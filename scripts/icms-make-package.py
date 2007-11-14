@@ -27,7 +27,7 @@ from string import Template
 from sys import executable
 
 # Import from itools
-import itools
+import ikaaro
 from itools import vfs
 
 
@@ -74,17 +74,17 @@ def make(parser, options, target):
     folder = vfs.open(target)
 
     # Copy source files
-    path_prefix = 'cms/skeleton/%s/' % options.type
+    path_prefix = 'skeleton/%s/' % options.type
     path_prefix_n = len(path_prefix)
 
-    itools_path = dirname(itools.__file__)
-    manifest = join(itools_path, 'MANIFEST')
+    ikaaro_path = dirname(ikaaro.__file__)
+    manifest = join(ikaaro_path, 'MANIFEST')
     for path in open(manifest).readlines():
         if not path.startswith(path_prefix):
             continue
         path = path.strip()
         # Read and process the data
-        source = join(itools_path, path)
+        source = join(ikaaro_path, path)
         source = open(source).read()
         data = Template(source).safe_substitute(**namespace)
         # Create the target file
@@ -112,8 +112,8 @@ def make(parser, options, target):
 if __name__ == '__main__':
     # The command line parser
     usage = '%prog TARGET'
-    version = 'itools %s' % itools.__version__
-    description = 'Creates a new Python package for itools.cms of name TARGET.'
+    version = 'ikaaro %s' % ikaaro.__version__
+    description = 'Creates a new Python package for ikaaro of name TARGET.'
     parser = OptionParser(usage, version=version, description=description)
     help=('Choose the type of package to make: --type=quickstart or '
           '--type=bare [default]. "bare" is an empty package, "quickstart" is'
