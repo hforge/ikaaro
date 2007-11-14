@@ -26,8 +26,10 @@ import itools
 from itools.catalog import make_catalog, CatalogAware
 from itools.handlers import Config, Database, get_handler
 from itools.uri import get_absolute_reference
-from itools.cms.root import Root
-from itools.cms.utils import generate_password
+
+# Import from ikaaro
+from ikaaro.root import Root
+from ikaaro.utils import generate_password
 
 
 def init(parser, options, target):

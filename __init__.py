@@ -22,8 +22,9 @@ import os
 # Import from itools
 from itools import get_abspath
 from itools.gettext import register_domain
+from itools.utils import get_version
 
-# Import from itools.cms
+# Import from ikaaro
 import root
 from folder import Folder
 from file import File
@@ -41,6 +42,8 @@ try:
 except ImportError:
     wiki = None
 
+
+__version__ = get_version(globals())
 
 
 ###########################################################################

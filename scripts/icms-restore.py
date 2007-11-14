@@ -24,7 +24,9 @@ import itools
 from itools import vfs
 from itools.handlers import (Database, READY, TRANSACTION_PHASE1,
     TRANSACTION_PHASE2)
-from itools.cms.server import ask_confirmation
+
+# Import from ikaaro
+from ikaaro.server import ask_confirmation
 
 
 def restore(parser, options, target):

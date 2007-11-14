@@ -16,13 +16,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Import from standard library
+# Import from the Standard Library
 from optparse import OptionParser
 import os
 import sys
+
 # Import from itools
 import itools
-from itools.cms.spool import Spool
+
+# Import from ikaaro
+from ikaaro.spool import Spool
+
 
 def start(optios, target):
     spool = Spool(target)

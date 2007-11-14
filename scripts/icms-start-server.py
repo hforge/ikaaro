@@ -25,7 +25,10 @@ import sys
 # Import from itools
 import itools
 from itools import vfs
-from itools.cms.server import Server
+
+# Import from ikaaro
+from ikaaro.server import Server
+
 
 def start(options, target):
     # Check for database consistency

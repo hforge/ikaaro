@@ -24,8 +24,10 @@ import sys
 import itools
 from itools import vfs
 from itools.web import set_context, Context
-from itools.cms.server import ask_confirmation
-from itools.cms.server import Server
+
+# Import from ikaaro
+from ikaaro.server import ask_confirmation
+from ikaaro.server import Server
 
 
 def update(parser, options, target):

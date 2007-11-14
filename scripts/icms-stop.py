@@ -21,9 +21,11 @@ from optparse import OptionParser
 
 # Import from itools
 import itools
-from itools.cms.server import Server
-from itools.cms.spool import Spool
-from itools.cms.utils import kill
+
+# Import from ikaaro
+from ikaaro.server import Server
+from ikaaro.spool import Spool
+from ikaaro.utils import kill
 
 
 
