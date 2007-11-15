@@ -23,66 +23,12 @@ from operator import itemgetter
 from itools.datatypes import FileName
 from itools.i18n import format_datetime
 from itools.stl import stl
-from itools.xml import Parser
-from itools.xhtml import sanitize_stream, xhtml_uri, Document as XHTMLDocument
-from itools.html import Parser as HTMLParser
 from itools.rest import checkid
 
-# Import from itools.cms
-from folder import Folder
-from messages import MSG_EDIT_CONFLICT, MSG_CHANGES_SAVED
-from registry import register_object_class
-from html import XHTMLFile
-from text import Text
-
-
-
-def build_document(data):
-    document = XHTMLDocument()
-    new_body = HTMLParser(data)
-    new_body = sanitize_stream(new_body)
-    old_body = document.get_body()
-    document.events = (document.events[:old_body.start+1]
-                       + new_body
-                       + document.events[old_body.end:])
-    return document
-
-
-
-class Message(XHTMLFile):
-
-    class_id = 'ForumMessage'
-    class_title = u"Message"
-    class_description = u"Message in a thread"
-    class_views = [['edit_form'], ['history_form']]
-
-
-    @classmethod
-    def _make_object(cls, folder, name, data):
-        XHTMLFile._make_object.im_func(cls, folder, name)
-        # The message
-        document = build_document(data)
-        folder.set_handler(name, document)
-
-
-    def _load_state_from_file(self, file):
-        data = file.read()
-        stream = Parser(data, {None: xhtml_uri})
-        self.events = list(stream)
-
-
-    # Was already indexed at the thread level
-    def to_text(self):
-        return u''
-
-
-    edit__access__ = 'is_admin'
-    def edit(self, context):
-        XHTMLFile.edit(self, context, sanitize=True)
-
-        return context.come_back(MSG_CHANGES_SAVED, goto='../;view')
-
-
+# Import from ikaaro
+from ikaaro.folder import Folder
+from ikaaro.registry import register_object_class
+from message import Message, build_message
 
 
 class Thread(Folder):
@@ -100,8 +46,8 @@ class Thread(Folder):
         # First post
         cls = cls.message_class
         folder.set_handler('%s/0.xhtml.metadata' % name, cls.build_metadata())
-        document = build_document(data)
-        folder.set_handler('%s/0.xhtml' % name, document)
+        message = build_message(data)
+        folder.set_handler('%s/0.xhtml' % name, message)
 
 
     def to_text(self):
@@ -267,6 +213,4 @@ class Forum(Folder):
         return None
 
 
-register_object_class(Forum)
 register_object_class(Thread)
-register_object_class(Message)
