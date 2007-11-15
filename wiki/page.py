@@ -23,6 +23,12 @@ from tempfile import mkdtemp
 from subprocess import call
 from urllib import urlencode
 
+# Import from docutils
+from docutils import core
+from docutils import io
+from docutils import readers
+from docutils import nodes
+
 # Import from itools
 from itools.datatypes import DateTime
 from itools import vfs
@@ -31,74 +37,12 @@ from itools.datatypes import Unicode, FileName
 from itools.rest import checkid
 from itools.xml import Parser
 
-# Import from itools.cms
-from base import DBObject
-from file import File
-from folder import Folder
-from messages import *
-from text import Text
-from registry import register_object_class
-from binary import Image
-
-# Import from docutils
-try:
-    import docutils
-except ImportError:
-    print "docutils is not installed, wiki deactivated."
-    raise
-from docutils import core
-from docutils import io
-from docutils import readers
-from docutils import nodes
-
-
-class WikiFolder(Folder):
-    class_id = 'WikiFolder'
-    class_version = '20061229'
-    class_title = u"Wiki"
-    class_description = u"Container for a wiki"
-    class_icon16 = 'images/WikiFolder16.png'
-    class_icon48 = 'images/WikiFolder48.png'
-    class_views = [['view'],
-                   ['browse_content?mode=list',
-                    'browse_content?mode=thumbnails',
-                    'browse_content?mode=image'],
-                   ['new_resource_form'],
-                   ['edit_metadata_form'],
-                   ['last_changes']]
-
-    __fixed_handlers__ = ['FrontPage']
-
-
-    @classmethod
-    def _make_object(cls, folder, name):
-        Folder._make_object.im_func(cls, folder, name)
-        # FrontPage
-        kw = {'dc:title': {'en': u"Front Page"}}
-        metadata = WikiPage.build_metadata(**kw)
-        folder.set_handler('%s/FrontPage.metadata' % name, metadata)
-
-
-    def get_document_types(self):
-        return [WikiPage, File]
-
-
-    #######################################################################
-    # User interface
-    #######################################################################
-    def GET(self, context):
-        return context.uri.resolve2('FrontPage')
-
-
-    view__access__ = 'is_allowed_to_view'
-    view__label__ = u'View'
-    def view(self, context):
-        if context.has_form_value('message'):
-            message = context.get_form_value('message', type=Unicode)
-            return context.come_back(message, goto='FrontPage')
-
-        return context.uri.resolve('FrontPage')
-
+# Import from ikaaro
+from ikaaro.base import DBObject
+from ikaaro.messages import MSG_EDIT_CONFLICT, MSG_CHANGES_SAVED
+from ikaaro.text import Text
+from ikaaro.registry import register_object_class
+from ikaaro.binary import Image
 
 
 class WikiPage(Text):
@@ -161,10 +105,12 @@ class WikiPage(Text):
                                         (self, refname),
                                         (parent, refname)):
                     try:
-                        ref = container.get_handler(path)
-                        break
-                    except (LookupError, UnicodeEncodeError):
-                        pass
+                        ref = container.get_object(path)
+                    except (NotImplementedError, LookupError,
+                            UnicodeEncodeError):
+                        continue
+                    # Found, exit now
+                    break
 
                 if ref is None:
                     target['wiki_refname'] = False
@@ -225,10 +171,11 @@ class WikiPage(Text):
             image = None
             for container in (self, parent):
                 try:
-                    image = container.get_handler(node_uri)
-                    break
-                except LookupError:
-                    pass
+                    image = container.get_object(node_uri)
+                except (NotImplementedError, LookupError):
+                    continue
+                # Found, exit now
+                break
 
             if image is not None:
                 node['uri'] = str(here.get_pathto(image))
@@ -291,10 +238,11 @@ class WikiPage(Text):
             reference = references[0]
             reference.parent.remove(reference)
             name = reference['wiki_name']
-            if not parent.has_handler(name):
+            try:
+                page = parent.get_object(name)
+            except LookupError:
                 continue
             title = reference.astext()
-            page = parent.get_handler(name)
             if isinstance(page, Image):
                 # Link to image?
                 images.append(('../%s' % name, name))
@@ -321,10 +269,11 @@ class WikiPage(Text):
             image = None
             for container in (self, parent):
                 try:
-                    image = container.get_handler(node_uri)
-                    break
-                except LookupError:
-                    pass
+                    image = container.get_object(node_uri)
+                except (NotImplementedError, LookupError):
+                    continue
+                # Found, exit now
+                break
             if image is None:
                 # missing image but prevent pdfLaTeX failure
                 node_uri = '/ui/wiki/missing.png'
@@ -373,7 +322,7 @@ class WikiPage(Text):
         for node_uri, filename in images:
             if tempdir.exists(filename):
                 continue
-            image = self.get_handler(node_uri)
+            image = self.get_object(node_uri)
             file = tempdir.make_file(filename)
             try:
                 image.save_state_to_file(file)
@@ -437,14 +386,17 @@ class WikiPage(Text):
 
     def edit(self, context):
         timestamp = context.get_form_value('timestamp', type=DateTime)
-        if timestamp is None or timestamp < self.handler.timestamp:
+        if timestamp is None:
+            return context.come_back(MSG_EDIT_CONFLICT)
+        page = self.handler
+        if page.timestamp is not None and timestamp < page.timestamp:
             return context.come_back(MSG_EDIT_CONFLICT)
 
         data = context.get_form_value('data', type=Unicode)
         text_size = context.get_form_value('text_size');
         # Ensure source is encoded to UTF-8
         data = data.encode('utf_8')
-        self.load_state_from_string(data)
+        page.load_state_from_string(data)
 
         if 'class="system-message"' in self.view(context):
             message = u"Syntax error, please check the view for details."
@@ -482,5 +434,4 @@ class WikiPage(Text):
 ###########################################################################
 # Register
 ###########################################################################
-register_object_class(WikiFolder)
 register_object_class(WikiPage)
