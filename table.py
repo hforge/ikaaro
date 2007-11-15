@@ -109,7 +109,7 @@ class Table(File):
         size = 50
 
         # The batch
-        total = self.get_n_records()
+        total = self.handler.get_n_records()
         namespace['batch'] = widgets.batch(context.uri, start, size, total,
                                            self.gettext)
 
