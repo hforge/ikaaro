@@ -31,242 +31,12 @@ from itools.rest import checkid
 from itools.web import get_context
 from itools.html import Parser as HTMLParser
 
-# Import from itools.cms
-from registry import register_object_class, get_object_class
-from folder import Folder
-from file import File
-from html import XHTMLFile, EpozEditable
-from messages import *
-from workflow import WorkflowAware
-
-
-
-class OrderAware(object):
-    orderable_classes = None
-
-    def get_ordered_folder_names(self, mode='mixed'):
-        """
-        Return current order plus the unordered names at the end.
-            mode mixed -> ordered + unordered
-            mode ordered -> ordered
-            mode all -> (ordered, unordered)
-            default mode : mixed
-        """
-        orderable_classes = self.orderable_classes or self.__class__
-        ordered_names = self.get_property('ikaaro:order')
-        real_names = [f.name for f in self.search_handlers()
-                if isinstance(f, orderable_classes)]
-
-        ordered_folders = [f for f in ordered_names if f in real_names]
-        if mode == 'ordered':
-            return ordered_folders
-        else:
-            unordered_folders = [f for f in real_names
-                                   if f not in ordered_names]
-            if mode == 'all':
-                return ordered_folders, unordered_folders
-            else:
-                return ordered_folders + unordered_folders
-
-
-    def get_ordered_objects(self, objects, mode='mix'):
-        "Return a sorted list of child handlers or brains of them."
-        ordered_list = []
-        if mode is not 'all':
-            ordered_names = self.get_ordered_folder_names(mode)
-            for object in objects:
-                index = ordered_names.index(object.name)
-                ordered_list.append((index, object))
-
-            ordered_list.sort()
-
-            return [x[1] for x in ordered_list]
-        else:
-            ordered_list, unordered_list = [], []
-            ordered_names, unordered_names = self.get_ordered_folder_names(mode)
-            for data in [(ordered_names, ordered_list),
-                         (unordered_names, unordered_list)]:
-                names, l = data
-                for object in objects:
-                    index = names.index(object.name)
-                    l.append((index, object))
-
-            ordered_list.sort()
-            unordered_list.sort()
-
-            ordered = [x[1] for x in ordered_list]
-            unordered = [x[1] for x in unordered_list]
-            return (ordered, unordered)
-
-
-    order_folders_form__access__ = 'is_allowed_to_edit'
-    order_folders_form__label__ = u"Order"
-    order_folders_form__sublabel__ = u"Order"
-    def order_folders_form(self, context):
-        namespace = {}
-
-        here = context.handler
-        ordered_folders = []
-        unordered_folders = []
-        names = self.get_ordered_folder_names('all')
-        ordered_folders_names, unordered_folders_names = names
-
-        for data in [(ordered_folders_names, ordered_folders),
-                     (unordered_folders_names, unordered_folders)]:
-            names, l = data
-            for name in names:
-                folder = self.get_handler(name)
-                ns = {
-                    'name': folder.name,
-                    'title': folder.get_property('dc:title'),
-                    'workflow_state': '',
-                    'is_orderaware': isinstance(folder, OrderAware),
-                    'path': '%s/;order_folders_form' % here.get_pathto(folder)
-                }
-                if isinstance(folder, WorkflowAware):
-                    statename = folder.get_statename()
-                    state = folder.get_state()
-                    msg = self.gettext(state['title']).encode('utf-8')
-                    state = ('<a href="%s/;state_form" class="workflow">'
-                             '<strong class="wf_%s">%s</strong>'
-                             '</a>') % (folder.name, statename, msg)
-                    ns['workflow_state'] = Parser(state)
-
-                l.append(ns)
-        namespace['ordered_folders'] = ordered_folders
-        namespace['unordered_folders'] = unordered_folders
-
-        handler = self.get_object('/ui/folder/order_items.xml')
-        return stl(handler, namespace)
-
-
-    order_folders_up__access__ = 'is_allowed_to_edit'
-    def order_folders_up(self, context):
-        names = context.get_form_values('ordered_names')
-        if not names:
-            return context.come_back(u'Please select the ordered objects' \
-                                       ' to order up.')
-
-        ordered_names = self.get_ordered_folder_names('ordered')
-
-        if ordered_names[0] == names[0]:
-            return context.come_back(u"Objects already up.")
-
-        temp = list(ordered_names)
-        for name in names:
-            idx = temp.index(name)
-            temp.remove(name)
-            temp.insert(idx - 1, name)
-
-        self.set_property('ikaaro:order', tuple(temp))
-        message = u"Objects ordered up."
-        return context.come_back(message)
-
-
-    order_folders_down__access__ = 'is_allowed_to_edit'
-    def order_folders_down(self, context):
-        names = context.get_form_values('ordered_names')
-        if not names:
-            return context.come_back(
-                u"Please select the ordered objects to order down.")
-
-        ordered_names = self.get_ordered_folder_names('ordered')
-
-        if ordered_names[-1] == names[-1]:
-            return context.come_back(u"Objects already down.")
-
-        temp = list(ordered_names)
-        names.reverse()
-        for name in names:
-            idx = temp.index(name)
-            temp.remove(name)
-            temp.insert(idx + 1, name)
-
-        self.set_property('ikaaro:order', tuple(temp))
-        message = u"Objects ordered down."
-        return context.come_back(message)
-
-
-    order_folders_top__access__ = 'is_allowed_to_edit'
-    def order_folders_top(self, context):
-        names = context.get_form_values('ordered_names')
-        if not names:
-            message = u"Please select the ordered objects to order on top."
-            return context.come_back(message)
-
-        ordered_names = self.get_ordered_folder_names('ordered')
-
-        if ordered_names[0] == names[0]:
-            message = u"Objects already on top."
-            return context.come_back(message)
-
-        temp = names + [name for name in ordered_names
-                if name not in names]
-
-        self.set_property('ikaaro:order', tuple(temp))
-        message = u"Objects ordered on top."
-        return context.come_back(message)
-
-
-    order_folders_bottom__access__ = 'is_allowed_to_edit'
-    def order_folders_bottom(self, context):
-        names = context.get_form_values('ordered_names')
-        if not names:
-            message = u"Please select the ordered objects to order on bottom."
-            return context.come_back(message)
-
-        ordered_names = self.get_ordered_folder_names('ordered')
-
-        if ordered_names[-1] == names[-1]:
-            message = u"Objects already on bottom."
-            return context.come_back(message)
-
-        temp = [name for name in ordered_names
-                if name not in names] + names
-
-        self.set_property('ikaaro:order', tuple(temp))
-        message = u"Objects ordered on bottom."
-        return context.come_back(message)
-
-
-    order_folders_ordered__access__ = 'is_allowed_to_edit'
-    def order_folders_ordered(self, context):
-        names = context.get_form_values('unordered_names')
-        if not names:
-            message = u'Please select the unordered objects to move ' \
-                       'into the ordered category.'
-            return context.come_back(message)
-
-        ordered_names, unordered_names = self.get_ordered_folder_names('all')
-        temp = list(ordered_names) + [name for name in names]
-
-        self.set_property('ikaaro:order', tuple(temp))
-        message = u"Objects moved to ordered category."
-        return context.come_back(message)
-
-
-    order_folders_unordered__access__ = 'is_allowed_to_edit'
-    def order_folders_unordered(self, context):
-        names = context.get_form_values('ordered_names')
-        if not names:
-            message = u'Please select the ordered objects to move into ' \
-                       'the unordered category.'
-            return context.come_back(message)
-
-        ordered_names, unordered_names = self.get_ordered_folder_names('all')
-
-        temp = [name for name in ordered_names
-                if name not in names]
-
-        self.set_property('ikaaro:order', tuple(temp))
-        message = u"Objects moved to ordered category."
-        return context.come_back(message)
-
-
-
-# FIXME keep this function?
-def add_dressable_style(context):
-    context.styles.append('/ui/dressable/dressable.css')
+# Import from ikaaro
+from ikaaro.registry import register_object_class, get_object_class
+from ikaaro.folder import Folder
+from ikaaro.file import File
+from ikaaro.html import XHTMLFile, EpozEditable
+from ikaaro.messages import *
 
 
 
@@ -282,7 +52,7 @@ class Dressable(Folder, EpozEditable):
     class_description = u'A dressable folder'
     class_views = ([['view'], ['edit_document']] + Folder.class_views)
     __fixed_handlers__ = ['index.xhtml']
-    template = '/ui/dressable/view.xml'
+    template = '/ui/future/dressable_view.xml'
     schema = {'content': ('index.xhtml', XHTMLFile),
               'browse_folder': 'browse_folder',
               'browse_file': 'browse_file'}
@@ -384,7 +154,7 @@ class Dressable(Folder, EpozEditable):
                 content = getattr(self, data)(context)
             namespace[key] = content
 
-        add_dressable_style(context)
+        context.styles.append('/ui/future/dressable.css')
 
         handler = self.get_handler(self.template)
         return stl(handler, namespace)
@@ -451,7 +221,7 @@ class Dressable(Folder, EpozEditable):
         namespace['width'] = width
         namespace['height'] = height
 
-        handler = self.get_object('/ui/dressable/upload_image.xml')
+        handler = self.get_object('/ui/future/dressable_edit_image.xml')
         return stl(handler, namespace)
 
 
@@ -505,7 +275,7 @@ class Dressable(Folder, EpozEditable):
         namespace['name'] = name
         namespace['class_id'] = self.get_class_id_image(name)
 
-        handler = self.get_object('/ui/dressable/Image_new_instance.xml')
+        handler = self.get_object('/ui/future/dressable_add_image.xml')
         return stl(handler, namespace)
 
 
