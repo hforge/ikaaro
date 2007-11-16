@@ -22,14 +22,13 @@ from datetime import datetime, timedelta
 import mimetypes
 
 # Import from itools
-from itools.uri import get_reference
 from itools.datatypes import FileName
-from itools.handlers import File as FileHandler
-from itools import vfs
-from itools.rest import checkid
+from itools.handlers import File as FileHandler, Text
 from itools.i18n import guess_language
-from itools.handlers import Text
+from itools.rest import checkid
 from itools.stl import stl
+from itools.uri import get_reference
+from itools import vfs
 
 # Import from itools.cms
 from base import DBObject
@@ -280,9 +279,9 @@ class File(WorkflowAware, VersioningAware, DBObject):
         # Check wether the handler is able to deal with the uploaded file
         filename, mimetype, data = file
         try:
-            self.load_state_from_string(data)
+            self.handler.load_state_from_string(data)
         except:
-            self.load_state()
+            self.handler.load_state()
             message = (u'Upload failed: either the file does not match this'
                        u' document type ($mimetype) or it contains errors.')
             return context.come_back(message, mimetype=self.get_mimetype())
