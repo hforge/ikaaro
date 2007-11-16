@@ -24,7 +24,7 @@ from HTMLParser import HTMLParseError
 from itools.datatypes import is_datatype, DateTime
 from itools.uri import Path
 from itools.stl import stl, set_prefix
-from itools.xhtml import Document
+from itools.xhtml import XHTMLFile
 from itools.xml import Parser
 from itools.handlers import Image
 from itools.rest import checkid
@@ -78,7 +78,7 @@ class Dressable(Folder, EpozEditable):
         for key, data in self.schema.iteritems():
             if isinstance(data, tuple):
                 name, cls = data
-                if is_datatype(cls, Document):
+                if is_datatype(cls, XHTMLFile):
                     handler = cls()
                     cache[name] = handler
                     cache['%s.metadata' % name] = handler.build_metadata()
@@ -146,7 +146,7 @@ class Dressable(Folder, EpozEditable):
                     handler = self.get_handler(name)
                     if is_datatype(handler, Image):
                         content = self._get_image(context, handler)
-                    elif is_datatype(handler, Document):
+                    elif is_datatype(handler, XHTMLFile):
                         content = self._get_document(context, handler)
                     else:
                         raise NotImplementedError
@@ -387,7 +387,7 @@ class Dressable(Folder, EpozEditable):
             for key, data in self.schema.iteritems():
                 if isinstance(data, tuple):
                     name, cls = data
-                    if is_datatype(cls, Document):
+                    if is_datatype(cls, XHTMLFile):
                         ref = 'edit_document?dress_name=%s' % name
                         subviews.append(ref)
                         ref = 'edit_document?dress_name=%s&external=1' % name
@@ -405,7 +405,7 @@ class Dressable(Folder, EpozEditable):
         for key, data in self.schema.iteritems():
             if isinstance(data, tuple):
                 name, cls = data
-                if is_datatype(cls, Document):
+                if is_datatype(cls, XHTMLFile):
                     return 'edit_document?dress_name=%s' % name
                 elif is_datatype(cls, Image):
                     return 'edit_image?name=%s' % name

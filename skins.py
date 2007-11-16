@@ -29,7 +29,7 @@ from itools.datatypes import URI
 from itools.handlers import File, Folder, Database
 from itools.stl import stl
 from itools.web import get_context, AccessControl
-from itools.xml import Parser, Document as XMLDocument
+from itools.xml import Parser, XMLFile
 
 # Import from itools.cms
 from base import Node
@@ -47,7 +47,7 @@ class UIFile(Node, File):
         return self.to_str()
 
 
-class UITemplate(Node, XMLDocument):
+class UITemplate(Node, XMLFile):
     pass
 
 

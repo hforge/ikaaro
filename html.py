@@ -24,9 +24,8 @@ from HTMLParser import HTMLParseError
 from itools.uri import Path
 from itools.datatypes import DateTime
 from itools.xml import TEXT, START_ELEMENT
-from itools.xhtml import Document as XHTMLDocument
+from itools.xhtml import XHTMLFile, sanitize_stream
 from itools.stl import stl
-from itools.xhtml import sanitize_stream
 from itools.html import Parser as HTMLParser
 
 # Import from ikaaro
@@ -123,7 +122,7 @@ class WebPage(EpozEditable, Text):
                    ['edit_metadata_form'],
                    ['state_form'],
                    ['history_form']]
-    class_handler = XHTMLDocument
+    class_handler = XHTMLFile
 
 
     GET__mtime__ = None

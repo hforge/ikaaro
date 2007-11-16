@@ -18,7 +18,7 @@
 
 # Import from itools
 from itools.xml import Parser
-from itools.xhtml import sanitize_stream, xhtml_uri, Document as XHTMLDocument
+from itools.xhtml import sanitize_stream, xhtml_uri, XHTMLFile
 from itools.html import Parser as HTMLParser
 
 # Import from ikaaro
@@ -28,7 +28,7 @@ from ikaaro.html import WebPage
 
 
 def build_message(data):
-    document = XHTMLDocument()
+    document = XHTMLFile()
     new_body = HTMLParser(data)
     new_body = sanitize_stream(new_body)
     old_body = document.get_body()
