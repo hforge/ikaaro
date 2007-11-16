@@ -29,7 +29,7 @@ from itools.datatypes import Boolean, DateTime, Integer, String, Unicode, XML
 from itools.i18n import format_datetime
 from itools.handlers import Config
 from itools.rest import checkid
-from itools.csv import IntegerKey, CSV as BaseCSV
+from itools.csv import IntegerKey, CSVFile
 from itools.xml import Parser
 from itools.stl import stl
 from itools.uri import encode_query, Reference, Path
@@ -745,13 +745,13 @@ class Tracker(Folder):
 ###########################################################################
 # Tables
 ###########################################################################
-class SelectTableCSV(BaseCSV):
+class SelectTableCSV(CSVFile):
 
     columns = ['id', 'title']
     schema = {'id': IntegerKey, 'title': Unicode}
 
 
-class VersionsCSV(BaseCSV):
+class VersionsCSV(CSVFile):
 
     columns = ['id', 'title', 'released']
     schema = {'id': IntegerKey,
@@ -888,7 +888,7 @@ class StoredSearch(Text):
 ###########################################################################
 # Issues
 ###########################################################################
-class History(BaseCSV):
+class History(CSVFile):
 
     columns = ['datetime', 'username', 'title', 'module', 'version', 'type',
                'priority', 'assigned_to', 'state', 'comment', 'file']

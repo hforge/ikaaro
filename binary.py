@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.pdf import PDF as PDFHandler
+from itools.pdf import PDFFile
 from itools.stl import stl
 
 # Import from ikaaro
@@ -186,7 +186,7 @@ class PDF(File):
     class_description = u'PDF Document'
     class_icon16 = 'images/Pdf16.png'
     class_icon48 = 'images/Pdf48.png'
-    class_handler = PDFHandler
+    class_handler = PDFFile
 
 
 
