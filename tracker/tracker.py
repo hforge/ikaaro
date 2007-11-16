@@ -33,15 +33,17 @@ from itools.csv import IntegerKey, CSV as BaseCSV
 from itools.xml import Parser
 from itools.stl import stl
 from itools.uri import encode_query, Reference, Path
-from csv import CSV
-from file import File
-from folder import Folder
-from messages import *
-from text import Text
-from utils import generate_name
-from registry import register_object_class, get_object_class
-from versioning import VersioningAware
-import widgets
+
+# Import from ikaaro
+from ikaaro.csv import CSV
+from ikaaro.file import File
+from ikaaro.folder import Folder
+from ikaaro.messages import *
+from ikaaro.text import Text
+from ikaaro.utils import generate_name
+from ikaaro.registry import register_object_class, get_object_class
+from ikaaro.versioning import VersioningAware
+from ikaaro import widgets
 
 
 
