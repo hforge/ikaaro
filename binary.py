@@ -17,7 +17,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
+from itools.pdf import PDF as PDFHandler
 from itools.stl import stl
+
+# Import from ikaaro
 from file import File
 from registry import register_object_class
 
@@ -183,6 +186,7 @@ class PDF(File):
     class_description = u'PDF Document'
     class_icon16 = 'images/Pdf16.png'
     class_icon48 = 'images/Pdf48.png'
+    class_handler = PDFHandler
 
 
 
