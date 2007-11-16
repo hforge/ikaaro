@@ -35,7 +35,7 @@ from itools.html import Parser as HTMLParser
 from ikaaro.registry import register_object_class, get_object_class
 from ikaaro.folder import Folder
 from ikaaro.file import File
-from ikaaro.html import XHTMLFile, EpozEditable
+from ikaaro.html import WebPage, EpozEditable
 from ikaaro.messages import *
 
 
@@ -53,7 +53,7 @@ class Dressable(Folder, EpozEditable):
     class_views = ([['view'], ['edit_document']] + Folder.class_views)
     __fixed_handlers__ = ['index.xhtml']
     template = '/ui/future/dressable_view.xml'
-    schema = {'content': ('index.xhtml', XHTMLFile),
+    schema = {'content': ('index.xhtml', WebPage),
               'browse_folder': 'browse_folder',
               'browse_file': 'browse_file'}
 
@@ -185,7 +185,7 @@ class Dressable(Folder, EpozEditable):
         if context.get_form_value('external'):
             return context.uri.resolve('%s/;externaledit' % name)
         handler = self.get_handler(name)
-        return XHTMLFile.edit_form(handler, context)
+        return WebPage.edit_form(handler, context)
 
 
     edit_image__access__ = 'is_allowed_to_edit'

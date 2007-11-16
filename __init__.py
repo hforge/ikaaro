@@ -31,8 +31,7 @@ from file import File
 import binary
 import csv
 import handlers
-import html
-from html import XHTMLFile as Document
+from html import WebPage
 import ical
 import text
 from forum import Forum
@@ -49,7 +48,7 @@ __version__ = get_version(globals())
 ###########################################################################
 # Register
 ###########################################################################
-Folder.register_document_type(html.XHTMLFile)
+Folder.register_document_type(WebPage)
 Folder.register_document_type(Folder)
 Folder.register_document_type(File)
 Folder.register_document_type(text.Text)

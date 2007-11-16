@@ -24,7 +24,7 @@ from itools.html import Parser as HTMLParser
 # Import from ikaaro
 from ikaaro.messages import MSG_CHANGES_SAVED
 from ikaaro.registry import register_object_class
-from ikaaro.html import XHTMLFile
+from ikaaro.html import WebPage
 
 
 def build_message(data):
@@ -39,7 +39,7 @@ def build_message(data):
 
 
 
-class Message(XHTMLFile):
+class Message(WebPage):
 
     class_id = 'ForumMessage'
     class_title = u"Message"
@@ -49,7 +49,7 @@ class Message(XHTMLFile):
 
     @classmethod
     def _make_object(cls, folder, name, data):
-        XHTMLFile._make_object.im_func(cls, folder, name)
+        WebPage._make_object.im_func(cls, folder, name)
         # The message
         document = build_message(data)
         folder.set_handler(name, document)
@@ -68,7 +68,7 @@ class Message(XHTMLFile):
 
     edit__access__ = 'is_admin'
     def edit(self, context):
-        XHTMLFile.edit(self, context, sanitize=True)
+        WebPage.edit(self, context, sanitize=True)
 
         return context.come_back(MSG_CHANGES_SAVED, goto='../;view')
 

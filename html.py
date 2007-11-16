@@ -111,7 +111,7 @@ class EpozEditable(object):
 
 
 
-class XHTMLFile(EpozEditable, Text):
+class WebPage(EpozEditable, Text):
 
     class_id = 'application/xhtml+xml'
     class_title = u'Web Page'
@@ -183,7 +183,7 @@ class XHTMLFile(EpozEditable, Text):
 
 
 
-class HTMLFile(XHTMLFile):
+class HTMLFile(WebPage):
 
     class_id = 'text/html'
 
@@ -194,5 +194,5 @@ class HTMLFile(XHTMLFile):
 ###########################################################################
 register_object_class(XMLFile)
 register_object_class(XMLFile, format='application/xml')
-register_object_class(XHTMLFile)
+register_object_class(WebPage)
 register_object_class(HTMLFile)
