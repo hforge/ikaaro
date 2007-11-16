@@ -79,8 +79,8 @@ class Table(File):
         Returns a list of tuples with the name and title of every field.
         """
         fields = []
-        for name in self.schema.keys():
-            datatype = self.schema[name]
+        for name in self.handler.schema.keys():
+            datatype = self.handler.schema[name]
             title = getattr(datatype, 'title', None)
             if title is None:
                 title = name
@@ -124,7 +124,7 @@ class Table(File):
         fields.insert(0, ('index', u'id'))
         records = []
 
-        for record in self.get_records():
+        for record in self.handler.get_records():
             id = record.id
             records.append({})
             records[-1]['id'] = str(id)
@@ -132,8 +132,8 @@ class Table(File):
             # Fields
             records[-1]['index'] = id, ';edit_record_form?id=%s' % id
             for field, field_title in fields[1:]:
-                value = self.get_value(record, field)
-                datatype = self.get_datatype(field)
+                value = self.handler.get_value(record, field)
+                datatype = self.handler.get_datatype(field)
 
                 multiple = getattr(datatype, 'multiple', False)
                 if multiple is True:
@@ -180,7 +180,7 @@ class Table(File):
     def del_record_action(self, context):
         ids = context.get_form_values('ids', type=Integer)
         for id in ids:
-            self.del_record(id)
+            self.handler.del_record(id)
 
         message = u'Record deleted.'
         return context.come_back(message)
@@ -197,7 +197,7 @@ class Table(File):
         fields = []
         for name, title in self.get_fields():
             # Enumerates, use a selection box
-            datatype = self.get_datatype(name)
+            datatype = self.handler.get_datatype(name)
             if getattr(datatype, 'multiple', False) is False:
                 value = context.get_form_value(name) \
                         or getattr(datatype, 'default', None)
@@ -228,7 +228,7 @@ class Table(File):
         # check form
         check_fields = []
         for name, kk in self.get_fields():
-            datatype = self.get_datatype(name)
+            datatype = self.handler.get_datatype(name)
             if getattr(datatype, 'multiple', False) is True:
                 datatype = Multiple(type=datatype)
             check_fields.append((name, getattr(datatype, 'mandatory', False),
@@ -240,7 +240,7 @@ class Table(File):
 
         record = {}
         for name, title in self.get_fields():
-            datatype = self.get_datatype(name)
+            datatype = self.handler.get_datatype(name)
             if getattr(datatype, 'multiple', False) is True:
                 if is_datatype(datatype, Enumerate):
                     value = context.get_form_values(name, type=datatype)
@@ -256,7 +256,7 @@ class Table(File):
                 value = context.get_form_value(name, type=datatype)
             record[name] = value
         try:
-            self.add_record(record)
+            self.handler.add_record(record)
             message = u'New record added.'
         except ValueError, strerror:
             message = u'Error: %s' % strerror
@@ -272,7 +272,7 @@ class Table(File):
     def edit_record_form(self, context):
         # Get the record
         id = context.get_form_value('id', type=Integer)
-        record = self.get_record(id)
+        record = self.handler.get_record(id)
 
         # Build the namespace
         namespace = {}
@@ -280,13 +280,13 @@ class Table(File):
 
         fields = []
         for name, title in self.get_fields():
-            datatype = self.get_datatype(name)
+            datatype = self.handler.get_datatype(name)
             if getattr(datatype, 'multiple', False) is False:
                 value = context.get_form_value(name) \
-                        or self.get_value(record, name)
+                        or self.handler.get_value(record, name)
             else:
                 value = context.get_form_values(name) \
-                        or self.get_value(record, name)
+                        or self.handler.get_value(record, name)
 
             if is_datatype(datatype, Enumerate) is False \
                     and getattr(datatype, 'multiple', False) is True:
@@ -318,7 +318,7 @@ class Table(File):
         # check form
         check_fields = []
         for name, kk in self.get_fields():
-            datatype = self.get_datatype(name)
+            datatype = self.handler.get_datatype(name)
             if getattr(datatype, 'multiple', False) is True:
                 datatype = Multiple(type=datatype)
             check_fields.append((name, getattr(datatype, 'mandatory', False),
@@ -332,7 +332,7 @@ class Table(File):
         id = context.get_form_value('id', type=Integer)
         record = {}
         for name, title in self.get_fields():
-            datatype = self.get_datatype(name)
+            datatype = self.handler.get_datatype(name)
             if getattr(datatype, 'multiple', False) is True:
                 if is_datatype(datatype, Enumerate):
                     value = context.get_form_values(name)
@@ -348,11 +348,10 @@ class Table(File):
                 value = context.get_form_value(name, type=datatype)
             record[name] = value
 
-        self.update_record(id, **record)
-        self.set_changed()
+        self.handler.update_record(id, **record)
+
         goto = context.uri.resolve2('../;edit_record_form')
         return context.come_back(MSG_CHANGES_SAVED, goto=goto, keep=['id'])
-
 
 
 register_object_class(Table)
