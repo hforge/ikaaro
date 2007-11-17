@@ -27,16 +27,17 @@ from types import GeneratorType
 # Import from itools
 import itools
 from itools import get_abspath
-from itools.datatypes import FileName
-from itools import vfs
 from itools.catalog import (make_catalog, CatalogAware, TextField,
     KeywordField, IntegerField, BoolField)
+from itools.datatypes import FileName
 from itools.handlers import Folder as FolderHandler, Config
+from itools.html import stream_to_str_as_html
 from itools.stl import stl
+from itools.uri import Path
+from itools import vfs
 from itools.web import get_context
 from itools.xml import Parser
-from itools.xhtml import stream_to_str_as_html
-from itools.uri import Path
+
 
 # Import from itools.cms
 from access import RoleAware

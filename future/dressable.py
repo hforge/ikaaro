@@ -22,14 +22,14 @@ from HTMLParser import HTMLParseError
 
 # Import from itools
 from itools.datatypes import is_datatype, DateTime
-from itools.uri import Path
-from itools.stl import stl, set_prefix
-from itools.xhtml import XHTMLFile
-from itools.xml import Parser
 from itools.handlers import Image
+from itools.html import XHTMLFile, Parser as HTMLParser
 from itools.rest import checkid
+from itools.stl import stl, set_prefix
+from itools.uri import Path
 from itools.web import get_context
-from itools.html import Parser as HTMLParser
+from itools.xml import Parser
+
 
 # Import from ikaaro
 from ikaaro.registry import register_object_class, get_object_class

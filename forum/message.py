@@ -18,8 +18,8 @@
 
 # Import from itools
 from itools.xml import Parser
-from itools.xhtml import sanitize_stream, xhtml_uri, XHTMLFile
-from itools.html import Parser as HTMLParser
+from itools.html import (Parser as HTMLParser, sanitize_stream, xhtml_uri,
+    XHTMLFile)
 
 # Import from ikaaro
 from ikaaro.messages import MSG_CHANGES_SAVED

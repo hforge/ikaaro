@@ -21,12 +21,11 @@ from datetime import datetime
 from HTMLParser import HTMLParseError
 
 # Import from itools
-from itools.uri import Path
 from itools.datatypes import DateTime
-from itools.xml import TEXT, START_ELEMENT
-from itools.xhtml import XHTMLFile, sanitize_stream
+from itools.html import XHTMLFile, sanitize_stream, Parser as HTMLParser
 from itools.stl import stl
-from itools.html import Parser as HTMLParser
+from itools.uri import Path
+from itools.xml import TEXT, START_ELEMENT
 
 # Import from ikaaro
 from messages import *
