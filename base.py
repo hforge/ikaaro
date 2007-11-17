@@ -734,7 +734,7 @@ class DBObject(CatalogAware, Node, DomainAware):
         # Add the image to the handler
         uri = Image.new_instance(container, context)
         if ';addimage_form' not in uri.path:
-            handler = container.get_handler(uri.path[0])
+            handler = container.get_object(uri.path[0])
             return """
             <script type="text/javascript">
                 window.opener.CreateImage('%s');

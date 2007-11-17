@@ -38,7 +38,7 @@ class OrderAware(object):
         """
         orderable_classes = self.orderable_classes or self.__class__
         ordered_names = self.get_property('ikaaro:order')
-        real_names = [f.name for f in self.search_handlers()
+        real_names = [f.name for f in self.search_objects()
                 if isinstance(f, orderable_classes)]
 
         ordered_folders = [f for f in ordered_names if f in real_names]

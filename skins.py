@@ -228,15 +228,15 @@ class Skin(UIFolder):
         # Content
         size = 0
         if isinstance(here, DBFolder):
-            for handler in here.search_handlers():
-                ac = handler.get_access_control()
-                if not ac.is_allowed_to_view(user, handler):
+            for object in here.search_objects():
+                ac = object.get_access_control()
+                if not ac.is_allowed_to_view(user, object):
                     continue
-                firstview = handler.get_firstview()
-                src = handler.get_path_to_icon(size=16)
-                options.append({'href': '%s/;%s' % (handler.name, firstview),
+                firstview = object.get_firstview()
+                src = object.get_path_to_icon(size=16)
+                options.append({'href': '%s/;%s' % (object.name, firstview),
                                 'src': src,
-                                'title': handler.get_title(),
+                                'title': object.get_title(),
                                 'class': '',
                                 'items': []})
                 size += 1

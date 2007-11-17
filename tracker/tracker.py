@@ -181,7 +181,7 @@ class Tracker(Folder):
     #######################################################################
     def get_subviews(self, name):
         if name == 'search_form':
-            items = list(self.search_handlers(handler_class=StoredSearch))
+            items = list(self.search_objects(object_class=StoredSearch))
             items.sort(lambda x, y: cmp(x.get_property('dc:title'),
                                         y.get_property('dc:title')))
             return ['view?search_name=%s' % x.name for x in items]
@@ -211,7 +211,7 @@ class Tracker(Folder):
         # Stored Searches
         stored_searches = [
             {'name': x.name, 'title': x.get_title()}
-            for x in self.search_handlers(handler_class=StoredSearch) ]
+            for x in self.search_objects(object_class=StoredSearch) ]
         stored_searches.sort(key=itemgetter('title'))
         namespace['stored_searches'] = stored_searches
 
@@ -647,7 +647,7 @@ class Tracker(Folder):
         # Execute the search
         issues = []
         now = datetime.now()
-        for handler in self.search_handlers(handler_class=Issue):
+        for handler in self.search_objcets(object_class=Issue):
             if text:
                 if not handler.has_text(text):
                     continue
@@ -832,8 +832,8 @@ class SelectTable(CSV):
                 is_enumerate = getattr(datatype, 'is_enumerate', False)
                 rows[-1][column] = value
             count = 0
-            for handler in self.parent.search_handlers(handler_class=Issue):
-                if handler.get_value(filter) == index:
+            for object in self.parent.search_objects(object_class=Issue):
+                if object.get_value(filter) == index:
                     count += 1
             value = '0'
             if count != 0:

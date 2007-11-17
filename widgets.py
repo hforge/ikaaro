@@ -31,7 +31,8 @@ from itools.xml import XMLParser
 from itools.stl import stl
 from itools.web import get_context
 
-# Import from itools.cms
+# Import from ikaaro
+from folder import Folder as IkaaroFolder
 from utils import get_parameters
 from base import DBObject
 
@@ -317,7 +318,7 @@ class Breadcrumb(object):
             else:
                 target = start.parent
         else:
-            target = root.get_handler(target_path)
+            target = root.get_object(target_path)
         self.target_path = target.abspath
 
         # Object to link
@@ -339,30 +340,30 @@ class Breadcrumb(object):
         objects = []
         self.is_submit = False
         user = context.user
-        filter = (Folder, filter_type)
-        for handler in target.search_handlers(handler_class=filter):
-            ac = handler.get_access_control()
-            if not ac.is_allowed_to_view(user, handler):
+        filter = (IkaaroFolder, filter_type)
+        for object in target.search_objects(object_class=filter):
+            ac = object.get_access_control()
+            if not ac.is_allowed_to_view(user, object):
                 continue
 
-            path = here.get_pathto(handler)
-            bc_target = str(root.get_pathto(handler))
+            path = here.get_pathto(object)
+            bc_target = str(root.get_pathto(object))
             url = context.uri.replace(bc_target=bc_target)
 
             self.is_submit = True
             # Calculate path
-            path_to_icon = handler.get_path_to_icon(16)
+            path_to_icon = object.get_path_to_icon(16)
             if path:
-                path_to_handler = Path(str(path) + '/')
-                path_to_icon = path_to_handler.resolve(path_to_icon)
-            objects.append({'name': handler.name,
-                            'is_folder': isinstance(handler, Folder),
-                            'is_image': isinstance(handler, Image),
+                path_to_object = Path(str(path) + '/')
+                path_to_icon = path_to_object.resolve(path_to_icon)
+            objects.append({'name': object.name,
+                            'is_folder': isinstance(object.handler, Folder),
+                            'is_image': isinstance(object.handler, Image),
                             'is_selectable': True,
                             'path': path,
                             'url': url,
                             'icon': path_to_icon,
-                            'object_type': handler.get_mimetype()})
+                            'object_type': object.handler.get_mimetype()})
 
         objects.sort(key=itemgetter('is_folder'), reverse=True)
         self.objects = objects
@@ -455,7 +456,7 @@ def _tree(node, root, depth, active_node, allow, deny, user, width):
     depth = depth - 1
 
     # Filter the handlers by the given class (don't filter by default)
-    search = node.search_handlers(handler_class=allow)
+    search = node.search_objects(object_class=allow)
     search = [ x for x in search if not isinstance(x, deny) ]
 
     children = []

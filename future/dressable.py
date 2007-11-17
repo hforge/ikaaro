@@ -335,7 +335,7 @@ class Dressable(Folder, EpozEditable):
         namespace = {}
         here = context.handler
         folders = []
-        handlers = self.search_handlers(handler_class=cls)
+        handlers = self.search_objects(object_class=cls)
         # Check access rights
         user = context.user
 

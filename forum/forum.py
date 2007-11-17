@@ -59,10 +59,10 @@ class Forum(Folder):
         accept_language = context.get_accept_language()
         users = self.get_object('/users')
         namespace['threads'] = []
-        for thread in self.search_handlers(handler_class=Thread):
+        for thread in self.search_objects(object_class=Thread):
             message = thread.get_object('0.xhtml')
             author = users.get_object(thread.get_property('owner'))
-            posts = thread.search_handlers(handler_class=Message)
+            posts = thread.search_objects(object_class=Message)
             posts = list(posts)
             namespace['threads'].append({
                 'name': thread.name,

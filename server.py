@@ -131,7 +131,7 @@ class Server(BaseServer):
         root = self.root
 
         sites = [root]
-        for site in root.search_handlers(handler_class=WebSite):
+        for site in root.search_objects(object_class=WebSite):
             sites.append(site)
 
         for site in sites:

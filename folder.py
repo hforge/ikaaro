@@ -225,22 +225,22 @@ class Folder(DBObject):
                 yield handler
 
 
-    def search_handlers(self, path='.', format=None, state=None,
-                        handler_class=None):
+    def search_objects(self, path='.', format=None, state=None,
+                        object_class=None):
         container = self.get_object(path)
-        for handler in container.get_objects():
-            if handler_class is not None:
-                if not isinstance(handler, handler_class):
+        for object in container.get_objects():
+            if object_class is not None:
+                if not isinstance(object , object_class):
                     continue
 
-            get_property = handler.get_property
+            get_property = object.get_property
             if format is None or get_property('format') == format:
                 if state is None:
-                    yield handler
+                    yield object
                 else:
-                    handler_state = get_property('state')
-                    if handler_state == state:
-                        yield handler
+                    object_state = get_property('state')
+                    if object_state == state:
+                        yield object
 
 
     #######################################################################

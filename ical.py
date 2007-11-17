@@ -841,7 +841,7 @@ class CalendarAware(CalendarView):
         if isinstance(self, Folder):
             calendars = []
             for cc in types:
-                calendars.extend(list(self.search_handlers(handler_class=cc)))
+                calendars.extend(list(self.search_objects(object_class=cc)))
             return calendars
         return [self]
 

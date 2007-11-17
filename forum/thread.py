@@ -53,7 +53,7 @@ class Thread(Folder):
     def to_text(self):
         # Index the thread by the content of all its posts
         text = [ x.to_text()
-                 for x in self.search_handlers(handler_class=Message) ]
+                 for x in self.search_objects(object_class=Message) ]
 
         return u'\n'.join(text)
 
@@ -64,13 +64,13 @@ class Thread(Folder):
 
     def get_posts(self):
         posts = [ (int(FileName.decode(x.name)[0]), x)
-                  for x in self.search_handlers(handler_class=Message) ]
+                  for x in self.search_objects(object_class=Message) ]
         posts.sort()
         return [ x[1] for x in posts ]
 
 
     def get_last_post_id(self):
-        posts = self.search_handlers(handler_class=Message)
+        posts = self.search_objects(object_class=Message)
         ids = [ int(FileName.decode(x.name)[0]) for x in posts ]
         return max(ids)
 
@@ -153,10 +153,10 @@ class Forum(Folder):
         accept_language = context.get_accept_language()
         users = self.get_object('/users')
         namespace['threads'] = []
-        for thread in self.search_handlers(handler_class=Thread):
+        for thread in self.search_objects(object_class=Thread):
             message = thread.get_object('0.xhtml')
             author = users.get_object(thread.get_property('owner'))
-            posts = thread.search_handlers(handler_class=Message)
+            posts = thread.search_objects(object_class=Message)
             posts = list(posts)
             namespace['threads'].append({
                 'name': thread.name,
