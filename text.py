@@ -140,6 +140,8 @@ class PO(Text):
 
     class_id = 'text/x-po'
     class_title = u'Message Catalog'
+    class_icon16 = 'images/Po16.png'
+    class_icon48 = 'images/Po48.png'
 
 
     #######################################################################
@@ -216,7 +218,8 @@ class CSS(Text):
     class_mimetypes = ['text/css']
     class_extension = 'css'
     class_id = 'text/css'
-    class_title = 'CSS'
+    class_title = u'CSS'
+    class_icon16 = 'images/CSS16.png'
     class_icon48 = 'images/CSS48.png'
 
 
@@ -227,6 +230,8 @@ register_object_class(CSS)
 class Python(Text):
 
     class_id = 'text/x-python'
+    class_title = u'Python'
+    class_icon16 = 'images/Python16.png'
     class_icon48 = 'images/Python48.png'
 
 

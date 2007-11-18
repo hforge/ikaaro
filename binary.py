@@ -76,8 +76,8 @@ class Video(File):
     class_id = 'video'
     class_title = u'Video'
     class_description = u'Video'
-    class_icon48 = 'images/Flash48.png'
     class_icon16 = 'images/Flash16.png'
+    class_icon48 = 'images/Flash48.png'
 
 
     view__access__ = 'is_allowed_to_view'
@@ -104,8 +104,8 @@ class Flash(File):
     class_id = 'application/x-shockwave-flash'
     class_title = u'Flash'
     class_description = u'Document Flash'
-    class_icon48 = 'images/Flash48.png'
     class_icon16 = 'images/Flash16.png'
+    class_icon48 = 'images/Flash48.png'
 
 
     view__label__ = u'View'
@@ -235,10 +235,6 @@ class ODP(File):
 ###########################################################################
 class Archive(File):
 
-    class_icon16 = 'images/Archive16.png'
-    class_icon48 = 'images/Archive48.png'
-
-
     view__access__ = 'is_allowed_to_view'
     view__label__ = u'View'
     view__sublabel__ = u'View'
@@ -256,6 +252,8 @@ class ZipArchive(Archive):
 
     class_id = 'application/zip'
     class_title = u"Zip Archive"
+    class_icon16 = 'images/Zip16.png'
+    class_icon48 = 'images/Zip48.png'
 
 
 
@@ -263,6 +261,8 @@ class TarArchive(Archive):
 
     class_id = 'application/x-tar'
     class_title = u"Tar Archive"
+    class_icon16 = 'images/Tar16.png'
+    class_icon48 = 'images/Tar48.png'
 
 
 ###########################################################################
@@ -270,21 +270,28 @@ class TarArchive(Archive):
 ###########################################################################
 
 class Compression(File):
+    # TODO API?
+    pass
 
-    class_icon16 = 'images/Archive16.png'
-    class_icon48 = 'images/Archive48.png'
 
 
 class Gzip(Compression):
 
     class_id = 'application/x-gzip'
     class_title = u"Gzip"
+    class_icon16 = 'images/Gzip16.png'
+    class_icon48 = 'images/Gzip48.png'
+
+
 
 
 class Bzip2(Compression):
 
     class_id = 'application/x-bzip2'
     class_title = u"Bzip2"
+    class_icon16 = 'images/Bzip16.png'
+    class_icon48 = 'images/Bzip48.png'
+
 
 ###########################################################################
 # Register
@@ -298,13 +305,13 @@ register_object_class(MSPowerPoint)
 register_object_class(PDF)
 register_object_class(RTF)
 # OpenOffice.org1.0 Format
-register_object_class(OOWriter, 'application/vnd.sun.xml.writer')
-register_object_class(OOCalc, 'application/vnd.sun.xml.calc')
-register_object_class(OOImpress, 'application/vnd.sun.xml.impress')
+register_object_class(OOWriter)
+register_object_class(OOCalc)
+register_object_class(OOImpress)
 # OpenOffice.org2.0 Format (ODF)
-register_object_class(ODT, 'application/vnd.oasis.opendocument.text')
-register_object_class(ODS, 'application/vnd.oasis.opendocument.spreadsheet')
-register_object_class(ODP, 'application/vnd.oasis.opendocument.presentation')
+register_object_class(ODT)
+register_object_class(ODS)
+register_object_class(ODP)
 # Archives
 register_object_class(ZipArchive)
 register_object_class(TarArchive)
