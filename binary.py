@@ -103,7 +103,7 @@ class Flash(File):
 
     class_id = 'application/x-shockwave-flash'
     class_title = u'Flash'
-    class_description = u'Document Flash'
+    class_description = u'Flash Document'
     class_icon16 = 'images/Flash16.png'
     class_icon48 = 'images/Flash48.png'
 
@@ -123,7 +123,7 @@ class MSWord(File):
 
     class_id = 'application/msword'
     class_title = u'Word'
-    class_description = u'Document Word'
+    class_description = u'Word Text'
     class_icon16 = 'images/Word16.png'
     class_icon48 = 'images/Word48.png'
 
@@ -133,7 +133,7 @@ class MSExcel(File):
 
     class_id = 'application/vnd.ms-excel'
     class_title = u'Excel'
-    class_description = u'Document Excel'
+    class_description = u'Excel Spreadsheet'
     class_icon16 = 'images/Excel16.png'
     class_icon48 = 'images/Excel48.png'
 
@@ -143,7 +143,7 @@ class MSPowerPoint(File):
 
     class_id = 'application/vnd.ms-powerpoint'
     class_title = u'PowerPoint'
-    class_description = u'Document PowerPoint'
+    class_description = u'PowerPoint Presentation'
     class_icon16 = 'images/PowerPoint16.png'
     class_icon48 = 'images/PowerPoint48.png'
 
@@ -153,7 +153,7 @@ class OOWriter(File):
 
     class_id = 'application/vnd.sun.xml.writer'
     class_title = u'OOo Writer'
-    class_description = u'OpenOffice.org Document'
+    class_description = u'OpenOffice.org Text'
     class_icon16 = 'images/OOWriter16.png'
     class_icon48 = 'images/OOWriter48.png'
 
@@ -204,7 +204,7 @@ class ODT(File):
 
     class_id ='application/vnd.oasis.opendocument.text'
     class_title = u'ODT'
-    class_description = u'ODT Document'
+    class_description = u'OpenDocument Text'
     class_icon16 = 'images/Odt16.png'
     class_icon48 = 'images/Odt48.png'
 
@@ -214,7 +214,7 @@ class ODS(File):
 
     class_id ='application/vnd.oasis.opendocument.spreadsheet'
     class_title = u'ODS'
-    class_description = u'ODS Document'
+    class_description = u'OpenDocument Spreadsheet'
     class_icon16 = 'images/Ods16.png'
     class_icon48 = 'images/Ods48.png'
 
@@ -224,7 +224,7 @@ class ODP(File):
 
     class_id ='application/vnd.oasis.opendocument.presentation'
     class_title = u'ODP'
-    class_description = u'ODP Document'
+    class_description = u'OpenDocument Presentation'
     class_icon16 = 'images/Odp16.png'
     class_icon48 = 'images/Odp48.png'
 
@@ -251,7 +251,8 @@ class Archive(File):
 class ZipArchive(Archive):
 
     class_id = 'application/zip'
-    class_title = u"Zip Archive"
+    class_title = u"Zip"
+    class_description = u"Zip Archive"
     class_icon16 = 'images/Zip16.png'
     class_icon48 = 'images/Zip48.png'
 
@@ -260,7 +261,8 @@ class ZipArchive(Archive):
 class TarArchive(Archive):
 
     class_id = 'application/x-tar'
-    class_title = u"Tar Archive"
+    class_title = u"Tar"
+    class_description = u"Tar Archive"
     class_icon16 = 'images/Tar16.png'
     class_icon48 = 'images/Tar48.png'
 
@@ -279,6 +281,7 @@ class Gzip(Compression):
 
     class_id = 'application/x-gzip'
     class_title = u"Gzip"
+    class_description = u"Gzip Compressed"
     class_icon16 = 'images/Gzip16.png'
     class_icon48 = 'images/Gzip48.png'
 
@@ -289,6 +292,7 @@ class Bzip2(Compression):
 
     class_id = 'application/x-bzip2'
     class_title = u"Bzip2"
+    class_description = u"Bzip2 Compressed"
     class_icon16 = 'images/Bzip16.png'
     class_icon48 = 'images/Bzip48.png'
 
