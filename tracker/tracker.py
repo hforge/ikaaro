@@ -30,7 +30,7 @@ from itools.i18n import format_datetime
 from itools.handlers import Config
 from itools.rest import checkid
 from itools.csv import IntegerKey, CSVFile
-from itools.xml import Parser
+from itools.xml import XMLParser
 from itools.stl import stl
 from itools.uri import encode_query, Reference, Path
 
@@ -840,7 +840,7 @@ class SelectTable(CSV):
                 value = '<a href="../;view?%s=%s">%s issues</a>'
                 if count == 1:
                     value = '<a href="../;view?%s=%s">%s issue</a>'
-                value = Parser(value % (filter, index, count))
+                value = XMLParser(value % (filter, index, count))
             rows[-1]['issues'] = value
             index += 1
 
@@ -1188,7 +1188,7 @@ class Issue(Folder, VersioningAware):
                     line = sub('http://(.\S*)', r'<a href="http://\1">\1</a>',
                                line)
                     res.append(line)
-        return Parser('\n'.join(res))
+        return XMLParser('\n'.join(res))
 
 
     #######################################################################
@@ -1310,7 +1310,7 @@ class Issue(Folder, VersioningAware):
             usertitle = (user_exist and
                          users.get_object(username).get_title() or username)
             comment = XML.encode(Unicode.encode(comment))
-            comment = Parser(comment.replace('\n', '<br />'))
+            comment = XMLParser(comment.replace('\n', '<br />'))
             i += 1
             row_ns = {'number': i,
                       'user': usertitle,

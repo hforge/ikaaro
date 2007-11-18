@@ -36,7 +36,7 @@ from itools.stl import stl
 from itools.uri import Path
 from itools import vfs
 from itools.web import get_context
-from itools.xml import Parser
+from itools.xml import XMLParser
 
 
 # Import from itools.cms
@@ -114,12 +114,12 @@ class Root(WebSite):
         # If there is not content type and the body is not None,
         # wrap it in the skin template
         if context.response.has_header('Content-Type'):
-            if isinstance(body, (list, GeneratorType, Parser)):
+            if isinstance(body, (list, GeneratorType, XMLParser)):
                 body = stream_to_str_as_html(body)
             return body
 
         if isinstance(body, str):
-            body = Parser(body)
+            body = XMLParser(body)
         return self.get_skin().template(body)
 
 

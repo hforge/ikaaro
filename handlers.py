@@ -22,10 +22,11 @@ from time import time
 
 # Import from itools
 from itools.datatypes import (DateTime, QName, String, Unicode,
-                              XML as XMLDataType)
+    XML as XMLDataType)
 from itools.schemas import get_schema_by_uri, get_schema, get_datatype
 from itools.handlers import File, Text, register_handler_class
-from itools.xml import XMLNamespace, Parser, START_ELEMENT, END_ELEMENT, TEXT
+from itools.xml import (XMLNamespace, XMLParser, START_ELEMENT, END_ELEMENT,
+    TEXT)
 from itools.web import get_context
 from metadata import Record
 
@@ -94,7 +95,7 @@ class Metadata(File):
         p_language = None
         p_value = ''
         stack = []
-        for event, value, line_number in Parser(file.read()):
+        for event, value, line_number in XMLParser(file.read()):
             if event == START_ELEMENT:
                 namespace_uri, local_name, attributes = value
                 if local_name == 'metadata':

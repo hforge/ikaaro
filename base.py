@@ -24,7 +24,6 @@ from datetime import datetime
 from itools.uri import Path, get_reference
 from itools import vfs
 from itools.catalog import CatalogAware
-from itools.handlers import Handler as BaseHandler
 from itools.i18n import get_language_name
 from itools.schemas import get_datatype
 from itools.stl import stl

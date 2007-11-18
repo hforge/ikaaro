@@ -22,7 +22,7 @@ from HTMLParser import HTMLParseError
 
 # Import from itools
 from itools.datatypes import DateTime
-from itools.html import XHTMLFile, sanitize_stream, Parser as HTMLParser
+from itools.html import XHTMLFile, sanitize_stream, HTMLParser
 from itools.stl import stl
 from itools.uri import Path
 from itools.xml import TEXT, START_ELEMENT

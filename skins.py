@@ -29,7 +29,7 @@ from itools.datatypes import URI
 from itools.handlers import File, Folder, Database
 from itools.stl import stl
 from itools.web import get_context, AccessControl
-from itools.xml import Parser, XMLFile
+from itools.xml import XMLParser, XMLFile
 
 # Import from itools.cms
 from base import Node
@@ -455,7 +455,7 @@ class Skin(UIFolder):
         """Return a message string from de request."""
         if context.has_form_value('message'):
             message = context.get_form_value('message')
-            return Parser(message)
+            return XMLParser(message)
         return None
 
 

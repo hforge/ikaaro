@@ -19,7 +19,7 @@
 import datetime
 
 # Import from itools
-from itools.workflow import Workflow, WorkflowAware as iWorkflowAware
+from itools.workflow import Workflow, WorkflowAware as BaseWorkflowAware
 from itools.stl import stl
 
 
@@ -54,7 +54,7 @@ workflow.set_initstate('private')
 
 
 
-class WorkflowAware(iWorkflowAware):
+class WorkflowAware(BaseWorkflowAware):
 
     workflow = workflow
 

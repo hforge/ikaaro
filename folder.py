@@ -34,7 +34,7 @@ from itools.handlers import get_handler_class, Folder as FolderHandler
 from itools.rest import checkid
 from itools.stl import stl
 from itools.web import get_context
-from itools.xml import Parser
+from itools.xml import XMLParser
 
 # Import from itools.cms
 from base import DBObject
@@ -314,7 +314,7 @@ class Folder(DBObject):
             state = ('<a href="%s/;state_form" class="workflow">'
                      '<strong class="wf_%s">%s</strong>'
                      '</a>') % (object.name, statename, msg)
-            line['workflow_state'] = Parser(state)
+            line['workflow_state'] = XMLParser(state)
         # Objects that should not be removed/renamed/etc
         line['checkbox'] = object.name not in self.__fixed_handlers__
 
@@ -812,7 +812,7 @@ class Folder(DBObject):
                 except LookupError:
                     user_title = username
             else:
-                user_title = Parser('<em>Unavailable</em>')
+                user_title = XMLParser('<em>Unavailable</em>')
             line['last_author'] = user_title
             lines.append(line)
 

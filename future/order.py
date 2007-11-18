@@ -18,7 +18,7 @@
 
 # Import from itools
 from itools.stl import stl
-from itools.xml import Parser
+from itools.xml import XMLParser
 
 # Import from ikaaro
 from ikaaro.workflow import WorkflowAware
@@ -114,7 +114,7 @@ class OrderAware(object):
                     state = ('<a href="%s/;state_form" class="workflow">'
                              '<strong class="wf_%s">%s</strong>'
                              '</a>') % (folder.name, statename, msg)
-                    ns['workflow_state'] = Parser(state)
+                    ns['workflow_state'] = XMLParser(state)
 
                 l.append(ns)
         namespace['ordered_folders'] = ordered_folders

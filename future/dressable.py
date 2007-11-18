@@ -23,12 +23,12 @@ from HTMLParser import HTMLParseError
 # Import from itools
 from itools.datatypes import is_datatype, DateTime
 from itools.handlers import Image
-from itools.html import XHTMLFile, Parser as HTMLParser
+from itools.html import XHTMLFile, HTMLParser
 from itools.rest import checkid
 from itools.stl import stl, set_prefix
 from itools.uri import Path
 from itools.web import get_context
-from itools.xml import Parser
+from itools.xml import XMLParser
 
 
 # Import from ikaaro
@@ -57,7 +57,7 @@ class Dressable(Folder, EpozEditable):
               'browse_folder': 'browse_folder',
               'browse_file': 'browse_file'}
 
-    browse_template = list(Parser("""
+    browse_template = list(XMLParser("""
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://xml.itools.org/namespaces/stl">
   <h2>${title}</h2>
@@ -99,7 +99,7 @@ class Dressable(Folder, EpozEditable):
         here = context.handler
         path = here.get_pathto(handler)
         content = '<img src="%s"/>' % path
-        return Parser(content)
+        return XMLParser(content)
 
 
     def _get_document(self, context, handler):

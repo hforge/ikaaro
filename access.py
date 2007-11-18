@@ -20,14 +20,14 @@
 # Import from itools
 from itools.uri import get_reference
 from itools.datatypes import Email, Integer, Unicode
-from itools.web import AccessControl as AccessControlBase
+from itools.web import AccessControl as BaseAccessControl
 from itools.stl import stl
 from messages import *
 from utils import generate_password
 import widgets
 
 
-class AccessControl(AccessControlBase):
+class AccessControl(BaseAccessControl):
 
     def is_admin(self, user, object):
         if user is None:

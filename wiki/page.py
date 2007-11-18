@@ -35,7 +35,7 @@ from itools import vfs
 from itools.stl import stl
 from itools.datatypes import Unicode, FileName
 from itools.rest import checkid
-from itools.xml import Parser
+from itools.xml import XMLParser
 
 # Import from ikaaro
 from ikaaro.base import DBObject
@@ -425,7 +425,7 @@ class WikiPage(Text):
                 settings_overrides=self.overrides)
 
         namespace['help_source'] = source
-        namespace['help_html'] = Parser(html)
+        namespace['help_html'] = XMLParser(html)
 
         handler = self.get_object('/ui/wiki/WikiPage_help.xml')
         return stl(handler, namespace)

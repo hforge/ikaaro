@@ -27,7 +27,7 @@ from itools.uri import Path
 from itools.datatypes import (XMLAttribute, is_datatype, Integer, Decimal,
                               Unicode, Date, Enumerate, Boolean)
 from itools.handlers import Folder, Image
-from itools.xml import Parser
+from itools.xml import XMLParser
 from itools.stl import stl
 from itools.web import get_context
 
@@ -112,7 +112,7 @@ def batch(uri, start, size, total, gettext=DBObject.gettext,
         msg = '%s %s' % (msg1, msg2)
 
     # Wrap around a paragraph
-    return Parser('<p class="batchcontrol">%s</p>' % msg, namespaces)
+    return XMLParser('<p class="batchcontrol">%s</p>' % msg, namespaces)
 
 
 
@@ -160,13 +160,13 @@ def table_head(columns, sortby, sortorder, gettext=lambda x: x):
     # Go
     return columns_
 
-table_with_form_template = list(Parser("""
+table_with_form_template = list(XMLParser("""
 <form action="." method="post" id="browse_list" name="browse_list">
   ${table}
 </form>
 """, namespaces))
 
-table_template = list(Parser("""
+table_template = list(XMLParser("""
 <table>
   <thead stl:if="columns">
     <tr>
@@ -375,7 +375,7 @@ class Breadcrumb(object):
 ###########################################################################
 # Menu
 ###########################################################################
-menu_template = list(Parser("""
+menu_template = list(XMLParser("""
 <dl>
 <stl:block repeat="item items">
   <dt class="${item/class}">
@@ -511,7 +511,7 @@ def get_default_widget(datatype):
 
 class Widget(object):
 
-    template = list(Parser(
+    template = list(XMLParser(
         """<input type="text" name="${name}" value="${value}" />""",
         namespaces))
 
@@ -533,7 +533,7 @@ class TextWidget(Widget):
 
 class ReadOnlyWidget(Widget):
 
-    template = list(Parser(
+    template = list(XMLParser(
         """
         <stl:block xmlns="http://www.w3.org/1999/xhtml"
                    xmlns:stl="http://xml.itools.org/namespaces/stl">
@@ -556,7 +556,7 @@ class ReadOnlyWidget(Widget):
 
 class MultilineWidget(Widget):
 
-    template = list(Parser(
+    template = list(XMLParser(
         """<textarea rows="5" cols="25" name="${name}">${value}</textarea>""",
         namespaces))
 
@@ -575,7 +575,7 @@ class MultilineWidget(Widget):
 
 class CheckBoxWidget(Widget):
 
-    template = list(Parser("""
+    template = list(XMLParser("""
         <input type="checkbox" name="${name}" value="${value}"
           checked="${is_selected}" />
         """, namespaces))
@@ -593,7 +593,7 @@ class CheckBoxWidget(Widget):
 
 class BooleanCheckBox(Widget):
 
-    template = list(Parser("""
+    template = list(XMLParser("""
         <input type="checkbox" name="${name}" value="1"
           checked="${is_selected}" />
         """, namespaces))
@@ -610,7 +610,7 @@ class BooleanCheckBox(Widget):
 
 class BooleanRadio(Widget):
 
-    template = list(Parser("""
+    template = list(XMLParser("""
         <label for="${name}_yes">${labels/yes}</label>
         <input id="${name}_yes" name="${name}" type="radio" value="1"
           checked="checked" stl:if="is_yes"/>
@@ -637,7 +637,7 @@ class BooleanRadio(Widget):
 
 class Select(Widget):
 
-    template = list(Parser("""
+    template = list(XMLParser("""
         <select name="${name}" style="width: 200px" multiple="${multiple}">
           <option value=""></option>
           <option stl:repeat="option options" value="${option/name}"
@@ -657,7 +657,7 @@ class Select(Widget):
 
 class SelectRadio(Widget):
 
-    template_simple = list(Parser("""
+    template_simple = list(XMLParser("""
         <input type="radio" name="${name}" value="" checked="checked"
           stl:if="none_selected"/>
         <input type="radio" name="${name}" value=""
@@ -673,7 +673,7 @@ class SelectRadio(Widget):
         </stl:block>
         """, namespaces))
 
-    template_multiple = list(Parser("""
+    template_multiple = list(XMLParser("""
         <stl:block stl:repeat="option options">
           <input type="checkbox" name="${name}" id="${name}_${option/name}"
             value="${option/name}" checked="${option/selected}" />
@@ -702,7 +702,7 @@ class SelectRadio(Widget):
 
 class DateWidget(Widget):
 
-    template_simple = list(Parser("""
+    template_simple = list(XMLParser("""
         <input type="text" name="${name}" value="${value}" id="${name}" />
         <input id="trigger_date" type="button" value="..."
           name="trigger_date"/>
@@ -712,7 +712,7 @@ class DateWidget(Widget):
         </script>
         """, namespaces))
 
-    template_multiple = list(Parser("""
+    template_multiple = list(XMLParser("""
         <table class="table_calendar">
           <tr>
             <td>

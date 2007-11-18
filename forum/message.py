@@ -17,9 +17,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.xml import Parser
-from itools.html import (Parser as HTMLParser, sanitize_stream, xhtml_uri,
-    XHTMLFile)
+from itools.xml import XMLParser
+from itools.html import HTMLParser, sanitize_stream, xhtml_uri, XHTMLFile
 
 # Import from ikaaro
 from ikaaro.messages import MSG_CHANGES_SAVED
@@ -57,7 +56,7 @@ class Message(WebPage):
 
     def _load_state_from_file(self, file):
         data = file.read()
-        stream = Parser(data, {None: xhtml_uri})
+        stream = XMLParser(data, {None: xhtml_uri})
         self.events = list(stream)
 
 
