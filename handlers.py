@@ -24,7 +24,7 @@ from time import time
 from itools.datatypes import (DateTime, QName, String, Unicode,
     XML as XMLDataType)
 from itools.schemas import get_schema_by_uri, get_schema, get_datatype
-from itools.handlers import File, Text, register_handler_class
+from itools.handlers import File, TextFile, register_handler_class
 from itools.xml import (XMLNamespace, XMLParser, START_ELEMENT, END_ELEMENT,
     TEXT)
 from itools.web import get_context
@@ -32,7 +32,7 @@ from metadata import Record
 
 
 
-class Lock(Text):
+class Lock(TextFile):
 
     class_mimetypes = ['text/x-lock']
     class_extension = 'lock'

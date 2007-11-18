@@ -27,7 +27,7 @@ from re import sub
 # Import from itools
 from itools.datatypes import Boolean, DateTime, Integer, String, Unicode, XML
 from itools.i18n import format_datetime
-from itools.handlers import Config
+from itools.handlers import ConfigFile
 from itools.rest import checkid
 from itools.csv import IntegerKey, CSVFile
 from itools.xml import XMLParser
@@ -114,9 +114,9 @@ class Tracker(Folder):
             metadata = SelectTable.build_metadata()
             folder.set_handler('%s/%s.metadata' % (name, table_name), metadata)
         # Pre-defined stored searches
-        open = Config(state=0)
-        not_assigned = Config(assigned_to='nobody')
-        high_priority = Config(state=0, priority=0)
+        open = ConfigFile(state=0)
+        not_assigned = ConfigFile(assigned_to='nobody')
+        high_priority = ConfigFile(state=0, priority=0)
         i = 0
         for search, title in [(open, u'Open Issues'),
                               (not_assigned, u'Not Assigned'),

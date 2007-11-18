@@ -30,7 +30,7 @@ from itools import get_abspath
 from itools.catalog import (make_catalog, CatalogAware, TextField,
     KeywordField, IntegerField, BoolField)
 from itools.datatypes import FileName
-from itools.handlers import Folder as FolderHandler, Config
+from itools.handlers import Folder as FolderHandler, ConfigFile
 from itools.html import stream_to_str_as_html
 from itools.stl import stl
 from itools.uri import Path
@@ -53,7 +53,7 @@ from utils import crypt_password
 
 # itools source and target languages
 config = get_abspath(globals(), 'setup.conf')
-config = Config(config)
+config = ConfigFile(config)
 itools_source_language = config.get_value('source_language')
 itools_target_languages = config.get_value('target_languages')
 
@@ -263,7 +263,7 @@ class Root(WebSite):
         if cls is not Root:
             exec('import %s as pkg' % cls.__module__.split('.', 1)[0])
             config = Path(pkg.__path__[0]).resolve2('setup.conf')
-            config = Config(str(config))
+            config = ConfigFile(str(config))
             source = config.get_value('source_language', default=source)
             target = config.get_value('target_languages', default=target)
 

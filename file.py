@@ -23,7 +23,7 @@ import mimetypes
 
 # Import from itools
 from itools.datatypes import FileName
-from itools.handlers import File as FileHandler, Text
+from itools.handlers import File as FileHandler, TextFile
 from itools.i18n import guess_language
 from itools.rest import checkid
 from itools.stl import stl
@@ -101,7 +101,7 @@ class File(WorkflowAware, VersioningAware, DBObject):
         if mimetype.startswith('text/'):
             short_name, type, language = FileName.decode(name)
             if language is None:
-                encoding = Text.guess_encoding(body)
+                encoding = TextFile.guess_encoding(body)
                 data = unicode(body, encoding)
                 language = guess_language(data)
                 # Rebuild the name

@@ -25,7 +25,7 @@ from tempfile import mkstemp
 from itools.uri import get_absolute_reference2
 from itools import vfs
 from itools.catalog import Catalog
-from itools.handlers import Config, Database
+from itools.handlers import ConfigFile, Database
 from itools.web import Server as BaseServer
 from handlers import Metadata
 import registry
@@ -44,7 +44,7 @@ def ask_confirmation(message):
 
 
 def get_config(target):
-    return Config('%s/config.conf' % target)
+    return ConfigFile('%s/config.conf' % target)
 
 
 

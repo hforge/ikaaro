@@ -24,7 +24,7 @@ import sys
 # Import from itools
 import itools
 from itools.catalog import make_catalog, CatalogAware
-from itools.handlers import Config, Database, get_handler
+from itools.handlers import ConfigFile, Database, get_handler
 from itools.uri import get_absolute_reference
 
 # Import from ikaaro
@@ -39,7 +39,7 @@ def init(parser, options, target):
         parser.error('can not create the instance (check permissions)')
 
     # Create the config file
-    config = Config()
+    config = ConfigFile()
     # The modules
     comment = [
         'The variable "modules" lists the Python modules or packages that',
