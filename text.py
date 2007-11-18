@@ -21,13 +21,15 @@ import cgi
 # Import from itools
 from itools.stl import stl
 from itools import rest
+from itools.gettext import PO as POHandler
 
-# Import from itools.cms
+# Import from ikaaro
 from base import DBObject
 from utils import get_parameters
 from file import File
-from messages import *
+from messages import MSG_CHANGES_SAVED
 from registry import register_object_class
+from catalog import schedule_to_reindex
 
 
 class Text(File):
@@ -142,6 +144,7 @@ class PO(Text):
     class_title = u'Message Catalog'
     class_icon16 = 'images/Po16.png'
     class_icon48 = 'images/Po48.png'
+    class_handler = POHandler
 
 
     #######################################################################
@@ -156,9 +159,10 @@ class PO(Text):
     edit_form__sublabel__ = u'Inline'
     def edit_form(self, context):
         namespace = {}
+        handler = self.handler
 
         # Get the messages, all but the header
-        msgids = [ x for x in self.get_msgids() if x.strip() ]
+        msgids = [ x for x in handler.get_msgids() if x.strip() ]
 
         # Set total
         total = len(msgids)
@@ -172,19 +176,23 @@ class PO(Text):
 
         # Set first, last, previous and next
         uri = context.uri
-        namespace['messages_first'] = uri.replace(messages_index=1)
-        namespace['messages_last'] = uri.replace(messages_index=total)
+        messages_first = uri.replace(messages_index='1')
+        namespace['messages_first'] = messages_first
+        messages_last = uri.replace(messages_index=str(total))
+        namespace['messages_last'] = messages_last
         previous = max(index - 1, 1)
-        namespace['messages_previous'] = uri.replace(messages_index=previous)
+        messages_previous = uri.replace(messages_index=str(previous))
+        namespace['messages_previous'] = messages_previous
         next = min(index + 1, total)
-        namespace['messages_next'] = uri.replace(messages_index=next)
+        messages_next = uri.replace(messages_index=str(next))
+        namespace['messages_next'] = messages_next
 
         # Set msgid and msgstr
         if msgids:
             msgids.sort()
             msgid = msgids[index-1]
             namespace['msgid'] = cgi.escape(msgid)
-            msgstr = self.get_msgstr(msgid)
+            msgstr = handler.get_msgstr(msgid)
             msgstr = cgi.escape(msgstr)
             namespace['msgstr'] = msgstr
         else:
@@ -200,11 +208,11 @@ class PO(Text):
         msgstr = context.get_form_value('msgstr')
         messages_index = context.get_form_value('messages_index')
 
-        self.set_changed()
         msgid = msgid.replace('\r', '')
         msgstr = msgstr.replace('\r', '')
-##        self.set_message(msgid, msgstr)
-        self._messages[msgid].msgstr = msgstr
+        handler = self.handler
+        handler.set_message(msgid, msgstr)
+        schedule_to_reindex(self)
 
         return context.come_back(MSG_CHANGES_SAVED)
 
