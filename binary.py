@@ -19,7 +19,7 @@
 # Import from itools
 from itools.pdf import PDFFile
 from itools.stl import stl
-from itools.handlers import Image as ImageHandler
+from itools.handlers import Image as ImageFile
 
 # Import from ikaaro
 from file import File
@@ -40,7 +40,7 @@ class Image(File):
                    ['edit_metadata_form'],
                    ['state_form'],
                    ['history_form']]
-    class_handler = ImageHandler
+    class_handler = ImageFile
 
 
     # XXX Temporal, until icon's API is fixed

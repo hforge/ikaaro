@@ -21,7 +21,7 @@ import cgi
 # Import from itools
 from itools.stl import stl
 from itools import rest
-from itools.gettext import PO as POHandler
+from itools.gettext import POFile
 
 # Import from ikaaro
 from base import DBObject
@@ -145,7 +145,7 @@ class PO(Text):
     class_title = u'Message Catalog'
     class_icon16 = 'images/Po16.png'
     class_icon48 = 'images/Po48.png'
-    class_handler = POHandler
+    class_handler = POFile
 
 
     #######################################################################
