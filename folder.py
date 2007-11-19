@@ -741,7 +741,7 @@ class Folder(DBObject):
         # Type choosen
         if type is not None:
             cls = get_object_class(type)
-            return cls.new_instance_form(context)
+            return cls.new_instance_form(cls, context)
 
         # Choose a type
         namespace = {}
@@ -762,7 +762,7 @@ class Folder(DBObject):
     def new_resource(self, context):
         class_id = context.get_form_value('class_id')
         cls = get_object_class(class_id)
-        return cls.new_instance(self, context)
+        return cls.new_instance(cls, self, context)
 
 
     #######################################################################
