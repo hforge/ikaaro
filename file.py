@@ -113,7 +113,7 @@ class File(WorkflowAware, VersioningAware, DBObject):
 
         # Build the object
         cls = get_object_class(mimetype)
-        object = cls.make_object(container, name, body)
+        object = cls.make_object(cls, container, name, body)
 
         goto = './%s/;%s' % (name, object.get_firstview())
         return context.come_back(MSG_NEW_RESOURCE, goto=goto)
