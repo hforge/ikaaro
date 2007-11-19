@@ -70,9 +70,9 @@ class WikiPage(Text):
     #######################################################################
     # User interface
     #######################################################################
-    @classmethod
+    @staticmethod
     def new_instance_form(cls, context):
-        return DBObject.new_instance_form.im_func(cls, context)
+        return DBObject.new_instance_form(cls, context)
 
 
     GET__mtime__ = None

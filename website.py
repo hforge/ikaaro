@@ -27,6 +27,9 @@ from itools.datatypes import Email, Integer, Unicode
 from itools.i18n import get_language_name, get_languages
 from itools.catalog import EqQuery, OrQuery, AndQuery, TextField
 from itools.stl import stl
+from itools.rest import checkid
+
+# Import from ikaaro
 from folder import Folder
 from skins import Skin
 from access import RoleAware
@@ -37,7 +40,6 @@ from skins import ui
 from registry import (register_object_class, register_website,
     get_register_websites, get_website_class)
 from utils import generate_password
-from itools.rest import checkid
 
 
 class WebSite(RoleAware, Folder):
@@ -77,7 +79,7 @@ class WebSite(RoleAware, Folder):
         return Folder._get_object(self, name)
 
 
-    @classmethod
+    @staticmethod
     def new_instance_form(cls, context):
         namespace = {}
         namespace['websites'] = []
@@ -101,7 +103,7 @@ class WebSite(RoleAware, Folder):
         return stl(handler, namespace)
 
 
-    @classmethod
+    @staticmethod
     def new_instance(cls, container, context):
         name = context.get_form_value('name')
         title = context.get_form_value('dc:title')

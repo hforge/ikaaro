@@ -65,7 +65,7 @@ class File(WorkflowAware, VersioningAware, DBObject):
             folder.set_handler(name, handler)
 
 
-    @classmethod
+    @staticmethod
     def new_instance_form(cls, context):
         namespace = {}
         namespace['class_id'] = cls.class_id
@@ -73,7 +73,7 @@ class File(WorkflowAware, VersioningAware, DBObject):
         return stl(handler, namespace)
 
 
-    @classmethod
+    @staticmethod
     def new_instance(cls, container, context):
         # Check input data
         file = context.get_form_value('file')

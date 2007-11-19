@@ -64,14 +64,15 @@ class Table(File):
     # User Interface
     #########################################################################
 
-    @classmethod
+    @staticmethod
     def new_instance_form(cls, context):
-        return DBObject.new_instance_form.im_func(cls, context)
+        # Use the default form
+        return DBObject.new_instance_form(cls, context)
 
 
-    @classmethod
+    @staticmethod
     def new_instance(cls, container, context):
-        return DBObject.new_instance.im_func(cls, container, context)
+        return DBObject.new_instance(cls, container, context)
 
 
     def get_fields(self):

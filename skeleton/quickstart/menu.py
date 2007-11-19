@@ -45,7 +45,7 @@ class Link(File):
 
     @classmethod
     def new_instance_form(cls, context):
-        # Use the default form without language
+        # Use the default form
         return Handler.new_instance_form.im_func(cls, context)
 
 

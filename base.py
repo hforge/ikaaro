@@ -527,7 +527,7 @@ class DBObject(CatalogAware, Node, DomainAware):
     ########################################################################
     # User interface
     ########################################################################
-    @classmethod
+    @staticmethod
     def new_instance_form(cls, context):
         root = context.root
         # Build the namespace
@@ -542,7 +542,7 @@ class DBObject(CatalogAware, Node, DomainAware):
         return stl(handler, namespace)
 
 
-    @classmethod
+    @staticmethod
     def new_instance(cls, container, context):
         name = context.get_form_value('name')
         title = context.get_form_value('dc:title')
@@ -731,7 +731,7 @@ class DBObject(CatalogAware, Node, DomainAware):
         # Get the container
         container = root.get_object(context.get_form_value('target_path'))
         # Add the image to the object
-        uri = Image.new_instance(container, context)
+        uri = Image.new_instance(Image, container, context)
         if ';addimage_form' not in uri.path:
             object = container.get_object(uri.path[0])
             return """
@@ -778,7 +778,7 @@ class DBObject(CatalogAware, Node, DomainAware):
         # Add the image to the object
         class_id = context.get_form_value('type')
         cls = get_object_class(class_id)
-        uri = cls.new_instance(container, context)
+        uri = cls.new_instance(cls, container, context)
         if ';addlink_form' not in uri.path:
             object = container.get_object(uri.path[0])
             return """

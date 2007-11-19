@@ -1105,11 +1105,6 @@ class Calendar(Text, CalendarView):
     download_form__sublabel__ = u'Export in ical format'
 
 
-    @classmethod
-    def new_instance_form(cls, context):
-        return DBObject.new_instance_form.im_func(cls, context)
-
-
     GET__mtime__ = None
     def GET(self, context):
         return DBObject.GET(self, context)
