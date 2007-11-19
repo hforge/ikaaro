@@ -1115,7 +1115,7 @@ class Calendar(Text, CalendarView):
     text_view__label__ = u'Text view'
     text_view__sublabel__ = u'Text view'
     def text_view(self, context):
-        return '<pre>%s</pre>' % self.to_str()
+        return '<pre>%s</pre>' % self.handler.to_str()
 
 
     remove__access__ = 'is_allowed_to_edit'
@@ -1354,7 +1354,8 @@ class CalendarTable(Table, CalendarView):
         except:
             message = (u'Upload failed: either the file does not match this'
                        u' document type ($mimetype) or it contains errors.')
-            return context.come_back(message, mimetype=self.get_mimetype())
+            mimetype=self.handler.get_mimetype()
+            return context.come_back(message, mimetype=mimetype)
 
         return context.come_back(u'Version uploaded.')
 

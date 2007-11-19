@@ -209,7 +209,7 @@ class File(WorkflowAware, VersioningAware, DBObject):
         uri = get_reference(uri_string)
         r = ['url:%s' % str(uri),
              'meta_type:toto', # XXX Maybe something more meaningful than toto?
-             'content_type:%s' % self.get_mimetype(),
+             'content_type:%s' % self.handler.get_mimetype(),
              'cookie:%s' % request.get_cookies_as_str()]
 
         title = self.get_property('dc:title')
@@ -249,9 +249,9 @@ class File(WorkflowAware, VersioningAware, DBObject):
 
         # Encoding
         if encoding is None:
-            r.append(self.to_str())
+            r.append(self.handler.to_str())
         else:
-            r.append(self.to_str(encoding))
+            r.append(self.handler.to_str(encoding))
 
         data = '\n'.join(r)
 
@@ -284,7 +284,7 @@ class File(WorkflowAware, VersioningAware, DBObject):
             self.handler.load_state()
             message = (u'Upload failed: either the file does not match this'
                        u' document type ($mimetype) or it contains errors.')
-            return context.come_back(message, mimetype=self.get_mimetype())
+            return context.come_back(message, mimetype=self.handler.get_mimetype())
 
         return context.come_back(u'Version uploaded.')
 

@@ -220,7 +220,7 @@ class WikiPage(Text):
             unknown_reference_resolvers = [wiki_reference_resolver]
 
         reader = WikiReader(parser_name='restructuredtext')
-        document = core.publish_doctree(self.to_str(), reader=reader,
+        document = core.publish_doctree(self.handler.to_str(), reader=reader,
                 settings_overrides=self.overrides)
 
         # Fix the wiki links
@@ -249,7 +249,7 @@ class WikiPage(Text):
             elif not isinstance(page, WikiPage):
                 # Link to file
                 continue
-            source = page.to_str()
+            source = page.handler.to_str()
             subdoc = core.publish_doctree(source,
                     settings_overrides=self.overrides)
             if isinstance(subdoc[0], nodes.section):
@@ -419,7 +419,7 @@ class WikiPage(Text):
         namespace = {}
 
         source = self.get_object('/ui/wiki/help.txt')
-        source = source.to_str()
+        source = source.handler.to_str()
         html = core.publish_string(source, writer_name='html',
                 settings_overrides=self.overrides)
 

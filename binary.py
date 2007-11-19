@@ -57,7 +57,8 @@ class Image(File):
         handler = self.handler
         data, format = handler.get_thumbnail(width, height)
         if data is None:
-            data = self.get_object('/ui/images/Image48.png').to_str()
+            object = self.get_object('/ui/images/Image48.png')
+            data = object.handler.to_str()
             format = 'png'
 
         response = context.response
@@ -88,7 +89,7 @@ class Video(File):
     view__sublabel__ = u'View'
     def view(self, context):
         namespace = {}
-        namespace['format'] = self.get_mimetype()
+        namespace['format'] = self.handler.get_mimetype()
 
         handler = self.get_object('/ui/binary/Video_view.xml')
         return stl(handler, namespace)
@@ -98,7 +99,7 @@ class Video(File):
         # XXX For some reason when uploading a WMV file with firefox the
         # file is identified as "video/x-msvideo". But IE does not understand
         # it, instead it expects "video/x-ms-wmv".
-        return self.get_mimetype()
+        return self.handler.get_mimetype()
 
 
 
