@@ -564,7 +564,7 @@ class DBObject(CatalogAware, Node, DomainAware):
         if container.has_object(name):
             return context.come_back(MSG_NAME_CLASH)
 
-        object = cls.make_object(container, name)
+        object = cls.make_object(cls, container, name)
         # The metadata
         metadata = object.metadata
         language = container.get_content_language(context)
