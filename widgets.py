@@ -23,12 +23,12 @@ from operator import attrgetter, itemgetter
 from string import Template
 
 # Import from itools
-from itools.uri import Path
 from itools.datatypes import (XMLAttribute, is_datatype, Integer, Decimal,
                               Unicode, Date, Enumerate, Boolean)
-from itools.xml import Parser
 from itools.stl import stl
+from itools.uri import Path
 from itools.web import get_context
+from itools.xml import XMLParser
 
 # Import from ikaaro
 from utils import get_parameters
