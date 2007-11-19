@@ -19,6 +19,7 @@
 
 # Import from the Standard Library
 from email.MIMEText import MIMEText
+from email.MIMEMultipart import MIMEMultipart
 from email.Utils import formatdate
 from time import time
 import traceback
@@ -277,22 +278,45 @@ class Root(WebSite):
 
     ########################################################################
     # Email
-    def send_email(self, from_addr, to_addr, subject, body, encoding='utf-8'):
+    def send_email(self, from_addr, to_addr, subject, text=None, html=None,
+                   encoding='utf-8', subject_with_host=True):
         # Check input data
         if not isinstance(subject, unicode):
             raise TypeError, 'the subject must be a Unicode string'
-        if not isinstance(body, unicode):
-            raise TypeError, 'the body must be a Unicode string'
+        if text and not isinstance(text, unicode):
+            raise TypeError, 'the text must be a Unicode string'
+        if html and not isinstance(html, unicode):
+            raise TypeError, 'the html must be a Unicode string'
 
-        # Build the message
         context = get_context()
-        body = body.encode(encoding)
-        message = MIMEText(body, _charset=encoding)
-        host = context.uri.authority.host
-        message['Subject'] = '[%s] %s' % (host, subject.encode(encoding))
+        # Set the subject
+        subject = subject.encode(encoding)
+        if subject_with_host is True:
+            host = context.uri.authority.host
+            subject = '[%s] %s' % (host, subject)
+        # Build the message
+        message = MIMEMultipart('related')
+        message['Subject'] = subject
         message['Date'] = formatdate(localtime=True)
         message['From'] = from_addr
         message['To'] = to_addr
+        # Create MIMEText
+        if html:
+            html = html.encode(encoding)
+            message_html = MIMEText(html, 'html', _charset=encoding)
+        if text:
+            text = text.encode(encoding)
+            message_text = MIMEText(text, _charset=encoding)
+        # Attach MIMETEXT to message
+        if text and html:
+            message_alternative = MIMEMultipart('alternative')
+            message.attach(message_alternative)
+            message_alternative.attach(message_text)
+            message_alternative.attach(message_html)
+        elif html:
+            message.attach(message_html)
+        elif text:
+            message.attach(message_text)
         # Send email
         server = context.server
         server.send_email(message)

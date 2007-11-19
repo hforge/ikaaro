@@ -567,7 +567,7 @@ class Tracker(Folder):
             body = template % (user_title, comment, '\n'.join(user_issues))
             to = root.get_user(user_id)
             to_addr = to.get_property('ikaaro:email')
-            root.send_email(from_addr, to_addr, subject, body)
+            root.send_email(from_addr, to_addr, subject, text=body)
 
         # Redirect on the new search
         query = encode_query(context.uri.query)
@@ -1033,7 +1033,7 @@ class Issue(Folder, VersioningAware):
         for to_addr in to_addrs:
             to_addr = users.get_object(to_addr)
             to_addr = to_addr.get_property('ikaaro:email')
-            root.send_email(from_addr, to_addr, subject, body)
+            root.send_email(from_addr, to_addr, subject, text=body)
 
 
     def get_diff_with(self, row, context):
