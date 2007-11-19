@@ -19,7 +19,8 @@
 # Import from itools
 from itools.pdf import PDFFile
 from itools.stl import stl
-from itools.handlers import Image as ImageFile
+from itools.handlers import (Image as ImageFile, TarFile, ZipFile, GzipFile,
+        Bzip2File)
 
 # Import from ikaaro
 from file import File
@@ -259,6 +260,7 @@ class ZipArchive(Archive):
     class_description = u"Zip Archive"
     class_icon16 = 'images/Zip16.png'
     class_icon48 = 'images/Zip48.png'
+    class_handler = ZipFile
 
 
 
@@ -269,14 +271,14 @@ class TarArchive(Archive):
     class_description = u"Tar Archive"
     class_icon16 = 'images/Tar16.png'
     class_icon48 = 'images/Tar48.png'
+    class_handler = TarFile
+
 
 
 ###########################################################################
 # Compression
 ###########################################################################
-
 class Compression(File):
-    # TODO API?
     pass
 
 
@@ -288,7 +290,7 @@ class Gzip(Compression):
     class_description = u"Gzip Compressed"
     class_icon16 = 'images/Gzip16.png'
     class_icon48 = 'images/Gzip48.png'
-
+    class_handler = GzipFile
 
 
 
@@ -299,6 +301,8 @@ class Bzip2(Compression):
     class_description = u"Bzip2 Compressed"
     class_icon16 = 'images/Bzip16.png'
     class_icon48 = 'images/Bzip48.png'
+    class_handler = Bzip2File
+
 
 
 ###########################################################################
