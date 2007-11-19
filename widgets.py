@@ -26,16 +26,15 @@ from string import Template
 from itools.uri import Path
 from itools.datatypes import (XMLAttribute, is_datatype, Integer, Decimal,
                               Unicode, Date, Enumerate, Boolean)
-from itools.handlers import Folder, Image
-from itools.xml import XMLParser
+from itools.xml import Parser
 from itools.stl import stl
 from itools.web import get_context
 
 # Import from ikaaro
-from folder import Folder as IkaaroFolder
 from utils import get_parameters
 from base import DBObject
-
+from folder import Folder
+from binary import Image
 
 
 namespaces = {
@@ -319,7 +318,7 @@ class Breadcrumb(object):
                 target = start.parent
         else:
             target = root.get_object(target_path)
-        self.target_path = target.abspath
+        self.target_path = target.get_abspath()
 
         # Object to link
         object = request.form.get('object')
@@ -340,7 +339,7 @@ class Breadcrumb(object):
         objects = []
         self.is_submit = False
         user = context.user
-        filter = (IkaaroFolder, filter_type)
+        filter = (Folder, filter_type)
         for object in target.search_objects(object_class=filter):
             ac = object.get_access_control()
             if not ac.is_allowed_to_view(user, object):
@@ -357,8 +356,8 @@ class Breadcrumb(object):
                 path_to_object = Path(str(path) + '/')
                 path_to_icon = path_to_object.resolve(path_to_icon)
             objects.append({'name': object.name,
-                            'is_folder': isinstance(object.handler, Folder),
-                            'is_image': isinstance(object.handler, Image),
+                            'is_folder': isinstance(object, Folder),
+                            'is_image': isinstance(object, Image),
                             'is_selectable': True,
                             'path': path,
                             'url': url,

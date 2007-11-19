@@ -19,6 +19,7 @@
 # Import from itools
 from itools.pdf import PDFFile
 from itools.stl import stl
+from itools.handlers import Image as ImageHandler
 
 # Import from ikaaro
 from file import File
@@ -39,6 +40,7 @@ class Image(File):
                    ['edit_metadata_form'],
                    ['state_form'],
                    ['history_form']]
+    class_handler = ImageHandler
 
 
     # XXX Temporal, until icon's API is fixed
@@ -52,7 +54,8 @@ class Image(File):
         height = context.get_form_value('height', 48)
         width, height = int(width), int(height)
 
-        data, format = self.get_thumbnail(width, height)
+        handler = self.handler
+        data, format = handler.get_thumbnail(width, height)
         if data is None:
             data = self.get_object('/ui/images/Image48.png').to_str()
             format = 'png'

@@ -130,8 +130,7 @@ class Node(BaseNode):
         return None
 
 
-    # XXX TODO remove "from_handler" in 0.17
-    def get_path_to_icon(self, size=16, from_handler=None):
+    def get_path_to_icon(self, size=16):
         if hasattr(self, 'icon%s' % size):
             return ';icon%s' % size
         path_to_icon = getattr(self.__class__, 'class_icon%s' % size)
@@ -731,16 +730,16 @@ class DBObject(CatalogAware, Node, DomainAware):
         root = context.root
         # Get the container
         container = root.get_object(context.get_form_value('target_path'))
-        # Add the image to the handler
+        # Add the image to the object
         uri = Image.new_instance(container, context)
         if ';addimage_form' not in uri.path:
-            handler = container.get_object(uri.path[0])
+            object = container.get_object(uri.path[0])
             return """
             <script type="text/javascript">
                 window.opener.CreateImage('%s');
                 window.close();
             </script>
-                    """ % handler.abspath
+                    """ % object.get_abspath()
 
         return context.come_back(message=uri.query['message'])
 
@@ -763,7 +762,7 @@ class DBObject(CatalogAware, Node, DomainAware):
         namespace['bc'] = Breadcrumb(filter_type=File, start=start)
         namespace['message'] = context.get_form_value('message')
 
-        prefix = Path(self.abspath).get_pathto('/ui/html/addimage.xml')
+        prefix = Path(self.get_abspath()).get_pathto('/ui/html/addimage.xml')
         handler = self.get_object('/ui/html/addlink.xml')
         return stl(handler, namespace, prefix=prefix)
 
@@ -775,19 +774,19 @@ class DBObject(CatalogAware, Node, DomainAware):
         """
         # Get the container
         root = context.root
-        container = root.get_handler(context.get_form_value('target_path'))
-        # Add the image to the handler
+        container = root.get_object(context.get_form_value('target_path'))
+        # Add the image to the object
         class_id = context.get_form_value('type')
         cls = get_object_class(class_id)
         uri = cls.new_instance(container, context)
         if ';addlink_form' not in uri.path:
-            handler = container.get_handler(uri.path[0])
+            object = container.get_object(uri.path[0])
             return """
             <script type="text/javascript">
                 window.opener.CreateLink('%s');
                 window.close();
             </script>
-                    """ % handler.abspath
+                    """ % object.get_abspath()
 
         return context.come_back(message=uri.query['message'])
 
