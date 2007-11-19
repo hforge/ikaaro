@@ -20,7 +20,7 @@ from itools.gettext import register_domain
 from itools.cms import skins
 
 # Import from our package
-from base import Handler
+from base import DBObject
 from root import Root
 
 
@@ -34,4 +34,4 @@ skins.register_skin('${PACKAGE_NAME}', skin)
 
 # Register domain (i18n)
 path = get_abspath(globals(), 'locale')
-register_domain(Handler.class_domain, path)
+register_domain(DBObject.class_domain, path)

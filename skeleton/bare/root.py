@@ -19,11 +19,11 @@ from itools.cms.registry import register_object_class
 from itools.cms.root import Root as BaseRoot
 
 # Import from here
-from base import Handler
+from base import DBObject
 
 
 
-class Root(Handler, BaseRoot):
+class Root(DBObject, BaseRoot):
 
     class_id = '${PACKAGE_NAME}'
     class_title = u'TITLE'

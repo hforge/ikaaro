@@ -14,11 +14,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Import from itools.cms
-from itools.cms.base import Handler as BaseHandler
+# Import from ikaaro
+from ikaaro import DBObject as BaseObject
 
 
-class Handler(BaseHandler):
+class DBObject(BaseObject):
 
     class_domain = '${PACKAGE_NAME}'
 
