@@ -277,7 +277,7 @@ class Root(WebSite):
 
     ########################################################################
     # Email
-    def send_email(self, from_addr, to_addr, subject, body, **kw):
+    def send_email(self, from_addr, to_addr, subject, body, encoding='utf-8'):
         # Check input data
         if not isinstance(subject, unicode):
             raise TypeError, 'the subject must be a Unicode string'
@@ -286,10 +286,9 @@ class Root(WebSite):
 
         # Build the message
         context = get_context()
-        host = context.uri.authority.host
-        encoding = 'utf-8'
         body = body.encode(encoding)
         message = MIMEText(body, _charset=encoding)
+        host = context.uri.authority.host
         message['Subject'] = '[%s] %s' % (host, subject.encode(encoding))
         message['Date'] = formatdate(localtime=True)
         message['From'] = from_addr
