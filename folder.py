@@ -578,7 +578,7 @@ class Folder(DBObject):
         namespace = {}
         namespace['objects'] = []
         for real_name in names:
-            handler = self.get_object(real_name)
+            handler = self.get_object(real_name).handler
             if handler.class_extension is None:
                 name = real_name
             else:
@@ -602,7 +602,7 @@ class Folder(DBObject):
         abspath = self.abspath
         for i, old_name in enumerate(names):
             new_name = new_names[i]
-            handler = self.get_object(old_name)
+            handler = self.get_object(old_name).handler
             if handler.class_extension is not None:
                 xxx, extension, language = FileName.decode(old_name)
                 new_name = FileName.encode((new_name, extension, language))
