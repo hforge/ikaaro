@@ -22,9 +22,10 @@ from operator import itemgetter
 
 # Import from itools
 from itools.datatypes import Boolean, Enumerate, Integer, is_datatype
-from itools.csv import IntegerKey
+from itools.csv import IntegerKey, CSVFile
 from itools.stl import stl
-from base import Node
+
+# Import from ikaaro
 from messages import *
 from text import Text
 from registry import register_object_class
@@ -41,24 +42,26 @@ class CSV(Text):
                    ['externaledit', 'upload_form'],
                    ['edit_metadata_form'],
                    ['history_form']]
+    class_handler = CSVFile
 
 
     #########################################################################
     # User Interface
     #########################################################################
     def get_columns(self):
+        """Returns a list of tuples with the name and title of every column.
         """
-        Returns a list of tuples with the name and title of every column.
-        """
-        if self.columns is None:
-            if self.lines:
-                row = self.lines[0]
+        handler = self.handler
+
+        if handler.columns is None:
+            if handler.lines:
+                row = handler.lines[0]
                 return [ (str(x), str(x)) for x in range(len(row)) ]
             return []
 
         columns = []
-        for name in self.columns:
-            datatype = self.schema[name]
+        for name in handler.columns:
+            datatype = handler.schema[name]
             if datatype != IntegerKey:
                 title = getattr(datatype, 'title', None)
                 if title is None:
@@ -80,13 +83,14 @@ class CSV(Text):
     # View
     def view(self, context):
         namespace = {}
+        handler = self.handler
 
         # The input parameters
         start = context.get_form_value('batchstart', type=Integer, default=0)
         size = 50
 
         # The batch
-        total = len(self.lines)
+        total = len(handler.lines)
         namespace['batch'] = widgets.batch(context.uri, start, size, total,
                                            self.gettext)
 
@@ -101,12 +105,12 @@ class CSV(Text):
         columns.insert(0, ('index', u''))
         rows = []
         index = start
-        if self.schema is not None:
+        if handler.schema is not None:
             getter = lambda x, y: x.get_value(y)
         else:
             getter = lambda x, y: x[int(y)]
 
-        for row in self.lines[start:start+size]:
+        for row in handler.lines[start:start+size]:
             rows.append({})
             rows[-1]['id'] = str(index)
             rows[-1]['checkbox'] = True
@@ -114,7 +118,7 @@ class CSV(Text):
             rows[-1]['index'] = index, ';edit_row_form?index=%s' % index
             for column, column_title in columns[1:]:
                 value = getter(row, column)
-                datatype = self.get_datatype(column)
+                datatype = handler.get_datatype(column)
                 is_enumerate = getattr(datatype, 'is_enumerate', False)
                 if is_enumerate:
                     rows[-1][column] = datatype.get_value(value)
@@ -138,7 +142,7 @@ class CSV(Text):
     del_row_action__access__ = 'is_allowed_to_edit'
     def del_row_action(self, context):
         ids = context.get_form_values('ids', type=Integer)
-        self.del_rows(ids)
+        self.handler.del_rows(ids)
 
         message = u'Row deleted.'
         return context.come_back(message)
@@ -150,6 +154,7 @@ class CSV(Text):
     add_row_form__label__ = u'Add'
     def add_row_form(self, context):
         namespace = {}
+        handler = self.handler
 
         columns = []
         for name, title in self.get_columns():
@@ -158,7 +163,7 @@ class CSV(Text):
             column['title'] = title
             column['value'] = None
             # Enumerates, use a selection box
-            datatype = self.get_datatype(name)
+            datatype = handler.get_datatype(name)
             column['is_input'] = False
             column['is_enumerate'] = False
             column['is_boolean'] = False
@@ -179,13 +184,14 @@ class CSV(Text):
 
     add_row_action__access__ = 'is_allowed_to_edit'
     def add_row_action(self, context):
+        handler = self.handler
         row = []
         for name, title in self.get_columns():
-            datatype = self.get_datatype(name)
+            datatype = handler.get_datatype(name)
             value = context.get_form_value(name, type=datatype)
             row.append(value)
 
-        self.add_row(row)
+        handler.add_row(row)
 
         message = u'New row added.'
         return context.come_back(message)
@@ -195,9 +201,10 @@ class CSV(Text):
     # Edit
     edit_row_form__access__ = 'is_allowed_to_edit'
     def edit_row_form(self, context):
+        handler = self.handler
         # Get the row
         index = context.get_form_value('index', type=Integer)
-        row = self.get_row(index)
+        row = handler.get_row(index)
 
         # Build the namespace
         namespace = {}
@@ -210,7 +217,7 @@ class CSV(Text):
             column['title'] = title
             value = row.get_value(name)
             # Enumerates, use a selection box
-            datatype = self.get_datatype(name)
+            datatype = handler.get_datatype(name)
             column['is_input'] = False
             column['is_enumerate'] = False
             column['is_boolean'] = False
@@ -233,20 +240,21 @@ class CSV(Text):
 
     edit_row__access__ = 'is_allowed_to_edit'
     def edit_row(self, context):
+        handler = self.handler
         # Get the row
         index = context.get_form_value('index', type=Integer)
-        row = self.get_row(index)
+        row = handler.get_row(index)
 
         for name, title in self.get_columns():
-            datatype = self.get_datatype(name)
+            datatype = handler.get_datatype(name)
             value = context.get_form_value(name, type=datatype)
             row.set_value(name, value)
 
-        self.set_changed()
+        # FIXME to migrate
+        #handler.set_changed()
         return context.come_back(MSG_CHANGES_SAVED)
 
 
 register_object_class(CSV)
 register_object_class(CSV, 'text/x-comma-separated-values')
 register_object_class(CSV, 'text/csv')
-
