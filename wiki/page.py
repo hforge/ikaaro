@@ -57,7 +57,6 @@ class WikiPage(Text):
                    ['edit_metadata_form'],
                    ['state_form'],
                    ['help']]
-    class_extension = None
 
     overrides = {
         # Security

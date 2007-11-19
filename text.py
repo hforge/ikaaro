@@ -223,8 +223,6 @@ register_object_class(PO)
 
 class CSS(Text):
 
-    class_mimetypes = ['text/css']
-    class_extension = 'css'
     class_id = 'text/css'
     class_title = u'CSS'
     class_icon16 = 'images/CSS16.png'
