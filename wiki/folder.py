@@ -46,9 +46,9 @@ class WikiFolder(Folder):
     __fixed_handlers__ = ['FrontPage']
 
 
-    @classmethod
+    @staticmethod
     def _make_object(cls, folder, name):
-        Folder._make_object.im_func(cls, folder, name)
+        Folder._make_object(cls, folder, name)
         # FrontPage
         kw = {'dc:title': {'en': u"Front Page"}}
         metadata = WikiPage.build_metadata(**kw)

@@ -152,7 +152,7 @@ class Root(WebSite):
         ]
 
 
-    @classmethod
+    @staticmethod
     def _make_object(cls, folder, email, password):
         # The metadata
         kw = {'ikaaro:admins': ('0',)}

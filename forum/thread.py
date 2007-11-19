@@ -40,9 +40,9 @@ class Thread(Folder):
 
     message_class = Message
 
-    @classmethod
+    @staticmethod
     def _make_object(cls, folder, name, data=u''):
-        Folder._make_object.im_func(cls, folder, name)
+        Folder._make_object(cls, folder, name)
         # First post
         cls = cls.message_class
         folder.set_handler('%s/0.xhtml.metadata' % name, cls.build_metadata())

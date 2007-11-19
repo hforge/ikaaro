@@ -56,9 +56,9 @@ class File(WorkflowAware, VersioningAware, DBObject):
     class_handler = FileHandler
 
 
-    @classmethod
+    @staticmethod
     def _make_object(cls, folder, name, body=None):
-        DBObject._make_object.im_func(cls, folder, name)
+        DBObject._make_object(cls, folder, name)
         # Add the body
         if body is not None:
             handler = cls.class_handler(string=body)

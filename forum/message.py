@@ -46,9 +46,9 @@ class Message(WebPage):
     class_views = [['edit_form'], ['history_form']]
 
 
-    @classmethod
+    @staticmethod
     def _make_object(cls, folder, name, data):
-        WebPage._make_object.im_func(cls, folder, name)
+        WebPage._make_object(cls, folder, name)
         # The message
         document = build_message(data)
         folder.set_handler(name, document)

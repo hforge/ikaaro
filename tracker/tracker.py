@@ -86,9 +86,9 @@ class Tracker(Folder):
         'priorities.csv', 'states.csv']
 
 
-    @classmethod
+    @staticmethod
     def _make_object(cls, folder, name):
-        Folder._make_object.im_func(cls, folder, name)
+        Folder._make_object(cls, folder, name)
         # Versions
         csv = VersionsCSV()
         csv.add_row([u'1.0', False])
@@ -919,9 +919,9 @@ class Issue(Folder, VersioningAware):
         ['history']]
 
 
-    @classmethod
+    @staticmethod
     def _make_object(cls, folder, name):
-        Folder._make_object.im_func(cls, folder, name)
+        Folder._make_object(cls, folder, name)
         folder.set_handler('%s/.history' % name, History())
 
 

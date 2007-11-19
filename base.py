@@ -213,11 +213,11 @@ class DBObject(CatalogAware, Node, DomainAware):
 
 
 
-    @classmethod
+    @staticmethod
     def make_object(cls, container, name, *args, **kw):
         from folder import Folder
 
-        cls._make_object(container.handler, name, *args, **kw)
+        cls._make_object(cls, container.handler, name, *args, **kw)
         object = container.get_object(name)
 
         # Versioning
@@ -233,7 +233,7 @@ class DBObject(CatalogAware, Node, DomainAware):
         return object
 
 
-    @classmethod
+    @staticmethod
     def _make_object(cls, folder, name):
         metadata = cls.build_metadata()
         folder.set_handler('%s.metadata' % name, metadata)
