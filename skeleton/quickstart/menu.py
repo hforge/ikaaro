@@ -15,17 +15,19 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
+from itools import get_abspath
 from itools.datatypes import is_datatype
 from itools.stl import stl
 from itools.uri import Path
 
-# Import from itools.cms
-from itools.cms.base import Handler
-from itools.cms.future import OrderAware
-from itools.cms.registry import register_object_class
-from itools.cms.messages import MSG_CHANGES_SAVED
-from itools.cms.file import File
-from itools.cms.widgets import Breadcrumb, BooleanRadio
+# Import from ikaaro
+from ikaaro.base import DBObject
+from ikaaro.future import OrderAware
+from ikaaro.registry import register_object_class
+from ikaaro.messages import MSG_CHANGES_SAVED
+from ikaaro.file import File
+from ikaaro.widgets import Breadcrumb, BooleanRadio
+from ikaaro.skins import register_skin
 
 
 
@@ -43,10 +45,14 @@ class Link(File):
     class_views = [['edit_metadata_form'], ['state_form']]
 
 
-    @classmethod
+    @staticmethod
     def new_instance_form(cls, context):
         # Use the default form
-        return Handler.new_instance_form.im_func(cls, context)
+        return DBObject.new_instance_form(cls, context)
+
+    @staticmethod
+    def new_instance(cls, container, context):
+        return DBObject.new_instance(cls, container, context)
 
 
     def GET(self, context):
@@ -66,8 +72,8 @@ class Link(File):
         namespace['bc'] = Breadcrumb(filter_type=File, start=start)
         namespace['message'] = context.get_form_value('message')
 
-        prefix = Path(self.abspath).get_pathto('/ui/html/addlink.xml')
-        handler = self.get_handler('/ui/menu/addlink.xml')
+        prefix = Path(self.get_abspath()).get_pathto('/ui/html/addlink.xml')
+        handler = self.get_object('/ui/menu/addlink.xml')
         return stl(handler, namespace, prefix=prefix)
 
 
@@ -93,7 +99,7 @@ class Link(File):
         # Add a script
         context.scripts.append('/ui/menu/javascript.js')
 
-        handler = self.get_handler('/ui/menu/Link_edit_metadata.xml')
+        handler = self.get_object('/ui/menu/Link_edit_metadata.xml')
         return stl(handler, namespace)
 
 
@@ -131,21 +137,17 @@ class Link(File):
 
         return new_window, self.get_property('menu:link')
 
-
-
-register_object_class(Link)
-
 ###########################################################################
 # Menu gestion
 ###########################################################################
-def get_target_info(context, handler):
+def get_target_info(context, object):
     """
     Return a tuple with:
-    - a list made with the target path and if any the target handler
+    - a list made with the target path and if any the target object
     - the target info '_top' or '_blank' or ...
     """
     new_window = '_top'
-    new_window, target = handler.get_target_info()
+    new_window, target = object.get_target_info()
 
     if target and target.startswith('http://'):
         return [target], new_window
@@ -158,17 +160,17 @@ def get_target_info(context, handler):
     if endswithparams:
         target_method = target_rpath.pop()
 
-    # get the real target handler
+    # get the real target object
     site_root = context.handler.get_site_root()
     try:
-        h = handler.get_handler(target_rpath)
+        o = object.get_object(target_rpath)
         if target_method is None:
-            target_method = ';%s' % h.get_firstview()
-        target_path = site_root.get_pathto(h)
+            target_method = ';%s' % o.get_firstview()
+        target_path = site_root.get_pathto(o)
     except LookupError:
         return None, None
 
-    # make a url list with the target handler
+    # make a url list with the target object
     target_url = [seg.name for seg in target_path if seg.name]
     if target_method:
         target_url.append(target_method)
@@ -199,25 +201,25 @@ def get_menu_namespace_level(context, url, menu_root, depth, show_first_child,
     tabs = {}
 
     for name in menu_root.get_ordered_folder_names('ordered'):
-        # Get the handlers, check security
-        handler = menu_root.get_handler(name)
+        # Get the objects, check security
+        object = menu_root.get_object(name)
 
-        ac = handler.get_access_control()
-        if ac.is_allowed_to_view(user, handler) is False:
+        ac = object.get_access_control()
+        if ac.is_allowed_to_view(user, object) is False:
             continue
 
         # Link special case for target and actual_url
         target = '_top'
-        actual_url = here.abspath == handler.abspath
-        if link_like and isinstance(handler, link_like):
-            target_url, new_window = get_target_info(context, handler)
+        actual_url = here.get_abspath() == object.get_abspath()
+        if link_like and isinstance(object, link_like):
+            target_url, new_window = get_target_info(context, object)
             if target_url:
                 actual_url = url == target_url
 
         # Subtabs
         subtabs = {}
         if depth > 1:
-            subtabs = get_menu_namespace_level(context, url, handler, depth-1,
+            subtabs = get_menu_namespace_level(context, url, object, depth-1,
                                                show_first_child, link_like)
 
         # set active, in_path
@@ -229,16 +231,16 @@ def get_menu_namespace_level(context, url, menu_root, depth, show_first_child,
         css = (active and 'active') or (in_path and 'in_path') or None
 
         # set label and description
-        label = handler.get_property('dc:title') or name
-        description = handler.get_property('dc:description') or label
+        label = object.get_property('dc:title') or name
+        description = object.get_property('dc:description') or label
 
         # set path
-        path = here.get_pathto(handler)
+        path = here.get_pathto(object)
         if show_first_child and depth > 1:
             if subtabs.get('items', None):
                 childs = subtabs['items']
                 first_child = childs[0]['path']
-                first_child = here.get_handler(first_child)
+                first_child = here.get_object(first_child)
                 path = here.get_pathto(first_child)
 
 
@@ -311,3 +313,9 @@ def get_menu_namespace(context, depth=3, show_first_child=False, flat=True,
 
 
 
+#
+# Register
+#
+register_object_class(Link)
+path = get_abspath(globals(), 'ui/menu')
+register_skin('menu', path)

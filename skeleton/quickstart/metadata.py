@@ -16,8 +16,7 @@
 
 # Import from itools
 from itools.datatypes import Boolean, String
-from itools.schemas.base import Schema as BaseSchema
-from itools.schemas import register_schema
+from itools.schemas import BaseSchema, register_schema
 
 
 

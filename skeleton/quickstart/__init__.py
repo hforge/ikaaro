@@ -15,18 +15,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools import get_version, get_abspath
-
-# Import from itools.cms
-from itools.cms.skins import register_skin
+from itools import get_version
 
 # Import from menu
 import metadata
-from mywebapp import MyWebApp
+import menu
+import webapp
 
 # Make the product version available to Python code
 __version__ = get_version(globals())
-
-# menu skin
-path = get_abspath(globals(), 'ui/menu')
-register_skin('menu', path)

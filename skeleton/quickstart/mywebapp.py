@@ -20,14 +20,14 @@ from datetime import date
 # Import from itools
 from itools import get_abspath
 
-# Import from itools.cms
-from itools.cms.future import Dressable, OrderAware
-from itools.cms.html import XHTMLFile
-from itools.cms.registry import register_object_class, register_website
-from itools.cms.skins import Skin as iSkin, register_skin
-from itools.cms.website import WebSite
-from itools.cms.binary import Image
-from itools.cms.workflow import WorkflowAware
+# Import from ikaaro
+from ikaaro.future import Dressable, OrderAware
+from ikaaro.html import XHTMLFile
+from ikaaro.registry import register_object_class, register_website
+from ikaaro.skins import Skin as BaseSkin, register_skin
+from ikaaro.website import WebSite
+from ikaaro.binary import Image
+from ikaaro.workflow import WorkflowAware
 
 # Import from itws
 from menu import get_menu_namespace, Link
@@ -38,13 +38,13 @@ from utils import is_back_office
 ###########################################################################
 # Skin
 ###########################################################################
-class Skin(iSkin):
+class Skin(BaseSkin):
 
     class_id = 'mywebapp-skin'
 
 
     def build_namespace(self, context):
-        namespace = iSkin.build_namespace(self, context)
+        namespace = BaseSkin.build_namespace(self, context)
         namespace['tabs'] = get_menu_namespace(context, depth=2,
                                                show_first_child=False,
                                                link_like=Link)
