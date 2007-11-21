@@ -108,10 +108,10 @@ class Tracker(Folder):
             ('priorities.csv', [u'High', u'Medium', u'Low']),
             ('states.csv', [u'Open', u'Fixed', u'Closed'])]
         for table_name, values in tables:
-            csv = SelectTableCSV()
+            table = SelectTableTable()
             for title in values:
-                csv.add_row([title])
-            folder.set_handler('%s/%s' % (name, table_name), csv)
+                table.add_record({'title': title})
+            folder.set_handler('%s/%s' % (name, table_name), table)
             metadata = SelectTable.build_metadata()
             folder.set_handler('%s/%s.metadata' % (name, table_name), metadata)
         # Pre-defined stored searches
@@ -746,20 +746,19 @@ class Tracker(Folder):
 ###########################################################################
 # Tables
 ###########################################################################
-class SelectTableCSV(CSVFile):
+class SelectTableTable(BaseTable):
 
-    columns = ['id', 'title']
-    schema = {'id': IntegerKey, 'title': Unicode}
+    schema = {'title': Unicode}
 
 
-class SelectTable(CSV):
+class SelectTable(Table):
 
     class_id = 'tracker_select_table'
-    class_handler = SelectTableCSV
+    class_handler = SelectTableTable
 
     def get_options(self, value=None, sort=True):
-        csv = self.handler
-        options = [ {'id': x[0], 'title': x[1]} for x in csv.get_rows() ]
+        table = self.handler
+        options = [ {'id': x.id, 'title': x.title} for x in table.get_records() ]
         if sort is True:
             options.sort(key=lambda x: x['title'])
         # Set 'is_selected'
@@ -776,13 +775,6 @@ class SelectTable(CSV):
         return options
 
 
-    def get_row_by_id(self, id):
-        csv = self.handler
-        for x in csv.search(id=id):
-            return csv.get_row(x)
-        return None
-
-
     def view(self, context):
         namespace = {}
 
@@ -791,7 +783,7 @@ class SelectTable(CSV):
         size = 30
 
         # The batch
-        total = len(self.lines)
+        total = self.handler.get_n_records()
         namespace['batch'] = widgets.batch(context.uri, start, size, total,
                                            self.gettext)
 
@@ -802,10 +794,11 @@ class SelectTable(CSV):
             if ac.is_allowed_to_edit(context.user, self):
                 actions = [('del_row_action', u'Remove', 'button_delete',None)]
 
-        columns = self.get_columns()
-        columns.insert(0, ('index', u''))
-        columns.append(('issues', u'Issues'))
-        rows = []
+        fields = self.get_fields()
+        fields.insert(0, ('index', u'id'))
+        fields.append(('issues', u'Issues'))
+        records = []
+
         index = start
         getter = lambda x, y: x.get_value(y)
 
@@ -813,20 +806,40 @@ class SelectTable(CSV):
         if self.name.startswith('priorit'):
             filter = 'priority'
 
-        for row in self.lines[start:start+size]:
-            rows.append({})
-            rows[-1]['id'] = str(index)
-            rows[-1]['checkbox'] = True
-            # Columns
-            rows[-1]['index'] = index, ';edit_row_form?index=%s' % index
-            for column, column_title in columns[1:-1]:
-                value = getter(row, column)
-                datatype = self.get_datatype(column)
+        for record in self.handler.get_records():
+            id = record.id
+            records.append({})
+            records[-1]['id'] = str(id)
+            records[-1]['checkbox'] = True
+            # Fields
+            records[-1]['index'] = id, ';edit_record_form?id=%s' % id
+            for field, field_title in fields[1:-1]:
+                value = self.handler.get_value(record, field)
+                datatype = self.handler.get_datatype(field)
+
+                multiple = getattr(datatype, 'multiple', False)
+                if multiple is True:
+                    print 'multiple', field_title, value
+                    value.sort()
+                    if len(value) > 0:
+                        rmultiple = len(value) > 1
+                        value = value[0]
+                    else:
+                        rmultiple = False
+                        value = None
+
                 is_enumerate = getattr(datatype, 'is_enumerate', False)
-                rows[-1][column] = value
+                if is_enumerate:
+                    records[-1][field] = datatype.get_value(value)
+                else:
+                    records[-1][field] = value
+
+                if multiple is True:
+                    records[-1][field] = (records[-1][field], rmultiple)
+
             count = 0
             for object in self.parent.search_objects(object_class=Issue):
-                if object.get_value(filter) == index:
+                if object.get_value(filter) == id:
                     count += 1
             value = '0'
             if count != 0:
@@ -834,19 +847,28 @@ class SelectTable(CSV):
                 if count == 1:
                     value = '<a href="../;view?%s=%s">%s issue</a>'
                 value = XMLParser(value % (filter, index, count))
-            rows[-1]['issues'] = value
+            records[-1]['issues'] = value
             index += 1
 
         # Sorting
         sortby = context.get_form_value('sortby')
         sortorder = context.get_form_value('sortorder', 'up')
         if sortby:
-            rows.sort(key=itemgetter(sortby), reverse=(sortorder=='down'))
+            records.sort(key=itemgetter(sortby), reverse=(sortorder=='down'))
 
-        namespace['table'] = widgets.table(columns, rows, [sortby], sortorder,
-                                           actions)
+        records = records[start:start+size]
+        for record in records:
+            for field, field_title in fields[1:]:
+                if isinstance(record[field], tuple):
+                    if record[field][1] is True:
+                        record[field] = '%s [...]' % record[field][0]
+                    else:
+                        record[field] = record[field][0]
 
-        handler = self.get_object('/ui/csv/view.xml')
+        namespace['table'] = widgets.table(fields, records, [sortby], 
+                                           sortorder, actions)
+
+        handler = self.get_object('/ui/table/view.xml')
         return stl(handler, namespace)
 
 
@@ -1081,32 +1103,10 @@ class Issue(Folder, VersioningAware):
             modifications.append(template %(title, last_title, new_title))
         # List modifications
         for key in [(u'Module', 'module', 'modules.csv'),
-                     (u'Type', 'type', 'types.csv'),
-                     (u'Priority', 'priority', 'priorities.csv'),
-                     (u'State', 'state', 'states.csv')]:
-            title, name, csv_name = key
-            title = self.gettext(title)
-            key_index = History.columns.index(name)
-            new_value = row[key_index]
-            last_value = self.get_value(name)
-            # Detect if modifications
-            if last_value==new_value:
-                continue
-            csv = self.parent.get_object(csv_name)
-            last_title = csv.get_row_by_id(last_value)
-            if last_title:
-                last_title = last_title.get_value('title')
-            else:
-                last_title = u''
-            new_title = csv.get_row_by_id(new_value)
-            if new_title:
-                new_title = new_title.get_value('title')
-            else:
-                new_title = u''
-            text = template % (title, last_title, new_title)
-            modifications.append(text)
-        # Version is now a Table
-        for key in [(u'Version', 'version', 'versions.csv')]:
+                    (u'Version', 'version', 'versions.csv'),
+                    (u'Type', 'type', 'types.csv'),
+                    (u'Priority', 'priority', 'priorities.csv'),
+                    (u'State', 'state', 'states.csv')]:
             title, name, csv_name = key
             title = self.gettext(title)
             key_index = History.columns.index(name)
@@ -1169,11 +1169,7 @@ class Issue(Folder, VersioningAware):
         infos = {'name': self.name,
                  'id': int(self.name),
                  'title': self.get_value('title')}
-        for name in 'module', 'type', 'priority', 'state':
-            value = self.get_value(name)
-            row = tables[name].get_row_by_id(value)
-            infos[name] = row and row.get_value('title') or None
-        for name in ('version', ):
+        for name in 'module', 'version', 'type', 'priority', 'state':
             value = self.get_value(name)
             record = tables[name].handler.get_record(value)
             infos[name] = record and record.title or None
@@ -1193,7 +1189,7 @@ class Issue(Folder, VersioningAware):
 
 
     def get_comment(self):
-        rows = self.handler.get_handler('.history').lines
+        rows = self.get_history().lines
         i = len(rows) - 1
         while i >= 0:
             row = rows[i]
@@ -1394,30 +1390,29 @@ class Issue(Folder, VersioningAware):
                 if type is None:
                     row_ns['type'] = ' '
                 else:
-                    type = types.get_row_by_id(type).get_value('title')
-                    row_ns['type'] = type
+                    type = types.handler.get_record(int(type))
+                    row_ns['type'] = type.get_value('title')
             if state != previous_state:
                 previous_state = state
                 if state is None:
                     row_ns['state'] = ' '
                 else:
-                    state = states.get_row_by_id(state).get_value('title')
-                    row_ns['state'] = state
+                    state = states.handler.get_record(int(state))
+                    row_ns['state'] = state.get_value('title')
             if module != previous_module:
                 previous_module = module
                 if module is None:
                     row_ns['module'] = ' '
                 else:
-                    module = modules.get_row_by_id(module).get_value('title')
-                    row_ns['module'] = module
+                    module = modules.handler.get_record(int(module))
+                    row_ns['module'] = module.get_value('title')
             if priority != previous_priority:
                 previous_priority = priority
                 if priority is None:
                     row_ns['priority'] = ' '
                 else:
-                    priority = priorities.get_row_by_id(priority).get_value(
-                        'title')
-                    row_ns['priority'] = priority
+                    priority = priorities.handler.get_record(int(priority))
+                    row_ns['priority'] = priority.get_value('title')
             if assigned_to != previous_assigned_to:
                 previous_assigned_to = assigned_to
                 if assigned_to and users.has_object(assigned_to):
