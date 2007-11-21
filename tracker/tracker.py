@@ -27,7 +27,7 @@ from re import sub
 # Import from itools
 from itools.datatypes import Boolean, DateTime, Integer, String, Unicode, XML
 from itools.i18n import format_datetime
-from itools.handlers import ConfigFile
+from itools.handlers import ConfigFile, Table as BaseTable
 from itools.rest import checkid
 from itools.csv import IntegerKey, CSVFile
 from itools.xml import XMLParser
@@ -39,6 +39,7 @@ from ikaaro.csv import CSV
 from ikaaro.file import File
 from ikaaro.folder import Folder
 from ikaaro.messages import *
+from ikaaro.table import Table
 from ikaaro.text import Text
 from ikaaro.utils import generate_name
 from ikaaro.registry import register_object_class, get_object_class
@@ -90,10 +91,10 @@ class Tracker(Folder):
     def _make_object(cls, folder, name):
         Folder._make_object(cls, folder, name)
         # Versions
-        csv = VersionsCSV()
-        csv.add_row([u'1.0', False])
-        csv.add_row([u'2.0', False])
-        folder.set_handler('%s/versions.csv' % name, csv)
+        table = VersionsTable()
+        table.add_record({'title': u'1.0', 'released': False})
+        table.add_record({'title': u'2.0', 'released': False})
+        folder.set_handler('%s/versions.csv' % name, table)
         metadata = Versions.build_metadata()
         folder.set_handler('%s/versions.csv.metadata' % name, metadata)
         # Other Tables
@@ -219,7 +220,7 @@ class Tracker(Folder):
         search_name = context.get_form_value('search_name')
         if search_name:
             search = self.get_object(search_name)
-            get_value = search.get_value
+            get_value = search.handler.get_value
             get_values = search.get_values
             namespace['search_name'] = search_name
             namespace['search_title'] = search.get_property('dc:title')
@@ -277,7 +278,7 @@ class Tracker(Folder):
         if search_title and search_title != stored_search_title:
             # New Stored Search
             search_name = self.get_new_id('s')
-            stored_search, kk = self.set_object(search_name, StoredSearch())
+            stored_search = StoredSearch.make_object(self, search_name)
 
         if stored_search is None:
             # Just Search
@@ -288,10 +289,10 @@ class Tracker(Folder):
         stored_search.set_property('dc:title', search_title, 'en')
         # Edit / Search Values
         text = context.get_form_value('text').strip().lower()
-        stored_search.set_value('text', text)
+        stored_search.handler.set_value('text', text)
 
         mtime = context.get_form_value('mtime', type=Integer)
-        stored_search.set_value('mtime', mtime)
+        stored_search.handler.set_value('mtime', mtime)
 
         criterias = [('module', Integer), ('version', Integer),
             ('type', Integer), ('priority', Integer), ('assigned_to', String),
@@ -628,7 +629,7 @@ class Tracker(Folder):
         search_name = context.get_form_value('search_name')
         if search_name:
             search = self.get_object(search_name)
-            get_value = search.get_value
+            get_value = search.handler.get_value
             get_values = search.get_values
         else:
             get_value = context.get_form_value
@@ -751,14 +752,6 @@ class SelectTableCSV(CSVFile):
     schema = {'id': IntegerKey, 'title': Unicode}
 
 
-class VersionsCSV(CSVFile):
-
-    columns = ['id', 'title', 'released']
-    schema = {'id': IntegerKey,
-              'title': Unicode(title=u'Title'),
-              'released': Boolean(title=u'Released')}
-
-
 class SelectTable(CSV):
 
     class_id = 'tracker_select_table'
@@ -858,10 +851,35 @@ class SelectTable(CSV):
 
 
 
-class Versions(SelectTable):
+class VersionsTable(BaseTable):
+
+    schema = {'title': Unicode(title=u'Title'),
+              'released': Boolean(title=u'Released')}
+
+
+
+class Versions(Table):
 
     class_id = 'tracker_versions'
-    class_handler = VersionsCSV
+    class_handler = VersionsTable
+
+    def get_options(self, value=None, sort=True):
+        table = self.handler
+        options = [ {'id': x.id, 'title': x.title} for x in table.get_records() ]
+        if sort is True:
+            options.sort(key=lambda x: x['title'])
+        # Set 'is_selected'
+        if value is None:
+            for option in options:
+                option['is_selected'] = False
+        elif isinstance(value, list):
+            for option in options:
+                option['is_selected'] = (option['id'] in value)
+        else:
+            for option in options:
+                option['is_selected'] = (option['id'] == value)
+
+        return options
 
 
 
@@ -872,16 +890,18 @@ class StoredSearch(Text):
 
     class_id = 'stored_search'
     class_title = u'Stored Search'
+    class_handler = Config
+
 
     def get_values(self, name, type=String):
-        value = self.get_value(name, default='')
+        value = self.handler.get_value(name, default='')
         return [ type.decode(x) for x in value.split() ]
 
 
     def set_values(self, name, value, type=String):
         value = [ type.encode(x) for x in value ]
         value = ' '.join(value)
-        self.set_value(name, value)
+        self.handler.set_value(name, value)
 
 
 
@@ -909,8 +929,6 @@ class History(CSVFile):
 class Issue(Folder, VersioningAware):
 
     class_id = 'issue'
-    class_layout = {
-        '.history': History}
     class_title = u'Issue'
     class_description = u'Issue'
     class_views = [
@@ -936,8 +954,16 @@ class Issue(Folder, VersioningAware):
         return '#%s %s' % (self.name, self.get_value('title'))
 
 
+    def get_history(self):
+        return self.get_handler('.history', cls=History)
+
+
     def get_rows(self):
-        return self.handler.get_handler('.history').get_rows()
+        return self.get_history().get_rows()
+
+
+    def get_history(self):
+        return self.handler.get_handler('.history', cls=History)
 
 
     def _add_row(self, context):
@@ -988,7 +1014,7 @@ class Issue(Folder, VersioningAware):
             metadata.set_property('format', mimetype)
         # Update
         modifications = self.get_diff_with(row, context)
-        history = self.handler.get_handler('.history')
+        history = self.get_history()
         history.add_row(row)
         # Send a Notification Email
         # Notify / From
@@ -1040,7 +1066,7 @@ class Issue(Folder, VersioningAware):
         """Return a text with the diff between the last and new issue state"""
         root = context.root
         modifications = []
-        history = self.handler.get_handler('.history')
+        history = self.get_history()
         if history.lines:
             # Edit issue
             template = self.gettext(u'%s: %s to %s')
@@ -1055,7 +1081,6 @@ class Issue(Folder, VersioningAware):
             modifications.append(template %(title, last_title, new_title))
         # List modifications
         for key in [(u'Module', 'module', 'modules.csv'),
-                     (u'Version', 'version', 'versions.csv'),
                      (u'Type', 'type', 'types.csv'),
                      (u'Priority', 'priority', 'priorities.csv'),
                      (u'State', 'state', 'states.csv')]:
@@ -1080,6 +1105,30 @@ class Issue(Folder, VersioningAware):
                 new_title = u''
             text = template % (title, last_title, new_title)
             modifications.append(text)
+        # Version is now a Table
+        for key in [(u'Version', 'version', 'versions.csv')]:
+            title, name, csv_name = key
+            title = self.gettext(title)
+            key_index = History.columns.index(name)
+            new_value = row[key_index]
+            last_value = self.get_value(name)
+            # Detect if modifications
+            if last_value == new_value:
+                continue
+            last_title = None
+            csv = self.parent.get_object(csv_name).handler
+            if last_value is not None:
+                last_title = csv.get_record(last_value)
+            if last_title:
+                last_title = last_title.get_value('title')
+            new_title = csv.get_record(new_value)
+            if new_title:
+                new_title = new_title.get_value('title')
+            else:
+                new_title = u''
+            text = template % (title, last_title, new_title)
+            modifications.append(text)
+
         # Modifications of assigned_to
         last_user = self.get_value('assigned_to')
         new_user = row[History.columns.index('assigned_to')]
@@ -1095,12 +1144,12 @@ class Issue(Folder, VersioningAware):
 
 
     def get_reported_by(self):
-        history = self.handler.get_handler('.history')
+        history = self.get_history()
         return history.get_row(0).get_value('username')
 
 
     def get_value(self, name):
-        rows = self.handler.get_handler('.history').lines
+        rows = self.get_history().lines
         if rows:
             return rows[-1].get_value(name)
         return None
@@ -1120,10 +1169,15 @@ class Issue(Folder, VersioningAware):
         infos = {'name': self.name,
                  'id': int(self.name),
                  'title': self.get_value('title')}
-        for name in 'module', 'version', 'type', 'priority', 'state':
+        for name in 'module', 'type', 'priority', 'state':
             value = self.get_value(name)
             row = tables[name].get_row_by_id(value)
             infos[name] = row and row.get_value('title') or None
+        for name in ('version', ):
+            value = self.get_value(name)
+            record = tables[name].handler.get_record(value)
+            infos[name] = record and record.title or None
+
         assigned_to = self.get_value('assigned_to')
         # solid in case the user has been removed
         users = self.get_object('/users')
@@ -1207,7 +1261,7 @@ class Issue(Folder, VersioningAware):
         # Local variables
         users = self.get_object('/users')
         (kk, kk, title, module, version, type, priority, assigned_to, state,
-            comment, file) = self.handler.get_handler('.history').lines[-1]
+            comment, file) = self.get_history().lines[-1]
 
         # Build the namespace
         namespace = {}
@@ -1333,8 +1387,8 @@ class Issue(Folder, VersioningAware):
                 if module is None:
                     row_ns['version'] = ' '
                 else:
-                    version = versions.get_row_by_id(version).get_value('title')
-                    row_ns['version'] = version
+                    version = versions.handler.get_record(int(version))
+                    row_ns['version'] = version.get_value('title')
             if type != previous_type:
                 previous_type = type
                 if type is None:
