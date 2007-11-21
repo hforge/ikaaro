@@ -33,7 +33,7 @@
       <tr>
         <td valign="top">
           <label for="module">Module<stl:block if="is_admin"> (<a
-            href="./modules.csv/;view">Edit</a>)</stl:block></label>
+            href="./modules/;view">Edit</a>)</stl:block></label>
           <br/>
           <select name="module" id="module" class="tracker_select"
             multiple="multiple" size="3">
@@ -53,7 +53,7 @@
         </td>
         <td valign="top">
           <label for="version">Version<stl:block if="is_admin"> (<a
-            href="./versions.csv/;view">Edit</a>)</stl:block></label>
+            href="./versions/;view">Edit</a>)</stl:block></label>
           <br/>
           <select name="version" id="version" class="tracker_select"
             multiple="multiple" size="3">
@@ -65,7 +65,7 @@
       <tr>
         <td valign="top">
           <label for="type">Type<stl:block if="is_admin"> (<a
-            href="./types.csv/;view">Edit</a>)</stl:block></label>
+            href="./types/;view">Edit</a>)</stl:block></label>
           <br/>
           <select name="type" id="type" class="tracker_select"
             multiple="multiple" size="3">
@@ -75,7 +75,7 @@
         </td>
         <td>
           <label for="state">Status<stl:block if="is_admin"> (<a
-            href="./states.csv/;view">Edit</a>)</stl:block></label>
+            href="./states/;view">Edit</a>)</stl:block></label>
           <br/>
           <select name="state" id="state" class="tracker_select"
             multiple="multiple" size="3">
@@ -85,7 +85,7 @@
         </td>
         <td valign="top">
           <label for="priority">Priority<stl:block if="is_admin"> (<a
-            href="./priorities.csv/;view">Edit</a>)</stl:block></label>
+            href="./priorities/;view">Edit</a>)</stl:block></label>
           <br/>
           <select name="priority" id="priority" class="tracker_select"
             multiple="multiple" size="3">

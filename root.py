@@ -63,7 +63,7 @@ itools_target_languages = config.get_value('target_languages')
 class Root(WebSite):
 
     class_id = 'iKaaro'
-    class_version = '20070816'
+    class_version = '20071119'
     class_title = u'iKaaro'
     class_icon16 = 'images/Root16.png'
     class_icon48 = 'images/Root48.png'
@@ -436,6 +436,14 @@ class Root(WebSite):
                     new_message = Message(data=data)
                     handler.set_changed()
                     handler.events = new_message.events
+
+
+    def update_20071119(self):
+        from tracker import Tracker
+
+        for handler in self.traverse_objects():
+            if isinstance(handler, Tracker):
+                handler.update('20071119')
 
 
 register_object_class(Root)

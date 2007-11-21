@@ -81,8 +81,8 @@ class Tracker(Folder):
         ['browse_content?mode=list'],
         ['edit_metadata_form']]
 
-    __fixed_handlers__ = ['modules.csv', 'versions.csv', 'types.csv',
-        'priorities.csv', 'states.csv']
+    __fixed_handlers__ = ['modules', 'versions', 'types',
+        'priorities', 'states']
 
 
     @staticmethod
@@ -92,19 +92,19 @@ class Tracker(Folder):
         table = VersionsTable()
         table.add_record({'title': u'1.0', 'released': False})
         table.add_record({'title': u'2.0', 'released': False})
-        folder.set_handler('%s/versions.csv' % name, table)
+        folder.set_handler('%s/versions' % name, table)
         metadata = Versions.build_metadata()
-        folder.set_handler('%s/versions.csv.metadata' % name, metadata)
+        folder.set_handler('%s/versions.metadata' % name, metadata)
         # Other Tables
         tables = [
-            ('modules.csv', [u'Documentation', u'Unit Tests',
+            ('modules', [u'Documentation', u'Unit Tests',
                 u'Programming Interface', u'Command Line Interface',
                 u'Visual Interface']),
-            ('types.csv', [u'Bug', u'New Feature', u'Security Issue',
+            ('types', [u'Bug', u'New Feature', u'Security Issue',
                 u'Stability Issue', u'Data Corruption Issue',
                 u'Performance Improvement', u'Technology Upgrade']),
-            ('priorities.csv', [u'High', u'Medium', u'Low']),
-            ('states.csv', [u'Open', u'Fixed', u'Closed'])]
+            ('priorities', [u'High', u'Medium', u'Low']),
+            ('states', [u'Open', u'Fixed', u'Closed'])]
         for table_name, values in tables:
             table = SelectTableTable()
             for title in values:
@@ -238,12 +238,12 @@ class Tracker(Folder):
         state = get_values('state', type=Integer)
 
         get = self.get_object
-        namespace['modules'] = get('modules.csv').get_options(module)
-        namespace['types'] = get('types.csv').get_options(type)
-        namespace['versions'] = get('versions.csv').get_options(version)
-        namespace['priorities'] = get('priorities.csv').get_options(priority,
+        namespace['modules'] = get('modules').get_options(module)
+        namespace['types'] = get('types').get_options(type)
+        namespace['versions'] = get('versions').get_options(version)
+        namespace['priorities'] = get('priorities').get_options(priority,
             sort=False)
-        namespace['states'] = get('states.csv').get_options(state, sort=False)
+        namespace['states'] = get('states').get_options(state, sort=False)
         namespace['users'] = self.get_members_namespace(assign, True)
 
         # is_admin
@@ -276,7 +276,7 @@ class Tracker(Folder):
         if search_title and search_title != stored_search_title:
             # New Stored Search
             search_name = self.get_new_id('s')
-            stored_search = StoredSearch.make_object(self, search_name)
+            stored_search = StoredSearch.make_object(StoredSearch, self, search_name)
 
         if stored_search is None:
             # Just Search
@@ -359,8 +359,13 @@ class Tracker(Folder):
             title = self.gettext(u'View Tracker')
         nb_results = len(lines)
         namespace['title'] = title
-        # Keep the search_parameters
-        namespace['search_parameters'] = encode_query(context.uri.query)
+        # Keep the search_parameters, clean different actions
+        params = encode_query(context.uri.query)
+        params = params.replace('change_several_bugs=1', '')
+        params = params.replace('export_to_csv=1', '')
+        params = params.replace('export_to_text=1', '')
+        params = params.replace('&&', '&').replace('?&', '?').replace('&#', '#')
+        namespace['search_parameters'] = params
         criteria = []
         for key in ['search_name', 'mtime']:
             value = context.get_form_value(key)
@@ -415,12 +420,12 @@ class Tracker(Folder):
             namespace['method'] = 'POST'
             namespace['action'] = ';change_several_bugs'
             namespace['change_several_bugs'] = True
-            namespace['modules'] = get('modules.csv').get_options()
-            namespace['versions'] = get('versions.csv').get_options()
-            namespace['priorities'] = get('priorities.csv').get_options()
-            namespace['states'] = get('states.csv').get_options()
-            namespace['types'] = get('types.csv').get_options()
-            namespace['states'] = get('states.csv').get_options()
+            namespace['modules'] = get('modules').get_options()
+            namespace['versions'] = get('versions').get_options()
+            namespace['priorities'] = get('priorities').get_options()
+            namespace['states'] = get('states').get_options()
+            namespace['types'] = get('types').get_options()
+            namespace['states'] = get('states').get_options()
             users = self.get_object('/users')
             namespace['users'] = self.get_members_namespace('')
 
@@ -653,21 +658,21 @@ class Tracker(Folder):
             if mtime is not None:
                 if (now - handler.get_mtime()).days >= mtime:
                     continue
-            if module and handler.get_value('module') not in module:
+            if module != [] and handler.get_value('module') not in module:
                 continue
-            if version and handler.get_value('version') not in version:
+            if version != [] and handler.get_value('version') not in version:
                 continue
-            if type and handler.get_value('type') not in type:
+            if type != [] and handler.get_value('type') not in type:
                 continue
-            if priority and handler.get_value('priority') not in priority:
+            if priority != [] and handler.get_value('priority') not in priority:
                 continue
-            if assign:
+            if assign != []:
                 value = handler.get_value('assigned_to')
                 if value == '':
                     value = 'nobody'
                 if value not in assign:
                     continue
-            if state and handler.get_value('state') not in state:
+            if state != [] and handler.get_value('state') not in state:
                 continue
             # Append
             issues.append(handler)
@@ -690,16 +695,16 @@ class Tracker(Folder):
         # Others
         get = self.get_object
         module = context.get_form_value('module', type=Integer)
-        namespace['modules'] = get('modules.csv').get_options(module)
+        namespace['modules'] = get('modules').get_options(module)
         version = context.get_form_value('version', type=Integer)
-        namespace['versions'] = get('versions.csv').get_options(version)
+        namespace['versions'] = get('versions').get_options(version)
         type = context.get_form_value('type', type=Integer)
-        namespace['types'] = get('types.csv').get_options(type)
+        namespace['types'] = get('types').get_options(type)
         priority = context.get_form_value('priority', type=Integer)
-        namespace['priorities'] = get('priorities.csv').get_options(priority,
+        namespace['priorities'] = get('priorities').get_options(priority,
             sort=False)
         state = context.get_form_value('state', type=Integer)
-        namespace['states'] = get('states.csv').get_options(state, sort=False)
+        namespace['states'] = get('states').get_options(state, sort=False)
 
         users = self.get_object('/users')
         assigned_to = context.get_form_values('assigned_to', type=String)
@@ -720,7 +725,7 @@ class Tracker(Folder):
 
         # Add
         id = self.get_new_id()
-        issue = Issue.make_object(self, id)
+        issue = Issue.make_object(Issue, self, id)
         issue._add_record(context)
 
         goto = context.uri.resolve2('../%s/;edit_form' % issue.name)
@@ -739,6 +744,38 @@ class Tracker(Folder):
 
         return context.uri.resolve2('../%s/;edit_form' % issue_name)
 
+
+
+    def update_20071119(self):
+        from itools.handlers import File as BaseFile
+        columns = ['id', 'title']
+        for new_name in ['modules', 'types', 'priorities', 'states',
+                         'versions']:
+            old_name = '%s.csv' % new_name
+            old_handler = BaseFile('%s/%s' %(self.handler.uri, old_name))
+            if new_name == 'versions':
+                columns.append('released')
+                table = VersionsTable()
+                metadata = Versions.build_metadata()
+            else:
+                table = SelectTableTable()
+                metadata = SelectTable.build_metadata()
+            table.update_from_csv(old_handler.to_str(), columns)
+            self.handler.del_handler(old_name)
+            self.handler.del_handler('%s.metadata' % old_name)
+            self.handler.set_handler(new_name, table)
+            self.handler.set_handler('%s.metadata' % new_name, metadata)
+
+        # .history of each Issue
+        columns = ['datetime', 'username', 'title', 'module', 'version',
+                   'type', 'priority', 'assigned_to', 'state', 'comment',
+                   'file']
+        for issue in self.search_objects(object_class=Issue):
+            old_handler = BaseFile('%s/.history' %(issue.handler.uri))
+            table = History()
+            table.update_from_csv(old_handler.to_str(), columns)
+            issue.handler.del_handler('.history')
+            issue.handler.set_handler('.history', table)
 
 
 ###########################################################################
@@ -794,24 +831,22 @@ class SelectTable(Table):
                             'button_delete', None)]
 
         fields = self.get_fields()
-        fields.insert(0, ('index', u'id'))
+        fields.insert(0, ('id', u'id'))
         fields.append(('issues', u'Issues'))
         records = []
 
-        index = start
         getter = lambda x, y: x.get_value(y)
 
-        filter = self.name[:-5]
+        filter = self.name[:-1]
         if self.name.startswith('priorit'):
             filter = 'priority'
 
         for record in self.handler.get_records():
             id = record.id
             records.append({})
-            records[-1]['id'] = str(id)
             records[-1]['checkbox'] = True
             # Fields
-            records[-1]['index'] = id, ';edit_record_form?id=%s' % id
+            records[-1]['id'] = id, ';edit_record_form?id=%s' % id
             for field, field_title in fields[1:-1]:
                 value = self.handler.get_value(record, field)
                 datatype = self.handler.get_datatype(field)
@@ -844,9 +879,8 @@ class SelectTable(Table):
                 value = '<a href="../;view?%s=%s">%s issues</a>'
                 if count == 1:
                     value = '<a href="../;view?%s=%s">%s issue</a>'
-                value = XMLParser(value % (filter, index, count))
+                value = XMLParser(value % (filter, id, count))
             records[-1]['issues'] = value
-            index += 1
 
         # Sorting
         sortby = context.get_form_value('sortby')
@@ -881,25 +915,6 @@ class Versions(SelectTable):
 
     class_id = 'tracker_versions'
     class_handler = VersionsTable
-
-##    def get_options(self, value=None, sort=True):
-##        table = self.handler
-##        options = [ {'id': x.id, 'title': x.title} for x in table.get_records() ]
-##        if sort is True:
-##            options.sort(key=lambda x: x['title'])
-##        # Set 'is_selected'
-##        if value is None:
-##            for option in options:
-##                option['is_selected'] = False
-##        elif isinstance(value, list):
-##            for option in options:
-##                option['is_selected'] = (option['id'] in value)
-##        else:
-##            for option in options:
-##                option['is_selected'] = (option['id'] == value)
-##
-##        return options
-
 
 
 ###########################################################################
@@ -1030,17 +1045,16 @@ class Issue(Folder, VersioningAware):
             guessed = mimetypes.guess_type(filename)[0]
             if guessed is not None:
                 mimetype = guessed
-            # Set the handler
-            cls = get_object_class(mimetype)
-            handler = cls(string=body)
-
             # Find a non used name
             filename = checkid(filename)
             filename = generate_name(filename, self.get_names())
             record['file'] = filename
-
-            handler, metadata = self.set_object(filename, handler)
-            metadata.set_property('format', mimetype)
+            # Set the handler
+            cls = get_object_class(mimetype)
+            handler = cls.class_handler(string=body)
+            metadata = cls.build_metadata()
+            self.handler.set_handler(filename, handler)
+            self.handler.set_handler('%s.metadata' % filename, metadata)
         # Update
         modifications = self.get_diff_with(record, context)
         history = self.get_history()
@@ -1109,11 +1123,11 @@ class Issue(Folder, VersioningAware):
             title = self.gettext(u'Title')
             modifications.append(template %(title, last_title, new_title))
         # List modifications
-        for key in [(u'Module', 'module', 'modules.csv'),
-                    (u'Version', 'version', 'versions.csv'),
-                    (u'Type', 'type', 'types.csv'),
-                    (u'Priority', 'priority', 'priorities.csv'),
-                    (u'State', 'state', 'states.csv')]:
+        for key in [(u'Module', 'module', 'modules'),
+                    (u'Version', 'version', 'versions'),
+                    (u'Type', 'type', 'types'),
+                    (u'Priority', 'priority', 'priorities'),
+                    (u'State', 'state', 'states')]:
             title, name, csv_name = key
             title = self.gettext(title)
             new_value = record[name]
@@ -1155,18 +1169,21 @@ class Issue(Folder, VersioningAware):
         This dict is used to construct a line for a table.
         """
         parent = self.parent
-        tables = {'module': parent.get_object('modules.csv'),
-                  'version': parent.get_object('versions.csv'),
-                  'type': parent.get_object('types.csv'),
-                  'priority': parent.get_object('priorities.csv'),
-                  'state': parent.get_object('states.csv')}
+        tables = {'module': parent.get_object('modules'),
+                  'version': parent.get_object('versions'),
+                  'type': parent.get_object('types'),
+                  'priority': parent.get_object('priorities'),
+                  'state': parent.get_object('states')}
         infos = {'name': self.name,
                  'id': int(self.name),
                  'title': self.get_value('title')}
         for name in 'module', 'version', 'type', 'priority', 'state':
             value = self.get_value(name)
-            record = tables[name].handler.get_record(value)
-            infos[name] = record and record.title or None
+            if value is not None:
+                record = tables[name].handler.get_record(int(value))
+                infos[name] = record and record.title or None
+            else:
+                infos[name] = None
 
         assigned_to = self.get_value('assigned_to')
         # solid in case the user has been removed
@@ -1272,12 +1289,12 @@ class Issue(Folder, VersioningAware):
         namespace['reported_by'] = reported_by.get_title()
         # Topics, Version, Priority, etc.
         get = self.parent.get_object
-        namespace['modules'] = get('modules.csv').get_options(module)
-        namespace['versions'] = get('versions.csv').get_options(version)
-        namespace['types'] = get('types.csv').get_options(type)
-        namespace['priorities'] = get('priorities.csv').get_options(priority,
+        namespace['modules'] = get('modules').get_options(module)
+        namespace['versions'] = get('versions').get_options(version)
+        namespace['types'] = get('types').get_options(type)
+        namespace['priorities'] = get('priorities').get_options(priority,
             sort=False)
-        namespace['states'] = get('states.csv').get_options(state, sort=False)
+        namespace['states'] = get('states').get_options(state, sort=False)
         # Assign To
         namespace['users'] = self.parent.get_members_namespace(assigned_to)
         # Date Start / Date End
@@ -1336,11 +1353,11 @@ class Issue(Folder, VersioningAware):
 
         # Local variables
         users = self.get_object('/users')
-        versions = self.get_object('../versions.csv')
-        types = self.get_object('../types.csv')
-        states = self.get_object('../states.csv')
-        modules = self.get_object('../modules.csv')
-        priorities = self.get_object('../priorities.csv')
+        versions = self.get_object('../versions')
+        types = self.get_object('../types')
+        states = self.get_object('../states')
+        modules = self.get_object('../modules')
+        priorities = self.get_object('../priorities')
         # Initial values
         previous_title = None
         previous_version = None
