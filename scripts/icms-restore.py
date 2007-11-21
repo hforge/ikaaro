@@ -22,7 +22,7 @@ from optparse import OptionParser
 # Import from itools
 import itools
 from itools import vfs
-from itools.handlers import (Database, READY, TRANSACTION_PHASE1,
+from itools.handlers import (SafeDatabase, READY, TRANSACTION_PHASE1,
     TRANSACTION_PHASE2)
 
 # Import from ikaaro
@@ -30,7 +30,7 @@ from ikaaro.server import ask_confirmation
 
 
 def restore(parser, options, target):
-    database = Database('%s/database.commit' % target)
+    database = SafeDatabase('%s/database.commit' % target)
 
     state = database.get_state()
     if state == READY:

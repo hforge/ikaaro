@@ -19,7 +19,7 @@
 # Import from itools
 from itools.pdf import PDFFile
 from itools.stl import stl
-from itools.handlers import (Image as ImageFile, TarFile, ZipFile, GzipFile,
+from itools.handlers import (Image as ImageFile, TARFile, ZIPFile, GzipFile,
         Bzip2File)
 
 # Import from ikaaro
@@ -260,7 +260,7 @@ class ZipArchive(Archive):
     class_description = u"Zip Archive"
     class_icon16 = 'images/Zip16.png'
     class_icon48 = 'images/Zip48.png'
-    class_handler = ZipFile
+    class_handler = ZIPFile
 
 
 
@@ -271,7 +271,7 @@ class TarArchive(Archive):
     class_description = u"Tar Archive"
     class_icon16 = 'images/Tar16.png'
     class_icon48 = 'images/Tar48.png'
-    class_handler = TarFile
+    class_handler = TARFile
 
 
 

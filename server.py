@@ -25,7 +25,7 @@ from tempfile import mkstemp
 from itools.uri import get_absolute_reference2
 from itools import vfs
 from itools.catalog import Catalog
-from itools.handlers import ConfigFile, Database
+from itools.handlers import ConfigFile, SafeDatabase
 from itools.web import Server as BaseServer
 from handlers import Metadata
 import registry
@@ -79,7 +79,7 @@ class Server(BaseServer):
                 port = int(port)
 
         # The database
-        database = Database('%s/database.commit' % target.path)
+        database = SafeDatabase('%s/database.commit' % target.path)
         self.database = database
         # The catalog
         self.catalog = Catalog('%s/catalog' % target)
