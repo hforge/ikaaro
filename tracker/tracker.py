@@ -29,13 +29,11 @@ from itools.datatypes import Boolean, DateTime, Integer, String, Unicode, XML
 from itools.i18n import format_datetime
 from itools.handlers import ConfigFile, Table as BaseTable
 from itools.rest import checkid
-from itools.csv import IntegerKey, CSVFile
 from itools.xml import XMLParser
 from itools.stl import stl
 from itools.uri import encode_query, Reference, Path
 
 # Import from ikaaro
-from ikaaro.csv import CSV
 from ikaaro.file import File
 from ikaaro.folder import Folder
 from ikaaro.messages import *
@@ -495,16 +493,17 @@ class Tracker(Folder):
             if issue.name not in selected_issues:
                   continue
             assigned_to = issue.get_value('assigned_to')
-            # Create a new row
-            row = [datetime.now()]
+            # Create a new record
+            record = {}
+            record['datetime'] = datetime.now()
             # User
             user = context.user
             if user is None:
-                row.append('')
+                record['username'] = ''
             else:
-                row.append(user.name)
+                record['username'] = user.name
             # Title (Is the same)
-            row.append(issue.get_value('title'))
+            record['title'] = issue.get_value('title')
             # Other changes
             for name in ['module', 'version', 'type', 'priority', 'assigned_to',
                          'state']:
@@ -519,20 +518,19 @@ class Tracker(Folder):
                     value = new_value
                 if type == Unicode:
                     value = value.strip()
-                row.append(value)
+                record[name] = value
             # Comment
-            row.append(comment)
-            # No attachment
-            row.append('')
-            # Add the list of modifications to comment
-            modifications = issue.get_diff_with(row, context)
+            record['comment'] = comment
+            # No attachment XXX
+            record['file'] = ''
+            # Add the list of modifications to comment XXX
+            modifications = issue.get_diff_with(record, context)
             if modifications:
                 title = self.gettext(u'Modifications:')
-                comment_index = History.columns.index('comment')
-                row[comment_index] += u'\n\n%s\n\n%s' % (title, modifications)
+                record['comment'] += u'\n\n%s\n\n%s' % (title, modifications)
             # Save issue
             history = issue.handler.get_handler('.history')
-            history.add_row(row)
+            history.add_record(record)
             # Mail (create a dict with a list of issues for each user)
             new_assigned_to = context.get_form_value('assigned_to')
             info = {'href': context.uri.resolve(self.get_pathto(issue)),
@@ -542,7 +540,7 @@ class Tracker(Folder):
                 if not users_issues.has_key(assigned_to):
                     users_issues[assigned_to] = []
                 users_issues[assigned_to].append(info)
-            if new_assigned_to and (assigned_to!=new_assigned_to):
+            if new_assigned_to and (assigned_to != new_assigned_to):
                 if not users_issues.has_key(new_assigned_to):
                     users_issues[new_assigned_to] = []
                 users_issues[new_assigned_to].append(info)
@@ -580,7 +578,7 @@ class Tracker(Folder):
 
     def get_export_to_text(self, context):
         """
-        Generate a text with selected rows of selected issues
+        Generate a text with selected records of selected issues
         """
         # Get selected columns
         selected_columns = context.get_form_values('column_selection')
@@ -648,7 +646,7 @@ class Tracker(Folder):
         # Execute the search
         issues = []
         now = datetime.now()
-        for handler in self.search_objcets(object_class=Issue):
+        for handler in self.search_objects(object_class=Issue):
             if text:
                 if not handler.has_text(text):
                     continue
@@ -723,7 +721,7 @@ class Tracker(Folder):
         # Add
         id = self.get_new_id()
         issue = Issue.make_object(self, id)
-        issue._add_row(context)
+        issue._add_record(context)
 
         goto = context.uri.resolve2('../%s/;edit_form' % issue.name)
         return context.come_back(u'New issue addded.', goto=goto)
@@ -792,7 +790,8 @@ class SelectTable(Table):
         if total:
             ac = self.get_access_control()
             if ac.is_allowed_to_edit(context.user, self):
-                actions = [('del_row_action', u'Remove', 'button_delete',None)]
+                actions = [('del_record_action', u'Remove', 
+                            'button_delete', None)]
 
         fields = self.get_fields()
         fields.insert(0, ('index', u'id'))
@@ -819,7 +818,6 @@ class SelectTable(Table):
 
                 multiple = getattr(datatype, 'multiple', False)
                 if multiple is True:
-                    print 'multiple', field_title, value
                     value.sort()
                     if len(value) > 0:
                         rmultiple = len(value) > 1
@@ -879,29 +877,28 @@ class VersionsTable(BaseTable):
               'released': Boolean(title=u'Released')}
 
 
-
-class Versions(Table):
+class Versions(SelectTable):
 
     class_id = 'tracker_versions'
     class_handler = VersionsTable
 
-    def get_options(self, value=None, sort=True):
-        table = self.handler
-        options = [ {'id': x.id, 'title': x.title} for x in table.get_records() ]
-        if sort is True:
-            options.sort(key=lambda x: x['title'])
-        # Set 'is_selected'
-        if value is None:
-            for option in options:
-                option['is_selected'] = False
-        elif isinstance(value, list):
-            for option in options:
-                option['is_selected'] = (option['id'] in value)
-        else:
-            for option in options:
-                option['is_selected'] = (option['id'] == value)
-
-        return options
+##    def get_options(self, value=None, sort=True):
+##        table = self.handler
+##        options = [ {'id': x.id, 'title': x.title} for x in table.get_records() ]
+##        if sort is True:
+##            options.sort(key=lambda x: x['title'])
+##        # Set 'is_selected'
+##        if value is None:
+##            for option in options:
+##                option['is_selected'] = False
+##        elif isinstance(value, list):
+##            for option in options:
+##                option['is_selected'] = (option['id'] in value)
+##        else:
+##            for option in options:
+##                option['is_selected'] = (option['id'] == value)
+##
+##        return options
 
 
 
@@ -912,7 +909,7 @@ class StoredSearch(Text):
 
     class_id = 'stored_search'
     class_title = u'Stored Search'
-    class_handler = Config
+    class_handler = ConfigFile
 
 
     def get_values(self, name, type=String):
@@ -930,10 +927,8 @@ class StoredSearch(Text):
 ###########################################################################
 # Issues
 ###########################################################################
-class History(CSVFile):
+class History(BaseTable):
 
-    columns = ['datetime', 'username', 'title', 'module', 'version', 'type',
-               'priority', 'assigned_to', 'state', 'comment', 'file']
     schema = {'datetime': DateTime,
               'username': String,
               'title': Unicode,
@@ -977,33 +972,45 @@ class Issue(Folder, VersioningAware):
 
 
     def get_history(self):
-        return self.get_handler('.history', cls=History)
-
-
-    def get_rows(self):
-        return self.get_history().get_rows()
-
-
-    def get_history(self):
         return self.handler.get_handler('.history', cls=History)
 
 
-    def _add_row(self, context):
+    def get_history_records(self):
+        return self.get_history().get_records()
+
+
+    def get_last_history_record(self):
+        history = self.handler.get_handler('.history', cls=History)
+        n_records = history.get_n_records()
+        if n_records == 0:
+            return None
+        return history.get_record(n_records - 1)
+
+
+    def get_value(self, name):
+        record = self.get_last_history_record()
+        if record:
+            return record.get_value(name)
+        return None
+
+
+    def _add_record(self, context):
         user = context.user
         root = context.root
         parent = self.parent
         users = root.get_object('users')
 
+        record = {}
         # Datetime
-        row = [datetime.now()]
-        # User
+        record['datetime'] = datetime.now()
+        # User XXX
         if user is None:
-            row.append('')
+            record['username'] = ''
         else:
-            row.append(user.name)
+            record['username'] = user.name
         # Title
         title = context.get_form_value('title', type=Unicode).strip()
-        row.append(title)
+        record['title'] = title
         # Version, Priority, etc.
         for name in ['module', 'version', 'type', 'priority', 'assigned_to',
                      'state', 'comment']:
@@ -1011,11 +1018,11 @@ class Issue(Folder, VersioningAware):
             value = context.get_form_value(name, type=type)
             if type == Unicode:
                 value = value.strip()
-            row.append(value)
-        # Files
+            record[name] = value
+        # Files XXX
         file = context.get_form_value('file')
         if file is None:
-            row.append('')
+            record['file'] = ''
         else:
             filename, mimetype, body = file
             # Upload
@@ -1030,14 +1037,14 @@ class Issue(Folder, VersioningAware):
             # Find a non used name
             filename = checkid(filename)
             filename = generate_name(filename, self.get_names())
-            row.append(filename)
+            record['file'] = filename
 
             handler, metadata = self.set_object(filename, handler)
             metadata.set_property('format', mimetype)
         # Update
-        modifications = self.get_diff_with(row, context)
+        modifications = self.get_diff_with(record, context)
         history = self.get_history()
-        history.add_row(row)
+        history.add_record(record)
         # Send a Notification Email
         # Notify / From
         if user is None:
@@ -1084,12 +1091,12 @@ class Issue(Folder, VersioningAware):
             root.send_email(from_addr, to_addr, subject, text=body)
 
 
-    def get_diff_with(self, row, context):
+    def get_diff_with(self, record, context):
         """Return a text with the diff between the last and new issue state"""
         root = context.root
         modifications = []
         history = self.get_history()
-        if history.lines:
+        if history.get_n_records() > 0:
             # Edit issue
             template = self.gettext(u'%s: %s to %s')
         else:
@@ -1097,7 +1104,7 @@ class Issue(Folder, VersioningAware):
             template = self.gettext(u'%s: %s%s')
         # Modification of title
         last_title = self.get_value('title') or ''
-        new_title = row[History.columns.index('title')]
+        new_title = record['title']
         if last_title != new_title:
             title = self.gettext(u'Title')
             modifications.append(template %(title, last_title, new_title))
@@ -1109,29 +1116,23 @@ class Issue(Folder, VersioningAware):
                     (u'State', 'state', 'states.csv')]:
             title, name, csv_name = key
             title = self.gettext(title)
-            key_index = History.columns.index(name)
-            new_value = row[key_index]
+            new_value = record[name]
             last_value = self.get_value(name)
             # Detect if modifications
             if last_value == new_value:
                 continue
-            last_title = None
+            new_title = last_title = u''
             csv = self.parent.get_object(csv_name).handler
-            if last_value is not None:
-                last_title = csv.get_record(last_value)
-            if last_title:
-                last_title = last_title.get_value('title')
-            new_title = csv.get_record(new_value)
-            if new_title:
-                new_title = new_title.get_value('title')
-            else:
-                new_title = u''
+            if last_value:
+                last_title = csv.get_record(last_value).title
+            if new_value:
+                new_title = csv.get_record(new_value).title
             text = template % (title, last_title, new_title)
             modifications.append(text)
 
         # Modifications of assigned_to
         last_user = self.get_value('assigned_to')
-        new_user = row[History.columns.index('assigned_to')]
+        new_user = record['assigned_to']
         if last_user and last_user!=new_user:
             last_user = root.get_user(last_user)
             if last_user:
@@ -1145,14 +1146,7 @@ class Issue(Folder, VersioningAware):
 
     def get_reported_by(self):
         history = self.get_history()
-        return history.get_row(0).get_value('username')
-
-
-    def get_value(self, name):
-        rows = self.get_history().lines
-        if rows:
-            return rows[-1].get_value(name)
-        return None
+        return history.get_record(0).username
 
 
     def get_informations(self):
@@ -1189,11 +1183,11 @@ class Issue(Folder, VersioningAware):
 
 
     def get_comment(self):
-        rows = self.get_history().lines
-        i = len(rows) - 1
+        records = self.get_history_records()
+        i = len(records) - 1
         while i >= 0:
-            row = rows[i]
-            comment = row.get_value('comment')
+            record = records[i]
+            comment = record.comment
             if comment:
                 return comment
             i -= 1
@@ -1256,8 +1250,17 @@ class Issue(Folder, VersioningAware):
 
         # Local variables
         users = self.get_object('/users')
-        (kk, kk, title, module, version, type, priority, assigned_to, state,
-            comment, file) = self.get_history().lines[-1]
+        values = self.get_last_history_record()
+        # XXX
+        title = values.title
+        module = values.module
+        version = values.version
+        type = values.type
+        priority = values.priority
+        assigned_to = values.assigned_to
+        state = values.state
+        comment = values.comment
+        file = values.file
 
         # Build the namespace
         namespace = {}
@@ -1285,14 +1288,14 @@ class Issue(Folder, VersioningAware):
         # Comments
         comments = []
         i = 0
-        for row in self.get_rows():
-            comment = row.get_value('comment')
-            file = row.get_value('file')
+        for record in self.get_history_records():
+            comment = record.comment
+            file = record.file
             if not comment and not file:
                 continue
-            datetime = row.get_value('datetime')
+            datetime = record.datetime
             # solid in case the user has been removed
-            username = row.get_value('username')
+            username = record.username
             user_title = username
             if users.has_object(username):
                 user_title = users.get_object(username).get_title()
@@ -1317,7 +1320,7 @@ class Issue(Folder, VersioningAware):
         if error is not None:
             return context.come_back(error)
         # Edit
-        self._add_row(context)
+        self._add_record(context)
 
         return context.come_back(MSG_CHANGES_SAVED)
 
@@ -1352,9 +1355,18 @@ class Issue(Folder, VersioningAware):
         namespace['number'] = self.name
         rows = []
         i = 0
-        for row in self.get_rows():
-            (datetime, username, title, module, version, type, priority,
-                assigned_to, state, comment, file) = row
+        for record in self.get_history_records():
+            datetime = record.datetime
+            username = record.username
+            title = record.title
+            module = record.module
+            version = record.version
+            type = record.type
+            priority = record.priority
+            assigned_to = record.assigned_to
+            state = record.state
+            comment = record.comment
+            file = record.file
             # solid in case the user has been removed
             user_exist = users.has_object(username)
             usertitle = (user_exist and
