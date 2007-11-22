@@ -739,7 +739,7 @@ class DBObject(CatalogAware, Node, DomainAware):
                 window.opener.CreateImage('%s');
                 window.close();
             </script>
-                    """ % object.get_abspath()
+                    """ % context.handler.get_pathto(object)
 
         return context.come_back(message=uri.query['message'])
 
@@ -786,7 +786,7 @@ class DBObject(CatalogAware, Node, DomainAware):
                 window.opener.CreateLink('%s');
                 window.close();
             </script>
-                    """ % object.get_abspath()
+                    """ % context.handler.get_pathto(object)
 
         return context.come_back(message=uri.query['message'])
 
