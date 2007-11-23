@@ -102,11 +102,12 @@ def init(parser, options, target):
     else:
         password = options.password
 
-    # Build the instance on memory
-    database = Database()
+    # Create the folder structure
     mkdir('%s/database' % target)
-    base = get_absolute_reference(target).resolve2('database')
+    mkdir('%s/log' % target)
     # Make the root
+    database = Database()
+    base = get_absolute_reference(target).resolve2('database')
     folder = database.get_handler(base)
     root = root_class._make_object(root_class, folder, email, password)
     database.save_changes()

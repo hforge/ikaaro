@@ -97,14 +97,14 @@ class Server(BaseServer):
         # Debug mode (TODO This should be a config and command line param)
         debug = bool(int(environ.get('DEBUG', '0')))
         if debug:
-            debug_log = '%s/debug_log' % path
+            debug_log = '%s/log/debug' % path
         else:
             debug_log = None
 
         # Initialize
         BaseServer.__init__(self, root, address=address, port=port,
-                            access_log='%s/access_log' % path,
-                            error_log='%s/error_log' % path,
+                            access_log='%s/log/access' % path,
+                            error_log='%s/log/error' % path,
                             debug_log=debug_log,
                             pid_file='%s/pid' % path)
 

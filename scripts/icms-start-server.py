@@ -39,6 +39,14 @@ def start(options, target):
         print
         return
 
+    # Check for the log folder
+    if not vfs.exists('%s/log' % target):
+        print 'The instance is not up-to-date, please type:'
+        print
+        print '    $ icms-update.py <instance>'
+        print
+        return
+
     # Set-up the server
     server = Server(target, address=options.address, port=options.port)
 

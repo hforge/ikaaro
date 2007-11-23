@@ -52,8 +52,8 @@ class Spool(object):
         self.smtp_host = config.get_value('smtp-host')
 
         # The logs
-        self.activity_log = open('%s/spool_log' % target.path, 'a+')
-        self.error_log = open('%s/spool_error_log' % target.path, 'a+')
+        self.activity_log = open('%s/log/spool' % target.path, 'a+')
+        self.error_log = open('%s/log/spool_error' % target.path, 'a+')
 
 
     def get_pid(self):
