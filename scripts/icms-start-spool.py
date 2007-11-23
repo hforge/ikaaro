@@ -18,8 +18,6 @@
 
 # Import from the Standard Library
 from optparse import OptionParser
-import os
-import sys
 
 # Import from itools
 import itools
@@ -36,26 +34,15 @@ def start(optios, target):
         return
 
     print '[%s] Start Mail Spool.' % target
-    if options.debug is False:
-        # Redirect standard file descriptors to '/dev/null'
-        devnull = os.open(os.devnull, os.O_RDWR)
-        sys.stdin.close()
-        os.dup2(devnull, 0)
-        sys.stdout.flush()
-        os.dup2(devnull, 1)
-        sys.stderr.flush()
-        os.dup2(devnull, 2)
     spool.start()
 
 
 if __name__ == '__main__':
     # The command line parser
-    usage = ('%prog TARGET')
+    usage = '%prog TARGET'
     version = 'itools %s' % itools.__version__
     description = ('Starts a spool server')
     parser = OptionParser(usage, version=version, description=description)
-    parser.add_option('-d', '--debug', action="store_true", default=False,
-                      help="Start the server on debug mode.")
 
     options, args = parser.parse_args()
     if len(args) == 0:

@@ -73,13 +73,22 @@ def init(parser, options, target):
     # The SMTP host
     comment = [
         'The variable "smtp-host" defines the name or IP address of the SMTP',
-        'relay. This option is required for the application to send emails.',
+        'relay.  This option is required for the application to send emails.',
         '',
         'smtp-host = localhost']
     if options.smtp_host:
         config.set_value('smtp-host', options.smtp_host, comment=comment)
     else:
         config.append_comment(comment)
+    # Debug mode
+    comment = [
+        'The variable "debug" defines whether the web server will be run in',
+        'debug mode or not.  When run in debug mode (debug = 1), debugging',
+        'information will be written to the "log/debug" file.  By default',
+        'debug mode is not active (debug = 0).',
+        '',
+        'debug = 1']
+    config.append_comment(comment)
     # Save the file
     config.save_state_to('%s/config.conf' % target)
 

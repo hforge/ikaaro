@@ -19,8 +19,6 @@
 
 # Import from the Standard Library
 from optparse import OptionParser
-import os
-import sys
 
 # Import from itools
 import itools
@@ -48,7 +46,7 @@ def start(options, target):
         return
 
     # Set-up the server
-    server = Server(target, address=options.address, port=options.port)
+    server = Server(target, options.address, options.port, options.debug)
 
     # Check the instance is up-to-date
     root = server.root
@@ -65,33 +63,24 @@ def start(options, target):
         print '[%s] The Web Server is already running.' % target
         return
 
-    print '[%s] Start Web Server (listens port %s).' % (target, server.port)
-    if options.debug is False:
-        # Redirect standard file descriptors to '/dev/null'
-        devnull = os.open(os.devnull, os.O_RDWR)
-        sys.stdin.close()
-        os.dup2(devnull, 0)
-        sys.stdout.flush()
-        os.dup2(devnull, 1)
-        sys.stderr.flush()
-        os.dup2(devnull, 2)
-
+    address = server.address or '*'
+    port = server.port
+    print '[%s] Web Server listens %s:%s' % (target, address, port)
     server.start()
 
 
 if __name__ == '__main__':
-    usage = ('%prog [OPTIONS] TARGET\n'
-             '       %prog TARGET [TARGET]*')
+    usage = '%prog [OPTIONS] TARGET'
     version = 'itools %s' % itools.__version__
     description = ('Starts a web server that publishes the TARGET itools.cms'
                    ' instance to the world. If several TARGETs are given, one'
                    ' server will be started for each one (in this mode no'
                    ' options are available).')
     parser = OptionParser(usage, version=version, description=description)
-    parser.add_option('-d', '--debug', action="store_true", default=False,
-                      help="Start the server on debug mode.")
     parser.add_option('-a', '--address', help='listen to IP ADDRESS')
     parser.add_option('-p', '--port', type='int', help='listen to PORT number')
+    parser.add_option('', '--debug', action="store_true", default=False,
+                      help="Start the server on debug mode.")
     options, args = parser.parse_args()
     if len(args) == 0:
         parser.error('The TARGET argument is missing.')

@@ -17,19 +17,22 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
-from os import fdopen, environ
+from os import fdopen
 import sys
 from tempfile import mkstemp
 
 # Import from itools
+from itools.catalog import Catalog
+from itools.datatypes import Boolean
+from itools.handlers import ConfigFile, SafeDatabase
 from itools.uri import get_absolute_reference2
 from itools import vfs
-from itools.catalog import Catalog
-from itools.handlers import ConfigFile, SafeDatabase
 from itools.web import Server as BaseServer
+
+# Import from ikaaro
+from catalog import get_to_index, get_to_unindex
 from handlers import Metadata
 import registry
-from catalog import get_to_index, get_to_unindex
 from utils import is_pid_running
 from website import WebSite
 
@@ -50,7 +53,7 @@ def get_config(target):
 
 class Server(BaseServer):
 
-    def __init__(self, target, address=None, port=None):
+    def __init__(self, target, address=None, port=None, debug=False):
         target = get_absolute_reference2(target)
         self.target = target
 
@@ -94,9 +97,8 @@ class Server(BaseServer):
         root.name = root.class_title
 
         path = target.path
-        # Debug mode (TODO This should be a config and command line param)
-        debug = bool(int(environ.get('DEBUG', '0')))
-        if debug:
+        # Debug mode
+        if debug or config.get_value('debug', type=Boolean, default=False):
             debug_log = '%s/log/debug' % path
         else:
             debug_log = None

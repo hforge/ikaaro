@@ -20,7 +20,7 @@
 # Import from the Standard Library
 from optparse import OptionParser
 from time import sleep
-import subprocess
+from subprocess import Popen, PIPE
 import sys
 from os.path import dirname, join, realpath
 
@@ -30,32 +30,44 @@ import itools
 
 def start(parser, options, target):
     script_path = dirname(realpath(sys.argv[0]))
+    # Detach
+    if options.detach:
+        stdin = stdout = stderr = PIPE
+    else:
+        stdin = stdout = stderr = None
+
     # Start Server
     path_icms_start_server = join(script_path, 'icms-start-server.py')
     args = [path_icms_start_server, target]
     if options.debug:
-        args.append('-d')
+        args.append('--debug')
     if options.port:
-        args.append('-p %s' % options.port)
+        args.append('--port=%s' % options.port)
     if options.address:
-        args.append('-a %s' % options.address)
-    p_server = subprocess.Popen(' '.join(args), shell=True)
-    sleep(0.4)
+        args.append('--address=%s' % options.address)
+    args = ' '.join(args)
+    p_server = Popen(args, 0, None, stdin, stdout, stderr, shell=True)
+    # Detach (FIXME Output from the child is lost)
+    if options.detach:
+        p_server.stdin.close()
+        p_server.stdout.close()
+        p_server.stderr.close()
 
     # Start the Mail Spool
     path_icms_start_spool = join(script_path, 'icms-start-spool.py')
-    args = [path_icms_start_spool, target]
-    if options.debug:
-        args.append('-d')
-    p_spool = subprocess.Popen(' '.join(args), shell=True)
-    sleep(0.4)
+    args = '%s %s' % (path_icms_start_spool, target)
+    p_spool = Popen(args, 0, None, stdin, stdout, stderr, shell=True)
+    # Detach (FIXME Output from the child is lost)
+    if options.detach:
+        p_spool.stdin.close()
+        p_spool.stdout.close()
+        p_spool.stderr.close()
 
     # Debugging mode
-    if options.debug is True:
+    if options.detach is False:
         try:
             p_server.wait()
         except KeyboardInterrupt:
-            sleep(0.1)
             print "Terminated by user."
         except:
             pass
@@ -73,10 +85,13 @@ if __name__ == '__main__':
                    ' options are available).')
     parser = OptionParser(usage, version=version, description=description)
     parser.add_option(
-        '-d', '--debug', action="store_true", default=False,
-        help="start the server on debug mode (don't detach from the console)")
-    parser.add_option(
         '-a', '--address', help='listen to IP ADDRESS')
+    parser.add_option(
+        '', '--debug', action="store_true", default=False,
+        help="Start the server on debug mode.")
+    parser.add_option(
+        '-d', '--detach', action="store_true", default=False,
+        help="Detach from the console.")
     parser.add_option(
         '-p', '--port', type='int', help='listen to PORT number')
 
@@ -86,7 +101,7 @@ if __name__ == '__main__':
         parser.error('The TARGET argument is missing.')
     elif n_args == 1:
         pass
-    elif options.address or options.debug or options.port:
+    elif options.address or options.debug or options.detach or options.port:
         parser.error(
             'Options are not available when starting several servers at once.')
 
