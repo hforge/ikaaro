@@ -96,14 +96,14 @@ class Dressable(Folder, EpozEditable):
     # API / Private
     #######################################################################
     def _get_image(self, context, handler):
-        here = context.handler
+        here = context.object
         path = here.get_pathto(handler)
         content = '<img src="%s"/>' % path
         return XMLParser(content)
 
 
     def _get_document(self, context, handler):
-        here = context.handler
+        here = context.object
         stream = handler.get_body().get_content_elements()
         prefix = here.get_pathto(handler)
         return set_prefix(stream, prefix)
@@ -333,7 +333,7 @@ class Dressable(Folder, EpozEditable):
 
     def get_browse(self, context, cls, exclude=[]):
         namespace = {}
-        here = context.handler
+        here = context.object
         folders = []
         handlers = self.search_objects(object_class=cls)
         # Check access rights

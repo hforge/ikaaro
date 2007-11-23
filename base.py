@@ -675,7 +675,7 @@ class DBObject(CatalogAware, Node, DomainAware):
             namespace['iframe'] = ';epoz_iframe'
         namespace['dress_name'] = dress_name
 
-        here = Path(context.handler.get_abspath())
+        here = Path(context.object.get_abspath())
         there = '/ui/epoz/rte.xml'
         prefix = here.get_pathto(there)
 
@@ -739,7 +739,7 @@ class DBObject(CatalogAware, Node, DomainAware):
                 window.opener.CreateImage('%s');
                 window.close();
             </script>
-                    """ % context.handler.get_pathto(object)
+                    """ % context.object.get_pathto(object)
 
         return context.come_back(message=uri.query['message'])
 
@@ -786,7 +786,7 @@ class DBObject(CatalogAware, Node, DomainAware):
                 window.opener.CreateLink('%s');
                 window.close();
             </script>
-                    """ % context.handler.get_pathto(object)
+                    """ % context.object.get_pathto(object)
 
         return context.come_back(message=uri.query['message'])
 

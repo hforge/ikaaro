@@ -85,7 +85,7 @@ class WikiPage(Text):
     def view(self, context):
         context.styles.append('/ui/wiki/wiki.css')
         parent = self.parent
-        here = context.handler
+        here = context.object
 
         # Override dandling links handling
         StandaloneReader = readers.get_reader_class('standalone')

@@ -93,7 +93,7 @@ class OrderAware(object):
     def order_folders_form(self, context):
         namespace = {}
 
-        here = context.handler
+        here = context.object
         ordered_folders = []
         unordered_folders = []
         names = self.get_ordered_folder_names('all')

@@ -1081,7 +1081,7 @@ class Issue(Folder, VersioningAware):
         tracker_title = self.parent.get_property('dc:title') or 'Tracker Issue'
         subject = '[%s #%s] %s' % (tracker_title, self.name, title)
         # Notify / Body
-        if context.handler.class_id == Tracker.class_id:
+        if context.object.class_id == Tracker.class_id:
             uri = context.uri.resolve('%s/;edit_form' % self.name)
         else:
             uri = context.uri.resolve(';edit_form')

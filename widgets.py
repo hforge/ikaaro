@@ -286,25 +286,23 @@ def table(columns, rows, sortby, sortorder, actions=[], gettext=lambda x: x,
 # Breadcrumb
 ###########################################################################
 class Breadcrumb(object):
-    """
-    Instances of this class will be used as namespaces for STL templates.
-    The built namespace contains the breadcrumb, that is to say, the path
-    from the tree root to another tree node, and the content of that node.
+    """Instances of this class will be used as namespaces for STL templates.
+    The built namespace contains the breadcrumb, that is to say, the path from
+    the tree root to another tree node, and the content of that node.
     """
 
     def __init__(self, filter_type=DBObject, root=None, start=None):
-        """
-        The 'start' must be a handler, 'filter_type' must be a handler class.
+        """The 'start' must be a handler, 'filter_type' must be a handler
+        class.
         """
         context = get_context()
         request, response = context.request, context.response
 
+        here = context.object
         if root is None:
-            root = context.handler.get_site_root()
+            root = here.get_site_root()
         if start is None:
             start = root
-
-        here = context.handler
 
         # Get the query parameters
         parameters = get_parameters('bc', id=None, target=None)

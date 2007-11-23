@@ -161,7 +161,7 @@ def get_target_info(context, object):
         target_method = target_rpath.pop()
 
     # get the real target object
-    site_root = context.handler.get_site_root()
+    site_root = context.object.get_site_root()
     try:
         o = object.get_object(target_rpath)
         if target_method is None:
@@ -196,7 +196,7 @@ def get_menu_namespace_level(context, url, menu_root, depth, show_first_child,
     if is_datatype(menu_root, OrderAware) is False:
         return {}
 
-    here, user = context.handler, context.user
+    here, user = context.object, context.user
     items = []
     tabs = {}
 
@@ -280,7 +280,7 @@ def get_menu_namespace(context, depth=3, show_first_child=False, flat=True,
 
     request = context.request
     request_uri = str(request.request_uri)
-    site_root = context.handler.get_site_root()
+    site_root = context.object.get_site_root()
     method, path = context.method, context.uri.path
     url = [seg.name for seg in path if seg.name]
     if method:

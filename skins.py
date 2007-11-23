@@ -139,7 +139,7 @@ class Skin(UIFolder):
     def get_main_menu(self, context):
         user = context.user
         root = context.site_root
-        here = context.handler or root
+        here = context.object or root
 
         menu = []
         for option in self.get_main_menu_options(context):
@@ -166,7 +166,7 @@ class Skin(UIFolder):
         """Build the namespace for the navigation menu."""
         from tracker import Issue
 
-        menu = tree(context.site_root, active_node=context.handler,
+        menu = tree(context.site_root, active_node=context.object,
                     allow=DBFolder, deny=Issue, user=context.user)
         return {'title': self.gettext(u'Navigation'), 'content': menu}
 
@@ -180,7 +180,7 @@ class Skin(UIFolder):
             class WikiFolder(object):
                 pass
 
-        here = context.handler
+        here = context.object
         while here is not None:
             if isinstance(here, (WikiFolder, Tracker)):
                 break
@@ -188,7 +188,7 @@ class Skin(UIFolder):
         else:
             return None
 
-        base = context.handler.get_pathto(here)
+        base = context.object.get_pathto(here)
 
         menu = []
         for view in here.get_views():
@@ -211,7 +211,7 @@ class Skin(UIFolder):
 
 
     def get_content_menu(self, context):
-        here = context.handler
+        here = context.object
         user = context.user
 
         options = []
@@ -305,7 +305,7 @@ class Skin(UIFolder):
     #######################################################################
     def get_breadcrumb(self, context):
         """Return a list of dicts [{name, url}...] """
-        here = context.handler
+        here = context.object
         root = context.site_root
 
         # Build the list of handlers that make up the breadcrumb
@@ -351,7 +351,7 @@ class Skin(UIFolder):
         # Get request, path, etc...
         request = context.request
         user = context.user
-        here = context.handler
+        here = context.object
         if here is None:
             return []
 
@@ -413,10 +413,10 @@ class Skin(UIFolder):
 
 
     #######################################################################
-    # Objects metadata (context.handler)
+    # Objects metadata (context.object)
     #######################################################################
     def get_metadata_ns(self, context):
-        here = context.handler
+        here = context.object
         if here is None:
             return {'title': '',
                     'format': '',
@@ -518,7 +518,7 @@ class Skin(UIFolder):
     #######################################################################
     def get_template_title(self, context):
         """Return the title to give to the template document."""
-        here = context.handler
+        here = context.object
         # Not Found
         if here is None:
             return u'404 Not Found'
@@ -536,7 +536,7 @@ class Skin(UIFolder):
         """Return a list of dict with meta tags to give to the template
         document.
         """
-        here = context.handler
+        here = context.object
         root = here.get_site_root()
 
         meta = []
@@ -573,7 +573,7 @@ class Skin(UIFolder):
         namespace['tabs'] = self.get_tabs(context)
         namespace['message'] = self.get_message(context)
         # View's title
-        here = context.handler
+        here = context.object
         title = getattr(here, '%s__title__' % context.method, None)
         if title is None:
             namespace['view_title'] = None

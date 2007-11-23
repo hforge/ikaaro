@@ -407,7 +407,7 @@ class WebSite(RoleAware, Folder):
     login_form__label__ = u'Login'
     def login_form(self, context):
         namespace = {}
-        here = context.handler
+        here = context.object
         site_root = here.get_site_root()
         namespace['action'] = '%s/;login' % here.get_pathto(site_root)
         namespace['username'] = context.get_form_value('username')
