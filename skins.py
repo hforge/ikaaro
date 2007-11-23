@@ -43,8 +43,8 @@ class UIFile(Node, File):
 
     def GET(self, context):
         response = context.response
-        response.set_header('Content-Type', self.handler.get_mimetype())
-        return self.handler.to_str()
+        response.set_header('Content-Type', self.get_mimetype())
+        return self.to_str()
 
 
 class UITemplate(Node, XMLFile):
