@@ -107,7 +107,7 @@ class Spool(object):
             try:
                 for name in names:
                     # Send message
-                    message = spool.open(name, 'r').read()
+                    message = spool.open(name).read()
                     headers = HeaderParser().parsestr(message)
                     subject = headers['subject']
                     from_addr = headers['from']

@@ -350,7 +350,7 @@ class Root(WebSite):
         # Build the namespace
         credits = get_abspath(globals(), '../CREDITS')
         names = []
-        for line in vfs.open(credits, 'r').readlines():
+        for line in vfs.open(credits).readlines():
             if line.startswith('N: '):
                 names.append(line[3:].strip())
 
