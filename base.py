@@ -393,7 +393,7 @@ class DBObject(CatalogAware, Node, DomainAware):
         handler = self.handler
         if handler is None:
             return metadata_mtime
-        elif handler.timestamp is not None:
+        elif getattr(handler, 'timestamp', None) is not None:
             handler_mtime = handler.timestamp
         elif vfs.exists(handler.uri):
             handler_mtime = vfs.get_mtime(handler.uri)
