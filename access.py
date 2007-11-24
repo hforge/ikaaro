@@ -18,13 +18,16 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.uri import get_reference
 from itools.datatypes import Email, Integer, Unicode
-from itools.web import AccessControl as BaseAccessControl
 from itools.stl import stl
+from itools.uri import get_reference
+from itools.web import AccessControl as BaseAccessControl
+
+# Import from ikaaro
 from messages import *
 from utils import generate_password
 import widgets
+from workflow import WorkflowAware
 
 
 class AccessControl(BaseAccessControl):
@@ -43,7 +46,6 @@ class AccessControl(BaseAccessControl):
 
     def is_allowed_to_view(self, user, object):
         # Objects with workflow
-        from workflow import WorkflowAware
         if isinstance(object, WorkflowAware):
             state = object.workflow_state
             # Anybody can see public objects
@@ -116,7 +118,6 @@ class RoleAware(AccessControl):
         else:
             role = self.get_user_role(user.name)
         # The state of the object
-        from workflow import WorkflowAware
         if isinstance(object, WorkflowAware):
             state = object.workflow_state
         else:
@@ -137,7 +138,6 @@ class RoleAware(AccessControl):
 
 
     def is_allowed_to_edit(self, user, object):
-        from workflow import WorkflowAware
         # Anonymous can touch nothing
         if user is None:
             return False

@@ -33,17 +33,13 @@ from text import Text
 from registry import register_object_class
 
 
-class XMLFile(Text):
-
-    class_id = 'text/xml'
-
-
-
 class EpozEditable(object):
     """A mixin class for handlers implementing HTML editing.
     """
+
     #######################################################################
-    # Edit / Inline / source
+    # API
+    #######################################################################
     def get_epoz_document(self):
         # Implement it in your editable handler
         raise NotImplementedError
@@ -58,12 +54,14 @@ class EpozEditable(object):
 
 
     #######################################################################
-    # Edit / Inline / edit form
+    # User Interface
+    #######################################################################
     edit_form__access__ = 'is_allowed_to_edit'
     edit_form__label__ = u'Edit'
     edit_form__sublabel__ = u'Inline'
     def edit_form(self, context):
-        """WYSIWYG editor for HTML documents."""
+        """WYSIWYG editor for HTML documents.
+        """
         data = self.get_epoz_data()
         # If the document has not a body (e.g. a frameset), edit as plain text
         if data is None:
@@ -78,8 +76,6 @@ class EpozEditable(object):
         return stl(handler, namespace)
 
 
-    #######################################################################
-    # Edit / Inline / edit
     edit__access__ = 'is_allowed_to_edit'
     def edit(self, context, sanitize=False):
         timestamp = context.get_form_value('timestamp', type=DateTime)
@@ -172,7 +168,8 @@ class WebPage(EpozEditable, Text):
 
 
     def is_empty(self):
-        """Test if XML doc is empty"""
+        """Test if XML doc is empty
+        """
         body = self.get_body()
         if body is None:
             return True
@@ -222,7 +219,5 @@ class HTMLFile(WebPage):
 ###########################################################################
 # Register
 ###########################################################################
-register_object_class(XMLFile)
-register_object_class(XMLFile, format='application/xml')
 register_object_class(WebPage)
 register_object_class(HTMLFile)

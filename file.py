@@ -289,5 +289,8 @@ class File(WorkflowAware, VersioningAware, DBObject):
         return context.come_back(u'Version uploaded.')
 
 
+###########################################################################
+# Register
+###########################################################################
 register_object_class(File)
 register_object_class(File, format="application/octet-stream")

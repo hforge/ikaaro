@@ -27,6 +27,9 @@ from itools.web import get_context
 
 class VersioningAware(object):
 
+    ########################################################################
+    # API
+    ########################################################################
     def commit_revision(self):
         context = get_context()
         username = ''

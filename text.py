@@ -54,7 +54,6 @@ class Text(File):
     #######################################################################
     # User interface
     #######################################################################
-
     @staticmethod
     def new_instance_form(cls, context):
         # Use the default form
@@ -125,17 +124,13 @@ class Text(File):
         # XXX This list should be built from a txt file with all the encodings,
         # or better, from a Python module that tells us which encodings Python
         # supports.
-        namespace['encodings'] = [{'value': 'utf-8', 'title': 'UTF-8',
-                                   'is_selected': True},
-                                  {'value': 'iso-8859-1',
-                                   'title': 'ISO-8859-1',
-                                   'is_selected': False}]
+        namespace['encodings'] = [
+            {'value': 'utf-8', 'title': 'UTF-8', 'is_selected': True},
+            {'value': 'iso-8859-1', 'title': 'ISO-8859-1',
+             'is_selected': False}]
 
         handler = self.get_object('/ui/text/externaledit.xml')
         return stl(handler, namespace)
-
-
-register_object_class(Text)
 
 
 
@@ -147,14 +142,9 @@ class PO(Text):
     class_icon48 = 'images/Po48.png'
     class_handler = POFile
 
-
     #######################################################################
-    # User interface
+    # UI / Edit
     #######################################################################
-
-
-    #######################################################################
-    # Edit
     edit_form__access__ = 'is_allowed_to_edit'
     edit_form__label__ = u'Edit'
     edit_form__sublabel__ = u'Inline'
@@ -218,9 +208,6 @@ class PO(Text):
         return context.come_back(MSG_CHANGES_SAVED)
 
 
-register_object_class(PO)
-
-
 
 class CSS(Text):
 
@@ -228,9 +215,6 @@ class CSS(Text):
     class_title = u'CSS'
     class_icon16 = 'images/CSS16.png'
     class_icon48 = 'images/CSS48.png'
-
-
-register_object_class(CSS)
 
 
 
@@ -242,4 +226,20 @@ class Python(Text):
     class_icon48 = 'images/Python48.png'
 
 
+
+class XMLFile(Text):
+
+    class_id = 'text/xml'
+
+
+
+###########################################################################
+# Register
+###########################################################################
+register_object_class(Text)
 register_object_class(Python)
+register_object_class(PO)
+register_object_class(CSS)
+register_object_class(XMLFile)
+register_object_class(XMLFile, format='application/xml')
+
