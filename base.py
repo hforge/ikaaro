@@ -96,10 +96,10 @@ class Node(BaseNode):
     ########################################################################
     def get_site_root(self):
         from website import WebSite
-        handler = self
-        while not isinstance(handler, WebSite):
-            handler = handler.parent
-        return handler
+        object = self
+        while not isinstance(object, WebSite):
+            object = object.parent
+        return object
 
 
     ########################################################################

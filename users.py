@@ -386,19 +386,17 @@ class User(AccessControl, Folder):
     def tasks_list(self, context):
         root = context.root
         user = context.user
-
         site_root = self.get_site_root()
-
         namespace = {}
         documents = []
 
         q1 = EqQuery('workflow_state', 'pending')
         q2 = OrQuery(EqQuery('paths', site_root.get_abspath()),
-                EqQuery('paths', self.get_canonical_path()))
+                     EqQuery('paths', self.get_canonical_path()))
         query = AndQuery(q1, q2)
 
         for brain in root.search(query).get_documents():
-            document = root.get_handler(brain.abspath)
+            document = root.get_object(brain.abspath)
             # Check security
             ac = document.get_access_control()
             if not ac.is_allowed_to_view(user, document):
@@ -438,7 +436,7 @@ class UserFolder(Folder):
 
         # Calculate the user id
         ids = []
-        for key in self.get_handler_names():
+        for key in self.get_names():
             try:
                 key = int(key)
             except ValueError:

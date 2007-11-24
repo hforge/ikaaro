@@ -200,12 +200,12 @@ class Folder(DBObject):
     def traverse_objects(self):
         yield self
         for name in self._get_names():
-            handler = self.get_object(name)
-            if isinstance(handler, Folder):
-                for x in handler.traverse_objects():
+            object = self.get_object(name)
+            if isinstance(object, Folder):
+                for x in object.traverse_objects():
                     yield x
             else:
-                yield handler
+                yield object
 
 
     def search_objects(self, path='.', format=None, state=None,
@@ -323,26 +323,26 @@ class Folder(DBObject):
         documents = results.get_documents(sort_by=sortby, reverse=reverse,
                                           start=start, size=batchsize)
 
-        # Get the handlers, check security
+        # Get the objects, check security
         user = context.user
-        handlers = []
-        for document in documents:
-            handler = root.get_object(document.abspath)
-            ac = handler.get_access_control()
-            if ac.is_allowed_to_view(user, handler):
-                handlers.append(handler)
-
-        # Get the handler for the visible documents and extracts values
         objects = []
-        for handler in handlers:
-            line = self._browse_namespace(handler, icon_size)
-            objects.append(line)
+        for document in documents:
+            object = root.get_object(document.abspath)
+            ac = object.get_access_control()
+            if ac.is_allowed_to_view(user, object):
+                objects.append(object)
+
+        # Get the object for the visible documents and extracts values
+        object_lines = []
+        for object in objects:
+            line = self._browse_namespace(object, icon_size)
+            object_lines.append(line)
 
         # Build namespace
         namespace = {}
         total = results.get_n_documents()
         namespace['total'] = total
-        namespace['objects'] = objects
+        namespace['objects'] = object_lines
 
         # The batch
         namespace['batch'] = widgets.batch(context.uri, start, size, total)
@@ -437,7 +437,7 @@ class Folder(DBObject):
         if selected_image is not None:
             path = Path(selected_image)
             selected_image = path[-1]
-            if not selected_image in self.get_handler_names():
+            if not selected_image in self.get_names():
                 selected_image = None
 
         # look up available images
@@ -445,20 +445,20 @@ class Folder(DBObject):
         namespace = self.browse_namespace(48, query=query, batchsize=0)
         objects = []
         offset = 0
-        for index, object in enumerate(namespace['objects']):
-            name = object['name']
+        for index, image in enumerate(namespace['objects']):
+            name = image['name']
             if isinstance(name, tuple):
                 name = name[0]
-            handler = self.get_handler(name)
-            if not isinstance(handler, Image):
+            object = self.get_object(name)
+            if not isinstance(object, Image):
                 offset = offset + 1
                 continue
             if selected_image is None:
                 selected_image = name
             if selected_image == name:
                 selected_index = index - offset
-            object['name'] = name
-            objects.append(object)
+            image['name'] = name
+            objects.append(image)
 
         namespace['objects'] = objects
 
@@ -466,7 +466,7 @@ class Folder(DBObject):
         if selected_image is None:
             namespace['selected'] = None
         else:
-            image = self.get_handler(selected_image)
+            image = self.get_object(selected_image)
             selected = {}
             selected['title_or_name'] = image.get_title()
             selected['description'] = image.get_property('dc:description')
@@ -497,8 +497,7 @@ class Folder(DBObject):
             namespace['selected'] = selected
 
         # Append gallery style
-        css = self.get_object('/ui/gallery.css')
-        context.styles.append(str(self.get_pathto(css)))
+        context.styles.append('/ui/gallery.css')
 
         handler = self.get_object('/ui/folder/browse_image.xml')
         return stl(handler, namespace)
@@ -520,10 +519,10 @@ class Folder(DBObject):
         user = context.user
         abspath = self.get_abspath()
         for name in ids:
-            handler = self.get_object(name)
-            ac = handler.get_access_control()
-            if ac.is_allowed_to_remove(user, handler):
-                # Remove handler
+            object = self.get_object(name)
+            ac = object.get_access_control()
+            if ac.is_allowed_to_remove(user, object):
+                # Remove object
                 self.del_object(name)
                 removed.append(name)
                 # Clean cookie
@@ -658,19 +657,19 @@ class Folder(DBObject):
         allowed_types = tuple(self.get_document_types())
         for path in paths:
             try:
-                handler = root.get_object(path)
+                object = root.get_object(path)
             except LookupError:
                 continue
-            if not isinstance(handler, allowed_types):
+            if not isinstance(object, allowed_types):
                 continue
 
             # Cut&Paste in the same place (do nothing)
             if cut is True:
-                parent = handler.parent
+                parent = object.parent
                 if self.get_canonical_path() == parent.get_canonical_path():
                     continue
 
-            name = generate_name(handler.name, self.get_names(), '_copy_')
+            name = generate_name(object.name, self.get_names(), '_copy_')
             if cut is True:
                 # Cut&Paste
                 self.move_object(path, name)
@@ -678,11 +677,11 @@ class Folder(DBObject):
                 # Copy&Paste
                 self.copy_object(path, name)
                 # Fix metadata properties
-                handler = self.get_object(name)
-                metadata = handler.metadata
+                object = self.get_object(name)
+                metadata = object.metadata
                 # Fix state
-                if isinstance(handler, WorkflowAware):
-                    metadata.set_property('state', handler.workflow.initstate)
+                if isinstance(object, WorkflowAware):
+                    metadata.set_property('state', object.workflow.initstate)
                 # Fix owner
                 metadata.set_property('owner', context.user.name)
         # Cut, clean cookie
@@ -780,12 +779,12 @@ class Folder(DBObject):
 
         lines = []
         for document in documents:
-            handler = root.get_object(document.abspath)
-            ac = handler.get_access_control()
-            if not ac.is_allowed_to_view(user, handler):
+            object = root.get_object(document.abspath)
+            ac = object.get_access_control()
+            if not ac.is_allowed_to_view(user, object):
                 continue
-            line = self._browse_namespace(handler, 16)
-            revisions = handler.get_revisions(context)
+            line = self._browse_namespace(object, 16)
+            revisions = object.get_revisions(context)
             if revisions:
                 last_rev = revisions[0]
                 username = last_rev['username']
