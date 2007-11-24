@@ -124,6 +124,43 @@ class WebPage(EpozEditable, Text):
     class_handler = XHTMLFile
 
 
+    def __init__(self, metadata):
+        self.metadata = metadata
+        self.handlers = {}
+        # The tree
+        self.name = ''
+        self.parent = None
+
+
+    def get_handler(self):
+        # Content language
+        language = self.get_content_language()
+        # Hit
+        if language in self.handlers:
+            return self.handlers[language]
+        # Miss
+        cls = self.class_handler
+        database = self.metadata.database
+        uri = self.metadata.uri.resolve('%s.%s' % (self.name, language))
+        if database.has_handler(uri):
+            handler = database.get_handler(uri, cls=cls)
+        else:
+            handler = cls()
+            handler.database = database
+            handler.uri = uri
+            handler.timestamp = None
+            handler.dirty = True
+            database.cache[uri] = handler
+
+        self.handlers[language] = handler
+        return handler
+
+    handler = property(get_handler, None, None, '')
+
+
+    #######################################################################
+    # API
+    #######################################################################
     GET__mtime__ = None
     def GET(self, context):
         method = self.get_firstview()
@@ -134,9 +171,6 @@ class WebPage(EpozEditable, Text):
         return context.uri.resolve2(';%s' % method)
 
 
-    #######################################################################
-    # API
-    #######################################################################
     def is_empty(self):
         """Test if XML doc is empty"""
         body = self.get_body()
@@ -154,11 +188,8 @@ class WebPage(EpozEditable, Text):
 
 
     #######################################################################
-    # User interface
+    # UI / View
     #######################################################################
-
-    #######################################################################
-    # View
     view__access__ = 'is_allowed_to_view'
     view__label__ = u'View'
     view__title__ = u'View'
@@ -175,7 +206,8 @@ class WebPage(EpozEditable, Text):
 
 
     #######################################################################
-    # Edit / Inline
+    # UI / Edit / Inline
+    #######################################################################
     def get_epoz_document(self):
         return self.handler
 
