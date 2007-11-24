@@ -212,7 +212,6 @@ class DBObject(CatalogAware, Node, DomainAware):
         self.parent = None
 
 
-
     @staticmethod
     def make_object(cls, container, name, *args, **kw):
         from folder import Folder
@@ -254,7 +253,7 @@ class DBObject(CatalogAware, Node, DomainAware):
                 handler.database = database
                 handler.uri = uri
                 handler.timestamp = None
-                handler.dirty = False
+                handler.dirty = True
                 database.cache[uri] = handler
                 self._handler = handler
         return self._handler
@@ -587,7 +586,10 @@ class DBObject(CatalogAware, Node, DomainAware):
         return request.referrer
 
 
-    def get_content_language(self, context):
+    def get_content_language(self, context=None):
+        if context is None:
+            context = get_context()
+
         site_root = self.get_site_root()
         languages = site_root.get_property('ikaaro:website_languages')
         # Check cookie
