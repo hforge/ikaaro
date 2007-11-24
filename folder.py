@@ -261,7 +261,7 @@ class Folder(DBObject):
     def _browse_namespace(self, object, icon_size):
         line = {}
         path = self.get_canonical_path()
-        id = Path(path).get_pathto(object.abspath)
+        id = Path(path).get_pathto(object.get_abspath())
         id = str(id)
         line['id'] = id
         title = object.get_title()
@@ -518,7 +518,7 @@ class Folder(DBObject):
         removed = []
         not_allowed = []
         user = context.user
-        abspath = self.abspath
+        abspath = self.get_abspath()
         for name in ids:
             handler = self.get_object(name)
             ac = handler.get_access_control()
@@ -582,7 +582,7 @@ class Folder(DBObject):
         cut, paths = context.get_cookie('ikaaro_cp', type=CopyCookie)
 
         # Process input data
-        abspath = self.abspath
+        abspath = self.get_abspath()
         for i, old_name in enumerate(names):
             new_name = new_names[i]
             handler = self.get_object(old_name).handler
@@ -620,7 +620,7 @@ class Folder(DBObject):
         if not names:
             return context.come_back(u'No objects selected.')
 
-        abspath = Path(self.abspath)
+        abspath = Path(self.get_abspath())
         cp = (False, [ str(abspath.resolve2(x)) for x in names ])
         cp = CopyCookie.encode(cp)
         context.set_cookie('ikaaro_cp', cp, path='/')
@@ -640,7 +640,7 @@ class Folder(DBObject):
         if not names:
             return context.come_back(u'No objects selected.')
 
-        abspath = Path(self.abspath)
+        abspath = Path(self.get_abspath())
         cp = (True, [ str(abspath.resolve2(x)) for x in names ])
         cp = CopyCookie.encode(cp)
         context.set_cookie('ikaaro_cp', cp, path='/')

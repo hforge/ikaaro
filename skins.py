@@ -476,7 +476,7 @@ class Skin(UIFolder):
         styles.append('/ui/table/style.css')
         # This skin's style
         if self.has_handler('style.css'):
-            styles.append('%s/style.css' % self.abspath)
+            styles.append('%s/style.css' % self.get_abspath())
         # Dynamic styles
         for style in context.styles:
             styles.append(style)
@@ -505,7 +505,7 @@ class Skin(UIFolder):
         scripts.append('/ui/table/javascript.js')
         # This skin's JavaScript
         if self.has_handler('javascript.js'):
-            scripts.append('%s/javascript.js' % self.abspath)
+            scripts.append('%s/javascript.js' % self.get_abspath())
         # Dynamic scripts
         for script in context.scripts:
             scripts.append(script)

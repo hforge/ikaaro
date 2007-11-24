@@ -202,8 +202,7 @@ class Tracker(Folder):
     search_form__label__ = u'Search'
     def search_form(self, context):
         # Set Style
-        css = Path(self.abspath).get_pathto('/ui/tracker/tracker.css')
-        context.styles.append(str(css))
+        context.styles.append('/ui/tracker/tracker.css')
 
         # Build the namespace
         namespace = {}
@@ -306,8 +305,7 @@ class Tracker(Folder):
     view__label__ = u'View'
     def view(self, context):
         # Set Style
-        css = Path(self.abspath).get_pathto('/ui/tracker/tracker.css')
-        context.styles.append(str(css))
+        context.styles.append('/ui/tracker/tracker.css')
 
         namespace = {}
         namespace['method'] = 'GET'
@@ -685,8 +683,7 @@ class Tracker(Folder):
     add_form__label__ = u'Add'
     def add_form(self, context):
         # Set Style
-        css = Path(self.abspath).get_pathto('/ui/tracker/tracker.css')
-        context.styles.append(str(css))
+        context.styles.append('/ui/tracker/tracker.css')
 
         # Build the namespace
         namespace = {}
@@ -827,7 +824,7 @@ class SelectTable(Table):
         if total:
             ac = self.get_access_control()
             if ac.is_allowed_to_edit(context.user, self):
-                actions = [('del_record_action', u'Remove', 
+                actions = [('del_record_action', u'Remove',
                             'button_delete', None)]
 
         fields = self.get_fields()
@@ -897,7 +894,7 @@ class SelectTable(Table):
                     else:
                         record[field] = record[field][0]
 
-        namespace['table'] = widgets.table(fields, records, [sortby], 
+        namespace['table'] = widgets.table(fields, records, [sortby],
                                            sortorder, actions)
 
         handler = self.get_object('/ui/table/view.xml')
@@ -1259,11 +1256,8 @@ class Issue(Folder, VersioningAware):
     edit_form__label__ = u'Edit'
     def edit_form(self, context):
         # Set Style & JS
-        abspath = Path(self.abspath) 
-        css = abspath.get_pathto('/ui/tracker/tracker.css')
-        context.styles.append(str(css))
-        js = abspath.get_pathto('/ui/tracker/tracker.js')
-        context.scripts.append(str(js))
+        context.styles.append('/ui/tracker/tracker.css')
+        context.scripts.append('/ui/tracker/tracker.js')
 
         # Local variables
         users = self.get_object('/users')
@@ -1348,8 +1342,7 @@ class Issue(Folder, VersioningAware):
     history__label__ = u'History'
     def history(self, context):
         # Set Style
-        css = Path(self.abspath).get_pathto('/ui/tracker/tracker.css')
-        context.styles.append(str(css))
+        context.styles.append('/ui/tracker/tracker.css')
 
         # Local variables
         users = self.get_object('/users')

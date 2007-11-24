@@ -701,7 +701,7 @@ class DBObject(CatalogAware, Node, DomainAware):
         namespace['bc'] = Breadcrumb(filter_type=Image, start=start)
         namespace['message'] = context.get_form_value('message')
 
-        prefix = Path(self.abspath).get_pathto('/ui/html/addimage.xml')
+        prefix = Path(self.get_abspath()).get_pathto('/ui/html/addimage.xml')
         handler = self.get_object('/ui/html/addimage.xml')
         return stl(handler, namespace, prefix=prefix)
 
