@@ -54,12 +54,6 @@ class Message(WebPage):
         folder.set_handler(name, document)
 
 
-    def _load_state_from_file(self, file):
-        data = file.read()
-        stream = XMLParser(data, {None: xhtml_uri})
-        self.events = list(stream)
-
-
     # Was already indexed at the thread level
     def to_text(self):
         return u''

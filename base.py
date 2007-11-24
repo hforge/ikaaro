@@ -467,7 +467,7 @@ class DBObject(CatalogAware, Node, DomainAware):
     def PUT(self, context):
         # Save the data
         body = context.get_form_value('body')
-        self.load_state_from_string(body)
+        self.handler.load_state_from_string(body)
 
 
     LOCK__access__ = 'is_authenticated'
