@@ -44,7 +44,7 @@ class VersioningAware(object):
             (None, 'size'): str(self.get_size()),
         }
 
-        self.set_property('ikaaro:history', property)
+        self.metadata.set_property('ikaaro:history', property)
 
 
     def get_revisions(self, context):

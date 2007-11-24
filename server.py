@@ -30,11 +30,13 @@ from itools import vfs
 from itools.web import Server as BaseServer
 
 # Import from ikaaro
-from catalog import get_to_index, get_to_unindex
 from handlers import Metadata
+from folder import Folder
 import registry
 from utils import is_pid_running
+from versioning import VersioningAware
 from website import WebSite
+
 
 
 def ask_confirmation(message):
@@ -103,6 +105,11 @@ class Server(BaseServer):
         else:
             debug_log = None
 
+        # Events
+        self.objects_added = set()
+        self.objects_changed = set()
+        self.objects_removed = set()
+
         # Initialize
         BaseServer.__init__(self, root, address=address, port=port,
                             access_log='%s/log/access' % path,
@@ -156,30 +163,55 @@ class Server(BaseServer):
 
 
     def abort_transaction(self, context):
-        # Clean the index/unindex queues
-        get_to_index().clear()
-        get_to_unindex().clear()
-
+        # Clear events
+        self.objects_removed.clear()
+        self.objects_added.clear()
+        self.objects_changed.clear()
+        # Follow-up
         BaseServer.abort_transaction(self, context)
+
+
+    #######################################################################
+    # Events
+    #######################################################################
+    def remove_object(self, object):
+        self.objects_removed.add(object)
+
+
+    def add_object(self, object):
+        self.objects_added.add(object)
+
+
+    def change_object(self, object):
+        self.objects_changed.add(object)
 
 
     def before_commit(self):
         catalog = self.catalog
-        # Unindex Handlers
-        to_unindex = get_to_unindex()
-        for path in to_unindex:
+        # Removed
+        for object in self.objects_removed:
+            path = object.abspath
             catalog.unindex_document(path)
-        to_unindex.clear()
+        self.objects_removed.clear()
 
-        # Index Handlers
-        to_index = get_to_index()
-        for handler in to_index:
-            catalog.index_document(handler)
-        to_index.clear()
+        # Added
+        for object in self.objects_added:
+            if isinstance(object, Folder):
+                for x in object.traverse_objects():
+                    catalog.index_document(x)
+                    if isinstance(x, VersioningAware):
+                        x.commit_revision()
+            else:
+                catalog.index_document(object)
+                if isinstance(object, VersioningAware):
+                    object.commit_revision()
+        self.objects_added.clear()
 
-        # XXX Versioning
-        transaction = self.database.changed
-        for handler in list(transaction):
-            if hasattr(handler, 'before_commit'):
-                handler.before_commit()
+        # Changed
+        for object in self.objects_changed:
+            catalog.unindex_document(object.abspath)
+            catalog.index_document(object)
+            if isinstance(object, VersioningAware):
+                object.commit_revision()
+        self.objects_changed.clear()
 

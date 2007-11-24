@@ -16,7 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
-import cgi
+from cgi import escape
 
 # Import from itools
 from itools.stl import stl
@@ -29,7 +29,6 @@ from utils import get_parameters
 from file import File
 from messages import MSG_CHANGES_SAVED
 from registry import register_object_class
-from catalog import schedule_to_reindex
 
 
 class Text(File):
@@ -182,9 +181,9 @@ class PO(Text):
         if msgids:
             msgids.sort()
             msgid = msgids[index-1]
-            namespace['msgid'] = cgi.escape(msgid)
+            namespace['msgid'] = escape(msgid)
             msgstr = handler.get_msgstr(msgid)
-            msgstr = cgi.escape(msgstr)
+            msgstr = escape(msgstr)
             namespace['msgstr'] = msgstr
         else:
             namespace['msgid'] = None
@@ -203,7 +202,8 @@ class PO(Text):
         msgstr = msgstr.replace('\r', '')
         handler = self.handler
         handler.set_message(msgid, msgstr)
-        schedule_to_reindex(self)
+        # Events, change
+        context.server.change_object(self)
 
         return context.come_back(MSG_CHANGES_SAVED)
 

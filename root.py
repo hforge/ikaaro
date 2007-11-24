@@ -434,8 +434,7 @@ class Root(WebSite):
                     # Re-generage message with document fragment
                     data = handler.to_str()
                     new_message = Message(data=data)
-                    handler.set_changed()
-                    handler.events = new_message.events
+                    handler.set_events(new_message.events)
 
 
     def update_20071119(self):

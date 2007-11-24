@@ -36,7 +36,6 @@ from messages import *
 from registry import register_object_class, get_object_class
 from versioning import VersioningAware
 from workflow import WorkflowAware
-from catalog import schedule_to_reindex
 
 
 
@@ -132,16 +131,6 @@ class File(WorkflowAware, VersioningAware, DBObject):
 
     def get_size(self):
         return len(self.handler.to_str())
-
-
-    def before_commit(self):
-        self.commit_revision()
-
-
-#   def set_changed(self):
-#       DBObject.set_changed(self)
-#       if self.uri is not None:
-#           schedule_to_reindex(self)
 
 
     #######################################################################

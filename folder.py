@@ -25,14 +25,14 @@ from urllib import quote, quote_plus, unquote
 from zlib import compress, decompress
 
 # Import from itools
-from itools.i18n import format_datetime
-from itools.uri import Path, get_reference
 from itools.catalog import CatalogAware, EqQuery, AndQuery, PhraseQuery
 from itools.datatypes import Boolean, DataType, FileName, Integer, Unicode
-from itools import vfs
 from itools.handlers import get_handler_class, Folder as FolderHandler
+from itools.i18n import format_datetime
 from itools.rest import checkid
 from itools.stl import stl
+from itools.uri import Path, get_reference
+from itools import vfs
 from itools.web import get_context
 from itools.xml import XMLParser
 
@@ -40,12 +40,11 @@ from itools.xml import XMLParser
 from base import DBObject
 from binary import Image
 from messages import *
-from versioning import VersioningAware
-from workflow import WorkflowAware
-from utils import generate_name, reduce_string
-import widgets
 from registry import register_object_class, get_object_class
-from catalog import schedule_to_index, schedule_to_unindex
+from utils import generate_name, reduce_string
+from versioning import VersioningAware
+import widgets
+from workflow import WorkflowAware
 
 
 
@@ -151,13 +150,9 @@ class Folder(DBObject):
 
 
     def del_object(self, name):
-        # Schedule to unindex
-        handler = self.get_object(name)
-        if isinstance(handler, Folder):
-            for x in handler.traverse_objects():
-                schedule_to_unindex(x)
-        else:
-            schedule_to_unindex(handler)
+        # Events, remove
+        object = self.get_object(name)
+        get_context().server.remove_object(object)
 
         # Remove
         folder = self.handler
@@ -177,23 +172,15 @@ class Folder(DBObject):
         if folder.has_handler(source):
             folder.copy_handler(source, target)
 
-        # Index
-        handler = self.get_object(target)
-        if isinstance(handler, Folder):
-            for x in handler.traverse_objects():
-                schedule_to_index(x)
-        else:
-            schedule_to_index(handler)
+        # Events, add
+        object = self.get_object(target)
+        get_context().server.add_object(object)
 
 
     def move_object(self, source, target):
-        # Unindex
-        handler = self.get_object(source)
-        if isinstance(handler, Folder):
-            for x in handler.traverse_objects():
-                schedule_to_unindex(x)
-        else:
-            schedule_to_unindex(handler)
+        # Events, remove
+        object = self.get_object(source)
+        get_context().server.remove_object(object)
 
         # Move
         if source[0] == '/':
@@ -205,13 +192,9 @@ class Folder(DBObject):
         if folder.has_handler(source):
             folder.move_handler(source, target)
 
-        # Index
-        handler = self.get_object(target)
-        if isinstance(handler, Folder):
-            for x in handler.traverse_objects():
-                schedule_to_index(x)
-        else:
-            schedule_to_index(handler)
+        # Events, add
+        object = self.get_object(target)
+        get_context().server.add_object(object)
 
 
     def traverse_objects(self):

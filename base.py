@@ -34,7 +34,6 @@ from itools.datatypes import FileName
 from itools.rest import checkid
 
 # Import from itools.cms
-from catalog import schedule_to_reindex, schedule_to_index
 from handlers import Lock, Metadata
 from messages import *
 from registry import get_object_class
@@ -214,20 +213,10 @@ class DBObject(CatalogAware, Node, DomainAware):
 
     @staticmethod
     def make_object(cls, container, name, *args, **kw):
-        from folder import Folder
-
         cls._make_object(cls, container.handler, name, *args, **kw)
         object = container.get_object(name)
-
-        # Versioning
-        if isinstance(object, VersioningAware):
-            object.commit_revision()
-        # Schedule to index
-        if isinstance(object, Folder):
-            for x in object.traverse_objects():
-                schedule_to_index(x)
-        else:
-            schedule_to_index(object)
+        # Events, add
+        get_context().server.add_object(object)
 
         return object
 
@@ -259,12 +248,6 @@ class DBObject(CatalogAware, Node, DomainAware):
         return self._handler
 
     handler = property(get_handler, None, None, '')
-
-
-#   def set_changed(self):
-#       Metadata.set_changed(self)
-#       if self.uri is not None:
-#           schedule_to_reindex(self)
 
 
     ########################################################################
@@ -371,12 +354,12 @@ class DBObject(CatalogAware, Node, DomainAware):
 
 
     def set_property(self, name, value, language=None):
-        schedule_to_reindex(self)
+        get_context().server.change_object(self)
         self.metadata.set_property(name, value, language=language)
 
 
     def del_property(self, name, language=None):
-        schedule_to_reindex(self)
+        get_context().server.change_object(self)
         self.metadata.del_property(self, name, language=language)
 
 

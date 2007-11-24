@@ -250,8 +250,7 @@ class CSV(Text):
             value = context.get_form_value(name, type=datatype)
             row.set_value(name, value)
 
-        # FIXME to migrate
-        #handler.set_changed()
+        handler.set_changed()
         return context.come_back(MSG_CHANGES_SAVED)
 
 

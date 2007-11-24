@@ -97,9 +97,9 @@ class EpozEditable(object):
         old_body = document.get_body()
         events = (document.events[:old_body.start+1] + new_body
                   + document.events[old_body.end:])
-        # Save the changes
-        document.set_changed()
-        document.events = events
+        # Change
+        document.set_events(events)
+        context.server.change_object(self)
 
         return context.come_back(MSG_CHANGES_SAVED)
 
@@ -128,9 +128,10 @@ class WebPage(EpozEditable, Text):
         self.parent = None
 
 
-    def get_handler(self):
+    def get_handler(self, language=None):
         # Content language
-        language = self.get_content_language()
+        if language is None:
+            language = self.get_content_language()
         # Hit
         if language in self.handlers:
             return self.handlers[language]
@@ -157,6 +158,17 @@ class WebPage(EpozEditable, Text):
     #######################################################################
     # API
     #######################################################################
+    def to_text(self):
+        site_root = self.get_site_root()
+        languages = site_root.get_property('ikaaro:website_languages')
+
+        text = []
+        for language in languages:
+            handler = self.get_handler(language=language)
+            text.append(handler.to_text())
+        return ' '.join(text)
+
+
     GET__mtime__ = None
     def GET(self, context):
         method = self.get_firstview()
