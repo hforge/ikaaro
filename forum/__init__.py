@@ -20,12 +20,16 @@
 from itools import get_abspath
 
 # Import from ikaaro
+from ikaaro.folder import Folder
 from ikaaro.skins import register_skin
-
 from forum import Forum
 from thread import Thread
 from message import Message
 
+
 # Register skin
 path = get_abspath(globals(), 'ui')
 register_skin('forum', path)
+
+# Register document type
+Folder.register_document_type(Forum)

@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
-import os
+from os import getenv, listdir
 
 # Import from itools
 from itools import get_abspath
@@ -32,31 +32,29 @@ import binary
 import csv
 import handlers
 from html import WebPage
-import ical
-import text
-from forum import Forum
-from tracker import Tracker
-try:
-    import wiki
-except ImportError:
-    wiki = None
+from ical import Calendar
+from text import Text
 
 
+# The version
 __version__ = get_version(globals())
 
 
-###########################################################################
-# Register
-###########################################################################
+# Register document types
 Folder.register_document_type(WebPage)
 Folder.register_document_type(Folder)
 Folder.register_document_type(File)
-Folder.register_document_type(text.Text)
-Folder.register_document_type(ical.Calendar)
-Folder.register_document_type(Forum)
-Folder.register_document_type(Tracker)
-if wiki is not None:
-    Folder.register_document_type(wiki.WikiFolder)
+Folder.register_document_type(Text)
+Folder.register_document_type(Calendar)
+
+# Import ikaaro sub-packages (NOTE must be imported after so they are
+# register after)
+import forum
+import tracker
+try:
+    import wiki
+except ImportError:
+    pass
 
 
 ###########################################################################
@@ -64,12 +62,12 @@ if wiki is not None:
 ###########################################################################
 cmds = ['wvText', 'xlhtml', 'ppthtml', 'pdftotext', 'unrtf']
 
-paths = os.getenv('PATH').split(':')
+paths = getenv('PATH').split(':')
 all_names = set()
 for path in paths:
     path = path.strip()
     try:
-        names = os.listdir(path)
+        names = listdir(path)
     except OSError:
         pass
     else:

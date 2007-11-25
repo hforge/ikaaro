@@ -19,7 +19,7 @@
 
 # Import from the Standard Library
 from datetime import datetime, timedelta
-import mimetypes
+from mimetypes import guess_type
 
 # Import from itools
 from itools.datatypes import FileName
@@ -30,7 +30,7 @@ from itools.stl import stl
 from itools.uri import get_reference
 from itools import vfs
 
-# Import from itools.cms
+# Import from ikaaro
 from base import DBObject
 from messages import *
 from registry import register_object_class, get_object_class
@@ -82,7 +82,7 @@ class File(WorkflowAware, VersioningAware, DBObject):
         # Interpret input data (the mimetype sent by the browser can be
         # minimalistic)
         name, mimetype, body = file
-        guessed, encoding = mimetypes.guess_type(name)
+        guessed, encoding = guess_type(name)
         if encoding is not None:
             encoding_map = {'gzip': 'application/x-gzip',
                             'bzip2': 'application/x-bzip2'}

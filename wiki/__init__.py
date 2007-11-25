@@ -28,11 +28,15 @@ except ImportError:
 from itools import get_abspath
 
 # Import from ikaaro
+from ikaaro.folder import Folder
 from ikaaro.skins import register_skin
-
 from folder import WikiFolder
 from page import WikiPage
+
 
 # Register skin
 path = get_abspath(globals(), 'ui')
 register_skin('wiki', path)
+
+# Register document type
+Folder.register_document_type(WikiFolder)

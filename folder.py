@@ -36,7 +36,7 @@ from itools import vfs
 from itools.web import get_context
 from itools.xml import XMLParser
 
-# Import from itools.cms
+# Import from ikaaro
 from base import DBObject
 from binary import Image
 from messages import *
@@ -819,5 +819,8 @@ class Folder(DBObject):
         return stl(handler, namespace)
 
 
+###########################################################################
+# Register
+###########################################################################
 register_object_class(Folder)
 register_object_class(Folder, format="application/x-not-regular-file")

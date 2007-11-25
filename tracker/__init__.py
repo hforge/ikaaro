@@ -18,6 +18,7 @@
 from itools import get_abspath
 
 # Import from ikaaro
+from ikaaro.folder import Folder
 from ikaaro.skins import register_skin
 from tracker import Tracker, Issue
 
@@ -25,3 +26,6 @@ from tracker import Tracker, Issue
 # Register skin
 path = get_abspath(globals(), 'ui')
 register_skin('tracker', path)
+
+# Register document type
+Folder.register_document_type(Tracker)
