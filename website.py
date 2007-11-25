@@ -126,7 +126,7 @@ class WebSite(RoleAware, Folder):
             return context.come_back(u'Please select a website.')
 
         cls = get_website_class(class_id)
-        object = cls.make_object(container, name)
+        object = cls.make_object(cls, container, name)
         # The metadata
         metadata = object.metadata
         language = container.get_site_root().get_default_language()

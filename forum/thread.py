@@ -113,7 +113,7 @@ class Thread(Folder):
         # Post
         data = context.get_form_value('data')
         cls = self.message_class
-        cls.make_object(self, name, data)
+        cls.make_object(cls, self, name, data)
 
         return context.come_back(u"Reply Posted.", goto='#new_reply')
 

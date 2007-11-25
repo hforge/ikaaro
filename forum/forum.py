@@ -107,7 +107,7 @@ class Forum(Folder):
 
         cls = self.thread_class
         data = context.get_form_value('data')
-        thread = cls.make_object(self, name, data)
+        thread = cls.make_object(cls, self, name, data)
         thread.set_property('dc:title', title, language=default_language)
 
         return context.come_back(u"Thread Created.", goto=name)
