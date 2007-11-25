@@ -24,9 +24,18 @@ import itools
 
 # Import from ikaaro
 from ikaaro.spool import Spool
+from ikaaro.update import is_instance_up_to_date
 
 
 def start(optios, target):
+    # Check instance is up to date
+    if not is_instance_up_to_date(target):
+        print 'The instance is not up-to-date, please type:'
+        print
+        print '    $ icms-update.py <instance>'
+        print
+        return
+
     spool = Spool(target)
     pid = spool.get_pid()
     if pid is not None:

@@ -27,9 +27,20 @@ from os.path import dirname, join, realpath
 # Import from itools
 import itools
 
+# Import from ikaaro
+from ikaaro.update import is_instance_up_to_date
+
+
 
 def start(parser, options, target):
-    script_path = dirname(realpath(sys.argv[0]))
+    # Check instance is up to date
+    if not is_instance_up_to_date(target):
+        print 'The instance is not up-to-date, please type:'
+        print
+        print '    $ icms-update.py <instance>'
+        print
+        return
+
     # Detach
     if options.detach:
         stdin = stdout = stderr = PIPE
@@ -37,6 +48,7 @@ def start(parser, options, target):
         stdin = stdout = stderr = None
 
     # Start Server
+    script_path = dirname(realpath(sys.argv[0]))
     path_icms_start_server = join(script_path, 'icms-start-server.py')
     args = [path_icms_start_server, target]
     if options.debug:

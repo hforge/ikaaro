@@ -32,7 +32,7 @@ from itools.web import Server as BaseServer
 # Import from ikaaro
 from handlers import Metadata
 from folder import Folder
-import registry
+from registry import get_object_class
 from utils import is_pid_running
 from versioning import VersioningAware
 from website import WebSite
@@ -93,13 +93,15 @@ class Server(BaseServer):
         path = target.resolve2('database/.metadata')
         metadata = database.get_handler(path, cls=Metadata)
         format = metadata.get_property('format')
-        cls = registry.get_object_class(format)
+        cls = get_object_class(format)
         # Build the root object
         root = cls(metadata)
         root.name = root.class_title
 
+        # Logs
         path = target.path
-        # Debug mode
+        access_log = '%s/log/access' % path
+        error_log = '%s/log/error' % path
         if debug or config.get_value('debug', type=Boolean, default=False):
             debug_log = '%s/log/debug' % path
         else:
@@ -112,12 +114,13 @@ class Server(BaseServer):
 
         # Initialize
         BaseServer.__init__(self, root, address=address, port=port,
-                            access_log='%s/log/access' % path,
-                            error_log='%s/log/error' % path,
-                            debug_log=debug_log,
-                            pid_file='%s/pid' % path)
+                            access_log=access_log, error_log=error_log,
+                            debug_log=debug_log, pid_file='%s/pid' % path)
 
 
+    #######################################################################
+    # API / Private
+    #######################################################################
     def get_pid(self):
         try:
             pid = open('%s/pid' % self.target.path).read()
@@ -141,23 +144,6 @@ class Server(BaseServer):
             file.close()
 
 
-    #######################################################################
-    # Override
-    #######################################################################
-    def get_site_root(self, hostname):
-        root = self.root
-
-        sites = [root]
-        for site in root.search_objects(object_class=WebSite):
-            sites.append(site)
-
-        for site in sites:
-            if hostname in site.get_property('ikaaro:vhosts'):
-                return site
-
-        return root
-
-
     def get_databases(self):
         return [self.database, self.catalog]
 
@@ -169,21 +155,6 @@ class Server(BaseServer):
         self.objects_changed.clear()
         # Follow-up
         BaseServer.abort_transaction(self, context)
-
-
-    #######################################################################
-    # Events
-    #######################################################################
-    def remove_object(self, object):
-        self.objects_removed.add(object)
-
-
-    def add_object(self, object):
-        self.objects_added.add(object)
-
-
-    def change_object(self, object):
-        self.objects_changed.add(object)
 
 
     def before_commit(self):
@@ -214,4 +185,34 @@ class Server(BaseServer):
             if isinstance(object, VersioningAware):
                 object.commit_revision()
         self.objects_changed.clear()
+
+
+    #######################################################################
+    # API / Public
+    #######################################################################
+    def get_site_root(self, hostname):
+        root = self.root
+
+        sites = [root]
+        for site in root.search_objects(object_class=WebSite):
+            sites.append(site)
+
+        for site in sites:
+            if hostname in site.get_property('ikaaro:vhosts'):
+                return site
+
+        return root
+
+
+    def remove_object(self, object):
+        self.objects_removed.add(object)
+
+
+    def add_object(self, object):
+        self.objects_added.add(object)
+
+
+    def change_object(self, object):
+        self.objects_changed.add(object)
+
 

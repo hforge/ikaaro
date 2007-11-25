@@ -422,27 +422,26 @@ class Root(WebSite):
     #######################################################################
     # Update
     #######################################################################
-    def update_20070816(self):
+    def update_20071119(self):
         from forum import Message
+        from tracker import Tracker
 
-        for handler in self.traverse_objects():
-            # Forum messages are formal XHTML documents
-            # XXX To test with old versions (TXT and XHTML fragments)
-            if isinstance(handler, Message):
+        for object in self.traverse_objects():
+            if isinstance(object, Message):
+                # Forum messages are formal XHTML documents
+                # XXX To test with old versions (TXT and XHTML fragments)
+                handler = object.handler
                 body = handler.get_body()
                 if body is None:
                     # Re-generage message with document fragment
                     data = handler.to_str()
                     new_message = Message(data=data)
                     handler.set_events(new_message.events)
+            elif isinstance(object, Tracker):
+                object.update('20071119')
 
 
-    def update_20071119(self):
-        from tracker import Tracker
-
-        for handler in self.traverse_objects():
-            if isinstance(handler, Tracker):
-                handler.update('20071119')
-
-
+###########################################################################
+# Register
+###########################################################################
 register_object_class(Root)

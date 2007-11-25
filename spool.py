@@ -18,13 +18,12 @@
 # Import from the Standard Library
 from datetime import datetime
 from email.parser import HeaderParser
-import os
-import sys
+from os import getpid, remove as remove_file
 from signal import signal, SIGINT
 from smtplib import SMTP
 from socket import gaierror
 from time import sleep
-import traceback
+from traceback import print_exc
 
 # Import from itools
 from itools.uri import get_absolute_reference2
@@ -70,7 +69,7 @@ class Spool(object):
 
     def start(self):
         # Pid
-        open('%s/spool_pid' % self.target.path, 'w').write(str(os.getpid()))
+        open('%s/spool_pid' % self.target.path, 'w').write(str(getpid()))
 
         # Graceful stop
         signal(SIGINT, self.stop)
@@ -129,7 +128,7 @@ class Spool(object):
         self.activity_log.close()
         self.error_log.close()
         # Remove pid file
-        os.remove('%s/spool_pid' % self.target.path)
+        remove_file('%s/spool_pid' % self.target.path)
 
 
     def stop(self, n, frame):
@@ -152,7 +151,7 @@ class Spool(object):
         log.write('DATE: %s\n' % datetime.now())
         # The traceback
         log.write('\n')
-        traceback.print_exc(file=log)
+        print_exc(file=log)
         log.flush()
 
 

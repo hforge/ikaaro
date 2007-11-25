@@ -26,6 +26,7 @@ from itools import vfs
 
 # Import from ikaaro
 from ikaaro.server import Server
+from ikaaro.update import is_instance_up_to_date
 
 
 def start(options, target):
@@ -37,8 +38,8 @@ def start(options, target):
         print
         return
 
-    # Check for the log folder
-    if not vfs.exists('%s/log' % target):
+    # Check instance is up to date
+    if not is_instance_up_to_date(target):
         print 'The instance is not up-to-date, please type:'
         print
         print '    $ icms-update.py <instance>'
@@ -47,15 +48,6 @@ def start(options, target):
 
     # Set-up the server
     server = Server(target, options.address, options.port, options.debug)
-
-    # Check the instance is up-to-date
-    root = server.root
-    if root.get_property('version') < root.class_version:
-        print 'The instance is not up-to-date, please type:'
-        print
-        print '    $ icms-update.py <instance>'
-        print
-        return
 
     # Check the server is not running
     pid = server.get_pid()
