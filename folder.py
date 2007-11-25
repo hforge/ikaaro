@@ -473,7 +473,7 @@ class Folder(DBObject):
             selected['url'] = '%s/;%s' % (image.name, image.get_firstview())
             selected['preview'] = '%s/;icon48?height=320&width=320' \
                                   % image.name
-            size = image.get_size()
+            size = image.handler.get_size()
             if size is None:
                 # PIL not installed
                 width, height = 0, 0

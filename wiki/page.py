@@ -43,6 +43,7 @@ from ikaaro.messages import MSG_EDIT_CONFLICT, MSG_CHANGES_SAVED
 from ikaaro.text import Text
 from ikaaro.registry import register_object_class
 from ikaaro.binary import Image
+from ikaaro.skins import UIFile
 
 
 class WikiPage(Text):
@@ -324,7 +325,10 @@ class WikiPage(Text):
             image = self.get_object(node_uri)
             file = tempdir.make_file(filename)
             try:
-                image.save_state_to_file(file)
+                if isinstance(image, UIFile):
+                    image.save_state_to_file(file)
+                else:
+                    image.handler.save_state_to_file(file)
             finally:
                 file.close()
 
@@ -419,7 +423,7 @@ class WikiPage(Text):
         namespace = {}
 
         source = self.get_object('/ui/wiki/help.txt')
-        source = source.handler.to_str()
+        source = source.to_str()
         html = core.publish_string(source, writer_name='html',
                 settings_overrides=self.overrides)
 
