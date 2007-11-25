@@ -49,6 +49,8 @@ class Spool(object):
         # The SMTP host
         config = get_config(target)
         self.smtp_host = config.get_value('smtp-host')
+        self.smtp_login = config.get_value('smtp-login')
+        self.smtp_password = config.get_value('smtp-password')
 
         # The logs
         self.activity_log = open('%s/log/spool' % target.path, 'a+')
@@ -96,6 +98,8 @@ class Spool(object):
             # Open connection
             try:
                 smtp = SMTP(smtp_host)
+                if self.smtp_login and self.smtp_password:
+                    smtp.login(self.smtp_login, self.smtp_password)
             except gaierror, excp:
                 log('%s: "%s"' % (excp[1], smtp_host))
                 continue

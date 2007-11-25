@@ -80,6 +80,26 @@ def init(parser, options, target):
         config.set_value('smtp-host', options.smtp_host, comment=comment)
     else:
         config.append_comment(comment)
+    # The SMTP login
+    comment = [
+        'The variable "smtp-login" defines the login associed to the SMTP.',
+        '',
+        'smtp-login = ']
+    if options.smtp_login:
+        config.set_value('smtp-login', options.smtp_login, comment=comment)
+    else:
+        config.append_comment(comment)
+    # The SMTP password
+    comment =  [
+        'The variable "smtp-password" defines the password associed ',
+        'to the stmp-login.',
+        '',
+        'smtp-password = ']
+    if options.smtp_password:
+        config.set_value('smtp-password', options.smtp_password,
+            comment=comment)
+    else:
+        config.append_comment(comment)
     # Debug mode
     comment = [
         'The variable "debug" defines whether the web server will be run in',
@@ -155,6 +175,10 @@ if __name__ == '__main__':
         help='use the given PASSWORD for the admin user')
     parser.add_option('-s', '--smtp-host',
         help='use the given SMTP_HOST to send emails')
+    parser.add_option('--smtp-login',
+        help='use the given SMTP_LOGIN for the SMTP')
+    parser.add_option('--smtp-password',
+        help='use the given SMTP_PASSWORD for the SMTP')
 
     options, args = parser.parse_args()
     if len(args) != 1:
