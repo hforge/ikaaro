@@ -45,17 +45,11 @@ class Text(File):
                    ['history_form']]
 
 
-    # Download
-    def get_content_type(self):
-        return '%s; charset=UTF-8' % File.get_content_type(self)
-
-
     #######################################################################
-    # User interface
+    # UI / New Instance
     #######################################################################
     @staticmethod
     def new_instance_form(cls, context):
-        # Use the default form
         return DBObject.new_instance_form(cls, context)
 
 
@@ -65,7 +59,15 @@ class Text(File):
 
 
     #######################################################################
-    # View
+    # UI / Download
+    #######################################################################
+    def get_content_type(self):
+        return '%s; charset=UTF-8' % File.get_content_type(self)
+
+
+    #######################################################################
+    # UI / View
+    #######################################################################
     view__access__ = 'is_allowed_to_view'
     view__label__ = u'View'
     view__sublabel__ = u'Plain Text'
@@ -96,7 +98,8 @@ class Text(File):
 
 
     #######################################################################
-    # Edit / Inline
+    # UI / Edit Inline
+    #######################################################################
     edit_form__access__ = 'is_allowed_to_edit'
     edit_form__label__ = u'Edit'
     edit_form__sublabel__ = u'Inline'
@@ -117,7 +120,8 @@ class Text(File):
 
 
     #######################################################################
-    # Edit / External
+    # UI / Edit External
+    #######################################################################
     def externaledit(self, context):
         namespace = {}
         # XXX This list should be built from a txt file with all the encodings,

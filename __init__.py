@@ -33,7 +33,6 @@ import csv
 import handlers
 from html import WebPage
 from ical import Calendar
-from text import Text
 
 
 # The version
@@ -44,7 +43,6 @@ __version__ = get_version(globals())
 Folder.register_document_type(WebPage)
 Folder.register_document_type(Folder)
 Folder.register_document_type(File)
-Folder.register_document_type(Text)
 Folder.register_document_type(Calendar)
 
 # Import ikaaro sub-packages (NOTE must be imported after so they are
