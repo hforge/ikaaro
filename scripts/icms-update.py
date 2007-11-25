@@ -82,7 +82,6 @@ def update(parser, options, target):
         sys.stdout.flush()
         database = server.database
         database.save_changes()
-        root.load_state()
         print '.'
     else:
         print '*'
