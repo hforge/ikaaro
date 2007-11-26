@@ -378,6 +378,8 @@ class DBObject(CatalogAware, Node, DomainAware):
                     mtime = vfs.get_mtime(handler.uri)
                     mtimes.append(mtime)
 
+        if not mtimes:
+            return None
         return max(mtimes)
 
 
