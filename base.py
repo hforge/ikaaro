@@ -21,7 +21,6 @@
 from datetime import datetime
 
 # Import from itools
-from itools.uri import Path, get_reference
 from itools import vfs
 from itools.catalog import CatalogAware
 from itools.i18n import get_language_name
@@ -273,7 +272,7 @@ class DBObject(CatalogAware, Node, DomainAware):
 
         document = {
             'name': name,
-            'abspath': abspath,
+            'abspath': str(abspath),
             'format': get_property('format'),
             'title': title,
             'owner': get_property('owner'),
@@ -292,12 +291,11 @@ class DBObject(CatalogAware, Node, DomainAware):
             document['text'] = text
 
         # Parent path
-        if abspath != '/':
-            parent_path = Path(abspath).resolve2('..')
+        if str(abspath) != '/':
+            parent_path = abspath.resolve2('..')
             document['parent_path'] = str(parent_path)
 
         # All paths
-        abspath = Path(abspath)
         document['paths'] = [ abspath[:x] for x in range(len(abspath) + 1) ]
 
         # Size
@@ -655,7 +653,7 @@ class DBObject(CatalogAware, Node, DomainAware):
             namespace['iframe'] = ';epoz_iframe'
         namespace['dress_name'] = dress_name
 
-        here = Path(context.object.get_abspath())
+        here = context.object.get_abspath()
         there = '/ui/epoz/rte.xml'
         prefix = here.get_pathto(there)
 
@@ -671,7 +669,7 @@ class DBObject(CatalogAware, Node, DomainAware):
         response = context.response
         response.set_header('Content-Type', 'text/html; charset=UTF-8')
 
-        here = Path(self.get_abspath())
+        here = self.get_abspath()
         there = '/ui/epoz/iframe.xml'
         prefix = here.get_pathto(there)
 
@@ -696,7 +694,7 @@ class DBObject(CatalogAware, Node, DomainAware):
         namespace['bc'] = Breadcrumb(filter_type=Image, start=start)
         namespace['message'] = context.get_form_value('message')
 
-        prefix = Path(self.get_abspath()).get_pathto('/ui/html/addimage.xml')
+        prefix = self.get_abspath().get_pathto('/ui/html/addimage.xml')
         handler = self.get_object('/ui/html/addimage.xml')
         return stl(handler, namespace, prefix=prefix)
 
@@ -742,7 +740,7 @@ class DBObject(CatalogAware, Node, DomainAware):
         namespace['bc'] = Breadcrumb(filter_type=File, start=start)
         namespace['message'] = context.get_form_value('message')
 
-        prefix = Path(self.get_abspath()).get_pathto('/ui/html/addimage.xml')
+        prefix = self.get_abspath().get_pathto('/ui/html/addimage.xml')
         handler = self.get_object('/ui/html/addlink.xml')
         return stl(handler, namespace, prefix=prefix)
 

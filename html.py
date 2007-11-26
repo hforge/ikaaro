@@ -24,7 +24,6 @@ from HTMLParser import HTMLParseError
 from itools.datatypes import DateTime
 from itools.html import XHTMLFile, sanitize_stream, HTMLParser
 from itools.stl import stl
-from itools.uri import Path
 from itools.xml import TEXT, START_ELEMENT
 
 # Import from ikaaro

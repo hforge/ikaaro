@@ -24,7 +24,7 @@ from string import Template
 # Import from itools
 from itools import get_abspath
 from itools.i18n import has_language, get_language_name
-from itools.uri import Path, decode_query
+from itools.uri import decode_query
 from itools.datatypes import URI
 from itools.handlers import File, Folder, Database
 from itools.stl import stl
@@ -607,7 +607,7 @@ class Skin(UIFolder):
         s = ['<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"\n'
              '  "http://www.w3.org/TR/html4/strict.dtd">']
         # STL
-        prefix = Path(handler.get_abspath())
+        prefix = handler.get_abspath()
         data = stl(handler, namespace, prefix=prefix, mode='html')
         s.append(data)
 

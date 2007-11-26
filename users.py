@@ -391,8 +391,8 @@ class User(AccessControl, Folder):
         documents = []
 
         q1 = EqQuery('workflow_state', 'pending')
-        q2 = OrQuery(EqQuery('paths', site_root.get_abspath()),
-                     EqQuery('paths', self.get_canonical_path()))
+        q2 = OrQuery(EqQuery('paths', str(site_root.get_abspath())),
+                     EqQuery('paths', str(self.get_canonical_path())))
         query = AndQuery(q1, q2)
 
         for brain in root.search(query).get_documents():

@@ -316,7 +316,7 @@ class Breadcrumb(object):
                 target = start.parent
         else:
             target = root.get_object(target_path)
-        self.target_path = target.get_abspath()
+        self.target_path = str(target.get_abspath())
 
         # Object to link
         object = request.form.get('object')

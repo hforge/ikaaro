@@ -22,7 +22,6 @@ from cStringIO import StringIO
 from datetime import datetime, date, time, timedelta
 
 # Import from itools
-from itools.uri import Path
 from itools.datatypes import Enumerate, Unicode, Date, Integer, is_datatype
 from itools.handlers import Folder, Property
 from itools.ical import get_grid_data, icalendar, PropertyValue, DateTime
@@ -1090,7 +1089,8 @@ class Calendar(Text, CalendarView):
             return True
         if event:
             organizer = event.get_property_values('ORGANIZER')
-            return organizer and context.user.get_abspath() == organizer.value
+            user_path = str(context.user.get_abspath())
+            return organizer and user_path == organizer.value
         ac = self.parent.get_access_control()
         return ac.is_allowed_to_edit(context.user, self.parent)
 
@@ -1176,7 +1176,7 @@ class Calendar(Text, CalendarView):
                 return context.come_back(goto, message, keys=keys)
         else:
             # Add user as Organizer
-            organizer = context.user.get_abspath()
+            organizer = str(context.user.get_abspath())
             properties['ORGANIZER'] = PropertyValue(organizer)
 
         for key in context.get_form_keys():
@@ -1290,7 +1290,8 @@ class CalendarTable(Table, CalendarView):
             return True
         if event:
             organizer = event.get_property('ORGANIZER')
-            return organizer and context.user.get_abspath() == organizer.value
+            user_path = str(context.user.get_abspath())
+            return organizer and user_path == organizer.value
         ac = self.parent.get_access_control()
         return ac.is_allowed_to_edit(context.user, self.parent)
 
@@ -1447,7 +1448,7 @@ class CalendarTable(Table, CalendarView):
                 return context.come_back(goto, message, keys=keys)
         else:
             # Add user as Organizer
-            organizer = context.user.get_abspath()
+            organizer = str(context.user.get_abspath())
             properties['ORGANIZER'] = Property(organizer)
 
         for key in context.get_form_keys():

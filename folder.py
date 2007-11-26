@@ -260,8 +260,7 @@ class Folder(DBObject):
 
     def _browse_namespace(self, object, icon_size):
         line = {}
-        path = self.get_canonical_path()
-        id = Path(path).get_pathto(object.get_abspath())
+        id = self.get_canonical_path().get_pathto(object.get_abspath())
         id = str(id)
         line['id'] = id
         title = object.get_title()
@@ -375,7 +374,7 @@ class Folder(DBObject):
         sortorder = context.get_form_value('sortorder', sortorder)
 
         # Build the query
-        abspath = self.get_canonical_path()
+        abspath = str(self.get_canonical_path())
         if term:
             if search_subfolders is True:
                 query = EqQuery('paths', abspath)
@@ -441,7 +440,7 @@ class Folder(DBObject):
                 selected_image = None
 
         # look up available images
-        query = EqQuery('parent_path', self.get_canonical_path())
+        query = EqQuery('parent_path', str(self.get_canonical_path()))
         namespace = self.browse_namespace(48, query=query, batchsize=0)
         objects = []
         offset = 0
@@ -526,7 +525,7 @@ class Folder(DBObject):
                 self.del_object(name)
                 removed.append(name)
                 # Clean cookie
-                if (abspath + '/' + name) in paths:
+                if str(abspath.resolve2(name)) in paths:
                     context.del_cookie('ikaaro_cp')
                     paths = []
             else:
@@ -598,7 +597,7 @@ class Folder(DBObject):
                     # Name already exists
                     return context.come_back(MSG_EXISTANT_FILENAME)
                 # Clean cookie (FIXME Do not clean the cookie, update it)
-                if (abspath + '/' + old_name) in paths:
+                if str(abspath.resolve2(old_name)) in paths:
                     context.del_cookie('ikaaro_cp')
                     paths = []
                 self.move_object(old_name, new_name)
@@ -773,7 +772,7 @@ class Folder(DBObject):
         sortorder = context.get_form_value('sortorder', sortorder)
 
         results = root.search(is_version_aware=True,
-                              paths=self.get_abspath())
+                              paths=str(self.get_abspath()))
         documents = results.get_documents(sortby, (sortorder == 'down'), start,
                                           batchsize)
 

@@ -554,7 +554,7 @@ class WebSite(RoleAware, Folder):
                       for word, kk in TextField.split(text) ]
             if query:
                 abspath = self.get_canonical_path()
-                q1 = EqQuery('paths', abspath)
+                q1 = EqQuery('paths', str(abspath))
                 query = AndQuery(q1, *query)
                 results = root.search(query=query)
                 documents = results.get_documents()
@@ -579,9 +579,8 @@ class WebSite(RoleAware, Folder):
             # Build the namespace
             objects = []
             for handler in handlers[start:start+size]:
-                abspath = handler.get_abspath()
                 info = {}
-                info['abspath'] = abspath
+                info['abspath'] = str(handler.get_abspath())
                 info['title'] = handler.get_title()
                 info['type'] = self.gettext(handler.class_title)
                 info['size'] = handler.get_human_size()

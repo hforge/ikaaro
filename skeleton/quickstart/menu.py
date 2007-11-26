@@ -72,7 +72,7 @@ class Link(File):
         namespace['bc'] = Breadcrumb(filter_type=File, start=start)
         namespace['message'] = context.get_form_value('message')
 
-        prefix = Path(self.get_abspath()).get_pathto('/ui/html/addlink.xml')
+        prefix = self.get_abspath().get_pathto('/ui/html/addlink.xml')
         handler = self.get_object('/ui/menu/addlink.xml')
         return stl(handler, namespace, prefix=prefix)
 

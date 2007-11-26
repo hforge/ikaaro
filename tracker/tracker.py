@@ -31,7 +31,7 @@ from itools.handlers import ConfigFile, Table as BaseTable
 from itools.rest import checkid
 from itools.xml import XMLParser
 from itools.stl import stl
-from itools.uri import encode_query, Reference, Path
+from itools.uri import encode_query, Reference
 
 # Import from ikaaro
 from ikaaro.file import File
