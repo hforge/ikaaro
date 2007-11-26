@@ -285,7 +285,7 @@ class Folder(DBObject):
             path_to_icon = Path('%s/' % object.name).resolve(path_to_icon)
         line['img'] = path_to_icon
         # The modification time
-        accept = get_context().get_accept_language()
+        accept = get_context().accept_language
         line['mtime'] = format_datetime(object.get_mtime(), accept=accept)
         # The workflow state
         line['workflow_state'] = ''

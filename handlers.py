@@ -236,7 +236,7 @@ class Metadata(File):
                 language = None
             else:
                 languages = [ k for k, v in value.items() if v.strip() ]
-                accept = context.get_accept_language()
+                accept = context.accept_language
                 language = accept.select_language(languages)
             # Default (FIXME pick one at random)
             if language is None:

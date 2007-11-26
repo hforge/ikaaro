@@ -56,7 +56,7 @@ class Forum(Folder):
         namespace['title'] = self.get_title()
         namespace['description'] = self.get_property('dc:description')
         # Namespace / Threads
-        accept_language = context.get_accept_language()
+        accept_language = context.accept_language
         users = self.get_object('/users')
         namespace['threads'] = []
         for thread in self.search_objects(object_class=Thread):

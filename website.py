@@ -146,7 +146,7 @@ class WebSite(RoleAware, Folder):
     def before_traverse(self, context, min=Decimal('0.000001'),
                         zero=Decimal('0.0')):
         # The default language
-        accept = context.get_accept_language()
+        accept = context.accept_language
         default = self.get_default_language()
         if accept.get(default, zero) < min:
             accept.set(default, min)

@@ -82,7 +82,7 @@ class UIFolder(Node, Folder):
             if context is None:
                 language = None
             else:
-                accept = context.get_accept_language()
+                accept = context.accept_language
                 language = accept.select_language(languages)
 
             # By default use whatever variant
@@ -497,7 +497,7 @@ class Skin(UIFolder):
             'af', 'al', 'bg', 'br', 'ca', 'da', 'de', 'du', 'el', 'en', 'es',
             'fi', 'fr', 'hr', 'hu', 'it', 'jp', 'ko', 'lt', 'lv', 'nl', 'no',
             'pl', 'pt', 'ro', 'ru', 'si', 'sk', 'sp', 'sv', 'tr', 'zh']
-        accept = context.get_accept_language()
+        accept = context.accept_language
         language = accept.select_language(languages)
         scripts.append('/ui/calendar/lang/calendar-%s.js' % language)
         scripts.append('/ui/calendar/calendar-setup.js')
