@@ -130,7 +130,9 @@ class File(WorkflowAware, VersioningAware, DBObject):
 
 
     def get_size(self):
-        return len(self.handler.to_str())
+        sizes = [ len(x.to_str()) for x in self.get_all_handlers() ]
+        # XXX Maybe not the good algo
+        return max(sizes)
 
 
     #######################################################################

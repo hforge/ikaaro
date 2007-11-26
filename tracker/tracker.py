@@ -1454,6 +1454,7 @@ class Issue(Folder, VersioningAware):
 
     def get_size(self):
         # FIXME Used by VersioningAware to define the size of the document
+        # FIXME Used by the browse list view (size is indexed)
         return 0
 
 

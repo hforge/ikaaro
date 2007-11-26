@@ -305,7 +305,7 @@ class DBObject(CatalogAware, Node, DomainAware):
             # FIXME We add an arbitrary size so files will always be bigger
             # than folders. This won't work when there is a folder with more
             # than that size.
-            document['size'] = 2**30 + len(self.handler.to_str())
+            document['size'] = 2**30 + self.get_size()
         else:
             names = self.get_names()
             document['size'] = len(names)
@@ -363,29 +363,24 @@ class DBObject(CatalogAware, Node, DomainAware):
         self.metadata.del_property(self, name, language=language)
 
 
+    def get_all_handlers(self):
+        return [self.handler]
+
+
     def get_mtime(self):
-        metadata = self.metadata
-        if metadata.timestamp is not None:
-            metadata_mtime = metadata.timestamp
-        elif vfs.exists(metadata.uri):
-            metadata_mtime = vfs.get_mtime(metadata.uri)
-        else:
-            metadata_mtime = None
+        handlers = [self.metadata] + self.get_all_handlers()
 
-        handler = self.handler
-        if handler is None:
-            return metadata_mtime
-        elif getattr(handler, 'timestamp', None) is not None:
-            handler_mtime = handler.timestamp
-        elif vfs.exists(handler.uri):
-            handler_mtime = vfs.get_mtime(handler.uri)
-        else:
-            return metadata_mtime
+        mtimes = []
+        for handler in handlers:
+            if handler is not None:
+                timestamp = getattr(handler, 'timestamp', None)
+                if timestamp is not None:
+                    mtimes.append(timestamp)
+                elif vfs.exists(handler.uri):
+                    mtime = vfs.get_mtime(handler.uri)
+                    mtimes.append(mtime)
 
-        if metadata_mtime is None:
-            return handler_mtime
-
-        return max(handler_mtime, metadata_mtime)
+        return max(mtimes)
 
 
     ########################################################################

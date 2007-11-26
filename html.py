@@ -155,17 +155,17 @@ class WebPage(EpozEditable, Text):
     handler = property(get_handler, None, None, '')
 
 
+    def get_all_handlers(self):
+        site_root = self.get_site_root()
+        languages = site_root.get_property('ikaaro:website_languages')
+        return [ self.get_handler(language=x) for x in languages ]
+
+
     #######################################################################
     # API
     #######################################################################
     def to_text(self):
-        site_root = self.get_site_root()
-        languages = site_root.get_property('ikaaro:website_languages')
-
-        text = []
-        for language in languages:
-            handler = self.get_handler(language=language)
-            text.append(handler.to_text())
+        text = [ x.to_text() for x in self.get_all_handlers() ]
         return ' '.join(text)
 
 
