@@ -46,6 +46,7 @@ from text import PO
 from users import UserFolder
 from website import WebSite
 from handlers import Metadata
+from html import WebPage
 from registry import register_object_class, get_object_class
 from folder import Folder
 from skins import ui
@@ -427,16 +428,17 @@ class Root(WebSite):
         from tracker import Tracker
 
         for object in self.traverse_objects():
-            if isinstance(object, Message):
-                # Forum messages are formal XHTML documents
-                # XXX To test with old versions (TXT and XHTML fragments)
-                handler = object.handler
-                body = handler.get_body()
-                if body is None:
-                    # Re-generage message with document fragment
-                    data = handler.to_str()
-                    new_message = Message(data=data)
-                    handler.set_events(new_message.events)
+            if isinstance(object, WebPage):
+                if isinstance(object, Message):
+                    # Forum messages are formal XHTML documents
+                    # XXX To test with old versions (TXT and XHTML fragments)
+                    handler = object.handler
+                    body = handler.get_body()
+                    if body is None:
+                        # Re-generage message with document fragment
+                        data = handler.to_str()
+                        new_message = Message(data=data)
+                        handler.set_events(new_message.events)
             elif isinstance(object, Tracker):
                 object.update('20071119')
 
