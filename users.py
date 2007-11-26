@@ -65,7 +65,7 @@ class User(AccessControl, Folder):
 
 
     def get_canonical_path(self):
-        return '/users/%s' % self.name
+        return Path('/users/%s' % self.name)
 
 
     ########################################################################
