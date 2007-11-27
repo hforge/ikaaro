@@ -47,11 +47,11 @@ class Message(WebPage):
 
 
     @staticmethod
-    def _make_object(cls, folder, name, data):
+    def _make_object(cls, folder, name, data, language):
         WebPage._make_object(cls, folder, name)
         # The message
         document = build_message(data)
-        folder.set_handler(name, document)
+        folder.set_handler('%s.%s' % (name, language), document)
 
 
     # Was already indexed at the thread level

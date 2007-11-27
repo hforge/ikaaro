@@ -103,12 +103,11 @@ class Forum(Folder):
         if self.has_object(name):
             return context.come_back(u"This thread already exists.")
 
-        default_language = context.site_root.get_default_language()
-
+        language = self.get_content_language()
         cls = self.thread_class
         data = context.get_form_value('data')
-        thread = cls.make_object(cls, self, name, data)
-        thread.set_property('dc:title', title, language=default_language)
+        thread = cls.make_object(cls, self, name, data, language)
+        thread.set_property('dc:title', title, language=language)
 
         return context.come_back(u"Thread Created.", goto=name)
 

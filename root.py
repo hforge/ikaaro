@@ -30,17 +30,16 @@ import itools
 from itools import get_abspath
 from itools.catalog import (make_catalog, CatalogAware, TextField,
     KeywordField, IntegerField, BoolField)
-from itools.datatypes import FileName
+from itools.datatypes import FileName, QName
 from itools.handlers import Folder as FolderHandler, ConfigFile
-from itools.html import stream_to_str_as_html
+from itools.html import XHTMLFile, stream_to_str_as_html
 from itools.stl import stl
 from itools.uri import Path
 from itools import vfs
 from itools.web import get_context
 from itools.xml import XMLParser
 
-
-# Import from itools.cms
+# Import from ikaaro
 from access import RoleAware
 from text import PO
 from users import UserFolder
@@ -255,8 +254,7 @@ class Root(WebSite):
 
 
     def get_available_languages(self):
-        """
-        Returns the language codes for the user interface.
+        """Returns the language codes for the user interface.
         """
         source = itools_source_language
         target = itools_target_languages
@@ -378,8 +376,7 @@ class Root(WebSite):
     #######################################################################
     # Check groups
     def get_groups(self):
-        """
-        Returns a list with all the subgroups, including the subgroups of
+        """Returns a list with all the subgroups, including the subgroups of
         the subgroups, etc..
         """
         results = self.search(is_role_aware=True)
@@ -427,20 +424,62 @@ class Root(WebSite):
         from forum import Message
         from tracker import Tracker
 
+        # Higher level update
         for object in self.traverse_objects():
-            if isinstance(object, WebPage):
-                if isinstance(object, Message):
-                    # Forum messages are formal XHTML documents
-                    # XXX To test with old versions (TXT and XHTML fragments)
-                    handler = object.handler
-                    body = handler.get_body()
-                    if body is None:
-                        # Re-generage message with document fragment
-                        data = handler.to_str()
-                        new_message = Message(data=data)
-                        handler.set_events(new_message.events)
+            if isinstance(object, Message):
+                # Forum messages. Add the language suffix and make it full
+                # XHTML.
+                language = object.get_site_root().get_default_language()
+                container = object.parent.handler
+                old_name = object.name
+                # Build the new handler
+                new_name = '%s.%s' % (old_name, language)
+                old_body = container.get_handler(old_name).events
+                new_handler = XHTMLFile()
+                new_handler.set_body(old_body)
+                # Remove the old handler and add the new one
+                container.del_handler(old_name)
+                container.set_handler(new_name, new_handler)
+            elif isinstance(object, WebPage):
+                ignore = ('ikaaro:history', 'dc:language')
+                container = object.parent.handler
+                old_metadata = object.metadata
+
+                old_name = '%s.metadata' % object.name
+                name, extension, lang = FileName.decode(object.name)
+                new_name = FileName.encode((name, extension, None))
+                new_name = '%s.metadata' % new_name
+                if container.has_handler(new_name):
+                    new_metadata = container.get_handler(new_name)
+                    for pname, pvalue in old_metadata.properties.items():
+                        pname = QName.encode(pname)
+                        if pname in ignore:
+                            continue
+                        ptype = type(pvalue)
+                        if ptype is list:
+                            print 'WARNING, skip property "%s"' % pname
+                        elif ptype is dict:
+                            value = old_metadata.get_property(pname, lang)
+                            if value.strip():
+                                new_metadata.set_property(pname, value, lang)
+                        elif pvalue != new_metadata.get_property(pname):
+                            print 'WARNING, property "%s" is different' % pname
+                else:
+                    metadata = old_metadata.clone()
+                    for pname in ignore:
+                        metadata.del_property(pname)
+                    container.set_handler(new_name, metadata)
+                container.del_handler(old_name)
             elif isinstance(object, Tracker):
                 object.update('20071119')
+            elif isinstance(object, Folder):
+                parent = object.parent
+                if parent is None:
+                    continue
+                container = parent.handler
+                folder = container.get_handler(object.name)
+                if not folder.get_handler_names():
+                    container.del_handler(object.name)
 
 
 ###########################################################################

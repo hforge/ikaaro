@@ -41,13 +41,13 @@ class Thread(Folder):
     message_class = Message
 
     @staticmethod
-    def _make_object(cls, folder, name, data=u''):
+    def _make_object(cls, folder, name, data=u'', language='en'):
         Folder._make_object(cls, folder, name)
         # First post
         cls = cls.message_class
         folder.set_handler('%s/0.xhtml.metadata' % name, cls.build_metadata())
         message = build_message(data)
-        folder.set_handler('%s/0.xhtml' % name, message)
+        folder.set_handler('%s/0.xhtml.%s' % (name, language), message)
 
 
     def to_text(self):
@@ -111,9 +111,10 @@ class Thread(Folder):
         name = '%s.xhtml' % (id + 1)
 
         # Post
+        language = self.get_content_language()
         data = context.get_form_value('data')
         cls = self.message_class
-        cls.make_object(cls, self, name, data)
+        cls.make_object(cls, self, name, data, language)
 
         return context.come_back(u"Reply Posted.", goto='#new_reply')
 
