@@ -349,7 +349,7 @@ class Root(WebSite):
         context.styles.append('/ui/credits.css')
 
         # Build the namespace
-        credits = get_abspath(globals(), '../CREDITS')
+        credits = get_abspath(globals(), 'CREDITS')
         names = []
         for line in vfs.open(credits).readlines():
             if line.startswith('N: '):
