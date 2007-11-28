@@ -358,7 +358,7 @@ class DBObject(CatalogAware, Node, DomainAware):
 
     def del_property(self, name, language=None):
         get_context().server.change_object(self)
-        self.metadata.del_property(self, name, language=language)
+        self.metadata.del_property(name, language=language)
 
 
     def get_all_handlers(self):
