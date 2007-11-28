@@ -426,9 +426,9 @@ class DBObject(CatalogAware, Node, DomainAware):
 
         self = self.get_real_object()
         if self.parent is None:
-            self.set_handler('.lock', lock)
+            self.handler.set_handler('.lock', lock)
         else:
-            self.parent.set_handler('%s.lock' % self.name, lock)
+            self.parent.handler.set_handler('%s.lock' % self.name, lock)
 
         return lock.key
 
@@ -436,23 +436,23 @@ class DBObject(CatalogAware, Node, DomainAware):
     def unlock(self):
         self = self.get_real_object()
         if self.parent is None:
-            self.del_handler('.lock')
+            self.handler.del_handler('.lock')
         else:
-            self.parent.del_handler('%s.lock' % self.name)
+            self.parent.handler.del_handler('%s.lock' % self.name)
 
 
     def is_locked(self):
         self = self.get_real_object()
         if self.parent is None:
-            return self.has_handler('.lock')
-        return self.parent.has_handler('%s.lock' % self.name)
+            return self.handler.has_handler('.lock')
+        return self.parent.handler.has_handler('%s.lock' % self.name)
 
 
     def get_lock(self):
         self = self.get_real_object()
         if self.parent is None:
-            return self.get_handler('.lock')
-        return self.parent.get_handler('%s.lock' % self.name)
+            return self.handler.get_handler('.lock')
+        return self.parent.handler.get_handler('%s.lock' % self.name)
 
 
     ########################################################################
