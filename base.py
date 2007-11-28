@@ -120,8 +120,9 @@ class Node(BaseNode):
         if self.uri is None:
             return None
 
-        if self.timestamp is not None:
-            return self.timestamp
+        timestamp = getattr(self, 'timestamp', None)
+        if timestamp is not None:
+            return timestamp
         elif vfs.exists(self.uri):
             return vfs.get_mtime(self.uri)
 
@@ -129,9 +130,11 @@ class Node(BaseNode):
 
 
     def get_path_to_icon(self, size=16):
-        if hasattr(self, 'icon%s' % size):
+        if getattr(self, 'icon%s' % size, None):
             return ';icon%s' % size
-        path_to_icon = getattr(self.__class__, 'class_icon%s' % size)
+        path_to_icon = getattr(self.__class__, 'class_icon%s' % size, None)
+        if path_to_icon is None:
+            return None
         return '/ui/' + path_to_icon
 
 

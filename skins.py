@@ -62,7 +62,7 @@ map = {
 class UIFolder(Node, Folder):
 
     class_title = 'UI'
-    class_icon48 = None
+    class_icon48 = 'images/Folder48.png'
 
 
     def _get_object(self, name):
