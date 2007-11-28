@@ -464,7 +464,7 @@ class RoleAware(AccessControl):
     def new_user(self, context):
         root = context.root
         user = context.user
-        users = root.get_handler('users')
+        users = root.get_object('users')
 
         email = context.get_form_value('email')
         # Check the email is right

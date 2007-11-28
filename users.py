@@ -432,8 +432,6 @@ class UserFolder(Folder):
     # API
     #######################################################################
     def set_user(self, email=None, password=None):
-        user = get_object_class('user')()
-
         # Calculate the user id
         ids = []
         for key in self.get_names():
@@ -449,7 +447,8 @@ class UserFolder(Folder):
             user_id = '0'
 
         # Add the user
-        user, metadata = self.set_object(user_id, user)
+        cls = get_object_class('user')
+        user = cls.make_object(cls, self, user_id)
         # Set the email and paswword
         if email is not None:
             user.set_property('ikaaro:email', email)
