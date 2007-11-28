@@ -161,7 +161,7 @@ class Server(BaseServer):
         catalog = self.catalog
         # Removed
         for object in self.objects_removed:
-            path = str(object.abspath)
+            path = str(object.get_abspath())
             catalog.unindex_document(path)
         self.objects_removed.clear()
 
@@ -180,7 +180,7 @@ class Server(BaseServer):
 
         # Changed
         for object in self.objects_changed:
-            path = str(object.abspath)
+            path = str(object.get_abspath())
             catalog.unindex_document(path)
             catalog.index_document(object)
             if isinstance(object, VersioningAware):

@@ -19,7 +19,6 @@
 
 # Import from the Standard Library
 from decimal import Decimal
-from string import Template
 
 # Import from itools
 from itools.uri import Path, get_reference
@@ -31,7 +30,6 @@ from itools.rest import checkid
 
 # Import from ikaaro
 from folder import Folder
-from skins import Skin
 from access import RoleAware
 from messages import *
 import widgets
@@ -563,33 +561,32 @@ class WebSite(RoleAware, Folder):
 
             # Check access rights
             user = context.user
-            handlers = []
-            for object in documents:
-                abspath = object.abspath
-                handler = root.get_object(abspath)
-                ac = handler.get_access_control()
-                if ac.is_allowed_to_view(user, handler):
-                    handlers.append(handler)
+            objects = []
+            for document in documents:
+                object = root.get_object(document.abspath)
+                ac = object.get_access_control()
+                if ac.is_allowed_to_view(user, object):
+                    objects.append(object)
 
             # Batch
             size = 10
-            total = len(handlers)
+            total = len(objects)
             namespace['batch'] = widgets.batch(context.uri, start, size, total)
 
             # Build the namespace
             objects = []
-            for handler in handlers[start:start+size]:
+            for object in objects[start:start+size]:
                 info = {}
-                info['abspath'] = str(handler.get_abspath())
-                info['title'] = handler.get_title()
-                info['type'] = self.gettext(handler.class_title)
-                info['size'] = handler.get_human_size()
-                info['url'] = '%s/;%s' % (self.get_pathto(handler),
-                                          handler.get_firstview())
+                info['abspath'] = str(object.get_abspath())
+                info['title'] = object.get_title()
+                info['type'] = self.gettext(object.class_title)
+                info['size'] = object.get_human_size()
+                info['url'] = '%s/;%s' % (self.get_pathto(object),
+                                          object.get_firstview())
 
-                icon = handler.get_path_to_icon(16)
+                icon = object.get_path_to_icon(16)
                 if icon.startswith(';'):
-                    icon = Path('%s/' % handler.name).resolve(icon)
+                    icon = Path('%s/' % object.name).resolve(icon)
                 info['icon'] = icon
                 objects.append(info)
             namespace['objects'] = objects
