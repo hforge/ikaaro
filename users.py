@@ -157,8 +157,7 @@ class User(AccessControl, Folder):
     #######################################################################
     # Registration
     def send_confirmation(self, context, email):
-        hostname = context.uri.authority.host
-        subject = u"[%s] Confirmation required" % hostname
+        subject = u"Confirmation required"
         subject = self.gettext(subject)
         body = self.gettext(u"To confirm your identity click the link:\n"
                             u"\n"
