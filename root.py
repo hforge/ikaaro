@@ -453,6 +453,8 @@ class Root(WebSite):
                     lang = old_meta.get_property('dc:language')
                     if lang is None:
                         lang = object.get_site_root().get_default_language()
+                    # Be robust against wrong extensions
+                    container.get_handler(name, cls=object.class_handler)
                     container.move_handler(name, '%s.%s' % (name, lang))
                 else:
                     # Merge metadata files

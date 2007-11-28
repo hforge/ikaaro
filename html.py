@@ -22,7 +22,7 @@ from HTMLParser import HTMLParseError
 
 # Import from itools
 from itools.datatypes import DateTime
-from itools.html import XHTMLFile, sanitize_stream, HTMLParser
+from itools.html import HTMLFile, XHTMLFile, sanitize_stream, HTMLParser
 from itools.stl import stl
 from itools.xml import TEXT, START_ELEMENT
 
@@ -221,9 +221,10 @@ class WebPage(EpozEditable, Text):
 
 
 
-class HTMLFile(WebPage):
+class HTMLWebPage(WebPage):
 
     class_id = 'text/html'
+    class_handler = HTMLFile
 
 
 
@@ -231,4 +232,4 @@ class HTMLFile(WebPage):
 # Register
 ###########################################################################
 register_object_class(WebPage)
-register_object_class(HTMLFile)
+register_object_class(HTMLWebPage)
