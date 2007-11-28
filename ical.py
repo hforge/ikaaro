@@ -1235,7 +1235,7 @@ class Calendar(Text, CalendarView):
             elif key.startswith('DTSTART') or key.startswith('DTEND'):
                 continue
             else:
-                datatype = self.get_datatype(key)
+                datatype = self.handler.get_datatype(key)
                 values = context.get_form_values(key)
                 if key == 'SUMMARY' and not values[0]:
                     return context.come_back(u'Summary must be filled.', goto)
@@ -1251,9 +1251,9 @@ class Calendar(Text, CalendarView):
                     properties[key] = decoded_values
 
         if uid:
-            self.update_component(uid, **properties)
+            self.handler.update_component(uid, **properties)
         else:
-            self.add_component('VEVENT', **properties)
+            self.handler.add_component('VEVENT', **properties)
 
         goto = '%s?date=%s' % (goto, selected_date)
         return context.come_back(u'Data updated', goto=goto, keys=keys)
@@ -1304,7 +1304,7 @@ class CalendarTable(Table, CalendarView):
         # check form
         check_fields = []
         for name, kk in self.get_fields():
-            datatype = self.get_datatype(name)
+            datatype = self.handler.get_datatype(name)
             if getattr(datatype, 'multiple', False) is True:
                 datatype = Multiple(type=datatype)
             check_fields.append((name, getattr(datatype, 'mandatory', False),
@@ -1318,7 +1318,7 @@ class CalendarTable(Table, CalendarView):
         id = context.get_form_value('id', type=Integer)
         record = {}
         for name, title in self.get_fields():
-            datatype = self.get_datatype(name)
+            datatype = self.handler.get_datatype(name)
             if getattr(datatype, 'multiple', False) is True:
                 if is_datatype(datatype, Enumerate):
                     value = context.get_form_values(name)
@@ -1508,7 +1508,7 @@ class CalendarTable(Table, CalendarView):
                 continue
             else:
                 check_fields = []
-                datatype = self.get_datatype(key)
+                datatype = self.handler.get_datatype(key)
                 multiple = getattr(datatype, 'multiple', False) is True
                 if multiple:
                     datatype = Multiple(type=datatype)
