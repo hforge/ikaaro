@@ -172,41 +172,27 @@ class Skin(UIFolder):
 
 
     def get_context_menu(self, context):
-        # FIXME Hard-Coded
-        from tracker import Tracker
-        try:
-            from wiki import WikiFolder
-        except ImportError:
-            class WikiFolder(object):
-                pass
-
         here = context.object
-        while here is not None:
-            if isinstance(here, (WikiFolder, Tracker)):
-                break
-            here = here.parent
-        else:
-            return None
-
-        base = context.object.get_pathto(here)
+        base = here.get_context_menu_base()
+        prefix = here.get_pathto(base)
 
         menu = []
-        for view in here.get_views():
+        for view in base.get_views():
             # Find out the title
             if '?' in view:
                 name, args = view.split('?')
                 args = decode_query(args)
             else:
                 name, args = view, {}
-            title = getattr(here, '%s__label__' % name)
+            title = getattr(base, '%s__label__' % name)
             if callable(title):
                 title = title(**args)
             # Append to the menu
-            menu.append({'href': '%s/;%s' % (base, view),
-                         'title': self.gettext(title),
+            menu.append({'href': '%s/;%s' % (prefix, view),
+                         'title': base.gettext(title),
                          'class': '', 'src': None, 'items': []})
 
-        return {'title': self.gettext(here.class_title),
+        return {'title': base.gettext(base.class_title),
                 'content': build_menu(menu)}
 
 

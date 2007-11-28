@@ -154,6 +154,10 @@ class File(WorkflowAware, VersioningAware, DBObject):
         return self.gettext(str) % size
 
 
+    def get_context_menu_base(self):
+        return self.parent
+
+
     #######################################################################
     # Download
     download_form__access__ = 'is_allowed_to_view'

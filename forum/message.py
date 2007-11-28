@@ -54,6 +54,11 @@ class Message(WebPage):
         folder.set_handler('%s.%s' % (name, language), document)
 
 
+    def get_context_menu_base(self):
+        # Show actions of the forum
+        return self.parent.parent
+
+
     # Was already indexed at the thread level
     def to_text(self):
         return u''

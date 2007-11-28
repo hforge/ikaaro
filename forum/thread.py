@@ -50,6 +50,11 @@ class Thread(Folder):
         folder.set_handler('%s/0.xhtml.%s' % (name, language), message)
 
 
+    def get_context_menu_base(self):
+        # Show actions of the forum
+        return self.parent
+
+
     def to_text(self):
         # Index the thread by the content of all its posts
         text = [ x.to_text()

@@ -263,6 +263,10 @@ class Folder(DBObject):
         return u'New Resource'
 
 
+    def get_context_menu_base(self):
+        return self
+
+
     #######################################################################
     # Browse
     def get_human_size(self):

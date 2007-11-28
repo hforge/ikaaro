@@ -976,6 +976,11 @@ class Issue(Folder, VersioningAware):
         return [File]
 
 
+    def get_context_menu_base(self):
+        # Show the actions of the tracker
+        return self.parent
+
+
     #######################################################################
     # API
     #######################################################################
