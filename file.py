@@ -33,6 +33,7 @@ from itools import vfs
 # Import from ikaaro
 from base import DBObject
 from messages import *
+from multilingual import Multilingual
 from registry import register_object_class, get_object_class
 from versioning import VersioningAware
 from workflow import WorkflowAware
@@ -74,6 +75,8 @@ class File(WorkflowAware, VersioningAware, DBObject):
 
     @staticmethod
     def new_instance(cls, container, context):
+        # FIXME This method does not work properly yet, specially for
+        # multilingual handlers like (X)HTML pages.
         # Check input data
         file = context.get_form_value('file')
         if file is None:
@@ -97,21 +100,21 @@ class File(WorkflowAware, VersioningAware, DBObject):
             return context.come_back(MSG_BAD_NAME)
 
         # Add the language extension to the name
-        if mimetype.startswith('text/'):
-            short_name, type, language = FileName.decode(name)
-            if language is None:
-                encoding = guess_encoding(body)
-                data = unicode(body, encoding)
-                language = guess_language(data)
-                # Rebuild the name
-                name = FileName.encode((short_name, type, language))
+        cls = get_object_class(mimetype)
+        if issubclass(cls, Multilingual):
+            name, type, language = FileName.decode(name)
+#           if language is None:
+#               encoding = guess_encoding(body)
+#               data = unicode(body, encoding)
+#               language = guess_language(data)
+#               # Rebuild the name
+#               name = FileName.encode((short_name, type, language))
 
         # Check the name is free
         if container.has_object(name):
             return context.come_back(MSG_NAME_CLASH)
 
         # Build the object
-        cls = get_object_class(mimetype)
         object = cls.make_object(cls, container, name, body)
 
         goto = './%s/;%s' % (name, object.get_firstview())
@@ -130,7 +133,7 @@ class File(WorkflowAware, VersioningAware, DBObject):
 
 
     def get_size(self):
-        sizes = [ len(x.to_str()) for x in self.get_all_handlers() ]
+        sizes = [ len(x.to_str()) for x in self.get_handlers() ]
         # XXX Maybe not the good algo
         return max(sizes)
 

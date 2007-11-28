@@ -364,12 +364,25 @@ class DBObject(CatalogAware, Node, DomainAware):
         self.metadata.del_property(name, language=language)
 
 
-    def get_all_handlers(self):
+    def get_handlers(self):
+        """Return all the handlers attached to this object, except the
+        metadata.
+        """
         return [self.handler]
 
 
+    def rename_handlers(self, new_name):
+        """Consider we want to rename this object to the given 'new_name',
+        return the old a new names for all the attached handlers (except the
+        metadata).
+
+        This method is required by the "move_object" method.
+        """
+        return [(self.name, new_name)]
+
+
     def get_mtime(self):
-        handlers = [self.metadata] + self.get_all_handlers()
+        handlers = [self.metadata] + self.get_handlers()
 
         mtimes = []
         for handler in handlers:
@@ -535,10 +548,6 @@ class DBObject(CatalogAware, Node, DomainAware):
         name = checkid(name)
         if name is None:
             return context.come_back(MSG_BAD_NAME)
-
-        # Add the language extension to the name
-        extension = cls.class_handler.class_extension
-        name = FileName.encode((name, extension, None))
 
         # Check the name is free
         if container.has_object(name):

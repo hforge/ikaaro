@@ -8,11 +8,11 @@
 
   <form action=";rename" method="post">
     <dl>
-      <stl:block repeat="object objects">
-        <dt>${object/name}</dt>
+      <stl:block repeat="name names">
+        <dt>${name}</dt>
         <dd>
-          <input type="hidden" name="names" value="${object/real_name}" />
-          to <input type="text" name="new_names" value="${object/name}" />
+          <input type="hidden" name="names" value="${name}" />
+          to <input type="text" name="new_names" value="${name}" />
         </dd>
       </stl:block>
     </dl>

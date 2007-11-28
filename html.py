@@ -28,6 +28,7 @@ from itools.xml import TEXT, START_ELEMENT
 
 # Import from ikaaro
 from messages import *
+from multilingual import Multilingual
 from text import Text
 from registry import register_object_class
 
@@ -104,7 +105,7 @@ class EpozEditable(object):
 
 
 
-class WebPage(EpozEditable, Text):
+class WebPage(EpozEditable, Multilingual, Text):
 
     class_id = 'application/xhtml+xml'
     class_title = u'Web Page'
@@ -119,52 +120,11 @@ class WebPage(EpozEditable, Text):
     class_handler = XHTMLFile
 
 
-    def __init__(self, metadata):
-        self.metadata = metadata
-        self.handlers = {}
-        # The tree
-        self.name = ''
-        self.parent = None
-
-
-    def get_handler(self, language=None):
-        # Content language
-        if language is None:
-            language = self.get_content_language()
-        # Hit
-        if language in self.handlers:
-            return self.handlers[language]
-        # Miss
-        cls = self.class_handler
-        database = self.metadata.database
-        uri = self.metadata.uri.resolve('%s.%s' % (self.name, language))
-        if database.has_handler(uri):
-            handler = database.get_handler(uri, cls=cls)
-        else:
-            handler = cls()
-            handler.database = database
-            handler.uri = uri
-            handler.timestamp = None
-            handler.dirty = True
-            database.cache[uri] = handler
-
-        self.handlers[language] = handler
-        return handler
-
-    handler = property(get_handler, None, None, '')
-
-
-    def get_all_handlers(self):
-        site_root = self.get_site_root()
-        languages = site_root.get_property('ikaaro:website_languages')
-        return [ self.get_handler(language=x) for x in languages ]
-
-
     #######################################################################
     # API
     #######################################################################
     def to_text(self):
-        text = [ x.to_text() for x in self.get_all_handlers() ]
+        text = [ x.to_text() for x in self.get_handlers() ]
         return ' '.join(text)
 
 

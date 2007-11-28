@@ -35,6 +35,7 @@ from base import DBObject
 from table import Multiple, Table
 from messages import *
 
+
 resolution = timedelta.resolution
 
 months = {1: u'January', 2: u'February', 3: u'March', 4: u'April',
@@ -46,8 +47,7 @@ days = {0: u'Monday', 1: u'Tuesday', 2: u'Wednesday', 3: u'Thursday',
 
 
 def get_current_date(value=None):
-    """
-    Get date as a date object from string value.
+    """Get date as a date object from string value.
     By default, get today's date as a date object.
     """
     if value is None:
@@ -59,8 +59,7 @@ def get_current_date(value=None):
 
 
 def build_timetables(start_time, end_time, interval):
-    """
-    Build a list of timetables represented as tuples(start, end).
+    """Build a list of timetables represented as tuples(start, end).
     Interval is given by minutes.
     """
     start =  datetime(2000, 1, 1)
@@ -79,7 +78,8 @@ def build_timetables(start_time, end_time, interval):
 
 
 def check_timetable_entry(context, key_start, key_end):
-    """ Check if timetable built from given key value is valid or not."""
+    """Check if timetable built from given key value is valid or not.
+    """
     start = context.get_form_value(key_start)
     end = context.get_form_value(key_end)
     if not start or start == '__:__' or \
@@ -133,8 +133,8 @@ class CalendarView(object):
 
     @classmethod
     def get_defaults(cls, selected_date=None, tt_start=None, tt_end=None):
-        """Return a dic with default values for default fields. """
-
+        """Return a dic with default values for default fields.
+        """
         # Default values for DTSTART and DTEND
         default = cls.default_fields.copy()
 
@@ -171,16 +171,14 @@ class CalendarView(object):
 
 
     def get_first_day(self):
-        """
-        Returns 0 if Sunday is the first day of the week, else 1.
+        """Returns 0 if Sunday is the first day of the week, else 1.
         For now it has to be overridden to return anything else than 1.
         """
         return 1
 
 
     def add_selector_ns(self, c_date, method, namespace):
-        """
-        Set header used to navigate into time.
+        """Set header used to navigate into time.
 
           datetime.strftime('%U') gives week number, starting week by Sunday
           datetime.strftime('%W') gives week number, starting week by Monday
@@ -328,8 +326,7 @@ class CalendarView(object):
 
 
     def get_timetables(self):
-        """
-        Build a list of timetables represented as tuples(start, end).
+        """Build a list of timetables represented as tuples(start, end).
         Data are taken from metadata or from class value.
 
         Example of metadata:
@@ -347,7 +344,8 @@ class CalendarView(object):
 
     # Get timetables as a list of string containing time start of each one
     def get_timetables_grid_ns(self, start_date):
-        """ Build namespace to give as grid to gridlayout factory."""
+        """Build namespace to give as grid to gridlayout factory.
+        """
         ns_timetables = []
         for calendar in self.get_calendars():
             for start, end in calendar.get_timetables():
@@ -360,7 +358,8 @@ class CalendarView(object):
 
     def get_grid_events(self, start_date, ndays=7, headers=None,
                         step=timedelta(1)):
-        """ Build namespace to give as data to gridlayout factory."""
+        """Build namespace to give as data to gridlayout factory.
+        """
         # Get events by day
         ns_days = []
         current_date = start_date
@@ -524,19 +523,20 @@ class CalendarView(object):
     # Public API
     ######################################################################
     def get_action_url(self, **kw):
-        """ Action to call on form submission. """
+        """Action to call on form submission.
+        """
         return None
 
 
     def get_calendars(self):
-        """ List of sources from which taking events. """
+        """List of sources from which taking events.
+        """
         return []
 
 
     def get_events_to_display(self, start, end):
-        """
-          Get a list of events as tuples (resource_name, start, properties{})
-          and a dict with all resources from whom they belong to.
+        """Get a list of events as tuples (resource_name, start, properties{})
+        and a dict with all resources from whom they belong to.
         """
         resources, events = {}, []
         for index, calendar in enumerate(self.get_calendars()):
@@ -548,8 +548,7 @@ class CalendarView(object):
 
 
     def events_to_namespace(self, events, day, cal_indexes):
-        """
-        Build namespace for events occuring on current day.
+        """Build namespace for events occuring on current day.
         Update events, removing past ones.
 
         Events is a list of events where each one follows:
@@ -834,7 +833,8 @@ class CalendarView(object):
 class CalendarAware(CalendarView):
 
     def get_calendars(self, types=None):
-        """ List of sources from which taking events. """
+        """List of sources from which taking events.
+        """
         if not types:
             types = (Calendar, CalendarTable)
         if isinstance(self, Folder):
@@ -1259,10 +1259,6 @@ class Calendar(Text, CalendarView):
         return context.come_back(u'Data updated', goto=goto, keys=keys)
 
 
-register_object_class(Calendar)
-register_object_class(icalendar, format='text/calendar')
-
-
 
 class CalendarTable(Table, CalendarView):
 
@@ -1539,4 +1535,11 @@ class CalendarTable(Table, CalendarView):
         goto = '%s?date=%s' % (goto, selected_date)
         return context.come_back(u'Data updated', goto=goto, keys=keys)
 
+
+###########################################################################
+# Register
+###########################################################################
 register_object_class(CalendarTable)
+register_object_class(Calendar)
+register_object_class(Calendar, format='text/calendar')
+

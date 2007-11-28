@@ -157,8 +157,9 @@ class Folder(DBObject):
         # Remove
         folder = self.handler
         folder.del_handler('%s.metadata' % name)
-        if folder.has_handler(name):
-            folder.del_handler(name)
+        for handler in object.get_handlers():
+            if folder.has_handler(folder.uri):
+                folder.del_handler(handler.uri)
 
 
     def copy_object(self, source, target):
@@ -169,6 +170,7 @@ class Folder(DBObject):
         # Copy
         folder = self.handler
         folder.copy_handler('%s.metadata' % source, '%s.metadata' % target)
+        # FIXME This does not work for multilingual handlers
         if folder.has_handler(source):
             folder.copy_handler(source, target)
 
@@ -178,23 +180,36 @@ class Folder(DBObject):
 
 
     def move_object(self, source, target):
+        context = get_context()
         # Events, remove
         object = self.get_object(source)
-        get_context().server.remove_object(object)
+        context.server.remove_object(object)
 
-        # Move
-        if source[0] == '/':
-            source = source[1:]
-            root = self.get_root()
-            source = root.handler.uri.resolve2(source)
+        # Find out the source and target absolute URIs
         folder = self.handler
+        if source[0] == '/':
+            source_uri = self.get_root().handler.uri.resolve2(source[1:])
+        else:
+            source_uri = folder.uri.resolve2(source)
+        if target[0] == '/':
+            target_uri = self.get_root().handler.uri.resolve2(target[1:])
+        else:
+            target_uri = folder.uri.resolve2(target)
+        old_name = source_uri.path[-1]
+        new_name = target_uri.path[-1]
+
+        # Move the metadata
         folder.move_handler('%s.metadata' % source, '%s.metadata' % target)
-        if folder.has_handler(source):
-            folder.move_handler(source, target)
+        # Move the content
+        for old_name, new_name in object.rename_handlers(new_name):
+            src_uri = source_uri.resolve(old_name)
+            dst_uri = target_uri.resolve(new_name)
+            if folder.has_handler(src_uri):
+                folder.move_handler(src_uri, dst_uri)
 
         # Events, add
         object = self.get_object(target)
-        get_context().server.add_object(object)
+        context.server.add_object(object)
 
 
     def traverse_objects(self):
@@ -547,24 +562,17 @@ class Folder(DBObject):
         if not names:
             return context.come_back(u'No objects selected.')
 
-        # XXX Hack to get rename working. The current user interface
-        # forces the rename_form to be called as a form action, hence
-        # with the POST method, but it should be a GET method. Maybe
-        # it will be solved after the needed folder browse overhaul.
+        # FIXME Hack to get rename working. The current user interface forces
+        # the rename_form to be called as a form action, hence with the POST
+        # method, but it should be a GET method. Maybe it will be solved after
+        # the needed folder browse overhaul.
         if context.request.method == 'POST':
             ids_list = '&'.join([ 'ids=%s' % x for x in names ])
             return get_reference(';rename_form?%s' % ids_list)
 
         # Build the namespace
         namespace = {}
-        namespace['objects'] = []
-        for real_name in names:
-            handler = self.get_object(real_name).handler
-            if handler.class_extension is None:
-                name = real_name
-            else:
-                name, extension, language = FileName.decode(real_name)
-            namespace['objects'].append({'real_name': real_name, 'name': name})
+        namespace['names'] = names
 
         # Process the template
         handler = self.get_object('/ui/folder/rename.xml')
@@ -583,24 +591,22 @@ class Folder(DBObject):
         abspath = self.get_abspath()
         for i, old_name in enumerate(names):
             new_name = new_names[i]
-            handler = self.get_object(old_name).handler
-            if handler.class_extension is not None:
-                xxx, extension, language = FileName.decode(old_name)
-                new_name = FileName.encode((new_name, extension, language))
+            # Check the name is valid
             new_name = checkid(new_name)
             if new_name is None:
-                # Invalid name
                 return context.come_back(MSG_BAD_NAME)
+            # Check the name really changed
+            if new_name == old_name:
+                continue
+            # Check there is not another resource with the same name
+            if new_name in used_names:
+                return context.come_back(MSG_EXISTANT_FILENAME)
+            # Clean cookie (FIXME Do not clean the cookie, update it)
+            if str(abspath.resolve2(old_name)) in paths:
+                context.del_cookie('ikaaro_cp')
+                paths = []
             # Rename
-            if new_name != old_name:
-                if new_name in used_names:
-                    # Name already exists
-                    return context.come_back(MSG_EXISTANT_FILENAME)
-                # Clean cookie (FIXME Do not clean the cookie, update it)
-                if str(abspath.resolve2(old_name)) in paths:
-                    context.del_cookie('ikaaro_cp')
-                    paths = []
-                self.move_object(old_name, new_name)
+            self.move_object(old_name, new_name)
 
         message = u'Objects renamed.'
         return context.come_back(message, goto=';browse_content')
