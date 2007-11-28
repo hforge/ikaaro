@@ -424,6 +424,8 @@ class Root(WebSite):
         from forum import Message
         from tracker import Tracker
 
+        ignore = ('dc:language', 'ikaaro:history', 'ikaaro:wf_transition')
+        warning = 'WARNING, skip property "%s"'
         # Higher level update
         for object in self.traverse_objects():
             if isinstance(object, Message):
@@ -441,35 +443,42 @@ class Root(WebSite):
                 container.del_handler(old_name)
                 container.set_handler(new_name, new_handler)
             elif isinstance(object, WebPage):
-                ignore = ('ikaaro:history', 'dc:language')
                 container = object.parent.handler
-                old_metadata = object.metadata
+                old_meta = object.metadata
+                name = object.name
 
-                old_name = '%s.metadata' % object.name
-                name, extension, lang = FileName.decode(object.name)
-                new_name = FileName.encode((name, extension, None))
-                new_name = '%s.metadata' % new_name
-                if container.has_handler(new_name):
-                    new_metadata = container.get_handler(new_name)
-                    for pname, pvalue in old_metadata.properties.items():
-                        pname = QName.encode(pname)
-                        if pname in ignore:
-                            continue
-                        ptype = type(pvalue)
-                        if ptype is list:
-                            print 'WARNING, skip property "%s"' % pname
-                        elif ptype is dict:
-                            value = old_metadata.get_property(pname, lang)
-                            if value.strip():
-                                new_metadata.set_property(pname, value, lang)
-                        elif pvalue != new_metadata.get_property(pname):
-                            print 'WARNING, property "%s" is different' % pname
+                main, extension, lang = FileName.decode(name)
+                if lang is None:
+                    # Add the language suffix
+                    lang = old_meta.get_property('dc:language')
+                    if lang is None:
+                        lang = object.get_site_root().get_default_language()
+                    container.move_handler(name, '%s.%s' % (name, lang))
                 else:
-                    metadata = old_metadata.clone()
-                    for pname in ignore:
-                        metadata.del_property(pname)
-                    container.set_handler(new_name, metadata)
-                container.del_handler(old_name)
+                    # Merge metadata files
+                    new_name = FileName.encode((main, extension, None))
+                    new_name = '%s.metadata' % new_name
+                    if container.has_handler(new_name):
+                        new_meta = container.get_handler(new_name)
+                        for pname, pvalue in old_meta.properties.items():
+                            pname = QName.encode(pname)
+                            if pname in ignore:
+                                continue
+                            ptype = type(pvalue)
+                            if ptype is list:
+                                print warning % pname
+                            elif ptype is dict:
+                                value = old_meta.get_property(pname, lang)
+                                if value.strip():
+                                    new_meta.set_property(pname, value, lang)
+                            elif pvalue != new_meta.get_property(pname):
+                                print warning % pname
+                    else:
+                        metadata = old_meta.clone()
+                        for pname in ignore:
+                            metadata.del_property(pname)
+                        container.set_handler(new_name, metadata)
+                    container.del_handler('%s.metadata' % name)
             elif isinstance(object, Tracker):
                 object.update('20071119')
             elif isinstance(object, Folder):
