@@ -1,0 +1,24 @@
+**************************************************************************
+ikaaro 0.17.0
+**************************************************************************
+
+1. Imports
+==========
+
+Most important, "itools.cms" has been changed to "ikaaro":
+
+  from itools.cms import XXX                     # Before
+  from ikaaro import XXX                         # Now
+
+The module "future" has become a package:
+
+  from itools.cms.future import Dressable        # Before
+  from ikaaro.future.dressable import Dressable  # Now
+
+  from itools.cms.future import OrderAware       # Before
+  from ikaaro.future.order import OrderAware     # Now
+
+Other renames include:
+
+  from itools.cms.html import XHTMLFile          # Before
+  from ikaaro.html import WebPage                # Now
