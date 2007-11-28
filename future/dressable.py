@@ -21,9 +21,8 @@ import mimetypes
 from HTMLParser import HTMLParseError
 
 # Import from itools
-from itools.datatypes import is_datatype, DateTime
-from itools.handlers import Image
-from itools.html import XHTMLFile, HTMLParser
+from itools.datatypes import is_datatype, DateTime, FileName
+from itools.html import HTMLParser
 from itools.rest import checkid
 from itools.stl import stl, set_prefix
 from itools.uri import Path
@@ -35,6 +34,7 @@ from itools.xml import XMLParser
 from ikaaro.registry import register_object_class, get_object_class
 from ikaaro.folder import Folder
 from ikaaro.file import File
+from ikaaro.binary import Image
 from ikaaro.html import WebPage, EpozEditable
 from ikaaro.messages import *
 
@@ -70,18 +70,18 @@ class Dressable(Folder, EpozEditable):
 </stl:block>
     """))
 
-
-    def new(self, **kw):
-        Folder.new(self, **kw)
-        cache = self.cache
-
-        for key, data in self.schema.iteritems():
+    @staticmethod
+    def _make_object(cls, folder, name):
+        Folder._make_object(cls, folder, name)
+        for key, data in cls.schema.iteritems():
             if isinstance(data, tuple):
-                name, cls = data
-                if is_datatype(cls, XHTMLFile):
-                    handler = cls()
-                    cache[name] = handler
-                    cache['%s.metadata' % name] = handler.build_metadata()
+                handler_name, handler_cls = data
+                if is_datatype(handler_cls, WebPage):
+                    handler = handler_cls.class_handler()
+                    base_name = '%s/%s' % (name, handler_name)
+                    folder.set_handler(base_name, handler)
+                    metadata = handler_cls.build_metadata()
+                    folder.set_handler('%s.metadata' % base_name, metadata)
 
 
     def get_document_types(self):
@@ -104,7 +104,10 @@ class Dressable(Folder, EpozEditable):
 
     def _get_document(self, context, handler):
         here = context.object
-        stream = handler.get_body().get_content_elements()
+        body = handler.get_epoz_document().get_body()
+        if body is None:
+            return None
+        stream = body.get_content_elements()
         prefix = here.get_pathto(handler)
         return set_prefix(stream, prefix)
 
@@ -118,10 +121,10 @@ class Dressable(Folder, EpozEditable):
         return handlers
 
 
-    def _get_handler_label(self, name):
-        if self.has_handler(name):
-            handler = self.get_handler(name)
-            label = handler.get_property('dc:title')
+    def _get_object_label(self, name):
+        if self.has_object(name):
+            object = self.get_object(name)
+            label = object.get_property('dc:title')
             if label:
                 return label
 
@@ -142,12 +145,12 @@ class Dressable(Folder, EpozEditable):
             content = ''
             if isinstance(data, tuple):
                 name, kk = data
-                if self.has_handler(name):
-                    handler = self.get_handler(name)
-                    if is_datatype(handler, Image):
-                        content = self._get_image(context, handler)
-                    elif is_datatype(handler, XHTMLFile):
-                        content = self._get_document(context, handler)
+                if self.has_object(name):
+                    object = self.get_object(name)
+                    if is_datatype(object, Image):
+                        content = self._get_image(context, object)
+                    elif is_datatype(object, WebPage):
+                        content = self._get_document(context, object)
                     else:
                         raise NotImplementedError
             else:
@@ -156,7 +159,7 @@ class Dressable(Folder, EpozEditable):
 
         context.styles.append('/ui/future/dressable.css')
 
-        handler = self.get_handler(self.template)
+        handler = self.get_object(self.template)
         return stl(handler, namespace)
 
 
@@ -184,14 +187,15 @@ class Dressable(Folder, EpozEditable):
         name = context.get_form_value('dress_name')
         if context.get_form_value('external'):
             return context.uri.resolve('%s/;externaledit' % name)
-        handler = self.get_handler(name)
-        return WebPage.edit_form(handler, context)
+        object = self.get_object(name)
+        return WebPage.edit_form(object, context)
 
 
     edit_image__access__ = 'is_allowed_to_edit'
+    edit_image__label__ = 'edit image'
     def edit_image(self, context):
         name = context.get_form_value('name')
-        if self.has_handler(name) is False:
+        if self.has_object(name) is False:
             return context.uri.resolve2('../;add_image_form?name=%s' % name)
 
         namespace = {}
@@ -203,8 +207,8 @@ class Dressable(Folder, EpozEditable):
         namespace['remove_action'] = msg
 
         # size
-        handler = self.get_handler(name)
-        size = handler.get_size()
+        object = self.get_object(name)
+        size = object.handler.get_size()
         if size is not None:
             width, height = size
             ratio = width / float(height)
@@ -231,12 +235,16 @@ class Dressable(Folder, EpozEditable):
     def edit(self, context, sanitize=False):
         # FIXME Duplicated code (cms.html)
         dress_name = context.get_form_value('dress_name')
-        dress_handler = self.get_handler(dress_name)
+        dress_object = self.get_object(dress_name)
         timestamp = context.get_form_value('timestamp', type=DateTime)
         # Compare the dressable's timestamp and not the folder's timestamp
-        if timestamp is None or timestamp < dress_handler.timestamp:
+        if timestamp is None:
+            return context.come_back(MSG_EDIT_CONFLICT)
+        document = self.get_epoz_document()
+        if document.timestamp is not None and timestamp < document.timestamp:
             return context.come_back(MSG_EDIT_CONFLICT)
 
+        # Sanitize
         new_body = context.get_form_value('data')
         try:
             new_body = HTMLParser(new_body)
@@ -244,15 +252,13 @@ class Dressable(Folder, EpozEditable):
             return context.come_back(u'Invalid HTML code.')
         if sanitize:
             new_body = sanitize_stream(new_body)
-        # Save the changes
         # "get_epoz_document" is to set in your editable handler
-        document = self.get_epoz_document()
         old_body = document.get_body()
-        document.set_changed()
-        document.events = (document.events[:old_body.start+1]
-                           + new_body
-                           + document.events[old_body.end:])
-
+        events = (document.events[:old_body.start+1] + new_body
+                  + document.events[old_body.end:])
+        # Change
+        document.set_events(events)
+        context.server.change_object(self)
         return context.come_back(MSG_CHANGES_SAVED)
 
 
@@ -299,20 +305,26 @@ class Dressable(Folder, EpozEditable):
         if name is None:
             return context.come_back(MSG_BAD_NAME)
 
-        # Add the language extension to the name
+        # Check the mimetype
         if mimetype.startswith('image/') is False:
             return context.come_back(u'The file is not an image')
 
-        # Build the object
-        cls = get_object_class(class_id)
-        handler = cls(string=body)
-        metadata = handler.build_metadata()
-        # Add the object
-        if self.has_handler(image_name):
-            handler = self.get_handler(image_name)
-            handler.load_state_from_string(body)
+        # Add the language extension to the name
+        cls = Image
+        extension = cls.class_handler.class_extension
+        name = FileName.encode((name, extension, None))
+
+        if self.has_object(image_name):
+            object = self.get_object(image_name)
+            object.handler.load_state_from_string(body)
         else:
-            handler, metadata = self.set_object(name, handler, metadata)
+            # Build the object
+            container = self
+            object = cls.make_object(cls, container, name, body=body)
+            # The metadata
+            metadata = object.metadata
+            language = container.get_content_language(context)
+            metadata.set_property('dc:title', name, language=language)
 
         goto = './;view'
         return context.come_back(MSG_NEW_RESOURCE, goto=goto)
@@ -328,7 +340,7 @@ class Dressable(Folder, EpozEditable):
 
     def get_epoz_document(self):
         name = get_context().get_form_value('dress_name')
-        return self.get_handler(name)
+        return self.get_object(name).handler
 
 
     def get_browse(self, context, cls, exclude=[]):
@@ -387,7 +399,7 @@ class Dressable(Folder, EpozEditable):
             for key, data in self.schema.iteritems():
                 if isinstance(data, tuple):
                     name, cls = data
-                    if is_datatype(cls, XHTMLFile):
+                    if is_datatype(cls, WebPage):
                         ref = 'edit_document?dress_name=%s' % name
                         subviews.append(ref)
                         ref = 'edit_document?dress_name=%s&external=1' % name
@@ -405,7 +417,7 @@ class Dressable(Folder, EpozEditable):
         for key, data in self.schema.iteritems():
             if isinstance(data, tuple):
                 name, cls = data
-                if is_datatype(cls, XHTMLFile):
+                if is_datatype(cls, WebPage):
                     return 'edit_document?dress_name=%s' % name
                 elif is_datatype(cls, Image):
                     return 'edit_image?name=%s' % name
@@ -414,7 +426,7 @@ class Dressable(Folder, EpozEditable):
 
     def edit_document__sublabel__(self, **kw):
         dress_name = kw.get('dress_name')
-        label = self._get_handler_label(dress_name)
+        label = self._get_object_label(dress_name)
         if kw.get('external'):
             label = u'%s (External)' % label
         return label
@@ -422,7 +434,7 @@ class Dressable(Folder, EpozEditable):
 
     def edit_image__sublabel__(self, **kw):
         name = kw.get('name')
-        return self._get_handler_label(name)
+        return self._get_object_label(name)
 
 
 
