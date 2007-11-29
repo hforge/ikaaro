@@ -45,7 +45,7 @@ class Thread(Folder):
         Folder._make_object(cls, folder, name)
         # First post
         cls = cls.message_class
-        folder.set_handler('%s/0.xhtml.metadata' % name, cls.build_metadata())
+        folder.set_handler('%s/0.metadata' % name, cls.build_metadata())
         message = build_message(data)
         folder.set_handler('%s/0.xhtml.%s' % (name, language), message)
 
@@ -76,7 +76,7 @@ class Thread(Folder):
 
     def get_last_post_id(self):
         posts = self.search_objects(object_class=Message)
-        ids = [ int(FileName.decode(x.name)[0]) for x in posts ]
+        ids = [ int(x.name) for x in posts ]
         return max(ids)
 
 
@@ -113,7 +113,7 @@ class Thread(Folder):
     def new_reply(self, context):
         # Find out the name for the new post
         id = self.get_last_post_id()
-        name = '%s.xhtml' % (id + 1)
+        name = str(id + 1)
 
         # Post
         language = self.get_content_language()

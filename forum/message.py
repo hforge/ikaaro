@@ -17,11 +17,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.xml import XMLParser
-from itools.html import HTMLParser, sanitize_stream, xhtml_uri, XHTMLFile
+from itools.html import HTMLParser, sanitize_stream, XHTMLFile
 
 # Import from ikaaro
-from ikaaro.messages import MSG_CHANGES_SAVED
+from ikaaro.messages import *
 from ikaaro.registry import register_object_class
 from ikaaro.html import WebPage
 

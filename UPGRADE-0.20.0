@@ -22,3 +22,16 @@ Other renames include:
 
   from itools.cms.html import XHTMLFile          # Before
   from ikaaro.html import WebPage                # Now
+
+
+2. Update database
+==================
+
+As usual instances must be updated:
+
+  $ icms-update.py xxx           (1)
+  $ icms-update-catalog.py xxx   (2)
+
+However, given the nature of the changes, sometimes the first step (1)
+could fail with an error message.  If this happens the problem must be
+resolved in the origin database, and then the procedure can be re-started.

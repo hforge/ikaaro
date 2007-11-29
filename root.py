@@ -420,12 +420,19 @@ class Root(WebSite):
     #######################################################################
     # Update
     #######################################################################
-    def update_20071119(self):
+    def update_20071119(self, ignore=None):
         from forum import Message
         from tracker import Tracker
 
-        ignore = ('dc:language', 'ikaaro:history', 'ikaaro:wf_transition')
-        warning = 'WARNING, skip property "%s"'
+        # These metadata properties will be lost in the upgrade process (the
+        # list can be customized).
+        if ignore is None:
+            ignore = ('dc:language', 'ikaaro:history', 'ikaaro:wf_transition')
+
+        # Possible message errors
+        error1 = '%s: unexpected value of type list for property "%s"'
+        error2 = '%s: metadata merge failed, value conflict for property "%s"'
+
         # Higher level update
         for object in self.traverse_objects():
             if isinstance(object, Message):
@@ -442,6 +449,11 @@ class Root(WebSite):
                 # Remove the old handler and add the new one
                 container.del_handler(old_name)
                 container.set_handler(new_name, new_handler)
+                # Rename the metadata
+                new_name, extension, language = FileName.decode(old_name)
+                old_name = '%s.metadata' % old_name
+                new_name = '%s.metadata' % new_name
+                container.move_handler(old_name, new_name)
             elif isinstance(object, WebPage):
                 container = object.parent.handler
                 old_meta = object.metadata
@@ -458,7 +470,7 @@ class Root(WebSite):
                     container.move_handler(name, '%s.%s' % (name, lang))
                 else:
                     # Merge metadata files
-                    new_name = FileName.encode((main, extension, None))
+                    new_name = main
                     new_name = '%s.metadata' % new_name
                     if container.has_handler(new_name):
                         new_meta = container.get_handler(new_name)
@@ -468,13 +480,15 @@ class Root(WebSite):
                                 continue
                             ptype = type(pvalue)
                             if ptype is list:
-                                print warning % pname
+                                message = error1 % (object.abspath, pname)
+                                raise TypeError, message
                             elif ptype is dict:
                                 value = old_meta.get_property(pname, lang)
                                 if value.strip():
                                     new_meta.set_property(pname, value, lang)
                             elif pvalue != new_meta.get_property(pname):
-                                print warning % pname
+                                message = error2 % (object.abspath, pname)
+                                raise ValueError, message
                     else:
                         metadata = old_meta.clone()
                         for pname in ignore:
