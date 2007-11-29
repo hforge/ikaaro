@@ -17,8 +17,11 @@
 # Import from itools
 from itools.datatypes import FileName
 
+# Import from ikaaro
+from base import DBObject
 
-class Multilingual(object):
+
+class Multilingual(DBObject):
 
     def __init__(self, metadata):
         self.metadata = metadata
@@ -26,6 +29,17 @@ class Multilingual(object):
         # The tree
         self.name = ''
         self.parent = None
+
+
+    @staticmethod
+    def _make_object(cls, folder, name, body=None, language=None):
+        DBObject._make_object(cls, folder, name)
+        # Add the body
+        if body is not None:
+            cls = cls.class_handler
+            handler = cls(string=body)
+            name = FileName.encode((name, cls.class_extension, language))
+            folder.set_handler(name, handler)
 
 
     def get_handler(self, language=None):

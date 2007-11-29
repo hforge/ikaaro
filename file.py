@@ -69,16 +69,18 @@ class File(WorkflowAware, VersioningAware, DBObject):
     def new_instance_form(cls, context):
         namespace = {}
         namespace['class_id'] = cls.class_id
+        namespace['title'] = context.get_form_value('dc:title')
+
         handler = context.root.get_object('ui/file/new_instance.xml')
         return stl(handler, namespace)
 
 
     @staticmethod
     def new_instance(cls, container, context):
-        # FIXME This method does not work properly yet, specially for
-        # multilingual handlers like (X)HTML pages.
-        # Check input data
         file = context.get_form_value('file')
+        title = context.get_form_value('dc:title')
+
+        # Check input data
         if file is None:
             return context.come_back(MSG_EMPTY_FILENAME)
 
@@ -103,19 +105,26 @@ class File(WorkflowAware, VersioningAware, DBObject):
         cls = get_object_class(mimetype)
         if issubclass(cls, Multilingual):
             name, type, language = FileName.decode(name)
-#           if language is None:
-#               encoding = guess_encoding(body)
-#               data = unicode(body, encoding)
-#               language = guess_language(data)
-#               # Rebuild the name
-#               name = FileName.encode((short_name, type, language))
+            if language is None:
+                encoding = guess_encoding(body)
+                data = unicode(body, encoding)
+                language = guess_language(data)
+                if language is None:
+                    language = container.get_content_language(context)
 
         # Check the name is free
         if container.has_object(name):
             return context.come_back(MSG_NAME_CLASH)
 
         # Build the object
-        object = cls.make_object(cls, container, name, body)
+        if issubclass(cls, Multilingual):
+            object = cls.make_object(cls, container, name, body, language)
+        else:
+            object = cls.make_object(cls, container, name, body)
+        # The title
+        metadata = object.metadata
+        language = container.get_content_language(context)
+        metadata.set_property('dc:title', title, language=language)
 
         goto = './%s/;%s' % (name, object.get_firstview())
         return context.come_back(MSG_NEW_RESOURCE, goto=goto)

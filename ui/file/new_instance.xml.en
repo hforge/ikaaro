@@ -13,6 +13,11 @@
       <dd>
         <input type="file" id="file" name="file" size="35" />
       </dd>
+      <dt><label for="dc:title">Title (optional)</label></dt>
+      <dd>
+        <input type="text" id="dc:title" name="dc:title" size="40"
+          value="${title}" />
+      </dd>
     </dl>
     <p>
       <input type="hidden" name="class_id" value="${class_id}"/>
