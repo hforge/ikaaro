@@ -421,6 +421,36 @@ class Root(WebSite):
     # Update
     #######################################################################
     def update_20071119(self, ignore=None):
+        """Changes:
+
+        - Remove emtpy folders
+
+        - Merge metadata files of multilingual objects:
+
+            Before                       After
+            -----------------------      --------------
+            index.xhtml.en.metadata      index.metadata
+            index.xhtml.en               index.xhtml.en
+            index.xhtml.fr.metadata      index.xhtml.fr
+            index.xhtml.fr
+
+        - Add missing language extension to multilingual handlers when missing
+
+            Before                       After
+            -----------------------      --------------
+            index.xhtml.metadata         index.metadata
+            index.xhtml                  index.xhtml.en
+
+        - Transform the forum messages from XHTML fragments to complete XHTML
+          documents:
+
+            Before                       After
+            -----------------------      -----
+            <p>hello</p>                 <html>...<p>hello</p>...</html>
+
+        - Change the CSV to Table in the Issue Tracker; for the select tables
+          and the ".history" files.
+        """
         from forum import Message
         from tracker import Tracker
 
