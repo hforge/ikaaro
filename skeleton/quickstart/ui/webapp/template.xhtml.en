@@ -20,7 +20,8 @@
   <body>
     <div id="header"><h1>Sports Blog Template</h1></div>
     <div id="menu">
-      <table border="0" cellpadding="0" cellspacing="0" align="center">
+      <table border="0" cellpadding="0" cellspacing="0" align="center"
+             stl:if="tabs/items">
         <tr>
           <td stl:repeat="menu tabs/items" class="${menu/class}"
             onmouseover="show('menu_${menu/id}')"

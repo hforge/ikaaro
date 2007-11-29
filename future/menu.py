@@ -1,5 +1,7 @@
 # -*- coding: UTF-8 -*-
-# Copyright (C) ${YEAR} ${AUTHOR_NAME} <${AUTHOR_EMAIL}>
+# Copyright (C) 2007 Henry Obein <henry@itaapy.com>
+# Copyright (C) 2007 Luis Arturo Belmar-Letelier <luis@itaapy.com>
+# Copyright (C) 2007 Hervé Cauwelier <herve@itaapy.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,14 +24,33 @@ from itools.uri import Path
 
 # Import from ikaaro
 from ikaaro.base import DBObject
-from ikaaro.future import OrderAware
+from ikaaro.future.order import OrderAware
 from ikaaro.registry import register_object_class
 from ikaaro.messages import MSG_CHANGES_SAVED
 from ikaaro.file import File
 from ikaaro.widgets import Breadcrumb, BooleanRadio
 from ikaaro.skins import register_skin
 
+# Import from itools
+from itools.datatypes import Boolean, String
+from itools.schemas import register_schema, BaseSchema
 
+
+###########################################################################
+# SCHEMA
+###########################################################################
+class Schema(BaseSchema):
+
+    class_uri = 'http://xml.ikaaro.org/namespaces/metadata-menu'
+    class_prefix = 'menu'
+
+    datatypes = {
+        'link': String,
+        'new_window': Boolean(default=False),
+    }
+
+
+register_schema(Schema)
 
 ###########################################################################
 # Link
@@ -40,8 +61,8 @@ class Link(File):
     class_title = u'Link'
     class_description = u'Link'
     class_version = '20070925'
-    class_icon48 = 'menu/images/Link48.png'
-    class_icon16 = 'menu/images/Link16.png'
+    class_icon48 = 'future/images/Link48.png'
+    class_icon16 = 'future/images/Link16.png'
     class_views = [['edit_metadata_form'], ['state_form']]
 
 
@@ -72,8 +93,8 @@ class Link(File):
         namespace['bc'] = Breadcrumb(filter_type=File, start=start)
         namespace['message'] = context.get_form_value('message')
 
-        prefix = self.get_abspath().get_pathto('/ui/html/addlink.xml')
-        handler = self.get_object('/ui/menu/addlink.xml')
+        prefix = self.get_abspath().get_pathto('/ui/future/link_addlink.xml')
+        handler = self.get_object('/ui/future/link_addlink.xml')
         return stl(handler, namespace, prefix=prefix)
 
 
@@ -97,9 +118,9 @@ class Link(File):
         namespace['target'] = BooleanRadio.to_html(None, 'menu:new_window',
                                                    new_window, labels)
         # Add a script
-        context.scripts.append('/ui/menu/javascript.js')
+        context.scripts.append('/ui/future/link.js')
 
-        handler = self.get_object('/ui/menu/Link_edit_metadata.xml')
+        handler = self.get_object('/ui/future/link_edit_metadata.xml')
         return stl(handler, namespace)
 
 
@@ -136,6 +157,11 @@ class Link(File):
             new_window = '_blank'
 
         return new_window, self.get_property('menu:link')
+
+
+    def has_target(self):
+        return self.get_property('menu:link') != None
+
 
 ###########################################################################
 # Menu gestion
@@ -255,7 +281,7 @@ def get_menu_namespace_level(context, url, menu_root, depth, show_first_child,
 
         # add options to the last dict in items
         items[-1]['options'] = subtabs
-        tabs['items'] = items
+    tabs['items'] = items
     return tabs
 
 
@@ -290,7 +316,7 @@ def get_menu_namespace(context, depth=3, show_first_child=False, flat=True,
 
     if flat:
         tabs['flat'] = {}
-        items = tabs['flat']['lvl0'] = tabs['items']
+        items = tabs['flat']['lvl0'] = tabs.get('items', None)
         # initialize the levels
         for i in range(1, depth):
             tabs['flat']['lvl%s' % i] = None
@@ -317,5 +343,3 @@ def get_menu_namespace(context, depth=3, show_first_child=False, flat=True,
 # Register
 #
 register_object_class(Link)
-path = get_abspath(globals(), 'ui/menu')
-register_skin('menu', path)

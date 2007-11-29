@@ -41,8 +41,7 @@ from ikaaro.messages import *
 
 
 class Dressable(Folder, EpozEditable):
-    """
-    A Dressable object is a folder with a specific view which is defined
+    """A Dressable object is a folder with a specific view which is defined
     by the schema. In addition of the schema, it is necessary to redefine
     the variable __fixed_handlers__.
     """
@@ -73,15 +72,20 @@ class Dressable(Folder, EpozEditable):
     @staticmethod
     def _make_object(cls, folder, name):
         Folder._make_object(cls, folder, name)
+        # populate the dressable
+        Dressable._populate(cls, folder, name)
+
+
+    @staticmethod
+    def _populate(cls, folder, base_name):
+        """Populate the dressable from the schema"""
         for key, data in cls.schema.iteritems():
             if isinstance(data, tuple):
                 handler_name, handler_cls = data
-                if is_datatype(handler_cls, WebPage):
-                    handler = handler_cls.class_handler()
-                    base_name = '%s/%s' % (name, handler_name)
-                    folder.set_handler(base_name, handler)
+                if issubclass(handler_cls, WebPage):
+                    full_name = '%s/%s.metadata' % (base_name, handler_name)
                     metadata = handler_cls.build_metadata()
-                    folder.set_handler('%s.metadata' % base_name, metadata)
+                    folder.set_handler(full_name, metadata)
 
 
     def get_document_types(self):
@@ -414,6 +418,7 @@ class Dressable(Folder, EpozEditable):
 
 
     def get_first_edit_subview(self):
+        # FIXME get_subviews is sorted but not get_first_edit_subview
         for key, data in self.schema.iteritems():
             if isinstance(data, tuple):
                 name, cls = data

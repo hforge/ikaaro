@@ -18,7 +18,7 @@
         <textarea cols="50" rows="8" id="dc:description"
           name="dc:description">${description}</textarea>
       </dd>
-      <dt><label for="menu:link">Lien</label></dt>
+      <dt><label for="menu:link">URL</label></dt>
       <dd>
         <input id="menu:link" name="menu:link" size="40" type="text"
                  value="${menu:link}"/>

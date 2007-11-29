@@ -21,8 +21,10 @@ from datetime import date
 from itools import get_abspath
 
 # Import from ikaaro
-from ikaaro.future import Dressable, OrderAware
-from ikaaro.html import XHTMLFile
+from ikaaro.future.order import OrderAware
+from ikaaro.future.dressable import Dressable
+from ikaaro.future.menu import get_menu_namespace, Link
+from ikaaro.html import WebPage
 from ikaaro.registry import register_object_class, register_website
 from ikaaro.skins import Skin as BaseSkin, register_skin
 from ikaaro.website import WebSite
@@ -30,7 +32,6 @@ from ikaaro.binary import Image
 from ikaaro.workflow import WorkflowAware
 
 # Import from itws
-from menu import get_menu_namespace, Link
 from utils import is_back_office
 
 
@@ -59,9 +60,9 @@ class Skin(BaseSkin):
 class Home(Dressable):
     class_id = 'mywebapp-home'
     class_title = u'Home'
-    __fixed_handlers__ = ['left.xhtml', 'right.xhtml']
-    schema = {'left': ('left.xhtml', XHTMLFile),
-              'right': ('right.xhtml', XHTMLFile)}
+    __fixed_handlers__ = ['left', 'right']
+    schema = {'left': ('left', WebPage),
+              'right': ('right', WebPage)}
     template = '/ui/webapp/Home_view.xml'
 
     view__access__ = True
@@ -74,7 +75,8 @@ class Section(OrderAware, Dressable, WorkflowAware):
     class_views = (Dressable.class_views +
                    [['state_form']] +
                    [['order_folders_form']])
-    schema = {'content': ('index.xhtml', XHTMLFile),
+    __fixed_handlers__ = ['index', 'image']
+    schema = {'content': ('index', WebPage),
               'image': ('image', Image)}
     template = '/ui/webapp/Section_view.xml'
 
@@ -102,14 +104,13 @@ class MyWebApp(OrderAware, WebSite):
     order_folders_form__label__ = u'Menu'
 
 
-    def new(self, **kw):
-        WebSite.new(self, **kw)
-        cache = self.cache
-
-        handler = Home()
-        cache['home'] = handler
-        cache['home.metadata'] = handler.build_metadata(
-                **{'dc:title': {'en': u'Home'}})
+    @staticmethod
+    def _make_object(cls, folder, name):
+        WebSite._make_object(cls, folder, name)
+        base_name = '%s/home' % name
+        metadata = Home.build_metadata()
+        folder.set_handler('%s.metadata' % base_name, metadata)
+        Dressable._populate(Home, folder, base_name)
 
 
     def is_allowed_to_view(self, user, object):
