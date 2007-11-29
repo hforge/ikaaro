@@ -234,7 +234,8 @@ class Skin(UIFolder):
 
 
     def get_content_language_menu(self, context):
-        languages = context.site_root.get_property('ikaaro:website_languages')
+        site_root = context.object.get_site_root()
+        languages = site_root.get_property('ikaaro:website_languages')
         content_language = context.get_cookie('content_language')
         if content_language is None:
             content_language = languages[0]
