@@ -35,3 +35,15 @@ As usual instances must be updated:
 However, given the nature of the changes, sometimes the first step (1)
 could fail with an error message.  If this happens the problem must be
 resolved in the origin database, and then the procedure can be re-started.
+
+
+UNCLASSIFIED
+============
+
+Remove obsolete code (ListOfUsers)
+_get_virtual_handler => _get_object
+
+"get_real_handler" => "get_real_object"
+"get_physical_path" => "get_canonical_path"
+
+
