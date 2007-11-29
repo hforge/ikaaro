@@ -19,7 +19,7 @@ The scripts included are:
 Requirements
 ------------
 
-Python 2.5 and itools 0.17 are required.
+Python 2.5 and itools 0.20 are required.
 
 It is recommended to install PIL [1]. For the Wiki to work, docutils [2] is
 required.
