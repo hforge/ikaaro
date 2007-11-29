@@ -465,9 +465,13 @@ class Root(WebSite):
                     lang = old_meta.get_property('dc:language')
                     if lang is None:
                         lang = object.get_site_root().get_default_language()
-                    # Be robust against wrong extensions
+                    # Rename handler (Be robust against wrong extensions)
                     container.get_handler(name, cls=object.class_handler)
                     container.move_handler(name, '%s.%s' % (name, lang))
+                    # Rename metadata
+                    old_name = '%s.metadata' % name
+                    new_name = '%s.metadata' % main
+                    container.move_handler(old_name, new_name)
                 else:
                     # Merge metadata files
                     new_name = main
