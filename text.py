@@ -20,7 +20,6 @@ from cgi import escape
 
 # Import from itools
 from itools.stl import stl
-from itools import rest
 from itools.gettext import POFile
 
 # Import from ikaaro
@@ -38,7 +37,7 @@ class Text(File):
     class_description = u'Keep your notes with plain text files.'
     class_icon16 = 'images/Text16.png'
     class_icon48 = 'images/Text48.png'
-    class_views = [['view', 'view_rest'],
+    class_views = [['view'],
                    ['edit_form', 'externaledit', 'upload_form'],
                    ['edit_metadata_form'],
                    ['state_form'],
@@ -74,24 +73,6 @@ class Text(File):
     def view(self, context):
         namespace = {}
         namespace['text'] = self.handler.to_str()
-
-        handler = self.get_object('/ui/text/view.xml')
-        return stl(handler, namespace)
-
-
-    view_rest__access__ = 'is_allowed_to_view'
-    view_rest__sublabel__ = u"As reStructuredText"
-    def view_rest(self, context):
-        data = self.data.encode('utf-8')
-        return rest.to_html_events(data)
-
-
-    view_xml__access__ = 'is_allowed_to_view'
-    view_xml__sublabel__ = u"As reStructuredText"
-    def view_xml(self, context):
-        namespace = {}
-        data = self.data.encode('utf-8')
-        namespace['text'] = rest.to_str(data, format='xml')
 
         handler = self.get_object('/ui/text/view.xml')
         return stl(handler, namespace)
