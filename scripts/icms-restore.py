@@ -56,7 +56,7 @@ if __name__ == '__main__':
     # The command line parser
     usage = '%prog TARGET'
     version = 'itools %s' % itools.__version__
-    description = ('Restore the TARGET itools.cms instance if broken. To be'
+    description = ('Restore the TARGET ikaaro instance if broken. To be'
                    ' used after a crash.')
     parser = OptionParser(usage, version=version, description=description)
 

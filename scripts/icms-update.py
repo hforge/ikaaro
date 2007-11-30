@@ -96,7 +96,7 @@ if __name__ == '__main__':
     # The command line parser
     usage = '%prog [OPTIONS] TARGET'
     version = 'itools %s' % itools.__version__
-    description = ('Updates the TARGET itools.cms instance (if needed). Use'
+    description = ('Updates the TARGET ikaaro instance (if needed). Use'
                    ' this command when upgrading to a new version of itools.')
     parser = OptionParser(usage, version=version, description=description)
     parser.add_option(

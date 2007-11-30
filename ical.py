@@ -29,7 +29,7 @@ from itools.ical import get_grid_data, icalendar, PropertyValue, DateTime
 from itools.ical import icalendarTable, Record, Time
 from itools.stl import stl
 
-# Import from itools.cms
+# Import from ikaaro
 from registry import register_object_class
 from text import Text
 from base import DBObject

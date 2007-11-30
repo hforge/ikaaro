@@ -31,7 +31,7 @@ from itools.stl import stl
 from itools.web import get_context, AccessControl
 from itools.xml import XMLParser, XMLFile
 
-# Import from itools.cms
+# Import from ikaaro
 from base import Node
 from folder import Folder as DBFolder
 from utils import reduce_string

@@ -91,7 +91,7 @@ if __name__ == '__main__':
     usage = ('%prog [OPTIONS] TARGET\n'
              '       %prog TARGET [TARGET]*')
     version = 'itools %s' % itools.__version__
-    description = ('Starts a web server that publishes the TARGET itools.cms'
+    description = ('Starts a web server that publishes the TARGET ikaaro'
                    ' instance to the world. If several TARGETs are given, one'
                    ' server will be started for each one (in this mode no'
                    ' options are available).')

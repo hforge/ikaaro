@@ -54,7 +54,7 @@ if __name__ == '__main__':
     usage = '%prog TARGET [TARGET]*'
     version = 'itools %s' % itools.__version__
     description = ('Stops the web server that is publishing the TARGET'
-                   ' itools.cms instance (if it is running). Accepts'
+                   ' ikaaro instance (if it is running). Accepts'
                    ' several TARGETs at once, to stop several servers.')
     parser = OptionParser(usage, version=version, description=description)
 

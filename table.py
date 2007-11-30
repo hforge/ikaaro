@@ -27,7 +27,7 @@ from itools.datatypes import (DataType, Integer, is_datatype, Enumerate, Date,
 from itools.handlers.table import Record
 from itools.stl import stl
 
-# Import from itools.cms
+# Import from ikaaro
 from base import DBObject
 from messages import *
 from file import File

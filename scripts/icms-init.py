@@ -150,7 +150,7 @@ def init(parser, options, target):
 
     # Bravo!
     print '*'
-    print '* Welcome to itools.cms'
+    print '* Welcome to ikaaro'
     print '* A user with administration rights has been created for you:'
     print '*   username: %s' % email
     print '*   password: %s' % password
@@ -165,7 +165,7 @@ if __name__ == '__main__':
     # The command line parser
     usage = '%prog [OPTIONS] TARGET'
     version = 'itools %s' % itools.__version__
-    description = 'Creates a new instance of itools.cms with the name TARGET.'
+    description = 'Creates a new instance of ikaaro with the name TARGET.'
     parser = OptionParser(usage, version=version, description=description)
     parser.add_option('-a', '--address', help='listen to IP ADDRESS')
     parser.add_option('-p', '--port', type='int', help='listen to PORT number')
