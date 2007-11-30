@@ -148,6 +148,10 @@ class WebSite(RoleAware, Folder):
         default = self.get_default_language()
         if accept.get(default, zero) < min:
             accept.set(default, min)
+        # The Query
+        language = context.get_form_value('language')
+        if language is not None:
+            context.set_cookie('language', language)
         # Language negotiation
         user = context.user
         if user is None:
@@ -513,7 +517,8 @@ class WebSite(RoleAware, Folder):
     # Logout
     logout__access__ = True
     def logout(self, context):
-        """Logs out of the application."""
+        """Logs out of the application.
+        """
         # Remove the cookie
         context.del_cookie('__ac')
         # Remove the user from the context
@@ -521,17 +526,6 @@ class WebSite(RoleAware, Folder):
         # Say goodbye
         handler = self.get_object('/ui/website/logout.xml')
         return stl(handler)
-
-
-    ########################################################################
-    # Languages
-    change_language__access__ = True
-    def change_language(self, context):
-        lang = context.get_form_value('lang')
-        goto = context.get_form_value('goto', context.request.referrer)
-
-        context.set_cookie('language', lang)
-        return goto
 
 
     ########################################################################
