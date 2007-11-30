@@ -174,8 +174,10 @@ def get_target_info(context, object):
     - the target info '_top' or '_blank' or ...
     """
     new_window = '_top'
-    new_window, target = object.get_target_info()
+    if object.has_target() is False:
+        return None, None
 
+    new_window, target = object.get_target_info()
     if target and target.startswith('http://'):
         return [target], new_window
 
@@ -227,7 +229,7 @@ def get_menu_namespace_level(context, url, menu_root, depth, show_first_child,
     items = []
     tabs = {}
 
-    for name in menu_root.get_ordered_folder_names('ordered'):
+    for name in menu_root.get_ordered_names('ordered'):
         # Get the objects, check security
         object = menu_root.get_object(name)
 
@@ -238,7 +240,8 @@ def get_menu_namespace_level(context, url, menu_root, depth, show_first_child,
         # Link special case for target and actual_url
         target = '_top'
         actual_url = here.get_abspath() == object.get_abspath()
-        if link_like and isinstance(object, link_like):
+        is_link = (link_like and isinstance(object, link_like))
+        if is_link is True:
             target_url, new_window = get_target_info(context, object)
             if target_url:
                 actual_url = url == target_url
@@ -262,17 +265,23 @@ def get_menu_namespace_level(context, url, menu_root, depth, show_first_child,
         description = object.get_property('dc:description') or label
 
         # set path
-        path = here.get_pathto(object)
-        if show_first_child and depth > 1:
-            if subtabs.get('items', None):
-                childs = subtabs['items']
-                first_child = childs[0]['path']
-                first_child = here.get_object(first_child)
-                path = here.get_pathto(first_child)
-
+        if is_link is True:
+            # Do not active the link if it does not have target_url
+            if target_url is None:
+                path = None
+            else:
+                path = str(here.get_pathto(object))
+        else:
+            path = str(here.get_pathto(object))
+            if show_first_child and depth > 1:
+                if subtabs.get('items', None):
+                    childs = subtabs['items']
+                    first_child = childs[0]['path']
+                    first_child = here.get_object(first_child)
+                    path = str(here.get_pathto(first_child))
 
         items.append({'id': 'tab_%s' % label.lower().replace(' ', '_'),
-                      'path': str(path),
+                      'path': path,
                       'name': name,
                       'label': here.gettext(label),
                       'description': here.gettext(description),
