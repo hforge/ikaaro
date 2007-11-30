@@ -368,8 +368,6 @@ class Folder(DBObject):
 
 
     def browse_thumbnails(self, context):
-        context.set_cookie('browse', 'thumb')
-
         query = EqQuery('parent_path', self.get_canonical_path())
         namespace = self.browse_namespace(48, query=query)
 
@@ -378,8 +376,6 @@ class Folder(DBObject):
 
 
     def browse_list(self, context, sortby=['title'], sortorder='up'):
-        context.set_cookie('browse', 'list')
-
         # Get the form values
         get_form_value = context.get_form_value
         term = get_form_value('search_term', type=Unicode)
