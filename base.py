@@ -567,15 +567,6 @@ class DBObject(CatalogAware, Node, DomainAware):
         return self.get_property('dc:title', language=language) or self.name
 
 
-    change_content_language__access__ = 'is_allowed_to_view'
-    def change_content_language(self, context):
-        language = context.get_form_value('dc:language')
-        context.set_cookie('content_language', language)
-
-        request = context.request
-        return request.referrer
-
-
     def get_content_language(self, context=None):
         if context is None:
             context = get_context()
@@ -583,7 +574,7 @@ class DBObject(CatalogAware, Node, DomainAware):
         site_root = self.get_site_root()
         languages = site_root.get_property('ikaaro:website_languages')
         # Check cookie
-        language = context.get_cookie('content_language')
+        language = context.get_cookie('language')
         if language in languages:
             return language
         # Default

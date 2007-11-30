@@ -103,10 +103,7 @@ class Link(File):
         # Build the namespace
         namespace = {}
         # Language
-        site_root = self.get_site_root()
-        languages = site_root.get_property('ikaaro:website_languages')
-        default_language = languages[0]
-        language = context.get_cookie('content_language') or default_language
+        language = self.get_content_language(context)
         namespace['language'] = language
         # Title
         namespace['title'] = self.get_property('dc:title', language=language)
