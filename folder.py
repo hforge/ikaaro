@@ -705,16 +705,9 @@ class Folder(DBObject):
                 'image': u'As Image Gallery'}[mode]
 
     def browse_content(self, context):
-        mode = context.get_form_value('mode')
-        if mode is None:
-            mode = context.get_cookie('browse_mode')
-            # Default
-            if mode is None:
-                mode = 'thumbnails'
-        else:
-            context.set_cookie('browse_mode', mode)
-
+        mode = context.get_form_value('mode', default='list')
         method = getattr(self, 'browse_%s' % mode)
+
         return method(context)
 
 
