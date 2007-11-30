@@ -26,7 +26,7 @@ from itools.datatypes import Email, Integer, Unicode
 from itools.i18n import get_language_name, get_languages
 from itools.catalog import EqQuery, OrQuery, AndQuery, TextField
 from itools.stl import stl
-from itools.rest import checkid
+from itools.handlers import checkid
 
 # Import from ikaaro
 from folder import Folder

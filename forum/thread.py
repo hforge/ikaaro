@@ -21,9 +21,9 @@ from operator import itemgetter
 
 # Import from itools
 from itools.datatypes import FileName
+from itools.handlers import checkid
 from itools.i18n import format_datetime
 from itools.stl import stl
-from itools.rest import checkid
 
 # Import from ikaaro
 from ikaaro.folder import Folder

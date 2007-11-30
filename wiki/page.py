@@ -30,11 +30,10 @@ from docutils import readers
 from docutils import nodes
 
 # Import from itools
-from itools.datatypes import DateTime
-from itools import vfs
+from itools.datatypes import DateTime, Unicode, FileName
+from itools.handlers import checkid
 from itools.stl import stl
-from itools.datatypes import Unicode, FileName
-from itools.rest import checkid
+from itools import vfs
 from itools.xml import XMLParser
 
 # Import from ikaaro

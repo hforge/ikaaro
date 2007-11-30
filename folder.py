@@ -27,9 +27,8 @@ from zlib import compress, decompress
 # Import from itools
 from itools.catalog import CatalogAware, EqQuery, AndQuery, PhraseQuery
 from itools.datatypes import Boolean, DataType, FileName, Integer, Unicode
-from itools.handlers import get_handler_class, Folder as FolderHandler
+from itools.handlers import Folder as FolderHandler, checkid
 from itools.i18n import format_datetime
-from itools.rest import checkid
 from itools.stl import stl
 from itools.uri import Path, get_reference
 from itools import vfs

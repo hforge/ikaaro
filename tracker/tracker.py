@@ -27,12 +27,11 @@ from re import sub
 
 # Import from itools
 from itools.datatypes import Boolean, DateTime, Integer, String, Unicode, XML
+from itools.handlers import checkid, ConfigFile, Table as BaseTable
 from itools.i18n import format_datetime
-from itools.handlers import ConfigFile, Table as BaseTable
-from itools.rest import checkid
-from itools.xml import XMLParser
 from itools.stl import stl
 from itools.uri import encode_query, Reference
+from itools.xml import XMLParser
 
 # Import from ikaaro
 from ikaaro.file import File

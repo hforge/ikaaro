@@ -21,18 +21,18 @@
 from datetime import datetime
 
 # Import from itools
-from itools import vfs
 from itools.catalog import CatalogAware
+from itools.datatypes import FileName
+from itools.gettext import DomainAware, get_domain
+from itools.handlers import checkid
+from itools.http import Forbidden
 from itools.i18n import get_language_name
 from itools.schemas import get_datatype
 from itools.stl import stl
-from itools.gettext import DomainAware, get_domain
-from itools.http import Forbidden
+from itools import vfs
 from itools.web import get_context, Node as BaseNode
-from itools.datatypes import FileName
-from itools.rest import checkid
 
-# Import from itools.cms
+# Import from ikaaro
 from handlers import Lock, Metadata
 from messages import *
 from registry import get_object_class

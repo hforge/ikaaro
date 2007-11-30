@@ -23,9 +23,8 @@ from mimetypes import guess_type
 
 # Import from itools
 from itools.datatypes import FileName
-from itools.handlers import File as FileHandler, guess_encoding
+from itools.handlers import File as FileHandler, guess_encoding, checkid
 from itools.i18n import guess_language
-from itools.rest import checkid
 from itools.stl import stl
 from itools.uri import get_reference
 from itools import vfs
