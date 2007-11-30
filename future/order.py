@@ -29,7 +29,7 @@ from ikaaro.workflow import WorkflowAware
 class OrderAware(object):
     orderable_classes = None
 
-    def get_ordered_folder_names(self, mode='mixed'):
+    def get_ordered_names(self, mode='mixed'):
         """Return current order plus the unordered names at the end.
             mode mixed -> ordered + unordered
             mode ordered -> ordered
@@ -41,16 +41,15 @@ class OrderAware(object):
         real_names = [f.name for f in self.search_objects()
                 if isinstance(f, orderable_classes)]
 
-        ordered_folders = [f for f in ordered_names if f in real_names]
+        ordered = [f for f in ordered_names if f in real_names]
         if mode == 'ordered':
-            return ordered_folders
+            return ordered
         else:
-            unordered_folders = [f for f in real_names
-                                   if f not in ordered_names]
+            unordered = [f for f in real_names if f not in ordered_names]
             if mode == 'all':
-                return ordered_folders, unordered_folders
+                return ordered, unordered
             else:
-                return ordered_folders + unordered_folders
+                return ordered + unordered
 
 
     def get_ordered_objects(self, objects, mode='mixed'):
@@ -62,7 +61,7 @@ class OrderAware(object):
         """
         ordered_list = []
         if mode is not 'all':
-            ordered_names = self.get_ordered_folder_names(mode)
+            ordered_names = self.get_ordered_names(mode)
             for object in objects:
                 index = ordered_names.index(object.name)
                 ordered_list.append((index, object))
@@ -72,7 +71,7 @@ class OrderAware(object):
             return [x[1] for x in ordered_list]
         else:
             ordered_list, unordered_list = [], []
-            ordered_names, unordered_names = self.get_ordered_folder_names(mode)
+            ordered_names, unordered_names = self.get_ordered_names(mode)
             for data in [(ordered_names, ordered_list),
                          (unordered_names, unordered_list)]:
                 names, l = data
@@ -88,55 +87,54 @@ class OrderAware(object):
             return (ordered, unordered)
 
 
-    order_folders_form__access__ = 'is_allowed_to_edit'
-    order_folders_form__label__ = u"Order"
-    order_folders_form__sublabel__ = u"Order"
-    def order_folders_form(self, context):
+    order_form__access__ = 'is_allowed_to_edit'
+    order_form__label__ = u"Order"
+    order_form__sublabel__ = u"Order"
+    def order_form(self, context):
         namespace = {}
 
         here = context.object
-        ordered_folders = []
-        unordered_folders = []
-        names = self.get_ordered_folder_names('all')
-        ordered_folders_names, unordered_folders_names = names
+        ordered = []
+        unordered = []
+        names = self.get_ordered_names('all')
+        ordered_names, unordered_names = names
 
-        for data in [(ordered_folders_names, ordered_folders),
-                     (unordered_folders_names, unordered_folders)]:
+        for data in [(ordered_names, ordered), (unordered_names, unordered)]:
             names, l = data
             for name in names:
-                folder = self.get_handler(name)
+                object = self.get_object(name)
                 ns = {
-                    'name': folder.name,
-                    'title': folder.get_property('dc:title'),
+                    'name': object.name,
+                    'title': object.get_property('dc:title'),
                     'workflow_state': '',
-                    'is_orderaware': isinstance(folder, OrderAware),
-                    'path': '%s/;order_folders_form' % here.get_pathto(folder)
+                    'is_orderaware': isinstance(object, OrderAware),
+                    'path': '%s/;order_form' % here.get_pathto(object)
                 }
-                if isinstance(folder, WorkflowAware):
-                    statename = folder.get_statename()
-                    state = folder.get_state()
+                if isinstance(object, WorkflowAware):
+                    statename = object.get_statename()
+                    state = object.get_state()
                     msg = self.gettext(state['title']).encode('utf-8')
                     state = ('<a href="%s/;state_form" class="workflow">'
                              '<strong class="wf_%s">%s</strong>'
-                             '</a>') % (folder.name, statename, msg)
+                             '</a>') % (object.name, statename, msg)
                     ns['workflow_state'] = XMLParser(state)
 
                 l.append(ns)
-        namespace['ordered_folders'] = ordered_folders
-        namespace['unordered_folders'] = unordered_folders
+        namespace['ordered'] = ordered
+        namespace['unordered'] = unordered
 
         handler = self.get_object('/ui/future/order_items.xml')
         return stl(handler, namespace)
 
 
-    order_folders_up__access__ = 'is_allowed_to_edit'
-    def order_folders_up(self, context):
+    order_up__access__ = 'is_allowed_to_edit'
+    def order_up(self, context):
         names = context.get_form_values('ordered_names')
         if not names:
             return context.come_back(u'Please select the ordered objects' \
                                        ' to order up.')
 
-        ordered_names = self.get_ordered_folder_names('ordered')
+        ordered_names = self.get_ordered_names('ordered')
 
         if ordered_names[0] == names[0]:
             return context.come_back(u"Objects already up.")
@@ -152,14 +150,14 @@ class OrderAware(object):
         return context.come_back(message)
 
 
-    order_folders_down__access__ = 'is_allowed_to_edit'
-    def order_folders_down(self, context):
+    order_down__access__ = 'is_allowed_to_edit'
+    def order_down(self, context):
         names = context.get_form_values('ordered_names')
         if not names:
             return context.come_back(
                 u"Please select the ordered objects to order down.")
 
-        ordered_names = self.get_ordered_folder_names('ordered')
+        ordered_names = self.get_ordered_names('ordered')
 
         if ordered_names[-1] == names[-1]:
             return context.come_back(u"Objects already down.")
@@ -176,14 +174,14 @@ class OrderAware(object):
         return context.come_back(message)
 
 
-    order_folders_top__access__ = 'is_allowed_to_edit'
-    def order_folders_top(self, context):
+    order_top__access__ = 'is_allowed_to_edit'
+    def order_top(self, context):
         names = context.get_form_values('ordered_names')
         if not names:
             message = u"Please select the ordered objects to order on top."
             return context.come_back(message)
 
-        ordered_names = self.get_ordered_folder_names('ordered')
+        ordered_names = self.get_ordered_names('ordered')
 
         if ordered_names[0] == names[0]:
             message = u"Objects already on top."
@@ -197,14 +195,14 @@ class OrderAware(object):
         return context.come_back(message)
 
 
-    order_folders_bottom__access__ = 'is_allowed_to_edit'
-    def order_folders_bottom(self, context):
+    order_bottom__access__ = 'is_allowed_to_edit'
+    def order_bottom(self, context):
         names = context.get_form_values('ordered_names')
         if not names:
             message = u"Please select the ordered objects to order on bottom."
             return context.come_back(message)
 
-        ordered_names = self.get_ordered_folder_names('ordered')
+        ordered_names = self.get_ordered_names('ordered')
 
         if ordered_names[-1] == names[-1]:
             message = u"Objects already on bottom."
@@ -218,15 +216,15 @@ class OrderAware(object):
         return context.come_back(message)
 
 
-    order_folders_ordered__access__ = 'is_allowed_to_edit'
-    def order_folders_ordered(self, context):
+    ordered__access__ = 'is_allowed_to_edit'
+    def ordered(self, context):
         names = context.get_form_values('unordered_names')
         if not names:
             message = u'Please select the unordered objects to move ' \
                        'into the ordered category.'
             return context.come_back(message)
 
-        ordered_names, unordered_names = self.get_ordered_folder_names('all')
+        ordered_names, unordered_names = self.get_ordered_names('all')
         temp = list(ordered_names) + [name for name in names]
 
         self.set_property('ikaaro:order', tuple(temp))
@@ -234,15 +232,15 @@ class OrderAware(object):
         return context.come_back(message)
 
 
-    order_folders_unordered__access__ = 'is_allowed_to_edit'
-    def order_folders_unordered(self, context):
+    unordered__access__ = 'is_allowed_to_edit'
+    def unordered(self, context):
         names = context.get_form_values('ordered_names')
         if not names:
             message = u'Please select the ordered objects to move into ' \
                        'the unordered category.'
             return context.come_back(message)
 
-        ordered_names, unordered_names = self.get_ordered_folder_names('all')
+        ordered_names, unordered_names = self.get_ordered_names('all')
 
         temp = [name for name in ordered_names
                 if name not in names]

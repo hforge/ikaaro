@@ -6,8 +6,8 @@
   <form action="." method="post">
     <stl:block>
       <h2>Ordered Objects</h2>
-      <p stl:if="not ordered_folders">There are no ordered objects</p>
-      <stl:block stl:if="ordered_folders">
+      <p stl:if="not ordered">There are no ordered objects</p>
+      <stl:block stl:if="ordered">
         <table>
           <thead>
             <tr>
@@ -18,36 +18,36 @@
             </tr>
           </thead>
           <tbody>
-            <tr stl:repeat="folder ordered_folders" class="${repeat/folder/even}">
+            <tr stl:repeat="object ordered" class="${repeat/object/even}">
               <td><input type="checkbox" name="ordered_names"
-                         value="${folder/name}" /></td>
+                         value="${object/name}" /></td>
               <td>
-                <a stl:if="folder/is_orderaware" href="${folder/path}">
-                  ${folder/name}
+                <a stl:if="object/is_orderaware" href="${object/path}">
+                  ${object/name}
                 </a>
-                <stl:inline stl:if="not folder/is_orderaware">
-                  ${folder/name}
+                <stl:inline stl:if="not object/is_orderaware">
+                  ${object/name}
                 </stl:inline>
               </td>
-              <td>${folder/title}</td>
-              <td>${folder/workflow_state}</td>
+              <td>${object/title}</td>
+              <td>${object/workflow_state}</td>
             </tr>
           </tbody>
         </table>
         <p>
-          <input type="submit" name=";order_folders_up" value="Order up" />
-          <input type="submit" name=";order_folders_down" value="Order down" />
-          <input type="submit" name=";order_folders_top" value="Order top" />
-          <input type="submit" name=";order_folders_bottom" value="Order bottom" />
-          <input type="submit" name=";order_folders_unordered"
+          <input type="submit" name=";order_up" value="Order up" />
+          <input type="submit" name=";order_down" value="Order down" />
+          <input type="submit" name=";order_top" value="Order top" />
+          <input type="submit" name=";order_bottom" value="Order bottom" />
+          <input type="submit" name=";unordered"
                  value="Move into unordered category" />
         </p>
       </stl:block>
     </stl:block>
     <stl:block>
       <h2>Unordered Objects</h2>
-      <p stl:if="not unordered_folders">There are no unordered objects</p>
-      <stl:block stl:if="unordered_folders">
+      <p stl:if="not unordered">There are no unordered objects</p>
+      <stl:block stl:if="unordered">
         <table>
           <thead>
             <tr>
@@ -58,16 +58,17 @@
             </tr>
           </thead>
           <tbody>
-            <tr stl:repeat="folder unordered_folders" class="${repeat/folder/even}">
-              <td><input type="checkbox" name="unordered_names" value="${folder/name}" /></td>
-              <td>${folder/name}</td>
-              <td>${folder/title}</td>
-              <td>${folder/workflow_state}</td>
+            <tr stl:repeat="object unordered" class="${repeat/object/even}">
+              <td><input type="checkbox" name="unordered_names"
+                         value="${object/name}" /></td>
+              <td>${object/name}</td>
+              <td>${object/title}</td>
+              <td>${object/workflow_state}</td>
             </tr>
           </tbody>
         </table>
         <p>
-          <input type="submit" name=";order_folders_ordered"
+          <input type="submit" name=";ordered"
                  value="Move into ordered category" />
         </p>
       </stl:block>
