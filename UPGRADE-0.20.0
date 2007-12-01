@@ -46,4 +46,9 @@ _get_virtual_handler => _get_object
 "get_real_handler" => "get_real_object"
 "get_physical_path" => "get_canonical_path"
 
+Code reorganization: wiki, tracker, future, forum
+
+"search_handlers" => "search_objects"
+
+
 

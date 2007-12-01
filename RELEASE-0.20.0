@@ -1,4 +1,44 @@
 
+ikaaro 0.20.0 (2007/12/20)
+==========================
 
+ikaaro is a Content Management System built on Python & itools, among
+other feautres it provides:
+
+ - content and document mangement (full index&search, metadata, etc.)
+ - multilingual user interfaces and content
+ - high level modules: wiki, forum, tracker, etc.
+
+Known before as "itools.cms", the ikaaro CMS has grown up to become a
+separate package.
+
+From a functional point of view the most important improvement is the
+new ability to manage multilingual content.
+
+
+There have been important changes to the programming interface, as a
+consequence of the 
+
+XXX
 Multilingual.
 Improve look of the forum.
+
+Continue: 46704ab23f3476a8d0f9eff8a6282d70a0ebe130
+XXX
+
+
+Resources
+---------
+
+Download
+http://download.ikaaro.org/ikaaro/ikaaro-0.20.0.tar.gz
+
+Home
+http://www.ikaaro.org/ikaaro
+
+Mailing list
+http://mail.ikaaro.org/mailman/listinfo/itools
+
+Bug Tracker
+http://bugs.ikaaro.org/
+
