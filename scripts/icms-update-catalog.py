@@ -62,7 +62,7 @@ def update_catalog(parser, options, target):
         catalog_path = '%s/catalog' % target
         if vfs.exists(catalog_path):
             vfs.remove(catalog_path)
-        catalog = make_catalog(catalog_path, *root._catalog_fields)
+        catalog = make_catalog(catalog_path)
         # Update
         t0, v0 = time(), vmsize()
         doc_n = 0

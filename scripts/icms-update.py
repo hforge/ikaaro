@@ -34,7 +34,7 @@ def update(parser, options, target):
     folder = vfs.open(target)
     confirmed = options.confirm
 
-    # Move the log files (FIXME Remove by 0.18)
+    # Move the log files (FIXME Remove by 0.21)
     if not folder.exists('log'):
         message = 'Move log files to the log folder (y/N)?'
         if ask_confirmation(message) is False:
@@ -43,6 +43,13 @@ def update(parser, options, target):
         for name in 'access', 'error', 'debug', 'spool', 'spool_error':
             if folder.exists('%s_log' % name):
                 folder.move('%s_log' % name, 'log/%s' % name)
+
+    # Move the "catalog/fields" file (FIXME Remove by 0.21)
+    if folder.exists('catalog/fields'):
+        message = 'Move "catalog/fields" file to "catalog/data/fields" (y/N)?'
+        if ask_confirmation(message) is False:
+            return
+        folder.move('catalog/fields', 'catalog/data/fields')
 
     # Build the server object
     server = Server(target)

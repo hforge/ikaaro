@@ -29,8 +29,6 @@ from types import GeneratorType
 # Import from itools
 import itools
 from itools import get_abspath
-from itools.catalog import (make_catalog, CatalogAware, TextField,
-    KeywordField, IntegerField, BoolField)
 from itools.datatypes import FileName, QName
 from itools.handlers import Folder as FolderHandler, ConfigFile
 from itools.html import XHTMLFile, stream_to_str_as_html
@@ -92,6 +90,25 @@ class Root(WebSite):
     contact_email = None
 
 
+    @staticmethod
+    def _make_object(cls, folder, email, password):
+        # The metadata
+        kw = {'ikaaro:admins': ('0',)}
+        metadata = cls.build_metadata(**kw)
+        folder.set_handler('.metadata', metadata)
+        # User Folder
+        kw = {'dc:title': {'en': u'Users'}}
+        users = UserFolder.build_metadata(owner=None, **kw)
+        folder.set_handler('users.metadata', users)
+        # Default User
+        password = crypt_password(password)
+        kw = {'ikaaro:email': email, 'ikaaro:password': password}
+        user = get_object_class('user').build_metadata(owner='0', **kw)
+        folder.set_handler('users/0.metadata', user)
+        # Return
+        return cls(metadata)
+
+
     ########################################################################
     # Override itools.web.root.Root
     ########################################################################
@@ -123,54 +140,6 @@ class Root(WebSite):
         if isinstance(body, str):
             body = XMLParser(body)
         return self.get_skin().template(body)
-
-
-    ########################################################################
-    # Skeleton
-    ########################################################################
-    _catalog_fields = [
-        KeywordField('abspath', is_stored=True),
-        TextField('text'),
-        TextField('title', is_stored=True),
-        KeywordField('owner', is_stored=True),
-        BoolField('is_role_aware'),
-        KeywordField('format', is_stored=True),
-        KeywordField('workflow_state', is_stored=True),
-        KeywordField('members'),
-        # Users
-        KeywordField('email', is_stored=True),
-        TextField('lastname', is_stored=True),
-        TextField('firstname', is_stored=True),
-        KeywordField('username', is_stored=True), # Login Name
-        # Folder's view
-        KeywordField('parent_path'),
-        KeywordField('paths'),
-        KeywordField('name', is_stored=True),
-        KeywordField('mtime', is_indexed=False, is_stored=True),
-        IntegerField('size', is_indexed=False, is_stored=True),
-        # Versioning Aware
-        BoolField('is_version_aware'),
-        KeywordField('last_author', is_indexed=False, is_stored=True),
-        ]
-
-
-    @staticmethod
-    def _make_object(cls, folder, email, password):
-        # The metadata
-        kw = {'ikaaro:admins': ('0',)}
-        metadata = cls.build_metadata(**kw)
-        folder.set_handler('.metadata', metadata)
-        # User Folder
-        kw = {'dc:title': {'en': u'Users'}}
-        users = UserFolder.build_metadata(owner=None, **kw)
-        folder.set_handler('users.metadata', users)
-        # Default User
-        password = crypt_password(password)
-        kw = {'ikaaro:email': email, 'ikaaro:password': password}
-        user = get_object_class('user').build_metadata(owner='0', **kw)
-        folder.set_handler('users/0.metadata', user)
-        # Return
-        return cls(metadata)
 
 
     ########################################################################

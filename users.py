@@ -23,7 +23,7 @@ from string import Template
 
 # Import from itools
 from itools.uri import Path
-from itools.catalog import EqQuery, AndQuery, OrQuery
+from itools.catalog import EqQuery, AndQuery, OrQuery, TextField, KeywordField
 from itools.i18n import get_language_name
 from itools.handlers import Folder as BaseFolder
 from itools.stl import stl
@@ -58,11 +58,23 @@ class User(AccessControl, Folder):
     ########################################################################
     # Indexing
     ########################################################################
-    def get_catalog_indexes(self):
-        indexes = Folder.get_catalog_indexes(self)
-        indexes['email'] = self.get_property('ikaaro:email')
-        indexes['username'] = self.get_login_name()
-        return indexes
+    def get_catalog_fields(self):
+        fields = Folder.get_catalog_fields(self)
+        fields += [KeywordField('email', is_stored=True),
+                   TextField('lastname', is_stored=True),
+                   TextField('firstname', is_stored=True),
+                   # Login Name
+                   KeywordField('username', is_stored=True)]
+        return fields
+
+
+    def get_catalog_values(self):
+        values = Folder.get_catalog_values(self)
+        values['email'] = self.get_property('ikaaro:email')
+        values['username'] = self.get_login_name()
+        values['firstname'] = self.get_property('ikaaro:firstname')
+        values['lastname'] = self.get_property('ikaaro:lastname')
+        return values
 
 
     def get_canonical_path(self):

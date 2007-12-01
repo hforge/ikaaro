@@ -21,7 +21,8 @@
 from datetime import datetime
 
 # Import from itools
-from itools.catalog import CatalogAware
+from itools.catalog import (CatalogAware, TextField, KeywordField,
+    IntegerField, BoolField)
 from itools.datatypes import FileName
 from itools.gettext import DomainAware, get_domain
 from itools.handlers import checkid
@@ -259,10 +260,30 @@ class DBObject(CatalogAware, Node, DomainAware):
         raise NotImplementedError
 
 
-    def get_catalog_indexes(self):
+    def get_catalog_fields(self):
+        return [
+            KeywordField('abspath', is_stored=True),
+            TextField('text'),
+            TextField('title', is_stored=True),
+            KeywordField('owner', is_stored=True),
+            BoolField('is_role_aware'),
+            KeywordField('format', is_stored=True),
+            KeywordField('workflow_state', is_stored=True),
+            KeywordField('members'),
+            # Folder's view
+            KeywordField('parent_path'),
+            KeywordField('paths'),
+            KeywordField('name', is_stored=True),
+            KeywordField('mtime', is_indexed=False, is_stored=True),
+            IntegerField('size', is_indexed=False, is_stored=True),
+            # Versioning Aware
+            BoolField('is_version_aware'),
+            KeywordField('last_author', is_indexed=False, is_stored=True)]
+
+
+    def get_catalog_values(self):
         from access import RoleAware
         from file import File
-        from users import User
 
         name = self.name
         abspath = self.get_canonical_path()
@@ -310,11 +331,6 @@ class DBObject(CatalogAware, Node, DomainAware):
         else:
             names = self.get_names()
             document['size'] = len(names)
-
-        # Users
-        if isinstance(self, User):
-            document['firstname'] = self.get_property('ikaaro:firstname')
-            document['lastname'] = self.get_property('ikaaro:lastname')
 
         # Workflow state
         if isinstance(self, WorkflowAware):

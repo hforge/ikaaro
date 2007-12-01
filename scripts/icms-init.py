@@ -142,7 +142,7 @@ def init(parser, options, target):
     root = root_class._make_object(root_class, folder, email, password)
     database.save_changes()
     # Index everything
-    catalog = make_catalog('%s/catalog' % target, *root._catalog_fields)
+    catalog = make_catalog('%s/catalog' % target)
     for handler in root.traverse_objects():
         if isinstance(handler, CatalogAware):
             catalog.index_document(handler)
