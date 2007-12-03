@@ -32,7 +32,7 @@ from itools.web import get_context, AccessControl
 from itools.xml import XMLParser, XMLFile
 
 # Import from ikaaro
-from base import Node
+from base import Node, DBObject
 from folder import Folder as DBFolder
 from utils import reduce_string
 from widgets import tree, build_menu
@@ -163,7 +163,8 @@ class Skin(UIFolder):
 
 
     def get_navigation_menu(self, context):
-        """Build the namespace for the navigation menu."""
+        """Build the namespace for the navigation menu.
+        """
         from tracker import Issue
 
         menu = tree(context.site_root, active_node=context.object,
@@ -173,6 +174,9 @@ class Skin(UIFolder):
 
     def get_context_menu(self, context):
         here = context.object
+        if not isinstance(here, DBObject):
+            return None
+
         base = here.get_context_menu_base()
         prefix = here.get_pathto(base)
 
@@ -291,7 +295,8 @@ class Skin(UIFolder):
     # Breadcrumb
     #######################################################################
     def get_breadcrumb(self, context):
-        """Return a list of dicts [{name, url}...] """
+        """Return a list of dicts [{name, url}...]
+        """
         here = context.object
         root = context.site_root
 
@@ -331,8 +336,7 @@ class Skin(UIFolder):
     # Tabs
     #######################################################################
     def get_tabs(self, context):
-        """
-        Return tabs and subtabs as a dict {tabs, subtabs} of list of dicts
+        """Return tabs and subtabs as a dict {tabs, subtabs} of list of dicts
         [{name, label, active, style}...].
         """
         # Get request, path, etc...
@@ -421,7 +425,8 @@ class Skin(UIFolder):
     # Users info (context.user)
     #######################################################################
     def get_user_menu(self, context):
-        """Return a dict {user_icon, user, joinisopen}."""
+        """Return a dict {user_icon, user, joinisopen}.
+        """
         user = context.user
 
         if user is None:
@@ -439,7 +444,8 @@ class Skin(UIFolder):
     # Users info (context.user)
     #######################################################################
     def get_message(self, context):
-        """Return a message string from de request."""
+        """Return a message string from de request.
+        """
         if context.has_form_value('message'):
             message = context.get_form_value('message')
             return XMLParser(message)
@@ -504,7 +510,8 @@ class Skin(UIFolder):
     #
     #######################################################################
     def get_template_title(self, context):
-        """Return the title to give to the template document."""
+        """Return the title to give to the template document.
+        """
         here = context.object
         # Not Found
         if here is None:
