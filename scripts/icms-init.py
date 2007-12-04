@@ -20,17 +20,58 @@
 # Import from the Standard Library
 from optparse import OptionParser
 from os import mkdir
+from string import Template
 import sys
 
 # Import from itools
 import itools
 from itools.catalog import make_catalog, CatalogAware
-from itools.handlers import ConfigFile, Database, get_handler
+from itools.handlers import Database
 from itools.uri import get_absolute_reference
 
 # Import from ikaaro
 from ikaaro.root import Root
 from ikaaro.utils import generate_password
+
+
+template = Template(
+"""# The variable "modules" lists the Python modules or packages that will be
+# loaded when the applications starts.
+# 
+# modules =
+${root}
+# The variable "address" defines the internet address the web server will
+# listen to for HTTP connections.
+# 
+# address = 127.0.0.1
+${address}
+# The variable "port" defines the port number the web server will listen to
+# for HTTP connections.
+# 
+# port = 8080
+${port}
+# The variable "smtp-host" defines the name or IP address of the SMTP relay.
+# This option is required for the application to send emails.
+# 
+# smtp-host = localhost
+${smtp_host}
+# The variable "smtp-login" defines the login associed to the SMTP.
+# 
+# smtp-login =
+${smtp_login}
+# The variable "smtp-password" defines the password associed to the
+# stmp-login.
+# 
+# smtp-password =
+${smtp_password}
+# The variable "debug" defines whether the web server will be run in debug
+# mode or not.  When run in debug mode (debug = 1), debugging information
+# will be written to the "log/debug" file.  By default debug mode is not
+# active (debug = 0).
+# 
+# debug = 1
+""")
+
 
 
 def init(parser, options, target):
@@ -39,79 +80,19 @@ def init(parser, options, target):
     except OSError:
         parser.error('can not create the instance (check permissions)')
 
-    # Create the config file
-    config = ConfigFile()
-    # The modules
-    comment = [
-        'The variable "modules" lists the Python modules or packages that',
-        'will be loaded when the applications starts.',
-        '',
-        'modules = ']
-    if options.root:
-        config.set_value('modules', options.root, comment=comment)
-    else:
-        config.append_comment(comment)
-    # The address
-    comment = [
-        'The variable "address" defines the internet address the web server',
-        'will listen to for HTTP connections.',
-        '',
-        'address = 127.0.0.1']
-    if options.address:
-        config.set_value('address', options.address, comment=comment)
-    else:
-        config.append_comment(comment)
-    # The port
-    comment = [
-        'The variable "port" defines the port number the web server will',
-        'listen to for HTTP connections.',
-        '',
-        'port = 8080']
-    if options.port:
-        config.set_value('port', options.port, comment=comment)
-    else:
-        config.append_comment(comment)
-    # The SMTP host
-    comment = [
-        'The variable "smtp-host" defines the name or IP address of the SMTP',
-        'relay.  This option is required for the application to send emails.',
-        '',
-        'smtp-host = localhost']
-    if options.smtp_host:
-        config.set_value('smtp-host', options.smtp_host, comment=comment)
-    else:
-        config.append_comment(comment)
-    # The SMTP login
-    comment = [
-        'The variable "smtp-login" defines the login associed to the SMTP.',
-        '',
-        'smtp-login = ']
-    if options.smtp_login:
-        config.set_value('smtp-login', options.smtp_login, comment=comment)
-    else:
-        config.append_comment(comment)
-    # The SMTP password
-    comment =  [
-        'The variable "smtp-password" defines the password associed ',
-        'to the stmp-login.',
-        '',
-        'smtp-password = ']
-    if options.smtp_password:
-        config.set_value('smtp-password', options.smtp_password,
-            comment=comment)
-    else:
-        config.append_comment(comment)
-    # Debug mode
-    comment = [
-        'The variable "debug" defines whether the web server will be run in',
-        'debug mode or not.  When run in debug mode (debug = 1), debugging',
-        'information will be written to the "log/debug" file.  By default',
-        'debug mode is not active (debug = 0).',
-        '',
-        'debug = 1']
-    config.append_comment(comment)
-    # Save the file
-    config.save_state_to('%s/config.conf' % target)
+    # The configuration file
+    namespace = {}
+    names = [('modules', 'root'), ('address', 'address'), ('port', 'port'),
+             ('smtp-host', 'smtp_host'), ('smtp-login', 'smtp_login'),
+             ('smtp-password', 'smtp_password')]
+    for key, name in names:
+        value = getattr(options, name)
+        if value is not None:
+            namespace[name] = '%s = %s\n' % (key, value)
+        else:
+            namespace[name] = ''
+    config = template.substitute(**namespace)
+    open('%s/config.conf' % target, 'w').write(config)
 
     # Load the root class
     if options.root is None:
