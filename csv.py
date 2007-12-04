@@ -242,14 +242,13 @@ class CSV(Text):
         handler = self.handler
         # Get the row
         index = context.get_form_value('index', type=Integer)
-        row = handler.get_row(index)
 
+        kw = {}
         for name, title in self.get_columns():
             datatype = handler.get_datatype(name)
-            value = context.get_form_value(name, type=datatype)
-            row.set_value(name, value)
+            kw[name] = context.get_form_value(name, type=datatype)
+        handler.update_row(index, **kw)
 
-        handler.set_changed()
         return context.come_back(MSG_CHANGES_SAVED)
 
 
