@@ -70,18 +70,17 @@ class Server(BaseServer):
                 exec('import %s' % name)
 
         # Find out the IP to listen to
-        if address:
-            pass
-        else:
-            address = config.get_value('address')
+        if not address:
+            address = config.get_value('address', default='').strip()
 
         # Find out the port to listen
-        if port:
-            pass
-        else:
+        if not port:
             port = config.get_value('port')
             if port is not None:
                 port = int(port)
+
+        # Contact Email
+        self.contact_email = config.get_value('contact-email')
 
         # The database
         database = SafeDatabase('%s/database.commit' % target.path)

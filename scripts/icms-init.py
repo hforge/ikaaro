@@ -38,38 +38,43 @@ template = Template(
 """# The variable "modules" lists the Python modules or packages that will be
 # loaded when the applications starts.
 # 
-# modules =
-${root}
+modules = ${modules}
+
 # The variable "address" defines the internet address the web server will
 # listen to for HTTP connections.
 # 
-# address = 127.0.0.1
-${address}
+address = ${address}
+
 # The variable "port" defines the port number the web server will listen to
 # for HTTP connections.
 # 
-# port = 8080
-${port}
+port = ${port}
+
 # The variable "smtp-host" defines the name or IP address of the SMTP relay.
 # This option is required for the application to send emails.
 # 
-# smtp-host = localhost
-${smtp_host}
+smtp-host = ${smtp_host}
+
 # The variable "smtp-login" defines the login associed to the SMTP.
 # 
-# smtp-login =
-${smtp_login}
+smtp-login = ${smtp_login}
+
 # The variable "smtp-password" defines the password associed to the
 # stmp-login.
 # 
-# smtp-password =
-${smtp_password}
+smtp-password = ${smtp_password}
+
+# The variable "contact-email" is the email address used in the From field
+# when sending anonymous emails.
+#
+contact-email = ${contact_email}
+
 # The variable "debug" defines whether the web server will be run in debug
 # mode or not.  When run in debug mode (debug = 1), debugging information
 # will be written to the "log/debug" file.  By default debug mode is not
 # active (debug = 0).
 # 
-# debug = 1
+debug = 0
 """)
 
 
@@ -80,38 +85,37 @@ def init(parser, options, target):
     except OSError:
         parser.error('can not create the instance (check permissions)')
 
-    # The configuration file
-    namespace = {}
-    names = [('modules', 'root'), ('address', 'address'), ('port', 'port'),
-             ('smtp-host', 'smtp_host'), ('smtp-login', 'smtp_login'),
-             ('smtp-password', 'smtp_password')]
-    for key, name in names:
-        value = getattr(options, name)
-        if value is not None:
-            namespace[name] = '%s = %s\n' % (key, value)
-        else:
-            namespace[name] = ''
-    config = template.substitute(**namespace)
-    open('%s/config.conf' % target, 'w').write(config)
-
-    # Load the root class
-    if options.root is None:
-        root_class = Root
-    else:
-        exec('import %s' % options.root)
-        exec('root_class = %s.Root' % options.root)
-
     # Get the email address for the init user
     if options.email is None:
         sys.stdout.write("Type your email address: ")
         email = sys.stdin.readline().strip()
     else:
         email = options.email
+
     # Get the password
     if options.password is None:
         password = generate_password()
     else:
         password = options.password
+
+    # Load the root class
+    if options.root is None:
+        root_class = Root
+        modules = ''
+    else:
+        modules = options.root
+        exec('import %s' % modules)
+        exec('root_class = %s.Root' % modules)
+
+    # The configuration file
+    namespace = {}
+    names = [('address', ''), ('port', '8080'), ('smtp_host', 'localhost'),
+             ('smtp_login', ''), ('smtp_password', '')]
+    for name, default in names:
+        namespace[name] = getattr(options, name) or default
+    config = template.substitute(modules=modules, contact_email=email,
+                                 **namespace)
+    open('%s/config.conf' % target, 'w').write(config)
 
     # Create the folder structure
     mkdir('%s/database' % target)

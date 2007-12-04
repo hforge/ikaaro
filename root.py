@@ -86,10 +86,6 @@ class Root(WebSite):
         {'name': 'ikaaro:admins', 'title': u'Admin'}]
 
 
-    # Default email address to use in the Form fields when sending emails
-    contact_email = None
-
-
     @staticmethod
     def _make_object(cls, folder, email, password):
         # The metadata
@@ -247,8 +243,8 @@ class Root(WebSite):
 
     ########################################################################
     # Email
-    def send_email(self, from_addr, to_addr, subject, text=None, html=None,
-                   encoding='utf-8', subject_with_host=True):
+    def send_email(self, to_addr, subject, from_addr=None, text=None,
+                   html=None, encoding='utf-8', subject_with_host=True):
         # Check input data
         if not isinstance(subject, unicode):
             raise TypeError, 'the subject must be a Unicode string'
@@ -257,7 +253,16 @@ class Root(WebSite):
         if html and not isinstance(html, unicode):
             raise TypeError, 'the html must be a Unicode string'
 
+        # Figure out the from address
         context = get_context()
+        server = context.server
+        if from_addr is None:
+            user = context.user
+            if user is not None:
+                from_addr = user.get_property('ikaaro:email')
+            if not from_addr:
+                from_addr = server.contact_email
+
         # Set the subject
         subject = subject.encode(encoding)
         if subject_with_host is True:
@@ -287,7 +292,6 @@ class Root(WebSite):
         elif text:
             message.attach(message_text)
         # Send email
-        server = context.server
         server.send_email(message)
 
 

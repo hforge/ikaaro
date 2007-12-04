@@ -181,8 +181,7 @@ class User(AccessControl, Folder):
         key = self.get_property('ikaaro:user_must_confirm')
         confirm_url.query = {'key': key}
         body = Template(body).substitute({'confirm_url': str(confirm_url)})
-        root = context.root
-        root.send_email(root.contact_email, email, subject, text=body)
+        context.root.send_email(email, subject, text=body)
 
 
     confirm_registration_form__access__ = True

@@ -656,7 +656,7 @@ class WebSite(RoleAware, Folder):
 
         # Send the email
         root = self.get_root()
-        root.send_email(from_addr, contact, subject, text=body)
+        root.send_email(contact, subject, from_addr=from_addr, text=body)
 
         return context.come_back(u'Message sent.')
 

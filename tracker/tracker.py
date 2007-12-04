@@ -540,10 +540,8 @@ class Tracker(Folder):
         # Send mails
         user = context.user
         if user is None:
-            from_addr = ''
             user_title = self.gettext(u'ANONYMOUS')
         else:
-            from_addr = user.get_property('ikaaro:email')
             user_title = user.get_title()
         template = u'--- Comment from : %s ---\n\n%s\n\n%s'
         template = self.gettext(template)
@@ -559,7 +557,7 @@ class Tracker(Folder):
             body = template % (user_title, comment, '\n'.join(user_issues))
             to = root.get_user(user_id)
             to_addr = to.get_property('ikaaro:email')
-            root.send_email(from_addr, to_addr, subject, text=body)
+            root.send_email(to_addr, subject, text=body)
 
         # Redirect on the new search
         query = encode_query(context.uri.query)

@@ -49,8 +49,8 @@ class Spool(object):
         # The SMTP host
         config = get_config(target)
         self.smtp_host = config.get_value('smtp-host')
-        self.smtp_login = config.get_value('smtp-login')
-        self.smtp_password = config.get_value('smtp-password')
+        self.smtp_login = config.get_value('smtp-login').strip()
+        self.smtp_password = config.get_value('smtp-password').strip()
 
         # The logs
         self.activity_log = open('%s/log/spool' % target.path, 'a+')

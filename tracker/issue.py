@@ -171,10 +171,8 @@ class Issue(Folder, VersioningAware):
         # Send a Notification Email
         # Notify / From
         if user is None:
-            from_addr = ''
             user_title = self.gettext(u'ANONYMOUS')
         else:
-            from_addr = user.get_property('ikaaro:email')
             user_title = user.get_title()
         # Notify / To
         to_addrs = set()
@@ -211,7 +209,7 @@ class Issue(Folder, VersioningAware):
         for to_addr in to_addrs:
             to_addr = users.get_object(to_addr)
             to_addr = to_addr.get_property('ikaaro:email')
-            root.send_email(from_addr, to_addr, subject, text=body)
+            root.send_email(to_addr, subject, text=body)
 
 
     def get_diff_with(self, record, context):
