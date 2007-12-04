@@ -162,20 +162,33 @@ class Folder(DBObject):
 
 
     def copy_object(self, source, target):
-        if source[0] == '/':
-            source = source[1:]
-            root = self.get_root()
-            source = root.handler.uri.resolve2(source)
-        # Copy
+        context = get_context()
+
+        # Find out the source and target absolute URIs
         folder = self.handler
+        if source[0] == '/':
+            source_uri = self.get_root().handler.uri.resolve2(source[1:])
+        else:
+            source_uri = folder.uri.resolve2(source)
+        if target[0] == '/':
+            target_uri = self.get_root().handler.uri.resolve2(target[1:])
+        else:
+            target_uri = folder.uri.resolve2(target)
+        old_name = source_uri.path[-1]
+        new_name = target_uri.path[-1]
+
+        # Copy the metadata
         folder.copy_handler('%s.metadata' % source, '%s.metadata' % target)
-        # FIXME This does not work for multilingual handlers
-        if folder.has_handler(source):
-            folder.copy_handler(source, target)
+        # Copy the content
+        for old_name, new_name in object.rename_handlers(new_name):
+            src_uri = source_uri.resolve(old_name)
+            dst_uri = target_uri.resolve(new_name)
+            if folder.has_handler(src_uri):
+                folder.copy_handler(src_uri, dst_uri)
 
         # Events, add
         object = self.get_object(target)
-        get_context().server.add_object(object)
+        context().server.add_object(object)
 
 
     def move_object(self, source, target):
@@ -623,7 +636,7 @@ class Folder(DBObject):
         if not names:
             return context.come_back(u'No objects selected.')
 
-        abspath = Path(self.get_abspath())
+        abspath = self.get_abspath()
         cp = (False, [ str(abspath.resolve2(x)) for x in names ])
         cp = CopyCookie.encode(cp)
         context.set_cookie('ikaaro_cp', cp, path='/')
@@ -643,7 +656,7 @@ class Folder(DBObject):
         if not names:
             return context.come_back(u'No objects selected.')
 
-        abspath = Path(self.get_abspath())
+        abspath = self.get_abspath()
         cp = (True, [ str(abspath.resolve2(x)) for x in names ])
         cp = CopyCookie.encode(cp)
         context.set_cookie('ikaaro_cp', cp, path='/')
