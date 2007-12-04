@@ -371,17 +371,16 @@ class Issue(Folder, VersioningAware):
 
         # Local variables
         users = self.get_object('/users')
-        values = self.get_last_history_record()
-        # XXX
-        title = values.title
-        module = values.module
-        version = values.version
-        type = values.type
-        priority = values.priority
-        assigned_to = values.assigned_to
-        state = values.state
-        comment = values.comment
-        file = values.file
+        record = self.get_last_history_record()
+        title = record.get_value('title')
+        module = record.get_value('module')
+        version = record.get_value('version')
+        type = record.get_value('type')
+        priority = record.get_value('priority')
+        assigned_to = record.get_value('assigned_to')
+        state = record.get_value('state')
+        comment = record.get_value('comment')
+        file = record.get_value('file')
 
         # Build the namespace
         namespace = {}
