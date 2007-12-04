@@ -157,7 +157,7 @@ class Folder(DBObject):
         folder = self.handler
         folder.del_handler('%s.metadata' % name)
         for handler in object.get_handlers():
-            if folder.has_handler(folder.uri):
+            if folder.has_handler(handler.uri):
                 folder.del_handler(handler.uri)
 
 
