@@ -130,7 +130,8 @@ class Table(File):
         if total:
             ac = self.get_access_control()
             if ac.is_allowed_to_edit(context.user, self):
-                actions = [('del_record_action', u'Remove', 'button_delete',None)]
+                actions = [('del_record_action', u'Remove', 'button_delete',
+                            None)]
 
         fields = self.get_fields()
         fields.insert(0, ('index', u'id'))
@@ -183,12 +184,11 @@ class Table(File):
                     else:
                         record[field] = record[field][0]
 
-        namespace['table'] = widgets.table(fields, records, [sortby], sortorder,
-                                           actions)
+        namespace['table'] = widgets.table(fields, records, [sortby],
+                                           sortorder, actions)
 
         handler = self.get_object('/ui/table/view.xml')
         return stl(handler, namespace)
-
 
 
     del_record_action__access__ = 'is_allowed_to_edit'
@@ -199,7 +199,6 @@ class Table(File):
 
         message = u'Record deleted.'
         return context.come_back(message)
-
 
 
     #########################################################################

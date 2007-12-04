@@ -47,8 +47,7 @@ namespaces = {
 
 def batch(uri, start, size, total, gettext=DBObject.gettext,
           msgs=(u"There is 1 object.", u"There are ${n} objects.")):
-    """
-    Outputs an HTML snippet with navigation links to move through a set
+    """Outputs an HTML snippet with navigation links to move through a set
     of objects.
 
     Input data:
@@ -117,9 +116,8 @@ def batch(uri, start, size, total, gettext=DBObject.gettext,
 
 
 def table_sortcontrol(column, sortby, sortorder):
-    """
-    Returns an html snippet with a link that lets to order a column
-    in a table.
+    """Returns an html snippet with a link that lets to order a column in a
+    table.
     """
     # Process column
     if isinstance(column, (str, unicode)):
@@ -208,8 +206,7 @@ table_template = list(XMLParser("""
 
 def table(columns, rows, sortby, sortorder, actions=[], gettext=lambda x: x,
           table_with_form=True):
-    """
-    The parameters are:
+    """The parameters are:
 
       columns --
         [(name, title), (name, title), ...]
@@ -244,6 +241,8 @@ def table(columns, rows, sortby, sortorder, actions=[], gettext=lambda x: x,
         id = None
         if row.get('checkbox') is True:
             id = row['id']
+            if isinstance(id, tuple):
+                id = id[0]
             if isinstance(id, int):
                 id = str(id)
             namespace['column_checkbox'] = True
@@ -389,8 +388,7 @@ menu_template = list(XMLParser("""
 
 
 def build_menu(options):
-    """
-    The input (options) is a tree:
+    """The input (options) is a tree:
 
       [{'href': ...,
         'class': ...,

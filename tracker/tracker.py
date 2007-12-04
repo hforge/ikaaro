@@ -774,6 +774,7 @@ class SelectTableTable(BaseTable):
 class SelectTable(Table):
 
     class_id = 'tracker_select_table'
+    class_title = u'Select Table'
     class_handler = SelectTableTable
 
     def get_options(self, value=None, sort=True):
@@ -922,8 +923,6 @@ class StoredSearch(Text):
         value = [ type.encode(x) for x in value ]
         value = ' '.join(value)
         self.handler.set_value(name, value)
-
-
 
 
 
