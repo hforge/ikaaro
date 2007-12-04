@@ -22,7 +22,7 @@ from operator import itemgetter
 
 # Import from itools
 from itools.datatypes import Boolean, Enumerate, Integer, is_datatype
-from itools.csv import IntegerKey, CSVFile
+from itools.csv import CSVFile
 from itools.stl import stl
 
 # Import from ikaaro
@@ -62,13 +62,12 @@ class CSV(Text):
         columns = []
         for name in handler.columns:
             datatype = handler.schema[name]
-            if datatype != IntegerKey:
-                title = getattr(datatype, 'title', None)
-                if title is None:
-                    title = name
-                else:
-                    title = self.gettext(title)
-                columns.append((name, title))
+            title = getattr(datatype, 'title', None)
+            if title is None:
+                title = name
+            else:
+                title = self.gettext(title)
+            columns.append((name, title))
 
         return columns
 
