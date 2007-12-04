@@ -375,10 +375,10 @@ class WebSite(RoleAware, Folder):
         # Do we already have a user with that email?
         root = context.root
         results = root.search(email=email)
-        users = self.get_handler('users')
+        users = self.get_object('users')
         if results.get_n_documents():
             user = results.get_documents()[0]
-            user = users.get_handler(user.name)
+            user = users.get_object(user.name)
             if not user.has_property('ikaaro:user_must_confirm'):
                 message = u'There is already an active user with that email.'
                 return context.come_back(message, keep=keep)
@@ -501,7 +501,7 @@ class WebSite(RoleAware, Folder):
             return context.come_back(message, username=username)
 
         user = results.get_documents()[0]
-        user = self.get_handler('/users/%s' % user.name)
+        user = self.get_object('/users/%s' % user.name)
 
         # Send email of confirmation
         email = user.get_property('ikaaro:email')
@@ -651,7 +651,7 @@ class WebSite(RoleAware, Folder):
         body = context.get_form_value('body', type=Unicode).strip()
 
         # Find out the "to" address
-        contact = self.get_handler('/users/%s' % contact)
+        contact = self.get_object('/users/%s' % contact)
         contact = contact.get_property('ikaaro:email')
 
         # Send the email
