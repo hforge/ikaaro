@@ -15,7 +15,9 @@
             selected="${contact/selected}">${contact/title}</option>
         </select>
       </dd>
-      <dt><label for="from" class="${from/class}">Sender</label></dt>
+      <dt>
+        <label for="from" class="${from/class}">Sender email address</label>
+      </dt>
       <dd>
         <input type="text" id="from" name="from" size="40"
           value="${from/value}" />

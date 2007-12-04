@@ -622,7 +622,7 @@ class WebSite(RoleAware, Folder):
         users = self.get_object('/users')
         namespace['contacts'] = []
         for name in self.get_property('ikaaro:contacts'):
-            user = users.get_handler(name)
+            user = users.get_object(name)
             title = user.get_title()
             namespace['contacts'].append({'name': name, 'title': title,
                 'selected': name == namespace['to']['value']})
