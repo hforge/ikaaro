@@ -178,8 +178,10 @@ class Folder(DBObject):
         new_name = target_uri.path[-1]
 
         # Copy the metadata
-        folder.copy_handler('%s.metadata' % source, '%s.metadata' % target)
+        folder.copy_handler('%s.metadata' % source_uri,
+                            '%s.metadata' % target_uri)
         # Copy the content
+        object = self.get_object(source)
         for old_name, new_name in object.rename_handlers(new_name):
             src_uri = source_uri.resolve(old_name)
             dst_uri = target_uri.resolve(new_name)
@@ -188,7 +190,7 @@ class Folder(DBObject):
 
         # Events, add
         object = self.get_object(target)
-        context().server.add_object(object)
+        context.server.add_object(object)
 
 
     def move_object(self, source, target):
@@ -211,7 +213,8 @@ class Folder(DBObject):
         new_name = target_uri.path[-1]
 
         # Move the metadata
-        folder.move_handler('%s.metadata' % source, '%s.metadata' % target)
+        folder.move_handler('%s.metadata' % source_uri,
+                            '%s.metadata' % target_uri)
         # Move the content
         for old_name, new_name in object.rename_handlers(new_name):
             src_uri = source_uri.resolve(old_name)
