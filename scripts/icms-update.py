@@ -18,7 +18,6 @@
 
 # Import from the Standard Library
 from optparse import OptionParser
-import sys
 
 # Import from itools
 import itools
@@ -26,8 +25,8 @@ from itools import vfs
 from itools.web import set_context, Context
 
 # Import from ikaaro
-from ikaaro.server import ask_confirmation
-from ikaaro.server import Server
+from ikaaro.base import DBObject
+from ikaaro.server import Server, ask_confirmation
 
 
 def update(parser, options, target):
@@ -53,43 +52,58 @@ def update(parser, options, target):
 
     # Build the server object
     server = Server(target)
+    database = server.database
     root = server.root
-
-    # Check the version
-    instance_version = root.get_property('version')
-    class_version = root.class_version
-    if instance_version == class_version:
-        print 'The instance is up-to-date (version: %s).' % instance_version
-        return
-    if instance_version > class_version:
-        print 'WARNING: the instance (%s) is newer! than the class (%s)' \
-              % (instance_version, class_version)
-        return
 
     # Build a fake context
     context = Context(None)
     context.server = server
     set_context(context)
 
-    # Update
-    for next_version in root.get_next_versions():
-        instance_version = root.get_property('version')
-        # Ask
-        message = 'Update instance from version %s to version %s (y/N)? ' \
-                  % (instance_version, next_version)
-        if ask_confirmation(message, confirm) is False:
-            break
+    # Traverse the database
+    n = 0
+    for object in root.traverse_objects():
+        # Skip non-database objects
+        if not isinstance(object, DBObject):
+            continue
+
+        # Skip up-to-date objects
+        obj_version = object.get_property('version')
+        cls_version = object.class_version
+        if obj_version == cls_version:
+            continue
+        
+        # Show object to process
+        path = object.get_abspath()
+        print '%s <%s>' % (path, object.__class__.__name__)
+
+        # Check for code that is older than the instance
+        if obj_version > cls_version:
+            print '*'
+            print '* ERROR: object is newer than its class'
+            print '*'
+            return
+
         # Update
-        sys.stdout.write('.')
-        sys.stdout.flush()
-        root.update(next_version)
-        sys.stdout.write('.')
-        sys.stdout.flush()
-        database = server.database
-        database.save_changes()
-        print '.'
-    else:
-        print '*'
+        for next_version in object.get_next_versions():
+            obj_version = object.get_property('version')
+            # Ask
+            message = '- Update from %s to %s (y/N)? ' % (obj_version,
+                                                          next_version)
+            if ask_confirmation(message, confirm) is False:
+                print '*'
+                print '* WARNING: Upgrade process not finished.'
+                print '*'
+                return
+            # Update
+            object.update(next_version)
+            database.save_changes()
+            n += 1
+
+    print '*'
+    print '* %s objects upgraded.' % n
+    print '*'
+    if n > 0:
         print '* To finish the upgrade process update the catalog:'
         print '*'
         print '*   $ icms-update-catalog.py %s' % target

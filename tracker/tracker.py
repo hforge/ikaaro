@@ -61,6 +61,7 @@ table_columns = [('id', u'Id'), ('title', u'Title'), ('version', u'Version'),
 class Tracker(Folder):
 
     class_id = 'tracker'
+    class_version = '20071119'
     class_title = u'Issue Tracker'
     class_description = u'To manage bugs and tasks'
     class_icon16 = 'images/tracker16.png'
@@ -730,7 +731,10 @@ class Tracker(Folder):
 
 
     def update_20071119(self):
+        """Change the CSV files to Table files.
+        """
         from itools.handlers import File
+
         columns = ['id', 'title']
         for new_name in ['modules', 'types', 'priorities', 'states',
                          'versions']:
