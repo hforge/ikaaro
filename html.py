@@ -107,7 +107,7 @@ class EpozEditable(object):
 
 class WebPage(EpozEditable, Multilingual, Text):
 
-    class_id = 'application/xhtml+xml'
+    class_id = 'webpage'
     class_title = u'Web Page'
     class_description = u'Create and publish a Web Page.'
     class_icon16 = 'images/HTML16.png'
@@ -181,15 +181,8 @@ class WebPage(EpozEditable, Multilingual, Text):
 
 
 
-class HTMLWebPage(WebPage):
-
-    class_id = 'text/html'
-    class_handler = HTMLFile
-
-
 
 ###########################################################################
 # Register
 ###########################################################################
 register_object_class(WebPage)
-register_object_class(HTMLWebPage)

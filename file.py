@@ -24,6 +24,7 @@ from mimetypes import guess_type
 # Import from itools
 from itools.datatypes import FileName
 from itools.handlers import File as FileHandler, guess_encoding, checkid
+from itools.html import HTMLParser, stream_to_str_as_xhtml
 from itools.i18n import guess_language
 from itools.stl import stl
 from itools.uri import get_reference
@@ -76,32 +77,38 @@ class File(WorkflowAware, VersioningAware, DBObject):
 
     @staticmethod
     def new_instance(cls, container, context):
+        # The upload file is mandatory
         file = context.get_form_value('file')
-        title = context.get_form_value('dc:title')
-
-        # Check input data
         if file is None:
             return context.come_back(MSG_EMPTY_FILENAME)
 
-        # Interpret input data (the mimetype sent by the browser can be
-        # minimalistic)
+        # Check the filename is good
         name, mimetype, body = file
-        guessed, encoding = guess_type(name)
-        if encoding is not None:
-            encoding_map = {'gzip': 'application/x-gzip',
-                            'bzip2': 'application/x-bzip2'}
-            if encoding_map.has_key(encoding):
-                mimetype = encoding_map[encoding]
-        elif guessed is not None:
-            mimetype = guessed
-
-        # Check the name
         name = checkid(name)
         if name is None:
             return context.come_back(MSG_BAD_NAME)
 
-        # Add the language extension to the name
-        cls = get_object_class(mimetype)
+        # Find out the object class (the mimetype sent by the browser can be
+        # minimalistic)
+        guessed, encoding = guess_type(name)
+        if encoding is not None:
+            encoding_map = {'gzip': 'application/x-gzip',
+                            'bzip2': 'application/x-bzip2'}
+            if encoding in encoding_map:
+                mimetype = encoding_map[encoding]
+        elif guessed is not None:
+            mimetype = guessed
+        # Web Pages are first class citizens
+        if mimetype == 'text/html':
+            body = stream_to_str_as_xhtml(HTMLParser(body))
+            class_id = 'webpage'
+        elif mimetype == 'application/xhtml+xml':
+            class_id = 'webpage'
+        else:
+            class_id = mimetype
+        cls = get_object_class(class_id)
+
+        # Multilingual objects, find out the language
         if issubclass(cls, Multilingual):
             name, type, language = FileName.decode(name)
             if language is None:
@@ -121,9 +128,9 @@ class File(WorkflowAware, VersioningAware, DBObject):
         else:
             object = cls.make_object(cls, container, name, body)
         # The title
-        metadata = object.metadata
+        title = context.get_form_value('dc:title')
         language = container.get_content_language(context)
-        metadata.set_property('dc:title', title, language=language)
+        object.metadata.set_property('dc:title', title, language=language)
 
         goto = './%s/;%s' % (name, object.get_firstview())
         return context.come_back(MSG_NEW_RESOURCE, goto=goto)
