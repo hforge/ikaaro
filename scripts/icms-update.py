@@ -32,12 +32,12 @@ from ikaaro.server import Server
 
 def update(parser, options, target):
     folder = vfs.open(target)
-    confirmed = options.confirm
+    confirm = options.confirm
 
     # Move the log files (FIXME Remove by 0.21)
     if not folder.exists('log'):
-        message = 'Move log files to the log folder (y/N)?'
-        if ask_confirmation(message) is False:
+        message = 'Move log files to the log folder (y/N)? '
+        if ask_confirmation(message, confirm) is False:
             return
         folder.make_folder('log')
         for name in 'access', 'error', 'debug', 'spool', 'spool_error':
@@ -46,8 +46,8 @@ def update(parser, options, target):
 
     # Move the "catalog/fields" file (FIXME Remove by 0.21)
     if folder.exists('catalog/fields'):
-        message = 'Move "catalog/fields" file to "catalog/data/fields" (y/N)?'
-        if ask_confirmation(message) is False:
+        message = 'Move "catalog/fields" file to "catalog/data/fields" (y/N)? '
+        if ask_confirmation(message, confirm) is False:
             return
         folder.move('catalog/fields', 'catalog/data/fields')
 
@@ -77,9 +77,7 @@ def update(parser, options, target):
         # Ask
         message = 'Update instance from version %s to version %s (y/N)? ' \
                   % (instance_version, next_version)
-        if confirmed:
-            print message + 'y'
-        elif ask_confirmation(message) is False:
+        if ask_confirmation(message, confirm) is False:
             break
         # Update
         sys.stdout.write('.')

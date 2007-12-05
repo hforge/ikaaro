@@ -39,7 +39,11 @@ from website import WebSite
 
 
 
-def ask_confirmation(message):
+def ask_confirmation(message, confirm=False):
+    if confirm is True:
+        print message + 'Y'
+        return True
+
     sys.stdout.write(message)
     sys.stdout.flush()
     line = sys.stdin.readline()

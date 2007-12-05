@@ -57,8 +57,7 @@ def update_catalog(parser, options, target):
 
     # Ask
     message = 'Update the catalog (y/N)? '
-    confirmed = options.confirm or ask_confirmation(message)
-    if confirmed is True:
+    if ask_confirmation(message, options.confirm) is True:
         catalog_path = '%s/catalog' % target
         if vfs.exists(catalog_path):
             vfs.remove(catalog_path)
