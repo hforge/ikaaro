@@ -106,8 +106,8 @@ class File(WorkflowAware, VersioningAware, DBObject):
             name, type, language = FileName.decode(name)
             if language is None:
                 encoding = guess_encoding(body)
-                data = unicode(body, encoding)
-                language = guess_language(data)
+                text = cls.class_handler(string=body).to_text()
+                language = guess_language(text)
                 if language is None:
                     language = container.get_content_language(context)
 
