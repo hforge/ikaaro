@@ -837,12 +837,8 @@ class Folder(DBObject):
     def update_20071119(self):
         """Remove empty folders.
         """
-        parent = self.parent
-        if parent is None:
-            return
-
         if not self.handler.get_handler_names():
-            parent.handler.del_handler(self.name)
+            self.parent.handler.del_handler(self.name)
 
 
 

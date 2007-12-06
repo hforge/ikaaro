@@ -31,8 +31,7 @@ import itools
 from itools import get_abspath
 from itools.datatypes import FileName, QName
 from itools.handlers import File, ConfigFile, Folder as FolderHandler
-from itools.html import (HTMLParser, XHTMLFile, stream_to_str_as_html,
-    stream_to_str_as_xhtml)
+from itools.html import stream_to_str_as_html
 from itools.stl import stl
 from itools.uri import Path
 from itools import vfs
@@ -392,122 +391,6 @@ class Root(WebSite):
 
         return context.come_back(u'Groups fixed.')
 
-
-    #######################################################################
-    # Update
-    #######################################################################
-#   def update_20071119(self, ignore=None):
-#       """Changes:
-
-#       - Merge metadata files of multilingual objects:
-
-#           Before                       After
-#           -----------------------      --------------
-#           index.xhtml.en.metadata      index.metadata
-#           index.xhtml.en               index.xhtml.en
-#           index.xhtml.fr.metadata      index.xhtml.fr
-#           index.xhtml.fr
-
-#       - Add missing language extension to multilingual handlers when missing
-
-#           Before                       After
-#           -----------------------      --------------
-#           index.xhtml.metadata         index.metadata
-#           index.xhtml                  index.xhtml.en
-
-#       """
-#       from forum import Message
-
-#       # These metadata properties will be lost in the upgrade process (the
-#       # list can be customized).
-#       if ignore is None:
-#           ignore = ('dc:language', 'ikaaro:history', 'ikaaro:wf_transition')
-
-#       # Possible message errors
-#       error1 = '%s: unexpected value of type list for property "%s"'
-#       error2 = '%s: metadata merge failed, value conflict for property "%s"'
-
-#       # Higher level update
-#       for object in self.traverse_objects():
-#           if not isinstance(object, DBObject):
-#               continue
-
-#           # Skip anything else that is not a WebPage
-#           format = object.get_property('format')
-#           is_xhtml = (format == 'application/xhtml+xml')
-#           is_html = (format == 'text/html')
-#           if not (is_html or is_xhtml or isinstance(object, WebPage)):
-#               continue
-
-#           # Web Pages
-#           container = object.parent.handler
-#           old_meta = object.metadata
-#           name = object.name
-#           # HTML => XHTML
-#           handler = container.get_handler(name, cls=File, cache=False)
-#           if is_html:
-#               data = stream_to_str_as_xhtml(HTMLParser(handler.data))
-#               handler = File(string=data)
-#           # No language, like "index.xhtml"
-#           main, extension, lang = FileName.decode(name)
-#           if lang is None:
-#               # Add the language suffix
-#               lang = old_meta.get_property('dc:language')
-#               if lang is None:
-#                   lang = object.get_site_root().get_default_language()
-#               # Rename handler
-#               new_name = FileName.encode((main, 'xhtml', lang))
-#               if is_html:
-#                   container.del_handler(name)
-#                   container.set_handler(new_name, handler)
-#               else:
-#                   # Be robust against wrong extensions
-#                   container.get_handler(name, cls=object.class_handler)
-#                   container.move_handler(name, new_name)
-#               # Rename metadata
-#               old_name = '%s.metadata' % name
-#               new_name = '%s.metadata' % main
-#               container.move_handler(old_name, new_name)
-#               if is_html or is_xhtml:
-#                   old_meta.set_property('format', 'webpage')
-#               continue
-#           # With language, like "index.xhtml.en"
-#           new_name = main
-#           new_name = '%s.metadata' % new_name
-#           if container.has_handler(new_name):
-#               # Merge metadata
-#               new_meta = container.get_handler(new_name)
-#               for pname, pvalue in old_meta.properties.items():
-#                   pname = QName.encode(pname)
-#                   if pname in ignore:
-#                       continue
-#                   ptype = type(pvalue)
-#                   if ptype is list:
-#                       message = error1 % (object.abspath, pname)
-#                       raise TypeError, message
-#                   elif ptype is dict:
-#                       value = old_meta.get_property(pname, lang)
-#                       if value.strip():
-#                           new_meta.set_property(pname, value, lang)
-#                   elif (is_html or is_xhtml) and pname == 'format':
-#                       pass
-#                   elif pvalue != new_meta.get_property(pname):
-#                       message = error2 % (object.abspath, pname)
-#                       raise ValueError, message
-#           else:
-#               # Metadata
-#               metadata = old_meta.clone()
-#               if is_html or is_xhtml:
-#                   metadata.set_property('format', 'webpage')
-#               for pname in ignore:
-#                   metadata.del_property(pname)
-#               container.set_handler(new_name, metadata)
-#           container.del_handler('%s.metadata' % name)
-#           # HTML => XHTML
-#           if is_html:
-#               container.del_handler(name)
-#               new_name = FileName.encode((main, 'xhtml', lang))
-#               container.set_handler(new_name, handler)
 
 
 ###########################################################################
