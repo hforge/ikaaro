@@ -192,7 +192,8 @@ class Dressable(Folder, EpozEditable):
         if context.get_form_value('external'):
             return context.uri.resolve('%s/;externaledit' % name)
         object = self.get_object(name)
-        return WebPage.edit_form(object, context)
+        cls = self.get_class(name)
+        return cls.edit_form(object, context)
 
 
     edit_image__access__ = 'is_allowed_to_edit'
@@ -205,7 +206,7 @@ class Dressable(Folder, EpozEditable):
         namespace = {}
         name = context.get_form_value('name')
         namespace['name'] = name
-        namespace['class_id'] = self.get_class_id_image(name)
+        namespace['class_id'] = self.get_class(name).class_id
         message = self.gettext(MSG_DELETE_OBJECT)
         msg = 'return confirmation("%s");' % message.encode('utf_8')
         namespace['remove_action'] = msg
@@ -266,15 +267,15 @@ class Dressable(Folder, EpozEditable):
         return context.come_back(MSG_CHANGES_SAVED)
 
 
-    def get_class_id_image(self, handler_name):
+    def get_class(self, handler_name):
         """
-        Return the class id of a handler
+        Return the class of a handler
         """
         for key, data in self.schema.iteritems():
             if isinstance(data, tuple):
                 name, cls = data
                 if name == handler_name:
-                    return cls.class_id
+                    return cls
         raise AttributeError
 
 
@@ -283,7 +284,7 @@ class Dressable(Folder, EpozEditable):
         namespace = {}
         name = context.get_form_value('name')
         namespace['name'] = name
-        namespace['class_id'] = self.get_class_id_image(name)
+        namespace['class_id'] = self.get_class(name).class_id
 
         handler = self.get_object('/ui/future/dressable_add_image.xml')
         return stl(handler, namespace)
