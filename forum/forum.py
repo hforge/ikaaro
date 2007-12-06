@@ -34,6 +34,7 @@ from message import Message
 class Forum(Folder):
 
     class_id = 'Forum'
+    class_version = '20071119'
     class_title = u'Forum'
     class_description = u'An iKaaro forum'
     class_icon48 = 'forum/Forum48.png'
@@ -118,4 +119,15 @@ class Forum(Folder):
         return None
 
 
+    #######################################################################
+    # Update
+    #######################################################################
+    def update_20071119(self):
+        Folder.update_20071119(self)
+
+
+
+###########################################################################
+# Register
+###########################################################################
 register_object_class(Forum)

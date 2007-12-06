@@ -34,6 +34,7 @@ from message import Message, build_message
 class Thread(Folder):
 
     class_id = 'ForumThread'
+    class_version = '20071119'
     class_title = u"Thread"
     class_description = u"A thread to discuss"
     class_views = [['view'], ['edit_metadata_form']]
@@ -130,5 +131,15 @@ class Thread(Folder):
         return None
 
 
+    #######################################################################
+    # Update
+    #######################################################################
+    def update_20071119(self):
+        Folder.update_20071119(self)
 
+
+
+###########################################################################
+# Register
+###########################################################################
 register_object_class(Thread)

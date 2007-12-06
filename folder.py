@@ -26,7 +26,7 @@ from zlib import compress, decompress
 
 # Import from itools
 from itools.catalog import CatalogAware, EqQuery, AndQuery, PhraseQuery
-from itools.datatypes import Boolean, DataType, FileName, Integer, Unicode
+from itools.datatypes import Boolean, DataType, Integer, Unicode
 from itools.handlers import Folder as FolderHandler, checkid
 from itools.i18n import format_datetime
 from itools.stl import stl
@@ -65,7 +65,7 @@ class CopyCookie(DataType):
 class Folder(DBObject):
 
     class_id = 'folder'
-    class_version = '20040625'
+    class_version = '20071119'
     class_layout = {}
     class_title = u'Folder'
     class_description = u'Organize your files and documents with folders.'
@@ -829,6 +829,21 @@ class Folder(DBObject):
 
         handler = self.get_object('/ui/folder/browse_list.xml')
         return stl(handler, namespace)
+
+
+    #######################################################################
+    # Update
+    #######################################################################
+    def update_20071119(self):
+        """Remove empty folders.
+        """
+        parent = self.parent
+        if parent is None:
+            return
+
+        if not self.handler.get_handler_names():
+            parent.handler.del_handler(self.name)
+
 
 
 ###########################################################################

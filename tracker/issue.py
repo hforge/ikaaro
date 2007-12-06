@@ -25,7 +25,7 @@ from re import sub
 
 # Import from itools
 from itools.datatypes import DateTime, Integer, String, Unicode, XML
-from itools.handlers import checkid, Table
+from itools.handlers import checkid, Table, File as FileHandler
 from itools.i18n import format_datetime
 from itools.stl import stl
 from itools.xml import XMLParser
@@ -65,6 +65,7 @@ class History(Table):
 class Issue(Folder, VersioningAware):
 
     class_id = 'issue'
+    class_version = '20071119'
     class_title = u'Issue'
     class_description = u'Issue'
     class_views = [
@@ -560,6 +561,25 @@ class Issue(Folder, VersioningAware):
         # FIXME Used by VersioningAware to define the size of the document
         # FIXME Used by the browse list view (size is indexed)
         return 0
+
+
+    #######################################################################
+    # Update
+    #######################################################################
+    def update_20071119(self):
+        """Change '.history' from CSV to Table.
+        """
+        columns = ['datetime', 'username', 'title', 'module', 'version',
+                   'type', 'priority', 'assigned_to', 'state', 'comment',
+                   'file']
+
+        folder = self.handler
+        csv = FileHandler('%s/.history' % folder.uri).to_str()
+        table = History()
+        table.update_from_csv(csv, columns)
+        # Replace
+        folder.del_handler('.history')
+        folder.set_handler('.history', table)
 
 
 ###########################################################################

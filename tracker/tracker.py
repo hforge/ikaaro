@@ -24,7 +24,7 @@ from operator import itemgetter
 
 # Import from itools
 from itools.datatypes import Boolean, Integer, String, Unicode
-from itools.handlers import ConfigFile, Table as BaseTable
+from itools.handlers import ConfigFile, Table as BaseTable, File as FileHandler
 from itools.stl import stl
 from itools.uri import encode_query, Reference
 from itools.xml import XMLParser
@@ -61,7 +61,7 @@ table_columns = [('id', u'Id'), ('title', u'Title'), ('version', u'Version'),
 class Tracker(Folder):
 
     class_id = 'tracker'
-    class_version = '20071119'
+    class_version = '20040625'
     class_title = u'Issue Tracker'
     class_description = u'To manage bugs and tasks'
     class_icon16 = 'images/tracker16.png'
@@ -730,40 +730,6 @@ class Tracker(Folder):
         return context.uri.resolve2('../%s/;edit_form' % issue_name)
 
 
-    def update_20071119(self):
-        """Change the CSV files to Table files.
-        """
-        from itools.handlers import File
-
-        columns = ['id', 'title']
-        for new_name in ['modules', 'types', 'priorities', 'states',
-                         'versions']:
-            old_name = '%s.csv' % new_name
-            old_handler = File('%s/%s' %(self.handler.uri, old_name))
-            if new_name == 'versions':
-                columns.append('released')
-                table = VersionsTable()
-                metadata = Versions.build_metadata()
-            else:
-                table = SelectTableTable()
-                metadata = SelectTable.build_metadata()
-            table.update_from_csv(old_handler.to_str(), columns)
-            self.handler.del_handler(old_name)
-            self.handler.del_handler('%s.metadata' % old_name)
-            self.handler.set_handler(new_name, table)
-            self.handler.set_handler('%s.metadata' % new_name, metadata)
-
-        # .history of each Issue
-        columns = ['datetime', 'username', 'title', 'module', 'version',
-                   'type', 'priority', 'assigned_to', 'state', 'comment',
-                   'file']
-        for issue in self.search_objects(object_class=Issue):
-            old_handler = File('%s/.history' %(issue.handler.uri))
-            table = History()
-            table.update_from_csv(old_handler.to_str(), columns)
-            issue.handler.del_handler('.history')
-            issue.handler.set_handler('.history', table)
-
 
 ###########################################################################
 # Tables
@@ -776,8 +742,10 @@ class SelectTableTable(BaseTable):
 class SelectTable(Table):
 
     class_id = 'tracker_select_table'
+    class_version = '20071119'
     class_title = u'Select Table'
     class_handler = SelectTableTable
+
 
     def get_options(self, value=None, sort=True):
         table = self.handler
@@ -893,6 +861,26 @@ class SelectTable(Table):
         return stl(handler, namespace)
 
 
+    #######################################################################
+    # Update
+    #######################################################################
+    def update_20071119(self, columns=['id', 'title']):
+        """Change from CSV to Table.
+        """
+        old_name = self.name
+        new_name = old_name[:-4]
+
+        folder = self.parent.handler
+        csv = FileHandler('%s/%s' % (folder.uri, old_name)).to_str()
+        table = self.class_handler()
+        table.update_from_csv(csv, columns)
+        # Replace
+        folder.del_handler(old_name)
+        folder.set_handler(new_name, table)
+        # Rename
+        folder.move_handler('%s.metadata' % old_name, '%s.metadata' % new_name)
+
+
 
 class VersionsTable(BaseTable):
 
@@ -903,7 +891,16 @@ class VersionsTable(BaseTable):
 class Versions(SelectTable):
 
     class_id = 'tracker_versions'
+    class_version = '20071119'
     class_handler = VersionsTable
+
+
+    #######################################################################
+    # Update
+    #######################################################################
+    def update_20071119(self):
+        SelectTable.update_20071119(self, ['id', 'title', 'released'])
+
 
 
 ###########################################################################

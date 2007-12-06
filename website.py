@@ -43,6 +43,7 @@ from utils import generate_password
 class WebSite(RoleAware, Folder):
 
     class_id = 'WebSite'
+    class_version = '20071119'
     class_title = u'Web Site'
     class_description = u'Create a new Web Site or Work Place.'
     class_icon16 = 'images/WebSite16.png'
@@ -661,7 +662,16 @@ class WebSite(RoleAware, Folder):
         return context.come_back(u'Message sent.')
 
 
-register_object_class(WebSite)
+    #######################################################################
+    # Update
+    #######################################################################
+    def update_20071119(self):
+        Folder.update_20071119(self)
 
-# Register the vanilla web site
+
+
+###########################################################################
+# Register
+###########################################################################
+register_object_class(WebSite)
 register_website(WebSite)

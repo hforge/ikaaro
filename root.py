@@ -399,8 +399,6 @@ class Root(WebSite):
 #   def update_20071119(self, ignore=None):
 #       """Changes:
 
-#       - Remove emtpy folders
-
 #       - Merge metadata files of multilingual objects:
 
 #           Before                       After
@@ -417,12 +415,6 @@ class Root(WebSite):
 #           index.xhtml.metadata         index.metadata
 #           index.xhtml                  index.xhtml.en
 
-#       - Transform the forum messages from XHTML fragments to complete XHTML
-#         documents:
-
-#           Before                       After
-#           -----------------------      -----
-#           <p>hello</p>                 <html>...<p>hello</p>...</html>
 #       """
 #       from forum import Message
 
@@ -438,36 +430,6 @@ class Root(WebSite):
 #       # Higher level update
 #       for object in self.traverse_objects():
 #           if not isinstance(object, DBObject):
-#               continue
-#           # Forum Messages are now full WebPages
-#           if isinstance(object, Message):
-#               # Forum messages. Add the language suffix and make it full
-#               # XHTML.
-#               language = object.get_site_root().get_default_language()
-#               container = object.parent.handler
-#               old_name = object.name
-#               # Build the new handler
-#               new_name = '%s.%s' % (old_name, language)
-#               old_body = container.get_handler(old_name).events
-#               new_handler = XHTMLFile()
-#               new_handler.set_body(old_body)
-#               # Remove the old handler and add the new one
-#               container.del_handler(old_name)
-#               container.set_handler(new_name, new_handler)
-#               # Rename the metadata
-#               new_name, extension, language = FileName.decode(old_name)
-#               old_name = '%s.metadata' % old_name
-#               new_name = '%s.metadata' % new_name
-#               container.move_handler(old_name, new_name)
-#               continue
-#           # Remove empty folders
-#           if isinstance(object, Folder):
-#               parent = object.parent
-#               if parent is not None:
-#                   container = parent.handler
-#                   folder = container.get_handler(object.name)
-#                   if not folder.get_handler_names():
-#                       container.del_handler(object.name)
 #               continue
 
 #           # Skip anything else that is not a WebPage

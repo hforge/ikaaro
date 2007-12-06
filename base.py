@@ -419,11 +419,11 @@ class DBObject(CatalogAware, Node, DomainAware):
     # Upgrade
     ########################################################################
     def get_next_versions(self):
-        class_version = self.class_version
-        object_version = self.get_property('version')
+        cls_version = self.class_version
+        obj_version = self.get_property('version')
         # Set zero version if the object does not have a version
-        if object_version is None:
-            object_version = '00000000'
+        if obj_version is None:
+            obj_version = '00000000'
 
         # Get all the version numbers
         versions = []
@@ -437,7 +437,7 @@ class DBObject(CatalogAware, Node, DomainAware):
                 int(version)
             except ValueError:
                 continue
-            if version > object_version and version <= class_version:
+            if version > obj_version and version <= cls_version:
                 versions.append(version)
 
         versions.sort()

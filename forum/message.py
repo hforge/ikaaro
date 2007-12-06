@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
+from itools.datatypes import FileName
 from itools.html import HTMLParser, sanitize_stream, XHTMLFile
 
 # Import from ikaaro
@@ -40,6 +41,7 @@ def build_message(data):
 class Message(WebPage):
 
     class_id = 'ForumMessage'
+    class_version = '20071119'
     class_title = u"Message"
     class_description = u"Message in a thread"
     class_views = [['edit_form'], ['history_form']]
@@ -69,6 +71,35 @@ class Message(WebPage):
 
         return context.come_back(MSG_CHANGES_SAVED, goto='../;view')
 
+
+    #######################################################################
+    # Update
+    #######################################################################
+    def update_20071119(self):
+        """Transform the forum messages from XHTML fragments to complete XHTML
+        documents:
+
+          Before                   After
+          -------------------      -----
+          <p>hello</p>             <html>...<p>hello</p>...</html>
+        """
+        # Forum messages. Add the language suffix and make it full XHTML.
+        language = self.get_site_root().get_default_language()
+        container = self.parent.handler
+        old_name = self.name
+        # Build the new handler
+        new_name = '%s.%s' % (old_name, language)
+        old_body = container.get_handler(old_name).events
+        new_handler = XHTMLFile()
+        new_handler.set_body(old_body)
+        # Remove the old handler and add the new one
+        container.del_handler(old_name)
+        container.set_handler(new_name, new_handler)
+        # Rename the metadata
+        new_name, extension, language = FileName.decode(old_name)
+        old_name = '%s.metadata' % old_name
+        new_name = '%s.metadata' % new_name
+        container.move_handler(old_name, new_name)
 
 
 register_object_class(Message)

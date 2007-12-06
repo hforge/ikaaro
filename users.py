@@ -42,6 +42,7 @@ from utils import crypt_password
 class User(AccessControl, Folder):
 
     class_id = 'user'
+    class_version = '20071119'
     class_title = 'User'
     class_icon16 = 'images/User16.png'
     class_icon48 = 'images/User48.png'
@@ -421,13 +422,18 @@ class User(AccessControl, Folder):
         return stl(handler, namespace)
 
 
-register_object_class(User)
+    #######################################################################
+    # Update
+    #######################################################################
+    def update_20071119(self):
+        Folder.update_20071119(self)
 
 
 
 class UserFolder(Folder):
 
     class_id = 'users'
+    class_version = '20071119'
     class_icon16 = 'images/UserFolder16.png'
     class_icon48 = 'images/UserFolder48.png'
     class_views = [['view'],
@@ -514,5 +520,16 @@ class UserFolder(Folder):
         return self.gettext(message).encode('utf-8')
 
 
+    #######################################################################
+    # Update
+    #######################################################################
+    def update_20071119(self):
+        Folder.update_20071119(self)
 
+
+
+###########################################################################
+# Register
+###########################################################################
 register_object_class(UserFolder)
+register_object_class(User)
