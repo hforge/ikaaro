@@ -37,36 +37,6 @@ def get_object_class(class_id):
     return objects_registry["application/octet-stream"]
 
 
-##def build_handler(resource, format=None):
-##    from file import File
-##    from folder import Folder
-
-##    if format in registry:
-##        handler_class = registry[format]
-##    else:
-##        format = format.split('/')
-##        if format[0] in registry:
-##            handler_class = registry[format[0]]
-##        else:
-##            # XXX Show a warning message here
-##            if isinstance(resource, base.File):
-##                handler_class = registry[File.class_id]
-##            elif isinstance(resource, base.Folder):
-##                handler_class = registry[Folder.class_id]
-##            else:
-##                raise ValueError, \
-##                      'Unknown resource type "%s"' % repr(resource)
-####    # Check wether the resource is a file and the handler class is a
-####    # folder, or viceversa.
-####    if isinstance(resource, base.File):
-####        if not issubclass(handler_class, File):
-####            handler_class = File
-####    elif isinstance(resource, base.Folder):
-####        if not issubclass(handler_class, Folder):
-####            handler_class = Folder
-
-##    return handler_class(resource)
-
 
 websites_registry = {}
 
