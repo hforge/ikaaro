@@ -41,6 +41,7 @@ from registry import register_object_class
 
 class UIFile(Node, File):
 
+    GET__mtime__ = Node.get_mtime
     def GET(self, context):
         response = context.response
         response.set_header('Content-Type', self.get_mimetype())
