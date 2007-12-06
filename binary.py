@@ -44,12 +44,8 @@ class Image(File):
     class_handler = ImageFile
 
 
-    # XXX Temporal, until icon's API is fixed
-    def icons_path(self):
-        return ';icon48?width=144&height=144'
-
-
     icon48__access__ = True
+    icon48__mtime__ = File.get_mtime
     def icon48(self, context):
         width = context.get_form_value('width', 48)
         height = context.get_form_value('height', 48)
