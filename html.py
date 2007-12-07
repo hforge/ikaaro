@@ -207,7 +207,8 @@ class WebPage(EpozEditable, Multilingual, Text):
         # These metadata properties will be lost in the upgrade process (the
         # list can be customized).
         if ignore is None:
-            ignore = ('dc:language', 'ikaaro:history', 'ikaaro:wf_transition')
+            ignore = ('version', 'dc:language', 'ikaaro:history',
+                      'ikaaro:wf_transition')
 
         # Possible message errors
         error1 = '%s: unexpected value of type list for property "%s"'
