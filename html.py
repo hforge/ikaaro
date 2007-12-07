@@ -21,7 +21,7 @@ from datetime import datetime
 from HTMLParser import HTMLParseError
 
 # Import from itools
-from itools.datatypes import DateTime, FileName
+from itools.datatypes import DateTime, FileName, QName
 from itools.handlers import File
 from itools.html import (XHTMLFile, sanitize_stream, HTMLParser,
     stream_to_str_as_xhtml)
