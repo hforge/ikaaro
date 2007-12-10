@@ -219,15 +219,25 @@ class Table(File):
                 value = context.get_form_values(name) \
                         or getattr(datatype, 'default', None)
 
+            is_mandatory = getattr(datatype, 'mandatory', False)
             field = {}
             field['name'] = name
             field['title'] = title
-            field['mandatory'] = getattr(datatype, 'mandatory', False)
+            field['mandatory'] = is_mandatory
             field['multiple'] = getattr(datatype, 'multiple', False)
             field['is_date'] = is_datatype(datatype, Date)
             widget = getattr(datatype, 'widget', get_default_widget(datatype))
             field['widget'] = widget.to_html(datatype, name, value)
-
+            # Class
+            cls = []
+            if is_mandatory:
+                cls.append('field_required')
+            if context.has_form_value(name):
+                if is_mandatory and not value:
+                    cls.append('missing')
+                elif value and not datatype.is_valid(value):
+                    cls.append('missing')
+            field['class'] = u' '.join(cls) or None
             # Append
             fields.append(field)
         namespace['fields'] = fields
@@ -315,13 +325,25 @@ class Table(File):
                 else:
                     value = datatype.encode(value)
 
+            is_mandatory = getattr(datatype, 'mandatory', False)
             field = {}
             field['title'] = title
-            field['mandatory'] = getattr(datatype, 'mandatory', False)
+            field['mandatory'] = is_mandatory
             field['multiple'] = getattr(datatype, 'multiple', False)
             field['is_date'] = is_datatype(datatype, Date)
             widget = getattr(datatype, 'widget', get_default_widget(datatype))
             field['widget'] = widget.to_html(datatype, name, value)
+            # Class
+            cls = []
+            if is_mandatory:
+                cls.append('field_required')
+            if context.has_form_value(name):
+                form_value = context.get_form_value(name)
+                if is_mandatory and not form_value:
+                    cls.append('missing')
+                elif form_value and not datatype.is_valid(form_value):
+                    cls.append('missing')
+            field['class'] = u' '.join(cls) or None
             # Append
             fields.append(field)
         namespace['fields'] = fields
