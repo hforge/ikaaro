@@ -49,9 +49,9 @@ class Dressable(Folder, EpozEditable):
     class_title = u'Dressable'
     class_description = u'A dressable folder'
     class_views = ([['view'], ['edit_document']] + Folder.class_views)
-    __fixed_handlers__ = ['index.xhtml']
+    __fixed_handlers__ = ['index']
     template = '/ui/future/dressable_view.xml'
-    schema = {'content': ('index.xhtml', WebPage),
+    schema = {'content': ('index', WebPage),
               'browse_folder': 'browse_folder',
               'browse_file': 'browse_file'}
 
@@ -72,7 +72,7 @@ class Dressable(Folder, EpozEditable):
     def _make_object(cls, folder, name):
         Folder._make_object(cls, folder, name)
         # populate the dressable
-        Dressable._populate(cls, folder, name)
+        cls._populate(cls, folder, name)
 
 
     @staticmethod
