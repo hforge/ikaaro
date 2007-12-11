@@ -149,8 +149,8 @@ class Issue(Folder, VersioningAware):
         if file is None:
             record['file'] = ''
         else:
-            filename, mimetype, body = file
             # Upload
+            filename, mimetype, body = file
             # The mimetype sent by the browser can be minimalistic
             guessed = guess_type(filename)[0]
             if guessed is not None:
@@ -158,13 +158,11 @@ class Issue(Folder, VersioningAware):
             # Find a non used name
             filename = checkid(filename)
             filename = generate_name(filename, self.get_names())
-            record['file'] = filename
-            # Set the handler
+            # Add attachement
             cls = get_object_class(mimetype)
-            handler = cls.class_handler(string=body)
-            metadata = cls.build_metadata()
-            self.handler.set_handler(filename, handler)
-            self.handler.set_handler('%s.metadata' % filename, metadata)
+            cls.make_object(cls, self, filename, body)
+            # Link
+            record['file'] = filename
         # Update
         modifications = self.get_diff_with(record, context)
         history = self.get_history()
