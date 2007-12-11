@@ -49,8 +49,7 @@ class Record(object):
 
 
 class Timetables(DataType):
-    """
-    Timetables are tuples of time objects (start, end) used by cms.ical.
+    """Timetables are tuples of time objects (start, end) used by cms.ical.
 
     Example with 3 timetables as saved into metadata:
         (8,0),(10,0);(10,0),(12,0);(15,30),(17,30)

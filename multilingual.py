@@ -32,8 +32,9 @@ class Multilingual(DBObject):
 
 
     @staticmethod
-    def _make_object(cls, folder, name, body=None, language=None):
-        DBObject._make_object(cls, folder, name)
+    def _make_object(cls, folder, name, body=None, filename=None,
+                     language=None):
+        DBObject._make_object(cls, folder, name, filename=filename)
         # Add the body
         if body is not None:
             cls = cls.class_handler

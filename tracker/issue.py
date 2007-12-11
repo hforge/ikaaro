@@ -156,13 +156,13 @@ class Issue(Folder, VersioningAware):
             if guessed is not None:
                 mimetype = guessed
             # Find a non used name
-            filename = checkid(filename)
-            filename = generate_name(filename, self.get_names())
+            name = checkid(filename)
+            name = generate_name(name, self.get_names())
             # Add attachement
             cls = get_object_class(mimetype)
-            cls.make_object(cls, self, filename, body)
+            cls.make_object(cls, self, name, body=body, filename=filename)
             # Link
-            record['file'] = filename
+            record['file'] = name
         # Update
         modifications = self.get_diff_with(record, context)
         history = self.get_history()
@@ -195,6 +195,7 @@ class Issue(Folder, VersioningAware):
         body += self.gettext(u'The user %s did some changes.') % user_title
         body += '\n\n'
         if file:
+            filename = unicode(filename, 'utf-8')
             body += self.gettext(u'  New Attachment: %s') % filename + '\n'
         comment = context.get_form_value('comment', type=Unicode)
         if comment:

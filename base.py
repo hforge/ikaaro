@@ -225,8 +225,8 @@ class DBObject(CatalogAware, Node, DomainAware):
 
 
     @staticmethod
-    def _make_object(cls, folder, name):
-        metadata = cls.build_metadata()
+    def _make_object(cls, folder, name, **kw):
+        metadata = cls.build_metadata(**kw)
         folder.set_handler('%s.metadata' % name, metadata)
 
 

@@ -57,8 +57,8 @@ class File(WorkflowAware, VersioningAware, DBObject):
 
 
     @staticmethod
-    def _make_object(cls, folder, name, body=None):
-        DBObject._make_object(cls, folder, name)
+    def _make_object(cls, folder, name, body=None, filename=None):
+        DBObject._make_object(cls, folder, name, filename=filename)
         # Add the body
         if body is not None:
             handler = cls.class_handler(string=body)
@@ -83,8 +83,8 @@ class File(WorkflowAware, VersioningAware, DBObject):
             return context.come_back(MSG_EMPTY_FILENAME)
 
         # Check the filename is good
-        name, mimetype, body = file
-        name = checkid(name)
+        filename, mimetype, body = file
+        name = checkid(filename)
         if name is None:
             return context.come_back(MSG_BAD_NAME)
 
@@ -123,10 +123,10 @@ class File(WorkflowAware, VersioningAware, DBObject):
             return context.come_back(MSG_NAME_CLASH)
 
         # Build the object
+        kw = {'filename': filename}
         if issubclass(cls, Multilingual):
-            object = cls.make_object(cls, container, name, body, language)
-        else:
-            object = cls.make_object(cls, container, name, body)
+            kw['language'] = language
+        object = cls.make_object(cls, container, name, body, **kw)
         # The title
         title = context.get_form_value('dc:title')
         language = container.get_content_language(context)
@@ -195,6 +195,12 @@ class File(WorkflowAware, VersioningAware, DBObject):
     download__mtime__ = DBObject.get_mtime
     def download(self, context):
         response = context.response
+        # Filename
+        filename = self.get_property('filename')
+        if filename is not None:
+            response.set_header('Content-Disposition',
+                                'inline; filename="%s"' % filename)
+        # Content-Type
         response.set_header('Content-Type', self.get_content_type())
         return self.handler.to_str()
 
