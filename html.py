@@ -157,6 +157,10 @@ class WebPage(EpozEditable, Multilingual, Text):
         return True
 
 
+    def get_content_type(self):
+        return 'application/xhtml+xml; charset=UTF-8'
+
+
     #######################################################################
     # UI / View
     #######################################################################
