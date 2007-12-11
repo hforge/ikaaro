@@ -427,17 +427,17 @@ def _tree(node, root, depth, active_node, allow, deny, user, width):
 
     # The CSS style
     namespace['class'] = ''
-    if node.handler.uri == active_node.handler.uri:
+    if node.abspath == active_node.abspath:
         namespace['class'] = 'nav_active'
 
     # Expand only if in path
     aux = active_node
     while True:
         # Match
-        if aux.handler.uri == node.handler.uri:
+        if aux.abspath == node.abspath:
             break
         # Reach the root, do not expand
-        if aux.handler.uri == root.handler.uri:
+        if aux.abspath == root.abspath:
             namespace['items'] = []
             return namespace, False
         # Next
