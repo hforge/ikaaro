@@ -18,7 +18,6 @@
 
 # Import from the Standard Library
 from datetime import datetime
-from HTMLParser import HTMLParseError
 
 # Import from itools
 from itools.datatypes import DateTime, FileName, QName
@@ -26,7 +25,7 @@ from itools.handlers import File
 from itools.html import (XHTMLFile, sanitize_stream, HTMLParser,
     stream_to_str_as_xhtml)
 from itools.stl import stl
-from itools.xml import TEXT, START_ELEMENT
+from itools.xml import TEXT, START_ELEMENT, XMLError
 
 # Import from ikaaro
 from messages import *
@@ -91,7 +90,7 @@ class EpozEditable(object):
         new_body = context.get_form_value('data')
         try:
             new_body = HTMLParser(new_body)
-        except HTMLParseError:
+        except XMLError:
             return context.come_back(u'Invalid HTML code.')
         if sanitize:
             new_body = sanitize_stream(new_body)

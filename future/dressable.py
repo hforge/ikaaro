@@ -18,8 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
-import mimetypes
-from HTMLParser import HTMLParseError
+from mimetypes import guess_type
 
 # Import from itools
 from itools.datatypes import is_datatype, DateTime, FileName
@@ -28,7 +27,7 @@ from itools.html import HTMLParser
 from itools.stl import stl, set_prefix
 from itools.uri import Path
 from itools.web import get_context
-from itools.xml import XMLParser
+from itools.xml import XMLParser, XMLError
 
 # Import from ikaaro
 from ikaaro.registry import register_object_class, get_object_class
@@ -253,7 +252,7 @@ class Dressable(Folder, EpozEditable):
         new_body = context.get_form_value('data')
         try:
             new_body = HTMLParser(new_body)
-        except HTMLParseError:
+        except XMLError:
             return context.come_back(u'Invalid HTML code.')
         if sanitize:
             new_body = sanitize_stream(new_body)
@@ -303,7 +302,7 @@ class Dressable(Folder, EpozEditable):
         # Interpret input data (the mimetype sent by the browser can be
         # minimalistic)
         kk, mimetype, body = file
-        guessed, encoding = mimetypes.guess_type(image_name)
+        guessed, encoding = guess_type(image_name)
 
         # Check the name
         name = checkid(image_name)
