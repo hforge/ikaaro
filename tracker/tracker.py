@@ -35,7 +35,6 @@ from ikaaro.messages import *
 from ikaaro.registry import register_object_class
 from ikaaro.table import Table
 from ikaaro.text import Text
-from ikaaro.utils import generate_name
 from ikaaro import widgets
 from issue import History, Issue, issue_fields
 

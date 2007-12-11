@@ -133,8 +133,7 @@ def crypt_password(password):
 # Generate next name
 ###########################################################################
 def generate_name(name, used, suffix='_'):
-    """
-    Generate a name which is not in list "used" based on name and suffix.
+    """Generate a name which is not in list "used" based on name and suffix.
     Example:
       With name='toto.txt', used=['toto.txt', 'toto_0.txt']
       --> toto.txt and toto_0.txt are used so it returns toto_1.txt
