@@ -23,7 +23,7 @@ from datetime import datetime
 # Import from itools
 from itools.catalog import (CatalogAware, TextField, KeywordField,
     IntegerField, BoolField)
-from itools.datatypes import FileName
+from itools.datatypes import FileName, String, Unicode
 from itools.gettext import DomainAware, get_domain
 from itools.handlers import checkid
 from itools.http import Forbidden
@@ -254,6 +254,37 @@ class DBObject(CatalogAware, Node, DomainAware):
 
 
     ########################################################################
+    # Metadata
+    ########################################################################
+    @classmethod
+    def get_metadata_schema(cls):
+        return {
+            'owner': String,
+            'title': Unicode,
+            'description': Unicode,
+            'subject': Unicode,
+            }
+
+
+    def has_property(self, name, language=None):
+        return self.metadata.has_property(name, language=language)
+
+
+    def get_property_and_language(self, name, language=None):
+        return self.metadata.get_property_and_language(name, language=language)
+
+
+    def set_property(self, name, value, language=None):
+        get_context().server.change_object(self)
+        self.metadata.set_property(name, value, language=language)
+
+
+    def del_property(self, name, language=None):
+        get_context().server.change_object(self)
+        self.metadata.del_property(name, language=language)
+
+
+    ########################################################################
     # Indexing
     ########################################################################
     def to_text(self):
@@ -360,26 +391,8 @@ class DBObject(CatalogAware, Node, DomainAware):
 
 
     ########################################################################
-    # Properties
+    # API
     ########################################################################
-    def has_property(self, name, language=None):
-        return self.metadata.has_property(name, language=language)
-
-
-    def get_property_and_language(self, name, language=None):
-        return self.metadata.get_property_and_language(name, language=language)
-
-
-    def set_property(self, name, value, language=None):
-        get_context().server.change_object(self)
-        self.metadata.set_property(name, value, language=language)
-
-
-    def del_property(self, name, language=None):
-        get_context().server.change_object(self)
-        self.metadata.del_property(name, language=language)
-
-
     def get_handlers(self):
         """Return all the handlers attached to this object, except the
         metadata.
@@ -602,7 +615,8 @@ class DBObject(CatalogAware, Node, DomainAware):
     ########################################################################
     @classmethod
     def build_metadata(cls, owner=None, format=None, **kw):
-        """Return a Metadata object with sensible default values."""
+        """Return a Metadata object with sensible default values.
+        """
         if owner is None:
             owner = ''
             context = get_context()

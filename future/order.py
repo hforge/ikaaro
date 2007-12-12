@@ -18,6 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
+from itools.datatypes import Tokens
 from itools.stl import stl
 from itools.xml import XMLParser
 
@@ -28,6 +29,14 @@ from ikaaro.workflow import WorkflowAware
 
 class OrderAware(object):
     orderable_classes = None
+
+    
+    @classmethod
+    def get_metadata_schema(cls):
+        return {
+            'order': Tokens(default=()),
+        }
+
 
     def get_ordered_names(self, mode='mixed'):
         """Return current order plus the unordered names at the end.

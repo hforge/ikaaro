@@ -20,12 +20,31 @@ from datetime import datetime
 from operator import itemgetter
 
 # Import from itools
+from itools.datatypes import DateTime, String
 from itools.i18n import format_datetime
 from itools.stl import stl
 from itools.web import get_context
 
+# Import from ikaaro
+from metadata import Record
+
+
+class History(Record):
+
+    schema = {
+        'date': DateTime,
+        'user': String,
+        'size': String}
+
 
 class VersioningAware(object):
+
+    @classmethod
+    def get_metadata_schema(cls):
+        return {
+            'history': History,
+        }
+
 
     ########################################################################
     # API

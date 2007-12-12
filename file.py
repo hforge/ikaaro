@@ -22,7 +22,7 @@ from datetime import datetime, timedelta
 from mimetypes import guess_type
 
 # Import from itools
-from itools.datatypes import FileName
+from itools.datatypes import FileName, String, Unicode
 from itools.handlers import File as FileHandler, guess_encoding, checkid
 from itools.html import HTMLParser, stream_to_str_as_xhtml
 from itools.i18n import guess_language
@@ -35,8 +35,8 @@ from base import DBObject
 from messages import *
 from multilingual import Multilingual
 from registry import register_object_class, get_object_class
-from versioning import VersioningAware
-from workflow import WorkflowAware
+from versioning import VersioningAware, History
+from workflow import WorkflowAware, WFTransition
 
 
 
@@ -142,7 +142,27 @@ class File(WorkflowAware, VersioningAware, DBObject):
 
 
     #######################################################################
+    # Metadata
+    #######################################################################
+    @classmethod
+    def get_metadata_schema(cls):
+        return {
+            # Base
+            'owner': String,
+            'title': Unicode,
+            'description': Unicode,
+            'subject': Unicode,
+            # Versioning
+            'history': History,
+            # Workflow
+            'state': String,
+            'wf_transition': WFTransition,
+        }
+
+
+    #######################################################################
     # Versioning & Indexing
+    #######################################################################
     def to_text(self):
         return self.handler.to_text()
 

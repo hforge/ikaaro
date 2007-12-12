@@ -18,7 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.datatypes import Email, Integer, Unicode
+from itools.datatypes import Email, Integer, Tokens, Unicode
 from itools.stl import stl
 from itools.uri import get_reference
 from itools.web import AccessControl as BaseAccessControl
@@ -88,9 +88,8 @@ class AccessControl(BaseAccessControl):
 
 
 class RoleAware(AccessControl):
-    """
-    This base class implements access control based on the concept of roles.
-    Includes a user interface.
+    """This base class implements access control based on the concept of
+    roles.  Includes a user interface.
     """
 
     #########################################################################
@@ -101,6 +100,16 @@ class RoleAware(AccessControl):
         {'name': 'ikaaro:members', 'title': u"Member"},
         {'name': 'ikaaro:reviewers', 'title': u"Reviewer"},
     ]
+
+
+    @classmethod
+    def get_metadata_schema(cls):
+        return {
+            'admins': Tokens(default=()),
+            'guests': Tokens(default=()),
+            'members': Tokens(default=()),
+            'reviewers': Tokens(default=()),
+        }
 
 
     #########################################################################
@@ -207,15 +216,13 @@ class RoleAware(AccessControl):
 
 
     def get_role_names(self):
-        """
-        Return the names of the roles available.
+        """Return the names of the roles available.
         """
         return [ r['name'] for r in self.__roles__ ]
 
 
     def get_user_role(self, user_id):
-        """
-        Return the role the user has here, or "None" if the user has not
+        """Return the role the user has here, or "None" if the user has not
         any role.
         """
         for role in self.get_role_names():
@@ -226,8 +233,7 @@ class RoleAware(AccessControl):
 
 
     def has_user_role(self, user_id, *roles):
-        """
-        Return True if the given user has any of the the given roles,
+        """Return True if the given user has any of the the given roles,
         False otherwise.
         """
         for role in roles:
@@ -237,8 +243,7 @@ class RoleAware(AccessControl):
 
 
     def set_user_role(self, user_ids, role):
-        """
-        Sets the role for the given users. If "role" is None, removes the
+        """Sets the role for the given users. If "role" is None, removes the
         role of the users.
         """
         # The input parameter "user_ids" should be a list

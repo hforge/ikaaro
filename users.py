@@ -22,12 +22,12 @@ from copy import deepcopy
 from string import Template
 
 # Import from itools
-from itools.uri import Path
 from itools.catalog import EqQuery, AndQuery, OrQuery, TextField, KeywordField
-from itools.i18n import get_language_name
+from itools.datatypes import Boolean, Email, String, Tokens, Unicode
 from itools.handlers import Folder as BaseFolder
+from itools.i18n import get_language_name
 from itools.stl import stl
-from itools.datatypes import Email
+from itools.uri import Path
 
 # Import from ikaaro
 from access import AccessControl
@@ -54,6 +54,27 @@ class User(AccessControl, Folder):
         ['new_resource_form'],
         ['edit_account_form', 'edit_form', 'edit_password_form'],
         ['tasks_list']]
+
+
+    ########################################################################
+    # Metadata
+    ########################################################################
+    @classmethod
+    def get_metadata_schema(cls):
+        return {
+            'firstname': Unicode,
+            'lastname': Unicode,
+            'email': Email,
+            'password': Password,
+            'user_language': String(default='en'),
+            'website_is_open': Boolean(default=False),
+            'website_languages': Tokens(default=('en',)),
+            'user_must_confirm': String,
+            # Backwards compatibility
+            'username': String,
+            # Unused (FIXME)
+            'user_theme': String(default='aruni'),
+        }
 
 
     ########################################################################

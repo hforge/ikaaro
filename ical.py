@@ -25,16 +25,17 @@ from datetime import datetime, date, time, timedelta
 # Import from itools
 from itools.datatypes import Enumerate, Unicode, Date, Integer, is_datatype
 from itools.handlers import Folder, Property
-from itools.ical import get_grid_data, icalendar, PropertyValue, DateTime
-from itools.ical import icalendarTable, Record, Time
+from itools.ical import (get_grid_data, icalendar, PropertyValue, DateTime,
+                         icalendarTable, Record, Time)
 from itools.stl import stl
 
 # Import from ikaaro
-from registry import register_object_class
-from text import Text
 from base import DBObject
-from table import Multiple, Table
 from messages import *
+from metadata import Timetables
+from registry import register_object_class
+from table import Multiple, Table
+from text import Text
 
 
 resolution = timedelta.resolution
@@ -106,6 +107,11 @@ class Status(Enumerate):
 
 
 class CalendarView(object):
+
+    @classmethod
+    def get_metadata_schema(cls):
+        return {'timetables': Timetables}
+
 
     # Start 07:00, End 21:00, Interval 30min
     class_cal_range = (time(7,0), time(21,0), 30)
@@ -1058,6 +1064,13 @@ class Calendar(Text, CalendarView):
     class_handler = icalendar
 
 
+    @classmethod
+    def get_metadata_schema(cls):
+        schema = Table.get_metadata_schema()
+        schema['timetables'] = Timetables
+        return schema
+
+
     def get_action_url(self, **kw):
         url = ';edit_event_form'
         params = []
@@ -1272,8 +1285,14 @@ class CalendarTable(Table, CalendarView):
     class_views = [['monthly_view', 'weekly_view', 'download_form'],
                    ['upload_form', 'edit_timetables_form',
                     'edit_metadata_form', 'edit_event_form']]
-
     record_class = Record
+
+
+    @classmethod
+    def get_metadata_schema(cls):
+        schema = Table.get_metadata_schema()
+        schema['timetables'] = Timetables
+        return schema
 
 
     GET__mtime__ = None

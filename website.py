@@ -21,23 +21,23 @@
 from decimal import Decimal
 
 # Import from itools
-from itools.uri import Path, get_reference
-from itools.datatypes import Email, Integer, Unicode
-from itools.i18n import get_language_name, get_languages
 from itools.catalog import EqQuery, OrQuery, AndQuery, TextField
-from itools.stl import stl
+from itools.datatypes import Email, Integer, String, Tokens, Unicode
 from itools.handlers import checkid
+from itools.i18n import get_language_name, get_languages
+from itools.stl import stl
+from itools.uri import Path, get_reference
 
 # Import from ikaaro
-from folder import Folder
 from access import RoleAware
+from folder import Folder
 from messages import *
-import widgets
-from workflow import WorkflowAware
-from skins import ui
 from registry import (register_object_class, register_website,
     get_register_websites, get_website_class)
+from skins import ui
 from utils import generate_password
+import widgets
+from workflow import WorkflowAware
 
 
 class WebSite(RoleAware, Folder):
@@ -76,6 +76,24 @@ class WebSite(RoleAware, Folder):
         if name in ('users', 'users.metadata'):
             return self.parent._get_object(name)
         return Folder._get_object(self, name)
+
+
+    @classmethod
+    def get_metadata_schema(cls):
+        return {
+            'vhosts': Tokens(default=()),
+            'contacts': Tokens(default=()),
+            # Base
+            'owner': String,
+            'title': Unicode,
+            'description': Unicode,
+            'subject': Unicode,
+            # RoleAware
+            'admins': Tokens(default=()),
+            'guests': Tokens(default=()),
+            'members': Tokens(default=()),
+            'reviewers': Tokens(default=()),
+        }
 
 
     @staticmethod

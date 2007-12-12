@@ -90,16 +90,16 @@ class Root(WebSite):
     @staticmethod
     def _make_object(cls, folder, email, password):
         # The metadata
-        kw = {'ikaaro:admins': ('0',)}
+        kw = {'admins': ('0',)}
         metadata = cls.build_metadata(**kw)
         folder.set_handler('.metadata', metadata)
         # User Folder
-        kw = {'dc:title': {'en': u'Users'}}
+        kw = {'title': {'en': u'Users'}}
         users = UserFolder.build_metadata(owner=None, **kw)
         folder.set_handler('users.metadata', users)
         # Default User
         password = crypt_password(password)
-        kw = {'ikaaro:email': email, 'ikaaro:password': password}
+        kw = {'email': email, 'password': password}
         user = get_object_class('user').build_metadata(owner='0', **kw)
         folder.set_handler('users/0.metadata', user)
         # Return

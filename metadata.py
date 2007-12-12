@@ -45,7 +45,7 @@ class Password(DataType):
 class Record(object):
 
     default = []
-
+    schema = {}
 
 
 class Timetables(DataType):
@@ -58,6 +58,7 @@ class Timetables(DataType):
         [(time(8,0), time(10,0)), (time(10,0), time(12, 0)),
          (time(15,30), time(17, 30))]
     """
+
     @staticmethod
     def decode(value):
         if not value:
@@ -98,9 +99,6 @@ class Schema(BaseSchema):
 ##        'owner': String,
         # Workflow
         'wf_transition': Record,
-##        'name': String,
-##        'user': String,
-##        'comments': Unicode,
         # History
         'history': Record,
         # Users

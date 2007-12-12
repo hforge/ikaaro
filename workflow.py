@@ -16,11 +16,15 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
-import datetime
+from datetime import datetime
 
 # Import from itools
-from itools.workflow import Workflow, WorkflowAware as BaseWorkflowAware
+from itools.datatypes import DateTime, String, Unicode
 from itools.stl import stl
+from itools.workflow import Workflow, WorkflowAware as BaseWorkflowAware
+
+# Import from ikaaro
+from metadata import Record
 
 
 # Workflow definition
@@ -54,9 +58,30 @@ workflow.set_initstate('private')
 
 
 
+class WFTransition(Record):
+
+    schema = {
+        'date': DateTime,
+        'name': String,
+        'user': String,
+        'comments': Unicode}
+
+
+
 class WorkflowAware(BaseWorkflowAware):
 
     workflow = workflow
+
+
+    ########################################################################
+    # Metadata
+    ########################################################################
+    @classmethod
+    def get_metadata_schema(cls):
+        return {
+            'state': String,
+            'wf_transition': WFTransition,
+            }
 
 
     ########################################################################
@@ -144,7 +169,7 @@ class WorkflowAware(BaseWorkflowAware):
             return context.come_back(u'A transition must be selected.')
 
         # Keep workflow history
-        property = {('dc', 'date'): datetime.datetime.now(),
+        property = {('dc', 'date'): datetime.now(),
                     (None, 'user'): context.user.name,
                     (None, 'name'): transition,
                     (None, 'comments'): comments}
