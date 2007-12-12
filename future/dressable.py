@@ -41,7 +41,7 @@ from ikaaro.messages import *
 
 class Dressable(Folder, EpozEditable):
     """A Dressable object is a folder with a specific view which is defined
-    by the schema. In addition of the schema, it is necessary to redefine
+    by the layout. In addition of the layout, it is necessary to redefine
     the variable __fixed_handlers__.
     """
 
@@ -51,7 +51,7 @@ class Dressable(Folder, EpozEditable):
     class_views = ([['view'], ['edit_document']] + Folder.class_views)
     __fixed_handlers__ = ['index']
     template = '/ui/future/dressable_view.xml'
-    schema = {'content': ('index', WebPage),
+    layout = {'content': ('index', WebPage),
               'browse_folder': 'browse_folder',
               'browse_file': 'browse_file'}
 
@@ -77,8 +77,8 @@ class Dressable(Folder, EpozEditable):
 
     @staticmethod
     def _populate(cls, folder, base_name):
-        """Populate the dressable from the schema"""
-        for key, data in cls.schema.iteritems():
+        """Populate the dressable from the layout"""
+        for key, data in cls.layout.iteritems():
             if isinstance(data, tuple):
                 handler_name, handler_cls = data
                 if issubclass(handler_cls, WebPage):
@@ -115,9 +115,9 @@ class Dressable(Folder, EpozEditable):
         return set_prefix(stream, prefix)
 
 
-    def _get_schema_handler_names(self):
+    def _get_layout_handler_names(self):
         handlers = []
-        for key, data in self.schema.iteritems():
+        for key, data in self.layout.iteritems():
             if isinstance(data, tuple):
                 name, kk = data
                 handlers.append(name)
@@ -131,7 +131,7 @@ class Dressable(Folder, EpozEditable):
             if label:
                 return label
 
-        for key, data in self.schema.iteritems():
+        for key, data in self.layout.iteritems():
             if isinstance(data, tuple):
                 handler_name, kk = data
                 if handler_name == name:
@@ -144,7 +144,7 @@ class Dressable(Folder, EpozEditable):
     def view(self, context):
         namespace = {}
 
-        for key, data in self.schema.iteritems():
+        for key, data in self.layout.iteritems():
             content = ''
             if isinstance(data, tuple):
                 name, kk = data
@@ -270,7 +270,7 @@ class Dressable(Folder, EpozEditable):
         """
         Return the class of a handler
         """
-        for key, data in self.schema.iteritems():
+        for key, data in self.layout.iteritems():
             if isinstance(data, tuple):
                 name, cls = data
                 if name == handler_name:
@@ -386,7 +386,7 @@ class Dressable(Folder, EpozEditable):
 
 
     def browse_file(self, context):
-        exclude = self._get_schema_handler_names()
+        exclude = self._get_layout_handler_names()
         namespace = {}
         namespace['id'] = 'browse_file'
         namespace['title'] = 'Files'
@@ -400,7 +400,7 @@ class Dressable(Folder, EpozEditable):
     def get_subviews(self, name):
         if name.split('?')[0] == 'edit_document':
             subviews = []
-            for key, data in self.schema.iteritems():
+            for key, data in self.layout.iteritems():
                 if isinstance(data, tuple):
                     name, cls = data
                     if is_datatype(cls, WebPage):
@@ -418,8 +418,10 @@ class Dressable(Folder, EpozEditable):
 
 
     def get_first_edit_subview(self):
-        # FIXME get_subviews is sorted but not get_first_edit_subview
-        for key, data in self.schema.iteritems():
+        keys = self.layout.keys()
+        keys.sort()
+        for key in keys:
+            data = self.layout[key]
             if isinstance(data, tuple):
                 name, cls = data
                 if is_datatype(cls, WebPage):
