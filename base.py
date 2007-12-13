@@ -452,7 +452,7 @@ class DBObject(CatalogAware, Node, DomainAware):
     def update(self, version):
         # We don't check the version is good
         getattr(self, 'update_%s' % version)()
-        self.metadata.set_property('version', version)
+        self.metadata.version = version
 
 
     ########################################################################

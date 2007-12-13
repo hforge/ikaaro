@@ -140,6 +140,10 @@ class Metadata(File):
                 # Find out datatype
                 if n == 1:
                     datatype = schema.get(name, String)
+                    # FIXME Backwards compatibility with 0.16, introduced in
+                    # 0.20
+                    if name in ('ikaaro:wf_transition', 'ikaaro:history'):
+                        datatype = Record
                 else:
                     datatype = stack[-1][1]
                     if is_datatype(datatype, Record):
@@ -159,6 +163,10 @@ class Metadata(File):
                 n = len(stack)
                 if n == 0:
                     self.properties = value
+                    # FIXME Backwards compatibility with 0.16, introduced in
+                    # 0.20
+                    if self.format is None:
+                        self.format = self.properties.pop('format')
                     break
 
                 # Decode value
