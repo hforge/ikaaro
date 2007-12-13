@@ -259,7 +259,6 @@ class DBObject(CatalogAware, Node, DomainAware):
     @classmethod
     def get_metadata_schema(cls):
         return {
-            'owner': String,
             'title': Unicode,
             'description': Unicode,
             'subject': Unicode,
@@ -296,7 +295,6 @@ class DBObject(CatalogAware, Node, DomainAware):
             KeywordField('abspath', is_stored=True),
             TextField('text'),
             TextField('title', is_stored=True),
-            KeywordField('owner', is_stored=True),
             BoolField('is_role_aware'),
             KeywordField('format', is_stored=True),
             KeywordField('workflow_state', is_stored=True),
@@ -326,7 +324,6 @@ class DBObject(CatalogAware, Node, DomainAware):
             'abspath': str(abspath),
             'format': self.class_id,
             'title': self.get_title(),
-            'owner': self.get_property('owner'),
             'mtime': mtime.strftime('%Y%m%d%H%M%S')}
 
         # Full text
@@ -610,23 +607,16 @@ class DBObject(CatalogAware, Node, DomainAware):
     # Metadata
     ########################################################################
     @classmethod
-    def build_metadata(cls, owner=None, format=None, **kw):
+    def build_metadata(cls, format=None, **kw):
         """Return a Metadata object with sensible default values.
         """
-        if owner is None:
-            owner = ''
-            context = get_context()
-            if context is not None:
-                if context.user is not None:
-                    owner = context.user.name
-
         if format is None:
             format = cls.class_id
 
         if isinstance(cls, WorkflowAware):
             kw['state'] = cls.workflow.initstate
 
-        return Metadata(handler_class=cls, owner=owner, format=format, **kw)
+        return Metadata(handler_class=cls, format=format, **kw)
 
 
     edit_metadata_form__access__ = 'is_allowed_to_edit'

@@ -81,7 +81,6 @@ class WebSite(RoleAware, Folder):
             'contacts': Tokens(default=()),
             'website_languages': Tokens(default=('en',)),
             # Base
-            'owner': String,
             'title': Unicode,
             'description': Unicode,
             'subject': Unicode,

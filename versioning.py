@@ -79,6 +79,13 @@ class VersioningAware(object):
         return revisions
 
 
+    def get_owner(self):
+        history = self.get_property('history')
+        if not history:
+            return None
+        return history[0]['user']
+
+
     ########################################################################
     # User Interface
     ########################################################################

@@ -62,7 +62,7 @@ class Forum(Folder):
         namespace['threads'] = []
         for thread in self.search_objects(object_class=Thread):
             message = thread.get_object('0')
-            author = users.get_object(thread.get_property('owner'))
+            author = users.get_object(message.get_owner())
             posts = thread.search_objects(object_class=Message)
             posts = list(posts)
             namespace['threads'].append({

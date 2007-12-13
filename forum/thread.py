@@ -92,7 +92,7 @@ class Thread(Folder):
         namespace['description'] = self.get_property('description')
         namespace['messages'] = []
         for message in self.get_posts():
-            author_id = message.get_property('owner')
+            author_id = message.get_owner()
             namespace['messages'].append({
                 'name': message.name,
                 'author': users.get_object(author_id).get_title(),

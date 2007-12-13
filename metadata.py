@@ -96,7 +96,6 @@ class Schema(BaseSchema):
     datatypes = {
 ##        'format': String,
 ##        'version': String,
-##        'owner': String,
         # Workflow
         'wf_transition': Record,
         # History

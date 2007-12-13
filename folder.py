@@ -700,8 +700,6 @@ class Folder(DBObject):
                 # Fix state
                 if isinstance(object, WorkflowAware):
                     metadata.set_property('state', object.workflow.initstate)
-                # Fix owner
-                metadata.set_property('owner', context.user.name)
         # Cut, clean cookie
         if cut is True:
             context.del_cookie('ikaaro_cp')

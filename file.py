@@ -148,7 +148,6 @@ class File(WorkflowAware, VersioningAware, DBObject):
     def get_metadata_schema(cls):
         return {
             # Base
-            'owner': String,
             'title': Unicode,
             'description': Unicode,
             'subject': Unicode,

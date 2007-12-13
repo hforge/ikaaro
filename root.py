@@ -95,12 +95,12 @@ class Root(WebSite):
         folder.set_handler('.metadata', metadata)
         # User Folder
         kw = {'title': {'en': u'Users'}}
-        users = UserFolder.build_metadata(owner=None, **kw)
+        users = UserFolder.build_metadata(**kw)
         folder.set_handler('users.metadata', users)
         # Default User
         password = crypt_password(password)
         kw = {'email': email, 'password': password}
-        user = get_object_class('user').build_metadata(owner='0', **kw)
+        user = get_object_class('user').build_metadata(**kw)
         folder.set_handler('users/0.metadata', user)
         # Return
         return cls(metadata)
