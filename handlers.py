@@ -224,7 +224,7 @@ class Metadata(File):
                     for value in value:
                         lines.append('  <%s>\n' % name)
                         for key, value in value.items():
-                            value = aux.get_datatype(key).encode(value)
+                            value = aux.get(key).encode(value)
                             value = XML.encode(value)
                             lines.append('    <%s>%s</%s>\n'
                                          % (key, value, key))

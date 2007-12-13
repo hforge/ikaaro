@@ -542,7 +542,10 @@ class Skin(UIFolder):
                          'content': value})
         # Set keywords for all languages
         for language in root.get_property('website_languages'):
-            value = here.get_property('subject', language).strip()
+            value = here.get_property('subject', language)
+            if value is None:
+                continue
+            value = value.strip()
             if value:
                 meta.append({'name': 'keywords', 'lang': language,
                              'content': value})
