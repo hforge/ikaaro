@@ -113,7 +113,7 @@ class OrderAware(object):
                 object = self.get_object(name)
                 ns = {
                     'name': object.name,
-                    'title': object.get_property('dc:title'),
+                    'title': object.get_property('title'),
                     'workflow_state': '',
                     'is_orderaware': isinstance(object, OrderAware),
                     'path': '%s/;order_form' % here.get_pathto(object)

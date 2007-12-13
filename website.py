@@ -144,7 +144,7 @@ class WebSite(RoleAware, Folder):
         # The metadata
         metadata = object.metadata
         language = container.get_site_root().get_default_language()
-        metadata.set_property('dc:title', title, language=language)
+        metadata.set_property('title', title, language=language)
 
         goto = './%s/;%s' % (name, object.get_firstview())
         return context.come_back(MSG_NEW_RESOURCE, goto=goto)

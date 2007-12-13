@@ -304,7 +304,7 @@ class Folder(DBObject):
             href = '%s/;%s' % (id, firstview)
         line['name'] = (id, href)
         line['format'] = self.gettext(object.class_title)
-        line['title'] = object.get_property('dc:title')
+        line['title'] = object.get_property('title')
         # Titles
         line['short_title'] = reduce_string(title, 12, 40)
         # The size

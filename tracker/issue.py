@@ -184,7 +184,7 @@ class Issue(Folder, VersioningAware):
         if user.name in to_addrs:
             to_addrs.remove(user.name)
         # Notify / Subject
-        tracker_title = self.parent.get_property('dc:title') or 'Tracker Issue'
+        tracker_title = self.parent.get_property('title') or 'Tracker Issue'
         subject = '[%s #%s] %s' % (tracker_title, self.name, title)
         # Notify / Body
         if context.object.class_id == 'tracker':

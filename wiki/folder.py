@@ -50,8 +50,7 @@ class WikiFolder(Folder):
     def _make_object(cls, folder, name):
         Folder._make_object(cls, folder, name)
         # FrontPage
-        kw = {'dc:title': {'en': u"Front Page"}}
-        metadata = WikiPage.build_metadata(**kw)
+        metadata = WikiPage.build_metadata(title={'en': u"Front Page"})
         folder.set_handler('%s/FrontPage.metadata' % name, metadata)
 
 

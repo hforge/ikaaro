@@ -111,8 +111,7 @@ class Tracker(Folder):
                               (not_assigned, u'Not Assigned'),
                               (high_priority, u'High Priority')]:
             folder.set_handler('%s/s%s' % (name, i), search)
-            kw = {'dc:title': {'en': title}}
-            metadata = StoredSearch.build_metadata(**kw)
+            metadata = StoredSearch.build_metadata(title={'en': title})
             folder.set_handler('%s/s%s.metadata' % (name, i), metadata)
             i += 1
 
@@ -170,8 +169,8 @@ class Tracker(Folder):
     def get_subviews(self, name):
         if name == 'search_form':
             items = list(self.search_objects(object_class=StoredSearch))
-            items.sort(lambda x, y: cmp(x.get_property('dc:title'),
-                                        y.get_property('dc:title')))
+            items.sort(lambda x, y: cmp(x.get_property('title'),
+                                        y.get_property('title')))
             return ['view?search_name=%s' % x.name for x in items]
         return Folder.get_subviews(self, name)
 
@@ -209,7 +208,7 @@ class Tracker(Folder):
             get_value = search.handler.get_value
             get_values = search.get_values
             namespace['search_name'] = search_name
-            namespace['search_title'] = search.get_property('dc:title')
+            namespace['search_title'] = search.get_property('title')
         else:
             get_value = context.get_form_value
             get_values = context.get_form_values
@@ -257,7 +256,7 @@ class Tracker(Folder):
             # Edit an Stored Search
             try:
                 stored_search = self.get_object(search_name)
-                stored_search_title = stored_search.get_property('dc:title')
+                stored_search_title = stored_search.get_property('title')
             except LookupError:
                 pass
 
@@ -273,7 +272,7 @@ class Tracker(Folder):
 
         # Edit / Title
         context.commit = True
-        stored_search.set_property('dc:title', search_title, 'en')
+        stored_search.set_property('title', search_title, 'en')
         # Edit / Search Values
         text = context.get_form_value('text').strip().lower()
         stored_search.handler.set_value('text', text)
@@ -545,7 +544,7 @@ class Tracker(Folder):
             user_title = user.get_title()
         template = u'--- Comment from : %s ---\n\n%s\n\n%s'
         template = self.gettext(template)
-        tracker_title = self.parent.get_property('dc:title') or 'Tracker Issue'
+        tracker_title = self.parent.get_property('title') or 'Tracker Issue'
         subject = u'[%s]' % tracker_title
         for user_id in users_issues.keys():
             user_issues = []

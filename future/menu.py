@@ -106,7 +106,7 @@ class Link(File):
         language = self.get_content_language(context)
         namespace['language'] = language
         # Title
-        namespace['title'] = self.get_property('dc:title', language=language)
+        namespace['title'] = self.get_property('title', language=language)
         # Description
         namespace['description'] = self.get_property('description',
                                                      language=language)
@@ -132,7 +132,7 @@ class Link(File):
         new_window = context.get_form_value('menu:new_window')
         language = context.site_root.get_default_language()
 
-        self.set_property('dc:title', title, language=language)
+        self.set_property('title', title, language=language)
         self.set_property('description', description, language=language)
         self.set_property('menu:link', link)
         self.set_property('menu:new_window', new_window)
@@ -258,7 +258,7 @@ def get_menu_namespace_level(context, url, menu_root, depth, show_first_child,
         css = (active and 'active') or (in_path and 'in_path') or None
 
         # set label and description
-        label = object.get_property('dc:title') or name
+        label = object.get_property('title') or name
         description = object.get_property('description') or label
 
         # set path

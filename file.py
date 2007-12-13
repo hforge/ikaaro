@@ -130,7 +130,7 @@ class File(WorkflowAware, VersioningAware, DBObject):
         # The title
         title = context.get_form_value('dc:title')
         language = container.get_content_language(context)
-        object.metadata.set_property('dc:title', title, language=language)
+        object.metadata.set_property('title', title, language=language)
 
         goto = './%s/;%s' % (name, object.get_firstview())
         return context.come_back(MSG_NEW_RESOURCE, goto=goto)
@@ -249,7 +249,7 @@ class File(WorkflowAware, VersioningAware, DBObject):
              'content_type:%s' % self.handler.get_mimetype(),
              'cookie:%s' % request.get_cookies_as_str()]
 
-        title = self.get_property('dc:title')
+        title = self.get_property('title')
         if title:
             title = title.encode(encoding or 'UTF-8')
         else:

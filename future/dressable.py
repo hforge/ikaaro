@@ -127,7 +127,7 @@ class Dressable(Folder, EpozEditable):
     def _get_object_label(self, name):
         if self.has_object(name):
             object = self.get_object(name)
-            label = object.get_property('dc:title')
+            label = object.get_property('title')
             if label:
                 return label
 
@@ -328,7 +328,7 @@ class Dressable(Folder, EpozEditable):
             # The metadata
             metadata = object.metadata
             language = container.get_content_language(context)
-            metadata.set_property('dc:title', name, language=language)
+            metadata.set_property('title', name, language=language)
 
         goto = './;view'
         return context.come_back(MSG_NEW_RESOURCE, goto=goto)
@@ -361,7 +361,7 @@ class Dressable(Folder, EpozEditable):
             ac = handler.get_access_control()
             if ac.is_allowed_to_view(user, handler):
                 d = {}
-                label = handler.get_property('dc:title')
+                label = handler.get_property('title')
                 if label is None or label == '':
                     label = handler.name
                 path_to_icon = handler.get_path_to_icon()

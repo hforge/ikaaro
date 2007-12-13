@@ -579,14 +579,14 @@ class DBObject(CatalogAware, Node, DomainAware):
         # The metadata
         metadata = object.metadata
         language = container.get_content_language(context)
-        metadata.set_property('dc:title', title, language=language)
+        metadata.set_property('title', title, language=language)
 
         goto = './%s/;%s' % (name, object.get_firstview())
         return context.come_back(MSG_NEW_RESOURCE, goto=goto)
 
 
     def get_title(self, language=None):
-        return self.get_property('dc:title', language=language) or self.name
+        return self.get_property('title', language=language) or self.name
 
 
     def get_content_language(self, context=None):
@@ -643,7 +643,7 @@ class DBObject(CatalogAware, Node, DomainAware):
         description = context.get_form_value('dc:description')
         subject = context.get_form_value('dc:subject')
         language = self.get_content_language(context)
-        self.set_property('dc:title', title, language=language)
+        self.set_property('title', title, language=language)
         self.set_property('description', description, language=language)
         self.set_property('subject', subject, language=language)
 
