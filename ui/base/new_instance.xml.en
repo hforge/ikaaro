@@ -8,9 +8,9 @@
 
   <form name="new_document" action=";new_resource" method="post">
     <dl>
-      <dt><label for="dc:title">Title</label></dt>
+      <dt><label for="title">Title</label></dt>
       <dd>
-        <input type="text" id="dc:title" name="dc:title" size="40"
+        <input type="text" id="title" name="title" size="40"
           value="${title}" />
       </dd>
       <dt><label for="name">Name (optional)</label></dt>
@@ -25,7 +25,7 @@
   </form>
 
   <script type="text/javascript">
-    focus("dc:title")
+    focus("title")
   </script>
 
 </stl:block>

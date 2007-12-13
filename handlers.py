@@ -23,7 +23,7 @@ from time import time
 # Import from itools
 from itools.datatypes import is_datatype, DateTime, String, Unicode, XML
 from itools.handlers import File, TextFile, register_handler_class
-from itools.schemas import get_schema_by_uri, get_schema
+from itools.schemas import get_schema_by_uri
 from itools.web import get_context
 from itools.xml import (XMLNamespace, XMLParser, START_ELEMENT, END_ELEMENT,
     TEXT)

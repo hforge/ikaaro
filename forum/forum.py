@@ -20,6 +20,7 @@
 from operator import itemgetter
 
 # Import from itools
+from itools.datatypes import Unicode
 from itools.handlers import checkid
 from itools.i18n import format_datetime
 from itools.stl import stl
@@ -93,7 +94,7 @@ class Forum(Folder):
 
     new_thread__access__ = 'is_allowed_to_edit'
     def new_thread(self, context):
-        title = context.get_form_value('dc:title').strip()
+        title = context.get_form_value('title', type=Unicode).strip()
         if not title:
             return context.come_back(u"No title given.")
 

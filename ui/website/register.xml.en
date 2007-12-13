@@ -13,28 +13,24 @@
   <form name="joinform" action=";register" method="post">
     <dl>
       <dt>
-        <label for="ikaaro:firstname" class="${ikaaro:firstname/class}">
-          First Name</label>
+        <label for="firstname" class="${firstname/class}">First Name</label>
       </dt>
       <dd>
-        <input type="text" id="ikaaro:firstname" name="ikaaro:firstname"
-          value="${ikaaro:firstname/value}" />
+        <input type="text" id="firstname" name="firstname"
+          value="${firstname/value}" />
       </dd>
       <dt>
-        <label for="ikaaro:lastname" class="${ikaaro:lastname/class}">
-          Last Name</label>
+        <label for="lastname" class="${lastname/class}">Last Name</label>
       </dt>
       <dd>
-        <input type="text" id="ikaaro:lastname" name="ikaaro:lastname"
-          value="${ikaaro:lastname/value}" />
+        <input type="text" id="lastname" name="lastname"
+          value="${lastname/value}" />
       </dd>
       <dt>
-        <label for="ikaaro:email" class="${ikaaro:email/class}">
-          Email address</label>
+        <label for="email" class="${email/class}">Email address</label>
       </dt>
       <dd>
-        <input type="text" id="ikaaro:email" name="ikaaro:email"
-          value="${ikaaro:email/value}" />
+        <input type="text" id="email" name="email" value="${email/value}" />
       </dd>
     </dl>
     <p>
@@ -43,7 +39,7 @@
   </form>
 
   <script language="javascript">
-    focus("ikaaro:firstname")
+    focus("firstname")
   </script>
 
 </stl:block>

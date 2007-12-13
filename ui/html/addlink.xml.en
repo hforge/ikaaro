@@ -102,9 +102,8 @@
         <p>Create a new Web Page and link to it:</p>
         <input type="hidden" name="type" value="application/xhtml+xml" />
         <input type="hidden" name="target_path" value="${bc/target_path}"/>
-        <input type="text" name="dc:title" size="40" />
+        <input type="text" name="title" size="40" />
         <input type="hidden" name="name" value="" />
-        <input type="hidden" name="dc:language" value="${language}" />
         <input class="button_add" type="submit" value="Ok" />
       </form>
       <!-- Upload and Link -->

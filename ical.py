@@ -1528,8 +1528,8 @@ class CalendarTable(Table, CalendarView):
                 multiple = getattr(datatype, 'multiple', False) is True
                 if multiple:
                     datatype = Multiple(type=datatype)
-                check_fields.append((key, getattr(datatype,
-                                              'mandatory', False), datatype))
+                check_fields.append(
+                    (key, getattr(datatype, 'mandatory', False), datatype))
                 # XXX Check inputs
                 error = context.check_form_input(check_fields)
                 if error is not None:

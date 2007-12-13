@@ -41,9 +41,12 @@ from ikaaro.versioning import VersioningAware
 
 
 # Definition of the fields of the forms to add and edit an issue
-issue_fields = [('title', True), ('version', True), ('type', True),
-    ('state', True), ('module', False), ('priority', False),
-    ('assigned_to', False), ('comment', False), ('file', False)]
+issue_fields = [
+    ('title', True, String), ('version', True, String),
+    ('type', True, String), ('state', True, String),
+    ('module', False, String), ('priority', False, String),
+    ('assigned_to', False, String), ('comment', False, String),
+    ('file', False, String)]
 
 
 class History(Table):

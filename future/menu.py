@@ -19,7 +19,7 @@
 
 # Import from itools
 from itools import get_abspath
-from itools.datatypes import is_datatype
+from itools.datatypes import is_datatype, Unicode
 from itools.stl import stl
 from itools.uri import Path
 
@@ -67,6 +67,14 @@ class Link(File):
     class_views = [['edit_metadata_form'], ['state_form']]
 
 
+    @classmethod
+    def get_metadata_schema(cls):
+        schema = File.get_metadata_schema()
+        schema['link'] = String
+        schema['new_window'] = Boolean(default=False)
+        return schema
+
+
     @staticmethod
     def new_instance_form(cls, context):
         # Use the default form
@@ -78,7 +86,7 @@ class Link(File):
 
 
     def GET(self, context):
-        link = self.get_property('menu:link')
+        link = self.get_property('link')
         return context.uri.resolve2(link)
 
 
@@ -102,18 +110,16 @@ class Link(File):
     def edit_metadata_form(self, context):
         # Build the namespace
         namespace = {}
-        # Language
-        language = self.get_content_language(context)
-        namespace['language'] = language
         # Title
+        language = self.get_content_language(context)
         namespace['title'] = self.get_property('title', language=language)
         # Description
         namespace['description'] = self.get_property('description',
                                                      language=language)
-        namespace['menu:link'] = self.get_property('menu:link')
-        new_window = self.get_property('menu:new_window')
+        namespace['link'] = self.get_property('link')
+        new_window = self.get_property('new_window')
         labels = {'yes': u'New window', 'no': u'Current window'}
-        namespace['target'] = BooleanRadio.to_html(None, 'menu:new_window',
+        namespace['target'] = BooleanRadio.to_html(None, 'new_window',
                                                    new_window, labels)
         # Add a script
         context.scripts.append('/ui/future/link.js')
@@ -123,19 +129,19 @@ class Link(File):
 
 
     def edit_metadata(self, context):
-        link = context.get_form_value('menu:link').strip()
+        link = context.get_form_value('link').strip()
         if not link:
             return context.come_back(u'The link must be entered.')
 
-        title = context.get_form_value('dc:title')
-        description = context.get_form_value('dc:description')
-        new_window = context.get_form_value('menu:new_window')
+        title = context.get_form_value('title', type=Unicode)
+        description = context.get_form_value('description', type=Unicode)
+        new_window = context.get_form_value('new_window', type=Boolean)
         language = context.site_root.get_default_language()
 
         self.set_property('title', title, language=language)
         self.set_property('description', description, language=language)
-        self.set_property('menu:link', link)
-        self.set_property('menu:new_window', new_window)
+        self.set_property('link', link)
+        self.set_property('new_window', new_window)
         return context.come_back(MSG_CHANGES_SAVED)
 
 
@@ -143,30 +149,28 @@ class Link(File):
     # API to be used by menu.py get_menu_namespace method
     #######################################################################
     def get_target_info(self):
-        """
-        Return a tuple with:
+        """Return a tuple with:
         example1 : '_blank', '../../;contact_form'
         example2 : '_top', '../../python'
         example3 : '_blank', 'http://www.google.com'
         """
 
         new_window = '_top'
-        if self.get_property('menu:new_window') is True:
+        if self.get_property('new_window') is True:
             new_window = '_blank'
 
-        return new_window, self.get_property('menu:link')
+        return new_window, self.get_property('link')
 
 
     def has_target(self):
-        return self.get_property('menu:link') != None
+        return self.get_property('link') != None
 
 
 ###########################################################################
 # Menu gestion
 ###########################################################################
 def get_target_info(context, object):
-    """
-    Return a tuple with:
+    """Return a tuple with:
     - a list made with the target path and if any the target object
     - the target info '_top' or '_blank' or ...
     """
@@ -207,8 +211,7 @@ def get_target_info(context, object):
 
 def get_menu_namespace_level(context, url, menu_root, depth, show_first_child,
                              link_like=None):
-    """
-    Return a tabs list with the following structure:
+    """Return a tabs list with the following structure:
 
     tabs = [{'active': False,
              'class': None,
@@ -294,7 +297,7 @@ def get_menu_namespace_level(context, url, menu_root, depth, show_first_child,
 
 def get_menu_namespace(context, depth=3, show_first_child=False, flat=True,
                        link_like=None):
-    """ Return dict with the following structure (for depth=3 lvl{0,1,2})
+    """Return dict with the following structure (for depth=3 lvl{0,1,2})
 
     {'flat': {'lvl0': [item_dic*],
               'lvl1': [item_dic*],

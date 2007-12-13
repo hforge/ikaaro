@@ -69,7 +69,7 @@ class File(WorkflowAware, VersioningAware, DBObject):
     def new_instance_form(cls, context):
         namespace = {}
         namespace['class_id'] = cls.class_id
-        namespace['title'] = context.get_form_value('dc:title')
+        namespace['title'] = context.get_form_value('title', type=Unicode)
 
         handler = context.root.get_object('ui/file/new_instance.xml')
         return stl(handler, namespace)
@@ -128,7 +128,7 @@ class File(WorkflowAware, VersioningAware, DBObject):
             kw['language'] = language
         object = cls.make_object(cls, container, name, body, **kw)
         # The title
-        title = context.get_form_value('dc:title')
+        title = context.get_form_value('title', type=Unicode)
         language = container.get_content_language(context)
         object.metadata.set_property('title', title, language=language)
 

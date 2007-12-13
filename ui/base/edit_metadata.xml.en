@@ -8,20 +8,20 @@
 
   <form action=";edit_metadata" method="post">
     <dl>
-      <dt><label for="dc:title">Title</label></dt>
+      <dt><label for="title">Title</label></dt>
       <dd>
-        <input type="text" size="40" id="dc:title" name="dc:title"
-          value="${dc:title}" />
+        <input type="text" size="40" id="title" name="title"
+          value="${title}" />
       </dd>
-      <dt><label for="dc:description">Description</label></dt>
+      <dt><label for="description">Description</label></dt>
       <dd>
-        <textarea cols="50" rows="8" id="dc:description"
-          name="dc:description">${dc:description}</textarea>
+        <textarea cols="50" rows="8" id="description" name="description"
+          >${description}</textarea>
       </dd>
-      <dt><label for="dc:subject">Keywords</label> (Separated by comma)</dt>
+      <dt><label for="subject">Keywords</label> (Separated by comma)</dt>
       <dd>
-        <input type="text" size="40" id="dc:subject" name="dc:subject"
-          value="${dc:subject}" />
+        <input type="text" size="40" id="subject" name="subject"
+          value="${subject}" />
       </dd>
     </dl>
     <p>

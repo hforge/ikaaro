@@ -150,7 +150,7 @@ class WikiPage(Text):
                 name = node['wiki_name']
                 if refname is False:
                     params = {'type': self.__class__.__name__,
-                              'dc:title': title.encode('utf_8'),
+                              'title': title.encode('utf_8'),
                               'name': name}
                     refuri = ";new_resource_form?%s" % urlencode(params)
                     prefix = here.get_pathto(parent)

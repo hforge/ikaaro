@@ -221,8 +221,8 @@ class User(AccessControl, Folder):
     confirm_registration__access__ = True
     def confirm_registration(self, context):
         keep = ['key']
-        register_fields = [('newpass', True),
-                           ('newpass2', True)]
+        register_fields = [('newpass', True, String),
+                           ('newpass2', True, String)]
 
         # Check register key
         must_confirm = self.get_property('user_must_confirm')
@@ -299,7 +299,7 @@ class User(AccessControl, Folder):
 
     edit__access__ = 'is_allowed_to_edit'
     def edit(self, context):
-        value = context.get_form_value('ikaaro:user_language')
+        value = context.get_form_value('user_language')
         self.set_property('user_language', value)
 
         return context.come_back(u'Application preferences changed.')
@@ -307,16 +307,15 @@ class User(AccessControl, Folder):
 
     #######################################################################
     # Edit account
-    account_fields = ['ikaaro:firstname', 'ikaaro:lastname', 'ikaaro:email']
-
     edit_account_form__access__ = 'is_allowed_to_edit'
     edit_account_form__label__ = u'Edit'
     edit_account_form__sublabel__ = u'Account'
     def edit_account_form(self, context):
         # Build the namespace
         namespace = {}
-        for key in self.account_fields:
-            namespace[key] = self.get_property(key)
+        namespace['firstname'] = self.get_property('firstname')
+        namespace['lastname'] = self.get_property('lastname')
+        namespace['email'] = self.get_property('email')
         # Ask for password to confirm the changes
         if self.name != context.user.name:
             namespace['must_confirm'] = False
@@ -339,7 +338,7 @@ class User(AccessControl, Folder):
                     u" not changed.")
 
         # Check the email is good
-        email = context.get_form_value('ikaaro:email')
+        email = context.get_form_value('email', type=Email)
         if not Email.is_valid(email):
             return context.come_back(MSG_INVALID_EMAIL)
 
@@ -350,9 +349,12 @@ class User(AccessControl, Folder):
                        u'please try again')
 
         # Save changes
-        for key in self.account_fields:
-            value = context.get_form_value(key)
-            self.set_property(key, value)
+        value = context.get_form_value('firstname', type=Unicode)
+        self.set_property('firstname', value)
+        value = context.get_form_value('lastname', type=Unicode)
+        self.set_property('lastname', value)
+        value = context.get_form_value('email', type=Email)
+        self.set_property('email', value)
 
         return context.come_back(u'Account changed.')
 
@@ -488,7 +490,6 @@ class UserFolder(Folder):
         # Set the email and paswword
         if email is not None:
             user.set_property('email', email)
-            user.set_property('dc:title', email, language='en')
         if password is not None:
             user.set_password(password)
 

@@ -8,20 +8,19 @@
 
   <form action=";edit_account" method="post">
     <dl>
-      <dt><label for="ikaaro:firstname">First name</label></dt>
+      <dt><label for="firstname">First name</label></dt>
       <dd>
-        <input type="text" id="ikaaro:firstname" name="ikaaro:firstname"
-          value="${ikaaro:firstname}" />
+        <input type="text" id="firstname" name="firstname"
+          value="${firstname}" />
       </dd>
-      <dt><label for="ikaaro:lastname">Last name</label></dt>
+      <dt><label for="lastname">Last name</label></dt>
       <dd>
-        <input type="text" id="ikaaro:lastname" name="ikaaro:lastname"
-          value="${ikaaro:lastname}" />
+        <input type="text" id="lastname" name="lastname"
+          value="${lastname}" />
       </dd>
-      <dt><label for="ikaaro:email">E-mail</label></dt>
+      <dt><label for="email">E-mail</label></dt>
       <dd>
-        <input type="text" id="ikaaro:email" name="ikaaro:email"
-          value="${ikaaro:email}" />
+        <input type="text" id="email" name="email" value="${email}" />
       </dd>
       <stl:block if="must_confirm">
         <dt><strong>To confirm these changes, you must type your actual
@@ -37,7 +36,7 @@
   </form>
 
   <script type="text/javascript">
-    focus("ikaaro:firstname");
+    focus("firstname");
   </script>
 
 </stl:block>

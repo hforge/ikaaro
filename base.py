@@ -28,7 +28,6 @@ from itools.gettext import DomainAware, get_domain
 from itools.handlers import checkid
 from itools.http import Forbidden
 from itools.i18n import get_language_name
-from itools.schemas import get_datatype
 from itools.stl import stl
 from itools import vfs
 from itools.web import get_context, Node as BaseNode
@@ -106,7 +105,7 @@ class Node(BaseNode):
     # Properties
     ########################################################################
     def get_property_and_language(self, name, language=None):
-        return get_datatype(name).default, None
+        return None, None
 
 
     def get_property(self, name, language=None):
@@ -547,8 +546,8 @@ class DBObject(CatalogAware, Node, DomainAware):
         root = context.root
         # Build the namespace
         namespace = {}
-        namespace['title'] = context.get_form_value('dc:title')
-        namespace['name'] = context.get_form_value('name', '')
+        namespace['title'] = context.get_form_value('title', type=Unicode)
+        namespace['name'] = context.get_form_value('name', default='')
         # The class id and title
         namespace['class_id'] = cls.class_id
         namespace['class_title'] = cls.gettext(cls.class_title)
@@ -560,7 +559,7 @@ class DBObject(CatalogAware, Node, DomainAware):
     @staticmethod
     def new_instance(cls, container, context):
         name = context.get_form_value('name')
-        title = context.get_form_value('dc:title')
+        title = context.get_form_value('title', type=Unicode)
 
         # Check the name
         name = name.strip() or title.strip()
@@ -630,7 +629,7 @@ class DBObject(CatalogAware, Node, DomainAware):
         language_name = get_language_name(language)
         namespace['language_name'] = self.gettext(language_name)
         # Title, Description, Subject
-        for name in 'dc:title', 'description', 'subject':
+        for name in 'title', 'description', 'subject':
             namespace[name] = self.get_property(name, language=language)
 
         handler = self.get_object('/ui/base/edit_metadata.xml')
@@ -639,9 +638,9 @@ class DBObject(CatalogAware, Node, DomainAware):
 
     edit_metadata__access__ = 'is_allowed_to_edit'
     def edit_metadata(self, context):
-        title = context.get_form_value('dc:title')
-        description = context.get_form_value('dc:description')
-        subject = context.get_form_value('dc:subject')
+        title = context.get_form_value('title', type=Unicode)
+        description = context.get_form_value('description', type=Unicode)
+        subject = context.get_form_value('subject', type=Unicode)
         language = self.get_content_language(context)
         self.set_property('title', title, language=language)
         self.set_property('description', description, language=language)
@@ -757,7 +756,6 @@ class DBObject(CatalogAware, Node, DomainAware):
             start = self
         # Construct namespace
         namespace = {}
-        namespace['language'] = self.get_property('dc:language') or 'en'
         namespace['bc'] = Breadcrumb(filter_type=File, start=start)
         namespace['message'] = context.get_form_value('message')
 
@@ -768,8 +766,7 @@ class DBObject(CatalogAware, Node, DomainAware):
 
     addlink__access__ = 'is_allowed_to_edit'
     def addlink(self, context):
-        """
-        Allow to upload a file and link it to epoz
+        """Allow to upload a file and link it to epoz
         """
         # Get the container
         root = context.root

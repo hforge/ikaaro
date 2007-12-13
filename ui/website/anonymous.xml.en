@@ -8,8 +8,8 @@
 
   <form action=";edit_anonymous" method="post">
     <p>
-      <input type="radio" name="ikaaro:website_is_open" value="0"
-        id="intranet" checked="${is_closed}" />
+      <input type="radio" name="website_is_open" value="0" id="intranet"
+        checked="${is_closed}" />
       <label for="intranet">Intranet</label>
       <br/>
       Authentication will be required for any level of access. Only
@@ -17,8 +17,8 @@
     </p>
     <br/>
     <p>
-      <input type="radio" name="ikaaro:website_is_open" value="1"
-        id="extranet" checked="${is_open}" />
+      <input type="radio" name="website_is_open" value="1" id="extranet"
+        checked="${is_open}" />
       <label for="extranet">Extranet</label>
       <br/>
       Non authenticated users will be able to access published content,

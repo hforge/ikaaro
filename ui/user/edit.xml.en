@@ -8,9 +8,9 @@
 
   <form action=";edit" method="post">
     <dl>
-      <dt><label for="ikaaro:user_language">Language</label></dt>
+      <dt><label for="user_language">Language</label></dt>
       <dd>
-        <select id="ikaaro:user_language" name="ikaaro:user_language">
+        <select id="user_language" name="user_language">
           <option stl:repeat="language languages" value="${language/code}"
             selected="${language/is_selected}">${language/name}</option>
         </select>

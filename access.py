@@ -430,8 +430,7 @@ class RoleAware(AccessControl):
 
         namespace = {}
         namespace['id'] = user_id
-        namespace['name'] = user.get_property('dc:title')
-        namespace['email'] = user.get_property('email')
+        namespace['name'] = user.get_title()
         namespace['roles'] = self.get_roles_namespace(user_id)
 
         handler = self.get_object('/ui/access/edit_membership_form.xml')

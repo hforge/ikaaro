@@ -23,7 +23,7 @@ from datetime import time
 
 # Import from itools
 from itools.datatypes import DataType, Boolean, Email, String, Tokens, Unicode
-from itools.schemas import BaseSchema, get_datatype, register_schema
+from itools.schemas import BaseSchema, register_schema
 
 
 

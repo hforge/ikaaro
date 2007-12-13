@@ -4,7 +4,7 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
-  <h2>Change Role of ${name} (${email})</h2>
+  <h2>Change Role of ${name}</h2>
 
   <form action=";edit_membership" method="post">
     <input type="hidden" name="id" value="${id}" />

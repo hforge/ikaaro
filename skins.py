@@ -410,14 +410,9 @@ class Skin(UIFolder):
     def get_metadata_ns(self, context):
         here = context.object
         if here is None:
-            return {'title': '',
-                    'format': '',
-                    'language': '',
-                    'mtime': '',
-                    'icon': ''}
+            return {'title': '', 'format': '', 'mtime': '', 'icon': ''}
         return {'title': here.get_title(),
                 'format': here.class_title,
-                'language': here.get_property('dc:language'),
                 'mtime': here.get_mtime().strftime('%Y-%m-%d %H:%M'),
                 'icon': here.get_path_to_icon(size=48)}
 

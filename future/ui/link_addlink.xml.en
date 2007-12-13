@@ -20,13 +20,13 @@
               }
           }
         }
-        window.opener.copy_to_input('menu:link', value);
+        window.opener.copy_to_input('link', value);
         window.close();
       }
 
       function select_uri(){
         value = document.getElementById('uri').value
-        window.opener.copy_to_input('menu:link', value);
+        window.opener.copy_to_input('link', value);
         window.close();
       }
     </script>

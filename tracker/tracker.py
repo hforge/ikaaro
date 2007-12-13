@@ -43,12 +43,12 @@ from issue import History, Issue, issue_fields
 # Definition of the fields of the forms to add and edit an issue
 search_fields = [('search_name', False, Unicode),
                  ('mtime', False, Integer),
-                 ('module', False),
-                 ('version', False),
-                 ('type', False),
-                 ('priority', False),
-                 ('assigned_to', False),
-                 ('state', False)]
+                 ('module', False, String),
+                 ('version', False, String),
+                 ('type', False, String),
+                 ('priority', False, String),
+                 ('assigned_to', False, String),
+                 ('state', False, String)]
 
 table_columns = [('id', u'Id'), ('title', u'Title'), ('version', u'Version'),
                  ('module', u'Module'), ('type', u'Type'),
@@ -699,7 +699,7 @@ class Tracker(Folder):
     add_issue__access__ = 'is_allowed_to_edit'
     def add_issue(self, context):
         keep = ['title', 'version', 'type', 'state', 'module', 'priority',
-            'assigned_to', 'comment']
+                'assigned_to', 'comment']
         # Check input data
         error = context.check_form_input(issue_fields)
         if error is not None:

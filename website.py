@@ -120,7 +120,7 @@ class WebSite(RoleAware, Folder):
     @staticmethod
     def new_instance(cls, container, context):
         name = context.get_form_value('name')
-        title = context.get_form_value('dc:title')
+        title = context.get_form_value('title', type=Unicode)
 
         # Check the name
         name = name.strip() or title.strip()
@@ -304,7 +304,8 @@ class WebSite(RoleAware, Folder):
 
     edit_anonymous__access__ = 'is_allowed_to_edit'
     def edit_anonymous(self, context):
-        value = context.get_form_value('ikaaro:website_is_open', default=False)
+        value = context.get_form_value('website_is_open', type=Boolean,
+                                       default=False)
         self.set_property('website_is_open', value)
 
         return context.come_back(MSG_CHANGES_SAVED)
@@ -357,9 +358,9 @@ class WebSite(RoleAware, Folder):
         return self.get_property('website_is_open')
 
 
-    register_fields = [('ikaaro:firstname', True),
-                       ('ikaaro:lastname', True),
-                       ('ikaaro:email', True)]
+    register_fields = [('firstname', True, Unicode),
+                       ('lastname', True, Unicode),
+                       ('email', True, Email)]
 
 
     register_form__access__ = 'is_allowed_to_register'
@@ -373,16 +374,16 @@ class WebSite(RoleAware, Folder):
 
     register__access__ = 'is_allowed_to_register'
     def register(self, context):
-        keep = ['ikaaro:firstname', 'ikaaro:lastname', 'ikaaro:email']
+        keep = ['firstname', 'lastname', 'email']
         # Check input data
         error = context.check_form_input(self.register_fields)
         if error is not None:
             return context.come_back(error, keep=keep)
 
         # Get input data
-        firstname = context.get_form_value('ikaaro:firstname').strip()
-        lastname = context.get_form_value('ikaaro:lastname').strip()
-        email = context.get_form_value('ikaaro:email').strip()
+        firstname = context.get_form_value('firstname', type=Unicode).strip()
+        lastname = context.get_form_value('lastname', type=Unicode).strip()
+        email = context.get_form_value('email', type=Email).strip()
 
         # Do we already have a user with that email?
         root = context.root
@@ -621,8 +622,10 @@ class WebSite(RoleAware, Folder):
 
     ########################################################################
     # Contact
-    contact_fields = [('to', True), ('from', True, Email), ('subject', True),
-                      ('body', True)]
+    contact_fields = [('to', True, String),
+                      ('from', True, Email),
+                      ('subject', True, String),
+                      ('body', True, String)]
 
 
     contact_form__access__ = True
