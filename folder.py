@@ -496,7 +496,7 @@ class Folder(DBObject):
             image = self.get_object(selected_image)
             selected = {}
             selected['title_or_name'] = image.get_title()
-            selected['description'] = image.get_property('dc:description')
+            selected['description'] = image.get_property('description')
             selected['url'] = '%s/;%s' % (image.name, image.get_firstview())
             selected['preview'] = '%s/;icon48?height=320&width=320' \
                                   % image.name

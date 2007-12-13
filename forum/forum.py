@@ -55,7 +55,7 @@ class Forum(Folder):
         # Namespace
         namespace = {}
         namespace['title'] = self.get_title()
-        namespace['description'] = self.get_property('dc:description')
+        namespace['description'] = self.get_property('description')
         # Namespace / Threads
         accept_language = context.accept_language
         users = self.get_object('/users')
@@ -71,7 +71,7 @@ class Forum(Folder):
                 'author': author.get_title(),
                 'date': format_datetime(message.get_mtime(), accept_language),
                 'comments': len(posts) - 1,
-##                'description': thread.get_property('dc:description'),
+##                'description': thread.get_property('description'),
             })
         namespace['threads'].sort(key=itemgetter('date'), reverse=True)
 

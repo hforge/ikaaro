@@ -555,8 +555,7 @@ class Tracker(Folder):
                 title = user_issue['title']
                 user_issues.append('#%s - %s - %s' %(name, title, href))
             body = template % (user_title, comment, '\n'.join(user_issues))
-            to = root.get_user(user_id)
-            to_addr = to.get_property('ikaaro:email')
+            to_addr = root.get_user(user_id).get_property('email')
             root.send_email(to_addr, subject, text=body)
 
         # Redirect on the new search

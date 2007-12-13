@@ -106,8 +106,8 @@ class WorkflowAware(BaseWorkflowAware):
             return None
 
         dates = []
-        for transition in self.get_property('ikaaro:wf_transition'):
-            date = transition.get(('dc', 'date'))
+        for transition in self.get_property('wf_transition'):
+            date = transition.get('date')
             # Be robust
             if date is None:
                 continue
@@ -144,15 +144,12 @@ class WorkflowAware(BaseWorkflowAware):
         namespace['transitions'] = transitions
         # Workflow history
         transitions = []
-        for transition in self.get_property('ikaaro:wf_transition'):
-            date = transition[('dc', 'date')].strftime('%Y-%m-%d %H:%M')
-            comments = transition[(None, 'comments')]
-            # XXX The property comments should be a unicode string
-            comments = unicode(comments, 'utf-8')
-            transitions.append({'title': transition[(None, 'name')],
-                                'date': date,
-                                'user': transition[(None, 'user')],
-                                'comments': comments})
+        for transition in self.get_property('wf_transition'):
+            transitions.append(
+                {'title': transition['name'],
+                 'date': transition['date'].strftime('%Y-%m-%d %H:%M'),
+                 'user': transition['user'],
+                 'comments': transition['comments']})
         transitions.reverse()
         namespace['history'] = transitions
 
@@ -163,19 +160,19 @@ class WorkflowAware(BaseWorkflowAware):
     edit_state__access__ = 'is_allowed_to_edit'
     def edit_state(self, context):
         transition = context.get_form_value('transition')
-        comments = context.get_form_value('comments')
         # Check input data
         if transition is None:
             return context.come_back(u'A transition must be selected.')
 
         # Keep workflow history
-        property = {('dc', 'date'): datetime.now(),
-                    (None, 'user'): context.user.name,
-                    (None, 'name'): transition,
-                    (None, 'comments'): comments}
-
-        self.set_property('ikaaro:wf_transition', property)
+        comments = context.get_form_value('comments', type=Unicode)
+        property = {'date': datetime.now(),
+                    'user': context.user.name,
+                    'name': transition,
+                    'comments': comments}
+        self.set_property('wf_transition', property)
         # Change the state, through the itools.workflow way
         self.do_trans(transition)
+
         # Comeback
         return context.come_back(u'Transition done.')

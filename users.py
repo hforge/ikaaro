@@ -90,10 +90,10 @@ class User(AccessControl, Folder):
 
     def get_catalog_values(self):
         values = Folder.get_catalog_values(self)
-        values['email'] = self.get_property('ikaaro:email')
+        values['email'] = self.get_property('email')
         values['username'] = self.get_login_name()
-        values['firstname'] = self.get_property('ikaaro:firstname')
-        values['lastname'] = self.get_property('ikaaro:lastname')
+        values['firstname'] = self.get_property('firstname')
+        values['lastname'] = self.get_property('lastname')
         return values
 
 
@@ -105,8 +105,8 @@ class User(AccessControl, Folder):
     # API
     ########################################################################
     def get_title(self, language=None):
-        firstname = self.get_property('ikaaro:firstname')
-        lastname = self.get_property('ikaaro:lastname')
+        firstname = self.get_property('firstname')
+        lastname = self.get_property('lastname')
         if firstname:
             if lastname:
                 return '%s %s' % (firstname, lastname)
@@ -118,26 +118,26 @@ class User(AccessControl, Folder):
 
     def get_login_name(self):
         # FIXME Check first the username (for compatibility with 0.14)
-        username = self.get_property('ikaaro:username')
+        username = self.get_property('username')
         if username:
             return username
-        return self.get_property('ikaaro:email')
+        return self.get_property('email')
 
 
     def set_password(self, password):
         crypted = crypt_password(password)
-        self.set_property('ikaaro:password', crypted)
+        self.set_property('password', crypted)
 
 
     def authenticate(self, password):
-        if self.get_property('ikaaro:user_must_confirm'):
+        if self.get_property('user_must_confirm'):
             return False
         # Is password crypted?
-        if password == self.get_property('ikaaro:password'):
+        if password == self.get_property('password'):
             return True
         # Is password clear?
         crypted = crypt_password(password)
-        return crypted == self.get_property('ikaaro:password')
+        return crypted == self.get_property('password')
 
 
     def get_groups(self):
@@ -198,7 +198,7 @@ class User(AccessControl, Folder):
         confirm_url = deepcopy(context.uri)
         path = '/users/%s/;confirm_registration_form' % self.name
         confirm_url.path = Path(path)
-        key = self.get_property('ikaaro:user_must_confirm')
+        key = self.get_property('user_must_confirm')
         confirm_url.query = {'key': key}
         body = Template(body).substitute({'confirm_url': str(confirm_url)})
         context.root.send_email(email, subject, text=body)
@@ -207,7 +207,7 @@ class User(AccessControl, Folder):
     confirm_registration_form__access__ = True
     def confirm_registration_form(self, context):
         # Check register key
-        must_confirm = self.get_property('ikaaro:user_must_confirm')
+        must_confirm = self.get_property('user_must_confirm')
         if (must_confirm is None
                 or context.get_form_value('key') != must_confirm):
             return self.gettext(u"Bad key.").encode('utf-8')
@@ -225,7 +225,7 @@ class User(AccessControl, Folder):
                            ('newpass2', True)]
 
         # Check register key
-        must_confirm = self.get_property('ikaaro:user_must_confirm')
+        must_confirm = self.get_property('user_must_confirm')
         if context.get_form_value('key') != must_confirm:
             return self.gettext(u"Bad key.").encode('utf-8')
 
@@ -242,7 +242,7 @@ class User(AccessControl, Folder):
 
         # Set user
         self.set_password(password)
-        self.del_property('ikaaro:user_must_confirm')
+        self.del_property('user_must_confirm')
 
         # Set cookie
         self.set_auth_cookie(context, password)
@@ -286,7 +286,7 @@ class User(AccessControl, Folder):
 
         # Languages
         languages = []
-        user_language = self.get_property('ikaaro:user_language')
+        user_language = self.get_property('user_language')
         for language_code in root.get_available_languages():
             languages.append({'code': language_code,
                               'name': get_language_name(language_code),
@@ -299,8 +299,8 @@ class User(AccessControl, Folder):
 
     edit__access__ = 'is_allowed_to_edit'
     def edit(self, context):
-        for key in ['ikaaro:user_language']:
-            self.set_property(key, context.get_form_value(key))
+        value = context.get_form_value('ikaaro:user_language')
+        self.set_property('user_language', value)
 
         return context.come_back(u'Application preferences changed.')
 
@@ -397,8 +397,8 @@ class User(AccessControl, Folder):
             return context.come_back(u"Passwords mismatch, please try again.")
 
         # Clear confirmation key
-        if self.has_property('ikaaro:user_must_confirm'):
-            self.del_property('ikaaro:user_must_confirm')
+        if self.has_property('user_must_confirm'):
+            self.del_property('user_must_confirm')
 
         # Set password
         self.set_password(newpass)
@@ -487,7 +487,7 @@ class UserFolder(Folder):
         user = cls.make_object(cls, self, user_id)
         # Set the email and paswword
         if email is not None:
-            user.set_property('ikaaro:email', email)
+            user.set_property('email', email)
             user.set_property('dc:title', email, language='en')
         if password is not None:
             user.set_password(password)

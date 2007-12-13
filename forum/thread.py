@@ -89,7 +89,7 @@ class Thread(Folder):
         # The namespace
         namespace = {}
         namespace['title'] = self.get_title()
-        namespace['description'] = self.get_property('dc:description')
+        namespace['description'] = self.get_property('description')
         namespace['messages'] = []
         for message in self.get_posts():
             author_id = message.get_property('owner')

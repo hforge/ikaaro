@@ -207,8 +207,7 @@ class Issue(Folder, VersioningAware):
             body += modifications
         # Notify / Send
         for to_addr in to_addrs:
-            to_addr = users.get_object(to_addr)
-            to_addr = to_addr.get_property('ikaaro:email')
+            to_addr = users.get_object(to_addr).get_property('email')
             root.send_email(to_addr, subject, text=body)
 
 
@@ -258,8 +257,8 @@ class Issue(Folder, VersioningAware):
         if last_user and last_user!=new_user:
             last_user = root.get_user(last_user)
             if last_user:
-                last_user = last_user.get_property('ikaaro:email')
-            new_user = root.get_user(new_user).get_property('ikaaro:email')
+                last_user = last_user.get_property('email')
+            new_user = root.get_user(new_user).get_property('email')
             title = self.gettext(u'Assigned to')
             modifications.append(template  %(title, last_user, new_user))
 

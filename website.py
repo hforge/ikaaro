@@ -155,7 +155,7 @@ class WebSite(RoleAware, Folder):
     # API
     ########################################################################
     def get_default_language(self):
-        return self.get_property('ikaaro:website_languages')[0]
+        return self.get_property('website_languages')[0]
 
 
     def before_traverse(self, context, min=Decimal('0.000001'),
@@ -176,7 +176,7 @@ class WebSite(RoleAware, Folder):
             if language is not None:
                 accept.set(language, 2.0)
         else:
-            language = user.get_property('ikaaro:user_language')
+            language = user.get_property('user_language')
             accept.set(language, 2.0)
 
 
@@ -192,7 +192,7 @@ class WebSite(RoleAware, Folder):
     virtual_hosts_form__sublabel__ = u'Virtual Hosts'
     def virtual_hosts_form(self, context):
         namespace = {}
-        vhosts = self.get_property('ikaaro:vhosts')
+        vhosts = self.get_property('vhosts')
         namespace['vhosts'] = '\n'.join(vhosts)
 
         handler = self.get_object('/ui/website/virtual_hosts.xml')
@@ -205,7 +205,7 @@ class WebSite(RoleAware, Folder):
         vhosts = [ x.strip() for x in vhosts.splitlines() ]
         vhosts = [ x for x in vhosts if x ]
         vhosts = tuple(vhosts)
-        self.set_property('ikaaro:vhosts', vhosts)
+        self.set_property('vhosts', vhosts)
 
         return context.come_back(MSG_CHANGES_SAVED)
 
@@ -220,7 +220,7 @@ class WebSite(RoleAware, Folder):
 
         # List of active languages
         languages = []
-        website_languages = self.get_property('ikaaro:website_languages')
+        website_languages = self.get_property('website_languages')
         default_language = website_languages[0]
         for code in website_languages:
             language_name = get_language_name(code)
@@ -250,11 +250,10 @@ class WebSite(RoleAware, Folder):
             return context.come_back(
                 u'You must select one and only one language.')
 
-        website_languages = self.get_property('ikaaro:website_languages')
+        website_languages = self.get_property('website_languages')
         website_languages = [codes[0]] + [ x for x in website_languages
                                            if x != codes[0] ]
-        self.set_property('ikaaro:website_languages',
-                          tuple(website_languages))
+        self.set_property('website_languages', tuple(website_languages))
 
         return context.come_back(u'The default language has been changed.')
 
@@ -262,7 +261,7 @@ class WebSite(RoleAware, Folder):
     remove_languages__access__ = 'is_allowed_to_edit'
     def remove_languages(self, context):
         codes = context.get_form_values('codes')
-        website_languages = self.get_property('ikaaro:website_languages')
+        website_languages = self.get_property('website_languages')
         default_language = website_languages[0]
 
         if default_language in codes:
@@ -270,8 +269,7 @@ class WebSite(RoleAware, Folder):
                 u'You can not remove the default language.')
 
         website_languages = [ x for x in website_languages if x not in codes ]
-        self.set_property('ikaaro:website_languages',
-                          tuple(website_languages))
+        self.set_property('website_languages', tuple(website_languages))
 
         return context.come_back(u'Languages removed.')
 
@@ -282,9 +280,8 @@ class WebSite(RoleAware, Folder):
         if not code:
             return context.come_back(u'You must choose a language')
 
-        website_languages = self.get_property('ikaaro:website_languages')
-        self.set_property('ikaaro:website_languages',
-                          website_languages + (code,))
+        website_languages = self.get_property('website_languages')
+        self.set_property('website_languages', website_languages + (code,))
 
         return context.come_back(u'Language added.')
 
@@ -298,7 +295,7 @@ class WebSite(RoleAware, Folder):
         # Build the namespace
         namespace = {}
         # Intranet or Extranet
-        is_open = self.get_property('ikaaro:website_is_open')
+        is_open = self.get_property('website_is_open')
         namespace['is_open'] = is_open
         namespace['is_closed'] = not is_open
 
@@ -308,9 +305,8 @@ class WebSite(RoleAware, Folder):
 
     edit_anonymous__access__ = 'is_allowed_to_edit'
     def edit_anonymous(self, context):
-        # Boolean properties
-        for name in ['ikaaro:website_is_open']:
-            self.set_property(name, context.get_form_value(name, False))
+        value = context.get_form_value('ikaaro:website_is_open', default=False)
+        self.set_property('website_is_open', value)
 
         return context.come_back(MSG_CHANGES_SAVED)
 
@@ -322,7 +318,7 @@ class WebSite(RoleAware, Folder):
     contact_options_form__sublabel__ = u'Contact'
     def contact_options_form(self, context):
         # Find out the contacts
-        contacts = self.get_property('ikaaro:contacts')
+        contacts = self.get_property('contacts')
 
         # Build the namespace
         users = self.get_object('/users')
@@ -331,7 +327,7 @@ class WebSite(RoleAware, Folder):
         namespace['contacts'] = []
         for username in users.get_usernames():
             user = users.get_object(username)
-            email = user.get_property('ikaaro:email')
+            email = user.get_property('email')
             if not email:
                 continue
             namespace['contacts'].append(
@@ -351,7 +347,7 @@ class WebSite(RoleAware, Folder):
     def edit_contact_options(self, context):
         contacts = context.get_form_values('contacts')
         contacts = tuple(contacts)
-        self.set_property('ikaaro:contacts', contacts)
+        self.set_property('contacts', contacts)
 
         return context.come_back(MSG_CHANGES_SAVED)
 
@@ -359,7 +355,7 @@ class WebSite(RoleAware, Folder):
     ########################################################################
     # Register
     def is_allowed_to_register(self, user, object):
-        return self.get_property('ikaaro:website_is_open')
+        return self.get_property('website_is_open')
 
 
     register_fields = [('ikaaro:firstname', True),
@@ -396,21 +392,21 @@ class WebSite(RoleAware, Folder):
         if results.get_n_documents():
             user = results.get_documents()[0]
             user = users.get_object(user.name)
-            if not user.has_property('ikaaro:user_must_confirm'):
+            if not user.has_property('user_must_confirm'):
                 message = u'There is already an active user with that email.'
                 return context.come_back(message, keep=keep)
         else:
             # Add the user
             user = users.set_user(email, None)
-            user.set_property('ikaaro:firstname', firstname, language='en')
-            user.set_property('ikaaro:lastname', lastname, language='en')
+            user.set_property('firstname', firstname, language='en')
+            user.set_property('lastname', lastname, language='en')
             # Set the role
             default_role = self.__roles__[0]['name']
             self.set_user_role(user.name, default_role)
 
         # Send confirmation email
         key = generate_password(30)
-        user.set_property('ikaaro:user_must_confirm', key)
+        user.set_property('user_must_confirm', key)
         user.send_confirmation(context, email)
 
         # Bring the user to the login form
@@ -463,7 +459,7 @@ class WebSite(RoleAware, Folder):
         user = root.get_object('users/%s' % brain.name)
 
         # Check the user is active
-        if user.get_property('ikaaro:user_must_confirm'):
+        if user.get_property('user_must_confirm'):
             message = u'The user "$username" is not active.'
             return context.come_back(message, username=email, keep=keep)
 
@@ -521,9 +517,9 @@ class WebSite(RoleAware, Folder):
         user = self.get_object('/users/%s' % user.name)
 
         # Send email of confirmation
-        email = user.get_property('ikaaro:email')
+        email = user.get_property('email')
         key = generate_password(30)
-        user.set_property('ikaaro:user_must_confirm', key)
+        user.set_property('user_must_confirm', key)
         user.send_confirmation(context, email)
 
         handler = self.get_object('/ui/website/forgotten_password.xml')
@@ -638,7 +634,7 @@ class WebSite(RoleAware, Folder):
         # To
         users = self.get_object('/users')
         namespace['contacts'] = []
-        for name in self.get_property('ikaaro:contacts'):
+        for name in self.get_property('contacts'):
             user = users.get_object(name)
             title = user.get_title()
             namespace['contacts'].append({'name': name, 'title': title,
@@ -648,7 +644,7 @@ class WebSite(RoleAware, Folder):
         if namespace['from']['value'] is None:
             user = context.user
             if user is not None:
-                namespace['from']['value'] = user.get_property('ikaaro:email')
+                namespace['from']['value'] = user.get_property('email')
 
         handler = self.get_object('/ui/website/contact_form.xml')
         return stl(handler, namespace)
@@ -669,7 +665,7 @@ class WebSite(RoleAware, Folder):
 
         # Find out the "to" address
         contact = self.get_object('/users/%s' % contact)
-        contact = contact.get_property('ikaaro:email')
+        contact = contact.get_property('email')
 
         # Send the email
         root = self.get_root()

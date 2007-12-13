@@ -73,14 +73,14 @@ class Multilingual(DBObject):
 
     def get_handlers(self):
         site_root = self.get_site_root()
-        languages = site_root.get_property('ikaaro:website_languages')
+        languages = site_root.get_property('website_languages')
         return [ self.get_handler(language=x) for x in languages ]
 
 
     def rename_handlers(self, new_name):
         old_name = self.name
         extension = self.class_handler.class_extension
-        langs = self.get_site_root().get_property('ikaaro:website_languages')
+        langs = self.get_site_root().get_property('website_languages')
 
         return [ (FileName.encode((old_name, extension, x)),
                   FileName.encode((new_name, extension, x)))

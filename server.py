@@ -201,7 +201,7 @@ class Server(BaseServer):
             sites.append(site)
 
         for site in sites:
-            if hostname in site.get_property('ikaaro:vhosts'):
+            if hostname in site.get_property('vhosts'):
                 return site
 
         return root

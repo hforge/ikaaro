@@ -240,7 +240,7 @@ class Skin(UIFolder):
 
     def get_content_language_menu(self, context):
         site_root = context.object.get_site_root()
-        languages = site_root.get_property('ikaaro:website_languages')
+        languages = site_root.get_property('website_languages')
         content_language = context.get_cookie('language')
         if content_language is None:
             content_language = languages[0]
@@ -432,7 +432,7 @@ class Skin(UIFolder):
 
         if user is None:
             root = context.site_root
-            joinisopen = root.get_property('ikaaro:website_is_open')
+            joinisopen = root.get_property('website_is_open')
             return {'info': None, 'joinisopen': joinisopen}
 
         home = '/users/%s/;%s' % (user.name, user.get_firstview())
@@ -536,13 +536,13 @@ class Skin(UIFolder):
 
         meta = []
         # Set description
-        value, language = here.get_property_and_language('dc:description')
+        value, language = here.get_property_and_language('description')
         if value:
             meta.append({'name': 'description', 'lang': language,
                          'content': value})
         # Set keywords for all languages
-        for language in root.get_property('ikaaro:website_languages'):
-            value = here.get_property('dc:subject', language).strip()
+        for language in root.get_property('website_languages'):
+            value = here.get_property('subject', language).strip()
             if value:
                 meta.append({'name': 'keywords', 'lang': language,
                              'content': value})

@@ -57,28 +57,23 @@ class VersioningAware(object):
             if user is not None:
                 username = user.name
 
-        property = {
-            (None, 'user'): username,
-            ('dc', 'date'): datetime.now(),
-            (None, 'size'): str(self.get_size()),
-        }
-
-        self.metadata.set_property('ikaaro:history', property)
+        property = {'user': username,
+                    'date': datetime.now(),
+                    'size': str(self.get_size())}
+        self.metadata.set_property('history', property)
 
 
     def get_revisions(self, context):
         accept = context.accept_language
         revisions = []
 
-        for revision in self.get_property('ikaaro:history'):
-            username = revision[(None, 'user')]
-            date = revision[('dc', 'date')]
-            size = revision[(None, 'size')]
+        for revision in self.get_property('history'):
+            date = revision['date']
             revisions.append({
-                'username': username,
+                'username': revision['user'],
                 'date': format_datetime(date, accept=accept),
                 'sort_date': date,
-                'size': size})
+                'size': revision['size']})
 
         revisions.sort(key=itemgetter('sort_date'), reverse=True)
         return revisions

@@ -46,19 +46,18 @@ class OrderAware(object):
             default mode : mixed
         """
         orderable_classes = self.orderable_classes or self.__class__
-        ordered_names = self.get_property('ikaaro:order')
+        ordered_names = self.get_property('order')
         real_names = [f.name for f in self.search_objects()
                 if isinstance(f, orderable_classes)]
 
         ordered = [f for f in ordered_names if f in real_names]
         if mode == 'ordered':
             return ordered
-        else:
-            unordered = [f for f in real_names if f not in ordered_names]
-            if mode == 'all':
-                return ordered, unordered
-            else:
-                return ordered + unordered
+
+        unordered = [f for f in real_names if f not in ordered_names]
+        if mode == 'all':
+            return ordered, unordered
+        return ordered + unordered
 
 
     def get_ordered_objects(self, objects, mode='mixed'):
@@ -153,8 +152,8 @@ class OrderAware(object):
             idx = temp.index(name)
             temp.remove(name)
             temp.insert(idx - 1, name)
+        self.set_property('order', tuple(temp))
 
-        self.set_property('ikaaro:order', tuple(temp))
         message = u"Objects ordered up."
         return context.come_back(message)
 
@@ -177,8 +176,8 @@ class OrderAware(object):
             idx = temp.index(name)
             temp.remove(name)
             temp.insert(idx + 1, name)
+        self.set_property('order', tuple(temp))
 
-        self.set_property('ikaaro:order', tuple(temp))
         message = u"Objects ordered down."
         return context.come_back(message)
 
@@ -196,10 +195,9 @@ class OrderAware(object):
             message = u"Objects already on top."
             return context.come_back(message)
 
-        temp = names + [name for name in ordered_names
-                if name not in names]
+        temp = names + [name for name in ordered_names if name not in names]
+        self.set_property('order', tuple(temp))
 
-        self.set_property('ikaaro:order', tuple(temp))
         message = u"Objects ordered on top."
         return context.come_back(message)
 
@@ -217,10 +215,9 @@ class OrderAware(object):
             message = u"Objects already on bottom."
             return context.come_back(message)
 
-        temp = [name for name in ordered_names
-                if name not in names] + names
+        temp = [name for name in ordered_names if name not in names] + names
+        self.set_property('order', tuple(temp))
 
-        self.set_property('ikaaro:order', tuple(temp))
         message = u"Objects ordered on bottom."
         return context.come_back(message)
 
@@ -235,8 +232,8 @@ class OrderAware(object):
 
         ordered_names, unordered_names = self.get_ordered_names('all')
         temp = list(ordered_names) + [name for name in names]
+        self.set_property('order', tuple(temp))
 
-        self.set_property('ikaaro:order', tuple(temp))
         message = u"Objects moved to ordered category."
         return context.come_back(message)
 
@@ -251,9 +248,8 @@ class OrderAware(object):
 
         ordered_names, unordered_names = self.get_ordered_names('all')
 
-        temp = [name for name in ordered_names
-                if name not in names]
+        temp = [ name for name in ordered_names if name not in names ]
+        self.set_property('order', tuple(temp))
 
-        self.set_property('ikaaro:order', tuple(temp))
         message = u"Objects moved to ordered category."
         return context.come_back(message)

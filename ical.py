@@ -339,8 +339,8 @@ class CalendarView(object):
         Example of metadata:
           <timetables>(8,0),(10,0);(10,30),(12,0);(13,30),(17,30)</timetables>
         """
-        if self.has_property('ikaaro:timetables'):
-            return self.get_property('ikaaro:timetables')
+        if self.has_property('timetables'):
+            return self.get_property('timetables')
 
         # From class value
         timetables = []
@@ -777,8 +777,8 @@ class CalendarView(object):
         namespace['timetables'] = []
 
         # Show current timetables only if previously set in metadata
-        if self.has_property('ikaaro:timetables'):
-            timetables = self.get_property('ikaaro:timetables')
+        if self.has_property('timetables'):
+            timetables = self.get_property('timetables')
             for index, (start, end) in enumerate(timetables):
                 ns = {}
                 ns['index'] = index
@@ -794,8 +794,8 @@ class CalendarView(object):
     edit_timetables__access__ = True
     def edit_timetables(self, context):
         timetables = []
-        if self.has_property('ikaaro:timetables'):
-            timetables = self.get_property('ikaaro:timetables')
+        if self.has_property('timetables'):
+            timetables = self.get_property('timetables')
 
         # Nothing to change
         if timetables == [] and not context.has_form_value('add'):
@@ -832,7 +832,7 @@ class CalendarView(object):
             new_timetables.sort()
             message = u'Timetables updated successfully.'
 
-        self.set_property('ikaaro:timetables', tuple(new_timetables))
+        self.set_property('timetables', tuple(new_timetables))
         return context.come_back(message=message)
 
 

@@ -372,9 +372,9 @@ class DBObject(CatalogAware, Node, DomainAware):
         if isinstance(self, VersioningAware):
             document['is_version_aware'] = True
             # Last Author (used in the Last Changes view)
-            history = self.get_property('ikaaro:history')
+            history = self.get_property('history')
             if history:
-                user_id = history[-1][(None, 'user')]
+                user_id = history[-1]['user']
                 users = self.get_object('/users')
                 try:
                     user = users.get_object(user_id)
@@ -597,7 +597,7 @@ class DBObject(CatalogAware, Node, DomainAware):
             context = get_context()
 
         site_root = self.get_site_root()
-        languages = site_root.get_property('ikaaro:website_languages')
+        languages = site_root.get_property('website_languages')
         # Check cookie
         language = context.get_cookie('language')
         if language in languages:
@@ -640,7 +640,7 @@ class DBObject(CatalogAware, Node, DomainAware):
         language_name = get_language_name(language)
         namespace['language_name'] = self.gettext(language_name)
         # Title, Description, Subject
-        for name in 'dc:title', 'dc:description', 'dc:subject':
+        for name in 'dc:title', 'description', 'subject':
             namespace[name] = self.get_property(name, language=language)
 
         handler = self.get_object('/ui/base/edit_metadata.xml')
@@ -654,8 +654,8 @@ class DBObject(CatalogAware, Node, DomainAware):
         subject = context.get_form_value('dc:subject')
         language = self.get_content_language(context)
         self.set_property('dc:title', title, language=language)
-        self.set_property('dc:description', description, language=language)
-        self.set_property('dc:subject', subject, language=language)
+        self.set_property('description', description, language=language)
+        self.set_property('subject', subject, language=language)
 
         return context.come_back(MSG_CHANGES_SAVED)
 
