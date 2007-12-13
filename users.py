@@ -23,7 +23,7 @@ from string import Template
 
 # Import from itools
 from itools.catalog import EqQuery, AndQuery, OrQuery, TextField, KeywordField
-from itools.datatypes import Boolean, Email, String, Tokens, Unicode
+from itools.datatypes import Email, String, Unicode
 from itools.handlers import Folder as BaseFolder
 from itools.i18n import get_language_name
 from itools.stl import stl
@@ -67,8 +67,6 @@ class User(AccessControl, Folder):
             'email': Email,
             'password': Password,
             'user_language': String(default='en'),
-            'website_is_open': Boolean(default=False),
-            'website_languages': Tokens(default=('en',)),
             'user_must_confirm': String,
             # Backwards compatibility
             'username': String,

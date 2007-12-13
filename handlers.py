@@ -127,8 +127,8 @@ class Metadata(File):
                 if n == 0:
                     if name != 'metadata':
                         raise ParserError, error1 % (name, line)
-                    self.format = attributes.get('format')
-                    self.version = attributes.get('version')
+                    self.format = attributes.get((None, 'format'))
+                    self.version = attributes.get((None, 'version'))
                     if self.format is None:
                         schema = {}
                     else:
@@ -142,12 +142,12 @@ class Metadata(File):
                     datatype = schema.get(name, String)
                 else:
                     datatype = stack[-1][1]
-                    if issubclass(datatype, Record):
+                    if is_datatype(datatype, Record):
                         datatype = datatype.schema.get(name, String)
                     else:
                         raise ParserError, error1 % (name, line)
 
-                if issubclass(datatype, Record):
+                if is_datatype(datatype, Record):
                     stack.append((name, datatype, {}))
                 else:
                     stack.append((name, datatype, ''))
@@ -162,7 +162,7 @@ class Metadata(File):
                     break
 
                 # Decode value
-                if issubclass(datatype, Record):
+                if is_datatype(datatype, Record):
                     pass
                 elif is_datatype(datatype, Unicode):
                     value = datatype.decode(value, 'utf-8')
@@ -219,7 +219,7 @@ class Metadata(File):
             # Multiple values
             elif isinstance(value, list):
                 # Record
-                if issubclass(datatype, Record):
+                if is_datatype(datatype, Record):
                     aux = datatype.schema
                     for value in value:
                         lines.append('  <%s>\n' % name)

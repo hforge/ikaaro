@@ -22,7 +22,7 @@ from decimal import Decimal
 
 # Import from itools
 from itools.catalog import EqQuery, OrQuery, AndQuery, TextField
-from itools.datatypes import Email, Integer, String, Tokens, Unicode
+from itools.datatypes import Boolean, Email, Integer, String, Tokens, Unicode
 from itools.handlers import checkid
 from itools.i18n import get_language_name, get_languages
 from itools.stl import stl
@@ -65,10 +65,6 @@ class WebSite(RoleAware, Folder):
 
     __fixed_handlers__ = ['skin', 'index']
 
-    __roles__ = RoleAware.__roles__ + [
-        # Local Administrator
-        {'name': 'ikaaro:admins', 'title': u'Admin'}]
-
 
     def _get_object(self, name):
         if name == 'ui':
@@ -83,16 +79,18 @@ class WebSite(RoleAware, Folder):
         return {
             'vhosts': Tokens(default=()),
             'contacts': Tokens(default=()),
+            'website_languages': Tokens(default=('en',)),
             # Base
             'owner': String,
             'title': Unicode,
             'description': Unicode,
             'subject': Unicode,
             # RoleAware
-            'admins': Tokens(default=()),
             'guests': Tokens(default=()),
             'members': Tokens(default=()),
             'reviewers': Tokens(default=()),
+            'admins': Tokens(default=()),
+            'website_is_open': Boolean(default=False),
         }
 
 

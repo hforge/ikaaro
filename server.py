@@ -95,8 +95,7 @@ class Server(BaseServer):
         # Find out the root class
         path = target.resolve2('database/.metadata')
         metadata = database.get_handler(path, cls=Metadata)
-        format = metadata.get_property('format')
-        cls = get_object_class(format)
+        cls = get_object_class(metadata.format)
         # Build the root object
         root = cls(metadata)
         root.name = root.class_title

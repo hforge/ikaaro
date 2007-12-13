@@ -143,8 +143,7 @@ class Folder(DBObject):
     def _get_object(self, name):
         folder = self.handler
         metadata = folder.get_handler('%s.metadata' % name)
-        format = metadata.get_property('format')
-        cls = get_object_class(format)
+        cls = get_object_class(metadata.format)
         return cls(metadata)
 
 
@@ -239,21 +238,20 @@ class Folder(DBObject):
 
 
     def search_objects(self, path='.', format=None, state=None,
-                        object_class=None):
-        container = self.get_object(path)
-        for object in container.get_objects():
-            if object_class is not None:
-                if not isinstance(object , object_class):
-                    continue
-
-            get_property = object.get_property
-            if format is None or get_property('format') == format:
-                if state is None:
-                    yield object
-                else:
-                    object_state = get_property('state')
-                    if object_state == state:
-                        yield object
+                       object_class=None):
+        for object in self.get_objects(path):
+            # Filter by base class
+            cls = object_class
+            if cls is not None and not isinstance(object, cls):
+                continue
+            # Filter by class_id
+            if format is not None and object.class_id != format:
+                continue
+            # Filter by workflow state
+            if state is not None and object.get_property('state') != state:
+                continue
+            # All filters passed
+            yield object
 
 
     #######################################################################
@@ -510,7 +508,7 @@ class Folder(DBObject):
                 width, height = size
             selected['width'] = width
             selected['height'] = height
-            selected['format'] = image.get_property('format')
+            selected['format'] = image.class_id
             if selected_index == 0:
                 selected['previous'] = None
             else:

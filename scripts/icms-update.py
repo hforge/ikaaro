@@ -68,7 +68,7 @@ def update(parser, options, target):
             continue
 
         # Skip up-to-date objects
-        obj_version = object.get_property('version')
+        obj_version = object.metadata.version
         cls_version = object.class_version
         if obj_version == cls_version:
             continue
@@ -86,7 +86,7 @@ def update(parser, options, target):
 
         # Update
         for next_version in object.get_next_versions():
-            obj_version = object.get_property('version')
+            obj_version = object.metadata.version
             # Ask
             message = '- Update from %s to %s (y/N)? ' % (obj_version,
                                                           next_version)

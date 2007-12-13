@@ -316,21 +316,17 @@ class DBObject(CatalogAware, Node, DomainAware):
         from access import RoleAware
         from file import File
 
-        name = self.name
         abspath = self.get_canonical_path()
-        get_property = self.get_property
-        title = self.get_title()
-
         mtime = self.get_mtime()
         if mtime is None:
             mtime = datetime.now()
 
         document = {
-            'name': name,
+            'name': self.name,
             'abspath': str(abspath),
-            'format': get_property('format'),
-            'title': title,
-            'owner': get_property('owner'),
+            'format': self.class_id,
+            'title': self.get_title(),
+            'owner': self.get_property('owner'),
             'mtime': mtime.strftime('%Y%m%d%H%M%S')}
 
         # Full text
@@ -433,7 +429,7 @@ class DBObject(CatalogAware, Node, DomainAware):
     ########################################################################
     def get_next_versions(self):
         cls_version = self.class_version
-        obj_version = self.get_property('version')
+        obj_version = self.metadata.version
         # Set zero version if the object does not have a version
         if obj_version is None:
             obj_version = '00000000'

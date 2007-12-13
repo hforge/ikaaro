@@ -18,7 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.datatypes import Email, Integer, Tokens, Unicode
+from itools.datatypes import Boolean, Email, Integer, Tokens, Unicode
 from itools.stl import stl
 from itools.uri import get_reference
 from itools.web import AccessControl as BaseAccessControl
@@ -37,11 +37,11 @@ class AccessControl(BaseAccessControl):
             return False
         # WebSite admin?
         root = object.get_site_root()
-        if root.has_user_role(user.name, 'ikaaro:admins'):
+        if root.has_user_role(user.name, 'admins'):
             return True
         # Global admin?
         root = object.get_root()
-        return root.has_user_role(user.name, 'ikaaro:admins')
+        return root.has_user_role(user.name, 'admins')
 
 
     def is_allowed_to_view(self, user, object):
@@ -96,19 +96,21 @@ class RoleAware(AccessControl):
     # To override
     #########################################################################
     __roles__ = [
-        {'name': 'ikaaro:guests', 'title': u"Guest"},
-        {'name': 'ikaaro:members', 'title': u"Member"},
-        {'name': 'ikaaro:reviewers', 'title': u"Reviewer"},
+        {'name': 'guests', 'title': u"Guest"},
+        {'name': 'members', 'title': u"Member"},
+        {'name': 'reviewers', 'title': u"Reviewer"},
+        {'name': 'admins', 'title': u'Admin'},
     ]
 
 
     @classmethod
     def get_metadata_schema(cls):
         return {
-            'admins': Tokens(default=()),
             'guests': Tokens(default=()),
             'members': Tokens(default=()),
             'reviewers': Tokens(default=()),
+            'admins': Tokens(default=()),
+            'website_is_open': Boolean(default=False),
         }
 
 
@@ -118,12 +120,12 @@ class RoleAware(AccessControl):
     def is_allowed_to_view(self, user, object):
         # Get the variables to resolve the formula
         # Intranet or Extranet
-        is_open = self.get_property('ikaaro:website_is_open')
+        is_open = self.get_property('website_is_open')
         # The role of the user
         if user is None:
             role = None
         elif self.is_admin(user, object):
-            role = 'ikaaro:admins'
+            role = 'admins'
         else:
             role = self.get_user_role(user.name)
         # The state of the object
@@ -139,9 +141,9 @@ class RoleAware(AccessControl):
                 return True
             return role is not None
         # Intranet
-        if role in ('ikaaro:admins', 'ikaaro:reviewers', 'ikaaro:members'):
+        if role in ('admins', 'reviewers', 'members'):
             return True
-        elif role == 'ikaaro:guests':
+        elif role == 'guests':
             return state == 'public'
         return False
 
@@ -156,11 +158,11 @@ class RoleAware(AccessControl):
             return True
 
         # Reviewers too
-        if self.has_user_role(user.name, 'ikaaro:reviewers'):
+        if self.has_user_role(user.name, 'reviewers'):
             return True
 
         # Members only can touch not-yet-published documents
-        if self.has_user_role(user.name, 'ikaaro:members'):
+        if self.has_user_role(user.name, 'members'):
             if isinstance(object, WorkflowAware):
                 state = object.workflow_state
                 # Anybody can see public objects
@@ -180,8 +182,7 @@ class RoleAware(AccessControl):
             return True
 
         # Reviewers too
-        return self.has_user_role(user.name, 'ikaaro:reviewers',
-                                  'ikaaro:members')
+        return self.has_user_role(user.name, 'reviewers', 'members')
 
 
     def is_allowed_to_trans(self, user, object, name):
@@ -195,11 +196,11 @@ class RoleAware(AccessControl):
 
         # Reviewers can do everything
         username = user.name
-        if self.has_user_role(username, 'ikaaro:reviewers'):
+        if self.has_user_role(username, 'reviewers'):
             return True
 
         # Members only can request and retract
-        if self.has_user_role(username, 'ikaaro:members'):
+        if self.has_user_role(username, 'members'):
             return name in ('request', 'unrequest')
 
         return False
@@ -430,7 +431,7 @@ class RoleAware(AccessControl):
         namespace = {}
         namespace['id'] = user_id
         namespace['name'] = user.get_property('dc:title')
-        namespace['email'] = user.get_property('ikaaro:email')
+        namespace['email'] = user.get_property('email')
         namespace['roles'] = self.get_roles_namespace(user_id)
 
         handler = self.get_object('/ui/access/edit_membership_form.xml')
@@ -507,7 +508,7 @@ class RoleAware(AccessControl):
             user_id = user.name
             if password is None:
                 key = generate_password(30)
-                user.set_property('ikaaro:user_must_confirm', key)
+                user.set_property('user_must_confirm', key)
                 # Send confirmation email to activate the account
                 user.send_confirmation(context, email)
         else:

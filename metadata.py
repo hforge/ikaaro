@@ -108,8 +108,6 @@ class Schema(BaseSchema):
         'password': Password,
         'user_theme': String(default='aruni'), # XXX unused
         'user_language': String(default='en'),
-        'website_is_open': Boolean(default=False),
-        'website_languages': Tokens(default=('en',)),
         'user_must_confirm': String,
         # Backwards compatibility
         'username': String,
@@ -123,6 +121,8 @@ class Schema(BaseSchema):
         # Websites
         'vhosts': Tokens(default=()),
         'contacts': Tokens(default=()),
+        'website_is_open': Boolean(default=False),
+        'website_languages': Tokens(default=('en',)),
         # ical
         'timetables': Timetables,
         }

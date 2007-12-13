@@ -34,10 +34,9 @@ def is_instance_up_to_date(target):
 
     # Find out the root class
     metadata = Metadata('%s/database/.metadata' % target)
-    format = metadata.get_property('format')
-    cls = get_object_class(format)
+    cls = get_object_class(metadata.format)
     # Check the version
-    if metadata.get_property('version') < cls.class_version:
+    if metadata.version < cls.class_version:
         return False
 
     # All tests pass

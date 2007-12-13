@@ -29,7 +29,7 @@ from types import GeneratorType
 # Import from itools
 import itools
 from itools import get_abspath
-from itools.datatypes import FileName, QName
+from itools.datatypes import Boolean, Tokens, Unicode
 from itools.handlers import File, ConfigFile, Folder as FolderHandler
 from itools.html import stream_to_str_as_html
 from itools.stl import stl
@@ -84,7 +84,7 @@ class Root(WebSite):
 
 
     __roles__ = [
-        {'name': 'ikaaro:admins', 'title': u'Admin'}]
+        {'name': 'admins', 'title': u'Admin'}]
 
 
     @staticmethod
@@ -104,6 +104,22 @@ class Root(WebSite):
         folder.set_handler('users/0.metadata', user)
         # Return
         return cls(metadata)
+
+
+    @classmethod
+    def get_metadata_schema(cls):
+        return {
+            'vhosts': Tokens(default=()),
+            'contacts': Tokens(default=()),
+            'website_languages': Tokens(default=('en',)),
+            # Base
+            'title': Unicode,
+            'description': Unicode,
+            'subject': Unicode,
+            # RoleAware
+            'admins': Tokens(default=()),
+            'website_is_open': Boolean(default=False),
+        }
 
 
     ########################################################################
@@ -260,7 +276,7 @@ class Root(WebSite):
         if from_addr is None:
             user = context.user
             if user is not None:
-                from_addr = user.get_property('ikaaro:email')
+                from_addr = user.get_property('email')
             if not from_addr:
                 from_addr = server.contact_email
 
