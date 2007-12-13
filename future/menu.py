@@ -34,24 +34,7 @@ from ikaaro.skins import register_skin
 
 # Import from itools
 from itools.datatypes import Boolean, String
-from itools.schemas import register_schema, BaseSchema
 
-
-###########################################################################
-# SCHEMA
-###########################################################################
-class Schema(BaseSchema):
-
-    class_uri = 'http://xml.ikaaro.org/namespaces/metadata-menu'
-    class_prefix = 'menu'
-
-    datatypes = {
-        'link': String,
-        'new_window': Boolean(default=False),
-    }
-
-
-register_schema(Schema)
 
 ###########################################################################
 # Link

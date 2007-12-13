@@ -18,12 +18,14 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
+from base64 import decodestring, encodestring
 from copy import deepcopy
 from string import Template
+from urllib import quote, unquote
 
 # Import from itools
 from itools.catalog import EqQuery, AndQuery, OrQuery, TextField, KeywordField
-from itools.datatypes import Email, String, Unicode
+from itools.datatypes import DataType, Email, String, Unicode
 from itools.handlers import Folder as BaseFolder
 from itools.i18n import get_language_name
 from itools.stl import stl
@@ -32,10 +34,22 @@ from itools.uri import Path
 # Import from ikaaro
 from access import AccessControl
 from folder import Folder
-from metadata import Password
 from messages import *
 from registry import register_object_class, get_object_class
 from utils import crypt_password
+
+
+
+class Password(DataType):
+
+    @staticmethod
+    def decode(data):
+        return decodestring(unquote(data))
+
+
+    @staticmethod
+    def encode(value):
+        return quote(encodestring(value))
 
 
 

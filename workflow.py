@@ -24,7 +24,7 @@ from itools.stl import stl
 from itools.workflow import Workflow, WorkflowAware as BaseWorkflowAware
 
 # Import from ikaaro
-from metadata import Record
+from handlers import Record
 
 
 # Workflow definition

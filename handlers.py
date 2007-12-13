@@ -23,13 +23,11 @@ from time import time
 # Import from itools
 from itools.datatypes import is_datatype, DateTime, String, Unicode, XML
 from itools.handlers import File, TextFile, register_handler_class
-from itools.schemas import get_schema_by_uri
 from itools.web import get_context
 from itools.xml import (XMLNamespace, XMLParser, START_ELEMENT, END_ELEMENT,
     TEXT)
 
 # Import from ikaaro
-from metadata import Record
 from registry import get_object_class
 
 
@@ -69,6 +67,12 @@ class Lock(TextFile):
 
 class ParserError(Exception):
     pass
+
+
+class Record(object):
+
+    default = []
+    schema = {}
 
 
 def get_datatype(format, name):
@@ -114,12 +118,16 @@ class Metadata(File):
         language = None
         stack = []
 
+        # FIXME Backwards compatibility with 0.16, introduced in 0.20
+        namespaces = {}
+
         # Parse
         for type, value, line in XMLParser(file.read()):
             if type == START_ELEMENT:
                 ns_uri, name, attributes = value
+                # FIXME Backwards compatibility with 0.16, introduced in 0.20
                 if ns_uri is not None:
-                    prefix = get_schema_by_uri(ns_uri).class_prefix
+                    prefix = namespaces[ns_uri]
                     name = '%s:%s' % (prefix, name)
 
                 # First tag: <metadata>
@@ -135,6 +143,12 @@ class Metadata(File):
                         cls = get_object_class(self.format)
                         schema = cls.get_metadata_schema()
                     stack.append((name, None, {}))
+                    # FIXME Backwards compatibility with 0.16, introduced in
+                    # 0.20
+                    for ns_uri, name in attributes:
+                        if ns_uri == 'http://www.w3.org/2000/xmlns/':
+                            value = attributes[(ns_uri, name)]
+                            namespaces[value] = name
                     continue
 
                 # Find out datatype

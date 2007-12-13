@@ -23,7 +23,8 @@ from cStringIO import StringIO
 from datetime import datetime, date, time, timedelta
 
 # Import from itools
-from itools.datatypes import Enumerate, Unicode, Date, Integer, is_datatype
+from itools.datatypes import (DataType, Enumerate, Unicode, Date, Integer,
+    is_datatype)
 from itools.handlers import Folder, Property
 from itools.ical import (get_grid_data, icalendar, PropertyValue, DateTime,
                          icalendarTable, Record, Time)
@@ -32,7 +33,6 @@ from itools.stl import stl
 # Import from ikaaro
 from base import DBObject
 from messages import *
-from metadata import Timetables
 from registry import register_object_class
 from table import Multiple, Table
 from text import Text
@@ -96,6 +96,44 @@ def check_timetable_entry(context, key_start, key_end):
         return u'Start time must be earlier than end time.'
     return (start, end)
 
+
+
+class Timetables(DataType):
+    """Timetables are tuples of time objects (start, end) used by cms.ical.
+
+    Example with 3 timetables as saved into metadata:
+        (8,0),(10,0);(10,0),(12,0);(15,30),(17,30)
+
+    Decoded value are:
+        [(time(8,0), time(10,0)), (time(10,0), time(12, 0)),
+         (time(15,30), time(17, 30))]
+    """
+
+    @staticmethod
+    def decode(value):
+        if not value:
+            return ()
+        timetables = []
+        for timetable in value.strip().split(';'):
+            start, end = timetable[1:-1].split('),(')
+            hours, minutes = start.split(',')
+            hours, minutes = int(hours), int(minutes)
+            start = time(hours, minutes)
+            hours, minutes = end.split(',')
+            hours, minutes = int(hours), int(minutes)
+            end = time(hours, minutes)
+            timetables.append((start, end))
+        return tuple(timetables)
+
+
+    @staticmethod
+    def encode(value):
+        timetables = []
+        for start, end in value:
+            start = '(' + str(start.hour) + ',' + str(start.minute) + ')'
+            end = '(' + str(end.hour) + ',' + str(end.minute) + ')'
+            timetables.append(start + ',' + end)
+        return ';'.join(timetables)
 
 
 class Status(Enumerate):
