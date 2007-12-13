@@ -216,6 +216,9 @@ class Metadata(File):
         for name in self.properties:
             value = self.properties[name]
             datatype = schema.get(name, String)
+            # FIXME Backwards compatibility with 0.16, introduced in 0.20
+            if name in ('ikaaro:wf_transition', 'ikaaro:history'):
+                continue
 
             # Multilingual properties
             if isinstance(value, dict):
