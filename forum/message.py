@@ -52,7 +52,7 @@ class Message(WebPage):
         WebPage._make_object(cls, folder, name)
         # The message
         document = build_message(data)
-        folder.set_handler('%s.%s' % (name, language), document)
+        folder.set_handler('%s.xhtml.%s' % (name, language), document)
 
 
     def get_context_menu_base(self):

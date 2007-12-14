@@ -108,13 +108,20 @@ class Thread(Folder):
 
     new_reply__access__ = 'is_allowed_to_edit'
     def new_reply(self, context):
+        # check input
+        data = context.get_form_value('data').strip()
+        if not data:
+            message = (
+              u'Some required fields are missing, or some values are not valid.'
+              u' Please correct them and continue.')
+            return context.come_back(message)
+
         # Find out the name for the new post
         id = self.get_last_post_id()
         name = str(id + 1)
 
         # Post
         language = self.get_content_language()
-        data = context.get_form_value('data')
         cls = self.message_class
         cls.make_object(cls, self, name, data, language)
 
