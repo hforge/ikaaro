@@ -18,6 +18,7 @@
 
 # Import from the Standard Library
 from optparse import OptionParser
+import sys
 
 # Import from itools
 import itools
@@ -43,6 +44,7 @@ def start(optios, target):
         return
 
     print '[%s] Start Mail Spool.' % target
+    sys.stdout.flush()
     spool.start()
 
 

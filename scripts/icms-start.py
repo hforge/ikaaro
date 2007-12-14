@@ -19,7 +19,6 @@
 
 # Import from the Standard Library
 from optparse import OptionParser
-from time import sleep
 from subprocess import Popen, PIPE
 import sys
 from os.path import dirname, join, realpath
@@ -59,8 +58,14 @@ def start(parser, options, target):
         args.append('--address=%s' % options.address)
     args = ' '.join(args)
     p_server = Popen(args, 0, None, stdin, stdout, stderr, shell=True)
-    # Detach (FIXME Output from the child is lost)
+    # Detach
     if options.detach:
+        # Redirect child's stdout to parent's stdout
+        # FIXME Print everything, not just one line (be non-blocking, timeout)
+        # FIXME Do the same for stderr
+        line = p_server.stdout.readline()
+        sys.stdout.write(line)
+        # Detach
         p_server.stdin.close()
         p_server.stdout.close()
         p_server.stderr.close()
@@ -69,8 +74,14 @@ def start(parser, options, target):
     path_icms_start_spool = join(script_path, 'icms-start-spool.py')
     args = '%s %s' % (path_icms_start_spool, target)
     p_spool = Popen(args, 0, None, stdin, stdout, stderr, shell=True)
-    # Detach (FIXME Output from the child is lost)
+    # Detach
     if options.detach:
+        # Redirect child's stdout to parent's stdout
+        # FIXME Print everything, not just one line (be non-blocking, timeout)
+        # FIXME Do the same for stderr
+        line = p_spool.stdout.readline()
+        sys.stdout.write(line)
+        # Detach
         p_spool.stdin.close()
         p_spool.stdout.close()
         p_spool.stderr.close()

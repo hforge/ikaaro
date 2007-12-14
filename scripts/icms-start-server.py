@@ -19,6 +19,7 @@
 
 # Import from the Standard Library
 from optparse import OptionParser
+import sys
 
 # Import from itools
 import itools
@@ -58,6 +59,7 @@ def start(options, target):
     address = server.address or '*'
     port = server.port
     print '[%s] Web Server listens %s:%s' % (target, address, port)
+    sys.stdout.flush()
     server.start()
 
 
