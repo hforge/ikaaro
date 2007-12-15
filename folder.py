@@ -65,7 +65,7 @@ class CopyCookie(DataType):
 class Folder(DBObject):
 
     class_id = 'folder'
-    class_version = '20071119'
+    class_version = '20071215'
     class_layout = {}
     class_title = u'Folder'
     class_description = u'Organize your files and documents with folders.'
@@ -830,9 +830,10 @@ class Folder(DBObject):
     #######################################################################
     # Update
     #######################################################################
-    def update_20071119(self):
+    def update_20071215(self, **kw):
         """Remove empty folders.
         """
+        DBObject.update_20071215(self, **kw)
         if not self.handler.get_handler_names():
             self.parent.handler.del_handler(self.name)
 

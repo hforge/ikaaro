@@ -56,7 +56,7 @@ class Password(DataType):
 class User(AccessControl, Folder):
 
     class_id = 'user'
-    class_version = '20071119'
+    class_version = '20071215'
     class_title = 'User'
     class_icon16 = 'images/User16.png'
     class_icon48 = 'images/User48.png'
@@ -460,15 +460,17 @@ class User(AccessControl, Folder):
     #######################################################################
     # Update
     #######################################################################
-    def update_20071119(self):
-        Folder.update_20071119(self)
+    def update_20071215(self):
+        remove = ['id', 'owner', 'dc:language', 'dc:title', 'ikaaro:history',
+                  'ikaaro:wf_transition', 'ikaaro:user_theme']
+        Folder.update_20071215(self, remove=remove)
 
 
 
 class UserFolder(Folder):
 
     class_id = 'users'
-    class_version = '20071119'
+    class_version = '20071215'
     class_icon16 = 'images/UserFolder16.png'
     class_icon48 = 'images/UserFolder48.png'
     class_views = [['view'],
@@ -557,8 +559,8 @@ class UserFolder(Folder):
     #######################################################################
     # Update
     #######################################################################
-    def update_20071119(self):
-        Folder.update_20071119(self)
+    def update_20071215(self):
+        Folder.update_20071215(self)
 
 
 

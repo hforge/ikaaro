@@ -205,6 +205,8 @@ class Node(BaseNode):
 
 class DBObject(CatalogAware, Node, DomainAware):
 
+    class_version = '20071215'
+
     def __init__(self, metadata):
         self.metadata = metadata
         self._handler = None
@@ -793,4 +795,48 @@ class DBObject(CatalogAware, Node, DomainAware):
 
         handler = self.get_object('/ui/epoz/script_table.xml')
         return handler.to_str()
+
+
+    #######################################################################
+    # Update
+    #######################################################################
+    def update_20071215(self, remove=None, rename=()):
+        metadata = self.metadata
+        properties = metadata.properties
+
+        schema = self.get_metadata_schema()
+
+        metadata.set_changed()
+
+        # Default values
+        if remove is None:
+            remove = ['id', 'owner', 'dc:language', 'ikaaro:history',
+                      'ikaaro:wf_transition', 'ikaaro:user_theme']
+
+        # Version
+        metadata.version = properties['version']
+        del properties['version']
+
+        # Remove
+        for name in remove:
+            if name in properties:
+                del properties[name]
+
+        # Rename (explicit rule)
+        for src, dst in rename:
+            if src in properties:
+                properties[dst] = properties[src]
+                del properties[src]
+
+        # Rename (implicit rule)
+        for name in properties:
+            if ':' in name:
+                new_name = name.split(':', 1)[1]
+                if new_name not in schema:
+                    raise ValueError, 'unexpected property "%s"' % name
+                properties[new_name] = properties[name]
+                del properties[name]
+            else:
+                if name not in schema:
+                    raise ValueError, 'unexpected property "%s"' % name
 

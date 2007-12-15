@@ -63,7 +63,7 @@ itools_target_languages = config.get_value('target_languages')
 class Root(WebSite):
 
     class_id = 'iKaaro'
-    class_version = '20070531'
+    class_version = '20071215'
     class_title = u'iKaaro'
     class_icon16 = 'images/Root16.png'
     class_icon48 = 'images/Root48.png'
@@ -405,6 +405,12 @@ class Root(WebSite):
 
         return context.come_back(u'Groups fixed.')
 
+
+    #######################################################################
+    # Update
+    #######################################################################
+    def update_20071215(self):
+        WebSite.update_20071215(self)
 
 
 ###########################################################################
