@@ -36,7 +36,6 @@ from base import Node, DBObject
 from folder import Folder as DBFolder
 from utils import reduce_string
 from widgets import tree, build_menu
-from registry import register_object_class
 
 
 class UIFile(Node, File):
@@ -105,7 +104,6 @@ class UIFolder(Node, Folder):
 
 class Skin(UIFolder):
 
-    class_id = 'Skin'
     class_title = u'Skin'
     class_icon16 = 'images/Skin16.png'
     class_icon48 = 'images/Skin48.png'
@@ -606,8 +604,6 @@ class Skin(UIFolder):
 
         return ''.join(s)
 
-
-register_object_class(Skin)
 
 
 #############################################################################

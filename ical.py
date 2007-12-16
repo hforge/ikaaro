@@ -23,11 +23,11 @@ from cStringIO import StringIO
 from datetime import datetime, date, time, timedelta
 
 # Import from itools
-from itools.datatypes import (DataType, Enumerate, Unicode, Date, Integer,
-    is_datatype)
+from itools.datatypes import (DataType, Date, Enumerate, FileName, Integer,
+    Unicode, is_datatype)
 from itools.handlers import Folder, Property
 from itools.ical import (get_grid_data, icalendar, PropertyValue, DateTime,
-                         icalendarTable, Record, Time)
+    icalendarTable, Record, Time)
 from itools.stl import stl
 
 # Import from ikaaro
@@ -1091,7 +1091,7 @@ class CalendarAware(CalendarView):
 class Calendar(Text, CalendarView):
 
     class_id = 'calendar'
-    class_version = '20071215'
+    class_version = '20071216'
     class_title = u'Calendar'
     class_description = u'Schedule your time with calendar files.'
     class_icon16 = 'images/icalendar16.png'
@@ -1316,6 +1316,16 @@ class Calendar(Text, CalendarView):
     #######################################################################
     def update_20071215(self):
         Text.update_20071215(self)
+
+
+    def update_20071216(self):
+        name, extension, language = FileName.decode(self.name)
+        name = FileName.encode((name, extension, None))
+        if name != self.name:
+            folder = self.parent.handler
+            folder.move_handler(self.name, name)
+            folder.move_handler('%s.metadata' % self.name,
+                                '%s.metadata' % name)
 
 
 

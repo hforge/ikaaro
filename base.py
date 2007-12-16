@@ -205,8 +205,6 @@ class Node(BaseNode):
 
 class DBObject(CatalogAware, Node, DomainAware):
 
-    class_version = '20071215'
-
     def __init__(self, metadata):
         self.metadata = metadata
         self._handler = None

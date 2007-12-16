@@ -53,7 +53,7 @@ class Multiple(DataType):
 class Table(File):
 
     class_id = 'table'
-    calss_version = '20071215'
+    class_version = '20071215'
     class_title = u'Table'
     class_views = [['view'],
                    ['add_record_form'],

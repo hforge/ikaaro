@@ -284,7 +284,7 @@ class RTF(File):
 
 class ODT(File):
 
-    class_id ='application/vnd.oasis.opendocument.text'
+    class_id = 'application/vnd.oasis.opendocument.text'
     class_version = '20071215'
     class_title = u'ODT'
     class_description = u'OpenDocument Text'
@@ -301,7 +301,7 @@ class ODT(File):
 
 class ODS(File):
 
-    class_id ='application/vnd.oasis.opendocument.spreadsheet'
+    class_id = 'application/vnd.oasis.opendocument.spreadsheet'
     class_version = '20071215'
     class_title = u'ODS'
     class_description = u'OpenDocument Spreadsheet'
@@ -318,7 +318,7 @@ class ODS(File):
 
 class ODP(File):
 
-    class_id ='application/vnd.oasis.opendocument.presentation'
+    class_id = 'application/vnd.oasis.opendocument.presentation'
     class_version = '20071215'
     class_title = u'ODP'
     class_description = u'OpenDocument Presentation'
