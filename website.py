@@ -43,7 +43,7 @@ from workflow import WorkflowAware
 class WebSite(RoleAware, Folder):
 
     class_id = 'WebSite'
-    class_version = '20071119'
+    class_version = '20071215'
     class_title = u'Web Site'
     class_description = u'Create a new Web Site or Work Place.'
     class_icon16 = 'images/WebSite16.png'
@@ -679,8 +679,8 @@ class WebSite(RoleAware, Folder):
     #######################################################################
     # Update
     #######################################################################
-    def update_20071119(self):
-        Folder.update_20071119(self)
+    def update_20071215(self):
+        Folder.update_20071215(self)
 
 
 

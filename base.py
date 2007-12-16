@@ -834,8 +834,14 @@ class DBObject(CatalogAware, Node, DomainAware):
                 new_name = name.split(':', 1)[1]
                 if new_name not in schema:
                     raise ValueError, 'unexpected property "%s"' % name
-                properties[new_name] = properties[name]
-                del properties[name]
+                datatype = schema[new_name]
+                value = properties.pop(name)
+                if isinstance(value, dict):
+                    properties[new_name] = {}
+                    for key in value:
+                        properties[new_name][key] = datatype.decode(value[key])
+                else:
+                    properties[new_name] = datatype.decode(value)
             else:
                 if name not in schema:
                     raise ValueError, 'unexpected property "%s"' % name

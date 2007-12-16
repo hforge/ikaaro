@@ -41,7 +41,7 @@ def build_message(data):
 class Message(WebPage):
 
     class_id = 'ForumMessage'
-    class_version = '20071119'
+    class_version = '20071216'
     class_title = u"Message"
     class_description = u"Message in a thread"
     class_views = [['edit_form'], ['history_form']]
@@ -75,7 +75,11 @@ class Message(WebPage):
     #######################################################################
     # Update
     #######################################################################
-    def update_20071119(self):
+    def update_20071215(self):
+        WebPage.update_20071215(self)
+
+
+    def update_20071216(self):
         """Transform the forum messages from XHTML fragments to complete XHTML
         documents:
 

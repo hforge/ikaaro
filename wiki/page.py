@@ -47,7 +47,7 @@ from ikaaro.skins import UIFile
 
 class WikiPage(Text):
     class_id = 'WikiPage'
-    class_version = '20061229'
+    class_version = '20071215'
     class_title = u"Wiki Page"
     class_description = u"Wiki contents"
     class_icon16 = 'wiki/WikiPage16.png'
@@ -431,6 +431,13 @@ class WikiPage(Text):
 
         handler = self.get_object('/ui/wiki/WikiPage_help.xml')
         return stl(handler, namespace)
+
+
+    #######################################################################
+    # Update
+    #######################################################################
+    def update_20071215(self):
+        Text.update_20071215(self)
 
 
 ###########################################################################

@@ -36,6 +36,7 @@ import widgets
 class CSV(Text):
 
     class_id = 'text/comma-separated-values'
+    class_version = '20071215'
     class_title = u'Comma Separated Values'
     class_views = [['view'],
                    ['add_row_form'],
@@ -250,6 +251,13 @@ class CSV(Text):
         handler.update_row(index, **kw)
 
         return context.come_back(MSG_CHANGES_SAVED)
+
+
+    #######################################################################
+    # Update
+    #######################################################################
+    def update_20071215(self):
+        Text.update_20071215(self)
 
 
 register_object_class(CSV)

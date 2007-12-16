@@ -60,7 +60,7 @@ table_columns = [('id', u'Id'), ('title', u'Title'), ('version', u'Version'),
 class Tracker(Folder):
 
     class_id = 'tracker'
-    class_version = '20040625'
+    class_version = '20071215'
     class_title = u'Issue Tracker'
     class_description = u'To manage bugs and tasks'
     class_icon16 = 'images/tracker16.png'
@@ -727,6 +727,13 @@ class Tracker(Folder):
         return context.uri.resolve2('../%s/;edit_form' % issue_name)
 
 
+    #######################################################################
+    # Update
+    #######################################################################
+    def update_20071215(self):
+        Folder.update_20071215(self)
+
+
 
 ###########################################################################
 # Tables
@@ -739,7 +746,7 @@ class SelectTableTable(BaseTable):
 class SelectTable(Table):
 
     class_id = 'tracker_select_table'
-    class_version = '20071119'
+    class_version = '20071216'
     class_title = u'Select Table'
     class_handler = SelectTableTable
 
@@ -861,7 +868,11 @@ class SelectTable(Table):
     #######################################################################
     # Update
     #######################################################################
-    def update_20071119(self, columns=['id', 'title']):
+    def update_20071215(self):
+        Table.update_20071215(self)
+
+
+    def update_20071216(self, columns=['id', 'title']):
         """Change from CSV to Table.
         """
         old_name = self.name
@@ -888,15 +899,19 @@ class VersionsTable(BaseTable):
 class Versions(SelectTable):
 
     class_id = 'tracker_versions'
-    class_version = '20071119'
+    class_version = '20071216'
     class_handler = VersionsTable
 
 
     #######################################################################
     # Update
     #######################################################################
-    def update_20071119(self):
-        SelectTable.update_20071119(self, ['id', 'title', 'released'])
+    def update_20071215(self):
+        SelectTable.update_20071215(self)
+
+
+    def update_20071216(self):
+        SelectTable.update_20071216(self, ['id', 'title', 'released'])
 
 
 
@@ -906,6 +921,7 @@ class Versions(SelectTable):
 class StoredSearch(Text):
 
     class_id = 'stored_search'
+    class_version = '20071215'
     class_title = u'Stored Search'
     class_handler = ConfigFile
 
@@ -919,6 +935,13 @@ class StoredSearch(Text):
         value = [ type.encode(x) for x in value ]
         value = ' '.join(value)
         self.handler.set_value(name, value)
+
+
+    #######################################################################
+    # Update
+    #######################################################################
+    def update_20071215(self):
+        Text.update_20071215(self)
 
 
 

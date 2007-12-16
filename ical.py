@@ -1091,7 +1091,7 @@ class CalendarAware(CalendarView):
 class Calendar(Text, CalendarView):
 
     class_id = 'calendar'
-    class_version = '20060720'
+    class_version = '20071215'
     class_title = u'Calendar'
     class_description = u'Schedule your time with calendar files.'
     class_icon16 = 'images/icalendar16.png'
@@ -1311,11 +1311,18 @@ class Calendar(Text, CalendarView):
         return context.come_back(u'Data updated', goto=goto, keys=keys)
 
 
+    #######################################################################
+    # Update
+    #######################################################################
+    def update_20071215(self):
+        Text.update_20071215(self)
+
+
 
 class CalendarTable(Table, CalendarView):
 
     class_id = 'calendarTable'
-    class_version = '20060720'
+    class_version = '20071215'
     class_title = u'CalendarTable'
     class_description = u'Schedule your time with calendar files.'
     class_icon16 = 'images/icalendar16.png'
@@ -1592,6 +1599,13 @@ class CalendarTable(Table, CalendarView):
 
         goto = '%s?date=%s' % (goto, selected_date)
         return context.come_back(u'Data updated', goto=goto, keys=keys)
+
+
+    #######################################################################
+    # Update
+    #######################################################################
+    def update_20071215(self):
+        Table.update_20071215(self)
 
 
 ###########################################################################

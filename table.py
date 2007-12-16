@@ -53,6 +53,7 @@ class Multiple(DataType):
 class Table(File):
 
     class_id = 'table'
+    calss_version = '20071215'
     class_title = u'Table'
     class_views = [['view'],
                    ['add_record_form'],
@@ -390,6 +391,13 @@ class Table(File):
 
         goto = context.uri.resolve2('../;edit_record_form')
         return context.come_back(MSG_CHANGES_SAVED, goto=goto, keep=['id'])
+
+
+    #######################################################################
+    # Update
+    #######################################################################
+    def update_20071215(self):
+        File.update_20071215(self)
 
 
 register_object_class(Table)

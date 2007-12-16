@@ -30,7 +30,7 @@ from page import WikiPage
 class WikiFolder(Folder):
 
     class_id = 'WikiFolder'
-    class_version = '20061229'
+    class_version = '20071215'
     class_title = u"Wiki"
     class_description = u"Container for a wiki"
     class_icon16 = 'wiki/WikiFolder16.png'
@@ -73,6 +73,13 @@ class WikiFolder(Folder):
             return context.come_back(message, goto='FrontPage')
 
         return context.uri.resolve('FrontPage')
+
+
+    #######################################################################
+    # Update
+    #######################################################################
+    def update_20071215(self):
+        Folder.update_20071215(self)
 
 
 ###########################################################################

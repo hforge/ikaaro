@@ -43,7 +43,7 @@ from workflow import WorkflowAware, WFTransition
 class File(WorkflowAware, VersioningAware, DBObject):
 
     class_id = 'file'
-    class_version = '20040625'
+    class_version = '20071215'
     class_title = u'File'
     class_description = u'Upload office documents, images, media files, etc.'
     class_icon16 = 'images/File16.png'
@@ -324,6 +324,13 @@ class File(WorkflowAware, VersioningAware, DBObject):
             return context.come_back(message, mimetype=self.handler.get_mimetype())
 
         return context.come_back(u'Version uploaded.')
+
+
+    #######################################################################
+    # Update
+    #######################################################################
+    def update_20071215(self):
+        DBObject.update_20071215(self)
 
 
 ###########################################################################

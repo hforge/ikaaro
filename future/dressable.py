@@ -46,6 +46,7 @@ class Dressable(Folder, EpozEditable):
     """
 
     class_id = 'dressable'
+    class_version = '20071215'
     class_title = u'Dressable'
     class_description = u'A dressable folder'
     class_views = ([['view'], ['edit_document']] + Folder.class_views)
@@ -443,6 +444,12 @@ class Dressable(Folder, EpozEditable):
         name = kw.get('name')
         return self._get_object_label(name)
 
+
+    #######################################################################
+    # Update
+    #######################################################################
+    def update_20071215(self):
+        Folder.update_20071215(self)
 
 
 register_object_class(Dressable)

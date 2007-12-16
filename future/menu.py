@@ -42,9 +42,9 @@ from itools.datatypes import Boolean, String
 class Link(File):
 
     class_id = 'link'
+    class_version = '20071215'
     class_title = u'Link'
     class_description = u'Link'
-    class_version = '20070925'
     class_icon48 = 'future/images/Link48.png'
     class_icon16 = 'future/images/Link16.png'
     class_views = [['edit_metadata_form'], ['state_form']]
@@ -147,6 +147,14 @@ class Link(File):
 
     def has_target(self):
         return self.get_property('link') != None
+
+
+    #######################################################################
+    # Update
+    #######################################################################
+    def update_20071215(self):
+        File.update_20071215(self)
+
 
 
 ###########################################################################

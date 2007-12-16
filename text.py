@@ -33,6 +33,7 @@ from registry import register_object_class
 class Text(File):
 
     class_id = 'text'
+    class_version = '20071215'
     class_title = u'Plain Text'
     class_description = u'Keep your notes with plain text files.'
     class_icon16 = 'images/Text16.png'
@@ -117,10 +118,17 @@ class Text(File):
         return stl(handler, namespace)
 
 
+    #######################################################################
+    # Update
+    #######################################################################
+    def update_20071215(self):
+        File.update_20071215(self)
+
 
 class PO(Text):
 
     class_id = 'text/x-po'
+    class_version = '20071215'
     class_title = u'Message Catalog'
     class_icon16 = 'images/Po16.png'
     class_icon48 = 'images/Po48.png'
@@ -193,28 +201,59 @@ class PO(Text):
         return context.come_back(MSG_CHANGES_SAVED)
 
 
+    #######################################################################
+    # Update
+    #######################################################################
+    def update_20071215(self):
+        Text.update_20071215(self)
+
+
 
 class CSS(Text):
 
     class_id = 'text/css'
+    class_version = '20071215'
     class_title = u'CSS'
     class_icon16 = 'images/CSS16.png'
     class_icon48 = 'images/CSS48.png'
+
+
+    #######################################################################
+    # Update
+    #######################################################################
+    def update_20071215(self):
+        Text.update_20071215(self)
 
 
 
 class Python(Text):
 
     class_id = 'text/x-python'
+    class_version = '20071215'
     class_title = u'Python'
     class_icon16 = 'images/Python16.png'
     class_icon48 = 'images/Python48.png'
+
+
+    #######################################################################
+    # Update
+    #######################################################################
+    def update_20071215(self):
+        Text.update_20071215(self)
 
 
 
 class XMLFile(Text):
 
     class_id = 'text/xml'
+    class_version = '20071215'
+
+
+    #######################################################################
+    # Update
+    #######################################################################
+    def update_20071215(self):
+        Text.update_20071215(self)
 
 
 

@@ -68,7 +68,7 @@ class History(Table):
 class Issue(Folder, VersioningAware):
 
     class_id = 'issue'
-    class_version = '20071119'
+    class_version = '20071215'
     class_title = u'Issue'
     class_description = u'Issue'
     class_views = [
@@ -567,9 +567,10 @@ class Issue(Folder, VersioningAware):
     #######################################################################
     # Update
     #######################################################################
-    def update_20071119(self):
+    def update_20071215(self):
         """Change '.history' from CSV to Table.
         """
+        Folder.update_20071215(self)
         columns = ['datetime', 'username', 'title', 'module', 'version',
                    'type', 'priority', 'assigned_to', 'state', 'comment',
                    'file']
