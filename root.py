@@ -44,7 +44,6 @@ from base import DBObject
 from text import PO
 from users import UserFolder
 from website import WebSite
-from handlers import Metadata
 from html import WebPage
 from registry import register_object_class, get_object_class
 from folder import Folder

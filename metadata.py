@@ -15,14 +15,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
-from datetime import datetime
-import mimetypes
-from random import random
-from time import time
+from mimetypes import add_type
 
 # Import from itools
-from itools.datatypes import is_datatype, DateTime, String, Unicode, XML
-from itools.handlers import File, TextFile, register_handler_class
+from itools.datatypes import is_datatype, String, Unicode, XML
+from itools.handlers import File, register_handler_class
 from itools.web import get_context
 from itools.xml import (XMLNamespace, XMLParser, START_ELEMENT, END_ELEMENT,
     TEXT)
@@ -30,35 +27,6 @@ from itools.xml import (XMLNamespace, XMLParser, START_ELEMENT, END_ELEMENT,
 # Import from ikaaro
 from registry import get_object_class
 
-
-
-###########################################################################
-# Lock
-###########################################################################
-class Lock(TextFile):
-
-    class_mimetypes = ['text/x-lock']
-    class_extension = 'lock'
-
-
-    def new(self, username=None, **kw):
-        self.username = username
-        self.lock_timestamp = datetime.now()
-        self.key = '%s-%s-00105A989226:%.03f' % (random(), random(), time())
-
-
-    def _load_state_from_file(self, file):
-        username, timestamp, key = file.read().strip().split('\n')
-        self.username = username
-        # XXX backwards compatibility: remove microseconds first
-        timestamp = timestamp.split('.')[0]
-        self.lock_timestamp = DateTime.decode(timestamp)
-        self.key = key
-
-
-    def to_str(self):
-        timestamp = DateTime.encode(self.lock_timestamp)
-        return '%s\n%s\n%s' % (self.username, timestamp, self.key)
 
 
 ###########################################################################
@@ -361,8 +329,7 @@ class Metadata(File):
 ###########################################################################
 # Register
 ###########################################################################
-for handler_class in [Lock, Metadata]:
-    register_handler_class(handler_class)
-    for mimetype in handler_class.class_mimetypes:
-        mimetypes.add_type(mimetype, '.%s' % handler_class.class_extension)
+register_handler_class(Metadata)
+for mimetype in Metadata.class_mimetypes:
+    add_type(mimetype, '.%s' % Metadata.class_extension)
 

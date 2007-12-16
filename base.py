@@ -33,11 +33,11 @@ from itools import vfs
 from itools.web import get_context, Node as BaseNode
 
 # Import from ikaaro
-from handlers import Lock, Metadata
+from lock import Lock, lock_body
 from messages import *
+from metadata import Metadata
 from registry import get_object_class
 from versioning import VersioningAware
-import webdav
 from workflow import WorkflowAware
 
 
@@ -515,8 +515,7 @@ class DBObject(CatalogAware, Node, DomainAware):
         response.set_header('Content-Type', 'text/xml; charset="utf-8"')
         response.set_header('Lock-Token', 'opaquelocktoken:%s' % lock)
 
-        user = context.user
-        return webdav.lock_body % {'owner': user.name, 'locktoken': lock}
+        return lock_body % {'owner': context.user.name, 'locktoken': lock}
 
 
     UNLOCK__access__ = 'is_authenticated'

@@ -18,7 +18,7 @@
 from itools import vfs
 
 # Import from ikaaro
-from handlers import Metadata
+from metadata import Metadata
 from registry import get_object_class
 
 

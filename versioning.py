@@ -26,7 +26,7 @@ from itools.stl import stl
 from itools.web import get_context
 
 # Import from ikaaro
-from handlers import Record
+from metadata import Record
 
 
 class History(Record):

@@ -30,8 +30,8 @@ from itools import vfs
 from itools.web import Server as BaseServer
 
 # Import from ikaaro
-from handlers import Metadata
 from folder import Folder
+from metadata import Metadata
 from registry import get_object_class
 from utils import is_pid_running
 from versioning import VersioningAware

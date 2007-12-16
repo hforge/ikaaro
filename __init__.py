@@ -25,14 +25,13 @@ from itools.gettext import register_domain
 from itools.utils import get_version
 
 # Import from ikaaro
-import root
-from folder import Folder
-from file import File
 import binary
 import csv
-import handlers
+from file import File
+from folder import Folder
 from html import WebPage
 from ical import Calendar
+import root
 
 
 # The version
