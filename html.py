@@ -20,7 +20,7 @@
 from datetime import datetime
 
 # Import from itools
-from itools.datatypes import DateTime, FileName, QName, String
+from itools.datatypes import DateTime, FileName, String
 from itools.handlers import File
 from itools.html import (XHTMLFile, sanitize_stream, HTMLParser,
     stream_to_str_as_xhtml)
@@ -271,7 +271,6 @@ class WebPage(EpozEditable, Multilingual, Text):
             # Merge metadata
             new_meta = container.get_handler(new_name)
             for pname, pvalue in old_meta.properties.items():
-                pname = QName.encode(pname)
                 if pname == 'language':
                     continue
                 ptype = type(pvalue)
