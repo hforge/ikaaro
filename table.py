@@ -29,11 +29,11 @@ from itools.stl import stl
 
 # Import from ikaaro
 from base import DBObject
-from messages import *
 from file import File
+from forms import get_default_widget
+from messages import *
 from registry import register_object_class
 import widgets
-from widgets import get_default_widget
 
 
 

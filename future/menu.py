@@ -25,12 +25,13 @@ from itools.uri import Path
 
 # Import from ikaaro
 from ikaaro.base import DBObject
-from ikaaro.future.order import OrderAware
-from ikaaro.registry import register_object_class
-from ikaaro.messages import MSG_CHANGES_SAVED
 from ikaaro.file import File
-from ikaaro.widgets import Breadcrumb, BooleanRadio
+from ikaaro.forms import BooleanRadio
+from ikaaro.messages import MSG_CHANGES_SAVED
+from ikaaro.registry import register_object_class
 from ikaaro.skins import register_skin
+from ikaaro.widgets import Breadcrumb
+from order import OrderAware
 
 # Import from itools
 from itools.datatypes import Boolean, String
