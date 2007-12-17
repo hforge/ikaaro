@@ -71,7 +71,9 @@ class Link(File):
 
     def GET(self, context):
         link = self.get_property('link')
-        return context.uri.resolve2(link)
+        if link is not None:
+            return context.uri.resolve2(link)
+        return File.GET(self, context)
 
 
     add_link_form__access__ = 'is_allowed_to_edit'
