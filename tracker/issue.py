@@ -37,7 +37,6 @@ from ikaaro.folder import Folder
 from ikaaro.messages import *
 from ikaaro.registry import register_object_class, get_object_class
 from ikaaro.utils import generate_name
-from ikaaro.versioning import VersioningAware
 
 
 
@@ -66,7 +65,7 @@ class History(Table):
 
 
 
-class Issue(Folder, VersioningAware):
+class Issue(Folder):
 
     class_id = 'issue'
     class_version = '20071215'
@@ -560,7 +559,6 @@ class Issue(Folder, VersioningAware):
 
 
     def get_size(self):
-        # FIXME Used by VersioningAware to define the size of the document
         # FIXME Used by the browse list view (size is indexed)
         return 0
 
