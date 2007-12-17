@@ -22,9 +22,9 @@
 from operator import itemgetter
 
 # Import from itools
+from itools.csv import Record
 from itools.datatypes import (DataType, Integer, is_datatype, Enumerate, Date,
                               Tokens)
-from itools.handlers.table import Record
 from itools.stl import stl
 
 # Import from ikaaro

@@ -23,9 +23,10 @@ from cStringIO import StringIO
 from datetime import datetime, date, time, timedelta
 
 # Import from itools
+from itools.csv import Property
 from itools.datatypes import (DataType, Date, Enumerate, FileName, Integer,
     Unicode, is_datatype)
-from itools.handlers import Folder, Property
+from itools.handlers import Folder
 from itools.ical import (get_grid_data, icalendar, PropertyValue, DateTime,
     icalendarTable, Record, Time)
 from itools.stl import stl

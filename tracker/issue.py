@@ -24,8 +24,9 @@ from mimetypes import guess_type
 from re import sub
 
 # Import from itools
+from itools.csv import Table
 from itools.datatypes import DateTime, Integer, String, Unicode, XML
-from itools.handlers import checkid, Table, File as FileHandler
+from itools.handlers import checkid, File as FileHandler
 from itools.i18n import format_datetime
 from itools.stl import stl
 from itools.xml import XMLParser

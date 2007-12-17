@@ -23,8 +23,9 @@ from datetime import datetime
 from operator import itemgetter
 
 # Import from itools
+from itools.csv import Table as BaseTable
 from itools.datatypes import Boolean, Integer, String, Unicode
-from itools.handlers import ConfigFile, Table as BaseTable, File as FileHandler
+from itools.handlers import ConfigFile, File as FileHandler
 from itools.stl import stl
 from itools.uri import encode_query, Reference
 from itools.xml import XMLParser
