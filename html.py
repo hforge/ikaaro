@@ -252,7 +252,7 @@ class WebPage(EpozEditable, Multilingual, Text):
             if is_html:
                 container.del_handler(name)
                 container.set_handler(new_name, handler)
-            else:
+            elif container.has_handler(name):
                 # Be robust against wrong extensions
                 container.get_handler(name, cls=self.class_handler)
                 container.move_handler(name, new_name)

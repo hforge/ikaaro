@@ -834,8 +834,11 @@ class Folder(DBObject):
         """Remove empty folders.
         """
         DBObject.update_20071215(self, **kw)
-        if not self.handler.get_handler_names():
-            self.parent.handler.del_handler(self.name)
+        handler = self.handler
+        database = handler.database
+        if database.has_handler(self.name):
+            if not handler.get_handler_names():
+                self.parent.handler.del_handler(self.name)
 
 
 
