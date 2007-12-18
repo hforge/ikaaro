@@ -91,7 +91,7 @@ class File(WorkflowAware, VersioningAware, DBObject):
         old_name = self.name
         extension = self.class_handler.class_extension
         return [(FileName.encode((old_name, extension, None)),
-                  FileName.encode((new_name, extension, None)))]
+                 FileName.encode((new_name, extension, None)))]
 
 
     @staticmethod
@@ -106,14 +106,16 @@ class File(WorkflowAware, VersioningAware, DBObject):
 
     @staticmethod
     def new_instance(cls, container, context):
-        # The upload file is mandatory
         file = context.get_form_value('file')
+        title = context.get_form_value('title', type=Unicode)
+        # The upload file is mandatory
         if file is None:
             return context.come_back(MSG_EMPTY_FILENAME)
 
         # Check the filename is good
         filename, mimetype, body = file
-        name = checkid(filename)
+        name = title.strip() or filename
+        name = checkid(name)
         if name is None:
             return context.come_back(MSG_BAD_NAME)
 
@@ -149,7 +151,9 @@ class File(WorkflowAware, VersioningAware, DBObject):
 
         # Check the name is free
         if container.has_object(name):
-            return context.come_back(MSG_NAME_CLASH)
+            message = (u'There is already another object with this name. '
+                       u'Please type a title to choose a different name.')
+            return context.come_back(message)
 
         # Build the object
         kw = {'filename': filename}
@@ -157,7 +161,6 @@ class File(WorkflowAware, VersioningAware, DBObject):
             kw['language'] = language
         object = cls.make_object(cls, container, name, body, **kw)
         # The title
-        title = context.get_form_value('title', type=Unicode)
         language = container.get_content_language(context)
         object.metadata.set_property('title', title, language=language)
 

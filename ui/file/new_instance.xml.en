@@ -9,14 +9,14 @@
   <form name="new_resource" action=";new_resource" method="post"
     enctype="multipart/form-data">
     <dl>
-      <dt><label for="file">File</label></dt>
-      <dd>
-        <input type="file" id="file" name="file" size="35" />
-      </dd>
-      <dt><label for="title">Title (optional)</label></dt>
+      <dt><label for="title">Title</label></dt>
       <dd>
         <input type="text" id="title" name="title" size="40"
           value="${title}" />
+      </dd>
+      <dt><label for="file">File</label></dt>
+      <dd>
+        <input type="file" id="file" name="file" size="35" />
       </dd>
     </dl>
     <p>
