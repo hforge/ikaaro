@@ -163,8 +163,13 @@ class Server(BaseServer):
         catalog = self.catalog
         # Removed
         for object in self.objects_removed:
-            path = str(object.get_abspath())
-            catalog.unindex_document(path)
+            if isinstance(object, Folder):
+                for x in object.traverse_objects():
+                    path = str(x.get_abspath())
+                    catalog.unindex_document(path)
+            else:
+                path = str(object.get_abspath())
+                catalog.unindex_document(path)
         self.objects_removed.clear()
 
         # Added
