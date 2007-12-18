@@ -382,7 +382,8 @@ class Folder(DBObject):
 
 
     def browse_thumbnails(self, context):
-        query = EqQuery('parent_path', self.get_canonical_path())
+        abspath = self.get_canonical_path()
+        query = EqQuery('parent_path', str(abspath))
         namespace = self.browse_namespace(48, query=query)
 
         handler = self.get_object('/ui/folder/browse_thumbnails.xml')
