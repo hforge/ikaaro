@@ -28,6 +28,7 @@ from itools.stl import stl
 from itools.xml import TEXT, START_ELEMENT, XMLError
 
 # Import from ikaaro
+from base import DBObject
 from messages import *
 from multilingual import Multilingual
 from text import Text
@@ -167,6 +168,19 @@ class WebPage(EpozEditable, Multilingual, Text):
 
     def get_content_type(self):
         return 'application/xhtml+xml; charset=UTF-8'
+
+
+    #######################################################################
+    # UI / New Instance
+    #######################################################################
+    @staticmethod
+    def new_instance_form(cls, context):
+        return DBObject.new_instance_form(cls, context)
+
+
+    @staticmethod
+    def new_instance(cls, container, context):
+        return DBObject.new_instance(cls, container, context)
 
 
     #######################################################################
