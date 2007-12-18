@@ -25,7 +25,7 @@ from re import sub
 
 # Import from itools
 from itools.csv import Table
-from itools.datatypes import DateTime, Integer, String, Unicode, XML
+from itools.datatypes import DateTime, FileName, Integer, String, Unicode, XML
 from itools.handlers import checkid, File as FileHandler
 from itools.i18n import format_datetime
 from itools.stl import stl
@@ -160,6 +160,7 @@ class Issue(Folder):
                 mimetype = guessed
             # Find a non used name
             name = checkid(filename)
+            name, extension, language = FileName.decode(name)
             name = generate_name(name, self.get_names())
             # Add attachement
             cls = get_object_class(mimetype)
