@@ -405,6 +405,9 @@ class WikiPage(Text):
         else:
             message = MSG_CHANGES_SAVED
 
+        # Change
+        context.server.change_object(self)
+
         goto = context.come_back(message, keep=['text_size'])
         if context.has_form_value('view'):
             query = goto.query
