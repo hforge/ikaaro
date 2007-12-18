@@ -98,7 +98,8 @@ def update(parser, options, target):
             # Update
             object.update(next_version)
             database.save_changes()
-            n += 1
+        # Counter
+        n += 1
 
     print '*'
     print '* %s objects upgraded.' % n
