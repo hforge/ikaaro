@@ -412,7 +412,7 @@ class Archive(File):
     view__sublabel__ = u'View'
     def view(self, context):
         namespace = {}
-        contents = self.get_contents()
+        contents = self.handler.get_contents()
         namespace['contents'] = '\n'.join(contents)
 
         handler = self.get_object('/ui/binary/Archive_view.xml')
