@@ -49,19 +49,6 @@ class Text(File):
 
 
     #######################################################################
-    # UI / New Instance
-    #######################################################################
-    @staticmethod
-    def new_instance_form(cls, context):
-        return DBObject.new_instance_form(cls, context)
-
-
-    @staticmethod
-    def new_instance(cls, container, context):
-        return DBObject.new_instance(cls, container, context)
-
-
-    #######################################################################
     # UI / Download
     #######################################################################
     def get_content_type(self):
