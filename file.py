@@ -238,7 +238,7 @@ class File(WorkflowAware, VersioningAware, DBObject):
 
 
     def get_content_type(self):
-        return self.class_id
+        return self.handler.get_mimetype()
 
 
     download__access__ = 'is_allowed_to_view'
