@@ -511,7 +511,7 @@ class RoleAware(AccessControl):
                 # Send confirmation email to activate the account
                 user.send_confirmation(context, email)
         else:
-            user = users.get_handler(user_id)
+            user = users.get_object(user_id)
             # Check the user is not yet in the group
             members = self.get_members()
             if user_id in members:
