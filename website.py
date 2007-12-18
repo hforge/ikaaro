@@ -581,7 +581,7 @@ class WebSite(RoleAware, Folder):
             namespace['batch'] = widgets.batch(context.uri, start, size, total)
 
             # Build the namespace
-            objects = []
+            ns_objects = []
             for object in objects[start:start+size]:
                 info = {}
                 info['abspath'] = str(object.get_abspath())
@@ -595,8 +595,8 @@ class WebSite(RoleAware, Folder):
                 if icon.startswith(';'):
                     icon = Path('%s/' % object.name).resolve(icon)
                 info['icon'] = icon
-                objects.append(info)
-            namespace['objects'] = objects
+                ns_objects.append(info)
+            namespace['objects'] = ns_objects
         else:
             namespace['text'] = ''
 
