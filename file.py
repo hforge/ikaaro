@@ -43,7 +43,7 @@ from workflow import WorkflowAware, WFTransition
 class File(WorkflowAware, VersioningAware, DBObject):
 
     class_id = 'file'
-    class_version = '20071215'
+    class_version = '20071216'
     class_title = u'File'
     class_description = u'Upload office documents, images, media files, etc.'
     class_icon16 = 'images/File16.png'
@@ -62,7 +62,36 @@ class File(WorkflowAware, VersioningAware, DBObject):
         # Add the body
         if body is not None:
             handler = cls.class_handler(string=body)
+            name = FileName.encode((name, handler.class_extension, None))
             folder.set_handler(name, handler)
+
+
+    def get_handler(self):
+        if self._handler is None:
+            cls = self.class_handler
+            database = self.metadata.database
+            name = FileName.encode((self.name, cls.class_extension, None))
+            uri = self.metadata.uri.resolve(name)
+            if database.has_handler(uri):
+                self._handler = database.get_handler(uri, cls=cls)
+            else:
+                handler = cls()
+                handler.database = database
+                handler.uri = uri
+                handler.timestamp = None
+                handler.dirty = True
+                database.cache[uri] = handler
+                self._handler = handler
+        return self._handler
+
+    handler = property(get_handler, None, None, '')
+
+
+    def rename_handlers(self, new_name):
+        old_name = self.name
+        extension = self.class_handler.class_extension
+        return [(FileName.encode((old_name, extension, None)),
+                  FileName.encode((new_name, extension, None)))]
 
 
     @staticmethod
@@ -109,8 +138,8 @@ class File(WorkflowAware, VersioningAware, DBObject):
         cls = get_object_class(class_id)
 
         # Multilingual objects, find out the language
+        name, type, language = FileName.decode(name)
         if issubclass(cls, Multilingual):
-            name, type, language = FileName.decode(name)
             if language is None:
                 encoding = guess_encoding(body)
                 text = cls.class_handler(string=body).to_text()
@@ -321,7 +350,8 @@ class File(WorkflowAware, VersioningAware, DBObject):
             self.handler.load_state()
             message = (u'Upload failed: either the file does not match this'
                        u' document type ($mimetype) or it contains errors.')
-            return context.come_back(message, mimetype=self.handler.get_mimetype())
+            mimetype = self.handler.get_mimetype()
+            return context.come_back(message, mimetype=mimetype)
 
         return context.come_back(u'Version uploaded.')
 
@@ -331,6 +361,15 @@ class File(WorkflowAware, VersioningAware, DBObject):
     #######################################################################
     def update_20071215(self, **kw):
         DBObject.update_20071215(self, **kw)
+
+
+    def update_20071216(self):
+        folder = self.parent.handler
+        name, extension, language = FileName.decode(self.name)
+        folder.move_handler('%s.metadata' % self.name, '%s.metadata' % name)
+        if language is not None:
+            name = FileName.encode((name, extension, None))
+            folder.move_handler(self.name, name)
 
 
 

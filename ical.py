@@ -1320,20 +1320,14 @@ class Calendar(Text, CalendarView):
 
 
     def update_20071216(self):
-        name, extension, language = FileName.decode(self.name)
-        name = FileName.encode((name, extension, None))
-        if name != self.name:
-            folder = self.parent.handler
-            folder.move_handler(self.name, name)
-            folder.move_handler('%s.metadata' % self.name,
-                                '%s.metadata' % name)
+        Text.update_20071216(self)
 
 
 
 class CalendarTable(Table, CalendarView):
 
     class_id = 'calendarTable'
-    class_version = '20071215'
+    class_version = '20071216'
     class_title = u'CalendarTable'
     class_description = u'Schedule your time with calendar files.'
     class_icon16 = 'images/icalendar16.png'
@@ -1341,6 +1335,7 @@ class CalendarTable(Table, CalendarView):
     class_views = [['monthly_view', 'weekly_view', 'download_form'],
                    ['upload_form', 'edit_timetables_form',
                     'edit_metadata_form', 'edit_event_form']]
+    class_handler = icalendarTable
     record_class = Record
 
 
@@ -1617,6 +1612,10 @@ class CalendarTable(Table, CalendarView):
     #######################################################################
     def update_20071215(self):
         Table.update_20071215(self)
+
+
+    def update_20071216(self):
+        Table.update_20071216(self)
 
 
 ###########################################################################

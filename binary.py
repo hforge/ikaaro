@@ -17,10 +17,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.pdf import PDFFile
-from itools.stl import stl
 from itools.handlers import (Image as ImageFile, TARFile, ZIPFile, GzipFile,
         Bzip2File)
+from itools.pdf import PDFFile
+from itools.stl import stl
+from itools.xml import MSWord as MSWordFile, MSExcel as MSExcelFile
+from itools.xml import MSPowerPoint as MSPowerPointFile, RTF as RTFFile
+from itools.odf import SXWFile, SXCFile, SXIFile, ODTFile, ODSFile, ODPFile
 
 # Import from ikaaro
 from file import File
@@ -33,7 +36,7 @@ from registry import register_object_class
 class Image(File):
 
     class_id = 'image'
-    class_version = '20071215'
+    class_version = '20071216'
     class_title = u'Image'
     class_icon16 = 'images/Image16.png'
     class_icon48 = 'images/Image48.png'
@@ -79,11 +82,15 @@ class Image(File):
         File.update_20071215(self)
 
 
+    def update_20071216(self):
+        File.update_20071216(self)
+
+
 
 class Video(File):
 
     class_id = 'video'
-    class_version = '20071215'
+    class_version = '20071216'
     class_title = u'Video'
     class_description = u'Video'
     class_icon16 = 'images/Flash16.png'
@@ -115,11 +122,15 @@ class Video(File):
         File.update_20071215(self)
 
 
+    def update_20071216(self):
+        File.update_20071216(self)
+
+
 
 class Flash(File):
 
     class_id = 'application/x-shockwave-flash'
-    class_version = '20071215'
+    class_version = '20071216'
     class_title = u'Flash'
     class_description = u'Flash Document'
     class_icon16 = 'images/Flash16.png'
@@ -141,6 +152,10 @@ class Flash(File):
         File.update_20071215(self)
 
 
+    def update_20071216(self):
+        File.update_20071216(self)
+
+
 
 ###########################################################################
 # Office Documents
@@ -148,96 +163,122 @@ class Flash(File):
 class MSWord(File):
 
     class_id = 'application/msword'
-    class_version = '20071215'
+    class_version = '20071216'
     class_title = u'Word'
     class_description = u'Word Text'
     class_icon16 = 'images/Word16.png'
     class_icon48 = 'images/Word48.png'
+    class_handler = MSWordFile
 
     #######################################################################
     # Update
     #######################################################################
     def update_20071215(self):
         File.update_20071215(self)
+
+
+    def update_20071216(self):
+        File.update_20071216(self)
 
 
 
 class MSExcel(File):
 
     class_id = 'application/vnd.ms-excel'
-    class_version = '20071215'
+    class_version = '20071216'
     class_title = u'Excel'
     class_description = u'Excel Spreadsheet'
     class_icon16 = 'images/Excel16.png'
     class_icon48 = 'images/Excel48.png'
+    class_handler = MSExcelFile
 
     #######################################################################
     # Update
     #######################################################################
     def update_20071215(self):
         File.update_20071215(self)
+
+
+    def update_20071216(self):
+        File.update_20071216(self)
 
 
 
 class MSPowerPoint(File):
 
     class_id = 'application/vnd.ms-powerpoint'
-    class_version = '20071215'
+    class_version = '20071216'
     class_title = u'PowerPoint'
     class_description = u'PowerPoint Presentation'
     class_icon16 = 'images/PowerPoint16.png'
     class_icon48 = 'images/PowerPoint48.png'
+    class_handler = MSPowerPointFile
 
     #######################################################################
     # Update
     #######################################################################
     def update_20071215(self):
         File.update_20071215(self)
+
+
+    def update_20071216(self):
+        File.update_20071216(self)
 
 
 
 class OOWriter(File):
 
     class_id = 'application/vnd.sun.xml.writer'
-    class_version = '20071215'
+    class_version = '20071216'
     class_title = u'OOo Writer'
     class_description = u'OpenOffice.org Text'
     class_icon16 = 'images/OOWriter16.png'
     class_icon48 = 'images/OOWriter48.png'
+    class_handler = SXWFile
 
     #######################################################################
     # Update
     #######################################################################
     def update_20071215(self):
         File.update_20071215(self)
+
+
+    def update_20071216(self):
+        File.update_20071216(self)
 
 
 
 class OOCalc(File):
 
     class_id = 'application/vnd.sun.xml.calc'
-    class_version = '20071215'
+    class_version = '20071216'
     class_title = u'OOo Calc'
     class_description = u'OpenOffice.org Spreadsheet'
     class_icon16 = 'images/OOCalc16.png'
     class_icon48 = 'images/OOCalc48.png'
+    class_handler = SXCFile
 
     #######################################################################
     # Update
     #######################################################################
     def update_20071215(self):
         File.update_20071215(self)
+
+
+    def update_20071216(self):
+        File.update_20071216(self)
 
 
 
 class OOImpress(File):
 
     class_id = 'application/vnd.sun.xml.impress'
-    class_version = '20071215'
+    class_version = '20071216'
     class_title = u'OOo Impress'
     class_description = u'OpenOffice.org Presentation'
     class_icon16 = 'images/OOImpress16.png'
     class_icon48 = 'images/OOImpress48.png'
+    class_handler = SXIFile
 
     #######################################################################
     # Update
@@ -246,11 +287,15 @@ class OOImpress(File):
         File.update_20071215(self)
 
 
+    def update_20071216(self):
+        File.update_20071216(self)
+
+
 
 class PDF(File):
 
     class_id = 'application/pdf'
-    class_version = '20071215'
+    class_version = '20071216'
     class_title = u'PDF'
     class_description = u'PDF Document'
     class_icon16 = 'images/Pdf16.png'
@@ -264,72 +309,96 @@ class PDF(File):
         File.update_20071215(self)
 
 
+    def update_20071216(self):
+        File.update_20071216(self)
+
+
 
 class RTF(File):
 
     class_id = 'text/rtf'
-    class_version = '20071215'
+    class_version = '20071216'
     class_title = u"RTF"
     class_description = u'RTF Document'
     class_icon16 = 'images/Text16.png'
     class_icon48 = 'images/Text48.png'
+    class_handler = RTFFile
 
     #######################################################################
     # Update
     #######################################################################
     def update_20071215(self):
         File.update_20071215(self)
+
+
+    def update_20071216(self):
+        File.update_20071216(self)
 
 
 
 class ODT(File):
 
     class_id = 'application/vnd.oasis.opendocument.text'
-    class_version = '20071215'
+    class_version = '20071216'
     class_title = u'ODT'
     class_description = u'OpenDocument Text'
     class_icon16 = 'images/Odt16.png'
     class_icon48 = 'images/Odt48.png'
+    class_handler = ODTFile
 
     #######################################################################
     # Update
     #######################################################################
     def update_20071215(self):
         File.update_20071215(self)
+
+
+    def update_20071216(self):
+        File.update_20071216(self)
 
 
 
 class ODS(File):
 
     class_id = 'application/vnd.oasis.opendocument.spreadsheet'
-    class_version = '20071215'
+    class_version = '20071216'
     class_title = u'ODS'
     class_description = u'OpenDocument Spreadsheet'
     class_icon16 = 'images/Ods16.png'
     class_icon48 = 'images/Ods48.png'
+    class_handler = ODSFile
 
     #######################################################################
     # Update
     #######################################################################
     def update_20071215(self):
         File.update_20071215(self)
+
+
+    def update_20071216(self):
+        File.update_20071216(self)
 
 
 
 class ODP(File):
 
     class_id = 'application/vnd.oasis.opendocument.presentation'
-    class_version = '20071215'
+    class_version = '20071216'
     class_title = u'ODP'
     class_description = u'OpenDocument Presentation'
     class_icon16 = 'images/Odp16.png'
     class_icon48 = 'images/Odp48.png'
+    class_handler = ODPFile
 
     #######################################################################
     # Update
     #######################################################################
     def update_20071215(self):
         File.update_20071215(self)
+
+
+    def update_20071216(self):
+        File.update_20071216(self)
 
 
 
@@ -354,7 +423,7 @@ class Archive(File):
 class ZipArchive(Archive):
 
     class_id = 'application/zip'
-    class_version = '20071215'
+    class_version = '20071216'
     class_title = u"Zip"
     class_description = u"Zip Archive"
     class_icon16 = 'images/Zip16.png'
@@ -368,11 +437,16 @@ class ZipArchive(Archive):
         Archive.update_20071215(self)
 
 
+    def update_20071216(self):
+        Archive.update_20071216(self)
+
+
+
 
 class TarArchive(Archive):
 
     class_id = 'application/x-tar'
-    class_version = '20071215'
+    class_version = '20071216'
     class_title = u"Tar"
     class_description = u"Tar Archive"
     class_icon16 = 'images/Tar16.png'
@@ -386,6 +460,9 @@ class TarArchive(Archive):
         Archive.update_20071215(self)
 
 
+    def update_20071216(self):
+        Archive.update_20071216(self)
+
 
 ###########################################################################
 # Compression
@@ -398,7 +475,7 @@ class Compression(File):
 class Gzip(Compression):
 
     class_id = 'application/x-gzip'
-    class_version = '20071215'
+    class_version = '20071216'
     class_title = u"Gzip"
     class_description = u"Gzip Compressed"
     class_icon16 = 'images/Gzip16.png'
@@ -412,11 +489,15 @@ class Gzip(Compression):
         Compression.update_20071215(self)
 
 
+    def update_20071216(self):
+        Compression.update_20071216(self)
+
+
 
 class Bzip2(Compression):
 
     class_id = 'application/x-bzip2'
-    class_version = '20071215'
+    class_version = '20071216'
     class_title = u"Bzip2"
     class_description = u"Bzip2 Compressed"
     class_icon16 = 'images/Bzip16.png'
@@ -428,6 +509,10 @@ class Bzip2(Compression):
     #######################################################################
     def update_20071215(self):
         Compression.update_20071215(self)
+
+
+    def update_20071216(self):
+        Compression.update_20071216(self)
 
 
 

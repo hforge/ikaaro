@@ -22,7 +22,7 @@
 from operator import itemgetter
 
 # Import from itools
-from itools.csv import Record
+from itools.csv import Record, Table as TableFile
 from itools.datatypes import (DataType, Integer, is_datatype, Enumerate, Date,
                               Tokens)
 from itools.stl import stl
@@ -53,12 +53,13 @@ class Multiple(DataType):
 class Table(File):
 
     class_id = 'table'
-    class_version = '20071215'
+    class_version = '20071216'
     class_title = u'Table'
     class_views = [['view'],
                    ['add_record_form'],
                    ['edit_metadata_form'],
                    ['history_form']]
+    class_handler = TableFile
 
     record_class = Record
 
@@ -398,6 +399,10 @@ class Table(File):
     #######################################################################
     def update_20071215(self):
         File.update_20071215(self)
+
+
+    def update_20071216(self):
+        File.update_20071216(self)
 
 
 register_object_class(Table)

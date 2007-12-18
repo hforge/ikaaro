@@ -19,21 +19,23 @@
 from cgi import escape
 
 # Import from itools
-from itools.stl import stl
 from itools.gettext import POFile
+from itools.handlers import TextFile, Python as PythonFile
+from itools.stl import stl
+from itools.xml import XMLFile
 
 # Import from ikaaro
 from base import DBObject
-from utils import get_parameters
 from file import File
 from messages import MSG_CHANGES_SAVED
 from registry import register_object_class
+from utils import get_parameters
 
 
 class Text(File):
 
     class_id = 'text'
-    class_version = '20071215'
+    class_version = '20071216'
     class_title = u'Plain Text'
     class_description = u'Keep your notes with plain text files.'
     class_icon16 = 'images/Text16.png'
@@ -43,6 +45,7 @@ class Text(File):
                    ['edit_metadata_form'],
                    ['state_form'],
                    ['history_form']]
+    class_handler = TextFile
 
 
     #######################################################################
@@ -125,11 +128,15 @@ class Text(File):
         File.update_20071215(self, **kw)
 
 
+    def update_20071216(self):
+        File.update_20071216(self)
+
+
 
 class PO(Text):
 
     class_id = 'text/x-po'
-    class_version = '20071215'
+    class_version = '20071216'
     class_title = u'Message Catalog'
     class_icon16 = 'images/Po16.png'
     class_icon48 = 'images/Po48.png'
@@ -209,11 +216,15 @@ class PO(Text):
         Text.update_20071215(self)
 
 
+    def update_20071216(self):
+        Text.update_20071216(self)
+
+
 
 class CSS(Text):
 
     class_id = 'text/css'
-    class_version = '20071215'
+    class_version = '20071216'
     class_title = u'CSS'
     class_icon16 = 'images/CSS16.png'
     class_icon48 = 'images/CSS48.png'
@@ -226,14 +237,19 @@ class CSS(Text):
         Text.update_20071215(self)
 
 
+    def update_20071216(self):
+        Text.update_20071216(self)
+
+
 
 class Python(Text):
 
     class_id = 'text/x-python'
-    class_version = '20071215'
+    class_version = '20071216'
     class_title = u'Python'
     class_icon16 = 'images/Python16.png'
     class_icon48 = 'images/Python48.png'
+    class_handler = PythonFile
 
 
     #######################################################################
@@ -243,11 +259,16 @@ class Python(Text):
         Text.update_20071215(self)
 
 
+    def update_20071216(self):
+        Text.update_20071216(self)
 
-class XMLFile(Text):
+
+
+class XML(Text):
 
     class_id = 'text/xml'
     class_version = '20071215'
+    class_handler = XMLFile
 
 
     #######################################################################
@@ -255,6 +276,10 @@ class XMLFile(Text):
     #######################################################################
     def update_20071215(self):
         Text.update_20071215(self)
+
+
+    def update_20071216(self):
+        Text.update_20071216(self)
 
 
 
@@ -265,6 +290,6 @@ register_object_class(Text)
 register_object_class(Python)
 register_object_class(PO)
 register_object_class(CSS)
-register_object_class(XMLFile)
-register_object_class(XMLFile, format='application/xml')
+register_object_class(XML)
+register_object_class(XML, format='application/xml')
 
