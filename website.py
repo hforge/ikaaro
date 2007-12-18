@@ -323,9 +323,15 @@ class WebSite(RoleAware, Folder):
         # Build the namespace
         users = self.get_object('/users')
 
+        # Only members of the website are showed
+        members = []
+        for key in ('members', 'reviewers', 'admins'):
+            members = members + list(self.get_property(key))
+        members = set(members)
+
         namespace = {}
         namespace['contacts'] = []
-        for username in users.get_usernames():
+        for username in members:
             user = users.get_object(username)
             email = user.get_property('email')
             if not email:
