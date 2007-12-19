@@ -50,5 +50,6 @@ Code reorganization: wiki, tracker, future, forum
 
 "search_handlers" => "search_objects"
 
+It is not necessary to inherit from ikaaro.Root class to define the catalog fields now.
 
 
