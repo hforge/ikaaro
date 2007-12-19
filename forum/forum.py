@@ -80,7 +80,7 @@ class Forum(Folder):
         return stl(handler, namespace)
 
 
-    new_thread_form__access__ = 'is_allowed_to_edit'
+    new_thread_form__access__ = 'is_allowed_to_add'
     new_thread_form__label__ = u"New Thread"
     def new_thread_form(self, context):
         context.styles.append('/ui/forum/forum.css')
@@ -92,7 +92,8 @@ class Forum(Folder):
         return stl(handler, namespace)
 
 
-    new_thread__access__ = 'is_allowed_to_edit'
+    new_thread__access__ = 'is_allowed_to_add'
+    epoz_iframe__access__ = 'is_allowed_to_add'
     def new_thread(self, context):
         title = context.get_form_value('title', type=Unicode).strip()
         if not title:

@@ -23,6 +23,7 @@ from itools.stl import stl
 
 # Import from ikaaro
 from ikaaro.folder import Folder
+from ikaaro.messages import MSG_DELETE_SELECTION, MSG_CHANGES_SAVED
 from ikaaro.registry import register_object_class
 from message import Message, build_message
 
@@ -90,6 +91,13 @@ class Thread(Folder):
         namespace = {}
         namespace['title'] = self.get_title()
         namespace['description'] = self.get_property('description')
+        namespace['editable'] = ac.is_admin(user, self)
+        # Actions
+        actions = []
+        message = self.gettext(MSG_DELETE_SELECTION)
+        remove_message = 'return confirmation("%s");' % message.encode('utf_8')
+        namespace['remove_message'] = remove_message
+
         namespace['messages'] = []
         for message in self.get_posts():
             author_id = message.get_owner()
@@ -98,7 +106,6 @@ class Thread(Folder):
                 'author': users.get_object(author_id).get_title(),
                 'mtime': format_datetime(message.get_mtime(), accept_language),
                 'body': message.handler.events,
-                'editable': ac.is_admin(user, message),
             })
         namespace['rte'] = self.get_rte(context, 'data', None)
 
@@ -106,7 +113,8 @@ class Thread(Folder):
         return stl(handler, namespace)
 
 
-    new_reply__access__ = 'is_allowed_to_edit'
+    new_reply__access__ = 'is_allowed_to_add'
+    epoz_iframe__access__ = 'is_allowed_to_add'
     def new_reply(self, context):
         # check input
         data = context.get_form_value('data').strip()
@@ -125,7 +133,20 @@ class Thread(Folder):
         cls = self.message_class
         cls.make_object(cls, self, name, data, language)
 
+        # Change
+        context.server.change_object(self)
+
         return context.come_back(u"Reply Posted.", goto='#new_reply')
+
+
+    remove_reply__access__ = 'is_admin'
+    def remove_reply(self, context):
+        come_back = Folder.remove(self, context)
+
+        # Change
+        context.server.change_object(self)
+
+        return come_back
 
 
     # Used by "get_rte" above

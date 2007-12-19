@@ -60,14 +60,18 @@ class Message(WebPage):
         return self.parent.parent
 
 
-    # Was already indexed at the thread level
-    def to_text(self):
-        return u''
+    def get_catalog_fields(self):
+        # text field was already indexed at the thread level
+        return [ x for x in WebPage.get_catalog_fields(self)
+                 if x.name != 'text' ]
 
 
     edit__access__ = 'is_admin'
     def edit(self, context):
         WebPage.edit(self, context, sanitize=True)
+
+        # Change, index parent
+        context.server.change_object(self.parent)
 
         return context.come_back(MSG_CHANGES_SAVED, goto='../;view')
 
