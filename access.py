@@ -237,8 +237,9 @@ class RoleAware(AccessControl):
         """Return True if the given user has any of the the given roles,
         False otherwise.
         """
-        for role in roles:
-            if user_id in self.get_property(role):
+        for role_name in roles:
+            role = self.get_property(role_name)
+            if role and user_id in role:
                 return True
         return False
 
