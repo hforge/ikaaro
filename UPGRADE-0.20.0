@@ -52,4 +52,5 @@ Code reorganization: wiki, tracker, future, forum
 
 It is not necessary to inherit from ikaaro.Root class to define the catalog fields now.
 
+Remove "get_pathtoroot"
 
