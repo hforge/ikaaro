@@ -18,6 +18,7 @@
 
 # Import from the Standard Library
 from optparse import OptionParser
+from traceback import print_exc
 
 # Import from itools
 import itools
@@ -60,8 +61,12 @@ def update(parser, options, target):
     context.server = server
     set_context(context)
 
+    # Open the update log
+    log = open('%s/log/update' % target, 'w')
+
     # Traverse the database
-    n = 0
+    up_to_date = 0
+    good = bad = 0
     for object in root.traverse_objects():
         # Skip non-database objects
         if not isinstance(object, DBObject):
@@ -84,8 +89,13 @@ def update(parser, options, target):
             print '*'
             return
 
+        next_versions = object.get_next_versions()
+        if not next_versions:
+            up_to_date += 1
+            continue
+
         # Update
-        for next_version in object.get_next_versions():
+        for next_version in next_versions:
             obj_version = object.metadata.version
             # Ask
             message = '- Update from %s to %s (y/N)? ' % (obj_version,
@@ -96,15 +106,27 @@ def update(parser, options, target):
                 print '*'
                 return
             # Update
-            object.update(next_version)
-            database.save_changes()
-        # Counter
-        n += 1
+            try:
+                object.update(next_version)
+                database.save_changes()
+            except:
+                log.write('%s <%s>\n' % (path, object.__class__.__name__))
+                print_exc(file=log)
+                log.write('\n')
+                bad += 1
+                break
+        else:
+            # The object was successfully upgraded
+            good += 1
 
     print '*'
-    print '* %s objects upgraded.' % n
+    print '* %s objects upgraded.' % good
     print '*'
-    if n > 0:
+    if bad > 0:
+        print '* %s objects failed to upgrade.' % bad
+        print '* Check the "%s/log/update" file.' % target
+        print '*'
+    elif good > 0:
         print '* To finish the upgrade process update the catalog:'
         print '*'
         print '*   $ icms-update-catalog.py %s' % target
