@@ -19,7 +19,6 @@
 
 # Import from the Standard Library
 from datetime import datetime, timedelta
-from mimetypes import guess_type
 
 # Import from itools
 from itools.datatypes import FileName, String, Unicode
@@ -36,6 +35,7 @@ from messages import *
 from multilingual import Multilingual
 from registry import register_object_class, get_object_class
 from versioning import VersioningAware, History
+from utils import get_file_parts
 from workflow import WorkflowAware, WFTransition
 
 
@@ -112,23 +112,14 @@ class File(WorkflowAware, VersioningAware, DBObject):
         if file is None:
             return context.come_back(MSG_EMPTY_FILENAME)
 
+        filename, mimetype, body = get_file_parts(file)
+
         # Check the filename is good
-        filename, mimetype, body = file
         name = title.strip() or filename
         name = checkid(name)
         if name is None:
             return context.come_back(MSG_BAD_NAME)
 
-        # Find out the object class (the mimetype sent by the browser can be
-        # minimalistic)
-        guessed, encoding = guess_type(filename)
-        if encoding is not None:
-            encoding_map = {'gzip': 'application/x-gzip',
-                            'bzip2': 'application/x-bzip2'}
-            if encoding in encoding_map:
-                mimetype = encoding_map[encoding]
-        elif guessed is not None:
-            mimetype = guessed
         # Web Pages are first class citizens
         if mimetype == 'text/html':
             body = stream_to_str_as_xhtml(HTMLParser(body))

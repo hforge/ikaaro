@@ -17,10 +17,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
-from urllib import quote
+from mimetypes import guess_type
 from random import sample
 import sha
 from sys import platform
+from urllib import quote
 
 # Import from itools
 from itools.web import get_context
@@ -35,9 +36,9 @@ else:
 # Navigation helper functions
 ###########################################################################
 def get_parameters(prefix, **kw):
-    """
-    Gets the parameters from the request form, the keyword argument specifies
-    which are the parameters to get and which are their default values.
+    """Gets the parameters from the request form, the keyword argument
+    specifies which are the parameters to get and which are their default
+    values.
 
     The prefix argument lets to create different namespaces for the
     parameters, so the same page web can have different sections with
@@ -132,6 +133,25 @@ def crypt_password(password):
 ###########################################################################
 # Generate next name
 ###########################################################################
+def get_file_parts(file):
+    """Find out the object class (the mimetype sent by the browser can be
+    minimalistic).
+    """
+    filename, mimetype, body = file
+    # Find out the mimetype
+    guessed, encoding = guess_type(filename)
+    if encoding is not None:
+        encoding_map = {'gzip': 'application/x-gzip',
+                        'bzip2': 'application/x-bzip2'}
+        if encoding in encoding_map:
+            mimetype = encoding_map[encoding]
+    elif guessed is not None:
+        mimetype = guessed
+
+    return filename, mimetype, body
+
+
+
 def generate_name(name, used, suffix='_'):
     """Generate a name which is not in list "used" based on name and suffix.
     Example:

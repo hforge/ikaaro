@@ -20,7 +20,6 @@
 
 # Import from the Standard Library
 from datetime import datetime
-from mimetypes import guess_type
 from re import sub
 
 # Import from itools
@@ -36,7 +35,7 @@ from ikaaro.file import File
 from ikaaro.folder import Folder
 from ikaaro.messages import *
 from ikaaro.registry import register_object_class, get_object_class
-from ikaaro.utils import generate_name
+from ikaaro.utils import generate_name, get_file_parts
 
 
 
@@ -153,11 +152,7 @@ class Issue(Folder):
             record['file'] = ''
         else:
             # Upload
-            filename, mimetype, body = file
-            # The mimetype sent by the browser can be minimalistic
-            guessed = guess_type(filename)[0]
-            if guessed is not None:
-                mimetype = guessed
+            filename, mimetype, body = get_file_parts(file)
             # Find a non used name
             name = checkid(filename)
             name, extension, language = FileName.decode(name)
