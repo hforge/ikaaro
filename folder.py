@@ -371,7 +371,7 @@ class Folder(DBObject):
 
         # Build namespace
         namespace = {}
-        total = results.get_n_documents()
+        total = len(objects)
         namespace['total'] = total
         namespace['objects'] = object_lines
 
@@ -773,7 +773,6 @@ class Folder(DBObject):
     def last_changes(self, context, sortby=['mtime'], sortorder='down',
                      batchstart=0, batchsize=20):
         root = context.root
-        user = context.user
         users = root.get_object('users')
         namespace = {}
 
@@ -791,7 +790,7 @@ class Folder(DBObject):
         for document in documents:
             object = root.get_object(document.abspath)
             ac = object.get_access_control()
-            if not ac.is_allowed_to_view(user, object):
+            if not ac.is_allowed_to_view(context.user, object):
                 continue
             line = self._browse_namespace(object, 16)
             revisions = object.get_revisions(context)
@@ -812,7 +811,7 @@ class Folder(DBObject):
         namespace['search_fields'] = None
 
         # The batch
-        total = results.get_n_documents()
+        total = len(lines)
         namespace['batch'] = widgets.batch(context.uri, start, batchsize,
                                            total)
 
