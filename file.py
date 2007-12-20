@@ -121,7 +121,7 @@ class File(WorkflowAware, VersioningAware, DBObject):
 
         # Find out the object class (the mimetype sent by the browser can be
         # minimalistic)
-        guessed, encoding = guess_type(name)
+        guessed, encoding = guess_type(filename)
         if encoding is not None:
             encoding_map = {'gzip': 'application/x-gzip',
                             'bzip2': 'application/x-bzip2'}
