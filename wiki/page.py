@@ -24,9 +24,11 @@ from subprocess import call
 from urllib import urlencode
 
 # Import from docutils
-from docutils import core
-from docutils import io
-from docutils import readers
+from docutils.core import (Publisher, publish_doctree, publish_from_doctree,
+    publish_string)
+from docutils.io import StringInput, StringOutput, NullOutput, DocTreeInput
+from docutils.readers import get_reader_class
+from docutils.readers.doctree import Reader
 from docutils import nodes
 
 # Import from itools
@@ -45,9 +47,14 @@ from ikaaro.binary import Image
 from ikaaro.skins import UIFile
 
 
+
+StandaloneReader = get_reader_class('standalone')
+
+
 class WikiPage(Text):
+
     class_id = 'WikiPage'
-    class_version = '20071215'
+    class_version = '20071216'
     class_title = u"Wiki Page"
     class_description = u"Wiki contents"
     class_icon16 = 'wiki/WikiPage16.png'
@@ -88,7 +95,6 @@ class WikiPage(Text):
         here = context.object
 
         # Override dandling links handling
-        StandaloneReader = readers.get_reader_class('standalone')
         class WikiReader(StandaloneReader):
             supported = ('wiki',)
 
@@ -126,8 +132,8 @@ class WikiPage(Text):
 
         # Manipulate publisher directly (from publish_doctree)
         reader = WikiReader(parser_name='restructuredtext')
-        pub = core.Publisher(reader=reader, source_class=io.StringInput,
-                destination_class=io.NullOutput)
+        pub = Publisher(reader=reader, source_class=StringInput,
+                destination_class=NullOutput)
         pub.set_components(None, 'restructuredtext', 'null')
         pub.process_programmatic_settings(None, self.overrides, None)
         pub.set_source(self.handler.to_str(), None)
@@ -180,10 +186,9 @@ class WikiPage(Text):
                 node['uri'] = str(here.get_pathto(image))
 
         # Manipulate publisher directly (from publish_from_doctree)
-        reader = readers.doctree.Reader(parser_name='null')
-        pub = core.Publisher(reader, None, None,
-                source=io.DocTreeInput(document),
-                destination_class=io.StringOutput)
+        reader = Reader(parser_name='null')
+        pub = Publisher(reader, None, None, source=DocTreeInput(document),
+                destination_class=StringOutput)
         pub.set_writer('html')
         pub.process_programmatic_settings(None, self.overrides, None)
         pub.set_destination(None, None)
@@ -203,7 +208,6 @@ class WikiPage(Text):
         images = []
 
         # Override dandling links handling
-        StandaloneReader = readers.get_reader_class('standalone')
         class WikiReader(StandaloneReader):
             supported = ('wiki',)
 
@@ -220,7 +224,7 @@ class WikiPage(Text):
             unknown_reference_resolvers = [wiki_reference_resolver]
 
         reader = WikiReader(parser_name='restructuredtext')
-        document = core.publish_doctree(self.handler.to_str(), reader=reader,
+        document = publish_doctree(self.handler.to_str(), reader=reader,
                 settings_overrides=self.overrides)
 
         # Fix the wiki links
@@ -250,8 +254,7 @@ class WikiPage(Text):
                 # Link to file
                 continue
             source = page.handler.to_str()
-            subdoc = core.publish_doctree(source,
-                    settings_overrides=self.overrides)
+            subdoc = publish_doctree(source, settings_overrides=self.overrides)
             if isinstance(subdoc[0], nodes.section):
                 for node in subdoc.children:
                     if isinstance(node, nodes.section):
@@ -291,7 +294,7 @@ class WikiPage(Text):
 
         overrides = dict(self.overrides)
         overrides['stylesheet'] = 'style.tex'
-        output = core.publish_from_doctree(document, writer_name='latex',
+        output = publish_from_doctree(document, writer_name='latex',
                 settings_overrides=overrides)
 
         dirname = mkdtemp('wiki', 'itools')
@@ -426,7 +429,7 @@ class WikiPage(Text):
 
         source = self.get_object('/ui/wiki/help.txt')
         source = source.to_str()
-        html = core.publish_string(source, writer_name='html',
+        html = publish_string(source, writer_name='html',
                 settings_overrides=self.overrides)
 
         namespace['help_source'] = source
@@ -441,6 +444,10 @@ class WikiPage(Text):
     #######################################################################
     def update_20071215(self):
         Text.update_20071215(self)
+
+
+    def update_20071216(self):
+        Text.update_20071216(self)
 
 
 ###########################################################################
