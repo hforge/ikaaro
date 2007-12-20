@@ -360,9 +360,13 @@ class File(WorkflowAware, VersioningAware, DBObject):
     def update_20071216(self):
         folder = self.parent.handler
         name, extension, language = FileName.decode(self.name)
+        # Rename metadata
         folder.move_handler('%s.metadata' % self.name, '%s.metadata' % name)
-        if language is not None:
-            name = FileName.encode((name, extension, None))
+        # Rename handler
+        if extension is None:
+            extension = self.class_handler.class_extension
+        name = FileName.encode((name, extension, None))
+        if name != self.name:
             folder.move_handler(self.name, name)
 
 

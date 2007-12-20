@@ -318,5 +318,4 @@ class WebPage(EpozEditable, Multilingual, Text):
 # Register
 ###########################################################################
 register_object_class(WebPage)
-register_object_class(WebPage, format='text/html')
 register_object_class(WebPage, format='application/xhtml+xml')

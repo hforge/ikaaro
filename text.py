@@ -21,6 +21,7 @@ from cgi import escape
 # Import from itools
 from itools.gettext import POFile
 from itools.handlers import TextFile, Python as PythonFile
+from itools.html import HTMLFile
 from itools.stl import stl
 from itools.xml import XMLFile
 
@@ -254,8 +255,27 @@ class Python(Text):
 class XML(Text):
 
     class_id = 'text/xml'
-    class_version = '20071215'
+    class_version = '20071216'
     class_handler = XMLFile
+
+
+    #######################################################################
+    # Update
+    #######################################################################
+    def update_20071215(self):
+        Text.update_20071215(self)
+
+
+    def update_20071216(self):
+        Text.update_20071216(self)
+
+
+
+class HTML(Text):
+
+    class_id = 'text/html'
+    class_version = '20071216'
+    class_handler = HTMLFile
 
 
     #######################################################################
@@ -279,4 +299,5 @@ register_object_class(PO)
 register_object_class(CSS)
 register_object_class(XML)
 register_object_class(XML, format='application/xml')
+register_object_class(HTML)
 
