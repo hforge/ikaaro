@@ -447,7 +447,18 @@ class WikiPage(Text):
 
 
     def update_20071216(self):
-        Text.update_20071216(self)
+        # Names are lower-case now
+        name = self.name
+        if self.name != 'FrontPage':
+            name = checkid(name)
+        # Rename metadata
+        folder = self.parent.handler
+        if name != self.name:
+            folder.move_handler('%s.metadata' % self.name,
+                                '%s.metadata' % name)
+        # Rename handler
+        folder.move_handler(self.name, '%s.txt' % name)
+
 
 
 ###########################################################################
