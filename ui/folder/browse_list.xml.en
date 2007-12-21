@@ -7,7 +7,7 @@
 <h2>Browse Content</h2>
 
 <!-- Search/Filter -->
-<form action=";browse_content?mode=list" method="get" stl:if="search_fields">
+<form action="${action}" method="get" stl:if="search_fields">
   <fieldset>
     <legend>Search</legend>
     <!-- Field -->

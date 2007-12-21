@@ -375,7 +375,7 @@ class DBObject(CatalogAware, Node, DomainAware):
                 try:
                     user = users.get_object(user_id)
                 except LookupError:
-                    document['last_author'] = u'Unavailable'
+                    document['last_author'] = None
                 else:
                     document['last_author'] = user.get_title()
 

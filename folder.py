@@ -317,8 +317,22 @@ class Folder(DBObject):
             path_to_icon = Path('%s/' % object.name).resolve(path_to_icon)
         line['img'] = path_to_icon
         # The modification time
-        accept = get_context().accept_language
+        context = get_context()
+        accept = context.accept_language
         line['mtime'] = format_datetime(object.get_mtime(), accept=accept)
+        # Last author
+        line['last_author'] = u''
+        if isinstance(object, VersioningAware):
+            revisions = object.get_revisions(context)
+            if revisions:
+                username = revisions[0]['username']
+                try:
+                    user = self.get_object('/users/%s' % username)
+                except LookupError:
+                    line['last_author'] = username
+                else:
+                    line['last_author'] = user.get_title()
+
         # The workflow state
         line['workflow_state'] = ''
         if isinstance(object, WorkflowAware):
@@ -336,12 +350,10 @@ class Folder(DBObject):
 
 
     def browse_namespace(self, icon_size, sortby=['title'], sortorder='up',
-                         batchstart=0, batchsize=20, query=None,
-                         results=None):
+                         batchsize=20, query=None, results=None):
         context = get_context()
         # Load variables from the request
-        start = context.get_form_value('batchstart', type=Integer,
-                                       default=batchstart)
+        start = context.get_form_value('batchstart', type=Integer, default=0)
         size = context.get_form_value('batchsize', type=Integer,
                                       default=batchsize)
 
@@ -390,32 +402,41 @@ class Folder(DBObject):
         return stl(handler, namespace)
 
 
-    def browse_list(self, context, sortby=['title'], sortorder='up'):
+    def browse_list(self, context, sortby=['title'], sortorder='up',
+            batchsize=20, search_subfolders=False,
+            action=';browse_content?mode=list', *args):
         # Get the form values
         get_form_value = context.get_form_value
         term = get_form_value('search_term', type=Unicode)
         term = term.strip()
         field = get_form_value('search_field')
-        search_subfolders = get_form_value('search_subfolders', type=Boolean,
-                                           default=False)
+        if field:
+            search_subfolders = get_form_value('search_subfolders',
+                                               type=Boolean, default=False)
 
         sortby = context.get_form_values('sortby', default=sortby)
-        sortorder = context.get_form_value('sortorder', sortorder)
+        sortorder = get_form_value('sortorder', sortorder)
 
         # Build the query
+        args = list(args)
         abspath = str(self.get_canonical_path())
-        if term:
-            if search_subfolders is True:
-                query = EqQuery('paths', abspath)
-            else:
-                query = EqQuery('parent_path', abspath)
-            query = AndQuery(query, PhraseQuery(field, term))
+        if search_subfolders is True:
+            args.append(EqQuery('paths', abspath))
         else:
-            query = EqQuery('parent_path', abspath)
+            args.append(EqQuery('parent_path', abspath))
+
+        if term:
+            args.append(PhraseQuery(field, term))
+
+        if len(args) == 1:
+            query = args[0]
+        else:
+            query = AndQuery(*args)
 
         # Build the namespace
-        namespace = self.browse_namespace(16, query=query, sortby=sortby,
-                                          sortorder=sortorder)
+        namespace = self.browse_namespace(16, sortby, sortorder, batchsize,
+                                          query=query)
+        namespace['action'] = action
         namespace['search_term'] = term
         namespace['search_subfolders'] = search_subfolders
         namespace['search_fields'] = [
@@ -426,8 +447,8 @@ class Folder(DBObject):
         # The column headers
         columns = [
             ('name', u'Name'), ('title', u'Title'), ('format', u'Type'),
-            ('mtime', u'Date'), ('size', u'Size'),
-            ('workflow_state', u'State')]
+            ('mtime', u'Last Modified'), ('last_author', u'Last Author'),
+            ('size', u'Size'), ('workflow_state', u'State')]
 
         # Actions
         user = context.user
@@ -771,60 +792,10 @@ class Folder(DBObject):
     last_changes__access__ = 'is_allowed_to_view'
     last_changes__label__ = u"Last Changes"
     def last_changes(self, context, sortby=['mtime'], sortorder='down',
-                     batchstart=0, batchsize=20):
-        root = context.root
-        users = root.get_object('users')
-        namespace = {}
-
-        start = context.get_form_value('batchstart', type=Integer,
-                                       default=batchstart)
-        sortby = context.get_form_values('sortby', sortby)
-        sortorder = context.get_form_value('sortorder', sortorder)
-
-        results = root.search(is_version_aware=True,
-                              paths=str(self.get_abspath()))
-        documents = results.get_documents(sortby, (sortorder == 'down'), start,
-                                          batchsize)
-
-        lines = []
-        for document in documents:
-            object = root.get_object(document.abspath)
-            ac = object.get_access_control()
-            if not ac.is_allowed_to_view(context.user, object):
-                continue
-            line = self._browse_namespace(object, 16)
-            revisions = object.get_revisions(context)
-            if revisions:
-                last_rev = revisions[0]
-                username = last_rev['username']
-                try:
-                    user = users.get_object(username)
-                    user_title = user.get_title()
-                except LookupError:
-                    user_title = username
-            else:
-                user_title = XMLParser('<em>Unavailable</em>')
-            line['last_author'] = user_title
-            lines.append(line)
-
-        # The filter (none)
-        namespace['search_fields'] = None
-
-        # The batch
-        total = results.get_n_documents()
-        namespace['batch'] = widgets.batch(context.uri, start, batchsize,
-                                           total)
-
-        # The table
-        columns = [('name', u'Name'), ('title', u'Title'),
-                   ('mtime', u'Last Modified'),
-                   ('last_author', u'Last Author'),
-                   ('workflow_state', u'State')]
-        namespace['table'] = widgets.table(columns, lines, sortby, sortorder,
-                                           gettext=self.gettext)
-
-        handler = self.get_object('/ui/folder/browse_list.xml')
-        return stl(handler, namespace)
+                     batchsize=20):
+        query = EqQuery('is_version_aware', '1')
+        return self.browse_list(context, sortby, sortorder, batchsize, True,
+                                ';last_changes', query)
 
 
     #######################################################################
