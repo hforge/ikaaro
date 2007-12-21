@@ -371,7 +371,7 @@ class Folder(DBObject):
 
         # Build namespace
         namespace = {}
-        total = len(objects)
+        total = results.get_n_documents()
         namespace['total'] = total
         namespace['objects'] = object_lines
 
@@ -811,7 +811,7 @@ class Folder(DBObject):
         namespace['search_fields'] = None
 
         # The batch
-        total = len(lines)
+        total = results.get_n_documents()
         namespace['batch'] = widgets.batch(context.uri, start, batchsize,
                                            total)
 
