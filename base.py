@@ -807,25 +807,23 @@ class DBObject(CatalogAware, Node, DomainAware):
 
         # Default values
         if remove is None:
-            remove = ['id', 'owner', 'dc:language', 'ikaaro:history',
-                      'ikaaro:wf_transition', 'ikaaro:user_theme']
+            remove = ['id', 'owner', 'dc:language', 'ikaaro:user_theme']
 
-        # Version
+        # The version is now an attribute
         metadata.version = properties['version']
         del properties['version']
 
-        # Remove
+        # Remove obsolete properties
         for name in remove:
             if name in properties:
                 del properties[name]
 
-        # Rename (explicit rule)
+        # Rename (when changing a name for another)
         for src, dst in rename:
             if src in properties:
-                properties[dst] = properties[src]
-                del properties[src]
+                properties[dst] = properties.pop(src)
 
-        # Rename (implicit rule)
+        # Rename (when removing the prefix is enough)
         for name in properties:
             if ':' in name:
                 new_name = name.split(':', 1)[1]
@@ -833,10 +831,22 @@ class DBObject(CatalogAware, Node, DomainAware):
                     raise ValueError, 'unexpected property "%s"' % name
                 datatype = schema[new_name]
                 value = properties.pop(name)
+                # Multilingual
                 if isinstance(value, dict):
                     properties[new_name] = {}
                     for key in value:
                         properties[new_name][key] = datatype.decode(value[key])
+                # Record
+                elif isinstance(value, list):
+                    for revision in value:
+                        for subname in revision:
+                            new_subname = subname.split(':', 1)[-1]
+                            # Using the record schema
+                            subdatatype = datatype.schema[new_subname]
+                            subdata = revision.pop(subname)
+                            subvalue = subdatatype.decode(subdata)
+                            revision[new_subname] = subvalue
+                    properties[new_name] = value
                 else:
                     properties[new_name] = datatype.decode(value)
             else:

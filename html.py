@@ -242,10 +242,9 @@ class WebPage(EpozEditable, Multilingual, Text):
     # Update
     #######################################################################
     def update_20071215(self):
-        remove = ['id', 'owner', 'ikaaro:history', 'ikaaro:wf_transition',
-                  'ikaaro:user_theme']
-        rename = [('dc:language', 'language')]
-        Text.update_20071215(self, remove=remove, rename=rename)
+        # Don't remove the language for 'update_20071216'
+        remove = ['id', 'owner', 'ikaaro:user_theme']
+        Text.update_20071215(self, remove=remove)
 
 
     def update_20071216(self):

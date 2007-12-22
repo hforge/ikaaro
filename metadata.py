@@ -121,11 +121,12 @@ class Metadata(File):
 
                 # Find out datatype
                 if n == 1:
-                    datatype = schema.get(name, String)
-                    # FIXME Backwards compatibility with 0.16, introduced in
-                    # 0.20
+                    # FIXME tell how to decode Records while migrating from
+                    # 0.16 to 0.20
                     if name in ('ikaaro:wf_transition', 'ikaaro:history'):
                         datatype = Record
+                    else:
+                        datatype = schema.get(name, String)
                 else:
                     datatype = stack[-1][1]
                     if is_datatype(datatype, Record):
@@ -192,15 +193,13 @@ class Metadata(File):
             schema = cls.get_metadata_schema()
 
         # Opening
-        lines = ['<metadata format="%s" version="%s">\n' % (format, version)]
+        lines = ['<?xml version="1.0" encoding="UTF-8"?>\n',
+                 '<metadata format="%s" version="%s">\n' % (format, version)]
 
         # Properties
         for name in self.properties:
             value = self.properties[name]
             datatype = schema.get(name, String)
-            # FIXME Backwards compatibility with 0.16, introduced in 0.20
-            if name in ('ikaaro:wf_transition', 'ikaaro:history'):
-                continue
 
             # Multilingual properties
             if isinstance(value, dict):
