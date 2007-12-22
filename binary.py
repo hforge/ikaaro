@@ -460,12 +460,7 @@ class TarArchive(Archive):
 ###########################################################################
 # Compression
 ###########################################################################
-class Compression(File):
-    pass
-
-
-
-class Gzip(Compression):
+class Gzip(File):
 
     class_id = 'application/x-gzip'
     class_version = '20071216'
@@ -479,15 +474,15 @@ class Gzip(Compression):
     # Update
     #######################################################################
     def update_20071215(self):
-        Compression.update_20071215(self)
+        File.update_20071215(self)
 
 
     def update_20071216(self):
-        Compression.update_20071216(self)
+        File.update_20071216(self)
 
 
 
-class Bzip2(Compression):
+class Bzip2(File):
 
     class_id = 'application/x-bzip2'
     class_version = '20071216'
@@ -501,11 +496,11 @@ class Bzip2(Compression):
     # Update
     #######################################################################
     def update_20071215(self):
-        Compression.update_20071215(self)
+        File.update_20071215(self)
 
 
     def update_20071216(self):
-        Compression.update_20071216(self)
+        File.update_20071216(self)
 
 
 
