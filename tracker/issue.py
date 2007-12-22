@@ -565,7 +565,10 @@ class Issue(Folder):
     def update_20071215(self):
         """Change '.history' from CSV to Table.
         """
-        Folder.update_20071215(self)
+        remove = ['id', 'owner', 'dc:language', 'ikaaro:user_theme',
+                  # Issue used to be VersioningAware
+                  'ikaaro:history']
+        Folder.update_20071215(self, remove=remove)
         columns = ['datetime', 'username', 'title', 'module', 'version',
                    'type', 'priority', 'assigned_to', 'state', 'comment',
                    'file']
