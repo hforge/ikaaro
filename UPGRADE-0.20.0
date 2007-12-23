@@ -54,3 +54,5 @@ It is not necessary to inherit from ikaaro.Root class to define the catalog fiel
 
 Remove "get_pathtoroot"
 
+send_email prototype
+"new_instance*" are now staticmethod, drop the last traces of "im_func"
