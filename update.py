@@ -17,10 +17,6 @@
 # Import from itools
 from itools import vfs
 
-# Import from ikaaro
-from metadata import Metadata
-from registry import get_object_class
-
 
 
 def is_instance_up_to_date(target):
@@ -30,13 +26,6 @@ def is_instance_up_to_date(target):
 
     # Check for the 'catalog/fields' file (XXX To remove by 0.21)
     if vfs.exists('%s/catalog/fields' % target):
-        return False
-
-    # Find out the root class
-    metadata = Metadata('%s/database/.metadata' % target)
-    cls = get_object_class(metadata.format)
-    # Check the version
-    if metadata.version < cls.class_version:
         return False
 
     # All tests pass

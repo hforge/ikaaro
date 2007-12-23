@@ -145,6 +145,9 @@ if __name__ == '__main__':
         '-y', '--yes', action='store_true', dest='confirm',
         help="start the update without asking confirmation")
 
+    # TODO Add option --pretend (to know whether the database needs to be
+    # updated)
+
     options, args = parser.parse_args()
     if len(args) != 1:
         parser.error('incorrect number of arguments')
