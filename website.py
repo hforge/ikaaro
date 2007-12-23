@@ -179,13 +179,14 @@ class WebSite(RoleAware, Folder):
             accept.set(language, 2.0)
 
 
-    ########################################################################
-    # User interface
-    ########################################################################
+    #######################################################################
+    # UI / Edit
+    #######################################################################
     edit_metadata_form__label__ = u'Edit'
 
-    ######################################################################
-    # Edit / Virtual Hosts
+    #######################################################################
+    # UI / Edit / Virtual Hosts
+    #######################################################################
     virtual_hosts_form__access__ = 'is_admin'
     virtual_hosts_form__label__ = u'Edit'
     virtual_hosts_form__sublabel__ = u'Virtual Hosts'
@@ -209,8 +210,9 @@ class WebSite(RoleAware, Folder):
         return context.come_back(MSG_CHANGES_SAVED)
 
 
-    ######################################################################
-    # Edit / Languages
+    #######################################################################
+    # UI / Edit / Languages
+    #######################################################################
     languages_form__access__ = 'is_admin'
     languages_form__label__ = u'Edit'
     languages_form__sublabel__ = u'Languages'
@@ -285,8 +287,9 @@ class WebSite(RoleAware, Folder):
         return context.come_back(u'Language added.')
 
 
-    ######################################################################
-    # Edit / Security
+    #######################################################################
+    # UI / Edit / Security
+    #######################################################################
     anonymous_form__access__ = 'is_allowed_to_edit'
     anonymous_form__label__ = u'Edit'
     anonymous_form__sublabel__ = u'Security Policy'
@@ -311,8 +314,9 @@ class WebSite(RoleAware, Folder):
         return context.come_back(MSG_CHANGES_SAVED)
 
 
-    ######################################################################
-    # Edit / Contact
+    #######################################################################
+    # UI / Edit / Contact
+    #######################################################################
     contact_options_form__access__ = 'is_allowed_to_edit'
     contact_options_form__label__ = u'Edit'
     contact_options_form__sublabel__ = u'Contact'
@@ -358,8 +362,9 @@ class WebSite(RoleAware, Folder):
         return context.come_back(MSG_CHANGES_SAVED)
 
 
-    ########################################################################
-    # Register
+    #######################################################################
+    # UI / Register
+    #######################################################################
     def is_allowed_to_register(self, user, object):
         return self.get_property('website_is_open')
 
@@ -422,8 +427,9 @@ class WebSite(RoleAware, Folder):
         return message.encode('utf-8')
 
 
-    ########################################################################
-    # Login
+    #######################################################################
+    # UI / Login
+    #######################################################################
     login_form__access__ = True
     login_form__label__ = u'Login'
     def login_form(self, context):
@@ -496,8 +502,9 @@ class WebSite(RoleAware, Folder):
         return get_reference('users/%s' % user.name)
 
 
-    ########################################################################
-    # Forgotten password
+    #######################################################################
+    # UI / Forgotten password
+    #######################################################################
     forgotten_password_form__access__ = True
     def forgotten_password_form(self, context):
         handler = self.get_object('/ui/website/forgotten_password_form.xml')
@@ -532,8 +539,9 @@ class WebSite(RoleAware, Folder):
         return stl(handler)
 
 
-    ########################################################################
-    # Logout
+    #######################################################################
+    # UI / Logout
+    #######################################################################
     logout__access__ = True
     def logout(self, context):
         """Logs out of the application.
@@ -547,8 +555,9 @@ class WebSite(RoleAware, Folder):
         return stl(handler)
 
 
-    ########################################################################
-    # Search
+    #######################################################################
+    # UI / Search
+    #######################################################################
     site_search__access__ = True
     def site_search(self, context):
         root = context.root
@@ -626,8 +635,9 @@ class WebSite(RoleAware, Folder):
         return stl(handler, namespace)
 
 
-    ########################################################################
-    # Contact
+    #######################################################################
+    # UI / Contact
+    #######################################################################
     contact_fields = [('to', True, String),
                       ('from', True, Email),
                       ('subject', True, String),
@@ -680,6 +690,21 @@ class WebSite(RoleAware, Folder):
         root.send_email(contact, subject, from_addr=from_addr, text=body)
 
         return context.come_back(u'Message sent.')
+
+
+    #######################################################################
+    # UI / Broken links
+    #######################################################################
+    broken_links__access__ = True
+    def broken_links(self, context):
+        root = context.root
+
+        broken = []
+        for brain in root.search(format='webpage').get_documents():
+            object = self.get_object(brain.abspath)
+            broken.extend(object.broken_links())
+
+        return '\n'.join(broken)
 
 
     #######################################################################

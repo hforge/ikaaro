@@ -72,8 +72,7 @@ class Multilingual(DBObject):
 
 
     def get_handlers(self):
-        site_root = self.get_site_root()
-        languages = site_root.get_property('website_languages')
+        languages = self.get_site_root().get_property('website_languages')
         return [ self.get_handler(language=x) for x in languages ]
 
 

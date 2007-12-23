@@ -22,7 +22,7 @@ from datetime import datetime
 # Import from itools
 from itools.datatypes import DateTime, FileName, String
 from itools.handlers import File
-from itools.html import (XHTMLFile, sanitize_stream, HTMLParser,
+from itools.html import (xhtml_uri, XHTMLFile, sanitize_stream, HTMLParser,
     stream_to_str_as_xhtml)
 from itools.stl import stl
 from itools.xml import TEXT, START_ELEMENT, XMLError
@@ -168,6 +168,36 @@ class WebPage(EpozEditable, Multilingual, Text):
 
     def get_content_type(self):
         return 'application/xhtml+xml; charset=UTF-8'
+
+
+    def broken_links(self):
+        languages = self.get_site_root().get_property('website_languages')
+
+        broken = []
+        for language in languages:
+            handler = self.get_handler(language=language)
+            for event in handler.events:
+                type, value, line = event
+                if type != START_ELEMENT:
+                    continue
+                tag_uri, tag_name, attributes = value
+                if tag_uri != xhtml_uri:
+                    continue
+                if tag_name == 'a':
+                    value = attributes.get('href')
+                elif tag_name == 'img':
+                    value = attributes.get('src')
+                else:
+                    continue
+                if value is None:
+                    continue
+                uri = get_reference(value)
+                if uri.scheme or uri.authority:
+                    continue
+                if not self.has_object(uri.path):
+                    broken.append(uri)
+
+        return broken
 
 
     #######################################################################
