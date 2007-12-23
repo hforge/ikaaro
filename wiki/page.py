@@ -74,9 +74,7 @@ class WikiPage(Text):
         'output_encoding': 'utf-8',
     }
 
-    #######################################################################
-    # User interface
-    #######################################################################
+
     @staticmethod
     def new_instance_form(cls, context):
         return DBObject.new_instance_form(cls, context)
@@ -88,6 +86,9 @@ class WikiPage(Text):
         return context.uri.resolve2(';view')
 
 
+    #######################################################################
+    # UI / View
+    #######################################################################
     view__sublabel__ = u'HTML'
     def view(self, context):
         context.styles.append('/ui/wiki/wiki.css')
@@ -103,28 +104,24 @@ class WikiPage(Text):
                 name = checkid(refname)
 
                 # It may be the page or its container
-                # It may a page title to convert or a path
-                ref = None
-                for container, path in ((self, name),
-                                        (parent, name),
-                                        (self, refname),
-                                        (parent, refname)):
+                # It may be a page title to convert or a path
+                for container, path in ((self, name), (parent, name),
+                                        (self, refname), (parent, refname)):
                     try:
                         ref = container.get_object(path)
                     except (NotImplementedError, LookupError,
                             UnicodeEncodeError):
                         continue
-                    # Found, exit now
-                    break
-
-                if ref is None:
-                    target['wiki_refname'] = False
-                    target['wiki_title'] = refname
-                    target['wiki_name'] = name
-                else:
+                    # Found
                     target['wiki_refname'] = refname
                     target['wiki_title'] = refname
                     target['wiki_name'] = str(here.get_pathto(ref))
+                    return True
+
+                # Not Found
+                target['wiki_refname'] = False
+                target['wiki_title'] = refname
+                target['wiki_name'] = name
                 return True
 
             wiki_reference_resolver.priority = 851
@@ -173,17 +170,15 @@ class WikiPage(Text):
         for node in document.traverse(condition=nodes.image):
             node_uri = node['uri']
             # Is the path is correct?
-            image = None
             for container in (self, parent):
                 try:
                     image = container.get_object(node_uri)
                 except (NotImplementedError, LookupError):
                     continue
-                # Found, exit now
-                break
 
-            if image is not None:
+                # Found
                 node['uri'] = str(here.get_pathto(image))
+                break
 
         # Manipulate publisher directly (from publish_from_doctree)
         reader = Reader(parser_name='null')
@@ -199,6 +194,9 @@ class WikiPage(Text):
         return body.encode('utf_8')
 
 
+    #######################################################################
+    # UI / PDF
+    #######################################################################
     to_pdf__access__ = 'is_allowed_to_view'
     to_pdf__label__ = u"View"
     to_pdf__sublabel__ = u"PDF"
@@ -366,6 +364,9 @@ class WikiPage(Text):
         return data
 
 
+    #######################################################################
+    # UI / Edit
+    #######################################################################
     def edit_form(self, context):
         context.styles.append('/ui/wiki/wiki.css')
         text_size = context.get_form_value('text_size');
@@ -421,6 +422,9 @@ class WikiPage(Text):
         return goto
 
 
+    #######################################################################
+    # UI / Help
+    #######################################################################
     help__access__ = 'is_allowed_to_view'
     help__label__ = u"Help"
     def help(self, context):
