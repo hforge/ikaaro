@@ -165,10 +165,10 @@ class Server(BaseServer):
         for object in self.objects_removed:
             if isinstance(object, Folder):
                 for x in object.traverse_objects():
-                    path = str(x.get_abspath())
+                    path = str(x.get_canonical_path())
                     catalog.unindex_document(path)
             else:
-                path = str(object.get_abspath())
+                path = str(object.get_canonical_path())
                 catalog.unindex_document(path)
         self.objects_removed.clear()
 
