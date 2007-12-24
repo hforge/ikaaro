@@ -810,8 +810,8 @@ class DBObject(CatalogAware, Node, DomainAware):
             remove = ['id', 'owner', 'dc:language', 'ikaaro:user_theme']
 
         # The version is now an attribute
-        metadata.version = properties['version']
-        del properties['version']
+        if 'version' in properties:
+            metadata.version = properties.pop('version')
 
         # Remove obsolete properties
         for name in remove:
