@@ -19,6 +19,7 @@
 
 # Import from the Standard Library
 from datetime import datetime, timedelta
+from mimetypes import guess_all_extensions
 
 # Import from itools
 from itools.datatypes import FileName, String, Unicode
@@ -57,31 +58,46 @@ class File(WorkflowAware, VersioningAware, DBObject):
 
 
     @staticmethod
-    def _make_object(cls, folder, name, body=None, filename=None):
+    def _make_object(cls, folder, name, body=None, filename=None,
+                     extension=None):
         DBObject._make_object(cls, folder, name, filename=filename)
         # Add the body
         if body is not None:
             handler = cls.class_handler(string=body)
-            name = FileName.encode((name, handler.class_extension, None))
+            extension = extension or handler.class_extension
+            name = FileName.encode((name, extension, None))
             folder.set_handler(name, handler)
 
 
     def get_handler(self):
-        if self._handler is None:
-            cls = self.class_handler
-            database = self.metadata.database
-            name = FileName.encode((self.name, cls.class_extension, None))
-            uri = self.metadata.uri.resolve(name)
+        # Already loaded
+        if self._handler is not None:
+            return self._handler
+
+        # Not yet loaded
+        cls = self.class_handler
+        database = self.metadata.database
+        base = self.metadata.uri
+        extensions = [ x[1:] for x in guess_all_extensions(self.class_id) ]
+        if cls.class_extension in extensions:
+            extensions.remove(cls.class_extension)
+        extensions.insert(0, cls.class_extension)
+        for extension in extensions:
+            name = FileName.encode((self.name, extension, None))
+            uri = base.resolve(name)
+            # Found
             if database.has_handler(uri):
                 self._handler = database.get_handler(uri, cls=cls)
-            else:
-                handler = cls()
-                handler.database = database
-                handler.uri = uri
-                handler.timestamp = None
-                handler.dirty = True
-                database.cache[uri] = handler
-                self._handler = handler
+                return self._handler
+
+        # Not found, build a dummy one
+        handler = cls()
+        handler.database = database
+        handler.uri = uri
+        handler.timestamp = None
+        handler.dirty = True
+        database.cache[uri] = handler
+        self._handler = handler
         return self._handler
 
     handler = property(get_handler, None, None, '')
@@ -150,6 +166,8 @@ class File(WorkflowAware, VersioningAware, DBObject):
         kw = {'filename': filename}
         if issubclass(cls, Multilingual):
             kw['language'] = language
+        else:
+            kw['extension'] = type
         object = cls.make_object(cls, container, name, body, **kw)
         # The title
         language = container.get_content_language(context)
