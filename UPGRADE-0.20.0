@@ -1,9 +1,38 @@
-**************************************************************************
-ikaaro 0.20.0
-**************************************************************************
+
+Upgrade instructions to ikaaro 0.20.0
+***************************************************************************
+
+For sys admins
+==============
+
+Add a log file to "icms-update.py"
+Move the contact email to the configuration file.
+Allow to use an smtp that required identification
+changes to the icms-start.py signature
+new option DEBUG
+new folder "log"
+
+1. Update database
+------------------
+
+As usual instances must be updated:
+
+  $ icms-update.py xxx           (1)
+  $ icms-update-catalog.py xxx   (2)
+
+However, given the nature of the changes, sometimes the first step (1)
+could fail with an error message.  If this happens the problem must be
+resolved in the origin database, and then the procedure can be re-started.
+
+
+
+For developers
+==============
+
+
 
 1. Imports
-==========
+----------
 
 Most important, "itools.cms" has been changed to "ikaaro":
 
@@ -24,17 +53,10 @@ Other renames include:
   from ikaaro.html import WebPage                # Now
 
 
-2. Update database
-==================
+2. 
+------------------
 
-As usual instances must be updated:
 
-  $ icms-update.py xxx           (1)
-  $ icms-update-catalog.py xxx   (2)
-
-However, given the nature of the changes, sometimes the first step (1)
-could fail with an error message.  If this happens the problem must be
-resolved in the origin database, and then the procedure can be re-started.
 
 
 UNCLASSIFIED
@@ -56,3 +78,34 @@ Remove "get_pathtoroot"
 
 send_email prototype
 "new_instance*" are now staticmethod, drop the last traces of "im_func"
+Remove the "owner" metadata.
+
+
+
+
+
+
+New metadata architecture
+Decentralize "icms-update.py"
+
+
+Proof-of-concept interface to check broken links.
+Add a log file to "icms-update.py"
+Now files "remember" the original filename.
+Unify HTML and XHTML web pages
+Move the contact email to the configuration file.
+Remove "icms-make-package.py"
+
+Replace "change_language" by a more efficient (no redirections), robust (no
+referrer) and google friendly way to set the language.
+
+Fix upload of multilingual files.  Add optional "title" to the upload form.
+extend the wiki/tracker action box to all containers
+Allow to use an smtp that required identification
+Remove plain text files from the add form.
+changes to the icms-start.py signature
+new option DEBUG
+new folder "log"
+"new_instance*" are now staticmethod, drop the last traces of "im_func"
+Allow to send html emails with send_email method
+

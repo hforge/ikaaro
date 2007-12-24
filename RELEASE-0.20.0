@@ -5,7 +5,7 @@ ikaaro 0.20.0 (2007/12/27)
 This is a Content Management System built on Python & itools, among
 other features ikaaro provides:
 
- - content and document mangement (index&search, metadata, etc.)
+ - content and document management (index&search, metadata, etc.)
  - multilingual user interfaces and content
  - high level modules: wiki, forum, tracker, etc.
 
@@ -19,45 +19,39 @@ are modest:
    pages.
 
  - Following the W3C recommendations [2], type extensions have been
-   drop from the URI, so for example "http://.../document.pdf" becomes
-   "http://.../document".
+   drop from the URI, so for example "http://.../index.html" becomes
+   "http://.../index".
 
-However, the most important changes
+However, the most important changes concern the architecture and the
+programming interface, and are strongly related to the changes in the
+latest itools version.
 
+This is the architecture diagram:
 
-There have been important changes to the programming interface, as a
-consequence of the 
+ 4) The Content Management System (ikaaro)
+ -----------------------------------------------------------------
+ 2) File Handlers & Database (itools.handlers)  | 3) Web Framework
+ ---------------------------------------------- |    (itools.web)
+ 1) Virtual File System (itools.vfs)            | 
 
-XXX
-Proof-of-concept interface to check broken links.
-Add a log file to "icms-update.py"
-Add the ability to remove a message from a thread (admin only!).
-contact_options_form only show members of the website
-Remove the "owner" metadata.
-New metadata architecture
-Now files "remember" the original filename.
-Decentralize "icms-update.py"
-Unify HTML and XHTML web pages
-Move the contact email to the configuration file.
-Remove "icms-make-package.py"
+Summarizing: now the distinction between the different layers is
+cleaner.
 
-Replace "change_language" by a more efficient (no redirections), robust (no
-referrer) and google friendly way to set the language.
+Another important change from the architecture point of view, we have
+decentralized three different aspects:
 
-Remove broken "view_rest/view_xml" views
-Fix upload of multilingual files.  Add optional "title" to the upload form.
-extend the wiki/tracker action box to all containers
-Allow to use an smtp that required identification
-Remove plain text files from the add form.
-changes to the icms-start.py signature
-new option DEBUG
-new folder "log"
-tracker => table
-Multilingual.
-Improve look of the forum.
-"new_instance*" are now staticmethod, drop the last traces of "im_func"
-Allow to send html emails with send_email method
-XXX
+ - the definition of the fields to be indexed
+
+ - the definition of the metadata fields
+
+ - the upgrade logic
+
+Before these three aspects were defined globally, now they are centered
+on the objects.  This means, for instance, that now it should be much
+more easy to develop third-party modules.
+
+Please check the upgrade notes for a more detailed description of what
+has changed.
 
 
 [1] http://www.ikaaro.org/itools
