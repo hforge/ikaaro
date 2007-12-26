@@ -51,6 +51,7 @@ from ikaaro.skins import UIFile
 StandaloneReader = get_reader_class('standalone')
 
 
+
 class WikiPage(Text):
 
     class_id = 'WikiPage'
@@ -87,41 +88,54 @@ class WikiPage(Text):
 
 
     #######################################################################
-    # UI / View
+    # API
     #######################################################################
-    view__sublabel__ = u'HTML'
-    def view(self, context):
-        context.styles.append('/ui/wiki/wiki.css')
+    def resolve_link(self, title):
         parent = self.parent
-        here = context.object
 
+        # Check first for the normalized link
+        link = checkid(title)
+        for container in (self, parent):
+            try:
+                return container.get_object(link)
+            except LookupError:
+                pass
+
+        # Check now for the raw title
+        try:
+            title = str(title)
+        except UnicodeEncodeError:
+            return None
+
+        for container in (self, parent):
+            try:
+                return container.get_object(title)
+            except LookupError:
+                pass
+
+        # Not found
+        return None
+
+
+    def get_document(self):
         # Override dandling links handling
         class WikiReader(StandaloneReader):
             supported = ('wiki',)
 
             def wiki_reference_resolver(target):
                 refname = target['name']
-                name = checkid(refname)
+                target['wiki_title'] = refname
 
-                # It may be the page or its container
-                # It may be a page title to convert or a path
-                for container, path in ((self, name), (parent, name),
-                                        (self, refname), (parent, refname)):
-                    try:
-                        ref = container.get_object(path)
-                    except (NotImplementedError, LookupError,
-                            UnicodeEncodeError):
-                        continue
+                ref = self.resolve_link(refname)
+                if ref is None:
+                    # Not Found
+                    target['wiki_refname'] = False
+                    target['wiki_name'] = checkid(refname)
+                else:
                     # Found
                     target['wiki_refname'] = refname
-                    target['wiki_title'] = refname
-                    target['wiki_name'] = str(here.get_pathto(ref))
-                    return True
+                    target['wiki_name'] = str(self.get_pathto(ref))
 
-                # Not Found
-                target['wiki_refname'] = False
-                target['wiki_title'] = refname
-                target['wiki_name'] = name
                 return True
 
             wiki_reference_resolver.priority = 851
@@ -138,9 +152,30 @@ class WikiPage(Text):
 
         # Publish!
         pub.publish(enable_exit_status=None)
-        document = pub.document
+        return pub.document
+
+
+    def broken_links(self):
+        broken = []
+        document = self.get_document()
+        for node in document.traverse(condition=nodes.reference):
+            refname = node.get('wiki_refname')
+            if refname is False:
+                broken.append(node['wiki_title'])
+        return broken
+
+
+    #######################################################################
+    # UI / View
+    #######################################################################
+    view__sublabel__ = u'HTML'
+    def view(self, context):
+        context.styles.append('/ui/wiki/wiki.css')
+        parent = self.parent
+        here = context.object
 
         # Fix the wiki links
+        document = self.get_document()
         for node in document.traverse(condition=nodes.reference):
             refname = node.get('wiki_refname')
             if refname is None:
@@ -170,15 +205,9 @@ class WikiPage(Text):
         for node in document.traverse(condition=nodes.image):
             node_uri = node['uri']
             # Is the path is correct?
-            for container in (self, parent):
-                try:
-                    image = container.get_object(node_uri)
-                except (NotImplementedError, LookupError):
-                    continue
-
-                # Found
-                node['uri'] = str(here.get_pathto(image))
-                break
+            ref = self.resolve_link(node_uri)
+            if ref is not None:
+                node['uri'] = str(here.get_pathto(ref))
 
         # Manipulate publisher directly (from publish_from_doctree)
         reader = Reader(parser_name='null')
@@ -266,29 +295,22 @@ class WikiPage(Text):
         # Find the list of images to append
         for node in document.traverse(condition=nodes.image):
             node_uri = node['uri']
-            image = None
-            for container in (self, parent):
-                try:
-                    image = container.get_object(node_uri)
-                except (NotImplementedError, LookupError):
-                    continue
-                # Found, exit now
-                break
+
+            image = self.resolve_link(node_uri)
             if image is None:
-                # missing image but prevent pdfLaTeX failure
-                node_uri = '/ui/wiki/missing.png'
-                filename = 'missing.png'
+                # Missing image, prevent pdfLaTeX failure
+                node['uri'] = 'missing.png'
+                images.append(('/ui/wiki/missing.png', 'missing.png'))
             else:
                 node_uri = image.get_abspath()
                 filename = image.name
-            name, ext, lang = FileName.decode(filename)
-            if ext == 'jpeg':
-                # pdflatex does not support this extension
-                ext = 'jpg'
-            filename = FileName.encode((name, ext, lang))
-            # Remove all path so the image is found in tempdir
-            node['uri'] = filename
-            images.append((node_uri, filename))
+                # pdflatex does not support the ".jpeg" extension
+                name, ext, lang = FileName.decode(filename)
+                if ext == 'jpeg':
+                    filename = FileName.encode((name, 'jpg', lang))
+                # Remove all path so the image is found in tempdir
+                node['uri'] = filename
+                images.append((node_uri, filename))
 
         overrides = dict(self.overrides)
         overrides['stylesheet'] = 'style.tex'

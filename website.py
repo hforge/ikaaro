@@ -699,7 +699,7 @@ class WebSite(RoleAware, Folder):
     broken_links__access__ = True
     def broken_links(self, context, formats=None):
         if formats is None:
-            formats = ['webpage', 'issue']
+            formats = ['webpage', 'issue', 'WikiPage']
 
         # Search
         query = [ EqQuery('format', x) for x in formats ]
