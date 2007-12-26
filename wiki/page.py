@@ -164,6 +164,10 @@ class WikiPage(Text):
             if refname is False:
                 title = node['wiki_title']
                 broken.append(title)
+        for node in document.traverse(condition=nodes.image):
+            refname = node['uri']
+            if self.resolve_link(refname) is None:
+                broken.append(refname)
         return broken
 
 
@@ -172,12 +176,29 @@ class WikiPage(Text):
         handler = self.handler
         data = handler.data
         total = 0
-        for link in self.broken_links():
-            name, ext, lang = FileName.decode(link)
-            if ext is not None:
-##            if self.resolve_link(name) is not None:
-                data, n = subn(u'`%s`_' % link, u'`%s`_' % name, data)
-                total += n
+        document = self.get_document()
+
+        # Links
+        for node in document.traverse(condition=nodes.reference):
+            refname = node.get('wiki_refname')
+            if refname is False:
+                link = node['wiki_title']
+                name, type, language = FileName.decode(link)
+                if type is not None:
+                    data, n = subn(u'`%s`_' % link, u'`%s`_' % name, data)
+                    total += n
+
+        # Images
+        for node in document.traverse(condition=nodes.image):
+            refname = node['uri']
+            if self.resolve_link(refname) is None:
+                link = refname
+                name, type, language = FileName.decode(link)
+                if type is not None:
+                    data, n = subn(link, name, data)
+                    total += n
+
+        # Commit
         if total > 0:
             context.commit = True
             handler.set_data(data)
