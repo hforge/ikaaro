@@ -13,7 +13,7 @@ ${table}
 
 <hr/>
 <!-- Links -->
-<p>
+<p stl:if="nb_results">
   <a name="link"/>
   <a href=";view?${search_parameters}&amp;change_several_bugs=1#link">
     Change Several Issues at Once
@@ -59,10 +59,12 @@ ${table}
   Please select encoding:<br/><br/>
   <input type="hidden" stl:repeat="c criteria" name="${c/name}"
       value="${c/value}"/>
-  <input type="radio" name="editor" value="oo" checked="on"/>
-  For OpenOffice (Encoding: UTF-8, Separator: ",")<br/>
-  <input type="radio" name="editor" value="excel"/>
-  For Excel (Encoding: CP1252, Separator: ";") <br/><br/>
+  <input type="radio" name="editor" id="editor_oo" value="oo" checked="on"/>
+  <label for="editor_oo">For OpenOffice (Encoding: UTF-8, Separator: ",")</label>
+  <br/>
+  <input type="radio" name="editor" id="editor_excel" value="excel"/>
+  <label for="editor_excel">For Excel (Encoding: CP1252, Separator: ";")</label>
+  <br/><br/>
   <input type="submit" class="button_ok" name="export_to_csv" value="Exporter"/>
 </stl:block>
 

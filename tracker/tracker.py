@@ -373,6 +373,7 @@ class Tracker(Folder):
                                 nb_results, msgs=msgs)
         namespace['table'] = widgets.table(table_columns, lines, [sortby],
                             sortorder, actions=actions, table_with_form=False)
+        namespace['nb_results'] = nb_results
         # Export_to_text
         namespace['export_to_text'] = False
         if context.get_form_value('export_to_text'):
@@ -718,6 +719,9 @@ class Tracker(Folder):
     go_to_issue__access__ = 'is_allowed_to_view'
     def go_to_issue(self, context):
         issue_name = context.get_form_value('issue_name')
+        if not issue_name:
+            return context.come_back(MSG_NAME_MISSING)
+
         if not self.has_object(issue_name):
             return context.come_back(u'Issue not found.')
 

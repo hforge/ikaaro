@@ -315,7 +315,7 @@ class Issue(Folder):
 
 
     def get_comment(self):
-        records = self.get_history_records()
+        records = list(self.get_history_records())
         i = len(records) - 1
         while i >= 0:
             record = records[i]
