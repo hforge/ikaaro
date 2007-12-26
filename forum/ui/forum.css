@@ -42,8 +42,10 @@ p.even, p.odd {
   display: none;
 }
 
-.button.epoz_button_anchor,
-.button.epoz_button_table,
-.button.epoz_button_bgcolor {
+#epoz_button_hyperlink,
+#epoz_button_anchor,
+#epoz_button_image,
+#epoz_button_table,
+#epoz_button_bgcolor {
   display: none;
 }

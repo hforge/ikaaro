@@ -38,6 +38,10 @@ class Thread(Folder):
 
     message_class = Message
 
+    addlink_form__access__ = False
+    addimage_form__access__ = False
+    epoz_table_form__access__ = False
+
     @staticmethod
     def _make_object(cls, folder, name, data=u'', language='en'):
         Folder._make_object(cls, folder, name)

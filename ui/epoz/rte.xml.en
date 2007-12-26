@@ -5,11 +5,13 @@
   xmlns:stl="http://xml.itools.org/namespaces/stl">
   <div style="display: none" id="epoz_widget_${form_name}">
     <div id="ToolBar_${form_name}">
-      <img class="button" src="hyperlink.png" width="23" height="22"
+      <img class="button" id="epoz_button_hyperlink"
+        src="hyperlink.png" width="23" height="22"
         alt="Insert Link" title="Insert Link" onclick="popup(';addlink_form',
-        640, 480);"/><img class="button" src="anchor.png" width="23"
-        height="22" alt="Insert Anchor" title="Insert Anchor"
-        onclick="CreateAnchor();" /><img class="button" src="image.png"
+        640, 480);"/><img class="button" id="epoz_button_anchor"
+        src="anchor.png" width="23" height="22" alt="Insert Anchor"
+        title="Insert Anchor" onclick="CreateAnchor();" />
+      <img class="button" id="epoz_button_image" src="image.png"
         width="23" height="22" alt="Insert Image" title="Insert Image"
         onclick="popup(';addimage_form', 640, 480);" />
       &nbsp;&nbsp;
@@ -43,8 +45,8 @@
         title="Remove Format" onclick="FormatText('removeformat', '');" /> <img
         class="button" src="textcolor.png" width="23" height="22" alt="Text
         Color" title="Text Color" onclick="SetTextColor(';epoz_color_form');"
-        /><img class="button" src="bgcolor.png" width="23" height="22"
-        alt="Background Color" title="Background Color"
+        /><img class="button" id="epoz_button_bgcolor" src="bgcolor.png"
+        width="23" height="22" alt="Background Color" title="Background Color"
         onclick="SetBackColor(';epoz_color_form');" /> <img class="button"
         src="left_just.png" width="23" height="22" alt="Align Left"
         title="Align Left" onclick="FormatText('justifyleft', '');"
@@ -65,8 +67,9 @@
         onclick="FormatText('indent', '');" /> <img class="button" src="hr.gif"
         width="23" height="22" alt="Insert Rule" title="Insert Rule"
         onclick="FormatText('inserthorizontalrule', '');" /><img class="button"
-        src="table.gif" width="23" height="22" alt="Insert Table" title="Insert
-        Table" onclick="popup(';epoz_table_form', 220, 320)" /> <img
+        id="epoz_button_table" src="table.gif" width="23" height="22"
+        alt="Insert Table" title="Insert Table"
+        onclick="popup(';epoz_table_form', 220, 320)" /> <img
         class="button" src="undo.png" width="23" height="22" alt="Undo"
         title="Undo" onclick="FormatText('undo', '');" /><img class="button"
         src="redo.png" width="23" height="22" alt="Redo" title="Redo"
@@ -79,7 +82,7 @@
     <textarea class="epoz_textarea" style="display: none" disabled="1"
       id="${form_name}" name="${form_name}">${js_data}</textarea>
     <div>
-      <input type="checkbox" class="epoz_switch" id="CB_${form_name}" 
+      <input type="checkbox" class="epoz_switch" id="CB_${form_name}"
         onclick="redirectAndSwitchViewMode(this);" />
       <label for="CB_${form_name}" style="font-size: 0.7em;">HTML</label>
       <input type="hidden" name="dress_name" value="${dress_name}" />

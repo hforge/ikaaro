@@ -44,6 +44,10 @@ class Forum(Folder):
 
     thread_class = Thread
 
+    addlink_form__access__ = False
+    addimage_form__access__ = False
+    epoz_table_form__access__ = False
+
 
     def get_document_types(self):
         return [self.thread_class]
@@ -106,9 +110,16 @@ class Forum(Folder):
         if self.has_object(name):
             return context.come_back(u"This thread already exists.")
 
+        # check input
+        data = context.get_form_value('data').strip()
+        if not data:
+            message = (
+              u'Some required fields are missing, or some values are not valid.'
+              u' Please correct them and continue.')
+            return context.come_back(message)
+
         language = self.get_content_language()
         cls = self.thread_class
-        data = context.get_form_value('data')
         thread = cls.make_object(cls, self, name, data, language)
         thread.set_property('title', title, language=language)
 
