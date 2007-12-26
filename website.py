@@ -697,17 +697,16 @@ class WebSite(RoleAware, Folder):
     # UI / Broken links
     #######################################################################
     broken_links__access__ = True
-    def broken_links(self, context):
-        root = context.root
+    def broken_links(self, context, formats=None):
+        if formats is None:
+            formats = ['webpage', 'issue']
 
         # Search
-        query = []
-        for format in ['webpage', 'issue']:
-            query.append(EqQuery('format', format))
+        query = [ EqQuery('format', x) for x in formats ]
         query = AndQuery(
                     EqQuery('paths', str(self.abspath)),
                     OrQuery(*query))
-        results = root.search(query)
+        results = context.root.search(query)
 
         # Build the namespace
         namespace = {}
