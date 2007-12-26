@@ -91,6 +91,15 @@ class Issue(Folder):
         return self.parent
 
 
+    def broken_links(self):
+        broken = []
+        for record in self.get_history_records():
+            filename = record.file
+            if filename and not self.has_object(filename):
+                broken.append(filename)
+        return broken
+
+
     #######################################################################
     # API
     #######################################################################

@@ -19,6 +19,7 @@
 
 # Import from the Standard Library
 from decimal import Decimal
+from operator import itemgetter
 
 # Import from itools
 from itools.catalog import EqQuery, OrQuery, AndQuery, TextField
@@ -699,12 +700,33 @@ class WebSite(RoleAware, Folder):
     def broken_links(self, context):
         root = context.root
 
-        broken = []
-        for brain in root.search(format='webpage').get_documents():
-            object = self.get_object(brain.abspath)
-            broken.extend(object.broken_links())
+        # Search
+        query = []
+        for format in ['webpage', 'issue']:
+            query.append(EqQuery('format', format))
+        query = AndQuery(
+                    EqQuery('paths', str(self.abspath)),
+                    OrQuery(*query))
+        results = root.search(query)
 
-        return '\n'.join(broken)
+        # Build the namespace
+        namespace = {}
+        objects = []
+        total = 0
+        for brain in results.get_documents():
+            object = self.get_object(brain.abspath)
+            links = object.broken_links()
+            n = len(links)
+            if n:
+                path = self.get_pathto(object)
+                objects.append({'path': str(path), 'n': n, 'links': links})
+                total += n
+        objects.sort(key=itemgetter('n'), reverse=True)
+        namespace['objects'] = objects
+        namespace['total'] = total
+
+        handler = self.get_object('/ui/website/broken_links.xml')
+        return stl(handler, namespace)
 
 
     #######################################################################
