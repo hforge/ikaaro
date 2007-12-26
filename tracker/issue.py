@@ -23,11 +23,12 @@ from datetime import datetime
 from re import sub
 
 # Import from itools
-from itools.csv import Table
+from itools.csv import parse, Table
 from itools.datatypes import DateTime, FileName, Integer, String, Unicode, XML
-from itools.handlers import checkid, File as FileHandler
+from itools.handlers import checkid
 from itools.i18n import format_datetime
 from itools.stl import stl
+from itools import vfs
 from itools.xml import XMLParser
 
 # Import from ikaaro
@@ -67,7 +68,7 @@ class History(Table):
 class Issue(Folder):
 
     class_id = 'issue'
-    class_version = '20071215'
+    class_version = '20071216'
     class_title = u'Issue'
     class_description = u'Issue'
     class_views = [
@@ -572,20 +573,36 @@ class Issue(Folder):
     # Update
     #######################################################################
     def update_20071215(self):
-        """Change '.history' from CSV to Table.
-        """
         remove = ['id', 'owner', 'dc:language', 'ikaaro:user_theme',
                   # Issue used to be VersioningAware
                   'ikaaro:history']
         Folder.update_20071215(self, remove=remove)
+
+
+    def update_20071216(self):
+        """Change '.history' from CSV to Table.
+        """
         columns = ['datetime', 'username', 'title', 'module', 'version',
                    'type', 'priority', 'assigned_to', 'state', 'comment',
                    'file']
 
         folder = self.handler
-        csv = FileHandler('%s/.history' % folder.uri).to_str()
+        csv = vfs.open('%s/.history' % folder.uri).read()
+
         table = History()
-        table.update_from_csv(csv, columns)
+        for line in parse(csv, columns, History.schema):
+            record = {}
+            for index, key in enumerate(columns):
+                record[key] = line[index]
+            # Rename link to attached file
+            filename = record['file']
+            if filename:
+                name, extension, language = FileName.decode(filename)
+                if name != filename:
+                    record['file'] = name
+
+            table.add_record(record)
+
         # Replace
         folder.del_handler('.history')
         folder.set_handler('.history', table)
