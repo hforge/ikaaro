@@ -19,6 +19,7 @@
 
 # Import from the Standard Library
 from datetime import datetime
+from re import subn
 from tempfile import mkdtemp
 from subprocess import call
 from urllib import urlencode
@@ -161,8 +162,26 @@ class WikiPage(Text):
         for node in document.traverse(condition=nodes.reference):
             refname = node.get('wiki_refname')
             if refname is False:
-                broken.append(node['wiki_title'])
+                title = node['wiki_title']
+                broken.append(title)
         return broken
+
+
+    fix_links__access__ = 'is_admin'
+    def fix_links(self, context):
+        handler = self.handler
+        data = handler.data
+        total = 0
+        for link in self.broken_links():
+            name, ext, lang = FileName.decode(link)
+            if ext is not None:
+##            if self.resolve_link(name) is not None:
+                data, n = subn(u'`%s`_' % link, u'`%s`_' % name, data)
+                total += n
+        if total > 0:
+            context.commit = True
+            handler.set_data(data)
+        return str(total)
 
 
     #######################################################################
