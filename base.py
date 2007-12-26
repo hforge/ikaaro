@@ -321,7 +321,7 @@ class DBObject(CatalogAware, Node, DomainAware):
         document = {
             'name': self.name,
             'abspath': str(abspath),
-            'format': self.class_id,
+            'format': self.metadata.format,
             'title': self.get_title(),
             'mtime': mtime.strftime('%Y%m%d%H%M%S')}
 

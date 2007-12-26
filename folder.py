@@ -245,7 +245,7 @@ class Folder(DBObject):
             if cls is not None and not isinstance(object, cls):
                 continue
             # Filter by class_id
-            if format is not None and object.class_id != format:
+            if format is not None and object.metadata.format != format:
                 continue
             # Filter by workflow state
             if state is not None and object.get_property('state') != state:
@@ -530,7 +530,7 @@ class Folder(DBObject):
                 width, height = size
             selected['width'] = width
             selected['height'] = height
-            selected['format'] = image.class_id
+            selected['format'] = image.metadata.format
             if selected_index == 0:
                 selected['previous'] = None
             else:

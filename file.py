@@ -75,10 +75,13 @@ class File(WorkflowAware, VersioningAware, DBObject):
             return self._handler
 
         # Not yet loaded
-        cls = self.class_handler
         database = self.metadata.database
         base = self.metadata.uri
-        extensions = [ x[1:] for x in guess_all_extensions(self.class_id) ]
+        cls = self.class_handler
+
+        # Check the handler exists
+        format = self.metadata.format
+        extensions = [ x[1:] for x in guess_all_extensions(format) ]
         if cls.class_extension in extensions:
             extensions.remove(cls.class_extension)
         extensions.insert(0, cls.class_extension)
@@ -91,6 +94,8 @@ class File(WorkflowAware, VersioningAware, DBObject):
                 return self._handler
 
         # Not found, build a dummy one
+        name = FileName.encode((self.name, cls.class_extension, None))
+        uri = base.resolve(self.name)
         handler = cls()
         handler.database = database
         handler.uri = uri
