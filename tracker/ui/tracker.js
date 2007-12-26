@@ -6,6 +6,8 @@ function reply(id){
   comment = comment.replace(reg, '>');
   reg = new RegExp("(&lt;)", "g");
   comment = comment.replace(reg, '<');
+  reg = new RegExp("(&amp;)", "g");
+  comment = comment.replace(reg, '&');
   reg = new RegExp("(&nbsp;)", "g");
   comment = comment.replace(reg, ' ');
   reg1 = new RegExp('(<a href=")', "g");
