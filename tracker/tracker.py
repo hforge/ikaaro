@@ -19,11 +19,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
-from datetime import datetime
+from datetime import datetime, timedelta
 from operator import itemgetter
 
 # Import from itools
 from itools.csv import Table as BaseTable
+from itools.catalog import (EqQuery, PhraseQuery, RangeQuery, AndQuery,
+                            OrQuery, TextField, IntegerField)
 from itools.datatypes import Boolean, Integer, String, Unicode
 from itools.handlers import ConfigFile, File as FileHandler
 from itools.stl import stl
@@ -627,40 +629,49 @@ class Tracker(Folder):
         if text is not None:
             text = text.strip().lower()
         mtime = get_value('mtime', type=Integer)
-        module = get_values('module', type=Integer)
-        version = get_values('version', type=Integer)
-        type = get_values('type', type=Integer)
-        priority = get_values('priority', type=Integer)
-        assign = get_values('assigned_to', type=String)
-        state = get_values('state', type=Integer)
-        # Execute the search
-        issues = []
-        now = datetime.now()
-        for handler in self.search_objects(object_class=Issue):
-            if text:
-                if not handler.has_text(text):
-                    continue
-            if mtime is not None:
-                if (now - handler.get_mtime()).days >= mtime:
-                    continue
-            if module != [] and handler.get_value('module') not in module:
-                continue
-            if version != [] and handler.get_value('version') not in version:
-                continue
-            if type != [] and handler.get_value('type') not in type:
-                continue
-            if priority != [] and handler.get_value('priority') not in priority:
-                continue
-            if assign != []:
-                value = handler.get_value('assigned_to')
+        modules = get_values('module', type=Integer)
+        versions = get_values('version', type=Integer)
+        types = get_values('type', type=Integer)
+        priorities = get_values('priority', type=Integer)
+        assigns = get_values('assigned_to', type=String)
+        states = get_values('state', type=Integer)
+
+        # Build the query
+        abspath = self.get_canonical_path()
+        query = EqQuery('parent_path', str(abspath))
+        query = AndQuery(query, EqQuery('format', 'issue'))
+        if text:
+            query2 = [ OrQuery(EqQuery('title', word), EqQuery('text', word))
+                               for word, kk in TextField.split(text) ]
+            query = AndQuery(query, *query2)
+        for name, data in (('module', modules), ('version', versions),
+                           ('type', types), ('priority', priorities),
+                           ('state', states)):
+            if data != []:
+                query2 = []
+                for value in data:
+                    word = IntegerField.split(value).next()[0]
+                    query2.append(EqQuery(name, word))
+                query = AndQuery(query, OrQuery(*query2))
+        if mtime:
+            date = datetime.now() - timedelta(mtime)
+            query = AndQuery(query, RangeQuery('mtime', data, None))
+        if assigns != []:
+            query2 = []
+            for value in assigns:
                 if value == '':
                     value = 'nobody'
-                if value not in assign:
-                    continue
-            if state != [] and handler.get_value('state') not in state:
-                continue
+                query2.append(EqQuery('assigned_to', value))
+            query = AndQuery(query, OrQuery(*query2))
+
+        # Execute the search
+        root = context.root
+        results = root.search(query)
+        issues = []
+        for doc in results.get_documents():
+            object = root.get_object(doc.abspath)
             # Append
-            issues.append(handler)
+            issues.append(object)
         return issues
 
 

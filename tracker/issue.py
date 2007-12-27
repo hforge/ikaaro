@@ -24,6 +24,7 @@ from re import sub
 
 # Import from itools
 from itools.csv import parse, Table
+from itools.catalog import IntegerField, KeywordField
 from itools.datatypes import DateTime, FileName, Integer, String, Unicode, XML
 from itools.handlers import checkid
 from itools.i18n import format_datetime
@@ -81,6 +82,23 @@ class Issue(Folder):
     def _make_object(cls, folder, name):
         Folder._make_object(cls, folder, name)
         folder.set_handler('%s/.history' % name, History())
+
+
+    def get_catalog_fields(self):
+       fields = Folder.get_catalog_fields(self) + \
+                [ IntegerField('module'), IntegerField('version'),
+                  IntegerField('type'), IntegerField('priority'),
+                  KeywordField('assigned_to'),  IntegerField('state') ]
+       return fields
+
+
+    def get_catalog_values(self):
+        document = Folder.get_catalog_values(self)
+        for name in ('module', 'version', 'type', 'priority', 'assigned_to',
+                     'state'):
+            document[name] = self.get_value(name)
+            document['assigned_to'] = self.get_value('assigned_to') or 'nobody'
+        return document
 
 
     def get_document_types(self):
@@ -324,6 +342,13 @@ class Issue(Folder):
                 return comment
             i -= 1
         return ''
+
+
+    def to_text(self):
+        records = list(self.get_history_records())
+        comments = [ r.comment for r in records
+                     if r.comment ]
+        return u'\n'.join(comments)
 
 
     def has_text(self, text):

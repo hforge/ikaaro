@@ -302,7 +302,7 @@ class DBObject(CatalogAware, Node, DomainAware):
             KeywordField('parent_path'),
             KeywordField('paths'),
             KeywordField('name', is_stored=True),
-            KeywordField('mtime', is_indexed=False, is_stored=True),
+            KeywordField('mtime', is_indexed=True, is_stored=True),
             IntegerField('size', is_indexed=False, is_stored=True),
             # Versioning Aware
             BoolField('is_version_aware'),
