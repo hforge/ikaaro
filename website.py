@@ -331,7 +331,9 @@ class WebSite(RoleAware, Folder):
         # Only members of the website are showed
         members = []
         for key in ('members', 'reviewers', 'admins'):
-            members = members + list(self.get_property(key))
+            property = self.get_property(key)
+            if property:
+                members += list(property)
         members = set(members)
 
         namespace = {}
