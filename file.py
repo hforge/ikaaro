@@ -19,7 +19,7 @@
 
 # Import from the Standard Library
 from datetime import datetime, timedelta
-from mimetypes import guess_all_extensions
+from mimetypes import guess_all_extensions, guess_type
 
 # Import from itools
 from itools.datatypes import FileName, String, Unicode
@@ -383,11 +383,21 @@ class File(WorkflowAware, VersioningAware, DBObject):
     def update_20071216(self):
         folder = self.parent.handler
         name, extension, language = FileName.decode(self.name)
+        # Fix the mimetype
+        if extension is not None:
+            mimetype, encoding = guess_type('.%s' % extension)
+            if mimetype is not None:
+                metadata = self.metadata
+                if metadata.format != mimetype:
+                    metadata.set_changed()
+                    metadata.format = mimetype
         # Rename metadata
         folder.move_handler('%s.metadata' % self.name, '%s.metadata' % name)
         # Rename handler
         if extension is None:
             extension = self.class_handler.class_extension
+        else:
+            extension = extension.lower()
         name = FileName.encode((name, extension, None))
         if name != self.name:
             folder.move_handler(self.name, name)

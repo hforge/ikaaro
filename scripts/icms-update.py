@@ -58,8 +58,7 @@ def update(parser, options, target):
     #######################################################################
     # STAGE 1: Find out the versions to upgrade
     #######################################################################
-    print '*'
-    print '* Please wait while we find out the versions to upgrade.'
+    print 'Please wait while we find out the versions to upgrade.'
 
     # Build the server object
     server = Server(target)
@@ -81,6 +80,7 @@ def update(parser, options, target):
 
         # Check for code that is older than the instance
         if obj_version > cls_version:
+            print
             print '*'
             print '* ERROR: object is newer than its class'
             print '* %s <%s>' % (object.abspath, object.__class__.__name__)
@@ -88,12 +88,16 @@ def update(parser, options, target):
             print '*'
             return
 
+        sys.stdout.write('.')
+        sys.stdout.flush()
         for version in object.get_next_versions():
             versions.add(version)
 
     versions = list(versions)
     versions.sort()
 
+    print
+    print '*'
     print '* Versions to upgrade: %s' % ', '.join(versions)
     print '*'
 

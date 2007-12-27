@@ -36,7 +36,7 @@ from registry import register_object_class
 class Image(File):
 
     class_id = 'image'
-    class_version = '20071217'
+    class_version = '20071216'
     class_title = u'Image'
     class_icon16 = 'images/Image16.png'
     class_icon48 = 'images/Image48.png'
@@ -84,14 +84,6 @@ class Image(File):
 
     def update_20071216(self):
         File.update_20071216(self)
-
-
-    def update_20071217(self):
-        metadata = self.metadata
-        mimetype = self.handler.get_mimetype()
-        if metadata.format != mimetype:
-            metadata.set_changed()
-            metadata.format = mimetype
 
 
 
