@@ -256,6 +256,7 @@ class XML(Text):
 
     class_id = 'text/xml'
     class_version = '20071216'
+    class_title = u'XML File'
     class_handler = XMLFile
 
 
@@ -275,6 +276,7 @@ class HTML(Text):
 
     class_id = 'text/html'
     class_version = '20071216'
+    class_title = u'HTML File'
     class_handler = HTMLFile
 
 
