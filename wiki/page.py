@@ -56,7 +56,7 @@ StandaloneReader = get_reader_class('standalone')
 class WikiPage(Text):
 
     class_id = 'WikiPage'
-    class_version = '20071216'
+    class_version = '20071217'
     class_title = u"Wiki Page"
     class_description = u"Wiki contents"
     class_icon16 = 'wiki/WikiPage16.png'
@@ -169,40 +169,6 @@ class WikiPage(Text):
             if self.resolve_link(refname) is None:
                 broken.append(refname)
         return broken
-
-
-    fix_links__access__ = 'is_admin'
-    def fix_links(self, context):
-        handler = self.handler
-        data = handler.data
-        total = 0
-        document = self.get_document()
-
-        # Links
-        for node in document.traverse(condition=nodes.reference):
-            refname = node.get('wiki_refname')
-            if refname is False:
-                link = node['wiki_title']
-                name, type, language = FileName.decode(link)
-                if type is not None:
-                    data, n = subn(u'`%s`_' % link, u'`%s`_' % name, data)
-                    total += n
-
-        # Images
-        for node in document.traverse(condition=nodes.image):
-            refname = node['uri']
-            if self.resolve_link(refname) is None:
-                link = refname
-                name, type, language = FileName.decode(link)
-                if type is not None:
-                    data, n = subn(link, name, data)
-                    total += n
-
-        # Commit
-        if total > 0:
-            context.commit = True
-            handler.set_data(data)
-        return str(total)
 
 
     #######################################################################
@@ -524,6 +490,37 @@ class WikiPage(Text):
                                 '%s.metadata' % name)
         # Rename handler
         folder.move_handler(self.name, '%s.txt' % name)
+
+
+    def update_20071217(self):
+        handler = self.handler
+        data = handler.data
+        total = 0
+        document = self.get_document()
+
+        # Links
+        for node in document.traverse(condition=nodes.reference):
+            refname = node.get('wiki_refname')
+            if refname is False:
+                link = node['wiki_title']
+                name, type, language = FileName.decode(link)
+                if type is not None:
+                    data, n = subn(u'`%s`_' % link, u'`%s`_' % name, data)
+                    total += n
+
+        # Images
+        for node in document.traverse(condition=nodes.image):
+            refname = node['uri']
+            if self.resolve_link(refname) is None:
+                link = refname
+                name, type, language = FileName.decode(link)
+                if type is not None:
+                    data, n = subn(link, name, data)
+                    total += n
+
+        # Commit
+        if total > 0:
+            handler.set_data(data)
 
 
 
