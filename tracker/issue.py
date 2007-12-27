@@ -187,7 +187,8 @@ class Issue(Folder):
             name = generate_name(name, self.get_names())
             # Add attachement
             cls = get_object_class(mimetype)
-            cls.make_object(cls, self, name, body=body, filename=filename)
+            cls.make_object(cls, self, name, body=body, filename=filename,
+                            extension=extension, format=mimetype)
             # Link
             record['file'] = name
         # Update

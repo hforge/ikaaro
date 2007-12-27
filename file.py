@@ -59,8 +59,8 @@ class File(WorkflowAware, VersioningAware, DBObject):
 
     @staticmethod
     def _make_object(cls, folder, name, body=None, filename=None,
-                     extension=None):
-        DBObject._make_object(cls, folder, name, filename=filename)
+                     extension=None, **kw):
+        DBObject._make_object(cls, folder, name, filename=filename, **kw)
         # Add the body
         if body is not None:
             handler = cls.class_handler(string=body)
@@ -168,7 +168,7 @@ class File(WorkflowAware, VersioningAware, DBObject):
             return context.come_back(message)
 
         # Build the object
-        kw = {'filename': filename}
+        kw = {'format': class_id, 'filename': filename}
         if issubclass(cls, Multilingual):
             kw['language'] = language
         else:
