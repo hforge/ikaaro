@@ -818,6 +818,10 @@ class SelectTable(Table):
         if self.name.startswith('priorit'):
             filter = 'priority'
 
+        root = context.root
+        abspath = self.parent.get_canonical_path()
+        base_query = EqQuery('parent_path', str(abspath))
+        base_query = AndQuery(base_query, EqQuery('format', 'issue'))
         for record in self.handler.get_records():
             id = record.id
             records.append({})
@@ -847,10 +851,9 @@ class SelectTable(Table):
                 if multiple is True:
                     records[-1][field] = (records[-1][field], rmultiple)
 
-            count = 0
-            for object in self.parent.search_objects(object_class=Issue):
-                if object.get_value(filter) == id:
-                    count += 1
+            filter_value = IntegerField.split(id).next()[0]
+            query = AndQuery(base_query, EqQuery(filter, filter_value))
+            count = root.search(query).get_n_documents()
             value = '0'
             if count != 0:
                 value = '<a href="../;view?%s=%s">%s issues</a>'
@@ -879,6 +882,34 @@ class SelectTable(Table):
 
         handler = self.get_object('/ui/table/view.xml')
         return stl(handler, namespace)
+
+
+    def del_record_action(self, context):
+        # check input
+        ids = context.get_form_values('ids', type=Integer)
+        if not ids:
+            return context.come_back(u'No objects selected.')
+
+        filter = self.name[:-1]
+        if self.name.startswith('priorit'):
+            filter = 'priority'
+        root = context.root
+        abspath = self.parent.get_canonical_path()
+
+        # Search
+        base_query = EqQuery('parent_path', str(abspath))
+        base_query = AndQuery(base_query, EqQuery('format', 'issue'))
+        removed = []
+        for id in ids:
+            filter_value = IntegerField.split(id).next()[0]
+            query = AndQuery(base_query, EqQuery(filter, filter_value))
+            count = root.search(query).get_n_documents()
+            if count == 0:
+                self.handler.del_record(id)
+                removed.append(str(id))
+
+        message = u'Objects removed: $objects.'
+        return context.come_back(message, objects=', '.join(removed))
 
 
     #######################################################################
