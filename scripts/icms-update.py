@@ -152,6 +152,8 @@ def update(parser, options, target):
                 print_exc(file=log)
                 log.write('\n')
                 bad += 1
+        # Reset the state
+        database.cache = {}
         # Stop if there were errors
         print
         if bad > 0:
