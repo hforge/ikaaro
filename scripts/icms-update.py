@@ -18,6 +18,7 @@
 
 # Import from the Standard Library
 from optparse import OptionParser
+import sys
 from traceback import print_exc
 
 # Import from itools
@@ -34,6 +35,9 @@ def update(parser, options, target):
     folder = vfs.open(target)
     confirm = options.confirm
 
+    #######################################################################
+    # STAGE 0: Specific upgrades
+    #######################################################################
     # Move the log files (FIXME Remove by 0.21)
     if not folder.exists('log'):
         message = 'Move log files to the log folder (y/N)? '
@@ -51,22 +55,19 @@ def update(parser, options, target):
             return
         folder.move('catalog/fields', 'catalog/data/fields')
 
+    #######################################################################
+    # STAGE 1: Find out the versions to upgrade
+    #######################################################################
+    print '*'
+    print '* Please wait while we find out the versions to upgrade.'
+
     # Build the server object
     server = Server(target)
     database = server.database
     root = server.root
 
-    # Build a fake context
-    context = Context(None)
-    context.server = server
-    set_context(context)
-
-    # Open the update log
-    log = open('%s/log/update' % target, 'w')
-
-    # Traverse the database
-    up_to_date = 0
-    good = bad = 0
+    # Find out the versions to upgrade
+    versions = set()
     for object in root.traverse_objects():
         # Skip non-database objects
         if not isinstance(object, DBObject):
@@ -77,60 +78,92 @@ def update(parser, options, target):
         cls_version = object.class_version
         if obj_version == cls_version:
             continue
-        
-        # Show object to process
-        path = object.get_abspath()
-        print '%s <%s>' % (path, object.__class__.__name__)
 
         # Check for code that is older than the instance
         if obj_version > cls_version:
             print '*'
             print '* ERROR: object is newer than its class'
+            print '* %s <%s>' % (object.abspath, object.__class__.__name__)
+            print '* %s > %s' % (obj_version, cls_version)
             print '*'
             return
 
-        next_versions = object.get_next_versions()
-        if not next_versions:
-            up_to_date += 1
-            continue
+        for version in object.get_next_versions():
+            versions.add(version)
 
-        # Update
-        for next_version in next_versions:
+    versions = list(versions)
+    versions.sort()
+
+    print '* Versions to upgrade: %s' % ', '.join(versions)
+    print '*'
+
+    #######################################################################
+    # STAGE 2: General Upgrade code
+    #######################################################################
+    # Build a fake context
+    context = Context(None)
+    context.server = server
+    set_context(context)
+
+    # Open the update log
+    log = open('%s/log/update' % target, 'w')
+
+    # Update
+    for version in versions:
+        message = 'Upgrade to version %s (y/N)? ' % version
+        if ask_confirmation(message, confirm) is False:
+            print '*'
+            print '* WARNING: Upgrade process not finished.'
+            print '*'
+            return
+        # Go ahead
+        bad = 0
+        for object in root.traverse_objects():
+            # Skip non-database objects
+            if not isinstance(object, DBObject):
+                continue
+
+            # Skip up-to-date objects
             obj_version = object.metadata.version
-            # Ask
-            message = '- Update from %s to %s (y/N)? ' % (obj_version,
-                                                          next_version)
-            if ask_confirmation(message, confirm) is False:
-                print '*'
-                print '* WARNING: Upgrade process not finished.'
-                print '*'
-                return
+            cls_version = object.class_version
+            if obj_version == cls_version:
+                continue
+
+            next_versions = object.get_next_versions()
+            if not next_versions:
+                continue
+
+            if next_versions[0] != version:
+                continue
+
             # Update
+            sys.stdout.write('.')
+            sys.stdout.flush()
             try:
-                object.update(next_version)
+                object.update(version)
                 database.save_changes()
             except:
+                path = object.get_abspath()
                 log.write('%s <%s>\n' % (path, object.__class__.__name__))
                 print_exc(file=log)
                 log.write('\n')
                 bad += 1
-                break
-        else:
-            # The object was successfully upgraded
-            good += 1
+        # Stop if there were errors
+        print
+        if bad > 0:
+            print '*'
+            print '* ERROR: %s objects failed to upgrade to version %s' \
+                  % (bad, version)
+            print '* Check the "%s/log/update" file.' % target
+            print '*'
+            return
 
+    # It is Done
     print '*'
-    print '* %s objects upgraded.' % good
+    print '* To finish the upgrade process update the catalog:'
     print '*'
-    if bad > 0:
-        print '* %s objects failed to upgrade.' % bad
-        print '* Check the "%s/log/update" file.' % target
-        print '*'
-    elif good > 0:
-        print '* To finish the upgrade process update the catalog:'
-        print '*'
-        print '*   $ icms-update-catalog.py %s' % target
-        print '*'
+    print '*   $ icms-update-catalog.py %s' % target
+    print '*'
 
 
 
