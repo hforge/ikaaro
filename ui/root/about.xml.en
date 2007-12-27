@@ -6,9 +6,13 @@
 
   <h2>About</h2>
   <p>
-  Version: <strong>${version}</strong>
+    <stl:inline if="itools_version">
+      itools Version: <strong>${itools_version}</strong>
+    </stl:inline>,
+    <stl:inline if="ikaaro_version">
+      iKaaro Version: <strong>${ikaaro_version}</strong>
+    </stl:inline>
   </p>
-
   <p>
     iKaaro is a Content Management System, written in the
     <a href="http://www.python.org">Python</a> programming language,

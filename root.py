@@ -39,6 +39,7 @@ from itools.web import get_context
 from itools.xml import XMLParser
 
 # Import from ikaaro
+import ikaaro
 from access import RoleAware
 from base import DBObject
 from text import PO
@@ -320,7 +321,8 @@ class Root(WebSite):
     about__sublabel__ = u'About'
     def about(self, context):
         namespace = {}
-        namespace['version'] = itools.__version__
+        namespace['itools_version'] = itools.__version__
+        namespace['ikaaro_version'] = ikaaro.__version__
 
         handler = self.get_object('/ui/root/about.xml')
         return stl(handler, namespace)
