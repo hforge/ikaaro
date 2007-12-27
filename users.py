@@ -521,14 +521,21 @@ class UserFolder(Folder):
 
 
     def del_object(self, name):
-        handler = self.get_handler(name)
+        handler = self.get_object(name)
         if isinstance(handler, User):
             root = self.get_root()
+            # Member
             for group_path in handler.get_groups():
-                group = root.get_handler(group_path)
+                group = root.get_object(group_path)
                 group.set_user_role(name, None)
-
-        Folder.del_object(self, name)
+            # Contact
+            results = root.search(contacts=self.name)
+            for brain in results.get_documents():
+                contact_handler = root.get_object(brain.abspath)
+                contacts = list(contact_handler.get_property('contacts'))
+                contacts.remove(name)
+                contact_handler.set_property('contacts', tuple(contacts))
+            Folder.del_object(self, name)
 
 
     #######################################################################

@@ -22,7 +22,7 @@ from decimal import Decimal
 from operator import itemgetter
 
 # Import from itools
-from itools.catalog import EqQuery, OrQuery, AndQuery, TextField
+from itools.catalog import EqQuery, OrQuery, AndQuery, TextField, KeywordField
 from itools.datatypes import Boolean, Email, Integer, String, Tokens, Unicode
 from itools.handlers import checkid
 from itools.i18n import get_language_name, get_languages
@@ -149,6 +149,16 @@ class WebSite(RoleAware, Folder):
 
         goto = './%s/;%s' % (name, object.get_firstview())
         return context.come_back(MSG_NEW_RESOURCE, goto=goto)
+
+
+    def get_catalog_fields(self):
+        return Folder.get_catalog_fields(self) + [KeywordField('contacts')]
+
+
+    def get_catalog_values(self):
+        document = Folder.get_catalog_values(self)
+        document['contacts'] = self.get_property('contacts')
+        return document
 
 
     ########################################################################
