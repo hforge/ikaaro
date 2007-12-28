@@ -575,6 +575,11 @@ class Folder(DBObject):
         not_allowed = []
         user = context.user
         abspath = self.get_abspath()
+
+        # We sort and reverse ids in order to
+        # remove the childs then their parents
+        ids.sort()
+        ids.reverse()
         for name in ids:
             object = self.get_object(name)
             ac = object.get_access_control()
