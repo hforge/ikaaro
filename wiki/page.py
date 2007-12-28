@@ -30,6 +30,7 @@ from docutils.core import (Publisher, publish_doctree, publish_from_doctree,
 from docutils.io import StringInput, StringOutput, NullOutput, DocTreeInput
 from docutils.readers import get_reader_class
 from docutils.readers.doctree import Reader
+from docutils.utils import SystemMessage
 from docutils import nodes
 
 # Import from itools
@@ -411,7 +412,8 @@ class WikiPage(Text):
 
         namespace = {}
         namespace['timestamp'] = DateTime.encode(datetime.now())
-        namespace['data'] = self.handler.to_str()
+        data = context.get_form_value('data') or self.handler.to_str()
+        namespace['data'] = data
         namespace['text_size'] = text_size
 
         handler = self.get_object('/ui/wiki/WikiPage_edit.xml')
@@ -432,10 +434,14 @@ class WikiPage(Text):
         data = data.encode('utf_8')
         page.load_state_from_string(data)
 
-        if 'class="system-message"' in self.view(context):
-            message = u"Syntax error, please check the view for details."
-        else:
-            message = MSG_CHANGES_SAVED
+        try:
+            if 'class="system-message"' in self.view(context):
+                message = u"Syntax error, please check the view for details."
+            else:
+                message = MSG_CHANGES_SAVED
+        except SystemMessage, message: # Critical error
+            msg = u"Syntax error<br>line%s" % message.message
+            return context.come_back(msg, keep=['data'])
 
         # Change
         context.server.change_object(self)
