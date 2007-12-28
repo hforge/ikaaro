@@ -95,7 +95,7 @@ class File(WorkflowAware, VersioningAware, DBObject):
 
         # Not found, build a dummy one
         name = FileName.encode((self.name, cls.class_extension, None))
-        uri = base.resolve(self.name)
+        uri = base.resolve(name)
         handler = cls()
         handler.database = database
         handler.uri = uri
