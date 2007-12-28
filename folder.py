@@ -341,7 +341,7 @@ class Folder(DBObject):
             msg = self.gettext(state['title']).encode('utf-8')
             state = ('<a href="%s/;state_form" class="workflow">'
                      '<strong class="wf_%s">%s</strong>'
-                     '</a>') % (object.name, statename, msg)
+                     '</a>') % (self.get_pathto(object), statename, msg)
             line['workflow_state'] = XMLParser(state)
         # Objects that should not be removed/renamed/etc
         line['checkbox'] = object.name not in self.__fixed_handlers__
