@@ -624,6 +624,7 @@ class Issue(Folder):
             filename = record['file']
             if filename:
                 name, extension, language = FileName.decode(filename)
+                name = checkid(name)
                 if name != filename:
                     record['file'] = name
 

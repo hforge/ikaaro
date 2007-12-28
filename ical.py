@@ -1105,7 +1105,7 @@ class Calendar(Text, CalendarView):
 
     @classmethod
     def get_metadata_schema(cls):
-        schema = Table.get_metadata_schema()
+        schema = Text.get_metadata_schema()
         schema['timetables'] = Timetables
         return schema
 

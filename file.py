@@ -202,6 +202,8 @@ class File(WorkflowAware, VersioningAware, DBObject):
             # Workflow
             'state': String,
             'wf_transition': WFTransition,
+            # Specific
+            'filename': String,
         }
 
 
@@ -382,16 +384,20 @@ class File(WorkflowAware, VersioningAware, DBObject):
 
     def update_20071216(self):
         folder = self.parent.handler
-        name, extension, language = FileName.decode(self.name)
+        # Add the "filename" field
+        metadata = self.metadata
+        filename = self.name
+        metadata.set_property('filename', filename)
+        # Normalize the filename
+        name, extension, language = FileName.decode(filename)
+        name = checkid(name)
         # Fix the mimetype
         if extension is not None:
             extension = extension.lower()
-            metadata = self.metadata
             if '/' not in metadata.format:
                 mimetype, encoding = guess_type('.%s' % extension)
                 if mimetype is not None:
                     if metadata.format != mimetype:
-                        metadata.set_changed()
                         metadata.format = mimetype
         # Rename metadata
         folder.move_handler('%s.metadata' % self.name, '%s.metadata' % name)
