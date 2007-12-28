@@ -655,7 +655,8 @@ class Tracker(Folder):
                 query = AndQuery(query, OrQuery(*query2))
         if mtime:
             date = datetime.now() - timedelta(mtime)
-            query = AndQuery(query, RangeQuery('mtime', data, None))
+            date = date.strftime('%Y%m%d%H%M%S')
+            query = AndQuery(query, RangeQuery('mtime', date, None))
         if assigns != []:
             query2 = []
             for value in assigns:

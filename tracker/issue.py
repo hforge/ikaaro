@@ -110,6 +110,14 @@ class Issue(Folder):
         return self.parent
 
 
+    def get_mtime(self):
+        """Return the datetime of the last record"""
+        last_record = self.get_last_history_record()
+        if last_record:
+            return last_record.datetime
+        return self.get_mtime()
+
+
     def broken_links(self):
         broken = []
         for record in self.get_history_records():
