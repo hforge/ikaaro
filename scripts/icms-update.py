@@ -88,9 +88,13 @@ def update(parser, options, target):
             print '*'
             return
 
+        next_versions = object.get_next_versions()
+        if not next_versions:
+            continue
+
         sys.stdout.write('.')
         sys.stdout.flush()
-        for version in object.get_next_versions():
+        for version in next_versions:
             versions.add(version)
 
     versions = list(versions)
