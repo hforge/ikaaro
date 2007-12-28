@@ -698,7 +698,7 @@ class WebSite(RoleAware, Folder):
     #######################################################################
     # UI / Broken links
     #######################################################################
-    broken_links__access__ = True
+    broken_links__access__ = 'is_admin'
     def broken_links(self, context, formats=None):
         if formats is None:
             formats = ['webpage', 'issue', 'WikiPage']
