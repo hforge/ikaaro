@@ -30,7 +30,7 @@ import csv
 from file import File
 from folder import Folder
 from html import WebPage
-from ical import Calendar
+from ical import CalendarTable
 import root
 
 
@@ -42,7 +42,7 @@ __version__ = get_version(globals())
 Folder.register_document_type(WebPage)
 Folder.register_document_type(Folder)
 Folder.register_document_type(File)
-Folder.register_document_type(Calendar)
+Folder.register_document_type(CalendarTable)
 
 # Import ikaaro sub-packages (NOTE must be imported after so they are
 # register after)

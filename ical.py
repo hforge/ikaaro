@@ -690,7 +690,7 @@ class CalendarView(object):
 
         # Existant event
         resource = None
-        if uid:
+        if uid is not None:
             resource = self
             id = uid
             if '/' in uid:
@@ -762,7 +762,7 @@ class CalendarView(object):
                         key = 'DTSTART_%s' % attr
                         if field.startswith('DTEND_'):
                             key = 'DTEND_%s' % attr
-                        value = context.get_form_value(key) or defaults[key]
+                        value = context.get_form_value(key, defaults[key])
                         namespace[key] = value
                 # Get value from context, used when invalid input given
                 elif context.has_form_value(field):
@@ -1171,22 +1171,6 @@ class Calendar(Text, CalendarView):
         return '<pre>%s</pre>' % self.handler.to_str()
 
 
-    remove__access__ = 'is_allowed_to_edit'
-    def remove(self, context):
-        method = context.get_cookie('method') or 'monthly_view'
-        goto = ';%s?%s' % (method, get_current_date())
-        if method not in dir(self):
-            goto = '../;%s?%s' % (method, get_current_date())
-
-        uid = context.get_form_value('id')
-        if '/' in uid:
-            kk, uid = uid.split('/', 1)
-        if not uid:
-            return context.come_back('', goto)
-        icalendar.remove(self, uid)
-        return context.come_back(u'Event definitely deleted.', goto=goto)
-
-
     edit_event__access__ = 'is_allowed_to_edit'
     def edit_event(self, context):
         # Keys to keep from url
@@ -1199,7 +1183,7 @@ class Calendar(Text, CalendarView):
 ##            goto = '../;%s' % method
 
         # Get event id
-        uid = context.get_form_value('id') or ''
+        uid = context.get_form_value('id', '')
         if '/' in uid:
             name, uid = uid.split('/', 1)
 
@@ -1221,7 +1205,7 @@ class Calendar(Text, CalendarView):
 
         # Get id and Record object
         properties = {}
-        if uid:
+        if uid is not None:
             event = self.get_record(uid)
             # Test if current user is admin or organizer of this event
             if not self.is_organizer_or_admin(context, event):
@@ -1271,7 +1255,7 @@ class Calendar(Text, CalendarView):
                     message = u'Start date MUST be earlier than end date.'
                     goto = ';edit_event_form?date=%s' % \
                                              Date.encode(values['DTSTART'][0])
-                    if uid:
+                    if uid is not None:
                         goto = goto + '&uid=%s' % uid
                     elif context.has_form_value('timetable'):
                         timetable = context.get_form_value('timetable', 0)
@@ -1303,13 +1287,37 @@ class Calendar(Text, CalendarView):
                 else:
                     properties[key] = decoded_values
 
-        if uid:
+        if uid is not None:
             self.handler.update_component(uid, **properties)
         else:
             self.handler.add_component('VEVENT', **properties)
 
         goto = '%s?date=%s' % (goto, selected_date)
         return context.come_back(u'Data updated', goto=goto, keys=keys)
+
+
+    remove__access__ = 'is_allowed_to_edit'
+    def remove(self, context):
+        method = context.get_cookie('method') or 'monthly_view'
+        goto = ';%s?%s' % (method, get_current_date())
+        if method not in dir(self):
+            goto = '../;%s?%s' % (method, get_current_date())
+
+        uid = context.get_form_value('id')
+        if '/' in uid:
+            kk, uid = uid.split('/', 1)
+        if not uid:
+            return context.come_back('', goto)
+        icalendar.remove(self, uid)
+        return context.come_back(u'Event definitely deleted.', goto=goto)
+
+
+    def download_form(self, context):
+        namespace = {}
+        namespace['url'] = '../%s/;download' % self.name
+        namespace['title_or_name'] = self.get_title()
+        handler = self.get_object('/ui/file/download_form.xml')
+        return stl(handler, namespace)
 
 
     #######################################################################
@@ -1328,7 +1336,7 @@ class CalendarTable(Table, CalendarView):
 
     class_id = 'calendarTable'
     class_version = '20071216'
-    class_title = u'CalendarTable'
+    class_title = u'Calendar'
     class_description = u'Schedule your time with calendar files.'
     class_icon16 = 'images/icalendar16.png'
     class_icon48 = 'images/icalendar48.png'
@@ -1364,7 +1372,7 @@ class CalendarTable(Table, CalendarView):
 
 
     def get_record(self, id):
-        return icalendarTable.get_record(self, int(id))
+        return icalendarTable.get_record(self.handler, int(id))
 
 
     def edit_record(self, context):
@@ -1401,8 +1409,7 @@ class CalendarTable(Table, CalendarView):
                 value = context.get_form_value(name, type=datatype)
             record[name] = value
 
-        self.update_record(id, **record)
-        self.set_changed()
+        self.handler.update_record(id, **record)
         goto = context.uri.resolve2('../;edit_record_form')
         return context.come_back(MSG_CHANGES_SAVED, goto=goto, keep=['id'])
 
@@ -1416,16 +1423,17 @@ class CalendarTable(Table, CalendarView):
 
         # Check wether the handler is able to deal with the uploaded file
         filename, mimetype, data = file
-        self.set_changed()
         try:
-            self._load_state_from_ical_file(StringIO(data))
+            self.handler._load_state_from_ical_file(StringIO(data))
+            # Change
+            context.server.change_object(self)
         except:
             message = (u'Upload failed: either the file does not match this'
                        u' document type ($mimetype) or it contains errors.')
-            mimetype=self.handler.get_mimetype()
+            mimetype = self.handler.get_mimetype()
             return context.come_back(message, mimetype=mimetype)
-
-        return context.come_back(u'Version uploaded.')
+        goto = ';%s' % self.get_firstview()
+        return context.come_back(u'Version uploaded.', goto)
 
 
     def download_form(self, context):
@@ -1439,7 +1447,7 @@ class CalendarTable(Table, CalendarView):
     def download(self, context):
         response = context.response
         response.set_header('Content-Type', 'calendar')
-        return self.to_ical()
+        return self.handler.to_ical()
 
 
     #######################################################################
@@ -1464,7 +1472,8 @@ class CalendarTable(Table, CalendarView):
 
     def get_events_to_display(self, start, end):
         events = []
-        for event in self.search_events_in_range(start, end, sortby='date'):
+        for event in self.handler.search_events_in_range(start, end,
+                                                         sortby='date'):
             e_dtstart = event.get_property('DTSTART').value
             events.append((self.name, e_dtstart, event))
         events.sort(lambda x, y : cmp(x[1], y[1]))
@@ -1484,7 +1493,7 @@ class CalendarTable(Table, CalendarView):
 ##            goto = '../;%s' % method
 
         # Get event id
-        uid = context.get_form_value('id') or ''
+        uid = context.get_form_value('id', '')
         if '/' in uid:
             name, uid = uid.split('/', 1)
 
@@ -1506,7 +1515,7 @@ class CalendarTable(Table, CalendarView):
 
         # Get id and Record object
         properties = {}
-        if uid:
+        if uid != '':
             uid = int(uid)
             event = self.get_record(uid)
             # Test if current user is admin or organizer of this event
@@ -1557,7 +1566,7 @@ class CalendarTable(Table, CalendarView):
                     message = u'Start date MUST be earlier than end date.'
                     goto = ';edit_event_form?date=%s' % \
                                              Date.encode(values['DTSTART'][0])
-                    if uid:
+                    if uid != '':
                         goto = goto + '&uid=%s' % uid
                     elif context.has_form_value('timetable'):
                         timetable = context.get_form_value('timetable', 0)
@@ -1597,14 +1606,30 @@ class CalendarTable(Table, CalendarView):
                     values = datatype.decode(values)
                 properties[key] = values
 
-        if uid:
-            self.update_record(uid, **properties)
+        if uid != '':
+            self.handler.update_record(uid, **properties)
         else:
             properties['type'] = 'VEVENT'
-            self.add_record(properties)
+            self.handler.add_record(properties)
 
         goto = '%s?date=%s' % (goto, selected_date)
         return context.come_back(u'Data updated', goto=goto, keys=keys)
+
+
+    remove__access__ = 'is_allowed_to_edit'
+    def remove(self, context):
+        method = context.get_cookie('method') or 'monthly_view'
+        goto = ';%s?%s' % (method, get_current_date())
+        if method not in dir(self):
+            goto = '../;%s?%s' % (method, get_current_date())
+
+        uid = context.get_form_value('id', '')
+        if '/' in uid:
+            kk, uid = uid.split('/', 1)
+        if uid =='':
+            return context.come_back('', goto)
+        self.handler.del_record(int(uid))
+        return context.come_back(u'Event definitely deleted.', goto=goto)
 
 
     #######################################################################
