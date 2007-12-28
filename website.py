@@ -686,8 +686,10 @@ class WebSite(RoleAware, Folder):
 
         # Find out the "to" address
         contact = self.get_object('/users/%s' % contact)
+        contact_title = contact.get_title()
         contact = contact.get_property('email')
-
+        if contact_title != contact:
+            contact = (contact_title, contact)
         # Send the email
         root = self.get_root()
         root.send_email(contact, subject, from_addr=from_addr, text=body)

@@ -22,6 +22,7 @@
 from email.MIMEText import MIMEText
 from email.MIMEMultipart import MIMEMultipart
 from email.Utils import formatdate
+from email.header import Header
 from time import time
 import traceback
 from types import GeneratorType
@@ -288,6 +289,9 @@ class Root(WebSite):
         message['Subject'] = subject
         message['Date'] = formatdate(localtime=True)
         message['From'] = from_addr
+        if isinstance(to_addr, tuple):
+            real_name, address = to_addr
+            to_addr = '%s <%s>' % (Header(real_name, encoding), address)
         message['To'] = to_addr
         # Create MIMEText
         if html:
