@@ -535,7 +535,7 @@ class UserFolder(Folder):
                 contacts = list(contact_handler.get_property('contacts'))
                 contacts.remove(name)
                 contact_handler.set_property('contacts', tuple(contacts))
-            Folder.del_object(self, name)
+        Folder.del_object(self, name)
 
 
     #######################################################################
