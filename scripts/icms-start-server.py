@@ -19,6 +19,7 @@
 
 # Import from the Standard Library
 from optparse import OptionParser
+from os import open, devnull, dup2, O_RDWR
 import sys
 
 # Import from itools
@@ -59,7 +60,16 @@ def start(options, target):
     address = server.address or '*'
     port = server.port
     print '[%s] Web Server listens %s:%s' % (target, address, port)
-    sys.stdout.flush()
+    # Detach: redirect standard file descriptors to '/dev/null'
+    if options.detach:
+        file_desc = open(devnull, O_RDWR)
+        sys.stdin.close()
+        dup2(file_desc, 0)
+        sys.stdout.flush()
+        dup2(file_desc, 1)
+        sys.stderr.flush()
+        dup2(file_desc, 2)
+    # Start
     server.start()
 
 
@@ -75,6 +85,9 @@ if __name__ == '__main__':
     parser.add_option('-p', '--port', type='int', help='listen to PORT number')
     parser.add_option('', '--debug', action="store_true", default=False,
                       help="Start the server on debug mode.")
+    parser.add_option(
+        '-d', '--detach', action="store_true", default=False,
+        help="Detach from the console.")
     options, args = parser.parse_args()
     if len(args) == 0:
         parser.error('The TARGET argument is missing.')

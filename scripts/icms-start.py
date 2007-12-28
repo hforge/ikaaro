@@ -19,9 +19,10 @@
 
 # Import from the Standard Library
 from optparse import OptionParser
-from subprocess import Popen, PIPE
+from subprocess import Popen
 import sys
 from os.path import dirname, join, realpath
+from time import sleep
 
 # Import from itools
 import itools
@@ -40,60 +41,40 @@ def start(parser, options, target):
         print
         return
 
-    # Detach
-    if options.detach:
-        stdin = stdout = stderr = PIPE
-    else:
-        stdin = stdout = stderr = None
-
     # Start Server
     script_path = dirname(realpath(sys.argv[0]))
     path_icms_start_server = join(script_path, 'icms-start-server.py')
     args = [path_icms_start_server, target]
     if options.debug:
         args.append('--debug')
+    if options.detach:
+        args.append('--detach')
     if options.port:
         args.append('--port=%s' % options.port)
     if options.address:
         args.append('--address=%s' % options.address)
     args = ' '.join(args)
-    p_server = Popen(args, 0, None, stdin, stdout, stderr, shell=True)
-    # Detach
-    if options.detach:
-        # Redirect child's stdout to parent's stdout
-        # FIXME Print everything, not just one line (be non-blocking, timeout)
-        # FIXME Do the same for stderr
-        line = p_server.stdout.readline()
-        sys.stdout.write(line)
-        # Detach
-        p_server.stdin.close()
-        p_server.stdout.close()
-        p_server.stderr.close()
+    p_server = Popen(args, 0, None, None, None, None, shell=True)
 
     # Start the Mail Spool
     path_icms_start_spool = join(script_path, 'icms-start-spool.py')
-    args = '%s %s' % (path_icms_start_spool, target)
-    p_spool = Popen(args, 0, None, stdin, stdout, stderr, shell=True)
+    args = [path_icms_start_spool, target]
+    if options.detach:
+        args.append('--detach')
+    args = ' '.join(args)
+    p_spool = Popen(args, 0, None, None, None, None, shell=True)
+
     # Detach
     if options.detach:
-        # Redirect child's stdout to parent's stdout
-        # FIXME Print everything, not just one line (be non-blocking, timeout)
-        # FIXME Do the same for stderr
-        line = p_spool.stdout.readline()
-        sys.stdout.write(line)
-        # Detach
-        p_spool.stdin.close()
-        p_spool.stdout.close()
-        p_spool.stderr.close()
+        sleep(0.5)
+        return
 
-    # Debugging mode
-    if options.detach is False:
-        try:
-            p_server.wait()
-        except KeyboardInterrupt:
-            print "Terminated by user."
-        except:
-            pass
+    # Do not detach: wait for the child process
+    try:
+        p_server.wait()
+    except:
+        pass
+
 
 
 

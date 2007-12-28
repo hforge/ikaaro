@@ -18,6 +18,7 @@
 
 # Import from the Standard Library
 from optparse import OptionParser
+from os import open, devnull, dup2, O_RDWR
 import sys
 
 # Import from itools
@@ -44,7 +45,16 @@ def start(optios, target):
         return
 
     print '[%s] Start Mail Spool.' % target
-    sys.stdout.flush()
+    # Detach: redirect standard file descriptors to '/dev/null'
+    if options.detach:
+        file_desc = open(devnull, O_RDWR)
+        sys.stdin.close()
+        dup2(file_desc, 0)
+        sys.stdout.flush()
+        dup2(file_desc, 1)
+        sys.stderr.flush()
+        dup2(file_desc, 2)
+    # Start
     spool.start()
 
 
@@ -54,6 +64,9 @@ if __name__ == '__main__':
     version = 'itools %s' % itools.__version__
     description = ('Starts a spool server')
     parser = OptionParser(usage, version=version, description=description)
+    parser.add_option(
+        '-d', '--detach', action="store_true", default=False,
+        help="Detach from the console.")
 
     options, args = parser.parse_args()
     if len(args) == 0:
