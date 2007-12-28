@@ -24,7 +24,7 @@ def register_object_class(object, format=None):
     objects_registry[format] = object
 
 
-def get_object_class(class_id):
+def get_object_class(class_id, is_file=True):
     if class_id in objects_registry:
         return objects_registry[class_id]
 
@@ -33,9 +33,11 @@ def get_object_class(class_id):
         if class_id in objects_registry:
             return objects_registry[class_id]
 
-    # Default to file
-    return objects_registry["application/octet-stream"]
+    # Default
+    if is_file:
+        return objects_registry['application/octet-stream']
 
+    return objects_registry['application/x-not-regular-file']
 
 
 websites_registry = {}

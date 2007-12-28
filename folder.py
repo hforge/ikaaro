@@ -143,7 +143,15 @@ class Folder(DBObject):
     def _get_object(self, name):
         folder = self.handler
         metadata = folder.get_handler('%s.metadata' % name)
-        cls = get_object_class(metadata.format)
+
+        uri = folder.uri.resolve2(name)
+        if vfs.exists(uri):
+            is_file = vfs.is_file(uri)
+        else:
+            # FIXME This is just a guess, it may fail.
+            is_file = False
+
+        cls = get_object_class(metadata.format, is_file=is_file)
         return cls(metadata)
 
 
