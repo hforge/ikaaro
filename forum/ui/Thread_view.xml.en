@@ -38,11 +38,10 @@
     </p>
   </form>
 
-  <hr />
-
   <a name="new_reply" />
+  <form action=";new_reply" method="post" stl:if="is_allowed_to_add">
+  <hr />
   <h3>Post a Reply</h3>
-  <form action=";new_reply" method="post">
     <p>
       ${rte}
       <input type="submit" value="Reply" />

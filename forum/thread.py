@@ -111,7 +111,9 @@ class Thread(Folder):
                 'mtime': format_datetime(message.get_mtime(), accept_language),
                 'body': message.handler.events,
             })
-        namespace['rte'] = self.get_rte(context, 'data', None)
+        namespace['is_allowed_to_add'] = ac.is_allowed_to_add(user, self)
+        if namespace['is_allowed_to_add']:
+            namespace['rte'] = self.get_rte(context, 'data', None)
 
         handler = self.get_object('/ui/forum/Thread_view.xml')
         return stl(handler, namespace)
