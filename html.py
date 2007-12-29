@@ -314,7 +314,7 @@ class WebPage(EpozEditable, Multilingual, Text):
             # Merge metadata
             new_meta = container.get_handler(new_name)
             for pname, pvalue in old_meta.properties.items():
-                if pname == 'language':
+                if pname in ['language', 'history', 'wf_transition']:
                     continue
                 ptype = type(pvalue)
                 if ptype is list:
