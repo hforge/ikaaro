@@ -20,12 +20,14 @@ from datetime import datetime
 from operator import itemgetter
 
 # Import from itools
+from itools.catalog import KeywordField, BoolField
 from itools.datatypes import DateTime, String
 from itools.i18n import format_datetime
 from itools.stl import stl
 from itools.web import get_context
 
 # Import from ikaaro
+from base import DBObject
 from metadata import Record
 
 
@@ -37,7 +39,7 @@ class History(Record):
         'size': String}
 
 
-class VersioningAware(object):
+class VersioningAware(DBObject):
 
     @classmethod
     def get_metadata_schema(cls):
@@ -85,6 +87,41 @@ class VersioningAware(object):
             return None
         return history[0]['user']
 
+
+    def get_mtime(self):
+        history = self.get_property('history')
+        if not history:
+            return DBObject.get_mtime(self)
+        return history[0]['date']
+
+
+    ########################################################################
+    # Index & Search
+    ########################################################################
+    def get_catalog_fields(self):
+        return DBObject.get_catalog_fields(self) + [
+            # Versioning Aware
+            BoolField('is_version_aware'),
+            KeywordField('last_author', is_indexed=False, is_stored=True)]
+
+
+    def get_catalog_values(self):
+        document = DBObject.get_catalog_values(self)
+
+        document['is_version_aware'] = True
+        # Last Author (used in the Last Changes view)
+        history = self.get_property('history')
+        if history:
+            user_id = history[-1]['user']
+            users = self.get_object('/users')
+            try:
+                user = users.get_object(user_id)
+            except LookupError:
+                document['last_author'] = None
+            else:
+                document['last_author'] = user.get_title()
+
+        return document
 
     ########################################################################
     # User Interface

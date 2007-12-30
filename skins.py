@@ -40,7 +40,7 @@ from widgets import tree, build_menu
 
 class UIFile(Node, File):
 
-    GET__mtime__ = Node.get_mtime
+    GET__mtime__ = File.get_mtime
     def GET(self, context):
         response = context.response
         response.set_header('Content-Type', self.get_mimetype())

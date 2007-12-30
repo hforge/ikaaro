@@ -31,7 +31,6 @@ from itools.uri import get_reference
 from itools import vfs
 
 # Import from ikaaro
-from base import DBObject
 from messages import *
 from multilingual import Multilingual
 from registry import register_object_class, get_object_class
@@ -41,7 +40,7 @@ from workflow import WorkflowAware, WFTransition
 
 
 
-class File(WorkflowAware, VersioningAware, DBObject):
+class File(WorkflowAware, VersioningAware):
 
     class_id = 'file'
     class_version = '20071216'
@@ -60,7 +59,8 @@ class File(WorkflowAware, VersioningAware, DBObject):
     @staticmethod
     def _make_object(cls, folder, name, body=None, filename=None,
                      extension=None, **kw):
-        DBObject._make_object(cls, folder, name, filename=filename, **kw)
+        VersioningAware._make_object(cls, folder, name, filename=filename,
+                                     **kw)
         # Add the body
         if body is not None:
             handler = cls.class_handler(string=body)
@@ -182,7 +182,7 @@ class File(WorkflowAware, VersioningAware, DBObject):
         return context.come_back(MSG_NEW_RESOURCE, goto=goto)
 
 
-    GET__mtime__ = DBObject.get_mtime
+    GET__mtime__ = VersioningAware.get_mtime
     def GET(self, context):
         return self.download(context)
 
@@ -258,7 +258,7 @@ class File(WorkflowAware, VersioningAware, DBObject):
 
 
     download__access__ = 'is_allowed_to_view'
-    download__mtime__ = DBObject.get_mtime
+    download__mtime__ = VersioningAware.get_mtime
     def download(self, context):
         response = context.response
         # Filename
@@ -379,7 +379,7 @@ class File(WorkflowAware, VersioningAware, DBObject):
     # Update
     #######################################################################
     def update_20071215(self, **kw):
-        DBObject.update_20071215(self, **kw)
+        VersioningAware.update_20071215(self, **kw)
 
 
     def update_20071216(self):

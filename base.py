@@ -37,7 +37,6 @@ from lock import Lock, lock_body
 from messages import *
 from metadata import Metadata
 from registry import get_object_class
-from versioning import VersioningAware
 from workflow import WorkflowAware
 
 
@@ -114,19 +113,6 @@ class Node(BaseNode):
 
     def get_title(self):
         return self.name
-
-
-    def get_mtime(self):
-        if self.uri is None:
-            return None
-
-        timestamp = getattr(self, 'timestamp', None)
-        if timestamp is not None:
-            return timestamp
-        elif vfs.exists(self.uri):
-            return vfs.get_mtime(self.uri)
-
-        return None
 
 
     def get_path_to_icon(self, size=16):
@@ -303,10 +289,7 @@ class DBObject(CatalogAware, Node, DomainAware):
             KeywordField('paths'),
             KeywordField('name', is_stored=True),
             KeywordField('mtime', is_indexed=True, is_stored=True),
-            IntegerField('size', is_indexed=False, is_stored=True),
-            # Versioning Aware
-            BoolField('is_version_aware'),
-            KeywordField('last_author', is_indexed=False, is_stored=True)]
+            IntegerField('size', is_indexed=False, is_stored=True)]
 
 
     def get_catalog_values(self):
@@ -364,21 +347,6 @@ class DBObject(CatalogAware, Node, DomainAware):
             document['is_role_aware'] = True
             document['members'] = self.get_members()
 
-        # Versioning
-        if isinstance(self, VersioningAware):
-            document['is_version_aware'] = True
-            # Last Author (used in the Last Changes view)
-            history = self.get_property('history')
-            if history:
-                user_id = history[-1]['user']
-                users = self.get_object('/users')
-                try:
-                    user = users.get_object(user_id)
-                except LookupError:
-                    document['last_author'] = None
-                else:
-                    document['last_author'] = user.get_title()
-
         return document
 
 
@@ -408,11 +376,8 @@ class DBObject(CatalogAware, Node, DomainAware):
         mtimes = []
         for handler in handlers:
             if handler is not None:
-                timestamp = getattr(handler, 'timestamp', None)
-                if timestamp is not None:
-                    mtimes.append(timestamp)
-                elif vfs.exists(handler.uri):
-                    mtime = vfs.get_mtime(handler.uri)
+                mtime = handler.get_mtime()
+                if mtime is not None:
                     mtimes.append(mtime)
 
         if not mtimes:
