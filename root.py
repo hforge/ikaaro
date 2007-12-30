@@ -181,7 +181,7 @@ class Root(WebSite):
         request = context.request
         if request.has_header('x-base-path'):
             try:
-                self.get_handler('%s/ui' % request.get_header('x-base-path'))
+                self.get_object('%s/ui' % request.get_header('x-base-path'))
             except LookupError:
                 response = context.response
                 response.set_header('content-type', 'text/html; charset=UTF-8')
@@ -207,10 +207,6 @@ class Root(WebSite):
     ########################################################################
     # API
     ########################################################################
-    def get_usernames(self):
-        return self.get_handler('users').get_usernames()
-
-
     def get_document_types(self):
         return WebSite.get_document_types(self) + [WebSite]
 
@@ -384,9 +380,9 @@ class Root(WebSite):
         namespace = {}
 
         groups = []
-        root_users = self.get_handler('users').get_usernames()
+        root_users = self.get_object('users').get_usernames()
         for path in self.get_groups():
-            group = self.get_handler(path)
+            group = self.get_object(path)
             members = group.get_members()
             members = set(members)
             if not members.issubset(root_users):
@@ -402,9 +398,9 @@ class Root(WebSite):
 
     fix_groups__access__ = 'is_admin'
     def fix_groups(self, context):
-        root_users = self.get_handler('users').get_usernames()
+        root_users = self.get_object('users').get_usernames()
         for path in self.get_groups():
-            group = self.get_handler(path)
+            group = self.get_object(path)
             members = group.get_members()
             group.set_user_role(members - root_users, None)
 
