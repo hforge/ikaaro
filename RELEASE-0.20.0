@@ -1,5 +1,5 @@
 
-ikaaro 0.20.0 (2007/12/27)
+ikaaro 0.20.0 (2007/12/31)
 ==========================
 
 This is a Content Management System built on Python & itools, among
@@ -26,7 +26,7 @@ However, the most important changes concern the architecture and the
 programming interface, and are strongly related to the changes in the
 latest itools version.
 
-This is the architecture diagram:
+This is the (new) architecture diagram:
 
  4) The Content Management System (ikaaro)
  -----------------------------------------------------------------

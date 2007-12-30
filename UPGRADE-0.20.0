@@ -1,28 +1,56 @@
 
 Upgrade instructions to ikaaro 0.20.0
-***************************************************************************
+**********************************************************************
 
-For sys admins
-==============
+For System Administrators
+=========================
 
-Add a log file to "icms-update.py"
-Move the contact email to the configuration file.
-Allow to use an smtp that required identification
-changes to the icms-start.py signature
-new option DEBUG
-new folder "log"
+(1) The signature of the "icms-start.py" script has changed concerning
+the way to detach, or not, from the console:
 
-1. Update database
-------------------
+                  Before                    Now
+                  -----------------------   -----------------------
+  (don't detach)  icms-start.py -d <path>   icms-start.py <path>
+  (detach)        icms-start.py <path>      icms-start.py -d <path>
 
-As usual instances must be updated:
+Type "icms-start.py --help" to learn the details of the new signature.
 
-  $ icms-update.py xxx           (1)
-  $ icms-update-catalog.py xxx   (2)
+(2) The log files have been moved to the new "log" directory:
 
-However, given the nature of the changes, sometimes the first step (1)
-could fail with an error message.  If this happens the problem must be
-resolved in the origin database, and then the procedure can be re-started.
+  Before            Now
+  ---------------   -------------------
+  access_log        log/access
+  error_log         log/error
+  spool_log         log/spool
+  spool_error_log   log/spool_error
+
+(3) It is higly recommended to define the new "contact-email" variable
+of the configuration file.
+
+
+Update the database
+-------------------
+
+As usual instances must be updated following the standard procedure:
+
+  1. Make a backup
+
+  2. Update the database:
+
+     $ icms-update.py xxx
+
+  3. Rebuild the catalog:
+
+     $ icms-update-catalog.py xxx
+
+But there are some important changes concerning the second step.  Now
+the "icms-update.py" script writes a log detailing the objects that
+failed to upgrade, if any.  This log is named "log/update".
+
+If some objects fail to upgrade, check the update log file and try to
+resolve the problems, then run again the "icms-update.py" script.
+
+If you don't know how to resolve a problem, ask to the mailing list.
 
 
 
@@ -109,3 +137,4 @@ new folder "log"
 "new_instance*" are now staticmethod, drop the last traces of "im_func"
 Allow to send html emails with send_email method
 
+Move the contact email to the configuration file.
