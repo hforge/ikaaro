@@ -111,7 +111,7 @@ class EpozEditable(object):
 class WebPage(EpozEditable, Multilingual, Text):
 
     class_id = 'webpage'
-    class_version = '20071216'
+    class_version = '20071217'
     class_title = u'Web Page'
     class_description = u'Create and publish a Web Page.'
     class_icon16 = 'images/HTML16.png'
@@ -342,6 +342,54 @@ class WebPage(EpozEditable, Multilingual, Text):
         # Switch metadata
         self.metadata = new_meta
 
+
+    def update_20071217(self):
+        languages = self.get_site_root().get_property('website_languages')
+
+        def fix_links(stream):
+            for event in handler.events:
+                type, value, line = event
+                if type != START_ELEMENT:
+                    yield event
+                    continue
+                tag_uri, tag_name, attributes = value
+                if tag_uri != xhtml_uri:
+                    yield event
+                    continue
+                if tag_name == 'a':
+                    attr_name = 'href'
+                elif tag_name == 'img':
+                    attr_name = 'src'
+                else:
+                    yield event
+                    continue
+                value = attributes.get((xhtml_uri, attr_name))
+                if value is None:
+                    yield event
+                    continue
+                uri = get_reference(value)
+                if uri.scheme or uri.authority or not uri.path:
+                    yield event
+                    continue
+                # Fix link
+                if self.has_object(uri.path):
+                    yield event
+                    continue
+
+                name, type, language = FileName.decode(value)
+                if name == value:
+                    yield event
+                    continue
+
+                attributes = attributes.copy()
+                attributes[(xhtml_uri, attr_name)] = name
+                yield START_ELEMENT, (tag_uri, tag_name, attributes), line
+
+        for language in languages:
+            handler = self.get_handler(language=language)
+            events = list(fix_links(handler.events))
+            handler.set_changed()
+            handler.events = events
 
 
 ###########################################################################
