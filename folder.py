@@ -120,15 +120,6 @@ class Folder(DBObject):
     #######################################################################
     # API
     #######################################################################
-    def set_handler(self, reference, handler):
-        # Remove ".metadata"
-        uri = str(self.uri)[:-9]
-        uri = get_reference(uri)
-        # Set
-        uri = uri.resolve2(reference)
-        self.database.set_handler(uri, handler)
-
-
     def _has_object(self, name):
         folder = self.handler
         return folder.has_handler('%s.metadata' % name)
