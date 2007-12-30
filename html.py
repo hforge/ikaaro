@@ -25,6 +25,7 @@ from itools.handlers import File
 from itools.html import (xhtml_uri, XHTMLFile, sanitize_stream, HTMLParser,
     stream_to_str_as_xhtml)
 from itools.stl import stl
+from itools.uri import get_reference
 from itools.xml import TEXT, START_ELEMENT, XMLError
 
 # Import from ikaaro
@@ -184,15 +185,15 @@ class WebPage(EpozEditable, Multilingual, Text):
                 if tag_uri != xhtml_uri:
                     continue
                 if tag_name == 'a':
-                    value = attributes.get('href')
+                    value = attributes.get((xhtml_uri, 'href'))
                 elif tag_name == 'img':
-                    value = attributes.get('src')
+                    value = attributes.get((xhtml_uri, 'src'))
                 else:
                     continue
                 if value is None:
                     continue
                 uri = get_reference(value)
-                if uri.scheme or uri.authority:
+                if uri.scheme or uri.authority or not uri.path:
                     continue
                 if not self.has_object(uri.path):
                     broken.append(uri)
