@@ -293,6 +293,45 @@ Two things to note:
   - The new API is more "procedural", while the old API had a more
     "declarative" flavour.
 
+new_instance_form/new_instance
+------------------------------
+
+Also, the "new_instance_form" and "new_instance" methods are now static:
+
+  # Before
+  @classmethod
+  def new_instance_form(cls, context):
+      BaseObject.new_instance_form.im_func(cls, context)
+      ...
+
+  @classmethod
+  def new_instance(cls, container, context):
+      BaseObject.new_instance.im_func(cls, container, context)
+      ...
+
+  # Now
+  @staticmethod
+  def new_instance_form(cls, context):
+      BaseObject.new_instance_form(cls, context)
+      ...
+
+  @staticmethod
+  def new_instance(cls, container, context):
+      BaseObject.new_instance(cls, container, context)
+      ...
+
+
+Other API changes
+====================
+
+These are some other patterns that need to be updated:
+
+(1) # Before
+    root.send_email(from_addr, to_addr, subject, body)
+
+    # Now
+    root.send_email(to_addr, subject, from_addr=from_addr, text=body)
+
 
 Obsolete Code
 ====================
@@ -302,33 +341,22 @@ This is the list of obsolete code that has been removed:
  - ListOfUsers
 
 
-
-
-
-
-
 UNCLASSIFIED
 ============
 
-_get_virtual_handler => _get_object
-"get_real_handler" => "get_real_object"
-"get_physical_path" => "get_canonical_path"
-"search_handlers" => "search_objects"
-Remove "get_pathtoroot"
+Changed:
 
-It is not necessary to inherit from ikaaro.Root class to define the catalog fields now.
+  Before                      Now
+  -------------------------   ------------------
+  _get_virtual_handler        _get_object
+  get_real_handler            get_real_object
+  get_physical_path           get_canonical_path
 
-send_email prototype
-Allow to send html emails with send_email method
-"new_instance*" are now staticmethod, drop the last traces of "im_func"
+  /;change_language?lang=fr   ?language=fr
 
-Remove the "owner" metadata.
+Removed:
 
-Unify HTML and XHTML web pages
-Move the contact email to the configuration file.
+  - The "get_pathtoroot" method.
+  - The "owner" metadata.
+  - The "contact_email" variable (moved to the configuration file).
 
-Replace "change_language" by a more efficient (no redirections), robust (no
-referrer) and google friendly way to set the language.
-
-Fix upload of multilingual files.  Add optional "title" to the upload form.
-Remove plain text files from the add form.
