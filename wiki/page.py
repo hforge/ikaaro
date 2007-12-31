@@ -83,6 +83,11 @@ class WikiPage(Text):
         return DBObject.new_instance_form(cls, context)
 
 
+    @staticmethod
+    def new_instance(cls, container, context):
+        return DBObject.new_instance(cls, container, context)
+
+
     GET__mtime__ = None
     GET__access__ = True
     def GET(self, context):
