@@ -8,17 +8,17 @@
 
   <form action=";edit_account" method="post">
     <dl>
-      <dt><label for="firstname">First name</label></dt>
+      <dt><label for="firstname">First Name</label></dt>
       <dd>
         <input type="text" id="firstname" name="firstname"
           value="${firstname}" />
       </dd>
-      <dt><label for="lastname">Last name</label></dt>
+      <dt><label for="lastname">Last Name</label></dt>
       <dd>
         <input type="text" id="lastname" name="lastname"
           value="${lastname}" />
       </dd>
-      <dt><label for="email">E-mail</label></dt>
+      <dt><label for="email">Email Address</label></dt>
       <dd>
         <input type="text" id="email" name="email" value="${email}" />
       </dd>

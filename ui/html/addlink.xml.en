@@ -104,7 +104,7 @@
         <input type="hidden" name="target_path" value="${bc/target_path}"/>
         <input type="text" name="title" size="40" />
         <input type="hidden" name="name" value="" />
-        <input class="button_add" type="submit" value="Ok" />
+        <input class="button_add" type="submit" value="OK" />
       </form>
       <!-- Upload and Link -->
       <form action=";addlink" method="post" enctype="multipart/form-data">

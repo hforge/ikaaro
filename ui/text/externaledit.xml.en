@@ -20,16 +20,17 @@
         External Editor for Windows</a>.
     </li>
     <li>
-      <a href="http://plope.org/software/ExternalEditor/zopeedit-0.9.2-src.tgz">Download External Editor for Unix and MacOSX</a>.
+      <a href="http://plope.org/software/ExternalEditor/zopeedit-0.9.2-src.tgz">Download
+        External Editor for Unix and MacOSX</a>.
     </li> 
   </ul>
 
 
   <form action=";external_edit" method="get">
+    <p>You may need to change the character encoding if your application doesn't
+      support UTF-8 (not recommended).
+    </p>
     <dl>
-      <p>You may need to change the character encoding if your application
-        doesn't support UTF-8 (not recommended).
-      </p>
       <dt><label for="encoding">Character encoding</label></dt>
       <dd>
         <select id="encoding" name="encoding">

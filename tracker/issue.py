@@ -21,6 +21,7 @@
 # Import from the Standard Library
 from datetime import datetime
 from re import sub
+from string import Template
 
 # Import from itools
 from itools.csv import parse, Table
@@ -228,11 +229,13 @@ class Issue(Folder):
         else:
             uri = context.uri.resolve(';edit_form')
         body = '#%s %s %s\n\n' % (self.name, self.get_value('title'), str(uri))
-        body += self.gettext(u'The user %s did some changes.') % user_title
+        template = Template(self.gettext(u'The user $title did some changes.'))
+        body += template.substitute(title=user_title)
         body += '\n\n'
         if file:
             filename = unicode(filename, 'utf-8')
-            body += self.gettext(u'  New Attachment: %s') % filename + '\n'
+            template = Template(self.gettext(u'  New Attachment: $filename'))
+            body += template.substitute(filename=filename) + '\n'
         comment = context.get_form_value('comment', type=Unicode)
         if comment:
             body += self.gettext(u'Comment') + u'\n'
@@ -255,24 +258,27 @@ class Issue(Folder):
         history = self.get_history()
         if history.get_n_records() > 0:
             # Edit issue
-            template = self.gettext(u'%s: %s to %s')
+            template = self.gettext(u'$field: $old_value to $new_value')
         else:
             # New issue
-            template = self.gettext(u'%s: %s%s')
+            template = self.gettext(u'$field: $old_value$new_value')
+        template = Template(template)
         # Modification of title
         last_title = self.get_value('title') or ''
         new_title = record['title']
         if last_title != new_title:
-            title = self.gettext(u'Title')
-            modifications.append(template %(title, last_title, new_title))
+            field = self.gettext(u'Title')
+            text = template.substitute(field=field, old_value=last_title,
+                                       new_value=new_title)
+            modifications.append(text)
         # List modifications
         for key in [(u'Module', 'module', 'modules'),
                     (u'Version', 'version', 'versions'),
                     (u'Type', 'type', 'types'),
                     (u'Priority', 'priority', 'priorities'),
                     (u'State', 'state', 'states')]:
-            title, name, csv_name = key
-            title = self.gettext(title)
+            field, name, csv_name = key
+            field = self.gettext(field)
             new_value = record[name]
             last_value = self.get_value(name)
             # Detect if modifications
@@ -284,7 +290,8 @@ class Issue(Folder):
                 last_title = csv.get_record(last_value).title
             if new_value:
                 new_title = csv.get_record(new_value).title
-            text = template % (title, last_title, new_title)
+            text = template.substitute(field=field, old_value=last_title,
+                                       new_value=new_title)
             modifications.append(text)
 
         # Modifications of assigned_to
@@ -295,8 +302,10 @@ class Issue(Folder):
             if last_user:
                 last_user = last_user.get_property('email')
             new_user = root.get_user(new_user).get_property('email')
-            title = self.gettext(u'Assigned to')
-            modifications.append(template  %(title, last_user, new_user))
+            field = self.gettext(u'Assigned To')
+            text = template.substitute(field=field, old_value=last_user,
+                                       new_value=new_user)
+            modifications.append(text)
 
         return u'\n'.join(modifications)
 

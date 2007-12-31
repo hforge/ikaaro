@@ -27,7 +27,7 @@
           value="${lastname/value}" />
       </dd>
       <dt>
-        <label for="email" class="${email/class}">Email address</label>
+        <label for="email" class="${email/class}">Email Address</label>
       </dt>
       <dd>
         <input type="text" id="email" name="email" value="${email/value}" />

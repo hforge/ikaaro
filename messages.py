@@ -32,4 +32,4 @@ MSG_NAME_MISSING = u'The name is missing.'
 MSG_NEW_RESOURCE = u'A new resource has been added.'
 MSG_PAGE_LOCK = u'This page is locked by $user'
 MSG_PASSWORD_MISMATCH = u'The provided passwords do not match.'
-
+MSG_OBJECTS_REMOVED = u'Objects removed: $objects.'

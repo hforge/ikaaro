@@ -20,7 +20,7 @@
         </th>
         <td>
           <textarea name="msgid" cols="65" rows="8"
-            readonly="">${msgid}></textarea>
+            readonly="">${msgid}</textarea>
         </td>
       </tr>
       <tr>

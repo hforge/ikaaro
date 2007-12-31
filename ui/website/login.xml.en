@@ -8,7 +8,7 @@
 
   <form id="loginform" name="loginform" method="post" action="${action}">
     <dl>
-      <dt><label for="username">Email address</label></dt>
+      <dt><label for="username">Email Address</label></dt>
       <dd>
         <input type="text" id="username" name="username" value="${username}" />
       </dd>

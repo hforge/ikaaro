@@ -21,6 +21,7 @@
 # Import from the Standard Library
 from datetime import datetime, timedelta
 from operator import itemgetter
+from string import Template
 
 # Import from itools
 from itools.csv import Table as BaseTable
@@ -425,7 +426,7 @@ class Tracker(Folder):
 
 
     export_to_csv__access__ = 'is_allowed_to_view'
-    export_to_csv__label__ = u'Export as CSV'
+    export_to_csv__label__ = u'Export to CSV'
     def export_to_csv(self, context):
         # Get search results
         results = self.get_search_results(context)
@@ -471,7 +472,7 @@ class Tracker(Folder):
 
 
     change_several_bugs__access__ = 'is_allowed_to_view'
-    change_several_bugs__label__ = u'Change several bugs'
+    change_several_bugs__label__ = u'Change Several Issues'
     def change_several_bugs(self, context):
         root = context.root
         # Get search results
@@ -546,7 +547,7 @@ class Tracker(Folder):
             user_title = self.gettext(u'ANONYMOUS')
         else:
             user_title = user.get_title()
-        template = u'--- Comment from : %s ---\n\n%s\n\n%s'
+        template = u'--- Comment from : $user ---\n\n$comment\n\n$issues'
         template = self.gettext(template)
         tracker_title = self.parent.get_property('title') or 'Tracker Issue'
         subject = u'[%s]' % tracker_title
@@ -556,8 +557,10 @@ class Tracker(Folder):
                 href = user_issue['href']
                 name = user_issue['name']
                 title = user_issue['title']
-                user_issues.append('#%s - %s - %s' %(name, title, href))
-            body = template % (user_title, comment, '\n'.join(user_issues))
+                user_issues.append(u'#%s - %s - %s' %(name, title, href))
+            body = Template(template).substitute(user=user_title,
+                                                 comment=comment,
+                                                 issues='\n'.join(user_issues))
             to_addr = root.get_user(user_id).get_property('email')
             root.send_email(to_addr, subject, text=body)
 
@@ -601,7 +604,7 @@ class Tracker(Folder):
         tab_text = []
         for line in lines:
             filtered_line = [unicode(line[col]) for col in selected_columns]
-            id = u'#%s' % line['name']
+            id = Template(u'#$id').substitute(id=line['name'])
             filtered_line.insert(0, id)
             filtered_line = u'\t'.join(filtered_line)
             tab_text.append(filtered_line)

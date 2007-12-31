@@ -20,6 +20,7 @@
 
 # Import from the Standard Library
 from operator import itemgetter
+from string import Template
 
 # Import from itools
 from itools.csv import Record, Table as TableFile
@@ -285,7 +286,8 @@ class Table(File):
             self.handler.add_record(record)
             message = u'New record added.'
         except ValueError, strerror:
-            message = u'Error: %s' % strerror
+            template = Template(self.gettext(u'Error: $message'))
+            message = template.substitute(message=strerror)
 
         goto = context.uri.resolve2('../;add_record_form')
         return context.come_back(message, goto=goto)

@@ -54,7 +54,7 @@
           </tr>
           <tr>
             <td colspan="2">
-              <button type="button" onclick="return SubmitForm();">Insert table</button>
+              <button type="button" onclick="return SubmitForm();">Insert Table</button>
             </td>
           </tr>
         </tbody>

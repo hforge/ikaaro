@@ -348,7 +348,7 @@ class File(WorkflowAware, VersioningAware):
     # Edit / Upload
     upload_form__access__ = 'is_allowed_to_edit'
     upload_form__label__ = u'Edit'
-    upload_form__sublabel__ = u'Upload'
+    upload_form__sublabel__ = u'Replace'
     def upload_form(self, context):
         handler = self.get_object('/ui/file/upload.xml')
         return stl(handler)

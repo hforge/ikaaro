@@ -19,6 +19,7 @@
 
 # Import from the Standard Library
 from mimetypes import guess_type
+from string import Template
 
 # Import from itools
 from itools.datatypes import is_datatype, DateTime, FileName
@@ -340,7 +341,7 @@ class Dressable(Folder, EpozEditable):
         name = context.get_form_value('name')
         self.del_object(name)
         goto = './;view'
-        return context.come_back(u'Objects removed: %s' % name, goto=goto)
+        return context.come_back(MSG_OBJECTS_REMOVED, objects=name, goto=goto)
 
 
     def get_epoz_document(self):
@@ -436,7 +437,7 @@ class Dressable(Folder, EpozEditable):
         dress_name = kw.get('dress_name')
         label = self._get_object_label(dress_name)
         if kw.get('external'):
-            label = u'%s (External)' % label
+            label = Template(u'$label (External)').substitute(label=label)
         return label
 
 

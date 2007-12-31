@@ -586,8 +586,7 @@ class Folder(DBObject):
             else:
                 not_allowed.append(name)
 
-        message = u'Objects removed: $objects.'
-        return context.come_back(message, objects=', '.join(removed))
+        return context.come_back(MSG_OBJECTS_REMOVED, objects=', '.join(removed))
 
 
     rename_form__access__ = 'is_allowed_to_move'

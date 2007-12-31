@@ -440,8 +440,8 @@ class WikiPage(Text):
             else:
                 message = MSG_CHANGES_SAVED
         except SystemMessage, message: # Critical error
-            msg = u"Syntax error<br>line%s" % message.message
-            return context.come_back(msg, keep=['data'])
+            msg = u"Syntax error<br/>line$line"
+            return context.come_back(msg, line=message.message, keep=['data'])
 
         # Change
         context.server.change_object(self)

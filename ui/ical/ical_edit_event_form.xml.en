@@ -85,14 +85,14 @@
       <td>
         <table stl:repeat="att ATTENDEE">
           <tr>
-            <td>Email address</td>
+            <td>Email Address</td>
             <td colspan="3">
               <input type="text" size="30" name="${att/uri}"
                 value="${att/v_uri}" />
             </td>
           </tr>
           <tr>
-            <td>Common name</td>
+            <td>Common Name</td>
             <td>
               <input type="text" size="20" name="${att/common}"
                 value="${att/v_common}" />

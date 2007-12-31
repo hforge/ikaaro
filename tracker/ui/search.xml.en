@@ -32,7 +32,7 @@
       </tr>
       <tr>
         <td valign="top">
-          <label for="module">Module<stl:block if="is_admin"> (<a
+          <label for="module">Module:<stl:block if="is_admin"> (<a
             href="./modules/;view">Edit</a>)</stl:block></label>
           <br/>
           <select name="module" id="module" class="tracker_select"
@@ -42,7 +42,7 @@
           </select>
         </td>
         <td valign="top">
-          <label for="assigned_to">Assign To<stl:block if="is_admin"> (<a
+          <label for="assigned_to">Assigned To:<stl:block if="is_admin"> (<a
             href="${manage_assigned}">Edit</a>)</stl:block></label>
           <br/>
           <select name="assigned_to" id="assigned_to"
@@ -52,7 +52,7 @@
           </select>
         </td>
         <td valign="top">
-          <label for="version">Version<stl:block if="is_admin"> (<a
+          <label for="version">Version:<stl:block if="is_admin"> (<a
             href="./versions/;view">Edit</a>)</stl:block></label>
           <br/>
           <select name="version" id="version" class="tracker_select"
@@ -64,7 +64,7 @@
       </tr>
       <tr>
         <td valign="top">
-          <label for="type">Type<stl:block if="is_admin"> (<a
+          <label for="type">Type:<stl:block if="is_admin"> (<a
             href="./types/;view">Edit</a>)</stl:block></label>
           <br/>
           <select name="type" id="type" class="tracker_select"
@@ -74,7 +74,7 @@
           </select>
         </td>
         <td>
-          <label for="state">Status<stl:block if="is_admin"> (<a
+          <label for="state">Status:<stl:block if="is_admin"> (<a
             href="./states/;view">Edit</a>)</stl:block></label>
           <br/>
           <select name="state" id="state" class="tracker_select"
@@ -84,7 +84,7 @@
           </select>
         </td>
         <td valign="top">
-          <label for="priority">Priority<stl:block if="is_admin"> (<a
+          <label for="priority">Priority:<stl:block if="is_admin"> (<a
             href="./priorities/;view">Edit</a>)</stl:block></label>
           <br/>
           <select name="priority" id="priority" class="tracker_select"
