@@ -1,12 +1,14 @@
 
-Upgrade instructions to ikaaro 0.20.0
+**********************************************************************
+Upgrade to ikaaro 0.20.0
+System Administrators
 **********************************************************************
 
-For System Administrators
-=========================
+Scripts
+====================
 
-(1) The signature of the "icms-start.py" script has changed concerning
-the way to detach, or not, from the console:
+The signature of the "icms-start.py" script has changed concerning the
+way to detach, or not, from the console:
 
                   Before                    Now
                   -----------------------   -----------------------
@@ -15,7 +17,11 @@ the way to detach, or not, from the console:
 
 Type "icms-start.py --help" to learn the details of the new signature.
 
-(2) The log files have been moved to the new "log" directory:
+
+Logs
+====================
+
+The log files have been moved to the new "log" directory:
 
   Before            Now
   ---------------   -------------------
@@ -24,12 +30,16 @@ Type "icms-start.py --help" to learn the details of the new signature.
   spool_log         log/spool
   spool_error_log   log/spool_error
 
-(3) It is higly recommended to define the new "contact-email" variable
-of the configuration file.
+
+Configuration File
+====================
+
+It is higly recommended to define the new "contact-email" variable of
+the configuration file.
 
 
 Update the database
--------------------
+====================
 
 As usual instances must be updated following the standard procedure:
 
@@ -53,36 +63,246 @@ resolve the problems, then run again the "icms-update.py" script.
 If you don't know how to resolve a problem, ask to the mailing list.
 
 
+**********************************************************************
+Upgrade to ikaaro 0.20.0
+Developers
+**********************************************************************
 
-For developers
-==============
+Note that the documentation below is not complete.  For any specific
+problem, please ask the mailing list.
 
+Imports
+====================
 
-
-1. Imports
-----------
+There have been many other improvements to the code reorganization, as
+a consequence import statements need to be updated.
 
 Most important, "itools.cms" has been changed to "ikaaro":
 
   from itools.cms import XXX                     # Before
   from ikaaro import XXX                         # Now
 
-The module "future" has become a package:
+There have been many other improvements to the code reorganization,
+among them the modules "forum", "future", "tracker" and "wiki" have
+become sub-packages:
 
-  from itools.cms.future import Dressable        # Before
-  from ikaaro.future.dressable import Dressable  # Now
-
-  from itools.cms.future import OrderAware       # Before
-  from ikaaro.future.order import OrderAware     # Now
-
-Other renames include:
-
-  from itools.cms.html import XHTMLFile          # Before
-  from ikaaro.html import WebPage                # Now
+  Before                         Now
+  ----------------------------   ---------------------------------
+  itools.cms.base.Handler        ikaaro.base.DBObject
+  itools.cms.html.XHTMLFile      ikaaro.html.WebPage
+  itools.cms.future.Dressable    ikaaro.future.dressable.Dressable
+  itools.cms.future.OrderAware   ikaaro.future.order.OrderAware
 
 
-2. 
-------------------
+Architecture
+====================
+
+Now the distinction between objects stored in the database, and the
+objects that make up the user interface (reached through the "/ui"
+path) is more clear.
+
+UI Objects
+--------------------
+
+As before, UI objects are at the same time "handlers".  However, we do
+not get to them using the "get_handler" method, but the "get_object"
+method.  The pattern that follows is very common, and needs to be
+updated:
+
+  # Before
+  handler = self.get_handler('/ui/...')
+  return stl(handler, namespace)
+
+  # Now
+  handler = self.get_object('/ui/...')
+  return stl(handler, namespace)
+
+Database Objects
+--------------------
+
+On the other hand, the database objects are not handlers anymore.  The
+relationship between database objects and itools handlers is not defined
+by inheritance, but by aggregation.
+
+One of the effects is that the expression to call a method of a handler
+has changed:
+
+  Before                Now
+  -------------------   ---------------------------
+  self.do_something()   self.handler.do_something()
+
+Also, in the rare occassions where our class inherited directly from a
+handler class, we need to update our code.  Now we specify what handler
+class we want to use through the new variable "handler_class":
+
+  # Before
+  class MyObject(BaseObject, HandlerClass):
+      ...
+
+  # Now
+  class MyObject(BaseObject):
+      class_handler = HandlerClass
+      ...
+
+Related to this, there are many method calls that need to be updated.
+These are some common patterns:
+
+(1) # Before
+    handler = self.get_handler(path)
+
+    # Now
+    object = self.get_object(path)
+    handler = object.handler
+
+(2) # Before
+    handler, metadata = self.get_object(path)
+
+    # Now
+    object = self.get_object(path)
+    object.metadata
+    object.handler
+
+(3) # Before
+    self.search_handlers(...)
+
+    # Now
+    self.search_objects(...)
+
+
+
+Metadata
+====================
+
+The architecture of the metadata has been radically changed.  The first
+visible effect is that we don't have prefixes anymore:
+
+  # Before
+  title = self.get_property('dc:title')
+
+  # Now
+  title = self.get_property('title')
+
+Definition
+--------------------
+
+Before the metadata was defined globally through a registry, now it is
+centered on the object.  This is the common pattern to update:
+
+  # Before
+  from itools.schemas import Schema, register_schema
+
+  class MySchema(Schema):
+      class_uri = 'http://example.com/my_xml_namespace'
+      class_prefix = 'myschema'
+
+      datatypes = {
+         'field1': DataType,
+         'field2': DataType,
+      }
+
+  register_schema(MySchema)
+
+  # Now
+  class MyObject(BaseObject):
+
+      @classmethod
+      def get_metadata_schema(cls):
+          schema = BaseObject.get_metadata_schema()
+          schema['field1'] = DataType
+          schema['field2'] = DataType
+          return schema
+
+
+Indexing
+====================
+
+As with the metadata, the definition of the fields to be indexed has
+been de-centralized:
+
+  # Before
+  class MyRoot(Root):
+
+      _catalog_fields = Root._catalog_fields + [
+          KeywordField('field1'),
+          KeywordField('field2')]
+
+  class MyObject(BaseObject):
+
+      def get_catalog_indexes(self):
+          ...
+
+  # Now
+  class MyObject(BaseObject):
+
+      def get_catalog_fields(self):
+          fields = BaseObject.get_catalog_fields(self)
+          fields.append(KeywordField('field1'))
+          fields.append(KeywordField('field2'))
+          return fields
+
+      def get_catalog_values(self):
+          ...
+
+
+Upgrading
+====================
+
+The last aspect that has been de-centralized is the upgrade code.  Be
+sure every custom class defines the right "class_version" variable, and
+includes the required update methods; for instance:
+
+  class MyObject(BaseObject):
+      class_id = 'myobject'
+      class_version = '20071216'
+
+      def update_20071215(self):
+          BaseObject.update_20071215(self)
+
+      def update_20071216(self):
+          BaseObject.update_20071216(self)
+
+
+New Instances
+====================
+
+The way to create new instances is much different.  For example, this
+is what a Wiki looks like, before and after:
+
+  # Before
+  class WikiFolder(Folder):
+      def new(self):
+          Folder.new(self)
+          cache = self.cache
+          page = WikiPage()
+          cache['FrontPage'] = page
+          cache['FrontPage.metadata'] = page.build_metadata()
+
+  # Now
+  class WikiFolder(Folder):
+      @staticmethod
+      def _make_object(cls, folder, name):
+          Folder._make_object(cls, folder, name)
+          metadata = WikiPage.build_metadata()
+          folder.set_handler('%s/FrontPage.metadata' % name, metadata)
+
+Two things to note:
+
+  - Now we don't need to create the "FrontPage" file, because at the
+    beginning it is empty.
+
+  - The new API is more "procedural", while the old API had a more
+    "declarative" flavour.
+
+
+Obsolete Code
+====================
+
+This is the list of obsolete code that has been removed:
+
+ - ListOfUsers
+
+
+
 
 
 
@@ -90,51 +310,25 @@ Other renames include:
 UNCLASSIFIED
 ============
 
-Remove obsolete code (ListOfUsers)
 _get_virtual_handler => _get_object
-
 "get_real_handler" => "get_real_object"
 "get_physical_path" => "get_canonical_path"
-
-Code reorganization: wiki, tracker, future, forum
-
 "search_handlers" => "search_objects"
+Remove "get_pathtoroot"
 
 It is not necessary to inherit from ikaaro.Root class to define the catalog fields now.
 
-Remove "get_pathtoroot"
-
 send_email prototype
+Allow to send html emails with send_email method
 "new_instance*" are now staticmethod, drop the last traces of "im_func"
+
 Remove the "owner" metadata.
 
-
-
-
-
-
-New metadata architecture
-Decentralize "icms-update.py"
-
-
-Proof-of-concept interface to check broken links.
-Add a log file to "icms-update.py"
-Now files "remember" the original filename.
 Unify HTML and XHTML web pages
 Move the contact email to the configuration file.
-Remove "icms-make-package.py"
 
 Replace "change_language" by a more efficient (no redirections), robust (no
 referrer) and google friendly way to set the language.
 
 Fix upload of multilingual files.  Add optional "title" to the upload form.
-extend the wiki/tracker action box to all containers
-Allow to use an smtp that required identification
 Remove plain text files from the add form.
-changes to the icms-start.py signature
-new option DEBUG
-new folder "log"
-"new_instance*" are now staticmethod, drop the last traces of "im_func"
-Allow to send html emails with send_email method
-
-Move the contact email to the configuration file.
