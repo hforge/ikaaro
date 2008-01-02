@@ -487,6 +487,8 @@ class Issue(Folder):
             return context.come_back(error)
         # Edit
         self._add_record(context)
+        # Change
+        context.server.change_object(self)
 
         return context.come_back(MSG_CHANGES_SAVED)
 

@@ -541,6 +541,8 @@ class Tracker(Folder):
                 if not users_issues.has_key(new_assigned_to):
                     users_issues[new_assigned_to] = []
                 users_issues[new_assigned_to].append(info)
+            # Change
+            context.server.change_object(issue)
         # Send mails
         user = context.user
         if user is None:
