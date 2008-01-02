@@ -30,6 +30,7 @@ from itools.handlers import Folder as BaseFolder
 from itools.i18n import get_language_name
 from itools.stl import stl
 from itools.uri import Path
+from itools.web import FormError
 
 # Import from ikaaro
 from access import AccessControl
@@ -234,8 +235,8 @@ class User(AccessControl, Folder):
     confirm_registration__access__ = True
     def confirm_registration(self, context):
         keep = ['key']
-        register_fields = [('newpass', True, String),
-                           ('newpass2', True, String)]
+        register_fields = {'newpass': String(mandatory=True),
+                           'newpass2': String(mandatory=True)}
 
         # Check register key
         must_confirm = self.get_property('user_must_confirm')
@@ -243,13 +244,14 @@ class User(AccessControl, Folder):
             return self.gettext(u"Bad key.").encode('utf-8')
 
         # Check input data
-        error = context.check_form_input(register_fields)
-        if error is not None:
-            return context.come_back(error, keep=keep)
+        try:
+            form = context.check_form_input(register_fields)
+        except FormError:
+            return context.come_back(MSG_MISSING_OR_INVALID, keep=keep)
 
         # Check passwords
-        password = context.get_form_value('newpass')
-        password2 = context.get_form_value('newpass2')
+        password = form['newpass']
+        password2 = form['newpass2']
         if password != password2:
             return context.come_back(MSG_PASSWORD_MISMATCH, keep=keep)
 

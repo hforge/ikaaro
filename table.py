@@ -27,6 +27,7 @@ from itools.csv import Record, Table as TableFile
 from itools.datatypes import (DataType, Integer, is_datatype, Enumerate, Date,
                               Tokens)
 from itools.stl import stl
+from itools.web import FormError
 
 # Import from ikaaro
 from base import DBObject
@@ -253,26 +254,27 @@ class Table(File):
     add_record_action__access__ = 'is_allowed_to_edit'
     def add_record_action(self, context):
         # check form
-        check_fields = []
+        check_fields = {}
         for name, kk in self.get_fields():
             datatype = self.handler.get_datatype(name)
             if getattr(datatype, 'multiple', False) is True:
                 datatype = Multiple(type=datatype)
-            check_fields.append((name, getattr(datatype, 'mandatory', False),
-                                 datatype))
+            check_fields[name] = datatype
 
-        error = context.check_form_input(check_fields)
-        if error is not None:
-            return context.come_back(error, keep=context.get_form_keys())
+        try:
+            form = context.check_form_input(check_fields)
+        except FormError:
+            return context.come_back(MSG_MISSING_OR_INVALID,
+                                     keep=context.get_form_keys())
 
         record = {}
         for name, title in self.get_fields():
             datatype = self.handler.get_datatype(name)
             if getattr(datatype, 'multiple', False) is True:
                 if is_datatype(datatype, Enumerate):
-                    value = context.get_form_values(name, type=datatype)
+                    value = form[name]
                 else: # textarea -> string
-                    values = context.get_form_value(name)
+                    values = form[name]
                     values = values.splitlines()
                     value = []
                     for index in range(len(values)):
@@ -280,7 +282,7 @@ class Table(File):
                         if tmp:
                             value.append(datatype.decode(tmp))
             else:
-                value = context.get_form_value(name, type=datatype)
+                value = form[name]
             record[name] = value
         try:
             self.handler.add_record(record)
@@ -358,17 +360,18 @@ class Table(File):
     edit_record__access__ = 'is_allowed_to_edit'
     def edit_record(self, context):
         # check form
-        check_fields = []
+        check_fields = {}
         for name, kk in self.get_fields():
             datatype = self.handler.get_datatype(name)
             if getattr(datatype, 'multiple', False) is True:
                 datatype = Multiple(type=datatype)
-            check_fields.append((name, getattr(datatype, 'mandatory', False),
-                                 datatype))
+            check_fields[name] = datatype
 
-        error = context.check_form_input(check_fields)
-        if error is not None:
-            return context.come_back(error, keep=context.get_form_keys())
+        try:
+            form = context.check_form_input(check_fields)
+        except FormError:
+            return context.come_back(MSG_MISSING_OR_INVALID,
+                                     keep=context.get_form_keys())
 
         # Get the record
         id = context.get_form_value('id', type=Integer)
@@ -377,9 +380,9 @@ class Table(File):
             datatype = self.handler.get_datatype(name)
             if getattr(datatype, 'multiple', False) is True:
                 if is_datatype(datatype, Enumerate):
-                    value = context.get_form_values(name)
+                    value = form[name]
                 else: # textarea -> string
-                    values = context.get_form_value(name)
+                    values = form[name]
                     values = values.splitlines()
                     value = []
                     for index in range(len(values)):
@@ -387,7 +390,7 @@ class Table(File):
                         if tmp:
                             value.append(datatype.decode(tmp))
             else:
-                value = context.get_form_value(name, type=datatype)
+                value = form[name]
             record[name] = value
 
         self.handler.update_record(id, **record)

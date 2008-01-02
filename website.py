@@ -28,6 +28,7 @@ from itools.handlers import checkid
 from itools.i18n import get_language_name, get_languages
 from itools.stl import stl
 from itools.uri import Path, get_reference
+from itools.web import FormError
 
 # Import from ikaaro
 from access import RoleAware
@@ -372,9 +373,9 @@ class WebSite(RoleAware, Folder):
         return self.get_property('website_is_open')
 
 
-    register_fields = [('firstname', True, Unicode),
-                       ('lastname', True, Unicode),
-                       ('email', True, Email)]
+    register_fields = {'firstname': Unicode(mandatory=True),
+                       'lastname': Unicode(mandatory=True),
+                       'email': Email(mandatory=True)}
 
 
     register_form__access__ = 'is_allowed_to_register'
@@ -390,14 +391,15 @@ class WebSite(RoleAware, Folder):
     def register(self, context):
         keep = ['firstname', 'lastname', 'email']
         # Check input data
-        error = context.check_form_input(self.register_fields)
-        if error is not None:
-            return context.come_back(error, keep=keep)
+        try:
+            form = context.check_form_input(self.register_fields)
+        except FormError:
+            return context.come_back(MSG_MISSING_OR_INVALID, keep=keep)
 
         # Get input data
-        firstname = context.get_form_value('firstname', type=Unicode).strip()
-        lastname = context.get_form_value('lastname', type=Unicode).strip()
-        email = context.get_form_value('email', type=Email).strip()
+        firstname = form['firstname'].strip()
+        lastname = form['lastname'].strip()
+        email = form['email'].strip()
 
         # Do we already have a user with that email?
         root = context.root
@@ -641,10 +643,10 @@ class WebSite(RoleAware, Folder):
     #######################################################################
     # UI / Contact
     #######################################################################
-    contact_fields = [('to', True, String),
-                      ('from', True, Email),
-                      ('subject', True, String),
-                      ('body', True, String)]
+    contact_fields = {'to': String(mandatory=True),
+                      'from': Email(mandatory=True),
+                      'subject': String(mandatory=True),
+                      'body': String(mandatory=True)}
 
 
     contact_form__access__ = True
@@ -674,15 +676,16 @@ class WebSite(RoleAware, Folder):
     contact__access__ = True
     def contact(self, context):
         # Check input data
-        error = context.check_form_input(self.contact_fields)
-        if error is not None:
-            keep = [ x[0] for x in self.contact_fields ]
-            return context.come_back(error, keep=keep)
+        try:
+            form = context.check_form_input(self.contact_fields)
+        except FormError:
+            keep = self.contact_fields.keys()
+            return context.come_back(MSG_MISSING_OR_INVALID, keep=keep)
 
-        contact = context.get_form_value('to')
-        from_addr = context.get_form_value('from').strip()
-        subject = context.get_form_value('subject', type=Unicode).strip()
-        body = context.get_form_value('body', type=Unicode).strip()
+        contact = form['to']
+        from_addr = form['from'].strip()
+        subject = form['subject'].strip()
+        body = form['body'].strip()
 
         # Find out the "to" address
         contact = self.get_object('/users/%s' % contact)

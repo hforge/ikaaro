@@ -32,6 +32,7 @@ from itools.handlers import ConfigFile, File as FileHandler
 from itools.stl import stl
 from itools.uri import encode_query, Reference
 from itools.xml import XMLParser
+from itools.web import FormError
 
 # Import from ikaaro
 from ikaaro.folder import Folder
@@ -45,14 +46,14 @@ from issue import History, Issue, issue_fields
 
 
 # Definition of the fields of the forms to add and edit an issue
-search_fields = [('search_name', False, Unicode),
-                 ('mtime', False, Integer),
-                 ('module', False, String),
-                 ('version', False, String),
-                 ('type', False, String),
-                 ('priority', False, String),
-                 ('assigned_to', False, String),
-                 ('state', False, String)]
+search_fields = {'search_name': Unicode(),
+                 'mtime': Integer(),
+                 'module': String(),
+                 'version': String(),
+                 'type': String(),
+                 'priority': String(),
+                 'assigned_to': String(),
+                 'state': String()}
 
 table_columns = [('id', u'Id'), ('title', u'Title'), ('version', u'Version'),
                  ('module', u'Module'), ('type', u'Type'),
@@ -616,12 +617,13 @@ class Tracker(Folder):
     def get_search_results(self, context):
         """Method that return a list of issues that correspond to the search
         """
-        error = context.check_form_input(search_fields)
-        if error is not None:
-            return context.come_back(error, keep=[])
+        try:
+            form = context.check_form_input(search_fields)
+        except FormError:
+            return context.come_back(MSG_MISSING_OR_INVALID, keep=[])
         users = self.get_object('/users')
         # Choose stored Search or personalized search
-        search_name = context.get_form_value('search_name')
+        search_name = form['search_name']
         if search_name:
             search = self.get_object(search_name)
             get_value = search.handler.get_value
@@ -720,9 +722,10 @@ class Tracker(Folder):
         keep = ['title', 'version', 'type', 'state', 'module', 'priority',
                 'assigned_to', 'comment']
         # Check input data
-        error = context.check_form_input(issue_fields)
-        if error is not None:
-            return context.come_back(error, keep=keep)
+        try:
+            form = context.check_form_input(issue_fields)
+        except:
+            return context.come_back(MSG_MISSING_OR_INVALID, keep=keep)
 
         # Add
         id = self.get_new_id()

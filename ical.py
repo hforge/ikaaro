@@ -30,6 +30,7 @@ from itools.handlers import Folder
 from itools.ical import (get_grid_data, icalendar, PropertyValue, DateTime,
     icalendarTable, Record, Time)
 from itools.stl import stl
+from itools.web import FormError
 
 # Import from ikaaro
 from base import DBObject
@@ -1374,17 +1375,18 @@ class CalendarTable(Table, CalendarView):
 
     def edit_record(self, context):
         # check form
-        check_fields = []
+        check_fields = {}
         for name, kk in self.get_fields():
             datatype = self.handler.get_datatype(name)
             if getattr(datatype, 'multiple', False) is True:
                 datatype = Multiple(type=datatype)
-            check_fields.append((name, getattr(datatype, 'mandatory', False),
-                                 datatype))
+            check_fields[name] = datatype
 
-        error = context.check_form_input(check_fields)
-        if error is not None:
-            return context.come_back(error, keep=context.get_form_keys())
+        try:
+            form = context.check_form_input(check_fields)
+        except FormError:
+            return context.come_back(MSG_MISSING_OR_INVALID,
+                                     keep=context.get_form_keys())
 
         # Get the record
         id = context.get_form_value('id', type=Integer)
@@ -1403,7 +1405,7 @@ class CalendarTable(Table, CalendarView):
                         if tmp:
                             value.append(datatype.decode(tmp))
             else:
-                value = context.get_form_value(name, type=datatype)
+                value = form[value]
             record[name] = value
 
         self.handler.update_record(id, **record)
@@ -1580,17 +1582,18 @@ class CalendarTable(Table, CalendarView):
             elif key.startswith('DTSTART') or key.startswith('DTEND'):
                 continue
             else:
-                check_fields = []
+                check_fields = {}
                 datatype = self.handler.get_datatype(key)
                 multiple = getattr(datatype, 'multiple', False) is True
                 if multiple:
                     datatype = Multiple(type=datatype)
-                check_fields.append(
-                    (key, getattr(datatype, 'mandatory', False), datatype))
+                check_fields[key] = datatype
                 # XXX Check inputs
-                error = context.check_form_input(check_fields)
-                if error is not None:
-                    return context.come_back(error, keep=context.get_form_keys())
+                try:
+                    form = context.check_form_input(check_fields)
+                except FormError:
+                    return context.come_back(MSG_MISSING_OR_INVALID,
+                                             keep=context.get_form_keys())
                 if multiple:
                     values = context.get_form_values(key)
                     decoded_values = []

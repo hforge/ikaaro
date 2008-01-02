@@ -32,6 +32,7 @@ from itools.i18n import format_datetime
 from itools.stl import stl
 from itools import vfs
 from itools.xml import XMLParser
+from itools.web import FormError
 
 # Import from ikaaro
 from ikaaro.file import File
@@ -43,12 +44,16 @@ from ikaaro.utils import generate_name, get_file_parts
 
 
 # Definition of the fields of the forms to add and edit an issue
-issue_fields = [
-    ('title', True, String), ('version', True, String),
-    ('type', True, String), ('state', True, String),
-    ('module', False, String), ('priority', False, String),
-    ('assigned_to', False, String), ('comment', False, String),
-    ('file', False, String)]
+issue_fields = {
+    'title': String(mandatory=True),
+    'version': String(mandatory=True),
+    'type': String(mandatory=True),
+    'state': String(mandatory=True),
+    'module': String(),
+    'priority': String(),
+    'assigned_to': String(),
+    'comment': String(),
+    'file': String()}
 
 
 class History(Table):
@@ -482,9 +487,10 @@ class Issue(Folder):
     edit__access__ = 'is_allowed_to_edit'
     def edit(self, context):
         # Check input data
-        error = context.check_form_input(issue_fields)
-        if error is not None:
-            return context.come_back(error)
+        try:
+            form = context.check_form_input(issue_fields)
+        except FormError:
+            return context.come_back(MSG_MISSING_OR_INVALID)
         # Edit
         self._add_record(context)
         # Change
