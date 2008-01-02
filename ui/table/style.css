@@ -7,7 +7,7 @@
 }
 
 .table_calendar .nav {
-  background: #888a85 url(menuarrow.gif) no-repeat 100% 100% !important;
+  background: #888a85 url(../calendar/menuarrow.gif) no-repeat 100% 100% !important;
 }
 
 .table_calendar thead .headrow { /* Row <TR> containing navigation buttons */
