@@ -640,6 +640,4 @@ class UI(AccessControl, UIFolder):
         return UIFolder._get_object(self, name)
 
 
-path = get_abspath(globals(), 'ui')
-ui = UI(path)
-ui.database = Database()
+ui_path = get_abspath(globals(), 'ui')

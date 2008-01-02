@@ -49,7 +49,7 @@ from website import WebSite
 from html import WebPage
 from registry import register_object_class, get_object_class
 from folder import Folder
-from skins import ui
+from skins import UI, ui_path
 from utils import crypt_password
 
 
@@ -195,6 +195,8 @@ class Root(WebSite):
     ########################################################################
     def _get_object(self, name):
         if name == 'ui':
+            ui = UI(ui_path)
+            ui.database = self.metadata.database
             return ui
         return Folder._get_object(self, name)
 

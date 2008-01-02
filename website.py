@@ -35,7 +35,7 @@ from folder import Folder
 from messages import *
 from registry import (register_object_class, register_website,
     get_register_websites, get_website_class)
-from skins import ui
+from skins import UI, ui_path
 from utils import generate_password
 import widgets
 from workflow import WorkflowAware
@@ -69,6 +69,8 @@ class WebSite(RoleAware, Folder):
 
     def _get_object(self, name):
         if name == 'ui':
+            ui = UI(ui_path)
+            ui.database = self.metadata.database
             return ui
         if name in ('users', 'users.metadata'):
             return self.parent._get_object(name)
