@@ -25,16 +25,9 @@ from itools.xml import (XMLNamespace, XMLParser, START_ELEMENT, END_ELEMENT,
     TEXT)
 
 # Import from ikaaro
+from exceptions import ParserError
 from registry import get_object_class
 
-
-
-###########################################################################
-# Metadata
-###########################################################################
-
-class ParserError(Exception):
-    pass
 
 
 class Record(object):

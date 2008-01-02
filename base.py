@@ -284,6 +284,9 @@ class DBObject(CatalogAware, Node, DomainAware):
             KeywordField('format', is_stored=True),
             KeywordField('workflow_state', is_stored=True),
             KeywordField('members'),
+            # For referencial-integrity, keep links between cms objects, where
+            # a link is the physical path.
+            KeywordField('links'),
             # Folder's view
             KeywordField('parent_path'),
             KeywordField('paths'),

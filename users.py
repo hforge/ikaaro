@@ -155,8 +155,7 @@ class User(AccessControl, Folder):
 
 
     def get_groups(self):
-        """
-        Returns all the role aware handlers where this user is a member.
+        """Returns all the role aware handlers where this user is a member.
         """
         root = self.get_root()
         if root is None:
@@ -517,25 +516,6 @@ class UserFolder(Folder):
         """Return all user names."""
         names = self._get_names()
         return frozenset(names)
-
-
-
-    def del_object(self, name):
-        handler = self.get_object(name)
-        if isinstance(handler, User):
-            root = self.get_root()
-            # Member
-            for group_path in handler.get_groups():
-                group = root.get_object(group_path)
-                group.set_user_role(name, None)
-            # Contact
-            results = root.search(contacts=self.name)
-            for brain in results.get_documents():
-                contact_handler = root.get_object(brain.abspath)
-                contacts = list(contact_handler.get_property('contacts'))
-                contacts.remove(name)
-                contact_handler.set_property('contacts', tuple(contacts))
-        Folder.del_object(self, name)
 
 
     #######################################################################

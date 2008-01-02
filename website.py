@@ -153,13 +153,9 @@ class WebSite(RoleAware, Folder):
         return context.come_back(MSG_NEW_RESOURCE, goto=goto)
 
 
-    def get_catalog_fields(self):
-        return Folder.get_catalog_fields(self) + [KeywordField('contacts')]
-
-
     def get_catalog_values(self):
         document = Folder.get_catalog_values(self)
-        document['contacts'] = self.get_property('contacts')
+        document['links'] = [ '/users/%s' % x for x in self.get_members() ]
         return document
 
 

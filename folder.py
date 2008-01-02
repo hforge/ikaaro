@@ -38,6 +38,7 @@ from itools.xml import XMLParser
 # Import from ikaaro
 from base import DBObject
 from binary import Image
+from exceptions import ConsistencyError
 from messages import *
 from registry import register_object_class, get_object_class
 from utils import generate_name, reduce_string
@@ -148,10 +149,20 @@ class Folder(DBObject):
 
 
     def del_object(self, name):
-        # Events, remove
         object = self.get_object(name)
-        get_context().server.remove_object(object)
 
+        # Check referencial-integrity
+        # FIXME Check sub-objects too
+        path = str(object.abspath)
+        root = self.get_root()
+        results = root.search(links=path)
+        n = results.get_n_documents()
+        if n:
+            message = 'cannot delete, object "%s" is referenced' % path
+            raise ConsistencyError, message
+
+        # Events, remove
+        get_context().server.remove_object(object)
         # Remove
         folder = self.handler
         folder.del_handler('%s.metadata' % name)
@@ -564,7 +575,7 @@ class Folder(DBObject):
 
         # Remove objects
         removed = []
-        not_allowed = []
+        not_removed = []
         user = context.user
         abspath = self.get_abspath()
 
@@ -577,16 +588,21 @@ class Folder(DBObject):
             ac = object.get_access_control()
             if ac.is_allowed_to_remove(user, object):
                 # Remove object
-                self.del_object(name)
+                try:
+                    self.del_object(name)
+                except ConsistencyError:
+                    not_removed.append(name)
+                    continue
                 removed.append(name)
                 # Clean cookie
                 if str(abspath.resolve2(name)) in paths:
                     context.del_cookie('ikaaro_cp')
                     paths = []
             else:
-                not_allowed.append(name)
+                not_removed.append(name)
 
-        return context.come_back(MSG_OBJECTS_REMOVED, objects=', '.join(removed))
+        objects = ', '.join(removed)
+        return context.come_back(MSG_OBJECTS_REMOVED, objects=objects)
 
 
     rename_form__access__ = 'is_allowed_to_move'
