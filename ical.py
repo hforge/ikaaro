@@ -656,7 +656,7 @@ class CalendarView(object):
         context.styles.append('/ui/ical/calendar.css')
         context.scripts.append('/ui/ical/calendar.js')
 
-        uid = context.get_form_value('id', None)
+        uid = context.get_form_value('id')
         # Method
         method = context.get_cookie('method') or 'monthly_view'
         goto = ';%s' % method
@@ -689,23 +689,24 @@ class CalendarView(object):
         status = Status()
 
         # Existant event
-        resource = None
+        object = None
         if uid is not None:
-            resource = self
             id = uid
             if '/' in uid:
                 name, id = uid.split('/')
-                if not self.has_handler(name):
-                    return context.come_back(u'Invalid argument.',
-                                             goto=';edit_event_form', keys=keys)
-                resource = self.get_handler(name)
+                if not self.has_object(name):
+                    return context.come_back(u'Invalid argument.', keys=keys,
+                                             goto=';edit_event_form')
+                object = self.get_object(name)
+            else:
+                object = self
 
-            # UID is used to remind which resource/id is being modified
+            # UID is used to remind which object/id is being modified
             namespace['UID'] = uid
 
             if id != '':
-                event = resource.get_record(id)
-                if not event:
+                event = object.get_record(id)
+                if event is None:
                     message = u'Event not found'
                     return context.come_back(message, goto=goto)
                 namespace['remove'] = True
@@ -749,7 +750,6 @@ class CalendarView(object):
                                      'selected': False})
             namespace['resources'] = ns_calendars
 
-
         # Default managed fields are :
         # SUMMARY, LOCATION, DTSTART, DTEND, DESCRIPTION,
         # STATUS ({}), ATTENDEE ([]), COMMENT ([])
@@ -780,10 +780,10 @@ class CalendarView(object):
             value['value'] = self.gettext(value['value'])
 
         # Show action buttons only if current user is authorized
-        if resource is None:
+        if object is None:
             namespace['allowed'] = True
         else:
-            namespace['allowed'] = resource.is_organizer_or_admin(context, event)
+            namespace['allowed'] = object.is_organizer_or_admin(context, event)
         # Set first day of week
         namespace['firstday'] = self.get_first_day()
 
@@ -1091,7 +1091,7 @@ class CalendarAware(CalendarView):
 
 class Calendar(Text, CalendarView):
 
-    class_id = 'calendar'
+    class_id = 'text/calendar'
     class_version = '20071216'
     class_title = u'Calendar'
     class_description = u'Schedule your time with calendar files.'
@@ -1101,6 +1101,10 @@ class Calendar(Text, CalendarView):
                    ['upload_form', 'edit_timetables_form',
                     'edit_metadata_form', 'edit_event_form']]
     class_handler = icalendar
+
+
+    def get_record(self, id):
+        return self.handler.get_record(id)
 
 
     @classmethod
@@ -1173,48 +1177,41 @@ class Calendar(Text, CalendarView):
 
     edit_event__access__ = 'is_allowed_to_edit'
     def edit_event(self, context):
-        # Keys to keep from url
-        keys = context.get_form_keys()
-
-        # Method
-        method = context.get_cookie('method') or 'monthly_view'
-        goto = ';%s' % method
-##        if method not in dir(self):
-##            goto = '../;%s' % method
-
-        # Get event id
-        uid = context.get_form_value('id', '')
-        if '/' in uid:
-            name, uid = uid.split('/', 1)
-
+        # Remove
         if context.has_form_value('remove'):
             return self.remove(context)
 
-        # Get selected_date from the 3 fields 'dd','mm','yyyy' into 'yyyy/mm/dd'
+        # Keys to keep from url
+        keys = context.get_form_keys()
+
+        # Cancel
+        goto = ';%s' % context.get_cookie('method') or 'monthly_view'
+        if context.has_form_value('cancel'):
+            return context.come_back('', goto, keys=keys)
+
+        # Get selected_date from the 3 fields 'dd','mm','yyyy' into
+        # 'yyyy/mm/dd'
         v_items = []
         for item in ('year', 'month', 'day'):
             v_items.append(context.get_form_value('DTSTART_%s' % item))
         selected_date = '-'.join(v_items)
 
-##        # Keys to keep from url
-##        keys = ['resource']
-
-        # Cancel
-        if context.has_form_value('cancel'):
-            return context.come_back('', goto, keys=keys)
-
         # Get id and Record object
         properties = {}
-        if uid is not None:
-            event = self.get_record(uid)
+        uid = context.get_form_value('id', default=None)
+        if uid is None:
+            # Add user as Organizer
+            organizer = str(context.user.get_abspath())
+            properties['ORGANIZER'] = PropertyValue(organizer)
+        else:
+            if '/' in uid:
+                uid = uid.split('/', 1)[1]
+
+            event = self.handler.get_record(uid)
             # Test if current user is admin or organizer of this event
             if not self.is_organizer_or_admin(context, event):
                 message = u'You are not authorized to modify this event.'
                 return context.come_back(goto, message, keys=keys)
-        else:
-            # Add user as Organizer
-            organizer = str(context.user.get_abspath())
-            properties['ORGANIZER'] = PropertyValue(organizer)
 
         for key in context.get_form_keys():
             if key in ('id', 'update', 'resource'):
@@ -1372,7 +1369,7 @@ class CalendarTable(Table, CalendarView):
 
 
     def get_record(self, id):
-        return icalendarTable.get_record(self.handler, int(id))
+        return self.handler.get_record(int(id))
 
 
     def edit_record(self, context):
@@ -1648,5 +1645,6 @@ class CalendarTable(Table, CalendarView):
 ###########################################################################
 register_object_class(CalendarTable)
 register_object_class(Calendar)
-register_object_class(Calendar, format='text/calendar')
+# FIXME For backwards compatibility
+register_object_class(Calendar, format='calendar')
 

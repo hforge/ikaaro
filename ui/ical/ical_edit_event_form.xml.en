@@ -132,7 +132,7 @@
     </tr>
   </table>
 
-  <input type="hidden" name="id" value="${UID}" />
+  <input type="hidden" name="id" stl:if="UID" value="${UID}" />
 
   <p stl:if="allowed">
      <input type="submit" name="update" value="OK" class="button_ok"/>
