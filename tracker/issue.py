@@ -297,11 +297,11 @@ class Issue(Folder):
         # Modifications of assigned_to
         last_user = self.get_value('assigned_to')
         new_user = record['assigned_to']
-        if last_user and last_user!=new_user:
-            last_user = root.get_user(last_user)
+        if last_user != new_user:
             if last_user:
-                last_user = last_user.get_property('email')
-            new_user = root.get_user(new_user).get_property('email')
+                last_user = root.get_user(last_user).get_property('email')
+            if new_user:
+                new_user = root.get_user(new_user).get_property('email')
             field = self.gettext(u'Assigned To')
             text = template.substitute(field=field, old_value=last_user,
                                        new_value=new_user)
