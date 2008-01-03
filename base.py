@@ -323,6 +323,9 @@ class DBObject(CatalogAware, Node, DomainAware):
         else:
             document['text'] = text
 
+        # Links
+        document['links'] = self.get_links()
+
         # Parent path
         if str(abspath) != '/':
             parent_path = abspath.resolve2('..')
@@ -386,6 +389,10 @@ class DBObject(CatalogAware, Node, DomainAware):
         if not mtimes:
             return None
         return max(mtimes)
+
+
+    def get_links(self):
+        return []
 
 
     ########################################################################
@@ -572,7 +579,7 @@ class DBObject(CatalogAware, Node, DomainAware):
 
 
     ########################################################################
-    # Metadata
+    # UI / Metadata
     ########################################################################
     @classmethod
     def build_metadata(cls, format=None, **kw):
@@ -619,7 +626,7 @@ class DBObject(CatalogAware, Node, DomainAware):
 
 
     ########################################################################
-    # Rich Text Editor
+    # UI / Rich Text Editor
     ########################################################################
     @classmethod
     def get_rte(cls, context, name, data):
@@ -659,7 +666,8 @@ class DBObject(CatalogAware, Node, DomainAware):
 
 
     #######################################################################
-    # Edit / Inline / toolbox: add images
+    # UI / Edit / Inline / toolbox: add images
+    #######################################################################
     addimage_form__access__ = 'is_allowed_to_edit'
     def addimage_form(self, context):
         from file import File
@@ -704,7 +712,8 @@ class DBObject(CatalogAware, Node, DomainAware):
 
 
     #######################################################################
-    # Edit / Inline / toolbox: add links
+    # UI / Edit / Inline / toolbox: add links
+    #######################################################################
     addlink_form__access__ = 'is_allowed_to_edit'
     def addlink_form(self, context):
         from file import File

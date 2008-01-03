@@ -92,9 +92,7 @@ class RoleAware(AccessControl):
     roles.  Includes a user interface.
     """
 
-    #########################################################################
     # To override
-    #########################################################################
     __roles__ = [
         {'name': 'guests', 'title': u"Guest"},
         {'name': 'members', 'title': u"Member"},
@@ -112,6 +110,10 @@ class RoleAware(AccessControl):
             'admins': Tokens(default=()),
             'website_is_open': Boolean(default=False),
         }
+
+
+    def get_links(self):
+        return [ '/users/%s' % x for x in self.get_members() ]
 
 
     #########################################################################
@@ -295,9 +297,9 @@ class RoleAware(AccessControl):
         return roles
 
 
-    #########################################################################
+    #######################################################################
     # User Interface
-    #########################################################################
+    #######################################################################
     def get_roles_namespace(self, username=None):
         # Build a list with the role name and title
         namespace = [ {'name': x['name'], 'title': self.gettext(x['title'])}
@@ -316,7 +318,8 @@ class RoleAware(AccessControl):
 
 
     #######################################################################
-    # Browse
+    # UI / Browse
+    #######################################################################
     permissions_form__access__ = 'is_authenticated'
     permissions_form__label__ = u"Members"
     permissions_form__sublabel__ = u"Browse Members"
@@ -449,7 +452,8 @@ class RoleAware(AccessControl):
 
 
     #######################################################################
-    # Add
+    # UI / Add
+    #######################################################################
     new_user_form__access__ = 'is_admin'
     new_user_form__label__ = u'Members'
     new_user_form__sublabel__ = u'New Member'

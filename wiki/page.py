@@ -162,19 +162,33 @@ class WikiPage(Text):
         return pub.document
 
 
-    def broken_links(self):
-        broken = []
+    def get_links(self):
+        pages = self.parent.search_objects(object_class=WikiPage)
+        pages = [ x.name for x in pages ]
+
+        base = self.get_abspath()
+
+        links = []
         document = self.get_document()
         for node in document.traverse(condition=nodes.reference):
             refname = node.get('wiki_refname')
             if refname is False:
-                title = node['wiki_title']
-                broken.append(title)
+                path = checkid(node['wiki_title'])
+                path = base.resolve(path)
+            elif refname:
+                path = node['wiki_name']
+                path = base.resolve2(path)
+            else:
+                continue
+            path = str(path)
+            links.append(path)
+
         for node in document.traverse(condition=nodes.image):
-            refname = node['uri']
-            if self.resolve_link(refname) is None:
-                broken.append(refname)
-        return broken
+            refname = checkid(node['uri'])
+            path = base.resolve(refname)
+            path = str(path)
+            links.append(path)
+        return links
 
 
     #######################################################################

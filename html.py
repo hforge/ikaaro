@@ -132,6 +132,37 @@ class WebPage(EpozEditable, Multilingual, Text):
         return schema
 
 
+    def get_links(self):
+        base = self.get_abspath()
+
+        languages = self.get_site_root().get_property('website_languages')
+        links = []
+        for language in languages:
+            handler = self.get_handler(language=language)
+            for event in handler.events:
+                type, value, line = event
+                if type != START_ELEMENT:
+                    continue
+                tag_uri, tag_name, attributes = value
+                if tag_uri != xhtml_uri:
+                    continue
+                if tag_name == 'a':
+                    value = attributes.get((xhtml_uri, 'href'))
+                elif tag_name == 'img':
+                    value = attributes.get((xhtml_uri, 'src'))
+                else:
+                    continue
+                if value is None:
+                    continue
+                uri = get_reference(value)
+                if uri.scheme or uri.authority or not uri.path:
+                    continue
+                uri = base.resolve(uri.path)
+                uri = str(uri)
+                links.append(uri)
+        return links
+
+
     #######################################################################
     # API
     #######################################################################
@@ -169,36 +200,6 @@ class WebPage(EpozEditable, Multilingual, Text):
 
     def get_content_type(self):
         return 'application/xhtml+xml; charset=UTF-8'
-
-
-    def broken_links(self):
-        languages = self.get_site_root().get_property('website_languages')
-
-        broken = []
-        for language in languages:
-            handler = self.get_handler(language=language)
-            for event in handler.events:
-                type, value, line = event
-                if type != START_ELEMENT:
-                    continue
-                tag_uri, tag_name, attributes = value
-                if tag_uri != xhtml_uri:
-                    continue
-                if tag_name == 'a':
-                    value = attributes.get((xhtml_uri, 'href'))
-                elif tag_name == 'img':
-                    value = attributes.get((xhtml_uri, 'src'))
-                else:
-                    continue
-                if value is None:
-                    continue
-                uri = get_reference(value)
-                if uri.scheme or uri.authority or not uri.path:
-                    continue
-                if not self.has_object(uri.path):
-                    broken.append(uri)
-
-        return broken
 
 
     #######################################################################

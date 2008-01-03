@@ -361,54 +361,6 @@ class Root(WebSite):
         return stl(handler)
 
 
-    ########################################################################
-    # Maintenance
-    ########################################################################
-
-    #######################################################################
-    # Check groups
-    def get_groups(self):
-        """Returns a list with all the subgroups, including the subgroups of
-        the subgroups, etc..
-        """
-        results = self.search(is_role_aware=True)
-        return [ x.abspath for x in results.get_documents() ]
-
-
-    check_groups__access__ = 'is_admin'
-    check_groups__label__ = u'Maintenance'
-    check_groups__sublabel__ = u'Check Groups'
-    def check_groups(self, context):
-        namespace = {}
-
-        groups = []
-        root_users = self.get_object('users').get_usernames()
-        for path in self.get_groups():
-            group = self.get_object(path)
-            members = group.get_members()
-            members = set(members)
-            if not members.issubset(root_users):
-                missing = list(members - root_users)
-                missing.sort()
-                missing = ' '.join(missing)
-                groups.append({'path': path, 'users': missing})
-        namespace['groups'] = groups
-
-        handler = self.get_object('/ui/root/check_groups.xml')
-        return stl(handler, namespace)
-
-
-    fix_groups__access__ = 'is_admin'
-    def fix_groups(self, context):
-        root_users = self.get_object('users').get_usernames()
-        for path in self.get_groups():
-            group = self.get_object(path)
-            members = group.get_members()
-            group.set_user_role(members - root_users, None)
-
-        return context.come_back(u'Groups fixed.')
-
-
     #######################################################################
     # Update
     #######################################################################

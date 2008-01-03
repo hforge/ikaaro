@@ -124,13 +124,15 @@ class Issue(Folder):
         return self.get_mtime()
 
 
-    def broken_links(self):
-        broken = []
+    def get_links(self):
+        base = str(self.abspath)
+
+        links = []
         for record in self.get_history_records():
             filename = record.file
-            if filename and not self.has_object(filename):
-                broken.append(filename)
-        return broken
+            if filename:
+                links.append('%s/%s' % (base, filename))
+        return links
 
 
     #######################################################################

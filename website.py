@@ -154,12 +154,6 @@ class WebSite(RoleAware, Folder):
         return context.come_back(MSG_NEW_RESOURCE, goto=goto)
 
 
-    def get_catalog_values(self):
-        document = Folder.get_catalog_values(self)
-        document['links'] = [ '/users/%s' % x for x in self.get_members() ]
-        return document
-
-
     ########################################################################
     # API
     ########################################################################
@@ -704,30 +698,36 @@ class WebSite(RoleAware, Folder):
     # UI / Broken links
     #######################################################################
     broken_links__access__ = 'is_admin'
-    def broken_links(self, context, formats=None):
-        if formats is None:
-            formats = ['webpage', 'issue', 'WikiPage']
+    broken_links__label__ = u'Maintenance'
+    broken_links__sublabel__ = u'Check Groups'
+    def broken_links(self, context):
+        root = context.root
 
-        # Search
-        query = [ EqQuery('format', x) for x in formats ]
-        query = AndQuery(
-                    EqQuery('paths', str(self.abspath)),
-                    OrQuery(*query))
-        results = context.root.search(query)
-
+        # Find out broken links
+        broken = {}
+        catalog = context.server.catalog
+        base = self.get_abspath()
+        base_str = str(base)
+        for link in catalog.get_unique_values('links'):
+            if root.has_object(link):
+                continue
+            query = AndQuery(EqQuery('paths', base_str),
+                             EqQuery('links', link))
+            link = str(base.get_pathto(Path(link)))
+            for brain in catalog.search(query).get_documents():
+                broken.setdefault(brain.abspath, []).append(link)
         # Build the namespace
         namespace = {}
         objects = []
         total = 0
-        for brain in results.get_documents():
-            object = self.get_object(brain.abspath)
-            links = object.broken_links()
+        keys = broken.keys()
+        keys.sort()
+        for path in keys:
+            links = broken[path]
+            path = str(base.get_pathto(Path(path)))
             n = len(links)
-            if n:
-                path = self.get_pathto(object)
-                objects.append({'path': str(path), 'n': n, 'links': links})
-                total += n
-        objects.sort(key=itemgetter('n'), reverse=True)
+            objects.append({'path': path, 'links': links, 'n': n})
+            total += n
         namespace['objects'] = objects
         namespace['total'] = total
 
