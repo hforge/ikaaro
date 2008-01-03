@@ -108,9 +108,9 @@ class Tracker(Folder):
             metadata = SelectTable.build_metadata()
             folder.set_handler('%s/%s.metadata' % (name, table_name), metadata)
         # Pre-defined stored searches
-        open = ConfigFile(state=0)
+        open = ConfigFile(state='0')
         not_assigned = ConfigFile(assigned_to='nobody')
-        high_priority = ConfigFile(state=0, priority=0)
+        high_priority = ConfigFile(state='0', priority='0')
         i = 0
         for search, title in [(open, u'Open Issues'),
                               (not_assigned, u'Not Assigned'),
@@ -250,6 +250,10 @@ class Tracker(Folder):
 
     search__access__ = 'is_allowed_to_edit'
     def search(self, context):
+        try:
+            form = context.check_form_input(search_fields)
+        except FormError:
+            return context.come_back(MSG_MISSING_OR_INVALID, keep=[])
         search_name = context.get_form_value('search_name')
         search_title = context.get_form_value('search_title').strip()
         search_title = unicode(search_title, 'utf8')
@@ -282,8 +286,8 @@ class Tracker(Folder):
         text = context.get_form_value('text').strip().lower()
         stored_search.handler.set_value('text', text)
 
-        mtime = context.get_form_value('mtime', type=Integer)
-        stored_search.handler.set_value('mtime', mtime)
+        mtime = context.get_form_value('mtime', type=Integer) or 0
+        stored_search.handler.set_value('mtime', str(mtime))
 
         criterias = [('module', Integer), ('version', Integer),
             ('type', Integer), ('priority', Integer), ('assigned_to', String),
