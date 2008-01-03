@@ -231,7 +231,8 @@ class Table(File):
             field['multiple'] = getattr(datatype, 'multiple', False)
             field['is_date'] = is_datatype(datatype, Date)
             widget = getattr(datatype, 'widget', get_default_widget(datatype))
-            field['widget'] = widget.to_html(datatype, name, value)
+            widget = widget(name)
+            field['widget'] = widget.to_html(datatype, value)
             # Class
             cls = []
             if is_mandatory:
@@ -338,7 +339,8 @@ class Table(File):
             field['multiple'] = getattr(datatype, 'multiple', False)
             field['is_date'] = is_datatype(datatype, Date)
             widget = getattr(datatype, 'widget', get_default_widget(datatype))
-            field['widget'] = widget.to_html(datatype, name, value)
+            widget = widget(name)
+            field['widget'] = widget.to_html(datatype, value)
             # Class
             cls = []
             if is_mandatory:

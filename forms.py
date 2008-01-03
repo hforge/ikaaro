@@ -43,6 +43,77 @@ def get_default_widget(datatype):
         return TextWidget
 
 
+def generate_form(context, form_title, fields, widgets, form_action,
+                  required_msg=None):
+    """Fields is a dictionnary:
+    ['firstname': Unicode(mandatory=True),
+     'lastname': Unicode(mandatory=True)]
+    Widgets is a list:
+    [TextWidget('firstname', title=u'Firstname'),
+     TextWidget('lastname', title=u'Lastname')]
+    And form_action:
+    {'action': ';register', 'name': 'register',
+     'value': 'Register', 'class': 'button_ok'}
+    """
+    template = list(XMLParser("""
+    <h2>${title}</h2>
+    <form action="${action/action}" method="POST">
+    <p stl:if="has_required_widget">
+      ${required_msg}
+    </p>
+    <dl>
+    <stl:block stl:repeat="widget widgets">
+      <dt class="${widget/class}">
+        <label for="${widget/name}" class="${widget/class}">
+          ${widget/title}
+        </label>
+      </dt>
+      <dd>
+          ${widget/widget}
+      </dd>
+    </stl:block>
+    </dl>
+    <p>
+    <input type="submit" name=";${action/name}" value="${action/value}"
+        class="${action/class}" />
+    </p>
+    </form>
+    <script language="javascript">
+      focus("${first_widget}")
+    </script>
+    """, namespaces))
+    here = context.object
+    # Set and translate the required_msg
+    if required_msg is None:
+        required_msg ="""The <span class="field_required">emphasized</span>
+                      fields are required."""
+    required_msg = XMLParser(here.gettext(required_msg))
+    # Build namespace
+    namespace = {}
+    namespace['title'] = here.gettext(form_title)
+    namespace['required_msg'] = required_msg
+    namespace['first_widget'] = widgets[0].name
+    form_action['value'] = here.gettext(form_action['value'])
+    namespace['action'] = form_action
+    # Build widgets namespace
+    has_required_widget = False
+    widgets_namespace = context.build_form_namespace(fields)
+    namespace['widgets'] = []
+    for widget in widgets:
+        datatype = fields[widget.name]
+        is_mandatory = getattr(datatype, 'mandatory', False)
+        if is_mandatory:
+            has_required_widget = True
+        widget_namespace = widgets_namespace[widget.name]
+        value = widget_namespace['value']
+        widget_namespace['title'] = getattr(widget, 'title', widget.name)
+        widget_namespace['widget'] = widget.to_html(datatype, value)
+        namespace['widgets'].append(widget_namespace)
+    namespace['has_required_widget'] = has_required_widget
+
+    return stl(events=template, namespace=namespace)
+
+
 
 class Widget(object):
 
@@ -50,10 +121,16 @@ class Widget(object):
         """<input type="text" name="${name}" value="${value}" />""",
         namespaces))
 
-    @staticmethod
-    def to_html(datatype, name, value):
+
+    def __init__(self, name, **kw):
+        self.name = name
+        for key in kw:
+            setattr(self, key, kw[key])
+
+
+    def to_html(self, datatype, value):
         namespace = {}
-        namespace['name'] = name
+        namespace['name'] = self.name
         namespace['value'] = value
 
         return stl(events=Widget.template, namespace=namespace)
@@ -77,12 +154,13 @@ class ReadOnlyWidget(Widget):
         </stl:block>
         """))
 
-    @staticmethod
-    def to_html(datatype, name, value, displayed=None):
+
+    def to_html(self, datatype, value):
         namespace = {}
-        namespace['name'] = name
+        namespace['name'] = self.name
         namespace['value'] = value
         namespace['displayed'] = value
+        displayed = getattr(self, 'displayed', None)
         if displayed is not None:
             namespace['displayed'] = displayed
         return stl(events=ReadOnlyWidget.template, namespace=namespace)
@@ -95,10 +173,10 @@ class MultilineWidget(Widget):
         """<textarea rows="5" cols="25" name="${name}">${value}</textarea>""",
         namespaces))
 
-    @staticmethod
-    def to_html(datatype, name, value):
+
+    def to_html(self, datatype, value):
         namespace = {}
-        namespace['name'] = name
+        namespace['name'] = self.name
         namespace['value'] = value
 
         return stl(events=MultilineWidget.template, namespace=namespace)
@@ -112,12 +190,12 @@ class CheckBoxWidget(Widget):
           checked="${is_selected}" />
         """, namespaces))
 
-    @staticmethod
-    def to_html(datatype, name, value, is_selected):
+
+    def to_html(self, datatype, value):
         namespace = {}
-        namespace['name'] = name
+        namespace['name'] = self.name
         namespace['value'] = value
-        namespace['is_selected'] = is_selected
+        namespace['is_selected'] = getattr(self, 'is_selected', False)
 
         return stl(events=CheckBoxWidget.template, namespace=namespace)
 
@@ -130,10 +208,10 @@ class BooleanCheckBox(Widget):
           checked="${is_selected}" />
         """, namespaces))
 
-    @staticmethod
-    def to_html(datatype, name, value):
+
+    def to_html(self, datatype, value):
         namespace = {}
-        namespace['name'] = name
+        namespace['name'] = self.name
         namespace['is_selected'] = value in [True, 1, '1']
 
         return stl(events=BooleanCheckBox.template, namespace=namespace)
@@ -156,11 +234,12 @@ class BooleanRadio(Widget):
           stl:if="is_yes"/>
         """, namespaces))
 
-    @staticmethod
-    def to_html(datatype, name, value, labels={'yes': 'Yes', 'no': 'No'}):
+
+    def to_html(self, datatype, value):
         namespace = {}
-        namespace['name'] = name
+        namespace['name'] = self.name
         namespace['is_yes'] = value in [True, 1, '1']
+        labels = getattr(self, 'labels', {'yes': 'Yes', 'no': 'No'})
         namespace['labels'] = labels
 
         return stl(events=BooleanRadio.template, namespace=namespace)
@@ -177,10 +256,10 @@ class Select(Widget):
         </select>
         """, namespaces))
 
-    @staticmethod
-    def to_html(datatype, name, value):
+
+    def to_html(self, datatype, value):
         namespace = {}
-        namespace['name'] = name
+        namespace['name'] = self.name
         namespace['multiple'] = getattr(datatype, 'multiple', False)
         namespace['options'] = datatype.get_namespace(value)
 
@@ -213,10 +292,10 @@ class SelectRadio(Widget):
         </stl:block>
         """, namespaces))
 
-    @staticmethod
-    def to_html(datatype, name, value):
+
+    def to_html(self, datatype, value):
         namespace = {}
-        namespace['name'] = name
+        namespace['name'] = self.name
         none_selected = True
         options = datatype.get_namespace(value)
         for option in options:
@@ -278,12 +357,12 @@ class DateWidget(Widget):
         </table>
         """, namespaces))
 
-    @staticmethod
-    def to_html(datatype, name, value):
+
+    def to_html(self, datatype, value):
         if not value:
             value = ''
         namespace = {}
-        namespace['name'] = name
+        namespace['name'] = self.name
         if getattr(datatype, 'multiple', False) is False:
             namespace['value'] = value
             return stl(events=DateWidget.template_simple, namespace=namespace)

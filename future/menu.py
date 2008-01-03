@@ -105,8 +105,8 @@ class Link(File):
         namespace['link'] = self.get_property('link')
         new_window = self.get_property('new_window')
         labels = {'yes': u'New window', 'no': u'Current window'}
-        namespace['target'] = BooleanRadio.to_html(None, 'new_window',
-                                                   new_window, labels)
+        widget =  BooleanRadio('new_window', labels=labels)
+        namespace['target'] = widget.to_html(None, new_window)
         # Add a script
         context.scripts.append('/ui/future/link.js')
 
