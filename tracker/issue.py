@@ -302,7 +302,7 @@ class Issue(Folder):
             modifications.append(text)
 
         # Modifications of assigned_to
-        last_user = self.get_value('assigned_to')
+        last_user = self.get_value('assigned_to') or ''
         new_user = record['assigned_to']
         if last_user != new_user:
             if last_user:
