@@ -373,10 +373,15 @@ class Table(File):
                 value = form[widget.name]
             record[widget.name] = value
 
-        self.handler.update_record(id, **record)
+        try:
+            self.handler.update_record(id, **record)
+            message = MSG_CHANGES_SAVED
+        except ValueError, strerror:
+            template = Template(self.gettext(u'Error: $message'))
+            message = template.substitute(message=strerror)
 
         goto = context.uri.resolve2('../;edit_record_form')
-        return context.come_back(MSG_CHANGES_SAVED, goto=goto, keep=['id'])
+        return context.come_back(message, goto=goto, keep=['id'])
 
 
     #######################################################################
