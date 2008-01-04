@@ -36,6 +36,7 @@ from itools.web import FormError
 
 # Import from ikaaro
 from ikaaro.folder import Folder
+from ikaaro.forms import TextWidget, BooleanCheckBox
 from ikaaro.messages import *
 from ikaaro.registry import register_object_class
 from ikaaro.table import Table
@@ -771,6 +772,8 @@ class SelectTableTable(BaseTable):
 
     schema = {'title': Unicode}
 
+    form = [TextWidget('title', title=u'Title')]
+
 
 class SelectTable(Table):
 
@@ -820,8 +823,10 @@ class SelectTable(Table):
                 actions = [('del_record_action', u'Remove',
                             'button_delete', None)]
 
-        fields = self.get_fields()
-        fields.insert(0, ('id', u'id'))
+        fields = [('id', u'id')]
+        for widget in self.handler.form:
+            fields.append((widget.name, getattr(widget, 'title', widget.name)))
+
         fields.append(('issues', u'Issues'))
         records = []
 
@@ -952,8 +957,11 @@ class SelectTable(Table):
 
 class VersionsTable(BaseTable):
 
-    schema = {'title': Unicode(title=u'Title'),
-              'released': Boolean(title=u'Released')}
+    schema = {'title': Unicode(),
+              'released': Boolean()}
+
+    form = [TextWidget('title', title=u'Title'),
+            BooleanCheckBox('released', title=u'Released')]
 
 
 class Versions(SelectTable):

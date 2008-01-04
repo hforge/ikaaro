@@ -90,23 +90,6 @@ class Table(File):
         return DBObject.new_instance(cls, container, context)
 
 
-    def get_fields(self):
-        """
-        Returns a list of tuples with the name and title of every field.
-        """
-        fields = []
-        for name in self.handler.schema.keys():
-            datatype = self.handler.schema[name]
-            title = getattr(datatype, 'title', None)
-            if title is None:
-                title = name
-            else:
-                title = self.gettext(title)
-            fields.append((name, title))
-
-        return fields
-
-
     #########################################################################
     # User Interface
     #########################################################################
@@ -137,8 +120,9 @@ class Table(File):
                 actions = [('del_record_action', u'Remove', 'button_delete',
                             None)]
 
-        fields = self.get_fields()
-        fields.insert(0, ('index', u'id'))
+        fields = [('index', u'id')]
+        for widget in self.handler.form:
+            fields.append((widget.name, getattr(widget, 'title', widget.name)))
         records = []
 
         for record in self.handler.get_records():
@@ -211,33 +195,29 @@ class Table(File):
     add_record_form__label__ = u'Add'
     def add_record_form(self, context):
         namespace = {}
-
         fields = []
-        for name, title in self.get_fields():
-            # Enumerates, use a selection box
-            datatype = self.handler.get_datatype(name)
+        for widget in self.handler.form:
+            datatype = self.handler.get_datatype(widget.name)
             if getattr(datatype, 'multiple', False) is False:
-                value = context.get_form_value(name) \
+                value = context.get_form_value(widget.name) \
                         or getattr(datatype, 'default', None)
             else:
-                value = context.get_form_values(name) \
+                value = context.get_form_values(widget.name) \
                         or getattr(datatype, 'default', None)
 
             is_mandatory = getattr(datatype, 'mandatory', False)
             field = {}
-            field['name'] = name
-            field['title'] = title
+            field['name'] = widget.name
+            field['title'] = getattr(widget, 'title', widget.name)
             field['mandatory'] = is_mandatory
             field['multiple'] = getattr(datatype, 'multiple', False)
             field['is_date'] = is_datatype(datatype, Date)
-            widget = getattr(datatype, 'widget', get_default_widget(datatype))
-            widget = widget(name)
             field['widget'] = widget.to_html(datatype, value)
             # Class
             cls = []
             if is_mandatory:
                 cls.append('field_required')
-            if context.has_form_value(name):
+            if context.has_form_value(widget.name):
                 if is_mandatory and not value:
                     cls.append('missing')
                 elif value and not datatype.is_valid(value):
@@ -256,7 +236,7 @@ class Table(File):
     def add_record_action(self, context):
         # check form
         check_fields = {}
-        for name, kk in self.get_fields():
+        for name in self.handler.schema.keys():
             datatype = self.handler.get_datatype(name)
             if getattr(datatype, 'multiple', False) is True:
                 datatype = Multiple(type=datatype)
@@ -269,7 +249,7 @@ class Table(File):
                                      keep=context.get_form_keys())
 
         record = {}
-        for name, title in self.get_fields():
+        for name in self.handler.schema.keys():
             datatype = self.handler.get_datatype(name)
             if getattr(datatype, 'multiple', False) is True:
                 if is_datatype(datatype, Enumerate):
@@ -310,16 +290,16 @@ class Table(File):
         namespace['id'] = id
 
         fields = []
-        for name, title in self.get_fields():
-            datatype = self.handler.get_datatype(name)
+        for widget in self.handler.form:
+            datatype = self.handler.get_datatype(widget.name)
             if getattr(datatype, 'multiple', False) is False:
-                value = context.get_form_value(name) \
-                        or self.handler.get_value(record, name)
+                value = context.get_form_value(widget.name) \
+                        or self.handler.get_value(record, widget.name)
                 if is_datatype(datatype, Tokens):
                     value = ' '.join(value) # remove parenthesis
             else:
-                value = context.get_form_values(name) \
-                        or self.handler.get_value(record, name)
+                value = context.get_form_values(widget.name) \
+                        or self.handler.get_value(record, widget.name)
 
             if is_datatype(datatype, Enumerate) is False \
                     and getattr(datatype, 'multiple', False) is True:
@@ -334,19 +314,17 @@ class Table(File):
 
             is_mandatory = getattr(datatype, 'mandatory', False)
             field = {}
-            field['title'] = title
+            field['title'] = getattr(widget, 'title', widget.name)
             field['mandatory'] = is_mandatory
             field['multiple'] = getattr(datatype, 'multiple', False)
             field['is_date'] = is_datatype(datatype, Date)
-            widget = getattr(datatype, 'widget', get_default_widget(datatype))
-            widget = widget(name)
             field['widget'] = widget.to_html(datatype, value)
             # Class
             cls = []
             if is_mandatory:
                 cls.append('field_required')
-            if context.has_form_value(name):
-                form_value = context.get_form_value(name)
+            if context.has_form_value(widget.name):
+                form_value = context.get_form_value(widget.name)
                 if is_mandatory and not form_value:
                     cls.append('missing')
                 elif form_value and not datatype.is_valid(form_value):
@@ -363,11 +341,11 @@ class Table(File):
     def edit_record(self, context):
         # check form
         check_fields = {}
-        for name, kk in self.get_fields():
-            datatype = self.handler.get_datatype(name)
+        for widget in self.handler.form:
+            datatype = self.handler.get_datatype(widget.name)
             if getattr(datatype, 'multiple', False) is True:
                 datatype = Multiple(type=datatype)
-            check_fields[name] = datatype
+            check_fields[widget.name] = datatype
 
         try:
             form = context.check_form_input(check_fields)
@@ -378,13 +356,13 @@ class Table(File):
         # Get the record
         id = context.get_form_value('id', type=Integer)
         record = {}
-        for name, title in self.get_fields():
-            datatype = self.handler.get_datatype(name)
+        for widget in self.handler.form:
+            datatype = self.handler.get_datatype(widget.name)
             if getattr(datatype, 'multiple', False) is True:
                 if is_datatype(datatype, Enumerate):
-                    value = form[name]
+                    value = form[widget.name]
                 else: # textarea -> string
-                    values = form[name]
+                    values = form[widget.name]
                     values = values.splitlines()
                     value = []
                     for index in range(len(values)):
@@ -392,8 +370,8 @@ class Table(File):
                         if tmp:
                             value.append(datatype.decode(tmp))
             else:
-                value = form[name]
-            record[name] = value
+                value = form[widget.name]
+            record[widget.name] = value
 
         self.handler.update_record(id, **record)
 
