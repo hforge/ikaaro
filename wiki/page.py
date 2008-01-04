@@ -173,7 +173,8 @@ class WikiPage(Text):
         for node in document.traverse(condition=nodes.reference):
             refname = node.get('wiki_refname')
             if refname is False:
-                path = checkid(node['wiki_title'])
+                path = node['wiki_title']
+                path = checkid(path)
                 path = base.resolve(path)
             elif refname:
                 path = node['wiki_name']
@@ -184,8 +185,13 @@ class WikiPage(Text):
             links.append(path)
 
         for node in document.traverse(condition=nodes.image):
-            refname = checkid(node['uri'])
-            path = base.resolve(refname)
+            path = node['uri']
+
+            path = path.split('/')
+            path[-1] = checkid(path[-1])
+            path = '/'.join(path)
+
+            path = base.resolve(path)
             path = str(path)
             links.append(path)
         return links
