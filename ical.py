@@ -1306,7 +1306,7 @@ class Calendar(Text, CalendarView):
             kk, uid = uid.split('/', 1)
         if not uid:
             return context.come_back('', goto)
-        icalendar.remove(self, uid)
+        self.handler.remove(uid)
         return context.come_back(u'Event definitely deleted.', goto=goto)
 
 
