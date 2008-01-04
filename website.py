@@ -37,6 +37,7 @@ from itools.web import FormError
 import ikaaro
 from access import RoleAware
 from folder import Folder
+from forms import generate_form, TextWidget
 from messages import *
 from registry import (register_object_class, register_website,
     get_register_websites, get_website_class)
@@ -379,10 +380,13 @@ class WebSite(RoleAware, Folder):
     register_form__access__ = 'is_allowed_to_register'
     register_form__label__ = u'Register'
     def register_form(self, context):
-        namespace = context.build_form_namespace(self.register_fields)
-
-        handler = self.get_object('/ui/website/register.xml')
-        return stl(handler, namespace)
+        form_action = {'action': ';register', 'name': 'register',
+                       'value': 'Register', 'class': 'button_ok'}
+        register_widgets = [TextWidget('firstname', title=u'First Name'),
+                            TextWidget('lastname', title=u'Last Name'),
+                            TextWidget('email', title=u'Email Address')]
+        return generate_form(context, u'Registration', self.register_fields,
+                             register_widgets, form_action)
 
 
     register__access__ = 'is_allowed_to_register'
