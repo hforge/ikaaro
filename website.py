@@ -22,15 +22,19 @@ from decimal import Decimal
 from operator import itemgetter
 
 # Import from itools
+import itools
+from itools import get_abspath
 from itools.catalog import EqQuery, OrQuery, AndQuery, TextField, KeywordField
 from itools.datatypes import Boolean, Email, Integer, String, Tokens, Unicode
 from itools.handlers import checkid
 from itools.i18n import get_language_name, get_languages
 from itools.stl import stl
 from itools.uri import Path, get_reference
+from itools import vfs
 from itools.web import FormError
 
 # Import from ikaaro
+import ikaaro
 from access import RoleAware
 from folder import Folder
 from messages import *
@@ -692,6 +696,48 @@ class WebSite(RoleAware, Folder):
         root.send_email(contact, subject, from_addr=from_addr, text=body)
 
         return context.come_back(u'Message sent.')
+
+
+    #######################################################################
+    # UI / Footer
+    #######################################################################
+    about__access__ = True
+    about__label__ = u'About'
+    about__sublabel__ = u'About'
+    def about(self, context):
+        namespace = {}
+        namespace['itools_version'] = itools.__version__
+        namespace['ikaaro_version'] = ikaaro.__version__
+
+        handler = self.get_object('/ui/root/about.xml')
+        return stl(handler, namespace)
+
+
+    credits__access__ = True
+    credits__label__ = u'About'
+    credits__sublabel__ = u'Credits'
+    def credits(self, context):
+        context.styles.append('/ui/credits.css')
+
+        # Build the namespace
+        credits = get_abspath(globals(), 'CREDITS')
+        names = []
+        for line in vfs.open(credits).readlines():
+            if line.startswith('N: '):
+                names.append(line[3:].strip())
+
+        namespace = {'hackers': names}
+
+        handler = self.get_object('/ui/root/credits.xml')
+        return stl(handler, namespace)
+
+
+    license__access__ = True
+    license__label__ = u'About'
+    license__sublabel__ = u'License'
+    def license(self, context):
+        handler = self.get_object('/ui/root/license.xml')
+        return stl(handler)
 
 
     #######################################################################

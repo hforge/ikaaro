@@ -28,19 +28,16 @@ import traceback
 from types import GeneratorType
 
 # Import from itools
-import itools
 from itools import get_abspath
 from itools.datatypes import Boolean, Tokens, Unicode
 from itools.handlers import File, ConfigFile, Folder as FolderHandler
 from itools.html import stream_to_str_as_html
 from itools.stl import stl
 from itools.uri import Path
-from itools import vfs
 from itools.web import get_context
 from itools.xml import XMLParser
 
 # Import from ikaaro
-import ikaaro
 from access import RoleAware
 from base import DBObject
 from text import PO
@@ -310,55 +307,6 @@ class Root(WebSite):
             message.attach(message_text)
         # Send email
         server.send_email(message)
-
-
-    ########################################################################
-    # Back Office
-    ########################################################################
-
-    ########################################################################
-    # About
-    about__access__ = True
-    about__label__ = u'About'
-    about__sublabel__ = u'About'
-    def about(self, context):
-        namespace = {}
-        namespace['itools_version'] = itools.__version__
-        namespace['ikaaro_version'] = ikaaro.__version__
-
-        handler = self.get_object('/ui/root/about.xml')
-        return stl(handler, namespace)
-
-
-    ########################################################################
-    # Credits
-    credits__access__ = True
-    credits__label__ = u'About'
-    credits__sublabel__ = u'Credits'
-    def credits(self, context):
-        context.styles.append('/ui/credits.css')
-
-        # Build the namespace
-        credits = get_abspath(globals(), 'CREDITS')
-        names = []
-        for line in vfs.open(credits).readlines():
-            if line.startswith('N: '):
-                names.append(line[3:].strip())
-
-        namespace = {'hackers': names}
-
-        handler = self.get_object('/ui/root/credits.xml')
-        return stl(handler, namespace)
-
-
-    ########################################################################
-    # License
-    license__access__ = True
-    license__label__ = u'About'
-    license__sublabel__ = u'License'
-    def license(self, context):
-        handler = self.get_object('/ui/root/license.xml')
-        return stl(handler)
 
 
     #######################################################################
