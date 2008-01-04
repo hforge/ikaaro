@@ -1,0 +1,45 @@
+
+ikaaro 0.20.1 (2008/01/04)
+==========================
+
+This is a Content Management System built on Python & itools, among
+other features ikaaro provides:
+
+ - content and document management (index&search, metadata, etc.)
+ - multilingual user interfaces and content
+ - high level modules: wiki, forum, tracker, etc.
+
+Most important in this release are a couple of enhancements.
+
+There is the beginnings of a system to keep track of references from
+one object to another (like internal hyper-links between web pages).
+This system will help to keep referential integrity, and to have the
+possibility to track orphan objects, or to know the back-links to a
+web page (for instance).
+
+(Given the nature of this change existing instances must rebuild the
+catalog with the "icms-update-catalog.py" script.)
+
+With the new "forms.generate_form" function we have the beginnings of
+a system to automatically generate web forms from an schema (useful for
+prototyping for example).
+
+Many bugs have been fixed too (specially in the bug tracker), including
+#209, #210, #217, #219, #221 and #223.
+
+
+Resources
+---------
+
+Download
+http://download.ikaaro.org/ikaaro/ikaaro-0.20.1.tar.gz
+
+Home
+http://www.ikaaro.org/ikaaro
+
+Mailing list
+http://mail.ikaaro.org/mailman/listinfo/itools
+
+Bug Tracker
+http://bugs.ikaaro.org/
+
