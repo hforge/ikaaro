@@ -188,7 +188,9 @@ class WikiPage(Text):
             path = node['uri']
 
             path = path.split('/')
-            path[-1] = checkid(path[-1])
+            name = checkid(path[-1])
+            if name is not None:
+                path[-1] = name
             path = '/'.join(path)
 
             path = base.resolve(path)
