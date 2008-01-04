@@ -43,25 +43,11 @@ def get_default_widget(datatype):
         return TextWidget
 
 
-def generate_form(context, form_title, fields, widgets, form_action,
-                  required_msg=None):
-    """Fields is a dictionnary:
-    ['firstname': Unicode(mandatory=True),
-     'lastname': Unicode(mandatory=True)]
-    Widgets is a list:
-    [TextWidget('firstname', title=u'Firstname'),
-     TextWidget('lastname', title=u'Lastname')]
-    And form_action:
-    {'action': ';register', 'name': 'register',
-     'value': 'Register', 'class': 'button_ok'}
-    """
-    template = list(XMLParser("""
-    <h2>${title}</h2>
-    <form action="${action/action}" method="POST">
-    <p stl:if="has_required_widget">
-      ${required_msg}
-    </p>
-    <dl>
+generate_form_template = list(XMLParser("""
+<h2>${title}</h2>
+<form action="${action/action}" method="POST">
+  <p stl:if="has_required_widget">${required_msg}</p>
+  <dl>
     <stl:block stl:repeat="widget widgets">
       <dt class="${widget/class}">
         <label for="${widget/name}" class="${widget/class}">
@@ -69,19 +55,38 @@ def generate_form(context, form_title, fields, widgets, form_action,
         </label>
       </dt>
       <dd>
-          ${widget/widget}
+        ${widget/widget}
       </dd>
     </stl:block>
-    </dl>
-    <p>
-    <input type="submit" name=";${action/name}" value="${action/value}"
-        class="${action/class}" />
-    </p>
-    </form>
-    <script language="javascript">
-      focus("${first_widget}")
-    </script>
-    """, namespaces))
+  </dl>
+  <p>
+  <input type="submit" name=";${action/name}" value="${action/value}"
+    class="${action/class}" />
+  </p>
+</form>
+<script language="javascript">
+  focus("${first_widget}")
+</script>
+""", namespaces))
+
+
+def generate_form(context, form_title, fields, widgets, form_action,
+                  required_msg=None):
+    """Fields is a dictionnary:
+
+      {'firstname': Unicode(mandatory=True),
+       'lastname': Unicode(mandatory=True)}
+
+    Widgets is a list:
+
+      [TextWidget('firstname', title=u'Firstname'),
+       TextWidget('lastname', title=u'Lastname')]
+
+    And form_action:
+
+      {'action': ';register', 'name': 'register',
+       'value': 'Register', 'class': 'button_ok'}
+    """
     here = context.object
     # Set and translate the required_msg
     if required_msg is None:
@@ -111,7 +116,7 @@ def generate_form(context, form_title, fields, widgets, form_action,
         namespace['widgets'].append(widget_namespace)
     namespace['has_required_widget'] = has_required_widget
 
-    return stl(events=template, namespace=namespace)
+    return stl(events=generate_form_template, namespace=namespace)
 
 
 
