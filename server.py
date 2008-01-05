@@ -87,7 +87,8 @@ class Server(BaseServer):
         self.contact_email = config.get_value('contact-email')
 
         # The database
-        database = SafeDatabase('%s/database.commit' % target.path)
+        events_log = '%s/log/events' % target.path
+        database = SafeDatabase('%s/database.commit' % target.path, events_log)
         self.database = database
         # The catalog
         self.catalog = Catalog('%s/catalog' % target)
@@ -105,7 +106,7 @@ class Server(BaseServer):
         access_log = '%s/log/access' % path
         error_log = '%s/log/error' % path
         if debug or config.get_value('debug', type=Boolean, default=False):
-            debug_log = '%s/log/debug' % path
+            debug_log = events_log
         else:
             debug_log = None
 
