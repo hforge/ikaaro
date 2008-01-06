@@ -35,43 +35,39 @@ from ikaaro.utils import generate_password
 
 
 template = Template(
-"""# The variable "modules" lists the Python modules or packages that will be
+"""# The "modules" variable lists the Python modules or packages that will be
 # loaded when the applications starts.
 # 
 modules = ${modules}
 
-# The variable "address" defines the internet address the web server will
-# listen to for HTTP connections.
+# The "address" and "port" variables define, respectively, the internet
+# address and the port number the web server listens to for HTTP
+# connections.
 # 
+# By default connections are accepted from any internet address.  And the
+# server listens the 8080 port number.
+#
 address = ${address}
-
-# The variable "port" defines the port number the web server will listen to
-# for HTTP connections.
-# 
 port = ${port}
 
-# The variable "smtp-host" defines the name or IP address of the SMTP relay.
-# This option is required for the application to send emails.
+# The "smtp-host" variable defines the name or IP address of the SMTP relay
+# (this option is required for the application to send emails).
+#
+# The "smtp-login" and "smtp-password" variables define the credentials
+# required to access a secured SMTP server.
 # 
 smtp-host = ${smtp_host}
+smtp-login =
+smtp-password =
 
-# The variable "smtp-login" defines the login associed to the SMTP.
-# 
-smtp-login = ${smtp_login}
-
-# The variable "smtp-password" defines the password associed to the
-# stmp-login.
-# 
-smtp-password = ${smtp_password}
-
-# The variable "contact-email" is the email address used in the From field
+# The "contact-email" variable is the email address used in the From field
 # when sending anonymous emails.
 #
 contact-email = ${contact_email}
 
-# The variable "debug" defines whether the web server will be run in debug
+# The "debug" variable defines whether the web server will be run in debug
 # mode or not.  When run in debug mode (debug = 1), debugging information
-# will be written to the "log/debug" file.  By default debug mode is not
+# will be written to the "log/events" file.  By default debug mode is not
 # active (debug = 0).
 # 
 debug = 0
@@ -109,8 +105,7 @@ def init(parser, options, target):
 
     # The configuration file
     namespace = {}
-    names = [('address', ''), ('port', '8080'), ('smtp_host', 'localhost'),
-             ('smtp_login', ''), ('smtp_password', '')]
+    names = [('address', ''), ('port', '8080'), ('smtp_host', 'localhost')]
     for name, default in names:
         namespace[name] = getattr(options, name) or default
     config = template.substitute(modules=modules, contact_email=email,
@@ -153,18 +148,14 @@ if __name__ == '__main__':
     description = 'Creates a new instance of ikaaro with the name TARGET.'
     parser = OptionParser(usage, version=version, description=description)
     parser.add_option('-a', '--address', help='listen to IP ADDRESS')
+    parser.add_option('-e', '--email', help='e-mail address of the admin user')
     parser.add_option('-p', '--port', type='int', help='listen to PORT number')
     parser.add_option('-r', '--root',
-        help='use the ROOT handler class to init the instance')
-    parser.add_option('-e', '--email', help='e-mail address of the admin user')
-    parser.add_option('-w', '--password',
-        help='use the given PASSWORD for the admin user')
+        help='create an instance of the ROOT application')
     parser.add_option('-s', '--smtp-host',
         help='use the given SMTP_HOST to send emails')
-    parser.add_option('--smtp-login',
-        help='use the given SMTP_LOGIN for the SMTP')
-    parser.add_option('--smtp-password',
-        help='use the given SMTP_PASSWORD for the SMTP')
+    parser.add_option('-w', '--password',
+        help='use the given PASSWORD for the admin user')
 
     options, args = parser.parse_args()
     if len(args) != 1:

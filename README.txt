@@ -11,6 +11,8 @@ The scripts included are:
   icms-init.py
   icms-restore.py
   icms-start.py
+  icms-start-server.py
+  icms-start-spool.py
   icms-stop.py
   icms-update.py
   icms-update-catalog.py
