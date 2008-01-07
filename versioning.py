@@ -92,7 +92,7 @@ class VersioningAware(DBObject):
         history = self.get_property('history')
         if not history:
             return DBObject.get_mtime(self)
-        return history[0]['date']
+        return history[-1]['date']
 
 
     ########################################################################
