@@ -293,9 +293,9 @@ class Issue(Folder):
                 continue
             new_title = last_title = u''
             csv = self.parent.get_object(csv_name).handler
-            if last_value:
+            if last_value or last_value == 0:
                 last_title = csv.get_record(last_value).title
-            if new_value:
+            if new_value or new_value == 0:
                 new_title = csv.get_record(new_value).title
             text = template.substitute(field=field, old_value=last_title,
                                        new_value=new_title)
