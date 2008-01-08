@@ -41,11 +41,6 @@ class Spool(object):
         self.spool = target.resolve2('spool')
         self._stop = False
 
-        # Create the folder
-        spool = str(self.spool.path)
-        if not vfs.exists(spool):
-            vfs.make_folder(spool)
-
         # The SMTP host
         get_value = get_config(target).get_value
         self.smtp_host = get_value('smtp-host')

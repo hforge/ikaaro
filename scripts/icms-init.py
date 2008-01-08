@@ -115,6 +115,7 @@ def init(parser, options, target):
     # Create the folder structure
     mkdir('%s/database' % target)
     mkdir('%s/log' % target)
+    mkdir('%s/spool' % target)
     # Make the root
     database = Database()
     base = get_absolute_reference(target).resolve2('database')
