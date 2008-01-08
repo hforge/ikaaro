@@ -100,6 +100,12 @@ def update(parser, options, target):
     versions = list(versions)
     versions.sort()
 
+    if not versions:
+        print '*'
+        print '* The instance is up-to-date: nothing to do.'
+        print '*'
+        return
+
     print
     print '*'
     print '* Versions to upgrade: %s' % ', '.join(versions)
