@@ -20,8 +20,9 @@
 
 # Import from the Standard Library
 from datetime import datetime
-from re import sub
+from re import split
 from string import Template
+from textwrap import wrap
 
 # Import from itools
 from itools.csv import parse, Table
@@ -29,10 +30,11 @@ from itools.catalog import IntegerField, KeywordField
 from itools.datatypes import DateTime, FileName, Integer, String, Unicode, XML
 from itools.datatypes import Boolean, Tokens
 from itools.handlers import checkid
+from itools.html import xhtml_uri
 from itools.i18n import format_datetime
 from itools.stl import stl
 from itools import vfs
-from itools.xml import XMLParser
+from itools.xml import XMLParser, START_ELEMENT, END_ELEMENT, TEXT
 from itools.web import FormError
 
 # Import from ikaaro
@@ -41,6 +43,28 @@ from ikaaro.folder import Folder
 from ikaaro.messages import *
 from ikaaro.registry import register_object_class, get_object_class
 from ikaaro.utils import generate_name, get_file_parts
+
+
+
+def indent(text):
+    """Replace URLs by HTML links.  Wrap lines (with spaces) to 150 chars.
+    """
+    text = text.encode('utf-8')
+    # Wrap
+    lines = []
+    for line in text.splitlines():
+        for line in wrap(line, 150):
+            lines.append(line)
+    text = '\n'.join(lines)
+    # Links
+    for segment in split('(http://[\w./;#]*)', text):
+        if segment.startswith('http://'):
+            attributes = {(xhtml_uri, 'href'): segment}
+            yield START_ELEMENT, (xhtml_uri, 'a', attributes), 1
+            yield TEXT, segment, 1
+            yield END_ELEMENT, (xhtml_uri, 'a'), 1
+        else:
+            yield TEXT, segment, 1
 
 
 
@@ -420,41 +444,6 @@ class Issue(Folder):
         return text in self.get_comment().lower()
 
 
-    def indent(self, text):
-        """Replace spaces at the beginning of a line by "&nbsp;".  Replace
-        '\n' by <br>\n and URL by HTML links.  Fold lines (with spaces) to
-        150c.
-        """
-        res = []
-        text = text.encode('utf-8')
-        text = XML.encode(text)
-        for line in text.splitlines():
-            sline = line.lstrip()
-            indent = len(line) - len(sline)
-            if indent:
-                line = '&nbsp;' * indent + sline
-            if len(line) < 150:
-                line = sub('http://(.\S*)', r'<a href="http://\1">\1</a>', line)
-                res.append(line)
-            else:
-                # Fold lines to 150c
-                text = line.split()
-                line = ''
-                while text != []:
-                    word = text.pop(0)
-                    if len(word) + len(line) > 150:
-                        line = sub('http://(.\S*)',
-                                   r'<a href="http://\1">\1</a>', line)
-                        res.append(line)
-                        line = ''
-                    line = line + word + ' '
-                if line != '':
-                    line = sub('http://(.\S*)', r'<a href="http://\1">\1</a>',
-                               line)
-                    res.append(line)
-        return XMLParser('\n'.join(res))
-
-
     #######################################################################
     # User Interface
     #######################################################################
@@ -515,7 +504,7 @@ class Issue(Folder):
                 'number': i,
                 'user': user_title,
                 'datetime': format_datetime(datetime),
-                'comment': self.indent(comment),
+                'comment': indent(comment),
                 'file': file})
         comments.reverse()
         namespace['comments'] = comments
