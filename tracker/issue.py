@@ -27,6 +27,7 @@ from string import Template
 from itools.csv import parse, Table
 from itools.catalog import IntegerField, KeywordField
 from itools.datatypes import DateTime, FileName, Integer, String, Unicode, XML
+from itools.datatypes import Boolean, Tokens
 from itools.handlers import checkid
 from itools.i18n import format_datetime
 from itools.stl import stl
@@ -53,6 +54,9 @@ issue_fields = {
     'priority': String(),
     'assigned_to': String(),
     'comment': String(),
+    'cc_add': String(),
+    'cc_list': String(),
+    'cc_remove': Boolean(),
     'file': String()}
 
 
@@ -68,6 +72,7 @@ class History(Table):
               'assigned_to': String,
               'state': Integer,
               'comment': Unicode,
+              'cc_list': Tokens(),
               'file': String}
 
 
@@ -190,6 +195,18 @@ class Issue(Folder):
             if type == Unicode:
                 value = value.strip()
             record[name] = value
+        # CCs
+        cc_list = list(self.get_value('cc_list') or ())
+        cc_remove = context.get_form_value('cc_remove')
+        if cc_remove:
+            cc_remove = context.get_form_values('cc_list')
+            for cc in cc_remove:
+                cc_list.remove(cc)
+        cc_add = context.get_form_values('cc_add')
+        if cc_add:
+            cc_list.extend(cc_add)
+        record['cc_list'] = cc_list
+
         # Files XXX
         file = context.get_form_value('file')
         if file is None:
@@ -222,6 +239,8 @@ class Issue(Folder):
         reported_by = self.get_reported_by()
         if reported_by:
             to_addrs.add(reported_by)
+        for cc in cc_list:
+            to_addrs.add(cc)
         assigned_to = self.get_value('assigned_to')
         if assigned_to:
             to_addrs.add(assigned_to)
@@ -312,6 +331,25 @@ class Issue(Folder):
             field = self.gettext(u'Assigned To')
             text = template.substitute(field=field, old_value=last_user,
                                        new_value=new_user)
+            modifications.append(text)
+
+        # Modifications of cc_list
+        last_cc = list(self.get_value('cc_list') or ())
+        new_cc = list(record['cc_list'])
+        if last_cc != new_cc:
+            last_values = []
+            for cc in last_cc:
+                value = root.get_user(cc).get_property('email')
+                last_values.append(value)
+            new_values = []
+            for cc in new_cc:
+                value = root.get_user(cc).get_property('email')
+                new_values.append(value)
+            field = self.gettext(u'CC')
+            last_values = ', '.join(last_values)
+            new_values = ', '.join(new_values)
+            text = template.substitute(field=field, old_value=last_values,
+                                       new_value=new_values)
             modifications.append(text)
 
         return u'\n'.join(modifications)
@@ -438,6 +476,7 @@ class Issue(Folder):
         assigned_to = record.get_value('assigned_to')
         state = record.get_value('state')
         comment = record.get_value('comment')
+        cc_list = list(record.get_value('cc_list') or ())
         file = record.get_value('file')
 
         # Build the namespace
@@ -446,8 +485,7 @@ class Issue(Folder):
         namespace['title'] = title
         # Reported by
         reported_by = self.get_reported_by()
-        reported_by = users.get_object(reported_by)
-        namespace['reported_by'] = reported_by.get_title()
+        namespace['reported_by'] = users.get_object(reported_by).get_title()
         # Topics, Version, Priority, etc.
         get = self.parent.get_object
         namespace['modules'] = get('modules').get_options(module)
@@ -481,6 +519,22 @@ class Issue(Folder):
                 'file': file})
         comments.reverse()
         namespace['comments'] = comments
+
+        users = self.parent.get_members_namespace(cc_list, False)
+        cc_list = []
+        cc_add = []
+        for user in users:
+            user_id = user['id']
+            if user_id == reported_by:
+                continue
+            if user['is_selected']:
+                user['is_selected'] = False
+                cc_list.append(user)
+            else:
+                cc_add.append(user)
+        namespace['cc_add'] = cc_add
+        namespace['cc_list'] = cc_list
+        namespace['cc_remove'] = None
 
         handler = self.get_object('/ui/tracker/edit_issue.xml')
         return stl(handler, namespace)
@@ -524,6 +578,7 @@ class Issue(Folder):
         previous_module = None
         previous_priority = None
         previous_assigned_to = None
+        previous_cc_list = None
 
         # Build the namespace
         namespace = {}
@@ -541,6 +596,7 @@ class Issue(Folder):
             assigned_to = record.assigned_to
             state = record.state
             comment = record.comment
+            cc_list = record.get_value('cc_list')
             file = record.file
             # solid in case the user has been removed
             user_exist = users.has_object(username)
@@ -560,6 +616,7 @@ class Issue(Folder):
                       'priority': None,
                       'assigned_to': None,
                       'comment': comment,
+                      'cc_list': None,
                       'file': file}
 
             if title != previous_title:
@@ -607,6 +664,17 @@ class Issue(Folder):
                     row_ns['assigned_to'] = assigned_to_user.get_title()
                 else:
                     row_ns['assigned_to'] = ' '
+            if cc_list != previous_cc_list:
+                root = context.root
+                previous_cc_list = cc_list
+                new_values = []
+                for cc in cc_list:
+                    value = root.get_user(cc).get_property('email')
+                    new_values.append(value)
+                if new_values:
+                    row_ns['cc_list'] = u', '.join(new_values)
+                else:
+                    row_ns['cc_list'] = ' '
 
             rows.append(row_ns)
 

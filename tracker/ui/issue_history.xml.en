@@ -35,6 +35,9 @@
           <stl:block if="row/assigned_to">
             <strong>Assign To:</strong> ${row/assigned_to}<br/>
           </stl:block>
+          <stl:block if="row/cc_list">
+            <strong>CC:</strong> ${row/cc_list}<br/>
+          </stl:block>
           <stl:block if="row/file">
             <strong>Attachement:</strong> <a href="${row/file}">${row/file}</a>
             <br/>

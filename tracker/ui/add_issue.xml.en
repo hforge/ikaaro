@@ -70,6 +70,16 @@
       </tr>
       <tr>
         <td valign="top" colspan="2">
+          <label for="cc_add">CC:</label><br/>
+          <select name="cc_add" id="cc_add" class="tracker_select"
+            multiple="multiple" size="5">
+            <option stl:repeat="item cc_add" value="${item/id}"
+              selected="${item/is_selected}">${item/title}</option>
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <td valign="top" colspan="2">
           <label for="description">Description:</label><br/>
           <textarea name="comment" id="description" cols="60" rows="10"
             >${comment}</textarea>

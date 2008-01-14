@@ -151,7 +151,7 @@ class Tracker(Folder):
 
     def get_members_namespace(self, value, not_assigned=False):
         """Returns a namespace (list of dictionaries) to be used for the
-        selection box of users (the 'assigned to' field).
+        selection box of users (the 'assigned to' and 'cc' fields).
         """
         users = self.get_object('/users')
         members = []
@@ -718,6 +718,8 @@ class Tracker(Folder):
         assigned_to = context.get_form_values('assigned_to', type=String)
         namespace['users'] = self.get_members_namespace(assigned_to)
 
+        namespace['cc_add'] = self.get_members_namespace(())
+
         handler = self.get_object('/ui/tracker/add_issue.xml')
         return stl(handler, namespace)
 
@@ -725,7 +727,7 @@ class Tracker(Folder):
     add_issue__access__ = 'is_allowed_to_edit'
     def add_issue(self, context):
         keep = ['title', 'version', 'type', 'state', 'module', 'priority',
-                'assigned_to', 'comment']
+                'assigned_to', 'cc_add', 'comment']
         # Check input data
         try:
             form = context.check_form_input(issue_fields)
