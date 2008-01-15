@@ -127,7 +127,7 @@ class Node(BaseNode):
     ########################################################################
     # Internationalization
     ########################################################################
-    class_domain = 'itools'
+    class_domain = 'ikaaro'
 
     @classmethod
     def select_language(cls, languages):
@@ -139,10 +139,10 @@ class Node(BaseNode):
     def gettext(cls, message, language=None):
         gettext = DomainAware.gettext
 
-        if cls.class_domain == 'itools':
-            domain_names = ['itools']
+        if cls.class_domain == 'ikaaro':
+            domain_names = ['ikaaro']
         else:
-            domain_names = [cls.class_domain, 'itools']
+            domain_names = [cls.class_domain, 'ikaaro']
 
         for domain_name in domain_names:
             if language is None:
