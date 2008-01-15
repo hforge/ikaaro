@@ -581,7 +581,7 @@ class Issue(Folder):
             module = record.module
             version = record.version
             type = record.type
-            priority = record.priority
+            priority = record.get_value('priority')
             assigned_to = record.assigned_to
             state = record.state
             comment = record.comment
