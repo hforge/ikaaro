@@ -27,8 +27,8 @@ from itools.csv import Property
 from itools.datatypes import (DataType, Date, Enumerate, FileName, Integer,
     Unicode, is_datatype)
 from itools.handlers import Folder
-from itools.ical import (get_grid_data, icalendar, PropertyValue, DateTime,
-    icalendarTable, Record, Time)
+from itools.ical import (get_grid_data, icalendar, DateTime, icalendarTable,
+    Record, Time)
 from itools.stl import stl
 from itools.web import FormError
 
@@ -794,15 +794,139 @@ class CalendarView(object):
 
     edit_event__access__ = 'is_allowed_to_edit'
     def edit_event(self, context):
-        id = context.get_form_value('id')
-        if '/' in id:
-            name, id = id.split('/', 1)
+        keys = context.get_form_keys()
+        goto = ';%s' % context.get_cookie('method') or 'monthly_view'
+
+        # Get selected_date from the 3 fields 'dd','mm','yyyy' into
+        # 'yyyy/mm/dd'
+        selected_date = [ context.get_form_value('DTSTART_%s' % x)
+                          for x in ('year', 'month', 'day') ]
+        selected_date = '-'.join(selected_date)
+
+        # Get event id
+        uid = context.get_form_value('id', default=None)
+        if uid is not None and '/' in uid:
+            name, uid = uid.split('/', 1)
+
+        # Get id and Record object
+        properties = {}
+        if uid is None:
+            # Add user as Organizer
+            organizer = str(context.user.get_abspath())
+            properties['ORGANIZER'] = Property(organizer)
         else:
-            name = context.get_form_value('resource')
-        if name and self.has_handler(name):
-            handler = self.get_handler(name)
-            return handler.__class__.edit_event(handler, context)
-        return context.come_back(u'Resource not found.')
+            event = self.get_record(uid)
+            if event is None:
+                message = u'Cannot modify event, because it has been removed.'
+                return context.come_back(message, goto=goto)
+            # Test if current user is admin or organizer of this event
+            if not self.is_organizer_or_admin(context, event):
+                message = u'You are not authorized to modify this event.'
+                return context.come_back(goto, message, keys=keys)
+
+        for key in keys:
+            if key in ('id', ';edit_event', 'resource'):
+                continue
+            # Get date and time for DTSTART and DTEND
+            if key.startswith('DTSTART_day'):
+                values = {}
+                for real_key in ('DTSTART', 'DTEND'):
+                    # Get date
+                    v_date = [ context.get_form_value('%s_%s' % (real_key, x))
+                               for x in ('year', 'month', 'day') ]
+                    v_date = '-'.join(v_date)
+                    # Get time
+                    hours = context.get_form_value('%s_hours' % real_key)
+                    minutes = context.get_form_value('%s_minutes' % real_key)
+                    params = {}
+                    if hours is '':
+                        value = v_date
+                        params['VALUE'] = ['DATE']
+                    else:
+                        if minutes is '':
+                            minutes = 0
+                        v_time = '%s:%s' % (hours, minutes)
+                        value = ' '.join([v_date, v_time])
+                    # Get value as a datetime object
+                    try:
+                        value = DateTime.from_str(value)
+                    except:
+                        goto = ';edit_event_form?date=%s' % selected_date
+                        message = u'One or more field is invalid.'
+                        return context.come_back(goto=goto, message=message)
+                    values[real_key] = value, params
+                # Check if start <= end
+                if values['DTSTART'][0] > values['DTEND'][0]:
+                    message = u'Start date MUST be earlier than end date.'
+                    goto = ';edit_event_form?date=%s' % \
+                                             Date.encode(values['DTSTART'][0])
+                    if uid is not None:
+                        goto = goto + '&uid=%s' % uid
+                    elif context.has_form_value('timetable'):
+                        timetable = context.get_form_value('timetable', 0)
+                        goto = goto + '&timetable=%s' % timetable
+                    return context.come_back(goto=goto, message=message)
+                # Save values
+                for key in ('DTSTART', 'DTEND'):
+                    if key == 'DTEND' and 'VALUE' in values[key][1]:
+                        value = values[key][0] + timedelta(days=1) - resolution
+                        value = Property(value, values[key][1])
+                    else:
+                        value = Property(values[key][0], values[key][1])
+                    properties[key] = value
+            elif key.startswith('DTSTART') or key.startswith('DTEND'):
+                continue
+            else:
+                datatype = self.handler.get_datatype(key)
+                multiple = getattr(datatype, 'multiple', False) is True
+                if multiple:
+                    datatype = Multiple(type=datatype)
+                # Load form
+                check_fields = {key: datatype}
+                try:
+                    form = context.check_form_input(check_fields)
+                except FormError:
+                    return context.come_back(MSG_MISSING_OR_INVALID, keep=keys)
+                # Set
+                if multiple:
+                    properties[key] = [ Property(x) for x in form[key] ]
+                else:
+                    properties[key] = Property(form[key])
+
+        if uid is not None:
+            self.update_record(uid, properties)
+        else:
+            self.add_record('VEVENT', properties)
+
+        goto = '%s?date=%s' % (goto, selected_date)
+        return context.come_back(u'Data updated', goto=goto, keys=keys)
+
+
+    remove_event__access__ = 'is_allowed_to_edit'
+    def remove_event(self, context):
+        # goto
+        method = context.get_cookie('method') or 'monthly_view'
+        goto = ';%s?%s' % (method, get_current_date())
+        if method not in dir(self):
+            goto = '../;%s?%s' % (method, get_current_date())
+        # uid
+        uid = context.get_form_value('id', '')
+        if '/' in uid:
+            kk, uid = uid.split('/', 1)
+        if uid =='':
+            return context.come_back('', goto)
+        if self.get_record(uid) is None:
+            message = u'Cannot delete event, because it was already removed.'
+            return context.come_back(message, goto=goto)
+
+        self._remove_event(uid)
+        return context.come_back(u'Event definitely deleted.', goto=goto)
+
+
+    cancel__access__ = 'is_allowed_to_edit'
+    def cancel(self, context):
+        goto = ';%s' % context.get_cookie('method') or 'monthly_view'
+        return context.come_back('', goto)
 
 
     edit_timetables_form__access__ = 'is_allowed_to_edit'
@@ -878,6 +1002,19 @@ class CalendarView(object):
 
 
 class CalendarAware(CalendarView):
+
+    edit_event__access__ = 'is_allowed_to_edit'
+    def edit_event(self, context):
+        id = context.get_form_value('id')
+        if '/' in id:
+            name, id = id.split('/', 1)
+        else:
+            name = context.get_form_value('resource')
+        if name and self.has_object(name):
+            object = self.get_object(name)
+            return object.edit_event(context)
+        return context.come_back(u'Resource not found.')
+
 
     def get_calendars(self, types=None):
         """List of sources from which taking events.
@@ -1108,6 +1245,14 @@ class Calendar(Text, CalendarView):
         return self.handler.get_record(id)
 
 
+    def update_record(self, id, properties):
+        self.handler.update_component(id, **properties)
+
+
+    def add_record(self, type, properties):
+        self.handler.add_component(type, **properties)
+
+
     @classmethod
     def get_metadata_schema(cls):
         schema = Text.get_metadata_schema()
@@ -1176,138 +1321,8 @@ class Calendar(Text, CalendarView):
         return '<pre>%s</pre>' % self.handler.to_str()
 
 
-    edit_event__access__ = 'is_allowed_to_edit'
-    def edit_event(self, context):
-        # Remove
-        if context.has_form_value('remove'):
-            return self.remove(context)
-
-        # Keys to keep from url
-        keys = context.get_form_keys()
-
-        # Cancel
-        goto = ';%s' % context.get_cookie('method') or 'monthly_view'
-        if context.has_form_value('cancel'):
-            return context.come_back('', goto, keys=keys)
-
-        # Get selected_date from the 3 fields 'dd','mm','yyyy' into
-        # 'yyyy/mm/dd'
-        v_items = []
-        for item in ('year', 'month', 'day'):
-            v_items.append(context.get_form_value('DTSTART_%s' % item))
-        selected_date = '-'.join(v_items)
-
-        # Get id and Record object
-        properties = {}
-        uid = context.get_form_value('id', default=None)
-        if uid is None:
-            # Add user as Organizer
-            organizer = str(context.user.get_abspath())
-            properties['ORGANIZER'] = PropertyValue(organizer)
-        else:
-            if '/' in uid:
-                uid = uid.split('/', 1)[1]
-
-            event = self.handler.get_record(uid)
-            # Test if current user is admin or organizer of this event
-            if not self.is_organizer_or_admin(context, event):
-                message = u'You are not authorized to modify this event.'
-                return context.come_back(goto, message, keys=keys)
-
-        for key in context.get_form_keys():
-            if key in ('id', 'update', 'resource'):
-                continue
-            # Get date and time for DTSTART and DTEND
-            if key.startswith('DTSTART_day'):
-                values = {}
-                for real_key in ('DTSTART', 'DTEND'):
-                    # Get date
-                    v_items = []
-                    for item in ('year', 'month', 'day'):
-                        item = '%s_%s' % (real_key, item)
-                        v_item = context.get_form_value(item)
-                        v_items.append(v_item)
-                    v_date = '-'.join(v_items)
-                    # Get time
-                    hours = context.get_form_value('%s_hours' % real_key)
-                    minutes = context.get_form_value('%s_minutes' % real_key)
-                    params = {}
-                    if hours is '':
-                        value = v_date
-                        params['VALUE'] = ['DATE']
-                    else:
-                        if minutes is '':
-                            minutes = 0
-                        v_time = '%s:%s' % (hours, minutes)
-                        value = ' '.join([v_date, v_time])
-                    # Get value as a datetime object
-                    try:
-                        value = DateTime.from_str(value)
-                    except:
-                        goto = ';edit_event_form?date=%s' % selected_date
-                        message = u'One or more field is invalid.'
-                        return context.come_back(goto=goto, message=message)
-                    values[real_key] = value, params
-                # Check if start <= end
-                if values['DTSTART'][0] > values['DTEND'][0]:
-                    message = u'Start date MUST be earlier than end date.'
-                    goto = ';edit_event_form?date=%s' % \
-                                             Date.encode(values['DTSTART'][0])
-                    if uid is not None:
-                        goto = goto + '&uid=%s' % uid
-                    elif context.has_form_value('timetable'):
-                        timetable = context.get_form_value('timetable', 0)
-                        goto = goto + '&timetable=%s' % timetable
-                    return context.come_back(goto=goto, message=message)
-                # Save values
-                for key in ('DTSTART', 'DTEND'):
-                    if key == 'DTEND' and 'VALUE' in values[key][1]:
-                        value = values[key][0] + timedelta(days=1) - resolution
-                        value = PropertyValue(value, **values[key][1])
-                    else:
-                        value = PropertyValue(values[key][0], **values[key][1])
-                    properties[key] = value
-            elif key.startswith('DTSTART') or key.startswith('DTEND'):
-                continue
-            else:
-                datatype = self.handler.get_datatype(key)
-                values = context.get_form_values(key)
-                if key == 'SUMMARY' and not values[0]:
-                    return context.come_back(u'Summary must be filled.', goto)
-
-                decoded_values = []
-                for value in values:
-                    value = datatype.decode(value)
-                    decoded_values.append(PropertyValue(value))
-
-                if datatype.occurs == 1:
-                    properties[key] = decoded_values[0]
-                else:
-                    properties[key] = decoded_values
-
-        if uid is not None:
-            self.handler.update_component(uid, **properties)
-        else:
-            self.handler.add_component('VEVENT', **properties)
-
-        goto = '%s?date=%s' % (goto, selected_date)
-        return context.come_back(u'Data updated', goto=goto, keys=keys)
-
-
-    remove__access__ = 'is_allowed_to_edit'
-    def remove(self, context):
-        method = context.get_cookie('method') or 'monthly_view'
-        goto = ';%s?%s' % (method, get_current_date())
-        if method not in dir(self):
-            goto = '../;%s?%s' % (method, get_current_date())
-
-        uid = context.get_form_value('id')
-        if '/' in uid:
-            kk, uid = uid.split('/', 1)
-        if not uid:
-            return context.come_back('', goto)
+    def _remove_event(self, uid):
         self.handler.remove(uid)
-        return context.come_back(u'Event definitely deleted.', goto=goto)
 
 
     def download_form(self, context):
@@ -1370,9 +1385,21 @@ class CalendarTable(Table, CalendarView):
 
 
     def get_record(self, id):
-        return self.handler.get_record(int(id))
+        id = int(id)
+        return self.handler.get_record(id)
 
 
+    def update_record(self, id, properties):
+        id = int(id)
+        self.handler.update_record(id, **properties)
+
+
+    def add_record(self, type, properties):
+        properties['type'] = type
+        self.handler.add_record(properties)
+
+
+    edit_record__access__ = 'is_allowed_to_edit'
     def edit_record(self, context):
         # check form
         check_fields = {}
@@ -1452,7 +1479,6 @@ class CalendarTable(Table, CalendarView):
     #######################################################################
     # API related to CalendarView
     #######################################################################
-
     def get_action_url(self, **kw):
         url = ';edit_event_form'
         params = []
@@ -1479,157 +1505,8 @@ class CalendarTable(Table, CalendarView):
         return {self.name: 0}, events
 
 
-    edit_record__access__ = 'is_allowed_to_edit'
-    edit_event__access__ = 'is_allowed_to_edit'
-    def edit_event(self, context):
-        # Keys to keep from url
-        keys = context.get_form_keys()
-
-        # Method
-        method = context.get_cookie('method') or 'monthly_view'
-        goto = ';%s' % method
-##        if method not in dir(self):
-##            goto = '../;%s' % method
-
-        # Get event id
-        uid = context.get_form_value('id', '')
-        if '/' in uid:
-            name, uid = uid.split('/', 1)
-
-        if context.has_form_value('remove'):
-            return self.remove(context)
-
-        # Get selected_date from the 3 fields 'dd','mm','yyyy' into 'yyyy/mm/dd'
-        v_items = []
-        for item in ('year', 'month', 'day'):
-            v_items.append(context.get_form_value('DTSTART_%s' % item))
-        selected_date = '-'.join(v_items)
-
-##        # Keys to keep from url
-##        keys = ['resource']
-
-        # Cancel
-        if context.has_form_value('cancel'):
-            return context.come_back('', goto, keys=keys)
-
-        # Get id and Record object
-        properties = {}
-        if uid != '':
-            uid = int(uid)
-            event = self.get_record(uid)
-            # Test if current user is admin or organizer of this event
-            if not self.is_organizer_or_admin(context, event):
-                message = u'You are not authorized to modify this event.'
-                return context.come_back(goto, message, keys=keys)
-        else:
-            # Add user as Organizer
-            organizer = str(context.user.get_abspath())
-            properties['ORGANIZER'] = Property(organizer)
-
-        for key in context.get_form_keys():
-            if key in ('id', 'update', 'resource'):
-                continue
-            # Get date and time for DTSTART and DTEND
-            if key.startswith('DTSTART_day'):
-                values = {}
-                for real_key in ('DTSTART', 'DTEND'):
-                    # Get date
-                    v_items = []
-                    for item in ('year', 'month', 'day'):
-                        item = '%s_%s' % (real_key, item)
-                        v_item = context.get_form_value(item)
-                        v_items.append(v_item)
-                    v_date = '-'.join(v_items)
-                    # Get time
-                    hours = context.get_form_value('%s_hours' % real_key)
-                    minutes = context.get_form_value('%s_minutes' % real_key)
-                    params = {}
-                    if hours is '':
-                        value = v_date
-                        params['VALUE'] = ['DATE']
-                    else:
-                        if minutes is '':
-                            minutes = 0
-                        v_time = '%s:%s' % (hours, minutes)
-                        value = ' '.join([v_date, v_time])
-                    # Get value as a datetime object
-                    try:
-                        value = DateTime.from_str(value)
-                    except:
-                        goto = ';edit_event_form?date=%s' % selected_date
-                        message = u'One or more field is invalid.'
-                        return context.come_back(goto=goto, message=message)
-                    values[real_key] = value, params
-                # Check if start <= end
-                if values['DTSTART'][0] > values['DTEND'][0]:
-                    message = u'Start date MUST be earlier than end date.'
-                    goto = ';edit_event_form?date=%s' % \
-                                             Date.encode(values['DTSTART'][0])
-                    if uid != '':
-                        goto = goto + '&uid=%s' % uid
-                    elif context.has_form_value('timetable'):
-                        timetable = context.get_form_value('timetable', 0)
-                        goto = goto + '&timetable=%s' % timetable
-                    return context.come_back(goto=goto, message=message)
-                # Save values
-                for key in ('DTSTART', 'DTEND'):
-                    if key == 'DTEND' and 'VALUE' in values[key][1]:
-                        value = values[key][0] + timedelta(days=1) - resolution
-                        value = Property(value, values[key][1])
-                    else:
-                        value = Property(values[key][0], values[key][1])
-                    properties[key] = value
-            elif key.startswith('DTSTART') or key.startswith('DTEND'):
-                continue
-            else:
-                check_fields = {}
-                datatype = self.handler.get_datatype(key)
-                multiple = getattr(datatype, 'multiple', False) is True
-                if multiple:
-                    datatype = Multiple(type=datatype)
-                check_fields[key] = datatype
-                # XXX Check inputs
-                try:
-                    form = context.check_form_input(check_fields)
-                except FormError:
-                    return context.come_back(MSG_MISSING_OR_INVALID,
-                                             keep=context.get_form_keys())
-                if multiple:
-                    values = context.get_form_values(key)
-                    decoded_values = []
-                    for value in values:
-                        value = datatype.decode(value)
-                        decoded_values.append(Property(value))
-                    values = decoded_values
-                else:
-                    values = context.get_form_value(key)
-                    values = datatype.decode(values)
-                properties[key] = values
-
-        if uid != '':
-            self.handler.update_record(uid, **properties)
-        else:
-            properties['type'] = 'VEVENT'
-            self.handler.add_record(properties)
-
-        goto = '%s?date=%s' % (goto, selected_date)
-        return context.come_back(u'Data updated', goto=goto, keys=keys)
-
-
-    remove__access__ = 'is_allowed_to_edit'
-    def remove(self, context):
-        method = context.get_cookie('method') or 'monthly_view'
-        goto = ';%s?%s' % (method, get_current_date())
-        if method not in dir(self):
-            goto = '../;%s?%s' % (method, get_current_date())
-
-        uid = context.get_form_value('id', '')
-        if '/' in uid:
-            kk, uid = uid.split('/', 1)
-        if uid =='':
-            return context.come_back('', goto)
+    def _remove_event(self, uid):
         self.handler.del_record(int(uid))
-        return context.come_back(u'Event definitely deleted.', goto=goto)
 
 
     #######################################################################

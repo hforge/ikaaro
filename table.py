@@ -42,13 +42,12 @@ import widgets
 class Multiple(DataType):
 
     def decode(self, data):
-        if isinstance(data, list) is True:
+        if isinstance(data, list):
             lines = data
         else:
             lines = data.splitlines()
 
-        return [self.type.decode(x)
-                for x in lines]
+        return [ self.type.decode(x) for x in lines ]
 
 
 
