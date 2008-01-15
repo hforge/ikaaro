@@ -521,13 +521,14 @@ class WebSite(RoleAware, Folder):
         root = context.root
 
         # Get the email address
-        username = context.get_form_value('username').strip()
+        username = context.get_form_value('username', default='').strip()
 
         # Get the user with the given login name
         results = root.search(username=username)
         if results.get_n_documents() == 0:
+            goto = ';forgotten_password_form'
             message = u'There is not a user identified as "$username"'
-            return context.come_back(message, username=username)
+            return context.come_back(message, goto=goto, username=username)
 
         user = results.get_documents()[0]
         user = self.get_object('/users/%s' % user.name)
