@@ -55,11 +55,10 @@ class Image(File):
         height = context.get_form_value('height', 48)
         width, height = int(width), int(height)
 
-        handler = self.handler
-        data, format = handler.get_thumbnail(width, height)
+        data, format = self.handler.get_thumbnail(width, height)
         if data is None:
             object = self.get_object('/ui/images/Image48.png')
-            data = object.handler.to_str()
+            data = object.to_str()
             format = 'png'
 
         response = context.response
