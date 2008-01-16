@@ -609,12 +609,12 @@ class Folder(DBObject):
     def rename_form(self, context):
         # Filter names which the authenticated user is not allowed to move
         ac = self.get_access_control()
-        names = [
+        paths = [
             x for x in context.get_form_values('ids')
             if ac.is_allowed_to_move(context.user, self.get_object(x)) ]
 
         # Check input data
-        if not names:
+        if not paths:
             return context.come_back(u'No objects selected.')
 
         # FIXME Hack to get rename working. The current user interface forces
@@ -622,46 +622,63 @@ class Folder(DBObject):
         # method, but it should be a GET method. Maybe it will be solved after
         # the needed folder browse overhaul.
         if context.request.method == 'POST':
-            ids_list = '&'.join([ 'ids=%s' % x for x in names ])
+            ids_list = '&'.join([ 'ids=%s' % x for x in paths ])
             return get_reference(';rename_form?%s' % ids_list)
 
         # Build the namespace
+        paths.sort()
+        paths.reverse()
         namespace = {}
-        namespace['names'] = names
+        namespace['objects'] = []
+        for path in paths:
+            if '/' in path:
+                parent_path, name = path.rsplit('/', 1)
+                parent_path += '/'
+            else:
+                parent_path = ''
+                name = path
+            namespace['objects'].append({
+                'path': path, 'parent_path': parent_path, 'name': name})
 
-        # Process the template
         handler = self.get_object('/ui/folder/rename.xml')
         return stl(handler, namespace)
 
 
     rename__access__ = 'is_allowed_to_move'
     def rename(self, context):
-        names = context.get_form_values('names')
+        paths = context.get_form_values('paths')
+        paths.sort()
+        paths.reverse()
         new_names = context.get_form_values('new_names')
-        used_names = self.get_names()
         # Clean the copy cookie if needed
-        cut, paths = context.get_cookie('ikaaro_cp', type=CopyCookie)
+        cut, cp_paths = context.get_cookie('ikaaro_cp', type=CopyCookie)
 
         # Process input data
         abspath = self.get_abspath()
-        for i, old_name in enumerate(names):
+        for i, path in enumerate(paths):
             new_name = new_names[i]
-            # Check the name is valid
             new_name = checkid(new_name)
             if new_name is None:
                 return context.come_back(MSG_BAD_NAME)
+            # Split the path
+            if '/' in path:
+                parent_path, old_name = path.rsplit('/', 1)
+                container = self.get_object(parent_path)
+            else:
+                old_name = path
+                container = self
             # Check the name really changed
             if new_name == old_name:
                 continue
             # Check there is not another resource with the same name
-            if new_name in used_names:
+            if container.has_object(new_name):
                 return context.come_back(MSG_EXISTANT_FILENAME)
             # Clean cookie (FIXME Do not clean the cookie, update it)
-            if str(abspath.resolve2(old_name)) in paths:
+            if cp_paths and str(abspath.resolve2(path)) in cp_paths:
                 context.del_cookie('ikaaro_cp')
-                paths = []
+                cp_paths = []
             # Rename
-            self.move_object(old_name, new_name)
+            container.move_object(old_name, new_name)
 
         message = u'Objects renamed.'
         return context.come_back(message, goto=';browse_content')

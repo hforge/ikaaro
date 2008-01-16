@@ -7,18 +7,19 @@
   <h2>Rename Objects</h2>
 
   <form action=";rename" method="post">
-    <dl>
-      <stl:block repeat="name names">
-        <dt>${name}</dt>
-        <dd>
-          <input type="hidden" name="names" value="${name}" />
-          to <input type="text" name="new_names" value="${name}" />
-        </dd>
-      </stl:block>
-    </dl>
-    <p>
-      <input type="submit" value="Rename" class="button_rename" />
-    </p>
+    <table style="margin-left: 20px; font-family: monospace;">
+      <tr stl:repeat="object objects">
+        <td>
+          <input type="hidden" name="paths" value="${object/path}" />
+          ${object/path}
+        </td>
+        <td>
+          &rArr; ${object/parent_path}<input type="text" name="new_names"
+          value="${object/name}" style="font-family: monospace;"/>
+        </td>
+      </tr>
+    </table>
+    <p><input type="submit" value="Rename" class="button_rename" /></p>
   </form>
 
 </stl:block>
