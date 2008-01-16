@@ -81,10 +81,18 @@ class File(WorkflowAware, VersioningAware):
 
         # Check the handler exists
         format = self.metadata.format
-        extensions = [ x[1:] for x in guess_all_extensions(format) ]
-        if cls.class_extension in extensions:
-            extensions.remove(cls.class_extension)
-        extensions.insert(0, cls.class_extension)
+        # FIXME This is a hack, compression encodings are not yet properly
+        # supported (to do for the next major version).
+        if format == 'application/x-gzip':
+            extensions = ['gz', 'tgz']
+        elif format == 'application/x-bzip2':
+            extensions = ['bz2', 'tbz2']
+        else:
+            extensions = [ x[1:] for x in guess_all_extensions(format) ]
+            if cls.class_extension in extensions:
+                extensions.remove(cls.class_extension)
+            extensions.insert(0, cls.class_extension)
+
         for extension in extensions:
             name = FileName.encode((self.name, extension, None))
             uri = base.resolve(name)
