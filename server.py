@@ -161,34 +161,24 @@ class Server(BaseServer):
 
 
     def before_commit(self):
+        root = self.root
         catalog = self.catalog
         # Removed
-        for object in self.objects_removed:
-            if isinstance(object, Folder):
-                for x in object.traverse_objects():
-                    path = str(x.get_canonical_path())
-                    catalog.unindex_document(path)
-            else:
-                path = str(object.get_canonical_path())
-                catalog.unindex_document(path)
+        for path in self.objects_removed:
+            catalog.unindex_document(path)
         self.objects_removed.clear()
 
         # Added
-        for object in self.objects_added:
-            if isinstance(object, Folder):
-                for x in object.traverse_objects():
-                    catalog.index_document(x)
-                    if isinstance(x, VersioningAware):
-                        x.commit_revision()
-            else:
-                catalog.index_document(object)
-                if isinstance(object, VersioningAware):
-                    object.commit_revision()
+        for path in self.objects_added:
+            object = root.get_object(path)
+            catalog.index_document(object)
+            if isinstance(object, VersioningAware):
+                object.commit_revision()
         self.objects_added.clear()
 
         # Changed
-        for object in self.objects_changed:
-            path = str(object.get_abspath())
+        for path in self.objects_changed:
+            object = root.get_object(path)
             catalog.unindex_document(path)
             catalog.index_document(object)
             if isinstance(object, VersioningAware):
@@ -214,14 +204,33 @@ class Server(BaseServer):
 
 
     def remove_object(self, object):
-        self.objects_removed.add(object)
+        objects_removed = self.objects_removed
+        objects_added = self.objects_added
+
+        if isinstance(object, Folder):
+            for x in object.traverse_objects():
+                path = str(x.get_canonical_path())
+                if path in objects_added:
+                    objects_added.remove(path)
+                objects_removed.add(path)
+        else:
+            path = str(object.get_canonical_path())
+            if path in objects_added:
+                objects_added.remove(path)
+            objects_removed.add(path)
 
 
     def add_object(self, object):
-        self.objects_added.add(object)
+        if isinstance(object, Folder):
+            for x in object.traverse_objects():
+                path = str(x.get_canonical_path())
+                self.objects_added.add(path)
+        else:
+            path = str(object.get_canonical_path())
+            self.objects_added.add(path)
 
 
     def change_object(self, object):
-        self.objects_changed.add(object)
-
+        path = str(object.get_canonical_path())
+        self.objects_changed.add(path)
 
