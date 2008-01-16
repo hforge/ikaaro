@@ -357,21 +357,24 @@ class File(WorkflowAware, VersioningAware):
     upload__access__ = 'is_allowed_to_edit'
     def upload(self, context):
         file = context.get_form_value('file')
-
         if file is None:
             return context.come_back(u'No file has been entered.')
 
         # Check wether the handler is able to deal with the uploaded file
-        filename, mimetype, data = file
-        try:
-            self.handler.load_state_from_string(data)
-        except:
-            self.handler.load_state()
-            message = (u'Upload failed: either the file does not match this'
-                       u' document type ($mimetype) or it contains errors.')
-            mimetype = self.handler.get_mimetype()
+        filename, mimetype, body = get_file_parts(file)
+        if mimetype != self.metadata.format:
+            message = u'Unexpected file of mimetype ${mimetype}.'
             return context.come_back(message, mimetype=mimetype)
 
+        # Replace
+        try:
+            self.handler.load_state_from_string(body)
+        except:
+            self.handler.load_state()
+            message = u'Failed to load the file, may contain errors.'
+            return context.come_back(message)
+
+        context.server.change_object(self)
         return context.come_back(u'Version uploaded.')
 
 
