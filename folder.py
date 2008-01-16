@@ -760,7 +760,10 @@ class Folder(DBObject):
 
     def browse_content(self, context):
         mode = context.get_form_value('mode', default='list')
-        method = getattr(self, 'browse_%s' % mode)
+        try:
+            method = getattr(self, 'browse_%s' % mode)
+        except AttributeError:
+            method = self.browse_list
 
         return method(context)
 
