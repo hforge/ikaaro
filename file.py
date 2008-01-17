@@ -28,7 +28,7 @@ from itools.html import HTMLParser, stream_to_str_as_xhtml
 from itools.i18n import guess_language
 from itools.stl import stl
 from itools.uri import get_reference
-from itools import vfs
+from itools.catalog import EqQuery
 
 # Import from ikaaro
 from messages import *
@@ -50,6 +50,7 @@ class File(WorkflowAware, VersioningAware):
     class_icon48 = 'images/File48.png'
     class_views = [['download_form', 'view'],
                    ['externaledit', 'upload_form'],
+                   ['backlinks'],
                    ['edit_metadata_form'],
                    ['state_form'],
                    ['history_form']]
@@ -384,6 +385,53 @@ class File(WorkflowAware, VersioningAware):
 
         context.server.change_object(self)
         return context.come_back(u'Version uploaded.')
+
+
+    #######################################################################
+    # UI / Backlinks
+    #######################################################################
+    backlinks__access__ = 'is_allowed_to_view'
+    backlinks__label__ = u"Backlinks"
+    def backlinks(self, context, sortby=['title'], sortorder='up',
+                  batchsize=20):
+        """Backlinks are the list of objects pointing to this object.
+        This view answers the question "where is this object used?"
+        You'll see all WebPages and WikiPages (for example) referencing it.
+        If the list is empty, you can consider it is "orphan".
+        """
+        from widgets import table
+
+        root = context.root
+
+        # Get the form values
+        sortby = context.get_form_values('sortby', sortby)
+        sortorder = context.get_form_value('sortorder', sortorder)
+
+        # Build the query
+        query = EqQuery('links', str(self.get_abspath()))
+
+        # Build the namespace
+        namespace = self.browse_namespace(16, sortby, sortorder, batchsize,
+                                          query=query)
+        namespace['search_fields'] = None
+
+        # The column headers
+        columns = [
+            ('name', u'Name'), ('title', u'Title'), ('format', u'Type'),
+            ('mtime', u'Last Modified'), ('last_author', u'Last Author'),
+            ('size', u'Size'), ('workflow_state', u'State')]
+
+        # Remove the checkboxes
+        objects = namespace['objects']
+        for line in objects:
+            line['checkbox'] = False
+
+        # Go
+        namespace['table'] = table(columns, objects, sortby, sortorder,
+                                   gettext=self.gettext)
+
+        template = self.get_object('/ui/folder/browse_list.xml')
+        return stl(template, namespace)
 
 
     #######################################################################

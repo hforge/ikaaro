@@ -42,6 +42,7 @@ class Image(File):
     class_icon48 = 'images/Image48.png'
     class_views = [['view'],
                    ['externaledit', 'upload_form'],
+                   ['backlinks'],
                    ['edit_metadata_form'],
                    ['state_form'],
                    ['history_form']]

@@ -23,7 +23,7 @@ from datetime import datetime
 # Import from itools
 from itools.catalog import (CatalogAware, TextField, KeywordField,
     IntegerField, BoolField)
-from itools.datatypes import FileName, String, Unicode
+from itools.datatypes import FileName, String, Unicode, Integer
 from itools.gettext import DomainAware, get_domain
 from itools.handlers import checkid
 from itools.http import Forbidden
@@ -31,6 +31,9 @@ from itools.i18n import get_language_name
 from itools.stl import stl
 from itools import vfs
 from itools.web import get_context, Node as BaseNode
+from itools.uri import Path
+from itools.i18n import format_datetime
+from itools.xml import XMLParser
 
 # Import from ikaaro
 from lock import Lock, lock_body
@@ -38,6 +41,7 @@ from messages import *
 from metadata import Metadata
 from registry import get_object_class
 from workflow import WorkflowAware
+from utils import reduce_string
 
 
 
@@ -576,6 +580,118 @@ class DBObject(CatalogAware, Node, DomainAware):
             return language
         # Default
         return languages[0]
+
+
+    def _browse_namespace(self, object, icon_size):
+        from versioning import VersioningAware
+        from workflow import WorkflowAware
+
+        line = {}
+        id = self.get_canonical_path().get_pathto(object.get_abspath())
+        id = str(id)
+        line['id'] = id
+        title = object.get_title()
+        line['title_or_name'] = title
+        firstview = object.get_firstview()
+        if firstview is None:
+            href = None
+        else:
+            href = '%s/;%s' % (id, firstview)
+        line['name'] = (id, href)
+        line['format'] = self.gettext(object.class_title)
+        line['title'] = object.get_property('title')
+        # Titles
+        line['short_title'] = reduce_string(title, 12, 40)
+        # The size
+        line['size'] = object.get_human_size()
+        # The url
+        line['href'] = href
+        # The icon
+        path_to_icon = object.get_path_to_icon(icon_size)
+        if path_to_icon.startswith(';'):
+            path_to_icon = Path('%s/' % object.name).resolve(path_to_icon)
+        line['img'] = path_to_icon
+        # The modification time
+        context = get_context()
+        accept = context.accept_language
+        line['mtime'] = format_datetime(object.get_mtime(), accept=accept)
+        # Last author
+        line['last_author'] = u''
+        if isinstance(object, VersioningAware):
+            revisions = object.get_revisions(context)
+            if revisions:
+                username = revisions[0]['username']
+                try:
+                    user = self.get_object('/users/%s' % username)
+                except LookupError:
+                    line['last_author'] = username
+                else:
+                    line['last_author'] = user.get_title()
+
+        # The workflow state
+        line['workflow_state'] = ''
+        if isinstance(object, WorkflowAware):
+            statename = object.get_statename()
+            state = object.get_state()
+            msg = self.gettext(state['title']).encode('utf-8')
+            state = ('<a href="%s/;state_form" class="workflow">'
+                     '<strong class="wf_%s">%s</strong>'
+                     '</a>') % (self.get_pathto(object), statename, msg)
+            line['workflow_state'] = XMLParser(state)
+        # Objects that should not be removed/renamed/etc
+        parent = object.parent
+        if parent is None:
+            line['checkbox'] = False
+        else:
+            line['checkbox'] = object.name not in parent.__fixed_handlers__
+
+        return line
+
+
+    def browse_namespace(self, icon_size, sortby=['title'], sortorder='up',
+                         batchsize=20, query=None, results=None):
+        from widgets import batch
+
+        context = get_context()
+        # Load variables from the request
+        start = context.get_form_value('batchstart', type=Integer, default=0)
+        size = context.get_form_value('batchsize', type=Integer,
+                                      default=batchsize)
+
+        # Search
+        root = context.root
+        if results is None:
+            results = root.search(query)
+
+        reverse = (sortorder == 'down')
+        documents = results.get_documents(sort_by=sortby, reverse=reverse,
+                                          start=start, size=batchsize)
+
+        # Get the objects, check security
+        user = context.user
+        objects = []
+        for document in documents:
+            object = root.get_object(document.abspath)
+            ac = object.get_access_control()
+            if ac.is_allowed_to_view(user, object):
+                objects.append(object)
+
+        # Get the object for the visible documents and extracts values
+        object_lines = []
+        for object in objects:
+            line = self._browse_namespace(object, icon_size)
+            object_lines.append(line)
+
+        # Build namespace
+        namespace = {}
+        total = results.get_n_documents()
+        namespace['total'] = total
+        namespace['objects'] = object_lines
+
+        # The batch
+        namespace['batch'] = batch(context.uri, start, size, total)
+
+        return namespace
 
 
     ########################################################################

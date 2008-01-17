@@ -34,10 +34,10 @@ from docutils.utils import SystemMessage
 from docutils import nodes
 
 # Import from itools
+from itools import vfs
 from itools.datatypes import DateTime, Unicode, FileName
 from itools.handlers import checkid
 from itools.stl import stl
-from itools import vfs
 from itools.xml import XMLParser
 
 # Import from ikaaro
@@ -63,6 +63,7 @@ class WikiPage(Text):
     class_icon48 = 'wiki/WikiPage48.png'
     class_views = [['view', 'to_pdf'],
                    ['edit_form', 'externaledit', 'upload_form'],
+                   ['backlinks'],
                    ['edit_metadata_form'],
                    ['state_form'],
                    ['help']]
