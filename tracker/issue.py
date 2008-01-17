@@ -575,18 +575,18 @@ class Issue(Folder):
         rows = []
         i = 0
         for record in self.get_history_records():
-            datetime = record.datetime
-            username = record.username
-            title = record.title
-            module = record.module
-            version = record.version
-            type = record.type
+            datetime = record.get_value('datetime')
+            username = record.get_value('username')
+            title = record.get_value('title')
+            module = record.get_value('module')
+            version = record.get_value('version')
+            type = record.get_value('type')
             priority = record.get_value('priority')
-            assigned_to = record.assigned_to
-            state = record.state
-            comment = record.comment
+            assigned_to = record.get_value('assigned_to')
+            state = record.get_value('state')
+            comment = record.get_value('comment')
             cc_list = record.get_value('cc_list')
-            file = record.file
+            file = record.get_value('file')
             # solid in case the user has been removed
             user_exist = users.has_object(username)
             usertitle = (user_exist and
