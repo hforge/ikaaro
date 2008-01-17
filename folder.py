@@ -355,7 +355,11 @@ class Folder(DBObject):
                      '</a>') % (self.get_pathto(object), statename, msg)
             line['workflow_state'] = XMLParser(state)
         # Objects that should not be removed/renamed/etc
-        line['checkbox'] = object.name not in self.__fixed_handlers__
+        parent = object.parent
+        if parent is None:
+            line['checkbox'] = False
+        else:
+            line['checkbox'] = object.name not in parent.__fixed_handlers__
 
         return line
 
