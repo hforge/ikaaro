@@ -370,7 +370,7 @@ class File(WorkflowAware, VersioningAware):
 
         # Check wether the handler is able to deal with the uploaded file
         filename, mimetype, body = get_file_parts(file)
-        if mimetype != self.metadata.format:
+        if mimetype != self.handler.get_mimetype():
             message = u'Unexpected file of mimetype ${mimetype}.'
             return context.come_back(message, mimetype=mimetype)
 
