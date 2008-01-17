@@ -27,7 +27,7 @@ from urllib import urlencode
 # Import from docutils
 from docutils.core import (Publisher, publish_doctree, publish_from_doctree,
     publish_string)
-from docutils.io import StringInput, StringOutput, NullOutput, DocTreeInput
+from docutils.io import StringOutput, DocTreeInput
 from docutils.readers import get_reader_class
 from docutils.readers.doctree import Reader
 from docutils.utils import SystemMessage
@@ -45,7 +45,6 @@ from ikaaro.base import DBObject
 from ikaaro.messages import MSG_EDIT_CONFLICT, MSG_CHANGES_SAVED
 from ikaaro.text import Text
 from ikaaro.registry import register_object_class
-from ikaaro.binary import Image
 from ikaaro.skins import UIFile
 
 
@@ -100,28 +99,18 @@ class WikiPage(Text):
     def resolve_link(self, title):
         parent = self.parent
 
-        # Check first for the normalized link
-        link = checkid(title)
-        for container in (self, parent):
-            try:
-                return container.get_object(link)
-            except LookupError:
-                pass
-
-        # Check now for the raw title
+        # Try regular object name or path
         try:
-            title = str(title)
-        except UnicodeEncodeError:
-            return None
-
-        for container in (self, parent):
+            return parent.get_object(title)
+        except (LookupError, UnicodeEncodeError):
+            # Convert wiki name to object name
+            name = checkid(title)
+            if name is None:
+                return None
             try:
-                return container.get_object(title)
+                return parent.get_object(name)
             except LookupError:
-                pass
-
-        # Not found
-        return None
+                return None
 
 
     def get_document(self):
@@ -130,72 +119,55 @@ class WikiPage(Text):
             supported = ('wiki',)
 
             def wiki_reference_resolver(target):
-                refname = target['name']
-                target['wiki_title'] = refname
-
-                ref = self.resolve_link(refname)
-                if ref is None:
+                title = target['name']
+                object = self.resolve_link(title)
+                if object is None:
                     # Not Found
-                    target['wiki_refname'] = False
-                    target['wiki_name'] = checkid(refname)
+                    target['wiki_name'] = False
                 else:
                     # Found
-                    target['wiki_refname'] = refname
-                    target['wiki_name'] = str(self.get_pathto(ref))
+                    target['wiki_name'] = str(self.get_pathto(object))
 
                 return True
 
             wiki_reference_resolver.priority = 851
             unknown_reference_resolvers = [wiki_reference_resolver]
 
-        # Manipulate publisher directly (from publish_doctree)
-        reader = WikiReader(parser_name='restructuredtext')
-        pub = Publisher(reader=reader, source_class=StringInput,
-                destination_class=NullOutput)
-        pub.set_components(None, 'restructuredtext', 'null')
-        pub.process_programmatic_settings(None, self.overrides, None)
-        pub.set_source(self.handler.to_str(), None)
-        pub.set_destination(None, None)
-
         # Publish!
-        pub.publish(enable_exit_status=None)
-        return pub.document
+        reader = WikiReader(parser_name='restructuredtext')
+        document = publish_doctree(self.handler.to_str(), reader=reader,
+                                   settings_overrides=self.overrides)
+
+        return document
 
 
     def get_links(self):
-        pages = self.parent.search_objects(object_class=WikiPage)
-        pages = [ x.name for x in pages ]
-
         base = self.get_abspath()
 
         links = []
         document = self.get_document()
         for node in document.traverse(condition=nodes.reference):
-            refname = node.get('wiki_refname')
+            refname = node.get('wiki_name')
             if refname is False:
-                path = node['wiki_title']
-                path = checkid(path)
+                # Wiki link not found
+                title = node['name']
+                path = checkid(title) or title
                 path = base.resolve(path)
             elif refname:
-                path = node['wiki_name']
-                path = base.resolve2(path)
+                # Wiki link found, "refname" is the path
+                path = base.resolve2(refname)
             else:
+                # Regular link
                 continue
             path = str(path)
             links.append(path)
 
         for node in document.traverse(condition=nodes.image):
-            path = node['uri']
-
-            path = path.split('/')
-            name = checkid(path[-1])
-            if name is not None:
-                path[-1] = name
-            path = '/'.join(path)
-
-            path = base.resolve(path)
+            node_uri = node['uri']
+            path = base.resolve(node_uri)
             path = str(path)
             links.append(path)
+
         return links
 
 
@@ -211,26 +183,28 @@ class WikiPage(Text):
         # Fix the wiki links
         document = self.get_document()
         for node in document.traverse(condition=nodes.reference):
-            refname = node.get('wiki_refname')
+            refname = node.get('wiki_name')
             if refname is None:
+                # Not a wiki link
                 if node.get('refid'):
                     node['classes'].append('internal')
                 elif node.get('refuri'):
                     node['classes'].append('external')
             else:
-                title = node['wiki_title']
-                name = node['wiki_name']
+                title = node['name']
                 if refname is False:
+                    # Wiki link not found
+                    prefix = here.get_pathto(parent)
                     params = {'type': self.__class__.__name__,
                               'title': title.encode('utf_8'),
-                              'name': name}
-                    refuri = ";new_resource_form?%s" % urlencode(params)
-                    prefix = here.get_pathto(parent)
-                    refuri = '%s/%s' % (prefix, refuri)
+                              'name': checkid(title) or title}
+                    refuri = "%s/;new_resource_form?%s" % (prefix,
+                                                           urlencode(params))
                     css_class = 'nowiki'
                 else:
-                    # 'name' is now the path to existing handler
-                    refuri = name
+                    # Wiki link found, "refname" is the path
+                    object = self.get_object(refname)
+                    refuri = str(here.get_pathto(object))
                     css_class = 'wiki'
                 node['refuri'] = refuri
                 node['classes'].append(css_class)
@@ -238,10 +212,12 @@ class WikiPage(Text):
         # Allow to reference images by name without their path
         for node in document.traverse(condition=nodes.image):
             node_uri = node['uri']
-            # Is the path is correct?
-            ref = self.resolve_link(node_uri)
-            if ref is not None:
-                node['uri'] = str(here.get_pathto(ref))
+            # The URI is relative to the wiki folder
+            try:
+                object = parent.get_object(node_uri)
+                node['uri'] = str(here.get_pathto(object))
+            except LookupError:
+                pass
 
         # Manipulate publisher directly (from publish_from_doctree)
         reader = Reader(parser_name='null')
@@ -265,86 +241,85 @@ class WikiPage(Text):
     to_pdf__sublabel__ = u"PDF"
     def to_pdf(self, context):
         parent = self.parent
-        pages = [self.name]
+        pages = [self.get_abspath()]
         images = []
 
-        # Override dandling links handling
-        class WikiReader(StandaloneReader):
-            supported = ('wiki',)
-
-            def wiki_reference_resolver(target):
-                refname = target['name']
-                name = checkid(refname)
-                if refname not in pages:
-                    pages.append(refname)
-                target['wiki_refname'] = refname
-                target['wiki_name'] = name
-                return True
-
-            wiki_reference_resolver.priority = 851
-            unknown_reference_resolvers = [wiki_reference_resolver]
-
-        reader = WikiReader(parser_name='restructuredtext')
-        document = publish_doctree(self.handler.to_str(), reader=reader,
-                settings_overrides=self.overrides)
-
-        # Fix the wiki links
+        document = self.get_document()
+        # We hack a bit the document tree to enhance the PDF produced
         for node in document.traverse(condition=nodes.reference):
-            refname = node.get('wiki_refname')
+            refname = node.get('wiki_name')
             if refname is None:
                 continue
-            name = node['name'].lower()
-            document.nameids[name] = refname
-
-        # Append referenced pages
-        for refname in pages[1:]:
-            references = document.refnames[refname.lower()]
-            reference = references[0]
-            reference.parent.remove(reference)
-            name = reference['wiki_name']
-            try:
-                page = parent.get_object(name)
-            except LookupError:
+            # Now consider the link is valid
+            title = node['name']
+            document.nameids[title.lower()] = checkid(title)
+            # The journey ends here for broken links
+            if refname is False:
                 continue
-            title = reference.astext()
-            if isinstance(page, Image):
-                # Link to image?
-                images.append(('../%s' % name, name))
-                continue
-            elif not isinstance(page, WikiPage):
-                # Link to file
-                continue
-            source = page.handler.to_str()
-            subdoc = publish_doctree(source, settings_overrides=self.overrides)
-            if isinstance(subdoc[0], nodes.section):
-                for node in subdoc.children:
-                    if isinstance(node, nodes.section):
-                        document.append(node)
-            else:
-                subtitle = subdoc.get('title', u'')
-                section = nodes.section(*subdoc.children, **subdoc.attributes)
-                section.insert(0, nodes.title(text=subtitle))
-                document.append(section)
+            # We extend the main page with the first level of subpages
+            object = self.get_object(refname)
+            abspath = object.get_abspath()
+            if abspath not in pages:
+                if not isinstance(object, WikiPage):
+                    # Link to a file, set the URI to download it
+                    prefix = context.object.get_pathto(object)
+                    node['refuri'] = str(context.uri.resolve(prefix))
+                    continue
+                # Adding the page to this one
+                subdoc = object.get_document()
+                # We point the second level of links to the website
+                for node in subdoc.traverse(condition=nodes.reference):
+                    refname = node.get('wiki_name')
+                    if refname is None:
+                        continue
+                    # Now consider the link is valid
+                    title = node['name']
+                    refid = title.lower()
+                    if refid not in document.nameids:
+                        document.nameids[refid] = checkid(title)
+                    # The journey ends here for broken links
+                    if refname is False:
+                        continue
+                    object = self.get_object(refname)
+                    prefix = context.object.get_pathto(object)
+                    node['refuri'] = str(context.uri.resolve(prefix))
+                # Now include the page
+                # A page may begin with a section or a list of sections
+                if len(subdoc) and isinstance(subdoc[0], nodes.section):
+                    for node in subdoc.children:
+                        if isinstance(node, nodes.section):
+                            document.append(node)
+                else:
+                    subtitle = subdoc.get('title', u'')
+                    section = nodes.section(*subdoc.children,
+                                            **subdoc.attributes)
+                    section.insert(0, nodes.title(text=subtitle))
+                    document.append(section)
+                pages.append(abspath)
 
         # Find the list of images to append
         for node in document.traverse(condition=nodes.image):
             node_uri = node['uri']
-
-            image = self.resolve_link(node_uri)
+            try:
+                image = parent.get_object(node_uri)
+            except LookupError:
+                image = None
             if image is None:
                 # Missing image, prevent pdfLaTeX failure
-                node['uri'] = 'missing.png'
-                images.append(('/ui/wiki/missing.png', 'missing.png'))
-            else:
-                node_uri = image.get_abspath()
+                image = self.get_object('/ui/wiki/missing.png')
                 filename = image.name
+                # Remove all path so the image is found in tempdir
+                node['uri'] = filename
+                images.append((image, filename))
+            else:
+                filename = image.get_property('filename')
                 # pdflatex does not support the ".jpeg" extension
                 name, ext, lang = FileName.decode(filename)
                 if ext == 'jpeg':
                     filename = FileName.encode((name, 'jpg', lang))
                 # Remove all path so the image is found in tempdir
                 node['uri'] = filename
-                images.append((node_uri, filename))
+                images.append((image, filename))
 
         overrides = dict(self.overrides)
         overrides['stylesheet'] = 'style.tex'
@@ -375,10 +350,9 @@ class WikiPage(Text):
         finally:
             file.close()
         # And referenced images
-        for node_uri, filename in images:
+        for image, filename in images:
             if tempdir.exists(filename):
                 continue
-            image = self.get_object(node_uri)
             file = tempdir.make_file(filename)
             try:
                 if isinstance(image, UIFile):
@@ -533,9 +507,9 @@ class WikiPage(Text):
 
         # Links
         for node in document.traverse(condition=nodes.reference):
-            refname = node.get('wiki_refname')
+            refname = node.get('wiki_name')
             if refname is False:
-                link = node['wiki_title']
+                link = node['name']
                 name, type, language = FileName.decode(link)
                 if type is not None:
                     data, n = subn(u'`%s`_' % link, u'`%s`_' % name, data)
