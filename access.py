@@ -320,7 +320,7 @@ class RoleAware(AccessControl):
     #######################################################################
     # UI / Browse
     #######################################################################
-    permissions_form__access__ = 'is_authenticated'
+    permissions_form__access__ = 'is_admin'
     permissions_form__label__ = u"Members"
     permissions_form__sublabel__ = u"Browse Members"
     def permissions_form(self, context):
