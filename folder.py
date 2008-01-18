@@ -25,7 +25,7 @@ from urllib import quote, quote_plus, unquote
 from zlib import compress, decompress
 
 # Import from itools
-from itools.catalog import EqQuery, AndQuery, PhraseQuery
+from itools.catalog import EqQuery, AndQuery, OrQuery, PhraseQuery
 from itools.datatypes import Boolean, DataType, Unicode
 from itools.handlers import Folder as FolderHandler, checkid
 from itools.stl import stl
@@ -730,6 +730,53 @@ class Folder(DBObject):
         query = EqQuery('is_version_aware', '1')
         return self.browse_list(context, sortby, sortorder, batchsize, True,
                                 ';last_changes', query)
+
+
+    #######################################################################
+    # Orphans
+    #######################################################################
+    orphans__access__ = 'is_allowed_to_view'
+    orphans__label__ = u"Orphans"
+    def orphans(self, context, sortby=['title'], sortorder='up',
+                batchsize=20):
+        """Orphans are files not referenced in another object of the database.
+        It extends the concept of "orphans pages" from the wiki to all file-like
+        objects.
+        Orphans folders generally don't make sense because they serve as
+        containers. TODO or list empty folders?
+        """
+        root = context.root
+        get_form_value = context.get_form_value
+
+        parent_path = str(self.get_canonical_path())
+        search_subfolders = get_form_value('search_subfolders', type=Boolean,
+                                           default=False)
+        if search_subfolders is True:
+            base_query = EqQuery('paths', parent_path)
+            objects = self.traverse_objects()
+        else:
+            base_query = EqQuery('parent_path', parent_path)
+            objects = self.get_objects()
+
+        orphans = []
+        for object in objects:
+            if isinstance(object, Folder):
+                # TODO consider empty folders?
+                continue
+            abspath = str(object.get_abspath())
+            query = AndQuery(base_query, EqQuery('links', abspath))
+            results = root.search(query)
+            if not results.get_n_documents():
+                orphans.append(abspath)
+
+        if not orphans:
+            return self.gettext(u"There is no orphan.")
+
+        args = [EqQuery('abspath', abspath) for abspath in orphans]
+        query = OrQuery(*args)
+
+        return self.browse_list(context, sortby, sortorder, batchsize, False,
+                                ';orphans', query)
 
 
     #######################################################################

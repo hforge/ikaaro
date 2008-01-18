@@ -19,12 +19,11 @@
 
 # Import from the Standard Library
 from decimal import Decimal
-from operator import itemgetter
 
 # Import from itools
 import itools
 from itools import get_abspath
-from itools.catalog import EqQuery, OrQuery, AndQuery, TextField, KeywordField
+from itools.catalog import EqQuery, OrQuery, AndQuery, TextField
 from itools.datatypes import Boolean, Email, Integer, String, Tokens, Unicode
 from itools.handlers import checkid
 from itools.i18n import get_language_name, get_languages
@@ -61,6 +60,7 @@ class WebSite(RoleAware, Folder):
          'browse_content?mode=thumbnails',
          'browse_content?mode=image'],
         ['new_resource_form'],
+        ['orphans'],
         ['edit_metadata_form',
          'virtual_hosts_form',
          'anonymous_form',

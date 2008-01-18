@@ -2431,8 +2431,8 @@ msgid "Organize your files and documents with folders."
 msgstr "Organisez vos fichiers et documents dans des dossiers."
 
 #: wiki/folder.py:87
-msgid "Orphan Pages"
-msgstr "Pages orphelines"
+msgid "Orphans"
+msgstr "Orphelins"
 
 #: ui/epoz/rte.xml.en:0
 msgid "Outdent"
@@ -3041,8 +3041,8 @@ msgid "There are no ordered objects"
 msgstr "Aucun objet ordonné."
 
 #: wiki/folder.py:102
-msgid "There are no orphan pages."
-msgstr "Aucune page orpheline."
+msgid "There is no orphan object."
+msgstr "Aucun objet orphelin."
 
 #: future/ui/order_items.xml.en:0
 msgid "There are no unordered objects"

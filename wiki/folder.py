@@ -40,6 +40,7 @@ class WikiFolder(Folder):
                     'browse_content?mode=thumbnails',
                     'browse_content?mode=image'],
                    ['new_resource_form'],
+                   ['orphans'],
                    ['edit_metadata_form'],
                    ['last_changes']]
 
