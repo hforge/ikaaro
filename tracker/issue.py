@@ -585,7 +585,7 @@ class Issue(Folder):
             assigned_to = record.get_value('assigned_to')
             state = record.get_value('state')
             comment = record.get_value('comment')
-            cc_list = record.get_value('cc_list')
+            cc_list = record.get_value('cc_list') or ()
             file = record.get_value('file')
             # solid in case the user has been removed
             user_exist = users.has_object(username)

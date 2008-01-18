@@ -522,6 +522,8 @@ class Tracker(Folder):
                 if type == Unicode:
                     value = value.strip()
                 record[name] = value
+            # CC
+            record['cc_list'] = issue.get_value('cc_list')
             # Comment
             record['comment'] = comment
             # No attachment XXX
