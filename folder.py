@@ -662,6 +662,7 @@ class Folder(DBObject):
 
     browse_content__access__ = 'is_allowed_to_view'
     browse_content__label__ = u'Contents'
+    browse_content__title__ = u"Browse Content"
 
     def browse_content__sublabel__(self, **kw):
         mode = kw.get('mode', 'thumbnails')
@@ -725,6 +726,7 @@ class Folder(DBObject):
     # Last Changes
     last_changes__access__ = 'is_allowed_to_view'
     last_changes__label__ = u"Last Changes"
+    last_changes__title__ = u"Last Changes"
     def last_changes(self, context, sortby=['mtime'], sortorder='down',
                      batchsize=20):
         query = EqQuery('is_version_aware', '1')
@@ -737,6 +739,8 @@ class Folder(DBObject):
     #######################################################################
     orphans__access__ = 'is_allowed_to_view'
     orphans__label__ = u"Orphans"
+    orphans__sublabel__ = u"Orphans"
+    orphans__title__ = u"Orphans"
     def orphans(self, context, sortby=['title'], sortorder='up',
                 batchsize=20):
         """Orphans are files not referenced in another object of the database.

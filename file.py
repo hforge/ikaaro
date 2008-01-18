@@ -392,6 +392,7 @@ class File(WorkflowAware, VersioningAware):
     #######################################################################
     backlinks__access__ = 'is_allowed_to_view'
     backlinks__label__ = u"Backlinks"
+    backlinks__title__ = u"Backlinks"
     def backlinks(self, context, sortby=['title'], sortorder='up',
                   batchsize=20):
         """Backlinks are the list of objects pointing to this object.

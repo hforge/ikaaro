@@ -176,6 +176,7 @@ a img { border: 0; }
 #tabs a#tab_help span { background-image: url(../images/help16.png); }
 #tabs a#tab_search span { background-image: url(../images/button_search.png); }
 #tabs a#tab_backlinks span { background-image: url(../images/button_rename.png); }
+#tabs a#tab_orphans span { background-image: url(../images/orphans.png); }
 
 
 /**************************************************************************

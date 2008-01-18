@@ -60,7 +60,7 @@ class WebSite(RoleAware, Folder):
          'browse_content?mode=thumbnails',
          'browse_content?mode=image'],
         ['new_resource_form'],
-        ['orphans'],
+        ['broken_links', 'orphans'],
         ['edit_metadata_form',
          'virtual_hosts_form',
          'anonymous_form',
@@ -750,7 +750,7 @@ class WebSite(RoleAware, Folder):
     #######################################################################
     broken_links__access__ = 'is_admin'
     broken_links__label__ = u'Maintenance'
-    broken_links__sublabel__ = u'Check Groups'
+    broken_links__sublabel__ = u'Broken Links'
     def broken_links(self, context):
         root = context.root
 
