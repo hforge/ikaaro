@@ -172,7 +172,8 @@ class Table(File):
                         record[field] = record[field][0]
 
         namespace['table'] = widgets.table(fields, records, [sortby],
-                                           sortorder, actions)
+                                           sortorder, actions,
+                                           gettext=self.gettext)
 
         handler = self.get_object('/ui/table/view.xml')
         return stl(handler, namespace)
@@ -207,7 +208,8 @@ class Table(File):
             is_mandatory = getattr(datatype, 'mandatory', False)
             field = {}
             field['name'] = widget.name
-            field['title'] = getattr(widget, 'title', widget.name)
+            title = getattr(widget, 'title', widget.name)
+            field['title'] = self.gettext(title)
             field['mandatory'] = is_mandatory
             field['multiple'] = getattr(datatype, 'multiple', False)
             field['is_date'] = is_datatype(datatype, Date)
@@ -313,7 +315,8 @@ class Table(File):
 
             is_mandatory = getattr(datatype, 'mandatory', False)
             field = {}
-            field['title'] = getattr(widget, 'title', widget.name)
+            title = getattr(widget, 'title', widget.name)
+            field['title'] = self.gettext(title)
             field['mandatory'] = is_mandatory
             field['multiple'] = getattr(datatype, 'multiple', False)
             field['is_date'] = is_datatype(datatype, Date)
