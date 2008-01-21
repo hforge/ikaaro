@@ -449,11 +449,5 @@ class Dressable(Folder, EpozEditable):
         return self._get_object_label(name)
 
 
-    #######################################################################
-    # Update
-    #######################################################################
-    def update_20071215(self):
-        Folder.update_20071215(self)
-
 
 register_object_class(Dressable)

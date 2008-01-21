@@ -79,10 +79,6 @@ class Message(WebPage):
     #######################################################################
     # Update
     #######################################################################
-    def update_20071215(self):
-        WebPage.update_20071215(self)
-
-
     def update_20071216(self):
         """Transform the forum messages from XHTML fragments to complete XHTML
         documents:

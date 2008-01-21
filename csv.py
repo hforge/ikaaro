@@ -253,17 +253,6 @@ class CSV(Text):
         return context.come_back(MSG_CHANGES_SAVED)
 
 
-    #######################################################################
-    # Update
-    #######################################################################
-    def update_20071215(self):
-        Text.update_20071215(self)
-
-
-    def update_20071216(self):
-        Text.update_20071216(self)
-
-
 
 register_object_class(CSV)
 register_object_class(CSV, 'text/x-comma-separated-values')

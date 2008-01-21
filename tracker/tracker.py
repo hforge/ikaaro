@@ -764,13 +764,6 @@ class Tracker(Folder):
         return context.uri.resolve2('../%s/;edit_form' % issue_name)
 
 
-    #######################################################################
-    # Update
-    #######################################################################
-    def update_20071215(self):
-        Folder.update_20071215(self)
-
-
 
 ###########################################################################
 # Tables
@@ -940,10 +933,6 @@ class SelectTable(Table):
     #######################################################################
     # Update
     #######################################################################
-    def update_20071215(self):
-        Table.update_20071215(self)
-
-
     def update_20071216(self, columns=['id', 'title']):
         """Change from CSV to Table.
         """
@@ -981,10 +970,6 @@ class Versions(SelectTable):
     #######################################################################
     # Update
     #######################################################################
-    def update_20071215(self):
-        SelectTable.update_20071215(self)
-
-
     def update_20071216(self):
         SelectTable.update_20071216(self, ['id', 'title', 'released'])
 
@@ -1010,13 +995,6 @@ class StoredSearch(Text):
         value = [ type.encode(x) for x in value ]
         value = ' '.join(value)
         self.handler.set_value(name, value)
-
-
-    #######################################################################
-    # Update
-    #######################################################################
-    def update_20071215(self):
-        Text.update_20071215(self)
 
 
 

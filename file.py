@@ -441,10 +441,6 @@ class File(WorkflowAware, VersioningAware):
     #######################################################################
     # Update
     #######################################################################
-    def update_20071215(self, **kw):
-        VersioningAware.update_20071215(self, **kw)
-
-
     def update_20071216(self):
         folder = self.parent.handler
         # Add the "filename" field

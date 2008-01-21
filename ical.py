@@ -1335,17 +1335,6 @@ class Calendar(Text, CalendarView):
         return stl(handler, namespace)
 
 
-    #######################################################################
-    # Update
-    #######################################################################
-    def update_20071215(self):
-        Text.update_20071215(self)
-
-
-    def update_20071216(self):
-        Text.update_20071216(self)
-
-
 
 class CalendarTable(Table, CalendarView):
 
@@ -1510,16 +1499,6 @@ class CalendarTable(Table, CalendarView):
     def _remove_event(self, uid):
         self.handler.del_record(int(uid))
 
-
-    #######################################################################
-    # Update
-    #######################################################################
-    def update_20071215(self):
-        Table.update_20071215(self)
-
-
-    def update_20071216(self):
-        Table.update_20071216(self)
 
 
 ###########################################################################

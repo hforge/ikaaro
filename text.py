@@ -111,17 +111,6 @@ class Text(File):
         return stl(handler, namespace)
 
 
-    #######################################################################
-    # Update
-    #######################################################################
-    def update_20071215(self, **kw):
-        File.update_20071215(self, **kw)
-
-
-    def update_20071216(self):
-        File.update_20071216(self)
-
-
 
 class PO(Text):
 
@@ -199,17 +188,6 @@ class PO(Text):
         return context.come_back(MSG_CHANGES_SAVED)
 
 
-    #######################################################################
-    # Update
-    #######################################################################
-    def update_20071215(self):
-        Text.update_20071215(self)
-
-
-    def update_20071216(self):
-        Text.update_20071216(self)
-
-
 
 class CSS(Text):
 
@@ -218,17 +196,6 @@ class CSS(Text):
     class_title = u'CSS'
     class_icon16 = 'images/CSS16.png'
     class_icon48 = 'images/CSS48.png'
-
-
-    #######################################################################
-    # Update
-    #######################################################################
-    def update_20071215(self):
-        Text.update_20071215(self)
-
-
-    def update_20071216(self):
-        Text.update_20071216(self)
 
 
 
@@ -242,17 +209,6 @@ class Python(Text):
     class_handler = PythonFile
 
 
-    #######################################################################
-    # Update
-    #######################################################################
-    def update_20071215(self):
-        Text.update_20071215(self)
-
-
-    def update_20071216(self):
-        Text.update_20071216(self)
-
-
 
 class XML(Text):
 
@@ -262,17 +218,6 @@ class XML(Text):
     class_handler = XMLFile
 
 
-    #######################################################################
-    # Update
-    #######################################################################
-    def update_20071215(self):
-        Text.update_20071215(self)
-
-
-    def update_20071216(self):
-        Text.update_20071216(self)
-
-
 
 class HTML(Text):
 
@@ -280,17 +225,6 @@ class HTML(Text):
     class_version = '20071216'
     class_title = u'HTML File'
     class_handler = HTMLFile
-
-
-    #######################################################################
-    # Update
-    #######################################################################
-    def update_20071215(self):
-        Text.update_20071215(self)
-
-
-    def update_20071216(self):
-        Text.update_20071216(self)
 
 
 

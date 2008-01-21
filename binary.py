@@ -76,17 +76,6 @@ class Image(File):
         return handler.to_str()
 
 
-    #######################################################################
-    # Update
-    #######################################################################
-    def update_20071215(self):
-        File.update_20071215(self)
-
-
-    def update_20071216(self):
-        File.update_20071216(self)
-
-
 
 class Video(File):
 
@@ -109,17 +98,6 @@ class Video(File):
         return stl(handler, namespace)
 
 
-    #######################################################################
-    # Update
-    #######################################################################
-    def update_20071215(self):
-        File.update_20071215(self)
-
-
-    def update_20071216(self):
-        File.update_20071216(self)
-
-
 
 class Flash(File):
 
@@ -139,17 +117,6 @@ class Flash(File):
         return stl(handler)
 
 
-    #######################################################################
-    # Update
-    #######################################################################
-    def update_20071215(self):
-        File.update_20071215(self)
-
-
-    def update_20071216(self):
-        File.update_20071216(self)
-
-
 
 ###########################################################################
 # Office Documents
@@ -164,16 +131,6 @@ class MSWord(File):
     class_icon48 = 'images/Word48.png'
     class_handler = MSWordFile
 
-    #######################################################################
-    # Update
-    #######################################################################
-    def update_20071215(self):
-        File.update_20071215(self)
-
-
-    def update_20071216(self):
-        File.update_20071216(self)
-
 
 
 class MSExcel(File):
@@ -185,16 +142,6 @@ class MSExcel(File):
     class_icon16 = 'images/Excel16.png'
     class_icon48 = 'images/Excel48.png'
     class_handler = MSExcelFile
-
-    #######################################################################
-    # Update
-    #######################################################################
-    def update_20071215(self):
-        File.update_20071215(self)
-
-
-    def update_20071216(self):
-        File.update_20071216(self)
 
 
 
@@ -208,16 +155,6 @@ class MSPowerPoint(File):
     class_icon48 = 'images/PowerPoint48.png'
     class_handler = MSPowerPointFile
 
-    #######################################################################
-    # Update
-    #######################################################################
-    def update_20071215(self):
-        File.update_20071215(self)
-
-
-    def update_20071216(self):
-        File.update_20071216(self)
-
 
 
 class OOWriter(File):
@@ -229,16 +166,6 @@ class OOWriter(File):
     class_icon16 = 'images/OOWriter16.png'
     class_icon48 = 'images/OOWriter48.png'
     class_handler = SXWFile
-
-    #######################################################################
-    # Update
-    #######################################################################
-    def update_20071215(self):
-        File.update_20071215(self)
-
-
-    def update_20071216(self):
-        File.update_20071216(self)
 
 
 
@@ -252,16 +179,6 @@ class OOCalc(File):
     class_icon48 = 'images/OOCalc48.png'
     class_handler = SXCFile
 
-    #######################################################################
-    # Update
-    #######################################################################
-    def update_20071215(self):
-        File.update_20071215(self)
-
-
-    def update_20071216(self):
-        File.update_20071216(self)
-
 
 
 class OOImpress(File):
@@ -273,16 +190,6 @@ class OOImpress(File):
     class_icon16 = 'images/OOImpress16.png'
     class_icon48 = 'images/OOImpress48.png'
     class_handler = SXIFile
-
-    #######################################################################
-    # Update
-    #######################################################################
-    def update_20071215(self):
-        File.update_20071215(self)
-
-
-    def update_20071216(self):
-        File.update_20071216(self)
 
 
 
@@ -296,16 +203,6 @@ class PDF(File):
     class_icon48 = 'images/Pdf48.png'
     class_handler = PDFFile
 
-    #######################################################################
-    # Update
-    #######################################################################
-    def update_20071215(self):
-        File.update_20071215(self)
-
-
-    def update_20071216(self):
-        File.update_20071216(self)
-
 
 
 class RTF(File):
@@ -317,16 +214,6 @@ class RTF(File):
     class_icon16 = 'images/Text16.png'
     class_icon48 = 'images/Text48.png'
     class_handler = RTFFile
-
-    #######################################################################
-    # Update
-    #######################################################################
-    def update_20071215(self):
-        File.update_20071215(self)
-
-
-    def update_20071216(self):
-        File.update_20071216(self)
 
 
 
@@ -340,16 +227,6 @@ class ODT(File):
     class_icon48 = 'images/Odt48.png'
     class_handler = ODTFile
 
-    #######################################################################
-    # Update
-    #######################################################################
-    def update_20071215(self):
-        File.update_20071215(self)
-
-
-    def update_20071216(self):
-        File.update_20071216(self)
-
 
 
 class ODS(File):
@@ -362,16 +239,6 @@ class ODS(File):
     class_icon48 = 'images/Ods48.png'
     class_handler = ODSFile
 
-    #######################################################################
-    # Update
-    #######################################################################
-    def update_20071215(self):
-        File.update_20071215(self)
-
-
-    def update_20071216(self):
-        File.update_20071216(self)
-
 
 
 class ODP(File):
@@ -383,16 +250,6 @@ class ODP(File):
     class_icon16 = 'images/Odp16.png'
     class_icon48 = 'images/Odp48.png'
     class_handler = ODPFile
-
-    #######################################################################
-    # Update
-    #######################################################################
-    def update_20071215(self):
-        File.update_20071215(self)
-
-
-    def update_20071216(self):
-        File.update_20071216(self)
 
 
 
@@ -424,17 +281,6 @@ class ZipArchive(Archive):
     class_icon48 = 'images/Zip48.png'
     class_handler = ZIPFile
 
-    #######################################################################
-    # Update
-    #######################################################################
-    def update_20071215(self):
-        Archive.update_20071215(self)
-
-
-    def update_20071216(self):
-        Archive.update_20071216(self)
-
-
 
 
 class TarArchive(Archive):
@@ -447,15 +293,6 @@ class TarArchive(Archive):
     class_icon48 = 'images/Tar48.png'
     class_handler = TARFile
 
-    #######################################################################
-    # Update
-    #######################################################################
-    def update_20071215(self):
-        Archive.update_20071215(self)
-
-
-    def update_20071216(self):
-        Archive.update_20071216(self)
 
 
 ###########################################################################
@@ -471,16 +308,6 @@ class Gzip(File):
     class_icon48 = 'images/Gzip48.png'
     class_handler = GzipFile
 
-    #######################################################################
-    # Update
-    #######################################################################
-    def update_20071215(self):
-        File.update_20071215(self)
-
-
-    def update_20071216(self):
-        File.update_20071216(self)
-
 
 
 class Bzip2(File):
@@ -492,16 +319,6 @@ class Bzip2(File):
     class_icon16 = 'images/Bzip16.png'
     class_icon48 = 'images/Bzip48.png'
     class_handler = Bzip2File
-
-    #######################################################################
-    # Update
-    #######################################################################
-    def update_20071215(self):
-        File.update_20071215(self)
-
-
-    def update_20071216(self):
-        File.update_20071216(self)
 
 
 

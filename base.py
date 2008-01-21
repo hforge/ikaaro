@@ -412,18 +412,19 @@ class DBObject(CatalogAware, Node, DomainAware):
 
         # Get all the version numbers
         versions = []
-        for name in self.__class__.__dict__.keys():
-            if not name.startswith('update_'):
-                continue
-            kk, version = name.split('_', 1)
-            if len(version) != 8:
-                continue
-            try:
-                int(version)
-            except ValueError:
-                continue
-            if version > obj_version and version <= cls_version:
-                versions.append(version)
+        for cls in self.__class__.mro():
+            for name in cls.__dict__.keys():
+                if not name.startswith('update_'):
+                    continue
+                kk, version = name.split('_', 1)
+                if len(version) != 8:
+                    continue
+                try:
+                    int(version)
+                except ValueError:
+                    continue
+                if version > obj_version and version <= cls_version:
+                    versions.append(version)
 
         versions.sort()
         return versions

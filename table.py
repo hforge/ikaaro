@@ -386,15 +386,5 @@ class Table(File):
         return context.come_back(message, goto=goto, keep=['id'])
 
 
-    #######################################################################
-    # Update
-    #######################################################################
-    def update_20071215(self):
-        File.update_20071215(self)
-
-
-    def update_20071216(self):
-        File.update_20071216(self)
-
 
 register_object_class(Table)

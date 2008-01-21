@@ -485,10 +485,6 @@ class WikiPage(Text):
     #######################################################################
     # Update
     #######################################################################
-    def update_20071215(self):
-        Text.update_20071215(self)
-
-
     def update_20071216(self):
         # Names are lower-case now
         name = self.name
