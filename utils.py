@@ -27,7 +27,7 @@ from urllib import quote
 from itools.web import get_context
 
 if platform[:3] == 'win':
-    from utils_windows import is_pid_running, kill
+    from utils_win import is_pid_running, kill
 else:
     from utils_unix import is_pid_running, kill
 
