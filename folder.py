@@ -190,6 +190,8 @@ class Folder(DBObject):
         # Copy the content
         object = self.get_object(source)
         for old_name, new_name in object.rename_handlers(new_name):
+            if old_name is None:
+                continue
             src_uri = source_uri.resolve(old_name)
             dst_uri = target_uri.resolve(new_name)
             if folder.has_handler(src_uri):
@@ -224,6 +226,8 @@ class Folder(DBObject):
                             '%s.metadata' % target_uri)
         # Move the content
         for old_name, new_name in object.rename_handlers(new_name):
+            if old_name is None:
+                continue
             src_uri = source_uri.resolve(old_name)
             dst_uri = target_uri.resolve(new_name)
             if folder.has_handler(src_uri):
@@ -647,11 +651,10 @@ class Folder(DBObject):
             else:
                 # Copy&Paste
                 self.copy_object(path, name)
-                # Fix metadata properties
-                object = self.get_object(name)
-                metadata = object.metadata
                 # Fix state
+                object = self.get_object(name)
                 if isinstance(object, WorkflowAware):
+                    metadata = object.metadata
                     metadata.set_property('state', object.workflow.initstate)
         # Cut, clean cookie
         if cut is True:

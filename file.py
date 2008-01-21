@@ -70,6 +70,23 @@ class File(WorkflowAware, VersioningAware):
             folder.set_handler(name, handler)
 
 
+    def get_all_extensions(self):
+        format = self.metadata.format
+        # FIXME This is a hack, compression encodings are not yet properly
+        # supported (to do for the next major version).
+        if format == 'application/x-gzip':
+            extensions = ['gz', 'tgz']
+        elif format == 'application/x-bzip2':
+            extensions = ['bz2', 'tbz2']
+        else:
+            cls = self.class_handler
+            extensions = [ x[1:] for x in guess_all_extensions(format) ]
+            if cls.class_extension in extensions:
+                extensions.remove(cls.class_extension)
+            extensions.insert(0, cls.class_extension)
+        return extensions
+
+
     def get_handler(self):
         # Already loaded
         if self._handler is not None:
@@ -81,19 +98,7 @@ class File(WorkflowAware, VersioningAware):
         cls = self.class_handler
 
         # Check the handler exists
-        format = self.metadata.format
-        # FIXME This is a hack, compression encodings are not yet properly
-        # supported (to do for the next major version).
-        if format == 'application/x-gzip':
-            extensions = ['gz', 'tgz']
-        elif format == 'application/x-bzip2':
-            extensions = ['bz2', 'tbz2']
-        else:
-            extensions = [ x[1:] for x in guess_all_extensions(format) ]
-            if cls.class_extension in extensions:
-                extensions.remove(cls.class_extension)
-            extensions.insert(0, cls.class_extension)
-
+        extensions = self.get_all_extensions()
         for extension in extensions:
             name = FileName.encode((self.name, extension, None))
             uri = base.resolve(name)
@@ -118,10 +123,13 @@ class File(WorkflowAware, VersioningAware):
 
 
     def rename_handlers(self, new_name):
+        folder = self.parent.handler
         old_name = self.name
-        extension = self.class_handler.class_extension
-        return [(FileName.encode((old_name, extension, None)),
-                 FileName.encode((new_name, extension, None)))]
+        for extension in self.get_all_extensions():
+            old = FileName.encode((old_name, extension, None))
+            if folder.has_handler(old):
+                return [(old, FileName.encode((new_name, extension, None)))]
+        return None, None
 
 
     @staticmethod
