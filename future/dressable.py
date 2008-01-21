@@ -143,6 +143,7 @@ class Dressable(Folder, EpozEditable):
 
     view__access__ = 'is_allowed_to_view'
     view__label__ = u'View'
+    view__icon__ = '/ui/images/view16.png'
     def view(self, context):
         namespace = {}
 
@@ -188,6 +189,7 @@ class Dressable(Folder, EpozEditable):
     #######################################################################
     edit_document__access__ = 'is_allowed_to_edit'
     edit_document__label__ = 'edit'
+    edit_document__icon__ = '/ui/images/edit16.png'
     def edit_document(self, context):
         name = context.get_form_value('dress_name')
         if context.get_form_value('external'):
@@ -199,6 +201,7 @@ class Dressable(Folder, EpozEditable):
 
     edit_image__access__ = 'is_allowed_to_edit'
     edit_image__label__ = 'edit image'
+    edit_image__icon__ = '/ui/images/Image16.png'
     def edit_image(self, context):
         name = context.get_form_value('name')
         if self.has_object(name) is False:

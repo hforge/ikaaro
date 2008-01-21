@@ -194,6 +194,7 @@ class Tracker(Folder):
     # User Interface / View
     search_form__access__ = 'is_allowed_to_view'
     search_form__label__ = u'Search'
+    search_form__icon__ = '/ui/images/button_search.png'
     def search_form(self, context):
         # Set Style
         context.styles.append('/ui/tracker/tracker.css')
@@ -302,6 +303,7 @@ class Tracker(Folder):
 
     view__access__ = 'is_allowed_to_view'
     view__label__ = u'View'
+    view__icon__ = '/ui/images/view16.png'
     def view(self, context):
         # Set Style
         context.styles.append('/ui/tracker/tracker.css')
@@ -694,6 +696,7 @@ class Tracker(Folder):
     # User Interface / Add Issue
     add_form__access__ = 'is_allowed_to_edit'
     add_form__label__ = u'Add'
+    add_form__icon__ = '/ui/images/new16.png'
     def add_form(self, context):
         # Set Style
         context.styles.append('/ui/tracker/tracker.css')

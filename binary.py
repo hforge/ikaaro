@@ -70,6 +70,7 @@ class Image(File):
     view__access__ = 'is_allowed_to_view'
     view__label__ = u'View'
     view__sublabel__ = u'View'
+    view__icon__ = '/ui/images/view16.png'
     def view(self, context):
         handler = self.get_object('/ui/binary/Image_view.xml')
         return handler.to_str()

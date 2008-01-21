@@ -42,6 +42,7 @@ class Thread(Folder):
     addimage_form__access__ = False
     epoz_table_form__access__ = False
 
+
     @staticmethod
     def _make_object(cls, folder, name, data=u'', language='en'):
         Folder._make_object(cls, folder, name)
@@ -84,6 +85,7 @@ class Thread(Folder):
 
     view__access__ = 'is_allowed_to_view'
     view__label__ = u"View"
+    view__icon__ = '/ui/images/view16.png'
     def view(self, context):
         context.styles.append('/ui/forum/forum.css')
 

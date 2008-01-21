@@ -119,10 +119,11 @@ class Node(BaseNode):
         return self.name
 
 
-    def get_path_to_icon(self, size=16):
-        if getattr(self, 'icon%s' % size, None):
+    @classmethod
+    def get_path_to_icon(cls, size=16):
+        if getattr(cls, 'icon%s' % size, None):
             return ';icon%s' % size
-        path_to_icon = getattr(self.__class__, 'class_icon%s' % size, None)
+        path_to_icon = getattr(cls, 'class_icon%s' % size, None)
         if path_to_icon is None:
             return None
         return '/ui/' + path_to_icon
@@ -713,6 +714,7 @@ class DBObject(CatalogAware, Node, DomainAware):
     edit_metadata_form__access__ = 'is_allowed_to_edit'
     edit_metadata_form__label__ = u'Metadata'
     edit_metadata_form__sublabel__ = u'Metadata'
+    edit_metadata_form__icon__ = '/ui/images/metadata16.png'
     def edit_metadata_form(self, context):
         # Build the namespace
         namespace = {}

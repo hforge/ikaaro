@@ -449,6 +449,7 @@ class Issue(Folder):
     #######################################################################
     edit_form__access__ = 'is_allowed_to_edit'
     edit_form__label__ = u'Edit'
+    edit_form__icon__ = '/ui/images/edit16.png'
     def edit_form(self, context):
         # Set Style & JS
         context.styles.append('/ui/tracker/tracker.css')
@@ -548,6 +549,7 @@ class Issue(Folder):
     # User Interface / History
     history__access__ = 'is_allowed_to_view'
     history__label__ = u'History'
+    history__icon__ = '/ui/images/history16.png'
     def history(self, context):
         # Set Style
         context.styles.append('/ui/tracker/tracker.css')

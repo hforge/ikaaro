@@ -120,11 +120,13 @@ a img { border: 0; }
   padding: 4px 0px 4px 0px;
 }
 
-#tabs .menu a {
+#tabs .menu a,
+#tabs .submenu a {
   padding: 4px 1em 4px 1em;
 }
 
-#tabs .menu a span {
+#tabs .menu a span,
+#tabs .submenu a span {
   background-position: left center;
   background-repeat: no-repeat;
   padding: 4px 0em 4px 19px;
@@ -147,7 +149,6 @@ a img { border: 0; }
 #tabs .submenu a {
   background-color: #ffffff;
   display: block;
-  padding: 2px 6px 2px 28px;
   width: 130px;
   white-space: normal;
 }
@@ -156,28 +157,6 @@ a img { border: 0; }
   background-color: #3465a4;
   color: #ffffff;
 }
-
-#tabs a#tab_contents span { background-image: url(../images/Folder16.png); }
-#tabs a#tab_add span { background-image: url(../images/new16.png); }
-#tabs a#tab_metadata span { background-image: url(../images/metadata16.png); }
-#tabs a#tab_members span { background-image: url(../images/UserFolder16.png); }
-#tabs a#tab_about span { background-image: url(../images/about16.png); }
-#tabs a#tab_profile span { background-image: url(images/action_home.png); }
-#tabs a#tab_preferences span { background-image: url(../images/Settings16.png); }
-#tabs a#tab_settings span { background-image: url(../images/Settings16.png); }
-#tabs a#tab_tasks span { background-image: url(../images/tasks16.png); }
-#tabs a#tab_maintenance span { background-image: url(../images/clear16.png); }
-#tabs a#tab_view span { background-image: url(../images/view16.png); }
-#tabs a#tab_edit span { background-image: url(../images/edit16.png); }
-#tabs a#tab_state span { background-image: url(../images/state16.png); }
-#tabs a#tab_history span { background-image: url(../images/history16.png); }
-#tabs a#tab_last_changes span { background-image: url(../images/icalendar16.png); }
-#tabs a#tab_to_pdf span { background-image: url(../images/Pdf16.png); }
-#tabs a#tab_help span { background-image: url(../images/help16.png); }
-#tabs a#tab_search span { background-image: url(../images/button_search.png); }
-#tabs a#tab_backlinks span { background-image: url(../images/button_rename.png); }
-#tabs a#tab_orphans span { background-image: url(../images/orphans.png); }
-
 
 /**************************************************************************
  * 

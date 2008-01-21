@@ -55,6 +55,7 @@ class Forum(Folder):
 
     view__access__ = 'is_allowed_to_view'
     view__label__ = u"View"
+    view__icon__ = '/ui/images/view16.png'
     def view(self, context):
         context.styles.append('/ui/forum/forum.css')
         # Namespace
@@ -86,6 +87,7 @@ class Forum(Folder):
 
     new_thread_form__access__ = 'is_allowed_to_add'
     new_thread_form__label__ = u"New Thread"
+    new_thread_form__icon__ = '/ui/images/new16.png'
     def new_thread_form(self, context):
         context.styles.append('/ui/forum/forum.css')
 

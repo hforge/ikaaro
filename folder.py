@@ -288,6 +288,14 @@ class Folder(DBObject):
         return u'New Resource'
 
 
+    def new_resource_form__icon__(self, **kw):
+        type = kw.get('type')
+        for cls in self.get_document_types():
+            if cls.class_id == type:
+                return cls.get_path_to_icon()
+        return '/ui/images/new16.png'
+
+
     def get_context_menu_base(self):
         return self
 
@@ -673,6 +681,12 @@ class Folder(DBObject):
                 'list': u'As List',
                 'image': u'As Image Gallery'}[mode]
 
+    def browse_content__icon__(self, **kw):
+        mode = kw.get('mode', 'thumbnails')
+        return {'thumbnails': '/ui/images/Folder16.png',
+                'list': '/ui/images/Folder16.png',
+                'image': '/ui/images/Image16.png'}[mode]
+
     def browse_content(self, context):
         mode = context.get_form_value('mode', default='list')
         try:
@@ -730,6 +744,7 @@ class Folder(DBObject):
     last_changes__access__ = 'is_allowed_to_view'
     last_changes__label__ = u"Last Changes"
     last_changes__title__ = u"Last Changes"
+    last_changes__icon__ = '/ui/images/icalendar16.png'
     def last_changes(self, context, sortby=['mtime'], sortorder='down',
                      batchsize=20):
         query = EqQuery('is_version_aware', '1')
@@ -744,6 +759,7 @@ class Folder(DBObject):
     orphans__label__ = u"Orphans"
     orphans__sublabel__ = u"Orphans"
     orphans__title__ = u"Orphans"
+    orphans__icon__ = '/ui/images/orphans.png'
     def orphans(self, context, sortby=['title'], sortorder='up',
                 batchsize=20):
         """Orphans are files not referenced in another object of the database.

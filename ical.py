@@ -436,6 +436,7 @@ class CalendarView(object):
     monthly_view__access__ = 'is_allowed_to_view'
     monthly_view__label__ = u'View'
     monthly_view__sublabel__ = u'Monthly'
+    monthly_view__icon__ = '/ui/images/icalendar16.png'
     def monthly_view(self, context):
         ndays = 7
         today_date = date.today()
@@ -507,6 +508,7 @@ class CalendarView(object):
     weekly_view__access__ = 'is_allowed_to_view'
     weekly_view__label__ = u'View'
     weekly_view__sublabel__ = u'Weekly'
+    weekly_view__icon__ = '/ui/images/icalendar16.png'
     def weekly_view(self, context):
         ndays = 7
 
@@ -650,6 +652,7 @@ class CalendarView(object):
     edit_event_form__access__ = 'is_allowed_to_edit'
     edit_event_form__label__ = u'Edit'
     edit_event_form__sublabel__ = u'Event'
+    edit_event_form__icon__ = '/ui/images/button_calendar.png'
     def edit_event_form(self, context):
         keys = context.get_form_keys()
 
@@ -932,6 +935,7 @@ class CalendarView(object):
     edit_timetables_form__access__ = 'is_allowed_to_edit'
     edit_timetables_form__label__ = u'Edit'
     edit_timetables_form__sublabel__ = u'Timetables'
+    edit_timetables_form__icon__ = '/ui/images/Settings16.png'
     def edit_timetables_form(self, context):
         # Add ical css
         context.styles.append('/ui/ical/calendar.css')
@@ -1304,10 +1308,6 @@ class Calendar(Text, CalendarView):
 
     edit_metadata_form__sublabel__ = u'Metadata'
 
-    download_form__access__ = 'is_allowed_to_view'
-    download_form__sublabel__ = u'Export in ical format'
-
-
     GET__mtime__ = None
     def GET(self, context):
         return DBObject.GET(self, context)
@@ -1325,6 +1325,8 @@ class Calendar(Text, CalendarView):
         self.handler.remove(uid)
 
 
+    download_form__access__ = 'is_allowed_to_view'
+    download_form__sublabel__ = u'Export in ical format'
     def download_form(self, context):
         namespace = {}
         namespace['url'] = '../%s/;download' % self.name

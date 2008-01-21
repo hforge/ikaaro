@@ -68,6 +68,7 @@ class WikiFolder(Folder):
 
     view__access__ = 'is_allowed_to_view'
     view__label__ = u'View'
+    view__icon__ = '/ui/images/view16.png'
     def view(self, context):
         if context.has_form_value('message'):
             message = context.get_form_value('message', type=Unicode)

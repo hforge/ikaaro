@@ -48,7 +48,7 @@ class File(WorkflowAware, VersioningAware):
     class_description = u'Upload office documents, images, media files, etc.'
     class_icon16 = 'images/File16.png'
     class_icon48 = 'images/File48.png'
-    class_views = [['download_form', 'view'],
+    class_views = [['download_form'],
                    ['externaledit', 'upload_form'],
                    ['backlinks'],
                    ['edit_metadata_form'],
@@ -262,6 +262,7 @@ class File(WorkflowAware, VersioningAware):
     download_form__access__ = 'is_allowed_to_view'
     download_form__label__ = u'View'
     download_form__sublabel__ = u'Download'
+    download_form__icon__ = '/ui/images/view16.png'
     def download_form(self, context):
         namespace = {}
         namespace['url'] = '../' + self.name
@@ -293,6 +294,7 @@ class File(WorkflowAware, VersioningAware):
     externaledit__access__ = 'is_allowed_to_edit'
     externaledit__label__ = u'Edit'
     externaledit__sublabel__ = u'External'
+    externaledit__icon__ = '/ui/images/button_external.png'
     def externaledit(self, context):
         handler = self.get_object('/ui/file/externaledit.xml')
         return stl(handler)
@@ -366,6 +368,7 @@ class File(WorkflowAware, VersioningAware):
     upload_form__access__ = 'is_allowed_to_edit'
     upload_form__label__ = u'Edit'
     upload_form__sublabel__ = u'Replace'
+    upload_form__icon__ = '/ui/images/button_upload.png'
     def upload_form(self, context):
         handler = self.get_object('/ui/file/upload.xml')
         return stl(handler)
@@ -401,6 +404,7 @@ class File(WorkflowAware, VersioningAware):
     backlinks__access__ = 'is_allowed_to_view'
     backlinks__label__ = u"Backlinks"
     backlinks__title__ = u"Backlinks"
+    backlinks__icon__ = '/ui/images/button_rename.png'
     def backlinks(self, context, sortby=['title'], sortorder='up',
                   batchsize=20):
         """Backlinks are the list of objects pointing to this object.

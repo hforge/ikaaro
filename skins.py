@@ -190,10 +190,13 @@ class Skin(UIFolder):
             title = getattr(base, '%s__label__' % name)
             if callable(title):
                 title = title(**args)
+            icon = getattr(base, '%s__icon__' % name, None)
+            if callable(icon):
+                icon = icon(**args)
             # Append to the menu
             menu.append({'href': '%s/;%s' % (prefix, view),
                          'title': base.gettext(title),
-                         'class': '', 'src': None, 'items': []})
+                         'class': '', 'src': icon, 'items': []})
 
         return {'title': base.gettext(base.class_title),
                 'content': build_menu(menu)}
@@ -373,9 +376,13 @@ class Skin(UIFolder):
             label = getattr(here, '%s__label__' % name)
             if callable(label):
                 label = label(**args)
-            tabs.append({'id': 'tab_%s' % label.lower().replace(' ', '_'),
+            icon = getattr(here, '%s__icon__' % name, None)
+            if callable(icon):
+                icon = icon(**args)
+            tabs.append({'id': 'tab_%s' % name,
                          'name': ';%s' % view,
                          'label': here.gettext(label),
+                         'icon': icon,
                          'active': active,
                          'class': active and 'active' or None})
 
@@ -395,7 +402,11 @@ class Skin(UIFolder):
                     label = getattr(here, '%s__sublabel__' % name)
                     if callable(label):
                         label = label(**args)
+                    icon = getattr(here, '%s__icon__' % name, None)
+                    if callable(icon):
+                        icon = icon(**args)
                     subtabs.append({'name': ';%s' % subview,
+                                    'icon': icon,
                                     'label': here.gettext(label)})
             tabs[-1]['options'] = subtabs
 

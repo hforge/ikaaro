@@ -199,6 +199,7 @@ class WebSite(RoleAware, Folder):
     virtual_hosts_form__access__ = 'is_admin'
     virtual_hosts_form__label__ = u'Edit'
     virtual_hosts_form__sublabel__ = u'Virtual Hosts'
+    virtual_hosts_form__icon__ = '/ui/images/WebSite16.png'
     def virtual_hosts_form(self, context):
         namespace = {}
         vhosts = self.get_property('vhosts')
@@ -225,6 +226,7 @@ class WebSite(RoleAware, Folder):
     languages_form__access__ = 'is_admin'
     languages_form__label__ = u'Edit'
     languages_form__sublabel__ = u'Languages'
+    languages_form__icon__ = '/ui/images/button_translate.png'
     def languages_form(self, context):
         namespace = {}
 
@@ -302,6 +304,7 @@ class WebSite(RoleAware, Folder):
     anonymous_form__access__ = 'is_allowed_to_edit'
     anonymous_form__label__ = u'Edit'
     anonymous_form__sublabel__ = u'Security Policy'
+    anonymous_form__icon__ = '/ui/aruni/images/action_login.png'
     def anonymous_form(self, context):
         # Build the namespace
         namespace = {}
@@ -329,6 +332,7 @@ class WebSite(RoleAware, Folder):
     contact_options_form__access__ = 'is_allowed_to_edit'
     contact_options_form__label__ = u'Edit'
     contact_options_form__sublabel__ = u'Contact'
+    contact_options_form__icon__ = '/ui/aruni/images/action_contact.png'
     def contact_options_form(self, context):
         # Find out the contacts
         contacts = self.get_property('contacts')
@@ -751,6 +755,7 @@ class WebSite(RoleAware, Folder):
     broken_links__access__ = 'is_admin'
     broken_links__label__ = u'Maintenance'
     broken_links__sublabel__ = u'Broken Links'
+    broken_links__icon__ = '/ui/images/clear16.png'
     def broken_links(self, context):
         root = context.root
 
