@@ -85,8 +85,6 @@ class User(AccessControl, Folder):
             'user_must_confirm': String,
             # Backwards compatibility
             'username': String,
-            # Unused (FIXME)
-            'user_theme': String(default='aruni'),
         }
 
 

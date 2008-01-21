@@ -34,9 +34,9 @@ from itools.catalog import EqQuery
 from messages import *
 from multilingual import Multilingual
 from registry import register_object_class, get_object_class
-from versioning import VersioningAware, History
+from versioning import VersioningAware
 from utils import get_file_parts
-from workflow import WorkflowAware, WFTransition
+from workflow import WorkflowAware
 
 
 
@@ -209,19 +209,10 @@ class File(WorkflowAware, VersioningAware):
     #######################################################################
     @classmethod
     def get_metadata_schema(cls):
-        return {
-            # Base
-            'title': Unicode,
-            'description': Unicode,
-            'subject': Unicode,
-            # Versioning
-            'history': History,
-            # Workflow
-            'state': String,
-            'wf_transition': WFTransition,
-            # Specific
-            'filename': String,
-        }
+        schema = VersioningAware.get_metadata_schema()
+        schema.update(WorkflowAware.get_metadata_schema())
+        schema['filename'] = String
+        return schema
 
 
     #######################################################################

@@ -29,7 +29,6 @@ from types import GeneratorType
 
 # Import from itools
 from itools import get_abspath
-from itools.datatypes import Boolean, Tokens, Unicode
 from itools.handlers import File, ConfigFile, Folder as FolderHandler
 from itools.html import stream_to_str_as_html
 from itools.stl import stl
@@ -104,18 +103,11 @@ class Root(WebSite):
 
     @classmethod
     def get_metadata_schema(cls):
-        return {
-            'vhosts': Tokens(default=()),
-            'contacts': Tokens(default=()),
-            'website_languages': Tokens(default=('en',)),
-            # Base
-            'title': Unicode,
-            'description': Unicode,
-            'subject': Unicode,
-            # RoleAware
-            'admins': Tokens(default=()),
-            'website_is_open': Boolean(default=False),
-        }
+        schema = WebSite.get_metadata_schema()
+        del schema['guests']
+        del schema['members']
+        del schema['reviewers']
+        return schema
 
 
     ########################################################################

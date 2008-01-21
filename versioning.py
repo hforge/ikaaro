@@ -43,9 +43,9 @@ class VersioningAware(DBObject):
 
     @classmethod
     def get_metadata_schema(cls):
-        return {
-            'history': History,
-        }
+        schema = DBObject.get_metadata_schema()
+        schema['history'] = History
+        return schema
 
 
     ########################################################################
