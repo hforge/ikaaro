@@ -482,6 +482,7 @@ class DBObject(CatalogAware, Node, DomainAware):
         # Save the data
         body = context.get_form_value('body')
         self.handler.load_state_from_string(body)
+        context.server.change_object(self)
 
 
     LOCK__access__ = 'is_authenticated'
