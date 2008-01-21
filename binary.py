@@ -40,7 +40,7 @@ class Image(File):
     class_title = u'Image'
     class_icon16 = 'images/Image16.png'
     class_icon48 = 'images/Image48.png'
-    class_views = [['view'],
+    class_views = [['view', 'download_form'],
                    ['externaledit', 'upload_form'],
                    ['backlinks'],
                    ['edit_metadata_form'],
