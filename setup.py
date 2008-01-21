@@ -18,6 +18,6 @@
 from itools.utils import setup
 
 
-if __name__ == '__main__': 
-    setup(globals()) 
+if __name__ == '__main__':
+    setup(globals())
 

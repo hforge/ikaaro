@@ -37,13 +37,13 @@ from ikaaro.utils import generate_password
 template = Template(
 """# The "modules" variable lists the Python modules or packages that will be
 # loaded when the applications starts.
-# 
+#
 modules = ${modules}
 
 # The "address" and "port" variables define, respectively, the internet
 # address and the port number the web server listens to for HTTP
 # connections.
-# 
+#
 # By default connections are accepted from any internet address.  And the
 # server listens the 8080 port number.
 #
@@ -55,7 +55,7 @@ port = ${port}
 #
 # The "smtp-login" and "smtp-password" variables define the credentials
 # required to access a secured SMTP server.
-# 
+#
 smtp-host = ${smtp_host}
 smtp-login =
 smtp-password =
@@ -69,7 +69,7 @@ contact-email = ${contact_email}
 # mode or not.  When run in debug mode (debug = 1), debugging information
 # will be written to the "log/events" file.  By default debug mode is not
 # active (debug = 0).
-# 
+#
 debug = 0
 """)
 

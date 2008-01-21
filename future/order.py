@@ -30,7 +30,7 @@ from ikaaro.workflow import WorkflowAware
 class OrderAware(object):
     orderable_classes = None
 
-    
+
     @classmethod
     def get_metadata_schema(cls):
         return {
