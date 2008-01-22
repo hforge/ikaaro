@@ -580,8 +580,13 @@ class Tracker(Folder):
         query = encode_query(context.uri.query)
         reference = ';view?%s&change_several_bugs=1#link' % query
         goto = context.uri.resolve(reference)
+
+        keys = context.get_form_keys()
+        keep = [key for key in ['search_name', 'mtime', 'module', 'version',
+                                'type', 'priority', 'assigned_to', 'state']
+                 if key in keys]
         return context.come_back(message=MSG_CHANGES_SAVED, goto=goto,
-                                    keep=['ids'])
+                                    keep=keep)
 
 
     def get_export_to_text(self, context):

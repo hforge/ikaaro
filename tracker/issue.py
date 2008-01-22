@@ -55,6 +55,9 @@ def indent(text):
     for line in text.splitlines():
         for line in wrap(line, 150):
             lines.append(line)
+        else:
+            if line is '':
+                lines.append(line)
     text = '\n'.join(lines)
     # Links
     for segment in split('(http://[\w./;#]*)', text):
