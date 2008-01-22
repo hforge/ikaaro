@@ -643,8 +643,8 @@ class WebSite(RoleAware, Folder):
     #######################################################################
     contact_fields = {'to': String(mandatory=True),
                       'from': Email(mandatory=True),
-                      'subject': String(mandatory=True),
-                      'body': String(mandatory=True)}
+                      'subject': Unicode(mandatory=True),
+                      'body': Unicode(mandatory=True)}
 
 
     contact_form__access__ = True
