@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
+from itools.datatypes import Integer
 from itools.handlers import (Image as ImageFile, TARFile, ZIPFile, GzipFile,
         Bzip2File)
 from itools.pdf import PDFFile
@@ -52,9 +53,8 @@ class Image(File):
     icon48__access__ = True
     icon48__mtime__ = File.get_mtime
     def icon48(self, context):
-        width = context.get_form_value('width', 48)
-        height = context.get_form_value('height', 48)
-        width, height = int(width), int(height)
+        width = context.get_form_value('width', type=Integer, default=48)
+        height = context.get_form_value('height', type=Integer, default=48)
 
         data, format = self.handler.get_thumbnail(width, height)
         if data is None:

@@ -409,7 +409,7 @@ class File(WorkflowAware, VersioningAware):
 
         # Get the form values
         sortby = context.get_form_values('sortby', sortby)
-        sortorder = context.get_form_value('sortorder', sortorder)
+        sortorder = context.get_form_value('sortorder', default=sortorder)
 
         # Build the query
         query = EqQuery('links', str(self.get_abspath()))

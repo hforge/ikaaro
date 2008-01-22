@@ -128,7 +128,7 @@ class CSV(Text):
 
         # Sorting
         sortby = context.get_form_value('sortby')
-        sortorder = context.get_form_value('sortorder', 'up')
+        sortorder = context.get_form_value('sortorder', default='up')
         if sortby:
             rows.sort(key=itemgetter(sortby), reverse=(sortorder=='down'))
 

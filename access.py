@@ -329,8 +329,8 @@ class RoleAware(AccessControl):
 
         # Get values from the request
         sortby = context.get_form_values('sortby', default=['login_name'])
-        sortorder = context.get_form_value('sortorder', 'up')
-        start = context.get_form_value('batchstart', default=0, type=Integer)
+        sortorder = context.get_form_value('sortorder', default='up')
+        start = context.get_form_value('batchstart', type=Integer, default=0)
         size = 20
 
         # The search form

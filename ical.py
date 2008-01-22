@@ -86,8 +86,7 @@ def check_timetable_entry(context, key_start, key_end):
     """
     start = context.get_form_value(key_start)
     end = context.get_form_value(key_end)
-    if not start or start == '__:__' or \
-       not end or end == '__:__':
+    if not start or start == '__:__' or not end or end == '__:__':
         return u'Wrong time selection.'
     try:
         start = Time.decode(start)
@@ -445,7 +444,8 @@ class CalendarView(object):
         context.styles.append('/ui/ical/calendar.css')
 
         # Current date
-        c_date = get_current_date(context.get_form_value('date', None))
+        c_date = context.get_form_value('date')
+        c_date = get_current_date(c_date)
         # Save selected date
         context.set_cookie('selected_date', c_date)
 
@@ -516,7 +516,7 @@ class CalendarView(object):
         context.styles.append('/ui/ical/calendar.css')
 
         # Current date
-        c_date = context.get_form_value('date', None)
+        c_date = context.get_form_value('date')
         if not c_date:
             c_date = context.get_cookie('selected_date')
         c_date = get_current_date(c_date)
@@ -666,7 +666,7 @@ class CalendarView(object):
         goto = ';%s' % method
 
         # Get date to add event
-        selected_date = context.get_form_value('date', None)
+        selected_date = context.get_form_value('date')
         if uid is None:
             if not selected_date:
                 message = u'To add an event, click on + symbol from the views.'
@@ -678,12 +678,8 @@ class CalendarView(object):
                 selected_date = Date.encode(c_date)
 
         # Timetables
-        tt_start = context.get_form_value('start_time', None)
-        tt_end = context.get_form_value('end_time', None)
-        if tt_start:
-            tt_start = Time.decode(tt_start)
-        if tt_end:
-            tt_end = Time.decode(tt_end)
+        tt_start = context.get_form_value('start_time', type=Time)
+        tt_end = context.get_form_value('end_time', type=Time)
 
         # Initialization
         namespace = {}
@@ -766,7 +762,8 @@ class CalendarView(object):
                         key = 'DTSTART_%s' % attr
                         if field.startswith('DTEND_'):
                             key = 'DTEND_%s' % attr
-                        value = context.get_form_value(key, defaults[key])
+                        default = defaults[key]
+                        value = context.get_form_value(key, default=default)
                         namespace[key] = value
                 # Get value from context, used when invalid input given
                 elif context.has_form_value(field):
@@ -807,7 +804,7 @@ class CalendarView(object):
         selected_date = '-'.join(selected_date)
 
         # Get event id
-        uid = context.get_form_value('id', default=None)
+        uid = context.get_form_value('id')
         if uid is not None and '/' in uid:
             name, uid = uid.split('/', 1)
 
@@ -866,7 +863,8 @@ class CalendarView(object):
                     if uid is not None:
                         goto = goto + '&uid=%s' % uid
                     elif context.has_form_value('timetable'):
-                        timetable = context.get_form_value('timetable', 0)
+                        timetable = context.get_form_value('timetable',
+                                                           default='0')
                         goto = goto + '&timetable=%s' % timetable
                     return context.come_back(goto=goto, message=message)
                 # Save values
@@ -913,7 +911,7 @@ class CalendarView(object):
         if method not in dir(self):
             goto = '../;%s?%s' % (method, get_current_date())
         # uid
-        uid = context.get_form_value('id', '')
+        uid = context.get_form_value('id', default='')
         if '/' in uid:
             kk, uid = uid.split('/', 1)
         if uid =='':
@@ -1199,7 +1197,7 @@ class CalendarAware(CalendarView):
             context.set_cookie('method', 'daily_view')
 
         # Current date
-        selected_date = context.get_form_value('date', None)
+        selected_date = context.get_form_value('date')
         c_date = get_current_date(selected_date)
         selected_date = Date.encode(c_date)
 

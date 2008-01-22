@@ -332,7 +332,7 @@ class Folder(DBObject):
                                                type=Boolean, default=False)
 
         sortby = context.get_form_values('sortby', default=sortby)
-        sortorder = get_form_value('sortorder', sortorder)
+        sortorder = get_form_value('sortorder', default=sortorder)
 
         # Build the query
         args = list(args)

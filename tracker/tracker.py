@@ -288,7 +288,7 @@ class Tracker(Folder):
         text = context.get_form_value('text').strip().lower()
         stored_search.handler.set_value('text', text)
 
-        mtime = context.get_form_value('mtime', type=Integer) or 0
+        mtime = context.get_form_value('mtime', type=Integer, default=0)
         stored_search.handler.set_value('mtime', str(mtime))
 
         criterias = [('module', Integer), ('version', Integer),
@@ -514,7 +514,7 @@ class Tracker(Folder):
                          'assigned_to', 'state']:
                 type = History.schema[name]
                 last_value = issue.get_value(name)
-                new_value = context.get_form_value('change_%s' % name,type=type)
+                new_value = context.get_form_value('change_%s' % name, type=type)
                 if ((last_value==new_value) or (new_value is None) or
                     (new_value=='do_not_change')):
                     # If no modification set the last value
@@ -882,7 +882,7 @@ class SelectTable(Table):
 
         # Sorting
         sortby = context.get_form_value('sortby')
-        sortorder = context.get_form_value('sortorder', 'up')
+        sortorder = context.get_form_value('sortorder', default='up')
         if sortby:
             records.sort(key=itemgetter(sortby), reverse=(sortorder=='down'))
 

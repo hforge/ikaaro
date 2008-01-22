@@ -158,7 +158,7 @@ class Table(File):
                     records[-1][field] = (records[-1][field], rmultiple)
         # Sorting
         sortby = context.get_form_value('sortby')
-        sortorder = context.get_form_value('sortorder', 'up')
+        sortorder = context.get_form_value('sortorder', default='up')
         if sortby:
             records.sort(key=itemgetter(sortby), reverse=(sortorder=='down'))
 
