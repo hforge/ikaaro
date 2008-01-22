@@ -408,7 +408,7 @@ class File(WorkflowAware, VersioningAware):
         root = context.root
 
         # Get the form values
-        sortby = context.get_form_values('sortby', sortby)
+        sortby = context.get_form_values('sortby', default=sortby)
         sortorder = context.get_form_value('sortorder', default=sortorder)
 
         # Build the query
