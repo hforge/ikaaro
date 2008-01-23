@@ -391,34 +391,42 @@ class Issue(Folder):
         """Construct a dict with issue informations.  This dict is used to
         construct a line for a table.
         """
-        parent = self.parent
-        tables = {'module': parent.get_object('modules'),
-                  'version': parent.get_object('versions'),
-                  'type': parent.get_object('types'),
-                  'priority': parent.get_object('priorities'),
-                  'state': parent.get_object('states')}
-        infos = {'name': self.name,
-                 'id': int(self.name),
-                 'title': self.get_value('title')}
-        for name in 'module', 'version', 'type', 'priority', 'state':
-            value = self.get_value(name)
-            if value is not None:
-                record = tables[name].handler.get_record(int(value))
-                infos[name] = record and record.title or None
-            else:
-                infos[name] = None
+        # Build the namespace
+        get_value = self.get_last_history_record().get_value
+        infos = {
+            'name': self.name,
+            'id': int(self.name),
+            'title': get_value('title'),
+            'comment': get_value('comment'),
+            }
 
-        assigned_to = self.get_value('assigned_to')
-        # solid in case the user has been removed
-        users = self.get_object('/users')
-        if assigned_to and users.has_object(assigned_to):
+        # Select Tables
+        get_object = self.parent.get_object
+        tables = {'module': 'modules', 'version': 'versions', 'type': 'types',
+                  'priority': 'priorities', 'state': 'states'}
+
+        for name in ('module', 'version', 'type', 'priority', 'state'):
+            value = get_value(name)
+            if value is None:
+                infos[name] = None
+            else:
+                record = get_object(tables[name]).handler.get_record(value)
+                infos[name] = record and record.title or None
+
+        # Assigned-To
+        assigned_to = get_value('assigned_to')
+        infos['assigned_to'] = ''
+        if assigned_to:
+            users = self.get_object('/users')
+            if users.has_object(assigned_to):
                 user = users.get_object(assigned_to)
                 infos['assigned_to'] = user.get_title()
-        else:
-            infos['assigned_to'] = ''
-        infos['comment'] = self.get_value('comment')
-        infos['mtime'] = format_datetime(self.get_mtime())
-        infos['mtime_sort'] = self.get_mtime()
+
+        # Modification Time
+        mtime = self.get_mtime()
+        infos['mtime'] = format_datetime(mtime)
+        infos['mtime_sort'] = mtime
+
         return infos
 
 

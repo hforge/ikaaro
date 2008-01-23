@@ -20,7 +20,8 @@ from itools import get_abspath
 # Import from ikaaro
 from ikaaro.folder import Folder
 from ikaaro.skins import register_skin
-from tracker import Tracker, Issue
+from issue import Issue
+from tracker import Tracker
 
 
 # Register skin
