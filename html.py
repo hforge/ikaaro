@@ -346,6 +346,9 @@ class WebPage(EpozEditable, Multilingual, Text):
 
 
     def update_20071217(self):
+        from itools.handlers import checkid
+        from itools.uri import Path
+
         languages = self.get_site_root().get_property('website_languages')
 
         def fix_links(stream):
@@ -382,6 +385,10 @@ class WebPage(EpozEditable, Multilingual, Text):
                 if name == value:
                     yield event
                     continue
+
+                if attr_name == 'src' and type is not None:
+                    path = Path(name)
+                    name = str(path.resolve(checkid(path.get_name())))
 
                 attributes = attributes.copy()
                 attributes[(xhtml_uri, attr_name)] = name
