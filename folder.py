@@ -252,6 +252,8 @@ class Folder(DBObject):
     def search_objects(self, path='.', format=None, state=None,
                        object_class=None):
         for object in self.get_objects(path):
+            if not isinstance(object, DBObject):
+                continue
             # Filter by base class
             cls = object_class
             if cls is not None and not isinstance(object, cls):
