@@ -23,7 +23,7 @@ from datetime import datetime
 # Import from itools
 from itools.catalog import (CatalogAware, TextField, KeywordField,
     IntegerField, BoolField)
-from itools.datatypes import FileName, String, Unicode, Integer
+from itools.datatypes import FileName, String, Unicode, Integer, is_datatype
 from itools.gettext import DomainAware, get_domain
 from itools.handlers import checkid
 from itools.http import Forbidden
@@ -958,7 +958,8 @@ class DBObject(CatalogAware, Node, DomainAware):
                 properties[dst] = properties.pop(src)
 
         # Rename (when removing the prefix is enough)
-        for name in properties:
+        names = properties.keys()
+        for name in names:
             if ':' in name:
                 new_name = name.split(':', 1)[1]
                 if new_name not in schema:
@@ -981,6 +982,10 @@ class DBObject(CatalogAware, Node, DomainAware):
                             subvalue = subdatatype.decode(subdata)
                             revision[new_subname] = subvalue
                     properties[new_name] = value
+                elif is_datatype(datatype, Unicode):
+                    value = datatype.decode(value).strip()
+                    if value:
+                        properties[new_name] = value
                 else:
                     properties[new_name] = datatype.decode(value)
             else:
