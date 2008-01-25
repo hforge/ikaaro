@@ -448,3 +448,24 @@ function addListener(ob, eventName, functionReference){
         ob.addEventListener(eventName, functionReference, false);
     }
 }
+
+
+/*
+ * Insert image or link from popup
+ */
+
+function select_img(value, caption) {
+  window.opener.CreateImage(value);
+  window.close();
+}
+
+function select_link(value) {
+  window.opener.CreateLink(value);
+  window.close();
+}
+
+function select_uri() {
+  var value = document.getElementById('uri').value;
+  window.opener.CreateLink(value);
+  window.close();
+}

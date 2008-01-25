@@ -6,18 +6,46 @@
 
   <form action=";edit" method="post" id="wiki_form">
     <input type="hidden" name="timestamp" value="${timestamp}" />
-    <p id="wiki_toolbar">
-      <a id="wiki_tool_size_s" href="#" onclick="return text_small()" />
-      <a id="wiki_tool_size_m" href="#" onclick="return text_medium()" />
-      <a id="wiki_tool_size_l" href="#" onclick="return text_large()" />
-      <a id="wiki_tool_help"
-        href="http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html"
-        target="_blank" />
-    </p>
-    <p>
-      <textarea id="data" name="data" cols="80" rows="19"
+    <div>
+      <!-- Formating -->
+      <img class="button" src="/ui/wiki/heading1.png" title="Heading 1"
+        onclick="insertTags('\n\n=====\n', '\n=====\n\n', 'Title')" />
+      <img class="button" src="/ui/wiki/heading2.png" title="Heading 2"
+        onclick="insertTags('\n\n', '\n=====\n\n', 'Title')" />
+      <img class="button" src="/ui/wiki/heading3.png" title="Heading 3"
+        onclick="insertTags('\n\n', '\n-----\n\n', 'Title')" />
+      <img class="button" src="/ui/epoz/bold.png" title="Bold"
+        onclick="insertTags('**', '**', 'Bold Text')" />
+      <img class="button" src="/ui/epoz/italic.png" title="Italic"
+        onclick="insertTags('*', '*', 'Italic Text')" />
+      <img class="button" src="/ui/epoz/hyperlink.png" title="Insert Link"
+        onclick="popup('../;addlink_form?mode=wiki', 640, 480)" />
+      <img class="button" src="/ui/epoz/image.png" title="Insert Image"
+        onclick="popup('../;addimage_form?mode=wiki', 640, 480)" />
+      <img class="button" src="/ui/epoz/list.gif" title="Unordered List"
+        onclick="insertTags('\n* ', '\n* \n', 'List Item')" />
+      <img class="button" src="/ui/epoz/numbered_list.gif" title="Ordered List"
+        onclick="insertTags('\n1. ', '\n2. \n', 'List Item')" />
+      <img class="button" src="/ui/epoz/table.gif" title="Table"
+        onclick="insertTags('\n\n===== =====\n', '\n===== =====\n\n',
+          'Cell1 Cell2')" />
+      <img class="button" src="/ui/wiki/literal.png" title="Literal Block"
+        onclick="insertTags('\n::\n\n  ', '\n',
+        'Type text not to interpret with identation')" />
+      <span class="separator"></span>
+      <!-- Settings -->
+      <img class="button" src="/ui/wiki/text_small.png"
+        title="Small Edit Text" onclick="text_small()" />
+      <img class="button" src="/ui/wiki/text_medium.png"
+        title="Medium Edit Text" onclick="text_medium()" />
+      <img class="button" src="/ui/wiki/text_large.png"
+        title="Large Edit Text" onclick="text_large()" />
+      <!--img class="button" src="/ui/wiki/help.png" title="Help"
+        onclick="popup('http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html', 600, 400)" /-->
+      <br />
+      <textarea name="data" id="data" cols="80" rows="19"
         wrap="physical">${data}</textarea>
-    </p>
+    </div>
     <p>
       <a name="bottom" style="float: right"></a>
       <input type="submit" name="save" value="Save" class="button_ok" />

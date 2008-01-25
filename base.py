@@ -793,25 +793,35 @@ class DBObject(CatalogAware, Node, DomainAware):
         from file import File
         from binary import Image
         from widgets import Breadcrumb
+
         # Build the bc
         if isinstance(self, File):
             start = self.parent
         else:
             start = self
+
         # Construct namespace
         namespace = {}
-        namespace['bc'] = Breadcrumb(filter_type=Image, start=start)
+        namespace['bc'] = Breadcrumb(filter_type=Image, start=start,
+                                     icon_size=48)
         namespace['message'] = context.get_form_value('message')
+        mode = context.get_form_value('mode', default='html')
+        namespace['mode'] = mode
+        if mode == 'wiki':
+            script = '/ui/wiki/javascript.js'
+        else:
+            script = '/ui/epoz/javascript.js'
+        namespace['script'] = script
+        namespace['caption'] = self.gettext(MSG_CAPTION).encode('utf_8')
 
-        prefix = self.get_abspath().get_pathto('/ui/html/addimage.xml')
-        handler = self.get_object('/ui/html/addimage.xml')
-        return stl(handler, namespace, prefix=prefix)
+        template = self.get_object('/ui/html/addimage.xml')
+        prefix = self.get_pathto(template)
+        return stl(template, namespace, prefix=prefix)
 
 
     addimage__access__ = 'is_allowed_to_edit'
     def addimage(self, context):
-        """
-        Allow to upload and add an image to epoz
+        """Allow to upload and add an image to epoz
         """
         from binary import Image
         root = context.root
@@ -820,13 +830,20 @@ class DBObject(CatalogAware, Node, DomainAware):
         # Add the image to the object
         uri = Image.new_instance(Image, container, context)
         if ';addimage_form' not in uri.path:
+            caption = self.gettext(MSG_CAPTION).encode('utf_8')
+            mode = context.get_form_value('mode', default='html')
+            if mode == 'wiki':
+                script = '/ui/wiki/javascript.js'
+            else:
+                script = '/ui/epoz/javascript.js'
             object = container.get_object(uri.path[0])
-            return """
-            <script type="text/javascript">
-                window.opener.CreateImage('%s');
-                window.close();
-            </script>
-                    """ % context.object.get_pathto(object)
+            path = context.object.get_pathto(object)
+            body = """
+               <script type="text/javascript" src="%s" />
+               <script type="text/javascript">
+                 select_img('%s', '%s');
+               </script>"""
+            return body % (script, path, caption)
 
         return context.come_back(message=uri.query['message'])
 
@@ -844,14 +861,26 @@ class DBObject(CatalogAware, Node, DomainAware):
             start = self.parent
         else:
             start = self
+
         # Construct namespace
         namespace = {}
-        namespace['bc'] = Breadcrumb(filter_type=File, start=start)
+        namespace['bc'] = Breadcrumb(filter_type=File, start=start,
+                                     icon_size=48)
         namespace['message'] = context.get_form_value('message')
+        mode = context.get_form_value('mode', default='html')
+        namespace['mode'] = mode
+        if mode == 'wiki':
+            script = '/ui/wiki/javascript.js'
+            type = 'WikiPage'
+        else:
+            script = '/ui/epoz/javascript.js'
+            type = 'application/xhtml+xml'
+        namespace['script'] = script
+        namespace['type'] = type
 
-        prefix = self.get_abspath().get_pathto('/ui/html/addimage.xml')
-        handler = self.get_object('/ui/html/addlink.xml')
-        return stl(handler, namespace, prefix=prefix)
+        template = self.get_object('/ui/html/addlink.xml')
+        prefix = self.get_pathto(template)
+        return stl(template, namespace, prefix=prefix)
 
 
     addlink__access__ = 'is_allowed_to_edit'
@@ -861,18 +890,24 @@ class DBObject(CatalogAware, Node, DomainAware):
         # Get the container
         root = context.root
         container = root.get_object(context.get_form_value('target_path'))
-        # Add the image to the object
+        # Add the file to the object
         class_id = context.get_form_value('type')
         cls = get_object_class(class_id)
         uri = cls.new_instance(cls, container, context)
         if ';addlink_form' not in uri.path:
+            mode = context.get_form_value('mode', default='html')
+            if mode == 'wiki':
+                script = '/ui/wiki/javascript.js'
+            else:
+                script = '/ui/epoz/javascript.js'
             object = container.get_object(uri.path[0])
-            return """
-            <script type="text/javascript">
-                window.opener.CreateLink('%s');
-                window.close();
-            </script>
-                    """ % context.object.get_pathto(object)
+            path = context.object.get_pathto(object)
+            body = """
+                <script type="text/javascript" src="%s" />
+                <script type="text/javascript">
+                    select_link('%s');
+                </script>"""
+            return body % (script, path)
 
         return context.come_back(message=uri.query['message'])
 

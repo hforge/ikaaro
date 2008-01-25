@@ -272,8 +272,8 @@ a img { border: 0; }
 
 dl.thumb {
   float: left;
-  width: 10em;
-  height: 10em;
+  width: 8em;
+  height: 6em;
   margin: 0;
   padding: 0.5em;
   text-align: center;

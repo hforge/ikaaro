@@ -1,28 +1,19 @@
-#wiki_toolbar a {
-  padding-left: 20px;
-  line-height: 20px;
-  background-position: top left;
-  background-repeat: no-repeat;
-}
-
-#wiki_toolbar a#wiki_tool_help {
-  background-image: url(../images/help16.png);
-}
-
-#wiki_toolbar a#wiki_tool_size_s {
-  background-image: url(../images/text_small16.png);
-}
-
-#wiki_toolbar a#wiki_tool_size_m {
-  background-image: url(../images/text_medium16.png);
-}
-
-#wiki_toolbar a#wiki_tool_size_l {
-  background-image: url(../images/text_large16.png);
-}
-
-textarea#data {
+textarea#wpTextbox1 {
   font-size: 1.2em;
+}
+
+#content .button {
+  width: 22px;
+  height: 22px;
+  margin: 1px;
+  border-bottom: 2px solid #fff;
+  padding-bottom: 1px;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+#content .separator {
+  margin: 1em;
 }
 
 #content .document h1 {

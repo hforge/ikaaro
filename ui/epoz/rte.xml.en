@@ -5,16 +5,6 @@
   xmlns:stl="http://xml.itools.org/namespaces/stl">
   <div style="display: none" id="epoz_widget_${form_name}">
     <div id="ToolBar_${form_name}">
-      <img class="button" id="epoz_button_hyperlink"
-        src="hyperlink.png" width="23" height="22"
-        alt="Insert Link" title="Insert Link" onclick="popup(';addlink_form',
-        640, 480);"/><img class="button" id="epoz_button_anchor"
-        src="anchor.png" width="23" height="22" alt="Insert Anchor"
-        title="Insert Anchor" onclick="CreateAnchor();" />
-      <img class="button" id="epoz_button_image" src="image.png"
-        width="23" height="22" alt="Insert Image" title="Insert Image"
-        onclick="popup(';addimage_form', 640, 480);" />
-      &nbsp;&nbsp;
       <select id="formatblock" class="formatblock"
         onchange="SelectFormat(this);">
         <option value="">Normal</option>
@@ -28,52 +18,70 @@
         <option value="&lt;pre&gt;">Formatted</option>
       </select>
       <img class="button" src="bold.png" alt="Bold" title="Bold"
-        onclick="FormatText('bold', '');" /><img class="button"
-        src="italic.png" width="23" height="22" alt="Italic" title="Italic"
-        onclick="FormatText('italic', '');" /><img class="button"
-        src="underline.png" width="23" height="22" alt="Underline"
-        title="Underline" onclick="FormatText('underline', '');" /><img
-        class="button" src="strikethrough.png" width="23" height="22"
+        onclick="FormatText('bold', '');" />
+      <img class="button" src="italic.png" width="23" height="22" alt="Italic"
+        title="Italic" onclick="FormatText('italic', '');" />
+      <img class="button" src="underline.png" width="23" height="22"
+        alt="Underline" title="Underline" onclick="FormatText('underline',
+        '');" />
+      <img class="button" src="strikethrough.png" width="23" height="22"
         alt="Strikethrough" title="Strikethrough"
-        onclick="FormatText('strikethrough', '');" /> <img class="button"
-        src="subscript.gif" width="23" height="22" alt="Subscript"
-        title="Subscript" onclick="FormatText('subscript', '');" /><img
-        class="button" src="superscript.gif" width="23" height="22"
+        onclick="FormatText('strikethrough', '');" />
+      <img class="button" src="subscript.gif" width="23" height="22"
+        alt="Subscript" title="Subscript" onclick="FormatText('subscript',
+        '');" />
+      <img class="button" src="superscript.gif" width="23" height="22"
         alt="Superscript" title="Superscript"
-        onclick="FormatText('superscript', '');" /> <img class="button"
-        src="unformat.png" width="23" height="22" alt="Remove Format"
-        title="Remove Format" onclick="FormatText('removeformat', '');" /> <img
-        class="button" src="textcolor.png" width="23" height="22" alt="Text
+        onclick="FormatText('superscript', '');" />
+      <img class="button" src="unformat.png" width="23" height="22" alt="Remove
+        Format" title="Remove Format" onclick="FormatText('removeformat', '');"
+        />
+      <img class="button" src="textcolor.png" width="23" height="22" alt="Text
         Color" title="Text Color" onclick="SetTextColor(';epoz_color_form');"
-        /><img class="button" id="epoz_button_bgcolor" src="bgcolor.png"
-        width="23" height="22" alt="Background Color" title="Background Color"
-        onclick="SetBackColor(';epoz_color_form');" /> <img class="button"
-        src="left_just.png" width="23" height="22" alt="Align Left"
-        title="Align Left" onclick="FormatText('justifyleft', '');"
-        name="left_just" /><img class="button" src="centre.png" width="23"
-        height="22" alt="Center" title="Center"
-        onclick="FormatText('justifycenter', '');" /><img class="button"
-        src="right_just.png" width="23" height="22" alt="Align Right"
-        title="Align Right" onclick="FormatText('justifyright', '');"
-        name="right_just" /> <img class="button" src="numbered_list.gif"
+        />
+      <img class="button" id="epoz_button_bgcolor" src="bgcolor.png" width="23"
+        height="22" alt="Background Color" title="Background Color"
+        onclick="SetBackColor(';epoz_color_form');" />
+      <img class="button" id="epoz_button_hyperlink"
+        src="hyperlink.png" width="23" height="22"
+        alt="Insert Link" title="Insert Link" onclick="popup(';addlink_form',
+        640, 480);"/>
+      <img class="button" id="epoz_button_anchor"
+        src="anchor.png" width="23" height="22" alt="Insert Anchor"
+        title="Insert Anchor" onclick="CreateAnchor();" />
+      <img class="button" id="epoz_button_image" src="image.png"
+        width="23" height="22" alt="Insert Image" title="Insert Image"
+        onclick="popup(';addimage_form', 640, 480);" />
+      &nbsp;&nbsp;
+      <img class="button" src="left_just.png" width="23" height="22" alt="Align
+        Left" title="Align Left" onclick="FormatText('justifyleft', '');"
+        name="left_just" />
+      <img class="button" src="centre.png" width="23" height="22" alt="Center"
+        title="Center" onclick="FormatText('justifycenter', '');" />
+      <img class="button" src="right_just.png" width="23" height="22"
+        alt="Align Right" title="Align Right"
+        onclick="FormatText('justifyright', '');" name="right_just" />
+      <img class="button" src="numbered_list.gif"
         width="23" height="22" alt="Ordered List" title="Ordered List"
         onclick="FormatText('insertorderedlist', '');" name="numbered_list"
-        /><img class="button" src="list.gif" width="23" height="22"
+        />
+      <img class="button" src="list.gif" width="23" height="22"
         alt="Unordered List" title="Unordered List"
-        onclick="FormatText('insertunorderedlist', '');" /><img class="button"
-        src="outdent.png" width="23" height="22" alt="Outdent" title="Outdent"
-        onclick="FormatText('outdent', '');" /><img class="button"
-        src="indent.png" width="23" height="22" alt="Indent" title="Indent"
-        onclick="FormatText('indent', '');" /> <img class="button" src="hr.gif"
-        width="23" height="22" alt="Insert Rule" title="Insert Rule"
-        onclick="FormatText('inserthorizontalrule', '');" /><img class="button"
-        id="epoz_button_table" src="table.gif" width="23" height="22"
-        alt="Insert Table" title="Insert Table"
-        onclick="popup(';epoz_table_form', 220, 320)" /> <img
-        class="button" src="undo.png" width="23" height="22" alt="Undo"
-        title="Undo" onclick="FormatText('undo', '');" /><img class="button"
-        src="redo.png" width="23" height="22" alt="Redo" title="Redo"
-        onclick="FormatText('redo', '');" />
+        onclick="FormatText('insertunorderedlist', '');" />
+      <img class="button" src="outdent.png" width="23" height="22"
+        alt="Outdent" title="Outdent" onclick="FormatText('outdent', '');" />
+      <img class="button" src="indent.png" width="23" height="22" alt="Indent"
+        title="Indent" onclick="FormatText('indent', '');" />
+      <img class="button" src="hr.gif" width="23" height="22" alt="Insert Rule"
+        title="Insert Rule" onclick="FormatText('inserthorizontalrule', '');"
+        />
+      <img class="button" id="epoz_button_table" src="table.gif" width="23"
+        height="22" alt="Insert Table" title="Insert Table"
+        onclick="popup(';epoz_table_form', 220, 320)" />
+      <img class="button" src="undo.png" width="23" height="22" alt="Undo"
+        title="Undo" onclick="FormatText('undo', '');" />
+      <img class="button" src="redo.png" width="23" height="22" alt="Redo"
+        title="Redo" onclick="FormatText('redo', '');" />
       <br />
       <iframe frameborder="1" class="epoz_frame" id="Iframe_${form_name}"
         name="EpozEditor" onload="InitDocument(this);"

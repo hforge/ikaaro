@@ -1,12 +1,11 @@
-
 #content .button {
-  background-color: #ffffff;
-  border-bottom: 2px solid #ffffff;
-  cursor: pointer;
-  height: 22px;
-  margin: 1px 1px 1px 1px;
-  padding-bottom: 1px;
   width: 22px;
+  height: 22px;
+  margin: 1px;
+  border-bottom: 2px solid #fff;
+  padding-bottom: 1px;
+  background-color: #fff;
+  cursor: pointer;
 }
 
 #content .button:hover {

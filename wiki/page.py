@@ -178,7 +178,7 @@ class WikiPage(Text):
     view__sublabel__ = u'HTML'
     view__icon__ = '/ui/images/HTML16.png'
     def view(self, context):
-        context.styles.append('/ui/wiki/wiki.css')
+        context.styles.append('/ui/wiki/style.css')
         parent = self.parent
         here = context.object
 
@@ -401,7 +401,8 @@ class WikiPage(Text):
     # UI / Edit
     #######################################################################
     def edit_form(self, context):
-        context.styles.append('/ui/wiki/wiki.css')
+        context.styles.append('/ui/wiki/style.css')
+        context.scripts.append('/ui/wiki/javascript.js')
         text_size = context.get_form_value('text_size');
         text_size_cookie = context.get_cookie('wiki_text_size')
 
@@ -467,7 +468,7 @@ class WikiPage(Text):
     help__label__ = u"Help"
     help__icon__ = '/ui/images/help16.png'
     def help(self, context):
-        context.styles.append('/ui/wiki/wiki.css')
+        context.styles.append('/ui/wiki/style.css')
         namespace = {}
 
         source = self.get_object('/ui/wiki/help.txt')

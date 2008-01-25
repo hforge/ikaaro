@@ -6,42 +6,16 @@
   <head>
     <title>Epoz-Toolbox</title>
     <link rel="stylesheet" type="text/css" href="../aruni/aruni.css" />
-    <script type="text/javascript">
-      function select_img(){
-        value = ''
-        elements = document.all['object']
-        if (elements.nodeName ) {
-          value = elements.value
-        }else{
-          for(var i=elements.length-1; i>=0;i--){
-              if(elements[i].checked){
-                value = elements[i].value
-                break;
-              }
-          }
-        }
-        window.opener.CreateImage(value);
-        window.close();
-      }
-    </script>
+    <script type="text/javascript" src="${script}" />
     <style>
       #body {
+        border-top: 20px solid #30569D;
         padding: 20px;
-      }
-      #header_blue{
-        height: 20px;
-        background-color: #30569D;
-        border-bottom: 4px solid #729FCF;
-      }
-      #insert_image td, #insert_image td a {
-        font: 14px Verdana;
-        color: #7986A8; 
       }
     </style>
   </head>
 
   <body>
-    <div id="header_blue"></div>
     <div id="body">
       <div id="message" stl:if="message">${message}</div>
       <!-- List of files -->
@@ -51,42 +25,50 @@
         <div id="breadcrumbs">
           <label>Location:</label>
           <span stl:repeat="x bc/path">
-            <a href="${x/url}">${x/name}</a> /
+            <a href="${x/url}" title="${x/title}">${x/short_title}</a> /
           </span>
         </div>
       </div>
-      <form action=";addimage_form" method="get">
-        <table id="insert_image">
-          <tr stl:repeat="object bc/objects">
-            <td>
-              <input type="radio" name="object" stl:if="not object/is_folder"
-                value="${object/path}" />
-            </td>
-            <td>
-              <img src="${object/path}/;icon48" stl:if="not object/is_folder"/>
-              <a stl:if="object/is_folder" href="${object/url}">
-                <img border="0" stl:if="object/is_folder"
-                alt="${object/object_type}" src="${object/icon}"/>
-              </a>
-            </td>
-            <td>
-              <a stl:if="object/is_folder" href="${object/url}">
-                ${object/name}
-              </a>
-              <stl:inline if="not object/is_folder">${object/name}</stl:inline>
-            </td>
-          </tr>
-        </table>
-        <input stl:if="bc/is_submit" type="button" value="Insert Image"
-          class="button_ok" onclick="javascript:select_img()"/>
-      </form>
+      <!-- Content -->
+      <!-- Folders first -->
+      <stl:block repeat="object bc/objects">
+        <dl class="thumb" stl:if="object/is_folder">
+          <dt>
+            <a href="${object/url}"
+              ><img alt="" src="${object/icon}" width="48"
+                height="48"/></a>
+          </dt>
+          <dd>
+            <a href="${object/url}"
+              title="${object/title}">${object/short_title}</a>
+          </dd>
+        </dl>
+      </stl:block>
+      <!-- Images next -->
+      <stl:block repeat="object bc/objects">
+        <dl class="thumb" stl:if="object/is_image">
+          <dt>
+            <img alt="" title="Select this resource"
+              src="${object/icon}/" width="48" height="48"
+              onclick="select_img('${object/path}', '${caption}')"
+              style="cursor: pointer" />
+          </dt>
+          <dd>
+            <a onclick="select_img('${object/path}', '${caption}')"
+              title="${object/title}"
+              style="cursor: pointer">${object/short_title}</a>
+          </dd>
+        </dl>
+      </stl:block>
+      <div class="clear"></div>
       <!-- Add an image -->
+      <h3>Upload an image to the current folder and insert it:</h3>
       <form action=";addimage" method="post" enctype="multipart/form-data">
-        <p>Upload an image to the current folder and insert it:</p>
         <input type="hidden" name="target_path" value="${bc/target_path}" />
+        <input type="hidden" name="mode" value="${mode}" />
         <input id="file" name="file" size="35" type="file" />
         <br/>
-        <input class="button_add" type="submit" value="Upload and Insert" />
+        <input class="button_upload" type="submit" value="Upload and Insert" />
       </form>
     </div>
   </body>

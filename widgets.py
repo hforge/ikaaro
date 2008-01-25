@@ -34,6 +34,7 @@ from utils import get_parameters
 from base import DBObject
 from folder import Folder
 from binary import Image
+from utils import reduce_string
 
 
 namespaces = {
@@ -291,7 +292,8 @@ class Breadcrumb(object):
     the tree root to another tree node, and the content of that node.
     """
 
-    def __init__(self, filter_type=DBObject, root=None, start=None):
+    def __init__(self, filter_type=DBObject, root=None, start=None,
+            icon_size=16):
         """The 'start' must be a handler, 'filter_type' must be a handler
         class.
         """
@@ -329,7 +331,11 @@ class Breadcrumb(object):
         node = target
         while node is not root.parent:
             url = context.uri.replace(bc_target=str(root.get_pathto(node)))
-            breadcrumb.insert(0, {'name': node.name, 'url': url})
+            title = node.get_title()
+            breadcrumb.insert(0, {'name': node.name,
+                                  'title': title,
+                                  'short_title': reduce_string(title, 12, 40),
+                                  'url': url})
             node = node.parent
         self.path = breadcrumb
 
@@ -349,11 +355,14 @@ class Breadcrumb(object):
 
             self.is_submit = True
             # Calculate path
-            path_to_icon = object.get_path_to_icon(16)
+            path_to_icon = object.get_path_to_icon(icon_size)
             if path:
                 path_to_object = Path(str(path) + '/')
                 path_to_icon = path_to_object.resolve(path_to_icon)
+            title = object.get_title()
             objects.append({'name': object.name,
+                            'title': title,
+                            'short_title': reduce_string(title, 12, 40),
                             'is_folder': isinstance(object, Folder),
                             'is_image': isinstance(object, Image),
                             'is_selectable': True,
