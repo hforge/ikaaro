@@ -12,6 +12,16 @@
         border-top: 20px solid #30569D;
         padding: 20px;
       }
+      table.thumbs {
+        border-collapse: collapse;
+      }
+      table.thumbs th,
+      table.thumbs td {
+        border: 2px solid #ccc;
+      }
+      dt a {
+        white-space: nowrap;
+      }
     </style>
   </head>
 
@@ -37,35 +47,43 @@
           </span>
         </div>
       </div>
-      <!-- Folders first -->
-      <stl:block repeat="object bc/objects">
-        <dl class="thumb" stl:if="object/is_folder">
-          <dt>
-            <a href="${object/url}"
-              ><img alt="" src="${object/icon}" width="48"
-                height="48"/></a>
-          </dt>
-          <dd>
-            <a href="${object/url}"
-              title="${object/title}">${object/short_title}</a>
-          </dd>
-        </dl>
-      </stl:block>
-      <!-- Files next -->
-      <stl:block repeat="object bc/objects">
-        <dl class="thumb" stl:if="not object/is_folder">
-          <dt>
-            <img alt="" title="Select this resource"
-              src="${object/icon}" width="48" height="48"
-              onclick="select_link('${object/path}')" style="cursor: pointer" />
-          </dt>
-          <dd>
-            <a href="javascript:select_link('${object/path}')"
-              title="${object/title}">${object/short_title}</a>
-          </dd>
-        </dl>
-      </stl:block>
-      <div class="clear"></div>
+      <table border="0" cellpadding="1" cellspacing="1" width="100%"
+        class="thumbs">
+        <tr>
+          <th width="150">Browse Content</th>
+          <th>Select Resource</th>
+        </tr>
+        <tr>
+          <td valign="top">
+            <!-- Browse Folders -->
+            <stl:block repeat="object bc/objects">
+              <dl stl:if="object/is_folder">
+                <dt>
+                  <a href="${object/url}" title="${object/title}"><img alt=""
+                      src="${object/icon}" width="16"
+                      height="16"/>&nbsp;${object/short_title}</a>
+                </dt>
+              </dl>
+            </stl:block>
+          </td>
+          <td valign="top">
+            <!-- Files and Folders to select -->
+            <stl:block repeat="object bc/objects">
+              <dl class="thumb">
+                <dt>
+                  <img alt="" title="${object/object_type}"
+                    src="${object/icon}" width="48" height="48" />
+                </dt>
+                <dd>
+                  <abbr
+                    title="${object/title}">${object/short_title}</abbr><br/>
+                  <a href="javascript:select_link('${object/path}')">Select</a>
+                </dd>
+              </dl>
+            </stl:block>
+          </td>
+        </tr>
+      </table>
       <!-- New Web Page -->
       <h3>Create a new Web Page and link to it:</h3>
       <form action=";addlink" method="post">

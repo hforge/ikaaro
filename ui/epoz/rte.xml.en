@@ -5,6 +5,16 @@
   xmlns:stl="http://xml.itools.org/namespaces/stl">
   <div style="display: none" id="epoz_widget_${form_name}">
     <div id="ToolBar_${form_name}">
+      <img class="button" id="epoz_button_hyperlink" src="hyperlink.png"
+        width="23" height="22" alt="Insert Link" title="Insert Link"
+        onclick="popup(';addlink_form', 640, 480);"/>
+      <img class="button" id="epoz_button_anchor" src="anchor.png" width="23"
+        height="22" alt="Insert Anchor" title="Insert Anchor"
+        onclick="CreateAnchor();" />
+      <img class="button" id="epoz_button_image" src="image.png" width="23"
+        height="22" alt="Insert Image" title="Insert Image"
+        onclick="popup(';addimage_form', 640, 480);" />
+      &nbsp;&nbsp;
       <select id="formatblock" class="formatblock"
         onchange="SelectFormat(this);">
         <option value="">Normal</option>
@@ -42,16 +52,6 @@
       <img class="button" id="epoz_button_bgcolor" src="bgcolor.png" width="23"
         height="22" alt="Background Color" title="Background Color"
         onclick="SetBackColor(';epoz_color_form');" />
-      <img class="button" id="epoz_button_hyperlink"
-        src="hyperlink.png" width="23" height="22"
-        alt="Insert Link" title="Insert Link" onclick="popup(';addlink_form',
-        640, 480);"/>
-      <img class="button" id="epoz_button_anchor"
-        src="anchor.png" width="23" height="22" alt="Insert Anchor"
-        title="Insert Anchor" onclick="CreateAnchor();" />
-      <img class="button" id="epoz_button_image" src="image.png"
-        width="23" height="22" alt="Insert Image" title="Insert Image"
-        onclick="popup(';addimage_form', 640, 480);" />
       &nbsp;&nbsp;
       <img class="button" src="left_just.png" width="23" height="22" alt="Align
         Left" title="Align Left" onclick="FormatText('justifyleft', '');"

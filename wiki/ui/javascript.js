@@ -31,6 +31,22 @@ function insertTags(tagOpen, tagClose, sampleText, target)
     //insert tags
     checkSelectedText();
     range.text = tagOpen + selText + tagClose;
+    //insert link target
+    if (isSample == false && target != undefined) {
+        //reuse value as the target if asked
+        if (target == true) {
+            target = sampleText;
+        }
+        //find next empty line or at the end
+        var returnStart = txtarea.value.indexOf('\n', startPos);
+        if (returnStart == -1) {
+            returnStart = txtarea.value.length;
+        }
+        txtarea.value = txtarea.value.substring(0, returnStart)
+            + '\n\n.. _`' + selText + '`: ' + target
+            + txtarea.value.substring(returnStart, txtarea.value.length)
+            + '\n';
+    }
     //mark sample text as selected
     if (isSample && range.moveStart) {
       if (window.opera)
