@@ -23,6 +23,7 @@ from re import subn
 from tempfile import mkdtemp
 from subprocess import call
 from urllib import urlencode
+from mimetypes import guess_extension
 
 # Import from docutils
 from docutils.core import (Publisher, publish_doctree, publish_from_doctree,
@@ -36,16 +37,16 @@ from docutils import nodes
 # Import from itools
 from itools import vfs
 from itools.datatypes import DateTime, Unicode, FileName
-from itools.handlers import checkid
+from itools.handlers import checkid, get_handler, File as FileHandler
 from itools.stl import stl
-from itools.xml import XMLParser
+from itools.xml import XMLParser, XMLError
+from itools.uri import get_reference
 
 # Import from ikaaro
 from ikaaro.base import DBObject
 from ikaaro.messages import MSG_EDIT_CONFLICT, MSG_CHANGES_SAVED
 from ikaaro.text import Text
 from ikaaro.registry import register_object_class
-from ikaaro.skins import UIFile
 
 
 
@@ -115,6 +116,8 @@ class WikiPage(Text):
 
 
     def get_document(self):
+        parent = self.parent
+
         # Override dandling links handling
         class WikiReader(StandaloneReader):
             supported = ('wiki',)
@@ -139,6 +142,34 @@ class WikiPage(Text):
         document = publish_doctree(self.handler.to_str(), reader=reader,
                                    settings_overrides=self.overrides)
 
+        # Assume internal paths are relative to the container
+        for node in document.traverse(condition=nodes.reference):
+            # Skip wiki or fragment link
+            if node.get('wiki_name') or not node.get('refuri'):
+                continue
+            reference = get_reference(node['refuri'])
+            # Skip external
+            if reference.scheme or reference.authority:
+                continue
+            # Note: absolute paths will be rewritten as relative paths
+            try:
+                object = parent.get_object(reference.path)
+                node['refuri'] = str(self.get_pathto(object))
+            except LookupError:
+                pass
+
+        # Assume image paths are relative to the container
+        for node in document.traverse(condition=nodes.image):
+            reference = get_reference(node['uri'])
+            # Skip external
+            if reference.scheme or reference.authority:
+                continue
+            try:
+                object = parent.get_object(reference.path)
+                node['uri'] = str(self.get_pathto(object))
+            except LookupError:
+                pass
+
         return document
 
 
@@ -158,14 +189,24 @@ class WikiPage(Text):
                 # Wiki link found, "refname" is the path
                 path = base.resolve2(refname)
             else:
-                # Regular link
-                continue
+                # Regular link, include internal ones
+                refuri = node.get('refuri')
+                if refuri is None:
+                    continue
+                reference = get_reference(refuri)
+                # Skip external
+                if reference.scheme or reference.authority:
+                    continue
+                path = base.resolve2(reference.path)
             path = str(path)
             links.append(path)
 
         for node in document.traverse(condition=nodes.image):
-            node_uri = node['uri']
-            path = base.resolve(node_uri)
+            reference = get_reference(node['uri'])
+            # Skip external image
+            if reference.scheme or reference.authority:
+                continue
+            path = base.resolve2(reference.path)
             path = str(path)
             links.append(path)
 
@@ -182,44 +223,42 @@ class WikiPage(Text):
         parent = self.parent
         here = context.object
 
-        # Fix the wiki links
+        # Decorate the links and resolve them against the published object
         document = self.get_document()
         for node in document.traverse(condition=nodes.reference):
             refname = node.get('wiki_name')
             if refname is None:
-                # Not a wiki link
+                # Regular link
                 if node.get('refid'):
                     node['classes'].append('internal')
                 elif node.get('refuri'):
-                    node['classes'].append('external')
-            else:
-                title = node['name']
-                if refname is False:
+                    reference = get_reference(node['refuri'])
+                    # Skip external
+                    if reference.scheme or reference.authority:
+                        node['classes'].append('external')
+                        continue
+                    try:
+                        object = self.get_object(reference.path)
+                        node['refuri'] = str(here.get_pathto(object))
+                    except LookupError:
+                        pass
+            elif refname is False:
                     # Wiki link not found
+                    node['classes'].append('nowiki')
                     prefix = here.get_pathto(parent)
+                    title = node['name']
+                    title_encoded = title.encode('utf_8')
                     params = {'type': self.__class__.__name__,
-                              'title': title.encode('utf_8'),
-                              'name': checkid(title) or title}
+                              'title': title_encoded,
+                              'name': checkid(title) or title_encoded}
                     refuri = "%s/;new_resource_form?%s" % (prefix,
                                                            urlencode(params))
-                    css_class = 'nowiki'
-                else:
-                    # Wiki link found, "refname" is the path
-                    object = self.get_object(refname)
-                    refuri = str(here.get_pathto(object))
-                    css_class = 'wiki'
-                node['refuri'] = refuri
-                node['classes'].append(css_class)
-
-        # Allow to reference images by name without their path
-        for node in document.traverse(condition=nodes.image):
-            node_uri = node['uri']
-            # The URI is relative to the wiki folder
-            try:
-                object = parent.get_object(node_uri)
-                node['uri'] = str(here.get_pathto(object))
-            except LookupError:
-                pass
+                    node['refuri'] = refuri
+            else:
+                # Wiki link found, "refname" is the path
+                node['classes'].append('wiki')
+                object = self.get_object(refname)
+                node['refuri'] = str(here.get_pathto(object))
 
         # Manipulate publisher directly (from publish_from_doctree)
         reader = Reader(parser_name='null')
@@ -252,6 +291,10 @@ class WikiPage(Text):
         for node in document.traverse(condition=nodes.reference):
             refname = node.get('wiki_name')
             if refname is None:
+                # Regular link: point back to the site
+                if node.get('refuri'):
+                    reference = get_reference(node['refuri'])
+                    node['refuri'] = str(context.uri.resolve(reference))
                 continue
             # Now consider the link is valid
             title = node['name']
@@ -274,6 +317,10 @@ class WikiPage(Text):
                 for node in subdoc.traverse(condition=nodes.reference):
                     refname = node.get('wiki_name')
                     if refname is None:
+                        # Regular link: point back to the site
+                        if node.get('refuri'):
+                            reference = get_reference(node['refuri'])
+                            node['refuri'] = str(context.uri.resolve(reference))
                         continue
                     # Now consider the link is valid
                     title = node['name']
@@ -302,11 +349,26 @@ class WikiPage(Text):
 
         # Find the list of images to append
         for node in document.traverse(condition=nodes.image):
-            node_uri = node['uri']
-            try:
-                image = parent.get_object(node_uri)
-            except LookupError:
-                image = None
+            reference = get_reference(node['uri'])
+            if reference.scheme or reference.authority:
+                # Fetch external image
+                try:
+                    image = get_handler(reference)
+                    filename = reference.path.get_name()
+                    name, ext, lang = FileName.decode(filename)
+                    # At least images from ikaaro won't have an extension
+                    if ext is None:
+                        mimetype = vfs.get_mimetype(reference)
+                        ext = guess_extension(mimetype)[1:]
+                        filename = FileName.encode((name, ext, lang))
+                except LookupError:
+                    image = None
+            else:
+                try:
+                    image = parent.get_object(reference.path)
+                    filename = image.get_property('filename')
+                except LookupError:
+                    image = None
             if image is None:
                 # Missing image, prevent pdfLaTeX failure
                 image = self.get_object('/ui/wiki/missing.png')
@@ -315,7 +377,6 @@ class WikiPage(Text):
                 node['uri'] = filename
                 images.append((image, filename))
             else:
-                filename = image.get_property('filename')
                 # pdflatex does not support the ".jpeg" extension
                 name, ext, lang = FileName.decode(filename)
                 if ext == 'jpeg':
@@ -358,8 +419,13 @@ class WikiPage(Text):
                 continue
             file = tempdir.make_file(filename)
             try:
-                if isinstance(image, UIFile):
-                    image.save_state_to_file(file)
+                if isinstance(image, FileHandler):
+                    try:
+                        image.save_state_to_file(file)
+                    except XMLError:
+                        # XMLError is raised by unexpected HTTP responses
+                        # from external images. See bug #249
+                        pass
                 else:
                     image.handler.save_state_to_file(file)
             finally:
