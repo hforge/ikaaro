@@ -811,12 +811,13 @@ class Folder(DBObject):
         """Remove empty folders.
         """
         DBObject.update_20071215(self, **kw)
-        handler = self.handler
-        database = handler.database
-        if database.has_handler(self.name):
-            if not handler.get_handler_names():
-                self.parent.handler.del_handler(self.name)
-
+        # Remove empty folders
+        if self.parent is None:
+            return
+        if vfs.exists(self.handler.uri):
+            folder = self.parent.handler
+            if not folder.get_handler_names(self.name):
+                folder.del_handler(self.name)
 
 
 ###########################################################################
