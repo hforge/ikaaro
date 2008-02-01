@@ -106,10 +106,12 @@ class Thread(Folder):
 
         namespace['messages'] = []
         for message in self.get_posts():
-            author_id = message.get_owner()
+            author = message.get_owner()
+            if author is not None:
+                author = users.get_object(author).get_title()
             namespace['messages'].append({
                 'name': message.name,
-                'author': users.get_object(author_id).get_title(),
+                'author': author,
                 'mtime': format_datetime(message.get_mtime(), accept_language),
                 'body': message.handler.events,
             })
