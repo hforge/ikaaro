@@ -60,7 +60,7 @@ def indent(text):
                 lines.append(line)
     text = '\n'.join(lines)
     # Links
-    for segment in split('(http://[\w./;#]*)', text):
+    for segment in split('(http://[\w./;#-]*)', text):
         if segment.startswith('http://'):
             attributes = {(xhtml_uri, 'href'): segment}
             yield START_ELEMENT, (xhtml_uri, 'a', attributes), 1
