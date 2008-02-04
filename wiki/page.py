@@ -144,10 +144,11 @@ class WikiPage(Text):
 
         # Assume internal paths are relative to the container
         for node in document.traverse(condition=nodes.reference):
+            refuri = node.get('refuri')
             # Skip wiki or fragment link
-            if node.get('wiki_name') or not node.get('refuri'):
+            if node.get('wiki_name') or not refuri:
                 continue
-            reference = get_reference(node['refuri'])
+            reference = get_reference(refuri.encode('utf_8'))
             # Skip external
             if reference.scheme or reference.authority:
                 continue
@@ -160,7 +161,8 @@ class WikiPage(Text):
 
         # Assume image paths are relative to the container
         for node in document.traverse(condition=nodes.image):
-            reference = get_reference(node['uri'])
+            uri  = node['uri'].encode('utf_8')
+            reference = get_reference(uri)
             # Skip external
             if reference.scheme or reference.authority:
                 continue
@@ -193,7 +195,7 @@ class WikiPage(Text):
                 refuri = node.get('refuri')
                 if refuri is None:
                     continue
-                reference = get_reference(refuri)
+                reference = get_reference(refuri.encode('utf_8'))
                 # Skip external
                 if reference.scheme or reference.authority:
                     continue
@@ -202,7 +204,8 @@ class WikiPage(Text):
             links.append(path)
 
         for node in document.traverse(condition=nodes.image):
-            reference = get_reference(node['uri'])
+            uri = node['uri'].encode('utf_8')
+            reference = get_reference(uri)
             # Skip external image
             if reference.scheme or reference.authority:
                 continue
@@ -231,8 +234,9 @@ class WikiPage(Text):
                 # Regular link
                 if node.get('refid'):
                     node['classes'].append('internal')
-                elif node.get('refuri'):
-                    reference = get_reference(node['refuri'])
+                refuri = node.get('refuri')
+                if refuri is not None:
+                    reference = get_reference(refuri.encode('utf_8'))
                     # Skip external
                     if reference.scheme or reference.authority:
                         node['classes'].append('external')
@@ -292,8 +296,9 @@ class WikiPage(Text):
             refname = node.get('wiki_name')
             if refname is None:
                 # Regular link: point back to the site
-                if node.get('refuri'):
-                    reference = get_reference(node['refuri'])
+                refuri = node.get('refuri')
+                if refuri is not None:
+                    reference = get_reference(refuri.encode('utf_8'))
                     node['refuri'] = str(context.uri.resolve(reference))
                 continue
             # Now consider the link is valid
@@ -318,8 +323,9 @@ class WikiPage(Text):
                     refname = node.get('wiki_name')
                     if refname is None:
                         # Regular link: point back to the site
-                        if node.get('refuri'):
-                            reference = get_reference(node['refuri'])
+                        refuri = node.get('refuri')
+                        if refuri is not None:
+                            reference = get_reference(refuri.encode('utf_8'))
                             node['refuri'] = str(context.uri.resolve(reference))
                         continue
                     # Now consider the link is valid
@@ -349,7 +355,8 @@ class WikiPage(Text):
 
         # Find the list of images to append
         for node in document.traverse(condition=nodes.image):
-            reference = get_reference(node['uri'])
+            uri = node['uri'].encode('utf_8')
+            reference = get_reference(uri)
             if reference.scheme or reference.authority:
                 # Fetch external image
                 try:
