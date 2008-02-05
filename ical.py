@@ -1461,7 +1461,7 @@ class CalendarTable(Table, CalendarView):
 
     def download(self, context):
         response = context.response
-        response.set_header('Content-Type', 'calendar')
+        response.set_header('Content-Type', 'text/calendar')
         return self.handler.to_ical()
 
 
