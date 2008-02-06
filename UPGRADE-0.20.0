@@ -244,6 +244,11 @@ been de-centralized:
           ...
 
 
+The method "schedule_to_reindex" disappeared in favor of the expected behaviour
+when you call "set_property" on a object: it will reindex the object with the
+new values.
+
+
 Upgrading
 ====================
 
