@@ -1512,7 +1512,7 @@ msgstr "Supprimer"
 
 #: ui/ical/ical_edit_event_form.xml.en:0
 msgid "Description"
-msgstr "Description&nbsp;:"
+msgstr "Description"
 
 #: tracker/ui/add_issue.xml.en:0
 msgid "Description:"
