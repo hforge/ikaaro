@@ -187,6 +187,9 @@ class Skin(UIFolder):
                          'title': base.gettext(title),
                          'class': '', 'src': icon, 'items': []})
 
+        if not menu:
+            return None
+
         return {'title': base.gettext(base.class_title),
                 'content': build_menu(menu)}
 
