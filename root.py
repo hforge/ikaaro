@@ -68,13 +68,14 @@ class Root(WebSite):
         ['browse_content?mode=list',
          'browse_content?mode=thumbnails'],
         ['new_resource_form'],
-        ['edit_metadata_form',
+        ['edit_metadata_form'],
+        ['control_panel',
+         'permissions_form',
+         'new_user_form',
          'virtual_hosts_form',
          'anonymous_form',
          'languages_form',
          'contact_options_form'],
-        ['permissions_form',
-         'new_user_form'],
         ['last_changes']]
 
     __fixed_handlers__ = ['users', 'ui']

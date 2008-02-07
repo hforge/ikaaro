@@ -60,14 +60,16 @@ class WebSite(RoleAware, Folder):
          'browse_content?mode=thumbnails',
          'browse_content?mode=image'],
         ['new_resource_form'],
-        ['broken_links', 'orphans'],
-        ['edit_metadata_form',
+        ['edit_metadata_form'],
+        ['control_panel',
+         'permissions_form',
+         'new_user_form',
          'virtual_hosts_form',
          'anonymous_form',
          'languages_form',
-         'contact_options_form'],
-        ['permissions_form',
-         'new_user_form'],
+         'contact_options_form',
+         'broken_links',
+         'orphans'],
         ['last_changes']]
 
     __fixed_handlers__ = ['skin', 'index']
@@ -93,6 +95,45 @@ class WebSite(RoleAware, Folder):
         return schema
 
 
+    ########################################################################
+    # Publish
+    ########################################################################
+    def unauthorized(self, context):
+        return self.login_form(context)
+
+
+    ########################################################################
+    # API
+    ########################################################################
+    def get_default_language(self):
+        return self.get_property('website_languages')[0]
+
+
+    def before_traverse(self, context, min=Decimal('0.000001'),
+                        zero=Decimal('0.0')):
+        # The default language
+        accept = context.accept_language
+        default = self.get_default_language()
+        if accept.get(default, zero) < min:
+            accept.set(default, min)
+        # The Query
+        language = context.get_form_value('language')
+        if language is not None:
+            context.set_cookie('language', language)
+        # Language negotiation
+        user = context.user
+        if user is None:
+            language = context.get_cookie('language')
+            if language is not None:
+                accept.set(language, 2.0)
+        else:
+            language = user.get_property('user_language')
+            accept.set(language, 2.0)
+
+
+    #######################################################################
+    # UI / New Instance
+    #######################################################################
     @staticmethod
     def new_instance_form(cls, context):
         namespace = {}
@@ -150,52 +191,47 @@ class WebSite(RoleAware, Folder):
         return context.come_back(MSG_NEW_RESOURCE, goto=goto)
 
 
-    ########################################################################
-    # Publish
-    ########################################################################
-    def unauthorized(self, context):
-        return self.login_form(context)
+    #######################################################################
+    # UI / Control Panel
+    #######################################################################
+    def get_subviews(self, name):
+        subviews = Folder.get_subviews(self, name)
+        if name == 'control_panel':
+            return subviews[1:]
+        return subviews
 
 
-    ########################################################################
-    # API
-    ########################################################################
-    def get_default_language(self):
-        return self.get_property('website_languages')[0]
+    control_panel__access__ = 'is_allowed_to_view'
+    control_panel__label__ = u'Control Panel'
+    control_panel__sublabel__ = u'Control Panel'
+    control_panel__icon__ = '/ui/images/Settings16.png'
+    def control_panel(self, context):
+        namespace = {}
+        namespace['types'] = []
+        for name in self.get_subviews('control_panel'):
+            method = getattr(self, name, None)
+            if method is None:
+                continue
+            if not self.is_access_allowed(context.user, self, name):
+                continue
+            title = getattr(self, '%s__sublabel__' % name)
+            description = getattr(self, '%s__description__' % name, None)
+            icon = getattr(self, '%s__icon__' % name)
+            namespace['types'].append({
+                'icon': icon,
+                'title': self.gettext(title),
+                'description': self.gettext(description),
+                'url': ';%s' % name})
 
-
-    def before_traverse(self, context, min=Decimal('0.000001'),
-                        zero=Decimal('0.0')):
-        # The default language
-        accept = context.accept_language
-        default = self.get_default_language()
-        if accept.get(default, zero) < min:
-            accept.set(default, min)
-        # The Query
-        language = context.get_form_value('language')
-        if language is not None:
-            context.set_cookie('language', language)
-        # Language negotiation
-        user = context.user
-        if user is None:
-            language = context.get_cookie('language')
-            if language is not None:
-                accept.set(language, 2.0)
-        else:
-            language = user.get_property('user_language')
-            accept.set(language, 2.0)
+        handler = self.get_object('/ui/folder/new_resource.xml.en')
+        return stl(handler, namespace)
 
 
     #######################################################################
-    # UI / Edit
-    #######################################################################
-    edit_metadata_form__label__ = u'Edit'
-
-    #######################################################################
-    # UI / Edit / Virtual Hosts
+    # UI / Control Panel / Virtual Hosts
     #######################################################################
     virtual_hosts_form__access__ = 'is_admin'
-    virtual_hosts_form__label__ = u'Edit'
+    virtual_hosts_form__label__ = u'Control Panel'
     virtual_hosts_form__sublabel__ = u'Virtual Hosts'
     virtual_hosts_form__icon__ = '/ui/images/WebSite16.png'
     def virtual_hosts_form(self, context):
@@ -219,10 +255,10 @@ class WebSite(RoleAware, Folder):
 
 
     #######################################################################
-    # UI / Edit / Languages
+    # UI / Control Panel / Languages
     #######################################################################
     languages_form__access__ = 'is_admin'
-    languages_form__label__ = u'Edit'
+    languages_form__label__ = u'Control Panel'
     languages_form__sublabel__ = u'Languages'
     languages_form__icon__ = '/ui/images/button_translate.png'
     def languages_form(self, context):
@@ -297,10 +333,10 @@ class WebSite(RoleAware, Folder):
 
 
     #######################################################################
-    # UI / Edit / Security
+    # UI / Control Panel / Security
     #######################################################################
     anonymous_form__access__ = 'is_allowed_to_edit'
-    anonymous_form__label__ = u'Edit'
+    anonymous_form__label__ = u'Control Panel'
     anonymous_form__sublabel__ = u'Security Policy'
     anonymous_form__icon__ = '/ui/aruni/images/action_login.png'
     def anonymous_form(self, context):
@@ -325,10 +361,10 @@ class WebSite(RoleAware, Folder):
 
 
     #######################################################################
-    # UI / Edit / Contact
+    # UI / Control Panel / Contact
     #######################################################################
     contact_options_form__access__ = 'is_allowed_to_edit'
-    contact_options_form__label__ = u'Edit'
+    contact_options_form__label__ = u'Control Panel'
     contact_options_form__sublabel__ = u'Contact'
     contact_options_form__icon__ = '/ui/aruni/images/action_contact.png'
     def contact_options_form(self, context):
@@ -365,6 +401,48 @@ class WebSite(RoleAware, Folder):
         self.set_property('contacts', contacts)
 
         return context.come_back(MSG_CHANGES_SAVED)
+
+
+    #######################################################################
+    # UI / Control Panel / Broken links
+    #######################################################################
+    broken_links__access__ = 'is_admin'
+    broken_links__label__ = u'Control Panel'
+    broken_links__sublabel__ = u'Broken Links'
+    broken_links__icon__ = '/ui/images/clear16.png'
+    def broken_links(self, context):
+        root = context.root
+
+        # Find out broken links
+        broken = {}
+        catalog = context.server.catalog
+        base = self.get_abspath()
+        base_str = str(base)
+        for link in catalog.get_unique_values('links'):
+            if root.has_object(link):
+                continue
+            query = AndQuery(EqQuery('paths', base_str),
+                             EqQuery('links', link))
+            link = str(base.get_pathto(Path(link)))
+            for brain in catalog.search(query).get_documents():
+                broken.setdefault(brain.abspath, []).append(link)
+        # Build the namespace
+        namespace = {}
+        objects = []
+        total = 0
+        keys = broken.keys()
+        keys.sort()
+        for path in keys:
+            links = broken[path]
+            path = str(base.get_pathto(Path(path)))
+            n = len(links)
+            objects.append({'path': path, 'links': links, 'n': n})
+            total += n
+        namespace['objects'] = objects
+        namespace['total'] = total
+
+        handler = self.get_object('/ui/website/broken_links.xml')
+        return stl(handler, namespace)
 
 
     #######################################################################
@@ -745,48 +823,6 @@ class WebSite(RoleAware, Folder):
     def license(self, context):
         handler = self.get_object('/ui/root/license.xml')
         return stl(handler)
-
-
-    #######################################################################
-    # UI / Broken links
-    #######################################################################
-    broken_links__access__ = 'is_admin'
-    broken_links__label__ = u'Maintenance'
-    broken_links__sublabel__ = u'Broken Links'
-    broken_links__icon__ = '/ui/images/clear16.png'
-    def broken_links(self, context):
-        root = context.root
-
-        # Find out broken links
-        broken = {}
-        catalog = context.server.catalog
-        base = self.get_abspath()
-        base_str = str(base)
-        for link in catalog.get_unique_values('links'):
-            if root.has_object(link):
-                continue
-            query = AndQuery(EqQuery('paths', base_str),
-                             EqQuery('links', link))
-            link = str(base.get_pathto(Path(link)))
-            for brain in catalog.search(query).get_documents():
-                broken.setdefault(brain.abspath, []).append(link)
-        # Build the namespace
-        namespace = {}
-        objects = []
-        total = 0
-        keys = broken.keys()
-        keys.sort()
-        for path in keys:
-            links = broken[path]
-            path = str(base.get_pathto(Path(path)))
-            n = len(links)
-            objects.append({'path': path, 'links': links, 'n': n})
-            total += n
-        namespace['objects'] = objects
-        namespace['total'] = total
-
-        handler = self.get_object('/ui/website/broken_links.xml')
-        return stl(handler, namespace)
 
 
 

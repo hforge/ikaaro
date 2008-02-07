@@ -765,8 +765,9 @@ class Folder(DBObject):
     def orphans(self, context, sortby=['title'], sortorder='up',
                 batchsize=20):
         """Orphans are files not referenced in another object of the database.
-        It extends the concept of "orphans pages" from the wiki to all file-like
-        objects.
+        It extends the concept of "orphans pages" from the wiki to all
+        file-like objects.
+
         Orphans folders generally don't make sense because they serve as
         containers. TODO or list empty folders?
         """

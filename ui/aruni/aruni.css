@@ -176,7 +176,11 @@ a img { border: 0; }
   padding: 0.3em;
   font-size: 1.4em;
 }
-#body h1, #body h2, #body h3, #body h4, #body h5, #body h6 { border-bottom: 1px solid #d3d7cf; }
+
+#body h1, #body h2, #body h3, #body h4, #body h5, #body h6 {
+  border-bottom: 1px solid #d3d7cf;
+}
+
 #body ol li { list-style-type: decimal; }
 #body ul li { list-style-type: square; }
 
@@ -300,21 +304,65 @@ table.new_resource_thumb {
   width: 24em;
 }
 
-.button_ok { padding-left: 16px; background-image: url(../images/button_ok.png); }
-.button_cancel { padding-left: 16px; background-image: url(../images/button_cancel.png); }
-.button_search { padding-left: 16px; background-image: url(../images/button_search.png); }
-.button_upload { padding-left: 16px; background-image: url(../images/button_upload.png); }
-.button_external { padding-left: 16px; background-image: url(../images/button_external.png); }
-.button_rename { padding-left: 16px; background-image: url(../images/button_rename.png); }
-.button_delete { padding-left: 16px; background-image: url(../images/button_delete.png); }
-.button_copy { padding-left: 16px; background-image: url(../images/button_copy.png); }
-.button_cut { padding-left: 16px; background-image: url(../images/button_cut.png); }
-.button_paste { padding-left: 16px; background-image: url(../images/button_paste.png); }
-.button_translate { padding-left: 16px; background-image: url(../images/button_translate.png); }
-.button_compare { padding-left: 16px; background-image: url(../images/button_compare.png); }
-.button_add { padding-left: 16px; background-image: url(../images/button_add.png); }
-.button_select_all { padding-left: 16px; background-image: url(../images/button_select_all.png); }
-.button_select_none { padding-left: 16px; background-image: url(../images/button_select_none.png); }
+.button_ok {
+  padding-left: 16px; background-image: url(../images/button_ok.png);
+}
+
+.button_cancel {
+  padding-left: 16px; background-image: url(../images/button_cancel.png);
+}
+
+.button_search {
+  padding-left: 16px; background-image: url(../images/button_search.png);
+}
+
+.button_upload {
+  padding-left: 16px; background-image: url(../images/button_upload.png);
+}
+
+.button_external {
+  padding-left: 16px; background-image: url(../images/button_external.png);
+}
+
+.button_rename {
+  padding-left: 16px; background-image: url(../images/button_rename.png);
+}
+
+.button_delete {
+  padding-left: 16px; background-image: url(../images/button_delete.png);
+}
+
+.button_copy {
+  padding-left: 16px; background-image: url(../images/button_copy.png);
+}
+
+.button_cut {
+  padding-left: 16px; background-image: url(../images/button_cut.png);
+}
+
+.button_paste {
+  padding-left: 16px; background-image: url(../images/button_paste.png);
+}
+
+.button_translate {
+  padding-left: 16px; background-image: url(../images/button_translate.png);
+}
+
+.button_compare {
+  padding-left: 16px; background-image: url(../images/button_compare.png);
+}
+
+.button_add {
+  padding-left: 16px; background-image: url(../images/button_add.png);
+}
+
+.button_select_all {
+  padding-left: 16px; background-image: url(../images/button_select_all.png);
+}
+
+.button_select_none {
+  padding-left: 16px; background-image: url(../images/button_select_none.png);
+}
 
 .results li { margin: 0.3em 0.3em 0.6em; }
 .result_control { background: #deeff1; }

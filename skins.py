@@ -116,11 +116,8 @@ class Skin(UIFolder):
     #######################################################################
     def get_main_menu_options(self, context):
         return [
-            {'title': u'Users Directory',
-             'path': '/', 'method': 'permissions_form',
-             'icon': '/ui/images/UserFolder16.png'},
-            {'title': u'Settings',
-             'path': '/', 'method': 'languages_form',
+            {'title': u'Control Panel',
+             'path': '.', 'method': 'control_panel',
              'icon': '/ui/images/Settings16.png'}]
 
 
@@ -136,10 +133,10 @@ class Skin(UIFolder):
             title = option['title']
             src = option['icon']
 
-            handler = root.get_object(path)
-            ac = handler.get_access_control()
-            if ac.is_access_allowed(user, handler, method):
-                href = '%s/;%s' % (here.get_pathto(handler), method)
+            object = root.get_object(path)
+            ac = object.get_access_control()
+            if ac.is_access_allowed(user, object, method):
+                href = '%s/;%s' % (here.get_pathto(object), method)
                 menu.append({'href': href, 'title': self.gettext(title),
                              'class': '', 'src': src, 'items': []})
 
