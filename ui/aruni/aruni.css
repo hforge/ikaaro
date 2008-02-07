@@ -69,6 +69,10 @@ a img { border: 0; }
   background-image: url(images/action_home.png);
 }
 
+#header a#top_menu_profile {
+  background-image: url(images/action_home.png);
+}
+
 #header a#top_menu_logout {
   background-image: url(images/action_logout.png);
 }

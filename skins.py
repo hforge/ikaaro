@@ -115,21 +115,13 @@ class Skin(UIFolder):
     # Left Menu
     #######################################################################
     def get_main_menu_options(self, context):
-        user = context.user
-
-        options = []
-        append = options.append
-        if user is not None:
-            path = '/users/%s' % user.name
-            append({'path': path, 'method': 'profile', 'title': u'My Profile',
-                    'icon': '/ui/aruni/images/action_home.png'})
-        append({'path': '/', 'method': 'permissions_form',
-                'title': u'Users Directory',
-                'icon': '/ui/images/UserFolder16.png'})
-        append({'path': '/', 'method': 'languages_form', 'title': u'Settings',
-                'icon': '/ui/images/Settings16.png'})
-
-        return options
+        return [
+            {'title': u'Users Directory',
+             'path': '/', 'method': 'permissions_form',
+             'icon': '/ui/images/UserFolder16.png'},
+            {'title': u'Settings',
+             'path': '/', 'method': 'languages_form',
+             'icon': '/ui/images/Settings16.png'}]
 
 
     def get_main_menu(self, context):

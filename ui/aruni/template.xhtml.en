@@ -30,6 +30,7 @@
 
       <stl:block if="user/info">
         (logged in as ${user/info/title})<br /><br />
+        <a href="${user/info/home}" id="top_menu_profile">My Profile</a>
         <a href="/;logout" id="top_menu_logout">Log out</a>
       </stl:block>
 
