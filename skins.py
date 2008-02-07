@@ -123,9 +123,6 @@ class Skin(UIFolder):
             path = '/users/%s' % user.name
             append({'path': path, 'method': 'profile', 'title': u'My Profile',
                     'icon': '/ui/aruni/images/action_home.png'})
-            append({'path': path, 'method': 'browse_content',
-                    'title': u'My Content',
-                    'icon': '/ui/images/Folder16.png'})
         append({'path': '/', 'method': 'permissions_form',
                 'title': u'Users Directory',
                 'icon': '/ui/images/UserFolder16.png'})
