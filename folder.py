@@ -67,8 +67,8 @@ class Folder(DBObject):
     class_layout = {}
     class_title = u'Folder'
     class_description = u'Organize your files and documents with folders.'
-    class_icon16 = 'images/Folder16.png'
-    class_icon48 = 'images/Folder48.png'
+    class_icon16 = 'icons/16x16/folder.png'
+    class_icon48 = 'icons/48x48/folder.png'
     class_views = [
         ['browse_content?mode=list',
          'browse_content?mode=thumbnails',
@@ -295,7 +295,7 @@ class Folder(DBObject):
         for cls in self.get_document_types():
             if cls.class_id == type:
                 return cls.get_path_to_icon()
-        return '/ui/images/new16.png'
+        return '/ui/icons/16x16/new.png'
 
 
     def get_context_menu_base(self):
@@ -685,9 +685,9 @@ class Folder(DBObject):
 
     def browse_content__icon__(self, **kw):
         mode = kw.get('mode', 'thumbnails')
-        return {'thumbnails': '/ui/images/Folder16.png',
-                'list': '/ui/images/Folder16.png',
-                'image': '/ui/images/Image16.png'}[mode]
+        return {'thumbnails': '/ui/icons/16x16/folder.png',
+                'list': '/ui/icons/16x16/folder.png',
+                'image': '/ui/icons/16x16/image.png'}[mode]
 
     def browse_content(self, context):
         mode = context.get_form_value('mode', default='list')
@@ -746,7 +746,7 @@ class Folder(DBObject):
     last_changes__access__ = 'is_allowed_to_view'
     last_changes__label__ = u"Last Changes"
     last_changes__title__ = u"Last Changes"
-    last_changes__icon__ = '/ui/images/icalendar16.png'
+    last_changes__icon__ = '/ui/icons/16x16/icalendar.png'
     def last_changes(self, context, sortby=['mtime'], sortorder='down',
                      batchsize=20):
         query = EqQuery('is_version_aware', '1')

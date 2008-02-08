@@ -59,8 +59,8 @@ class User(AccessControl, Folder):
     class_id = 'user'
     class_version = '20071215'
     class_title = 'User'
-    class_icon16 = 'images/User16.png'
-    class_icon48 = 'images/User48.png'
+    class_icon16 = 'icons/16x16/user.png'
+    class_icon48 = 'icons/48x48/user.png'
     class_views = [
         ['profile'],
         ['browse_content?mode=list',
@@ -291,7 +291,7 @@ class User(AccessControl, Folder):
     edit_form__access__ = 'is_allowed_to_edit'
     edit_form__label__ = u'Edit'
     edit_form__sublabel__ = u'Preferences'
-    edit_form__icon__ = '/ui/images/Skin16.png'
+    edit_form__icon__ = '/ui/icons/16x16/skin.png'
     def edit_form(self, context):
         root = context.root
         user = context.user
@@ -325,7 +325,7 @@ class User(AccessControl, Folder):
     edit_account_form__access__ = 'is_allowed_to_edit'
     edit_account_form__label__ = u'Edit'
     edit_account_form__sublabel__ = u'Account'
-    edit_account_form__icon__ = '/ui/images/Settings16.png'
+    edit_account_form__icon__ = '/ui/icons/16x16/settings.png'
     def edit_account_form(self, context):
         # Build the namespace
         namespace = {}
@@ -433,7 +433,7 @@ class User(AccessControl, Folder):
     # Tasks
     tasks_list__access__ = 'is_allowed_to_edit'
     tasks_list__label__ = u'Tasks'
-    tasks_list__icon__ = '/ui/images/tasks16.png'
+    tasks_list__icon__ = '/ui/icons/16x16/tasks.png'
     def tasks_list(self, context):
         root = context.root
         user = context.user
@@ -475,8 +475,8 @@ class UserFolder(Folder):
 
     class_id = 'users'
     class_version = '20071215'
-    class_icon16 = 'images/UserFolder16.png'
-    class_icon48 = 'images/UserFolder48.png'
+    class_icon16 = 'icons/16x16/userfolder.png'
+    class_icon48 = 'icons/48x48/userfolder.png'
     class_views = [['view'],
                    ['browse_content?mode=list'],
                    ['edit_metadata_form']]

@@ -52,8 +52,8 @@ class WebSite(RoleAware, Folder):
     class_version = '20071215'
     class_title = u'Web Site'
     class_description = u'Create a new Web Site or Work Place.'
-    class_icon16 = 'images/WebSite16.png'
-    class_icon48 = 'images/WebSite48.png'
+    class_icon16 = 'icons/16x16/website.png'
+    class_icon48 = 'icons/48x48/website.png'
     class_skin = 'ui/aruni'
     class_views = [
         ['browse_content?mode=list',
@@ -204,7 +204,7 @@ class WebSite(RoleAware, Folder):
     control_panel__access__ = 'is_allowed_to_view'
     control_panel__label__ = u'Control Panel'
     control_panel__sublabel__ = u'Control Panel'
-    control_panel__icon__ = '/ui/images/Settings16.png'
+    control_panel__icon__ = '/ui/icons/16x16/settings.png'
     def control_panel(self, context):
         namespace = {}
         namespace['types'] = []
@@ -233,7 +233,7 @@ class WebSite(RoleAware, Folder):
     virtual_hosts_form__access__ = 'is_admin'
     virtual_hosts_form__label__ = u'Control Panel'
     virtual_hosts_form__sublabel__ = u'Virtual Hosts'
-    virtual_hosts_form__icon__ = '/ui/images/WebSite16.png'
+    virtual_hosts_form__icon__ = '/ui/icons/16x16/website.png'
     def virtual_hosts_form(self, context):
         namespace = {}
         vhosts = self.get_property('vhosts')
@@ -409,7 +409,7 @@ class WebSite(RoleAware, Folder):
     broken_links__access__ = 'is_admin'
     broken_links__label__ = u'Control Panel'
     broken_links__sublabel__ = u'Broken Links'
-    broken_links__icon__ = '/ui/images/clear16.png'
+    broken_links__icon__ = '/ui/icons/16x16/clear.png'
     def broken_links(self, context):
         root = context.root
 

@@ -46,8 +46,8 @@ class File(WorkflowAware, VersioningAware):
     class_version = '20071216'
     class_title = u'File'
     class_description = u'Upload office documents, images, media files, etc.'
-    class_icon16 = 'images/File16.png'
-    class_icon48 = 'images/File48.png'
+    class_icon16 = 'icons/16x16/file.png'
+    class_icon48 = 'icons/48x48/file.png'
     class_views = [['download_form'],
                    ['externaledit', 'upload_form'],
                    ['backlinks'],
@@ -253,7 +253,7 @@ class File(WorkflowAware, VersioningAware):
     download_form__access__ = 'is_allowed_to_view'
     download_form__label__ = u'View'
     download_form__sublabel__ = u'Download'
-    download_form__icon__ = '/ui/images/view16.png'
+    download_form__icon__ = '/ui/icons/16x16/view.png'
     def download_form(self, context):
         namespace = {}
         namespace['url'] = '../' + self.name

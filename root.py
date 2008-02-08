@@ -62,8 +62,8 @@ class Root(WebSite):
     class_id = 'iKaaro'
     class_version = '20071215'
     class_title = u'iKaaro'
-    class_icon16 = 'images/Root16.png'
-    class_icon48 = 'images/Root48.png'
+    class_icon16 = 'icons/16x16/root.png'
+    class_icon48 = 'icons/48x48/root.png'
     class_views = [
         ['browse_content?mode=list',
          'browse_content?mode=thumbnails'],

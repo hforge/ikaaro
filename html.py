@@ -62,7 +62,7 @@ class EpozEditable(object):
     edit_form__access__ = 'is_allowed_to_edit'
     edit_form__label__ = u'Edit'
     edit_form__sublabel__ = u'Inline'
-    edit_form__icon__ = '/ui/images/edit16.png'
+    edit_form__icon__ = '/ui/icons/16x16/edit.png'
     def edit_form(self, context):
         """WYSIWYG editor for HTML documents.
         """
@@ -115,8 +115,8 @@ class WebPage(EpozEditable, Multilingual, Text):
     class_version = '20071217'
     class_title = u'Web Page'
     class_description = u'Create and publish a Web Page.'
-    class_icon16 = 'images/HTML16.png'
-    class_icon48 = 'images/HTML48.png'
+    class_icon16 = 'icons/16x16/html.png'
+    class_icon48 = 'icons/48x48/html.png'
     class_views = [['view'],
                    ['edit_form', 'externaledit', 'upload_form'],
                    ['edit_metadata_form'],

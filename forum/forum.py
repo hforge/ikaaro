@@ -38,8 +38,8 @@ class Forum(Folder):
     class_version = '20071215'
     class_title = u'Forum'
     class_description = u'An iKaaro forum'
-    class_icon48 = 'forum/Forum48.png'
     class_icon16 = 'forum/Forum16.png'
+    class_icon48 = 'forum/Forum48.png'
     class_views = [['view'], ['new_thread_form'], ['edit_metadata_form']]
 
     thread_class = Thread
@@ -55,7 +55,7 @@ class Forum(Folder):
 
     view__access__ = 'is_allowed_to_view'
     view__label__ = u"View"
-    view__icon__ = '/ui/images/view16.png'
+    view__icon__ = '/ui/icons/16x16/view.png'
     def view(self, context):
         context.styles.append('/ui/forum/forum.css')
         # Namespace
@@ -87,7 +87,7 @@ class Forum(Folder):
 
     new_thread_form__access__ = 'is_allowed_to_add'
     new_thread_form__label__ = u"New Thread"
-    new_thread_form__icon__ = '/ui/images/new16.png'
+    new_thread_form__icon__ = '/ui/icons/16x16/new.png'
     def new_thread_form(self, context):
         context.styles.append('/ui/forum/forum.css')
 

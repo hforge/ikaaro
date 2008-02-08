@@ -39,8 +39,8 @@ class Text(File):
     class_version = '20071216'
     class_title = u'Plain Text'
     class_description = u'Keep your notes with plain text files.'
-    class_icon16 = 'images/Text16.png'
-    class_icon48 = 'images/Text48.png'
+    class_icon16 = 'icons/16x16/text.png'
+    class_icon48 = 'icons/48x48/text.png'
     class_views = [['view'],
                    ['edit_form', 'externaledit', 'upload_form'],
                    ['edit_metadata_form'],
@@ -62,7 +62,7 @@ class Text(File):
     view__access__ = 'is_allowed_to_view'
     view__label__ = u'View'
     view__sublabel__ = u'Plain Text'
-    view__icon__ = '/ui/images/view16.png'
+    view__icon__ = '/ui/icons/16x16/view.png'
     def view(self, context):
         namespace = {}
         namespace['text'] = self.handler.to_str()
@@ -77,7 +77,7 @@ class Text(File):
     edit_form__access__ = 'is_allowed_to_edit'
     edit_form__label__ = u'Edit'
     edit_form__sublabel__ = u'Inline'
-    edit_form__icon__ = '/ui/images/edit16.png'
+    edit_form__icon__ = '/ui/icons/16x16/edit.png'
     def edit_form(self, context):
         namespace = {}
         namespace['data'] = self.handler.to_str()
@@ -117,8 +117,8 @@ class PO(Text):
     class_id = 'text/x-po'
     class_version = '20071216'
     class_title = u'Message Catalog'
-    class_icon16 = 'images/Po16.png'
-    class_icon48 = 'images/Po48.png'
+    class_icon16 = 'icons/16x16/po.png'
+    class_icon48 = 'icons/48x48/po.png'
     class_handler = POFile
 
     #######################################################################
@@ -194,8 +194,8 @@ class CSS(Text):
     class_id = 'text/css'
     class_version = '20071216'
     class_title = u'CSS'
-    class_icon16 = 'images/CSS16.png'
-    class_icon48 = 'images/CSS48.png'
+    class_icon16 = 'icons/16x16/css.png'
+    class_icon48 = 'icons/48x48/css.png'
 
 
 
@@ -204,8 +204,8 @@ class Python(Text):
     class_id = 'text/x-python'
     class_version = '20071216'
     class_title = u'Python'
-    class_icon16 = 'images/Python16.png'
-    class_icon48 = 'images/Python48.png'
+    class_icon16 = 'icons/16x16/python.png'
+    class_icon48 = 'icons/48x48/python.png'
     class_handler = PythonFile
 
 

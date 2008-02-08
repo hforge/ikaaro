@@ -87,7 +87,7 @@ textarea#wpTextbox1 {
 .reference.external:visited {
   padding-left: 18px;
   color: blue;
-  background: url(../images/WebSite16.png) top left no-repeat;
+  background: url(../icons/16x16/website.png) top left no-repeat;
 }
 
 .reference.internal:link,

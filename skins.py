@@ -62,7 +62,7 @@ map = {
 class UIFolder(Node, Folder):
 
     class_title = 'UI'
-    class_icon48 = 'images/Folder48.png'
+    class_icon48 = 'icons/48x48/folder.png'
 
 
     def _get_object(self, name):
@@ -105,8 +105,8 @@ class UIFolder(Node, Folder):
 class Skin(UIFolder):
 
     class_title = u'Skin'
-    class_icon16 = 'images/Skin16.png'
-    class_icon48 = 'images/Skin48.png'
+    class_icon16 = 'icons/16x16/skin.png'
+    class_icon48 = 'icons/48x48/skin.png'
 
     __fixed_handlers__ = ['template.xhtml.en']
 
@@ -118,7 +118,7 @@ class Skin(UIFolder):
         return [
             {'title': u'Control Panel',
              'path': '.', 'method': 'control_panel',
-             'icon': '/ui/images/Settings16.png'}]
+             'icon': '/ui/icons/16x16/settings.png'}]
 
 
     def get_main_menu(self, context):

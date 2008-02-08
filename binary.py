@@ -39,8 +39,8 @@ class Image(File):
     class_id = 'image'
     class_version = '20071216'
     class_title = u'Image'
-    class_icon16 = 'images/Image16.png'
-    class_icon48 = 'images/Image48.png'
+    class_icon16 = 'icons/16x16/image.png'
+    class_icon48 = 'icons/48x48/image.png'
     class_views = [['view', 'download_form'],
                    ['externaledit', 'upload_form'],
                    ['backlinks'],
@@ -58,7 +58,7 @@ class Image(File):
 
         data, format = self.handler.get_thumbnail(width, height)
         if data is None:
-            object = self.get_object('/ui/images/Image48.png')
+            object = self.get_object('/ui/icons/48x48/image.png')
             data = object.to_str()
             format = 'png'
 
@@ -70,7 +70,7 @@ class Image(File):
     view__access__ = 'is_allowed_to_view'
     view__label__ = u'View'
     view__sublabel__ = u'View'
-    view__icon__ = '/ui/images/view16.png'
+    view__icon__ = '/ui/icons/16x16/view.png'
     def view(self, context):
         handler = self.get_object('/ui/binary/Image_view.xml')
         return handler.to_str()
@@ -83,8 +83,8 @@ class Video(File):
     class_version = '20071216'
     class_title = u'Video'
     class_description = u'Video'
-    class_icon16 = 'images/Flash16.png'
-    class_icon48 = 'images/Flash48.png'
+    class_icon16 = 'icons/16x16/flash.png'
+    class_icon48 = 'icons/48x48/flash.png'
 
 
     view__access__ = 'is_allowed_to_view'
@@ -105,8 +105,8 @@ class Flash(File):
     class_version = '20071216'
     class_title = u'Flash'
     class_description = u'Flash Document'
-    class_icon16 = 'images/Flash16.png'
-    class_icon48 = 'images/Flash48.png'
+    class_icon16 = 'icons/16x16/flash.png'
+    class_icon48 = 'icons/48x48/flash.png'
 
 
     view__label__ = u'View'
@@ -127,8 +127,8 @@ class MSWord(File):
     class_version = '20071216'
     class_title = u'Word'
     class_description = u'Word Text'
-    class_icon16 = 'images/Word16.png'
-    class_icon48 = 'images/Word48.png'
+    class_icon16 = 'icons/16x16/word.png'
+    class_icon48 = 'icons/48x48/word.png'
     class_handler = MSWordFile
 
 
@@ -139,8 +139,8 @@ class MSExcel(File):
     class_version = '20071216'
     class_title = u'Excel'
     class_description = u'Excel Spreadsheet'
-    class_icon16 = 'images/Excel16.png'
-    class_icon48 = 'images/Excel48.png'
+    class_icon16 = 'icons/16x16/excel.png'
+    class_icon48 = 'icons/48x48/excel.png'
     class_handler = MSExcelFile
 
 
@@ -151,8 +151,8 @@ class MSPowerPoint(File):
     class_version = '20071216'
     class_title = u'PowerPoint'
     class_description = u'PowerPoint Presentation'
-    class_icon16 = 'images/PowerPoint16.png'
-    class_icon48 = 'images/PowerPoint48.png'
+    class_icon16 = 'icons/16x16/powerpoint.png'
+    class_icon48 = 'icons/48x48/powerpoint.png'
     class_handler = MSPowerPointFile
 
 
@@ -163,8 +163,8 @@ class OOWriter(File):
     class_version = '20071216'
     class_title = u'OOo Writer'
     class_description = u'OpenOffice.org Text'
-    class_icon16 = 'images/OOWriter16.png'
-    class_icon48 = 'images/OOWriter48.png'
+    class_icon16 = 'icons/16x16/oowriter.png'
+    class_icon48 = 'icons/48x48/oowriter.png'
     class_handler = SXWFile
 
 
@@ -175,8 +175,8 @@ class OOCalc(File):
     class_version = '20071216'
     class_title = u'OOo Calc'
     class_description = u'OpenOffice.org Spreadsheet'
-    class_icon16 = 'images/OOCalc16.png'
-    class_icon48 = 'images/OOCalc48.png'
+    class_icon16 = 'icons/16x16/oocalc.png'
+    class_icon48 = 'icons/48x48/oocalc.png'
     class_handler = SXCFile
 
 
@@ -187,8 +187,8 @@ class OOImpress(File):
     class_version = '20071216'
     class_title = u'OOo Impress'
     class_description = u'OpenOffice.org Presentation'
-    class_icon16 = 'images/OOImpress16.png'
-    class_icon48 = 'images/OOImpress48.png'
+    class_icon16 = 'icons/16x16/ooimpress.png'
+    class_icon48 = 'icons/48x48/ooimpress.png'
     class_handler = SXIFile
 
 
@@ -199,8 +199,8 @@ class PDF(File):
     class_version = '20071216'
     class_title = u'PDF'
     class_description = u'PDF Document'
-    class_icon16 = 'images/Pdf16.png'
-    class_icon48 = 'images/Pdf48.png'
+    class_icon16 = 'icons/16x16/pdf.png'
+    class_icon48 = 'icons/48x48/pdf.png'
     class_handler = PDFFile
 
 
@@ -211,8 +211,8 @@ class RTF(File):
     class_version = '20071216'
     class_title = u"RTF"
     class_description = u'RTF Document'
-    class_icon16 = 'images/Text16.png'
-    class_icon48 = 'images/Text48.png'
+    class_icon16 = 'icons/16x16/text.png'
+    class_icon48 = 'icons/48x48/text.png'
     class_handler = RTFFile
 
 
@@ -223,8 +223,8 @@ class ODT(File):
     class_version = '20071216'
     class_title = u'ODT'
     class_description = u'OpenDocument Text'
-    class_icon16 = 'images/Odt16.png'
-    class_icon48 = 'images/Odt48.png'
+    class_icon16 = 'icons/16x16/odt.png'
+    class_icon48 = 'icons/48x48/odt.png'
     class_handler = ODTFile
 
 
@@ -235,8 +235,8 @@ class ODS(File):
     class_version = '20071216'
     class_title = u'ODS'
     class_description = u'OpenDocument Spreadsheet'
-    class_icon16 = 'images/Ods16.png'
-    class_icon48 = 'images/Ods48.png'
+    class_icon16 = 'icons/16x16/ods.png'
+    class_icon48 = 'icons/48x48/ods.png'
     class_handler = ODSFile
 
 
@@ -247,8 +247,8 @@ class ODP(File):
     class_version = '20071216'
     class_title = u'ODP'
     class_description = u'OpenDocument Presentation'
-    class_icon16 = 'images/Odp16.png'
-    class_icon48 = 'images/Odp48.png'
+    class_icon16 = 'icons/16x16/odp.png'
+    class_icon48 = 'icons/48x48/odp.png'
     class_handler = ODPFile
 
 
@@ -277,8 +277,8 @@ class ZipArchive(Archive):
     class_version = '20071216'
     class_title = u"Zip"
     class_description = u"Zip Archive"
-    class_icon16 = 'images/Zip16.png'
-    class_icon48 = 'images/Zip48.png'
+    class_icon16 = 'icons/16x16/zip.png'
+    class_icon48 = 'icons/48x48/zip.png'
     class_handler = ZIPFile
 
 
@@ -289,8 +289,8 @@ class TarArchive(Archive):
     class_version = '20071216'
     class_title = u"Tar"
     class_description = u"Tar Archive"
-    class_icon16 = 'images/Tar16.png'
-    class_icon48 = 'images/Tar48.png'
+    class_icon16 = 'icons/16x16/tar.png'
+    class_icon48 = 'icons/48x48/tar.png'
     class_handler = TARFile
 
 
@@ -304,8 +304,8 @@ class Gzip(File):
     class_version = '20071216'
     class_title = u"Gzip"
     class_description = u"Gzip Compressed"
-    class_icon16 = 'images/Gzip16.png'
-    class_icon48 = 'images/Gzip48.png'
+    class_icon16 = 'icons/16x16/gzip.png'
+    class_icon48 = 'icons/48x48/gzip.png'
     class_handler = GzipFile
 
 
@@ -316,8 +316,8 @@ class Bzip2(File):
     class_version = '20071216'
     class_title = u"Bzip2"
     class_description = u"Bzip2 Compressed"
-    class_icon16 = 'images/Bzip16.png'
-    class_icon48 = 'images/Bzip48.png'
+    class_icon16 = 'icons/16x16/bzip.png'
+    class_icon48 = 'icons/48x48/bzip.png'
     class_handler = Bzip2File
 
 

@@ -220,7 +220,7 @@ class WikiPage(Text):
     # UI / View
     #######################################################################
     view__sublabel__ = u'HTML'
-    view__icon__ = '/ui/images/HTML16.png'
+    view__icon__ = '/ui/icons/16x16/html.png'
     def view(self, context):
         context.styles.append('/ui/wiki/style.css')
         parent = self.parent
@@ -284,7 +284,7 @@ class WikiPage(Text):
     to_pdf__access__ = 'is_allowed_to_view'
     to_pdf__label__ = u"View"
     to_pdf__sublabel__ = u"PDF"
-    to_pdf__icon__ = '/ui/images/Pdf16.png'
+    to_pdf__icon__ = '/ui/icons/16x16/pdf.png'
     def to_pdf(self, context):
         parent = self.parent
         pages = [self.get_abspath()]
@@ -539,7 +539,7 @@ class WikiPage(Text):
     #######################################################################
     help__access__ = 'is_allowed_to_view'
     help__label__ = u"Help"
-    help__icon__ = '/ui/images/help16.png'
+    help__icon__ = '/ui/icons/16x16/help.png'
     def help(self, context):
         context.styles.append('/ui/wiki/style.css')
         namespace = {}

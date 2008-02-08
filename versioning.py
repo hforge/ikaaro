@@ -128,7 +128,7 @@ class VersioningAware(DBObject):
     ########################################################################
     history_form__access__ = 'is_allowed_to_view'
     history_form__label__ = u'History'
-    history_form__icon__ = '/ui/images/history16.png'
+    history_form__icon__ = '/ui/icons/16x16/history.png'
     def history_form(self, context):
         namespace = {}
 

@@ -716,7 +716,7 @@ class DBObject(CatalogAware, Node, DomainAware):
     edit_metadata_form__access__ = 'is_allowed_to_edit'
     edit_metadata_form__label__ = u'Metadata'
     edit_metadata_form__sublabel__ = u'Metadata'
-    edit_metadata_form__icon__ = '/ui/images/metadata16.png'
+    edit_metadata_form__icon__ = '/ui/icons/16x16/metadata.png'
     def edit_metadata_form(self, context):
         # Build the namespace
         namespace = {}

@@ -435,7 +435,7 @@ class CalendarView(object):
     monthly_view__access__ = 'is_allowed_to_view'
     monthly_view__label__ = u'View'
     monthly_view__sublabel__ = u'Monthly'
-    monthly_view__icon__ = '/ui/images/icalendar16.png'
+    monthly_view__icon__ = '/ui/icons/16x16/icalendar.png'
     def monthly_view(self, context):
         ndays = 7
         today_date = date.today()
@@ -508,7 +508,7 @@ class CalendarView(object):
     weekly_view__access__ = 'is_allowed_to_view'
     weekly_view__label__ = u'View'
     weekly_view__sublabel__ = u'Weekly'
-    weekly_view__icon__ = '/ui/images/icalendar16.png'
+    weekly_view__icon__ = '/ui/icons/16x16/icalendar.png'
     def weekly_view(self, context):
         ndays = 7
 
@@ -933,7 +933,7 @@ class CalendarView(object):
     edit_timetables_form__access__ = 'is_allowed_to_edit'
     edit_timetables_form__label__ = u'Edit'
     edit_timetables_form__sublabel__ = u'Timetables'
-    edit_timetables_form__icon__ = '/ui/images/Settings16.png'
+    edit_timetables_form__icon__ = '/ui/icons/16x16/settings.png'
     def edit_timetables_form(self, context):
         # Add ical css
         context.styles.append('/ui/ical/calendar.css')
@@ -1235,8 +1235,8 @@ class Calendar(Text, CalendarView):
     class_version = '20071216'
     class_title = u'Calendar'
     class_description = u'Schedule your time with calendar files.'
-    class_icon16 = 'images/icalendar16.png'
-    class_icon48 = 'images/icalendar48.png'
+    class_icon16 = 'icons/16x16/icalendar.png'
+    class_icon48 = 'icons/48x48/icalendar.png'
     class_views = [['monthly_view', 'weekly_view', 'download_form'],
                    ['upload_form', 'edit_timetables_form',
                     'edit_metadata_form', 'edit_event_form']]
@@ -1340,8 +1340,8 @@ class CalendarTable(Table, CalendarView):
     class_version = '20071216'
     class_title = u'Calendar'
     class_description = u'Schedule your time with calendar files.'
-    class_icon16 = 'images/icalendar16.png'
-    class_icon48 = 'images/icalendar48.png'
+    class_icon16 = 'icons/16x16/icalendar.png'
+    class_icon48 = 'icons/48x48/icalendar.png'
     class_views = [['monthly_view', 'weekly_view', 'download_form'],
                    ['upload_form', 'edit_timetables_form',
                     'edit_metadata_form', 'edit_event_form']]
