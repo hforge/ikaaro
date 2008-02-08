@@ -761,7 +761,7 @@ class Folder(DBObject):
     orphans__label__ = u"Orphans"
     orphans__sublabel__ = u"Orphans"
     orphans__title__ = u"Orphans"
-    orphans__icon__ = '/ui/images/orphans.png'
+    orphans__icon__ = '/ui/icons/16x16/orphans.png'
     def orphans(self, context, sortby=['title'], sortorder='up',
                 batchsize=20):
         """Orphans are files not referenced in another object of the database.

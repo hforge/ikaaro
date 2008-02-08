@@ -58,40 +58,40 @@ a img { border: 0; }
 }
 
 #header a#top_menu_login {
-  background-image: url(images/action_login.png);
+  background-image: url(../icons/16x16/action_login.png);
 }
 
 #header a#top_menu_register {
-  background-image: url(images/action_join.png);
+  background-image: url(../icons/16x16/action_join.png);
 }
 
 #header a#top_menu_home {
-  background-image: url(images/action_home.png);
+  background-image: url(../icons/16x16/action_home.png);
 }
 
 #header a#top_menu_profile {
-  background-image: url(images/action_home.png);
+  background-image: url(../icons/16x16/action_home.png);
 }
 
 #header a#top_menu_logout {
-  background-image: url(images/action_logout.png);
+  background-image: url(../icons/16x16/action_logout.png);
 }
 
 #header a#top_menu_search {
-  background-image: url(../images/button_search.png);
+  background-image: url(../icons/16x16/button_search.png);
 }
 
 #header a#top_menu_contact {
-  background-image: url(images/action_contact.png);
+  background-image: url(../icons/16x16/action_contact.png);
 }
 
 #site_search_form { float: right; }
 #site_search_form input { font-size: 1em; }
 
-#action_login { background-image: url(images/action_login.png); }
-#action_join { background-image: url(images/action_join.png); }
-#action_home { background-image: url(images/action_home.png); }
-#action_logout { background-image: url(images/action_logout.png); }
+#action_login { background-image: url(../icons/16x16/action_login.png); }
+#action_join { background-image: url(../icons/16x16/action_join.png); }
+#action_home { background-image: url(../icons/16x16/action_home.png); }
+#action_logout { background-image: url(../icons/16x16/action_logout.png); }
 
 #breadcrumbs { margin-bottom: .5em; }
 #breadcrumbs a, #breadcrumbs span { color: #888a85; }
@@ -313,19 +313,23 @@ table.new_resource_thumb {
 }
 
 .button_search {
-  padding-left: 16px; background-image: url(../images/button_search.png);
+  background-image: url(../icons/16x16/button_search.png);
+  padding-left: 16px;
 }
 
 .button_upload {
-  padding-left: 16px; background-image: url(../images/button_upload.png);
+  background-image: url(../icons/16x16/button_upload.png);
+  padding-left: 16px;
 }
 
 .button_external {
-  padding-left: 16px; background-image: url(../images/button_external.png);
+  background-image: url(../icons/16x16/button_external.png);
+  padding-left: 16px;
 }
 
 .button_rename {
-  padding-left: 16px; background-image: url(../images/button_rename.png);
+  background-image: url(../icons/16x16/button_rename.png);
+  padding-left: 16px;
 }
 
 .button_delete {
@@ -345,11 +349,13 @@ table.new_resource_thumb {
 }
 
 .button_translate {
-  padding-left: 16px; background-image: url(../images/button_translate.png);
+  background-image: url(../icons/16x16/button_translate.png);
+  padding-left: 16px;
 }
 
 .button_compare {
-  padding-left: 16px; background-image: url(../images/button_compare.png);
+  background-image: url(../icons/16x16/button_compare.png);
+  padding-left: 16px;
 }
 
 .button_add {

@@ -458,7 +458,7 @@ class RoleAware(AccessControl):
     new_user_form__access__ = 'is_admin'
     new_user_form__label__ = u'Control Panel'
     new_user_form__sublabel__ = u'Add New Member'
-    new_user_form__icon__ = '/ui/aruni/images/action_join.png'
+    new_user_form__icon__ = '/ui/icons/16x16/action_join.png'
     def new_user_form(self, context):
         namespace = {}
 

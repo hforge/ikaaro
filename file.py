@@ -285,7 +285,7 @@ class File(WorkflowAware, VersioningAware):
     externaledit__access__ = 'is_allowed_to_edit'
     externaledit__label__ = u'Edit'
     externaledit__sublabel__ = u'External'
-    externaledit__icon__ = '/ui/images/button_external.png'
+    externaledit__icon__ = '/ui/icons/16x16/button_external.png'
     def externaledit(self, context):
         handler = self.get_object('/ui/file/externaledit.xml')
         return stl(handler)
@@ -359,7 +359,7 @@ class File(WorkflowAware, VersioningAware):
     upload_form__access__ = 'is_allowed_to_edit'
     upload_form__label__ = u'Edit'
     upload_form__sublabel__ = u'Replace'
-    upload_form__icon__ = '/ui/images/button_upload.png'
+    upload_form__icon__ = '/ui/icons/16x16/button_upload.png'
     def upload_form(self, context):
         handler = self.get_object('/ui/file/upload.xml')
         return stl(handler)
@@ -395,7 +395,7 @@ class File(WorkflowAware, VersioningAware):
     backlinks__access__ = 'is_allowed_to_view'
     backlinks__label__ = u"Backlinks"
     backlinks__title__ = u"Backlinks"
-    backlinks__icon__ = '/ui/images/button_rename.png'
+    backlinks__icon__ = '/ui/icons/16x16/button_rename.png'
     def backlinks(self, context, sortby=['title'], sortorder='up',
                   batchsize=20):
         """Backlinks are the list of objects pointing to this object.

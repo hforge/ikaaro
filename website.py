@@ -260,7 +260,7 @@ class WebSite(RoleAware, Folder):
     languages_form__access__ = 'is_admin'
     languages_form__label__ = u'Control Panel'
     languages_form__sublabel__ = u'Languages'
-    languages_form__icon__ = '/ui/images/button_translate.png'
+    languages_form__icon__ = '/ui/icons/16x16/button_translate.png'
     def languages_form(self, context):
         namespace = {}
 
@@ -338,7 +338,7 @@ class WebSite(RoleAware, Folder):
     anonymous_form__access__ = 'is_allowed_to_edit'
     anonymous_form__label__ = u'Control Panel'
     anonymous_form__sublabel__ = u'Security Policy'
-    anonymous_form__icon__ = '/ui/aruni/images/action_login.png'
+    anonymous_form__icon__ = '/ui/icons/16x16/action_login.png'
     def anonymous_form(self, context):
         # Build the namespace
         namespace = {}
@@ -366,7 +366,7 @@ class WebSite(RoleAware, Folder):
     contact_options_form__access__ = 'is_allowed_to_edit'
     contact_options_form__label__ = u'Control Panel'
     contact_options_form__sublabel__ = u'Contact'
-    contact_options_form__icon__ = '/ui/aruni/images/action_contact.png'
+    contact_options_form__icon__ = '/ui/icons/16x16/action_contact.png'
     def contact_options_form(self, context):
         # Find out the contacts
         contacts = self.get_property('contacts')

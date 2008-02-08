@@ -269,7 +269,7 @@ class User(AccessControl, Folder):
     # Profile
     profile__access__ = 'is_allowed_to_view'
     profile__label__ = u'Profile'
-    profile__icon__ = '/ui/aruni/images/action_home.png'
+    profile__icon__ = '/ui/icons/16x16/action_home.png'
     def profile(self, context):
         root = context.root
         user = context.user
@@ -380,7 +380,7 @@ class User(AccessControl, Folder):
     edit_password_form__access__ = 'is_allowed_to_edit'
     edit_password_form__label__ = u'Edit'
     edit_password_form__sublabel__ = u'Password'
-    edit_password_form__icon__ = '/ui/aruni/images/action_login.png'
+    edit_password_form__icon__ = '/ui/icons/16x16/action_login.png'
     def edit_password_form(self, context):
         user = context.user
 

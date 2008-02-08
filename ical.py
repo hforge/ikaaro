@@ -652,7 +652,7 @@ class CalendarView(object):
     edit_event_form__access__ = 'is_allowed_to_edit'
     edit_event_form__label__ = u'Edit'
     edit_event_form__sublabel__ = u'Event'
-    edit_event_form__icon__ = '/ui/images/button_calendar.png'
+    edit_event_form__icon__ = '/ui/icons/16x16/button_calendar.png'
     def edit_event_form(self, context):
         keys = context.get_form_keys()
 
