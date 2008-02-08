@@ -85,7 +85,7 @@ class Thread(Folder):
 
     view__access__ = 'is_allowed_to_view'
     view__label__ = u"View"
-    view__icon__ = '/ui/icons/16x16/view.png'
+    view__icon__ = 'view.png'
     def view(self, context):
         context.styles.append('/ui/forum/forum.css')
 

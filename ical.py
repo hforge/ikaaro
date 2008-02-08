@@ -435,7 +435,7 @@ class CalendarView(object):
     monthly_view__access__ = 'is_allowed_to_view'
     monthly_view__label__ = u'View'
     monthly_view__sublabel__ = u'Monthly'
-    monthly_view__icon__ = '/ui/icons/16x16/icalendar.png'
+    monthly_view__icon__ = 'icalendar.png'
     def monthly_view(self, context):
         ndays = 7
         today_date = date.today()
@@ -508,7 +508,7 @@ class CalendarView(object):
     weekly_view__access__ = 'is_allowed_to_view'
     weekly_view__label__ = u'View'
     weekly_view__sublabel__ = u'Weekly'
-    weekly_view__icon__ = '/ui/icons/16x16/icalendar.png'
+    weekly_view__icon__ = 'icalendar.png'
     def weekly_view(self, context):
         ndays = 7
 
@@ -652,7 +652,7 @@ class CalendarView(object):
     edit_event_form__access__ = 'is_allowed_to_edit'
     edit_event_form__label__ = u'Edit'
     edit_event_form__sublabel__ = u'Event'
-    edit_event_form__icon__ = '/ui/icons/16x16/button_calendar.png'
+    edit_event_form__icon__ = 'button_calendar.png'
     def edit_event_form(self, context):
         keys = context.get_form_keys()
 
@@ -933,7 +933,7 @@ class CalendarView(object):
     edit_timetables_form__access__ = 'is_allowed_to_edit'
     edit_timetables_form__label__ = u'Edit'
     edit_timetables_form__sublabel__ = u'Timetables'
-    edit_timetables_form__icon__ = '/ui/icons/16x16/settings.png'
+    edit_timetables_form__icon__ = 'settings.png'
     def edit_timetables_form(self, context):
         # Add ical css
         context.styles.append('/ui/ical/calendar.css')

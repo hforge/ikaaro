@@ -119,14 +119,41 @@ class Node(BaseNode):
         return self.name
 
 
+    ########################################################################
+    # Icons
+    ########################################################################
+    @classmethod
+    def get_class_icon(cls, size=16):
+        icon = getattr(cls, 'class_icon%s' % size, None)
+        if icon is None:
+            return None
+        return '/ui/%s' % icon
+
+
+    @classmethod
+    def get_object_icon(cls, size=16):
+        icon = getattr(cls, 'icon%s' % size, None)
+        if icon is None:
+            return cls.get_class_icon(size)
+        return ';icon%s' % size
+
+
+    def get_method_icon(self, name, size='16x16', **kw):
+        icon = getattr(self, '%s__icon__' % name, None)
+        if icon is None:
+            return None
+        if callable(icon):
+            icon = icon(**kw)
+        if icon.startswith('/ui/'):
+            return icon
+        return '/ui/icons/%s/%s' % (size, icon)
+
+
+    # FIXME For backwards compatibility (replaced by 'get_object_icon'), to
+    # remove by 0.30
     @classmethod
     def get_path_to_icon(cls, size=16):
-        if getattr(cls, 'icon%s' % size, None):
-            return ';icon%s' % size
-        path_to_icon = getattr(cls, 'class_icon%s' % size, None)
-        if path_to_icon is None:
-            return None
-        return '/ui/' + path_to_icon
+        return cls.get_object_icon(size)
 
 
     ########################################################################
@@ -610,7 +637,7 @@ class DBObject(CatalogAware, Node, DomainAware):
         # The url
         line['href'] = href
         # The icon
-        path_to_icon = object.get_path_to_icon(icon_size)
+        path_to_icon = object.get_object_icon(icon_size)
         if path_to_icon.startswith(';'):
             path_to_icon = Path('%s/' % object.name).resolve(path_to_icon)
         line['img'] = path_to_icon
@@ -716,7 +743,7 @@ class DBObject(CatalogAware, Node, DomainAware):
     edit_metadata_form__access__ = 'is_allowed_to_edit'
     edit_metadata_form__label__ = u'Metadata'
     edit_metadata_form__sublabel__ = u'Metadata'
-    edit_metadata_form__icon__ = '/ui/icons/16x16/metadata.png'
+    edit_metadata_form__icon__ = 'metadata.png'
     def edit_metadata_form(self, context):
         # Build the namespace
         namespace = {}

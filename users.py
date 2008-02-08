@@ -269,7 +269,7 @@ class User(AccessControl, Folder):
     # Profile
     profile__access__ = 'is_allowed_to_view'
     profile__label__ = u'Profile'
-    profile__icon__ = '/ui/icons/16x16/action_home.png'
+    profile__icon__ = 'action_home.png'
     def profile(self, context):
         root = context.root
         user = context.user
@@ -291,7 +291,7 @@ class User(AccessControl, Folder):
     edit_form__access__ = 'is_allowed_to_edit'
     edit_form__label__ = u'Edit'
     edit_form__sublabel__ = u'Preferences'
-    edit_form__icon__ = '/ui/icons/16x16/skin.png'
+    edit_form__icon__ = 'skin.png'
     def edit_form(self, context):
         root = context.root
         user = context.user
@@ -325,7 +325,7 @@ class User(AccessControl, Folder):
     edit_account_form__access__ = 'is_allowed_to_edit'
     edit_account_form__label__ = u'Edit'
     edit_account_form__sublabel__ = u'Account'
-    edit_account_form__icon__ = '/ui/icons/16x16/settings.png'
+    edit_account_form__icon__ = 'settings.png'
     def edit_account_form(self, context):
         # Build the namespace
         namespace = {}
@@ -380,7 +380,7 @@ class User(AccessControl, Folder):
     edit_password_form__access__ = 'is_allowed_to_edit'
     edit_password_form__label__ = u'Edit'
     edit_password_form__sublabel__ = u'Password'
-    edit_password_form__icon__ = '/ui/icons/16x16/action_login.png'
+    edit_password_form__icon__ = 'lock.png'
     def edit_password_form(self, context):
         user = context.user
 
@@ -433,7 +433,7 @@ class User(AccessControl, Folder):
     # Tasks
     tasks_list__access__ = 'is_allowed_to_edit'
     tasks_list__label__ = u'Tasks'
-    tasks_list__icon__ = '/ui/icons/16x16/tasks.png'
+    tasks_list__icon__ = 'tasks.png'
     def tasks_list(self, context):
         root = context.root
         user = context.user

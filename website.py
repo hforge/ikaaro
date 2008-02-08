@@ -204,7 +204,7 @@ class WebSite(RoleAware, Folder):
     control_panel__access__ = 'is_allowed_to_view'
     control_panel__label__ = u'Control Panel'
     control_panel__sublabel__ = u'Control Panel'
-    control_panel__icon__ = '/ui/icons/16x16/settings.png'
+    control_panel__icon__ = 'settings.png'
     def control_panel(self, context):
         namespace = {}
         namespace['types'] = []
@@ -216,9 +216,8 @@ class WebSite(RoleAware, Folder):
                 continue
             title = getattr(self, '%s__sublabel__' % name)
             description = getattr(self, '%s__description__' % name, None)
-            icon = getattr(self, '%s__icon__' % name)
             namespace['types'].append({
-                'icon': icon,
+                'icon': self.get_method_icon(name, size='48x48'),
                 'title': self.gettext(title),
                 'description': self.gettext(description),
                 'url': ';%s' % name})
@@ -233,7 +232,7 @@ class WebSite(RoleAware, Folder):
     virtual_hosts_form__access__ = 'is_admin'
     virtual_hosts_form__label__ = u'Control Panel'
     virtual_hosts_form__sublabel__ = u'Virtual Hosts'
-    virtual_hosts_form__icon__ = '/ui/icons/16x16/website.png'
+    virtual_hosts_form__icon__ = 'website.png'
     def virtual_hosts_form(self, context):
         namespace = {}
         vhosts = self.get_property('vhosts')
@@ -260,7 +259,7 @@ class WebSite(RoleAware, Folder):
     languages_form__access__ = 'is_admin'
     languages_form__label__ = u'Control Panel'
     languages_form__sublabel__ = u'Languages'
-    languages_form__icon__ = '/ui/icons/16x16/button_translate.png'
+    languages_form__icon__ = 'languages.png'
     def languages_form(self, context):
         namespace = {}
 
@@ -338,7 +337,7 @@ class WebSite(RoleAware, Folder):
     anonymous_form__access__ = 'is_allowed_to_edit'
     anonymous_form__label__ = u'Control Panel'
     anonymous_form__sublabel__ = u'Security Policy'
-    anonymous_form__icon__ = '/ui/icons/16x16/action_login.png'
+    anonymous_form__icon__ = 'lock.png'
     def anonymous_form(self, context):
         # Build the namespace
         namespace = {}
@@ -366,7 +365,7 @@ class WebSite(RoleAware, Folder):
     contact_options_form__access__ = 'is_allowed_to_edit'
     contact_options_form__label__ = u'Control Panel'
     contact_options_form__sublabel__ = u'Contact'
-    contact_options_form__icon__ = '/ui/icons/16x16/action_contact.png'
+    contact_options_form__icon__ = 'mail.png'
     def contact_options_form(self, context):
         # Find out the contacts
         contacts = self.get_property('contacts')
@@ -409,7 +408,7 @@ class WebSite(RoleAware, Folder):
     broken_links__access__ = 'is_admin'
     broken_links__label__ = u'Control Panel'
     broken_links__sublabel__ = u'Broken Links'
-    broken_links__icon__ = '/ui/icons/16x16/clear.png'
+    broken_links__icon__ = 'clear.png'
     def broken_links(self, context):
         root = context.root
 
@@ -693,11 +692,7 @@ class WebSite(RoleAware, Folder):
                 info['size'] = object.get_human_size()
                 info['url'] = '%s/;%s' % (self.get_pathto(object),
                                           object.get_firstview())
-
-                icon = object.get_path_to_icon(16)
-                if icon.startswith(';'):
-                    icon = Path('%s/' % object.name).resolve(icon)
-                info['icon'] = icon
+                info['icon'] = object.get_class_icon()
                 ns_objects.append(info)
             namespace['objects'] = ns_objects
         else:

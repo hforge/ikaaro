@@ -58,11 +58,11 @@ a img { border: 0; }
 }
 
 #header a#top_menu_login {
-  background-image: url(../icons/16x16/action_login.png);
+  background-image: url(../icons/16x16/lock.png);
 }
 
 #header a#top_menu_register {
-  background-image: url(../icons/16x16/action_join.png);
+  background-image: url(../icons/16x16/card.png);
 }
 
 #header a#top_menu_home {
@@ -82,14 +82,14 @@ a img { border: 0; }
 }
 
 #header a#top_menu_contact {
-  background-image: url(../icons/16x16/action_contact.png);
+  background-image: url(../icons/16x16/mail.png);
 }
 
 #site_search_form { float: right; }
 #site_search_form input { font-size: 1em; }
 
-#action_login { background-image: url(../icons/16x16/action_login.png); }
-#action_join { background-image: url(../icons/16x16/action_join.png); }
+#action_login { background-image: url(../icons/16x16/lock.png); }
+#action_join { background-image: url(../icons/16x16/card.png); }
 #action_home { background-image: url(../icons/16x16/action_home.png); }
 #action_logout { background-image: url(../icons/16x16/action_logout.png); }
 
@@ -349,7 +349,7 @@ table.new_resource_thumb {
 }
 
 .button_translate {
-  background-image: url(../icons/16x16/button_translate.png);
+  background-image: url(../icons/16x16/languages.png);
   padding-left: 16px;
 }
 

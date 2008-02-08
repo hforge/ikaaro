@@ -294,7 +294,7 @@ class Folder(DBObject):
         type = kw.get('type')
         for cls in self.get_document_types():
             if cls.class_id == type:
-                return cls.get_path_to_icon()
+                return cls.get_class_icon()
         return '/ui/icons/16x16/new.png'
 
 
@@ -746,7 +746,7 @@ class Folder(DBObject):
     last_changes__access__ = 'is_allowed_to_view'
     last_changes__label__ = u"Last Changes"
     last_changes__title__ = u"Last Changes"
-    last_changes__icon__ = '/ui/icons/16x16/icalendar.png'
+    last_changes__icon__ = 'icalendar.png'
     def last_changes(self, context, sortby=['mtime'], sortorder='down',
                      batchsize=20):
         query = EqQuery('is_version_aware', '1')
@@ -761,7 +761,7 @@ class Folder(DBObject):
     orphans__label__ = u"Orphans"
     orphans__sublabel__ = u"Orphans"
     orphans__title__ = u"Orphans"
-    orphans__icon__ = '/ui/icons/16x16/orphans.png'
+    orphans__icon__ = 'orphans.png'
     def orphans(self, context, sortby=['title'], sortorder='up',
                 batchsize=20):
         """Orphans are files not referenced in another object of the database.

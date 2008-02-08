@@ -62,7 +62,7 @@ class EpozEditable(object):
     edit_form__access__ = 'is_allowed_to_edit'
     edit_form__label__ = u'Edit'
     edit_form__sublabel__ = u'Inline'
-    edit_form__icon__ = '/ui/icons/16x16/edit.png'
+    edit_form__icon__ = 'edit.png'
     def edit_form(self, context):
         """WYSIWYG editor for HTML documents.
         """

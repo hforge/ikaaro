@@ -62,7 +62,7 @@ class Text(File):
     view__access__ = 'is_allowed_to_view'
     view__label__ = u'View'
     view__sublabel__ = u'Plain Text'
-    view__icon__ = '/ui/icons/16x16/view.png'
+    view__icon__ = 'view.png'
     def view(self, context):
         namespace = {}
         namespace['text'] = self.handler.to_str()
@@ -77,7 +77,7 @@ class Text(File):
     edit_form__access__ = 'is_allowed_to_edit'
     edit_form__label__ = u'Edit'
     edit_form__sublabel__ = u'Inline'
-    edit_form__icon__ = '/ui/icons/16x16/edit.png'
+    edit_form__icon__ = 'edit.png'
     def edit_form(self, context):
         namespace = {}
         namespace['data'] = self.handler.to_str()

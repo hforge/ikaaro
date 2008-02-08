@@ -176,13 +176,12 @@ class Skin(UIFolder):
             title = getattr(base, '%s__label__' % name)
             if callable(title):
                 title = title(**args)
-            icon = getattr(base, '%s__icon__' % name, None)
-            if callable(icon):
-                icon = icon(**args)
             # Append to the menu
             menu.append({'href': '%s/;%s' % (prefix, view),
                          'title': base.gettext(title),
-                         'class': '', 'src': icon, 'items': []})
+                         'class': '',
+                         'src': base.get_method_icon(name, **args),
+                         'items': []})
 
         if not menu:
             return None
@@ -214,7 +213,7 @@ class Skin(UIFolder):
                 if not ac.is_allowed_to_view(user, object):
                     continue
                 firstview = object.get_firstview()
-                src = object.get_path_to_icon(size=16)
+                src = object.get_class_icon()
                 options.append({'href': '%s/;%s' % (object.name, firstview),
                                 'src': src,
                                 'title': object.get_title(),
@@ -365,13 +364,11 @@ class Skin(UIFolder):
             label = getattr(here, '%s__label__' % name)
             if callable(label):
                 label = label(**args)
-            icon = getattr(here, '%s__icon__' % name, None)
-            if callable(icon):
-                icon = icon(**args)
+
             tabs.append({'id': 'tab_%s' % name,
                          'name': ';%s' % view,
                          'label': here.gettext(label),
-                         'icon': icon,
+                         'icon': here.get_method_icon(name, **args),
                          'active': active,
                          'class': active and 'active' or None})
 
@@ -391,12 +388,11 @@ class Skin(UIFolder):
                     label = getattr(here, '%s__sublabel__' % name)
                     if callable(label):
                         label = label(**args)
-                    icon = getattr(here, '%s__icon__' % name, None)
-                    if callable(icon):
-                        icon = icon(**args)
-                    subtabs.append({'name': ';%s' % subview,
-                                    'icon': icon,
-                                    'label': here.gettext(label)})
+
+                    subtabs.append({
+                        'name': ';%s' % subview,
+                        'icon': here.get_method_icon(name, **args),
+                        'label': here.gettext(label)})
             tabs[-1]['options'] = subtabs
 
         return tabs
@@ -412,7 +408,7 @@ class Skin(UIFolder):
         return {'title': here.get_title(),
                 'format': here.class_title,
                 'mtime': here.get_mtime().strftime('%Y-%m-%d %H:%M'),
-                'icon': here.get_path_to_icon(size=48)}
+                'icon': here.get_object_icon(size=48)}
 
 
     #######################################################################

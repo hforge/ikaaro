@@ -355,7 +355,7 @@ class Breadcrumb(object):
 
             self.is_submit = True
             # Calculate path
-            path_to_icon = object.get_path_to_icon(icon_size)
+            path_to_icon = object.get_object_icon(icon_size)
             if path:
                 path_to_object = Path(str(path) + '/')
                 path_to_icon = path_to_object.resolve(path_to_icon)
@@ -423,7 +423,7 @@ def build_menu(options):
 def _tree(node, root, depth, active_node, allow, deny, user, width):
     # Build the namespace
     namespace = {}
-    namespace['src'] = node.get_path_to_icon(size=16)
+    namespace['src'] = node.get_class_icon()
     namespace['title'] = node.get_title()
 
     # The href
