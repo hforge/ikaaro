@@ -207,7 +207,9 @@ class WebSite(RoleAware, Folder):
     control_panel__icon__ = 'settings.png'
     def control_panel(self, context):
         namespace = {}
-        namespace['types'] = []
+        namespace['title'] = self.gettext(u'Control Panel')
+        namespace['batch'] = None
+        namespace['items'] = []
         for name in self.get_subviews('control_panel'):
             method = getattr(self, name, None)
             if method is None:
@@ -216,7 +218,7 @@ class WebSite(RoleAware, Folder):
                 continue
             title = getattr(self, '%s__sublabel__' % name)
             description = getattr(self, '%s__description__' % name, None)
-            namespace['types'].append({
+            namespace['items'].append({
                 'icon': self.get_method_icon(name, size='48x48'),
                 'title': self.gettext(title),
                 'description': self.gettext(description),

@@ -39,7 +39,7 @@ from binary import Image
 from exceptions import ConsistencyError
 from messages import *
 from registry import register_object_class, get_object_class
-from utils import generate_name
+from utils import generate_name, reduce_string
 import widgets
 from workflow import WorkflowAware
 
@@ -315,9 +315,21 @@ class Folder(DBObject):
     def browse_thumbnails(self, context):
         abspath = self.get_canonical_path()
         query = EqQuery('parent_path', str(abspath))
-        namespace = self.browse_namespace(48, query=query)
+        ns = self.browse_namespace(48, query=query)
+        # Adapt the namespace tot the template
+        namespace = {}
+        namespace['title'] = None
+        namespace['batch'] = ns['batch']
+        namespace['items'] = []
+        for object_ns in ns['objects']:
+            object = self.get_object(object_ns['id'])
+            namespace['items'].append({
+                'url': object_ns['href'],
+                'icon': object_ns['img'],
+                'title': reduce_string(object_ns['title_or_name'], 15, 25),
+                'description': object.get_property('description')})
 
-        handler = self.get_object('/ui/folder/browse_thumbnails.xml')
+        handler = self.get_object('/ui/folder/new_resource.xml')
         return stl(handler, namespace)
 
 
@@ -712,10 +724,12 @@ class Folder(DBObject):
 
         # Choose a type
         namespace = {}
-        namespace['types'] = []
+        namespace['title'] = self.gettext(u'Add new content')
+        namespace['batch'] = None
+        namespace['items'] = []
 
         for cls in self.get_document_types():
-            namespace['types'].append({
+            namespace['items'].append({
                 'icon': '/ui/' + cls.class_icon48,
                 'title': cls.gettext(cls.class_title),
                 'description': cls.gettext(cls.class_description),
