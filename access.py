@@ -323,6 +323,7 @@ class RoleAware(AccessControl):
     permissions_form__access__ = 'is_admin'
     permissions_form__label__ = u"Control Panel"
     permissions_form__sublabel__ = u"Browse Members"
+    permissions_form__description__ = u"See the users and their roles."
     permissions_form__icon__ = 'userfolder.png'
     def permissions_form(self, context):
         namespace = {}
@@ -458,6 +459,7 @@ class RoleAware(AccessControl):
     new_user_form__access__ = 'is_admin'
     new_user_form__label__ = u'Control Panel'
     new_user_form__sublabel__ = u'Add New Member'
+    new_user_form__description__ = u'Grant access to a new user.'
     new_user_form__icon__ = 'card.png'
     def new_user_form(self, context):
         namespace = {}

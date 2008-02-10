@@ -775,6 +775,7 @@ class Folder(DBObject):
     orphans__label__ = u"Orphans"
     orphans__sublabel__ = u"Orphans"
     orphans__title__ = u"Orphans"
+    orphans__description__ = u"Show objects not linked from anywhere."
     orphans__icon__ = 'orphans.png'
     def orphans(self, context, sortby=['title'], sortorder='up',
                 batchsize=20):

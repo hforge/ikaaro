@@ -236,6 +236,8 @@ class WebSite(RoleAware, Folder):
     virtual_hosts_form__access__ = 'is_admin'
     virtual_hosts_form__label__ = u'Control Panel'
     virtual_hosts_form__sublabel__ = u'Virtual Hosts'
+    virtual_hosts_form__description__ = (
+        u'Define the domain names for this Web Site.')
     virtual_hosts_form__icon__ = 'website.png'
     def virtual_hosts_form(self, context):
         namespace = {}
@@ -263,6 +265,7 @@ class WebSite(RoleAware, Folder):
     languages_form__access__ = 'is_admin'
     languages_form__label__ = u'Control Panel'
     languages_form__sublabel__ = u'Languages'
+    languages_form__description__ = u'Define the Web Site languages.'
     languages_form__icon__ = 'languages.png'
     def languages_form(self, context):
         namespace = {}
@@ -341,6 +344,7 @@ class WebSite(RoleAware, Folder):
     anonymous_form__access__ = 'is_allowed_to_edit'
     anonymous_form__label__ = u'Control Panel'
     anonymous_form__sublabel__ = u'Security Policy'
+    anonymous_form__description__ = u'Choose the security policy.'
     anonymous_form__icon__ = 'lock.png'
     def anonymous_form(self, context):
         # Build the namespace
@@ -369,6 +373,7 @@ class WebSite(RoleAware, Folder):
     contact_options_form__access__ = 'is_allowed_to_edit'
     contact_options_form__label__ = u'Control Panel'
     contact_options_form__sublabel__ = u'Contact'
+    contact_options_form__description__ = u'Configure the Contact form.'
     contact_options_form__icon__ = 'mail.png'
     def contact_options_form(self, context):
         # Find out the contacts
@@ -412,6 +417,7 @@ class WebSite(RoleAware, Folder):
     broken_links__access__ = 'is_admin'
     broken_links__label__ = u'Control Panel'
     broken_links__sublabel__ = u'Broken Links'
+    broken_links__description__ = u'Check the referential integrity.'
     broken_links__icon__ = 'clear.png'
     def broken_links(self, context):
         root = context.root
