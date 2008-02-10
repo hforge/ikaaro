@@ -218,10 +218,12 @@ class WebSite(RoleAware, Folder):
                 continue
             title = getattr(self, '%s__sublabel__' % name)
             description = getattr(self, '%s__description__' % name, None)
+            if description is not None:
+                description = self.gettext(description)
             namespace['items'].append({
                 'icon': self.get_method_icon(name, size='48x48'),
                 'title': self.gettext(title),
-                'description': self.gettext(description),
+                'description': description,
                 'url': ';%s' % name})
 
         handler = self.get_object('/ui/folder/new_resource.xml.en')
