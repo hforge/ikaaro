@@ -462,18 +462,17 @@ class Folder(DBObject):
             selected['width'] = width
             selected['height'] = height
             selected['format'] = image.metadata.format
+            pattern = ';browse_content?mode=image&selected_image=%s'
             if selected_index == 0:
                 selected['previous'] = None
             else:
                 previous = objects[selected_index - 1]['name']
-                selected['previous'] = ';%s?selected_image=%s' % (
-                        context.method, previous)
+                selected['previous'] = pattern % previous
             if selected_index == (len(objects) - 1):
                 selected['next'] = None
             else:
                 next = objects[selected_index + 1]['name']
-                selected['next'] = ';%s?selected_image=%s' % (context.method,
-                        next)
+                selected['next'] = pattern % next
             namespace['selected'] = selected
 
         # Append gallery style
