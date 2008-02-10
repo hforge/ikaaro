@@ -57,7 +57,6 @@ class WebSite(RoleAware, Folder):
     class_skin = 'ui/aruni'
     class_views = [
         ['browse_content?mode=list',
-         'browse_content?mode=thumbnails',
          'browse_content?mode=image'],
         ['new_resource_form'],
         ['edit_metadata_form'],

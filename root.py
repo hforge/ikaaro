@@ -66,7 +66,7 @@ class Root(WebSite):
     class_icon48 = 'icons/48x48/root.png'
     class_views = [
         ['browse_content?mode=list',
-         'browse_content?mode=thumbnails'],
+         'browse_content?mode=image'],
         ['new_resource_form'],
         ['edit_metadata_form'],
         ['control_panel',

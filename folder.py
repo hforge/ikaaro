@@ -71,7 +71,6 @@ class Folder(DBObject):
     class_icon48 = 'icons/48x48/folder.png'
     class_views = [
         ['browse_content?mode=list',
-         'browse_content?mode=thumbnails',
          'browse_content?mode=image'],
         ['new_resource_form'],
         ['edit_metadata_form']]
@@ -310,27 +309,6 @@ class Folder(DBObject):
 
         str = self.gettext('$n obs')
         return Template(str).substitute(n=size)
-
-
-    def browse_thumbnails(self, context):
-        abspath = self.get_canonical_path()
-        query = EqQuery('parent_path', str(abspath))
-        ns = self.browse_namespace(48, query=query)
-        # Adapt the namespace tot the template
-        namespace = {}
-        namespace['title'] = None
-        namespace['batch'] = ns['batch']
-        namespace['items'] = []
-        for object_ns in ns['objects']:
-            object = self.get_object(object_ns['id'])
-            namespace['items'].append({
-                'url': object_ns['href'],
-                'icon': object_ns['img'],
-                'title': reduce_string(object_ns['title_or_name'], 15, 25),
-                'description': object.get_property('description')})
-
-        handler = self.get_object('/ui/folder/new_resource.xml')
-        return stl(handler, namespace)
 
 
     def browse_list(self, context, sortby=['title'], sortorder='up',
@@ -689,15 +667,13 @@ class Folder(DBObject):
     browse_content__title__ = u"Browse Content"
 
     def browse_content__sublabel__(self, **kw):
-        mode = kw.get('mode', 'thumbnails')
-        return {'thumbnails': u'As Icons',
-                'list': u'As List',
-                'image': u'As Image Gallery'}[mode]
+        mode = kw.get('mode', 'list')
+        return {'list': u'Browse Content',
+                'image': u'Preview Content'}[mode]
 
     def browse_content__icon__(self, **kw):
-        mode = kw.get('mode', 'thumbnails')
-        return {'thumbnails': '/ui/icons/16x16/folder.png',
-                'list': '/ui/icons/16x16/folder.png',
+        mode = kw.get('mode', 'list')
+        return {'list': '/ui/icons/16x16/folder.png',
                 'image': '/ui/icons/16x16/image.png'}[mode]
 
     def browse_content(self, context):

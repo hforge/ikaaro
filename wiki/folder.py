@@ -37,7 +37,6 @@ class WikiFolder(Folder):
     class_icon48 = 'wiki/WikiFolder48.png'
     class_views = [['view'],
                    ['browse_content?mode=list',
-                    'browse_content?mode=thumbnails',
                     'browse_content?mode=image'],
                    ['new_resource_form'],
                    ['orphans'],
