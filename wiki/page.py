@@ -41,6 +41,7 @@ from itools.handlers import checkid, get_handler, File as FileHandler
 from itools.stl import stl
 from itools.xml import XMLParser, XMLError
 from itools.uri import get_reference
+from itools.uri.mailto import Mailto
 
 # Import from ikaaro
 from ikaaro.base import DBObject
@@ -299,7 +300,12 @@ class WikiPage(Text):
                 refuri = node.get('refuri')
                 if refuri is not None:
                     reference = get_reference(refuri.encode('utf_8'))
-                    node['refuri'] = str(context.uri.resolve(reference))
+                    if isinstance(reference, Mailto):
+                        # mailto:
+                        node['refuri'] = str(reference)
+                    else:
+                        # Make canonical URI to the website for future download
+                        node['refuri'] = str(context.uri.resolve(reference))
                 continue
             # Now consider the link is valid
             title = node['name']
@@ -510,6 +516,8 @@ class WikiPage(Text):
         text_size = context.get_form_value('text_size');
         # Ensure source is encoded to UTF-8
         data = data.encode('utf_8')
+
+
         page.load_state_from_string(data)
 
         try:
