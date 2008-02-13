@@ -36,7 +36,7 @@ from docutils import nodes
 
 # Import from itools
 from itools import vfs
-from itools.datatypes import DateTime, Unicode, FileName
+from itools.datatypes import DateTime, FileName, XML
 from itools.handlers import checkid, get_handler, File as FileHandler
 from itools.stl import stl
 from itools.xml import XMLParser, XMLError
@@ -512,26 +512,32 @@ class WikiPage(Text):
         if page.timestamp is not None and timestamp < page.timestamp:
             return context.come_back(MSG_EDIT_CONFLICT)
 
-        data = context.get_form_value('data', type=Unicode)
-        text_size = context.get_form_value('text_size');
-        # Ensure source is encoded to UTF-8
-        data = data.encode('utf_8')
+        # Data is assumed to be encoded in UTF-8
+        data = context.get_form_value('data')
 
-
-        page.load_state_from_string(data)
-
+        # Validate data by compiling it
         try:
-            if 'class="system-message"' in self.view(context):
-                message = u"Syntax error, please check the view for details."
-            else:
-                message = MSG_CHANGES_SAVED
-        except SystemMessage, message: # Critical error
-            msg = u"Syntax error<br/>line$line"
-            return context.come_back(msg, line=message.message, keep=['data'])
+            html = publish_string(data, writer_name='html',
+                                  settings_overrides=self.overrides)
+        except SystemMessage, message:
+            # Critical error
+            msg = u"A syntax error prevented from saving the changes: $error"
+            # docutils is using tags to represent the error
+            error = XML.encode(message.message)
+            return context.come_back(msg, error=error,
+                                     keep=['data', 'text_size'])
 
-        # Change
+        # OK, committing
+        page.load_state_from_string(data)
         context.server.change_object(self)
 
+        # But warn about non-critical syntax errors
+        if 'class="system-message"' in self.view(context):
+            message = u"Syntax error, please check the view for details."
+        else:
+            message = MSG_CHANGES_SAVED
+
+        # Come back to the desired view
         goto = context.come_back(message, keep=['text_size'])
         if context.has_form_value('view'):
             query = goto.query
