@@ -93,6 +93,11 @@ become sub-packages:
   itools.cms.future.Dressable    ikaaro.future.dressable.Dressable
   itools.cms.future.OrderAware   ikaaro.future.order.OrderAware
 
+The module "catalog" has been removed.  The functions "schedule_to_index",
+"schedule_to_unindex" and "schedule_to_reindex" have been replaced by
+calls to the "context.server" methods "add_object", "remove_object" and
+"change_object" (see section "Indexing").
+
 
 Architecture
 ====================
@@ -244,9 +249,13 @@ been de-centralized:
           ...
 
 
-The method "schedule_to_reindex" disappeared in favor of the expected behaviour
-when you call "set_property" on a object: it will reindex the object with the
-new values.
+The "schedule_to_index", "schedule_to_unindex" and "schedule_to_reindex"
+functions have been removed.  They are replaced by:
+
+  # Before                    # Now
+  schedule_to_index(obj)      context.server.add_object(obj)
+  schedule_to_unindex(obj)    context.server.remove_object(obj)
+  schedule_to_reindex(obj)    context.server.change_object(obj)
 
 
 Upgrading
