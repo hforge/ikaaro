@@ -55,10 +55,13 @@ class CSV(Text):
         handler = self.handler
 
         if handler.columns is None:
-            if handler.lines:
-                row = handler.lines[0]
-                return [ (str(x), str(x)) for x in range(len(row)) ]
-            return []
+            row = None
+            for row in handler.lines:
+                if row is not None:
+                    break
+            if row is None:
+                return []
+            return [ (str(x), str(x)) for x in range(len(row)) ]
 
         columns = []
         for name in handler.columns:
@@ -90,7 +93,7 @@ class CSV(Text):
         size = 50
 
         # The batch
-        total = len(handler.lines)
+        total = handler.get_nrows()
         namespace['batch'] = widgets.batch(context.uri, start, size, total,
                                            self.gettext)
 
@@ -110,7 +113,11 @@ class CSV(Text):
         else:
             getter = lambda x, y: x[int(y)]
 
-        for row in handler.lines[start:start+size]:
+        end = start + size
+        if end > total:
+            end = total
+
+        for row in handler.get_rows(range(start, end)):
             rows.append({})
             rows[-1]['id'] = str(index)
             rows[-1]['checkbox'] = True
