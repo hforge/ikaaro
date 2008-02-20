@@ -46,7 +46,6 @@ class Forum(Folder):
 
     addlink_form__access__ = False
     addimage_form__access__ = False
-    epoz_table_form__access__ = False
 
 
     def get_document_types(self):
@@ -90,27 +89,27 @@ class Forum(Folder):
     new_thread_form__icon__ = 'new.png'
     def new_thread_form(self, context):
         context.styles.append('/ui/forum/forum.css')
+        data = context.get_form_value('data') or None
 
         namespace = {}
-        namespace['rte'] =  self.get_rte(context, 'data', None)
+        namespace['rte'] =  self.get_rte(context, 'data', data)
 
         handler = self.get_object('/ui/forum/Forum_new_thread.xml')
         return stl(handler, namespace)
 
 
     new_thread__access__ = 'is_allowed_to_add'
-    epoz_iframe__access__ = 'is_allowed_to_add'
     def new_thread(self, context):
         title = context.get_form_value('title', type=Unicode).strip()
         if not title:
-            return context.come_back(u"No title given.")
+            return context.come_back(u"No title given.", keep=['data'])
 
         name = checkid(title)
         if name is None:
-            return context.come_back(u"Invalid title.")
+            return context.come_back(u"Invalid title.", keep=['data'])
 
         if self.has_object(name):
-            return context.come_back(u"This thread already exists.")
+            return context.come_back(u"This thread already exists.", keep=['data'])
 
         # check input
         data = context.get_form_value('data').strip()

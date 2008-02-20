@@ -66,7 +66,7 @@ class EpozEditable(object):
     def edit_form(self, context):
         """WYSIWYG editor for HTML documents.
         """
-        data = self.get_epoz_data()
+        data = context.get_form_value('data') or self.get_epoz_data()
         # If the document has not a body (e.g. a frameset), edit as plain text
         if data is None:
             return Text.edit_form(self, context)
@@ -94,7 +94,7 @@ class EpozEditable(object):
         try:
             new_body = HTMLParser(new_body)
         except XMLError:
-            return context.come_back(u'Invalid HTML code.')
+            return context.come_back(u'Invalid HTML code.', keep=['data'])
         if sanitize:
             new_body = sanitize_stream(new_body)
         # "get_epoz_document" is to set in your editable handler
@@ -106,6 +106,7 @@ class EpozEditable(object):
         context.server.change_object(self)
 
         return context.come_back(MSG_CHANGES_SAVED)
+
 
 
 

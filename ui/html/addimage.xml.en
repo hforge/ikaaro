@@ -6,7 +6,7 @@
   <head>
     <title>Epoz-Toolbox</title>
     <link rel="stylesheet" type="text/css" href="../aruni/aruni.css" />
-    <script type="text/javascript" src="${script}" />
+    <script type="text/javascript" stl:repeat="script scripts" src="${script}" />
     <style>
       #body {
         border-top: 20px solid #30569D;

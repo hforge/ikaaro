@@ -780,35 +780,19 @@ class DBObject(CatalogAware, Node, DomainAware):
         namespace = {}
         namespace['form_name'] = name
         namespace['js_data'] = data
-        namespace['iframe'] = ';epoz_iframe'
+        namespace['scripts'] = ['/ui/tiny_mce/tiny_mce_src.js',
+                                '/ui/tiny_mce/javascript.js']
+        namespace['css'] = '/ui/tiny_mce/style.css'
+        # Dressable
         dress_name = context.get_form_value('dress_name')
-        if dress_name:
-            namespace['iframe'] = ';epoz_iframe?dress_name=%s' % dress_name
-        else:
-            namespace['iframe'] = ';epoz_iframe'
         namespace['dress_name'] = dress_name
+        # TODO language
 
         here = context.object.get_abspath()
-        there = '/ui/epoz/rte.xml'
+        there = '/ui/tiny_mce/rte.xml'
         prefix = here.get_pathto(there)
 
         handler = context.root.get_object(there)
-        return stl(handler, namespace, prefix=prefix)
-
-
-    epoz_iframe__access__ = 'is_allowed_to_edit'
-    def epoz_iframe(self, context):
-        namespace = {}
-        namespace['data'] = self.get_epoz_data()
-
-        response = context.response
-        response.set_header('Content-Type', 'text/html; charset=UTF-8')
-
-        here = self.get_abspath()
-        there = '/ui/epoz/iframe.xml'
-        prefix = here.get_pathto(there)
-
-        handler = self.get_object(there)
         return stl(handler, namespace, prefix=prefix)
 
 
@@ -835,10 +819,12 @@ class DBObject(CatalogAware, Node, DomainAware):
         mode = context.get_form_value('mode', default='html')
         namespace['mode'] = mode
         if mode == 'wiki':
-            script = '/ui/wiki/javascript.js'
+            scripts = ['/ui/wiki/javascript.js']
         else:
-            script = '/ui/epoz/javascript.js'
-        namespace['script'] = script
+            scripts = ['/ui/tiny_mce/javascript.js',
+                       '/ui/tiny_mce/tiny_mce_src.js',
+                       '/ui/tiny_mce/tiny_mce_popup.js']
+        namespace['scripts'] = scripts
         namespace['caption'] = self.gettext(MSG_CAPTION).encode('utf_8')
 
         template = self.get_object('/ui/html/addimage.xml')
@@ -860,17 +846,24 @@ class DBObject(CatalogAware, Node, DomainAware):
             caption = self.gettext(MSG_CAPTION).encode('utf_8')
             mode = context.get_form_value('mode', default='html')
             if mode == 'wiki':
-                script = '/ui/wiki/javascript.js'
+                scripts = ['/ui/wiki/javascript.js']
             else:
-                script = '/ui/epoz/javascript.js'
+                scripts = ['/ui/tiny_mce/javascript.js',
+                           '/ui/tiny_mce/tiny_mce_src.js',
+                           '/ui/tiny_mce/tiny_mce_popup.js']
+
             object = container.get_object(uri.path[0])
             path = context.object.get_pathto(object)
-            body = """
-               <script type="text/javascript" src="%s" />
-               <script type="text/javascript">
-                 select_img('%s', '%s');
-               </script>"""
-            return body % (script, path, caption)
+            script_template = '<script type="text/javascript" src="%s" />'
+            body = ''
+            for script in scripts:
+                body += script_template % script
+
+            body += """
+                <script type="text/javascript">
+                    select_img('%s', '%s');
+                </script>"""
+            return body % (path, caption)
 
         return context.come_back(message=uri.query['message'])
 
@@ -897,13 +890,16 @@ class DBObject(CatalogAware, Node, DomainAware):
         mode = context.get_form_value('mode', default='html')
         namespace['mode'] = mode
         if mode == 'wiki':
-            script = '/ui/wiki/javascript.js'
+            scripts = ['/ui/wiki/javascript.js']
             type = 'WikiPage'
         else:
-            script = '/ui/epoz/javascript.js'
+            scripts = ['/ui/tiny_mce/javascript.js',
+                       '/ui/tiny_mce/tiny_mce_src.js',
+                       '/ui/tiny_mce/tiny_mce_popup.js']
             type = 'application/xhtml+xml'
-        namespace['script'] = script
+        namespace['scripts'] = scripts
         namespace['type'] = type
+        namespace['wiki_mode'] = (mode == 'wiki')
 
         template = self.get_object('/ui/html/addlink.xml')
         prefix = self.get_pathto(template)
@@ -924,35 +920,26 @@ class DBObject(CatalogAware, Node, DomainAware):
         if ';addlink_form' not in uri.path:
             mode = context.get_form_value('mode', default='html')
             if mode == 'wiki':
-                script = '/ui/wiki/javascript.js'
+                scripts = ['/ui/wiki/javascript.js']
             else:
-                script = '/ui/epoz/javascript.js'
+                scripts = ['/ui/tiny_mce/javascript.js',
+                           '/ui/tiny_mce/tiny_mce_src.js',
+                           '/ui/tiny_mce/tiny_mce_popup.js']
+
             object = container.get_object(uri.path[0])
             path = context.object.get_pathto(object)
-            body = """
-                <script type="text/javascript" src="%s" />
+            script_template = '<script type="text/javascript" src="%s" />'
+            body = ''
+            for script in scripts:
+                body += script_template % script
+
+            body += """
                 <script type="text/javascript">
                     select_link('%s');
                 </script>"""
-            return body % (script, path)
+            return body % path
 
         return context.come_back(message=uri.query['message'])
-
-
-    epoz_color_form__access__ = 'is_allowed_to_edit'
-    def epoz_color_form(self, context):
-        context.response.set_header('Content-Type', 'text/html; charset=UTF-8')
-
-        handler = self.get_object('/ui/epoz/script_color.xml')
-        return handler.to_str()
-
-
-    epoz_table_form__access__ = 'is_allowed_to_edit'
-    def epoz_table_form(self, context):
-        context.response.set_header('Content-Type', 'text/html; charset=UTF-8')
-
-        handler = self.get_object('/ui/epoz/script_table.xml')
-        return handler.to_str()
 
 
     #######################################################################

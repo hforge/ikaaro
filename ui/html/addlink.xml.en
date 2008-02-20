@@ -6,7 +6,7 @@
   <head>
     <title>Epoz-Toolbox</title>
     <link rel="stylesheet" type="text/css" href="../aruni/aruni.css" />
-    <script type="text/javascript" src="${script}" />
+    <script type="text/javascript" stl:repeat="script scripts" src="${script}" />
     <style>
       #body {
         border-top: 20px solid #30569D;
@@ -29,13 +29,15 @@
     <div id="body">
       <!-- Message -->
       <div id="message" stl:if="message">Message :${message}</div>
-      <!-- External Link -->
-      <h3>Type the URL of an external resource</h3>
-      <form>
-        <input type="text" id="uri" name="uri" size="40" value="http://"/>
-        <input type="button" value="Add" class="button_ok"
-          onclick="select_uri()"/>
-      </form>
+      <stl:block stl:if="wiki_mode">
+        <!-- External Link -->
+        <h3>Type the URL of an external resource</h3>
+        <form>
+          <input type="text" id="uri" name="uri" size="40" value="http://"/>
+          <input type="button" value="Add" class="button_ok"
+            onclick="select_uri()"/>
+        </form>
+      </stl:block>
       <!-- Internal Link -->
       <h3>Browse and link to a File from the workspace</h3>
       <!-- Breadcrumbs -->

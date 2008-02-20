@@ -1,0 +1,13 @@
+body {
+  color: #000000;
+  font-family: "Arial","DejaVu Sans",sans-serif;
+  font-size: 62.5%;
+}
+
+#tinymce {
+  font-size: 0.9em;
+}
+
+#tinymce p {
+  line-height: 16px;
+}

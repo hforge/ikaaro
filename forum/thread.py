@@ -40,7 +40,6 @@ class Thread(Folder):
 
     addlink_form__access__ = False
     addimage_form__access__ = False
-    epoz_table_form__access__ = False
 
 
     @staticmethod
@@ -124,7 +123,6 @@ class Thread(Folder):
 
 
     new_reply__access__ = 'is_allowed_to_add'
-    epoz_iframe__access__ = 'is_allowed_to_add'
     def new_reply(self, context):
         # check input
         data = context.get_form_value('data').strip()
