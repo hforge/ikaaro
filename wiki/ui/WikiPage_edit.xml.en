@@ -58,21 +58,7 @@
   <div class="clear" />
 
   <script type="text/javascript">
-    <!--
     var tarea = document.getElementById('data');
-    var height_orig = getHeight(tarea)
-    var posy = getPosY(tarea);
-
-    function fixHeight() {
-        var max_height = window.innerHeight - posy - 50;
-        if (max_height > height_orig) {
-          var height = max_height;
-        }
-        else {
-          var height = height_orig;
-        }
-        setHeight(tarea, height);
-    }
 
     function text_small() {
       tarea.style.fontSize = '1.2em';
@@ -92,12 +78,6 @@
     function updateTextSizeType(value) {
       document.getElementById('text_size').value = value;
     }
-
-    fixHeight();
-    addEvent(window, 'resize', fixHeight);
-    addEvent(window, 'overflow', fixHeight);
-    addEvent(window, 'underflow', fixHeight);
-    -->
 
     text_${text_size}();
   </script>
