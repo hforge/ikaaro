@@ -3,7 +3,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: zh\n"
-"POT-Creation-Date: 2007-12-31 00:12+CET\n"
+"POT-Creation-Date: 2008-02-21 13:02+CET\n"
 "PO-Revision-Date: 2007-10-30 17:58+0100\n"
 "Last-Translator: Zhouli <zhouli@in-girum.net>\n"
 "Language-Team:  <zh@li.org>\n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: tracker/tracker.py:527
+#: tracker/tracker.py:537
 msgid ""
 "\n"
 "\n"
@@ -20,7 +20,7 @@ msgid ""
 "%s"
 msgstr ""
 
-#: tracker/issue.py:237
+#: tracker/issue.py:290
 msgid "  New Attachment: $filename"
 msgstr ""
 
@@ -32,23 +32,23 @@ msgstr ""
 msgid "\";\")"
 msgstr ""
 
-#: tracker/tracker.py:607
+#: tracker/tracker.py:624
 msgid "#$id"
 msgstr ""
 
-#: tracker/tracker.py:560
+#: tracker/tracker.py:572
 msgid "#%s - %s - %s"
 msgstr ""
 
-#: tracker/issue.py:261
+#: tracker/issue.py:314
 msgid "$field: $old_value to $new_value"
 msgstr ""
 
-#: tracker/issue.py:264
+#: tracker/issue.py:317
 msgid "$field: $old_value$new_value"
 msgstr ""
 
-#: future/dressable.py:440
+#: future/dressable.py:443
 #, fuzzy
 msgid "$label (External)"
 msgstr "外部"
@@ -144,7 +144,7 @@ msgstr ""
 msgid "${content}"
 msgstr "名称"
 
-#: wiki/ui/WikiPage_edit.xml.en:0
+#: ui/text/edit.xml.en:0
 msgid "${data}"
 msgstr ""
 
@@ -185,14 +185,6 @@ msgstr ""
 msgid "${field/widget}"
 msgstr "名称"
 
-#: ui/root/check_groups.xml.en:0
-msgid "${group/path}:"
-msgstr ""
-
-#: ui/root/check_groups.xml.en:0
-msgid "${group/users}"
-msgstr ""
-
 #: ui/ical/ical_grid_weekly_view.xml.en:0
 #, fuzzy
 msgid "${header/header}"
@@ -215,10 +207,6 @@ msgstr "名称"
 #, fuzzy
 msgid "${item/value}"
 msgstr "名称"
-
-#: ui/epoz/rte.xml.en:0
-msgid "${js_data}"
-msgstr ""
 
 #: ui/website/languages.xml.en:0
 #, fuzzy
@@ -292,15 +280,7 @@ msgstr "物件被更名"
 msgid "${object/object_type}"
 msgstr ""
 
-#: ui/folder/browse_thumbnails.xml.en:0
-msgid "${object/short_title}"
-msgstr ""
-
-#: ui/folder/browse_thumbnails.xml.en:0
-msgid "${object/title_or_name}"
-msgstr ""
-
-#: future/ui/order_items.xml.en:0
+#: ui/html/addlink.xml.en:0
 #, fuzzy
 msgid "${object/title}"
 msgstr "用户资料列单"
@@ -309,11 +289,6 @@ msgstr "用户资料列单"
 #, fuzzy
 msgid "${object/workflow_state}"
 msgstr "物件被更名"
-
-#: ui/aruni/template.xhtml.en:0
-#, fuzzy
-msgid "${option/label}"
-msgstr "名称"
 
 #: ui/csv/edit_row.xml.en:0
 #, fuzzy
@@ -339,6 +314,11 @@ msgstr ""
 #: tracker/ui/issue_history.xml.en:0
 msgid "${row/assigned_to}<br/>"
 msgstr ""
+
+#: tracker/ui/issue_history.xml.en:0
+#, fuzzy
+msgid "${row/cc_list}<br/>"
+msgstr "名称"
 
 #: tracker/ui/issue_history.xml.en:0
 msgid "${row/comment}<br/>"
@@ -491,11 +471,11 @@ msgstr "名称"
 msgid "${week/month}"
 msgstr ""
 
-#: file.py:234
+#: file.py:242
 msgid "%.01f KB"
 msgstr ""
 
-#: file.py:232
+#: file.py:240
 msgid "%.01f MB"
 msgstr ""
 
@@ -541,8 +521,9 @@ msgstr ""
 
 #: ui/aruni/template.xhtml.en:0
 msgid ""
-"(logged in as ${user/info/title})<br/><br/> <a id=\"top_menu_logout\" href="
-"\"/;logout\">Log out</a>"
+"(logged in as ${user/info/title})<br/><br/> <a id=\"top_menu_profile\" href="
+"\"${user/info/home}\">My Profile</a> <a id=\"top_menu_logout\" href=\"/;"
+"logout\">Log out</a>"
 msgstr ""
 
 #: ui/aruni/template.xhtml.en:0
@@ -552,7 +533,7 @@ msgid ""
 "register_form\">Register</a>"
 msgstr ""
 
-#: tracker/tracker.py:550
+#: tracker/tracker.py:562
 msgid ""
 "--- Comment from : $user ---\n"
 "\n"
@@ -561,21 +542,21 @@ msgid ""
 "$issues"
 msgstr ""
 
-#: tracker/issue.py:244
+#: tracker/issue.py:297
 msgid ""
 "-------\n"
 "\n"
 msgstr ""
 
-#: tracker/tracker.py:87
+#: tracker/tracker.py:89
 msgid "1.0"
 msgstr ""
 
-#: tracker/tracker.py:88
+#: tracker/tracker.py:90
 msgid "2.0"
 msgstr ""
 
-#: skins.py:512
+#: skins.py:504
 msgid "404 Not Found"
 msgstr ""
 
@@ -594,6 +575,10 @@ msgstr ""
 msgid ""
 "<a href=\"${event/url}\"> ${event/SUMMARY}</a> <span stl:if=\"event/TIME\" "
 "class=\"time\">${event/TIME}</span>"
+msgstr ""
+
+#: ui/folder/new_resource.xml.en:0
+msgid "<a href=\"${item/url}\">${item/title}</a> <br/> ${item/description}"
 msgstr ""
 
 #: ui/ical/ical_monthly_view.xml.en:0
@@ -618,11 +603,7 @@ msgstr ""
 msgid "<a href=\"${row/file}\">${row/file}</a> <br/>"
 msgstr ""
 
-#: ui/folder/new_resource.xml.en:0
-msgid "<a href=\"${type/url}\">${type/title}</a> <br/> ${type/description}"
-msgstr ""
-
-#: ui/html/addlink.xml.en:0
+#: future/ui/link_addlink.xml.en:0
 msgid "<a href=\"${x/url}\">${x/name}</a> /"
 msgstr ""
 
@@ -686,7 +667,7 @@ msgid ""
 "short_name}</span> <stl:inline stl:if=\"not repeat/item/end\">/</stl:inline>"
 msgstr ""
 
-#: ui/html/addlink.xml.en:0
+#: future/ui/link_addlink.xml.en:0
 msgid ""
 "<a stl:if=\"object/is_folder\" href=\"${object/url}\"> ${object/name} </a> "
 "<stl:inline stl:if=\"not object/is_folder\">${object/name}</stl:inline>"
@@ -699,6 +680,10 @@ msgid ""
 "inline>"
 msgstr ""
 
+#: ui/html/addlink.xml.en:0
+msgid "<a title=\"${x/title}\" href=\"${x/url}\">${x/short_title}</a> /"
+msgstr ""
+
 #: ui/PO_edit.xml.en:0
 msgid ""
 "<a title=\"Go to next message\" href=\"${messages_next}\">></a> <a title="
@@ -708,6 +693,24 @@ msgstr ""
 #: ui/PO_edit.xml.en:0
 msgid ""
 "<a title=\"Go to previous message\" href=\"${messages_previous}\">&lt;</a>"
+msgstr ""
+
+#: ui/html/addimage.xml.en:0
+msgid ""
+"<abbr title=\"${object/title}\">${object/short_title}</abbr><br/> <a href="
+"\"javascript:select_img('${object/path}', '${caption}')\">Select</a>"
+msgstr ""
+
+#: ui/html/addlink.xml.en:0
+msgid ""
+"<abbr title=\"${object/title}\">${object/short_title}</abbr><br/> <a href="
+"\"javascript:select_link('${object/path}')\">Select</a>"
+msgstr ""
+
+#: ui/html/addimage.xml.en:0
+msgid ""
+"<abbr title=\"${object/title}\">${object/short_title}</abbr><br/> <a title="
+"\"${object/title}\" href=\"${object/url}\">Browse</a>"
 msgstr ""
 
 #: forum/ui/Forum_view.xml.en:0
@@ -726,6 +729,12 @@ msgid ""
 "${comment}</textarea>"
 msgstr ""
 
+#: wiki/ui/WikiPage_edit.xml.en:0
+msgid ""
+"<br/> <textarea name=\"data\" id=\"data\" rows=\"19\" cols=\"80\" wrap="
+"\"physical\">${data}</textarea>"
+msgstr ""
+
 #: ui/website/anonymous.xml.en:0
 msgid "<br/> Authentication will be required for any level of access."
 msgstr ""
@@ -736,16 +745,10 @@ msgid ""
 "to register by themselves."
 msgstr ""
 
-#: ui/epoz/rte.xml.en:0
+#: ui/html/addlink.xml.en:0
 msgid ""
-"<img height=\"22\" src=\"hyperlink.png\" alt=\"Insert Link\" title=\"Insert "
-"Link\" id=\"epoz_button_hyperlink\" width=\"23\" class=\"button\" onclick="
-"\"popup(';addlink_form', 640, 480);\"/><img height=\"22\" src=\"anchor.png\" "
-"alt=\"Insert Anchor\" title=\"Insert Anchor\" id=\"epoz_button_anchor\" "
-"width=\"23\" class=\"button\" onclick=\"CreateAnchor();\"/> <img height=\"22"
-"\" src=\"image.png\" alt=\"Insert Image\" title=\"Insert Image\" id="
-"\"epoz_button_image\" width=\"23\" class=\"button\" onclick=\"popup(';"
-"addimage_form', 640, 480);\"/>"
+"<img alt=\"\" height=\"16\" src=\"${object/icon}\" width=\"16\"/> ${object/"
+"short_title}"
 msgstr ""
 
 #: ui/website/search.xml.en:0
@@ -802,8 +805,8 @@ msgstr ""
 
 #: ui/folder/rename.xml.en:0
 msgid ""
-"<input name=\"names\" type=\"hidden\" value=\"${name}\"/> to <input name="
-"\"new_names\" type=\"text\" value=\"${name}\"/>"
+"<input name=\"paths\" type=\"hidden\" value=\"${object/path}\"/> ${object/"
+"path}"
 msgstr ""
 
 #: ui/html/edit.xml.en:0
@@ -849,16 +852,21 @@ msgid ""
 msgstr ""
 
 #: ui/aruni/template.xhtml.en:0
-#, fuzzy
-msgid "<span>${menu/label}</span>"
-msgstr "名称"
+msgid ""
+"<span style=\"background-image: url(${menu/icon})\">${menu/label}</span>"
+msgstr ""
 
-#: tracker/tracker.py:374
+#: ui/aruni/template.xhtml.en:0
+msgid ""
+"<span style=\"background-image: url(${option/icon})\">${option/label}</span>"
+msgstr ""
+
+#: tracker/tracker.py:382
 #, fuzzy
 msgid "<span>There are ${n} results.</span>"
 msgstr "此处无图片."
 
-#: tracker/tracker.py:373
+#: tracker/tracker.py:381
 msgid "<span>There is 1 result.</span>"
 msgstr ""
 
@@ -879,6 +887,10 @@ msgstr ""
 
 #: tracker/ui/issue_history.xml.en:0
 msgid "<strong>Attachement:</strong>"
+msgstr ""
+
+#: tracker/ui/issue_history.xml.en:0
+msgid "<strong>CC:</strong>"
 msgstr ""
 
 #: tracker/ui/issue_history.xml.en:0
@@ -909,6 +921,13 @@ msgstr ""
 msgid "<strong>Version:</strong>"
 msgstr ""
 
+#: ui/tiny_mce/rte.xml.en:0
+msgid ""
+"<textarea id=\"${form_name}\" name=\"${form_name}\" cols=\"80\" rows=\"15\" "
+"style=\"width: 80%\"> ${js_data} </textarea> <input name=\"dress_name\" type="
+"\"hidden\" value=\"${dress_name}\"/>"
+msgstr ""
+
 #: ui/website/virtual_hosts.xml.en:0
 msgid ""
 "<textarea name=\"vhosts\" cols=\"62\" rows=\"7\">${vhosts}</textarea> <br/> "
@@ -924,7 +943,7 @@ msgstr "文件夹"
 msgid "A given name already exists."
 msgstr ""
 
-#: messages.py:32
+#: messages.py:35
 #, fuzzy
 msgid "A new resource has been added."
 msgstr "新资料被加入."
@@ -941,15 +960,19 @@ msgstr ""
 msgid "A public document can be reached by even anonymous users."
 msgstr ""
 
+#: wiki/page.py:524
+msgid "A syntax error prevented from saving the changes: $error"
+msgstr ""
+
 #: forum/thread.py:36
 msgid "A thread to discuss"
 msgstr ""
 
-#: workflow.py:165
+#: workflow.py:166
 msgid "A transition must be selected."
 msgstr ""
 
-#: tracker/tracker.py:547
+#: tracker/tracker.py:559
 msgid "ANONYMOUS"
 msgstr ""
 
@@ -965,7 +988,7 @@ msgstr "进入文档"
 msgid "Access Control"
 msgstr ""
 
-#: root.py:165
+#: root.py:151
 msgid "Access forbidden, you are not authorized to access this resource."
 msgstr ""
 
@@ -979,7 +1002,7 @@ msgstr "关于IKAARO"
 msgid "Account Change"
 msgstr "改换"
 
-#: users.py:373
+#: users.py:374
 #, fuzzy
 msgid "Account changed."
 msgstr "用户资料被变更."
@@ -992,10 +1015,20 @@ msgstr ""
 msgid "Add"
 msgstr "加入"
 
+#: tracker/ui/edit_issue.xml.en:0
+#, fuzzy
+msgid "Add CC:"
+msgstr "加入"
+
 #: tracker/ui/add_issue.xml.en:0
 #, fuzzy
 msgid "Add Issue"
 msgstr "用户"
+
+#: access.py:461
+#, fuzzy
+msgid "Add New Member"
+msgstr "新文件夹"
 
 #: ui/access/new_user.xml.en:0
 #, fuzzy
@@ -1024,11 +1057,11 @@ msgstr ""
 msgid "Add and view"
 msgstr ""
 
-#: ui/folder/new_resource.xml.en:0
+#: folder.py:702
 msgid "Add new content"
 msgstr ""
 
-#: root.py:88
+#: root.py:85
 msgid "Admin"
 msgstr ""
 
@@ -1036,21 +1069,12 @@ msgstr ""
 msgid "Advanced Search"
 msgstr ""
 
-#: ui/epoz/rte.xml.en:0
-#, fuzzy
-msgid "Align Left"
-msgstr "简易文件"
-
-#: ui/epoz/rte.xml.en:0
-msgid "Align Right"
-msgstr ""
-
 #: ui/website/forgotten_password.xml.en:0
 msgid ""
 "An email has been sent to you with the procedure to change your password."
 msgstr ""
 
-#: website.py:438
+#: website.py:520
 msgid ""
 "An email has been sent to you, to finish the registration process follow the "
 "instructions detailed in it."
@@ -1077,7 +1101,7 @@ msgstr "优先"
 msgid "Application preferences changed."
 msgstr ""
 
-#: ical.py:44
+#: ical.py:45
 msgid "April"
 msgstr ""
 
@@ -1089,19 +1113,7 @@ msgstr ""
 msgid "Are you sure you want to delete this object?"
 msgstr ""
 
-#: folder.py:741
-msgid "As Icons"
-msgstr "图标"
-
-#: folder.py:743
-msgid "As Image Gallery"
-msgstr ""
-
-#: folder.py:742
-msgid "As List"
-msgstr "目录"
-
-#: ical.py:1050
+#: ical.py:1190
 msgid "As calendar"
 msgstr ""
 
@@ -1109,7 +1121,7 @@ msgstr ""
 msgid "Assign To:"
 msgstr ""
 
-#: tracker/tracker.py:60
+#: tracker/tracker.py:62
 msgid "Assigned To"
 msgstr ""
 
@@ -1125,19 +1137,15 @@ msgstr ""
 msgid "Attendees"
 msgstr ""
 
-#: ical.py:45
+#: ical.py:46
 msgid "August"
 msgstr ""
 
-#: ui/epoz/rte.xml.en:0
-msgid "Background Color"
-msgstr ""
-
-#: wiki/page.py:493
+#: file.py:397
 msgid "Backlinks"
 msgstr ""
 
-#: users.py:244
+#: users.py:241
 msgid "Bad key."
 msgstr ""
 
@@ -1149,26 +1157,21 @@ msgstr ""
 msgid "Body"
 msgstr "正文"
 
-#: ui/epoz/rte.xml.en:0
+#: wiki/ui/WikiPage_edit.xml.en:0
 #, fuzzy
 msgid "Bold"
-msgstr "文件夹"
-
-#: ui/epoz/script_table.xml.en:0
-#, fuzzy
-msgid "Border"
 msgstr "文件夹"
 
 #: ui/website/broken_links.xml.en:0
 msgid "Broken Links"
 msgstr ""
 
-#: ui/folder/browse_thumbnails.xml.en:0
+#: ui/html/addlink.xml.en:0
 #, fuzzy
 msgid "Browse Content"
 msgstr "浏览"
 
-#: access.py:322
+#: access.py:325
 #, fuzzy
 msgid "Browse Members"
 msgstr "浏览"
@@ -1183,7 +1186,7 @@ msgstr "禄 Browse and link an image from the workspace:"
 msgid "Browse and link to a File from the workspace"
 msgstr "禄 Browse and link an image from the workspace:"
 
-#: tracker/tracker.py:97
+#: tracker/tracker.py:99
 msgid "Bug"
 msgstr ""
 
@@ -1191,23 +1194,27 @@ msgstr ""
 msgid "By"
 msgstr ""
 
-#: binary.py:489
+#: binary.py:317
 msgid "Bzip2"
 msgstr ""
 
-#: binary.py:490
+#: binary.py:318
 msgid "Bzip2 Compressed"
+msgstr ""
+
+#: tracker/ui/edit_issue.xml.en:0
+msgid "CC:"
 msgstr ""
 
 #: tracker/ui/view_tracker.xml.en:0
 msgid "CP1252, Separator:"
 msgstr ""
 
-#: text.py:216
+#: text.py:196
 msgid "CSS"
 msgstr ""
 
-#: ical.py:1339
+#: ical.py:1341
 msgid "Calendar"
 msgstr ""
 
@@ -1221,10 +1228,18 @@ msgstr "改换"
 msgid "Cancelled"
 msgstr "改换"
 
-#: ui/epoz/rte.xml.en:0
+#: ical.py:920
+msgid "Cannot delete event, because it was already removed."
+msgstr ""
+
+#: ical.py:820
+msgid "Cannot modify event, because it has been removed."
+msgstr ""
+
+#: messages.py:39
 #, fuzzy
-msgid "Center"
-msgstr "概略"
+msgid "Caption"
+msgstr "登录"
 
 #: ui/website/contact_options.xml.en:0
 msgid "Change"
@@ -1267,20 +1282,16 @@ msgstr ""
 msgid "Character encoding"
 msgstr ""
 
-#: root.py:378
-msgid "Check Groups"
-msgstr ""
-
-#: ui/root/check_groups.xml.en:0
-msgid "Check groups for <em>phantom</em> users"
-msgstr ""
-
 #: ui/root/about.xml.en:0
 msgid "Check the <a href=\";credits\">Credits</a>;"
 msgstr ""
 
 #: ui/root/about.xml.en:0
 msgid "Check the <a href=\";license\">License</a>;"
+msgstr ""
+
+#: website.py:419
+msgid "Check the referential integrity."
 msgstr ""
 
 #: ui/website/languages.xml.en:0
@@ -1291,12 +1302,17 @@ msgstr "选择语言"
 msgid "Choose the role for the new member"
 msgstr ""
 
+#: website.py:346
+#, fuzzy
+msgid "Choose the security policy."
+msgstr "更改安全设置"
+
 #: ui/user/confirm_registration.xml.en:0
 #, fuzzy
 msgid "Choose your password"
 msgstr "改变内设"
 
-#: tracker/tracker.py:101
+#: tracker/tracker.py:103
 #, fuzzy
 msgid "Closed"
 msgstr "编码"
@@ -1313,7 +1329,7 @@ msgstr ""
 msgid "Comma Separated Values"
 msgstr ""
 
-#: tracker/tracker.py:95
+#: tracker/tracker.py:97
 #, fuzzy
 msgid "Command Line Interface"
 msgstr "选择你的界面"
@@ -1345,11 +1361,15 @@ msgstr ""
 msgid "Common Name"
 msgstr "分类名称"
 
+#: website.py:375
+msgid "Configure the Contact form."
+msgstr ""
+
 #: ui/user/edit_password.xml.en:0
 msgid "Confirm"
 msgstr ""
 
-#: users.py:207
+#: users.py:204
 msgid "Confirmation required"
 msgstr ""
 
@@ -1369,15 +1389,15 @@ msgstr ""
 msgid "Contacts"
 msgstr ""
 
-#: wiki/folder.py:36
+#: wiki/folder.py:35
 msgid "Container for a wiki"
 msgstr ""
 
-#: skins.py:234
+#: skins.py:225
 msgid "Content ($size)"
 msgstr ""
 
-#: skins.py:262
+#: skins.py:253
 #, fuzzy
 msgid "Content Language"
 msgstr "语言"
@@ -1386,7 +1406,11 @@ msgstr "语言"
 msgid "Contents"
 msgstr ""
 
-#: folder.py:463
+#: website.py:417
+msgid "Control Panel"
+msgstr ""
+
+#: folder.py:372
 msgid "Copy"
 msgstr "复制"
 
@@ -1394,11 +1418,11 @@ msgstr "复制"
 msgid "Create a new Web Page and link to it:"
 msgstr ""
 
-#: website.py:49
+#: website.py:54
 msgid "Create a new Web Site or Work Place."
 msgstr ""
 
-#: html.py:116
+#: html.py:118
 #, fuzzy
 msgid "Create and publish a Web Page."
 msgstr "列出文档"
@@ -1419,15 +1443,15 @@ msgstr ""
 msgid "Current window"
 msgstr ""
 
-#: folder.py:464
+#: folder.py:373
 msgid "Cut"
 msgstr "剪切"
 
-#: tracker/tracker.py:98
+#: tracker/tracker.py:100
 msgid "Data Corruption Issue"
 msgstr ""
 
-#: ical.py:1616
+#: ical.py:903
 #, fuzzy
 msgid "Data updated"
 msgstr "文件被上载."
@@ -1441,7 +1465,7 @@ msgstr "日期"
 msgid "Date :"
 msgstr "日期"
 
-#: ical.py:46
+#: ical.py:47
 msgid "December"
 msgstr ""
 
@@ -1449,11 +1473,19 @@ msgstr ""
 msgid "Default"
 msgstr "设置"
 
+#: website.py:267
+msgid "Define the Web Site languages."
+msgstr ""
+
+#: website.py:239
+msgid "Define the domain names for this Web Site."
+msgstr ""
+
 #: ui/ical/ical_edit_event_form.xml.en:0
 msgid "Definitely remove"
 msgstr ""
 
-#: access.py:403
+#: access.py:408
 #, fuzzy
 msgid "Delete"
 msgstr "设置"
@@ -1472,7 +1504,7 @@ msgstr "安全"
 msgid "Do not change"
 msgstr "编辑文档"
 
-#: tracker/tracker.py:94
+#: tracker/tracker.py:96
 #, fuzzy
 msgid "Documentation"
 msgstr "新文件"
@@ -1535,7 +1567,7 @@ msgstr ""
 msgid "Email"
 msgstr ""
 
-#: ui/website/register.xml.en:0
+#: ui/website/login.xml.en:0
 msgid "Email Address"
 msgstr ""
 
@@ -1547,41 +1579,33 @@ msgstr ""
 msgid "End"
 msgstr ""
 
-#: ui/epoz/script_table.xml.en:0
-msgid "Epoz"
-msgstr ""
-
 #: ui/html/addlink.xml.en:0
 msgid "Epoz-Toolbox"
 msgstr ""
 
-#: table.py:289
+#: table.py:382
 #, fuzzy
 msgid "Error: $message"
 msgstr "信息"
 
-#: ical.py:651
+#: ical.py:654
 msgid "Event"
 msgstr ""
 
-#: ical.py:1632
+#: ical.py:924
 msgid "Event definitely deleted."
 msgstr ""
 
-#: ical.py:709
+#: ical.py:710
 msgid "Event not found"
 msgstr ""
 
-#: ui/root/check_groups.xml.en:0
-msgid "Everything is alright."
-msgstr ""
-
-#: binary.py:182
+#: binary.py:140
 #, fuzzy
 msgid "Excel"
 msgstr "外部"
 
-#: binary.py:183
+#: binary.py:141
 msgid "Excel Spreadsheet"
 msgstr ""
 
@@ -1590,7 +1614,7 @@ msgstr ""
 msgid "Export"
 msgstr "简易文件"
 
-#: ical.py:1158
+#: ical.py:1327
 msgid "Export in ical format"
 msgstr ""
 
@@ -1603,7 +1627,7 @@ msgstr ""
 msgid "Export to Text"
 msgstr "简易文件"
 
-#: file.py:278
+#: file.py:287
 msgid "External"
 msgstr "外部"
 
@@ -1622,7 +1646,11 @@ msgstr "外部"
 msgid "Extranet"
 msgstr "外部"
 
-#: ical.py:44
+#: file.py:385
+msgid "Failed to load the file, may contain errors."
+msgstr ""
+
+#: ical.py:45
 msgid "February"
 msgstr ""
 
@@ -1630,29 +1658,25 @@ msgstr ""
 msgid "File"
 msgstr ""
 
-#: ui/website/register.xml.en:0
+#: ui/user/edit_account.xml.en:0
 #, fuzzy
 msgid "First Name"
 msgstr "你的全名"
 
-#: ui/root/check_groups.xml.en:0
-msgid "Fix"
-msgstr ""
-
-#: tracker/tracker.py:101
+#: tracker/tracker.py:103
 msgid "Fixed"
 msgstr ""
 
-#: binary.py:127
+#: binary.py:106
 msgid "Flash"
 msgstr ""
 
-#: binary.py:128
+#: binary.py:107
 #, fuzzy
 msgid "Flash Document"
 msgstr "新文件"
 
-#: folder.py:70
+#: folder.py:68
 msgid "Folder"
 msgstr "文件夹"
 
@@ -1674,11 +1698,6 @@ msgstr "改变内设"
 msgid "Format:"
 msgstr "格式"
 
-#: ui/epoz/rte.xml.en:0
-#, fuzzy
-msgid "Formatted"
-msgstr "格式"
-
 #: forum/forum.py:39
 #, fuzzy
 msgid "Forum"
@@ -1688,7 +1707,7 @@ msgstr "格式"
 msgid "Found <b>${total}</b> broken links."
 msgstr ""
 
-#: ical.py:49
+#: ical.py:50
 msgid "Friday"
 msgstr ""
 
@@ -1696,7 +1715,7 @@ msgstr ""
 msgid "From"
 msgstr "格式"
 
-#: wiki/folder.py:55
+#: wiki/folder.py:53
 msgid "Front Page"
 msgstr ""
 
@@ -1710,28 +1729,27 @@ msgid ""
 "class=\"button_ok\" type=\"submit\" value=\"OK\"/>"
 msgstr ""
 
-#: root.py:407
-#, fuzzy
-msgid "Groups fixed."
-msgstr "组件加入"
+#: access.py:462
+msgid "Grant access to a new user."
+msgstr ""
 
-#: access.py:99
+#: access.py:97
 msgid "Guest"
 msgstr ""
 
-#: binary.py:467
+#: binary.py:305
 msgid "Gzip"
 msgstr ""
 
-#: binary.py:468
+#: binary.py:306
 msgid "Gzip Compressed"
 msgstr ""
 
-#: ui/epoz/rte.xml.en:0
+#: wiki/page.py:223
 msgid "HTML"
 msgstr ""
 
-#: text.py:279
+#: text.py:226
 msgid "HTML File"
 msgstr ""
 
@@ -1739,31 +1757,19 @@ msgstr ""
 msgid "Hacking"
 msgstr ""
 
-#: ui/epoz/rte.xml.en:0
+#: wiki/ui/WikiPage_edit.xml.en:0
 msgid "Heading 1"
 msgstr ""
 
-#: ui/epoz/rte.xml.en:0
+#: wiki/ui/WikiPage_edit.xml.en:0
 msgid "Heading 2"
 msgstr ""
 
-#: ui/epoz/rte.xml.en:0
+#: wiki/ui/WikiPage_edit.xml.en:0
 msgid "Heading 3"
 msgstr ""
 
-#: ui/epoz/rte.xml.en:0
-msgid "Heading 4"
-msgstr ""
-
-#: ui/epoz/rte.xml.en:0
-msgid "Heading 5"
-msgstr ""
-
-#: ui/epoz/rte.xml.en:0
-msgid "Heading 6"
-msgstr ""
-
-#: wiki/page.py:528
+#: wiki/page.py:555
 msgid "Help"
 msgstr "帮助"
 
@@ -1771,11 +1777,11 @@ msgstr "帮助"
 msgid "Hervé Cauwelier (French)"
 msgstr ""
 
-#: tracker/tracker.py:100
+#: tracker/tracker.py:102
 msgid "High"
 msgstr ""
 
-#: tracker/tracker.py:116
+#: tracker/tracker.py:118
 msgid "High Priority"
 msgstr ""
 
@@ -1807,21 +1813,19 @@ msgstr ""
 msgid "Image"
 msgstr ""
 
-#: ui/epoz/rte.xml.en:0
-msgid "Indent"
-msgstr ""
-
-#: text.py:138
+#: text.py:129
 msgid "Inline"
 msgstr "直接从内部写入."
 
-#: ui/epoz/rte.xml.en:0
-msgid "Insert Rule"
-msgstr ""
+#: wiki/ui/WikiPage_edit.xml.en:0
+#, fuzzy
+msgid "Insert Image"
+msgstr "新链接"
 
-#: ui/epoz/script_table.xml.en:0
-msgid "Insert Table"
-msgstr ""
+#: wiki/ui/WikiPage_edit.xml.en:0
+#, fuzzy
+msgid "Insert Link"
+msgstr "新链接"
 
 #: ui/root/internal_server_error.xml.en:0
 msgid "Internal Server Error"
@@ -1831,19 +1835,19 @@ msgstr ""
 msgid "Intranet"
 msgstr ""
 
-#: html.py:96
+#: html.py:97
 msgid "Invalid HTML code."
 msgstr ""
 
-#: ical.py:699
+#: ical.py:698
 msgid "Invalid argument."
 msgstr ""
 
-#: forum/forum.py:108
+#: forum/forum.py:109
 msgid "Invalid title."
 msgstr ""
 
-#: tracker/issue.py:75
+#: tracker/issue.py:112
 msgid "Issue"
 msgstr ""
 
@@ -1851,25 +1855,25 @@ msgstr ""
 msgid "Issue #${number}"
 msgstr ""
 
-#: tracker/tracker.py:68
+#: tracker/tracker.py:70
 msgid "Issue Tracker"
 msgstr ""
 
-#: tracker/tracker.py:745
+#: tracker/tracker.py:767
 msgid "Issue not found."
 msgstr ""
 
-#: tracker/tracker.py:816
+#: tracker/tracker.py:835
 #, fuzzy
 msgid "Issues"
 msgstr "用户"
 
-#: ui/epoz/rte.xml.en:0
+#: wiki/ui/WikiPage_edit.xml.en:0
 #, fuzzy
 msgid "Italic"
 msgstr "意在利语"
 
-#: ical.py:44
+#: ical.py:45
 msgid "January"
 msgstr ""
 
@@ -1877,11 +1881,11 @@ msgstr ""
 msgid "Juan David Ibáñez Palomar (Spanish)"
 msgstr ""
 
-#: ical.py:45
+#: ical.py:46
 msgid "July"
 msgstr ""
 
-#: ical.py:45
+#: ical.py:46
 msgid "June"
 msgstr ""
 
@@ -1902,32 +1906,37 @@ msgstr "语言"
 msgid "Language Settings"
 msgstr "语言"
 
-#: website.py:298
+#: website.py:337
 msgid "Language added."
 msgstr "语言被加入."
 
-#: website.py:229
+#: website.py:266
 msgid "Languages"
 msgstr "语言"
 
-#: website.py:286
+#: website.py:325
 msgid "Languages removed."
 msgstr "语言被改变."
 
-#: wiki/page.py:508
+#: wiki/ui/WikiPage_edit.xml.en:0
+#, fuzzy
+msgid "Large Edit Text"
+msgstr "简易文件"
+
+#: folder.py:359
 msgid "Last Author"
 msgstr ""
 
-#: folder.py:797
+#: folder.py:737
 #, fuzzy
 msgid "Last Changes"
 msgstr "改换"
 
-#: wiki/page.py:507
+#: folder.py:359
 msgid "Last Modified"
 msgstr ""
 
-#: ui/website/register.xml.en:0
+#: ui/user/edit_account.xml.en:0
 #, fuzzy
 msgid "Last Name"
 msgstr "姓名"
@@ -1939,6 +1948,10 @@ msgstr "许可证"
 #: future/menu.py:48
 msgid "Link"
 msgstr "链接"
+
+#: wiki/ui/WikiPage_edit.xml.en:0
+msgid "Literal Block"
+msgstr ""
 
 #: ui/ical/ical_edit_event_form.xml.en:0
 #, fuzzy
@@ -1957,16 +1970,12 @@ msgstr "登录"
 msgid "Login"
 msgstr "登录"
 
-#: tracker/tracker.py:100
+#: tracker/tracker.py:102
 msgid "Low"
 msgstr ""
 
-#: skins.py:160
+#: skins.py:146
 msgid "Main Menu"
-msgstr ""
-
-#: root.py:377
-msgid "Maintenance"
 msgstr ""
 
 #: ui/root/about.xml.en:0
@@ -1981,28 +1990,29 @@ msgstr ""
 msgid "Manage personal content;"
 msgstr ""
 
-#: ical.py:44
+#: ical.py:45
 #, fuzzy
 msgid "March"
 msgstr "搜索"
 
-#: ical.py:45
+#: ical.py:46
 msgid "May"
 msgstr ""
 
-#: tracker/tracker.py:100
+#: tracker/tracker.py:102
 msgid "Medium"
 msgstr ""
 
-#: access.py:100
+#: wiki/ui/WikiPage_edit.xml.en:0
+#, fuzzy
+msgid "Medium Edit Text"
+msgstr "简易文件"
+
+#: access.py:98
 msgid "Member"
 msgstr ""
 
-#: access.py:454
-msgid "Members"
-msgstr ""
-
-#: access.py:424
+#: access.py:429
 #, fuzzy
 msgid "Members deleted."
 msgstr "没有物件被选中"
@@ -2022,7 +2032,7 @@ msgstr ""
 msgid "Message :${message}"
 msgstr "信息"
 
-#: text.py:128
+#: text.py:119
 #, fuzzy
 msgid "Message Catalog"
 msgstr "信息"
@@ -2032,7 +2042,7 @@ msgstr "信息"
 msgid "Message in a thread"
 msgstr "信息被修正."
 
-#: website.py:707
+#: website.py:787
 #, fuzzy
 msgid "Message sent."
 msgstr "信息被修正."
@@ -2042,16 +2052,16 @@ msgstr "信息被修正."
 msgid "Message:"
 msgstr "信息"
 
-#: ical.py:1155
+#: ical.py:1307
 msgid "Metadata"
 msgstr "附加信息"
 
-#: tracker/tracker.py:526
+#: tracker/tracker.py:536
 #, fuzzy
 msgid "Modifications:"
 msgstr "登录"
 
-#: tracker/tracker.py:61
+#: tracker/tracker.py:63
 msgid "Modified"
 msgstr ""
 
@@ -2068,7 +2078,7 @@ msgstr ""
 msgid "Modified since:"
 msgstr "登录"
 
-#: tracker/tracker.py:58
+#: tracker/tracker.py:60
 #, fuzzy
 msgid "Module"
 msgstr "编码"
@@ -2078,7 +2088,7 @@ msgstr "编码"
 msgid "Module:"
 msgstr "编码"
 
-#: ical.py:48
+#: ical.py:49
 msgid "Monday"
 msgstr ""
 
@@ -2092,15 +2102,6 @@ msgstr ""
 
 #: future/ui/order_items.xml.en:0
 msgid "Move into unordered category"
-msgstr ""
-
-#: skins.py:127
-#, fuzzy
-msgid "My Content"
-msgstr "浏览"
-
-#: skins.py:124
-msgid "My Profile"
 msgstr ""
 
 #: ui/ical/ical_edit_event_form.xml.en:0
@@ -2133,7 +2134,7 @@ msgstr ""
 msgid "New Comment:"
 msgstr "新文件"
 
-#: tracker/tracker.py:97
+#: tracker/tracker.py:99
 #, fuzzy
 msgid "New Feature"
 msgstr "新文件夹"
@@ -2143,17 +2144,12 @@ msgstr "新文件夹"
 msgid "New Language:"
 msgstr "语言"
 
-#: access.py:455
-#, fuzzy
-msgid "New Member"
-msgstr "新文件夹"
-
 #: ui/user/edit_password.xml.en:0
 #, fuzzy
 msgid "New Password"
 msgstr "密码"
 
-#: folder.py:276
+#: folder.py:289
 msgid "New Resource"
 msgstr "新文件夹"
 
@@ -2166,12 +2162,12 @@ msgstr ""
 msgid "New Wiki Page"
 msgstr "新工作界面"
 
-#: tracker/tracker.py:731
+#: tracker/tracker.py:753
 #, fuzzy
 msgid "New issue addded."
 msgstr "新资料被加入."
 
-#: table.py:287
+#: table.py:271
 #, fuzzy
 msgid "New record added."
 msgstr "新资料被加入."
@@ -2193,7 +2189,7 @@ msgstr ""
 msgid "Nicolas Deram (French)"
 msgstr ""
 
-#: tracker/tracker.py:465
+#: tracker/tracker.py:473
 msgid "No data to export."
 msgstr ""
 
@@ -2201,7 +2197,7 @@ msgstr ""
 msgid "No document awaits your review."
 msgstr ""
 
-#: ical.py:1422
+#: ical.py:1437
 msgid "No file has been entered."
 msgstr "没有文件被写入."
 
@@ -2210,20 +2206,15 @@ msgstr "没有文件被写入."
 msgid "No history."
 msgstr "记录"
 
-#: tracker/tracker.py:895
+#: tracker/tracker.py:914
 msgid "No objects selected."
 msgstr "没有物件被选中"
 
-#: forum/forum.py:104
+#: forum/forum.py:105
 msgid "No title given."
 msgstr ""
 
-#: ui/epoz/rte.xml.en:0
-#, fuzzy
-msgid "Normal"
-msgstr "格式"
-
-#: tracker/tracker.py:115
+#: tracker/tracker.py:117
 msgid "Not Assigned"
 msgstr ""
 
@@ -2240,33 +2231,33 @@ msgstr ""
 msgid "Note:"
 msgstr ""
 
-#: ical.py:841
+#: ical.py:968
 #, fuzzy
 msgid "Nothing to change."
 msgstr "用户资料被变更."
 
-#: folder.py:698
+#: folder.py:628
 #, fuzzy
 msgid "Nothing to paste."
 msgstr "用户资料被变更."
 
-#: ical.py:847
+#: ical.py:974
 msgid "Nothing to remove."
 msgstr ""
 
-#: ical.py:46
+#: ical.py:47
 msgid "November"
 msgstr ""
 
-#: binary.py:380
+#: binary.py:248
 msgid "ODP"
 msgstr ""
 
-#: binary.py:358
+#: binary.py:236
 msgid "ODS"
 msgstr ""
 
-#: binary.py:336
+#: binary.py:224
 msgid "ODT"
 msgstr ""
 
@@ -2274,16 +2265,16 @@ msgstr ""
 msgid "OK"
 msgstr ""
 
-#: binary.py:248
+#: binary.py:176
 msgid "OOo Calc"
 msgstr ""
 
-#: binary.py:270
+#: binary.py:188
 #, fuzzy
 msgid "OOo Impress"
 msgstr "编辑文档"
 
-#: binary.py:226
+#: binary.py:164
 #, fuzzy
 msgid "OOo Writer"
 msgstr "写入"
@@ -2292,77 +2283,77 @@ msgstr "写入"
 msgid "OPTIONNAL"
 msgstr ""
 
-#: future/order.py:171
+#: future/order.py:172
 #, fuzzy
 msgid "Objects already down."
 msgstr "用户被加入."
 
-#: future/order.py:215
+#: future/order.py:216
 #, fuzzy
 msgid "Objects already on bottom."
 msgstr "用户被加入."
 
-#: future/order.py:195
+#: future/order.py:196
 #, fuzzy
 msgid "Objects already on top."
 msgstr "用户被加入."
 
-#: future/order.py:148
+#: future/order.py:149
 #, fuzzy
 msgid "Objects already up."
 msgstr "物件被更名"
 
-#: folder.py:671
+#: folder.py:601
 msgid "Objects copied."
 msgstr "物件被复制"
 
-#: folder.py:691
+#: folder.py:621
 msgid "Objects cut."
 msgstr "物件被剪切"
 
-#: future/order.py:254
+#: future/order.py:255
 #, fuzzy
 msgid "Objects moved to ordered category."
 msgstr "Objects removed: %s."
 
-#: future/order.py:181
+#: future/order.py:182
 #, fuzzy
 msgid "Objects ordered down."
 msgstr "物件被更名"
 
-#: future/order.py:221
+#: future/order.py:222
 #, fuzzy
 msgid "Objects ordered on bottom."
 msgstr "用户被加入."
 
-#: future/order.py:201
+#: future/order.py:202
 #, fuzzy
 msgid "Objects ordered on top."
 msgstr "用户被加入."
 
-#: future/order.py:157
+#: future/order.py:158
 #, fuzzy
 msgid "Objects ordered up."
 msgstr "物件被更名"
 
-#: folder.py:733
+#: folder.py:662
 msgid "Objects pasted."
 msgstr "物件被粘贴"
 
-#: tracker/tracker.py:915
+#: tracker/tracker.py:934
 #, fuzzy
 msgid "Objects removed: $objects."
 msgstr "Objects removed: %s."
 
-#: folder.py:650
+#: folder.py:580
 msgid "Objects renamed."
 msgstr "物件被更名"
 
-#: ical.py:46
+#: ical.py:47
 msgid "October"
 msgstr ""
 
-#: ical.py:1561
+#: ical.py:855
 msgid "One or more field is invalid."
 msgstr ""
 
@@ -2370,42 +2361,42 @@ msgstr ""
 msgid "Only administrators will be able to register new users."
 msgstr ""
 
-#: tracker/tracker.py:101
+#: tracker/tracker.py:103
 msgid "Open"
 msgstr ""
 
-#: tracker/tracker.py:114
+#: tracker/tracker.py:116
 msgid "Open Issues"
 msgstr ""
 
-#: binary.py:381
+#: binary.py:249
 #, fuzzy
 msgid "OpenDocument Presentation"
 msgstr "新文件"
 
-#: binary.py:359
+#: binary.py:237
 #, fuzzy
 msgid "OpenDocument Spreadsheet"
 msgstr "新文件"
 
-#: binary.py:337
+#: binary.py:225
 #, fuzzy
 msgid "OpenDocument Text"
 msgstr "编辑文档"
 
-#: binary.py:271
+#: binary.py:189
 msgid "OpenOffice.org Presentation"
 msgstr ""
 
-#: binary.py:249
+#: binary.py:177
 msgid "OpenOffice.org Spreadsheet"
 msgstr ""
 
-#: binary.py:227
+#: binary.py:165
 msgid "OpenOffice.org Text"
 msgstr ""
 
-#: users.py:264
+#: users.py:262
 msgid "Operation successful ! Welcome."
 msgstr ""
 
@@ -2431,7 +2422,7 @@ msgstr "文件夹"
 msgid "Order up"
 msgstr ""
 
-#: ui/epoz/rte.xml.en:0
+#: wiki/ui/WikiPage_edit.xml.en:0
 #, fuzzy
 msgid "Ordered List"
 msgstr "文件夹"
@@ -2441,41 +2432,33 @@ msgstr "文件夹"
 msgid "Ordered Objects"
 msgstr "重命名物件"
 
-#: folder.py:71
+#: folder.py:69
 msgid "Organize your files and documents with folders."
 msgstr ""
 
-#: wiki/folder.py:87
-msgid "Orphan Pages"
+#: folder.py:752
+msgid "Orphans"
 msgstr ""
 
-#: ui/epoz/rte.xml.en:0
-msgid "Outdent"
-msgstr ""
-
-#: wiki/page.py:268
+#: wiki/page.py:287
 msgid "PDF"
 msgstr ""
 
-#: binary.py:293
+#: binary.py:201
 #, fuzzy
 msgid "PDF Document"
 msgstr "新文件"
 
-#: wiki/page.py:416
+#: wiki/page.py:469
 msgid "PDF generation failed."
 msgstr ""
 
-#: wiki/page.py:401
+#: wiki/page.py:454
 msgid "PDF generation failed. Please install pdflatex."
 msgstr ""
 
 #: ui/root/credits.xml.en:0
 msgid "Paolo Dina (Italian)"
-msgstr ""
-
-#: ui/epoz/rte.xml.en:0
-msgid "Paragraph"
 msgstr ""
 
 #: ui/website/login.xml.en:0
@@ -2487,21 +2470,21 @@ msgstr "密码"
 msgid "Password Change"
 msgstr "密码被修改."
 
-#: users.py:426
+#: users.py:428
 msgid "Password changed."
 msgstr "密码被修改."
 
-#: users.py:410
+#: users.py:412
 #, fuzzy
 msgid "Password empty, please type one."
 msgstr "密码错误,请再输入."
 
-#: users.py:413
+#: users.py:415
 #, fuzzy
 msgid "Passwords mismatch, please try again."
 msgstr "密码错误,请再输入."
 
-#: folder.py:469
+#: folder.py:378
 msgid "Paste"
 msgstr "粘贴"
 
@@ -2513,7 +2496,7 @@ msgstr ""
 msgid "Pending tasks."
 msgstr ""
 
-#: tracker/tracker.py:99
+#: tracker/tracker.py:101
 msgid "Performance Improvement"
 msgstr ""
 
@@ -2521,7 +2504,7 @@ msgstr ""
 msgid "Plain Text"
 msgstr "简易文件"
 
-#: website.py:141
+#: website.py:180
 #, fuzzy
 msgid "Please select a website."
 msgstr "你必须选择删除成员."
@@ -2535,32 +2518,32 @@ msgstr ""
 msgid "Please select the columns to export:"
 msgstr "你必须选择删除成员."
 
-#: future/order.py:245
+#: future/order.py:246
 #, fuzzy
 msgid "Please select the ordered objects to move into the unordered category."
 msgstr "你必须选择删除成员."
 
-#: future/order.py:166
+#: future/order.py:167
 #, fuzzy
 msgid "Please select the ordered objects to order down."
 msgstr "你必须选择删除成员."
 
-#: future/order.py:209
+#: future/order.py:210
 #, fuzzy
 msgid "Please select the ordered objects to order on bottom."
 msgstr "你必须选择删除成员."
 
-#: future/order.py:189
+#: future/order.py:190
 #, fuzzy
 msgid "Please select the ordered objects to order on top."
 msgstr "你必须选择删除成员."
 
-#: future/order.py:142
+#: future/order.py:143
 #, fuzzy
 msgid "Please select the ordered objects to order up."
 msgstr "你必须选择删除成员."
 
-#: future/order.py:229
+#: future/order.py:230
 #, fuzzy
 msgid "Please select the unordered objects to move into the ordered category."
 msgstr "你必须选择删除成员."
@@ -2574,15 +2557,15 @@ msgstr "粘贴"
 msgid "Post a Reply"
 msgstr ""
 
-#: binary.py:204
+#: binary.py:152
 msgid "PowerPoint"
 msgstr ""
 
-#: binary.py:205
+#: binary.py:153
 msgid "PowerPoint Presentation"
 msgstr ""
 
-#: users.py:293
+#: users.py:292
 msgid "Preferences"
 msgstr "优先"
 
@@ -2591,12 +2574,17 @@ msgstr "优先"
 msgid "Presence"
 msgstr "优先"
 
-#: widgets.py:83
+#: folder.py:672
+#, fuzzy
+msgid "Preview Content"
+msgstr "浏览"
+
+#: widgets.py:84
 #, fuzzy
 msgid "Previous"
 msgstr "查阅"
 
-#: tracker/tracker.py:59
+#: tracker/tracker.py:61
 msgid "Priority"
 msgstr ""
 
@@ -2609,11 +2597,11 @@ msgstr ""
 msgid "Private"
 msgstr "隐私"
 
-#: users.py:272
+#: users.py:270
 msgid "Profile"
 msgstr ""
 
-#: tracker/tracker.py:95
+#: tracker/tracker.py:97
 msgid "Programming Interface"
 msgstr ""
 
@@ -2626,7 +2614,7 @@ msgstr "公共"
 msgid "Publish the document."
 msgstr "列出文档"
 
-#: text.py:237
+#: text.py:206
 msgid "Python"
 msgstr ""
 
@@ -2634,11 +2622,11 @@ msgstr ""
 msgid "REQUIRED"
 msgstr ""
 
-#: binary.py:314
+#: binary.py:212
 msgid "RTF"
 msgstr ""
 
-#: binary.py:315
+#: binary.py:213
 #, fuzzy
 msgid "RTF Document"
 msgstr "新文件"
@@ -2647,22 +2635,17 @@ msgstr "新文件"
 msgid "Recipient"
 msgstr "收件人"
 
-#: table.py:203
+#: table.py:188
 #, fuzzy
 msgid "Record deleted."
 msgstr "记录被修正."
 
-#: ui/epoz/rte.xml.en:0
-#, fuzzy
-msgid "Redo"
-msgstr "删除"
-
-#: ui/website/register.xml.en:0
+#: website.py:469
 #, fuzzy
 msgid "Register"
 msgstr "查阅"
 
-#: ui/website/register.xml.en:0
+#: website.py:476
 #, fuzzy
 msgid "Registration"
 msgstr "查阅"
@@ -2671,7 +2654,7 @@ msgstr "查阅"
 msgid "Reject the document."
 msgstr "删除文档"
 
-#: tracker/tracker.py:947
+#: tracker/tracker.py:965
 #, fuzzy
 msgid "Released"
 msgstr "查阅"
@@ -2685,10 +2668,9 @@ msgstr "查阅"
 msgid "Remove"
 msgstr "删除"
 
-#: ui/epoz/rte.xml.en:0
-#, fuzzy
-msgid "Remove Format"
-msgstr "删除"
+#: tracker/ui/edit_issue.xml.en:0
+msgid "Remove selected CCs"
+msgstr ""
 
 #: ui/folder/rename.xml.en:0
 #, fuzzy
@@ -2714,7 +2696,7 @@ msgstr "查阅"
 msgid "Replace File"
 msgstr "上载文件"
 
-#: forum/thread.py:145
+#: forum/thread.py:147
 msgid "Reply Posted."
 msgstr ""
 
@@ -2731,7 +2713,7 @@ msgstr ""
 msgid "Resource"
 msgstr "新文件夹"
 
-#: ical.py:804
+#: ical.py:1018
 msgid "Resource not found."
 msgstr ""
 
@@ -2749,7 +2731,7 @@ msgstr "删除文档"
 msgid "Retract the document."
 msgstr "删除文档"
 
-#: access.py:101
+#: access.py:99
 #, fuzzy
 msgid "Reviewer"
 msgstr "查阅"
@@ -2759,7 +2741,7 @@ msgstr "查阅"
 msgid "Role"
 msgstr "删除"
 
-#: access.py:448
+#: access.py:453
 #, fuzzy
 msgid "Role updated."
 msgstr "文件被上载."
@@ -2769,7 +2751,7 @@ msgstr "文件被上载."
 msgid "Row deleted."
 msgstr "没有物件被选中"
 
-#: ical.py:49
+#: ical.py:50
 msgid "Saturday"
 msgstr ""
 
@@ -2777,7 +2759,7 @@ msgstr ""
 msgid "Save"
 msgstr "保存"
 
-#: ical.py:1340
+#: ical.py:1342
 msgid "Schedule your time with calendar files."
 msgstr ""
 
@@ -2794,7 +2776,7 @@ msgstr "搜索替代文件夹"
 msgid "Search:"
 msgstr "搜索"
 
-#: tracker/tracker.py:97
+#: tracker/tracker.py:99
 #, fuzzy
 msgid "Security Issue"
 msgstr "安全"
@@ -2808,7 +2790,17 @@ msgstr "安全"
 msgid "See the GNU General Public License for more details."
 msgstr ""
 
-#: tracker/tracker.py:770
+#: access.py:326
+#, fuzzy
+msgid "See the users and their roles."
+msgstr "用户被加入."
+
+#: ui/html/addlink.xml.en:0
+#, fuzzy
+msgid "Select Resource"
+msgstr "新文件夹"
+
+#: tracker/tracker.py:787
 msgid "Select Table"
 msgstr ""
 
@@ -2820,15 +2812,15 @@ msgstr "发送"
 msgid "Sender email address"
 msgstr ""
 
-#: ical.py:45
+#: ical.py:46
 msgid "September"
 msgstr ""
 
-#: skins.py:132
-msgid "Settings"
-msgstr "设置"
+#: folder.py:753
+msgid "Show objects not linked from anywhere."
+msgstr ""
 
-#: folder.py:451
+#: folder.py:360
 msgid "Size"
 msgstr "尺寸"
 
@@ -2845,7 +2837,12 @@ msgstr "尺寸"
 msgid "Skin"
 msgstr ""
 
-#: forum/thread.py:129
+#: wiki/ui/WikiPage_edit.xml.en:0
+#, fuzzy
+msgid "Small Edit Text"
+msgstr "简易文件"
+
+#: messages.py:31
 msgid ""
 "Some required fields are missing, or some values are not valid. Please "
 "correct them and continue."
@@ -2855,7 +2852,7 @@ msgstr ""
 msgid "Some things you can do with ikaaro:"
 msgstr ""
 
-#: tracker/tracker.py:98
+#: tracker/tracker.py:100
 msgid "Stability Issue"
 msgstr ""
 
@@ -2864,7 +2861,7 @@ msgstr ""
 msgid "Start"
 msgstr "状态"
 
-#: ical.py:1566
+#: ical.py:860
 msgid "Start date MUST be earlier than end date."
 msgstr ""
 
@@ -2896,17 +2893,13 @@ msgstr "密码错误,请再输入."
 msgid "Status:"
 msgstr "状态"
 
-#: tracker/tracker.py:976
+#: tracker/tracker.py:990
 #, fuzzy
 msgid "Stored Search"
 msgstr "搜索"
 
 #: tracker/ui/search.xml.en:0
 msgid "Stored Searches"
-msgstr ""
-
-#: ui/epoz/rte.xml.en:0
-msgid "Strikethrough"
 msgstr ""
 
 #: ui/website/contact_form.xml.en:0
@@ -2917,58 +2910,33 @@ msgstr "主题"
 msgid "Submit"
 msgstr ""
 
-#: ui/epoz/rte.xml.en:0
-msgid "Subscript"
-msgstr ""
-
 #: ui/ical/ical_edit_event_form.xml.en:0
 msgid "Summary"
 msgstr ""
 
-#: ical.py:1278
-msgid "Summary must be filled."
-msgstr ""
-
-#: ical.py:49
+#: ical.py:50
 msgid "Sunday"
 msgstr ""
-
-#: ui/epoz/rte.xml.en:0
-#, fuzzy
-msgid "Superscript"
-msgstr "安全"
 
 #: ui/root/credits.xml.en:0
 msgid "Sylvain Taverne (French)"
 msgstr ""
 
-#: wiki/page.py:469
+#: wiki/page.py:536
 msgid "Syntax error, please check the view for details."
 msgstr ""
 
-#: wiki/page.py:473
-msgid "Syntax error<br/>line$line"
-msgstr ""
-
-#: table.py:58
+#: wiki/ui/WikiPage_edit.xml.en:0
 #, fuzzy
 msgid "Table"
 msgstr "名称"
 
-#: ui/epoz/script_table.xml.en:0
-msgid "Table columns"
-msgstr ""
-
-#: ui/epoz/script_table.xml.en:0
-msgid "Table rows"
-msgstr ""
-
-#: binary.py:443
+#: binary.py:290
 #, fuzzy
 msgid "Tar"
 msgstr "对照"
 
-#: binary.py:444
+#: binary.py:291
 msgid "Tar Archive"
 msgstr ""
 
@@ -2981,7 +2949,7 @@ msgstr "对照"
 msgid "Tasks"
 msgstr ""
 
-#: tracker/tracker.py:99
+#: tracker/tracker.py:101
 msgid "Technology Upgrade"
 msgstr ""
 
@@ -2990,29 +2958,19 @@ msgstr ""
 msgid "Tentative"
 msgstr "名称"
 
-#: folder.py:85
+#: folder.py:82
 msgid "Text"
-msgstr ""
-
-#: ui/epoz/rte.xml.en:0
-msgid ""
-"Text\n"
-"        Color"
 msgstr ""
 
 #: tracker/ui/search.xml.en:0
 msgid "Text (search within the title and all comments)"
 msgstr ""
 
-#: ui/epoz/rte.xml.en:0
-msgid "Text Color"
-msgstr ""
-
 #: ui/website/search_form.xml.en:0
 msgid "Text contains"
 msgstr ""
 
-#: ical.py:1169
+#: ical.py:1317
 #, fuzzy
 msgid "Text view"
 msgstr "名称"
@@ -3021,17 +2979,12 @@ msgstr "名称"
 msgid "Thank you for using ikaaro."
 msgstr ""
 
-#: ui/website/register.xml.en:0
-msgid ""
-"The <span class=\"field_required\">emphasized</span> fields are required."
-msgstr ""
-
 #: messages.py:23
 #, fuzzy
 msgid "The changes have been saved."
 msgstr "预设语言已被改变."
 
-#: website.py:270
+#: website.py:309
 msgid "The default language has been changed."
 msgstr "预设语言已被改变."
 
@@ -3043,7 +2996,7 @@ msgstr "文件名中含有不符规定的符号,请更名."
 msgid "The documents below await review for publication:"
 msgstr ""
 
-#: access.py:478
+#: access.py:486
 #, fuzzy
 msgid "The email address is missing, please type it."
 msgstr "用户名错误,请再输入."
@@ -3053,7 +3006,7 @@ msgstr "用户名错误,请再输入."
 msgid "The email address provided is invalid."
 msgstr "用户名错误,请再输入."
 
-#: future/dressable.py:316
+#: future/dressable.py:319
 msgid "The file is not an image"
 msgstr ""
 
@@ -3062,25 +3015,21 @@ msgstr ""
 msgid "The file must be entered."
 msgstr "必须写入文件."
 
-#: ui/root/check_groups.xml.en:0
-msgid "The following groups contain users that don't exist anymore:"
-msgstr ""
-
 #: future/menu.py:120
 #, fuzzy
 msgid "The link must be entered."
 msgstr "必须写入文件."
 
-#: messages.py:31
+#: messages.py:34
 msgid "The name is missing."
 msgstr ""
 
-#: website.py:493
+#: website.py:575
 #, fuzzy
 msgid "The password is wrong."
 msgstr "密码错误,请再输入."
 
-#: messages.py:34
+#: messages.py:37
 #, fuzzy
 msgid "The provided passwords do not match."
 msgstr "密码错误,请再输入."
@@ -3089,25 +3038,25 @@ msgstr "密码错误,请再输入."
 msgid "The requested URL ${uri} was not found on this server."
 msgstr ""
 
-#: website.py:479
+#: website.py:561
 msgid "The user \"$username\" does not exist."
 msgstr ""
 
-#: website.py:488
+#: website.py:570
 msgid "The user \"$username\" is not active."
 msgstr ""
 
-#: tracker/issue.py:232
+#: tracker/issue.py:285
 #, fuzzy
 msgid "The user $title did some changes."
 msgstr "名称"
 
-#: access.py:519
+#: access.py:527
 #, fuzzy
 msgid "The user is already here."
 msgstr "用户被加入."
 
-#: widgets.py:49
+#: widgets.py:50
 #, fuzzy
 msgid "There are ${n} objects."
 msgstr "此处无图片."
@@ -3116,11 +3065,6 @@ msgstr "此处无图片."
 #, fuzzy
 msgid "There are no ordered objects"
 msgstr "此处无图片."
-
-#: wiki/folder.py:102
-#, fuzzy
-msgid "There are no orphan pages."
-msgstr "此处无内容."
 
 #: future/ui/order_items.xml.en:0
 #, fuzzy
@@ -3141,33 +3085,38 @@ msgstr "此处无内容."
 msgid "There has been an error, please try again later."
 msgstr "用户名错误,请再输入."
 
-#: widgets.py:49
+#: widgets.py:50
 msgid "There is 1 object."
 msgstr ""
 
-#: website.py:420
+#: website.py:502
 #, fuzzy
 msgid "There is already an active user with that email."
 msgstr "此文件名已被另外资源占有."
 
-#: messages.py:30
+#: messages.py:33
 #, fuzzy
 msgid "There is already another object with this name."
 msgstr "此名称已被另外物件名有."
 
-#: file.py:166
+#: file.py:183
 #, fuzzy
 msgid ""
 "There is already another object with this name. Please type a title to "
 "choose a different name."
 msgstr "此名称已被另外物件名有."
 
-#: users.py:362
+#: users.py:363
 #, fuzzy
 msgid "There is another user with the email \"%s\", please try again"
 msgstr "此用户名已登记\"%s\", 请输入另一用户名."
 
-#: website.py:539
+#: folder.py:789
+#, fuzzy
+msgid "There is no orphan."
+msgstr "此处无内容."
+
+#: website.py:622
 #, fuzzy
 msgid "There is not a user identified as \"$username\""
 msgstr "此用户名已登记\"%s\", 请输入另一用户名."
@@ -3178,11 +3127,11 @@ msgid ""
 "publish them."
 msgstr ""
 
-#: file.py:320
+#: file.py:330
 msgid "This page is lock by another user"
 msgstr ""
 
-#: messages.py:33
+#: messages.py:36
 msgid "This page is locked by $user"
 msgstr ""
 
@@ -3196,7 +3145,7 @@ msgstr ""
 msgid "This program is free software:"
 msgstr ""
 
-#: forum/forum.py:111
+#: forum/forum.py:112
 msgid "This thread already exists."
 msgstr ""
 
@@ -3205,24 +3154,24 @@ msgstr ""
 msgid "Thread"
 msgstr "读入"
 
-#: forum/forum.py:126
+#: forum/forum.py:127
 msgid "Thread Created."
 msgstr ""
 
-#: ical.py:48
+#: ical.py:49
 msgid "Thursday"
 msgstr ""
 
-#: ical.py:852
+#: ical.py:979
 msgid "Timetable(s) removed successfully."
 msgstr ""
 
-#: ical.py:809
+#: ical.py:935
 #, fuzzy
 msgid "Timetables"
 msgstr "名称"
 
-#: ical.py:872
+#: ical.py:999
 msgid "Timetables updated successfully."
 msgstr ""
 
@@ -3248,7 +3197,7 @@ msgstr "名称"
 msgid "To activate your account, please type a password."
 msgstr ""
 
-#: ical.py:668
+#: ical.py:672
 msgid "To add an event, click on + symbol from the views."
 msgstr ""
 
@@ -3256,7 +3205,7 @@ msgstr ""
 msgid "To confirm these changes, you must type your actual password."
 msgstr ""
 
-#: users.py:209
+#: users.py:206
 msgid ""
 "To confirm your identity click the link:\n"
 "\n"
@@ -3271,15 +3220,15 @@ msgstr ""
 msgid "To learn more, check out these resources:"
 msgstr ""
 
-#: tracker/tracker.py:69
+#: tracker/tracker.py:71
 msgid "To manage bugs and tasks"
 msgstr ""
 
-#: users.py:561
+#: users.py:545
 msgid "To manage the users please go <a href=\"/;permissions_form\">here</a>."
 msgstr ""
 
-#: workflow.py:178
+#: workflow.py:179
 msgid "Transition done."
 msgstr ""
 
@@ -3293,11 +3242,11 @@ msgstr "保存翻译件"
 msgid "Translators"
 msgstr "保存翻译件"
 
-#: ical.py:48
+#: ical.py:49
 msgid "Tuesday"
 msgstr ""
 
-#: tracker/tracker.py:58
+#: tracker/tracker.py:60
 #, fuzzy
 msgid "Type"
 msgstr "种类"
@@ -3316,7 +3265,7 @@ msgid ""
 "Type the hostnames this website will apply to, each one in a different line."
 msgstr ""
 
-#: website.py:470
+#: website.py:552
 msgid "Type your email please."
 msgstr ""
 
@@ -3337,21 +3286,16 @@ msgstr ""
 msgid "UTF-8, Separator:"
 msgstr ""
 
-#: ui/epoz/rte.xml.en:0
-#, fuzzy
-msgid "Underline"
-msgstr "直接从内部写入."
-
-#: ui/epoz/rte.xml.en:0
-msgid "Undo"
+#: file.py:377
+msgid "Unexpected file of mimetype ${mimetype}."
 msgstr ""
 
-#: tracker/tracker.py:94
+#: tracker/tracker.py:96
 #, fuzzy
 msgid "Unit Tests"
 msgstr "简易文件"
 
-#: ui/epoz/rte.xml.en:0
+#: wiki/ui/WikiPage_edit.xml.en:0
 #, fuzzy
 msgid "Unordered List"
 msgstr "目录"
@@ -3401,13 +3345,13 @@ msgstr "上载文件"
 msgid "Upload and Link"
 msgstr "上载文件"
 
-#: ical.py:1431
+#: ical.py:1446
 msgid ""
 "Upload failed: either the file does not match this document type ($mimetype) "
 "or it contains errors."
 msgstr ""
 
-#: ical.py:1417
+#: ical.py:1432
 #, fuzzy
 msgid "Upload from an ical file"
 msgstr "上载文件"
@@ -3420,26 +3364,21 @@ msgstr ""
 msgid "User"
 msgstr "用户"
 
-#: access.py:396
+#: access.py:401
 #, fuzzy
 msgid "User ID"
 msgstr "用户"
 
-#: access.py:533
+#: access.py:541
 #, fuzzy
 msgid "User added."
 msgstr "加入用户"
 
-#: root.py:97
+#: root.py:94
 msgid "Users"
 msgstr "用户"
 
-#: skins.py:130
-#, fuzzy
-msgid "Users Directory"
-msgstr "用户被删除."
-
-#: tracker/tracker.py:57
+#: tracker/tracker.py:59
 #, fuzzy
 msgid "Version"
 msgstr "个人"
@@ -3449,7 +3388,7 @@ msgstr "个人"
 msgid "Version (mandatory):"
 msgstr "密码错误,请再输入."
 
-#: ical.py:1436
+#: ical.py:1451
 msgid "Version uploaded."
 msgstr "版本上载."
 
@@ -3458,7 +3397,7 @@ msgstr "版本上载."
 msgid "Version:"
 msgstr "个人"
 
-#: binary.py:95
+#: binary.py:85
 #, fuzzy
 msgid "Video"
 msgstr "浏览"
@@ -3467,11 +3406,11 @@ msgstr "浏览"
 msgid "View"
 msgstr "浏览"
 
-#: tracker/tracker.py:350
+#: tracker/tracker.py:358
 msgid "View Tracker"
 msgstr ""
 
-#: widgets.py:106
+#: widgets.py:107
 msgid "View from ${start} to ${end} (${link}):"
 msgstr ""
 
@@ -3483,7 +3422,7 @@ msgstr ""
 msgid "Visit the project's <a href=\"http://www.ikaaro.org/\">Web Site</a>;"
 msgstr ""
 
-#: tracker/tracker.py:96
+#: tracker/tracker.py:98
 #, fuzzy
 msgid "Visual Interface"
 msgstr "选择你的界面"
@@ -3492,15 +3431,15 @@ msgstr "选择你的界面"
 msgid "Want to know who is behind this software?"
 msgstr ""
 
-#: html.py:115
+#: html.py:117
 msgid "Web Page"
 msgstr ""
 
-#: website.py:48
+#: website.py:53
 msgid "Web Site"
 msgstr ""
 
-#: ical.py:48
+#: ical.py:49
 msgid "Wednesday"
 msgstr ""
 
@@ -3508,7 +3447,7 @@ msgstr ""
 msgid "Week "
 msgstr ""
 
-#: ical.py:508
+#: ical.py:510
 msgid "Weekly"
 msgstr ""
 
@@ -3516,31 +3455,23 @@ msgstr ""
 msgid "Welcome to your home folder."
 msgstr ""
 
-#: wiki/folder.py:35
+#: wiki/folder.py:34
 msgid "Wiki"
 msgstr ""
 
-#: wiki/page.py:65
+#: wiki/page.py:62
 msgid "Wiki Page"
 msgstr ""
 
-#: wiki/page.py:66
+#: wiki/page.py:63
 msgid "Wiki contents"
 msgstr ""
 
-#: ui/epoz/script_table.xml.en:0
-msgid "With head"
-msgstr ""
-
-#: ui/epoz/script_table.xml.en:0
-msgid "Without head"
-msgstr ""
-
-#: binary.py:160
+#: binary.py:128
 msgid "Word"
 msgstr ""
 
-#: binary.py:161
+#: binary.py:129
 #, fuzzy
 msgid "Word Text"
 msgstr "简易文件"
@@ -3565,7 +3496,7 @@ msgstr ""
 msgid "Wrong time selection."
 msgstr ""
 
-#: text.py:259
+#: text.py:217
 msgid "XML File"
 msgstr ""
 
@@ -3577,7 +3508,7 @@ msgstr ""
 msgid "You Are Now Logged out"
 msgstr ""
 
-#: ical.py:1523
+#: ical.py:824
 msgid "You are not authorized to modify this event."
 msgstr ""
 
@@ -3602,7 +3533,7 @@ msgid ""
 "Office or OpenOffice.org."
 msgstr ""
 
-#: website.py:281
+#: website.py:320
 msgid "You can not remove the default language."
 msgstr "你不能改变预设语言."
 
@@ -3621,15 +3552,15 @@ msgid ""
 "support UTF-8 (not recommended)."
 msgstr ""
 
-#: users.py:405
+#: users.py:407
 msgid "You mistyped your actual password, your account is not changed."
 msgstr ""
 
-#: website.py:293
+#: website.py:332
 msgid "You must choose a language"
 msgstr "你必须选择一种语言."
 
-#: website.py:263
+#: website.py:302
 msgid "You must select one and only one language."
 msgstr "你只能选择一种语言."
 
@@ -3647,11 +3578,11 @@ msgstr ""
 msgid "Zhou Li (Chinese)"
 msgstr ""
 
-#: binary.py:420
+#: binary.py:278
 msgid "Zip"
 msgstr ""
 
-#: binary.py:421
+#: binary.py:279
 msgid "Zip Archive"
 msgstr ""
 
@@ -3661,11 +3592,11 @@ msgid ""
 "a>]"
 msgstr ""
 
-#: tracker/tracker.py:553
+#: tracker/tracker.py:565
 msgid "[%s]"
 msgstr ""
 
-#: wiki/page.py:579
+#: wiki/page.py:603
 msgid "`%s`_"
 msgstr ""
 
@@ -3675,7 +3606,7 @@ msgid ""
 "\"Settings\", subtab \"Languages\"."
 msgstr ""
 
-#: root.py:68
+#: root.py:64
 msgid "iKaaro"
 msgstr ""
 
@@ -3703,6 +3634,12 @@ msgid ""
 "3 of the License, or (at your option) any later version."
 msgstr ""
 
+#: ui/folder/rename.xml.en:0
+msgid ""
+"⇒ ${object/parent_path}<input name=\"new_names\" style=\"font-family: "
+"monospace;\" type=\"text\" value=\"${object/name}\"/>"
+msgstr ""
+
 #, fuzzy
 #~ msgid "  State: %s"
 #~ msgstr "状态"
@@ -3720,6 +3657,10 @@ msgstr ""
 #~ msgstr "物件被更名"
 
 #, fuzzy
+#~ msgid "${option/label}"
+#~ msgstr "名称"
+
+#, fuzzy
 #~ msgid "${thread/last_date}"
 #~ msgstr "用户资料列单"
 
@@ -3729,6 +3670,10 @@ msgstr ""
 
 #~ msgid "-- Choose a language --"
 #~ msgstr "选择语言"
+
+#, fuzzy
+#~ msgid "<span>${menu/label}</span>"
+#~ msgstr "名称"
 
 #, fuzzy
 #~ msgid "Active Item"
@@ -3754,12 +3699,26 @@ msgstr ""
 #~ msgstr "新用户"
 
 #, fuzzy
+#~ msgid "Align Left"
+#~ msgstr "简易文件"
+
+#, fuzzy
 #~ msgid "Anonymous Settings."
 #~ msgstr "总设置被改变"
 
 #, fuzzy
 #~ msgid "Anonymous users allowed to join this web site"
 #~ msgstr "无名用户准许进入此网站"
+
+#~ msgid "As Icons"
+#~ msgstr "图标"
+
+#~ msgid "As List"
+#~ msgstr "目录"
+
+#, fuzzy
+#~ msgid "Border"
+#~ msgstr "文件夹"
 
 #~ msgid "Browse-Directories"
 #~ msgstr "浏览"
@@ -3770,11 +3729,12 @@ msgstr ""
 #~ msgid "Catalog"
 #~ msgstr "分类"
 
+#, fuzzy
+#~ msgid "Center"
+#~ msgstr "概略"
+
 #~ msgid "Change the catalog associated to this document:"
 #~ msgstr "改变文件目录"
-
-#~ msgid "Change the security settings"
-#~ msgstr "更改安全设置"
 
 #, fuzzy
 #~ msgid "Changes saved."
@@ -3874,6 +3834,10 @@ msgstr ""
 #~ msgstr "文件夹用于文件分类."
 
 #, fuzzy
+#~ msgid "Formatted"
+#~ msgstr "格式"
+
+#, fuzzy
 #~ msgid "French (fr)"
 #~ msgstr "法语"
 
@@ -3894,6 +3858,10 @@ msgstr ""
 #~ msgstr "组件加入"
 
 #, fuzzy
+#~ msgid "Groups fixed."
+#~ msgstr "组件加入"
+
+#, fuzzy
 #~ msgid "Guests"
 #~ msgstr "搜索替代文件夹"
 
@@ -3910,10 +3878,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "Inactive Item"
 #~ msgstr "名称"
-
-#, fuzzy
-#~ msgid "Insert Link"
-#~ msgstr "新链接"
 
 #~ msgid "Japanese"
 #~ msgstr "日本语"
@@ -3957,11 +3921,19 @@ msgstr ""
 #~ msgid "Metadata changed."
 #~ msgstr "用户资料被变更."
 
+#, fuzzy
+#~ msgid "My Content"
+#~ msgstr "浏览"
+
 #~ msgid "No objects selected"
 #~ msgstr "没有物件被选中"
 
 #~ msgid "No user added"
 #~ msgstr "未有加入用户"
+
+#, fuzzy
+#~ msgid "Normal"
+#~ msgstr "格式"
 
 #, fuzzy
 #~ msgid "ODP Document"
@@ -4007,6 +3979,14 @@ msgstr ""
 #~ msgid "Record removed."
 #~ msgstr "记录被删除"
 
+#, fuzzy
+#~ msgid "Redo"
+#~ msgstr "删除"
+
+#, fuzzy
+#~ msgid "Remove Format"
+#~ msgstr "删除"
+
 #~ msgid "Rename.."
 #~ msgstr "重命名"
 
@@ -4028,9 +4008,16 @@ msgstr ""
 #~ msgid "Sender"
 #~ msgstr "发件人"
 
+#~ msgid "Settings"
+#~ msgstr "设置"
+
 #, fuzzy
 #~ msgid "Spanish (es)"
 #~ msgstr "西班牙语"
+
+#, fuzzy
+#~ msgid "Superscript"
+#~ msgstr "安全"
 
 #, fuzzy
 #~ msgid "Table view"
@@ -4133,6 +4120,10 @@ msgstr ""
 #~ "tt> button:"
 #~ msgstr "请选择一个新的文件版本并点击登录"
 
+#, fuzzy
+#~ msgid "Underline"
+#~ msgstr "直接从内部写入."
+
 #~ msgid "Unpack"
 #~ msgstr "卸下"
 
@@ -4155,6 +4146,10 @@ msgstr ""
 
 #~ msgid "Username"
 #~ msgstr "用户姓名"
+
+#, fuzzy
+#~ msgid "Users Directory"
+#~ msgstr "用户被删除."
 
 #~ msgid "Users added"
 #~ msgstr "加入用户"
