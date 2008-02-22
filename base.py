@@ -776,13 +776,18 @@ class DBObject(CatalogAware, Node, DomainAware):
     # UI / Rich Text Editor
     ########################################################################
     @classmethod
+    def get_rte_css(cls, context):
+        return '/ui/tiny_mce/content.css'
+
+
+    @classmethod
     def get_rte(cls, context, name, data):
         namespace = {}
         namespace['form_name'] = name
         namespace['js_data'] = data
         namespace['scripts'] = ['/ui/tiny_mce/tiny_mce_src.js',
                                 '/ui/tiny_mce/javascript.js']
-        namespace['css'] = '/ui/tiny_mce/style.css'
+        namespace['css'] = cls.get_rte_css(context)
         # Dressable
         dress_name = context.get_form_value('dress_name')
         namespace['dress_name'] = dress_name
