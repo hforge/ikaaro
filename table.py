@@ -99,6 +99,7 @@ class Table(File):
     # View
     view__access__ = 'is_allowed_to_view'
     view__label__ = u'View'
+    view__icon__ = 'view.png'
     def view(self, context):
         namespace = {}
 
@@ -193,6 +194,7 @@ class Table(File):
     # Add
     add_record_form__access__ = 'is_allowed_to_edit'
     add_record_form__label__ = u'Add'
+    add_record_form__icon__ = 'new.png'
     def add_record_form(self, context):
         namespace = {}
         fields = []
