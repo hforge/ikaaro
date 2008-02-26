@@ -113,11 +113,14 @@ class CSV(Text):
         else:
             getter = lambda x, y: x[int(y)]
 
-        end = start + size
-        if end > total:
-            end = total
-
-        for row in handler.get_rows(range(start, end)):
+        read = 0
+        length = len(handler.lines)
+        while read < size and index < length:
+            try:
+                row = handler.get_row(index)
+            except IndexError:
+                index += 1
+                continue
             rows.append({})
             rows[-1]['id'] = str(index)
             rows[-1]['checkbox'] = True
@@ -132,6 +135,7 @@ class CSV(Text):
                 else:
                     rows[-1][column] = value
             index += 1
+            read += 1
 
         # Sorting
         sortby = context.get_form_value('sortby')
