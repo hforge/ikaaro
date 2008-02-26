@@ -89,6 +89,7 @@ become sub-packages:
   Before                         Now
   ----------------------------   ---------------------------------
   itools.cms.base.Handler        ikaaro.base.DBObject
+  itools.cms.handlers.Metadata   ikaaro.metadata.Metadata
   itools.cms.html.XHTMLFile      ikaaro.html.WebPage
   itools.cms.future.Dressable    ikaaro.future.dressable.Dressable
   itools.cms.future.OrderAware   ikaaro.future.order.OrderAware
@@ -152,6 +153,13 @@ class we want to use through the new variable "handler_class":
 Related to this, there are many method calls that need to be updated.
 These are some common patterns:
 
+  Before                      Now
+  --------------------------  ------------------------------
+  self.search_handlers(...)   self.search_objects(...)
+  self.get_metadata()         self.metadata
+
+And:
+
 (1) # Before
     handler = self.get_handler(path)
 
@@ -168,10 +176,10 @@ These are some common patterns:
     object.handler
 
 (3) # Before
-    self.search_handlers(...)
+    handler, metadata = self.set_object(name, handler, metadata)
 
-    # Now
-    self.search_objects(...)
+    # Now (XXX)
+    cls.make_object(cls, container, name, **kw)
 
 
 
@@ -362,10 +370,6 @@ Changed:
 
   Before                      Now
   -------------------------   ------------------
-  _get_virtual_handler        _get_object
-  get_real_handler            get_real_object
-  get_physical_path           get_canonical_path
-
   /;change_language?lang=fr   ?language=fr
 
 Removed:
