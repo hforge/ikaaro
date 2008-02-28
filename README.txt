@@ -76,19 +76,19 @@ http://bugs.ikaaro.org
 Copyright
 ---------
 
-Copyright (C) 2002-2007 Juan David Ibáñez Palomar <jdavid@itaapy.com>
-Copyright (C) 2005-2007 Luis Arturo Belmar-Letelier <luis@itaapy.com>
-Copyright (C) 2005-2007 Hervé Cauwelier <herve@itaapy.com>
-Copyright (C) 2005-2007 Nicolas Deram <nicolas@itaapy.com>
+Copyright (C) 2003-2008 Juan David Ibáñez Palomar <jdavid@itaapy.com>
+Copyright (C) 2005-2008 Luis Arturo Belmar-Letelier <luis@itaapy.com>
+Copyright (C) 2005-2008 Hervé Cauwelier <herve@itaapy.com>
+Copyright (C) 2005-2008 Nicolas Deram <nicolas@itaapy.com>
 
 And others. Check the CREDITS file for complete list.
 
-Includes the DHTML Calendar, authored by Mihai Bazon and published under
-the terms of the GNU Lesser General Public License.
+Includes the TinyMCE editor (http://tinymce.moxiecode.com/), available
+under the terms and conditions of the GNU Lesser General Public License.
 
-The HTML editor is derived from Epoz (XXX), which is authored by Maik
-Jablonski and Benoit Pin, and published under the terms of the Zope
-Public License (ZPL) version 2.1.
+Includes the DHTML Calendar (http://www.dynarch.com/projects/calendar/),
+authored by Mihai Bazon and published under the terms of the GNU Lesser
+General Public License.
 
 Most icons used are copyrighted by the Tango Desktop Project, and licensed
 under the Creative Commons Attribution Share-Alike license, including the
