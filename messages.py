@@ -21,6 +21,7 @@
 MSG_BAD_NAME = (
     u'The document name contains illegal characters, choose another one.')
 MSG_CHANGES_SAVED = u'The changes have been saved.'
+MSG_CHANGES_SAVED2 = u'The changes have been saved ($time).'
 MSG_DELETE_OBJECT = u'Are you sure you want to delete this object?'
 MSG_DELETE_SELECTION = u'Are you sure you want to delete the selection?'
 MSG_EDIT_CONFLICT = u'Changes could not be saved, there was an edit conflict.'

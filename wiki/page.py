@@ -38,6 +38,7 @@ from docutils import nodes
 from itools import vfs
 from itools.datatypes import DateTime, FileName, XML
 from itools.handlers import checkid, get_handler, File as FileHandler
+from itools.i18n import format_datetime
 from itools.stl import stl
 from itools.xml import XMLParser, XMLError
 from itools.uri import get_reference
@@ -45,7 +46,7 @@ from itools.uri.mailto import Mailto
 
 # Import from ikaaro
 from ikaaro.base import DBObject
-from ikaaro.messages import MSG_EDIT_CONFLICT, MSG_CHANGES_SAVED
+from ikaaro.messages import *
 from ikaaro.text import Text
 from ikaaro.registry import register_object_class
 
@@ -535,10 +536,12 @@ class WikiPage(Text):
         if 'class="system-message"' in self.view(context):
             message = u"Syntax error, please check the view for details."
         else:
-            message = MSG_CHANGES_SAVED
+            message = MSG_CHANGES_SAVED2
 
         # Come back to the desired view
-        goto = context.come_back(message, keep=['text_size'])
+        accept = context.accept_language
+        time = format_datetime(datetime.now(), accept=accept)
+        goto = context.come_back(message, keep=['text_size'], time=time)
         if context.has_form_value('view'):
             query = goto.query
             goto = goto.resolve(';view')
