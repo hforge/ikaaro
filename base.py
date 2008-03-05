@@ -981,10 +981,22 @@ class DBObject(CatalogAware, Node, DomainAware):
         for name in names:
             if ':' in name:
                 new_name = name.split(':', 1)[1]
+                value = properties.pop(name)
+                # Skip empty values
+                if isinstance(value, dict):
+                    for key in value.keys():
+                        if value[key].strip() == '':
+                            del value[key]
+                    if len(value) == 0:
+                        continue
+                elif isinstance(value, list):
+                    pass
+                elif value.strip() == '':
+                    continue
+                # Check the schema
                 if new_name not in schema:
                     raise ValueError, 'unexpected property "%s"' % name
                 datatype = schema[new_name]
-                value = properties.pop(name)
                 # Multilingual
                 if isinstance(value, dict):
                     properties[new_name] = {}
