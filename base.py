@@ -138,8 +138,8 @@ class Node(BaseNode):
         return ';icon%s' % size
 
 
-    def get_method_icon(self, name, size='16x16', **kw):
-        icon = getattr(self, '%s__icon__' % name, None)
+    def get_method_icon(self, method_name, size='16x16', **kw):
+        icon = getattr(self, '%s__icon__' % method_name, None)
         if icon is None:
             return None
         if callable(icon):
