@@ -463,9 +463,11 @@ class User(AccessControl, Folder):
     #######################################################################
     # Update
     #######################################################################
-    def update_20071215(self):
-        remove = ['id', 'owner', 'dc:language', 'dc:title', 'ikaaro:history',
-                  'ikaaro:wf_transition', 'ikaaro:user_theme']
+    def update_20071215(self, remove=None):
+        if remove is None:
+            remove = [
+                'id', 'owner', 'dc:language', 'dc:title', 'ikaaro:history',
+                'ikaaro:wf_transition', 'ikaaro:user_theme']
         Folder.update_20071215(self, remove=remove)
 
 
