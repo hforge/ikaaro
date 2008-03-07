@@ -65,6 +65,11 @@ class UIFolder(Node, Folder):
     class_icon48 = 'icons/48x48/folder.png'
 
 
+    def _get_names(self):
+        # FIXME May not be the right implementation
+        return self.get_handler_names()
+
+
     def _get_object(self, name):
         if self.has_handler(name):
             handler = self.get_handler(name)
