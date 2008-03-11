@@ -26,7 +26,7 @@ from itools.html import (xhtml_uri, XHTMLFile, sanitize_stream, HTMLParser,
     stream_to_str_as_xhtml)
 from itools.stl import stl
 from itools.uri import get_reference
-from itools.xml import TEXT, START_ELEMENT, XMLError
+from itools.xml import TEXT, START_ELEMENT, XMLError, XMLParser
 
 # Import from ikaaro
 from base import DBObject
@@ -92,7 +92,7 @@ class EpozEditable(object):
         # Sanitize
         new_body = context.get_form_value('data')
         try:
-            new_body = HTMLParser(new_body)
+            new_body = list(XMLParser(new_body))
         except XMLError:
             return context.come_back(u'Invalid HTML code.', keep=['data'])
         if sanitize:

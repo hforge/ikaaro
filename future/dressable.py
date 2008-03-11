@@ -24,7 +24,6 @@ from string import Template
 # Import from itools
 from itools.datatypes import is_datatype, DateTime, FileName
 from itools.handlers import checkid
-from itools.html import HTMLParser
 from itools.stl import stl, set_prefix
 from itools.uri import Path
 from itools.web import get_context
@@ -256,7 +255,7 @@ class Dressable(Folder, EpozEditable):
         # Sanitize
         new_body = context.get_form_value('data')
         try:
-            new_body = HTMLParser(new_body)
+            new_body = list(XMLParser(new_body))
         except XMLError:
             return context.come_back(u'Invalid HTML code.')
         if sanitize:
