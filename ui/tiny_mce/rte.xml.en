@@ -12,10 +12,11 @@
         buttons += ",|,bullist,numlist,undo,redo,|,link,unlink,image,media,|,removeformat,forecolor,backcolor,|,formatselect"
 
   tinyMCE.init({
-    mode : "textareas",
+      mode : "exact",
+      elements : "${form_name}",
+
       theme : "advanced",
       plugins : "safari,table,media",
-      elements : "${form_name}",
 
       /* language */
       language : "en",
@@ -43,7 +44,7 @@
 	<!-- Gets replaced with TinyMCE, remember HTML in a textarea should be encoded -->
   <textarea id="${form_name}" name="${form_name}" rows="15" cols="80" style="width: 80%">
     ${js_data}
-	</textarea>
+  </textarea>
   <input type="hidden" name="dress_name" value="${dress_name}" />
 
 </stl:block>
