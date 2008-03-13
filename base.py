@@ -781,7 +781,7 @@ class DBObject(CatalogAware, Node, DomainAware):
 
 
     @classmethod
-    def get_rte(cls, context, name, data):
+    def get_rte(cls, context, name, data, template='/ui/tiny_mce/rte.xml'):
         namespace = {}
         namespace['form_name'] = name
         namespace['js_data'] = data
@@ -794,10 +794,9 @@ class DBObject(CatalogAware, Node, DomainAware):
         # TODO language
 
         here = context.object.get_abspath()
-        there = '/ui/tiny_mce/rte.xml'
-        prefix = here.get_pathto(there)
+        prefix = here.get_pathto(template)
 
-        handler = context.root.get_object(there)
+        handler = context.root.get_object(template)
         return stl(handler, namespace, prefix=prefix)
 
 
