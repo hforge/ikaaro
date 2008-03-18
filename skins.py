@@ -47,7 +47,7 @@ class UIFile(Node, File):
         return self.to_str()
 
 
-class UITemplate(Node, XMLFile):
+class UITemplate(UIFile, XMLFile):
     pass
 
 
