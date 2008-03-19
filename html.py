@@ -186,7 +186,7 @@ class WebPage(EpozEditable, Multilingual, Text):
     def is_empty(self):
         """Test if XML doc is empty
         """
-        body = self.get_body()
+        body = self.handler.get_body()
         if body is None:
             return True
         for type, value, line in body.events:
