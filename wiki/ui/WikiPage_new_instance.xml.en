@@ -29,7 +29,7 @@
   </form>
 
   <script type="text/javascript">
-    focus("name")
+    focus_element("name")
   </script>
 
   <p>

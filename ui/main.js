@@ -42,7 +42,7 @@ function confirmation(message) {
     return confirm(message)
 }
 
-function focus(id) {
+function focus_element(id) {
     var element = document.getElementById(id);
     element.focus();
 }

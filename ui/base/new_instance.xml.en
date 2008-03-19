@@ -25,7 +25,7 @@
   </form>
 
   <script type="text/javascript">
-    focus("title")
+    focus_element("title")
   </script>
 
 </stl:block>

@@ -65,7 +65,7 @@ generate_form_template = list(XMLParser("""
   </p>
 </form>
 <script language="javascript">
-  focus("${first_widget}")
+  focus_element("${first_widget}")
 </script>
 """, namespaces))
 

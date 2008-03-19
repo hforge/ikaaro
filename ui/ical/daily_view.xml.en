@@ -62,7 +62,7 @@
 </div>
 
 <script language="javascript">
-  focus("date");
+  focus_element("date");
   Calendar.setup({
     inputField: "date",
     ifFormat: "%Y-%m-%d",

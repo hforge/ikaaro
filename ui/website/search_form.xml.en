@@ -51,7 +51,7 @@
   </form>
 
   <script type="text/javascript">
-    focus("site_search_name");
+    focus_element("site_search_name");
     Calendar.setup({"inputField": "site_search_after",
                     "displayArea": "site_search_after_text",
                     "button": "site_search_after_button",

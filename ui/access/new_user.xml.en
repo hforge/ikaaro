@@ -46,7 +46,7 @@
   </form>
 
   <script language="javascript">
-    focus("email");
+    focus_element("email");
   </script>
 
 </stl:block>

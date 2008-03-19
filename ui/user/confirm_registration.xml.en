@@ -32,7 +32,7 @@
   </form>
 
   <script language="javascript">
-    focus("newpass")
+    focus_element("newpass")
   </script>
 
 </stl:block>
