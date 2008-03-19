@@ -40,6 +40,11 @@ from widgets import tree, build_menu
 
 class UIFile(Node, File):
 
+    def clone(self, cls=None, exclude=('database', 'uri', 'timestamp',
+                                       'dirty', 'parent', 'name')):
+        return File.clone(self, cls=cls, exclude=exclude)
+
+
     GET__mtime__ = File.get_mtime
     def GET(self, context):
         response = context.response
