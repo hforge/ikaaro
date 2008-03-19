@@ -219,9 +219,10 @@ class User(AccessControl, Folder):
     def confirm_registration_form(self, context):
         # Check register key
         must_confirm = self.get_property('user_must_confirm')
-        if (must_confirm is None
-                or context.get_form_value('key') != must_confirm):
-            return self.gettext(u"Bad key.").encode('utf-8')
+        if must_confirm is None:
+            return context.come_back(MSG_REGISTERED, goto='/;login_form')
+        elif context.get_form_value('key') != must_confirm:
+            return context.come_back(MSG_BAD_KEY, goto='/;login_form')
 
         namespace = {'key': must_confirm}
 
@@ -238,7 +239,7 @@ class User(AccessControl, Folder):
         # Check register key
         must_confirm = self.get_property('user_must_confirm')
         if context.get_form_value('key') != must_confirm:
-            return self.gettext(u"Bad key.").encode('utf-8')
+            return context.come_back(MSG_BAD_KEY)
 
         # Check input data
         try:
