@@ -210,7 +210,8 @@ class User(AccessControl, Folder):
         path = '/users/%s/;confirm_registration_form' % self.name
         confirm_url.path = Path(path)
         key = self.get_property('user_must_confirm')
-        confirm_url.query = {'key': key}
+        confirm_url.query = {'key': key,
+                             'username': self.get_login_name()}
         body = Template(body).substitute({'confirm_url': str(confirm_url)})
         context.root.send_email(email, subject, text=body)
 
@@ -219,12 +220,16 @@ class User(AccessControl, Folder):
     def confirm_registration_form(self, context):
         # Check register key
         must_confirm = self.get_property('user_must_confirm')
+        username = context.get_form_value('username', default='')
         if must_confirm is None:
-            return context.come_back(MSG_REGISTERED, goto='/;login_form')
+            return context.come_back(MSG_REGISTERED,
+                    goto='/;login_form?username=%s' % username)
         elif context.get_form_value('key') != must_confirm:
-            return context.come_back(MSG_BAD_KEY, goto='/;login_form')
+            return context.come_back(MSG_BAD_KEY,
+                    goto='/;login_form?username=%s' % username)
 
-        namespace = {'key': must_confirm}
+        namespace = {'key': must_confirm,
+                     'username': self.get_login_name()}
 
         handler = self.get_object('/ui/user/confirm_registration.xml')
         return stl(handler, namespace)

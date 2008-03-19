@@ -13,6 +13,11 @@
   <form name="confirm_registration" action=";confirm_registration" method="post">
     <dl>
       <dt>
+        <label for="username">Username</label>
+      </dt>
+      <dd>
+        <strong>${username}</strong>
+      <dt>
         <label for="newpass">Password</label>
       </dt>
       <dd>
