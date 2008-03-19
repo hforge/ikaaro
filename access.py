@@ -17,6 +17,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# Import from the Standard Library
+from operator import itemgetter
+
 # Import from itools
 from itools.datatypes import Boolean, Email, Integer, Tokens, Unicode
 from itools.stl import stl
@@ -376,7 +379,7 @@ class RoleAware(AccessControl):
             ns['img'] = None
             # Email
             href = '/users/%s' % user_id
-            ns['user_id'] = user_id, href
+            ns['user_id'] = int(user_id), href
             # Title
             ns['login_name'] = user.username
             ns['firstname'] = user.firstname
@@ -389,9 +392,7 @@ class RoleAware(AccessControl):
             members.append(ns)
 
         # Sort
-        members.sort(key=lambda x: x[sortby[0]])
-        if sortorder == 'down':
-            members.reverse()
+        members.sort(key=itemgetter(sortby[0]), reverse=sortorder=='down')
 
         # Batch
         total = len(members)
