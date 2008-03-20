@@ -23,7 +23,7 @@ from datetime import datetime
 from itools.datatypes import DateTime, FileName, String
 from itools.handlers import File
 from itools.html import (xhtml_uri, XHTMLFile, sanitize_stream, HTMLParser,
-    stream_to_str_as_xhtml)
+    stream_to_str_as_xhtml, stream_to_str_as_html)
 from itools.stl import stl
 from itools.uri import get_reference
 from itools.xml import TEXT, START_ELEMENT, XMLError, XMLParser
@@ -66,10 +66,15 @@ class EpozEditable(object):
     def edit_form(self, context):
         """WYSIWYG editor for HTML documents.
         """
-        data = context.get_form_value('data') or self.get_epoz_data()
-        # If the document has not a body (e.g. a frameset), edit as plain text
-        if data is None:
-            return Text.edit_form(self, context)
+        data = context.get_form_value('data')
+        if data:
+            data = stream_to_str_as_html(XMLParser(data))
+        else:
+            data = self.get_epoz_data()
+            # If the document has not a body (e.g. a frameset), edit as plain text
+            if data is None:
+                return Text.edit_form(self, context)
+            data = stream_to_str_as_html(data)
 
         # Edit with a rich text editor
         namespace = {}
@@ -92,7 +97,8 @@ class EpozEditable(object):
         # Sanitize
         new_body = context.get_form_value('data')
         try:
-            new_body = list(XMLParser(new_body))
+            new_body = list(XMLParser(new_body,
+                                      {None: 'http://www.w3.org/1999/xhtml'}))
         except XMLError:
             return context.come_back(u'Invalid HTML code.', keep=['data'])
         if sanitize:

@@ -24,9 +24,9 @@
       content_css : "${css}",
 
       /* cleanup html code */
+      cleanup : true,
       /* Warning: This option is somewhat experimental so use it on your own risk. */
-      cleanup : "true",
-      cleanup_serializer : 'xml',
+      cleanup_serializer : "xml",
 
       file_browser_callback : "ikaaro_filebrowser",
 

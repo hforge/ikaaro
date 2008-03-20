@@ -777,7 +777,14 @@ class DBObject(CatalogAware, Node, DomainAware):
     ########################################################################
     @classmethod
     def get_rte_css(cls, context):
-        return '/ui/tiny_mce/content.css'
+        css_names = ['/ui/aruni/aruni.css', '/ui/tiny_mce/content.css']
+        css = []
+        here = context.object
+        root = context.root
+        for name in css_names:
+            handler = root.get_object(name)
+            css.append(str(here.get_pathto(handler)))
+        return ','.join(css)
 
 
     @classmethod
