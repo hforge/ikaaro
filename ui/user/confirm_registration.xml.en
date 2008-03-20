@@ -17,6 +17,7 @@
       </dt>
       <dd>
         <strong>${username}</strong>
+      </dd>
       <dt>
         <label for="newpass">Password</label>
       </dt>
