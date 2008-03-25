@@ -71,7 +71,7 @@ generate_form_template = list(XMLParser("""
 
 
 def generate_form(context, form_title, fields, widgets, form_action,
-                  required_msg=None):
+                  required_msg=None, method=None):
     """Fields is a dictionnary:
 
       {'firstname': Unicode(mandatory=True),
@@ -102,7 +102,7 @@ def generate_form(context, form_title, fields, widgets, form_action,
     namespace['action'] = form_action
     # Build widgets namespace
     has_required_widget = False
-    widgets_namespace = context.build_form_namespace(fields)
+    widgets_namespace = context.build_form_namespace(fields, method=method)
     namespace['widgets'] = []
     for widget in widgets:
         datatype = fields[widget.name]
