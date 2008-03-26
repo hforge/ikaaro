@@ -14,6 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# Import from the Standard Library
+from datetime import datetime
+
 # Import from itools
 from itools.datatypes import FileName
 
@@ -62,7 +65,7 @@ class Multilingual(DBObject):
             handler.database = database
             handler.uri = uri
             handler.timestamp = None
-            handler.dirty = True
+            handler.dirty = datetime.now()
             database.cache[uri] = handler
 
         self.handlers[language] = handler

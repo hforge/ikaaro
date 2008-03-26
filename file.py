@@ -114,7 +114,7 @@ class File(WorkflowAware, VersioningAware):
         handler.database = database
         handler.uri = uri
         handler.timestamp = None
-        handler.dirty = True
+        handler.dirty = datetime.now()
         database.cache[uri] = handler
         self._handler = handler
         return self._handler
