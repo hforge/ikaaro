@@ -171,18 +171,18 @@ class Server(BaseServer):
         # Added
         for path in self.objects_added:
             object = root.get_object(path)
-            catalog.index_document(object)
             if isinstance(object, VersioningAware):
                 object.commit_revision()
+            catalog.index_document(object)
         self.objects_added.clear()
 
         # Changed
         for path in self.objects_changed:
             object = root.get_object(path)
-            catalog.unindex_document(path)
-            catalog.index_document(object)
             if isinstance(object, VersioningAware):
                 object.commit_revision()
+            catalog.unindex_document(path)
+            catalog.index_document(object)
         self.objects_changed.clear()
 
 
