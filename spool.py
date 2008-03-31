@@ -18,7 +18,7 @@
 # Import from the Standard Library
 from datetime import datetime
 from email.parser import HeaderParser
-from os import getpid, remove as remove_file
+from os import fstat, getpid, remove as remove_file
 from signal import signal, SIGINT
 from smtplib import SMTP
 from socket import gaierror
@@ -48,8 +48,10 @@ class Spool(object):
         self.smtp_password = get_value('smtp-password', default='').strip()
 
         # The logs
-        self.activity_log = open('%s/log/spool' % target.path, 'a+')
-        self.error_log = open('%s/log/spool_error' % target.path, 'a+')
+        self.activity_log_path = '%s/log/spool' % target.path
+        self.activity_log = open(self.activity_log_path, 'a+')
+        self.error_log_path = '%s/log/spool_error' % target.path
+        self.error_log = open(self.error_log_path, 'a+')
 
 
     def get_pid(self):
@@ -136,21 +138,39 @@ class Spool(object):
 
 
     def log_activity(self, msg):
+        # The data to write
+        data = '%s - %s\n' % (datetime.now(), msg)
+
+        # Check the file has not been removed
         log = self.activity_log
-        log.write('%s - %s\n' % (datetime.now(), msg))
+        if fstat(log.fileno())[3] == 0:
+            log = open(self.activity_log_path, 'a+')
+            self.activity_log = log
+
+        # Write
+        log.write(data)
         log.flush()
 
 
     def log_error(self):
+        # The data to write
+        lines = [
+            '\n',
+            '%s\n' % ('*' * 78),
+            'DATE: %s\n' % datetime.now(),
+            '\n']
+        data = ''.join(lines)
+
+        # Check the file has not been removed
         log = self.error_log
-        # The separator
-        log.write('\n')
-        log.write('%s\n' % ('*' * 78))
-        # The date
-        log.write('DATE: %s\n' % datetime.now())
-        # The traceback
-        log.write('\n')
-        print_exc(file=log)
+        if fstat(log.fileno())[3] == 0:
+            log = open(self.error_log_path, 'a+')
+            self.error_log = log
+
+        # Write
+        log.write(data)
+        print_exc(file=log) # FIXME Should be done before to reduce the risk
+                            # of the log file being removed.
         log.flush()
 
 
