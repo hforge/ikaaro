@@ -639,7 +639,12 @@ class Tracker(Folder):
         # Choose stored Search or personalized search
         search_name = form['search_name']
         if search_name:
-            search = self.get_object(search_name)
+            try:
+                search = self.get_object(search_name)
+            except LookupError:
+                goto = ';search_form'
+                msg = u'Unknown stored search "${sname}".'
+                return context.come_back(msg, goto=goto, sname=search_name)
             get_value = search.handler.get_value
             get_values = search.get_values
         else:
