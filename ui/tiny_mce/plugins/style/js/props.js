@@ -1,12 +1,12 @@
 tinyMCEPopup.requireLangPack();
 
-var defaultFonts = "" + 
-	"Arial, Helvetica, sans-serif=Arial, Helvetica, sans-serif;" + 
-	"Times New Roman, Times, serif=Times New Roman, Times, serif;" + 
-	"Courier New, Courier, mono=Courier New, Courier, mono;" + 
-	"Times New Roman, Times, serif=Times New Roman, Times, serif;" + 
-	"Georgia, Times New Roman, Times, serif=Georgia, Times New Roman, Times, serif;" + 
-	"Verdana, Arial, Helvetica, sans-serif=Verdana, Arial, Helvetica, sans-serif;" + 
+var defaultFonts = "" +
+	"Arial, Helvetica, sans-serif=Arial, Helvetica, sans-serif;" +
+	"Times New Roman, Times, serif=Times New Roman, Times, serif;" +
+	"Courier New, Courier, mono=Courier New, Courier, mono;" +
+	"Times New Roman, Times, serif=Times New Roman, Times, serif;" +
+	"Georgia, Times New Roman, Times, serif=Georgia, Times New Roman, Times, serif;" +
+	"Verdana, Arial, Helvetica, sans-serif=Verdana, Arial, Helvetica, sans-serif;" +
 	"Geneva, Arial, Helvetica, sans-serif=Geneva, Arial, Helvetica, sans-serif";
 
 var defaultSizes = "9;10;12;14;16;18;24;xx-small;x-small;small;medium;large;x-large;xx-large;smaller;larger";
@@ -138,7 +138,7 @@ function setupFormData() {
 	selectByValue(f, 'text_lineheight_measurement', getMeasurement(ce.style.lineHeight));
 	selectByValue(f, 'text_case', ce.style.textTransform, true, true);
 	selectByValue(f, 'text_variant', ce.style.fontVariant, true, true);
-	f.text_color.value = ce.style.color;
+	f.text_color.value = tinyMCEPopup.editor.dom.toHex(ce.style.color);
 	updateColor('text_color_pick', 'text_color');
 	f.text_underline.checked = inStr(ce.style.textDecoration, 'underline');
 	f.text_overline.checked = inStr(ce.style.textDecoration, 'overline');
@@ -147,7 +147,7 @@ function setupFormData() {
 
 	// Setup background fields
 
-	f.background_color.value = ce.style.backgroundColor;
+	f.background_color.value = tinyMCEPopup.editor.dom.toHex(ce.style.backgroundColor);
 	updateColor('background_color_pick', 'background_color');
 	f.background_image.value = ce.style.backgroundImage.replace(new RegExp("url\\('?([^']*)'?\\)", 'gi'), "$1");
 	selectByValue(f, 'background_repeat', ce.style.backgroundRepeat, true, true);
@@ -198,6 +198,11 @@ function setupFormData() {
 	updateColor('border_color_right_pick', 'border_color_right');
 	updateColor('border_color_bottom_pick', 'border_color_bottom');
 	updateColor('border_color_left_pick', 'border_color_left');
+
+	f.elements.border_color_top.value = tinyMCEPopup.editor.dom.toHex(f.elements.border_color_top.value);
+	f.elements.border_color_right.value = tinyMCEPopup.editor.dom.toHex(f.elements.border_color_right.value);
+	f.elements.border_color_bottom.value = tinyMCEPopup.editor.dom.toHex(f.elements.border_color_bottom.value);
+	f.elements.border_color_left.value = tinyMCEPopup.editor.dom.toHex(f.elements.border_color_left.value);
 
 	// Setup list fields
 
@@ -447,7 +452,7 @@ function generateCSS() {
 		ce.style.paddingBottom = f.box_padding_bottom.value + (isNum(f.box_padding_bottom.value) ? f.box_padding_bottom_measurement.value : "");
 		ce.style.paddingLeft = f.box_padding_left.value + (isNum(f.box_padding_left.value) ? f.box_padding_left_measurement.value : "");
 	} else
-		ce.style.padding = f.box_padding_top.value + (isNum(f.box_padding_top.value) ? f.box_padding_top_measurement.value : "");		
+		ce.style.padding = f.box_padding_top.value + (isNum(f.box_padding_top.value) ? f.box_padding_top_measurement.value : "");
 
 	if (!f.box_margin_same.checked) {
 		ce.style.marginTop = f.box_margin_top.value + (isNum(f.box_margin_top.value) ? f.box_margin_top_measurement.value : "");
@@ -455,7 +460,7 @@ function generateCSS() {
 		ce.style.marginBottom = f.box_margin_bottom.value + (isNum(f.box_margin_bottom.value) ? f.box_margin_bottom_measurement.value : "");
 		ce.style.marginLeft = f.box_margin_left.value + (isNum(f.box_margin_left.value) ? f.box_margin_left_measurement.value : "");
 	} else
-		ce.style.margin = f.box_margin_top.value + (isNum(f.box_margin_top.value) ? f.box_margin_top_measurement.value : "");		
+		ce.style.margin = f.box_margin_top.value + (isNum(f.box_margin_top.value) ? f.box_margin_top_measurement.value : "");
 
 	// Build border styles
 

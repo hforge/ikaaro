@@ -50,7 +50,7 @@ function insertAction() {
 	var inst = tinyMCEPopup.editor;
 	var elm = inst.selection.getNode();
 
-	tinyMCEPopup.execCommand("mceBeginUndoLevel");	
+	tinyMCEPopup.execCommand("mceBeginUndoLevel");
 	setAllAttribs(elm);
 	tinyMCEPopup.execCommand("mceEndUndoLevel");
 	tinyMCEPopup.close();
@@ -81,7 +81,7 @@ function setAttrib(elm, attrib, value) {
 		if (attrib == "class")
 			attrib = "className";
 
-		eval('elm.' + attrib + "=value;");
+		elm[attrib]=value;
 	} else
 		elm.removeAttribute(attrib);
 }

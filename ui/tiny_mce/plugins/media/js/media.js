@@ -16,7 +16,7 @@ function init() {
 
 	fe = ed.selection.getNode();
 	if (/mceItem(Flash|ShockWave|WindowsMedia|QuickTime|RealMedia)/.test(ed.dom.getAttrib(fe, 'class'))) {
-		pl = "x={" + fe.title + "};";
+		pl = fe.title;
 
 		switch (ed.dom.getAttrib(fe, 'class')) {
 			case 'mceItemFlash':
@@ -44,7 +44,7 @@ function init() {
 				break;
 		}
 
-		document.forms[0].insert.value = ed.getLang('update', 'Insert', true); 
+		document.forms[0].insert.value = ed.getLang('update', 'Insert', true);
 	}
 
 	document.getElementById('filebrowsercontainer').innerHTML = getBrowserHTML('filebrowser','src','media','media');
@@ -63,7 +63,7 @@ function init() {
 
 	// Setup form
 	if (pl != "") {
-		pl = eval(pl);
+		pl = tinyMCEPopup.editor.plugins.media._parse(pl);
 
 		switch (type) {
 			case "flash":
@@ -179,6 +179,8 @@ function init() {
 
 function insertMedia() {
 	var fe, f = document.forms[0], h;
+
+	tinyMCEPopup.restoreSelection();
 
 	if (!AutoValidator.validate(f)) {
 		alert(ed.getLang('invalid_data'));
@@ -303,7 +305,7 @@ function getType(v) {
 	fo = ed.getParam("media_types", "flash=swf;flv=flv;shockwave=dcr;qt=mov,qt,mpg,mp3,mp4,mpeg;shockwave=dcr;wmp=avi,wmv,wm,asf,asx,wmx,wvx;rmp=rm,ra,ram").split(';');
 
 	// YouTube
-	if (v.match(/v=(.+)(.*)/)) {
+	if (v.match(/watch\?v=(.+)(.*)/)) {
 		f.width.value = '425';
 		f.height.value = '350';
 		f.src.value = 'http://www.youtube.com/v/' + v.match(/v=(.*)(.*)/)[0].split('=')[1];
@@ -493,6 +495,9 @@ function getStr(p, n, d) {
 	var e = document.forms[0].elements[(p != null ? p + "_" : "") + n];
 	var v = e.type == "text" ? e.value : e.options[e.selectedIndex].value;
 
+	if (n == 'src')
+		v = tinyMCEPopup.editor.convertURL(v, 'src', null);
+
 	return ((n == d || v == '') ? '' : n + ":'" + jsEncode(v) + "',");
 }
 
@@ -579,7 +584,7 @@ function generatePreview(c) {
 		return;
 	}
 
-	pl = eval('x={' + pl + '};');
+	pl = tinyMCEPopup.editor.plugins.media._parse(pl);
 
 	if (!pl.src) {
 		p.innerHTML = '';

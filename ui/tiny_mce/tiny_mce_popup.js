@@ -3,9 +3,20 @@ var tinymce = null, tinyMCEPopup, tinyMCE;
 
 tinyMCEPopup = {
 	init : function() {
-		var t = this, w = t.getWin(), ti;
+		var t = this, w, ti, li, q, i, it;
 
-		// Find API
+		li = ('' + document.location.search).replace(/^\?/, '').split('&');
+		q = {};
+		for (i=0; i<li.length; i++) {
+			it = li[i].split('=');
+			q[unescape(it[0])] = unescape(it[1]);
+		}
+
+		if (q.mce_rdomain)
+			document.domain = q.mce_rdomain;
+
+		// Find window & API
+		w = t.getWin();
 		tinymce = w.tinymce;
 		tinyMCE = w.tinyMCE;
 		t.editor = tinymce.EditorManager.activeEditor;
@@ -13,6 +24,9 @@ tinyMCEPopup = {
 
 		// Setup local DOM
 		t.dom = t.editor.windowManager.createInstance('tinymce.dom.DOMUtils', document);
+        /*
+         * iKaaro: choose if we include original css or not
+         */
         if (t.getWindowArg('use_css') == "no") 
             ;
         else
@@ -50,12 +64,15 @@ tinyMCEPopup = {
 	},
 
 	execCommand : function(cmd, ui, val, a) {
+		a = a || {};
+		a.skip_focus = 1;
+
 		this.restoreSelection();
-		return this.editor.execCommand(cmd, ui, val, a || {skip_focus : 1});
+		return this.editor.execCommand(cmd, ui, val, a);
 	},
 
 	resizeToInnerSize : function() {
-		var t = this;
+        var t = this;
         /*
          * iKaaro: check if t.dom exists before calling getViewPort.
          * Because when we upload and insert an image
@@ -94,8 +111,14 @@ tinyMCEPopup = {
 	requireLangPack : function() {
 		var u = this.getWindowArg('plugin_url') || this.getWindowArg('theme_url');
 
-		if (u)
-			document.write('<script type="text/javascript" src="' + u + '/langs/' + this.editor.settings.language + '_dlg.js' + '"></script>');
+		if (u && this.editor.settings.language) {
+			u += '/langs/' + this.editor.settings.language + '_dlg.js';
+
+			if (!tinymce.ScriptLoader.isDone(u)) {
+				document.write('<script type="text/javascript" src="' + u + '"></script>');
+				tinymce.ScriptLoader.markDone(u);
+			}
+		}
 	},
 
 	pickColor : function(e, element_id) {
@@ -121,11 +144,19 @@ tinyMCEPopup = {
 	close : function() {
 		var t = this;
 
-		t.dom = t.dom.doc = null; // Cleanup
-		t.editor.windowManager.close(window, t.id);
+		// To avoid domain relaxing issue in Opera
+		function close() {
+			t.editor.windowManager.close(window, t.id);
+			tinymce = tinyMCE = t.editor = t.params = t.dom = t.dom.doc = null; // Cleanup
+		};
+
+		if (tinymce.isOpera)
+			t.getWin().setTimeout(close, 0);
+		else
+			close();
 	},
 
-	// Internal functions	
+	// Internal functions
 
 	_restoreSelection : function() {
 		var e = window.event.srcElement;
@@ -150,7 +181,7 @@ tinyMCEPopup = {
 
 		// Replace a=x with a="x" in IE
 		if (tinymce.isIE)
-			h = h.replace(/ (value|title|alt)=([^\s>]+)/gi, ' $1="$2"');
+			h = h.replace(/ (value|title|alt)=([^"][^\s>]+)/gi, ' $1="$2"')
 
 		document.body.innerHTML = t.editor.translate(h);
 		document.title = ti = t.editor.translate(ti);
@@ -161,18 +192,13 @@ tinyMCEPopup = {
 			document.attachEvent('onmouseup', tinyMCEPopup._restoreSelection);
 
 		t.restoreSelection();
-
-		// Call onInit
-		tinymce.each(t.listeners, function(o) {
-			o.func.call(o.scope, t.editor);
-		});
-
 		t.resizeToInnerSize();
 
-		if (t.isWindow)
-			window.focus();
-		else
+		// Set inline title
+		if (!t.isWindow)
 			t.editor.windowManager.setTitle(ti, t.id);
+		else
+			window.focus();
 
 		if (!tinymce.isIE && !t.isWindow) {
 			tinymce.dom.Event._add(document, 'focus', function() {
@@ -185,12 +211,32 @@ tinyMCEPopup = {
 			e.onkeydown = tinyMCEPopup._accessHandler;
 		});
 
+		// Call onInit
+		// Init must be called before focus so the selection won't get lost by the focus call
+		tinymce.each(t.listeners, function(o) {
+			o.func.call(o.scope, t.editor);
+		});
+
 		// Move focus to window
-		window.focus();
+		if (t.getWindowArg('mce_auto_focus', true)) {
+			window.focus();
+
+			// Focus element with mceFocus class
+			tinymce.each(document.forms, function(f) {
+				tinymce.each(f.elements, function(e) {
+					if (t.dom.hasClass(e, 'mceFocus')) {
+						e.focus();
+						return false; // Break loop
+					}
+				});
+			});
+		}
+
+		document.onkeydown = tinyMCEPopup._closeWinKeyHandler;
 	},
 
 	_accessHandler : function(e) {
-		var e = e || window.event;
+		e = e || window.event;
 
 		if (e.keyCode == 13 || e.keyCode == 32) {
 			e = e.target || e.srcElement;
@@ -200,6 +246,13 @@ tinyMCEPopup = {
 
 			return tinymce.dom.Event.cancel(e);
 		}
+	},
+
+	_closeWinKeyHandler : function(e) {
+		e = e || window.event;
+
+		if (e.keyCode == 27)
+			tinyMCEPopup.close();
 	},
 
 	_wait : function() {

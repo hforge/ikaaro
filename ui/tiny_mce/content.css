@@ -1,3 +1,7 @@
+body {
+  padding: 8px;
+}
+
 body, td {
   font-size: 90% !important; /* already include inside aruni css */
   font-family: "Arial", "DejaVu Sans", sans-serif !important;
