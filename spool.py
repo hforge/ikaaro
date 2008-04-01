@@ -104,8 +104,8 @@ class Spool(object):
                 self.log_error()
                 continue
             # Send emails
-            try:
-                for name in names:
+            for name in names:
+                try:
                     # Send message
                     message = spool.open(name).read()
                     headers = HeaderParser().parsestr(message)
@@ -119,11 +119,10 @@ class Spool(object):
                     # Log
                     log('SENT "%s" from "%s" to "%s"' % (subject, from_addr,
                         to_addr))
-            except:
-                smtp.quit()
-                self.log_error()
-            else:
-                smtp.quit()
+                except:
+                    self.log_error()
+            # Close connection
+            smtp.quit()
 
         # Close files
         self.activity_log.close()
