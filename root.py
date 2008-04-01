@@ -248,6 +248,8 @@ class Root(WebSite):
         # Check input data
         if not isinstance(subject, unicode):
             raise TypeError, 'the subject must be a Unicode string'
+        if len(subject.splitlines()) > 1:
+            raise ValueError, 'the subject cannot have more than one line'
         if text and not isinstance(text, unicode):
             raise TypeError, 'the text must be a Unicode string'
         if html and not isinstance(html, unicode):
