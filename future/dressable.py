@@ -30,6 +30,7 @@ from itools.web import get_context
 from itools.xml import XMLParser, XMLError
 
 # Import from ikaaro
+from ikaaro.exceptions import ConsistencyError
 from ikaaro.registry import register_object_class, get_object_class
 from ikaaro.folder import Folder
 from ikaaro.file import File
@@ -255,7 +256,8 @@ class Dressable(Folder, EpozEditable):
         # Sanitize
         new_body = context.get_form_value('data')
         try:
-            new_body = list(XMLParser(new_body))
+            new_body = list(XMLParser(new_body,
+                                      {None: 'http://www.w3.org/1999/xhtml'}))
         except XMLError:
             return context.come_back(u'Invalid HTML code.')
         if sanitize:
@@ -266,7 +268,9 @@ class Dressable(Folder, EpozEditable):
                   + document.events[old_body.end:])
         # Change
         document.set_events(events)
+        context.server.change_object(dress_object)
         context.server.change_object(self)
+
         return context.come_back(MSG_CHANGES_SAVED)
 
 
@@ -341,9 +345,16 @@ class Dressable(Folder, EpozEditable):
     remove_image__access__ = 'is_allowed_to_edit'
     def remove_image(self, context):
         name = context.get_form_value('name')
-        self.del_object(name)
+        objects = ''
+        try:
+            self.del_object(name)
+            objects = name
+        except ConsistencyError:
+            pass
+
         goto = './;view'
-        return context.come_back(MSG_OBJECTS_REMOVED, objects=name, goto=goto)
+        return context.come_back(MSG_OBJECTS_REMOVED, objects=objects,
+                                 goto=goto)
 
 
     def get_epoz_document(self):
