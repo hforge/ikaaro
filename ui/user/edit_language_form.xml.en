@@ -4,9 +4,9 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
            xmlns:stl="http://xml.itools.org/namespaces/stl">
 
-  <h2>Application Preferences</h2>
+  <h2>Application Language</h2>
 
-  <form action=";edit" method="post">
+  <form action=";edit_language" method="post">
     <dl>
       <dt><label for="user_language">Language</label></dt>
       <dd>
@@ -17,7 +17,7 @@
       </dd>
     </dl>
     <p>
-      <input type="submit" value="Change preferences" class="button_ok"/>
+      <input type="submit" value="Change language" class="button_ok"/>
     </p>
   </form>
 

@@ -66,7 +66,7 @@ class User(AccessControl, Folder):
         ['browse_content?mode=list',
          'browse_content?mode=image'],
         ['new_resource_form'],
-        ['edit_account_form', 'edit_form', 'edit_password_form'],
+        ['edit_account_form', 'edit_language_form', 'edit_password_form'],
         ['tasks_list']]
 
 
@@ -314,12 +314,12 @@ class User(AccessControl, Folder):
 
 
     #######################################################################
-    # Edit
-    edit_form__access__ = 'is_allowed_to_edit'
-    edit_form__label__ = u'Edit'
-    edit_form__sublabel__ = u'Preferences'
-    edit_form__icon__ = 'skin.png'
-    def edit_form(self, context):
+    # Edit Language
+    edit_language_form__access__ = 'is_allowed_to_edit'
+    edit_language_form__label__ = u'Edit'
+    edit_language_form__sublabel__ = u'Language'
+    edit_language_form__icon__ = 'skin.png'
+    def edit_language_form(self, context):
         root = context.root
         user = context.user
 
@@ -335,12 +335,12 @@ class User(AccessControl, Folder):
                               'is_selected': language_code == user_language})
         namespace['languages'] = languages
 
-        handler = self.get_object('/ui/user/edit.xml')
+        handler = self.get_object('/ui/user/edit_language_form.xml')
         return stl(handler, namespace)
 
 
-    edit__access__ = 'is_allowed_to_edit'
-    def edit(self, context):
+    edit_language__access__ = 'is_allowed_to_edit'
+    def edit_language(self, context):
         value = context.get_form_value('user_language')
         self.set_property('user_language', value)
 
