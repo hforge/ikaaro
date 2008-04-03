@@ -364,6 +364,7 @@ class RoleAware(AccessControl):
         # Build the namespace
         members = []
         for user in results.get_documents():
+            user_object = root.get_object(user.abspath)
             user_id = user.name
             # Find out the user role. Skip the user if does not belong to
             # this group
@@ -384,6 +385,13 @@ class RoleAware(AccessControl):
             ns['login_name'] = user.username
             ns['firstname'] = user.firstname
             ns['lastname'] = user.lastname
+            # State
+            if user_object.get_property('user_must_confirm'):
+                account_state = (self.gettext(u'Inactive'),
+                                 '/users/%s/;resend_confirmation' % user_id)
+            else:
+                account_state = self.gettext(u'Active')
+            ns['account_state'] = account_state
             # Role
             role = self.get_role_title(role)
             href = ';edit_membership_form?id=%s' % user_id
@@ -403,6 +411,7 @@ class RoleAware(AccessControl):
                    ('login_name', u'Login'),
                    ('firstname', u'First Name'),
                    ('lastname', u'Last Name'),
+                   ('account_state', u'State'),
                    ('role', u'Role')]
 
         # The actions

@@ -216,6 +216,17 @@ class User(AccessControl, Folder):
         context.root.send_email(email, subject, text=body)
 
 
+    resend_confirmation__access__ = 'is_admin'
+    def resend_confirmation(self, context):
+        must_confirm = self.has_property('user_must_confirm')
+        if must_confirm:
+            self.send_confirmation(context, self.get_property('email'))
+            msg = u'Confirmation sended!'
+        else:
+            msg = u'User has already confirm his registration!'
+        return context.come_back(msg)
+
+
     confirm_registration_form__access__ = True
     def confirm_registration_form(self, context):
         # Check register key
@@ -286,6 +297,8 @@ class User(AccessControl, Folder):
         namespace['is_owner'] = is_owner
         # Owner or Admin
         namespace['is_owner_or_admin'] = is_owner or root.is_admin(user, self)
+        # Must confirm ?
+        namespace['user_must_confirm'] = self.has_property('user_must_confirm')
 
         handler = self.get_object('/ui/user/profile.xml')
         return stl(handler, namespace)
