@@ -41,7 +41,6 @@ from messages import *
 from registry import (register_object_class, register_website,
     get_register_websites, get_website_class)
 from skins import UI, ui_path
-from utils import generate_password
 import widgets
 from workflow import WorkflowAware
 
@@ -511,8 +510,6 @@ class WebSite(RoleAware, Folder):
             self.set_user_role(user.name, default_role)
 
         # Send confirmation email
-        key = generate_password(30)
-        user.set_property('user_must_confirm', key)
         user.send_confirmation(context, email)
 
         # Bring the user to the login form
@@ -627,8 +624,6 @@ class WebSite(RoleAware, Folder):
 
         # Send email of confirmation
         email = user.get_property('email')
-        key = generate_password(30)
-        user.set_property('user_must_confirm', key)
         user.send_confirmation(context, email)
 
         handler = self.get_object('/ui/website/forgotten_password.xml')

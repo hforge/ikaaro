@@ -28,7 +28,6 @@ from itools.web import AccessControl as BaseAccessControl
 
 # Import from ikaaro
 from messages import *
-from utils import generate_password
 import widgets
 from workflow import WorkflowAware
 
@@ -525,8 +524,6 @@ class RoleAware(AccessControl):
             user = users.set_user(email, password)
             user_id = user.name
             if password is None:
-                key = generate_password(30)
-                user.set_property('user_must_confirm', key)
                 # Send confirmation email to activate the account
                 user.send_confirmation(context, email)
         else:

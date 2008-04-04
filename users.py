@@ -37,7 +37,7 @@ from access import AccessControl
 from folder import Folder
 from messages import *
 from registry import register_object_class, get_object_class
-from utils import crypt_password
+from utils import crypt_password, generate_password
 
 
 
@@ -201,18 +201,26 @@ class User(AccessControl, Folder):
     #######################################################################
     # Registration
     def send_confirmation(self, context, email):
-        subject = u"Confirmation required"
-        subject = self.gettext(subject)
-        body = self.gettext(u"To confirm your identity click the link:\n"
-                            u"\n"
-                            u"  $confirm_url")
+        # Set the confirmation key
+        key = generate_password(30)
+        self.set_property('user_must_confirm', key)
+
+        # Build the confirmation link
         confirm_url = deepcopy(context.uri)
         path = '/users/%s/;confirm_registration_form' % self.name
         confirm_url.path = Path(path)
-        key = self.get_property('user_must_confirm')
-        confirm_url.query = {'key': key,
-                             'username': self.get_login_name()}
-        body = Template(body).substitute({'confirm_url': str(confirm_url)})
+        confirm_url.query = {'key': key, 'username': self.get_login_name()}
+        confirm_url = str(confirm_url)
+
+        # Build the email
+        subject = u"Confirmation required"
+        subject = self.gettext(subject)
+        body = self.gettext(
+            u"To confirm your identity click the link:\n"
+            u"\n"
+            u"  $confirm_url")
+        body = Template(body).substitute({'confirm_url': confirm_url})
+        # Send
         context.root.send_email(email, subject, text=body)
 
 
@@ -220,6 +228,7 @@ class User(AccessControl, Folder):
     def resend_confirmation(self, context):
         must_confirm = self.has_property('user_must_confirm')
         if must_confirm:
+            context.commit = True
             self.send_confirmation(context, self.get_property('email'))
             msg = u'Confirmation sended!'
         else:
