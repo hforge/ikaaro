@@ -7,5 +7,5 @@ bullist_desc:"Lista desordenada",
 numlist_desc:"Lista ordenada",
 undo_desc:"Deshacer (Ctrl+Z)",
 redo_desc:"Rehacer (Ctrl+Y)",
-cleanup_desc:"Limpiar codigo sucio"
+cleanup_desc:"Limpiar c\u00F3digo basura"
 });
