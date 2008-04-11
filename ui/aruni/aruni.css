@@ -205,29 +205,28 @@ a img { border: 0; }
   color: #ff0000;
 }
 
-#left {
-  width: 200px;
+#menu {
   font-size: 1.1em;
 }
-#left a, #left a:link, #left a:visited, #left a:hover, #left a:active {
+#menu a, #menu a:link, #menu a:visited, #menu a:hover, #menu a:active {
   text-decoration: none;
   color: #3465a4;
 }
-#left label {
+#menu label {
   display: block;
   margin: 0.3em;
   padding: 0.3em 0.6em;
   color: #fff;
   background: #c17d11;
 }
-#left ul,
-#left dl {
+#menu ul,
+#menu dl {
   margin: 0.3em 0.6em 1em 0.3em;
 }
-#left ul {
+#menu ul {
   list-style: none;
 }
-#left li {
+#menu li {
   margin: 0.3em;
   padding: 0;
   background-repeat: no-repeat;
@@ -235,23 +234,23 @@ a img { border: 0; }
   line-height: 1.6em;
   list-style: none;
 }
-#left li a {
+#menu li a {
   padding-left: 2em;
 }
-#left dl {
+#menu dl {
   padding: 0.3em;
 }
-#left dl dl {
+#menu dl dl {
   margin: 0;
   border: 0;
   padding: 0;
 }
-#left dt {
+#menu dt {
   overflow: hidden;
   line-height: 1.6em;
   border-bottom: 1px solid #d3d7cf;
 }
-#left dd {
+#menu dd {
   margin-left: 0.9em;
 }
 
