@@ -66,10 +66,7 @@
           stl:repeat="item timetable_data/full_day_events">
         <table class="event" width="100%">
           <tr stl:repeat="event item/events">
-            <td class="color${event/cal}">
-              <a href="${event/url}" class="${event/STATUS}">
-                ${event/SUMMARY}</a>
-            </td>
+            ${event/ns}
           </tr>
         </table>
       </td>

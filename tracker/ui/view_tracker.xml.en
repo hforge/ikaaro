@@ -26,6 +26,11 @@ ${table}
   <a href=";view?${search_parameters}&amp;export_to_csv=1#link">
     Export to CSV
   </a>
+  &nbsp;|
+  <a href="resources/;monthly_view?${search_parameters}"
+    class="button_calendar" style="background-repeat: no-repeat;">
+    &nbsp;Resources
+  </a>
 </p>
 <!-- Export to text -->
 <stl:block stl:if="export_to_text">

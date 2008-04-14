@@ -327,6 +327,11 @@ table.new_resource_thumb {
   padding-left: 16px;
 }
 
+.button_calendar {
+  background-image: url(../icons/16x16/button_calendar.png);
+  padding-left: 16px;
+}
+
 .button_upload {
   background-image: url(../icons/16x16/button_upload.png);
   padding-left: 16px;

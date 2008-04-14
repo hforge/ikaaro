@@ -24,9 +24,10 @@ from datetime import datetime, date, time, timedelta
 
 # Import from itools
 from itools.csv import Property
-from itools.datatypes import (DataType, Date, Enumerate, FileName, Integer,
-    Unicode, is_datatype)
+from itools.datatypes import (DataType, Date, Enumerate, Integer, Unicode,
+    is_datatype)
 from itools.handlers import Folder
+from itools.html import XHTMLFile
 from itools.ical import (get_grid_data, icalendar, DateTime, icalendarTable,
     Record, Time)
 from itools.stl import stl
@@ -48,6 +49,22 @@ months = {1: u'January', 2: u'February', 3: u'March', 4: u'April',
 
 days = {0: u'Monday', 1: u'Tuesday', 2: u'Wednesday', 3: u'Thursday',
         4: u'Friday', 5: u'Saturday', 6: u'Sunday'}
+
+# Template to display events on monthly_view
+template_string = """
+  <table class="event">
+    <tr xmlns:stl="http://xml.itools.org/namespaces/stl"
+    stl:repeat="event events" class="color${event/resource/color}">
+      <td class="${event/STATUS}">
+        <a href="${event/url}">
+          ${event/SUMMARY}</a>
+          <span stl:if="event/TIME" class="time">${event/TIME}</span>
+      </td>
+    </tr>
+  </table>
+"""
+default_monthly_template = XHTMLFile()
+default_monthly_template.load_state_from_string(template_string)
 
 
 def get_current_date(value=None):
@@ -424,12 +441,29 @@ class CalendarView(object):
             ns_day['header'] = header
             # Insert events
             ns_events, events = self.events_to_namespace(events, current_date,
-                                                         cal_indexes)
+                cal_indexes, grid=True)
             ns_day['events'] = ns_events
             ns_days.append(ns_day)
             current_date = current_date + step
 
         return ns_days
+
+
+    def get_weekly_templates(self):
+        """
+        Get weekly templates to display events with timetables, and full day
+        events."""
+        return None, None
+
+
+    def get_monthly_template(self):
+        """
+        Get monthly templates to display events."""
+        return default_monthly_template
+
+
+    def get_with_new_url(self):
+        return True
 
 
     monthly_view__access__ = 'is_allowed_to_view'
@@ -467,6 +501,7 @@ class CalendarView(object):
         ###################################################################
         # Get a list of events to display on view
         cal_indexes, events = self.get_events_to_display(start, end)
+        template = self.get_monthly_template()
 
         ###################################################################
         namespace = {}
@@ -491,7 +526,7 @@ class CalendarView(object):
                     # Insert events
                     ns_events, events = self.events_to_namespace(events, day,
                                                                  cal_indexes)
-                    ns_day['events'] = ns_events
+                    ns_day['events'] = stl(template, {'events': ns_events})
                     ns_week['days'].append(ns_day)
                     if day.day == 1:
                         month = self.gettext(months[day.month])
@@ -554,7 +589,10 @@ class CalendarView(object):
         events = self.get_grid_events(start, headers=ns_headers)
 
         # Fill data with grid (timetables) and data (events for each day)
-        timetable = get_grid_data(events, timetables, start)
+        templates = self.get_weekly_templates()
+        with_new_url = self.get_with_new_url()
+        timetable = get_grid_data(events, timetables, start, templates,
+                                  with_new_url)
         namespace['timetable_data'] = timetable
 
         handler = self.get_object('/ui/ical/ical_grid_weekly_view.xml')
@@ -596,7 +634,7 @@ class CalendarView(object):
         return resources, events
 
 
-    def events_to_namespace(self, events, day, cal_indexes):
+    def events_to_namespace(self, events, day, cal_indexes, grid=False):
         """Build namespace for events occuring on current day.
         Update events, removing past ones.
 
@@ -625,10 +663,10 @@ class CalendarView(object):
                 if len(cal_indexes.items()) < 2:
                     resource_name = None
                 ns_event = event.get_ns_event(day, resource_name=resource_name,
-                                              starts_on=starts_on,
+                                              grid=grid, starts_on=starts_on,
                                               ends_on=ends_on, out_on=out_on)
                 if resource_name is not None:
-                    resource = self.get_handler(resource_name)
+                    resource = self.get_object(resource_name)
                 else:
                     resource = self
                 ns_event['url'] = resource.get_action_url(**ns_event)

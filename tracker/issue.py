@@ -20,6 +20,7 @@
 
 # Import from the Standard Library
 from datetime import datetime
+from operator import itemgetter
 from re import split
 from string import Template
 from textwrap import wrap
@@ -43,8 +44,19 @@ from ikaaro.folder import Folder
 from ikaaro.messages import *
 from ikaaro.registry import register_object_class, get_object_class
 from ikaaro.utils import generate_name, get_file_parts
+from ikaaro import widgets
 
 
+# Select widget with onchange attribute to update time values.
+time_select_template = list(XMLParser("""
+    <select name="${name}" id="${name}" multiple="${multiple}"
+     onchange="update_time('${name}')">
+      <option value=""></option>
+      <option stl:repeat="option options" value="${option/name}"
+        selected="${option/selected}">${option/value}</option>
+    </select> """,
+    { None: 'http://www.w3.org/1999/xhtml',
+     'stl': 'http://xml.itools.org/namespaces/stl'}))
 
 def indent(text):
     """Replace URLs by HTML links.  Wrap lines (with spaces) to 150 chars.
@@ -111,7 +123,7 @@ class Issue(Folder):
     class_title = u'Issue'
     class_description = u'Issue'
     class_views = [
-        ['edit_form'],
+        ['edit_form', 'edit_resources_form'],
         ['browse_content?mode=list'],
         ['history']]
 
@@ -126,16 +138,15 @@ class Issue(Folder):
        fields = Folder.get_catalog_fields(self) + \
                 [ IntegerField('module'), IntegerField('version'),
                   IntegerField('type'), IntegerField('priority'),
-                  KeywordField('assigned_to'),  IntegerField('state') ]
+                  KeywordField('assigned_to'),  IntegerField('state')]
        return fields
 
 
     def get_catalog_values(self):
         document = Folder.get_catalog_values(self)
-        for name in ('module', 'version', 'type', 'priority', 'assigned_to',
-                     'state'):
+        for name in ('module', 'version', 'type', 'priority', 'state'):
             document[name] = self.get_value(name)
-            document['assigned_to'] = self.get_value('assigned_to') or 'nobody'
+        document['assigned_to'] = self.get_value('assigned_to') or 'nobody'
         return document
 
 
@@ -172,6 +183,10 @@ class Issue(Folder):
     #######################################################################
     def get_title(self):
         return '#%s %s' % (self.name, self.get_value('title'))
+
+
+    def get_resources(self):
+        return self.parent.get_object('resources')
 
 
     def get_history(self):
@@ -460,6 +475,7 @@ class Issue(Folder):
     #######################################################################
     edit_form__access__ = 'is_allowed_to_edit'
     edit_form__label__ = u'Edit'
+    edit_form__sublabel__ = u'Edit Issue'
     edit_form__icon__ = 'edit.png'
     def edit_form(self, context):
         # Set Style & JS
@@ -544,10 +560,12 @@ class Issue(Folder):
     edit__access__ = 'is_allowed_to_edit'
     def edit(self, context):
         # Check input data
+        form = context.request.form
         try:
             form = context.check_form_input(issue_fields)
         except FormError:
-            return context.come_back(MSG_MISSING_OR_INVALID)
+            return context.come_back(MSG_MISSING_OR_INVALID,
+                keep=issue_fields.keys())
         # Edit
         self._add_record(context)
         # Change
@@ -685,6 +703,95 @@ class Issue(Folder):
 
         handler = self.get_object('/ui/tracker/issue_history.xml')
         return stl(handler, namespace)
+
+
+    def get_time_select(self, name, value):
+        timetables = self.get_resources().get_timetables()
+        options = []
+        for index, (tstart, tend) in enumerate(timetables):
+            opt = '%s - %s' % (tstart.strftime('%H:%M'), tend.strftime('%H:%M'))
+            options.append(
+                {'name': index, 'value': opt, 'selected': index == value})
+        namespace = {'name': name, 'multiple': False, 'options': options}
+
+        return stl(events=time_select_template, namespace=namespace)
+
+
+    edit_resources_form__access__ = 'is_allowed_to_edit'
+    edit_resources_form__sublabel__ = u'Edit resources'
+    edit_resources_form__icon__ = 'edit.png'
+    def edit_resources_form(self, context):
+        from datetime import date
+        resource = context.get_form_value('resource', '')
+        dtstart = context.get_form_value('dtstart', date.today())
+        dtend = context.get_form_value('dtend', date.today())
+        tstart = context.get_form_value('tstart', '')
+        tend = context.get_form_value('tend', '')
+        time_select = context.get_form_value('time_select', '')
+        comment = context.get_form_value('comment', u'', Unicode)
+
+        namespace = {}
+        # New assignment
+        namespace['issue'] = {'number': self.name, 'title': self.get_title()}
+        namespace['users'] = self.parent.get_members_namespace(resource)
+        namespace['dtstart'] = dtstart
+        namespace['tstart'] = tstart
+        namespace['dtend'] = dtend
+        namespace['tend'] = tend
+        namespace['comment'] = comment
+        namespace['time_select'] = self.get_time_select('time_select',
+                                                        time_select)
+
+        # Existent
+        records = self.get_resources().handler.search(issue=self.name)
+        users = context.root.get_object('/users')
+        ns_records = []
+        for record in records:
+            id = record.id
+            resource = record.get_value('resource')
+            resource = users.get_object(resource)
+            ns_record = {}
+            ns_record['id'] = (id, '../resources/;edit_record_form?id=%s' % id)
+            ns_record['resource'] = resource.get_title()
+            ns_record['dtstart'] = record.get_value('dtstart')
+            ns_record['dtend'] = record.get_value('dtend')
+            ns_record['comment'] = record.get_value('comment')
+            ns_record['issue'] = record.get_value('issue')
+            ns_records.append(ns_record)
+
+        fields = [('id', u'id')]
+        for widget in self.get_resources().handler.form:
+            fields.append((widget.name, getattr(widget, 'title', widget.name)))
+        sortby = context.get_form_value('sortby', 'dtend')
+        sortorder = context.get_form_value('sortorder', 'up')
+        ns_records.sort(key=itemgetter(sortby), reverse=(sortorder=='down'))
+        namespace['table'] = widgets.table(fields, ns_records, [sortby],
+            sortorder, actions=[], table_with_form=False)
+
+        handler = self.get_object('/ui/tracker/edit_resources.xml')
+        return stl(handler, namespace)
+
+
+    edit_resources__access__ = 'is_allowed_to_edit'
+    def edit_resources(self, context):
+        # Check input data
+        resources = self.get_resources()
+        resources_fields = resources.handler.schema
+        form = context.request.form
+        try:
+            # Insert time into datetime values dtstart and dtend
+            dtstart = (form['dtstart'], form['tstart'] or '00:00')
+            form['dtstart'] = '%s %s' % dtstart
+            dtend = (form['dtend'], form['tend'] or '00:00')
+            form['dtend'] = '%s %s' % dtend
+            form = context.check_form_input(resources_fields)
+        except FormError:
+            return context.come_back(MSG_MISSING_OR_INVALID,
+                keep=context.get_form_keys())
+
+        resources.handler.add_record(form)
+
+        return context.come_back(MSG_CHANGES_SAVED)
 
 
     def get_size(self):

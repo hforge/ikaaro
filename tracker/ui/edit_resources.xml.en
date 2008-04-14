@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<stl:block xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:stl="http://xml.itools.org/namespaces/stl">
+
+  <h2>Issue #${issue/number}</h2>
+  <h3>${issue/title}</h3>
+
+  <form action=";edit_resources" method="post">
+    <table>
+      <tr>
+        <td valign="top">
+          <label for="resource">Resource:</label><br/>
+          <select name="resource" id="resource" class="tracker_select">
+            <option stl:repeat="item users" value="${item/id}"
+              selected="${item/is_selected}">${item/title}</option>
+          </select>
+        </td>
+        <td valign="top">
+          <label for="dtstart">Start:</label><br/>
+          <input type="text" name="dtstart" value="${dtstart}" id="dtstart"
+            size="10" />
+          <input id="trigger_dtstart" type="button" value="..."
+            name="trigger_dtstart"/>
+          <br />
+          <input type="text" name="tstart" value="${tstart}" id="tstart"
+            size="5" /> (HH:MM)
+        </td>
+        <td valign="top">
+          <label for="dtend">End:</label><br/>
+          <input type="text" name="dtend" value="${dtend}" id="dtend"
+            size="10" />
+          <input id="trigger_dtend" type="button" value="..."
+            name="trigger_dtend"/>
+          &nbsp;&nbsp;${time_select}
+          <br />
+          <input type="text" name="tend" value="${tend}" id="tend"
+            size="5" /> (HH:MM)
+        </td>
+      </tr>
+      <tr>
+        <td valign="top" colspan="3">
+          <label for="comment">Comment:</label><br/>
+          <textarea name="comment" id="comment" cols="80" rows="3"
+            >${comment}</textarea>
+        </td>
+      </tr>
+    </table>
+    <input type="hidden" name="issue" value="${issue/number}" />
+    <input type="submit" class="button_ok" value="Assign" />
+  </form>
+  <br/>
+
+  <!-- Previous assignments -->
+  ${table}
+
+  <script language="javascript">
+    Calendar.setup({inputField: "dtstart", ifFormat: "%Y-%m-%d",
+      button: "trigger_dtstart"});
+    Calendar.setup({inputField: "dtend", ifFormat: "%Y-%m-%d",
+      button: "trigger_dtend"});
+
+    function update_time(name){
+      var elt = document.getElementById(name);
+      var text = elt.options.item(elt.selectedIndex).text;
+      var start = ""; var end = "";
+      if (text != ""){
+        var reg = new RegExp(" - +", "g");
+        var value = text.split(reg);
+        start = value[0];
+        end = value[1];
+        }
+      document.getElementById("tstart").value = start;
+      document.getElementById("tend").value = end;
+    }
+  </script>
+</stl:block>

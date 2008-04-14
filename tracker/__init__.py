@@ -21,6 +21,7 @@ from itools import get_abspath
 from ikaaro.folder import Folder
 from ikaaro.skins import register_skin
 from issue import Issue
+from resources import Resources
 from tracker import Tracker
 
 

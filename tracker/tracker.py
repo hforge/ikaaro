@@ -25,7 +25,7 @@ from string import Template
 
 # Import from itools
 from itools.csv import Table as BaseTable
-from itools.catalog import (EqQuery, PhraseQuery, RangeQuery, AndQuery,
+from itools.catalog import (EqQuery, RangeQuery, AndQuery,
                             OrQuery, TextField, IntegerField)
 from itools.datatypes import Boolean, Integer, String, Unicode
 from itools.handlers import ConfigFile, File as FileHandler
@@ -43,8 +43,10 @@ from ikaaro.table import Table
 from ikaaro.text import Text
 from ikaaro import widgets
 from issue import History, Issue, issue_fields
+from resources import Resources
 
 
+resolution = timedelta.resolution
 
 # Definition of the fields of the forms to add and edit an issue
 search_fields = {'search_name': Unicode(),
@@ -62,11 +64,10 @@ table_columns = [('id', u'Id'), ('title', u'Title'), ('version', u'Version'),
                  ('assigned_to', u'Assigned To'),
                  ('mtime', u'Modified')]
 
-
 class Tracker(Folder):
 
     class_id = 'tracker'
-    class_version = '20071215'
+    class_version = '20080407'
     class_title = u'Issue Tracker'
     class_description = u'To manage bugs and tasks'
     class_icon16 = 'images/tracker16.png'
@@ -78,8 +79,7 @@ class Tracker(Folder):
         ['edit_metadata_form']]
 
     __fixed_handlers__ = ['modules', 'versions', 'types',
-        'priorities', 'states']
-
+        'priorities', 'states', 'resources']
 
     @staticmethod
     def _make_object(cls, folder, name):
@@ -120,6 +120,8 @@ class Tracker(Folder):
             metadata = StoredSearch.build_metadata(title={'en': title})
             folder.set_handler('%s/s%s.metadata' % (name, i), metadata)
             i += 1
+        metadata = Resources.build_metadata()
+        folder.set_handler('%s/resources.metadata' % name, metadata)
 
 
     def get_document_types(self):
@@ -277,9 +279,10 @@ class Tracker(Folder):
             stored_search = StoredSearch.make_object(StoredSearch, self,
                                                      search_name)
 
+        view = context.get_form_value('search_view', ';view')
         if stored_search is None:
             # Just Search
-            return context.uri.resolve(';view').replace(**context.uri.query)
+            return context.uri.resolve(view).replace(**context.uri.query)
 
         # Edit / Title
         context.commit = True
@@ -298,7 +301,8 @@ class Tracker(Folder):
             value = context.get_form_values(name, type=type)
             stored_search.set_values(name, value, type=type)
 
-        return context.uri.resolve(';view?search_name=%s' % search_name)
+        view = '%s?search_name=%s' % (view, search_name)
+        return context.uri.resolve(view)
 
 
     view__access__ = 'is_allowed_to_view'
@@ -628,7 +632,7 @@ class Tracker(Folder):
         return u'\n'.join(tab_text)
 
 
-    def get_search_results(self, context):
+    def get_search_results(self, context, start=None, end=None):
         """Method that return a list of issues that correspond to the search
         """
         try:
@@ -746,7 +750,7 @@ class Tracker(Folder):
         # Check input data
         try:
             form = context.check_form_input(issue_fields)
-        except:
+        except FormError:
             return context.come_back(MSG_MISSING_OR_INVALID, keep=keep)
 
         # Add
@@ -772,6 +776,14 @@ class Tracker(Folder):
             return context.come_back(u'Issue not found.')
 
         return context.uri.resolve2('../%s/;edit_form' % issue_name)
+
+
+    def update_20080407(self):
+        """
+        Add resources to tracker."""
+        from resources import Resources
+        metadata = Resources.build_metadata()
+        self.handler.set_handler('resources.metadata', metadata)
 
 
 

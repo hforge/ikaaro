@@ -98,6 +98,16 @@
       <tr>
         <td>
           <input type="submit" class="button_search" value="Search" />
+          <input type="submit" class="button_calendar"
+            value="Search on resources" onclick="weekly();" />
+          <input type="hidden" name="search_view" id="search_view"
+            value=";view" />
+          <script language="javascript">
+            function weekly() {
+              var elt = document.getElementById('search_view');
+              elt.value="resources/;weekly_view";
+            }
+          </script>
         </td>
         <td colspan="2" align="right">
           <label for="search_title">Remember as</label>
