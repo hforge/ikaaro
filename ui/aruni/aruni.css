@@ -29,9 +29,13 @@ input {
 a { color: #3465a4; }
 a img { border: 0; }
 
+#layout {
+  width: 1000px;
+}
+
 #header {
-  margin-bottom: 1em;
-  padding: 10px 1em;
+  margin-bottom: 10px;
+  padding: 10px;
   color: #fff;
   background: #729fcf url(images/logo.png) left bottom no-repeat;
   font-size: 1.1em;
@@ -93,7 +97,12 @@ a img { border: 0; }
 #action_home { background-image: url(../icons/16x16/action_home.png); }
 #action_logout { background-image: url(../icons/16x16/action_logout.png); }
 
-#breadcrumbs { margin-bottom: .5em; }
+#maintitle h1 {
+  margin: 0;
+  padding: 9px 0 0 0;
+}
+
+#breadcrumbs { margin-bottom: 3px; }
 #breadcrumbs a, #breadcrumbs span { color: #888a85; }
 
 /**************************************************************************
@@ -103,7 +112,7 @@ a img { border: 0; }
 #tabs {
   border-bottom: 1px solid #babdb6;
   border-top: 1px solid #babdb6;
-  padding: 0px 1em 0px 1em;
+  padding: 0;
 }
 
 #tabs a {
@@ -126,14 +135,14 @@ a img { border: 0; }
 
 #tabs .menu a,
 #tabs .submenu a {
-  padding: 4px 1em 4px 1em;
+  padding: 4px 10px 4px 10px;
 }
 
 #tabs .menu a span,
 #tabs .submenu a span {
   background-position: left center;
   background-repeat: no-repeat;
-  padding: 4px 0em 4px 19px;
+  padding: 4px 0 4px 19px;
 }
 
 #tabs .menu a:hover,
@@ -166,14 +175,14 @@ a img { border: 0; }
  * 
  * ***********************************************************************/
 #message {
-  margin: 0.3em;
-  padding: 0.3em 0 0.3em 24px;
+  margin: 3px;
+  padding: 3px 0 3px 24px;
   border: 2px solid #000;
   background: #fcaf3e url(../images/message.png) left center no-repeat;
 }
 
 #body {
-  padding: 0.3em;
+  padding: 3px;
   font-size: 1.4em;
 }
 
@@ -190,7 +199,7 @@ a img { border: 0; }
 #body form legend {
   font-size: 0.9em;
 }
-#body form dd { padding-bottom: 0.5em; }
+#body form dd { padding-bottom: 5px; }
 #body form p { clear: both; }
 #body form .form_mandatory {
   color: red;
@@ -205,67 +214,69 @@ a img { border: 0; }
   color: #ff0000;
 }
 
-#menu {
+#right {
+  width: 224px;
   font-size: 1.1em;
 }
-#menu a, #menu a:link, #menu a:visited, #menu a:hover, #menu a:active {
+#right a, #right a:link, #right a:visited, #right a:hover, #right a:active {
   text-decoration: none;
   color: #3465a4;
 }
-#menu label {
+#right label {
   display: block;
-  margin: 0.3em;
-  padding: 0.3em 0.6em;
+  width: 205px;
+  margin: 3px;
+  padding: 3px 6px;
   color: #fff;
   background: #c17d11;
 }
-#menu ul,
-#menu dl {
-  margin: 0.3em 0.6em 1em 0.3em;
+#right ul,
+#right dl {
+  margin: 3px 6px 10px 3px;
 }
-#menu ul {
+#right ul {
   list-style: none;
 }
-#menu li {
-  margin: 0.3em;
+#right li {
+  margin: 3px;
   padding: 0;
   background-repeat: no-repeat;
   background-position: top left;
   line-height: 1.6em;
   list-style: none;
 }
-#menu li a {
-  padding-left: 2em;
+#right li a {
+  padding-left: 20px;
 }
-#menu dl {
-  padding: 0.3em;
+#right dl {
+  padding: 3px;
 }
-#menu dl dl {
+#right dl dl {
   margin: 0;
   border: 0;
   padding: 0;
 }
-#menu dt {
+#right dt {
   overflow: hidden;
   line-height: 1.6em;
   border-bottom: 1px solid #d3d7cf;
 }
-#menu dd {
-  margin-left: 0.9em;
+#right dd {
+  margin-left: 9px;
 }
 
 #footer {
   text-align: center;
   border-top: 1px solid #729fcf;
   font-size: 1.0em;
-  margin: 3.5em auto 0 auto;
-  padding: 0.3em;
+  margin: 35px auto 0 auto;
+  padding: 3px;
   width: 500px;
 }
 
 #footer a {
-  margin-left: 2em;
-  margin-right: 2em;
+  margin-left: 20px;
+  margin-right: 20px;
   text-decoration: none;
 }
 
@@ -282,7 +293,7 @@ dl.thumb {
   width: 8em;
   height: 8em;
   margin: 0;
-  padding: 0.5em;
+  padding: 5px;
   text-align: center;
 }
 
@@ -369,7 +380,7 @@ table.new_resource_thumb {
   padding-left: 16px; background-image: url(../images/button_select_none.png);
 }
 
-.results li { margin: 0.3em 0.3em 0.6em; }
+.results li { margin: 3px 3px 6px; }
 .result_control { background: #deeff1; }
 .result_url, .result_type, .result_size { font-size: 0.9em; }
 .result_url { color: #008000; }

@@ -20,23 +20,22 @@
 
   </head>
   <body>
-    <table width="1000" border="0" cellpadding="0" cellspacing="0">
+    <table id="layout" border="0" cellpadding="0" cellspacing="0"
+        align="center" valign="top">
       <thead>
         <tr>
           <td id="header" colspan="2">
             <stl:block if="not user/info">
-              (not logged in)<br/><br/>
+              (not logged in)
               <a href="/;login_form" id="top_menu_login">Log in</a>
               <a href="/;register_form" id="top_menu_register"
                 stl:if="user/joinisopen">Register</a>
             </stl:block>
-
             <stl:block if="user/info">
-              (logged in as ${user/info/title})<br /><br />
+              Logged in as ${user/info/title}
               <a href="${user/info/home}" id="top_menu_profile">My Profile</a>
               <a href="/;logout" id="top_menu_logout">Log out</a>
             </stl:block>
-
             <a href="/;site_search" id="top_menu_search">Search</a>
             <a href="/;contact_form" id="top_menu_contact">Contact</a>
           </td>
@@ -98,7 +97,7 @@
               </div>
             </div>
           </td>
-          <td id="menu" class="column" valign="top" width="224">
+          <td id="right" class="column" valign="top">
             <div class="navigation" stl:repeat="menu left_menus">
               <label>${menu/title}</label>
               ${menu/content}
