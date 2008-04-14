@@ -35,7 +35,7 @@ a img { border: 0; }
 
 #header {
   margin-bottom: 10px;
-  padding: 10px;
+  padding: 20px 10px 10px 10px;
   color: #fff;
   background: #729fcf url(images/logo.png) left bottom no-repeat;
   font-size: 1.1em;
