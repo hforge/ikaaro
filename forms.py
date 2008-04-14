@@ -127,8 +127,10 @@ class Widget(object):
         namespaces))
 
 
-    def __init__(self, name, **kw):
+    def __init__(self, name, template=None, **kw):
         self.name = name
+        if template is not None:
+            self.template = template
         for key in kw:
             setattr(self, key, kw[key])
 
@@ -138,7 +140,7 @@ class Widget(object):
         namespace['name'] = self.name
         namespace['value'] = value
 
-        return stl(events=Widget.template, namespace=namespace)
+        return stl(events=self.template, namespace=namespace)
 
 
 
@@ -254,7 +256,7 @@ class BooleanRadio(Widget):
 class Select(Widget):
 
     template = list(XMLParser("""
-        <select name="${name}" style="width: 200px" multiple="${multiple}">
+        <select name="${name}" multiple="${multiple}">
           <option value=""></option>
           <option stl:repeat="option options" value="${option/name}"
             selected="${option/selected}">${option/value}</option>
