@@ -32,7 +32,7 @@ from itools.web import FormError
 # Import from ikaaro
 from base import DBObject
 from file import File
-from forms import get_default_widget
+from forms import generate_form, get_default_widget
 from messages import *
 from registry import register_object_class
 import widgets
@@ -73,6 +73,17 @@ class Table(File):
             raise Forbidden
         # Redirect
         return context.uri.resolve2(';%s' % method)
+
+
+    @classmethod
+    def get_form(cls):
+        if cls.form != []:
+            return cls.form
+        form = []
+        for key, value in cls.class_handler.schema.items():
+            widget = get_default_widget(value)
+            form.append(widget(key))
+        return form
 
 
     #########################################################################
@@ -130,7 +141,7 @@ class Table(File):
                             None)]
 
         fields = [('index', u'id')]
-        for widget in self.form:
+        for widget in self.get_form():
             fields.append((widget.name, getattr(widget, 'title', widget.name)))
         records = []
 
@@ -205,43 +216,10 @@ class Table(File):
     add_record_form__label__ = u'Add'
     add_record_form__icon__ = 'new.png'
     def add_record_form(self, context):
-        namespace = {}
-        fields = []
-        for widget in self.form:
-            datatype = self.handler.get_datatype(widget.name)
-            if getattr(datatype, 'multiple', False) is False:
-                value = context.get_form_value(widget.name) \
-                        or getattr(datatype, 'default', None)
-            else:
-                value = context.get_form_values(widget.name) \
-                        or getattr(datatype, 'default', None)
-
-            is_mandatory = getattr(datatype, 'mandatory', False)
-            field = {}
-            field['name'] = widget.name
-            title = getattr(widget, 'title', widget.name)
-            field['title'] = self.gettext(title)
-            field['mandatory'] = is_mandatory
-            field['multiple'] = getattr(datatype, 'multiple', False)
-            field['is_date'] = is_datatype(datatype, Date)
-            field['widget'] = widget.to_html(datatype, value)
-            # Class
-            cls = []
-            if is_mandatory:
-                cls.append('field_required')
-            if context.has_form_value(widget.name):
-                if is_mandatory and not value:
-                    cls.append('missing')
-                elif value and not datatype.is_valid(value):
-                    cls.append('missing')
-            field['class'] = u' '.join(cls) or None
-            # Append
-            fields.append(field)
-        namespace['fields'] = fields
-
-        handler = self.get_object('/ui/table/add_record.xml')
-        return stl(handler, namespace)
-
+        form_action = {'action': ';add_record_action', 'name': 'add',
+                       'value': 'Add', 'class': 'button_ok'}
+        return generate_form(context, u'Add a new record',
+            self.handler.schema, self.get_form(), form_action)
 
 
     add_record_action__access__ = 'is_allowed_to_edit'
@@ -306,7 +284,7 @@ class Table(File):
         namespace['id'] = id
 
         fields = []
-        for widget in self.form:
+        for widget in self.get_form():
             datatype = self.handler.get_datatype(widget.name)
             if getattr(datatype, 'multiple', False) is False:
                 value = context.get_form_value(widget.name) \
@@ -358,7 +336,7 @@ class Table(File):
     def edit_record(self, context):
         # check form
         check_fields = {}
-        for widget in self.form:
+        for widget in self.get_form():
             datatype = self.handler.get_datatype(widget.name)
             if getattr(datatype, 'multiple', False) is True:
                 datatype = Multiple(type=datatype)
@@ -373,7 +351,7 @@ class Table(File):
         # Get the record
         id = context.get_form_value('id', type=Integer)
         record = {}
-        for widget in self.form:
+        for widget in self.get_form():
             datatype = self.handler.get_datatype(widget.name)
             if getattr(datatype, 'multiple', False) is True:
                 if is_datatype(datatype, Enumerate):

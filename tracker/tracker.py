@@ -815,8 +815,6 @@ class SelectTableTable(BaseTable):
 
     schema = {'title': Unicode}
 
-    form = [TextWidget('title', title=u'Title')]
-
 
 class SelectTable(Table):
 
@@ -824,6 +822,8 @@ class SelectTable(Table):
     class_version = '20071216'
     class_title = u'Select Table'
     class_handler = SelectTableTable
+
+    form = [TextWidget('title', title=u'Title')]
 
 
     def get_options(self, value=None, sort='title'):
@@ -1003,9 +1003,6 @@ class OrderedSelectTableTable(SelectTableTable):
 
     schema = {'title': Unicode, 'rank': Integer(index='keyword', unique=True)}
 
-    form = [TextWidget('title', title=u'Title'),
-            TextWidget('rank', title=u'rank', mandatory=True)]
-
 
 class OrderedSelectTable(SelectTable):
 
@@ -1014,6 +1011,9 @@ class OrderedSelectTable(SelectTable):
     class_title = u'Ordered select table'
     class_handler = OrderedSelectTableTable
 
+    form = [TextWidget('title', title=u'Title'),
+            TextWidget('rank', title=u'rank', mandatory=True)]
+
 
 
 class VersionsTable(BaseTable):
@@ -1021,15 +1021,15 @@ class VersionsTable(BaseTable):
     schema = {'title': Unicode(),
               'released': Boolean()}
 
-    form = [TextWidget('title', title=u'Title'),
-            BooleanCheckBox('released', title=u'Released')]
-
 
 class Versions(SelectTable):
 
     class_id = 'tracker_versions'
     class_version = '20071216'
     class_handler = VersionsTable
+
+    form = [TextWidget('title', title=u'Title'),
+            BooleanCheckBox('released', title=u'Released')]
 
 
     #######################################################################

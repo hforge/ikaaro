@@ -53,6 +53,9 @@ generate_form_template = list(XMLParser("""
         <label for="${widget/name}" class="${widget/class}">
           ${widget/title}
         </label>
+        <span stl:if="widget/mandatory">(mandatory)</span>
+        <span stl:if="widget/multiple">(multiple)</span>
+        <span stl:if="widget/is_date">Format: 'yyyy-mm-dd'</span>
       </dt>
       <dd>
         ${widget/widget}
@@ -112,6 +115,9 @@ def generate_form(context, form_title, fields, widgets, form_action,
         widget_namespace = widgets_namespace[widget.name]
         value = widget_namespace['value']
         widget_namespace['title'] = getattr(widget, 'title', widget.name)
+        widget_namespace['mandatory'] = is_mandatory
+        widget_namespace['multiple'] = getattr(datatype, 'multiple', False)
+        widget_namespace['is_date'] = is_datatype(datatype, Date)
         widget_namespace['widget'] = widget.to_html(datatype, value)
         namespace['widgets'].append(widget_namespace)
     namespace['has_required_widget'] = has_required_widget
