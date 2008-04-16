@@ -23,7 +23,7 @@ from operator import itemgetter
 from string import Template
 
 # Import from itools
-from itools.csv import Record, Table as TableFile
+from itools.csv import Record, UniqueError, Table as TableFile
 from itools.datatypes import (DataType, Integer, is_datatype, Enumerate, Date,
                               Tokens)
 from itools.stl import stl
@@ -64,6 +64,7 @@ class Table(File):
 
     record_class = Record
 
+    form = []
 
     def GET(self, context):
         method = self.get_firstview()
@@ -87,6 +88,14 @@ class Table(File):
     @staticmethod
     def new_instance(cls, container, context):
         return DBObject.new_instance(cls, container, context)
+
+
+    @classmethod
+    def get_field_title(cls, name):
+        for widget in cls.form:
+            if widget.name == name:
+                return  getattr(widget, 'title', name)
+        return name
 
 
     #########################################################################
@@ -271,7 +280,11 @@ class Table(File):
         try:
             self.handler.add_record(record)
             message = u'New record added.'
-        except ValueError, strerror:
+        except UniqueError, error:
+            title = self.get_field_title(error.name)
+            message = str(error) % (title, error.value)
+        except ValueError, error:
+            title = self.get_field_title(error.name)
             template = Template(self.gettext(u'Error: $message'))
             message = template.substitute(message=strerror)
 
@@ -380,7 +393,11 @@ class Table(File):
         try:
             self.handler.update_record(id, **record)
             message = MSG_CHANGES_SAVED
-        except ValueError, strerror:
+        except UniqueError, error:
+            title = self.get_field_title(error.name)
+            message = str(error) % (title, error.value)
+        except ValueError, error:
+            title = self.get_field_title(error.name)
             template = Template(self.gettext(u'Error: $message'))
             message = template.substitute(message=strerror)
 
