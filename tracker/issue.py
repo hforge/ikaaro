@@ -413,6 +413,7 @@ class Issue(Folder):
             'id': int(self.name),
             'title': get_value('title'),
             'comment': get_value('comment'),
+            'rank': None,
             }
 
         # Select Tables
@@ -424,9 +425,12 @@ class Issue(Folder):
             value = get_value(name)
             if value is None:
                 infos[name] = None
+                infos['%s_rank'% name] = None
             else:
                 record = get_object(tables[name]).handler.get_record(value)
                 infos[name] = record and record.title or None
+                if name in ('priority', 'state'):
+                    infos['%s_rank'% name] = record.get_value('rank')
 
         # Assigned-To
         assigned_to = get_value('assigned_to')

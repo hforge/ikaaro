@@ -67,7 +67,7 @@ table_columns = [('id', u'Id'), ('title', u'Title'), ('version', u'Version'),
 class Tracker(Folder):
 
     class_id = 'tracker'
-    class_version = '20080407'
+    class_version = '20080415'
     class_title = u'Issue Tracker'
     class_description = u'To manage bugs and tasks'
     class_icon16 = 'images/tracker16.png'
@@ -91,22 +91,31 @@ class Tracker(Folder):
         folder.set_handler('%s/versions' % name, table)
         metadata = Versions.build_metadata()
         folder.set_handler('%s/versions.metadata' % name, metadata)
-        # Other Tables
+        # Modules and Types Select Tables
         tables = [
             ('modules', [u'Documentation', u'Unit Tests',
                 u'Programming Interface', u'Command Line Interface',
                 u'Visual Interface']),
             ('types', [u'Bug', u'New Feature', u'Security Issue',
                 u'Stability Issue', u'Data Corruption Issue',
-                u'Performance Improvement', u'Technology Upgrade']),
-            ('priorities', [u'High', u'Medium', u'Low']),
-            ('states', [u'Open', u'Fixed', u'Closed'])]
+                u'Performance Improvement', u'Technology Upgrade'])]
         for table_name, values in tables:
             table = SelectTableTable()
             for title in values:
                 table.add_record({'title': title})
             folder.set_handler('%s/%s' % (name, table_name), table)
             metadata = SelectTable.build_metadata()
+            folder.set_handler('%s/%s.metadata' % (name, table_name), metadata)
+        # Priorities and States Ordered Select Tables
+        tables = [
+            ('priorities', [u'High', u'Medium', u'Low']),
+            ('states', [u'Open', u'Fixed', u'Closed'])]
+        for table_name, values in tables:
+            table = OrderedSelectTableTable()
+            for index, title in enumerate(values):
+                table.add_record({'title': title, 'rank': index})
+            folder.set_handler('%s/%s' % (name, table_name), table)
+            metadata = OrderedSelectTable.build_metadata()
             folder.set_handler('%s/%s.metadata' % (name, table_name), metadata)
         # Pre-defined stored searches
         open = ConfigFile(state='0')
@@ -238,8 +247,8 @@ class Tracker(Folder):
         namespace['types'] = get('types').get_options(type)
         namespace['versions'] = get('versions').get_options(version)
         namespace['priorities'] = get('priorities').get_options(priority,
-            sort=False)
-        namespace['states'] = get('states').get_options(state, sort=False)
+            sort='rank')
+        namespace['states'] = get('states').get_options(state, sort='rank')
         namespace['users'] = self.get_members_namespace(assign, True)
 
         # is_admin
@@ -349,6 +358,8 @@ class Tracker(Folder):
         sortorder = context.get_form_value('sortorder', default='up')
         if sortby == 'mtime':
             lines.sort(key=itemgetter('mtime_sort'))
+        elif sortby in ('priority', 'state'):
+            lines.sort(key=itemgetter('%s_rank' % sortby))
         else:
             lines.sort(key=itemgetter(sortby))
         if sortorder == 'down':
@@ -426,10 +437,9 @@ class Tracker(Folder):
             namespace['change_several_bugs'] = True
             namespace['modules'] = get('modules').get_options()
             namespace['versions'] = get('versions').get_options()
-            namespace['priorities'] = get('priorities').get_options()
-            namespace['states'] = get('states').get_options()
+            namespace['priorities'] = get('priorities').get_options(sort='rank')
             namespace['types'] = get('types').get_options()
-            namespace['states'] = get('states').get_options()
+            namespace['states'] = get('states').get_options(sort='rank')
             users = self.get_object('/users')
             namespace['users'] = self.get_members_namespace('')
 
@@ -729,9 +739,9 @@ class Tracker(Folder):
         namespace['types'] = get('types').get_options(type)
         priority = context.get_form_value('priority', type=Integer)
         namespace['priorities'] = get('priorities').get_options(priority,
-            sort=False)
+            sort='rank')
         state = context.get_form_value('state', type=Integer)
-        namespace['states'] = get('states').get_options(state, sort=False)
+        namespace['states'] = get('states').get_options(state, sort='rank')
 
         users = self.get_object('/users')
         assigned_to = context.get_form_values('assigned_to', type=String)
@@ -786,6 +796,17 @@ class Tracker(Folder):
         self.handler.set_handler('resources.metadata', metadata)
 
 
+    def update_20080415(self):
+        for name in ('priorities', 'states'):
+            if not self.has_object(name):
+                continue
+            handler = self.get_object(name)
+            handler.metadata.set_changed()
+            handler.metadata.format = OrderedSelectTable.class_id
+            for index, record in enumerate(handler.handler.get_records()):
+                handler.handler.update_record(record.id, rank=str(index))
+
+
 
 ###########################################################################
 # Tables
@@ -805,12 +826,17 @@ class SelectTable(Table):
     class_handler = SelectTableTable
 
 
-    def get_options(self, value=None, sort=True):
+    def get_options(self, value=None, sort='title'):
         table = self.handler
-        options = [ {'id': x.id, 'title': x.title}
-                    for x in table.get_records() ]
-        if sort is True:
-            options.sort(key=lambda x: x['title'])
+        options = []
+        for x in table.get_records():
+            ns = {'id': x.id, 'title': x.title}
+            if sort == 'rank':
+                ns['rank'] = x.get_value('rank')
+            options.append(ns)
+
+        if sort is not None:
+            options.sort(key=lambda x: x.get(sort))
         # Set 'is_selected'
         if value is None:
             for option in options:
@@ -973,6 +999,23 @@ class SelectTable(Table):
 
 
 
+class OrderedSelectTableTable(SelectTableTable):
+
+    schema = {'title': Unicode, 'rank': Integer(index='keyword', unique=True)}
+
+    form = [TextWidget('title', title=u'Title'),
+            TextWidget('rank', title=u'rank', mandatory=True)]
+
+
+class OrderedSelectTable(SelectTable):
+
+    class_id = 'tracker_ordered_select_table'
+    class_version = '20080415'
+    class_title = u'Ordered select table'
+    class_handler = OrderedSelectTableTable
+
+
+
 class VersionsTable(BaseTable):
 
     schema = {'title': Unicode(),
@@ -1025,5 +1068,6 @@ class StoredSearch(Text):
 ###########################################################################
 register_object_class(Tracker)
 register_object_class(SelectTable)
+register_object_class(OrderedSelectTable)
 register_object_class(Versions)
 register_object_class(StoredSearch)
