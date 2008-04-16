@@ -29,17 +29,16 @@ input {
 a { color: #3465a4; }
 a img { border: 0; }
 
-#layout {
+.layout_auth {
   width: 1000px;
 }
 
 #header {
   margin-bottom: 10px;
-  padding: 20px 10px 10px 10px;
+  padding: 25px 10px 10px 210px;
   color: #fff;
   background: #729fcf url(images/logo.png) left bottom no-repeat;
   font-size: 1.1em;
-  text-align: right;
 }
 
 #header a {
@@ -214,9 +213,15 @@ a img { border: 0; }
   color: #ff0000;
 }
 
+#center {
+  padding: 5px 8px 0px 5px;
+  width: 776px;
+}
+
 #right {
   width: 224px;
   font-size: 1.1em;
+  padding-top: 5px;
 }
 #right a, #right a:link, #right a:visited, #right a:hover, #right a:active {
   text-decoration: none;

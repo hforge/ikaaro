@@ -281,12 +281,12 @@ class Skin(UIFolder):
         if user is not None:
             menu = self.get_content_language_menu(context)
             menus.append(menu)
-        # Navigation
-        menu = self.get_navigation_menu(context)
-        menus.append(menu)
-        # Content
-        #menu = self.get_content_menu(context)
-        #menus.append(menu)
+            # Navigation
+            menu = self.get_navigation_menu(context)
+            menus.append(menu)
+            # Content
+            #menu = self.get_content_menu(context)
+            #menus.append(menu)
 
         return menus
 
@@ -572,6 +572,11 @@ class Skin(UIFolder):
             namespace['view_title'] = None
         else:
             namespace['view_title'] = here.gettext(title)
+        # Layout
+        if context.user is None:
+            namespace['layout_class'] = 'layout_not_auth'
+        else:
+            namespace['layout_class'] = 'layout_auth'
 
         return namespace
 
