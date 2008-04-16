@@ -130,7 +130,7 @@ class Table(File):
                             None)]
 
         fields = [('index', u'id')]
-        for widget in self.handler.form:
+        for widget in self.form:
             fields.append((widget.name, getattr(widget, 'title', widget.name)))
         records = []
 
@@ -207,7 +207,7 @@ class Table(File):
     def add_record_form(self, context):
         namespace = {}
         fields = []
-        for widget in self.handler.form:
+        for widget in self.form:
             datatype = self.handler.get_datatype(widget.name)
             if getattr(datatype, 'multiple', False) is False:
                 value = context.get_form_value(widget.name) \
@@ -306,7 +306,7 @@ class Table(File):
         namespace['id'] = id
 
         fields = []
-        for widget in self.handler.form:
+        for widget in self.form:
             datatype = self.handler.get_datatype(widget.name)
             if getattr(datatype, 'multiple', False) is False:
                 value = context.get_form_value(widget.name) \
@@ -358,7 +358,7 @@ class Table(File):
     def edit_record(self, context):
         # check form
         check_fields = {}
-        for widget in self.handler.form:
+        for widget in self.form:
             datatype = self.handler.get_datatype(widget.name)
             if getattr(datatype, 'multiple', False) is True:
                 datatype = Multiple(type=datatype)
@@ -373,7 +373,7 @@ class Table(File):
         # Get the record
         id = context.get_form_value('id', type=Integer)
         record = {}
-        for widget in self.handler.form:
+        for widget in self.form:
             datatype = self.handler.get_datatype(widget.name)
             if getattr(datatype, 'multiple', False) is True:
                 if is_datatype(datatype, Enumerate):
