@@ -19,6 +19,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
+from copy import deepcopy
 from operator import itemgetter
 from string import Template
 
@@ -32,7 +33,7 @@ from itools.web import FormError
 # Import from ikaaro
 from base import DBObject
 from file import File
-from forms import generate_form, get_default_widget
+from forms import generate_form, get_default_widget, ReadOnlyWidget
 from messages import *
 from registry import register_object_class
 import widgets
@@ -64,7 +65,7 @@ class Table(File):
 
     record_class = Record
 
-    form = []
+    form = [ReadOnlyWidget('id', mandatory=True)]
 
     def GET(self, context):
         method = self.get_firstview()
@@ -77,12 +78,13 @@ class Table(File):
 
     @classmethod
     def get_form(cls):
-        if cls.form != []:
+        if cls.form != [ReadOnlyWidget('id', mandatory=True)]:
             return cls.form
-        form = []
+        form = [ReadOnlyWidget('id', mandatory=True)]
         for key, value in cls.class_handler.schema.items():
-            widget = get_default_widget(value)
-            form.append(widget(key))
+            if key != 'id':
+                widget = get_default_widget(value)
+                form.append(widget(key))
         return form
 
 
@@ -270,7 +272,6 @@ class Table(File):
         return context.come_back(message, goto=goto)
 
 
-
     #########################################################################
     # Edit
     edit_record_form__access__ = 'is_allowed_to_edit'
@@ -279,57 +280,13 @@ class Table(File):
         id = context.get_form_value('id', type=Integer)
         record = self.handler.get_record(id)
 
-        # Build the namespace
-        namespace = {}
-        namespace['id'] = id
-
-        fields = []
-        for widget in self.get_form():
-            datatype = self.handler.get_datatype(widget.name)
-            if getattr(datatype, 'multiple', False) is False:
-                value = context.get_form_value(widget.name) \
-                        or self.handler.get_value(record, widget.name)
-                if is_datatype(datatype, Tokens):
-                    value = ' '.join(value) # remove parenthesis
-            else:
-                value = context.get_form_values(widget.name) \
-                        or self.handler.get_value(record, widget.name)
-
-            if is_datatype(datatype, Enumerate) is False \
-                    and getattr(datatype, 'multiple', False) is True:
-                if isinstance(value, list) is True:
-                    if value and isinstance(value[0], str) is False:
-                        # get value from the record
-                        for index in (range(len(value))):
-                            value[index] = datatype.encode(value[index])
-                    value = '\n'.join(value)
-                else:
-                    value = datatype.encode(value)
-
-            is_mandatory = getattr(datatype, 'mandatory', False)
-            field = {}
-            title = getattr(widget, 'title', widget.name)
-            field['title'] = self.gettext(title)
-            field['mandatory'] = is_mandatory
-            field['multiple'] = getattr(datatype, 'multiple', False)
-            field['is_date'] = is_datatype(datatype, Date)
-            field['widget'] = widget.to_html(datatype, value)
-            # Class
-            cls = []
-            if is_mandatory:
-                cls.append('field_required')
-            if context.has_form_value(widget.name):
-                form_value = context.get_form_value(widget.name)
-                if is_mandatory and not form_value:
-                    cls.append('missing')
-                elif form_value and not datatype.is_valid(form_value):
-                    cls.append('missing')
-            field['class'] = u' '.join(cls) or None
-            # Append
-            fields.append(field)
-        namespace['fields'] = fields
-        handler = self.get_object('/ui/table/edit_record.xml')
-        return stl(handler, namespace)
+        schema = deepcopy(self.handler.schema)
+        schema.update(id=Integer)
+        form_action = {'action': ';edit_record_action', 'name': 'edit',
+                       'value': 'Change', 'class': 'button_ok'}
+        return generate_form(context, u'Edit record %s' % id,
+            schema, self.get_form(), form_action,
+            method=record.get_value)
 
 
     edit_record__access__ = 'is_allowed_to_edit'
