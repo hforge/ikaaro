@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<stl:block xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:stl="http://xml.itools.org/namespaces/stl">
+
+  <stl:block stl:if="not nb_orders">
+    You have no orders yet.
+  </stl:block>
+
+  <stl:block stl:if="nb_orders">
+  <h2>Your orders</h2>
+
+  ${batch}
+  ${table}
+
+  </stl:block>
+
+
+</stl:block>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<stl:block xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:stl="http://xml.itools.org/namespaces/stl">
+
+  <h2>Your cart</h2>
+
+  <stl:block stl:if="not products">
+    Please add products in your cart before.
+  </stl:block>
+
+  <stl:block stl:if="products">
+
+  <form name="new_order" action=";new_resource" method="post">
+  <table class="cart">
+    <tr>
+      <th>Reference</th>
+      <th>Product</th>
+      <th>Quantity</th>
+      <th>Unit Price Before VAT</th>
+      <th>Unit Price After VAT</th>
+      <th>Total Price</th>
+    </tr>
+    <tr stl:repeat="p products">
+      <td>${p/name}</td>
+      <td><a href="${p/uri}">${p/title}</a></td>
+      <td>${p/quantity}</td>
+      <td>${p/price_before_vat}</td>
+      <td>${p/price_after_vat}</td>
+      <td>${p/price_total}</td>
+    </tr>
+    <tr>
+      <td rowspan="2" colspan="4"/>
+      <td><b>Transport XXX</b></td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td><b>Total</b></td>
+      <td>${total}</td>
+    </tr>
+  </table>
+
+  <h2>Your account</h2>
+
+    <b>Firstname:</b> ${firstname}<br/>
+    <b>Lastname:</b> ${lastname}<br/>
+    <b>E-mail:</b> ${email}<br/>
+
+  <h2>Address invoicing</h2>
+
+    <dl>
+      <dt class="${address1/class}">
+        <label for="address1" class="${address1/class}">Address</label>
+      </dt>
+      <dd>
+        <input id="address1" name="address1" size="40" type="text"
+               value="${address1/value}"/>
+        <br/>
+        <input id="address2" name="address2" size="40" type="text"
+               value="${address2/value}"/>
+      </dd>
+      <dt class="${zip/class}">
+        <label for="zip" class="${zip/class}">Zip</label>
+      </dt>
+      <dd>
+        <input id="zip" name="zip" size="40" type="text" value="${zip/value}"/>
+      </dd>
+      <dt class="${city/class}">
+        <label for="city" class="${city/class}">City</label>
+      </dt>
+      <dd>
+        <input id="city" name="city" size="40" type="text"
+               value="${city/value}"/>
+      </dd>
+      <dt class="${bp/class}">
+        <label for="bp" class="${bp/class}">BP</label>
+        </dt>
+      <dd>
+        <input id="bp" name="bp" size="40" type="text" value="${bp/value}"/>
+      </dd>
+    </dl>
+
+    <p>
+      <input type="hidden" name="class_id" value="${class_id}" />
+      <input id="order" type="submit" value="Order" class="button_ok"/>
+    </p>
+  </form>
+
+  </stl:block>
+</stl:block>

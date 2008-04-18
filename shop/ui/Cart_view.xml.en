@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<stl:block xmlns="http://www.w3.org/1999/xhtml"
+           xmlns:stl="http://xml.itools.org/namespaces/stl">
+
+  <div style="width:200px; width:200px; border:1px solid black">
+    <div style="width:200px;height:20px;color:red;"><b>Cart</b></div>
+      <p stl:if="not products">No products in your cart</p>
+      <ul stl:repeat="p products">
+        <li>${p/title} (${p/quantity})</li>
+      </ul>
+    <br/>
+    <p stl:if="products"> ${nb_product} Products</p>
+    <a stl:if="products" href="../orders/;new_resource_form?type=order">
+      Order
+    </a>
+    <br/><br/>
+    <a stl:if="products" href="${cart_link}">
+      Show the cart
+    </a>
+    <br/>
+  </div>
+
+</stl:block>
