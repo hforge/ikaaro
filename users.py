@@ -571,6 +571,7 @@ class UserFolder(Folder):
     # View
     view__access__ = 'is_admin'
     view__label__ = u'View'
+    view__icon__ = 'view.png'
     def view(self, context):
         message = (u'To manage the users please go '
                    u'<a href="/;permissions_form">here</a>.')
