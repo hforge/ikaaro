@@ -67,7 +67,8 @@ Home
 http://www.ikaaro.org/ikaaro
 
 Mailing list
-http://mail.ikaaro.org/mailman/listinfo/itools
+http://www.ikaaro.org/community/
+http://archives.ikaaro.org/index.cgi?list=itools
 
 Bug Tracker
 http://bugs.ikaaro.org

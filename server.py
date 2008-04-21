@@ -57,6 +57,19 @@ def get_config(target):
 
 
 
+def get_pid(target):
+    try:
+        pid = open('%s/pid' % target).read()
+    except IOError:
+        return None
+
+    pid = int(pid)
+    if is_pid_running(pid):
+        return pid
+    return None
+
+
+
 class Server(BaseServer):
 
     def __init__(self, target, address=None, port=None, debug=False):
@@ -125,15 +138,7 @@ class Server(BaseServer):
     # API / Private
     #######################################################################
     def get_pid(self):
-        try:
-            pid = open('%s/pid' % self.target.path).read()
-        except IOError:
-            return None
-
-        pid = int(pid)
-        if is_pid_running(pid):
-            return pid
-        return None
+        return get_pid(self.target.path)
 
 
     def send_email(self, message):
