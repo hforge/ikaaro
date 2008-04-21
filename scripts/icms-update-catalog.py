@@ -30,7 +30,7 @@ from itools.catalog import make_catalog
 
 # Import from ikaaro
 from ikaaro.server import ask_confirmation
-from ikaaro.server import Server
+from ikaaro.server import Server, get_pid
 
 
 def update_catalog(parser, options, target):
@@ -43,49 +43,52 @@ def update_catalog(parser, options, target):
         return
 
     # Check the server is not running
-    server = Server(target)
-    pid = server.get_pid()
+    pid = get_pid(target)
     if pid is not None:
         print 'The server is running. To update the catalog first stop the'
         print 'server.'
         return
 
-    # Get what we need from the server instance
-    root = server.root
-    target = server.target
-    del server
-
     # Ask
     message = 'Update the catalog (y/N)? '
-    if ask_confirmation(message, options.confirm) is True:
-        catalog_path = '%s/catalog' % target
-        if vfs.exists(catalog_path):
-            vfs.remove(catalog_path)
-        catalog = make_catalog(catalog_path)
-        # Update
-        t0, v0 = time(), vmsize()
-        doc_n = 0
-        for obj in root.traverse_objects():
-            if not isinstance(obj, CatalogAware):
-                continue
-            print doc_n, obj.get_abspath()
-            doc_n += 1
-            catalog.index_document(obj)
-        # Update / Free Memory
-        del obj, root
-        # Update / Report
-        t1, v1 = time(), vmsize()
-        v = (v1 - v0)/1024
-        print '[Update] Time: %.02f seconds. Memory: %s Kb' % (t1 - t0, v)
+    if ask_confirmation(message, options.confirm) is False:
+        return
 
-        # Commit
-        print '[Commit]',
-        sys.stdout.flush()
-        catalog.save_changes()
-        # Commit / Report
-        t2, v2 = time(), vmsize()
-        v = (v2 - v1)/1024
-        print 'Time: %.02f seconds. Memory: %s Kb' % (t2 - t1, v)
+    # Remove the old catalog and create a new one
+    catalog_path = '%s/catalog' % target
+    if vfs.exists(catalog_path):
+        vfs.remove(catalog_path)
+    catalog = make_catalog(catalog_path)
+
+    # Get the root
+    server = Server(target)
+    root = server.root
+    del server
+
+    # Update
+    t0, v0 = time(), vmsize()
+    doc_n = 0
+    for obj in root.traverse_objects():
+        if not isinstance(obj, CatalogAware):
+            continue
+        print doc_n, obj.get_abspath()
+        doc_n += 1
+        catalog.index_document(obj)
+    # Update / Free Memory
+    del obj, root
+    # Update / Report
+    t1, v1 = time(), vmsize()
+    v = (v1 - v0)/1024
+    print '[Update] Time: %.02f seconds. Memory: %s Kb' % (t1 - t0, v)
+
+    # Commit
+    print '[Commit]',
+    sys.stdout.flush()
+    catalog.save_changes()
+    # Commit / Report
+    t2, v2 = time(), vmsize()
+    v = (v2 - v1)/1024
+    print 'Time: %.02f seconds. Memory: %s Kb' % (t2 - t1, v)
 
 
 
