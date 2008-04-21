@@ -26,7 +26,7 @@ import itools
 from itools.catalog import CatalogAware
 from itools.utils import vmsize
 from itools import vfs
-from itools.catalog import make_catalog
+from itools.xapian import make_catalog
 
 # Import from ikaaro
 from ikaaro.server import ask_confirmation

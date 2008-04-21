@@ -22,12 +22,12 @@ import sys
 from tempfile import mkstemp
 
 # Import from itools
-from itools.catalog import Catalog
 from itools.datatypes import Boolean
 from itools.handlers import ConfigFile, SafeDatabase
 from itools.uri import get_absolute_reference2
 from itools import vfs
 from itools.web import Server as BaseServer
+from itools.xapian import Catalog
 
 # Import from ikaaro
 from folder import Folder

@@ -25,9 +25,10 @@ import sys
 
 # Import from itools
 import itools
-from itools.catalog import make_catalog, CatalogAware
+from itools.catalog import CatalogAware
 from itools.handlers import Database
 from itools.uri import get_absolute_reference
+from itools.xapian import make_catalog
 
 # Import from ikaaro
 from ikaaro.root import Root
