@@ -70,6 +70,17 @@ def get_pid(target):
 
 
 
+def get_root(database, target):
+    path = '%s/database/.metadata' % target
+    metadata = database.get_handler(path, cls=Metadata)
+    cls = get_object_class(metadata.format)
+    # Build the root object
+    root = cls(metadata)
+    root.name = root.class_title
+    return root
+
+
+
 class Server(BaseServer):
 
     def __init__(self, target, address=None, port=None, debug=False):
@@ -107,12 +118,7 @@ class Server(BaseServer):
         self.catalog = Catalog('%s/catalog' % target)
 
         # Find out the root class
-        path = target.resolve2('database/.metadata')
-        metadata = database.get_handler(path, cls=Metadata)
-        cls = get_object_class(metadata.format)
-        # Build the root object
-        root = cls(metadata)
-        root.name = root.class_title
+        root = get_root(database, target)
 
         # Logs
         path = target.path

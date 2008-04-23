@@ -24,13 +24,14 @@ from time import time
 # Import from itools
 import itools
 from itools.catalog import CatalogAware
+from itools.handlers import Database
 from itools.utils import vmsize
 from itools import vfs
 from itools.xapian import make_catalog
 
 # Import from ikaaro
 from ikaaro.server import ask_confirmation
-from ikaaro.server import Server, get_pid
+from ikaaro.server import get_pid, get_root
 
 
 def update_catalog(parser, options, target):
@@ -61,9 +62,8 @@ def update_catalog(parser, options, target):
     catalog = make_catalog(catalog_path)
 
     # Get the root
-    server = Server(target)
-    root = server.root
-    del server
+    database = Database()
+    root = get_root(database, target)
 
     # Update
     t0, v0 = time(), vmsize()
