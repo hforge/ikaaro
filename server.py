@@ -57,6 +57,17 @@ def get_config(target):
 
 
 
+def load_modules(config):
+    """Load Python packages and modules.
+    """
+    modules = config.get_value('modules')
+    if modules is not None:
+        for name in modules.split():
+            name = name.strip()
+            exec('import %s' % name)
+
+
+
 def get_pid(target):
     try:
         pid = open('%s/pid' % target).read()
@@ -89,13 +100,7 @@ class Server(BaseServer):
 
         # Load the config
         config = get_config(target)
-
-        # Load Python packages and modules
-        modules = config.get_value('modules')
-        if modules is not None:
-            for name in modules.split():
-                name = name.strip()
-                exec('import %s' % name)
+        load_modules(config)
 
         # Find out the IP to listen to
         if not address:

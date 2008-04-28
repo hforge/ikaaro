@@ -31,7 +31,7 @@ from itools.xapian import make_catalog
 
 # Import from ikaaro
 from ikaaro.server import ask_confirmation
-from ikaaro.server import get_pid, get_root
+from ikaaro.server import get_config, get_pid, get_root, load_modules
 
 
 def update_catalog(parser, options, target):
@@ -60,6 +60,10 @@ def update_catalog(parser, options, target):
     if vfs.exists(catalog_path):
         vfs.remove(catalog_path)
     catalog = make_catalog(catalog_path)
+
+    # Load the Python modules
+    config = get_config(target)
+    load_modules(config)
 
     # Get the root
     database = Database()
