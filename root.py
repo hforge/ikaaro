@@ -122,6 +122,7 @@ class Root(WebSite):
         # attribute lets the interface to add those resources.
         context.styles = []
         context.scripts = []
+        context.message = None
 
 
     def get_user(self, name):

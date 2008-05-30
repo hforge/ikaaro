@@ -148,7 +148,8 @@ class File(WorkflowAware, VersioningAware):
         title = context.get_form_value('title', type=Unicode)
         # The upload file is mandatory
         if file is None:
-            return context.come_back(MSG_EMPTY_FILENAME)
+            context.message = MSG_EMPTY_FILENAME
+            return cls.new_instance_form(cls, context)
 
         filename, mimetype, body = get_file_parts(file)
 

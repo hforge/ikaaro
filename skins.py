@@ -446,10 +446,13 @@ class Skin(UIFolder):
     def get_message(self, context):
         """Return a message string from de request.
         """
-        if context.has_form_value('message'):
-            message = context.get_form_value('message')
-            return XMLParser(message)
-        return None
+        # FIXME For backwards compatibility with 0.20, to be removed.
+        if context.message is None:
+            if context.has_form_value('message'):
+                message = context.get_form_value('message')
+                return XMLParser(message)
+
+        return context.message
 
 
     #######################################################################
