@@ -94,7 +94,8 @@ def get_root(database, target):
 
 class Server(BaseServer):
 
-    def __init__(self, target, address=None, port=None, debug=False):
+    def __init__(self, target, address=None, port=None, debug=False,
+                 read_only=False):
         target = get_absolute_reference2(target)
         self.target = target
 
@@ -117,10 +118,11 @@ class Server(BaseServer):
 
         # The database
         events_log = '%s/log/events' % target.path
-        database = SafeDatabase('%s/database.commit' % target.path, events_log)
+        database = SafeDatabase('%s/database.commit' % target.path,
+                                events_log)
         self.database = database
         # The catalog
-        self.catalog = Catalog('%s/catalog' % target)
+        self.catalog = Catalog('%s/catalog' % target, read_only=read_only)
 
         # Find out the root class
         root = get_root(database, target)

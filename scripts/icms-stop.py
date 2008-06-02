@@ -31,7 +31,7 @@ from ikaaro.utils import kill
 
 def stop(parser, options, target):
     # Stop the Web Server
-    server = Server(target)
+    server = Server(target, read_only=True)
     pid = server.get_pid()
     if pid is None:
         print '[%s] Web Server not running.' % target
