@@ -25,8 +25,8 @@ from string import Template
 
 # Import from itools
 from itools.csv import Table as BaseTable
-from itools.catalog import (EqQuery, RangeQuery, AndQuery,
-                            OrQuery, TextField, IntegerField)
+from itools.catalog import (EqQuery, RangeQuery, AndQuery, OrQuery,
+                            PhraseQuery)
 from itools.datatypes import Boolean, Integer, String, Unicode
 from itools.handlers import ConfigFile, File as FileHandler
 from itools.stl import stl
@@ -176,6 +176,7 @@ class Tracker(Folder):
             value = [value]
         for member in members:
             member['is_selected'] = (member['id'] in value)
+        members.sort(key=itemgetter('title'))
 
         return members
 
@@ -673,7 +674,7 @@ class Tracker(Folder):
         versions = get_values('version', type=Integer)
         types = get_values('type', type=Integer)
         priorities = get_values('priority', type=Integer)
-        assigns = get_values('assigned_to', type=String)
+        assigns = get_values('assigned_to')
         states = get_values('state', type=Integer)
 
         # Build the query
@@ -681,17 +682,15 @@ class Tracker(Folder):
         query = EqQuery('parent_path', str(abspath))
         query = AndQuery(query, EqQuery('format', 'issue'))
         if text:
-            query2 = [ OrQuery(EqQuery('title', word), EqQuery('text', word))
-                               for word, kk in TextField.split(text) ]
-            query = AndQuery(query, *query2)
+            query2 = [PhraseQuery('title', text), PhraseQuery('text', text)]
+            query = AndQuery(query, OrQuery(*query2))
         for name, data in (('module', modules), ('version', versions),
                            ('type', types), ('priority', priorities),
                            ('state', states)):
             if data != []:
                 query2 = []
                 for value in data:
-                    word = IntegerField.split(value).next()[0]
-                    query2.append(EqQuery(name, word))
+                    query2.append(EqQuery(name, value))
                 query = AndQuery(query, OrQuery(*query2))
         if mtime:
             date = datetime.now() - timedelta(mtime)
@@ -917,8 +916,7 @@ class SelectTable(Table):
                 if multiple is True:
                     records[-1][field] = (records[-1][field], rmultiple)
 
-            filter_value = IntegerField.split(id).next()[0]
-            query = AndQuery(base_query, EqQuery(filter, filter_value))
+            query = AndQuery(base_query, EqQuery(filter, id))
             count = root.search(query).get_n_documents()
             value = '0'
             if count != 0:
@@ -967,8 +965,7 @@ class SelectTable(Table):
         base_query = AndQuery(base_query, EqQuery('format', 'issue'))
         removed = []
         for id in ids:
-            filter_value = IntegerField.split(id).next()[0]
-            query = AndQuery(base_query, EqQuery(filter, filter_value))
+            query = AndQuery(base_query, EqQuery(filter, id))
             count = root.search(query).get_n_documents()
             if count == 0:
                 self.handler.del_record(id)

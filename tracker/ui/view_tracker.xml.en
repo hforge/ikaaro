@@ -93,6 +93,7 @@ ${table}
       <label for="module">Module:</label><br/>
       <select name="change_module" id="module" class="tracker_select">
         <option value="">Do not change</option>
+        <option value=""></option>
         <option stl:repeat="item modules" value="${item/id}"
           selected="${item/is_selected}">${item/title}</option>
       </select>
@@ -111,6 +112,7 @@ ${table}
       <label for="priority">Priority:</label><br/>
       <select name="change_priority" id="priority" class="tracker_select">
         <option value="">Do not change</option>
+        <option value=""></option>
         <option stl:repeat="item priorities" value="${item/id}"
           selected="${item/is_selected}">${item/title}</option>
       </select>
@@ -129,6 +131,7 @@ ${table}
       <label for="assigned_to">Assign To:</label><br/>
       <select name="change_assigned_to" id="assigned_to" class="tracker_select">
         <option value="do_not_change">Do not change</option>
+        <option value=""></option>
         <option stl:repeat="item users" value="${item/id}"
           selected="${item/is_selected}">${item/title}</option>
       </select>
