@@ -66,6 +66,8 @@ generate_form_template = list(XMLParser("""
   <input type="submit" name=";${action/name}" value="${action/value}"
     class="${action/class}" />
   </p>
+  <input type="hidden" name="${hidden/name}" value="${hidden/value}" 
+    stl:repeat="hidden hiddens" />
 </form>
 <script language="javascript">
   focus_element("${first_widget}")
@@ -74,7 +76,7 @@ generate_form_template = list(XMLParser("""
 
 
 def generate_form(context, form_title, fields, widgets, form_action,
-                  required_msg=None, method=None):
+                  form_hidden=[], required_msg=None, method=None):
     """Fields is a dictionnary:
 
       {'firstname': Unicode(mandatory=True),
@@ -103,6 +105,7 @@ def generate_form(context, form_title, fields, widgets, form_action,
     namespace['first_widget'] = widgets[0].name
     form_action['value'] = here.gettext(form_action['value'])
     namespace['action'] = form_action
+    namespace['hiddens'] = form_hidden
     # Build widgets namespace
     has_required_widget = False
     widgets_namespace = context.build_form_namespace(fields, method=method)

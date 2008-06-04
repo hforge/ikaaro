@@ -62,10 +62,8 @@ class Table(File):
                    ['edit_metadata_form'],
                    ['history_form']]
     class_handler = TableFile
-
     record_class = Record
-
-    form = [ReadOnlyWidget('id', mandatory=True)]
+    form = []
 
     def GET(self, context):
         method = self.get_firstview()
@@ -78,13 +76,12 @@ class Table(File):
 
     @classmethod
     def get_form(cls):
-        if cls.form != [ReadOnlyWidget('id', mandatory=True)]:
+        if cls.form != []:
             return cls.form
-        form = [ReadOnlyWidget('id', mandatory=True)]
+        form = []
         for key, value in cls.class_handler.schema.items():
-            if key != 'id':
-                widget = get_default_widget(value)
-                form.append(widget(key))
+            widget = get_default_widget(value)
+            form.append(widget(key))
         return form
 
 
@@ -280,17 +277,20 @@ class Table(File):
         id = context.get_form_value('id', type=Integer)
         record = self.handler.get_record(id)
 
-        schema = deepcopy(self.handler.schema)
-        schema.update(id=Integer)
         form_action = {'action': ';edit_record_action', 'name': 'edit',
                        'value': 'Change', 'class': 'button_ok'}
+        form_hidden = [{'name': 'id', 'value': id}]
         return generate_form(context, u'Edit record %s' % id,
-            schema, self.get_form(), form_action,
+            self.handler.schema, self.get_form(), form_action, form_hidden,
             method=record.get_value)
 
 
-    edit_record__access__ = 'is_allowed_to_edit'
-    def edit_record(self, context):
+    edit_record_action__access__ = 'is_allowed_to_edit'
+    def edit_record_action(self, context):
+        id = context.get_form_value('id', None, type=Integer)
+        if id is None:
+            return context.come_back(MSG_MISSING_OR_INVALID)
+
         # check form
         check_fields = {}
         for widget in self.get_form():
@@ -306,7 +306,6 @@ class Table(File):
                                      keep=context.get_form_keys())
 
         # Get the record
-        id = context.get_form_value('id', type=Integer)
         record = {}
         for widget in self.get_form():
             datatype = self.handler.get_datatype(widget.name)
@@ -328,6 +327,7 @@ class Table(File):
         try:
             self.handler.update_record(id, **record)
             message = MSG_CHANGES_SAVED
+            return context.come_back(message, goto=';view')
         except UniqueError, error:
             title = self.get_field_title(error.name)
             message = str(error) % (title, error.value)
