@@ -15,13 +15,13 @@
     </select>
     <!-- Term -->
     <input type="text" name="search_term" size="35" value="${search_term}" />
-    <!-- OK -->
-    <input type="submit" value="OK" class="button_search"/>
-    <br/>
     <!-- SubFolders -->
     <input type="checkbox" name="search_subfolders" id="search_subfolders"
       checked="${search_subfolders}" value="1" />
     <label for="search_subfolders">Search subfolders</label>
+    <!-- OK -->
+    <input type="hidden" name="mode" value="${mode}" stl:if="mode" />
+    <input type="submit" value="OK" class="button_search"/>
   </fieldset>
 </form>
 

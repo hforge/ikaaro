@@ -4,46 +4,39 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
-  <div id="gallery_vpane">
-    <a stl:repeat="image objects"
-      href="?mode=image&amp;selected_image=${image/name}"><img
-      src="${image/name}/;icon48?width=128&amp;height=128" /></a>
+  <!-- Search/Filter -->
+  <form action="${action}" method="get" stl:if="search_fields">
+    <fieldset id="gallery_zoom">
+      <legend>Zoom</legend>
+      <a href="${zoom_out}"><img src="/ui/icons/16x16/zoom_out.png"
+          alt="-" title="Zoom Out" /></a>
+      <a href="${zoom_in}"><img src="/ui/icons/16x16/zoom_in.png"
+          alt="+" title="Zoom In" /></a>
+    </fieldset>
+    <fieldset>
+      <legend>Search</legend>
+      <!-- Field -->
+      <select name="search_field">
+        <option value="${field/id}" selected="${field/selected}"
+          stl:repeat="field search_fields">${field/title}</option>
+      </select>
+      <!-- Term -->
+      <input type="text" name="search_term" size="35" value="${search_term}" />
+      <!-- SubFolders -->
+      <input type="checkbox" name="search_subfolders" id="search_subfolders"
+        checked="${search_subfolders}" value="1" />
+      <label for="search_subfolders">Search subfolders</label>
+      <!-- OK -->
+      <input type="hidden" name="mode" value="${mode}" stl:if="mode" />
+      <input type="hidden" name="size" value="${size}" />
+      <input type="submit" value="OK" class="button_search"/>
+    </fieldset>
+  </form>
+
+  <div id="browse_image">
+    <a stl:repeat="object objects" href="${object/href}">
+      <img src="${object/id}/;icon48?width=${size}&amp;height=${size}" />
+    </a>
   </div>
-  <div id="gallery_main" stl:if="selected">
-    <div id="gallery_center">
-      <p id="gallery_browse">
-        <a id="gallery_previous" stl:if="selected/previous"
-          href="${selected/previous}">&lt;</a>
-        <span id="gallery_previous" stl:if="not selected/previous">&lt;</span>
-        <a id="gallery_next" stl:if="selected/next"
-          href="${selected/next}">&gt;</a>
-        <span id="gallery_next" stl:if="not selected/next">&gt;</span>
-      </p>
-      <p id="gallery_preview">
-        <a href="${selected/url}"><img src="${selected/preview}" /></a>
-      </p>
-      <table id="gallery_properties">
-        <tbody>
-          <tr>
-            <th>Name:</th>
-            <td>
-              <a href="${selected/url}">${selected/title_or_name}</a>
-            </td>
-          </tr>
-          <tr>
-            <th>Size:</th>
-            <td>
-              ${selected/width}x${selected/height}
-            </td>
-          </tr>
-          <tr>
-            <th>Format:</th>
-            <td>${selected/format}</td>
-          </tr>
-        </tbody>
-      </table>
-      <p id="gallery_description">${selected/description}</p>
-    </div>
-  </div>
-  <div class="clear"></div>
+
 </stl:block>

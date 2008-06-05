@@ -313,6 +313,7 @@ class DBObject(CatalogAware, Node, DomainAware):
             TextField('text'),
             TextField('title', is_stored=True),
             BoolField('is_role_aware'),
+            BoolField('is_image'),
             KeywordField('format', is_stored=True),
             KeywordField('workflow_state', is_stored=True),
             KeywordField('members'),
@@ -330,6 +331,7 @@ class DBObject(CatalogAware, Node, DomainAware):
     def get_catalog_values(self):
         from access import RoleAware
         from file import File
+        from binary import Image
 
         abspath = self.get_canonical_path()
         mtime = self.get_mtime()
@@ -384,6 +386,9 @@ class DBObject(CatalogAware, Node, DomainAware):
         if isinstance(self, RoleAware):
             document['is_role_aware'] = True
             document['members'] = self.get_members()
+
+        # Browse in image mode
+        document['is_image'] = isinstance(self, Image)
 
         return document
 

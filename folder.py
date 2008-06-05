@@ -26,20 +26,19 @@ from zlib import compress, decompress
 
 # Import from itools
 from itools.catalog import EqQuery, AndQuery, OrQuery, PhraseQuery
-from itools.datatypes import Boolean, DataType, Unicode
+from itools.datatypes import Boolean, DataType, Unicode, Integer
 from itools.handlers import Folder as FolderHandler, checkid
 from itools.stl import stl
-from itools.uri import Path, get_reference
+from itools.uri import get_reference
 from itools import vfs
 from itools.web import get_context
 
 # Import from ikaaro
 from base import DBObject
-from binary import Image
 from exceptions import ConsistencyError
 from messages import *
 from registry import register_object_class, get_object_class
-from utils import generate_name, reduce_string
+from utils import generate_name
 import widgets
 from workflow import WorkflowAware
 
@@ -89,6 +88,14 @@ class Folder(DBObject):
     class_document_types = []
 
     __fixed_handlers__ = []
+
+
+    #########################################################################
+    # Gallery properties
+    DEFAULT_SIZE = 128
+    MIN_SIZE = 32
+    MAX_SIZE = 512
+    SIZE_STEPS = (32, 48, 64, 128, 256, 512)
 
 
     @classmethod
@@ -345,7 +352,9 @@ class Folder(DBObject):
         # Build the namespace
         namespace = self.browse_namespace(16, sortby, sortorder, batchsize,
                                           query=query)
-        namespace['action'] = action
+        action = get_reference(action)
+        namespace['action'] = str(action.path)
+        namespace['mode'] = action.query.get('mode')
         namespace['search_term'] = term
         namespace['search_subfolders'] = search_subfolders
         namespace['search_fields'] = [
@@ -387,77 +396,65 @@ class Folder(DBObject):
         return stl(handler, namespace)
 
 
-    def browse_image(self, context):
-        selected_image = context.get_form_value('selected_image')
-        selected_index = None
+    def browse_image(self, context, search_subfolders=False,
+                     action=';browse_content?mode=image', *args):
 
-        # check selected image
-        if selected_image is not None:
-            path = Path(selected_image)
-            selected_image = path[-1]
-            if not selected_image in self.get_names():
-                selected_image = None
+        # Get the form values
+        get_form_value = context.get_form_value
+        current_size = get_form_value('size', type=Integer,
+                                      default=self.DEFAULT_SIZE)
+        term = get_form_value('search_term', type=Unicode).strip()
+        field = get_form_value('search_field')
+        if field:
+            search_subfolders = get_form_value('search_subfolders',
+                                               type=Boolean, default=False)
 
-        # look up available images
-        query = EqQuery('parent_path', str(self.get_canonical_path()))
-        namespace = self.browse_namespace(48, query=query, batchsize=0)
-        objects = []
-        offset = 0
-        for index, image in enumerate(namespace['objects']):
-            name = image['name']
-            if isinstance(name, tuple):
-                name = name[0]
-            object = self.get_object(name)
-            if not isinstance(object, Image):
-                offset = offset + 1
-                continue
-            if selected_image is None:
-                selected_image = name
-            if selected_image == name:
-                selected_index = index - offset
-            image['name'] = name
-            objects.append(image)
+        # Validate size
+        current_size = max(self.MIN_SIZE, min(current_size, self.MAX_SIZE))
 
-        namespace['objects'] = objects
+        # Compute previous and next sizes
+        previous_size = self.MIN_SIZE
+        next_size = self.MAX_SIZE
+        for step in self.SIZE_STEPS:
+            if step < current_size:
+                previous_size = step
+            if next_size is self.MAX_SIZE and step > current_size:
+                next_size = step
 
-        # selected image namespace
-        if selected_image is None:
-            namespace['selected'] = None
+        # Build the query
+        args = list(args)
+        args.append(EqQuery('is_image', '1'))
+        abspath = str(self.get_canonical_path())
+        if search_subfolders is True:
+            args.append(EqQuery('paths', abspath))
         else:
-            image = self.get_object(selected_image)
-            selected = {}
-            selected['title_or_name'] = image.get_title()
-            selected['description'] = image.get_property('description')
-            selected['url'] = '%s/;%s' % (image.name, image.get_firstview())
-            selected['preview'] = '%s/;icon48?height=320&width=320' \
-                                  % image.name
-            size = image.handler.get_size()
-            if size is None:
-                # PIL not installed
-                width, height = 0, 0
-            else:
-                width, height = size
-            selected['width'] = width
-            selected['height'] = height
-            selected['format'] = image.metadata.format
-            pattern = ';browse_content?mode=image&selected_image=%s'
-            if selected_index == 0:
-                selected['previous'] = None
-            else:
-                previous = objects[selected_index - 1]['name']
-                selected['previous'] = pattern % previous
-            if selected_index == (len(objects) - 1):
-                selected['next'] = None
-            else:
-                next = objects[selected_index + 1]['name']
-                selected['next'] = pattern % next
-            namespace['selected'] = selected
+            args.append(EqQuery('parent_path', abspath))
+
+        if term:
+            args.append(PhraseQuery(field, term))
+        query = AndQuery(*args)
+
+        # Build the namespace
+        namespace = self.browse_namespace(16, batchsize=1000, query=query)
+        action = get_reference(action)
+        namespace['action'] = str(action.path)
+        namespace['mode'] = action.query.get('mode')
+        namespace['search_term'] = term
+        namespace['search_subfolders'] = search_subfolders
+        namespace['search_fields'] = [{'id': x['id'],
+                                       'title': self.gettext(x['title']),
+                                       'selected': x['id'] == field or None}
+                                       for x in self.get_search_criteria()
+                                           if x['id'] != 'text']
+        namespace['size'] = current_size
+        namespace['zoom_out'] = context.uri.replace(size=str(previous_size))
+        namespace['zoom_in'] = context.uri.replace(size=str(next_size))
 
         # Append gallery style
         context.styles.append('/ui/gallery.css')
 
-        handler = self.get_object('/ui/folder/browse_image.xml')
-        return stl(handler, namespace)
+        template = self.get_object('/ui/folder/browse_image.xml')
+        return stl(template, namespace)
 
 
     remove__access__ = 'is_allowed_to_remove'
