@@ -136,10 +136,12 @@ class Widget(object):
         namespaces))
 
 
-    def __init__(self, name, template=None, **kw):
+    def __init__(self, name, template=None, template_multiple=None, **kw):
         self.name = name
         if template is not None:
             self.template = template
+        if template_multiple is not None:
+            self.template_multiple = template_multiple
         for key in kw:
             setattr(self, key, kw[key])
 
@@ -179,7 +181,7 @@ class ReadOnlyWidget(Widget):
         displayed = getattr(self, 'displayed', None)
         if displayed is not None:
             namespace['displayed'] = displayed
-        return stl(events=ReadOnlyWidget.template, namespace=namespace)
+        return stl(events=self.template, namespace=namespace)
 
 
 
@@ -195,7 +197,7 @@ class MultilineWidget(Widget):
         namespace['name'] = self.name
         namespace['value'] = value
 
-        return stl(events=MultilineWidget.template, namespace=namespace)
+        return stl(events=self.template, namespace=namespace)
 
 
 
@@ -213,7 +215,7 @@ class CheckBoxWidget(Widget):
         namespace['value'] = value
         namespace['is_selected'] = getattr(self, 'is_selected', False)
 
-        return stl(events=CheckBoxWidget.template, namespace=namespace)
+        return stl(events=self.template, namespace=namespace)
 
 
 
@@ -230,7 +232,7 @@ class BooleanCheckBox(Widget):
         namespace['name'] = self.name
         namespace['is_selected'] = value in [True, 1, '1']
 
-        return stl(events=BooleanCheckBox.template, namespace=namespace)
+        return stl(events=self.template, namespace=namespace)
 
 
 
@@ -258,7 +260,7 @@ class BooleanRadio(Widget):
         labels = getattr(self, 'labels', {'yes': 'Yes', 'no': 'No'})
         namespace['labels'] = labels
 
-        return stl(events=BooleanRadio.template, namespace=namespace)
+        return stl(events=self.template, namespace=namespace)
 
 
 
@@ -279,12 +281,12 @@ class Select(Widget):
         namespace['multiple'] = getattr(datatype, 'multiple', False)
         namespace['options'] = datatype.get_namespace(value)
 
-        return stl(events=Select.template, namespace=namespace)
+        return stl(events=self.template, namespace=namespace)
 
 
 class SelectRadio(Widget):
 
-    template_simple = list(XMLParser("""
+    template = list(XMLParser("""
         <input type="radio" name="${name}" value="" checked="checked"
           stl:if="none_selected"/>
         <input type="radio" name="${name}" value=""
@@ -321,20 +323,20 @@ class SelectRadio(Widget):
         namespace['none_selected'] = none_selected
         namespace['options'] = options
         if getattr(datatype, 'multiple', False) is True:
-            return stl(events=SelectRadio.template_multiple,
+            return stl(events=self.template_multiple,
                        namespace=namespace)
         else:
-            return stl(events=SelectRadio.template_simple, namespace=namespace)
+            return stl(events=self.template, namespace=namespace)
 
 
 class DateWidget(Widget):
 
-    template_simple = list(XMLParser("""
+    template = list(XMLParser("""
         <input type="text" name="${name}" value="${value}" id="${name}" />
         <input id="trigger_date" type="button" value="..."
           name="trigger_date"/>
         <script language="javascript">
-          Calendar.setup({inputField: "${name}", ifFormat: "%Y-%m-%d",
+          Calendar.setup({inputField: "${name}", ifFormat: "${format}",
                           button: "trigger_date"});
         </script>
         """, namespaces))
@@ -360,7 +362,7 @@ class DateWidget(Widget):
                     flat         : 'calendar-flat-${name}',
                     flatCallback : tableFlatCallback,
                     multiple     : MA_${name},
-                    ifFormat     : '%Y-%m-%d'});
+                    ifFormat     : '${format}'});
                 var elt_${name} = document.getElementById('${name}');
                 if (!browser.isIE) {
                     document.getElementById('btn_blur_${name}').style.display = 'none';
@@ -379,11 +381,12 @@ class DateWidget(Widget):
             value = ''
         namespace = {}
         namespace['name'] = self.name
+        namespace['format'] = getattr(self, 'format', '%Y-%m-%d')
         if getattr(datatype, 'multiple', False) is False:
             namespace['value'] = value
-            return stl(events=DateWidget.template_simple, namespace=namespace)
+            return stl(events=self.template, namespace=namespace)
         if isinstance(value, list): # ['2007-08-01\r\n2007-08-02']
             value = value[0]
         namespace['value'] = value
         namespace['dates'] = value.splitlines()
-        return stl(events=DateWidget.template_multiple, namespace=namespace)
+        return stl(events=self.template_multiple, namespace=namespace)
