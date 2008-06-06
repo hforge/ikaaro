@@ -157,7 +157,8 @@ class File(WorkflowAware, VersioningAware):
         name = title.strip() or filename
         name = checkid(name)
         if name is None:
-            return context.come_back(MSG_BAD_NAME)
+            context.message = MSG_BAD_NAME
+            return cls.new_instance_form(cls, context)
 
         # Web Pages are first class citizens
         if mimetype == 'text/html':
@@ -183,7 +184,8 @@ class File(WorkflowAware, VersioningAware):
         if container.has_object(name):
             message = (u'There is already another object with this name. '
                        u'Please type a title to choose a different name.')
-            return context.come_back(message)
+            context.message = message
+            return cls.new_instance_form(cls, context)
 
         # Build the object
         kw = {'format': class_id, 'filename': filename}
@@ -370,24 +372,26 @@ class File(WorkflowAware, VersioningAware):
     def upload(self, context):
         file = context.get_form_value('file')
         if file is None:
-            return context.come_back(u'No file has been entered.')
+            context.message = u'No file has been entered.'
+            return self.upload_form(context)
 
         # Check wether the handler is able to deal with the uploaded file
         filename, mimetype, body = get_file_parts(file)
         if mimetype != self.handler.get_mimetype():
-            message = u'Unexpected file of mimetype ${mimetype}.'
-            return context.come_back(message, mimetype=mimetype)
+            context.message = u'Unexpected file of mimetype %s' % mimetype
+            return self.upload_form(context)
 
         # Replace
         try:
             self.handler.load_state_from_string(body)
         except:
             self.handler.load_state()
-            message = u'Failed to load the file, may contain errors.'
-            return context.come_back(message)
+            context.message = u'Failed to load the file, may contain errors.'
+            return self.upload_form(context)
 
         context.server.change_object(self)
-        return context.come_back(u'Version uploaded.')
+        context.message = u'Version uploaded'
+        return self.upload_form(context)
 
 
     #######################################################################

@@ -774,7 +774,8 @@ class DBObject(CatalogAware, Node, DomainAware):
         self.set_property('description', description, language=language)
         self.set_property('subject', subject, language=language)
 
-        return context.come_back(MSG_CHANGES_SAVED)
+        context.message = MSG_CHANGES_SAVED
+        return self.edit_metadata_form
 
 
     ########################################################################

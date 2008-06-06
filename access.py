@@ -435,7 +435,8 @@ class RoleAware(AccessControl):
         usernames = context.get_form_values('ids')
         self.set_user_role(usernames, None)
 
-        return context.come_back(u"Members deleted.")
+        context.message = u"Members deleted."
+        return self.permissions_form
 
 
     edit_membership_form__access__ = 'is_admin'
@@ -459,7 +460,8 @@ class RoleAware(AccessControl):
 
         self.set_user_role(user_id, role)
 
-        return context.come_back(u"Role updated.")
+        context.message = u"Role updated."
+        return self.edit_membership_form
 
 
     #######################################################################
@@ -492,10 +494,11 @@ class RoleAware(AccessControl):
         email = context.get_form_value('email')
         # Check the email is right
         if not email:
-            message = u'The email address is missing, please type it.'
-            return context.come_back(message)
+            context.message = u'The email address is missing, please type it.'
+            return self.new_user_form
         if not Email.is_valid(email):
-            return context.come_back(MSG_INVALID_EMAIL)
+            context.message = MSG_INVALID_EMAIL
+            return self.new_user_form
 
         # Check whether the user already exists
         results = root.search(email=email)
@@ -513,7 +516,8 @@ class RoleAware(AccessControl):
                 password2 = context.get_form_value('newpass2')
                 # Check the password is right
                 if password != password2:
-                    return context.come_back(MSG_PASSWORD_MISMATCH)
+                    context.message = MSG_PASSWORD_MISMATCH
+                    return self.new_user_form
                 if not password:
                     # Admin can set no password
                     # so the user must activate its account
@@ -531,8 +535,8 @@ class RoleAware(AccessControl):
             # Check the user is not yet in the group
             members = self.get_members()
             if user_id in members:
-                message = u'The user is already here.'
-                return context.come_back(message)
+                context.message = u'The user is already here.'
+                return self.new_user_form
 
         # Set the role
         role = context.get_form_value('role')
