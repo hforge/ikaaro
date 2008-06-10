@@ -27,7 +27,6 @@ from textwrap import wrap
 
 # Import from itools
 from itools.csv import parse, Table
-from itools.catalog import IntegerField, KeywordField
 from itools.datatypes import DateTime, FileName, Integer, String, Unicode, XML
 from itools.datatypes import Boolean, Tokens
 from itools.handlers import checkid
@@ -37,6 +36,7 @@ from itools.stl import stl
 from itools import vfs
 from itools.xml import XMLParser, START_ELEMENT, END_ELEMENT, TEXT
 from itools.web import FormError
+from itools.xapian import IntegerField, KeywordField
 
 # Import from ikaaro
 from ikaaro.file import File

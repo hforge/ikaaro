@@ -21,18 +21,17 @@
 from datetime import datetime
 
 # Import from itools
-from itools.catalog import (CatalogAware, TextField, KeywordField,
-    IntegerField, BoolField)
 from itools.datatypes import FileName, String, Unicode, Integer, is_datatype
 from itools.gettext import DomainAware, get_domain
 from itools.handlers import checkid
 from itools.http import Forbidden
-from itools.i18n import get_language_name
+from itools.i18n import get_language_name, format_datetime
 from itools.stl import stl
+from itools.uri import Path
 from itools import vfs
 from itools.web import get_context, Node as BaseNode
-from itools.uri import Path
-from itools.i18n import format_datetime
+from itools.xapian import CatalogAware
+from itools.xapian import TextField, KeywordField, IntegerField, BoolField
 from itools.xml import XMLParser
 
 # Import from ikaaro

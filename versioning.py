@@ -20,11 +20,11 @@ from datetime import datetime
 from operator import itemgetter
 
 # Import from itools
-from itools.catalog import KeywordField, BoolField
 from itools.datatypes import DateTime, String
 from itools.i18n import format_datetime
 from itools.stl import stl
 from itools.web import get_context
+from itools.xapian import KeywordField, BoolField
 
 # Import from ikaaro
 from base import DBObject

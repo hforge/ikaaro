@@ -23,11 +23,10 @@ from time import time
 
 # Import from itools
 import itools
-from itools.catalog import CatalogAware
 from itools.handlers import Database
 from itools.utils import vmsize
 from itools import vfs
-from itools.xapian import make_catalog
+from itools.xapian import make_catalog, CatalogAware
 
 # Import from ikaaro
 from ikaaro.server import ask_confirmation

@@ -25,14 +25,13 @@ from string import Template
 
 # Import from itools
 from itools.csv import Table as BaseTable
-from itools.catalog import (EqQuery, RangeQuery, AndQuery, OrQuery,
-                            PhraseQuery)
 from itools.datatypes import Boolean, Integer, String, Unicode
 from itools.handlers import ConfigFile, File as FileHandler
 from itools.stl import stl
 from itools.uri import encode_query, Reference
-from itools.xml import XMLParser
 from itools.web import FormError
+from itools.xapian import EqQuery, RangeQuery, AndQuery, OrQuery, PhraseQuery
+from itools.xml import XMLParser
 
 # Import from ikaaro
 from ikaaro.folder import Folder

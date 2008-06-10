@@ -19,13 +19,12 @@ from datetime import time, timedelta
 
 # Import from itools
 from itools.csv import Table as BaseTable, Record
-from itools.catalog import (OrQuery,
-                            AndQuery, RangeQuery)
 from itools.datatypes import DateTime, String, Unicode
 from itools.datatypes import Enumerate
 from itools.html import XHTMLFile
 from itools.ical import Time
 from itools.web import get_context
+from itools.xapian import OrQuery, AndQuery, RangeQuery
 
 # Import from ikaaro
 from ikaaro.forms import DateWidget, MultilineWidget, Select, TextWidget

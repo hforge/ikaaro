@@ -19,13 +19,13 @@ from string import Template
 
 # Import from itools
 from itools import get_abspath
-from itools.stl import stl
-from itools.i18n.locale_ import format_datetime
-from itools.catalog import KeywordField, EqQuery
 from itools.datatypes import Unicode, String, Integer
+from itools.i18n import format_datetime
 from itools.pdf import PDFFile
-from itools.xml import XMLParser
+from itools.stl import stl
 from itools.web import FormError
+from itools.xapian import KeywordField, EqQuery
+from itools.xml import XMLParser
 
 # Import from ikaaro
 from ikaaro.binary import PDF

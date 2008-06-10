@@ -24,13 +24,13 @@ from string import Template
 from urllib import quote, unquote
 
 # Import from itools
-from itools.catalog import EqQuery, AndQuery, OrQuery, TextField, KeywordField
 from itools.datatypes import DataType, Email, String, Unicode
 from itools.handlers import Folder as BaseFolder
 from itools.i18n import get_language_name
 from itools.stl import stl
 from itools.uri import Path
 from itools.web import FormError
+from itools.xapian import EqQuery, AndQuery, OrQuery, TextField, KeywordField
 
 # Import from ikaaro
 from access import AccessControl

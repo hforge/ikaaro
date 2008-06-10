@@ -25,13 +25,13 @@ from urllib import quote, quote_plus, unquote
 from zlib import compress, decompress
 
 # Import from itools
-from itools.catalog import EqQuery, AndQuery, OrQuery, PhraseQuery
 from itools.datatypes import Boolean, DataType, Unicode, Integer
 from itools.handlers import Folder as FolderHandler, checkid
 from itools.stl import stl
 from itools.uri import get_reference
 from itools import vfs
 from itools.web import get_context
+from itools.xapian import EqQuery, AndQuery, OrQuery, PhraseQuery
 
 # Import from ikaaro
 from base import DBObject

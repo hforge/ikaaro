@@ -28,7 +28,7 @@ from itools.html import HTMLParser, stream_to_str_as_xhtml
 from itools.i18n import guess_language
 from itools.stl import stl
 from itools.uri import get_reference
-from itools.catalog import EqQuery
+from itools.xapian import EqQuery
 
 # Import from ikaaro
 from messages import *

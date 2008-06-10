@@ -23,7 +23,6 @@ from decimal import Decimal
 # Import from itools
 import itools
 from itools import get_abspath
-from itools.catalog import EqQuery, OrQuery, AndQuery, TextField
 from itools.datatypes import Boolean, Email, Integer, String, Tokens, Unicode
 from itools.handlers import checkid
 from itools.i18n import get_language_name, get_languages
@@ -31,6 +30,7 @@ from itools.stl import stl
 from itools.uri import Path, get_reference
 from itools import vfs
 from itools.web import FormError
+from itools.xapian import EqQuery, OrQuery, AndQuery, TextField
 
 # Import from ikaaro
 import ikaaro
