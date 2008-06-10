@@ -137,4 +137,5 @@ function popup(url, width, height) {
     options = "menubar=no, status=no, scrollbars=yes, resizable=yes, width=" + width;
     options += ", height=" + height;
     popup_window = window.open(url, 'itools_popup', options);
+    return false;
 }
