@@ -792,21 +792,6 @@ class Folder(DBObject):
                                 ';orphans', query)
 
 
-    #######################################################################
-    # Update
-    #######################################################################
-    def update_20071215(self, **kw):
-        """Remove empty folders.
-        """
-        DBObject.update_20071215(self, **kw)
-        # Remove empty folders
-        if self.parent is None:
-            return
-        if vfs.exists(self.handler.uri):
-            folder = self.parent.handler
-            if not folder.get_handler_names(self.name):
-                folder.del_handler(self.name)
-
 
 ###########################################################################
 # Register

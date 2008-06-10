@@ -974,25 +974,6 @@ class SelectTable(Table):
         return context.come_back(message, objects=', '.join(removed))
 
 
-    #######################################################################
-    # Update
-    #######################################################################
-    def update_20071216(self, columns=['id', 'title']):
-        """Change from CSV to Table.
-        """
-        old_name = self.name
-        new_name = old_name[:-4]
-
-        folder = self.parent.handler
-        csv = FileHandler('%s/%s' % (folder.uri, old_name)).to_str()
-        table = self.class_handler()
-        table.update_from_csv(csv, columns)
-        # Replace
-        folder.del_handler(old_name)
-        folder.set_handler(new_name, table)
-        # Rename
-        folder.move_handler('%s.metadata' % old_name, '%s.metadata' % new_name)
-
 
 
 class OrderedSelectTableTable(SelectTableTable):
@@ -1026,13 +1007,6 @@ class Versions(SelectTable):
 
     form = [TextWidget('title', title=u'Title'),
             BooleanCheckBox('released', title=u'Released')]
-
-
-    #######################################################################
-    # Update
-    #######################################################################
-    def update_20071216(self):
-        SelectTable.update_20071216(self, ['id', 'title', 'released'])
 
 
 

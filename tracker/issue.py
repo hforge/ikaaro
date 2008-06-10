@@ -803,45 +803,6 @@ class Issue(Folder):
         return 0
 
 
-    #######################################################################
-    # Update
-    #######################################################################
-    def update_20071215(self):
-        remove = ['id', 'owner', 'dc:language', 'ikaaro:user_theme',
-                  # Issue used to be VersioningAware
-                  'ikaaro:history']
-        Folder.update_20071215(self, remove=remove)
-
-
-    def update_20071216(self):
-        """Change '.history' from CSV to Table.
-        """
-        columns = ['datetime', 'username', 'title', 'module', 'version',
-                   'type', 'priority', 'assigned_to', 'state', 'comment',
-                   'file']
-
-        folder = self.handler
-        csv = vfs.open('%s/.history' % folder.uri).read()
-
-        table = History()
-        for line in parse(csv, columns, History.schema):
-            record = {}
-            for index, key in enumerate(columns):
-                record[key] = line[index]
-            # Rename link to attached file
-            filename = record['file']
-            if filename:
-                name, extension, language = FileName.decode(filename)
-                name = checkid(name)
-                if name != filename:
-                    record['file'] = name
-
-            table.add_record(record)
-
-        # Replace
-        folder.del_handler('.history')
-        folder.set_handler('.history', table)
-
 
 ###########################################################################
 # Register

@@ -443,36 +443,6 @@ class File(WorkflowAware, VersioningAware):
         return stl(template, namespace)
 
 
-    #######################################################################
-    # Update
-    #######################################################################
-    def update_20071216(self):
-        folder = self.parent.handler
-        # Add the "filename" field
-        metadata = self.metadata
-        filename = self.name
-        metadata.set_property('filename', filename)
-        # Normalize the filename
-        name, extension, language = FileName.decode(filename)
-        name = checkid(name)
-        # Fix the mimetype
-        if extension is not None:
-            extension = extension.lower()
-            if '/' not in metadata.format:
-                mimetype, encoding = guess_type('.%s' % extension)
-                if mimetype is not None:
-                    if metadata.format != mimetype:
-                        metadata.format = mimetype
-        # Rename metadata
-        folder.move_handler('%s.metadata' % self.name, '%s.metadata' % name)
-        # Rename handler
-        if extension is None:
-            extension = self.class_handler.class_extension
-        name = FileName.encode((name, extension, None))
-        if name != self.name:
-            folder.move_handler(self.name, name)
-
-
 
 ###########################################################################
 # Register
