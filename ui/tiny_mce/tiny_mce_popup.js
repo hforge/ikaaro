@@ -24,13 +24,13 @@ tinyMCEPopup = {
 
 		// Setup local DOM
 		t.dom = t.editor.windowManager.createInstance('tinymce.dom.DOMUtils', document);
-         /*
-          * iKaaro: choose if we include original css or not
-          */
-         if (t.getWindowArg('use_css') == "no")
-             ;
-         else
-             t.dom.loadCSS(t.editor.settings.popup_css);
+        /*
+         * iKaaro: choose if we include original css or not
+         */
+        if (t.getWindowArg('use_css') == "no")
+            ;
+        else
+            t.dom.loadCSS(t.editor.settings.popup_css);
 
 		// Setup on init listeners
 		t.listeners = [];
@@ -89,7 +89,7 @@ tinyMCEPopup = {
             else
                 t.editor.windowManager.resizeBy(dw, dh, t.id);
         }
-	},
+    },
 
 	executeOnLoad : function(s) {
 		this.onInit.add(function() {
