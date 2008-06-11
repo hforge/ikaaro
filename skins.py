@@ -60,6 +60,7 @@ class UITemplate(UIFile, XMLFile):
 map = {
     'application/xml': UITemplate,
     'application/xhtml+xml': UITemplate,
+    'text/xml': UITemplate,
 }
 
 
