@@ -27,7 +27,7 @@ tinyMCEPopup = {
         /*
          * iKaaro: choose if we include original css or not
          */
-        if (t.getWindowArg('use_css') == "no") 
+        if (t.getWindowArg('use_css') == "no")
             ;
         else
             t.dom.loadCSS(t.editor.settings.popup_css);
@@ -89,7 +89,7 @@ tinyMCEPopup = {
             else
                 t.editor.windowManager.resizeBy(dw, dh, t.id);
         }
-	},
+    },
 
 	executeOnLoad : function(s) {
 		this.onInit.add(function() {
@@ -146,7 +146,7 @@ tinyMCEPopup = {
 
 		// To avoid domain relaxing issue in Opera
 		function close() {
-			t.editor.windowManager.close(window, t.id);
+			t.editor.windowManager.close(window);
 			tinymce = tinyMCE = t.editor = t.params = t.dom = t.dom.doc = null; // Cleanup
 		};
 
@@ -176,63 +176,74 @@ tinyMCEPopup = {
 	_onDOMLoaded : function() {
 		var t = this, ti = document.title, bm, h;
 
+        /*
+         * iKaaro: check if tinymce is not null before calling tinymce methods,
+         * because when we upload and insert a document tinymce is null with
+         * Gecko engine.
+         */
+        var ikaaro_tinymce_ok = (tinymce != null);
+
 		// Translate page
 		h = document.body.innerHTML;
 
-		// Replace a=x with a="x" in IE
-		if (tinymce.isIE)
-			h = h.replace(/ (value|title|alt)=([^"][^\s>]+)/gi, ' $1="$2"')
+        if (ikaaro_tinymce_ok) { // iKaaro
+            // Replace a=x with a="x" in IE
+            if (tinymce.isIE)
+                h = h.replace(/ (value|title|alt)=([^"][^\s>]+)/gi, ' $1="$2"')
 
-		document.dir = t.editor.getParam('directionality','');
-		document.body.innerHTML = t.editor.translate(h);
-		document.title = ti = t.editor.translate(ti);
-		document.body.style.display = '';
+            document.dir = t.editor.getParam('directionality','');
+            document.body.innerHTML = t.editor.translate(h);
+            document.title = ti = t.editor.translate(ti);
+            document.body.style.display = '';
+        }
 
 		// Restore selection in IE when focus is placed on a non textarea or input element of the type text
-		if (tinymce.isIE)
-			document.attachEvent('onmouseup', tinyMCEPopup._restoreSelection);
-
+        if (ikaaro_tinymce_ok) { // iKaaro
+            if (tinymce.isIE)
+                document.attachEvent('onmouseup', tinyMCEPopup._restoreSelection);
+        }
 		t.restoreSelection();
 		t.resizeToInnerSize();
 
 		// Set inline title
-		if (!t.isWindow)
-			t.editor.windowManager.setTitle(ti, t.id);
-		else
-			window.focus();
+        if (ikaaro_tinymce_ok) { // iKaaro
+            if (!t.isWindow)
+                t.editor.windowManager.setTitle(window, ti);
+            else
+                window.focus();
 
-		if (!tinymce.isIE && !t.isWindow) {
-			tinymce.dom.Event._add(document, 'focus', function() {
-				t.editor.windowManager.focus(t.id)
-			});
-		}
+            if (!tinymce.isIE && !t.isWindow) {
+                tinymce.dom.Event._add(document, 'focus', function() {
+                    t.editor.windowManager.focus(t.id)
+                });
+            }
 
-		// Patch for accessibility
-		tinymce.each(t.dom.select('select'), function(e) {
-			e.onkeydown = tinyMCEPopup._accessHandler;
-		});
+            // Patch for accessibility
+            tinymce.each(t.dom.select('select'), function(e) {
+                e.onkeydown = tinyMCEPopup._accessHandler;
+            });
 
-		// Call onInit
-		// Init must be called before focus so the selection won't get lost by the focus call
-		tinymce.each(t.listeners, function(o) {
-			o.func.call(o.scope, t.editor);
-		});
+            // Call onInit
+            // Init must be called before focus so the selection won't get lost by the focus call
+            tinymce.each(t.listeners, function(o) {
+                o.func.call(o.scope, t.editor);
+            });
 
-		// Move focus to window
-		if (t.getWindowArg('mce_auto_focus', true)) {
-			window.focus();
+            // Move focus to window
+            if (t.getWindowArg('mce_auto_focus', true)) {
+                window.focus();
 
-			// Focus element with mceFocus class
-			tinymce.each(document.forms, function(f) {
-				tinymce.each(f.elements, function(e) {
-					if (t.dom.hasClass(e, 'mceFocus') && !e.disabled) {
-						e.focus();
-						return false; // Break loop
-					}
-				});
-			});
-		}
-
+                // Focus element with mceFocus class
+                tinymce.each(document.forms, function(f) {
+                    tinymce.each(f.elements, function(e) {
+                        if (t.dom.hasClass(e, 'mceFocus') && !e.disabled) {
+                            e.focus();
+                            return false; // Break loop
+                        }
+                    });
+                });
+            }
+        }
 		document.onkeyup = tinyMCEPopup._closeWinKeyHandler;
 	},
 

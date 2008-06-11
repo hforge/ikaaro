@@ -377,7 +377,7 @@ class Issue(Folder):
 
         # Modifications of cc_list
         last_cc = list(self.get_value('cc_list') or ())
-        new_cc = list(record['cc_list'])
+        new_cc = list(record['cc_list'] or ())
         if last_cc != new_cc:
             last_values = []
             for cc in last_cc:
