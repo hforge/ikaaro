@@ -163,6 +163,7 @@ class CSV(Text):
     # Add
     add_row_form__access__ = 'is_allowed_to_edit'
     add_row_form__label__ = u'Add'
+    add_row_form__icon__ = 'new.png'
     def add_row_form(self, context):
         namespace = {}
         handler = self.handler
