@@ -626,11 +626,11 @@ class Issue(Folder):
                 row_ns['title'] = title
             if version != previous_version:
                 previous_version = version
-                if module is None:
-                    row_ns['version'] = ' '
-                else:
+                row_ns['version'] = ' '
+                if module is not None:
                     version = versions.handler.get_record(int(version))
-                    row_ns['version'] = version.get_value('title')
+                    if version:
+                        row_ns['version'] = version.get_value('title')
             if type != previous_type:
                 previous_type = type
                 if type is None:
