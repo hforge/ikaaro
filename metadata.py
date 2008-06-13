@@ -79,18 +79,10 @@ class Metadata(File):
         language = None
         stack = []
 
-        # FIXME Backwards compatibility with 0.16, introduced in 0.20
-        namespaces = {}
-
         # Parse
         for type, value, line in XMLParser(file.read()):
             if type == START_ELEMENT:
                 ns_uri, name, attributes = value
-                # FIXME Backwards compatibility with 0.16, introduced in 0.20
-                if ns_uri is not None:
-                    prefix = namespaces[ns_uri]
-                    name = '%s:%s' % (prefix, name)
-
                 # First tag: <metadata>
                 n = len(stack)
                 if n == 0:
@@ -104,22 +96,11 @@ class Metadata(File):
                         cls = get_object_class(self.format)
                         schema = cls.get_metadata_schema()
                     stack.append((name, None, {}))
-                    # FIXME Backwards compatibility with 0.16, introduced in
-                    # 0.20
-                    for ns_uri, name in attributes:
-                        if ns_uri == 'http://www.w3.org/2000/xmlns/':
-                            value = attributes[(ns_uri, name)]
-                            namespaces[value] = name
                     continue
 
                 # Find out datatype
                 if n == 1:
-                    # FIXME tell how to decode Records while migrating from
-                    # 0.16 to 0.20
-                    if name in ('ikaaro:wf_transition', 'ikaaro:history'):
-                        datatype = Record
-                    else:
-                        datatype = schema.get(name, String)
+                    datatype = schema.get(name, String)
                 else:
                     datatype = stack[-1][1]
                     if is_datatype(datatype, Record):
@@ -139,10 +120,6 @@ class Metadata(File):
                 n = len(stack)
                 if n == 0:
                     self.properties = value
-                    # FIXME Backwards compatibility with 0.16, introduced in
-                    # 0.20
-                    if self.format is None:
-                        self.format = self.properties.pop('format')
                     break
 
                 # Decode value

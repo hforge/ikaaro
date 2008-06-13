@@ -148,13 +148,6 @@ class Node(BaseNode):
         return '/ui/icons/%s/%s' % (size, icon)
 
 
-    # FIXME For backwards compatibility (replaced by 'get_object_icon'), to
-    # remove by 0.30
-    @classmethod
-    def get_path_to_icon(cls, size=16):
-        return cls.get_object_icon(size)
-
-
     ########################################################################
     # Internationalization
     ########################################################################

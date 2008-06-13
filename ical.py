@@ -1542,6 +1542,4 @@ class CalendarTable(Table, CalendarView):
 ###########################################################################
 register_object_class(CalendarTable)
 register_object_class(Calendar)
-# FIXME For backwards compatibility
-register_object_class(Calendar, format='calendar')
 

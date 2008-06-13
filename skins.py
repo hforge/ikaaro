@@ -447,7 +447,7 @@ class Skin(UIFolder):
     def get_message(self, context):
         """Return a message string from de request.
         """
-        # FIXME For backwards compatibility with 0.20, to be removed.
+        # FIXME At some point we should deprecate usage of message in the URL
         if context.message is None:
             if context.has_form_value('message'):
                 message = context.get_form_value('message')
