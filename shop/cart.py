@@ -35,8 +35,11 @@ class Cart(object):
         """Return the list of products in cart"""
         products = []
         for name, quantity in self.get_list_products():
-            product = shop_root.get_object('%s' % name)
-            products.append((product, quantity))
+            if shop_root.has_object('%s' % name):
+                product = shop_root.get_object('%s' % name)
+                products.append((product, quantity))
+            else:
+                self.remove_product(name, quantity)
         return products
 
 
