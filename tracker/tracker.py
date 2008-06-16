@@ -24,7 +24,7 @@ from operator import itemgetter
 from string import Template
 
 # Import from itools
-from itools.csv import Table as BaseTable
+from itools.csv import CSVFile, Table as BaseTable
 from itools.catalog import (EqQuery, PhraseQuery, RangeQuery, AndQuery,
                             OrQuery, TextField, IntegerField)
 from itools.datatypes import Boolean, Integer, String, Unicode
@@ -454,29 +454,29 @@ class Tracker(Folder):
         # Selected issues
         selected_issues = context.get_form_values('ids')
         # Create the CSV
-        csv_lines = []
+        csv = CSVFile()
         for issue in results:
+            # If selected_issues is empty, select all
             if selected_issues and (issue.name not in selected_issues):
                 continue
-            csv_line = ''
+            row = []
             issue_line = issue.get_informations()
-            for column in table_columns:
-                name, value = column
-                val = issue_line[name]
-                if csv_line:
-                    csv_line = '%s%s%s' % (csv_line, separator, val)
+            for name, label in table_columns:
+                value = issue_line[name]
+                if isinstance(value, unicode):
+                    value = value.encode(encoding)
                 else:
-                    csv_line = '%s' % val
-            csv_lines.append(csv_line)
-        data = '\n'.join(csv_lines)
-        if not len(data):
+                    value = str(value)
+                row.append(value)
+            csv.add_row(row)
+        if csv.get_nrows() == 0:
             return context.come_back(u"No data to export.")
         # Set response type
         response = context.response
-        response.set_header('Content-Type', 'text/csv')
+        response.set_header('Content-Type', 'text/comma-separated-values')
         response.set_header('Content-Disposition',
                             'attachment; filename=export.csv')
-        return data.encode(encoding)
+        return csv.to_str(separator=separator)
 
 
     change_several_bugs__access__ = 'is_allowed_to_view'
@@ -607,7 +607,7 @@ class Tracker(Folder):
         # Get lines
         lines = []
         for issue in results:
-            # If selected_issues=None, select all
+            # If selected_issues is empty, select all
             if selected_issues and (issue.name not in selected_issues):
                 continue
             lines.append(issue.get_informations())
