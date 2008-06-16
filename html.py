@@ -22,6 +22,7 @@ from datetime import datetime
 # Import from itools
 from itools.datatypes import DateTime, FileName, String
 from itools.handlers import File
+from itools.http import Forbidden
 from itools.html import (xhtml_uri, XHTMLFile, sanitize_stream, HTMLParser,
     stream_to_str_as_xhtml, stream_to_str_as_html)
 from itools.stl import stl

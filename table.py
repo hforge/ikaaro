@@ -24,6 +24,7 @@ from string import Template
 
 # Import from itools
 from itools.csv import Record, Table as TableFile
+from itools.http import Forbidden
 from itools.datatypes import (DataType, Integer, is_datatype, Enumerate, Date,
                               Tokens)
 from itools.stl import stl
