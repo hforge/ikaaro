@@ -1239,7 +1239,7 @@ class Calendar(Text, CalendarView):
     class_icon48 = 'icons/48x48/icalendar.png'
     class_views = [['monthly_view', 'weekly_view', 'download_form'],
                    ['upload_form', 'edit_timetables_form',
-                    'edit_metadata_form', 'edit_event_form']]
+                    'edit_metadata_form']]
     class_handler = icalendar
 
 
@@ -1344,7 +1344,7 @@ class CalendarTable(Table, CalendarView):
     class_icon48 = 'icons/48x48/icalendar.png'
     class_views = [['monthly_view', 'weekly_view', 'download_form'],
                    ['upload_form', 'edit_timetables_form',
-                    'edit_metadata_form', 'edit_event_form']]
+                    'edit_metadata_form']]
     class_handler = icalendarTable
     record_class = Record
 
