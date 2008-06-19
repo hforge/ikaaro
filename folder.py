@@ -737,10 +737,10 @@ class Folder(DBObject):
     last_changes__title__ = u"Last Changes"
     last_changes__icon__ = 'icalendar.png'
     def last_changes(self, context, sortby=['mtime'], sortorder='down',
-                     batchsize=20):
+                     batchsize=20, action=';last_changes'):
         query = EqQuery('is_version_aware', '1')
         return self.browse_list(context, sortby, sortorder, batchsize, True,
-                                ';last_changes', query)
+                                action, query)
 
 
     #######################################################################
