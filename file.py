@@ -369,7 +369,7 @@ class File(WorkflowAware, VersioningAware):
     def upload(self, context):
         file = context.get_form_value('file')
         if file is None:
-            return context.come_back(u'No file has been entered.')
+            return context.come_back(MSG_EMPTY_FILENAME)
 
         # Check wether the handler is able to deal with the uploaded file
         filename, mimetype, body = get_file_parts(file)
