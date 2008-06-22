@@ -18,7 +18,7 @@
 from mimetypes import add_type
 
 # Import from itools
-from itools.datatypes import is_datatype, String, Unicode, XML
+from itools.datatypes import is_datatype, String, Unicode, XMLContent
 from itools.handlers import File, register_handler_class
 from itools.web import get_context
 from itools.xml import (XMLNamespace, XMLParser, START_ELEMENT, END_ELEMENT,
@@ -176,7 +176,7 @@ class Metadata(File):
                 template = '  <%s xml:lang="%s">%s</%s>\n'
                 for language, value in value.items():
                     value = datatype.encode(value)
-                    value = XML.encode(value)
+                    value = XMLContent.encode(value)
                     lines.append(template % (name, language, value, name))
             # Multiple values
             elif isinstance(value, list):
@@ -187,7 +187,7 @@ class Metadata(File):
                         lines.append('  <%s>\n' % name)
                         for key, value in value.items():
                             value = aux.get(key).encode(value)
-                            value = XML.encode(value)
+                            value = XMLContent.encode(value)
                             lines.append('    <%s>%s</%s>\n'
                                          % (key, value, key))
                         lines.append('  </%s>\n' % name)
@@ -195,13 +195,13 @@ class Metadata(File):
                 # Regular field
                 for value in value:
                     value = datatype.encode(value)
-                    value = XML.encode(value)
+                    value = XMLContent.encode(value)
                     lines.append('  <%s>%s</%s>\n' % (name, value, name))
                 continue
             # Simple properties
             else:
                 value = datatype.encode(value)
-                value = XML.encode(value)
+                value = XMLContent.encode(value)
                 lines.append('  <%s>%s</%s>\n' % (name, value, name))
 
         lines.append('</metadata>\n')

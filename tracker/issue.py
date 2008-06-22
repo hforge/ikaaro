@@ -27,8 +27,8 @@ from textwrap import wrap
 
 # Import from itools
 from itools.csv import parse, Table
-from itools.datatypes import DateTime, FileName, Integer, String, Unicode, XML
-from itools.datatypes import Boolean, Tokens
+from itools.datatypes import DateTime, FileName, Integer, String, Unicode
+from itools.datatypes import Boolean, Tokens, XMLContent
 from itools.handlers import checkid
 from itools.html import xhtml_uri
 from itools.i18n import format_datetime
@@ -626,7 +626,7 @@ class Issue(Folder):
             user_exist = users.has_object(username)
             usertitle = (user_exist and
                          users.get_object(username).get_title() or username)
-            comment = XML.encode(Unicode.encode(comment))
+            comment = XMLContent.encode(Unicode.encode(comment))
             comment = XMLParser(comment.replace('\n', '<br />'))
             i += 1
             row_ns = {'number': i,
