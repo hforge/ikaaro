@@ -29,7 +29,7 @@ from itools.datatypes import Boolean, Integer, String, Unicode
 from itools.handlers import ConfigFile, File as FileHandler
 from itools.stl import stl
 from itools.uri import encode_query, Reference
-from itools.web import FormError
+from itools.web import FormError, STLForm
 from itools.xapian import EqQuery, RangeQuery, AndQuery, OrQuery, PhraseQuery
 from itools.xml import XMLParser
 
@@ -38,14 +38,181 @@ from ikaaro.folder import Folder
 from ikaaro.forms import TextWidget, BooleanCheckBox
 from ikaaro.messages import *
 from ikaaro.registry import register_object_class
-from ikaaro.table import Table
+from ikaaro.table import Table, TableView
 from ikaaro.text import Text
-from ikaaro import widgets
+from ikaaro.widgets import batch, table
 from issue import History, Issue, issue_fields
 from resources import Resources
 
 
 resolution = timedelta.resolution
+
+
+###########################################################################
+# Views
+###########################################################################
+
+class AddIssueForm(STLForm):
+
+    access = 'is_allowed_to_edit'
+    __label__ = u'Add'
+    icon = 'new.png'
+    template = '/ui/tracker/add_issue.xml'
+
+    schema = issue_fields
+
+
+    def get_namespace(self, model, context):
+        # Set Style
+        context.styles.append('/ui/tracker/tracker.css')
+
+        # Build the namespace
+        namespace = {}
+        namespace['title'] = context.get_form_value('title', type=Unicode)
+        namespace['comment'] = context.get_form_value('comment', type=Unicode)
+        # Others
+        get = model.get_object
+        module = context.get_form_value('module', type=Integer)
+        namespace['modules'] = get('modules').get_options(module)
+        version = context.get_form_value('version', type=Integer)
+        namespace['versions'] = get('versions').get_options(version)
+        type = context.get_form_value('type', type=Integer)
+        namespace['types'] = get('types').get_options(type)
+        priority = context.get_form_value('priority', type=Integer)
+        namespace['priorities'] = get('priorities').get_options(priority,
+            sort='rank')
+        state = context.get_form_value('state', type=Integer)
+        namespace['states'] = get('states').get_options(state, sort='rank')
+
+        users = model.get_object('/users')
+        assigned_to = context.get_form_values('assigned_to', type=String)
+        namespace['users'] = model.get_members_namespace(assigned_to)
+
+        namespace['cc_add'] = model.get_members_namespace(())
+
+        return namespace
+
+
+    def action(self, model, context, form):
+        # Add
+        id = model.get_new_id()
+        issue = Issue.make_object(Issue, model, id)
+        issue._add_record(context)
+
+        goto = context.uri.resolve2('../%s/;edit_form' % issue.name)
+        return context.come_back(u'New issue addded.', goto=goto)
+
+
+
+class SelectTableView(TableView):
+
+    def get_widgets(self, model):
+        return model.form
+
+
+    def get_namespace(self, model, context):
+        namespace = {}
+
+        # The input parameters
+        start = context.get_form_value('batchstart', type=Integer, default=0)
+        size = 30
+
+        # The batch
+        handler = model.handler
+        gettext = model.gettext
+        total = handler.get_n_records()
+        namespace['batch'] = batch(context.uri, start, size, total, gettext)
+
+        # The table
+        actions = []
+        if total:
+            ac = model.get_access_control()
+            if ac.is_allowed_to_edit(context.user, model):
+                actions = [('del_record_action', u'Remove',
+                            'button_delete', None)]
+
+        fields = [('id', u'id')]
+        widgets = self.get_widgets(model)
+        for widget in widgets:
+            fields.append((widget.name, getattr(widget, 'title', widget.name)))
+
+        fields.append(('issues', u'Issues'))
+        records = []
+
+        getter = lambda x, y: x.get_value(y)
+
+        filter = model.name[:-1]
+        if model.name.startswith('priorit'):
+            filter = 'priority'
+
+        root = context.root
+        abspath = model.parent.get_canonical_path()
+        base_query = EqQuery('parent_path', str(abspath))
+        base_query = AndQuery(base_query, EqQuery('format', 'issue'))
+        for record in handler.get_records():
+            id = record.id
+            records.append({})
+            records[-1]['checkbox'] = True
+            # Fields
+            records[-1]['id'] = id, ';edit_record_form?id=%s' % id
+            for field, field_title in fields[1:-1]:
+                value = handler.get_value(record, field)
+                datatype = handler.get_datatype(field)
+
+                multiple = getattr(datatype, 'multiple', False)
+                if multiple is True:
+                    value.sort()
+                    if len(value) > 0:
+                        rmultiple = len(value) > 1
+                        value = value[0]
+                    else:
+                        rmultiple = False
+                        value = None
+
+                is_enumerate = getattr(datatype, 'is_enumerate', False)
+                if is_enumerate:
+                    records[-1][field] = datatype.get_value(value)
+                else:
+                    records[-1][field] = value
+
+                if multiple is True:
+                    records[-1][field] = (records[-1][field], rmultiple)
+
+            query = AndQuery(base_query, EqQuery(filter, id))
+            count = root.search(query).get_n_documents()
+            value = '0'
+            if count != 0:
+                value = '<a href="../;view?%s=%s">%s issues</a>'
+                if count == 1:
+                    value = '<a href="../;view?%s=%s">%s issue</a>'
+                value = XMLParser(value % (filter, id, count))
+            records[-1]['issues'] = value
+
+        # Sorting
+        sortby = context.get_form_value('sortby')
+        sortorder = context.get_form_value('sortorder', default='up')
+        if sortby:
+            records.sort(key=itemgetter(sortby), reverse=(sortorder=='down'))
+
+        records = records[start:start+size]
+        for record in records:
+            for field, field_title in fields[1:]:
+                if isinstance(record[field], tuple):
+                    if record[field][1] is True:
+                        record[field] = '%s [...]' % record[field][0]
+                    else:
+                        record[field] = record[field][0]
+
+        namespace['table'] = table(fields, records, [sortby], sortorder,
+                                   actions)
+
+        return namespace
+
+
+###########################################################################
+# Model
+###########################################################################
+
 
 # Definition of the fields of the forms to add and edit an issue
 search_fields = {'search_name': Unicode(),
@@ -73,7 +240,7 @@ class Tracker(Folder):
     class_icon48 = 'images/tracker48.png'
     class_views = [
         ['search_form'],
-        ['add_form'],
+        ['add_issue'],
         ['browse_content?mode=list'],
         ['edit_metadata_form']]
 
@@ -395,10 +562,10 @@ class Tracker(Folder):
         sortorder = context.get_form_value('sortorder', default='up')
         msgs = (u'<span>There is 1 result.</span>',
                 u'<span>There are ${n} results.</span>')
-        namespace['batch'] = widgets.batch(context.uri, 0, nb_results,
-                                nb_results, msgs=msgs)
-        namespace['table'] = widgets.table(table_columns, lines, [sortby],
-                            sortorder, actions=actions, table_with_form=False)
+        namespace['batch'] = batch(context.uri, 0, nb_results, nb_results,
+                                   msgs=msgs)
+        namespace['table'] = table(table_columns, lines, [sortby], sortorder,
+                                   actions=actions, table_with_form=False)
         namespace['nb_results'] = nb_results
         # Export_to_text
         namespace['export_to_text'] = False
@@ -708,58 +875,7 @@ class Tracker(Folder):
 
     #######################################################################
     # User Interface / Add Issue
-    add_form__access__ = 'is_allowed_to_edit'
-    add_form__label__ = u'Add'
-    add_form__icon__ = 'new.png'
-    def add_form(self, context):
-        # Set Style
-        context.styles.append('/ui/tracker/tracker.css')
-
-        # Build the namespace
-        namespace = {}
-        namespace['title'] = context.get_form_value('title', type=Unicode)
-        namespace['comment'] = context.get_form_value('comment', type=Unicode)
-        # Others
-        get = self.get_object
-        module = context.get_form_value('module', type=Integer)
-        namespace['modules'] = get('modules').get_options(module)
-        version = context.get_form_value('version', type=Integer)
-        namespace['versions'] = get('versions').get_options(version)
-        type = context.get_form_value('type', type=Integer)
-        namespace['types'] = get('types').get_options(type)
-        priority = context.get_form_value('priority', type=Integer)
-        namespace['priorities'] = get('priorities').get_options(priority,
-            sort='rank')
-        state = context.get_form_value('state', type=Integer)
-        namespace['states'] = get('states').get_options(state, sort='rank')
-
-        users = self.get_object('/users')
-        assigned_to = context.get_form_values('assigned_to', type=String)
-        namespace['users'] = self.get_members_namespace(assigned_to)
-
-        namespace['cc_add'] = self.get_members_namespace(())
-
-        handler = self.get_object('/ui/tracker/add_issue.xml')
-        return stl(handler, namespace)
-
-
-    add_issue__access__ = 'is_allowed_to_edit'
-    def add_issue(self, context):
-        keep = ['title', 'version', 'type', 'state', 'module', 'priority',
-                'assigned_to', 'cc_add', 'comment']
-        # Check input data
-        try:
-            form = context.check_form_input(issue_fields)
-        except FormError:
-            return context.come_back(MSG_MISSING_OR_INVALID, keep=keep)
-
-        # Add
-        id = self.get_new_id()
-        issue = Issue.make_object(Issue, self, id)
-        issue._add_record(context)
-
-        goto = context.uri.resolve2('../%s/;edit_form' % issue.name)
-        return context.come_back(u'New issue addded.', goto=goto)
+    add_issue = AddIssueForm()
 
 
     go_to_issue__access__ = 'is_allowed_to_view'
@@ -778,9 +894,12 @@ class Tracker(Folder):
         return context.uri.resolve2('../%s/;edit_form' % issue_name)
 
 
+    #######################################################################
+    # Update
+    #######################################################################
     def update_20080407(self):
+        """Add resources to tracker.
         """
-        Add resources to tracker."""
         from resources import Resources
         metadata = Resources.build_metadata()
         self.handler.set_handler('resources.metadata', metadata)
@@ -841,102 +960,7 @@ class SelectTable(Table):
         return options
 
 
-    def view(self, context):
-        namespace = {}
-
-        # The input parameters
-        start = context.get_form_value('batchstart', type=Integer, default=0)
-        size = 30
-
-        # The batch
-        total = self.handler.get_n_records()
-        namespace['batch'] = widgets.batch(context.uri, start, size, total,
-                                           self.gettext)
-
-        # The table
-        actions = []
-        if total:
-            ac = self.get_access_control()
-            if ac.is_allowed_to_edit(context.user, self):
-                actions = [('del_record_action', u'Remove',
-                            'button_delete', None)]
-
-        fields = [('id', u'id')]
-        for widget in self.form:
-            fields.append((widget.name, getattr(widget, 'title', widget.name)))
-
-        fields.append(('issues', u'Issues'))
-        records = []
-
-        getter = lambda x, y: x.get_value(y)
-
-        filter = self.name[:-1]
-        if self.name.startswith('priorit'):
-            filter = 'priority'
-
-        root = context.root
-        abspath = self.parent.get_canonical_path()
-        base_query = EqQuery('parent_path', str(abspath))
-        base_query = AndQuery(base_query, EqQuery('format', 'issue'))
-        for record in self.handler.get_records():
-            id = record.id
-            records.append({})
-            records[-1]['checkbox'] = True
-            # Fields
-            records[-1]['id'] = id, ';edit_record_form?id=%s' % id
-            for field, field_title in fields[1:-1]:
-                value = self.handler.get_value(record, field)
-                datatype = self.handler.get_datatype(field)
-
-                multiple = getattr(datatype, 'multiple', False)
-                if multiple is True:
-                    value.sort()
-                    if len(value) > 0:
-                        rmultiple = len(value) > 1
-                        value = value[0]
-                    else:
-                        rmultiple = False
-                        value = None
-
-                is_enumerate = getattr(datatype, 'is_enumerate', False)
-                if is_enumerate:
-                    records[-1][field] = datatype.get_value(value)
-                else:
-                    records[-1][field] = value
-
-                if multiple is True:
-                    records[-1][field] = (records[-1][field], rmultiple)
-
-            query = AndQuery(base_query, EqQuery(filter, id))
-            count = root.search(query).get_n_documents()
-            value = '0'
-            if count != 0:
-                value = '<a href="../;view?%s=%s">%s issues</a>'
-                if count == 1:
-                    value = '<a href="../;view?%s=%s">%s issue</a>'
-                value = XMLParser(value % (filter, id, count))
-            records[-1]['issues'] = value
-
-        # Sorting
-        sortby = context.get_form_value('sortby')
-        sortorder = context.get_form_value('sortorder', default='up')
-        if sortby:
-            records.sort(key=itemgetter(sortby), reverse=(sortorder=='down'))
-
-        records = records[start:start+size]
-        for record in records:
-            for field, field_title in fields[1:]:
-                if isinstance(record[field], tuple):
-                    if record[field][1] is True:
-                        record[field] = '%s [...]' % record[field][0]
-                    else:
-                        record[field] = record[field][0]
-
-        namespace['table'] = widgets.table(fields, records, [sortby],
-                                           sortorder, actions)
-
-        handler = self.get_object('/ui/table/view.xml')
-        return stl(handler, namespace)
+    view = SelectTableView()
 
 
     def del_record_action(self, context):

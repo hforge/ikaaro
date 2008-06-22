@@ -19,9 +19,9 @@
       <img class="button" src="/ui/epoz/italic.png" title="Italic"
         onclick="insertTags('*', '*', 'Italic Text')" />
       <img class="button" src="/ui/epoz/hyperlink.png" title="Insert Link"
-        onclick="popup('../;addlink_form?mode=wiki', 700, 480)" />
+        onclick="popup('../;add_link?mode=wiki', 700, 480)" />
       <img class="button" src="/ui/epoz/image.png" title="Insert Image"
-        onclick="popup('../;addimage_form?mode=wiki', 700, 480)" />
+        onclick="popup('../;add_image?mode=wiki', 700, 480)" />
       <img class="button" src="/ui/epoz/list.gif" title="Unordered List"
         onclick="insertTags('\n* ', '\n* \n', 'List Item')" />
       <img class="button" src="/ui/epoz/numbered_list.gif" title="Ordered List"

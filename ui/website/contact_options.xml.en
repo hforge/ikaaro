@@ -4,8 +4,6 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
-  <h2>Contact Options</h2>
-
   <form action=";edit_contact_options" method="post">
     <dl>
       <dt><label for="contacts">Contacts</label></dt>

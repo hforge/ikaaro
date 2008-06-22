@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<stl:block xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:stl="http://xml.itools.org/namespaces/stl">
+
+<h2>${title}</h2>
+<form action="${action/action}" method="POST">
+  <p stl:if="has_required_widget">${required_msg}</p>
+  <dl>
+    <stl:block stl:repeat="widget widgets">
+      <dt class="${widget/class}">
+        <label for="${widget/name}" class="${widget/class}">
+          ${widget/title}
+        </label>
+        <span stl:if="widget/mandatory">(mandatory)</span>
+        <span stl:if="widget/multiple">(multiple)</span>
+        <span stl:if="widget/is_date">Format: 'yyyy-mm-dd'</span>
+      </dt>
+      <dd>
+        ${widget/widget}
+      </dd>
+    </stl:block>
+  </dl>
+  <p>
+  <input type="submit" value="${action/value}" class="${action/class}" />
+  </p>
+  <input type="hidden" name="${hidden/name}" value="${hidden/value}"
+    stl:repeat="hidden hiddens" />
+</form>
+<script language="javascript">
+  focus_element("${first_widget}")
+</script>
+
+</stl:block>

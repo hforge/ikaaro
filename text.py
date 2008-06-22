@@ -19,10 +19,12 @@
 from cgi import escape
 
 # Import from itools
+from itools.datatypes import String
 from itools.gettext import POFile
 from itools.handlers import TextFile, Python as PythonFile
 from itools.html import HTMLFile
 from itools.stl import stl
+from itools.web import STLForm
 from itools.xml import XMLFile
 
 # Import from ikaaro
@@ -33,6 +35,36 @@ from registry import register_object_class
 from utils import get_parameters
 
 
+###########################################################################
+# Views
+###########################################################################
+class EditTextForm(STLForm):
+
+    access = 'is_allowed_to_edit'
+    __label__ = u'Edit'
+    title = u'Inline'
+    icon = 'edit.png'
+    template = '/ui/text/edit.xml'
+    schema = {
+        'data': String(mandatory=True),
+    }
+
+
+    def get_namespace(self, model, context):
+        return {'data': model.handler.to_str()}
+
+
+    def action(self, model, context, form):
+        data = form['data']
+        model.handler.load_state_from_string(data)
+        # Ok
+        context.message = MSG_CHANGES_SAVED
+
+
+
+###########################################################################
+# Model
+###########################################################################
 class Text(File):
 
     class_id = 'text'
@@ -42,10 +74,10 @@ class Text(File):
     class_icon16 = 'icons/16x16/text.png'
     class_icon48 = 'icons/48x48/text.png'
     class_views = [['view'],
-                   ['edit_form', 'externaledit', 'upload_form'],
-                   ['edit_metadata_form'],
-                   ['state_form'],
-                   ['history_form']]
+                   ['edit', 'externaledit', 'upload_form'],
+                   ['edit_metadata'],
+                   ['edit_state'],
+                   ['history']]
     class_handler = TextFile
 
 
@@ -74,24 +106,7 @@ class Text(File):
     #######################################################################
     # UI / Edit Inline
     #######################################################################
-    edit_form__access__ = 'is_allowed_to_edit'
-    edit_form__label__ = u'Edit'
-    edit_form__sublabel__ = u'Inline'
-    edit_form__icon__ = 'edit.png'
-    def edit_form(self, context):
-        namespace = {}
-        namespace['data'] = self.handler.to_str()
-
-        handler = self.get_object('/ui/text/edit.xml')
-        return stl(handler, namespace)
-
-
-    edit__access__ = 'is_allowed_to_edit'
-    def edit(self, context):
-        data = context.get_form_value('data')
-        self.handler.load_state_from_string(data)
-
-        return context.come_back(MSG_CHANGES_SAVED)
+    edit = EditTextForm()
 
 
     #######################################################################

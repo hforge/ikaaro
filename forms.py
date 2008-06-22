@@ -18,6 +18,7 @@
 # Import from itools
 from itools.datatypes import is_datatype, Unicode, Date, Enumerate, Boolean
 from itools.stl import stl
+from itools.web import STLForm
 from itools.xml import XMLParser
 
 
@@ -27,6 +28,9 @@ namespaces = {
     'stl': 'http://xml.itools.org/namespaces/stl'}
 
 
+###########################################################################
+# Widgets
+###########################################################################
 def get_default_widget(datatype):
 
     if is_datatype(datatype, Unicode):
@@ -41,91 +45,6 @@ def get_default_widget(datatype):
         return Select
     else:
         return TextWidget
-
-
-generate_form_template = list(XMLParser("""
-<h2>${title}</h2>
-<form action="${action/action}" method="POST">
-  <p stl:if="has_required_widget">${required_msg}</p>
-  <dl>
-    <stl:block stl:repeat="widget widgets">
-      <dt class="${widget/class}">
-        <label for="${widget/name}" class="${widget/class}">
-          ${widget/title}
-        </label>
-        <span stl:if="widget/mandatory">(mandatory)</span>
-        <span stl:if="widget/multiple">(multiple)</span>
-        <span stl:if="widget/is_date">Format: 'yyyy-mm-dd'</span>
-      </dt>
-      <dd>
-        ${widget/widget}
-      </dd>
-    </stl:block>
-  </dl>
-  <p>
-  <input type="submit" name=";${action/name}" value="${action/value}"
-    class="${action/class}" />
-  </p>
-  <input type="hidden" name="${hidden/name}" value="${hidden/value}" 
-    stl:repeat="hidden hiddens" />
-</form>
-<script language="javascript">
-  focus_element("${first_widget}")
-</script>
-""", namespaces))
-
-
-def generate_form(context, form_title, fields, widgets, form_action,
-                  form_hidden=[], required_msg=None, method=None):
-    """Fields is a dictionnary:
-
-      {'firstname': Unicode(mandatory=True),
-       'lastname': Unicode(mandatory=True)}
-
-    Widgets is a list:
-
-      [TextWidget('firstname', title=u'Firstname'),
-       TextWidget('lastname', title=u'Lastname')]
-
-    And form_action:
-
-      {'action': ';register', 'name': 'register',
-       'value': 'Register', 'class': 'button_ok'}
-    """
-    here = context.object
-    # Set and translate the required_msg
-    if required_msg is None:
-        required_msg ="""The <span class="field_required">emphasized</span>
-                      fields are required."""
-    required_msg = XMLParser(here.gettext(required_msg))
-    # Build namespace
-    namespace = {}
-    namespace['title'] = here.gettext(form_title)
-    namespace['required_msg'] = required_msg
-    namespace['first_widget'] = widgets[0].name
-    form_action['value'] = here.gettext(form_action['value'])
-    namespace['action'] = form_action
-    namespace['hiddens'] = form_hidden
-    # Build widgets namespace
-    has_required_widget = False
-    widgets_namespace = context.build_form_namespace(fields, method=method)
-    namespace['widgets'] = []
-    for widget in widgets:
-        datatype = fields[widget.name]
-        is_mandatory = getattr(datatype, 'mandatory', False)
-        if is_mandatory:
-            has_required_widget = True
-        widget_namespace = widgets_namespace[widget.name]
-        value = widget_namespace['value']
-        widget_namespace['title'] = getattr(widget, 'title', widget.name)
-        widget_namespace['mandatory'] = is_mandatory
-        widget_namespace['multiple'] = getattr(datatype, 'multiple', False)
-        widget_namespace['is_date'] = is_datatype(datatype, Date)
-        widget_namespace['widget'] = widget.to_html(datatype, value)
-        namespace['widgets'].append(widget_namespace)
-    namespace['has_required_widget'] = has_required_widget
-
-    return stl(events=generate_form_template, namespace=namespace)
 
 
 
@@ -390,3 +309,81 @@ class DateWidget(Widget):
         namespace['value'] = value
         namespace['dates'] = value.splitlines()
         return stl(events=self.template_multiple, namespace=namespace)
+
+
+
+###########################################################################
+# Generate Form
+###########################################################################
+class AutoForm(STLForm):
+    """Fields is a dictionnary:
+
+      {'firstname': Unicode(mandatory=True),
+       'lastname': Unicode(mandatory=True)}
+
+    Widgets is a list:
+
+      [TextWidget('firstname', title=u'Firstname'),
+       TextWidget('lastname', title=u'Lastname')]
+
+    And form_action:
+
+      {'action': ';register', 'name': 'register',
+       'value': 'Register', 'class': 'button_ok'}
+    """
+
+    widgets = []
+    form_hidden = []
+    required_msg = None
+    method = None
+    template = '/ui/auto_form.xml'
+
+
+    def get_widgets(self, model):
+        return self.widgets
+
+
+    def get_namespace(self, model, context):
+        # Local Variables
+        form_title = self.form_title
+        fields = self.get_schema(model)
+        widgets = self.get_widgets(model)
+        form_action = self.form_action
+        form_hidden = self.form_hidden
+        required_msg = self.required_msg
+        method = self.method
+
+        here = context.object
+        # Set and translate the required_msg
+        if required_msg is None:
+            required_msg ="""The <span class="field_required">emphasized</span>
+                          fields are required."""
+        required_msg = XMLParser(here.gettext(required_msg))
+        # Build namespace
+        namespace = {}
+        namespace['title'] = here.gettext(form_title)
+        namespace['required_msg'] = required_msg
+        namespace['first_widget'] = widgets[0].name
+        form_action['value'] = here.gettext(form_action['value'])
+        namespace['action'] = form_action
+        namespace['hiddens'] = form_hidden
+        # Build widgets namespace
+        has_required_widget = False
+        widgets_namespace = context.build_form_namespace(fields, method=method)
+        namespace['widgets'] = []
+        for widget in widgets:
+            datatype = fields[widget.name]
+            is_mandatory = getattr(datatype, 'mandatory', False)
+            if is_mandatory:
+                has_required_widget = True
+            widget_namespace = widgets_namespace[widget.name]
+            value = widget_namespace['value']
+            widget_namespace['title'] = getattr(widget, 'title', widget.name)
+            widget_namespace['mandatory'] = is_mandatory
+            widget_namespace['multiple'] = getattr(datatype, 'multiple', False)
+            widget_namespace['is_date'] = is_datatype(datatype, Date)
+            widget_namespace['widget'] = widget.to_html(datatype, value)
+            namespace['widgets'].append(widget_namespace)
+        namespace['has_required_widget'] = has_required_widget
+
+        return namespace

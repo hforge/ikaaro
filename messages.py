@@ -28,9 +28,6 @@ MSG_EDIT_CONFLICT = u'Changes could not be saved, there was an edit conflict.'
 MSG_EMPTY_FILENAME = u'The file must be entered.'
 MSG_EXISTANT_FILENAME = u'A given name already exists.'
 MSG_INVALID_EMAIL = u'The email address provided is invalid.'
-MSG_MISSING_OR_INVALID = (
-            u'Some required fields are missing, or some values are not valid.'
-            u' Please correct them and continue.')
 MSG_NAME_CLASH = u'There is already another object with this name.'
 MSG_NAME_MISSING = u'The name is missing.'
 MSG_NEW_RESOURCE = u'A new resource has been added.'

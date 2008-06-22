@@ -21,10 +21,10 @@
 from operator import itemgetter
 
 # Import from itools
-from itools.datatypes import Boolean, Email, Integer, Tokens, Unicode
+from itools.datatypes import Boolean, Email, Integer, Tokens, Unicode, String
 from itools.stl import stl
 from itools.uri import get_reference
-from itools.web import AccessControl as BaseAccessControl
+from itools.web import AccessControl as BaseAccessControl, STLForm
 
 # Import from ikaaro
 from messages import *
@@ -32,6 +32,243 @@ import widgets
 from workflow import WorkflowAware
 
 
+###########################################################################
+# Views
+###########################################################################
+class PermissionsForm(STLForm):
+
+    access = 'is_admin'
+    __label__ = u"Control Panel"
+    title = u"Browse Members"
+    description = u"See the users and their roles."
+    icon = 'userfolder.png'
+    template = '/ui/access/permissions.xml'
+    schema = {
+        'ids': String(multiple=True, mandatory=True),
+    }
+
+
+    def get_namespace(self, model, context):
+        namespace = {}
+        gettext = model.gettext
+
+        # Get values from the request
+        sortby = context.get_form_values('sortby', default=['login_name'])
+        sortorder = context.get_form_value('sortorder', default='up')
+        start = context.get_form_value('batchstart', type=Integer, default=0)
+        size = 20
+
+        # The search form
+        field = context.get_form_value('search_field')
+        term = context.get_form_value('search_term', type=Unicode)
+        term = term.strip()
+
+        search_fields = [('username', u'Login'),
+                         ('lastname', u'Last Name'),
+                         ('firstname', u'First Name')]
+
+        namespace['search_term'] = term
+        namespace['search_fields'] = [
+            {'id': name, 'title': gettext(title),
+             'selected': name == field or None}
+            for name, title in search_fields ]
+
+        # Search
+        query = {'format': 'user'}
+        if field:
+            query[field] = term
+        root = context.root
+        results = root.search(**query)
+
+        roles = model.get_members_classified_by_role()
+
+        # Build the namespace
+        members = []
+        for user in results.get_documents():
+            user_id = user.name
+            # Find out the user role. Skip the user if does not belong to
+            # this group
+            for role in roles:
+                if user_id in roles[role]:
+                    break
+            else:
+                continue
+            # Build the namespace for the user
+            ns = {}
+            ns['checkbox'] = True
+            ns['id'] = user_id
+            ns['img'] = None
+            # Email
+            href = '/users/%s' % user_id
+            ns['user_id'] = int(user_id), href
+            # Title
+            ns['login_name'] = user.username
+            ns['firstname'] = user.firstname
+            ns['lastname'] = user.lastname
+            # Role
+            role = model.get_role_title(role)
+            href = ';edit_membership?id=%s' % user_id
+            ns['role'] = role, href
+            # State
+            user_object = root.get_object(user.abspath)
+            if user_object.get_property('user_must_confirm'):
+                account_state = (gettext(u'Inactive'),
+                                 '/users/%s/;resend_confirmation' % user_id)
+            else:
+                account_state = gettext(u'Active')
+            ns['account_state'] = account_state
+            # Append
+            members.append(ns)
+
+        # Sort
+        members.sort(key=itemgetter(sortby[0]), reverse=sortorder=='down')
+
+        # Batch
+        total = len(members)
+        members = members[start:start+size]
+
+        # The columns
+        columns = [('user_id', u'User ID'),
+                   ('login_name', u'Login'),
+                   ('firstname', u'First Name'),
+                   ('lastname', u'Last Name'),
+                   ('role', u'Role'),
+                   ('account_state', u'State')]
+
+        # The actions
+        actions = [('permissions_del_members', gettext(u'Delete'),
+                   'button_delete', None)]
+
+        namespace['batch'] = widgets.batch(context.uri, start, size, total)
+        namespace['table'] = widgets.table(columns, members, sortby, sortorder,
+                                           ';permissions', actions, gettext)
+
+        return namespace
+
+
+    def permissions_del_members(self, model, context, form):
+        usernames = form['ids']
+        model.set_user_role(usernames, None)
+        # Ok
+        context.message = u"Members deleted."
+
+
+
+class MembershipForm(STLForm):
+
+    access = 'is_admin'
+    template = '/ui/access/edit_membership_form.xml'
+    schema = {
+        'id': String(mandatory=True),
+        'role': String(mandatory=True),
+    }
+
+
+    def get_namespace(self, model, context):
+        user_id = context.get_form_value('id')
+        user = model.get_object('/users/%s' % user_id)
+
+        return {
+            'id': user_id,
+            'name': user.get_title(),
+            'roles': model.get_roles_namespace(user_id),
+        }
+
+
+    def action(self, model, context, form):
+        user_id = form['id']
+        role = form['role']
+
+        model.set_user_role(user_id, role)
+        # Ok
+        context.message = u"Role updated."
+
+
+
+class NewUserForm(STLForm):
+
+    access = 'is_admin'
+    __label__ = u'Control Panel'
+    title = u'Add New Member'
+    description = u'Grant access to a new user.'
+    icon = 'card.png'
+    template = '/ui/access/new_user.xml'
+    schema = {
+        'email': Email(mandatory=True),
+        'role': String(mandatory=True),
+        'newpass': String,
+        'newpass2': String,
+    }
+
+
+    def get_namespace(self, model, context):
+        return {
+            'is_admin': model.is_admin(context.user, model),
+            'roles': model.get_roles_namespace(),
+        }
+
+
+    def action(self, model, context, form):
+        root = context.root
+        user = context.user
+        users = root.get_object('users')
+
+        # Check whether the user already exists
+        email = form['email']
+        results = root.search(email=email)
+        if results.get_n_documents():
+            user_id = results.get_documents()[0].name
+        else:
+            user_id = None
+
+        # Get the user (create it if needed)
+        if user_id is None:
+            # New user
+            is_admin = model.is_admin(user, model)
+            if is_admin:
+                password = form['newpass']
+                password2 = form['newpass2']
+                # Check the password is right
+                if password != password2:
+                    context.message = MSG_PASSWORD_MISMATCH
+                    return
+                if not password:
+                    # Admin can set no password
+                    # so the user must activate its account
+                    password = None
+            else:
+                password = None
+            # Add the user
+            user = users.set_user(email, password)
+            user_id = user.name
+            if password is None:
+                # Send confirmation email to activate the account
+                user.send_confirmation(context, email)
+        else:
+            user = users.get_object(user_id)
+            # Check the user is not yet in the group
+            members = model.get_members()
+            if user_id in members:
+                context.message = u'The user is already here.'
+                return
+
+        # Set the role
+        role = form['role']
+        model.set_user_role(user_id, role)
+
+        # Come back
+        if context.has_form_value('add_and_return'):
+            return
+
+        goto='/users/%s/;%s' % (user.name, user.get_firstview())
+        goto = get_reference(goto)
+        return context.come_back(u'User added.', goto=goto)
+
+
+
+###########################################################################
+# Model
+###########################################################################
 class AccessControl(BaseAccessControl):
 
     def is_admin(self, user, object):
@@ -320,233 +557,8 @@ class RoleAware(AccessControl):
 
 
     #######################################################################
-    # UI / Browse
+    # UI / Views
     #######################################################################
-    permissions_form__access__ = 'is_admin'
-    permissions_form__label__ = u"Control Panel"
-    permissions_form__sublabel__ = u"Browse Members"
-    permissions_form__description__ = u"See the users and their roles."
-    permissions_form__icon__ = 'userfolder.png'
-    def permissions_form(self, context):
-        namespace = {}
-
-        # Get values from the request
-        sortby = context.get_form_values('sortby', default=['login_name'])
-        sortorder = context.get_form_value('sortorder', default='up')
-        start = context.get_form_value('batchstart', type=Integer, default=0)
-        size = 20
-
-        # The search form
-        field = context.get_form_value('search_field')
-        term = context.get_form_value('search_term', type=Unicode)
-        term = term.strip()
-
-        search_fields = [('username', u'Login'),
-                         ('lastname', u'Last Name'),
-                         ('firstname', u'First Name')]
-
-        namespace['search_term'] = term
-        namespace['search_fields'] = [
-            {'id': name, 'title': self.gettext(title),
-             'selected': name == field or None}
-            for name, title in search_fields ]
-
-        # Search
-        query = {'format': 'user'}
-        if field:
-            query[field] = term
-        root = context.root
-        results = root.search(**query)
-
-        roles = self.get_members_classified_by_role()
-
-        # Build the namespace
-        members = []
-        for user in results.get_documents():
-            user_id = user.name
-            # Find out the user role. Skip the user if does not belong to
-            # this group
-            for role in roles:
-                if user_id in roles[role]:
-                    break
-            else:
-                continue
-            # Build the namespace for the user
-            ns = {}
-            ns['checkbox'] = True
-            ns['id'] = user_id
-            ns['img'] = None
-            # Email
-            href = '/users/%s' % user_id
-            ns['user_id'] = int(user_id), href
-            # Title
-            ns['login_name'] = user.username
-            ns['firstname'] = user.firstname
-            ns['lastname'] = user.lastname
-            # Role
-            role = self.get_role_title(role)
-            href = ';edit_membership_form?id=%s' % user_id
-            ns['role'] = role, href
-            # State
-            user_object = root.get_object(user.abspath)
-            if user_object.get_property('user_must_confirm'):
-                account_state = (self.gettext(u'Inactive'),
-                                 '/users/%s/;resend_confirmation' % user_id)
-            else:
-                account_state = self.gettext(u'Active')
-            ns['account_state'] = account_state
-            # Append
-            members.append(ns)
-
-        # Sort
-        members.sort(key=itemgetter(sortby[0]), reverse=sortorder=='down')
-
-        # Batch
-        total = len(members)
-        members = members[start:start+size]
-
-        # The columns
-        columns = [('user_id', u'User ID'),
-                   ('login_name', u'Login'),
-                   ('firstname', u'First Name'),
-                   ('lastname', u'Last Name'),
-                   ('role', u'Role'),
-                   ('account_state', u'State')]
-
-        # The actions
-        actions = [('permissions_del_members', self.gettext(u'Delete'),
-                    'button_delete', None)]
-        user = context.user
-        ac = self.get_access_control()
-        actions = [
-            x for x in actions if ac.is_access_allowed(user, self, x[0]) ]
-
-        namespace['batch'] = widgets.batch(context.uri, start, size, total)
-
-        namespace['table'] = widgets.table(columns, members, sortby, sortorder,
-                                           actions, self.gettext)
-
-        handler = self.get_object('/ui/access/permissions.xml')
-        return stl(handler, namespace)
-
-
-    permissions_del_members__access__ = 'is_admin'
-    def permissions_del_members(self, context):
-        usernames = context.get_form_values('ids')
-        self.set_user_role(usernames, None)
-
-        context.message = u"Members deleted."
-        return self.permissions_form
-
-
-    edit_membership_form__access__ = 'is_admin'
-    def edit_membership_form(self, context):
-        user_id = context.get_form_value('id')
-        user = self.get_object('/users/%s' % user_id)
-
-        namespace = {}
-        namespace['id'] = user_id
-        namespace['name'] = user.get_title()
-        namespace['roles'] = self.get_roles_namespace(user_id)
-
-        handler = self.get_object('/ui/access/edit_membership_form.xml')
-        return stl(handler, namespace)
-
-
-    edit_membership__access__ = 'is_admin'
-    def edit_membership(self, context):
-        user_id = context.get_form_value('id')
-        role = context.get_form_value('role')
-
-        self.set_user_role(user_id, role)
-
-        context.message = u"Role updated."
-        return self.edit_membership_form
-
-
-    #######################################################################
-    # UI / Add
-    #######################################################################
-    new_user_form__access__ = 'is_admin'
-    new_user_form__label__ = u'Control Panel'
-    new_user_form__sublabel__ = u'Add New Member'
-    new_user_form__description__ = u'Grant access to a new user.'
-    new_user_form__icon__ = 'card.png'
-    def new_user_form(self, context):
-        namespace = {}
-
-        # Admin can set the password directly
-        namespace['is_admin'] = self.is_admin(context.user, self)
-
-        # Roles
-        namespace['roles'] = self.get_roles_namespace()
-
-        handler = self.get_object('/ui/access/new_user.xml')
-        return stl(handler, namespace)
-
-
-    new_user__access__ = 'is_admin'
-    def new_user(self, context):
-        root = context.root
-        user = context.user
-        users = root.get_object('users')
-
-        email = context.get_form_value('email')
-        # Check the email is right
-        if not email:
-            context.message = u'The email address is missing, please type it.'
-            return self.new_user_form
-        if not Email.is_valid(email):
-            context.message = MSG_INVALID_EMAIL
-            return self.new_user_form
-
-        # Check whether the user already exists
-        results = root.search(email=email)
-        if results.get_n_documents():
-            user_id = results.get_documents()[0].name
-        else:
-            user_id = None
-
-        # Get the user (create it if needed)
-        if user_id is None:
-            # New user
-            is_admin = self.is_admin(user, self)
-            if is_admin:
-                password = context.get_form_value('newpass')
-                password2 = context.get_form_value('newpass2')
-                # Check the password is right
-                if password != password2:
-                    context.message = MSG_PASSWORD_MISMATCH
-                    return self.new_user_form
-                if not password:
-                    # Admin can set no password
-                    # so the user must activate its account
-                    password = None
-            else:
-                password = None
-            # Add the user
-            user = users.set_user(email, password)
-            user_id = user.name
-            if password is None:
-                # Send confirmation email to activate the account
-                user.send_confirmation(context, email)
-        else:
-            user = users.get_object(user_id)
-            # Check the user is not yet in the group
-            members = self.get_members()
-            if user_id in members:
-                context.message = u'The user is already here.'
-                return self.new_user_form
-
-        # Set the role
-        role = context.get_form_value('role')
-        self.set_user_role(user_id, role)
-
-        # Come back
-        if context.has_form_value('add_and_return'):
-            goto = None
-        else:
-            goto='/users/%s/;%s' % (user.name, user.get_firstview())
-            goto = get_reference(goto)
-
-        return context.come_back(u'User added.', goto=goto)
+    permissions = PermissionsForm()
+    edit_membership = MembershipForm()
+    new_user = NewUserForm()

@@ -17,7 +17,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
-from mimetypes import guess_type
 from random import sample
 import sha
 from sys import platform
@@ -49,19 +48,18 @@ def get_parameters(prefix, **kw):
       get_parameters('objects', sortby='id', sortorder='up')
     """
     # Get the form field from the request (a zope idiom)
-    form = get_context().request.form
+    get_parameter = get_context().request.get_parameter
 
     # Get the parameters
     parameters = {}
     for key, value in kw.items():
-        parameters[key] = form.get('%s_%s' % (prefix, key), value)
+        parameters[key] = get_parameter('%s_%s' % (prefix, key), default=value)
 
     return parameters
 
 
 def preserve_parameters(preserve=[]):
-    """
-    Returns an HTML snippet with hidden input html elements, there will
+    """Returns an HTML snippet with hidden input html elements, there will
     be one element for each request parameter that starts with any of
     the prefixes contained in the preserve parameter.
 
@@ -70,7 +68,7 @@ def preserve_parameters(preserve=[]):
     """
     snippet = []
 
-    form = get_context().request.form
+    form = get_context().request.get_form()
     for k, v in form.items():
         for prefix in preserve:
             if k.startswith(prefix):
@@ -104,7 +102,8 @@ u'Spanish'
 ###########################################################################
 
 def reduce_string(title='', word_treshold=15, phrase_treshold=40):
-    """Reduce words and string size"""
+    """Reduce words and string size.
+    """
     words = title.strip().split(' ')
     for i, word in enumerate(words):
         if len(word) > word_treshold:
@@ -133,25 +132,6 @@ def crypt_password(password):
 ###########################################################################
 # Generate next name
 ###########################################################################
-def get_file_parts(file):
-    """Find out the object class (the mimetype sent by the browser can be
-    minimalistic).
-    """
-    filename, mimetype, body = file
-    # Find out the mimetype
-    guessed, encoding = guess_type(filename)
-    if encoding is not None:
-        encoding_map = {'gzip': 'application/x-gzip',
-                        'bzip2': 'application/x-bzip2'}
-        if encoding in encoding_map:
-            mimetype = encoding_map[encoding]
-    elif guessed is not None:
-        mimetype = guessed
-
-    return filename, mimetype, body
-
-
-
 def generate_name(name, used, suffix='_'):
     """Generate a name which is not in list "used" based on name and suffix.
     Example:

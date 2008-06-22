@@ -21,40 +21,104 @@ from datetime import datetime
 # Import from itools
 from itools.datatypes import DateTime, String, Unicode
 from itools.stl import stl
+from itools.web import STLForm
 from itools.workflow import Workflow, WorkflowAware as BaseWorkflowAware
 
 # Import from ikaaro
 from metadata import Record
 
 
+###########################################################################
+# Views
+###########################################################################
+class StateForm(STLForm):
+
+    access = 'is_allowed_to_edit'
+    __label__ = u'State'
+    title = u'Workflow State'
+    icon = 'state.png'
+    template = '/ui/WorkflowAware_state.xml'
+    schema = {
+        'transition': String(mandatory=True),
+        'comments': Unicode,
+    }
+
+
+    def get_namespace(self, model, context):
+        namespace = {}
+        # State
+        namespace['statename'] = model.get_statename()
+        state = model.get_state()
+        namespace['state'] = model.gettext(state['title'])
+        # Posible transitions
+        ac = model.get_access_control()
+        transitions = []
+        for name, trans in state.transitions.items():
+            view = model.get_view(name)
+            if ac.is_allowed_to_trans(context.user, model, view) is False:
+                continue
+            description = model.gettext(trans['description'])
+            transitions.append({'name': name, 'description': description})
+        namespace['transitions'] = transitions
+        # Workflow history
+        transitions = []
+        for transition in model.get_property('wf_transition'):
+            transitions.append(
+                {'title': transition['name'],
+                 'date': transition['date'].strftime('%Y-%m-%d %H:%M'),
+                 'user': transition['user'],
+                 'comments': transition['comments']})
+        transitions.reverse()
+        namespace['history'] = transitions
+
+        return namespace
+
+
+    def action(self, model, context, form):
+        transition = form['transition']
+        comments = form['comments']
+
+        # Keep workflow history
+        property = {
+            'date': datetime.now(),
+            'user': context.user.name,
+            'name': transition,
+            'comments': comments}
+        model.set_property('wf_transition', property)
+        # Change the state, through the itools.workflow way
+        model.do_trans(transition)
+
+        context.message = u'Transition done.'
+
+
+
+###########################################################################
+# Model
+###########################################################################
+
 # Workflow definition
 workflow = Workflow()
 # Specify the workflow states
-workflow.add_state('private', title=u'Private',
-                   description=(u'A private document only can be reached by'
-                                u' authorized users.'))
-workflow.add_state('pending', title=u'Pending',
-                   description=(u'A pending document awaits review from'
-                                u' authorized users to be published.'))
-workflow.add_state('public', title=u'Public',
-                   description=(u'A public document can be reached by even'
-                                u' anonymous users.'))
+add_state = workflow.add_state
+add_state('private', title=u'Private',
+    description=u'A private document only can be reached by authorized users.')
+add_state('pending', title=u'Pending',
+    description=(u'A pending document awaits review from authorized users to'
+                 u' be published.'))
+add_state('public', title=u'Public',
+    description=u'A public document can be reached by even anonymous users.')
 # Specify the workflow transitions
-workflow.add_trans('publish', 'private', 'public',
-                   description=u'Publish the document.')
-workflow.add_trans('request', 'private', 'pending',
-                   description=u'Request the document publication.')
-workflow.add_trans('unrequest', 'pending', 'private',
-                   description=u'Retract the document.')
-workflow.add_trans('reject', 'pending', 'private',
-                   description=u'Reject the document.')
-workflow.add_trans('accept', 'pending', 'public',
-                   description=u'Accept the document.')
-workflow.add_trans('retire', 'public', 'private',
-                   description=u'Retire the document.')
+add_trans = workflow.add_trans
+add_trans('publish', 'private', 'public', description=u'Publish the document.')
+add_trans('request', 'private', 'pending',
+    description=u'Request the document publication.')
+add_trans('unrequest', 'pending', 'private',
+    description=u'Retract the document.')
+add_trans('reject', 'pending', 'private', description=u'Reject the document.')
+add_trans('accept', 'pending', 'public', description=u'Accept the document.')
+add_trans('retire', 'public', 'private', description=u'Retire the document.')
 # Specify the initial state (try outcommenting this)
 workflow.set_initstate('private')
-
 
 
 
@@ -124,56 +188,4 @@ class WorkflowAware(BaseWorkflowAware):
     ########################################################################
     # User Interface
     ########################################################################
-    state_form__access__ = 'is_allowed_to_edit'
-    state_form__label__ = u'State'
-    state_form__sublabel__ = u'Workflow State'
-    state_form__icon__ = 'state.png'
-    def state_form(self, context):
-        namespace = {}
-        # State
-        namespace['statename'] = self.get_statename()
-        state = self.get_state()
-        namespace['state'] = self.gettext(state['title'])
-        # Posible transitions
-        ac = self.get_access_control()
-        transitions = []
-        for name, trans in state.transitions.items():
-            if ac.is_allowed_to_trans(context.user, self, name) is False:
-                continue
-            description = self.gettext(trans['description'])
-            transitions.append({'name': name, 'description': description})
-        namespace['transitions'] = transitions
-        # Workflow history
-        transitions = []
-        for transition in self.get_property('wf_transition'):
-            transitions.append(
-                {'title': transition['name'],
-                 'date': transition['date'].strftime('%Y-%m-%d %H:%M'),
-                 'user': transition['user'],
-                 'comments': transition['comments']})
-        transitions.reverse()
-        namespace['history'] = transitions
-
-        handler = self.get_object('/ui/WorkflowAware_state.xml')
-        return stl(handler, namespace)
-
-
-    edit_state__access__ = 'is_allowed_to_edit'
-    def edit_state(self, context):
-        transition = context.get_form_value('transition')
-        # Check input data
-        if transition is None:
-            return context.come_back(u'A transition must be selected.')
-
-        # Keep workflow history
-        comments = context.get_form_value('comments', type=Unicode)
-        property = {'date': datetime.now(),
-                    'user': context.user.name,
-                    'name': transition,
-                    'comments': comments}
-        self.set_property('wf_transition', property)
-        # Change the state, through the itools.workflow way
-        self.do_trans(transition)
-
-        # Comeback
-        return context.come_back(u'Transition done.')
+    edit_state = StateForm()

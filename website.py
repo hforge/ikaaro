@@ -29,22 +29,635 @@ from itools.i18n import get_language_name, get_languages
 from itools.stl import stl
 from itools.uri import Path, get_reference
 from itools import vfs
-from itools.web import FormError
+from itools.web import FormError, STLView, STLForm
+from itools.web import MSG_MISSING_OR_INVALID
 from itools.xapian import EqQuery, OrQuery, AndQuery, TextField
 
 # Import from ikaaro
 import ikaaro
 from access import RoleAware
 from folder import Folder
-from forms import generate_form, TextWidget
+from forms import TextWidget, AutoForm
 from messages import *
-from registry import (register_object_class, register_website,
-    get_register_websites, get_website_class)
+from registry import register_object_class
+from registry import register_website, get_register_websites, get_website_class
 from skins import UI, ui_path
+from views import IconsView, NewInstanceForm
 import widgets
 from workflow import WorkflowAware
 
 
+###########################################################################
+# Views / New
+###########################################################################
+class NewWebSiteForm(NewInstanceForm):
+
+    access = 'is_allowed_to_add'
+    title = u'Web Site'
+    template = 'ui/website/new_instance.xml'
+    schema = {
+        'name': String,
+        'title': Unicode,
+    }
+
+
+    def get_namespace(self, model, context):
+        type = context.get_query_value('type')
+        cls = get_object_class(type)
+
+        for handler_class in get_register_websites():
+            gettext = handler_class.gettext
+            title = handler_class.class_title
+            websites.append({
+                'title': gettext(title),
+                'class_id': handler_class.class_id,
+                'selected': False,
+                'icon': '/ui/' + handler_class.class_icon16})
+
+        if len(websites) == 1:
+            alone = websites[0]
+        else:
+            alone = None
+            websites[0]['selected'] = True
+
+        return {
+            'class_title': cls.class_title,
+            'websites': websites,
+            'alone': alone,
+        }
+
+
+    def action(self, model, context, form):
+        name = form['name']
+        title = form['title']
+
+        # Check the name
+        name = name.strip() or title.strip()
+        if not name:
+            context.message = MSG_NAME_MISSING
+            return
+
+        name = checkid(name)
+        if name is None:
+            context.message = MSG_BAD_NAME
+            return
+
+        # Check the name is free
+        if container.has_object(name):
+            context.message = MSG_NAME_CLASH
+            return
+
+        class_id = context.get_form_value('class_id')
+        if class_id is None:
+            context.message = u'Please select a website.'
+            return
+
+        cls = get_website_class(class_id)
+        object = cls.make_object(cls, container, name)
+        # The metadata
+        metadata = object.metadata
+        language = container.get_site_root().get_default_language()
+        metadata.set_property('title', title, language=language)
+
+        goto = './%s/;%s' % (name, object.get_firstview())
+        return context.come_back(MSG_NEW_RESOURCE, goto=goto)
+
+
+###########################################################################
+# Views / Login, Logout
+###########################################################################
+class LoginView(STLView):
+
+    access = True
+    __label__ = u'Login'
+    template = '/ui/website/login.xml'
+
+
+    def get_namespace(self, model, context):
+        site_root = model.get_site_root()
+
+        return {
+            'action': '%s/;login' % model.get_pathto(site_root),
+            'username': context.get_form_value('username'),
+        }
+
+
+
+    def POST(self, model, context, goto=None):
+        email = context.get_form_value('username', type=Unicode)
+        password = context.get_form_value('password')
+
+        # Don't send back the password
+        keep = ['username']
+
+        # Check the email field has been filed
+        email = email.strip()
+        if not email:
+            message = u'Type your email please.'
+            return context.come_back(message, keep=keep)
+
+        # Check the user exists
+        root = context.root
+
+        # Search the user by username (login name)
+        results = root.search(username=email)
+        if results.get_n_documents() == 0:
+            message = u'The user "$username" does not exist.'
+            return context.come_back(message, username=email, keep=keep)
+
+        # Get the user
+        brain = results.get_documents()[0]
+        user = root.get_object('users/%s' % brain.name)
+
+        # Check the user is active
+        if user.get_property('user_must_confirm'):
+            message = u'The user "$username" is not active.'
+            return context.come_back(message, username=email, keep=keep)
+
+        # Check the password is right
+        if not user.authenticate(password):
+            return context.come_back(u'The password is wrong.', keep=keep)
+
+        # Set cookie
+        user.set_auth_cookie(context, password)
+
+        # Set context
+        context.user = user
+
+        # Come back
+        referrer = context.request.referrer
+        if referrer:
+            if not referrer.path:
+                return referrer
+            params = referrer.path[-1].params
+            if not params:
+                return referrer
+            if params[0] != 'login':
+                return referrer
+
+        if goto is not None:
+            return get_reference(goto)
+
+        return get_reference('users/%s' % user.name)
+
+
+
+class LogoutView(STLView):
+    """Logs out of the application.
+    """
+
+    access = True
+    template = '/ui/website/logout.xml'
+
+
+    def get_namespace(self, model, context):
+        # Log-out
+        context.del_cookie('__ac')
+        context.user = None
+
+        return {}
+
+
+class ForgottenPasswordForm(STLForm):
+
+    access = True
+    template = '/ui/website/forgotten_password_form.xml'
+    schema = {
+        'username': String(default=''),
+    }
+
+
+    def action(self, model, context, form):
+        username = form['username']
+        # TODO Don't generate the password, send instead a link to a form
+        # where the user will be able to type his new password.
+        root = context.root
+
+        # Get the email address
+        username = username.strip()
+
+        # Get the user with the given login name
+        results = root.search(username=username)
+        if results.get_n_documents() == 0:
+            goto = ';forgotten_password_form'
+            message = u'There is not a user identified as "$username"'
+            context.message =  model.gettext(message, username=username)
+            return
+
+        user = results.get_documents()[0]
+        user = model.get_object('/users/%s' % user.name)
+
+        # Send email of confirmation
+        email = user.get_property('email')
+        user.send_confirmation(context, email)
+
+        handler = model.get_object('/ui/website/forgotten_password.xml')
+        return stl(handler)
+
+
+
+###########################################################################
+# Views / Control Panel
+###########################################################################
+class ControlPanel(IconsView):
+
+    access = 'is_allowed_to_view'
+    __label__ = u'Control Panel'
+    title = u'Control Panel'
+    icon = 'settings.png'
+
+
+    def get_namespace(self, model, context):
+        namespace = {
+            'title': model.gettext(u'Control Panel'),
+            'batch': None,
+            'items': [],
+        }
+        for name in model.get_subviews('control_panel'):
+            view = model.get_view(name)
+            if view is None:
+                continue
+            if not model.is_access_allowed(context.user, model, view):
+                continue
+            title = view.title
+            description = view.description
+            if description is not None:
+                description = model.gettext(description)
+            namespace['items'].append({
+                'icon': model.get_method_icon(view, size='48x48'),
+                'title': model.gettext(title),
+                'description': description,
+                'url': ';%s' % name})
+
+        return namespace
+
+
+
+class VHostsForm(STLForm):
+
+    access = 'is_admin'
+    __label__ = u'Control Panel'
+    title = u'Virtual Hosts'
+    description = u'Define the domain names for this Web Site.'
+    icon = 'website.png'
+    template = '/ui/website/virtual_hosts.xml'
+    schema = {
+        'vhosts': String,
+    }
+
+
+    def get_namespace(self, model, context):
+        vhosts = model.get_property('vhosts')
+        return {
+            'vhosts': '\n'.join(vhosts),
+        }
+
+
+    def action(self, model, context, form):
+        vhosts = form['vhosts']
+        vhosts = [ x.strip() for x in vhosts.splitlines() ]
+        vhosts = [ x for x in vhosts if x ]
+        vhosts = tuple(vhosts)
+        model.set_property('vhosts', vhosts)
+        # Ok
+        context.message = MSG_CHANGES_SAVED
+
+
+
+class SecurityPolicyForm(STLForm):
+
+    access = 'is_allowed_to_edit'
+    __label__ = u'Control Panel'
+    title = u'Security Policy'
+    description = u'Choose the security policy.'
+    icon = 'lock.png'
+    template = '/ui/website/anonymous.xml'
+    schema = {
+        'website_is_open': Boolean(default=False),
+    }
+
+
+    def get_namespace(self, model, context):
+        is_open = model.get_property('website_is_open')
+        return {
+            'is_open': is_open,
+            'is_closed': not is_open,
+        }
+
+
+    def action(self, model, context, form):
+        value = form['website_is_open']
+        model.set_property('website_is_open', value)
+        # Ok
+        context.message = MSG_CHANGES_SAVED
+
+
+
+class ContactOptionsForm(STLForm):
+
+    access = 'is_allowed_to_edit'
+    __label__ = u'Control Panel'
+    title = u'Contact Options'
+    description = u'Configure the Contact form.'
+    icon = 'mail.png'
+    template = '/ui/website/contact_options.xml'
+    schema = {
+        'contacts': String(multiple=True),
+    }
+
+
+    def get_namespace(self, model, context):
+        # Find out the contacts
+        contacts = model.get_property('contacts')
+
+        # Build the namespace
+        users = model.get_object('/users')
+        # Only members of the website are showed
+        namespace = {}
+        namespace['contacts'] = []
+        for username in model.get_members():
+            user = users.get_object(username)
+            email = user.get_property('email')
+            if not email:
+                continue
+            namespace['contacts'].append(
+                {'name': username,
+                 'email': email,
+                 'title': user.get_title(),
+                 'is_selected': username in contacts})
+
+        # Sort
+        namespace['contacts'].sort(key=lambda x: x['email'])
+
+        return namespace
+
+
+    def action(self, model, context, form):
+        contacts = form['contacts']
+        contacts = tuple(contacts)
+        model.set_property('contacts', contacts)
+        # Ok
+        context.message = MSG_CHANGES_SAVED
+
+
+
+class BrokenLinks(STLView):
+
+    access = 'is_admin'
+    __label__ = u'Control Panel'
+    title = u'Broken Links'
+    description = u'Check the referential integrity.'
+    icon = 'clear.png'
+    template = '/ui/website/broken_links.xml'
+
+
+    def get_namespace(self, model, context):
+        root = context.root
+
+        # Find out broken links
+        broken = {}
+        catalog = context.server.catalog
+        base = model.get_abspath()
+        base_str = str(base)
+        for link in catalog.get_unique_values('links'):
+            if root.has_object(link):
+                continue
+            query = AndQuery(EqQuery('paths', base_str),
+                             EqQuery('links', link))
+            link = str(base.get_pathto(Path(link)))
+            for brain in catalog.search(query).get_documents():
+                broken.setdefault(brain.abspath, []).append(link)
+        # Build the namespace
+        namespace = {}
+        objects = []
+        total = 0
+        keys = broken.keys()
+        keys.sort()
+        for path in keys:
+            links = broken[path]
+            path = str(base.get_pathto(Path(path)))
+            n = len(links)
+            objects.append({'path': path, 'links': links, 'n': n})
+            total += n
+        namespace['objects'] = objects
+        namespace['total'] = total
+
+        return namespace
+
+
+###########################################################################
+# Views / Public
+###########################################################################
+class RegisterForm(AutoForm):
+
+    access = 'is_allowed_to_register'
+    __label__ = u'Register'
+
+
+    form_title = u'Registration'
+
+    form_action = {'action': ';register', 'name': 'register',
+                   'value': 'Register', 'class': 'button_ok'}
+
+    schema = {
+        'firstname': Unicode(mandatory=True),
+        'lastname': Unicode(mandatory=True),
+        'email': Email(mandatory=True)}
+
+    widgets = [
+        TextWidget('firstname', title=u'First Name'),
+        TextWidget('lastname', title=u'Last Name'),
+        TextWidget('email', title=u'Email Address')]
+
+
+    def action(self, model, context, form):
+        # Get input data
+        firstname = form['firstname'].strip()
+        lastname = form['lastname'].strip()
+        email = form['email'].strip()
+
+        # Do we already have a user with that email?
+        root = context.root
+        results = root.search(email=email)
+        users = model.get_object('users')
+        if results.get_n_documents():
+            user = results.get_documents()[0]
+            user = users.get_object(user.name)
+            if not user.has_property('user_must_confirm'):
+                message = u'There is already an active user with that email.'
+                context.message = message
+                return
+        else:
+            # Add the user
+            user = users.set_user(email, None)
+            user.set_property('firstname', firstname, language='en')
+            user.set_property('lastname', lastname, language='en')
+            # Set the role
+            default_role = model.__roles__[0]['name']
+            model.set_user_role(user.name, default_role)
+
+        # Send confirmation email
+        user.send_confirmation(context, email)
+
+        # Bring the user to the login form
+        message = model.gettext(
+            u"An email has been sent to you, to finish the registration "
+            u"process follow the instructions detailed in it.")
+        return message.encode('utf-8')
+
+
+
+class ContactForm(STLForm):
+
+    access = True
+    template = '/ui/website/contact_form.xml'
+
+    schema = {
+        'to': String(mandatory=True),
+        'from': Email(mandatory=True),
+        'subject': Unicode(mandatory=True),
+        'body': Unicode(mandatory=True)}
+
+
+    def get_namespace(self, model, context):
+        # Build the namespace
+        namespace = context.build_form_namespace(self.schema)
+
+        # To
+        users = model.get_object('/users')
+        namespace['contacts'] = []
+        for name in model.get_property('contacts'):
+            user = users.get_object(name)
+            title = user.get_title()
+            namespace['contacts'].append({'name': name, 'title': title,
+                'selected': name == namespace['to']['value']})
+
+        # From
+        if namespace['from']['value'] is None:
+            user = context.user
+            if user is not None:
+                namespace['from']['value'] = user.get_property('email')
+
+        return namespace
+
+
+    def action(self, model, context, form):
+        # Get form values
+        contact = form['to']
+        from_addr = form['from'].strip()
+        subject = form['subject'].strip()
+        body = form['body'].strip()
+
+        # Find out the "to" address
+        contact = model.get_object('/users/%s' % contact)
+        contact_title = contact.get_title()
+        contact = contact.get_property('email')
+        if contact_title != contact:
+            contact = (contact_title, contact)
+        # Send the email
+        root = model.get_root()
+        root.send_email(contact, subject, from_addr=from_addr, text=body)
+        # Ok
+        context.message = u'Message sent.'
+
+
+class SiteSearchView(STLView):
+
+    access = True
+    template = '/ui/website/search.xml'
+
+
+    def get_namespace(self, model, context):
+        root = context.root
+
+        # Get and check input data
+        text = context.get_form_value('site_search_text', type=Unicode)
+        start = context.get_form_value('batchstart', type=Integer, default=0)
+
+        namespace = {}
+        if text.strip():
+            namespace['text'] = text
+            # Search
+            query = [ OrQuery(EqQuery('title', word), EqQuery('text', word))
+                      for word, kk in TextField.split(text) ]
+            if query:
+                abspath = model.get_canonical_path()
+                q1 = EqQuery('paths', str(abspath))
+                query = AndQuery(q1, *query)
+                results = root.search(query=query)
+                documents = results.get_documents()
+            else:
+                documents = []
+
+            # Check access rights
+            user = context.user
+            objects = []
+            for document in documents:
+                object = root.get_object(document.abspath)
+                ac = object.get_access_control()
+                if ac.is_allowed_to_view(user, object):
+                    objects.append(object)
+
+            # Batch
+            size = 10
+            total = len(objects)
+            namespace['batch'] = widgets.batch(context.uri, start, size, total)
+
+            # Build the namespace
+            ns_objects = []
+            for object in objects[start:start+size]:
+                info = {}
+                info['abspath'] = str(object.get_abspath())
+                info['title'] = object.get_title()
+                info['type'] = model.gettext(object.class_title)
+                info['size'] = object.get_human_size()
+                info['url'] = '%s/;%s' % (model.get_pathto(object),
+                                          object.get_firstview())
+                info['icon'] = object.get_class_icon()
+                ns_objects.append(info)
+            namespace['objects'] = ns_objects
+        else:
+            namespace['text'] = ''
+
+        return namespace
+
+
+
+class AboutView(STLView):
+
+    access = True
+    template = '/ui/root/about.xml'
+
+
+    def get_namespace(self, model, context):
+        return  {
+            'itools_version': itools.__version__,
+            'ikaaro_version': ikaaro.__version__,
+        }
+
+
+
+class CreditsView(STLView):
+
+    access = True
+    template = '/ui/root/credits.xml'
+
+
+    def get_namespace(self, model, context):
+        context.styles.append('/ui/credits.css')
+
+        # Build the namespace
+        credits = get_abspath(globals(), 'CREDITS')
+        lines = vfs.open(credits).readlines()
+        names = [ x[3:].strip() for x in lines if x.startswith('N: ') ]
+
+        return {'hackers': names}
+
+
+
+###########################################################################
+# Model
+###########################################################################
 class WebSite(RoleAware, Folder):
 
     class_id = 'WebSite'
@@ -55,17 +668,16 @@ class WebSite(RoleAware, Folder):
     class_icon48 = 'icons/48x48/website.png'
     class_skin = 'ui/aruni'
     class_views = [
-        ['browse_content?mode=list',
-         'browse_content?mode=image'],
-        ['new_resource_form'],
-        ['edit_metadata_form'],
+        ['browse_content', 'preview_content'],
+        ['new_resource'],
+        ['edit_metadata'],
         ['control_panel',
-         'permissions_form',
-         'new_user_form',
-         'virtual_hosts_form',
-         'anonymous_form',
+         'permissions',
+         'new_user',
+         'edit_virtual_hosts',
+         'edit_security_policy',
          'languages_form',
-         'contact_options_form',
+         'edit_contact_options',
          'broken_links',
          'orphans'],
         ['last_changes']]
@@ -96,8 +708,7 @@ class WebSite(RoleAware, Folder):
     ########################################################################
     # Publish
     ########################################################################
-    def unauthorized(self, context):
-        return self.login_form(context)
+    unauthorized = LoginView()
 
 
     ########################################################################
@@ -129,68 +740,12 @@ class WebSite(RoleAware, Folder):
             accept.set(language, 2.0)
 
 
-    #######################################################################
-    # UI / New Instance
-    #######################################################################
-    @staticmethod
-    def new_instance_form(cls, context):
-        namespace = {}
-        namespace['websites'] = []
-        namespace['class_title'] = cls.class_title
-        for handler_class in get_register_websites():
-            website_ns = {}
-            gettext = handler_class.gettext
-            title = handler_class.class_title
-            website_ns['title'] = gettext(title)
-            website_ns['class_id'] = handler_class.class_id
-            website_ns['selected'] = False
-            website_ns['icon'] = '/ui/' + handler_class.class_icon16
-            namespace['websites'].append(website_ns)
-
-        namespace['alone'] = False
-        if len(namespace['websites']) == 1:
-            namespace['alone'] = namespace['websites'][0]
-        else:
-            namespace['websites'][0]['selected'] = True
-        handler = context.root.get_object('ui/website/new_instance.xml')
-        return stl(handler, namespace)
-
-
-    @staticmethod
-    def new_instance(cls, container, context):
-        name = context.get_form_value('name')
-        title = context.get_form_value('title', type=Unicode)
-
-        # Check the name
-        name = name.strip() or title.strip()
-        if not name:
-            return context.come_back(MSG_NAME_MISSING)
-
-        name = checkid(name)
-        if name is None:
-            return context.come_back(MSG_BAD_NAME)
-
-        # Check the name is free
-        if container.has_object(name):
-            return context.come_back(MSG_NAME_CLASH)
-
-        class_id = context.get_form_value('class_id')
-        if class_id is None:
-            return context.come_back(u'Please select a website.')
-
-        cls = get_website_class(class_id)
-        object = cls.make_object(cls, container, name)
-        # The metadata
-        metadata = object.metadata
-        language = container.get_site_root().get_default_language()
-        metadata.set_property('title', title, language=language)
-
-        goto = './%s/;%s' % (name, object.get_firstview())
-        return context.come_back(MSG_NEW_RESOURCE, goto=goto)
+    def is_allowed_to_register(self, user, object):
+        return self.get_property('website_is_open')
 
 
     #######################################################################
-    # UI / Control Panel
+    # UI
     #######################################################################
     def get_subviews(self, name):
         subviews = Folder.get_subviews(self, name)
@@ -199,62 +754,12 @@ class WebSite(RoleAware, Folder):
         return subviews
 
 
-    control_panel__access__ = 'is_allowed_to_view'
-    control_panel__label__ = u'Control Panel'
-    control_panel__sublabel__ = u'Control Panel'
-    control_panel__icon__ = 'settings.png'
-    def control_panel(self, context):
-        namespace = {}
-        namespace['title'] = self.gettext(u'Control Panel')
-        namespace['batch'] = None
-        namespace['items'] = []
-        for name in self.get_subviews('control_panel'):
-            method = getattr(self, name, None)
-            if method is None:
-                continue
-            if not self.is_access_allowed(context.user, self, name):
-                continue
-            title = getattr(self, '%s__sublabel__' % name)
-            description = getattr(self, '%s__description__' % name, None)
-            if description is not None:
-                description = self.gettext(description)
-            namespace['items'].append({
-                'icon': self.get_method_icon(name, size='48x48'),
-                'title': self.gettext(title),
-                'description': description,
-                'url': ';%s' % name})
-
-        handler = self.get_object('/ui/folder/new_resource.xml.en')
-        return stl(handler, namespace)
-
-
-    #######################################################################
-    # UI / Control Panel / Virtual Hosts
-    #######################################################################
-    virtual_hosts_form__access__ = 'is_admin'
-    virtual_hosts_form__label__ = u'Control Panel'
-    virtual_hosts_form__sublabel__ = u'Virtual Hosts'
-    virtual_hosts_form__description__ = (
-        u'Define the domain names for this Web Site.')
-    virtual_hosts_form__icon__ = 'website.png'
-    def virtual_hosts_form(self, context):
-        namespace = {}
-        vhosts = self.get_property('vhosts')
-        namespace['vhosts'] = '\n'.join(vhosts)
-
-        handler = self.get_object('/ui/website/virtual_hosts.xml')
-        return stl(handler, namespace)
-
-
-    edit_virtual_hosts__access__ = 'is_admin'
-    def edit_virtual_hosts(self, context):
-        vhosts = context.get_form_value('vhosts')
-        vhosts = [ x.strip() for x in vhosts.splitlines() ]
-        vhosts = [ x for x in vhosts if x ]
-        vhosts = tuple(vhosts)
-        self.set_property('vhosts', vhosts)
-
-        return context.come_back(MSG_CHANGES_SAVED)
+    new_instance = NewWebSiteForm()
+    # Control Panel
+    control_panel = ControlPanel()
+    edit_virtual_hosts = VHostsForm()
+    edit_security_policy = SecurityPolicyForm()
+    edit_contact_options = ContactOptionsForm()
 
 
     #######################################################################
@@ -337,491 +842,23 @@ class WebSite(RoleAware, Folder):
 
 
     #######################################################################
-    # UI / Control Panel / Security
-    #######################################################################
-    anonymous_form__access__ = 'is_allowed_to_edit'
-    anonymous_form__label__ = u'Control Panel'
-    anonymous_form__sublabel__ = u'Security Policy'
-    anonymous_form__description__ = u'Choose the security policy.'
-    anonymous_form__icon__ = 'lock.png'
-    def anonymous_form(self, context):
-        # Build the namespace
-        namespace = {}
-        # Intranet or Extranet
-        is_open = self.get_property('website_is_open')
-        namespace['is_open'] = is_open
-        namespace['is_closed'] = not is_open
-
-        handler = self.get_object('/ui/website/anonymous.xml')
-        return stl(handler, namespace)
-
-
-    edit_anonymous__access__ = 'is_allowed_to_edit'
-    def edit_anonymous(self, context):
-        value = context.get_form_value('website_is_open', type=Boolean,
-                                       default=False)
-        self.set_property('website_is_open', value)
-
-        return context.come_back(MSG_CHANGES_SAVED)
-
-
-    #######################################################################
-    # UI / Control Panel / Contact
-    #######################################################################
-    contact_options_form__access__ = 'is_allowed_to_edit'
-    contact_options_form__label__ = u'Control Panel'
-    contact_options_form__sublabel__ = u'Contact'
-    contact_options_form__description__ = u'Configure the Contact form.'
-    contact_options_form__icon__ = 'mail.png'
-    def contact_options_form(self, context):
-        # Find out the contacts
-        contacts = self.get_property('contacts')
-
-        # Build the namespace
-        users = self.get_object('/users')
-        # Only members of the website are showed
-        namespace = {}
-        namespace['contacts'] = []
-        for username in self.get_members():
-            user = users.get_object(username)
-            email = user.get_property('email')
-            if not email:
-                continue
-            namespace['contacts'].append(
-                {'name': username,
-                 'email': email,
-                 'title': user.get_title(),
-                 'is_selected': username in contacts})
-
-        # Sort
-        namespace['contacts'].sort(key=lambda x: x['email'])
-
-        handler = self.get_object('/ui/website/contact_options.xml')
-        return stl(handler, namespace)
-
-
-    edit_contact_options__access__ = 'is_allowed_to_edit'
-    def edit_contact_options(self, context):
-        contacts = context.get_form_values('contacts')
-        contacts = tuple(contacts)
-        self.set_property('contacts', contacts)
-
-        return context.come_back(MSG_CHANGES_SAVED)
-
-
-    #######################################################################
     # UI / Control Panel / Broken links
     #######################################################################
-    broken_links__access__ = 'is_admin'
-    broken_links__label__ = u'Control Panel'
-    broken_links__sublabel__ = u'Broken Links'
-    broken_links__description__ = u'Check the referential integrity.'
-    broken_links__icon__ = 'clear.png'
-    def broken_links(self, context):
-        root = context.root
-
-        # Find out broken links
-        broken = {}
-        catalog = context.server.catalog
-        base = self.get_abspath()
-        base_str = str(base)
-        for link in catalog.get_unique_values('links'):
-            if root.has_object(link):
-                continue
-            query = AndQuery(EqQuery('paths', base_str),
-                             EqQuery('links', link))
-            link = str(base.get_pathto(Path(link)))
-            for brain in catalog.search(query).get_documents():
-                broken.setdefault(brain.abspath, []).append(link)
-        # Build the namespace
-        namespace = {}
-        objects = []
-        total = 0
-        keys = broken.keys()
-        keys.sort()
-        for path in keys:
-            links = broken[path]
-            path = str(base.get_pathto(Path(path)))
-            n = len(links)
-            objects.append({'path': path, 'links': links, 'n': n})
-            total += n
-        namespace['objects'] = objects
-        namespace['total'] = total
-
-        handler = self.get_object('/ui/website/broken_links.xml')
-        return stl(handler, namespace)
+    broken_links = BrokenLinks()
 
 
     #######################################################################
-    # UI / Register
+    # UI
     #######################################################################
-    def is_allowed_to_register(self, user, object):
-        return self.get_property('website_is_open')
-
-
-    register_fields = {'firstname': Unicode(mandatory=True),
-                       'lastname': Unicode(mandatory=True),
-                       'email': Email(mandatory=True)}
-
-
-    register_form__access__ = 'is_allowed_to_register'
-    register_form__label__ = u'Register'
-    def register_form(self, context):
-        form_action = {'action': ';register', 'name': 'register',
-                       'value': 'Register', 'class': 'button_ok'}
-        register_widgets = [TextWidget('firstname', title=u'First Name'),
-                            TextWidget('lastname', title=u'Last Name'),
-                            TextWidget('email', title=u'Email Address')]
-        return generate_form(context, u'Registration', self.register_fields,
-                             register_widgets, form_action)
-
-
-    register__access__ = 'is_allowed_to_register'
-    def register(self, context):
-        keep = ['firstname', 'lastname', 'email']
-        # Check input data
-        try:
-            form = context.check_form_input(self.register_fields)
-        except FormError:
-            return context.come_back(MSG_MISSING_OR_INVALID, keep=keep)
-
-        # Get input data
-        firstname = form['firstname'].strip()
-        lastname = form['lastname'].strip()
-        email = form['email'].strip()
-
-        # Do we already have a user with that email?
-        root = context.root
-        results = root.search(email=email)
-        users = self.get_object('users')
-        if results.get_n_documents():
-            user = results.get_documents()[0]
-            user = users.get_object(user.name)
-            if not user.has_property('user_must_confirm'):
-                message = u'There is already an active user with that email.'
-                return context.come_back(message, keep=keep)
-        else:
-            # Add the user
-            user = users.set_user(email, None)
-            user.set_property('firstname', firstname, language='en')
-            user.set_property('lastname', lastname, language='en')
-            # Set the role
-            default_role = self.__roles__[0]['name']
-            self.set_user_role(user.name, default_role)
-
-        # Send confirmation email
-        user.send_confirmation(context, email)
-
-        # Bring the user to the login form
-        message = self.gettext(
-            u"An email has been sent to you, to finish the registration "
-            u"process follow the instructions detailed in it.")
-        return message.encode('utf-8')
-
-
-    #######################################################################
-    # UI / Login
-    #######################################################################
-    login_form__access__ = True
-    login_form__label__ = u'Login'
-    def login_form(self, context):
-        namespace = {}
-        here = context.object
-        site_root = here.get_site_root()
-        namespace['action'] = '%s/;login' % here.get_pathto(site_root)
-        namespace['username'] = context.get_form_value('username')
-
-        handler = self.get_object('/ui/website/login.xml')
-        return stl(handler, namespace)
-
-
-    login__access__ = True
-    def login(self, context, goto=None):
-        email = context.get_form_value('username', type=Unicode)
-        password = context.get_form_value('password')
-
-        # Don't send back the password
-        keep = ['username']
-
-        # Check the email field has been filed
-        email = email.strip()
-        if not email:
-            message = u'Type your email please.'
-            return context.come_back(message, keep=keep)
-
-        # Check the user exists
-        root = context.root
-
-        # Search the user by username (login name)
-        results = root.search(username=email)
-        if results.get_n_documents() == 0:
-            message = u'The user "$username" does not exist.'
-            return context.come_back(message, username=email, keep=keep)
-
-        # Get the user
-        brain = results.get_documents()[0]
-        user = root.get_object('users/%s' % brain.name)
-
-        # Check the user is active
-        if user.get_property('user_must_confirm'):
-            message = u'The user "$username" is not active.'
-            return context.come_back(message, username=email, keep=keep)
-
-        # Check the password is right
-        if not user.authenticate(password):
-            return context.come_back(u'The password is wrong.', keep=keep)
-
-        # Set cookie
-        user.set_auth_cookie(context, password)
-
-        # Set context
-        context.user = user
-
-        # Come back
-        referrer = context.request.referrer
-        if referrer:
-            if not referrer.path:
-                return referrer
-            params = referrer.path[-1].params
-            if not params:
-                return referrer
-            if params[0] != 'login_form':
-                return referrer
-
-        if goto is not None:
-            return get_reference(goto)
-
-        return get_reference('users/%s' % user.name)
-
-
-    #######################################################################
-    # UI / Forgotten password
-    #######################################################################
-    forgotten_password_form__access__ = True
-    def forgotten_password_form(self, context):
-        handler = self.get_object('/ui/website/forgotten_password_form.xml')
-        return stl(handler)
-
-
-    forgotten_password__access__ = True
-    def forgotten_password(self, context):
-        # TODO Don't generate the password, send instead a link to a form
-        # where the user will be able to type his new password.
-        root = context.root
-
-        # Get the email address
-        username = context.get_form_value('username', default='').strip()
-
-        # Get the user with the given login name
-        results = root.search(username=username)
-        if results.get_n_documents() == 0:
-            goto = ';forgotten_password_form'
-            message = u'There is not a user identified as "$username"'
-            return context.come_back(message, goto=goto, username=username)
-
-        user = results.get_documents()[0]
-        user = self.get_object('/users/%s' % user.name)
-
-        # Send email of confirmation
-        email = user.get_property('email')
-        user.send_confirmation(context, email)
-
-        handler = self.get_object('/ui/website/forgotten_password.xml')
-        return stl(handler)
-
-
-    #######################################################################
-    # UI / Logout
-    #######################################################################
-    logout__access__ = True
-    def logout(self, context):
-        """Logs out of the application.
-        """
-        # Remove the cookie
-        context.del_cookie('__ac')
-        # Remove the user from the context
-        context.user = None
-        # Say goodbye
-        handler = self.get_object('/ui/website/logout.xml')
-        return stl(handler)
-
-
-    #######################################################################
-    # UI / Search
-    #######################################################################
-    site_search__access__ = True
-    def site_search(self, context):
-        root = context.root
-
-        # Get and check input data
-        text = context.get_form_value('site_search_text', type=Unicode)
-        start = context.get_form_value('batchstart', type=Integer, default=0)
-
-        namespace = {}
-        if text.strip():
-            namespace['text'] = text
-            # Search
-            query = [ OrQuery(EqQuery('title', word), EqQuery('text', word))
-                      for word, kk in TextField.split(text) ]
-            if query:
-                abspath = self.get_canonical_path()
-                q1 = EqQuery('paths', str(abspath))
-                query = AndQuery(q1, *query)
-                results = root.search(query=query)
-                documents = results.get_documents()
-            else:
-                documents = []
-
-            # Check access rights
-            user = context.user
-            objects = []
-            for document in documents:
-                object = root.get_object(document.abspath)
-                ac = object.get_access_control()
-                if ac.is_allowed_to_view(user, object):
-                    objects.append(object)
-
-            # Batch
-            size = 10
-            total = len(objects)
-            namespace['batch'] = widgets.batch(context.uri, start, size, total)
-
-            # Build the namespace
-            ns_objects = []
-            for object in objects[start:start+size]:
-                info = {}
-                info['abspath'] = str(object.get_abspath())
-                info['title'] = object.get_title()
-                info['type'] = self.gettext(object.class_title)
-                info['size'] = object.get_human_size()
-                info['url'] = '%s/;%s' % (self.get_pathto(object),
-                                          object.get_firstview())
-                info['icon'] = object.get_class_icon()
-                ns_objects.append(info)
-            namespace['objects'] = ns_objects
-        else:
-            namespace['text'] = ''
-
-        hander = self.get_object('/ui/website/search.xml')
-        return stl(hander, namespace)
-
-
-    site_search_form__access__ = True
-    def site_search_form(self, context):
-        namespace = {}
-
-        states = []
-        if context.user is not None:
-            workflow = WorkflowAware.workflow
-            for name, state in workflow.states.items():
-                title = state['title'] or name
-                states.append({'key': name, 'value': title})
-        namespace['states'] = states
-
-        handler = self.get_object('/ui/website/search_form.xml')
-        return stl(handler, namespace)
-
-
-    #######################################################################
-    # UI / Contact
-    #######################################################################
-    contact_fields = {'to': String(mandatory=True),
-                      'from': Email(mandatory=True),
-                      'subject': Unicode(mandatory=True),
-                      'body': Unicode(mandatory=True)}
-
-
-    contact_form__access__ = True
-    def contact_form(self, context):
-        # Build the namespace
-        namespace = context.build_form_namespace(self.contact_fields)
-
-        # To
-        users = self.get_object('/users')
-        namespace['contacts'] = []
-        for name in self.get_property('contacts'):
-            user = users.get_object(name)
-            title = user.get_title()
-            namespace['contacts'].append({'name': name, 'title': title,
-                'selected': name == namespace['to']['value']})
-
-        # From
-        if namespace['from']['value'] is None:
-            user = context.user
-            if user is not None:
-                namespace['from']['value'] = user.get_property('email')
-
-        handler = self.get_object('/ui/website/contact_form.xml')
-        return stl(handler, namespace)
-
-
-    contact__access__ = True
-    def contact(self, context):
-        # Check input data
-        try:
-            form = context.check_form_input(self.contact_fields)
-        except FormError:
-            keep = self.contact_fields.keys()
-            return context.come_back(MSG_MISSING_OR_INVALID, keep=keep)
-
-        contact = form['to']
-        from_addr = form['from'].strip()
-        subject = form['subject'].strip()
-        body = form['body'].strip()
-
-        # Find out the "to" address
-        contact = self.get_object('/users/%s' % contact)
-        contact_title = contact.get_title()
-        contact = contact.get_property('email')
-        if contact_title != contact:
-            contact = (contact_title, contact)
-        # Send the email
-        root = self.get_root()
-        root.send_email(contact, subject, from_addr=from_addr, text=body)
-
-        return context.come_back(u'Message sent.')
-
-
-    #######################################################################
-    # UI / Footer
-    #######################################################################
-    about__access__ = True
-    about__label__ = u'About'
-    about__sublabel__ = u'About'
-    def about(self, context):
-        namespace = {}
-        namespace['itools_version'] = itools.__version__
-        namespace['ikaaro_version'] = ikaaro.__version__
-
-        handler = self.get_object('/ui/root/about.xml')
-        return stl(handler, namespace)
-
-
-    credits__access__ = True
-    credits__label__ = u'About'
-    credits__sublabel__ = u'Credits'
-    def credits(self, context):
-        context.styles.append('/ui/credits.css')
-
-        # Build the namespace
-        credits = get_abspath(globals(), 'CREDITS')
-        names = []
-        for line in vfs.open(credits).readlines():
-            if line.startswith('N: '):
-                names.append(line[3:].strip())
-
-        namespace = {'hackers': names}
-
-        handler = self.get_object('/ui/root/credits.xml')
-        return stl(handler, namespace)
-
-
-    license__access__ = True
-    license__label__ = u'About'
-    license__sublabel__ = u'License'
-    def license(self, context):
-        handler = self.get_object('/ui/root/license.xml')
-        return stl(handler)
+    register = RegisterForm()
+    login = LoginView()
+    logout = LogoutView()
+    forgotten_password = ForgottenPasswordForm()
+    site_search = SiteSearchView()
+    contact = ContactForm()
+    about = AboutView()
+    credits = CreditsView()
+    license = STLView(access=True, template='/ui/root/license.xml')
 
 
 

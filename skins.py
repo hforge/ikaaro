@@ -28,7 +28,7 @@ from itools.uri import decode_query
 from itools.datatypes import URI
 from itools.handlers import File, Folder, Database
 from itools.stl import stl
-from itools.web import get_context, AccessControl
+from itools.web import get_context, BaseView
 from itools.xml import XMLParser, XMLFile
 
 # Import from ikaaro
@@ -38,6 +38,23 @@ from utils import reduce_string
 from widgets import tree, build_menu
 
 
+
+class FileGET(BaseView):
+
+    access = True
+
+
+    def get_mtime(self, model):
+        return model.get_mtime()
+
+
+    def GET(self, model, context):
+        response = context.response
+        response.set_header('Content-Type', model.get_mimetype())
+        return model.to_str()
+
+
+
 class UIFile(Node, File):
 
     def clone(self, cls=None, exclude=('database', 'uri', 'timestamp',
@@ -45,11 +62,8 @@ class UIFile(Node, File):
         return File.clone(self, cls=cls, exclude=exclude)
 
 
-    GET__mtime__ = File.get_mtime
-    def GET(self, context):
-        response = context.response
-        response.set_header('Content-Type', self.get_mimetype())
-        return self.to_str()
+    GET = FileGET()
+
 
 
 class UITemplate(UIFile, XMLFile):
@@ -146,7 +160,8 @@ class Skin(UIFolder):
 
             object = root.get_object(path)
             ac = object.get_access_control()
-            if ac.is_access_allowed(user, object, method):
+            view = object.get_view(method)
+            if ac.is_access_allowed(user, object, view):
                 href = '%s/;%s' % (here.get_pathto(object), method)
                 menu.append({'href': href, 'title': self.gettext(title),
                              'class': '', 'src': src, 'items': []})
@@ -177,21 +192,21 @@ class Skin(UIFolder):
         prefix = here.get_pathto(base)
 
         menu = []
-        for view in base.get_views():
+        for name, view in base.get_views():
             # Find out the title
-            if '?' in view:
-                name, args = view.split('?')
+            if '?' in name:
+                args = name.split('?')[1]
                 args = decode_query(args)
             else:
-                name, args = view, {}
-            title = getattr(base, '%s__label__' % name)
+                args = {}
+            title = view.__label__
             if callable(title):
                 title = title(**args)
             # Append to the menu
-            menu.append({'href': '%s/;%s' % (prefix, view),
+            menu.append({'href': '%s/;%s' % (prefix, name),
                          'title': base.gettext(title),
                          'class': '',
-                         'src': base.get_method_icon(name, **args),
+                         'src': base.get_method_icon(view, **args),
                          'items': []})
 
         if not menu:
@@ -354,55 +369,56 @@ class Skin(UIFolder):
         subviews = here.get_subviews(context.method)
 
         tabs = []
-        for view in here.get_views():
+        for name, view in here.get_views():
             # From method?param1=value1&param2=value2&...
             # we separate method and arguments, then we get a dict with
             # the arguments and the subview active state
-            if '?' in view:
-                name, args = view.split('?')
+            if '?' in name:
+                subname, args = name.split('?')
                 args = decode_query(args)
-                active = name == context.method or name in subviews
+                active = subname == context.method or subname in subviews
                 for key, value in args.items():
                     request_param = request.get_parameter(key)
                     if request_param != value:
                         active = False
                         break
             else:
-                name, args = view, {}
+                args = {}
+                subname = name
                 active = name == context.method or name in subviews
 
             # Add the menu
-            label = getattr(here, '%s__label__' % name)
+            label = view.__label__
             if callable(label):
                 label = label(**args)
 
-            tabs.append({'id': 'tab_%s' % name,
-                         'name': ';%s' % view,
+            tabs.append({'id': 'tab_%s' % subname,
+                         'name': ';%s' % subname,
                          'label': here.gettext(label),
-                         'icon': here.get_method_icon(name, **args),
+                         'icon': here.get_method_icon(view, **args),
                          'active': active,
                          'class': active and 'active' or None})
 
             # Subtabs
             subtabs = []
-            for subview in here.get_subviews(view):
+            for subview_link in here.get_subviews(name):
                 # same thing, separate method and arguments
-                if '?' in subview:
-                    name, args = subview.split('?')
+                if '?' in subview_link:
+                    subview_name, args = subview_link.split('?')
                     args = decode_query(args)
-                    for key, value in args.items():
-                        request_param = request.get_parameter(key)
                 else:
-                    name, args = subview, {}
+                    subview_name = subview_link
+                    args = {}
 
-                if ac.is_access_allowed(user, here, name):
-                    label = getattr(here, '%s__sublabel__' % name)
+                subview = here.get_view(subview_name, **args)
+                if ac.is_access_allowed(user, here, subview):
+                    label = subview.title
                     if callable(label):
                         label = label(**args)
 
                     subtabs.append({
-                        'name': ';%s' % subview,
-                        'icon': here.get_method_icon(name, **args),
+                        'name': ';%s' % subview_link,
+                        'icon': here.get_method_icon(subview, **args),
                         'label': here.gettext(label)})
             tabs[-1]['options'] = subtabs
 
@@ -569,12 +585,15 @@ class Skin(UIFolder):
         # Tabs & Message
         namespace['tabs'] = self.get_tabs(context)
         namespace['message'] = self.get_message(context)
-        # View's title
+        # View's title (FIXME)
         here = context.object
-        title = getattr(here, '%s__title__' % context.method, None)
+        view = here.get_view(context.method)
+        title = getattr(view, 'title', None)
         if title is None:
             namespace['view_title'] = None
         else:
+            if callable(title):
+                title = title()
             namespace['view_title'] = here.gettext(title)
         # Layout
         if context.user is None:
@@ -633,15 +652,7 @@ path = get_abspath(globals(), 'ui')
 register_skin('aruni', '%s/aruni' % path)
 
 
-class UI(AccessControl, UIFolder):
-
-    def is_access_allowed(self, user, object, method_name):
-        return isinstance(object, File) and method_name == 'GET'
-
-
-    def is_allowed_to_view(self, user, object):
-        return False
-
+class UI(UIFolder):
 
     def _get_object(self, name):
         if name in skin_registry:

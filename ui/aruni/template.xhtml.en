@@ -26,8 +26,8 @@
         <tr>
           <td id="header" colspan="2">
             <stl:block if="not user/info">
-              <a href="/;login_form" id="top_menu_login">Log in</a>
-              <a href="/;register_form" id="top_menu_register"
+              <a href="/;login" id="top_menu_login">Log in</a>
+              <a href="/;register" id="top_menu_register"
                 stl:if="user/joinisopen">Register</a>
             </stl:block>
             <stl:block if="user/info">
@@ -35,7 +35,7 @@
               <a href="/;logout" id="top_menu_logout">Log out</a>
             </stl:block>
             <a href="/;site_search" id="top_menu_search">Search</a>
-            <a href="/;contact_form" id="top_menu_contact">Contact</a>
+            <a href="/;contact" id="top_menu_contact">Contact</a>
           </td>
         </tr>
       </thead>

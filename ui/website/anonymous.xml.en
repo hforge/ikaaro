@@ -4,9 +4,7 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
-  <h2>Security Policy</h2>
-
-  <form action=";edit_anonymous" method="post">
+  <form action=";edit_security_policy" method="post">
     <p>
       <input type="radio" name="website_is_open" value="0" id="intranet"
         checked="${is_closed}" />

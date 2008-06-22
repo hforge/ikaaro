@@ -65,17 +65,16 @@ class Root(WebSite):
     class_icon16 = 'icons/16x16/root.png'
     class_icon48 = 'icons/48x48/root.png'
     class_views = [
-        ['browse_content?mode=list',
-         'browse_content?mode=image'],
-        ['new_resource_form'],
-        ['edit_metadata_form'],
+        ['browse_content', 'preview_content'],
+        ['new_resource'],
+        ['edit_metadata'],
         ['control_panel',
-         'permissions_form',
-         'new_user_form',
-         'virtual_hosts_form',
-         'anonymous_form',
+         'permissions',
+         'new_user',
+         'edit_virtual_hosts',
+         'edit_security_policy',
          'languages_form',
-         'contact_options_form'],
+         'edit_contact_options'],
         ['last_changes']]
 
     __fixed_handlers__ = ['users', 'ui']

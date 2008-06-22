@@ -26,7 +26,7 @@ from itools.web import FormError
 from ikaaro.folder import Folder
 from ikaaro.file import File
 from ikaaro.registry import register_object_class
-from ikaaro.messages import MSG_MISSING_OR_INVALID, MSG_CHANGES_SAVED
+from ikaaro.messages import MSG_CHANGES_SAVED
 
 # Import from Here
 from cart import Cart

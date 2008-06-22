@@ -6,7 +6,8 @@
 
   <h2>Add Resource of Type "${class_title}"</h2>
 
-  <form name="new_document" action=";new_resource" method="post">
+  <form name="new_document" action=";new_resource?type=${class_id}"
+    method="post">
     <dl>
       <dt><label for="title">Title</label></dt>
       <dd>

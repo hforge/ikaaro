@@ -23,27 +23,112 @@ from datetime import datetime
 from itools.datatypes import DateTime, FileName, String
 from itools.handlers import File
 from itools.http import Forbidden
-from itools.html import (xhtml_uri, XHTMLFile, sanitize_stream, HTMLParser,
-    stream_to_str_as_xhtml, stream_to_str_as_html)
+from itools.html import xhtml_uri, XHTMLFile, sanitize_stream, HTMLParser
+from itools.html import stream_to_str_as_xhtml, stream_to_str_as_html
 from itools.stl import stl
 from itools.uri import get_reference
+from itools.web import BaseView, STLView
 from itools.xml import TEXT, START_ELEMENT, XMLError, XMLParser
 
 # Import from ikaaro
-from base import DBObject
+from base import DBObject, RedirectView
 from messages import *
 from multilingual import Multilingual
 from text import Text
 from registry import register_object_class
 
 
+
+###########################################################################
+# Views
+###########################################################################
+class HTMLEditView(BaseView):
+    """WYSIWYG editor for HTML documents.
+    """
+
+    access = 'is_allowed_to_edit'
+    __label__ = u'Edit'
+    title = u'Inline'
+    icon = 'edit.png'
+
+
+    def GET(self, model, context):
+        data = context.get_form_value('data')
+        if data:
+            data = stream_to_str_as_html(XMLParser(data))
+        else:
+            data = model.get_epoz_data()
+            # If the document has not a body (e.g. a frameset), edit as plain
+            # text
+            if data is None:
+                return Text.edit_form(self, context)
+            data = stream_to_str_as_html(data)
+
+        # Edit with a rich text editor
+        namespace = {}
+        namespace['timestamp'] = DateTime.encode(datetime.now())
+        namespace['rte'] = model.get_rte(context, 'data', data)
+
+        handler = model.get_object('/ui/html/edit.xml')
+        return stl(handler, namespace)
+
+
+    def POST(self, model, context, sanitize=False):
+        timestamp = context.get_form_value('timestamp', type=DateTime)
+        if timestamp is None:
+            return context.come_back(MSG_EDIT_CONFLICT)
+        document = model.get_epoz_document()
+        if document.timestamp is not None and timestamp < document.timestamp:
+            return context.come_back(MSG_EDIT_CONFLICT)
+
+        # Sanitize
+        new_body = context.get_form_value('data')
+        namespaces = {None: 'http://www.w3.org/1999/xhtml'}
+        try:
+            new_body = list(XMLParser(new_body, namespaces))
+        except XMLError:
+            return context.come_back(u'Invalid HTML code.', keep=['data'])
+        if sanitize:
+            new_body = sanitize_stream(new_body)
+        # "get_epoz_document" is to set in your editable handler
+        old_body = document.get_body()
+        events = (document.events[:old_body.start+1] + new_body
+                  + document.events[old_body.end:])
+        # Change
+        document.set_events(events)
+        context.server.change_object(model)
+
+        return context.come_back(MSG_CHANGES_SAVED)
+
+
+
+class WebPageView(STLView):
+
+    access = 'is_allowed_to_view'
+    __label__ = u'View'
+    title = u'View'
+    icon = '/ui/icons/16x16/view.png'
+    template = '/ui/html/view.xml'
+
+
+    def get_namespace(self, model, context):
+        body = model.handler.get_body()
+        return {
+            'text': body.get_content_elements() if body else None,
+        }
+
+
+
+###########################################################################
+# Model
+###########################################################################
 class EpozEditable(object):
     """A mixin class for handlers implementing HTML editing.
     """
 
-    #######################################################################
-    # API
-    #######################################################################
+    edit = HTMLEditView()
+
+
     def get_epoz_document(self):
         # Implement it in your editable handler
         raise NotImplementedError
@@ -57,64 +142,6 @@ class EpozEditable(object):
         return body.get_content_elements()
 
 
-    #######################################################################
-    # User Interface
-    #######################################################################
-    edit_form__access__ = 'is_allowed_to_edit'
-    edit_form__label__ = u'Edit'
-    edit_form__sublabel__ = u'Inline'
-    edit_form__icon__ = 'edit.png'
-    def edit_form(self, context):
-        """WYSIWYG editor for HTML documents.
-        """
-        data = context.get_form_value('data')
-        if data:
-            data = stream_to_str_as_html(XMLParser(data))
-        else:
-            data = self.get_epoz_data()
-            # If the document has not a body (e.g. a frameset), edit as plain text
-            if data is None:
-                return Text.edit_form(self, context)
-            data = stream_to_str_as_html(data)
-
-        # Edit with a rich text editor
-        namespace = {}
-        namespace['timestamp'] = DateTime.encode(datetime.now())
-        namespace['rte'] = self.get_rte(context, 'data', data)
-
-        handler = self.get_object('/ui/html/edit.xml')
-        return stl(handler, namespace)
-
-
-    edit__access__ = 'is_allowed_to_edit'
-    def edit(self, context, sanitize=False):
-        timestamp = context.get_form_value('timestamp', type=DateTime)
-        if timestamp is None:
-            return context.come_back(MSG_EDIT_CONFLICT)
-        document = self.get_epoz_document()
-        if document.timestamp is not None and timestamp < document.timestamp:
-            return context.come_back(MSG_EDIT_CONFLICT)
-
-        # Sanitize
-        new_body = context.get_form_value('data')
-        try:
-            new_body = list(XMLParser(new_body,
-                                      {None: 'http://www.w3.org/1999/xhtml'}))
-        except XMLError:
-            return context.come_back(u'Invalid HTML code.', keep=['data'])
-        if sanitize:
-            new_body = sanitize_stream(new_body)
-        # "get_epoz_document" is to set in your editable handler
-        old_body = document.get_body()
-        events = (document.events[:old_body.start+1] + new_body
-                  + document.events[old_body.end:])
-        # Change
-        document.set_events(events)
-        context.server.change_object(self)
-
-        return context.come_back(MSG_CHANGES_SAVED)
-
-
 
 
 class WebPage(EpozEditable, Multilingual, Text):
@@ -126,10 +153,10 @@ class WebPage(EpozEditable, Multilingual, Text):
     class_icon16 = 'icons/16x16/html.png'
     class_icon48 = 'icons/48x48/html.png'
     class_views = [['view'],
-                   ['edit_form', 'externaledit', 'upload_form'],
-                   ['edit_metadata_form'],
-                   ['state_form'],
-                   ['history_form']]
+                   ['edit', 'externaledit', 'upload_form'],
+                   ['edit_metadata'],
+                   ['edit_state'],
+                   ['history']]
     class_handler = XHTMLFile
 
 
@@ -180,14 +207,7 @@ class WebPage(EpozEditable, Multilingual, Text):
         return ' '.join(text)
 
 
-    GET__mtime__ = None
-    def GET(self, context):
-        method = self.get_firstview()
-        # Check access
-        if method is None:
-            raise Forbidden
-        # Redirect
-        return context.uri.resolve2(';%s' % method)
+    GET= RedirectView()
 
 
     def is_empty(self):
@@ -212,34 +232,10 @@ class WebPage(EpozEditable, Multilingual, Text):
 
 
     #######################################################################
-    # UI / New Instance
+    # UI
     #######################################################################
-    @staticmethod
-    def new_instance_form(cls, context):
-        return DBObject.new_instance_form(cls, context)
-
-
-    @staticmethod
-    def new_instance(cls, container, context):
-        return DBObject.new_instance(cls, container, context)
-
-
-    #######################################################################
-    # UI / View
-    #######################################################################
-    view__access__ = 'is_allowed_to_view'
-    view__label__ = u'View'
-    view__title__ = u'View'
-    def view(self, context):
-        namespace = {}
-        body = self.handler.get_body()
-        if body is None:
-            namespace['text'] = None
-        else:
-            namespace['text'] = body.get_content_elements()
-
-        handler = self.get_object('/ui/html/view.xml')
-        return stl(handler, namespace)
+    new_instance = DBObject.new_instance
+    view = WebPageView()
 
 
     #######################################################################

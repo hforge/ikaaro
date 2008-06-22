@@ -43,7 +43,7 @@ from ikaaro.file import File
 from ikaaro.folder import Folder
 from ikaaro.messages import *
 from ikaaro.registry import register_object_class, get_object_class
-from ikaaro.utils import generate_name, get_file_parts
+from ikaaro.utils import generate_name
 from ikaaro import widgets
 
 
@@ -214,6 +214,8 @@ class Issue(Folder):
 
 
     def _add_record(self, context):
+        from utils import get_file_parts
+
         user = context.user
         root = context.root
         parent = self.parent
@@ -565,7 +567,6 @@ class Issue(Folder):
     edit__access__ = 'is_allowed_to_edit'
     def edit(self, context):
         # Check input data
-        form = context.request.form
         try:
             form = context.check_form_input(issue_fields)
         except FormError:
@@ -782,7 +783,8 @@ class Issue(Folder):
         # Check input data
         resources = self.get_resources()
         resources_fields = resources.handler.schema
-        form = context.request.form
+        form = context.request.get_form()
+        form = form.copy()
         try:
             # Insert time into datetime values dtstart and dtend
             dtstart = (form['dtstart'], form['tstart'] or '00:00')

@@ -31,9 +31,9 @@ function tiny_mce_set_uri_value(uri) {
 function ikaaro_filebrowser(field_name, url, type, win) {
     var cms_location = window.location.href
     var cms_base = cms_location.substring(0, cms_location.indexOf(';'))
-    var cms_specific_action = ';addlink_form';
+    var cms_specific_action = ';add_link';
     if (type == 'image')
-        cms_specific_action = ';addimage_form';
+        cms_specific_action = ';add_image';
     var cmsURL = cms_base + cms_specific_action;      // script URL
 
     tinyMCE.activeEditor.windowManager.open({

@@ -41,8 +41,8 @@ class CSV(Text):
     class_views = [['view'],
                    ['add_row_form'],
                    ['externaledit', 'upload_form'],
-                   ['edit_metadata_form'],
-                   ['history_form']]
+                   ['edit_metadata'],
+                   ['history']]
     class_handler = CSVFile
 
 

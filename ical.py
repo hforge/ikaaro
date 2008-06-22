@@ -1277,7 +1277,7 @@ class Calendar(Text, CalendarView):
     class_icon48 = 'icons/48x48/icalendar.png'
     class_views = [['monthly_view', 'weekly_view', 'download_form'],
                    ['upload_form', 'edit_timetables_form',
-                    'edit_metadata_form']]
+                    'edit_metadata']]
     class_handler = icalendar
 
 
@@ -1341,10 +1341,6 @@ class Calendar(Text, CalendarView):
     #######################################################################
     # User interface
     #######################################################################
-
-    edit_metadata_form__sublabel__ = u'Metadata'
-
-    GET__mtime__ = None
     def GET(self, context):
         return DBObject.GET(self, context)
 
@@ -1382,7 +1378,7 @@ class CalendarTable(Table, CalendarView):
     class_icon48 = 'icons/48x48/icalendar.png'
     class_views = [['monthly_view', 'weekly_view', 'download_form'],
                    ['upload_form', 'edit_timetables_form',
-                    'edit_metadata_form']]
+                    'edit_metadata']]
     class_handler = icalendarTable
     record_class = Record
 
@@ -1394,7 +1390,6 @@ class CalendarTable(Table, CalendarView):
         return schema
 
 
-    GET__mtime__ = None
     def GET(self, context):
         return DBObject.GET(self, context)
 

@@ -160,7 +160,7 @@ def table_head(columns, sortby, sortorder, gettext=lambda x: x):
     return columns_
 
 table_with_form_template = list(XMLParser("""
-<form action="." method="post" id="browse_list" name="browse_list">
+<form action="${action}" method="post" id="browse_list" name="browse_list">
   ${table}
 </form>
 """, namespaces))
@@ -205,8 +205,8 @@ table_template = list(XMLParser("""
 """, namespaces))
 
 
-def table(columns, rows, sortby, sortorder, actions=[], gettext=lambda x: x,
-          table_with_form=True, css=None):
+def table(columns, rows, sortby, sortorder, action=None, actions=[],
+          gettext=lambda x: x, table_with_form=True, css=None):
     """The parameters are:
 
       columns --
@@ -274,7 +274,7 @@ def table(columns, rows, sortby, sortorder, actions=[], gettext=lambda x: x,
         {'name': name, 'value': value, 'class': cls, 'onclick': onclick}
         for name, value, cls, onclick in actions ]
     if table_with_form:
-        table = {'table': table_template}
+        table = {'table': table_template, 'action': action}
         events = stl(events=table_with_form_template, namespace=table)
     else:
         events = table_template
@@ -321,7 +321,7 @@ class Breadcrumb(object):
         self.target_path = str(target.get_abspath())
 
         # Object to link
-        object = request.form.get('object')
+        object = request.get_parameter('object')
         if object == '':
             object = '.'
         self.object = object

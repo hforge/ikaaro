@@ -20,19 +20,48 @@
 from itools.datatypes import Integer
 from itools.handlers import (Image as ImageFile, TARFile, ZIPFile, GzipFile,
         Bzip2File)
+from itools.odf import SXWFile, SXCFile, SXIFile, ODTFile, ODSFile, ODPFile
 from itools.pdf import PDFFile
 from itools.stl import stl
+from itools.web import BaseView, STLView
 from itools.xml import MSWord as MSWordFile, MSExcel as MSExcelFile
 from itools.xml import MSPowerPoint as MSPowerPointFile, RTF as RTFFile
-from itools.odf import SXWFile, SXCFile, SXIFile, ODTFile, ODSFile, ODPFile
 
 # Import from ikaaro
 from file import File
 from registry import register_object_class
 
 
+
 ###########################################################################
-# Images, Video & Flash
+# Views
+###########################################################################
+class ThumbnailView(BaseView):
+
+    access = True
+
+
+    def get_mtime(self, model):
+        return model.get_mtime()
+
+
+    def GET(self, model, context):
+        width = context.get_form_value('width', type=Integer, default=48)
+        height = context.get_form_value('height', type=Integer, default=48)
+
+        data, format = model.handler.get_thumbnail(width, height)
+        if data is None:
+            object = model.get_object('/ui/icons/48x48/image.png')
+            data = object.to_str()
+            format = 'png'
+
+        response = context.response
+        response.set_header('Content-Type', 'image/%s' % format)
+        return data
+
+
+###########################################################################
+# Model
 ###########################################################################
 class Image(File):
 
@@ -44,36 +73,18 @@ class Image(File):
     class_views = [['view', 'download_form'],
                    ['externaledit', 'upload_form'],
                    ['backlinks'],
-                   ['edit_metadata_form'],
-                   ['state_form'],
-                   ['history_form']]
+                   ['edit_metadata'],
+                   ['edit_state'],
+                   ['history']]
     class_handler = ImageFile
 
 
-    icon48__access__ = True
-    icon48__mtime__ = File.get_mtime
-    def icon48(self, context):
-        width = context.get_form_value('width', type=Integer, default=48)
-        height = context.get_form_value('height', type=Integer, default=48)
-
-        data, format = self.handler.get_thumbnail(width, height)
-        if data is None:
-            object = self.get_object('/ui/icons/48x48/image.png')
-            data = object.to_str()
-            format = 'png'
-
-        response = context.response
-        response.set_header('Content-Type', 'image/%s' % format)
-        return data
-
-
-    view__access__ = 'is_allowed_to_view'
-    view__label__ = u'View'
-    view__sublabel__ = u'View'
-    view__icon__ = 'view.png'
-    def view(self, context):
-        handler = self.get_object('/ui/binary/Image_view.xml')
-        return handler.to_str()
+    view = STLView(
+        access='is_allowed_to_view',
+        __label__=u'View',
+        title=u'View',
+        icon='view.png',
+        template='/ui/binary/Image_view.xml')
 
 
 
@@ -109,12 +120,11 @@ class Flash(File):
     class_icon48 = 'icons/48x48/flash.png'
 
 
-    view__label__ = u'View'
-    view__sublabel__ = u'View'
-    view__access__ = 'is_allowed_to_view'
-    def view(self, context):
-        handler = self.get_object('/ui/binary/Flash_view.xml')
-        return stl(handler)
+    view = STLView(
+        access='is_allowed_to_view',
+        title=u'View',
+        __label__=u'View',
+        template='/ui/binary/Flash_view.xml')
 
 
 

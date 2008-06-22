@@ -26,101 +26,32 @@ from string import Template
 # Import from itools
 from itools.csv import Record, UniqueError, Table as TableFile
 from itools.http import Forbidden
-from itools.datatypes import (DataType, Integer, is_datatype, Enumerate, Date,
-                              Tokens)
+from itools.datatypes import DataType, is_datatype
+from itools.datatypes import Integer, Enumerate, Date, Tokens
 from itools.stl import stl
-from itools.web import FormError
+from itools.web import FormError, STLView
 
 # Import from ikaaro
 from base import DBObject
 from file import File
-from forms import generate_form, get_default_widget, ReadOnlyWidget
+from forms import AutoForm, get_default_widget, ReadOnlyWidget
 from messages import *
 from registry import register_object_class
-import widgets
+from widgets import batch, table
 
 
+###########################################################################
+# Views
+###########################################################################
+class TableView(STLView):
 
-class Multiple(DataType):
-
-    def decode(self, data):
-        if isinstance(data, list):
-            lines = data
-        else:
-            lines = data.splitlines()
-
-        return [ self.type.decode(x) for x in lines ]
-
+    access = 'is_allowed_to_view'
+    __label__ = u'View'
+    icon = 'view.png'
+    template = '/ui/table/view.xml'
 
 
-class Table(File):
-
-    class_id = 'table'
-    class_version = '20071216'
-    class_title = u'Table'
-    class_views = [['view'],
-                   ['add_record_form'],
-                   ['edit_metadata_form'],
-                   ['history_form']]
-    class_handler = TableFile
-    record_class = Record
-    form = []
-
-    def GET(self, context):
-        method = self.get_firstview()
-        # Check access
-        if method is None:
-            raise Forbidden
-        # Redirect
-        return context.uri.resolve2(';%s' % method)
-
-
-    @classmethod
-    def get_form(cls):
-        if cls.form != []:
-            return cls.form
-        form = []
-        for key, value in cls.class_handler.schema.items():
-            widget = get_default_widget(value)
-            form.append(widget(key))
-        return form
-
-
-    #########################################################################
-    # User Interface
-    #########################################################################
-
-    @staticmethod
-    def new_instance_form(cls, context):
-        # Use the default form
-        return DBObject.new_instance_form(cls, context)
-
-
-    @staticmethod
-    def new_instance(cls, container, context):
-        return DBObject.new_instance(cls, container, context)
-
-
-    @classmethod
-    def get_field_title(cls, name):
-        for widget in cls.form:
-            if widget.name == name:
-                return  getattr(widget, 'title', name)
-        return name
-
-
-    #########################################################################
-    # User Interface
-    #########################################################################
-    edit_form__access__ = False
-
-
-    #########################################################################
-    # View
-    view__access__ = 'is_allowed_to_view'
-    view__label__ = u'View'
-    view__icon__ = 'view.png'
-    def view(self, context):
+    def get_namespace(self, model, context):
         namespace = {}
 
         # The input parameters
@@ -128,24 +59,26 @@ class Table(File):
         size = 50
 
         # The batch
-        total = self.handler.get_n_records()
-        namespace['batch'] = widgets.batch(context.uri, start, size, total,
-                                           self.gettext)
+        handler = model.handler
+        gettext = model.gettext
+        total = handler.get_n_records()
+        namespace['batch'] = batch(context.uri, start, size, total, gettext)
 
         # The table
         actions = []
         if total:
-            ac = self.get_access_control()
-            if ac.is_allowed_to_edit(context.user, self):
+            ac = model.get_access_control()
+            if ac.is_allowed_to_edit(context.user, model):
                 actions = [('del_record_action', u'Remove', 'button_delete',
                             None)]
 
         fields = [('index', u'id')]
-        for widget in self.get_form():
+        widgets = self.get_widgets()
+        for widget in widgets:
             fields.append((widget.name, getattr(widget, 'title', widget.name)))
         records = []
 
-        for record in self.handler.get_records():
+        for record in handler.get_records():
             id = record.id
             records.append({})
             records[-1]['id'] = str(id)
@@ -153,8 +86,8 @@ class Table(File):
             # Fields
             records[-1]['index'] = id, ';edit_record_form?id=%s' % id
             for field, field_title in fields[1:]:
-                value = self.handler.get_value(record, field)
-                datatype = self.handler.get_datatype(field)
+                value = handler.get_value(record, field)
+                datatype = handler.get_datatype(field)
 
                 multiple = getattr(datatype, 'multiple', False)
                 is_tokens = is_datatype(datatype, Tokens)
@@ -192,55 +125,55 @@ class Table(File):
                     else:
                         record[field] = record[field][0]
 
-        namespace['table'] = widgets.table(fields, records, [sortby],
-                                           sortorder, actions,
-                                           gettext=self.gettext)
+        namespace['table'] = table(fields, records, [sortby], sortorder,
+                                   actions, gettext=gettext)
 
-        handler = self.get_object('/ui/table/view.xml')
-        return stl(handler, namespace)
+        return namespace
 
 
-    del_record_action__access__ = 'is_allowed_to_edit'
-    def del_record_action(self, context):
-        ids = context.get_form_values('ids', type=Integer)
-        for id in ids:
-            self.handler.del_record(id)
 
-        message = u'Record deleted.'
-        return context.come_back(message)
+class AddRecordForm(AutoForm):
 
+    access = 'is_allowed_to_edit'
+    __label__ = u'Add'
+    icon = 'new.png'
 
-    #########################################################################
-    # Add
-    add_record_form__access__ = 'is_allowed_to_edit'
-    add_record_form__label__ = u'Add'
-    add_record_form__icon__ = 'new.png'
-    def add_record_form(self, context):
-        form_action = {'action': ';add_record_action', 'name': 'add',
-                       'value': 'Add', 'class': 'button_ok'}
-        return generate_form(context, u'Add a new record',
-            self.handler.schema, self.get_form(), form_action)
+    form_title = u'Add a new record'
+    form_action = {
+        'action': ';add_record',
+        'name': 'add',
+        'value': 'Add',
+        'class': 'button_ok'}
 
 
-    add_record_action__access__ = 'is_allowed_to_edit'
-    def add_record_action(self, context):
-        # check form
-        check_fields = {}
-        for name in self.handler.schema.keys():
-            datatype = self.handler.get_datatype(name)
-            if getattr(datatype, 'multiple', False) is True:
-                datatype = Multiple(type=datatype)
-            check_fields[name] = datatype
+    def get_schema(self, model):
+        return model.handler.schema
 
-        try:
-            form = context.check_form_input(check_fields)
-        except FormError:
-            return context.come_back(MSG_MISSING_OR_INVALID,
-                                     keep=context.get_form_keys())
+
+    def get_widgets(self, model):
+        return model.get_form()
+
+
+    def action(self, model, context, form):
+        schema = self.get_schema(model)
+        handler = model.handler
+#       # check form
+#       check_fields = {}
+#       for name in schema:
+#           datatype = handler.get_datatype(name)
+#           if getattr(datatype, 'multiple', False) is True:
+#               datatype = Multiple(type=datatype)
+#           check_fields[name] = datatype
+
+#       try:
+#           form = self.check_form_input(model, check_fields)
+#       except FormError:
+#           context.message = MSG_MISSING_OR_INVALID
+#           return
 
         record = {}
-        for name in self.handler.schema.keys():
-            datatype = self.handler.get_datatype(name)
+        for name in schema:
+            datatype = handler.get_datatype(name)
             if getattr(datatype, 'multiple', False) is True:
                 if is_datatype(datatype, Enumerate):
                     value = form[name]
@@ -256,38 +189,42 @@ class Table(File):
                 value = form[name]
             record[name] = value
         try:
-            self.handler.add_record(record)
+            handler.add_record(record)
             message = u'New record added.'
         except UniqueError, error:
-            title = self.get_field_title(error.name)
+            title = model.get_field_title(error.name)
             message = str(error) % (title, error.value)
         except ValueError, error:
-            title = self.get_field_title(error.name)
-            template = Template(self.gettext(u'Error: $message'))
+            title = model.get_field_title(error.name)
+            template = Template(model.gettext(u'Error: $message'))
             message = template.substitute(message=strerror)
 
-        goto = context.uri.resolve2('../;add_record_form')
-        return context.come_back(message, goto=goto)
+        context.message = message
 
 
-    #########################################################################
-    # Edit
-    edit_record_form__access__ = 'is_allowed_to_edit'
+class EditRecordForm(AutoForm):
+
+    access = 'is_allowed_to_edit'
+
+    form_action = {
+        'action': ';edit_record',
+        'name': 'edit',
+        'value': 'Change',
+        'class': 'button_ok'}
+
+
     def edit_record_form(self, context):
         # Get the record
         id = context.get_form_value('id', type=Integer)
         record = self.handler.get_record(id)
 
-        form_action = {'action': ';edit_record_action', 'name': 'edit',
-                       'value': 'Change', 'class': 'button_ok'}
         form_hidden = [{'name': 'id', 'value': id}]
         return generate_form(context, u'Edit record %s' % id,
             self.handler.schema, self.get_form(), form_action, form_hidden,
             method=record.get_value)
 
 
-    edit_record_action__access__ = 'is_allowed_to_edit'
-    def edit_record_action(self, context):
+    def action(self, model, context):
         id = context.get_form_value('id', None, type=Integer)
         if id is None:
             return context.come_back(MSG_MISSING_OR_INVALID)
@@ -342,4 +279,96 @@ class Table(File):
 
 
 
+
+###########################################################################
+# Model
+###########################################################################
+class Multiple(DataType):
+
+    def decode(self, data):
+        if isinstance(data, list):
+            lines = data
+        else:
+            lines = data.splitlines()
+
+        return [ self.type.decode(x) for x in lines ]
+
+
+
+class Table(File):
+
+    class_id = 'table'
+    class_version = '20071216'
+    class_title = u'Table'
+    class_views = [['view'],
+                   ['add_record'],
+                   ['edit_metadata'],
+                   ['history']]
+    class_handler = TableFile
+    record_class = Record
+    form = []
+
+    def GET(self, context):
+        method = self.get_firstview()
+        # Check access
+        if method is None:
+            raise Forbidden
+        # Redirect
+        return context.uri.resolve2(';%s' % method)
+
+
+    @classmethod
+    def get_form(cls):
+        if cls.form != []:
+            return cls.form
+        form = []
+        for key, value in cls.class_handler.schema.items():
+            widget = get_default_widget(value)
+            form.append(widget(key))
+        return form
+
+
+    #########################################################################
+    # User Interface
+    #########################################################################
+    new_instance = DBObject.new_instance
+
+
+    @classmethod
+    def get_field_title(cls, name):
+        for widget in cls.form:
+            if widget.name == name:
+                return  getattr(widget, 'title', name)
+        return name
+
+
+    #########################################################################
+    # User Interface
+    #########################################################################
+    edit_form__access__ = False
+    view = TableView()
+
+
+    #########################################################################
+    # View
+    del_record_action__access__ = 'is_allowed_to_edit'
+    def del_record_action(self, context):
+        ids = context.get_form_values('ids', type=Integer)
+        for id in ids:
+            self.handler.del_record(id)
+
+        message = u'Record deleted.'
+        return context.come_back(message)
+
+
+    #########################################################################
+    # Add, Edit
+    add_record = AddRecordForm()
+    edit_record = EditRecordForm()
+
+
+
+###########################################################################
+# Register
+###########################################################################
 register_object_class(Table)

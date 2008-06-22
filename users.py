@@ -18,10 +18,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
-from base64 import decodestring, encodestring
 from copy import deepcopy
 from string import Template
-from urllib import quote, unquote
 
 # Import from itools
 from itools.datatypes import DataType, Email, String, Unicode
@@ -29,31 +27,232 @@ from itools.handlers import Folder as BaseFolder
 from itools.i18n import get_language_name
 from itools.stl import stl
 from itools.uri import Path
-from itools.web import FormError
+from itools.web import FormError, STLView, STLForm
 from itools.xapian import EqQuery, AndQuery, OrQuery, TextField, KeywordField
 
 # Import from ikaaro
 from access import AccessControl
+from base import MetadataForm
+from datatypes import Password
 from folder import Folder
 from messages import *
 from registry import register_object_class, get_object_class
 from utils import crypt_password, generate_password
 
 
+###########################################################################
+# Views
+###########################################################################
+class ProfileView(STLView):
 
-class Password(DataType):
-
-    @staticmethod
-    def decode(data):
-        return decodestring(unquote(data))
-
-
-    @staticmethod
-    def encode(value):
-        return quote(encodestring(value))
+    access = 'is_allowed_to_view'
+    __label__ = u'Profile'
+    icon = 'action_home.png'
+    template = '/ui/user/profile.xml'
 
 
+    def get_namespace(self, model, context):
+        root = context.root
+        user = context.user
 
+        is_owner = user is not None and user.name == model.name
+        return {
+            'title': model.get_title(),
+            'is_owner': is_owner,
+            'is_owner_or_admin': is_owner or root.is_admin(user, model),
+            'user_must_confirm': model.has_property('user_must_confirm'),
+        }
+
+
+
+class AccountForm(STLForm):
+
+    access = 'is_allowed_to_edit'
+    __label__ = u'Edit'
+    title = u'Account'
+    icon = 'settings.png'
+    template = '/ui/user/edit_account.xml'
+    schema = {
+        'password': String,
+        'email': Email,
+        'firstname': Unicode,
+        'lastname': Unicode,
+    }
+
+
+    def get_namespace(self, model, context):
+        return {
+            'firstname': model.get_property('firstname'),
+            'lastname': model.get_property('lastname'),
+            'email': model.get_property('email'),
+            'must_confirm': (model.name == context.user.name),
+        }
+
+
+    def action(self, model, context, form):
+        firstname = form['firstname']
+        lastname = form['lastname']
+        email = form['email']
+
+        # Check password to confirm changes
+        is_same_user = (model.name == context.user.name)
+        if is_same_user:
+            password = form['password']
+            if not model.authenticate(password):
+                context.message = (
+                    u"You mistyped your actual password, your account is"
+                    u" not changed.")
+                return
+
+        # If the user changes his email, check there is not already other
+        # user with the same email in the database.
+        if email != model.get_property('email'):
+            results = context.root.search(email=email)
+            if results.get_n_documents():
+                context.message = model.gettext(
+                    u'There is another user with the email "${email}", please'
+                    u' try again.', email=email)
+                return
+
+        # Save changes
+        model.set_property('firstname', firstname)
+        model.set_property('lastname', lastname)
+        model.set_property('email', email)
+        # Ok
+        context.message = u'Account changed.'
+
+
+
+class PreferencesForm(STLForm):
+
+    access = 'is_allowed_to_edit'
+    __label__ = u'Edit'
+    title = u'Preferences'
+    icon = 'skin.png'
+    template = '/ui/user/edit_language_form.xml'
+    schema = {
+        'user_language': String(mandatory=True),
+    }
+
+
+    def get_namespace(self, model, context):
+        root = context.root
+        user = context.user
+
+        # Languages
+        user_language = model.get_property('user_language')
+        languages = [
+            {'code': code, 'name': get_language_name(code),
+             'is_selected': code == user_language}
+            for code in root.get_available_languages() ]
+
+        return {'languages': languages}
+
+
+    def action(self, model, context, form):
+        value = form['user_language']
+        model.set_property('user_language', value)
+        # Ok
+        context.message = u'Application preferences changed.'
+
+
+
+class PasswordForm(STLForm):
+
+    access = 'is_allowed_to_edit'
+    __label__ = u'Edit'
+    title = u'Password'
+    icon = 'lock.png'
+    template = '/ui/user/edit_password.xml'
+    schema = {
+        'newpass': String(mandatory=True),
+        'newpass2': String(mandatory=True),
+        'password': String,
+    }
+
+
+    def get_namespace(self, model, context):
+        user = context.user
+        return {
+            'must_confirm': (model.name == user.name)
+        }
+
+
+    def action(self, model, context, form):
+        newpass = form['newpass'].strip()
+        newpass2 = form['newpass2']
+
+        # Check password to confirm changes
+        is_same_user = (model.name == context.user.name)
+        if is_same_user:
+            password = form['password']
+            if not model.authenticate(password):
+                context.message = (
+                    u"You mistyped your actual password, your account is"
+                    u" not changed.")
+                return
+
+        # Check the new password matches
+        if newpass != newpass2:
+            context.message = u"Passwords mismatch, please try again."
+            return
+
+        # Clear confirmation key
+        if model.has_property('user_must_confirm'):
+            model.del_property('user_must_confirm')
+
+        # Set password
+        model.set_password(newpass)
+
+        # Update the cookie if we updated our own password
+        if is_same_user:
+            model.set_auth_cookie(context, newpass)
+
+        # Ok
+        context.message = u'Password changed.'
+
+
+
+class TasksView(STLView):
+
+    access = 'is_allowed_to_edit'
+    __label__ = u'Tasks'
+    icon = 'tasks.png'
+    template = '/ui/user/tasks.xml'
+
+
+    def get_namespace(self, model, context):
+        root = context.root
+        user = context.user
+
+        # Build the query
+        site_root = model.get_site_root()
+        q1 = EqQuery('workflow_state', 'pending')
+        q2 = OrQuery(EqQuery('paths', str(site_root.get_abspath())),
+                     EqQuery('paths', str(model.get_canonical_path())))
+        query = AndQuery(q1, q2)
+
+        # Build the list of documents
+        documents = []
+        for brain in root.search(query).get_documents():
+            document = root.get_object(brain.abspath)
+            # Check security
+            ac = document.get_access_control()
+            if not ac.is_allowed_to_view(user, document):
+                continue
+            # Append
+            firstview = document.get_firstview()
+            documents.append(
+                {'url': '%s/;%s' % (model.get_pathto(document), firstview),
+                 'title': document.get_title()})
+
+        return {'documents': documents}
+
+
+
+###########################################################################
+# Model
+###########################################################################
 class User(AccessControl, Folder):
 
     class_id = 'user'
@@ -63,11 +262,10 @@ class User(AccessControl, Folder):
     class_icon48 = 'icons/48x48/user.png'
     class_views = [
         ['profile'],
-        ['browse_content?mode=list',
-         'browse_content?mode=image'],
-        ['new_resource_form'],
-        ['edit_account_form', 'edit_language_form', 'edit_password_form'],
-        ['tasks_list']]
+        ['browse_content', 'preview_content'],
+        ['new_resource'],
+        ['edit_account', 'edit_preferences', 'edit_password'],
+        ['tasks']]
 
 
     ########################################################################
@@ -168,8 +366,7 @@ class User(AccessControl, Folder):
         username = str(self.name)
         crypted = crypt_password(password)
         cookie = Password.encode('%s:%s' % (username, crypted))
-        request = context.request
-        expires = request.form.get('iAuthExpires', None)
+        expires = context.request.get_parameter('iAuthExpires')
         if expires is None:
             context.set_cookie('__ac', cookie, path='/')
         else:
@@ -243,10 +440,10 @@ class User(AccessControl, Folder):
         username = context.get_form_value('username', default='')
         if must_confirm is None:
             return context.come_back(MSG_REGISTERED,
-                    goto='/;login_form?username=%s' % username)
+                    goto='/;login?username=%s' % username)
         elif context.get_form_value('key') != must_confirm:
             return context.come_back(MSG_BAD_KEY,
-                    goto='/;login_form?username=%s' % username)
+                    goto='/;login?username=%s' % username)
 
         namespace = {'key': must_confirm,
                      'username': self.get_login_name()}
@@ -292,200 +489,11 @@ class User(AccessControl, Folder):
 
     #######################################################################
     # Profile
-    profile__access__ = 'is_allowed_to_view'
-    profile__label__ = u'Profile'
-    profile__icon__ = 'action_home.png'
-    def profile(self, context):
-        root = context.root
-        user = context.user
-
-        namespace = {}
-        namespace['title'] = self.get_title()
-        # Owner
-        is_owner = user is not None and user.name == self.name
-        namespace['is_owner'] = is_owner
-        # Owner or Admin
-        namespace['is_owner_or_admin'] = is_owner or root.is_admin(user, self)
-        # Must confirm ?
-        namespace['user_must_confirm'] = self.has_property('user_must_confirm')
-
-        handler = self.get_object('/ui/user/profile.xml')
-        return stl(handler, namespace)
-
-
-    #######################################################################
-    # Edit Language
-    edit_language_form__access__ = 'is_allowed_to_edit'
-    edit_language_form__label__ = u'Edit'
-    edit_language_form__sublabel__ = u'Language'
-    edit_language_form__icon__ = 'skin.png'
-    def edit_language_form(self, context):
-        root = context.root
-        user = context.user
-
-        # Build the namespace
-        namespace = {}
-
-        # Languages
-        languages = []
-        user_language = self.get_property('user_language')
-        for language_code in root.get_available_languages():
-            languages.append({'code': language_code,
-                              'name': get_language_name(language_code),
-                              'is_selected': language_code == user_language})
-        namespace['languages'] = languages
-
-        handler = self.get_object('/ui/user/edit_language_form.xml')
-        return stl(handler, namespace)
-
-
-    edit_language__access__ = 'is_allowed_to_edit'
-    def edit_language(self, context):
-        value = context.get_form_value('user_language')
-        self.set_property('user_language', value)
-
-        return context.come_back(u'Application preferences changed.')
-
-
-    #######################################################################
-    # Edit account
-    edit_account_form__access__ = 'is_allowed_to_edit'
-    edit_account_form__label__ = u'Edit'
-    edit_account_form__sublabel__ = u'Account'
-    edit_account_form__icon__ = 'settings.png'
-    def edit_account_form(self, context):
-        # Build the namespace
-        namespace = {}
-        namespace['firstname'] = self.get_property('firstname')
-        namespace['lastname'] = self.get_property('lastname')
-        namespace['email'] = self.get_property('email')
-        # Ask for password to confirm the changes
-        if self.name != context.user.name:
-            namespace['must_confirm'] = False
-        else:
-            namespace['must_confirm'] = True
-
-        handler = self.get_object('/ui/user/edit_account.xml')
-        return stl(handler, namespace)
-
-
-    edit_account__access__ = 'is_allowed_to_edit'
-    def edit_account(self, context):
-        # Check password to confirm changes
-        password = context.get_form_value('password')
-        user = context.user
-        if self.name == user.name:
-            if not self.authenticate(password):
-                return context.come_back(
-                    u"You mistyped your actual password, your account is"
-                    u" not changed.")
-
-        # Check the email is good
-        email = context.get_form_value('email', type=Email)
-        if not Email.is_valid(email):
-            return context.come_back(MSG_INVALID_EMAIL)
-
-        root = context.root
-        results = root.search(email=email)
-        if results.get_n_documents():
-            message = (u'There is another user with the email "%s", '
-                       u'please try again')
-
-        # Save changes
-        value = context.get_form_value('firstname', type=Unicode)
-        self.set_property('firstname', value)
-        value = context.get_form_value('lastname', type=Unicode)
-        self.set_property('lastname', value)
-        value = context.get_form_value('email', type=Email)
-        self.set_property('email', value)
-
-        return context.come_back(u'Account changed.')
-
-
-    #######################################################################
-    # Edit password
-    edit_password_form__access__ = 'is_allowed_to_edit'
-    edit_password_form__label__ = u'Edit'
-    edit_password_form__sublabel__ = u'Password'
-    edit_password_form__icon__ = 'lock.png'
-    def edit_password_form(self, context):
-        user = context.user
-
-        # Build the namespace
-        namespace = {}
-        if self.name != user.name:
-            namespace['must_confirm'] = False
-        else:
-            namespace['must_confirm'] = True
-
-        handler = self.get_object('/ui/user/edit_password.xml')
-        return stl(handler, namespace)
-
-
-    edit_password__access__ = 'is_allowed_to_edit'
-    def edit_password(self, context):
-        newpass = context.get_form_value('newpass')
-        newpass2 = context.get_form_value('newpass2')
-        password = context.get_form_value('password')
-        user = context.user
-
-        # Check input
-        if self.name == user.name:
-            if not self.authenticate(password):
-                return context.come_back(u"You mistyped your actual password, "
-                                         u"your account is not changed.")
-
-        newpass = newpass.strip()
-        if not newpass:
-            return context.come_back(u'Password empty, please type one.')
-
-        if newpass != newpass2:
-            return context.come_back(u"Passwords mismatch, please try again.")
-
-        # Clear confirmation key
-        if self.has_property('user_must_confirm'):
-            self.del_property('user_must_confirm')
-
-        # Set password
-        self.set_password(newpass)
-
-        # Update the cookie if we updated our own password
-        if self.name == user.name:
-            self.set_auth_cookie(context, newpass)
-
-        return context.come_back(u'Password changed.')
-
-
-    #######################################################################
-    # Tasks
-    tasks_list__access__ = 'is_allowed_to_edit'
-    tasks_list__label__ = u'Tasks'
-    tasks_list__icon__ = 'tasks.png'
-    def tasks_list(self, context):
-        root = context.root
-        user = context.user
-        site_root = self.get_site_root()
-        namespace = {}
-        documents = []
-
-        q1 = EqQuery('workflow_state', 'pending')
-        q2 = OrQuery(EqQuery('paths', str(site_root.get_abspath())),
-                     EqQuery('paths', str(self.get_canonical_path())))
-        query = AndQuery(q1, q2)
-
-        for brain in root.search(query).get_documents():
-            document = root.get_object(brain.abspath)
-            # Check security
-            ac = document.get_access_control()
-            if not ac.is_allowed_to_view(user, document):
-                continue
-            documents.append({'url': '%s/;%s' % (self.get_pathto(document),
-                                                 document.get_firstview()),
-                             'title': document.get_title()})
-        namespace['documents'] = documents
-
-        handler = self.get_object('/ui/user/tasks.xml')
-        return stl(handler, namespace)
+    profile = ProfileView()
+    edit_account = AccountForm()
+    edit_preferences = PreferencesForm()
+    edit_password = PasswordForm()
+    tasks = TasksView()
 
 
 
@@ -496,8 +504,8 @@ class UserFolder(Folder):
     class_icon16 = 'icons/16x16/userfolder.png'
     class_icon48 = 'icons/48x48/userfolder.png'
     class_views = [['view'],
-                   ['browse_content?mode=list'],
-                   ['edit_metadata_form']]
+                   ['browse_content'],
+                   ['edit_metadata']]
 
 
     def get_document_types(self):
@@ -552,8 +560,8 @@ class UserFolder(Folder):
     copy__access__ = False
     paste__access__ = False
 
-    edit_metadata_form__access__ = 'is_admin'
-    edit_metadata__access__ = 'is_admin'
+
+    edit_metadata = MetadataForm(access='is_admin')
 
 
     #######################################################################
@@ -562,8 +570,8 @@ class UserFolder(Folder):
     view__label__ = u'View'
     view__icon__ = 'view.png'
     def view(self, context):
-        message = (u'To manage the users please go '
-                   u'<a href="/;permissions_form">here</a>.')
+        message = (
+            u'To manage the users please go <a href="/;permissions">here</a>.')
         return self.gettext(message).encode('utf-8')
 
 

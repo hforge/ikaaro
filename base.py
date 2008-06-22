@@ -19,6 +19,7 @@
 
 # Import from the Standard Library
 from datetime import datetime
+from string import Template
 
 # Import from itools
 from itools.datatypes import FileName, String, Unicode, Integer, is_datatype
@@ -29,7 +30,7 @@ from itools.i18n import get_language_name, format_datetime
 from itools.stl import stl
 from itools.uri import Path
 from itools import vfs
-from itools.web import get_context, Node as BaseNode
+from itools.web import get_context, Node as BaseNode, BaseView, STLForm
 from itools.xapian import CatalogAware
 from itools.xapian import TextField, KeywordField, IntegerField, BoolField
 from itools.xml import XMLParser
@@ -39,30 +40,78 @@ from lock import Lock, lock_body
 from messages import *
 from metadata import Metadata
 from registry import get_object_class
-from workflow import WorkflowAware
 from utils import reduce_string
+from views import NewInstanceForm
+from workflow import WorkflowAware
 
 
 
-class Node(BaseNode):
+###########################################################################
+# Views
+###########################################################################
+class NewObjectForm(NewInstanceForm):
 
-    class_views = []
-
-    ########################################################################
-    # HTTP
-    ########################################################################
-    def get_method(self, name):
-        try:
-            method = getattr(self, name)
-        except AttributeError:
-            return None
-        return method
+    access = 'is_allowed_to_add'
+    template = 'ui/base/new_instance.xml'
+    schema = {
+        'name': String,
+        'title': Unicode,
+    }
 
 
-    GET__access__ = 'is_allowed_to_view'
-    def GET(self, context):
-        method = self.get_firstview()
+    def get_namespace(self, model, context):
+        type = context.get_query_value('type')
+        cls = get_object_class(type)
+        return {
+            'title': context.get_form_value('title', type=Unicode),
+            'name': context.get_form_value('name', default=''),
+            'class_id': cls.class_id,
+            'class_title': cls.gettext(cls.class_title),
+        }
+
+
+    def action(self, model, context, form):
+        name = form['name']
+        title = form['title']
+
+        # Check the name
+        name = name.strip() or title.strip()
+        if not name:
+            context.message = MSG_NAME_MISSING
+            return
+
+        name = checkid(name)
+        if name is None:
+            context.message = MSG_BAD_NAME
+            return
+
+        # Check the name is free
+        if model.has_object(name):
+            context.message = MSG_NAME_CLASH
+            return
+
+        # Create the object
+        class_id = context.get_form_value('class_id')
+        cls = get_object_class(class_id)
+        object = cls.make_object(cls, model, name)
+        # The metadata
+        metadata = object.metadata
+        language = model.get_content_language(context)
+        metadata.set_property('title', title, language=language)
+
+        goto = './%s/;%s' % (name, object.get_firstview())
+        return context.come_back(MSG_NEW_RESOURCE, goto=goto)
+
+
+
+class RedirectView(BaseView):
+
+    access = 'is_allowed_to_view'
+
+
+    def GET(self, model, context):
         # Check access
+        method = model.get_firstview()
         if method is None:
             raise Forbidden
 
@@ -70,26 +119,221 @@ class Node(BaseNode):
         return context.uri.resolve2(';%s' % method)
 
 
-    POST__access__ = 'is_authenticated'
-    def POST(self, context):
-        for name in context.get_form_keys():
-            if name.startswith(';'):
-                method_name = name[1:]
-                method = self.get_method(method_name)
-                if method is None:
-                    # XXX When the method is not defined, is it the best
-                    # thing to do a Not-Found error?
-                    # XXX Send a 404 status code.
-                    return context.root.not_found(context)
-                # Check security
-                user = context.user
-                ac = self.get_access_control()
-                if not ac.is_access_allowed(user, self, method_name):
-                    raise Forbidden
-                # Call the method
-                return method(context)
 
-        raise Exception, 'the form did not define the action to do'
+class MetadataForm(STLForm):
+
+    access = 'is_allowed_to_edit'
+    __label__ = u'Metadata'
+    title = u'Metadata'
+    icon = 'metadata.png'
+    template = '/ui/base/edit_metadata.xml'
+    schema = {
+        'title': Unicode,
+        'description': Unicode,
+        'subject': Unicode,
+    }
+
+
+    def get_namespace(self, model, context):
+        language = model.get_content_language(context)
+        language_name = get_language_name(language)
+
+        get_property = model.get_property
+        return {
+            'language_name': model.gettext(language_name),
+            'title': get_property('title', language=language),
+            'description': get_property('description', language=language),
+            'subject': get_property('subject', language=language),
+        }
+
+
+    def action(self, model, context, form):
+        title = form['title']
+        description = form['description']
+        subject = form['subject']
+        language = model.get_content_language(context)
+        model.set_property('title', title, language=language)
+        model.set_property('description', description, language=language)
+        model.set_property('subject', subject, language=language)
+
+        return MSG_CHANGES_SAVED
+
+
+
+class AddImageForm(STLForm):
+
+    access = 'is_allowed_to_edit'
+    template = '/ui/html/addimage.xml'
+
+
+    def get_namespace(self, model, context):
+        from file import File
+        from binary import Image
+        from widgets import Breadcrumb
+
+        # HTML or Wiki
+        mode = context.get_form_value('mode', default='html')
+        if mode == 'wiki':
+            scripts = ['/ui/wiki/javascript.js']
+        else:
+            scripts = ['/ui/tiny_mce/javascript.js',
+                       '/ui/tiny_mce/tiny_mce_src.js',
+                       '/ui/tiny_mce/tiny_mce_popup.js']
+
+        # For the breadcrumb
+        if isinstance(model, File):
+            start = model.parent
+        else:
+            start = model
+
+        # Construct namespace
+        return {
+            'bc': Breadcrumb(filter_type=Image, start=start, icon_size=48),
+            'message': context.get_form_value('message'),
+            'mode': mode,
+            'scripts': scripts,
+            'caption': model.gettext(MSG_CAPTION).encode('utf_8'),
+        }
+
+
+    def GET(self, model, context):
+        template = model.get_object(self.template)
+        namespace = self.get_namespace(model, context)
+        prefix = model.get_pathto(template)
+        return stl(template, namespace, prefix=prefix)
+
+
+    def action(self, model, context, form):
+        """Allow to upload and add an image to epoz
+        """
+        from binary import Image
+
+        root = context.root
+        # Get the container
+        container = root.get_object(context.get_form_value('target_path'))
+        # Add the image to the object
+        uri = Image.new_instance(Image, container, context)
+        if ';add_image' not in uri.path:
+            caption = self.gettext(MSG_CAPTION).encode('utf_8')
+            mode = context.get_form_value('mode', default='html')
+            if mode == 'wiki':
+                scripts = ['/ui/wiki/javascript.js']
+            else:
+                scripts = ['/ui/tiny_mce/javascript.js',
+                           '/ui/tiny_mce/tiny_mce_src.js',
+                           '/ui/tiny_mce/tiny_mce_popup.js']
+
+            object = container.get_object(uri.path[0])
+            path = context.object.get_pathto(object)
+            script_template = '<script type="text/javascript" src="%s" />'
+            body = ''
+            for script in scripts:
+                body += script_template % script
+
+            body += """
+                <script type="text/javascript">
+                    select_img('%s', '%s');
+                </script>"""
+            return body % (path, caption)
+
+        return context.come_back(message=uri.query['message'])
+
+
+
+class AddLinkForm(STLForm):
+
+    access = 'is_allowed_to_edit'
+    template = '/ui/html/addlink.xml'
+
+
+    def get_namespace(self, model, context):
+        from file import File
+        from widgets import Breadcrumb
+
+        # HTML or Wiki
+        mode = context.get_form_value('mode', default='html')
+        if mode == 'wiki':
+            scripts = ['/ui/wiki/javascript.js']
+            type = 'WikiPage'
+        else:
+            scripts = ['/ui/tiny_mce/javascript.js',
+                       '/ui/tiny_mce/tiny_mce_src.js',
+                       '/ui/tiny_mce/tiny_mce_popup.js']
+            type = 'application/xhtml+xml'
+
+        # For the breadcrumb
+        if isinstance(model, File):
+            start = model.parent
+        else:
+            start = model
+
+        # Construct namespace
+        return {
+            'mode': mode,
+            'bc': Breadcrumb(filter_type=File, start=start, icon_size=48),
+            'message': context.get_form_value('message'),
+            'scripts': scripts,
+            'type': type,
+            'wiki_mode': (mode == 'wiki'),
+        }
+
+
+    def GET(self, model, context):
+        template = model.get_object(self.template)
+        namespace = self.get_namespace(model, context)
+        prefix = model.get_pathto(template)
+        return stl(template, namespace, prefix=prefix)
+
+
+    def action(self, model, context, form):
+        """Allow to upload a file and link it to epoz
+        """
+        # Get the container
+        root = context.root
+        container = root.get_object(context.get_form_value('target_path'))
+        # Add the file to the object
+        class_id = context.get_form_value('type')
+        cls = get_object_class(class_id)
+        uri = cls.new_instance(cls, container, context)
+        if ';add_link' not in uri.path:
+            mode = context.get_form_value('mode', default='html')
+            if mode == 'wiki':
+                scripts = ['/ui/wiki/javascript.js']
+            else:
+                scripts = ['/ui/tiny_mce/javascript.js',
+                           '/ui/tiny_mce/tiny_mce_src.js',
+                           '/ui/tiny_mce/tiny_mce_popup.js']
+
+            object = container.get_object(uri.path[0])
+            path = context.object.get_pathto(object)
+            script_template = '<script type="text/javascript" src="%s" />'
+            body = ''
+            for script in scripts:
+                body += script_template % script
+
+            body += """
+                <script type="text/javascript">
+                    select_link('%s');
+                </script>"""
+            return body % path
+
+        return context.come_back(message=uri.query['message'])
+
+
+
+
+
+###########################################################################
+# Model
+###########################################################################
+class Node(BaseNode):
+
+    class_views = []
+
+    ########################################################################
+    # UI
+    ########################################################################
+    GET = RedirectView()
 
 
     ########################################################################
@@ -137,12 +381,12 @@ class Node(BaseNode):
         return ';icon%s' % size
 
 
-    def get_method_icon(self, method_name, size='16x16', **kw):
-        icon = getattr(self, '%s__icon__' % method_name, None)
+    def get_method_icon(self, view, size='16x16', **kw):
+        icon = getattr(view, 'icon', None)
         if icon is None:
             return None
         if callable(icon):
-            icon = icon(**kw)
+            icon = icon(self, **kw)
         if icon.startswith('/ui/'):
             return icon
         return '/ui/icons/%s/%s' % (size, icon)
@@ -160,9 +404,10 @@ class Node(BaseNode):
 
 
     @classmethod
-    def gettext(cls, message, language=None):
+    def gettext(cls, message, language=None, **kw):
         gettext = DomainAware.gettext
 
+        # Translate
         if cls.class_domain == 'ikaaro':
             domain_names = ['ikaaro']
         else:
@@ -176,7 +421,12 @@ class Node(BaseNode):
 
             translation = gettext(message, language, domain=domain_name)
             if translation != message:
-                return translation
+                message = translation
+                break
+
+        # Interpolate
+        if kw:
+            message = Template(message).substitute(kw)
 
         return message
 
@@ -188,19 +438,20 @@ class Node(BaseNode):
         """Returns the first allowed object view url, or None if there
         aren't.
         """
-        for view in self.get_views():
-            return view
+        for name, view in self.get_views():
+            return name
         return None
 
 
     def get_views(self):
         user = get_context().user
         ac = self.get_access_control()
-        for view in self.class_views:
-            view = view[0]
-            name = view.split('?')[0]
-            if ac.is_access_allowed(user, self, name):
-                yield view
+        for names in self.class_views:
+            name = names[0]
+            name = name.split('?')[0]
+            view = self.get_view(name)
+            if ac.is_access_allowed(user, self, view):
+                yield name, view
 
 
     def get_subviews(self, name):
@@ -548,47 +799,7 @@ class DBObject(CatalogAware, Node, DomainAware):
     ########################################################################
     # User interface
     ########################################################################
-    @staticmethod
-    def new_instance_form(cls, context):
-        root = context.root
-        # Build the namespace
-        namespace = {}
-        namespace['title'] = context.get_form_value('title', type=Unicode)
-        namespace['name'] = context.get_form_value('name', default='')
-        # The class id and title
-        namespace['class_id'] = cls.class_id
-        namespace['class_title'] = cls.gettext(cls.class_title)
-
-        handler = root.get_object('ui/base/new_instance.xml')
-        return stl(handler, namespace)
-
-
-    @staticmethod
-    def new_instance(cls, container, context):
-        name = context.get_form_value('name')
-        title = context.get_form_value('title', type=Unicode)
-
-        # Check the name
-        name = name.strip() or title.strip()
-        if not name:
-            return context.come_back(MSG_NAME_MISSING)
-
-        name = checkid(name)
-        if name is None:
-            return context.come_back(MSG_BAD_NAME)
-
-        # Check the name is free
-        if container.has_object(name):
-            return context.come_back(MSG_NAME_CLASH)
-
-        object = cls.make_object(cls, container, name)
-        # The metadata
-        metadata = object.metadata
-        language = container.get_content_language(context)
-        metadata.set_property('title', title, language=language)
-
-        goto = './%s/;%s' % (name, object.get_firstview())
-        return context.come_back(MSG_NEW_RESOURCE, goto=goto)
+    new_instance = NewObjectForm()
 
 
     def get_title(self, language=None):
@@ -661,7 +872,7 @@ class DBObject(CatalogAware, Node, DomainAware):
             statename = object.get_statename()
             state = object.get_state()
             msg = self.gettext(state['title']).encode('utf-8')
-            state = ('<a href="%s/;state_form" class="workflow">'
+            state = ('<a href="%s/;edit_state" class="workflow">'
                      '<strong class="wf_%s">%s</strong>'
                      '</a>') % (self.get_pathto(object), statename, msg)
             line['workflow_state'] = XMLParser(state)
@@ -737,37 +948,7 @@ class DBObject(CatalogAware, Node, DomainAware):
         return Metadata(handler_class=cls, format=format, **kw)
 
 
-    edit_metadata_form__access__ = 'is_allowed_to_edit'
-    edit_metadata_form__label__ = u'Metadata'
-    edit_metadata_form__sublabel__ = u'Metadata'
-    edit_metadata_form__icon__ = 'metadata.png'
-    def edit_metadata_form(self, context):
-        # Build the namespace
-        namespace = {}
-        # Language
-        language = self.get_content_language(context)
-        language_name = get_language_name(language)
-        namespace['language_name'] = self.gettext(language_name)
-        # Title, Description, Subject
-        for name in 'title', 'description', 'subject':
-            namespace[name] = self.get_property(name, language=language)
-
-        handler = self.get_object('/ui/base/edit_metadata.xml')
-        return stl(handler, namespace)
-
-
-    edit_metadata__access__ = 'is_allowed_to_edit'
-    def edit_metadata(self, context):
-        title = context.get_form_value('title', type=Unicode)
-        description = context.get_form_value('description', type=Unicode)
-        subject = context.get_form_value('subject', type=Unicode)
-        language = self.get_content_language(context)
-        self.set_property('title', title, language=language)
-        self.set_property('description', description, language=language)
-        self.set_property('subject', subject, language=language)
-
-        context.message = MSG_CHANGES_SAVED
-        return self.edit_metadata_form
+    edit_metadata = MetadataForm()
 
 
     ########################################################################
@@ -806,147 +987,7 @@ class DBObject(CatalogAware, Node, DomainAware):
 
 
     #######################################################################
-    # UI / Edit / Inline / toolbox: add images
+    # UI / Edit Inline (toolbox)
     #######################################################################
-    addimage_form__access__ = 'is_allowed_to_edit'
-    def addimage_form(self, context):
-        from file import File
-        from binary import Image
-        from widgets import Breadcrumb
-
-        # Build the bc
-        if isinstance(self, File):
-            start = self.parent
-        else:
-            start = self
-
-        # Construct namespace
-        namespace = {}
-        namespace['bc'] = Breadcrumb(filter_type=Image, start=start,
-                                     icon_size=48)
-        namespace['message'] = context.get_form_value('message')
-        mode = context.get_form_value('mode', default='html')
-        namespace['mode'] = mode
-        if mode == 'wiki':
-            scripts = ['/ui/wiki/javascript.js']
-        else:
-            scripts = ['/ui/tiny_mce/javascript.js',
-                       '/ui/tiny_mce/tiny_mce_src.js',
-                       '/ui/tiny_mce/tiny_mce_popup.js']
-        namespace['scripts'] = scripts
-        namespace['caption'] = self.gettext(MSG_CAPTION).encode('utf_8')
-
-        template = self.get_object('/ui/html/addimage.xml')
-        prefix = self.get_pathto(template)
-        return stl(template, namespace, prefix=prefix)
-
-
-    addimage__access__ = 'is_allowed_to_edit'
-    def addimage(self, context):
-        """Allow to upload and add an image to epoz
-        """
-        from binary import Image
-        root = context.root
-        # Get the container
-        container = root.get_object(context.get_form_value('target_path'))
-        # Add the image to the object
-        uri = Image.new_instance(Image, container, context)
-        if ';addimage_form' not in uri.path:
-            caption = self.gettext(MSG_CAPTION).encode('utf_8')
-            mode = context.get_form_value('mode', default='html')
-            if mode == 'wiki':
-                scripts = ['/ui/wiki/javascript.js']
-            else:
-                scripts = ['/ui/tiny_mce/javascript.js',
-                           '/ui/tiny_mce/tiny_mce_src.js',
-                           '/ui/tiny_mce/tiny_mce_popup.js']
-
-            object = container.get_object(uri.path[0])
-            path = context.object.get_pathto(object)
-            script_template = '<script type="text/javascript" src="%s" />'
-            body = ''
-            for script in scripts:
-                body += script_template % script
-
-            body += """
-                <script type="text/javascript">
-                    select_img('%s', '%s');
-                </script>"""
-            return body % (path, caption)
-
-        return context.come_back(message=uri.query['message'])
-
-
-    #######################################################################
-    # UI / Edit / Inline / toolbox: add links
-    #######################################################################
-    addlink_form__access__ = 'is_allowed_to_edit'
-    def addlink_form(self, context):
-        from file import File
-        from widgets import Breadcrumb
-
-        # Build the bc
-        if isinstance(self, File):
-            start = self.parent
-        else:
-            start = self
-
-        # Construct namespace
-        namespace = {}
-        namespace['bc'] = Breadcrumb(filter_type=File, start=start,
-                                     icon_size=48)
-        namespace['message'] = context.get_form_value('message')
-        mode = context.get_form_value('mode', default='html')
-        namespace['mode'] = mode
-        if mode == 'wiki':
-            scripts = ['/ui/wiki/javascript.js']
-            type = 'WikiPage'
-        else:
-            scripts = ['/ui/tiny_mce/javascript.js',
-                       '/ui/tiny_mce/tiny_mce_src.js',
-                       '/ui/tiny_mce/tiny_mce_popup.js']
-            type = 'application/xhtml+xml'
-        namespace['scripts'] = scripts
-        namespace['type'] = type
-        namespace['wiki_mode'] = (mode == 'wiki')
-
-        template = self.get_object('/ui/html/addlink.xml')
-        prefix = self.get_pathto(template)
-        return stl(template, namespace, prefix=prefix)
-
-
-    addlink__access__ = 'is_allowed_to_edit'
-    def addlink(self, context):
-        """Allow to upload a file and link it to epoz
-        """
-        # Get the container
-        root = context.root
-        container = root.get_object(context.get_form_value('target_path'))
-        # Add the file to the object
-        class_id = context.get_form_value('type')
-        cls = get_object_class(class_id)
-        uri = cls.new_instance(cls, container, context)
-        if ';addlink_form' not in uri.path:
-            mode = context.get_form_value('mode', default='html')
-            if mode == 'wiki':
-                scripts = ['/ui/wiki/javascript.js']
-            else:
-                scripts = ['/ui/tiny_mce/javascript.js',
-                           '/ui/tiny_mce/tiny_mce_src.js',
-                           '/ui/tiny_mce/tiny_mce_popup.js']
-
-            object = container.get_object(uri.path[0])
-            path = context.object.get_pathto(object)
-            script_template = '<script type="text/javascript" src="%s" />'
-            body = ''
-            for script in scripts:
-                body += script_template % script
-
-            body += """
-                <script type="text/javascript">
-                    select_link('%s');
-                </script>"""
-            return body % path
-
-        return context.come_back(message=uri.query['message'])
-
+    add_image = AddImageForm()
+    add_link = AddLinkForm()

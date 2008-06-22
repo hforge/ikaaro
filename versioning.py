@@ -22,8 +22,7 @@ from operator import itemgetter
 # Import from itools
 from itools.datatypes import DateTime, String
 from itools.i18n import format_datetime
-from itools.stl import stl
-from itools.web import get_context
+from itools.web import get_context, STLView
 from itools.xapian import KeywordField, BoolField
 
 # Import from ikaaro
@@ -31,6 +30,27 @@ from base import DBObject
 from metadata import Record
 
 
+###########################################################################
+# Views
+###########################################################################
+class HistoryView(STLView):
+
+    access = 'is_allowed_to_view'
+    __label__ = u'History'
+    icon = 'history.png'
+    template = '/ui/file/history.xml'
+
+
+    def get_namespace(self, model, context):
+        return {
+            'revisions': model.get_revisions(context),
+        }
+
+
+
+###########################################################################
+# Model
+###########################################################################
 class History(Record):
 
     schema = {
@@ -123,17 +143,8 @@ class VersioningAware(DBObject):
 
         return document
 
+
     ########################################################################
     # User Interface
     ########################################################################
-    history_form__access__ = 'is_allowed_to_view'
-    history_form__label__ = u'History'
-    history_form__icon__ = 'history.png'
-    def history_form(self, context):
-        namespace = {}
-
-        namespace['revisions'] = self.get_revisions(context)
-
-        handler = self.get_object('/ui/file/history.xml')
-        return stl(handler, namespace)
-
+    history = HistoryView()
