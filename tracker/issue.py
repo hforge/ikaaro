@@ -21,7 +21,7 @@
 # Import from the Standard Library
 from datetime import datetime
 from operator import itemgetter
-from re import split
+from re import compile
 from string import Template
 from textwrap import wrap
 
@@ -58,6 +58,7 @@ time_select_template = list(XMLParser("""
     { None: 'http://www.w3.org/1999/xhtml',
      'stl': 'http://xml.itools.org/namespaces/stl'}))
 
+url_expr = compile('(https?://[\w./;?=&#\-%:]*)')
 def indent(text):
     """Replace URLs by HTML links.  Wrap lines (with spaces) to 150 chars.
     """
@@ -72,8 +73,8 @@ def indent(text):
                 lines.append(line)
     text = '\n'.join(lines)
     # Links
-    for segment in split('(http://[\w./;#\-%:]*)', text):
-        if segment.startswith('http://'):
+    for segment in url_expr.split(text):
+        if segment.startswith('http://') or segment.startswith('https://'):
             attributes = {(xhtml_uri, 'href'): segment}
             yield START_ELEMENT, (xhtml_uri, 'a', attributes), 1
             yield TEXT, segment, 1
