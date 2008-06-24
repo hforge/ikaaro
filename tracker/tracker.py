@@ -408,19 +408,12 @@ class Tracker(Folder):
             namespace['export_to_text'] = True
             namespace['columns'] = []
             # List columns
-            columns = context.get_form_values('column_selection')
-            # Put the title at the end
-            table_columns.remove(('title', u'Title'))
-            table_columns.append(('title', u'Title'))
-            for column in table_columns:
-                name, title = column
-                if name is not 'id':
-                    checked = True
-                    if context.get_form_value('button_export_to_text'):
-                        checked = name in columns
-                    namespace['columns'].append({'name': name,
-                                                 'title': title,
-                                                 'checked': checked})
+            columns = context.get_form_values('column_selection', ['title'])
+            # Use columns in a different order and without the id
+            export_columns = table_columns[2:] + [table_columns[1]]
+            for name, title in export_columns:
+                namespace['columns'].append({'name': name, 'title': title,
+                                             'checked': name in columns})
             namespace['text'] = self.get_export_to_text(context)
         # Export_to_csv
         namespace['export_to_csv'] = False
@@ -609,8 +602,7 @@ class Tracker(Folder):
         # Get selected columns
         selected_columns = context.get_form_values('column_selection')
         if not selected_columns:
-            selected_columns = [ x[0] for x in table_columns
-                                 if x[0] is not 'id' ]
+            selected_columns = ['title']
         # Get search results
         results = self.get_search_results(context)
         # Analyse the result
