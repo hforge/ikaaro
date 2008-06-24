@@ -32,22 +32,22 @@
       </tr>
       <tr>
         <td valign="top">
+          <label for="type">Type:<stl:block if="is_admin"> (<a
+            href="./types/;view">Edit</a>)</stl:block></label>
+          <br/>
+          <select name="type" id="type" class="tracker_select"
+            multiple="multiple" size="3">
+            <option stl:repeat="item types" value="${item/id}"
+              selected="${item/is_selected}">${item/title}</option>
+          </select>
+        </td>
+        <td valign="top">
           <label for="module">Module:<stl:block if="is_admin"> (<a
             href="./modules/;view">Edit</a>)</stl:block></label>
           <br/>
           <select name="module" id="module" class="tracker_select"
             multiple="multiple" size="3">
             <option stl:repeat="item modules" value="${item/id}"
-              selected="${item/is_selected}">${item/title}</option>
-          </select>
-        </td>
-        <td valign="top">
-          <label for="assigned_to">Assigned To:<stl:block if="is_admin"> (<a
-            href="${manage_assigned}">Edit</a>)</stl:block></label>
-          <br/>
-          <select name="assigned_to" id="assigned_to"
-            class="tracker_select" multiple="multiple" size="3">
-            <option stl:repeat="item users" value="${item/id}"
               selected="${item/is_selected}">${item/title}</option>
           </select>
         </td>
@@ -64,16 +64,16 @@
       </tr>
       <tr>
         <td valign="top">
-          <label for="type">Type:<stl:block if="is_admin"> (<a
-            href="./types/;view">Edit</a>)</stl:block></label>
+          <label for="assigned_to">Assigned To:<stl:block if="is_admin"> (<a
+            href="${manage_assigned}">Edit</a>)</stl:block></label>
           <br/>
-          <select name="type" id="type" class="tracker_select"
-            multiple="multiple" size="3">
-            <option stl:repeat="item types" value="${item/id}"
+          <select name="assigned_to" id="assigned_to"
+            class="tracker_select" multiple="multiple" size="3">
+            <option stl:repeat="item users" value="${item/id}"
               selected="${item/is_selected}">${item/title}</option>
           </select>
         </td>
-        <td>
+        <td valign="top">
           <label for="state">Status:<stl:block if="is_admin"> (<a
             href="./states/;view">Edit</a>)</stl:block></label>
           <br/>

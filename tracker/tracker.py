@@ -862,7 +862,7 @@ class SelectTable(Table):
                             'button_delete', None)]
 
         fields = [('id', u'id')]
-        for widget in self.handler.form:
+        for widget in self.form:
             fields.append((widget.name, getattr(widget, 'title', widget.name)))
 
         fields.append(('issues', u'Issues'))

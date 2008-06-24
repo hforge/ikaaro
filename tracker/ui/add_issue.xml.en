@@ -17,10 +17,10 @@
       </tr>
       <tr>
         <td valign="top">
-          <label for="version">Version (mandatory):</label><br/>
-          <select name="version" id="version" class="tracker_select">
+          <label for="type">Type (mandatory):</label><br/>
+          <select name="type" id="type" class="tracker_select">
             <option value=""></option>
-            <option stl:repeat="item versions" value="${item/id}"
+            <option stl:repeat="item types" value="${item/id}"
               selected="${item/is_selected}">${item/title}</option>
           </select>
         </td>
@@ -32,13 +32,28 @@
               selected="${item/is_selected}">${item/title}</option>
           </select>
         </td>
+        <td valign="top">
+          <label for="version">Version (mandatory):</label><br/>
+          <select name="version" id="version" class="tracker_select">
+            <option value=""></option>
+            <option stl:repeat="item versions" value="${item/id}"
+              selected="${item/is_selected}">${item/title}</option>
+          </select>
+        </td>
       </tr>
       <tr>
         <td valign="top">
-          <label for="type">Type (mandatory):</label><br/>
-          <select name="type" id="type" class="tracker_select">
+          <label for="assigned_to">Assign To:</label><br/>
+          <select name="assigned_to" id="assigned_to" class="tracker_select">
             <option value=""></option>
-            <option stl:repeat="item types" value="${item/id}"
+            <option stl:repeat="item users" value="${item/id}"
+              selected="${item/is_selected}">${item/title}</option>
+          </select>
+        </td>
+        <td valign="top">
+          <label for="state">Status (mandatory):</label><br/>
+          <select name="state" id="state" class="tracker_select">
+            <option stl:repeat="item states" value="${item/id}"
               selected="${item/is_selected}">${item/title}</option>
           </select>
         </td>
@@ -53,23 +68,6 @@
       </tr>
       <tr>
         <td valign="top">
-          <label for="state">Status (mandatory):</label><br/>
-          <select name="state" id="state" class="tracker_select">
-            <option stl:repeat="item states" value="${item/id}"
-              selected="${item/is_selected}">${item/title}</option>
-          </select>
-        </td>
-        <td valign="top">
-          <label for="assigned_to">Assign To:</label><br/>
-          <select name="assigned_to" id="assigned_to" class="tracker_select">
-            <option value=""></option>
-            <option stl:repeat="item users" value="${item/id}"
-              selected="${item/is_selected}">${item/title}</option>
-          </select>
-        </td>
-      </tr>
-      <tr>
-        <td valign="top" colspan="2">
           <label for="cc_add">CC:</label><br/>
           <select name="cc_add" id="cc_add" class="tracker_select"
             multiple="multiple" size="5">
@@ -93,7 +91,7 @@
       </tr>
       <tr>
         <td>
-          <input type="submit" value="Add" />
+          <input type="submit" class="button_ok" value="Add" />
         </td>
       </tr>
     </table>
