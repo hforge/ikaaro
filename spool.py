@@ -20,7 +20,7 @@ from datetime import datetime
 from email.parser import HeaderParser
 from os import fstat, getpid, remove as remove_file
 from signal import signal, SIGINT
-from smtplib import SMTP
+from smtplib import SMTP, SMTPException
 from socket import gaierror
 from time import sleep
 from traceback import print_exc
@@ -119,6 +119,14 @@ class Spool(object):
                     # Log
                     log('SENT "%s" from "%s" to "%s"' % (subject, from_addr,
                         to_addr))
+                except SMTPException, excp:
+                    if excp.smtp_code == 501:
+                        # Bad address syntax
+                        # Log
+                        self.log_error()
+                        # Remove
+                        spool.remove(name)
+                    # Other error ...
                 except:
                     self.log_error()
             # Close connection
