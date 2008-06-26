@@ -50,7 +50,8 @@ class Dressable(Folder, EpozEditable):
     class_version = '20071215'
     class_title = u'Dressable'
     class_description = u'A dressable folder'
-    class_views = ([['view'], ['edit_document']] + Folder.class_views)
+    class_views = ([Folder.class_views[0]] + [['view'], ['edit_document']]
+            + Folder.class_views[1:])
     __fixed_handlers__ = ['index']
     template = '/ui/future/dressable_view.xml'
     layout = {'content': ('index', WebPage),
@@ -71,8 +72,8 @@ class Dressable(Folder, EpozEditable):
     """))
 
     @staticmethod
-    def _make_object(cls, folder, name):
-        Folder._make_object(cls, folder, name)
+    def _make_object(cls, folder, name, **kw):
+        Folder._make_object(cls, folder, name, **kw)
         # populate the dressable
         cls._populate(cls, folder, name)
 
@@ -188,7 +189,7 @@ class Dressable(Folder, EpozEditable):
     # API
     #######################################################################
     edit_document__access__ = 'is_allowed_to_edit'
-    edit_document__label__ = 'edit'
+    edit_document__label__ = u'Edit'
     edit_document__icon__ = 'edit.png'
     def edit_document(self, context):
         name = context.get_form_value('dress_name')
@@ -200,7 +201,7 @@ class Dressable(Folder, EpozEditable):
 
 
     edit_image__access__ = 'is_allowed_to_edit'
-    edit_image__label__ = 'edit image'
+    edit_image__label__ = u'Edit image'
     edit_image__icon__ = 'image.png'
     def edit_image(self, context):
         name = context.get_form_value('name')
