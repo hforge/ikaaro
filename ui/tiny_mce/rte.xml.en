@@ -8,7 +8,7 @@
   <script type="text/javascript" stl:repeat="script scripts" src="${script}" />
   <script type="text/javascript">
     /* toolbar */
-    var buttons = "newdocument,code,cleanup,|,bold,italic,underline,separator,strikethrough,justifyleft,justifycenter,justifyright, justifyfull"
+    var buttons = "newdocument,code,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright, justifyfull"
         buttons += ",|,bullist,numlist,|, outdent, indent,|,undo,redo,|,link,unlink,image,media,|,removeformat,forecolor,backcolor,|,formatselect"
 
   tinyMCE.init({
