@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.datatypes import Unicode
+from itools.datatypes import Integer, String, Unicode
 from itools.stl import stl
 from itools.web import STLView, STLForm
 
@@ -69,17 +69,24 @@ class BrowseForm(STLForm):
 
     template = '/ui/generic/browse.xml'
 
+    query_schema = {
+        'search_field': String,
+        'search_term': Unicode,
+        'sortorder': String(default='up'),
+        'sortby': String(multiple=True),
+        'batchstart': Integer(default=0),
+    }
 
     # [(<name>, <title>), ...]
     search_fields = []
 
 
-    def search_form(self, model, context):
+    def search_form(self, model, query):
         gettext = model.gettext
 
         # Get values from the query
-        field = context.get_form_value('search_field')
-        term = context.get_form_value('search_term', type=Unicode)
+        field = query['search_field']
+        term = query['search_term']
 
         # Build the namespace
         namespace = {}
@@ -95,7 +102,14 @@ class BrowseForm(STLForm):
         return stl(template, namespace)
 
 
-    def get_namespace(self, model, context):
-        namespace = {}
-        namespace['search'] = self.search_form(model, context)
-        return namespace
+    def GET(self, model, context):
+        query = self.get_query(context)
+
+        # Batch / Table
+        namespace = self.get_namespace(model, context, query)
+        # Search Form
+        namespace['search'] = self.search_form(model, query)
+
+        # Ok
+        template = model.get_object(self.template)
+        return stl(template, namespace)

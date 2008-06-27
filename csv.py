@@ -46,13 +46,13 @@ class ViewCSV(BrowseForm):
     }
 
 
-    def get_namespace(self, model, context):
-        namespace = BrowseForm.get_namespace(self, model, context)
+    def get_namespace(self, model, context, query):
+        namespace = {}
 
         handler = model.handler
 
         # The input parameters
-        start = context.get_form_value('batchstart', type=Integer, default=0)
+        start = query['batchstart']
         size = 50
 
         # The batch
@@ -101,12 +101,12 @@ class ViewCSV(BrowseForm):
             read += 1
 
         # Sorting
-        sortby = context.get_form_value('sortby')
-        sortorder = context.get_form_value('sortorder', default='up')
+        sortby = query['sortby']
+        sortorder = query['sortorder']
         if sortby:
-            rows.sort(key=itemgetter(sortby), reverse=(sortorder=='down'))
+            rows.sort(key=itemgetter(sortby[0]), reverse=(sortorder=='down'))
 
-        namespace['table'] = widgets.table(columns, rows, [sortby], sortorder,
+        namespace['table'] = widgets.table(columns, rows, sortby, sortorder,
                                            actions)
 
         return namespace

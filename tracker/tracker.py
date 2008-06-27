@@ -110,11 +110,11 @@ class SelectTableView(TableView):
         return model.form
 
 
-    def get_namespace(self, model, context):
+    def get_namespace(self, model, context, query):
         namespace = {}
 
         # The input parameters
-        start = context.get_form_value('batchstart', type=Integer, default=0)
+        start = query['batchstart']
         size = 30
 
         # Search
@@ -181,8 +181,8 @@ class SelectTableView(TableView):
                 if multiple is True:
                     records[-1][field] = (records[-1][field], rmultiple)
 
-            query = AndQuery(base_query, EqQuery(filter, id))
-            count = root.search(query).get_n_documents()
+            search_query = AndQuery(base_query, EqQuery(filter, id))
+            count = root.search(search_query).get_n_documents()
             value = '0'
             if count != 0:
                 value = '<a href="../;view?%s=%s">%s issues</a>'
@@ -192,10 +192,11 @@ class SelectTableView(TableView):
             records[-1]['issues'] = value
 
         # Sorting
-        sortby = context.get_form_value('sortby')
-        sortorder = context.get_form_value('sortorder', default='up')
+        sortby = query['sortby']
+        sortorder = query['sortorder']
         if sortby:
-            records.sort(key=itemgetter(sortby), reverse=(sortorder=='down'))
+            reverse = (sortorder == 'down')
+            records.sort(key=itemgetter(sortby[0]), reverse=reverse)
 
         records = records[start:start+size]
         for record in records:
@@ -206,9 +207,7 @@ class SelectTableView(TableView):
                     else:
                         record[field] = record[field][0]
 
-        namespace['table'] = table(fields, records, [sortby], sortorder,
-                                   actions)
-
+        namespace['table'] = table(fields, records, sortby, sortorder, actions)
         return namespace
 
 

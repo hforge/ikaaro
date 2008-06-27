@@ -2,19 +2,21 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
-  <form action="" method="get" stl:if="search_fields">
-    <fieldset>
-      <legend>Search</legend>
-      <!-- Field -->
-      <select name="search_field">
-        <option value="${field/name}" selected="${field/selected}"
-          stl:repeat="field search_fields">${field/title}</option>
-      </select>
-      <!-- Term -->
-      <input type="text" name="search_term" size="35" value="${search_term}" />
-      <!-- OK -->
-      <input type="submit" value="OK" class="button_search"/>
-    </fieldset>
-  </form>
+
+<form action="" method="get" stl:if="search_fields">
+  <fieldset>
+    <legend>Search</legend>
+    <!-- Field -->
+    <select name="search_field">
+      <option value="${field/name}" selected="${field/selected}"
+        stl:repeat="field search_fields">${field/title}</option>
+    </select>
+    <!-- Term -->
+    <input type="text" name="search_term" size="35" value="${search_term}" />
+    <!-- OK -->
+    <input type="submit" value="OK" class="button_search"/>
+  </fieldset>
+</form>
+
 
 </stl:block>

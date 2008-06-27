@@ -22,7 +22,7 @@ from datetime import datetime, timedelta
 from mimetypes import guess_all_extensions, guess_type
 
 # Import from itools
-from itools.datatypes import FileName, String, Unicode
+from itools.datatypes import Boolean, FileName, Integer, String, Unicode
 from itools.handlers import File as FileHandler, guess_encoding, checkid
 from itools.html import HTMLParser, stream_to_str_as_xhtml
 from itools.i18n import guess_language
@@ -268,9 +268,17 @@ class BacklinksView(BrowseForm):
     title = u"Backlinks"
     icon = 'button_rename.png'
 
+    query_schema = {
+        'search_field': String,
+        'search_term': Unicode,
+        'search_subfolders': Boolean(default=False),
+        'sortorder': String(default='up'),
+        'sortby': String(multiple=True, default=['title']),
+        'batchstart': Integer(default=0),
+    }
 
-    def get_namespace(self, model, context, sortby=['title'], sortorder='up',
-                      batchsize=20):
+
+    def get_namespace(self, model, context, query):
         """Backlinks are the list of objects pointing to this object.
         This view answers the question "where is this object used?"
         You'll see all WebPages and WikiPages (for example) referencing it.
@@ -278,19 +286,16 @@ class BacklinksView(BrowseForm):
         """
         from widgets import table
 
-        namespace = BrowseForm.get_namespace(self, model, context)
-        root = context.root
-
         # Get the form values
-        sortby = context.get_form_values('sortby', default=sortby)
-        sortorder = context.get_form_value('sortorder', default=sortorder)
+        sortby = query['sortby']
+        sortorder = query['sortorder']
 
         # Build the query
-        query = EqQuery('links', str(model.get_abspath()))
+        search_query = EqQuery('links', str(model.get_abspath()))
 
         # Build the namespace
-        namespace.update(model.browse_namespace(16, sortby, sortorder,
-                                                batchsize, query=query))
+        namespace = model.browse_namespace(16, sortby, sortorder, batchsize=20,
+                                           query=search_query)
 
         # The column headers
         columns = [

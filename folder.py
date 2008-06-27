@@ -38,7 +38,7 @@ from exceptions import ConsistencyError
 from messages import *
 from registry import register_object_class, get_object_class
 from utils import generate_name
-from views import IconsView
+from views import IconsView, BrowseForm
 import widgets
 from workflow import WorkflowAware
 
@@ -87,49 +87,79 @@ class AddView(IconsView):
 
 
 
-class BrowseView(STLForm):
+class BrowseContent(BrowseForm):
 
     access = 'is_allowed_to_view'
     access_POST = 'is_allowed_to_edit'
     __label__ = u'Contents'
     title = u'Browse Content'
     icon = '/ui/icons/16x16/folder.png'
-    template = '/ui/folder/browse_list.xml'
+
     schema = {
         'ids': String(multiple=True, mandatory=True),
     }
 
-    search_criteria =  [
-        {'id': 'title', 'title': u"Title"},
-        {'id': 'text', 'title': u"Text"},
-        {'id': 'name', 'title': u"Name"},
+    search_fields =  [
+        ('title', u'Title'),
+        ('text', u'Text'),
+        ('name', u'Name'),
     ]
 
-    def get_namespace(self, model, context, sortby=['title'], sortorder='up',
-                      batchsize=20, search_subfolders=False,
-                      action=';browse_content', *args):
-        # Get the form values
-        get_form_value = context.get_form_value
-        term = get_form_value('search_term', type=Unicode)
-        term = term.strip()
-        field = get_form_value('search_field')
-        if field:
-            search_subfolders = get_form_value('search_subfolders',
-                                               type=Boolean, default=False)
+    batchsize = 20
 
-        sortby = context.get_form_values('sortby', default=sortby)
-        sortorder = get_form_value('sortorder', default=sortorder)
+
+    query_schema = {
+        'search_field': String,
+        'search_term': Unicode,
+        'search_subfolders': Boolean(default=False),
+        'sortorder': String(default='up'),
+        'sortby': String(multiple=True, default=['title']),
+        'batchstart': Integer(default=0),
+    }
+
+
+    def search_form(self, model, query):
+        gettext = model.gettext
+
+        # Get values from the query
+        field = query['search_field']
+        term = query['search_term']
+
+        # Build the namespace
+        namespace = {}
+        namespace['search_term'] = term
+        namespace['search_fields'] = [
+            {'name': name,
+             'title': gettext(title),
+             'selected': name == field}
+            for name, title in self.search_fields ]
+
+        # NOTE Folder's content specifics
+        namespace['search_subfolders'] = query['search_subfolders']
+
+        # Ok
+        template = model.get_object('/ui/folder/browse_search.xml')
+        return stl(template, namespace)
+
+
+    def get_namespace(self, model, context, query):
+        # Get the parameters from the query
+        search_term = query['search_term'].strip()
+        field = query['search_field']
+        sortby = query['sortby']
+        sortorder = query['sortorder']
+        search_subfolders = query['search_subfolders']
 
         # Build the query
-        args = list(args)
+        args = []
         abspath = str(model.get_canonical_path())
         if search_subfolders is True:
             args.append(EqQuery('paths', abspath))
         else:
             args.append(EqQuery('parent_path', abspath))
 
-        if term:
-            args.append(PhraseQuery(field, term))
+        if search_term:
+            args.append(PhraseQuery(field, search_term))
 
         if len(args) == 1:
             query = args[0]
@@ -137,17 +167,9 @@ class BrowseView(STLForm):
             query = AndQuery(*args)
 
         # Build the namespace
+        batchsize = self.batchsize
         namespace = model.browse_namespace(16, sortby, sortorder, batchsize,
                                            query=query)
-        aux = get_reference(action)
-        namespace['action'] = str(aux.path)
-        namespace['mode'] = aux.query.get('mode')
-        namespace['search_term'] = term
-        namespace['search_subfolders'] = search_subfolders
-        namespace['search_fields'] = [
-            {'id': x['id'], 'title': model.gettext(x['title']),
-             'selected': x['id'] == field or None}
-            for x in self.search_criteria ]
 
         # The column headers
         columns = [
@@ -176,8 +198,8 @@ class BrowseView(STLForm):
 
         # Go!
         namespace['table'] = widgets.table(
-            columns, namespace['objects'], sortby, sortorder, action, actions,
-            model.gettext)
+            columns, namespace['objects'], sortby, sortorder, actions=actions,
+            gettext=model.gettext)
 
         return namespace
 
@@ -375,14 +397,13 @@ class PreviewView(STLView):
     icon = '/ui/icons/16x16/image.png'
     template = '/ui/folder/browse_image.xml'
 
-    search_criteria =  [
-        {'id': 'title', 'title': u"Title"},
-        {'id': 'name', 'title': u"Name"},
+    search_fields =  [
+        ('title', u'Title'),
+        ('name', u'Name'),
     ]
 
 
-    def get_namespace(self, model, context, search_subfolders=False,
-                      action=';preview_content', *args):
+    def get_namespace(self, model, context, search_subfolders=False, *args):
         # Get the form values
         get_form_value = context.get_form_value
         current_size = get_form_value('size', type=Integer,
@@ -420,15 +441,13 @@ class PreviewView(STLView):
 
         # Build the namespace
         namespace = model.browse_namespace(16, batchsize=1000, query=query)
-        action = get_reference(action)
-        namespace['action'] = str(action.path)
-        namespace['mode'] = action.query.get('mode')
         namespace['search_term'] = term
         namespace['search_subfolders'] = search_subfolders
         namespace['search_fields'] = [
-            {'id': x['id'], 'title': model.gettext(x['title']),
-             'selected': x['id'] == field or None}
-            for x in self.search_criteria ]
+            {'id': name,
+             'title': model.gettext(title),
+             'selected': name == field or None}
+            for name, title in self.search_fields ]
         namespace['size'] = current_size
         namespace['zoom_out'] = context.uri.replace(size=str(previous_size))
         namespace['zoom_in'] = context.uri.replace(size=str(next_size))
@@ -438,7 +457,7 @@ class PreviewView(STLView):
         return namespace
 
 
-class LastChanges(BrowseView):
+class LastChanges(BrowseContent):
 
     __label__ = u"Last Changes"
     title = u"Last Changes"
@@ -446,14 +465,14 @@ class LastChanges(BrowseView):
 
 
     def get_namespace(self, model, context, sortby=['mtime'],
-                      sortorder='down', batchsize=20, action=';last_changes'):
+                      sortorder='down', batchsize=20):
         query = EqQuery('is_version_aware', '1')
-        return BrowseView.get_namespace(self, model, context, sortby,
-               sortorder, batchsize, True, action, query)
+        return BrowseContent.get_namespace(self, model, context, sortby,
+               sortorder, batchsize, True, query)
 
 
 
-class OrphansView(BrowseView):
+class OrphansView(BrowseContent):
     """Orphans are files not referenced in another object of the database.  It
     extends the concept of "orphans pages" from the wiki to all file-like
     objects.
@@ -498,8 +517,8 @@ class OrphansView(BrowseView):
         args = [ EqQuery('abspath', abspath) for abspath in orphans ]
         query = OrQuery(*args)
 
-        return BrowseView.get_namespace(self, model, context, sortby,
-               sortorder, batchsize, False, ';orphans', query)
+        return BrowseContent.get_namespace(self, model, context, sortby,
+               sortorder, batchsize, False, query)
 
 
 
@@ -738,7 +757,7 @@ class Folder(DBObject):
 
     GET = IndexView()
     new_resource = AddView()
-    browse_content = BrowseView()
+    browse_content = BrowseContent()
     rename = RenameForm()
     preview_content = PreviewView()
     last_changes = LastChanges()

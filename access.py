@@ -44,6 +44,14 @@ class PermissionsForm(BrowseForm):
     description = u"See the users and their roles."
     icon = 'userfolder.png'
 
+    query_schema = {
+        'search_field': String,
+        'search_term': Unicode,
+        'sortorder': String(default='up'),
+        'sortby': String(multiple=True, default=['login_name']),
+        'batchstart': Integer(default=0),
+    }
+
     schema = {
         'ids': String(multiple=True, mandatory=True),
     }
@@ -54,26 +62,26 @@ class PermissionsForm(BrowseForm):
         ('firstname', u'First Name')]
 
 
-    def get_namespace(self, model, context):
-        namespace = BrowseForm.get_namespace(self, model, context)
+    def get_namespace(self, model, context, query):
+        namespace = {}
 
         gettext = model.gettext
 
         # Get values from the request
-        sortby = context.get_form_values('sortby', default=['login_name'])
-        sortorder = context.get_form_value('sortorder', default='up')
-        start = context.get_form_value('batchstart', type=Integer, default=0)
+        sortby = query['sortby']
+        sortorder = query['sortorder']
+        start = query['batchstart']
         size = 20
 
         # Search
-        field = context.get_form_value('search_field')
-        term = context.get_form_value('search_term', type=Unicode)
+        field = query['search_field']
+        term = query['search_term']
         term = term.strip()
-        query = {'format': 'user'}
+        search_query = {'format': 'user'}
         if field:
             query[field] = term
         root = context.root
-        results = root.search(**query)
+        results = root.search(**search_query)
 
         roles = model.get_members_classified_by_role()
 
@@ -136,7 +144,7 @@ class PermissionsForm(BrowseForm):
 
         namespace['batch'] = widgets.batch(context.uri, start, size, total)
         namespace['table'] = widgets.table(columns, members, sortby, sortorder,
-                                           ';permissions', actions, gettext)
+                                           actions, gettext)
 
         return namespace
 

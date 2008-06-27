@@ -51,11 +51,11 @@ class TableView(BrowseForm):
     icon = 'view.png'
 
 
-    def get_namespace(self, model, context):
-        namespace = BrowseForm.get_namespace(self, model, context)
+    def get_namespace(self, model, context, query):
+        namespace = {}
 
         # The input parameters
-        start = context.get_form_value('batchstart', type=Integer, default=0)
+        start = query['batchstart']
         size = 50
 
         # The batch
@@ -111,10 +111,11 @@ class TableView(BrowseForm):
                 if multiple is True or is_tokens:
                     records[-1][field] = (records[-1][field], rmultiple)
         # Sorting
-        sortby = context.get_form_value('sortby')
-        sortorder = context.get_form_value('sortorder', default='up')
+        sortby = query['sortby']
+        sortorder = query['sortorder']
         if sortby:
-            records.sort(key=itemgetter(sortby), reverse=(sortorder=='down'))
+            reverse = (sortorder == 'down')
+            records.sort(key=itemgetter(sortby[0]), reverse=reverse)
 
         records = records[start:start+size]
         for record in records:
