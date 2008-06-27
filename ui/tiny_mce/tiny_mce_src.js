@@ -9014,7 +9014,12 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 							return dom.setStyle(n, v.name, v.value);
 
 						case 'removeformat':
-							return dom.setAttrib(n, 'class', '');
+                            /*
+                             * iKaaro
+                             * Remove the class AND style attributes
+                             */
+                            dom.setAttrib(n, 'class', '');
+                            return dom.setAttrib(n, 'style', '');
 					}
 				}
 			};
