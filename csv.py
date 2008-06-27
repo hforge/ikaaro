@@ -27,12 +27,104 @@ from itools.stl import stl
 
 # Import from ikaaro
 from messages import *
-from text import Text
 from registry import register_object_class
+from text import Text
+from views import BrowseForm
 import widgets
 
 
+###########################################################################
+# Views
+###########################################################################
+class ViewCSV(BrowseForm):
 
+    # FIXME We need different permissions for GET and POST
+    access = 'is_allowed_to_edit'
+    __label__ = u'View'
+    schema = {
+        'ids': Integer(mandatory=True),
+    }
+
+
+    def get_namespace(self, model, context):
+        namespace = {}
+        handler = model.handler
+
+        # The input parameters
+        start = context.get_form_value('batchstart', type=Integer, default=0)
+        size = 50
+
+        # Search
+        namespace['search'] = None
+
+        # The batch
+        total = handler.get_nrows()
+        namespace['batch'] = widgets.batch(context.uri, start, size, total,
+                                           model.gettext)
+
+        # The table
+        actions = []
+        if total:
+            ac = model.get_access_control()
+            if ac.is_allowed_to_edit(context.user, model):
+                actions = [('action', u'Remove', 'button_delete',None)]
+
+        columns = model.get_columns()
+        columns.insert(0, ('index', u''))
+        rows = []
+        index = start
+        if handler.schema is not None:
+            getter = lambda x, y: x.get_value(y)
+        else:
+            getter = lambda x, y: x[int(y)]
+
+        read = 0
+        length = len(handler.lines)
+        while read < size and index < length:
+            try:
+                row = handler.get_row(index)
+            except IndexError:
+                index += 1
+                continue
+            rows.append({})
+            rows[-1]['id'] = str(index)
+            rows[-1]['checkbox'] = True
+            # Columns
+            rows[-1]['index'] = index, ';edit_row_form?index=%s' % index
+            for column, column_title in columns[1:]:
+                value = getter(row, column)
+                datatype = handler.get_datatype(column)
+                is_enumerate = getattr(datatype, 'is_enumerate', False)
+                if is_enumerate:
+                    rows[-1][column] = datatype.get_value(value)
+                else:
+                    rows[-1][column] = value
+            index += 1
+            read += 1
+
+        # Sorting
+        sortby = context.get_form_value('sortby')
+        sortorder = context.get_form_value('sortorder', default='up')
+        if sortby:
+            rows.sort(key=itemgetter(sortby), reverse=(sortorder=='down'))
+
+        namespace['table'] = widgets.table(columns, rows, [sortby], sortorder,
+                                           actions)
+
+        return namespace
+
+
+    def action(self, model, context, form):
+        ids = form['ids']
+        model.handler.del_rows(ids)
+        # Ok
+        context.message = u'Row deleted.'
+
+
+
+###########################################################################
+# Model
+###########################################################################
 class CSV(Text):
 
     class_id = 'text/comma-separated-values'
@@ -81,82 +173,7 @@ class CSV(Text):
     #########################################################################
     edit_form__access__ = False
 
-
-    #########################################################################
-    # View
-    def view(self, context):
-        namespace = {}
-        handler = self.handler
-
-        # The input parameters
-        start = context.get_form_value('batchstart', type=Integer, default=0)
-        size = 50
-
-        # The batch
-        total = handler.get_nrows()
-        namespace['batch'] = widgets.batch(context.uri, start, size, total,
-                                           self.gettext)
-
-        # The table
-        actions = []
-        if total:
-            ac = self.get_access_control()
-            if ac.is_allowed_to_edit(context.user, self):
-                actions = [('del_row_action', u'Remove', 'button_delete',None)]
-
-        columns = self.get_columns()
-        columns.insert(0, ('index', u''))
-        rows = []
-        index = start
-        if handler.schema is not None:
-            getter = lambda x, y: x.get_value(y)
-        else:
-            getter = lambda x, y: x[int(y)]
-
-        read = 0
-        length = len(handler.lines)
-        while read < size and index < length:
-            try:
-                row = handler.get_row(index)
-            except IndexError:
-                index += 1
-                continue
-            rows.append({})
-            rows[-1]['id'] = str(index)
-            rows[-1]['checkbox'] = True
-            # Columns
-            rows[-1]['index'] = index, ';edit_row_form?index=%s' % index
-            for column, column_title in columns[1:]:
-                value = getter(row, column)
-                datatype = handler.get_datatype(column)
-                is_enumerate = getattr(datatype, 'is_enumerate', False)
-                if is_enumerate:
-                    rows[-1][column] = datatype.get_value(value)
-                else:
-                    rows[-1][column] = value
-            index += 1
-            read += 1
-
-        # Sorting
-        sortby = context.get_form_value('sortby')
-        sortorder = context.get_form_value('sortorder', default='up')
-        if sortby:
-            rows.sort(key=itemgetter(sortby), reverse=(sortorder=='down'))
-
-        namespace['table'] = widgets.table(columns, rows, [sortby], sortorder,
-                                           actions)
-
-        handler = self.get_object('/ui/csv/view.xml')
-        return stl(handler, namespace)
-
-
-    del_row_action__access__ = 'is_allowed_to_edit'
-    def del_row_action(self, context):
-        ids = context.get_form_values('ids', type=Integer)
-        self.handler.del_rows(ids)
-
-        message = u'Row deleted.'
-        return context.come_back(message)
+    view = ViewCSV()
 
 
     #########################################################################

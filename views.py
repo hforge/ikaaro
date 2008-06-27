@@ -62,3 +62,8 @@ class NewInstanceForm(STLForm):
         return '/ui/icons/16x16/new.png'
 
 
+
+
+class BrowseForm(STLForm):
+
+    template = '/ui/generic/browse.xml'

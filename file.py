@@ -261,8 +261,6 @@ class ExternalEdit(BaseView):
 
 
 
-
-
 class BacklinksView(STLView):
 
     access = 'is_allowed_to_view'
