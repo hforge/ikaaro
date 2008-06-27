@@ -33,7 +33,7 @@ from itools.handlers import File, ConfigFile, Folder as FolderHandler
 from itools.html import stream_to_str_as_html
 from itools.stl import stl
 from itools.uri import Path
-from itools.web import get_context
+from itools.web import get_context, STLView
 from itools.xml import XMLParser
 
 # Import from ikaaro
@@ -54,6 +54,26 @@ config = get_abspath(globals(), 'setup.conf')
 config = ConfigFile(config)
 itools_source_language = config.get_value('source_language')
 itools_target_languages = config.get_value('target_languages')
+
+
+
+class NotFoundView(STLView):
+
+    template = '/ui/root/not_found.xml'
+
+    def get_namespace(self, model, context):
+        namespace = {'uri': str(context.uri)}
+
+        # Don't show the skin if it is not going to work
+        request = context.request
+        if request.has_header('x-base-path'):
+            try:
+                model.get_object('%s/ui' % request.get_header('x-base-path'))
+            except LookupError:
+                response = context.response
+                response.set_header('content-type', 'text/html; charset=UTF-8')
+
+        return namespace
 
 
 
@@ -158,22 +178,6 @@ class Root(WebSite):
 
         handler = self.get_object('/ui/root/internal_server_error.xml')
         return stl(handler, namespace, mode='html')
-
-
-    def not_found(self, context):
-        namespace = {'uri': str(context.uri)}
-
-        # Don't show the skin if it is not going to work
-        request = context.request
-        if request.has_header('x-base-path'):
-            try:
-                self.get_object('%s/ui' % request.get_header('x-base-path'))
-            except LookupError:
-                response = context.response
-                response.set_header('content-type', 'text/html; charset=UTF-8')
-
-        handler = self.get_object('/ui/root/not_found.xml')
-        return stl(handler, namespace)
 
 
     ########################################################################
@@ -299,6 +303,8 @@ class Root(WebSite):
         # Send email
         server.send_email(message)
 
+
+    not_found = NotFoundView()
 
 
 ###########################################################################
