@@ -15,6 +15,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
+from itools.datatypes import Unicode
+from itools.stl import stl
 from itools.web import STLView, STLForm
 
 # Import from ikaaro
@@ -63,7 +65,37 @@ class NewInstanceForm(STLForm):
 
 
 
-
 class BrowseForm(STLForm):
 
     template = '/ui/generic/browse.xml'
+
+
+    # [(<name>, <title>), ...]
+    search_fields = []
+
+
+    def search_form(self, model, context):
+        gettext = model.gettext
+
+        # Get values from the query
+        field = context.get_form_value('search_field')
+        term = context.get_form_value('search_term', type=Unicode)
+
+        # Build the namespace
+        namespace = {}
+        namespace['search_term'] = term
+        namespace['search_fields'] = [
+            {'name': name,
+             'title': gettext(title),
+             'selected': name == field}
+            for name, title in self.search_fields ]
+
+        # Ok
+        template = model.get_object('/ui/generic/browse_search.xml')
+        return stl(template, namespace)
+
+
+    def get_namespace(self, model, context):
+        namespace = {}
+        namespace['search'] = self.search_form(model, context)
+        return namespace

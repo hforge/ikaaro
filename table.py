@@ -37,22 +37,22 @@ from file import File
 from forms import AutoForm, get_default_widget, ReadOnlyWidget
 from messages import *
 from registry import register_object_class
+from views import BrowseForm
 from widgets import batch, table
 
 
 ###########################################################################
 # Views
 ###########################################################################
-class TableView(STLView):
+class TableView(BrowseForm):
 
     access = 'is_allowed_to_view'
     __label__ = u'View'
     icon = 'view.png'
-    template = '/ui/table/view.xml'
 
 
     def get_namespace(self, model, context):
-        namespace = {}
+        namespace = BrowseForm.get_namespace(self, model, context)
 
         # The input parameters
         start = context.get_form_value('batchstart', type=Integer, default=0)

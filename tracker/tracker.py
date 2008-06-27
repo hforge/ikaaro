@@ -117,6 +117,9 @@ class SelectTableView(TableView):
         start = context.get_form_value('batchstart', type=Integer, default=0)
         size = 30
 
+        # Search
+        namespace['search'] = None
+
         # The batch
         handler = model.handler
         gettext = model.gettext

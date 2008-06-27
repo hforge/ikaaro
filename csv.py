@@ -47,15 +47,13 @@ class ViewCSV(BrowseForm):
 
 
     def get_namespace(self, model, context):
-        namespace = {}
+        namespace = BrowseForm.get_namespace(self, model, context)
+
         handler = model.handler
 
         # The input parameters
         start = context.get_form_value('batchstart', type=Integer, default=0)
         size = 50
-
-        # Search
-        namespace['search'] = None
 
         # The batch
         total = handler.get_nrows()

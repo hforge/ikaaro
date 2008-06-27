@@ -37,7 +37,7 @@ from messages import *
 from multilingual import Multilingual
 from registry import register_object_class, get_object_class
 from versioning import VersioningAware
-from views import NewInstanceForm
+from views import NewInstanceForm, BrowseForm
 from workflow import WorkflowAware
 
 
@@ -261,13 +261,12 @@ class ExternalEdit(BaseView):
 
 
 
-class BacklinksView(STLView):
+class BacklinksView(BrowseForm):
 
     access = 'is_allowed_to_view'
     __label__ = u"Backlinks"
     title = u"Backlinks"
     icon = 'button_rename.png'
-    template = '/ui/folder/browse_list.xml'
 
 
     def get_namespace(self, model, context, sortby=['title'], sortorder='up',
@@ -279,6 +278,7 @@ class BacklinksView(STLView):
         """
         from widgets import table
 
+        namespace = BrowseForm.get_namespace(self, model, context)
         root = context.root
 
         # Get the form values
@@ -289,9 +289,8 @@ class BacklinksView(STLView):
         query = EqQuery('links', str(model.get_abspath()))
 
         # Build the namespace
-        namespace = model.browse_namespace(16, sortby, sortorder, batchsize,
-                                           query=query)
-        namespace['search_fields'] = None
+        namespace.update(model.browse_namespace(16, sortby, sortorder,
+                                                batchsize, query=query))
 
         # The column headers
         columns = [

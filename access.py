@@ -28,6 +28,7 @@ from itools.web import AccessControl as BaseAccessControl, STLForm
 
 # Import from ikaaro
 from messages import *
+from views import BrowseForm
 import widgets
 from workflow import WorkflowAware
 
@@ -35,21 +36,27 @@ from workflow import WorkflowAware
 ###########################################################################
 # Views
 ###########################################################################
-class PermissionsForm(STLForm):
+class PermissionsForm(BrowseForm):
 
     access = 'is_admin'
     __label__ = u"Control Panel"
     title = u"Browse Members"
     description = u"See the users and their roles."
     icon = 'userfolder.png'
-    template = '/ui/access/permissions.xml'
+
     schema = {
         'ids': String(multiple=True, mandatory=True),
     }
 
+    search_fields = [
+        ('username', u'Login'),
+        ('lastname', u'Last Name'),
+        ('firstname', u'First Name')]
+
 
     def get_namespace(self, model, context):
-        namespace = {}
+        namespace = BrowseForm.get_namespace(self, model, context)
+
         gettext = model.gettext
 
         # Get values from the request
@@ -58,22 +65,10 @@ class PermissionsForm(STLForm):
         start = context.get_form_value('batchstart', type=Integer, default=0)
         size = 20
 
-        # The search form
+        # Search
         field = context.get_form_value('search_field')
         term = context.get_form_value('search_term', type=Unicode)
         term = term.strip()
-
-        search_fields = [('username', u'Login'),
-                         ('lastname', u'Last Name'),
-                         ('firstname', u'First Name')]
-
-        namespace['search_term'] = term
-        namespace['search_fields'] = [
-            {'id': name, 'title': gettext(title),
-             'selected': name == field or None}
-            for name, title in search_fields ]
-
-        # Search
         query = {'format': 'user'}
         if field:
             query[field] = term
