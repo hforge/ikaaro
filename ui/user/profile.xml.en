@@ -14,19 +14,19 @@
     <p>You can do the following actions:</p>
     <ul>
       <li>
-        <a href=";edit_account_form">Edit account details;</a>
+        <a href=";edit_account">Edit account details;</a>
       </li>
       <li>
-        <a href=";edit_language_form">Edit language preferences;</a>
+        <a href=";edit_preferences">Edit language preferences;</a>
       </li>
       <li>
-        <a href=";browse_content?mode=list">Manage personal content;</a>
+        <a href=";browse_content">Manage personal content;</a>
       </li>
       <li>
-        <a href=";edit_password_form">Change your password;</a>
+        <a href=";edit_password">Change your password;</a>
       </li>
       <li>
-        <a href=";tasks_list">Pending tasks.</a>
+        <a href=";tasks">Pending tasks.</a>
       </li>
     </ul>
   </stl:block>

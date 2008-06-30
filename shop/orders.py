@@ -103,8 +103,7 @@ class Orders(Folder):
         # Batch
         msgs = (u'<span>You have one order.</span>',
                 u'<span>You have ${n} orders</span>')
-        namespace['batch'] = batch(context.uri, start, size, total,
-                                   msgs=msgs, gettext=self.gettext)
+        namespace['batch'] = batch(context.uri, start, size, total, msgs=msgs)
         # Table
         namespace['table'] = table(columns, orders, sortby, sortorder,
                                    actions, self.gettext)
@@ -168,8 +167,7 @@ class Orders(Folder):
         # Batch
         msgs = (u'<span>There is one order.</span>',
                 u'<span>There are ${n} orders</span>')
-        namespace['batch'] = batch(context.uri, start, size, total,
-                                   msgs=msgs, gettext=self.gettext)
+        namespace['batch'] = batch(context.uri, start, size, total, msgs=msgs)
         # Table
         namespace['table'] = table(columns, orders, sortby, sortorder,
                                    actions, self.gettext)

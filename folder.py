@@ -19,11 +19,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
-from string import Template
 from urllib import quote, quote_plus
 
 # Import from itools
 from itools.datatypes import Boolean, DataType, Unicode, Integer, String
+from itools.gettext import MSG
 from itools.handlers import Folder as FolderHandler, checkid
 from itools.stl import stl
 from itools.uri import get_reference
@@ -73,14 +73,14 @@ class AddView(IconsView):
         items = [
             {
                 'icon': '/ui/' + cls.class_icon48,
-                'title': cls.gettext(cls.class_title),
-                'description': cls.gettext(cls.class_description),
+                'title': cls.class_title.gettext(),
+                'description': cls.class_description.gettext(),
                 'url': ';new_resource?type=%s' % quote(cls.class_id)
             }
             for cls in model.get_document_types() ]
 
         return {
-            'title': model.gettext(u'Add new content'),
+            'title': MSG(u'Add new content', __name__).gettext(),
             'batch': None,
             'items': items,
         }
@@ -119,8 +119,6 @@ class BrowseContent(BrowseForm):
 
 
     def search_form(self, model, query):
-        gettext = model.gettext
-
         # Get values from the query
         field = query['search_field']
         term = query['search_term']
@@ -130,7 +128,7 @@ class BrowseContent(BrowseForm):
         namespace['search_term'] = term
         namespace['search_fields'] = [
             {'name': name,
-             'title': gettext(title),
+             'title': title.gettext(),
              'selected': name == field}
             for name, title in self.search_fields ]
 
@@ -142,7 +140,7 @@ class BrowseContent(BrowseForm):
         return stl(template, namespace)
 
 
-    def get_namespace(self, model, context, query):
+    def get_namespace(self, model, context, query, *args):
         # Get the parameters from the query
         search_term = query['search_term'].strip()
         field = query['search_field']
@@ -151,7 +149,7 @@ class BrowseContent(BrowseForm):
         search_subfolders = query['search_subfolders']
 
         # Build the query
-        args = []
+        args = list(args)
         abspath = str(model.get_canonical_path())
         if search_subfolders is True:
             args.append(EqQuery('paths', abspath))
@@ -176,12 +174,14 @@ class BrowseContent(BrowseForm):
             ('name', u'Name'), ('title', u'Title'), ('format', u'Type'),
             ('mtime', u'Last Modified'), ('last_author', u'Last Author'),
             ('size', u'Size'), ('workflow_state', u'State')]
+        columns = [ (name, gettext(__name__, title))
+                    for name, title in columns ]
 
         # Actions
         user = context.user
         ac = model.get_access_control()
         actions = []
-        message = model.gettext(MSG_DELETE_SELECTION)
+        message = gettext(__name__, MSG_DELETE_SELECTION)
         if ac.is_allowed_to_edit(user, model):
             if namespace['total']:
                 actions = [
@@ -193,13 +193,12 @@ class BrowseContent(BrowseForm):
                 actions = [
                     (x[0], model.gettext(x[1]), x[2], x[3]) for x in actions ]
             if context.has_cookie('ikaaro_cp'):
-                actions.append(('paste', model.gettext(u'Paste'),
+                actions.append(('paste', gettext(__name__, u'Paste'),
                                 'button_paste', None))
 
         # Go!
         namespace['table'] = widgets.table(
-            columns, namespace['objects'], sortby, sortorder, actions=actions,
-            gettext=model.gettext)
+            columns, namespace['objects'], sortby, sortorder, actions=actions)
 
         return namespace
 
@@ -463,12 +462,21 @@ class LastChanges(BrowseContent):
     title = u"Last Changes"
     icon = 'icalendar.png'
 
+    query_schema = {
+        'search_field': String,
+        'search_term': Unicode,
+        'search_subfolders': Boolean(default=False),
+        'sortorder': String(default='down'),
+        'sortby': String(multiple=True, default=['mtime']),
+        'batchstart': Integer(default=0),
+    }
 
-    def get_namespace(self, model, context, sortby=['mtime'],
-                      sortorder='down', batchsize=20):
-        query = EqQuery('is_version_aware', '1')
-        return BrowseContent.get_namespace(self, model, context, sortby,
-               sortorder, batchsize, True, query)
+
+
+    def get_namespace(self, model, context, query):
+        search_query = EqQuery('is_version_aware', '1')
+        return BrowseContent.get_namespace(self, model, context, query,
+                                           search_query)
 
 
 
@@ -722,8 +730,7 @@ class Folder(DBObject):
         names = self.get_names()
         size = len(names)
 
-        str = self.gettext('$n obs')
-        return Template(str).substitute(n=size)
+        return gettext(__name__, u'$n obs', n=size)
 
 
     #######################################################################

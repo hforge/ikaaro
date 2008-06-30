@@ -17,24 +17,80 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# Import from itools
+from itools.gettext import MSG
 
-MSG_BAD_NAME = (
-    u'The document name contains illegal characters, choose another one.')
-MSG_CHANGES_SAVED = u'The changes have been saved.'
-MSG_CHANGES_SAVED2 = u'The changes have been saved ($time).'
-MSG_DELETE_OBJECT = u'Are you sure you want to delete this object?'
-MSG_DELETE_SELECTION = u'Are you sure you want to delete the selection?'
-MSG_EDIT_CONFLICT = u'Changes could not be saved, there was an edit conflict.'
-MSG_EMPTY_FILENAME = u'The file must be entered.'
-MSG_EXISTANT_FILENAME = u'A given name already exists.'
-MSG_INVALID_EMAIL = u'The email address provided is invalid.'
-MSG_NAME_CLASH = u'There is already another object with this name.'
-MSG_NAME_MISSING = u'The name is missing.'
-MSG_NEW_RESOURCE = u'A new resource has been added.'
-MSG_PAGE_LOCK = u'This page is locked by $user'
-MSG_PASSWORD_MISMATCH = u'The provided passwords do not match.'
-MSG_OBJECTS_REMOVED = u'Objects removed: $objects.'
-MSG_CAPTION = u'Caption'
-MSG_REGISTERED = (u"You have already confirmed your registration. "
-                  u"Try to log in or ask for a new password.")
-MSG_BAD_KEY = u"Your confirmation key is invalid."
+
+MSG_BAD_KEY = MSG(
+    u"Your confirmation key is invalid.",
+    __name__)
+
+MSG_BAD_NAME = MSG(
+    u'The document name contains illegal characters, choose another one.',
+    __name__)
+
+MSG_CAPTION = MSG(
+    u'Caption',
+    __name__)
+
+MSG_CHANGES_SAVED = MSG(
+    u'The changes have been saved.',
+    __name__)
+
+MSG_CHANGES_SAVED2 = MSG(
+    u'The changes have been saved ($time).',
+    __name__)
+
+MSG_DELETE_OBJECT = MSG(
+    u'Are you sure you want to delete this object?',
+    __name__)
+
+MSG_DELETE_SELECTION = MSG(
+    u'Are you sure you want to delete the selection?',
+    __name__)
+
+MSG_EDIT_CONFLICT = MSG(
+    u'Changes could not be saved, there was an edit conflict.',
+    __name__)
+
+MSG_EMPTY_FILENAME = MSG(
+    u'The file must be entered.',
+    __name__)
+
+MSG_EXISTANT_FILENAME = MSG(
+    u'A given name already exists.',
+    __name__)
+
+MSG_INVALID_EMAIL = MSG(
+    u'The email address provided is invalid.',
+    __name__)
+
+MSG_NAME_CLASH = MSG(
+    u'There is already another object with this name.',
+    __name__)
+
+MSG_NAME_MISSING = MSG(
+    u'The name is missing.',
+    __name__)
+
+MSG_NEW_RESOURCE = MSG(
+    u'A new resource has been added.',
+    __name__)
+
+MSG_OBJECTS_REMOVED = MSG(
+    u'Objects removed: $objects.',
+    __name__)
+
+MSG_PAGE_LOCK = MSG(
+    u'This page is locked by $user',
+    __name__)
+
+MSG_PASSWORD_MISMATCH = MSG(
+    u'The provided passwords do not match.',
+    __name__)
+
+MSG_REGISTERED = MSG(
+    u"You have already confirmed your registration. "
+    u"Try to log in or ask for a new password.",
+    __name__)
+

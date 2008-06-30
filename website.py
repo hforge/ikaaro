@@ -24,6 +24,7 @@ from decimal import Decimal
 import itools
 from itools import get_abspath
 from itools.datatypes import Boolean, Email, Integer, String, Tokens, Unicode
+from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.i18n import get_language_name, get_languages
 from itools.stl import stl
@@ -66,10 +67,9 @@ class NewWebSiteForm(NewInstanceForm):
         cls = get_object_class(type)
 
         for handler_class in get_register_websites():
-            gettext = handler_class.gettext
             title = handler_class.class_title
             websites.append({
-                'title': gettext(title),
+                'title': title.gettext(),
                 'class_id': handler_class.class_id,
                 'selected': False,
                 'icon': '/ui/' + handler_class.class_icon16})
@@ -240,8 +240,9 @@ class ForgottenPasswordForm(STLForm):
         results = root.search(username=username)
         if results.get_n_documents() == 0:
             goto = ';forgotten_password_form'
-            message = u'There is not a user identified as "$username"'
-            context.message =  model.gettext(message, username=username)
+            message = MSG(u'There is not a user identified as "$username"',
+                          __name__)
+            context.message =  message.gettext(username=username)
             return
 
         user = results.get_documents()[0]
@@ -269,7 +270,7 @@ class ControlPanel(IconsView):
 
     def get_namespace(self, model, context):
         namespace = {
-            'title': model.gettext(u'Control Panel'),
+            'title': MSG(u'Control Panel', __name__).gettext(),
             'batch': None,
             'items': [],
         }
@@ -282,10 +283,10 @@ class ControlPanel(IconsView):
             title = view.title
             description = view.description
             if description is not None:
-                description = model.gettext(description)
+                description = description.gettext()
             namespace['items'].append({
                 'icon': model.get_method_icon(view, size='48x48'),
-                'title': model.gettext(title),
+                'title': title.gettext(),
                 'description': description,
                 'url': ';%s' % name})
 
@@ -455,9 +456,9 @@ class RegisterForm(AutoForm):
 
 
     form_title = u'Registration'
-
-    form_action = {'action': ';register', 'name': 'register',
-                   'value': 'Register', 'class': 'button_ok'}
+    form_action = ';register'
+    submit_value = u'Register'
+    submit_class = 'button_ok'
 
     schema = {
         'firstname': Unicode(mandatory=True),
@@ -500,10 +501,11 @@ class RegisterForm(AutoForm):
         user.send_confirmation(context, email)
 
         # Bring the user to the login form
-        message = model.gettext(
+        message = MSG(
             u"An email has been sent to you, to finish the registration "
-            u"process follow the instructions detailed in it.")
-        return message.encode('utf-8')
+            u"process follow the instructions detailed in it.",
+            __name__)
+        return message.gettext().encode('utf-8')
 
 
 
@@ -609,7 +611,7 @@ class SiteSearchView(STLView):
                 info = {}
                 info['abspath'] = str(object.get_abspath())
                 info['title'] = object.get_title()
-                info['type'] = model.gettext(object.class_title)
+                info['type'] = object.class_title.gettext()
                 info['size'] = object.get_human_size()
                 info['url'] = '%s/;%s' % (model.get_pathto(object),
                                           object.get_firstview())
@@ -780,7 +782,7 @@ class WebSite(RoleAware, Folder):
         for code in website_languages:
             language_name = get_language_name(code)
             languages.append({'code': code,
-                              'name': self.gettext(language_name),
+                              'name': language_name.gettext(),
                               'isdefault': code == default_language})
         namespace['active_languages'] = languages
 
@@ -790,7 +792,7 @@ class WebSite(RoleAware, Folder):
             code = language['code']
             if code not in website_languages:
                 languages.append({'code': code,
-                                  'name': self.gettext(language['name'])})
+                                  'name': language['name'].gettext()})
         languages.sort(lambda x, y: cmp(x['name'], y['name']))
         namespace['non_active_languages'] = languages
 

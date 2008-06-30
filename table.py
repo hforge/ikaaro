@@ -21,13 +21,13 @@
 # Import from the Standard Library
 from copy import deepcopy
 from operator import itemgetter
-from string import Template
 
 # Import from itools
 from itools.csv import Record, UniqueError, Table as TableFile
-from itools.http import Forbidden
 from itools.datatypes import DataType, is_datatype
 from itools.datatypes import Integer, Enumerate, Date, Tokens
+from itools.gettext import MSG
+from itools.http import Forbidden
 from itools.stl import stl
 from itools.web import FormError, STLView
 
@@ -60,9 +60,8 @@ class TableView(BrowseForm):
 
         # The batch
         handler = model.handler
-        gettext = model.gettext
         total = handler.get_n_records()
-        namespace['batch'] = batch(context.uri, start, size, total, gettext)
+        namespace['batch'] = batch(context.uri, start, size, total)
 
         # The table
         actions = []
@@ -127,7 +126,7 @@ class TableView(BrowseForm):
                         record[field] = record[field][0]
 
         namespace['table'] = table(fields, records, [sortby], sortorder,
-                                   actions, gettext=gettext)
+                                   actions)
 
         return namespace
 
@@ -140,11 +139,9 @@ class AddRecordForm(AutoForm):
     icon = 'new.png'
 
     form_title = u'Add a new record'
-    form_action = {
-        'action': ';add_record',
-        'name': 'add',
-        'value': 'Add',
-        'class': 'button_ok'}
+    form_action = ';add_record'
+    submit_value = u'Add'
+    submit_class = 'button_ok'
 
 
     def get_schema(self, model):
@@ -197,8 +194,8 @@ class AddRecordForm(AutoForm):
             message = str(error) % (title, error.value)
         except ValueError, error:
             title = model.get_field_title(error.name)
-            template = Template(model.gettext(u'Error: $message'))
-            message = template.substitute(message=strerror)
+            message = MSG(u'Error: $message', __name__)
+            message = message.gettext(message=strerror)
 
         context.message = message
 
@@ -207,11 +204,9 @@ class EditRecordForm(AutoForm):
 
     access = 'is_allowed_to_edit'
 
-    form_action = {
-        'action': ';edit_record',
-        'name': 'edit',
-        'value': 'Change',
-        'class': 'button_ok'}
+    form_action = ';edit_record'
+    submit_value = u'Change'
+    submit_class = 'button_ok'
 
 
     def edit_record_form(self, context):
@@ -272,8 +267,8 @@ class EditRecordForm(AutoForm):
             message = str(error) % (title, error.value)
         except ValueError, error:
             title = self.get_field_title(error.name)
-            template = Template(self.gettext(u'Error: $message'))
-            message = template.substitute(message=strerror)
+            message = MSG(u'Error: $message', __name__)
+            message = message.gettext(message=strerror)
 
         goto = context.uri.resolve2('../;edit_record_form')
         return context.come_back(message, goto=goto, keep=['id'])

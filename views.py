@@ -16,6 +16,7 @@
 
 # Import from itools
 from itools.datatypes import Integer, String, Unicode
+from itools.gettext import MSG
 from itools.stl import stl
 from itools.web import STLView, STLForm
 
@@ -50,9 +51,9 @@ class NewInstanceForm(STLForm):
         type = kw.get('type')
         cls = get_object_class(type)
         if cls is not None:
-            return cls.class_title
+            return cls.class_title.gettext()
         # Default
-        return 'Unknown object.'
+        return MSG(u'Unknown object.', __name__).gettext()
 
 
     def icon(self, model, **kw):
@@ -82,8 +83,6 @@ class BrowseForm(STLForm):
 
 
     def search_form(self, model, query):
-        gettext = model.gettext
-
         # Get values from the query
         field = query['search_field']
         term = query['search_term']
@@ -93,7 +92,7 @@ class BrowseForm(STLForm):
         namespace['search_term'] = term
         namespace['search_fields'] = [
             {'name': name,
-             'title': gettext(title),
+             'title': title.gettext(),
              'selected': name == field}
             for name, title in self.search_fields ]
 

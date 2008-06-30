@@ -30,7 +30,7 @@ from messages import *
 from registry import register_object_class
 from text import Text
 from views import BrowseForm
-import widgets
+from widgets import batch
 
 
 ###########################################################################
@@ -49,16 +49,14 @@ class ViewCSV(BrowseForm):
     def get_namespace(self, model, context, query):
         namespace = {}
 
-        handler = model.handler
-
         # The input parameters
         start = query['batchstart']
         size = 50
 
         # The batch
+        handler = model.handler
         total = handler.get_nrows()
-        namespace['batch'] = widgets.batch(context.uri, start, size, total,
-                                           model.gettext)
+        namespace['batch'] = batch(context.uri, start, size, total)
 
         # The table
         actions = []

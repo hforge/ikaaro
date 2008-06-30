@@ -26,6 +26,7 @@ from string import Template
 # Import from itools
 from itools.csv import CSVFile, Table as BaseTable
 from itools.datatypes import Boolean, Integer, String, Unicode
+from itools.gettext import MSG
 from itools.handlers import ConfigFile, File as FileHandler
 from itools.stl import stl
 from itools.uri import encode_query, Reference
@@ -122,9 +123,8 @@ class SelectTableView(TableView):
 
         # The batch
         handler = model.handler
-        gettext = model.gettext
         total = handler.get_n_records()
-        namespace['batch'] = batch(context.uri, start, size, total, gettext)
+        namespace['batch'] = batch(context.uri, start, size, total)
 
         # The table
         actions = []
@@ -539,7 +539,7 @@ class Tracker(Folder):
             search = self.get_object(search_name)
             title = search.get_title()
         else:
-            title = self.gettext(u'View Tracker')
+            title = MSG(u'View Tracker', __name__).gettext()
         nb_results = len(lines)
         namespace['title'] = title
         # Keep the search_parameters, clean different actions
@@ -562,11 +562,12 @@ class Tracker(Folder):
         # Table
         sortby = context.get_form_value('sortby', default='id')
         sortorder = context.get_form_value('sortorder', default='up')
-        msgs = (u'<span>There is 1 result.</span>',
-                u'<span>There are ${n} results.</span>')
+        msgs = (
+            MSG(u'There is 1 result.', __name__),
+            MSG(u'There are ${n} results.', __name__))
         namespace['batch'] = batch(context.uri, 0, nb_results, nb_results,
                                    msgs=msgs)
-        namespace['table'] = table(table_columns, lines, [sortby], sortorder,
+        namespace['table'] = table(columns, lines, [sortby], sortorder,
                                    actions=actions, table_with_form=False)
         namespace['nb_results'] = nb_results
         # Export_to_text
@@ -577,9 +578,10 @@ class Tracker(Folder):
             namespace['export_to_text'] = True
             namespace['columns'] = []
             # List columns
-            columns = context.get_form_values('column_selection', ['title'])
+            column_select = context.get_form_values('column_selection',
+                                                    default=['title'])
             # Use columns in a different order and without the id
-            export_columns = table_columns[2:] + [table_columns[1]]
+            export_columns = columns[2:] + [columns[1]]
             for name, title in export_columns:
                 namespace['columns'].append({'name': name, 'title': title,
                                              'checked': name in columns})

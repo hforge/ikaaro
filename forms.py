@@ -17,6 +17,7 @@
 
 # Import from itools
 from itools.datatypes import is_datatype, Unicode, Date, Enumerate, Boolean
+from itools.gettext import MSG
 from itools.stl import stl
 from itools.web import STLForm
 from itools.xml import XMLParser
@@ -344,28 +345,32 @@ class AutoForm(STLForm):
 
 
     def get_namespace(self, model, context):
+        here = context.object
         # Local Variables
         form_title = self.form_title
         fields = self.get_schema(model)
         widgets = self.get_widgets(model)
-        form_action = self.form_action
         form_hidden = self.form_hidden
-        required_msg = self.required_msg
         method = self.method
 
-        here = context.object
         # Set and translate the required_msg
+        required_msg = self.required_msg
         if required_msg is None:
-            required_msg ="""The <span class="field_required">emphasized</span>
-                          fields are required."""
-        required_msg = XMLParser(here.gettext(required_msg))
+            required_msg = MSG(
+                u'The <span class="field_required">emphasized</span> fields'
+                u' are required.', __name__)
+        required_msg = required_msg.gettext()
+        required_msg = required_msg.encode('utf-8')
+        required_msg = XMLParser(required_msg)
+
         # Build namespace
         namespace = {}
-        namespace['title'] = here.gettext(form_title)
+        namespace['title'] = self.form_title.gettext()
         namespace['required_msg'] = required_msg
         namespace['first_widget'] = widgets[0].name
-        form_action['value'] = here.gettext(form_action['value'])
-        namespace['action'] = form_action
+        namespace['action'] = self.form_action
+        namespace['submit_value'] = self.submit_value.gettext()
+        namespace['submit_class'] = self.submit_class
         namespace['hiddens'] = form_hidden
         # Build widgets namespace
         has_required_widget = False

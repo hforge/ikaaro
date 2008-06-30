@@ -19,11 +19,10 @@
 
 # Import from the Standard Library
 from datetime import datetime
-from string import Template
 
 # Import from itools
 from itools.datatypes import FileName, String, Unicode, Integer, is_datatype
-from itools.gettext import DomainAware, get_domain
+from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.http import Forbidden
 from itools.i18n import get_language_name, format_datetime
@@ -66,7 +65,7 @@ class NewObjectForm(NewInstanceForm):
             'title': context.get_form_value('title', type=Unicode),
             'name': context.get_form_value('name', default=''),
             'class_id': cls.class_id,
-            'class_title': cls.gettext(cls.class_title),
+            'class_title': cls.class_title.gettext(),
         }
 
 
@@ -140,7 +139,7 @@ class MetadataForm(STLForm):
 
         get_property = model.get_property
         return {
-            'language_name': model.gettext(language_name),
+            'language_name': language_name.gettext(),
             'title': get_property('title', language=language),
             'description': get_property('description', language=language),
             'subject': get_property('subject', language=language),
@@ -192,7 +191,7 @@ class AddImageForm(STLForm):
             'message': context.get_form_value('message'),
             'mode': mode,
             'scripts': scripts,
-            'caption': model.gettext(MSG_CAPTION).encode('utf_8'),
+            'caption': MSG_CAPTION.gettext().encode('utf_8'),
         }
 
 
@@ -214,7 +213,7 @@ class AddImageForm(STLForm):
         # Add the image to the object
         uri = Image.new_instance(Image, container, context)
         if ';add_image' not in uri.path:
-            caption = self.gettext(MSG_CAPTION).encode('utf_8')
+            caption = MSG_CAPTION.gettext().encode('utf_8')
             mode = context.get_form_value('mode', default='html')
             if mode == 'wiki':
                 scripts = ['/ui/wiki/javascript.js']
@@ -393,45 +392,6 @@ class Node(BaseNode):
 
 
     ########################################################################
-    # Internationalization
-    ########################################################################
-    class_domain = 'ikaaro'
-
-    @classmethod
-    def select_language(cls, languages):
-        accept = get_context().accept_language
-        return accept.select_language(languages)
-
-
-    @classmethod
-    def gettext(cls, message, language=None, **kw):
-        gettext = DomainAware.gettext
-
-        # Translate
-        if cls.class_domain == 'ikaaro':
-            domain_names = ['ikaaro']
-        else:
-            domain_names = [cls.class_domain, 'ikaaro']
-
-        for domain_name in domain_names:
-            if language is None:
-                domain = get_domain(domain_name)
-                languages = domain.get_languages()
-                language = cls.select_language(languages)
-
-            translation = gettext(message, language, domain=domain_name)
-            if translation != message:
-                message = translation
-                break
-
-        # Interpolate
-        if kw:
-            message = Template(message).substitute(kw)
-
-        return message
-
-
-    ########################################################################
     # User interface
     ########################################################################
     def get_firstview(self):
@@ -464,7 +424,7 @@ class Node(BaseNode):
 
 
 
-class DBObject(CatalogAware, Node, DomainAware):
+class DBObject(CatalogAware, Node):
 
     def __init__(self, metadata):
         self.metadata = metadata
@@ -836,7 +796,7 @@ class DBObject(CatalogAware, Node, DomainAware):
         else:
             href = '%s/;%s' % (id, firstview)
         line['name'] = (id, href)
-        line['format'] = self.gettext(object.class_title)
+        line['format'] = object.class_title.gettext()
         line['title'] = object.get_property('title')
         # Titles
         line['short_title'] = reduce_string(title, 12, 40)
@@ -871,7 +831,7 @@ class DBObject(CatalogAware, Node, DomainAware):
         if isinstance(object, WorkflowAware):
             statename = object.get_statename()
             state = object.get_state()
-            msg = self.gettext(state['title']).encode('utf-8')
+            msg = state['title'].gettext().encode('utf-8')
             state = ('<a href="%s/;edit_state" class="workflow">'
                      '<strong class="wf_%s">%s</strong>'
                      '</a>') % (self.get_pathto(object), statename, msg)

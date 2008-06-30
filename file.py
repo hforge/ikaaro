@@ -23,6 +23,7 @@ from mimetypes import guess_all_extensions, guess_type
 
 # Import from itools
 from itools.datatypes import Boolean, FileName, Integer, String, Unicode
+from itools.gettext import MSG
 from itools.handlers import File as FileHandler, guess_encoding, checkid
 from itools.html import HTMLParser, stream_to_str_as_xhtml
 from itools.i18n import guess_language
@@ -299,9 +300,14 @@ class BacklinksView(BrowseForm):
 
         # The column headers
         columns = [
-            ('name', u'Name'), ('title', u'Title'), ('format', u'Type'),
-            ('mtime', u'Last Modified'), ('last_author', u'Last Author'),
-            ('size', u'Size'), ('workflow_state', u'State')]
+            ('name', MSG(u'Name', __name__)),
+            ('title', MSG(u'Title', __name__)),
+            ('format', MSG(u'Type', __name__)),
+            ('mtime', MSG(u'Last Modified', __name__)),
+            ('last_author', MSG(u'Last Author', __name__)),
+            ('size', MSG(u'Size', __name__)),
+            ('workflow_state', MSG(u'State', __name__))
+        ]
 
         # Remove the checkboxes
         objects = namespace['objects']
@@ -309,9 +315,7 @@ class BacklinksView(BrowseForm):
             line['checkbox'] = False
 
         # Go
-        namespace['table'] = table(columns, objects, sortby, sortorder,
-                                   gettext=model.gettext)
-
+        namespace['table'] = table(columns, objects, sortby, sortorder)
         return namespace
 
 
@@ -447,11 +451,11 @@ class File(WorkflowAware, VersioningAware):
         size = bytes / 1024.0
         if size >= 1024:
             size = size / 1024.0
-            str = u'%.01f MB'
+            str = MSG(u'%.01f MB', __name__)
         else:
-            str = u'%.01f KB'
+            str = MSG(u'%.01f KB', __name__)
 
-        return self.gettext(str) % size
+        return str.gettext() % size
 
 
     def get_context_menu_base(self):

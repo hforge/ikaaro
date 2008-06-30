@@ -26,6 +26,7 @@ from datetime import datetime, date, time, timedelta
 from itools.csv import Property
 from itools.datatypes import (DataType, Date, Enumerate, Integer, Unicode,
     is_datatype)
+from itools.gettext import MSG
 from itools.handlers import Folder
 from itools.html import XHTMLFile
 from itools.ical import (get_grid_data, icalendar, DateTime, icalendarTable,
@@ -262,13 +263,13 @@ class CalendarView(object):
             week_number = str(int(week_number) + 1)
             if len(week_number) == 1:
                 week_number = '0%s' % week_number
-        current_week = self.gettext(u'Week ') + week_number
+        current_week = MSG(u'Week $n', __name__).gettext(n=week_number)
         tmp_date = c_date - timedelta(7)
         previous_week = ";%s?date=%s" % (method, Date.encode(tmp_date))
         tmp_date = c_date + timedelta(7)
         next_week = ";%s?date=%s" % (method, Date.encode(tmp_date))
         # Month
-        current_month = self.gettext(months[c_date.month])
+        current_month = months[c_date.month].gettext()
         delta = 31
         if c_date.month != 1:
             kk, delta = monthrange(c_date.year, c_date.month - 1)
@@ -320,7 +321,7 @@ class CalendarView(object):
         ns_days = []
         for index in range(ndays):
             ns =  {}
-            ns['name'] = self.gettext(days[current_date.weekday()])
+            ns['name'] = days[current_date.weekday()].gettext()
             if num:
                 ns['nday'] = current_date.day
             else:
@@ -529,7 +530,7 @@ class CalendarView(object):
                     ns_day['events'] = stl(template, {'events': ns_events})
                     ns_week['days'].append(ns_day)
                     if day.day == 1:
-                        month = self.gettext(months[day.month])
+                        month = months[day.month].gettext()
                         ns_week['month'] = month
                 day = day + timedelta(1)
             namespace['weeks'].append(ns_week)
@@ -816,7 +817,7 @@ class CalendarView(object):
             namespace['STATUS'] = status.get_namespace('TENTATIVE')
         # Call to gettext on Status values
         for value in namespace['STATUS']:
-            value['value'] = self.gettext(value['value'])
+            value['value'] = value['value'].gettext()
 
         # Show action buttons only if current user is authorized
         if object is None:

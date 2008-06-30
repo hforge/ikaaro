@@ -24,6 +24,7 @@ from string import Template
 
 # Import from itools
 from itools.datatypes import XMLAttribute
+from itools.gettext import MSG
 from itools.stl import stl
 from itools.uri import Path
 from itools.web import get_context
@@ -46,8 +47,9 @@ namespaces = {
 # Table
 ###########################################################################
 
-def batch(uri, start, size, total, gettext=DBObject.gettext,
-          msgs=(u"There is 1 object.", u"There are ${n} objects.")):
+
+
+def batch(uri, start, size, total, msgs=None):
     """Outputs an HTML snippet with navigation links to move through a set
     of objects.
 
@@ -61,13 +63,19 @@ def batch(uri, start, size, total, gettext=DBObject.gettext,
 
         total -- The total number of objects.
     """
-    # Plural forms (XXX do it the gettext way)
+    # FIXME Use plural forms
+    if msgs is None:
+        msgs = (
+            MSG(u"There is 1 item.", __name__),
+            MSG(u"There are ${n} items.", __name__)
+        )
+
     if total == 1:
-        msg1 = gettext(msgs[0])
+        # Singular
+        msg1 = msgs[0].gettext()
     else:
-        msg1 = gettext(msgs[1])
-        msg1 = Template(msg1).substitute(n=total)
-    msg1 = msg1.encode('utf-8')
+        # Plural
+        msg1 = msgs[1].gettext(n=total)
 
     # Calculate end
     end = min(start + size, total)
@@ -81,7 +89,7 @@ def batch(uri, start, size, total, gettext=DBObject.gettext,
         previous = str(previous)
         previous = XMLAttribute.encode(previous)
         previous = '<a href="%s" title="%s">&lt;&lt;</a>' \
-                   % (previous, gettext(u'Previous'))
+                   % (previous, MSG(u'Previous', __name__).gettext())
     # Next
     next = None
     if end < total:
@@ -90,7 +98,7 @@ def batch(uri, start, size, total, gettext=DBObject.gettext,
         next = str(next)
         next = XMLAttribute.encode(next)
         next = '<a href="%s" title="%s">&gt;&gt;</a>' \
-               % (next, gettext(u'Next'))
+               % (next, MSG(u'Next', __name__).gettext())
 
     # Output
     if previous is None and next is None:
@@ -104,14 +112,13 @@ def batch(uri, start, size, total, gettext=DBObject.gettext,
         else:
             link = '%s %s' % (previous, next)
 
-        msg2 = gettext(u"View from ${start} to ${end} (${link}):")
-        msg2 = Template(msg2)
-        msg2 = msg2.substitute(start=(start+1), end=end, link=link)
-        msg2 = msg2.encode('utf-8')
+        msg2 = MSG(u"View from ${start} to ${end} (${link}):", __name__)
+        msg2 = msg2.gettext(start=(start+1), end=end, link=link)
 
         msg = '%s %s' % (msg1, msg2)
 
     # Wrap around a paragraph
+    msg = msg.encode('utf-8')
     return XMLParser('<p class="batchcontrol">%s</p>' % msg, namespaces)
 
 
@@ -142,7 +149,7 @@ def table_sortcontrol(column, sortby, sortorder):
     return href, value
 
 
-def table_head(columns, sortby, sortorder, gettext=lambda x: x):
+def table_head(columns, sortby, sortorder):
     # Build the namespace
     columns_ = []
     for name, title in columns:
@@ -150,8 +157,6 @@ def table_head(columns, sortby, sortorder, gettext=lambda x: x):
             column = None
         else:
             column = {'title': title}
-            if isinstance(title, basestring):
-                column['title'] = gettext(title)
             href, sort = table_sortcontrol(name, sortby, sortorder)
             column['href'] = href
             column['order'] = sort
@@ -205,8 +210,8 @@ table_template = list(XMLParser("""
 """, namespaces))
 
 
-def table(columns, rows, sortby, sortorder, actions=[], gettext=lambda x: x,
-          table_with_form=True, css=None):
+def table(columns, rows, sortby, sortorder, actions=[], table_with_form=True,
+          css=None):
     """The parameters are:
 
       columns --
@@ -223,15 +228,12 @@ def table(columns, rows, sortby, sortorder, actions=[], gettext=lambda x: x,
 
       actions --
         [{'name': , 'value': , 'class': , 'onclick': }, ...]
-
-      gettext --
-        The translation function.
     """
     namespace = {}
     namespace['column_checkbox'] = False
     namespace['column_image'] = False
     # The columns
-    namespace['columns'] = table_head(columns, sortby, sortorder, gettext)
+    namespace['columns'] = table_head(columns, sortby, sortorder)
     # The rows
     aux = []
     for row in rows:

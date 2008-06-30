@@ -137,6 +137,8 @@ class PermissionsForm(BrowseForm):
                    ('lastname', u'Last Name'),
                    ('role', u'Role'),
                    ('account_state', u'State')]
+        columns = [ (name, gettext(__name__, title))
+                    for name, title in columns ]
 
         # The actions
         actions = [('permissions_del_members', gettext(u'Delete'),

@@ -3,7 +3,7 @@
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
 <h2>${title}</h2>
-<form action="${action/action}" method="POST">
+<form action="${action}" method="POST">
   <p stl:if="has_required_widget">${required_msg}</p>
   <dl>
     <stl:block stl:repeat="widget widgets">
@@ -21,7 +21,7 @@
     </stl:block>
   </dl>
   <p>
-  <input type="submit" value="${action/value}" class="${action/class}" />
+  <input type="submit" value="${submit_value}" class="${submit_class}" />
   </p>
   <input type="hidden" name="${hidden/name}" value="${hidden/value}"
     stl:repeat="hidden hiddens" />
