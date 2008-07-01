@@ -47,7 +47,7 @@ from widgets import batch, table
 class TableView(BrowseForm):
 
     access = 'is_allowed_to_view'
-    __label__ = u'View'
+    __label__ = MSG(u'View', __name__)
     icon = 'view.png'
 
 
@@ -135,7 +135,7 @@ class TableView(BrowseForm):
 class AddRecordForm(AutoForm):
 
     access = 'is_allowed_to_edit'
-    __label__ = u'Add'
+    __label__ = MSG(u'Add', __name__)
     icon = 'new.png'
 
     form_title = u'Add a new record'
@@ -295,7 +295,7 @@ class Table(File):
 
     class_id = 'table'
     class_version = '20071216'
-    class_title = u'Table'
+    class_title = MSG(u'Table', __name__)
     class_views = [['view'],
                    ['add_record'],
                    ['edit_metadata'],

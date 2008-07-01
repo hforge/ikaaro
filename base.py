@@ -122,7 +122,7 @@ class RedirectView(BaseView):
 class MetadataForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    __label__ = u'Metadata'
+    __label__ = MSG(u'Metadata', __name__)
     title = u'Metadata'
     icon = 'metadata.png'
     template = '/ui/base/edit_metadata.xml'
@@ -763,7 +763,14 @@ class DBObject(CatalogAware, Node):
 
 
     def get_title(self, language=None):
-        return self.get_property('title', language=language) or self.name
+        title = self.get_property('title', language=language)
+        if title:
+            return title
+        # Fallback to the object's name
+        title = self.name
+        if isinstance(title, MSG):
+            return title.gettext(language)
+        return title
 
 
     def get_content_language(self, context=None):

@@ -144,7 +144,7 @@ class FileGET(BaseView):
 class DownloadView(STLView):
 
     access = 'is_allowed_to_view'
-    __label__ = u'View'
+    __label__ = MSG(u'View', __name__)
     title = u'Download'
     icon = 'view.png'
     template = '/ui/file/download_form.xml'
@@ -161,7 +161,7 @@ class DownloadView(STLView):
 class UploadForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    __label__ = u'Edit'
+    __label__ = MSG(u'Edit', __name__)
     title = u'Replace'
     icon = 'button_upload.png'
     template = '/ui/file/upload.xml'
@@ -265,7 +265,7 @@ class ExternalEdit(BaseView):
 class BacklinksView(BrowseForm):
 
     access = 'is_allowed_to_view'
-    __label__ = u"Backlinks"
+    __label__ = MSG(u"Backlinks", __name__)
     title = u"Backlinks"
     icon = 'button_rename.png'
 
@@ -327,7 +327,7 @@ class File(WorkflowAware, VersioningAware):
 
     class_id = 'file'
     class_version = '20071216'
-    class_title = u'File'
+    class_title = MSG(u'File', __name__)
     class_description = u'Upload office documents, images, media files, etc.'
     class_icon16 = 'icons/16x16/file.png'
     class_icon48 = 'icons/48x48/file.png'
@@ -474,7 +474,7 @@ class File(WorkflowAware, VersioningAware):
 
     externaledit = STLView(
         access='is_allowed_to_edit',
-        __label__=u'Edit',
+        __label__=MSG(u'Edit', __name__),
         title=u'External Editor',
         icon='button_external.png',
         template='/ui/file/externaledit.xml',

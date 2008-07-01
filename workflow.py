@@ -20,6 +20,7 @@ from datetime import datetime
 
 # Import from itools
 from itools.datatypes import DateTime, String, Unicode
+from itools.gettext import MSG
 from itools.stl import stl
 from itools.web import STLForm
 from itools.workflow import Workflow, WorkflowAware as BaseWorkflowAware
@@ -34,7 +35,7 @@ from metadata import Record
 class StateForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    __label__ = u'State'
+    __label__ = MSG(u'State', __name__)
     title = u'Workflow State'
     icon = 'state.png'
     template = '/ui/WorkflowAware_state.xml'

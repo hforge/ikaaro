@@ -66,21 +66,21 @@ class AddView(IconsView):
     access = 'is_allowed_to_add'
     title = u'Add new content'
     icon = '/ui/icons/16x16/new.png'
-    __label__ = u'Add'
+    __label__ = MSG(u'Add', __name__)
 
 
     def get_namespace(self, model, context):
         items = [
             {
                 'icon': '/ui/' + cls.class_icon48,
-                'title': cls.class_title.gettext(),
-                'description': cls.class_description.gettext(),
+                'title': cls.class_title,
+                'description': cls.class_description,
                 'url': ';new_resource?type=%s' % quote(cls.class_id)
             }
             for cls in model.get_document_types() ]
 
         return {
-            'title': MSG(u'Add new content', __name__).gettext(),
+            'title': MSG(u'Add new content', __name__),
             'batch': None,
             'items': items,
         }
@@ -91,7 +91,7 @@ class BrowseContent(BrowseForm):
 
     access = 'is_allowed_to_view'
     access_POST = 'is_allowed_to_edit'
-    __label__ = u'Contents'
+    __label__ = MSG(u'Contents', __name__)
     title = u'Browse Content'
     icon = '/ui/icons/16x16/folder.png'
 
@@ -128,7 +128,7 @@ class BrowseContent(BrowseForm):
         namespace['search_term'] = term
         namespace['search_fields'] = [
             {'name': name,
-             'title': title.gettext(),
+             'title': title,
              'selected': name == field}
             for name, title in self.search_fields ]
 
@@ -171,30 +171,31 @@ class BrowseContent(BrowseForm):
 
         # The column headers
         columns = [
-            ('name', u'Name'), ('title', u'Title'), ('format', u'Type'),
-            ('mtime', u'Last Modified'), ('last_author', u'Last Author'),
-            ('size', u'Size'), ('workflow_state', u'State')]
-        columns = [ (name, gettext(__name__, title))
-                    for name, title in columns ]
+            ('name', MSG(u'Name', __name__)),
+            ('title', MSG(u'Title', __name__)),
+            ('format', MSG(u'Type', __name__)),
+            ('mtime', MSG(u'Last Modified', __name__)),
+            ('last_author', MSG(u'Last Author', __name__)),
+            ('size', MSG(u'Size', __name__)),
+            ('workflow_state', MSG(u'State', __name__))]
 
         # Actions
         user = context.user
         ac = model.get_access_control()
         actions = []
-        message = gettext(__name__, MSG_DELETE_SELECTION)
         if ac.is_allowed_to_edit(user, model):
             if namespace['total']:
+                message = MSG_DELETE_SELECTION.gettext()
                 actions = [
-                    ('remove', u'Remove', 'button_delete',
+                    ('remove', MSG(u'Remove', __name__), 'button_delete',
                      'return confirmation("%s");' % message.encode('utf_8')),
-                    ('rename', u'Rename', 'button_rename', None),
-                    ('copy', u'Copy', 'button_copy', None),
-                    ('cut', u'Cut', 'button_cut', None)]
-                actions = [
-                    (x[0], model.gettext(x[1]), x[2], x[3]) for x in actions ]
+                    ('rename', MSG(u'Rename', __name__), 'button_rename',
+                     None),
+                    ('copy', MSG(u'Copy', __name__), 'button_copy', None),
+                    ('cut', MSG(u'Cut', __name__), 'button_cut', None)]
             if context.has_cookie('ikaaro_cp'):
-                actions.append(('paste', gettext(__name__, u'Paste'),
-                                'button_paste', None))
+                actions.append(
+                    ('paste', MSG(u'Paste', __name__), 'button_paste', None))
 
         # Go!
         namespace['table'] = widgets.table(
@@ -241,7 +242,7 @@ class BrowseContent(BrowseForm):
                 not_removed.append(name)
 
         objects = ', '.join(removed)
-        context.message = object.gettext(MSG_OBJECTS_REMOVED, objects=objects)
+        context.message = MSG_OBJECTS_REMOVED.gettext(objects=objects)
 
 
     def rename(self, model, context, form):
@@ -391,14 +392,14 @@ class RenameForm(STLForm):
 class PreviewView(STLView):
 
     access = 'is_allowed_to_view'
-    __label__ = u'Contents'
+    __label__ = MSG(u'Contents', __name__)
     title = u'Preview Content'
     icon = '/ui/icons/16x16/image.png'
     template = '/ui/folder/browse_image.xml'
 
     search_fields =  [
-        ('title', u'Title'),
-        ('name', u'Name'),
+        ('title', MSG(u'Title', __name__)),
+        ('name', MSG(u'Name', __name__)),
     ]
 
 
@@ -444,7 +445,7 @@ class PreviewView(STLView):
         namespace['search_subfolders'] = search_subfolders
         namespace['search_fields'] = [
             {'id': name,
-             'title': model.gettext(title),
+             'title': title,
              'selected': name == field or None}
             for name, title in self.search_fields ]
         namespace['size'] = current_size
@@ -458,7 +459,7 @@ class PreviewView(STLView):
 
 class LastChanges(BrowseContent):
 
-    __label__ = u"Last Changes"
+    __label__ = MSG(u"Last Changes", __name__)
     title = u"Last Changes"
     icon = 'icalendar.png'
 
@@ -490,7 +491,7 @@ class OrphansView(BrowseContent):
     """
 
     access = 'is_allowed_to_view'
-    __label__ = u"Orphans"
+    __label__ = MSG(u"Orphans", __name__)
     title = u"Orphans"
     description = u"Show objects not linked from anywhere."
     icon = 'orphans.png'
@@ -538,7 +539,7 @@ class Folder(DBObject):
     class_id = 'folder'
     class_version = '20071215'
     class_layout = {}
-    class_title = u'Folder'
+    class_title = MSG(u'Folder', __name__)
     class_description = u'Organize your files and documents with folders.'
     class_icon16 = 'icons/16x16/folder.png'
     class_icon48 = 'icons/48x48/folder.png'
@@ -730,7 +731,7 @@ class Folder(DBObject):
         names = self.get_names()
         size = len(names)
 
-        return gettext(__name__, u'$n obs', n=size)
+        return MSG(u'$n obs', __name__).gettext(n=size)
 
 
     #######################################################################

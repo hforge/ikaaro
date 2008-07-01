@@ -129,7 +129,7 @@ class NewWebSiteForm(NewInstanceForm):
 class LoginView(STLView):
 
     access = True
-    __label__ = u'Login'
+    __label__ = MSG(u'Login', __name__)
     template = '/ui/website/login.xml'
 
 
@@ -263,7 +263,7 @@ class ForgottenPasswordForm(STLForm):
 class ControlPanel(IconsView):
 
     access = 'is_allowed_to_view'
-    __label__ = u'Control Panel'
+    __label__ = MSG(u'Control Panel', __name__)
     title = u'Control Panel'
     icon = 'settings.png'
 
@@ -297,7 +297,7 @@ class ControlPanel(IconsView):
 class VHostsForm(STLForm):
 
     access = 'is_admin'
-    __label__ = u'Control Panel'
+    __label__ = MSG(u'Control Panel', __name__)
     title = u'Virtual Hosts'
     description = u'Define the domain names for this Web Site.'
     icon = 'website.png'
@@ -328,7 +328,7 @@ class VHostsForm(STLForm):
 class SecurityPolicyForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    __label__ = u'Control Panel'
+    __label__ = MSG(u'Control Panel', __name__)
     title = u'Security Policy'
     description = u'Choose the security policy.'
     icon = 'lock.png'
@@ -357,7 +357,7 @@ class SecurityPolicyForm(STLForm):
 class ContactOptionsForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    __label__ = u'Control Panel'
+    __label__ = MSG(u'Control Panel', __name__)
     title = u'Contact Options'
     description = u'Configure the Contact form.'
     icon = 'mail.png'
@@ -405,7 +405,7 @@ class ContactOptionsForm(STLForm):
 class BrokenLinks(STLView):
 
     access = 'is_admin'
-    __label__ = u'Control Panel'
+    __label__ = MSG(u'Control Panel', __name__)
     title = u'Broken Links'
     description = u'Check the referential integrity.'
     icon = 'clear.png'
@@ -452,7 +452,7 @@ class BrokenLinks(STLView):
 class RegisterForm(AutoForm):
 
     access = 'is_allowed_to_register'
-    __label__ = u'Register'
+    __label__ = MSG(u'Register', __name__)
 
 
     form_title = u'Registration'
@@ -664,7 +664,7 @@ class WebSite(RoleAware, Folder):
 
     class_id = 'WebSite'
     class_version = '20071215'
-    class_title = u'Web Site'
+    class_title = MSG(u'Web Site', __name__)
     class_description = u'Create a new Web Site or Work Place.'
     class_icon16 = 'icons/16x16/website.png'
     class_icon48 = 'icons/48x48/website.png'

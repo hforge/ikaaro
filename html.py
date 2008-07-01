@@ -22,6 +22,7 @@ from datetime import datetime
 # Import from itools
 from itools.datatypes import DateTime, FileName, String
 from itools.handlers import File
+from itools.gettext import MSG
 from itools.http import Forbidden
 from itools.html import xhtml_uri, XHTMLFile, sanitize_stream, HTMLParser
 from itools.html import stream_to_str_as_xhtml, stream_to_str_as_html
@@ -47,7 +48,7 @@ class HTMLEditView(BaseView):
     """
 
     access = 'is_allowed_to_edit'
-    __label__ = u'Edit'
+    __label__ = MSG(u'Edit', __name__)
     title = u'Inline'
     icon = 'edit.png'
 
@@ -105,7 +106,7 @@ class HTMLEditView(BaseView):
 class WebPageView(STLView):
 
     access = 'is_allowed_to_view'
-    __label__ = u'View'
+    __label__ = MSG(u'View', __name__)
     title = u'View'
     icon = '/ui/icons/16x16/view.png'
     template = '/ui/html/view.xml'
@@ -148,7 +149,7 @@ class WebPage(EpozEditable, Multilingual, Text):
 
     class_id = 'webpage'
     class_version = '20071217'
-    class_title = u'Web Page'
+    class_title = MSG(u'Web Page', __name__)
     class_description = u'Create and publish a Web Page.'
     class_icon16 = 'icons/16x16/html.png'
     class_icon48 = 'icons/48x48/html.png'

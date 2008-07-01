@@ -29,6 +29,7 @@ from types import GeneratorType
 
 # Import from itools
 from itools import get_abspath
+from itools.gettext import MSG
 from itools.handlers import File, ConfigFile, Folder as FolderHandler
 from itools.html import stream_to_str_as_html
 from itools.stl import stl
@@ -81,7 +82,7 @@ class Root(WebSite):
 
     class_id = 'iKaaro'
     class_version = '20071215'
-    class_title = u'iKaaro'
+    class_title = MSG(u'iKaaro', __name__)
     class_icon16 = 'icons/16x16/root.png'
     class_icon48 = 'icons/48x48/root.png'
     class_views = [

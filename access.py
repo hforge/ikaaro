@@ -22,6 +22,7 @@ from operator import itemgetter
 
 # Import from itools
 from itools.datatypes import Boolean, Email, Integer, Tokens, Unicode, String
+from itools.gettext import MSG
 from itools.stl import stl
 from itools.uri import get_reference
 from itools.web import AccessControl as BaseAccessControl, STLForm
@@ -39,7 +40,7 @@ from workflow import WorkflowAware
 class PermissionsForm(BrowseForm):
 
     access = 'is_admin'
-    __label__ = u"Control Panel"
+    __label__ = MSG(u"Control Panel", __name__)
     title = u"Browse Members"
     description = u"See the users and their roles."
     icon = 'userfolder.png'
@@ -193,7 +194,7 @@ class MembershipForm(STLForm):
 class NewUserForm(STLForm):
 
     access = 'is_admin'
-    __label__ = u'Control Panel'
+    __label__ = MSG(u'Control Panel', __name__)
     title = u'Add New Member'
     description = u'Grant access to a new user.'
     icon = 'card.png'

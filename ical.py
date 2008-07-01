@@ -1272,7 +1272,7 @@ class Calendar(Text, CalendarView):
 
     class_id = 'text/calendar'
     class_version = '20071216'
-    class_title = u'Calendar'
+    class_title = MSG(u'Calendar', __name__)
     class_description = u'Schedule your time with calendar files.'
     class_icon16 = 'icons/16x16/icalendar.png'
     class_icon48 = 'icons/48x48/icalendar.png'
@@ -1373,7 +1373,7 @@ class CalendarTable(Table, CalendarView):
 
     class_id = 'calendarTable'
     class_version = '20071216'
-    class_title = u'Calendar'
+    class_title = MSG(u'Calendar', __name__)
     class_description = u'Schedule your time with calendar files.'
     class_icon16 = 'icons/16x16/icalendar.png'
     class_icon48 = 'icons/48x48/icalendar.png'

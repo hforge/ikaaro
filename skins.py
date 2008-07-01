@@ -82,7 +82,7 @@ map = {
 
 class UIFolder(Node, Folder):
 
-    class_title = 'UI'
+    class_title = MSG(u'UI', __name__)
     class_icon48 = 'icons/48x48/folder.png'
 
 
@@ -130,7 +130,7 @@ class UIFolder(Node, Folder):
 
 class Skin(UIFolder):
 
-    class_title = u'Skin'
+    class_title = MSG(u'Skin', __name__)
     class_icon16 = 'icons/16x16/skin.png'
     class_icon48 = 'icons/48x48/skin.png'
 
@@ -152,23 +152,24 @@ class Skin(UIFolder):
 
         menu = []
         for option in self.get_main_menu_options(context):
-            path = option['path']
+            object = root.get_object(option['path'])
+            # Get the view
             method = option['method']
-            title = option['title'].gettext()
-            src = option['icon']
-
-            object = root.get_object(path)
-            ac = object.get_access_control()
             view = object.get_view(method)
+            # Test security
+            ac = object.get_access_control()
             if ac.is_access_allowed(user, object, view):
-                href = '%s/;%s' % (here.get_pathto(object), method)
-                menu.append({'href': href, 'title': title, 'class': '',
-                             'src': src, 'items': []})
+                menu.append({
+                    'href': '%s/;%s' % (here.get_pathto(object), method),
+                    'title': option['title'],
+                    'class': '',
+                    'src': option['icon'],
+                    'items': []})
 
         if not menu:
             return None
 
-        return {'title': MSG(u'Main Menu', __name__).gettext(),
+        return {'title': MSG(u'Main Menu', __name__),
                 'content': build_menu(menu)}
 
 
@@ -180,7 +181,7 @@ class Skin(UIFolder):
         menu = tree(context.site_root, active_node=context.object,
                     allow=DBFolder, deny=Issue, user=context.user)
         return {
-            'title': MSG(u'Navigation', __name__).gettext(),
+            'title': MSG(u'Navigation', __name__),
             'content': menu}
 
 
@@ -202,7 +203,7 @@ class Skin(UIFolder):
                 args = {}
             # Append to the menu
             menu.append({'href': '%s/;%s' % (prefix, name),
-                         'title': view.__label__.gettext(),
+                         'title': view.__label__,
                          'class': '',
                          'src': base.get_method_icon(view, **args),
                          'items': []})
@@ -210,7 +211,7 @@ class Skin(UIFolder):
         if not menu:
             return None
 
-        return {'title': base.class_title.gettext(),
+        return {'title': base.class_title,
                 'content': build_menu(menu)}
 
 
@@ -262,7 +263,7 @@ class Skin(UIFolder):
         for language in languages:
             title = get_language_name(language)
             # FIXME The domain name should be 'itools'
-            title = title.gettext(language=language)
+            title = title.gettext(language)
             if language == content_language:
                 css_class = 'nav_active'
             else:
@@ -275,9 +276,10 @@ class Skin(UIFolder):
                 'items': [],
             })
 
-        title = MSG(u'Content Language', __name__).gettext()
-        menu = build_menu(options)
-        return {'title': title, 'content': menu}
+        return {
+            'title': MSG(u'Content Language', __name__),
+            'content': build_menu(options),
+        }
 
 
     def get_left_menus(self, context):
@@ -389,7 +391,7 @@ class Skin(UIFolder):
             # Add the menu
             tabs.append({'id': 'tab_%s' % subname,
                          'name': ';%s' % subname,
-                         'label': gettext(view, '__label__'),
+                         'label': view.__label__,
                          'icon': here.get_method_icon(view, **args),
                          'active': active,
                          'class': active and 'active' or None})
@@ -410,8 +412,6 @@ class Skin(UIFolder):
                     title = subview.title
                     if callable(title):
                         title = title(**args)
-                    else:
-                        title = gettext(subview, 'title')
 
                     subtabs.append({
                         'name': ';%s' % subview_link,
@@ -534,9 +534,9 @@ class Skin(UIFolder):
         if root is here:
             return root.get_title()
         # Somewhere else
-        mapping = {'root_title': root.get_title(),
-                   'here_title': here.get_title()}
-        return gettext(__name__, u"${root_title}: ${here_title}", **mapping)
+        message = MSG(u"${root_title}: ${here_title}", __name__)
+        return message.gettext(root_title=root.get_title(),
+                               here_title=here.get_title())
 
 
     def get_meta_tags(self, context):
@@ -586,12 +586,9 @@ class Skin(UIFolder):
         here = context.object
         view = here.get_view(context.method)
         title = getattr(view, 'title', None)
-        if title is None:
-            namespace['view_title'] = None
-        elif callable(title):
-            namespace['view_title'] = title()
-        else:
-            namespace['view_title'] = gettext(view, 'title')
+        if callable(title):
+            title = title()
+        namespace['view_title'] = title
         # Layout
         if context.user is None:
             namespace['layout_class'] = 'layout_not_auth'

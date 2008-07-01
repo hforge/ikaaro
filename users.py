@@ -23,6 +23,7 @@ from string import Template
 
 # Import from itools
 from itools.datatypes import DataType, Email, String, Unicode
+from itools.gettext import MSG
 from itools.handlers import Folder as BaseFolder
 from itools.i18n import get_language_name
 from itools.stl import stl
@@ -46,7 +47,7 @@ from utils import crypt_password, generate_password
 class ProfileView(STLView):
 
     access = 'is_allowed_to_view'
-    __label__ = u'Profile'
+    __label__ = MSG(u'Profile', __name__)
     icon = 'action_home.png'
     template = '/ui/user/profile.xml'
 
@@ -68,7 +69,7 @@ class ProfileView(STLView):
 class AccountForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    __label__ = u'Edit'
+    __label__ = MSG(u'Edit', __name__)
     title = u'Account'
     icon = 'settings.png'
     template = '/ui/user/edit_account.xml'
@@ -126,7 +127,7 @@ class AccountForm(STLForm):
 class PreferencesForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    __label__ = u'Edit'
+    __label__ = MSG(u'Edit', __name__)
     title = u'Preferences'
     icon = 'skin.png'
     template = '/ui/user/edit_language_form.xml'
@@ -160,7 +161,7 @@ class PreferencesForm(STLForm):
 class PasswordForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    __label__ = u'Edit'
+    __label__ = MSG(u'Edit', __name__)
     title = u'Password'
     icon = 'lock.png'
     template = '/ui/user/edit_password.xml'
@@ -216,7 +217,7 @@ class PasswordForm(STLForm):
 class TasksView(STLView):
 
     access = 'is_allowed_to_edit'
-    __label__ = u'Tasks'
+    __label__ = MSG(u'Tasks', __name__)
     icon = 'tasks.png'
     template = '/ui/user/tasks.xml'
 

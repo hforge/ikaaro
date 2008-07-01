@@ -21,6 +21,7 @@ from operator import itemgetter
 
 # Import from itools
 from itools.datatypes import DateTime, String
+from itools.gettext import MSG
 from itools.i18n import format_datetime
 from itools.web import get_context, STLView
 from itools.xapian import KeywordField, BoolField
@@ -36,7 +37,7 @@ from metadata import Record
 class HistoryView(STLView):
 
     access = 'is_allowed_to_view'
-    __label__ = u'History'
+    __label__ = MSG(u'History', __name__)
     icon = 'history.png'
     template = '/ui/file/history.xml'
 

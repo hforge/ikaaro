@@ -20,7 +20,7 @@ from cgi import escape
 
 # Import from itools
 from itools.datatypes import String
-from itools.gettext import POFile
+from itools.gettext import POFile, MSG
 from itools.handlers import TextFile, Python as PythonFile
 from itools.html import HTMLFile
 from itools.stl import stl
@@ -41,7 +41,7 @@ from utils import get_parameters
 class EditTextForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    __label__ = u'Edit'
+    __label__ = MSG(u'Edit', __name__)
     title = u'Inline'
     icon = 'edit.png'
     template = '/ui/text/edit.xml'
@@ -69,7 +69,7 @@ class Text(File):
 
     class_id = 'text'
     class_version = '20071216'
-    class_title = u'Plain Text'
+    class_title = MSG(u'Plain Text', __name__)
     class_description = u'Keep your notes with plain text files.'
     class_icon16 = 'icons/16x16/text.png'
     class_icon48 = 'icons/48x48/text.png'
@@ -131,7 +131,7 @@ class PO(Text):
 
     class_id = 'text/x-po'
     class_version = '20071216'
-    class_title = u'Message Catalog'
+    class_title = MSG(u'Message Catalog', __name__)
     class_icon16 = 'icons/16x16/po.png'
     class_icon48 = 'icons/48x48/po.png'
     class_handler = POFile
@@ -208,7 +208,7 @@ class CSS(Text):
 
     class_id = 'text/css'
     class_version = '20071216'
-    class_title = u'CSS'
+    class_title = MSG(u'CSS', __name__)
     class_icon16 = 'icons/16x16/css.png'
     class_icon48 = 'icons/48x48/css.png'
 
@@ -218,7 +218,7 @@ class Python(Text):
 
     class_id = 'text/x-python'
     class_version = '20071216'
-    class_title = u'Python'
+    class_title = MSG(u'Python', __name__)
     class_icon16 = 'icons/16x16/python.png'
     class_icon48 = 'icons/48x48/python.png'
     class_handler = PythonFile
@@ -229,7 +229,7 @@ class XML(Text):
 
     class_id = 'text/xml'
     class_version = '20071216'
-    class_title = u'XML File'
+    class_title = MSG(u'XML File', __name__)
     class_handler = XMLFile
 
 
@@ -238,7 +238,7 @@ class HTML(Text):
 
     class_id = 'text/html'
     class_version = '20071216'
-    class_title = u'HTML File'
+    class_title = MSG(u'HTML File', __name__)
     class_handler = HTMLFile
 
 

@@ -23,6 +23,7 @@ from operator import itemgetter
 # Import from itools
 from itools.datatypes import Boolean, Enumerate, Integer, is_datatype
 from itools.csv import CSVFile
+from itools.gettext import MSG
 from itools.stl import stl
 
 # Import from ikaaro
@@ -40,7 +41,7 @@ class ViewCSV(BrowseForm):
 
     # FIXME We need different permissions for GET and POST
     access = 'is_allowed_to_edit'
-    __label__ = u'View'
+    __label__ = MSG(u'View', __name__)
     schema = {
         'ids': Integer(mandatory=True),
     }
@@ -125,7 +126,7 @@ class CSV(Text):
 
     class_id = 'text/comma-separated-values'
     class_version = '20071216'
-    class_title = u'Comma Separated Values'
+    class_title = MSG(u'Comma Separated Values', __name__)
     class_views = [['view'],
                    ['add_row_form'],
                    ['externaledit', 'upload_form'],
