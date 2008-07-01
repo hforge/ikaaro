@@ -236,8 +236,8 @@ class Tracker(Folder):
 
     class_id = 'tracker'
     class_version = '20080415'
-    class_title = u'Issue Tracker'
-    class_description = u'To manage bugs and tasks'
+    class_title = MSG(u'Issue Tracker', __name__)
+    class_description = MSG(u'To manage bugs and tasks', __name__)
     class_icon16 = 'images/tracker16.png'
     class_icon48 = 'images/tracker48.png'
     class_views = [
@@ -933,7 +933,7 @@ class SelectTable(Table):
 
     class_id = 'tracker_select_table'
     class_version = '20071216'
-    class_title = u'Select Table'
+    class_title = MSG(u'Select Table', __name__)
     class_handler = SelectTableTable
 
     form = [TextWidget('title', title=u'Title')]
@@ -1005,7 +1005,7 @@ class OrderedSelectTable(SelectTable):
 
     class_id = 'tracker_ordered_select_table'
     class_version = '20080415'
-    class_title = u'Ordered select table'
+    class_title = MSG(u'Ordered select table', __name__)
     class_handler = OrderedSelectTableTable
 
     form = [TextWidget('title', title=u'Title'),
@@ -1037,7 +1037,7 @@ class StoredSearch(Text):
 
     class_id = 'stored_search'
     class_version = '20071215'
-    class_title = u'Stored Search'
+    class_title = MSG(u'Stored Search', __name__)
     class_handler = ConfigFile
 
 

@@ -18,6 +18,7 @@
 
 # Import from itools
 from itools.datatypes import Unicode, Integer, Decimal
+from itools.gettext import MSG
 from itools.stl import stl
 from itools.handlers import checkid
 from itools.web import FormError
@@ -35,8 +36,8 @@ from cart import Cart
 class Product(Folder):
 
     class_id = 'product'
-    class_title = u'A product'
-    class_description = u'A product'
+    class_title = MSG(u'A product', __name__)
+    class_description = MSG(u'A product', __name__)
     #class_icon16 = 'images/xxx.png'
     #class_icon48 = 'images/xxx.png'
     class_views = [['view'],
@@ -166,7 +167,7 @@ class Product(Folder):
 class Book(Product):
 
     class_id = 'book'
-    class_title = u'Book'
+    class_title = MSG(u'Book', __name__)
 
     product_fields = Product.product_fields
     product_fields.update({'subject': Unicode(mandatory=True),

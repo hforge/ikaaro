@@ -19,6 +19,7 @@
 
 # Import from itools
 from itools.datatypes import Unicode
+from itools.gettext import MSG
 
 # Import from ikaaro
 from ikaaro.file import File
@@ -31,8 +32,8 @@ class WikiFolder(Folder):
 
     class_id = 'WikiFolder'
     class_version = '20071215'
-    class_title = u"Wiki"
-    class_description = u"Container for a wiki"
+    class_title = MSG(u"Wiki", __name__)
+    class_description = MSG(u"Container for a wiki", __name__)
     class_icon16 = 'wiki/WikiFolder16.png'
     class_icon48 = 'wiki/WikiFolder48.png'
     class_views = [['view'],

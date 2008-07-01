@@ -29,6 +29,7 @@ from textwrap import wrap
 from itools.csv import parse, Table
 from itools.datatypes import DateTime, FileName, Integer, String, Unicode
 from itools.datatypes import Boolean, Tokens, XMLContent
+from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.html import xhtml_uri
 from itools.i18n import format_datetime
@@ -121,8 +122,8 @@ class Issue(Folder):
 
     class_id = 'issue'
     class_version = '20071216'
-    class_title = u'Issue'
-    class_description = u'Issue'
+    class_title = MSG(u'Issue', __name__)
+    class_description = MSG(u'Issue', __name__)
     class_views = [
         ['edit_form', 'edit_resources_form'],
         ['browse_content?mode=list'],

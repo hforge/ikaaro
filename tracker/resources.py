@@ -21,6 +21,7 @@ from datetime import time, timedelta
 from itools.csv import Table as BaseTable, Record
 from itools.datatypes import DateTime, String, Unicode
 from itools.datatypes import Enumerate
+from itools.gettext import MSG
 from itools.html import XHTMLFile
 from itools.ical import Time
 from itools.web import get_context
@@ -193,8 +194,8 @@ class Resources(Table, TrackerView):
 
     class_id = 'resources'
     class_version = '20071216'
-    class_title = u'Resources'
-    class_description = u'Resources assigned to issues'
+    class_title = MSG(u'Resources', __name__)
+    class_description = MSG(u'Resources assigned to issues', __name__)
     class_handler = BaseResources
 
     class_views = [['weekly_view', 'monthly_view'],

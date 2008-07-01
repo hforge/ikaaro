@@ -37,6 +37,7 @@ from docutils import nodes
 # Import from itools
 from itools import vfs
 from itools.datatypes import DateTime, FileName, XML
+from itools.gettext import MSG
 from itools.handlers import checkid, get_handler, File as FileHandler
 from itools.i18n import format_datetime
 from itools.stl import stl
@@ -60,8 +61,8 @@ class WikiPage(Text):
 
     class_id = 'WikiPage'
     class_version = '20071217'
-    class_title = u"Wiki Page"
-    class_description = u"Wiki contents"
+    class_title = MSG(u"Wiki Page", __name__)
+    class_description = MSG(u"Wiki contents", __name__)
     class_icon16 = 'wiki/WikiPage16.png'
     class_icon48 = 'wiki/WikiPage48.png'
     class_views = [['view', 'to_pdf'],
