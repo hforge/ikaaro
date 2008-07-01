@@ -102,7 +102,7 @@ class Root(WebSite):
 
 
     __roles__ = [
-        {'name': 'admins', 'title': u'Admin'}]
+        {'name': 'admins', 'title': MSG(u'Admin', __name__)}]
 
 
     @staticmethod

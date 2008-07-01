@@ -88,7 +88,8 @@ class HTMLEditView(BaseView):
         try:
             new_body = list(XMLParser(new_body, namespaces))
         except XMLError:
-            return context.come_back(u'Invalid HTML code.', keep=['data'])
+            message = MSG(u'Invalid HTML code.', __name__)
+            return context.come_back(message, keep=['data'])
         if sanitize:
             new_body = sanitize_stream(new_body)
         # "get_epoz_document" is to set in your editable handler

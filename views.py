@@ -51,9 +51,9 @@ class NewInstanceForm(STLForm):
         type = kw.get('type')
         cls = get_object_class(type)
         if cls is not None:
-            return cls.class_title.gettext()
+            return cls.class_title
         # Default
-        return MSG(u'Unknown object.', __name__).gettext()
+        return MSG(u'Unknown object.', __name__)
 
 
     def icon(self, model, **kw):

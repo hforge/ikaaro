@@ -139,7 +139,7 @@ class MetadataForm(STLForm):
 
         get_property = model.get_property
         return {
-            'language_name': language_name.gettext(),
+            'language_name': language_name,
             'title': get_property('title', language=language),
             'description': get_property('description', language=language),
             'subject': get_property('subject', language=language),

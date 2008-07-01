@@ -258,7 +258,7 @@ class User(AccessControl, Folder):
 
     class_id = 'user'
     class_version = '20071215'
-    class_title = 'User'
+    class_title = MSG(u'User', __name__)
     class_icon16 = 'icons/16x16/user.png'
     class_icon48 = 'icons/48x48/user.png'
     class_views = [

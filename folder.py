@@ -100,9 +100,9 @@ class BrowseContent(BrowseForm):
     }
 
     search_fields =  [
-        ('title', u'Title'),
-        ('text', u'Text'),
-        ('name', u'Name'),
+        ('title', MSG(u'Title', __name__)),
+        ('text', MSG(u'Text', __name__)),
+        ('name', MSG(u'Name', __name__)),
     ]
 
     batchsize = 20
@@ -778,7 +778,8 @@ class Folder(DBObject):
     def paste(self, context):
         cut, paths = context.get_cookie('ikaaro_cp', type=CopyCookie)
         if len(paths) == 0:
-            return context.come_back(u'Nothing to paste.')
+            message = MSG(u'Nothing to paste.', __name__)
+            return context.come_back(message)
 
         root = context.root
         allowed_types = tuple(self.get_document_types())
@@ -812,7 +813,8 @@ class Folder(DBObject):
         if cut is True:
             context.del_cookie('ikaaro_cp')
 
-        return context.come_back(u'Objects pasted.')
+        message = MSG(u'Objects pasted.', __name__)
+        return context.come_back(message)
 
 
 

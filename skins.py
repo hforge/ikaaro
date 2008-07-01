@@ -262,8 +262,7 @@ class Skin(UIFolder):
         options = []
         for language in languages:
             title = get_language_name(language)
-            # FIXME The domain name should be 'itools'
-            title = title.gettext(language)
+#            title = title.gettext(language)
             if language == content_language:
                 css_class = 'nav_active'
             else:

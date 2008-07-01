@@ -58,15 +58,13 @@ class PermissionsForm(BrowseForm):
     }
 
     search_fields = [
-        ('username', u'Login'),
-        ('lastname', u'Last Name'),
-        ('firstname', u'First Name')]
+        ('username', MSG(u'Login', __name__)),
+        ('lastname', MSG(u'Last Name', __name__)),
+        ('firstname', MSG(u'First Name', __name__))]
 
 
     def get_namespace(self, model, context, query):
         namespace = {}
-
-        gettext = model.gettext
 
         # Get values from the request
         sortby = query['sortby']
@@ -116,10 +114,10 @@ class PermissionsForm(BrowseForm):
             # State
             user_object = root.get_object(user.abspath)
             if user_object.get_property('user_must_confirm'):
-                account_state = (gettext(u'Inactive'),
+                account_state = (MSG(u'Inactive', __name__),
                                  '/users/%s/;resend_confirmation' % user_id)
             else:
-                account_state = gettext(u'Active')
+                account_state = MSG(u'Active', __name__)
             ns['account_state'] = account_state
             # Append
             members.append(ns)
@@ -132,22 +130,22 @@ class PermissionsForm(BrowseForm):
         members = members[start:start+size]
 
         # The columns
-        columns = [('user_id', u'User ID'),
-                   ('login_name', u'Login'),
-                   ('firstname', u'First Name'),
-                   ('lastname', u'Last Name'),
-                   ('role', u'Role'),
-                   ('account_state', u'State')]
-        columns = [ (name, gettext(__name__, title))
-                    for name, title in columns ]
+        columns = [
+            ('user_id', MSG(u'User ID', __name__)),
+            ('login_name', MSG(u'Login', __name__)),
+            ('firstname', MSG(u'First Name', __name__)),
+            ('lastname', MSG(u'Last Name', __name__)),
+            ('role', MSG(u'Role', __name__)),
+            ('account_state', MSG(u'State', __name__))]
 
         # The actions
-        actions = [('permissions_del_members', gettext(u'Delete'),
-                   'button_delete', None)]
+        actions = [
+            ('permissions_del_members', MSG(u'Delete', __name__),
+             'button_delete', None)]
 
         namespace['batch'] = widgets.batch(context.uri, start, size, total)
         namespace['table'] = widgets.table(columns, members, sortby, sortorder,
-                                           actions, gettext)
+                                           actions)
 
         return namespace
 
@@ -266,9 +264,10 @@ class NewUserForm(STLForm):
         if context.has_form_value('add_and_return'):
             return
 
-        goto='/users/%s/;%s' % (user.name, user.get_firstview())
+        goto = '/users/%s/;%s' % (user.name, user.get_firstview())
         goto = get_reference(goto)
-        return context.come_back(u'User added.', goto=goto)
+        message = MSG(u'User added.', __name__)
+        return context.come_back(message, goto=goto)
 
 
 
@@ -339,10 +338,10 @@ class RoleAware(AccessControl):
 
     # To override
     __roles__ = [
-        {'name': 'guests', 'title': u"Guest"},
-        {'name': 'members', 'title': u"Member"},
-        {'name': 'reviewers', 'title': u"Reviewer"},
-        {'name': 'admins', 'title': u'Admin'},
+        {'name': 'guests', 'title': MSG(u"Guest", __name__)},
+        {'name': 'members', 'title': MSG(u"Member", __name__)},
+        {'name': 'reviewers', 'title': MSG(u"Reviewer", __name__)},
+        {'name': 'admins', 'title': MSG(u'Admin', __name__)},
     ]
 
 
@@ -459,7 +458,7 @@ class RoleAware(AccessControl):
     def get_role_title(self, name):
         for role in self.__roles__:
             if role['name'] == name:
-                return self.gettext(role['title'])
+                return role['title']
         return None
 
 
@@ -547,8 +546,7 @@ class RoleAware(AccessControl):
     #######################################################################
     def get_roles_namespace(self, username=None):
         # Build a list with the role name and title
-        namespace = [ {'name': x['name'], 'title': self.gettext(x['title'])}
-                      for x in self.__roles__ ]
+        namespace = [ x.copy() for x in self.__roles__ ]
 
         # If a username was not given, we are done
         if username is None:

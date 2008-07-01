@@ -954,7 +954,7 @@ class CalendarView(object):
         if '/' in uid:
             kk, uid = uid.split('/', 1)
         if uid =='':
-            return context.come_back('', goto)
+            return context.come_back(None, goto)
         if self.get_record(uid) is None:
             message = u'Cannot delete event, because it was already removed.'
             return context.come_back(message, goto=goto)
@@ -966,7 +966,7 @@ class CalendarView(object):
     cancel__access__ = 'is_allowed_to_edit'
     def cancel(self, context):
         goto = ';%s' % context.get_cookie('method') or 'monthly_view'
-        return context.come_back('', goto)
+        return context.come_back(None, goto)
 
 
     edit_timetables_form__access__ = 'is_allowed_to_edit'

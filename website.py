@@ -176,7 +176,8 @@ class LoginView(STLView):
 
         # Check the password is right
         if not user.authenticate(password):
-            return context.come_back(u'The password is wrong.', keep=keep)
+            message = MSG(u'The password is wrong.', __name__)
+            return context.come_back(message, keep=keep)
 
         # Set cookie
         user.set_auth_cookie(context, password)
@@ -270,7 +271,7 @@ class ControlPanel(IconsView):
 
     def get_namespace(self, model, context):
         namespace = {
-            'title': MSG(u'Control Panel', __name__).gettext(),
+            'title': MSG(u'Control Panel', __name__),
             'batch': None,
             'items': [],
         }
@@ -280,14 +281,10 @@ class ControlPanel(IconsView):
                 continue
             if not model.is_access_allowed(context.user, model, view):
                 continue
-            title = view.title
-            description = view.description
-            if description is not None:
-                description = description.gettext()
             namespace['items'].append({
                 'icon': model.get_method_icon(view, size='48x48'),
-                'title': title.gettext(),
-                'description': description,
+                'title': view.title,
+                'description': view.description,
                 'url': ';%s' % name})
 
         return namespace
@@ -455,9 +452,9 @@ class RegisterForm(AutoForm):
     __label__ = MSG(u'Register', __name__)
 
 
-    form_title = u'Registration'
+    form_title = MSG(u'Registration', __name__)
     form_action = ';register'
-    submit_value = u'Register'
+    submit_value = MSG(u'Register', __name__)
     submit_class = 'button_ok'
 
     schema = {
@@ -812,7 +809,8 @@ class WebSite(RoleAware, Folder):
                                            if x != codes[0] ]
         self.set_property('website_languages', tuple(website_languages))
 
-        return context.come_back(u'The default language has been changed.')
+        message = MSG(u'The default language has been changed.', __name__)
+        return context.come_back(message)
 
 
     remove_languages__access__ = 'is_allowed_to_edit'
@@ -828,19 +826,22 @@ class WebSite(RoleAware, Folder):
         website_languages = [ x for x in website_languages if x not in codes ]
         self.set_property('website_languages', tuple(website_languages))
 
-        return context.come_back(u'Languages removed.')
+        message = MSG(u'Languages removed.', __name__)
+        return context.come_back(message)
 
 
     add_language__access__ = 'is_allowed_to_edit'
     def add_language(self, context):
         code = context.get_form_value('code')
         if not code:
-            return context.come_back(u'You must choose a language')
+            message = MSG(u'You must choose a language', __name__)
+            return context.come_back(message)
 
         website_languages = self.get_property('website_languages')
         self.set_property('website_languages', website_languages + (code,))
 
-        return context.come_back(u'Language added.')
+        message = MSG(u'Language added.', __name__)
+        return context.come_back(message)
 
 
     #######################################################################

@@ -347,7 +347,6 @@ class AutoForm(STLForm):
     def get_namespace(self, model, context):
         here = context.object
         # Local Variables
-        form_title = self.form_title
         fields = self.get_schema(model)
         widgets = self.get_widgets(model)
         form_hidden = self.form_hidden
@@ -365,7 +364,7 @@ class AutoForm(STLForm):
 
         # Build namespace
         namespace = {}
-        namespace['title'] = self.form_title.gettext()
+        namespace['title'] = self.form_title
         namespace['required_msg'] = required_msg
         namespace['first_widget'] = widgets[0].name
         namespace['action'] = self.form_action

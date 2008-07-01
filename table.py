@@ -138,9 +138,9 @@ class AddRecordForm(AutoForm):
     __label__ = MSG(u'Add', __name__)
     icon = 'new.png'
 
-    form_title = u'Add a new record'
+    form_title = MSG(u'Add a new record', __name__)
     form_action = ';add_record'
-    submit_value = u'Add'
+    submit_value = MSG(u'Add', __name__)
     submit_class = 'button_ok'
 
 
