@@ -13,7 +13,7 @@
     </p>
   </form>
 
-  <stl:block if="text">
+  <stl:block stl:if="text">
     <h4>Results</h4>
     ${batch}
     <ol class="results" stl:if="objects">

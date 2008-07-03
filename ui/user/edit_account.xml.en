@@ -20,7 +20,7 @@
       <dd>
         <input type="text" id="email" name="email" value="${email}" />
       </dd>
-      <stl:block if="must_confirm">
+      <stl:block stl:if="must_confirm">
         <dt><strong>To confirm these changes, you must type your actual
             password.</strong></dt>
         <dd>

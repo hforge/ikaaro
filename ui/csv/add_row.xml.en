@@ -6,7 +6,7 @@
 
 <form action=";add_row_action" method="post">
   <dl>
-    <stl:block repeat="column columns">
+    <stl:block stl:repeat="column columns">
       <dt>${column/title}</dt>
       <dd>
         <input type="text" name="${column/name}" value="${column/value}"

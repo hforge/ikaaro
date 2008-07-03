@@ -12,7 +12,7 @@
         <dd>
           <input id="email" type="text" name="email" size="40" />
         </dd>
-        <stl:block if="is_admin">
+        <stl:block stl:if="is_admin">
           <dt>Password</dt>
           <dd>
             <input id="newpass" type="password" name="newpass" />

@@ -7,7 +7,7 @@
 <form action=";edit_row" method="post">
   <input type="hidden" name="index" value="${index}" />
   <dl>
-    <stl:block repeat="column columns">
+    <stl:block stl:repeat="column columns">
       <dt>${column/title}</dt>
       <dd>
         <input type="text" name="${column/name}" value="${column/value}"

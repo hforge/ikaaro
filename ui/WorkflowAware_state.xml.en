@@ -14,7 +14,7 @@
     <dl>
       <dt>You can do the following actions:</dt>
       <dd>
-        <stl:block repeat="transition transitions">
+        <stl:block stl:repeat="transition transitions">
           <br/>
           <input type="radio" name="transition" id="${transition/name}"
             value="${transition/name}" />

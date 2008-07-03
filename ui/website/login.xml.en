@@ -24,8 +24,8 @@
   </form>
 
   <script language="javascript">
-    <stl:inline if="not username">focus_element("username");</stl:inline>
-    <stl:inline if="username">focus_element("password");</stl:inline>
+    <stl:inline stl:if="not username">focus_element("username");</stl:inline>
+    <stl:inline stl:if="username">focus_element("password");</stl:inline>
   </script>
 
 </stl:block>

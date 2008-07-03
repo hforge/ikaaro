@@ -10,7 +10,7 @@
     No document awaits your review.
   </p>
 
-  <stl:block if="documents">
+  <stl:block stl:if="documents">
     <p>
       The documents below await review for publication:
     </p>

@@ -6,11 +6,11 @@
 
   <h2>About</h2>
   <p>
-    <stl:inline if="itools_version">
+    <stl:inline stl:if="itools_version">
       itools <strong>${itools_version}</strong>
     </stl:inline>
     <br/>
-    <stl:inline if="ikaaro_version">
+    <stl:inline stl:if="ikaaro_version">
       iKaaro <strong>${ikaaro_version}</strong>
     </stl:inline>
   </p>

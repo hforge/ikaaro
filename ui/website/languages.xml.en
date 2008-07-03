@@ -26,7 +26,7 @@
           <td>${language/name}</td>
           <td>${language/code}</td>
           <td align="center">
-            <stl:block if="language/isdefault">Yes</stl:block>
+            <stl:block stl:if="language/isdefault">Yes</stl:block>
           </td>
         </tr>
       </tbody>

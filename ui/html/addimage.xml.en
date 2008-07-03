@@ -31,7 +31,7 @@
       </div>
       <!-- Content -->
       <!-- Folders first -->
-      <stl:block repeat="object bc/objects">
+      <stl:block stl:repeat="object bc/objects">
         <dl class="thumb" stl:if="object/is_folder">
           <dt>
             <a href="${object/url}"
@@ -45,7 +45,7 @@
         </dl>
       </stl:block>
       <!-- Images next -->
-      <stl:block repeat="object bc/objects">
+      <stl:block stl:repeat="object bc/objects">
         <dl class="thumb" stl:if="object/is_image">
           <dt>
             <img alt="" title="${object/object_type}"

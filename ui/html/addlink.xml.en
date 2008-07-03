@@ -58,7 +58,7 @@
         <tr>
           <td valign="top">
             <!-- Browse Folders -->
-            <stl:block repeat="object bc/objects">
+            <stl:block stl:repeat="object bc/objects">
               <dl stl:if="object/is_folder">
                 <dt>
                   <a href="${object/url}" title="${object/title}"><img alt=""
@@ -70,7 +70,7 @@
           </td>
           <td valign="top">
             <!-- Files and Folders to select -->
-            <stl:block repeat="object bc/objects">
+            <stl:block stl:repeat="object bc/objects">
               <dl class="thumb">
                 <dt>
                   <img alt="" title="${object/object_type}"

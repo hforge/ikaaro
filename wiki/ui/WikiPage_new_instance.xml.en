@@ -11,7 +11,7 @@
       <dt><label for="name">Name</label></dt>
       <dd>
         <input type="text" id="name" name="name" size="40" stl:if="not name" />
-        <stl:inline if="name">
+        <stl:inline stl:if="name">
           <input type="hidden" name="name" value="${name}" />
           <span id="name">${name}</span>
         </stl:inline>

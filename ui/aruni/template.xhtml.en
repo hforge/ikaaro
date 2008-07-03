@@ -21,16 +21,16 @@
   </head>
   <body>
     <table id="layout" class="${layout_class}" border="0" cellpadding="0"
-      cellspacing="0" align="center" valign="top">
+      cellspacing="0" align="center">
       <thead>
         <tr>
           <td id="header" colspan="2">
-            <stl:block if="not user/info">
+            <stl:block stl:if="not user/info">
               <a href="/;login" id="top_menu_login">Log in</a>
               <a href="/;register" id="top_menu_register"
                 stl:if="user/joinisopen">Register</a>
             </stl:block>
-            <stl:block if="user/info">
+            <stl:block stl:if="user/info">
               <a href="${user/info/home}" id="top_menu_profile">My Profile</a>
               <a href="/;logout" id="top_menu_logout">Log out</a>
             </stl:block>
@@ -53,7 +53,7 @@
                     title="${item/name}">${item/short_name}</a>
                   <span stl:if="not item/url"
                     title="${item/name}">${item/short_name}</span>
-                  <stl:inline if="not repeat/item/end">/</stl:inline> 
+                  <stl:inline stl:if="not repeat/item/end">/</stl:inline>
                 </span>
               </div>
               <div class="clear"></div>
