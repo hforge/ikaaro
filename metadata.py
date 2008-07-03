@@ -21,8 +21,7 @@ from mimetypes import add_type
 from itools.datatypes import is_datatype, String, Unicode, XMLContent
 from itools.handlers import File, register_handler_class
 from itools.web import get_context
-from itools.xml import (XMLNamespace, XMLParser, START_ELEMENT, END_ELEMENT,
-    TEXT)
+from itools.xml import xml_uri, XMLParser, START_ELEMENT, END_ELEMENT, TEXT
 
 # Import from ikaaro
 from exceptions import ParserError
@@ -73,7 +72,7 @@ class Metadata(File):
 
     def _load_state_from_file(self, file):
         # Constants
-        xml_lang = (XMLNamespace.class_uri, 'lang')
+        xml_lang = (xml_uri, 'lang')
         error1 = 'unexpected start tag "%s" at line "%s"'
         # Local variables
         language = None
