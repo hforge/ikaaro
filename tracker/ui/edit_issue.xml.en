@@ -95,6 +95,7 @@
       </tr>
       <tr>
         <td valign="top" colspan="2">
+          <a name="new_comment"></a>
           <label for="comment">New Comment:</label><br/>
           <textarea name="comment" id="comment" cols="80" rows="10"
             ></textarea>
@@ -124,7 +125,8 @@
         <td align="right">${comment/datetime}</td>
         <td align="right">
         &nbsp;[
-        <a href="#" onclick="javascript:reply('${comment/number}');">
+        <a href="#new_comment"
+          onclick="javascript:reply('${comment/number}');">
           Reply
         </a>]&nbsp;
         </td>
