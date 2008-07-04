@@ -70,9 +70,9 @@ days = {
 
 # Template to display events on monthly_view
 template_string = """
-  <table class="event">
-    <tr xmlns:stl="http://xml.itools.org/namespaces/stl"
-    stl:repeat="event events" class="color${event/resource/color}">
+  <table class="event" xmlns="http://www.w3.org/1999/xhtml" 
+    xmlns:stl="http://xml.itools.org/namespaces/stl">
+    <tr stl:repeat="event events" class="color${event/resource/color}">
       <td class="${event/STATUS}">
         <a href="${event/url}">
           ${event/SUMMARY}</a>

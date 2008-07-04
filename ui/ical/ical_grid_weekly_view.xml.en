@@ -43,8 +43,8 @@
       <th class="time" width="9%">
         ${row/start}-${row/end}
       </th>
-      <stl:block repeat="item row/items">
-        <stl:block repeat="cell item/cells">
+      <stl:block stl:repeat="item row/items">
+        <stl:block stl:repeat="cell item/cells">
           <div stl:if="cell/new">${cell/ns}</div>
 
           <div stl:if="cell/free">
