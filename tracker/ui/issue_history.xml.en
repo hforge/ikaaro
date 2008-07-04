@@ -6,7 +6,7 @@
 
   <h2>Issue #${number}</h2>
 
-  <stl:block repeat="row rows">
+  <stl:block stl:repeat="row rows">
     <table width="100%" border="0" cellpadding="0" cellspacing="0">
       <tr class="tracker_issue_comment_title">
         <td>${row/datetime}</td>
@@ -14,35 +14,35 @@
       </tr>
       <tr>
         <td colspan="2">
-          <stl:block if="row/title">
+          <stl:block stl:if="row/title">
             <strong>Title:</strong> ${row/title}<br/>
           </stl:block>
-          <stl:block if="row/version">
+          <stl:block stl:if="row/version">
             <strong>Version:</strong> ${row/version}<br/>
           </stl:block>
-          <stl:block if="row/type">
+          <stl:block stl:if="row/type">
             <strong>Type:</strong> ${row/type}<br/>
           </stl:block>
-          <stl:block if="row/state">
+          <stl:block stl:if="row/state">
             <strong>State:</strong> ${row/state}<br/>
           </stl:block>
-          <stl:block if="row/module">
+          <stl:block stl:if="row/module">
             <strong>Module:</strong> ${row/module}<br/>
           </stl:block>
-          <stl:block if="row/priority">
+          <stl:block stl:if="row/priority">
             <strong>Priority:</strong> ${row/priority}<br/>
           </stl:block>
-          <stl:block if="row/assigned_to">
+          <stl:block stl:if="row/assigned_to">
             <strong>Assign To:</strong> ${row/assigned_to}<br/>
           </stl:block>
-          <stl:block if="row/cc_list">
+          <stl:block stl:if="row/cc_list">
             <strong>CC:</strong> ${row/cc_list}<br/>
           </stl:block>
-          <stl:block if="row/file">
+          <stl:block stl:if="row/file">
             <strong>Attachement:</strong> <a href="${row/file}">${row/file}</a>
             <br/>
           </stl:block>
-          <stl:block if="row/comment">
+          <stl:block stl:if="row/comment">
             <strong>Comment:</strong> ${row/comment}<br/>
           </stl:block>
         </td>

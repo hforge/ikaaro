@@ -30,7 +30,7 @@ from itools.gettext import MSG
 from itools.handlers import ConfigFile, File as FileHandler
 from itools.stl import stl
 from itools.uri import encode_query, Reference
-from itools.web import FormError, STLForm
+from itools.web import FormError, STLForm, STLView
 from itools.xapian import EqQuery, RangeQuery, AndQuery, OrQuery, PhraseQuery
 from itools.xml import XMLParser
 
@@ -41,12 +41,39 @@ from ikaaro.messages import *
 from ikaaro.registry import register_object_class
 from ikaaro.table import Table, TableView
 from ikaaro.text import Text
+from ikaaro.views import BrowseForm
 from ikaaro.widgets import batch, table
 from issue import History, Issue, issue_fields
 from resources import Resources
 
 
 resolution = timedelta.resolution
+
+
+search_fields = {
+    'search_name': Unicode(),
+    'search_title': Unicode(),
+    'text': Unicode(),
+    'mtime': Integer(),
+    'module': String(multiple=True),
+    'version': String(multiple=True),
+    'type': String(multiple=True),
+    'priority': String(multiple=True),
+    'assigned_to': String(multiple=True),
+    'state': String(multiple=True),
+    }
+
+
+columns = [
+    ('id', MSG(u'Id', __name__)),
+    ('title', MSG(u'Title', __name__)),
+    ('version', MSG(u'Version', __name__)),
+    ('module', MSG(u'Module', __name__)),
+    ('type', MSG(u'Type', __name__)),
+    ('priority', MSG(u'Priority', __name__)),
+    ('state', MSG(u'State', __name__)),
+    ('assigned_to', MSG(u'Assigned To', __name__)),
+    ('mtime', MSG(u'Modified', __name__))]
 
 
 ###########################################################################
@@ -98,10 +125,8 @@ class AddIssueForm(STLForm):
         # Add
         id = model.get_new_id()
         issue = Issue.make_object(Issue, model, id)
-        issue._add_record(context)
-
-        goto = context.uri.resolve2('../%s/;edit_form' % issue.name)
-        return context.come_back(u'New issue addded.', goto=goto)
+        issue._add_record(context, form)
+        context.message = MSG(u'New issue added.', __name__)
 
 
 
@@ -211,26 +236,297 @@ class SelectTableView(TableView):
         return namespace
 
 
+
+class SearchForm(STLForm):
+
+    access = 'is_allowed_to_view'
+    __label__ = u'Search'
+    icon = 'button_search.png'
+    template = '/ui/tracker/search.xml'
+
+    query_schema = search_fields
+
+
+    def get_namespace(self, model, context, query):
+        # Set Style
+        context.styles.append('/ui/tracker/tracker.css')
+
+        # Build the namespace
+        namespace = {}
+        # Stored Searches
+        stored_searches = [
+            {'name': x.name, 'title': x.get_title()}
+            for x in model.search_objects(object_class=StoredSearch) ]
+        stored_searches.sort(key=itemgetter('title'))
+        namespace['stored_searches'] = stored_searches
+
+        # Search Form
+        search_name = query['search_name']
+        if search_name:
+            search = model.get_object(search_name)
+            get_value = search.handler.get_value
+            get_values = search.get_values
+            namespace['search_name'] = search_name
+            namespace['search_title'] = search.get_property('title')
+        else:
+            get_value = query.get
+            get_values = query.get
+            namespace['search_name'] = None
+            namespace['search_title'] = query['search_title']
+
+        namespace['text'] = get_value('text')
+        namespace['mtime'] = get_value('mtime')
+        module = get_values('module')
+        type = get_values('type')
+        version = get_values('version')
+        priority = get_values('priority')
+        assign = get_values('assigned_to')
+        state = get_values('state')
+
+        get = model.get_object
+        namespace['modules'] = get('modules').get_options(module)
+        namespace['types'] = get('types').get_options(type)
+        namespace['versions'] = get('versions').get_options(version)
+        namespace['priorities'] = get('priorities').get_options(priority,
+            sort='rank')
+        namespace['states'] = get('states').get_options(state, sort='rank')
+        namespace['users'] = model.get_members_namespace(assign, True)
+
+        # is_admin
+        ac = model.get_access_control()
+        namespace['is_admin'] = ac.is_admin(context.user, model)
+        pathto_website = model.get_pathto(model.get_site_root())
+        namespace['manage_assigned'] = '%s/;permissions_form' % pathto_website
+
+        return namespace
+
+
+    def go_to_issue(self, model, context, query):
+        issue_name = context.get_form_value('issue_name')
+        if not issue_name:
+            return context.come_back(MSG_NAME_MISSING)
+
+        if not self.has_object(issue_name):
+            return context.come_back(MSG(u'Issue not found.', __name__))
+
+        issue = self.get_object(issue_name)
+        if not isinstance(issue, Issue):
+            return context.come_back(MSG(u'Issue not found.', __name__))
+
+        return context.uri.resolve2('../%s/;edit_form' % issue_name)
+
+
+    def search(self, model, context, form, query):
+        print 'VIEW'
+        search_name = query['search_name']
+        search_title = query['search_title'].strip()
+        search_title = unicode(search_title, 'utf8')
+
+        stored_search = stored_search_title = None
+        if not search_title:
+            context.uri.query['search_name'] = search_name = None
+        if search_name:
+            # Edit an Stored Search
+            try:
+                stored_search = model.get_object(search_name)
+                stored_search_title = stored_search.get_property('title')
+            except LookupError:
+                pass
+
+        if search_title and search_title != stored_search_title:
+            # New Stored Search
+            search_name = model.get_new_id('s')
+            stored_search = StoredSearch.make_object(StoredSearch, model,
+                                                     search_name)
+
+        view = context.get_form_value('search_view', ';view')
+        if stored_search is None:
+            # Just Search
+            return context.uri.resolve(view).replace(**context.uri.query)
+
+        # Edit / Title
+        context.commit = True
+        stored_search.set_property('title', search_title, 'en')
+        # Edit / Search Values
+        text = query['text'].strip().lower()
+        stored_search.handler.set_value('text', text)
+
+        mtime = query.get('mtime', 0)
+        stored_search.handler.set_value('mtime', str(mtime))
+
+        criterias = [
+            ('module', Integer), ('version', Integer), ('type', Integer),
+            ('priority', Integer), ('assigned_to', String),
+            ('state', Integer)]
+        for name, type in criterias:
+            value = query[name]
+            stored_search.set_values(name, value, type=type)
+
+        view = '%s?search_name=%s' % (view, search_name)
+        return context.uri.resolve(view)
+
+
+
+class View(BrowseForm):
+
+    access = 'is_allowed_to_view'
+    __label__ = u'View'
+    title = MSG(u'View', __name__)
+    icon = 'view.png'
+    template = '/ui/tracker/view_tracker.xml'
+
+    schema = {
+        'ids': String(multiple=True, mandatory=True),
+    }
+
+    query_schema = {
+        # search_fields
+        'search_name': Unicode(),
+        'mtime': Integer(),
+        'module': String(multiple=True),
+        'version': String(multiple=True),
+        'type': String(multiple=True),
+        'priority': String(multiple=True),
+        'assigned_to': String(multiple=True),
+        'state': String(multiple=True),
+        # Specific fields
+        'export_to_text': Boolean,
+        'export_to_csv': Boolean,
+        'change_several_bugs': Boolean,
+        'search_field': String,
+        'search_term': Unicode,
+        'search_subfolders': Boolean(default=False),
+        'sortorder': String(default='up'),
+        'sortby': String(multiple=True, default=['title']),
+        'batchstart': Integer(default=0),
+    }
+
+
+
+    def get_namespace(self, model, context, query):
+        # Set Style
+        context.styles.append('/ui/tracker/tracker.css')
+
+        namespace = {}
+        namespace['method'] = 'GET'
+        namespace['action'] = '.'
+        # Get search results
+        results = model.get_search_results(context, query)
+        # Analyse the result
+        if isinstance(results, Reference):
+            return results
+        # Selected issues
+        selected_issues = context.get_form_values('ids')
+        # Show checkbox or not
+        show_checkbox = False
+        actions = []
+        if (query['export_to_text'] or query['export_to_csv'] or
+            query['change_several_bugs']):
+            show_checkbox = True
+        # Construct lines
+        lines = []
+        for issue in results:
+            line = issue.get_informations()
+            # Add link to title
+            link = '%s/;edit_form' % issue.name
+            line['title'] = (line['title'], link)
+            if show_checkbox:
+                line['checkbox'] = True
+                if not selected_issues:
+                    line['checked'] = True
+                else:
+                    if issue.name in selected_issues:
+                        line['checked'] = issue.name
+            lines.append(line)
+        # Sort
+        sortby = query['sortby']
+        sortorder = query['sortorder']
+        if sortby == 'mtime':
+            lines.sort(key=itemgetter('mtime_sort'))
+        elif sortby in ('priority', 'state'):
+            lines.sort(key=itemgetter('%s_rank' % sortby))
+        else:
+            lines.sort(key=itemgetter(sortby[0]))
+        if sortorder == 'down':
+            lines.reverse()
+        # Set title of search
+        search_name = query['search_name']
+        if search_name:
+            search = model.get_object(search_name)
+            title = search.get_title()
+        else:
+            title = MSG(u'View Tracker', __name__).gettext()
+        nb_results = len(lines)
+        namespace['title'] = title
+        # Keep the search_parameters, clean different actions
+        params = encode_query(context.uri.query)
+        params = params.replace('change_several_bugs=1', '')
+        params = params.replace('export_to_csv=1', '')
+        params = params.replace('export_to_text=1', '')
+        params = params.replace('&&', '&').replace('?&', '?').replace('&#', '#')
+        namespace['search_parameters'] = params
+        criteria = []
+        for key in ['search_name', 'mtime']:
+            value = query[key]
+            criteria.append({'name': key, 'value': value})
+        keys = 'module', 'version', 'type', 'priority', 'assigned_to', 'state'
+        for key in keys:
+            for value in query[key]:
+                criteria.append({'name': key, 'value': value})
+        namespace['criteria'] = criteria
+        # Table
+        msgs = (
+            MSG(u'There is 1 result.', __name__),
+            MSG(u'There are ${n} results.', __name__))
+        namespace['batch'] = batch(context.uri, 0, nb_results, nb_results,
+                                   msgs=msgs)
+        namespace['table'] = table(columns, lines, [sortby], sortorder,
+                                   actions=actions, table_with_form=False)
+        namespace['nb_results'] = nb_results
+        # Export_to_text
+        namespace['export_to_text'] = False
+        if query['export_to_text']:
+            namespace['method'] = 'GET'
+            namespace['action'] = ';view'
+            namespace['export_to_text'] = True
+            namespace['columns'] = []
+            # List columns
+            column_select = context.get_form_values('column_selection',
+                                                    default=['title'])
+            # Use columns in a different order and without the id
+            export_columns = columns[2:] + [columns[1]]
+            for name, title in export_columns:
+                namespace['columns'].append({'name': name, 'title': title,
+                                             'checked': name in columns})
+            namespace['text'] = model.get_export_to_text(context)
+        # Export_to_csv
+        namespace['export_to_csv'] = False
+        if query['export_to_csv']:
+            namespace['export_to_csv'] = True
+            namespace['method'] = 'GET'
+            namespace['action'] = ';export_to_csv'
+        # Edit several bugs at once
+        namespace['change_several_bugs'] = False
+        if query['change_several_bugs']:
+            get = model.get_object
+            namespace['method'] = 'POST'
+            namespace['action'] = ';change_several_bugs'
+            namespace['change_several_bugs'] = True
+            namespace['modules'] = get('modules').get_options()
+            namespace['versions'] = get('versions').get_options()
+            namespace['priorities'] = get('priorities').get_options(sort='rank')
+            namespace['types'] = get('types').get_options()
+            namespace['states'] = get('states').get_options(sort='rank')
+            users = model.get_object('/users')
+            namespace['users'] = model.get_members_namespace('')
+
+        return namespace
+
+
 ###########################################################################
 # Model
 ###########################################################################
 
-
-# Definition of the fields of the forms to add and edit an issue
-search_fields = {'search_name': Unicode(),
-                 'mtime': Integer(),
-                 'module': String(),
-                 'version': String(),
-                 'type': String(),
-                 'priority': String(),
-                 'assigned_to': String(),
-                 'state': String()}
-
-table_columns = [('id', u'Id'), ('title', u'Title'), ('version', u'Version'),
-                 ('module', u'Module'), ('type', u'Type'),
-                 ('priority', u'Priority'), ('state', u'State'),
-                 ('assigned_to', u'Assigned To'),
-                 ('mtime', u'Modified')]
 
 class Tracker(Folder):
 
@@ -241,7 +537,7 @@ class Tracker(Folder):
     class_icon16 = 'images/tracker16.png'
     class_icon48 = 'images/tracker48.png'
     class_views = [
-        ['search_form'],
+        ['search'],
         ['add_issue'],
         ['browse_content?mode=list'],
         ['edit_metadata_form']]
@@ -352,8 +648,9 @@ class Tracker(Folder):
     #######################################################################
     # User Interface
     #######################################################################
+    # XXX
     def get_subviews(self, name):
-        if name == 'search_form':
+        if name == 'search':
             items = list(self.search_objects(object_class=StoredSearch))
             items.sort(lambda x, y: cmp(x.get_property('title'),
                                         y.get_property('title')))
@@ -361,6 +658,7 @@ class Tracker(Folder):
         return Folder.get_subviews(self, name)
 
 
+    # XXX
     def view__sublabel__(self , **kw):
         search_name = kw.get('search_name')
         if search_name is None:
@@ -372,245 +670,6 @@ class Tracker(Folder):
 
     #######################################################################
     # User Interface / View
-    search_form__access__ = 'is_allowed_to_view'
-    search_form__label__ = u'Search'
-    search_form__icon__ = 'button_search.png'
-    def search_form(self, context):
-        # Set Style
-        context.styles.append('/ui/tracker/tracker.css')
-
-        # Build the namespace
-        namespace = {}
-        # Stored Searches
-        stored_searches = [
-            {'name': x.name, 'title': x.get_title()}
-            for x in self.search_objects(object_class=StoredSearch) ]
-        stored_searches.sort(key=itemgetter('title'))
-        namespace['stored_searches'] = stored_searches
-
-        # Search Form
-        search_name = context.get_form_value('search_name')
-        if search_name:
-            search = self.get_object(search_name)
-            get_value = search.handler.get_value
-            get_values = search.get_values
-            namespace['search_name'] = search_name
-            namespace['search_title'] = search.get_property('title')
-        else:
-            get_value = context.get_form_value
-            get_values = context.get_form_values
-            namespace['search_name'] = get_value('search_name')
-            namespace['search_title'] = get_value('search_title')
-
-        namespace['text'] = get_value('text', type=Unicode)
-        namespace['mtime'] = get_value('mtime', type=Integer)
-        module = get_values('module', type=Integer)
-        type = get_values('type', type=Integer)
-        version = get_values('version', type=Integer)
-        priority = get_values('priority', type=Integer)
-        assign = get_values('assigned_to')
-        state = get_values('state', type=Integer)
-
-        get = self.get_object
-        namespace['modules'] = get('modules').get_options(module)
-        namespace['types'] = get('types').get_options(type)
-        namespace['versions'] = get('versions').get_options(version)
-        namespace['priorities'] = get('priorities').get_options(priority,
-            sort='rank')
-        namespace['states'] = get('states').get_options(state, sort='rank')
-        namespace['users'] = self.get_members_namespace(assign, True)
-
-        # is_admin
-        ac = self.get_access_control()
-        namespace['is_admin'] = ac.is_admin(context.user, self)
-        pathto_website = self.get_pathto(self.get_site_root())
-        namespace['manage_assigned'] = '%s/;permissions_form' % pathto_website
-
-        handler = self.get_object('/ui/tracker/search.xml')
-        return stl(handler, namespace)
-
-
-    search__access__ = 'is_allowed_to_edit'
-    def search(self, context):
-        try:
-            form = context.check_form_input(search_fields)
-        except FormError:
-            return context.come_back(MSG_MISSING_OR_INVALID, keep=[])
-        search_name = context.get_form_value('search_name')
-        search_title = context.get_form_value('search_title').strip()
-        search_title = unicode(search_title, 'utf8')
-
-        stored_search = stored_search_title = None
-        if not search_title:
-            context.uri.query['search_name'] = search_name = None
-        if search_name:
-            # Edit an Stored Search
-            try:
-                stored_search = self.get_object(search_name)
-                stored_search_title = stored_search.get_property('title')
-            except LookupError:
-                pass
-
-        if search_title and search_title != stored_search_title:
-            # New Stored Search
-            search_name = self.get_new_id('s')
-            stored_search = StoredSearch.make_object(StoredSearch, self,
-                                                     search_name)
-
-        view = context.get_form_value('search_view', ';view')
-        if stored_search is None:
-            # Just Search
-            return context.uri.resolve(view).replace(**context.uri.query)
-
-        # Edit / Title
-        context.commit = True
-        stored_search.set_property('title', search_title, 'en')
-        # Edit / Search Values
-        text = context.get_form_value('text').strip().lower()
-        stored_search.handler.set_value('text', text)
-
-        mtime = context.get_form_value('mtime', type=Integer, default=0)
-        stored_search.handler.set_value('mtime', str(mtime))
-
-        criterias = [('module', Integer), ('version', Integer),
-            ('type', Integer), ('priority', Integer), ('assigned_to', String),
-            ('state', Integer)]
-        for name, type in criterias:
-            value = context.get_form_values(name, type=type)
-            stored_search.set_values(name, value, type=type)
-
-        view = '%s?search_name=%s' % (view, search_name)
-        return context.uri.resolve(view)
-
-
-    view__access__ = 'is_allowed_to_view'
-    view__label__ = u'View'
-    view__icon__ = 'view.png'
-    def view(self, context):
-        # Set Style
-        context.styles.append('/ui/tracker/tracker.css')
-
-        namespace = {}
-        namespace['method'] = 'GET'
-        namespace['action'] = '.'
-        # Get search results
-        results = self.get_search_results(context)
-        # Analyse the result
-        if isinstance(results, Reference):
-            return results
-        # Selected issues
-        selected_issues = context.get_form_values('ids')
-        # Show checkbox or not
-        show_checkbox = False
-        actions = []
-        if (context.get_form_value('export_to_text') or
-            context.get_form_value('export_to_csv') or
-            context.get_form_value('change_several_bugs')):
-            show_checkbox = True
-        # Construct lines
-        lines = []
-        for issue in results:
-            line = issue.get_informations()
-            # Add link to title
-            link = '%s/;edit_form' % issue.name
-            line['title'] = (line['title'], link)
-            if show_checkbox:
-                line['checkbox'] = True
-                if not selected_issues:
-                  line['checked'] = True
-                else:
-                    if issue.name in selected_issues:
-                        line['checked'] = issue.name
-            lines.append(line)
-        # Sort
-        sortby = context.get_form_value('sortby', default='id')
-        sortorder = context.get_form_value('sortorder', default='up')
-        if sortby == 'mtime':
-            lines.sort(key=itemgetter('mtime_sort'))
-        elif sortby in ('priority', 'state'):
-            lines.sort(key=itemgetter('%s_rank' % sortby))
-        else:
-            lines.sort(key=itemgetter(sortby))
-        if sortorder == 'down':
-            lines.reverse()
-        # Set title of search
-        search_name = context.get_form_value('search_name')
-        if search_name:
-            search = self.get_object(search_name)
-            title = search.get_title()
-        else:
-            title = MSG(u'View Tracker', __name__).gettext()
-        nb_results = len(lines)
-        namespace['title'] = title
-        # Keep the search_parameters, clean different actions
-        params = encode_query(context.uri.query)
-        params = params.replace('change_several_bugs=1', '')
-        params = params.replace('export_to_csv=1', '')
-        params = params.replace('export_to_text=1', '')
-        params = params.replace('&&', '&').replace('?&', '?').replace('&#', '#')
-        namespace['search_parameters'] = params
-        criteria = []
-        for key in ['search_name', 'mtime']:
-            value = context.get_form_value(key)
-            criteria.append({'name': key, 'value': value})
-        keys = 'module', 'version', 'type', 'priority', 'assigned_to', 'state'
-        for key in keys:
-            values = context.get_form_values(key)
-            for value in values:
-                criteria.append({'name': key, 'value': value})
-        namespace['criteria'] = criteria
-        # Table
-        sortby = context.get_form_value('sortby', default='id')
-        sortorder = context.get_form_value('sortorder', default='up')
-        msgs = (
-            MSG(u'There is 1 result.', __name__),
-            MSG(u'There are ${n} results.', __name__))
-        namespace['batch'] = batch(context.uri, 0, nb_results, nb_results,
-                                   msgs=msgs)
-        namespace['table'] = table(columns, lines, [sortby], sortorder,
-                                   actions=actions, table_with_form=False)
-        namespace['nb_results'] = nb_results
-        # Export_to_text
-        namespace['export_to_text'] = False
-        if context.get_form_value('export_to_text'):
-            namespace['method'] = 'GET'
-            namespace['action'] = ';view'
-            namespace['export_to_text'] = True
-            namespace['columns'] = []
-            # List columns
-            column_select = context.get_form_values('column_selection',
-                                                    default=['title'])
-            # Use columns in a different order and without the id
-            export_columns = columns[2:] + [columns[1]]
-            for name, title in export_columns:
-                namespace['columns'].append({'name': name, 'title': title,
-                                             'checked': name in columns})
-            namespace['text'] = self.get_export_to_text(context)
-        # Export_to_csv
-        namespace['export_to_csv'] = False
-        if context.get_form_value('export_to_csv'):
-            namespace['export_to_csv'] = True
-            namespace['method'] = 'GET'
-            namespace['action'] = ';export_to_csv'
-        # Edit several bugs at once
-        namespace['change_several_bugs'] = False
-        if context.get_form_value('change_several_bugs'):
-            get = self.get_object
-            namespace['method'] = 'POST'
-            namespace['action'] = ';change_several_bugs'
-            namespace['change_several_bugs'] = True
-            namespace['modules'] = get('modules').get_options()
-            namespace['versions'] = get('versions').get_options()
-            namespace['priorities'] = get('priorities').get_options(sort='rank')
-            namespace['types'] = get('types').get_options()
-            namespace['states'] = get('states').get_options(sort='rank')
-            users = self.get_object('/users')
-            namespace['users'] = self.get_members_namespace('')
-
-        handler = self.get_object('/ui/tracker/view_tracker.xml')
-        return stl(handler, namespace)
-
-
     export_to_csv__access__ = 'is_allowed_to_view'
     export_to_csv__label__ = u'Export to CSV'
     def export_to_csv(self, context):
@@ -805,13 +864,13 @@ class Tracker(Folder):
         return u'\n'.join(tab_text)
 
 
-    def get_search_results(self, context, start=None, end=None):
+    def get_search_results(self, context, form, start=None, end=None):
         """Method that return a list of issues that correspond to the search
         """
-        try:
-            form = context.check_form_input(search_fields)
-        except FormError:
-            return context.come_back(MSG_MISSING_OR_INVALID, keep=[])
+##        try:
+##            form = context.check_form_input(search_fields)
+##        except FormError:
+##            return context.come_back(MSG_MISSING_OR_INVALID, keep=[])
         users = self.get_object('/users')
         # Choose stored Search or personalized search
         search_name = form['search_name']
@@ -819,7 +878,7 @@ class Tracker(Folder):
             try:
                 search = self.get_object(search_name)
             except LookupError:
-                goto = ';search_form'
+                goto = ';search'
                 msg = u'Unknown stored search "${sname}".'
                 return context.come_back(msg, goto=goto, sname=search_name)
             get_value = search.handler.get_value
@@ -880,22 +939,8 @@ class Tracker(Folder):
     #######################################################################
     # User Interface / Add Issue
     add_issue = AddIssueForm()
-
-
-    go_to_issue__access__ = 'is_allowed_to_view'
-    def go_to_issue(self, context):
-        issue_name = context.get_form_value('issue_name')
-        if not issue_name:
-            return context.come_back(MSG_NAME_MISSING)
-
-        if not self.has_object(issue_name):
-            return context.come_back(u'Issue not found.')
-
-        issue = self.get_object(issue_name)
-        if not isinstance(issue, Issue):
-            return context.come_back(u'Issue not found.')
-
-        return context.uri.resolve2('../%s/;edit_form' % issue_name)
+    search = SearchForm()
+    view = View()
 
 
     #######################################################################
@@ -971,7 +1016,7 @@ class SelectTable(Table):
         # check input
         ids = context.get_form_values('ids', type=Integer)
         if not ids:
-            return context.come_back(u'No objects selected.')
+            return context.come_back(MSG(u'No objects selected.', __name__))
 
         filter = self.name[:-1]
         if self.name.startswith('priorit'):

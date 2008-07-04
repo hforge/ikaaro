@@ -7,7 +7,7 @@
 
 <form id="browse_list" name="browse_list" method="${method}" action="${action}">
 
-<h2>${title} <a href=";search_form?${search_parameters}">(Edit search)</a></h2>
+<h2>${title} <a href=";search?${search_parameters}">(Edit search)</a></h2>
 ${batch}
 ${table}
 
@@ -51,7 +51,7 @@ ${table}
       value="${c/value}"/>
     <input type="hidden" name="export_to_text" value="1"/>
     <input type="submit" class="button_ok" value="Update text export"
-        name="button_export_to_text"/>
+        name=";export_to_text"/>
   </dl>
     <div style="height:300px;border:1px solid #9FB7D4;overflow:auto">
       <pre>${text}</pre>
@@ -70,7 +70,7 @@ ${table}
   <input type="radio" name="editor" id="editor_excel" value="excel"/>
   <label for="editor_excel">For Excel (Encoding: CP1252, Separator: ";")</label>
   <br/><br/>
-  <input type="submit" class="button_ok" name="export_to_csv" value="Export"/>
+  <input type="submit" class="button_ok" name=";export_to_csv" value="Export"/>
 </stl:block>
 
 <!-- Change Several Issues -->
@@ -146,7 +146,7 @@ ${table}
   </tr>
   <tr>
     <td colspan="6">
-      <input type="submit" class="button_ok" name="edit_bugs" 
+      <input type="submit" class="button_ok" name=";edit_bugs" 
         value="Edit Issues"/>
     </td>
   </tr>

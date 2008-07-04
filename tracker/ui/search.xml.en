@@ -14,7 +14,7 @@
   <!-- Advanced Search -->
   <h2 stl:if="search_name">Search: ${search_title}</h2>
   <h2 stl:if="not search_name">Search</h2>
-  <form action=";search" method="get">
+  <form action="." method="get">
     <input type="hidden" name="search_name" value="${search_name}" />
     <table>
       <tr>
@@ -25,14 +25,14 @@
             class="tracker_select" />
         </td>
         <td colspan="1">
-          <label for="mtime" alt="">Modified since:</label><br/>
+          <label for="mtime">Modified since:</label><br/>
           <input type="text" name="mtime" id="mtime" size="2" value="${mtime}"
-            xclass="tracker_select" /> days ago
+            /> days ago
         </td>
       </tr>
       <tr>
         <td valign="top">
-          <label for="type">Type:<stl:block if="is_admin"> (<a
+          <label for="type">Type:<stl:block stl:if="is_admin"> (<a
             href="./types/;view">Edit</a>)</stl:block></label>
           <br/>
           <select name="type" id="type" class="tracker_select"
@@ -42,7 +42,7 @@
           </select>
         </td>
         <td valign="top">
-          <label for="module">Module:<stl:block if="is_admin"> (<a
+          <label for="module">Module:<stl:block stl:if="is_admin"> (<a
             href="./modules/;view">Edit</a>)</stl:block></label>
           <br/>
           <select name="module" id="module" class="tracker_select"
@@ -52,7 +52,7 @@
           </select>
         </td>
         <td valign="top">
-          <label for="version">Version:<stl:block if="is_admin"> (<a
+          <label for="version">Version:<stl:block stl:if="is_admin"> (<a
             href="./versions/;view">Edit</a>)</stl:block></label>
           <br/>
           <select name="version" id="version" class="tracker_select"
@@ -64,7 +64,7 @@
       </tr>
       <tr>
         <td valign="top">
-          <label for="assigned_to">Assigned To:<stl:block if="is_admin"> (<a
+          <label for="assigned_to">Assigned To:<stl:block stl:if="is_admin"> (<a
             href="${manage_assigned}">Edit</a>)</stl:block></label>
           <br/>
           <select name="assigned_to" id="assigned_to"
@@ -74,7 +74,7 @@
           </select>
         </td>
         <td valign="top">
-          <label for="state">Status:<stl:block if="is_admin"> (<a
+          <label for="state">Status:<stl:block stl:if="is_admin"> (<a
             href="./states/;view">Edit</a>)</stl:block></label>
           <br/>
           <select name="state" id="state" class="tracker_select"
@@ -84,7 +84,7 @@
           </select>
         </td>
         <td valign="top">
-          <label for="priority">Priority:<stl:block if="is_admin"> (<a
+          <label for="priority">Priority:<stl:block stl:if="is_admin"> (<a
             href="./priorities/;view">Edit</a>)</stl:block></label>
           <br/>
           <select name="priority" id="priority" class="tracker_select"
@@ -97,8 +97,9 @@
 
       <tr>
         <td>
-          <input type="submit" class="button_search" value="Search" />
-          <input type="submit" class="button_calendar"
+          <input type="submit" name=";search" class="button_search"
+            value="Search" />
+          <input type="submit" name=";search" class="button_calendar"
             value="Search on resources" onclick="weekly();" />
           <input type="hidden" name="search_view" id="search_view"
             value=";view" />
