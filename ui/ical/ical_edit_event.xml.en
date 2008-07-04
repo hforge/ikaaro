@@ -2,7 +2,7 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
-<form id="edit_event" action="." method="post">
+<form id="edit_event" action=";edit_event" method="post">
   <p>(To add an event lasting all day long, leave time fields empty.)</p>
   <input stl:if="resource" type="hidden" name="resource" value="${resource}" />
   <table class="form">
