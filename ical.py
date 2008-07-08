@@ -577,8 +577,8 @@ class CalendarView(object):
 class TimetablesForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    __label__ = u'Edit'
-    title = u'Timetables'
+    __label__ = MSG(u'Timetables', __name__)
+    title = MSG(u'Timetables', __name__)
     icon = 'settings.png'
     template = '/ui/ical/ical_edit_timetables.xml'
     schema = {}
@@ -653,8 +653,8 @@ class TimetablesForm(STLForm):
 class EditEventForm(CalendarView, STLForm):
 
     access = 'is_allowed_to_edit'
-    __label__ = u'Edit'
-    title = u'Event'
+    __label__ = MSG(u'Edit', __name__)
+    title = MSG(u'Event', __name__)
     icon = 'button_calendar.png'
     template = '/ui/ical/ical_edit_event.xml'
     schema = {
@@ -957,8 +957,8 @@ class EditEventForm(CalendarView, STLForm):
 class MonthlyView(CalendarView, STLView):
 
     access = 'is_allowed_to_view'
-    __label__ = u'View'
-    title = u'Monthly'
+    __label__ = MSG(u'View', __name__)
+    title = MSG(u'Monthly', __name__)
     icon = 'icalendar.png'
     template = '/ui/ical/ical_monthly_view.xml'
 
@@ -1035,8 +1035,8 @@ class MonthlyView(CalendarView, STLView):
 class WeeklyView(CalendarView, STLView):
 
     access = 'is_allowed_to_view'
-    __label__ = u'View'
-    title = u'Weekly'
+    __label__ = MSG(u'View', __name__)
+    title = MSG(u'Weekly', __name__)
     icon = 'icalendar.png'
     template = '/ui/ical/ical_grid_weekly_view.xml'
 
@@ -1325,7 +1325,7 @@ class CalendarAware(CalendarView):
 
 class UploadForm(BaseUploadForm):
 
-    title = u'Upload from an ical file'
+    title = MSG(u'Upload from an ical file', __name__)
 
 
     def action(self, model, context, form):
@@ -1351,7 +1351,7 @@ class UploadForm(BaseUploadForm):
 
 class DownloadView(BaseDownloadView):
 
-    title = u'Export in ical format'
+    title = MSG(u'Export in ical format', __name__)
 
 ##    XXX Check header is correct
 ##    def download(self, context):
@@ -1364,8 +1364,8 @@ class DownloadView(BaseDownloadView):
 class TextView(BaseView):
 
     access = 'is_allowed_to_edit'
-    __label__ = u'Text view'
-    title = u'Text view'
+    __label__ = MSG(u'Text view', __name__)
+    title = MSG(u'Text view', __name__)
 
     def GET(self, model, context):
         return '<pre>%s</pre>' % model.handler.to_str()
