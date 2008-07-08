@@ -19,6 +19,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
+from email.charset import add_charset, add_codec, QP
 from email.MIMEText import MIMEText
 from email.MIMEMultipart import MIMEMultipart
 from email.Utils import formatdate
@@ -54,6 +55,11 @@ config = get_abspath(globals(), 'setup.conf')
 config = ConfigFile(config)
 itools_source_language = config.get_value('source_language')
 itools_target_languages = config.get_value('target_languages')
+
+
+# Force email to send UTF-8 mails in plain text
+add_charset('utf-8', QP, None, 'utf-8')
+add_codec('utf-8', 'utf_8')
 
 
 
