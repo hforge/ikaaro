@@ -721,7 +721,7 @@ class Folder(DBObject):
             if format is not None and object.metadata.format != format:
                 continue
             # Filter by workflow state
-            if state is not None and object.get_property('state') != state:
+            if state is not None and object.get_workflow_state() != state:
                 continue
             # All filters passed
             yield object
