@@ -14,7 +14,7 @@
   <!-- Advanced Search -->
   <h2 stl:if="search_name">Search: ${search_title}</h2>
   <h2 stl:if="not search_name">Search</h2>
-  <form action="." method="get">
+  <form action=";search" method="get">
     <input type="hidden" name="search_name" value="${search_name}" />
     <table>
       <tr>
@@ -120,7 +120,7 @@
   </form>
 
   <h2>Stored Searches</h2>
-  <form action=";remove" method="post" stl:if="stored_searches">
+  <form action="" method="post" stl:if="stored_searches">
     <table>
       <tr stl:repeat="search stored_searches">
         <td><input type="checkbox" name="ids" value="${search/name}" /></td>
@@ -128,13 +128,13 @@
           <a href=";view?search_name=${search/name}">${search/title}</a>
         </td>
         <td>
-          (<a href=";search_form?search_name=${search/name}">Edit</a>)
+          (<a href=";search?search_name=${search/name}">Edit</a>)
         </td>
       </tr>
       <tr>
         <td></td>
         <td colspan="2">
-          <input type="submit" class="button_delete" value="Remove" />
+          <input type="submit" name=";remove" class="button_delete" value="Remove" />
         </td>
       </tr>
     </table>

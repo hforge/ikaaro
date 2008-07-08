@@ -19,6 +19,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
+from copy import deepcopy
 from datetime import datetime, timedelta
 from operator import itemgetter
 from string import Template
@@ -27,15 +28,15 @@ from string import Template
 from itools.csv import CSVFile, Table as BaseTable
 from itools.datatypes import Boolean, Integer, String, Unicode
 from itools.gettext import MSG
-from itools.handlers import ConfigFile, File as FileHandler
+from itools.handlers import ConfigFile as BaseConfigFile, File as FileHandler
 from itools.stl import stl
 from itools.uri import encode_query, Reference
-from itools.web import FormError, STLForm, STLView
+from itools.web import FormError, STLForm, STLView, get_context
 from itools.xapian import EqQuery, RangeQuery, AndQuery, OrQuery, PhraseQuery
 from itools.xml import XMLParser
 
 # Import from ikaaro
-from ikaaro.folder import Folder
+from ikaaro.folder import Folder, BrowseContent
 from ikaaro.forms import TextWidget, BooleanCheckBox
 from ikaaro.messages import *
 from ikaaro.registry import register_object_class
@@ -121,7 +122,7 @@ class AddIssueForm(STLForm):
         return namespace
 
 
-    def action(self, model, context, form):
+    def remove(self, model, context, form):
         # Add
         id = model.get_new_id()
         issue = Issue.make_object(Issue, model, id)
@@ -237,14 +238,29 @@ class SelectTableView(TableView):
 
 
 
-class SearchForm(STLForm):
+class SearchForm(BrowseContent):
 
     access = 'is_allowed_to_view'
     __label__ = u'Search'
+    title = None
     icon = 'button_search.png'
     template = '/ui/tracker/search.xml'
 
     query_schema = search_fields
+
+
+    def GET(self, model, context):
+        query = self.get_query(context)
+
+        if 'go_to_issue' in str(context.uri):
+            return self.go_to_issue(model, context, query)
+
+        if ';search' in context.get_form_keys():
+            return self.search(model, context, query)
+
+        namespace = self.get_namespace(model, context, query)
+        handler = model.get_object(self.template)
+        return stl(handler, namespace)
 
 
     def get_namespace(self, model, context, query):
@@ -306,21 +322,19 @@ class SearchForm(STLForm):
         if not issue_name:
             return context.come_back(MSG_NAME_MISSING)
 
-        if not self.has_object(issue_name):
+        if not model.has_object(issue_name):
             return context.come_back(MSG(u'Issue not found.', __name__))
 
-        issue = self.get_object(issue_name)
+        issue = model.get_object(issue_name)
         if not isinstance(issue, Issue):
             return context.come_back(MSG(u'Issue not found.', __name__))
 
-        return context.uri.resolve2('../%s/;edit_form' % issue_name)
+        return context.uri.resolve2('../%s/;edit' % issue_name)
 
 
-    def search(self, model, context, form, query):
-        print 'VIEW'
+    def search(self, model, context, query):
         search_name = query['search_name']
         search_title = query['search_title'].strip()
-        search_title = unicode(search_title, 'utf8')
 
         stored_search = stored_search_title = None
         if not search_title:
@@ -339,7 +353,7 @@ class SearchForm(STLForm):
             stored_search = StoredSearch.make_object(StoredSearch, model,
                                                      search_name)
 
-        view = context.get_form_value('search_view', ';view')
+        view = context.get_form_value('search_view', default=';view')
         if stored_search is None:
             # Just Search
             return context.uri.resolve(view).replace(**context.uri.query)
@@ -349,10 +363,10 @@ class SearchForm(STLForm):
         stored_search.set_property('title', search_title, 'en')
         # Edit / Search Values
         text = query['text'].strip().lower()
-        stored_search.handler.set_value('text', text)
+        stored_search.handler.set_value('text', Unicode.encode(text))
 
-        mtime = query.get('mtime', 0)
-        stored_search.handler.set_value('mtime', str(mtime))
+        mtime = query.get('mtime') or 0
+        stored_search.handler.set_value('mtime', mtime)
 
         criterias = [
             ('module', Integer), ('version', Integer), ('type', Integer),
@@ -371,7 +385,6 @@ class View(BrowseForm):
 
     access = 'is_allowed_to_view'
     __label__ = u'View'
-    title = MSG(u'View', __name__)
     icon = 'view.png'
     template = '/ui/tracker/view_tracker.xml'
 
@@ -382,13 +395,13 @@ class View(BrowseForm):
     query_schema = {
         # search_fields
         'search_name': Unicode(),
-        'mtime': Integer(),
-        'module': String(multiple=True),
-        'version': String(multiple=True),
-        'type': String(multiple=True),
-        'priority': String(multiple=True),
-        'assigned_to': String(multiple=True),
-        'state': String(multiple=True),
+        'mtime': Integer(default=0),
+        'module': Integer(multiple=True, default=()),
+        'version': Integer(multiple=True, default=()),
+        'type': Integer(multiple=True, default=()),
+        'priority': Integer(multiple=True, default=()),
+        'assigned_to': String(multiple=True, default=()),
+        'state': Integer(multiple=True, default=()),
         # Specific fields
         'export_to_text': Boolean,
         'export_to_csv': Boolean,
@@ -401,6 +414,15 @@ class View(BrowseForm):
         'batchstart': Integer(default=0),
     }
 
+
+    def view__sublabel__(self, **kw):
+        search_name = kw.get('search_name')
+        if search_name is None:
+            return None
+        model = get_context().object
+        search = model.get_object(search_name)
+        return search.get_title()
+    title = view__sublabel__
 
 
     def get_namespace(self, model, context, query):
@@ -428,7 +450,7 @@ class View(BrowseForm):
         for issue in results:
             line = issue.get_informations()
             # Add link to title
-            link = '%s/;edit_form' % issue.name
+            link = '%s/;edit' % issue.name
             line['title'] = (line['title'], link)
             if show_checkbox:
                 line['checkbox'] = True
@@ -459,7 +481,12 @@ class View(BrowseForm):
         nb_results = len(lines)
         namespace['title'] = title
         # Keep the search_parameters, clean different actions
-        params = encode_query(context.uri.query)
+        query_params = deepcopy(context.uri.query)
+        params = {}
+        for key in query_params:
+            if not key.startswith(';'):
+                params[key] = query_params[key]
+        params = encode_query(params)
         params = params.replace('change_several_bugs=1', '')
         params = params.replace('export_to_csv=1', '')
         params = params.replace('export_to_text=1', '')
@@ -658,16 +685,6 @@ class Tracker(Folder):
         return Folder.get_subviews(self, name)
 
 
-    # XXX
-    def view__sublabel__(self , **kw):
-        search_name = kw.get('search_name')
-        if search_name is None:
-            return u'View'
-
-        search = self.get_object(search_name)
-        return search.get_title()
-
-
     #######################################################################
     # User Interface / View
     export_to_csv__access__ = 'is_allowed_to_view'
@@ -864,16 +881,12 @@ class Tracker(Folder):
         return u'\n'.join(tab_text)
 
 
-    def get_search_results(self, context, form, start=None, end=None):
+    def get_search_results(self, context, form=None, start=None, end=None):
         """Method that return a list of issues that correspond to the search
         """
-##        try:
-##            form = context.check_form_input(search_fields)
-##        except FormError:
-##            return context.come_back(MSG_MISSING_OR_INVALID, keep=[])
         users = self.get_object('/users')
         # Choose stored Search or personalized search
-        search_name = form['search_name']
+        search_name = form and form['search_name']
         if search_name:
             try:
                 search = self.get_object(search_name)
@@ -895,7 +908,7 @@ class Tracker(Folder):
         versions = get_values('version', type=Integer)
         types = get_values('type', type=Integer)
         priorities = get_values('priority', type=Integer)
-        assigns = get_values('assigned_to')
+        assigns = get_values('assigned_to', type=String)
         states = get_values('state', type=Integer)
 
         # Build the query
@@ -912,7 +925,8 @@ class Tracker(Folder):
                 query2 = []
                 for value in data:
                     query2.append(EqQuery(name, value))
-                query = AndQuery(query, OrQuery(*query2))
+                if query2:
+                    query = AndQuery(query, OrQuery(*query2))
         if mtime:
             date = datetime.now() - timedelta(mtime)
             date = date.strftime('%Y%m%d%H%M%S')
@@ -1078,6 +1092,20 @@ class Versions(SelectTable):
 ###########################################################################
 # Stored Searches
 ###########################################################################
+class ConfigFile(BaseConfigFile):
+
+    schema = {
+        'search_name': Unicode(),
+        'mtime': Integer(default=0),
+        'module': Integer(multiple=True, default=()),
+        'version': Integer(multiple=True, default=()),
+        'type': Integer(multiple=True, default=()),
+        'priority': Integer(multiple=True, default=()),
+        'assigned_to': String(multiple=True, default=()),
+        'state': Integer(multiple=True, default=()),
+        }
+
+
 class StoredSearch(Text):
 
     class_id = 'stored_search'
@@ -1086,9 +1114,8 @@ class StoredSearch(Text):
     class_handler = ConfigFile
 
 
-    def get_values(self, name, type=String):
-        value = self.handler.get_value(name, default='')
-        return [ type.decode(x) for x in value.split() ]
+    def get_values(self, name, type=None):
+        return self.handler.get_value(name)
 
 
     def set_values(self, name, value, type=String):

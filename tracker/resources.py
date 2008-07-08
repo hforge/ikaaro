@@ -29,7 +29,7 @@ from itools.xapian import OrQuery, AndQuery, RangeQuery
 
 # Import from ikaaro
 from ikaaro.forms import DateWidget, MultilineWidget, Select, TextWidget
-from ikaaro.ical import CalendarView
+from ikaaro.ical import CalendarView, MonthlyView, TimetablesForm, WeeklyView
 from ikaaro.table import Table
 from ikaaro.registry import register_object_class
 
@@ -38,9 +38,9 @@ resolution = timedelta.resolution
 
 # Template to display events on monthly_view
 template_string = """
-  <table class="event">
-    <tr xmlns:stl="http://xml.itools.org/namespaces/stl"
-    stl:repeat="event events" class="color0">
+  <table xmlns:stl="http://xml.itools.org/namespaces/stl"
+         xmlns="http://www.w3.org/1999/xhtml" class="event">
+    <tr stl:repeat="event events" class="color0">
       <td>
         <a href="${event/url}">[#${event/issue/number}]</a>
         ${event/issue/title}
@@ -56,7 +56,7 @@ monthly_template.load_state_from_string(template_string)
 
 # Template to display full day events
 template_string = """
-  <td class="color0">
+  <td xmlns="http://www.w3.org/1999/xhtml" class="color0">
     <a href="${issue/url}">[#${issue/number}]</a>
     ${issue/title}
     (${resource/title})
@@ -68,8 +68,8 @@ template_fd.load_state_from_string(template_string)
 
 # Template to display events with timetables
 template_string = """
-  <td colspan="${cell/colspan}" rowspan="${cell/rowspan}"
-    valign="top" class="color0">
+  <td xmlns="http://www.w3.org/1999/xhtml" colspan="${cell/colspan}"
+    rowspan="${cell/rowspan}" valign="top" class="color0">
       <a href="${cell/content/issue/url}">[#${cell/content/issue/number}]</a>
       ${cell/content/issue/title}
       (${cell/content/resource/title})
@@ -126,7 +126,7 @@ class Resource(Record):
         ns = {}
         ns['resource'] = {'name': user, 'title': user_title}
         ns['issue'] = {'number': issue.name, 'title': issue.get_value('title'),
-                       'url': '../%s/;edit_form' % issue.name}
+                       'url': '../%s/;edit' % issue.name}
 
         ###############################################################
         # Set dtstart and dtend values using '...' for events which
@@ -190,6 +190,7 @@ class BaseResources(BaseTable):
     record_class = Resource
 
 
+
 class Resources(Table, TrackerView):
 
     class_id = 'resources'
@@ -199,9 +200,7 @@ class Resources(Table, TrackerView):
     class_handler = BaseResources
 
     class_views = [['weekly_view', 'monthly_view'],
-                   ['edit_metadata_form'],
-                   ['edit_timetables_form'],
-                   ['history_form']]
+                   ['edit_timetables']]
 
 
     @classmethod
@@ -214,7 +213,7 @@ class Resources(Table, TrackerView):
     def get_action_url(self, **kw):
         issue = kw.get('issue', None)
         if issue:
-            return get_context().uri.resolve('../%s/;edit_form' % issue)
+            return get_context().uri.resolve('../%s/;edit' % issue)
         return None
 
 
@@ -238,6 +237,12 @@ class Resources(Table, TrackerView):
                 events.append((0, e_dtstart, record))
         events.sort(lambda x, y : cmp(x[1], y[1]))
         return {0:self.name}, events
+
+
+    monthly_view = MonthlyView()
+    weekly_view = WeeklyView()
+    edit_timetables = TimetablesForm()
+
 
 ###########################################################################
 # Register

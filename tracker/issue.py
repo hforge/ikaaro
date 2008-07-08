@@ -625,9 +625,9 @@ class Issue(Folder):
         subject = '[%s #%s] %s' % (tracker_title, self.name, title)
         # Notify / Body
         if context.object.class_id == 'tracker':
-            uri = context.uri.resolve('%s/;edit_form' % self.name)
+            uri = context.uri.resolve('%s/;edit' % self.name)
         else:
-            uri = context.uri.resolve(';edit_form')
+            uri = context.uri.resolve(';edit')
         body = '#%s %s %s\n\n' % (self.name, self.get_value('title'), str(uri))
         message = MSG(u'The user $title did some changes.', __name__)
         body +=  message.gettext(title=user_title)
