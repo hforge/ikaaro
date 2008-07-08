@@ -244,7 +244,8 @@ class Root(WebSite):
     ########################################################################
     # Email
     def send_email(self, to_addr, subject, from_addr=None, text=None,
-                   html=None, encoding='utf-8', subject_with_host=True):
+                   html=None, encoding='utf-8', subject_with_host=True,
+                   return_receipt=False):
         # Check input data
         if not isinstance(subject, unicode):
             raise TypeError, 'the subject must be a Unicode string'
@@ -279,6 +280,12 @@ class Root(WebSite):
             real_name, address = to_addr
             to_addr = '%s <%s>' % (Header(real_name, encoding), address)
         message['To'] = to_addr
+        # Return Receipt
+        if return_receipt is True:
+            # Somewhat standard
+            message['Disposition-Notification-To'] = from_addr
+            # XXX For Outlook 2000
+            message['Return-Receipt-To'] = from_addr
         # Create MIMEText
         if html:
             html = html.encode(encoding)
