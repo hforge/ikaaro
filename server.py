@@ -155,6 +155,11 @@ class Server(BaseServer):
 
 
     def send_email(self, message):
+        # Check the SMTP host is defined
+        config = get_config(self.target)
+        if not config.get_value('smtp-host'):
+            raise ValueError, '"smtp-host" is not set in config.conf'
+
         spool = self.target.resolve2('spool')
         spool = str(spool.path)
         tmp_file, tmp_path = mkstemp(dir=spool)
