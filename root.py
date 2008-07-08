@@ -279,7 +279,7 @@ class Root(WebSite):
             subject = '[%s] %s' % (host, subject)
         # Build the message
         message = MIMEMultipart('related')
-        message['Subject'] = subject
+        message['Subject'] = Header(subject, encoding)
         message['Date'] = formatdate(localtime=True)
         message['From'] = from_addr
         if isinstance(to_addr, tuple):
