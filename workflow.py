@@ -21,7 +21,8 @@ from datetime import datetime
 # Import from itools
 from itools.datatypes import DateTime, String, Unicode
 from itools.stl import stl
-from itools.workflow import Workflow, WorkflowAware as BaseWorkflowAware
+from itools.workflow import (Workflow, WorkflowAware as BaseWorkflowAware,
+                             WorkflowError)
 
 # Import from ikaaro
 from metadata import Record
@@ -173,7 +174,10 @@ class WorkflowAware(BaseWorkflowAware):
                     'comments': comments}
         self.set_property('wf_transition', property)
         # Change the state, through the itools.workflow way
-        self.do_trans(transition)
+        try:
+            self.do_trans(transition)
+        except WorkflowError, excp:
+            return context.come_back(unicode(excp.message, 'utf-8'))
 
         # Comeback
         return context.come_back(u'Transition done.')
