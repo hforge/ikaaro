@@ -23,7 +23,8 @@ from itools.datatypes import DateTime, String, Unicode
 from itools.gettext import MSG
 from itools.stl import stl
 from itools.web import STLForm
-from itools.workflow import Workflow, WorkflowAware as BaseWorkflowAware
+from itools.workflow import (Workflow, WorkflowAware as BaseWorkflowAware,
+                             WorkflowError)
 
 # Import from ikaaro
 from metadata import Record
@@ -87,8 +88,13 @@ class StateForm(STLForm):
             'comments': comments}
         model.set_property('wf_transition', property)
         # Change the state, through the itools.workflow way
-        model.do_trans(transition)
+        try:
+            model.do_trans(transition)
+        except WorkflowError, excp:
+            context.message = unicode(excp.message, 'utf-8')
+            return
 
+        # Ok
         context.message = u'Transition done.'
 
 
