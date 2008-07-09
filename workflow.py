@@ -177,6 +177,7 @@ class WorkflowAware(BaseWorkflowAware):
         try:
             self.do_trans(transition)
         except WorkflowError, excp:
+            context.server.log_error(context)
             return context.come_back(unicode(excp.message, 'utf-8'))
 
         # Comeback
