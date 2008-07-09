@@ -91,6 +91,7 @@ class StateForm(STLForm):
         try:
             model.do_trans(transition)
         except WorkflowError, excp:
+            context.server.log_error(context)
             context.message = unicode(excp.message, 'utf-8')
             return
 
