@@ -47,8 +47,8 @@ from widgets import batch, table
 class TableView(BrowseForm):
 
     access = 'is_allowed_to_view'
-    __label__ = MSG(u'View', __name__)
-    icon = 'view.png'
+    tab_label = MSG(u'View', __name__)
+    tab_icon = 'view.png'
 
 
     def get_namespace(self, model, context, query):
@@ -135,8 +135,8 @@ class TableView(BrowseForm):
 class AddRecordForm(AutoForm):
 
     access = 'is_allowed_to_edit'
-    __label__ = MSG(u'Add', __name__)
-    icon = 'new.png'
+    tab_label = MSG(u'Add', __name__)
+    tab_icon = 'new.png'
 
     form_title = MSG(u'Add a new record', __name__)
     form_action = ';add_record'

@@ -41,9 +41,9 @@ from utils import get_parameters
 class EditTextForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    __label__ = MSG(u'Edit', __name__)
-    title = u'Inline'
-    icon = 'edit.png'
+    tab_label = MSG(u'Edit', __name__)
+    tab_sublabel = u'Inline'
+    tab_icon = 'edit.png'
     template = '/ui/text/edit.xml'
     schema = {
         'data': String(mandatory=True),

@@ -20,6 +20,7 @@
 # Import from itools
 from itools import get_abspath
 from itools.datatypes import is_datatype, Unicode
+from itools.gettext import MSG
 from itools.stl import stl
 from itools.uri import Path
 
@@ -44,8 +45,8 @@ class Link(File):
 
     class_id = 'link'
     class_version = '20071215'
-    class_title = u'Link'
-    class_description = u'Link'
+    class_title = MSG(u'Link', __name__)
+    class_description = MSG(u'Link', __name__)
     class_icon48 = 'future/images/Link48.png'
     class_icon16 = 'future/images/Link16.png'
     class_views = [['edit_metadata_form'], ['state_form']]

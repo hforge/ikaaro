@@ -40,10 +40,11 @@ from workflow import WorkflowAware
 class PermissionsForm(BrowseForm):
 
     access = 'is_admin'
-    __label__ = MSG(u"Control Panel", __name__)
-    title = u"Browse Members"
-    description = u"See the users and their roles."
-    icon = 'userfolder.png'
+    tab_label = MSG(u"Control Panel", __name__)
+    tab_sublabel = MSG(u'Browse Members', __name__)
+    tab_icon = 'userfolder.png'
+    page_title = tab_sublabel
+    description = MSG(u'See the users and their roles.', __name__)
 
     query_schema = {
         'search_field': String,
@@ -192,10 +193,11 @@ class MembershipForm(STLForm):
 class NewUserForm(STLForm):
 
     access = 'is_admin'
-    __label__ = MSG(u'Control Panel', __name__)
-    title = u'Add New Member'
-    description = u'Grant access to a new user.'
-    icon = 'card.png'
+    tab_label = MSG(u'Control Panel', __name__)
+    tab_sublabel = MSG(u'Add New Member', __name__)
+    tab_icon = 'card.png'
+    page_title = tab_sublabel
+    description = MSG(u'Grant access to a new user.', __name__)
     template = '/ui/access/new_user.xml'
     schema = {
         'email': Email(mandatory=True),

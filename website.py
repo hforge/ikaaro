@@ -40,7 +40,7 @@ from access import RoleAware
 from folder import Folder
 from forms import TextWidget, AutoForm
 from messages import *
-from registry import register_object_class
+from registry import get_object_class, register_object_class
 from registry import register_website, get_register_websites, get_website_class
 from skins import UI, ui_path
 from views import IconsView, NewInstanceForm
@@ -54,8 +54,9 @@ from workflow import WorkflowAware
 class NewWebSiteForm(NewInstanceForm):
 
     access = 'is_allowed_to_add'
-    title = u'Web Site'
-    template = 'ui/website/new_instance.xml'
+    tab_sublabel = MSG(u'Web Site', __name__)
+    page_title = tab_sublabel
+    template = '/ui/website/new_instance.xml'
     schema = {
         'name': String,
         'title': Unicode,
@@ -66,6 +67,7 @@ class NewWebSiteForm(NewInstanceForm):
         type = context.get_query_value('type')
         cls = get_object_class(type)
 
+        websites = []
         for handler_class in get_register_websites():
             title = handler_class.class_title
             websites.append({
@@ -81,7 +83,7 @@ class NewWebSiteForm(NewInstanceForm):
             websites[0]['selected'] = True
 
         return {
-            'class_title': cls.class_title,
+            'class_title': cls.class_title.gettext(),
             'websites': websites,
             'alone': alone,
         }
@@ -103,7 +105,7 @@ class NewWebSiteForm(NewInstanceForm):
             return
 
         # Check the name is free
-        if container.has_object(name):
+        if model.has_object(name):
             context.message = MSG_NAME_CLASH
             return
 
@@ -113,10 +115,10 @@ class NewWebSiteForm(NewInstanceForm):
             return
 
         cls = get_website_class(class_id)
-        object = cls.make_object(cls, container, name)
+        object = cls.make_object(cls, model, name)
         # The metadata
         metadata = object.metadata
-        language = container.get_site_root().get_default_language()
+        language = model.get_site_root().get_default_language()
         metadata.set_property('title', title, language=language)
 
         goto = './%s/;%s' % (name, object.get_firstview())
@@ -129,7 +131,8 @@ class NewWebSiteForm(NewInstanceForm):
 class LoginView(STLView):
 
     access = True
-    __label__ = MSG(u'Login', __name__)
+    tab_label = MSG(u'Login', __name__)
+    page_title = MSG(u'Login', __name__)
     template = '/ui/website/login.xml'
 
 
@@ -219,9 +222,11 @@ class LogoutView(STLView):
         return {}
 
 
+
 class ForgottenPasswordForm(STLForm):
 
     access = True
+    page_title = MSG(u'Forgotten password', __name__)
     template = '/ui/website/forgotten_password_form.xml'
     schema = {
         'username': String(default=''),
@@ -264,9 +269,10 @@ class ForgottenPasswordForm(STLForm):
 class ControlPanel(IconsView):
 
     access = 'is_allowed_to_view'
-    __label__ = MSG(u'Control Panel', __name__)
-    title = u'Control Panel'
-    icon = 'settings.png'
+    tab_label = MSG(u'Control Panel', __name__)
+    tab_sublabel = MSG(u'Control Panel', __name__)
+    tab_icon = 'settings.png'
+    page_title = tab_sublabel
 
 
     def get_namespace(self, model, context):
@@ -294,10 +300,11 @@ class ControlPanel(IconsView):
 class VHostsForm(STLForm):
 
     access = 'is_admin'
-    __label__ = MSG(u'Control Panel', __name__)
-    title = u'Virtual Hosts'
-    description = u'Define the domain names for this Web Site.'
-    icon = 'website.png'
+    tab_label = MSG(u'Control Panel', __name__)
+    tab_sublabel = MSG(u'Virtual Hosts', __name__)
+    tab_icon = 'website.png'
+    page_title = tab_sublabel
+    description = MSG(u'Define the domain names for this Web Site.', __name__)
     template = '/ui/website/virtual_hosts.xml'
     schema = {
         'vhosts': String,
@@ -325,10 +332,11 @@ class VHostsForm(STLForm):
 class SecurityPolicyForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    __label__ = MSG(u'Control Panel', __name__)
-    title = u'Security Policy'
-    description = u'Choose the security policy.'
-    icon = 'lock.png'
+    tab_label = MSG(u'Control Panel', __name__)
+    tab_sublabel = MSG(u'Security Policy', __name__)
+    tab_icon = 'lock.png'
+    page_title = tab_sublabel
+    description = MSG(u'Choose the security policy.', __name__)
     template = '/ui/website/anonymous.xml'
     schema = {
         'website_is_open': Boolean(default=False),
@@ -354,10 +362,11 @@ class SecurityPolicyForm(STLForm):
 class ContactOptionsForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    __label__ = MSG(u'Control Panel', __name__)
-    title = u'Contact Options'
-    description = u'Configure the Contact form.'
-    icon = 'mail.png'
+    tab_label = MSG(u'Control Panel', __name__)
+    tab_sublabel = MSG(u'Contact Options', __name__)
+    tab_icon = 'mail.png'
+    page_title = tab_sublabel
+    description = MSG(u'Configure the Contact form.', __name__)
     template = '/ui/website/contact_options.xml'
     schema = {
         'contacts': String(multiple=True),
@@ -402,10 +411,11 @@ class ContactOptionsForm(STLForm):
 class BrokenLinks(STLView):
 
     access = 'is_admin'
-    __label__ = MSG(u'Control Panel', __name__)
-    title = u'Broken Links'
-    description = u'Check the referential integrity.'
-    icon = 'clear.png'
+    tab_label = MSG(u'Control Panel', __name__)
+    tab_sublabel = MSG(u'Broken Links', __name__)
+    tab_icon = 'clear.png'
+    page_title = tab_sublabel
+    description = MSG(u'Check the referential integrity.', __name__)
     template = '/ui/website/broken_links.xml'
 
 
@@ -449,7 +459,7 @@ class BrokenLinks(STLView):
 class RegisterForm(AutoForm):
 
     access = 'is_allowed_to_register'
-    __label__ = MSG(u'Register', __name__)
+    tab_label = MSG(u'Register', __name__)
 
 
     form_title = MSG(u'Registration', __name__)
@@ -509,6 +519,7 @@ class RegisterForm(AutoForm):
 class ContactForm(STLForm):
 
     access = True
+    page_title = MSG(u'Contact', __name__)
     template = '/ui/website/contact_form.xml'
 
     schema = {
@@ -563,6 +574,7 @@ class ContactForm(STLForm):
 class SiteSearchView(STLView):
 
     access = True
+    page_title = MSG(u'Search', __name__)
     template = '/ui/website/search.xml'
 
 
@@ -625,6 +637,7 @@ class SiteSearchView(STLView):
 class AboutView(STLView):
 
     access = True
+    page_title = MSG(u'About', __name__)
     template = '/ui/root/about.xml'
 
 
@@ -639,6 +652,7 @@ class AboutView(STLView):
 class CreditsView(STLView):
 
     access = True
+    page_title = MSG(u'Credits', __name__)
     template = '/ui/root/credits.xml'
 
 
@@ -662,7 +676,7 @@ class WebSite(RoleAware, Folder):
     class_id = 'WebSite'
     class_version = '20071215'
     class_title = MSG(u'Web Site', __name__)
-    class_description = u'Create a new Web Site or Work Place.'
+    class_description = MSG(u'Create a new Web Site or Work Place.', __name__)
     class_icon16 = 'icons/16x16/website.png'
     class_icon48 = 'icons/48x48/website.png'
     class_skin = 'ui/aruni'
@@ -861,8 +875,8 @@ class WebSite(RoleAware, Folder):
     contact = ContactForm()
     about = AboutView()
     credits = CreditsView()
-    license = STLView(access=True, template='/ui/root/license.xml')
-
+    license = STLView(access=True, page_title=MSG(u'License', __name__),
+                      template='/ui/root/license.xml')
 
 
 ###########################################################################

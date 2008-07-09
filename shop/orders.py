@@ -20,6 +20,7 @@ from string import Template
 # Import from itools
 from itools import get_abspath
 from itools.datatypes import Unicode, String, Integer
+from itools.gettext import MSG
 from itools.i18n import format_datetime
 from itools.pdf import PDFFile
 from itools.stl import stl
@@ -43,8 +44,8 @@ from workflow import order_workflow
 class Orders(Folder):
 
     class_id = 'orders'
-    class_title = u'Orders'
-    class_description = u'Our orders'
+    class_title = MSG(u'Orders', __name__)
+    class_description = MSG(u'Our orders', __name__)
     class_views = Folder.class_views + [['view', 'view_all']]
     #class_icon16 = 'images/xxx.png'
     #class_icon48 = 'images/xxx.png'
@@ -183,8 +184,8 @@ class Orders(Folder):
 class Order(Folder, WorkflowAware):
 
     class_id = 'order'
-    class_title = u'Order'
-    class_description = u'Create an order in our shop'
+    class_title = MSG(u'Order', __name__)
+    class_description = MSG(u'Create an order in our shop', __name__)
     #class_icon16 = 'images/xxx.png'
     #class_icon48 = 'images/xxx.png'
     class_views = Folder.class_views + [['state_form'], ['view']]

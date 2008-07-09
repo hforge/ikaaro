@@ -4,7 +4,6 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
-  <h2>About</h2>
   <p>
     <stl:inline stl:if="itools_version">
       itools <strong>${itools_version}</strong>

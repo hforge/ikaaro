@@ -4,9 +4,7 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
-  <h2>Add Resource of Type "${class_title}"</h2>
-
-  <form name="new_resource" action=";new_resource" method="post">
+  <form name="new_resource" action=";new_instance" method="post">
     <dl>
       <dt><label for="title">Title</label></dt>
       <dd>

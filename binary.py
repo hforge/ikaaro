@@ -82,7 +82,7 @@ class Image(File):
 
     view = STLView(
         access='is_allowed_to_view',
-        __label__=u'View',
+        tab_label=u'View',
         title=u'View',
         icon='view.png',
         template='/ui/binary/Image_view.xml')
@@ -124,7 +124,7 @@ class Flash(File):
     view = STLView(
         access='is_allowed_to_view',
         title=u'View',
-        __label__=u'View',
+        tab_label=u'View',
         template='/ui/binary/Flash_view.xml')
 
 

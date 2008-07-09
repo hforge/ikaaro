@@ -21,6 +21,7 @@ from operator import itemgetter
 
 # Import from itools
 from itools.datatypes import Unicode
+from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.i18n import format_datetime
 from itools.stl import stl
@@ -36,8 +37,8 @@ class Forum(Folder):
 
     class_id = 'Forum'
     class_version = '20071215'
-    class_title = u'Forum'
-    class_description = u'An iKaaro forum'
+    class_title = MSG(u'Forum', __name__)
+    class_description = MSG(u'An iKaaro forum', __name__)
     class_icon16 = 'forum/Forum16.png'
     class_icon48 = 'forum/Forum48.png'
     class_views = [['view'], ['new_thread_form'], ['edit_metadata_form']]

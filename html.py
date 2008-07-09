@@ -49,8 +49,9 @@ class HTMLEditView(BaseView):
 
     access = 'is_allowed_to_edit'
     __label__ = MSG(u'Edit', __name__)
-    title = u'Inline'
-    icon = 'edit.png'
+    tab_sublabel = MSG(u'Inline', __name__)
+    tab_icon = 'edit.png'
+    page_title = MSG(u'Edit', __name__)
 
 
     def GET(self, model, context):
@@ -108,8 +109,9 @@ class WebPageView(STLView):
 
     access = 'is_allowed_to_view'
     __label__ = MSG(u'View', __name__)
-    title = u'View'
-    icon = '/ui/icons/16x16/view.png'
+    tab_sublabel = MSG(u'View', __name__)
+    tab_icon = '/ui/icons/16x16/view.png'
+    page_title = tab_sublabel
     template = '/ui/html/view.xml'
 
 
@@ -151,7 +153,7 @@ class WebPage(EpozEditable, Multilingual, Text):
     class_id = 'webpage'
     class_version = '20071217'
     class_title = MSG(u'Web Page', __name__)
-    class_description = u'Create and publish a Web Page.'
+    class_description = MSG(u'Create and publish a Web Page.', __name__)
     class_icon16 = 'icons/16x16/html.png'
     class_icon48 = 'icons/48x48/html.png'
     class_views = [['view'],

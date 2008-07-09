@@ -51,7 +51,7 @@ from workflow import WorkflowAware
 class NewObjectForm(NewInstanceForm):
 
     access = 'is_allowed_to_add'
-    template = 'ui/base/new_instance.xml'
+    template = '/ui/base/new_instance.xml'
     schema = {
         'name': String,
         'title': Unicode,
@@ -122,15 +122,23 @@ class RedirectView(BaseView):
 class MetadataForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    __label__ = MSG(u'Metadata', __name__)
-    title = u'Metadata'
-    icon = 'metadata.png'
+    tab_label = MSG(u'Metadata', __name__)
+    tab_sublabel = MSG(u'Metadata', __name__)
+    tab_icon = 'metadata.png'
     template = '/ui/base/edit_metadata.xml'
     schema = {
         'title': Unicode,
         'description': Unicode,
         'subject': Unicode,
     }
+
+
+    def page_title(self):
+        context = get_context()
+        language = context.object.get_content_language(context)
+        language_name = get_language_name(language)
+        message = u'Edit metadata in $language_name'
+        return MSG(message, __name__).gettext(language_name=language_name)
 
 
     def get_namespace(self, model, context):
@@ -381,7 +389,7 @@ class Node(BaseNode):
 
 
     def get_method_icon(self, view, size='16x16', **kw):
-        icon = getattr(view, 'icon', None)
+        icon = getattr(view, 'tab_icon', None)
         if icon is None:
             return None
         if callable(icon):

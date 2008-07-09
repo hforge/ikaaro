@@ -6,9 +6,9 @@
 
   <!-- Navigation -->
   <h2>Navigation</h2>
-  <form action=";go_to_issue" method="get">
+  <form action=";search" method="get">
     Go to issue #<input type="text" name="issue_name" size="6" />
-    <input type="submit" class="button_ok" value="OK" />
+    <input name=";go_to_issue" type="submit" class="button_ok" value="OK" />
   </form>
 
   <!-- Advanced Search -->

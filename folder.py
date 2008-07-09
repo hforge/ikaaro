@@ -64,23 +64,33 @@ class IndexView(RedirectView):
 class AddView(IconsView):
 
     access = 'is_allowed_to_add'
-    title = u'Add new content'
-    icon = '/ui/icons/16x16/new.png'
-    __label__ = MSG(u'Add', __name__)
+    tab_label = MSG(u'Add', __name__)
+    tab_sublabel = MSG(u'Add', __name__)
+    tab_icon = '/ui/icons/16x16/new.png'
+
+
+    def page_title(self):
+        type = get_context().get_query_value('type')
+        if not type:
+            return MSG(u'Add new resource', __name__).gettext()
+        cls = get_object_class(type)
+        class_title = cls.class_title.gettext()
+        page_title = MSG(u'Add $class_title', __name__)
+        page_title = page_title.gettext(class_title=class_title)
+        return page_title
 
 
     def get_namespace(self, model, context):
         items = [
             {
                 'icon': '/ui/' + cls.class_icon48,
-                'title': cls.class_title,
-                'description': cls.class_description,
+                'title': cls.class_title.gettext(),
+                'description': cls.class_description.gettext(),
                 'url': ';new_resource?type=%s' % quote(cls.class_id)
             }
             for cls in model.get_document_types() ]
 
         return {
-            'title': MSG(u'Add new content', __name__),
             'batch': None,
             'items': items,
         }
@@ -91,9 +101,10 @@ class BrowseContent(BrowseForm):
 
     access = 'is_allowed_to_view'
     access_POST = 'is_allowed_to_edit'
-    __label__ = MSG(u'Contents', __name__)
-    title = u'Browse Content'
-    icon = '/ui/icons/16x16/folder.png'
+    tab_label = MSG(u'Contents', __name__)
+    tab_sublabel = MSG(u'Browse Content', __name__)
+    tab_icon = '/ui/icons/16x16/folder.png'
+    page_title = tab_sublabel
 
     schema = {
         'ids': String(multiple=True, mandatory=True),
@@ -312,6 +323,7 @@ class BrowseContent(BrowseForm):
 class RenameForm(STLForm):
 
     access = 'is_allowed_to_edit'
+    page_title = MSG(u'Rename objects', __name__)
     template = '/ui/folder/rename.xml'
     schema = {
         'paths': String(multiple=True, mandatory=True),
@@ -384,7 +396,7 @@ class RenameForm(STLForm):
             # Rename
             container.move_object(old_name, new_name)
 
-        message = u'Objects renamed.'
+        message = MSG(u'Objects renamed.', __name__)
         return context.come_back(message, goto=';browse_content')
 
 
@@ -392,9 +404,10 @@ class RenameForm(STLForm):
 class PreviewView(STLView):
 
     access = 'is_allowed_to_view'
-    __label__ = MSG(u'Contents', __name__)
-    title = u'Preview Content'
-    icon = '/ui/icons/16x16/image.png'
+    tab_label = MSG(u'Contents', __name__)
+    tab_sublabel = MSG(u'Preview Content', __name__)
+    tab_icon = '/ui/icons/16x16/image.png'
+    page_title = tab_sublabel
     template = '/ui/folder/browse_image.xml'
 
     search_fields =  [
@@ -459,9 +472,10 @@ class PreviewView(STLView):
 
 class LastChanges(BrowseContent):
 
-    __label__ = MSG(u"Last Changes", __name__)
-    title = u"Last Changes"
-    icon = 'icalendar.png'
+    tab_label = MSG(u"Last Changes", __name__)
+    tab_sublabel = MSG(u'Last Changes', __name__)
+    tab_icon = 'icalendar.png'
+    page_title = tab_sublabel
 
     query_schema = {
         'search_field': String,
@@ -491,10 +505,11 @@ class OrphansView(BrowseContent):
     """
 
     access = 'is_allowed_to_view'
-    __label__ = MSG(u"Orphans", __name__)
-    title = u"Orphans"
-    description = u"Show objects not linked from anywhere."
-    icon = 'orphans.png'
+    tab_label = MSG(u"Orphans", __name__)
+    tab_sublabel = MSG(u"Orphans", __name__)
+    tab_icon = 'orphans.png'
+    page_title = tab_sublabel
+    description = MSG(u"Show objects not linked from anywhere.", __name__)
 
 
     def get_namespace(self, model, context, sortby=['title'], sortorder='up',
@@ -534,13 +549,15 @@ class OrphansView(BrowseContent):
 ###########################################################################
 # Model
 ###########################################################################
+folder_description = u'Organize your files and documents with folders.'
+
 class Folder(DBObject):
 
     class_id = 'folder'
     class_version = '20071215'
     class_layout = {}
     class_title = MSG(u'Folder', __name__)
-    class_description = u'Organize your files and documents with folders.'
+    class_description = MSG(folder_description, __name__)
     class_icon16 = 'icons/16x16/folder.png'
     class_icon48 = 'icons/48x48/folder.png'
     class_views = [

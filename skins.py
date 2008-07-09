@@ -203,7 +203,7 @@ class Skin(UIFolder):
                 args = {}
             # Append to the menu
             menu.append({'href': '%s/;%s' % (prefix, name),
-                         'title': view.__label__,
+                         'title': view.tab_label,
                          'class': '',
                          'src': base.get_method_icon(view, **args),
                          'items': []})
@@ -262,7 +262,6 @@ class Skin(UIFolder):
         options = []
         for language in languages:
             title = get_language_name(language)
-#            title = title.gettext(language)
             if language == content_language:
                 css_class = 'nav_active'
             else:
@@ -390,7 +389,7 @@ class Skin(UIFolder):
             # Add the menu
             tabs.append({'id': 'tab_%s' % subname,
                          'name': ';%s' % subname,
-                         'label': view.__label__,
+                         'label': view.tab_label,
                          'icon': here.get_method_icon(view, **args),
                          'active': active,
                          'class': active and 'active' or None})
@@ -408,14 +407,14 @@ class Skin(UIFolder):
 
                 subview = here.get_view(subview_name, **args)
                 if ac.is_access_allowed(user, here, subview):
-                    title = subview.title
-                    if callable(title):
-                        title = title(**args)
+                    sublabel = subview.tab_sublabel
+                    if callable(sublabel):
+                        sublabel = sublabel(**args)
 
                     subtabs.append({
                         'name': ';%s' % subview_link,
                         'icon': here.get_method_icon(subview, **args),
-                        'label': title})
+                        'label': sublabel})
             tabs[-1]['options'] = subtabs
 
         return tabs
@@ -584,7 +583,7 @@ class Skin(UIFolder):
         # View's title (FIXME)
         here = context.object
         view = here.get_view(context.method)
-        title = getattr(view, 'title', None)
+        title = getattr(view, 'page_title', None)
         if callable(title):
             title = title()
         namespace['view_title'] = title

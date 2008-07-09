@@ -41,7 +41,7 @@ class ViewCSV(BrowseForm):
 
     # FIXME We need different permissions for GET and POST
     access = 'is_allowed_to_edit'
-    __label__ = MSG(u'View', __name__)
+    tab_label = MSG(u'View', __name__)
     schema = {
         'ids': Integer(mandatory=True),
     }

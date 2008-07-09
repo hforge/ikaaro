@@ -23,6 +23,7 @@ from string import Template
 
 # Import from itools
 from itools.datatypes import is_datatype, DateTime, FileName
+from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.stl import stl, set_prefix
 from itools.uri import Path
@@ -48,8 +49,8 @@ class Dressable(Folder, EpozEditable):
 
     class_id = 'dressable'
     class_version = '20071215'
-    class_title = u'Dressable'
-    class_description = u'A dressable folder'
+    class_title = MSG(u'Dressable', __name__)
+    class_description = MSG(u'A dressable folder', __name__)
     class_views = ([Folder.class_views[0]] + [['view'], ['edit_document']]
             + Folder.class_views[1:])
     __fixed_handlers__ = ['index']

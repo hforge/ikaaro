@@ -84,8 +84,8 @@ columns = [
 class AddIssueForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    __label__ = u'Add'
-    icon = 'new.png'
+    tab_label = u'Add'
+    tab_icon = 'new.png'
     template = '/ui/tracker/add_issue.xml'
 
     schema = issue_fields
@@ -241,9 +241,10 @@ class SelectTableView(TableView):
 class SearchForm(BrowseContent):
 
     access = 'is_allowed_to_view'
-    __label__ = u'Search'
-    title = None
-    icon = 'button_search.png'
+    tab_label = MSG(u'Search', __name__)
+    tab_sublabel = None
+    tab_icon = 'button_search.png'
+    page_title = None
     template = '/ui/tracker/search.xml'
 
     query_schema = search_fields
@@ -251,11 +252,12 @@ class SearchForm(BrowseContent):
 
     def GET(self, model, context):
         query = self.get_query(context)
+        keys = context.get_form_keys()
 
-        if 'go_to_issue' in str(context.uri):
+        if ';go_to_issue' in keys:
             return self.go_to_issue(model, context, query)
 
-        if ';search' in context.get_form_keys():
+        if ';search' in keys:
             return self.search(model, context, query)
 
         namespace = self.get_namespace(model, context, query)
@@ -312,7 +314,7 @@ class SearchForm(BrowseContent):
         ac = model.get_access_control()
         namespace['is_admin'] = ac.is_admin(context.user, model)
         pathto_website = model.get_pathto(model.get_site_root())
-        namespace['manage_assigned'] = '%s/;permissions_form' % pathto_website
+        namespace['manage_assigned'] = '%s/;permissions' % pathto_website
 
         return namespace
 
@@ -384,8 +386,8 @@ class SearchForm(BrowseContent):
 class View(BrowseForm):
 
     access = 'is_allowed_to_view'
-    __label__ = u'View'
-    icon = 'view.png'
+    tab_label = u'View'
+    tab_icon = 'view.png'
     template = '/ui/tracker/view_tracker.xml'
 
     schema = {
@@ -422,7 +424,7 @@ class View(BrowseForm):
         model = get_context().object
         search = model.get_object(search_name)
         return search.get_title()
-    title = view__sublabel__
+    tab_sublabel = view__sublabel__
 
 
     def get_namespace(self, model, context, query):

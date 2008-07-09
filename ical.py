@@ -84,6 +84,8 @@ template_string = """
 default_monthly_template = XHTMLFile()
 default_monthly_template.load_state_from_string(template_string)
 
+description = u'Schedule your time with calendar files.'
+
 
 def get_current_date(value=None):
     """Get date as a date object from string value.
@@ -577,9 +579,9 @@ class CalendarView(object):
 class TimetablesForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    __label__ = MSG(u'Timetables', __name__)
-    title = MSG(u'Timetables', __name__)
-    icon = 'settings.png'
+    tab_label = MSG(u'Timetables', __name__)
+    tab_sublabel = MSG(u'Timetables', __name__)
+    tab_icon = 'settings.png'
     template = '/ui/ical/ical_edit_timetables.xml'
     schema = {}
 
@@ -653,9 +655,9 @@ class TimetablesForm(STLForm):
 class EditEventForm(CalendarView, STLForm):
 
     access = 'is_allowed_to_edit'
-    __label__ = MSG(u'Edit', __name__)
-    title = MSG(u'Event', __name__)
-    icon = 'button_calendar.png'
+    tab_label = MSG(u'Edit', __name__)
+    tab_sublabel = MSG(u'Event', __name__)
+    tab_icon = 'button_calendar.png'
     template = '/ui/ical/ical_edit_event.xml'
     schema = {
         'DTSTART_day': Integer(mandatory=True),
@@ -957,9 +959,9 @@ class EditEventForm(CalendarView, STLForm):
 class MonthlyView(CalendarView, STLView):
 
     access = 'is_allowed_to_view'
-    __label__ = MSG(u'View', __name__)
-    title = MSG(u'Monthly', __name__)
-    icon = 'icalendar.png'
+    tab_label = MSG(u'View', __name__)
+    tab_sublabel = MSG(u'Monthly', __name__)
+    tab_icon = 'icalendar.png'
     template = '/ui/ical/ical_monthly_view.xml'
 
 
@@ -1035,9 +1037,9 @@ class MonthlyView(CalendarView, STLView):
 class WeeklyView(CalendarView, STLView):
 
     access = 'is_allowed_to_view'
-    __label__ = MSG(u'View', __name__)
-    title = MSG(u'Weekly', __name__)
-    icon = 'icalendar.png'
+    tab_label = MSG(u'View', __name__)
+    tab_sublabel = MSG(u'Weekly', __name__)
+    tab_icon = 'icalendar.png'
     template = '/ui/ical/ical_grid_weekly_view.xml'
 
 
@@ -1325,7 +1327,7 @@ class CalendarAware(CalendarView):
 
 class UploadForm(BaseUploadForm):
 
-    title = MSG(u'Upload from an ical file', __name__)
+    tab_sublabel = MSG(u'Upload from an ical file', __name__)
 
 
     def action(self, model, context, form):
@@ -1351,7 +1353,7 @@ class UploadForm(BaseUploadForm):
 
 class DownloadView(BaseDownloadView):
 
-    title = MSG(u'Export in ical format', __name__)
+    tab_sublabel = MSG(u'Export in ical format', __name__)
 
 ##    XXX Check header is correct
 ##    def download(self, context):
@@ -1364,8 +1366,8 @@ class DownloadView(BaseDownloadView):
 class TextView(BaseView):
 
     access = 'is_allowed_to_edit'
-    __label__ = MSG(u'Text view', __name__)
-    title = MSG(u'Text view', __name__)
+    tab_label = MSG(u'Text view', __name__)
+    tab_sublabel = MSG(u'Text view', __name__)
 
     def GET(self, model, context):
         return '<pre>%s</pre>' % model.handler.to_str()
@@ -1380,7 +1382,7 @@ class CalendarTable(Table, CalendarView):
     class_id = 'calendarTable'
     class_version = '20071216'
     class_title = MSG(u'Calendar', __name__)
-    class_description = u'Schedule your time with calendar files.'
+    class_description = MSG(description, __name__)
     class_icon16 = 'icons/16x16/icalendar.png'
     class_icon48 = 'icons/48x48/icalendar.png'
     class_views = [['monthly_view', 'weekly_view', 'download'],
@@ -1514,7 +1516,7 @@ class Calendar(Text, CalendarView):
     class_id = 'text/calendar'
     class_version = '20071216'
     class_title = MSG(u'Calendar', __name__)
-    class_description = u'Schedule your time with calendar files.'
+    class_description = MSG(description, __name__)
     class_icon16 = 'icons/16x16/icalendar.png'
     class_icon48 = 'icons/48x48/icalendar.png'
     class_views = [['monthly_view', 'weekly_view', 'download'],

@@ -104,9 +104,9 @@ issue_fields = {
 class EditIssueForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    __label__ = MSG(u'Edit', __name__)
-    title = MSG(u'Edit Issue', __name__)
-    icon = 'edit.png'
+    tab_label = MSG(u'Edit', __name__)
+    tab_sublabel = MSG(u'Edit Issue', __name__)
+    tab_icon = 'edit.png'
     template = '/ui/tracker/edit_issue.xml'
 
     schema = issue_fields
@@ -203,9 +203,9 @@ class EditIssueForm(STLForm):
 class EditResourcesForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    __label__ = MSG(u'Edit', __name__)
-    title = MSG(u'Edit resources', __name__)
-    icon = 'edit.png'
+    tab_label = MSG(u'Edit', __name__)
+    tab_sublabel = MSG(u'Edit resources', __name__)
+    tab_icon = 'edit.png'
     template = '/ui/tracker/edit_resources.xml'
 
     schema = {
@@ -299,9 +299,9 @@ class EditResourcesForm(STLForm):
 class HistoryForm(STLView):
 
     access = 'is_allowed_to_view'
-    __label__ = MSG(u'History', __name__)
-    title = MSG(u'History', __name__)
-    icon = 'history.png'
+    tab_label = MSG(u'History', __name__)
+    tab_sublabel = MSG(u'History', __name__)
+    tab_icon = 'history.png'
     template = '/ui/tracker/issue_history.xml'
 
 

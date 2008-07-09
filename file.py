@@ -48,8 +48,9 @@ from workflow import WorkflowAware
 class NewFileForm(NewInstanceForm):
 
     access = 'is_allowed_to_add'
-    title = u'File'
-    template = 'ui/file/new_instance.xml'
+    tab_sublabel = MSG(u'File', __name__)
+    page_title = MSG(u'Upload File', __name__)
+    template = '/ui/file/new_instance.xml'
     schema = {
         'title': Unicode,
         'file': FileDataType(mandatory=True),
@@ -144,9 +145,9 @@ class FileGET(BaseView):
 class DownloadView(STLView):
 
     access = 'is_allowed_to_view'
-    __label__ = MSG(u'View', __name__)
-    title = u'Download'
-    icon = 'view.png'
+    tab_label = MSG(u'View', __name__)
+    tab_sublabel = MSG(u'Download', __name__)
+    tab_icon = 'view.png'
     template = '/ui/file/download_form.xml'
 
 
@@ -161,9 +162,9 @@ class DownloadView(STLView):
 class UploadForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    __label__ = MSG(u'Edit', __name__)
-    title = u'Replace'
-    icon = 'button_upload.png'
+    tab_label = MSG(u'Edit', __name__)
+    tab_sublabel = MSG(u'Replace', __name__)
+    tab_icon = 'button_upload.png'
     template = '/ui/file/upload.xml'
     schema = {
         'file': FileDataType(mandatory=True),
@@ -265,9 +266,9 @@ class ExternalEdit(BaseView):
 class BacklinksView(BrowseForm):
 
     access = 'is_allowed_to_view'
-    __label__ = MSG(u"Backlinks", __name__)
-    title = u"Backlinks"
-    icon = 'button_rename.png'
+    tab_label = MSG(u"Backlinks", __name__)
+    tab_sublabel = MSG(u'Backlinks', __name__)
+    tab_icon = 'button_rename.png'
 
     query_schema = {
         'search_field': String,
@@ -323,12 +324,14 @@ class BacklinksView(BrowseForm):
 ###########################################################################
 # Model
 ###########################################################################
+file_description = u'Upload office documents, images, media files, etc.'
+
 class File(WorkflowAware, VersioningAware):
 
     class_id = 'file'
     class_version = '20071216'
     class_title = MSG(u'File', __name__)
-    class_description = u'Upload office documents, images, media files, etc.'
+    class_description = MSG(file_description, __name__)
     class_icon16 = 'icons/16x16/file.png'
     class_icon48 = 'icons/48x48/file.png'
     class_views = [['download'],
@@ -474,7 +477,7 @@ class File(WorkflowAware, VersioningAware):
 
     externaledit = STLView(
         access='is_allowed_to_edit',
-        __label__=MSG(u'Edit', __name__),
+        tab_label=MSG(u'Edit', __name__),
         title=u'External Editor',
         icon='button_external.png',
         template='/ui/file/externaledit.xml',

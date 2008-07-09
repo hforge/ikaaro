@@ -37,9 +37,10 @@ from metadata import Record
 class HistoryView(STLView):
 
     access = 'is_allowed_to_view'
-    __label__ = MSG(u'History', __name__)
-    icon = 'history.png'
+    tab_label = MSG(u'History', __name__)
+    tab_icon = 'history.png'
     template = '/ui/file/history.xml'
+    page_title = MSG(u'History', __name__)
 
 
     def get_namespace(self, model, context):

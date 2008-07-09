@@ -4,8 +4,6 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
-  <h2>Contact</h2>
-
   <form action=";contact" method="post" id="contact_form">
     <dl>
       <dt><label for="to" class="${to/class}">Recipient</label></dt>

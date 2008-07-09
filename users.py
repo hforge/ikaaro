@@ -47,8 +47,8 @@ from utils import crypt_password, generate_password
 class ProfileView(STLView):
 
     access = 'is_allowed_to_view'
-    __label__ = MSG(u'Profile', __name__)
-    icon = 'action_home.png'
+    tab_label = MSG(u'Profile', __name__)
+    tab_icon = 'action_home.png'
     template = '/ui/user/profile.xml'
 
 
@@ -69,9 +69,10 @@ class ProfileView(STLView):
 class AccountForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    __label__ = MSG(u'Edit', __name__)
-    title = u'Account'
-    icon = 'settings.png'
+    tab_label = MSG(u'Edit', __name__)
+    tab_sublabel = MSG(u'Account', __name__)
+    page_title = MSG(u'Edit your personal data', __name__)
+    tab_icon = 'settings.png'
     template = '/ui/user/edit_account.xml'
     schema = {
         'password': String,
@@ -127,9 +128,10 @@ class AccountForm(STLForm):
 class PreferencesForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    __label__ = MSG(u'Edit', __name__)
-    title = u'Preferences'
-    icon = 'skin.png'
+    tab_label = MSG(u'Edit', __name__)
+    tab_sublabel = MSG(u'Preferences', __name__)
+    tab_icon = 'skin.png'
+    page_title = tab_sublabel
     template = '/ui/user/edit_language_form.xml'
     schema = {
         'user_language': String(mandatory=True),
@@ -161,9 +163,10 @@ class PreferencesForm(STLForm):
 class PasswordForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    __label__ = MSG(u'Edit', __name__)
-    title = u'Password'
-    icon = 'lock.png'
+    tab_label = MSG(u'Edit', __name__)
+    tab_sublabel = MSG(u'Password', __name__)
+    tab_icon = 'lock.png'
+    page_title = MSG(u'Change you password', __name__)
     template = '/ui/user/edit_password.xml'
     schema = {
         'newpass': String(mandatory=True),
@@ -217,8 +220,9 @@ class PasswordForm(STLForm):
 class TasksView(STLView):
 
     access = 'is_allowed_to_edit'
-    __label__ = MSG(u'Tasks', __name__)
-    icon = 'tasks.png'
+    tab_label = MSG(u'Tasks', __name__)
+    tab_icon = 'tasks.png'
+    page_title = MSG(u'Tasks', __name__)
     template = '/ui/user/tasks.xml'
 
 

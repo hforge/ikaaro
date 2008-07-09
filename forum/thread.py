@@ -18,6 +18,7 @@
 
 # Import from itools
 from itools.datatypes import FileName
+from itools.gettext import MSG
 from itools.i18n import format_datetime
 from itools.stl import stl
 
@@ -32,7 +33,7 @@ class Thread(Folder):
 
     class_id = 'ForumThread'
     class_version = '20071215'
-    class_title = u"Thread"
+    class_title = MSG(u'Thread', __name__)
     class_description = u"A thread to discuss"
     class_views = [['view'], ['edit_metadata_form']]
 

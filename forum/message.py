@@ -18,6 +18,7 @@
 
 # Import from itools
 from itools.datatypes import FileName
+from itools.gettext import MSG
 from itools.html import HTMLParser, sanitize_stream, XHTMLFile
 
 # Import from ikaaro
@@ -42,7 +43,7 @@ class Message(WebPage):
 
     class_id = 'ForumMessage'
     class_version = '20071216'
-    class_title = u"Message"
+    class_title = MSG(u'Message', __name__)
     class_description = u"Message in a thread"
     class_views = [['edit_form'], ['history_form']]
 

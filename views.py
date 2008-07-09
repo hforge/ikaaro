@@ -47,16 +47,16 @@ class NewInstanceForm(STLForm):
     add a new object to the database.
     """
 
-    def title(self, **kw):
+    def tab_sublabel(self, **kw):
         type = kw.get('type')
         cls = get_object_class(type)
         if cls is not None:
-            return cls.class_title
+            return cls.class_title.gettext()
         # Default
         return MSG(u'Unknown object.', __name__)
 
 
-    def icon(self, model, **kw):
+    def tab_icon(self, model, **kw):
         type = kw.get('type')
         cls = get_object_class(type)
         if cls is not None:
