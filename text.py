@@ -24,7 +24,7 @@ from itools.gettext import POFile, MSG
 from itools.handlers import TextFile, Python as PythonFile
 from itools.html import HTMLFile
 from itools.stl import stl
-from itools.web import STLForm
+from itools.web import STLForm, STLView
 from itools.xml import XMLFile
 
 # Import from ikaaro
@@ -42,8 +42,9 @@ class EditTextForm(STLForm):
 
     access = 'is_allowed_to_edit'
     tab_label = MSG(u'Edit', __name__)
-    tab_sublabel = u'Inline'
+    tab_sublabel = MSG(u'Inline', __name__)
     tab_icon = 'edit.png'
+    page_title = MSG(u'Edit', __name__)
     template = '/ui/text/edit.xml'
     schema = {
         'data': String(mandatory=True),
@@ -59,6 +60,21 @@ class EditTextForm(STLForm):
         model.handler.load_state_from_string(data)
         # Ok
         context.message = MSG_CHANGES_SAVED
+
+
+
+class ViewText(STLView):
+
+    access = 'is_allowed_to_view'
+    tab_label = MSG(u'View', __name__)
+    tab_sublabel = MSG(u'Plain Text', __name__)
+    tab_icon = 'view.png'
+    page_title = MSG(u'View', __name__)
+    template = '/ui/text/view.xml'
+
+
+    def get_namespace(self, model, context):
+        return {'data': model.handler.to_str()}
 
 
 
@@ -89,24 +105,10 @@ class Text(File):
 
 
     #######################################################################
-    # UI / View
-    #######################################################################
-    view__access__ = 'is_allowed_to_view'
-    view__label__ = u'View'
-    view__sublabel__ = u'Plain Text'
-    view__icon__ = 'view.png'
-    def view(self, context):
-        namespace = {}
-        namespace['text'] = self.handler.to_str()
-
-        handler = self.get_object('/ui/text/view.xml')
-        return stl(handler, namespace)
-
-
-    #######################################################################
     # UI / Edit Inline
     #######################################################################
     edit = EditTextForm()
+    view = ViewText()
 
 
     #######################################################################

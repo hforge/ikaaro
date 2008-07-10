@@ -51,7 +51,7 @@ class StateForm(STLForm):
         # State
         namespace['statename'] = model.get_statename()
         state = model.get_state()
-        namespace['state'] = model.gettext(state['title'])
+        namespace['state'] = state['title'].gettext()
         # Posible transitions
         ac = model.get_access_control()
         transitions = []
@@ -59,7 +59,7 @@ class StateForm(STLForm):
             view = model.get_view(name)
             if ac.is_allowed_to_trans(context.user, model, view) is False:
                 continue
-            description = model.gettext(trans['description'])
+            description = trans['description'].gettext()
             transitions.append({'name': name, 'description': description})
         namespace['transitions'] = transitions
         # Workflow history

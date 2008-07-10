@@ -164,6 +164,7 @@ class UploadForm(STLForm):
     access = 'is_allowed_to_edit'
     tab_label = MSG(u'Edit', __name__)
     tab_sublabel = MSG(u'Replace', __name__)
+    page_title = tab_sublabel
     tab_icon = 'button_upload.png'
     template = '/ui/file/upload.xml'
     schema = {
@@ -478,8 +479,8 @@ class File(WorkflowAware, VersioningAware):
     externaledit = STLView(
         access='is_allowed_to_edit',
         tab_label=MSG(u'Edit', __name__),
-        title=u'External Editor',
-        icon='button_external.png',
+        tab_sublabel=MSG(u'External Editor', __name__),
+        tab_icon='button_external.png',
         template='/ui/file/externaledit.xml',
     )
 

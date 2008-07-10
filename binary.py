@@ -71,8 +71,8 @@ class Image(File):
     class_title = MSG(u'Image', __name__)
     class_icon16 = 'icons/16x16/image.png'
     class_icon48 = 'icons/48x48/image.png'
-    class_views = [['view', 'download_form'],
-                   ['externaledit', 'upload_form'],
+    class_views = [['view', 'download'],
+                   ['externaledit', 'upload'],
                    ['backlinks'],
                    ['edit_metadata'],
                    ['edit_state'],
@@ -82,9 +82,9 @@ class Image(File):
 
     view = STLView(
         access='is_allowed_to_view',
-        tab_label=u'View',
-        title=u'View',
-        icon='view.png',
+        tab_label=MSG(u'View', __name__),
+        tab_sublabel=MSG(u'View', __name__),
+        tab_icon='view.png',
         template='/ui/binary/Image_view.xml')
 
 
@@ -123,8 +123,8 @@ class Flash(File):
 
     view = STLView(
         access='is_allowed_to_view',
-        title=u'View',
-        tab_label=u'View',
+        tab_label=MSG(u'View', __name__),
+        tab_sublabel=MSG(u'View', __name__),
         template='/ui/binary/Flash_view.xml')
 
 
