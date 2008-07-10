@@ -87,6 +87,7 @@ class Image(File):
         tab_icon='view.png',
         template='/ui/binary/Image_view.xml')
 
+    thumb = ThumbnailView()
 
 
 class Video(File):

@@ -34,7 +34,7 @@
 
   <div id="browse_image">
     <a stl:repeat="object objects" href="${object/href}">
-      <img src="${object/id}/;icon48?width=${size}&amp;height=${size}" />
+      <img src="${object/id}/;thumb?width=${size}&amp;height=${size}" />
     </a>
   </div>
 
