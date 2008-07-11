@@ -82,7 +82,7 @@ map = {
 
 class UIFolder(Node, Folder):
 
-    class_title = MSG(u'UI', __name__)
+    class_title = MSG(u'UI')
     class_icon48 = 'icons/48x48/folder.png'
 
 
@@ -130,7 +130,7 @@ class UIFolder(Node, Folder):
 
 class Skin(UIFolder):
 
-    class_title = MSG(u'Skin', __name__)
+    class_title = MSG(u'Skin')
     class_icon16 = 'icons/16x16/skin.png'
     class_icon48 = 'icons/48x48/skin.png'
 
@@ -140,7 +140,7 @@ class Skin(UIFolder):
     #######################################################################
     def get_main_menu_options(self, context):
         return [
-            {'title': MSG(u'Control Panel', __name__),
+            {'title': MSG(u'Control Panel'),
              'path': '.', 'method': 'control_panel',
              'icon': '/ui/icons/16x16/settings.png'}]
 
@@ -169,7 +169,7 @@ class Skin(UIFolder):
         if not menu:
             return None
 
-        return {'title': MSG(u'Main Menu', __name__),
+        return {'title': MSG(u'Main Menu'),
                 'content': build_menu(menu)}
 
 
@@ -181,7 +181,7 @@ class Skin(UIFolder):
         menu = tree(context.site_root, active_node=context.object,
                     allow=DBFolder, deny=Issue, user=context.user)
         return {
-            'title': MSG(u'Navigation', __name__),
+            'title': MSG(u'Navigation'),
             'content': menu}
 
 
@@ -275,7 +275,7 @@ class Skin(UIFolder):
             })
 
         return {
-            'title': MSG(u'Content Language', __name__),
+            'title': MSG(u'Content Language'),
             'content': build_menu(options),
         }
 
@@ -532,7 +532,7 @@ class Skin(UIFolder):
         if root is here:
             return root.get_title()
         # Somewhere else
-        message = MSG(u"${root_title}: ${here_title}", __name__)
+        message = MSG(u"${root_title}: ${here_title}")
         return message.gettext(root_title=root.get_title(),
                                here_title=here.get_title())
 

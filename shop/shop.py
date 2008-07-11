@@ -33,8 +33,8 @@ from cart import Cart
 class Shop(Folder):
 
     class_id = 'shop'
-    class_title = MSG(u'Shop', __name__)
-    class_description = MSG(u'E-commerce Shop', __name__)
+    class_title = MSG(u'Shop')
+    class_description = MSG(u'E-commerce Shop')
     #class_icon16 = 'images/xxx.png'
     #class_icon48 = 'images/xxx.png'
     class_views = Folder.class_views + [['view_cart'], ['orders']]

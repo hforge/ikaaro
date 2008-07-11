@@ -41,10 +41,10 @@ from utils import get_parameters
 class EditTextForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    tab_label = MSG(u'Edit', __name__)
-    tab_sublabel = MSG(u'Inline', __name__)
+    tab_label = MSG(u'Edit')
+    tab_sublabel = MSG(u'Inline')
     tab_icon = 'edit.png'
-    page_title = MSG(u'Edit', __name__)
+    page_title = MSG(u'Edit')
     template = '/ui/text/edit.xml'
     schema = {
         'data': String(mandatory=True),
@@ -66,10 +66,10 @@ class EditTextForm(STLForm):
 class ViewText(STLView):
 
     access = 'is_allowed_to_view'
-    tab_label = MSG(u'View', __name__)
-    tab_sublabel = MSG(u'Plain Text', __name__)
+    tab_label = MSG(u'View')
+    tab_sublabel = MSG(u'Plain Text')
     tab_icon = 'view.png'
-    page_title = MSG(u'View', __name__)
+    page_title = MSG(u'View')
     template = '/ui/text/view.xml'
 
 
@@ -85,7 +85,7 @@ class Text(File):
 
     class_id = 'text'
     class_version = '20071216'
-    class_title = MSG(u'Plain Text', __name__)
+    class_title = MSG(u'Plain Text')
     class_description = u'Keep your notes with plain text files.'
     class_icon16 = 'icons/16x16/text.png'
     class_icon48 = 'icons/48x48/text.png'
@@ -133,7 +133,7 @@ class PO(Text):
 
     class_id = 'text/x-po'
     class_version = '20071216'
-    class_title = MSG(u'Message Catalog', __name__)
+    class_title = MSG(u'Message Catalog')
     class_icon16 = 'icons/16x16/po.png'
     class_icon48 = 'icons/48x48/po.png'
     class_handler = POFile
@@ -210,7 +210,7 @@ class CSS(Text):
 
     class_id = 'text/css'
     class_version = '20071216'
-    class_title = MSG(u'CSS', __name__)
+    class_title = MSG(u'CSS')
     class_icon16 = 'icons/16x16/css.png'
     class_icon48 = 'icons/48x48/css.png'
 
@@ -220,7 +220,7 @@ class Python(Text):
 
     class_id = 'text/x-python'
     class_version = '20071216'
-    class_title = MSG(u'Python', __name__)
+    class_title = MSG(u'Python')
     class_icon16 = 'icons/16x16/python.png'
     class_icon48 = 'icons/48x48/python.png'
     class_handler = PythonFile
@@ -231,7 +231,7 @@ class XML(Text):
 
     class_id = 'text/xml'
     class_version = '20071216'
-    class_title = MSG(u'XML File', __name__)
+    class_title = MSG(u'XML File')
     class_handler = XMLFile
 
 
@@ -240,7 +240,7 @@ class HTML(Text):
 
     class_id = 'text/html'
     class_version = '20071216'
-    class_title = MSG(u'HTML File', __name__)
+    class_title = MSG(u'HTML File')
     class_handler = HTMLFile
 
 

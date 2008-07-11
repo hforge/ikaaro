@@ -66,15 +66,15 @@ search_fields = {
 
 
 columns = [
-    ('id', MSG(u'Id', __name__)),
-    ('title', MSG(u'Title', __name__)),
-    ('version', MSG(u'Version', __name__)),
-    ('module', MSG(u'Module', __name__)),
-    ('type', MSG(u'Type', __name__)),
-    ('priority', MSG(u'Priority', __name__)),
-    ('state', MSG(u'State', __name__)),
-    ('assigned_to', MSG(u'Assigned To', __name__)),
-    ('mtime', MSG(u'Modified', __name__))]
+    ('id', MSG(u'Id')),
+    ('title', MSG(u'Title')),
+    ('version', MSG(u'Version')),
+    ('module', MSG(u'Module')),
+    ('type', MSG(u'Type')),
+    ('priority', MSG(u'Priority')),
+    ('state', MSG(u'State')),
+    ('assigned_to', MSG(u'Assigned To')),
+    ('mtime', MSG(u'Modified'))]
 
 
 ###########################################################################
@@ -127,7 +127,7 @@ class AddIssueForm(STLForm):
         id = model.get_new_id()
         issue = Issue.make_object(Issue, model, id)
         issue._add_record(context, form)
-        context.message = MSG(u'New issue added.', __name__)
+        context.message = MSG(u'New issue added.')
 
 
 
@@ -241,7 +241,7 @@ class SelectTableView(TableView):
 class SearchForm(BrowseContent):
 
     access = 'is_allowed_to_view'
-    tab_label = MSG(u'Search', __name__)
+    tab_label = MSG(u'Search')
     tab_sublabel = None
     tab_icon = 'button_search.png'
     page_title = None
@@ -325,11 +325,11 @@ class SearchForm(BrowseContent):
             return context.come_back(MSG_NAME_MISSING)
 
         if not model.has_object(issue_name):
-            return context.come_back(MSG(u'Issue not found.', __name__))
+            return context.come_back(MSG(u'Issue not found.'))
 
         issue = model.get_object(issue_name)
         if not isinstance(issue, Issue):
-            return context.come_back(MSG(u'Issue not found.', __name__))
+            return context.come_back(MSG(u'Issue not found.'))
 
         return context.uri.resolve2('../%s/;edit' % issue_name)
 
@@ -479,7 +479,7 @@ class View(BrowseForm):
             search = model.get_object(search_name)
             title = search.get_title()
         else:
-            title = MSG(u'View Tracker', __name__).gettext()
+            title = MSG(u'View Tracker').gettext()
         nb_results = len(lines)
         namespace['title'] = title
         # Keep the search_parameters, clean different actions
@@ -505,8 +505,8 @@ class View(BrowseForm):
         namespace['criteria'] = criteria
         # Table
         msgs = (
-            MSG(u'There is 1 result.', __name__),
-            MSG(u'There are ${n} results.', __name__))
+            MSG(u'There is 1 result.'),
+            MSG(u'There are ${n} results.'))
         namespace['batch'] = batch(context.uri, 0, nb_results, nb_results,
                                    msgs=msgs)
         namespace['table'] = table(columns, lines, [sortby], sortorder,
@@ -561,8 +561,8 @@ class Tracker(Folder):
 
     class_id = 'tracker'
     class_version = '20080415'
-    class_title = MSG(u'Issue Tracker', __name__)
-    class_description = MSG(u'To manage bugs and tasks', __name__)
+    class_title = MSG(u'Issue Tracker')
+    class_description = MSG(u'To manage bugs and tasks')
     class_icon16 = 'images/tracker16.png'
     class_icon48 = 'images/tracker48.png'
     class_views = [
@@ -994,7 +994,7 @@ class SelectTable(Table):
 
     class_id = 'tracker_select_table'
     class_version = '20071216'
-    class_title = MSG(u'Select Table', __name__)
+    class_title = MSG(u'Select Table')
     class_handler = SelectTableTable
 
     form = [TextWidget('title', title=u'Title')]
@@ -1032,7 +1032,7 @@ class SelectTable(Table):
         # check input
         ids = context.get_form_values('ids', type=Integer)
         if not ids:
-            return context.come_back(MSG(u'No objects selected.', __name__))
+            return context.come_back(MSG(u'No objects selected.'))
 
         filter = self.name[:-1]
         if self.name.startswith('priorit'):
@@ -1066,7 +1066,7 @@ class OrderedSelectTable(SelectTable):
 
     class_id = 'tracker_ordered_select_table'
     class_version = '20080415'
-    class_title = MSG(u'Ordered select table', __name__)
+    class_title = MSG(u'Ordered select table')
     class_handler = OrderedSelectTableTable
 
     form = [TextWidget('title', title=u'Title'),
@@ -1112,7 +1112,7 @@ class StoredSearch(Text):
 
     class_id = 'stored_search'
     class_version = '20071215'
-    class_title = MSG(u'Stored Search', __name__)
+    class_title = MSG(u'Stored Search')
     class_handler = ConfigFile
 
 

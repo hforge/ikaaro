@@ -37,8 +37,8 @@ class Forum(Folder):
 
     class_id = 'Forum'
     class_version = '20071215'
-    class_title = MSG(u'Forum', __name__)
-    class_description = MSG(u'An iKaaro forum', __name__)
+    class_title = MSG(u'Forum')
+    class_description = MSG(u'An iKaaro forum')
     class_icon16 = 'forum/Forum16.png'
     class_icon48 = 'forum/Forum48.png'
     class_views = [['view'], ['new_thread_form'], ['edit_metadata_form']]

@@ -36,8 +36,8 @@ from metadata import Record
 class StateForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    tab_label = MSG(u'State', __name__)
-    tab_sublabel = MSG(u'Workflow State', __name__)
+    tab_label = MSG(u'State')
+    tab_sublabel = MSG(u'Workflow State')
     tab_icon = 'state.png'
     template = '/ui/WorkflowAware_state.xml'
     schema = {
@@ -110,38 +110,35 @@ add_state = workflow.add_state
 add_trans = workflow.add_trans
 # State: Private
 description = u'A private document only can be reached by authorized users.'
-add_state('private',
-    title=MSG(u'Private', __name__),
-    description=MSG(description, __name__))
+add_state('private', title=MSG(u'Private'),
+    description=MSG(description))
 # State: Pending
 description = (
     u'A pending document awaits review from authorized users to be published.')
-add_state('pending',
-    title=MSG(u'Pending', __name__),
-    description=MSG(description, __name__))
+add_state('pending', title=MSG(u'Pending'),
+    description=MSG(description))
 # State: Public
 description = u'A public document can be reached by even anonymous users.'
-add_state('public',
-    title=MSG(u'Public', __name__),
-    description=MSG(description, __name__))
+add_state('public', title=MSG(u'Public'),
+    description=MSG(description))
 # Transition: Publish
 add_trans('publish', 'private', 'public',
-    description=MSG(u'Publish the document.', __name__))
+    description=MSG(u'Publish the document.'))
 # Transition: Request
 add_trans('request', 'private', 'pending',
-    description=MSG(u'Request the document publication.', __name__))
+    description=MSG(u'Request the document publication.'))
 # Transition: Unrequest
 add_trans('unrequest', 'pending', 'private',
-    description=MSG(u'Retract the document.', __name__))
+    description=MSG(u'Retract the document.'))
 # Transition: Reject
 add_trans('reject', 'pending', 'private',
-    description=MSG(u'Reject the document.', __name__))
+    description=MSG(u'Reject the document.'))
 # Transition: Accept
 add_trans('accept', 'pending', 'public',
-    description=MSG(u'Accept the document.', __name__))
+    description=MSG(u'Accept the document.'))
 # Transition: Retire
 add_trans('retire', 'public', 'private',
-    description=MSG(u'Retire the document.', __name__))
+    description=MSG(u'Retire the document.'))
 # Define the initial state
 workflow.set_initstate('private')
 

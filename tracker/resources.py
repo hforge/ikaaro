@@ -195,8 +195,8 @@ class Resources(Table, TrackerView):
 
     class_id = 'resources'
     class_version = '20071216'
-    class_title = MSG(u'Resources', __name__)
-    class_description = MSG(u'Resources assigned to issues', __name__)
+    class_title = MSG(u'Resources')
+    class_description = MSG(u'Resources assigned to issues')
     class_handler = BaseResources
 
     class_views = [['weekly_view', 'monthly_view'],

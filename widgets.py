@@ -66,8 +66,8 @@ def batch(uri, start, size, total, msgs=None):
     # FIXME Use plural forms
     if msgs is None:
         msgs = (
-            MSG(u"There is 1 item.", __name__),
-            MSG(u"There are ${n} items.", __name__)
+            MSG(u"There is 1 item."),
+            MSG(u"There are ${n} items.")
         )
 
     if total == 1:
@@ -89,7 +89,7 @@ def batch(uri, start, size, total, msgs=None):
         previous = str(previous)
         previous = XMLAttribute.encode(previous)
         previous = '<a href="%s" title="%s">&lt;&lt;</a>' \
-                   % (previous, MSG(u'Previous', __name__).gettext())
+                   % (previous, MSG(u'Previous').gettext())
     # Next
     next = None
     if end < total:
@@ -98,7 +98,7 @@ def batch(uri, start, size, total, msgs=None):
         next = str(next)
         next = XMLAttribute.encode(next)
         next = '<a href="%s" title="%s">&gt;&gt;</a>' \
-               % (next, MSG(u'Next', __name__).gettext())
+               % (next, MSG(u'Next').gettext())
 
     # Output
     if previous is None and next is None:
@@ -112,7 +112,7 @@ def batch(uri, start, size, total, msgs=None):
         else:
             link = '%s %s' % (previous, next)
 
-        msg2 = MSG(u"View from ${start} to ${end} (${link}):", __name__)
+        msg2 = MSG(u"View from ${start} to ${end} (${link}):")
         msg2 = msg2.gettext(start=(start+1), end=end, link=link)
 
         msg = '%s %s' % (msg1, msg2)

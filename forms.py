@@ -357,7 +357,7 @@ class AutoForm(STLForm):
         if required_msg is None:
             required_msg = MSG(
                 u'The <span class="field_required">emphasized</span> fields'
-                u' are required.', __name__)
+                u' are required.')
         required_msg = required_msg.gettext()
         required_msg = required_msg.encode('utf-8')
         required_msg = XMLParser(required_msg)

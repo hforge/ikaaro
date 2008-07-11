@@ -47,7 +47,7 @@ from widgets import batch, table
 class TableView(BrowseForm):
 
     access = 'is_allowed_to_view'
-    tab_label = MSG(u'View', __name__)
+    tab_label = MSG(u'View')
     tab_icon = 'view.png'
 
 
@@ -135,12 +135,12 @@ class TableView(BrowseForm):
 class AddRecordForm(AutoForm):
 
     access = 'is_allowed_to_edit'
-    tab_label = MSG(u'Add', __name__)
+    tab_label = MSG(u'Add')
     tab_icon = 'new.png'
 
-    form_title = MSG(u'Add a new record', __name__)
+    form_title = MSG(u'Add a new record')
     form_action = ';add_record'
-    submit_value = MSG(u'Add', __name__)
+    submit_value = MSG(u'Add')
     submit_class = 'button_ok'
 
 
@@ -194,7 +194,7 @@ class AddRecordForm(AutoForm):
             message = str(error) % (title, error.value)
         except ValueError, error:
             title = model.get_field_title(error.name)
-            message = MSG(u'Error: $message', __name__)
+            message = MSG(u'Error: $message')
             message = message.gettext(message=strerror)
 
         context.message = message
@@ -267,7 +267,7 @@ class EditRecordForm(AutoForm):
             message = str(error) % (title, error.value)
         except ValueError, error:
             title = self.get_field_title(error.name)
-            message = MSG(u'Error: $message', __name__)
+            message = MSG(u'Error: $message')
             message = message.gettext(message=strerror)
 
         goto = context.uri.resolve2('../;edit_record_form')
@@ -295,7 +295,7 @@ class Table(File):
 
     class_id = 'table'
     class_version = '20071216'
-    class_title = MSG(u'Table', __name__)
+    class_title = MSG(u'Table')
     class_views = [['view'],
                    ['add_record'],
                    ['edit_metadata'],

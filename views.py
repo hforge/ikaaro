@@ -53,7 +53,7 @@ class NewInstanceForm(STLForm):
         if cls is not None:
             return cls.class_title.gettext()
         # Default
-        return MSG(u'Unknown object.', __name__)
+        return MSG(u'Unknown object.')
 
 
     def tab_icon(self, model, **kw):

@@ -64,18 +64,18 @@ class IndexView(RedirectView):
 class AddView(IconsView):
 
     access = 'is_allowed_to_add'
-    tab_label = MSG(u'Add', __name__)
-    tab_sublabel = MSG(u'Add', __name__)
+    tab_label = MSG(u'Add')
+    tab_sublabel = MSG(u'Add')
     tab_icon = '/ui/icons/16x16/new.png'
 
 
     def page_title(self):
         type = get_context().get_query_value('type')
         if not type:
-            return MSG(u'Add new resource', __name__).gettext()
+            return MSG(u'Add new resource').gettext()
         cls = get_object_class(type)
         class_title = cls.class_title.gettext()
-        page_title = MSG(u'Add $class_title', __name__)
+        page_title = MSG(u'Add $class_title')
         page_title = page_title.gettext(class_title=class_title)
         return page_title
 
@@ -101,8 +101,8 @@ class BrowseContent(BrowseForm):
 
     access = 'is_allowed_to_view'
     access_POST = 'is_allowed_to_edit'
-    tab_label = MSG(u'Contents', __name__)
-    tab_sublabel = MSG(u'Browse Content', __name__)
+    tab_label = MSG(u'Contents')
+    tab_sublabel = MSG(u'Browse Content')
     tab_icon = '/ui/icons/16x16/folder.png'
     page_title = tab_sublabel
 
@@ -111,9 +111,9 @@ class BrowseContent(BrowseForm):
     }
 
     search_fields =  [
-        ('title', MSG(u'Title', __name__)),
-        ('text', MSG(u'Text', __name__)),
-        ('name', MSG(u'Name', __name__)),
+        ('title', MSG(u'Title')),
+        ('text', MSG(u'Text')),
+        ('name', MSG(u'Name')),
     ]
 
     batchsize = 20
@@ -182,13 +182,13 @@ class BrowseContent(BrowseForm):
 
         # The column headers
         columns = [
-            ('name', MSG(u'Name', __name__)),
-            ('title', MSG(u'Title', __name__)),
-            ('format', MSG(u'Type', __name__)),
-            ('mtime', MSG(u'Last Modified', __name__)),
-            ('last_author', MSG(u'Last Author', __name__)),
-            ('size', MSG(u'Size', __name__)),
-            ('workflow_state', MSG(u'State', __name__))]
+            ('name', MSG(u'Name')),
+            ('title', MSG(u'Title')),
+            ('format', MSG(u'Type')),
+            ('mtime', MSG(u'Last Modified')),
+            ('last_author', MSG(u'Last Author')),
+            ('size', MSG(u'Size')),
+            ('workflow_state', MSG(u'State'))]
 
         # Actions
         user = context.user
@@ -198,15 +198,15 @@ class BrowseContent(BrowseForm):
             if namespace['total']:
                 message = MSG_DELETE_SELECTION.gettext()
                 actions = [
-                    ('remove', MSG(u'Remove', __name__), 'button_delete',
+                    ('remove', MSG(u'Remove'), 'button_delete',
                      'return confirmation("%s");' % message.encode('utf_8')),
-                    ('rename', MSG(u'Rename', __name__), 'button_rename',
+                    ('rename', MSG(u'Rename'), 'button_rename',
                      None),
-                    ('copy', MSG(u'Copy', __name__), 'button_copy', None),
-                    ('cut', MSG(u'Cut', __name__), 'button_cut', None)]
+                    ('copy', MSG(u'Copy'), 'button_copy', None),
+                    ('cut', MSG(u'Cut'), 'button_cut', None)]
             if context.has_cookie('ikaaro_cp'):
                 actions.append(
-                    ('paste', MSG(u'Paste', __name__), 'button_paste', None))
+                    ('paste', MSG(u'Paste'), 'button_paste', None))
 
         # Go!
         namespace['table'] = widgets.table(
@@ -323,7 +323,7 @@ class BrowseContent(BrowseForm):
 class RenameForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    page_title = MSG(u'Rename objects', __name__)
+    page_title = MSG(u'Rename objects')
     template = '/ui/folder/rename.xml'
     schema = {
         'paths': String(multiple=True, mandatory=True),
@@ -396,7 +396,7 @@ class RenameForm(STLForm):
             # Rename
             container.move_object(old_name, new_name)
 
-        message = MSG(u'Objects renamed.', __name__)
+        message = MSG(u'Objects renamed.')
         return context.come_back(message, goto=';browse_content')
 
 
@@ -404,15 +404,15 @@ class RenameForm(STLForm):
 class PreviewView(STLView):
 
     access = 'is_allowed_to_view'
-    tab_label = MSG(u'Contents', __name__)
-    tab_sublabel = MSG(u'Preview Content', __name__)
+    tab_label = MSG(u'Contents')
+    tab_sublabel = MSG(u'Preview Content')
     tab_icon = '/ui/icons/16x16/image.png'
     page_title = tab_sublabel
     template = '/ui/folder/browse_image.xml'
 
     search_fields =  [
-        ('title', MSG(u'Title', __name__)),
-        ('name', MSG(u'Name', __name__)),
+        ('title', MSG(u'Title')),
+        ('name', MSG(u'Name')),
     ]
 
 
@@ -472,8 +472,8 @@ class PreviewView(STLView):
 
 class LastChanges(BrowseContent):
 
-    tab_label = MSG(u"Last Changes", __name__)
-    tab_sublabel = MSG(u'Last Changes', __name__)
+    tab_label = MSG(u"Last Changes")
+    tab_sublabel = MSG(u'Last Changes')
     tab_icon = 'icalendar.png'
     page_title = tab_sublabel
 
@@ -505,11 +505,11 @@ class OrphansView(BrowseContent):
     """
 
     access = 'is_allowed_to_view'
-    tab_label = MSG(u"Orphans", __name__)
-    tab_sublabel = MSG(u"Orphans", __name__)
+    tab_label = MSG(u"Orphans")
+    tab_sublabel = MSG(u"Orphans")
     tab_icon = 'orphans.png'
     page_title = tab_sublabel
-    description = MSG(u"Show objects not linked from anywhere.", __name__)
+    description = MSG(u"Show objects not linked from anywhere.")
 
 
     def get_namespace(self, model, context, sortby=['title'], sortorder='up',
@@ -556,8 +556,8 @@ class Folder(DBObject):
     class_id = 'folder'
     class_version = '20071215'
     class_layout = {}
-    class_title = MSG(u'Folder', __name__)
-    class_description = MSG(folder_description, __name__)
+    class_title = MSG(u'Folder')
+    class_description = MSG(folder_description)
     class_icon16 = 'icons/16x16/folder.png'
     class_icon48 = 'icons/48x48/folder.png'
     class_views = [
@@ -748,7 +748,7 @@ class Folder(DBObject):
         names = self.get_names()
         size = len(names)
 
-        return MSG(u'$n obs', __name__).gettext(n=size)
+        return MSG(u'$n obs').gettext(n=size)
 
 
     #######################################################################
@@ -795,7 +795,7 @@ class Folder(DBObject):
     def paste(self, context):
         cut, paths = context.get_cookie('ikaaro_cp', type=CopyCookie)
         if len(paths) == 0:
-            message = MSG(u'Nothing to paste.', __name__)
+            message = MSG(u'Nothing to paste.')
             return context.come_back(message)
 
         root = context.root
@@ -830,7 +830,7 @@ class Folder(DBObject):
         if cut is True:
             context.del_cookie('ikaaro_cp')
 
-        message = MSG(u'Objects pasted.', __name__)
+        message = MSG(u'Objects pasted.')
         return context.come_back(message)
 
 

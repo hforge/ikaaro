@@ -122,8 +122,8 @@ class RedirectView(BaseView):
 class MetadataForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    tab_label = MSG(u'Metadata', __name__)
-    tab_sublabel = MSG(u'Metadata', __name__)
+    tab_label = MSG(u'Metadata')
+    tab_sublabel = MSG(u'Metadata')
     tab_icon = 'metadata.png'
     template = '/ui/base/edit_metadata.xml'
     schema = {
@@ -137,8 +137,8 @@ class MetadataForm(STLForm):
         context = get_context()
         language = context.object.get_content_language(context)
         language_name = get_language_name(language)
-        message = u'Edit metadata in $language_name'
-        return MSG(message, __name__).gettext(language_name=language_name)
+        message = MSG(u'Edit metadata in $language_name')
+        return message.gettext(language_name=language_name)
 
 
     def get_namespace(self, model, context):

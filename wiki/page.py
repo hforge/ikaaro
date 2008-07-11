@@ -61,8 +61,8 @@ class WikiPage(Text):
 
     class_id = 'WikiPage'
     class_version = '20071217'
-    class_title = MSG(u"Wiki Page", __name__)
-    class_description = MSG(u"Wiki contents", __name__)
+    class_title = MSG(u"Wiki Page")
+    class_description = MSG(u"Wiki contents")
     class_icon16 = 'wiki/WikiPage16.png'
     class_icon48 = 'wiki/WikiPage48.png'
     class_views = [['view', 'to_pdf'],

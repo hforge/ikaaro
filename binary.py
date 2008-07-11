@@ -68,7 +68,7 @@ class Image(File):
 
     class_id = 'image'
     class_version = '20071216'
-    class_title = MSG(u'Image', __name__)
+    class_title = MSG(u'Image')
     class_icon16 = 'icons/16x16/image.png'
     class_icon48 = 'icons/48x48/image.png'
     class_views = [['view', 'download'],
@@ -82,8 +82,8 @@ class Image(File):
 
     view = STLView(
         access='is_allowed_to_view',
-        tab_label=MSG(u'View', __name__),
-        tab_sublabel=MSG(u'View', __name__),
+        tab_label=MSG(u'View'),
+        tab_sublabel=MSG(u'View'),
         tab_icon='view.png',
         template='/ui/binary/Image_view.xml')
 
@@ -94,7 +94,7 @@ class Video(File):
 
     class_id = 'video'
     class_version = '20071216'
-    class_title = MSG(u'Video', __name__)
+    class_title = MSG(u'Video')
     class_description = u'Video'
     class_icon16 = 'icons/16x16/flash.png'
     class_icon48 = 'icons/48x48/flash.png'
@@ -116,7 +116,7 @@ class Flash(File):
 
     class_id = 'application/x-shockwave-flash'
     class_version = '20071216'
-    class_title = MSG(u'Flash', __name__)
+    class_title = MSG(u'Flash')
     class_description = u'Flash Document'
     class_icon16 = 'icons/16x16/flash.png'
     class_icon48 = 'icons/48x48/flash.png'
@@ -124,8 +124,8 @@ class Flash(File):
 
     view = STLView(
         access='is_allowed_to_view',
-        tab_label=MSG(u'View', __name__),
-        tab_sublabel=MSG(u'View', __name__),
+        tab_label=MSG(u'View'),
+        tab_sublabel=MSG(u'View'),
         template='/ui/binary/Flash_view.xml')
 
 
@@ -137,7 +137,7 @@ class MSWord(File):
 
     class_id = 'application/msword'
     class_version = '20071216'
-    class_title = MSG(u'Word', __name__)
+    class_title = MSG(u'Word')
     class_description = u'Word Text'
     class_icon16 = 'icons/16x16/word.png'
     class_icon48 = 'icons/48x48/word.png'
@@ -149,7 +149,7 @@ class MSExcel(File):
 
     class_id = 'application/vnd.ms-excel'
     class_version = '20071216'
-    class_title = MSG(u'Excel', __name__)
+    class_title = MSG(u'Excel')
     class_description = u'Excel Spreadsheet'
     class_icon16 = 'icons/16x16/excel.png'
     class_icon48 = 'icons/48x48/excel.png'
@@ -161,7 +161,7 @@ class MSPowerPoint(File):
 
     class_id = 'application/vnd.ms-powerpoint'
     class_version = '20071216'
-    class_title = MSG(u'PowerPoint', __name__)
+    class_title = MSG(u'PowerPoint')
     class_description = u'PowerPoint Presentation'
     class_icon16 = 'icons/16x16/powerpoint.png'
     class_icon48 = 'icons/48x48/powerpoint.png'
@@ -173,7 +173,7 @@ class OOWriter(File):
 
     class_id = 'application/vnd.sun.xml.writer'
     class_version = '20071216'
-    class_title = MSG(u'OOo Writer', __name__)
+    class_title = MSG(u'OOo Writer')
     class_description = u'OpenOffice.org Text'
     class_icon16 = 'icons/16x16/oowriter.png'
     class_icon48 = 'icons/48x48/oowriter.png'
@@ -185,7 +185,7 @@ class OOCalc(File):
 
     class_id = 'application/vnd.sun.xml.calc'
     class_version = '20071216'
-    class_title = MSG(u'OOo Calc', __name__)
+    class_title = MSG(u'OOo Calc')
     class_description = u'OpenOffice.org Spreadsheet'
     class_icon16 = 'icons/16x16/oocalc.png'
     class_icon48 = 'icons/48x48/oocalc.png'
@@ -197,7 +197,7 @@ class OOImpress(File):
 
     class_id = 'application/vnd.sun.xml.impress'
     class_version = '20071216'
-    class_title = MSG(u'OOo Impress', __name__)
+    class_title = MSG(u'OOo Impress')
     class_description = u'OpenOffice.org Presentation'
     class_icon16 = 'icons/16x16/ooimpress.png'
     class_icon48 = 'icons/48x48/ooimpress.png'
@@ -209,7 +209,7 @@ class PDF(File):
 
     class_id = 'application/pdf'
     class_version = '20071216'
-    class_title = MSG(u'PDF', __name__)
+    class_title = MSG(u'PDF')
     class_description = u'PDF Document'
     class_icon16 = 'icons/16x16/pdf.png'
     class_icon48 = 'icons/48x48/pdf.png'
@@ -221,7 +221,7 @@ class RTF(File):
 
     class_id = 'text/rtf'
     class_version = '20071216'
-    class_title = MSG(u"RTF", __name__)
+    class_title = MSG(u"RTF")
     class_description = u'RTF Document'
     class_icon16 = 'icons/16x16/text.png'
     class_icon48 = 'icons/48x48/text.png'
@@ -233,7 +233,7 @@ class ODT(File):
 
     class_id = 'application/vnd.oasis.opendocument.text'
     class_version = '20071216'
-    class_title = MSG(u'ODT', __name__)
+    class_title = MSG(u'ODT')
     class_description = u'OpenDocument Text'
     class_icon16 = 'icons/16x16/odt.png'
     class_icon48 = 'icons/48x48/odt.png'
@@ -245,7 +245,7 @@ class ODS(File):
 
     class_id = 'application/vnd.oasis.opendocument.spreadsheet'
     class_version = '20071216'
-    class_title = MSG(u'ODS', __name__)
+    class_title = MSG(u'ODS')
     class_description = u'OpenDocument Spreadsheet'
     class_icon16 = 'icons/16x16/ods.png'
     class_icon48 = 'icons/48x48/ods.png'
@@ -257,7 +257,7 @@ class ODP(File):
 
     class_id = 'application/vnd.oasis.opendocument.presentation'
     class_version = '20071216'
-    class_title = MSG(u'ODP', __name__)
+    class_title = MSG(u'ODP')
     class_description = u'OpenDocument Presentation'
     class_icon16 = 'icons/16x16/odp.png'
     class_icon48 = 'icons/48x48/odp.png'
@@ -287,7 +287,7 @@ class ZipArchive(Archive):
 
     class_id = 'application/zip'
     class_version = '20071216'
-    class_title = MSG(u"Zip", __name__)
+    class_title = MSG(u"Zip")
     class_description = u"Zip Archive"
     class_icon16 = 'icons/16x16/zip.png'
     class_icon48 = 'icons/48x48/zip.png'
@@ -299,7 +299,7 @@ class TarArchive(Archive):
 
     class_id = 'application/x-tar'
     class_version = '20071216'
-    class_title = MSG(u"Tar", __name__)
+    class_title = MSG(u"Tar")
     class_description = u"Tar Archive"
     class_icon16 = 'icons/16x16/tar.png'
     class_icon48 = 'icons/48x48/tar.png'
@@ -314,7 +314,7 @@ class Gzip(File):
 
     class_id = 'application/x-gzip'
     class_version = '20071216'
-    class_title = MSG(u"Gzip", __name__)
+    class_title = MSG(u"Gzip")
     class_description = u"Gzip Compressed"
     class_icon16 = 'icons/16x16/gzip.png'
     class_icon48 = 'icons/48x48/gzip.png'
@@ -326,7 +326,7 @@ class Bzip2(File):
 
     class_id = 'application/x-bzip2'
     class_version = '20071216'
-    class_title = MSG(u"Bzip2", __name__)
+    class_title = MSG(u"Bzip2")
     class_description = u"Bzip2 Compressed"
     class_icon16 = 'icons/16x16/bzip.png'
     class_icon48 = 'icons/48x48/bzip.png'

@@ -48,8 +48,8 @@ from workflow import WorkflowAware
 class NewFileForm(NewInstanceForm):
 
     access = 'is_allowed_to_add'
-    tab_sublabel = MSG(u'File', __name__)
-    page_title = MSG(u'Upload File', __name__)
+    tab_sublabel = MSG(u'File')
+    page_title = MSG(u'Upload File')
     template = '/ui/file/new_instance.xml'
     schema = {
         'title': Unicode,
@@ -145,8 +145,8 @@ class FileGET(BaseView):
 class DownloadView(STLView):
 
     access = 'is_allowed_to_view'
-    tab_label = MSG(u'View', __name__)
-    tab_sublabel = MSG(u'Download', __name__)
+    tab_label = MSG(u'View')
+    tab_sublabel = MSG(u'Download')
     tab_icon = 'view.png'
     template = '/ui/file/download_form.xml'
 
@@ -162,8 +162,8 @@ class DownloadView(STLView):
 class UploadForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    tab_label = MSG(u'Edit', __name__)
-    tab_sublabel = MSG(u'Replace', __name__)
+    tab_label = MSG(u'Edit')
+    tab_sublabel = MSG(u'Replace')
     page_title = tab_sublabel
     tab_icon = 'button_upload.png'
     template = '/ui/file/upload.xml'
@@ -267,8 +267,8 @@ class ExternalEdit(BaseView):
 class BacklinksView(BrowseForm):
 
     access = 'is_allowed_to_view'
-    tab_label = MSG(u"Backlinks", __name__)
-    tab_sublabel = MSG(u'Backlinks', __name__)
+    tab_label = MSG(u"Backlinks")
+    tab_sublabel = MSG(u'Backlinks')
     tab_icon = 'button_rename.png'
 
     query_schema = {
@@ -302,13 +302,13 @@ class BacklinksView(BrowseForm):
 
         # The column headers
         columns = [
-            ('name', MSG(u'Name', __name__)),
-            ('title', MSG(u'Title', __name__)),
-            ('format', MSG(u'Type', __name__)),
-            ('mtime', MSG(u'Last Modified', __name__)),
-            ('last_author', MSG(u'Last Author', __name__)),
-            ('size', MSG(u'Size', __name__)),
-            ('workflow_state', MSG(u'State', __name__))
+            ('name', MSG(u'Name')),
+            ('title', MSG(u'Title')),
+            ('format', MSG(u'Type')),
+            ('mtime', MSG(u'Last Modified')),
+            ('last_author', MSG(u'Last Author')),
+            ('size', MSG(u'Size')),
+            ('workflow_state', MSG(u'State'))
         ]
 
         # Remove the checkboxes
@@ -331,8 +331,8 @@ class File(WorkflowAware, VersioningAware):
 
     class_id = 'file'
     class_version = '20071216'
-    class_title = MSG(u'File', __name__)
-    class_description = MSG(file_description, __name__)
+    class_title = MSG(u'File')
+    class_description = MSG(file_description)
     class_icon16 = 'icons/16x16/file.png'
     class_icon48 = 'icons/48x48/file.png'
     class_views = [['download'],
@@ -455,9 +455,9 @@ class File(WorkflowAware, VersioningAware):
         size = bytes / 1024.0
         if size >= 1024:
             size = size / 1024.0
-            str = MSG(u'%.01f MB', __name__)
+            str = MSG(u'%.01f MB')
         else:
-            str = MSG(u'%.01f KB', __name__)
+            str = MSG(u'%.01f KB')
 
         return str.gettext() % size
 
@@ -478,8 +478,8 @@ class File(WorkflowAware, VersioningAware):
 
     externaledit = STLView(
         access='is_allowed_to_edit',
-        tab_label=MSG(u'Edit', __name__),
-        tab_sublabel=MSG(u'External Editor', __name__),
+        tab_label=MSG(u'Edit'),
+        tab_sublabel=MSG(u'External Editor'),
         tab_icon='button_external.png',
         template='/ui/file/externaledit.xml',
     )

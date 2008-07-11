@@ -22,75 +22,57 @@ from itools.gettext import MSG
 
 
 MSG_BAD_KEY = MSG(
-    u"Your confirmation key is invalid.",
-    __name__)
+    u"Your confirmation key is invalid.")
 
 MSG_BAD_NAME = MSG(
-    u'The document name contains illegal characters, choose another one.',
-    __name__)
+    u'The document name contains illegal characters, choose another one.')
 
 MSG_CAPTION = MSG(
-    u'Caption',
-    __name__)
+    u'Caption')
 
 MSG_CHANGES_SAVED = MSG(
-    u'The changes have been saved.',
-    __name__)
+    u'The changes have been saved.')
 
 MSG_CHANGES_SAVED2 = MSG(
-    u'The changes have been saved ($time).',
-    __name__)
+    u'The changes have been saved ($time).')
 
 MSG_DELETE_OBJECT = MSG(
-    u'Are you sure you want to delete this object?',
-    __name__)
+    u'Are you sure you want to delete this object?')
 
 MSG_DELETE_SELECTION = MSG(
-    u'Are you sure you want to delete the selection?',
-    __name__)
+    u'Are you sure you want to delete the selection?')
 
 MSG_EDIT_CONFLICT = MSG(
-    u'Changes could not be saved, there was an edit conflict.',
-    __name__)
+    u'Changes could not be saved, there was an edit conflict.')
 
 MSG_EMPTY_FILENAME = MSG(
-    u'The file must be entered.',
-    __name__)
+    u'The file must be entered.')
 
 MSG_EXISTANT_FILENAME = MSG(
-    u'A given name already exists.',
-    __name__)
+    u'A given name already exists.')
 
 MSG_INVALID_EMAIL = MSG(
-    u'The email address provided is invalid.',
-    __name__)
+    u'The email address provided is invalid.')
 
 MSG_NAME_CLASH = MSG(
-    u'There is already another object with this name.',
-    __name__)
+    u'There is already another object with this name.')
 
 MSG_NAME_MISSING = MSG(
-    u'The name is missing.',
-    __name__)
+    u'The name is missing.')
 
 MSG_NEW_RESOURCE = MSG(
-    u'A new resource has been added.',
-    __name__)
+    u'A new resource has been added.')
 
 MSG_OBJECTS_REMOVED = MSG(
-    u'Objects removed: $objects.',
-    __name__)
+    u'Objects removed: $objects.')
 
 MSG_PAGE_LOCK = MSG(
-    u'This page is locked by $user',
-    __name__)
+    u'This page is locked by $user')
 
 MSG_PASSWORD_MISMATCH = MSG(
-    u'The provided passwords do not match.',
-    __name__)
+    u'The provided passwords do not match.')
 
 MSG_REGISTERED = MSG(
     u"You have already confirmed your registration. "
-    u"Try to log in or ask for a new password.",
-    __name__)
+    u"Try to log in or ask for a new password.")
 

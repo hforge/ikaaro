@@ -33,7 +33,7 @@ class Thread(Folder):
 
     class_id = 'ForumThread'
     class_version = '20071215'
-    class_title = MSG(u'Thread', __name__)
+    class_title = MSG(u'Thread')
     class_description = u"A thread to discuss"
     class_views = [['view'], ['edit_metadata_form']]
 

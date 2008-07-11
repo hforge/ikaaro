@@ -44,8 +44,8 @@ from workflow import order_workflow
 class Orders(Folder):
 
     class_id = 'orders'
-    class_title = MSG(u'Orders', __name__)
-    class_description = MSG(u'Our orders', __name__)
+    class_title = MSG(u'Orders')
+    class_description = MSG(u'Our orders')
     class_views = Folder.class_views + [['view', 'view_all']]
     #class_icon16 = 'images/xxx.png'
     #class_icon48 = 'images/xxx.png'
@@ -184,8 +184,8 @@ class Orders(Folder):
 class Order(Folder, WorkflowAware):
 
     class_id = 'order'
-    class_title = MSG(u'Order', __name__)
-    class_description = MSG(u'Create an order in our shop', __name__)
+    class_title = MSG(u'Order')
+    class_description = MSG(u'Create an order in our shop')
     #class_icon16 = 'images/xxx.png'
     #class_icon48 = 'images/xxx.png'
     class_views = Folder.class_views + [['state_form'], ['view']]

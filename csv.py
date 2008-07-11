@@ -41,7 +41,7 @@ class ViewCSV(BrowseForm):
 
     # FIXME We need different permissions for GET and POST
     access = 'is_allowed_to_edit'
-    tab_label = MSG(u'View', __name__)
+    tab_label = MSG(u'View')
     schema = {
         'ids': Integer(mandatory=True),
     }
@@ -126,7 +126,7 @@ class CSV(Text):
 
     class_id = 'text/comma-separated-values'
     class_version = '20071216'
-    class_title = MSG(u'Comma Separated Values', __name__)
+    class_title = MSG(u'Comma Separated Values')
     class_views = [['view'],
                    ['add_row_form'],
                    ['externaledit', 'upload_form'],

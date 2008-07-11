@@ -46,27 +46,27 @@ from text import Text
 resolution = timedelta.resolution
 
 months = {
-    1: MSG(u'January', __name__),
-    2: MSG(u'February', __name__),
-    3: MSG(u'March', __name__),
-    4: MSG(u'April', __name__),
-    5: MSG(u'May', __name__),
-    6: MSG(u'June', __name__),
-    7: MSG(u'July', __name__),
-    8: MSG(u'August', __name__),
-    9: MSG(u'September', __name__),
-    10: MSG(u'October', __name__),
-    11: MSG(u'November', __name__),
-    12: MSG(u'December', __name__)}
+    1: MSG(u'January'),
+    2: MSG(u'February'),
+    3: MSG(u'March'),
+    4: MSG(u'April'),
+    5: MSG(u'May'),
+    6: MSG(u'June'),
+    7: MSG(u'July'),
+    8: MSG(u'August'),
+    9: MSG(u'September'),
+    10: MSG(u'October'),
+    11: MSG(u'November'),
+    12: MSG(u'December')}
 
 days = {
-    0: MSG(u'Monday', __name__),
-    1: MSG(u'Tuesday', __name__),
-    2: MSG(u'Wednesday', __name__),
-    3: MSG(u'Thursday', __name__),
-    4: MSG(u'Friday', __name__),
-    5: MSG(u'Saturday', __name__),
-    6: MSG(u'Sunday', __name__)}
+    0: MSG(u'Monday'),
+    1: MSG(u'Tuesday'),
+    2: MSG(u'Wednesday'),
+    3: MSG(u'Thursday'),
+    4: MSG(u'Friday'),
+    5: MSG(u'Saturday'),
+    6: MSG(u'Sunday')}
 
 # Template to display events on monthly_view
 template_string = """
@@ -124,14 +124,14 @@ def check_timetable_entry(context, key_start, key_end):
     start = context.get_form_value(key_start)
     end = context.get_form_value(key_end)
     if not start or start == '__:__' or not end or end == '__:__':
-        return MSG(u'Wrong time selection.', __name__)
+        return MSG(u'Wrong time selection.')
     try:
         start = Time.decode(start)
         end = Time.decode(end)
     except:
-        return MSG(u'Wrong time selection (HH:MM).', __name__)
+        return MSG(u'Wrong time selection (HH:MM).')
     if start >= end:
-        return MSG(u'Start time must be earlier than end time.', __name__)
+        return MSG(u'Start time must be earlier than end time.')
     return (start, end)
 
 
@@ -177,9 +177,9 @@ class Timetables(DataType):
 
 class Status(Enumerate):
 
-    options = [{'name': 'TENTATIVE', 'value': MSG(u'Tentative', __name__)},
-               {'name': 'CONFIRMED', 'value': MSG(u'Confirmed', __name__)},
-               {'name': 'CANCELLED', 'value': MSG(u'Cancelled', __name__)}]
+    options = [{'name': 'TENTATIVE', 'value': MSG(u'Tentative')},
+               {'name': 'CONFIRMED', 'value': MSG(u'Confirmed')},
+               {'name': 'CANCELLED', 'value': MSG(u'Cancelled')}]
 
 
 
@@ -284,7 +284,7 @@ class CalendarView(object):
             week_number = str(int(week_number) + 1)
             if len(week_number) == 1:
                 week_number = '0%s' % week_number
-        current_week = MSG(u'Week $n', __name__).gettext(n=week_number)
+        current_week = MSG(u'Week $n').gettext(n=week_number)
         tmp_date = c_date - timedelta(7)
         previous_week = ";%s?date=%s" % (method, Date.encode(tmp_date))
         tmp_date = c_date + timedelta(7)
@@ -579,8 +579,8 @@ class CalendarView(object):
 class TimetablesForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    tab_label = MSG(u'Timetables', __name__)
-    tab_sublabel = MSG(u'Timetables', __name__)
+    tab_label = MSG(u'Timetables')
+    tab_sublabel = MSG(u'Timetables')
     tab_icon = 'settings.png'
     template = '/ui/ical/ical_edit_timetables.xml'
     schema = {}
@@ -621,7 +621,7 @@ class TimetablesForm(STLForm):
         if context.has_form_value('remove'):
             ids = context.get_form_values('ids')
             if ids == []:
-                return context.come_back(MSG(u'Nothing to remove.', __name__))
+                return context.come_back(MSG(u'Nothing to remove.'))
             new_timetables = []
             for index, timetable in enumerate(timetables):
                 if str(index) not in ids:
@@ -655,8 +655,8 @@ class TimetablesForm(STLForm):
 class EditEventForm(CalendarView, STLForm):
 
     access = 'is_allowed_to_edit'
-    tab_label = MSG(u'Edit', __name__)
-    tab_sublabel = MSG(u'Event', __name__)
+    tab_label = MSG(u'Edit')
+    tab_sublabel = MSG(u'Event')
     tab_icon = 'button_calendar.png'
     template = '/ui/ical/ical_edit_event.xml'
     schema = {
@@ -693,7 +693,7 @@ class EditEventForm(CalendarView, STLForm):
         if uid is None:
             if not selected_date:
                 message = u'To add an event, click on + symbol from the views.'
-                message = MSG(message, __name__)
+                message = MSG(message)
                 return context.come_back(message, goto=goto)
         else:
             # Get it as a datetime object
@@ -719,7 +719,7 @@ class EditEventForm(CalendarView, STLForm):
             if '/' in uid:
                 name, id = uid.split('/')
                 if not model.has_object(name):
-                    message = MSG(u'Invalid argument.', __name__)
+                    message = MSG(u'Invalid argument.')
                     return context.come_back(message, keys=keys,
                                              goto=';edit_event')
                 object = model.get_object(name)
@@ -732,7 +732,7 @@ class EditEventForm(CalendarView, STLForm):
             if id != '':
                 event = object.get_record(id)
                 if event is None:
-                    message = MSG(u'Event not found', __name__)
+                    message = MSG(u'Event not found')
                     return context.come_back(message, goto=goto)
                 namespace['remove'] = True
                 properties = event.get_property()
@@ -842,12 +842,12 @@ class EditEventForm(CalendarView, STLForm):
             event = model.get_record(uid)
             if event is None:
                 message = u'Cannot modify event, because it has been removed.'
-                message = MSG(message, __name__)
+                message = MSG(message)
                 return context.come_back(message, goto=goto)
             # Test if current user is admin or organizer of this event
             if not model.is_organizer_or_admin(context, event):
                 message = u'You are not authorized to modify this event.'
-                message = MSG(message, __name__)
+                message = MSG(message)
                 return context.come_back(message, goto, keys=keys)
 
         for key in keys:
@@ -879,13 +879,13 @@ class EditEventForm(CalendarView, STLForm):
                     except:
                         goto = ';edit_event?date=%s' % selected_date
                         message = u'One or more field is invalid.'
-                        message = MSG(message, __name__)
+                        message = MSG(message)
                         return context.come_back(message, goto=goto)
                     values[real_key] = value, params
                 # Check if start <= end
                 if values['DTSTART'][0] > values['DTEND'][0]:
                     message = u'Start date MUST be earlier than end date.'
-                    message = MSG(message, __name__)
+                    message = MSG(message)
                     goto = ';edit_event?date=%s' % \
                                              Date.encode(values['DTSTART'][0])
                     if uid is not None:
@@ -923,7 +923,7 @@ class EditEventForm(CalendarView, STLForm):
             model.add_record('VEVENT', properties)
 
         goto = '%s?date=%s' % (goto, selected_date)
-        message = MSG(u'Data updated', __name__)
+        message = MSG(u'Data updated')
         return context.come_back(message, goto=goto, keys=keys)
 
 
@@ -941,11 +941,11 @@ class EditEventForm(CalendarView, STLForm):
             return context.come_back(None, goto)
         if model.get_record(uid) is None:
             message = u'Cannot delete event, because it was already removed.'
-            message = MSG(message, __name__)
+            message = MSG(message)
             return context.come_back(message, goto=goto)
 
         model._remove_event(uid)
-        message = MSG(u'Event definitely deleted.', __name__)
+        message = MSG(u'Event definitely deleted.')
         return context.come_back(message, goto=goto)
 
 
@@ -959,8 +959,8 @@ class EditEventForm(CalendarView, STLForm):
 class MonthlyView(CalendarView, STLView):
 
     access = 'is_allowed_to_view'
-    tab_label = MSG(u'View', __name__)
-    tab_sublabel = MSG(u'Monthly', __name__)
+    tab_label = MSG(u'View')
+    tab_sublabel = MSG(u'Monthly')
     tab_icon = 'icalendar.png'
     template = '/ui/ical/ical_monthly_view.xml'
 
@@ -1037,8 +1037,8 @@ class MonthlyView(CalendarView, STLView):
 class WeeklyView(CalendarView, STLView):
 
     access = 'is_allowed_to_view'
-    tab_label = MSG(u'View', __name__)
-    tab_sublabel = MSG(u'Weekly', __name__)
+    tab_label = MSG(u'View')
+    tab_sublabel = MSG(u'Weekly')
     tab_icon = 'icalendar.png'
     template = '/ui/ical/ical_grid_weekly_view.xml'
 
@@ -1110,7 +1110,7 @@ class CalendarAware(CalendarView):
         if name and self.has_object(name):
             object = self.get_object(name)
             return object.edit_event(context)
-        message = MSG(u'Resource not found.', __name__)
+        message = MSG(u'Resource not found.')
         return context.come_back(message)
 
 
@@ -1327,7 +1327,7 @@ class CalendarAware(CalendarView):
 
 class UploadForm(BaseUploadForm):
 
-    tab_sublabel = MSG(u'Upload from an ical file', __name__)
+    tab_sublabel = MSG(u'Upload from an ical file')
 
 
     def action(self, model, context, form):
@@ -1353,7 +1353,7 @@ class UploadForm(BaseUploadForm):
 
 class DownloadView(BaseDownloadView):
 
-    tab_sublabel = MSG(u'Export in ical format', __name__)
+    tab_sublabel = MSG(u'Export in ical format')
 
 ##    XXX Check header is correct
 ##    def download(self, context):
@@ -1366,8 +1366,8 @@ class DownloadView(BaseDownloadView):
 class TextView(BaseView):
 
     access = 'is_allowed_to_edit'
-    tab_label = MSG(u'Text view', __name__)
-    tab_sublabel = MSG(u'Text view', __name__)
+    tab_label = MSG(u'Text view')
+    tab_sublabel = MSG(u'Text view')
 
     def GET(self, model, context):
         return '<pre>%s</pre>' % model.handler.to_str()
@@ -1381,8 +1381,8 @@ class CalendarTable(Table, CalendarView):
 
     class_id = 'calendarTable'
     class_version = '20071216'
-    class_title = MSG(u'Calendar', __name__)
-    class_description = MSG(description, __name__)
+    class_title = MSG(u'Calendar')
+    class_description = MSG(description)
     class_icon16 = 'icons/16x16/icalendar.png'
     class_icon48 = 'icons/48x48/icalendar.png'
     class_views = [['monthly_view', 'weekly_view', 'download'],
@@ -1515,8 +1515,8 @@ class Calendar(Text, CalendarView):
 
     class_id = 'text/calendar'
     class_version = '20071216'
-    class_title = MSG(u'Calendar', __name__)
-    class_description = MSG(description, __name__)
+    class_title = MSG(u'Calendar')
+    class_description = MSG(description)
     class_icon16 = 'icons/16x16/icalendar.png'
     class_icon48 = 'icons/48x48/icalendar.png'
     class_views = [['monthly_view', 'weekly_view', 'download'],

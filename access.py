@@ -40,11 +40,11 @@ from workflow import WorkflowAware
 class PermissionsForm(BrowseForm):
 
     access = 'is_admin'
-    tab_label = MSG(u"Control Panel", __name__)
-    tab_sublabel = MSG(u'Browse Members', __name__)
+    tab_label = MSG(u"Control Panel")
+    tab_sublabel = MSG(u'Browse Members')
     tab_icon = 'userfolder.png'
     page_title = tab_sublabel
-    description = MSG(u'See the users and their roles.', __name__)
+    description = MSG(u'See the users and their roles.')
 
     query_schema = {
         'search_field': String,
@@ -59,9 +59,9 @@ class PermissionsForm(BrowseForm):
     }
 
     search_fields = [
-        ('username', MSG(u'Login', __name__)),
-        ('lastname', MSG(u'Last Name', __name__)),
-        ('firstname', MSG(u'First Name', __name__))]
+        ('username', MSG(u'Login')),
+        ('lastname', MSG(u'Last Name')),
+        ('firstname', MSG(u'First Name'))]
 
 
     def get_namespace(self, model, context, query):
@@ -115,10 +115,10 @@ class PermissionsForm(BrowseForm):
             # State
             user_object = root.get_object(user.abspath)
             if user_object.get_property('user_must_confirm'):
-                account_state = (MSG(u'Inactive', __name__),
+                account_state = (MSG(u'Inactive'),
                                  '/users/%s/;resend_confirmation' % user_id)
             else:
-                account_state = MSG(u'Active', __name__)
+                account_state = MSG(u'Active')
             ns['account_state'] = account_state
             # Append
             members.append(ns)
@@ -132,16 +132,16 @@ class PermissionsForm(BrowseForm):
 
         # The columns
         columns = [
-            ('user_id', MSG(u'User ID', __name__)),
-            ('login_name', MSG(u'Login', __name__)),
-            ('firstname', MSG(u'First Name', __name__)),
-            ('lastname', MSG(u'Last Name', __name__)),
-            ('role', MSG(u'Role', __name__)),
-            ('account_state', MSG(u'State', __name__))]
+            ('user_id', MSG(u'User ID')),
+            ('login_name', MSG(u'Login')),
+            ('firstname', MSG(u'First Name')),
+            ('lastname', MSG(u'Last Name')),
+            ('role', MSG(u'Role')),
+            ('account_state', MSG(u'State'))]
 
         # The actions
         actions = [
-            ('permissions_del_members', MSG(u'Delete', __name__),
+            ('permissions_del_members', MSG(u'Delete'),
              'button_delete', None)]
 
         namespace['batch'] = widgets.batch(context.uri, start, size, total)
@@ -193,11 +193,11 @@ class MembershipForm(STLForm):
 class NewUserForm(STLForm):
 
     access = 'is_admin'
-    tab_label = MSG(u'Control Panel', __name__)
-    tab_sublabel = MSG(u'Add New Member', __name__)
+    tab_label = MSG(u'Control Panel')
+    tab_sublabel = MSG(u'Add New Member')
     tab_icon = 'card.png'
     page_title = tab_sublabel
-    description = MSG(u'Grant access to a new user.', __name__)
+    description = MSG(u'Grant access to a new user.')
     template = '/ui/access/new_user.xml'
     schema = {
         'email': Email(mandatory=True),
@@ -268,7 +268,7 @@ class NewUserForm(STLForm):
 
         goto = '/users/%s/;%s' % (user.name, user.get_firstview())
         goto = get_reference(goto)
-        message = MSG(u'User added.', __name__)
+        message = MSG(u'User added.')
         return context.come_back(message, goto=goto)
 
 
@@ -340,10 +340,10 @@ class RoleAware(AccessControl):
 
     # To override
     __roles__ = [
-        {'name': 'guests', 'title': MSG(u"Guest", __name__)},
-        {'name': 'members', 'title': MSG(u"Member", __name__)},
-        {'name': 'reviewers', 'title': MSG(u"Reviewer", __name__)},
-        {'name': 'admins', 'title': MSG(u'Admin', __name__)},
+        {'name': 'guests', 'title': MSG(u"Guest")},
+        {'name': 'members', 'title': MSG(u"Member")},
+        {'name': 'reviewers', 'title': MSG(u"Reviewer")},
+        {'name': 'admins', 'title': MSG(u'Admin')},
     ]
 
 

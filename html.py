@@ -48,10 +48,10 @@ class HTMLEditView(BaseView):
     """
 
     access = 'is_allowed_to_edit'
-    __label__ = MSG(u'Edit', __name__)
-    tab_sublabel = MSG(u'Inline', __name__)
+    __label__ = MSG(u'Edit')
+    tab_sublabel = MSG(u'Inline')
     tab_icon = 'edit.png'
-    page_title = MSG(u'Edit', __name__)
+    page_title = MSG(u'Edit')
 
 
     def GET(self, model, context):
@@ -89,7 +89,7 @@ class HTMLEditView(BaseView):
         try:
             new_body = list(XMLParser(new_body, namespaces))
         except XMLError:
-            message = MSG(u'Invalid HTML code.', __name__)
+            message = MSG(u'Invalid HTML code.')
             return context.come_back(message, keep=['data'])
         if sanitize:
             new_body = sanitize_stream(new_body)
@@ -108,8 +108,8 @@ class HTMLEditView(BaseView):
 class WebPageView(STLView):
 
     access = 'is_allowed_to_view'
-    __label__ = MSG(u'View', __name__)
-    tab_sublabel = MSG(u'View', __name__)
+    __label__ = MSG(u'View')
+    tab_sublabel = MSG(u'View')
     tab_icon = '/ui/icons/16x16/view.png'
     page_title = tab_sublabel
     template = '/ui/html/view.xml'
@@ -152,8 +152,8 @@ class WebPage(EpozEditable, Multilingual, Text):
 
     class_id = 'webpage'
     class_version = '20071217'
-    class_title = MSG(u'Web Page', __name__)
-    class_description = MSG(u'Create and publish a Web Page.', __name__)
+    class_title = MSG(u'Web Page')
+    class_description = MSG(u'Create and publish a Web Page.')
     class_icon16 = 'icons/16x16/html.png'
     class_icon48 = 'icons/48x48/html.png'
     class_views = [['view'],

@@ -49,8 +49,8 @@ class Dressable(Folder, EpozEditable):
 
     class_id = 'dressable'
     class_version = '20071215'
-    class_title = MSG(u'Dressable', __name__)
-    class_description = MSG(u'A dressable folder', __name__)
+    class_title = MSG(u'Dressable')
+    class_description = MSG(u'A dressable folder')
     class_views = ([Folder.class_views[0]] + [['view'], ['edit_document']]
             + Folder.class_views[1:])
     __fixed_handlers__ = ['index']

@@ -104,8 +104,8 @@ issue_fields = {
 class EditIssueForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    tab_label = MSG(u'Edit', __name__)
-    tab_sublabel = MSG(u'Edit Issue', __name__)
+    tab_label = MSG(u'Edit')
+    tab_sublabel = MSG(u'Edit Issue')
     tab_icon = 'edit.png'
     template = '/ui/tracker/edit_issue.xml'
 
@@ -203,8 +203,8 @@ class EditIssueForm(STLForm):
 class EditResourcesForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    tab_label = MSG(u'Edit', __name__)
-    tab_sublabel = MSG(u'Edit resources', __name__)
+    tab_label = MSG(u'Edit')
+    tab_sublabel = MSG(u'Edit resources')
     tab_icon = 'edit.png'
     template = '/ui/tracker/edit_resources.xml'
 
@@ -299,8 +299,8 @@ class EditResourcesForm(STLForm):
 class HistoryForm(STLView):
 
     access = 'is_allowed_to_view'
-    tab_label = MSG(u'History', __name__)
-    tab_sublabel = MSG(u'History', __name__)
+    tab_label = MSG(u'History')
+    tab_sublabel = MSG(u'History')
     tab_icon = 'history.png'
     template = '/ui/tracker/issue_history.xml'
 
@@ -452,8 +452,8 @@ class Issue(Folder):
 
     class_id = 'issue'
     class_version = '20071216'
-    class_title = MSG(u'Issue', __name__)
-    class_description = MSG(u'Issue', __name__)
+    class_title = MSG(u'Issue')
+    class_description = MSG(u'Issue')
     class_views = [
         ['edit', 'edit_resources'],
         ['browse_content?mode=list'],
@@ -605,7 +605,7 @@ class Issue(Folder):
         # Send a Notification Email
         # Notify / From
         if user is None:
-            user_title = MSG(u'ANONYMOUS', __name__)
+            user_title = MSG(u'ANONYMOUS')
         else:
             user_title = user.get_title()
         # Notify / To
@@ -629,17 +629,17 @@ class Issue(Folder):
         else:
             uri = context.uri.resolve(';edit')
         body = '#%s %s %s\n\n' % (self.name, self.get_value('title'), str(uri))
-        message = MSG(u'The user $title did some changes.', __name__)
+        message = MSG(u'The user $title did some changes.')
         body +=  message.gettext(title=user_title)
         body += '\n\n'
         if file:
             filename = unicode(filename, 'utf-8')
-            message = MSG(u'  New Attachment: $filename', __name__)
+            message = MSG(u'  New Attachment: $filename')
             message = message.gettext(filename=filename)
             body += message + '\n'
         comment = context.get_form_value('comment', type=Unicode)
         if comment:
-            body += MSG(u'Comment', __name__).gettext() + u'\n'
+            body += MSG(u'Comment').gettext() + u'\n'
             body += u'-------\n\n'
             body += comment + u'\n\n'
             body += u'-------\n\n'
@@ -659,15 +659,15 @@ class Issue(Folder):
         history = self.get_history()
         if history.get_n_records() > 0:
             # Edit issue
-            template = MSG(u'$field: $old_value to $new_value', __name__)
+            template = MSG(u'$field: $old_value to $new_value')
         else:
             # New issue
-            template = MSG(u'$field: $old_value$new_value', __name__)
+            template = MSG(u'$field: $old_value$new_value')
         # Modification of title
         last_title = self.get_value('title') or ''
         new_title = record['title']
         if last_title != new_title:
-            field = MSG(u'Title', __name__).gettext()
+            field = MSG(u'Title').gettext()
             text = template.gettext(field=field, old_value=last_title,
                                     new_value=new_title)
             modifications.append(text)
@@ -678,7 +678,7 @@ class Issue(Folder):
                     (u'Priority', 'priority', 'priorities'),
                     (u'State', 'state', 'states')]:
             field, name, csv_name = key
-            field = MSG(field, __name__).gettext()
+            field = MSG(field).gettext()
             new_value = record[name]
             last_value = self.get_value(name)
             # Detect if modifications
@@ -702,7 +702,7 @@ class Issue(Folder):
                 last_user = root.get_user(last_user).get_property('email')
             if new_user:
                 new_user = root.get_user(new_user).get_property('email')
-            field = MSG(u'Assigned To', __name__)
+            field = MSG(u'Assigned To')
             text = field.gettext(field=field, old_value=last_user,
                                  new_value=new_user)
             modifications.append(text)
@@ -719,7 +719,7 @@ class Issue(Folder):
             for cc in new_cc:
                 value = root.get_user(cc).get_property('email')
                 new_values.append(value)
-            field = MSG(u'CC', __name__).gettext()
+            field = MSG(u'CC').gettext()
             last_values = ', '.join(last_values)
             new_values = ', '.join(new_values)
             text = template.gettext(field=field, old_value=last_values,

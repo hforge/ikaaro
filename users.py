@@ -47,7 +47,7 @@ from utils import crypt_password, generate_password
 class ProfileView(STLView):
 
     access = 'is_allowed_to_view'
-    tab_label = MSG(u'Profile', __name__)
+    tab_label = MSG(u'Profile')
     tab_icon = 'action_home.png'
     template = '/ui/user/profile.xml'
 
@@ -69,9 +69,9 @@ class ProfileView(STLView):
 class AccountForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    tab_label = MSG(u'Edit', __name__)
-    tab_sublabel = MSG(u'Account', __name__)
-    page_title = MSG(u'Edit your personal data', __name__)
+    tab_label = MSG(u'Edit')
+    tab_sublabel = MSG(u'Account')
+    page_title = MSG(u'Edit your personal data')
     tab_icon = 'settings.png'
     template = '/ui/user/edit_account.xml'
     schema = {
@@ -128,8 +128,8 @@ class AccountForm(STLForm):
 class PreferencesForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    tab_label = MSG(u'Edit', __name__)
-    tab_sublabel = MSG(u'Preferences', __name__)
+    tab_label = MSG(u'Edit')
+    tab_sublabel = MSG(u'Preferences')
     tab_icon = 'skin.png'
     page_title = tab_sublabel
     template = '/ui/user/edit_language_form.xml'
@@ -163,10 +163,10 @@ class PreferencesForm(STLForm):
 class PasswordForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    tab_label = MSG(u'Edit', __name__)
-    tab_sublabel = MSG(u'Password', __name__)
+    tab_label = MSG(u'Edit')
+    tab_sublabel = MSG(u'Password')
     tab_icon = 'lock.png'
-    page_title = MSG(u'Change you password', __name__)
+    page_title = MSG(u'Change you password')
     template = '/ui/user/edit_password.xml'
     schema = {
         'newpass': String(mandatory=True),
@@ -220,9 +220,9 @@ class PasswordForm(STLForm):
 class TasksView(STLView):
 
     access = 'is_allowed_to_edit'
-    tab_label = MSG(u'Tasks', __name__)
+    tab_label = MSG(u'Tasks')
     tab_icon = 'tasks.png'
-    page_title = MSG(u'Tasks', __name__)
+    page_title = MSG(u'Tasks')
     template = '/ui/user/tasks.xml'
 
 
@@ -262,7 +262,7 @@ class User(AccessControl, Folder):
 
     class_id = 'user'
     class_version = '20071215'
-    class_title = MSG(u'User', __name__)
+    class_title = MSG(u'User')
     class_icon16 = 'icons/16x16/user.png'
     class_icon48 = 'icons/48x48/user.png'
     class_views = [

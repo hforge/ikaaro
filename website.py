@@ -54,7 +54,7 @@ from workflow import WorkflowAware
 class NewWebSiteForm(NewInstanceForm):
 
     access = 'is_allowed_to_add'
-    tab_sublabel = MSG(u'Web Site', __name__)
+    tab_sublabel = MSG(u'Web Site')
     page_title = tab_sublabel
     template = '/ui/website/new_instance.xml'
     schema = {
@@ -131,8 +131,8 @@ class NewWebSiteForm(NewInstanceForm):
 class LoginView(STLView):
 
     access = True
-    tab_label = MSG(u'Login', __name__)
-    page_title = MSG(u'Login', __name__)
+    tab_label = MSG(u'Login')
+    page_title = MSG(u'Login')
     template = '/ui/website/login.xml'
 
 
@@ -179,7 +179,7 @@ class LoginView(STLView):
 
         # Check the password is right
         if not user.authenticate(password):
-            message = MSG(u'The password is wrong.', __name__)
+            message = MSG(u'The password is wrong.')
             return context.come_back(message, keep=keep)
 
         # Set cookie
@@ -226,7 +226,7 @@ class LogoutView(STLView):
 class ForgottenPasswordForm(STLForm):
 
     access = True
-    page_title = MSG(u'Forgotten password', __name__)
+    page_title = MSG(u'Forgotten password')
     template = '/ui/website/forgotten_password_form.xml'
     schema = {
         'username': String(default=''),
@@ -246,8 +246,7 @@ class ForgottenPasswordForm(STLForm):
         results = root.search(username=username)
         if results.get_n_documents() == 0:
             goto = ';forgotten_password_form'
-            message = MSG(u'There is not a user identified as "$username"',
-                          __name__)
+            message = MSG(u'There is not a user identified as "$username"')
             context.message =  message.gettext(username=username)
             return
 
@@ -269,15 +268,15 @@ class ForgottenPasswordForm(STLForm):
 class ControlPanel(IconsView):
 
     access = 'is_allowed_to_view'
-    tab_label = MSG(u'Control Panel', __name__)
-    tab_sublabel = MSG(u'Control Panel', __name__)
+    tab_label = MSG(u'Control Panel')
+    tab_sublabel = MSG(u'Control Panel')
     tab_icon = 'settings.png'
     page_title = tab_sublabel
 
 
     def get_namespace(self, model, context):
         namespace = {
-            'title': MSG(u'Control Panel', __name__),
+            'title': MSG(u'Control Panel'),
             'batch': None,
             'items': [],
         }
@@ -300,11 +299,11 @@ class ControlPanel(IconsView):
 class VHostsForm(STLForm):
 
     access = 'is_admin'
-    tab_label = MSG(u'Control Panel', __name__)
-    tab_sublabel = MSG(u'Virtual Hosts', __name__)
+    tab_label = MSG(u'Control Panel')
+    tab_sublabel = MSG(u'Virtual Hosts')
     tab_icon = 'website.png'
     page_title = tab_sublabel
-    description = MSG(u'Define the domain names for this Web Site.', __name__)
+    description = MSG(u'Define the domain names for this Web Site.')
     template = '/ui/website/virtual_hosts.xml'
     schema = {
         'vhosts': String,
@@ -332,11 +331,11 @@ class VHostsForm(STLForm):
 class SecurityPolicyForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    tab_label = MSG(u'Control Panel', __name__)
-    tab_sublabel = MSG(u'Security Policy', __name__)
+    tab_label = MSG(u'Control Panel')
+    tab_sublabel = MSG(u'Security Policy')
     tab_icon = 'lock.png'
     page_title = tab_sublabel
-    description = MSG(u'Choose the security policy.', __name__)
+    description = MSG(u'Choose the security policy.')
     template = '/ui/website/anonymous.xml'
     schema = {
         'website_is_open': Boolean(default=False),
@@ -362,11 +361,11 @@ class SecurityPolicyForm(STLForm):
 class ContactOptionsForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    tab_label = MSG(u'Control Panel', __name__)
-    tab_sublabel = MSG(u'Contact Options', __name__)
+    tab_label = MSG(u'Control Panel')
+    tab_sublabel = MSG(u'Contact Options')
     tab_icon = 'mail.png'
     page_title = tab_sublabel
-    description = MSG(u'Configure the Contact form.', __name__)
+    description = MSG(u'Configure the Contact form.')
     template = '/ui/website/contact_options.xml'
     schema = {
         'contacts': String(multiple=True),
@@ -411,11 +410,11 @@ class ContactOptionsForm(STLForm):
 class BrokenLinks(STLView):
 
     access = 'is_admin'
-    tab_label = MSG(u'Control Panel', __name__)
-    tab_sublabel = MSG(u'Broken Links', __name__)
+    tab_label = MSG(u'Control Panel')
+    tab_sublabel = MSG(u'Broken Links')
     tab_icon = 'clear.png'
     page_title = tab_sublabel
-    description = MSG(u'Check the referential integrity.', __name__)
+    description = MSG(u'Check the referential integrity.')
     template = '/ui/website/broken_links.xml'
 
 
@@ -459,12 +458,12 @@ class BrokenLinks(STLView):
 class RegisterForm(AutoForm):
 
     access = 'is_allowed_to_register'
-    tab_label = MSG(u'Register', __name__)
+    tab_label = MSG(u'Register')
 
 
-    form_title = MSG(u'Registration', __name__)
+    form_title = MSG(u'Registration')
     form_action = ';register'
-    submit_value = MSG(u'Register', __name__)
+    submit_value = MSG(u'Register')
     submit_class = 'button_ok'
 
     schema = {
@@ -510,8 +509,7 @@ class RegisterForm(AutoForm):
         # Bring the user to the login form
         message = MSG(
             u"An email has been sent to you, to finish the registration "
-            u"process follow the instructions detailed in it.",
-            __name__)
+            u"process follow the instructions detailed in it.")
         return message.gettext().encode('utf-8')
 
 
@@ -519,7 +517,7 @@ class RegisterForm(AutoForm):
 class ContactForm(STLForm):
 
     access = True
-    page_title = MSG(u'Contact', __name__)
+    page_title = MSG(u'Contact')
     template = '/ui/website/contact_form.xml'
 
     schema = {
@@ -574,7 +572,7 @@ class ContactForm(STLForm):
 class SiteSearchView(STLView):
 
     access = True
-    page_title = MSG(u'Search', __name__)
+    page_title = MSG(u'Search')
     template = '/ui/website/search.xml'
 
 
@@ -637,7 +635,7 @@ class SiteSearchView(STLView):
 class AboutView(STLView):
 
     access = True
-    page_title = MSG(u'About', __name__)
+    page_title = MSG(u'About')
     template = '/ui/root/about.xml'
 
 
@@ -652,7 +650,7 @@ class AboutView(STLView):
 class CreditsView(STLView):
 
     access = True
-    page_title = MSG(u'Credits', __name__)
+    page_title = MSG(u'Credits')
     template = '/ui/root/credits.xml'
 
 
@@ -675,8 +673,8 @@ class WebSite(RoleAware, Folder):
 
     class_id = 'WebSite'
     class_version = '20071215'
-    class_title = MSG(u'Web Site', __name__)
-    class_description = MSG(u'Create a new Web Site or Work Place.', __name__)
+    class_title = MSG(u'Web Site')
+    class_description = MSG(u'Create a new Web Site or Work Place.')
     class_icon16 = 'icons/16x16/website.png'
     class_icon48 = 'icons/48x48/website.png'
     class_skin = 'ui/aruni'
@@ -823,7 +821,7 @@ class WebSite(RoleAware, Folder):
                                            if x != codes[0] ]
         self.set_property('website_languages', tuple(website_languages))
 
-        message = MSG(u'The default language has been changed.', __name__)
+        message = MSG(u'The default language has been changed.')
         return context.come_back(message)
 
 
@@ -840,7 +838,7 @@ class WebSite(RoleAware, Folder):
         website_languages = [ x for x in website_languages if x not in codes ]
         self.set_property('website_languages', tuple(website_languages))
 
-        message = MSG(u'Languages removed.', __name__)
+        message = MSG(u'Languages removed.')
         return context.come_back(message)
 
 
@@ -848,13 +846,13 @@ class WebSite(RoleAware, Folder):
     def add_language(self, context):
         code = context.get_form_value('code')
         if not code:
-            message = MSG(u'You must choose a language', __name__)
+            message = MSG(u'You must choose a language')
             return context.come_back(message)
 
         website_languages = self.get_property('website_languages')
         self.set_property('website_languages', website_languages + (code,))
 
-        message = MSG(u'Language added.', __name__)
+        message = MSG(u'Language added.')
         return context.come_back(message)
 
 
@@ -875,7 +873,7 @@ class WebSite(RoleAware, Folder):
     contact = ContactForm()
     about = AboutView()
     credits = CreditsView()
-    license = STLView(access=True, page_title=MSG(u'License', __name__),
+    license = STLView(access=True, page_title=MSG(u'License'),
                       template='/ui/root/license.xml')
 
 
