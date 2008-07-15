@@ -349,13 +349,11 @@ class RoleAware(AccessControl):
 
     @classmethod
     def get_metadata_schema(cls):
-        return {
-            'guests': Tokens(default=()),
-            'members': Tokens(default=()),
-            'reviewers': Tokens(default=()),
-            'admins': Tokens(default=()),
-            'website_is_open': Boolean(default=False),
-        }
+        schema = {}
+        for role in cls.__roles__:
+            schema[role] = Tokens(default=())
+        schema['website_is_open'] = Boolean
+        return schema
 
 
     def get_links(self):
