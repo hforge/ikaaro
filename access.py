@@ -351,7 +351,7 @@ class RoleAware(AccessControl):
     def get_metadata_schema(cls):
         schema = {}
         for role in cls.__roles__:
-            schema[role] = Tokens(default=())
+            schema[role['name']] = Tokens(default=())
         schema['website_is_open'] = Boolean
         return schema
 
