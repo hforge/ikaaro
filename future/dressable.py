@@ -415,7 +415,7 @@ class Dressable(Folder, EpozEditable):
     # User interface
     #######################################################################
     def get_subviews(self, name):
-        if name.split('?')[0] == 'edit_document':
+        if name.split('?')[0] in ('edit_document', 'edit_image'):
             subviews = []
             for key, data in self.layout.iteritems():
                 if isinstance(data, tuple):
