@@ -3,7 +3,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: zh\n"
-"POT-Creation-Date: 2008-06-24 13:06+CET\n"
+"POT-Creation-Date: 2008-07-16 10:07+CET\n"
 "PO-Revision-Date: 2007-10-30 17:58+0100\n"
 "Last-Translator: Zhouli <zhouli@in-girum.net>\n"
 "Language-Team:  <zh@li.org>\n"
@@ -48,7 +48,7 @@ msgstr ""
 msgid "$field: $old_value$new_value"
 msgstr ""
 
-#: future/dressable.py:453
+#: future/dressable.py:454
 #, fuzzy
 msgid "$label (External)"
 msgstr "外部"
@@ -963,15 +963,15 @@ msgstr ""
 msgid "A new resource has been added."
 msgstr "新资料被加入."
 
-#: workflow.py:37
+#: workflow.py:38
 msgid "A pending document awaits review from authorized users to be published."
 msgstr ""
 
-#: workflow.py:34
+#: workflow.py:35
 msgid "A private document only can be reached by authorized users."
 msgstr ""
 
-#: workflow.py:40
+#: workflow.py:41
 msgid "A public document can be reached by even anonymous users."
 msgstr ""
 
@@ -983,7 +983,7 @@ msgstr ""
 msgid "A thread to discuss"
 msgstr ""
 
-#: workflow.py:166
+#: workflow.py:167
 msgid "A transition must be selected."
 msgstr ""
 
@@ -995,7 +995,7 @@ msgstr ""
 msgid "About"
 msgstr "关于IKAARO"
 
-#: workflow.py:52
+#: workflow.py:53
 msgid "Accept the document."
 msgstr "进入文档"
 
@@ -1003,7 +1003,7 @@ msgstr "进入文档"
 msgid "Access Control"
 msgstr ""
 
-#: root.py:151
+#: root.py:157
 msgid "Access forbidden, you are not authorized to access this resource."
 msgstr ""
 
@@ -1026,7 +1026,7 @@ msgstr "用户资料被变更."
 msgid "Action"
 msgstr ""
 
-#: access.py:396
+#: access.py:394
 #, fuzzy
 msgid "Active"
 msgstr "名称"
@@ -1045,7 +1045,7 @@ msgstr "加入"
 msgid "Add Issue"
 msgstr "用户"
 
-#: access.py:470
+#: access.py:468
 #, fuzzy
 msgid "Add New Member"
 msgstr "新文件夹"
@@ -1081,7 +1081,7 @@ msgstr ""
 msgid "Add new content"
 msgstr ""
 
-#: root.py:85
+#: root.py:91
 msgid "Admin"
 msgstr ""
 
@@ -1187,7 +1187,7 @@ msgstr ""
 msgid "Browse Content"
 msgstr "浏览"
 
-#: access.py:327
+#: access.py:325
 #, fuzzy
 msgid "Browse Members"
 msgstr "浏览"
@@ -1511,7 +1511,7 @@ msgstr ""
 msgid "Definitely remove"
 msgstr ""
 
-#: access.py:417
+#: access.py:415
 #, fuzzy
 msgid "Delete"
 msgstr "设置"
@@ -1571,6 +1571,11 @@ msgstr "简易文件"
 #: ui/user/profile.xml.en:0
 msgid "Edit account details;"
 msgstr ""
+
+#: future/dressable.py:204
+#, fuzzy
+msgid "Edit image"
+msgstr "简易文件"
 
 #: ui/user/profile.xml.en:0
 #, fuzzy
@@ -1755,7 +1760,7 @@ msgid ""
 "class=\"button_ok\" type=\"submit\" value=\"OK\"/>"
 msgstr ""
 
-#: access.py:471
+#: access.py:469
 msgid "Grant access to a new user."
 msgstr ""
 
@@ -1839,7 +1844,7 @@ msgstr ""
 msgid "Image"
 msgstr ""
 
-#: access.py:393
+#: access.py:391
 #, fuzzy
 msgid "Inactive"
 msgstr "名称"
@@ -2043,7 +2048,7 @@ msgstr "简易文件"
 msgid "Member"
 msgstr ""
 
-#: access.py:438
+#: access.py:436
 #, fuzzy
 msgid "Members deleted."
 msgstr "没有物件被选中"
@@ -2519,7 +2524,7 @@ msgstr "密码错误,请再输入."
 msgid "Paste"
 msgstr "粘贴"
 
-#: workflow.py:36
+#: workflow.py:37
 msgid "Pending"
 msgstr ""
 
@@ -2619,7 +2624,7 @@ msgstr ""
 msgid "Priority:"
 msgstr ""
 
-#: workflow.py:33
+#: workflow.py:34
 #, fuzzy
 msgid "Private"
 msgstr "隐私"
@@ -2632,12 +2637,12 @@ msgstr ""
 msgid "Programming Interface"
 msgstr ""
 
-#: workflow.py:39
+#: workflow.py:40
 #, fuzzy
 msgid "Public"
 msgstr "公共"
 
-#: workflow.py:44
+#: workflow.py:45
 msgid "Publish the document."
 msgstr "列出文档"
 
@@ -2677,7 +2682,7 @@ msgstr "查阅"
 msgid "Registration"
 msgstr "查阅"
 
-#: workflow.py:50
+#: workflow.py:51
 msgid "Reject the document."
 msgstr "删除文档"
 
@@ -2731,7 +2736,7 @@ msgstr ""
 msgid "Reported by <em>${reported_by}</em>"
 msgstr ""
 
-#: workflow.py:46
+#: workflow.py:47
 msgid "Request the document publication."
 msgstr ""
 
@@ -2749,11 +2754,11 @@ msgstr ""
 msgid "Results"
 msgstr "搜索替代文件夹"
 
-#: workflow.py:54
+#: workflow.py:55
 msgid "Retire the document."
 msgstr "删除文档"
 
-#: workflow.py:48
+#: workflow.py:49
 #, fuzzy
 msgid "Retract the document."
 msgstr "删除文档"
@@ -2768,7 +2773,7 @@ msgstr "查阅"
 msgid "Role"
 msgstr "删除"
 
-#: access.py:462
+#: access.py:460
 #, fuzzy
 msgid "Role updated."
 msgstr "文件被上载."
@@ -2821,7 +2826,7 @@ msgstr "安全"
 msgid "See the GNU General Public License for more details."
 msgstr ""
 
-#: access.py:328
+#: access.py:326
 #, fuzzy
 msgid "See the users and their roles."
 msgstr "用户被加入."
@@ -3032,7 +3037,7 @@ msgstr "文件名中含有不符规定的符号,请更名."
 msgid "The documents below await review for publication:"
 msgstr ""
 
-#: access.py:495
+#: access.py:493
 #, fuzzy
 msgid "The email address is missing, please type it."
 msgstr "用户名错误,请再输入."
@@ -3042,7 +3047,7 @@ msgstr "用户名错误,请再输入."
 msgid "The email address provided is invalid."
 msgstr "用户名错误,请再输入."
 
-#: future/dressable.py:322
+#: future/dressable.py:323
 msgid "The file is not an image"
 msgstr ""
 
@@ -3087,7 +3092,7 @@ msgstr ""
 msgid "The user $title did some changes."
 msgstr "名称"
 
-#: access.py:534
+#: access.py:532
 #, fuzzy
 msgid "The user is already here."
 msgstr "用户被加入."
@@ -3264,7 +3269,7 @@ msgstr ""
 msgid "To manage the users please go <a href=\"/;permissions_form\">here</a>."
 msgstr ""
 
-#: workflow.py:179
+#: workflow.py:184
 msgid "Transition done."
 msgstr ""
 
@@ -3404,12 +3409,12 @@ msgstr ""
 msgid "User"
 msgstr "用户"
 
-#: access.py:409
+#: access.py:407
 #, fuzzy
 msgid "User ID"
 msgstr "用户"
 
-#: access.py:548
+#: access.py:546
 #, fuzzy
 msgid "User added."
 msgstr "加入用户"
@@ -3422,7 +3427,7 @@ msgstr ""
 msgid "Username"
 msgstr "用户姓名"
 
-#: root.py:94
+#: root.py:100
 msgid "Users"
 msgstr "用户"
 
@@ -3646,8 +3651,8 @@ msgstr ""
 
 #: tracker/ui/edit_issue.xml.en:0
 msgid ""
-"[ <a onclick=\"javascript:reply('${comment/number}');\" href=\"#\"> Reply </"
-"a>]"
+"[ <a onclick=\"javascript:reply('${comment/number}');\" href=\"#new_comment"
+"\"> Reply </a>]"
 msgstr ""
 
 #: tracker/tracker.py:558
@@ -3664,7 +3669,7 @@ msgid ""
 "\"Settings\", subtab \"Languages\"."
 msgstr ""
 
-#: root.py:64
+#: root.py:70
 msgid "iKaaro"
 msgstr ""
 
