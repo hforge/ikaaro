@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-06-24 13:06+CET\n"
+"POT-Creation-Date: 2008-07-16 10:07+CET\n"
 "PO-Revision-Date: 2007-12-31 01:41+0100\n"
 "Last-Translator: Hervé Cauwelier <herve@itaapy.com>\n"
 "Language-Team: Français <fr@li.org>\n"
@@ -62,7 +62,7 @@ msgstr "$field: $old_value to $new_value"
 msgid "$field: $old_value$new_value"
 msgstr "$field: $old_value$new_value"
 
-#: future/dressable.py:453
+#: future/dressable.py:454
 msgid "$label (External)"
 msgstr "$label (externe)"
 
@@ -1048,17 +1048,17 @@ msgstr "Le nom donné existe déjà."
 msgid "A new resource has been added."
 msgstr "Nouvelle ressource ajoutée."
 
-#: workflow.py:37
+#: workflow.py:38
 msgid "A pending document awaits review from authorized users to be published."
 msgstr ""
 "Un document en attente a besoin de la validation des responsables pour être "
 "publié."
 
-#: workflow.py:34
+#: workflow.py:35
 msgid "A private document only can be reached by authorized users."
 msgstr "Un document privé n'est accessible qu'aux utilisateurs autorisés."
 
-#: workflow.py:40
+#: workflow.py:41
 msgid "A public document can be reached by even anonymous users."
 msgstr "Un document public est accessible même aux utilisateurs anonymes."
 
@@ -1070,7 +1070,7 @@ msgstr ""
 msgid "A thread to discuss"
 msgstr "Un fil de discussion"
 
-#: workflow.py:166
+#: workflow.py:167
 msgid "A transition must be selected."
 msgstr "Vous devez choisir une action."
 
@@ -1082,7 +1082,7 @@ msgstr "Anonyme"
 msgid "About"
 msgstr "À propos de"
 
-#: workflow.py:52
+#: workflow.py:53
 msgid "Accept the document."
 msgstr "Accepter le document"
 
@@ -1090,7 +1090,7 @@ msgstr "Accepter le document"
 msgid "Access Control"
 msgstr "Contrôle d'accès"
 
-#: root.py:151
+#: root.py:157
 msgid "Access forbidden, you are not authorized to access this resource."
 msgstr "Accès refusé, vous n'êtes pas autorisé à accéder à cette ressource."
 
@@ -1110,7 +1110,7 @@ msgstr "Compte modifié."
 msgid "Action"
 msgstr "Action"
 
-#: access.py:396
+#: access.py:394
 #, fuzzy
 msgid "Active"
 msgstr "Action"
@@ -1128,7 +1128,7 @@ msgstr "Ajouter"
 msgid "Add Issue"
 msgstr "Ajouter une fiche de suivi"
 
-#: access.py:470
+#: access.py:468
 #, fuzzy
 msgid "Add New Member"
 msgstr "Nouveau membre"
@@ -1161,7 +1161,7 @@ msgstr "Ajouter et voir"
 msgid "Add new content"
 msgstr "Ajouter du contenu"
 
-#: root.py:85
+#: root.py:91
 msgid "Admin"
 msgstr "Administrateur"
 
@@ -1269,7 +1269,7 @@ msgstr "Liens cassés"
 msgid "Browse Content"
 msgstr "Parcourir"
 
-#: access.py:327
+#: access.py:325
 msgid "Browse Members"
 msgstr "Membres"
 
@@ -1575,7 +1575,7 @@ msgstr ""
 msgid "Definitely remove"
 msgstr "Supprimer définitivement"
 
-#: access.py:417
+#: access.py:415
 msgid "Delete"
 msgstr "Supprimer"
 
@@ -1626,6 +1626,11 @@ msgstr "Modifier le texte"
 #: ui/user/profile.xml.en:0
 msgid "Edit account details;"
 msgstr "Modifier le nom et le courriel&nbsp;:"
+
+#: future/dressable.py:204
+#, fuzzy
+msgid "Edit image"
+msgstr "Modifier le texte"
 
 #: ui/user/profile.xml.en:0
 #, fuzzy
@@ -1800,7 +1805,7 @@ msgstr ""
 "Aller à la fiche #<input name=\"issue_name\" size=\"6\" type=\"text\"/> "
 "<input class=\"button_ok\" type=\"submit\" value=\"OK\"/>"
 
-#: access.py:471
+#: access.py:469
 msgid "Grant access to a new user."
 msgstr ""
 
@@ -1888,7 +1893,7 @@ msgstr ""
 msgid "Image"
 msgstr "Image"
 
-#: access.py:393
+#: access.py:391
 #, fuzzy
 msgid "Inactive"
 msgstr "Provisoire"
@@ -2085,7 +2090,7 @@ msgstr "Modifier le texte"
 msgid "Member"
 msgstr "Membre"
 
-#: access.py:438
+#: access.py:436
 msgid "Members deleted."
 msgstr "Membres supprimés."
 
@@ -2518,7 +2523,7 @@ msgstr "Les mots de passe sont différents, veuillez réessayez."
 msgid "Paste"
 msgstr "Coller"
 
-#: workflow.py:36
+#: workflow.py:37
 msgid "Pending"
 msgstr "En attente de validation"
 
@@ -2607,7 +2612,7 @@ msgstr "Priorité"
 msgid "Priority:"
 msgstr "Priorité&nbsp;:"
 
-#: workflow.py:33
+#: workflow.py:34
 msgid "Private"
 msgstr "Privé"
 
@@ -2619,11 +2624,11 @@ msgstr "Profil"
 msgid "Programming Interface"
 msgstr "Interface de programmation"
 
-#: workflow.py:39
+#: workflow.py:40
 msgid "Public"
 msgstr "Publié"
 
-#: workflow.py:44
+#: workflow.py:45
 msgid "Publish the document."
 msgstr "Publier le document."
 
@@ -2659,7 +2664,7 @@ msgstr "Inscription"
 msgid "Registration"
 msgstr "Inscription"
 
-#: workflow.py:50
+#: workflow.py:51
 msgid "Reject the document."
 msgstr "Rejeter le document."
 
@@ -2707,7 +2712,7 @@ msgstr "Réponse postée."
 msgid "Reported by <em>${reported_by}</em>"
 msgstr "Rapporté par <em>${reported_by}</em>"
 
-#: workflow.py:46
+#: workflow.py:47
 msgid "Request the document publication."
 msgstr "Demander la publication du document."
 
@@ -2723,11 +2728,11 @@ msgstr "Evénement introuvable."
 msgid "Results"
 msgstr "Résultat de la recherche"
 
-#: workflow.py:54
+#: workflow.py:55
 msgid "Retire the document."
 msgstr "Dépublier le document."
 
-#: workflow.py:48
+#: workflow.py:49
 msgid "Retract the document."
 msgstr "Retirer le document."
 
@@ -2739,7 +2744,7 @@ msgstr "Modérateur"
 msgid "Role"
 msgstr "Rôle"
 
-#: access.py:462
+#: access.py:460
 msgid "Role updated."
 msgstr "Rôle mis à jour."
 
@@ -2787,7 +2792,7 @@ msgstr "Politique de sécurité"
 msgid "See the GNU General Public License for more details."
 msgstr "See the GNU General Public License for more details."
 
-#: access.py:328
+#: access.py:326
 #, fuzzy
 msgid "See the users and their roles."
 msgstr "L'utilisateur est déjà membre."
@@ -2989,7 +2994,7 @@ msgid "The documents below await review for publication:"
 msgstr ""
 "Les documents ci-dessous nécessitent une validation pour être publiés&nbsp;:"
 
-#: access.py:495
+#: access.py:493
 msgid "The email address is missing, please type it."
 msgstr "Une adresse de courriel doit être saisie."
 
@@ -2997,7 +3002,7 @@ msgstr "Une adresse de courriel doit être saisie."
 msgid "The email address provided is invalid."
 msgstr "L'adresse de courriel est incorrecte, veuillez réessayer."
 
-#: future/dressable.py:322
+#: future/dressable.py:323
 msgid "The file is not an image"
 msgstr "ce fichier n'est pas une image."
 
@@ -3038,7 +3043,7 @@ msgstr ""
 msgid "The user $title did some changes."
 msgstr "L'utilisateur $title a modifié cette fiche."
 
-#: access.py:534
+#: access.py:532
 msgid "The user is already here."
 msgstr "L'utilisateur est déjà membre."
 
@@ -3216,7 +3221,7 @@ msgstr ""
 "Pour gérer les utilisateurs, merci d'aller <a href=\"/;permissions_form"
 "\">là</a>."
 
-#: workflow.py:179
+#: workflow.py:184
 msgid "Transition done."
 msgstr "Action effectuée."
 
@@ -3348,11 +3353,11 @@ msgstr ""
 msgid "User"
 msgstr "Utilisateur"
 
-#: access.py:409
+#: access.py:407
 msgid "User ID"
 msgstr "ID utilisateur"
 
-#: access.py:548
+#: access.py:546
 msgid "User added."
 msgstr "Utilisateur ajouté."
 
@@ -3365,7 +3370,7 @@ msgstr ""
 msgid "Username"
 msgstr "Renommer"
 
-#: root.py:94
+#: root.py:100
 msgid "Users"
 msgstr "Utilisateurs"
 
@@ -3593,9 +3598,10 @@ msgid "Zip Archive"
 msgstr "Archive Zip"
 
 #: tracker/ui/edit_issue.xml.en:0
+#, fuzzy
 msgid ""
-"[ <a onclick=\"javascript:reply('${comment/number}');\" href=\"#\"> Reply </"
-"a>]"
+"[ <a onclick=\"javascript:reply('${comment/number}');\" href=\"#new_comment"
+"\"> Reply </a>]"
 msgstr ""
 "[ <a onclick=\"javascript:reply('${comment/number}');\" href=\"#\"> Répondre "
 "</a>]"
@@ -3617,7 +3623,7 @@ msgstr ""
 "l'application, onglet &laquo;&nbsp;Configuration&nbsp;&raquo;, sous-onglet "
 "&laquo;&nbsp;Langues&nbsp;&raquo;."
 
-#: root.py:64
+#: root.py:70
 msgid "iKaaro"
 msgstr "iKaaro"
 
