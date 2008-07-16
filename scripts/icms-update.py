@@ -38,22 +38,6 @@ def update(parser, options, target):
     #######################################################################
     # STAGE 0: Specific upgrades
     #######################################################################
-    # Move the log files (FIXME Remove by 0.21)
-    if not folder.exists('log'):
-        message = 'Move log files to the log folder (y/N)? '
-        if ask_confirmation(message, confirm) is False:
-            return
-        folder.make_folder('log')
-        for name in 'access', 'error', 'debug', 'spool', 'spool_error':
-            if folder.exists('%s_log' % name):
-                folder.move('%s_log' % name, 'log/%s' % name)
-
-    # Move the "catalog/fields" file (FIXME Remove by 0.21)
-    if folder.exists('catalog/fields'):
-        message = 'Move "catalog/fields" file to "catalog/data/fields" (y/N)? '
-        if ask_confirmation(message, confirm) is False:
-            return
-        folder.move('catalog/fields', 'catalog/data/fields')
 
     #######################################################################
     # STAGE 1: Find out the versions to upgrade

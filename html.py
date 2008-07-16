@@ -164,14 +164,6 @@ class WebPage(EpozEditable, Multilingual, Text):
     class_handler = XHTMLFile
 
 
-    @classmethod
-    def get_metadata_schema(cls):
-        schema = Text.get_metadata_schema()
-        # FIXME Needed by the upgrade code from 0.16 to 0.20
-        schema['language'] = String
-        return schema
-
-
     def get_links(self):
         base = self.get_abspath()
 
