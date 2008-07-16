@@ -131,7 +131,7 @@ class Text(File):
 
 class PO(Text):
 
-    class_id = 'text/x-po'
+    class_id = 'text/x-gettext-translation'
     class_version = '20071216'
     class_title = MSG(u'Message Catalog')
     class_icon16 = 'icons/16x16/po.png'
