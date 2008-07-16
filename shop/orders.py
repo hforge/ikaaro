@@ -220,7 +220,7 @@ class Order(Folder, WorkflowAware):
     def _make_object(cls, folder, name):
         Folder._make_object(cls, folder, name)
         # Add a FAKE PDF
-        path = get_abspath(globals(), 'data/test.pdf')
+        path = get_abspath('data/test.pdf')
         handler = PDFFile()
         handler.load_state_from(path)
         kw = {'dc:title': {'en': u"PDF"}}

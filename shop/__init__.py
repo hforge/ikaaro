@@ -26,6 +26,6 @@ from shop import Shop
 Folder.register_document_type(Shop)
 
 # Register the skin
-skin = get_abspath(globals(), 'ui')
+skin = get_abspath('ui')
 register_skin('shop', skin)
 

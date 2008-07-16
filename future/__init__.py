@@ -22,5 +22,5 @@ from ikaaro.skins import register_skin
 
 
 # Register skin
-path = get_abspath(globals(), 'ui')
+path = get_abspath('ui')
 register_skin('future', path)

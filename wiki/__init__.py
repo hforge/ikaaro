@@ -35,7 +35,7 @@ from page import WikiPage
 
 
 # Register skin
-path = get_abspath(globals(), 'ui')
+path = get_abspath('ui')
 register_skin('wiki', path)
 
 # Register document type

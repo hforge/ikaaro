@@ -26,7 +26,7 @@ from tracker import Tracker
 
 
 # Register skin
-path = get_abspath(globals(), 'ui')
+path = get_abspath('ui')
 register_skin('tracker', path)
 
 # Register document type

@@ -658,7 +658,7 @@ class CreditsView(STLView):
         context.styles.append('/ui/credits.css')
 
         # Build the namespace
-        credits = get_abspath(globals(), 'CREDITS')
+        credits = get_abspath('CREDITS')
         lines = vfs.open(credits).readlines()
         names = [ x[3:].strip() for x in lines if x.startswith('N: ') ]
 

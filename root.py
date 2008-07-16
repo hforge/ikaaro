@@ -52,7 +52,7 @@ from utils import crypt_password
 
 
 # itools source and target languages
-config = get_abspath(globals(), 'setup.conf')
+config = get_abspath('setup.conf')
 config = ConfigFile(config)
 itools_source_language = config.get_value('source_language')
 itools_target_languages = config.get_value('target_languages')

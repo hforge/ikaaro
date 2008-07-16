@@ -28,7 +28,7 @@ from message import Message
 
 
 # Register skin
-path = get_abspath(globals(), 'ui')
+path = get_abspath('ui')
 register_skin('forum', path)
 
 # Register document type

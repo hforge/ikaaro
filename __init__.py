@@ -35,11 +35,11 @@ import root
 
 
 # The version
-__version__ = get_version(globals())
+__version__ = get_version()
 
 
 # Register the itools domain
-path = get_abspath(globals(), 'locale')
+path = get_abspath('locale')
 register_domain('ikaaro', path)
 
 # Register document types

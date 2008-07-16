@@ -640,8 +640,8 @@ def register_skin(name, skin):
 
 
 # Register the built-in skins
-path = get_abspath(globals(), 'ui')
-register_skin('aruni', '%s/aruni' % path)
+ui_path = get_abspath('ui')
+register_skin('aruni', '%s/aruni' % ui_path)
 
 
 class UI(UIFolder):
@@ -654,4 +654,3 @@ class UI(UIFolder):
         return UIFolder._get_object(self, name)
 
 
-ui_path = get_abspath(globals(), 'ui')
