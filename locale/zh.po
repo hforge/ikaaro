@@ -3,7 +3,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: zh\n"
-"POT-Creation-Date: 2008-07-16 10:07+CET\n"
+"POT-Creation-Date: 2008-07-17 11:07+CET\n"
 "PO-Revision-Date: 2007-10-30 17:58+0100\n"
 "Last-Translator: Zhouli <zhouli@in-girum.net>\n"
 "Language-Team:  <zh@li.org>\n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: tracker/tracker.py:530
+#: ../tracker/tracker.py:793
 msgid ""
 "\n"
 "\n"
@@ -20,515 +20,587 @@ msgid ""
 "%s"
 msgstr ""
 
-#: tracker/issue.py:291
+#: ../tracker/issue.py:637
 msgid "  New Attachment: $filename"
 msgstr ""
 
-#: tracker/ui/view_tracker.xml.en:0
-msgid "\",\")"
-msgstr ""
-
-#: tracker/ui/view_tracker.xml.en:0
-msgid "\";\")"
-msgstr ""
-
-#: tracker/tracker.py:616
+#: ../tracker/tracker.py:879
 msgid "#$id"
 msgstr ""
 
-#: tracker/tracker.py:565
+#: ../tracker/tracker.py:828
 msgid "#%s - %s - %s"
 msgstr ""
 
-#: tracker/issue.py:315
+#: ../tracker/issue.py:662
 msgid "$field: $old_value to $new_value"
 msgstr ""
 
-#: tracker/issue.py:318
+#: ../tracker/issue.py:665
 msgid "$field: $old_value$new_value"
 msgstr ""
 
-#: future/dressable.py:454
+#: ../future/dressable.py:455
 #, fuzzy
 msgid "$label (External)"
 msgstr "外部"
 
-#: ui/ical/ical_edit_event_form.xml.en:0
+#: ../folder.py:751
+#, fuzzy
+msgid "$n obs"
+msgstr "%d 字节"
+
+#: ../ui/ical/ical_edit_event.xml.en:69
 msgid "${DESCRIPTION}"
 msgstr ""
 
-#: ui/website/search.xml.en:0
+#: ../shop/ui/Order_view.xml.en:16
+#, fuzzy
+msgid "${address1}<br/>"
+msgstr "名称"
+
+#: ../shop/ui/Order_view.xml.en:17
+#, fuzzy
+msgid "${address2}<br/>"
+msgstr "名称"
+
+#: ../ui/website/search.xml.en:15
 #, fuzzy
 msgid "${batch}"
 msgstr "名称"
 
-#: ui/table/view.xml.en:0
+#: ../ui/table/view.xml.en:3
 #, fuzzy
 msgid "${batch} ${table}"
 msgstr "名称"
 
-#: ui/website/contact_form.xml.en:0
+#: ../ui/website/contact_form.xml.en:31
 #, fuzzy
 msgid "${body/value}"
 msgstr "名称"
 
-#: ui/aruni/template.xhtml.en:0
+#: ../ui/aruni/template.xhtml.en:93
 msgid "${body}"
 msgstr ""
 
-#: future/ui/dressable_view.xml.en:0
+#: ../shop/ui/Order_view.xml.en:20
+msgid "${bp}<br/>"
+msgstr ""
+
+#: ../future/ui/dressable_view.xml.en:14
 #, fuzzy
 msgid "${browse_file}"
 msgstr "名称"
 
-#: future/ui/dressable_view.xml.en:0
+#: ../future/ui/dressable_view.xml.en:13
 #, fuzzy
 msgid "${browse_folder}"
 msgstr "物件被更名"
 
-#: ui/ical/daily_view.xml.en:0
+#: ../ui/ical/daily_view.xml.en:30
 msgid "${calendar/name}"
 msgstr ""
 
-#: ui/ical/ical_grid_weekly_view.xml.en:0
+#: ../shop/ui/product_view.xml.en:13
+#, fuzzy
+msgid "${cart}"
+msgstr "名称"
+
+#: ../ui/ical/ical_grid_weekly_view.xml.en:46
 msgid "${cell/ns}"
 msgstr ""
 
-#: ui/ical/daily_view.xml.en:0
+#: ../shop/ui/Order_view.xml.en:18
+#, fuzzy
+msgid "${city}<br/>"
+msgstr "名称"
+
+#: ../ui/ical/daily_view.xml.en:40
 msgid "${col/SUMMARY}"
 msgstr ""
 
-#: ui/ical/daily_view.xml.en:0
+#: ../ui/ical/daily_view.xml.en:33
 msgid "${col/new_value}"
 msgstr ""
 
-#: ui/csv/edit_row.xml.en:0
+#: ../ui/csv/edit_row.xml.en:11
 #, fuzzy
 msgid "${column/title}"
 msgstr "名称"
 
-#: tracker/ui/edit_issue.xml.en:0
+#: ../tracker/ui/edit_issue.xml.en:139
 msgid "${comment/comment}"
 msgstr ""
 
-#: tracker/ui/edit_issue.xml.en:0
+#: ../tracker/ui/edit_issue.xml.en:123
 #, fuzzy
 msgid "${comment/datetime}"
 msgstr "用户资料列单"
 
-#: tracker/ui/edit_issue.xml.en:0
+#: ../tracker/ui/edit_issue.xml.en:122
 #, fuzzy
 msgid "${comment/user}"
 msgstr "名称"
 
-#: ui/ical/ical_edit_event_form.xml.en:0
+#: ../ui/ical/ical_edit_event.xml.en:132
 msgid "${comment/value}"
 msgstr ""
 
-#: ui/website/contact_form.xml.en:0
+#: ../ui/website/contact_form.xml.en:13
 #, fuzzy
 msgid "${contact/title}"
 msgstr "用户资料列单"
 
-#: ui/website/contact_options.xml.en:0
+#: ../ui/website/contact_options.xml.en:14
 #, fuzzy
 msgid "${contact/title} (${contact/email})"
 msgstr "用户资料列单"
 
-#: ui/binary/Archive_view.xml.en:0
+#: ../ui/binary/Archive_view.xml.en:6
 msgid "${contents}"
 msgstr ""
 
-#: future/ui/dressable_view.xml.en:0
+#: ../future/ui/dressable_view.xml.en:7
 #, fuzzy
 msgid "${content}"
 msgstr "名称"
 
-#: ui/text/edit.xml.en:0
+#: ../ui/text/view.xml.en:7
 msgid "${data}"
 msgstr ""
 
-#: ui/ical/ical_monthly_view.xml.en:0
+#: ../ui/ical/ical_monthly_view.xml.en:37
 msgid "${day/name}"
 msgstr ""
 
-#: ui/base/edit_metadata.xml.en:0
+#: ../shop/ui/product_new_instance.xml.en:27
+#, fuzzy
+msgid "${description/value}"
+msgstr "名称"
+
+#: ../ui/base/edit_metadata.xml.en:17
 msgid "${description}"
 msgstr ""
 
-#: ui/user/tasks.xml.en:0
+#: ../shop/ui/product_view.xml.en:5
+msgid "${description}<br/> Price:"
+msgstr ""
+
+#: ../ui/user/tasks.xml.en:17
 msgid "${doc/title}"
 msgstr ""
 
-#: ui/text/externaledit.xml.en:0
+#: ../shop/ui/Order_new_instance.xml.en:46
+#, fuzzy
+msgid "${email}<br/>"
+msgstr "名称"
+
+#: ../ui/text/externaledit.xml.en:38
 msgid "${encoding/title}"
 msgstr ""
 
-#: ui/ical/ical_grid_weekly_view.xml.en:0
-msgid "${event/SUMMARY}"
-msgstr ""
+#: ../ui/ical/ical_grid_weekly_view.xml.en:66
+#, fuzzy
+msgid "${event/ns}"
+msgstr "名称"
 
-#: ui/folder/browse_list.xml.en:0
+#: ../ui/generic/browse_search.xml.en:12
 #, fuzzy
 msgid "${field/title}"
 msgstr "名称"
 
-#: ui/table/edit_record.xml.en:0
-msgid ""
-"${field/title} <span stl:if=\"field/mandatory\">(mandatory)</span> <span stl:"
-"if=\"field/multiple\">(multiple)</span> <span stl:if=\"field/is_date"
-"\">Format: 'yyyy-mm-dd'</span>"
+#: ../shop/ui/Order_new_instance.xml.en:46
+msgid "${firstname}<br/> <b>Lastname:</b>"
 msgstr ""
 
-#: ui/table/edit_record.xml.en:0
-#, fuzzy
-msgid "${field/widget}"
-msgstr "名称"
-
-#: ui/ical/ical_grid_weekly_view.xml.en:0
+#: ../ui/ical/ical_grid_weekly_view.xml.en:35
 #, fuzzy
 msgid "${header/header}"
 msgstr "用户资料列单"
 
-#: wiki/ui/WikiPage_help.xml.en:0
+#: ../wiki/ui/WikiPage_help.xml.en:9
 msgid "${help_html}"
 msgstr ""
 
-#: wiki/ui/WikiPage_help.xml.en:0
+#: ../wiki/ui/WikiPage_help.xml.en:7
 msgid "${help_source}"
 msgstr ""
 
-#: tracker/ui/view_tracker.xml.en:0
+#: ../tracker/ui/edit_resources.xml.en:8
+#, fuzzy
+msgid "${issue/title}"
+msgstr "名称"
+
+#: ../tracker/ui/view_tracker.xml.en:136
 #, fuzzy
 msgid "${item/title}"
 msgstr "名称"
 
-#: ui/ical/ical_edit_event_form.xml.en:0
+#: ../ui/ical/ical_edit_event.xml.en:16
 #, fuzzy
 msgid "${item/value}"
 msgstr "名称"
 
-#: ui/website/languages.xml.en:0
+#: ../ui/website/languages.xml.en:27
 #, fuzzy
 msgid "${language/code}"
 msgstr "语言"
 
-#: ui/website/languages.xml.en:0
+#: ../ui/website/languages.xml.en:50
 #, fuzzy
 msgid "${language/name}"
 msgstr "语言"
 
-#: ui/website/broken_links.xml.en:0
+#: ../shop/ui/Order_new_instance.xml.en:46
+msgid "${lastname}<br/> <b>E-mail:</b>"
+msgstr ""
+
+#: ../ui/website/broken_links.xml.en:13
 msgid "${link}"
 msgstr ""
 
-#: ui/aruni/template.xhtml.en:0
-msgid "${menu/content}"
-msgstr ""
-
-#: ui/aruni/template.xhtml.en:0
-#, fuzzy
-msgid "${menu/title}"
-msgstr "名称"
-
-#: forum/ui/Thread_view.xml.en:0
+#: ../forum/ui/Thread_view.xml.en:19
 #, fuzzy
 msgid "${message/author}"
 msgstr "信息"
 
-#: forum/ui/Thread_view.xml.en:0
+#: ../forum/ui/Thread_view.xml.en:30
 #, fuzzy
 msgid "${message/body}"
 msgstr "信息"
 
-#: forum/ui/Thread_view.xml.en:0
+#: ../forum/ui/Thread_view.xml.en:20
 #, fuzzy
 msgid "${message/mtime}"
 msgstr "信息"
 
-#: ui/html/addimage.xml.en:0
+#: ../ui/html/addimage.xml.en:20
 #, fuzzy
 msgid "${message}"
 msgstr "信息"
 
-#: ui/aruni/template.xhtml.en:0
+#: ../ui/aruni/template.xhtml.en:48
 #, fuzzy
 msgid "${metadata/title}"
 msgstr "用户资料列单"
 
-#: ui/PO_edit.xml.en:0
+#: ../ui/PO_edit.xml.en:23
 #, fuzzy
 msgid "${msgid}"
 msgstr "信息"
 
-#: ui/PO_edit.xml.en:0
+#: ../ui/PO_edit.xml.en:31
 #, fuzzy
 msgid "${msgstr}"
 msgstr "信息"
 
-#: ui/root/credits.xml.en:0
+#: ../shop/ui/Order_view.xml.en:7
+msgid "${mtime}<br/> State:"
+msgstr ""
+
+#: ../ui/root/credits.xml.en:12
 #, fuzzy
 msgid "${name}"
 msgstr "物件被更名"
 
-#: future/ui/order_items.xml.en:0
+#: ../shop/ui/Order_view.xml.en:7
+msgid "${name}<br/> Date:"
+msgstr ""
+
+#: ../shop/ui/Cart_view.xml.en:14
+msgid "${nb_product} Products"
+msgstr ""
+
+#: ../future/ui/order_items.xml.en:64
 #, fuzzy
 msgid "${object/name}"
 msgstr "物件被更名"
 
-#: ui/html/addlink.xml.en:0
+#: ../ui/html/addlink.xml.en:76
 msgid "${object/object_type}"
 msgstr ""
 
-#: ui/html/addlink.xml.en:0
+#: ../ui/html/addlink.xml.en:64
 #, fuzzy
 msgid "${object/title}"
 msgstr "用户资料列单"
 
-#: future/ui/order_items.xml.en:0
+#: ../future/ui/order_items.xml.en:66
 #, fuzzy
 msgid "${object/workflow_state}"
 msgstr "物件被更名"
 
-#: ui/csv/edit_row.xml.en:0
+#: ../ui/csv/edit_row.xml.en:23
 #, fuzzy
 msgid "${option/value}"
 msgstr "名称"
 
-#: ui/file/history.xml.en:0
+#: ../shop/ui/Shop_view_cart.xml.en:24
+#, fuzzy
+msgid "${p/name}"
+msgstr "物件被更名"
+
+#: ../shop/ui/Shop_view_cart.xml.en:32
+msgid "${p/price_after_vat}"
+msgstr ""
+
+#: ../shop/ui/Shop_view_cart.xml.en:31
+msgid "${p/price_before_vat}"
+msgstr ""
+
+#: ../shop/ui/Shop_view_cart.xml.en:33
+#, fuzzy
+msgid "${p/price_total}"
+msgstr "名称"
+
+#: ../shop/ui/Order_new_instance.xml.en:28
+msgid "${p/quantity}"
+msgstr ""
+
+#: ../shop/ui/Shop_view_cart.xml.en:25
+#, fuzzy
+msgid "${p/title}"
+msgstr "名称"
+
+#: ../shop/ui/Cart_view.xml.en:11
+msgid "${p/title} (${p/quantity})"
+msgstr ""
+
+#: ../shop/ui/product_view.xml.en:5
+#, fuzzy
+msgid "${price}<br/> VAT:"
+msgstr "名称"
+
+#: ../shop/ui/Shop_view.xml.en:11
+#, fuzzy
+msgid "${product/title}"
+msgstr "用户资料列单"
+
+#: ../ui/auto_form.xml.en:7
+msgid "${required_msg}"
+msgstr ""
+
+#: ../ui/file/history.xml.en:19
 msgid "${revision/date}"
 msgstr ""
 
-#: ui/file/history.xml.en:0
+#: ../ui/file/history.xml.en:20
 msgid "${revision/size}"
 msgstr ""
 
-#: ui/file/history.xml.en:0
+#: ../ui/file/history.xml.en:18
 msgid "${revision/username}"
 msgstr ""
 
-#: ui/access/new_user.xml.en:0
+#: ../ui/access/new_user.xml.en:34
 msgid "${role/title}"
 msgstr ""
 
-#: tracker/ui/issue_history.xml.en:0
+#: ../skins.py:535
+msgid "${root_title}: ${here_title}"
+msgstr ""
+
+#: ../tracker/ui/issue_history.xml.en:36
 msgid "${row/assigned_to}<br/>"
 msgstr ""
 
-#: tracker/ui/issue_history.xml.en:0
+#: ../tracker/ui/issue_history.xml.en:39
 #, fuzzy
 msgid "${row/cc_list}<br/>"
 msgstr "名称"
 
-#: tracker/ui/issue_history.xml.en:0
+#: ../tracker/ui/issue_history.xml.en:46
 msgid "${row/comment}<br/>"
 msgstr ""
 
-#: tracker/ui/issue_history.xml.en:0
+#: ../tracker/ui/issue_history.xml.en:12
 msgid "${row/datetime}"
 msgstr ""
 
-#: tracker/ui/issue_history.xml.en:0
+#: ../tracker/ui/issue_history.xml.en:30
 msgid "${row/module}<br/>"
 msgstr ""
 
-#: tracker/ui/issue_history.xml.en:0
+#: ../tracker/ui/issue_history.xml.en:33
 msgid "${row/priority}<br/>"
 msgstr ""
 
-#: ui/ical/ical_grid_weekly_view.xml.en:0
+#: ../ui/ical/ical_grid_weekly_view.xml.en:41
 msgid "${row/start}-${row/end}"
 msgstr ""
 
-#: tracker/ui/issue_history.xml.en:0
+#: ../tracker/ui/issue_history.xml.en:27
 msgid "${row/state}<br/>"
 msgstr ""
 
-#: tracker/ui/issue_history.xml.en:0
+#: ../tracker/ui/issue_history.xml.en:18
 #, fuzzy
 msgid "${row/title}<br/>"
 msgstr "名称"
 
-#: tracker/ui/issue_history.xml.en:0
+#: ../tracker/ui/issue_history.xml.en:24
 msgid "${row/type}<br/>"
 msgstr ""
 
-#: tracker/ui/issue_history.xml.en:0
+#: ../tracker/ui/issue_history.xml.en:13
 msgid "${row/user}"
 msgstr ""
 
-#: tracker/ui/issue_history.xml.en:0
+#: ../tracker/ui/issue_history.xml.en:21
 msgid "${row/version}<br/>"
 msgstr ""
 
-#: forum/ui/Forum_new_thread.xml.en:0
+#: ../forum/ui/Forum_new_thread.xml.en:16
 msgid "${rte}"
 msgstr ""
 
-#: forum/ui/Thread_view.xml.en:0
-msgid "${rte} <input type=\"submit\" value=\"Reply\"/>"
+#: ../forum/ui/Thread_view.xml.en:45
+msgid "${rte} <input value=\"Reply\" type=\"submit\"/>"
 msgstr ""
 
-#: ui/ical/ical_edit_event_form.xml.en:0
+#: ../ui/ical/ical_edit_event.xml.en:79
 msgid "${s/value}"
 msgstr ""
 
-#: tracker/ui/search.xml.en:0
+#: ../tracker/ui/search.xml.en:128
 #, fuzzy
 msgid "${search/title}"
 msgstr "名称"
 
-#: tracker/ui/search.xml.en:0
+#: ../tracker/ui/search.xml.en:15
 #, fuzzy
 msgid "${search_title}"
 msgstr "名称"
 
-#: ui/folder/browse_image.xml.en:0
-msgid "${selected/description}"
-msgstr ""
-
-#: ui/folder/browse_image.xml.en:0
-msgid "${selected/format}"
-msgstr ""
-
-#: ui/folder/browse_image.xml.en:0
-msgid "${selected/title_or_name}"
-msgstr ""
-
-#: ui/folder/browse_image.xml.en:0
-msgid "${selected/width}x${selected/height}"
-msgstr ""
-
-#: ui/website/search_form.xml.en:0
+#: ../ui/generic/browse.xml.en:7
 #, fuzzy
-msgid "${state/value}"
+msgid "${search}"
+msgstr "搜索"
+
+#: ../shop/ui/Order_view.xml.en:7
+msgid "${state}<br/> Download PDF:"
+msgstr ""
+
+#: ../ui/auto_form.xml.en:24
+#, fuzzy
+msgid "${submit_value}"
 msgstr "名称"
 
-#: ui/folder/browse_list.xml.en:0
+#: ../ui/generic/browse.xml.en:13
 #, fuzzy
 msgid "${table}"
 msgstr "名称"
 
-#: future/ui/link_edit_metadata.xml.en:0
+#: ../future/ui/link_edit_metadata.xml.en:28
 #, fuzzy
 msgid "${target}"
 msgstr "名称"
 
-#: ui/text/view.xml.en:0
+#: ../ui/html/view.xml.en:3
 msgid "${text}"
 msgstr ""
 
-#: ui/folder/new_resource.xml.en:0
+#: ../ui/auto_form.xml.en:5
 #, fuzzy
 msgid "${title}"
 msgstr "名称"
 
-#: tracker/ui/view_tracker.xml.en:0
-msgid ""
-"${title} <a href=\";search_form?${search_parameters}\">(Edit search)</a>"
+#: ../tracker/ui/view_tracker.xml.en:10
+msgid "${title} <a href=\";search?${search_parameters}\">(Edit search)</a>"
 msgstr ""
 
-#: ui/user/profile.xml.en:0
+#: ../ui/user/profile.xml.en:7
 msgid "${title} <em stl:if=\"user_must_confirm\">(Not confirm)</em>"
 msgstr ""
 
-#: ui/root/internal_server_error.xml.en:0
+#: ../shop/ui/product_view.xml.en:5
+#, fuzzy
+msgid "${title}<br/> Description:"
+msgstr "安全"
+
+#: ../shop/ui/Shop_view_cart.xml.en:41
+#, fuzzy
+msgid "${total}"
+msgstr "名称"
+
+#: ../ui/root/internal_server_error.xml.en:16
 msgid "${traceback}"
 msgstr ""
 
-#: ui/WorkflowAware_state.xml.en:0
+#: ../ui/WorkflowAware_state.xml.en:56
 msgid "${transition/comments}"
 msgstr ""
 
-#: ui/WorkflowAware_state.xml.en:0
+#: ../ui/WorkflowAware_state.xml.en:53
 msgid "${transition/date}"
 msgstr ""
 
-#: ui/WorkflowAware_state.xml.en:0
-msgid "${transition/description}"
-msgstr ""
-
-#: ui/WorkflowAware_state.xml.en:0
+#: ../ui/WorkflowAware_state.xml.en:54
 #, fuzzy
 msgid "${transition/title}"
 msgstr "用户资料列单"
 
-#: ui/WorkflowAware_state.xml.en:0
+#: ../ui/WorkflowAware_state.xml.en:55
 msgid "${transition/user}"
 msgstr ""
 
-#: ui/ical/daily_view.xml.en:0
+#: ../ui/ical/daily_view.xml.en:57
 msgid "${tt/start}"
 msgstr ""
 
-#: ui/user/confirm_registration.xml.en:0
+#: ../ui/user/confirm_registration.xml.en:19
 #, fuzzy
 msgid "${username}"
 msgstr "物件被更名"
 
-#: ui/aruni/template.xhtml.en:0
+#: ../shop/ui/product_view.xml.en:5
+msgid "${vat}<br/> <a href=\";add_to_cart\">Add to cart</a>"
+msgstr ""
+
+#: ../ui/aruni/template.xhtml.en:93
 #, fuzzy
 msgid "${view_title}"
 msgstr "名称"
 
-#: ui/website/new_instance.xml.en:0
+#: ../ui/website/new_instance.xml.en:27
 #, fuzzy
 msgid "${website/title}"
 msgstr "名称"
 
-#: ui/ical/ical_monthly_view.xml.en:0
+#: ../ui/ical/ical_monthly_view.xml.en:42
 msgid "${week/month}"
 msgstr ""
 
-#: file.py:242
+#: ../ui/auto_form.xml.en:18
+#, fuzzy
+msgid "${widget/widget}"
+msgstr "名称"
+
+#: ../shop/ui/Order_view.xml.en:18
+msgid "${zip}<br/> <b>City:</b>"
+msgstr ""
+
+#: ../file.py:460
 msgid "%.01f KB"
 msgstr ""
 
-#: file.py:240
+#: ../file.py:458
 msgid "%.01f MB"
 msgstr ""
 
-#: ui/website/broken_links.xml.en:0
+#: ../ui/website/broken_links.xml.en:10
 msgid "(${object/n}) <a href=\"${object/path}\">${object/path}</a>"
 msgstr ""
 
-#: tracker/ui/search.xml.en:0
-msgid "(<a href=\"${manage_assigned}\">Edit</a>)"
+#: ../tracker/ui/search.xml.en:130
+msgid "(<a href=\";search?search_name=${search/name}\">Edit</a>)"
 msgstr ""
 
-#: tracker/ui/search.xml.en:0
-msgid "(<a href=\"./modules/;view\">Edit</a>)"
-msgstr ""
-
-#: tracker/ui/search.xml.en:0
-msgid "(<a href=\"./priorities/;view\">Edit</a>)"
-msgstr ""
-
-#: tracker/ui/search.xml.en:0
-msgid "(<a href=\"./states/;view\">Edit</a>)"
-msgstr ""
-
-#: tracker/ui/search.xml.en:0
-msgid "(<a href=\"./types/;view\">Edit</a>)"
-msgstr ""
-
-#: tracker/ui/search.xml.en:0
-msgid "(<a href=\"./versions/;view\">Edit</a>)"
-msgstr ""
-
-#: tracker/ui/search.xml.en:0
-msgid "(<a href=\";search_form?search_name=${search/name}\">Edit</a>)"
-msgstr ""
-
-#: ui/base/edit_metadata.xml.en:0
-msgid "(Separated by comma)"
-msgstr ""
-
-#: ui/ical/ical_edit_event_form.xml.en:0
+#: ../ui/ical/ical_edit_event.xml.en:8
 msgid "(To add an event lasting all day long, leave time fields empty.)"
 msgstr ""
 
-#: tracker/tracker.py:555
+#: ../tracker/tracker.py:818
 msgid ""
 "--- Comment from : $user ---\n"
 "\n"
@@ -537,3170 +609,3591 @@ msgid ""
 "$issues"
 msgstr ""
 
-#: tracker/issue.py:298
+#: ../tracker/issue.py:645
 msgid ""
 "-------\n"
 "\n"
 msgstr ""
 
-#: tracker/tracker.py:89
+#: ../tracker/tracker.py:582
 msgid "1.0"
 msgstr ""
 
-#: tracker/tracker.py:90
+#: ../tracker/tracker.py:583
 msgid "2.0"
 msgstr ""
 
-#: skins.py:515
+#: ../skins.py:529
 msgid "404 Not Found"
 msgstr ""
 
-#: forum/ui/Forum_view.xml.en:0
-msgid ""
-"<a class=\"forum_thread_title\" href=\"${thread/name}\">${thread/title}</a> "
-"<br/> Posted by <span class=\"forum_thread_author\">${thread/author}</span>, "
-"the <span class=\"forum_thread_date\">${thread/date}</span>."
-msgstr ""
-
-#: tracker/ui/edit_issue.xml.en:0
+#: ../tracker/ui/edit_issue.xml.en:133
 msgid "<a href=\"${comment/file}\">${comment/file}</a>"
 msgstr ""
 
-#: ui/ical/ical_monthly_view.xml.en:0
-msgid ""
-"<a href=\"${event/url}\"> ${event/SUMMARY}</a> <span stl:if=\"event/TIME\" "
-"class=\"time\">${event/TIME}</span>"
-msgstr ""
-
-#: ui/folder/new_resource.xml.en:0
+#: ../ui/generic/icons_view.xml.en:16
 msgid "<a href=\"${item/url}\">${item/title}</a> <br/> ${item/description}"
 msgstr ""
 
-#: ui/ical/ical_monthly_view.xml.en:0
+#: ../ui/PO_edit.xml.en:11
+msgid ""
+"<a href=\"${messages_next}\" title=\"Go to next message\">></a> <a href="
+"\"${messages_last}\" title=\"Go to last message\">>></a>"
+msgstr ""
+
+#: ../ui/PO_edit.xml.en:11
+msgid ""
+"<a href=\"${messages_previous}\" title=\"Go to previous message\">&lt;</a>"
+msgstr ""
+
+#: ../shop/ui/Shop_view_cart.xml.en:27
+msgid ""
+"<a href=\"${p/link_remove}\">-</a> ${p/quantity} <a href=\"${p/link_add}\">"
+"+</a>"
+msgstr ""
+
+#: ../ui/ical/ical_monthly_view.xml.en:18
 msgid ""
 "<a href=\"${previous_month}\">«</a> ${current_month} <a href=\"${next_month}"
 "\">»</a>"
 msgstr ""
 
-#: ui/ical/ical_monthly_view.xml.en:0
+#: ../ui/ical/ical_monthly_view.xml.en:13
 msgid ""
 "<a href=\"${previous_week}\">«</a> ${current_week} <a href=\"${next_week}"
 "\">»</a>"
 msgstr ""
 
-#: ui/ical/ical_monthly_view.xml.en:0
+#: ../ui/ical/ical_monthly_view.xml.en:23
 msgid ""
 "<a href=\"${previous_year}\">«</a> ${current_year} <a href=\"${next_year}"
 "\">»</a>"
 msgstr ""
 
-#: tracker/ui/issue_history.xml.en:0
+#: ../tracker/ui/issue_history.xml.en:42
 msgid "<a href=\"${row/file}\">${row/file}</a> <br/>"
 msgstr ""
 
-#: future/ui/link_addlink.xml.en:0
-msgid "<a href=\"${x/url}\">${x/name}</a> /"
+#: ../forum/ui/Forum_view.xml.en:11
+msgid ""
+"<a href=\"${thread/name}\" class=\"forum_thread_title\">${thread/title}</a> "
+"<br/> Posted by <span class=\"forum_thread_author\">${thread/author}</span>, "
+"the <span class=\"forum_thread_date\">${thread/date}</span>."
 msgstr ""
 
-#: ui/aruni/template.xhtml.en:0
+#: ../ui/aruni/template.xhtml.en:34
+#, fuzzy
+msgid ""
+"<a href=\"${user/info/home}\" id=\"top_menu_profile\">My Profile</a> <a href="
+"\"/;logout\" id=\"top_menu_logout\">Log out</a>"
+msgstr ""
+"<a id=\"top_menu_search\" href=\"/;site_search\">搜索</a> <a id="
+"\"top_menu_contact\" href=\"/;contact_form\">联系我们</a>"
+
+#: ../ui/aruni/template.xhtml.en:108
 msgid ""
 "<a href=\"/;about\">About</a> <a href=\"/;credits\">Credits</a> <a href=\"/;"
 "license\">License</a>"
 msgstr ""
 
-#: ui/text/externaledit.xml.en:0
+#: ../ui/aruni/template.xhtml.en:29
+#, fuzzy
+msgid ""
+"<a href=\"/;login\" id=\"top_menu_login\">Log in</a> <a stl:if=\"user/"
+"joinisopen\" href=\"/;register\" id=\"top_menu_register\">Register</a>"
+msgstr ""
+"<a id=\"top_menu_search\" href=\"/;site_search\">搜索</a> <a id="
+"\"top_menu_contact\" href=\"/;contact_form\">联系我们</a>"
+
+#: ../ui/aruni/template.xhtml.en:37
+#, fuzzy
+msgid ""
+"<a href=\"/;site_search\" id=\"top_menu_search\">Search</a> <a href=\"/;"
+"contact\" id=\"top_menu_contact\">Contact</a>"
+msgstr ""
+"<a id=\"top_menu_search\" href=\"/;site_search\">搜索</a> <a id="
+"\"top_menu_contact\" href=\"/;contact_form\">联系我们</a>"
+
+#: ../ui/text/externaledit.xml.en:23
 msgid ""
 "<a href=\"http://plope.org/software/ExternalEditor/zopeedit-0.9.2-src.tgz"
 "\">Download External Editor for Unix and MacOSX</a>."
 msgstr ""
 
-#: ui/text/externaledit.xml.en:0
+#: ../ui/text/externaledit.xml.en:19
 msgid ""
 "<a href=\"http://plope.org/software/ExternalEditor/zopeedit-win32-0.9.2.exe"
 "\">Download External Editor for Windows</a>."
 msgstr ""
 
-#: ui/folder/browse_image.xml.en:0
-msgid ""
-"<a id=\"gallery_next\" stl:if=\"selected/next\" href=\"${selected/next}\">></"
-"a> <span id=\"gallery_next\" stl:if=\"not selected/next\">></span>"
+#: ../shop/ui/Order_view.xml.en:7
+msgid "<a href=\"order.pdf\">Click here</a>"
 msgstr ""
 
-#: ui/folder/browse_image.xml.en:0
+#: ../shop/ui/Shop_view_cart.xml.en:47
 msgid ""
-"<a id=\"gallery_previous\" stl:if=\"selected/previous\" href=\"${selected/"
-"previous}\">&lt;</a>"
+"<a href=\"orders/;new_resource_form?type=order\">Order</a> <a href="
+"\"${link_clear}\">Clear the cart</a>"
 msgstr ""
 
-#: ui/aruni/template.xhtml.en:0
-#, fuzzy
-msgid ""
-"<a id=\"top_menu_login\" href=\"/;login_form\">Log in</a> <a id="
-"\"top_menu_register\" stl:if=\"user/joinisopen\" href=\"/;register_form"
-"\">Register</a>"
-msgstr ""
-"<a id=\"top_menu_search\" href=\"/;site_search\">搜索</a> <a id="
-"\"top_menu_contact\" href=\"/;contact_form\">联系我们</a>"
-
-#: ui/aruni/template.xhtml.en:0
-#, fuzzy
-msgid ""
-"<a id=\"top_menu_profile\" href=\"${user/info/home}\">My Profile</a> <a id="
-"\"top_menu_logout\" href=\"/;logout\">Log out</a>"
-msgstr ""
-"<a id=\"top_menu_search\" href=\"/;site_search\">搜索</a> <a id="
-"\"top_menu_contact\" href=\"/;contact_form\">联系我们</a>"
-
-#: ui/aruni/template.xhtml.en:0
-msgid ""
-"<a id=\"top_menu_search\" href=\"/;site_search\">Search</a> <a id="
-"\"top_menu_contact\" href=\"/;contact_form\">Contact</a>"
-msgstr ""
-"<a id=\"top_menu_search\" href=\"/;site_search\">搜索</a> <a id="
-"\"top_menu_contact\" href=\"/;contact_form\">联系我们</a>"
-
-#: tracker/ui/view_tracker.xml.en:0
+#: ../tracker/ui/view_tracker.xml.en:17
 msgid ""
 "<a name=\"link\"></a> <a href=\";view?${search_parameters}&amp;"
 "change_several_bugs=1#link\"> Change Several Issues </a> | <a href=\";view?"
 "${search_parameters}&amp;export_to_text=1#link\"> Export to Text </a> | <a "
 "href=\";view?${search_parameters}&amp;export_to_csv=1#link\"> Export to CSV "
-"</a>"
+"</a> | <a href=\"resources/;monthly_view?${search_parameters}\" class="
+"\"button_calendar\" style=\"background-repeat: no-repeat;\"> Resources </a>"
 msgstr ""
 
-#: ui/ical/daily_view.xml.en:0
+#: ../tracker/ui/edit_issue.xml.en:96
 msgid ""
-"<a stl:if=\"col/evt_url\" class=\"evt_value\" href=\"${col/evt_url}\">${col/"
+"<a name=\"new_comment\"></a> <label for=\"comment\">New Comment:</label><br/>"
+msgstr ""
+
+#: ../ui/ical/daily_view.xml.en:44
+msgid ""
+"<a stl:if=\"col/evt_url\" href=\"${col/evt_url}\" class=\"evt_value\">${col/"
 "evt_value}</a> <span stl:if=\"col/SUMMARY\">${col/SUMMARY}</span>"
 msgstr ""
 
-#: ui/aruni/template.xhtml.en:0
-msgid ""
-"<a stl:if=\"item/url\" title=\"${item/name}\" href=\"${item/url}\">${item/"
-"short_name}</a> <span stl:if=\"not item/url\" title=\"${item/name}\">${item/"
-"short_name}</span> <stl:inline stl:if=\"not repeat/item/end\">/</stl:inline>"
-msgstr ""
-
-#: future/ui/link_addlink.xml.en:0
+#: ../future/ui/link_addlink.xml.en:87
 msgid ""
 "<a stl:if=\"object/is_folder\" href=\"${object/url}\"> ${object/name} </a> "
-"<stl:inline stl:if=\"not object/is_folder\">${object/name}</stl:inline>"
+"<stl:inline if=\"not object/is_folder\">${object/name}</stl:inline>"
 msgstr ""
 
-#: future/ui/order_items.xml.en:0
+#: ../future/ui/order_items.xml.en:25
 msgid ""
 "<a stl:if=\"object/is_orderaware\" href=\"${object/path}\"> ${object/name} </"
 "a> <stl:inline stl:if=\"not object/is_orderaware\"> ${object/name} </stl:"
 "inline>"
 msgstr ""
 
-#: ui/html/addlink.xml.en:0
-msgid "<a title=\"${x/title}\" href=\"${x/url}\">${x/short_title}</a> /"
-msgstr ""
-
-#: ui/PO_edit.xml.en:0
+#: ../shop/ui/Cart_view.xml.en:15
 msgid ""
-"<a title=\"Go to next message\" href=\"${messages_next}\">></a> <a title="
-"\"Go to last message\" href=\"${messages_last}\">>></a>"
+"<a stl:if=\"products\" href=\"../orders/;new_resource_form?type=order\"> "
+"Order </a> <br/><br/> <a stl:if=\"products\" href=\"${cart_link}\"> Show the "
+"cart </a> <br/>"
 msgstr ""
 
-#: ui/PO_edit.xml.en:0
+#: ../ui/html/addimage.xml.en:42
 msgid ""
-"<a title=\"Go to previous message\" href=\"${messages_previous}\">&lt;</a>"
+"<abbr title=\"${object/title}\">${object/short_title}</abbr><br/> <a href="
+"\"${object/url}\" title=\"${object/title}\">Browse</a>"
 msgstr ""
 
-#: ui/html/addimage.xml.en:0
+#: ../ui/html/addimage.xml.en:55
 msgid ""
 "<abbr title=\"${object/title}\">${object/short_title}</abbr><br/> <a href="
 "\"javascript:select_img('${object/path}', '${caption}')\">Select</a>"
 msgstr ""
 
-#: ui/html/addlink.xml.en:0
+#: ../ui/html/addlink.xml.en:80
 msgid ""
 "<abbr title=\"${object/title}\">${object/short_title}</abbr><br/> <a href="
 "\"javascript:select_link('${object/path}')\">Select</a>"
 msgstr ""
 
-#: ui/html/addimage.xml.en:0
-msgid ""
-"<abbr title=\"${object/title}\">${object/short_title}</abbr><br/> <a title="
-"\"${object/title}\" href=\"${object/url}\">Browse</a>"
+#: ../shop/ui/Order_view.xml.en:16
+msgid "<b>Address 1:</b>"
 msgstr ""
 
-#: forum/ui/Forum_view.xml.en:0
+#: ../shop/ui/Order_view.xml.en:17
+msgid "<b>Address 2:</b>"
+msgstr ""
+
+#: ../shop/ui/Order_view.xml.en:20
+msgid "<b>BP:</b>"
+msgstr ""
+
+#: ../shop/ui/Order_new_instance.xml.en:46
+#, fuzzy
+msgid "<b>Firstname:</b>"
+msgstr "你的全名"
+
+#: ../shop/ui/Order_view.xml.en:18
+msgid "<b>Zip:</b>"
+msgstr ""
+
+#: ../tracker/ui/search.xml.en:87
+msgid "<br/>"
+msgstr ""
+
+#: ../forum/ui/Forum_view.xml.en:11
 msgid "<br/> ${thread/comments} comments."
 msgstr ""
 
-#: tracker/ui/search.xml.en:0
+#: ../ui/WorkflowAware_state.xml.en:18
 msgid ""
-"<br/> <input value=\"${mtime}\" name=\"mtime\" size=\"2\" id=\"mtime\" type="
-"\"text\" xclass=\"tracker_select\"/> days ago"
+"<br/> <input id=\"${transition/name}\" name=\"transition\" value="
+"\"${transition/name}\" type=\"radio\"/> <label for=\"${transition/name}\">"
+"${transition/description}</label>"
 msgstr ""
 
-#: tracker/ui/add_issue.xml.en:0
+#: ../tracker/ui/view_tracker.xml.en:63
 msgid ""
-"<br/> <textarea name=\"comment\" id=\"description\" rows=\"10\" cols=\"80\">"
-"${comment}</textarea>"
+"<br/> <input id=\"editor_excel\" name=\"editor\" value=\"excel\" type=\"radio"
+"\"/> <label for=\"editor_excel\">For Excel (Encoding: CP1252, Separator: \";"
+"\")</label>"
 msgstr ""
 
-#: wiki/ui/WikiPage_edit.xml.en:0
+#: ../ui/folder/browse_search.xml.en:19
 msgid ""
-"<br/> <textarea name=\"data\" id=\"data\" rows=\"19\" cols=\"80\" wrap="
-"\"physical\">${data}</textarea>"
+"<br/> <input id=\"search_subfolders\" checked=\"${search_subfolders}\" name="
+"\"search_subfolders\" value=\"1\" type=\"checkbox\"/> <label for="
+"\"search_subfolders\">Search subfolders</label>"
 msgstr ""
 
-#: ui/website/anonymous.xml.en:0
-msgid "<br/> Authentication will be required for any level of access."
+#: ../tracker/ui/view_tracker.xml.en:142
+msgid ""
+"<br/> <textarea id=\"comment\" rows=\"10\" name=\"comment\" cols=\"68\"></"
+"textarea>"
 msgstr ""
 
-#: ui/website/anonymous.xml.en:0
+#: ../wiki/ui/WikiPage_edit.xml.en:45
 msgid ""
-"<br/> Non authenticated users will be able to access published content, and "
-"to register by themselves."
+"<br/> <textarea id=\"data\" rows=\"19\" wrap=\"physical\" name=\"data\" cols="
+"\"80\">${data}</textarea>"
 msgstr ""
 
-#: ui/html/addlink.xml.en:0
+#: ../tracker/ui/view_tracker.xml.en:63
 msgid ""
-"<img alt=\"\" height=\"16\" src=\"${object/icon}\" width=\"16\"/> ${object/"
+"<br/><br/> <input name=\";export_to_csv\" class=\"button_ok\" value=\"Export"
+"\" type=\"submit\"/>"
+msgstr ""
+
+#: ../ui/html/addlink.xml.en:64
+msgid ""
+"<img src=\"${object/icon}\" width=\"16\" alt=\"\" height=\"16\"/> ${object/"
 "short_title}"
 msgstr ""
 
-#: ui/website/search.xml.en:0
+#: ../ui/website/search.xml.en:19
 msgid ""
-"<img width=\"16\" height=\"16\" src=\"${object/icon}\"/> <a class="
-"\"result_title\" href=\"${object/url}\">${object/title}</a> <br/> <span "
-"class=\"result_url\">${object/abspath}</span> - <span class=\"result_type\">"
+"<img src=\"${object/icon}\" width=\"16\" height=\"16\"/> <a href=\"${object/"
+"url}\" class=\"result_title\">${object/title}</a> <br/> <span class="
+"\"result_url\">${object/abspath}</span> - <span class=\"result_type\">"
 "${object/type}</span> - <span class=\"result_size\">${object/size}</span>"
 msgstr ""
 
-#: wiki/ui/WikiPage_new_instance.xml.en:0
+#: ../ui/access/edit_membership_form.xml.en:12
 msgid ""
-"<input id=\"name\" name=\"name\" size=\"40\" type=\"text\" stl:if=\"not name"
-"\"/> <stl:inline stl:if=\"name\"> <input name=\"name\" type=\"hidden\" value="
-"\"${name}\"/> <span id=\"name\">${name}</span> </stl:inline>"
+"<input id=\"${role/name}\" checked=\"${role/selected}\" name=\"role\" value="
+"\"${role/name}\" type=\"radio\"/> <label for=\"${role/name}\">${role/title}</"
+"label>"
 msgstr ""
 
-#: ui/website/login.xml.en:0
+#: ../ui/ical/ical_edit_event.xml.en:52
 msgid ""
-"<input id=\"password\" name=\"password\" type=\"password\"/> <a href=\"/;"
-"forgotten_password_form\">I forgot my password</a>"
+"<input id=\"DTEND_day\" name=\"DTEND_day\" value=\"${DTEND_day}\" size=\"2\" "
+"type=\"text\"/> / <input id=\"DTEND_month\" name=\"DTEND_month\" value="
+"\"${DTEND_month}\" size=\"2\" type=\"text\"/> / <input id=\"DTEND_year\" "
+"name=\"DTEND_year\" value=\"${DTEND_year}\" size=\"4\" type=\"text\"/> "
+"<input value=\"...\" id=\"trigger_dtend\" type=\"button\"/> <input id="
+"\"DTEND_hours\" name=\"DTEND_hours\" value=\"${DTEND_hours}\" size=\"2\" "
+"type=\"text\"/> :"
 msgstr ""
 
-#: tracker/ui/view_tracker.xml.en:0
+#: ../ui/ical/ical_edit_event.xml.en:52
 msgid ""
-"<input name=\"${c/name}\" type=\"hidden\" stl:repeat=\"c criteria\" value="
-"\"${c/value}\"/> <input name=\"editor\" id=\"editor_oo\" type=\"radio\" "
-"value=\"oo\" checked=\"on\"/>"
+"<input id=\"DTEND_minutes\" name=\"DTEND_minutes\" value=\"${DTEND_minutes}"
+"\" size=\"2\" type=\"text\"/>"
 msgstr ""
 
-#: ui/ical/ical_edit_event_form.xml.en:0
-msgid ""
-"<input name=\"DTEND_day\" id=\"DTEND_day\" size=\"2\" type=\"text\" value="
-"\"${DTEND_day}\"/> / <input name=\"DTEND_month\" id=\"DTEND_month\" size=\"2"
-"\" type=\"text\" value=\"${DTEND_month}\"/> / <input name=\"DTEND_year\" id="
-"\"DTEND_year\" size=\"4\" type=\"text\" value=\"${DTEND_year}\"/> <input id="
-"\"trigger_dtend\" type=\"button\" value=\"...\"/> <input name=\"DTEND_hours"
-"\" id=\"DTEND_hours\" size=\"2\" type=\"text\" value=\"${DTEND_hours}\"/> :"
+#: ../tracker/ui/edit_issue.xml.en:104
+msgid "<input id=\"attachement\" name=\"file\" size=\"36\" type=\"file\"/>"
 msgstr ""
 
-#: ui/ical/ical_edit_event_form.xml.en:0
+#: ../ui/ical/daily_view.xml.en:10
 msgid ""
-"<input name=\"DTEND_minutes\" id=\"DTEND_minutes\" size=\"2\" type=\"text\" "
-"value=\"${DTEND_minutes}\"/>"
+"<input id=\"date\" name=\"date\" value=\"${date}\" size=\"11\" type=\"text\"/"
+"> <input value=\"...\" id=\"trigger_date\" type=\"button\"/> <input name=\";"
+"daily_view\" class=\"button_ok\" id=\"update\" value=\"OK\" type=\"submit\"/>"
 msgstr ""
 
-#: ui/ical/daily_view.xml.en:0
+#: ../tracker/ui/search.xml.en:28
 msgid ""
-"<input name=\"date\" id=\"date\" size=\"11\" type=\"text\" value=\"${date}\"/"
-"> <input id=\"trigger_date\" type=\"button\" value=\"...\"/> <input id="
-"\"update\" name=\";daily_view\" type=\"submit\" value=\"OK\" class="
-"\"button_ok\"/>"
+"<input id=\"mtime\" name=\"mtime\" value=\"${mtime}\" size=\"2\" type=\"text"
+"\"/> days ago"
 msgstr ""
 
-#: ui/folder/rename.xml.en:0
+#: ../ui/folder/browse_image.xml.en:26
 msgid ""
-"<input name=\"paths\" type=\"hidden\" value=\"${object/path}\"/> ${object/"
+"<input id=\"search_subfolders\" checked=\"${search_subfolders}\" name="
+"\"search_subfolders\" value=\"1\" type=\"checkbox\"/> <label for="
+"\"search_subfolders\">Search subfolders</label>"
+msgstr ""
+
+#: ../tracker/ui/edit_issue.xml.en:17
+msgid ""
+"<input id=\"title\" name=\"title\" value=\"${title}\" size=\"48\" type=\"text"
+"\"/>"
+msgstr ""
+
+#: ../tracker/ui/view_tracker.xml.en:63
+msgid ""
+"<input name=\"${c/name}\" stl:repeat=\"c criteria\" value=\"${c/value}\" "
+"type=\"hidden\"/> <input id=\"editor_oo\" checked=\"on\" name=\"editor\" "
+"value=\"oo\" type=\"radio\"/> <label for=\"editor_oo\">For OpenOffice "
+"(Encoding: UTF-8, Separator: \",\")</label>"
+msgstr ""
+
+#: ../ui/ical/ical_edit_event.xml.en:35
+msgid ""
+"<input name=\"DTSTART_day\" size=\"2\" id=\"DTSTART_day\" maxlength=\"2\" "
+"type=\"text\" value=\"${DTSTART_day}\"/> / <input name=\"DTSTART_month\" "
+"size=\"2\" id=\"DTSTART_month\" maxlength=\"2\" type=\"text\" value="
+"\"${DTSTART_month}\"/> / <input name=\"DTSTART_year\" size=\"4\" id="
+"\"DTSTART_year\" maxlength=\"4\" type=\"text\" value=\"${DTSTART_year}\"/> "
+"<input value=\"...\" id=\"trigger_dtstart\" type=\"button\"/> <input name="
+"\"DTSTART_hours\" size=\"2\" id=\"DTSTART_hours\" maxlength=\"2\" type=\"text"
+"\" value=\"${DTSTART_hours}\"/> :"
+msgstr ""
+
+#: ../ui/ical/ical_edit_event.xml.en:35
+msgid ""
+"<input name=\"DTSTART_minutes\" size=\"2\" id=\"DTSTART_minutes\" maxlength="
+"\"2\" type=\"text\" value=\"${DTSTART_minutes}\"/>"
+msgstr ""
+
+#: ../tracker/ui/view_tracker.xml.en:43
+msgid ""
+"<input name=\"column_selection\" checked=\"${column/checked}\" id=\"${column/"
+"name}\" value=\"${column/name}\" type=\"checkbox\"/> <label for=\"${column/"
+"name}\">${column/title}</label>"
+msgstr ""
+
+#: ../ui/website/login.xml.en:15
+msgid ""
+"<input name=\"password\" id=\"password\" type=\"password\"/> <a href=\"/;"
+"forgotten_password\">I forgot my password</a>"
+msgstr ""
+
+#: ../wiki/ui/WikiPage_new_instance.xml.en:13
+msgid ""
+"<input stl:if=\"not name\" name=\"name\" id=\"name\" size=\"40\" type=\"text"
+"\"/> <stl:inline stl:if=\"name\"> <input value=\"${name}\" name=\"name\" "
+"type=\"hidden\"/> <span id=\"name\">${name}</span> </stl:inline>"
+msgstr ""
+
+#: ../tracker/ui/edit_resources.xml.en:31
+msgid ""
+"<input value=\"${dtend}\" id=\"dtend\" name=\"dtend\" size=\"10\" type=\"text"
+"\"/> <input value=\"...\" name=\"trigger_dtend\" id=\"trigger_dtend\" type="
+"\"button\"/> ${time_select} <br/> <input value=\"${tend}\" id=\"tend\" name="
+"\"tend\" size=\"5\" type=\"text\"/> (HH:MM)"
+msgstr ""
+
+#: ../tracker/ui/edit_resources.xml.en:21
+msgid ""
+"<input value=\"${dtstart}\" id=\"dtstart\" name=\"dtstart\" size=\"10\" type="
+"\"text\"/> <input value=\"...\" name=\"trigger_dtstart\" id=\"trigger_dtstart"
+"\" type=\"button\"/> <br/> <input value=\"${tstart}\" id=\"tstart\" name="
+"\"tstart\" size=\"5\" type=\"text\"/> (HH:MM)"
+msgstr ""
+
+#: ../ui/folder/rename.xml.en:11
+msgid ""
+"<input value=\"${object/path}\" name=\"paths\" type=\"hidden\"/> ${object/"
 "path}"
 msgstr ""
 
-#: ui/html/edit.xml.en:0
+#: ../ui/html/edit.xml.en:8
 msgid ""
-"<input name=\"timestamp\" type=\"hidden\" value=\"${timestamp}\"/> ${rte}"
+"<input value=\"${timestamp}\" name=\"timestamp\" type=\"hidden\"/> ${rte}"
 msgstr ""
 
-#: ui/ical/ical_edit_event_form.xml.en:0
+#: ../ui/website/anonymous.xml.en:9
 msgid ""
-"<input value=\"${DTSTART_day}\" name=\"DTSTART_day\" size=\"2\" id="
-"\"DTSTART_day\" maxlength=\"2\" type=\"text\"/> / <input value="
-"\"${DTSTART_month}\" name=\"DTSTART_month\" size=\"2\" id=\"DTSTART_month\" "
-"maxlength=\"2\" type=\"text\"/> / <input value=\"${DTSTART_year}\" name="
-"\"DTSTART_year\" size=\"4\" id=\"DTSTART_year\" maxlength=\"4\" type=\"text"
-"\"/> <input id=\"trigger_dtstart\" type=\"button\" value=\"...\"/> <input "
-"value=\"${DTSTART_hours}\" name=\"DTSTART_hours\" size=\"2\" id="
-"\"DTSTART_hours\" maxlength=\"2\" type=\"text\"/> :"
+"<input value=\"0\" id=\"intranet\" name=\"website_is_open\" checked="
+"\"${is_closed}\" type=\"radio\"/> <label for=\"intranet\">Intranet</label> "
+"<br/> Authentication will be required for any level of access."
 msgstr ""
 
-#: ui/ical/ical_edit_event_form.xml.en:0
+#: ../tracker/ui/edit_issue.xml.en:89
 msgid ""
-"<input value=\"${DTSTART_minutes}\" name=\"DTSTART_minutes\" size=\"2\" id="
-"\"DTSTART_minutes\" maxlength=\"2\" type=\"text\"/>"
+"<input value=\"1\" checked=\"${cc_remove}\" name=\"cc_remove\" type="
+"\"checkbox\"/> <label for=\"cc_remove\">Remove selected CCs</label>"
 msgstr ""
 
-#: ui/folder/browse_image.xml.en:0
+#: ../ui/website/anonymous.xml.en:18
 msgid ""
-"<span id=\"gallery_previous\" stl:if=\"not selected/previous\">&lt;</span>"
+"<input value=\"1\" id=\"extranet\" name=\"website_is_open\" checked="
+"\"${is_open}\" type=\"radio\"/> <label for=\"extranet\">Extranet</label> <br/"
+"> Non authenticated users will be able to access published content, and to "
+"register by themselves."
 msgstr ""
 
-#: ui/ical/daily_view.xml.en:0
+#: ../ui/auto_form.xml.en:11
+msgid ""
+"<label for=\"${widget/name}\" class=\"${widget/class}\"> ${widget/title} </"
+"label> <span stl:if=\"widget/mandatory\">(mandatory)</span> <span stl:if="
+"\"widget/multiple\">(multiple)</span> <span stl:if=\"widget/is_date"
+"\">Format: 'yyyy-mm-dd'</span>"
+msgstr ""
+
+#: ../tracker/ui/view_tracker.xml.en:131
+msgid "<label for=\"assigned_to\">Assign To:</label><br/>"
+msgstr ""
+
+#: ../tracker/ui/search.xml.en:67
+msgid ""
+"<label for=\"assigned_to\">Assigned To:<stl:block stl:if=\"is_admin\"> (<a "
+"href=\"${manage_assigned}\">Edit</a>)</stl:block></label>"
+msgstr ""
+
+#: ../tracker/ui/add_issue.xml.en:88
+msgid "<label for=\"attachement\">Attachement:</label><br/>"
+msgstr ""
+
+#: ../tracker/ui/edit_issue.xml.en:104
+msgid "<label for=\"attachement\">New Attachement:</label><br/>"
+msgstr ""
+
+#: ../tracker/ui/edit_issue.xml.en:75
+msgid "<label for=\"cc_add\">Add CC:</label><br/>"
+msgstr ""
+
+#: ../tracker/ui/add_issue.xml.en:71
+msgid "<label for=\"cc_add\">CC:</label><br/>"
+msgstr ""
+
+#: ../tracker/ui/edit_issue.xml.en:83
+msgid "<label for=\"cc_list\">CC:</label><br/>"
+msgstr ""
+
+#: ../tracker/ui/view_tracker.xml.en:142
+msgid "<label for=\"comment\">Comment:</label>"
+msgstr ""
+
+#: ../tracker/ui/edit_resources.xml.en:44
+msgid "<label for=\"comment\">Comment:</label><br/>"
+msgstr ""
+
+#: ../tracker/ui/add_issue.xml.en:81
+msgid "<label for=\"description\">Description:</label><br/>"
+msgstr ""
+
+#: ../tracker/ui/edit_resources.xml.en:31
+msgid "<label for=\"dtend\">End:</label><br/>"
+msgstr ""
+
+#: ../tracker/ui/edit_resources.xml.en:21
+msgid "<label for=\"dtstart\">Start:</label><br/>"
+msgstr ""
+
+#: ../tracker/ui/view_tracker.xml.en:93
+msgid "<label for=\"module\">Module:</label><br/>"
+msgstr ""
+
+#: ../tracker/ui/search.xml.en:45
+msgid ""
+"<label for=\"module\">Module:<stl:block stl:if=\"is_admin\"> (<a href=\"./"
+"modules/;view\">Edit</a>)</stl:block></label>"
+msgstr ""
+
+#: ../tracker/ui/search.xml.en:28
+msgid "<label for=\"mtime\">Modified since:</label><br/>"
+msgstr ""
+
+#: ../tracker/ui/view_tracker.xml.en:112
+msgid "<label for=\"priority\">Priority:</label><br/>"
+msgstr ""
+
+#: ../tracker/ui/search.xml.en:87
+msgid ""
+"<label for=\"priority\">Priority:<stl:block stl:if=\"is_admin\"> (<a href="
+"\"./priorities/;view\">Edit</a>)</stl:block></label>"
+msgstr ""
+
+#: ../tracker/ui/edit_resources.xml.en:14
+msgid "<label for=\"resource\">Resource:</label><br/>"
+msgstr ""
+
+#: ../tracker/ui/search.xml.en:114
+msgid ""
+"<label for=\"search_title\">Remember as</label> <input id=\"search_title\" "
+"name=\"search_title\" value=\"${search_title}\" size=\"12\" type=\"text\"/>"
+msgstr ""
+
+#: ../tracker/ui/edit_issue.xml.en:58
+msgid "<label for=\"state\">Status (mandatory):</label><br/>"
+msgstr ""
+
+#: ../tracker/ui/view_tracker.xml.en:123
+msgid "<label for=\"state\">Status:</label><br/>"
+msgstr ""
+
+#: ../tracker/ui/search.xml.en:77
+msgid ""
+"<label for=\"state\">Status:<stl:block stl:if=\"is_admin\"> (<a href=\"./"
+"states/;view\">Edit</a>)</stl:block></label>"
+msgstr ""
+
+#: ../ui/base/edit_metadata.xml.en:19
+msgid "<label for=\"subject\">Keywords</label> (Separated by comma)"
+msgstr ""
+
+#: ../tracker/ui/search.xml.en:22
+msgid ""
+"<label for=\"text\">Text (search within the title and all comments)</"
+"label><br/> <input name=\"text\" size=\"30\" class=\"tracker_select\" id="
+"\"text\" type=\"text\" value=\"${text}\"/>"
+msgstr ""
+
+#: ../tracker/ui/edit_issue.xml.en:17
+msgid "<label for=\"title\">Title (mandatory):</label><br/>"
+msgstr ""
+
+#: ../tracker/ui/edit_issue.xml.en:24
+msgid "<label for=\"type\">Type (mandatory):</label><br/>"
+msgstr ""
+
+#: ../tracker/ui/view_tracker.xml.en:104
+msgid "<label for=\"type\">Type:</label><br/>"
+msgstr ""
+
+#: ../tracker/ui/search.xml.en:35
+msgid ""
+"<label for=\"type\">Type:<stl:block stl:if=\"is_admin\"> (<a href=\"./types/;"
+"view\">Edit</a>)</stl:block></label>"
+msgstr ""
+
+#: ../tracker/ui/edit_issue.xml.en:40
+msgid "<label for=\"version\">Version (mandatory):</label><br/>"
+msgstr ""
+
+#: ../tracker/ui/view_tracker.xml.en:85
+msgid "<label for=\"version\">Version:</label><br/>"
+msgstr ""
+
+#: ../tracker/ui/search.xml.en:55
+msgid ""
+"<label for=\"version\">Version:<stl:block stl:if=\"is_admin\"> (<a href=\"./"
+"versions/;view\">Edit</a>)</stl:block></label>"
+msgstr ""
+
+#: ../ui/aruni/template.xhtml.en:100
+msgid "<label>${menu/title}</label> ${menu/content}"
+msgstr ""
+
+#: ../ui/html/addlink.xml.en:46
+msgid "<label>Location:</label>"
+msgstr ""
+
+#: ../ui/ical/daily_view.xml.en:48
 msgid ""
 "<span stl:if=\"col/DTSTART\">${col/DTSTART}</span> <span stl:if=\"col/DTEND"
 "\">${col/DTEND}</span>"
 msgstr ""
 
-#: ui/aruni/template.xhtml.en:0
+#: ../ui/aruni/template.xhtml.en:69
 msgid ""
 "<span stl:if=\"menu/icon\" style=\"background-image: url(${menu/icon})\">"
 "${menu/label}</span> <span stl:if=\"not menu/icon\">${menu/label}</span>"
 msgstr ""
 
-#: ui/ical/ical_monthly_view.xml.en:0
+#: ../ui/ical/ical_monthly_view.xml.en:44
 msgid ""
 "<span stl:if=\"not day/selected\" class=\"bold\">${day/nday}</span> <span "
 "stl:if=\"day/selected\" class=\"cal_day_selected\">${day/nday}</span> <a stl:"
-"if=\"day/url\" class=\"add_event\" href=\"${day/url}\"> <img src="
-"\"${add_icon}\" height=\"16\" width=\"16\"/></a>"
+"if=\"day/url\" href=\"${day/url}\" class=\"add_event\"> <img width=\"16\" "
+"src=\"${add_icon}\" height=\"16\"/></a> ${day/events}"
 msgstr ""
 
-#: ui/aruni/template.xhtml.en:0
+#: ../ui/aruni/template.xhtml.en:50
+msgid ""
+"<span stl:repeat=\"item breadcrumb\"> <a stl:if=\"item/url\" href=\"${item/"
+"url}\" title=\"${item/name}\">${item/short_name}</a> <span stl:if=\"not item/"
+"url\" title=\"${item/name}\">${item/short_name}</span> <stl:inline stl:if="
+"\"not repeat/item/end\">/</stl:inline> </span>"
+msgstr ""
+
+#: ../ui/html/addlink.xml.en:46
+msgid ""
+"<span stl:repeat=\"x bc/path\"> <a href=\"${x/url}\" title=\"${x/title}\">"
+"${x/short_title}</a> / </span>"
+msgstr ""
+
+#: ../future/ui/link_addlink.xml.en:66
+msgid ""
+"<span stl:repeat=\"x bc/path\"> <a href=\"${x/url}\">${x/name}</a> / </span>"
+msgstr ""
+
+#: ../ui/aruni/template.xhtml.en:79
 msgid ""
 "<span style=\"background-image: url(${option/icon})\">${option/label}</span>"
 msgstr ""
 
-#: tracker/tracker.py:382
+#: ../shop/orders.py:170
 #, fuzzy
-msgid "<span>There are ${n} results.</span>"
+msgid "<span>There are ${n} orders</span>"
 msgstr "此处无图片."
 
-#: tracker/tracker.py:381
-msgid "<span>There is 1 result.</span>"
-msgstr ""
+#: ../shop/orders.py:169
+#, fuzzy
+msgid "<span>There is one order.</span>"
+msgstr "此处无图片."
 
-#: ui/root/about.xml.en:0
+#: ../shop/orders.py:106
+#, fuzzy
+msgid "<span>You have ${n} orders</span>"
+msgstr "此处无图片."
+
+#: ../shop/orders.py:105
+#, fuzzy
+msgid "<span>You have one order.</span>"
+msgstr "此处无图片."
+
+#: ../ui/root/about.xml.en:8
 msgid ""
 "<stl:inline stl:if=\"itools_version\"> itools <strong>${itools_version}</"
 "strong> </stl:inline> <br/> <stl:inline stl:if=\"ikaaro_version\"> iKaaro "
 "<strong>${ikaaro_version}</strong> </stl:inline>"
 msgstr ""
 
-#: ui/WorkflowAware_state.xml.en:0
+#: ../ui/WorkflowAware_state.xml.en:9
 msgid "<strong class=\"wf_${statename}\">${state}</strong>"
 msgstr ""
 
-#: tracker/ui/issue_history.xml.en:0
+#: ../tracker/ui/issue_history.xml.en:36
 msgid "<strong>Assign To:</strong>"
 msgstr ""
 
-#: tracker/ui/issue_history.xml.en:0
+#: ../tracker/ui/issue_history.xml.en:42
 msgid "<strong>Attachement:</strong>"
 msgstr ""
 
-#: tracker/ui/issue_history.xml.en:0
+#: ../tracker/ui/issue_history.xml.en:39
 msgid "<strong>CC:</strong>"
 msgstr ""
 
-#: tracker/ui/issue_history.xml.en:0
+#: ../tracker/ui/issue_history.xml.en:46
 msgid "<strong>Comment:</strong>"
 msgstr ""
 
-#: tracker/ui/issue_history.xml.en:0
+#: ../tracker/ui/issue_history.xml.en:30
 msgid "<strong>Module:</strong>"
 msgstr ""
 
-#: tracker/ui/issue_history.xml.en:0
+#: ../tracker/ui/issue_history.xml.en:33
 msgid "<strong>Priority:</strong>"
 msgstr ""
 
-#: tracker/ui/issue_history.xml.en:0
+#: ../tracker/ui/issue_history.xml.en:27
 msgid "<strong>State:</strong>"
 msgstr ""
 
-#: tracker/ui/issue_history.xml.en:0
+#: ../tracker/ui/issue_history.xml.en:18
 msgid "<strong>Title:</strong>"
 msgstr ""
 
-#: tracker/ui/issue_history.xml.en:0
+#: ../tracker/ui/issue_history.xml.en:24
 msgid "<strong>Type:</strong>"
 msgstr ""
 
-#: tracker/ui/issue_history.xml.en:0
+#: ../tracker/ui/issue_history.xml.en:21
 msgid "<strong>Version:</strong>"
 msgstr ""
 
-#: ui/tiny_mce/rte.xml.en:0
+#: ../ui/website/virtual_hosts.xml.en:11
 msgid ""
-"<textarea id=\"${form_name}\" name=\"${form_name}\" cols=\"80\" rows=\"15\" "
-"style=\"width: 80%\"> ${js_data} </textarea> <input name=\"dress_name\" type="
-"\"hidden\" value=\"${dress_name}\"/>"
+"<textarea cols=\"62\" rows=\"7\" name=\"vhosts\">${vhosts}</textarea> <br/> "
+"<input value=\"OK\" type=\"submit\"/>"
 msgstr ""
 
-#: ui/website/virtual_hosts.xml.en:0
+#: ../tracker/ui/edit_issue.xml.en:96
 msgid ""
-"<textarea name=\"vhosts\" cols=\"62\" rows=\"7\">${vhosts}</textarea> <br/> "
-"<input type=\"submit\" value=\"OK\"/>"
+"<textarea id=\"comment\" rows=\"10\" name=\"comment\" cols=\"80\"></textarea>"
 msgstr ""
 
-#: future/dressable.py:52
+#: ../tracker/ui/edit_resources.xml.en:44
+msgid ""
+"<textarea id=\"comment\" rows=\"3\" name=\"comment\" cols=\"80\">${comment}</"
+"textarea>"
+msgstr ""
+
+#: ../tracker/ui/add_issue.xml.en:81
+msgid ""
+"<textarea id=\"description\" rows=\"10\" name=\"comment\" cols=\"80\">"
+"${comment}</textarea>"
+msgstr ""
+
+#: ../ui/tiny_mce/rte.xml.en:45
+msgid ""
+"<textarea name=\"${form_name}\" rows=\"15\" id=\"${form_name}\" cols=\"80\" "
+"style=\"width: 80%\"> ${js_data} </textarea> <input value=\"${dress_name}\" "
+"name=\"dress_name\" type=\"hidden\"/>"
+msgstr ""
+
+#: ../future/dressable.py:53
 #, fuzzy
 msgid "A dressable folder"
 msgstr "文件夹"
 
-#: messages.py:29
+#: ../messages.py:52
 msgid "A given name already exists."
 msgstr ""
 
-#: messages.py:36
+#: ../messages.py:64
 #, fuzzy
 msgid "A new resource has been added."
 msgstr "新资料被加入."
 
-#: workflow.py:38
+#: ../workflow.py:117
 msgid "A pending document awaits review from authorized users to be published."
 msgstr ""
 
-#: workflow.py:35
+#: ../workflow.py:112
 msgid "A private document only can be reached by authorized users."
 msgstr ""
 
-#: workflow.py:41
+#: ../shop/products.py:40
+msgid "A product"
+msgstr ""
+
+#: ../workflow.py:121
 msgid "A public document can be reached by even anonymous users."
 msgstr ""
 
-#: wiki/page.py:525
+#: ../wiki/page.py:526
 msgid "A syntax error prevented from saving the changes: $error"
 msgstr ""
 
-#: forum/thread.py:36
+#: ../forum/thread.py:37
 msgid "A thread to discuss"
 msgstr ""
 
-#: workflow.py:167
-msgid "A transition must be selected."
-msgstr ""
-
-#: tracker/tracker.py:552
+#: ../tracker/tracker.py:815
 msgid "ANONYMOUS"
 msgstr ""
 
-#: ui/root/about.xml.en:0
+#: ../website.py:638
 msgid "About"
 msgstr "关于IKAARO"
 
-#: workflow.py:53
+#: ../workflow.py:138
 msgid "Accept the document."
 msgstr "进入文档"
 
-#: ui/access/permissions.xml.en:0
-msgid "Access Control"
-msgstr ""
-
-#: root.py:157
+#: ../root.py:178
 msgid "Access forbidden, you are not authorized to access this resource."
 msgstr ""
 
-#: users.py:354
+#: ../users.py:73
 #, fuzzy
 msgid "Account"
 msgstr "关于IKAARO"
 
-#: ui/user/edit_account.xml.en:0
-#, fuzzy
-msgid "Account Change"
-msgstr "改换"
-
-#: users.py:402
+#: ../users.py:124
 #, fuzzy
 msgid "Account changed."
 msgstr "用户资料被变更."
 
-#: ui/WorkflowAware_state.xml.en:0
+#: ../ui/WorkflowAware_state.xml.en:46
 msgid "Action"
 msgstr ""
 
-#: access.py:394
+#: ../shop/ui/Shop_view.xml.en:16
+#, fuzzy
+msgid "Actions"
+msgstr "登录"
+
+#: ../access.py:121
 #, fuzzy
 msgid "Active"
 msgstr "名称"
 
-#: wiki/ui/WikiPage_new_instance.xml.en:0
+#: ../wiki/ui/WikiPage_new_instance.xml.en:27
 msgid "Add"
 msgstr "加入"
 
-#: tracker/ui/edit_issue.xml.en:0
-#, fuzzy
-msgid "Add CC:"
-msgstr "加入"
+#: ../folder.py:78
+msgid "Add $class_title"
+msgstr ""
 
-#: tracker/ui/add_issue.xml.en:0
+#: ../tracker/ui/add_issue.xml.en:7
 #, fuzzy
 msgid "Add Issue"
 msgstr "用户"
 
-#: access.py:468
+#: ../access.py:197
 #, fuzzy
 msgid "Add New Member"
 msgstr "新文件夹"
 
-#: ui/access/new_user.xml.en:0
+#: ../ui/access/new_user.xml.en:9
 #, fuzzy
 msgid "Add New User"
 msgstr "新用户"
 
-#: ui/website/new_instance.xml.en:0
-msgid "Add Resource of Type \"${class_title}\""
-msgstr ""
+#: ../shop/ui/book_new_instance.xml.en:7
+#, fuzzy
+msgid "Add a Book"
+msgstr "新用户"
 
-#: ui/table/add_record.xml.en:0
+#: ../shop/ui/product_new_instance.xml.en:7
+#, fuzzy
+msgid "Add a Product"
+msgstr "新用户"
+
+#: ../table.py:141
 #, fuzzy
 msgid "Add a new record"
 msgstr "新用户"
 
-#: ui/csv/add_row.xml.en:0
+#: ../ui/csv/add_row.xml.en:5
 #, fuzzy
 msgid "Add a new row"
 msgstr "新用户"
 
-#: ui/access/new_user.xml.en:0
+#: ../ui/access/new_user.xml.en:42
 msgid "Add and return"
 msgstr ""
 
-#: ui/access/new_user.xml.en:0
+#: ../ui/access/new_user.xml.en:40
 msgid "Add and view"
 msgstr ""
 
-#: folder.py:702
-msgid "Add new content"
+#: ../folder.py:75
+#, fuzzy
+msgid "Add new resource"
+msgstr "新用户"
+
+#: ../shop/products.py:159
+#, fuzzy
+msgid "Add to cart"
+msgstr "新文件"
+
+#: ../shop/ui/Order_new_instance.xml.en:54
+#, fuzzy
+msgid "Address"
+msgstr "用户"
+
+#: ../shop/ui/Order_view.xml.en:14
+msgid "Address invoicing"
 msgstr ""
 
-#: root.py:91
+#: ../root.py:111
 msgid "Admin"
 msgstr ""
 
-#: ui/website/search_form.xml.en:0
-msgid "Advanced Search"
-msgstr ""
-
-#: ui/website/forgotten_password.xml.en:0
+#: ../ui/website/forgotten_password.xml.en:7
 msgid ""
 "An email has been sent to you with the procedure to change your password."
 msgstr ""
 
-#: website.py:517
+#: ../website.py:511
 msgid ""
 "An email has been sent to you, to finish the registration process follow the "
 "instructions detailed in it."
 msgstr ""
 
-#: forum/forum.py:40
+#: ../forum/forum.py:41
 msgid "An iKaaro forum"
 msgstr ""
 
-#: ui/website/search_form.xml.en:0
-msgid "Any"
-msgstr ""
-
-#: ui/root/internal_server_error.xml.en:0
+#: ../ui/root/internal_server_error.xml.en:13
 msgid "Apologies for the inconvenience."
 msgstr ""
 
-#: ui/user/edit_language_form.xml.en:0
-#, fuzzy
-msgid "Application Language"
-msgstr "优先"
-
-#: users.py:347
+#: ../users.py:159
 msgid "Application preferences changed."
 msgstr ""
 
-#: ical.py:45
+#: ../ical.py:52
 msgid "April"
 msgstr ""
 
-#: messages.py:26
+#: ../shop/orders.py:163
+msgid "Are you realy sure you want to delete this order ?"
+msgstr ""
+
+#: ../messages.py:43
 msgid "Are you sure you want to delete the selection?"
 msgstr ""
 
-#: messages.py:25
+#: ../messages.py:40
 msgid "Are you sure you want to delete this object?"
 msgstr ""
 
-#: ical.py:1190
+#: ../ical.py:1286
 msgid "As calendar"
 msgstr ""
 
-#: tracker/ui/view_tracker.xml.en:0
-msgid "Assign To:"
+#: ../tracker/ui/edit_resources.xml.en:51
+msgid "Assign"
 msgstr ""
 
-#: tracker/tracker.py:62
+#: ../tracker/tracker.py:76
 msgid "Assigned To"
 msgstr ""
 
-#: tracker/ui/search.xml.en:0
-msgid "Assigned To:"
-msgstr ""
-
-#: tracker/ui/edit_issue.xml.en:0
+#: ../tracker/ui/edit_issue.xml.en:133
 msgid "Attachement:"
 msgstr ""
 
-#: ui/ical/ical_edit_event_form.xml.en:0
+#: ../ui/ical/ical_edit_event.xml.en:86
 msgid "Attendees"
 msgstr ""
 
-#: ical.py:46
+#: ../ical.py:56
 msgid "August"
 msgstr ""
 
-#: file.py:397
+#: ../shop/ui/book_new_instance.xml.en:51
+msgid "Author"
+msgstr ""
+
+#: ../shop/ui/Order_new_instance.xml.en:77
+msgid "BP"
+msgstr ""
+
+#: ../file.py:271
 msgid "Backlinks"
 msgstr ""
 
-#: ui/text/externaledit.xml.en:0
+#: ../ui/text/externaledit.xml.en:13
 msgid "Be sure your have the external editor plug-in installed."
 msgstr ""
 
-#: ui/website/contact_form.xml.en:0
+#: ../ui/website/contact_form.xml.en:28
 msgid "Body"
 msgstr "正文"
 
-#: wiki/ui/WikiPage_edit.xml.en:0
+#: ../wiki/ui/WikiPage_edit.xml.en:17
 #, fuzzy
 msgid "Bold"
 msgstr "文件夹"
 
-#: ui/website/broken_links.xml.en:0
+#: ../shop/products.py:170
+msgid "Book"
+msgstr ""
+
+#: ../website.py:414
 msgid "Broken Links"
 msgstr ""
 
-#: ui/html/addlink.xml.en:0
+#: ../ui/html/addlink.xml.en:55
 #, fuzzy
 msgid "Browse Content"
 msgstr "浏览"
 
-#: access.py:325
+#: ../access.py:44
 #, fuzzy
 msgid "Browse Members"
 msgstr "浏览"
 
-#: ui/html/addimage.xml.en:0
+#: ../ui/html/addimage.xml.en:22
 #, fuzzy
 msgid "Browse and insert an Image from the workspace"
 msgstr "禄 Browse and link an image from the workspace:"
 
-#: ui/html/addlink.xml.en:0
+#: ../ui/html/addlink.xml.en:42
 #, fuzzy
 msgid "Browse and link to a File from the workspace"
 msgstr "禄 Browse and link an image from the workspace:"
 
-#: tracker/tracker.py:99
+#: ../tracker/tracker.py:592
 msgid "Bug"
 msgstr ""
 
-#: ui/WorkflowAware_state.xml.en:0
+#: ../ui/WorkflowAware_state.xml.en:47
 msgid "By"
 msgstr ""
 
-#: binary.py:317
+#: ../binary.py:329
 msgid "Bzip2"
 msgstr ""
 
-#: binary.py:318
+#: ../binary.py:330
 msgid "Bzip2 Compressed"
 msgstr ""
 
-#: tracker/ui/edit_issue.xml.en:0
-msgid "CC:"
-msgstr ""
-
-#: tracker/ui/view_tracker.xml.en:0
-msgid "CP1252, Separator:"
-msgstr ""
-
-#: text.py:196
+#: ../text.py:213
 msgid "CSS"
 msgstr ""
 
-#: ical.py:1341
+#: ../ical.py:1518
 msgid "Calendar"
 msgstr ""
 
-#: ui/ical/ical_edit_event_form.xml.en:0
+#: ../ui/ical/ical_edit_event.xml.en:143
 #, fuzzy
 msgid "Cancel"
 msgstr "改换"
 
-#: ical.py:144
+#: ../ical.py:182
 #, fuzzy
 msgid "Cancelled"
 msgstr "改换"
 
-#: ical.py:920
+#: ../ical.py:943
 msgid "Cannot delete event, because it was already removed."
 msgstr ""
 
-#: ical.py:820
+#: ../ical.py:844
 msgid "Cannot modify event, because it has been removed."
 msgstr ""
 
-#: messages.py:40
+#: ../messages.py:31
 #, fuzzy
 msgid "Caption"
 msgstr "登录"
 
-#: ui/website/contact_options.xml.en:0
+#: ../shop/ui/Cart_view.xml.en:8
+#, fuzzy
+msgid "Cart"
+msgstr "状态"
+
+#: ../ui/website/contact_options.xml.en:18
 msgid "Change"
 msgstr "改换"
 
-#: ui/access/edit_membership_form.xml.en:0
+#: ../ui/access/edit_membership_form.xml.en:7
 msgid "Change Role of ${name}"
 msgstr ""
 
-#: tracker/ui/view_tracker.xml.en:0
+#: ../tracker/ui/view_tracker.xml.en:78
 #, fuzzy
 msgid "Change Several Issues"
 msgstr "改变内设"
 
-#: ui/user/edit_account.xml.en:0
+#: ../ui/user/edit_account.xml.en:32
 #, fuzzy
 msgid "Change account"
 msgstr "改变内设"
 
-#: ui/website/languages.xml.en:0
+#: ../ui/website/languages.xml.en:35
 #, fuzzy
 msgid "Change default"
 msgstr "改变内设"
 
-#: ui/user/edit_language_form.xml.en:0
+#: ../ui/user/edit_language_form.xml.en:18
 #, fuzzy
 msgid "Change language"
 msgstr "选择语言"
 
-#: ui/user/edit_password.xml.en:0
+#: ../ui/user/edit_password.xml.en:28
 #, fuzzy
 msgid "Change password"
 msgstr "改变内设"
 
-#: ui/user/profile.xml.en:0
+#: ../users.py:169
+#, fuzzy
+msgid "Change you password"
+msgstr "改变内设"
+
+#: ../ui/user/profile.xml.en:26
 #, fuzzy
 msgid "Change your password;"
 msgstr "改变内设"
 
-#: messages.py:27
+#: ../messages.py:46
 msgid "Changes could not be saved, there was an edit conflict."
 msgstr ""
 
-#: ui/text/externaledit.xml.en:0
+#: ../ui/text/externaledit.xml.en:34
 msgid "Character encoding"
 msgstr ""
 
-#: ui/root/about.xml.en:0
+#: ../ui/root/about.xml.en:40
 msgid "Check the <a href=\";credits\">Credits</a>;"
 msgstr ""
 
-#: ui/root/about.xml.en:0
+#: ../ui/root/about.xml.en:37
 msgid "Check the <a href=\";license\">License</a>;"
 msgstr ""
 
-#: website.py:418
+#: ../website.py:417
 msgid "Check the referential integrity."
 msgstr ""
 
-#: ui/website/languages.xml.en:0
+#: ../ui/website/languages.xml.en:48
 msgid "Choose a language"
 msgstr "选择语言"
 
-#: ui/access/new_user.xml.en:0
+#: ../ui/access/new_user.xml.en:28
 msgid "Choose the role for the new member"
 msgstr ""
 
-#: website.py:345
+#: ../website.py:338
 #, fuzzy
 msgid "Choose the security policy."
 msgstr "更改安全设置"
 
-#: ui/user/confirm_registration.xml.en:0
+#: ../ui/user/confirm_registration.xml.en:7
 #, fuzzy
 msgid "Choose your password"
 msgstr "改变内设"
 
-#: tracker/tracker.py:103
+#: ../shop/ui/Order_new_instance.xml.en:70
+msgid "City"
+msgstr ""
+
+#: ../shop/workflow.py:28
+#, fuzzy
+msgid "Close"
+msgstr "编码"
+
+#: ../shop/workflow.py:32
+#, fuzzy
+msgid "Close Order"
+msgstr "编码"
+
+#: ../shop/workflow.py:32
+msgid "Close the order"
+msgstr ""
+
+#: ../tracker/tracker.py:605
 #, fuzzy
 msgid "Closed"
 msgstr "编码"
 
-#: ui/website/languages.xml.en:0
+#: ../ui/website/languages.xml.en:15
 msgid "Code"
 msgstr "编码"
 
-#: ui/ical/ical_monthly_view.xml.en:0
+#: ../ui/ical/ical_monthly_view.xml.en:9
 msgid "Come back to today"
 msgstr ""
 
-#: csv.py:40
+#: ../csv.py:129
 msgid "Comma Separated Values"
 msgstr ""
 
-#: tracker/tracker.py:97
+#: ../tracker/tracker.py:590
 #, fuzzy
 msgid "Command Line Interface"
 msgstr "选择你的界面"
 
-#: ui/ical/ical_edit_event_form.xml.en:0
+#: ../shop/orders.py:303
+#, fuzzy
+msgid "Command confirmation"
+msgstr "查阅"
+
+#: ../ui/ical/ical_edit_event.xml.en:130
 #, fuzzy
 msgid "Comment"
 msgstr "新文件"
 
-#: tracker/ui/edit_issue.xml.en:0
+#: ../tracker/ui/edit_issue.xml.en:121
 msgid "Comment <a href=\"#c${comment/number}\">${comment/number}</a>"
 msgstr ""
 
-#: tracker/ui/view_tracker.xml.en:0
-#, fuzzy
-msgid "Comment:"
-msgstr "新文件"
-
-#: ui/WorkflowAware_state.xml.en:0
+#: ../ui/WorkflowAware_state.xml.en:48
 msgid "Comments"
 msgstr ""
 
-#: ui/WorkflowAware_state.xml.en:0
+#: ../ui/WorkflowAware_state.xml.en:26
 msgid "Comments (optional):"
 msgstr ""
 
-#: ui/ical/ical_edit_event_form.xml.en:0
+#: ../ui/ical/ical_edit_event.xml.en:97
 #, fuzzy
 msgid "Common Name"
 msgstr "分类名称"
 
-#: website.py:374
+#: ../website.py:368
 msgid "Configure the Contact form."
 msgstr ""
 
-#: ui/user/edit_password.xml.en:0
+#: ../ui/user/edit_password.xml.en:13
 msgid "Confirm"
 msgstr ""
 
-#: users.py:216
+#: ../users.py:418
 msgid "Confirmation required"
 msgstr ""
 
-#: users.py:233
+#: ../users.py:435
 #, fuzzy
 msgid "Confirmation sended!"
 msgstr "查阅"
 
-#: ical.py:143
+#: ../ical.py:181
 msgid "Confirmed"
 msgstr ""
 
-#: ui/website/contact_form.xml.en:0
+#: ../website.py:520
 msgid "Contact"
 msgstr "联系我们"
 
-#: ui/website/contact_options.xml.en:0
+#: ../website.py:365
 msgid "Contact Options"
 msgstr ""
 
-#: ui/website/contact_options.xml.en:0
+#: ../ui/website/contact_options.xml.en:9
 msgid "Contacts"
 msgstr ""
 
-#: wiki/folder.py:35
+#: ../wiki/folder.py:36
 msgid "Container for a wiki"
 msgstr ""
 
-#: skins.py:236
+#: ../skins.py:250
 msgid "Content ($size)"
 msgstr ""
 
-#: skins.py:264
+#: ../skins.py:278
 #, fuzzy
 msgid "Content Language"
 msgstr "语言"
 
-#: wiki/ui/WikiPage_new_instance.xml.en:0
+#: ../wiki/ui/WikiPage_new_instance.xml.en:19
 msgid "Contents"
 msgstr ""
 
-#: website.py:416
+#: ../website.py:780
 msgid "Control Panel"
 msgstr ""
 
-#: folder.py:372
+#: ../folder.py:205
 msgid "Copy"
 msgstr "复制"
 
-#: ui/html/addlink.xml.en:0
+#: ../ui/html/addlink.xml.en:90
 msgid "Create a new Web Page and link to it:"
 msgstr ""
 
-#: website.py:53
+#: ../website.py:677
 msgid "Create a new Web Site or Work Place."
 msgstr ""
 
-#: html.py:125
+#: ../shop/orders.py:188
+#, fuzzy
+msgid "Create an order in our shop"
+msgstr "建立一新组件"
+
+#: ../html.py:156
 #, fuzzy
 msgid "Create and publish a Web Page."
 msgstr "列出文档"
 
-#: ui/root/credits.xml.en:0
+#: ../website.py:653
 msgid "Credits"
 msgstr ""
 
-#: future/ui/dressable_edit_image.xml.en:0
+#: ../future/ui/dressable_edit_image.xml.en:34
 msgid "Current image"
 msgstr ""
 
-#: ui/WorkflowAware_state.xml.en:0
+#: ../ui/WorkflowAware_state.xml.en:9
 msgid "Current state:"
 msgstr ""
 
-#: future/menu.py:107
+#: ../future/menu.py:108
 msgid "Current window"
 msgstr ""
 
-#: folder.py:373
+#: ../folder.py:206
 msgid "Cut"
 msgstr "剪切"
 
-#: tracker/tracker.py:100
+#: ../tracker/tracker.py:593
 msgid "Data Corruption Issue"
 msgstr ""
 
-#: ical.py:903
+#: ../ical.py:926
 #, fuzzy
 msgid "Data updated"
 msgstr "文件被上载."
 
-#: ui/file/history.xml.en:0
+#: ../ui/file/history.xml.en:12
 msgid "Date"
 msgstr "日期"
 
-#: ui/ical/daily_view.xml.en:0
+#: ../ui/ical/daily_view.xml.en:10
 #, fuzzy
 msgid "Date :"
 msgstr "日期"
 
-#: ical.py:47
+#: ../ical.py:60
 msgid "December"
 msgstr ""
 
-#: ui/website/languages.xml.en:0
+#: ../ui/website/languages.xml.en:16
 msgid "Default"
 msgstr "设置"
 
-#: website.py:266
+#: ../website.py:782
 msgid "Define the Web Site languages."
 msgstr ""
 
-#: website.py:238
+#: ../website.py:306
 msgid "Define the domain names for this Web Site."
 msgstr ""
 
-#: ui/ical/ical_edit_event_form.xml.en:0
+#: ../ui/ical/ical_edit_event.xml.en:141
 msgid "Definitely remove"
 msgstr ""
 
-#: access.py:415
+#: ../access.py:144
 #, fuzzy
 msgid "Delete"
 msgstr "设置"
 
-#: ui/ical/ical_edit_event_form.xml.en:0
+#: ../ui/ical/ical_edit_event.xml.en:67
 msgid "Description"
 msgstr ""
 
-#: tracker/ui/add_issue.xml.en:0
-#, fuzzy
-msgid "Description:"
-msgstr "安全"
-
-#: tracker/ui/view_tracker.xml.en:0
+#: ../tracker/ui/view_tracker.xml.en:133
 #, fuzzy
 msgid "Do not change"
 msgstr "编辑文档"
 
-#: tracker/tracker.py:96
+#: ../tracker/tracker.py:589
 #, fuzzy
 msgid "Documentation"
 msgstr "新文件"
 
-#: ui/file/download_form.xml.en:0
+#: ../file.py:149
 msgid "Download"
 msgstr ""
 
-#: future/dressable.py:51
+#: ../future/dressable.py:52
 #, fuzzy
 msgid "Dressable"
 msgstr "信息"
 
-#: ui/html/edit.xml.en:0
+#: ../shop/shop.py:37
+msgid "E-commerce Shop"
+msgstr ""
+
+#: ../tracker/ui/edit_issue.xml.en:110
 msgid "Edit"
 msgstr "编辑"
 
-#: tracker/ui/view_tracker.xml.en:0
+#: ../tracker/issue.py:108
+#, fuzzy
+msgid "Edit Issue"
+msgstr "用户"
+
+#: ../tracker/ui/view_tracker.xml.en:149
 #, fuzzy
 msgid "Edit Issues"
 msgstr "用户"
 
-#: ui/base/edit_metadata.xml.en:0
-#, fuzzy
-msgid "Edit Metadata in ${language_name}"
-msgstr "语言"
-
-#: future/ui/link_edit_metadata.xml.en:0
+#: ../future/ui/link_edit_metadata.xml.en:7
 #, fuzzy
 msgid "Edit Metadata in Current Language"
 msgstr "语言"
 
-#: ui/text/edit.xml.en:0
-#, fuzzy
-msgid "Edit Text"
-msgstr "简易文件"
+#: ../shop/ui/book_edit.xml.en:7
+msgid "Edit a Book"
+msgstr ""
 
-#: ui/user/profile.xml.en:0
+#: ../shop/ui/product_edit.xml.en:7
+msgid "Edit a Product"
+msgstr ""
+
+#: ../ui/user/profile.xml.en:17
 msgid "Edit account details;"
 msgstr ""
 
-#: future/dressable.py:204
+#: ../future/dressable.py:205
 #, fuzzy
 msgid "Edit image"
 msgstr "简易文件"
 
-#: ui/user/profile.xml.en:0
+#: ../ui/user/profile.xml.en:20
 #, fuzzy
 msgid "Edit language preferences;"
 msgstr "优先"
 
-#: ui/table/edit_record.xml.en:0
-msgid "Edit record ${id}"
+#: ../base.py:140
+#, fuzzy
+msgid "Edit metadata in $language_name"
+msgstr "语言"
+
+#: ../table.py:218
+msgid "Edit record %s"
 msgstr ""
 
-#: ui/csv/edit_row.xml.en:0
+#: ../tracker/issue.py:207
+#, fuzzy
+msgid "Edit resources"
+msgstr "用户"
+
+#: ../ui/csv/edit_row.xml.en:5
 msgid "Edit row ${index}"
 msgstr ""
 
-#: ui/ical/ical_edit_timetables.xml.en:0
+#: ../ui/ical/ical_edit_timetables.xml.en:5
 msgid "Edit the timetable grid"
 msgstr ""
 
-#: ui/access/new_user.xml.en:0
+#: ../users.py:74
+msgid "Edit your personal data"
+msgstr ""
+
+#: ../ui/access/new_user.xml.en:11
 msgid "Email"
 msgstr ""
 
-#: ui/website/login.xml.en:0
+#: ../ui/website/login.xml.en:9
 msgid "Email Address"
 msgstr ""
 
-#: ui/website/forgotten_password_form.xml.en:0
+#: ../ui/website/forgotten_password_form.xml.en:10
 msgid "Email address"
 msgstr ""
 
-#: ui/ical/ical_edit_event_form.xml.en:0
+#: ../ui/ical/ical_edit_event.xml.en:50
 msgid "End"
 msgstr ""
 
-#: ui/html/addlink.xml.en:0
+#: ../ui/html/addlink.xml.en:7
 msgid "Epoz-Toolbox"
 msgstr ""
 
-#: table.py:385
+#: ../table.py:270
 #, fuzzy
 msgid "Error: $message"
 msgstr "信息"
 
-#: ical.py:654
+#: ../ical.py:659
 msgid "Event"
 msgstr ""
 
-#: ical.py:924
+#: ../ical.py:948
 msgid "Event definitely deleted."
 msgstr ""
 
-#: ical.py:710
+#: ../ical.py:735
 msgid "Event not found"
 msgstr ""
 
-#: binary.py:140
+#: ../binary.py:152
 #, fuzzy
 msgid "Excel"
 msgstr "外部"
 
-#: binary.py:141
+#: ../binary.py:153
 msgid "Excel Spreadsheet"
 msgstr ""
 
-#: tracker/ui/view_tracker.xml.en:0
-#, fuzzy
-msgid "Export"
-msgstr "简易文件"
-
-#: ical.py:1327
+#: ../ical.py:1356
 msgid "Export in ical format"
 msgstr ""
 
-#: tracker/ui/view_tracker.xml.en:0
+#: ../tracker/ui/view_tracker.xml.en:63
 msgid "Export to CSV"
 msgstr ""
 
-#: tracker/ui/view_tracker.xml.en:0
+#: ../tracker/ui/view_tracker.xml.en:37
 #, fuzzy
 msgid "Export to Text"
 msgstr "简易文件"
 
-#: file.py:287
-msgid "External"
-msgstr "外部"
-
-#: ui/text/externaledit.xml.en:0
+#: ../ui/text/externaledit.xml.en:7
 #, fuzzy
 msgid "External Editor"
 msgstr "外部"
 
-#: ui/text/externaledit.xml.en:0
+#: ../ui/text/externaledit.xml.en:43
 #, fuzzy
 msgid "External Editor..."
 msgstr "外部"
 
-#: ui/website/anonymous.xml.en:0
-#, fuzzy
-msgid "Extranet"
-msgstr "外部"
-
-#: file.py:385
+#: ../ical.py:1347
 msgid "Failed to load the file, may contain errors."
 msgstr ""
 
-#: ical.py:45
+#: ../ical.py:50
 msgid "February"
 msgstr ""
 
-#: ui/file/upload.xml.en:0
+#: ../ui/file/upload.xml.en:14
 msgid "File"
 msgstr ""
 
-#: ui/user/edit_account.xml.en:0
+#: ../ui/user/edit_account.xml.en:9
 #, fuzzy
 msgid "First Name"
 msgstr "你的全名"
 
-#: tracker/tracker.py:103
+#: ../tracker/tracker.py:605
 msgid "Fixed"
 msgstr ""
 
-#: binary.py:106
+#: ../binary.py:119
 msgid "Flash"
 msgstr ""
 
-#: binary.py:107
+#: ../binary.py:120
 #, fuzzy
 msgid "Flash Document"
 msgstr "新文件"
 
-#: folder.py:68
+#: ../folder.py:559
 msgid "Folder"
 msgstr "文件夹"
 
-#: tracker/ui/view_tracker.xml.en:0
-msgid "For Excel (Encoding:"
-msgstr ""
-
-#: tracker/ui/view_tracker.xml.en:0
-msgid "For OpenOffice (Encoding:"
-msgstr ""
-
-#: ui/website/forgotten_password_form.xml.en:0
+#: ../website.py:229
 #, fuzzy
 msgid "Forgotten password"
 msgstr "改变内设"
 
-#: ui/folder/browse_image.xml.en:0
-#, fuzzy
-msgid "Format:"
-msgstr "格式"
-
-#: forum/forum.py:39
+#: ../forum/forum.py:40
 #, fuzzy
 msgid "Forum"
 msgstr "格式"
 
-#: ui/website/broken_links.xml.en:0
+#: ../ui/website/broken_links.xml.en:7
 msgid "Found <b>${total}</b> broken links."
 msgstr ""
 
-#: ical.py:50
+#: ../ical.py:67
 msgid "Friday"
 msgstr ""
 
-#: ui/ical/ical_edit_timetables.xml.en:0
+#: ../ui/ical/ical_edit_timetables.xml.en:27
 msgid "From"
 msgstr "格式"
 
-#: wiki/folder.py:53
+#: ../wiki/folder.py:54
 msgid "Front Page"
 msgstr ""
 
-#: ui/ical/ical_grid_weekly_view.xml.en:0
+#: ../ui/ical/ical_grid_weekly_view.xml.en:62
 msgid "Full day"
 msgstr ""
 
-#: tracker/ui/search.xml.en:0
+#: ../tracker/ui/search.xml.en:9
 msgid ""
 "Go to issue #<input name=\"issue_name\" size=\"6\" type=\"text\"/> <input "
-"class=\"button_ok\" type=\"submit\" value=\"OK\"/>"
+"class=\"button_ok\" name=\";go_to_issue\" value=\"OK\" type=\"submit\"/>"
 msgstr ""
 
-#: access.py:469
+#: ../access.py:200
 msgid "Grant access to a new user."
 msgstr ""
 
-#: access.py:99
+#: ../access.py:343
 msgid "Guest"
 msgstr ""
 
-#: binary.py:305
+#: ../binary.py:317
 msgid "Gzip"
 msgstr ""
 
-#: binary.py:306
+#: ../binary.py:318
 msgid "Gzip Compressed"
 msgstr ""
 
-#: wiki/page.py:224
+#: ../wiki/page.py:225
 msgid "HTML"
 msgstr ""
 
-#: text.py:226
+#: ../text.py:243
 msgid "HTML File"
 msgstr ""
 
-#: ui/root/credits.xml.en:0
+#: ../ui/root/credits.xml.en:10
 msgid "Hacking"
 msgstr ""
 
-#: wiki/ui/WikiPage_edit.xml.en:0
+#: ../wiki/ui/WikiPage_edit.xml.en:11
 msgid "Heading 1"
 msgstr ""
 
-#: wiki/ui/WikiPage_edit.xml.en:0
+#: ../wiki/ui/WikiPage_edit.xml.en:13
 msgid "Heading 2"
 msgstr ""
 
-#: wiki/ui/WikiPage_edit.xml.en:0
+#: ../wiki/ui/WikiPage_edit.xml.en:15
 msgid "Heading 3"
 msgstr ""
 
-#: wiki/page.py:558
+#: ../wiki/page.py:559
 msgid "Help"
 msgstr "帮助"
 
-#: ui/root/credits.xml.en:0
+#: ../ui/root/credits.xml.en:18
 msgid "Hervé Cauwelier (French)"
 msgstr ""
 
-#: tracker/tracker.py:102
+#: ../tracker/tracker.py:604
 msgid "High"
 msgstr ""
 
-#: tracker/tracker.py:118
+#: ../tracker/tracker.py:620
 msgid "High Priority"
 msgstr ""
 
-#: ui/file/history.xml.en:0
+#: ../versioning.py:43
 msgid "History"
 msgstr "记录"
 
-#: ui/root/license.xml.en:0
+#: ../shop/ui/book_new_instance.xml.en:67
+msgid "ISBN"
+msgstr ""
+
+#: ../ui/root/license.xml.en:21
 msgid ""
 "If not, see <a href=\"http://www.gnu.org/licenses/\">http://www.gnu.org/"
 "licenses/</a>."
 msgstr ""
 
-#: ui/root/internal_server_error.xml.en:0
+#: ../ui/root/internal_server_error.xml.en:9
 msgid "If the error persists contact with the system administrator."
 msgstr ""
 
-#: ui/text/externaledit.xml.en:0
+#: ../ui/text/externaledit.xml.en:13
 msgid "If you don't, you can download it from a link below."
 msgstr ""
 
-#: ui/root/about.xml.en:0
+#: ../ui/root/about.xml.en:47
 msgid ""
 "If you find a bug or wish some new feature, please <a href=\"http://bugs."
 "ikaaro.org\">file a bug report</a>."
 msgstr ""
 
-#: future/ui/dressable_edit_image.xml.en:0
+#: ../future/ui/dressable_edit_image.xml.en:18
 msgid "Image"
 msgstr ""
 
-#: access.py:391
+#: ../access.py:118
 #, fuzzy
 msgid "Inactive"
 msgstr "名称"
 
-#: text.py:129
+#: ../text.py:146
 msgid "Inline"
 msgstr "直接从内部写入."
 
-#: wiki/ui/WikiPage_edit.xml.en:0
+#: ../wiki/ui/WikiPage_edit.xml.en:23
 #, fuzzy
 msgid "Insert Image"
 msgstr "新链接"
 
-#: wiki/ui/WikiPage_edit.xml.en:0
+#: ../wiki/ui/WikiPage_edit.xml.en:21
 #, fuzzy
 msgid "Insert Link"
 msgstr "新链接"
 
-#: ui/root/internal_server_error.xml.en:0
+#: ../ui/root/internal_server_error.xml.en:7
 msgid "Internal Server Error"
 msgstr ""
 
-#: ui/website/anonymous.xml.en:0
-msgid "Intranet"
-msgstr ""
-
-#: html.py:104
+#: ../html.py:92
 msgid "Invalid HTML code."
 msgstr ""
 
-#: ical.py:698
+#: ../ical.py:722
 msgid "Invalid argument."
 msgstr ""
 
-#: forum/forum.py:109
+#: ../forum/forum.py:110
 msgid "Invalid title."
 msgstr ""
 
-#: tracker/issue.py:113
+#: ../tracker/resources.py:188
 msgid "Issue"
 msgstr ""
 
-#: tracker/ui/issue_history.xml.en:0
+#: ../tracker/ui/edit_resources.xml.en:7
+msgid "Issue #${issue/number}"
+msgstr ""
+
+#: ../tracker/ui/issue_history.xml.en:7
 msgid "Issue #${number}"
 msgstr ""
 
-#: tracker/tracker.py:70
+#: ../tracker/tracker.py:564
 msgid "Issue Tracker"
 msgstr ""
 
-#: tracker/tracker.py:764
+#: ../tracker/tracker.py:332
 msgid "Issue not found."
 msgstr ""
 
-#: tracker/tracker.py:832
+#: ../tracker/tracker.py:168
 #, fuzzy
 msgid "Issues"
 msgstr "用户"
 
-#: wiki/ui/WikiPage_edit.xml.en:0
+#: ../wiki/ui/WikiPage_edit.xml.en:19
 #, fuzzy
 msgid "Italic"
 msgstr "意在利语"
 
-#: ical.py:45
+#: ../ical.py:49
 msgid "January"
 msgstr ""
 
-#: ui/root/credits.xml.en:0
+#: ../ui/root/credits.xml.en:21
 msgid "Juan David Ibáñez Palomar (Spanish)"
 msgstr ""
 
-#: ical.py:46
+#: ../ical.py:55
 msgid "July"
 msgstr ""
 
-#: ical.py:46
+#: ../ical.py:54
 msgid "June"
 msgstr ""
 
-#: text.py:41
+#: ../text.py:89
 msgid "Keep your notes with plain text files."
 msgstr ""
 
-#: ui/base/edit_metadata.xml.en:0
-msgid "Keywords"
-msgstr ""
-
-#: ui/user/edit_language_form.xml.en:0
+#: ../ui/user/edit_language_form.xml.en:9
 msgid "Language"
 msgstr "语言"
 
-#: ui/website/languages.xml.en:0
+#: ../ui/website/languages.xml.en:7
 #, fuzzy
 msgid "Language Settings"
 msgstr "语言"
 
-#: website.py:336
+#: ../website.py:855
 msgid "Language added."
 msgstr "语言被加入."
 
-#: website.py:265
+#: ../website.py:781
 msgid "Languages"
 msgstr "语言"
 
-#: website.py:324
+#: ../website.py:841
 msgid "Languages removed."
 msgstr "语言被改变."
 
-#: wiki/ui/WikiPage_edit.xml.en:0
+#: ../wiki/ui/WikiPage_edit.xml.en:41
 #, fuzzy
 msgid "Large Edit Text"
 msgstr "简易文件"
 
-#: folder.py:359
+#: ../folder.py:189
 msgid "Last Author"
 msgstr ""
 
-#: folder.py:737
+#: ../folder.py:476
 #, fuzzy
 msgid "Last Changes"
 msgstr "改换"
 
-#: folder.py:359
+#: ../folder.py:188
 msgid "Last Modified"
 msgstr ""
 
-#: ui/user/edit_account.xml.en:0
+#: ../ui/user/edit_account.xml.en:14
 #, fuzzy
 msgid "Last Name"
 msgstr "姓名"
 
-#: ui/root/license.xml.en:0
+#: ../website.py:876
 msgid "License"
 msgstr "许可证"
 
-#: future/menu.py:48
+#: ../future/menu.py:49
 msgid "Link"
 msgstr "链接"
 
-#: wiki/ui/WikiPage_edit.xml.en:0
+#: ../wiki/ui/WikiPage_edit.xml.en:32
 msgid "Literal Block"
 msgstr ""
 
-#: ui/ical/ical_edit_event_form.xml.en:0
+#: ../ui/ical/ical_edit_event.xml.en:27
 #, fuzzy
 msgid "Location"
 msgstr "登录"
 
-#: ui/html/addlink.xml.en:0
-msgid "Location:"
-msgstr ""
-
-#: ui/website/login.xml.en:0
+#: ../ui/website/login.xml.en:20
 msgid "Log in"
 msgstr "登录"
 
-#: ui/website/login.xml.en:0
+#: ../website.py:135
 msgid "Login"
 msgstr "登录"
 
-#: tracker/tracker.py:102
+#: ../tracker/tracker.py:604
 msgid "Low"
 msgstr ""
 
-#: skins.py:157
+#: ../skins.py:172
 msgid "Main Menu"
 msgstr ""
 
-#: ui/root/about.xml.en:0
+#: ../ui/root/about.xml.en:27
 msgid "Manage Web Content and Electronic Documents;"
 msgstr ""
 
-#: ui/root/about.xml.en:0
+#: ../ui/root/about.xml.en:29
 msgid "Manage a project with the issue tracker."
 msgstr ""
 
-#: ui/user/profile.xml.en:0
+#: ../ui/user/profile.xml.en:23
 msgid "Manage personal content;"
 msgstr ""
 
-#: ical.py:45
+#: ../ical.py:51
 #, fuzzy
 msgid "March"
 msgstr "搜索"
 
-#: ical.py:46
+#: ../ical.py:53
 msgid "May"
 msgstr ""
 
-#: tracker/tracker.py:102
+#: ../tracker/tracker.py:604
 msgid "Medium"
 msgstr ""
 
-#: wiki/ui/WikiPage_edit.xml.en:0
+#: ../wiki/ui/WikiPage_edit.xml.en:39
 #, fuzzy
 msgid "Medium Edit Text"
 msgstr "简易文件"
 
-#: access.py:100
+#: ../access.py:344
 msgid "Member"
 msgstr ""
 
-#: access.py:436
+#: ../access.py:158
 #, fuzzy
 msgid "Members deleted."
 msgstr "没有物件被选中"
 
-#: forum/message.py:45
+#: ../forum/message.py:46
 msgid "Message"
 msgstr "信息"
 
-#: ui/PO_edit.xml.en:0
+#: ../ui/PO_edit.xml.en:11
 msgid ""
-"Message ${messages_index} / ${messages_total} <br/> <a title=\"Go to first "
-"message\" href=\"${messages_first}\">&lt;&lt;</a>"
+"Message ${messages_index} / ${messages_total} <br/> <a href="
+"\"${messages_first}\" title=\"Go to first message\">&lt;&lt;</a>"
 msgstr ""
 
-#: ui/html/addlink.xml.en:0
+#: ../ui/html/addlink.xml.en:31
 #, fuzzy
 msgid "Message :${message}"
 msgstr "信息"
 
-#: text.py:119
+#: ../text.py:136
 #, fuzzy
 msgid "Message Catalog"
 msgstr "信息"
 
-#: forum/message.py:46
+#: ../forum/message.py:47
 #, fuzzy
 msgid "Message in a thread"
 msgstr "信息被修正."
 
-#: website.py:782
+#: ../website.py:569
 #, fuzzy
 msgid "Message sent."
 msgstr "信息被修正."
 
-#: forum/ui/Forum_new_thread.xml.en:0
+#: ../forum/ui/Forum_new_thread.xml.en:15
 #, fuzzy
 msgid "Message:"
 msgstr "信息"
 
-#: ical.py:1307
+#: ../base.py:126
 msgid "Metadata"
 msgstr "附加信息"
 
-#: tracker/tracker.py:529
+#: ../tracker/tracker.py:792
 #, fuzzy
 msgid "Modifications:"
 msgstr "登录"
 
-#: tracker/tracker.py:63
+#: ../tracker/tracker.py:77
 msgid "Modified"
 msgstr ""
 
-#: ui/website/search_form.xml.en:0
-msgid "Modified after"
-msgstr ""
-
-#: ui/website/search_form.xml.en:0
-msgid "Modified before"
-msgstr ""
-
-#: tracker/ui/search.xml.en:0
-#, fuzzy
-msgid "Modified since:"
-msgstr "登录"
-
-#: tracker/tracker.py:60
+#: ../tracker/tracker.py:72
 #, fuzzy
 msgid "Module"
 msgstr "编码"
 
-#: tracker/ui/view_tracker.xml.en:0
-#, fuzzy
-msgid "Module:"
-msgstr "编码"
-
-#: ical.py:49
+#: ../ical.py:63
 msgid "Monday"
 msgstr ""
 
-#: ical.py:437
+#: ../ical.py:963
 msgid "Monthly"
 msgstr ""
 
-#: future/ui/order_items.xml.en:0
+#: ../future/ui/order_items.xml.en:71
 msgid "Move into ordered category"
 msgstr ""
 
-#: future/ui/order_items.xml.en:0
+#: ../future/ui/order_items.xml.en:42
 msgid "Move into unordered category"
 msgstr ""
 
-#: ui/ical/ical_edit_event_form.xml.en:0
+#: ../shop/ui/Shop_view.xml.en:17
+#, fuzzy
+msgid "My orders"
+msgstr "文件夹"
+
+#: ../ui/ical/ical_edit_event.xml.en:118
 msgid "NONE"
 msgstr ""
 
-#: wiki/ui/WikiPage_new_instance.xml.en:0
+#: ../wiki/ui/WikiPage_new_instance.xml.en:11
 msgid "Name"
 msgstr "姓名"
 
-#: ui/website/search_form.xml.en:0
-msgid "Name contains"
-msgstr ""
-
-#: ui/folder/browse_image.xml.en:0
-#, fuzzy
-msgid "Name:"
-msgstr "姓名"
-
-#: tracker/ui/search.xml.en:0
+#: ../tracker/ui/search.xml.en:8
 msgid "Navigation"
 msgstr ""
 
-#: tracker/ui/edit_issue.xml.en:0
-msgid "New Attachement:"
-msgstr ""
-
-#: tracker/ui/edit_issue.xml.en:0
-#, fuzzy
-msgid "New Comment:"
-msgstr "新文件"
-
-#: tracker/tracker.py:99
+#: ../tracker/tracker.py:592
 #, fuzzy
 msgid "New Feature"
 msgstr "新文件夹"
 
-#: ui/website/languages.xml.en:0
+#: ../ui/website/languages.xml.en:45
 #, fuzzy
 msgid "New Language:"
 msgstr "语言"
 
-#: ui/user/edit_password.xml.en:0
+#: ../ui/user/edit_password.xml.en:9
 #, fuzzy
 msgid "New Password"
 msgstr "密码"
 
-#: folder.py:289
-msgid "New Resource"
-msgstr "新文件夹"
-
-#: forum/ui/Forum_new_thread.xml.en:0
+#: ../forum/ui/Forum_new_thread.xml.en:7
 msgid "New Thread"
 msgstr ""
 
-#: wiki/ui/WikiPage_new_instance.xml.en:0
+#: ../wiki/ui/WikiPage_new_instance.xml.en:7
 #, fuzzy
 msgid "New Wiki Page"
 msgstr "新工作界面"
 
-#: tracker/tracker.py:750
+#: ../tracker/tracker.py:130
 #, fuzzy
-msgid "New issue addded."
+msgid "New issue added."
 msgstr "新资料被加入."
 
-#: table.py:274
+#: ../table.py:191
 #, fuzzy
 msgid "New record added."
 msgstr "新资料被加入."
 
-#: csv.py:208
+#: ../csv.py:222
 #, fuzzy
 msgid "New row added."
 msgstr "新资料被加入."
 
-#: future/menu.py:107
+#: ../future/menu.py:108
 msgid "New window"
 msgstr ""
 
-#: ui/user/confirm_registration.xml.en:0
+#: ../ui/user/confirm_registration.xml.en:36
 msgid "Next"
 msgstr ""
 
-#: ui/root/credits.xml.en:0
+#: ../ui/root/credits.xml.en:19
 msgid "Nicolas Deram (French)"
 msgstr ""
 
-#: tracker/tracker.py:466
+#: ../tracker/tracker.py:729
 msgid "No data to export."
 msgstr ""
 
-#: ui/user/tasks.xml.en:0
+#: ../ui/user/tasks.xml.en:7
 msgid "No document awaits your review."
 msgstr ""
 
-#: ical.py:1437
-msgid "No file has been entered."
-msgstr "没有文件被写入."
-
-#: ui/WorkflowAware_state.xml.en:0
+#: ../ui/WorkflowAware_state.xml.en:38
 #, fuzzy
 msgid "No history."
 msgstr "记录"
 
-#: tracker/tracker.py:911
+#: ../tracker/tracker.py:1035
 msgid "No objects selected."
 msgstr "没有物件被选中"
 
-#: forum/forum.py:105
+#: ../shop/ui/Cart_view.xml.en:9
+msgid "No products in your cart"
+msgstr ""
+
+#: ../forum/forum.py:106
 msgid "No title given."
 msgstr ""
 
-#: tracker/tracker.py:117
+#: ../tracker/tracker.py:619
 msgid "Not Assigned"
 msgstr ""
 
-#: ui/root/not_found.xml.en:0
+#: ../ui/root/not_found.xml.en:7
 #, fuzzy
 msgid "Not Found"
 msgstr "未发现物件."
 
-#: ui/file/upload.xml.en:0
+#: ../ui/file/upload.xml.en:7
 msgid "Note the name and title won't change."
 msgstr ""
 
-#: wiki/ui/WikiPage_new_instance.xml.en:0
+#: ../wiki/ui/WikiPage_new_instance.xml.en:35
 msgid "Note:"
 msgstr ""
 
-#: ical.py:968
+#: ../ical.py:617
 #, fuzzy
 msgid "Nothing to change."
 msgstr "用户资料被变更."
 
-#: folder.py:628
+#: ../folder.py:798
 #, fuzzy
 msgid "Nothing to paste."
 msgstr "用户资料被变更."
 
-#: ical.py:974
+#: ../ical.py:624
 msgid "Nothing to remove."
 msgstr ""
 
-#: ical.py:47
+#: ../ical.py:59
 msgid "November"
 msgstr ""
 
-#: binary.py:248
+#: ../binary.py:260
 msgid "ODP"
 msgstr ""
 
-#: binary.py:236
+#: ../binary.py:248
 msgid "ODS"
 msgstr ""
 
-#: binary.py:224
+#: ../binary.py:236
 msgid "ODT"
 msgstr ""
 
-#: ui/ical/ical_edit_event_form.xml.en:0
+#: ../ui/ical/ical_edit_event.xml.en:140
 msgid "OK"
 msgstr ""
 
-#: binary.py:176
+#: ../binary.py:188
 msgid "OOo Calc"
 msgstr ""
 
-#: binary.py:188
+#: ../binary.py:200
 #, fuzzy
 msgid "OOo Impress"
 msgstr "编辑文档"
 
-#: binary.py:164
+#: ../binary.py:176
 #, fuzzy
 msgid "OOo Writer"
 msgstr "写入"
 
-#: ui/ical/ical_edit_event_form.xml.en:0
+#: ../ui/ical/ical_edit_event.xml.en:117
 msgid "OPTIONNAL"
 msgstr ""
 
-#: future/order.py:172
+#: ../future/order.py:172
 #, fuzzy
 msgid "Objects already down."
 msgstr "用户被加入."
 
-#: future/order.py:216
+#: ../future/order.py:216
 #, fuzzy
 msgid "Objects already on bottom."
 msgstr "用户被加入."
 
-#: future/order.py:196
+#: ../future/order.py:196
 #, fuzzy
 msgid "Objects already on top."
 msgstr "用户被加入."
 
-#: future/order.py:149
+#: ../future/order.py:149
 #, fuzzy
 msgid "Objects already up."
 msgstr "物件被更名"
 
-#: folder.py:601
+#: ../folder.py:298
 msgid "Objects copied."
 msgstr "物件被复制"
 
-#: folder.py:621
+#: ../folder.py:319
 msgid "Objects cut."
 msgstr "物件被剪切"
 
-#: future/order.py:255
+#: ../future/order.py:255
 #, fuzzy
 msgid "Objects moved to ordered category."
 msgstr "Objects removed: %s."
 
-#: future/order.py:182
+#: ../future/order.py:182
 #, fuzzy
 msgid "Objects ordered down."
 msgstr "物件被更名"
 
-#: future/order.py:222
+#: ../future/order.py:222
 #, fuzzy
 msgid "Objects ordered on bottom."
 msgstr "用户被加入."
 
-#: future/order.py:202
+#: ../future/order.py:202
 #, fuzzy
 msgid "Objects ordered on top."
 msgstr "用户被加入."
 
-#: future/order.py:158
+#: ../future/order.py:158
 #, fuzzy
 msgid "Objects ordered up."
 msgstr "物件被更名"
 
-#: folder.py:662
+#: ../folder.py:833
 msgid "Objects pasted."
 msgstr "物件被粘贴"
 
-#: tracker/tracker.py:931
+#: ../tracker/tracker.py:1054
 #, fuzzy
 msgid "Objects removed: $objects."
 msgstr "Objects removed: %s."
 
-#: folder.py:580
+#: ../folder.py:399
 msgid "Objects renamed."
 msgstr "物件被更名"
 
-#: ical.py:47
+#: ../ical.py:58
 msgid "October"
 msgstr ""
 
-#: ical.py:855
+#: ../ical.py:881
 msgid "One or more field is invalid."
 msgstr ""
 
-#: ui/website/anonymous.xml.en:0
+#: ../ui/website/anonymous.xml.en:9
 msgid "Only administrators will be able to register new users."
 msgstr ""
 
-#: tracker/tracker.py:103
+#: ../tracker/tracker.py:605
 msgid "Open"
 msgstr ""
 
-#: tracker/tracker.py:116
+#: ../tracker/tracker.py:618
 msgid "Open Issues"
 msgstr ""
 
-#: binary.py:249
+#: ../binary.py:261
 #, fuzzy
 msgid "OpenDocument Presentation"
 msgstr "新文件"
 
-#: binary.py:237
+#: ../binary.py:249
 #, fuzzy
 msgid "OpenDocument Spreadsheet"
 msgstr "新文件"
 
-#: binary.py:225
+#: ../binary.py:237
 #, fuzzy
 msgid "OpenDocument Text"
 msgstr "编辑文档"
 
-#: binary.py:189
+#: ../binary.py:201
 msgid "OpenOffice.org Presentation"
 msgstr ""
 
-#: binary.py:177
+#: ../binary.py:189
 msgid "OpenOffice.org Spreadsheet"
 msgstr ""
 
-#: binary.py:165
+#: ../binary.py:177
 msgid "OpenOffice.org Text"
 msgstr ""
 
-#: users.py:288
+#: ../users.py:490
 msgid "Operation successful ! Welcome."
 msgstr ""
 
-#: future/order.py:100
+#: ../shop/ui/Order_new_instance.xml.en:86
 #, fuzzy
 msgid "Order"
 msgstr "文件夹"
 
-#: future/ui/order_items.xml.en:0
+#: ../future/ui/order_items.xml.en:41
 msgid "Order bottom"
 msgstr ""
 
-#: future/ui/order_items.xml.en:0
+#: ../shop/workflow.py:28
+#, fuzzy
+msgid "Order close"
+msgstr "文件夹"
+
+#: ../shop/orders.py:369
+msgid "Order created !"
+msgstr ""
+
+#: ../future/ui/order_items.xml.en:39
 msgid "Order down"
 msgstr ""
 
-#: future/ui/order_items.xml.en:0
+#: ../shop/orders.py:130
+#, fuzzy
+msgid "Order id"
+msgstr "文件夹"
+
+#: ../shop/ui/Order_view.xml.en:7
+#, fuzzy
+msgid "Order id:"
+msgstr "文件夹"
+
+#: ../shop/orders.py:283
+#, fuzzy
+msgid "Order number %s"
+msgstr "重命名物件"
+
+#: ../shop/workflow.py:27
+#, fuzzy
+msgid "Order open"
+msgstr "文件夹"
+
+#: ../future/ui/order_items.xml.en:40
 #, fuzzy
 msgid "Order top"
 msgstr "文件夹"
 
-#: future/ui/order_items.xml.en:0
+#: ../future/ui/order_items.xml.en:38
 msgid "Order up"
 msgstr ""
 
-#: wiki/ui/WikiPage_edit.xml.en:0
+#: ../wiki/ui/WikiPage_edit.xml.en:27
 #, fuzzy
 msgid "Ordered List"
 msgstr "文件夹"
 
-#: future/ui/order_items.xml.en:0
+#: ../future/ui/order_items.xml.en:8
 #, fuzzy
 msgid "Ordered Objects"
 msgstr "重命名物件"
 
-#: folder.py:69
+#: ../tracker/tracker.py:1069
+#, fuzzy
+msgid "Ordered select table"
+msgstr "重命名物件"
+
+#: ../shop/shop.py:59
+#, fuzzy
+msgid "Orders"
+msgstr "文件夹"
+
+#: ../folder.py:552
 msgid "Organize your files and documents with folders."
 msgstr ""
 
-#: folder.py:752
+#: ../folder.py:509
 msgid "Orphans"
 msgstr ""
 
-#: wiki/page.py:288
+#: ../shop/shop.py:54
+#, fuzzy
+msgid "Our orders"
+msgstr "文件夹"
+
+#: ../shop/ui/Shop_view.xml.en:7
+msgid "Our products"
+msgstr ""
+
+#: ../wiki/page.py:289
 msgid "PDF"
 msgstr ""
 
-#: binary.py:201
+#: ../binary.py:213
 #, fuzzy
 msgid "PDF Document"
 msgstr "新文件"
 
-#: wiki/page.py:470
+#: ../wiki/page.py:471
 msgid "PDF generation failed."
 msgstr ""
 
-#: wiki/page.py:455
+#: ../wiki/page.py:456
 msgid "PDF generation failed. Please install pdflatex."
 msgstr ""
 
-#: ui/root/credits.xml.en:0
+#: ../ui/root/credits.xml.en:20
 msgid "Paolo Dina (Italian)"
 msgstr ""
 
-#: ui/website/login.xml.en:0
+#: ../ui/website/login.xml.en:13
 msgid "Password"
 msgstr "密码"
 
-#: ui/user/edit_password.xml.en:0
-#, fuzzy
-msgid "Password Change"
-msgstr "密码被修改."
-
-#: users.py:456
+#: ../users.py:216
 msgid "Password changed."
 msgstr "密码被修改."
 
-#: users.py:440
-#, fuzzy
-msgid "Password empty, please type one."
-msgstr "密码错误,请再输入."
-
-#: users.py:443
+#: ../users.py:201
 #, fuzzy
 msgid "Passwords mismatch, please try again."
 msgstr "密码错误,请再输入."
 
-#: folder.py:378
+#: ../folder.py:209
 msgid "Paste"
 msgstr "粘贴"
 
-#: workflow.py:37
+#: ../shop/orders.py:134
+msgid "Pdf"
+msgstr ""
+
+#: ../workflow.py:118
 msgid "Pending"
 msgstr ""
 
-#: ui/user/profile.xml.en:0
+#: ../ui/user/profile.xml.en:29
 msgid "Pending tasks."
 msgstr ""
 
-#: tracker/tracker.py:101
+#: ../tracker/tracker.py:594
 msgid "Performance Improvement"
 msgstr ""
 
-#: text.py:64
+#: ../text.py:88
 msgid "Plain Text"
 msgstr "简易文件"
 
-#: website.py:179
+#: ../shop/ui/Order_new_instance.xml.en:9
+msgid "Please add products in your cart before."
+msgstr ""
+
+#: ../website.py:114
 #, fuzzy
 msgid "Please select a website."
 msgstr "你必须选择删除成员."
 
-#: tracker/ui/view_tracker.xml.en:0
+#: ../tracker/ui/view_tracker.xml.en:63
 msgid "Please select encoding:<br/><br/>"
 msgstr ""
 
-#: tracker/ui/view_tracker.xml.en:0
+#: ../tracker/ui/view_tracker.xml.en:39
 #, fuzzy
 msgid "Please select the columns to export:"
 msgstr "你必须选择删除成员."
 
-#: future/order.py:246
+#: ../future/order.py:246
 #, fuzzy
 msgid "Please select the ordered objects to move into the unordered category."
 msgstr "你必须选择删除成员."
 
-#: future/order.py:167
+#: ../future/order.py:167
 #, fuzzy
 msgid "Please select the ordered objects to order down."
 msgstr "你必须选择删除成员."
 
-#: future/order.py:210
+#: ../future/order.py:210
 #, fuzzy
 msgid "Please select the ordered objects to order on bottom."
 msgstr "你必须选择删除成员."
 
-#: future/order.py:190
+#: ../future/order.py:190
 #, fuzzy
 msgid "Please select the ordered objects to order on top."
 msgstr "你必须选择删除成员."
 
-#: future/order.py:143
+#: ../future/order.py:143
 #, fuzzy
 msgid "Please select the ordered objects to order up."
 msgstr "你必须选择删除成员."
 
-#: future/order.py:230
+#: ../future/order.py:230
 #, fuzzy
 msgid "Please select the unordered objects to move into the ordered category."
 msgstr "你必须选择删除成员."
 
-#: forum/ui/Forum_new_thread.xml.en:0
+#: ../forum/ui/Forum_new_thread.xml.en:21
 #, fuzzy
 msgid "Post"
 msgstr "粘贴"
 
-#: forum/ui/Thread_view.xml.en:0
+#: ../forum/ui/Thread_view.xml.en:44
 msgid "Post a Reply"
 msgstr ""
 
-#: binary.py:152
+#: ../binary.py:164
 msgid "PowerPoint"
 msgstr ""
 
-#: binary.py:153
+#: ../binary.py:165
 msgid "PowerPoint Presentation"
 msgstr ""
 
-#: ui/ical/ical_edit_event_form.xml.en:0
+#: ../users.py:132
+msgid "Preferences"
+msgstr "优先"
+
+#: ../ui/ical/ical_edit_event.xml.en:102
 #, fuzzy
 msgid "Presence"
 msgstr "优先"
 
-#: folder.py:672
+#: ../folder.py:408
 #, fuzzy
 msgid "Preview Content"
 msgstr "浏览"
 
-#: widgets.py:84
+#: ../widgets.py:92
 #, fuzzy
 msgid "Previous"
 msgstr "查阅"
 
-#: tracker/tracker.py:61
+#: ../shop/ui/product_new_instance.xml.en:30
+#, fuzzy
+msgid "Price"
+msgstr "隐私"
+
+#: ../tracker/tracker.py:74
 msgid "Priority"
 msgstr ""
 
-#: tracker/ui/view_tracker.xml.en:0
-msgid "Priority:"
-msgstr ""
-
-#: workflow.py:34
+#: ../workflow.py:113
 #, fuzzy
 msgid "Private"
 msgstr "隐私"
 
-#: users.py:296
+#: ../shop/ui/Shop_view_cart.xml.en:16
+msgid "Product"
+msgstr ""
+
+#: ../shop/products.py:164
+msgid "Product added to the cart"
+msgstr ""
+
+#: ../shop/products.py:110
+msgid "Product created!"
+msgstr ""
+
+#: ../users.py:50
 msgid "Profile"
 msgstr ""
 
-#: tracker/tracker.py:97
+#: ../tracker/tracker.py:590
 msgid "Programming Interface"
 msgstr ""
 
-#: workflow.py:40
+#: ../workflow.py:122
 #, fuzzy
 msgid "Public"
 msgstr "公共"
 
-#: workflow.py:45
+#: ../workflow.py:126
 msgid "Publish the document."
 msgstr "列出文档"
 
-#: text.py:206
+#: ../shop/ui/book_new_instance.xml.en:59
+#, fuzzy
+msgid "Publisher"
+msgstr "公共"
+
+#: ../text.py:223
 msgid "Python"
 msgstr ""
 
-#: ui/ical/ical_edit_event_form.xml.en:0
+#: ../shop/ui/Shop_view_cart.xml.en:17
+msgid "Quantity"
+msgstr ""
+
+#: ../ui/ical/ical_edit_event.xml.en:116
 msgid "REQUIRED"
 msgstr ""
 
-#: binary.py:212
+#: ../binary.py:224
 msgid "RTF"
 msgstr ""
 
-#: binary.py:213
+#: ../binary.py:225
 #, fuzzy
 msgid "RTF Document"
 msgstr "新文件"
 
-#: ui/website/contact_form.xml.en:0
+#: ../shop/workflow.py:34
+#, fuzzy
+msgid "Re-Open"
+msgstr "收件人"
+
+#: ../shop/workflow.py:34
+msgid "Re-open the order"
+msgstr ""
+
+#: ../ui/website/contact_form.xml.en:9
 msgid "Recipient"
 msgstr "收件人"
 
-#: table.py:190
+#: ../table.py:356
 #, fuzzy
 msgid "Record deleted."
 msgstr "记录被修正."
 
-#: website.py:468
+#: ../shop/ui/Shop_view_cart.xml.en:15
+#, fuzzy
+msgid "Reference"
+msgstr "优先"
+
+#: ../website.py:466
 #, fuzzy
 msgid "Register"
 msgstr "查阅"
 
-#: website.py:475
+#: ../website.py:464
 #, fuzzy
 msgid "Registration"
 msgstr "查阅"
 
-#: workflow.py:51
+#: ../workflow.py:135
 msgid "Reject the document."
 msgstr "删除文档"
 
-#: tracker/tracker.py:962
+#: ../tracker/tracker.py:1090
 #, fuzzy
 msgid "Released"
 msgstr "查阅"
 
-#: tracker/ui/search.xml.en:0
-#, fuzzy
-msgid "Remember as"
-msgstr "查阅"
-
-#: ui/website/languages.xml.en:0
+#: ../ui/website/languages.xml.en:37
 msgid "Remove"
 msgstr "删除"
 
-#: tracker/ui/edit_issue.xml.en:0
-msgid "Remove selected CCs"
-msgstr ""
-
-#: ui/folder/rename.xml.en:0
+#: ../ui/folder/rename.xml.en:20
 #, fuzzy
 msgid "Rename"
 msgstr "重命名"
 
-#: ui/folder/rename.xml.en:0
+#: ../folder.py:326
 #, fuzzy
-msgid "Rename Objects"
+msgid "Rename objects"
 msgstr "重命名物件"
 
-#: ui/user/confirm_registration.xml.en:0
+#: ../ui/user/confirm_registration.xml.en:28
 msgid "Repeat Password"
 msgstr "重复密码"
 
-#: ui/file/upload.xml.en:0
+#: ../ui/file/upload.xml.en:20
 #, fuzzy
 msgid "Replace"
 msgstr "查阅"
 
-#: ui/file/upload.xml.en:0
-#, fuzzy
-msgid "Replace File"
-msgstr "上载文件"
-
-#: forum/thread.py:147
+#: ../forum/thread.py:148
 msgid "Reply Posted."
 msgstr ""
 
-#: tracker/ui/edit_issue.xml.en:0
+#: ../tracker/ui/edit_issue.xml.en:9
 msgid "Reported by <em>${reported_by}</em>"
 msgstr ""
 
-#: workflow.py:47
+#: ../workflow.py:129
 msgid "Request the document publication."
 msgstr ""
 
-#: ui/ical/ical_edit_event_form.xml.en:0
+#: ../ui/ical/ical_edit_event.xml.en:12
 #, fuzzy
 msgid "Resource"
 msgstr "新文件夹"
 
-#: ical.py:1018
+#: ../ical.py:1113
 msgid "Resource not found."
 msgstr ""
 
-#: ui/website/search.xml.en:0
+#: ../tracker/resources.py:198
+#, fuzzy
+msgid "Resources"
+msgstr "新文件夹"
+
+#: ../tracker/resources.py:199
+msgid "Resources assigned to issues"
+msgstr ""
+
+#: ../ui/website/search.xml.en:15
 #, fuzzy
 msgid "Results"
 msgstr "搜索替代文件夹"
 
-#: workflow.py:55
+#: ../workflow.py:141
 msgid "Retire the document."
 msgstr "删除文档"
 
-#: workflow.py:49
+#: ../workflow.py:132
 #, fuzzy
 msgid "Retract the document."
 msgstr "删除文档"
 
-#: access.py:101
+#: ../access.py:345
 #, fuzzy
 msgid "Reviewer"
 msgstr "查阅"
 
-#: ui/access/new_user.xml.en:0
+#: ../ui/access/new_user.xml.en:30
 #, fuzzy
 msgid "Role"
 msgstr "删除"
 
-#: access.py:460
+#: ../access.py:189
 #, fuzzy
 msgid "Role updated."
 msgstr "文件被上载."
 
-#: csv.py:158
+#: ../csv.py:118
 #, fuzzy
 msgid "Row deleted."
 msgstr "没有物件被选中"
 
-#: ical.py:50
+#: ../ical.py:68
 msgid "Saturday"
 msgstr ""
 
-#: wiki/ui/WikiPage_edit.xml.en:0
+#: ../wiki/ui/WikiPage_edit.xml.en:51
 msgid "Save"
 msgstr "保存"
 
-#: wiki/ui/WikiPage_edit.xml.en:0
+#: ../wiki/ui/WikiPage_edit.xml.en:52
 msgid "Save & View"
 msgstr ""
 
-#: ical.py:1342
+#: ../ical.py:87
 msgid "Schedule your time with calendar files."
 msgstr ""
 
-#: ui/website/search_form.xml.en:0
+#: ../ui/website/search.xml.en:10
 msgid "Search"
 msgstr "搜索"
 
-#: ui/folder/browse_list.xml.en:0
-msgid "Search subfolders"
-msgstr "搜索替代文件夹"
+#: ../tracker/ui/search.xml.en:102
+#, fuzzy
+msgid "Search on resources"
+msgstr "新文件夹"
 
-#: tracker/ui/search.xml.en:0
+#: ../tracker/ui/search.xml.en:15
 #, fuzzy
 msgid "Search:"
 msgstr "搜索"
 
-#: tracker/tracker.py:99
+#: ../tracker/tracker.py:592
 #, fuzzy
 msgid "Security Issue"
 msgstr "安全"
 
-#: ui/website/anonymous.xml.en:0
+#: ../website.py:335
 #, fuzzy
 msgid "Security Policy"
 msgstr "安全"
 
-#: ui/root/license.xml.en:0
+#: ../ui/root/license.xml.en:14
 msgid "See the GNU General Public License for more details."
 msgstr ""
 
-#: access.py:326
+#: ../access.py:47
 #, fuzzy
 msgid "See the users and their roles."
 msgstr "用户被加入."
 
-#: ui/html/addlink.xml.en:0
+#: ../ui/html/addlink.xml.en:56
 #, fuzzy
 msgid "Select Resource"
 msgstr "新文件夹"
 
-#: tracker/tracker.py:784
+#: ../tracker/tracker.py:997
 msgid "Select Table"
 msgstr ""
 
-#: ui/website/contact_form.xml.en:0
+#: ../ui/website/contact_form.xml.en:34
 msgid "Send"
 msgstr "发送"
 
-#: ui/website/contact_form.xml.en:0
+#: ../ui/website/contact_form.xml.en:17
 msgid "Sender email address"
 msgstr ""
 
-#: ical.py:46
+#: ../ical.py:57
 msgid "September"
 msgstr ""
 
-#: folder.py:753
+#: ../shop/shop.py:36
+msgid "Shop"
+msgstr ""
+
+#: ../shop/ui/Order_view_all.xml.en:7
+#, fuzzy
+msgid "Shop Orders"
+msgstr "文件夹"
+
+#: ../folder.py:512
 msgid "Show objects not linked from anywhere."
 msgstr ""
 
-#: folder.py:360
+#: ../folder.py:190
 msgid "Size"
 msgstr "尺寸"
 
-#: ui/file/history.xml.en:0
+#: ../ui/file/history.xml.en:13
 msgid "Size (bytes)"
 msgstr ""
 
-#: ui/folder/browse_image.xml.en:0
-#, fuzzy
-msgid "Size:"
-msgstr "尺寸"
-
-#: skins.py:118
+#: ../skins.py:133
 msgid "Skin"
 msgstr ""
 
-#: wiki/ui/WikiPage_edit.xml.en:0
+#: ../wiki/ui/WikiPage_edit.xml.en:37
 #, fuzzy
 msgid "Small Edit Text"
 msgstr "简易文件"
 
-#: messages.py:32
+#: ../forum/thread.py:132
 msgid ""
 "Some required fields are missing, or some values are not valid. Please "
 "correct them and continue."
 msgstr ""
 
-#: ui/root/about.xml.en:0
+#: ../ui/root/about.xml.en:23
 msgid "Some things you can do with ikaaro:"
 msgstr ""
 
-#: tracker/tracker.py:100
+#: ../tracker/tracker.py:593
 msgid "Stability Issue"
 msgstr ""
 
-#: ui/ical/ical_edit_event_form.xml.en:0
+#: ../ui/ical/ical_edit_event.xml.en:33
 #, fuzzy
 msgid "Start"
 msgstr "状态"
 
-#: ical.py:860
+#: ../tracker/resources.py:185
+msgid "Start YYYY-MM-DD HH:MM"
+msgstr ""
+
+#: ../ical.py:887
 msgid "Start date MUST be earlier than end date."
 msgstr ""
 
-#: ical.py:97
+#: ../ical.py:134
 msgid "Start time must be earlier than end time."
 msgstr ""
 
-#: future/ui/order_items.xml.en:0
+#: ../future/ui/order_items.xml.en:57
 msgid "State"
 msgstr "状态"
 
-#: ui/WorkflowAware_state.xml.en:0
+#: ../ui/WorkflowAware_state.xml.en:36
 #, fuzzy
 msgid "State History"
 msgstr "记录"
 
-#: ui/ical/ical_edit_event_form.xml.en:0
+#: ../ui/ical/ical_edit_event.xml.en:75
 #, fuzzy
 msgid "Status"
 msgstr "状态"
 
-#: tracker/ui/edit_issue.xml.en:0
-#, fuzzy
-msgid "Status (mandatory):"
-msgstr "密码错误,请再输入."
+#: ../shop/ui/product_new_instance.xml.en:43
+msgid "Stock quantity"
+msgstr ""
 
-#: tracker/ui/view_tracker.xml.en:0
-#, fuzzy
-msgid "Status:"
-msgstr "状态"
-
-#: tracker/tracker.py:987
+#: ../tracker/tracker.py:1115
 #, fuzzy
 msgid "Stored Search"
 msgstr "搜索"
 
-#: tracker/ui/search.xml.en:0
+#: ../tracker/ui/search.xml.en:122
 msgid "Stored Searches"
 msgstr ""
 
-#: ui/website/contact_form.xml.en:0
+#: ../ui/website/contact_form.xml.en:23
 msgid "Subject"
 msgstr "主题"
 
-#: ui/website/forgotten_password_form.xml.en:0
+#: ../ui/website/forgotten_password_form.xml.en:16
 msgid "Submit"
 msgstr ""
 
-#: ui/ical/ical_edit_event_form.xml.en:0
+#: ../ui/ical/ical_edit_event.xml.en:21
 msgid "Summary"
 msgstr ""
 
-#: ical.py:50
+#: ../ical.py:69
 msgid "Sunday"
 msgstr ""
 
-#: ui/root/credits.xml.en:0
+#: ../ui/root/credits.xml.en:23
 msgid "Sylvain Taverne (French)"
 msgstr ""
 
-#: wiki/page.py:537
+#: ../wiki/page.py:538
 msgid "Syntax error, please check the view for details."
 msgstr ""
 
-#: wiki/ui/WikiPage_edit.xml.en:0
+#: ../wiki/ui/WikiPage_edit.xml.en:29
 #, fuzzy
 msgid "Table"
 msgstr "名称"
 
-#: binary.py:290
+#: ../binary.py:302
 #, fuzzy
 msgid "Tar"
 msgstr "对照"
 
-#: binary.py:291
+#: ../binary.py:303
 msgid "Tar Archive"
 msgstr ""
 
-#: future/ui/link_edit_metadata.xml.en:0
+#: ../future/ui/link_edit_metadata.xml.en:27
 #, fuzzy
 msgid "Target"
 msgstr "对照"
 
-#: ui/user/tasks.xml.en:0
+#: ../users.py:225
 msgid "Tasks"
 msgstr ""
 
-#: tracker/tracker.py:101
+#: ../tracker/tracker.py:594
 msgid "Technology Upgrade"
 msgstr ""
 
-#: ical.py:142
+#: ../ical.py:180
 #, fuzzy
 msgid "Tentative"
 msgstr "名称"
 
-#: folder.py:82
+#: ../shop/orders.py:388
+#, fuzzy
+msgid "Test"
+msgstr "对照"
+
+#: ../folder.py:115
 msgid "Text"
 msgstr ""
 
-#: tracker/ui/search.xml.en:0
-msgid "Text (search within the title and all comments)"
-msgstr ""
-
-#: ui/website/search_form.xml.en:0
-msgid "Text contains"
-msgstr ""
-
-#: ical.py:1317
+#: ../ical.py:1370
 #, fuzzy
 msgid "Text view"
 msgstr "名称"
 
-#: ui/website/logout.xml.en:0
+#: ../ui/website/logout.xml.en:9
 msgid "Thank you for using ikaaro."
 msgstr ""
 
-#: messages.py:24
+#: ../shop/ui/product_new_instance.xml.en:10
+msgid ""
+"The <span class=\"field_required\">emphasized</span> fields are required."
+msgstr ""
+
+#: ../messages.py:37
 #, fuzzy
 msgid "The changes have been saved ($time)."
 msgstr "预设语言已被改变."
 
-#: messages.py:23
+#: ../messages.py:34
 #, fuzzy
 msgid "The changes have been saved."
 msgstr "预设语言已被改变."
 
-#: website.py:308
+#: ../website.py:824
 msgid "The default language has been changed."
 msgstr "预设语言已被改变."
 
-#: messages.py:22
+#: ../messages.py:28
 msgid "The document name contains illegal characters, choose another one."
 msgstr "文件名中含有不符规定的符号,请更名."
 
-#: ui/user/tasks.xml.en:0
+#: ../ui/user/tasks.xml.en:12
 msgid "The documents below await review for publication:"
 msgstr ""
 
-#: access.py:493
-#, fuzzy
-msgid "The email address is missing, please type it."
-msgstr "用户名错误,请再输入."
-
-#: messages.py:30
+#: ../messages.py:55
 #, fuzzy
 msgid "The email address provided is invalid."
 msgstr "用户名错误,请再输入."
 
-#: future/dressable.py:323
+#: ../future/dressable.py:324
 msgid "The file is not an image"
 msgstr ""
 
-#: messages.py:28
+#: ../messages.py:49
 #, fuzzy
 msgid "The file must be entered."
 msgstr "必须写入文件."
 
-#: future/menu.py:120
+#: ../future/menu.py:121
 #, fuzzy
 msgid "The link must be entered."
 msgstr "必须写入文件."
 
-#: messages.py:35
+#: ../messages.py:61
 msgid "The name is missing."
 msgstr ""
 
-#: website.py:572
+#: ../website.py:182
 #, fuzzy
 msgid "The password is wrong."
 msgstr "密码错误,请再输入."
 
-#: messages.py:38
+#: ../messages.py:73
 #, fuzzy
 msgid "The provided passwords do not match."
 msgstr "密码错误,请再输入."
 
-#: ui/root/not_found.xml.en:0
+#: ../ui/root/not_found.xml.en:9
 msgid "The requested URL ${uri} was not found on this server."
 msgstr ""
 
-#: website.py:558
+#: ../website.py:168
 msgid "The user \"$username\" does not exist."
 msgstr ""
 
-#: website.py:567
+#: ../website.py:177
 msgid "The user \"$username\" is not active."
 msgstr ""
 
-#: tracker/issue.py:286
+#: ../tracker/issue.py:632
 #, fuzzy
 msgid "The user $title did some changes."
 msgstr "名称"
 
-#: access.py:532
+#: ../access.py:258
 #, fuzzy
 msgid "The user is already here."
 msgstr "用户被加入."
 
-#: widgets.py:50
+#: ../widgets.py:70
 #, fuzzy
-msgid "There are ${n} objects."
+msgid "There are ${n} items."
 msgstr "此处无图片."
 
-#: future/ui/order_items.xml.en:0
+#: ../tracker/tracker.py:509
+#, fuzzy
+msgid "There are ${n} results."
+msgstr "此处无图片."
+
+#: ../future/ui/order_items.xml.en:9
 #, fuzzy
 msgid "There are no ordered objects"
 msgstr "此处无图片."
 
-#: future/ui/order_items.xml.en:0
+#: ../future/ui/order_items.xml.en:49
 #, fuzzy
 msgid "There are no unordered objects"
 msgstr "此处无图片."
 
-#: tracker/ui/search.xml.en:0
+#: ../tracker/ui/search.xml.en:142
 #, fuzzy
 msgid "There are not stored searches."
 msgstr "此处无内容."
 
-#: ui/PO_edit.xml.en:0
+#: ../ui/PO_edit.xml.en:43
 msgid "There aren't messages."
 msgstr "此处无内容."
 
-#: ui/root/internal_server_error.xml.en:0
+#: ../ui/root/internal_server_error.xml.en:9
 #, fuzzy
 msgid "There has been an error, please try again later."
 msgstr "用户名错误,请再输入."
 
-#: widgets.py:50
-msgid "There is 1 object."
-msgstr ""
+#: ../widgets.py:69
+#, fuzzy
+msgid "There is 1 item."
+msgstr "名称"
 
-#: website.py:501
+#: ../tracker/tracker.py:508
+#, fuzzy
+msgid "There is 1 result."
+msgstr "此处无内容."
+
+#: ../website.py:494
 #, fuzzy
 msgid "There is already an active user with that email."
 msgstr "此文件名已被另外资源占有."
 
-#: messages.py:34
+#: ../messages.py:58
 #, fuzzy
 msgid "There is already another object with this name."
 msgstr "此名称已被另外物件名有."
 
-#: file.py:183
+#: ../file.py:103
 #, fuzzy
 msgid ""
 "There is already another object with this name. Please type a title to "
 "choose a different name."
 msgstr "此名称已被另外物件名有."
 
-#: users.py:391
+#: ../users.py:115
 #, fuzzy
-msgid "There is another user with the email \"%s\", please try again"
+msgid "There is another user with the email \"${email}\", please try again."
 msgstr "此用户名已登记\"%s\", 请输入另一用户名."
 
-#: folder.py:789
-#, fuzzy
-msgid "There is no orphan."
-msgstr "此处无内容."
-
-#: website.py:619
+#: ../website.py:249
 #, fuzzy
 msgid "There is not a user identified as \"$username\""
 msgstr "此用户名已登记\"%s\", 请输入另一用户名."
 
-#: ui/user/profile.xml.en:0
+#: ../ui/user/profile.xml.en:9
 msgid ""
 "This is your personal space where you can manage your own documents and "
 "publish them."
 msgstr ""
 
-#: file.py:330
+#: ../file.py:239
 msgid "This page is lock by another user"
 msgstr ""
 
-#: messages.py:37
+#: ../messages.py:70
 msgid "This page is locked by $user"
 msgstr ""
 
-#: ui/root/license.xml.en:0
+#: ../ui/root/license.xml.en:14
 msgid ""
 "This program is distributed in the hope that it will be useful, but WITHOUT "
 "ANY WARRANTY;"
 msgstr ""
 
-#: ui/root/license.xml.en:0
+#: ../ui/root/license.xml.en:7
 msgid "This program is free software:"
 msgstr ""
 
-#: forum/forum.py:112
+#: ../forum/forum.py:113
 msgid "This thread already exists."
 msgstr ""
 
-#: forum/thread.py:35
+#: ../forum/thread.py:36
 #, fuzzy
 msgid "Thread"
 msgstr "读入"
 
-#: forum/forum.py:127
+#: ../forum/forum.py:128
 msgid "Thread Created."
 msgstr ""
 
-#: ical.py:49
+#: ../ical.py:66
 msgid "Thursday"
 msgstr ""
 
-#: ical.py:979
+#: ../ical.py:629
 msgid "Timetable(s) removed successfully."
 msgstr ""
 
-#: ical.py:935
+#: ../ical.py:583
 #, fuzzy
 msgid "Timetables"
 msgstr "名称"
 
-#: ical.py:999
+#: ../ical.py:649
 msgid "Timetables updated successfully."
 msgstr ""
 
-#: ui/website/new_instance.xml.en:0
+#: ../ui/website/new_instance.xml.en:9
 msgid "Title"
 msgstr "名称"
 
-#: tracker/ui/edit_issue.xml.en:0
-#, fuzzy
-msgid "Title (mandatory):"
-msgstr "密码错误,请再输入."
-
-#: ui/website/search_form.xml.en:0
-msgid "Title contains"
-msgstr ""
-
-#: forum/ui/Forum_new_thread.xml.en:0
+#: ../shop/ui/product_view.xml.en:5
 #, fuzzy
 msgid "Title:"
 msgstr "名称"
 
-#: ui/user/confirm_registration.xml.en:0
+#: ../ui/user/confirm_registration.xml.en:9
 msgid "To activate your account, please type a password."
 msgstr ""
 
-#: ical.py:672
+#: ../ical.py:695
 msgid "To add an event, click on + symbol from the views."
 msgstr ""
 
-#: ui/user/edit_password.xml.en:0
+#: ../ui/user/edit_password.xml.en:19
 msgid "To confirm these changes, you must type your actual password."
 msgstr ""
 
-#: users.py:219
+#: ../users.py:421
 msgid ""
 "To confirm your identity click the link:\n"
 "\n"
 "  $confirm_url"
 msgstr ""
 
-#: ui/file/download_form.xml.en:0
+#: ../ui/file/download_form.xml.en:7
 msgid "To download this file, click on <a href=\"${url}\">${title_or_name}</a>"
 msgstr ""
 
-#: ui/root/about.xml.en:0
+#: ../ui/root/about.xml.en:32
 msgid "To learn more, check out these resources:"
 msgstr ""
 
-#: tracker/tracker.py:71
+#: ../tracker/tracker.py:565
 msgid "To manage bugs and tasks"
 msgstr ""
 
-#: users.py:576
-msgid "To manage the users please go <a href=\"/;permissions_form\">here</a>."
+#: ../users.py:579
+msgid "To manage the users please go <a href=\"/;permissions\">here</a>."
 msgstr ""
 
-#: workflow.py:184
+#: ../shop/ui/Order_new_instance.xml.en:39
+#, fuzzy
+msgid "Total"
+msgstr "名称"
+
+#: ../shop/ui/Shop_view_cart.xml.en:40
+msgid "Total Price"
+msgstr ""
+
+#: ../workflow.py:99
 msgid "Transition done."
 msgstr ""
 
-#: ui/PO_edit.xml.en:0
+#: ../ui/PO_edit.xml.en:27
 #, fuzzy
 msgid "Translation"
 msgstr "保存翻译件"
 
-#: ui/root/credits.xml.en:0
+#: ../ui/root/credits.xml.en:16
 #, fuzzy
 msgid "Translators"
 msgstr "保存翻译件"
 
-#: ical.py:49
+#: ../shop/ui/Order_new_instance.xml.en:35
+msgid "Transport XXX"
+msgstr ""
+
+#: ../ical.py:64
 msgid "Tuesday"
 msgstr ""
 
-#: tracker/tracker.py:60
+#: ../tracker/tracker.py:73
 #, fuzzy
 msgid "Type"
 msgstr "种类"
 
-#: tracker/ui/edit_issue.xml.en:0
-#, fuzzy
-msgid "Type (mandatory):"
-msgstr "密码错误,请再输入."
-
-#: ui/html/addlink.xml.en:0
+#: ../ui/html/addlink.xml.en:34
 msgid "Type the URL of an external resource"
 msgstr ""
 
-#: ui/website/virtual_hosts.xml.en:0
+#: ../ui/website/virtual_hosts.xml.en:7
 msgid ""
 "Type the hostnames this website will apply to, each one in a different line."
 msgstr ""
 
-#: website.py:549
+#: ../website.py:159
 msgid "Type your email please."
 msgstr ""
 
-#: wiki/ui/WikiPage_new_instance.xml.en:0
+#: ../wiki/ui/WikiPage_new_instance.xml.en:22
 msgid "Type your text here..."
 msgstr ""
 
-#: tracker/ui/view_tracker.xml.en:0
-#, fuzzy
-msgid "Type:"
-msgstr "种类"
-
-#: future/ui/link_edit_metadata.xml.en:0
+#: ../future/ui/link_edit_metadata.xml.en:21
 msgid "URL"
 msgstr ""
 
-#: tracker/ui/view_tracker.xml.en:0
-msgid "UTF-8, Separator:"
+#: ../file.py:182
+msgid "Unexpected file of mimetype %s"
 msgstr ""
 
-#: file.py:377
-msgid "Unexpected file of mimetype ${mimetype}."
+#: ../shop/ui/Shop_view_cart.xml.en:19
+msgid "Unit Price After VAT"
 msgstr ""
 
-#: tracker/tracker.py:96
+#: ../shop/ui/Shop_view_cart.xml.en:18
+msgid "Unit Price Before VAT"
+msgstr ""
+
+#: ../tracker/tracker.py:589
 #, fuzzy
 msgid "Unit Tests"
 msgstr "简易文件"
 
-#: tracker/tracker.py:638
+#: ../views.py:56
+msgid "Unknown object."
+msgstr ""
+
+#: ../tracker/tracker.py:897
 msgid "Unknown stored search \"${sname}\"."
 msgstr ""
 
-#: wiki/ui/WikiPage_edit.xml.en:0
+#: ../wiki/ui/WikiPage_edit.xml.en:25
 #, fuzzy
 msgid "Unordered List"
 msgstr "目录"
 
-#: future/ui/order_items.xml.en:0
+#: ../future/ui/order_items.xml.en:48
 #, fuzzy
 msgid "Unordered Objects"
 msgstr "目录"
 
-#: ui/ical/ical_edit_timetables.xml.en:0
+#: ../ui/ical/ical_edit_timetables.xml.en:43
 #, fuzzy
 msgid "Update"
 msgstr "更新目录"
 
-#: tracker/ui/view_tracker.xml.en:0
+#: ../tracker/ui/view_tracker.xml.en:53
 msgid "Update text export"
 msgstr ""
 
-#: future/ui/dressable_edit_image.xml.en:0
+#: ../future/ui/dressable_edit_image.xml.en:27
 msgid "Upload"
 msgstr "上载"
 
-#: ui/file/new_instance.xml.en:0
+#: ../file.py:52
 msgid "Upload File"
 msgstr "上载文件"
 
-#: future/ui/dressable_edit_image.xml.en:0
+#: ../future/ui/dressable_edit_image.xml.en:7
 #, fuzzy
 msgid "Upload Image"
 msgstr "上载文件"
 
-#: ui/html/addlink.xml.en:0
+#: ../ui/html/addlink.xml.en:100
 msgid "Upload a file to the current folder and link to it:"
 msgstr ""
 
-#: ui/html/addimage.xml.en:0
+#: ../ui/html/addimage.xml.en:63
 msgid "Upload an image to the current folder and insert it:"
 msgstr ""
 
-#: ui/html/addimage.xml.en:0
+#: ../ui/html/addimage.xml.en:69
 #, fuzzy
 msgid "Upload and Insert"
 msgstr "上载文件"
 
-#: ui/html/addlink.xml.en:0
+#: ../ui/html/addlink.xml.en:107
 #, fuzzy
 msgid "Upload and Link"
 msgstr "上载文件"
 
-#: ical.py:1446
-msgid ""
-"Upload failed: either the file does not match this document type ($mimetype) "
-"or it contains errors."
-msgstr ""
-
-#: ical.py:1432
+#: ../ical.py:1330
 #, fuzzy
 msgid "Upload from an ical file"
 msgstr "上载文件"
 
-#: file.py:48
+#: ../file.py:328
 msgid "Upload office documents, images, media files, etc."
 msgstr ""
 
-#: ui/file/history.xml.en:0
+#: ../ui/file/history.xml.en:11
 msgid "User"
 msgstr "用户"
 
-#: access.py:407
+#: ../access.py:135
 #, fuzzy
 msgid "User ID"
 msgstr "用户"
 
-#: access.py:546
+#: ../access.py:271
 #, fuzzy
 msgid "User added."
 msgstr "加入用户"
 
-#: users.py:235
+#: ../users.py:437
 msgid "User has already confirm his registration!"
 msgstr ""
 
-#: ui/user/confirm_registration.xml.en:0
+#: ../ui/user/confirm_registration.xml.en:16
 msgid "Username"
 msgstr "用户姓名"
 
-#: root.py:100
+#: ../root.py:120
 msgid "Users"
 msgstr "用户"
 
-#: tracker/tracker.py:59
+#: ../shop/ui/product_new_instance.xml.en:37
+msgid "VAT"
+msgstr ""
+
+#: ../tracker/tracker.py:71
 #, fuzzy
 msgid "Version"
 msgstr "个人"
 
-#: tracker/ui/edit_issue.xml.en:0
+#: ../ical.py:1350
 #, fuzzy
-msgid "Version (mandatory):"
-msgstr "密码错误,请再输入."
-
-#: ical.py:1451
-msgid "Version uploaded."
+msgid "Version uploaded"
 msgstr "版本上载."
 
-#: tracker/ui/view_tracker.xml.en:0
-#, fuzzy
-msgid "Version:"
-msgstr "个人"
-
-#: binary.py:85
+#: ../binary.py:98
 #, fuzzy
 msgid "Video"
 msgstr "浏览"
 
-#: ui/text/view.xml.en:0
+#: ../wiki/page.py:288
 msgid "View"
 msgstr "浏览"
 
-#: tracker/tracker.py:358
+#: ../tracker/tracker.py:482
 msgid "View Tracker"
 msgstr ""
 
-#: widgets.py:107
+#: ../shop/orders.py:117
+msgid "View all orders"
+msgstr ""
+
+#: ../widgets.py:115
 msgid "View from ${start} to ${end} (${link}):"
 msgstr ""
 
-#: ui/website/virtual_hosts.xml.en:0
+#: ../shop/orders.py:59
+msgid "View my orders"
+msgstr ""
+
+#: ../website.py:303
 msgid "Virtual Hosts"
 msgstr ""
 
-#: ui/root/about.xml.en:0
+#: ../ui/root/about.xml.en:44
 msgid "Visit the project's <a href=\"http://www.ikaaro.org/\">Web Site</a>;"
 msgstr ""
 
-#: tracker/tracker.py:98
+#: ../tracker/tracker.py:591
 #, fuzzy
 msgid "Visual Interface"
 msgstr "选择你的界面"
 
-#: ui/root/about.xml.en:0
+#: ../ui/root/about.xml.en:40
 msgid "Want to know who is behind this software?"
 msgstr ""
 
-#: html.py:124
+#: ../html.py:155
 msgid "Web Page"
 msgstr ""
 
-#: website.py:52
+#: ../website.py:676
 msgid "Web Site"
 msgstr ""
 
-#: ical.py:49
+#: ../ical.py:65
 msgid "Wednesday"
 msgstr ""
 
-#: ical.py:248
-msgid "Week "
+#: ../ical.py:287
+msgid "Week $n"
 msgstr ""
 
-#: ical.py:510
+#: ../ical.py:1041
 msgid "Weekly"
 msgstr ""
 
-#: ui/user/profile.xml.en:0
+#: ../ui/user/profile.xml.en:9
 msgid "Welcome to your home folder."
 msgstr ""
 
-#: wiki/folder.py:34
+#: ../wiki/folder.py:35
 msgid "Wiki"
 msgstr ""
 
-#: wiki/page.py:63
+#: ../wiki/page.py:64
 msgid "Wiki Page"
 msgstr ""
 
-#: wiki/page.py:64
+#: ../wiki/page.py:65
 msgid "Wiki contents"
 msgstr ""
 
-#: binary.py:128
+#: ../binary.py:140
 msgid "Word"
 msgstr ""
 
-#: binary.py:129
+#: ../binary.py:141
 #, fuzzy
 msgid "Word Text"
 msgstr "简易文件"
 
-#: ui/root/about.xml.en:0
+#: ../ui/root/about.xml.en:28
 msgid "Work together with the Wiki;"
 msgstr ""
 
-#: ui/WorkflowAware_state.xml.en:0
+#: ../ui/WorkflowAware_state.xml.en:7
 msgid "Workflow State"
 msgstr ""
 
-#: ui/website/search_form.xml.en:0
-msgid "Workflow state"
-msgstr ""
-
-#: ical.py:95
+#: ../ical.py:132
 msgid "Wrong time selection (HH:MM)."
 msgstr ""
 
-#: ical.py:90
+#: ../ical.py:127
 msgid "Wrong time selection."
 msgstr ""
 
-#: text.py:217
+#: ../text.py:234
 msgid "XML File"
 msgstr ""
 
-#: ui/website/languages.xml.en:0
+#: ../ui/website/languages.xml.en:29
 msgid "Yes"
 msgstr ""
 
-#: ui/website/logout.xml.en:0
+#: ../ui/website/logout.xml.en:7
 msgid "You Are Now Logged out"
 msgstr ""
 
-#: ical.py:824
+#: ../ical.py:849
 msgid "You are not authorized to modify this event."
 msgstr ""
 
-#: ui/website/logout.xml.en:0
+#: ../ui/website/logout.xml.en:11
 msgid "You are now an anonymous visitor."
 msgstr ""
 
-#: ui/user/profile.xml.en:0
+#: ../ui/user/profile.xml.en:14
 #, fuzzy
 msgid "You can do the following actions:"
 msgstr "你是以下组件中的一成员"
 
-#: future/ui/dressable_edit_image.xml.en:0
+#: ../future/ui/dressable_edit_image.xml.en:37
 msgid ""
 "You can download the current picture by clicking right on the image and "
 "click Save Image As."
 msgstr ""
 
-#: ui/text/externaledit.xml.en:0
+#: ../ui/text/externaledit.xml.en:9
 msgid ""
 "You can edit this document using an application from your desktop, like MS "
 "Office or OpenOffice.org."
 msgstr ""
 
-#: website.py:319
+#: ../website.py:836
 msgid "You can not remove the default language."
 msgstr "你不能改变预设语言."
 
-#: ui/ical/ical_edit_timetables.xml.en:0
+#: ../ui/ical/ical_edit_timetables.xml.en:7
 msgid "You can specify timetables to limit the range when an event can be set"
 msgstr ""
 
-#: ui/file/upload.xml.en:0
+#: ../ui/file/upload.xml.en:7
 #, fuzzy
 msgid "You can upload a new file to replace the current one."
 msgstr " 你可以上载一个文件通过内存系统建立一个新文档."
 
-#: messages.py:41
+#: ../messages.py:76
 msgid ""
 "You have already confirmed your registration. Try to log in or ask for a new "
 "password."
 msgstr ""
 
-#: ui/text/externaledit.xml.en:0
+#: ../shop/ui/Orders_view.xml.en:7
+msgid "You have no orders yet."
+msgstr ""
+
+#: ../ui/text/externaledit.xml.en:30
 msgid ""
 "You may need to change the character encoding if your application doesn't "
 "support UTF-8 (not recommended)."
 msgstr ""
 
-#: users.py:435
+#: ../users.py:195
 msgid "You mistyped your actual password, your account is not changed."
 msgstr ""
 
-#: website.py:331
+#: ../website.py:849
 msgid "You must choose a language"
 msgstr "你必须选择一种语言."
 
-#: website.py:301
+#: ../website.py:817
 msgid "You must select one and only one language."
 msgstr "你只能选择一种语言."
 
-#: ui/root/license.xml.en:0
+#: ../ui/root/license.xml.en:21
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "this program."
 msgstr ""
 
-#: messages.py:43
+#: ../shop/ui/Order_new_instance.xml.en:44
+#, fuzzy
+msgid "Your account"
+msgstr "关于IKAARO"
+
+#: ../shop/ui/Shop_view_cart.xml.en:12
+msgid "Your cart"
+msgstr ""
+
+#: ../shop/ui/Shop_view_cart.xml.en:8
+msgid "Your cart is empty !"
+msgstr ""
+
+#: ../messages.py:25
 msgid "Your confirmation key is invalid."
 msgstr ""
 
-#: ui/website/logout.xml.en:0
+#: ../ui/website/logout.xml.en:11
 msgid "Your login information has been cleared."
 msgstr ""
 
-#: ui/root/credits.xml.en:0
+#: ../shop/ui/Order_view.xml.en:7
+#, fuzzy
+msgid "Your order"
+msgstr "文件夹"
+
+#: ../shop/ui/Orders_view.xml.en:12
+msgid "Your orders"
+msgstr ""
+
+#: ../ui/root/credits.xml.en:22
 msgid "Zhou Li (Chinese)"
 msgstr ""
 
-#: binary.py:278
+#: ../shop/ui/Order_new_instance.xml.en:64
 msgid "Zip"
 msgstr ""
 
-#: binary.py:279
+#: ../binary.py:291
 msgid "Zip Archive"
 msgstr ""
 
-#: tracker/ui/edit_issue.xml.en:0
+#: ../ui/folder/browse_image.xml.en:10
+msgid "Zoom"
+msgstr ""
+
+#: ../ui/folder/browse_image.xml.en:13
+msgid "Zoom In"
+msgstr ""
+
+#: ../ui/folder/browse_image.xml.en:11
+msgid "Zoom Out"
+msgstr ""
+
+#: ../tracker/ui/edit_issue.xml.en:124
 msgid ""
 "[ <a onclick=\"javascript:reply('${comment/number}');\" href=\"#new_comment"
 "\"> Reply </a>]"
 msgstr ""
 
-#: tracker/tracker.py:558
+#: ../tracker/tracker.py:821
 msgid "[%s]"
 msgstr ""
 
-#: wiki/page.py:606
-msgid "`%s`_"
-msgstr ""
-
-#: wiki/ui/WikiPage_new_instance.xml.en:0
+#: ../wiki/ui/WikiPage_new_instance.xml.en:35
 msgid ""
 "administrators can add new languages at the root of the application, tab "
 "\"Settings\", subtab \"Languages\"."
 msgstr ""
 
-#: root.py:70
+#: ../shop/orders.py:132
+msgid "customer"
+msgstr ""
+
+#: ../root.py:91
 msgid "iKaaro"
 msgstr ""
 
-#: ui/root/about.xml.en:0
+#: ../ui/root/about.xml.en:16
 msgid ""
 "iKaaro is a Content Management System, written in the <a href=\"http://www."
 "python.org\">Python</a> programming language, and based on the <a href="
 "\"http://www.ikaaro.org/itools\">itools</a> library."
 msgstr ""
 
-#: ui/ical/ical_edit_timetables.xml.en:0
+#: ../tracker/tracker.py:1073
+#, fuzzy
+msgid "rank"
+msgstr "德语"
+
+#: ../ui/ical/ical_edit_timetables.xml.en:31
 msgid "to"
 msgstr ""
 
-#: ui/root/license.xml.en:0
+#: ../ui/root/license.xml.en:14
 msgid ""
 "without even the implied warranty of MERCHANTABILITY or FITNESS FOR A "
 "PARTICULAR PURPOSE."
 msgstr ""
 
-#: ui/root/license.xml.en:0
+#: ../ui/root/license.xml.en:7
 msgid ""
 "you can redistribute it and/or modify it under the terms of the GNU General "
 "Public License as published by the Free Software Foundation, either version "
 "3 of the License, or (at your option) any later version."
 msgstr ""
 
-#: ui/folder/rename.xml.en:0
+#: ../ui/folder/rename.xml.en:14
 msgid ""
-"⇒ ${object/parent_path}<input name=\"new_names\" style=\"font-family: "
-"monospace;\" type=\"text\" value=\"${object/name}\"/>"
+"⇒ ${object/parent_path}<input value=\"${object/name}\" name=\"new_names\" "
+"style=\"font-family: monospace;\" type=\"text\"/>"
 msgstr ""
 
 #, fuzzy
@@ -3720,16 +4213,20 @@ msgstr ""
 #~ msgstr "物件被更名"
 
 #, fuzzy
+#~ msgid "${menu/title}"
+#~ msgstr "名称"
+
+#, fuzzy
 #~ msgid "${option/label}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgid "${state/value}"
 #~ msgstr "名称"
 
 #, fuzzy
 #~ msgid "${thread/last_date}"
 #~ msgstr "用户资料列单"
-
-#, fuzzy
-#~ msgid "%d obs"
-#~ msgstr "%d 字节"
 
 #~ msgid "-- Choose a language --"
 #~ msgstr "选择语言"
@@ -3739,8 +4236,12 @@ msgstr ""
 #~ msgstr "名称"
 
 #, fuzzy
-#~ msgid "Add Document"
-#~ msgstr "新文件"
+#~ msgid "Account Change"
+#~ msgstr "改换"
+
+#, fuzzy
+#~ msgid "Add CC:"
+#~ msgstr "加入"
 
 #, fuzzy
 #~ msgid "Add Language"
@@ -3769,15 +4270,15 @@ msgstr ""
 #~ msgid "Anonymous users allowed to join this web site"
 #~ msgstr "无名用户准许进入此网站"
 
+#, fuzzy
+#~ msgid "Application Language"
+#~ msgstr "优先"
+
 #~ msgid "As Icons"
 #~ msgstr "图标"
 
 #~ msgid "As List"
 #~ msgstr "目录"
-
-#, fuzzy
-#~ msgid "Border"
-#~ msgstr "文件夹"
 
 #~ msgid "Browse-Directories"
 #~ msgstr "浏览"
@@ -3814,15 +4315,15 @@ msgstr ""
 #~ msgstr "选择你的语言"
 
 #, fuzzy
+#~ msgid "Comment:"
+#~ msgstr "新文件"
+
+#, fuzzy
 #~ msgid "Compare selected revisions"
 #~ msgstr "必须选择一或二个修正版."
 
 #~ msgid "Copy to present"
 #~ msgstr "复制到当前"
-
-#, fuzzy
-#~ msgid "Create a New Group"
-#~ msgstr "建立一新组件"
 
 #, fuzzy
 #~ msgid "Demo"
@@ -3866,19 +4367,30 @@ msgstr ""
 #~ msgid "Documents are where the data is stored"
 #~ msgstr "文件在数据存储处."
 
+#, fuzzy
+#~ msgid "Edit Text"
+#~ msgstr "简易文件"
+
 #~ msgid "English"
 #~ msgstr "英语"
+
+#, fuzzy
+#~ msgid "Export"
+#~ msgstr "简易文件"
+
+#~ msgid "External"
+#~ msgstr "外部"
 
 #, fuzzy
 #~ msgid "External Editor.."
 #~ msgstr "外部"
 
+#, fuzzy
+#~ msgid "Extranet"
+#~ msgstr "外部"
+
 #~ msgid "File uploaded."
 #~ msgstr "文件被上载."
-
-#, fuzzy
-#~ msgid "First name"
-#~ msgstr "你的全名"
 
 #~ msgid "Folders are used to classify documents"
 #~ msgstr "文件夹用于文件分类."
@@ -3888,6 +4400,10 @@ msgstr ""
 
 #~ msgid "Folders let to classify other resources."
 #~ msgstr "文件夹用于文件分类."
+
+#, fuzzy
+#~ msgid "Format:"
+#~ msgstr "格式"
 
 #, fuzzy
 #~ msgid "Formatted"
@@ -3906,9 +4422,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "General settings changed."
 #~ msgstr "总设置被改变"
-
-#~ msgid "German"
-#~ msgstr "德语"
 
 #~ msgid "Group added."
 #~ msgstr "组件加入"
@@ -3974,8 +4487,30 @@ msgstr ""
 #~ msgstr "用户资料被变更."
 
 #, fuzzy
+#~ msgid "Modified since:"
+#~ msgstr "登录"
+
+#, fuzzy
+#~ msgid "Module:"
+#~ msgstr "编码"
+
+#, fuzzy
 #~ msgid "My Content"
 #~ msgstr "浏览"
+
+#, fuzzy
+#~ msgid "Name:"
+#~ msgstr "姓名"
+
+#, fuzzy
+#~ msgid "New Comment:"
+#~ msgstr "新文件"
+
+#~ msgid "New Resource"
+#~ msgstr "新文件夹"
+
+#~ msgid "No file has been entered."
+#~ msgstr "没有文件被写入."
 
 #~ msgid "No objects selected"
 #~ msgstr "没有物件被选中"
@@ -4004,6 +4539,14 @@ msgstr ""
 #~ msgstr "Objects removed: %s."
 
 #, fuzzy
+#~ msgid "Password Change"
+#~ msgstr "密码被修改."
+
+#, fuzzy
+#~ msgid "Password empty, please type one."
+#~ msgstr "密码错误,请再输入."
+
+#, fuzzy
 #~ msgid "Patents."
 #~ msgstr "粘贴"
 
@@ -4017,9 +4560,6 @@ msgstr ""
 
 #~ msgid "Portuguese"
 #~ msgstr "葡萄牙语"
-
-#~ msgid "Preferences"
-#~ msgstr "优先"
 
 #, fuzzy
 #~ msgid "Publishers of the Future"
@@ -4039,11 +4579,19 @@ msgstr ""
 #~ msgstr "删除"
 
 #, fuzzy
+#~ msgid "Remember as"
+#~ msgstr "查阅"
+
+#, fuzzy
 #~ msgid "Remove Format"
 #~ msgstr "删除"
 
 #~ msgid "Rename.."
 #~ msgstr "重命名"
+
+#, fuzzy
+#~ msgid "Replace File"
+#~ msgstr "上载文件"
 
 #, fuzzy
 #~ msgid "Reviewers"
@@ -4056,6 +4604,9 @@ msgstr ""
 #~ msgid "Save Changes"
 #~ msgstr "改换"
 
+#~ msgid "Search subfolders"
+#~ msgstr "搜索替代文件夹"
+
 #, fuzzy
 #~ msgid "Search term"
 #~ msgstr "搜索"
@@ -4067,8 +4618,20 @@ msgstr ""
 #~ msgstr "设置"
 
 #, fuzzy
+#~ msgid "Size:"
+#~ msgstr "尺寸"
+
+#, fuzzy
 #~ msgid "Spanish (es)"
 #~ msgstr "西班牙语"
+
+#, fuzzy
+#~ msgid "Status (mandatory):"
+#~ msgstr "密码错误,请再输入."
+
+#, fuzzy
+#~ msgid "Status:"
+#~ msgstr "状态"
 
 #, fuzzy
 #~ msgid "Superscript"
@@ -4091,8 +4654,8 @@ msgstr ""
 #~ msgstr "感谢你加入我们,请登录."
 
 #, fuzzy
-#~ msgid "The active item"
-#~ msgstr "名称"
+#~ msgid "The email address is missing, please type it."
+#~ msgstr "用户名错误,请再输入."
 
 #~ msgid "The list below describes your skills as a translator:"
 #~ msgstr "以下目录详述你作为翻译者的技巧"
@@ -4142,6 +4705,10 @@ msgstr ""
 #~ msgid "This is a tar file, you can untar it by clicking the button below:"
 #~ msgstr "这是个tar文件, 你可以通过击打如下键获得"
 
+#, fuzzy
+#~ msgid "Title (mandatory):"
+#~ msgstr "密码错误,请再输入."
+
 #~ msgid "To add a folder enter its name and click the <tt>Add</tt> button."
 #~ msgstr ""
 #~ "文件夹被用于分类存储文档. 为了加入一个新文件夹请输入文件夹名称并击打"
@@ -4176,6 +4743,14 @@ msgstr ""
 #~ msgstr "请选择一个新的文件版本并点击登录"
 
 #, fuzzy
+#~ msgid "Type (mandatory):"
+#~ msgstr "密码错误,请再输入."
+
+#, fuzzy
+#~ msgid "Type:"
+#~ msgstr "种类"
+
+#, fuzzy
 #~ msgid "Underline"
 #~ msgstr "直接从内部写入."
 
@@ -4206,8 +4781,16 @@ msgstr ""
 #~ msgid "Users added"
 #~ msgstr "加入用户"
 
+#, fuzzy
+#~ msgid "Version (mandatory):"
+#~ msgstr "密码错误,请再输入."
+
 #~ msgid "Version edited."
 #~ msgstr "版本被修正."
+
+#, fuzzy
+#~ msgid "Version:"
+#~ msgstr "个人"
 
 #, fuzzy
 #~ msgid "Web Document"
@@ -4264,10 +4847,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "que"
 #~ msgstr "巴斯克语"
-
-#, fuzzy
-#~ msgid "search"
-#~ msgstr "搜索"
 
 #, fuzzy
 #~ msgid "that"
