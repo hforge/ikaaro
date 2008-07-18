@@ -37,6 +37,10 @@ class Multilingual(DBObject):
     @staticmethod
     def _make_object(cls, folder, name, body=None, filename=None,
                      language=None, **kw):
+        # FIXME Maybe 'language' should be a positional parameter
+        if language is None:
+            raise ValueError, "the 'language' parameter is required"
+
         DBObject._make_object(cls, folder, name, filename=filename, **kw)
         # Add the body
         if body is not None:
