@@ -111,9 +111,6 @@ class Root(WebSite):
     @classmethod
     def get_metadata_schema(cls):
         schema = WebSite.get_metadata_schema()
-        del schema['guests']
-        del schema['members']
-        del schema['reviewers']
         return schema
 
 
