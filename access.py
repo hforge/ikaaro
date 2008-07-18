@@ -350,8 +350,8 @@ class RoleAware(AccessControl):
     @classmethod
     def get_metadata_schema(cls):
         schema = {}
-        for role in cls.__roles__:
-            schema[role['name']] = Tokens(default=())
+        for rolename in cls.get_role_names():
+            schema[rolename] = Tokens(default=())
         schema['website_is_open'] = Boolean
         return schema
 
@@ -455,17 +455,19 @@ class RoleAware(AccessControl):
     #########################################################################
     # API / Public
     #########################################################################
-    def get_role_title(self, name):
-        for role in self.__roles__:
+    @classmethod
+    def get_role_title(cls, name):
+        for role in cls.__roles__:
             if role['name'] == name:
                 return role['title']
         return None
 
 
-    def get_role_names(self):
+    @classmethod
+    def get_role_names(cls):
         """Return the names of the roles available.
         """
-        return [ r['name'] for r in self.__roles__ ]
+        return [ r['name'] for r in cls.__roles__ ]
 
 
     def get_user_role(self, user_id):
