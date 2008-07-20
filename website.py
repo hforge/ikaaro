@@ -156,7 +156,7 @@ class LoginView(STLView):
         # Check the email field has been filed
         email = email.strip()
         if not email:
-            message = u'Type your email please.'
+            message = MSG(u'Type your email please.')
             return context.come_back(message, keep=keep)
 
         # Check the user exists
@@ -165,7 +165,7 @@ class LoginView(STLView):
         # Search the user by username (login name)
         results = root.search(username=email)
         if results.get_n_documents() == 0:
-            message = u'The user "$username" does not exist.'
+            message = MSG(u'The user "$username" does not exist.')
             return context.come_back(message, username=email, keep=keep)
 
         # Get the user
