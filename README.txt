@@ -68,10 +68,10 @@ http://www.ikaaro.org/ikaaro
 
 Mailing list
 http://www.ikaaro.org/community/
-http://archives.ikaaro.org/index.cgi?list=itools
+http://archives.hforge.org/index.cgi?list=itools
 
 Bug Tracker
-http://bugs.ikaaro.org
+http://bugs.hforge.org
 
 
 Copyright
