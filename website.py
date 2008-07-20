@@ -288,7 +288,7 @@ class ControlPanel(IconsView):
                 continue
             namespace['items'].append({
                 'icon': model.get_method_icon(view, size='48x48'),
-                'title': view.title,
+                'title': view.page_title,
                 'description': view.description,
                 'url': ';%s' % name})
 
