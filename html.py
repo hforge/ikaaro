@@ -48,7 +48,7 @@ class HTMLEditView(BaseView):
     """
 
     access = 'is_allowed_to_edit'
-    __label__ = MSG(u'Edit')
+    tab_label = MSG(u'Edit')
     tab_sublabel = MSG(u'Inline')
     tab_icon = 'edit.png'
     page_title = MSG(u'Edit')
@@ -108,7 +108,7 @@ class HTMLEditView(BaseView):
 class WebPageView(STLView):
 
     access = 'is_allowed_to_view'
-    __label__ = MSG(u'View')
+    tab_label = MSG(u'View')
     tab_sublabel = MSG(u'View')
     tab_icon = '/ui/icons/16x16/view.png'
     page_title = tab_sublabel
