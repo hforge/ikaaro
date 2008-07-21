@@ -219,31 +219,33 @@ class AddImageForm(STLForm):
         # Get the container
         container = root.get_object(context.get_form_value('target_path'))
         # Add the image to the object
-        uri = Image.new_instance(Image, container, context)
-        if ';add_image' not in uri.path:
-            caption = MSG_CAPTION.gettext().encode('utf_8')
-            mode = context.get_form_value('mode', default='html')
-            if mode == 'wiki':
-                scripts = ['/ui/wiki/javascript.js']
-            else:
-                scripts = ['/ui/tiny_mce/javascript.js',
-                           '/ui/tiny_mce/tiny_mce_src.js',
-                           '/ui/tiny_mce/tiny_mce_popup.js']
+        goto = Image.new_instance.POST(container, context)
+        # Error
+        if goto is None:
+            return
 
-            object = container.get_object(uri.path[0])
-            path = context.object.get_pathto(object)
-            script_template = '<script type="text/javascript" src="%s" />'
-            body = ''
-            for script in scripts:
-                body += script_template % script
+        # Success
+        caption = MSG_CAPTION.gettext().encode('utf_8')
+        mode = context.get_form_value('mode', default='html')
+        if mode == 'wiki':
+            scripts = ['/ui/wiki/javascript.js']
+        else:
+            scripts = ['/ui/tiny_mce/javascript.js',
+                       '/ui/tiny_mce/tiny_mce_src.js',
+                       '/ui/tiny_mce/tiny_mce_popup.js']
 
-            body += """
-                <script type="text/javascript">
-                    select_img('%s', '%s');
-                </script>"""
-            return body % (path, caption)
+        object = container.get_object(goto.path[0])
+        path = context.object.get_pathto(object)
+        script_template = '<script type="text/javascript" src="%s" />'
+        body = ''
+        for script in scripts:
+            body += script_template % script
 
-        return context.come_back(message=uri.query['message'])
+        body += """
+            <script type="text/javascript">
+                select_img('%s', '%s');
+            </script>"""
+        return body % (path, caption)
 
 
 
@@ -302,6 +304,7 @@ class AddLinkForm(STLForm):
         class_id = context.get_form_value('type')
         cls = get_object_class(class_id)
         uri = cls.new_instance(cls, container, context)
+
         if ';add_link' not in uri.path:
             mode = context.get_form_value('mode', default='html')
             if mode == 'wiki':
@@ -324,7 +327,8 @@ class AddLinkForm(STLForm):
                 </script>"""
             return body % path
 
-        return context.come_back(message=uri.query['message'])
+        context.message = message=uri.query['message']
+        return
 
 
 

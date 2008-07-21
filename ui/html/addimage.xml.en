@@ -61,7 +61,7 @@
       <div class="clear"></div>
       <!-- Add an image -->
       <h3>Upload an image to the current folder and insert it:</h3>
-      <form action=";addimage" method="post" enctype="multipart/form-data">
+      <form action=";add_image" method="post" enctype="multipart/form-data">
         <input type="hidden" name="target_path" value="${bc/target_path}" />
         <input type="hidden" name="mode" value="${mode}" />
         <input id="file" name="file" size="35" type="file" />
