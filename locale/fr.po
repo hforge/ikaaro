@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-07-17 11:07+CET\n"
+"POT-Creation-Date: 2008-07-21 14:07+CET\n"
 "PO-Revision-Date: 2007-12-31 01:41+0100\n"
 "Last-Translator: Hervé Cauwelier <herve@itaapy.com>\n"
 "Language-Team: Français <fr@li.org>\n"
@@ -76,19 +76,19 @@ msgstr "${row/version}<br/>"
 msgid "${address2}<br/>"
 msgstr "${row/version}<br/>"
 
-#: ../ui/website/search.xml.en:15
+#: ../ui/website/search.xml.en:16
 msgid "${batch}"
 msgstr "${batch}"
 
-#: ../ui/table/view.xml.en:3
+#: ../ui/table/view.xml.en:4
 msgid "${batch} ${table}"
 msgstr "${batch} ${table}"
 
-#: ../ui/website/contact_form.xml.en:31
+#: ../ui/website/contact_form.xml.en:30
 msgid "${body/value}"
 msgstr "${body/value}"
 
-#: ../ui/aruni/template.xhtml.en:93
+#: ../ui/aruni/template.xhtml.en:94
 msgid "${body}"
 msgstr "${body}"
 
@@ -109,7 +109,7 @@ msgstr "${browse_folder}"
 msgid "${calendar/name}"
 msgstr "${calendar/name}"
 
-#: ../shop/ui/product_view.xml.en:13
+#: ../shop/ui/product_view.xml.en:14
 #, fuzzy
 msgid "${cart}"
 msgstr "${rte}"
@@ -118,7 +118,7 @@ msgstr "${rte}"
 msgid "${cell/ns}"
 msgstr "${cell/ns}"
 
-#: ../shop/ui/Order_view.xml.en:18
+#: ../shop/ui/Order_view.xml.en:19
 #, fuzzy
 msgid "${city}<br/>"
 msgstr "${row/type}<br/>"
@@ -143,6 +143,11 @@ msgstr "${comment/comment}"
 msgid "${comment/datetime}"
 msgstr "${comment/datetime}"
 
+#: ../tracker/ui/edit_issue.xml.en:134
+#, fuzzy
+msgid "${comment/file}"
+msgstr "${comment/value}"
+
 #: ../tracker/ui/edit_issue.xml.en:122
 msgid "${comment/user}"
 msgstr "${comment/user}"
@@ -150,6 +155,11 @@ msgstr "${comment/user}"
 #: ../ui/ical/ical_edit_event.xml.en:132
 msgid "${comment/value}"
 msgstr "${comment/value}"
+
+#: ../tracker/ui/edit_resources.xml.en:45
+#, fuzzy
+msgid "${comment}"
+msgstr "${comment/user}"
 
 #: ../ui/website/contact_form.xml.en:13
 msgid "${contact/title}"
@@ -163,7 +173,7 @@ msgstr "${contact/title} (${contact/email})"
 msgid "${contents}"
 msgstr "${contents}"
 
-#: ../future/ui/dressable_view.xml.en:7
+#: ../future/ui/dressable_view.xml.en:8
 msgid "${content}"
 msgstr "${content}"
 
@@ -175,16 +185,16 @@ msgstr "${data}"
 msgid "${day/name}"
 msgstr "${day/name}"
 
-#: ../shop/ui/product_new_instance.xml.en:27
+#: ../shop/ui/product_new_instance.xml.en:26
 #, fuzzy
 msgid "${description/value}"
 msgstr "${description}"
 
-#: ../ui/base/edit_metadata.xml.en:17
+#: ../ui/base/edit_metadata.xml.en:16
 msgid "${description}"
 msgstr "${description}"
 
-#: ../shop/ui/product_view.xml.en:5
+#: ../shop/ui/product_view.xml.en:8
 #, fuzzy
 msgid "${description}<br/> Price:"
 msgstr "${description}"
@@ -193,7 +203,7 @@ msgstr "${description}"
 msgid "${doc/title}"
 msgstr "${doc/title}"
 
-#: ../shop/ui/Order_new_instance.xml.en:46
+#: ../shop/ui/Order_new_instance.xml.en:48
 #, fuzzy
 msgid "${email}<br/>"
 msgstr "${row/title}<br/>"
@@ -202,7 +212,7 @@ msgstr "${row/title}<br/>"
 msgid "${encoding/title}"
 msgstr "${encoding/title}"
 
-#: ../ui/ical/ical_grid_weekly_view.xml.en:66
+#: ../ui/ical/ical_grid_weekly_view.xml.en:67
 #, fuzzy
 msgid "${event/ns}"
 msgstr "${cell/ns}"
@@ -212,14 +222,14 @@ msgid "${field/title}"
 msgstr "${field/title}"
 
 #: ../shop/ui/Order_new_instance.xml.en:46
-msgid "${firstname}<br/> <b>Lastname:</b>"
+msgid "${firstname}<br/>  <b>Lastname:</b>"
 msgstr ""
 
-#: ../ui/ical/ical_grid_weekly_view.xml.en:35
+#: ../ui/ical/ical_grid_weekly_view.xml.en:36
 msgid "${header/header}"
 msgstr "${header/header}"
 
-#: ../wiki/ui/WikiPage_help.xml.en:9
+#: ../wiki/ui/WikiPage_help.xml.en:10
 msgid "${help_html}"
 msgstr "${help_html}"
 
@@ -248,8 +258,8 @@ msgstr "${language/code}"
 msgid "${language/name}"
 msgstr "${language/name}"
 
-#: ../shop/ui/Order_new_instance.xml.en:46
-msgid "${lastname}<br/> <b>E-mail:</b>"
+#: ../shop/ui/Order_new_instance.xml.en:47
+msgid "${lastname}<br/>  <b>E-mail:</b>"
 msgstr ""
 
 #: ../ui/website/broken_links.xml.en:13
@@ -276,7 +286,7 @@ msgstr "${message}"
 msgid "${metadata/title}"
 msgstr "${metadata/title}"
 
-#: ../ui/PO_edit.xml.en:23
+#: ../ui/PO_edit.xml.en:22
 msgid "${msgid}"
 msgstr "${msgid}"
 
@@ -284,7 +294,7 @@ msgstr "${msgid}"
 msgid "${msgstr}"
 msgstr "${msgstr}"
 
-#: ../shop/ui/Order_view.xml.en:7
+#: ../shop/ui/Order_view.xml.en:10
 msgid "${mtime}<br/> State:"
 msgstr ""
 
@@ -292,7 +302,7 @@ msgstr ""
 msgid "${name}"
 msgstr "${name}"
 
-#: ../shop/ui/Order_view.xml.en:7
+#: ../shop/ui/Order_view.xml.en:9
 msgid "${name}<br/> Date:"
 msgstr ""
 
@@ -308,13 +318,17 @@ msgstr "${object/name}"
 msgid "${object/object_type}"
 msgstr "${object/object_type}"
 
-#: ../ui/html/addlink.xml.en:64
+#: ../future/ui/order_items.xml.en:65
 msgid "${object/title}"
 msgstr "${object/title}"
 
 #: ../future/ui/order_items.xml.en:66
 msgid "${object/workflow_state}"
 msgstr "${object/workflow_state}"
+
+#: ../ui/aruni/template.xhtml.en:79
+msgid "${option/label}"
+msgstr "${option/label}"
 
 #: ../ui/csv/edit_row.xml.en:23
 msgid "${option/value}"
@@ -351,7 +365,7 @@ msgstr "${title}"
 msgid "${p/title} (${p/quantity})"
 msgstr ""
 
-#: ../shop/ui/product_view.xml.en:5
+#: ../shop/ui/product_view.xml.en:9
 #, fuzzy
 msgid "${price}<br/> VAT:"
 msgstr "${row/title}<br/>"
@@ -410,7 +424,7 @@ msgstr "${row/module}<br/>"
 msgid "${row/priority}<br/>"
 msgstr "${row/priority}<br/>"
 
-#: ../ui/ical/ical_grid_weekly_view.xml.en:41
+#: ../ui/ical/ical_grid_weekly_view.xml.en:42
 msgid "${row/start}-${row/end}"
 msgstr "${row/start}-${row/end}"
 
@@ -434,11 +448,11 @@ msgstr "${row/user}"
 msgid "${row/version}<br/>"
 msgstr "${row/version}<br/>"
 
-#: ../forum/ui/Forum_new_thread.xml.en:16
+#: ../forum/ui/Forum_new_thread.xml.en:17
 msgid "${rte}"
 msgstr "${rte}"
 
-#: ../forum/ui/Thread_view.xml.en:45
+#: ../forum/ui/Thread_view.xml.en:46
 #, fuzzy
 msgid "${rte} <input value=\"Reply\" type=\"submit\"/>"
 msgstr "${rte} <input type=\"submit\" value=\"Répondre\"/>"
@@ -455,12 +469,17 @@ msgstr "${search/title}"
 msgid "${search_title}"
 msgstr "${search_title}"
 
-#: ../ui/generic/browse.xml.en:7
+#: ../ui/generic/browse.xml.en:8
 #, fuzzy
 msgid "${search}"
 msgstr "${search/title}"
 
-#: ../shop/ui/Order_view.xml.en:7
+#: ../ui/WorkflowAware_state.xml.en:10
+#, fuzzy
+msgid "${state}"
+msgstr "${table}"
+
+#: ../shop/ui/Order_view.xml.en:11
 msgid "${state}<br/> Download PDF:"
 msgstr ""
 
@@ -469,7 +488,7 @@ msgstr ""
 msgid "${submit_value}"
 msgstr "${s/value}"
 
-#: ../ui/generic/browse.xml.en:13
+#: ../ui/generic/browse.xml.en:14
 msgid "${table}"
 msgstr "${table}"
 
@@ -477,7 +496,7 @@ msgstr "${table}"
 msgid "${target}"
 msgstr "${target}"
 
-#: ../ui/html/view.xml.en:3
+#: ../ui/html/view.xml.en:4
 msgid "${text}"
 msgstr "${text}"
 
@@ -494,7 +513,7 @@ msgstr "${title} <a href=\";search_form?${search_parameters}\">(Modifier)</a>"
 msgid "${title} <em stl:if=\"user_must_confirm\">(Not confirm)</em>"
 msgstr ""
 
-#: ../shop/ui/product_view.xml.en:5
+#: ../shop/ui/product_view.xml.en:7
 #, fuzzy
 msgid "${title}<br/> Description:"
 msgstr "Description&nbsp;:"
@@ -533,8 +552,8 @@ msgstr "${tt/start}"
 msgid "${username}"
 msgstr "${name}"
 
-#: ../shop/ui/product_view.xml.en:5
-msgid "${vat}<br/> <a href=\";add_to_cart\">Add to cart</a>"
+#: ../shop/ui/product_view.xml.en:10
+msgid "${vat}<br/>  <a href=\";add_to_cart\">Add to cart</a>"
 msgstr ""
 
 #: ../ui/aruni/template.xhtml.en:93
@@ -549,13 +568,13 @@ msgstr "${website/title}"
 msgid "${week/month}"
 msgstr "${week/month}"
 
-#: ../ui/auto_form.xml.en:18
+#: ../ui/auto_form.xml.en:19
 #, fuzzy
 msgid "${widget/widget}"
 msgstr "${field/widget}"
 
 #: ../shop/ui/Order_view.xml.en:18
-msgid "${zip}<br/> <b>City:</b>"
+msgid "${zip}<br/>  <b>City:</b>"
 msgstr ""
 
 #: ../file.py:460
@@ -566,11 +585,15 @@ msgstr "%.01f Ko"
 msgid "%.01f MB"
 msgstr "%.01f Mo"
 
-#: ../ui/website/broken_links.xml.en:10
+#: ../ui/PO_edit.xml.en:15
+msgid "&lt;"
+msgstr ""
+
+#: ../ui/website/broken_links.xml.en:11
 msgid "(${object/n}) <a href=\"${object/path}\">${object/path}</a>"
 msgstr "(${object/n}) <a href=\"${object/path}\">${object/path}</a>"
 
-#: ../tracker/ui/search.xml.en:130
+#: ../tracker/ui/search.xml.en:131
 #, fuzzy
 msgid "(<a href=\";search?search_name=${search/name}\">Edit</a>)"
 msgstr "(<a href=\";search_form?search_name=${search/name}\">Modifier</a>)"
@@ -615,30 +638,19 @@ msgstr "2.0"
 msgid "404 Not Found"
 msgstr "404 Introuvable"
 
-#: ../tracker/ui/edit_issue.xml.en:133
-msgid "<a href=\"${comment/file}\">${comment/file}</a>"
-msgstr "<a href=\"${comment/file}\">${comment/file}</a>"
-
-#: ../ui/generic/icons_view.xml.en:16
+#: ../ui/generic/icons_view.xml.en:17
 #, fuzzy
-msgid "<a href=\"${item/url}\">${item/title}</a> <br/> ${item/description}"
+msgid "<a href=\"${item/url}\">${item/title}</a>  <br/> ${item/description}"
 msgstr "<a href=\"${type/url}\">${type/title}</a> <br/> ${type/description}"
 
-#: ../ui/PO_edit.xml.en:11
+#: ../ui/PO_edit.xml.en:16
 #, fuzzy
 msgid ""
-"<a href=\"${messages_next}\" title=\"Go to next message\">></a> <a href="
+"<a href=\"${messages_next}\" title=\"Go to next message\">></a>  <a href="
 "\"${messages_last}\" title=\"Go to last message\">>></a>"
 msgstr ""
 "<a title=\"Aller au message suivant\" href=\"${messages_next}\">></a> <a "
 "title=\"Aller au dernier message\" href=\"${messages_last}\">>></a>"
-
-#: ../ui/PO_edit.xml.en:11
-#, fuzzy
-msgid ""
-"<a href=\"${messages_previous}\" title=\"Go to previous message\">&lt;</a>"
-msgstr ""
-"<span id=\"gallery_previous\" stl:if=\"not selected/previous\">&lt;</span>"
 
 #: ../shop/ui/Shop_view_cart.xml.en:27
 #, fuzzy
@@ -674,13 +686,14 @@ msgstr ""
 "\">»</a>"
 
 #: ../tracker/ui/issue_history.xml.en:42
-msgid "<a href=\"${row/file}\">${row/file}</a> <br/>"
+#, fuzzy
+msgid "<a href=\"${row/file}\">${row/file}</a>  <br/>"
 msgstr "<a href=\"${row/file}\">${row/file}</a> <br/>"
 
-#: ../forum/ui/Forum_view.xml.en:11
+#: ../forum/ui/Forum_view.xml.en:12
 #, fuzzy
 msgid ""
-"<a href=\"${thread/name}\" class=\"forum_thread_title\">${thread/title}</a> "
+"<a href=\"${thread/name}\" class=\"forum_thread_title\">${thread/title}</a>  "
 "<br/> Posted by <span class=\"forum_thread_author\">${thread/author}</span>, "
 "the <span class=\"forum_thread_date\">${thread/date}</span>."
 msgstr ""
@@ -691,16 +704,27 @@ msgstr ""
 #: ../ui/aruni/template.xhtml.en:34
 #, fuzzy
 msgid ""
-"<a href=\"${user/info/home}\" id=\"top_menu_profile\">My Profile</a> <a href="
-"\"/;logout\" id=\"top_menu_logout\">Log out</a>"
+"<a href=\"${user/info/home}\" id=\"top_menu_profile\">My Profile</a>  <a "
+"href=\"/;logout\" id=\"top_menu_logout\">Log out</a>"
 msgstr ""
 "(connecté en ${user/info/title})<br/><br/> <a id=\"top_menu_logout\" href="
 "\"/;logout\">Déconnexion</a>"
 
-#: ../ui/aruni/template.xhtml.en:108
+#: ../ui/html/addlink.xml.en:47
+#, fuzzy
+msgid "<a href=\"${x/url}\" title=\"${x/title}\">${x/short_title}</a> /"
+msgstr "<a href=\"${x/url}\">${x/name}</a> /"
+
+#: ../future/ui/link_addlink.xml.en:67
+#, fuzzy
+msgid "<a href=\"${x/url}\">${x/name}</a> /"
+msgstr "<a href=\"${row/file}\">${row/file}</a> <br/>"
+
+#: ../ui/aruni/template.xhtml.en:109
+#, fuzzy
 msgid ""
-"<a href=\"/;about\">About</a> <a href=\"/;credits\">Credits</a> <a href=\"/;"
-"license\">License</a>"
+"<a href=\"/;about\">About</a>  <a href=\"/;credits\">Credits</a>  <a href="
+"\"/;license\">License</a>"
 msgstr ""
 "<a href=\"/;about\">À propos</a> <a href=\"/;credits\">Crédits</a> <a href="
 "\"/;license\">Licence</a>"
@@ -708,7 +732,7 @@ msgstr ""
 #: ../ui/aruni/template.xhtml.en:29
 #, fuzzy
 msgid ""
-"<a href=\"/;login\" id=\"top_menu_login\">Log in</a> <a stl:if=\"user/"
+"<a href=\"/;login\" id=\"top_menu_login\">Log in</a>  <a stl:if=\"user/"
 "joinisopen\" href=\"/;register\" id=\"top_menu_register\">Register</a>"
 msgstr ""
 "(déconnecté)<br/><br/> <a id=\"top_menu_login\" href=\"/;login_form"
@@ -718,7 +742,7 @@ msgstr ""
 #: ../ui/aruni/template.xhtml.en:37
 #, fuzzy
 msgid ""
-"<a href=\"/;site_search\" id=\"top_menu_search\">Search</a> <a href=\"/;"
+"<a href=\"/;site_search\" id=\"top_menu_search\">Search</a>  <a href=\"/;"
 "contact\" id=\"top_menu_contact\">Contact</a>"
 msgstr ""
 "<a id=\"top_menu_search\" href=\"/;site_search\">Rechercher</a> <a id="
@@ -740,20 +764,16 @@ msgstr ""
 "<a href=\"http://plope.org/software/ExternalEditor/zopeedit-win32-0.9.2.exe"
 "\">Télécharger External Editor pour Windows</a>."
 
-#: ../shop/ui/Order_view.xml.en:7
-msgid "<a href=\"order.pdf\">Click here</a>"
-msgstr ""
-
 #: ../shop/ui/Shop_view_cart.xml.en:47
 msgid ""
-"<a href=\"orders/;new_resource_form?type=order\">Order</a> <a href="
+"<a href=\"orders/;new_resource_form?type=order\">Order</a>  <a href="
 "\"${link_clear}\">Clear the cart</a>"
 msgstr ""
 
-#: ../tracker/ui/view_tracker.xml.en:17
+#: ../tracker/ui/view_tracker.xml.en:30
 #, fuzzy
 msgid ""
-"<a name=\"link\"></a> <a href=\";view?${search_parameters}&amp;"
+"<a name=\"link\"></a>  <a href=\";view?${search_parameters}&amp;"
 "change_several_bugs=1#link\"> Change Several Issues </a> | <a href=\";view?"
 "${search_parameters}&amp;export_to_text=1#link\"> Export to Text </a> | <a "
 "href=\";view?${search_parameters}&amp;export_to_csv=1#link\"> Export to CSV "
@@ -766,117 +786,97 @@ msgstr ""
 "href=\";view?${search_parameters}&amp;export_to_csv=1#link\">Exporter en "
 "CSV</a>"
 
-#: ../tracker/ui/edit_issue.xml.en:96
+#: ../tracker/ui/edit_issue.xml.en:97
+#, fuzzy
 msgid ""
-"<a name=\"new_comment\"></a> <label for=\"comment\">New Comment:</label><br/>"
-msgstr ""
+"<a name=\"new_comment\"></a>  <label for=\"comment\">New Comment:</label><br/"
+">"
+msgstr "<a href=\"${comment/file}\">${comment/file}</a>"
 
 #: ../ui/ical/daily_view.xml.en:44
 #, fuzzy
 msgid ""
 "<a stl:if=\"col/evt_url\" href=\"${col/evt_url}\" class=\"evt_value\">${col/"
-"evt_value}</a> <span stl:if=\"col/SUMMARY\">${col/SUMMARY}</span>"
+"evt_value}</a>  <span stl:if=\"col/SUMMARY\">${col/SUMMARY}</span>"
 msgstr ""
 "<a stl:if=\"col/evt_url\" class=\"evt_value\" href=\"${col/evt_url}\">${col/"
 "evt_value}</a> <span stl:if=\"col/SUMMARY\">${col/SUMMARY}</span>"
 
-#: ../future/ui/link_addlink.xml.en:87
+#: ../ui/aruni/template.xhtml.en:54
 #, fuzzy
 msgid ""
-"<a stl:if=\"object/is_folder\" href=\"${object/url}\"> ${object/name} </a> "
+"<a stl:if=\"item/url\" href=\"${item/url}\" title=\"${item/name}\">${item/"
+"short_name}</a>  <span stl:if=\"not item/url\" title=\"${item/name}\">${item/"
+"short_name}</span>  <stl:inline stl:if=\"not repeat/item/end\">/</stl:inline>"
+msgstr ""
+"<a stl:if=\"item/url\" title=\"${item/name}\" href=\"${item/url}\">${item/"
+"short_name}</a> <span stl:if=\"not item/url\" title=\"${item/name}\">${item/"
+"short_name}</span> <stl:inline stl:if=\"not repeat/item/end\">/</stl:inline>"
+
+#: ../future/ui/link_addlink.xml.en:89
+#, fuzzy
+msgid ""
+"<a stl:if=\"object/is_folder\" href=\"${object/url}\"> ${object/name} </a>  "
 "<stl:inline if=\"not object/is_folder\">${object/name}</stl:inline>"
 msgstr ""
 "<a stl:if=\"object/is_folder\" href=\"${object/url}\"> ${object/name} </a> "
 "<stl:inline stl:if=\"not object/is_folder\">${object/name}</stl:inline>"
 
-#: ../future/ui/order_items.xml.en:25
+#: ../future/ui/order_items.xml.en:28
+#, fuzzy
 msgid ""
 "<a stl:if=\"object/is_orderaware\" href=\"${object/path}\"> ${object/name} </"
-"a> <stl:inline stl:if=\"not object/is_orderaware\"> ${object/name} </stl:"
+"a>  <stl:inline stl:if=\"not object/is_orderaware\"> ${object/name} </stl:"
 "inline>"
 msgstr ""
 "<a stl:if=\"object/is_orderaware\" href=\"${object/path}\"> ${object/name} </"
 "a> <stl:inline stl:if=\"not object/is_orderaware\"> ${object/name} </stl:"
 "inline>"
 
-#: ../shop/ui/Cart_view.xml.en:15
+#: ../shop/ui/Cart_view.xml.en:21
 msgid ""
 "<a stl:if=\"products\" href=\"../orders/;new_resource_form?type=order\"> "
-"Order </a> <br/><br/> <a stl:if=\"products\" href=\"${cart_link}\"> Show the "
-"cart </a> <br/>"
+"Order </a>  <br/><br/>  <a stl:if=\"products\" href=\"${cart_link}\"> Show "
+"the cart </a>  <br/>"
 msgstr ""
 
 #: ../ui/html/addimage.xml.en:42
 msgid ""
-"<abbr title=\"${object/title}\">${object/short_title}</abbr><br/> <a href="
+"<abbr title=\"${object/title}\">${object/short_title}</abbr><br/>  <a href="
 "\"${object/url}\" title=\"${object/title}\">Browse</a>"
 msgstr ""
 
 #: ../ui/html/addimage.xml.en:55
 msgid ""
-"<abbr title=\"${object/title}\">${object/short_title}</abbr><br/> <a href="
-"\"javascript:select_img('${object/path}', '${caption}')\">Select</a>"
+"<abbr title=\"${object/title}\">${object/short_title}</abbr><br/>  <a href="
+"\"javascript:select_img('${object/path}',\n"
+"              '${caption}')\">Select</a>"
 msgstr ""
 
 #: ../ui/html/addlink.xml.en:80
 msgid ""
-"<abbr title=\"${object/title}\">${object/short_title}</abbr><br/> <a href="
+"<abbr title=\"${object/title}\">${object/short_title}</abbr><br/>  <a href="
 "\"javascript:select_link('${object/path}')\">Select</a>"
 msgstr ""
 
-#: ../shop/ui/Order_view.xml.en:16
-msgid "<b>Address 1:</b>"
-msgstr ""
-
-#: ../shop/ui/Order_view.xml.en:17
-msgid "<b>Address 2:</b>"
-msgstr ""
-
-#: ../shop/ui/Order_view.xml.en:20
-msgid "<b>BP:</b>"
-msgstr ""
-
-#: ../shop/ui/Order_new_instance.xml.en:46
-msgid "<b>Firstname:</b>"
-msgstr ""
-
-#: ../shop/ui/Order_view.xml.en:18
-msgid "<b>Zip:</b>"
-msgstr ""
-
-#: ../tracker/ui/search.xml.en:87
-msgid "<br/>"
-msgstr ""
-
-#: ../forum/ui/Forum_view.xml.en:11
-msgid "<br/> ${thread/comments} comments."
-msgstr "<br/> ${thread/comments} commentaires."
-
-#: ../ui/WorkflowAware_state.xml.en:18
+#: ../ui/WorkflowAware_state.xml.en:19
 msgid ""
-"<br/> <input id=\"${transition/name}\" name=\"transition\" value="
-"\"${transition/name}\" type=\"radio\"/> <label for=\"${transition/name}\">"
+"<br/>  <input id=\"${transition/name}\" name=\"transition\" value="
+"\"${transition/name}\" type=\"radio\"/>  <label for=\"${transition/name}\">"
 "${transition/description}</label>"
 msgstr ""
 
-#: ../tracker/ui/view_tracker.xml.en:63
+#: ../ui/folder/browse_search.xml.en:20
 msgid ""
-"<br/> <input id=\"editor_excel\" name=\"editor\" value=\"excel\" type=\"radio"
-"\"/> <label for=\"editor_excel\">For Excel (Encoding: CP1252, Separator: \";"
-"\")</label>"
-msgstr ""
-
-#: ../ui/folder/browse_search.xml.en:19
-msgid ""
-"<br/> <input id=\"search_subfolders\" checked=\"${search_subfolders}\" name="
-"\"search_subfolders\" value=\"1\" type=\"checkbox\"/> <label for="
+"<br/>  <input id=\"search_subfolders\" checked=\"${search_subfolders}\" name="
+"\"search_subfolders\" value=\"1\" type=\"checkbox\"/>  <label for="
 "\"search_subfolders\">Search subfolders</label>"
 msgstr ""
 
-#: ../tracker/ui/view_tracker.xml.en:142
+#: ../tracker/ui/view_tracker.xml.en:143
 #, fuzzy
 msgid ""
-"<br/> <textarea id=\"comment\" rows=\"10\" name=\"comment\" cols=\"68\"></"
+"<br/>  <textarea id=\"comment\" rows=\"10\" name=\"comment\" cols=\"68\"></"
 "textarea>"
 msgstr ""
 "<br/> <textarea name=\"comment\" id=\"description\" rows=\"10\" cols=\"60\">"
@@ -885,17 +885,15 @@ msgstr ""
 #: ../wiki/ui/WikiPage_edit.xml.en:45
 #, fuzzy
 msgid ""
-"<br/> <textarea id=\"data\" rows=\"19\" wrap=\"physical\" name=\"data\" cols="
-"\"80\">${data}</textarea>"
+"<br/>  <textarea id=\"data\" rows=\"19\" wrap=\"physical\" name=\"data\" "
+"cols=\"80\">${data}</textarea>"
 msgstr ""
 "<br/> <textarea name=\"comment\" id=\"description\" rows=\"10\" cols=\"60\">"
 "${comment}</textarea>"
 
-#: ../tracker/ui/view_tracker.xml.en:63
-msgid ""
-"<br/><br/> <input name=\";export_to_csv\" class=\"button_ok\" value=\"Export"
-"\" type=\"submit\"/>"
-msgstr ""
+#: ../forum/ui/Forum_view.xml.en:15
+msgid "<br/> ${thread/comments} comments."
+msgstr "<br/> ${thread/comments} commentaires."
 
 #: ../ui/html/addlink.xml.en:64
 msgid ""
@@ -903,11 +901,11 @@ msgid ""
 "short_title}"
 msgstr ""
 
-#: ../ui/website/search.xml.en:19
+#: ../ui/website/search.xml.en:21
 #, fuzzy
 msgid ""
-"<img src=\"${object/icon}\" width=\"16\" height=\"16\"/> <a href=\"${object/"
-"url}\" class=\"result_title\">${object/title}</a> <br/> <span class="
+"<img src=\"${object/icon}\" width=\"16\" height=\"16\"/>  <a href=\"${object/"
+"url}\" class=\"result_title\">${object/title}</a>  <br/>  <span class="
 "\"result_url\">${object/abspath}</span> - <span class=\"result_type\">"
 "${object/type}</span> - <span class=\"result_size\">${object/size}</span>"
 msgstr ""
@@ -919,18 +917,18 @@ msgstr ""
 #: ../ui/access/edit_membership_form.xml.en:12
 msgid ""
 "<input id=\"${role/name}\" checked=\"${role/selected}\" name=\"role\" value="
-"\"${role/name}\" type=\"radio\"/> <label for=\"${role/name}\">${role/title}</"
-"label>"
+"\"${role/name}\" type=\"radio\"/>  <label for=\"${role/name}\">${role/title}"
+"</label>"
 msgstr ""
 
-#: ../ui/ical/ical_edit_event.xml.en:52
+#: ../ui/ical/ical_edit_event.xml.en:56
 #, fuzzy
 msgid ""
 "<input id=\"DTEND_day\" name=\"DTEND_day\" value=\"${DTEND_day}\" size=\"2\" "
 "type=\"text\"/> / <input id=\"DTEND_month\" name=\"DTEND_month\" value="
 "\"${DTEND_month}\" size=\"2\" type=\"text\"/> / <input id=\"DTEND_year\" "
-"name=\"DTEND_year\" value=\"${DTEND_year}\" size=\"4\" type=\"text\"/> "
-"<input value=\"...\" id=\"trigger_dtend\" type=\"button\"/> <input id="
+"name=\"DTEND_year\" value=\"${DTEND_year}\" size=\"4\" type=\"text\"/>  "
+"<input value=\"...\" id=\"trigger_dtend\" type=\"button\"/>  <input id="
 "\"DTEND_hours\" name=\"DTEND_hours\" value=\"${DTEND_hours}\" size=\"2\" "
 "type=\"text\"/> :"
 msgstr ""
@@ -941,7 +939,7 @@ msgstr ""
 "\"trigger_dtend\" type=\"button\" value=\"...\"/> <input name=\"DTEND_hours"
 "\" id=\"DTEND_hours\" size=\"2\" type=\"text\" value=\"${DTEND_hours}\"/> :"
 
-#: ../ui/ical/ical_edit_event.xml.en:52
+#: ../ui/ical/ical_edit_event.xml.en:58
 #, fuzzy
 msgid ""
 "<input id=\"DTEND_minutes\" name=\"DTEND_minutes\" value=\"${DTEND_minutes}"
@@ -950,23 +948,24 @@ msgstr ""
 "<input name=\"DTEND_minutes\" id=\"DTEND_minutes\" size=\"2\" type=\"text\" "
 "value=\"${DTEND_minutes}\"/>"
 
-#: ../tracker/ui/edit_issue.xml.en:104
+#: ../tracker/ui/edit_issue.xml.en:105
 msgid "<input id=\"attachement\" name=\"file\" size=\"36\" type=\"file\"/>"
 msgstr ""
 
-#: ../ui/ical/daily_view.xml.en:10
+#: ../ui/ical/daily_view.xml.en:14
 #, fuzzy
 msgid ""
 "<input id=\"date\" name=\"date\" value=\"${date}\" size=\"11\" type=\"text\"/"
-"> <input value=\"...\" id=\"trigger_date\" type=\"button\"/> <input name=\";"
-"daily_view\" class=\"button_ok\" id=\"update\" value=\"OK\" type=\"submit\"/>"
+">  <input value=\"...\" id=\"trigger_date\" type=\"button\"/>  <input name="
+"\";daily_view\" class=\"button_ok\" id=\"update\" value=\"OK\" type=\"submit"
+"\"/>"
 msgstr ""
 "<input name=\"date\" id=\"date\" size=\"11\" type=\"text\" value=\"${date}\"/"
 "> <input id=\"trigger_date\" type=\"button\" value=\"...\"/> <input id="
 "\"update\" name=\";daily_view\" type=\"submit\" value=\"Ok\" class="
 "\"button_ok\"/>"
 
-#: ../tracker/ui/search.xml.en:28
+#: ../tracker/ui/search.xml.en:29
 #, fuzzy
 msgid ""
 "<input id=\"mtime\" name=\"mtime\" value=\"${mtime}\" size=\"2\" type=\"text"
@@ -978,37 +977,41 @@ msgstr ""
 #: ../ui/folder/browse_image.xml.en:26
 msgid ""
 "<input id=\"search_subfolders\" checked=\"${search_subfolders}\" name="
-"\"search_subfolders\" value=\"1\" type=\"checkbox\"/> <label for="
+"\"search_subfolders\" value=\"1\" type=\"checkbox\"/>  <label for="
 "\"search_subfolders\">Search subfolders</label>"
 msgstr ""
 
-#: ../tracker/ui/edit_issue.xml.en:17
+#: ../tracker/ui/edit_issue.xml.en:18
 msgid ""
 "<input id=\"title\" name=\"title\" value=\"${title}\" size=\"48\" type=\"text"
 "\"/>"
 msgstr ""
 
-#: ../tracker/ui/view_tracker.xml.en:63
+#: ../tracker/ui/view_tracker.xml.en:71
 #, fuzzy
 msgid ""
 "<input name=\"${c/name}\" stl:repeat=\"c criteria\" value=\"${c/value}\" "
-"type=\"hidden\"/> <input id=\"editor_oo\" checked=\"on\" name=\"editor\" "
-"value=\"oo\" type=\"radio\"/> <label for=\"editor_oo\">For OpenOffice "
-"(Encoding: UTF-8, Separator: \",\")</label>"
+"type=\"hidden\"/>  <input id=\"editor_oo\" checked=\"on\" name=\"editor\" "
+"value=\"oo\" type=\"radio\"/>  <label for=\"editor_oo\">For OpenOffice "
+"(Encoding: UTF-8, Separator: \",\")</label>  <br/>  <input id=\"editor_excel"
+"\" name=\"editor\" value=\"excel\" type=\"radio\"/>  <label for="
+"\"editor_excel\">For Excel (Encoding: CP1252, Separator: \";\")</label>  <br/"
+"><br/>  <input name=\";export_to_csv\" class=\"button_ok\" value=\"Export\" "
+"type=\"submit\"/>"
 msgstr ""
 "<input name=\"${c/name}\" type=\"hidden\" stl:repeat=\"c criteria\" value="
 "\"${c/value}\"/> <input name=\"editor\" id=\"editor_oo\" type=\"radio\" "
 "value=\"oo\" checked=\"on\"/>"
 
-#: ../ui/ical/ical_edit_event.xml.en:35
+#: ../ui/ical/ical_edit_event.xml.en:39
 #, fuzzy
 msgid ""
 "<input name=\"DTSTART_day\" size=\"2\" id=\"DTSTART_day\" maxlength=\"2\" "
 "type=\"text\" value=\"${DTSTART_day}\"/> / <input name=\"DTSTART_month\" "
 "size=\"2\" id=\"DTSTART_month\" maxlength=\"2\" type=\"text\" value="
 "\"${DTSTART_month}\"/> / <input name=\"DTSTART_year\" size=\"4\" id="
-"\"DTSTART_year\" maxlength=\"4\" type=\"text\" value=\"${DTSTART_year}\"/> "
-"<input value=\"...\" id=\"trigger_dtstart\" type=\"button\"/> <input name="
+"\"DTSTART_year\" maxlength=\"4\" type=\"text\" value=\"${DTSTART_year}\"/>  "
+"<input value=\"...\" id=\"trigger_dtstart\" type=\"button\"/>  <input name="
 "\"DTSTART_hours\" size=\"2\" id=\"DTSTART_hours\" maxlength=\"2\" type=\"text"
 "\" value=\"${DTSTART_hours}\"/> :"
 msgstr ""
@@ -1021,7 +1024,7 @@ msgstr ""
 "value=\"${DTSTART_hours}\" name=\"DTSTART_hours\" size=\"2\" id="
 "\"DTSTART_hours\" maxlength=\"2\" type=\"text\"/> :"
 
-#: ../ui/ical/ical_edit_event.xml.en:35
+#: ../ui/ical/ical_edit_event.xml.en:41
 #, fuzzy
 msgid ""
 "<input name=\"DTSTART_minutes\" size=\"2\" id=\"DTSTART_minutes\" maxlength="
@@ -1030,48 +1033,58 @@ msgstr ""
 "<input name=\"DTEND_minutes\" id=\"DTEND_minutes\" size=\"2\" type=\"text\" "
 "value=\"${DTEND_minutes}\"/>"
 
-#: ../tracker/ui/view_tracker.xml.en:43
+#: ../tracker/ui/view_tracker.xml.en:45
 msgid ""
 "<input name=\"column_selection\" checked=\"${column/checked}\" id=\"${column/"
-"name}\" value=\"${column/name}\" type=\"checkbox\"/> <label for=\"${column/"
+"name}\" value=\"${column/name}\" type=\"checkbox\"/>  <label for=\"${column/"
 "name}\">${column/title}</label>"
 msgstr ""
 
 #: ../ui/website/login.xml.en:15
 #, fuzzy
 msgid ""
-"<input name=\"password\" id=\"password\" type=\"password\"/> <a href=\"/;"
+"<input name=\"password\" id=\"password\" type=\"password\"/>  <a href=\"/;"
 "forgotten_password\">I forgot my password</a>"
 msgstr ""
 "<input id=\"password\" name=\"password\" type=\"password\"/> <a href=\"/;"
 "forgotten_password_form\">Mot de passe oublié&nbsp;?</a>"
 
-#: ../wiki/ui/WikiPage_new_instance.xml.en:13
+#: ../wiki/ui/WikiPage_new_instance.xml.en:16
 #, fuzzy
 msgid ""
 "<input stl:if=\"not name\" name=\"name\" id=\"name\" size=\"40\" type=\"text"
-"\"/> <stl:inline stl:if=\"name\"> <input value=\"${name}\" name=\"name\" "
-"type=\"hidden\"/> <span id=\"name\">${name}</span> </stl:inline>"
+"\"/>  <stl:inline stl:if=\"name\">  <input value=\"${name}\" name=\"name\" "
+"type=\"hidden\"/>  <span id=\"name\">${name}</span>  </stl:inline>"
 msgstr ""
 "<input id=\"name\" name=\"name\" size=\"40\" type=\"text\" stl:if=\"not name"
 "\"/> <stl:inline stl:if=\"name\"> <input name=\"name\" type=\"hidden\" value="
 "\"${name}\"/> <span id=\"name\">${name}</span> </stl:inline>"
 
-#: ../tracker/ui/edit_resources.xml.en:31
+#: ../tracker/ui/edit_resources.xml.en:35
+#, fuzzy
 msgid ""
 "<input value=\"${dtend}\" id=\"dtend\" name=\"dtend\" size=\"10\" type=\"text"
-"\"/> <input value=\"...\" name=\"trigger_dtend\" id=\"trigger_dtend\" type="
-"\"button\"/> ${time_select} <br/> <input value=\"${tend}\" id=\"tend\" name="
+"\"/>  <input value=\"...\" name=\"trigger_dtend\" id=\"trigger_dtend\" type="
+"\"button\"/> ${time_select} <br/>  <input value=\"${tend}\" id=\"tend\" name="
 "\"tend\" size=\"5\" type=\"text\"/> (HH:MM)"
 msgstr ""
+"<input name=\"date\" id=\"date\" size=\"11\" type=\"text\" value=\"${date}\"/"
+"> <input id=\"trigger_date\" type=\"button\" value=\"...\"/> <input id="
+"\"update\" name=\";daily_view\" type=\"submit\" value=\"Ok\" class="
+"\"button_ok\"/>"
 
-#: ../tracker/ui/edit_resources.xml.en:21
+#: ../tracker/ui/edit_resources.xml.en:24
+#, fuzzy
 msgid ""
 "<input value=\"${dtstart}\" id=\"dtstart\" name=\"dtstart\" size=\"10\" type="
-"\"text\"/> <input value=\"...\" name=\"trigger_dtstart\" id=\"trigger_dtstart"
-"\" type=\"button\"/> <br/> <input value=\"${tstart}\" id=\"tstart\" name="
-"\"tstart\" size=\"5\" type=\"text\"/> (HH:MM)"
+"\"text\"/>  <input value=\"...\" name=\"trigger_dtstart\" id="
+"\"trigger_dtstart\" type=\"button\"/>  <br/>  <input value=\"${tstart}\" id="
+"\"tstart\" name=\"tstart\" size=\"5\" type=\"text\"/> (HH:MM)"
 msgstr ""
+"<input name=\"date\" id=\"date\" size=\"11\" type=\"text\" value=\"${date}\"/"
+"> <input id=\"trigger_date\" type=\"button\" value=\"...\"/> <input id="
+"\"update\" name=\";daily_view\" type=\"submit\" value=\"Ok\" class="
+"\"button_ok\"/>"
 
 #: ../ui/folder/rename.xml.en:11
 #, fuzzy
@@ -1088,36 +1101,39 @@ msgid ""
 msgstr ""
 "<input name=\"timestamp\" type=\"hidden\" value=\"${timestamp}\"/> ${rte}"
 
-#: ../ui/website/anonymous.xml.en:9
-msgid ""
-"<input value=\"0\" id=\"intranet\" name=\"website_is_open\" checked="
-"\"${is_closed}\" type=\"radio\"/> <label for=\"intranet\">Intranet</label> "
-"<br/> Authentication will be required for any level of access."
-msgstr ""
-
-#: ../tracker/ui/edit_issue.xml.en:89
-msgid ""
-"<input value=\"1\" checked=\"${cc_remove}\" name=\"cc_remove\" type="
-"\"checkbox\"/> <label for=\"cc_remove\">Remove selected CCs</label>"
-msgstr ""
-
-#: ../ui/website/anonymous.xml.en:18
+#: ../ui/website/anonymous.xml.en:11
 #, fuzzy
 msgid ""
-"<input value=\"1\" id=\"extranet\" name=\"website_is_open\" checked="
-"\"${is_open}\" type=\"radio\"/> <label for=\"extranet\">Extranet</label> <br/"
-"> Non authenticated users will be able to access published content, and to "
-"register by themselves."
+"<input value=\"0\" id=\"intranet\" name=\"website_is_open\" checked="
+"\"${is_closed}\" type=\"radio\"/>  <label for=\"intranet\">Intranet</label>  "
+"<br/> Authentication will be required for any level of access."
 msgstr ""
 "<br/> Les utilisateurs non authentifiés pourront accéder au contenu publié "
 "et créer leur compte."
 
-#: ../ui/auto_form.xml.en:11
+#: ../tracker/ui/edit_issue.xml.en:89
+msgid ""
+"<input value=\"1\" checked=\"${cc_remove}\" name=\"cc_remove\" type="
+"\"checkbox\"/>  <label for=\"cc_remove\">Remove selected CCs</label>"
+msgstr ""
+
+#: ../ui/website/anonymous.xml.en:20
+#, fuzzy
+msgid ""
+"<input value=\"1\" id=\"extranet\" name=\"website_is_open\" checked="
+"\"${is_open}\" type=\"radio\"/>  <label for=\"extranet\">Extranet</label>  "
+"<br/> Non authenticated users will be able to access published content, and "
+"to register by themselves."
+msgstr ""
+"<br/> Les utilisateurs non authentifiés pourront accéder au contenu publié "
+"et créer leur compte."
+
+#: ../ui/auto_form.xml.en:15
 #, fuzzy
 msgid ""
 "<label for=\"${widget/name}\" class=\"${widget/class}\"> ${widget/title} </"
-"label> <span stl:if=\"widget/mandatory\">(mandatory)</span> <span stl:if="
-"\"widget/multiple\">(multiple)</span> <span stl:if=\"widget/is_date"
+"label>  <span stl:if=\"widget/mandatory\">(mandatory)</span>  <span stl:if="
+"\"widget/multiple\">(multiple)</span>  <span stl:if=\"widget/is_date"
 "\">Format: 'yyyy-mm-dd'</span>"
 msgstr ""
 "${field/title} <span stl:if=\"field/mandatory\">(obligatoire)</span> <span "
@@ -1131,7 +1147,7 @@ msgstr ""
 #: ../tracker/ui/search.xml.en:67
 msgid ""
 "<label for=\"assigned_to\">Assigned To:<stl:block stl:if=\"is_admin\"> (<a "
-"href=\"${manage_assigned}\">Edit</a>)</stl:block></label>"
+"href=\"${manage_assigned}\">Edit</a>)</stl:block></label>  <br/>"
 msgstr ""
 
 #: ../tracker/ui/add_issue.xml.en:88
@@ -1153,11 +1169,6 @@ msgstr ""
 #: ../tracker/ui/edit_issue.xml.en:83
 msgid "<label for=\"cc_list\">CC:</label><br/>"
 msgstr ""
-
-#: ../tracker/ui/view_tracker.xml.en:142
-#, fuzzy
-msgid "<label for=\"comment\">Comment:</label>"
-msgstr "<a href=\"${comment/file}\">${comment/file}</a>"
 
 #: ../tracker/ui/edit_resources.xml.en:44
 #, fuzzy
@@ -1183,7 +1194,7 @@ msgstr ""
 #: ../tracker/ui/search.xml.en:45
 msgid ""
 "<label for=\"module\">Module:<stl:block stl:if=\"is_admin\"> (<a href=\"./"
-"modules/;view\">Edit</a>)</stl:block></label>"
+"modules/;view\">Edit</a>)</stl:block></label>  <br/>"
 msgstr ""
 
 #: ../tracker/ui/search.xml.en:28
@@ -1197,7 +1208,7 @@ msgstr ""
 #: ../tracker/ui/search.xml.en:87
 msgid ""
 "<label for=\"priority\">Priority:<stl:block stl:if=\"is_admin\"> (<a href="
-"\"./priorities/;view\">Edit</a>)</stl:block></label>"
+"\"./priorities/;view\">Edit</a>)</stl:block></label>  <br/>"
 msgstr ""
 
 #: ../tracker/ui/edit_resources.xml.en:14
@@ -1206,7 +1217,7 @@ msgstr ""
 
 #: ../tracker/ui/search.xml.en:114
 msgid ""
-"<label for=\"search_title\">Remember as</label> <input id=\"search_title\" "
+"<label for=\"search_title\">Remember as</label>  <input id=\"search_title\" "
 "name=\"search_title\" value=\"${search_title}\" size=\"12\" type=\"text\"/>"
 msgstr ""
 
@@ -1221,17 +1232,17 @@ msgstr ""
 #: ../tracker/ui/search.xml.en:77
 msgid ""
 "<label for=\"state\">Status:<stl:block stl:if=\"is_admin\"> (<a href=\"./"
-"states/;view\">Edit</a>)</stl:block></label>"
+"states/;view\">Edit</a>)</stl:block></label>  <br/>"
 msgstr ""
 
 #: ../ui/base/edit_metadata.xml.en:19
 msgid "<label for=\"subject\">Keywords</label> (Separated by comma)"
 msgstr ""
 
-#: ../tracker/ui/search.xml.en:22
+#: ../tracker/ui/search.xml.en:23
 msgid ""
 "<label for=\"text\">Text (search within the title and all comments)</"
-"label><br/> <input name=\"text\" size=\"30\" class=\"tracker_select\" id="
+"label><br/>  <input name=\"text\" size=\"30\" class=\"tracker_select\" id="
 "\"text\" type=\"text\" value=\"${text}\"/>"
 msgstr ""
 
@@ -1250,7 +1261,7 @@ msgstr ""
 #: ../tracker/ui/search.xml.en:35
 msgid ""
 "<label for=\"type\">Type:<stl:block stl:if=\"is_admin\"> (<a href=\"./types/;"
-"view\">Edit</a>)</stl:block></label>"
+"view\">Edit</a>)</stl:block></label>  <br/>"
 msgstr ""
 
 #: ../tracker/ui/edit_issue.xml.en:40
@@ -1264,73 +1275,40 @@ msgstr ""
 #: ../tracker/ui/search.xml.en:55
 msgid ""
 "<label for=\"version\">Version:<stl:block stl:if=\"is_admin\"> (<a href=\"./"
-"versions/;view\">Edit</a>)</stl:block></label>"
+"versions/;view\">Edit</a>)</stl:block></label>  <br/>"
 msgstr ""
 
 #: ../ui/aruni/template.xhtml.en:100
 msgid "<label>${menu/title}</label> ${menu/content}"
 msgstr ""
 
-#: ../ui/html/addlink.xml.en:46
-msgid "<label>Location:</label>"
-msgstr ""
-
 #: ../ui/ical/daily_view.xml.en:48
-msgid ""
-"<span stl:if=\"col/DTSTART\">${col/DTSTART}</span> <span stl:if=\"col/DTEND"
-"\">${col/DTEND}</span>"
-msgstr ""
-"<span stl:if=\"col/DTSTART\">${col/DTSTART}</span> <span stl:if=\"col/DTEND"
-"\">${col/DTEND}</span>"
-
-#: ../ui/aruni/template.xhtml.en:69
-msgid ""
-"<span stl:if=\"menu/icon\" style=\"background-image: url(${menu/icon})\">"
-"${menu/label}</span> <span stl:if=\"not menu/icon\">${menu/label}</span>"
-msgstr ""
-
-#: ../ui/ical/ical_monthly_view.xml.en:44
 #, fuzzy
 msgid ""
-"<span stl:if=\"not day/selected\" class=\"bold\">${day/nday}</span> <span "
-"stl:if=\"day/selected\" class=\"cal_day_selected\">${day/nday}</span> <a stl:"
-"if=\"day/url\" href=\"${day/url}\" class=\"add_event\"> <img width=\"16\" "
-"src=\"${add_icon}\" height=\"16\"/></a> ${day/events}"
+"<span stl:if=\"col/DTSTART\">${col/DTSTART}</span>  <span stl:if=\"col/DTEND"
+"\">${col/DTEND}</span>"
+msgstr ""
+"<span stl:if=\"col/DTSTART\">${col/DTSTART}</span> <span stl:if=\"col/DTEND"
+"\">${col/DTEND}</span>"
+
+#: ../ui/aruni/template.xhtml.en:71
+msgid ""
+"<span stl:if=\"menu/icon\" style=\"background-image: url(${menu/icon})\">"
+"${menu/label}</span>  <span stl:if=\"not menu/icon\">${menu/label}</span>"
+msgstr ""
+
+#: ../ui/ical/ical_monthly_view.xml.en:49
+#, fuzzy
+msgid ""
+"<span stl:if=\"not day/selected\" class=\"bold\">${day/nday}</span>  <span "
+"stl:if=\"day/selected\" class=\"cal_day_selected\">${day/nday}</span>  <a "
+"stl:if=\"day/url\" href=\"${day/url}\" class=\"add_event\">  <img width=\"16"
+"\" src=\"${add_icon}\" height=\"16\"/></a> ${day/events}"
 msgstr ""
 "<span stl:if=\"not day/selected\" class=\"bold\">${day/nday}</span> <span "
 "stl:if=\"day/selected\" class=\"cal_day_selected\">${day/nday}</span> <a stl:"
 "if=\"day/url\" class=\"add_event\" href=\"${day/url}\"> <img src="
 "\"${add_icon}\" height=\"16\" width=\"16\"/></a>"
-
-#: ../ui/aruni/template.xhtml.en:50
-#, fuzzy
-msgid ""
-"<span stl:repeat=\"item breadcrumb\"> <a stl:if=\"item/url\" href=\"${item/"
-"url}\" title=\"${item/name}\">${item/short_name}</a> <span stl:if=\"not item/"
-"url\" title=\"${item/name}\">${item/short_name}</span> <stl:inline stl:if="
-"\"not repeat/item/end\">/</stl:inline> </span>"
-msgstr ""
-"<a stl:if=\"item/url\" title=\"${item/name}\" href=\"${item/url}\">${item/"
-"short_name}</a> <span stl:if=\"not item/url\" title=\"${item/name}\">${item/"
-"short_name}</span> <stl:inline stl:if=\"not repeat/item/end\">/</stl:inline>"
-
-#: ../ui/html/addlink.xml.en:46
-#, fuzzy
-msgid ""
-"<span stl:repeat=\"x bc/path\"> <a href=\"${x/url}\" title=\"${x/title}\">"
-"${x/short_title}</a> / </span>"
-msgstr "<a href=\"${x/url}\">${x/name}</a> /"
-
-#: ../future/ui/link_addlink.xml.en:66
-#, fuzzy
-msgid ""
-"<span stl:repeat=\"x bc/path\"> <a href=\"${x/url}\">${x/name}</a> / </span>"
-msgstr "<a href=\"${x/url}\">${x/name}</a> /"
-
-#: ../ui/aruni/template.xhtml.en:79
-msgid ""
-"<span style=\"background-image: url(${option/icon})\">${option/label}</span>"
-msgstr ""
 
 #: ../shop/orders.py:170
 #, fuzzy
@@ -1352,100 +1330,30 @@ msgstr "<span>Il y a ${n} résultats.</span>"
 msgid "<span>You have one order.</span>"
 msgstr "<span>Il y a ${n} résultats.</span>"
 
-#: ../ui/root/about.xml.en:8
+#: ../ui/root/about.xml.en:13
+#, fuzzy
 msgid ""
 "<stl:inline stl:if=\"itools_version\"> itools <strong>${itools_version}</"
-"strong> </stl:inline> <br/> <stl:inline stl:if=\"ikaaro_version\"> iKaaro "
-"<strong>${ikaaro_version}</strong> </stl:inline>"
+"strong>  </stl:inline>  <br/>  <stl:inline stl:if=\"ikaaro_version\"> iKaaro "
+"<strong>${ikaaro_version}</strong>  </stl:inline>"
 msgstr ""
 "<stl:inline stl:if=\"itools_version\"> itools <strong>${itools_version}</"
 "strong> </stl:inline> <br/> <stl:inline stl:if=\"ikaaro_version\"> iKaaro "
 "<strong>${ikaaro_version}</strong> </stl:inline>"
 
-#: ../ui/WorkflowAware_state.xml.en:9
-msgid "<strong class=\"wf_${statename}\">${state}</strong>"
-msgstr "<strong class=\"wf_${statename}\">${state}</strong>"
-
-#: ../tracker/ui/issue_history.xml.en:36
-msgid "<strong>Assign To:</strong>"
-msgstr "<strong>Assigner à&nbsp;:</strong>"
-
-#: ../tracker/ui/issue_history.xml.en:42
-msgid "<strong>Attachement:</strong>"
-msgstr "<strong>Pièce jointe&nbsp;:</strong>"
-
-#: ../tracker/ui/issue_history.xml.en:39
-#, fuzzy
-msgid "<strong>CC:</strong>"
-msgstr "<strong>Type&nbsp;:</strong>"
-
-#: ../tracker/ui/issue_history.xml.en:46
-msgid "<strong>Comment:</strong>"
-msgstr "<strong>Commentaire&nbsp;:</strong>"
-
-#: ../tracker/ui/issue_history.xml.en:30
-msgid "<strong>Module:</strong>"
-msgstr "<strong>Module&nbsp;:</strong>"
-
-#: ../tracker/ui/issue_history.xml.en:33
-msgid "<strong>Priority:</strong>"
-msgstr "<strong>Priorité&nbsp;:</strong>"
-
-#: ../tracker/ui/issue_history.xml.en:27
-msgid "<strong>State:</strong>"
-msgstr "<strong>État&nbsp;:</strong>"
-
-#: ../tracker/ui/issue_history.xml.en:18
-msgid "<strong>Title:</strong>"
-msgstr "<strong>Titre&nbsp;:</strong>"
-
-#: ../tracker/ui/issue_history.xml.en:24
-msgid "<strong>Type:</strong>"
-msgstr "<strong>Type&nbsp;:</strong>"
-
-#: ../tracker/ui/issue_history.xml.en:21
-msgid "<strong>Version:</strong>"
-msgstr "<strong>Version&nbsp;:</strong>"
-
-#: ../ui/website/virtual_hosts.xml.en:11
+#: ../ui/website/virtual_hosts.xml.en:12
 #, fuzzy
 msgid ""
-"<textarea cols=\"62\" rows=\"7\" name=\"vhosts\">${vhosts}</textarea> <br/> "
-"<input value=\"OK\" type=\"submit\"/>"
+"<textarea cols=\"62\" rows=\"7\" name=\"vhosts\">${vhosts}</textarea>  <br/"
+">  <input value=\"OK\" type=\"submit\"/>"
 msgstr ""
 "<textarea name=\"vhosts\" cols=\"62\" rows=\"7\">${vhosts}</textarea> <br/> "
 "<input type=\"submit\" value=\"OK\"/>"
 
-#: ../tracker/ui/edit_issue.xml.en:96
-#, fuzzy
-msgid ""
-"<textarea id=\"comment\" rows=\"10\" name=\"comment\" cols=\"80\"></textarea>"
-msgstr ""
-"<br/> <textarea name=\"comment\" id=\"description\" rows=\"10\" cols=\"60\">"
-"${comment}</textarea>"
-
-#: ../tracker/ui/edit_resources.xml.en:44
-#, fuzzy
-msgid ""
-"<textarea id=\"comment\" rows=\"3\" name=\"comment\" cols=\"80\">${comment}</"
-"textarea>"
-msgstr ""
-"<br/> <textarea name=\"comment\" id=\"description\" rows=\"10\" cols=\"60\">"
-"${comment}</textarea>"
-
-#: ../tracker/ui/add_issue.xml.en:81
-#, fuzzy
-msgid ""
-"<textarea id=\"description\" rows=\"10\" name=\"comment\" cols=\"80\">"
-"${comment}</textarea>"
-msgstr ""
-"<br/> <textarea name=\"comment\" id=\"description\" rows=\"10\" cols=\"60\">"
-"${comment}</textarea>"
-
-#: ../ui/tiny_mce/rte.xml.en:45
+#: ../ui/tiny_mce/rte.xml.en:47
 msgid ""
 "<textarea name=\"${form_name}\" rows=\"15\" id=\"${form_name}\" cols=\"80\" "
-"style=\"width: 80%\"> ${js_data} </textarea> <input value=\"${dress_name}\" "
+"style=\"width: 80%\"> ${js_data} </textarea>  <input value=\"${dress_name}\" "
 "name=\"dress_name\" type=\"hidden\"/>"
 msgstr ""
 
@@ -1499,7 +1407,7 @@ msgstr "À propos de"
 msgid "Accept the document."
 msgstr "Accepter le document"
 
-#: ../root.py:178
+#: ../root.py:175
 msgid "Access forbidden, you are not authorized to access this resource."
 msgstr "Accès refusé, vous n'êtes pas autorisé à accéder à cette ressource."
 
@@ -1587,6 +1495,16 @@ msgstr ""
 msgid "Address"
 msgstr "Adresse de courriel"
 
+#: ../shop/ui/Order_view.xml.en:16
+#, fuzzy
+msgid "Address 1:"
+msgstr "Adresse de courriel"
+
+#: ../shop/ui/Order_view.xml.en:17
+#, fuzzy
+msgid "Address 2:"
+msgstr "Adresse de courriel"
+
 #: ../shop/ui/Order_view.xml.en:14
 msgid "Address invoicing"
 msgstr ""
@@ -1595,7 +1513,7 @@ msgstr ""
 msgid "Admin"
 msgstr "Administrateur"
 
-#: ../ui/website/forgotten_password.xml.en:7
+#: ../ui/website/forgotten_password.xml.en:8
 msgid ""
 "An email has been sent to you with the procedure to change your password."
 msgstr ""
@@ -1614,7 +1532,7 @@ msgstr ""
 msgid "An iKaaro forum"
 msgstr "Un forum Ikaaro"
 
-#: ../ui/root/internal_server_error.xml.en:13
+#: ../ui/root/internal_server_error.xml.en:14
 msgid "Apologies for the inconvenience."
 msgstr "Veuillez nous excuser pour la gêne occasionnée."
 
@@ -1648,11 +1566,16 @@ msgstr "Calendrier"
 msgid "Assign"
 msgstr "Assigner à&nbsp;:"
 
+#: ../tracker/ui/issue_history.xml.en:36
+#, fuzzy
+msgid "Assign To:"
+msgstr "Assigné à&nbsp;:"
+
 #: ../tracker/tracker.py:76
 msgid "Assigned To"
 msgstr "Assigné à"
 
-#: ../tracker/ui/edit_issue.xml.en:133
+#: ../tracker/ui/issue_history.xml.en:42
 msgid "Attachement:"
 msgstr "Pièce jointe&nbsp;:"
 
@@ -1673,11 +1596,15 @@ msgstr "Dernier auteur"
 msgid "BP"
 msgstr ""
 
+#: ../shop/ui/Order_view.xml.en:20
+msgid "BP:"
+msgstr ""
+
 #: ../file.py:271
 msgid "Backlinks"
 msgstr "Rétroliens"
 
-#: ../ui/text/externaledit.xml.en:13
+#: ../ui/text/externaledit.xml.en:14
 msgid "Be sure your have the external editor plug-in installed."
 msgstr "Assurez-vous d'avoir l'extension External Editor."
 
@@ -1728,6 +1655,11 @@ msgstr "Bzip2"
 #: ../binary.py:330
 msgid "Bzip2 Compressed"
 msgstr "Compacté en bzip2"
+
+#: ../tracker/ui/issue_history.xml.en:39
+#, fuzzy
+msgid "CC:"
+msgstr "Ajouter"
 
 #: ../text.py:213
 msgid "CSS"
@@ -1810,11 +1742,11 @@ msgstr "Un conflit a empêché la sauvegarde des changements."
 msgid "Character encoding"
 msgstr "Codage des caractères"
 
-#: ../ui/root/about.xml.en:40
+#: ../ui/root/about.xml.en:41
 msgid "Check the <a href=\";credits\">Credits</a>;"
 msgstr "Consultez les <a href=\";credits\">crédits</a>&nbsp;;"
 
-#: ../ui/root/about.xml.en:37
+#: ../ui/root/about.xml.en:38
 msgid "Check the <a href=\";license\">License</a>;"
 msgstr "Consultez la <a href=\";license\">licence</a>&nbsp;;"
 
@@ -1841,6 +1773,10 @@ msgstr "Saisissez un mot de passe"
 
 #: ../shop/ui/Order_new_instance.xml.en:70
 msgid "City"
+msgstr ""
+
+#: ../shop/ui/Order_view.xml.en:12
+msgid "Click here"
 msgstr ""
 
 #: ../shop/workflow.py:28
@@ -1889,6 +1825,10 @@ msgstr "Commentaire"
 #: ../tracker/ui/edit_issue.xml.en:121
 msgid "Comment <a href=\"#c${comment/number}\">${comment/number}</a>"
 msgstr "Commentaire <a href=\"#c${comment/number}\">${comment/number}</a>"
+
+#: ../tracker/ui/view_tracker.xml.en:142
+msgid "Comment:"
+msgstr "Commentaire&nbsp;:"
 
 #: ../ui/WorkflowAware_state.xml.en:48
 msgid "Comments"
@@ -1984,7 +1924,7 @@ msgstr "Crédits"
 msgid "Current image"
 msgstr "Image actuelle"
 
-#: ../ui/WorkflowAware_state.xml.en:9
+#: ../ui/WorkflowAware_state.xml.en:10
 msgid "Current state:"
 msgstr "État actuel&nbsp;:"
 
@@ -2008,7 +1948,7 @@ msgstr "Données mises à jour."
 msgid "Date"
 msgstr "Date"
 
-#: ../ui/ical/daily_view.xml.en:10
+#: ../ui/ical/daily_view.xml.en:11
 msgid "Date :"
 msgstr "Date :"
 
@@ -2206,6 +2146,11 @@ msgstr "Fichier"
 msgid "First Name"
 msgstr "Prénom"
 
+#: ../shop/ui/Order_new_instance.xml.en:46
+#, fuzzy
+msgid "Firstname:"
+msgstr "Prénom"
+
 #: ../tracker/tracker.py:605
 msgid "Fixed"
 msgstr "Corrigé"
@@ -2230,7 +2175,7 @@ msgstr "Récupérer le mot de passe"
 msgid "Forum"
 msgstr "Forum"
 
-#: ../ui/website/broken_links.xml.en:7
+#: ../ui/website/broken_links.xml.en:8
 msgid "Found <b>${total}</b> broken links."
 msgstr "<b>${total}</b> liens cassés ont été trouvés."
 
@@ -2250,10 +2195,10 @@ msgstr "Accueil"
 msgid "Full day"
 msgstr "Toute la journée"
 
-#: ../tracker/ui/search.xml.en:9
+#: ../tracker/ui/search.xml.en:10
 #, fuzzy
 msgid ""
-"Go to issue #<input name=\"issue_name\" size=\"6\" type=\"text\"/> <input "
+"Go to issue #<input name=\"issue_name\" size=\"6\" type=\"text\"/>  <input "
 "class=\"button_ok\" name=\";go_to_issue\" value=\"OK\" type=\"submit\"/>"
 msgstr ""
 "Aller à la fiche #<input name=\"issue_name\" size=\"6\" type=\"text\"/> "
@@ -2323,7 +2268,7 @@ msgstr "Historique"
 msgid "ISBN"
 msgstr ""
 
-#: ../ui/root/license.xml.en:21
+#: ../ui/root/license.xml.en:23
 msgid ""
 "If not, see <a href=\"http://www.gnu.org/licenses/\">http://www.gnu.org/"
 "licenses/</a>."
@@ -2331,15 +2276,15 @@ msgstr ""
 "If not, see <a href=\"http://www.gnu.org/licenses/\">http://www.gnu.org/"
 "licenses/</a>."
 
-#: ../ui/root/internal_server_error.xml.en:9
+#: ../ui/root/internal_server_error.xml.en:10
 msgid "If the error persists contact with the system administrator."
 msgstr "Si l'erreur persiste, contactez l'administrateur du site."
 
-#: ../ui/text/externaledit.xml.en:13
+#: ../ui/text/externaledit.xml.en:14
 msgid "If you don't, you can download it from a link below."
 msgstr "Sinon, vous pouvez le télécharger ci-dessous."
 
-#: ../ui/root/about.xml.en:47
+#: ../ui/root/about.xml.en:48
 msgid ""
 "If you find a bug or wish some new feature, please <a href=\"http://bugs."
 "ikaaro.org\">file a bug report</a>."
@@ -2492,6 +2437,10 @@ msgstr ""
 msgid "Location"
 msgstr "Lieu"
 
+#: ../ui/html/addlink.xml.en:46
+msgid "Location:"
+msgstr "Emplacement&nbsp;:"
+
 #: ../ui/website/login.xml.en:20
 msgid "Log in"
 msgstr "Connexion"
@@ -2549,10 +2498,10 @@ msgstr "Membres supprimés."
 msgid "Message"
 msgstr "Message"
 
-#: ../ui/PO_edit.xml.en:11
+#: ../ui/PO_edit.xml.en:14
 #, fuzzy
 msgid ""
-"Message ${messages_index} / ${messages_total} <br/> <a href="
+"Message ${messages_index} / ${messages_total} <br/>  <a href="
 "\"${messages_first}\" title=\"Go to first message\">&lt;&lt;</a>"
 msgstr ""
 "Message ${messages_index} / ${messages_total} <br/> <a title=\"Aller au "
@@ -2593,6 +2542,10 @@ msgstr "Dernière modification"
 #: ../tracker/tracker.py:72
 msgid "Module"
 msgstr "Module"
+
+#: ../tracker/ui/issue_history.xml.en:30
+msgid "Module:"
+msgstr "Module&nbsp;:"
 
 #: ../ical.py:63
 msgid "Monday"
@@ -2676,11 +2629,11 @@ msgstr "Nicolas Deram (français)"
 msgid "No data to export."
 msgstr "Aucune donnée à exporter."
 
-#: ../ui/user/tasks.xml.en:7
+#: ../ui/user/tasks.xml.en:8
 msgid "No document awaits your review."
 msgstr "Aucun document en attente."
 
-#: ../ui/WorkflowAware_state.xml.en:38
+#: ../ui/WorkflowAware_state.xml.en:39
 msgid "No history."
 msgstr "Rien dans l'historique."
 
@@ -2704,11 +2657,11 @@ msgstr "Pas assigné"
 msgid "Not Found"
 msgstr "Introuvable"
 
-#: ../ui/file/upload.xml.en:7
+#: ../ui/file/upload.xml.en:8
 msgid "Note the name and title won't change."
 msgstr "Notez que ni le nom ni le titre ne changeront."
 
-#: ../wiki/ui/WikiPage_new_instance.xml.en:35
+#: ../wiki/ui/WikiPage_new_instance.xml.en:36
 msgid "Note:"
 msgstr "Note&nbsp;:"
 
@@ -2824,7 +2777,7 @@ msgstr "Octobre"
 msgid "One or more field is invalid."
 msgstr "un champ ou plus est invalide."
 
-#: ../ui/website/anonymous.xml.en:9
+#: ../ui/website/anonymous.xml.en:12
 msgid "Only administrators will be able to register new users."
 msgstr ""
 "Seuls les administrateurs pourront enregistrer de nouveaux utilisateurs"
@@ -2892,7 +2845,7 @@ msgstr "Descendre"
 msgid "Order id"
 msgstr "Descendre"
 
-#: ../shop/ui/Order_view.xml.en:7
+#: ../shop/ui/Order_view.xml.en:8
 #, fuzzy
 msgid "Order id:"
 msgstr "Descendre"
@@ -3006,7 +2959,7 @@ msgstr "Amélioration des performances"
 msgid "Plain Text"
 msgstr "Texte brut"
 
-#: ../shop/ui/Order_new_instance.xml.en:9
+#: ../shop/ui/Order_new_instance.xml.en:10
 msgid "Please add products in your cart before."
 msgstr ""
 
@@ -3014,11 +2967,11 @@ msgstr ""
 msgid "Please select a website."
 msgstr "Veuillez sélectionner un site Web."
 
-#: ../tracker/ui/view_tracker.xml.en:63
+#: ../tracker/ui/view_tracker.xml.en:64
 msgid "Please select encoding:<br/><br/>"
 msgstr "Veuillez choisir un format&nbsp;:<br/><br/>"
 
-#: ../tracker/ui/view_tracker.xml.en:39
+#: ../tracker/ui/view_tracker.xml.en:40
 msgid "Please select the columns to export:"
 msgstr "Veuillez sélectionner les colonnes à exporter&nbsp;:"
 
@@ -3087,6 +3040,10 @@ msgstr "Privé"
 #: ../tracker/tracker.py:74
 msgid "Priority"
 msgstr "Priorité"
+
+#: ../tracker/ui/issue_history.xml.en:33
+msgid "Priority:"
+msgstr "Priorité&nbsp;:"
 
 #: ../workflow.py:113
 msgid "Private"
@@ -3208,7 +3165,7 @@ msgstr "Remplacer"
 msgid "Reply Posted."
 msgstr "Réponse postée."
 
-#: ../tracker/ui/edit_issue.xml.en:9
+#: ../tracker/ui/edit_issue.xml.en:10
 msgid "Reported by <em>${reported_by}</em>"
 msgstr "Rapporté par <em>${reported_by}</em>"
 
@@ -3298,7 +3255,7 @@ msgstr "Problème de sécurité"
 msgid "Security Policy"
 msgstr "Politique de sécurité"
 
-#: ../ui/root/license.xml.en:14
+#: ../ui/root/license.xml.en:17
 msgid "See the GNU General Public License for more details."
 msgstr "See the GNU General Public License for more details."
 
@@ -3366,7 +3323,7 @@ msgstr ""
 "Des champs requis ne sont pas renseignés ou des valeurs ne sont pas valides. "
 "Merci de les corriger avant de continuer."
 
-#: ../ui/root/about.xml.en:23
+#: ../ui/root/about.xml.en:24
 msgid "Some things you can do with ikaaro:"
 msgstr "Voici quelques fonctionnalités d'ikaaro&nbsp;:"
 
@@ -3397,6 +3354,11 @@ msgstr "État"
 #: ../ui/WorkflowAware_state.xml.en:36
 msgid "State History"
 msgstr "Historique de publication"
+
+#: ../tracker/ui/issue_history.xml.en:27
+#, fuzzy
+msgid "State:"
+msgstr "État"
 
 #: ../ui/ical/ical_edit_event.xml.en:75
 msgid "Status"
@@ -3507,7 +3469,7 @@ msgid "The document name contains illegal characters, choose another one."
 msgstr ""
 "Le nom du document contient des caractères interdits, choisissez-en un autre."
 
-#: ../ui/user/tasks.xml.en:12
+#: ../ui/user/tasks.xml.en:13
 msgid "The documents below await review for publication:"
 msgstr ""
 "Les documents ci-dessous nécessitent une validation pour être publiés&nbsp;:"
@@ -3579,15 +3541,15 @@ msgstr "Aucun objet ordonné."
 msgid "There are no unordered objects"
 msgstr "Aucun objet sans ordre."
 
-#: ../tracker/ui/search.xml.en:142
+#: ../tracker/ui/search.xml.en:143
 msgid "There are not stored searches."
 msgstr "Aucune recherche enregistrée."
 
-#: ../ui/PO_edit.xml.en:43
+#: ../ui/PO_edit.xml.en:44
 msgid "There aren't messages."
 msgstr "Aucun message."
 
-#: ../ui/root/internal_server_error.xml.en:9
+#: ../ui/root/internal_server_error.xml.en:10
 msgid "There has been an error, please try again later."
 msgstr "Une erreur s'est produite, veuillez réessayer plus tard."
 
@@ -3628,7 +3590,7 @@ msgstr ""
 msgid "There is not a user identified as \"$username\""
 msgstr "Il n'existe pas d'utilisateur &laquo;&nbsp;$username&nbsp;&raquo;."
 
-#: ../ui/user/profile.xml.en:9
+#: ../ui/user/profile.xml.en:10
 msgid ""
 "This is your personal space where you can manage your own documents and "
 "publish them."
@@ -3644,7 +3606,7 @@ msgstr "Cette page est verrouillée par un autre utilisateur."
 msgid "This page is locked by $user"
 msgstr "Cette page est verrouillée par $user"
 
-#: ../ui/root/license.xml.en:14
+#: ../ui/root/license.xml.en:15
 msgid ""
 "This program is distributed in the hope that it will be useful, but WITHOUT "
 "ANY WARRANTY;"
@@ -3652,7 +3614,7 @@ msgstr ""
 "This program is distributed in the hope that it will be useful, but WITHOUT "
 "ANY WARRANTY;"
 
-#: ../ui/root/license.xml.en:7
+#: ../ui/root/license.xml.en:8
 msgid "This program is free software:"
 msgstr "This program is free software:"
 
@@ -3688,11 +3650,11 @@ msgstr "Horaire modifié."
 msgid "Title"
 msgstr "Titre"
 
-#: ../shop/ui/product_view.xml.en:5
+#: ../tracker/ui/issue_history.xml.en:18
 msgid "Title:"
 msgstr "Titre&nbsp;:"
 
-#: ../ui/user/confirm_registration.xml.en:9
+#: ../ui/user/confirm_registration.xml.en:10
 msgid "To activate your account, please type a password."
 msgstr "Pour activer votre compte, vous devez saisir un mot de passe."
 
@@ -3715,13 +3677,13 @@ msgstr ""
 "\n"
 "  $confirm_url"
 
-#: ../ui/file/download_form.xml.en:7
+#: ../ui/file/download_form.xml.en:8
 msgid "To download this file, click on <a href=\"${url}\">${title_or_name}</a>"
 msgstr ""
 "Pour télécharger ce fichier, cliquez sur <a href=\"${url}\">${title_or_name}"
 "</a>"
 
-#: ../ui/root/about.xml.en:32
+#: ../ui/root/about.xml.en:33
 msgid "To learn more, check out these resources:"
 msgstr "Pour en savoir plus, consultez ces ressources&nbsp;:"
 
@@ -3749,7 +3711,7 @@ msgstr ""
 msgid "Transition done."
 msgstr "Action effectuée."
 
-#: ../ui/PO_edit.xml.en:27
+#: ../ui/PO_edit.xml.en:28
 msgid "Translation"
 msgstr "Traduction"
 
@@ -3773,7 +3735,7 @@ msgstr "Type"
 msgid "Type the URL of an external resource"
 msgstr "Saisissez une adresse URL externe"
 
-#: ../ui/website/virtual_hosts.xml.en:7
+#: ../ui/website/virtual_hosts.xml.en:8
 msgid ""
 "Type the hostnames this website will apply to, each one in a different line."
 msgstr ""
@@ -3784,9 +3746,13 @@ msgstr ""
 msgid "Type your email please."
 msgstr "Veuillez taper votre adresse de courriel."
 
-#: ../wiki/ui/WikiPage_new_instance.xml.en:22
+#: ../wiki/ui/WikiPage_new_instance.xml.en:21
 msgid "Type your text here..."
 msgstr "Tapez votre texte ici..."
+
+#: ../tracker/ui/issue_history.xml.en:24
+msgid "Type:"
+msgstr "Type&nbsp;:"
 
 #: ../future/ui/link_edit_metadata.xml.en:21
 msgid "URL"
@@ -3907,6 +3873,10 @@ msgstr "Version"
 msgid "Version uploaded"
 msgstr "Version chargée."
 
+#: ../tracker/ui/issue_history.xml.en:21
+msgid "Version:"
+msgstr "Version&nbsp;:"
+
 #: ../binary.py:98
 msgid "Video"
 msgstr "Vidéo"
@@ -3936,7 +3906,7 @@ msgstr "Voir le tracker"
 msgid "Virtual Hosts"
 msgstr "Hôtes virtuels"
 
-#: ../ui/root/about.xml.en:44
+#: ../ui/root/about.xml.en:45
 msgid "Visit the project's <a href=\"http://www.ikaaro.org/\">Web Site</a>;"
 msgstr "Visitez le <a href=\"http://www.ikaaro.org\">site Web</a> du projet."
 
@@ -3944,7 +3914,7 @@ msgstr "Visitez le <a href=\"http://www.ikaaro.org\">site Web</a> du projet."
 msgid "Visual Interface"
 msgstr "Interface utilisateur"
 
-#: ../ui/root/about.xml.en:40
+#: ../ui/root/about.xml.en:41
 msgid "Want to know who is behind this software?"
 msgstr "Découvrez qui se cache derrière ce logiciel"
 
@@ -3969,7 +3939,7 @@ msgstr "Semaine "
 msgid "Weekly"
 msgstr "Hebdomadaire"
 
-#: ../ui/user/profile.xml.en:9
+#: ../ui/user/profile.xml.en:10
 msgid "Welcome to your home folder."
 msgstr "Bienvenue dans votre espace personnel."
 
@@ -4041,7 +4011,7 @@ msgstr ""
 "Vous pouvez télércharger cette image en cliquant dessus avec le bouton droit "
 "et choisir &laquo;&nbsp;Enregistrer l'image sous...&nbsp;&raquo;."
 
-#: ../ui/text/externaledit.xml.en:9
+#: ../ui/text/externaledit.xml.en:10
 msgid ""
 "You can edit this document using an application from your desktop, like MS "
 "Office or OpenOffice.org."
@@ -4058,7 +4028,7 @@ msgid "You can specify timetables to limit the range when an event can be set"
 msgstr ""
 "Vous pouvez spécifier les plages horaire où un événement peut être saisi.\t"
 
-#: ../ui/file/upload.xml.en:7
+#: ../ui/file/upload.xml.en:8
 msgid "You can upload a new file to replace the current one."
 msgstr ""
 "Vous pouvez importer un fichier de votre ordinateur pour remplacer l'actuel."
@@ -4069,7 +4039,7 @@ msgid ""
 "password."
 msgstr ""
 
-#: ../shop/ui/Orders_view.xml.en:7
+#: ../shop/ui/Orders_view.xml.en:8
 msgid "You have no orders yet."
 msgstr ""
 
@@ -4095,7 +4065,7 @@ msgstr "Vous devez choisir une langue."
 msgid "You must select one and only one language."
 msgstr "Vous ne devez sélectionner qu'une langue."
 
-#: ../ui/root/license.xml.en:21
+#: ../ui/root/license.xml.en:22
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "this program."
@@ -4146,6 +4116,11 @@ msgstr "Zip"
 msgid "Zip Archive"
 msgstr "Archive Zip"
 
+#: ../shop/ui/Order_view.xml.en:18
+#, fuzzy
+msgid "Zip:"
+msgstr "Zip"
+
 #: ../ui/folder/browse_image.xml.en:10
 msgid "Zoom"
 msgstr ""
@@ -4158,7 +4133,7 @@ msgstr ""
 msgid "Zoom Out"
 msgstr ""
 
-#: ../tracker/ui/edit_issue.xml.en:124
+#: ../tracker/ui/edit_issue.xml.en:126
 #, fuzzy
 msgid ""
 "[ <a onclick=\"javascript:reply('${comment/number}');\" href=\"#new_comment"
@@ -4171,7 +4146,7 @@ msgstr ""
 msgid "[%s]"
 msgstr "[%s]"
 
-#: ../wiki/ui/WikiPage_new_instance.xml.en:35
+#: ../wiki/ui/WikiPage_new_instance.xml.en:36
 msgid ""
 "administrators can add new languages at the root of the application, tab "
 "\"Settings\", subtab \"Languages\"."
@@ -4189,7 +4164,7 @@ msgstr "Octobre"
 msgid "iKaaro"
 msgstr "iKaaro"
 
-#: ../ui/root/about.xml.en:16
+#: ../ui/root/about.xml.en:19
 msgid ""
 "iKaaro is a Content Management System, written in the <a href=\"http://www."
 "python.org\">Python</a> programming language, and based on the <a href="
@@ -4207,7 +4182,7 @@ msgstr ""
 msgid "to"
 msgstr "à"
 
-#: ../ui/root/license.xml.en:14
+#: ../ui/root/license.xml.en:16
 msgid ""
 "without even the implied warranty of MERCHANTABILITY or FITNESS FOR A "
 "PARTICULAR PURPOSE."
@@ -4215,7 +4190,7 @@ msgstr ""
 "without even the implied warranty of MERCHANTABILITY or FITNESS FOR A "
 "PARTICULAR PURPOSE."
 
-#: ../ui/root/license.xml.en:7
+#: ../ui/root/license.xml.en:8
 msgid ""
 "you can redistribute it and/or modify it under the terms of the GNU General "
 "Public License as published by the Free Software Foundation, either version "
@@ -4225,7 +4200,7 @@ msgstr ""
 "Public License as published by the Free Software Foundation, either version "
 "3 of the License, or (at your option) any later version."
 
-#: ../ui/folder/rename.xml.en:14
+#: ../ui/folder/rename.xml.en:15
 msgid ""
 "⇒ ${object/parent_path}<input value=\"${object/name}\" name=\"new_names\" "
 "style=\"font-family: monospace;\" type=\"text\"/>"
@@ -4260,9 +4235,6 @@ msgstr ""
 
 #~ msgid "${object/title_or_name}"
 #~ msgstr "${object/title_or_name}"
-
-#~ msgid "${option/label}"
-#~ msgstr "${option/label}"
 
 #~ msgid "${selected/description}"
 #~ msgstr "${selected/description}"
@@ -4303,12 +4275,21 @@ msgstr ""
 #~ msgid "(Separated by comma)"
 #~ msgstr "(séparés par des virgules)"
 
+#~ msgid "<a href=\"${comment/file}\">${comment/file}</a>"
+#~ msgstr "<a href=\"${comment/file}\">${comment/file}</a>"
+
 #~ msgid ""
 #~ "<a href=\"${event/url}\"> ${event/SUMMARY}</a> <span stl:if=\"event/TIME"
 #~ "\" class=\"time\">${event/TIME}</span>"
 #~ msgstr ""
 #~ "<a href=\"${event/url}\"> ${event/SUMMARY}</a> <span stl:if=\"event/TIME"
 #~ "\" class=\"time\">${event/TIME}</span>"
+
+#, fuzzy
+#~ msgid ""
+#~ "<a href=\"${messages_previous}\" title=\"Go to previous message\">&lt;</a>"
+#~ msgstr ""
+#~ "<span id=\"gallery_previous\" stl:if=\"not selected/previous\">&lt;</span>"
 
 #~ msgid ""
 #~ "<a id=\"gallery_next\" stl:if=\"selected/next\" href=\"${selected/next}"
@@ -4367,8 +4348,76 @@ msgstr ""
 #~ "<input value=\"${DTSTART_minutes}\" name=\"DTSTART_minutes\" size=\"2\" "
 #~ "id=\"DTSTART_minutes\" maxlength=\"2\" type=\"text\"/>"
 
+#, fuzzy
+#~ msgid "<label for=\"comment\">Comment:</label>"
+#~ msgstr "<a href=\"${comment/file}\">${comment/file}</a>"
+
+#, fuzzy
+#~ msgid ""
+#~ "<span stl:repeat=\"x bc/path\"> <a href=\"${x/url}\">${x/name}</a> / </"
+#~ "span>"
+#~ msgstr "<a href=\"${x/url}\">${x/name}</a> /"
+
 #~ msgid "<span>${menu/label}</span>"
 #~ msgstr "<span>${menu/label}</span>"
+
+#~ msgid "<strong class=\"wf_${statename}\">${state}</strong>"
+#~ msgstr "<strong class=\"wf_${statename}\">${state}</strong>"
+
+#~ msgid "<strong>Assign To:</strong>"
+#~ msgstr "<strong>Assigner à&nbsp;:</strong>"
+
+#~ msgid "<strong>Attachement:</strong>"
+#~ msgstr "<strong>Pièce jointe&nbsp;:</strong>"
+
+#, fuzzy
+#~ msgid "<strong>CC:</strong>"
+#~ msgstr "<strong>Type&nbsp;:</strong>"
+
+#~ msgid "<strong>Comment:</strong>"
+#~ msgstr "<strong>Commentaire&nbsp;:</strong>"
+
+#~ msgid "<strong>Module:</strong>"
+#~ msgstr "<strong>Module&nbsp;:</strong>"
+
+#~ msgid "<strong>Priority:</strong>"
+#~ msgstr "<strong>Priorité&nbsp;:</strong>"
+
+#~ msgid "<strong>State:</strong>"
+#~ msgstr "<strong>État&nbsp;:</strong>"
+
+#~ msgid "<strong>Title:</strong>"
+#~ msgstr "<strong>Titre&nbsp;:</strong>"
+
+#~ msgid "<strong>Type:</strong>"
+#~ msgstr "<strong>Type&nbsp;:</strong>"
+
+#~ msgid "<strong>Version:</strong>"
+#~ msgstr "<strong>Version&nbsp;:</strong>"
+
+#, fuzzy
+#~ msgid ""
+#~ "<textarea id=\"comment\" rows=\"10\" name=\"comment\" cols=\"80\"></"
+#~ "textarea>"
+#~ msgstr ""
+#~ "<br/> <textarea name=\"comment\" id=\"description\" rows=\"10\" cols=\"60"
+#~ "\">${comment}</textarea>"
+
+#, fuzzy
+#~ msgid ""
+#~ "<textarea id=\"comment\" rows=\"3\" name=\"comment\" cols=\"80\">"
+#~ "${comment}</textarea>"
+#~ msgstr ""
+#~ "<br/> <textarea name=\"comment\" id=\"description\" rows=\"10\" cols=\"60"
+#~ "\">${comment}</textarea>"
+
+#, fuzzy
+#~ msgid ""
+#~ "<textarea id=\"description\" rows=\"10\" name=\"comment\" cols=\"80\">"
+#~ "${comment}</textarea>"
+#~ msgstr ""
+#~ "<br/> <textarea name=\"comment\" id=\"description\" rows=\"10\" cols=\"60"
+#~ "\">${comment}</textarea>"
 
 #~ msgid "A transition must be selected."
 #~ msgstr "Vous devez choisir une action."
@@ -4378,10 +4427,6 @@ msgstr ""
 
 #~ msgid "Account Change"
 #~ msgstr "Modifier le compte"
-
-#, fuzzy
-#~ msgid "Add CC:"
-#~ msgstr "Ajouter"
 
 #~ msgid "Add new content"
 #~ msgstr "Ajouter du contenu"
@@ -4411,9 +4456,6 @@ msgstr ""
 #~ msgid "As List"
 #~ msgstr "Vue listée"
 
-#~ msgid "Assigned To:"
-#~ msgstr "Assigné à&nbsp;:"
-
 #~ msgid "Background Color"
 #~ msgstr "Couleur de fond"
 
@@ -4434,9 +4476,6 @@ msgstr ""
 
 #~ msgid "Check groups for <em>phantom</em> users"
 #~ msgstr "Vérifier les utilisateurs <em>fantômes</em> des groupes"
-
-#~ msgid "Comment:"
-#~ msgstr "Commentaire&nbsp;:"
 
 #~ msgid "Edit Text"
 #~ msgstr "Modifier le texte"
@@ -4492,9 +4531,6 @@ msgstr ""
 #~ msgid "Keywords"
 #~ msgstr "Mots-clé"
 
-#~ msgid "Location:"
-#~ msgstr "Emplacement&nbsp;:"
-
 #~ msgid "Maintenance"
 #~ msgstr "Maintenance"
 
@@ -4509,9 +4545,6 @@ msgstr ""
 
 #~ msgid "Modified since:"
 #~ msgstr "Modifié depuis le&nbsp;:"
-
-#~ msgid "Module:"
-#~ msgstr "Module&nbsp;:"
 
 #~ msgid "My Content"
 #~ msgstr "Mon Contenu"
@@ -4551,9 +4584,6 @@ msgstr ""
 
 #~ msgid "Password empty, please type one."
 #~ msgstr "Vous devez saisir un mot de passe."
-
-#~ msgid "Priority:"
-#~ msgstr "Priorité&nbsp;:"
 
 #~ msgid "Redo"
 #~ msgstr "Restaurer"
@@ -4636,9 +4666,6 @@ msgstr ""
 #~ msgid "Type (mandatory):"
 #~ msgstr "Type (obligatoire)&nbsp;:"
 
-#~ msgid "Type:"
-#~ msgstr "Type&nbsp;:"
-
 #~ msgid "UTF-8, Separator:"
 #~ msgstr "UTF-8, separateur"
 
@@ -4660,9 +4687,6 @@ msgstr ""
 
 #~ msgid "Version (mandatory):"
 #~ msgstr "Version (obligatoire)&nbsp;:"
-
-#~ msgid "Version:"
-#~ msgstr "Version&nbsp;:"
 
 #~ msgid "With head"
 #~ msgstr "Avec en-tête"
