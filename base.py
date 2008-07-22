@@ -35,6 +35,7 @@ from itools.xapian import TextField, KeywordField, IntegerField, BoolField
 from itools.xml import XMLParser
 
 # Import from ikaaro
+from datatypes import FileDataType
 from lock import Lock, lock_body
 from messages import *
 from metadata import Metadata
@@ -171,6 +172,9 @@ class AddImageForm(STLForm):
 
     access = 'is_allowed_to_edit'
     template = '/ui/html/addimage.xml'
+    schema = {
+        'file': FileDataType(mandatory=True),
+    }
 
 
     def get_namespace(self, model, context):
@@ -196,7 +200,7 @@ class AddImageForm(STLForm):
         # Construct namespace
         return {
             'bc': Breadcrumb(filter_type=Image, start=start, icon_size=48),
-            'message': context.get_form_value('message'),
+            'message': context.message,
             'mode': mode,
             'scripts': scripts,
             'caption': MSG_CAPTION.gettext().encode('utf_8'),
@@ -215,16 +219,32 @@ class AddImageForm(STLForm):
         """
         from binary import Image
 
-        root = context.root
-        # Get the container
-        container = root.get_object(context.get_form_value('target_path'))
-        # Add the image to the object
-        goto = Image.new_instance.POST(container, context)
-        # Error
-        if goto is None:
+        # Check the filename is good
+        filename, mimetype, body = form['file']
+        name = checkid(filename)
+        if name is None:
+            context.message = MSG_BAD_NAME
             return
 
-        # Success
+        # Check it is an image
+        cls = get_object_class(mimetype)
+        if not issubclass(cls, Image):
+            context.message = MSG(u'The given file is not an image.')
+            return
+
+        # Get the container
+        root = context.root
+        container = root.get_object(context.get_form_value('target_path'))
+        # Check the name is free
+        name, type, language = FileName.decode(name)
+        if container.has_object(name):
+            context.message = MSG_NAME_CLASH
+            return
+
+        # Add the image to the object
+        cls.make_object(cls, container, name, body, type=type)
+
+        # Ok
         caption = MSG_CAPTION.gettext().encode('utf_8')
         mode = context.get_form_value('mode', default='html')
         if mode == 'wiki':
@@ -234,8 +254,8 @@ class AddImageForm(STLForm):
                        '/ui/tiny_mce/tiny_mce_src.js',
                        '/ui/tiny_mce/tiny_mce_popup.js']
 
-        object = container.get_object(goto.path[0])
-        path = context.object.get_pathto(object)
+        object = container.get_object(name)
+        path = model.get_pathto(object)
         script_template = '<script type="text/javascript" src="%s" />'
         body = ''
         for script in scripts:
@@ -280,7 +300,7 @@ class AddLinkForm(STLForm):
         return {
             'mode': mode,
             'bc': Breadcrumb(filter_type=File, start=start, icon_size=48),
-            'message': context.get_form_value('message'),
+            'message': context.message,
             'scripts': scripts,
             'type': type,
             'wiki_mode': (mode == 'wiki'),

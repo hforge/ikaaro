@@ -99,9 +99,7 @@ class NewFileForm(NewInstanceForm):
 
         # Check the name is free
         if model.has_object(name):
-            context.message = (
-                u'There is already another object with this name. Please'
-                u' type a title to choose a different name.')
+            context.message = MSG_NAME_CLASH
             return
 
         # Build the object
