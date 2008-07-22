@@ -78,6 +78,28 @@ class ViewText(STLView):
 
 
 
+class ExternalEditForm(STLView):
+
+    access = 'is_allowed_to_edit'
+    tab_label = MSG(u'Edit')
+    tab_sublabel = MSG(u'External Editor')
+    tab_icon = 'button_external.png'
+    template = '/ui/text/externaledit.xml'
+
+
+    def get_namespace(self, model, context):
+        # FIXME This list should be built from a txt file with all the
+        # encodings, or better, from a Python module that tells us which
+        # encodings Python supports.
+        encodings = [
+            {'value': 'utf-8', 'title': 'UTF-8', 'is_selected': True},
+            {'value': 'iso-8859-1', 'title': 'ISO-8859-1',
+             'is_selected': False}]
+
+        return {'encodings': encodings}
+
+
+
 ###########################################################################
 # Model
 ###########################################################################
@@ -97,35 +119,16 @@ class Text(File):
     class_handler = TextFile
 
 
-    #######################################################################
-    # UI / Download
-    #######################################################################
     def get_content_type(self):
         return '%s; charset=UTF-8' % File.get_content_type(self)
 
 
     #######################################################################
-    # UI / Edit Inline
+    # Views
     #######################################################################
     edit = EditTextForm()
     view = ViewText()
-
-
-    #######################################################################
-    # UI / Edit External
-    #######################################################################
-    def externaledit(self, context):
-        namespace = {}
-        # XXX This list should be built from a txt file with all the encodings,
-        # or better, from a Python module that tells us which encodings Python
-        # supports.
-        namespace['encodings'] = [
-            {'value': 'utf-8', 'title': 'UTF-8', 'is_selected': True},
-            {'value': 'iso-8859-1', 'title': 'ISO-8859-1',
-             'is_selected': False}]
-
-        handler = self.get_object('/ui/text/externaledit.xml')
-        return stl(handler, namespace)
+    externaledit = ExternalEditForm()
 
 
 
