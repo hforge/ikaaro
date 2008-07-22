@@ -129,7 +129,7 @@ class CSV(Text):
     class_title = MSG(u'Comma Separated Values')
     class_views = [['view'],
                    ['add_row_form'],
-                   ['externaledit', 'upload_form'],
+                   ['externaledit', 'upload'],
                    ['edit_metadata'],
                    ['history']]
     class_handler = CSVFile

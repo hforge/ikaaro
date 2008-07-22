@@ -66,7 +66,7 @@ class WikiPage(Text):
     class_icon16 = 'wiki/WikiPage16.png'
     class_icon48 = 'wiki/WikiPage48.png'
     class_views = [['view', 'to_pdf'],
-                   ['edit_form', 'externaledit', 'upload_form'],
+                   ['edit_form', 'externaledit', 'upload'],
                    ['backlinks'],
                    ['edit_metadata_form'],
                    ['state_form'],

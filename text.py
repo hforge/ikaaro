@@ -112,7 +112,7 @@ class Text(File):
     class_icon16 = 'icons/16x16/text.png'
     class_icon48 = 'icons/48x48/text.png'
     class_views = [['view'],
-                   ['edit', 'externaledit', 'upload_form'],
+                   ['edit', 'externaledit', 'upload'],
                    ['edit_metadata'],
                    ['edit_state'],
                    ['history']]
