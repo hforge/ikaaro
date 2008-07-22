@@ -498,6 +498,9 @@ class Folder(DBObject):
             else:
                 not_removed.append(name)
 
+        if not removed:
+            return context.come_back(MSG_NONE_REMOVED)
+
         objects = ', '.join(removed)
         return context.come_back(MSG_OBJECTS_REMOVED, objects=objects)
 

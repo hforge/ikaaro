@@ -37,6 +37,7 @@ MSG_NEW_RESOURCE = u'A new resource has been added.'
 MSG_PAGE_LOCK = u'This page is locked by $user'
 MSG_PASSWORD_MISMATCH = u'The provided passwords do not match.'
 MSG_OBJECTS_REMOVED = u'Objects removed: $objects.'
+MSG_NONE_REMOVED = u'No Object removed.'
 MSG_CAPTION = u'Caption'
 MSG_REGISTERED = (u"You have already confirmed your registration. "
                   u"Try to log in or ask for a new password.")
