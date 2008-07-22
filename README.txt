@@ -56,7 +56,7 @@ Documentation
 -------------
 
 The documentation is distributed as a separate package, ikaaro-docs.
-The PDF file can be downloaded from http://www.ikaaro.org/ikaaro
+The PDF file can be downloaded from http://www.hforge.org/ikaaro
 
 
 
@@ -64,10 +64,10 @@ Resources
 ---------
 
 Home
-http://www.ikaaro.org/ikaaro
+http://www.hforge.org/ikaaro
 
 Mailing list
-http://www.ikaaro.org/community/
+http://www.hforge.org/community/
 http://archives.hforge.org/index.cgi?list=itools
 
 Bug Tracker
