@@ -137,17 +137,6 @@ class Root(WebSite):
     ########################################################################
     # Override itools.web.root.Root
     ########################################################################
-    def init(self, context):
-        # Set the list of needed resources. The method we are going to
-        # call may need external resources to be rendered properly, for
-        # example it could need an style sheet or a javascript file to
-        # be included in the html head (which it can not control). This
-        # attribute lets the interface to add those resources.
-        context.styles = []
-        context.scripts = []
-        context.message = None
-
-
     def get_user(self, name):
         users = self.get_object('users')
         if users.has_object(name):
