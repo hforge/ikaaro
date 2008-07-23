@@ -902,7 +902,7 @@ class DBObject(CatalogAware, Node):
 
         reverse = (sortorder == 'down')
         documents = results.get_documents(sort_by=sortby, reverse=reverse,
-                                          start=start, size=batchsize)
+                                          start=start, size=size)
 
         # Get the objects, check security
         user = context.user
