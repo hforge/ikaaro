@@ -252,8 +252,11 @@ class BrowseContent(BrowseForm):
             else:
                 not_removed.append(name)
 
-        objects = ', '.join(removed)
-        context.message = MSG_OBJECTS_REMOVED.gettext(objects=objects)
+        if removed:
+            objects = ', '.join(removed)
+            context.message = MSG_OBJECTS_REMOVED.gettext(objects=objects)
+        else:
+            context.message = MSG_NONE_REMOVED
 
 
     def rename(self, model, context, form):

@@ -63,6 +63,9 @@ MSG_NAME_MISSING = MSG(
 MSG_NEW_RESOURCE = MSG(
     u'A new resource has been added.')
 
+MSG_NONE_REMOVED = MSG(
+    u'No Object removed.')
+
 MSG_OBJECTS_REMOVED = MSG(
     u'Objects removed: $objects.')
 
