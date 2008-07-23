@@ -88,23 +88,24 @@
       </table>
       <!-- New Web Page -->
       <h3>Create a new Web Page and link to it:</h3>
-      <form action=";addlink" method="post">
+      <form action=";add_link" method="post">
         <input type="hidden" name="type" value="${type}" />
         <input type="hidden" name="target_path" value="${bc/target_path}"/>
         <input type="hidden" name="mode" value="${mode}" />
         <input type="text" name="title" size="40" />
         <input type="hidden" name="name" value="" />
-        <input class="button_ok" type="submit" value="OK" />
+        <input class="button_ok" type="submit" value="OK" name=";add_page" />
       </form>
       <!-- Upload and Link -->
       <h3>Upload a file to the current folder and link to it:</h3>
-      <form action=";addlink" method="post" enctype="multipart/form-data">
+      <form action=";add_link" method="post" enctype="multipart/form-data">
         <input type="hidden" name="type" value="file" />
         <input type="hidden" name="target_path" value="${bc/target_path}"/>
         <input type="hidden" name="mode" value="${mode}" />
         <input id="file" name="file" size="35" type="file"/>
         <br/>
-        <input class="button_upload" type="submit" value="Upload and Link" />
+        <input class="button_upload" type="submit" value="Upload and Link"
+          name=";add_file" />
       </form>
     </div>
   </body>

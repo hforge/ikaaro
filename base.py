@@ -173,7 +173,9 @@ class AddImageForm(STLForm):
     access = 'is_allowed_to_edit'
     template = '/ui/html/addimage.xml'
     schema = {
+        'target_path': String(mandatory=True),
         'file': FileDataType(mandatory=True),
+        'mode': String(default='html'),
     }
 
 
@@ -233,8 +235,7 @@ class AddImageForm(STLForm):
             return
 
         # Get the container
-        root = context.root
-        container = root.get_object(context.get_form_value('target_path'))
+        container = context.root.get_object(form['target_path'])
         # Check the name is free
         name, type, language = FileName.decode(name)
         if container.has_object(name):
@@ -246,8 +247,7 @@ class AddImageForm(STLForm):
 
         # Ok
         caption = MSG_CAPTION.gettext().encode('utf_8')
-        mode = context.get_form_value('mode', default='html')
-        if mode == 'wiki':
+        if form['mode'] == 'wiki':
             scripts = ['/ui/wiki/javascript.js']
         else:
             scripts = ['/ui/tiny_mce/javascript.js',
@@ -273,6 +273,11 @@ class AddLinkForm(STLForm):
 
     access = 'is_allowed_to_edit'
     template = '/ui/html/addlink.xml'
+    schema = {
+        'target_path': String(mandatory=True),
+        'file': FileDataType(mandatory=True),
+        'mode': String(default='html'),
+    }
 
 
     def get_namespace(self, model, context):
@@ -314,7 +319,7 @@ class AddLinkForm(STLForm):
         return stl(template, namespace, prefix=prefix)
 
 
-    def action(self, model, context, form):
+    def add_page(self, model, context, form):
         """Allow to upload a file and link it to epoz
         """
         # Get the container
@@ -347,7 +352,7 @@ class AddLinkForm(STLForm):
                 </script>"""
             return body % path
 
-        context.message = message=uri.query['message']
+        context.message = uri.query['message']
         return
 
 
