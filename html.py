@@ -127,6 +127,7 @@ class WebPage(EpozEditable, Multilingual, Text):
     class_icon48 = 'icons/48x48/html.png'
     class_views = [['view'],
                    ['edit_form', 'externaledit', 'upload_form'],
+                   ['backlinks'],
                    ['edit_metadata_form'],
                    ['state_form'],
                    ['history_form']]
