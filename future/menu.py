@@ -305,7 +305,7 @@ def get_menu_namespace(context, depth=3, show_first_child=False, flat=True,
     request = context.request
     request_uri = str(request.request_uri)
     site_root = context.object.get_site_root()
-    method, path = context.method, context.uri.path
+    method, path = context.view_name, context.uri.path
     url = [seg.name for seg in path if seg.name]
     if method:
         url += [';%s' % method]

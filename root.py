@@ -144,26 +144,12 @@ class Root(WebSite):
         return None
 
 
-    def after_traverse(self, context, body):
-        # If there is not content type and the body is not None,
-        # wrap it in the skin template
-        if context.response.has_header('Content-Type'):
-            if isinstance(body, (list, GeneratorType, XMLParser)):
-                body = stream_to_str_as_html(body)
-            return body
-
-        if isinstance(body, str):
-            body = XMLParser(body)
-        return self.get_skin().template(body)
-
-
     ########################################################################
     # Publish
     ########################################################################
-    def forbidden(self, context):
-        message = (u'Access forbidden, you are not authorized to access'
-                   u' this resource.')
-        return self.gettext(message).encode('utf-8')
+    forbidden = STLView(
+        template='/ui/root/forbidden.xml',
+    )
 
 
     def internal_server_error(self, context):

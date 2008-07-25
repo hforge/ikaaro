@@ -52,24 +52,6 @@ class Lock(TextFile):
 
 
 
-lock_body = """<?xml version="1.0" encoding="utf-8" ?>
-<d:prop xmlns:d="DAV:">
- <d:lockdiscovery>
-   <d:activelock>
-     <d:locktype><d:write/></d:locktype>
-     <d:lockscope><d:exclusive/></d:lockscope>
-     <d:depth>0</d:depth>
-     <d:owner>%(owner)s</d:owner>
-     <d:timeout>Second-720</d:timeout>
-     <d:locktoken>
-       <d:href>opaquelocktoken:%(locktoken)s</d:href>
-     </d:locktoken>
-   </d:activelock>
- </d:lockdiscovery>
-</d:prop>
-"""
-
-
 ###########################################################################
 # Register
 ###########################################################################

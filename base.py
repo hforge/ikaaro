@@ -36,7 +36,7 @@ from itools.xml import XMLParser
 
 # Import from ikaaro
 from datatypes import FileDataType
-from lock import Lock, lock_body
+from lock import Lock
 from messages import *
 from metadata import Metadata
 from registry import get_object_class
@@ -164,7 +164,7 @@ class MetadataForm(STLForm):
         model.set_property('description', description, language=language)
         model.set_property('subject', subject, language=language)
 
-        return MSG_CHANGES_SAVED
+        context.message = MSG_CHANGES_SAVED
 
 
 
@@ -756,41 +756,6 @@ class DBObject(CatalogAware, Node):
         body = context.get_form_value('body')
         self.handler.load_state_from_string(body)
         context.server.change_object(self)
-
-
-    LOCK__access__ = 'is_authenticated'
-    def LOCK(self, context):
-        if self.is_locked():
-            return None
-        # Lock the resource
-        lock = self.lock()
-        # Build response
-        response = context.response
-        response.set_header('Content-Type', 'text/xml; charset="utf-8"')
-        response.set_header('Lock-Token', 'opaquelocktoken:%s' % lock)
-
-        return lock_body % {'owner': context.user.name, 'locktoken': lock}
-
-
-    UNLOCK__access__ = 'is_authenticated'
-    def UNLOCK(self, context):
-        # Check wether the resource is locked
-        if not self.is_locked():
-            # XXX Send some nice response to the client
-            raise ValueError, 'resource is not locked'
-
-        # Check wether we have the right key
-        request = context.request
-        key = request.get_header('Lock-Token')
-        key = key[len('opaquelocktoken:'):]
-
-        lock = self.get_lock()
-        if lock.key != key:
-            # XXX Send some nice response to the client
-            raise ValueError, 'can not unlock resource, wrong key'
-
-        # Unlock the resource
-        self.unlock()
 
 
     ########################################################################

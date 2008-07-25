@@ -365,7 +365,7 @@ class Skin(UIFolder):
         ac = here.get_access_control()
 
         # Tabs
-        subviews = here.get_subviews(context.method)
+        subviews = here.get_subviews(context.view_name)
 
         tabs = []
         for name, view in here.get_views():
@@ -375,7 +375,7 @@ class Skin(UIFolder):
             if '?' in name:
                 subname, args = name.split('?')
                 args = decode_query(args)
-                active = subname == context.method or subname in subviews
+                active = subname == context.view_name or subname in subviews
                 for key, value in args.items():
                     request_param = request.get_parameter(key)
                     if request_param != value:
@@ -384,7 +384,7 @@ class Skin(UIFolder):
             else:
                 args = {}
                 subname = name
-                active = name == context.method or name in subviews
+                active = name == context.view_name or name in subviews
 
             # Add the menu
             tabs.append({'id': 'tab_%s' % subname,
@@ -582,7 +582,7 @@ class Skin(UIFolder):
         namespace['message'] = self.get_message(context)
         # View's title (FIXME)
         here = context.object
-        view = here.get_view(context.method)
+        view = context.view
         title = getattr(view, 'page_title', None)
         if callable(title):
             title = title()

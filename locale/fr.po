@@ -1358,7 +1358,7 @@ msgstr "Ajouter"
 
 #: ../folder.py:78
 msgid "Add $class_title"
-msgstr "Ajouter une ressource de type &laquo;&nbsp;${class_title}&nbsp;&raquo;"
+msgstr "Ajouter une ressource de type « ${class_title} »"
 
 #: ../tracker/ui/add_issue.xml.en:7
 msgid "Add Issue"
@@ -3359,11 +3359,11 @@ msgstr "L'URL demandée ${uri} est introuvable sur ce serveur."
 
 #: ../website.py:168
 msgid "The user \"$username\" does not exist."
-msgstr "L'utilisateur &laquo;&nbsp;$username&nbsp;&raquo; n'existe pas."
+msgstr "L'utilisateur « $username » n'existe pas."
 
 #: ../website.py:177
 msgid "The user \"$username\" is not active."
-msgstr "L'utilisateur &laquo;&nbsp;$username&nbsp;&raquo; n'a pas activé son compte."
+msgstr "L'utilisateur « $username » n'a pas activé son compte."
 
 #: ../tracker/issue.py:632
 msgid "The user $title did some changes."
@@ -3433,7 +3433,7 @@ msgstr "Il existe déjà un utilisateur avec le courriel \"${email}\", veuillez 
 
 #: ../website.py:249
 msgid "There is not a user identified as \"$username\""
-msgstr "Il n'existe pas d'utilisateur &laquo;&nbsp;$username&nbsp;&raquo;."
+msgstr "Il n'existe pas d'utilisateur « $username »."
 
 #: ../ui/user/profile.xml.en:10
 msgid ""
@@ -3843,7 +3843,7 @@ msgid ""
 "click Save Image As."
 msgstr ""
 "Vous pouvez télércharger cette image en cliquant dessus avec le bouton droit "
-"et choisir &laquo;&nbsp;Enregistrer l'image sous...&nbsp;&raquo;."
+"et choisir « Enregistrer l'image sous... »."
 
 #: ../ui/text/externaledit.xml.en:10
 msgid ""
@@ -3979,8 +3979,7 @@ msgid ""
 "\"Settings\", subtab \"Languages\"."
 msgstr ""
 "Les administrateurs peuvent ajouter de nouvelles langues à la racine de "
-"l'application, onglet &laquo;&nbsp;Configuration&nbsp;&raquo;, sous-onglet "
-"&laquo;&nbsp;Langues&nbsp;&raquo;."
+"l'application, onglet « Configuration », sous-onglet « Langues »."
 
 #: ../shop/orders.py:132
 msgid "customer"

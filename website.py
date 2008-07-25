@@ -19,6 +19,7 @@
 
 # Import from the Standard Library
 from decimal import Decimal
+from types import GeneratorType
 
 # Import from itools
 import itools
@@ -33,6 +34,7 @@ from itools import vfs
 from itools.web import FormError, STLView, STLForm
 from itools.web import MSG_MISSING_OR_INVALID
 from itools.xapian import EqQuery, OrQuery, AndQuery, TextField
+from itools.xml import XMLParser
 
 # Import from ikaaro
 import ikaaro
@@ -128,12 +130,16 @@ class NewWebSiteForm(NewInstanceForm):
 ###########################################################################
 # Views / Login, Logout
 ###########################################################################
-class LoginView(STLView):
+class LoginView(STLForm):
 
     access = True
     tab_label = MSG(u'Login')
     page_title = MSG(u'Login')
     template = '/ui/website/login.xml'
+    schema = {
+        'username': Unicode(mandatory=True),
+        'password': String(mandatory=True),
+    }
 
 
     def get_namespace(self, model, context):
@@ -145,19 +151,9 @@ class LoginView(STLView):
         }
 
 
-
-    def POST(self, model, context, goto=None):
-        email = context.get_form_value('username', type=Unicode)
-        password = context.get_form_value('password')
-
-        # Don't send back the password
-        keep = ['username']
-
-        # Check the email field has been filed
-        email = email.strip()
-        if not email:
-            message = MSG(u'Type your email please.')
-            return context.come_back(message, keep=keep)
+    def action(self, model, context, form, goto=None):
+        email = form['username']
+        password = form['password']
 
         # Check the user exists
         root = context.root
@@ -166,7 +162,8 @@ class LoginView(STLView):
         results = root.search(username=email)
         if results.get_n_documents() == 0:
             message = MSG(u'The user "$username" does not exist.')
-            return context.come_back(message, username=email, keep=keep)
+            context.message = message.gettext(username=email)
+            return
 
         # Get the user
         brain = results.get_documents()[0]
@@ -174,13 +171,14 @@ class LoginView(STLView):
 
         # Check the user is active
         if user.get_property('user_must_confirm'):
-            message = u'The user "$username" is not active.'
-            return context.come_back(message, username=email, keep=keep)
+            message = MSG(u'The user "$username" is not active.')
+            context.message = message.gettext(username=email)
+            return
 
         # Check the password is right
         if not user.authenticate(password):
-            message = MSG(u'The password is wrong.')
-            return context.come_back(message, keep=keep)
+            context.message = MSG(u'The password is wrong.')
+            return
 
         # Set cookie
         user.set_auth_cookie(context, password)
@@ -749,6 +747,23 @@ class WebSite(RoleAware, Folder):
         else:
             language = user.get_property('user_language')
             accept.set(language, 2.0)
+
+
+    def after_traverse(self, context):
+        body = context.entity
+        if not isinstance(body, (str, list, GeneratorType, XMLParser)):
+            return
+
+        # If there is not content type and the body is not None, wrap it in
+        # the skin template
+        if context.response.has_header('Content-Type'):
+            if isinstance(body, (list, GeneratorType, XMLParser)):
+                context.entity = stream_to_str_as_html(body)
+            return
+
+        if isinstance(body, str):
+            body = XMLParser(body)
+        context.entity = context.root.get_skin().template(body)
 
 
     def is_allowed_to_register(self, user, object):

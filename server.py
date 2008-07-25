@@ -224,18 +224,23 @@ class Server(BaseServer):
         context.message = None
 
 
-    def get_site_root(self, hostname):
+    def find_site_root(self, context):
+        hostname = context.uri.authority.host
+
+        # Check first the root
         root = self.root
+        if hostname in root.get_property('vhosts'):
+            context.site_root = root
+            return
 
-        sites = [root]
+        # Check the sub-sites
         for site in root.search_objects(object_class=WebSite):
-            sites.append(site)
-
-        for site in sites:
             if hostname in site.get_property('vhosts'):
-                return site
+                context.site_root = site
+                return
 
-        return root
+        # Default to root
+        context.site_root = root
 
 
     def remove_object(self, object):
