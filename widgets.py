@@ -464,7 +464,8 @@ def _tree(node, root, depth, active_node, allow, deny, user, width):
 
     # Filter the handlers by the given class (don't filter by default)
     search = node.search_objects(object_class=allow)
-    search = [ x for x in search if not isinstance(x, deny) ]
+    if deny is not None:
+        search = [ x for x in search if not isinstance(x, deny) ]
 
     children = []
     counter = 0
