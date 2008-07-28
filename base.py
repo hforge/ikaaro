@@ -711,7 +711,7 @@ class DBObject(CatalogAware, Node):
 
 
     ########################################################################
-    # Locking
+    # Lock/Unlock/Put
     ########################################################################
     def lock(self):
         lock = Lock(username=get_context().user.name)
@@ -747,11 +747,7 @@ class DBObject(CatalogAware, Node):
         return self.parent.handler.get_handler('%s.lock' % self.name)
 
 
-    ########################################################################
-    # HTTP
-    ########################################################################
-    PUT__access__ = 'is_authenticated'
-    def PUT(self, context):
+    def put(self, context):
         # Save the data
         body = context.get_form_value('body')
         self.handler.load_state_from_string(body)
