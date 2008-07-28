@@ -334,7 +334,12 @@ class WikiPage(Text):
                         refuri = node.get('refuri')
                         if refuri is not None:
                             reference = get_reference(refuri.encode('utf_8'))
-                            node['refuri'] = str(context.uri.resolve(reference))
+                            if isinstance(reference, Mailto):
+                                # mailto:
+                                node['refuri'] = str(reference)
+                            else:
+                                refuri = context.uri.resolve(reference)
+                                node['refuri'] = str(refuri)
                         continue
                     # Now consider the link is valid
                     title = node['name']
