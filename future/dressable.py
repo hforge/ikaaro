@@ -101,20 +101,20 @@ class Dressable(Folder, EpozEditable):
     #######################################################################
     # API / Private
     #######################################################################
-    def _get_image(self, context, handler):
+    def _get_image(self, context, object):
         here = context.object
-        path = here.get_pathto(handler)
+        path = here.get_pathto(object)
         content = '<img src="%s"/>' % path
         return XMLParser(content)
 
 
-    def _get_document(self, context, handler):
+    def _get_document(self, context, object):
         here = context.object
-        body = handler.get_epoz_document().get_body()
+        body = object.get_epoz_document().get_body()
         if body is None:
             return None
         stream = body.get_content_elements()
-        prefix = here.get_pathto(handler)
+        prefix = here.get_pathto(object)
         return set_prefix(stream, prefix)
 
 
