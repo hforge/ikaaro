@@ -22,7 +22,7 @@ import sys
 from tempfile import mkstemp
 
 # Import from itools
-from itools.datatypes import Boolean
+from itools.datatypes import Boolean, Integer, String, Tokens
 from itools.handlers import ConfigFile, SafeDatabase
 from itools.uri import get_absolute_reference2
 from itools import vfs
@@ -36,6 +36,22 @@ from registry import get_object_class
 from utils import is_pid_running
 from versioning import VersioningAware
 from website import WebSite
+
+
+
+class ServerConfig(ConfigFile):
+
+    schema = {
+        'modules': Tokens(default=()),
+        'listen-address': String(default=''),
+        'listen-port': Integer(default=8080),
+        'smtp-host': String(default=''),
+        'smtp-from': String(default=''),
+        'smtp-login': String(default=''),
+        'smtp-password': String(default=''),
+        'debug': Boolean(default=False),
+    }
+
 
 
 
@@ -53,7 +69,7 @@ def ask_confirmation(message, confirm=False):
 
 
 def get_config(target):
-    return ConfigFile('%s/config.conf' % target)
+    return ServerConfig('%s/config.conf' % target)
 
 
 
@@ -61,10 +77,9 @@ def load_modules(config):
     """Load Python packages and modules.
     """
     modules = config.get_value('modules')
-    if modules is not None:
-        for name in modules.split():
-            name = name.strip()
-            exec('import %s' % name)
+    for name in modules:
+        name = name.strip()
+        exec('import %s' % name)
 
 
 
@@ -105,13 +120,11 @@ class Server(BaseServer):
 
         # Find out the IP to listen to
         if not address:
-            address = config.get_value('address', default='').strip()
+            address = config.get_value('listen-address').strip()
 
         # Find out the port to listen
         if not port:
-            port = config.get_value('port')
-            if port is not None:
-                port = int(port)
+            port = config.get_value('listen-port')
 
         # Contact Email
         self.smtp_from = config.get_value('smtp-from')
@@ -131,7 +144,7 @@ class Server(BaseServer):
         path = target.path
         access_log = '%s/log/access' % path
         error_log = '%s/log/error' % path
-        if debug or config.get_value('debug', type=Boolean, default=False):
+        if debug or config.get_value('debug'):
             debug_log = events_log
         else:
             debug_log = None

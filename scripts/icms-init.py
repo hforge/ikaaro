@@ -40,15 +40,15 @@ template = Template(
 #
 modules = ${modules}
 
-# The "address" and "port" variables define, respectively, the internet
-# address and the port number the web server listens to for HTTP
+# The "listen-address" and "listen-port" variables define, respectively, the
+# internet address and the port number the web server listens to for HTTP
 # connections.
 #
 # By default connections are accepted from any internet address.  And the
 # server listens the 8080 port number.
 #
-address = ${address}
-port = ${port}
+listen-address = ${listen_address}
+listen-port = ${listen_port}
 
 # The "smtp-host" variable defines the name or IP address of the SMTP relay.
 # The "smtp-from" variable is the email address used in the From field when
@@ -102,11 +102,14 @@ def init(parser, options, target):
         exec('root_class = %s.Root' % modules)
 
     # The configuration file
-    namespace = {}
-    names = [('address', ''), ('port', '8080'), ('smtp_host', 'localhost')]
-    for name, default in names:
-        namespace[name] = getattr(options, name) or default
-    config = template.substitute(modules=modules, smtp_from=email, **namespace)
+    namespace = {
+        'modules': modules,
+        'listen_address': getattr(options, 'address') or '',
+        'listen_port': getattr(options, 'port') or '8080',
+        'smtp_host': getattr(options, 'smtp_host') or 'localhost',
+        'smtp_from': email,
+    }
+    config = template.substitute(**namespace)
     open('%s/config.conf' % target, 'w').write(config)
 
     # Create the folder structure
