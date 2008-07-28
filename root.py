@@ -247,7 +247,7 @@ class Root(WebSite):
             if user is not None:
                 from_addr = user.get_property('email')
             if not from_addr:
-                from_addr = server.contact_email
+                from_addr = server.smtp_from
 
         # Set the subject
         subject = subject.encode(encoding)

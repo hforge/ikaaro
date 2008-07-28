@@ -299,7 +299,7 @@ class Order(Folder, WorkflowAware):
                 metadata.set_property(field, value)
         # Send E-mail confirmation
         customer_mail = context.user.get_property('email')
-        admin_mail = context.server.contact_email
+        admin_mail = context.server.smtp_from
         subject = u'Command confirmation'
         # Template for E-mail (HTML and Text version)
         namespace = {'customer_id': context.user.name,

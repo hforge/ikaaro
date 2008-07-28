@@ -114,7 +114,7 @@ class Server(BaseServer):
                 port = int(port)
 
         # Contact Email
-        self.contact_email = config.get_value('contact-email')
+        self.smtp_from = config.get_value('smtp-from')
 
         # The database
         events_log = '%s/log/events' % target.path

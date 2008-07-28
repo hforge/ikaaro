@@ -50,20 +50,18 @@ modules = ${modules}
 address = ${address}
 port = ${port}
 
-# The "smtp-host" variable defines the name or IP address of the SMTP relay
-# (this option is required for the application to send emails).
+# The "smtp-host" variable defines the name or IP address of the SMTP relay.
+# The "smtp-from" variable is the email address used in the From field when
+# sending anonymous emails.  (These options are required for the application
+# to send emails).
 #
 # The "smtp-login" and "smtp-password" variables define the credentials
 # required to access a secured SMTP server.
 #
 smtp-host = ${smtp_host}
+smtp-from = ${smtp_from}
 smtp-login =
 smtp-password =
-
-# The "contact-email" variable is the email address used in the From field
-# when sending anonymous emails.
-#
-contact-email = ${contact_email}
 
 # The "debug" variable defines whether the web server will be run in debug
 # mode or not.  When run in debug mode (debug = 1), debugging information
@@ -108,8 +106,7 @@ def init(parser, options, target):
     names = [('address', ''), ('port', '8080'), ('smtp_host', 'localhost')]
     for name, default in names:
         namespace[name] = getattr(options, name) or default
-    config = template.substitute(modules=modules, contact_email=email,
-                                 **namespace)
+    config = template.substitute(modules=modules, smtp_from=email, **namespace)
     open('%s/config.conf' % target, 'w').write(config)
 
     # Create the folder structure
