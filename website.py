@@ -454,10 +454,11 @@ class BrokenLinks(STLView):
 class LanguagesForm(STLForm):
 
     access = 'is_admin'
-    tab_label = u'Control Panel'
-    tab_sublabel = u'Languages'
-    tab_icon = 'languages.png'
+    page_title = MSG(u'Languages')
     description = MSG(u'Define the Web Site languages.')
+    tab_label = MSG(u'Control Panel')
+    tab_sublabel = page_title
+    tab_icon = 'languages.png'
     template = '/ui/website/languages.xml'
 
     def get_namespace(self, model, context):
