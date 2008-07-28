@@ -450,6 +450,45 @@ class BrokenLinks(STLView):
         return namespace
 
 
+
+class LanguagesForm(STLForm):
+
+    access = 'is_admin'
+    tab_label = u'Control Panel'
+    tab_sublabel = u'Languages'
+    tab_icon = 'languages.png'
+    description = MSG(u'Define the Web Site languages.')
+    template = '/ui/website/languages.xml'
+
+    def get_namespace(self, model, context):
+        # List of active languages
+        active = []
+        website_languages = model.get_property('website_languages')
+        default_language = website_languages[0]
+        for code in website_languages:
+            language_name = get_language_name(code)
+            active.append({
+                'code': code,
+                'name': language_name,
+                'isdefault': code == default_language})
+
+        # List of non active languages
+        non_active = []
+        for language in get_languages():
+            code = language['code']
+            if code not in website_languages:
+                non_active.append({
+                    'code': code,
+                    'name': language['name']})
+        non_active.sort(lambda x, y: cmp(x['name'], y['name']))
+
+        # Ok
+        return {
+            'active_languages': active,
+            'non_active_languages': non_active,
+        }
+
+
 ###########################################################################
 # Views / Public
 ###########################################################################
@@ -685,7 +724,7 @@ class WebSite(RoleAware, Folder):
          'new_user',
          'edit_virtual_hosts',
          'edit_security_policy',
-         'languages_form',
+         'edit_languages',
          'edit_contact_options',
          'broken_links',
          'orphans'],
@@ -791,37 +830,7 @@ class WebSite(RoleAware, Folder):
     #######################################################################
     # UI / Control Panel / Languages
     #######################################################################
-    languages_form__access__ = 'is_admin'
-    languages_form__label__ = u'Control Panel'
-    languages_form__sublabel__ = u'Languages'
-    languages_form__description__ = u'Define the Web Site languages.'
-    languages_form__icon__ = 'languages.png'
-    def languages_form(self, context):
-        namespace = {}
-
-        # List of active languages
-        languages = []
-        website_languages = self.get_property('website_languages')
-        default_language = website_languages[0]
-        for code in website_languages:
-            language_name = get_language_name(code)
-            languages.append({'code': code,
-                              'name': language_name.gettext(),
-                              'isdefault': code == default_language})
-        namespace['active_languages'] = languages
-
-        # List of non active languages
-        languages = []
-        for language in get_languages():
-            code = language['code']
-            if code not in website_languages:
-                languages.append({'code': code,
-                                  'name': language['name'].gettext()})
-        languages.sort(lambda x, y: cmp(x['name'], y['name']))
-        namespace['non_active_languages'] = languages
-
-        handler = self.get_object('/ui/website/languages.xml')
-        return stl(handler, namespace)
+    edit_languages = LanguagesForm()
 
 
     change_default_language__access__ = 'is_allowed_to_edit'

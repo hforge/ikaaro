@@ -100,7 +100,7 @@ class Root(WebSite):
          'new_user',
          'edit_virtual_hosts',
          'edit_security_policy',
-         'languages_form',
+         'edit_languages',
          'edit_contact_options'],
         ['last_changes']]
 
