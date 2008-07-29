@@ -29,10 +29,11 @@ from itools.stl import stl, set_prefix
 from itools.uri import Path
 from itools.web import get_context
 from itools.xml import XMLParser, XMLError
+from itools.html import sanitize_stream
 
 # Import from ikaaro
 from ikaaro.exceptions import ConsistencyError
-from ikaaro.registry import register_object_class, get_object_class
+from ikaaro.registry import register_object_class
 from ikaaro.folder import Folder
 from ikaaro.file import File
 from ikaaro.binary import Image
@@ -193,7 +194,7 @@ class Dressable(Folder, EpozEditable):
     edit_document__label__ = u'Edit'
     edit_document__icon__ = 'edit.png'
     def edit_document(self, context):
-        name = context.get_form_value('dress_name')
+        name = context.get_form_value('dress_name', 'index')
         if context.get_form_value('external'):
             return context.uri.resolve('%s/;externaledit' % name)
         object = self.get_object(name)
@@ -245,7 +246,7 @@ class Dressable(Folder, EpozEditable):
     edit__access__ = 'is_allowed_to_edit'
     def edit(self, context, sanitize=False):
         # FIXME Duplicated code (cms.html)
-        dress_name = context.get_form_value('dress_name')
+        dress_name = context.get_form_value('dress_name', 'index')
         dress_object = self.get_object(dress_name)
         timestamp = context.get_form_value('timestamp', type=DateTime)
         # Compare the dressable's timestamp and not the folder's timestamp
@@ -360,7 +361,7 @@ class Dressable(Folder, EpozEditable):
 
 
     def get_epoz_document(self):
-        name = get_context().get_form_value('dress_name')
+        name = get_context().get_form_value('dress_name', 'index')
         return self.get_object(name).handler
 
 
