@@ -76,11 +76,14 @@ class OrderAware(object):
         else:
             ordered_list, unordered_list = [], []
             ordered_names, unordered_names = self.get_ordered_names('all')
-            for names, stack in [(ordered_names, ordered_list),
-                                 (unordered_names, unordered_list)]:
-                for object in objects:
-                    index = names.index(object.name)
-                    stack.append((index, object))
+            for object in objects:
+                name = object.name
+                if name in ordered_names:
+                    index = ordered_names.index(name)
+                    ordered_list.append((index, object))
+                else:
+                    index = unordered_names.index(name)
+                    unordered_list.append((index, object))
             ordered_list.sort(reverse=reverse)
             unordered_list.sort(reverse=reverse)
             ordered = [x[1] for x in ordered_list]
