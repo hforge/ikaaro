@@ -867,8 +867,21 @@ class DBObject(CatalogAware, Node):
             results = root.search(query)
 
         reverse = (sortorder == 'down')
-        documents = results.get_documents(sort_by=sortby, reverse=reverse,
-                                          start=start, size=size)
+        if sortby in ('order', ['order']):
+            # TODO a catalog index would help
+            # but requires reindexing a single index at once
+            bulk = results.get_documents()
+            ordered = self.get_ordered_objects(bulk, mode='mixed',
+                                               reverse=reverse)
+            if size > 0:
+                documents = ordered[start:start+size]
+            elif start > 0:
+                documents = ordered[start:]
+            else:
+                documents = ordered
+        else:
+            documents = results.get_documents(sort_by=sortby, reverse=reverse,
+                                              start=start, size=size)
 
         # Get the objects, check security
         user = context.user
