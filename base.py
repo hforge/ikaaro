@@ -852,7 +852,7 @@ class DBObject(CatalogAware, Node):
 
 
     def browse_namespace(self, icon_size, sortby=['title'], sortorder='up',
-                         batchsize=20, query=None, results=None):
+                         batchsize=20, query=None):
         from widgets import batch
 
         context = get_context()
@@ -863,8 +863,7 @@ class DBObject(CatalogAware, Node):
 
         # Search
         root = context.root
-        if results is None:
-            results = root.search(query)
+        results = root.search(query)
 
         reverse = (sortorder == 'down')
         if sortby in ('order', ['order']):
