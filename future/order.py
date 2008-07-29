@@ -47,52 +47,47 @@ class OrderAware(object):
         """
         orderable_classes = self.orderable_classes or self.__class__
         ordered_names = self.get_property('order')
-        real_names = [f.name for f in self.search_objects()
-                if isinstance(f, orderable_classes)]
-
-        ordered = [f for f in ordered_names if f in real_names]
+        objects = self.search_objects(object_class=orderable_classes)
+        real_names = [object.name for object in objects]
+        ordered = [name for name in ordered_names if name in real_names]
         if mode == 'ordered':
             return ordered
-
-        unordered = [f for f in real_names if f not in ordered_names]
+        unordered = [name for name in real_names if name not in ordered_names]
         if mode == 'all':
             return ordered, unordered
         return ordered + unordered
 
 
-    def get_ordered_objects(self, objects, mode='mixed'):
+    def get_ordered_objects(self, objects, mode='mixed', reverse=False):
         """Return a sorted list of child handlers or brains of them.
             mode mixed -> ordered + unordered
             mode ordered -> ordered
             mode all -> (ordered, unordered)
             default mode : mixed
         """
-        ordered_list = []
-        if mode is not 'all':
-            ordered_names = self.get_ordered_names(mode)
+        if mode == 'ordered':
+            ordered_list = []
+            ordered_names = self.get_ordered_names('ordered')
             for object in objects:
                 index = ordered_names.index(object.name)
                 ordered_list.append((index, object))
-
-            ordered_list.sort()
-
+            ordered_list.sort(reverse=reverse)
             return [x[1] for x in ordered_list]
         else:
             ordered_list, unordered_list = [], []
-            ordered_names, unordered_names = self.get_ordered_names(mode)
-            for data in [(ordered_names, ordered_list),
-                         (unordered_names, unordered_list)]:
-                names, l = data
+            ordered_names, unordered_names = self.get_ordered_names('all')
+            for names, stack in [(ordered_names, ordered_list),
+                                 (unordered_names, unordered_list)]:
                 for object in objects:
                     index = names.index(object.name)
-                    l.append((index, object))
-
-            ordered_list.sort()
-            unordered_list.sort()
-
+                    stack.append((index, object))
+            ordered_list.sort(reverse=reverse)
+            unordered_list.sort(reverse=reverse)
             ordered = [x[1] for x in ordered_list]
             unordered = [x[1] for x in unordered_list]
-            return (ordered, unordered)
+            if mode == 'all':
+                return (ordered, unordered)
+            return ordered + unordered
 
 
     order_form__access__ = 'is_allowed_to_edit'
