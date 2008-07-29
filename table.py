@@ -51,6 +51,10 @@ class TableView(BrowseForm):
     tab_icon = 'view.png'
 
 
+    def get_widgets(self, model):
+        return model.get_form()
+
+
     def get_namespace(self, model, context, query):
         namespace = {}
 
@@ -72,7 +76,7 @@ class TableView(BrowseForm):
                             None)]
 
         fields = [('index', u'id')]
-        widgets = self.get_widgets()
+        widgets = self.get_widgets(model)
         for widget in widgets:
             fields.append((widget.name, getattr(widget, 'title', widget.name)))
         records = []
