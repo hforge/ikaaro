@@ -47,9 +47,13 @@ from widgets import batch, table
 class TableView(BrowseForm):
 
     access = 'is_allowed_to_view'
+    access_POST = 'is_allowed_to_edit'
     tab_label = MSG(u'View')
     tab_icon = 'view.png'
 
+    schema = {
+        'ids': Integer(multiple=True, mandatory=True),
+    }
 
     def get_widgets(self, model):
         return model.get_form()
@@ -72,8 +76,9 @@ class TableView(BrowseForm):
         if total:
             ac = model.get_access_control()
             if ac.is_allowed_to_edit(context.user, model):
+                message_utf8 = MSG_DELETE_SELECTION.gettext().encode('utf_8')
                 actions = [('del_record_action', u'Remove', 'button_delete',
-                            None)]
+                            'return confirmation("%s");' % message_utf8)]
 
         fields = [('index', u'id')]
         widgets = self.get_widgets(model)
@@ -133,6 +138,17 @@ class TableView(BrowseForm):
                                    actions)
 
         return namespace
+
+
+    #######################################################################
+    # Form Actions
+    #######################################################################
+    def del_record_action(self, model, context, form):
+        ids = form['ids']
+        for id in ids:
+            model.handler.del_record(id)
+
+        context.message = u'Record deleted.'
 
 
 
@@ -347,18 +363,6 @@ class Table(File):
     #########################################################################
     edit_form__access__ = False
     view = TableView()
-
-
-    #########################################################################
-    # View
-    del_record_action__access__ = 'is_allowed_to_edit'
-    def del_record_action(self, context):
-        ids = context.get_form_values('ids', type=Integer)
-        for id in ids:
-            self.handler.del_record(id)
-
-        message = u'Record deleted.'
-        return context.come_back(message)
 
 
     #########################################################################
