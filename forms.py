@@ -364,7 +364,7 @@ class AutoForm(STLForm):
 
         # Build namespace
         namespace = {}
-        namespace['title'] = self.form_title
+        namespace['title'] = self.get_form_title()
         namespace['required_msg'] = required_msg
         namespace['first_widget'] = widgets[0].name
         namespace['action'] = self.form_action
