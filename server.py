@@ -102,7 +102,7 @@ def get_root(database, target):
     cls = get_object_class(metadata.format)
     # Build the root object
     root = cls(metadata)
-    root.name = root.class_title
+    root.name = root.class_title.message
     return root
 
 
