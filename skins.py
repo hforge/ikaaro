@@ -45,14 +45,14 @@ class FileGET(BaseView):
     access = True
 
 
-    def get_mtime(self, model):
-        return model.get_mtime()
+    def get_mtime(self, resource):
+        return resource.get_mtime()
 
 
-    def GET(self, model, context):
+    def GET(self, resource, context):
         response = context.response
-        response.set_header('Content-Type', model.get_mimetype())
-        return model.to_str()
+        response.set_header('Content-Type', resource.get_mimetype())
+        return resource.to_str()
 
 
 
@@ -148,7 +148,7 @@ class Skin(UIFolder):
     def get_main_menu(self, context):
         user = context.user
         root = context.site_root
-        here = context.object or root
+        here = context.resource or root
 
         menu = []
         for option in self.get_main_menu_options(context):
@@ -178,7 +178,7 @@ class Skin(UIFolder):
         """
         from tracker import Issue
 
-        menu = tree(context.site_root, active_node=context.object,
+        menu = tree(context.site_root, active_node=context.resource,
                     allow=DBFolder, deny=Issue, user=context.user)
         return {
             'title': MSG(u'Navigation'),
@@ -186,7 +186,7 @@ class Skin(UIFolder):
 
 
     def get_context_menu(self, context):
-        here = context.object
+        here = context.resource
         if not isinstance(here, DBObject):
             return None
 
@@ -216,7 +216,7 @@ class Skin(UIFolder):
 
 
     def get_content_menu(self, context):
-        here = context.object
+        here = context.resource
         user = context.user
 
         options = []
@@ -253,7 +253,7 @@ class Skin(UIFolder):
 
 
     def get_content_language_menu(self, context):
-        site_root = context.object.get_site_root()
+        site_root = context.resource.get_site_root()
         languages = site_root.get_property('website_languages')
         content_language = context.get_cookie('language')
         if content_language is None:
@@ -312,7 +312,7 @@ class Skin(UIFolder):
     def get_breadcrumb(self, context):
         """Return a list of dicts [{name, url}...]
         """
-        here = context.object
+        here = context.resource
         root = context.site_root
 
         # Build the list of handlers that make up the breadcrumb
@@ -357,7 +357,7 @@ class Skin(UIFolder):
         # Get request, path, etc...
         request = context.request
         user = context.user
-        here = context.object
+        here = context.resource
         if here is None:
             return []
 
@@ -421,10 +421,10 @@ class Skin(UIFolder):
 
 
     #######################################################################
-    # Objects metadata (context.object)
+    # Objects metadata (context.resource)
     #######################################################################
     def get_metadata_ns(self, context):
-        here = context.object
+        here = context.resource
         if here is None:
             return {'title': '', 'format': '', 'mtime': '', 'icon': ''}
         return {'title': here.get_title(),
@@ -523,7 +523,7 @@ class Skin(UIFolder):
     def get_template_title(self, context):
         """Return the title to give to the template document.
         """
-        here = context.object
+        here = context.resource
         # Not Found
         if here is None:
             return u'404 Not Found'
@@ -541,7 +541,7 @@ class Skin(UIFolder):
         """Return a list of dict with meta tags to give to the template
         document.
         """
-        here = context.object
+        here = context.resource
         root = here.get_site_root()
 
         meta = []
@@ -581,7 +581,7 @@ class Skin(UIFolder):
         namespace['tabs'] = self.get_tabs(context)
         namespace['message'] = self.get_message(context)
         # View's title (FIXME)
-        here = context.object
+        here = context.resource
         view = context.view
         title = getattr(view, 'page_title', None)
         if callable(title):

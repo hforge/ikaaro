@@ -112,14 +112,14 @@ class EditIssueForm(STLForm):
     schema = issue_fields
 
 
-    def get_namespace(self, model, context):
+    def get_namespace(self, resource, context):
         # Set Style & JS
         context.styles.append('/ui/tracker/tracker.css')
         context.scripts.append('/ui/tracker/tracker.js')
 
         # Local variables
-        users = model.get_object('/users')
-        record = model.get_last_history_record()
+        users = resource.get_object('/users')
+        record = resource.get_last_history_record()
         title = record.get_value('title')
         module = record.get_value('module')
         version = record.get_value('version')
@@ -133,13 +133,13 @@ class EditIssueForm(STLForm):
 
         # Build the namespace
         namespace = {}
-        namespace['number'] = model.name
+        namespace['number'] = resource.name
         namespace['title'] = title
         # Reported by
-        reported_by = model.get_reported_by()
+        reported_by = resource.get_reported_by()
         namespace['reported_by'] = users.get_object(reported_by).get_title()
         # Topics, Version, Priority, etc.
-        get = model.parent.get_object
+        get = resource.parent.get_object
         namespace['modules'] = get('modules').get_options(module)
         namespace['versions'] = get('versions').get_options(version)
         namespace['types'] = get('types').get_options(type)
@@ -147,11 +147,11 @@ class EditIssueForm(STLForm):
             sort=False)
         namespace['states'] = get('states').get_options(state, sort=False)
         # Assign To
-        namespace['users'] = model.parent.get_members_namespace(assigned_to)
+        namespace['users'] = resource.parent.get_members_namespace(assigned_to)
         # Comments
         comments = []
         i = 0
-        for record in model.get_history_records():
+        for record in resource.get_history_records():
             comment = record.comment
             file = record.file
             if not comment and not file:
@@ -172,7 +172,7 @@ class EditIssueForm(STLForm):
         comments.reverse()
         namespace['comments'] = comments
 
-        users = model.parent.get_members_namespace(cc_list, False)
+        users = resource.parent.get_members_namespace(cc_list, False)
         cc_list = []
         cc_add = []
         for user in users:
@@ -191,11 +191,11 @@ class EditIssueForm(STLForm):
         return namespace
 
 
-    def action(self, model, context, form):
+    def action(self, resource, context, form):
         # Edit
-        model._add_record(context, form)
+        resource._add_record(context, form)
         # Change
-        context.server.change_object(model)
+        context.server.change_object(resource)
         context.message = MSG_CHANGES_SAVED
 
 
@@ -230,7 +230,7 @@ class EditResourcesForm(STLForm):
         }
 
 
-    def get_namespace(self, model, context, query):
+    def get_namespace(self, resource, context, query):
         from datetime import date
         resource = query.get('resource') or ''
         dtstart = query.get('dtstart', date.today())
@@ -242,19 +242,19 @@ class EditResourcesForm(STLForm):
 
         namespace = {}
         # New assignment
-        namespace['issue'] = {'number': model.name, 'title': model.get_title()}
-        namespace['users'] = model.parent.get_members_namespace(resource)
+        namespace['issue'] = {'number': resource.name, 'title': resource.get_title()}
+        namespace['users'] = resource.parent.get_members_namespace(resource)
         namespace['dtstart'] = dtstart
         namespace['tstart'] = tstart
         namespace['dtend'] = dtend
         namespace['tend'] = tend
         namespace['comment'] = comment
-        namespace['time_select'] = model.get_time_select('time_select',
+        namespace['time_select'] = resource.get_time_select('time_select',
                                                          time_select)
 
         # Existent
-        resources = model.get_resources().handler
-        records = resources.search(issue=model.name)
+        resources = resource.get_resources().handler
+        records = resources.search(issue=resource.name)
         users = context.root.get_object('/users')
         ns_records = []
         for record in records:
@@ -282,15 +282,15 @@ class EditResourcesForm(STLForm):
         return namespace
 
 
-    def action(self, model, context, form):
+    def action(self, resource, context, form):
         tstart = form['tstart'] or time(0,0)
         tend = form['tend'] or time(0,0)
         record = {}
-        record['issue'] = model.name
+        record['issue'] = resource.name
         record['resource'] = form['resource']
         record['dtstart'] = datetime.combine(form['dtstart'], tstart)
         record['dtend'] = datetime.combine(form['dtend'], tend)
-        resources = model.get_resources()
+        resources = resource.get_resources()
         resources.handler.add_record(record)
         context.message = MSG_CHANGES_SAVED
 
@@ -305,17 +305,17 @@ class HistoryForm(STLView):
     template = '/ui/tracker/issue_history.xml'
 
 
-    def get_namespace(self, model, context):
+    def get_namespace(self, resource, context):
         # Set Style
         context.styles.append('/ui/tracker/tracker.css')
 
         # Local variables
-        users = model.get_object('/users')
-        versions = model.get_object('../versions')
-        types = model.get_object('../types')
-        states = model.get_object('../states')
-        modules = model.get_object('../modules')
-        priorities = model.get_object('../priorities')
+        users = resource.get_object('/users')
+        versions = resource.get_object('../versions')
+        types = resource.get_object('../types')
+        states = resource.get_object('../states')
+        modules = resource.get_object('../modules')
+        priorities = resource.get_object('../priorities')
         # Initial values
         previous_title = None
         previous_version = None
@@ -328,10 +328,10 @@ class HistoryForm(STLView):
 
         # Build the namespace
         namespace = {}
-        namespace['number'] = model.name
+        namespace['number'] = resource.name
         rows = []
         i = 0
-        for record in model.get_history_records():
+        for record in resource.get_history_records():
             datetime = record.get_value('datetime')
             username = record.get_value('username')
             title = record.get_value('title')
@@ -624,7 +624,7 @@ class Issue(Folder):
         tracker_title = self.parent.get_property('title') or 'Tracker Issue'
         subject = '[%s #%s] %s' % (tracker_title, self.name, title)
         # Notify / Body
-        if context.object.class_id == 'tracker':
+        if context.resource.class_id == 'tracker':
             uri = context.uri.resolve('%s/;edit' % self.name)
         else:
             uri = context.uri.resolve(';edit')

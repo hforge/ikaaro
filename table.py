@@ -55,11 +55,11 @@ class TableView(BrowseForm):
         'ids': Integer(multiple=True, mandatory=True),
     }
 
-    def get_widgets(self, model):
-        return model.get_form()
+    def get_widgets(self, resource):
+        return resource.get_form()
 
 
-    def get_namespace(self, model, context, query):
+    def get_namespace(self, resource, context, query):
         namespace = {}
 
         # The input parameters
@@ -67,21 +67,21 @@ class TableView(BrowseForm):
         size = 50
 
         # The batch
-        handler = model.handler
+        handler = resource.handler
         total = handler.get_n_records()
         namespace['batch'] = batch(context.uri, start, size, total)
 
         # The table
         actions = []
         if total:
-            ac = model.get_access_control()
-            if ac.is_allowed_to_edit(context.user, model):
+            ac = resource.get_access_control()
+            if ac.is_allowed_to_edit(context.user, resource):
                 message_utf8 = MSG_DELETE_SELECTION.gettext().encode('utf_8')
                 actions = [('del_record_action', u'Remove', 'button_delete',
                             'return confirmation("%s");' % message_utf8)]
 
         fields = [('index', u'id')]
-        widgets = self.get_widgets(model)
+        widgets = self.get_widgets(resource)
         for widget in widgets:
             fields.append((widget.name, getattr(widget, 'title', widget.name)))
         records = []
@@ -143,10 +143,10 @@ class TableView(BrowseForm):
     #######################################################################
     # Form Actions
     #######################################################################
-    def del_record_action(self, model, context, form):
+    def del_record_action(self, resource, context, form):
         ids = form['ids']
         for id in ids:
-            model.handler.del_record(id)
+            resource.handler.del_record(id)
 
         context.message = u'Record deleted.'
 
@@ -164,17 +164,17 @@ class AddRecordForm(AutoForm):
     submit_class = 'button_ok'
 
 
-    def get_schema(self, model):
-        return model.handler.schema
+    def get_schema(self, resource):
+        return resource.handler.schema
 
 
-    def get_widgets(self, model):
-        return model.get_form()
+    def get_widgets(self, resource):
+        return resource.get_form()
 
 
-    def action(self, model, context, form):
-        schema = self.get_schema(model)
-        handler = model.handler
+    def action(self, resource, context, form):
+        schema = self.get_schema(resource)
+        handler = resource.handler
 #       # check form
 #       check_fields = {}
 #       for name in schema:
@@ -184,7 +184,7 @@ class AddRecordForm(AutoForm):
 #           check_fields[name] = datatype
 
 #       try:
-#           form = self.check_form_input(model, check_fields)
+#           form = self.check_form_input(resource, check_fields)
 #       except FormError:
 #           context.message = MSG_MISSING_OR_INVALID
 #           return
@@ -210,10 +210,10 @@ class AddRecordForm(AutoForm):
             handler.add_record(record)
             message = u'New record added.'
         except UniqueError, error:
-            title = model.get_field_title(error.name)
+            title = resource.get_field_title(error.name)
             message = str(error) % (title, error.value)
         except ValueError, error:
-            title = model.get_field_title(error.name)
+            title = resource.get_field_title(error.name)
             message = MSG(u'Error: $message')
             message = message.gettext(message=strerror)
 
@@ -240,7 +240,7 @@ class EditRecordForm(AutoForm):
             method=record.get_value)
 
 
-    def action(self, model, context):
+    def action(self, resource, context):
         id = context.get_form_value('id', None, type=Integer)
         if id is None:
             return context.come_back(MSG_MISSING_OR_INVALID)

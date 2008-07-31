@@ -302,7 +302,7 @@ class Breadcrumb(object):
         context = get_context()
         request, response = context.request, context.response
 
-        here = context.object
+        here = context.resource
         if root is None:
             root = here.get_site_root()
         if start is None:

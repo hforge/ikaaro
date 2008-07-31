@@ -64,7 +64,7 @@ class PermissionsForm(BrowseForm):
         ('firstname', MSG(u'First Name'))]
 
 
-    def get_namespace(self, model, context, query):
+    def get_namespace(self, resource, context, query):
         namespace = {}
 
         # Get values from the request
@@ -83,7 +83,7 @@ class PermissionsForm(BrowseForm):
         root = context.root
         results = root.search(**search_query)
 
-        roles = model.get_members_classified_by_role()
+        roles = resource.get_members_classified_by_role()
 
         # Build the namespace
         members = []
@@ -109,7 +109,7 @@ class PermissionsForm(BrowseForm):
             ns['firstname'] = user.firstname
             ns['lastname'] = user.lastname
             # Role
-            role = model.get_role_title(role)
+            role = resource.get_role_title(role)
             href = ';edit_membership?id=%s' % user_id
             ns['role'] = role, href
             # State
@@ -151,9 +151,9 @@ class PermissionsForm(BrowseForm):
         return namespace
 
 
-    def permissions_del_members(self, model, context, form):
+    def permissions_del_members(self, resource, context, form):
         usernames = form['ids']
-        model.set_user_role(usernames, None)
+        resource.set_user_role(usernames, None)
         # Ok
         context.message = u"Members deleted."
 
@@ -169,22 +169,22 @@ class MembershipForm(STLForm):
     }
 
 
-    def get_namespace(self, model, context):
+    def get_namespace(self, resource, context):
         user_id = context.get_form_value('id')
-        user = model.get_object('/users/%s' % user_id)
+        user = resource.get_object('/users/%s' % user_id)
 
         return {
             'id': user_id,
             'name': user.get_title(),
-            'roles': model.get_roles_namespace(user_id),
+            'roles': resource.get_roles_namespace(user_id),
         }
 
 
-    def action(self, model, context, form):
+    def action(self, resource, context, form):
         user_id = form['id']
         role = form['role']
 
-        model.set_user_role(user_id, role)
+        resource.set_user_role(user_id, role)
         # Ok
         context.message = u"Role updated."
 
@@ -207,14 +207,14 @@ class NewUserForm(STLForm):
     }
 
 
-    def get_namespace(self, model, context):
+    def get_namespace(self, resource, context):
         return {
-            'is_admin': model.is_admin(context.user, model),
-            'roles': model.get_roles_namespace(),
+            'is_admin': resource.is_admin(context.user, resource),
+            'roles': resource.get_roles_namespace(),
         }
 
 
-    def action(self, model, context, form):
+    def action(self, resource, context, form):
         root = context.root
         user = context.user
         users = root.get_object('users')
@@ -230,7 +230,7 @@ class NewUserForm(STLForm):
         # Get the user (create it if needed)
         if user_id is None:
             # New user
-            is_admin = model.is_admin(user, model)
+            is_admin = resource.is_admin(user, resource)
             if is_admin:
                 password = form['newpass']
                 password2 = form['newpass2']
@@ -253,14 +253,14 @@ class NewUserForm(STLForm):
         else:
             user = users.get_object(user_id)
             # Check the user is not yet in the group
-            members = model.get_members()
+            members = resource.get_members()
             if user_id in members:
                 context.message = u'The user is already here.'
                 return
 
         # Set the role
         role = form['role']
-        model.set_user_role(user_id, role)
+        resource.set_user_role(user_id, role)
 
         # Come back
         if context.has_form_value('add_and_return'):

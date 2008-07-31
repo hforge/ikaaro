@@ -43,9 +43,9 @@ class HistoryView(STLView):
     page_title = MSG(u'History')
 
 
-    def get_namespace(self, model, context):
+    def get_namespace(self, resource, context):
         return {
-            'revisions': model.get_revisions(context),
+            'revisions': resource.get_revisions(context),
         }
 
 

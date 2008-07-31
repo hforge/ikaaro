@@ -340,15 +340,15 @@ class AutoForm(STLForm):
     template = '/ui/auto_form.xml'
 
 
-    def get_widgets(self, model):
+    def get_widgets(self, resource):
         return self.widgets
 
 
-    def get_namespace(self, model, context):
-        here = context.object
+    def get_namespace(self, resource, context):
+        here = context.resource
         # Local Variables
-        fields = self.get_schema(model)
-        widgets = self.get_widgets(model)
+        fields = self.get_schema(resource)
+        widgets = self.get_widgets(resource)
         form_hidden = self.form_hidden
         method = self.method
 

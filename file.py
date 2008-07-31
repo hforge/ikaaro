@@ -57,7 +57,7 @@ class NewFileForm(NewInstanceForm):
     }
 
 
-    def get_namespace(self, model, context):
+    def get_namespace(self, resource, context):
         type = context.get_query_value('type')
         cls = get_object_class(type)
         return {
@@ -66,7 +66,7 @@ class NewFileForm(NewInstanceForm):
         }
 
 
-    def action(self, model, context, form):
+    def action(self, resource, context, form):
         filename, mimetype, body = form['file']
         title = form['title']
 
@@ -95,10 +95,10 @@ class NewFileForm(NewInstanceForm):
                 text = cls.class_handler(string=body).to_text()
                 language = guess_language(text)
                 if language is None:
-                    language = model.get_content_language(context)
+                    language = resource.get_content_language(context)
 
         # Check the name is free
-        if model.has_object(name):
+        if resource.has_object(name):
             context.message = MSG_NAME_CLASH
             return
 
@@ -108,9 +108,9 @@ class NewFileForm(NewInstanceForm):
             kw['language'] = language
         else:
             kw['extension'] = type
-        object = cls.make_object(cls, model, name, body, **kw)
+        object = cls.make_object(cls, resource, name, body, **kw)
         # The title
-        language = model.get_content_language(context)
+        language = resource.get_content_language(context)
         object.metadata.set_property('title', title, language=language)
 
         goto = './%s/;%s' % (name, object.get_firstview())
@@ -123,20 +123,20 @@ class FileGET(BaseView):
     access = 'is_allowed_to_view'
 
 
-    def get_mtime(self, model):
-        return model.get_mtime()
+    def get_mtime(self, resource):
+        return resource.get_mtime()
 
 
-    def GET(self, model, context):
+    def GET(self, resource, context):
         response = context.response
         # Filename
-        filename = model.get_property('filename')
+        filename = resource.get_property('filename')
         if filename is not None:
             response.set_header('Content-Disposition',
                                 'inline; filename="%s"' % filename)
         # Content-Type
-        response.set_header('Content-Type', model.get_content_type())
-        return model.handler.to_str()
+        response.set_header('Content-Type', resource.get_content_type())
+        return resource.handler.to_str()
 
 
 
@@ -149,10 +149,10 @@ class DownloadView(STLView):
     template = '/ui/file/download_form.xml'
 
 
-    def get_namespace(self, model, context):
+    def get_namespace(self, resource, context):
         return {
-            'url': '../' + model.name,
-            'title_or_name': model.get_title(),
+            'url': '../' + resource.name,
+            'title_or_name': resource.get_title(),
         }
 
 
@@ -170,12 +170,12 @@ class UploadForm(STLForm):
     }
 
 
-    def action(self, model, context, form):
+    def action(self, resource, context, form):
         file = form['file']
         filename, mimetype, body = file
 
         # Check wether the handler is able to deal with the uploaded file
-        handler = model.handler
+        handler = resource.handler
         if mimetype != handler.get_mimetype():
             context.message = u'Unexpected file of mimetype %s' % mimetype
             return
@@ -187,7 +187,7 @@ class UploadForm(STLForm):
             handler.load_state()
             context.message = u'Failed to load the file, may contain errors.'
         else:
-            context.server.change_object(model)
+            context.server.change_object(resource)
             context.message = u'Version uploaded'
 
 
@@ -197,7 +197,7 @@ class ExternalEdit(BaseView):
     access = 'is_allowed_to_edit'
 
 
-    def GET(self, model, context):
+    def GET(self, resource, context):
         # Get the request and response
         request, response = context.request, context.response
 
@@ -206,12 +206,12 @@ class ExternalEdit(BaseView):
         uri = context.uri
         uri_string = '%s://%s/%s' % (uri.scheme, uri.authority, uri.path[:-1])
         uri = get_reference(uri_string)
-        handler = model.handler
-        title = model.get_property('title')
+        handler = resource.handler
+        title = resource.get_property('title')
         if title:
             title = title.encode(encoding or 'UTF-8')
         else:
-            title = model.name
+            title = resource.name
 
         r = [
             'url:%s' % str(uri),
@@ -221,11 +221,11 @@ class ExternalEdit(BaseView):
             'title:%s' % title,
             ]
 
-        if model.is_locked():
-            lock = model.get_lock()
+        if resource.is_locked():
+            lock = resource.get_lock()
             # locks expire after 1 hour
             if lock.lock_timestamp + timedelta(hours=1) < datetime.now():
-                model.unlock()
+                resource.unlock()
                 context.commit = True
             else:
                 # always borrow lock from same user
@@ -233,7 +233,7 @@ class ExternalEdit(BaseView):
                     r.append('lock-token:%s' % lock.key)
                     r.append('borrow_lock:1')
                 else:
-                    goto = ';%s' % model.get_firstview()
+                    goto = ';%s' % resource.get_firstview()
                     msg = u'This page is lock by another user'
                     return context.come_back(message=msg, goto=goto)
 
@@ -279,7 +279,7 @@ class BacklinksView(BrowseForm):
     }
 
 
-    def get_namespace(self, model, context, query):
+    def get_namespace(self, resource, context, query):
         """Backlinks are the list of objects pointing to this object.
         This view answers the question "where is this object used?"
         You'll see all WebPages and WikiPages (for example) referencing it.
@@ -292,10 +292,10 @@ class BacklinksView(BrowseForm):
         sortorder = query['sortorder']
 
         # Build the query
-        search_query = EqQuery('links', str(model.get_abspath()))
+        search_query = EqQuery('links', str(resource.get_abspath()))
 
         # Build the namespace
-        namespace = model.browse_namespace(16, sortby, sortorder, batchsize=20,
+        namespace = resource.browse_namespace(16, sortby, sortorder, batchsize=20,
                                            query=search_query)
 
         # The column headers

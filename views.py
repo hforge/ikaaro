@@ -35,7 +35,7 @@ class IconsView(STLView):
 
     template = '/ui/generic/icons_view.xml.en'
 
-    def get_namespace(self, model, context):
+    def get_namespace(self, resource, context):
         """TODO Write a docstring explaining the expected namespace.
         """
         raise NotImplementedError
@@ -56,7 +56,7 @@ class NewInstanceForm(STLForm):
         return MSG(u'Unknown object.')
 
 
-    def tab_icon(self, model, **kw):
+    def tab_icon(self, resource, **kw):
         type = kw.get('type')
         cls = get_object_class(type)
         if cls is not None:
@@ -82,7 +82,7 @@ class BrowseForm(STLForm):
     search_fields = []
 
 
-    def search_form(self, model, query):
+    def search_form(self, resource, query):
         # Get values from the query
         field = query['search_field']
         term = query['search_term']
@@ -97,18 +97,18 @@ class BrowseForm(STLForm):
             for name, title in self.search_fields ]
 
         # Ok
-        template = model.get_object('/ui/generic/browse_search.xml')
+        template = resource.get_object('/ui/generic/browse_search.xml')
         return stl(template, namespace)
 
 
-    def GET(self, model, context):
+    def GET(self, resource, context):
         query = self.get_query(context)
 
         # Batch / Table
-        namespace = self.get_namespace(model, context, query)
+        namespace = self.get_namespace(resource, context, query)
         # Search Form
-        namespace['search'] = self.search_form(model, query)
+        namespace['search'] = self.search_form(resource, query)
 
         # Ok
-        template = model.get_object(self.template)
+        template = resource.get_object(self.template)
         return stl(template, namespace)

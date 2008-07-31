@@ -118,7 +118,7 @@ class Resource(Record):
                      timetable=None, grid=False,
                      starts_on=True, ends_on=True, out_on=True):
         context = get_context()
-        here = context.object
+        here = context.resource
         issue = here.parent.get_object(self.get_value('issue'))
         users = context.root.get_object('/users')
         user = self.get_value('resource')
@@ -165,7 +165,7 @@ class ListOfUsers(Enumerate):
 
     @classmethod
     def get_options(cls):
-        tracker = get_context().object.parent
+        tracker = get_context().resource.parent
         return [{'name': x['id'], 'value': x['title']}
                 for x in tracker.get_members_namespace('')]
 

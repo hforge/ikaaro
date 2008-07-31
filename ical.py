@@ -272,7 +272,7 @@ class CalendarView(object):
         We adjust week numbers to fit rules which are used by french people.
         XXX Check for other countries
         """
-        model = get_context().object
+        resource = get_context().resource
         if self.get_first_day() == 1:
             format = '%W'
         else:
@@ -338,7 +338,7 @@ class CalendarView(object):
           ndays : number of days we want
           selected : selected date
         """
-        model = get_context().object
+        resource = get_context().resource
         current_date = start
         ns_days = []
         for index in range(ndays):
@@ -432,9 +432,9 @@ class CalendarView(object):
     def get_timetables_grid_ns(self, start_date):
         """Build namespace to give as grid to gridlayout factory.
         """
-        model = get_context().object
+        resource = get_context().resource
         ns_timetables = []
-        for calendar in model.get_calendars():
+        for calendar in resource.get_calendars():
             for start, end in calendar.get_timetables():
                 for value in (start, end):
                     value = Time.encode(value)
@@ -447,7 +447,7 @@ class CalendarView(object):
                         step=timedelta(1)):
         """Build namespace to give as data to gridlayout factory.
         """
-        model = get_context().object
+        resource = get_context().resource
         # Get events by day
         ns_days = []
         current_date = start_date
@@ -459,13 +459,13 @@ class CalendarView(object):
         events = []
         # Get a list of events to display on view
         end = start_date + timedelta(days=ndays)
-        cal_indexes, events = model.get_events_to_display(start_date, end)
+        cal_indexes, events = resource.get_events_to_display(start_date, end)
         for header in headers:
             ns_day = {}
             # Add header if given
             ns_day['header'] = header
             # Insert events
-            ns_events, events = model.events_to_namespace(events, current_date,
+            ns_events, events = resource.events_to_namespace(events, current_date,
                 cal_indexes, grid=True)
             ns_day['events'] = ns_events
             ns_days.append(ns_day)
@@ -511,8 +511,8 @@ class CalendarView(object):
         and a dict with all resources from whom they belong to.
         """
         resources, events = {}, []
-        model = get_context().object
-        for index, calendar in enumerate(model.get_calendars()):
+        resource = get_context().resource
+        for index, calendar in enumerate(resource.get_calendars()):
             res, evts = calendar.get_events_to_display(start, end)
             events.extend(evts)
             resources[calendar.name] = index
@@ -530,7 +530,7 @@ class CalendarView(object):
               - get_end
               - get_ns_event.
         """
-        model = get_context().object
+        resource = get_context().resource
         ns_events = []
         index = 0
         while index < len(events):
@@ -553,9 +553,7 @@ class CalendarView(object):
                                               grid=grid, starts_on=starts_on,
                                               ends_on=ends_on, out_on=out_on)
                 if resource_name is not None:
-                    resource = model.get_object(resource_name)
-                else:
-                    resource = model
+                    resource = resource.get_object(resource_name)
                 ns_event['url'] = resource.get_action_url(**ns_event)
                 ns_event['cal'] = cal_index
                 ns_event['resource'] = {'color': cal_index}
@@ -586,7 +584,7 @@ class TimetablesForm(STLForm):
     schema = {}
 
 
-    def get_namespace(self, model, context):
+    def get_namespace(self, resource, context):
         # Add ical css
         context.styles.append('/ui/ical/calendar.css')
 
@@ -594,8 +592,8 @@ class TimetablesForm(STLForm):
         namespace = {'timetables': []}
 
         # Show current timetables only if previously set in metadata
-        if model.has_property('timetables'):
-            timetables = model.get_property('timetables')
+        if resource.has_property('timetables'):
+            timetables = resource.get_property('timetables')
             for index, (start, end) in enumerate(timetables):
                 ns = {}
                 ns['index'] = index
@@ -607,10 +605,10 @@ class TimetablesForm(STLForm):
         return namespace
 
 
-    def action(self, model, context, form):
+    def action(self, resource, context, form):
         timetables = []
-        if model.has_property('timetables'):
-            timetables = model.get_property('timetables')
+        if resource.has_property('timetables'):
+            timetables = resource.get_property('timetables')
 
         # Nothing to change
         if timetables == [] and not context.has_form_value('add'):
@@ -648,7 +646,7 @@ class TimetablesForm(STLForm):
             new_timetables.sort()
             context.message = u'Timetables updated successfully.'
 
-        model.set_property('timetables', tuple(new_timetables))
+        resource.set_property('timetables', tuple(new_timetables))
 
 
 
@@ -676,7 +674,7 @@ class EditEventForm(CalendarView, STLForm):
         }
 
 
-    def get_namespace(self, model, context):
+    def get_namespace(self, resource, context):
         keys = context.get_form_keys()
 
         # Add ical css
@@ -718,13 +716,13 @@ class EditEventForm(CalendarView, STLForm):
             id = uid
             if '/' in uid:
                 name, id = uid.split('/')
-                if not model.has_object(name):
+                if not resource.has_object(name):
                     message = MSG(u'Invalid argument.')
                     return context.come_back(message, keys=keys,
                                              goto=';edit_event')
-                object = model.get_object(name)
+                object = resource.get_object(name)
             else:
-                object = model 
+                object = resource 
 
             # UID is used to remind which object/id is being modified
             namespace['UID'] = uid
@@ -769,7 +767,7 @@ class EditEventForm(CalendarView, STLForm):
             event = None
             # Selected calendar
             ns_calendars = []
-            for calendar in model.get_calendars():
+            for calendar in resource.get_calendars():
                 ns_calendars.append({'name': calendar.name,
                                      'value': calendar.get_title(),
                                      'selected': False})
@@ -817,7 +815,7 @@ class EditEventForm(CalendarView, STLForm):
 
 
     edit_event__access__ = 'is_allowed_to_edit'
-    def edit_event(self, model, context, form):
+    def edit_event(self, resource, context, form):
         keys = context.get_form_keys()
         goto = ';%s' % context.get_cookie('method') or 'monthly_view'
 
@@ -839,13 +837,13 @@ class EditEventForm(CalendarView, STLForm):
             organizer = str(context.user.get_abspath())
             properties['ORGANIZER'] = Property(organizer)
         else:
-            event = model.get_record(uid)
+            event = resource.get_record(uid)
             if event is None:
                 message = u'Cannot modify event, because it has been removed.'
                 message = MSG(message)
                 return context.come_back(message, goto=goto)
             # Test if current user is admin or organizer of this event
-            if not model.is_organizer_or_admin(context, event):
+            if not resource.is_organizer_or_admin(context, event):
                 message = u'You are not authorized to modify this event.'
                 message = MSG(message)
                 return context.come_back(message, goto, keys=keys)
@@ -905,7 +903,7 @@ class EditEventForm(CalendarView, STLForm):
             elif key.startswith('DTSTART') or key.startswith('DTEND'):
                 continue
             else:
-                datatype = model.handler.get_datatype(key)
+                datatype = resource.handler.get_datatype(key)
                 multiple = getattr(datatype, 'multiple', False) is True
                 if multiple:
                     datatype = Multiple(type=datatype)
@@ -918,9 +916,9 @@ class EditEventForm(CalendarView, STLForm):
                         properties[key] = Property(values)
 
         if uid is not None:
-            model.update_record(uid, properties)
+            resource.update_record(uid, properties)
         else:
-            model.add_record('VEVENT', properties)
+            resource.add_record('VEVENT', properties)
 
         goto = '%s?date=%s' % (goto, selected_date)
         message = MSG(u'Data updated')
@@ -928,10 +926,10 @@ class EditEventForm(CalendarView, STLForm):
 
 
     remove_event__access__ = 'is_allowed_to_edit'
-    def remove_event(self, model, context, form):
+    def remove_event(self, resource, context, form):
         method = context.get_cookie('method') or 'monthly_view'
         goto = ';%s?%s' % (method, get_current_date())
-        if method not in dir(model):
+        if method not in dir(resource):
             goto = '../;%s?%s' % (method, get_current_date())
         # uid
         uid = context.get_form_value('id', default='')
@@ -939,18 +937,18 @@ class EditEventForm(CalendarView, STLForm):
             kk, uid = uid.split('/', 1)
         if uid =='':
             return context.come_back(None, goto)
-        if model.get_record(uid) is None:
+        if resource.get_record(uid) is None:
             message = u'Cannot delete event, because it was already removed.'
             message = MSG(message)
             return context.come_back(message, goto=goto)
 
-        model._remove_event(uid)
+        resource._remove_event(uid)
         message = MSG(u'Event definitely deleted.')
         return context.come_back(message, goto=goto)
 
 
     cancel__access__ = 'is_allowed_to_edit'
-    def cancel(self, model, context, form):
+    def cancel(self, resource, context, form):
         goto = ';%s' % context.get_cookie('method') or 'monthly_view'
         return context.come_back(None, goto)
 
@@ -965,7 +963,7 @@ class MonthlyView(CalendarView, STLView):
     template = '/ui/ical/ical_monthly_view.xml'
 
 
-    def get_namespace(self, model, context):
+    def get_namespace(self, resource, context):
         ndays = 7
         today_date = date.today()
 
@@ -995,8 +993,8 @@ class MonthlyView(CalendarView, STLView):
 
         ###################################################################
         # Get a list of events to display on view
-        cal_indexes, events = model.get_events_to_display(start, end)
-        template = model.get_monthly_template()
+        cal_indexes, events = resource.get_events_to_display(start, end)
+        template = resource.get_monthly_template()
 
         ###################################################################
         namespace = {}
@@ -1017,7 +1015,7 @@ class MonthlyView(CalendarView, STLView):
                     ns_day = {}
                     ns_day['nday'] = day.day
                     ns_day['selected'] = (day == today_date)
-                    ns_day['url'] = model.get_action_url(day=day)
+                    ns_day['url'] = resource.get_action_url(day=day)
                     # Insert events
                     ns_events, events = self.events_to_namespace(events, day,
                                                                  cal_indexes)
@@ -1043,7 +1041,7 @@ class WeeklyView(CalendarView, STLView):
     template = '/ui/ical/ical_grid_weekly_view.xml'
 
 
-    def get_namespace(self, model, context):
+    def get_namespace(self, resource, context):
         ndays = 7
 
         # Add ical css
@@ -1083,13 +1081,13 @@ class WeeklyView(CalendarView, STLView):
             # Tip: Use 'selected' for css class to highlight selected date
             ns_headers.append(ns_header)
         # Calculate timetables and events occurring for current week
-        timetables = model.get_timetables_grid_ns(start)
+        timetables = resource.get_timetables_grid_ns(start)
 
-        events = model.get_grid_events(start, headers=ns_headers)
+        events = resource.get_grid_events(start, headers=ns_headers)
 
         # Fill data with grid (timetables) and data (events for each day)
-        templates = model.get_weekly_templates()
-        with_new_url = model.get_with_new_url()
+        templates = resource.get_weekly_templates()
+        with_new_url = resource.get_with_new_url()
         timetable = get_grid_data(events, timetables, start, templates,
                                   with_new_url)
         namespace['timetable_data'] = timetable
@@ -1330,12 +1328,12 @@ class UploadForm(BaseUploadForm):
     tab_sublabel = MSG(u'Upload from an ical file')
 
 
-    def action(self, model, context, form):
+    def action(self, resource, context, form):
         file = form['file']
         filename, mimetype, body = file
 
 ##        # Check wether the handler is able to deal with the uploaded file
-        handler = model.handler
+        handler = resource.handler
 ##        if mimetype != handler.get_mimetype():
 ##            context.message = u'Unexpected file of mimetype %s' % mimetype
 ##            return
@@ -1346,7 +1344,7 @@ class UploadForm(BaseUploadForm):
         except:
             context.message = u'Failed to load the file, may contain errors.'
         else:
-            context.server.change_object(model)
+            context.server.change_object(resource)
             context.message = u'Version uploaded'
 
 
@@ -1369,8 +1367,8 @@ class TextView(BaseView):
     tab_label = MSG(u'Text view')
     tab_sublabel = MSG(u'Text view')
 
-    def GET(self, model, context):
-        return '<pre>%s</pre>' % model.handler.to_str()
+    def GET(self, resource, context):
+        return '<pre>%s</pre>' % resource.handler.to_str()
 
 
 

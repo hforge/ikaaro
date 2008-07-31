@@ -100,7 +100,7 @@ class OrderAware(object):
     def order_form(self, context):
         namespace = {}
 
-        here = context.object
+        here = context.resource
         ordered = []
         unordered = []
         names = self.get_ordered_names('all')

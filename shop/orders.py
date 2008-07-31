@@ -241,7 +241,7 @@ class Order(Folder, WorkflowAware):
         # Get products informations
         total = 0
         for name, quantity in cart_products:
-            product = context.object.parent.get_object('%s' % name)
+            product = context.resource.parent.get_object('%s' % name)
             # Price
             price = product.get_property('price')
             vat = product.get_property('vat')
@@ -250,7 +250,7 @@ class Order(Folder, WorkflowAware):
             # All
             p = ({'name': product.name,
                   'title': product.get_title(),
-                  'uri': context.object.get_pathto(product),
+                  'uri': context.resource.get_pathto(product),
                   'description': product.get_property('dc:description'),
                   'quantity': quantity,
                   'price_before_vat': price,
@@ -314,7 +314,7 @@ class Order(Folder, WorkflowAware):
                      'products': []}
         order_price = 0
         for name, quantity in cart_products:
-            product = context.object.parent.get_object('%s' % name)
+            product = context.resource.parent.get_object('%s' % name)
             # Reduce the stock
             stock = product.get_property('stock')
             product.set_property('stock', stock - quantity)

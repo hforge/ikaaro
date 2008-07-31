@@ -42,17 +42,17 @@ class ThumbnailView(BaseView):
     access = True
 
 
-    def get_mtime(self, model):
-        return model.get_mtime()
+    def get_mtime(self, resource):
+        return resource.get_mtime()
 
 
-    def GET(self, model, context):
+    def GET(self, resource, context):
         width = context.get_form_value('width', type=Integer, default=48)
         height = context.get_form_value('height', type=Integer, default=48)
 
-        data, format = model.handler.get_thumbnail(width, height)
+        data, format = resource.handler.get_thumbnail(width, height)
         if data is None:
-            object = model.get_object('/ui/icons/48x48/image.png')
+            object = resource.get_object('/ui/icons/48x48/image.png')
             data = object.to_str()
             format = 'png'
 

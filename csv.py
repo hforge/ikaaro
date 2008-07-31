@@ -47,7 +47,7 @@ class ViewCSV(BrowseForm):
     }
 
 
-    def get_namespace(self, model, context, query):
+    def get_namespace(self, resource, context, query):
         namespace = {}
 
         # The input parameters
@@ -55,18 +55,18 @@ class ViewCSV(BrowseForm):
         size = 50
 
         # The batch
-        handler = model.handler
+        handler = resource.handler
         total = handler.get_nrows()
         namespace['batch'] = batch(context.uri, start, size, total)
 
         # The table
         actions = []
         if total:
-            ac = model.get_access_control()
-            if ac.is_allowed_to_edit(context.user, model):
+            ac = resource.get_access_control()
+            if ac.is_allowed_to_edit(context.user, resource):
                 actions = [('action', u'Remove', 'button_delete',None)]
 
-        columns = model.get_columns()
+        columns = resource.get_columns()
         columns.insert(0, ('index', u''))
         rows = []
         index = start
@@ -111,9 +111,9 @@ class ViewCSV(BrowseForm):
         return namespace
 
 
-    def action(self, model, context, form):
+    def action(self, resource, context, form):
         ids = form['ids']
-        model.handler.del_rows(ids)
+        resource.handler.del_rows(ids)
         # Ok
         context.message = u'Row deleted.'
 

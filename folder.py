@@ -51,12 +51,12 @@ class IndexView(RedirectView):
 
     access = True
 
-    def GET(self, model, context):
+    def GET(self, resource, context):
         # Try index
         try:
-            model.get_object('index')
+            resource.get_object('index')
         except LookupError:
-            return RedirectView.GET(self, model, context)
+            return RedirectView.GET(self, resource, context)
 
         return context.uri.resolve2('index')
 
@@ -80,7 +80,7 @@ class AddView(IconsView):
         return page_title
 
 
-    def get_namespace(self, model, context):
+    def get_namespace(self, resource, context):
         items = [
             {
                 'icon': '/ui/' + cls.class_icon48,
@@ -88,7 +88,7 @@ class AddView(IconsView):
                 'description': cls.class_description.gettext(),
                 'url': ';new_resource?type=%s' % quote(cls.class_id)
             }
-            for cls in model.get_document_types() ]
+            for cls in resource.get_document_types() ]
 
         return {
             'batch': None,
@@ -129,7 +129,7 @@ class BrowseContent(BrowseForm):
     }
 
 
-    def search_form(self, model, query):
+    def search_form(self, resource, query):
         # Get values from the query
         field = query['search_field']
         term = query['search_term']
@@ -147,11 +147,11 @@ class BrowseContent(BrowseForm):
         namespace['search_subfolders'] = query['search_subfolders']
 
         # Ok
-        template = model.get_object('/ui/folder/browse_search.xml')
+        template = resource.get_object('/ui/folder/browse_search.xml')
         return stl(template, namespace)
 
 
-    def get_namespace(self, model, context, query, *args):
+    def get_namespace(self, resource, context, query, *args):
         # Get the parameters from the query
         search_term = query['search_term'].strip()
         field = query['search_field']
@@ -161,7 +161,7 @@ class BrowseContent(BrowseForm):
 
         # Build the query
         args = list(args)
-        abspath = str(model.get_canonical_path())
+        abspath = str(resource.get_canonical_path())
         if search_subfolders is True:
             args.append(EqQuery('paths', abspath))
         else:
@@ -177,7 +177,7 @@ class BrowseContent(BrowseForm):
 
         # Build the namespace
         batchsize = self.batchsize
-        namespace = model.browse_namespace(16, sortby, sortorder, batchsize,
+        namespace = resource.browse_namespace(16, sortby, sortorder, batchsize,
                                            query=query)
 
         # The column headers
@@ -192,9 +192,9 @@ class BrowseContent(BrowseForm):
 
         # Actions
         user = context.user
-        ac = model.get_access_control()
+        ac = resource.get_access_control()
         actions = []
-        if ac.is_allowed_to_edit(user, model):
+        if ac.is_allowed_to_edit(user, resource):
             if namespace['total']:
                 message = MSG_DELETE_SELECTION.gettext()
                 actions = [
@@ -218,7 +218,7 @@ class BrowseContent(BrowseForm):
     #######################################################################
     # Form Actions
     #######################################################################
-    def remove(self, model, context, form):
+    def remove(self, resource, context, form):
         ids = form['ids']
 
         # Clean the copy cookie if needed
@@ -228,19 +228,19 @@ class BrowseContent(BrowseForm):
         removed = []
         not_removed = []
         user = context.user
-        abspath = model.get_abspath()
+        abspath = resource.get_abspath()
 
         # We sort and reverse ids in order to
         # remove the childs then their parents
         ids.sort()
         ids.reverse()
         for name in ids:
-            object = model.get_object(name)
+            object = resource.get_object(name)
             ac = object.get_access_control()
             if ac.is_allowed_to_remove(user, object):
                 # Remove object
                 try:
-                    model.del_object(name)
+                    resource.del_object(name)
                 except ConsistencyError:
                     not_removed.append(name)
                     continue
@@ -259,13 +259,13 @@ class BrowseContent(BrowseForm):
             context.message = MSG_NONE_REMOVED
 
 
-    def rename(self, model, context, form):
+    def rename(self, resource, context, form):
         ids = form['ids']
         # Filter names which the authenticated user is not allowed to move
-        ac = model.get_access_control()
+        ac = resource.get_access_control()
         user = context.user
         paths = [ x for x in ids
-                  if ac.is_allowed_to_move(user, model.get_object(x)) ]
+                  if ac.is_allowed_to_move(user, resource.get_object(x)) ]
 
         # Check input data
         if not paths:
@@ -280,20 +280,20 @@ class BrowseContent(BrowseForm):
         return get_reference(';rename?%s' % ids_list)
 
 
-    def copy(self, model, context, form):
+    def copy(self, resource, context, form):
         ids = form['ids']
         # Filter names which the authenticated user is not allowed to copy
-        ac = model.get_access_control()
+        ac = resource.get_access_control()
         user = context.user
         names = [ x for x in ids
-                  if ac.is_allowed_to_copy(user, model.get_object(x)) ]
+                  if ac.is_allowed_to_copy(user, resource.get_object(x)) ]
 
         # Check input data
         if not names:
             message = u'No objects selected.'
             return
 
-        abspath = model.get_abspath()
+        abspath = resource.get_abspath()
         cp = (False, [ str(abspath.resolve2(x)) for x in names ])
         cp = CopyCookie.encode(cp)
         context.set_cookie('ikaaro_cp', cp, path='/')
@@ -301,20 +301,20 @@ class BrowseContent(BrowseForm):
         context.message = u'Objects copied.'
 
 
-    def cut(self, model, context, form):
+    def cut(self, resource, context, form):
         ids = form['ids']
         # Filter names which the authenticated user is not allowed to move
-        ac = model.get_access_control()
+        ac = resource.get_access_control()
         user = context.user
         names = [ x for x in ids
-                  if ac.is_allowed_to_move(user, model.get_object(x)) ]
+                  if ac.is_allowed_to_move(user, resource.get_object(x)) ]
 
         # Check input data
         if not names:
             message = u'No objects selected.'
             return
 
-        abspath = model.get_abspath()
+        abspath = resource.get_abspath()
         cp = (True, [ str(abspath.resolve2(x)) for x in names ])
         cp = CopyCookie.encode(cp)
         context.set_cookie('ikaaro_cp', cp, path='/')
@@ -334,13 +334,13 @@ class RenameForm(STLForm):
     }
 
 
-    def get_namespace(self, model, context):
+    def get_namespace(self, resource, context):
         ids = context.get_form_values('ids')
         # Filter names which the authenticated user is not allowed to move
-        ac = model.get_access_control()
+        ac = resource.get_access_control()
         user = context.user
         paths = [ x for x in ids
-                  if ac.is_allowed_to_move(user, model.get_object(x)) ]
+                  if ac.is_allowed_to_move(user, resource.get_object(x)) ]
 
         # Build the namespace
         paths.sort()
@@ -361,7 +361,7 @@ class RenameForm(STLForm):
         return {'objects': objects}
 
 
-    def action(self, model, context, form):
+    def action(self, resource, context, form):
         paths = form['paths']
         new_names = form['new_names']
 
@@ -371,7 +371,7 @@ class RenameForm(STLForm):
         cut, cp_paths = context.get_cookie('ikaaro_cp', type=CopyCookie)
 
         # Process input data
-        abspath = model.get_abspath()
+        abspath = resource.get_abspath()
         for i, path in enumerate(paths):
             new_name = new_names[i]
             new_name = checkid(new_name)
@@ -381,10 +381,10 @@ class RenameForm(STLForm):
             # Split the path
             if '/' in path:
                 parent_path, old_name = path.rsplit('/', 1)
-                container = model.get_object(parent_path)
+                container = resource.get_object(parent_path)
             else:
                 old_name = path
-                container = model
+                container = resource
             # Check the name really changed
             if new_name == old_name:
                 continue
@@ -419,11 +419,11 @@ class PreviewView(STLView):
     ]
 
 
-    def get_namespace(self, model, context, search_subfolders=False, *args):
+    def get_namespace(self, resource, context, search_subfolders=False, *args):
         # Get the form values
         get_form_value = context.get_form_value
         current_size = get_form_value('size', type=Integer,
-                                      default=model.DEFAULT_SIZE)
+                                      default=resource.DEFAULT_SIZE)
         term = get_form_value('search_term', type=Unicode).strip()
         field = get_form_value('search_field')
         if field:
@@ -431,21 +431,21 @@ class PreviewView(STLView):
                                                type=Boolean, default=False)
 
         # Validate size
-        current_size = max(model.MIN_SIZE, min(current_size, model.MAX_SIZE))
+        current_size = max(resource.MIN_SIZE, min(current_size, resource.MAX_SIZE))
 
         # Compute previous and next sizes
-        previous_size = model.MIN_SIZE
-        next_size = model.MAX_SIZE
-        for step in model.SIZE_STEPS:
+        previous_size = resource.MIN_SIZE
+        next_size = resource.MAX_SIZE
+        for step in resource.SIZE_STEPS:
             if step < current_size:
                 previous_size = step
-            if next_size is model.MAX_SIZE and step > current_size:
+            if next_size is resource.MAX_SIZE and step > current_size:
                 next_size = step
 
         # Build the query
         args = list(args)
         args.append(EqQuery('is_image', '1'))
-        abspath = str(model.get_canonical_path())
+        abspath = str(resource.get_canonical_path())
         if search_subfolders is True:
             args.append(EqQuery('paths', abspath))
         else:
@@ -456,7 +456,7 @@ class PreviewView(STLView):
         query = AndQuery(*args)
 
         # Build the namespace
-        namespace = model.browse_namespace(16, batchsize=1000, query=query)
+        namespace = resource.browse_namespace(16, batchsize=1000, query=query)
         namespace['search_term'] = term
         namespace['search_subfolders'] = search_subfolders
         namespace['search_fields'] = [
@@ -491,9 +491,9 @@ class LastChanges(BrowseContent):
 
 
 
-    def get_namespace(self, model, context, query):
+    def get_namespace(self, resource, context, query):
         search_query = EqQuery('is_version_aware', '1')
-        return BrowseContent.get_namespace(self, model, context, query,
+        return BrowseContent.get_namespace(self, resource, context, query,
                                            search_query)
 
 
@@ -515,20 +515,20 @@ class OrphansView(BrowseContent):
     description = MSG(u"Show objects not linked from anywhere.")
 
 
-    def get_namespace(self, model, context, sortby=['title'], sortorder='up',
+    def get_namespace(self, resource, context, sortby=['title'], sortorder='up',
                       batchsize=20):
         root = context.root
         get_form_value = context.get_form_value
 
-        parent_path = str(model.get_canonical_path())
+        parent_path = str(resource.get_canonical_path())
         search_subfolders = get_form_value('search_subfolders', type=Boolean,
                                            default=False)
         if search_subfolders is True:
             base_query = EqQuery('paths', parent_path)
-            objects = model.traverse_objects()
+            objects = resource.traverse_objects()
         else:
             base_query = EqQuery('parent_path', parent_path)
-            objects = model.get_objects()
+            objects = resource.get_objects()
 
         orphans = []
         for object in objects:
@@ -544,7 +544,7 @@ class OrphansView(BrowseContent):
         args = [ EqQuery('abspath', abspath) for abspath in orphans ]
         query = OrQuery(*args)
 
-        return BrowseContent.get_namespace(self, model, context, sortby,
+        return BrowseContent.get_namespace(self, resource, context, sortby,
                sortorder, batchsize, False, query)
 
 

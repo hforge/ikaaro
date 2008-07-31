@@ -46,25 +46,25 @@ class StateForm(STLForm):
     }
 
 
-    def get_namespace(self, model, context):
+    def get_namespace(self, resource, context):
         namespace = {}
         # State
-        namespace['statename'] = model.get_statename()
-        state = model.get_state()
+        namespace['statename'] = resource.get_statename()
+        state = resource.get_state()
         namespace['state'] = state['title'].gettext()
         # Posible transitions
-        ac = model.get_access_control()
+        ac = resource.get_access_control()
         transitions = []
         for name, trans in state.transitions.items():
-            view = model.get_view(name)
-            if ac.is_allowed_to_trans(context.user, model, view) is False:
+            view = resource.get_view(name)
+            if ac.is_allowed_to_trans(context.user, resource, view) is False:
                 continue
             description = trans['description'].gettext()
             transitions.append({'name': name, 'description': description})
         namespace['transitions'] = transitions
         # Workflow history
         transitions = []
-        for transition in model.get_property('wf_transition'):
+        for transition in resource.get_property('wf_transition'):
             transitions.append(
                 {'title': transition['name'],
                  'date': transition['date'].strftime('%Y-%m-%d %H:%M'),
@@ -76,7 +76,7 @@ class StateForm(STLForm):
         return namespace
 
 
-    def action(self, model, context, form):
+    def action(self, resource, context, form):
         transition = form['transition']
         comments = form['comments']
 
@@ -86,10 +86,10 @@ class StateForm(STLForm):
             'user': context.user.name,
             'name': transition,
             'comments': comments}
-        model.set_property('wf_transition', property)
+        resource.set_property('wf_transition', property)
         # Change the state, through the itools.workflow way
         try:
-            model.do_trans(transition)
+            resource.do_trans(transition)
         except WorkflowError, excp:
             context.server.log_error(context)
             context.message = unicode(excp.message, 'utf-8')

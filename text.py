@@ -51,13 +51,13 @@ class EditTextForm(STLForm):
     }
 
 
-    def get_namespace(self, model, context):
-        return {'data': model.handler.to_str()}
+    def get_namespace(self, resource, context):
+        return {'data': resource.handler.to_str()}
 
 
-    def action(self, model, context, form):
+    def action(self, resource, context, form):
         data = form['data']
-        model.handler.load_state_from_string(data)
+        resource.handler.load_state_from_string(data)
         # Ok
         context.message = MSG_CHANGES_SAVED
 
@@ -73,8 +73,8 @@ class ViewText(STLView):
     template = '/ui/text/view.xml'
 
 
-    def get_namespace(self, model, context):
-        return {'data': model.handler.to_str()}
+    def get_namespace(self, resource, context):
+        return {'data': resource.handler.to_str()}
 
 
 
@@ -87,7 +87,7 @@ class ExternalEditForm(STLView):
     template = '/ui/text/externaledit.xml'
 
 
-    def get_namespace(self, model, context):
+    def get_namespace(self, resource, context):
         # FIXME This list should be built from a txt file with all the
         # encodings, or better, from a Python module that tells us which
         # encodings Python supports.

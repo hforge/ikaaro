@@ -54,12 +54,12 @@ class HTMLEditView(BaseView):
     page_title = MSG(u'Edit')
 
 
-    def GET(self, model, context):
+    def GET(self, resource, context):
         data = context.get_form_value('data')
         if data:
             data = stream_to_str_as_html(XMLParser(data))
         else:
-            data = model.get_epoz_data()
+            data = resource.get_epoz_data()
             # If the document has not a body (e.g. a frameset), edit as plain
             # text
             if data is None:
@@ -69,17 +69,17 @@ class HTMLEditView(BaseView):
         # Edit with a rich text editor
         namespace = {}
         namespace['timestamp'] = DateTime.encode(datetime.now())
-        namespace['rte'] = model.get_rte(context, 'data', data)
+        namespace['rte'] = resource.get_rte(context, 'data', data)
 
-        handler = model.get_object('/ui/html/edit.xml')
+        handler = resource.get_object('/ui/html/edit.xml')
         return stl(handler, namespace)
 
 
-    def POST(self, model, context, sanitize=False):
+    def POST(self, resource, context, sanitize=False):
         timestamp = context.get_form_value('timestamp', type=DateTime)
         if timestamp is None:
             return context.come_back(MSG_EDIT_CONFLICT)
-        document = model.get_epoz_document()
+        document = resource.get_epoz_document()
         if document.timestamp is not None and timestamp < document.timestamp:
             return context.come_back(MSG_EDIT_CONFLICT)
 
@@ -99,7 +99,7 @@ class HTMLEditView(BaseView):
                   + document.events[old_body.end:])
         # Change
         document.set_events(events)
-        context.server.change_object(model)
+        context.server.change_object(resource)
 
         return context.come_back(MSG_CHANGES_SAVED)
 
@@ -115,8 +115,8 @@ class WebPageView(STLView):
     template = '/ui/html/view.xml'
 
 
-    def get_namespace(self, model, context):
-        body = model.handler.get_body()
+    def get_namespace(self, resource, context):
+        body = resource.handler.get_body()
         return {
             'text': body.get_content_elements() if body else None,
         }

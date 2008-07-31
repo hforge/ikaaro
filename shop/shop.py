@@ -70,7 +70,7 @@ class Shop(Folder):
     def view_small_cart(self, context):
         cart = Cart()
         products = cart.get_products(context, self)
-        uri = '%s/;view_cart' % context.object.get_pathto(self)
+        uri = '%s/;view_cart' % context.resource.get_pathto(self)
         namespace = {'products': [],
                      'nb_product': len(products),
                      'cart_link': uri}

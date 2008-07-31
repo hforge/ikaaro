@@ -59,7 +59,7 @@ class NewObjectForm(NewInstanceForm):
     }
 
 
-    def get_namespace(self, model, context):
+    def get_namespace(self, resource, context):
         type = context.get_query_value('type')
         cls = get_object_class(type)
         return {
@@ -70,7 +70,7 @@ class NewObjectForm(NewInstanceForm):
         }
 
 
-    def action(self, model, context, form):
+    def action(self, resource, context, form):
         name = form['name']
         title = form['title']
 
@@ -86,17 +86,17 @@ class NewObjectForm(NewInstanceForm):
             return
 
         # Check the name is free
-        if model.has_object(name):
+        if resource.has_object(name):
             context.message = MSG_NAME_CLASH
             return
 
         # Create the object
         class_id = context.get_form_value('class_id')
         cls = get_object_class(class_id)
-        object = cls.make_object(cls, model, name)
+        object = cls.make_object(cls, resource, name)
         # The metadata
         metadata = object.metadata
-        language = model.get_content_language(context)
+        language = resource.get_content_language(context)
         metadata.set_property('title', title, language=language)
 
         goto = './%s/;%s' % (name, object.get_firstview())
@@ -109,9 +109,9 @@ class RedirectView(BaseView):
     access = 'is_allowed_to_view'
 
 
-    def GET(self, model, context):
+    def GET(self, resource, context):
         # Check access
-        method = model.get_firstview()
+        method = resource.get_firstview()
         if method is None:
             raise Forbidden
 
@@ -136,17 +136,17 @@ class MetadataForm(STLForm):
 
     def page_title(self):
         context = get_context()
-        language = context.object.get_content_language(context)
+        language = context.resource.get_content_language(context)
         language_name = get_language_name(language)
         message = MSG(u'Edit metadata in $language_name')
         return message.gettext(language_name=language_name)
 
 
-    def get_namespace(self, model, context):
-        language = model.get_content_language(context)
+    def get_namespace(self, resource, context):
+        language = resource.get_content_language(context)
         language_name = get_language_name(language)
 
-        get_property = model.get_property
+        get_property = resource.get_property
         return {
             'language_name': language_name,
             'title': get_property('title', language=language),
@@ -155,14 +155,14 @@ class MetadataForm(STLForm):
         }
 
 
-    def action(self, model, context, form):
+    def action(self, resource, context, form):
         title = form['title']
         description = form['description']
         subject = form['subject']
-        language = model.get_content_language(context)
-        model.set_property('title', title, language=language)
-        model.set_property('description', description, language=language)
-        model.set_property('subject', subject, language=language)
+        language = resource.get_content_language(context)
+        resource.set_property('title', title, language=language)
+        resource.set_property('description', description, language=language)
+        resource.set_property('subject', subject, language=language)
 
         context.message = MSG_CHANGES_SAVED
 
@@ -179,7 +179,7 @@ class AddImageForm(STLForm):
     }
 
 
-    def get_namespace(self, model, context):
+    def get_namespace(self, resource, context):
         from file import File
         from binary import Image
         from widgets import Breadcrumb
@@ -194,10 +194,10 @@ class AddImageForm(STLForm):
                        '/ui/tiny_mce/tiny_mce_popup.js']
 
         # For the breadcrumb
-        if isinstance(model, File):
-            start = model.parent
+        if isinstance(resource, File):
+            start = resource.parent
         else:
-            start = model
+            start = resource
 
         # Construct namespace
         return {
@@ -209,14 +209,14 @@ class AddImageForm(STLForm):
         }
 
 
-    def GET(self, model, context):
-        template = model.get_object(self.template)
-        namespace = self.get_namespace(model, context)
-        prefix = model.get_pathto(template)
+    def GET(self, resource, context):
+        template = resource.get_object(self.template)
+        namespace = self.get_namespace(resource, context)
+        prefix = resource.get_pathto(template)
         return stl(template, namespace, prefix=prefix)
 
 
-    def action(self, model, context, form):
+    def action(self, resource, context, form):
         """Allow to upload and add an image to epoz
         """
         from binary import Image
@@ -255,7 +255,7 @@ class AddImageForm(STLForm):
                        '/ui/tiny_mce/tiny_mce_popup.js']
 
         object = container.get_object(name)
-        path = model.get_pathto(object)
+        path = resource.get_pathto(object)
         script_template = '<script type="text/javascript" src="%s" />'
         body = ''
         for script in scripts:
@@ -280,7 +280,7 @@ class AddLinkForm(STLForm):
     }
 
 
-    def get_namespace(self, model, context):
+    def get_namespace(self, resource, context):
         from file import File
         from widgets import Breadcrumb
 
@@ -296,10 +296,10 @@ class AddLinkForm(STLForm):
             type = 'application/xhtml+xml'
 
         # For the breadcrumb
-        if isinstance(model, File):
-            start = model.parent
+        if isinstance(resource, File):
+            start = resource.parent
         else:
-            start = model
+            start = resource
 
         # Construct namespace
         return {
@@ -312,14 +312,14 @@ class AddLinkForm(STLForm):
         }
 
 
-    def GET(self, model, context):
-        template = model.get_object(self.template)
-        namespace = self.get_namespace(model, context)
-        prefix = model.get_pathto(template)
+    def GET(self, resource, context):
+        template = resource.get_object(self.template)
+        namespace = self.get_namespace(resource, context)
+        prefix = resource.get_pathto(template)
         return stl(template, namespace, prefix=prefix)
 
 
-    def add_page(self, model, context, form):
+    def add_page(self, resource, context, form):
         """Allow to upload a file and link it to epoz
         """
         # Get the container
@@ -340,7 +340,7 @@ class AddLinkForm(STLForm):
                            '/ui/tiny_mce/tiny_mce_popup.js']
 
             object = container.get_object(uri.path[0])
-            path = context.object.get_pathto(object)
+            path = context.resource.get_pathto(object)
             script_template = '<script type="text/javascript" src="%s" />'
             body = ''
             for script in scripts:
@@ -935,7 +935,7 @@ class DBObject(CatalogAware, Node):
     def get_rte_css(cls, context):
         css_names = ['/ui/aruni/aruni.css', '/ui/tiny_mce/content.css']
         css = []
-        here = context.object
+        here = context.resource
         root = context.root
         for name in css_names:
             handler = root.get_object(name)
@@ -956,7 +956,7 @@ class DBObject(CatalogAware, Node):
         namespace['dress_name'] = dress_name
         # TODO language
 
-        here = context.object.get_abspath()
+        here = context.resource.get_abspath()
         prefix = here.get_pathto(template)
 
         handler = context.root.get_object(template)

@@ -91,7 +91,7 @@ class AddIssueForm(STLForm):
     schema = issue_fields
 
 
-    def get_namespace(self, model, context):
+    def get_namespace(self, resource, context):
         # Set Style
         context.styles.append('/ui/tracker/tracker.css')
 
@@ -100,7 +100,7 @@ class AddIssueForm(STLForm):
         namespace['title'] = context.get_form_value('title', type=Unicode)
         namespace['comment'] = context.get_form_value('comment', type=Unicode)
         # Others
-        get = model.get_object
+        get = resource.get_object
         module = context.get_form_value('module', type=Integer)
         namespace['modules'] = get('modules').get_options(module)
         version = context.get_form_value('version', type=Integer)
@@ -113,19 +113,19 @@ class AddIssueForm(STLForm):
         state = context.get_form_value('state', type=Integer)
         namespace['states'] = get('states').get_options(state, sort='rank')
 
-        users = model.get_object('/users')
+        users = resource.get_object('/users')
         assigned_to = context.get_form_values('assigned_to', type=String)
-        namespace['users'] = model.get_members_namespace(assigned_to)
+        namespace['users'] = resource.get_members_namespace(assigned_to)
 
-        namespace['cc_add'] = model.get_members_namespace(())
+        namespace['cc_add'] = resource.get_members_namespace(())
 
         return namespace
 
 
-    def remove(self, model, context, form):
+    def remove(self, resource, context, form):
         # Add
-        id = model.get_new_id()
-        issue = Issue.make_object(Issue, model, id)
+        id = resource.get_new_id()
+        issue = Issue.make_object(Issue, resource, id)
         issue._add_record(context, form)
         context.message = MSG(u'New issue added.')
 
@@ -133,11 +133,11 @@ class AddIssueForm(STLForm):
 
 class SelectTableView(TableView):
 
-    def get_widgets(self, model):
-        return model.form
+    def get_widgets(self, resource):
+        return resource.form
 
 
-    def get_namespace(self, model, context, query):
+    def get_namespace(self, resource, context, query):
         namespace = {}
 
         # The input parameters
@@ -148,20 +148,20 @@ class SelectTableView(TableView):
         namespace['search'] = None
 
         # The batch
-        handler = model.handler
+        handler = resource.handler
         total = handler.get_n_records()
         namespace['batch'] = batch(context.uri, start, size, total)
 
         # The table
         actions = []
         if total:
-            ac = model.get_access_control()
-            if ac.is_allowed_to_edit(context.user, model):
+            ac = resource.get_access_control()
+            if ac.is_allowed_to_edit(context.user, resource):
                 actions = [('del_record_action', u'Remove',
                             'button_delete', None)]
 
         fields = [('id', u'id')]
-        widgets = self.get_widgets(model)
+        widgets = self.get_widgets(resource)
         for widget in widgets:
             fields.append((widget.name, getattr(widget, 'title', widget.name)))
 
@@ -170,12 +170,12 @@ class SelectTableView(TableView):
 
         getter = lambda x, y: x.get_value(y)
 
-        filter = model.name[:-1]
-        if model.name.startswith('priorit'):
+        filter = resource.name[:-1]
+        if resource.name.startswith('priorit'):
             filter = 'priority'
 
         root = context.root
-        abspath = model.parent.get_canonical_path()
+        abspath = resource.parent.get_canonical_path()
         base_query = EqQuery('parent_path', str(abspath))
         base_query = AndQuery(base_query, EqQuery('format', 'issue'))
         for record in handler.get_records():
@@ -250,22 +250,22 @@ class SearchForm(BrowseContent):
     query_schema = search_fields
 
 
-    def GET(self, model, context):
+    def GET(self, resource, context):
         query = self.get_query(context)
         keys = context.get_form_keys()
 
         if ';go_to_issue' in keys:
-            return self.go_to_issue(model, context, query)
+            return self.go_to_issue(resource, context, query)
 
         if ';search' in keys:
-            return self.search(model, context, query)
+            return self.search(resource, context, query)
 
-        namespace = self.get_namespace(model, context, query)
-        handler = model.get_object(self.template)
+        namespace = self.get_namespace(resource, context, query)
+        handler = resource.get_object(self.template)
         return stl(handler, namespace)
 
 
-    def get_namespace(self, model, context, query):
+    def get_namespace(self, resource, context, query):
         # Set Style
         context.styles.append('/ui/tracker/tracker.css')
 
@@ -274,14 +274,14 @@ class SearchForm(BrowseContent):
         # Stored Searches
         stored_searches = [
             {'name': x.name, 'title': x.get_title()}
-            for x in model.search_objects(object_class=StoredSearch) ]
+            for x in resource.search_objects(object_class=StoredSearch) ]
         stored_searches.sort(key=itemgetter('title'))
         namespace['stored_searches'] = stored_searches
 
         # Search Form
         search_name = query['search_name']
         if search_name:
-            search = model.get_object(search_name)
+            search = resource.get_object(search_name)
             get_value = search.handler.get_value
             get_values = search.get_values
             namespace['search_name'] = search_name
@@ -301,40 +301,40 @@ class SearchForm(BrowseContent):
         assign = get_values('assigned_to')
         state = get_values('state')
 
-        get = model.get_object
+        get = resource.get_object
         namespace['modules'] = get('modules').get_options(module)
         namespace['types'] = get('types').get_options(type)
         namespace['versions'] = get('versions').get_options(version)
         namespace['priorities'] = get('priorities').get_options(priority,
             sort='rank')
         namespace['states'] = get('states').get_options(state, sort='rank')
-        namespace['users'] = model.get_members_namespace(assign, True)
+        namespace['users'] = resource.get_members_namespace(assign, True)
 
         # is_admin
-        ac = model.get_access_control()
-        namespace['is_admin'] = ac.is_admin(context.user, model)
-        pathto_website = model.get_pathto(model.get_site_root())
+        ac = resource.get_access_control()
+        namespace['is_admin'] = ac.is_admin(context.user, resource)
+        pathto_website = resource.get_pathto(resource.get_site_root())
         namespace['manage_assigned'] = '%s/;permissions' % pathto_website
 
         return namespace
 
 
-    def go_to_issue(self, model, context, query):
+    def go_to_issue(self, resource, context, query):
         issue_name = context.get_form_value('issue_name')
         if not issue_name:
             return context.come_back(MSG_NAME_MISSING)
 
-        if not model.has_object(issue_name):
+        if not resource.has_object(issue_name):
             return context.come_back(MSG(u'Issue not found.'))
 
-        issue = model.get_object(issue_name)
+        issue = resource.get_object(issue_name)
         if not isinstance(issue, Issue):
             return context.come_back(MSG(u'Issue not found.'))
 
         return context.uri.resolve2('../%s/;edit' % issue_name)
 
 
-    def search(self, model, context, query):
+    def search(self, resource, context, query):
         search_name = query['search_name']
         search_title = query['search_title'].strip()
 
@@ -344,15 +344,15 @@ class SearchForm(BrowseContent):
         if search_name:
             # Edit an Stored Search
             try:
-                stored_search = model.get_object(search_name)
+                stored_search = resource.get_object(search_name)
                 stored_search_title = stored_search.get_property('title')
             except LookupError:
                 pass
 
         if search_title and search_title != stored_search_title:
             # New Stored Search
-            search_name = model.get_new_id('s')
-            stored_search = StoredSearch.make_object(StoredSearch, model,
+            search_name = resource.get_new_id('s')
+            stored_search = StoredSearch.make_object(StoredSearch, resource,
                                                      search_name)
 
         view = context.get_form_value('search_view', default=';view')
@@ -421,13 +421,13 @@ class View(BrowseForm):
         search_name = kw.get('search_name')
         if search_name is None:
             return None
-        model = get_context().object
-        search = model.get_object(search_name)
+        resource = get_context().resource
+        search = resource.get_object(search_name)
         return search.get_title()
     tab_sublabel = view__sublabel__
 
 
-    def get_namespace(self, model, context, query):
+    def get_namespace(self, resource, context, query):
         # Set Style
         context.styles.append('/ui/tracker/tracker.css')
 
@@ -435,7 +435,7 @@ class View(BrowseForm):
         namespace['method'] = 'GET'
         namespace['action'] = '.'
         # Get search results
-        results = model.get_search_results(context, query)
+        results = resource.get_search_results(context, query)
         # Analyse the result
         if isinstance(results, Reference):
             return results
@@ -476,7 +476,7 @@ class View(BrowseForm):
         # Set title of search
         search_name = query['search_name']
         if search_name:
-            search = model.get_object(search_name)
+            search = resource.get_object(search_name)
             title = search.get_title()
         else:
             title = MSG(u'View Tracker').gettext()
@@ -527,7 +527,7 @@ class View(BrowseForm):
             for name, title in export_columns:
                 namespace['columns'].append({'name': name, 'title': title,
                                              'checked': name in columns})
-            namespace['text'] = model.get_export_to_text(context)
+            namespace['text'] = resource.get_export_to_text(context)
         # Export_to_csv
         namespace['export_to_csv'] = False
         if query['export_to_csv']:
@@ -537,7 +537,7 @@ class View(BrowseForm):
         # Edit several bugs at once
         namespace['change_several_bugs'] = False
         if query['change_several_bugs']:
-            get = model.get_object
+            get = resource.get_object
             namespace['method'] = 'POST'
             namespace['action'] = ';change_several_bugs'
             namespace['change_several_bugs'] = True
@@ -546,8 +546,8 @@ class View(BrowseForm):
             namespace['priorities'] = get('priorities').get_options(sort='rank')
             namespace['types'] = get('types').get_options()
             namespace['states'] = get('states').get_options(sort='rank')
-            users = model.get_object('/users')
-            namespace['users'] = model.get_members_namespace('')
+            users = resource.get_object('/users')
+            namespace['users'] = resource.get_members_namespace('')
 
         return namespace
 

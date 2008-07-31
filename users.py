@@ -52,16 +52,16 @@ class ProfileView(STLView):
     template = '/ui/user/profile.xml'
 
 
-    def get_namespace(self, model, context):
+    def get_namespace(self, resource, context):
         root = context.root
         user = context.user
 
-        is_owner = user is not None and user.name == model.name
+        is_owner = user is not None and user.name == resource.name
         return {
-            'title': model.get_title(),
+            'title': resource.get_title(),
             'is_owner': is_owner,
-            'is_owner_or_admin': is_owner or root.is_admin(user, model),
-            'user_must_confirm': model.has_property('user_must_confirm'),
+            'is_owner_or_admin': is_owner or root.is_admin(user, resource),
+            'user_must_confirm': resource.has_property('user_must_confirm'),
         }
 
 
@@ -82,25 +82,25 @@ class AccountForm(STLForm):
     }
 
 
-    def get_namespace(self, model, context):
+    def get_namespace(self, resource, context):
         return {
-            'firstname': model.get_property('firstname'),
-            'lastname': model.get_property('lastname'),
-            'email': model.get_property('email'),
-            'must_confirm': (model.name == context.user.name),
+            'firstname': resource.get_property('firstname'),
+            'lastname': resource.get_property('lastname'),
+            'email': resource.get_property('email'),
+            'must_confirm': (resource.name == context.user.name),
         }
 
 
-    def action(self, model, context, form):
+    def action(self, resource, context, form):
         firstname = form['firstname']
         lastname = form['lastname']
         email = form['email']
 
         # Check password to confirm changes
-        is_same_user = (model.name == context.user.name)
+        is_same_user = (resource.name == context.user.name)
         if is_same_user:
             password = form['password']
-            if not model.authenticate(password):
+            if not resource.authenticate(password):
                 context.message = (
                     u"You mistyped your actual password, your account is"
                     u" not changed.")
@@ -108,18 +108,18 @@ class AccountForm(STLForm):
 
         # If the user changes his email, check there is not already other
         # user with the same email in the database.
-        if email != model.get_property('email'):
+        if email != resource.get_property('email'):
             results = context.root.search(email=email)
             if results.get_n_documents():
-                context.message = model.gettext(
+                context.message = resource.gettext(
                     u'There is another user with the email "${email}", please'
                     u' try again.', email=email)
                 return
 
         # Save changes
-        model.set_property('firstname', firstname)
-        model.set_property('lastname', lastname)
-        model.set_property('email', email)
+        resource.set_property('firstname', firstname)
+        resource.set_property('lastname', lastname)
+        resource.set_property('email', email)
         # Ok
         context.message = u'Account changed.'
 
@@ -138,12 +138,12 @@ class PreferencesForm(STLForm):
     }
 
 
-    def get_namespace(self, model, context):
+    def get_namespace(self, resource, context):
         root = context.root
         user = context.user
 
         # Languages
-        user_language = model.get_property('user_language')
+        user_language = resource.get_property('user_language')
         languages = [
             {'code': code, 'name': get_language_name(code),
              'is_selected': code == user_language}
@@ -152,9 +152,9 @@ class PreferencesForm(STLForm):
         return {'languages': languages}
 
 
-    def action(self, model, context, form):
+    def action(self, resource, context, form):
         value = form['user_language']
-        model.set_property('user_language', value)
+        resource.set_property('user_language', value)
         # Ok
         context.message = u'Application preferences changed.'
 
@@ -175,22 +175,22 @@ class PasswordForm(STLForm):
     }
 
 
-    def get_namespace(self, model, context):
+    def get_namespace(self, resource, context):
         user = context.user
         return {
-            'must_confirm': (model.name == user.name)
+            'must_confirm': (resource.name == user.name)
         }
 
 
-    def action(self, model, context, form):
+    def action(self, resource, context, form):
         newpass = form['newpass'].strip()
         newpass2 = form['newpass2']
 
         # Check password to confirm changes
-        is_same_user = (model.name == context.user.name)
+        is_same_user = (resource.name == context.user.name)
         if is_same_user:
             password = form['password']
-            if not model.authenticate(password):
+            if not resource.authenticate(password):
                 context.message = (
                     u"You mistyped your actual password, your account is"
                     u" not changed.")
@@ -202,15 +202,15 @@ class PasswordForm(STLForm):
             return
 
         # Clear confirmation key
-        if model.has_property('user_must_confirm'):
-            model.del_property('user_must_confirm')
+        if resource.has_property('user_must_confirm'):
+            resource.del_property('user_must_confirm')
 
         # Set password
-        model.set_password(newpass)
+        resource.set_password(newpass)
 
         # Update the cookie if we updated our own password
         if is_same_user:
-            model.set_auth_cookie(context, newpass)
+            resource.set_auth_cookie(context, newpass)
 
         # Ok
         context.message = u'Password changed.'
@@ -226,15 +226,15 @@ class TasksView(STLView):
     template = '/ui/user/tasks.xml'
 
 
-    def get_namespace(self, model, context):
+    def get_namespace(self, resource, context):
         root = context.root
         user = context.user
 
         # Build the query
-        site_root = model.get_site_root()
+        site_root = resource.get_site_root()
         q1 = EqQuery('workflow_state', 'pending')
         q2 = OrQuery(EqQuery('paths', str(site_root.get_abspath())),
-                     EqQuery('paths', str(model.get_canonical_path())))
+                     EqQuery('paths', str(resource.get_canonical_path())))
         query = AndQuery(q1, q2)
 
         # Build the list of documents
@@ -248,7 +248,7 @@ class TasksView(STLView):
             # Append
             firstview = document.get_firstview()
             documents.append(
-                {'url': '%s/;%s' % (model.get_pathto(document), firstview),
+                {'url': '%s/;%s' % (resource.get_pathto(document), firstview),
                  'title': document.get_title()})
 
         return {'documents': documents}

@@ -65,7 +65,7 @@ class NewWebSiteForm(NewInstanceForm):
     }
 
 
-    def get_namespace(self, model, context):
+    def get_namespace(self, resource, context):
         type = context.get_query_value('type')
         cls = get_object_class(type)
 
@@ -91,7 +91,7 @@ class NewWebSiteForm(NewInstanceForm):
         }
 
 
-    def action(self, model, context, form):
+    def action(self, resource, context, form):
         name = form['name']
         title = form['title']
 
@@ -107,7 +107,7 @@ class NewWebSiteForm(NewInstanceForm):
             return
 
         # Check the name is free
-        if model.has_object(name):
+        if resource.has_object(name):
             context.message = MSG_NAME_CLASH
             return
 
@@ -117,10 +117,10 @@ class NewWebSiteForm(NewInstanceForm):
             return
 
         cls = get_website_class(class_id)
-        object = cls.make_object(cls, model, name)
+        object = cls.make_object(cls, resource, name)
         # The metadata
         metadata = object.metadata
-        language = model.get_site_root().get_default_language()
+        language = resource.get_site_root().get_default_language()
         metadata.set_property('title', title, language=language)
 
         goto = './%s/;%s' % (name, object.get_firstview())
@@ -142,16 +142,16 @@ class LoginView(STLForm):
     }
 
 
-    def get_namespace(self, model, context):
-        site_root = model.get_site_root()
+    def get_namespace(self, resource, context):
+        site_root = resource.get_site_root()
 
         return {
-            'action': '%s/;login' % model.get_pathto(site_root),
+            'action': '%s/;login' % resource.get_pathto(site_root),
             'username': context.get_form_value('username'),
         }
 
 
-    def action(self, model, context, form, goto=None):
+    def action(self, resource, context, form, goto=None):
         email = form['username']
         password = form['password']
 
@@ -212,7 +212,7 @@ class LogoutView(STLView):
     template = '/ui/website/logout.xml'
 
 
-    def get_namespace(self, model, context):
+    def get_namespace(self, resource, context):
         # Log-out
         context.del_cookie('__ac')
         context.user = None
@@ -231,7 +231,7 @@ class ForgottenPasswordForm(STLForm):
     }
 
 
-    def action(self, model, context, form):
+    def action(self, resource, context, form):
         username = form['username']
         # TODO Don't generate the password, send instead a link to a form
         # where the user will be able to type his new password.
@@ -249,13 +249,13 @@ class ForgottenPasswordForm(STLForm):
             return
 
         user = results.get_documents()[0]
-        user = model.get_object('/users/%s' % user.name)
+        user = resource.get_object('/users/%s' % user.name)
 
         # Send email of confirmation
         email = user.get_property('email')
         user.send_confirmation(context, email)
 
-        handler = model.get_object('/ui/website/forgotten_password.xml')
+        handler = resource.get_object('/ui/website/forgotten_password.xml')
         return stl(handler)
 
 
@@ -272,20 +272,20 @@ class ControlPanel(IconsView):
     page_title = tab_sublabel
 
 
-    def get_namespace(self, model, context):
+    def get_namespace(self, resource, context):
         namespace = {
             'title': MSG(u'Control Panel'),
             'batch': None,
             'items': [],
         }
-        for name in model.get_subviews('control_panel'):
-            view = model.get_view(name)
+        for name in resource.get_subviews('control_panel'):
+            view = resource.get_view(name)
             if view is None:
                 continue
-            if not model.is_access_allowed(context.user, model, view):
+            if not resource.is_access_allowed(context.user, resource, view):
                 continue
             namespace['items'].append({
-                'icon': model.get_method_icon(view, size='48x48'),
+                'icon': resource.get_method_icon(view, size='48x48'),
                 'title': view.page_title,
                 'description': view.description,
                 'url': ';%s' % name})
@@ -308,19 +308,19 @@ class VHostsForm(STLForm):
     }
 
 
-    def get_namespace(self, model, context):
-        vhosts = model.get_property('vhosts')
+    def get_namespace(self, resource, context):
+        vhosts = resource.get_property('vhosts')
         return {
             'vhosts': '\n'.join(vhosts),
         }
 
 
-    def action(self, model, context, form):
+    def action(self, resource, context, form):
         vhosts = form['vhosts']
         vhosts = [ x.strip() for x in vhosts.splitlines() ]
         vhosts = [ x for x in vhosts if x ]
         vhosts = tuple(vhosts)
-        model.set_property('vhosts', vhosts)
+        resource.set_property('vhosts', vhosts)
         # Ok
         context.message = MSG_CHANGES_SAVED
 
@@ -340,17 +340,17 @@ class SecurityPolicyForm(STLForm):
     }
 
 
-    def get_namespace(self, model, context):
-        is_open = model.get_property('website_is_open')
+    def get_namespace(self, resource, context):
+        is_open = resource.get_property('website_is_open')
         return {
             'is_open': is_open,
             'is_closed': not is_open,
         }
 
 
-    def action(self, model, context, form):
+    def action(self, resource, context, form):
         value = form['website_is_open']
-        model.set_property('website_is_open', value)
+        resource.set_property('website_is_open', value)
         # Ok
         context.message = MSG_CHANGES_SAVED
 
@@ -370,16 +370,16 @@ class ContactOptionsForm(STLForm):
     }
 
 
-    def get_namespace(self, model, context):
+    def get_namespace(self, resource, context):
         # Find out the contacts
-        contacts = model.get_property('contacts')
+        contacts = resource.get_property('contacts')
 
         # Build the namespace
-        users = model.get_object('/users')
+        users = resource.get_object('/users')
         # Only members of the website are showed
         namespace = {}
         namespace['contacts'] = []
-        for username in model.get_members():
+        for username in resource.get_members():
             user = users.get_object(username)
             email = user.get_property('email')
             if not email:
@@ -396,10 +396,10 @@ class ContactOptionsForm(STLForm):
         return namespace
 
 
-    def action(self, model, context, form):
+    def action(self, resource, context, form):
         contacts = form['contacts']
         contacts = tuple(contacts)
-        model.set_property('contacts', contacts)
+        resource.set_property('contacts', contacts)
         # Ok
         context.message = MSG_CHANGES_SAVED
 
@@ -416,13 +416,13 @@ class BrokenLinks(STLView):
     template = '/ui/website/broken_links.xml'
 
 
-    def get_namespace(self, model, context):
+    def get_namespace(self, resource, context):
         root = context.root
 
         # Find out broken links
         broken = {}
         catalog = context.server.catalog
-        base = model.get_abspath()
+        base = resource.get_abspath()
         base_str = str(base)
         for link in catalog.get_unique_values('links'):
             if root.has_object(link):
@@ -461,10 +461,10 @@ class LanguagesForm(STLForm):
     tab_icon = 'languages.png'
     template = '/ui/website/languages.xml'
 
-    def get_namespace(self, model, context):
+    def get_namespace(self, resource, context):
         # List of active languages
         active = []
-        website_languages = model.get_property('website_languages')
+        website_languages = resource.get_property('website_languages')
         default_language = website_languages[0]
         for code in website_languages:
             language_name = get_language_name(code)
@@ -515,7 +515,7 @@ class RegisterForm(AutoForm):
         TextWidget('email', title=u'Email Address')]
 
 
-    def action(self, model, context, form):
+    def action(self, resource, context, form):
         # Get input data
         firstname = form['firstname'].strip()
         lastname = form['lastname'].strip()
@@ -524,7 +524,7 @@ class RegisterForm(AutoForm):
         # Do we already have a user with that email?
         root = context.root
         results = root.search(email=email)
-        users = model.get_object('users')
+        users = resource.get_object('users')
         if results.get_n_documents():
             user = results.get_documents()[0]
             user = users.get_object(user.name)
@@ -538,8 +538,8 @@ class RegisterForm(AutoForm):
             user.set_property('firstname', firstname, language='en')
             user.set_property('lastname', lastname, language='en')
             # Set the role
-            default_role = model.__roles__[0]['name']
-            model.set_user_role(user.name, default_role)
+            default_role = resource.__roles__[0]['name']
+            resource.set_user_role(user.name, default_role)
 
         # Send confirmation email
         user.send_confirmation(context, email)
@@ -565,14 +565,14 @@ class ContactForm(STLForm):
         'body': Unicode(mandatory=True)}
 
 
-    def get_namespace(self, model, context):
+    def get_namespace(self, resource, context):
         # Build the namespace
         namespace = context.build_form_namespace(self.schema)
 
         # To
-        users = model.get_object('/users')
+        users = resource.get_object('/users')
         namespace['contacts'] = []
-        for name in model.get_property('contacts'):
+        for name in resource.get_property('contacts'):
             user = users.get_object(name)
             title = user.get_title()
             namespace['contacts'].append({'name': name, 'title': title,
@@ -587,7 +587,7 @@ class ContactForm(STLForm):
         return namespace
 
 
-    def action(self, model, context, form):
+    def action(self, resource, context, form):
         # Get form values
         contact = form['to']
         from_addr = form['from'].strip()
@@ -595,13 +595,13 @@ class ContactForm(STLForm):
         body = form['body'].strip()
 
         # Find out the "to" address
-        contact = model.get_object('/users/%s' % contact)
+        contact = resource.get_object('/users/%s' % contact)
         contact_title = contact.get_title()
         contact = contact.get_property('email')
         if contact_title != contact:
             contact = (contact_title, contact)
         # Send the email
-        root = model.get_root()
+        root = resource.get_root()
         root.send_email(contact, subject, from_addr=from_addr, text=body)
         # Ok
         context.message = u'Message sent.'
@@ -614,7 +614,7 @@ class SiteSearchView(STLView):
     template = '/ui/website/search.xml'
 
 
-    def get_namespace(self, model, context):
+    def get_namespace(self, resource, context):
         root = context.root
 
         # Get and check input data
@@ -628,7 +628,7 @@ class SiteSearchView(STLView):
             query = [ OrQuery(EqQuery('title', word), EqQuery('text', word))
                       for word, kk in TextField.split(text) ]
             if query:
-                abspath = model.get_canonical_path()
+                abspath = resource.get_canonical_path()
                 q1 = EqQuery('paths', str(abspath))
                 query = AndQuery(q1, *query)
                 results = root.search(query=query)
@@ -658,7 +658,7 @@ class SiteSearchView(STLView):
                 info['title'] = object.get_title()
                 info['type'] = object.class_title.gettext()
                 info['size'] = object.get_human_size()
-                info['url'] = '%s/;%s' % (model.get_pathto(object),
+                info['url'] = '%s/;%s' % (resource.get_pathto(object),
                                           object.get_firstview())
                 info['icon'] = object.get_class_icon()
                 ns_objects.append(info)
@@ -677,7 +677,7 @@ class AboutView(STLView):
     template = '/ui/root/about.xml'
 
 
-    def get_namespace(self, model, context):
+    def get_namespace(self, resource, context):
         return  {
             'itools_version': itools.__version__,
             'ikaaro_version': ikaaro.__version__,
@@ -692,7 +692,7 @@ class CreditsView(STLView):
     template = '/ui/root/credits.xml'
 
 
-    def get_namespace(self, model, context):
+    def get_namespace(self, resource, context):
         context.styles.append('/ui/credits.css')
 
         # Build the namespace

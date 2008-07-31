@@ -227,7 +227,7 @@ class WikiPage(Text):
     def view(self, context):
         context.styles.append('/ui/wiki/style.css')
         parent = self.parent
-        here = context.object
+        here = context.resource
 
         # Decorate the links and resolve them against the published object
         document = self.get_document()
@@ -321,7 +321,7 @@ class WikiPage(Text):
             if abspath not in pages:
                 if not isinstance(object, WikiPage):
                     # Link to a file, set the URI to download it
-                    prefix = context.object.get_pathto(object)
+                    prefix = context.resource.get_pathto(object)
                     node['refuri'] = str(context.uri.resolve(prefix))
                     continue
                 # Adding the page to this one
@@ -350,7 +350,7 @@ class WikiPage(Text):
                     if refname is False:
                         continue
                     object = self.get_object(refname)
-                    prefix = context.object.get_pathto(object)
+                    prefix = context.resource.get_pathto(object)
                     node['refuri'] = str(context.uri.resolve(prefix))
                 # Now include the page
                 # A page may begin with a section or a list of sections
