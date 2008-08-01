@@ -18,8 +18,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr stl:repeat="language active_languages"
-          class="${repeat/language/even}">
+        <tr stl:repeat="language languages" class="${repeat/language/even}">
           <td>
             <input class="checkbox" type="checkbox" name="codes"
               value="${language/code}" />
@@ -37,25 +36,6 @@
         value="Change default" class="button_ok"/>
       <input type="submit" name=";remove_languages" class="button_delete"
         value="Remove" />
-    </p>
-  </form>
-
-  <br/>
-  <form action=";add_language" method="post">
-    <dl stl:if="non_active_languages">
-      <dt>
-        <label for="new_language">Add another language:</label>
-      </dt>
-      <dd>
-        <select name="code" id="new_language">
-          <option value="">Choose a language</option>
-          <option stl:repeat="language non_active_languages"
-            value="${language/code}">${language/name}</option>
-        </select>
-      </dd>
-    </dl>
-    <p>
-      <input type="submit" value="Add" class="button_ok"/>
     </p>
   </form>
 

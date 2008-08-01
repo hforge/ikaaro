@@ -450,6 +450,102 @@ class BrokenLinks(STLView):
         return namespace
 
 
+class EditLanguagesForm(STLForm):
+
+    access = 'is_allowed_to_edit'
+    template = '/ui/website/languages_edit.xml'
+    schema = {
+        'codes': String(multiple=True, mandatory=True),
+    }
+
+
+    def get_namespace(self, resource, context):
+        # List of active languages
+        languages = resource.get_property('website_languages')
+        default = languages[0]
+
+        languages = []
+        for code in languages:
+            language_name = get_language_name(code)
+            languages.append({
+                'code': code,
+                'name': language_name,
+                'isdefault': code == default})
+
+        # Ok
+        return {
+            'languages': languages,
+        }
+
+
+    def change_default_language(self, resource, context, form):
+        codes = form['codes']
+
+        # This action requires only one language to be selected
+        if len(codes) != 1:
+            context.message = MSG(
+                u'You must select one and only one language.')
+            return
+        default = codes[0]
+
+        # Change the default language
+        languages = resource.get_property('website_languages')
+        languages = [ x for x in languages if x != default ]
+        languages.insert(0, default)
+        resource.set_property('website_languages', tuple(languages))
+        # Ok
+        context.message = MSG(u'The default language has been changed.')
+
+
+    def remove_languages(self, resource, context, form):
+        codes = form['codes']
+
+        # Check the default language is not to be removed
+        languages = resource.get_property('website_languages')
+        default = languages[0]
+        if default in codes:
+            context.message = MSG(u'You can not remove the default language.')
+            return
+
+        # Remove the languages
+        languages = [ x for x in languages if x not in codes ]
+        resource.set_property('website_languages', tuple(languages))
+        # Ok
+        context.message = MSG(u'Languages removed.')
+
+
+
+class AddLanguageForm(STLForm):
+
+    access = 'is_allowed_to_edit'
+    template = '/ui/website/languages_add.xml'
+    schema = {
+        'code': String(mandatory=True),
+    }
+
+
+    def get_namespace(self, resource, context):
+        # List of non active languages
+        ws_languages = resource.get_property('website_languages')
+        languages = [
+            x for x in get_languages() if x['code'] not in ws_languages ]
+
+        # Sort by name
+        languages.sort(lambda x, y: cmp(x['name'], y['name']))
+
+        # Ok
+        return {
+            'languages': languages,
+        }
+
+
+    def add_language(self, resource, context, form):
+        ws_languages = resource.get_property('website_languages')
+        resource.set_property('website_languages', ws_languages + (code,))
+        # Ok
+        context.message = MSG(u'Language added.')
+
+
 
 class LanguagesForm(STLForm):
 
@@ -459,35 +555,7 @@ class LanguagesForm(STLForm):
     tab_label = MSG(u'Control Panel')
     tab_sublabel = page_title
     tab_icon = 'languages.png'
-    template = '/ui/website/languages.xml'
 
-    def get_namespace(self, resource, context):
-        # List of active languages
-        active = []
-        website_languages = resource.get_property('website_languages')
-        default_language = website_languages[0]
-        for code in website_languages:
-            language_name = get_language_name(code)
-            active.append({
-                'code': code,
-                'name': language_name,
-                'isdefault': code == default_language})
-
-        # List of non active languages
-        non_active = []
-        for language in get_languages():
-            code = language['code']
-            if code not in website_languages:
-                non_active.append({
-                    'code': code,
-                    'name': language['name']})
-        non_active.sort(lambda x, y: cmp(x['name'], y['name']))
-
-        # Ok
-        return {
-            'active_languages': active,
-            'non_active_languages': non_active,
-        }
 
 
 ###########################################################################
@@ -826,64 +894,7 @@ class WebSite(RoleAware, Folder):
     edit_virtual_hosts = VHostsForm()
     edit_security_policy = SecurityPolicyForm()
     edit_contact_options = ContactOptionsForm()
-
-
-    #######################################################################
-    # UI / Control Panel / Languages
-    #######################################################################
     edit_languages = LanguagesForm()
-
-
-    change_default_language__access__ = 'is_allowed_to_edit'
-    def change_default_language(self, context):
-        codes = context.get_form_values('codes')
-        if len(codes) != 1:
-            return context.come_back(
-                u'You must select one and only one language.')
-
-        website_languages = self.get_property('website_languages')
-        website_languages = [codes[0]] + [ x for x in website_languages
-                                           if x != codes[0] ]
-        self.set_property('website_languages', tuple(website_languages))
-
-        message = MSG(u'The default language has been changed.')
-        return context.come_back(message)
-
-
-    remove_languages__access__ = 'is_allowed_to_edit'
-    def remove_languages(self, context):
-        codes = context.get_form_values('codes')
-        website_languages = self.get_property('website_languages')
-        default_language = website_languages[0]
-
-        if default_language in codes:
-            return context.come_back(
-                u'You can not remove the default language.')
-
-        website_languages = [ x for x in website_languages if x not in codes ]
-        self.set_property('website_languages', tuple(website_languages))
-
-        message = MSG(u'Languages removed.')
-        return context.come_back(message)
-
-
-    add_language__access__ = 'is_allowed_to_edit'
-    def add_language(self, context):
-        code = context.get_form_value('code')
-        if not code:
-            message = MSG(u'You must choose a language')
-            return context.come_back(message)
-
-        website_languages = self.get_property('website_languages')
-        self.set_property('website_languages', website_languages + (code,))
-
-        message = MSG(u'Language added.')
-        return context.come_back(message)
-
-
-    #######################################################################
-    # UI / Control Panel / Broken links
-    #######################################################################
     broken_links = BrokenLinks()
 
 

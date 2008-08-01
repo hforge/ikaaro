@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<stl:block xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:stl="http://xml.itools.org/namespaces/stl">
+
+  <form action=";add_language" method="post" stl:if="languages">
+    <dl>
+      <dt>
+        <label for="new_language">Add another language:</label>
+      </dt>
+      <dd>
+        <select name="code" id="new_language">
+          <option value="">Choose a language</option>
+          <option stl:repeat="language languages"
+            value="${language/code}">${language/name}</option>
+        </select>
+      </dd>
+    </dl>
+    <p>
+      <input type="submit" value="Add" class="button_ok"/>
+    </p>
+  </form>
+
+</stl:block>
