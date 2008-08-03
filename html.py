@@ -32,7 +32,7 @@ from itools.web import BaseView, STLView
 from itools.xml import TEXT, START_ELEMENT, XMLError, XMLParser
 
 # Import from ikaaro
-from base import DBObject, RedirectView
+from base import DBObject
 from messages import *
 from multilingual import Multilingual
 from text import Text
@@ -202,9 +202,6 @@ class WebPage(EpozEditable, Multilingual, Text):
     def to_text(self):
         text = [ x.to_text() for x in self.get_handlers() ]
         return ' '.join(text)
-
-
-    GET= RedirectView()
 
 
     def is_empty(self):

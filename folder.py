@@ -32,7 +32,7 @@ from itools.web import get_context, BaseView, STLView, STLForm
 from itools.xapian import EqQuery, AndQuery, OrQuery, PhraseQuery
 
 # Import from ikaaro
-from base import DBObject, RedirectView
+from base import DBObject
 from datatypes import CopyCookie
 from exceptions import ConsistencyError
 from messages import *
@@ -47,18 +47,14 @@ from workflow import WorkflowAware
 ###########################################################################
 # Views
 ###########################################################################
-class IndexView(RedirectView):
+
+class IndexView(BaseView):
 
     access = True
 
     def GET(self, resource, context):
-        # Try index
-        try:
-            resource.get_object('index')
-        except LookupError:
-            return RedirectView.GET(self, resource, context)
-
         return context.uri.resolve2('index')
+
 
 
 class AddView(IconsView):
@@ -758,6 +754,7 @@ class Folder(DBObject):
     # User interface
     #######################################################################
     def get_view(self, name, **kw):
+        # Add resource form
         type = kw.get('type')
         if name == 'new_resource' and type is not None:
             cls = get_object_class(type)
@@ -765,6 +762,12 @@ class Folder(DBObject):
             if isinstance(view, BaseView):
                 return view
 #            raise ValueError, 'unknown type "%s"' % type
+
+        # Index page
+        if name is None and self.has_object('index'):
+            return self.GET
+
+        # Default
         return DBObject.get_view(self, name, **kw)
 
 

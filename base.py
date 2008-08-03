@@ -104,22 +104,6 @@ class NewObjectForm(NewInstanceForm):
 
 
 
-class RedirectView(BaseView):
-
-    access = 'is_allowed_to_view'
-
-
-    def GET(self, resource, context):
-        # Check access
-        method = resource.get_firstview()
-        if method is None:
-            raise Forbidden
-
-        # Redirect
-        return context.uri.resolve2(';%s' % method)
-
-
-
 class MetadataForm(STLForm):
 
     access = 'is_allowed_to_edit'
@@ -369,7 +353,14 @@ class Node(BaseNode):
     ########################################################################
     # UI
     ########################################################################
-    GET = RedirectView()
+    def get_view(self, name, **kw):
+        # Default
+        if name is None:
+            name = self.get_firstview()
+            if name is None:
+                raise Forbidden
+
+        return BaseNode.get_view(self, name, **kw)
 
 
     ########################################################################

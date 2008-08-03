@@ -23,12 +23,13 @@ from string import Template
 
 # Import from itools
 from itools import get_abspath
-from itools.gettext import MSG
-from itools.i18n import has_language, get_language_name
-from itools.uri import decode_query
 from itools.datatypes import URI
+from itools.gettext import MSG
 from itools.handlers import File, Folder, Database
+from itools.http import NotFound
+from itools.i18n import has_language, get_language_name
 from itools.stl import stl
+from itools.uri import decode_query
 from itools.web import get_context, BaseView
 from itools.xml import XMLParser, XMLFile
 
@@ -63,7 +64,12 @@ class UIFile(Node, File):
         return File.clone(self, cls=cls, exclude=exclude)
 
 
-    GET = FileGET()
+    download = FileGET()
+
+    def get_view(self, name, **kw):
+        if name is None:
+            return self.download
+        raise NotFound
 
 
 
