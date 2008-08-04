@@ -429,12 +429,12 @@ def _tree(node, root, depth, active_node, allow, deny, user, width):
     namespace['title'] = node.get_title()
 
     # The href
-    firstview = node.get_firstview()
-    if firstview is None:
+    view = node.get_view(None)
+    if view is None:
         namespace['href'] = None
     else:
-        path = active_node.get_pathto(node)
-        namespace['href'] = '%s/;%s' % (path, firstview)
+        path = root.get_pathto(node)
+        namespace['href'] = '/' + str(path)
 
     # The CSS style
     namespace['class'] = ''

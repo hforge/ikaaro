@@ -26,7 +26,7 @@ from itools import get_abspath
 from itools.datatypes import URI
 from itools.gettext import MSG
 from itools.handlers import File, Folder, Database
-from itools.http import NotFound
+from itools.http import NotFound, Forbidden
 from itools.i18n import has_language, get_language_name
 from itools.stl import stl
 from itools.uri import decode_query
@@ -197,8 +197,10 @@ class Skin(UIFolder):
             return None
 
         base = here.get_context_menu_base()
-        prefix = here.get_pathto(base)
+        prefix = context.site_root.get_pathto(base)
+        prefix = '/' + str(prefix)
 
+        # Build the menu
         menu = []
         for name, view in base.get_views():
             # Find out the title
@@ -219,43 +221,6 @@ class Skin(UIFolder):
 
         return {'title': base.class_title,
                 'content': build_menu(menu)}
-
-
-    def get_content_menu(self, context):
-        here = context.resource
-        user = context.user
-
-        options = []
-        # Parent
-        parent = here.parent
-        if parent is not None:
-            firstview = parent.get_firstview()
-            options.append({'href': '../;%s' % (firstview),
-                            'src': None,
-                            'title': '<<',
-                            'class': '',
-                            'items': []})
-
-        # Content
-        size = 0
-        if isinstance(here, DBFolder):
-            for object in here.search_objects():
-                ac = object.get_access_control()
-                if not ac.is_allowed_to_view(user, object):
-                    continue
-                firstview = object.get_firstview()
-                src = object.get_class_icon()
-                options.append({'href': '%s/;%s' % (object.name, firstview),
-                                'src': src,
-                                'title': object.get_title(),
-                                'class': '',
-                                'items': []})
-                size += 1
-
-        menu = build_menu(options)
-        title = Template(u'Content ($size)').substitute(size=size)
-
-        return {'title': title, 'content': menu}
 
 
     def get_content_language_menu(self, context):
@@ -305,9 +270,6 @@ class Skin(UIFolder):
             # Navigation
             menu = self.get_navigation_menu(context)
             menus.append(menu)
-            # Content
-            #menu = self.get_content_menu(context)
-            #menus.append(menu)
 
         return menus
 
@@ -318,37 +280,32 @@ class Skin(UIFolder):
     def get_breadcrumb(self, context):
         """Return a list of dicts [{name, url}...]
         """
-        here = context.resource
         root = context.site_root
 
-        # Build the list of handlers that make up the breadcrumb
-        handlers = [root]
-        for segment in context.uri.path:
-            name = segment.name
-            if name:
-                try:
-                    handler = handlers[-1].get_object(name)
-                except LookupError:
-                    continue
-                handlers.append(handler)
+        # Initialize the breadcrumb with the root resource
+        path = '/'
+        title = root.get_title()
+        breadcrumb = [{
+            'url': path,
+            'name': title,
+            'short_name': reduce_string(title, 15, 30),
+            }]
 
-        #  Build the namespace
-        breadcrumb = []
-        for handler in handlers:
-            if not isinstance(handler, Node):
+        # Complete the breadcrumb
+        resource = root
+        for name in context.uri.path:
+            path = path + ('%s/' % name)
+            try:
+                resource = resource.get_object(name)
+            except LookupError:
                 break
-            # The link
-            view = handler.get_firstview()
-            if view is None:
-                url = None
-            else:
-                url = '%s/;%s' % (here.get_pathto(handler), view)
-            # The title
-            title = handler.get_title()
-            short_title = reduce_string(title, 15, 30)
-            # Name
-            breadcrumb.append({'name': title, 'short_name': short_title,
-                               'url': url})
+            # Append
+            title = resource.get_title()
+            breadcrumb.append({
+                'url': path,
+                'name': title,
+                'short_name': reduce_string(title, 15, 30),
+            })
 
         return breadcrumb
 
@@ -452,7 +409,7 @@ class Skin(UIFolder):
             joinisopen = root.get_property('website_is_open')
             return {'info': None, 'joinisopen': joinisopen}
 
-        home = '/users/%s/;%s' % (user.name, user.get_firstview())
+        home = '/users/%s' % user.name
         info = {'name': user.name, 'title': user.get_title(),
                 'home': home}
         return {'info': info, 'joinisopen': False}
