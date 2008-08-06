@@ -241,7 +241,7 @@ class EditRecordForm(AutoForm):
 
 
     def action(self, resource, context):
-        id = context.get_form_value('id', None, type=Integer)
+        id = context.get_form_value('id', type=Integer, default=None)
         if id is None:
             return context.come_back(MSG_MISSING_OR_INVALID)
 

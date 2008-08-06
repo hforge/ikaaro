@@ -943,7 +943,7 @@ class DBObject(CatalogAware, Node):
                                 '/ui/tiny_mce/javascript.js']
         namespace['css'] = cls.get_rte_css(context)
         # Dressable
-        dress_name = context.get_form_value('dress_name', 'index')
+        dress_name = context.get_form_value('dress_name', default='index')
         namespace['dress_name'] = dress_name
         # TODO language
 
