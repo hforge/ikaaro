@@ -123,7 +123,7 @@ class NewWebSiteForm(NewInstanceForm):
         language = resource.get_site_root().get_default_language()
         metadata.set_property('title', title, language=language)
 
-        goto = './%s/;%s' % (name, object.get_firstview())
+        goto = './%s/' % name
         return context.come_back(MSG_NEW_RESOURCE, goto=goto)
 
 
@@ -726,8 +726,7 @@ class SiteSearchView(STLView):
                 info['title'] = object.get_title()
                 info['type'] = object.class_title.gettext()
                 info['size'] = object.get_human_size()
-                info['url'] = '%s/;%s' % (resource.get_pathto(object),
-                                          object.get_firstview())
+                info['url'] = '%s/' % resource.get_pathto(object)
                 info['icon'] = object.get_class_icon()
                 ns_objects.append(info)
             namespace['objects'] = ns_objects

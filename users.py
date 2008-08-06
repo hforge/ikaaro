@@ -246,9 +246,8 @@ class TasksView(STLView):
             if not ac.is_allowed_to_view(user, document):
                 continue
             # Append
-            firstview = document.get_firstview()
             documents.append(
-                {'url': '%s/;%s' % (resource.get_pathto(document), firstview),
+                {'url': '%s/' % resource.get_pathto(document),
                  'title': document.get_title()})
 
         return {'documents': documents}
@@ -487,9 +486,8 @@ class User(AccessControl, Folder):
         # Set cookie
         self.set_auth_cookie(context, password)
 
-        message = u'Operation successful ! Welcome.'
-        goto = "./;%s" % self.get_firstview()
-        return context.come_back(message, goto=goto)
+        message = u'Operation successful! Welcome.'
+        return context.come_back(message, goto='./')
 
 
     #######################################################################

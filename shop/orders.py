@@ -365,8 +365,8 @@ class Order(Folder, WorkflowAware):
         cart.clear()
 
         # Come back
-        goto = './;%s' % container.get_firstview()
-        return context.come_back(u'Order created !', goto=goto)
+        message = u'Order created.'
+        return context.come_back(message, goto='./')
 
 
     def get_catalog_fields(self):

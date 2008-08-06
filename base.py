@@ -99,7 +99,7 @@ class NewObjectForm(NewInstanceForm):
         language = resource.get_content_language(context)
         metadata.set_property('title', title, language=language)
 
-        goto = './%s/;%s' % (name, object.get_firstview())
+        goto = './%s/' % name
         return context.come_back(MSG_NEW_RESOURCE, goto=goto)
 
 
@@ -786,11 +786,11 @@ class DBObject(CatalogAware, Node):
         line['id'] = id
         title = object.get_title()
         line['title_or_name'] = title
-        firstview = object.get_firstview()
-        if firstview is None:
+        view = object.get_view(None)
+        if view is None:
             href = None
         else:
-            href = '%s/;%s' % (id, firstview)
+            href = '%s/' % id
         line['name'] = (id, href)
         line['format'] = object.class_title.gettext()
         line['title'] = object.get_property('title')

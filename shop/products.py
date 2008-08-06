@@ -106,8 +106,8 @@ class Product(Folder):
         for property in cls.product_fields:
             metadata.set_property(property, form[property])
 
-        goto = './;%s' % container.get_firstview()
-        return context.come_back(u'Product created!', goto=goto)
+        message = u'Product created!'
+        return context.come_back(message, goto='./')
 
 
     def get_context_menu_base(self):

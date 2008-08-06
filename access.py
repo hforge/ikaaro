@@ -266,8 +266,7 @@ class NewUserForm(STLForm):
         if context.has_form_value('add_and_return'):
             return
 
-        goto = '/users/%s/;%s' % (user.name, user.get_firstview())
-        goto = get_reference(goto)
+        goto = '/users/%s/' % user.name
         message = MSG(u'User added.')
         return context.come_back(message, goto=goto)
 

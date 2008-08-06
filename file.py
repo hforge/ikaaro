@@ -113,7 +113,7 @@ class NewFileForm(NewInstanceForm):
         language = resource.get_content_language(context)
         object.metadata.set_property('title', title, language=language)
 
-        goto = './%s/;%s' % (name, object.get_firstview())
+        goto = './%s/' % name
         return context.come_back(MSG_NEW_RESOURCE, goto=goto)
 
 
@@ -233,9 +233,8 @@ class ExternalEdit(BaseView):
                     r.append('lock-token:%s' % lock.key)
                     r.append('borrow_lock:1')
                 else:
-                    goto = ';%s' % resource.get_firstview()
                     msg = u'This page is lock by another user'
-                    return context.come_back(message=msg, goto=goto)
+                    return context.come_back(message=msg, goto='.')
 
         if request.has_header('Authorization'):
             r.append('auth:%s' % request.get_header('Authorization'))
