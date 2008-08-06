@@ -34,11 +34,12 @@ a img { border: 0; }
 }
 
 #header {
-  margin-bottom: 10px;
-  padding: 25px 10px 10px 210px;
-  color: #fff;
+  text-align: right;
   background: #729fcf url(images/logo.png) left bottom no-repeat;
+  color: #fff;
   font-size: 1.1em;
+  margin-bottom: 10px;
+  padding: 32px 10px 3px 25px;
 }
 
 #header a {
@@ -171,7 +172,7 @@ a img { border: 0; }
 }
 
 /**************************************************************************
- * 
+ *
  * ***********************************************************************/
 #message {
   margin: 3px;
@@ -216,6 +217,10 @@ a img { border: 0; }
 #center {
   padding: 5px 8px 0px 5px;
   width: 776px;
+}
+
+#header_right {
+  background: #c17d11;
 }
 
 #right {

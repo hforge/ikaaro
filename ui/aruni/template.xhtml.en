@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" 
+<html xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://xml.itools.org/namespaces/stl">
   <head>
     <title>${title}</title>
@@ -15,16 +15,16 @@
       href="${style}" />
 
     <!-- JavaScript -->
-    <script type="text/javascript" stl:repeat="script scripts" src="${script}" 
+    <script type="text/javascript" stl:repeat="script scripts" src="${script}"
       />
 
   </head>
   <body>
     <table id="layout" class="${layout_class}" border="0" cellpadding="0"
-      cellspacing="0" align="center">
+      cellspacing="8" align="center">
       <thead>
         <tr>
-          <td id="header" colspan="2">
+          <td id="header">
             <stl:block stl:if="not user/info">
               <a href="/;login" id="top_menu_login">Log in</a>
               <a href="/;register" id="top_menu_register"
@@ -37,11 +37,13 @@
             <a href="/;site_search" id="top_menu_search">Search</a>
             <a href="/;contact" id="top_menu_contact">Contact</a>
           </td>
+          <td id="header_right" stl:if="user/info">
+          </td>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td id="center" class="column" valign="top">
+          <td id="center" valign="top">
             <div id="maintitle">
               <img alt="" height="48" width="48" src="${metadata/icon}"
                 style="float: left; margin-right: 9px" stl:if="metadata/icon" />
@@ -95,19 +97,24 @@
               </div>
             </div>
           </td>
-          <td id="right" class="column" valign="top" stl:if="user/info">
+          <td id="right" valign="top" stl:if="user/info">
             <div class="navigation" stl:repeat="menu left_menus">
               <label>${menu/title}</label>
               ${menu/content}
             </div>
           </td>
         </tr>
+        <tr>
+          <td>
+            <div id="footer">
+              <a href="/;about">About</a>
+              <a href="/;credits">Credits</a>
+              <a href="/;license">License</a>
+            </div>
+          </td>
+          <td stl:if="user/info"></td>
+        </tr>
       </tbody>
     </table>
-    <div id="footer">
-      <a href="/;about">About</a>
-      <a href="/;credits">Credits</a>
-      <a href="/;license">License</a>
-    </div>
   </body>
 </html>
