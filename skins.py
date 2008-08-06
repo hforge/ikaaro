@@ -317,68 +317,80 @@ class Skin(UIFolder):
         """Return tabs and subtabs as a dict {tabs, subtabs} of list of dicts
         [{name, label, active, style}...].
         """
+        def resolve(context, view_name):
+            # Case 1: /a/b/;view
+            if context.view_name is not None:
+                return ';%s' % view_name
+            # Case 2: /
+            if not context.uri.path:
+                return ';%s' % view_name
+            # Case 3: /a/b/
+            if context.uri.path.endswith_slash:
+                return ';%s' % view_name
+            # Case 4: /a/b
+            return '%s/;%s' % (context.uri.path[-1], view_name)
+
         # Get request, path, etc...
-        request = context.request
-        user = context.user
         here = context.resource
         if here is None:
             return []
 
         # Get access control
+        user = context.user
         ac = here.get_access_control()
 
         # Tabs
-        subviews = here.get_subviews(context.view_name)
-
         tabs = []
-        for name, view in here.get_views():
+        for link, view in here.get_views():
+            active = False
+
             # From method?param1=value1&param2=value2&...
             # we separate method and arguments, then we get a dict with
             # the arguments and the subview active state
-            if '?' in name:
-                subname, args = name.split('?')
+            if '?' in link:
+                name, args = link.split('?')
                 args = decode_query(args)
-                active = subname == context.view_name or subname in subviews
-                for key, value in args.items():
-                    request_param = request.get_parameter(key)
-                    if request_param != value:
-                        active = False
-                        break
             else:
-                args = {}
-                subname = name
-                active = name == context.view_name or name in subviews
+                name, args = link, {}
 
-            # Add the menu
-            tabs.append({'id': 'tab_%s' % subname,
-                         'name': ';%s' % subname,
-                         'label': view.tab_label,
-                         'icon': here.get_method_icon(view, **args),
-                         'active': active,
-                         'class': active and 'active' or None})
+            # Active
+            if context.view == here.get_view(name, **args):
+                active = True
 
             # Subtabs
             subtabs = []
-            for subview_link in here.get_subviews(name):
+            for subview_link in here.get_subviews(link):
                 # same thing, separate method and arguments
                 if '?' in subview_link:
-                    subview_name, args = subview_link.split('?')
-                    args = decode_query(args)
+                    subview_name, subview_args = subview_link.split('?')
+                    subview_args = decode_query(subview_args)
                 else:
-                    subview_name = subview_link
-                    args = {}
+                    subview_name, subview_args = subview_link, {}
 
-                subview = here.get_view(subview_name, **args)
+                subview = here.get_view(subview_name, **subview_args)
                 if ac.is_access_allowed(user, here, subview):
                     sublabel = subview.tab_sublabel
                     if callable(sublabel):
-                        sublabel = sublabel(**args)
+                        sublabel = sublabel(**subview_args)
 
                     subtabs.append({
-                        'name': ';%s' % subview_link,
-                        'icon': here.get_method_icon(subview, **args),
+                        'name': resolve(context, subview_link),
+                        'icon': here.get_method_icon(subview, **subview_args),
                         'label': sublabel})
-            tabs[-1]['options'] = subtabs
+
+                    # Active
+                    if context.view == subview:
+                        active = True
+
+            # Add the menu
+            tabs.append({
+                'id': 'tab_%s' % name,
+                'name': resolve(context, link),
+                'label': view.tab_label,
+                'icon': here.get_method_icon(view, **args),
+                'active': active,
+                'class': active and 'active' or None,
+                'options': subtabs})
 
         return tabs
 
