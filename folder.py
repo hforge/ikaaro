@@ -753,6 +753,14 @@ class Folder(DBObject):
     #######################################################################
     # User interface
     #######################################################################
+    def get_default_view_name(self):
+        # Index page
+        if self.has_object('index'):
+            return 'view'
+
+        return DBObject.get_default_view_name(self)
+
+
     def get_view(self, name, **kw):
         # Add resource form
         type = kw.get('type')
@@ -761,11 +769,6 @@ class Folder(DBObject):
             view = cls.new_instance
             if isinstance(view, BaseView):
                 return view
-#            raise ValueError, 'unknown type "%s"' % type
-
-        # Index page
-        if name is None and self.has_object('index'):
-            return self.GET
 
         # Default
         return DBObject.get_view(self, name, **kw)
@@ -786,7 +789,7 @@ class Folder(DBObject):
         return self
 
 
-    GET = IndexView()
+    view = IndexView()
     new_resource = AddView()
     browse_content = BrowseContent()
     rename = RenameForm()

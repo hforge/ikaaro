@@ -341,8 +341,6 @@ class AddLinkForm(STLForm):
 
 
 
-
-
 ###########################################################################
 # Model
 ###########################################################################
@@ -359,18 +357,11 @@ class Node(BaseNode):
         return object
 
 
-    def get_view(self, name, **kw):
-        # Default
-        if name is None:
-            views = self.get_views()
-            views = list(views)
-            if not views:
-                raise Forbidden
-
-            name, view = views[0]
-            return view
-
-        return BaseNode.get_view(self, name, **kw)
+    def get_default_view_name(self):
+        views = self.class_views
+        if not views:
+            return None
+        return views[0][0]
 
 
     ########################################################################
