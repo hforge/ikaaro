@@ -350,28 +350,27 @@ class Node(BaseNode):
 
     class_views = []
 
-    ########################################################################
-    # UI
-    ########################################################################
-    def get_view(self, name, **kw):
-        # Default
-        if name is None:
-            name = self.get_firstview()
-            if name is None:
-                raise Forbidden
 
-        return BaseNode.get_view(self, name, **kw)
-
-
-    ########################################################################
-    # Tree
-    ########################################################################
     def get_site_root(self):
         from website import WebSite
         object = self
         while not isinstance(object, WebSite):
             object = object.parent
         return object
+
+
+    def get_view(self, name, **kw):
+        # Default
+        if name is None:
+            views = self.get_views()
+            views = list(views)
+            if not views:
+                raise Forbidden
+
+            name, view = views[0]
+            return view
+
+        return BaseNode.get_view(self, name, **kw)
 
 
     ########################################################################
@@ -422,15 +421,6 @@ class Node(BaseNode):
     ########################################################################
     # User interface
     ########################################################################
-    def get_firstview(self):
-        """Returns the first allowed object view url, or None if there
-        aren't.
-        """
-        for name, view in self.get_views():
-            return name
-        return None
-
-
     def get_views(self):
         user = get_context().user
         ac = self.get_access_control()

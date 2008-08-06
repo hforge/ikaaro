@@ -324,14 +324,6 @@ class Table(File):
     record_class = Record
     form = []
 
-    def GET(self, context):
-        method = self.get_firstview()
-        # Check access
-        if method is None:
-            raise Forbidden
-        # Redirect
-        return context.uri.resolve2(';%s' % method)
-
 
     @classmethod
     def get_form(cls):

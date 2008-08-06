@@ -162,7 +162,6 @@ def get_target_info(context, object):
     - a list made with the target path and if any the target object
     - the target info '_top' or '_blank' or ...
     """
-    new_window = '_top'
     if object.has_target() is False:
         return None, None
 
@@ -172,25 +171,22 @@ def get_target_info(context, object):
 
     target_rpath = Path(target)
 
-    # split relative target path and target method if any
-    target_method = None
-    endswithparams = target_rpath[-1].params
-    if endswithparams:
+    # Split relative target path and target method if any
+    if target_rpath[-1].params:
         target_method = target_rpath.pop()
+    else:
+        target_method = None
 
     # get the real target object
     site_root = context.resource.get_site_root()
     try:
         o = object.get_object(target_rpath)
-        if target_method is None:
-            target_method = ';%s' % o.get_firstview()
-        target_path = site_root.get_pathto(o)
     except LookupError:
         return None, None
 
     # make a url list with the target object
-    target_url = [seg.name for seg in target_path if seg.name]
-    if target_method:
+    target_url = [ x.name for x in site_root.get_pathto(o) if x.name ]
+    if target_method is not None:
         target_url.append(target_method)
 
     return target_url, new_window
