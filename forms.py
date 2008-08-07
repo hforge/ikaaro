@@ -368,7 +368,7 @@ class AutoForm(STLForm):
         namespace['required_msg'] = required_msg
         namespace['first_widget'] = widgets[0].name
         namespace['action'] = self.form_action
-        namespace['submit_value'] = self.submit_value.gettext()
+        namespace['submit_value'] = self.submit_value
         namespace['submit_class'] = self.submit_class
         namespace['hiddens'] = form_hidden
         # Build widgets namespace

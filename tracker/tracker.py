@@ -183,7 +183,7 @@ class SelectTableView(TableView):
             records.append({})
             records[-1]['checkbox'] = True
             # Fields
-            records[-1]['id'] = id, ';edit_record_form?id=%s' % id
+            records[-1]['id'] = id, ';edit_record?id=%s' % id
             for field, field_title in fields[1:-1]:
                 value = handler.get_value(record, field)
                 datatype = handler.get_datatype(field)
@@ -1070,7 +1070,7 @@ class OrderedSelectTable(SelectTable):
     class_handler = OrderedSelectTableTable
 
     form = [TextWidget('title', title=u'Title'),
-            TextWidget('rank', title=u'rank', mandatory=True)]
+            TextWidget('rank', title=u'Rank', mandatory=True)]
 
 
 

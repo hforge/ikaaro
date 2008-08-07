@@ -29,7 +29,7 @@ from itools.datatypes import Integer, Enumerate, Date, Tokens
 from itools.gettext import MSG
 from itools.http import Forbidden
 from itools.stl import stl
-from itools.web import FormError, STLView
+from itools.web import FormError, STLView, get_context
 
 # Import from ikaaro
 from base import DBObject
@@ -223,10 +223,23 @@ class AddRecordForm(AutoForm):
 class EditRecordForm(AutoForm):
 
     access = 'is_allowed_to_edit'
-
     form_action = ';edit_record'
-    submit_value = u'Change'
+    form_title = MSG(u'Edit record ${id}')
+    submit_value = MSG(u'Change')
     submit_class = 'button_ok'
+
+
+    def get_schema(self, resource):
+        return resource.get_handler().schema
+
+
+    def get_widgets(self, resource):
+        return resource.get_form()
+
+
+    def get_form_title(self):
+        id = get_context().get_form_value('id')
+        return self.form_title.gettext(id=id)
 
 
     def edit_record_form(self, context):
