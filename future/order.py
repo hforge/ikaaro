@@ -111,7 +111,7 @@ class OrderAware(object):
             for name in names:
                 object = self.get_object(name)
                 ns = {
-                    'name': object.name,
+                    'name': str(name),
                     'title': object.get_property('title'),
                     'workflow_state': '',
                     'is_orderaware': isinstance(object, OrderAware),
