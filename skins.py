@@ -37,7 +37,7 @@ from itools.xml import XMLParser, XMLFile
 from base import Node, DBObject
 from folder import Folder as DBFolder
 from utils import reduce_string
-from widgets import tree, build_menu
+from widgets import build_menu
 
 
 
@@ -179,18 +179,6 @@ class Skin(UIFolder):
                 'content': build_menu(menu)}
 
 
-    def get_navigation_menu(self, context):
-        """Build the namespace for the navigation menu.
-        """
-        from tracker import Issue
-
-        menu = tree(context.site_root, active_node=context.resource,
-                    allow=DBFolder, deny=Issue, user=context.user)
-        return {
-            'title': MSG(u'Navigation'),
-            'content': menu}
-
-
     def get_context_menu(self, context):
         here = context.resource
         if not isinstance(here, DBObject):
@@ -266,9 +254,6 @@ class Skin(UIFolder):
         # Content language
         if user is not None:
             menu = self.get_content_language_menu(context)
-            menus.append(menu)
-            # Navigation
-            menu = self.get_navigation_menu(context)
             menus.append(menu)
 
         return menus
