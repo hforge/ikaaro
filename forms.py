@@ -326,15 +326,9 @@ class AutoForm(STLForm):
 
       [TextWidget('firstname', title=u'Firstname'),
        TextWidget('lastname', title=u'Lastname')]
-
-    And form_action:
-
-      {'action': ';register', 'name': 'register',
-       'value': 'Register', 'class': 'button_ok'}
     """
 
     widgets = []
-    form_hidden = []
     required_msg = None
     method = None
     template = '/ui/auto_form.xml'
@@ -349,7 +343,6 @@ class AutoForm(STLForm):
         # Local Variables
         fields = self.get_schema(resource)
         widgets = self.get_widgets(resource)
-        form_hidden = self.form_hidden
         method = self.method
 
         # Set and translate the required_msg
@@ -367,10 +360,9 @@ class AutoForm(STLForm):
         namespace['title'] = self.get_form_title()
         namespace['required_msg'] = required_msg
         namespace['first_widget'] = widgets[0].name
-        namespace['action'] = self.form_action
+        namespace['action'] = context.uri
         namespace['submit_value'] = self.submit_value
         namespace['submit_class'] = self.submit_class
-        namespace['hiddens'] = form_hidden
         # Build widgets namespace
         has_required_widget = False
         widgets_namespace = context.build_form_namespace(fields, method=method)

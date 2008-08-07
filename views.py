@@ -82,8 +82,9 @@ class BrowseForm(STLForm):
     search_fields = []
 
 
-    def search_form(self, resource, query):
+    def search_form(self, resource, context):
         # Get values from the query
+        query = context.query
         field = query['search_field']
         term = query['search_term']
 
@@ -102,12 +103,16 @@ class BrowseForm(STLForm):
 
 
     def GET(self, resource, context):
-        query = self.get_query(context)
+        # Check there is a template defined
+        if self.template is None:
+            raise NotImplementedError
 
-        # Batch / Table
-        namespace = self.get_namespace(resource, context, query)
-        # Search Form
-        namespace['search'] = self.search_form(resource, query)
+        # Load the query
+        context.query = self.get_query(context)
+
+        # Get the namespace
+        namespace = self.get_namespace(resource, context)
+        namespace['search'] = self.search_form(resource, context)
 
         # Ok
         template = resource.get_object(self.template)

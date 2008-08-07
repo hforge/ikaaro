@@ -47,17 +47,15 @@ class ViewCSV(BrowseForm):
     }
 
 
-    def get_namespace(self, resource, context, query):
-        namespace = {}
-
+    def get_namespace(self, resource, context):
         # The input parameters
+        query = context.query
         start = query['batchstart']
         size = 50
 
         # The batch
         handler = resource.handler
         total = handler.get_nrows()
-        namespace['batch'] = batch(context.uri, start, size, total)
 
         # The table
         actions = []
@@ -105,10 +103,10 @@ class ViewCSV(BrowseForm):
         if sortby:
             rows.sort(key=itemgetter(sortby[0]), reverse=(sortorder=='down'))
 
-        namespace['table'] = widgets.table(columns, rows, sortby, sortorder,
-                                           actions)
-
-        return namespace
+        return {
+            'batch': batch(context.uri, start, size, total),
+            'table': widgets.table(columns, rows, sortby, sortorder, actions),
+        }
 
 
     def action(self, resource, context, form):

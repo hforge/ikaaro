@@ -568,7 +568,6 @@ class RegisterForm(AutoForm):
 
 
     form_title = MSG(u'Registration')
-    form_action = ';register'
     submit_value = MSG(u'Register')
     submit_class = 'button_ok'
 

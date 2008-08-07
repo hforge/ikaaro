@@ -125,8 +125,9 @@ class BrowseContent(BrowseForm):
     }
 
 
-    def search_form(self, resource, query):
+    def search_form(self, resource, context):
         # Get values from the query
+        query = context.query
         field = query['search_field']
         term = query['search_term']
 
@@ -147,8 +148,9 @@ class BrowseContent(BrowseForm):
         return stl(template, namespace)
 
 
-    def get_namespace(self, resource, context, query, *args):
+    def get_namespace(self, resource, context, *args):
         # Get the parameters from the query
+        query = context.query
         search_term = query['search_term'].strip()
         field = query['search_field']
         sortby = query['sortby']
@@ -486,10 +488,9 @@ class LastChanges(BrowseContent):
     }
 
 
-
-    def get_namespace(self, resource, context, query):
+    def get_namespace(self, resource, context):
         search_query = EqQuery('is_version_aware', '1')
-        return BrowseContent.get_namespace(self, resource, context, query,
+        return BrowseContent.get_namespace(self, resource, context,
                                            search_query)
 
 

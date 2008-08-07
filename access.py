@@ -64,10 +64,9 @@ class PermissionsForm(BrowseForm):
         ('firstname', MSG(u'First Name'))]
 
 
-    def get_namespace(self, resource, context, query):
-        namespace = {}
-
+    def get_namespace(self, resource, context):
         # Get values from the request
+        query = context.query
         sortby = query['sortby']
         sortorder = query['sortorder']
         start = query['batchstart']
@@ -144,11 +143,11 @@ class PermissionsForm(BrowseForm):
             ('permissions_del_members', MSG(u'Delete'),
              'button_delete', None)]
 
-        namespace['batch'] = widgets.batch(context.uri, start, size, total)
-        namespace['table'] = widgets.table(columns, members, sortby, sortorder,
-                                           actions)
-
-        return namespace
+        return {
+            'batch': widgets.batch(context.uri, start, size, total),
+            'table': widgets.table(columns, members, sortby, sortorder,
+                                   actions)
+        }
 
 
     def permissions_del_members(self, resource, context, form):

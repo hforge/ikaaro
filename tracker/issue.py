@@ -19,7 +19,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
-from datetime import datetime, time
+from datetime import date, datetime, time
 from operator import itemgetter
 from re import compile
 from string import Template
@@ -230,8 +230,8 @@ class EditResourcesForm(STLForm):
         }
 
 
-    def get_namespace(self, resource, context, query):
-        from datetime import date
+    def get_namespace(self, resource, context):
+        query = context.query
         resource = query.get('resource') or ''
         dtstart = query.get('dtstart', date.today())
         dtend = query.get('dtend', date.today())
@@ -242,7 +242,8 @@ class EditResourcesForm(STLForm):
 
         namespace = {}
         # New assignment
-        namespace['issue'] = {'number': resource.name, 'title': resource.get_title()}
+        namespace['issue'] = {'number': resource.name,
+                              'title': resource.get_title()}
         namespace['users'] = resource.parent.get_members_namespace(resource)
         namespace['dtstart'] = dtstart
         namespace['tstart'] = tstart
@@ -250,7 +251,7 @@ class EditResourcesForm(STLForm):
         namespace['tend'] = tend
         namespace['comment'] = comment
         namespace['time_select'] = resource.get_time_select('time_select',
-                                                         time_select)
+                                                            time_select)
 
         # Existent
         resources = resource.get_resources().handler

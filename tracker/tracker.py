@@ -122,12 +122,16 @@ class AddIssueForm(STLForm):
         return namespace
 
 
-    def remove(self, resource, context, form):
+    def action(self, resource, context, form):
         # Add
         id = resource.get_new_id()
         issue = Issue.make_object(Issue, resource, id)
         issue._add_record(context, form)
-        context.message = MSG(u'New issue added.')
+
+        # Ok
+        message = MSG(u'New issue added.')
+        goto = './%s/' % id
+        return context.come_back(message, goto=goto)
 
 
 
@@ -137,20 +141,15 @@ class SelectTableView(TableView):
         return resource.form
 
 
-    def get_namespace(self, resource, context, query):
-        namespace = {}
-
+    def get_namespace(self, resource, context):
         # The input parameters
+        query = context.query
         start = query['batchstart']
         size = 30
-
-        # Search
-        namespace['search'] = None
 
         # The batch
         handler = resource.handler
         total = handler.get_n_records()
-        namespace['batch'] = batch(context.uri, start, size, total)
 
         # The table
         actions = []
@@ -233,8 +232,11 @@ class SelectTableView(TableView):
                     else:
                         record[field] = record[field][0]
 
-        namespace['table'] = table(fields, records, sortby, sortorder, actions)
-        return namespace
+        return {
+            'search': None,
+            'batch': batch(context.uri, start, size, total),
+            'table': table(fields, records, sortby, sortorder, actions),
+        }
 
 
 
@@ -251,21 +253,22 @@ class SearchForm(BrowseContent):
 
 
     def GET(self, resource, context):
-        query = self.get_query(context)
+        context.query = self.get_query(context)
         keys = context.get_form_keys()
 
+        # Proxy (like we do in forms)
         if ';go_to_issue' in keys:
-            return self.go_to_issue(resource, context, query)
-
+            return self.go_to_issue(resource, context)
         if ';search' in keys:
-            return self.search(resource, context, query)
+            return self.search(resource, context)
 
-        namespace = self.get_namespace(resource, context, query)
+        # Default view
+        namespace = self.get_namespace(resource, context)
         handler = resource.get_object(self.template)
         return stl(handler, namespace)
 
 
-    def get_namespace(self, resource, context, query):
+    def get_namespace(self, resource, context):
         # Set Style
         context.styles.append('/ui/tracker/tracker.css')
 
@@ -279,6 +282,7 @@ class SearchForm(BrowseContent):
         namespace['stored_searches'] = stored_searches
 
         # Search Form
+        query = context.query
         search_name = query['search_name']
         if search_name:
             search = resource.get_object(search_name)
@@ -319,7 +323,7 @@ class SearchForm(BrowseContent):
         return namespace
 
 
-    def go_to_issue(self, resource, context, query):
+    def go_to_issue(self, resource, context):
         issue_name = context.get_form_value('issue_name')
         if not issue_name:
             return context.come_back(MSG_NAME_MISSING)
@@ -334,7 +338,8 @@ class SearchForm(BrowseContent):
         return context.uri.resolve2('../%s/;edit' % issue_name)
 
 
-    def search(self, resource, context, query):
+    def search(self, resource, context):
+        query = context.query
         search_name = query['search_name']
         search_title = query['search_title'].strip()
 
@@ -427,7 +432,7 @@ class View(BrowseForm):
     tab_sublabel = view__sublabel__
 
 
-    def get_namespace(self, resource, context, query):
+    def get_namespace(self, resource, context):
         # Set Style
         context.styles.append('/ui/tracker/tracker.css')
 
@@ -435,6 +440,7 @@ class View(BrowseForm):
         namespace['method'] = 'GET'
         namespace['action'] = '.'
         # Get search results
+        query = context.query
         results = resource.get_search_results(context, query)
         # Analyse the result
         if isinstance(results, Reference):

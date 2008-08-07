@@ -278,7 +278,7 @@ class BacklinksView(BrowseForm):
     }
 
 
-    def get_namespace(self, resource, context, query):
+    def get_namespace(self, resource, context):
         """Backlinks are the list of objects pointing to this object.
         This view answers the question "where is this object used?"
         You'll see all WebPages and WikiPages (for example) referencing it.
@@ -287,6 +287,7 @@ class BacklinksView(BrowseForm):
         from widgets import table
 
         # Get the form values
+        query = context.query
         sortby = query['sortby']
         sortorder = query['sortorder']
 
@@ -294,8 +295,8 @@ class BacklinksView(BrowseForm):
         search_query = EqQuery('links', str(resource.get_abspath()))
 
         # Build the namespace
-        namespace = resource.browse_namespace(16, sortby, sortorder, batchsize=20,
-                                           query=search_query)
+        namespace = resource.browse_namespace(16, sortby, sortorder,
+                                              batchsize=20, query=search_query)
 
         # The column headers
         columns = [

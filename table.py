@@ -59,17 +59,15 @@ class TableView(BrowseForm):
         return resource.get_form()
 
 
-    def get_namespace(self, resource, context, query):
-        namespace = {}
-
+    def get_namespace(self, resource, context):
         # The input parameters
+        query = context.query
         start = query['batchstart']
         size = 50
 
         # The batch
         handler = resource.handler
         total = handler.get_n_records()
-        namespace['batch'] = batch(context.uri, start, size, total)
 
         # The table
         actions = []
@@ -134,10 +132,10 @@ class TableView(BrowseForm):
                     else:
                         record[field] = record[field][0]
 
-        namespace['table'] = table(fields, records, [sortby], sortorder,
-                                   actions)
-
-        return namespace
+        return {
+            'batch': batch(context.uri, start, size, total),
+            'table': table(fields, records, [sortby], sortorder, actions),
+        }
 
 
     #######################################################################
@@ -159,7 +157,6 @@ class AddRecordForm(AutoForm):
     tab_icon = 'new.png'
 
     form_title = MSG(u'Add a new record')
-    form_action = ';add_record'
     submit_value = MSG(u'Add')
     submit_class = 'button_ok'
 
@@ -223,10 +220,20 @@ class AddRecordForm(AutoForm):
 class EditRecordForm(AutoForm):
 
     access = 'is_allowed_to_edit'
-    form_action = ';edit_record'
     form_title = MSG(u'Edit record ${id}')
     submit_value = MSG(u'Change')
     submit_class = 'button_ok'
+    query_schema = {'id': Integer}
+
+
+    def method(self, name):
+        context = get_context()
+        # Get the record
+        resource = context.resource
+        id = context.query['id']
+        record = resource.get_handler().get_record(id)
+        # Return the value
+        return getattr(record, name)
 
 
     def get_schema(self, resource):
@@ -242,21 +249,11 @@ class EditRecordForm(AutoForm):
         return self.form_title.gettext(id=id)
 
 
-    def edit_record_form(self, context):
-        # Get the record
-        id = context.get_form_value('id', type=Integer)
-        record = self.handler.get_record(id)
-
-        form_hidden = [{'name': 'id', 'value': id}]
-        return generate_form(context, u'Edit record %s' % id,
-            self.handler.schema, self.get_form(), form_action, form_hidden,
-            method=record.get_value)
-
-
-    def action(self, resource, context):
-        id = context.get_form_value('id', type=Integer, default=None)
+    def action(self, resource, context, form):
+        id = context.query.get('id')
         if id is None:
-            return context.come_back(MSG_MISSING_OR_INVALID)
+            context.message = MSG_MISSING_OR_INVALID
+            return
 
         # check form
         check_fields = {}
@@ -269,8 +266,8 @@ class EditRecordForm(AutoForm):
         try:
             form = context.check_form_input(check_fields)
         except FormError:
-            return context.come_back(MSG_MISSING_OR_INVALID,
-                                     keep=context.get_form_keys())
+            context.message = MSG_MISSING_OR_INVALID
+            return
 
         # Get the record
         record = {}
@@ -293,20 +290,15 @@ class EditRecordForm(AutoForm):
 
         try:
             self.handler.update_record(id, **record)
-            message = MSG_CHANGES_SAVED
-            return context.come_back(message, goto=';view')
         except UniqueError, error:
             title = self.get_field_title(error.name)
-            message = str(error) % (title, error.value)
+            context.message = str(error) % (title, error.value)
         except ValueError, error:
             title = self.get_field_title(error.name)
             message = MSG(u'Error: $message')
-            message = message.gettext(message=strerror)
-
-        goto = context.uri.resolve2('../;edit_record_form')
-        return context.come_back(message, goto=goto, keep=['id'])
-
-
+            context.message = message.gettext(message=strerror)
+        else:
+            context.message = MSG_CHANGES_SAVED
 
 
 ###########################################################################
@@ -349,29 +341,19 @@ class Table(File):
         return form
 
 
-    #########################################################################
-    # User Interface
-    #########################################################################
-    new_instance = DBObject.new_instance
-
-
     @classmethod
     def get_field_title(cls, name):
         for widget in cls.form:
             if widget.name == name:
-                return  getattr(widget, 'title', name)
+                return getattr(widget, 'title', name)
         return name
 
 
     #########################################################################
-    # User Interface
+    # Views
     #########################################################################
-    edit_form__access__ = False
+    new_instance = DBObject.new_instance
     view = TableView()
-
-
-    #########################################################################
-    # Add, Edit
     add_record = AddRecordForm()
     edit_record = EditRecordForm()
 
