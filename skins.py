@@ -347,10 +347,8 @@ class Skin(UIFolder):
                 'id': 'tab_%s' % name,
                 'name': resolve(context, link),
                 'label': view.tab_label,
-                'icon': here.get_method_icon(view, **args),
                 'active': active,
-                'class': active and 'active' or None,
-                'options': []})
+                'class': active and 'active' or None})
 
         return tabs
 

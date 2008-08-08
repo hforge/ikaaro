@@ -110,9 +110,9 @@ a img { border: 0; }
  * ***********************************************************************/
 
 #tabs {
-  border-bottom: 1px solid #babdb6;
-  border-top: 1px solid #babdb6;
   padding: 0;
+  float: right;
+  font-size: 1.1em;
 }
 
 #tabs a {
@@ -120,55 +120,24 @@ a img { border: 0; }
   white-space: nowrap;
 }
 
-#tabs ul {
-  margin: 0;
-  padding: 0;
+#tabs .menu a {
+  padding: 4px 4px 4px 4px;
 }
 
-#tabs ul li {
-  list-style: none;
-}
-
-#tabs td {
-  padding: 4px 0px 4px 0px;
-}
-
-#tabs .menu a,
-#tabs .submenu a {
-  padding: 4px 10px 4px 10px;
-}
-
-#tabs .menu a span,
-#tabs .submenu a span {
+#tabs .menu a span {
   background-position: left center;
   background-repeat: no-repeat;
   padding: 4px 0 4px 19px;
 }
 
-#tabs .menu a:hover,
-#tabs td.active .menu a {
+#tabs .menu a:hover {
   background-color: #3465a4;
   color: #ffffff;
 }
 
-#tabs .submenu {
-  background-color: #ffffff;
-  border: 1px solid #babdb6;
-  margin: 4px 0px 0px 0px;
-  position: absolute;
-  visibility: hidden;
-}
-
-#tabs .submenu a {
-  background-color: #ffffff;
-  display: block;
-  width: 130px;
-  white-space: normal;
-}
-
-#tabs .submenu a:hover {
-  background-color: #3465a4;
-  color: #ffffff;
+#tabs .active a {
+  text-decoration: underline;
+  font-weight: bold;
 }
 
 /**************************************************************************
