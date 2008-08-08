@@ -41,8 +41,7 @@ from utils import get_parameters
 class EditTextForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    tab_label = MSG(u'Edit')
-    tab_sublabel = MSG(u'Inline')
+    tab_label = MSG(u'Edit Inline')
     tab_icon = 'edit.png'
     page_title = MSG(u'Edit')
     template = '/ui/text/edit.xml'
@@ -67,9 +66,8 @@ class ViewText(STLView):
 
     access = 'is_allowed_to_view'
     tab_label = MSG(u'View')
-    tab_sublabel = MSG(u'Plain Text')
     tab_icon = 'view.png'
-    page_title = MSG(u'View')
+    page_title = tab_label
     template = '/ui/text/view.xml'
 
 
@@ -81,8 +79,7 @@ class ViewText(STLView):
 class ExternalEditForm(STLView):
 
     access = 'is_allowed_to_edit'
-    tab_label = MSG(u'Edit')
-    tab_sublabel = MSG(u'External Editor')
+    tab_label = MSG(u'External Editor')
     tab_icon = 'button_external.png'
     template = '/ui/text/externaledit.xml'
 
@@ -111,11 +108,8 @@ class Text(File):
     class_description = u'Keep your notes with plain text files.'
     class_icon16 = 'icons/16x16/text.png'
     class_icon48 = 'icons/48x48/text.png'
-    class_views = [['view'],
-                   ['edit', 'externaledit', 'upload'],
-                   ['edit_metadata'],
-                   ['edit_state'],
-                   ['history']]
+    class_views = ['view', 'edit', 'externaledit', 'upload', 'edit_metadata',
+                   'edit_state', 'history']
     class_handler = TextFile
 
 
@@ -146,7 +140,6 @@ class PO(Text):
     #######################################################################
     edit_form__access__ = 'is_allowed_to_edit'
     edit_form__label__ = u'Edit'
-    edit_form__sublabel__ = u'Inline'
     def edit_form(self, context):
         namespace = {}
         handler = self.handler

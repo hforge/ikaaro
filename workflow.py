@@ -36,8 +36,7 @@ from metadata import Record
 class StateForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    tab_label = MSG(u'State')
-    tab_sublabel = MSG(u'Workflow State')
+    tab_label = MSG(u'Workflow State')
     tab_icon = 'state.png'
     template = '/ui/WorkflowAware_state.xml'
     schema = {

@@ -125,11 +125,8 @@ class CSV(Text):
     class_id = 'text/comma-separated-values'
     class_version = '20071216'
     class_title = MSG(u'Comma Separated Values')
-    class_views = [['view'],
-                   ['add_row_form'],
-                   ['externaledit', 'upload'],
-                   ['edit_metadata'],
-                   ['history']]
+    class_views = ['view', 'add_row_form', 'externaledit', 'upload',
+                   'edit_metadata', 'history']
     class_handler = CSVFile
 
 

@@ -69,8 +69,7 @@ class ProfileView(STLView):
 class AccountForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    tab_label = MSG(u'Edit')
-    tab_sublabel = MSG(u'Account')
+    tab_label = MSG(u'Account')
     page_title = MSG(u'Edit your personal data')
     tab_icon = 'settings.png'
     template = '/ui/user/edit_account.xml'
@@ -128,10 +127,9 @@ class AccountForm(STLForm):
 class PreferencesForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    tab_label = MSG(u'Edit')
-    tab_sublabel = MSG(u'Preferences')
+    tab_label = MSG(u'Preferences')
     tab_icon = 'skin.png'
-    page_title = tab_sublabel
+    page_title = tab_label
     template = '/ui/user/edit_language_form.xml'
     schema = {
         'user_language': String(mandatory=True),
@@ -163,8 +161,7 @@ class PreferencesForm(STLForm):
 class PasswordForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    tab_label = MSG(u'Edit')
-    tab_sublabel = MSG(u'Password')
+    tab_label = MSG(u'Password')
     tab_icon = 'lock.png'
     page_title = MSG(u'Change you password')
     template = '/ui/user/edit_password.xml'
@@ -264,12 +261,9 @@ class User(AccessControl, Folder):
     class_title = MSG(u'User')
     class_icon16 = 'icons/16x16/user.png'
     class_icon48 = 'icons/48x48/user.png'
-    class_views = [
-        ['profile'],
-        ['browse_content', 'preview_content'],
-        ['new_resource'],
-        ['edit_account', 'edit_preferences', 'edit_password'],
-        ['tasks']]
+    class_views = ['profile', 'browse_content', 'preview_content',
+                   'new_resource', 'edit_account', 'edit_preferences',
+                   'edit_password', 'tasks']
 
 
     ########################################################################
@@ -506,9 +500,7 @@ class UserFolder(Folder):
     class_version = '20071215'
     class_icon16 = 'icons/16x16/userfolder.png'
     class_icon48 = 'icons/48x48/userfolder.png'
-    class_views = [['view'],
-                   ['browse_content'],
-                   ['edit_metadata']]
+    class_views = ['view', 'browse_content', 'edit_metadata']
 
 
     def get_document_types(self):

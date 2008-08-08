@@ -104,8 +104,7 @@ issue_fields = {
 class EditIssueForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    tab_label = MSG(u'Edit')
-    tab_sublabel = MSG(u'Edit Issue')
+    tab_label = MSG(u'Edit Issue')
     tab_icon = 'edit.png'
     template = '/ui/tracker/edit_issue.xml'
 
@@ -203,8 +202,7 @@ class EditIssueForm(STLForm):
 class EditResourcesForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    tab_label = MSG(u'Edit')
-    tab_sublabel = MSG(u'Edit resources')
+    tab_label = MSG(u'Edit resources')
     tab_icon = 'edit.png'
     template = '/ui/tracker/edit_resources.xml'
 
@@ -301,7 +299,6 @@ class HistoryForm(STLView):
 
     access = 'is_allowed_to_view'
     tab_label = MSG(u'History')
-    tab_sublabel = MSG(u'History')
     tab_icon = 'history.png'
     template = '/ui/tracker/issue_history.xml'
 
@@ -455,10 +452,7 @@ class Issue(Folder):
     class_version = '20071216'
     class_title = MSG(u'Issue')
     class_description = MSG(u'Issue')
-    class_views = [
-        ['edit', 'edit_resources'],
-        ['browse_content?mode=list'],
-        ['history']]
+    class_views = ['edit', 'edit_resources', 'browse_content', 'history']
 
 
     @staticmethod

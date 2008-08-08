@@ -71,19 +71,14 @@ class Image(File):
     class_title = MSG(u'Image')
     class_icon16 = 'icons/16x16/image.png'
     class_icon48 = 'icons/48x48/image.png'
-    class_views = [['view', 'download'],
-                   ['externaledit', 'upload'],
-                   ['backlinks'],
-                   ['edit_metadata'],
-                   ['edit_state'],
-                   ['history']]
+    class_views = ['view', 'download', 'externaledit', 'upload', 'backlinks',
+                   'edit_metadata', 'edit_state', 'history']
     class_handler = ImageFile
 
 
     view = STLView(
         access='is_allowed_to_view',
         tab_label=MSG(u'View'),
-        tab_sublabel=MSG(u'View'),
         tab_icon='view.png',
         template='/ui/binary/Image_view.xml')
 
@@ -102,7 +97,6 @@ class Video(File):
 
     view__access__ = 'is_allowed_to_view'
     view__label__ = u'View'
-    view__sublabel__ = u'View'
     def view(self, context):
         namespace = {}
         namespace['format'] = self.handler.get_mimetype()
@@ -125,7 +119,6 @@ class Flash(File):
     view = STLView(
         access='is_allowed_to_view',
         tab_label=MSG(u'View'),
-        tab_sublabel=MSG(u'View'),
         template='/ui/binary/Flash_view.xml')
 
 
@@ -272,7 +265,6 @@ class Archive(File):
 
     view__access__ = 'is_allowed_to_view'
     view__label__ = u'View'
-    view__sublabel__ = u'View'
     def view(self, context):
         namespace = {}
         contents = self.handler.get_contents()

@@ -56,8 +56,8 @@ from workflow import WorkflowAware
 class NewWebSiteForm(NewInstanceForm):
 
     access = 'is_allowed_to_add'
-    tab_sublabel = MSG(u'Web Site')
-    page_title = tab_sublabel
+    tab_label = MSG(u'Web Site')
+    page_title = tab_label
     template = '/ui/website/new_instance.xml'
     schema = {
         'name': String,
@@ -267,9 +267,8 @@ class ControlPanel(IconsView):
 
     access = 'is_allowed_to_view'
     tab_label = MSG(u'Control Panel')
-    tab_sublabel = MSG(u'Control Panel')
     tab_icon = 'settings.png'
-    page_title = tab_sublabel
+    page_title = tab_label
 
 
     def get_namespace(self, resource, context):
@@ -278,7 +277,7 @@ class ControlPanel(IconsView):
             'batch': None,
             'items': [],
         }
-        for name in resource.get_subviews('control_panel'):
+        for name in resource.class_control_panel:
             view = resource.get_view(name)
             if view is None:
                 continue
@@ -297,10 +296,9 @@ class ControlPanel(IconsView):
 class VHostsForm(STLForm):
 
     access = 'is_admin'
-    tab_label = MSG(u'Control Panel')
-    tab_sublabel = MSG(u'Virtual Hosts')
+    tab_label = MSG(u'Virtual Hosts')
     tab_icon = 'website.png'
-    page_title = tab_sublabel
+    page_title = tab_label
     description = MSG(u'Define the domain names for this Web Site.')
     template = '/ui/website/virtual_hosts.xml'
     schema = {
@@ -329,10 +327,9 @@ class VHostsForm(STLForm):
 class SecurityPolicyForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    tab_label = MSG(u'Control Panel')
-    tab_sublabel = MSG(u'Security Policy')
+    tab_label = MSG(u'Security Policy')
     tab_icon = 'lock.png'
-    page_title = tab_sublabel
+    page_title = tab_label
     description = MSG(u'Choose the security policy.')
     template = '/ui/website/anonymous.xml'
     schema = {
@@ -359,10 +356,9 @@ class SecurityPolicyForm(STLForm):
 class ContactOptionsForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    tab_label = MSG(u'Control Panel')
-    tab_sublabel = MSG(u'Contact Options')
+    tab_label = MSG(u'Contact Options')
     tab_icon = 'mail.png'
-    page_title = tab_sublabel
+    page_title = tab_label
     description = MSG(u'Configure the Contact form.')
     template = '/ui/website/contact_options.xml'
     schema = {
@@ -408,10 +404,9 @@ class ContactOptionsForm(STLForm):
 class BrokenLinks(STLView):
 
     access = 'is_admin'
-    tab_label = MSG(u'Control Panel')
-    tab_sublabel = MSG(u'Broken Links')
+    tab_label = MSG(u'Broken Links')
     tab_icon = 'clear.png'
-    page_title = tab_sublabel
+    page_title = tab_label
     description = MSG(u'Check the referential integrity.')
     template = '/ui/website/broken_links.xml'
 
@@ -550,10 +545,9 @@ class AddLanguageForm(STLForm):
 class LanguagesForm(STLForm):
 
     access = 'is_admin'
-    page_title = MSG(u'Languages')
+    tab_label = MSG(u'Languages')
+    page_title = tab_label
     description = MSG(u'Define the Web Site languages.')
-    tab_label = MSG(u'Control Panel')
-    tab_sublabel = page_title
     tab_icon = 'languages.png'
 
 
@@ -782,20 +776,12 @@ class WebSite(RoleAware, Folder):
     class_icon16 = 'icons/16x16/website.png'
     class_icon48 = 'icons/48x48/website.png'
     class_skin = 'ui/aruni'
-    class_views = [
-        ['browse_content', 'preview_content'],
-        ['new_resource'],
-        ['edit_metadata'],
-        ['control_panel',
-         'permissions',
-         'new_user',
-         'edit_virtual_hosts',
-         'edit_security_policy',
-         'edit_languages',
-         'edit_contact_options',
-         'broken_links',
-         'orphans'],
-        ['last_changes']]
+    class_views = ['browse_content', 'preview_content', 'new_resource',
+                   'edit_metadata', 'control_panel', 'last_changes']
+    class_control_panel = ['permissions', 'new_user', 'edit_virtual_hosts',
+                           'edit_security_policy', 'edit_languages',
+                           'edit_contact_options', 'broken_links', 'orphans'],
+
 
     __fixed_handlers__ = ['skin', 'index']
 
@@ -879,13 +865,6 @@ class WebSite(RoleAware, Folder):
     #######################################################################
     # UI
     #######################################################################
-    def get_subviews(self, name):
-        subviews = Folder.get_subviews(self, name)
-        if name == 'control_panel':
-            return subviews[1:]
-        return subviews
-
-
     new_instance = NewWebSiteForm()
     # Control Panel
     control_panel = ControlPanel()

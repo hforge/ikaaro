@@ -40,11 +40,8 @@ class Product(Folder):
     class_description = MSG(u'A product')
     #class_icon16 = 'images/xxx.png'
     #class_icon48 = 'images/xxx.png'
-    class_views = [['view'],
-                   ['edit_form'],
-                   ['browse_content?mode=list',
-                    'browse_content?mode=image'],
-                   ['new_resource_form']]
+    class_views = ['view', 'edit_form', 'browse_content', 'preview_content',
+                   'new_resource']
 
 
     product_fields = {'title': Unicode(mandatory=True),

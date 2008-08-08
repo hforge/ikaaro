@@ -244,7 +244,6 @@ class SearchForm(BrowseContent):
 
     access = 'is_allowed_to_view'
     tab_label = MSG(u'Search')
-    tab_sublabel = None
     tab_icon = 'button_search.png'
     page_title = None
     template = '/ui/tracker/search.xml'
@@ -571,11 +570,7 @@ class Tracker(Folder):
     class_description = MSG(u'To manage bugs and tasks')
     class_icon16 = 'images/tracker16.png'
     class_icon48 = 'images/tracker48.png'
-    class_views = [
-        ['search'],
-        ['add_issue'],
-        ['browse_content?mode=list'],
-        ['edit_metadata_form']]
+    class_views = ['search', 'add_issue', 'browse_content', 'edit_metadata']
 
     __fixed_handlers__ = ['modules', 'versions', 'types',
         'priorities', 'states', 'resources']

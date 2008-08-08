@@ -46,7 +46,7 @@ class Orders(Folder):
     class_id = 'orders'
     class_title = MSG(u'Orders')
     class_description = MSG(u'Our orders')
-    class_views = Folder.class_views + [['view', 'view_all']]
+    class_views = Folder.class_views + ['view', 'view_all']
     #class_icon16 = 'images/xxx.png'
     #class_icon48 = 'images/xxx.png'
 
@@ -55,8 +55,7 @@ class Orders(Folder):
         return [Order]
 
 
-    view__label__ = u'Test'
-    view__sublabel__ = u'View my orders'
+    view__label__ = u'View my orders'
     view__access__ = 'is_allowed_to_add'
     view__icon__ = 'view.png'
     def view(self, context):
@@ -113,8 +112,7 @@ class Orders(Folder):
         return stl(handler, namespace)
 
 
-    view_all__label__ = u'Test'
-    view_all__sublabel__ = u'View all orders'
+    view_all__label__ = u'View all orders'
     view_all__access__ = 'is_allowed_to_add'
     view_all__icon__ = 'view.png'
     def view_all(self, context):
@@ -188,7 +186,7 @@ class Order(Folder, WorkflowAware):
     class_description = MSG(u'Create an order in our shop')
     #class_icon16 = 'images/xxx.png'
     #class_icon48 = 'images/xxx.png'
-    class_views = Folder.class_views + [['state_form'], ['view']]
+    class_views = Folder.class_views + ['state_form', 'view']
 
     # Workflow
     workflow = order_workflow
@@ -385,8 +383,7 @@ class Order(Folder, WorkflowAware):
             return self.parent.parent
 
 
-    view__label__ = u'Test'
-    view__sublabel__ = u'View'
+    view__label__ = u'View'
     view__access__ = True
     view__icon__ = 'view.png'
     def view(self, context):

@@ -65,12 +65,8 @@ class WikiPage(Text):
     class_description = MSG(u"Wiki contents")
     class_icon16 = 'wiki/WikiPage16.png'
     class_icon48 = 'wiki/WikiPage48.png'
-    class_views = [['view', 'to_pdf'],
-                   ['edit_form', 'externaledit', 'upload'],
-                   ['backlinks'],
-                   ['edit_metadata_form'],
-                   ['state_form'],
-                   ['help']]
+    class_views = ['view', 'to_pdf', 'edit_form', 'externaledit', 'upload',
+                   'backlinks', 'edit_metadata_form', 'state_form', 'help']
 
     overrides = {
         # Security
@@ -222,7 +218,7 @@ class WikiPage(Text):
     #######################################################################
     # UI / View
     #######################################################################
-    view__sublabel__ = u'HTML'
+    view__label__ = u'HTML'
     view__icon__ = 'html.png'
     def view(self, context):
         context.styles.append('/ui/wiki/style.css')
@@ -285,8 +281,7 @@ class WikiPage(Text):
     # UI / PDF
     #######################################################################
     to_pdf__access__ = 'is_allowed_to_view'
-    to_pdf__label__ = u"View"
-    to_pdf__sublabel__ = u"PDF"
+    to_pdf__label__ = u"PDF"
     to_pdf__icon__ = 'pdf.png'
     def to_pdf(self, context):
         parent = self.parent

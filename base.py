@@ -108,7 +108,6 @@ class MetadataForm(STLForm):
 
     access = 'is_allowed_to_edit'
     tab_label = MSG(u'Metadata')
-    tab_sublabel = MSG(u'Metadata')
     tab_icon = 'metadata.png'
     template = '/ui/base/edit_metadata.xml'
     schema = {
@@ -361,7 +360,7 @@ class Node(BaseNode):
         views = self.class_views
         if not views:
             return None
-        return views[0][0]
+        return views[0]
 
 
     ########################################################################
@@ -415,21 +414,11 @@ class Node(BaseNode):
     def get_views(self):
         user = get_context().user
         ac = self.get_access_control()
-        for names in self.class_views:
-            name = names[0]
+        for name in self.class_views:
             name = name.split('?')[0]
             view = self.get_view(name)
             if ac.is_access_allowed(user, self, view):
                 yield name, view
-
-
-    def get_subviews(self, name):
-        for block in self.class_views:
-            if name in block:
-                if len(block) == 1:
-                    return []
-                return block[:]
-        return []
 
 
 

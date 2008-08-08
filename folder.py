@@ -61,7 +61,6 @@ class AddView(IconsView):
 
     access = 'is_allowed_to_add'
     tab_label = MSG(u'Add')
-    tab_sublabel = MSG(u'Add')
     tab_icon = '/ui/icons/16x16/new.png'
 
 
@@ -97,10 +96,9 @@ class BrowseContent(BrowseForm):
 
     access = 'is_allowed_to_view'
     access_POST = 'is_allowed_to_edit'
-    tab_label = MSG(u'Contents')
-    tab_sublabel = MSG(u'Browse Content')
+    tab_label = MSG(u'Browse Content')
     tab_icon = '/ui/icons/16x16/folder.png'
-    page_title = tab_sublabel
+    page_title = tab_label
 
     schema = {
         'ids': String(multiple=True, mandatory=True),
@@ -405,10 +403,9 @@ class RenameForm(STLForm):
 class PreviewView(STLView):
 
     access = 'is_allowed_to_view'
-    tab_label = MSG(u'Contents')
-    tab_sublabel = MSG(u'Preview Content')
+    tab_label = MSG(u'Preview Content')
     tab_icon = '/ui/icons/16x16/image.png'
-    page_title = tab_sublabel
+    page_title = tab_label
     template = '/ui/folder/browse_image.xml'
 
     search_fields =  [
@@ -474,9 +471,8 @@ class PreviewView(STLView):
 class LastChanges(BrowseContent):
 
     tab_label = MSG(u"Last Changes")
-    tab_sublabel = MSG(u'Last Changes')
     tab_icon = 'icalendar.png'
-    page_title = tab_sublabel
+    page_title = tab_label
 
     query_schema = {
         'search_field': String,
@@ -506,9 +502,8 @@ class OrphansView(BrowseContent):
 
     access = 'is_allowed_to_view'
     tab_label = MSG(u"Orphans")
-    tab_sublabel = MSG(u"Orphans")
     tab_icon = 'orphans.png'
-    page_title = tab_sublabel
+    page_title = tab_label
     description = MSG(u"Show objects not linked from anywhere.")
 
 
@@ -560,10 +555,8 @@ class Folder(DBObject):
     class_description = MSG(folder_description)
     class_icon16 = 'icons/16x16/folder.png'
     class_icon48 = 'icons/48x48/folder.png'
-    class_views = [
-        ['browse_content', 'preview_content'],
-        ['new_resource'],
-        ['edit_metadata']]
+    class_views = ['browse_content', 'preview_content', 'new_resource',
+                   'edit_metadata']
     class_handler = FolderHandler
 
 
@@ -773,17 +766,6 @@ class Folder(DBObject):
 
         # Default
         return DBObject.get_view(self, name, **kw)
-
-
-    def get_subviews(self, name):
-        if name == 'new_resource':
-            subviews = []
-            for cls in self.get_document_types():
-                id = cls.class_id
-                ref = 'new_resource?type=%s' % quote_plus(id)
-                subviews.append(ref)
-            return subviews
-        return DBObject.get_subviews(self, name)
 
 
     def get_context_menu_base(self):

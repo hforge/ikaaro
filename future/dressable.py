@@ -52,8 +52,8 @@ class Dressable(Folder, EpozEditable):
     class_version = '20071215'
     class_title = MSG(u'Dressable')
     class_description = MSG(u'A dressable folder')
-    class_views = ([Folder.class_views[0]] + [['view'], ['edit_document']]
-            + Folder.class_views[1:])
+    class_views = ['browse_content', 'preview_content', 'view',
+                   'edit_document', 'new_resource', 'edit_metadata']
     __fixed_handlers__ = ['index']
     template = '/ui/future/dressable_view.xml'
     layout = {'content': ('index', WebPage),

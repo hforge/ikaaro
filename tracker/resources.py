@@ -199,8 +199,7 @@ class Resources(Table, TrackerView):
     class_description = MSG(u'Resources assigned to issues')
     class_handler = BaseResources
 
-    class_views = [['weekly_view', 'monthly_view'],
-                   ['edit_timetables']]
+    class_views = ['weekly_view', 'monthly_view', 'edit_timetables']
 
 
     @classmethod

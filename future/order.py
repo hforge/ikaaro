@@ -95,7 +95,6 @@ class OrderAware(object):
 
     order_form__access__ = 'is_allowed_to_edit'
     order_form__label__ = u"Order"
-    order_form__sublabel__ = u"Order"
     order_form__icon__ = 'button_compare.png'
     def order_form(self, context):
         namespace = {}

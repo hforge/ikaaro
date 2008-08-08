@@ -37,7 +37,7 @@ class Shop(Folder):
     class_description = MSG(u'E-commerce Shop')
     #class_icon16 = 'images/xxx.png'
     #class_icon48 = 'images/xxx.png'
-    class_views = Folder.class_views + [['view_cart'], ['orders']]
+    class_views = Folder.class_views + ['view_cart', 'orders']
 
     __fixed_handlers__ = ['orders']
 

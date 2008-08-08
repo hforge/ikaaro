@@ -342,31 +342,6 @@ class Skin(UIFolder):
             if context.view == here.get_view(name, **args):
                 active = True
 
-            # Subtabs
-            subtabs = []
-            for subview_link in here.get_subviews(link):
-                # same thing, separate method and arguments
-                if '?' in subview_link:
-                    subview_name, subview_args = subview_link.split('?')
-                    subview_args = decode_query(subview_args)
-                else:
-                    subview_name, subview_args = subview_link, {}
-
-                subview = here.get_view(subview_name, **subview_args)
-                if ac.is_access_allowed(user, here, subview):
-                    sublabel = subview.tab_sublabel
-                    if callable(sublabel):
-                        sublabel = sublabel(**subview_args)
-
-                    subtabs.append({
-                        'name': resolve(context, subview_link),
-                        'icon': here.get_method_icon(subview, **subview_args),
-                        'label': sublabel})
-
-                    # Active
-                    if context.view == subview:
-                        active = True
-
             # Add the menu
             tabs.append({
                 'id': 'tab_%s' % name,
@@ -375,7 +350,7 @@ class Skin(UIFolder):
                 'icon': here.get_method_icon(view, **args),
                 'active': active,
                 'class': active and 'active' or None,
-                'options': subtabs})
+                'options': []})
 
         return tabs
 

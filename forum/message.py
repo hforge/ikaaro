@@ -45,7 +45,7 @@ class Message(WebPage):
     class_version = '20071216'
     class_title = MSG(u'Message')
     class_description = u"Message in a thread"
-    class_views = [['edit_form'], ['history_form']]
+    class_views = ['edit_form', 'history_form']
 
 
     @staticmethod

@@ -36,13 +36,8 @@ class WikiFolder(Folder):
     class_description = MSG(u"Container for a wiki")
     class_icon16 = 'wiki/WikiFolder16.png'
     class_icon48 = 'wiki/WikiFolder48.png'
-    class_views = [['view'],
-                   ['browse_content?mode=list',
-                    'browse_content?mode=image'],
-                   ['new_resource_form'],
-                   ['orphans'],
-                   ['edit_metadata_form'],
-                   ['last_changes']]
+    class_views = ['view', 'browse_content', 'preview_content',
+                   'new_resource', 'orphans', 'edit_metadata', 'last_changes']
 
     __fixed_handlers__ = ['FrontPage']
 

@@ -49,7 +49,7 @@ class Link(File):
     class_description = MSG(u'Link')
     class_icon48 = 'future/images/Link48.png'
     class_icon16 = 'future/images/Link16.png'
-    class_views = [['edit_metadata_form'], ['state_form']]
+    class_views = ['edit_metadata_form', 'state_form']
 
 
     @classmethod

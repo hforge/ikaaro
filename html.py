@@ -48,8 +48,7 @@ class HTMLEditView(BaseView):
     """
 
     access = 'is_allowed_to_edit'
-    tab_label = MSG(u'Edit')
-    tab_sublabel = MSG(u'Inline')
+    tab_label = MSG(u'Edit Inline')
     tab_icon = 'edit.png'
     page_title = MSG(u'Edit')
 
@@ -109,9 +108,8 @@ class WebPageView(STLView):
 
     access = 'is_allowed_to_view'
     tab_label = MSG(u'View')
-    tab_sublabel = MSG(u'View')
     tab_icon = '/ui/icons/16x16/view.png'
-    page_title = tab_sublabel
+    page_title = tab_label
     template = '/ui/html/view.xml'
 
 
@@ -156,12 +154,8 @@ class WebPage(EpozEditable, Multilingual, Text):
     class_description = MSG(u'Create and publish a Web Page.')
     class_icon16 = 'icons/16x16/html.png'
     class_icon48 = 'icons/48x48/html.png'
-    class_views = [['view'],
-                   ['edit', 'externaledit', 'upload'],
-                   ['backlinks'],
-                   ['edit_metadata'],
-                   ['edit_state'],
-                   ['history']]
+    class_views = ['view', 'edit', 'externaledit', 'upload', 'backlinks',
+                   'edit_metadata', 'edit_state', 'history']
     class_handler = XHTMLFile
 
 

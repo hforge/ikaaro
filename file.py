@@ -48,7 +48,7 @@ from workflow import WorkflowAware
 class NewFileForm(NewInstanceForm):
 
     access = 'is_allowed_to_add'
-    tab_sublabel = MSG(u'File')
+    tab_label = MSG(u'File')
     page_title = MSG(u'Upload File')
     template = '/ui/file/new_instance.xml'
     schema = {
@@ -143,8 +143,7 @@ class FileGET(BaseView):
 class DownloadView(STLView):
 
     access = 'is_allowed_to_view'
-    tab_label = MSG(u'View')
-    tab_sublabel = MSG(u'Download')
+    tab_label = MSG(u'Download')
     tab_icon = 'view.png'
     template = '/ui/file/download_form.xml'
 
@@ -160,9 +159,8 @@ class DownloadView(STLView):
 class UploadForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    tab_label = MSG(u'Edit')
-    tab_sublabel = MSG(u'Replace')
-    page_title = tab_sublabel
+    tab_label = MSG(u'Replace')
+    page_title = tab_label
     tab_icon = 'button_upload.png'
     template = '/ui/file/upload.xml'
     schema = {
@@ -265,7 +263,6 @@ class BacklinksView(BrowseForm):
 
     access = 'is_allowed_to_view'
     tab_label = MSG(u"Backlinks")
-    tab_sublabel = MSG(u'Backlinks')
     tab_icon = 'button_rename.png'
 
     query_schema = {
@@ -333,12 +330,8 @@ class File(WorkflowAware, VersioningAware):
     class_description = MSG(file_description)
     class_icon16 = 'icons/16x16/file.png'
     class_icon48 = 'icons/48x48/file.png'
-    class_views = [['download'],
-                   ['externaledit', 'upload'],
-                   ['backlinks'],
-                   ['edit_metadata'],
-                   ['edit_state'],
-                   ['history']]
+    class_views = ['download', 'externaledit', 'upload', 'backlinks',
+                   'edit_metadata', 'edit_state', 'history']
     class_handler = FileHandler
 
 
@@ -476,8 +469,7 @@ class File(WorkflowAware, VersioningAware):
 
     externaledit = STLView(
         access='is_allowed_to_edit',
-        tab_label=MSG(u'Edit'),
-        tab_sublabel=MSG(u'External Editor'),
+        tab_label=MSG(u'External Editor'),
         tab_icon='button_external.png',
         template='/ui/file/externaledit.xml',
     )

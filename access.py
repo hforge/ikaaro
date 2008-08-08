@@ -40,10 +40,9 @@ from workflow import WorkflowAware
 class PermissionsForm(BrowseForm):
 
     access = 'is_admin'
-    tab_label = MSG(u"Control Panel")
-    tab_sublabel = MSG(u'Browse Members')
+    tab_label = MSG(u'Browse Members')
     tab_icon = 'userfolder.png'
-    page_title = tab_sublabel
+    page_title = tab_label
     description = MSG(u'See the users and their roles.')
 
     query_schema = {
@@ -192,10 +191,9 @@ class MembershipForm(STLForm):
 class NewUserForm(STLForm):
 
     access = 'is_admin'
-    tab_label = MSG(u'Control Panel')
-    tab_sublabel = MSG(u'Add New Member')
+    tab_label = MSG(u'Add New Member')
     tab_icon = 'card.png'
-    page_title = tab_sublabel
+    page_title = tab_label
     description = MSG(u'Grant access to a new user.')
     template = '/ui/access/new_user.xml'
     schema = {
