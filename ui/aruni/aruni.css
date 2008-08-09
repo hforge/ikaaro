@@ -146,6 +146,7 @@ a img { border: 0; }
 #body {
   padding: 3px;
   font-size: 1.4em;
+  min-height: 280px;
 }
 
 #body h1, #body h2, #body h3, #body h4, #body h5, #body h6 {
