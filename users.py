@@ -47,7 +47,7 @@ from utils import crypt_password, generate_password
 class ProfileView(STLView):
 
     access = 'is_allowed_to_view'
-    tab_label = MSG(u'Profile')
+    title = MSG(u'Profile')
     tab_icon = 'action_home.png'
     template = '/ui/user/profile.xml'
 
@@ -69,8 +69,7 @@ class ProfileView(STLView):
 class AccountForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    tab_label = MSG(u'Account')
-    page_title = MSG(u'Edit your personal data')
+    title = MSG(u'Edit Account')
     tab_icon = 'settings.png'
     template = '/ui/user/edit_account.xml'
     schema = {
@@ -127,9 +126,8 @@ class AccountForm(STLForm):
 class PreferencesForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    tab_label = MSG(u'Preferences')
+    title = MSG(u'Preferences')
     tab_icon = 'skin.png'
-    page_title = tab_label
     template = '/ui/user/edit_language_form.xml'
     schema = {
         'user_language': String(mandatory=True),
@@ -161,9 +159,8 @@ class PreferencesForm(STLForm):
 class PasswordForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    tab_label = MSG(u'Password')
+    title = MSG(u'Edit Password')
     tab_icon = 'lock.png'
-    page_title = MSG(u'Change you password')
     template = '/ui/user/edit_password.xml'
     schema = {
         'newpass': String(mandatory=True),
@@ -217,9 +214,8 @@ class PasswordForm(STLForm):
 class TasksView(STLView):
 
     access = 'is_allowed_to_edit'
-    tab_label = MSG(u'Tasks')
+    title = MSG(u'Tasks')
     tab_icon = 'tasks.png'
-    page_title = MSG(u'Tasks')
     template = '/ui/user/tasks.xml'
 
 

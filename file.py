@@ -48,8 +48,7 @@ from workflow import WorkflowAware
 class NewFileForm(NewInstanceForm):
 
     access = 'is_allowed_to_add'
-    tab_label = MSG(u'File')
-    page_title = MSG(u'Upload File')
+    title = MSG(u'Upload File')
     template = '/ui/file/new_instance.xml'
     schema = {
         'title': Unicode,
@@ -143,7 +142,7 @@ class FileGET(BaseView):
 class DownloadView(STLView):
 
     access = 'is_allowed_to_view'
-    tab_label = MSG(u'Download')
+    title = MSG(u'Download')
     tab_icon = 'view.png'
     template = '/ui/file/download_form.xml'
 
@@ -159,8 +158,7 @@ class DownloadView(STLView):
 class UploadForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    tab_label = MSG(u'Replace')
-    page_title = tab_label
+    title = MSG(u'Replace')
     tab_icon = 'button_upload.png'
     template = '/ui/file/upload.xml'
     schema = {
@@ -262,7 +260,7 @@ class ExternalEdit(BaseView):
 class BacklinksView(BrowseForm):
 
     access = 'is_allowed_to_view'
-    tab_label = MSG(u"Backlinks")
+    title = MSG(u"Backlinks")
     tab_icon = 'button_rename.png'
 
     query_schema = {
@@ -469,7 +467,7 @@ class File(WorkflowAware, VersioningAware):
 
     externaledit = STLView(
         access='is_allowed_to_edit',
-        tab_label=MSG(u'External Editor'),
+        title=MSG(u'External Editor'),
         tab_icon='button_external.png',
         template='/ui/file/externaledit.xml',
     )

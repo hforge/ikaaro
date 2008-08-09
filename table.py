@@ -48,7 +48,7 @@ class TableView(BrowseForm):
 
     access = 'is_allowed_to_view'
     access_POST = 'is_allowed_to_edit'
-    tab_label = MSG(u'View')
+    title = MSG(u'View')
     tab_icon = 'view.png'
 
     schema = {
@@ -153,7 +153,7 @@ class TableView(BrowseForm):
 class AddRecordForm(AutoForm):
 
     access = 'is_allowed_to_edit'
-    tab_label = MSG(u'Add')
+    title = MSG(u'Add')
     tab_icon = 'new.png'
 
     form_title = MSG(u'Add a new record')

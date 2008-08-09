@@ -40,6 +40,15 @@ from utils import reduce_string
 from widgets import build_menu
 
 
+def get_view_title(view):
+    title = getattr(view, 'title', None)
+    if title is None:
+        return None
+    if callable(title):
+        return title()
+    return title
+
+
 
 class FileGET(BaseView):
 
@@ -198,11 +207,12 @@ class Skin(UIFolder):
             else:
                 args = {}
             # Append to the menu
-            menu.append({'href': '%s/;%s' % (prefix, name),
-                         'title': view.tab_label,
-                         'class': '',
-                         'src': base.get_method_icon(view, **args),
-                         'items': []})
+            menu.append({
+                'href': '%s/;%s' % (prefix, name),
+                'title': get_view_title(view),
+                'class': '',
+                'src': base.get_method_icon(view, **args),
+                'items': []})
 
         if not menu:
             return None
@@ -326,7 +336,7 @@ class Skin(UIFolder):
             tabs.append({
                 'id': 'tab_%s' % name,
                 'name': resolve(context, link),
-                'label': view.tab_label,
+                'label': get_view_title(view),
                 'active': active,
                 'class': active and 'active' or None})
 
@@ -494,10 +504,7 @@ class Skin(UIFolder):
         # View's title (FIXME)
         here = context.resource
         view = context.view
-        title = getattr(view, 'page_title', None)
-        if callable(title):
-            title = title()
-        namespace['view_title'] = title
+        namespace['view_title'] = get_view_title(view)
 
         return namespace
 

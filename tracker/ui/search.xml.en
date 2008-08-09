@@ -5,15 +5,14 @@
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
   <!-- Navigation -->
-  <h2>Navigation</h2>
   <form action=";search" method="get">
     Go to issue #<input type="text" name="issue_name" size="6" />
     <input name=";go_to_issue" type="submit" class="button_ok" value="OK" />
   </form>
 
   <!-- Advanced Search -->
-  <h2 stl:if="search_name">Search: ${search_title}</h2>
-  <h2 stl:if="not search_name">Search</h2>
+  <h3 stl:if="search_name">Search: ${search_title}</h3>
+  <h3 stl:if="not search_name">Search</h3>
   <form action=";search" method="get">
     <input type="hidden" name="search_name" value="${search_name}" />
     <table>
@@ -119,7 +118,7 @@
     </table>
   </form>
 
-  <h2>Stored Searches</h2>
+  <h3>Stored Searches</h3>
   <form action="" method="post" stl:if="stored_searches">
     <table>
       <tr stl:repeat="search stored_searches">

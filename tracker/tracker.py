@@ -84,7 +84,7 @@ columns = [
 class AddIssueForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    tab_label = u'Add'
+    title = MSG(u'Add')
     tab_icon = 'new.png'
     template = '/ui/tracker/add_issue.xml'
 
@@ -243,9 +243,8 @@ class SelectTableView(TableView):
 class SearchForm(BrowseContent):
 
     access = 'is_allowed_to_view'
-    tab_label = MSG(u'Search')
+    title = MSG(u'Search')
     tab_icon = 'button_search.png'
-    page_title = None
     template = '/ui/tracker/search.xml'
 
     query_schema = search_fields
@@ -390,7 +389,7 @@ class SearchForm(BrowseContent):
 class View(BrowseForm):
 
     access = 'is_allowed_to_view'
-    tab_label = u'View'
+    title = MSG(u'View')
     tab_icon = 'view.png'
     template = '/ui/tracker/view_tracker.xml'
 

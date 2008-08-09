@@ -104,7 +104,7 @@ issue_fields = {
 class EditIssueForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    tab_label = MSG(u'Edit Issue')
+    title = MSG(u'Edit Issue')
     tab_icon = 'edit.png'
     template = '/ui/tracker/edit_issue.xml'
 
@@ -202,7 +202,7 @@ class EditIssueForm(STLForm):
 class EditResourcesForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    tab_label = MSG(u'Edit resources')
+    title = MSG(u'Edit resources')
     tab_icon = 'edit.png'
     template = '/ui/tracker/edit_resources.xml'
 
@@ -298,7 +298,7 @@ class EditResourcesForm(STLForm):
 class HistoryForm(STLView):
 
     access = 'is_allowed_to_view'
-    tab_label = MSG(u'History')
+    title = MSG(u'History')
     tab_icon = 'history.png'
     template = '/ui/tracker/issue_history.xml'
 

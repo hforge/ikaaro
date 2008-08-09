@@ -56,8 +56,7 @@ from workflow import WorkflowAware
 class NewWebSiteForm(NewInstanceForm):
 
     access = 'is_allowed_to_add'
-    tab_label = MSG(u'Web Site')
-    page_title = tab_label
+    title = MSG(u'Web Site')
     template = '/ui/website/new_instance.xml'
     schema = {
         'name': String,
@@ -133,8 +132,7 @@ class NewWebSiteForm(NewInstanceForm):
 class LoginView(STLForm):
 
     access = True
-    tab_label = MSG(u'Login')
-    page_title = MSG(u'Login')
+    title = MSG(u'Login')
     template = '/ui/website/login.xml'
     schema = {
         'username': Unicode(mandatory=True),
@@ -224,7 +222,7 @@ class LogoutView(STLView):
 class ForgottenPasswordForm(STLForm):
 
     access = True
-    page_title = MSG(u'Forgotten password')
+    title = MSG(u'Forgotten password')
     template = '/ui/website/forgotten_password_form.xml'
     schema = {
         'username': String(default=''),
@@ -266,9 +264,8 @@ class ForgottenPasswordForm(STLForm):
 class ControlPanel(IconsView):
 
     access = 'is_allowed_to_view'
-    tab_label = MSG(u'Control Panel')
+    title = MSG(u'Control Panel')
     tab_icon = 'settings.png'
-    page_title = tab_label
 
 
     def get_namespace(self, resource, context):
@@ -285,7 +282,7 @@ class ControlPanel(IconsView):
                 continue
             namespace['items'].append({
                 'icon': resource.get_method_icon(view, size='48x48'),
-                'title': view.page_title,
+                'title': view.title,
                 'description': view.description,
                 'url': ';%s' % name})
 
@@ -296,9 +293,8 @@ class ControlPanel(IconsView):
 class VHostsForm(STLForm):
 
     access = 'is_admin'
-    tab_label = MSG(u'Virtual Hosts')
+    title = MSG(u'Virtual Hosts')
     tab_icon = 'website.png'
-    page_title = tab_label
     description = MSG(u'Define the domain names for this Web Site.')
     template = '/ui/website/virtual_hosts.xml'
     schema = {
@@ -327,9 +323,8 @@ class VHostsForm(STLForm):
 class SecurityPolicyForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    tab_label = MSG(u'Security Policy')
+    title = MSG(u'Security Policy')
     tab_icon = 'lock.png'
-    page_title = tab_label
     description = MSG(u'Choose the security policy.')
     template = '/ui/website/anonymous.xml'
     schema = {
@@ -356,9 +351,8 @@ class SecurityPolicyForm(STLForm):
 class ContactOptionsForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    tab_label = MSG(u'Contact Options')
+    title = MSG(u'Contact Options')
     tab_icon = 'mail.png'
-    page_title = tab_label
     description = MSG(u'Configure the Contact form.')
     template = '/ui/website/contact_options.xml'
     schema = {
@@ -404,9 +398,8 @@ class ContactOptionsForm(STLForm):
 class BrokenLinks(STLView):
 
     access = 'is_admin'
-    tab_label = MSG(u'Broken Links')
+    title = MSG(u'Broken Links')
     tab_icon = 'clear.png'
-    page_title = tab_label
     description = MSG(u'Check the referential integrity.')
     template = '/ui/website/broken_links.xml'
 
@@ -545,8 +538,7 @@ class AddLanguageForm(STLForm):
 class LanguagesForm(STLForm):
 
     access = 'is_admin'
-    tab_label = MSG(u'Languages')
-    page_title = tab_label
+    title = MSG(u'Languages')
     description = MSG(u'Define the Web Site languages.')
     tab_icon = 'languages.png'
 
@@ -558,7 +550,7 @@ class LanguagesForm(STLForm):
 class RegisterForm(AutoForm):
 
     access = 'is_allowed_to_register'
-    tab_label = MSG(u'Register')
+    title = MSG(u'Register')
 
 
     form_title = MSG(u'Registration')
@@ -616,7 +608,7 @@ class RegisterForm(AutoForm):
 class ContactForm(STLForm):
 
     access = True
-    page_title = MSG(u'Contact')
+    title = MSG(u'Contact')
     template = '/ui/website/contact_form.xml'
 
     schema = {
@@ -671,7 +663,7 @@ class ContactForm(STLForm):
 class SiteSearchView(STLView):
 
     access = True
-    page_title = MSG(u'Search')
+    title = MSG(u'Search')
     template = '/ui/website/search.xml'
 
 
@@ -733,7 +725,7 @@ class SiteSearchView(STLView):
 class AboutView(STLView):
 
     access = True
-    page_title = MSG(u'About')
+    title = MSG(u'About')
     template = '/ui/root/about.xml'
 
 
@@ -748,7 +740,7 @@ class AboutView(STLView):
 class CreditsView(STLView):
 
     access = True
-    page_title = MSG(u'Credits')
+    title = MSG(u'Credits')
     template = '/ui/root/credits.xml'
 
 
@@ -886,7 +878,7 @@ class WebSite(RoleAware, Folder):
     contact = ContactForm()
     about = AboutView()
     credits = CreditsView()
-    license = STLView(access=True, page_title=MSG(u'License'),
+    license = STLView(access=True, title=MSG(u'License'),
                       template='/ui/root/license.xml')
 
 

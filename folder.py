@@ -60,19 +60,8 @@ class IndexView(BaseView):
 class AddView(IconsView):
 
     access = 'is_allowed_to_add'
-    tab_label = MSG(u'Add')
+    title = MSG(u'Add resource')
     tab_icon = '/ui/icons/16x16/new.png'
-
-
-    def page_title(self):
-        type = get_context().get_query_value('type')
-        if not type:
-            return MSG(u'Add new resource').gettext()
-        cls = get_object_class(type)
-        class_title = cls.class_title.gettext()
-        page_title = MSG(u'Add $class_title')
-        page_title = page_title.gettext(class_title=class_title)
-        return page_title
 
 
     def get_namespace(self, resource, context):
@@ -96,9 +85,8 @@ class BrowseContent(BrowseForm):
 
     access = 'is_allowed_to_view'
     access_POST = 'is_allowed_to_edit'
-    tab_label = MSG(u'Browse Content')
+    title = MSG(u'Browse Content')
     tab_icon = '/ui/icons/16x16/folder.png'
-    page_title = tab_label
 
     schema = {
         'ids': String(multiple=True, mandatory=True),
@@ -322,7 +310,7 @@ class BrowseContent(BrowseForm):
 class RenameForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    page_title = MSG(u'Rename objects')
+    title = MSG(u'Rename objects')
     template = '/ui/folder/rename.xml'
     schema = {
         'paths': String(multiple=True, mandatory=True),
@@ -403,9 +391,8 @@ class RenameForm(STLForm):
 class PreviewView(STLView):
 
     access = 'is_allowed_to_view'
-    tab_label = MSG(u'Preview Content')
+    title = MSG(u'Preview Content')
     tab_icon = '/ui/icons/16x16/image.png'
-    page_title = tab_label
     template = '/ui/folder/browse_image.xml'
 
     search_fields =  [
@@ -470,9 +457,8 @@ class PreviewView(STLView):
 
 class LastChanges(BrowseContent):
 
-    tab_label = MSG(u"Last Changes")
+    title = MSG(u"Last Changes")
     tab_icon = 'icalendar.png'
-    page_title = tab_label
 
     query_schema = {
         'search_field': String,
@@ -501,9 +487,8 @@ class OrphansView(BrowseContent):
     """
 
     access = 'is_allowed_to_view'
-    tab_label = MSG(u"Orphans")
+    title = MSG(u"Orphans")
     tab_icon = 'orphans.png'
-    page_title = tab_label
     description = MSG(u"Show objects not linked from anywhere.")
 
 

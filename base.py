@@ -59,6 +59,16 @@ class NewObjectForm(NewInstanceForm):
     }
 
 
+    def title(self):
+        type = get_context().get_query_value('type')
+        if not type:
+            return MSG(u'Add resource').gettext()
+        cls = get_object_class(type)
+        class_title = cls.class_title.gettext()
+        title = MSG(u'Add $class_title')
+        return title.gettext(class_title=class_title)
+
+
     def get_namespace(self, resource, context):
         type = context.get_query_value('type')
         cls = get_object_class(type)
@@ -107,7 +117,7 @@ class NewObjectForm(NewInstanceForm):
 class MetadataForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    tab_label = MSG(u'Metadata')
+    title = MSG(u'Edit Metadata')
     tab_icon = 'metadata.png'
     template = '/ui/base/edit_metadata.xml'
     schema = {
@@ -115,14 +125,6 @@ class MetadataForm(STLForm):
         'description': Unicode,
         'subject': Unicode,
     }
-
-
-    def page_title(self):
-        context = get_context()
-        language = context.resource.get_content_language(context)
-        language_name = get_language_name(language)
-        message = MSG(u'Edit metadata in $language_name')
-        return message.gettext(language_name=language_name)
 
 
     def get_namespace(self, resource, context):

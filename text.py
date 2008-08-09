@@ -41,9 +41,8 @@ from utils import get_parameters
 class EditTextForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    tab_label = MSG(u'Edit Inline')
+    title = MSG(u'Edit Inline')
     tab_icon = 'edit.png'
-    page_title = MSG(u'Edit')
     template = '/ui/text/edit.xml'
     schema = {
         'data': String(mandatory=True),
@@ -65,9 +64,8 @@ class EditTextForm(STLForm):
 class ViewText(STLView):
 
     access = 'is_allowed_to_view'
-    tab_label = MSG(u'View')
+    title = MSG(u'View')
     tab_icon = 'view.png'
-    page_title = tab_label
     template = '/ui/text/view.xml'
 
 
@@ -79,7 +77,7 @@ class ViewText(STLView):
 class ExternalEditForm(STLView):
 
     access = 'is_allowed_to_edit'
-    tab_label = MSG(u'External Editor')
+    title = MSG(u'External Editor')
     tab_icon = 'button_external.png'
     template = '/ui/text/externaledit.xml'
 

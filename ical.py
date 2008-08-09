@@ -577,7 +577,7 @@ class CalendarView(object):
 class TimetablesForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    tab_label = MSG(u'Timetables')
+    title = MSG(u'Timetables')
     tab_icon = 'settings.png'
     template = '/ui/ical/ical_edit_timetables.xml'
     schema = {}
@@ -652,7 +652,7 @@ class TimetablesForm(STLForm):
 class EditEventForm(CalendarView, STLForm):
 
     access = 'is_allowed_to_edit'
-    tab_label = MSG(u'Edit Event')
+    title = MSG(u'Edit Event')
     tab_icon = 'button_calendar.png'
     template = '/ui/ical/ical_edit_event.xml'
     schema = {
@@ -955,7 +955,7 @@ class EditEventForm(CalendarView, STLForm):
 class MonthlyView(CalendarView, STLView):
 
     access = 'is_allowed_to_view'
-    tab_label = MSG(u'Monthly View')
+    title = MSG(u'Monthly View')
     tab_icon = 'icalendar.png'
     template = '/ui/ical/ical_monthly_view.xml'
 
@@ -1032,7 +1032,7 @@ class MonthlyView(CalendarView, STLView):
 class WeeklyView(CalendarView, STLView):
 
     access = 'is_allowed_to_view'
-    tab_label = MSG(u'Weekly View')
+    title = MSG(u'Weekly View')
     tab_icon = 'icalendar.png'
     template = '/ui/ical/ical_grid_weekly_view.xml'
 
@@ -1320,7 +1320,7 @@ class CalendarAware(CalendarView):
 
 class UploadForm(BaseUploadForm):
 
-    tab_label = MSG(u'Upload from an ical file')
+    title = MSG(u'Upload from an ical file')
 
 
     def action(self, resource, context, form):
@@ -1346,7 +1346,7 @@ class UploadForm(BaseUploadForm):
 
 class DownloadView(BaseDownloadView):
 
-    tab_label = MSG(u'Export in ical format')
+    title = MSG(u'Export in ical format')
 
 ##    XXX Check header is correct
 ##    def download(self, context):
@@ -1359,7 +1359,7 @@ class DownloadView(BaseDownloadView):
 class TextView(BaseView):
 
     access = 'is_allowed_to_edit'
-    tab_label = MSG(u'Text view')
+    title = MSG(u'Text view')
 
     def GET(self, resource, context):
         return '<pre>%s</pre>' % resource.handler.to_str()
