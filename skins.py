@@ -505,6 +505,7 @@ class Skin(UIFolder):
         here = context.resource
         view = context.view
         namespace['view_title'] = get_view_title(view)
+        namespace['view_description'] = getattr(view, 'description', None)
 
         return namespace
 

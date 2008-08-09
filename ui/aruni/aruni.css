@@ -102,8 +102,25 @@ a img { border: 0; }
   padding: 9px 0 0 0;
 }
 
-#breadcrumbs { margin-bottom: 3px; }
-#breadcrumbs a, #breadcrumbs span { color: #888a85; }
+#breadcrumbs {
+  float: left;
+  font-size: 1.1em;
+  margin: 2px 0px 2px 0px;
+}
+
+#breadcrumbs span {
+  color: #888a85;
+}
+
+#breadcrumbs a {
+  text-decoration: none;
+  padding: 2px 4px 2px 4px;
+}
+
+#breadcrumbs a:hover {
+  background-color: #3465a4;
+  color: #ffffff;
+}
 
 /**************************************************************************
  * Tabs

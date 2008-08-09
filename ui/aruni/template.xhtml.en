@@ -42,6 +42,15 @@
       <tbody>
         <tr>
           <td id="center" valign="top">
+            <!-- Location -->
+            <div id="breadcrumbs">
+              <label>Location:</label>
+              <span stl:repeat="item breadcrumb"><a stl:if="item/url"
+                href="${item/url}" title="${item/name}">${item/short_name}</a
+                ><span stl:if="not item/url" title="${item/name}"
+                >${item/short_name}</span><stl:inline
+                stl:if="not repeat/item/end">/</stl:inline></span>
+            </div>
             <!-- Resource Menu: Views -->
             <div id="tabs" stl:if="tabs">
               [
@@ -51,27 +60,13 @@
               </span>
               ]
             </div>
-            <div id="maintitle">
-              <img alt="" height="48" width="48" src="${metadata/icon}"
-                style="float: left; margin-right: 9px" stl:if="metadata/icon" />
-              <h1>${metadata/title}</h1>
-              <div id="breadcrumbs">
-                <label>Location:</label>
-                <span stl:repeat="item breadcrumb">
-                  <a stl:if="item/url" href="${item/url}"
-                    title="${item/name}">${item/short_name}</a>
-                  <span stl:if="not item/url"
-                    title="${item/name}">${item/short_name}</span>
-                  <stl:inline stl:if="not repeat/item/end">/</stl:inline>
-                </span>
-              </div>
-              <div class="clear"></div>
-            </div>
+            <div class="clear"></div>
             <!-- The Body -->
             <div id="body">
+              <h1>${metadata/title}</h1>
               <div id="message" stl:if="message">${message}</div>
               <div id="content">
-                <h2 stl:if="view_title">${view_title}</h2>
+                <p stl:if="view_description">${view_description}</p>
                 ${body}
               </div>
             </div>

@@ -4,7 +4,9 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml" 
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
-  <h2>${title} <em stl:if="user_must_confirm">(Not confirm)</em></h2>
+  <p stl:if="user_must_confirm">
+  The user is not active, (s)he has not confirmed registration.
+  </p>
 
   <p stl:if="is_owner">
     Welcome to your home folder. This is your personal space where you can
