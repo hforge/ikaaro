@@ -105,7 +105,7 @@ class EditIssueForm(STLForm):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Edit Issue')
-    tab_icon = 'edit.png'
+    icon = 'edit.png'
     template = '/ui/tracker/edit_issue.xml'
 
     schema = issue_fields
@@ -203,7 +203,7 @@ class EditResourcesForm(STLForm):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Edit resources')
-    tab_icon = 'edit.png'
+    icon = 'edit.png'
     template = '/ui/tracker/edit_resources.xml'
 
     schema = {
@@ -299,7 +299,7 @@ class HistoryForm(STLView):
 
     access = 'is_allowed_to_view'
     title = MSG(u'History')
-    tab_icon = 'history.png'
+    icon = 'history.png'
     template = '/ui/tracker/issue_history.xml'
 
 

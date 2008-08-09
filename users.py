@@ -48,7 +48,7 @@ class ProfileView(STLView):
 
     access = 'is_allowed_to_view'
     title = MSG(u'Profile')
-    tab_icon = 'action_home.png'
+    icon = 'action_home.png'
     template = '/ui/user/profile.xml'
 
 
@@ -70,7 +70,7 @@ class AccountForm(STLForm):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Edit Account')
-    tab_icon = 'settings.png'
+    icon = 'settings.png'
     template = '/ui/user/edit_account.xml'
     schema = {
         'password': String,
@@ -127,7 +127,7 @@ class PreferencesForm(STLForm):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Preferences')
-    tab_icon = 'skin.png'
+    icon = 'skin.png'
     template = '/ui/user/edit_language_form.xml'
     schema = {
         'user_language': String(mandatory=True),
@@ -160,7 +160,7 @@ class PasswordForm(STLForm):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Edit Password')
-    tab_icon = 'lock.png'
+    icon = 'lock.png'
     template = '/ui/user/edit_password.xml'
     schema = {
         'newpass': String(mandatory=True),
@@ -215,7 +215,7 @@ class TasksView(STLView):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Tasks')
-    tab_icon = 'tasks.png'
+    icon = 'tasks.png'
     template = '/ui/user/tasks.xml'
 
 

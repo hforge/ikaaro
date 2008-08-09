@@ -49,7 +49,7 @@ class TableView(BrowseForm):
     access = 'is_allowed_to_view'
     access_POST = 'is_allowed_to_edit'
     title = MSG(u'View')
-    tab_icon = 'view.png'
+    icon = 'view.png'
 
     schema = {
         'ids': Integer(multiple=True, mandatory=True),
@@ -154,7 +154,7 @@ class AddRecordForm(AutoForm):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Add')
-    tab_icon = 'new.png'
+    icon = 'new.png'
 
     form_title = MSG(u'Add a new record')
     submit_value = MSG(u'Add')

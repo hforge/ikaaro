@@ -143,7 +143,7 @@ class DownloadView(STLView):
 
     access = 'is_allowed_to_view'
     title = MSG(u'Download')
-    tab_icon = 'view.png'
+    icon = 'view.png'
     template = '/ui/file/download_form.xml'
 
 
@@ -159,7 +159,7 @@ class UploadForm(STLForm):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Replace')
-    tab_icon = 'button_upload.png'
+    icon = 'button_upload.png'
     template = '/ui/file/upload.xml'
     schema = {
         'file': FileDataType(mandatory=True),
@@ -261,7 +261,7 @@ class BacklinksView(BrowseForm):
 
     access = 'is_allowed_to_view'
     title = MSG(u"Backlinks")
-    tab_icon = 'button_rename.png'
+    icon = 'button_rename.png'
 
     query_schema = {
         'search_field': String,
@@ -468,7 +468,7 @@ class File(WorkflowAware, VersioningAware):
     externaledit = STLView(
         access='is_allowed_to_edit',
         title=MSG(u'External Editor'),
-        tab_icon='button_external.png',
+        icon='button_external.png',
         template='/ui/file/externaledit.xml',
     )
 

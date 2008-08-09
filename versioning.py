@@ -38,7 +38,7 @@ class HistoryView(STLView):
 
     access = 'is_allowed_to_view'
     title = MSG(u'History')
-    tab_icon = 'history.png'
+    icon = 'history.png'
     template = '/ui/file/history.xml'
 
 

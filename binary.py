@@ -79,7 +79,7 @@ class Image(File):
     view = STLView(
         access='is_allowed_to_view',
         title=MSG(u'View'),
-        tab_icon='view.png',
+        icon='view.png',
         template='/ui/binary/Image_view.xml')
 
     thumb = ThumbnailView()

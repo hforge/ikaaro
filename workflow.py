@@ -37,7 +37,7 @@ class StateForm(STLForm):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Workflow State')
-    tab_icon = 'state.png'
+    icon = 'state.png'
     template = '/ui/WorkflowAware_state.xml'
     schema = {
         'transition': String(mandatory=True),

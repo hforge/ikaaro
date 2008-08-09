@@ -85,7 +85,7 @@ class AddIssueForm(STLForm):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Add')
-    tab_icon = 'new.png'
+    icon = 'new.png'
     template = '/ui/tracker/add_issue.xml'
 
     schema = issue_fields
@@ -244,7 +244,7 @@ class SearchForm(BrowseContent):
 
     access = 'is_allowed_to_view'
     title = MSG(u'Search')
-    tab_icon = 'button_search.png'
+    icon = 'button_search.png'
     template = '/ui/tracker/search.xml'
 
     query_schema = search_fields
@@ -390,7 +390,7 @@ class View(BrowseForm):
 
     access = 'is_allowed_to_view'
     title = MSG(u'View')
-    tab_icon = 'view.png'
+    icon = 'view.png'
     template = '/ui/tracker/view_tracker.xml'
 
     schema = {

@@ -47,13 +47,13 @@ class NewInstanceForm(STLForm):
     add a new object to the database.
     """
 
-    def tab_icon(self, resource, **kw):
+    def icon(self, resource, **kw):
         type = kw.get('type')
         cls = get_object_class(type)
         if cls is not None:
             return cls.get_class_icon()
         # Default
-        return '/ui/icons/16x16/new.png'
+        return 'new.png'
 
 
 

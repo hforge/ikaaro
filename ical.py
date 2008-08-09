@@ -578,7 +578,7 @@ class TimetablesForm(STLForm):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Timetables')
-    tab_icon = 'settings.png'
+    icon = 'settings.png'
     template = '/ui/ical/ical_edit_timetables.xml'
     schema = {}
 
@@ -653,7 +653,7 @@ class EditEventForm(CalendarView, STLForm):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Edit Event')
-    tab_icon = 'button_calendar.png'
+    icon = 'button_calendar.png'
     template = '/ui/ical/ical_edit_event.xml'
     schema = {
         'DTSTART_day': Integer(mandatory=True),
@@ -956,7 +956,7 @@ class MonthlyView(CalendarView, STLView):
 
     access = 'is_allowed_to_view'
     title = MSG(u'Monthly View')
-    tab_icon = 'icalendar.png'
+    icon = 'icalendar.png'
     template = '/ui/ical/ical_monthly_view.xml'
 
 
@@ -1033,7 +1033,7 @@ class WeeklyView(CalendarView, STLView):
 
     access = 'is_allowed_to_view'
     title = MSG(u'Weekly View')
-    tab_icon = 'icalendar.png'
+    icon = 'icalendar.png'
     template = '/ui/ical/ical_grid_weekly_view.xml'
 
 

@@ -41,7 +41,7 @@ class PermissionsForm(BrowseForm):
 
     access = 'is_admin'
     title = MSG(u'Browse Members')
-    tab_icon = 'userfolder.png'
+    icon = 'userfolder.png'
     description = MSG(u'See the users and their roles.')
 
     query_schema = {
@@ -191,7 +191,7 @@ class NewUserForm(STLForm):
 
     access = 'is_admin'
     title = MSG(u'Add New Member')
-    tab_icon = 'card.png'
+    icon = 'card.png'
     description = MSG(u'Grant access to a new user.')
     template = '/ui/access/new_user.xml'
     schema = {

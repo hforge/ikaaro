@@ -118,7 +118,7 @@ class MetadataForm(STLForm):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Edit Metadata')
-    tab_icon = 'metadata.png'
+    icon = 'metadata.png'
     template = '/ui/base/edit_metadata.xml'
     schema = {
         'title': Unicode,
@@ -400,13 +400,11 @@ class Node(BaseNode):
 
 
     def get_method_icon(self, view, size='16x16', **kw):
-        icon = getattr(view, 'tab_icon', None)
+        icon = getattr(view, 'icon', None)
         if icon is None:
             return None
         if callable(icon):
             icon = icon(self, **kw)
-        if icon.startswith('/ui/'):
-            return icon
         return '/ui/icons/%s/%s' % (size, icon)
 
 

@@ -265,7 +265,7 @@ class ControlPanel(IconsView):
 
     access = 'is_allowed_to_view'
     title = MSG(u'Control Panel')
-    tab_icon = 'settings.png'
+    icon = 'settings.png'
 
 
     def get_namespace(self, resource, context):
@@ -294,7 +294,7 @@ class VHostsForm(STLForm):
 
     access = 'is_admin'
     title = MSG(u'Virtual Hosts')
-    tab_icon = 'website.png'
+    icon = 'website.png'
     description = MSG(u'Define the domain names for this Web Site.')
     template = '/ui/website/virtual_hosts.xml'
     schema = {
@@ -324,7 +324,7 @@ class SecurityPolicyForm(STLForm):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Security Policy')
-    tab_icon = 'lock.png'
+    icon = 'lock.png'
     description = MSG(u'Choose the security policy.')
     template = '/ui/website/anonymous.xml'
     schema = {
@@ -352,7 +352,7 @@ class ContactOptionsForm(STLForm):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Contact Options')
-    tab_icon = 'mail.png'
+    icon = 'mail.png'
     description = MSG(u'Configure the Contact form.')
     template = '/ui/website/contact_options.xml'
     schema = {
@@ -399,7 +399,7 @@ class BrokenLinks(STLView):
 
     access = 'is_admin'
     title = MSG(u'Broken Links')
-    tab_icon = 'clear.png'
+    icon = 'clear.png'
     description = MSG(u'Check the referential integrity.')
     template = '/ui/website/broken_links.xml'
 
@@ -540,7 +540,7 @@ class LanguagesForm(STLForm):
     access = 'is_admin'
     title = MSG(u'Languages')
     description = MSG(u'Define the Web Site languages.')
-    tab_icon = 'languages.png'
+    icon = 'languages.png'
 
 
 

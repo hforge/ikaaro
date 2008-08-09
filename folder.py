@@ -61,7 +61,7 @@ class AddView(IconsView):
 
     access = 'is_allowed_to_add'
     title = MSG(u'Add resource')
-    tab_icon = '/ui/icons/16x16/new.png'
+    icon = 'new.png'
 
 
     def get_namespace(self, resource, context):
@@ -86,7 +86,7 @@ class BrowseContent(BrowseForm):
     access = 'is_allowed_to_view'
     access_POST = 'is_allowed_to_edit'
     title = MSG(u'Browse Content')
-    tab_icon = '/ui/icons/16x16/folder.png'
+    icon = 'folder.png'
 
     schema = {
         'ids': String(multiple=True, mandatory=True),
@@ -392,7 +392,7 @@ class PreviewView(STLView):
 
     access = 'is_allowed_to_view'
     title = MSG(u'Preview Content')
-    tab_icon = '/ui/icons/16x16/image.png'
+    icon = 'image.png'
     template = '/ui/folder/browse_image.xml'
 
     search_fields =  [
@@ -458,7 +458,7 @@ class PreviewView(STLView):
 class LastChanges(BrowseContent):
 
     title = MSG(u"Last Changes")
-    tab_icon = 'icalendar.png'
+    icon = 'icalendar.png'
 
     query_schema = {
         'search_field': String,
@@ -488,7 +488,7 @@ class OrphansView(BrowseContent):
 
     access = 'is_allowed_to_view'
     title = MSG(u"Orphans")
-    tab_icon = 'orphans.png'
+    icon = 'orphans.png'
     description = MSG(u"Show objects not linked from anywhere.")
 
 

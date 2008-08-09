@@ -42,7 +42,7 @@ class EditTextForm(STLForm):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Edit Inline')
-    tab_icon = 'edit.png'
+    icon = 'edit.png'
     template = '/ui/text/edit.xml'
     schema = {
         'data': String(mandatory=True),
@@ -65,7 +65,7 @@ class ViewText(STLView):
 
     access = 'is_allowed_to_view'
     title = MSG(u'View')
-    tab_icon = 'view.png'
+    icon = 'view.png'
     template = '/ui/text/view.xml'
 
 
@@ -78,7 +78,7 @@ class ExternalEditForm(STLView):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'External Editor')
-    tab_icon = 'button_external.png'
+    icon = 'button_external.png'
     template = '/ui/text/externaledit.xml'
 
 
