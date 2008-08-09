@@ -29,8 +29,8 @@ input {
 a { color: #3465a4; }
 a img { border: 0; }
 
-.layout_auth {
-  width: 1000px;
+#layout {
+  width: 980px;
 }
 
 #header {

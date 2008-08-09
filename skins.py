@@ -239,26 +239,6 @@ class Skin(UIFolder):
         }
 
 
-    def get_left_menus(self, context):
-        user = context.user
-
-        menus = []
-        # Main Menu
-        menu = self.get_main_menu(context)
-        if menu is not None:
-            menus.append(menu)
-        # Parent's Menu
-        menu = self.get_context_menu(context)
-        if menu is not None:
-            menus.append(menu)
-        # Content language
-        if user is not None:
-            menu = self.get_content_language_menu(context)
-            menus.append(menu)
-
-        return menus
-
-
     #######################################################################
     # Breadcrumb
     #######################################################################
@@ -505,8 +485,6 @@ class Skin(UIFolder):
         namespace['meta_tags']= self.get_meta_tags(context)
         # User menu
         namespace['user']= self.get_user_menu(context)
-        # Left menus
-        namespace['left_menus'] = self.get_left_menus(context)
         # Object's metadata & Breadcrumb
         namespace['metadata'] = self.get_metadata_ns(context)
         namespace['breadcrumb'] = self.get_breadcrumb(context)
@@ -520,11 +498,6 @@ class Skin(UIFolder):
         if callable(title):
             title = title()
         namespace['view_title'] = title
-        # Layout
-        if context.user is None:
-            namespace['layout_class'] = 'layout_not_auth'
-        else:
-            namespace['layout_class'] = 'layout_auth'
 
         return namespace
 
