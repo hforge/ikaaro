@@ -110,7 +110,7 @@ a img { border: 0; }
  * ***********************************************************************/
 
 #tabs {
-  padding: 0;
+  padding: 2px 0px;
   float: right;
   font-size: 1.1em;
 }
@@ -121,13 +121,7 @@ a img { border: 0; }
 }
 
 #tabs .menu a {
-  padding: 4px 4px 4px 4px;
-}
-
-#tabs .menu a span {
-  background-position: left center;
-  background-repeat: no-repeat;
-  padding: 4px 0 4px 19px;
+  padding: 2px 4px 2px 4px;
 }
 
 #tabs .menu a:hover {
@@ -136,7 +130,6 @@ a img { border: 0; }
 }
 
 #tabs .active a {
-  text-decoration: underline;
   font-weight: bold;
 }
 
