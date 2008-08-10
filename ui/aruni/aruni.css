@@ -127,7 +127,7 @@ a img { border: 0; }
  * ***********************************************************************/
 
 #tabs {
-  padding: 2px 0px;
+  padding: 2px 4px 2px 0px;
   float: right;
   font-size: 1.1em;
 }
@@ -161,9 +161,9 @@ a img { border: 0; }
 }
 
 #body {
-  padding: 3px;
+  padding: 10px;
   font-size: 1.4em;
-  height: 280px;
+  min-height: 280px;
 }
 
 #body h1, #body h2, #body h3, #body h4, #body h5, #body h6 {
@@ -195,8 +195,9 @@ a img { border: 0; }
 }
 
 #location {
-  padding: 4px 2px 0px 2px;
-  width: 776px;
+  margin: 0px 10px 0px 0px;
+  padding: 0px 0px 4px 8px;
+  width: 99%;
 }
 
 #header_right {
