@@ -412,10 +412,12 @@ def build_menu(options):
 
     """
     for option in options:
+        # Defaults
+        for name in ['class', 'src', 'items']:
+            option.setdefault(name, None)
+        # Submenu
         if option['items']:
             option['items'] = build_menu(option['items'])
-        else:
-            option['items'] = None
 
     namespace = {'items': options}
     return stl(events=menu_template, namespace=namespace)

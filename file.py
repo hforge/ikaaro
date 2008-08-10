@@ -451,10 +451,6 @@ class File(WorkflowAware, VersioningAware):
         return str.gettext() % size
 
 
-    def get_context_menu_base(self):
-        return self.parent
-
-
     def get_content_type(self):
         return self.handler.get_mimetype()
 

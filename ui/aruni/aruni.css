@@ -163,7 +163,7 @@ a img { border: 0; }
 #body {
   padding: 3px;
   font-size: 1.4em;
-  min-height: 280px;
+  height: 280px;
 }
 
 #body h1, #body h2, #body h3, #body h4, #body h5, #body h6 {
@@ -194,8 +194,8 @@ a img { border: 0; }
   color: #ff0000;
 }
 
-#center {
-  padding: 5px 8px 0px 5px;
+#location {
+  padding: 4px 2px 0px 2px;
   width: 776px;
 }
 
@@ -204,14 +204,16 @@ a img { border: 0; }
 }
 
 #right {
-  width: 224px;
-  font-size: 1.1em;
-  padding-top: 5px;
+  font-size: 1.0em;
+  padding-left: 8px;
+  width: 210px;
 }
+
 #right a, #right a:link, #right a:visited, #right a:hover, #right a:active {
   text-decoration: none;
   color: #3465a4;
 }
+
 #right label {
   display: block;
   width: 205px;
@@ -220,13 +222,16 @@ a img { border: 0; }
   color: #fff;
   background: #c17d11;
 }
+
 #right ul,
 #right dl {
   margin: 3px 6px 10px 3px;
 }
+
 #right ul {
   list-style: none;
 }
+
 #right li {
   margin: 3px;
   padding: 0;
@@ -235,22 +240,27 @@ a img { border: 0; }
   line-height: 1.6em;
   list-style: none;
 }
+
 #right li a {
   padding-left: 20px;
 }
+
 #right dl {
   padding: 3px;
 }
+
 #right dl dl {
   margin: 0;
   border: 0;
   padding: 0;
 }
+
 #right dt {
   overflow: hidden;
   line-height: 1.6em;
   border-bottom: 1px solid #d3d7cf;
 }
+
 #right dd {
   margin-left: 9px;
 }

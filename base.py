@@ -365,6 +365,39 @@ class Node(BaseNode):
         return views[0]
 
 
+    def get_right_menus(self, context):
+        from widgets import build_menu
+
+        menus = []
+        # Multilingual
+        if isinstance(context.view, MetadataForm):
+            site_root = self.get_site_root()
+            languages = site_root.get_property('website_languages')
+            content_language = context.get_cookie('language')
+            if content_language is None:
+                content_language = languages[0]
+
+            options = []
+            for language in languages:
+                title = get_language_name(language)
+                if language == content_language:
+                    css_class = 'nav_active'
+                else:
+                    css_class = None
+                options.append({
+                    'href': context.uri.replace(language=language),
+                    'title': title,
+                    'class': css_class,
+                })
+
+            menus.append({
+                'title': MSG(u'Edit Language'),
+                'content': build_menu(options)})
+
+        # Ok
+        return menus
+
+
     ########################################################################
     # Properties
     ########################################################################

@@ -753,10 +753,6 @@ class Folder(DBObject):
         return DBObject.get_view(self, name, **kw)
 
 
-    def get_context_menu_base(self):
-        return self
-
-
     view = IndexView()
     new_resource = AddView()
     browse_content = BrowseContent()

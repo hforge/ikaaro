@@ -42,8 +42,9 @@ from ikaaro.messages import *
 from ikaaro.registry import register_object_class
 from ikaaro.table import Table, TableView
 from ikaaro.text import Text
+from ikaaro.utils import resolve_view
 from ikaaro.views import BrowseForm
-from ikaaro.widgets import batch, table
+from ikaaro.widgets import batch, table, build_menu
 from issue import History, Issue, issue_fields
 from resources import Resources
 
@@ -272,12 +273,6 @@ class SearchForm(BrowseContent):
 
         # Build the namespace
         namespace = {}
-        # Stored Searches
-        stored_searches = [
-            {'name': x.name, 'title': x.get_title()}
-            for x in resource.search_objects(object_class=StoredSearch) ]
-        stored_searches.sort(key=itemgetter('title'))
-        namespace['stored_searches'] = stored_searches
 
         # Search Form
         query = context.query
@@ -677,14 +672,23 @@ class Tracker(Folder):
     #######################################################################
     # User Interface
     #######################################################################
-    # XXX
-    def get_subviews(self, name):
-        if name == 'search':
-            items = list(self.search_objects(object_class=StoredSearch))
-            items.sort(lambda x, y: cmp(x.get_property('title'),
-                                        y.get_property('title')))
-            return ['view?search_name=%s' % x.name for x in items]
-        return Folder.get_subviews(self, name)
+    def get_right_menus(self, context):
+        menus = []
+        # Stored Searches
+        items = self.search_objects(object_class=StoredSearch)
+        menu = [
+            {'href': resolve_view(context, 'view?search_name=%s' % x.name),
+             'title': x.get_property('title'),
+            }
+            for x in items ]
+        menu.sort(lambda x, y: cmp(x['title'], y['title']))
+        menus.append({
+            'title': MSG(u'Stored Searches'),
+            'content': build_menu(menu),
+        })
+
+        # Ok
+        return menus
 
 
     #######################################################################

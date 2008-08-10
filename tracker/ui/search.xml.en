@@ -5,141 +5,125 @@
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
   <!-- Navigation -->
-  <form action=";search" method="get">
-    Go to issue #<input type="text" name="issue_name" size="6" />
-    <input name=";go_to_issue" type="submit" class="button_ok" value="OK" />
-  </form>
+  <fieldset>
+    <legend>Go to issue</legend>
+    <form action=";search" method="get">
+      #<input type="text" name="issue_name" size="6" />
+      <input name=";go_to_issue" type="submit" class="button_ok" value="OK" />
+    </form>
+  </fieldset>
+
+  <br/>
 
   <!-- Advanced Search -->
-  <h3 stl:if="search_name">Search: ${search_title}</h3>
-  <h3 stl:if="not search_name">Search</h3>
-  <form action=";search" method="get">
-    <input type="hidden" name="search_name" value="${search_name}" />
-    <table>
-      <tr>
-        <td colspan="2">
-          <label for="text">Text (search within the title and all
-          comments)</label><br/>
-          <input type="text" name="text" id="text" size="30" value="${text}"
-            class="tracker_select" />
-        </td>
-        <td colspan="1">
-          <label for="mtime">Modified since:</label><br/>
-          <input type="text" name="mtime" id="mtime" size="2" value="${mtime}"
-            /> days ago
-        </td>
-      </tr>
-      <tr>
-        <td valign="top">
-          <label for="type">Type:<stl:block stl:if="is_admin"> (<a
-            href="./types/;view">Edit</a>)</stl:block></label>
-          <br/>
-          <select name="type" id="type" class="tracker_select"
-            multiple="multiple" size="3">
-            <option stl:repeat="item types" value="${item/id}"
-              selected="${item/is_selected}">${item/title}</option>
-          </select>
-        </td>
-        <td valign="top">
-          <label for="module">Module:<stl:block stl:if="is_admin"> (<a
-            href="./modules/;view">Edit</a>)</stl:block></label>
-          <br/>
-          <select name="module" id="module" class="tracker_select"
-            multiple="multiple" size="3">
-            <option stl:repeat="item modules" value="${item/id}"
-              selected="${item/is_selected}">${item/title}</option>
-          </select>
-        </td>
-        <td valign="top">
-          <label for="version">Version:<stl:block stl:if="is_admin"> (<a
-            href="./versions/;view">Edit</a>)</stl:block></label>
-          <br/>
-          <select name="version" id="version" class="tracker_select"
-            multiple="multiple" size="3">
-            <option stl:repeat="item versions" value="${item/id}"
-              selected="${item/is_selected}">${item/title}</option>
-          </select>
-        </td>
-      </tr>
-      <tr>
-        <td valign="top">
-          <label for="assigned_to">Assigned To:<stl:block stl:if="is_admin"> (<a
-            href="${manage_assigned}">Edit</a>)</stl:block></label>
-          <br/>
-          <select name="assigned_to" id="assigned_to"
-            class="tracker_select" multiple="multiple" size="3">
-            <option stl:repeat="item users" value="${item/id}"
-              selected="${item/is_selected}">${item/title}</option>
-          </select>
-        </td>
-        <td valign="top">
-          <label for="state">Status:<stl:block stl:if="is_admin"> (<a
-            href="./states/;view">Edit</a>)</stl:block></label>
-          <br/>
-          <select name="state" id="state" class="tracker_select"
-            multiple="multiple" size="3">
-            <option stl:repeat="item states" value="${item/id}"
-              selected="${item/is_selected}">${item/title}</option>
-          </select>
-        </td>
-        <td valign="top">
-          <label for="priority">Priority:<stl:block stl:if="is_admin"> (<a
-            href="./priorities/;view">Edit</a>)</stl:block></label>
-          <br/>
-          <select name="priority" id="priority" class="tracker_select"
-            multiple="multiple" size="3">
-            <option stl:repeat="item priorities" value="${item/id}"
-              selected="${item/is_selected}">${item/title}</option>
-          </select>
-        </td>
-      </tr>
+  <fieldset> 
+    <legend stl:if="search_name">Search: ${search_title}</legend>
+    <legend stl:if="not search_name">Search</legend>
+    <form action=";search" method="get">
+      <input type="hidden" name="search_name" value="${search_name}" />
+      <table>
+        <tr>
+          <td colspan="2">
+            <label for="text">Text (search within the title and all comments)
+            </label>
+            <br/>
+            <input type="text" name="text" id="text" size="30" value="${text}"
+              class="tracker_select" />
+          </td>
+          <td colspan="1">
+            <label for="mtime">Modified since:</label><br/>
+            <input type="text" name="mtime" id="mtime" size="2"
+              value="${mtime}" /> days ago
+          </td>
+        </tr>
+        <tr>
+          <td valign="top">
+            <label for="type">Type:<stl:block stl:if="is_admin"> (<a
+              href="./types/;view">Edit</a>)</stl:block></label>
+            <br/>
+            <select name="type" id="type" class="tracker_select"
+              multiple="multiple" size="3">
+              <option stl:repeat="item types" value="${item/id}"
+                selected="${item/is_selected}">${item/title}</option>
+            </select>
+          </td>
+          <td valign="top">
+            <label for="module">Module:<stl:block stl:if="is_admin"> (<a
+              href="./modules/;view">Edit</a>)</stl:block></label>
+            <br/>
+            <select name="module" id="module" class="tracker_select"
+              multiple="multiple" size="3">
+              <option stl:repeat="item modules" value="${item/id}"
+                selected="${item/is_selected}">${item/title}</option>
+            </select>
+          </td>
+          <td valign="top">
+            <label for="version">Version:<stl:block stl:if="is_admin"> (<a
+              href="./versions/;view">Edit</a>)</stl:block></label>
+            <br/>
+            <select name="version" id="version" class="tracker_select"
+              multiple="multiple" size="3">
+              <option stl:repeat="item versions" value="${item/id}"
+                selected="${item/is_selected}">${item/title}</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top">
+            <label for="assigned_to">Assigned To:<stl:block stl:if="is_admin">
+            (<a href="${manage_assigned}">Edit</a>)</stl:block></label>
+            <br/>
+            <select name="assigned_to" id="assigned_to"
+              class="tracker_select" multiple="multiple" size="3">
+              <option stl:repeat="item users" value="${item/id}"
+                selected="${item/is_selected}">${item/title}</option>
+            </select>
+          </td>
+          <td valign="top">
+            <label for="state">Status:<stl:block stl:if="is_admin"> (<a
+              href="./states/;view">Edit</a>)</stl:block></label>
+            <br/>
+            <select name="state" id="state" class="tracker_select"
+              multiple="multiple" size="3">
+              <option stl:repeat="item states" value="${item/id}"
+                selected="${item/is_selected}">${item/title}</option>
+            </select>
+          </td>
+          <td valign="top">
+            <label for="priority">Priority:<stl:block stl:if="is_admin"> (<a
+              href="./priorities/;view">Edit</a>)</stl:block></label>
+            <br/>
+            <select name="priority" id="priority" class="tracker_select"
+              multiple="multiple" size="3">
+              <option stl:repeat="item priorities" value="${item/id}"
+                selected="${item/is_selected}">${item/title}</option>
+            </select>
+          </td>
+        </tr>
 
-      <tr>
-        <td>
-          <input type="submit" name=";search" class="button_search"
-            value="Search" />
-          <input type="submit" name=";search" class="button_calendar"
-            value="Search on resources" onclick="weekly();" />
-          <input type="hidden" name="search_view" id="search_view"
-            value=";view" />
-          <script language="javascript">
-            function weekly() {
-              var elt = document.getElementById('search_view');
-              elt.value="resources/;weekly_view";
-            }
-          </script>
-        </td>
-        <td colspan="2" align="right">
-          <label for="search_title">Remember as</label>
-          <input type="text" name="search_title" id="search_title" size="12"
-            value="${search_title}" />
-        </td>
-      </tr>
-    </table>
-  </form>
-
-  <h3>Stored Searches</h3>
-  <form action="" method="post" stl:if="stored_searches">
-    <table>
-      <tr stl:repeat="search stored_searches">
-        <td><input type="checkbox" name="ids" value="${search/name}" /></td>
-        <td>
-          <a href=";view?search_name=${search/name}">${search/title}</a>
-        </td>
-        <td>
-          (<a href=";search?search_name=${search/name}">Edit</a>)
-        </td>
-      </tr>
-      <tr>
-        <td></td>
-        <td colspan="2">
-          <input type="submit" name=";remove" class="button_delete" value="Remove" />
-        </td>
-      </tr>
-    </table>
-  </form>
-  <p stl:if="not stored_searches">
-    There are not stored searches.
-  </p>
+        <tr>
+          <td>
+            <input type="submit" name=";search" class="button_search"
+              value="Search" />
+            <input type="submit" name=";search" class="button_calendar"
+              value="Search on resources" onclick="weekly();" />
+            <input type="hidden" name="search_view" id="search_view"
+              value=";view" />
+            <script language="javascript">
+              function weekly() {
+                var elt = document.getElementById('search_view');
+                elt.value="resources/;weekly_view";
+              }
+            </script>
+          </td>
+          <td colspan="2" align="right">
+            <label for="search_title">Remember as</label>
+            <input type="text" name="search_title" id="search_title" size="12"
+              value="${search_title}" />
+          </td>
+        </tr>
+      </table>
+    </form>
+  </fieldset>
 
 </stl:block>

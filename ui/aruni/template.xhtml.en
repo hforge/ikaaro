@@ -8,7 +8,7 @@
     <!-- Meta -->
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta stl:repeat="meta meta_tags" name="${meta/name}" lang="${meta/lang}"
-          content="${meta/content}" />
+      content="${meta/content}" />
 
     <!-- CSS -->
     <link type="text/css" rel="stylesheet" stl:repeat="style styles"
@@ -17,71 +17,76 @@
     <!-- JavaScript -->
     <script type="text/javascript" stl:repeat="script scripts" src="${script}"
       />
-
   </head>
+
   <body>
     <table id="layout" border="0" cellpadding="0" cellspacing="0"
       align="center">
-      <thead>
-        <tr>
-          <td id="header">
-            <stl:block stl:if="not user/info">
-              <a href="/;login" id="top_menu_login">Log in</a>
-              <a href="/;register" id="top_menu_register"
-                stl:if="user/joinisopen">Register</a>
-            </stl:block>
-            <stl:block stl:if="user/info">
-              <a href="${user/info/home}" id="top_menu_profile">My Profile</a>
-              <a href="/;logout" id="top_menu_logout">Log out</a>
-            </stl:block>
-            <a href="/;site_search" id="top_menu_search">Search</a>
-            <a href="/;contact" id="top_menu_contact">Contact</a>
-          </td>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td id="center" valign="top">
-            <!-- Location -->
-            <div id="breadcrumbs">
-              <label>Location:</label>
-              <span stl:repeat="item breadcrumb"><a stl:if="item/url"
-                href="${item/url}" title="${item/name}">${item/short_name}</a
-                ><span stl:if="not item/url" title="${item/name}"
-                >${item/short_name}</span><stl:inline
-                stl:if="not repeat/item/end">/</stl:inline></span>
-            </div>
-            <!-- Resource Menu: Views -->
-            <div id="tabs" stl:if="tabs">
-              [
-              <span class="menu ${menu/class}" stl:repeat="menu tabs">
-                <a href="${menu/name}" id="${menu/id}">${menu/label}</a>
-                <stl:block stl:if="not repeat/menu/end">|</stl:block>
-              </span>
-              ]
-            </div>
-            <div class="clear"></div>
-            <!-- The Body -->
-            <div id="body">
-              <h1>${metadata/title}</h1>
-              <div id="message" stl:if="message">${message}</div>
-              <div id="content">
+      <tr>
+        <td id="header">
+          <!-- Header -->
+          <stl:block stl:if="not user/info">
+            <a href="/;login" id="top_menu_login">Log in</a>
+            <a href="/;register" id="top_menu_register"
+              stl:if="user/joinisopen">Register</a>
+          </stl:block>
+          <stl:block stl:if="user/info">
+            <a href="${user/info/home}" id="top_menu_profile">My Profile</a>
+            <a href="/;logout" id="top_menu_logout">Log out</a>
+          </stl:block>
+          <a href="/;site_search" id="top_menu_search">Search</a>
+          <a href="/;contact" id="top_menu_contact">Contact</a>
+        </td>
+      </tr>
+      <tr>
+        <td id="location" valign="top">
+          <!-- Location -->
+          <div id="breadcrumbs">
+            <label>Location:</label>
+            <span stl:repeat="item breadcrumb"><a stl:if="item/url"
+              href="${item/url}" title="${item/name}">${item/short_name}</a
+              ><span stl:if="not item/url" title="${item/name}"
+              >${item/short_name}</span><stl:inline
+              stl:if="not repeat/item/end">/</stl:inline></span>
+          </div>
+          <!-- Views -->
+          <div id="tabs" stl:if="tabs">
+            [
+            <span class="menu ${menu/class}" stl:repeat="menu tabs">
+              <a href="${menu/name}" id="${menu/id}">${menu/label}</a>
+              <stl:block stl:if="not repeat/menu/end">|</stl:block>
+            </span>
+            ]
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td id="body" valign="top">
+          <!-- Body -->
+          <h1>${metadata/title}</h1>
+          <div id="message" stl:if="message">${message}</div>
+          <table cellpadding="0" cellspacing="0" border="0" width="100%">
+            <tr>
+              <td id="content" valign="top">
                 <p stl:if="view_description">${view_description}</p>
                 ${body}
-              </div>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <div id="footer">
-              <a href="/;about">About</a>
-              <a href="/;credits">Credits</a>
-              <a href="/;license">License</a>
-            </div>
-          </td>
-        </tr>
-      </tbody>
+              </td>
+              <td id="right" valign="top">
+                <div class="navigation" stl:repeat="menu right_menus">
+                  <label>${menu/title}</label>
+                  ${menu/content}
+                </div>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
     </table>
+    <!-- Footer -->
+    <div id="footer">
+      <a href="/;about">About</a>
+      <a href="/;credits">Credits</a>
+      <a href="/;license">License</a>
+    </div>
   </body>
 </html>

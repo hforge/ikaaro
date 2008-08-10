@@ -36,7 +36,7 @@ from itools.xml import XMLParser, XMLFile
 # Import from ikaaro
 from base import Node, DBObject
 from folder import Folder as DBFolder
-from utils import reduce_string
+from utils import reduce_string, resolve_view
 from widgets import build_menu
 
 
@@ -151,102 +151,11 @@ class Skin(UIFolder):
 
 
     #######################################################################
-    # Left Menu
+    # Right Menu
     #######################################################################
-    def get_main_menu_options(self, context):
-        return [
-            {'title': MSG(u'Control Panel'),
-             'path': '.', 'method': 'control_panel',
-             'icon': '/ui/icons/16x16/settings.png'}]
-
-
-    def get_main_menu(self, context):
-        user = context.user
-        root = context.site_root
-        here = context.resource or root
-
-        menu = []
-        for option in self.get_main_menu_options(context):
-            object = root.get_object(option['path'])
-            # Get the view
-            method = option['method']
-            view = object.get_view(method)
-            # Test security
-            ac = object.get_access_control()
-            if ac.is_access_allowed(user, object, view):
-                menu.append({
-                    'href': '%s/;%s' % (here.get_pathto(object), method),
-                    'title': option['title'],
-                    'class': '',
-                    'src': option['icon'],
-                    'items': []})
-
-        if not menu:
-            return None
-
-        return {'title': MSG(u'Main Menu'),
-                'content': build_menu(menu)}
-
-
-    def get_context_menu(self, context):
+    def get_right_menus(self, context):
         here = context.resource
-        if not isinstance(here, DBObject):
-            return None
-
-        base = here.get_context_menu_base()
-        prefix = context.site_root.get_pathto(base)
-        prefix = '/' + str(prefix)
-
-        # Build the menu
-        menu = []
-        for name, view in base.get_views():
-            # Find out the title
-            if '?' in name:
-                args = name.split('?')[1]
-                args = decode_query(args)
-            else:
-                args = {}
-            # Append to the menu
-            menu.append({
-                'href': '%s/;%s' % (prefix, name),
-                'title': get_view_title(view),
-                'class': '',
-                'src': base.get_method_icon(view, **args),
-                'items': []})
-
-        if not menu:
-            return None
-
-        return {'title': base.class_title,
-                'content': build_menu(menu)}
-
-
-    def get_content_language_menu(self, context):
-        site_root = context.resource.get_site_root()
-        languages = site_root.get_property('website_languages')
-        content_language = context.get_cookie('language')
-        if content_language is None:
-            content_language = languages[0]
-
-        options = []
-        for language in languages:
-            title = get_language_name(language)
-            if language == content_language:
-                css_class = 'nav_active'
-            else:
-                css_class = ''
-            options.append({
-                'href': context.uri.replace(language=language),
-                'src': None,
-                'title': title,
-                'class': css_class,
-                'items': [],
-            })
-
-        return {
-            'title': MSG(u'Content Language'),
-            'content': build_menu(options),
-        }
+        return here.get_right_menus(context)
 
 
     #######################################################################
@@ -292,23 +201,8 @@ class Skin(UIFolder):
         """Return tabs and subtabs as a dict {tabs, subtabs} of list of dicts
         [{name, label, active, style}...].
         """
-        def resolve(context, view_name):
-            # Case 1: /a/b/;view
-            if context.view_name is not None:
-                return ';%s' % view_name
-            # Case 2: /
-            if not context.uri.path:
-                return ';%s' % view_name
-            # Case 3: /a/b/
-            if context.uri.path.endswith_slash:
-                return ';%s' % view_name
-            # Case 4: /a/b
-            return '%s/;%s' % (context.uri.path[-1], view_name)
-
         # Get request, path, etc...
         here = context.resource
-        if here is None:
-            return []
 
         # Get access control
         user = context.user
@@ -335,7 +229,7 @@ class Skin(UIFolder):
             # Add the menu
             tabs.append({
                 'id': 'tab_%s' % name,
-                'name': resolve(context, link),
+                'name': resolve_view(context, link),
                 'label': get_view_title(view),
                 'active': active,
                 'class': active and 'active' or None})
@@ -348,8 +242,6 @@ class Skin(UIFolder):
     #######################################################################
     def get_metadata_ns(self, context):
         here = context.resource
-        if here is None:
-            return {'title': '', 'format': '', 'mtime': '', 'icon': ''}
         return {'title': here.get_title(),
                 'format': here.class_title,
                 'mtime': here.get_mtime().strftime('%Y-%m-%d %H:%M'),
@@ -447,9 +339,6 @@ class Skin(UIFolder):
         """Return the title to give to the template document.
         """
         here = context.resource
-        # Not Found
-        if here is None:
-            return u'404 Not Found'
         # In the Root
         root = here.get_site_root()
         if root is here:
@@ -495,12 +384,14 @@ class Skin(UIFolder):
         namespace['meta_tags']= self.get_meta_tags(context)
         # User menu
         namespace['user']= self.get_user_menu(context)
-        # Object's metadata & Breadcrumb
-        namespace['metadata'] = self.get_metadata_ns(context)
+        # Location & Views
         namespace['breadcrumb'] = self.get_breadcrumb(context)
-        # Tabs & Message
         namespace['tabs'] = self.get_tabs(context)
+        # Resource's metadata & message
+        namespace['metadata'] = self.get_metadata_ns(context)
         namespace['message'] = self.get_message(context)
+        # Resource's right menu
+        namespace['right_menus'] = self.get_right_menus(context)
         # View's title (FIXME)
         here = context.resource
         view = context.view
