@@ -269,24 +269,24 @@ class ControlPanel(IconsView):
 
 
     def get_namespace(self, resource, context):
-        namespace = {
-            'title': MSG(u'Control Panel'),
-            'batch': None,
-            'items': [],
-        }
+        items = []
         for name in resource.class_control_panel:
             view = resource.get_view(name)
             if view is None:
                 continue
             if not resource.is_access_allowed(context.user, resource, view):
                 continue
-            namespace['items'].append({
+            items.append({
                 'icon': resource.get_method_icon(view, size='48x48'),
                 'title': view.title,
                 'description': view.description,
                 'url': ';%s' % name})
 
-        return namespace
+        return {
+            'title': MSG(u'Control Panel'),
+            'batch': None,
+            'items': items,
+        }
 
 
 

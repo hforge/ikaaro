@@ -1,36 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<stl:block xmlns="http://www.w3.org/1999/xhtml" 
+<stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
   <p stl:if="user_must_confirm">
   The user is not active, (s)he has not confirmed registration.
   </p>
 
-  <p stl:if="is_owner">
-    Welcome to your home folder. This is your personal space where you can
-    manage your own documents and publish them.
-  </p>
-  <stl:block stl:if="is_owner_or_admin">
-    <p>You can do the following actions:</p>
-    <ul>
-      <li>
-        <a href=";edit_account">Edit account details;</a>
-      </li>
-      <li>
-        <a href=";edit_preferences">Edit language preferences;</a>
-      </li>
-      <li>
-        <a href=";browse_content">Manage personal content;</a>
-      </li>
-      <li>
-        <a href=";edit_password">Change your password;</a>
-      </li>
-      <li>
-        <a href=";tasks">Pending tasks.</a>
-      </li>
-    </ul>
-  </stl:block>
+  <table stl:repeat="item items" class="new_resource_thumb">
+    <tr>
+      <td valign="top" style="width: 48px">
+        <a href="${item/url}"><img alt="" src="${item/icon}" /></a>
+      </td>
+      <td valign="top">
+        <a href="${item/url}">${item/title}</a>
+        <br/>
+        ${item/description}
+      </td>
+    </tr>
+  </table>
 
 </stl:block>

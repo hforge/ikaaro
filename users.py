@@ -38,7 +38,7 @@ from datatypes import Password
 from folder import Folder
 from messages import *
 from registry import register_object_class, get_object_class
-from utils import crypt_password, generate_password
+from utils import crypt_password, generate_password, resolve_view
 
 
 ###########################################################################
@@ -48,6 +48,7 @@ class ProfileView(STLView):
 
     access = 'is_allowed_to_view'
     title = MSG(u'Profile')
+    description = MSG(u"User's profile page.")
     icon = 'action_home.png'
     template = '/ui/user/profile.xml'
 
@@ -56,13 +57,34 @@ class ProfileView(STLView):
         root = context.root
         user = context.user
 
+        ac = resource.get_access_control()
+
+        # The icons menu
+        items = []
+        for name in ['edit_account', 'edit_preferences', 'edit_password',
+                     'tasks']:
+            # Get the view & check access rights
+            view = resource.get_view(name)
+            if view is None:
+                continue
+            if not ac.is_access_allowed(user, resource, view):
+                continue
+            # Append
+            items.append({
+                'url': resolve_view(context, name),
+                'title': view.title,
+                'description': getattr(view, 'description', None),
+                'icon': resource.get_method_icon(view, size='48x48'),
+            })
+
+        # Ok
         is_owner = user is not None and user.name == resource.name
         return {
-            'title': resource.get_title(),
-            'is_owner': is_owner,
+            'items': items,
             'is_owner_or_admin': is_owner or root.is_admin(user, resource),
             'user_must_confirm': resource.has_property('user_must_confirm'),
         }
+
 
 
 
@@ -70,7 +92,8 @@ class AccountForm(STLForm):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Edit Account')
-    icon = 'settings.png'
+    description = MSG(u'Edit your name and email address.')
+    icon = 'card.png'
     template = '/ui/user/edit_account.xml'
     schema = {
         'password': String,
@@ -126,8 +149,9 @@ class AccountForm(STLForm):
 class PreferencesForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    title = MSG(u'Preferences')
-    icon = 'skin.png'
+    title = MSG(u'Edit Preferences')
+    description = MSG(u'Set your preferred language.')
+    icon = 'preferences.png'
     template = '/ui/user/edit_language_form.xml'
     schema = {
         'user_language': String(mandatory=True),
@@ -160,6 +184,7 @@ class PasswordForm(STLForm):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Edit Password')
+    description = MSG(u'Change your password.')
     icon = 'lock.png'
     template = '/ui/user/edit_password.xml'
     schema = {
@@ -215,6 +240,7 @@ class TasksView(STLView):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Tasks')
+    description = MSG(u'See your pending tasks.')
     icon = 'tasks.png'
     template = '/ui/user/tasks.xml'
 
