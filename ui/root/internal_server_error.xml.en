@@ -4,15 +4,17 @@
 <div xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
-  <h3>Internal Server Error</h3>
+  <fieldset>
+    <legend style="font-weight: bold;">Internal Server Error</legend>
 
-  <p>
+    <p>
     There has been an error, please try again later. If the error
     persists contact with the system administrator.
-  </p>
-  <p>
+    </p>
+    <p>
     Apologies for the inconvenience.
-  </p>
-  <pre style="color: white;">${traceback}</pre>
+    </p>
+    <pre style="color: #BBB;">${traceback}</pre>
+  </fieldset>
 
 </div>
