@@ -151,140 +151,22 @@ class Skin(UIFolder):
 
 
     #######################################################################
-    # Right Menu
+    # HTML head
     #######################################################################
-    def get_right_menus(self, context):
+    def get_template_title(self, context):
+        """Return the title to give to the template document.
+        """
         here = context.resource
-        return here.get_right_menus(context)
+        # In the Root
+        root = here.get_site_root()
+        if root is here:
+            return root.get_title()
+        # Somewhere else
+        message = MSG(u"${root_title}: ${here_title}")
+        return message.gettext(root_title=root.get_title(),
+                               here_title=here.get_title())
 
 
-    #######################################################################
-    # Breadcrumb
-    #######################################################################
-    def get_breadcrumb(self, context):
-        """Return a list of dicts [{name, url}...]
-        """
-        root = context.site_root
-
-        # Initialize the breadcrumb with the root resource
-        path = '/'
-        title = root.get_title()
-        breadcrumb = [{
-            'url': path,
-            'name': title,
-            'short_name': reduce_string(title, 15, 30),
-            }]
-
-        # Complete the breadcrumb
-        resource = root
-        for name in context.uri.path:
-            path = path + ('%s/' % name)
-            try:
-                resource = resource.get_object(name)
-            except LookupError:
-                break
-            # Append
-            title = resource.get_title()
-            breadcrumb.append({
-                'url': path,
-                'name': title,
-                'short_name': reduce_string(title, 15, 30),
-            })
-
-        return breadcrumb
-
-
-    #######################################################################
-    # Tabs
-    #######################################################################
-    def get_tabs(self, context):
-        """Return tabs and subtabs as a dict {tabs, subtabs} of list of dicts
-        [{name, label, active, style}...].
-        """
-        # Get request, path, etc...
-        here = context.resource
-
-        # Get access control
-        user = context.user
-        ac = here.get_access_control()
-
-        # Tabs
-        tabs = []
-        for link, view in here.get_views():
-            active = False
-
-            # From method?param1=value1&param2=value2&...
-            # we separate method and arguments, then we get a dict with
-            # the arguments and the subview active state
-            if '?' in link:
-                name, args = link.split('?')
-                args = decode_query(args)
-            else:
-                name, args = link, {}
-
-            # Active
-            if context.view == here.get_view(name, **args):
-                active = True
-
-            # Add the menu
-            tabs.append({
-                'id': 'tab_%s' % name,
-                'name': resolve_view(context, link),
-                'label': get_view_title(view),
-                'active': active,
-                'class': active and 'active' or None})
-
-        return tabs
-
-
-    #######################################################################
-    # Objects metadata (context.resource)
-    #######################################################################
-    def get_metadata_ns(self, context):
-        here = context.resource
-        return {'title': here.get_title(),
-                'format': here.class_title,
-                'mtime': here.get_mtime().strftime('%Y-%m-%d %H:%M'),
-                'icon': here.get_object_icon(size=48)}
-
-
-    #######################################################################
-    # Users info (context.user)
-    #######################################################################
-    def get_user_menu(self, context):
-        """Return a dict {user_icon, user, joinisopen}.
-        """
-        user = context.user
-
-        if user is None:
-            root = context.site_root
-            joinisopen = root.get_property('website_is_open')
-            return {'info': None, 'joinisopen': joinisopen}
-
-        home = '/users/%s' % user.name
-        info = {'name': user.name, 'title': user.get_title(),
-                'home': home}
-        return {'info': info, 'joinisopen': False}
-
-
-    #######################################################################
-    # Users info (context.user)
-    #######################################################################
-    def get_message(self, context):
-        """Return a message string from de request.
-        """
-        # FIXME At some point we should deprecate usage of message in the URL
-        if context.message is None:
-            if context.has_form_value('message'):
-                message = context.get_form_value('message')
-                return XMLParser(message)
-
-        return context.message
-
-
-    #######################################################################
-    # Styles and Scripts
-    #######################################################################
     def get_styles(self, context):
         styles = []
         # Calendar JavaScript Widget (http://dynarch.com/mishoo/calendar.epl)
@@ -332,23 +214,6 @@ class Skin(UIFolder):
         return scripts
 
 
-    #######################################################################
-    #
-    #######################################################################
-    def get_template_title(self, context):
-        """Return the title to give to the template document.
-        """
-        here = context.resource
-        # In the Root
-        root = here.get_site_root()
-        if root is here:
-            return root.get_title()
-        # Somewhere else
-        message = MSG(u"${root_title}: ${here_title}")
-        return message.gettext(root_title=root.get_title(),
-                               here_title=here.get_title())
-
-
     def get_meta_tags(self, context):
         """Return a list of dict with meta tags to give to the template
         document.
@@ -374,31 +239,156 @@ class Skin(UIFolder):
         return meta
 
 
-    def build_namespace(self, context):
-        namespace = {}
-        # CSS & JavaScript
-        namespace['styles'] = self.get_styles(context)
-        namespace['scripts'] = self.get_scripts(context)
-        # Title & Meta
-        namespace['title'] = self.get_template_title(context)
-        namespace['meta_tags']= self.get_meta_tags(context)
-        # User menu
-        namespace['user']= self.get_user_menu(context)
-        # Location & Views
-        namespace['breadcrumb'] = self.get_breadcrumb(context)
-        namespace['tabs'] = self.get_tabs(context)
-        # Resource's metadata & message
-        namespace['metadata'] = self.get_metadata_ns(context)
-        namespace['message'] = self.get_message(context)
-        # Resource's right menu
-        namespace['right_menus'] = self.get_right_menus(context)
-        # View's title (FIXME)
-        here = context.resource
-        view = context.view
-        namespace['view_title'] = get_view_title(view)
-        namespace['view_description'] = getattr(view, 'description', None)
+    #######################################################################
+    # Authenticated user
+    #######################################################################
+    def get_user_menu(self, context):
+        """Return a dict {user_icon, user, joinisopen}.
+        """
+        user = context.user
 
-        return namespace
+        if user is None:
+            root = context.site_root
+            joinisopen = root.get_property('website_is_open')
+            return {'info': None, 'joinisopen': joinisopen}
+
+        home = '/users/%s' % user.name
+        info = {'name': user.name, 'title': user.get_title(),
+                'home': home}
+        return {'info': info, 'joinisopen': False}
+
+
+    #######################################################################
+    # Location & Views
+    #######################################################################
+    def get_breadcrumb(self, context):
+        """Return a list of dicts [{name, url}...]
+        """
+        root = context.site_root
+
+        # Initialize the breadcrumb with the root resource
+        path = '/'
+        title = root.get_title()
+        breadcrumb = [{
+            'url': path,
+            'name': title,
+            'short_name': reduce_string(title, 15, 30),
+            }]
+
+        # Complete the breadcrumb
+        resource = root
+        for name in context.uri.path:
+            path = path + ('%s/' % name)
+            try:
+                resource = resource.get_object(name)
+            except LookupError:
+                break
+            # Append
+            title = resource.get_title()
+            breadcrumb.append({
+                'url': path,
+                'name': title,
+                'short_name': reduce_string(title, 15, 30),
+            })
+
+        return breadcrumb
+
+
+    def get_tabs(self, context):
+        """Return tabs and subtabs as a dict {tabs, subtabs} of list of dicts
+        [{name, label, active, style}...].
+        """
+        # Get request, path, etc...
+        here = context.resource
+
+        # Get access control
+        user = context.user
+        ac = here.get_access_control()
+
+        # Tabs
+        tabs = []
+        for link, view in here.get_views():
+            active = False
+
+            # From method?param1=value1&param2=value2&...
+            # we separate method and arguments, then we get a dict with
+            # the arguments and the subview active state
+            if '?' in link:
+                name, args = link.split('?')
+                args = decode_query(args)
+            else:
+                name, args = link, {}
+
+            # Active
+            if context.view == here.get_view(name, **args):
+                active = True
+
+            # Add the menu
+            tabs.append({
+                'id': 'tab_%s' % name,
+                'name': resolve_view(context, link),
+                'label': get_view_title(view),
+                'active': active,
+                'class': active and 'active' or None})
+
+        return tabs
+
+
+    #######################################################################
+    # Body
+    #######################################################################
+    def get_page_title(self, context):
+        resource = context.resource
+        view = context.view
+
+        # Page title
+        try:
+            get_page_title = view.get_page_title
+        except AttributeError:
+            return resource.get_title()
+        else:
+            return get_page_title(resource, context)
+
+
+    def get_message(self, context):
+        """Return a message string from de request.
+        """
+        # FIXME At some point we should deprecate usage of message in the URL
+        if context.message is None:
+            if context.has_form_value('message'):
+                message = context.get_form_value('message')
+                return XMLParser(message)
+
+        return context.message
+
+
+    def get_right_menus(self, context):
+        here = context.resource
+        return here.get_right_menus(context)
+
+
+    #######################################################################
+    # Main
+    #######################################################################
+    def build_namespace(self, context):
+        return {
+            # HTML head
+            'title': self.get_template_title(context),
+            'styles': self.get_styles(context),
+            'scripts': self.get_scripts(context),
+            'meta_tags': self.get_meta_tags(context),
+            # User
+            'user': self.get_user_menu(context),
+            # Location & Views
+            'breadcrumb': self.get_breadcrumb(context),
+            'tabs': self.get_tabs(context),
+            # Body
+            'page_title': self.get_page_title(context),
+            'message': self.get_message(context),
+            'right_menus': self.get_right_menus(context),
+            # FIXME
+            'view_description': getattr(context.view, 'description', None),
+        }
 
 
     def get_template(self):
