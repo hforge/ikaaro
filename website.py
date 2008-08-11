@@ -438,35 +438,48 @@ class BrokenLinks(STLView):
         return namespace
 
 
+
+
 class EditLanguagesForm(STLForm):
 
-    access = 'is_allowed_to_edit'
-    template = '/ui/website/languages_edit.xml'
+    access = 'is_admin'
+    title = MSG(u'Languages')
+    description = MSG(u'Define the Web Site languages.')
+    icon = 'languages.png'
+    template = '/ui/website/edit_languages.xml'
     schema = {
         'codes': String(multiple=True, mandatory=True),
     }
 
 
     def get_namespace(self, resource, context):
-        # List of active languages
-        languages = resource.get_property('website_languages')
-        default = languages[0]
+        ws_languages = resource.get_property('website_languages')
 
-        languages = []
-        for code in languages:
+        # Active languages
+        default = ws_languages[0]
+        active = []
+        for code in ws_languages:
             language_name = get_language_name(code)
-            languages.append({
+            active.append({
                 'code': code,
                 'name': language_name,
                 'isdefault': code == default})
 
+        # Not active languages
+        not_active = [
+            x for x in get_languages() if x['code'] not in ws_languages ]
+        not_active.sort(lambda x, y: cmp(x['name'], y['name']))
+
         # Ok
         return {
-            'languages': languages,
+            'active_languages': active,
+            'not_active_languages': not_active,
         }
 
 
-    def change_default_language(self, resource, context, form):
+    #######################################################################
+    # Actions / Edit
+    def action_change_default_language(self, resource, context, form):
         codes = form['codes']
 
         # This action requires only one language to be selected
@@ -485,7 +498,7 @@ class EditLanguagesForm(STLForm):
         context.message = MSG(u'The default language has been changed.')
 
 
-    def remove_languages(self, resource, context, form):
+    def action_remove_languages(self, resource, context, form):
         codes = form['codes']
 
         # Check the default language is not to be removed
@@ -502,45 +515,19 @@ class EditLanguagesForm(STLForm):
         context.message = MSG(u'Languages removed.')
 
 
-
-class AddLanguageForm(STLForm):
-
-    access = 'is_allowed_to_edit'
-    template = '/ui/website/languages_add.xml'
-    schema = {
-        'code': String(mandatory=True),
+    #######################################################################
+    # Actions / Add
+    action_add_language_schema = {
+        'code': String(mandatory=True)
     }
 
+    def action_add_language(self, resource, context, form):
+        code = form['code']
 
-    def get_namespace(self, resource, context):
-        # List of non active languages
-        ws_languages = resource.get_property('website_languages')
-        languages = [
-            x for x in get_languages() if x['code'] not in ws_languages ]
-
-        # Sort by name
-        languages.sort(lambda x, y: cmp(x['name'], y['name']))
-
-        # Ok
-        return {
-            'languages': languages,
-        }
-
-
-    def add_language(self, resource, context, form):
         ws_languages = resource.get_property('website_languages')
         resource.set_property('website_languages', ws_languages + (code,))
         # Ok
         context.message = MSG(u'Language added.')
-
-
-
-class LanguagesForm(STLForm):
-
-    access = 'is_admin'
-    title = MSG(u'Languages')
-    description = MSG(u'Define the Web Site languages.')
-    icon = 'languages.png'
 
 
 
@@ -863,7 +850,7 @@ class WebSite(RoleAware, Folder):
     edit_virtual_hosts = VHostsForm()
     edit_security_policy = SecurityPolicyForm()
     edit_contact_options = ContactOptionsForm()
-    edit_languages = LanguagesForm()
+    edit_languages = EditLanguagesForm()
     broken_links = BrokenLinks()
 
 

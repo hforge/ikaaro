@@ -202,7 +202,7 @@ class BrowseContent(BrowseForm):
     #######################################################################
     # Form Actions
     #######################################################################
-    def remove(self, resource, context, form):
+    def action_remove(self, resource, context, form):
         ids = form['ids']
 
         # Clean the copy cookie if needed
@@ -243,7 +243,7 @@ class BrowseContent(BrowseForm):
             context.message = MSG_NONE_REMOVED
 
 
-    def rename(self, resource, context, form):
+    def action_rename(self, resource, context, form):
         ids = form['ids']
         # Filter names which the authenticated user is not allowed to move
         ac = resource.get_access_control()
@@ -264,7 +264,7 @@ class BrowseContent(BrowseForm):
         return get_reference(';rename?%s' % ids_list)
 
 
-    def copy(self, resource, context, form):
+    def action_copy(self, resource, context, form):
         ids = form['ids']
         # Filter names which the authenticated user is not allowed to copy
         ac = resource.get_access_control()
@@ -285,7 +285,7 @@ class BrowseContent(BrowseForm):
         context.message = u'Objects copied.'
 
 
-    def cut(self, resource, context, form):
+    def action_cut(self, resource, context, form):
         ids = form['ids']
         # Filter names which the authenticated user is not allowed to move
         ac = resource.get_access_control()

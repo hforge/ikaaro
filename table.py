@@ -161,7 +161,7 @@ class AddRecordForm(AutoForm):
     submit_class = 'button_ok'
 
 
-    def get_schema(self, resource):
+    def get_schema(self, resource, context):
         return resource.handler.schema
 
 
@@ -236,7 +236,7 @@ class EditRecordForm(AutoForm):
         return getattr(record, name)
 
 
-    def get_schema(self, resource):
+    def get_schema(self, resource, context):
         return resource.get_handler().schema
 
 
