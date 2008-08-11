@@ -31,7 +31,7 @@ from itools.gettext import MSG
 from itools.handlers import ConfigFile as BaseConfigFile
 from itools.stl import stl
 from itools.uri import encode_query, Reference
-from itools.web import STLForm, get_context
+from itools.web import BaseView, STLForm, get_context
 from itools.xapian import EqQuery, RangeQuery, AndQuery, OrQuery, PhraseQuery
 
 # Import from ikaaro
@@ -40,7 +40,6 @@ from ikaaro.folder import Folder, BrowseContent
 from ikaaro.messages import *
 from ikaaro.registry import register_object_class
 from ikaaro.text import Text
-from ikaaro.utils import resolve_view
 from ikaaro.views import BrowseForm
 from ikaaro.widgets import batch, table, build_menu
 from issue import History, Issue, issue_fields
@@ -210,21 +209,6 @@ class SearchForm(BrowseContent):
         namespace['manage_assigned'] = '%s/;permissions' % pathto_website
 
         return namespace
-
-
-    def go_to_issue(self, resource, context):
-        issue_name = context.get_form_value('issue_name')
-        if not issue_name:
-            return context.come_back(MSG_NAME_MISSING)
-
-        if not resource.has_object(issue_name):
-            return context.come_back(MSG(u'Issue not found.'))
-
-        issue = resource.get_object(issue_name)
-        if not isinstance(issue, Issue):
-            return context.come_back(MSG(u'Issue not found.'))
-
-        return context.uri.resolve2('../%s/;edit' % issue_name)
 
 
     def search(self, resource, context):
@@ -497,6 +481,25 @@ class StoredSearchesForm(STLForm):
             context.message = MSG_NONE_REMOVED
 
 
+class GoToIssue(BaseView):
+
+    access = 'is_allowed_to_view'
+
+    def GET(self, resource, context):
+        issue_name = context.get_form_value('issue_name')
+        if not issue_name:
+            return context.come_back(MSG_NAME_MISSING)
+
+        if not resource.has_object(issue_name):
+            return context.come_back(MSG(u'Issue not found.'))
+
+        issue = resource.get_object(issue_name)
+        if not isinstance(issue, Issue):
+            return context.come_back(MSG(u'Issue not found.'))
+
+        return context.uri.resolve2('../%s/;edit' % issue_name)
+
+
 
 ###########################################################################
 # Model
@@ -622,10 +625,19 @@ class Tracker(Folder):
     #######################################################################
     def get_right_menus(self, context):
         menus = []
+
+        # Go to
+        template = self.get_object('/ui/tracker/goto.xml')
+        menus.append({
+            'title': MSG(u'Go To Issue'),
+            'content': stl(template),
+        })
+
         # Stored Searches
         items = self.search_objects(object_class=StoredSearch)
+        base = '/%s/;view' % context.site_root.get_pathto(self)
         menu = [
-            {'href': resolve_view(context, 'view?search_name=%s' % x.name),
+            {'href': '%s?search_name=%s' % (base, x.name),
              'title': x.get_property('title'),
             }
             for x in items ]
@@ -905,11 +917,13 @@ class Tracker(Folder):
 
 
     #######################################################################
-    # User Interface / Add Issue
+    # Views
+    #######################################################################
     search = SearchForm()
     view = View()
     add_issue = AddIssueForm()
     stored_searches = StoredSearchesForm()
+    go_to_issue = GoToIssue()
 
 
     #######################################################################

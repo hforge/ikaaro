@@ -70,6 +70,7 @@
             <div class="navigation" stl:repeat="menu right_menus">
               <label>${menu/title}</label>
               ${menu/content}
+              <br/>
             </div>
           </td>
         </tr>

@@ -4,19 +4,8 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
-  <!-- Navigation -->
-  <fieldset>
-    <legend>Go to issue</legend>
-    <form action=";search" method="get">
-      #<input type="text" name="issue_name" size="6" />
-      <input name=";go_to_issue" type="submit" class="button_ok" value="OK" />
-    </form>
-  </fieldset>
-
-  <br/>
-
   <!-- Advanced Search -->
-  <fieldset> 
+  <fieldset>
     <legend stl:if="search_name">Search: ${search_title}</legend>
     <legend stl:if="not search_name">Search</legend>
     <form action=";search" method="get">
@@ -42,7 +31,7 @@
               href="./types/;view">Edit</a>)</stl:block></label>
             <br/>
             <select name="type" id="type" class="tracker_select"
-              multiple="multiple" size="3">
+              multiple="multiple" size="4">
               <option stl:repeat="item types" value="${item/id}"
                 selected="${item/is_selected}">${item/title}</option>
             </select>
@@ -52,7 +41,7 @@
               href="./modules/;view">Edit</a>)</stl:block></label>
             <br/>
             <select name="module" id="module" class="tracker_select"
-              multiple="multiple" size="3">
+              multiple="multiple" size="4">
               <option stl:repeat="item modules" value="${item/id}"
                 selected="${item/is_selected}">${item/title}</option>
             </select>
@@ -62,7 +51,7 @@
               href="./versions/;view">Edit</a>)</stl:block></label>
             <br/>
             <select name="version" id="version" class="tracker_select"
-              multiple="multiple" size="3">
+              multiple="multiple" size="4">
               <option stl:repeat="item versions" value="${item/id}"
                 selected="${item/is_selected}">${item/title}</option>
             </select>
@@ -74,7 +63,7 @@
             (<a href="${manage_assigned}">Edit</a>)</stl:block></label>
             <br/>
             <select name="assigned_to" id="assigned_to"
-              class="tracker_select" multiple="multiple" size="3">
+              class="tracker_select" multiple="multiple" size="4">
               <option stl:repeat="item users" value="${item/id}"
                 selected="${item/is_selected}">${item/title}</option>
             </select>
@@ -84,7 +73,7 @@
               href="./states/;view">Edit</a>)</stl:block></label>
             <br/>
             <select name="state" id="state" class="tracker_select"
-              multiple="multiple" size="3">
+              multiple="multiple" size="4">
               <option stl:repeat="item states" value="${item/id}"
                 selected="${item/is_selected}">${item/title}</option>
             </select>
@@ -94,7 +83,7 @@
               href="./priorities/;view">Edit</a>)</stl:block></label>
             <br/>
             <select name="priority" id="priority" class="tracker_select"
-              multiple="multiple" size="3">
+              multiple="multiple" size="4">
               <option stl:repeat="item priorities" value="${item/id}"
                 selected="${item/is_selected}">${item/title}</option>
             </select>

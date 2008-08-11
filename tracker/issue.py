@@ -27,8 +27,8 @@ from textwrap import wrap
 
 # Import from itools
 from itools.csv import parse, Table
-from itools.datatypes import Date, DateTime, FileName, Integer, String, Time, Unicode
-from itools.datatypes import Boolean, Tokens, XMLContent
+from itools.datatypes import Boolean, Date, DateTime, Integer, String, Time
+from itools.datatypes import FileName, Tokens, Unicode, XMLContent
 from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.html import xhtml_uri
@@ -132,7 +132,6 @@ class EditIssueForm(STLForm):
 
         # Build the namespace
         namespace = {}
-        namespace['number'] = resource.name
         namespace['title'] = title
         # Reported by
         reported_by = resource.get_reported_by()
@@ -821,6 +820,10 @@ class Issue(Folder):
     #######################################################################
     # User Interface
     #######################################################################
+    def get_right_menus(self, context):
+        return self.parent.get_right_menus(context)
+
+
     edit = EditIssueForm()
     edit_resources = EditResourcesForm()
     history = HistoryForm()
