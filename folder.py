@@ -535,7 +535,6 @@ class Folder(DBObject):
 
     class_id = 'folder'
     class_version = '20071215'
-    class_layout = {}
     class_title = MSG(u'Folder')
     class_description = MSG(folder_description)
     class_icon16 = 'icons/16x16/folder.png'
