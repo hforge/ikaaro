@@ -548,7 +548,7 @@ class Tracker(Folder):
         # Priorities and States Ordered Select Tables
         tables = [
             ('priorities', [u'High', u'Medium', u'Low']),
-            ('states', [u'Open', u'Fixed', u'Closed'])]
+            ('states', [u'Open', u'Fixed', u'Verified', u'Closed'])]
         for table_name, values in tables:
             table = OrderedSelectTableTable()
             for index, title in enumerate(values):
