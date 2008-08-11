@@ -5,7 +5,8 @@
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
   <p>
-  To download this file, click on <a href="${url}">${title_or_name}</a>
+  To download this file, click on
+  <a href="${url}/;download">${title_or_name}</a>
   </p>
 
 </stl:block>

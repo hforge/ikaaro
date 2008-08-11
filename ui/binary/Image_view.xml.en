@@ -4,5 +4,5 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
-  <img src="." border="0" />
+  <img src=";download" border="0" />
 </stl:block>

@@ -117,7 +117,7 @@ class NewFileForm(NewInstanceForm):
 
 
 
-class FileGET(BaseView):
+class Download(BaseView):
 
     access = 'is_allowed_to_view'
 
@@ -328,7 +328,7 @@ class File(WorkflowAware, VersioningAware):
     class_description = MSG(file_description)
     class_icon16 = 'icons/16x16/file.png'
     class_icon48 = 'icons/48x48/file.png'
-    class_views = ['download', 'externaledit', 'upload', 'backlinks',
+    class_views = ['view', 'externaledit', 'upload', 'backlinks',
                    'edit_metadata', 'edit_state', 'history']
     class_handler = FileHandler
 
@@ -435,9 +435,6 @@ class File(WorkflowAware, VersioningAware):
     #######################################################################
     # UI
     #######################################################################
-    GET = FileGET()
-
-
     def get_human_size(self):
         file = self.handler
         bytes = len(file.to_str())
@@ -459,7 +456,8 @@ class File(WorkflowAware, VersioningAware):
     # Views
     #######################################################################
     new_instance = NewFileForm()
-    download = DownloadView()
+    download = Download()
+    view = DownloadView()
 
     externaledit = STLView(
         access='is_allowed_to_edit',
