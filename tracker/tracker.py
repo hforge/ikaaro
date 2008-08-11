@@ -35,6 +35,7 @@ from itools.web import STLForm, get_context
 from itools.xapian import EqQuery, RangeQuery, AndQuery, OrQuery, PhraseQuery
 
 # Import from ikaaro
+from ikaaro.datatypes import CopyCookie
 from ikaaro.folder import Folder, BrowseContent
 from ikaaro.messages import *
 from ikaaro.registry import register_object_class
@@ -446,6 +447,57 @@ class View(BrowseForm):
         return namespace
 
 
+class StoredSearchesForm(STLForm):
+
+    access = 'is_allowed_to_edit'
+    title = MSG(u'Stored Searches')
+    template = '/ui/tracker/stored_searches.xml'
+    schema = {
+        'ids': String(multiple=True, mandatory=True),
+    }
+
+
+    def get_namespace(self, resource, context):
+        stored_searches = [
+            {'name': x.name, 'title': x.get_title()}
+            for x in resource.search_objects(object_class=StoredSearch) ]
+        stored_searches.sort(key=itemgetter('title'))
+
+        return {'stored_searches': stored_searches}
+
+
+    def action(self, resource, context, form):
+        # FIXME This is a simplified version of 'BrowseContent.remove'
+        ids = form['ids']
+
+        # Clean the copy cookie if needed
+        cut, paths = context.get_cookie('ikaaro_cp', type=CopyCookie)
+
+        # Remove objects
+        removed = []
+        not_removed = []
+        abspath = resource.get_abspath()
+
+        for name in ids:
+            try:
+                resource.del_object(name)
+            except ConsistencyError:
+                not_removed.append(name)
+                continue
+            removed.append(name)
+            # Clean cookie
+            if str(abspath.resolve2(name)) in paths:
+                context.del_cookie('ikaaro_cp')
+                paths = []
+
+        if removed:
+            objects = ', '.join(removed)
+            context.message = MSG_OBJECTS_REMOVED.gettext(objects=objects)
+        else:
+            context.message = MSG_NONE_REMOVED
+
+
+
 ###########################################################################
 # Model
 ###########################################################################
@@ -459,7 +511,8 @@ class Tracker(Folder):
     class_description = MSG(u'To manage bugs and tasks')
     class_icon16 = 'images/tracker16.png'
     class_icon48 = 'images/tracker48.png'
-    class_views = ['search', 'add_issue', 'browse_content', 'edit_metadata']
+    class_views = ['search', 'add_issue', 'stored_searches', 'browse_content',
+                   'edit_metadata']
 
     __fixed_handlers__ = ['modules', 'versions', 'types',
         'priorities', 'states', 'resources']
@@ -853,9 +906,10 @@ class Tracker(Folder):
 
     #######################################################################
     # User Interface / Add Issue
-    add_issue = AddIssueForm()
     search = SearchForm()
     view = View()
+    add_issue = AddIssueForm()
+    stored_searches = StoredSearchesForm()
 
 
     #######################################################################

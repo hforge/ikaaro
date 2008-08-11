@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<stl:block xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:stl="http://xml.itools.org/namespaces/stl">
+
+  <form action="" method="post" stl:if="stored_searches">
+    <table>
+      <tr stl:repeat="search stored_searches">
+        <td><input type="checkbox" name="ids" value="${search/name}" /></td>
+        <td>
+          <a href=";view?search_name=${search/name}">${search/title}</a>
+        </td>
+        <td>
+          (<a href=";search?search_name=${search/name}">Edit</a>)
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td colspan="2">
+          <input type="submit" class="button_delete" value="Remove" />
+        </td>
+      </tr>
+    </table>
+  </form>
+  <p stl:if="not stored_searches">
+    There are not stored searches.
+  </p>
+
+</stl:block>
