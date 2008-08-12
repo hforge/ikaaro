@@ -61,6 +61,20 @@ class ThumbnailView(BaseView):
         return data
 
 
+
+# FIXME This is broken, check http://alistapart.com/articles/byebyeembed
+class VideoView(STLView):
+
+    access = 'is_allowed_to_view'
+    title = MSG(u'View')
+    template = '/ui/binary/Video_view.xml'
+
+
+    def get_namespace(self, resource, context):
+        return {'format': resource.handler.get_mimetype()}
+
+
+
 ###########################################################################
 # Model
 ###########################################################################
@@ -94,15 +108,8 @@ class Video(File):
     class_icon16 = 'icons/16x16/flash.png'
     class_icon48 = 'icons/48x48/flash.png'
 
+    view = VideoView()
 
-    view__access__ = 'is_allowed_to_view'
-    view__label__ = u'View'
-    def view(self, context):
-        namespace = {}
-        namespace['format'] = self.handler.get_mimetype()
-
-        handler = self.get_resource('/ui/binary/Video_view.xml')
-        return stl(handler, namespace)
 
 
 

@@ -4,16 +4,22 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
-<object xid="rvocx" xclassid="clsid:CFCDAA03-8BE4-11cf-B84B-0020AFBBCCFA"
-  xwidth="320" xheight="30">
+<object>
+<!--
+  id="rvocx" classid="clsid:CFCDAA03-8BE4-11cf-B84B-0020AFBBCCFA"
+  width="320" height="30">
+-->
   <param name="src" value="." />
   <!--
   <param name="autostart" value="true" />
   <param name="controls" value="ControlPanel" />
   <param name="console" value="video" />
   -->
-  <embed src="." xwidth="320" xheight="30" xcontrols="ControlPanel"
-    type="${format}" xconsole="video" xautostart="true">
+  <embed src="." type="${format}">
+<!--
+    width="320" height="30" controls="ControlPanel"
+    console="video" autostart="true">
+-->
   </embed>
 </object>
 
