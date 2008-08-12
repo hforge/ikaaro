@@ -36,7 +36,7 @@ class Cart(object):
         products = []
         for name, quantity in self.get_list_products():
             if shop_root.has_object('%s' % name):
-                product = shop_root.get_object('%s' % name)
+                product = shop_root.get_resource('%s' % name)
                 products.append((product, quantity))
             else:
                 self.remove_product(name, quantity)

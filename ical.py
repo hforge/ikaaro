@@ -553,7 +553,7 @@ class CalendarView(object):
                                               grid=grid, starts_on=starts_on,
                                               ends_on=ends_on, out_on=out_on)
                 if resource_name is not None:
-                    resource = resource.get_object(resource_name)
+                    resource = resource.get_resource(resource_name)
                 ns_event['url'] = resource.get_action_url(**ns_event)
                 ns_event['cal'] = cal_index
                 ns_event['resource'] = {'color': cal_index}
@@ -718,7 +718,7 @@ class EditEventForm(CalendarView, STLForm):
                     message = MSG(u'Invalid argument.')
                     return context.come_back(message, keys=keys,
                                              goto=';edit_event')
-                object = resource.get_object(name)
+                object = resource.get_resource(name)
             else:
                 object = resource 
 
@@ -1102,7 +1102,7 @@ class CalendarAware(CalendarView):
         else:
             name = context.get_form_value('resource')
         if name and self.has_object(name):
-            object = self.get_object(name)
+            object = self.get_resource(name)
             return object.edit_event(context)
         message = MSG(u'Resource not found.')
         return context.come_back(message)
@@ -1313,7 +1313,7 @@ class CalendarAware(CalendarView):
             ns_calendars.append(ns_calendar)
         namespace['calendars'] = ns_calendars
 
-        handler = self.get_object('/ui/ical/daily_view.xml')
+        handler = self.get_resource('/ui/ical/daily_view.xml')
         return stl(handler, namespace)
 
 

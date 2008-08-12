@@ -110,7 +110,7 @@ class PermissionsForm(BrowseForm):
             href = ';edit_membership?id=%s' % user_id
             ns['role'] = role, href
             # State
-            user_object = root.get_object(user.abspath)
+            user_object = root.get_resource(user.abspath)
             if user_object.get_property('user_must_confirm'):
                 account_state = (MSG(u'Inactive'),
                                  '/users/%s/;resend_confirmation' % user_id)
@@ -168,7 +168,7 @@ class MembershipForm(STLForm):
 
     def get_namespace(self, resource, context):
         user_id = context.get_form_value('id')
-        user = resource.get_object('/users/%s' % user_id)
+        user = resource.get_resource('/users/%s' % user_id)
 
         return {
             'id': user_id,
@@ -212,7 +212,7 @@ class NewUserForm(STLForm):
     def action(self, resource, context, form):
         root = context.root
         user = context.user
-        users = root.get_object('users')
+        users = root.get_resource('users')
 
         # Check whether the user already exists
         email = form['email']
@@ -246,7 +246,7 @@ class NewUserForm(STLForm):
                 # Send confirmation email to activate the account
                 user.send_confirmation(context, email)
         else:
-            user = users.get_object(user_id)
+            user = users.get_resource(user_id)
             # Check the user is not yet in the group
             members = resource.get_members()
             if user_id in members:

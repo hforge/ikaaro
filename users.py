@@ -259,7 +259,7 @@ class TasksView(STLView):
         # Build the list of documents
         documents = []
         for brain in root.search(query).get_documents():
-            document = root.get_object(brain.abspath)
+            document = root.get_resource(brain.abspath)
             # Check security
             ac = document.get_access_control()
             if not ac.is_allowed_to_view(user, document):
@@ -468,7 +468,7 @@ class User(AccessControl, Folder):
         namespace = {'key': must_confirm,
                      'username': self.get_login_name()}
 
-        handler = self.get_object('/ui/user/confirm_registration.xml')
+        handler = self.get_resource('/ui/user/confirm_registration.xml')
         return stl(handler, namespace)
 
 

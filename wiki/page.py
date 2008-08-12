@@ -102,14 +102,14 @@ class WikiPage(Text):
 
         # Try regular object name or path
         try:
-            return parent.get_object(title)
+            return parent.get_resource(title)
         except (LookupError, UnicodeEncodeError):
             # Convert wiki name to object name
             name = checkid(title)
             if name is None:
                 return None
             try:
-                return parent.get_object(name)
+                return parent.get_resource(name)
             except LookupError:
                 return None
 
@@ -153,7 +153,7 @@ class WikiPage(Text):
                 continue
             # Note: absolute paths will be rewritten as relative paths
             try:
-                object = parent.get_object(reference.path)
+                object = parent.get_resource(reference.path)
                 node['refuri'] = str(self.get_pathto(object))
             except LookupError:
                 pass
@@ -166,7 +166,7 @@ class WikiPage(Text):
             if reference.scheme or reference.authority:
                 continue
             try:
-                object = parent.get_object(reference.path)
+                object = parent.get_resource(reference.path)
                 node['uri'] = str(self.get_pathto(object))
             except LookupError:
                 pass
@@ -241,7 +241,7 @@ class WikiPage(Text):
                         node['classes'].append('external')
                         continue
                     try:
-                        object = self.get_object(reference.path)
+                        object = self.get_resource(reference.path)
                         node['refuri'] = str(here.get_pathto(object))
                     except LookupError:
                         pass
@@ -260,7 +260,7 @@ class WikiPage(Text):
             else:
                 # Wiki link found, "refname" is the path
                 node['classes'].append('wiki')
-                object = self.get_object(refname)
+                object = self.get_resource(refname)
                 node['refuri'] = str(here.get_pathto(object))
 
         # Manipulate publisher directly (from publish_from_doctree)
@@ -311,7 +311,7 @@ class WikiPage(Text):
             if refname is False:
                 continue
             # We extend the main page with the first level of subpages
-            object = self.get_object(refname)
+            object = self.get_resource(refname)
             abspath = object.get_abspath()
             if abspath not in pages:
                 if not isinstance(object, WikiPage):
@@ -344,7 +344,7 @@ class WikiPage(Text):
                     # The journey ends here for broken links
                     if refname is False:
                         continue
-                    object = self.get_object(refname)
+                    object = self.get_resource(refname)
                     prefix = context.resource.get_pathto(object)
                     node['refuri'] = str(context.uri.resolve(prefix))
                 # Now include the page
@@ -380,13 +380,13 @@ class WikiPage(Text):
                     image = None
             else:
                 try:
-                    image = parent.get_object(reference.path)
+                    image = parent.get_resource(reference.path)
                     filename = image.get_property('filename')
                 except LookupError:
                     image = None
             if image is None:
                 # Missing image, prevent pdfLaTeX failure
-                image = self.get_object('/ui/wiki/missing.png')
+                image = self.get_resource('/ui/wiki/missing.png')
                 filename = image.name
                 # Remove all path so the image is found in tempdir
                 node['uri'] = filename
@@ -415,14 +415,14 @@ class WikiPage(Text):
         finally:
             file.close()
         # The stylesheet...
-        stylesheet = self.get_object('/ui/wiki/style.tex')
+        stylesheet = self.get_resource('/ui/wiki/style.tex')
         file = tempdir.make_file('style.tex')
         try:
             stylesheet.save_state_to_file(file)
         finally:
             file.close()
         # The 'powered' image...
-        image = self.get_object('/ui/images/ikaaro_powered.png')
+        image = self.get_resource('/ui/images/ikaaro_powered.png')
         file = tempdir.make_file('ikaaro.png')
         try:
             image.save_state_to_file(file)
@@ -502,7 +502,7 @@ class WikiPage(Text):
         namespace['data'] = data
         namespace['text_size'] = text_size
 
-        handler = self.get_object('/ui/wiki/WikiPage_edit.xml')
+        handler = self.get_resource('/ui/wiki/WikiPage_edit.xml')
         return stl(handler, namespace)
 
 
@@ -562,7 +562,7 @@ class WikiPage(Text):
         context.styles.append('/ui/wiki/style.css')
         namespace = {}
 
-        source = self.get_object('/ui/wiki/help.txt')
+        source = self.get_resource('/ui/wiki/help.txt')
         source = source.to_str()
         html = publish_string(source, writer_name='html',
                 settings_overrides=self.overrides)
@@ -570,7 +570,7 @@ class WikiPage(Text):
         namespace['help_source'] = source
         namespace['help_html'] = XMLParser(html)
 
-        handler = self.get_object('/ui/wiki/WikiPage_help.xml')
+        handler = self.get_resource('/ui/wiki/WikiPage_help.xml')
         return stl(handler, namespace)
 
 

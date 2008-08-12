@@ -131,7 +131,7 @@ class Dressable(Folder, EpozEditable):
 
     def _get_object_label(self, name):
         if self.has_object(name):
-            object = self.get_object(name)
+            object = self.get_resource(name)
             label = object.get_property('title')
             if label:
                 return label
@@ -155,7 +155,7 @@ class Dressable(Folder, EpozEditable):
             if isinstance(data, tuple):
                 name, kk = data
                 if self.has_object(name):
-                    object = self.get_object(name)
+                    object = self.get_resource(name)
                     if is_datatype(object, Image):
                         content = self._get_image(context, object)
                     elif is_datatype(object, WebPage):
@@ -168,7 +168,7 @@ class Dressable(Folder, EpozEditable):
 
         context.styles.append('/ui/future/dressable.css')
 
-        handler = self.get_object(self.template)
+        handler = self.get_resource(self.template)
         return stl(handler, namespace)
 
 
@@ -197,7 +197,7 @@ class Dressable(Folder, EpozEditable):
         name = context.get_form_value('dress_name', 'index')
         if context.get_form_value('external'):
             return context.uri.resolve('%s/;externaledit' % name)
-        object = self.get_object(name)
+        object = self.get_resource(name)
         cls = self.get_class(name)
         return cls.edit_form(object, context)
 
@@ -219,7 +219,7 @@ class Dressable(Folder, EpozEditable):
         namespace['remove_action'] = msg
 
         # size
-        object = self.get_object(name)
+        object = self.get_resource(name)
         size = object.handler.get_size()
         if size is not None:
             width, height = size
@@ -237,7 +237,7 @@ class Dressable(Folder, EpozEditable):
         namespace['width'] = width
         namespace['height'] = height
 
-        handler = self.get_object('/ui/future/dressable_edit_image.xml')
+        handler = self.get_resource('/ui/future/dressable_edit_image.xml')
         return stl(handler, namespace)
 
 
@@ -247,7 +247,7 @@ class Dressable(Folder, EpozEditable):
     def edit(self, context, sanitize=False):
         # FIXME Duplicated code (cms.html)
         dress_name = context.get_form_value('dress_name', 'index')
-        dress_object = self.get_object(dress_name)
+        dress_object = self.get_resource(dress_name)
         timestamp = context.get_form_value('timestamp', type=DateTime)
         # Compare the dressable's timestamp and not the folder's timestamp
         if timestamp is None:
@@ -296,7 +296,7 @@ class Dressable(Folder, EpozEditable):
         namespace['name'] = name
         namespace['class_id'] = self.get_class(name).class_id
 
-        handler = self.get_object('/ui/future/dressable_add_image.xml')
+        handler = self.get_resource('/ui/future/dressable_add_image.xml')
         return stl(handler, namespace)
 
 
@@ -330,7 +330,7 @@ class Dressable(Folder, EpozEditable):
         name = FileName.encode((name, extension, None))
 
         if self.has_object(image_name):
-            object = self.get_object(image_name)
+            object = self.get_resource(image_name)
             object.handler.load_state_from_string(body)
         else:
             # Build the object
@@ -362,7 +362,7 @@ class Dressable(Folder, EpozEditable):
 
     def get_epoz_document(self):
         name = get_context().get_form_value('dress_name', 'index')
-        return self.get_object(name).handler
+        return self.get_resource(name).handler
 
 
     def get_browse(self, context, cls, exclude=[]):

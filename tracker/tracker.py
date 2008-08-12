@@ -114,7 +114,7 @@ class AddIssueForm(STLForm):
         state = context.get_form_value('state', type=Integer)
         namespace['states'] = get('states').get_options(state, sort='rank')
 
-        users = resource.get_object('/users')
+        users = resource.get_resource('/users')
         assigned_to = context.get_form_values('assigned_to', type=String)
         namespace['users'] = resource.get_members_namespace(assigned_to)
 
@@ -158,7 +158,7 @@ class SearchForm(BrowseContent):
 
         # Default view
         namespace = self.get_namespace(resource, context)
-        handler = resource.get_object(self.template)
+        handler = resource.get_resource(self.template)
         return stl(handler, namespace)
 
 
@@ -173,7 +173,7 @@ class SearchForm(BrowseContent):
         query = context.query
         search_name = query['search_name']
         if search_name:
-            search = resource.get_object(search_name)
+            search = resource.get_resource(search_name)
             get_value = search.handler.get_value
             get_values = search.get_values
             namespace['search_name'] = search_name
@@ -222,7 +222,7 @@ class SearchForm(BrowseContent):
         if search_name:
             # Edit an Stored Search
             try:
-                stored_search = resource.get_object(search_name)
+                stored_search = resource.get_resource(search_name)
                 stored_search_title = stored_search.get_property('title')
             except LookupError:
                 pass
@@ -300,7 +300,7 @@ class View(BrowseForm):
         if search_name is None:
             return None
         resource = get_context().resource
-        search = resource.get_object(search_name)
+        search = resource.get_resource(search_name)
         return search.get_title()
     tab_sublabel = view__sublabel__
 
@@ -355,7 +355,7 @@ class View(BrowseForm):
         # Set title of search
         search_name = query['search_name']
         if search_name:
-            search = resource.get_object(search_name)
+            search = resource.get_resource(search_name)
             title = search.get_title()
         else:
             title = MSG(u'View Tracker').gettext()
@@ -425,7 +425,7 @@ class View(BrowseForm):
             namespace['priorities'] = get('priorities').get_options(sort='rank')
             namespace['types'] = get('types').get_options()
             namespace['states'] = get('states').get_options(sort='rank')
-            users = resource.get_object('/users')
+            users = resource.get_resource('/users')
             namespace['users'] = resource.get_members_namespace('')
 
         return namespace
@@ -493,7 +493,7 @@ class GoToIssue(BaseView):
         if not resource.has_object(issue_name):
             return context.come_back(MSG(u'Issue not found.'))
 
-        issue = resource.get_object(issue_name)
+        issue = resource.get_resource(issue_name)
         if not isinstance(issue, Issue):
             return context.come_back(MSG(u'Issue not found.'))
 
@@ -603,12 +603,12 @@ class Tracker(Folder):
         """Returns a namespace (list of dictionaries) to be used for the
         selection box of users (the 'assigned to' and 'cc' fields).
         """
-        users = self.get_object('/users')
+        users = self.get_resource('/users')
         members = []
         if not_assigned is True:
             members.append({'id': 'nobody', 'title': 'NOT ASSIGNED'})
         for username in self.get_site_root().get_members():
-            user = users.get_object(username)
+            user = users.get_resource(username)
             members.append({'id': username, 'title': user.get_title()})
         # Select
         if isinstance(value, str):
@@ -627,7 +627,7 @@ class Tracker(Folder):
         menus = []
 
         # Go to
-        template = self.get_object('/ui/tracker/goto.xml')
+        template = self.get_resource('/ui/tracker/goto.xml')
         menus.append({
             'title': MSG(u'Go To Issue'),
             'content': stl(template),
@@ -850,12 +850,12 @@ class Tracker(Folder):
     def get_search_results(self, context, form=None, start=None, end=None):
         """Method that return a list of issues that correspond to the search
         """
-        users = self.get_object('/users')
+        users = self.get_resource('/users')
         # Choose stored Search or personalized search
         search_name = form and form['search_name']
         if search_name:
             try:
-                search = self.get_object(search_name)
+                search = self.get_resource(search_name)
             except LookupError:
                 goto = ';search'
                 msg = u'Unknown stored search "${sname}".'
@@ -910,7 +910,7 @@ class Tracker(Folder):
         results = root.search(query)
         issues = []
         for doc in results.get_documents():
-            object = root.get_object(doc.abspath)
+            object = root.get_resource(doc.abspath)
             # Append
             issues.append(object)
         return issues
@@ -941,7 +941,7 @@ class Tracker(Folder):
         for name in ('priorities', 'states'):
             if not self.has_object(name):
                 continue
-            handler = self.get_object(name)
+            handler = self.get_resource(name)
             handler.metadata.set_changed()
             handler.metadata.format = OrderedSelectTable.class_id
             for index, record in enumerate(handler.handler.get_records()):

@@ -319,7 +319,7 @@ class Breadcrumb(object):
             else:
                 target = start.parent
         else:
-            target = root.get_object(target_path)
+            target = root.get_resource(target_path)
         self.target_path = str(target.get_abspath())
 
         # Object to link

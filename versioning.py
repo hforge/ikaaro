@@ -134,9 +134,9 @@ class VersioningAware(DBObject):
         history = self.get_property('history')
         if history:
             user_id = history[-1]['user']
-            users = self.get_object('/users')
+            users = self.get_resource('/users')
             try:
-                user = users.get_object(user_id)
+                user = users.get_resource(user_id)
             except LookupError:
                 document['last_author'] = None
             else:

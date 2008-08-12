@@ -108,7 +108,7 @@ class OrderAware(object):
         for data in [(ordered_names, ordered), (unordered_names, unordered)]:
             names, l = data
             for name in names:
-                object = self.get_object(name)
+                object = self.get_resource(name)
                 ns = {
                     'name': str(name),
                     'title': object.get_property('title'),
@@ -129,7 +129,7 @@ class OrderAware(object):
         namespace['ordered'] = ordered
         namespace['unordered'] = unordered
 
-        handler = self.get_object('/ui/future/order_items.xml')
+        handler = self.get_resource('/ui/future/order_items.xml')
         return stl(handler, namespace)
 
 

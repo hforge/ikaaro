@@ -69,7 +69,7 @@ class Product(Folder):
         namespace = context.build_form_namespace(cls.product_fields)
         namespace['class_id'] = cls.class_id
         uri = 'ui/shop/%s_new_instance.xml' % cls.class_id
-        handler = context.root.get_object(uri)
+        handler = context.root.get_resource(uri)
         return stl(handler, namespace)
 
 
@@ -125,7 +125,7 @@ class Product(Folder):
         namespace = self.get_namespace()
         shop_root = self.parent
         namespace['cart'] = shop_root.view_small_cart(context)
-        handler = self.get_object('/ui/shop/%s_view.xml' % self.class_id)
+        handler = self.get_resource('/ui/shop/%s_view.xml' % self.class_id)
         return stl(handler, namespace)
 
 
@@ -135,7 +135,7 @@ class Product(Folder):
     def edit_form(self, context):
         namespace = context.build_form_namespace(self.product_fields,
                                                  self.get_property)
-        handler = self.get_object('/ui/shop/%s_edit.xml' % self.class_id)
+        handler = self.get_resource('/ui/shop/%s_edit.xml' % self.class_id)
         return stl(handler, namespace)
 
 

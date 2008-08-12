@@ -179,7 +179,7 @@ class PO(Text):
         else:
             namespace['msgid'] = None
 
-        handler = self.get_object('/ui/PO_edit.xml')
+        handler = self.get_resource('/ui/PO_edit.xml')
         return stl(handler, namespace)
 
 

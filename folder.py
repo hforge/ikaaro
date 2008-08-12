@@ -130,7 +130,7 @@ class BrowseContent(BrowseForm):
         namespace['search_subfolders'] = query['search_subfolders']
 
         # Ok
-        template = resource.get_object('/ui/folder/browse_search.xml')
+        template = resource.get_resource('/ui/folder/browse_search.xml')
         return stl(template, namespace)
 
 
@@ -219,7 +219,7 @@ class BrowseContent(BrowseForm):
         ids.sort()
         ids.reverse()
         for name in ids:
-            object = resource.get_object(name)
+            object = resource.get_resource(name)
             ac = object.get_access_control()
             if ac.is_allowed_to_remove(user, object):
                 # Remove object
@@ -249,7 +249,7 @@ class BrowseContent(BrowseForm):
         ac = resource.get_access_control()
         user = context.user
         paths = [ x for x in ids
-                  if ac.is_allowed_to_move(user, resource.get_object(x)) ]
+                  if ac.is_allowed_to_move(user, resource.get_resource(x)) ]
 
         # Check input data
         if not paths:
@@ -270,7 +270,7 @@ class BrowseContent(BrowseForm):
         ac = resource.get_access_control()
         user = context.user
         names = [ x for x in ids
-                  if ac.is_allowed_to_copy(user, resource.get_object(x)) ]
+                  if ac.is_allowed_to_copy(user, resource.get_resource(x)) ]
 
         # Check input data
         if not names:
@@ -291,7 +291,7 @@ class BrowseContent(BrowseForm):
         ac = resource.get_access_control()
         user = context.user
         names = [ x for x in ids
-                  if ac.is_allowed_to_move(user, resource.get_object(x)) ]
+                  if ac.is_allowed_to_move(user, resource.get_resource(x)) ]
 
         # Check input data
         if not names:
@@ -324,7 +324,7 @@ class RenameForm(STLForm):
         ac = resource.get_access_control()
         user = context.user
         paths = [ x for x in ids
-                  if ac.is_allowed_to_move(user, resource.get_object(x)) ]
+                  if ac.is_allowed_to_move(user, resource.get_resource(x)) ]
 
         # Build the namespace
         paths.sort()
@@ -365,7 +365,7 @@ class RenameForm(STLForm):
             # Split the path
             if '/' in path:
                 parent_path, old_name = path.rsplit('/', 1)
-                container = resource.get_object(parent_path)
+                container = resource.get_resource(parent_path)
             else:
                 old_name = path
                 container = resource
@@ -505,7 +505,7 @@ class OrphansView(BrowseContent):
             objects = resource.traverse_objects()
         else:
             base_query = EqQuery('parent_path', parent_path)
-            objects = resource.get_objects()
+            objects = resource.get_resources()
 
         orphans = []
         for object in objects:
@@ -582,7 +582,7 @@ class Folder(DBObject):
                  if x[-9:] == '.metadata' ]
 
 
-    def _get_object(self, name):
+    def _get_resource(self, name):
         folder = self.handler
         metadata = folder.get_handler('%s.metadata' % name)
         format = metadata.format
@@ -599,7 +599,7 @@ class Folder(DBObject):
 
 
     def del_object(self, name):
-        object = self.get_object(name)
+        object = self.get_resource(name)
 
         # Check referencial-integrity
         # FIXME Check sub-objects too
@@ -641,7 +641,7 @@ class Folder(DBObject):
         folder.copy_handler('%s.metadata' % source_uri,
                             '%s.metadata' % target_uri)
         # Copy the content
-        object = self.get_object(source)
+        object = self.get_resource(source)
         for old_name, new_name in object.rename_handlers(new_name):
             if old_name is None:
                 continue
@@ -651,14 +651,14 @@ class Folder(DBObject):
                 folder.copy_handler(src_uri, dst_uri)
 
         # Events, add
-        object = self.get_object(target)
+        object = self.get_resource(target)
         context.server.add_object(object)
 
 
     def move_object(self, source, target):
         context = get_context()
         # Events, remove
-        object = self.get_object(source)
+        object = self.get_resource(source)
         context.server.remove_object(object)
 
         # Find out the source and target absolute URIs
@@ -687,14 +687,14 @@ class Folder(DBObject):
                 folder.move_handler(src_uri, dst_uri)
 
         # Events, add
-        object = self.get_object(target)
+        object = self.get_resource(target)
         context.server.add_object(object)
 
 
     def traverse_objects(self):
         yield self
         for name in self._get_names():
-            object = self.get_object(name)
+            object = self.get_resource(name)
             if isinstance(object, Folder):
                 for x in object.traverse_objects():
                     yield x
@@ -704,7 +704,7 @@ class Folder(DBObject):
 
     def search_objects(self, path='.', format=None, state=None,
                        object_class=None):
-        for object in self.get_objects(path):
+        for object in self.get_resources(path):
             if not isinstance(object, DBObject):
                 continue
             # Filter by base class
@@ -774,7 +774,7 @@ class Folder(DBObject):
         allowed_types = tuple(self.get_document_types())
         for path in paths:
             try:
-                object = root.get_object(path)
+                object = root.get_resource(path)
             except LookupError:
                 continue
             if not isinstance(object, allowed_types):
@@ -794,7 +794,7 @@ class Folder(DBObject):
                 # Copy&Paste
                 self.copy_object(path, name)
                 # Fix state
-                object = self.get_object(name)
+                object = self.get_resource(name)
                 if isinstance(object, WorkflowAware):
                     metadata = object.metadata
                     metadata.set_property('state', object.workflow.initstate)

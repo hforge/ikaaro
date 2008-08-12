@@ -78,7 +78,7 @@ class Shop(Folder):
             namespace['products'].append({'title': product.get_title(),
                                           'quantity': quantity})
 
-        handler = self.get_object('/ui/shop/Cart_view.xml')
+        handler = self.get_resource('/ui/shop/Cart_view.xml')
         return stl(handler, namespace)
 
 
@@ -119,7 +119,7 @@ class Shop(Folder):
             namespace['link_clear'] = ';cart?action=clear'
         namespace['total'] = total
 
-        handler = self.get_object('/ui/shop/Shop_view_cart.xml')
+        handler = self.get_resource('/ui/shop/Shop_view_cart.xml')
         return stl(handler, namespace)
 
 
@@ -130,7 +130,7 @@ class Shop(Folder):
             Cart().clear()
         else:
             product = context.get_form_value('product')
-            product = self.get_object('%s' % product)
+            product = self.get_resource('%s' % product)
             if(action=='add'):
                 Cart().add_product(product.name)
             elif(action=='remove'):

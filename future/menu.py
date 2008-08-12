@@ -91,7 +91,7 @@ class Link(File):
         namespace['message'] = context.get_form_value('message')
 
         prefix = self.get_abspath().get_pathto('/ui/future/link_addlink.xml')
-        handler = self.get_object('/ui/future/link_addlink.xml')
+        handler = self.get_resource('/ui/future/link_addlink.xml')
         return stl(handler, namespace, prefix=prefix)
 
 
@@ -115,7 +115,7 @@ class Link(File):
         # Add a script
         context.scripts.append('/ui/future/link.js')
 
-        handler = self.get_object('/ui/future/link_edit_metadata.xml')
+        handler = self.get_resource('/ui/future/link_edit_metadata.xml')
         return stl(handler, namespace)
 
 
@@ -185,7 +185,7 @@ def get_target_info(context, object):
     # get the real target object
     site_root = context.resource.get_site_root()
     try:
-        o = object.get_object(target_rpath)
+        o = object.get_resource(target_rpath)
     except LookupError:
         return None, None
 
@@ -220,7 +220,7 @@ def get_menu_namespace_level(context, url, menu_root, depth, show_first_child,
 
     for name in menu_root.get_ordered_names('ordered'):
         # Get the objects, check security
-        object = menu_root.get_object(name)
+        object = menu_root.get_resource(name)
 
         ac = object.get_access_control()
         if ac.is_allowed_to_view(user, object) is False:
@@ -266,7 +266,7 @@ def get_menu_namespace_level(context, url, menu_root, depth, show_first_child,
                 if subtabs.get('items', None):
                     childs = subtabs['items']
                     first_child = childs[0]['path']
-                    first_child = here.get_object(first_child)
+                    first_child = here.get_resource(first_child)
                     path = str(here.get_pathto(first_child))
 
         items.append({'id': 'tab_%s' % label.lower().replace(' ', '_'),

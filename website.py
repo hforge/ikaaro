@@ -165,7 +165,7 @@ class LoginView(STLForm):
 
         # Get the user
         brain = results.get_documents()[0]
-        user = root.get_object('users/%s' % brain.name)
+        user = root.get_resource('users/%s' % brain.name)
 
         # Check the user is active
         if user.get_property('user_must_confirm'):
@@ -247,13 +247,13 @@ class ForgottenPasswordForm(STLForm):
             return
 
         user = results.get_documents()[0]
-        user = resource.get_object('/users/%s' % user.name)
+        user = resource.get_resource('/users/%s' % user.name)
 
         # Send email of confirmation
         email = user.get_property('email')
         user.send_confirmation(context, email)
 
-        handler = resource.get_object('/ui/website/forgotten_password.xml')
+        handler = resource.get_resource('/ui/website/forgotten_password.xml')
         return stl(handler)
 
 
@@ -365,12 +365,12 @@ class ContactOptionsForm(STLForm):
         contacts = resource.get_property('contacts')
 
         # Build the namespace
-        users = resource.get_object('/users')
+        users = resource.get_resource('/users')
         # Only members of the website are showed
         namespace = {}
         namespace['contacts'] = []
         for username in resource.get_members():
-            user = users.get_object(username)
+            user = users.get_resource(username)
             email = user.get_property('email')
             if not email:
                 continue
@@ -564,10 +564,10 @@ class RegisterForm(AutoForm):
         # Do we already have a user with that email?
         root = context.root
         results = root.search(email=email)
-        users = resource.get_object('users')
+        users = resource.get_resource('users')
         if results.get_n_documents():
             user = results.get_documents()[0]
-            user = users.get_object(user.name)
+            user = users.get_resource(user.name)
             if not user.has_property('user_must_confirm'):
                 message = u'There is already an active user with that email.'
                 context.message = message
@@ -610,10 +610,10 @@ class ContactForm(STLForm):
         namespace = context.build_form_namespace(self.schema)
 
         # To
-        users = resource.get_object('/users')
+        users = resource.get_resource('/users')
         namespace['contacts'] = []
         for name in resource.get_property('contacts'):
-            user = users.get_object(name)
+            user = users.get_resource(name)
             title = user.get_title()
             namespace['contacts'].append({'name': name, 'title': title,
                 'selected': name == namespace['to']['value']})
@@ -635,7 +635,7 @@ class ContactForm(STLForm):
         body = form['body'].strip()
 
         # Find out the "to" address
-        contact = resource.get_object('/users/%s' % contact)
+        contact = resource.get_resource('/users/%s' % contact)
         contact_title = contact.get_title()
         contact = contact.get_property('email')
         if contact_title != contact:
@@ -680,7 +680,7 @@ class SiteSearchView(STLView):
             user = context.user
             objects = []
             for document in documents:
-                object = root.get_object(document.abspath)
+                object = root.get_resource(document.abspath)
                 ac = object.get_access_control()
                 if ac.is_allowed_to_view(user, object):
                     objects.append(object)
@@ -765,14 +765,14 @@ class WebSite(RoleAware, Folder):
     __fixed_handlers__ = ['skin', 'index']
 
 
-    def _get_object(self, name):
+    def _get_resource(self, name):
         if name == 'ui':
             ui = UI(ui_path)
             ui.database = self.metadata.database
             return ui
         if name in ('users', 'users.metadata'):
-            return self.parent._get_object(name)
-        return Folder._get_object(self, name)
+            return self.parent._get_resource(name)
+        return Folder._get_resource(self, name)
 
 
     @classmethod

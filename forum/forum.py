@@ -64,11 +64,11 @@ class Forum(Folder):
         namespace['description'] = self.get_property('description')
         # Namespace / Threads
         accept_language = context.accept_language
-        users = self.get_object('/users')
+        users = self.get_resource('/users')
         namespace['threads'] = []
         for thread in self.search_objects(object_class=Thread):
-            message = thread.get_object('0')
-            author = users.get_object(message.get_owner())
+            message = thread.get_resource('0')
+            author = users.get_resource(message.get_owner())
             posts = thread.search_objects(object_class=Message)
             posts = list(posts)
             namespace['threads'].append({
@@ -81,7 +81,7 @@ class Forum(Folder):
             })
         namespace['threads'].sort(key=itemgetter('date'), reverse=True)
 
-        handler = self.get_object('/ui/forum/Forum_view.xml')
+        handler = self.get_resource('/ui/forum/Forum_view.xml')
         return stl(handler, namespace)
 
 
@@ -95,7 +95,7 @@ class Forum(Folder):
         namespace = {}
         namespace['rte'] =  self.get_rte(context, 'data', data)
 
-        handler = self.get_object('/ui/forum/Forum_new_thread.xml')
+        handler = self.get_resource('/ui/forum/Forum_new_thread.xml')
         return stl(handler, namespace)
 
 

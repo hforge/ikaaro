@@ -117,7 +117,7 @@ class EditIssueForm(STLForm):
         context.scripts.append('/ui/tracker/tracker.js')
 
         # Local variables
-        users = resource.get_object('/users')
+        users = resource.get_resource('/users')
         record = resource.get_last_history_record()
         title = record.get_value('title')
         module = record.get_value('module')
@@ -135,7 +135,7 @@ class EditIssueForm(STLForm):
         namespace['title'] = title
         # Reported by
         reported_by = resource.get_reported_by()
-        namespace['reported_by'] = users.get_object(reported_by).get_title()
+        namespace['reported_by'] = users.get_resource(reported_by).get_title()
         # Topics, Version, Priority, etc.
         get = resource.parent.get_object
         namespace['modules'] = get('modules').get_options(module)
@@ -159,7 +159,7 @@ class EditIssueForm(STLForm):
             username = record.username
             user_title = username
             if users.has_object(username):
-                user_title = users.get_object(username).get_title()
+                user_title = users.get_resource(username).get_title()
             i += 1
             comments.append({
                 'number': i,
@@ -253,12 +253,12 @@ class EditResourcesForm(STLForm):
         # Existent
         resources = resource.get_resources().handler
         records = resources.search(issue=resource.name)
-        users = context.root.get_object('/users')
+        users = context.root.get_resource('/users')
         ns_records = []
         for record in records:
             id = record.id
             resource = record.get_value('resource')
-            resource = users.get_object(resource)
+            resource = users.get_resource(resource)
             ns_record = {}
             ns_record['id'] = (id, '../resources/;edit_record_form?id=%s' % id)
             ns_record['resource'] = resource.get_title()
@@ -307,12 +307,12 @@ class HistoryForm(STLView):
         context.styles.append('/ui/tracker/tracker.css')
 
         # Local variables
-        users = resource.get_object('/users')
-        versions = resource.get_object('../versions')
-        types = resource.get_object('../types')
-        states = resource.get_object('../states')
-        modules = resource.get_object('../modules')
-        priorities = resource.get_object('../priorities')
+        users = resource.get_resource('/users')
+        versions = resource.get_resource('../versions')
+        types = resource.get_resource('../types')
+        states = resource.get_resource('../states')
+        modules = resource.get_resource('../modules')
+        priorities = resource.get_resource('../priorities')
         # Initial values
         previous_title = None
         previous_version = None
@@ -344,7 +344,7 @@ class HistoryForm(STLView):
             # solid in case the user has been removed
             user_exist = users.has_object(username)
             usertitle = (user_exist and
-                         users.get_object(username).get_title() or username)
+                         users.get_resource(username).get_title() or username)
             comment = XMLContent.encode(Unicode.encode(comment))
             comment = XMLParser(comment.replace('\n', '<br />'))
             i += 1
@@ -403,7 +403,7 @@ class HistoryForm(STLView):
             if assigned_to != previous_assigned_to:
                 previous_assigned_to = assigned_to
                 if assigned_to and users.has_object(assigned_to):
-                    assigned_to_user = users.get_object(assigned_to)
+                    assigned_to_user = users.get_resource(assigned_to)
                     row_ns['assigned_to'] = assigned_to_user.get_title()
                 else:
                     row_ns['assigned_to'] = ' '
@@ -512,7 +512,7 @@ class Issue(Folder):
 
 
     def get_resources(self):
-        return self.parent.get_object('resources')
+        return self.parent.get_resource('resources')
 
 
     def get_history(self):
@@ -542,7 +542,7 @@ class Issue(Folder):
         user = context.user
         root = context.root
         parent = self.parent
-        users = root.get_object('users')
+        users = root.get_resource('users')
 
         record = {}
         # Datetime
@@ -641,7 +641,7 @@ class Issue(Folder):
             body += modifications
         # Notify / Send
         for to_addr in to_addrs:
-            to_addr = users.get_object(to_addr).get_property('email')
+            to_addr = users.get_resource(to_addr).get_property('email')
             root.send_email(to_addr, subject, text=body)
 
 
@@ -679,7 +679,7 @@ class Issue(Folder):
             if last_value == new_value:
                 continue
             new_title = last_title = u''
-            csv = self.parent.get_object(csv_name).handler
+            csv = self.parent.get_resource(csv_name).handler
             if last_value or last_value == 0:
                 last_title = csv.get_record(last_value).title
             if new_value or new_value == 0:
@@ -753,7 +753,7 @@ class Issue(Folder):
                 infos[name] = None
                 infos['%s_rank'% name] = None
             else:
-                record = get_object(tables[name]).handler.get_record(value)
+                record = get_resource(tables[name]).handler.get_record(value)
                 infos[name] = record and record.title or None
                 if name in ('priority', 'state'):
                     infos['%s_rank'% name] = record.get_value('rank')
@@ -762,9 +762,9 @@ class Issue(Folder):
         assigned_to = get_value('assigned_to')
         infos['assigned_to'] = ''
         if assigned_to:
-            users = self.get_object('/users')
+            users = self.get_resource('/users')
             if users.has_object(assigned_to):
-                user = users.get_object(assigned_to)
+                user = users.get_resource(assigned_to)
                 infos['assigned_to'] = user.get_title()
 
         # Modification Time

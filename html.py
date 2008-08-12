@@ -69,7 +69,7 @@ class HTMLEditView(BaseView):
         namespace['timestamp'] = DateTime.encode(datetime.now())
         namespace['rte'] = resource.get_rte(context, 'data', data)
 
-        handler = resource.get_object('/ui/html/edit.xml')
+        handler = resource.get_resource('/ui/html/edit.xml')
         return stl(handler, namespace)
 
 

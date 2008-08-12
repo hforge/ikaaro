@@ -52,7 +52,7 @@ class ThumbnailView(BaseView):
 
         data, format = resource.handler.get_thumbnail(width, height)
         if data is None:
-            object = resource.get_object('/ui/icons/48x48/image.png')
+            object = resource.get_resource('/ui/icons/48x48/image.png')
             data = object.to_str()
             format = 'png'
 
@@ -101,7 +101,7 @@ class Video(File):
         namespace = {}
         namespace['format'] = self.handler.get_mimetype()
 
-        handler = self.get_object('/ui/binary/Video_view.xml')
+        handler = self.get_resource('/ui/binary/Video_view.xml')
         return stl(handler, namespace)
 
 
@@ -270,7 +270,7 @@ class Archive(File):
         contents = self.handler.get_contents()
         namespace['contents'] = '\n'.join(contents)
 
-        handler = self.get_object('/ui/binary/Archive_view.xml')
+        handler = self.get_resource('/ui/binary/Archive_view.xml')
         return stl(handler, namespace)
 
 

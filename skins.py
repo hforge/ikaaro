@@ -106,7 +106,7 @@ class UIFolder(Node, Folder):
         return self.get_handler_names()
 
 
-    def _get_object(self, name):
+    def _get_resource(self, name):
         if self.has_handler(name):
             handler = self.get_handler(name)
         else:
@@ -280,7 +280,7 @@ class Skin(UIFolder):
         for name in context.uri.path:
             path = path + ('%s/' % name)
             try:
-                resource = resource.get_object(name)
+                resource = resource.get_resource(name)
             except LookupError:
                 break
             # Append
@@ -393,10 +393,10 @@ class Skin(UIFolder):
 
     def get_template(self):
         try:
-            return self.get_object('template.xhtml')
+            return self.get_resource('template.xhtml')
         except LookupError:
             # Default, aruni
-            return self.get_object('/ui/aruni/template.xhtml')
+            return self.get_resource('/ui/aruni/template.xhtml')
 
 
     def template(self, content):
@@ -441,11 +441,11 @@ register_skin('aruni', '%s/aruni' % ui_path)
 
 class UI(UIFolder):
 
-    def _get_object(self, name):
+    def _get_resource(self, name):
         if name in skin_registry:
             skin = skin_registry[name]
             skin.database = self.database
             return skin
-        return UIFolder._get_object(self, name)
+        return UIFolder._get_resource(self, name)
 
 

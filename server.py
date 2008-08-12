@@ -206,7 +206,7 @@ class Server(BaseServer):
 
         # Added
         for path in self.objects_added:
-            object = root.get_object(path)
+            object = root.get_resource(path)
             if isinstance(object, VersioningAware):
                 object.commit_revision()
             catalog.index_document(object)
@@ -214,7 +214,7 @@ class Server(BaseServer):
 
         # Changed
         for path in self.objects_changed:
-            object = root.get_object(path)
+            object = root.get_resource(path)
             if isinstance(object, VersioningAware):
                 object.commit_revision()
             catalog.unindex_document(path)

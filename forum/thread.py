@@ -90,7 +90,7 @@ class Thread(Folder):
         context.styles.append('/ui/forum/forum.css')
 
         user = context.user
-        users = self.get_object('/users')
+        users = self.get_resource('/users')
         ac = self.get_access_control()
         accept_language = context.accept_language
         # The namespace
@@ -108,7 +108,7 @@ class Thread(Folder):
         for message in self.get_posts():
             author = message.get_owner()
             if author is not None:
-                author = users.get_object(author).get_title()
+                author = users.get_resource(author).get_title()
             namespace['messages'].append({
                 'name': message.name,
                 'author': author,
@@ -119,7 +119,7 @@ class Thread(Folder):
         if namespace['is_allowed_to_add']:
             namespace['rte'] = self.get_rte(context, 'data', None)
 
-        handler = self.get_object('/ui/forum/Thread_view.xml')
+        handler = self.get_resource('/ui/forum/Thread_view.xml')
         return stl(handler, namespace)
 
 

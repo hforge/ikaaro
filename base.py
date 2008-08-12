@@ -195,7 +195,7 @@ class AddImageForm(STLForm):
 
 
     def GET(self, resource, context):
-        template = resource.get_object(self.template)
+        template = resource.get_resource(self.template)
         namespace = self.get_namespace(resource, context)
         prefix = resource.get_pathto(template)
         return stl(template, namespace, prefix=prefix)
@@ -220,7 +220,7 @@ class AddImageForm(STLForm):
             return
 
         # Get the container
-        container = context.root.get_object(form['target_path'])
+        container = context.root.get_resource(form['target_path'])
         # Check the name is free
         name, type, language = FileName.decode(name)
         if container.has_object(name):
@@ -239,7 +239,7 @@ class AddImageForm(STLForm):
                        '/ui/tiny_mce/tiny_mce_src.js',
                        '/ui/tiny_mce/tiny_mce_popup.js']
 
-        object = container.get_object(name)
+        object = container.get_resource(name)
         path = resource.get_pathto(object)
         script_template = '<script type="text/javascript" src="%s" />'
         body = ''
@@ -298,7 +298,7 @@ class AddLinkForm(STLForm):
 
 
     def GET(self, resource, context):
-        template = resource.get_object(self.template)
+        template = resource.get_resource(self.template)
         namespace = self.get_namespace(resource, context)
         prefix = resource.get_pathto(template)
         return stl(template, namespace, prefix=prefix)
@@ -309,7 +309,7 @@ class AddLinkForm(STLForm):
         """
         # Get the container
         root = context.root
-        container = root.get_object(context.get_form_value('target_path'))
+        container = root.get_resource(context.get_form_value('target_path'))
         # Add the file to the object
         class_id = context.get_form_value('type')
         cls = get_object_class(class_id)
@@ -324,7 +324,7 @@ class AddLinkForm(STLForm):
                            '/ui/tiny_mce/tiny_mce_src.js',
                            '/ui/tiny_mce/tiny_mce_popup.js']
 
-            object = container.get_object(uri.path[0])
+            object = container.get_resource(uri.path[0])
             path = context.resource.get_pathto(object)
             script_template = '<script type="text/javascript" src="%s" />'
             body = ''
@@ -468,7 +468,7 @@ class DBObject(CatalogAware, Node):
     @staticmethod
     def make_object(cls, container, name, *args, **kw):
         cls._make_object(cls, container.handler, name, *args, **kw)
-        object = container.get_object(name)
+        object = container.get_resource(name)
         # Events, add
         get_context().server.add_object(object)
 
@@ -819,7 +819,7 @@ class DBObject(CatalogAware, Node):
             if revisions:
                 username = revisions[0]['username']
                 try:
-                    user = self.get_object('/users/%s' % username)
+                    user = self.get_resource('/users/%s' % username)
                 except LookupError:
                     line['last_author'] = username
                 else:
@@ -880,7 +880,7 @@ class DBObject(CatalogAware, Node):
         user = context.user
         objects = []
         for document in documents:
-            object = root.get_object(document.abspath)
+            object = root.get_resource(document.abspath)
             ac = object.get_access_control()
             if ac.is_allowed_to_view(user, object):
                 objects.append(object)
@@ -932,7 +932,7 @@ class DBObject(CatalogAware, Node):
         here = context.resource
         root = context.root
         for name in css_names:
-            handler = root.get_object(name)
+            handler = root.get_resource(name)
             css.append(str(here.get_pathto(handler)))
         return ','.join(css)
 
@@ -953,7 +953,7 @@ class DBObject(CatalogAware, Node):
         here = context.resource.get_abspath()
         prefix = here.get_pathto(template)
 
-        handler = context.root.get_object(template)
+        handler = context.root.get_resource(template)
         return stl(handler, namespace, prefix=prefix)
 
 

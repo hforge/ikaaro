@@ -81,7 +81,7 @@ class Orders(Folder):
         my_orders = results.get_documents(sort_by='name')
         orders = []
         for my_order in my_orders:
-            order = root.get_object(my_order.abspath)
+            order = root.get_resource(my_order.abspath)
             # Mtime
             mtime = format_datetime(order.get_mtime(), accept)
             # State
@@ -108,7 +108,7 @@ class Orders(Folder):
         namespace['table'] = table(columns, orders, sortby, sortorder,
                                    actions, self.gettext)
 
-        handler = self.get_object('/ui/shop/Orders_view.xml')
+        handler = self.get_resource('/ui/shop/Orders_view.xml')
         return stl(handler, namespace)
 
 
@@ -171,7 +171,7 @@ class Orders(Folder):
         namespace['table'] = table(columns, orders, sortby, sortorder,
                                    actions, self.gettext)
 
-        handler = self.get_object('/ui/shop/Order_view_all.xml')
+        handler = self.get_resource('/ui/shop/Order_view_all.xml')
         return stl(handler, namespace)
 
 
@@ -239,7 +239,7 @@ class Order(Folder, WorkflowAware):
         # Get products informations
         total = 0
         for name, quantity in cart_products:
-            product = context.resource.parent.get_object('%s' % name)
+            product = context.resource.parent.get_resource('%s' % name)
             # Price
             price = product.get_property('price')
             vat = product.get_property('vat')
@@ -262,7 +262,7 @@ class Order(Folder, WorkflowAware):
         namespace['lastname'] = context.user.get_property('lastname')
         namespace['email'] = context.user.get_property('email')
 
-        handler = context.root.get_object('/ui/shop/Order_new_instance.xml')
+        handler = context.root.get_resource('/ui/shop/Order_new_instance.xml')
         return stl(handler, namespace)
 
 
@@ -312,7 +312,7 @@ class Order(Folder, WorkflowAware):
                      'products': []}
         order_price = 0
         for name, quantity in cart_products:
-            product = context.resource.parent.get_object('%s' % name)
+            product = context.resource.parent.get_resource('%s' % name)
             # Reduce the stock
             stock = product.get_property('stock')
             product.set_property('stock', stock - quantity)
@@ -396,7 +396,7 @@ class Order(Folder, WorkflowAware):
         # Metadata
         for field in self.order_fields:
             namespace[field] = self.get_property(field)
-        handler = self.get_object('/ui/shop/Order_view.xml')
+        handler = self.get_resource('/ui/shop/Order_view.xml')
 
         return stl(handler, namespace)
 

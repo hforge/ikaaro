@@ -199,7 +199,7 @@ class CSV(Text):
             columns.append(column)
         namespace['columns'] = columns
 
-        handler = self.get_object('/ui/csv/add_row.xml')
+        handler = self.get_resource('/ui/csv/add_row.xml')
         return stl(handler, namespace)
 
 
@@ -255,7 +255,7 @@ class CSV(Text):
             columns.append(column)
         namespace['columns'] = columns
 
-        handler = self.get_object('/ui/csv/edit_row.xml')
+        handler = self.get_resource('/ui/csv/edit_row.xml')
         return stl(handler, namespace)
 
 

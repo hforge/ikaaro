@@ -89,7 +89,7 @@ class BrowseForm(STLForm):
             for name, title in self.search_fields ]
 
         # Ok
-        template = resource.get_object('/ui/generic/browse_search.xml')
+        template = resource.get_resource('/ui/generic/browse_search.xml')
         return stl(template, namespace)
 
 
@@ -106,5 +106,5 @@ class BrowseForm(STLForm):
         namespace['search'] = self.search_form(resource, context)
 
         # Ok
-        template = resource.get_object(self.template)
+        template = resource.get_resource(self.template)
         return stl(template, namespace)

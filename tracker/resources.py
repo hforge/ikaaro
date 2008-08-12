@@ -119,10 +119,10 @@ class Resource(Record):
                      starts_on=True, ends_on=True, out_on=True):
         context = get_context()
         here = context.resource
-        issue = here.parent.get_object(self.get_value('issue'))
-        users = context.root.get_object('/users')
+        issue = here.parent.get_resource(self.get_value('issue'))
+        users = context.root.get_resource('/users')
         user = self.get_value('resource')
-        user_title = users.get_object(user).get_title()
+        user_title = users.get_resource(user).get_title()
         ns = {}
         ns['resource'] = {'name': user, 'title': user_title}
         ns['issue'] = {'number': issue.name, 'title': issue.get_value('title'),

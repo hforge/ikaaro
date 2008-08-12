@@ -75,7 +75,7 @@ class NotFoundView(STLView):
         request = context.request
         if request.has_header('x-base-path'):
             try:
-                resource.get_object('%s/ui' % request.get_header('x-base-path'))
+                resource.get_resource('%s/ui' % request.get_header('x-base-path'))
             except LookupError:
                 response = context.response
                 response.set_header('content-type', 'text/html; charset=UTF-8')
@@ -132,9 +132,9 @@ class Root(WebSite):
     # Override itools.web.root.Root
     ########################################################################
     def get_user(self, name):
-        users = self.get_object('users')
+        users = self.get_resource('users')
         if users.has_object(name):
-            return users.get_object(name)
+            return users.get_resource(name)
         return None
 
 
@@ -149,19 +149,19 @@ class Root(WebSite):
     def internal_server_error(self, context):
         namespace = {'traceback': traceback.format_exc()}
 
-        handler = self.get_object('/ui/root/internal_server_error.xml')
+        handler = self.get_resource('/ui/root/internal_server_error.xml')
         return stl(handler, namespace, mode='html')
 
 
     ########################################################################
     # Traverse
     ########################################################################
-    def _get_object(self, name):
+    def _get_resource(self, name):
         if name == 'ui':
             ui = UI(ui_path)
             ui.database = self.metadata.database
             return ui
-        return Folder._get_object(self, name)
+        return Folder._get_resource(self, name)
 
 
     def _get_names(self):
@@ -190,10 +190,10 @@ class Root(WebSite):
         # Back-Office
         hostname = context.uri.authority.host
         if hostname[:3] in ['bo.', 'bo-']:
-            return self.get_object('ui/aruni')
+            return self.get_resource('ui/aruni')
         # Fron-Office
         skin = context.site_root.class_skin
-        return self.get_object(skin)
+        return self.get_resource(skin)
 
 
     def get_available_languages(self):
