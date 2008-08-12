@@ -224,7 +224,7 @@ class BrowseContent(BrowseForm):
             if ac.is_allowed_to_remove(user, object):
                 # Remove object
                 try:
-                    resource.del_object(name)
+                    resource.del_resource(name)
                 except ConsistencyError:
                     not_removed.append(name)
                     continue
@@ -381,7 +381,7 @@ class RenameForm(STLForm):
                 context.del_cookie('ikaaro_cp')
                 cp_paths = []
             # Rename
-            container.move_object(old_name, new_name)
+            container.move_resource(old_name, new_name)
 
         message = MSG(u'Objects renamed.')
         return context.come_back(message, goto=';browse_content')
@@ -598,7 +598,7 @@ class Folder(DBObject):
         return cls(metadata)
 
 
-    def del_object(self, name):
+    def del_resource(self, name):
         object = self.get_resource(name)
 
         # Check referencial-integrity
@@ -621,7 +621,7 @@ class Folder(DBObject):
                 folder.del_handler(handler.uri)
 
 
-    def copy_object(self, source, target):
+    def copy_resource(self, source, target):
         context = get_context()
 
         # Find out the source and target absolute URIs
@@ -655,7 +655,7 @@ class Folder(DBObject):
         context.server.add_object(object)
 
 
-    def move_object(self, source, target):
+    def move_resource(self, source, target):
         context = get_context()
         # Events, remove
         object = self.get_resource(source)
@@ -789,10 +789,10 @@ class Folder(DBObject):
             name = generate_name(object.name, self.get_names(), '_copy_')
             if cut is True:
                 # Cut&Paste
-                self.move_object(path, name)
+                self.move_resource(path, name)
             else:
                 # Copy&Paste
-                self.copy_object(path, name)
+                self.copy_resource(path, name)
                 # Fix state
                 object = self.get_resource(name)
                 if isinstance(object, WorkflowAware):

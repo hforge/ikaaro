@@ -350,7 +350,7 @@ class Dressable(Folder, EpozEditable):
         name = context.get_form_value('name')
         objects = ''
         try:
-            self.del_object(name)
+            self.del_resource(name)
             objects = name
         except ConsistencyError:
             pass

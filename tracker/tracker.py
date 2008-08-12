@@ -464,7 +464,7 @@ class StoredSearchesForm(STLForm):
 
         for name in ids:
             try:
-                resource.del_object(name)
+                resource.del_resource(name)
             except ConsistencyError:
                 not_removed.append(name)
                 continue

@@ -642,7 +642,7 @@ class DBObject(CatalogAware, Node):
         return the old a new names for all the attached handlers (except the
         metadata).
 
-        This method is required by the "move_object" method.
+        This method is required by the "move_resource" method.
         """
         return [(self.name, new_name)]
 
