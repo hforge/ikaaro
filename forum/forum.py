@@ -109,7 +109,7 @@ class Forum(Folder):
         if name is None:
             return context.come_back(u"Invalid title.", keep=['data'])
 
-        if self.has_object(name):
+        if self.has_resource(name):
             return context.come_back(u"This thread already exists.", keep=['data'])
 
         # check input

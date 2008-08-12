@@ -97,7 +97,7 @@ class NewFileForm(NewInstanceForm):
                     language = resource.get_content_language(context)
 
         # Check the name is free
-        if resource.has_object(name):
+        if resource.has_resource(name):
             context.message = MSG_NAME_CLASH
             return
 

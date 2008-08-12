@@ -490,7 +490,7 @@ class GoToIssue(BaseView):
         if not issue_name:
             return context.come_back(MSG_NAME_MISSING)
 
-        if not resource.has_object(issue_name):
+        if not resource.has_resource(issue_name):
             return context.come_back(MSG(u'Issue not found.'))
 
         issue = resource.get_resource(issue_name)
@@ -939,7 +939,7 @@ class Tracker(Folder):
 
     def update_20080415(self):
         for name in ('priorities', 'states'):
-            if not self.has_object(name):
+            if not self.has_resource(name):
                 continue
             handler = self.get_resource(name)
             handler.metadata.set_changed()

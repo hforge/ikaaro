@@ -106,7 +106,7 @@ class NewWebSiteForm(NewInstanceForm):
             return
 
         # Check the name is free
-        if resource.has_object(name):
+        if resource.has_resource(name):
             context.message = MSG_NAME_CLASH
             return
 
@@ -413,7 +413,7 @@ class BrokenLinks(STLView):
         base = resource.get_abspath()
         base_str = str(base)
         for link in catalog.get_unique_values('links'):
-            if root.has_object(link):
+            if root.has_resource(link):
                 continue
             query = AndQuery(EqQuery('paths', base_str),
                              EqQuery('links', link))

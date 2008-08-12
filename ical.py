@@ -714,7 +714,7 @@ class EditEventForm(CalendarView, STLForm):
             id = uid
             if '/' in uid:
                 name, id = uid.split('/')
-                if not resource.has_object(name):
+                if not resource.has_resource(name):
                     message = MSG(u'Invalid argument.')
                     return context.come_back(message, keys=keys,
                                              goto=';edit_event')
@@ -1101,7 +1101,7 @@ class CalendarAware(CalendarView):
             name, id = id.split('/', 1)
         else:
             name = context.get_form_value('resource')
-        if name and self.has_object(name):
+        if name and self.has_resource(name):
             object = self.get_resource(name)
             return object.edit_event(context)
         message = MSG(u'Resource not found.')

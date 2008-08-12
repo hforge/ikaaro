@@ -158,7 +158,7 @@ class EditIssueForm(STLForm):
             # solid in case the user has been removed
             username = record.username
             user_title = username
-            if users.has_object(username):
+            if users.has_resource(username):
                 user_title = users.get_resource(username).get_title()
             i += 1
             comments.append({
@@ -342,7 +342,7 @@ class HistoryForm(STLView):
             cc_list = record.get_value('cc_list') or ()
             file = record.get_value('file')
             # solid in case the user has been removed
-            user_exist = users.has_object(username)
+            user_exist = users.has_resource(username)
             usertitle = (user_exist and
                          users.get_resource(username).get_title() or username)
             comment = XMLContent.encode(Unicode.encode(comment))
@@ -402,7 +402,7 @@ class HistoryForm(STLView):
                     row_ns['priority'] = priority.get_value('title')
             if assigned_to != previous_assigned_to:
                 previous_assigned_to = assigned_to
-                if assigned_to and users.has_object(assigned_to):
+                if assigned_to and users.has_resource(assigned_to):
                     assigned_to_user = users.get_resource(assigned_to)
                     row_ns['assigned_to'] = assigned_to_user.get_title()
                 else:
@@ -763,7 +763,7 @@ class Issue(Folder):
         infos['assigned_to'] = ''
         if assigned_to:
             users = self.get_resource('/users')
-            if users.has_object(assigned_to):
+            if users.has_resource(assigned_to):
                 user = users.get_resource(assigned_to)
                 infos['assigned_to'] = user.get_title()
 

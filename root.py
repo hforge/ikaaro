@@ -133,7 +133,7 @@ class Root(WebSite):
     ########################################################################
     def get_user(self, name):
         users = self.get_resource('users')
-        if users.has_object(name):
+        if users.has_resource(name):
             return users.get_resource(name)
         return None
 

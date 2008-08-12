@@ -130,7 +130,7 @@ class Dressable(Folder, EpozEditable):
 
 
     def _get_object_label(self, name):
-        if self.has_object(name):
+        if self.has_resource(name):
             object = self.get_resource(name)
             label = object.get_property('title')
             if label:
@@ -154,7 +154,7 @@ class Dressable(Folder, EpozEditable):
             content = ''
             if isinstance(data, tuple):
                 name, kk = data
-                if self.has_object(name):
+                if self.has_resource(name):
                     object = self.get_resource(name)
                     if is_datatype(object, Image):
                         content = self._get_image(context, object)
@@ -207,7 +207,7 @@ class Dressable(Folder, EpozEditable):
     edit_image__icon__ = 'image.png'
     def edit_image(self, context):
         name = context.get_form_value('name')
-        if self.has_object(name) is False:
+        if self.has_resource(name) is False:
             return context.uri.resolve2('../;add_image_form?name=%s' % name)
 
         namespace = {}
@@ -329,7 +329,7 @@ class Dressable(Folder, EpozEditable):
         extension = cls.class_handler.class_extension
         name = FileName.encode((name, extension, None))
 
-        if self.has_object(image_name):
+        if self.has_resource(image_name):
             object = self.get_resource(image_name)
             object.handler.load_state_from_string(body)
         else:

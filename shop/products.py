@@ -91,7 +91,7 @@ class Product(Folder):
             return context.come_back(MSG_BAD_NAME)
 
         # Check the name is free
-        if container.has_object(name):
+        if container.has_resource(name):
             return context.come_back(MSG_NAME_CLASH)
 
         object = cls.make_object(cls, container, name)

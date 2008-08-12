@@ -373,7 +373,7 @@ class RenameForm(STLForm):
             if new_name == old_name:
                 continue
             # Check there is not another resource with the same name
-            if container.has_object(new_name):
+            if container.has_resource(new_name):
                 context.message = MSG_EXISTANT_FILENAME
                 return
             # Clean cookie (FIXME Do not clean the cookie, update it)
@@ -571,7 +571,7 @@ class Folder(DBObject):
     #######################################################################
     # API
     #######################################################################
-    def _has_object(self, name):
+    def _has_resource(self, name):
         folder = self.handler
         return folder.has_handler('%s.metadata' % name)
 
@@ -733,7 +733,7 @@ class Folder(DBObject):
     #######################################################################
     def get_default_view_name(self):
         # Index page
-        if self.has_object('index'):
+        if self.has_resource('index'):
             return 'view'
 
         return DBObject.get_default_view_name(self)

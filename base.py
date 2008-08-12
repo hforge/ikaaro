@@ -96,7 +96,7 @@ class NewObjectForm(NewInstanceForm):
             return
 
         # Check the name is free
-        if resource.has_object(name):
+        if resource.has_resource(name):
             context.message = MSG_NAME_CLASH
             return
 
@@ -223,7 +223,7 @@ class AddImageForm(STLForm):
         container = context.root.get_resource(form['target_path'])
         # Check the name is free
         name, type, language = FileName.decode(name)
-        if container.has_object(name):
+        if container.has_resource(name):
             context.message = MSG_NAME_CLASH
             return
 

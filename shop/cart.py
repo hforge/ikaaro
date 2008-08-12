@@ -35,7 +35,7 @@ class Cart(object):
         """Return the list of products in cart"""
         products = []
         for name, quantity in self.get_list_products():
-            if shop_root.has_object('%s' % name):
+            if shop_root.has_resource('%s' % name):
                 product = shop_root.get_resource('%s' % name)
                 products.append((product, quantity))
             else:
