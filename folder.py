@@ -306,6 +306,52 @@ class BrowseContent(BrowseForm):
         context.message = u'Objects cut.'
 
 
+    action_paste_schema = {}
+    def action_paste(self, resource, context, form):
+        # Check there is something to paste
+        cut, paths = context.get_cookie('ikaaro_cp', type=CopyCookie)
+        if len(paths) == 0:
+            context.message = MSG(u'Nothing to paste.')
+            return
+
+        # Paste
+        target = resource
+        allowed_types = tuple(target.get_document_types())
+        for path in paths:
+            # Check the resource actually exists
+            try:
+                resource = target.get_resource(path)
+            except LookupError:
+                continue
+            if not isinstance(resource, allowed_types):
+                continue
+
+            # If cut&paste in the same place, do nothing
+            if cut is True:
+                source = resource.parent
+                if target.get_canonical_path() == source.get_canonical_path():
+                    continue
+
+            name = generate_name(resource.name, target.get_names(), '_copy_')
+            if cut is True:
+                # Cut&Paste
+                target.move_resource(path, name)
+            else:
+                # Copy&Paste
+                target.copy_resource(path, name)
+                # Fix state
+                resource = target.get_resource(name)
+                if isinstance(resource, WorkflowAware):
+                    metadata = resource.metadata
+                    metadata.set_property('state', resource.workflow.initstate)
+
+        # Cut, clean cookie
+        if cut is True:
+            context.del_cookie('ikaaro_cp')
+
+        context.message = MSG(u'Objects pasted.')
+
+
 
 class RenameForm(STLForm):
 
@@ -759,51 +805,6 @@ class Folder(DBObject):
     preview_content = PreviewView()
     last_changes = LastChanges()
     orphans = OrphansView()
-
-
-    #######################################################################
-    # Paste (FIXME)
-    paste__access__ = 'is_allowed_to_edit'
-    def paste(self, context):
-        cut, paths = context.get_cookie('ikaaro_cp', type=CopyCookie)
-        if len(paths) == 0:
-            message = MSG(u'Nothing to paste.')
-            return context.come_back(message)
-
-        root = context.root
-        allowed_types = tuple(self.get_document_types())
-        for path in paths:
-            try:
-                object = root.get_resource(path)
-            except LookupError:
-                continue
-            if not isinstance(object, allowed_types):
-                continue
-
-            # Cut&Paste in the same place (do nothing)
-            if cut is True:
-                parent = object.parent
-                if self.get_canonical_path() == parent.get_canonical_path():
-                    continue
-
-            name = generate_name(object.name, self.get_names(), '_copy_')
-            if cut is True:
-                # Cut&Paste
-                self.move_resource(path, name)
-            else:
-                # Copy&Paste
-                self.copy_resource(path, name)
-                # Fix state
-                object = self.get_resource(name)
-                if isinstance(object, WorkflowAware):
-                    metadata = object.metadata
-                    metadata.set_property('state', object.workflow.initstate)
-        # Cut, clean cookie
-        if cut is True:
-            context.del_cookie('ikaaro_cp')
-
-        message = MSG(u'Objects pasted.')
-        return context.come_back(message)
 
 
 
