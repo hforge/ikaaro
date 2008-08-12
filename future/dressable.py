@@ -24,20 +24,21 @@ from string import Template
 # Import from itools
 from itools.datatypes import is_datatype, DateTime, FileName
 from itools.handlers import checkid
+from itools.html import sanitize_stream
 from itools.stl import stl, set_prefix
 from itools.uri import Path
 from itools.web import get_context
 from itools.xml import XMLParser, XMLError
-from itools.html import sanitize_stream
 
 # Import from ikaaro
-from ikaaro.exceptions import ConsistencyError
-from ikaaro.registry import register_object_class
-from ikaaro.folder import Folder
-from ikaaro.file import File
 from ikaaro.binary import Image
+from ikaaro.exceptions import ConsistencyError
+from ikaaro.file import File
+from ikaaro.folder import Folder
 from ikaaro.html import WebPage, EpozEditable
 from ikaaro.messages import *
+from ikaaro.registry import register_object_class
+from ikaaro.workflow import WorkflowAware
 
 
 
@@ -88,6 +89,8 @@ class Dressable(Folder, EpozEditable):
                 if issubclass(handler_cls, WebPage):
                     full_name = '%s/%s.metadata' % (base_name, handler_name)
                     metadata = handler_cls.build_metadata()
+                    if issubclass(handler_cls, WorkflowAware):
+                        metadata.set_property('state', 'public')
                     folder.set_handler(full_name, metadata)
 
 
@@ -339,6 +342,7 @@ class Dressable(Folder, EpozEditable):
             metadata = object.metadata
             language = container.get_content_language(context)
             metadata.set_property('title', name, language=language)
+            metadata.set_property('state', 'public')
 
         goto = './;view'
         return context.come_back(MSG_NEW_RESOURCE, goto=goto)
