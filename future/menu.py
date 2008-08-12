@@ -20,6 +20,7 @@
 # Import from itools
 from itools import get_abspath
 from itools.datatypes import is_datatype, Unicode
+from itools.i18n import get_language_name
 from itools.stl import stl
 from itools.uri import Path
 
@@ -96,8 +97,11 @@ class Link(File):
     def edit_metadata_form(self, context):
         # Build the namespace
         namespace = {}
-        # Title
+        # Language
         language = self.get_content_language(context)
+        language_name = get_language_name(language)
+        namespace['language_name'] = self.gettext(language_name)
+        # Title
         namespace['title'] = self.get_property('title', language=language)
         # Description
         namespace['description'] = self.get_property('description',
@@ -122,7 +126,8 @@ class Link(File):
         title = context.get_form_value('title', type=Unicode)
         description = context.get_form_value('description', type=Unicode)
         new_window = context.get_form_value('new_window', type=Boolean)
-        language = context.site_root.get_default_language()
+        # Set input data
+        language = self.get_content_language(context)
 
         self.set_property('title', title, language=language)
         self.set_property('description', description, language=language)
