@@ -424,8 +424,6 @@ class Dressable(Folder, EpozEditable):
                     if is_datatype(cls, WebPage):
                         ref = 'edit_document?dress_name=%s' % name
                         subviews.append(ref)
-                        ref = 'edit_document?dress_name=%s&external=1' % name
-                        subviews.append(ref)
                     elif is_datatype(cls, Image):
                         ref = 'edit_image?name=%s' % name
                         subviews.append(ref)
