@@ -224,8 +224,7 @@ class EditRecordForm(AutoForm):
     query_schema = {'id': Integer}
 
 
-    def method(self, name):
-        context = get_context()
+    def get_value(self, name, context):
         # Get the record
         resource = context.resource
         id = context.query['id']

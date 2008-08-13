@@ -175,8 +175,7 @@ class EditRowForm(RowForm):
         return self.title.gettext(id=id)
 
 
-    def method(self, name):
-        context = get_context()
+    def get_value(self, name, context):
         # Get the record
         resource = context.resource
         id = context.query['index']

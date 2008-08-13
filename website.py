@@ -25,6 +25,7 @@ from types import GeneratorType
 import itools
 from itools import get_abspath
 from itools.datatypes import Boolean, Email, Integer, String, Tokens, Unicode
+from itools.datatypes import DynamicEnumerate
 from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.i18n import get_language_name, get_languages
@@ -40,13 +41,13 @@ from itools.xml import XMLParser
 import ikaaro
 from access import RoleAware
 from folder import Folder
-from forms import TextWidget, AutoForm
+from forms import AutoForm, Select, MultilineWidget, TextWidget
 from messages import *
 from registry import get_object_class, register_object_class
 from registry import register_website, get_register_websites, get_website_class
 from skins import UI, ui_path
 from views import IconsView, NewInstanceForm
-import widgets
+from widgets import batch
 from workflow import WorkflowAware
 
 
@@ -589,39 +590,49 @@ class RegisterForm(AutoForm):
 
 
 
-class ContactForm(STLForm):
+class ContactOptions(DynamicEnumerate):
+
+    def get_options(self):
+        resource = self.resource
+        users = resource.get_resource('/users')
+
+        return [
+            {'name': x, 'value': users.get_resource(x).get_title()}
+            for x in resource.get_property('contacts')
+        ]
+
+
+
+class ContactForm(AutoForm):
 
     access = True
     title = MSG(u'Contact')
-    template = '/ui/website/contact_form.xml'
+    submit_class = 'button_ok'
+    submit_value = MSG(u'Send')
 
-    schema = {
-        'to': String(mandatory=True),
-        'from': Email(mandatory=True),
-        'subject': Unicode(mandatory=True),
-        'body': Unicode(mandatory=True)}
+    def get_schema(self, resource, context):
+        return {
+            'to': ContactOptions(resource=resource, mandatory=True),
+            'from': Email(mandatory=True),
+            'subject': Unicode(mandatory=True),
+            'body': Unicode(mandatory=True)
+        }
 
 
-    def get_namespace(self, resource, context):
-        # Build the namespace
-        namespace = context.build_form_namespace(self.schema)
+    widgets = [
+        Select('to', title=MSG(u'Recipient')),
+        TextWidget('from', title=MSG(u'Sender email address'), size=40),
+        TextWidget('subject', title=MSG(u'Subject'), size=40),
+        MultilineWidget('body', title=MSG(u'Body'), rows=8, cols=50),
+    ]
 
-        # To
-        users = resource.get_resource('/users')
-        namespace['contacts'] = []
-        for name in resource.get_property('contacts'):
-            user = users.get_resource(name)
-            title = user.get_title()
-            namespace['contacts'].append({'name': name, 'title': title,
-                'selected': name == namespace['to']['value']})
 
-        # From
-        if namespace['from']['value'] is None:
+    def get_value(self, name, context):
+        if name == 'from':
             user = context.user
             if user is not None:
-                namespace['from']['value'] = user.get_property('email')
-
-        return namespace
+                return user.get_property('email')
+        return None
 
 
     def action(self, resource, context, form):
@@ -641,7 +652,7 @@ class ContactForm(STLForm):
         root = resource.get_root()
         root.send_email(contact, subject, from_addr=from_addr, text=body)
         # Ok
-        context.message = u'Message sent.'
+        context.message = MSG(u'Message sent.')
 
 
 class SiteSearchView(STLView):
@@ -685,7 +696,7 @@ class SiteSearchView(STLView):
             # Batch
             size = 10
             total = len(objects)
-            namespace['batch'] = widgets.batch(context.uri, start, size, total)
+            namespace['batch'] = batch(context.uri, start, size, total)
 
             # Build the namespace
             ns_objects = []

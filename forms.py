@@ -33,7 +33,6 @@ namespaces = {
 # Widgets
 ###########################################################################
 def get_default_widget(datatype):
-
     if is_datatype(datatype, Unicode):
         if getattr(datatype, 'multiple', False) is True:
             return MultilineWidget
@@ -44,15 +43,18 @@ def get_default_widget(datatype):
         return DateWidget
     elif is_datatype(datatype, Enumerate):
         return Select
-    else:
-        return TextWidget
+
+    return TextWidget
 
 
 
 class Widget(object):
 
+    size = None
+
     template = list(XMLParser(
-        """<input type="text" name="${name}" value="${value}" />""",
+        """<input type="text" name="${name}" value="${value}" size="${size}"
+        />""",
         namespaces))
 
 
@@ -67,9 +69,11 @@ class Widget(object):
 
 
     def to_html(self, datatype, value):
-        namespace = {}
-        namespace['name'] = self.name
-        namespace['value'] = value
+        namespace = {
+            'name': self.name,
+            'value': value,
+            'size': self.size,
+        }
 
         return stl(events=self.template, namespace=namespace)
 
@@ -107,15 +111,22 @@ class ReadOnlyWidget(Widget):
 
 class MultilineWidget(Widget):
 
+    rows = 5
+    cols = 25
+
     template = list(XMLParser(
-        """<textarea rows="5" cols="25" name="${name}">${value}</textarea>""",
+        """<textarea rows="${rows}" cols="${cols}" name="${name}"
+        >${value}</textarea>""",
         namespaces))
 
 
     def to_html(self, datatype, value):
-        namespace = {}
-        namespace['name'] = self.name
-        namespace['value'] = value
+        namespace = {
+            'name': self.name,
+            'value': value,
+            'rows': self.rows,
+            'cols': self.cols,
+            }
 
         return stl(events=self.template, namespace=namespace)
 
@@ -330,8 +341,11 @@ class AutoForm(STLForm):
 
     widgets = []
     required_msg = None
-    method = None
     template = '/ui/auto_form.xml'
+
+
+    def get_value(self, name, context):
+        return None
 
 
     def get_widgets(self, resource, context):
@@ -343,7 +357,6 @@ class AutoForm(STLForm):
         # Local Variables
         fields = self.get_schema(resource, context)
         widgets = self.get_widgets(resource, context)
-        method = self.method
 
         # Set and translate the required_msg
         required_msg = self.required_msg
@@ -365,7 +378,8 @@ class AutoForm(STLForm):
         namespace['submit_class'] = self.submit_class
         # Build widgets namespace
         has_required_widget = False
-        widgets_namespace = context.build_form_namespace(fields, method=method)
+        widgets_namespace = context.build_form_namespace(fields,
+                            get_value=self.get_value)
         namespace['widgets'] = []
         for widget in widgets:
             datatype = fields[widget.name]
