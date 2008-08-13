@@ -538,9 +538,6 @@ class RegisterForm(AutoForm):
 
     access = 'is_allowed_to_register'
     title = MSG(u'Register')
-
-
-    form_title = MSG(u'Registration')
     submit_value = MSG(u'Register')
     submit_class = 'button_ok'
 

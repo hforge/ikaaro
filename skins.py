@@ -40,15 +40,6 @@ from utils import reduce_string, resolve_view
 from widgets import build_menu
 
 
-def get_view_title(view):
-    title = getattr(view, 'title', None)
-    if title is None:
-        return None
-    if callable(title):
-        return title()
-    return title
-
-
 
 class FileGET(BaseView):
 
@@ -327,7 +318,7 @@ class Skin(UIFolder):
             tabs.append({
                 'id': 'tab_%s' % name,
                 'name': resolve_view(context, link),
-                'label': get_view_title(view),
+                'label': view.get_title(context),
                 'active': active,
                 'class': active and 'active' or None})
 

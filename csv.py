@@ -146,9 +146,8 @@ class RowForm(AutoForm):
 
 class AddRowForm(RowForm):
 
-    title = MSG(u'Add')
+    title = MSG(u'Add Row')
     icon = 'new.png'
-    form_title = MSG(u'Add a new row')
     submit_value = MSG(u'Add')
 
 
@@ -164,16 +163,16 @@ class AddRowForm(RowForm):
 
 class EditRowForm(RowForm):
 
-    form_title = MSG(u'Edit row #${id}')
+    title = MSG(u'Edit row #${id}')
     submit_value = MSG(u'Change')
     query_schema = {
         'index': Integer,
     }
 
 
-    def get_form_title(self, context):
+    def get_title(self, context):
         id = context.query['index']
-        return self.form_title.gettext(id=id)
+        return self.title.gettext(id=id)
 
 
     def method(self, name):

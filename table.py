@@ -153,10 +153,8 @@ class TableView(BrowseForm):
 class AddRecordForm(AutoForm):
 
     access = 'is_allowed_to_edit'
-    title = MSG(u'Add')
+    title = MSG(u'Add Record')
     icon = 'new.png'
-
-    form_title = MSG(u'Add a new record')
     submit_value = MSG(u'Add')
     submit_class = 'button_ok'
 
@@ -220,7 +218,7 @@ class AddRecordForm(AutoForm):
 class EditRecordForm(AutoForm):
 
     access = 'is_allowed_to_edit'
-    form_title = MSG(u'Edit record ${id}')
+    title = MSG(u'Edit record ${id}')
     submit_value = MSG(u'Change')
     submit_class = 'button_ok'
     query_schema = {'id': Integer}
@@ -244,9 +242,9 @@ class EditRecordForm(AutoForm):
         return resource.get_form()
 
 
-    def get_form_title(self, context):
+    def get_title(self, context):
         id = context.query['id']
-        return self.form_title.gettext(id=id)
+        return self.title.gettext(id=id)
 
 
     def action(self, resource, context, form):

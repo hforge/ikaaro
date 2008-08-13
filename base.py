@@ -59,8 +59,8 @@ class NewObjectForm(NewInstanceForm):
     }
 
 
-    def title(self):
-        type = get_context().get_query_value('type')
+    def get_title(self, context):
+        type = context.get_query_value('type')
         if not type:
             return MSG(u'Add resource').gettext()
         cls = get_object_class(type)
