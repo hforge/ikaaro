@@ -114,7 +114,7 @@ class NewWebSiteForm(NewInstanceForm):
 
         class_id = context.get_form_value('class_id')
         if class_id is None:
-            context.message = u'Please select a website.'
+            context.message = MSG(u'Please select a website.')
             return
 
         cls = get_website_class(class_id)
@@ -568,8 +568,8 @@ class RegisterForm(AutoForm):
             user = results.get_documents()[0]
             user = users.get_resource(user.name)
             if not user.has_property('user_must_confirm'):
-                message = u'There is already an active user with that email.'
-                context.message = message
+                context.message = MSG(
+                    u'There is already an active user with that email.')
                 return
         else:
             # Add the user

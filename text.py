@@ -169,7 +169,6 @@ class Text(File):
     class_id = 'text'
     class_version = '20071216'
     class_title = MSG(u'Plain Text')
-    class_description = u'Keep your notes with plain text files.'
     class_icon16 = 'icons/16x16/text.png'
     class_icon48 = 'icons/48x48/text.png'
     class_views = ['view', 'edit', 'externaledit', 'upload', 'edit_metadata',

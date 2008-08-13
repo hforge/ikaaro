@@ -250,7 +250,7 @@ class NewUserForm(STLForm):
             # Check the user is not yet in the group
             members = resource.get_members()
             if user_id in members:
-                context.message = u'The user is already here.'
+                context.message = MSG(u'The user is already here.')
                 return
 
         # Set the role

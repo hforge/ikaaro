@@ -173,7 +173,8 @@ class UploadForm(STLForm):
         # Check wether the handler is able to deal with the uploaded file
         handler = resource.handler
         if mimetype != handler.get_mimetype():
-            context.message = u'Unexpected file of mimetype %s' % mimetype
+            message = MSG(u'Unexpected file of mimetype ${type}')
+            context.message = message.gettext(type=mimetype)
             return
 
         # Replace
@@ -181,10 +182,13 @@ class UploadForm(STLForm):
             handler.load_state_from_string(body)
         except:
             handler.load_state()
-            context.message = u'Failed to load the file, may contain errors.'
-        else:
-            context.server.change_object(resource)
-            context.message = u'Version uploaded'
+            message = MSG(u'Failed to load the file, may contain errors.')
+            context.message = message
+            return
+
+        # Ok
+        context.server.change_object(resource)
+        context.message = MSG(u'Version uploaded')
 
 
 
@@ -229,7 +233,7 @@ class ExternalEdit(BaseView):
                     r.append('lock-token:%s' % lock.key)
                     r.append('borrow_lock:1')
                 else:
-                    msg = u'This page is lock by another user'
+                    msg = MSG(u'This page is lock by another user')
                     return context.come_back(message=msg, goto='.')
 
         if request.has_header('Authorization'):
@@ -318,14 +322,14 @@ class BacklinksView(BrowseForm):
 ###########################################################################
 # Model
 ###########################################################################
-file_description = u'Upload office documents, images, media files, etc.'
 
 class File(WorkflowAware, VersioningAware):
 
     class_id = 'file'
     class_version = '20071216'
     class_title = MSG(u'File')
-    class_description = MSG(file_description)
+    class_description = MSG(
+        u'Upload office documents, images, media files, etc.')
     class_icon16 = 'icons/16x16/file.png'
     class_icon48 = 'icons/48x48/file.png'
     class_views = ['view', 'externaledit', 'upload', 'backlinks',

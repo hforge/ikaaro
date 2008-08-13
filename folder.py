@@ -255,7 +255,7 @@ class BrowseContent(BrowseForm):
 
         # Check input data
         if not paths:
-            context.message = u'No objects selected.'
+            context.message = MSG(u'No objects selected.')
             return
 
         # FIXME Hack to get rename working. The current user interface forces
@@ -276,15 +276,15 @@ class BrowseContent(BrowseForm):
 
         # Check input data
         if not names:
-            message = u'No objects selected.'
+            message = MSG(u'No objects selected.')
             return
 
         abspath = resource.get_abspath()
         cp = (False, [ str(abspath.resolve2(x)) for x in names ])
         cp = CopyCookie.encode(cp)
         context.set_cookie('ikaaro_cp', cp, path='/')
-
-        context.message = u'Objects copied.'
+        # Ok
+        context.message = MSG(u'Objects copied.')
 
 
     def action_cut(self, resource, context, form):
@@ -297,7 +297,7 @@ class BrowseContent(BrowseForm):
 
         # Check input data
         if not names:
-            message = u'No objects selected.'
+            message = MSG(u'No objects selected.')
             return
 
         abspath = resource.get_abspath()
@@ -305,7 +305,7 @@ class BrowseContent(BrowseForm):
         cp = CopyCookie.encode(cp)
         context.set_cookie('ikaaro_cp', cp, path='/')
 
-        context.message = u'Objects cut.'
+        context.message = MSG(u'Objects cut.')
 
 
     action_paste_schema = {}
@@ -577,14 +577,12 @@ class OrphansView(BrowseContent):
 ###########################################################################
 # Model
 ###########################################################################
-folder_description = u'Organize your files and documents with folders.'
-
 class Folder(DBObject):
 
     class_id = 'folder'
     class_version = '20071215'
     class_title = MSG(u'Folder')
-    class_description = MSG(folder_description)
+    class_description = MSG(u'Organize your files and documents with folders.')
     class_icon16 = 'icons/16x16/folder.png'
     class_icon48 = 'icons/48x48/folder.png'
     class_views = ['browse_content', 'preview_content', 'new_resource',

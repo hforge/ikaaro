@@ -101,7 +101,7 @@ class Video(File):
     class_id = 'video'
     class_version = '20071216'
     class_title = MSG(u'Video')
-    class_description = u'Video'
+    class_description = MSG(u'Video')
     class_icon16 = 'icons/16x16/flash.png'
     class_icon48 = 'icons/48x48/flash.png'
 
@@ -115,7 +115,7 @@ class Flash(File):
     class_id = 'application/x-shockwave-flash'
     class_version = '20071216'
     class_title = MSG(u'Flash')
-    class_description = u'Flash Document'
+    class_description = MSG(u'Flash Document')
     class_icon16 = 'icons/16x16/flash.png'
     class_icon48 = 'icons/48x48/flash.png'
 
@@ -135,7 +135,7 @@ class MSWord(File):
     class_id = 'application/msword'
     class_version = '20071216'
     class_title = MSG(u'Word')
-    class_description = u'Word Text'
+    class_description = MSG(u'Word Text')
     class_icon16 = 'icons/16x16/word.png'
     class_icon48 = 'icons/48x48/word.png'
     class_handler = MSWordFile
@@ -147,7 +147,7 @@ class MSExcel(File):
     class_id = 'application/vnd.ms-excel'
     class_version = '20071216'
     class_title = MSG(u'Excel')
-    class_description = u'Excel Spreadsheet'
+    class_description = MSG(u'Excel Spreadsheet')
     class_icon16 = 'icons/16x16/excel.png'
     class_icon48 = 'icons/48x48/excel.png'
     class_handler = MSExcelFile
@@ -159,7 +159,7 @@ class MSPowerPoint(File):
     class_id = 'application/vnd.ms-powerpoint'
     class_version = '20071216'
     class_title = MSG(u'PowerPoint')
-    class_description = u'PowerPoint Presentation'
+    class_description = MSG(u'PowerPoint Presentation')
     class_icon16 = 'icons/16x16/powerpoint.png'
     class_icon48 = 'icons/48x48/powerpoint.png'
     class_handler = MSPowerPointFile
@@ -171,7 +171,7 @@ class OOWriter(File):
     class_id = 'application/vnd.sun.xml.writer'
     class_version = '20071216'
     class_title = MSG(u'OOo Writer')
-    class_description = u'OpenOffice.org Text'
+    class_description = MSG(u'OpenOffice.org Text')
     class_icon16 = 'icons/16x16/oowriter.png'
     class_icon48 = 'icons/48x48/oowriter.png'
     class_handler = SXWFile
@@ -183,7 +183,7 @@ class OOCalc(File):
     class_id = 'application/vnd.sun.xml.calc'
     class_version = '20071216'
     class_title = MSG(u'OOo Calc')
-    class_description = u'OpenOffice.org Spreadsheet'
+    class_description = MSG(u'OpenOffice.org Spreadsheet')
     class_icon16 = 'icons/16x16/oocalc.png'
     class_icon48 = 'icons/48x48/oocalc.png'
     class_handler = SXCFile
@@ -195,7 +195,7 @@ class OOImpress(File):
     class_id = 'application/vnd.sun.xml.impress'
     class_version = '20071216'
     class_title = MSG(u'OOo Impress')
-    class_description = u'OpenOffice.org Presentation'
+    class_description = MSG(u'OpenOffice.org Presentation')
     class_icon16 = 'icons/16x16/ooimpress.png'
     class_icon48 = 'icons/48x48/ooimpress.png'
     class_handler = SXIFile
@@ -207,7 +207,7 @@ class PDF(File):
     class_id = 'application/pdf'
     class_version = '20071216'
     class_title = MSG(u'PDF')
-    class_description = u'PDF Document'
+    class_description = MSG(u'PDF Document')
     class_icon16 = 'icons/16x16/pdf.png'
     class_icon48 = 'icons/48x48/pdf.png'
     class_handler = PDFFile
@@ -219,7 +219,7 @@ class RTF(File):
     class_id = 'text/rtf'
     class_version = '20071216'
     class_title = MSG(u"RTF")
-    class_description = u'RTF Document'
+    class_description = MSG(u'RTF Document')
     class_icon16 = 'icons/16x16/text.png'
     class_icon48 = 'icons/48x48/text.png'
     class_handler = RTFFile
@@ -231,7 +231,7 @@ class ODT(File):
     class_id = 'application/vnd.oasis.opendocument.text'
     class_version = '20071216'
     class_title = MSG(u'ODT')
-    class_description = u'OpenDocument Text'
+    class_description = MSG(u'OpenDocument Text')
     class_icon16 = 'icons/16x16/odt.png'
     class_icon48 = 'icons/48x48/odt.png'
     class_handler = ODTFile
@@ -243,7 +243,7 @@ class ODS(File):
     class_id = 'application/vnd.oasis.opendocument.spreadsheet'
     class_version = '20071216'
     class_title = MSG(u'ODS')
-    class_description = u'OpenDocument Spreadsheet'
+    class_description = MSG(u'OpenDocument Spreadsheet')
     class_icon16 = 'icons/16x16/ods.png'
     class_icon48 = 'icons/48x48/ods.png'
     class_handler = ODSFile
@@ -255,7 +255,7 @@ class ODP(File):
     class_id = 'application/vnd.oasis.opendocument.presentation'
     class_version = '20071216'
     class_title = MSG(u'ODP')
-    class_description = u'OpenDocument Presentation'
+    class_description = MSG(u'OpenDocument Presentation')
     class_icon16 = 'icons/16x16/odp.png'
     class_icon48 = 'icons/48x48/odp.png'
     class_handler = ODPFile
@@ -289,7 +289,7 @@ class ZipArchive(Archive):
     class_id = 'application/zip'
     class_version = '20071216'
     class_title = MSG(u"Zip")
-    class_description = u"Zip Archive"
+    class_description = MSG(u'Zip Archive')
     class_icon16 = 'icons/16x16/zip.png'
     class_icon48 = 'icons/48x48/zip.png'
     class_handler = ZIPFile
@@ -301,7 +301,7 @@ class TarArchive(Archive):
     class_id = 'application/x-tar'
     class_version = '20071216'
     class_title = MSG(u"Tar")
-    class_description = u"Tar Archive"
+    class_description = MSG(u'Tar Archive')
     class_icon16 = 'icons/16x16/tar.png'
     class_icon48 = 'icons/48x48/tar.png'
     class_handler = TARFile
@@ -316,7 +316,7 @@ class Gzip(File):
     class_id = 'application/x-gzip'
     class_version = '20071216'
     class_title = MSG(u"Gzip")
-    class_description = u"Gzip Compressed"
+    class_description = MSG(u'Gzip Compressed')
     class_icon16 = 'icons/16x16/gzip.png'
     class_icon48 = 'icons/48x48/gzip.png'
     class_handler = GzipFile
@@ -328,7 +328,7 @@ class Bzip2(File):
     class_id = 'application/x-bzip2'
     class_version = '20071216'
     class_title = MSG(u"Bzip2")
-    class_description = u"Bzip2 Compressed"
+    class_description = MSG(u'Bzip2 Compressed')
     class_icon16 = 'icons/16x16/bzip.png'
     class_icon48 = 'icons/48x48/bzip.png'
     class_handler = Bzip2File

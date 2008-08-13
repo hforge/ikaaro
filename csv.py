@@ -115,7 +115,7 @@ class ViewCSV(BrowseForm):
         ids = form['ids']
         resource.handler.del_rows(ids)
         # Ok
-        context.message = u'Row deleted.'
+        context.message = MSG(u'Row deleted.')
 
 
 

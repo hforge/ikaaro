@@ -186,9 +186,10 @@ class AccountForm(STLForm):
         if email != resource.get_property('email'):
             results = context.root.search(email=email)
             if results.get_n_documents():
-                context.message = resource.gettext(
+                message = MSG(
                     u'There is another user with the email "${email}", please'
-                    u' try again.', email=email)
+                    u' try again.')
+                context.message = message.gettext(email=email)
                 return
 
         # Save changes
@@ -196,7 +197,7 @@ class AccountForm(STLForm):
         resource.set_property('lastname', lastname)
         resource.set_property('email', email)
         # Ok
-        context.message = u'Account changed.'
+        context.message = MSG(u'Account changed.')
 
 
 
@@ -230,7 +231,7 @@ class PreferencesForm(STLForm):
         value = form['user_language']
         resource.set_property('user_language', value)
         # Ok
-        context.message = u'Application preferences changed.'
+        context.message = MSG(u'Application preferences changed.')
 
 
 
@@ -286,7 +287,7 @@ class PasswordForm(STLForm):
             resource.set_auth_cookie(context, newpass)
 
         # Ok
-        context.message = u'Password changed.'
+        context.message = MSG(u'Password changed.')
 
 
 
@@ -501,9 +502,9 @@ class User(AccessControl, Folder):
         if must_confirm:
             context.commit = True
             self.send_confirmation(context, self.get_property('email'))
-            msg = u'Confirmation sended!'
+            msg = MSG(u'Confirmation sended!')
         else:
-            msg = u'User has already confirm his registration!'
+            msg = MSG(u'User has already confirm his registration!')
         return context.come_back(msg)
 
 

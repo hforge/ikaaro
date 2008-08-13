@@ -100,7 +100,7 @@ class StateForm(STLForm):
             return
 
         # Ok
-        context.message = u'Transition done.'
+        context.message = MSG(u'Transition done.')
 
 
 
