@@ -35,7 +35,7 @@ from registry import register_object_class
 
 
 ###########################################################################
-# Views
+# Image / Video / Flash
 ###########################################################################
 class ThumbnailView(BaseView):
 
@@ -75,9 +75,6 @@ class VideoView(STLView):
 
 
 
-###########################################################################
-# Model
-###########################################################################
 class Image(File):
 
     class_id = 'image'
@@ -268,17 +265,22 @@ class ODP(File):
 ###########################################################################
 # Archives
 ###########################################################################
+
+class ArchiveView(STLView):
+
+    access = 'is_allowed_to_view'
+    title = MSG(u'View')
+    template = '/ui/binary/Archive_view.xml'
+
+    def get_namespace(self, resource, context):
+        contents = resource.handler.get_contents()
+        return {
+            'contents': '\n'.join(contents)}
+
+
 class Archive(File):
 
-    view__access__ = 'is_allowed_to_view'
-    view__label__ = u'View'
-    def view(self, context):
-        namespace = {}
-        contents = self.handler.get_contents()
-        namespace['contents'] = '\n'.join(contents)
-
-        handler = self.get_resource('/ui/binary/Archive_view.xml')
-        return stl(handler, namespace)
+    view = ArchiveView()
 
 
 
