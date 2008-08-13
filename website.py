@@ -28,6 +28,7 @@ from itools.datatypes import Boolean, Email, Integer, String, Tokens, Unicode
 from itools.datatypes import DynamicEnumerate
 from itools.gettext import MSG
 from itools.handlers import checkid
+from itools.html import stream_to_str_as_html
 from itools.i18n import get_language_name, get_languages
 from itools.stl import stl
 from itools.uri import Path, get_reference

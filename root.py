@@ -32,7 +32,6 @@ from types import GeneratorType
 from itools import get_abspath
 from itools.gettext import MSG
 from itools.handlers import File, ConfigFile, Folder as FolderHandler
-from itools.html import stream_to_str_as_html
 from itools.stl import stl
 from itools.uri import Path
 from itools.web import get_context, STLView
