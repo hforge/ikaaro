@@ -4,11 +4,13 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
-  <h2>You Are Now Logged out</h2>
+  <fieldset>
+    <legend>You Are Now Logged out</legend>
 
-  <p>Thank you for using ikaaro.</p>
+    <p>Thank you for using ikaaro.</p>
 
-  <p>Your login information has been cleared. You are now an anonymous
-  visitor.</p>
+    <p>Your login information has been cleared. You are now an anonymous
+    visitor.</p>
+  </fieldset>
 
 </stl:block>
