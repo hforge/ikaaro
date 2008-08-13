@@ -344,10 +344,6 @@ class AutoForm(STLForm):
     template = '/ui/auto_form.xml'
 
 
-    def get_value(self, name, context):
-        return None
-
-
     def get_widgets(self, resource, context):
         return self.widgets
 
@@ -378,8 +374,7 @@ class AutoForm(STLForm):
         namespace['submit_class'] = self.submit_class
         # Build widgets namespace
         has_required_widget = False
-        widgets_namespace = context.build_form_namespace(fields,
-                            get_value=self.get_value)
+        widgets_namespace = self.build_namespace(resource, context)
         namespace['widgets'] = []
         for widget in widgets:
             datatype = fields[widget.name]

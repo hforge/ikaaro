@@ -627,12 +627,12 @@ class ContactForm(AutoForm):
     ]
 
 
-    def get_value(self, name, context):
+    def get_value(self, resource, context, name, datatype):
         if name == 'from':
             user = context.user
             if user is not None:
                 return user.get_property('email')
-        return None
+        return datatype.default
 
 
     def action(self, resource, context, form):

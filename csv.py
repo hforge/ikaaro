@@ -175,12 +175,9 @@ class EditRowForm(RowForm):
         return self.title.gettext(id=id)
 
 
-    def get_value(self, name, context):
-        # Get the record
-        resource = context.resource
+    def get_value(self, resource, context, name, datatype):
         id = context.query['index']
         row = resource.handler.get_row(id)
-        # Return the value
         return row.get_value(name)
 
 
