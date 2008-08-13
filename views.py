@@ -19,6 +19,7 @@ from itools.datatypes import Integer, String, Unicode
 from itools.gettext import MSG
 from itools.stl import stl
 from itools.web import STLView, STLForm
+from itools.xml import XMLParser
 
 # Import from ikaaro
 from registry import get_object_class
@@ -28,12 +29,26 @@ from registry import get_object_class
 """
 
 
+class MessageView(STLView):
+
+    template = '/ui/generic/message_view.xml'
+
+    def get_namespace(self, resource, context):
+        message = self.message
+        message = message.gettext()
+        message = message.encode('utf-8')
+        message = XMLParser(message)
+        return {'message': message}
+
+
+
+
 class IconsView(STLView):
     """This view draws a menu where each menu item is made up of a big
     icon (48x48 pixels), a title and a description.
     """
 
-    template = '/ui/generic/icons_view.xml.en'
+    template = '/ui/generic/icons_view.xml'
 
     def get_namespace(self, resource, context):
         """TODO Write a docstring explaining the expected namespace.

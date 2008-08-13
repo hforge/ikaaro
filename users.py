@@ -39,6 +39,7 @@ from folder import Folder
 from messages import *
 from registry import register_object_class, get_object_class
 from utils import crypt_password, generate_password, resolve_view
+from views import MessageView
 
 
 ###########################################################################
@@ -583,13 +584,12 @@ class UserFolder(Folder):
 
     #######################################################################
     # View
-    view__access__ = 'is_admin'
-    view__label__ = u'View'
-    view__icon__ = 'view.png'
-    def view(self, context):
-        message = (
-            u'To manage the users please go <a href="/;permissions">here</a>.')
-        return self.gettext(message).encode('utf-8')
+    view = MessageView(
+        access='is_admin',
+        title=MSG(u'View'),
+        icon='view.png',
+        message = MSG(u'To manage the users please go '
+                      u'<a href="/;permissions">here</a>.'))
 
 
 
