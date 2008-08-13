@@ -55,7 +55,7 @@ class TableView(BrowseForm):
         'ids': Integer(multiple=True, mandatory=True),
     }
 
-    def get_widgets(self, resource):
+    def get_widgets(self, resource, context):
         return resource.get_form()
 
 
@@ -79,7 +79,7 @@ class TableView(BrowseForm):
                             'return confirmation("%s");' % message_utf8)]
 
         fields = [('index', u'id')]
-        widgets = self.get_widgets(resource)
+        widgets = self.get_widgets(resource, context)
         for widget in widgets:
             fields.append((widget.name, getattr(widget, 'title', widget.name)))
         records = []
@@ -165,7 +165,7 @@ class AddRecordForm(AutoForm):
         return resource.handler.schema
 
 
-    def get_widgets(self, resource):
+    def get_widgets(self, resource, context):
         return resource.get_form()
 
 
@@ -240,12 +240,12 @@ class EditRecordForm(AutoForm):
         return resource.get_handler().schema
 
 
-    def get_widgets(self, resource):
+    def get_widgets(self, resource, context):
         return resource.get_form()
 
 
-    def get_form_title(self):
-        id = get_context().get_form_value('id')
+    def get_form_title(self, context):
+        id = context.query['id']
         return self.form_title.gettext(id=id)
 
 
@@ -331,11 +331,11 @@ class Table(File):
     def get_form(cls):
         if cls.form != []:
             return cls.form
-        form = []
-        for key, value in cls.class_handler.schema.items():
-            widget = get_default_widget(value)
-            form.append(widget(key))
-        return form
+        schema = cls.class_handler.schema
+        return [
+            get_default_widget(datatype)(name)
+            for name, datatype in schema.items()
+        ]
 
 
     @classmethod

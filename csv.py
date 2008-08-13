@@ -21,17 +21,19 @@
 from operator import itemgetter
 
 # Import from itools
-from itools.datatypes import Boolean, Enumerate, Integer, is_datatype
+from itools.datatypes import Boolean, Enumerate, Integer, String, is_datatype
 from itools.csv import CSVFile
 from itools.gettext import MSG
 from itools.stl import stl
+from itools.web import get_context
 
 # Import from ikaaro
+from forms import AutoForm, get_default_widget
 from messages import *
 from registry import register_object_class
 from text import Text
 from views import BrowseForm
-from widgets import batch
+from widgets import batch, table
 
 
 ###########################################################################
@@ -43,7 +45,7 @@ class ViewCSV(BrowseForm):
     access = 'is_allowed_to_edit'
     title = MSG(u'View')
     schema = {
-        'ids': Integer(mandatory=True),
+        'ids': Integer(mandatory=True, multiple=True),
     }
 
 
@@ -62,7 +64,7 @@ class ViewCSV(BrowseForm):
         if total:
             ac = resource.get_access_control()
             if ac.is_allowed_to_edit(context.user, resource):
-                actions = [('action', u'Remove', 'button_delete',None)]
+                actions = [('remove', u'Remove', 'button_delete',None)]
 
         columns = resource.get_columns()
         columns.insert(0, ('index', u''))
@@ -85,7 +87,7 @@ class ViewCSV(BrowseForm):
             rows[-1]['id'] = str(index)
             rows[-1]['checkbox'] = True
             # Columns
-            rows[-1]['index'] = index, ';edit_row_form?index=%s' % index
+            rows[-1]['index'] = index, ';edit_row?index=%s' % index
             for column, column_title in columns[1:]:
                 value = getter(row, column)
                 datatype = handler.get_datatype(column)
@@ -105,15 +107,90 @@ class ViewCSV(BrowseForm):
 
         return {
             'batch': batch(context.uri, start, size, total),
-            'table': widgets.table(columns, rows, sortby, sortorder, actions),
+            'table': table(columns, rows, sortby, sortorder, actions),
         }
 
 
-    def action(self, resource, context, form):
+    def action_remove(self, resource, context, form):
         ids = form['ids']
         resource.handler.del_rows(ids)
         # Ok
         context.message = u'Row deleted.'
+
+
+
+class RowForm(AutoForm):
+
+    access = 'is_allowed_to_edit'
+    submit_class = 'button_ok'
+
+    def get_schema(self, resource, context):
+        schema = resource.handler.schema
+        if schema is not None:
+            return schema
+        # Default
+        schema = {}
+        for name, title in resource.get_columns():
+            schema[name] = String
+        return schema
+
+
+    def get_widgets(self, resource, context):
+        schema = self.get_schema(resource, context)
+        return [
+            get_default_widget(schema[name])(name)
+            for name, title in resource.get_columns()
+        ]
+
+
+
+class AddRowForm(RowForm):
+
+    title = MSG(u'Add')
+    icon = 'new.png'
+    form_title = MSG(u'Add a new row')
+    submit_value = MSG(u'Add')
+
+
+    def action(self, resource, context, form):
+        row = [ form[name] for name, title in resource.get_columns() ]
+        row = resource.handler.add_row(row)
+        # Ok
+        message = MSG(u'New row added.')
+        goto = ';edit_row?index=%s' % row.number
+        return context.come_back(message, goto=goto)
+
+
+
+class EditRowForm(RowForm):
+
+    form_title = MSG(u'Edit row #${id}')
+    submit_value = MSG(u'Change')
+    query_schema = {
+        'index': Integer,
+    }
+
+
+    def get_form_title(self, context):
+        id = context.query['index']
+        return self.form_title.gettext(id=id)
+
+
+    def method(self, name):
+        context = get_context()
+        # Get the record
+        resource = context.resource
+        id = context.query['index']
+        row = resource.handler.get_row(id)
+        # Return the value
+        return row.get_value(name)
+
+
+    def action(self, resource, context, form):
+        index = context.query['index']
+        resource.handler.update_row(index, **form)
+        # Ok
+        context.message = MSG_CHANGES_SAVED
 
 
 
@@ -125,14 +202,11 @@ class CSV(Text):
     class_id = 'text/comma-separated-values'
     class_version = '20071216'
     class_title = MSG(u'Comma Separated Values')
-    class_views = ['view', 'add_row_form', 'externaledit', 'upload',
+    class_views = ['view', 'add_row', 'externaledit', 'upload',
                    'edit_metadata', 'history']
     class_handler = CSVFile
 
 
-    #########################################################################
-    # User Interface
-    #########################################################################
     def get_columns(self):
         """Returns a list of tuples with the name and title of every column.
         """
@@ -161,120 +235,19 @@ class CSV(Text):
 
 
     #########################################################################
-    # User Interface
+    # Views
     #########################################################################
     edit_form__access__ = False
 
     view = ViewCSV()
-
-
-    #########################################################################
-    # Add
-    add_row_form__access__ = 'is_allowed_to_edit'
-    add_row_form__label__ = u'Add'
-    add_row_form__icon__ = 'new.png'
-    def add_row_form(self, context):
-        namespace = {}
-        handler = self.handler
-
-        columns = []
-        for name, title in self.get_columns():
-            column = {}
-            column['name'] = name
-            column['title'] = title
-            column['value'] = None
-            # Enumerates, use a selection box
-            datatype = handler.get_datatype(name)
-            column['is_input'] = False
-            column['is_enumerate'] = False
-            column['is_boolean'] = False
-            if is_datatype(datatype, Enumerate):
-                column['is_enumerate'] = True
-                column['options'] = datatype.get_namespace(None)
-            elif is_datatype(datatype, Boolean):
-                column['is_boolean'] = True
-            else:
-                column['is_input'] = True
-            # Append
-            columns.append(column)
-        namespace['columns'] = columns
-
-        handler = self.get_resource('/ui/csv/add_row.xml')
-        return stl(handler, namespace)
-
-
-    add_row_action__access__ = 'is_allowed_to_edit'
-    def add_row_action(self, context):
-        handler = self.handler
-        row = []
-        for name, title in self.get_columns():
-            datatype = handler.get_datatype(name)
-            value = context.get_form_value(name, type=datatype)
-            row.append(value)
-
-        handler.add_row(row)
-
-        message = u'New row added.'
-        return context.come_back(message)
-
-
-    #########################################################################
-    # Edit
-    edit_row_form__access__ = 'is_allowed_to_edit'
-    def edit_row_form(self, context):
-        handler = self.handler
-        # Get the row
-        index = context.get_form_value('index', type=Integer)
-        row = handler.get_row(index)
-
-        # Build the namespace
-        namespace = {}
-        namespace['index'] = index
-        # Columns
-        columns = []
-        for name, title in self.get_columns():
-            column = {}
-            column['name'] = name
-            column['title'] = title
-            value = row.get_value(name)
-            # Enumerates, use a selection box
-            datatype = handler.get_datatype(name)
-            column['is_input'] = False
-            column['is_enumerate'] = False
-            column['is_boolean'] = False
-            if is_datatype(datatype, Enumerate):
-                column['is_enumerate'] = True
-                column['options'] = datatype.get_namespace(value)
-            elif is_datatype(datatype, Boolean):
-                column['is_boolean'] = True
-                column['is_selected'] = value
-            else:
-                column['is_input'] = True
-                column['value'] = datatype.encode(value)
-            # Append
-            columns.append(column)
-        namespace['columns'] = columns
-
-        handler = self.get_resource('/ui/csv/edit_row.xml')
-        return stl(handler, namespace)
-
-
-    edit_row__access__ = 'is_allowed_to_edit'
-    def edit_row(self, context):
-        handler = self.handler
-        # Get the row
-        index = context.get_form_value('index', type=Integer)
-
-        kw = {}
-        for name, title in self.get_columns():
-            datatype = handler.get_datatype(name)
-            kw[name] = context.get_form_value(name, type=datatype)
-        handler.update_row(index, **kw)
-
-        return context.come_back(MSG_CHANGES_SAVED)
+    add_row = AddRowForm()
+    edit_row = EditRowForm()
 
 
 
+###########################################################################
+# Register
+###########################################################################
 register_object_class(CSV)
 register_object_class(CSV, 'text/x-comma-separated-values')
 register_object_class(CSV, 'text/csv')

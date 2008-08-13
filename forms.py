@@ -334,15 +334,15 @@ class AutoForm(STLForm):
     template = '/ui/auto_form.xml'
 
 
-    def get_widgets(self, resource):
+    def get_widgets(self, resource, context):
         return self.widgets
 
 
     def get_namespace(self, resource, context):
         here = context.resource
         # Local Variables
-        fields = self.get_schema(resource)
-        widgets = self.get_widgets(resource)
+        fields = self.get_schema(resource, context)
+        widgets = self.get_widgets(resource, context)
         method = self.method
 
         # Set and translate the required_msg
@@ -357,7 +357,7 @@ class AutoForm(STLForm):
 
         # Build namespace
         namespace = {}
-        namespace['title'] = self.get_form_title()
+        namespace['title'] = self.get_form_title(context)
         namespace['required_msg'] = required_msg
         namespace['first_widget'] = widgets[0].name
         namespace['action'] = context.uri

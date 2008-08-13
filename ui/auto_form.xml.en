@@ -4,7 +4,8 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
-<h2>${title}</h2>
+<fieldset>
+<legend>${title}</legend>
 <form action="${action}" method="POST">
   <p stl:if="has_required_widget">${required_msg}</p>
   <dl>
@@ -26,6 +27,9 @@
   <input type="submit" value="${submit_value}" class="${submit_class}" />
   </p>
 </form>
+</fieldset>
+
+
 <script language="javascript">
   focus_element("${first_widget}")
 </script>

@@ -40,7 +40,7 @@ from ikaaro.widgets import batch, table
 ###########################################################################
 class SelectTableView(TableView):
 
-    def get_widgets(self, resource):
+    def get_widgets(self, resource, context):
         return resource.form
 
 
@@ -63,7 +63,7 @@ class SelectTableView(TableView):
                             'button_delete', None)]
 
         fields = [('id', u'id')]
-        widgets = self.get_widgets(resource)
+        widgets = self.get_widgets(resource, context)
         for widget in widgets:
             fields.append((widget.name, getattr(widget, 'title', widget.name)))
 
