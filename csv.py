@@ -232,8 +232,7 @@ class CSV(Text):
     #########################################################################
     # Views
     #########################################################################
-    edit_form__access__ = False
-
+    edit = None
     view = ViewCSV()
     add_row = AddRowForm()
     edit_row = EditRowForm()
