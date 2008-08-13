@@ -45,6 +45,59 @@ from views import MessageView
 ###########################################################################
 # Views
 ###########################################################################
+class ConfirmationForm(STLForm):
+
+    access = True
+    template = '/ui/user/confirm_registration.xml'
+    schema = {
+        'key': String(mandatory=True),
+        'newpass': String(mandatory=True),
+        'newpass2': String(mandatory=True)}
+
+    def get_namespace(self, resource, context):
+        # Check register key
+        # FIXME This does not work
+        must_confirm = resource.get_property('user_must_confirm')
+        username = context.get_form_value('username', default='')
+        if must_confirm is None:
+            return context.come_back(MSG_REGISTERED,
+                    goto='/;login?username=%s' % username)
+        elif context.get_form_value('key') != must_confirm:
+            return context.come_back(MSG_BAD_KEY,
+                    goto='/;login?username=%s' % username)
+
+        # Ok
+        return {
+            'key': must_confirm,
+            'username': resource.get_login_name()}
+
+
+    def action(self, resource, context, form):
+        # Check register key
+        must_confirm = resource.get_property('user_must_confirm')
+        if form['key'] != must_confirm:
+            context.message = MSG_BAD_KEY
+            return
+
+        # Check passwords
+        password = form['newpass']
+        password2 = form['newpass2']
+        if password != password2:
+            context.message = MSG_PASSWORD_MISMATCH
+            return
+
+        # Set user
+        resource.set_password(password)
+        resource.del_property('user_must_confirm')
+        # Set cookie
+        resource.set_auth_cookie(context, password)
+
+        # Ok
+        message = MSG(u'Operation successful! Welcome.')
+        return context.come_back(message, goto='./')
+
+
+
 class ProfileView(STLView):
 
     access = 'is_allowed_to_view'
@@ -454,61 +507,9 @@ class User(AccessControl, Folder):
         return context.come_back(msg)
 
 
-    confirm_registration_form__access__ = True
-    def confirm_registration_form(self, context):
-        # Check register key
-        must_confirm = self.get_property('user_must_confirm')
-        username = context.get_form_value('username', default='')
-        if must_confirm is None:
-            return context.come_back(MSG_REGISTERED,
-                    goto='/;login?username=%s' % username)
-        elif context.get_form_value('key') != must_confirm:
-            return context.come_back(MSG_BAD_KEY,
-                    goto='/;login?username=%s' % username)
-
-        namespace = {'key': must_confirm,
-                     'username': self.get_login_name()}
-
-        handler = self.get_resource('/ui/user/confirm_registration.xml')
-        return stl(handler, namespace)
-
-
-    confirm_registration__access__ = True
-    def confirm_registration(self, context):
-        keep = ['key']
-        register_fields = {'newpass': String(mandatory=True),
-                           'newpass2': String(mandatory=True)}
-
-        # Check register key
-        must_confirm = self.get_property('user_must_confirm')
-        if context.get_form_value('key') != must_confirm:
-            return context.come_back(MSG_BAD_KEY)
-
-        # Check input data
-        try:
-            form = context.check_form_input(register_fields)
-        except FormError:
-            return context.come_back(MSG_MISSING_OR_INVALID, keep=keep)
-
-        # Check passwords
-        password = form['newpass']
-        password2 = form['newpass2']
-        if password != password2:
-            return context.come_back(MSG_PASSWORD_MISMATCH, keep=keep)
-
-        # Set user
-        self.set_password(password)
-        self.del_property('user_must_confirm')
-
-        # Set cookie
-        self.set_auth_cookie(context, password)
-
-        message = u'Operation successful! Welcome.'
-        return context.come_back(message, goto='./')
-
-
     #######################################################################
-    # Profile
+    # Views
+    confirm_registration = ConfirmationForm()
     profile = ProfileView()
     edit_account = AccountForm()
     edit_preferences = PreferencesForm()
