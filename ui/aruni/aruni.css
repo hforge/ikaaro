@@ -176,9 +176,16 @@ a img { border: 0; }
 #body form fieldset {
   border-bottom: 1px solid #d3d7cf;
 }
+
 #body form legend {
   font-size: 0.9em;
 }
+
+legend {
+  font-weight: bold;
+}
+
+
 #body form dd { padding-bottom: 5px; }
 #body form p { clear: both; }
 #body form .form_mandatory {

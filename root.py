@@ -69,18 +69,7 @@ class NotFoundView(STLView):
     template = '/ui/root/not_found.xml'
 
     def get_namespace(self, resource, context):
-        namespace = {'uri': str(context.uri)}
-
-        # Don't show the skin if it is not going to work
-        request = context.request
-        if request.has_header('x-base-path'):
-            try:
-                resource.get_resource('%s/ui' % request.get_header('x-base-path'))
-            except LookupError:
-                response = context.response
-                response.set_header('content-type', 'text/html; charset=UTF-8')
-
-        return namespace
+        return {'uri': str(context.uri)}
 
 
 

@@ -5,7 +5,7 @@
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
   <fieldset>
-    <legend style="font-weight: bold;">Internal Server Error</legend>
+    <legend>Internal Server Error</legend>
 
     <p>
     There has been an error, please try again later. If the error
