@@ -21,10 +21,11 @@ from datetime import datetime
 # Import from itools
 from itools.datatypes import DateTime, String, Unicode
 from itools.gettext import MSG
+from itools.i18n import format_datetime
 from itools.stl import stl
 from itools.web import STLForm
-from itools.workflow import (Workflow, WorkflowAware as BaseWorkflowAware,
-                             WorkflowError)
+from itools.workflow import Workflow, WorkflowAware as BaseWorkflowAware
+from itools.workflow import WorkflowError
 
 # Import from ikaaro
 from metadata import Record
@@ -46,11 +47,8 @@ class StateForm(STLForm):
 
 
     def get_namespace(self, resource, context):
-        namespace = {}
         # State
-        namespace['statename'] = resource.get_statename()
         state = resource.get_state()
-        namespace['state'] = state['title'].gettext()
         # Posible transitions
         ac = resource.get_access_control()
         transitions = []
@@ -60,19 +58,26 @@ class StateForm(STLForm):
                 continue
             description = trans['description'].gettext()
             transitions.append({'name': name, 'description': description})
-        namespace['transitions'] = transitions
         # Workflow history
-        transitions = []
+        users = resource.get_resource('/users')
+        history = []
         for transition in resource.get_property('wf_transition'):
-            transitions.append(
+            userid = transition['user']
+            user = users.get_resource(userid)
+            history.append(
                 {'title': transition['name'],
-                 'date': transition['date'].strftime('%Y-%m-%d %H:%M'),
-                 'user': transition['user'],
+                 'date': format_datetime(transition['date']),
+                 'user': user.get_title(),
                  'comments': transition['comments']})
-        transitions.reverse()
-        namespace['history'] = transitions
+        history.reverse()
 
-        return namespace
+        # Ok
+        return {
+            'statename': resource.get_statename(),
+            'state': state['title'],
+            'transitions': transitions,
+            'history': history,
+        }
 
 
     def action(self, resource, context, form):

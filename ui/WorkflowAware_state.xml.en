@@ -4,10 +4,8 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
-  <h2>Workflow State</h2>
-
   <p>
-    Current state: <strong class="wf_${statename}">${state}</strong>
+  Current state: <strong class="wf_${statename}">${state}</strong>
   </p>
 
   <form action=";edit_state" method="post">
@@ -33,7 +31,7 @@
     </p>
   </form>
 
-  <h2>State History</h2>
+  <h4>State History</h4>
 
   <p stl:if="not history">
     No history.
@@ -57,5 +55,5 @@
       </tr>
     </tbody>
   </table>
-        
+
 </stl:block>
