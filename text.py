@@ -95,6 +95,72 @@ class ExternalEditForm(STLView):
 
 
 
+class POEditForm(STLForm):
+
+    access = 'is_allowed_to_edit'
+    title = MSG(u'Edit')
+    template = '/ui/PO_edit.xml'
+    schema = {
+        'msgid': String(mandatory=True),
+        'msgstr': String(mandatory=True),
+    }
+
+
+    def get_namespace(self, resource, context):
+        # Get the messages, all but the header
+        handler = resource.handler
+        msgids = [ x for x in handler.get_msgids() if x.strip() ]
+
+        # Set total
+        total = len(msgids)
+        namespace = {}
+        namespace['messages_total'] = str(total)
+
+        # Set the index
+        parameters = get_parameters('messages', index='1')
+        index = parameters['index']
+        namespace['messages_index'] = index
+        index = int(index)
+
+        # Set first, last, previous and next
+        uri = context.uri
+        messages_first = uri.replace(messages_index='1')
+        namespace['messages_first'] = messages_first
+        messages_last = uri.replace(messages_index=str(total))
+        namespace['messages_last'] = messages_last
+        previous = max(index - 1, 1)
+        messages_previous = uri.replace(messages_index=str(previous))
+        namespace['messages_previous'] = messages_previous
+        next = min(index + 1, total)
+        messages_next = uri.replace(messages_index=str(next))
+        namespace['messages_next'] = messages_next
+
+        # Set msgid and msgstr
+        if msgids:
+            msgids.sort()
+            msgid = msgids[index-1]
+            namespace['msgid'] = escape(msgid)
+            msgstr = handler.get_msgstr(msgid)
+            msgstr = escape(msgstr)
+            namespace['msgstr'] = msgstr
+        else:
+            namespace['msgid'] = None
+
+        return namespace
+
+
+    def action(self, resource, context, form):
+        msgid = form['msgid'].replace('\r', '')
+        msgstr = form['msgstr'].replace('\r', '')
+        resource.handler.set_message(msgid, msgstr)
+        # Events, change
+        context.server.change_object(resource)
+
+        # Ok
+        context.message = MSG_CHANGES_SAVED
+
+
+
 ###########################################################################
 # Model
 ###########################################################################
@@ -133,70 +199,7 @@ class PO(Text):
     class_icon48 = 'icons/48x48/po.png'
     class_handler = POFile
 
-    #######################################################################
-    # UI / Edit
-    #######################################################################
-    edit_form__access__ = 'is_allowed_to_edit'
-    edit_form__label__ = u'Edit'
-    def edit_form(self, context):
-        namespace = {}
-        handler = self.handler
-
-        # Get the messages, all but the header
-        msgids = [ x for x in handler.get_msgids() if x.strip() ]
-
-        # Set total
-        total = len(msgids)
-        namespace['messages_total'] = str(total)
-
-        # Set the index
-        parameters = get_parameters('messages', index='1')
-        index = parameters['index']
-        namespace['messages_index'] = index
-        index = int(index)
-
-        # Set first, last, previous and next
-        uri = context.uri
-        messages_first = uri.replace(messages_index='1')
-        namespace['messages_first'] = messages_first
-        messages_last = uri.replace(messages_index=str(total))
-        namespace['messages_last'] = messages_last
-        previous = max(index - 1, 1)
-        messages_previous = uri.replace(messages_index=str(previous))
-        namespace['messages_previous'] = messages_previous
-        next = min(index + 1, total)
-        messages_next = uri.replace(messages_index=str(next))
-        namespace['messages_next'] = messages_next
-
-        # Set msgid and msgstr
-        if msgids:
-            msgids.sort()
-            msgid = msgids[index-1]
-            namespace['msgid'] = escape(msgid)
-            msgstr = handler.get_msgstr(msgid)
-            msgstr = escape(msgstr)
-            namespace['msgstr'] = msgstr
-        else:
-            namespace['msgid'] = None
-
-        handler = self.get_resource('/ui/PO_edit.xml')
-        return stl(handler, namespace)
-
-
-    edit__access__ = 'is_allowed_to_edit'
-    def edit(self, context):
-        msgid = context.get_form_value('msgid')
-        msgstr = context.get_form_value('msgstr')
-        messages_index = context.get_form_value('messages_index')
-
-        msgid = msgid.replace('\r', '')
-        msgstr = msgstr.replace('\r', '')
-        handler = self.handler
-        handler.set_message(msgid, msgstr)
-        # Events, change
-        context.server.change_object(self)
-
-        return context.come_back(MSG_CHANGES_SAVED)
+    edit = POEditForm()
 
 
 
