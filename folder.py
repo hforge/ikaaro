@@ -53,7 +53,9 @@ class IndexView(BaseView):
     access = True
 
     def GET(self, resource, context):
-        return context.uri.resolve2('index')
+        index = resource.get_resource('index')
+        # FIXME We need to rewrite the URLs
+        return index.view.GET(index, context)
 
 
 
