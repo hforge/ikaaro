@@ -29,19 +29,19 @@ from itools.stl import stl
 from itools.uri import get_reference
 from itools import vfs
 from itools.web import get_context, BaseView, STLView, STLForm
-from itools.xapian import EqQuery, AndQuery, OrQuery, PhraseQuery
+from itools.xapian import EqQuery, AndQuery, OrQuery
 
 # Import from ikaaro
 from base import DBObject
+from browse import BrowseContent
 from datatypes import CopyCookie
 from exceptions import ConsistencyError
 from messages import *
 from registry import register_object_class, get_object_class
 from utils import generate_name
-from views import IconsView, BrowseForm
-import widgets
+from views import IconsView
+from widgets import build_menu
 from workflow import WorkflowAware
-
 
 
 ###########################################################################
@@ -80,278 +80,6 @@ class AddView(IconsView):
             'batch': None,
             'items': items,
         }
-
-
-
-class BrowseContent(BrowseForm):
-
-    access = 'is_allowed_to_view'
-    access_POST = 'is_allowed_to_edit'
-    title = MSG(u'Browse Content')
-    icon = 'folder.png'
-
-    schema = {
-        'ids': String(multiple=True, mandatory=True),
-    }
-
-    search_fields =  [
-        ('title', MSG(u'Title')),
-        ('text', MSG(u'Text')),
-        ('name', MSG(u'Name')),
-    ]
-
-    batchsize = 20
-
-
-    query_schema = {
-        'search_field': String,
-        'search_term': Unicode,
-        'search_subfolders': Boolean(default=False),
-        'sortorder': String(default='up'),
-        'sortby': String(multiple=True, default=['title']),
-        'batchstart': Integer(default=0),
-    }
-
-
-    def search_form(self, resource, context):
-        # Get values from the query
-        query = context.query
-        field = query['search_field']
-        term = query['search_term']
-
-        # Build the namespace
-        namespace = {}
-        namespace['search_term'] = term
-        namespace['search_fields'] = [
-            {'name': name,
-             'title': title,
-             'selected': name == field}
-            for name, title in self.search_fields ]
-
-        # NOTE Folder's content specifics
-        namespace['search_subfolders'] = query['search_subfolders']
-
-        # Ok
-        template = resource.get_resource('/ui/folder/browse_search.xml')
-        return stl(template, namespace)
-
-
-    def get_namespace(self, resource, context, *args):
-        # Get the parameters from the query
-        query = context.query
-        search_term = query['search_term'].strip()
-        field = query['search_field']
-        sortby = query['sortby']
-        sortorder = query['sortorder']
-        search_subfolders = query['search_subfolders']
-
-        # Build the query
-        args = list(args)
-        abspath = str(resource.get_canonical_path())
-        if search_subfolders is True:
-            args.append(EqQuery('paths', abspath))
-        else:
-            args.append(EqQuery('parent_path', abspath))
-
-        if search_term:
-            args.append(PhraseQuery(field, search_term))
-
-        if len(args) == 1:
-            query = args[0]
-        else:
-            query = AndQuery(*args)
-
-        # Build the namespace
-        batchsize = self.batchsize
-        namespace = resource.browse_namespace(16, sortby, sortorder, batchsize,
-                                           query=query)
-
-        # The column headers
-        columns = [
-            ('name', MSG(u'Name')),
-            ('title', MSG(u'Title')),
-            ('format', MSG(u'Type')),
-            ('mtime', MSG(u'Last Modified')),
-            ('last_author', MSG(u'Last Author')),
-            ('size', MSG(u'Size')),
-            ('workflow_state', MSG(u'State'))]
-
-        # Actions
-        user = context.user
-        ac = resource.get_access_control()
-        actions = []
-        if ac.is_allowed_to_edit(user, resource):
-            if namespace['total']:
-                message = MSG_DELETE_SELECTION.gettext()
-                actions = [
-                    ('remove', MSG(u'Remove'), 'button_delete',
-                     'return confirmation("%s");' % message.encode('utf_8')),
-                    ('rename', MSG(u'Rename'), 'button_rename',
-                     None),
-                    ('copy', MSG(u'Copy'), 'button_copy', None),
-                    ('cut', MSG(u'Cut'), 'button_cut', None)]
-            if context.has_cookie('ikaaro_cp'):
-                actions.append(
-                    ('paste', MSG(u'Paste'), 'button_paste', None))
-
-        # Go!
-        namespace['table'] = widgets.table(
-            columns, namespace['objects'], sortby, sortorder, actions=actions)
-
-        return namespace
-
-
-    #######################################################################
-    # Form Actions
-    #######################################################################
-    def action_remove(self, resource, context, form):
-        ids = form['ids']
-
-        # Clean the copy cookie if needed
-        cut, paths = context.get_cookie('ikaaro_cp', type=CopyCookie)
-
-        # Remove objects
-        removed = []
-        not_removed = []
-        user = context.user
-        abspath = resource.get_abspath()
-
-        # We sort and reverse ids in order to
-        # remove the childs then their parents
-        ids.sort()
-        ids.reverse()
-        for name in ids:
-            object = resource.get_resource(name)
-            ac = object.get_access_control()
-            if ac.is_allowed_to_remove(user, object):
-                # Remove object
-                try:
-                    resource.del_resource(name)
-                except ConsistencyError:
-                    not_removed.append(name)
-                    continue
-                removed.append(name)
-                # Clean cookie
-                if str(abspath.resolve2(name)) in paths:
-                    context.del_cookie('ikaaro_cp')
-                    paths = []
-            else:
-                not_removed.append(name)
-
-        if removed:
-            objects = ', '.join(removed)
-            context.message = MSG_OBJECTS_REMOVED.gettext(objects=objects)
-        else:
-            context.message = MSG_NONE_REMOVED
-
-
-    def action_rename(self, resource, context, form):
-        ids = form['ids']
-        # Filter names which the authenticated user is not allowed to move
-        ac = resource.get_access_control()
-        user = context.user
-        paths = [ x for x in ids
-                  if ac.is_allowed_to_move(user, resource.get_resource(x)) ]
-
-        # Check input data
-        if not paths:
-            context.message = MSG(u'No objects selected.')
-            return
-
-        # FIXME Hack to get rename working. The current user interface forces
-        # the rename_form to be called as a form action, hence with the POST
-        # method, but it should be a GET method. Maybe it will be solved after
-        # the needed folder browse overhaul.
-        ids_list = '&'.join([ 'ids=%s' % x for x in paths ])
-        return get_reference(';rename?%s' % ids_list)
-
-
-    def action_copy(self, resource, context, form):
-        ids = form['ids']
-        # Filter names which the authenticated user is not allowed to copy
-        ac = resource.get_access_control()
-        user = context.user
-        names = [ x for x in ids
-                  if ac.is_allowed_to_copy(user, resource.get_resource(x)) ]
-
-        # Check input data
-        if not names:
-            message = MSG(u'No objects selected.')
-            return
-
-        abspath = resource.get_abspath()
-        cp = (False, [ str(abspath.resolve2(x)) for x in names ])
-        cp = CopyCookie.encode(cp)
-        context.set_cookie('ikaaro_cp', cp, path='/')
-        # Ok
-        context.message = MSG(u'Objects copied.')
-
-
-    def action_cut(self, resource, context, form):
-        ids = form['ids']
-        # Filter names which the authenticated user is not allowed to move
-        ac = resource.get_access_control()
-        user = context.user
-        names = [ x for x in ids
-                  if ac.is_allowed_to_move(user, resource.get_resource(x)) ]
-
-        # Check input data
-        if not names:
-            message = MSG(u'No objects selected.')
-            return
-
-        abspath = resource.get_abspath()
-        cp = (True, [ str(abspath.resolve2(x)) for x in names ])
-        cp = CopyCookie.encode(cp)
-        context.set_cookie('ikaaro_cp', cp, path='/')
-
-        context.message = MSG(u'Objects cut.')
-
-
-    action_paste_schema = {}
-    def action_paste(self, resource, context, form):
-        # Check there is something to paste
-        cut, paths = context.get_cookie('ikaaro_cp', type=CopyCookie)
-        if len(paths) == 0:
-            context.message = MSG(u'Nothing to paste.')
-            return
-
-        # Paste
-        target = resource
-        allowed_types = tuple(target.get_document_types())
-        for path in paths:
-            # Check the resource actually exists
-            try:
-                resource = target.get_resource(path)
-            except LookupError:
-                continue
-            if not isinstance(resource, allowed_types):
-                continue
-
-            # If cut&paste in the same place, do nothing
-            if cut is True:
-                source = resource.parent
-                if target.get_canonical_path() == source.get_canonical_path():
-                    continue
-
-            name = generate_name(resource.name, target.get_names(), '_copy_')
-            if cut is True:
-                # Cut&Paste
-                target.move_resource(path, name)
-            else:
-                # Copy&Paste
-                target.copy_resource(path, name)
-                # Fix state
-                resource = target.get_resource(name)
-                if isinstance(resource, WorkflowAware):
-                    metadata = resource.metadata
-                    metadata.set_property('state', resource.workflow.initstate)
-
-        # Cut, clean cookie
-        if cut is True:
-            context.del_cookie('ikaaro_cp')
-
-        context.message = MSG(u'Objects pasted.')
 
 
 
@@ -436,71 +164,51 @@ class RenameForm(STLForm):
 
 
 
-class PreviewView(STLView):
+class PreviewView(BrowseContent):
 
     access = 'is_allowed_to_view'
     title = MSG(u'Preview Content')
     icon = 'image.png'
-    template = '/ui/folder/browse_image.xml'
 
-    search_fields =  [
-        ('title', MSG(u'Title')),
-        ('name', MSG(u'Name')),
-    ]
+    batchsize = 1000
+
+    query_schema = {
+        'search_field': String,
+        'search_term': Unicode,
+        'search_subfolders': Boolean(default=False),
+        'sortorder': String(default='up'),
+        'sortby': String(multiple=True, default=['title']),
+        'batchstart': Integer(default=0),
+        'size': Integer(default=128),
+    }
 
 
-    def get_namespace(self, resource, context, search_subfolders=False, *args):
-        # Get the form values
-        get_form_value = context.get_form_value
-        current_size = get_form_value('size', type=Integer,
-                                      default=resource.DEFAULT_SIZE)
-        term = get_form_value('search_term', type=Unicode).strip()
-        field = get_form_value('search_field')
-        if field:
-            search_subfolders = get_form_value('search_subfolders',
-                                               type=Boolean, default=False)
+    def search(self, resource, context):
+        query = EqQuery('is_image', '1')
+        return BrowseContent.search(self, resource, context, query)
 
-        # Validate size
-        current_size = max(resource.MIN_SIZE, min(current_size, resource.MAX_SIZE))
 
-        # Compute previous and next sizes
-        previous_size = resource.MIN_SIZE
-        next_size = resource.MAX_SIZE
-        for step in resource.SIZE_STEPS:
-            if step < current_size:
-                previous_size = step
-            if next_size is resource.MAX_SIZE and step > current_size:
-                next_size = step
+    def get_actions(self, resource, context, results):
+        return []
 
-        # Build the query
-        args = list(args)
-        args.append(EqQuery('is_image', '1'))
-        abspath = str(resource.get_canonical_path())
-        if search_subfolders is True:
-            args.append(EqQuery('paths', abspath))
-        else:
-            args.append(EqQuery('parent_path', abspath))
 
-        if term:
-            args.append(PhraseQuery(field, term))
-        query = AndQuery(*args)
-
-        # Build the namespace
-        namespace = resource.browse_namespace(16, batchsize=1000, query=query)
-        namespace['search_term'] = term
-        namespace['search_subfolders'] = search_subfolders
-        namespace['search_fields'] = [
-            {'id': name,
-             'title': title,
-             'selected': name == field or None}
-            for name, title in self.search_fields ]
-        namespace['size'] = current_size
-        namespace['zoom_out'] = context.uri.replace(size=str(previous_size))
-        namespace['zoom_in'] = context.uri.replace(size=str(next_size))
-
-        # Append gallery style
+    def get_table(self, resource, context, results):
         context.styles.append('/ui/gallery.css')
-        return namespace
+
+        # Zoom
+        current_size = context.query['size']
+        min_size = resource.MIN_SIZE
+        max_size = resource.MAX_SIZE
+        current_size = max(min_size, min(current_size, max_size))
+
+        namespace = {
+            'objects': self.get_rows(resource, context, results),
+            'size': current_size,
+        }
+
+        template = resource.get_resource('/ui/folder/browse_image.xml')
+        return stl(template, namespace)
+
 
 
 class LastChanges(BrowseContent):
@@ -540,8 +248,8 @@ class OrphansView(BrowseContent):
     description = MSG(u"Show objects not linked from anywhere.")
 
 
-    def get_namespace(self, resource, context, sortby=['title'], sortorder='up',
-                      batchsize=20):
+    def get_namespace(self, resource, context, sortby=['title'],
+                      sortorder='up'):
         root = context.root
         get_form_value = context.get_form_value
 
@@ -570,7 +278,7 @@ class OrphansView(BrowseContent):
         query = OrQuery(*args)
 
         return BrowseContent.get_namespace(self, resource, context, sortby,
-               sortorder, batchsize, False, query)
+               sortorder, False, query)
 
 
 
@@ -798,6 +506,46 @@ class Folder(DBObject):
         return DBObject.get_view(self, name, **kw)
 
 
+    def get_right_menus(self, context):
+        menus = []
+        if isinstance(context.view, PreviewView):
+            resource = context.resource
+            # Compute previous and next sizes
+            current_size = context.query['size']
+            min_size = resource.MIN_SIZE
+            max_size = resource.MAX_SIZE
+            current_size = max(min_size, min(current_size, max_size))
+            previous_size = min_size
+            next_size = max_size
+            for step in resource.SIZE_STEPS:
+                if step < current_size:
+                    previous_size = step
+                if next_size is max_size and step > current_size:
+                    next_size = step
+
+            options = [
+                {'href': context.uri.replace(size=str(next_size)),
+                 'src': '/ui/icons/16x16/zoom_in.png',
+                 'title': MSG(u'Zoom In'),
+                 'class': None,
+                },
+                {'href': context.uri.replace(size=str(previous_size)),
+                 'src': '/ui/icons/16x16/zoom_out.png',
+                 'title': MSG(u'Zoom Out'),
+                 'class': None,
+                }
+            ]
+
+            menus.append({
+                'title': MSG(u'Zoom'),
+                'content': build_menu(options)})
+
+        # Ok
+        return menus
+
+
+    #######################################################################
+    # Views
     view = IndexView()
     new_resource = AddView()
     browse_content = BrowseContent()

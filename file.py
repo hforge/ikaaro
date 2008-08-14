@@ -33,6 +33,7 @@ from itools.web import BaseView, STLView, STLForm
 from itools.xapian import EqQuery
 
 # Import from ikaaro
+from browse import BrowseContent
 from datatypes import FileDataType
 from messages import *
 from multilingual import Multilingual
@@ -261,7 +262,7 @@ class ExternalEdit(BaseView):
 
 
 
-class BacklinksView(BrowseForm):
+class BacklinksView(BrowseContent):
 
     access = 'is_allowed_to_view'
     title = MSG(u"Backlinks")
@@ -277,45 +278,43 @@ class BacklinksView(BrowseForm):
     }
 
 
-    def get_namespace(self, resource, context):
+    columns = [
+        ('name', MSG(u'Name')),
+        ('title', MSG(u'Title')),
+        ('format', MSG(u'Type')),
+        ('mtime', MSG(u'Last Modified')),
+        ('last_author', MSG(u'Last Author')),
+        ('size', MSG(u'Size')),
+        ('workflow_state', MSG(u'State'))
+    ]
+
+
+    def search_form(self, resource, context):
+        return None
+
+
+    def search(self, resource, context):
+        query = EqQuery('links', str(resource.get_abspath()))
+        return context.root.search(query)
+
+
+    def get_actions(self, resource, context, results):
+        return []
+
+
+    def get_rows(self, resource, context, results):
         """Backlinks are the list of objects pointing to this object.
         This view answers the question "where is this object used?"
         You'll see all WebPages and WikiPages (for example) referencing it.
         If the list is empty, you can consider it is "orphan".
         """
-        from widgets import table
-
-        # Get the form values
-        query = context.query
-        sortby = query['sortby']
-        sortorder = query['sortorder']
-
-        # Build the query
-        search_query = EqQuery('links', str(resource.get_abspath()))
-
-        # Build the namespace
-        namespace = resource.browse_namespace(16, sortby, sortorder,
-                                              batchsize=20, query=search_query)
-
-        # The column headers
-        columns = [
-            ('name', MSG(u'Name')),
-            ('title', MSG(u'Title')),
-            ('format', MSG(u'Type')),
-            ('mtime', MSG(u'Last Modified')),
-            ('last_author', MSG(u'Last Author')),
-            ('size', MSG(u'Size')),
-            ('workflow_state', MSG(u'State'))
-        ]
+        rows = BrowseContent.get_rows(self, resource, context, results)
 
         # Remove the checkboxes
-        objects = namespace['objects']
-        for line in objects:
-            line['checkbox'] = False
+        for row in rows:
+            row['checkbox'] = False
 
-        # Go
-        namespace['table'] = table(columns, objects, sortby, sortorder)
-        return namespace
+        return rows
 
 
 

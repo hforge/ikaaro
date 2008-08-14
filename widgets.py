@@ -32,9 +32,6 @@ from itools.xml import XMLParser
 
 # Import from ikaaro
 from utils import get_parameters
-from base import DBObject
-from folder import Folder
-from binary import Image
 from utils import reduce_string
 
 
@@ -294,11 +291,18 @@ class Breadcrumb(object):
     the tree root to another tree node, and the content of that node.
     """
 
-    def __init__(self, filter_type=DBObject, root=None, start=None,
+    def __init__(self, filter_type=None, root=None, start=None,
             icon_size=16):
         """The 'start' must be a handler, 'filter_type' must be a handler
         class.
         """
+        from base import DBObject
+        from binary import Image
+        from folder import Folder
+
+        if filter_type is None:
+            filter_type = DBObject
+
         context = get_context()
         request, response = context.request, context.response
 

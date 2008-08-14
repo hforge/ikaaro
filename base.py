@@ -42,6 +42,7 @@ from metadata import Metadata
 from registry import get_object_class
 from utils import reduce_string
 from views import NewInstanceForm
+from widgets import Breadcrumb, build_menu
 from workflow import WorkflowAware
 
 
@@ -167,7 +168,6 @@ class AddImageForm(STLForm):
     def get_namespace(self, resource, context):
         from file import File
         from binary import Image
-        from widgets import Breadcrumb
 
         # HTML or Wiki
         mode = context.get_form_value('mode', default='html')
@@ -267,7 +267,6 @@ class AddLinkForm(STLForm):
 
     def get_namespace(self, resource, context):
         from file import File
-        from widgets import Breadcrumb
 
         # HTML or Wiki
         mode = context.get_form_value('mode', default='html')
@@ -366,8 +365,6 @@ class Node(BaseNode):
 
 
     def get_right_menus(self, context):
-        from widgets import build_menu
-
         menus = []
         # Multilingual
         if isinstance(context.view, MetadataForm):
@@ -843,64 +840,6 @@ class DBObject(CatalogAware, Node):
             line['checkbox'] = object.name not in parent.__fixed_handlers__
 
         return line
-
-
-    def browse_namespace(self, icon_size, sortby=['title'], sortorder='up',
-                         batchsize=20, query=None):
-        from widgets import batch
-
-        context = get_context()
-        # Load variables from the request
-        start = context.get_form_value('batchstart', type=Integer, default=0)
-        size = context.get_form_value('batchsize', type=Integer,
-                                      default=batchsize)
-
-        # Search
-        root = context.root
-        results = root.search(query)
-
-        reverse = (sortorder == 'down')
-        if sortby in ('order', ['order']):
-            # TODO a catalog index would help
-            # but requires reindexing a single index at once
-            bulk = results.get_documents()
-            ordered = self.get_ordered_objects(bulk, mode='mixed',
-                                               reverse=reverse)
-            if size > 0:
-                documents = ordered[start:start+size]
-            elif start > 0:
-                documents = ordered[start:]
-            else:
-                documents = ordered
-        else:
-            documents = results.get_documents(sort_by=sortby, reverse=reverse,
-                                              start=start, size=size)
-
-        # Get the objects, check security
-        user = context.user
-        objects = []
-        for document in documents:
-            object = root.get_resource(document.abspath)
-            ac = object.get_access_control()
-            if ac.is_allowed_to_view(user, object):
-                objects.append(object)
-
-        # Get the object for the visible documents and extracts values
-        object_lines = []
-        for object in objects:
-            line = self._browse_namespace(object, icon_size)
-            object_lines.append(line)
-
-        # Build namespace
-        namespace = {}
-        total = results.get_n_documents()
-        namespace['total'] = total
-        namespace['objects'] = object_lines
-
-        # The batch
-        namespace['batch'] = batch(context.uri, start, size, total)
-
-        return namespace
 
 
     ########################################################################

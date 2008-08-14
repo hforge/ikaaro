@@ -23,6 +23,7 @@ from itools.xml import XMLParser
 
 # Import from ikaaro
 from registry import get_object_class
+from widgets import batch, table
 
 
 """This module contains some generic views used by different objects.
@@ -84,30 +85,6 @@ class BrowseForm(STLForm):
         'batchstart': Integer(default=0),
     }
 
-    # [(<name>, <title>), ...]
-    search_fields = []
-
-
-    def search_form(self, resource, context):
-        # Get values from the query
-        query = context.query
-        field = query['search_field']
-        term = query['search_term']
-
-        # Build the namespace
-        namespace = {}
-        namespace['search_term'] = term
-        namespace['search_fields'] = [
-            {'name': name,
-             'title': title.gettext(),
-             'selected': name == field}
-            for name, title in self.search_fields ]
-
-        # Ok
-        template = resource.get_resource('/ui/generic/browse_search.xml')
-        return stl(template, namespace)
-
-
     def GET(self, resource, context):
         # Check there is a template defined
         if self.template is None:
@@ -116,10 +93,83 @@ class BrowseForm(STLForm):
         # Load the query
         context.query = self.get_query(context)
 
+        # Search
+        results = self.search(resource, context)
+
         # Get the namespace
-        namespace = self.get_namespace(resource, context)
-        namespace['search'] = self.search_form(resource, context)
+        namespace = {
+            'search': self.search_form(resource, context),
+            'batch': self.get_batch(results, context),
+            'table': self.get_table(resource, context, results),
+        }
 
         # Ok
         template = resource.get_resource(self.template)
         return stl(template, namespace)
+
+
+    #######################################################################
+    # Search Form
+    #######################################################################
+    search_fields = [] # [(<name>, <title>), ...]
+
+    def search_form(self, resource, context):
+        # Get values from the query
+        query = context.query
+        field = query['search_field']
+        term = query['search_term']
+
+        # Build the namespace
+        search_fields = [
+            {'name': name, 'title': title.gettext(),
+             'selected': name == field}
+            for name, title in self.search_fields ]
+        namespace = {
+            'search_term': term,
+            'search_fields': search_fields}
+
+        # Ok
+        template = resource.get_resource('/ui/generic/browse_search.xml')
+        return stl(template, namespace)
+
+
+    def search(self, resource, context):
+        return []
+
+
+    #######################################################################
+    # Batch
+    #######################################################################
+    batchsize = 20
+
+    def get_batch(self, results, context):
+        query = context.query
+        start = query['batchstart']
+        size = self.batchsize
+        total = len(results)
+
+        return batch(context.uri, start, size, total)
+
+
+    #######################################################################
+    # Table
+    #######################################################################
+    columns = []
+    actions = []
+
+
+    def get_columns(self, resource, context):
+        return self.columns
+
+
+    def get_actions(self, resource, context):
+        return self.actions
+
+
+    def get_table(self, resource, context, results):
+        columns = self.get_columns(resource, context)
+        rows = self.get_rows(resource, context, results)
+        sortby = context.query['sortby']
+        sortorder = context.query['sortorder']
+        actions = self.get_actions(resource, context, results)
+        return table(columns, rows, sortby, sortorder, actions)
