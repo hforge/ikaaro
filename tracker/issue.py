@@ -137,7 +137,7 @@ class EditIssueForm(STLForm):
         reported_by = resource.get_reported_by()
         namespace['reported_by'] = users.get_resource(reported_by).get_title()
         # Topics, Version, Priority, etc.
-        get = resource.parent.get_object
+        get = resource.parent.get_resource
         namespace['modules'] = get('modules').get_options(module)
         namespace['versions'] = get('versions').get_options(version)
         namespace['types'] = get('types').get_options(type)
@@ -743,7 +743,7 @@ class Issue(Folder):
             }
 
         # Select Tables
-        get_object = self.parent.get_object
+        get_resource = self.parent.get_resource
         tables = {'module': 'modules', 'version': 'versions', 'type': 'types',
                   'priority': 'priorities', 'state': 'states'}
 

@@ -101,7 +101,7 @@ class AddIssueForm(STLForm):
         namespace['title'] = context.get_form_value('title', type=Unicode)
         namespace['comment'] = context.get_form_value('comment', type=Unicode)
         # Others
-        get = resource.get_object
+        get = resource.get_resource
         module = context.get_form_value('module', type=Integer)
         namespace['modules'] = get('modules').get_options(module)
         version = context.get_form_value('version', type=Integer)
@@ -151,8 +151,6 @@ class SearchForm(BrowseContent):
         keys = context.get_form_keys()
 
         # Proxy (like we do in forms)
-        if ';go_to_issue' in keys:
-            return self.go_to_issue(resource, context)
         if ';search' in keys:
             return self.search(resource, context)
 
@@ -193,7 +191,7 @@ class SearchForm(BrowseContent):
         assign = get_values('assigned_to')
         state = get_values('state')
 
-        get = resource.get_object
+        get = resource.get_resource
         namespace['modules'] = get('modules').get_options(module)
         namespace['types'] = get('types').get_options(type)
         namespace['versions'] = get('versions').get_options(version)
@@ -416,7 +414,7 @@ class View(BrowseForm):
         # Edit several bugs at once
         namespace['change_several_bugs'] = False
         if query['change_several_bugs']:
-            get = resource.get_object
+            get = resource.get_resource
             namespace['method'] = 'POST'
             namespace['action'] = ';change_several_bugs'
             namespace['change_several_bugs'] = True
