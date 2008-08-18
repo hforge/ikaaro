@@ -436,8 +436,7 @@ class CalendarView(object):
     monthly_view__label__ = u'View'
     monthly_view__sublabel__ = u'Monthly'
     monthly_view__icon__ = 'icalendar.png'
-    def monthly_view(self, context):
-        ndays = 7
+    def monthly_view(self, context, ndays=7):
         today_date = date.today()
 
         # Add ical css
@@ -509,9 +508,7 @@ class CalendarView(object):
     weekly_view__label__ = u'View'
     weekly_view__sublabel__ = u'Weekly'
     weekly_view__icon__ = 'icalendar.png'
-    def weekly_view(self, context):
-        ndays = 7
-
+    def weekly_view(self, context, ndays=7):
         # Add ical css
         context.styles.append('/ui/ical/calendar.css')
 
@@ -551,7 +548,7 @@ class CalendarView(object):
         # Calculate timetables and events occurring for current week
         timetables = self.get_timetables_grid_ns(start)
 
-        events = self.get_grid_events(start, headers=ns_headers)
+        events = self.get_grid_events(start, ndays, headers=ns_headers)
 
         # Fill data with grid (timetables) and data (events for each day)
         timetable = get_grid_data(events, timetables, start)
@@ -1229,7 +1226,7 @@ class CalendarAware(CalendarView):
 
 
 
-class Calendar(Text, CalendarView):
+class Calendar(CalendarView, Text):
 
     class_id = 'text/calendar'
     class_version = '20071216'
@@ -1334,7 +1331,7 @@ class Calendar(Text, CalendarView):
 
 
 
-class CalendarTable(Table, CalendarView):
+class CalendarTable(CalendarView, Table):
 
     class_id = 'calendarTable'
     class_version = '20071216'
@@ -1506,4 +1503,3 @@ register_object_class(CalendarTable)
 register_object_class(Calendar)
 # FIXME For backwards compatibility
 register_object_class(Calendar, format='calendar')
-
