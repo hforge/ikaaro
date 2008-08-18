@@ -89,29 +89,12 @@
             </select>
           </td>
         </tr>
-
-        <tr>
-          <td>
-            <input type="submit" name=";search" class="button_search"
-              value="Search" />
-            <input type="submit" name=";search" class="button_calendar"
-              value="Search on resources" onclick="weekly();" />
-            <input type="hidden" name="search_view" id="search_view"
-              value=";view" />
-            <script language="javascript">
-              function weekly() {
-                var elt = document.getElementById('search_view');
-                elt.value="resources/;weekly_view";
-              }
-            </script>
-          </td>
-          <td colspan="2" align="right">
-            <label for="search_title">Remember as</label>
-            <input type="text" name="search_title" id="search_title" size="12"
-              value="${search_title}" />
-          </td>
-        </tr>
       </table>
+      <br/>
+      <input type="submit" name=";search" class="button_search" value="Search"
+        />
+      <input type="submit" name=";search" class="button_calendar"
+        value="Search on resources" onclick="weekly();" />
     </form>
   </fieldset>
 

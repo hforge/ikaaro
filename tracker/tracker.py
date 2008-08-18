@@ -36,12 +36,13 @@ from itools.xapian import EqQuery, RangeQuery, AndQuery, OrQuery, PhraseQuery
 
 # Import from ikaaro
 from ikaaro.datatypes import CopyCookie
-from ikaaro.folder import Folder, BrowseContent
+from ikaaro.folder import Folder
+from ikaaro.folder_views import FolderBrowseContent
 from ikaaro.messages import *
 from ikaaro.registry import register_object_class
 from ikaaro.text import Text
 from ikaaro.views import BrowseForm
-from ikaaro.widgets import batch, table, build_menu
+from ikaaro.widgets import build_menu
 from issue import History, Issue, issue_fields
 from resources import Resources
 from tables import SelectTableTable, SelectTable
@@ -50,20 +51,6 @@ from tables import Versions, VersionsTable
 
 
 resolution = timedelta.resolution
-
-
-search_fields = {
-    'search_name': Unicode(),
-    'search_title': Unicode(),
-    'text': Unicode(),
-    'mtime': Integer(),
-    'module': String(multiple=True),
-    'version': String(multiple=True),
-    'type': String(multiple=True),
-    'priority': String(multiple=True),
-    'assigned_to': String(multiple=True),
-    'state': String(multiple=True),
-    }
 
 
 columns = [
@@ -136,31 +123,41 @@ class AddIssueForm(STLForm):
 
 
 
-class SearchForm(BrowseContent):
+class SearchForm(BrowseForm):
 
     access = 'is_allowed_to_view'
     title = MSG(u'Search')
     icon = 'button_search.png'
-    template = '/ui/tracker/search.xml'
 
-    query_schema = search_fields
-
-
-    def GET(self, resource, context):
-        context.query = self.get_query(context)
-        keys = context.get_form_keys()
-
-        # Proxy (like we do in forms)
-        if ';search' in keys:
-            return self.search(resource, context)
-
-        # Default view
-        namespace = self.get_namespace(resource, context)
-        handler = resource.get_resource(self.template)
-        return stl(handler, namespace)
+    query_schema = {
+        'search_name': Unicode(),
+        'search_title': Unicode(),
+        'text': Unicode(),
+        'mtime': Integer(),
+        'module': String(multiple=True),
+        'version': String(multiple=True),
+        'type': String(multiple=True),
+        'priority': String(multiple=True),
+        'assigned_to': String(multiple=True),
+        'state': String(multiple=True),
+        }
 
 
-    def get_namespace(self, resource, context):
+#   def GET(self, resource, context):
+#       context.query = self.get_query(context)
+#       keys = context.get_form_keys()
+
+#       # Proxy (like we do in forms)
+#       if ';search' in keys:
+#           return self.search(resource, context)
+
+#       # Default view
+#       namespace = self.get_namespace(resource, context)
+#       handler = resource.get_resource(self.template)
+#       return stl(handler, namespace)
+
+
+    def search_form(self, resource, context):
         # Set Style
         context.styles.append('/ui/tracker/tracker.css')
 
@@ -206,53 +203,61 @@ class SearchForm(BrowseContent):
         pathto_website = resource.get_pathto(resource.get_site_root())
         namespace['manage_assigned'] = '%s/;permissions' % pathto_website
 
-        return namespace
+        template = resource.get_resource('/ui/tracker/search.xml')
+        return stl(template, namespace)
 
 
-    def search(self, resource, context):
-        query = context.query
-        search_name = query['search_name']
-        search_title = query['search_title'].strip()
+    def get_namespace(self, resource, context):
+        return {
+            'batch': None,
+            'table': None,
+        }
 
-        stored_search = stored_search_title = None
-        if not search_title:
-            context.uri.query['search_name'] = search_name = None
-        if search_name:
-            # Edit an Stored Search
-            try:
-                stored_search = resource.get_resource(search_name)
-                stored_search_title = stored_search.get_property('title')
-            except LookupError:
-                pass
 
-        if search_title and search_title != stored_search_title:
-            # New Stored Search
-            search_name = resource.get_new_id('s')
-            stored_search = StoredSearch.make_object(StoredSearch, resource,
-                                                     search_name)
+#   def search(self, resource, context):
+#       query = context.query
+#       search_name = query['search_name']
+#       search_title = query['search_title'].strip()
 
-        view = context.get_form_value('search_view', default=';view')
-        if stored_search is None:
-            # Just Search
-            return context.uri.resolve(view).replace(**context.uri.query)
+#       stored_search = stored_search_title = None
+#       if not search_title:
+#           context.uri.query['search_name'] = search_name = None
+#       if search_name:
+#           # Edit an Stored Search
+#           try:
+#               stored_search = resource.get_resource(search_name)
+#               stored_search_title = stored_search.get_property('title')
+#           except LookupError:
+#               pass
 
-        # Edit / Title
-        context.commit = True
-        stored_search.set_property('title', search_title, 'en')
-        # Edit / Search Values
-        text = query['text'].strip().lower()
-        stored_search.handler.set_value('text', Unicode.encode(text))
+#       if search_title and search_title != stored_search_title:
+#           # New Stored Search
+#           search_name = resource.get_new_id('s')
+#           stored_search = StoredSearch.make_object(StoredSearch, resource,
+#                                                    search_name)
 
-        mtime = query.get('mtime') or 0
-        stored_search.handler.set_value('mtime', mtime)
+#       view = context.get_form_value('search_view', default=';view')
+#       if stored_search is None:
+#           # Just Search
+#           return context.uri.resolve(view).replace(**context.uri.query)
 
-        criterias = [
-            ('module', Integer), ('version', Integer), ('type', Integer),
-            ('priority', Integer), ('assigned_to', String),
-            ('state', Integer)]
-        for name, type in criterias:
-            value = query[name]
-            stored_search.set_values(name, value, type=type)
+#       # Edit / Title
+#       context.commit = True
+#       stored_search.set_property('title', search_title, 'en')
+#       # Edit / Search Values
+#       text = query['text'].strip().lower()
+#       stored_search.handler.set_value('text', Unicode.encode(text))
+
+#       mtime = query.get('mtime') or 0
+#       stored_search.handler.set_value('mtime', mtime)
+
+#       criterias = [
+#           ('module', Integer), ('version', Integer), ('type', Integer),
+#           ('priority', Integer), ('assigned_to', String),
+#           ('state', Integer)]
+#       for name, type in criterias:
+#           value = query[name]
+#           stored_search.set_values(name, value, type=type)
 
         view = '%s?search_name=%s' % (view, search_name)
         return context.uri.resolve(view)
@@ -303,7 +308,7 @@ class View(BrowseForm):
     tab_sublabel = view__sublabel__
 
 
-    def get_namespace(self, resource, context):
+    def xget_namespace(self, resource, context):
         # Set Style
         context.styles.append('/ui/tracker/tracker.css')
 
@@ -381,11 +386,9 @@ class View(BrowseForm):
                 criteria.append({'name': key, 'value': value})
         namespace['criteria'] = criteria
         # Table
-        msgs = (
-            MSG(u'There is 1 result.'),
-            MSG(u'There are ${n} results.'))
-        namespace['batch'] = batch(context.uri, 0, nb_results, nb_results,
-                                   msgs=msgs)
+        batch = Batch(size=nb_results, msg_1=MSG(u'There is 1 result.'),
+                      msg_2=MSG(u'There are ${n} results.'))
+        namespace['batch'] = batch.render(0, nb_results, context)
         namespace['table'] = table(columns, lines, [sortby], sortorder,
                                    actions=actions, table_with_form=False)
         namespace['nb_results'] = nb_results

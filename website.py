@@ -46,8 +46,7 @@ from messages import *
 from registry import get_object_class, register_object_class
 from registry import register_website, get_register_websites, get_website_class
 from skins import UI, ui_path
-from views import IconsView, NewInstanceForm
-from widgets import batch
+from views import IconsView, NewInstanceForm, SearchForm
 from workflow import WorkflowAware
 
 
@@ -655,65 +654,89 @@ class ContactForm(AutoForm):
         context.message = MSG(u'Message sent.')
 
 
-class SiteSearchView(STLView):
+
+class SiteSearchView(SearchForm):
 
     access = True
     title = MSG(u'Search')
     template = '/ui/website/search.xml'
 
+    search_schema = {
+        'site_search_text': Unicode,
+    }
+
 
     def get_namespace(self, resource, context):
-        root = context.root
-
-        # Get and check input data
-        text = context.get_form_value('site_search_text', type=Unicode)
-        start = context.get_form_value('batchstart', type=Integer, default=0)
-
-        namespace = {}
-        if text.strip():
-            namespace['text'] = text
-            # Search
-            query = [ OrQuery(EqQuery('title', word), EqQuery('text', word))
-                      for word, kk in TextField.split(text) ]
-            if query:
-                abspath = resource.get_canonical_path()
-                q1 = EqQuery('paths', str(abspath))
-                query = AndQuery(q1, *query)
-                results = root.search(query=query)
-                documents = results.get_documents()
-            else:
-                documents = []
-
-            # Check access rights
-            user = context.user
-            objects = []
-            for document in documents:
-                object = root.get_resource(document.abspath)
-                ac = object.get_access_control()
-                if ac.is_allowed_to_view(user, object):
-                    objects.append(object)
-
-            # Batch
-            size = 10
-            total = len(objects)
-            namespace['batch'] = batch(context.uri, start, size, total)
-
-            # Build the namespace
-            ns_objects = []
-            for object in objects[start:start+size]:
-                info = {}
-                info['abspath'] = str(object.get_abspath())
-                info['title'] = object.get_title()
-                info['type'] = object.class_title.gettext()
-                info['size'] = object.get_human_size()
-                info['url'] = '%s/' % resource.get_pathto(object)
-                info['icon'] = object.get_class_icon()
-                ns_objects.append(info)
-            namespace['objects'] = ns_objects
-        else:
-            namespace['text'] = ''
-
+        namespace = SearchForm.get_namespace(self, resource, context)
+        namespace['text'] = context.query['site_search_text'].strip()
         return namespace
+
+
+    def get_query_schema(self):
+        schema = SearchForm.get_query_schema(self)
+        schema = schema.copy()
+        del schema['sort_by']
+        del schema['reverse']
+        return schema
+
+
+    def get_search_namespace(self, resource, context):
+        text = context.query['site_search_text']
+        return {'text': text}
+
+
+    search_template = '/ui/website/search_form.xml'
+    def get_items(self, resource, context):
+        text = context.query['site_search_text'].strip()
+        if not text:
+            return []
+
+        # The Search Query
+        query = [ OrQuery(EqQuery('title', word), EqQuery('text', word))
+                  for word, kk in TextField.split(text) ]
+        if not query:
+            return []
+
+        # Search
+        abspath = resource.get_canonical_path()
+        q1 = EqQuery('paths', str(abspath))
+        query = AndQuery(q1, *query)
+        root = context.root
+        results = root.search(query=query)
+        documents = results.get_documents()
+
+        # Check access rights
+        user = context.user
+        objects = []
+        for document in documents:
+            object = root.get_resource(document.abspath)
+            ac = object.get_access_control()
+            if ac.is_allowed_to_view(user, object):
+                objects.append(object)
+
+        return objects
+
+
+    def sort_and_batch(self, resource, context, items):
+        # Batch
+        start = context.query['batch_start']
+        size = context.query['batch_size']
+        return items[start:start+size]
+
+
+    table_template = '/ui/website/search_table.xml'
+    def get_table_namespace(self, resource, context, items):
+        # Build the namespace
+        items_ns = [{
+            'abspath': str(item.get_abspath()),
+            'title': item.get_title(),
+            'type': item.class_title.gettext(),
+            'size': item.get_human_size(),
+            'url': '%s/' % resource.get_pathto(item),
+            'icon': item.get_class_icon(),
+        } for item in items ]
+
+        return {'objects': items_ns}
 
 
 

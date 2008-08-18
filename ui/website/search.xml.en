@@ -4,26 +4,15 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
-  <form action=";site_search" method="get">
-    <p>
-      <input name="site_search_text" type="text" value="${text}"/>
-      <input class="button_search" type="submit" value="Search"/>
-    </p>
-  </form>
+  <!-- Search -->
+  ${search}
 
   <stl:block stl:if="text">
     <h4>Results</h4>
+    <!-- Batch -->
     ${batch}
-    <ol class="results" stl:if="objects">
-      <li stl:repeat="object objects">
-        <img src="${object/icon}" width="16" height="16" />
-        <a class="result_title" href="${object/url}">${object/title}</a>
-        <br />
-        <span class="result_url">${object/abspath}</span>&nbsp;-
-        <span class="result_type">${object/type}</span>&nbsp;-
-        <span class="result_size">${object/size}</span>
-      </li>
-    </ol>
+    <!-- Table -->
+    ${table}
   </stl:block>
 
 </stl:block>

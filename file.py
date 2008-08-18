@@ -33,13 +33,13 @@ from itools.web import BaseView, STLView, STLForm
 from itools.xapian import EqQuery
 
 # Import from ikaaro
-from browse import BrowseContent
 from datatypes import FileDataType
+from folder_views import FolderBrowseContent
 from messages import *
 from multilingual import Multilingual
 from registry import register_object_class, get_object_class
 from versioning import VersioningAware
-from views import NewInstanceForm, BrowseForm
+from views import NewInstanceForm
 from workflow import WorkflowAware
 
 
@@ -262,7 +262,7 @@ class ExternalEdit(BaseView):
 
 
 
-class BacklinksView(BrowseContent):
+class BacklinksView(FolderBrowseContent):
 
     access = 'is_allowed_to_view'
     title = MSG(u"Backlinks")
@@ -308,7 +308,7 @@ class BacklinksView(BrowseContent):
         You'll see all WebPages and WikiPages (for example) referencing it.
         If the list is empty, you can consider it is "orphan".
         """
-        rows = BrowseContent.get_rows(self, resource, context, results)
+        rows = FolderBrowseContent.get_rows(self, resource, context, results)
 
         # Remove the checkboxes
         for row in rows:

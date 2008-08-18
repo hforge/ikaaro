@@ -38,7 +38,6 @@ from forms import AutoForm, get_default_widget, ReadOnlyWidget
 from messages import *
 from registry import register_object_class
 from views import BrowseForm
-from widgets import batch, table
 
 
 ###########################################################################
@@ -59,89 +58,87 @@ class TableView(BrowseForm):
         return resource.get_form()
 
 
-    def get_namespace(self, resource, context):
-        # The input parameters
-        query = context.query
-        start = query['batchstart']
-        size = 50
+    def get_items(self, resource, context):
+        items = resource.handler.get_records()
+        return list(items)
 
-        # The batch
+
+    def sort_and_batch(self, resource, context, items):
+        # Sort
+        sort_by = context.query['sort_by']
+        reverse = context.query['reverse']
+        if sort_by:
+            items.sort(key=itemgetter(sort_by), reverse=reverse)
+
+        # Batch
+        start = context.query['batch_start']
+        size = context.query['batch_size']
+        return items[start:start+size]
+
+
+    def get_table_columns(self, resource, context):
+        columns = [
+            ('checkbox', None),
+            ('index', u'id')]
+        # From the schema
+        for widget in self.get_widgets(resource, context):
+            column = (widget.name, getattr(widget, 'title', widget.name))
+            columns.append(column)
+
+        return columns
+
+
+    def get_item_value(self, resource, context, item, column):
+        if column == 'checkbox':
+            return item.id, False
+        elif column == 'index':
+            id = item.id
+            return id, ';edit_record?id=%s' % id
+
+        # Columns
         handler = resource.handler
-        total = handler.get_n_records()
+        value = handler.get_value(item, column)
+        datatype = handler.get_datatype(column)
 
-        # The table
-        actions = []
-        if total:
-            ac = resource.get_access_control()
-            if ac.is_allowed_to_edit(context.user, resource):
-                message_utf8 = MSG_DELETE_SELECTION.gettext().encode('utf_8')
-                actions = [('del_record_action', u'Remove', 'button_delete',
-                            'return confirmation("%s");' % message_utf8)]
+        multiple = getattr(datatype, 'multiple', False)
+        is_tokens = is_datatype(datatype, Tokens)
+        if multiple is True or is_tokens:
+            if multiple:
+                value.sort()
+            value_length = len(value)
+            if value_length > 0:
+                rmultiple = value_length > 1
+                value = value[0]
+            else:
+                rmultiple = False
+                value = None
 
-        fields = [('index', u'id')]
-        widgets = self.get_widgets(resource, context)
-        for widget in widgets:
-            fields.append((widget.name, getattr(widget, 'title', widget.name)))
-        records = []
+        is_enumerate = getattr(datatype, 'is_enumerate', False)
+        if is_enumerate:
+            value = datatype.get_value(value)
 
-        for record in handler.get_records():
-            id = record.id
-            records.append({})
-            records[-1]['id'] = str(id)
-            records[-1]['checkbox'] = True
-            # Fields
-            records[-1]['index'] = id, ';edit_record_form?id=%s' % id
-            for field, field_title in fields[1:]:
-                value = handler.get_value(record, field)
-                datatype = handler.get_datatype(field)
+        if multiple is True or is_tokens:
+            return value, rmultiple
+        return value
 
-                multiple = getattr(datatype, 'multiple', False)
-                is_tokens = is_datatype(datatype, Tokens)
-                if multiple is True or is_tokens:
-                    if multiple:
-                        value.sort()
-                    value_length = len(value)
-                    if value_length > 0:
-                        rmultiple = value_length > 1
-                        value = value[0]
-                    else:
-                        rmultiple = False
-                        value = None
 
-                is_enumerate = getattr(datatype, 'is_enumerate', False)
-                if is_enumerate:
-                    records[-1][field] = datatype.get_value(value)
-                else:
-                    records[-1][field] = value
+    def get_actions(self, resource, context, items):
+        if len(items) == 0:
+            return []
 
-                if multiple is True or is_tokens:
-                    records[-1][field] = (records[-1][field], rmultiple)
-        # Sorting
-        sortby = query['sortby']
-        sortorder = query['sortorder']
-        if sortby:
-            reverse = (sortorder == 'down')
-            records.sort(key=itemgetter(sortby[0]), reverse=reverse)
+        ac = resource.get_access_control()
+        if ac.is_allowed_to_edit(context.user, resource):
+            message_utf8 = MSG_DELETE_SELECTION.gettext().encode('utf_8')
+            return [('remove', u'Remove', 'button_delete',
+                     'return confirmation("%s");' % message_utf8)]
 
-        records = records[start:start+size]
-        for record in records:
-            for field, field_title in fields[1:]:
-                if isinstance(record[field], tuple):
-                    if record[field][1] is True:
-                        record[field] = '%s [...]' % record[field][0]
-                    else:
-                        record[field] = record[field][0]
-
-        return {
-            'batch': batch(context.uri, start, size, total),
-            'table': table(fields, records, [sortby], sortorder, actions),
-        }
+        return []
 
 
     #######################################################################
     # Form Actions
     #######################################################################
-    def del_record_action(self, resource, context, form):
+    def action_remove(self, resource, context, form):
         ids = form['ids']
         for id in ids:
             resource.handler.del_record(id)
@@ -168,7 +165,7 @@ class AddRecordForm(AutoForm):
 
 
     def action(self, resource, context, form):
-        schema = self.get_schema(resource)
+        schema = self.get_schema(resource, context)
         handler = resource.handler
 #       # check form
 #       check_fields = {}

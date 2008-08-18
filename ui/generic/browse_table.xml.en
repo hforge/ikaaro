@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<stl:block xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:stl="http://xml.itools.org/namespaces/stl">
+
+<form action="" method="post" id="browse_list" name="browse_list"
+  stl:omit-tag="not actions">
+<table class="${css}">
+  <thead stl:if="columns">
+    <tr>
+      <stl:block stl:repeat="column columns">
+        <!-- checkbox -->
+        <th stl:if="column/is_checkbox" class="checkbox">
+          <input type="checkbox" title="Click to select/unselect all rows"
+            onclick="select_checkboxes('browse_list', this.checked);" />
+        </th>
+        <!-- checkbox -->
+        <th stl:if="not column/is_checkbox">
+          <a stl:if="column/href" href="${column/href}"
+            class="sort_${column/order}">${column/title}</a>
+        </th>
+      </stl:block>
+    </tr>
+  </thead>
+  <tbody>
+    <tr stl:repeat="row rows" class="${repeat/row/even}">
+      <td stl:repeat="column row/columns">
+        <!-- checkbox -->
+        <input stl:if="column/is_checkbox" type="checkbox" name="ids"
+          value="${column/value}" checked="${column/checked}" class="checkbox"
+          />
+        <!-- icon -->
+        <img stl:if="column/is_icon" src="${column/src}" border="0" />
+        <!-- link -->
+        <a stl:if="column/is_link" stl:omit-tag="not column/href"
+          href="${column/href}">${column/value}</a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<p stl:if="actions">
+  <input stl:repeat="action actions" type="submit" name=";${action/name}"
+    value="${action/value}" class="${action/class}"
+    onclick="${action/onclick}" />
+</p>
+</form>
+
+</stl:block>

@@ -29,31 +29,32 @@ from itools.web import AccessControl as BaseAccessControl, STLForm
 
 # Import from ikaaro
 from messages import *
-from views import BrowseForm
-import widgets
+from views import SearchForm
 from workflow import WorkflowAware
 
 
 ###########################################################################
 # Views
 ###########################################################################
-class PermissionsForm(BrowseForm):
+class PermissionsForm(SearchForm):
 
     access = 'is_admin'
     title = MSG(u'Browse Members')
     icon = 'userfolder.png'
     description = MSG(u'See the users and their roles.')
 
-    query_schema = {
-        'search_field': String,
-        'search_term': Unicode,
-        'sortorder': String(default='up'),
-        'sortby': String(multiple=True, default=['login_name']),
-        'batchstart': Integer(default=0),
-    }
-
     schema = {
         'ids': String(multiple=True, mandatory=True),
+    }
+
+    def get_query_schema(self):
+        schema = SearchForm.get_query_schema(self)
+        schema['sort_by'] = String(default='login_name')
+        return schema
+
+    search_schema = {
+        'search_field': String,
+        'search_term': Unicode,
     }
 
     search_fields = [
@@ -62,93 +63,78 @@ class PermissionsForm(BrowseForm):
         ('firstname', MSG(u'First Name'))]
 
 
-    def get_namespace(self, resource, context):
-        # Get values from the request
-        query = context.query
-        sortby = query['sortby']
-        sortorder = query['sortorder']
-        start = query['batchstart']
-        size = 20
-
+    def get_items(self, resource, context):
         # Search
-        field = query['search_field']
-        term = query['search_term']
-        term = term.strip()
         search_query = {'format': 'user'}
+        field = context.query['search_field']
         if field:
-            query[field] = term
-        root = context.root
-        results = root.search(**search_query)
+            query[field] = context.query['search_term'].strip()
+        results = context.root.search(**search_query)
 
+        # Show only users that belong to this group (FIXME Use the catalog)
+        users = []
         roles = resource.get_members_classified_by_role()
-
-        # Build the namespace
-        members = []
         for user in results.get_documents():
-            user_id = user.name
-            # Find out the user role. Skip the user if does not belong to
-            # this group
             for role in roles:
-                if user_id in roles[role]:
+                if user.name in roles[role]:
+                    users.append(user)
                     break
-            else:
-                continue
-            # Build the namespace for the user
-            ns = {}
-            ns['checkbox'] = True
-            ns['id'] = user_id
-            ns['img'] = None
-            # Email
-            href = '/users/%s' % user_id
-            ns['user_id'] = int(user_id), href
-            # Title
-            ns['login_name'] = user.username
-            ns['firstname'] = user.firstname
-            ns['lastname'] = user.lastname
-            # Role
-            role = resource.get_role_title(role)
-            href = ';edit_membership?id=%s' % user_id
-            ns['role'] = role, href
-            # State
-            user_object = root.get_resource(user.abspath)
-            if user_object.get_property('user_must_confirm'):
-                account_state = (MSG(u'Inactive'),
-                                 '/users/%s/;resend_confirmation' % user_id)
-            else:
-                account_state = MSG(u'Active')
-            ns['account_state'] = account_state
-            # Append
-            members.append(ns)
 
+        # Ok
+        return users
+
+
+    def sort_and_batch(self, resource, context, items):
         # Sort
-        members.sort(key=itemgetter(sortby[0]), reverse=sortorder=='down')
-
+        sort_by = context.query['sort_by']
+        reverse = context.query['reverse']
+        f = lambda x, y: cmp(getattr(x, sort_by), getattr(y, sort_by))
+        items.sort(cmp=f, reverse=reverse)
         # Batch
-        total = len(members)
-        members = members[start:start+size]
-
-        # The columns
-        columns = [
-            ('user_id', MSG(u'User ID')),
-            ('login_name', MSG(u'Login')),
-            ('firstname', MSG(u'First Name')),
-            ('lastname', MSG(u'Last Name')),
-            ('role', MSG(u'Role')),
-            ('account_state', MSG(u'State'))]
-
-        # The actions
-        actions = [
-            ('permissions_del_members', MSG(u'Delete'),
-             'button_delete', None)]
-
-        return {
-            'batch': widgets.batch(context.uri, start, size, total),
-            'table': widgets.table(columns, members, sortby, sortorder,
-                                   actions)
-        }
+        start = context.query['batch_start']
+        size = context.query['batch_size']
+        return items[start:start+size]
 
 
-    def permissions_del_members(self, resource, context, form):
+    def get_actions(self, resource, context, items):
+        return [
+            ('remove', MSG(u'Delete'), 'button_delete', None)]
+
+
+    table_columns = [
+        ('checkbox', None),
+        ('user_id', MSG(u'User ID')),
+        ('login_name', MSG(u'Login')),
+        ('firstname', MSG(u'First Name')),
+        ('lastname', MSG(u'Last Name')),
+        ('role', MSG(u'Role')),
+        ('account_state', MSG(u'State'))]
+
+
+    def get_item_value(self, resource, context, item, column):
+        if column == 'checkbox':
+            return item.name, False
+        elif column == 'user_id':
+            return item.name, '/users/%s' % item.name
+        elif column == 'login_name':
+            return item.username
+        elif column == 'firstname':
+            return item.firstname
+        elif column == 'lastname':
+            return item.lastname
+        elif column == 'role':
+            role = resource.get_user_role(item.name)
+            role = resource.get_role_title(role)
+            return role, ';edit_membership?id=%s' % item.name
+        elif column == 'account_state':
+            user = context.root.get_resource(item.abspath)
+            if user.get_property('user_must_confirm'):
+                href = '/users/%s/;resend_confirmation' % item.name
+                return MSG(u'Inactive'), href
+            return MSG(u'Active')
+
+
+    def action_remove(self, resource, context, form):
         usernames = form['ids']
         resource.set_user_role(usernames, None)
         # Ok

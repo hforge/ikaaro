@@ -4,10 +4,13 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
-  <!-- Batch -->
-  ${batch}
-
-  <!-- Table -->
-  ${table}
+<p class="batchcontrol">
+${msg}
+<stl:block stl:if="control">
+View from ${start} to ${end}
+(<a stl:omit-tag="not previous" href="${previous}" title="Previous"
+>&lt;&lt;</a> <a stl:omit-tag="not next" href="${next}" title="Next">>></a>)
+</stl:block>
+</p>
 
 </stl:block>

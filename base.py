@@ -25,14 +25,13 @@ from itools.datatypes import FileName, String, Unicode, Integer, is_datatype
 from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.http import Forbidden
-from itools.i18n import get_language_name, format_datetime
+from itools.i18n import get_language_name
 from itools.stl import stl
 from itools.uri import Path
 from itools import vfs
 from itools.web import get_context, Node as BaseNode, BaseView, STLForm
 from itools.xapian import CatalogAware
 from itools.xapian import TextField, KeywordField, IntegerField, BoolField
-from itools.xml import XMLParser
 
 # Import from ikaaro
 from datatypes import FileDataType
@@ -40,7 +39,6 @@ from lock import Lock
 from messages import *
 from metadata import Metadata
 from registry import get_object_class
-from utils import reduce_string
 from views import NewInstanceForm
 from widgets import Breadcrumb, build_menu
 from workflow import WorkflowAware
@@ -151,6 +149,33 @@ class MetadataForm(STLForm):
         resource.set_property('subject', subject, language=language)
 
         context.message = MSG_CHANGES_SAVED
+
+
+    def get_right_menus(self, resource, context):
+        # Multilingual
+        site_root = resource.get_site_root()
+        languages = site_root.get_property('website_languages')
+        content_language = context.get_cookie('language')
+        if content_language is None:
+            content_language = languages[0]
+
+        options = []
+        for language in languages:
+            title = get_language_name(language)
+            if language == content_language:
+                css_class = 'nav_active'
+            else:
+                css_class = None
+            options.append({
+                'href': context.uri.replace(language=language),
+                'title': title,
+                'class': css_class,
+            })
+
+        # Ok
+        return [{
+            'title': MSG(u'Edit Language'),
+            'content': build_menu(options)}]
 
 
 
@@ -365,34 +390,7 @@ class Node(BaseNode):
 
 
     def get_right_menus(self, context):
-        menus = []
-        # Multilingual
-        if isinstance(context.view, MetadataForm):
-            site_root = self.get_site_root()
-            languages = site_root.get_property('website_languages')
-            content_language = context.get_cookie('language')
-            if content_language is None:
-                content_language = languages[0]
-
-            options = []
-            for language in languages:
-                title = get_language_name(language)
-                if language == content_language:
-                    css_class = 'nav_active'
-                else:
-                    css_class = None
-                options.append({
-                    'href': context.uri.replace(language=language),
-                    'title': title,
-                    'class': css_class,
-                })
-
-            menus.append({
-                'title': MSG(u'Edit Language'),
-                'content': build_menu(options)})
-
-        # Ok
-        return menus
+        return []
 
 
     ########################################################################
@@ -774,72 +772,6 @@ class DBObject(CatalogAware, Node):
             return language
         # Default
         return languages[0]
-
-
-    def _browse_namespace(self, object, icon_size):
-        from versioning import VersioningAware
-        from workflow import WorkflowAware
-
-        line = {}
-        id = self.get_canonical_path().get_pathto(object.get_abspath())
-        id = str(id)
-        line['id'] = id
-        title = object.get_title()
-        line['title_or_name'] = title
-        view = object.get_view(None)
-        if view is None:
-            href = None
-        else:
-            href = '%s/' % id
-        line['name'] = (id, href)
-        line['format'] = object.class_title.gettext()
-        line['title'] = object.get_property('title')
-        # Titles
-        line['short_title'] = reduce_string(title, 12, 40)
-        # The size
-        line['size'] = object.get_human_size()
-        # The url
-        line['href'] = href
-        # The icon
-        path_to_icon = object.get_object_icon(icon_size)
-        if path_to_icon.startswith(';'):
-            path_to_icon = Path('%s/' % object.name).resolve(path_to_icon)
-        line['img'] = path_to_icon
-        # The modification time
-        context = get_context()
-        accept = context.accept_language
-        line['mtime'] = format_datetime(object.get_mtime(), accept=accept)
-        # Last author
-        line['last_author'] = u''
-        if isinstance(object, VersioningAware):
-            revisions = object.get_revisions(context)
-            if revisions:
-                username = revisions[0]['username']
-                try:
-                    user = self.get_resource('/users/%s' % username)
-                except LookupError:
-                    line['last_author'] = username
-                else:
-                    line['last_author'] = user.get_title()
-
-        # The workflow state
-        line['workflow_state'] = ''
-        if isinstance(object, WorkflowAware):
-            statename = object.get_statename()
-            state = object.get_state()
-            msg = state['title'].gettext().encode('utf-8')
-            state = ('<a href="%s/;edit_state" class="workflow">'
-                     '<strong class="wf_%s">%s</strong>'
-                     '</a>') % (self.get_pathto(object), statename, msg)
-            line['workflow_state'] = XMLParser(state)
-        # Objects that should not be removed/renamed/etc
-        parent = object.parent
-        if parent is None:
-            line['checkbox'] = False
-        else:
-            line['checkbox'] = object.name not in parent.__fixed_handlers__
-
-        return line
 
 
     ########################################################################

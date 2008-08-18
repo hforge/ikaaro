@@ -32,7 +32,6 @@ from itools.xml import XMLParser
 from ikaaro.forms import TextWidget, BooleanCheckBox
 from ikaaro.registry import register_object_class
 from ikaaro.table import Table, TableView
-from ikaaro.widgets import batch, table
 
 
 ###########################################################################
@@ -40,106 +39,28 @@ from ikaaro.widgets import batch, table
 ###########################################################################
 class SelectTableView(TableView):
 
-    def get_widgets(self, resource, context):
-        return resource.form
+    def get_table_columns(self, resource, context):
+        columns = TableView.get_table_columns(self, resource, context)
+        columns.append(('issues', u'Issues'))
+        return columns
 
 
-    def get_namespace(self, resource, context):
-        # The input parameters
-        query = context.query
-        start = query['batchstart']
-        size = 30
-
-        # The batch
-        handler = resource.handler
-        total = handler.get_n_records()
-
-        # The table
-        actions = []
-        if total:
-            ac = resource.get_access_control()
-            if ac.is_allowed_to_edit(context.user, resource):
-                actions = [('del_record_action', u'Remove',
-                            'button_delete', None)]
-
-        fields = [('id', u'id')]
-        widgets = self.get_widgets(resource, context)
-        for widget in widgets:
-            fields.append((widget.name, getattr(widget, 'title', widget.name)))
-
-        fields.append(('issues', u'Issues'))
-        records = []
-
-        getter = lambda x, y: x.get_value(y)
-
-        filter = resource.name[:-1]
-        if resource.name.startswith('priorit'):
-            filter = 'priority'
-
-        root = context.root
-        abspath = resource.parent.get_canonical_path()
-        base_query = EqQuery('parent_path', str(abspath))
-        base_query = AndQuery(base_query, EqQuery('format', 'issue'))
-        for record in handler.get_records():
-            id = record.id
-            records.append({})
-            records[-1]['checkbox'] = True
-            # Fields
-            records[-1]['id'] = id, ';edit_record?id=%s' % id
-            for field, field_title in fields[1:-1]:
-                value = handler.get_value(record, field)
-                datatype = handler.get_datatype(field)
-
-                multiple = getattr(datatype, 'multiple', False)
-                if multiple is True:
-                    value.sort()
-                    if len(value) > 0:
-                        rmultiple = len(value) > 1
-                        value = value[0]
-                    else:
-                        rmultiple = False
-                        value = None
-
-                is_enumerate = getattr(datatype, 'is_enumerate', False)
-                if is_enumerate:
-                    records[-1][field] = datatype.get_value(value)
-                else:
-                    records[-1][field] = value
-
-                if multiple is True:
-                    records[-1][field] = (records[-1][field], rmultiple)
-
+    def get_item_value(self, resource, context, item, column):
+        if column == 'issues':
+            # Append a column for the number of issues
+            root = context.root
+            abspath = resource.parent.get_canonical_path()
+            base_query = AndQuery(
+                            EqQuery('parent_path', str(abspath)),
+                            EqQuery('format', 'issue'))
             search_query = AndQuery(base_query, EqQuery(filter, id))
-            count = root.search(search_query).get_n_documents()
-            value = '0'
-            if count != 0:
-                value = '<a href="../;view?%s=%s">%s issues</a>'
-                if count == 1:
-                    value = '<a href="../;view?%s=%s">%s issue</a>'
-                value = XMLParser(value % (filter, id, count))
-            records[-1]['issues'] = value
+            results = root.search(search_query)
+            count = len(results)
+            if count == 0:
+                return 0
+            return count, '../;view?%s=%s' % (filter, id)
 
-        # Sorting
-        sortby = query['sortby']
-        sortorder = query['sortorder']
-        if sortby:
-            reverse = (sortorder == 'down')
-            records.sort(key=itemgetter(sortby[0]), reverse=reverse)
-
-        records = records[start:start+size]
-        for record in records:
-            for field, field_title in fields[1:]:
-                if isinstance(record[field], tuple):
-                    if record[field][1] is True:
-                        record[field] = '%s [...]' % record[field][0]
-                    else:
-                        record[field] = record[field][0]
-
-        return {
-            'search': None,
-            'batch': batch(context.uri, start, size, total),
-            'table': table(fields, records, sortby, sortorder, actions),
-        }
+        return TableView.get_item_value(self, resource, context, item, column)
 
 
 

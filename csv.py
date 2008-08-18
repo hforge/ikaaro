@@ -33,7 +33,6 @@ from messages import *
 from registry import register_object_class
 from text import Text
 from views import BrowseForm
-from widgets import batch, table
 
 
 ###########################################################################
@@ -49,66 +48,62 @@ class ViewCSV(BrowseForm):
     }
 
 
-    def get_namespace(self, resource, context):
-        # The input parameters
-        query = context.query
-        start = query['batchstart']
-        size = 50
+    def get_items(self, resource, context):
+        return list(resource.handler.lines)
 
-        # The batch
-        handler = resource.handler
-        total = handler.get_nrows()
 
-        # The table
-        actions = []
-        if total:
-            ac = resource.get_access_control()
-            if ac.is_allowed_to_edit(context.user, resource):
-                actions = [('remove', u'Remove', 'button_delete',None)]
+    def sort_and_batch(self, resource, context, items):
+        # Sort
+        sort_by = context.query['sort_by']
+        reverse = context.query['reverse']
+        if sort_by:
+            sort_by = int(sort_by)
+            items.sort(key=itemgetter(sort_by), reverse=reverse)
 
+        # Batch
+        start = context.query['batch_start']
+        size = context.query['batch_size']
+        return items[start:start+size]
+
+
+    def get_table_columns(self, resource, context):
         columns = resource.get_columns()
-        columns.insert(0, ('index', u''))
-        rows = []
-        index = start
-        if handler.schema is not None:
-            getter = lambda x, y: x.get_value(y)
+        columns.insert(0, ('checkbox', None))
+        columns.insert(1, ('index', None))
+        return columns
+
+
+    def get_item_value(self, resource, context, item, column):
+        if column == 'checkbox':
+            return item.number, False
+        elif column == 'index':
+            index = item.number
+            return index, ';edit_row?index=%s' % index
+
+        # A value from the schema
+        handler = resource.handler
+        datatype = handler.get_datatype(column)
+        if handler.schema is None:
+            value = item[int(column)]
         else:
-            getter = lambda x, y: x[int(y)]
+            value = item.get_value(column)
 
-        read = 0
-        length = len(handler.lines)
-        while read < size and index < length:
-            try:
-                row = handler.get_row(index)
-            except IndexError:
-                index += 1
-                continue
-            rows.append({})
-            rows[-1]['id'] = str(index)
-            rows[-1]['checkbox'] = True
-            # Columns
-            rows[-1]['index'] = index, ';edit_row?index=%s' % index
-            for column, column_title in columns[1:]:
-                value = getter(row, column)
-                datatype = handler.get_datatype(column)
-                is_enumerate = getattr(datatype, 'is_enumerate', False)
-                if is_enumerate:
-                    rows[-1][column] = datatype.get_value(value)
-                else:
-                    rows[-1][column] = value
-            index += 1
-            read += 1
+        # Columns
+        is_enumerate = getattr(datatype, 'is_enumerate', False)
+        if is_enumerate:
+            return datatype.get_value(value)
+        return value
 
-        # Sorting
-        sortby = query['sortby']
-        sortorder = query['sortorder']
-        if sortby:
-            rows.sort(key=itemgetter(sortby[0]), reverse=(sortorder=='down'))
 
-        return {
-            'batch': batch(context.uri, start, size, total),
-            'table': table(columns, rows, sortby, sortorder, actions),
-        }
+    def get_actions(self, resource, context, items):
+        if len(items) == 0:
+            return []
+
+        ac = resource.get_access_control()
+        if ac.is_allowed_to_edit(context.user, resource):
+            return [('remove', u'Remove', 'button_delete',None)]
+
+        return []
 
 
     def action_remove(self, resource, context, form):

@@ -45,7 +45,6 @@ from ikaaro.folder import Folder
 from ikaaro.messages import *
 from ikaaro.registry import register_object_class, get_object_class
 from ikaaro.utils import generate_name
-from ikaaro import widgets
 
 
 # Select widget with onchange attribute to update time values.
@@ -274,8 +273,8 @@ class EditResourcesForm(STLForm):
         sortby = query['sortby']
         sortorder = query['sortorder']
         ns_records.sort(key=itemgetter(sortby[0]), reverse=(sortorder=='down'))
-        namespace['table'] = widgets.table(fields, ns_records, [sortby],
-            sortorder, actions=[], table_with_form=False)
+        namespace['table'] = table(fields, ns_records, [sortby], sortorder,
+                                   actions=[], table_with_form=False)
 
         return namespace
 

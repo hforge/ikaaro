@@ -33,7 +33,7 @@ from ikaaro.binary import PDF
 from ikaaro.folder import Folder
 from ikaaro.registry import register_object_class
 from ikaaro.workflow import WFTransition, WorkflowAware
-from ikaaro.widgets import batch, table
+from ikaaro.messages import *
 
 # Import from here
 from cart import Cart
@@ -100,9 +100,9 @@ class Orders(Folder):
         # The actions
         actions = []
         # Batch
-        msgs = (u'<span>You have one order.</span>',
-                u'<span>You have ${n} orders</span>')
-        namespace['batch'] = batch(context.uri, start, size, total, msgs=msgs)
+        batch = Batch(size=size, msg_1=u'<span>You have one order.</span>',
+                      msg_2=u'<span>You have ${n} orders</span>')
+        namespace['batch'] = batch.render(start, total, context)
         # Table
         namespace['table'] = table(columns, orders, sortby, sortorder,
                                    actions, self.gettext)
@@ -163,9 +163,9 @@ class Orders(Folder):
                     'return confirmation("%s");' % message.encode('utf_8'))]
         actions = [(x[0], self.gettext(x[1]), x[2], x[3]) for x in actions ]
         # Batch
-        msgs = (u'<span>There is one order.</span>',
-                u'<span>There are ${n} orders</span>')
-        namespace['batch'] = batch(context.uri, start, size, total, msgs=msgs)
+        batch = Batch(size=size, msg_1=u'<span>There is one order.</span>',
+                      msg_2=u'<span>There are ${n} orders</span>')
+        namespace['batch'] = batch.render(start, total, context)
         # Table
         namespace['table'] = table(columns, orders, sortby, sortorder,
                                    actions, self.gettext)
