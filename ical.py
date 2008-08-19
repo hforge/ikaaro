@@ -1150,7 +1150,7 @@ class CalendarAware(CalendarView):
             ns_event['tt_start'] = tt_start
             ns_event['tt_end'] = tt_end
             uid = getattr(event, 'id', getattr(event, 'uid', None))
-            if calendar_name and uid:
+            if uid:
                 uid = '%s/%s' % (calendar_name, uid)
             ns_event['UID'] = uid
             ns_event['colspan'] = tt_end - tt_start + 1
@@ -1158,12 +1158,14 @@ class CalendarAware(CalendarView):
         ns_events.sort(lambda x, y: cmp(x['tt_start'], y['tt_start']))
         ###############################################################
 
-        # Get conflicts in events if activated
+        # Get the list of conflicting events if activated
         if show_conflicts:
-            conflicts = handler.get_conflicts(c_date)
             conflicts_list = set()
+            conflicts = handler.get_conflicts(c_date)
             if conflicts:
-                [conflicts_list.update(uids) for uids in conflicts]
+                for uids in conflicts:
+                    uids = ['%s/%s' % (calendar_name, uid) for uid in uids]
+                    conflicts_list.update(uids)
 
         ###############################################################
         # Organize events in rows
@@ -1407,7 +1409,7 @@ class CalendarTable(CalendarView, Table):
 
     def add_record(self, type, properties):
         properties['type'] = type
-        self.handler.add_record(properties)
+        return self.handler.add_record(properties)
 
 
     edit_record__access__ = 'is_allowed_to_edit'
@@ -1517,7 +1519,7 @@ class Calendar(CalendarView, Text):
 
 
     def add_record(self, type, properties):
-        self.handler.add_component(type, **properties)
+        return self.handler.add_component(type, **properties)
 
 
     @classmethod
