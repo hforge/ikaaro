@@ -673,8 +673,6 @@ class EditEventForm(CalendarView, STLForm):
 
 
     def get_namespace(self, resource, context):
-        keys = context.get_form_keys()
-
         # Add ical css
         context.styles.append('/ui/ical/calendar.css')
         context.scripts.append('/ui/ical/calendar.js')
@@ -716,7 +714,7 @@ class EditEventForm(CalendarView, STLForm):
                 name, id = uid.split('/')
                 if not resource.has_resource(name):
                     message = MSG(u'Invalid argument.')
-                    return context.come_back(message, keys=keys,
+                    return context.come_back(message, keep=True,
                                              goto=';edit_event')
                 object = resource.get_resource(name)
             else:
@@ -814,7 +812,6 @@ class EditEventForm(CalendarView, STLForm):
 
     edit_event__access__ = 'is_allowed_to_edit'
     def edit_event(self, resource, context, form):
-        keys = context.get_form_keys()
         goto = ';%s' % context.get_cookie('method') or 'monthly_view'
 
         # Get selected_date from the 3 fields 'dd','mm','yyyy' into
@@ -844,9 +841,9 @@ class EditEventForm(CalendarView, STLForm):
             if not resource.is_organizer_or_admin(context, event):
                 message = u'You are not authorized to modify this event.'
                 message = MSG(message)
-                return context.come_back(message, goto, keys=keys)
+                return context.come_back(message, goto, keep=True)
 
-        for key in keys:
+        for key in context.get_form_keys():
             if key in ('id', ';edit_event', 'resource'):
                 continue
             # Get date and time for DTSTART and DTEND
@@ -872,11 +869,11 @@ class EditEventForm(CalendarView, STLForm):
                     # Get value as a datetime object
                     try:
                         value = DateTime.from_str(value)
-                    except:
+                    except ValueError:
                         goto = ';edit_event?date=%s' % selected_date
                         message = u'One or more field is invalid.'
                         message = MSG(message)
-                        return context.come_back(message, goto=goto)
+                        return context.come_back(message, goto, keep=True)
                     values[real_key] = value, params
                 # Check if start <= end
                 if values['DTSTART'][0] > values['DTEND'][0]:
@@ -885,11 +882,11 @@ class EditEventForm(CalendarView, STLForm):
                     goto = ';edit_event?date=%s' % \
                                              Date.encode(values['DTSTART'][0])
                     if uid is not None:
-                        goto = goto + '&uid=%s' % uid
+                        goto = goto + '&id=%s' % uid
                     elif 'timetable' in form:
                         timetable = form.get('timetable', '0')
                         goto = goto + '&timetable=%s' % timetable
-                    return context.come_back(message, goto)
+                    return context.come_back(message, goto, keep=True)
                 # Save values
                 for key in ('DTSTART', 'DTEND'):
                     if key == 'DTEND' and 'VALUE' in values[key][1]:
@@ -920,7 +917,7 @@ class EditEventForm(CalendarView, STLForm):
 
         goto = '%s?date=%s' % (goto, selected_date)
         message = MSG(u'Data updated')
-        return context.come_back(message, goto=goto, keys=keys)
+        return context.come_back(message, goto=goto, keep=True)
 
 
     remove_event__access__ = 'is_allowed_to_edit'
@@ -1427,8 +1424,7 @@ class CalendarTable(CalendarView, Table):
         try:
             form = context.check_form_input(check_fields)
         except FormError:
-            return context.come_back(MSG_MISSING_OR_INVALID,
-                                     keep=context.get_form_keys())
+            return context.come_back(MSG_MISSING_OR_INVALID, keep=True)
 
         # Get the record
         id = context.get_form_value('id', type=Integer)
@@ -1563,7 +1559,7 @@ class Calendar(CalendarView, Text):
         if self.get_access_control().is_admin(context.user, self):
             return True
         if event:
-            organizer = event.get_property_values('ORGANIZER')
+            organizer = event.get_property('ORGANIZER')
             user_path = str(context.user.get_abspath())
             return organizer and user_path == organizer.value
         ac = self.parent.get_access_control()
