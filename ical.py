@@ -960,8 +960,7 @@ class MonthlyView(CalendarView, STLView):
     template = '/ui/ical/ical_monthly_view.xml'
 
 
-    def get_namespace(self, resource, context):
-        ndays = 7
+    def get_namespace(self, resource, context, ndays=7):
         today_date = date.today()
 
         # Add ical css
@@ -1037,9 +1036,7 @@ class WeeklyView(CalendarView, STLView):
     template = '/ui/ical/ical_grid_weekly_view.xml'
 
 
-    def get_namespace(self, resource, context):
-        ndays = 7
-
+    def get_namespace(self, resource, context, ndays=7):
         # Add ical css
         context.styles.append('/ui/ical/calendar.css')
 
@@ -1369,7 +1366,7 @@ class TextView(BaseView):
 ###########################################################################
 # Model
 ###########################################################################
-class CalendarTable(Table, CalendarView):
+class CalendarTable(CalendarView, Table):
 
     class_id = 'calendarTable'
     class_version = '20071216'
@@ -1503,7 +1500,7 @@ class CalendarTable(Table, CalendarView):
 
 
 
-class Calendar(Text, CalendarView):
+class Calendar(CalendarView, Text):
 
     class_id = 'text/calendar'
     class_version = '20071216'
@@ -1594,4 +1591,3 @@ class Calendar(Text, CalendarView):
 ###########################################################################
 register_object_class(CalendarTable)
 register_object_class(Calendar)
-
