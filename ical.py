@@ -26,7 +26,6 @@ from datetime import datetime, date, time, timedelta
 from itools.csv import Property
 from itools.datatypes import (DataType, Date, Enumerate, FileName, Integer,
     Unicode, is_datatype)
-from itools.handlers import Folder
 from itools.ical import (get_grid_data, icalendar, DateTime, icalendarTable,
     Record, Time)
 from itools.stl import stl
@@ -38,6 +37,7 @@ from messages import *
 from registry import register_object_class
 from table import Multiple, Table
 from text import Text
+from folder import Folder
 
 
 resolution = timedelta.resolution
@@ -562,7 +562,7 @@ class CalendarView(object):
     daily_view__label__ = u'Contents'
     daily_view__sublabel__ = u'As calendar'
     def daily_view(self, context):
-        raise NotImplemented
+        raise NotImplementedError
 
 
     ######################################################################
@@ -625,7 +625,7 @@ class CalendarView(object):
                                               starts_on=starts_on,
                                               ends_on=ends_on, out_on=out_on)
                 if resource_name is not None:
-                    resource = self.get_handler(resource_name)
+                    resource = self.get_object(resource_name)
                 else:
                     resource = self
                 ns_event['url'] = resource.get_action_url(**ns_event)
@@ -1018,9 +1018,7 @@ class CalendarAware(CalendarView):
         if not types:
             types = (Calendar, CalendarTable)
         if isinstance(self, Folder):
-            calendars = []
-            for cc in types:
-                calendars.extend(list(self.search_objects(object_class=cc)))
+            calendars = list(self.search_objects(object_class=types))
             return calendars
         return [self]
 
@@ -1038,7 +1036,8 @@ class CalendarAware(CalendarView):
         ###############################################################
         # Get a dict for each event with shown_fields, tt_start, tt_end,
         # uid and colspan ; the result is a list sorted by tt_start
-        events_list = calendar.search_events_in_date(c_date)
+        handler = calendar.handler
+        events_list = handler.search_events_in_date(c_date)
         # Get dict from events_list and sort events by start date
         ns_events = []
         for event in events_list:
@@ -1071,7 +1070,7 @@ class CalendarAware(CalendarView):
 
         # Get conflicts in events if activated
         if show_conflicts:
-            conflicts = calendar.get_conflicts(c_date)
+            conflicts = handler.get_conflicts(c_date)
             conflicts_list = set()
             if conflicts:
                 [conflicts_list.update(uids) for uids in conflicts]
