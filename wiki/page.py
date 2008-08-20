@@ -36,7 +36,7 @@ from docutils import nodes
 
 # Import from itools
 from itools import vfs
-from itools.datatypes import DateTime, FileName, XML
+from itools.datatypes import DateTime, FileName, XMLContent
 from itools.gettext import MSG
 from itools.handlers import checkid, get_handler, File as FileHandler
 from itools.i18n import format_datetime
@@ -44,6 +44,7 @@ from itools.stl import stl
 from itools.xml import XMLParser, XMLError
 from itools.uri import get_reference
 from itools.uri.mailto import Mailto
+from itools.web import BaseView
 
 # Import from ikaaro
 from ikaaro.base import DBObject
@@ -54,6 +55,70 @@ from ikaaro.registry import register_object_class
 
 
 StandaloneReader = get_reader_class('standalone')
+
+
+class WikiPageView(BaseView):
+
+    access = 'is_allowed_to_view'
+    title = u'HTML'
+    icon = 'html.png'
+
+
+    def GET(self, resource, context):
+        context.styles.append('/ui/wiki/style.css')
+        parent = resource.parent
+        here = context.resource
+
+        # Decorate the links and resolve them against the published object
+        document = resource.get_document()
+        for node in document.traverse(condition=nodes.reference):
+            refname = node.get('wiki_name')
+            if refname is None:
+                # Regular link
+                if node.get('refid'):
+                    node['classes'].append('internal')
+                refuri = node.get('refuri')
+                if refuri is not None:
+                    reference = get_reference(refuri.encode('utf_8'))
+                    # Skip external
+                    if reference.scheme or reference.authority:
+                        node['classes'].append('external')
+                        continue
+                    try:
+                        object = resource.get_resource(reference.path)
+                        node['refuri'] = str(here.get_pathto(object))
+                    except LookupError:
+                        pass
+            elif refname is False:
+                    # Wiki link not found
+                    node['classes'].append('nowiki')
+                    prefix = here.get_pathto(parent)
+                    title = node['name']
+                    title_encoded = title.encode('utf_8')
+                    params = {'type': resource.__class__.__name__,
+                              'title': title_encoded,
+                              'name': checkid(title) or title_encoded}
+                    refuri = "%s/;new_resource_form?%s" % (prefix,
+                                                           urlencode(params))
+                    node['refuri'] = refuri
+            else:
+                # Wiki link found, "refname" is the path
+                node['classes'].append('wiki')
+                object = resource.get_resource(refname)
+                node['refuri'] = str(here.get_pathto(object))
+
+        # Manipulate publisher directly (from publish_from_doctree)
+        reader = Reader(parser_name='null')
+        pub = Publisher(reader, None, None, source=DocTreeInput(document),
+                destination_class=StringOutput)
+        pub.set_writer('html')
+        pub.process_programmatic_settings(None, resource.overrides, None)
+        pub.set_destination(None, None)
+        pub.publish(enable_exit_status=None)
+        parts = pub.writer.parts
+        body = parts['html_body']
+
+        return body.encode('utf_8')
 
 
 
@@ -218,64 +283,7 @@ class WikiPage(Text):
     #######################################################################
     # UI / View
     #######################################################################
-    view__label__ = u'HTML'
-    view__icon__ = 'html.png'
-    def view(self, context):
-        context.styles.append('/ui/wiki/style.css')
-        parent = self.parent
-        here = context.resource
-
-        # Decorate the links and resolve them against the published object
-        document = self.get_document()
-        for node in document.traverse(condition=nodes.reference):
-            refname = node.get('wiki_name')
-            if refname is None:
-                # Regular link
-                if node.get('refid'):
-                    node['classes'].append('internal')
-                refuri = node.get('refuri')
-                if refuri is not None:
-                    reference = get_reference(refuri.encode('utf_8'))
-                    # Skip external
-                    if reference.scheme or reference.authority:
-                        node['classes'].append('external')
-                        continue
-                    try:
-                        object = self.get_resource(reference.path)
-                        node['refuri'] = str(here.get_pathto(object))
-                    except LookupError:
-                        pass
-            elif refname is False:
-                    # Wiki link not found
-                    node['classes'].append('nowiki')
-                    prefix = here.get_pathto(parent)
-                    title = node['name']
-                    title_encoded = title.encode('utf_8')
-                    params = {'type': self.__class__.__name__,
-                              'title': title_encoded,
-                              'name': checkid(title) or title_encoded}
-                    refuri = "%s/;new_resource_form?%s" % (prefix,
-                                                           urlencode(params))
-                    node['refuri'] = refuri
-            else:
-                # Wiki link found, "refname" is the path
-                node['classes'].append('wiki')
-                object = self.get_resource(refname)
-                node['refuri'] = str(here.get_pathto(object))
-
-        # Manipulate publisher directly (from publish_from_doctree)
-        reader = Reader(parser_name='null')
-        pub = Publisher(reader, None, None, source=DocTreeInput(document),
-                destination_class=StringOutput)
-        pub.set_writer('html')
-        pub.process_programmatic_settings(None, self.overrides, None)
-        pub.set_destination(None, None)
-        pub.publish(enable_exit_status=None)
-        parts = pub.writer.parts
-        body = parts['html_body']
-
-        return body.encode('utf_8')
-
+    view = WikiPageView()
 
     #######################################################################
     # UI / PDF
@@ -525,7 +533,7 @@ class WikiPage(Text):
             # Critical error
             msg = u"A syntax error prevented from saving the changes: $error"
             # docutils is using tags to represent the error
-            error = XML.encode(message.message)
+            error = XMLContent.encode(message.message)
             return context.come_back(msg, error=error,
                                      keep=['data', 'text_size'])
 

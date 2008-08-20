@@ -20,12 +20,28 @@
 # Import from itools
 from itools.datatypes import Unicode
 from itools.gettext import MSG
+from itools.web import BaseView
 
 # Import from ikaaro
 from ikaaro.file import File
 from ikaaro.folder import Folder
 from ikaaro.registry import register_object_class
 from page import WikiPage
+
+
+class GoToFrontPage(BaseView):
+
+    access = 'is_allowed_to_view'
+    title = MSG(u'View')
+    icon = 'view.png'
+
+    def GET(self, resource, context):
+        if context.has_form_value('message'):
+            message = context.get_form_value('message', type=Unicode)
+            return context.come_back(message, goto='FrontPage')
+
+        return context.uri.resolve('FrontPage')
+
 
 
 class WikiFolder(Folder):
@@ -61,15 +77,7 @@ class WikiFolder(Folder):
         return context.uri.resolve2('FrontPage')
 
 
-    view__access__ = 'is_allowed_to_view'
-    view__label__ = u'View'
-    view__icon__ = 'view.png'
-    def view(self, context):
-        if context.has_form_value('message'):
-            message = context.get_form_value('message', type=Unicode)
-            return context.come_back(message, goto='FrontPage')
-
-        return context.uri.resolve('FrontPage')
+    view = GoToFrontPage()
 
 
 
