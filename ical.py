@@ -440,9 +440,6 @@ class CalendarView(object):
     def monthly_view(self, context, ndays=7):
         today_date = date.today()
 
-        # Add ical css
-        context.styles.append('/ui/ical/calendar.css')
-
         # Current date
         c_date = context.get_form_value('date')
         c_date = get_current_date(c_date)
@@ -510,9 +507,6 @@ class CalendarView(object):
     weekly_view__sublabel__ = u'Weekly'
     weekly_view__icon__ = 'icalendar.png'
     def weekly_view(self, context, ndays=7):
-        # Add ical css
-        context.styles.append('/ui/ical/calendar.css')
-
         # Current date
         c_date = context.get_form_value('date')
         if not c_date:
@@ -661,10 +655,6 @@ class CalendarView(object):
     edit_event_form__sublabel__ = u'Event'
     edit_event_form__icon__ = 'button_calendar.png'
     def edit_event_form(self, context):
-        # Add ical css
-        context.styles.append('/ui/ical/calendar.css')
-        context.scripts.append('/ui/ical/calendar.js')
-
         uid = context.get_form_value('id')
         # Method
         method = context.get_cookie('method') or 'monthly_view'
@@ -939,9 +929,6 @@ class CalendarView(object):
     edit_timetables_form__sublabel__ = u'Timetables'
     edit_timetables_form__icon__ = 'settings.png'
     def edit_timetables_form(self, context):
-        # Add ical css
-        context.styles.append('/ui/ical/calendar.css')
-
         # Initialization
         namespace = {}
         namespace['timetables'] = []
@@ -1183,9 +1170,6 @@ class CalendarAware(CalendarView):
     daily_view__label__ = u'Contents'
     daily_view__sublabel__ = u'As calendar'
     def daily_view(self, context):
-        # Add ical css
-        context.styles.append('/ui/ical/calendar.css')
-
         method = context.get_cookie('method')
         if method != 'daily_view':
             context.set_cookie('method', 'daily_view')
