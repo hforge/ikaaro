@@ -593,7 +593,8 @@ class CalendarView(object):
         return resources, events
 
 
-    def events_to_namespace(self, events, day, cal_indexes):
+    def events_to_namespace(self, events, day, cal_indexes,
+                            show_conflicts=False):
         """Build namespace for events occuring on current day.
         Update events, removing past ones.
 
@@ -621,13 +622,21 @@ class CalendarView(object):
                 cal_index = cal_indexes[resource_name]
                 if len(cal_indexes.items()) < 2:
                     resource_name = None
-                ns_event = event.get_ns_event(day, resource_name=resource_name,
-                                              starts_on=starts_on,
-                                              ends_on=ends_on, out_on=out_on)
                 if resource_name is not None:
                     resource = self.get_object(resource_name)
                 else:
                     resource = self
+                conflicts_list = set()
+                if show_conflicts:
+                    handler = resource.handler
+                    conflicts = handler.get_conflicts(e_dtstart, e_dtend)
+                    if conflicts:
+                        for uids in conflicts:
+                            conflicts_list.update(uids)
+                ns_event = event.get_ns_event(day, resource_name=resource_name,
+                                              conflicts_list=conflicts_list,
+                                              starts_on=starts_on,
+                                              ends_on=ends_on, out_on=out_on)
                 ns_event['url'] = resource.get_action_url(**ns_event)
                 ns_event['cal'] = cal_index
                 ns_events.append(ns_event)
