@@ -21,11 +21,13 @@
 from calendar import monthrange, isleap
 from cStringIO import StringIO
 from datetime import datetime, date, time, timedelta
+from operator import itemgetter
 
 # Import from itools
+from itools.uri import encode_query
 from itools.csv import Property
-from itools.datatypes import (DataType, Date, Enumerate, FileName, Integer,
-    Unicode, is_datatype)
+from itools.datatypes import (DataType, Date, Enumerate, Integer, Unicode,
+        is_datatype)
 from itools.ical import (get_grid_data, icalendar, DateTime, icalendarTable,
     Record, Time)
 from itools.stl import stl
@@ -33,7 +35,7 @@ from itools.web import FormError
 
 # Import from ikaaro
 from base import DBObject
-from messages import *
+from messages import MSG_MISSING_OR_INVALID, MSG_CHANGES_SAVED
 from registry import register_object_class
 from table import Multiple, Table
 from text import Text
@@ -347,22 +349,21 @@ class CalendarView(object):
                            new_class='add_event', new_value='+'):
         ns_columns = []
         for start, end in timetables:
+            tmp_args = dict(args)
             start = Time.encode(start)
+            tmp_args['start_time'] = start
             end = Time.encode(end)
-
-            tmp_args = args + '&start_time=%s' % start
-            tmp_args = tmp_args + '&end_time=%s' % end
-            tmp_args = tmp_args + '&id=%s/' % calendar_name
-            new_url = ';edit_event_form?%s' % (tmp_args)
-
+            tmp_args['end_time'] = end
+            tmp_args['id'] = calendar_name
+            new_url = ';edit_event_form?%s' % encode_query(tmp_args)
             column =  {'class': None,
-                      'colspan': 1,
-                      'rowspan': 1,
-                      'DTSTART': start,
-                      'DTEND': end,
-                      'new_url': new_url,
-                      'new_class': new_class,
-                      'new_value': new_value}
+                       'colspan': 1,
+                       'rowspan': 1,
+                       'DTSTART': start,
+                       'DTEND': end,
+                       'new_url': new_url,
+                       'new_class': new_class,
+                       'new_value': new_value}
             # Fields in template but not shown
             for field in cal_fields:
                 if field not in column:
@@ -1036,28 +1037,23 @@ class CalendarAware(CalendarView):
     def get_ns_calendar(self, calendar, c_date, cal_fields, shown_fields,
                         timetables, method='daily_view', show_conflicts=False):
         calendar_name = calendar.name
-        args = 'date=%s&method=%s' % (Date.encode(c_date), method)
-        new_url = ';edit_event_form?%s' % args
+        args = {'date': Date.encode(c_date), 'method': method}
 
         ns_calendar = {}
         ns_calendar['name'] = calendar.get_title()
 
-        ###############################################################
-        # Get a dict for each event with shown_fields, tt_start, tt_end,
-        # uid and colspan ; the result is a list sorted by tt_start
+        # Get a dict for each event, compute colspan
         handler = calendar.handler
-        events_list = handler.search_events_in_date(c_date)
-        # Get dict from events_list and sort events by start date
-        ns_events = []
-        for event in events_list:
-            ns_event = {}
+        events_by_index = {}
+        for event in handler.search_events_in_date(c_date):
+            event_namespace = {}
             for field in shown_fields:
-                ns_event[field] = event.get_property(field).value
+                event_namespace[field] = event.get_property(field).value
             event_start = event.get_property('DTSTART').value
             event_end = event.get_property('DTEND').value
-            # Add timetables info
+            # Compute start and end indexes
             tt_start = 0
-            tt_end = len(timetables)-1
+            tt_end = len(timetables) - 1
             for tt_index, (start, end) in enumerate(timetables):
                 start = datetime.combine(c_date, start)
                 end = datetime.combine(c_date, end)
@@ -1066,16 +1062,38 @@ class CalendarAware(CalendarView):
                 if end >= event_end:
                     tt_end = tt_index
                     break
-            ns_event['tt_start'] = tt_start
-            ns_event['tt_end'] = tt_end
+            event_namespace['tt_start'] = tt_start
+            event_namespace['tt_end'] = tt_end
             uid = getattr(event, 'id', getattr(event, 'uid', None))
             if uid:
                 uid = '%s/%s' % (calendar_name, uid)
-            ns_event['UID'] = uid
-            ns_event['colspan'] = tt_end - tt_start + 1
-            ns_events.append(ns_event)
-        ns_events.sort(lambda x, y: cmp(x['tt_start'], y['tt_start']))
-        ###############################################################
+            event_namespace['UID'] = uid
+            event_namespace['colspan'] = tt_end - tt_start + 1
+            if not tt_start in events_by_index:
+                events_by_index[tt_start] = []
+            events_by_index[tt_start].append(event_namespace)
+
+        # Organize events in rows
+        # If a row index is busy, start a new row
+        rows = []
+        for index in range(len(timetables)):
+            events = events_by_index.get(index)
+            if events is None:
+                continue
+            # Sort events by tt_end to reduce fragmentation
+            # Longer events go on lines of their own
+            events.sort(key=itemgetter('tt_end'))
+            for row_index, event in enumerate(events):
+                if not rows or len(rows) <= row_index:
+                    rows.append({'events': []})
+                current_events = rows[row_index]['events']
+                if (current_events
+                        and current_events[-1]['tt_end'] >= index):
+                    # Overlapping, move on a line of its own
+                    rows.append({'events': [event]})
+                else:
+                    # Enough free space, extend
+                    current_events.append(event)
 
         # Get the list of conflicting events if activated
         if show_conflicts:
@@ -1086,96 +1104,68 @@ class CalendarAware(CalendarView):
                     uids = ['%s/%s' % (calendar_name, uid) for uid in uids]
                     conflicts_list.update(uids)
 
-        ###############################################################
-        # Organize events in rows
-        rows = []
-        for index in range(len(timetables)):
-            row_index = 0
-            # Search events in current timetable
-            for event in ns_events:
-                if index >= event['tt_start'] and index <= event['tt_end']:
-                    if index == event['tt_start']:
-                        if rows == [] or row_index >= len(rows):
-                            rows.append({'events': []})
-                        rows[row_index]['events'].append(event)
-                    row_index = row_index + 1
-
-        ###############################################################
-        # Set event values
-        new_class = 'add_event'
-        new_value = '+'
-
-        ns_rows = []
+        # Organize columns
+        rows_namespace = []
         for row in rows:
-            ns_row = {}
-            ns_columns = []
+            row_namespace = {}
+            columns_namespace = []
             events = row['events']
-            if events == []:
-                ns_rows = None
-                break
-            event = events[0]
+            event = events.pop(0)
             colspan = 0
-
             for tt_index, (start, end) in enumerate(timetables):
                 if colspan > 0:
                     colspan = colspan - 1
                     continue
-                start = Time.encode(start)
-                end = Time.encode(end)
-                tmp_args = args + '&start_time=' + start
-                tmp_args = tmp_args + '&end_time=' + end
-                new_url = ';edit_event_form?%s' % (tmp_args)
+                tmp_args = dict(args)
+                tmp_args['start_time'] = Time.encode(start)
+                tmp_args['end_time'] = Time.encode(end)
+                new_url = ';edit_event_form?%s' % encode_query(tmp_args)
                 # Init column
                 column =  {'class': None,
-                          'colspan': 1,
-                          'rowspan': 1,
-                          'evt_url': None,
-                          'evt_value': '>>',
-                          'new_url': new_url,
-                          'new_class': new_class,
-                          'new_value': new_value}
+                           'colspan': 1,
+                           'rowspan': 1,
+                           'evt_url': None,
+                           'evt_value': '>>',
+                           'new_url': new_url,
+                           'new_class': 'add_event',
+                           'new_value': '+'}
                 # Add event
                 if event and tt_index == event['tt_start']:
                     uid = event['UID']
-                    event_params = '%s&id=%s' % (args, uid)
-                    go_url = ';edit_event_form?%s' % event_params
+                    tmp_args = dict(args)
+                    tmp_args['id'] = uid
+                    go_url = ';edit_event_form?%s' % encode_query(tmp_args)
                     if show_conflicts and uid in conflicts_list:
                         css_class = 'cal_conflict'
                     else:
                         css_class = 'cal_busy'
-
                     column['class'] = css_class
                     column['colspan'] = event['colspan']
                     column['evt_url'] = go_url
                     column['new_url'] = None
                     column['evt_value'] = '>>'
-
                     # Fields to show
                     for field in shown_fields:
                         value = event[field]
                         if isinstance(value, datetime):
                             value = value.strftime('%H:%M')
                         column[field] = value
-
                     # Set colspan
                     colspan = event['colspan'] - 1
-
                     # Delete added event
-                    del events[0]
                     event = None
                     if events != []:
-                        event = events[0]
-
+                        event = events.pop(0)
                 # Fields in template but not shown
                 for field in cal_fields:
                     if field not in column:
                         column[field] = None
-                ns_columns.append(column)
-                ns_row['columns'] = ns_columns
-            ns_rows.append(ns_row)
+                columns_namespace.append(column)
+                row_namespace['columns'] = columns_namespace
+            rows_namespace.append(row_namespace)
 
-        # Add ns_rows to namespace
-        ns_calendar['rows'] = ns_rows
+        # Add rows_namespace to namespace
+        ns_calendar['rows'] = rows_namespace
 
         # Add one line with header and empty cases with only '+'
         header_columns = self.get_header_columns(calendar_name, args,
