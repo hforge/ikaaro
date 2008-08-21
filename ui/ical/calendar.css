@@ -154,44 +154,38 @@ table.timetable {
 /*  color: #002090; # override status color */
 }
 
-#cal_monthly_view .event .color0 td,
-#cal_weekly_view td.color0 {
+#cal_monthly_view .event .color0 td, #cal_weekly_view td.color0 {
  background-color: #BCA1A1;
 }
 
-#cal_monthly_view .event .color1 td,
-#cal_weekly_view td.color1 {
+#cal_monthly_view .event .color1 td, #cal_weekly_view td.color1 {
  background-color: #A1BCA1;
 }
 
-#cal_monthly_view .event .color2 td,
-#cal_weekly_view td.color2 {
+#cal_monthly_view .event .color2 td, #cal_weekly_view td.color2 {
  background-color: #A1A1BC;
 }
 
-#cal_monthly_view .event .color3 td,
-#cal_weekly_view td.color3 {
+#cal_monthly_view .event .color3 td, #cal_weekly_view td.color3 {
  background-color: #90A5A5;
 }
 
-#cal_monthly_view .event .color4 td,
-#cal_weekly_view td.color4 {
+#cal_monthly_view .event .color4 td, #cal_weekly_view td.color4 {
  background-color: #A5A590;
+}
+
+.cal_busy {
+  background: #729fcf !important;
+}
+.cal_conflict {
+  background: #ef2929 !important;
+}
+.cal_busy a, .cal_conflict a {
+  color: #fff !important;
 }
 
 
 /* daily_view */
-
-#cal_daily_view .cal_busy {
-  background: #729fcf;
-}
-#cal_daily_view .cal_conflict {
-  background: #ef2929;
-}
-#cal_daily_view .cal_busy a,
-#cal_daily_view .cal_conflict a {
-  color: #fff;
-}
 
 #cal_daily_view #attributes {
   margin: 5px 0 8px 0;
