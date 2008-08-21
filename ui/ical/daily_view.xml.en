@@ -12,17 +12,17 @@
     </form>
 
     <table cellspacing="0" cellpadding="0">
-      <tr id="header_timetables">
+      <tr class="header_timetables">
         <td />
         <td stl:repeat="tt header_timetables">
           <span stl:if="tt/start">${tt/start}</span>
         </td>
       </tr>
       <stl:block stl:repeat="calendar calendars">
-        <tr id="header_columns">
-          <td rowspan="${calendar/rowspan}">
+        <tr class="header_columns">
+          <th rowspan="${calendar/rowspan}">
             <a href="${calendar/url}">${calendar/name}</a>
-          </td>
+          </th>
           <td align="center" stl:repeat="col calendar/header_columns">
             <a href="${col/new_url}"
               class="${col/new_class}">${col/new_value}</a>
@@ -45,7 +45,7 @@
           </td>
         </tr>
       </stl:block>
-      <tr id="header_timetables">
+      <tr class="header_timetables">
         <td />
         <td stl:repeat="tt header_timetables">
           <span stl:if="tt/start">${tt/start}</span>
