@@ -24,7 +24,7 @@ from itools.gettext import MSG
 from itools.i18n import format_datetime
 from itools.pdf import PDFFile
 from itools.stl import stl
-from itools.web import FormError
+from itools.web import FormError, MSG_MISSING_OR_INVALID
 from itools.xapian import KeywordField, EqQuery
 from itools.xml import XMLParser
 
@@ -34,7 +34,6 @@ from ikaaro.folder import Folder
 from ikaaro.registry import register_object_class
 from ikaaro.workflow import WFTransition, WorkflowAware
 from ikaaro.widgets import batch, table
-from ikaaro.messages import *
 
 # Import from here
 from cart import Cart

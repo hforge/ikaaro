@@ -26,23 +26,24 @@ from operator import itemgetter
 # Import from itools
 from itools.uri import encode_query
 from itools.csv import Property
-from itools.datatypes import (DataType, Date, Enumerate, Integer, Unicode,
-    is_datatype)
+from itools.datatypes import DataType, is_datatype
+from itools.datatypes import Date, Enumerate, Integer, Unicode
 from itools.gettext import MSG
 from itools.html import XHTMLFile
-from itools.ical import (get_grid_data, icalendar, DateTime, icalendarTable,
-    Record, Time)
+from itools.ical import icalendar, icalendarTable, get_grid_data
+from itools.ical import DateTime, Record, Time
 from itools.stl import stl
 from itools.web import get_context, BaseView, FormError, STLForm, STLView
+from itools.web import MSG_MISSING_OR_INVALID
 
 # Import from ikaaro
 from base import DBObject
 from file import DownloadView as BaseDownloadView, UploadForm as BaseUploadForm
-from messages import MSG_MISSING_OR_INVALID, MSG_CHANGES_SAVED
+from folder import Folder
+from messages import MSG_CHANGES_SAVED
 from registry import register_object_class
 from table import Multiple, Table
 from text import Text
-from folder import Folder
 
 
 resolution = timedelta.resolution

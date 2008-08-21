@@ -29,7 +29,7 @@ from itools.datatypes import Integer, Enumerate, Date, Tokens
 from itools.gettext import MSG
 from itools.http import Forbidden
 from itools.stl import stl
-from itools.web import FormError, STLView, get_context
+from itools.web import FormError, STLView, get_context, MSG_MISSING_OR_INVALID
 
 # Import from ikaaro
 from base import DBObject

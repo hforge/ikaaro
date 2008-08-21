@@ -34,7 +34,6 @@ from itools.stl import stl
 from itools.uri import Path, get_reference
 from itools import vfs
 from itools.web import FormError, STLView, STLForm
-from itools.web import MSG_MISSING_OR_INVALID
 from itools.xapian import EqQuery, OrQuery, AndQuery, TextField
 from itools.xml import XMLParser
 

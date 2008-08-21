@@ -19,15 +19,15 @@
 # Import from itools
 from itools.datatypes import Unicode, Integer, Decimal
 from itools.gettext import MSG
-from itools.stl import stl
 from itools.handlers import checkid
-from itools.web import FormError
+from itools.stl import stl
+from itools.web import FormError, MSG_MISSING_OR_INVALID
 
 # Import from ikaaro
-from ikaaro.folder import Folder
 from ikaaro.file import File
+from ikaaro.folder import Folder
+from ikaaro.messages import *
 from ikaaro.registry import register_object_class
-from ikaaro.messages import MSG_CHANGES_SAVED
 
 # Import from Here
 from cart import Cart
