@@ -596,9 +596,6 @@ class TimetablesForm(STLForm):
 
 
     def get_namespace(self, resource, context):
-        # Add ical css
-        context.styles.append('/ui/ical/calendar.css')
-
         # Initialization
         namespace = {'timetables': []}
 
@@ -685,10 +682,6 @@ class EditEventForm(CalendarView, STLForm):
 
 
     def get_namespace(self, resource, context):
-        # Add ical css
-        context.styles.append('/ui/ical/calendar.css')
-        context.scripts.append('/ui/ical/calendar.js')
-
         uid = context.get_form_value('id')
         # Method
         method = context.get_cookie('method') or 'monthly_view'
@@ -972,9 +965,6 @@ class MonthlyView(CalendarView, STLView):
     def get_namespace(self, resource, context, ndays=7):
         today_date = date.today()
 
-        # Add ical css
-        context.styles.append('/ui/ical/calendar.css')
-
         # Current date
         c_date = context.get_form_value('date')
         c_date = get_current_date(c_date)
@@ -1046,9 +1036,6 @@ class WeeklyView(CalendarView, STLView):
 
 
     def get_namespace(self, resource, context, ndays=7):
-        # Add ical css
-        context.styles.append('/ui/ical/calendar.css')
-
         # Current date
         c_date = context.get_form_value('date')
         if not c_date:
@@ -1274,9 +1261,6 @@ class CalendarAware(CalendarView):
     daily_view__access__ = 'is_allowed_to_edit'
     daily_view__label__ = u'Daily View'
     def daily_view(self, context):
-        # Add ical css
-        context.styles.append('/ui/ical/calendar.css')
-
         method = context.get_cookie('method')
         if method != 'daily_view':
             context.set_cookie('method', 'daily_view')

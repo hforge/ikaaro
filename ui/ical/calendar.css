@@ -174,17 +174,6 @@ table.timetable {
  background-color: #A5A590;
 }
 
-.cal_busy {
-  background: #729fcf !important;
-}
-.cal_conflict {
-  background: #ef2929 !important;
-}
-.cal_busy a, .cal_conflict a {
-  color: #fff !important;
-}
-
-
 /* daily_view */
 
 #cal_daily_view #attributes {
