@@ -66,7 +66,7 @@ class UIFile(Node, File):
 
     download = FileGET()
 
-    def get_view(self, name, **kw):
+    def get_view(self, name, query=None):
         if name is None:
             return self.download
         raise NotFound
@@ -311,7 +311,7 @@ class Skin(UIFolder):
                 name, args = link, {}
 
             # Active
-            if context.view == here.get_view(name, **args):
+            if context.view == here.get_view(name, args):
                 active = True
 
             # Add the menu

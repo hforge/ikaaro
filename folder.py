@@ -493,17 +493,16 @@ class Folder(DBObject):
         return DBObject.get_default_view_name(self)
 
 
-    def get_view(self, name, **kw):
+    def get_view(self, name, query=None):
         # Add resource form
-        type = kw.get('type')
-        if name == 'new_resource' and type is not None:
-            cls = get_object_class(type)
-            view = cls.new_instance
-            if isinstance(view, BaseView):
-                return view
+        if name == 'new_resource':
+            if query is not None and 'type' in query:
+                view = get_object_class(query['type']).new_instance
+                if isinstance(view, BaseView):
+                    return view
 
         # Default
-        return DBObject.get_view(self, name, **kw)
+        return DBObject.get_view(self, name, query)
 
 
     def get_right_menus(self, context):
