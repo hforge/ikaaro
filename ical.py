@@ -1560,7 +1560,6 @@ class Calendar(CalendarView, Text):
     #######################################################################
     # Views
     #######################################################################
-    GET = DBObject.GET
     download = DownloadView()
     upload = UploadForm()
     monthly_view = MonthlyView()
@@ -1568,6 +1567,7 @@ class Calendar(CalendarView, Text):
     edit_timetables = TimetablesForm()
     text_view = TextView()
     edit_event = EditEventForm()
+
 
 ###########################################################################
 # Register
