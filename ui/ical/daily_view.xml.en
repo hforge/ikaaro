@@ -4,12 +4,11 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://xml.itools.org/namespaces/stl">
   <div id="cal_daily_view">
-    <form id="attributes" action="." method="get">
+    <form id="attributes" action=";daily_view" method="get">
       Date :
       <input type="text" name="date" id="date" size="11" value="${date}" />
       <input type="button" id="trigger_date" value="..." />
-      <input type="submit" id="update" name=";daily_view" value="OK"
-        class="button_ok" />
+      <input type="submit" value="OK" class="button_ok" />
     </form>
 
     <table cellspacing="0" cellpadding="0">
