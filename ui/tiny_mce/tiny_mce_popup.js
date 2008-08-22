@@ -21,6 +21,7 @@ tinyMCEPopup = {
 		tinyMCE = w.tinyMCE;
 		t.editor = tinymce.EditorManager.activeEditor;
 		t.params = t.editor.windowManager.params;
+		t.features = t.editor.windowManager.features;
 
 		// Setup local DOM
 		t.dom = t.editor.windowManager.createInstance('tinymce.dom.DOMUtils', document);
@@ -30,7 +31,7 @@ tinyMCEPopup = {
         if (t.getWindowArg('use_css') == "no")
             ;
         else
-            t.dom.loadCSS(t.editor.settings.popup_css);
+            t.dom.loadCSS(t.features.popup_css || t.editor.settings.popup_css);
 
 		// Setup on init listeners
 		t.listeners = [];
@@ -89,7 +90,7 @@ tinyMCEPopup = {
             else
                 t.editor.windowManager.resizeBy(dw, dh, t.id);
         }
-    },
+	},
 
 	executeOnLoad : function(s) {
 		this.onInit.add(function() {
@@ -139,6 +140,14 @@ tinyMCEPopup = {
 	openBrowser : function(element_id, type, option) {
 		tinyMCEPopup.restoreSelection();
 		this.editor.execCallback('file_browser_callback', element_id, document.getElementById(element_id).value, type, window);
+	},
+
+	confirm : function(t, cb, s) {
+		this.editor.windowManager.confirm(t, cb, s, window);
+	},
+
+	alert : function(tx, cb, s) {
+		this.editor.windowManager.alert(tx, cb, s, window);
 	},
 
 	close : function() {
