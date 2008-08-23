@@ -31,7 +31,7 @@ from itools.i18n import get_language_name
 from itools.stl import stl
 from itools.uri import Path
 from itools import vfs
-from itools.web import get_context, Node as BaseNode, BaseView, STLForm
+from itools.web import get_context, Resource, BaseView, STLForm
 from itools.xapian import CatalogAware
 from itools.xapian import TextField, KeywordField, IntegerField, BoolField
 
@@ -371,7 +371,7 @@ class AddLinkForm(STLForm):
 ###########################################################################
 # Model
 ###########################################################################
-class Node(BaseNode):
+class Node(Resource):
 
     class_views = []
 
