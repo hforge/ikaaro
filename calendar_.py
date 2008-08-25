@@ -34,7 +34,8 @@ from itools.web import get_context, FormError
 from itools.web import MSG_MISSING_OR_INVALID
 
 # Import from ikaaro
-from calendar_views import DownloadView
+from calendar_views import CalendarUpload, DownloadView, EditEventForm
+from calendar_views import MonthlyView, TextView, TimetablesForm, WeeklyView
 from folder import Folder
 from messages import MSG_CHANGES_SAVED
 from registry import register_object_class
@@ -701,7 +702,7 @@ class CalendarTable(CalendarView, Table):
     # Views
     #######################################################################
     download = DownloadView()
-    upload = UploadForm()
+    upload = CalendarUpload()
     monthly_view = MonthlyView()
     weekly_view = WeeklyView()
     edit_timetables = TimetablesForm()
@@ -787,7 +788,7 @@ class Calendar(CalendarView, Text):
     # Views
     #######################################################################
     download = DownloadView()
-    upload = UploadForm()
+    upload = CalendarUpload()
     monthly_view = MonthlyView()
     weekly_view = WeeklyView()
     edit_timetables = TimetablesForm()

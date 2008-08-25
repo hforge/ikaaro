@@ -162,6 +162,105 @@ class TimetablesForm(STLForm):
 
 
 
+class CalendarView(STLView):
+
+    def add_selector_ns(self, c_date, method, namespace):
+        """Set header used to navigate into time.
+
+          datetime.strftime('%U') gives week number, starting week by Sunday
+          datetime.strftime('%W') gives week number, starting week by Monday
+          This week number is calculated as "Week O1" begins on the first
+          Sunday/Monday of the year. Its range is [0,53].
+
+        We adjust week numbers to fit rules which are used by french people.
+        XXX Check for other countries
+        """
+        resource = get_context().resource
+        if self.get_first_day() == 1:
+            format = '%W'
+        else:
+            format = '%U'
+        week_number = Unicode.encode(c_date.strftime(format))
+        # Get day of 1st January, if < friday and != monday then number++
+        day, kk = monthrange(c_date.year, 1)
+        if day in (1, 2, 3):
+            week_number = str(int(week_number) + 1)
+            if len(week_number) == 1:
+                week_number = '0%s' % week_number
+        current_week = MSG(u'Week $n').gettext(n=week_number)
+        tmp_date = c_date - timedelta(7)
+        previous_week = ";%s?date=%s" % (method, Date.encode(tmp_date))
+        tmp_date = c_date + timedelta(7)
+        next_week = ";%s?date=%s" % (method, Date.encode(tmp_date))
+        # Month
+        current_month = months[c_date.month].gettext()
+        delta = 31
+        if c_date.month != 1:
+            kk, delta = monthrange(c_date.year, c_date.month - 1)
+        tmp_date = c_date - timedelta(delta)
+        previous_month = ";%s?date=%s" % (method, Date.encode(tmp_date))
+        kk, delta = monthrange(c_date.year, c_date.month)
+        tmp_date = c_date + timedelta(delta)
+        next_month = ";%s?date=%s" % (method, Date.encode(tmp_date))
+        # Year
+        date_before = date(c_date.year, 2, 28)
+        date_after = date(c_date.year, 3, 1)
+        delta = 365
+        if (isleap(c_date.year - 1) and c_date <= date_before) \
+          or (isleap(c_date.year) and c_date > date_before):
+            delta = 366
+        tmp_date = c_date - timedelta(delta)
+        previous_year = ";%s?date=%s" % (method, Date.encode(tmp_date))
+        delta = 365
+        if (isleap(c_date.year) and c_date <= date_before) \
+          or (isleap(c_date.year +1) and c_date >= date_after):
+            delta = 366
+        tmp_date = c_date + timedelta(delta)
+        next_year = ";%s?date=%s" % (method, Date.encode(tmp_date))
+        # Set value into namespace
+        namespace['current_week'] = current_week
+        namespace['previous_week'] = previous_week
+        namespace['next_week'] = next_week
+        namespace['current_month'] = current_month
+        namespace['previous_month'] = previous_month
+        namespace['next_month'] = next_month
+        namespace['current_year'] = c_date.year
+        namespace['previous_year'] = previous_year
+        namespace['next_year'] = next_year
+        # Add today link
+        tmp_date = date.today()
+        namespace['today'] = ";%s?date=%s" % (method, Date.encode(tmp_date))
+        return namespace
+
+
+    # Get days of week based on get_first_day's result for start
+    def days_of_week_ns(self, start, num=None, ndays=7, selected=None):
+        """
+          start : start date of the week
+          num : True if we want to get number of the day too
+          ndays : number of days we want
+          selected : selected date
+        """
+        resource = get_context().resource
+        current_date = start
+        ns_days = []
+        for index in range(ndays):
+            ns =  {}
+            ns['name'] = days[current_date.weekday()].gettext()
+            if num:
+                ns['nday'] = current_date.day
+            else:
+                ns['nday'] = None
+            if selected:
+                ns['selected'] = (selected == current_date)
+            else:
+                ns['selected'] = None
+            ns_days.append(ns)
+            current_date = current_date + timedelta(1)
+        return ns_days
+
+
+
 class EditEventForm(CalendarView, STLForm):
 
     access = 'is_allowed_to_edit'
@@ -482,108 +581,6 @@ class EditEventForm(CalendarView, STLForm):
 
 
 
-class CalendarView(STLView):
-
-    def add_selector_ns(self, c_date, method, namespace):
-        """Set header used to navigate into time.
-
-          datetime.strftime('%U') gives week number, starting week by Sunday
-          datetime.strftime('%W') gives week number, starting week by Monday
-          This week number is calculated as "Week O1" begins on the first
-          Sunday/Monday of the year. Its range is [0,53].
-
-        We adjust week numbers to fit rules which are used by french people.
-        XXX Check for other countries
-        """
-        resource = get_context().resource
-        if self.get_first_day() == 1:
-            format = '%W'
-        else:
-            format = '%U'
-        week_number = Unicode.encode(c_date.strftime(format))
-        # Get day of 1st January, if < friday and != monday then number++
-        day, kk = monthrange(c_date.year, 1)
-        if day in (1, 2, 3):
-            week_number = str(int(week_number) + 1)
-            if len(week_number) == 1:
-                week_number = '0%s' % week_number
-        current_week = MSG(u'Week $n').gettext(n=week_number)
-        tmp_date = c_date - timedelta(7)
-        previous_week = ";%s?date=%s" % (method, Date.encode(tmp_date))
-        tmp_date = c_date + timedelta(7)
-        next_week = ";%s?date=%s" % (method, Date.encode(tmp_date))
-        # Month
-        current_month = months[c_date.month].gettext()
-        delta = 31
-        if c_date.month != 1:
-            kk, delta = monthrange(c_date.year, c_date.month - 1)
-        tmp_date = c_date - timedelta(delta)
-        previous_month = ";%s?date=%s" % (method, Date.encode(tmp_date))
-        kk, delta = monthrange(c_date.year, c_date.month)
-        tmp_date = c_date + timedelta(delta)
-        next_month = ";%s?date=%s" % (method, Date.encode(tmp_date))
-        # Year
-        date_before = date(c_date.year, 2, 28)
-        date_after = date(c_date.year, 3, 1)
-        delta = 365
-        if (isleap(c_date.year - 1) and c_date <= date_before) \
-          or (isleap(c_date.year) and c_date > date_before):
-            delta = 366
-        tmp_date = c_date - timedelta(delta)
-        previous_year = ";%s?date=%s" % (method, Date.encode(tmp_date))
-        delta = 365
-        if (isleap(c_date.year) and c_date <= date_before) \
-          or (isleap(c_date.year +1) and c_date >= date_after):
-            delta = 366
-        tmp_date = c_date + timedelta(delta)
-        next_year = ";%s?date=%s" % (method, Date.encode(tmp_date))
-        # Set value into namespace
-        namespace['current_week'] = current_week
-        namespace['previous_week'] = previous_week
-        namespace['next_week'] = next_week
-        namespace['current_month'] = current_month
-        namespace['previous_month'] = previous_month
-        namespace['next_month'] = next_month
-        namespace['current_year'] = c_date.year
-        namespace['previous_year'] = previous_year
-        namespace['next_year'] = next_year
-        # Add today link
-        tmp_date = date.today()
-        namespace['today'] = ";%s?date=%s" % (method, Date.encode(tmp_date))
-        return namespace
-
-
-    # Get days of week based on get_first_day's result for start
-    def days_of_week_ns(self, start, num=None, ndays=7, selected=None):
-        """
-          start : start date of the week
-          num : True if we want to get number of the day too
-          ndays : number of days we want
-          selected : selected date
-        """
-        resource = get_context().resource
-        current_date = start
-        ns_days = []
-        for index in range(ndays):
-            ns =  {}
-            ns['name'] = days[current_date.weekday()].gettext()
-            if num:
-                ns['nday'] = current_date.day
-            else:
-                ns['nday'] = None
-            if selected:
-                ns['selected'] = (selected == current_date)
-            else:
-                ns['selected'] = None
-            ns_days.append(ns)
-            current_date = current_date + timedelta(1)
-        return ns_days
-
-
-
-
-
-
 class MonthlyView(CalendarView):
 
     access = 'is_allowed_to_view'
@@ -768,7 +765,7 @@ class WeeklyView(CalendarView):
 
 
 
-class UploadForm(FileUpload):
+class CalendarUpload(FileUpload):
 
     title = MSG(u'Upload from an ical file')
 
