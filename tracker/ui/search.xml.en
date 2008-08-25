@@ -6,9 +6,9 @@
 
   <!-- Advanced Search -->
   <fieldset>
-    <legend stl:if="search_name">Search: ${search_title}</legend>
-    <legend stl:if="not search_name">Search</legend>
-    <form action=";search" method="get">
+    <legend>Search<stl:block stl:if="search_name">: ${search_title}</stl:block>
+    </legend>
+    <form action=";view" method="get">
       <input type="hidden" name="search_name" value="${search_name}" />
       <table>
         <tr>
@@ -91,10 +91,7 @@
         </tr>
       </table>
       <br/>
-      <input type="submit" name=";search" class="button_search" value="Search"
-        />
-      <input type="submit" name=";search" class="button_calendar"
-        value="Search on resources" onclick="weekly();" />
+      <input type="submit" name=";view" class="button_search" value="Search" />
     </form>
   </fieldset>
 

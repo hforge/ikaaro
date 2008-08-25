@@ -30,6 +30,7 @@ from itools.web import get_context
 from itools.xapian import OrQuery, AndQuery, RangeQuery
 
 # Import from ikaaro
+from ikaaro.calendar_ import Timetables
 from ikaaro.calendar_views import CalendarView, MonthlyView, TimetablesForm
 from ikaaro.calendar_views import WeeklyView
 from ikaaro.forms import DateWidget, MultilineWidget, Select, TextWidget
@@ -208,7 +209,7 @@ class Resources(Table, TrackerView):
     @classmethod
     def get_metadata_schema(cls):
         schema = Table.get_metadata_schema()
-        schema.update(TrackerView.get_metadata_schema())
+        schema['timetables'] = Timetables
         return schema
 
 
