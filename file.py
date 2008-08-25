@@ -47,7 +47,7 @@ from workflow import WorkflowAware
 ###########################################################################
 # Views
 ###########################################################################
-class NewFileForm(NewInstanceForm):
+class FileNewInstance(NewInstanceForm):
 
     access = 'is_allowed_to_add'
     title = MSG(u'Upload File')
@@ -119,7 +119,7 @@ class NewFileForm(NewInstanceForm):
 
 
 
-class Download(BaseView):
+class FileDownload(BaseView):
 
     access = 'is_allowed_to_view'
 
@@ -141,7 +141,7 @@ class Download(BaseView):
 
 
 
-class DownloadView(STLView):
+class FileView(STLView):
 
     access = 'is_allowed_to_view'
     title = MSG(u'Download')
@@ -157,7 +157,7 @@ class DownloadView(STLView):
 
 
 
-class UploadForm(STLForm):
+class FileUpload(STLForm):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Replace')
@@ -194,7 +194,7 @@ class UploadForm(STLForm):
 
 
 
-class ExternalEdit(BaseView):
+class FileExternalEdit(BaseView):
 
     access = 'is_allowed_to_edit'
 
@@ -263,7 +263,7 @@ class ExternalEdit(BaseView):
 
 
 
-class BacklinksView(FolderBrowseContent):
+class FileBacklinks(FolderBrowseContent):
 
     access = 'is_allowed_to_view'
     title = MSG(u"Backlinks")
@@ -456,12 +456,9 @@ class File(WorkflowAware, VersioningAware):
         return self.handler.get_mimetype()
 
 
-    #######################################################################
-    # Views
-    #######################################################################
-    new_instance = NewFileForm()
-    download = Download()
-    view = DownloadView()
+    new_instance = FileNewInstance()
+    download = FileDownload()
+    view = FileView()
 
     externaledit = STLView(
         access='is_allowed_to_edit',
@@ -470,9 +467,9 @@ class File(WorkflowAware, VersioningAware):
         template='/ui/file/externaledit.xml',
     )
 
-    external_edit = ExternalEdit()
-    upload = UploadForm()
-    backlinks = BacklinksView()
+    external_edit = FileExternalEdit()
+    upload = FileUpload()
+    backlinks = FileBacklinks()
 
 
 

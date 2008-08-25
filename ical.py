@@ -38,7 +38,7 @@ from itools.web import MSG_MISSING_OR_INVALID
 
 # Import from ikaaro
 from base import DBObject
-from file import DownloadView as BaseDownloadView, UploadForm as BaseUploadForm
+from file import FileView, FileUpload
 from folder import Folder
 from messages import MSG_CHANGES_SAVED
 from registry import register_object_class
@@ -1299,7 +1299,7 @@ class CalendarAware(CalendarView):
 
 
 
-class UploadForm(BaseUploadForm):
+class UploadForm(FileUpload):
 
     title = MSG(u'Upload from an ical file')
 
@@ -1325,7 +1325,7 @@ class UploadForm(BaseUploadForm):
 
 
 
-class DownloadView(BaseDownloadView):
+class DownloadView(FileView):
 
     title = MSG(u'Export in ical format')
 
