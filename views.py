@@ -307,9 +307,12 @@ class SearchForm(BrowseForm):
         namespace = BrowseForm.get_namespace(self, resource, context)
 
         # The Search Form
-        search_template = resource.get_resource(self.search_template)
-        search_namespace = self.get_search_namespace(resource, context)
-        namespace['search'] = stl(search_template, search_namespace)
+        if self.search_template is None:
+            namespace['search'] = None
+        else:
+            search_template = resource.get_resource(self.search_template)
+            search_namespace = self.get_search_namespace(resource, context)
+            namespace['search'] = stl(search_template, search_namespace)
 
         return namespace
 

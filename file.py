@@ -264,58 +264,31 @@ class FileExternalEdit(BaseView):
 
 
 class FileBacklinks(FolderBrowseContent):
+   """Backlinks are the list of objects pointing to this object.  This view
+   answers the question "where is this object used?" You'll see all WebPages
+   and WikiPages (for example) referencing it.  If the list is empty, you can
+   consider it is "orphan".
+   """
 
     access = 'is_allowed_to_view'
     title = MSG(u"Backlinks")
     icon = 'button_rename.png'
 
-    query_schema = {
-        'search_field': String,
-        'search_term': Unicode,
-        'search_subfolders': Boolean(default=False),
-        'sortorder': String(default='up'),
-        'sortby': String(multiple=True, default=['title']),
-        'batchstart': Integer(default=0),
-    }
+    search_template = None
+    search_schema = {}
+
+    def get_table_columns(self, resource, context):
+        cols = FolderBrowseContent.get_table_columns(self, resource, context)
+        return [ (name, title) for name, title in cols if name != 'checkbox' ]
 
 
-    columns = [
-        ('name', MSG(u'Name')),
-        ('title', MSG(u'Title')),
-        ('format', MSG(u'Type')),
-        ('mtime', MSG(u'Last Modified')),
-        ('last_author', MSG(u'Last Author')),
-        ('size', MSG(u'Size')),
-        ('workflow_state', MSG(u'State'))
-    ]
-
-
-    def search_form(self, resource, context):
-        return None
-
-
-    def search(self, resource, context):
+    def get_items(self, resource, context):
         query = EqQuery('links', str(resource.get_abspath()))
         return context.root.search(query)
 
 
     def get_actions(self, resource, context, results):
         return []
-
-
-    def get_rows(self, resource, context, results):
-        """Backlinks are the list of objects pointing to this object.
-        This view answers the question "where is this object used?"
-        You'll see all WebPages and WikiPages (for example) referencing it.
-        If the list is empty, you can consider it is "orphan".
-        """
-        rows = FolderBrowseContent.get_rows(self, resource, context, results)
-
-        # Remove the checkboxes
-        for row in rows:
-            row['checkbox'] = False
-
-        return rows
 
 
 
