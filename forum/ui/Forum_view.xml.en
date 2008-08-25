@@ -4,7 +4,6 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
-  <h2>${title}</h2>
   <p><em>${description}</em></p>
 
   <p class="${repeat/thread/even}" stl:repeat="thread threads">

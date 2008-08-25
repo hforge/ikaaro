@@ -22,53 +22,42 @@
 from operator import itemgetter
 
 # Import from itools
-from itools.datatypes import Unicode
+from itools.datatypes import Unicode, String
 from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.i18n import format_datetime
-from itools.stl import stl
+from itools.web import STLForm
 
 # Import from ikaaro
 from ikaaro.folder import Folder
+from ikaaro.messages import MSG_NAME_CLASH
 from ikaaro.registry import register_object_class
 from thread import Thread
 from message import Message
 
 
-class Forum(Folder):
+###########################################################################
+# Views
+###########################################################################
 
-    class_id = 'Forum'
-    class_version = '20071215'
-    class_title = MSG(u'Forum')
-    class_description = MSG(u'An iKaaro forum')
-    class_icon16 = 'forum/Forum16.png'
-    class_icon48 = 'forum/Forum48.png'
-    class_views = ['view', 'new_thread_form', 'edit_metadata_form']
-
-    thread_class = Thread
-
-    addlink_form__access__ = False
-    addimage_form__access__ = False
+class View(STLForm):
 
 
-    def get_document_types(self):
-        return [self.thread_class]
+    access = 'is_allowed_to_view'
+    title = MSG(u'View')
+    template = '/ui/forum/Forum_view.xml'
 
-
-    view__access__ = 'is_allowed_to_view'
-    view__label__ = u"View"
-    view__icon__ = 'view.png'
-    def view(self, context):
+    def get_namespace(self, resource, context):
         context.styles.append('/ui/forum/forum.css')
         # Namespace
         namespace = {}
-        namespace['title'] = self.get_title()
-        namespace['description'] = self.get_property('description')
+        namespace['title'] = resource.get_title()
+        namespace['description'] = resource.get_property('description')
         # Namespace / Threads
         accept_language = context.accept_language
-        users = self.get_resource('/users')
+        users = resource.get_resource('/users')
         namespace['threads'] = []
-        for thread in self.search_objects(object_class=Thread):
+        for thread in resource.search_objects(object_class=Thread):
             message = thread.get_resource('0')
             author = users.get_resource(message.get_owner())
             posts = thread.search_objects(object_class=Message)
@@ -79,61 +68,80 @@ class Forum(Folder):
                 'author': author.get_title(),
                 'date': format_datetime(message.get_mtime(), accept_language),
                 'comments': len(posts) - 1,
-##                'description': thread.get_property('description'),
-            })
+                'description': thread.get_property('description'),
+           })
         namespace['threads'].sort(key=itemgetter('date'), reverse=True)
-
-        handler = self.get_resource('/ui/forum/Forum_view.xml')
-        return stl(handler, namespace)
+        return namespace
 
 
-    new_thread_form__access__ = 'is_allowed_to_add'
-    new_thread_form__label__ = u"New Thread"
-    new_thread_form__icon__ = 'new.png'
-    def new_thread_form(self, context):
+class AddThreadForm(STLForm):
+
+    access = 'is_allowed_to_edit'
+    title = MSG(u'Add a thread')
+    icon = 'new.png'
+    template = '/ui/forum/Forum_new_thread.xml'
+
+    schema = {
+        'title': String(mandatory=True),
+        'data': Unicode(mandatory=True),
+        }
+
+
+    def get_namespace(self, resource, context):
         context.styles.append('/ui/forum/forum.css')
+        namespace = self.build_namespace(resource, context)
         data = context.get_form_value('data') or None
-
-        namespace = {}
-        namespace['rte'] =  self.get_rte(context, 'data', data)
-
-        handler = self.get_resource('/ui/forum/Forum_new_thread.xml')
-        return stl(handler, namespace)
+        namespace['data']['value'] = resource.get_rte(context, 'data', data)
+        return namespace
 
 
-    new_thread__access__ = 'is_allowed_to_add'
-    def new_thread(self, context):
-        title = context.get_form_value('title', type=Unicode).strip()
-        if not title:
-            return context.come_back(u"No title given.", keep=['data'])
-
+    def action(self, resource, context, form):
+        # Add
+        title = form['title']
         name = checkid(title)
         if name is None:
-            return context.come_back(u"Invalid title.", keep=['data'])
+            return context.come_back(u"Invalid title.", keep=True)
 
-        if self.has_resource(name):
-            return context.come_back(u"This thread already exists.", keep=['data'])
-
-        # check input
-        data = context.get_form_value('data').strip()
+        data = form['data'].strip()
         if not data:
-            message = (
-              u'Some required fields are missing, or some values are not valid.'
-              u' Please correct them and continue.')
-            return context.come_back(message)
+            return context.come_back("Thread can't be None.", keep=True)
 
-        language = self.get_content_language()
-        cls = self.thread_class
-        thread = cls.make_object(cls, self, name, data, language)
+        # Check the name is free
+        if resource.has_resource(name):
+            context.message = MSG_NAME_CLASH
+            return
+
+        language = resource.get_content_language()
+        thread = Thread.make_object(Thread, resource, name, data, language)
         thread.set_property('title', title, language=language)
 
-        return context.come_back(u"Thread Created.", goto=name)
+        # Ok
+        message = MSG(u'Thread Created.')
+        goto = './%s/' % name
+        return context.come_back(message, goto=goto)
+###########################################################################
+# Model
+###########################################################################
 
 
-    # Used by "get_rte" above
-    def get_epoz_data(self):
-        # Default document for new thread form
-        return None
+class Forum(Folder):
+
+    class_id = 'Forum'
+    class_version = '20071215'
+    class_title = MSG(u'Forum')
+    class_description = MSG(u'An iKaaro forum')
+    class_icon16 = 'forum/Forum16.png'
+    class_icon48 = 'forum/Forum48.png'
+    class_views = ['view', 'add_thread', 'edit_metadata_form']
+
+
+    #######################################################################
+    # Views
+    #######################################################################
+
+    view = View()
+    add_thread = AddThreadForm()
+
 
 
 

@@ -22,6 +22,7 @@
 from itools.datatypes import FileName
 from itools.gettext import MSG
 from itools.html import HTMLParser, sanitize_stream, XHTMLFile
+from itools.web import STLForm
 
 # Import from ikaaro
 from ikaaro.messages import *
@@ -39,7 +40,9 @@ def build_message(data):
                        + document.events[old_body.end:])
     return document
 
-
+###########################################################################
+# Model
+###########################################################################
 
 class Message(WebPage):
 
@@ -47,7 +50,7 @@ class Message(WebPage):
     class_version = '20071216'
     class_title = MSG(u'Message')
     class_description = u"Message in a thread"
-    class_views = ['edit_form', 'history_form']
+    class_views = ['edit', 'history_form']
 
 
     @staticmethod
@@ -58,25 +61,10 @@ class Message(WebPage):
         folder.set_handler('%s.xhtml.%s' % (name, language), document)
 
 
-    def get_context_menu_base(self):
-        # Show actions of the forum
-        return self.parent.parent
-
-
     def get_catalog_fields(self):
         # text field was already indexed at the thread level
         return [ x for x in WebPage.get_catalog_fields(self)
                  if x.name != 'text' ]
-
-
-    edit__access__ = 'is_admin'
-    def edit(self, context):
-        WebPage.edit(self, context, sanitize=True)
-
-        # Change, index parent
-        context.server.change_object(self.parent)
-
-        return context.come_back(MSG_CHANGES_SAVED, goto='../;view')
 
 
 

@@ -6,19 +6,20 @@
 
   <h2>New Thread</h2>
 
-  <form name="new_thread" action=";new_thread" method="post">
+  <form name="add_thread" action=";add_thread" method="post">
     <dl>
-      <dt>Title:</dt>
+      <dt class="${title/class}">Title:</dt>
       <dd>
-        <input type="text" id="title" name="title" size="40" />
+        <input type="text" id="title" name="title" size="40"
+            value="${title/value}"/>
       </dd>
-      <dt>Message:</dt>
+      <dt class="${data/class}">Message:</dt>
       <dd>
-        ${rte}
+        ${data/value}
       </dd>
     </dl>
     <p>
-      <input type="submit" value="Post"/>
+      <input type="submit" value="Create" class="button_ok"/>
     </p>
   </form>
 

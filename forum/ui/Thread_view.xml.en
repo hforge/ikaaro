@@ -4,10 +4,7 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
-  <h2>${title}</h2>
-  <p><em>${description}</em></p>
-
-  <form action=";remove_reply" method="post">
+  <form action="." method="post">
     <table id="forum_message_list" width="100%">
       <colgroup>
         <col width="20%" />
@@ -19,7 +16,7 @@
             <p class="forum_message_author">${message/author}</p>
             <p class="forum_message_date">${message/mtime}</p>
             <stl:block stl:if="editable">
-              <a href="${message/name}/;edit_form">Edit</a>
+              <a href="${message/name}/;edit">Edit</a>
               <stl:block stl:if="not repeat/message/start">
                 <br/>
                 <input type="checkbox" name="ids" value="${message/name}" />
@@ -33,18 +30,18 @@
       </tbody>
     </table>
     <p stl:if="editable">
-      <input type="submit" value="Remove" class="button_delete"
+      <input type="submit" name=";remove" value="Remove" class="button_delete"
              onclick="${remove_message}" />
     </p>
   </form>
 
   <a name="new_reply" />
-  <form action=";new_reply" method="post" stl:if="is_allowed_to_add">
+  <form action="." method="post" stl:if="is_allowed_to_add">
   <hr />
   <h3>Post a Reply</h3>
     <p>
       ${rte}
-      <input type="submit" value="Reply" />
+      <input type="submit" name=";new_reply" value="Reply" class="button_ok"/>
     </p>
   </form>
 

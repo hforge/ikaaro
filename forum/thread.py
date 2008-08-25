@@ -19,10 +19,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.datatypes import FileName
+from itools.datatypes import FileName, Unicode
 from itools.gettext import MSG
 from itools.i18n import format_datetime
-from itools.stl import stl
+from itools.web import STLForm
 
 # Import from ikaaro
 from ikaaro.folder import Folder
@@ -30,6 +30,79 @@ from ikaaro.messages import MSG_DELETE_SELECTION, MSG_CHANGES_SAVED
 from ikaaro.registry import register_object_class
 from message import Message, build_message
 
+
+###########################################################################
+# Views
+###########################################################################
+class View(STLForm):
+
+
+    access = 'is_allowed_to_view'
+    title = MSG(u'View')
+    icon = 'view.png'
+    template = '/ui/forum/Thread_view.xml'
+
+    def get_namespace(self, resource, context):
+        context.styles.append('/ui/forum/forum.css')
+        user = context.user
+        users = resource.get_resource('/users')
+        ac = resource.get_access_control()
+        accept_language = context.accept_language
+        # The namespace
+        namespace = {'editable': ac.is_admin(user, resource)}
+        # Actions
+        actions = []
+        message = MSG_DELETE_SELECTION.gettext()
+        remove_message = 'return confirmation("%s");' % message
+        namespace['remove_message'] = remove_message
+
+        namespace['messages'] = []
+        for message in resource.get_posts():
+            author = message.get_owner()
+            if author is not None:
+                author = users.get_resource(author).get_title()
+            namespace['messages'].append({
+                'name': message.name,
+                'author': author,
+                'mtime': format_datetime(message.get_mtime(), accept_language),
+                'body': message.handler.events,
+            })
+        namespace['is_allowed_to_add'] = ac.is_allowed_to_add(user, resource)
+        if namespace['is_allowed_to_add']:
+            namespace['rte'] = resource.get_rte(context, 'data', None)
+        return namespace
+
+
+    def action_new_reply(self, resource, context, form):
+        # Add
+        id = resource.get_last_post_id()
+        name = str(id + 1)
+        data = context.get_form_value('data')
+        if not data:
+            return context.come_back(MSG(u"Your response can't be empty !"))
+        language = resource.get_content_language()
+        thread = Message.make_object(Message, resource, name, data, language)
+        # Ok
+        message = MSG(u'Reply posted')
+        return context.come_back(message)
+
+
+
+    def action_remove(self, resource, context, form):
+        user = context.user
+        ids = context.get_form_values('ids')
+        for name in ids:
+            object = resource.get_resource(name)
+            ac = object.get_access_control()
+            if ac.is_allowed_to_remove(user, object):
+                resource.del_resource(name)
+        message = MSG(u"Message(s) deleted !")
+        return context.come_back(message, goto='#new_reply')
+
+
+###########################################################################
+# Model
+###########################################################################
 
 class Thread(Folder):
 
@@ -39,32 +112,24 @@ class Thread(Folder):
     class_description = u"A thread to discuss"
     class_views = ['view', 'edit_metadata_form']
 
-    message_class = Message
-
-    addlink_form__access__ = False
-    addimage_form__access__ = False
+    # XXX
+    #addlink_form__access__ = False
+    #addimage_form__access__ = False
 
 
     @staticmethod
     def _make_object(cls, folder, name, data=u'', language='en'):
         Folder._make_object(cls, folder, name)
         # First post
-        cls = cls.message_class
-        folder.set_handler('%s/0.metadata' % name, cls.build_metadata())
+        folder.set_handler('%s/0.metadata' % name, Message.build_metadata())
         message = build_message(data)
         folder.set_handler('%s/0.xhtml.%s' % (name, language), message)
-
-
-    def get_context_menu_base(self):
-        # Show actions of the forum
-        return self.parent
 
 
     def to_text(self):
         # Index the thread by the content of all its posts
         text = [ x.to_text()
                  for x in self.search_objects(object_class=Message) ]
-
         return u'\n'.join(text)
 
 
@@ -84,87 +149,10 @@ class Thread(Folder):
         ids = [ int(x.name) for x in posts ]
         return max(ids)
 
-
-    view__access__ = 'is_allowed_to_view'
-    view__label__ = u"View"
-    view__icon__ = 'view.png'
-    def view(self, context):
-        context.styles.append('/ui/forum/forum.css')
-
-        user = context.user
-        users = self.get_resource('/users')
-        ac = self.get_access_control()
-        accept_language = context.accept_language
-        # The namespace
-        namespace = {}
-        namespace['title'] = self.get_title()
-        namespace['description'] = self.get_property('description')
-        namespace['editable'] = ac.is_admin(user, self)
-        # Actions
-        actions = []
-        message = self.gettext(MSG_DELETE_SELECTION)
-        remove_message = 'return confirmation("%s");' % message.encode('utf_8')
-        namespace['remove_message'] = remove_message
-
-        namespace['messages'] = []
-        for message in self.get_posts():
-            author = message.get_owner()
-            if author is not None:
-                author = users.get_resource(author).get_title()
-            namespace['messages'].append({
-                'name': message.name,
-                'author': author,
-                'mtime': format_datetime(message.get_mtime(), accept_language),
-                'body': message.handler.events,
-            })
-        namespace['is_allowed_to_add'] = ac.is_allowed_to_add(user, self)
-        if namespace['is_allowed_to_add']:
-            namespace['rte'] = self.get_rte(context, 'data', None)
-
-        handler = self.get_resource('/ui/forum/Thread_view.xml')
-        return stl(handler, namespace)
-
-
-    new_reply__access__ = 'is_allowed_to_add'
-    def new_reply(self, context):
-        # check input
-        data = context.get_form_value('data').strip()
-        if not data:
-            message = (
-              u'Some required fields are missing, or some values are not valid.'
-              u' Please correct them and continue.')
-            return context.come_back(message)
-
-        # Find out the name for the new post
-        id = self.get_last_post_id()
-        name = str(id + 1)
-
-        # Post
-        language = self.get_content_language()
-        cls = self.message_class
-        cls.make_object(cls, self, name, data, language)
-
-        # Change
-        context.server.change_object(self)
-
-        return context.come_back(u"Reply Posted.", goto='#new_reply')
-
-
-    remove_reply__access__ = 'is_admin'
-    def remove_reply(self, context):
-        come_back = Folder.remove(self, context)
-
-        # Change
-        context.server.change_object(self)
-
-        return come_back
-
-
-    # Used by "get_rte" above
-    def get_epoz_data(self):
-        # Default document for new message form
-        return None
-
+    #######################################################################
+    # Views
+    #######################################################################
+    view = View()
 
 
 ###########################################################################
