@@ -253,7 +253,7 @@ class ForgottenPasswordForm(STLForm):
 ###########################################################################
 class ControlPanel(IconsView):
 
-    access = 'is_allowed_to_view'
+    access = 'is_allowed_to_edit'
     title = MSG(u'Control Panel')
     icon = 'settings.png'
 
