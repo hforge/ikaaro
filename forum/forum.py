@@ -40,8 +40,7 @@ from message import Message
 # Views
 ###########################################################################
 
-class View(STLForm):
-
+class ForumView(STLForm):
 
     access = 'is_allowed_to_view'
     title = MSG(u'View')
@@ -72,6 +71,7 @@ class View(STLForm):
            })
         namespace['threads'].sort(key=itemgetter('date'), reverse=True)
         return namespace
+
 
 
 class AddThreadForm(STLForm):
@@ -119,6 +119,8 @@ class AddThreadForm(STLForm):
         message = MSG(u'Thread Created.')
         goto = './%s/' % name
         return context.come_back(message, goto=goto)
+
+
 ###########################################################################
 # Model
 ###########################################################################
@@ -139,7 +141,7 @@ class Forum(Folder):
     # Views
     #######################################################################
 
-    view = View()
+    view = ForumView()
     add_thread = AddThreadForm()
 
 

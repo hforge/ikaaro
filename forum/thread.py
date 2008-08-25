@@ -19,7 +19,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.datatypes import FileName, Unicode
+from itools.datatypes import FileName, Unicode, String
 from itools.gettext import MSG
 from itools.i18n import format_datetime
 from itools.web import STLForm
@@ -34,13 +34,16 @@ from message import Message, build_message
 ###########################################################################
 # Views
 ###########################################################################
-class View(STLForm):
-
+class ThreadView(STLForm):
 
     access = 'is_allowed_to_view'
     title = MSG(u'View')
     icon = 'view.png'
     template = '/ui/forum/Thread_view.xml'
+
+    schema = {
+        'ids': String(multiple=True, mandatory=True)
+        }
 
     def get_namespace(self, resource, context):
         context.styles.append('/ui/forum/forum.css')
@@ -73,25 +76,21 @@ class View(STLForm):
         return namespace
 
 
+    action_new_reply_schema = {'data': Unicode(mandatory=True)}
     def action_new_reply(self, resource, context, form):
         # Add
         id = resource.get_last_post_id()
         name = str(id + 1)
-        data = context.get_form_value('data')
-        if not data:
-            return context.come_back(MSG(u"Your response can't be empty !"))
+        data = form['data']
         language = resource.get_content_language()
         thread = Message.make_object(Message, resource, name, data, language)
         # Ok
-        message = MSG(u'Reply posted')
-        return context.come_back(message)
-
+        return context.come_back(MSG(u'Reply posted'))
 
 
     def action_remove(self, resource, context, form):
         user = context.user
-        ids = context.get_form_values('ids')
-        for name in ids:
+        for name in form['ids']:
             object = resource.get_resource(name)
             ac = object.get_access_control()
             if ac.is_allowed_to_remove(user, object):
@@ -152,7 +151,7 @@ class Thread(Folder):
     #######################################################################
     # Views
     #######################################################################
-    view = View()
+    view = ThreadView()
 
 
 ###########################################################################
