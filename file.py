@@ -264,11 +264,11 @@ class FileExternalEdit(BaseView):
 
 
 class FileBacklinks(FolderBrowseContent):
-   """Backlinks are the list of objects pointing to this object.  This view
-   answers the question "where is this object used?" You'll see all WebPages
-   and WikiPages (for example) referencing it.  If the list is empty, you can
-   consider it is "orphan".
-   """
+    """Backlinks are the list of objects pointing to this object.  This view
+    answers the question "where is this object used?" You'll see all WebPages
+    and WikiPages (for example) referencing it.  If the list is empty, you can
+    consider it is "orphan".
+    """
 
     access = 'is_allowed_to_view'
     title = MSG(u"Backlinks")

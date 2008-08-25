@@ -30,8 +30,9 @@ from itools.web import get_context
 from itools.xapian import OrQuery, AndQuery, RangeQuery
 
 # Import from ikaaro
+from ikaaro.calendar import CalendarView, MonthlyView, TimetablesForm
+from ikaaro.calendar import WeeklyView
 from ikaaro.forms import DateWidget, MultilineWidget, Select, TextWidget
-from ikaaro.ical import CalendarView, MonthlyView, TimetablesForm, WeeklyView
 from ikaaro.table import Table
 from ikaaro.registry import register_object_class
 

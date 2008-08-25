@@ -27,11 +27,11 @@ from itools.utils import get_version
 
 # Import from ikaaro
 import binary
+from calendar import CalendarTable
 import csv
 from file import File
 from folder import Folder
 from html import WebPage
-from ical import CalendarTable
 import root
 
 
