@@ -51,7 +51,7 @@ def update(parser, options, target):
 
     # Find out the versions to upgrade
     versions = set()
-    for object in root.traverse_objects():
+    for object in root.traverse_resources():
         # Skip non-database objects
         if not isinstance(object, DBObject):
             continue
@@ -116,7 +116,7 @@ def update(parser, options, target):
             return
         # Go ahead
         bad = 0
-        for object in root.traverse_objects():
+        for object in root.traverse_resources():
             # Skip non-database objects
             if not isinstance(object, DBObject):
                 continue

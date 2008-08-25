@@ -124,7 +124,7 @@ def init(parser, options, target):
     database.save_changes()
     # Index everything
     catalog = make_catalog('%s/catalog' % target)
-    for handler in root.traverse_objects():
+    for handler in root.traverse_resources():
         if isinstance(handler, CatalogAware):
             catalog.index_document(handler)
     catalog.save_changes()

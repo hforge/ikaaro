@@ -263,7 +263,7 @@ class Server(BaseServer):
         objects_added = self.objects_added
 
         if isinstance(object, Folder):
-            for x in object.traverse_objects():
+            for x in object.traverse_resources():
                 path = str(x.get_canonical_path())
                 if path in objects_added:
                     objects_added.remove(path)
@@ -277,7 +277,7 @@ class Server(BaseServer):
 
     def add_object(self, object):
         if isinstance(object, Folder):
-            for x in object.traverse_objects():
+            for x in object.traverse_resources():
                 path = str(x.get_canonical_path())
                 self.objects_added.add(path)
         else:

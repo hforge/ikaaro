@@ -194,12 +194,12 @@ class Folder(DBObject):
         context.server.add_object(object)
 
 
-    def traverse_objects(self):
+    def traverse_resources(self):
         yield self
         for name in self._get_names():
             object = self.get_resource(name)
             if isinstance(object, Folder):
-                for x in object.traverse_objects():
+                for x in object.traverse_resources():
                     yield x
             else:
                 yield object

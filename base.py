@@ -707,7 +707,7 @@ class DBObject(CatalogAware, Node):
     def lock(self):
         lock = Lock(username=get_context().user.name)
 
-        self = self.get_real_object()
+        self = self.get_real_resource()
         if self.parent is None:
             self.handler.set_handler('.lock', lock)
         else:
@@ -717,7 +717,7 @@ class DBObject(CatalogAware, Node):
 
 
     def unlock(self):
-        self = self.get_real_object()
+        self = self.get_real_resource()
         if self.parent is None:
             self.handler.del_handler('.lock')
         else:
@@ -725,14 +725,14 @@ class DBObject(CatalogAware, Node):
 
 
     def is_locked(self):
-        self = self.get_real_object()
+        self = self.get_real_resource()
         if self.parent is None:
             return self.handler.has_handler('.lock')
         return self.parent.handler.has_handler('%s.lock' % self.name)
 
 
     def get_lock(self):
-        self = self.get_real_object()
+        self = self.get_real_resource()
         if self.parent is None:
             return self.handler.get_handler('.lock')
         return self.parent.handler.get_handler('%s.lock' % self.name)
