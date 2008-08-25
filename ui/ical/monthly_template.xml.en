@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<stl:block xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:stl="http://xml.itools.org/namespaces/stl">
+
+<table class="event" xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:stl="http://xml.itools.org/namespaces/stl">
+  <tr stl:repeat="event events" class="color${event/resource/color}">
+    <td class="${event/STATUS}">
+      <a href="${event/url}">
+        ${event/SUMMARY}</a>
+        <span stl:if="event/TIME" class="time">${event/TIME}</span>
+    </td>
+  </tr>
+</table>
+
+</stl:block>
