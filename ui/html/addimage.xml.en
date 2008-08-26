@@ -48,13 +48,13 @@
       <stl:block stl:repeat="object bc/objects">
         <dl class="thumb" stl:if="object/is_image">
           <dt>
-            <img alt="" title="${object/object_type}"
-              src="${object/icon}/" width="48" height="48" />
+            <img alt="" title="${object/object_type}" src="${object/icon}/"
+              width="48" height="48" />
           </dt>
           <dd>
             <abbr title="${object/title}">${object/short_title}</abbr><br />
-            <a href="javascript:select_img('${object/path}',
-              '${caption}')">Select</a>
+            <a href="javascript:select_img('${object/path}/;download',
+              '${caption}')" >Select</a>
           </dd>
         </dl>
       </stl:block>
