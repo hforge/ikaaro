@@ -38,7 +38,7 @@ from registry import register_object_class
 ###########################################################################
 # Image / Video / Flash
 ###########################################################################
-class ThumbnailView(BaseView):
+class ImageThumbnail(BaseView):
 
     access = True
 
@@ -60,6 +60,19 @@ class ThumbnailView(BaseView):
         response = context.response
         response.set_header('Content-Type', 'image/%s' % format)
         return data
+
+
+
+class ImageView(STLView):
+
+    access = 'is_allowed_to_view'
+    title = MSG(u'View')
+    template = '/ui/binary/Image_view.xml'
+
+    def get_namespace(self, resource, context):
+        if context.uri.path.endswith_slash:
+            return {'src': ';download'}
+        return {'src': '%s/;download' % resource.name}
 
 
 
@@ -86,15 +99,10 @@ class Image(File):
     class_views = ['view', 'download', 'externaledit', 'upload', 'backlinks',
                    'edit_metadata', 'edit_state', 'history']
     class_handler = ImageFile
+    # Views
+    thumb = ImageThumbnail()
+    view = ImageView()
 
-
-    view = STLView(
-        access='is_allowed_to_view',
-        title=MSG(u'View'),
-        icon='view.png',
-        template='/ui/binary/Image_view.xml')
-
-    thumb = ThumbnailView()
 
 
 class Video(File):
@@ -105,9 +113,8 @@ class Video(File):
     class_description = MSG(u'Video')
     class_icon16 = 'icons/16x16/flash.png'
     class_icon48 = 'icons/48x48/flash.png'
-
+    # Views
     view = VideoView()
-
 
 
 
