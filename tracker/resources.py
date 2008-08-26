@@ -30,7 +30,7 @@ from itools.web import get_context
 from itools.xapian import OrQuery, AndQuery, RangeQuery
 
 # Import from ikaaro
-from ikaaro.calendar_ import Timetables
+from ikaaro.calendar_ import Timetables, CalendarView as CalendarBase
 from ikaaro.calendar_views import CalendarView, MonthlyView, TimetablesForm
 from ikaaro.calendar_views import WeeklyView
 from ikaaro.forms import DateWidget, MultilineWidget, Select, TextWidget
@@ -195,7 +195,7 @@ class BaseResources(BaseTable):
 
 
 
-class Resources(Table, TrackerView):
+class Resources(Table, CalendarBase, TrackerView):
 
     class_id = 'resources'
     class_version = '20071216'
@@ -222,7 +222,7 @@ class Resources(Table, TrackerView):
 
     def get_events_to_display(self, start, end):
         results = self.parent.get_search_results(get_context())
-        results = [result.name for result in results]
+        results = [result.name for result in results.get_documents()]
         dtstart = str(start)
         dtend = str(end)
         dtstart_limit = str(start + resolution)

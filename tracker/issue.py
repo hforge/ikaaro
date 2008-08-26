@@ -230,7 +230,7 @@ class EditResourcesForm(STLForm):
 
     def get_namespace(self, resource, context):
         query = context.query
-        resource = query.get('resource') or ''
+        q_resource = query.get('resource') or ''
         dtstart = query.get('dtstart', date.today())
         dtend = query.get('dtend', date.today())
         tstart = query['tstart']
@@ -242,7 +242,7 @@ class EditResourcesForm(STLForm):
         # New assignment
         namespace['issue'] = {'number': resource.name,
                               'title': resource.get_title()}
-        namespace['users'] = resource.parent.get_members_namespace(resource)
+        namespace['users'] = resource.parent.get_members_namespace(q_resource)
         namespace['dtstart'] = dtstart
         namespace['tstart'] = tstart
         namespace['dtend'] = dtend
@@ -258,8 +258,8 @@ class EditResourcesForm(STLForm):
         ns_records = []
         for record in records:
             id = record.id
-            resource = record.get_value('resource')
-            resource = users.get_resource(resource)
+            r_resource = record.get_value('resource')
+            r_resource = users.get_resource(r_resource)
             ns_record = {}
             ns_record['id'] = (id, '../resources/;edit_record_form?id=%s' % id)
             ns_record['resource'] = resource.get_title()
@@ -275,6 +275,7 @@ class EditResourcesForm(STLForm):
         sortby = query['sortby']
         sortorder = query['sortorder']
         ns_records.sort(key=itemgetter(sortby[0]), reverse=(sortorder=='down'))
+# XXX FIXME widgets.table
         namespace['table'] = table(fields, ns_records, [sortby], sortorder,
                                    actions=[], table_with_form=False)
 

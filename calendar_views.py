@@ -18,6 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from Standard Library
+from calendar import monthrange, isleap
 from cStringIO import StringIO
 from datetime import datetime, date, time, timedelta
 
@@ -28,7 +29,7 @@ from itools.gettext import MSG
 from itools.ical import get_grid_data
 from itools.ical import DateTime, Time
 from itools.stl import stl
-from itools.web import BaseView, STLForm, STLView
+from itools.web import BaseView, STLForm, STLView, get_context
 
 # Import from ikaaro
 from file import FileView, FileUpload
@@ -51,12 +52,22 @@ months = {
     11: MSG(u'November'),
     12: MSG(u'December')}
 
+days = {
+    0: MSG(u'Monday'),
+    1: MSG(u'Tuesday'),
+    2: MSG(u'Wednesday'),
+    3: MSG(u'Thursday'),
+    4: MSG(u'Friday'),
+    5: MSG(u'Saturday'),
+    6: MSG(u'Sunday')}
 
 
 def get_current_date(value):
     """Get date as a date object from string value.
     By default, get today's date as a date object.
     """
+    if value is None:
+        return date.today()
     try:
         return Date.decode(value)
     except:
@@ -86,7 +97,6 @@ class Status(Enumerate):
     options = [{'name': 'TENTATIVE', 'value': MSG(u'Tentative')},
                {'name': 'CONFIRMED', 'value': MSG(u'Confirmed')},
                {'name': 'CANCELLED', 'value': MSG(u'Cancelled')}]
-
 
 
 
@@ -163,6 +173,38 @@ class TimetablesForm(STLForm):
 
 
 class CalendarView(STLView):
+
+    class_weekly_shown = ('SUMMARY', )
+
+    # default values for fields within namespace
+    default_fields = {
+        'UID': None, 'SUMMARY': u'', 'LOCATION': u'', 'DESCRIPTION': u'',
+        'DTSTART_year': None, 'DTSTART_month': None, 'DTSTART_day': None,
+        'DTSTART_hours': '', 'DTSTART_minutes': '',
+        'DTEND_year': None, 'DTEND_month': None, 'DTEND_day': None,
+        'DTEND_hours': '', 'DTEND_minutes': '',
+        'ATTENDEE': [], 'COMMENT': [], 'STATUS': {}
+      }
+
+    # default viewed fields on monthly_view
+    default_viewed_fields = ('DTSTART', 'DTEND', 'SUMMARY', 'STATUS')
+
+
+    @classmethod
+    def get_weekly_shown(cls):
+        return cls.class_weekly_shown
+
+
+    def get_first_day(self):
+        """Returns 0 if Sunday is the first day of the week, else 1.
+        For now it has to be overridden to return anything else than 1.
+        """
+        return 1
+
+
+    def get_with_new_url(self):
+        return True
+
 
     def add_selector_ns(self, c_date, method, namespace):
         """Set header used to navigate into time.
@@ -258,6 +300,100 @@ class CalendarView(STLView):
             ns_days.append(ns)
             current_date = current_date + timedelta(1)
         return ns_days
+
+
+    ######################################################################
+    # Public API
+    ######################################################################
+
+    def get_action_url(self, **kw):
+        """Action to call on form submission.
+        """
+        return None
+
+
+    def get_calendars(self):
+        """List of sources from which taking events.
+        """
+        return []
+
+
+    def get_events_to_display(self, start, end):
+        """Get a list of events as tuples (resource_name, start, properties{})
+        and a dict with all resources from whom they belong to.
+        """
+        resources, events = {}, []
+        resource = get_context().resource
+        for index, calendar in enumerate(resource.get_calendars()):
+            res, evts = calendar.get_events_to_display(start, end)
+            events.extend(evts)
+            resources[calendar.name] = index
+        events.sort(lambda x, y : cmp(x[1], y[1]))
+        return resources, events
+
+
+    def events_to_namespace(self, resource, events, day, cal_indexes,
+                            grid=False, show_conflicts=False):
+        """Build namespace for events occuring on current day.
+        Update events, removing past ones.
+
+        Events is a list of events where each one follows:
+          (resource_name, dtstart, event)
+          'event' object must have a methods:
+              - get_end
+              - get_ns_event.
+        """
+        resource = get_context().resource
+        ns_events = []
+        index = 0
+        while index < len(events):
+            resource_name, dtstart, event = events[index]
+            e_dtstart = dtstart.date()
+            e_dtend = event.get_end().date()
+            # Current event occurs on current date
+            # event begins during current tt
+            starts_on = e_dtstart == day
+            # event ends during current tt
+            ends_on = e_dtend == day
+            # event begins before and ends after
+            out_on = (e_dtstart < day and e_dtend > day)
+
+            if starts_on or ends_on or out_on:
+                cal_index = cal_indexes[resource_name]
+                if len(cal_indexes.items()) < 2:
+                    resource_name = None
+                if resource_name is not None:
+                    resource = self.get_object(resource_name)
+                else:
+                    resource = self
+                conflicts_list = set()
+                if show_conflicts:
+                    handler = resource.handler
+                    conflicts = handler.get_conflicts(e_dtstart, e_dtend)
+                    if conflicts:
+                        for uids in conflicts:
+                            conflicts_list.update(uids)
+                ns_event = event.get_ns_event(day, resource_name=resource_name,
+                                              conflicts_list=conflicts_list,
+                                              grid=grid, starts_on=starts_on,
+                                              ends_on=ends_on, out_on=out_on)
+                ns_event['url'] = resource.get_action_url(**ns_event)
+                ns_event['cal'] = cal_index
+                ns_event['resource'] = {'color': cal_index}
+                ns_events.append(ns_event)
+                # Current event end on current date
+                if e_dtend == day:
+                    events.remove(events[index])
+                    if events == []:
+                        break
+                else:
+                    index = index + 1
+            # Current event occurs only later
+            elif e_dtstart > day:
+                break
+            else:
+                index = index + 1
+        return ns_events, events
 
 
 
@@ -442,8 +578,8 @@ class EditEventForm(CalendarView, STLForm):
         return namespace
 
 
-    edit_event__access__ = 'is_allowed_to_edit'
-    def edit_event(self, resource, context, form):
+    action_edit_event__access__ = 'is_allowed_to_edit'
+    def action_edit_event(self, resource, context, form):
         goto = ';%s' % context.get_cookie('method') or 'monthly_view'
 
         # Get selected_date from the 3 fields 'dd','mm','yyyy' into
@@ -552,8 +688,8 @@ class EditEventForm(CalendarView, STLForm):
         return context.come_back(message, goto=goto, keep=True)
 
 
-    remove_event__access__ = 'is_allowed_to_edit'
-    def remove_event(self, resource, context, form):
+    action_remove_event__access__ = 'is_allowed_to_edit'
+    def action_remove_event(self, resource, context, form):
         method = context.get_cookie('method') or 'monthly_view'
         goto = ';%s?%s' % (method, date.today())
         if method not in dir(resource):
@@ -574,8 +710,8 @@ class EditEventForm(CalendarView, STLForm):
         return context.come_back(message, goto=goto)
 
 
-    cancel__access__ = 'is_allowed_to_edit'
-    def cancel(self, resource, context, form):
+    action_cancel__access__ = 'is_allowed_to_edit'
+    def action_cancel(self, resource, context, form):
         goto = ';%s' % context.get_cookie('method') or 'monthly_view'
         return context.come_back(None, goto)
 
@@ -617,7 +753,7 @@ class MonthlyView(CalendarView):
         ###################################################################
         # Get a list of events to display on view
         cal_indexes, events = resource.get_events_to_display(start, end)
-        template = resource.get_object(self.monthly_template)
+        template = resource.get_resource(self.monthly_template)
 
         ###################################################################
         namespace = {}
@@ -640,8 +776,8 @@ class MonthlyView(CalendarView):
                     ns_day['selected'] = (day == today_date)
                     ns_day['url'] = resource.get_action_url(day=day)
                     # Insert events
-                    ns_events, events = self.events_to_namespace(events, day,
-                                                                 cal_indexes)
+                    ns_events, events = self.events_to_namespace(resource,
+                        events, day, cal_indexes)
                     ns_day['events'] = stl(template, {'events': ns_events})
                     ns_week['days'].append(ns_day)
                     if day.day == 1:
@@ -705,7 +841,7 @@ class WeeklyView(CalendarView):
             # Add header if given
             ns_day['header'] = header
             # Insert events
-            ns_events, events = resource.events_to_namespace(events,
+            ns_events, events = self.events_to_namespace(resource, events,
                                 current_date, cal_indexes, grid=True)
             ns_day['events'] = ns_events
             ns_days.append(ns_day)
@@ -754,8 +890,8 @@ class WeeklyView(CalendarView):
         events = self.get_grid_events(resource, start, headers=ns_headers)
 
         # Fill data with grid (timetables) and data (events for each day)
-        templates = resource.get_weekly_templates()
-        with_new_url = resource.get_with_new_url()
+        templates = self.get_weekly_templates()
+        with_new_url = self.get_with_new_url()
         timetable = get_grid_data(events, timetables, start, templates,
                                   with_new_url)
         namespace['timetable_data'] = timetable

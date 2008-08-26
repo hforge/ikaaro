@@ -18,7 +18,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from Standard Library
-from calendar import monthrange, isleap
 from datetime import datetime, date, time, timedelta
 from operator import itemgetter
 
@@ -30,7 +29,7 @@ from itools.gettext import MSG
 from itools.ical import icalendar, icalendarTable
 from itools.ical import Record, Time
 from itools.stl import stl
-from itools.web import get_context, FormError
+from itools.web import FormError
 from itools.web import MSG_MISSING_OR_INVALID
 
 # Import from ikaaro
@@ -43,41 +42,7 @@ from table import Multiple, Table
 from text import Text
 
 
-months = {
-    1: MSG(u'January'),
-    2: MSG(u'February'),
-    3: MSG(u'March'),
-    4: MSG(u'April'),
-    5: MSG(u'May'),
-    6: MSG(u'June'),
-    7: MSG(u'July'),
-    8: MSG(u'August'),
-    9: MSG(u'September'),
-    10: MSG(u'October'),
-    11: MSG(u'November'),
-    12: MSG(u'December')}
-
-days = {
-    0: MSG(u'Monday'),
-    1: MSG(u'Tuesday'),
-    2: MSG(u'Wednesday'),
-    3: MSG(u'Thursday'),
-    4: MSG(u'Friday'),
-    5: MSG(u'Saturday'),
-    6: MSG(u'Sunday')}
-
-
 description = u'Schedule your time with calendar files.'
-
-
-def get_current_date(value=None):
-    """Get date as a date object from string value.
-    By default, get today's date as a date object.
-    """
-    try:
-        return Date.decode(value)
-    except:
-        return date.today()
 
 
 def build_timetables(start_time, end_time, interval):
@@ -144,7 +109,6 @@ class CalendarView(object):
     # Start 07:00, End 21:00, Interval 30min
     class_cal_range = (time(7,0), time(21,0), 30)
     class_cal_fields = ('SUMMARY', 'DTSTART', 'DTEND')
-    class_weekly_shown = ('SUMMARY', )
 
 
     timetables = [((7,0),(8,0)), ((8,0),(9,0)), ((9,0),(10,0)),
@@ -152,19 +116,6 @@ class CalendarView(object):
                   ((13,0),(14,0)), ((14,0),(15,0)), ((15,0),(16,0)),
                   ((16,0),(17,0)), ((17,0),(18,0)), ((18,0),(19,0)),
                   ((19,0),(20,0)), ((20,0),(21,0))]
-
-    # default values for fields within namespace
-    default_fields = {
-        'UID': None, 'SUMMARY': u'', 'LOCATION': u'', 'DESCRIPTION': u'',
-        'DTSTART_year': None, 'DTSTART_month': None, 'DTSTART_day': None,
-        'DTSTART_hours': '', 'DTSTART_minutes': '',
-        'DTEND_year': None, 'DTEND_month': None, 'DTEND_day': None,
-        'DTEND_hours': '', 'DTEND_minutes': '',
-        'ATTENDEE': [], 'COMMENT': [], 'STATUS': {}
-      }
-
-    # default viewed fields on monthly_view
-    default_viewed_fields = ('DTSTART', 'DTEND', 'SUMMARY', 'STATUS')
 
     @classmethod
     def get_cal_range(cls):
@@ -174,18 +125,6 @@ class CalendarView(object):
     @classmethod
     def get_cal_fields(cls):
         return cls.class_cal_fields
-
-
-    @classmethod
-    def get_weekly_shown(cls):
-        return cls.class_weekly_shown
-
-
-    def get_first_day(self):
-        """Returns 0 if Sunday is the first day of the week, else 1.
-        For now it has to be overridden to return anything else than 1.
-        """
-        return 1
 
 
     # Get one line with times of timetables for daily_view
@@ -239,120 +178,6 @@ class CalendarView(object):
                     column[field] = None
             ns_columns.append(column)
         return ns_columns
-
-
-    def get_timetables(self):
-        """Build a list of timetables represented as tuples(start, end).
-        Data are taken from metadata or from class value.
-
-        Example of metadata:
-          <timetables>(8,0),(10,0);(10,30),(12,0);(13,30),(17,30)</timetables>
-        """
-        if self.has_property('timetables'):
-            return self.get_property('timetables')
-
-        # From class value
-        timetables = []
-        for index, (start, end) in enumerate(self.timetables):
-            timetables.append((time(start[0], start[1]), time(end[0], end[1])))
-        return timetables
-
-
-    def get_with_new_url(self):
-        return True
-
-
-    ######################################################################
-    # Public API
-    ######################################################################
-    def get_action_url(self, **kw):
-        """Action to call on form submission.
-        """
-        return None
-
-
-    def get_calendars(self):
-        """List of sources from which taking events.
-        """
-        return []
-
-
-    def get_events_to_display(self, start, end):
-        """Get a list of events as tuples (resource_name, start, properties{})
-        and a dict with all resources from whom they belong to.
-        """
-        resources, events = {}, []
-        resource = get_context().resource
-        for index, calendar in enumerate(resource.get_calendars()):
-            res, evts = calendar.get_events_to_display(start, end)
-            events.extend(evts)
-            resources[calendar.name] = index
-        events.sort(lambda x, y : cmp(x[1], y[1]))
-        return resources, events
-
-
-    def events_to_namespace(self, events, day, cal_indexes, grid=False,
-                            show_conflicts=False):
-        """Build namespace for events occuring on current day.
-        Update events, removing past ones.
-
-        Events is a list of events where each one follows:
-          (resource_name, dtstart, event)
-          'event' object must have a methods:
-              - get_end
-              - get_ns_event.
-        """
-        resource = get_context().resource
-        ns_events = []
-        index = 0
-        while index < len(events):
-            resource_name, dtstart, event = events[index]
-            e_dtstart = dtstart.date()
-            e_dtend = event.get_end().date()
-            # Current event occurs on current date
-            # event begins during current tt
-            starts_on = e_dtstart == day
-            # event ends during current tt
-            ends_on = e_dtend == day
-            # event begins before and ends after
-            out_on = (e_dtstart < day and e_dtend > day)
-
-            if starts_on or ends_on or out_on:
-                cal_index = cal_indexes[resource_name]
-                if len(cal_indexes.items()) < 2:
-                    resource_name = None
-                if resource_name is not None:
-                    resource = self.get_object(resource_name)
-                else:
-                    resource = self
-                conflicts_list = set()
-                if show_conflicts:
-                    handler = resource.handler
-                    conflicts = handler.get_conflicts(e_dtstart, e_dtend)
-                    if conflicts:
-                        for uids in conflicts:
-                            conflicts_list.update(uids)
-                ns_event = event.get_ns_event(day, resource_name=resource_name,
-                                              conflicts_list=conflicts_list,
-                                              grid=grid, starts_on=starts_on,
-                                              ends_on=ends_on, out_on=out_on)
-                ns_event['url'] = resource.get_action_url(**ns_event)
-                ns_event['cal'] = cal_index
-                ns_event['resource'] = {'color': cal_index}
-                ns_events.append(ns_event)
-                # Current event end on current date
-                if e_dtend == day:
-                    events.remove(events[index])
-                    if events == []:
-                        break
-                else:
-                    index = index + 1
-            # Current event occurs only later
-            elif e_dtstart > day:
-                break
-            else:
-                index = index + 1
-        return ns_events, events
 
 
 
@@ -537,6 +362,7 @@ class CalendarAware(CalendarView):
     daily_view__access__ = 'is_allowed_to_edit'
     daily_view__label__ = u'Daily View'
     def daily_view(self, context):
+        from calendar_views import get_current_date
         method = context.get_cookie('method')
         if method != 'daily_view':
             context.set_cookie('method', 'daily_view')
@@ -577,7 +403,7 @@ class CalendarAware(CalendarView):
 ###########################################################################
 # Model
 ###########################################################################
-class CalendarTable(CalendarView, Table):
+class CalendarTable(Table):
 
     class_id = 'calendarTable'
     class_version = '20071216'
@@ -585,8 +411,6 @@ class CalendarTable(CalendarView, Table):
     class_description = MSG(description)
     class_icon16 = 'icons/16x16/icalendar.png'
     class_icon48 = 'icons/48x48/icalendar.png'
-    class_views = ['monthly_view', 'weekly_view', 'download', 'upload',
-                   'edit_timetables', 'edit_metadata']
     class_handler = icalendarTable
     record_class = Record
 
@@ -669,6 +493,23 @@ class CalendarTable(CalendarView, Table):
         self.handler.del_record(int(uid))
 
 
+    def get_timetables(self):
+        """Build a list of timetables represented as tuples(start, end).
+        Data are taken from metadata or from class value.
+
+        Example of metadata:
+          <timetables>(8,0),(10,0);(10,30),(12,0);(13,30),(17,30)</timetables>
+        """
+        if self.has_property('timetables'):
+            return self.get_property('timetables')
+
+        # From class value
+        timetables = []
+        for index, (start, end) in enumerate(self.timetables):
+            timetables.append((time(start[0], start[1]), time(end[0], end[1])))
+        return timetables
+
+
     #######################################################################
     # API related to CalendarView
     #######################################################################
@@ -718,8 +559,6 @@ class Calendar(CalendarView, Text):
     class_description = MSG(description)
     class_icon16 = 'icons/16x16/icalendar.png'
     class_icon48 = 'icons/48x48/icalendar.png'
-    class_views = ['monthly_view', 'weekly_view', 'download',
-                   'upload', 'edit_timetables', 'edit_metadata']
     class_handler = icalendar
 
 
@@ -752,6 +591,24 @@ class Calendar(CalendarView, Text):
         if params != []:
             url = '%s?%s' % (url, '&'.join(params))
         return url
+
+
+    # XXX FIXME Copy of CalendarTable.get_timetables method
+    def get_timetables(self):
+        """Build a list of timetables represented as tuples(start, end).
+        Data are taken from metadata or from class value.
+
+        Example of metadata:
+          <timetables>(8,0),(10,0);(10,30),(12,0);(13,30),(17,30)</timetables>
+        """
+        if self.has_property('timetables'):
+            return self.get_property('timetables')
+
+        # From class value
+        timetables = []
+        for index, (start, end) in enumerate(self.timetables):
+            timetables.append((time(start[0], start[1]), time(end[0], end[1])))
+        return timetables
 
 
     def get_calendars(self):
