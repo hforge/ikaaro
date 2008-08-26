@@ -70,9 +70,8 @@ class ImageView(STLView):
     template = '/ui/binary/Image_view.xml'
 
     def get_namespace(self, resource, context):
-        if context.uri.path.endswith_slash:
-            return {'src': ';download'}
-        return {'src': '%s/;download' % resource.name}
+        path = context.site_root.get_pathto(resource)
+        return {'src': '/%s/;download' % path}
 
 
 
