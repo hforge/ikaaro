@@ -21,6 +21,7 @@
 # Import from itools
 from itools.datatypes import Unicode
 from itools.gettext import MSG
+from itools.uri import get_reference
 from itools.web import BaseView
 
 # Import from ikaaro
@@ -37,11 +38,15 @@ class GoToFrontPage(BaseView):
     icon = 'view.png'
 
     def GET(self, resource, context):
-        if context.has_form_value('message'):
-            message = context.get_form_value('message', type=Unicode)
-            return context.come_back(message, goto='FrontPage')
+        goto = '/%s/FrontPage' % context.site_root.get_pathto(resource)
+        goto = get_reference(goto)
 
-        return context.uri.resolve('FrontPage')
+        # Keep the message
+        if context.has_form_value('message'):
+            message = context.get_form_value('message')
+            goto = goto.replace(message=message)
+
+        return goto
 
 
 
@@ -69,13 +74,6 @@ class WikiFolder(Folder):
 
     def get_document_types(self):
         return [WikiPage, File]
-
-
-    #######################################################################
-    # User interface
-    #######################################################################
-    def GET(self, context):
-        return context.uri.resolve2('FrontPage')
 
 
     view = GoToFrontPage()
