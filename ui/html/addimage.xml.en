@@ -6,7 +6,8 @@
   <head>
     <title>Epoz-Toolbox</title>
     <link rel="stylesheet" type="text/css" href="../aruni/aruni.css" />
-    <script type="text/javascript" stl:repeat="script scripts" src="${script}" />
+    <script type="text/javascript" stl:repeat="script scripts" src="${script}"
+      />
     <style>
       #body {
         border-top: 20px solid #30569D;
@@ -34,9 +35,8 @@
       <stl:block stl:repeat="object bc/objects">
         <dl class="thumb" stl:if="object/is_folder">
           <dt>
-            <a href="${object/url}"
-              ><img alt="" src="${object/icon}" width="48"
-                height="48"/></a>
+            <a href="${object/url}"><img alt="" src="${object/icon}"
+              width="48" height="48"/></a>
           </dt>
           <dd>
             <abbr title="${object/title}">${object/short_title}</abbr><br />
