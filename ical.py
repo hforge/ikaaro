@@ -735,7 +735,7 @@ class CalendarView(object):
             else:
                 event = None
 
-        if not uid:
+        if uid is None:
             event = None
             # Selected calendar
             ns_calendars = []
@@ -908,7 +908,7 @@ class CalendarView(object):
         uid = context.get_form_value('id', default='')
         if '/' in uid:
             kk, uid = uid.split('/', 1)
-        if uid =='':
+        if uid == '':
             return context.come_back('', goto)
         if self.get_record(uid) is None:
             message = u'Cannot delete event, because it was already removed.'
@@ -1052,7 +1052,7 @@ class CalendarAware(CalendarView):
             event_namespace['tt_start'] = tt_start
             event_namespace['tt_end'] = tt_end
             uid = getattr(event, 'id', getattr(event, 'uid', None))
-            if uid:
+            if uid is not None:
                 uid = '%s/%s' % (calendar_name, uid)
             event_namespace['UID'] = uid
             event_namespace['colspan'] = tt_end - tt_start + 1
@@ -1160,7 +1160,7 @@ class CalendarAware(CalendarView):
         ns_calendar['header_columns'] = header_columns
 
         # Add url to calendar keeping args
-        ns_calendar['url'] = ';monthly_view?%s' % args
+        ns_calendar['url'] = ';monthly_view?%s' % encode_query(args)
         ns_calendar['rowspan'] = len(rows) + 1
 
         return ns_calendar
