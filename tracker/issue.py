@@ -21,31 +21,29 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
-from datetime import date, datetime, time
-from operator import itemgetter
+from datetime import datetime
 from re import compile
-from string import Template
 from textwrap import wrap
 
 # Import from itools
-from itools.csv import parse, Table
-from itools.datatypes import Boolean, Date, DateTime, Integer, String, Time
+from itools.csv import Table
+from itools.datatypes import Boolean, DateTime, Integer, String
 from itools.datatypes import FileName, Tokens, Unicode, XMLContent
 from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.html import xhtml_uri
 from itools.i18n import format_datetime
 from itools.stl import stl
-from itools import vfs
 from itools.xml import XMLParser, START_ELEMENT, END_ELEMENT, TEXT
-from itools.web import FormError, STLForm, STLView
+from itools.web import STLForm, STLView
 from itools.xapian import IntegerField, KeywordField
 
 # Import from ikaaro
 from ikaaro.file import File
 from ikaaro.folder import Folder
-from ikaaro.messages import *
+from ikaaro.messages import MSG_CHANGES_SAVED
 from ikaaro.registry import register_object_class, get_object_class
+from ikaaro.tracker.resources import EditResourcesForm
 from ikaaro.utils import generate_name
 
 
@@ -195,103 +193,6 @@ class EditIssueForm(STLForm):
         resource._add_record(context, form)
         # Change
         context.server.change_object(resource)
-        context.message = MSG_CHANGES_SAVED
-
-
-
-class EditResourcesForm(STLForm):
-
-    access = 'is_allowed_to_edit'
-    title = MSG(u'Edit resources')
-    icon = 'edit.png'
-    template = '/ui/tracker/edit_resources.xml'
-
-    schema = {
-        'resource': String,
-        'dtstart': Date,
-        'dtend': Date,
-        'tstart': Time,
-        'tend': Time,
-        'comment': Unicode,
-        }
-
-    query_schema = {
-        'resource': String,
-        'dtstart': Date,
-        'dtend': Date,
-        'tstart': Time,
-        'tend': Time,
-        'time_select': String,
-        'comment': Unicode,
-        'sortorder': String(default='up'),
-        'sortby': String(multiple=True, default=['dtend']),
-        }
-
-
-    def get_namespace(self, resource, context):
-        query = context.query
-        q_resource = query.get('resource') or ''
-        dtstart = query.get('dtstart', date.today())
-        dtend = query.get('dtend', date.today())
-        tstart = query['tstart']
-        tend = query['tend']
-        time_select = query['time_select']
-        comment = query['comment']
-
-        namespace = {}
-        # New assignment
-        namespace['issue'] = {'number': resource.name,
-                              'title': resource.get_title()}
-        namespace['users'] = resource.parent.get_members_namespace(q_resource)
-        namespace['dtstart'] = dtstart
-        namespace['tstart'] = tstart
-        namespace['dtend'] = dtend
-        namespace['tend'] = tend
-        namespace['comment'] = comment
-        namespace['time_select'] = resource.get_time_select('time_select',
-                                                            time_select)
-
-        # Existent
-        resources = resource.get_resources().handler
-        records = resources.search(issue=resource.name)
-        users = context.root.get_resource('/users')
-        ns_records = []
-        for record in records:
-            id = record.id
-            r_resource = record.get_value('resource')
-            r_resource = users.get_resource(r_resource)
-            ns_record = {}
-            ns_record['id'] = (id, '../resources/;edit_record_form?id=%s' % id)
-            ns_record['resource'] = resource.get_title()
-            ns_record['dtstart'] = record.get_value('dtstart')
-            ns_record['dtend'] = record.get_value('dtend')
-            ns_record['comment'] = record.get_value('comment')
-            ns_record['issue'] = record.get_value('issue')
-            ns_records.append(ns_record)
-
-        fields = [('id', u'id')]
-        for widget in resources.form:
-            fields.append((widget.name, getattr(widget, 'title', widget.name)))
-        sortby = query['sortby']
-        sortorder = query['sortorder']
-        ns_records.sort(key=itemgetter(sortby[0]), reverse=(sortorder=='down'))
-# XXX FIXME widgets.table
-        namespace['table'] = table(fields, ns_records, [sortby], sortorder,
-                                   actions=[], table_with_form=False)
-
-        return namespace
-
-
-    def action(self, resource, context, form):
-        tstart = form['tstart'] or time(0,0)
-        tend = form['tend'] or time(0,0)
-        record = {}
-        record['issue'] = resource.name
-        record['resource'] = form['resource']
-        record['dtstart'] = datetime.combine(form['dtstart'], tstart)
-        record['dtend'] = datetime.combine(form['dtend'], tend)
-        resources = resource.get_resources()
-        resources.handler.add_record(record)
         context.message = MSG_CHANGES_SAVED
 
 

@@ -17,24 +17,25 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
-from datetime import time, timedelta
+from datetime import date, datetime, time, timedelta
 
 # Import from itools
 from itools.csv import Table as BaseTable, Record
-from itools.datatypes import DateTime, String, Unicode
+from itools.datatypes import Boolean, Date, DateTime, Integer, String, Unicode
 from itools.datatypes import Enumerate
 from itools.gettext import MSG
-from itools.html import XHTMLFile
 from itools.ical import Time
-from itools.web import get_context
+from itools.stl import stl
+from itools.web import get_context, STLForm
 from itools.xapian import OrQuery, AndQuery, RangeQuery
 
 # Import from ikaaro
-from ikaaro.calendar_ import Timetables, CalendarBase
-from ikaaro.calendar_views import CalendarView, MonthlyView, TimetablesForm
+from ikaaro.calendar_ import CalendarBase
+from ikaaro.calendar_views import MonthlyView
 from ikaaro.calendar_views import WeeklyView
 from ikaaro.forms import DateWidget, MultilineWidget, Select, TextWidget
-from ikaaro.table import Table
+from ikaaro.messages import MSG_CHANGES_SAVED
+from ikaaro.table import Table, TableView
 from ikaaro.registry import register_object_class
 
 
@@ -78,6 +79,20 @@ class TrackerWeeklyView(WeeklyView):
                 if value not in ns_timetables:
                     ns_timetables.append(value)
         return ns_timetables
+
+
+
+class ResourcesView(TableView):
+
+    def get_widgets(self, resource, context):
+        return resource.get_form()
+
+
+    def get_item_value(self, resource, context, item, column):
+        if column == 'index':
+            id = item.id
+            return id, '../resources/;edit_record?id=%s' % id
+        return TableView.get_item_value(self, resource, context, item, column)
 
 
 
@@ -208,6 +223,83 @@ class Resources(Table, CalendarBase):
 
     monthly_view = TrackerMonthlyView()
     weekly_view = TrackerWeeklyView()
+
+
+
+class EditResourcesForm(STLForm):
+
+    access = 'is_allowed_to_edit'
+    title = MSG(u'Edit resources')
+    icon = 'edit.png'
+    template = '/ui/tracker/edit_resources.xml'
+
+    schema = {
+        'resource': String,
+        'dtstart': Date,
+        'dtend': Date,
+        'tstart': Time,
+        'tend': Time,
+        'comment': Unicode,
+        }
+
+    query_schema = {
+        'resource': String,
+        'dtstart': Date,
+        'dtend': Date,
+        'tstart': Time,
+        'tend': Time,
+        'time_select': String,
+        'comment': Unicode,
+        'batch_start': Integer(default=0),
+        'batch_size': Integer(default=20),
+        'sort_by': String,
+        'reverse': Boolean(default=False),
+        }
+
+
+    def get_namespace(self, resource, context):
+        query = context.query
+        q_resource = query.get('resource') or ''
+        dtstart = query.get('dtstart', date.today())
+        dtend = query.get('dtend', date.today())
+        tstart = query['tstart']
+        tend = query['tend']
+        time_select = query['time_select']
+        comment = query['comment']
+
+        namespace = {}
+        # New assignment
+        namespace['issue'] = {'number': resource.name,
+                              'title': resource.get_title()}
+        namespace['users'] = resource.parent.get_members_namespace(q_resource)
+        namespace['dtstart'] = dtstart
+        namespace['tstart'] = tstart
+        namespace['dtend'] = dtend
+        namespace['tend'] = tend
+        namespace['comment'] = comment
+        namespace['time_select'] = resource.get_time_select('time_select',
+                                                            time_select)
+        # Existent ones
+        resources = resource.get_resources()
+        template = resource.get_resource(ResourcesView.template)
+        ns_table = ResourcesView().get_namespace(resources, context)
+        namespace['table'] = stl(template, ns_table)
+
+        return namespace
+
+
+    def action(self, resource, context, form):
+        tstart = form['tstart'] or time(0,0)
+        tend = form['tend'] or time(0,0)
+        record = {}
+        record['issue'] = resource.name
+        record['resource'] = form['resource']
+        record['dtstart'] = datetime.combine(form['dtstart'], tstart)
+        record['dtend'] = datetime.combine(form['dtend'], tend)
+        resources = resource.get_resources()
+        resources.handler.add_record(record)
+        context.message = MSG_CHANGES_SAVED
+
 
 
 ###########################################################################

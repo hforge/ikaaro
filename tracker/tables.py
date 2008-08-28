@@ -18,15 +18,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Import from the Standard Library
-from operator import itemgetter
-
 # Import from itools
 from itools.csv import Table as BaseTable
 from itools.datatypes import Boolean, Integer, Unicode
 from itools.gettext import MSG
 from itools.xapian import EqQuery, AndQuery
-from itools.xml import XMLParser
 
 # Import from ikaaro
 from ikaaro.forms import TextWidget, BooleanCheckBox

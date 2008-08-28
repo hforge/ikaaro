@@ -20,7 +20,7 @@
 # Import from Standard Library
 from calendar import monthrange, isleap
 from cStringIO import StringIO
-from datetime import datetime, date, time, timedelta
+from datetime import date, timedelta
 
 # Import from itools
 from itools.csv import Property
@@ -382,7 +382,6 @@ class CalendarView(STLView):
                     ns_event['resource']['color'] = cal_index
                 else:
                     ns_event['resource'] = {'color': cal_index}
-                print '->', ns_event
                 ns_events.append(ns_event)
                 # Current event end on current date
                 if e_dtend == day:

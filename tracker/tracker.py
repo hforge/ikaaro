@@ -37,9 +37,10 @@ from itools.xapian import EqQuery, RangeQuery, AndQuery, OrQuery, PhraseQuery
 
 # Import from ikaaro
 from ikaaro.datatypes import CopyCookie
+from ikaaro.exceptions import ConsistencyError
 from ikaaro.folder import Folder
-from ikaaro.folder_views import FolderBrowseContent
-from ikaaro.messages import *
+from ikaaro.messages import MSG_NONE_REMOVED, MSG_OBJECTS_REMOVED
+from ikaaro.messages import MSG_NAME_MISSING, MSG_CHANGES_SAVED
 from ikaaro.registry import register_object_class
 from ikaaro.text import Text
 from ikaaro.views import BrowseForm, SearchForm as BaseSearchForm

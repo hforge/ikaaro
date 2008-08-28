@@ -23,7 +23,7 @@ from operator import itemgetter
 
 # Import from itools
 from itools.uri import encode_query
-from itools.datatypes import DataType, Date, Enumerate, Integer, Unicode
+from itools.datatypes import DataType, Date, Enumerate, Integer
 from itools.datatypes import is_datatype
 from itools.gettext import MSG
 from itools.ical import icalendar, icalendarTable
@@ -33,9 +33,8 @@ from itools.web import FormError
 from itools.web import MSG_MISSING_OR_INVALID
 
 # Import from ikaaro
-from base import DBObject
 from calendar_views import CalendarUpload, DownloadView, EditEventForm
-from calendar_views import MonthlyView, TextView, TimetablesForm, WeeklyView
+from calendar_views import MonthlyView, TimetablesForm, WeeklyView
 from folder import Folder
 from messages import MSG_CHANGES_SAVED
 from registry import register_object_class
