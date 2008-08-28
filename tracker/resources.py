@@ -30,7 +30,7 @@ from itools.web import get_context
 from itools.xapian import OrQuery, AndQuery, RangeQuery
 
 # Import from ikaaro
-from ikaaro.calendar_ import Timetables, CalendarView as CalendarBase
+from ikaaro.calendar_ import Timetables, CalendarBase
 from ikaaro.calendar_views import CalendarView, MonthlyView, TimetablesForm
 from ikaaro.calendar_views import WeeklyView
 from ikaaro.forms import DateWidget, MultilineWidget, Select, TextWidget
@@ -40,53 +40,10 @@ from ikaaro.registry import register_object_class
 
 resolution = timedelta.resolution
 
-# Template to display events on monthly_view
-template_string = """
-  <table xmlns:stl="http://xml.itools.org/namespaces/stl"
-         xmlns="http://www.w3.org/1999/xhtml" class="event">
-    <tr stl:repeat="event events" class="color0">
-      <td>
-        <a href="${event/url}">[#${event/issue/number}]</a>
-        ${event/issue/title}
-        <span stl:if="event/TIME" class="time">${event/TIME}</span>
-        (${event/resource/title})
-      </td>
-    </tr>
-  </table>
-"""
-monthly_template = XHTMLFile()
-monthly_template.load_state_from_string(template_string)
-
-
-# Template to display full day events
-template_string = """
-  <td xmlns="http://www.w3.org/1999/xhtml" class="color0">
-    <a href="${issue/url}">[#${issue/number}]</a>
-    ${issue/title}
-    (${resource/title})
-  </td>
-"""
-template_fd = XHTMLFile()
-template_fd.load_state_from_string(template_string)
-
-
-# Template to display events with timetables
-template_string = """
-  <td xmlns="http://www.w3.org/1999/xhtml" colspan="${cell/colspan}"
-    rowspan="${cell/rowspan}" valign="top" class="color0">
-      <a href="${cell/content/issue/url}">[#${cell/content/issue/number}]</a>
-      ${cell/content/issue/title}
-      (${cell/content/resource/title})
-  </td>
-"""
-template = XHTMLFile()
-template.load_state_from_string(template_string)
-
-
 
 class TrackerMonthlyView(MonthlyView):
 
-    template = monthly_template
+    monthly_template = '/ui/tracker/monthly_template.xml'
 
     def get_with_new_url(self):
         return False
@@ -95,7 +52,14 @@ class TrackerMonthlyView(MonthlyView):
 
 class TrackerWeeklyView(WeeklyView):
 
+    weekly_template_fd = '/ui/tracker/weekly_template_fd.xml'
+    weekly_template = '/ui/tracker/weekly_template.xml'
+
+
     def get_weekly_templates(self):
+        root = get_context().root
+        template = root.get_resource(self.weekly_template)
+        template_fd = root.get_resource(self.weekly_template_fd)
         return template, template_fd
 
 
@@ -167,6 +131,7 @@ class Resource(Record):
                         value = '...' + value
                 ns['TIME'] = '(' + value + ')'
 
+        print ns
         return ns
 
 
@@ -212,13 +177,6 @@ class Resources(Table, CalendarBase):
     class_views = ['weekly_view', 'monthly_view', 'edit_timetables']
 
 
-    @classmethod
-    def get_metadata_schema(cls):
-        schema = Table.get_metadata_schema()
-        schema['timetables'] = Timetables
-        return schema
-
-
     def get_action_url(self, **kw):
         issue = kw.get('issue', None)
         if issue:
@@ -248,27 +206,8 @@ class Resources(Table, CalendarBase):
         return {0:self.name}, events
 
 
-    # XXX FIXME Next to CalendarTable.get_timetables method
-    def get_timetables(self):
-        """Build a list of timetables represented as tuples(start, end).
-        Data are taken from metadata or from class value.
-
-        Example of metadata:
-          <timetables>(8,0),(10,0);(10,30),(12,0);(13,30),(17,30)</timetables>
-        """
-        if self.has_property('timetables'):
-            return self.get_property('timetables')
-
-        # From class value
-        timetables = []
-        for index, (start, end) in enumerate(CalendarBase.timetables):
-            timetables.append((time(start[0], start[1]), time(end[0], end[1])))
-        return timetables
-
-
     monthly_view = TrackerMonthlyView()
     weekly_view = TrackerWeeklyView()
-    edit_timetables = TimetablesForm()
 
 
 ###########################################################################

@@ -5,11 +5,12 @@
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
 <table class="event">
-  <tr stl:repeat="event events" class="color${event/resource/color}">
-    <td class="${event/STATUS}">
-      <a href="${event/url}">
-        ${event/SUMMARY}</a>
-        <span stl:if="event/TIME" class="time">${event/TIME}</span>
+  <tr stl:repeat="event events" class="color0">
+    <td>
+      <a href="${event/issue/url}">[#${event/issue/number}]</a>
+      ${event/issue/title}
+      <span stl:if="event/TIME" class="time">${event/TIME}</span>
+      (${event/resource/title})
     </td>
   </tr>
 </table>

@@ -378,7 +378,11 @@ class CalendarView(STLView):
                                               ends_on=ends_on, out_on=out_on)
                 ns_event['url'] = current_resource.get_action_url(**ns_event)
                 ns_event['cal'] = cal_index
-                ns_event['resource'] = {'color': cal_index}
+                if 'resource' in ns_event.keys():
+                    ns_event['resource']['color'] = cal_index
+                else:
+                    ns_event['resource'] = {'color': cal_index}
+                print '->', ns_event
                 ns_events.append(ns_event)
                 # Current event end on current date
                 if e_dtend == day:
@@ -752,7 +756,10 @@ class MonthlyView(CalendarView):
         ###################################################################
         # Get a list of events to display on view
         cal_indexes, events = resource.get_events_to_display(start, end)
-        template = resource.get_resource(self.monthly_template)
+        if isinstance(self.monthly_template, str):
+            template = resource.get_resource(self.monthly_template)
+        else:
+            template = self.monthly_template
 
         ###################################################################
         namespace = {}

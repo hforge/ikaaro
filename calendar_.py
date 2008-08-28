@@ -112,12 +112,6 @@ class CalendarView(object):
     class_cal_fields = ('SUMMARY', 'DTSTART', 'DTEND')
 
 
-    timetables = [((7,0),(8,0)), ((8,0),(9,0)), ((9,0),(10,0)),
-                  ((10,0),(11,0)), ((11,0),(12,0)), ((12,0),(13,0)),
-                  ((13,0),(14,0)), ((14,0),(15,0)), ((15,0),(16,0)),
-                  ((16,0),(17,0)), ((17,0),(18,0)), ((18,0),(19,0)),
-                  ((19,0),(20,0)), ((20,0),(21,0))]
-
     @classmethod
     def get_cal_range(cls):
         return cls.class_cal_range
@@ -179,34 +173,6 @@ class CalendarView(object):
                     column[field] = None
             ns_columns.append(column)
         return ns_columns
-
-
-
-class CalendarContainer(DBObject):
-
-    @classmethod
-    def get_metadata_schema(cls):
-        return {'timetables': Timetables}
-
-
-    def get_calendars(self, types=None):
-        """List of sources from which taking events.
-        """
-        if not types:
-            types = (Calendar, CalendarTable)
-        if isinstance(self, Folder):
-            calendars = list(self.search_objects(object_class=types))
-            return calendars
-        return [self]
-
-
-    #######################################################################
-    # Views
-    #######################################################################
-    monthly_view = MonthlyView()
-    weekly_view = WeeklyView()
-    edit_timetables = TimetablesForm()
-    edit_event = EditEventForm()
 
 
 
@@ -416,23 +382,37 @@ class CalendarAwareView(CalendarView):
 ###########################################################################
 # Model
 ###########################################################################
-class CalendarTable(Table):
+class CalendarBase():
 
-    class_id = 'calendarTable'
-    class_version = '20071216'
     class_title = MSG(u'Calendar')
     class_description = MSG(description)
     class_icon16 = 'icons/16x16/icalendar.png'
     class_icon48 = 'icons/48x48/icalendar.png'
-    class_handler = icalendarTable
-    record_class = Record
+    class_views = ['monthly_view', 'weekly_view', 'download', 'upload',
+                   'edit_timetables', 'edit_metadata']
 
 
-    @classmethod
-    def get_metadata_schema(cls):
-        schema = Table.get_metadata_schema()
-        schema['timetables'] = Timetables
-        return schema
+    timetables = [((7,0),(8,0)), ((8,0),(9,0)), ((9,0),(10,0)),
+                  ((10,0),(11,0)), ((11,0),(12,0)), ((12,0),(13,0)),
+                  ((13,0),(14,0)), ((14,0),(15,0)), ((15,0),(16,0)),
+                  ((16,0),(17,0)), ((17,0),(18,0)), ((18,0),(19,0)),
+                  ((19,0),(20,0)), ((20,0),(21,0))]
+
+
+    def get_calendars(self):
+        return [self]
+
+
+    def get_action_url(self, **kw):
+        url = ';edit_event'
+        params = []
+        if 'day' in kw:
+            params.append('date=%s' % Date.encode(kw['day']))
+        if 'id' in kw:
+            params.append('id=%s' % kw['id'])
+        if params != []:
+            url = '%s?%s' % (url, '&'.join(params))
+        return url
 
 
     # Test if user in context is the organizer of a given event (or is admin)
@@ -447,9 +427,61 @@ class CalendarTable(Table):
         return ac.is_allowed_to_edit(context.user, self.parent)
 
 
+    def get_timetables(self):
+        """Build a list of timetables represented as tuples(start, end).
+        Data are taken from metadata or from class value.
+
+        Example of metadata:
+          <timetables>(8,0),(10,0);(10,30),(12,0);(13,30),(17,30)</timetables>
+        """
+        if self.has_property('timetables'):
+            return self.get_property('timetables')
+
+        # From class value
+        timetables = []
+        for index, (start, end) in enumerate(self.timetables):
+            timetables.append((time(start[0], start[1]), time(end[0], end[1])))
+        return timetables
+
+
+    def get_events_to_display(self, start, end):
+        file = self.handler
+        events = []
+        for event in file.search_events_in_range(start, end, sortby='date'):
+            e_dtstart = event.get_property('DTSTART').value
+            events.append((self.name, e_dtstart, event))
+        events.sort(lambda x, y : cmp(x[1], y[1]))
+        return {self.name: 0}, events
+
+
+    #######################################################################
+    # Views
+    #######################################################################
+    download = DownloadView()
+    upload = CalendarUpload()
+    monthly_view = MonthlyView()
+    weekly_view = WeeklyView()
+    edit_timetables = TimetablesForm()
+    edit_event = EditEventForm()
+
+
+
+class CalendarTable(Table, CalendarBase):
+
+    class_id = 'calendarTable'
+    class_version = '20071216'
+    class_handler = icalendarTable
+    record_class = Record
+
+
     def get_record(self, id):
         id = int(id)
         return self.handler.get_record(id)
+
+
+    def add_record(self, type, properties):
+        properties['type'] = type
+        return self.handler.add_record(properties)
 
 
     def update_record(self, id, properties):
@@ -457,9 +489,15 @@ class CalendarTable(Table):
         self.handler.update_record(id, **properties)
 
 
-    def add_record(self, type, properties):
-        properties['type'] = type
-        return self.handler.add_record(properties)
+    def _remove_event(self, uid):
+        self.handler.del_record(int(uid))
+
+
+    @classmethod
+    def get_metadata_schema(cls):
+        schema = Table.get_metadata_schema()
+        schema['timetables'] = Timetables
+        return schema
 
 
     edit_record__access__ = 'is_allowed_to_edit'
@@ -502,76 +540,11 @@ class CalendarTable(Table):
         return context.come_back(MSG_CHANGES_SAVED, goto=goto, keep=['id'])
 
 
-    def _remove_event(self, uid):
-        self.handler.del_record(int(uid))
 
-
-    def get_timetables(self):
-        """Build a list of timetables represented as tuples(start, end).
-        Data are taken from metadata or from class value.
-
-        Example of metadata:
-          <timetables>(8,0),(10,0);(10,30),(12,0);(13,30),(17,30)</timetables>
-        """
-        if self.has_property('timetables'):
-            return self.get_property('timetables')
-
-        # From class value
-        timetables = []
-        for index, (start, end) in enumerate(self.timetables):
-            timetables.append((time(start[0], start[1]), time(end[0], end[1])))
-        return timetables
-
-
-    #######################################################################
-    # API related to CalendarView
-    #######################################################################
-    def get_action_url(self, **kw):
-        url = ';edit_event'
-        params = []
-        if 'day' in kw:
-            params.append('date=%s' % Date.encode(kw['day']))
-        if 'id' in kw:
-            params.append('id=%s' % kw['id'])
-        if params != []:
-            url = '%s?%s' % (url, '&'.join(params))
-        return url
-
-
-    def get_calendars(self):
-        return [self]
-
-
-    def get_events_to_display(self, start, end):
-        file = self.handler
-        events = []
-        for event in file.search_events_in_range(start, end, sortby='date'):
-            e_dtstart = event.get_property('DTSTART').value
-            events.append((self.name, e_dtstart, event))
-        events.sort(lambda x, y : cmp(x[1], y[1]))
-        return {self.name: 0}, events
-
-
-    #######################################################################
-    # Views
-    #######################################################################
-    download = DownloadView()
-    upload = CalendarUpload()
-    monthly_view = MonthlyView()
-    weekly_view = WeeklyView()
-    edit_timetables = TimetablesForm()
-    edit_event = EditEventForm()
-
-
-
-class Calendar(CalendarView, Text):
+class Calendar(Text, CalendarBase):
 
     class_id = 'text/calendar'
     class_version = '20071216'
-    class_title = MSG(u'Calendar')
-    class_description = MSG(description)
-    class_icon16 = 'icons/16x16/icalendar.png'
-    class_icon48 = 'icons/48x48/icalendar.png'
     class_handler = icalendar
 
 
@@ -579,12 +552,16 @@ class Calendar(CalendarView, Text):
         return self.handler.get_record(id)
 
 
+    def add_record(self, type, properties):
+        return self.handler.add_component(type, **properties)
+
+
     def update_record(self, id, properties):
         self.handler.update_component(id, **properties)
 
 
-    def add_record(self, type, properties):
-        return self.handler.add_component(type, **properties)
+    def _remove_event(self, uid):
+        self.handler.remove(uid)
 
 
     @classmethod
@@ -594,76 +571,36 @@ class Calendar(CalendarView, Text):
         return schema
 
 
-    def get_action_url(self, **kw):
-        url = ';edit_event'
-        params = []
-        if 'day' in kw:
-            params.append('date=%s' % Date.encode(kw['day']))
-        if 'id' in kw:
-            params.append('id=%s' % kw['id'])
-        if params != []:
-            url = '%s?%s' % (url, '&'.join(params))
-        return url
+
+class CalendarContainer(CalendarBase):
+
+    @classmethod
+    def get_metadata_schema(cls):
+        return {'timetables': Timetables}
 
 
-    # XXX FIXME Copy of CalendarTable.get_timetables method
-    def get_timetables(self):
-        """Build a list of timetables represented as tuples(start, end).
-        Data are taken from metadata or from class value.
-
-        Example of metadata:
-          <timetables>(8,0),(10,0);(10,30),(12,0);(13,30),(17,30)</timetables>
+    def get_calendars(self, types=None):
+        """List of sources from which taking events.
         """
-        if self.has_property('timetables'):
-            return self.get_property('timetables')
-
-        # From class value
-        timetables = []
-        for index, (start, end) in enumerate(self.timetables):
-            timetables.append((time(start[0], start[1]), time(end[0], end[1])))
-        return timetables
-
-
-    def get_calendars(self):
+        if not types:
+            types = (Calendar, CalendarTable)
+        if isinstance(self, Folder):
+            calendars = list(self.search_objects(object_class=types))
+            return calendars
         return [self]
-
-
-    def get_events_to_display(self, start, end):
-        file = self.handler
-        events = []
-        for event in file.search_events_in_range(start, end, sortby='date'):
-            e_dtstart = event.get_property('DTSTART').value
-            events.append((self.name, e_dtstart, event))
-        events.sort(lambda x, y : cmp(x[1], y[1]))
-        return {self.name: 0}, events
-
-
-    # Test if user in context is the organizer of a given event (or is admin)
-    def is_organizer_or_admin(self, context, event):
-        if self.get_access_control().is_admin(context.user, self):
-            return True
-        if event:
-            organizer = event.get_property('ORGANIZER')
-            user_path = str(context.user.get_abspath())
-            return organizer and user_path == organizer.value
-        ac = self.parent.get_access_control()
-        return ac.is_allowed_to_edit(context.user, self.parent)
-
-
-    def _remove_event(self, uid):
-        self.handler.remove(uid)
 
 
     #######################################################################
     # Views
     #######################################################################
-    download = DownloadView()
-    upload = CalendarUpload()
     monthly_view = MonthlyView()
     weekly_view = WeeklyView()
     edit_timetables = TimetablesForm()
-    text_view = TextView()
     edit_event = EditEventForm()
+
+    download = None
+    upload = None
+
 
 
 ###########################################################################
