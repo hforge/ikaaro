@@ -33,6 +33,7 @@ from itools.web import FormError
 from itools.web import MSG_MISSING_OR_INVALID
 
 # Import from ikaaro
+from base import DBObject
 from calendar_views import CalendarUpload, DownloadView, EditEventForm
 from calendar_views import MonthlyView, TextView, TimetablesForm, WeeklyView
 from folder import Folder
@@ -181,12 +182,35 @@ class CalendarView(object):
 
 
 
-class CalendarAware(CalendarView):
+class CalendarContainer(DBObject):
 
     @classmethod
     def get_metadata_schema(cls):
         return {'timetables': Timetables}
 
+
+    def get_calendars(self, types=None):
+        """List of sources from which taking events.
+        """
+        if not types:
+            types = (Calendar, CalendarTable)
+        if isinstance(self, Folder):
+            calendars = list(self.search_objects(object_class=types))
+            return calendars
+        return [self]
+
+
+    #######################################################################
+    # Views
+    #######################################################################
+    monthly_view = MonthlyView()
+    weekly_view = WeeklyView()
+    edit_timetables = TimetablesForm()
+    edit_event = EditEventForm()
+
+
+
+class CalendarAwareView(CalendarView):
 
     edit_event__access__ = 'is_allowed_to_edit'
     def edit_event(self, context):
@@ -200,17 +224,6 @@ class CalendarAware(CalendarView):
             return object.edit_event(context)
         message = MSG(u'Resource not found.')
         return context.come_back(message)
-
-
-    def get_calendars(self, types=None):
-        """List of sources from which taking events.
-        """
-        if not types:
-            types = (Calendar, CalendarTable)
-        if isinstance(self, Folder):
-            calendars = list(self.search_objects(object_class=types))
-            return calendars
-        return [self]
 
 
     # Get namespace for a resource's lines into daily_view

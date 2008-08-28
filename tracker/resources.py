@@ -84,24 +84,16 @@ template.load_state_from_string(template_string)
 
 
 
-class TrackerView(CalendarView):
+class TrackerMonthlyView(MonthlyView):
 
-    # Get timetables as a list of string containing time start of each one
-    def get_timetables_grid_ns(self, start_date):
-        """Build namespace to give as grid to gridlayout factory.
-        """
-        ns_timetables = []
-        for start, end in self.get_timetables():
-            for value in (start, end):
-                value = Time.encode(value)
-                if value not in ns_timetables:
-                    ns_timetables.append(value)
-        return ns_timetables
+    template = monthly_template
+
+    def get_with_new_url(self):
+        return False
 
 
-    def get_monthly_template(self):
-        return monthly_template
 
+class TrackerWeeklyView(WeeklyView):
 
     def get_weekly_templates(self):
         return template, template_fd
@@ -109,6 +101,19 @@ class TrackerView(CalendarView):
 
     def get_with_new_url(self):
         return False
+
+
+    # Get timetables as a list of string containing time start of each one
+    def get_timetables_grid_ns(self, resource, start_date):
+        """Build namespace to give as grid to gridlayout factory.
+        """
+        ns_timetables = []
+        for start, end in resource.get_timetables():
+            for value in (start, end):
+                value = Time.encode(value)
+                if value not in ns_timetables:
+                    ns_timetables.append(value)
+        return ns_timetables
 
 
 
@@ -165,6 +170,7 @@ class Resource(Record):
         return ns
 
 
+
 class ListOfUsers(Enumerate):
 
     @classmethod
@@ -195,7 +201,7 @@ class BaseResources(BaseTable):
 
 
 
-class Resources(Table, CalendarBase, TrackerView):
+class Resources(Table, CalendarBase):
 
     class_id = 'resources'
     class_version = '20071216'
@@ -242,8 +248,26 @@ class Resources(Table, CalendarBase, TrackerView):
         return {0:self.name}, events
 
 
-    monthly_view = MonthlyView()
-    weekly_view = WeeklyView()
+    # XXX FIXME Next to CalendarTable.get_timetables method
+    def get_timetables(self):
+        """Build a list of timetables represented as tuples(start, end).
+        Data are taken from metadata or from class value.
+
+        Example of metadata:
+          <timetables>(8,0),(10,0);(10,30),(12,0);(13,30),(17,30)</timetables>
+        """
+        if self.has_property('timetables'):
+            return self.get_property('timetables')
+
+        # From class value
+        timetables = []
+        for index, (start, end) in enumerate(CalendarBase.timetables):
+            timetables.append((time(start[0], start[1]), time(end[0], end[1])))
+        return timetables
+
+
+    monthly_view = TrackerMonthlyView()
+    weekly_view = TrackerWeeklyView()
     edit_timetables = TimetablesForm()
 
 

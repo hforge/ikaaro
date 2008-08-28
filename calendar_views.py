@@ -343,7 +343,6 @@ class CalendarView(STLView):
               - get_end
               - get_ns_event.
         """
-        resource = get_context().resource
         ns_events = []
         index = 0
         while index < len(events):
@@ -363,12 +362,12 @@ class CalendarView(STLView):
                 if len(cal_indexes.items()) < 2:
                     resource_name = None
                 if resource_name is not None:
-                    resource = self.get_object(resource_name)
+                    current_resource = self.get_object(resource_name)
                 else:
-                    resource = self
+                    current_resource = resource
                 conflicts_list = set()
                 if show_conflicts:
-                    handler = resource.handler
+                    handler = current_resource.handler
                     conflicts = handler.get_conflicts(e_dtstart, e_dtend)
                     if conflicts:
                         for uids in conflicts:
@@ -377,7 +376,7 @@ class CalendarView(STLView):
                                               conflicts_list=conflicts_list,
                                               grid=grid, starts_on=starts_on,
                                               ends_on=ends_on, out_on=out_on)
-                ns_event['url'] = resource.get_action_url(**ns_event)
+                ns_event['url'] = current_resource.get_action_url(**ns_event)
                 ns_event['cal'] = cal_index
                 ns_event['resource'] = {'color': cal_index}
                 ns_events.append(ns_event)
@@ -897,7 +896,6 @@ class WeeklyView(CalendarView):
         namespace['timetable_data'] = timetable
 
         return namespace
-
 
 
 
