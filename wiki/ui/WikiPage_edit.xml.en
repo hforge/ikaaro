@@ -52,8 +52,8 @@
       <input type="submit" name="view" value="Save &amp; View"
         class="button_ok" />
     </p>
-    <input type="hidden" id="text_size" name="text_size"
-           value="${text_size}" />
+    <input type="hidden" id="text_size" name="text_size" value="${text_size}"
+      />
   </form>
 
   <div class="clear" />

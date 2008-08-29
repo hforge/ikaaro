@@ -37,7 +37,7 @@ from docutils import nodes
 
 # Import from itools
 from itools import vfs
-from itools.datatypes import DateTime, XMLContent
+from itools.datatypes import DateTime, String, XMLContent
 from itools.gettext import MSG
 from itools.handlers import checkid, get_handler, File as FileHandler
 from itools.i18n import format_datetime
@@ -46,7 +46,7 @@ from itools.xml import XMLParser, XMLError
 from itools.uri import get_reference
 from itools.uri.mailto import Mailto
 from itools.vfs import FileName
-from itools.web import BaseView
+from itools.web import BaseView, STLForm
 
 # Import from ikaaro
 from ikaaro.base import DBObject
@@ -62,7 +62,7 @@ StandaloneReader = get_reader_class('standalone')
 class WikiPageView(BaseView):
 
     access = 'is_allowed_to_view'
-    title = u'HTML'
+    title = MSG(u'View')
     icon = 'html.png'
 
 
@@ -124,6 +124,90 @@ class WikiPageView(BaseView):
 
 
 
+class WikiPageEdit(STLForm):
+
+    access = 'is_allowed_to_edit'
+    title = MSG(u'Edit')
+    template = '/ui/wiki/WikiPage_edit.xml'
+    schema = {
+        'data': String,
+    }
+
+
+    def get_namespace(self, resource, context):
+        context.styles.append('/ui/wiki/style.css')
+        context.scripts.append('/ui/wiki/javascript.js')
+        text_size = context.get_form_value('text_size');
+        text_size_cookie = context.get_cookie('wiki_text_size')
+
+        if text_size_cookie is None:
+            if not text_size:
+                text_size = 'small'
+            context.set_cookie('wiki_text_size', text_size)
+        elif text_size is None:
+            text_size = context.get_cookie('wiki_text_size')
+        elif text_size != text_size_cookie:
+            context.set_cookie('wiki_text_size', text_size)
+
+        data = context.get_form_value('data') or resource.handler.to_str()
+        return {
+            'timestamp': DateTime.encode(datetime.now()),
+            'data': data,
+            'text_size': text_size,
+        }
+
+
+    def action(self, resource, context, form):
+        timestamp = context.get_form_value('timestamp', type=DateTime)
+        if timestamp is None:
+            context.message = MSG_EDIT_CONFLICT
+            return
+        page = resource.handler
+        if page.timestamp is not None and timestamp < page.timestamp:
+            context.message = MSG_EDIT_CONFLICT
+            return
+
+        # Data is assumed to be encoded in UTF-8
+        data = form['data']
+
+        # Validate data by compiling it
+        try:
+            html = publish_string(data, writer_name='html',
+                                  settings_overrides=resource.overrides)
+        except SystemMessage, message:
+            # Critical error
+            msg = MSG(u'A syntax error prevented from saving the changes:'
+                      u' $error')
+            # docutils is using tags to represent the error
+            error = XMLContent.encode(message.message)
+            context.message = msg.gettext(error=error)
+            return
+
+        # OK, committing
+        page.load_state_from_string(data)
+        context.server.change_object(resource)
+
+        # But warn about non-critical syntax errors
+        if 'class="system-message"' in resource.view.GET(resource, context):
+            message = MSG(u"Syntax error, please check the view for details.")
+        else:
+            message = MSG_CHANGES_SAVED2
+            accept = context.accept_language
+            time = format_datetime(datetime.now(), accept=accept)
+            message = message.gettext(time=time)
+
+        # Come back to the desired view
+        if context.has_form_value('view'):
+            goto = context.come_back(message, keep=['text_size'])
+            query = goto.query
+            goto = goto.resolve(';view')
+            goto.query = query
+            return goto
+        else:
+            context.message = message
+
+
+
 class WikiPage(Text):
 
     class_id = 'WikiPage'
@@ -132,7 +216,7 @@ class WikiPage(Text):
     class_description = MSG(u"Wiki contents")
     class_icon16 = 'wiki/WikiPage16.png'
     class_icon48 = 'wiki/WikiPage48.png'
-    class_views = ['view', 'to_pdf', 'edit_form', 'externaledit', 'upload',
+    class_views = ['view', 'to_pdf', 'edit', 'externaledit', 'upload',
                    'backlinks', 'edit_metadata_form', 'state_form', 'help']
 
     overrides = {
@@ -153,12 +237,6 @@ class WikiPage(Text):
     @staticmethod
     def new_instance(cls, container, context):
         return DBObject.new_instance(cls, container, context)
-
-
-    GET__mtime__ = None
-    GET__access__ = True
-    def GET(self, context):
-        return context.uri.resolve2(';view')
 
 
     #######################################################################
@@ -491,75 +569,7 @@ class WikiPage(Text):
     #######################################################################
     # UI / Edit
     #######################################################################
-    def edit_form(self, context):
-        context.styles.append('/ui/wiki/style.css')
-        context.scripts.append('/ui/wiki/javascript.js')
-        text_size = context.get_form_value('text_size');
-        text_size_cookie = context.get_cookie('wiki_text_size')
-
-        if text_size_cookie is None:
-            if not text_size:
-                text_size = 'small'
-            context.set_cookie('wiki_text_size', text_size)
-        elif text_size is None:
-            text_size = context.get_cookie('wiki_text_size')
-        elif text_size != text_size_cookie:
-            context.set_cookie('wiki_text_size', text_size)
-
-        namespace = {}
-        namespace['timestamp'] = DateTime.encode(datetime.now())
-        data = context.get_form_value('data') or self.handler.to_str()
-        namespace['data'] = data
-        namespace['text_size'] = text_size
-
-        handler = self.get_resource('/ui/wiki/WikiPage_edit.xml')
-        return stl(handler, namespace)
-
-
-    def edit(self, context):
-        timestamp = context.get_form_value('timestamp', type=DateTime)
-        if timestamp is None:
-            return context.come_back(MSG_EDIT_CONFLICT)
-        page = self.handler
-        if page.timestamp is not None and timestamp < page.timestamp:
-            return context.come_back(MSG_EDIT_CONFLICT)
-
-        # Data is assumed to be encoded in UTF-8
-        data = context.get_form_value('data')
-
-        # Validate data by compiling it
-        try:
-            html = publish_string(data, writer_name='html',
-                                  settings_overrides=self.overrides)
-        except SystemMessage, message:
-            # Critical error
-            msg = u"A syntax error prevented from saving the changes: $error"
-            # docutils is using tags to represent the error
-            error = XMLContent.encode(message.message)
-            return context.come_back(msg, error=error,
-                                     keep=['data', 'text_size'])
-
-        # OK, committing
-        page.load_state_from_string(data)
-        context.server.change_object(self)
-
-        # But warn about non-critical syntax errors
-        if 'class="system-message"' in self.view(context):
-            message = u"Syntax error, please check the view for details."
-        else:
-            message = MSG_CHANGES_SAVED2
-
-        # Come back to the desired view
-        accept = context.accept_language
-        time = format_datetime(datetime.now(), accept=accept)
-        goto = context.come_back(message, keep=['text_size'], time=time)
-        if context.has_form_value('view'):
-            query = goto.query
-            goto = goto.resolve(';view')
-            goto.query = query
-        else:
-            goto.fragment = 'bottom'
-        return goto
+    edit = WikiPageEdit()
 
 
     #######################################################################
