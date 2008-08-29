@@ -23,7 +23,7 @@
 from datetime import datetime
 
 # Import from itools
-from itools.datatypes import FileName, String, Unicode, Integer, is_datatype
+from itools.datatypes import String, Unicode, Integer, is_datatype
 from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.http import Forbidden
@@ -31,6 +31,7 @@ from itools.i18n import get_language_name
 from itools.stl import stl
 from itools.uri import Path
 from itools import vfs
+from itools.vfs import FileName
 from itools.web import get_context, Resource, BaseView, STLForm
 from itools.xapian import CatalogAware
 from itools.xapian import TextField, KeywordField, IntegerField, BoolField

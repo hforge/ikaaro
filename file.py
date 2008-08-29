@@ -23,13 +23,14 @@ from datetime import datetime, timedelta
 from mimetypes import guess_all_extensions, guess_type
 
 # Import from itools
-from itools.datatypes import Boolean, FileName, Integer, String, Unicode
+from itools.datatypes import Boolean, Integer, String, Unicode
 from itools.gettext import MSG
 from itools.handlers import File as FileHandler, guess_encoding, checkid
 from itools.html import HTMLParser, stream_to_str_as_xhtml
 from itools.i18n import guess_language
 from itools.stl import stl
 from itools.uri import get_reference
+from itools.vfs import FileName
 from itools.web import BaseView, STLView, STLForm
 from itools.xapian import EqQuery
 

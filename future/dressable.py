@@ -23,12 +23,13 @@ from mimetypes import guess_type
 from string import Template
 
 # Import from itools
-from itools.datatypes import is_datatype, DateTime, FileName
+from itools.datatypes import is_datatype, DateTime
 from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.html import sanitize_stream
 from itools.stl import stl, set_prefix
 from itools.uri import Path
+from itools.vfs import FileName
 from itools.web import get_context
 from itools.xml import XMLParser, XMLError
 

@@ -22,7 +22,7 @@
 from datetime import datetime
 
 # Import from itools
-from itools.datatypes import DateTime, FileName, String
+from itools.datatypes import DateTime, String
 from itools.handlers import File
 from itools.gettext import MSG
 from itools.http import Forbidden

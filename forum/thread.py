@@ -19,9 +19,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.datatypes import FileName, Unicode, String
+from itools.datatypes import Unicode, String
 from itools.gettext import MSG
 from itools.i18n import format_datetime
+from itools.vfs import FileName
 from itools.web import STLForm
 
 # Import from ikaaro

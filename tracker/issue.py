@@ -27,16 +27,17 @@ from textwrap import wrap
 
 # Import from itools
 from itools.csv import Table
-from itools.datatypes import Boolean, DateTime, Integer, String
-from itools.datatypes import FileName, Tokens, Unicode, XMLContent
+from itools.datatypes import Boolean, DateTime, Integer, String, Unicode
+from itools.datatypes import Tokens, XMLContent
 from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.html import xhtml_uri
 from itools.i18n import format_datetime
 from itools.stl import stl
-from itools.xml import XMLParser, START_ELEMENT, END_ELEMENT, TEXT
+from itools.vfs import FileName
 from itools.web import STLForm, STLView
 from itools.xapian import IntegerField, KeywordField
+from itools.xml import XMLParser, START_ELEMENT, END_ELEMENT, TEXT
 
 # Import from ikaaro
 from ikaaro.file import File

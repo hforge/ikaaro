@@ -18,7 +18,7 @@
 from datetime import datetime
 
 # Import from itools
-from itools.datatypes import FileName
+from itools.vfs import FileName
 
 # Import from ikaaro
 from base import DBObject

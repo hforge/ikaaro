@@ -19,7 +19,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.datatypes import FileName
 from itools.gettext import MSG
 from itools.html import HTMLParser, sanitize_stream, XHTMLFile
 from itools.web import STLForm
