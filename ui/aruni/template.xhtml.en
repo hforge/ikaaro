@@ -67,9 +67,7 @@
                     onmouseout="hide('menu_${menu/id}')">
                     <div class="menu">
                       <a href="${menu/name}" id="${menu/id}">
-                        <span style="background-image: url(${menu/icon})"
-                              stl:if="menu/icon">${menu/label}</span>
-                        <span stl:if="not menu/icon">${menu/label}</span>
+                        <span style="${menu/style}">${menu/label}</span>
                       </a>
                     </div>
                     <div class="submenu" stl:if="menu/options"
@@ -77,8 +75,8 @@
                       <ul>
                         <li stl:repeat="option menu/options">
                           <a href="${option/name}">
-                            <span style="background-image:
-                              url(${option/icon})">${option/label}</span></a>
+                            <span style="${option/style}">${option/label}</span>
+                          </a>
                         </li>
                       </ul>
                     </div>

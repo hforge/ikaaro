@@ -376,10 +376,14 @@ class Skin(UIFolder):
             if callable(label):
                 label = label(**args)
 
+            style = None
+            icon = here.get_method_icon(name, **args)
+            if icon is not None:
+                style = "background-image: url(%s)" % icon
             tabs.append({'id': 'tab_%s' % name,
                          'name': ';%s' % view,
                          'label': here.gettext(label),
-                         'icon': here.get_method_icon(name, **args),
+                         'style': style,
                          'active': active,
                          'class': active and 'active' or None})
 
@@ -399,10 +403,13 @@ class Skin(UIFolder):
                     label = getattr(here, '%s__sublabel__' % name)
                     if callable(label):
                         label = label(**args)
-
+                    style = None
+                    icon = here.get_method_icon(name, **args)
+                    if icon is not None:
+                        style = "background-image: url(%s)" % icon
                     subtabs.append({
                         'name': ';%s' % subview,
-                        'icon': here.get_method_icon(name, **args),
+                        'style': style,
                         'label': here.gettext(label)})
             tabs[-1]['options'] = subtabs
 
