@@ -50,7 +50,7 @@
         [
         <span class="menu ${menu/class}" stl:repeat="menu tabs">
           <a href="${menu/name}" id="${menu/id}">${menu/label}</a>
-          <stl:block stl:if="not repeat/menu/end">|</stl:block>
+          <stl:inline stl:if="not repeat/menu/end">|</stl:inline>
         </span>
         ]
       </div>
