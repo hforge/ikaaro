@@ -46,7 +46,7 @@ from itools.xml import XMLParser, XMLError
 from itools.uri import get_reference
 from itools.uri.mailto import Mailto
 from itools.vfs import FileName
-from itools.web import BaseView, STLForm
+from itools.web import BaseView, STLForm, STLView
 
 # Import from ikaaro
 from ikaaro.base import DBObject
@@ -121,6 +121,208 @@ class WikiPageView(BaseView):
         body = parts['html_body']
 
         return body.encode('utf_8')
+
+
+
+class WikiPageToPDF(BaseView):
+
+    access = 'is_allowed_to_view'
+    title = MSG(u"PDF")
+
+
+    def GET(self, resource, context):
+        parent = resource.parent
+        pages = [resource.get_abspath()]
+        images = []
+
+        document = resource.get_document()
+        # We hack a bit the document tree to enhance the PDF produced
+        for node in document.traverse(condition=nodes.reference):
+            refname = node.get('wiki_name')
+            if refname is None:
+                # Regular link: point back to the site
+                refuri = node.get('refuri')
+                if refuri is not None:
+                    reference = get_reference(refuri.encode('utf_8'))
+                    if isinstance(reference, Mailto):
+                        # mailto:
+                        node['refuri'] = str(reference)
+                    else:
+                        # Make canonical URI to the website for future download
+                        node['refuri'] = str(context.uri.resolve(reference))
+                continue
+            # Now consider the link is valid
+            title = node['name']
+            document.nameids[title.lower()] = checkid(title)
+            # The journey ends here for broken links
+            if refname is False:
+                continue
+            # We extend the main page with the first level of subpages
+            object = resource.get_resource(refname)
+            abspath = object.get_abspath()
+            if abspath not in pages:
+                if not isinstance(object, WikiPage):
+                    # Link to a file, set the URI to download it
+                    prefix = context.resource.get_pathto(object)
+                    node['refuri'] = str(context.uri.resolve(prefix))
+                    continue
+                # Adding the page to this one
+                subdoc = object.get_document()
+                # We point the second level of links to the website
+                for node in subdoc.traverse(condition=nodes.reference):
+                    refname = node.get('wiki_name')
+                    if refname is None:
+                        # Regular link: point back to the site
+                        refuri = node.get('refuri')
+                        if refuri is not None:
+                            reference = get_reference(refuri.encode('utf_8'))
+                            if isinstance(reference, Mailto):
+                                # mailto:
+                                node['refuri'] = str(reference)
+                            else:
+                                refuri = context.uri.resolve(reference)
+                                node['refuri'] = str(refuri)
+                        continue
+                    # Now consider the link is valid
+                    title = node['name']
+                    refid = title.lower()
+                    if refid not in document.nameids:
+                        document.nameids[refid] = checkid(title)
+                    # The journey ends here for broken links
+                    if refname is False:
+                        continue
+                    object = resource.get_resource(refname)
+                    prefix = context.resource.get_pathto(object)
+                    node['refuri'] = str(context.uri.resolve(prefix))
+                # Now include the page
+                # A page may begin with a section or a list of sections
+                if len(subdoc) and isinstance(subdoc[0], nodes.section):
+                    for node in subdoc.children:
+                        if isinstance(node, nodes.section):
+                            document.append(node)
+                else:
+                    subtitle = subdoc.get('title', u'')
+                    section = nodes.section(*subdoc.children,
+                                            **subdoc.attributes)
+                    section.insert(0, nodes.title(text=subtitle))
+                    document.append(section)
+                pages.append(abspath)
+
+        # Find the list of images to append
+        for node in document.traverse(condition=nodes.image):
+            uri = node['uri'].encode('utf_8')
+            reference = get_reference(uri)
+            if reference.scheme or reference.authority:
+                # Fetch external image
+                try:
+                    image = get_handler(reference)
+                    filename = reference.path.get_name()
+                    name, ext, lang = FileName.decode(filename)
+                    # At least images from ikaaro won't have an extension
+                    if ext is None:
+                        mimetype = vfs.get_mimetype(reference)
+                        ext = guess_extension(mimetype)[1:]
+                        filename = FileName.encode((name, ext, lang))
+                except LookupError:
+                    image = None
+            else:
+                try:
+                    image = parent.get_resource(reference.path)
+                    filename = image.get_property('filename')
+                except LookupError:
+                    image = None
+            if image is None:
+                # Missing image, prevent pdfLaTeX failure
+                image = resource.get_resource('/ui/wiki/missing.png')
+                filename = image.name
+                # Remove all path so the image is found in tempdir
+                node['uri'] = filename
+                images.append((image, filename))
+            else:
+                # pdflatex does not support the ".jpeg" extension
+                name, ext, lang = FileName.decode(filename)
+                if ext == 'jpeg':
+                    filename = FileName.encode((name, 'jpg', lang))
+                # Remove all path so the image is found in tempdir
+                node['uri'] = filename
+                images.append((image, filename))
+
+        overrides = dict(resource.overrides)
+        overrides['stylesheet'] = 'style.tex'
+        output = publish_from_doctree(document, writer_name='latex',
+                settings_overrides=overrides)
+
+        dirname = mkdtemp('wiki', 'itools')
+        tempdir = vfs.open(dirname)
+
+        # Save the document...
+        file = tempdir.make_file(resource.name)
+        try:
+            file.write(output)
+        finally:
+            file.close()
+        # The stylesheet...
+        stylesheet = resource.get_resource('/ui/wiki/style.tex')
+        file = tempdir.make_file('style.tex')
+        try:
+            stylesheet.save_state_to_file(file)
+        finally:
+            file.close()
+        # The 'powered' image...
+        image = resource.get_resource('/ui/images/ikaaro_powered.png')
+        file = tempdir.make_file('ikaaro.png')
+        try:
+            image.save_state_to_file(file)
+        finally:
+            file.close()
+        # And referenced images
+        for image, filename in images:
+            if tempdir.exists(filename):
+                continue
+            file = tempdir.make_file(filename)
+            try:
+                if isinstance(image, FileHandler):
+                    try:
+                        image.save_state_to_file(file)
+                    except XMLError:
+                        # XMLError is raised by unexpected HTTP responses
+                        # from external images. See bug #249
+                        pass
+                else:
+                    image.handler.save_state_to_file(file)
+            finally:
+                file.close()
+
+        try:
+            call(['pdflatex', '-8bit', '-no-file-line-error',
+                  '-interaction=batchmode', resource.name], cwd=dirname)
+            # Twice for correct page numbering
+            call(['pdflatex', '-8bit', '-no-file-line-error',
+                  '-interaction=batchmode', resource.name], cwd=dirname)
+        except OSError:
+            msg = u"PDF generation failed. Please install pdflatex."
+            return context.come_back(msg)
+
+        pdfname = '%s.pdf' % resource.name
+        if tempdir.exists(pdfname):
+            file = tempdir.open(pdfname)
+            try:
+                data = file.read()
+            finally:
+                file.close()
+        else:
+            data = None
+        vfs.remove(dirname)
+
+        if data is None:
+            return context.come_back(u"PDF generation failed.")
+
+        response = context.response
+        response.set_header('Content-Type', 'application/pdf')
+        response.set_header('Content-Disposition',
+                'attachment; filename=%s' % pdfname)
+
+        return data
 
 
 
@@ -205,6 +407,29 @@ class WikiPageEdit(STLForm):
             return goto
         else:
             context.message = message
+
+
+
+class WikiPageHelp(STLView):
+
+    access = 'is_allowed_to_view'
+    title = MSG(u"Help")
+    template = '/ui/wiki/WikiPage_help.xml'
+
+
+    def get_namespace(self, resource, context):
+        context.styles.append('/ui/wiki/style.css')
+
+        source = resource.get_resource('/ui/wiki/help.txt')
+        source = source.to_str()
+        html = publish_string(source, writer_name='html',
+                              settings_overrides=resource.overrides)
+
+        return {
+            'help_source': source,
+            'help_html': XMLParser(html),
+        }
+
 
 
 
@@ -361,237 +586,12 @@ class WikiPage(Text):
 
 
     #######################################################################
-    # UI / View
+    # Views
     #######################################################################
     view = WikiPageView()
-
-    #######################################################################
-    # UI / PDF
-    #######################################################################
-    to_pdf__access__ = 'is_allowed_to_view'
-    to_pdf__label__ = u"PDF"
-    to_pdf__icon__ = 'pdf.png'
-    def to_pdf(self, context):
-        parent = self.parent
-        pages = [self.get_abspath()]
-        images = []
-
-        document = self.get_document()
-        # We hack a bit the document tree to enhance the PDF produced
-        for node in document.traverse(condition=nodes.reference):
-            refname = node.get('wiki_name')
-            if refname is None:
-                # Regular link: point back to the site
-                refuri = node.get('refuri')
-                if refuri is not None:
-                    reference = get_reference(refuri.encode('utf_8'))
-                    if isinstance(reference, Mailto):
-                        # mailto:
-                        node['refuri'] = str(reference)
-                    else:
-                        # Make canonical URI to the website for future download
-                        node['refuri'] = str(context.uri.resolve(reference))
-                continue
-            # Now consider the link is valid
-            title = node['name']
-            document.nameids[title.lower()] = checkid(title)
-            # The journey ends here for broken links
-            if refname is False:
-                continue
-            # We extend the main page with the first level of subpages
-            object = self.get_resource(refname)
-            abspath = object.get_abspath()
-            if abspath not in pages:
-                if not isinstance(object, WikiPage):
-                    # Link to a file, set the URI to download it
-                    prefix = context.resource.get_pathto(object)
-                    node['refuri'] = str(context.uri.resolve(prefix))
-                    continue
-                # Adding the page to this one
-                subdoc = object.get_document()
-                # We point the second level of links to the website
-                for node in subdoc.traverse(condition=nodes.reference):
-                    refname = node.get('wiki_name')
-                    if refname is None:
-                        # Regular link: point back to the site
-                        refuri = node.get('refuri')
-                        if refuri is not None:
-                            reference = get_reference(refuri.encode('utf_8'))
-                            if isinstance(reference, Mailto):
-                                # mailto:
-                                node['refuri'] = str(reference)
-                            else:
-                                refuri = context.uri.resolve(reference)
-                                node['refuri'] = str(refuri)
-                        continue
-                    # Now consider the link is valid
-                    title = node['name']
-                    refid = title.lower()
-                    if refid not in document.nameids:
-                        document.nameids[refid] = checkid(title)
-                    # The journey ends here for broken links
-                    if refname is False:
-                        continue
-                    object = self.get_resource(refname)
-                    prefix = context.resource.get_pathto(object)
-                    node['refuri'] = str(context.uri.resolve(prefix))
-                # Now include the page
-                # A page may begin with a section or a list of sections
-                if len(subdoc) and isinstance(subdoc[0], nodes.section):
-                    for node in subdoc.children:
-                        if isinstance(node, nodes.section):
-                            document.append(node)
-                else:
-                    subtitle = subdoc.get('title', u'')
-                    section = nodes.section(*subdoc.children,
-                                            **subdoc.attributes)
-                    section.insert(0, nodes.title(text=subtitle))
-                    document.append(section)
-                pages.append(abspath)
-
-        # Find the list of images to append
-        for node in document.traverse(condition=nodes.image):
-            uri = node['uri'].encode('utf_8')
-            reference = get_reference(uri)
-            if reference.scheme or reference.authority:
-                # Fetch external image
-                try:
-                    image = get_handler(reference)
-                    filename = reference.path.get_name()
-                    name, ext, lang = FileName.decode(filename)
-                    # At least images from ikaaro won't have an extension
-                    if ext is None:
-                        mimetype = vfs.get_mimetype(reference)
-                        ext = guess_extension(mimetype)[1:]
-                        filename = FileName.encode((name, ext, lang))
-                except LookupError:
-                    image = None
-            else:
-                try:
-                    image = parent.get_resource(reference.path)
-                    filename = image.get_property('filename')
-                except LookupError:
-                    image = None
-            if image is None:
-                # Missing image, prevent pdfLaTeX failure
-                image = self.get_resource('/ui/wiki/missing.png')
-                filename = image.name
-                # Remove all path so the image is found in tempdir
-                node['uri'] = filename
-                images.append((image, filename))
-            else:
-                # pdflatex does not support the ".jpeg" extension
-                name, ext, lang = FileName.decode(filename)
-                if ext == 'jpeg':
-                    filename = FileName.encode((name, 'jpg', lang))
-                # Remove all path so the image is found in tempdir
-                node['uri'] = filename
-                images.append((image, filename))
-
-        overrides = dict(self.overrides)
-        overrides['stylesheet'] = 'style.tex'
-        output = publish_from_doctree(document, writer_name='latex',
-                settings_overrides=overrides)
-
-        dirname = mkdtemp('wiki', 'itools')
-        tempdir = vfs.open(dirname)
-
-        # Save the document...
-        file = tempdir.make_file(self.name)
-        try:
-            file.write(output)
-        finally:
-            file.close()
-        # The stylesheet...
-        stylesheet = self.get_resource('/ui/wiki/style.tex')
-        file = tempdir.make_file('style.tex')
-        try:
-            stylesheet.save_state_to_file(file)
-        finally:
-            file.close()
-        # The 'powered' image...
-        image = self.get_resource('/ui/images/ikaaro_powered.png')
-        file = tempdir.make_file('ikaaro.png')
-        try:
-            image.save_state_to_file(file)
-        finally:
-            file.close()
-        # And referenced images
-        for image, filename in images:
-            if tempdir.exists(filename):
-                continue
-            file = tempdir.make_file(filename)
-            try:
-                if isinstance(image, FileHandler):
-                    try:
-                        image.save_state_to_file(file)
-                    except XMLError:
-                        # XMLError is raised by unexpected HTTP responses
-                        # from external images. See bug #249
-                        pass
-                else:
-                    image.handler.save_state_to_file(file)
-            finally:
-                file.close()
-
-        try:
-            call(['pdflatex', '-8bit', '-no-file-line-error',
-                  '-interaction=batchmode', self.name], cwd=dirname)
-            # Twice for correct page numbering
-            call(['pdflatex', '-8bit', '-no-file-line-error',
-                  '-interaction=batchmode', self.name], cwd=dirname)
-        except OSError:
-            msg = u"PDF generation failed. Please install pdflatex."
-            return context.come_back(msg)
-
-        pdfname = '%s.pdf' % self.name
-        if tempdir.exists(pdfname):
-            file = tempdir.open(pdfname)
-            try:
-                data = file.read()
-            finally:
-                file.close()
-        else:
-            data = None
-        vfs.remove(dirname)
-
-        if data is None:
-            return context.come_back(u"PDF generation failed.")
-
-        response = context.response
-        response.set_header('Content-Type', 'application/pdf')
-        response.set_header('Content-Disposition',
-                'attachment; filename=%s' % pdfname)
-
-        return data
-
-
-    #######################################################################
-    # UI / Edit
-    #######################################################################
+    to_pdf = WikiPageToPDF()
     edit = WikiPageEdit()
-
-
-    #######################################################################
-    # UI / Help
-    #######################################################################
-    help__access__ = 'is_allowed_to_view'
-    help__label__ = u"Help"
-    help__icon__ = 'help.png'
-    def help(self, context):
-        context.styles.append('/ui/wiki/style.css')
-        namespace = {}
-
-        source = self.get_resource('/ui/wiki/help.txt')
-        source = source.to_str()
-        html = publish_string(source, writer_name='html',
-                settings_overrides=self.overrides)
-
-        namespace['help_source'] = source
-        namespace['help_html'] = XMLParser(html)
-
-        handler = self.get_resource('/ui/wiki/WikiPage_help.xml')
-        return stl(handler, namespace)
+    help = WikiPageHelp()
 
 
 
