@@ -3,7 +3,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: es\n"
-"POT-Creation-Date: 2008-08-25 14:08+CET\n"
+"POT-Creation-Date: 2008-09-01 10:09+CET\n"
 "PO-Revision-Date: 2006-12-06 16:23+0100\n"
 "Last-Translator: J. David Ibáñez <jdavid@itaapy.com>\n"
 "Language-Team: Spanish\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.11.4\n"
 
-#: ../tracker/tracker.py:759
+#: ../tracker/tracker.py:922
 msgid ""
 "\n"
 "\n"
@@ -21,27 +21,27 @@ msgid ""
 "%s"
 msgstr ""
 
-#: ../tracker/issue.py:632
+#: ../tracker/issue.py:535
 msgid "  New Attachment: $filename"
 msgstr ""
 
-#: ../tracker/tracker.py:845
+#: ../tracker/tracker.py:1008
 msgid "#$id"
 msgstr ""
 
-#: ../tracker/tracker.py:794
+#: ../tracker/tracker.py:957
 msgid "#%s - %s - %s"
 msgstr ""
 
-#: ../tracker/issue.py:657
+#: ../tracker/issue.py:560
 msgid "$field: $old_value to $new_value"
 msgstr ""
 
-#: ../tracker/issue.py:660
+#: ../tracker/issue.py:563
 msgid "$field: $old_value$new_value"
 msgstr ""
 
-#: ../future/dressable.py:459
+#: ../future/dressable.py:460
 #, fuzzy
 msgid "$label (External)"
 msgstr "Externo"
@@ -269,7 +269,7 @@ msgstr ""
 msgid "${message/mtime}"
 msgstr ""
 
-#: ../ui/html/addimage.xml.en:20
+#: ../ui/html/addimage.xml.en:21
 msgid "${message}"
 msgstr ""
 
@@ -553,11 +553,11 @@ msgstr ""
 msgid "${zip}<br/>  <b>City:</b>"
 msgstr ""
 
-#: ../file.py:423
+#: ../file.py:424
 msgid "%.01f KB"
 msgstr ""
 
-#: ../file.py:421
+#: ../file.py:422
 msgid "%.01f MB"
 msgstr ""
 
@@ -577,7 +577,7 @@ msgstr ""
 msgid "(To add an event lasting all day long, leave time fields empty.)"
 msgstr ""
 
-#: ../tracker/tracker.py:784
+#: ../tracker/tracker.py:947
 msgid ""
 "--- Comment from : $user ---\n"
 "\n"
@@ -586,18 +586,43 @@ msgid ""
 "$issues"
 msgstr ""
 
-#: ../tracker/issue.py:640
+#: ../tracker/issue.py:543
 msgid ""
 "-------\n"
 "\n"
 msgstr ""
 
-#: ../tracker/tracker.py:530
+#: ../tracker/tracker.py:693
 msgid "1.0"
 msgstr ""
 
-#: ../tracker/tracker.py:531
+#: ../tracker/tracker.py:694
 msgid "2.0"
+msgstr ""
+
+#: ../tracker/ui/weekly_template.xml.en:9
+msgid ""
+"<a href=\"${cell/content/issue/url}\">[#${cell/content/issue/number}]</a> "
+"${cell/content/issue/title} (${cell/content/resource/title})"
+msgstr ""
+
+#: ../tracker/ui/monthly_template.xml.en:12
+msgid ""
+"<a href=\"${event/issue/url}\">[#${event/issue/number}]</a> ${event/issue/"
+"title} <span stl:if=\"event/TIME\" class=\"time\">${event/TIME}</span> "
+"(${event/resource/title})"
+msgstr ""
+
+#: ../ui/ical/monthly_template.xml.en:11
+msgid ""
+"<a href=\"${event/url}\"> ${event/SUMMARY}</a>  <span stl:if=\"event/TIME\" "
+"class=\"time\">${event/TIME}</span>"
+msgstr ""
+
+#: ../tracker/ui/weekly_template_fd.xml.en:8
+msgid ""
+"<a href=\"${issue/url}\">[#${issue/number}]</a> ${issue/title} (${resource/"
+"title})"
 msgstr ""
 
 #: ../ui/user/profile.xml.en:18
@@ -757,7 +782,7 @@ msgstr ""
 #: ../ui/html/addimage.xml.en:55
 msgid ""
 "<abbr title=\"${object/title}\">${object/short_title}</abbr><br/>  <a href="
-"\"javascript:select_img('${object/path}',\n"
+"\"javascript:select_img('${object/path}/;download',\n"
 "              '${caption}')\">Select</a>"
 msgstr ""
 
@@ -970,8 +995,8 @@ msgstr ""
 
 #: ../tracker/ui/search.xml.en:63
 msgid ""
-"<label for=\"assigned_to\">Assigned To:<stl:block stl:if=\"is_admin\"> (<a "
-"href=\"${manage_assigned}\">Edit</a>)</stl:block></label>  <br/>"
+"<label for=\"assigned_to\">Assigned To:<stl:inline stl:if=\"is_admin\"> (<a "
+"href=\"${manage_assigned}\">Edit</a>)</stl:inline></label>  <br/>"
 msgstr ""
 
 #: ../tracker/ui/add_issue.xml.en:88
@@ -1016,8 +1041,8 @@ msgstr ""
 
 #: ../tracker/ui/search.xml.en:40
 msgid ""
-"<label for=\"module\">Module:<stl:block stl:if=\"is_admin\"> (<a href=\"./"
-"modules/;view\">Edit</a>)</stl:block></label>  <br/>"
+"<label for=\"module\">Module:<stl:inline stl:if=\"is_admin\"> (<a href=\"./"
+"modules/;view\">Edit</a>)</stl:inline></label>  <br/>"
 msgstr ""
 
 #: ../tracker/ui/search.xml.en:23
@@ -1030,8 +1055,8 @@ msgstr ""
 
 #: ../tracker/ui/search.xml.en:82
 msgid ""
-"<label for=\"priority\">Priority:<stl:block stl:if=\"is_admin\"> (<a href="
-"\"./priorities/;view\">Edit</a>)</stl:block></label>  <br/>"
+"<label for=\"priority\">Priority:<stl:inline stl:if=\"is_admin\"> (<a href="
+"\"./priorities/;view\">Edit</a>)</stl:inline></label>  <br/>"
 msgstr ""
 
 #: ../tracker/ui/edit_resources.xml.en:14
@@ -1048,8 +1073,8 @@ msgstr ""
 
 #: ../tracker/ui/search.xml.en:72
 msgid ""
-"<label for=\"state\">Status:<stl:block stl:if=\"is_admin\"> (<a href=\"./"
-"states/;view\">Edit</a>)</stl:block></label>  <br/>"
+"<label for=\"state\">Status:<stl:inline stl:if=\"is_admin\"> (<a href=\"./"
+"states/;view\">Edit</a>)</stl:inline></label>  <br/>"
 msgstr ""
 
 #: ../ui/base/edit_metadata.xml.en:19
@@ -1077,8 +1102,8 @@ msgstr ""
 
 #: ../tracker/ui/search.xml.en:30
 msgid ""
-"<label for=\"type\">Type:<stl:block stl:if=\"is_admin\"> (<a href=\"./types/;"
-"view\">Edit</a>)</stl:block></label>  <br/>"
+"<label for=\"type\">Type:<stl:inline stl:if=\"is_admin\"> (<a href=\"./"
+"types/;view\">Edit</a>)</stl:inline></label>  <br/>"
 msgstr ""
 
 #: ../tracker/ui/edit_issue.xml.en:38
@@ -1091,8 +1116,8 @@ msgstr ""
 
 #: ../tracker/ui/search.xml.en:50
 msgid ""
-"<label for=\"version\">Version:<stl:block stl:if=\"is_admin\"> (<a href=\"./"
-"versions/;view\">Edit</a>)</stl:block></label>  <br/>"
+"<label for=\"version\">Version:<stl:inline stl:if=\"is_admin\"> (<a href=\"./"
+"versions/;view\">Edit</a>)</stl:inline></label>  <br/>"
 msgstr ""
 
 #: ../ui/aruni/template.xhtml.en:71
@@ -1153,7 +1178,7 @@ msgid ""
 "name=\"dress_name\" type=\"hidden\"/>"
 msgstr ""
 
-#: ../future/dressable.py:56
+#: ../future/dressable.py:57
 msgid "A dressable folder"
 msgstr ""
 
@@ -1182,15 +1207,15 @@ msgstr ""
 msgid "A public document can be reached by even anonymous users."
 msgstr ""
 
-#: ../wiki/page.py:535
+#: ../wiki/page.py:381
 msgid "A syntax error prevented from saving the changes: $error"
 msgstr ""
 
-#: ../forum/thread.py:111
+#: ../forum/thread.py:112
 msgid "A thread to discuss"
 msgstr ""
 
-#: ../tracker/tracker.py:781
+#: ../tracker/tracker.py:944
 msgid "ANONYMOUS"
 msgstr ""
 
@@ -1228,7 +1253,7 @@ msgstr "Acción"
 msgid "Add"
 msgstr "Agregar"
 
-#: ../base.py:69
+#: ../base.py:70
 msgid "Add $class_title"
 msgstr ""
 
@@ -1339,7 +1364,7 @@ msgstr ""
 msgid "Application preferences changed."
 msgstr ""
 
-#: ../calendar_views.py:44
+#: ../calendar_views.py:45
 msgid "April"
 msgstr "Abril"
 
@@ -1363,7 +1388,7 @@ msgstr ""
 msgid "Assign To:"
 msgstr ""
 
-#: ../tracker/tracker.py:65
+#: ../tracker/tracker.py:66
 msgid "Assigned To"
 msgstr ""
 
@@ -1375,7 +1400,7 @@ msgstr ""
 msgid "Attendees"
 msgstr ""
 
-#: ../calendar_views.py:48
+#: ../calendar_views.py:49
 msgid "August"
 msgstr "Agosto"
 
@@ -1391,7 +1416,7 @@ msgstr ""
 msgid "BP:"
 msgstr ""
 
-#: ../file.py:274
+#: ../file.py:275
 msgid "Backlinks"
 msgstr ""
 
@@ -1424,7 +1449,7 @@ msgstr ""
 msgid "Browse Members"
 msgstr ""
 
-#: ../ui/html/addimage.xml.en:22
+#: ../ui/html/addimage.xml.en:23
 msgid "Browse and insert an Image from the workspace"
 msgstr ""
 
@@ -1432,7 +1457,7 @@ msgstr ""
 msgid "Browse and link to a File from the workspace"
 msgstr ""
 
-#: ../tracker/tracker.py:540
+#: ../tracker/tracker.py:703
 msgid "Bug"
 msgstr ""
 
@@ -1440,11 +1465,11 @@ msgstr ""
 msgid "By"
 msgstr "Por"
 
-#: ../binary.py:331
+#: ../binary.py:337
 msgid "Bzip2"
 msgstr ""
 
-#: ../binary.py:332
+#: ../binary.py:338
 msgid "Bzip2 Compressed"
 msgstr ""
 
@@ -1457,7 +1482,7 @@ msgstr "Agregar"
 msgid "CSS"
 msgstr ""
 
-#: ../calendar_.py:717
+#: ../calendar_.py:386
 msgid "Calendar"
 msgstr ""
 
@@ -1465,16 +1490,16 @@ msgstr ""
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: ../calendar_views.py:88
+#: ../calendar_views.py:99
 #, fuzzy
 msgid "Cancelled"
 msgstr "Cancelar"
 
-#: ../calendar_views.py:568
+#: ../calendar_views.py:706
 msgid "Cannot delete event, because it was already removed."
 msgstr ""
 
-#: ../calendar_views.py:469
+#: ../calendar_views.py:607
 msgid "Cannot modify event, because it has been removed."
 msgstr ""
 
@@ -1589,7 +1614,7 @@ msgstr "Código"
 msgid "Close the order"
 msgstr ""
 
-#: ../tracker/tracker.py:553
+#: ../tracker/tracker.py:716
 #, fuzzy
 msgid "Closed"
 msgstr "Código"
@@ -1606,7 +1631,7 @@ msgstr ""
 msgid "Comma Separated Values"
 msgstr ""
 
-#: ../tracker/tracker.py:538
+#: ../tracker/tracker.py:701
 msgid "Command Line Interface"
 msgstr ""
 
@@ -1657,7 +1682,7 @@ msgstr ""
 msgid "Confirmation sended!"
 msgstr "Descripción"
 
-#: ../calendar_views.py:87
+#: ../calendar_views.py:98
 msgid "Confirmed"
 msgstr ""
 
@@ -1674,7 +1699,7 @@ msgstr ""
 msgid "Contacts"
 msgstr "Comentarios"
 
-#: ../wiki/folder.py:53
+#: ../wiki/folder.py:58
 msgid "Container for a wiki"
 msgstr ""
 
@@ -1733,15 +1758,15 @@ msgstr "Estado actual:"
 msgid "Cut"
 msgstr "Cortar"
 
-#: ../calendar_.py:538
+#: ../calendar_.py:341
 msgid "Daily View"
 msgstr ""
 
-#: ../tracker/tracker.py:541
+#: ../tracker/tracker.py:704
 msgid "Data Corruption Issue"
 msgstr ""
 
-#: ../calendar_views.py:551
+#: ../calendar_views.py:689
 msgid "Data updated"
 msgstr "Datos actualizados"
 
@@ -1754,7 +1779,7 @@ msgstr "Fecha"
 msgid "Date :"
 msgstr "Fecha"
 
-#: ../calendar_views.py:52
+#: ../calendar_views.py:53
 msgid "December"
 msgstr ""
 
@@ -1787,16 +1812,16 @@ msgstr "Descripción"
 msgid "Do not change"
 msgstr "Documento modificado."
 
-#: ../tracker/tracker.py:537
+#: ../tracker/tracker.py:700
 #, fuzzy
 msgid "Documentation"
 msgstr "Documento"
 
-#: ../file.py:147
+#: ../file.py:148
 msgid "Download"
 msgstr ""
 
-#: ../future/dressable.py:55
+#: ../future/dressable.py:56
 #, fuzzy
 msgid "Dressable"
 msgstr "Preámbulo"
@@ -1814,7 +1839,7 @@ msgstr "Editar"
 msgid "Edit Account"
 msgstr "Cuenta"
 
-#: ../calendar_views.py:267
+#: ../calendar_views.py:405
 #, fuzzy
 msgid "Edit Event"
 msgstr "Editar Texto"
@@ -1824,7 +1849,7 @@ msgstr "Editar Texto"
 msgid "Edit Inline"
 msgstr "Seguridad"
 
-#: ../tracker/issue.py:108
+#: ../tracker/issue.py:107
 #, fuzzy
 msgid "Edit Issue"
 msgstr "Seguridad"
@@ -1834,12 +1859,12 @@ msgstr "Seguridad"
 msgid "Edit Issues"
 msgstr "Seguridad"
 
-#: ../base.py:179
+#: ../base.py:180
 #, fuzzy
 msgid "Edit Language"
 msgstr "Idioma"
 
-#: ../base.py:121
+#: ../base.py:122
 #, fuzzy
 msgid "Edit Metadata"
 msgstr "Editar Texto"
@@ -1866,7 +1891,7 @@ msgstr ""
 msgid "Edit a Product"
 msgstr ""
 
-#: ../future/dressable.py:210
+#: ../future/dressable.py:211
 #, fuzzy
 msgid "Edit image"
 msgstr "Editar Texto"
@@ -1875,7 +1900,7 @@ msgstr "Editar Texto"
 msgid "Edit record ${id}"
 msgstr ""
 
-#: ../tracker/issue.py:205
+#: ../tracker/resources.py:232
 #, fuzzy
 msgid "Edit resources"
 msgstr "Seguridad"
@@ -1921,23 +1946,23 @@ msgstr ""
 msgid "Error: $message"
 msgstr ""
 
-#: ../calendar_views.py:573
+#: ../calendar_views.py:711
 msgid "Event definitely deleted."
 msgstr ""
 
-#: ../calendar_views.py:361
+#: ../calendar_views.py:499
 msgid "Event not found"
 msgstr ""
 
-#: ../binary.py:150
+#: ../binary.py:156
 msgid "Excel"
 msgstr "Excel"
 
-#: ../binary.py:151
+#: ../binary.py:157
 msgid "Excel Spreadsheet"
 msgstr ""
 
-#: ../calendar_views.py:796
+#: ../calendar_views.py:936
 msgid "Export in ical format"
 msgstr ""
 
@@ -1958,11 +1983,11 @@ msgstr "Editor Externo"
 msgid "External Editor..."
 msgstr "Editor Externo..."
 
-#: ../file.py:187
+#: ../file.py:188
 msgid "Failed to load the file, may contain errors."
 msgstr ""
 
-#: ../calendar_views.py:42
+#: ../calendar_views.py:43
 msgid "February"
 msgstr ""
 
@@ -1980,16 +2005,16 @@ msgstr "Nombre completo"
 msgid "Firstname:"
 msgstr "Nombre completo"
 
-#: ../tracker/tracker.py:553
+#: ../tracker/tracker.py:716
 #, fuzzy
 msgid "Fixed"
 msgstr "Campo"
 
-#: ../binary.py:118
+#: ../binary.py:124
 msgid "Flash"
 msgstr ""
 
-#: ../binary.py:119
+#: ../binary.py:125
 #, fuzzy
 msgid "Flash Document"
 msgstr "Añadir Documento"
@@ -2016,7 +2041,7 @@ msgstr "Formato:"
 msgid "Found <b>${total}</b> broken links."
 msgstr ""
 
-#: ../calendar_.py:65
+#: ../calendar_views.py:60
 msgid "Friday"
 msgstr "Viernes"
 
@@ -2024,7 +2049,7 @@ msgstr "Viernes"
 msgid "From"
 msgstr ""
 
-#: ../wiki/folder.py:66
+#: ../wiki/folder.py:71
 msgid "Front Page"
 msgstr ""
 
@@ -2036,7 +2061,7 @@ msgstr ""
 msgid "Go"
 msgstr ""
 
-#: ../tracker/tracker.py:634
+#: ../tracker/tracker.py:797
 msgid "Go To Issue"
 msgstr ""
 
@@ -2048,16 +2073,12 @@ msgstr ""
 msgid "Guest"
 msgstr ""
 
-#: ../binary.py:319
+#: ../binary.py:325
 msgid "Gzip"
 msgstr ""
 
-#: ../binary.py:320
+#: ../binary.py:326
 msgid "Gzip Compressed"
-msgstr ""
-
-#: ../wiki/page.py:64
-msgid "HTML"
 msgstr ""
 
 #: ../text.py:240
@@ -2081,7 +2102,7 @@ msgstr ""
 msgid "Heading 3"
 msgstr ""
 
-#: ../wiki/page.py:568
+#: ../wiki/page.py:416
 msgid "Help"
 msgstr ""
 
@@ -2089,11 +2110,11 @@ msgstr ""
 msgid "Hervé Cauwelier (French)"
 msgstr ""
 
-#: ../tracker/tracker.py:552
+#: ../tracker/tracker.py:715
 msgid "High"
 msgstr ""
 
-#: ../tracker/tracker.py:568
+#: ../tracker/tracker.py:731
 msgid "High Priority"
 msgstr ""
 
@@ -2149,7 +2170,7 @@ msgstr ""
 msgid "Invalid HTML code."
 msgstr ""
 
-#: ../calendar_views.py:348
+#: ../calendar_views.py:486
 msgid "Invalid argument."
 msgstr ""
 
@@ -2157,7 +2178,7 @@ msgstr ""
 msgid "Invalid title."
 msgstr ""
 
-#: ../tracker/resources.py:191
+#: ../tracker/resources.py:178
 msgid "Issue"
 msgstr ""
 
@@ -2169,15 +2190,15 @@ msgstr ""
 msgid "Issue #${number}"
 msgstr ""
 
-#: ../tracker/tracker.py:515
+#: ../tracker/tracker.py:678
 msgid "Issue Tracker"
 msgstr ""
 
-#: ../tracker/tracker.py:500
+#: ../tracker/tracker.py:663
 msgid "Issue not found."
 msgstr ""
 
-#: ../tracker/tables.py:44
+#: ../tracker/tables.py:40
 msgid "Issues"
 msgstr ""
 
@@ -2185,7 +2206,7 @@ msgstr ""
 msgid "Italic"
 msgstr "Cursiva"
 
-#: ../calendar_views.py:41
+#: ../calendar_views.py:42
 msgid "January"
 msgstr "Enero"
 
@@ -2193,11 +2214,11 @@ msgstr "Enero"
 msgid "Juan David Ibáñez Palomar (Spanish)"
 msgstr ""
 
-#: ../calendar_views.py:47
+#: ../calendar_views.py:48
 msgid "July"
 msgstr "Julio"
 
-#: ../calendar_views.py:46
+#: ../calendar_views.py:47
 msgid "June"
 msgstr "Junio"
 
@@ -2269,7 +2290,7 @@ msgstr ""
 msgid "Login"
 msgstr ""
 
-#: ../tracker/tracker.py:552
+#: ../tracker/tracker.py:715
 msgid "Low"
 msgstr ""
 
@@ -2281,15 +2302,15 @@ msgstr ""
 msgid "Manage a project with the issue tracker."
 msgstr ""
 
-#: ../calendar_views.py:43
+#: ../calendar_views.py:44
 msgid "March"
 msgstr "Marzo"
 
-#: ../calendar_views.py:45
+#: ../calendar_views.py:46
 msgid "May"
 msgstr "Mayo"
 
-#: ../tracker/tracker.py:552
+#: ../tracker/tracker.py:715
 msgid "Medium"
 msgstr ""
 
@@ -2306,7 +2327,7 @@ msgstr ""
 msgid "Members deleted."
 msgstr ""
 
-#: ../forum/message.py:51
+#: ../forum/message.py:50
 msgid "Message"
 msgstr "Mensaje"
 
@@ -2325,7 +2346,7 @@ msgstr "Mensaje"
 msgid "Message Catalog"
 msgstr "Catalogo de Mensajes"
 
-#: ../forum/message.py:52
+#: ../forum/message.py:51
 #, fuzzy
 msgid "Message in a thread"
 msgstr "Catalogo de Mensajes"
@@ -2335,7 +2356,7 @@ msgstr "Catalogo de Mensajes"
 msgid "Message sent."
 msgstr "Mensaje"
 
-#: ../forum/thread.py:98
+#: ../forum/thread.py:99
 #, fuzzy
 msgid "Message(s) deleted !"
 msgstr "Mensaje"
@@ -2345,15 +2366,15 @@ msgstr "Mensaje"
 msgid "Message:"
 msgstr "Mensaje"
 
-#: ../tracker/tracker.py:758
+#: ../tracker/tracker.py:921
 msgid "Modifications:"
 msgstr ""
 
-#: ../tracker/tracker.py:66
+#: ../tracker/tracker.py:67
 msgid "Modified"
 msgstr ""
 
-#: ../tracker/tracker.py:61
+#: ../tracker/tracker.py:62
 #, fuzzy
 msgid "Module"
 msgstr "Código"
@@ -2363,11 +2384,11 @@ msgstr "Código"
 msgid "Module:"
 msgstr "Código"
 
-#: ../calendar_.py:61
+#: ../calendar_views.py:56
 msgid "Monday"
 msgstr "Lunes"
 
-#: ../calendar_views.py:587
+#: ../calendar_views.py:725
 #, fuzzy
 msgid "Monthly View"
 msgstr "Mensualmente"
@@ -2393,7 +2414,7 @@ msgstr ""
 msgid "Name"
 msgstr "Nombre"
 
-#: ../tracker/tracker.py:540
+#: ../tracker/tracker.py:703
 #, fuzzy
 msgid "New Feature"
 msgstr "Nuevo Recurso"
@@ -2410,7 +2431,7 @@ msgstr ""
 msgid "New Wiki Page"
 msgstr ""
 
-#: ../tracker/tracker.py:121
+#: ../tracker/tracker.py:122
 #, fuzzy
 msgid "New issue added."
 msgstr "Nuevo recurso agregado."
@@ -2443,7 +2464,7 @@ msgstr ""
 msgid "No Object removed."
 msgstr "Objetos renombrados."
 
-#: ../tracker/tracker.py:695
+#: ../tracker/tracker.py:858
 msgid "No data to export."
 msgstr ""
 
@@ -2455,7 +2476,7 @@ msgstr ""
 msgid "No history."
 msgstr ""
 
-#: ../tracker/tables.py:117
+#: ../tracker/tables.py:113
 msgid "No objects selected."
 msgstr "No se ha seleccionado ningún objeto."
 
@@ -2463,7 +2484,7 @@ msgstr "No se ha seleccionado ningún objeto."
 msgid "No products in your cart"
 msgstr ""
 
-#: ../tracker/tracker.py:567
+#: ../tracker/tracker.py:730
 msgid "Not Assigned"
 msgstr ""
 
@@ -2479,7 +2500,7 @@ msgstr ""
 msgid "Note:"
 msgstr "Nota:"
 
-#: ../calendar_views.py:127
+#: ../calendar_views.py:137
 msgid "Nothing to change."
 msgstr "Nada para cambiar."
 
@@ -2488,23 +2509,23 @@ msgstr "Nada para cambiar."
 msgid "Nothing to paste."
 msgstr "Nada para cambiar."
 
-#: ../calendar_views.py:134
+#: ../calendar_views.py:144
 msgid "Nothing to remove."
 msgstr ""
 
-#: ../calendar_views.py:51
+#: ../calendar_views.py:52
 msgid "November"
 msgstr ""
 
-#: ../binary.py:258
+#: ../binary.py:264
 msgid "ODP"
 msgstr ""
 
-#: ../binary.py:246
+#: ../binary.py:252
 msgid "ODS"
 msgstr ""
 
-#: ../binary.py:234
+#: ../binary.py:240
 msgid "ODT"
 msgstr ""
 
@@ -2512,15 +2533,15 @@ msgstr ""
 msgid "OK"
 msgstr ""
 
-#: ../binary.py:186
+#: ../binary.py:192
 msgid "OOo Calc"
 msgstr ""
 
-#: ../binary.py:198
+#: ../binary.py:204
 msgid "OOo Impress"
 msgstr ""
 
-#: ../binary.py:174
+#: ../binary.py:180
 msgid "OOo Writer"
 msgstr ""
 
@@ -2585,7 +2606,7 @@ msgstr "Objetos renombrados."
 msgid "Objects pasted."
 msgstr "Objetos pegados."
 
-#: ../tracker/tables.py:136
+#: ../tracker/tables.py:132
 msgid "Objects removed: $objects."
 msgstr "Objetos suprimidos: $objects"
 
@@ -2593,7 +2614,7 @@ msgstr "Objetos suprimidos: $objects"
 msgid "Objects renamed."
 msgstr "Objetos renombrados."
 
-#: ../calendar_views.py:50
+#: ../calendar_views.py:51
 msgid "October"
 msgstr ""
 
@@ -2601,7 +2622,7 @@ msgstr ""
 msgid "Ok"
 msgstr ""
 
-#: ../calendar_views.py:506
+#: ../calendar_views.py:644
 msgid "One or more field is invalid."
 msgstr ""
 
@@ -2609,38 +2630,38 @@ msgstr ""
 msgid "Only administrators will be able to register new users."
 msgstr ""
 
-#: ../tracker/tracker.py:553
+#: ../tracker/tracker.py:716
 msgid "Open"
 msgstr ""
 
-#: ../tracker/tracker.py:566
+#: ../tracker/tracker.py:729
 msgid "Open Issues"
 msgstr ""
 
-#: ../binary.py:259
+#: ../binary.py:265
 #, fuzzy
 msgid "OpenDocument Presentation"
 msgstr "Documento"
 
-#: ../binary.py:247
+#: ../binary.py:253
 #, fuzzy
 msgid "OpenDocument Spreadsheet"
 msgstr "Documento Flash"
 
-#: ../binary.py:235
+#: ../binary.py:241
 #, fuzzy
 msgid "OpenDocument Text"
 msgstr "Documento editado."
 
-#: ../binary.py:199
+#: ../binary.py:205
 msgid "OpenOffice.org Presentation"
 msgstr ""
 
-#: ../binary.py:187
+#: ../binary.py:193
 msgid "OpenOffice.org Spreadsheet"
 msgstr ""
 
-#: ../binary.py:175
+#: ../binary.py:181
 msgid "OpenOffice.org Text"
 msgstr ""
 
@@ -2706,7 +2727,7 @@ msgstr "Lista Ordenada"
 msgid "Ordered Objects"
 msgstr "Lista Ordenada"
 
-#: ../tracker/tables.py:151
+#: ../tracker/tables.py:147
 #, fuzzy
 msgid "Ordered select table"
 msgstr "Lista Ordenada"
@@ -2733,20 +2754,20 @@ msgstr "Borde"
 msgid "Our products"
 msgstr ""
 
-#: ../wiki/page.py:293
+#: ../wiki/page.py:130
 msgid "PDF"
 msgstr "PDF"
 
-#: ../binary.py:211
+#: ../binary.py:217
 #, fuzzy
 msgid "PDF Document"
 msgstr "Añadir Documento"
 
-#: ../wiki/page.py:480
+#: ../wiki/page.py:318
 msgid "PDF generation failed."
 msgstr ""
 
-#: ../wiki/page.py:465
+#: ../wiki/page.py:303
 msgid "PDF generation failed. Please install pdflatex."
 msgstr ""
 
@@ -2778,7 +2799,7 @@ msgstr ""
 msgid "Pending"
 msgstr ""
 
-#: ../tracker/tracker.py:542
+#: ../tracker/tracker.py:705
 msgid "Performance Improvement"
 msgstr ""
 
@@ -2830,11 +2851,11 @@ msgstr ""
 msgid "Post a Reply"
 msgstr ""
 
-#: ../binary.py:162
+#: ../binary.py:168
 msgid "PowerPoint"
 msgstr ""
 
-#: ../binary.py:163
+#: ../binary.py:169
 msgid "PowerPoint Presentation"
 msgstr ""
 
@@ -2851,7 +2872,7 @@ msgstr ""
 msgid "Price"
 msgstr "Privado"
 
-#: ../tracker/tracker.py:63
+#: ../tracker/tracker.py:64
 msgid "Priority"
 msgstr ""
 
@@ -2879,7 +2900,7 @@ msgstr ""
 msgid "Profile"
 msgstr "Perfil"
 
-#: ../tracker/tracker.py:538
+#: ../tracker/tracker.py:701
 msgid "Programming Interface"
 msgstr ""
 
@@ -2908,16 +2929,16 @@ msgstr ""
 msgid "REQUIRED"
 msgstr ""
 
-#: ../binary.py:222
+#: ../binary.py:228
 msgid "RTF"
 msgstr ""
 
-#: ../binary.py:223
+#: ../binary.py:229
 #, fuzzy
 msgid "RTF Document"
 msgstr "Añadir Documento"
 
-#: ../tracker/tables.py:155
+#: ../tracker/tables.py:151
 msgid "Rank"
 msgstr ""
 
@@ -2953,7 +2974,7 @@ msgstr ""
 msgid "Reject the document."
 msgstr "Rechazar el documento."
 
-#: ../tracker/tables.py:172
+#: ../tracker/tables.py:168
 #, fuzzy
 msgid "Released"
 msgstr "Revisores"
@@ -2980,7 +3001,7 @@ msgstr ""
 msgid "Replace"
 msgstr "Revisores"
 
-#: ../forum/thread.py:88
+#: ../forum/thread.py:89
 #, fuzzy
 msgid "Reply posted"
 msgstr "Revisores"
@@ -2998,16 +3019,16 @@ msgstr ""
 msgid "Resource"
 msgstr "Nuevo Recurso"
 
-#: ../calendar_.py:376
+#: ../calendar_.py:190
 msgid "Resource not found."
 msgstr ""
 
-#: ../tracker/resources.py:201
+#: ../tracker/resources.py:188
 #, fuzzy
 msgid "Resources"
 msgstr "Nuevo Recurso"
 
-#: ../tracker/resources.py:202
+#: ../tracker/resources.py:189
 msgid "Resources assigned to issues"
 msgstr ""
 
@@ -3042,7 +3063,7 @@ msgstr "Roles actualizados."
 msgid "Row deleted."
 msgstr "Roles actualizados."
 
-#: ../calendar_.py:66
+#: ../calendar_views.py:61
 msgid "Saturday"
 msgstr ""
 
@@ -3055,7 +3076,7 @@ msgstr "Estado"
 msgid "Save & View"
 msgstr ""
 
-#: ../calendar_.py:70
+#: ../calendar_.py:45
 msgid "Schedule your time with calendar files."
 msgstr ""
 
@@ -3063,17 +3084,7 @@ msgstr ""
 msgid "Search"
 msgstr "Buscar"
 
-#: ../tracker/ui/search.xml.en:96
-#, fuzzy
-msgid "Search on resources"
-msgstr "Nuevo Recurso"
-
-#: ../tracker/ui/search.xml.en:9
-#, fuzzy
-msgid "Search:"
-msgstr "Buscar"
-
-#: ../tracker/tracker.py:540
+#: ../tracker/tracker.py:703
 #, fuzzy
 msgid "Security Issue"
 msgstr "Seguridad"
@@ -3101,7 +3112,7 @@ msgstr "Tareas pendientes."
 msgid "Select Resource"
 msgstr "Nuevo Recurso"
 
-#: ../tracker/tables.py:79
+#: ../tracker/tables.py:75
 #, fuzzy
 msgid "Select Table"
 msgstr "Insertar Tabla"
@@ -3114,7 +3125,7 @@ msgstr ""
 msgid "Sender email address"
 msgstr ""
 
-#: ../calendar_views.py:49
+#: ../calendar_views.py:50
 msgid "September"
 msgstr ""
 
@@ -3155,7 +3166,7 @@ msgstr "Editar Texto"
 msgid "Some things you can do with ikaaro:"
 msgstr ""
 
-#: ../tracker/tracker.py:541
+#: ../tracker/tracker.py:704
 msgid "Stability Issue"
 msgstr ""
 
@@ -3163,15 +3174,15 @@ msgstr ""
 msgid "Start"
 msgstr "Empezar"
 
-#: ../tracker/resources.py:188
+#: ../tracker/resources.py:175
 msgid "Start YYYY-MM-DD HH:MM"
 msgstr ""
 
-#: ../calendar_views.py:512
+#: ../calendar_views.py:650
 msgid "Start date MUST be earlier than end date."
 msgstr ""
 
-#: ../calendar_views.py:79
+#: ../calendar_views.py:90
 msgid "Start time must be earlier than end time."
 msgstr ""
 
@@ -3196,12 +3207,12 @@ msgstr "Estado"
 msgid "Stock quantity"
 msgstr ""
 
-#: ../tracker/tracker.py:975
+#: ../tracker/tracker.py:1133
 #, fuzzy
 msgid "Stored Search"
 msgstr "Búsqueda Avanzada"
 
-#: ../tracker/tracker.py:648
+#: ../tracker/tracker.py:811
 #, fuzzy
 msgid "Stored Searches"
 msgstr "Búsqueda Avanzada"
@@ -3218,7 +3229,7 @@ msgstr ""
 msgid "Summary"
 msgstr ""
 
-#: ../calendar_.py:67
+#: ../calendar_views.py:62
 msgid "Sunday"
 msgstr ""
 
@@ -3226,7 +3237,7 @@ msgstr ""
 msgid "Sylvain Taverne (French)"
 msgstr ""
 
-#: ../wiki/page.py:547
+#: ../wiki/page.py:394
 msgid "Syntax error, please check the view for details."
 msgstr ""
 
@@ -3235,11 +3246,11 @@ msgstr ""
 msgid "Table"
 msgstr "Preámbulo"
 
-#: ../binary.py:304
+#: ../binary.py:310
 msgid "Tar"
 msgstr ""
 
-#: ../binary.py:305
+#: ../binary.py:311
 msgid "Tar Archive"
 msgstr ""
 
@@ -3252,11 +3263,11 @@ msgstr "Texto"
 msgid "Tasks"
 msgstr "Tareas"
 
-#: ../tracker/tracker.py:542
+#: ../tracker/tracker.py:705
 msgid "Technology Upgrade"
 msgstr ""
 
-#: ../calendar_views.py:86
+#: ../calendar_views.py:97
 msgid "Tentative"
 msgstr ""
 
@@ -3264,7 +3275,7 @@ msgstr ""
 msgid "Text"
 msgstr "Texto"
 
-#: ../calendar_views.py:809
+#: ../calendar_views.py:949
 msgid "Text view"
 msgstr ""
 
@@ -3306,7 +3317,7 @@ msgstr ""
 "La dirección de correo electrónico es incorrecta, por favor intentelo de "
 "nuevo."
 
-#: ../future/dressable.py:329
+#: ../future/dressable.py:330
 msgid "The file is not an image"
 msgstr ""
 
@@ -3314,7 +3325,7 @@ msgstr ""
 msgid "The file must be entered."
 msgstr ""
 
-#: ../base.py:246
+#: ../base.py:247
 msgid "The given file is not an image."
 msgstr ""
 
@@ -3347,7 +3358,7 @@ msgstr ""
 msgid "The user \"$username\" is not active."
 msgstr ""
 
-#: ../tracker/issue.py:627
+#: ../tracker/issue.py:530
 #, fuzzy
 msgid "The user $title did some changes."
 msgstr "Las claves de acceso no concuerdan."
@@ -3363,11 +3374,6 @@ msgstr ""
 #: ../views.py:91
 #, fuzzy
 msgid "There are ${n} items."
-msgstr "No hay mensajes."
-
-#: ../tracker/tracker.py:391
-#, fuzzy
-msgid "There are ${n} results."
 msgstr "No hay mensajes."
 
 #: ../future/ui/order_items.xml.en:9
@@ -3398,11 +3404,6 @@ msgstr "Ha habido un error, por favor intentalo más tarde."
 msgid "There is 1 item."
 msgstr "No hay mensajes."
 
-#: ../tracker/tracker.py:390
-#, fuzzy
-msgid "There is 1 result."
-msgstr "No hay mensajes."
-
 #: ../website_views.py:560
 msgid "There is already an active user with that email."
 msgstr ""
@@ -3419,7 +3420,7 @@ msgstr ""
 msgid "There is not a user identified as \"$username\""
 msgstr ""
 
-#: ../file.py:238
+#: ../file.py:239
 msgid "This page is lock by another user"
 msgstr ""
 
@@ -3437,7 +3438,7 @@ msgstr ""
 msgid "This program is free software:"
 msgstr ""
 
-#: ../forum/thread.py:110
+#: ../forum/thread.py:111
 msgid "Thread"
 msgstr ""
 
@@ -3445,19 +3446,19 @@ msgstr ""
 msgid "Thread Created."
 msgstr ""
 
-#: ../calendar_.py:64
+#: ../calendar_views.py:59
 msgid "Thursday"
 msgstr ""
 
-#: ../calendar_views.py:139
+#: ../calendar_views.py:149
 msgid "Timetable(s) removed successfully."
 msgstr ""
 
-#: ../calendar_views.py:96
+#: ../calendar_views.py:106
 msgid "Timetables"
 msgstr ""
 
-#: ../calendar_views.py:159
+#: ../calendar_views.py:169
 msgid "Timetables updated successfully."
 msgstr ""
 
@@ -3474,7 +3475,7 @@ msgstr "Título"
 msgid "To activate your account, please type a password."
 msgstr ""
 
-#: ../calendar_views.py:321
+#: ../calendar_views.py:459
 msgid "To add an event, click on + symbol from the views."
 msgstr ""
 
@@ -3499,7 +3500,7 @@ msgstr ""
 msgid "To learn more, check out these resources:"
 msgstr ""
 
-#: ../tracker/tracker.py:516
+#: ../tracker/tracker.py:679
 msgid "To manage bugs and tasks"
 msgstr ""
 
@@ -3534,11 +3535,11 @@ msgstr "Traducir"
 msgid "Transport XXX"
 msgstr ""
 
-#: ../calendar_.py:62
+#: ../calendar_views.py:57
 msgid "Tuesday"
 msgstr ""
 
-#: ../tracker/tracker.py:62
+#: ../tracker/tracker.py:63
 msgid "Type"
 msgstr "Tipo"
 
@@ -3564,7 +3565,7 @@ msgstr "Tipo"
 msgid "URL"
 msgstr ""
 
-#: ../file.py:178
+#: ../file.py:179
 msgid "Unexpected file of mimetype ${type}"
 msgstr ""
 
@@ -3576,12 +3577,12 @@ msgstr ""
 msgid "Unit Price Before VAT"
 msgstr ""
 
-#: ../tracker/tracker.py:537
+#: ../tracker/tracker.py:700
 #, fuzzy
 msgid "Unit Tests"
 msgstr "Editar Texto"
 
-#: ../tracker/tracker.py:863
+#: ../tracker/tracker.py:1026
 msgid "Unknown stored search \"${sname}\"."
 msgstr ""
 
@@ -3605,7 +3606,7 @@ msgstr ""
 msgid "Upload"
 msgstr ""
 
-#: ../file.py:53
+#: ../file.py:54
 msgid "Upload File"
 msgstr ""
 
@@ -3629,11 +3630,11 @@ msgstr ""
 msgid "Upload and Link"
 msgstr ""
 
-#: ../calendar_views.py:770
+#: ../calendar_views.py:910
 msgid "Upload from an ical file"
 msgstr ""
 
-#: ../file.py:305
+#: ../file.py:306
 msgid "Upload office documents, images, media files, etc."
 msgstr ""
 
@@ -3671,16 +3672,16 @@ msgstr "Usuarios"
 msgid "VAT"
 msgstr ""
 
-#: ../tracker/tracker.py:553
+#: ../tracker/tracker.py:716
 msgid "Verified"
 msgstr ""
 
-#: ../tracker/tracker.py:60
+#: ../tracker/tracker.py:61
 #, fuzzy
 msgid "Version"
 msgstr "Permisos"
 
-#: ../file.py:193
+#: ../file.py:194
 #, fuzzy
 msgid "Version uploaded"
 msgstr "Versión editada."
@@ -3690,15 +3691,15 @@ msgstr "Versión editada."
 msgid "Version:"
 msgstr "Permisos"
 
-#: ../binary.py:105
+#: ../binary.py:112
 msgid "Video"
 msgstr ""
 
-#: ../wiki/folder.py:36
+#: ../wiki/page.py:65
 msgid "View"
 msgstr "Ver"
 
-#: ../tracker/tracker.py:365
+#: ../tracker/tracker.py:383
 msgid "View Tracker"
 msgstr ""
 
@@ -3724,7 +3725,7 @@ msgstr ""
 msgid "Visit the project's <a href=\"http://www.ikaaro.org/\">Web Site</a>;"
 msgstr ""
 
-#: ../tracker/tracker.py:539
+#: ../tracker/tracker.py:702
 msgid "Visual Interface"
 msgstr ""
 
@@ -3741,37 +3742,37 @@ msgstr "Sitio Web"
 msgid "Web Site"
 msgstr "Sitio Web"
 
-#: ../calendar_.py:63
+#: ../calendar_views.py:58
 msgid "Wednesday"
 msgstr ""
 
-#: ../calendar_views.py:190
+#: ../calendar_views.py:232
 #, fuzzy
 msgid "Week $n"
 msgstr "Semana"
 
-#: ../calendar_views.py:661
+#: ../calendar_views.py:802
 #, fuzzy
 msgid "Weekly View"
 msgstr "Semanalmente"
 
-#: ../wiki/folder.py:52
+#: ../wiki/folder.py:57
 msgid "Wiki"
 msgstr ""
 
-#: ../wiki/page.py:130
+#: ../wiki/page.py:440
 msgid "Wiki Page"
 msgstr ""
 
-#: ../wiki/page.py:131
+#: ../wiki/page.py:441
 msgid "Wiki contents"
 msgstr ""
 
-#: ../binary.py:138
+#: ../binary.py:144
 msgid "Word"
 msgstr ""
 
-#: ../binary.py:139
+#: ../binary.py:145
 #, fuzzy
 msgid "Word Text"
 msgstr "Editar Texto"
@@ -3784,11 +3785,11 @@ msgstr ""
 msgid "Workflow State"
 msgstr ""
 
-#: ../calendar_views.py:77
+#: ../calendar_views.py:88
 msgid "Wrong time selection (HH:MM)."
 msgstr ""
 
-#: ../calendar_views.py:72
+#: ../calendar_views.py:83
 msgid "Wrong time selection."
 msgstr ""
 
@@ -3805,7 +3806,7 @@ msgstr "Sí"
 msgid "You Are Now Logged out"
 msgstr ""
 
-#: ../calendar_views.py:474
+#: ../calendar_views.py:612
 msgid "You are not authorized to modify this event."
 msgstr ""
 
@@ -3909,7 +3910,7 @@ msgstr ""
 msgid "Zip"
 msgstr ""
 
-#: ../binary.py:293
+#: ../binary.py:299
 msgid "Zip Archive"
 msgstr ""
 
@@ -3938,11 +3939,11 @@ msgstr ""
 #: ../ui/aruni/template.xhtml.en:54
 msgid ""
 "[ <span stl:repeat=\"menu tabs\" class=\"menu ${menu/class}\">  <a href="
-"\"${menu/name}\" id=\"${menu/id}\">${menu/label}</a>  <stl:block stl:if="
-"\"not repeat/menu/end\">|</stl:block>  </span> ]"
+"\"${menu/name}\" id=\"${menu/id}\">${menu/label}</a>  <stl:inline stl:if="
+"\"not repeat/menu/end\">|</stl:inline>  </span> ]"
 msgstr ""
 
-#: ../tracker/tracker.py:787
+#: ../tracker/tracker.py:950
 msgid "[%s]"
 msgstr ""
 
@@ -4214,6 +4215,14 @@ msgstr ""
 #~ msgstr "Guardar Cambios"
 
 #, fuzzy
+#~ msgid "Search on resources"
+#~ msgstr "Nuevo Recurso"
+
+#, fuzzy
+#~ msgid "Search:"
+#~ msgstr "Buscar"
+
+#, fuzzy
 #~ msgid "Sender"
 #~ msgstr "Centrar"
 
@@ -4250,6 +4259,14 @@ msgstr ""
 #~ msgstr ""
 #~ "La dirección de correo electrónico es incorrecta, por favor intentelo de "
 #~ "nuevo."
+
+#, fuzzy
+#~ msgid "There are ${n} results."
+#~ msgstr "No hay mensajes."
+
+#, fuzzy
+#~ msgid "There is 1 result."
+#~ msgstr "No hay mensajes."
 
 #~ msgid "This folder is empty."
 #~ msgstr "Esta carpeta está vacía."
