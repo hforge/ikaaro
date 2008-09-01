@@ -131,6 +131,10 @@ class Server(BaseServer):
         # Contact Email
         self.smtp_from = config.get_value('smtp-from')
 
+        # Full-text indexing
+        self.index_text =  config.get_value('index-text', type=Boolean,
+                                            default=True)
+
         # The database
         events_log = '%s/log/events' % target.path
         database = SafeDatabase('%s/database.commit' % target.path,
