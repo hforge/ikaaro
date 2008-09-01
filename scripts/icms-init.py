@@ -71,6 +71,11 @@ contact-email = ${contact_email}
 # active (debug = 0).
 #
 debug = 0
+
+# The "index-text" vairable defines whether the catalog must process full-text
+# indexing. It requires (much) more time and third-party applications.
+# To speed up catalog updates, set this option to 0 (default is 1).
+index-text = 1
 """)
 
 

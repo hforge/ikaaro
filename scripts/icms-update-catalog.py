@@ -27,6 +27,9 @@ from itools.catalog import CatalogAware
 from itools.utils import vmsize
 from itools import vfs
 from itools.catalog import make_catalog
+from itools.web import set_context, Context
+from itools.i18n.accept import AcceptLanguage
+from itools.http import Request
 
 # Import from ikaaro
 from ikaaro.server import ask_confirmation
@@ -63,7 +66,13 @@ def update_catalog(parser, options, target):
     # Get the root
     server = Server(target)
     root = server.root
-    del server
+
+    # Build a fake context
+    context = Context(Request())
+    context.server = server
+    context.accept_language = AcceptLanguage()
+    context.uri = None
+    set_context(context)
 
     # Update
     t0, v0 = time(), vmsize()

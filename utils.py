@@ -186,5 +186,3 @@ def generate_name(name, used, suffix='_'):
         name = ''.join([basename, suffix, str(index), extent])
 
     return str(name)
-
-

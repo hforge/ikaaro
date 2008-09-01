@@ -344,16 +344,16 @@ class DBObject(CatalogAware, Node, DomainAware):
             'mtime': mtime.strftime('%Y%m%d%H%M%S')}
 
         # Full text
-        try:
-            text = self.to_text()
-        except NotImplementedError:
-            pass
-        except:
-            context = get_context()
-            if context is not None:
+        context = get_context()
+        if context is not None and context.server.index_text:
+            try:
+                text = self.to_text()
+            except NotImplementedError:
+                pass
+            except:
                 context.server.log_error(context)
-        else:
-            document['text'] = text
+            else:
+                document['text'] = text
 
         # Links
         document['links'] = self.get_links()

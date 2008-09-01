@@ -178,7 +178,7 @@ class WebPage(EpozEditable, Multilingual, Text):
     #######################################################################
     def to_text(self):
         text = [ x.to_text() for x in self.get_handlers() ]
-        return ' '.join(text)
+        return u' '.join(text)
 
 
     GET__mtime__ = None

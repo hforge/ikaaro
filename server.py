@@ -99,6 +99,10 @@ class Server(BaseServer):
         # Contact Email
         self.contact_email = config.get_value('contact-email')
 
+        # Full-text indexing
+        self.index_text =  config.get_value('index-text', type=Boolean,
+                                            default=True)
+
         # The database
         events_log = '%s/log/events' % target.path
         database = SafeDatabase('%s/database.commit' % target.path, events_log)
