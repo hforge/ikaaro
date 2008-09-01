@@ -51,37 +51,44 @@ summizes these changes:
   ikaaro.messages.MSG_MISSING_OR_INVALID  itools.web.MSG_MISSING_OR_INVALID
 
 
-
-
-Architecture
+User Interface
 ====================
 
+(1) The two level drop-down menu has ben flat to just one level.  As a side
+effect the 'class_views' variable has become a simple list.
 
-Metadata
-====================
+  # Before
+  class MyClass(...):
+      class_views = [['view'], ['edit_form', 'metadata_form']]
 
+  # Now
+  class MyClass(...):
+      class_views = ['view', 'edit_form', 'metadata_form']
 
-Indexing
-====================
+Another side effect of the new interface is that the metadata of a view
+has been simplified:
 
+  1. '__label__', '__sublabel__' and '__title__' have been merged into 'title'
 
-Upgrading
-====================
+  2. '__access__' and '__description__' are just the same
 
+  3. '__icon__' is not used anymore
 
-New Instances
-====================
+For instance:
 
+  # Before
+  view__access__ = True
+  view__label__ = u'View'
+  view__sublabel__ = u'View'
+  view__title__ = u'View'
+  view__description__ = u'...'
+  view__icon__ = '/ui/...'
+  def view(self, context):
+      ...
 
-Other API changes
-====================
-
-
-Obsolete Code
-====================
-
-
-UNCLASSIFIED
-============
-
+  # Now
+  class View(...):
+    access = True
+    title = MSG(u'View')
+    description = MSG(u'...')
 
