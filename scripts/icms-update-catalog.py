@@ -33,7 +33,7 @@ from itools.http import Request
 
 # Import from ikaaro
 from ikaaro.server import ask_confirmation
-from ikaaro.server import get_config, get_pid, get_root, load_modules
+from ikaaro.server import Server, get_pid
 
 
 def update_catalog(parser, options, target):
@@ -63,12 +63,8 @@ def update_catalog(parser, options, target):
         vfs.remove(catalog_path)
     catalog = make_catalog(catalog_path)
 
-    # Load the Python modules
-    config = get_config(target)
-    load_modules(config)
-
     # Get the root
-    server = Server(target)
+    server = Server(target, read_only=True)
     root = server.root
 
     # Build a fake context
