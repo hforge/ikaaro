@@ -78,7 +78,6 @@ written now also as views:
           ...
 
 
-
 User Interface
 ====================
 
@@ -119,4 +118,13 @@ For instance:
     access = True
     title = MSG(u'View')
     description = MSG(u'...')
+
+(2) The 'get_firstview' method has been removed.  So making a link to a
+resource has been simplified:
+
+  # Before
+  goto = '%s/;%s' % (resource.name, resource.get_firstview())
+
+  # Now
+  goto = '%s' % resource.name
 
