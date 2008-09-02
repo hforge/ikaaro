@@ -55,10 +55,11 @@ class NewObjectForm(NewInstanceForm):
 
     access = 'is_allowed_to_add'
     template = '/ui/base/new_instance.xml'
+    query_schema = {
+        'type': String}
     schema = {
         'name': String,
-        'title': Unicode,
-    }
+        'title': Unicode}
 
 
     def get_title(self, context):
@@ -72,7 +73,7 @@ class NewObjectForm(NewInstanceForm):
 
 
     def get_namespace(self, resource, context):
-        type = context.get_query_value('type')
+        type = context.query['type']
         cls = get_object_class(type)
         return {
             'title': context.get_form_value('title', type=Unicode),
@@ -103,7 +104,7 @@ class NewObjectForm(NewInstanceForm):
             return
 
         # Create the object
-        class_id = context.get_form_value('class_id')
+        class_id = context.query['type']
         cls = get_object_class(class_id)
         object = cls.make_object(cls, resource, name)
         # The metadata
