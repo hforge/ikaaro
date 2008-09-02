@@ -325,6 +325,17 @@ class Skin(UIFolder):
         return tabs
 
 
+    def get_location(self, context):
+        root = context.root
+
+        namespace = {
+            'breadcrumb': self.get_breadcrumb(context),
+            'tabs': self.get_tabs(context)}
+
+        template = root.get_resource('/ui/aruni/location.xml')
+        return stl(template, namespace)
+
+
     #######################################################################
     # Body
     #######################################################################
@@ -380,8 +391,7 @@ class Skin(UIFolder):
             # User
             'user': self.get_user_menu(context),
             # Location & Views
-            'breadcrumb': self.get_breadcrumb(context),
-            'tabs': self.get_tabs(context),
+            'location': self.get_location(context),
             # Body
             'page_title': self.get_page_title(context),
             'message': self.get_message(context),

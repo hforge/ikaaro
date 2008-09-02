@@ -37,24 +37,7 @@
     </div>
 
     <!-- Location & Views-->
-    <div id="location">
-      <div id="breadcrumbs">
-        <label>Location:</label>
-        <span stl:repeat="item breadcrumb"><a stl:if="item/url"
-          href="${item/url}" title="${item/name}">${item/short_name}</a
-          ><span stl:if="not item/url" title="${item/name}"
-          >${item/short_name}</span><stl:inline
-          stl:if="not repeat/item/end">/</stl:inline></span>
-      </div>
-      <div id="tabs" stl:if="tabs">
-        [
-        <span class="menu ${menu/class}" stl:repeat="menu tabs">
-          <a href="${menu/name}" id="${menu/id}">${menu/label}</a>
-          <stl:inline stl:if="not repeat/menu/end">|</stl:inline>
-        </span>
-        ]
-      </div>
-    </div>
+    ${location}
 
     <!-- Body -->
     <div id="body">
