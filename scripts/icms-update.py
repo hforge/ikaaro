@@ -23,6 +23,7 @@ from traceback import print_exc
 
 # Import from itools
 import itools
+from itools.http import Request
 from itools import vfs
 from itools.web import set_context, Context
 
@@ -99,7 +100,7 @@ def update(parser, options, target):
     # STAGE 2: General Upgrade code
     #######################################################################
     # Build a fake context
-    context = Context(None)
+    context = Context(Request())
     context.server = server
     set_context(context)
 
