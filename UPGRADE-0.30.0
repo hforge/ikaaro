@@ -1,6 +1,6 @@
 
 **********************************************************************
-Upgrade to ikaaro 0.20.0
+Upgrade to ikaaro 0.30.0
 System Administrators
 **********************************************************************
 
@@ -33,7 +33,7 @@ As usual instances must be updated following the standard procedure:
 
 
 **********************************************************************
-Upgrade to ikaaro 0.20.0
+Upgrade to ikaaro 0.30.0
 Developers
 **********************************************************************
 
@@ -49,6 +49,34 @@ summizes these changes:
   Before                                  Now
   --------------------------------------  ---------------------------------
   ikaaro.messages.MSG_MISSING_OR_INVALID  itools.web.MSG_MISSING_OR_INVALID
+
+
+Architecture
+====================
+
+The changes on the views architecture belong to itools, but here we will
+comment on some specifics to ikaaro.
+
+(1) The couple of static methods new_instance_form/new_instance must be
+written now also as views:
+
+  # Before
+  @staticmethod
+  def new_instance_form(cls, context):
+      ...
+
+  @staticmethod
+  def new_instance(cls, container, context):
+      ...
+
+  # Now
+  from ikaaro.views import NewInstanceForm
+  class MyClassNewInstance(NewInstanceForm):
+      def get_namespace(self, resource, context):
+          ...
+      def action(self, resource, context, form):
+          ...
+
 
 
 User Interface
