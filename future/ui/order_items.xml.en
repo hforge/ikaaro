@@ -12,6 +12,7 @@
           <thead>
             <tr>
               <th></th>
+              <th></th>
               <th>Name</th>
               <th>Title</th>
               <th>State</th>
@@ -19,15 +20,20 @@
           </thead>
           <tbody>
             <tr stl:repeat="object ordered" class="${repeat/object/even}">
-              <td><input type="checkbox" name="ordered_names"
-                         value="${object/name}" /></td>
               <td>
-                <a stl:if="object/is_orderaware" href="${object/path}">
+                <input type="checkbox" name="ordered_names"
+                  value="${object/name}" />
+              </td>
+              <td>
+                <img src="${object/img}" width="16" height="16" />
+              </td>
+              <td>
+                <a stl:if="object/path" href="${object/path}">
                   ${object/name}
                 </a>
-                <stl:inline stl:if="not object/is_orderaware">
+                <span stl:if="not object/path">
                   ${object/name}
-                </stl:inline>
+                </span>
               </td>
               <td>${object/title}</td>
               <td>${object/workflow_state}</td>
@@ -52,6 +58,7 @@
           <thead>
             <tr>
               <th></th>
+              <th></th>
               <th>Name</th>
               <th>Title</th>
               <th>State</th>
@@ -59,8 +66,13 @@
           </thead>
           <tbody>
             <tr stl:repeat="object unordered" class="${repeat/object/even}">
-              <td><input type="checkbox" name="unordered_names"
-                         value="${object/name}" /></td>
+              <td>
+                <input type="checkbox" name="unordered_names"
+                  value="${object/name}" />
+              </td>
+              <td>
+                <img src="${object/img}" width="16" height="16" />
+              </td>
               <td>${object/name}</td>
               <td>${object/title}</td>
               <td>${object/workflow_state}</td>
