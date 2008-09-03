@@ -23,14 +23,20 @@ from itools.stl import stl
 
 
 class OrderAware(object):
+    # FIXME backwards compatibility
+    # Use "get_orderable_classes"
     orderable_classes = None
-
 
     @classmethod
     def get_metadata_schema(cls):
         return {
             'order': Tokens(default=()),
         }
+
+
+    @classmethod
+    def get_orderable_classes(cls):
+        return (cls,)
 
 
     def get_ordered_names(self, mode='mixed'):
@@ -40,7 +46,9 @@ class OrderAware(object):
             mode all -> (ordered, unordered)
             default mode : mixed
         """
-        orderable_classes = self.orderable_classes or self.__class__
+        orderable_classes = self.orderable_classes
+        if orderable_classes is None:
+            orderable_classes = self.get_orderable_classes()
         ordered_names = self.get_property('order')
         objects = self.search_objects(object_class=orderable_classes)
         real_names = [object.name for object in objects]
