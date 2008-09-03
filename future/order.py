@@ -20,11 +20,6 @@
 # Import from itools
 from itools.datatypes import Tokens
 from itools.stl import stl
-from itools.xml import XMLParser
-
-# Import from ikaaro
-from ikaaro.workflow import WorkflowAware
-
 
 
 class OrderAware(object):
@@ -81,7 +76,7 @@ class OrderAware(object):
                 if name in ordered_names:
                     index = ordered_names.index(name)
                     ordered_list.append((index, object))
-                else:
+                elif name in unordered_names:
                     index = unordered_names.index(name)
                     unordered_list.append((index, object))
             ordered_list.sort(reverse=reverse)
@@ -109,22 +104,12 @@ class OrderAware(object):
             names, l = data
             for name in names:
                 object = self.get_resource(name)
-                ns = {
-                    'name': str(name),
-                    'title': object.get_property('title'),
-                    'workflow_state': '',
-                    'is_orderaware': isinstance(object, OrderAware),
-                    'path': '%s/;order_form' % here.get_pathto(object)
-                }
-                if isinstance(object, WorkflowAware):
-                    statename = object.get_statename()
-                    state = object.get_state()
-                    msg = self.gettext(state['title']).encode('utf-8')
-                    state = ('<a href="%s/;state_form" class="workflow">'
-                             '<strong class="wf_%s">%s</strong>'
-                             '</a>') % (object.name, statename, msg)
-                    ns['workflow_state'] = XMLParser(state)
-
+                ns = self._browse_namespace(object, 16)
+                ns['name'] = name
+                path = None
+                if isinstance(object, OrderAware):
+                    path = '%s/;order_form' % name
+                ns['path'] = path
                 l.append(ns)
         namespace['ordered'] = ordered
         namespace['unordered'] = unordered
