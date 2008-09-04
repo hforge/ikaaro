@@ -32,7 +32,7 @@ from itools.gettext import MSG
 from itools.handlers import ConfigFile as BaseConfigFile
 from itools.stl import stl
 from itools.uri import encode_query, Reference
-from itools.web import BaseView, STLForm, get_context
+from itools.web import BaseView, BaseForm, STLForm, get_context
 from itools.xapian import EqQuery, RangeQuery, AndQuery, OrQuery, PhraseQuery
 
 # Import from ikaaro
@@ -665,6 +665,7 @@ class GoToIssue(BaseView):
         return context.uri.resolve2('../%s/;edit' % issue_name)
 
 
+
 class TrackerExportToCSV(BaseView):
 
     access = 'is_allowed_to_view'
@@ -680,15 +681,6 @@ class TrackerExportToCSV(BaseView):
         if isinstance(results, Reference):
             return results
 
-        # Get CSV encoding and separator (OpenOffice or Excel)
-        editor = context.query['editor']
-        if editor == 'oo':
-            separator = ','
-            encoding = 'utf-8'
-        else:
-            separator = ';'
-            encoding = 'cp1252'
-
         # Selected issues
         issues = results.get_documents()
         selected_issues = context.query['ids']
@@ -698,6 +690,15 @@ class TrackerExportToCSV(BaseView):
         if len(issues) == 0:
             message = MSG(u"No data to export.")
             return context.come_back(message)
+
+        # Get CSV encoding and separator (OpenOffice or Excel)
+        editor = context.query['editor']
+        if editor == 'oo':
+            separator = ','
+            encoding = 'utf-8'
+        else:
+            separator = ';'
+            encoding = 'cp1252'
 
         # Create the CSV
         csv = CSVFile()
@@ -722,10 +723,123 @@ class TrackerExportToCSV(BaseView):
         return csv.to_str(separator=separator)
 
 
+class TrackerChangeSeveralBugs(BaseForm):
+
+    access = 'is_allowed_to_view'
+    title = MSG(u'Change Several Issues')
+    schema = {
+        'comment': Unicode,
+        'ids': String(multiple=True),
+        'change_module': Integer,
+        'change_version': Integer,
+        'change_type': Integer,
+        'change_priority': Integer,
+        'change_assigned_to': String,
+        'change_state': Integer,
+    }
+
+    def action(self, resource, context, form):
+        # Get search results
+        results = resource.get_search_results(context)
+        if isinstance(results, Reference):
+            return results
+
+        # Selected issues
+        issues = results.get_documents()
+        selected_issues = form['ids']
+        if selected_issues:
+            issues = [ x for x in issues if x.name in selected_issues ]
+
+        if len(issues) == 0:
+            message = MSG(u"No data to export.")
+            return context.come_back(message)
+
+        # Modify all issues selected
+        comment = form['comment']
+        user = context.user
+        username = user and user.name or ''
+        users_issues = {}
+        for issue in issues:
+            issue = resource.get_resource(issue.name)
+            # Create a new record
+            record = {
+                'datetime': datetime.now(),
+                'username': username,
+                'title': issue.get_value('title'),
+                'cc_list': issue.get_value('cc_list'),
+                'file': '',
+            }
+            # Assign-To
+            assigned_to = issue.get_value('assigned_to')
+            new_assigned_to = form['change_assigned_to']
+            if new_assigned_to == 'do-not-change':
+                record['assigned_to'] = assigned_to
+            else:
+                record['assigned_to'] = new_assigned_to
+            # Integer Fields
+            for name in 'module', 'version', 'type', 'priority', 'state':
+                new_value = form['change_%s' % name]
+                if new_value == -1:
+                    record[name] = issue.get_value(name)
+                else:
+                    record[name] = new_value
+            # Comment
+            record['comment'] = comment
+            modifications = issue.get_diff_with(record, context)
+            if modifications:
+                title = MSG(u'Modifications:').gettext()
+                record['comment'] += u'\n\n%s\n\n%s' % (title, modifications)
+
+            # Save issue
+            history = issue.handler.get_handler('.history')
+            history.add_record(record)
+            # Mail (create a dict with a list of issues for each user)
+            info = {'href': context.uri.resolve(issue.name),
+                    'name': issue.name,
+                    'title': issue.get_title()}
+            if new_assigned_to and new_assigned_to != 'do-not-change':
+                users_issues.setdefault(new_assigned_to, []).append(info)
+            if assigned_to and assigned_to != new_assigned_to:
+                users_issues.setdefault(assigned_to, []).append(info)
+            # Change
+            context.server.change_object(issue)
+
+        # Send mails
+        root = context.root
+        if user is None:
+            user_title = MSG(u'ANONYMOUS').gettext()
+        else:
+            user_title = user.get_title()
+        template = MSG(u'--- Comment from: $user ---\n\n$comment\n\n$issues')
+        tracker_title = resource.get_property('title') or 'Tracker Issue'
+        subject = u'[%s]' % tracker_title
+        for user_id in users_issues:
+            user_issues = [
+                u'#%s - %s - %s' % (x['href'], x['name'], x['title'])
+                for x in users_issues[user_id]
+            ]
+            user_issues = '\n'.join(user_issues)
+            body = template.gettext(user=user_title, comment=comment,
+                                    issues=user_issues)
+            to_addr = root.get_user(user_id).get_property('email')
+            root.send_email(to_addr, subject, text=body)
+
+        # Redirect on the new search
+        query = encode_query(context.uri.query)
+        reference = ';view?%s&change_several_bugs=1#link' % query
+        goto = context.uri.resolve(reference)
+
+        keys = context.get_form_keys()
+        keep = ['search_name', 'mtime', 'module', 'version', 'type',
+                'priority', 'assigned_to', 'state']
+        keep = [ x for x in keep if x in keys]
+        return context.come_back(MSG_CHANGES_SAVED, goto=goto, keep=keep)
+
+
+
 ###########################################################################
 # Model
 ###########################################################################
-
 
 class Tracker(Folder):
 
@@ -875,116 +989,7 @@ class Tracker(Folder):
     #######################################################################
     # User Interface / View
     export_to_csv = TrackerExportToCSV()
-
-
-    change_several_bugs__access__ = 'is_allowed_to_view'
-    change_several_bugs__label__ = u'Change Several Issues'
-    def change_several_bugs(self, context):
-        root = context.root
-        # Get search results
-        results = self.get_search_results(context)
-        # Analyse the result
-        if isinstance(results, Reference):
-            return results
-        users_issues = {}
-        # Comment
-        comment = context.get_form_value('comment', type=Unicode)
-        # Selected_issues
-        selected_issues = context.get_form_values('ids')
-        # Modify all issues selected
-        for issue in results:
-            if issue.name not in selected_issues:
-                  continue
-            assigned_to = issue.get_value('assigned_to')
-            # Create a new record
-            record = {}
-            record['datetime'] = datetime.now()
-            # User
-            user = context.user
-            if user is None:
-                record['username'] = ''
-            else:
-                record['username'] = user.name
-            # Title (Is the same)
-            record['title'] = issue.get_value('title')
-            # Other changes
-            for name in ['module', 'version', 'type', 'priority',
-                         'assigned_to', 'state']:
-                type = History.schema[name]
-                last_value = issue.get_value(name)
-                new_value = context.get_form_value('change_%s' % name, type=type)
-                if ((last_value==new_value) or (new_value is None) or
-                    (new_value=='do_not_change')):
-                    # If no modification set the last value
-                    value = last_value
-                else:
-                    value = new_value
-                if type == Unicode:
-                    value = value.strip()
-                record[name] = value
-            # CC
-            record['cc_list'] = issue.get_value('cc_list')
-            # Comment
-            record['comment'] = comment
-            # No attachment XXX
-            record['file'] = ''
-            # Add the list of modifications to comment XXX
-            modifications = issue.get_diff_with(record, context)
-            if modifications:
-                title = self.gettext(u'Modifications:')
-                record['comment'] += u'\n\n%s\n\n%s' % (title, modifications)
-            # Save issue
-            history = issue.handler.get_handler('.history')
-            history.add_record(record)
-            # Mail (create a dict with a list of issues for each user)
-            new_assigned_to = context.get_form_value('assigned_to')
-            info = {'href': context.uri.resolve(self.get_pathto(issue)),
-                    'name': issue.name,
-                    'title': issue.get_title()}
-            if assigned_to:
-                if not users_issues.has_key(assigned_to):
-                    users_issues[assigned_to] = []
-                users_issues[assigned_to].append(info)
-            if new_assigned_to and (assigned_to != new_assigned_to):
-                if not users_issues.has_key(new_assigned_to):
-                    users_issues[new_assigned_to] = []
-                users_issues[new_assigned_to].append(info)
-            # Change
-            context.server.change_object(issue)
-        # Send mails
-        user = context.user
-        if user is None:
-            user_title = self.gettext(u'ANONYMOUS')
-        else:
-            user_title = user.get_title()
-        template = u'--- Comment from : $user ---\n\n$comment\n\n$issues'
-        template = self.gettext(template)
-        tracker_title = self.parent.get_property('title') or 'Tracker Issue'
-        subject = u'[%s]' % tracker_title
-        for user_id in users_issues.keys():
-            user_issues = []
-            for user_issue in users_issues[user_id]:
-                href = user_issue['href']
-                name = user_issue['name']
-                title = user_issue['title']
-                user_issues.append(u'#%s - %s - %s' %(name, title, href))
-            body = Template(template).substitute(user=user_title,
-                                                 comment=comment,
-                                                 issues='\n'.join(user_issues))
-            to_addr = root.get_user(user_id).get_property('email')
-            root.send_email(to_addr, subject, text=body)
-
-        # Redirect on the new search
-        query = encode_query(context.uri.query)
-        reference = ';view?%s&change_several_bugs=1#link' % query
-        goto = context.uri.resolve(reference)
-
-        keys = context.get_form_keys()
-        keep = [key for key in ['search_name', 'mtime', 'module', 'version',
-                                'type', 'priority', 'assigned_to', 'state']
-                 if key in keys]
-        return context.come_back(message=MSG_CHANGES_SAVED, goto=goto,
-                                    keep=keep)
+    change_several_bugs = TrackerChangeSeveralBugs()
 
 
     def get_export_to_text(self, context):
