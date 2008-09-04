@@ -665,6 +665,62 @@ class GoToIssue(BaseView):
         return context.uri.resolve2('../%s/;edit' % issue_name)
 
 
+class TrackerExportToCSV(BaseView):
+
+    access = 'is_allowed_to_view'
+    title = MSG(u'Export to CSV')
+    query_schema = {
+        'editor': String(default='excel'),
+        'ids': String(multiple=True),
+    }
+
+    def GET(self, resource, context):
+        # Get search results
+        results = resource.get_search_results(context)
+        if isinstance(results, Reference):
+            return results
+
+        # Get CSV encoding and separator (OpenOffice or Excel)
+        editor = context.query['editor']
+        if editor == 'oo':
+            separator = ','
+            encoding = 'utf-8'
+        else:
+            separator = ';'
+            encoding = 'cp1252'
+
+        # Selected issues
+        issues = results.get_documents()
+        selected_issues = context.query['ids']
+        if selected_issues:
+            issues = [ x for x in issues if x.name in selected_issues ]
+
+        if len(issues) == 0:
+            message = MSG(u"No data to export.")
+            return context.come_back(message)
+
+        # Create the CSV
+        csv = CSVFile()
+        for issue in issues:
+            issue = resource.get_resource(issue.name)
+            issue = issue.get_informations()
+            row = []
+            for name, label in columns:
+                value = issue[name]
+                if isinstance(value, unicode):
+                    value = value.encode(encoding)
+                else:
+                    value = str(value)
+                row.append(value)
+            csv.add_row(row)
+
+        # Set response type
+        response = context.response
+        response.set_header('Content-Type', 'text/comma-separated-values')
+        response.set_header('Content-Disposition',
+                            'attachment; filename=export.csv')
+        return csv.to_str(separator=separator)
+
 
 ###########################################################################
 # Model
@@ -818,50 +874,7 @@ class Tracker(Folder):
 
     #######################################################################
     # User Interface / View
-    export_to_csv__access__ = 'is_allowed_to_view'
-    export_to_csv__label__ = u'Export to CSV'
-    def export_to_csv(self, context):
-        # Get search results
-        results = self.get_search_results(context)
-        # Analyse the results
-        if isinstance(results, Reference):
-            return results
-        # Get CSV encoding and separator
-        editor = context.get_form_value('editor')
-        if editor=='oo':
-            # OpenOffice
-            separator = ','
-            encoding = 'utf-8'
-        else:
-            # Excel
-            separator = ';'
-            encoding = 'cp1252'
-        # Selected issues
-        selected_issues = context.get_form_values('ids')
-        # Create the CSV
-        csv = CSVFile()
-        for issue in results:
-            # If selected_issues is empty, select all
-            if selected_issues and (issue.name not in selected_issues):
-                continue
-            row = []
-            issue_line = issue.get_informations()
-            for name, label in table_columns:
-                value = issue_line[name]
-                if isinstance(value, unicode):
-                    value = value.encode(encoding)
-                else:
-                    value = str(value)
-                row.append(value)
-            csv.add_row(row)
-        if csv.get_nrows() == 0:
-            return context.come_back(u"No data to export.")
-        # Set response type
-        response = context.response
-        response.set_header('Content-Type', 'text/comma-separated-values')
-        response.set_header('Content-Disposition',
-                            'attachment; filename=export.csv')
-        return csv.to_str(separator=separator)
+    export_to_csv = TrackerExportToCSV()
 
 
     change_several_bugs__access__ = 'is_allowed_to_view'
