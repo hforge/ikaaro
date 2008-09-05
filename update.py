@@ -20,9 +20,5 @@ from itools import vfs
 
 
 def is_instance_up_to_date(target):
-    # Check for the 'catalog/fields' file (XXX To remove by 0.21)
-    if vfs.exists('%s/catalog/fields' % target):
-        return False
-
     # All tests pass
     return True
