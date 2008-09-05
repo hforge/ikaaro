@@ -30,7 +30,7 @@ from folder_views import FolderBrowseContent, FolderLastChanges
 from folder_views import FolderNewResource, FolderOrphans
 from folder_views import FolderPreviewContent, FolderRename, FolderView
 from registry import register_object_class, get_object_class
-from resources import DBResource
+from resource_ import DBResource
 
 
 

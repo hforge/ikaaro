@@ -37,7 +37,7 @@ from datatypes import Password
 from folder import Folder
 from messages import *
 from registry import register_object_class, get_object_class
-from resources import MetadataForm
+from resource_views import DBResourceEditMetadata
 from utils import crypt_password, generate_password, resolve_view
 from views import MessageView
 
@@ -581,7 +581,7 @@ class UserFolder(Folder):
     paste__access__ = False
 
 
-    edit_metadata = MetadataForm(access='is_admin')
+    edit_metadata = DBResourceEditMetadata(access='is_admin')
 
 
     #######################################################################

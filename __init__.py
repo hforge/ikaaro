@@ -53,10 +53,7 @@ Folder.register_document_type(CalendarTable)
 import forum
 import shop
 import tracker
-try:
-    import wiki
-except ImportError:
-    pass
+import wiki
 
 
 ###########################################################################

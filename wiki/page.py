@@ -52,7 +52,7 @@ from itools.web import BaseView, STLForm, STLView
 from ikaaro.messages import *
 from ikaaro.text import Text
 from ikaaro.registry import register_object_class
-from ikaaro.resources import DBResource
+from ikaaro.resource_views import DBResourceNewInstance
 
 
 
@@ -454,7 +454,7 @@ class WikiPage(Text):
     }
 
 
-    new_instance = DBResource.new_instance
+    new_instance = DBResourceNewInstance
 
 
     #######################################################################

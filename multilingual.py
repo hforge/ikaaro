@@ -21,7 +21,7 @@ from datetime import datetime
 from itools.vfs import FileName
 
 # Import from ikaaro
-from resources import DBResource
+from resource_ import DBResource
 
 
 class Multilingual(DBResource):

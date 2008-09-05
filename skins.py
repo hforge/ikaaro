@@ -34,8 +34,8 @@ from itools.web import get_context, BaseView
 from itools.xml import XMLParser, XMLFile
 
 # Import from ikaaro
-from resources import IResource
 from folder import Folder as DBFolder
+from resource_ import IResource
 from utils import reduce_string, resolve_view
 from widgets import build_menu
 

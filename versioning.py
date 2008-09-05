@@ -29,7 +29,7 @@ from itools.xapian import KeywordField, BoolField
 
 # Import from ikaaro
 from metadata import Record
-from resources import DBResource
+from resource_ import DBResource
 
 
 ###########################################################################

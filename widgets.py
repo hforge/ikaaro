@@ -57,7 +57,7 @@ class Breadcrumb(object):
         """
         from file import Image
         from folder import Folder
-        from resources import DBResource
+        from resource_ import DBResource
 
         if filter_type is None:
             filter_type = DBResource

@@ -28,7 +28,7 @@ from itools import vfs
 from itools.web import set_context, Context
 
 # Import from ikaaro
-from ikaaro.resources import DBResource
+from ikaaro.resource_ import DBResource
 from ikaaro.server import Server, ask_confirmation
 
 

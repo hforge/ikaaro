@@ -38,7 +38,7 @@ from messages import *
 from multilingual import Multilingual
 from text import Text
 from registry import register_object_class
-from resources import DBResource
+from resource_ import DBResource
 
 
 

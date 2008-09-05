@@ -36,7 +36,7 @@ from file import File
 from forms import AutoForm, get_default_widget, ReadOnlyWidget
 from messages import *
 from registry import register_object_class
-from resources import DBResource
+from resource_ import DBResource
 from views import BrowseForm
 
 
