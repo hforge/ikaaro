@@ -34,8 +34,7 @@ from exceptions import ConsistencyError
 from messages import *
 from utils import generate_name, reduce_string
 from versioning import VersioningAware
-from views import IconsView, SearchForm
-from widgets import build_menu
+from views import IconsView, SearchForm, build_menu
 from workflow import WorkflowAware
 
 

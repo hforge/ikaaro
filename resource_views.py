@@ -37,8 +37,7 @@ from datatypes import FileDataType
 from messages import *
 from registry import get_object_class
 from utils import get_parameters, reduce_string
-from views import NewInstanceForm
-from widgets import build_menu
+from views import NewInstanceForm, build_menu
 
 
 

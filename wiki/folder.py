@@ -28,7 +28,7 @@ from itools.web import BaseView
 from ikaaro.file import File
 from ikaaro.folder import Folder
 from ikaaro.registry import register_object_class
-from ikaaro.widgets import build_menu
+from ikaaro.views import build_menu
 from page import WikiPage
 
 

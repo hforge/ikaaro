@@ -18,6 +18,7 @@
 from itools.datatypes import Boolean, Integer, String, Unicode
 from itools.gettext import MSG
 from itools.stl import stl
+from itools.uri import Path
 from itools.web import BaseView, STLView, STLForm
 from itools.xml import XMLParser
 
@@ -334,4 +335,51 @@ class SearchForm(BrowseForm):
             'search_term': term,
             'search_fields': search_fields}
 
+
+###########################################################################
+# Menu
+###########################################################################
+namespaces = {
+    None: 'http://www.w3.org/1999/xhtml',
+    'stl': 'http://xml.itools.org/namespaces/stl'}
+
+
+
+menu_template = list(XMLParser("""
+<dl>
+<stl:block stl:repeat="item items">
+  <dt class="${item/class}">
+    <img stl:if="item/src" src="${item/src}" alt="" width="16" height="16" />
+    <stl:block stl:if="not item/href">${item/title}</stl:block>
+    <a stl:if="item/href" href="${item/href}">${item/title}</a>
+  </dt>
+  <dd>${item/items}</dd>
+</stl:block>
+</dl>
+""", namespaces))
+
+
+
+def build_menu(options):
+    """The input (options) is a tree:
+
+      [{'href': ...,
+        'class': ...,
+        'src': ...,
+        'title': ...,
+        'items': [....]}
+       ...
+       ]
+
+    """
+    for option in options:
+        # Defaults
+        for name in ['class', 'src', 'items']:
+            option.setdefault(name, None)
+        # Submenu
+        if option['items']:
+            option['items'] = build_menu(option['items'])
+
+    namespace = {'items': options}
+    return stl(events=menu_template, namespace=namespace)
 

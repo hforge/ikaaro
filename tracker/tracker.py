@@ -43,8 +43,7 @@ from ikaaro.messages import MSG_NONE_REMOVED, MSG_OBJECTS_REMOVED
 from ikaaro.messages import MSG_NAME_MISSING, MSG_CHANGES_SAVED
 from ikaaro.registry import register_object_class
 from ikaaro.text import Text
-from ikaaro.views import BrowseForm, SearchForm as BaseSearchForm
-from ikaaro.widgets import build_menu
+from ikaaro.views import BrowseForm, SearchForm as BaseSearchForm, build_menu
 from issue import History, Issue, issue_fields
 from resources import Resources
 from tables import SelectTableTable, SelectTable
