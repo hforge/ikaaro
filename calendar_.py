@@ -35,6 +35,7 @@ from itools.web import MSG_MISSING_OR_INVALID
 # Import from ikaaro
 from calendar_views import CalendarUpload, DownloadView, EditEventForm
 from calendar_views import MonthlyView, TimetablesForm, WeeklyView
+from calendar_views import get_current_date
 from folder import Folder
 from messages import MSG_CHANGES_SAVED
 from registry import register_object_class
@@ -340,7 +341,6 @@ class CalendarAwareView(CalendarView):
     daily_view__access__ = 'is_allowed_to_edit'
     daily_view__label__ = u'Daily View'
     def daily_view(self, context):
-        from calendar_views import get_current_date
         method = context.get_cookie('method')
         if method != 'daily_view':
             context.set_cookie('method', 'daily_view')

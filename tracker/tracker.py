@@ -1106,7 +1106,6 @@ class Tracker(Folder):
     def update_20080407(self):
         """Add resources to tracker.
         """
-        from resources import Resources
         metadata = Resources.build_metadata()
         self.handler.set_handler('resources.metadata', metadata)
 

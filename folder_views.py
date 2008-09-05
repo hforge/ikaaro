@@ -588,8 +588,6 @@ class FolderOrphans(FolderBrowseContent):
 
 
     def get_items(self, resource, context):
-        from folder import Folder
-
         # Make the base search
         items = FolderBrowseContent.get_items(self, resource, context)
 
