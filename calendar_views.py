@@ -942,12 +942,3 @@ class DownloadView(FileView):
 ##        return self.handler.to_ical()
 
 
-
-class TextView(BaseView):
-
-    access = 'is_allowed_to_edit'
-    title = MSG(u'Text view')
-
-    def GET(self, resource, context):
-        return '<pre>%s</pre>' % resource.handler.to_str()
-
