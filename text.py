@@ -29,7 +29,6 @@ from itools.web import STLForm, STLView
 from itools.xml import XMLFile
 
 # Import from ikaaro
-from base import DBObject
 from file import File
 from messages import MSG_CHANGES_SAVED
 from registry import register_object_class

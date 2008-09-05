@@ -21,10 +21,10 @@ from datetime import datetime
 from itools.vfs import FileName
 
 # Import from ikaaro
-from base import DBObject
+from resources import DBResource
 
 
-class Multilingual(DBObject):
+class Multilingual(DBResource):
 
     def __init__(self, metadata):
         self.metadata = metadata
@@ -37,7 +37,7 @@ class Multilingual(DBObject):
     @staticmethod
     def _make_object(cls, folder, name, body=None, filename=None,
                      language=None, **kw):
-        DBObject._make_object(cls, folder, name, filename=filename, **kw)
+        DBResource._make_object(cls, folder, name, filename=filename, **kw)
         # Add the body
         if body is not None:
             cls = cls.class_handler

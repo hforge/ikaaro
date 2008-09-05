@@ -49,10 +49,10 @@ from itools.vfs import FileName
 from itools.web import BaseView, STLForm, STLView
 
 # Import from ikaaro
-from ikaaro.base import DBObject
 from ikaaro.messages import *
 from ikaaro.text import Text
 from ikaaro.registry import register_object_class
+from ikaaro.resources import DBResource
 
 
 
@@ -454,14 +454,7 @@ class WikiPage(Text):
     }
 
 
-    @staticmethod
-    def new_instance_form(cls, context):
-        return DBObject.new_instance_form(cls, context)
-
-
-    @staticmethod
-    def new_instance(cls, container, context):
-        return DBObject.new_instance(cls, container, context)
+    new_instance = DBResource.new_instance
 
 
     #######################################################################

@@ -39,15 +39,14 @@ from itools.xml import XMLParser
 
 # Import from ikaaro
 from access import RoleAware
-from base import DBObject
-from text import PO
-from users import UserFolder
-from website import WebSite
+from folder import Folder
 from html import WebPage
 from registry import register_object_class, get_object_class
-from folder import Folder
 from skins import UI, ui_path
+from text import PO
+from users import UserFolder
 from utils import crypt_password
+from website import WebSite
 
 
 # itools source and target languages

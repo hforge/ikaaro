@@ -34,7 +34,7 @@ from itools.web import get_context, BaseView
 from itools.xml import XMLParser, XMLFile
 
 # Import from ikaaro
-from base import Node, DBObject
+from resources import IResource
 from folder import Folder as DBFolder
 from utils import reduce_string, resolve_view
 from widgets import build_menu
@@ -57,7 +57,7 @@ class FileGET(BaseView):
 
 
 
-class UIFile(Node, File):
+class UIFile(IResource, File):
 
     def clone(self, cls=None, exclude=('database', 'uri', 'timestamp',
                                        'dirty', 'parent', 'name')):
@@ -86,7 +86,7 @@ map = {
 
 
 
-class UIFolder(Node, Folder):
+class UIFolder(IResource, Folder):
 
     class_title = MSG(u'UI')
     class_icon48 = 'icons/48x48/folder.png'

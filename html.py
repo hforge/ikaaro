@@ -34,11 +34,11 @@ from itools.web import BaseView, STLView
 from itools.xml import TEXT, START_ELEMENT, XMLError, XMLParser
 
 # Import from ikaaro
-from base import DBObject
 from messages import *
 from multilingual import Multilingual
 from text import Text
 from registry import register_object_class
+from resources import DBResource
 
 
 
@@ -222,7 +222,7 @@ class WebPage(EpozEditable, Multilingual, Text):
     #######################################################################
     # UI
     #######################################################################
-    new_instance = DBObject.new_instance
+    new_instance = DBResource.new_instance
     view = WebPageView()
 
     def get_epoz_document(self):

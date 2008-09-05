@@ -28,7 +28,7 @@ from itools import vfs
 from itools.web import set_context, Context
 
 # Import from ikaaro
-from ikaaro.base import DBObject
+from ikaaro.resources import DBResource
 from ikaaro.server import Server, ask_confirmation
 
 
@@ -54,7 +54,7 @@ def update(parser, options, target):
     versions = set()
     for object in root.traverse_resources():
         # Skip non-database objects
-        if not isinstance(object, DBObject):
+        if not isinstance(object, DBResource):
             continue
 
         # Skip up-to-date objects
@@ -119,7 +119,7 @@ def update(parser, options, target):
         bad = 0
         for object in root.traverse_resources():
             # Skip non-database objects
-            if not isinstance(object, DBObject):
+            if not isinstance(object, DBResource):
                 continue
 
             # Skip up-to-date objects

@@ -28,8 +28,8 @@ from itools.web import get_context, STLView
 from itools.xapian import KeywordField, BoolField
 
 # Import from ikaaro
-from base import DBObject
 from metadata import Record
+from resources import DBResource
 
 
 ###########################################################################
@@ -61,11 +61,11 @@ class History(Record):
         'size': String}
 
 
-class VersioningAware(DBObject):
+class VersioningAware(DBResource):
 
     @classmethod
     def get_metadata_schema(cls):
-        schema = DBObject.get_metadata_schema()
+        schema = DBResource.get_metadata_schema()
         schema['history'] = History
         return schema
 
@@ -113,7 +113,7 @@ class VersioningAware(DBObject):
     def get_mtime(self):
         history = self.get_property('history')
         if not history:
-            return DBObject.get_mtime(self)
+            return DBResource.get_mtime(self)
         return history[-1]['date']
 
 
@@ -121,14 +121,14 @@ class VersioningAware(DBObject):
     # Index & Search
     ########################################################################
     def get_catalog_fields(self):
-        return DBObject.get_catalog_fields(self) + [
+        return DBResource.get_catalog_fields(self) + [
             # Versioning Aware
             BoolField('is_version_aware'),
             KeywordField('last_author', is_indexed=False, is_stored=True)]
 
 
     def get_catalog_values(self):
-        document = DBObject.get_catalog_values(self)
+        document = DBResource.get_catalog_values(self)
 
         document['is_version_aware'] = True
         # Last Author (used in the Last Changes view)

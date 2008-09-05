@@ -48,6 +48,8 @@ summizes these changes:
 
   Before                                  Now
   --------------------------------------  ---------------------------------
+  ikaaro.base.Node                        ikaaro.resources.IResource
+  ikaaro.base.DBObject                    ikaaro.resources.DBResource
   ikaaro.messages.MSG_MISSING_OR_INVALID  itools.web.MSG_MISSING_OR_INVALID
 
 

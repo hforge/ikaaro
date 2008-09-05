@@ -55,12 +55,12 @@ class Breadcrumb(object):
         """The 'start' must be a handler, 'filter_type' must be a handler
         class.
         """
-        from base import DBObject
         from binary import Image
         from folder import Folder
+        from resources import DBResource
 
         if filter_type is None:
-            filter_type = DBObject
+            filter_type = DBResource
 
         context = get_context()
         request, response = context.request, context.response

@@ -28,11 +28,11 @@ from itools.stl import stl
 from itools.uri import Path
 
 # Import from ikaaro
-from ikaaro.base import DBObject
 from ikaaro.file import File
 from ikaaro.forms import BooleanRadio
 from ikaaro.messages import MSG_CHANGES_SAVED
 from ikaaro.registry import register_object_class
+from ikaaro.resources import DBResource
 from ikaaro.skins import register_skin
 from ikaaro.widgets import Breadcrumb
 from order import OrderAware
@@ -66,11 +66,11 @@ class Link(File):
     @staticmethod
     def new_instance_form(cls, context):
         # Use the default form
-        return DBObject.new_instance_form(cls, context)
+        return DBResource.new_instance_form(cls, context)
 
     @staticmethod
     def new_instance(cls, container, context):
-        return DBObject.new_instance(cls, container, context)
+        return DBResource.new_instance(cls, container, context)
 
 
     def GET(self, context):

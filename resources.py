@@ -32,7 +32,7 @@ from itools.stl import stl
 from itools.uri import Path
 from itools import vfs
 from itools.vfs import FileName
-from itools.web import get_context, Resource, BaseView, STLForm
+from itools.web import Resource, BaseView, STLForm, get_context
 from itools.xapian import CatalogAware
 from itools.xapian import TextField, KeywordField, IntegerField, BoolField
 
@@ -373,7 +373,7 @@ class AddLinkForm(STLForm):
 ###########################################################################
 # Model
 ###########################################################################
-class Node(Resource):
+class IResource(Resource):
 
     class_views = []
 
@@ -454,7 +454,7 @@ class Node(Resource):
 
 
 
-class DBObject(CatalogAware, Node):
+class DBResource(CatalogAware, IResource):
 
     def __init__(self, metadata):
         self.metadata = metadata

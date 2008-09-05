@@ -33,11 +33,11 @@ from itools.xapian import EqQuery, AndQuery, OrQuery, TextField, KeywordField
 
 # Import from ikaaro
 from access import AccessControl
-from base import MetadataForm
 from datatypes import Password
 from folder import Folder
 from messages import *
 from registry import register_object_class, get_object_class
+from resources import MetadataForm
 from utils import crypt_password, generate_password, resolve_view
 from views import MessageView
 

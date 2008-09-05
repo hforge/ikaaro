@@ -32,11 +32,11 @@ from itools.stl import stl
 from itools.web import FormError, STLView, get_context, MSG_MISSING_OR_INVALID
 
 # Import from ikaaro
-from base import DBObject
 from file import File
 from forms import AutoForm, get_default_widget, ReadOnlyWidget
 from messages import *
 from registry import register_object_class
+from resources import DBResource
 from views import BrowseForm
 
 
@@ -340,7 +340,7 @@ class Table(File):
     #########################################################################
     # Views
     #########################################################################
-    new_instance = DBObject.new_instance
+    new_instance = DBResource.new_instance
     view = TableView()
     add_record = AddRecordForm()
     edit_record = EditRecordForm()

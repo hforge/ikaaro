@@ -965,22 +965,19 @@ class Tracker(Folder):
         template = self.get_resource('/ui/tracker/goto.xml')
         menus.append({
             'title': MSG(u'Go To Issue'),
-            'content': stl(template),
-        })
+            'content': stl(template)})
 
         # Stored Searches
         items = self.search_objects(object_class=StoredSearch)
         base = '/%s/;view' % context.site_root.get_pathto(self)
         menu = [
             {'href': '%s?search_name=%s' % (base, x.name),
-             'title': x.get_property('title'),
-            }
+             'title': x.get_property('title')}
             for x in items ]
         menu.sort(lambda x, y: cmp(x['title'], y['title']))
         menus.append({
             'title': MSG(u'Stored Searches'),
-            'content': build_menu(menu),
-        })
+            'content': build_menu(menu)})
 
         # Ok
         return menus

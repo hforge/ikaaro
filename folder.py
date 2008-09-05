@@ -25,16 +25,16 @@ from itools import vfs
 from itools.web import get_context, BaseView
 
 # Import from ikaaro
-from base import DBObject
 from exceptions import ConsistencyError
 from folder_views import FolderBrowseContent, FolderLastChanges
 from folder_views import FolderNewResource, FolderOrphans
 from folder_views import FolderPreviewContent, FolderRename, FolderView
 from registry import register_object_class, get_object_class
+from resources import DBResource
 
 
 
-class Folder(DBObject):
+class Folder(DBResource):
 
     class_id = 'folder'
     class_version = '20071215'
@@ -208,7 +208,7 @@ class Folder(DBObject):
     def search_objects(self, path='.', format=None, state=None,
                        object_class=None):
         for object in self.get_resources(path):
-            if not isinstance(object, DBObject):
+            if not isinstance(object, DBResource):
                 continue
             # Filter by base class
             cls = object_class
@@ -239,7 +239,7 @@ class Folder(DBObject):
         if self.has_resource('index'):
             return 'view'
 
-        return DBObject.get_default_view_name(self)
+        return DBResource.get_default_view_name(self)
 
 
     def get_view(self, name, query=None):
@@ -251,7 +251,7 @@ class Folder(DBObject):
                     return view
 
         # Default
-        return DBObject.get_view(self, name, query)
+        return DBResource.get_view(self, name, query)
 
 
     #######################################################################
