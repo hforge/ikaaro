@@ -19,6 +19,7 @@
 
 # Import from the Standard Library
 from datetime import datetime
+from operator import attrgetter
 
 # Import from itools
 from itools.catalog import (CatalogAware, TextField, KeywordField,
@@ -683,7 +684,7 @@ class DBObject(CatalogAware, Node, DomainAware):
 
 
     def browse_namespace(self, icon_size, sortby=['title'], sortorder='up',
-                         batchsize=20, query=None):
+                         batchsize=20, query=None, results=None):
         from widgets import batch
 
         context = get_context()
@@ -694,13 +695,16 @@ class DBObject(CatalogAware, Node, DomainAware):
 
         # Search
         root = context.root
-        results = root.search(query)
+        if results is None:
+            results = root.search(query)
 
         reverse = (sortorder == 'down')
         if sortby in ('order', ['order']):
             # TODO a catalog index would help
             # but requires reindexing a single index at once
-            bulk = results.get_documents()
+            bulk = results
+            if not isinstance(bulk, list):
+                bulk = results.get_documents()
             ordered = self.get_ordered_objects(bulk, mode='mixed',
                                                reverse=reverse)
             if size > 0:
@@ -710,8 +714,21 @@ class DBObject(CatalogAware, Node, DomainAware):
             else:
                 documents = ordered
         else:
-            documents = results.get_documents(sort_by=sortby, reverse=reverse,
-                                              start=start, size=size)
+            if isinstance(results, list):
+                if isinstance(sortby, list):
+                    key = attrgetter(*sortby)
+                else:
+                    key = attrgetter(sortby)
+                documents = sorted(results, key=key, reverse=reverse)
+                if size > 0:
+                    documents = documents[start:start+size]
+                elif start > 0:
+                    documents = documents[start:]
+            else:
+                documents = results.get_documents(sort_by=sortby,
+                                                  reverse=reverse,
+                                                  start=start,
+                                                  size=size)
 
         # Get the objects, check security
         user = context.user
@@ -730,7 +747,10 @@ class DBObject(CatalogAware, Node, DomainAware):
 
         # Build namespace
         namespace = {}
-        total = results.get_n_documents()
+        if isinstance(results, list):
+            total = len(results)
+        else:
+            total = results.get_n_documents()
         namespace['total'] = total
         namespace['objects'] = object_lines
 
