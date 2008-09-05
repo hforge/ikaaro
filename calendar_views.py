@@ -70,7 +70,7 @@ def get_current_date(value):
         return date.today()
     try:
         return Date.decode(value)
-    except:
+    except ValueError:
         return date.today()
 
 
@@ -84,7 +84,7 @@ def check_timetable_entry(context, key_start, key_end):
     try:
         start = Time.decode(start)
         end = Time.decode(end)
-    except:
+    except ValueError:
         return MSG(u'Wrong time selection (HH:MM).')
     if start >= end:
         return MSG(u'Start time must be earlier than end time.')
