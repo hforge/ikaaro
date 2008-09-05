@@ -540,7 +540,7 @@ class CalendarTable(Table, CalendarBase):
 
 
 
-class Calendar(Text, CalendarBase):
+class Calendar(CalendarBase, Text):
 
     class_id = 'text/calendar'
     class_version = '20071216'
