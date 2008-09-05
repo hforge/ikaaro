@@ -17,16 +17,17 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
+from itools.csv import CSVFile
 from itools.gettext import POFile, MSG
 from itools.handlers import TextFile, Python as PythonFile
 from itools.html import HTMLFile
-from itools.stl import stl
 from itools.xml import XMLFile
 
 # Import from ikaaro
 from file import File
 from registry import register_object_class
 from text_views import TextEdit, TextView, TextExternalEdit, POEdit
+from text_views import CSVView, CSVAddRow, CSVEditRow
 
 
 
@@ -106,6 +107,51 @@ class HTML(Text):
 
 
 
+class CSV(Text):
+
+    class_id = 'text/comma-separated-values'
+    class_version = '20071216'
+    class_title = MSG(u'Comma Separated Values')
+    class_views = ['view', 'add_row', 'externaledit', 'upload',
+                   'edit_metadata', 'history']
+    class_handler = CSVFile
+
+
+    def get_columns(self):
+        """Returns a list of tuples with the name and title of every column.
+        """
+        handler = self.handler
+
+        if handler.columns is None:
+            row = None
+            for row in handler.lines:
+                if row is not None:
+                    break
+            if row is None:
+                return []
+            return [ (str(x), str(x)) for x in range(len(row)) ]
+
+        columns = []
+        for name in handler.columns:
+            datatype = handler.schema[name]
+            title = getattr(datatype, 'title', None)
+            if title is None:
+                title = name
+            else:
+                title = self.gettext(title)
+            columns.append((name, title))
+
+        return columns
+
+
+    # Views
+    edit = None
+    view = CSVView()
+    add_row = CSVAddRow()
+    edit_row = CSVEditRow()
+
+
+
 ###########################################################################
 # Register
 ###########################################################################
@@ -116,4 +162,7 @@ register_object_class(CSS)
 register_object_class(XML)
 register_object_class(XML, format='application/xml')
 register_object_class(HTML)
+register_object_class(CSV)
+register_object_class(CSV, 'text/x-comma-separated-values')
+register_object_class(CSV, 'text/csv')
 

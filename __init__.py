@@ -27,7 +27,6 @@ from itools.utils import get_version
 
 # Import from ikaaro
 from calendar_ import CalendarTable
-import csv
 from file import File
 from folder import Folder
 from html import WebPage
