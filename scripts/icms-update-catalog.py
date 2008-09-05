@@ -65,6 +65,7 @@ def update_catalog(parser, options, target):
 
     # Get the root
     server = Server(target)
+    server.database.set_use_cache(False)
     root = server.root
 
     # Build a fake context
@@ -83,8 +84,8 @@ def update_catalog(parser, options, target):
         print doc_n, obj.get_abspath()
         doc_n += 1
         catalog.index_document(obj)
-    # Update / Free Memory
-    del obj, root
+        # Free Memory
+        del obj
     # Update / Report
     t1, v1 = time(), vmsize()
     v = (v1 - v0)/1024

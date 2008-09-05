@@ -66,7 +66,7 @@ class Multilingual(DBObject):
             handler.uri = uri
             handler.timestamp = None
             handler.dirty = datetime.now()
-            database.cache[uri] = handler
+            database.add_to_cache(uri, handler)
 
         self.handlers[language] = handler
         return handler
