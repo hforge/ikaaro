@@ -51,6 +51,8 @@ summizes these changes:
   ikaaro.base.Node                        ikaaro.resource_.IResource
   ikaaro.base.DBObject                    ikaaro.resource_.DBResource
   ikaaro.messages.MSG_MISSING_OR_INVALID  itools.web.MSG_MISSING_OR_INVALID
+  ikaaro.users.User                       ikaaro.user.User
+  ikaaro.users.UserFolder                 ikaaro.user.UserFolder
   ikaaro.widgets.Breadcrumb               ikaaro.resource_views.Breadcrumb
   ikaaro.widgets.build_menu               ikaaro.views.build_menu
 
