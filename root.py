@@ -78,8 +78,8 @@ class Root(WebSite):
     class_title = MSG(u'iKaaro')
     class_icon16 = 'icons/16x16/root.png'
     class_icon48 = 'icons/48x48/root.png'
-    class_views = ['browse_content', 'preview_content', 'new_resource',
-                   'edit_metadata', 'control_panel', 'last_changes']
+    class_views = ['browse_content', 'preview_content', 'edit_metadata',
+                   'control_panel', 'last_changes']
     class_control_panel = ['permissions', 'new_user', 'edit_virtual_hosts',
                            'edit_security_policy', 'edit_languages',
                            'edit_contact_options']

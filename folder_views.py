@@ -478,6 +478,27 @@ class FolderBrowseContent(SearchForm):
         context.message = MSG(u'Objects pasted.')
 
 
+    #######################################################################
+    # Right Menu
+    #######################################################################
+    def get_right_menus(self, resource, context):
+        menus = []
+
+        # Add a new resource
+        document_types = resource.get_document_types()
+        if document_types:
+            menu = [
+                {'src': '/ui/' + cls.class_icon16,
+                 'title': cls.class_title.gettext(),
+                 'href': ';new_resource?type=%s' % quote(cls.class_id)}
+                for cls in document_types ]
+            menus.append({
+                'title': MSG(u'Add Resource'),
+                'content': build_menu(menu)})
+
+        return menus
+
+
 
 class FolderPreviewContent(FolderBrowseContent):
 
@@ -520,6 +541,8 @@ class FolderPreviewContent(FolderBrowseContent):
 
 
     def get_right_menus(self, resource, context):
+        menus = FolderBrowseContent.get_right_menus(self, resource, context)
+
         # Zoom
         # Compute previous and next sizes
         current_size = context.query['size']
@@ -538,19 +561,16 @@ class FolderPreviewContent(FolderBrowseContent):
             {'href': context.uri.replace(size=str(next_size)),
              'src': '/ui/icons/16x16/zoom_in.png',
              'title': MSG(u'Zoom In'),
-             'class': None,
-            },
+             'class': None},
             {'href': context.uri.replace(size=str(previous_size)),
              'src': '/ui/icons/16x16/zoom_out.png',
              'title': MSG(u'Zoom Out'),
-             'class': None,
-            }
-        ]
+             'class': None}]
+        menus.insert(0,
+            {'title': MSG(u'Zoom'), 'content': build_menu(options)})
 
         # Ok
-        return [{
-            'title': MSG(u'Zoom'),
-            'content': build_menu(options)}]
+        return menus
 
 
 
