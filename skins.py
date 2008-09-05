@@ -23,21 +23,18 @@ from string import Template
 
 # Import from itools
 from itools import get_abspath
-from itools.datatypes import URI
 from itools.gettext import MSG
-from itools.handlers import File, Folder, Database
-from itools.http import NotFound, Forbidden
-from itools.i18n import has_language, get_language_name
+from itools.handlers import File, Folder
+from itools.http import NotFound
+from itools.i18n import has_language
 from itools.stl import stl
 from itools.uri import decode_query
 from itools.web import get_context, BaseView
 from itools.xml import XMLParser, XMLFile
 
 # Import from ikaaro
-from folder import Folder as DBFolder
 from resource_ import IResource
 from utils import reduce_string, resolve_view
-from widgets import build_menu
 
 
 

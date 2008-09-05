@@ -233,9 +233,6 @@ class WebPage(EpozEditable, Multilingual, Text):
     # Update
     #######################################################################
     def update_20080902(self):
-        from itools.handlers import checkid
-        from itools.uri import Path
-
         def fix_links(stream):
             for event in stream:
                 type, value, line = event
