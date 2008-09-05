@@ -586,12 +586,16 @@ class WikiPage(Text):
 
 
     #######################################################################
-    # Views
+    # User Interface
     #######################################################################
     view = WikiPageView()
     to_pdf = WikiPageToPDF()
     edit = WikiPageEdit()
     help = WikiPageHelp()
+
+
+    def get_right_menus(self, context):
+        return self.parent.get_right_menus(context)
 
 
 
