@@ -120,7 +120,7 @@ class File(WorkflowAware, VersioningAware):
         handler.uri = uri
         handler.timestamp = None
         handler.dirty = datetime.now()
-        database.cache[uri] = handler
+        database.add_to_cache(uri, handler)
         self._handler = handler
         return self._handler
 
