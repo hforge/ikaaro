@@ -32,9 +32,9 @@ from ikaaro.file import File
 from ikaaro.forms import BooleanRadio
 from ikaaro.messages import MSG_CHANGES_SAVED
 from ikaaro.registry import register_object_class
-from ikaaro.resources import DBResource
+from ikaaro.resource_ import DBResource
+from ikaaro.resource_views import Breadcrumb
 from ikaaro.skins import register_skin
-from ikaaro.widgets import Breadcrumb
 from order import OrderAware
 
 # Import from itools

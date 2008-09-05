@@ -19,6 +19,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# Import from the Standard Library
+from operator import itemgetter
+
 # Import from itools
 from itools.datatypes import String, Unicode
 from itools.gettext import MSG
@@ -27,14 +30,15 @@ from itools.i18n import get_language_name
 from itools.stl import stl
 from itools.uri import Path
 from itools.vfs import FileName
-from itools.web import STLForm
+from itools.web import STLForm, get_context
 
 # Import from ikaaro
 from datatypes import FileDataType
 from messages import *
 from registry import get_object_class
+from utils import get_parameters, reduce_string
 from views import NewInstanceForm
-from widgets import Breadcrumb, build_menu
+from widgets import build_menu
 
 
 
@@ -167,6 +171,109 @@ class DBResourceEditMetadata(STLForm):
         return [{
             'title': MSG(u'Edit Language'),
             'content': build_menu(options)}]
+
+
+
+###########################################################################
+# Interface to add images from the TinyMCE editor
+###########################################################################
+class Breadcrumb(object):
+    """Instances of this class will be used as namespaces for STL templates.
+    The built namespace contains the breadcrumb, that is to say, the path from
+    the tree root to another tree node, and the content of that node.
+    """
+
+    def __init__(self, filter_type=None, root=None, start=None,
+            icon_size=16):
+        """The 'start' must be a handler, 'filter_type' must be a handler
+        class.
+        """
+        from file import Image
+        from folder import Folder
+        from resource_ import DBResource
+
+        if filter_type is None:
+            filter_type = DBResource
+
+        context = get_context()
+        request, response = context.request, context.response
+
+        here = context.resource
+        if root is None:
+            root = here.get_site_root()
+        if start is None:
+            start = root
+
+        # Get the query parameters
+        parameters = get_parameters('bc', id=None, target=None)
+        id = parameters['id']
+        # Get the target folder
+        target_path = parameters['target']
+        if target_path is None:
+            if isinstance(start, Folder):
+                target = start
+            else:
+                target = start.parent
+        else:
+            target = root.get_resource(target_path)
+        self.target_path = str(target.get_abspath())
+
+        # Object to link
+        object = request.get_parameter('object')
+        if object == '':
+            object = '.'
+        self.object = object
+
+        # The breadcrumb
+        breadcrumb = []
+        node = target
+        while node is not root.parent:
+            url = context.uri.replace(bc_target=str(root.get_pathto(node)))
+            title = node.get_title()
+            breadcrumb.insert(0, {'name': node.name,
+                                  'title': title,
+                                  'short_title': reduce_string(title, 12, 40),
+                                  'url': url})
+            node = node.parent
+        self.path = breadcrumb
+
+        # Content
+        objects = []
+        self.is_submit = False
+        user = context.user
+        filter = (Folder, filter_type)
+        for object in target.search_objects(object_class=filter):
+            ac = object.get_access_control()
+            if not ac.is_allowed_to_view(user, object):
+                continue
+
+            path = here.get_pathto(object)
+            bc_target = str(root.get_pathto(object))
+            url = context.uri.replace(bc_target=bc_target)
+
+            self.is_submit = True
+            # Calculate path
+            path_to_icon = object.get_object_icon(icon_size)
+            if path:
+                path_to_object = Path(str(path) + '/')
+                path_to_icon = path_to_object.resolve(path_to_icon)
+            title = object.get_title()
+            objects.append({'name': object.name,
+                            'title': title,
+                            'short_title': reduce_string(title, 12, 40),
+                            'is_folder': isinstance(object, Folder),
+                            'is_image': isinstance(object, Image),
+                            'is_selectable': True,
+                            'path': path,
+                            'url': url,
+                            'icon': path_to_icon,
+                            'object_type': object.handler.get_mimetype()})
+
+        objects.sort(key=itemgetter('is_folder'), reverse=True)
+        self.objects = objects
+
+        # Avoid general template
+        response.set_header('Content-Type', 'text/html; charset=UTF-8')
 
 
 
