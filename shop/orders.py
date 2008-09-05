@@ -31,7 +31,7 @@ from itools.xapian import KeywordField, EqQuery
 from itools.xml import XMLParser
 
 # Import from ikaaro
-from ikaaro.binary import PDF
+from ikaaro.file import PDF
 from ikaaro.folder import Folder
 from ikaaro.registry import register_object_class
 from ikaaro.workflow import WFTransition, WorkflowAware

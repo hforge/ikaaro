@@ -195,8 +195,7 @@ class AddImageForm(STLForm):
 
 
     def get_namespace(self, resource, context):
-        from file import File
-        from binary import Image
+        from file import File, Image
 
         # HTML or Wiki
         mode = context.get_form_value('mode', default='html')
@@ -233,7 +232,7 @@ class AddImageForm(STLForm):
     def action(self, resource, context, form):
         """Allow to upload and add an image to epoz
         """
-        from binary import Image
+        from file import Image
 
         # Check the filename is good
         filename, mimetype, body = form['file']
@@ -563,8 +562,7 @@ class DBResource(CatalogAware, IResource):
 
     def get_catalog_values(self):
         from access import RoleAware
-        from file import File
-        from binary import Image
+        from file import File, Image
 
         abspath = self.get_canonical_path()
         mtime = self.get_mtime()

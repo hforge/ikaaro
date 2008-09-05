@@ -26,7 +26,6 @@ from itools.gettext import register_domain
 from itools.utils import get_version
 
 # Import from ikaaro
-import binary
 from calendar_ import CalendarTable
 import csv
 from file import File

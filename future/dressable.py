@@ -34,9 +34,8 @@ from itools.web import get_context
 from itools.xml import XMLParser, XMLError
 
 # Import from ikaaro
-from ikaaro.binary import Image
 from ikaaro.exceptions import ConsistencyError
-from ikaaro.file import File
+from ikaaro.file import File, Image
 from ikaaro.folder import Folder
 from ikaaro.html import WebPage, EpozEditable
 from ikaaro.messages import *

@@ -55,7 +55,7 @@ class Breadcrumb(object):
         """The 'start' must be a handler, 'filter_type' must be a handler
         class.
         """
-        from binary import Image
+        from file import Image
         from folder import Folder
         from resources import DBResource
 

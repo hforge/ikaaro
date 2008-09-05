@@ -22,7 +22,7 @@
 from datetime import datetime, timedelta
 
 # Import from itools
-from itools.datatypes import Unicode
+from itools.datatypes import Integer, Unicode
 from itools.gettext import MSG
 from itools.handlers import guess_encoding, checkid
 from itools.html import HTMLParser, stream_to_str_as_xhtml
@@ -283,4 +283,66 @@ class FileBacklinks(FolderBrowseContent):
 
     def get_actions(self, resource, context, results):
         return []
+
+
+
+class ImageThumbnail(BaseView):
+
+    access = True
+
+    def get_mtime(self, resource):
+        return resource.get_mtime()
+
+
+    def GET(self, resource, context):
+        width = context.get_form_value('width', type=Integer, default=48)
+        height = context.get_form_value('height', type=Integer, default=48)
+
+        data, format = resource.handler.get_thumbnail(width, height)
+        if data is None:
+            object = resource.get_resource('/ui/icons/48x48/image.png')
+            data = object.to_str()
+            format = 'png'
+
+        response = context.response
+        response.set_header('Content-Type', 'image/%s' % format)
+        return data
+
+
+
+class ImageView(STLView):
+
+    access = 'is_allowed_to_view'
+    title = MSG(u'View')
+    template = '/ui/binary/Image_view.xml'
+
+    def get_namespace(self, resource, context):
+        path = context.site_root.get_pathto(resource)
+        return {'src': '/%s/;download' % path}
+
+
+
+# FIXME This is broken, check http://alistapart.com/articles/byebyeembed
+class VideoView(STLView):
+
+    access = 'is_allowed_to_view'
+    title = MSG(u'View')
+    template = '/ui/binary/Video_view.xml'
+
+
+    def get_namespace(self, resource, context):
+        return {'format': resource.handler.get_mimetype()}
+
+
+
+class ArchiveView(STLView):
+
+    access = 'is_allowed_to_view'
+    title = MSG(u'View')
+    template = '/ui/binary/Archive_view.xml'
+
+    def get_namespace(self, resource, context):
+        contents = resource.handler.get_contents()
+        return {
+            'contents': '\n'.join(contents)}
 
