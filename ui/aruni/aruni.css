@@ -408,7 +408,7 @@ th a.sort_none {
 
 
 /**************************************************************************
- * folder_views.py
+ * folder_views.FolderBrowseContent
  *************************************************************************/
 
 .workflow { text-decoration: none; }
@@ -424,7 +424,17 @@ th a.sort_none {
 
 
 /**************************************************************************
- *
+ * Defined by resource_views.DBResourceEditMetadata
+ * Used by views.build_menu
+ *************************************************************************/
+
+.nav_active {
+  font-weight: bold;
+}
+
+
+/**************************************************************************
+ * NOT YET CLASSIFIED
  *************************************************************************/
 
 .clear {
@@ -505,10 +515,6 @@ th a.sort_none {
 
 .number { text-align: right; }
 
-/* Left navigation menu */
-.nav_active {
-  font-weight: bold;
-}
 
 tr.odd th, tr.odd td,
 tr.odd td input {
