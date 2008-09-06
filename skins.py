@@ -313,7 +313,6 @@ class Skin(UIFolder):
 
             # Add the menu
             tabs.append({
-                'id': 'tab_%s' % name,
                 'name': resolve_view(context, link),
                 'label': view.get_title(context),
                 'active': active,

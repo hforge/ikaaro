@@ -1,3 +1,4 @@
+
 body {
   margin: 0;
   padding: 0;
@@ -29,9 +30,27 @@ input {
 a { color: #3465a4; }
 a img { border: 0; }
 
-#layout {
-  width: 980px;
+legend {
+  font-weight: bold;
 }
+
+
+/**************************************************************************
+ * itools.web.BaseForm
+ *************************************************************************/
+
+.field_is_required {
+  font-style: italic;
+}
+
+.field_is_missing {
+  color: #ff0000;
+}
+
+
+/**************************************************************************
+ * ui/aruni/template.xhtml.en
+ *************************************************************************/
 
 #header {
   text-align: right;
@@ -87,128 +106,6 @@ a img { border: 0; }
 
 #header a#top_menu_contact {
   background-image: url(../icons/16x16/mail.png);
-}
-
-#site_search_form { float: right; }
-#site_search_form input { font-size: 1em; }
-
-#action_login { background-image: url(../icons/16x16/lock.png); }
-#action_join { background-image: url(../icons/16x16/card.png); }
-#action_home { background-image: url(../icons/16x16/action_home.png); }
-#action_logout { background-image: url(../icons/16x16/action_logout.png); }
-
-#maintitle h1 {
-  margin: 0;
-  padding: 9px 0 0 0;
-}
-
-#breadcrumbs {
-  float: left;
-  font-size: 1.1em;
-  margin: 2px 0px 2px 0px;
-}
-
-#breadcrumbs span {
-  color: #888a85;
-}
-
-#breadcrumbs a {
-  text-decoration: none;
-  padding: 2px 4px 2px 4px;
-}
-
-#breadcrumbs a:hover {
-  background-color: #3465a4;
-  color: #ffffff;
-}
-
-/**************************************************************************
- * Tabs
- * ***********************************************************************/
-
-#tabs {
-  padding: 2px 4px 2px 0px;
-  float: right;
-  font-size: 1.1em;
-}
-
-#tabs a {
-  text-decoration: none;
-  white-space: nowrap;
-}
-
-#tabs .menu a {
-  padding: 2px 4px 2px 4px;
-}
-
-#tabs .menu a:hover {
-  background-color: #3465a4;
-  color: #ffffff;
-}
-
-#tabs .active a {
-  font-weight: bold;
-}
-
-/**************************************************************************
- *
- * ***********************************************************************/
-#message {
-  margin: 3px;
-  padding: 3px 0 3px 24px;
-  border: 2px solid #000;
-  background: #fcaf3e url(../images/message.png) left center no-repeat;
-}
-
-#body {
-  padding: 10px;
-  font-size: 1.4em;
-  min-height: 280px;
-}
-
-#body h1, #body h2, #body h3, #body h4, #body h5, #body h6 {
-  border-bottom: 1px solid #d3d7cf;
-}
-
-#body ol li { list-style-type: decimal; }
-#body ul li { list-style-type: square; }
-
-#body form fieldset {
-  border-bottom: 1px solid #d3d7cf;
-}
-
-#body form legend {
-  font-size: 0.9em;
-}
-
-legend {
-  font-weight: bold;
-}
-
-
-#body form dd { padding-bottom: 5px; }
-#body form p { clear: both; }
-#body form .form_mandatory {
-  color: red;
-  font-weight: bold;
-}
-
-#body .field_required {
-  font-style: italic;
-}
-
-#body form .missing {
-  color: #ff0000;
-}
-
-#location {
-  margin: 0px 10px 0px 0px;
-  padding: 0px 0px 4px 8px;
-  width: 99%;
-}
-
-#header_right {
-  background: #c17d11;
 }
 
 #right {
@@ -292,9 +189,125 @@ legend {
   text-decoration: underline;
 }
 
-.clear {
-  clear: both;
+
+/**************************************************************************
+ * ui/aruni/template.xhtml.en
+ * ui/html/addlink.xml.en
+ * ui/html/addimage.xml.en
+ * future/ui/link_addlink.xml.en
+ *************************************************************************/
+
+#message {
+  margin: 3px;
+  padding: 3px 0 3px 24px;
+  border: 2px solid #000;
+  background: #fcaf3e url(../images/message.png) left center no-repeat;
 }
+
+#body {
+  padding: 10px;
+  font-size: 1.4em;
+  min-height: 280px;
+}
+
+#body h1, #body h2, #body h3, #body h4, #body h5, #body h6 {
+  border-bottom: 1px solid #d3d7cf;
+}
+
+#body ol li { list-style-type: decimal; }
+#body ul li { list-style-type: square; }
+
+#body form fieldset {
+  border-bottom: 1px solid #d3d7cf;
+}
+
+#body form legend {
+  font-size: 0.9em;
+}
+
+#body form dd { padding-bottom: 5px; }
+#body form p { clear: both; }
+
+
+/**************************************************************************
+ * ui/aruni/location.xml.en
+ *************************************************************************/
+
+#location {
+  margin: 0px 10px 0px 0px;
+  padding: 0px 0px 4px 8px;
+  width: 99%;
+}
+
+#tabs {
+  padding: 2px 4px 2px 0px;
+  float: right;
+  font-size: 1.1em;
+}
+
+#tabs a {
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+#tabs .menu a {
+  padding: 2px 4px 2px 4px;
+}
+
+#tabs .menu a:hover {
+  background-color: #3465a4;
+  color: #ffffff;
+}
+
+#tabs .active a {
+  font-weight: bold;
+}
+
+
+/**************************************************************************
+ * ui/aruni/location.xml.en
+ * ui/html/addlink.xml.en
+ * ui/html/addimage.xml.en
+ * future/ui/link_addlink.xml.en
+ *************************************************************************/
+
+#breadcrumbs {
+  float: left;
+  font-size: 1.1em;
+  margin: 2px 0px 2px 0px;
+}
+
+#breadcrumbs span {
+  color: #888a85;
+}
+
+#breadcrumbs a {
+  text-decoration: none;
+  padding: 2px 4px 2px 4px;
+}
+
+#breadcrumbs a:hover {
+  background-color: #3465a4;
+  color: #ffffff;
+}
+
+
+/**************************************************************************
+ * ui/html/addlink.xml.en
+ * ui/html/addimage.xml.en
+ * future/ui/link_addlink.xml.en
+ *************************************************************************/
+
+#maintitle h1 {
+  margin: 0;
+  padding: 9px 0 0 0;
+}
+
+
+/**************************************************************************
+ * ui/html/addlink.xml.en
+ * ui/html/addimage.xml.en
+ *************************************************************************/
 
 dl.thumb {
   float: left;
@@ -316,10 +329,106 @@ dl.thumb dd {
   padding: 0;
 }
 
+
+/**************************************************************************
+ * ui/generic/icons_view.xml.en
+ * ui/user/profile.xml.en
+ *************************************************************************/
+
 table.new_resource_thumb {
   float: left;
   margin-bottom: 10px;
   width: 18em;
+}
+
+/**************************************************************************
+ * ui/website/search_table.xml.en
+ *************************************************************************/
+
+.results li {
+  margin: 3px 3px 6px;
+}
+
+.result_url, .result_type, .result_size {
+  font-size: 0.9em;
+}
+
+.result_url {
+  color: #008000;
+}
+
+
+/**************************************************************************
+ * ui/generic/browse_table.xml.en
+ * ui/website/edit_languages.xml.en
+ * tracker/ui/view_tracker.xml.en
+ *************************************************************************/
+
+#browse_list thead th {
+  padding: 6px;
+  background: #d3d7cf;
+  white-space: nowrap;
+}
+
+#browse_list thead th.checkbox {
+  padding: 6px 3px;
+}
+
+#browse_list thead th.checkbox input {
+  background-color: #d3d7cf;
+}
+
+#browse_list tbody td {
+  padding: 3px;
+  vertical-align: top;
+}
+
+
+/**************************************************************************
+ * ui/generic/browse_table.xml.en
+ *************************************************************************/
+
+th a.sort_up {
+  background: transparent url(images/order-up.png) right top no-repeat;
+  padding-right: 20px;
+  text-decoration: none;
+}
+
+th a.sort_down {
+  background: transparent url(images/order-down.png) right top no-repeat;
+  padding-right: 20px;
+  text-decoration: none;
+}
+
+th a.sort_none {
+  background: transparent url(images/order-none.png) right top no-repeat;
+  padding-right: 20px;
+  text-decoration: none;
+}
+
+
+/**************************************************************************
+ * folder_views.py
+ *************************************************************************/
+
+.workflow { text-decoration: none; }
+
+
+/**************************************************************************
+ * ui/WorkflowAware_state.xml.en
+ *************************************************************************/
+
+.wf_private { color: #c00; }
+.wf_pending { color: #f57900; }
+.wf_public { color: #4e9a06; }
+
+
+/**************************************************************************
+ *
+ *************************************************************************/
+
+.clear {
+  clear: both;
 }
 
 .button_ok {
@@ -393,10 +502,6 @@ table.new_resource_thumb {
   padding-left: 16px; background-image: url(../images/button_select_none.png);
 }
 
-.results li { margin: 3px 3px 6px; }
-.result_control { background: #deeff1; }
-.result_url, .result_type, .result_size { font-size: 0.9em; }
-.result_url { color: #008000; }
 
 .number { text-align: right; }
 
@@ -405,51 +510,8 @@ table.new_resource_thumb {
   font-weight: bold;
 }
 
-/* Browse list */
-#browse_list thead th {
-  padding: 6px;
-  background: #d3d7cf;
-  white-space: nowrap;
-}
-
-#browse_list thead th.checkbox {
-  padding: 6px 3px;
-}
-
-#browse_list thead th.checkbox input {
-  background-color: #d3d7cf;
-}
-
-#browse_list tbody td {
-  padding: 3px;
-  vertical-align: top;
-}
-
 tr.odd th, tr.odd td,
 tr.odd td input {
   background: #eeeeec;
 }
 
-th a.sort_up {
-  background: transparent url(images/order-up.png) right top no-repeat;
-  padding-right: 20px;
-  text-decoration: none;
-}
-
-th a.sort_down {
-  background: transparent url(images/order-down.png) right top no-repeat;
-  padding-right: 20px;
-  text-decoration: none;
-}
-
-th a.sort_none {
-  background: transparent url(images/order-none.png) right top no-repeat;
-  padding-right: 20px;
-  text-decoration: none;
-}
-
-/* Workflow */
-.workflow { text-decoration: none; }
-.wf_private { color: #c00; }
-.wf_pending { color: #f57900; }
-.wf_public { color: #4e9a06; }

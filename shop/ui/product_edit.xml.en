@@ -7,8 +7,8 @@
   <h2>Edit a Product</h2>
 
   <form name="new_product" action=";edit" method="post">
-    <p>The <span class="field_required">emphasized</span>
-                          fields are required.</p>
+    <p>The <span class="field_is_required">emphasized</span> fields are
+    required.</p>
     <dl>
       <dt class="${title/class}">
         <label for="title" class="${title/class}">Title</label>
