@@ -4,16 +4,16 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
-<form action="" method="post" id="browse_list" name="browse_list"
+<form action="" method="post" name="browse_list" id="form_table"
   stl:omit-tag="not actions">
-<table class="${css}">
+<table id="browse_list" class="${css}">
   <thead stl:if="columns">
     <tr>
       <stl:block stl:repeat="column columns">
         <!-- checkbox -->
         <th stl:if="column/is_checkbox" class="checkbox">
           <input type="checkbox" title="Click to select/unselect all rows"
-            onclick="select_checkboxes('browse_list', this.checked);" />
+            onclick="select_checkboxes('form_table', this.checked);" />
         </th>
         <!-- checkbox -->
         <th stl:if="not column/is_checkbox">
