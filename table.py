@@ -227,7 +227,7 @@ class TableView(BrowseForm):
         if ac.is_allowed_to_edit(context.user, resource):
             message_utf8 = MSG_DELETE_SELECTION.gettext().encode('utf_8')
             return [('remove', u'Remove', 'button_delete',
-                     'return confirmation("%s");' % message_utf8)]
+                     'return confirm("%s");' % message_utf8)]
 
         return []
 

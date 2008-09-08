@@ -40,7 +40,7 @@
   </form>
 
   <script language="javascript">
-    focus_element("newpass")
+    $("#newpass").focus();
   </script>
   </fieldset>
 

@@ -57,7 +57,7 @@ class ThreadView(STLForm):
         # Actions
         actions = []
         message = MSG_DELETE_SELECTION.gettext()
-        remove_message = 'return confirmation("%s");' % message
+        remove_message = 'return confirm("%s");' % message
         namespace['remove_message'] = remove_message
 
         namespace['messages'] = []

@@ -3,7 +3,7 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://xml.itools.org/namespaces/stl">
-          
+
   <form action=";edit_account" method="post">
     <dl>
       <dt><label for="firstname">First Name</label></dt>
@@ -34,7 +34,7 @@
   </form>
 
   <script type="text/javascript">
-    focus_element("firstname");
+    $("#firstname").focus();
   </script>
 
 </stl:block>

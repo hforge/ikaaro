@@ -361,7 +361,7 @@ class FolderBrowseContent(SearchForm):
             message = MSG_DELETE_SELECTION.gettext()
             actions = [
                 ('remove', MSG(u'Remove'), 'button_delete',
-                 'return confirmation("%s");' % message.encode('utf_8')),
+                 'return confirm("%s");' % message.encode('utf_8')),
                 ('rename', MSG(u'Rename'), 'button_rename', None),
                 ('copy', MSG(u'Copy'), 'button_copy', None),
                 ('cut', MSG(u'Cut'), 'button_cut', None)]

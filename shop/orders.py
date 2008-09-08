@@ -162,7 +162,7 @@ class Orders(Folder):
         message = u'Are you realy sure you want to delete this order ?'
         message = self.gettext(message)
         actions = [('remove', u'Remove', 'button_delete',
-                    'return confirmation("%s");' % message.encode('utf_8'))]
+                    'return confirm("%s");' % message.encode('utf_8'))]
         actions = [(x[0], self.gettext(x[1]), x[2], x[3]) for x in actions ]
         # Batch
         batch = Batch(size=size, msg_1=u'<span>There is one order.</span>',

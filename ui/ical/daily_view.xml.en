@@ -55,7 +55,7 @@
   </div>
 
   <script language="javascript">
-    focus_element("date");
+    $("#date").focus();
     Calendar.setup({
       inputField: "date",
       ifFormat: "%Y-%m-%d",

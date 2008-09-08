@@ -146,7 +146,7 @@
 </form>
 
 <script language="javascript">
-focus_element("SUMMARY");
+$("#SUMMARY").focus();
 
 Calendar.setup({
     inputField: "DTSTART_day",

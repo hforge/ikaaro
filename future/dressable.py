@@ -219,7 +219,7 @@ class Dressable(Folder, EpozEditable):
         namespace['name'] = name
         namespace['class_id'] = self.get_class(name).class_id
         message = self.gettext(MSG_DELETE_OBJECT)
-        msg = 'return confirmation("%s");' % message.encode('utf_8')
+        msg = 'return confirm("%s");' % message.encode('utf_8')
         namespace['remove_action'] = msg
 
         # size
