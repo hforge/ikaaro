@@ -50,11 +50,7 @@
             ${body}
           </td>
           <td id="right" valign="top">
-            <div class="navigation" stl:repeat="menu right_menus">
-              <label>${menu/title}</label>
-              ${menu/content}
-              <br/>
-            </div>
+            <stl:block stl:repeat="menu right_menus">${menu}<br/></stl:block>
           </td>
         </tr>
       </table>

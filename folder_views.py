@@ -34,8 +34,55 @@ from exceptions import ConsistencyError
 from messages import *
 from utils import generate_name, reduce_string
 from versioning import VersioningAware
-from views import IconsView, SearchForm, build_menu
+from views import IconsView, SearchForm, ContextMenu
 from workflow import WorkflowAware
+
+
+
+class AddResourceMenu(ContextMenu):
+
+    title = MSG(u'Add Resource')
+
+    def get_items(self, resource, context):
+        document_types = resource.get_document_types()
+        return [
+            {'src': '/ui/' + cls.class_icon16,
+             'title': cls.class_title.gettext(),
+             'href': ';new_resource?type=%s' % quote(cls.class_id)}
+            for cls in document_types ]
+
+
+class ZoomMenu(ContextMenu):
+
+    title = MSG(u'Zoom')
+
+    def get_items(self, resource, context):
+        uri = context.uri
+
+        # Compute previous and next sizes
+        current_size = context.query['size']
+        min_size = resource.MIN_SIZE
+        max_size = resource.MAX_SIZE
+        current_size = max(min_size, min(current_size, max_size))
+        previous_size = min_size
+        next_size = max_size
+        for step in resource.SIZE_STEPS:
+            if step < current_size:
+                previous_size = step
+            if next_size is max_size and step > current_size:
+                next_size = step
+
+        next_size = str(next_size)
+        previous_size = str(previous_size)
+        return [
+            {'title': MSG(u'Zoom In'),
+             'src': '/ui/icons/16x16/zoom_in.png',
+             'href': uri.replace(size=next_size)},
+            {'title': MSG(u'Zoom Out'),
+             'src': '/ui/icons/16x16/zoom_out.png',
+             'href': uri.replace(size=previous_size)}
+        ]
+
 
 
 class FolderView(BaseView):
@@ -487,14 +534,9 @@ class FolderBrowseContent(SearchForm):
         # Add a new resource
         document_types = resource.get_document_types()
         if document_types:
-            menu = [
-                {'src': '/ui/' + cls.class_icon16,
-                 'title': cls.class_title.gettext(),
-                 'href': ';new_resource?type=%s' % quote(cls.class_id)}
-                for cls in document_types ]
-            menus.append({
-                'title': MSG(u'Add Resource'),
-                'content': build_menu(menu)})
+            menu = AddResourceMenu()
+            menu = menu.render(resource, context)
+            menus.append(menu)
 
         return menus
 
@@ -544,30 +586,9 @@ class FolderPreviewContent(FolderBrowseContent):
         menus = FolderBrowseContent.get_right_menus(self, resource, context)
 
         # Zoom
-        # Compute previous and next sizes
-        current_size = context.query['size']
-        min_size = resource.MIN_SIZE
-        max_size = resource.MAX_SIZE
-        current_size = max(min_size, min(current_size, max_size))
-        previous_size = min_size
-        next_size = max_size
-        for step in resource.SIZE_STEPS:
-            if step < current_size:
-                previous_size = step
-            if next_size is max_size and step > current_size:
-                next_size = step
-
-        options = [
-            {'href': context.uri.replace(size=str(next_size)),
-             'src': '/ui/icons/16x16/zoom_in.png',
-             'title': MSG(u'Zoom In'),
-             'class': None},
-            {'href': context.uri.replace(size=str(previous_size)),
-             'src': '/ui/icons/16x16/zoom_out.png',
-             'title': MSG(u'Zoom Out'),
-             'class': None}]
-        menus.insert(0,
-            {'title': MSG(u'Zoom'), 'content': build_menu(options)})
+        menu = ZoomMenu()
+        menu = menu.render(resource, context)
+        menus.insert(0, menu)
 
         # Ok
         return menus

@@ -4,15 +4,14 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
-<dl>
-<stl:block stl:repeat="item items">
-  <dt class="${item/class}">
-    <img stl:if="item/src" src="${item/src}" alt="" width="16" height="16" />
-    <stl:block stl:if="not item/href">${item/title}</stl:block>
-    <a stl:if="item/href" href="${item/href}">${item/title}</a>
-  </dt>
-  <dd>${item/items}</dd>
-</stl:block>
-</dl>
+<div class="context_menu">
+  <label>${title}</label>
+  <ul>
+    <li class="${item/class}" stl:repeat="item items">
+      <img stl:if="item/src" src="${item/src}" alt="" width="16" height="16" />
+      <a href="${item/href}" stl:omit-tag="not item/href">${item/title}</a>
+    </li>
+  </ul>
+</div>
 
 </stl:block>

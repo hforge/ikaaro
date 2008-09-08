@@ -339,27 +339,38 @@ class SearchForm(BrowseForm):
 ###########################################################################
 # Menu
 ###########################################################################
-def build_menu(options):
-    """The input (options) is a tree:
+class ContextMenu(object):
 
-      [{'href': ...,
-        'class': ...,
-        'src': ...,
-        'title': ...,
-        'items': [....]}
-       ...
-       ]
+    template = '/ui/generic/menu.xml'
 
-    """
-    for option in options:
+    def get_items(self, resource, context):
+        """The input (options) is a tree:
+
+          [{'href': ...,
+            'class': ...,
+            'src': ...,
+            'title': ...,
+            'items': [....]}
+           ...
+           ]
+        """
+        raise NotImplementedError
+
+
+    def get_namespace(self, resource, context):
+        items = self.get_items(resource, context)
         # Defaults
-        for name in ['class', 'src', 'items']:
-            option.setdefault(name, None)
-        # Submenu
-        if option['items']:
-            option['items'] = build_menu(option['items'])
+        for item in items:
+            for name in ['class', 'src', 'items']:
+                item.setdefault(name, None)
 
-    namespace = {'items': options}
-    template = get_context().root.get_resource('/ui/generic/menu.xml')
-    return stl(template, namespace)
+        return {
+            'title': self.title,
+            'items': items}
+
+
+    def render(self, resource, context):
+        namespace = self.get_namespace(resource, context)
+        template = resource.get_resource(self.template)
+        return stl(template, namespace)
 

@@ -37,7 +37,26 @@ from datatypes import FileDataType
 from messages import *
 from registry import get_object_class
 from utils import get_parameters, reduce_string
-from views import NewInstanceForm, build_menu
+from views import NewInstanceForm, ContextMenu
+
+
+
+class EditLanguageMenu(ContextMenu):
+
+    title = MSG(u'Edit Language')
+
+    def get_items(self, resource, context):
+        site_root = resource.get_site_root()
+        languages = site_root.get_property('website_languages')
+        content_language = context.get_cookie('language')
+        if content_language is None:
+            content_language = languages[0]
+
+        return [
+            {'title': get_language_name(x),
+             'href': context.uri.replace(language=x),
+             'class': 'nav_active' if (x == content_language) else None}
+            for x in languages ]
 
 
 
@@ -147,29 +166,11 @@ class DBResourceEditMetadata(STLForm):
 
     def get_right_menus(self, resource, context):
         # Multilingual
-        site_root = resource.get_site_root()
-        languages = site_root.get_property('website_languages')
-        content_language = context.get_cookie('language')
-        if content_language is None:
-            content_language = languages[0]
-
-        options = []
-        for language in languages:
-            title = get_language_name(language)
-            if language == content_language:
-                css_class = 'nav_active'
-            else:
-                css_class = None
-            options.append({
-                'href': context.uri.replace(language=language),
-                'title': title,
-                'class': css_class,
-            })
+        menu = EditLanguageMenu()
+        menu = menu.render(resource, context)
 
         # Ok
-        return [{
-            'title': MSG(u'Edit Language'),
-            'content': build_menu(options)}]
+        return [menu]
 
 
 

@@ -28,8 +28,22 @@ from itools.web import BaseView
 from ikaaro.file import File
 from ikaaro.folder import Folder
 from ikaaro.registry import register_object_class
-from ikaaro.views import build_menu
+from ikaaro.views import ContextMenu
 from page import WikiPage
+
+
+class WikiMenu(ContextMenu):
+
+    title = MSG(u'Wiki')
+
+    def get_items(self, resource, context):
+        base = '/%s' % context.site_root.get_pathto(resource)
+
+        return [
+            {'title': resource.get_view(x).title,
+             'href': '%s/;%s' % (base, x)}
+            for x in resource.class_views ]
+
 
 
 class GoToFrontPage(BaseView):
@@ -84,22 +98,10 @@ class WikiFolder(Folder):
 
 
     def get_right_menus(self, context):
-        menus = []
-
-        # Wiki Views
-        base = '/%s' % context.site_root.get_pathto(self)
-        menu = []
-        for view_name in self.class_views:
-            view = self.get_view(view_name)
-            menu.append(
-                {'href': '%s/;%s' % (base, view_name),
-                 'title': view.title})
-        menus.append({
-            'title': MSG(u'Wiki'),
-            'content': build_menu(menu)})
-
+        menu = WikiMenu()
+        menu = menu.render(self, context)
         # Ok
-        return menus
+        return [menu]
 
 
 

@@ -43,7 +43,7 @@ from ikaaro.messages import MSG_NONE_REMOVED, MSG_OBJECTS_REMOVED
 from ikaaro.messages import MSG_NAME_MISSING, MSG_CHANGES_SAVED
 from ikaaro.registry import register_object_class
 from ikaaro.text import Text
-from ikaaro.views import BrowseForm, SearchForm as BaseSearchForm, build_menu
+from ikaaro.views import BrowseForm, SearchForm as BaseSearchForm, ContextMenu
 from issue import History, Issue, issue_fields
 from resources import Resources
 from tables import SelectTableTable, SelectTable
@@ -64,6 +64,35 @@ columns = [
     ('state', MSG(u'State')),
     ('assigned_to', MSG(u'Assigned To')),
     ('mtime', MSG(u'Modified'))]
+
+
+
+class GoToIssueMenu(ContextMenu):
+
+    title = MSG(u'Go To Issue')
+    template = '/ui/tracker/menu_goto.xml'
+
+    def get_namespace(self, resource, context):
+        return {'title': self.title}
+
+
+
+class StoredSearchesMenu(ContextMenu):
+
+    title = MSG(u'Stored Searches')
+
+    def get_items(self, resource, context):
+        base = '/%s/;view' % context.site_root.get_pathto(resource)
+
+        items = resource.search_objects(object_class=StoredSearch)
+        items = [
+            {'title': x.get_property('title'),
+             'href': '%s?search_name=%s' % (base, x.name)}
+            for x in items ]
+        items.sort(lambda x, y: cmp(x['title'], y['title']))
+
+        return items
+
 
 
 ###########################################################################
@@ -961,22 +990,14 @@ class Tracker(Folder):
         menus = []
 
         # Go to
-        template = self.get_resource('/ui/tracker/goto.xml')
-        menus.append({
-            'title': MSG(u'Go To Issue'),
-            'content': stl(template)})
+        menu = GoToIssueMenu()
+        menu = menu.render(self, context)
+        menus.append(menu)
 
         # Stored Searches
-        items = self.search_objects(object_class=StoredSearch)
-        base = '/%s/;view' % context.site_root.get_pathto(self)
-        menu = [
-            {'href': '%s?search_name=%s' % (base, x.name),
-             'title': x.get_property('title')}
-            for x in items ]
-        menu.sort(lambda x, y: cmp(x['title'], y['title']))
-        menus.append({
-            'title': MSG(u'Stored Searches'),
-            'content': build_menu(menu)})
+        menu = StoredSearchesMenu()
+        menu = menu.render(self, context)
+        menus.append(menu)
 
         # Ok
         return menus

@@ -454,4 +454,3 @@ class UI(UIFolder):
             return skin
         return UIFolder._get_resource(self, name)
 
-
