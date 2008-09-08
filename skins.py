@@ -363,13 +363,12 @@ class Skin(UIFolder):
     def get_right_menus(self, context):
         resource = context.resource
         # Resource
-        for menu in context.resource.get_right_menus(context):
-            yield menu
+        for menu in resource.get_right_menus():
+            yield menu.render(resource, context)
         # View
-        get_menus = getattr(context.view, 'get_right_menus', None)
-        if get_menus is not None:
-            for menu in get_menus(resource, context):
-                yield menu
+        menus = getattr(context.view, 'right_menus', [])
+        for menu in menus:
+            yield menu.render(resource, context)
 
 
     #######################################################################

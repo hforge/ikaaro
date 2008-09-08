@@ -82,8 +82,12 @@ class StoredSearchesMenu(ContextMenu):
     title = MSG(u'Stored Searches')
 
     def get_items(self, resource, context):
-        base = '/%s/;view' % context.site_root.get_pathto(resource)
+        # If called from a child
+        if isinstance(resource, Issue):
+            resource = resource.parent
 
+        # Namespace
+        base = '/%s/;view' % context.site_root.get_pathto(resource)
         items = resource.search_objects(object_class=StoredSearch)
         items = [
             {'title': x.get_property('title'),
@@ -986,21 +990,7 @@ class Tracker(Folder):
     #######################################################################
     # User Interface
     #######################################################################
-    def get_right_menus(self, context):
-        menus = []
-
-        # Go to
-        menu = GoToIssueMenu()
-        menu = menu.render(self, context)
-        menus.append(menu)
-
-        # Stored Searches
-        menu = StoredSearchesMenu()
-        menu = menu.render(self, context)
-        menus.append(menu)
-
-        # Ok
-        return menus
+    right_menus = [GoToIssueMenu(), StoredSearchesMenu()]
 
 
     #######################################################################

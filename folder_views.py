@@ -205,6 +205,7 @@ class FolderBrowseContent(SearchForm):
 
     access = 'is_allowed_to_view'
     title = MSG(u'Browse Content')
+    right_menus = [AddResourceMenu()]
     schema = {
         'ids': String(multiple=True, mandatory=True),
     }
@@ -525,27 +526,12 @@ class FolderBrowseContent(SearchForm):
         context.message = MSG(u'Objects pasted.')
 
 
-    #######################################################################
-    # Right Menu
-    #######################################################################
-    def get_right_menus(self, resource, context):
-        menus = []
-
-        # Add a new resource
-        document_types = resource.get_document_types()
-        if document_types:
-            menu = AddResourceMenu()
-            menu = menu.render(resource, context)
-            menus.append(menu)
-
-        return menus
-
-
 
 class FolderPreviewContent(FolderBrowseContent):
 
     title = MSG(u'Preview Content')
     table_template = '/ui/folder/browse_image.xml'
+    right_menus = FolderBrowseContent.right_menus + [ZoomMenu()]
 
 
     def get_query_schema(self):
@@ -580,18 +566,6 @@ class FolderPreviewContent(FolderBrowseContent):
             'objects': items_namespace,
             'size': current_size,
         }
-
-
-    def get_right_menus(self, resource, context):
-        menus = FolderBrowseContent.get_right_menus(self, resource, context)
-
-        # Zoom
-        menu = ZoomMenu()
-        menu = menu.render(resource, context)
-        menus.insert(0, menu)
-
-        # Ok
-        return menus
 
 
 

@@ -131,6 +131,8 @@ class DBResourceEditMetadata(STLForm):
     access = 'is_allowed_to_edit'
     title = MSG(u'Edit Metadata')
     icon = 'metadata.png'
+    right_menus = [EditLanguageMenu()]
+
     template = '/ui/base/edit_metadata.xml'
     schema = {
         'title': Unicode,
@@ -162,15 +164,6 @@ class DBResourceEditMetadata(STLForm):
         resource.set_property('subject', subject, language=language)
 
         context.message = MSG_CHANGES_SAVED
-
-
-    def get_right_menus(self, resource, context):
-        # Multilingual
-        menu = EditLanguageMenu()
-        menu = menu.render(resource, context)
-
-        # Ok
-        return [menu]
 
 
 

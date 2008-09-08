@@ -37,8 +37,12 @@ class WikiMenu(ContextMenu):
     title = MSG(u'Wiki')
 
     def get_items(self, resource, context):
-        base = '/%s' % context.site_root.get_pathto(resource)
+        # If called from a child
+        if isinstance(resource, WikiPage):
+            resource = resource.parent
 
+        # Namespace
+        base = '/%s' % context.site_root.get_pathto(resource)
         return [
             {'title': resource.get_view(x).title,
              'href': '%s/;%s' % (base, x)}
@@ -91,17 +95,10 @@ class WikiFolder(Folder):
         return [WikiPage, File]
 
 
-    #######################################################################
     # User Interface
-    #######################################################################
+    right_menus = [WikiMenu()]
+
     view = GoToFrontPage()
-
-
-    def get_right_menus(self, context):
-        menu = WikiMenu()
-        menu = menu.render(self, context)
-        # Ok
-        return [menu]
 
 
 
