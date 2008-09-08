@@ -20,10 +20,11 @@
 
 # Import from the Standard Library
 from copy import deepcopy
+from datetime import datetime
 from operator import itemgetter
 
 # Import from itools
-from itools.csv import Record, UniqueError, Table as TableFile
+from itools.csv import Record, UniqueError, Table as TableFile, Property
 from itools.datatypes import DataType, is_datatype
 from itools.datatypes import Integer, Enumerate, Date, Tokens
 from itools.gettext import MSG
@@ -38,6 +39,102 @@ from messages import *
 from registry import register_object_class
 from resource_ import DBResource
 from views import BrowseForm
+
+
+class OrderedTableFile(TableFile):
+
+    def get_datatype(self, name):
+        if name == 'order':
+            return Tokens()
+        return TableFile.get_datatype(self, name)
+
+
+    #######################################################################
+    # Handlers
+    #######################################################################
+    def new(self):
+        # Add the record 0 which stocks the records order
+        record = self.record_class(0)
+        record.append({
+            'ts': Property(datetime.now()),
+            'order': Property(())})
+        self.records.append(record)
+
+
+    #######################################################################
+    # API / Public
+    #######################################################################
+    def get_record_ids(self):
+        # Override to skip the record '0' (start in '1')
+        i = 1
+        for record in self.records:
+            if record is not None:
+                yield i
+            i += 1
+
+
+    def get_record_ids_in_order(self):
+        """Return ids sort by order"""
+        record_order = self.get_record(0)
+        ordered = record_order.get_value('order')
+        for id in ordered:
+            yield int(id)
+        # Unordered
+        ordered_set = set(ordered)
+        for id in self.get_record_ids():
+            if str(id) not in ordered_set:
+                yield id
+
+
+    def get_records_in_order(self):
+        for id in self.get_record_ids_in_order():
+            yield self.get_record(id)
+
+
+    #######################################################################
+    # Order
+    #######################################################################
+    def order_up(self, ids):
+        order = self.get_record_ids_in_order()
+        order = list(order)
+        for id in ids:
+            index = order.index(id)
+            if index > 0:
+                order.remove(id)
+                order.insert(index - 1, id)
+        # Update the order
+        order = [ str(x) for x in order ]
+        self.update_record(0, order=tuple(order))
+
+
+    def order_down(self, ids):
+        order = self.get_record_ids_in_order()
+        order = list(order)
+        for id in ids:
+            index = order.index(id)
+            order.remove(id)
+            order.insert(index + 1, id)
+        # Update the order
+        order = [ str(x) for x in order ]
+        self.update_record(0, order=tuple(order))
+
+
+    def order_top(self, ids):
+        order = self.get_record_ids_in_order()
+        order = list(order)
+        order = ids + [ id for id in order if id not in ids ]
+        # Update the order
+        order = [ str(x) for x in order ]
+        self.update_record(0, order=tuple(order))
+
+
+    def order_bottom(self, ids):
+        order = self.get_record_ids_in_order()
+        order = list(order)
+        order = [ id for id in order if id not in ids ] + ids
+        # Update the order
+        order = [ str(x) for x in order ]
+        self.update_record(0, order=tuple(order))
 
 
 ###########################################################################
@@ -286,6 +383,84 @@ class EditRecordForm(AutoForm):
             context.message = MSG_CHANGES_SAVED
 
 
+
+class OrderForm(TableView):
+
+    access = 'is_allowed_to_edit'
+    access_POST = 'is_allowed_to_edit'
+    title = MSG(u'Order')
+    icon = 'view.png' # FIXME
+
+    schema = {
+        'ids': Integer(multiple=True, mandatory=True),
+    }
+
+
+    def get_items(self, resource, context):
+        items = resource.handler.get_records_in_order()
+        return list(items)
+
+
+    def get_actions(self, resource, context, items):
+        if len(items) == 0:
+            return []
+
+        ac = resource.get_access_control()
+        if ac.is_allowed_to_edit(context.user, resource):
+            return [('order_up', u'Order up', 'button_ok', None),
+                    ('order_down', u'Order down', 'button_ok', None),
+                    ('order_top', u'Order top', 'button_ok', None),
+                    ('order_bottom', u'Order bottom', 'button_ok', None)]
+
+        return []
+
+
+    #######################################################################
+    # Form Actions
+    #######################################################################
+    def action_order_up(self, resource, context, form):
+        ids = form['ids']
+        if not ids:
+            context.message = MSG(u'Please select the objects to order up.')
+            return
+
+        resource.handler.order_up(ids)
+        context.message = MSG(u'Objects ordered up.')
+
+
+    def action_order_down(self, resource, context, form):
+        ids = form['ids']
+        if not ids:
+            context.message = MSG(u'Please select the objects to order down.')
+            return
+
+        resource.handler.order_down(ids)
+        context.message = MSG(u'Objects ordered down.')
+
+
+    def action_order_top(self, resource, context, form):
+        ids = form['ids']
+        if not ids:
+            message = MSG(u'Please select the objects to order on top.')
+            context.message = message
+            return
+
+        resource.handler.order_top(ids)
+        context.message = MSG(u'Objects ordered on top.')
+
+
+    def action_order_bottom(self, resource, context, form):
+        ids = form['ids']
+        if not ids:
+            message = MSG(u'Please select the objects to order on bottom.')
+            context.message = message
+            return
+
+        resource.handler.order_records_bottom(ids)
+        context.message = MSG(u'Objects ordered on bottom.')
+
+
+
 ###########################################################################
 # Model
 ###########################################################################
@@ -339,6 +514,17 @@ class Table(File):
     add_record = AddRecordForm()
     edit_record = EditRecordForm()
 
+
+
+class OrderedTable(Table):
+
+    class_version = '20071216'
+    class_title = MSG(u'Ordered Table')
+    class_views = Table.class_views + ['order_form']
+    class_handler = OrderedTableFile
+
+    # Views
+    order_form = OrderForm()
 
 
 ###########################################################################
