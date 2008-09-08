@@ -248,22 +248,16 @@ class EditRecordForm(AutoForm):
 
         # check form
         check_fields = {}
-        for widget in self.get_form():
-            datatype = self.handler.get_datatype(widget.name)
+        for widget in resource.get_form():
+            datatype = resource.handler.get_datatype(widget.name)
             if getattr(datatype, 'multiple', False) is True:
                 datatype = Multiple(type=datatype)
             check_fields[widget.name] = datatype
 
-        try:
-            form = context.check_form_input(check_fields)
-        except FormError:
-            context.message = MSG_MISSING_OR_INVALID
-            return
-
         # Get the record
         record = {}
-        for widget in self.get_form():
-            datatype = self.handler.get_datatype(widget.name)
+        for widget in resource.get_form():
+            datatype = resource.handler.get_datatype(widget.name)
             if getattr(datatype, 'multiple', False) is True:
                 if is_datatype(datatype, Enumerate):
                     value = form[widget.name]
@@ -280,12 +274,12 @@ class EditRecordForm(AutoForm):
             record[widget.name] = value
 
         try:
-            self.handler.update_record(id, **record)
+            resource.handler.update_record(id, **record)
         except UniqueError, error:
-            title = self.get_field_title(error.name)
+            title = resource.get_field_title(error.name)
             context.message = str(error) % (title, error.value)
         except ValueError, error:
-            title = self.get_field_title(error.name)
+            title = resource.get_field_title(error.name)
             message = MSG(u'Error: $message')
             context.message = message.gettext(message=strerror)
         else:
