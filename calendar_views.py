@@ -922,7 +922,7 @@ class CalendarUpload(FileUpload):
 
         # Replace
         try:
-            handler._load_state_from_ical_file(StringIO(body))
+            handler.load_state_from_ical_file(StringIO(body))
         except:
             context.message = u'Failed to load the file, may contain errors.'
         else:
