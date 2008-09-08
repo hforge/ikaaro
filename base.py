@@ -705,30 +705,24 @@ class DBObject(CatalogAware, Node, DomainAware):
             bulk = results
             if not isinstance(bulk, list):
                 bulk = results.get_documents()
-            ordered = self.get_ordered_objects(bulk, mode='mixed',
-                                               reverse=reverse)
+            documents = self.get_ordered_objects(bulk, mode='mixed',
+                                                 reverse=reverse)
             if size > 0:
-                documents = ordered[start:start+size]
+                documents = documents[start:start+size]
             elif start > 0:
-                documents = ordered[start:]
-            else:
-                documents = ordered
+                documents = documents[start:]
+        elif isinstance(results, list):
+            key = attrgetter(sortby)
+            if isinstance(sortby, list):
+                key = attrgetter(*sortby)
+            documents = sorted(results, key=key, reverse=reverse)
+            if size > 0:
+                documents = documents[start:start+size]
+            elif start > 0:
+                documents = documents[start:]
         else:
-            if isinstance(results, list):
-                if isinstance(sortby, list):
-                    key = attrgetter(*sortby)
-                else:
-                    key = attrgetter(sortby)
-                documents = sorted(results, key=key, reverse=reverse)
-                if size > 0:
-                    documents = documents[start:start+size]
-                elif start > 0:
-                    documents = documents[start:]
-            else:
-                documents = results.get_documents(sort_by=sortby,
-                                                  reverse=reverse,
-                                                  start=start,
-                                                  size=size)
+            documents = results.get_documents(sort_by=sortby, reverse=reverse,
+                                              start=start, size=size)
 
         # Get the objects, check security
         user = context.user
