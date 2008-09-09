@@ -385,17 +385,7 @@ class EditRecordForm(AutoForm):
 
 
 
-class OrderForm(TableView):
-
-    access = 'is_allowed_to_edit'
-    access_POST = 'is_allowed_to_edit'
-    title = MSG(u'Order')
-    icon = 'view.png' # FIXME
-
-    schema = {
-        'ids': Integer(multiple=True, mandatory=True),
-    }
-
+class OrderedTableView(TableView):
 
     def get_items(self, resource, context):
         items = resource.handler.get_records_in_order()
@@ -408,7 +398,10 @@ class OrderForm(TableView):
 
         ac = resource.get_access_control()
         if ac.is_allowed_to_edit(context.user, resource):
-            return [('order_up', u'Order up', 'button_ok', None),
+            message_utf8 = MSG_DELETE_SELECTION.gettext().encode('utf_8')
+            return [('remove', u'Remove', 'button_delete',
+                     'return confirm("%s");' % message_utf8),
+                    ('order_up', u'Order up', 'button_ok', None),
                     ('order_down', u'Order down', 'button_ok', None),
                     ('order_top', u'Order top', 'button_ok', None),
                     ('order_bottom', u'Order bottom', 'button_ok', None)]
@@ -419,6 +412,14 @@ class OrderForm(TableView):
     #######################################################################
     # Form Actions
     #######################################################################
+    def action_remove(self, resource, context, form):
+        ids = form['ids']
+        for id in ids:
+            resource.handler.del_record(id)
+
+        context.message = u'Record deleted.'
+
+
     def action_order_up(self, resource, context, form):
         ids = form['ids']
         if not ids:
@@ -457,7 +458,7 @@ class OrderForm(TableView):
             context.message = message
             return
 
-        resource.handler.order_records_bottom(ids)
+        resource.handler.order_bottom(ids)
         context.message = MSG(u'Objects ordered on bottom.')
 
 
@@ -519,10 +520,9 @@ class OrderedTable(Table):
 
     class_version = '20071216'
     class_title = MSG(u'Ordered Table')
-    class_views = Table.class_views + ['order_form']
     class_handler = OrderedTableFile
 
     # Views
-    order_form = OrderForm()
+    view = OrderedTableView()
 
 
