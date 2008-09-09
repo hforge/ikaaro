@@ -5,9 +5,10 @@
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
 
-<form id="browse_list" name="browse_list" method="${method}" action="${action}">
+<form id="browse_list" name="browse_list" method="${method}"
+  action="${action}">
 
-<h2>${title} <a href=";search?${search_parameters}">(Edit search)</a></h2>
+<p><a href=";search?${search_parameters}">Edit <em>${title}</em> search</a>.</p>
 ${batch}
 ${table}
 
@@ -15,17 +16,14 @@ ${table}
 <!-- Links -->
 <p stl:if="nb_results">
   <a name="link"/>
-  <a href=";view?${search_parameters}&amp;change_several_bugs=1#link">
-    Change Several Issues
-  </a>
+  <a href=";view?${search_parameters}&amp;change_several_bugs=1#link">Change
+  Several Issues</a>
   &nbsp;|
-  <a href=";view?${search_parameters}&amp;export_to_text=1#link">
-    Export to Text
-  </a>
+  <a href=";view?${search_parameters}&amp;export_to_text=1#link">Export to
+  Text</a>
   &nbsp;|
-  <a href=";view?${search_parameters}&amp;export_to_csv=1#link">
-    Export to CSV
-  </a>
+  <a href=";view?${search_parameters}&amp;export_to_csv=1#link">Export to
+  CSV</a>
   &nbsp;|
   <a href="resources/;monthly_view?${search_parameters}"
     class="button_calendar" style="background-repeat: no-repeat;">

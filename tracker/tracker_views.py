@@ -201,8 +201,8 @@ class TrackerView(BrowseForm):
             search = resource.get_resource(search_name)
             title = search.get_title()
         else:
-            title = MSG(u'View Tracker').gettext()
-##        nb_results = len(lines)
+            title = None
+#        nb_results = len(lines)
         namespace['nb_results'] = 'XXX'
         namespace['title'] = title
         # Keep the search_parameters, clean different actions
@@ -344,127 +344,6 @@ class TrackerView(BrowseForm):
         return columns
 
 
-    def xget_namespace(self, resource, context):
-
-        namespace = {}
-        namespace['method'] = 'GET'
-        namespace['action'] = '.'
-        # Get search results
-        query = context.query
-        results = resource.get_search_results(context, query)
-        # Analyse the result
-        if isinstance(results, Reference):
-            return results
-##        # Selected issues
-##        selected_issues = context.get_form_values('ids')
-##        # Show checkbox or not
-##        show_checkbox = False
-##        if (query['export_to_text'] or query['export_to_csv'] or
-##            query['change_several_bugs']):
-##            show_checkbox = True
-##        # Construct lines
-##        lines = []
-##        for issue in results:
-##            line = issue.get_informations()
-##            # Add link to title
-##            link = '%s/;edit' % issue.name
-##            line['title'] = (line['title'], link)
-##            if show_checkbox:
-##                line['checkbox'] = True
-##                if not selected_issues:
-##                    line['checked'] = True
-##                else:
-##                    if issue.name in selected_issues:
-##                        line['checked'] = issue.name
-##            lines.append(line)
-        # Sort
-##        sortby = query['sortby']
-##        sortorder = query['sortorder']
-##        if sortby == 'mtime':
-##            lines.sort(key=itemgetter('mtime_sort'))
-##        elif sortby in ('priority', 'state'):
-##            lines.sort(key=itemgetter('%s_rank' % sortby))
-##        else:
-##            lines.sort(key=itemgetter(sortby[0]))
-##        if sortorder == 'down':
-##            lines.reverse()
-        # Set title of search
-        search_name = query['search_name']
-        if search_name:
-            search = resource.get_resource(search_name)
-            title = search.get_title()
-        else:
-            title = MSG(u'View Tracker').gettext()
-        nb_results = len(lines)
-        namespace['title'] = title
-        # Keep the search_parameters, clean different actions
-        query_params = deepcopy(context.uri.query)
-        params = {}
-        for key in query_params:
-            if not key.startswith(';'):
-                params[key] = query_params[key]
-        params = encode_query(params)
-        params = params.replace('change_several_bugs=1', '')
-        params = params.replace('export_to_csv=1', '')
-        params = params.replace('export_to_text=1', '')
-        params = params.replace('&&', '&').replace('?&', '?').replace('&#', '#')
-        namespace['search_parameters'] = params
-        criteria = []
-        for key in ['search_name', 'mtime']:
-            value = query[key]
-            criteria.append({'name': key, 'value': value})
-        keys = 'module', 'version', 'type', 'priority', 'assigned_to', 'state'
-        for key in keys:
-            for value in query[key]:
-                criteria.append({'name': key, 'value': value})
-        namespace['criteria'] = criteria
-##        # Table
-##        batch = Batch(size=nb_results, msg_1=MSG(u'There is 1 result.'),
-##                      msg_2=MSG(u'There are ${n} results.'))
-##        namespace['batch'] = batch.render(0, nb_results, context)
-##        namespace['table'] = table(columns, lines, [sortby], sortorder,
-##                                   actions=actions, table_with_form=False)
-        namespace['nb_results'] = nb_results
-        # Export_to_text
-        namespace['export_to_text'] = False
-        if query['export_to_text']:
-            namespace['method'] = 'GET'
-            namespace['action'] = ';view'
-            namespace['export_to_text'] = True
-            namespace['columns'] = []
-            # List columns
-            column_select = context.get_form_values('column_selection',
-                                                    default=['title'])
-            # Use columns in a different order and without the id
-            export_columns = columns[2:] + [columns[1]]
-            for name, title in export_columns:
-                namespace['columns'].append({'name': name, 'title': title,
-                                             'checked': name in columns})
-            namespace['text'] = resource.get_export_to_text(context)
-        # Export_to_csv
-        namespace['export_to_csv'] = False
-        if query['export_to_csv']:
-            namespace['export_to_csv'] = True
-            namespace['method'] = 'GET'
-            namespace['action'] = ';export_to_csv'
-        # Edit several bugs at once
-        namespace['change_several_bugs'] = False
-        if query['change_several_bugs']:
-            get = resource.get_resource
-            namespace['method'] = 'POST'
-            namespace['action'] = ';change_several_bugs'
-            namespace['change_several_bugs'] = True
-            namespace['modules'] = get('modules').get_options()
-            namespace['versions'] = get('versions').get_options()
-            namespace['priorities'] = get('priorities').get_options()
-            namespace['types'] = get('types').get_options()
-            namespace['states'] = get('states').get_options()
-            users = resource.get_resource('/users')
-            namespace['users'] = resource.get_members_namespace('')
-
-        return namespace
-
-
 
 class TrackerSearch(BaseSearchForm, TrackerView):
 
@@ -488,22 +367,6 @@ class TrackerSearch(BaseSearchForm, TrackerView):
         }
 
 
-#   def GET(self, resource, context):
-#       context.query = self.get_query(context)
-#       keys = context.get_form_keys()
-
-#       # Proxy (like we do in forms)
-#       if ';search' in keys:
-#           return self.search(resource, context)
-
-#       # Default view
-#       namespace = self.get_namespace(resource, context)
-#       handler = resource.get_resource(self.template)
-#       return stl(handler, namespace)
-
-
-    #######################################################################
-    # The Search Form
     def get_search_namespace(self, resource, context):
         # Set Style
         context.styles.append('/ui/tracker/tracker.css')
@@ -557,54 +420,6 @@ class TrackerSearch(BaseSearchForm, TrackerView):
         namespace['batch'] = None
         namespace['table'] = None
         return namespace
-
-
-##    def action_search(self, resource, context, form):
-##       query = context.query
-##       search_name = query['search_name']
-##       search_title = query['search_title'].strip()
-##
-##       stored_search = stored_search_title = None
-##       if not search_title:
-##           context.uri.query['search_name'] = search_name = None
-##       if search_name:
-##           # Edit an Stored Search
-##           try:
-##               stored_search = resource.get_resource(search_name)
-##               stored_search_title = stored_search.get_property('title')
-##           except LookupError:
-##               pass
-##
-##       if search_title and search_title != stored_search_title:
-##           # New Stored Search
-##           search_name = resource.get_new_id('s')
-##           stored_search = StoredSearch.make_object(StoredSearch, resource,
-##                                                    search_name)
-##
-##       view = context.get_form_value('search_view', default=';view')
-##       if stored_search is None:
-##           # Just Search
-##           return context.uri.resolve(view).replace(**context.uri.query)
-##
-##       # Edit / Title
-##       context.commit = True
-##       stored_search.set_property('title', search_title, 'en')
-##       # Edit / Search Values
-##       text = query['text'].strip().lower()
-##       stored_search.handler.set_value('text', Unicode.encode(text))
-##
-##       mtime = query.get('mtime') or 0
-##       stored_search.handler.set_value('mtime', mtime)
-##
-##       criterias = [
-##           ('module', Integer), ('version', Integer), ('type', Integer),
-##           ('priority', Integer), ('assigned_to', String),
-##           ('state', Integer)]
-##       for name, type in criterias:
-##           value = query[name]
-##           stored_search.set_values(name, value, type=type)
-##        view = '%s?search_name=%s' % (view, search_name)
-##        return context.uri.resolve(view)
 
 
 
