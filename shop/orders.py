@@ -133,7 +133,7 @@ class Orders(Folder):
                    ('pdf', u'Pdf')]
         # Table content
         orders = []
-        for order in self.search_objects(object_class=Order):
+        for order in self.search_resources(cls=Order):
             # Mtime
             mtime = format_datetime(order.get_mtime(), accept)
             # Customer
@@ -274,8 +274,8 @@ class Order(Folder, WorkflowAware):
         except FormError:
             return context.come_back(MSG_MISSING_OR_INVALID, keep=True)
         # Search a good id for letter
-        orders = list(container.search_objects(object_class=Order))
-        orders = [int(x.name) for x in orders]
+        orders = list(container.search_resources(cls=Order))
+        orders = [ int(x.name) for x in orders ]
         nb_max = max([0] + orders)
         name = str(int(nb_max) + 1)
         # Title

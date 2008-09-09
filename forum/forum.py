@@ -56,10 +56,10 @@ class ForumView(STLForm):
         accept_language = context.accept_language
         users = resource.get_resource('/users')
         namespace['threads'] = []
-        for thread in resource.search_objects(object_class=Thread):
+        for thread in resource.search_resources(cls=Thread):
             message = thread.get_resource('0')
             author = users.get_resource(message.get_owner())
-            posts = thread.search_objects(object_class=Message)
+            posts = thread.search_resources(cls=Message)
             posts = list(posts)
             namespace['threads'].append({
                 'name': thread.name,

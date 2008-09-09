@@ -204,23 +204,22 @@ class Folder(DBResource):
                 yield object
 
 
-    def search_objects(self, path='.', format=None, state=None,
-                       object_class=None):
-        for object in self.get_resources(path):
-            if not isinstance(object, DBResource):
-                continue
+    def search_resources(self, cls=None, format=None, state=None):
+        if cls is None:
+            cls = DBResource
+
+        for resource in self.get_resources():
             # Filter by base class
-            cls = object_class
-            if cls is not None and not isinstance(object, cls):
+            if not isinstance(resource, cls):
                 continue
             # Filter by class_id
-            if format is not None and object.metadata.format != format:
+            if format is not None and resource.metadata.format != format:
                 continue
             # Filter by workflow state
-            if state is not None and object.get_workflow_state() != state:
+            if state is not None and resource.get_workflow_state() != state:
                 continue
             # All filters passed
-            yield object
+            yield resource
 
 
     def get_human_size(self):

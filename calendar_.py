@@ -578,17 +578,16 @@ class CalendarContainer(CalendarBase):
     def get_calendars(self, types=None):
         """List of sources from which taking events.
         """
-        if not types:
+        if types is None:
             types = (Calendar, CalendarTable)
+
         if isinstance(self, Folder):
-            calendars = list(self.search_objects(object_class=types))
-            return calendars
+            calendars = self.search_resources(cls=types)
+            return list(calendars)
         return [self]
 
 
-    #######################################################################
     # Views
-    #######################################################################
     monthly_view = MonthlyView()
     weekly_view = WeeklyView()
     edit_timetables = TimetablesForm()

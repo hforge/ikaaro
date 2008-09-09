@@ -253,7 +253,7 @@ class Server(BaseServer):
             return
 
         # Check the sub-sites
-        for site in root.search_objects(object_class=WebSite):
+        for site in root.search_resources(cls=WebSite):
             if hostname in site.get_property('vhosts'):
                 context.site_root = site
                 return

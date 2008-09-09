@@ -135,24 +135,32 @@ resource has been simplified:
   goto = '%s' % resource.name
 
 
+API
+====================
+
+This is a summary of the methods that were renamed or changed their signature:
+
+  # Before
+  Folder.search_objects(path='.', format=None, state=None, object_class=None)
+
+  # Now
+  Folder.search_resources(cls=None, format=None, state=None)
+
+
 Javascript
-==========
+====================
 
 Our uncohrent javascript library has been happily replaced by jQuery [1]. Most
 of what you need is already included. See the documentation [2].
 
 For the few functions that were eventually used, the usage has changed.
 
-Before                              After
-----------------------------------  -----------------------------
-return confirmation("message...");  return confirm("message...");
-
-focus_element("myid");              $("#myid").focus();
-
-show("myid");                       $("#myid").show();
-
-hide("myid");                       $("#myid").hide();
-----------------------------------  -----------------------------
+  Before                              Now
+  ----------------------------------  -----------------------------
+  return confirmation("message...");  return confirm("message...");
+  focus_element("myid");              $("#myid").focus();
+  show("myid");                       $("#myid").show();
+  hide("myid");                       $("#myid").hide();
 
 The "confirm" function is the Javascript built-in. "$('#myid')" is jQuery
 selector syntax.

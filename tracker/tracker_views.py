@@ -75,7 +75,7 @@ class StoredSearchesMenu(ContextMenu):
 
         # Namespace
         base = '/%s/;view' % context.site_root.get_pathto(resource)
-        items = resource.search_objects(format='stored_search')
+        items = resource.search_resources(format='stored_search')
         items = [
             {'title': x.get_property('title'),
              'href': '%s?search_name=%s' % (base, x.name)}
@@ -621,7 +621,7 @@ class TrackerStoredSearches(STLForm):
     def get_namespace(self, resource, context):
         stored_searches = [
             {'name': x.name, 'title': x.get_title()}
-            for x in resource.search_objects(format='stored_search') ]
+            for x in resource.search_resources(format='stored_search') ]
         stored_searches.sort(key=itemgetter('title'))
 
         return {'stored_searches': stored_searches}

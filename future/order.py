@@ -50,7 +50,7 @@ class OrderAware(object):
         if orderable_classes is None:
             orderable_classes = self.get_orderable_classes()
         ordered_names = self.get_property('order')
-        objects = self.search_objects(object_class=orderable_classes)
+        objects = self.search_resources(cls=orderable_classes)
         real_names = [object.name for object in objects]
         ordered = [name for name in ordered_names if name in real_names]
         if mode == 'ordered':

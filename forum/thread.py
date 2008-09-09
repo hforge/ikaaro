@@ -128,8 +128,7 @@ class Thread(Folder):
 
     def to_text(self):
         # Index the thread by the content of all its posts
-        text = [ x.to_text()
-                 for x in self.search_objects(object_class=Message) ]
+        text = [ x.to_text() for x in self.search_resources(cls=Message) ]
         return u'\n'.join(text)
 
 
@@ -138,20 +137,18 @@ class Thread(Folder):
 
 
     def get_posts(self):
-        posts = [ (int(FileName.decode(x.name)[0]), x)
-                  for x in self.search_objects(object_class=Message) ]
+        posts = self.search_resources(cls=Message)
+        posts = [ (int(FileName.decode(x.name)[0]), x) for x in posts ]
         posts.sort()
         return [ x[1] for x in posts ]
 
 
     def get_last_post_id(self):
-        posts = self.search_objects(object_class=Message)
-        ids = [ int(x.name) for x in posts ]
+        ids = [ int(x.name) for x in self.search_resources(cls=Message) ]
         return max(ids)
 
-    #######################################################################
+
     # Views
-    #######################################################################
     view = ThreadView()
 
 

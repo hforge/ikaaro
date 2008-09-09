@@ -235,7 +235,7 @@ class Breadcrumb(object):
         self.is_submit = False
         user = context.user
         filter = (Folder, filter_type)
-        for object in target.search_objects(object_class=filter):
+        for object in target.search_resources(cls=filter):
             ac = object.get_access_control()
             if not ac.is_allowed_to_view(user, object):
                 continue
