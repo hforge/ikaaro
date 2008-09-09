@@ -14,19 +14,19 @@
         onclick="insertTags('\n\n', '\n=====\n\n', 'Title')" />
       <img class="button" src="/ui/wiki/heading3.png" title="Heading 3"
         onclick="insertTags('\n\n', '\n-----\n\n', 'Title')" />
-      <img class="button" src="/ui/epoz/bold.png" title="Bold"
+      <img class="button" src="/ui/wiki/bold.png" title="Bold"
         onclick="insertTags('**', '**', 'Bold Text')" />
-      <img class="button" src="/ui/epoz/italic.png" title="Italic"
+      <img class="button" src="/ui/wiki/italic.png" title="Italic"
         onclick="insertTags('*', '*', 'Italic Text')" />
-      <img class="button" src="/ui/epoz/hyperlink.png" title="Insert Link"
+      <img class="button" src="/ui/wiki/hyperlink.png" title="Insert Link"
         onclick="popup('../;add_link?mode=wiki', 700, 480)" />
-      <img class="button" src="/ui/epoz/image.png" title="Insert Image"
+      <img class="button" src="/ui/wiki/image.png" title="Insert Image"
         onclick="popup('../;add_image?mode=wiki', 700, 480)" />
-      <img class="button" src="/ui/epoz/list.gif" title="Unordered List"
+      <img class="button" src="/ui/wiki/list.gif" title="Unordered List"
         onclick="insertTags('\n* ', '\n* \n', 'List Item')" />
-      <img class="button" src="/ui/epoz/numbered_list.gif" title="Ordered List"
+      <img class="button" src="/ui/wiki/numbered_list.gif" title="Ordered List"
         onclick="insertTags('\n1. ', '\n2. \n', 'List Item')" />
-      <img class="button" src="/ui/epoz/table.gif" title="Table"
+      <img class="button" src="/ui/wiki/table.gif" title="Table"
         onclick="insertTags('\n\n===== =====\n', '\n===== =====\n\n',
           'Cell1 Cell2')" />
       <img class="button" src="/ui/wiki/literal.png" title="Literal Block"
