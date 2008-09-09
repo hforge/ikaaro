@@ -38,7 +38,7 @@ from forms import AutoForm, Select, MultilineWidget, TextWidget
 from messages import *
 from registry import get_object_class
 from registry import get_register_websites, get_website_class
-from views import IconsView, NewInstanceForm, SearchForm
+from views import IconsView, NewInstanceForm, SearchForm, ContextMenu
 from workflow import WorkflowAware
 
 
@@ -251,11 +251,34 @@ class ForgottenPasswordForm(STLForm):
 ###########################################################################
 # Views / Control Panel
 ###########################################################################
+
+class ControlPanelMenu(ContextMenu):
+
+    title = MSG(u'Control Panel')
+
+    def get_items(self, resource, context):
+        items = []
+        for name in resource.class_control_panel:
+            view = resource.get_view(name)
+            if view is None:
+                continue
+            if not resource.is_access_allowed(context.user, resource, view):
+                continue
+            items.append({
+                'title': view.title,
+                'src': resource.get_method_icon(view, size='16x16'),
+                'href': ';%s' % name})
+
+        return items
+
+
+
 class ControlPanel(IconsView):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Control Panel')
     icon = 'settings.png'
+    context_menus = [ControlPanelMenu()]
 
 
     def get_namespace(self, resource, context):
@@ -275,8 +298,7 @@ class ControlPanel(IconsView):
         return {
             'title': MSG(u'Control Panel'),
             'batch': None,
-            'items': items,
-        }
+            'items': items}
 
 
 
@@ -286,6 +308,7 @@ class VHostsForm(STLForm):
     title = MSG(u'Virtual Hosts')
     icon = 'website.png'
     description = MSG(u'Define the domain names for this Web Site.')
+    context_menus = [ControlPanelMenu()]
     template = '/ui/website/virtual_hosts.xml'
     schema = {
         'vhosts': String,
@@ -316,6 +339,7 @@ class SecurityPolicyForm(STLForm):
     title = MSG(u'Security Policy')
     icon = 'lock.png'
     description = MSG(u'Choose the security policy.')
+    context_menus = [ControlPanelMenu()]
     template = '/ui/website/anonymous.xml'
     schema = {
         'website_is_open': Boolean(default=False),
@@ -344,6 +368,7 @@ class ContactOptionsForm(STLForm):
     title = MSG(u'Contact Options')
     icon = 'mail.png'
     description = MSG(u'Configure the Contact form.')
+    context_menus = [ControlPanelMenu()]
     template = '/ui/website/contact_options.xml'
     schema = {
         'contacts': String(multiple=True),
@@ -391,6 +416,7 @@ class BrokenLinks(STLView):
     title = MSG(u'Broken Links')
     icon = 'clear.png'
     description = MSG(u'Check the referential integrity.')
+    context_menus = [ControlPanelMenu()]
     template = '/ui/website/broken_links.xml'
 
 
@@ -435,6 +461,7 @@ class EditLanguagesForm(STLForm):
     access = 'is_admin'
     title = MSG(u'Languages')
     description = MSG(u'Define the Web Site languages.')
+    context_menus = [ControlPanelMenu()]
     icon = 'languages.png'
     template = '/ui/website/edit_languages.xml'
     schema = {
