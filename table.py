@@ -479,9 +479,7 @@ class Multiple(DataType):
 
 class Table(File):
 
-    class_id = 'table'
     class_version = '20071216'
-    class_title = MSG(u'Table')
     class_views = ['view', 'add_record', 'edit_metadata', 'history']
     class_handler = TableFile
     record_class = Record
