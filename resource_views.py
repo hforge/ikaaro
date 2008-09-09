@@ -21,6 +21,7 @@
 
 # Import from the Standard Library
 from operator import itemgetter
+from urllib import quote
 
 # Import from itools
 from itools.datatypes import String, Unicode
@@ -60,6 +61,19 @@ class EditLanguageMenu(ContextMenu):
 
 
 
+class AddResourceMenu(ContextMenu):
+
+    title = MSG(u'Add Resource')
+
+    def get_items(self, resource, context):
+        document_types = resource.get_document_types()
+        return [
+            {'src': '/ui/' + cls.class_icon16,
+             'title': cls.class_title.gettext(),
+             'href': ';new_resource?type=%s' % quote(cls.class_id)}
+            for cls in document_types ]
+
+
 class DBResourceNewInstance(NewInstanceForm):
 
     access = 'is_allowed_to_add'
@@ -69,6 +83,7 @@ class DBResourceNewInstance(NewInstanceForm):
     schema = {
         'name': String,
         'title': Unicode}
+    context_menus = [AddResourceMenu()]
 
 
     def get_title(self, context):

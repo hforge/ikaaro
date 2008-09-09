@@ -38,6 +38,7 @@ from folder_views import FolderBrowseContent
 from messages import MSG_BAD_NAME, MSG_NAME_CLASH, MSG_NEW_RESOURCE
 from multilingual import Multilingual
 from registry import get_object_class
+from resource_views import AddResourceMenu
 from views import NewInstanceForm
 
 
@@ -50,6 +51,7 @@ class FileNewInstance(NewInstanceForm):
         'title': Unicode,
         'file': FileDataType(mandatory=True),
     }
+    context_menus = [AddResourceMenu()]
 
 
     def get_namespace(self, resource, context):

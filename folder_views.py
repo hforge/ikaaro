@@ -32,24 +32,12 @@ from itools.xml import XMLParser
 from datatypes import CopyCookie
 from exceptions import ConsistencyError
 from messages import *
+from resource_views import AddResourceMenu
 from utils import generate_name, reduce_string
 from versioning import VersioningAware
 from views import IconsView, SearchForm, ContextMenu
 from workflow import WorkflowAware
 
-
-
-class AddResourceMenu(ContextMenu):
-
-    title = MSG(u'Add Resource')
-
-    def get_items(self, resource, context):
-        document_types = resource.get_document_types()
-        return [
-            {'src': '/ui/' + cls.class_icon16,
-             'title': cls.class_title.gettext(),
-             'href': ';new_resource?type=%s' % quote(cls.class_id)}
-            for cls in document_types ]
 
 
 class ZoomMenu(ContextMenu):

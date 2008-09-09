@@ -38,6 +38,7 @@ from forms import AutoForm, Select, MultilineWidget, TextWidget
 from messages import *
 from registry import get_object_class
 from registry import get_register_websites, get_website_class
+from resource_views import AddResourceMenu
 from views import IconsView, NewInstanceForm, SearchForm, ContextMenu
 from workflow import WorkflowAware
 
@@ -52,6 +53,7 @@ class NewWebSiteForm(NewInstanceForm):
         'name': String,
         'title': Unicode,
     }
+    context_menus = [AddResourceMenu()]
 
 
     def get_namespace(self, resource, context):
