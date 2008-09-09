@@ -134,3 +134,28 @@ resource has been simplified:
   # Now
   goto = '%s' % resource.name
 
+
+Javascript
+==========
+
+Our uncohrent javascript library has been happily replaced by jQuery [1]. Most
+of what you need is already included. See the documentation [2].
+
+For the few functions that were eventually used, the usage has changed.
+
+Before                              After
+----------------------------------  -----------------------------
+return confirmation("message...");  return confirm("message...");
+
+focus_element("myid");              $("#myid").focus();
+
+show("myid");                       $("#myid").show();
+
+hide("myid");                       $("#myid").hide();
+----------------------------------  -----------------------------
+
+The "confirm" function is the Javascript built-in. "$('#myid')" is jQuery
+selector syntax.
+
+[1] http://www.jquery.com/
+[2] http://docs.jquery.com/
