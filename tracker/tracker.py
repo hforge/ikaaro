@@ -130,10 +130,9 @@ class AddIssueForm(STLForm):
         type = context.get_form_value('type', type=Integer)
         namespace['types'] = get('types').get_options(type)
         priority = context.get_form_value('priority', type=Integer)
-        namespace['priorities'] = get('priorities').get_options(priority,
-            sort='rank')
+        namespace['priorities'] = get('priorities').get_options(priority)
         state = context.get_form_value('state', type=Integer)
-        namespace['states'] = get('states').get_options(state, sort='rank')
+        namespace['states'] = get('states').get_options(state)
 
         users = resource.get_resource('/users')
         assigned_to = context.get_form_values('assigned_to', type=String)
@@ -276,9 +275,9 @@ class View(BrowseForm):
             namespace['change_several_bugs'] = True
             namespace['modules'] = get('modules').get_options()
             namespace['versions'] = get('versions').get_options()
-            namespace['priorities'] = get('priorities').get_options(sort='rank')
+            namespace['priorities'] = get('priorities').get_options()
             namespace['types'] = get('types').get_options()
-            namespace['states'] = get('states').get_options(sort='rank')
+            namespace['states'] = get('states').get_options()
             users = resource.get_resource('/users')
             namespace['users'] = resource.get_members_namespace('')
 
@@ -474,9 +473,9 @@ class View(BrowseForm):
             namespace['change_several_bugs'] = True
             namespace['modules'] = get('modules').get_options()
             namespace['versions'] = get('versions').get_options()
-            namespace['priorities'] = get('priorities').get_options(sort='rank')
+            namespace['priorities'] = get('priorities').get_options()
             namespace['types'] = get('types').get_options()
-            namespace['states'] = get('states').get_options(sort='rank')
+            namespace['states'] = get('states').get_options()
             users = resource.get_resource('/users')
             namespace['users'] = resource.get_members_namespace('')
 
@@ -557,9 +556,8 @@ class SearchForm(BaseSearchForm, View):
         namespace['modules'] = get('modules').get_options(module)
         namespace['types'] = get('types').get_options(type)
         namespace['versions'] = get('versions').get_options(version)
-        namespace['priorities'] = get('priorities').get_options(priority,
-            sort='rank')
-        namespace['states'] = get('states').get_options(state, sort='rank')
+        namespace['priorities'] = get('priorities').get_options(priority)
+        namespace['states'] = get('states').get_options(state)
         namespace['users'] = resource.get_members_namespace(assign, True)
 
         # is_admin
@@ -919,7 +917,7 @@ class Tracker(Folder):
         for table_name, values in tables:
             table = OrderedSelectTableTable()
             for index, title in enumerate(values):
-                table.add_record({'title': title, 'rank': index})
+                table.add_record({'title': title})
             folder.set_handler('%s/%s' % (name, table_name), table)
             metadata = OrderedSelectTable.build_metadata()
             folder.set_handler('%s/%s.metadata' % (name, table_name), metadata)

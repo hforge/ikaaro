@@ -27,7 +27,7 @@ from itools.xapian import EqQuery, AndQuery
 # Import from ikaaro
 from ikaaro.forms import TextWidget, BooleanCheckBox
 from ikaaro.registry import register_object_class
-from ikaaro.table import Table, TableView
+from ikaaro.table import Table, OrderedTable, OrderedTableFile, TableView
 
 
 ###########################################################################
@@ -83,8 +83,6 @@ class SelectTable(Table):
         options = []
         for x in table.get_records():
             ns = {'id': x.id, 'title': x.title}
-            if sort == 'rank':
-                ns['rank'] = x.get_value('rank')
             options.append(ns)
 
         if sort is not None:
@@ -135,21 +133,42 @@ class SelectTable(Table):
 
 
 
-class OrderedSelectTableTable(SelectTableTable):
+class OrderedSelectTableTable(OrderedTableFile):
 
-    schema = {'title': Unicode, 'rank': Integer(index='keyword', unique=True)}
+    schema = {'title': Unicode}
 
 
-class OrderedSelectTable(SelectTable):
+class OrderedSelectTable(OrderedTable, SelectTable):
 
     class_id = 'tracker_ordered_select_table'
     class_version = '20080415'
     class_title = MSG(u'Ordered select table')
     class_handler = OrderedSelectTableTable
 
-    form = [TextWidget('title', title=u'Title'),
-            TextWidget('rank', title=u'Rank', mandatory=True)]
+    form = [TextWidget('title', title=u'Title')]
 
+
+    def get_options(self, value=None, sort=None):
+        table = self.handler
+        options = []
+        for x in table.get_records_in_order():
+            ns = {'id': x.id, 'title': x.title}
+            options.append(ns)
+
+        if sort is not None:
+            options.sort(key=lambda x: x.get(sort))
+        # Set 'is_selected'
+        if value is None:
+            for option in options:
+                option['is_selected'] = False
+        elif isinstance(value, list):
+            for option in options:
+                option['is_selected'] = (option['id'] in value)
+        else:
+            for option in options:
+                option['is_selected'] = (option['id'] == value)
+
+        return options
 
 
 class VersionsTable(BaseTable):
