@@ -27,7 +27,7 @@ import itools
 from itools import vfs
 
 # Import from ikaaro
-from ikaaro.server import Server
+from ikaaro.server import Server, get_pid
 from ikaaro.update import is_instance_up_to_date
 
 
@@ -48,14 +48,14 @@ def start(options, target):
         print
         return
 
-    # Set-up the server
-    server = Server(target, options.address, options.port, options.debug)
-
     # Check the server is not running
-    pid = server.get_pid()
+    pid = get_pid(target)
     if pid is not None:
         print '[%s] The Web Server is already running.' % target
         return
+
+    # Set-up the server
+    server = Server(target, options.address, options.port, options.debug)
 
     address = server.address or '*'
     port = server.port
