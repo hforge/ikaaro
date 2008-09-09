@@ -384,11 +384,6 @@ class Issue(Folder):
         return [File]
 
 
-    def get_context_menu_base(self):
-        # Show the actions of the tracker
-        return self.parent
-
-
     def get_mtime(self):
         """Return the datetime of the last record"""
         last_record = self.get_last_history_record()
@@ -724,8 +719,8 @@ class Issue(Folder):
     #######################################################################
     # User Interface
     #######################################################################
-    def get_right_menus(self):
-        return self.parent.get_right_menus()
+    def get_context_menus(self):
+        return self.parent.get_context_menus()
 
 
     edit = EditIssueForm()

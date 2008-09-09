@@ -205,7 +205,7 @@ class FolderBrowseContent(SearchForm):
 
     access = 'is_allowed_to_view'
     title = MSG(u'Browse Content')
-    right_menus = [AddResourceMenu()]
+    context_menus = [AddResourceMenu()]
     schema = {
         'ids': String(multiple=True, mandatory=True),
     }
@@ -531,7 +531,7 @@ class FolderPreviewContent(FolderBrowseContent):
 
     title = MSG(u'Preview Content')
     table_template = '/ui/folder/browse_image.xml'
-    right_menus = FolderBrowseContent.right_menus + [ZoomMenu()]
+    context_menus = FolderBrowseContent.context_menus + [ZoomMenu()]
 
 
     def get_query_schema(self):

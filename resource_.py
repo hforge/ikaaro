@@ -42,7 +42,7 @@ from workflow import WorkflowAware
 class IResource(Resource):
 
     class_views = []
-    right_menus = []
+    context_menus = []
 
 
     def get_site_root(self):
@@ -60,8 +60,8 @@ class IResource(Resource):
         return views[0]
 
 
-    def get_right_menus(self):
-        return self.right_menus
+    def get_context_menus(self):
+        return self.context_menus
 
 
     ########################################################################

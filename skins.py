@@ -360,13 +360,13 @@ class Skin(UIFolder):
         return context.message
 
 
-    def get_right_menus(self, context):
+    def get_context_menus(self, context):
         resource = context.resource
         # Resource
-        for menu in resource.get_right_menus():
+        for menu in resource.get_context_menus():
             yield menu.render(resource, context)
         # View
-        menus = getattr(context.view, 'right_menus', [])
+        menus = getattr(context.view, 'context_menus', [])
         for menu in menus:
             yield menu.render(resource, context)
 
@@ -375,8 +375,8 @@ class Skin(UIFolder):
     # Main
     #######################################################################
     def build_namespace(self, context):
-        right_menus = self.get_right_menus(context)
-        right_menus = list(right_menus)
+        context_menus = self.get_context_menus(context)
+        context_menus = list(context_menus)
         return {
             # HTML head
             'title': self.get_template_title(context),
@@ -390,7 +390,7 @@ class Skin(UIFolder):
             # Body
             'page_title': self.get_page_title(context),
             'message': self.get_message(context),
-            'right_menus': right_menus,
+            'context_menus': context_menus,
             # FIXME
             'view_description': getattr(context.view, 'description', None),
         }

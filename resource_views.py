@@ -131,7 +131,7 @@ class DBResourceEditMetadata(STLForm):
     access = 'is_allowed_to_edit'
     title = MSG(u'Edit Metadata')
     icon = 'metadata.png'
-    right_menus = [EditLanguageMenu()]
+    context_menus = [EditLanguageMenu()]
 
     template = '/ui/base/edit_metadata.xml'
     schema = {

@@ -587,8 +587,8 @@ class WikiPage(Text):
     help = WikiPageHelp()
 
 
-    def get_right_menus(self):
-        return self.parent.get_right_menus()
+    def get_context_menus(self):
+        return self.parent.get_context_menus()
 
 
 

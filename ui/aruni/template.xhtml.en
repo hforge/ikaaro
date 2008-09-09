@@ -50,7 +50,7 @@
             ${body}
           </td>
           <td id="right" valign="top">
-            <stl:block stl:repeat="menu right_menus">${menu}<br/></stl:block>
+            <stl:block stl:repeat="menu context_menus">${menu}<br/></stl:block>
           </td>
         </tr>
       </table>

@@ -96,7 +96,7 @@ class WikiFolder(Folder):
 
 
     # User Interface
-    right_menus = [WikiMenu()]
+    context_menus = [WikiMenu()]
 
     view = GoToFrontPage()
 
