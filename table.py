@@ -78,12 +78,15 @@ class OrderedTableFile(TableFile):
         """Return ids sort by order"""
         record_order = self.get_record(0)
         ordered = record_order.get_value('order')
+        ordered = [ int(x) for x in ordered ]
+        record_ids = list(self.get_record_ids())
         for id in ordered:
-            yield int(id)
+            if id in record_ids:
+                yield id
         # Unordered
         ordered_set = set(ordered)
-        for id in self.get_record_ids():
-            if str(id) not in ordered_set:
+        for id in record_ids:
+            if id not in ordered_set:
                 yield id
 
 
