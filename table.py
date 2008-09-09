@@ -36,7 +36,6 @@ from itools.web import FormError, STLView, get_context, MSG_MISSING_OR_INVALID
 from file import File
 from forms import AutoForm, get_default_widget, ReadOnlyWidget
 from messages import *
-from registry import register_object_class
 from resource_ import DBResource
 from views import BrowseForm
 
@@ -529,7 +528,3 @@ class OrderedTable(Table):
     order_form = OrderForm()
 
 
-###########################################################################
-# Register
-###########################################################################
-register_object_class(Table)
