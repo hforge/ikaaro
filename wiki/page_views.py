@@ -117,7 +117,7 @@ class WikiPageView(BaseView):
 class WikiPageToPDF(BaseView):
 
     access = 'is_allowed_to_view'
-    title = MSG(u"PDF")
+    title = MSG(u"To PDF")
 
 
     def GET(self, resource, context):

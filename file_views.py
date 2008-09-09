@@ -273,6 +273,9 @@ class FileBacklinks(FolderBrowseContent):
     search_template = None
     search_schema = {}
 
+    # Skip AddResourceMenu
+    context_menus = []
+
     def get_table_columns(self, resource, context):
         cols = FolderBrowseContent.get_table_columns(self, resource, context)
         return [ (name, title) for name, title in cols if name != 'checkbox' ]
