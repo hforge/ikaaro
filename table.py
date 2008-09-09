@@ -169,7 +169,8 @@ class TableView(BrowseForm):
         sort_by = context.query['sort_by']
         reverse = context.query['reverse']
         if sort_by:
-            items.sort(key=itemgetter(sort_by), reverse=reverse)
+            items.sort(cmp=lambda x,y: cmp(getattr(x, sort_by),
+                       getattr(y, sort_by)), reverse=reverse)
 
         # Batch
         start = context.query['batch_start']
@@ -180,7 +181,7 @@ class TableView(BrowseForm):
     def get_table_columns(self, resource, context):
         columns = [
             ('checkbox', None),
-            ('index', u'id')]
+            ('id', u'id')]
         # From the schema
         for widget in self.get_widgets(resource, context):
             column = (widget.name, getattr(widget, 'title', widget.name))
@@ -192,7 +193,7 @@ class TableView(BrowseForm):
     def get_item_value(self, resource, context, item, column):
         if column == 'checkbox':
             return item.id, False
-        elif column == 'index':
+        elif column == 'id':
             id = item.id
             return id, ';edit_record?id=%s' % id
 

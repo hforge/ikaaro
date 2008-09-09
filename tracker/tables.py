@@ -53,10 +53,26 @@ class SelectTableView(TableView):
             results = root.search(search_query)
             count = len(results)
             if count == 0:
-                return 0
+                return 0, None
             return count, '../;view?%s=%s' % (filter, id)
 
         return TableView.get_item_value(self, resource, context, item, column)
+
+
+    def sort_and_batch(self, resource, context, items):
+        # Sort
+        sort_by = context.query['sort_by']
+        if sort_by != 'issues':
+            return TableView.sort_and_batch(self, resource, context, items)
+
+        reverse = context.query['reverse']
+        f = lambda x: self.get_item_value(resource, context, x, 'issues')[0]
+        items.sort(cmp=lambda x,y: cmp(f(x), f(y)), reverse=reverse)
+
+        # Batch
+        start = context.query['batch_start']
+        size = context.query['batch_size']
+        return items[start:start+size]
 
 
 
