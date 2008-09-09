@@ -41,7 +41,8 @@ from tables import Versions, VersionsTable
 from tracker_views import GoToIssueMenu, StoredSearchesMenu
 from tracker_views import TrackerSearch, TrackerView, TrackerAddIssue
 from tracker_views import TrackerStoredSearches, TrackerGoToIssue
-from tracker_views import TrackerExportToCSV, TrackerChangeSeveralBugs
+from tracker_views import TrackerExportToText, TrackerChangeSeveralBugs
+from tracker_views import TrackerExportToCSVForm, TrackerExportToCSV
 
 
 resolution = timedelta.resolution
@@ -226,44 +227,6 @@ class Tracker(Folder):
         return results
 
 
-    def get_export_to_text(self, context):
-        """Generate a text with selected records of selected issues
-        """
-        # Get selected columns
-        selected_columns = context.get_form_values('column_selection')
-        if not selected_columns:
-            selected_columns = ['title']
-        # Get search results
-        results = self.get_search_results(context)
-        # Analyse the result
-        if isinstance(results, Reference):
-            return results
-        # Selected issues
-        selected_issues = context.get_form_values('ids')
-        # Get lines
-        lines = []
-        for issue in results:
-            # If selected_issues is empty, select all
-            if selected_issues and (issue.name not in selected_issues):
-                continue
-            lines.append(issue.get_informations())
-        # Sort lines
-        sortby = context.get_form_value('sortby', default='id')
-        sortorder = context.get_form_value('sortorder', default='up')
-        lines.sort(key=itemgetter(sortby))
-        if sortorder == 'down':
-            lines.reverse()
-        # Create the text
-        tab_text = []
-        for line in lines:
-            filtered_line = [unicode(line[col]) for col in selected_columns]
-            id = Template(u'#$id').substitute(id=line['name'])
-            filtered_line.insert(0, id)
-            filtered_line = u'\t'.join(filtered_line)
-            tab_text.append(filtered_line)
-        return u'\n'.join(tab_text)
-
-
     #######################################################################
     # User Interface
     #######################################################################
@@ -275,6 +238,8 @@ class Tracker(Folder):
     add_issue = TrackerAddIssue()
     stored_searches = TrackerStoredSearches()
     go_to_issue = TrackerGoToIssue()
+    export_to_text = TrackerExportToText()
+    export_to_csv_form = TrackerExportToCSVForm()
     export_to_csv = TrackerExportToCSV()
     change_several_bugs = TrackerChangeSeveralBugs()
 

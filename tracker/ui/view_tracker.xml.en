@@ -4,10 +4,6 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
-
-<form id="browse_list" name="browse_list" method="${method}"
-  action="${action}">
-
 ${batch}
 ${table}
 
@@ -17,139 +13,17 @@ ${table}
   <a name="link"/>
   <a href=";search?${search_parameters}">Edit this search</a>
   &nbsp;|
-  <a href=";view?${search_parameters}&amp;change_several_bugs=1#link">Change
-  Several Issues</a>
+  <a href=";change_several_bugs?${search_parameters}#link">Change Several
+  Issues</a>
   &nbsp;|
-  <a href=";view?${search_parameters}&amp;export_to_text=1#link">Export to
-  Text</a>
+  <a href=";export_to_text?${search_parameters}#link">Export to Text</a>
   &nbsp;|
-  <a href=";view?${search_parameters}&amp;export_to_csv=1#link">Export to
-  CSV</a>
+  <a href=";export_to_csv_form?${search_parameters}#link">Export to CSV</a>
   &nbsp;|
   <a href="resources/;monthly_view?${search_parameters}"
     class="button_calendar" style="background-repeat: no-repeat;">
     &nbsp;Resources
   </a>
 </p>
-<!-- Export to text -->
-<stl:block stl:if="export_to_text">
-  <h2>Export to Text</h2>
-  <dl>
-    <p>
-    Please select the columns to export:
-    </p>
-    <stl:block stl:repeat="column columns">
-      <input id="${column/name}" type="checkbox" name="column_selection"
-        value="${column/name}" checked="${column/checked}" />
-        <label for="${column/name}">${column/title}</label>
-      &nbsp;
-    </stl:block>
-    <br/>
-    
-    <input type="hidden" stl:repeat="c criteria" name="${c/name}"
-      value="${c/value}"/>
-    <input type="hidden" name="export_to_text" value="1"/>
-    <input type="submit" class="button_ok" value="Update text export"
-        name=";export_to_text"/>
-  </dl>
-    <div style="height:300px;border:1px solid #9FB7D4;overflow:auto">
-      <pre>${text}</pre>
-    </div>
-</stl:block>
 
-<!-- Export to CSV -->
-<stl:block stl:if="export_to_csv">
-<h2>Export to CSV</h2>
-  Please select encoding:<br/><br/>
-  <input type="hidden" stl:repeat="c criteria" name="${c/name}"
-      value="${c/value}"/>
-  <input type="radio" name="editor" id="editor_oo" value="oo" checked="on"/>
-  <label for="editor_oo">For OpenOffice (Encoding: UTF-8, Separator: ",")</label>
-  <br/>
-  <input type="radio" name="editor" id="editor_excel" value="excel"/>
-  <label for="editor_excel">For Excel (Encoding: CP1252, Separator: ";")</label>
-  <br/><br/>
-  <input type="submit" class="button_ok" name=";export_to_csv" value="Export"/>
-</stl:block>
-
-<!-- Change Several Issues -->
-<stl:block stl:if="change_several_bugs">
-<h2>Change Several Issues</h2>
-
-<input type="hidden" stl:repeat="c criteria" name="${c/name}"
-  value="${c/value}"/>
-<table>
-  <tr>
-    <td valign="top">
-      <label for="version">Version:</label><br/>
-      <select name="change_version" id="version" class="tracker_select">
-        <option value="-1">Do not change</option>
-        <option stl:repeat="item versions" value="${item/id}"
-          selected="${item/is_selected}">${item/title}</option>
-      </select>
-    </td>
-    <td valign="top">
-      <label for="module">Module:</label><br/>
-      <select name="change_module" id="module" class="tracker_select">
-        <option value="-1">Do not change</option>
-        <option value=""></option>
-        <option stl:repeat="item modules" value="${item/id}"
-          selected="${item/is_selected}">${item/title}</option>
-      </select>
-    </td>
-  </tr>
-  <tr>
-    <td valign="top">
-      <label for="type">Type:</label><br/>
-      <select name="change_type" id="type" class="tracker_select">
-        <option value="-1">Do not change</option>
-        <option stl:repeat="item types" value="${item/id}"
-          selected="${item/is_selected}">${item/title}</option>
-      </select>
-    </td>
-    <td valign="top">
-      <label for="priority">Priority:</label><br/>
-      <select name="change_priority" id="priority" class="tracker_select">
-        <option value="-1">Do not change</option>
-        <option value=""></option>
-        <option stl:repeat="item priorities" value="${item/id}"
-          selected="${item/is_selected}">${item/title}</option>
-      </select>
-    </td>
-  </tr>
-  <tr>
-    <td valign="top">
-      <label for="state">Status:</label><br/>
-      <select name="change_state" id="state" class="tracker_select">
-        <option value="-1">Do not change</option>
-        <option stl:repeat="item states" value="${item/id}"
-          selected="${item/is_selected}">${item/title}</option>
-      </select>
-    </td>
-    <td valign="top">
-      <label for="assigned_to">Assign To:</label><br/>
-      <select name="change_assigned_to" id="assigned_to" class="tracker_select">
-        <option value="do-not-change">Do not change</option>
-        <option value=""></option>
-        <option stl:repeat="item users" value="${item/id}"
-          selected="${item/is_selected}">${item/title}</option>
-      </select>
-    </td>
-  </tr>
-  <tr>
-    <td colspan="6">
-      <label for="comment">Comment:</label>
-      <br/>
-      <textarea name="comment" id="comment" rows="10" cols="68"></textarea>
-    </td>
-  </tr>
-  <tr>
-    <td colspan="6">
-      <input type="submit" class="button_ok" value="Edit Issues" />
-    </td>
-  </tr>
-</table>
-</stl:block>
-
-</form>
 </stl:block>

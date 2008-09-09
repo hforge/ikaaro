@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<stl:block xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:stl="http://xml.itools.org/namespaces/stl">
+
+<form action=";export_to_text" method="GET" id="form_table">
+  ${batch}
+  ${table}
+
+  <br/>
+  <fieldset>
+    <legend>Export to Text: select the columns to export</legend>
+    <stl:block stl:repeat="column columns">
+      <input id="${column/name}" type="checkbox" name="column_selection"
+        value="${column/name}" checked="${column/checked}" />
+        <label for="${column/name}">${column/title}</label>
+      &nbsp;
+    </stl:block>
+    <input type="submit" class="button_ok" value="Update text export" />
+  </fieldset>
+
+  <br/>
+  <div style="height: 200px; border: 1px solid #9FB7D4; overflow: auto">
+    <pre>${text}</pre>
+  </div>
+</form>
+
+</stl:block>

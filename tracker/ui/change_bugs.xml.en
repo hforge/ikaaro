@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<stl:block xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:stl="http://xml.itools.org/namespaces/stl">
+
+<form action=";change_several_bugs" method="POST" id="form_table">
+  ${batch}
+  ${table}
+
+  <br/>
+  <fieldset>
+    <legend>Change Several Issues</legend>
+<table>
+  <tr>
+    <td valign="top">
+      <label for="version">Version:</label><br/>
+      <select name="change_version" id="version" class="tracker_select">
+        <option value="-1">Do not change</option>
+        <option stl:repeat="item versions" value="${item/id}"
+          selected="${item/is_selected}">${item/title}</option>
+      </select>
+    </td>
+    <td valign="top">
+      <label for="module">Module:</label><br/>
+      <select name="change_module" id="module" class="tracker_select">
+        <option value="-1">Do not change</option>
+        <option value=""></option>
+        <option stl:repeat="item modules" value="${item/id}"
+          selected="${item/is_selected}">${item/title}</option>
+      </select>
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">
+      <label for="type">Type:</label><br/>
+      <select name="change_type" id="type" class="tracker_select">
+        <option value="-1">Do not change</option>
+        <option stl:repeat="item types" value="${item/id}"
+          selected="${item/is_selected}">${item/title}</option>
+      </select>
+    </td>
+    <td valign="top">
+      <label for="priority">Priority:</label><br/>
+      <select name="change_priority" id="priority" class="tracker_select">
+        <option value="-1">Do not change</option>
+        <option value=""></option>
+        <option stl:repeat="item priorities" value="${item/id}"
+          selected="${item/is_selected}">${item/title}</option>
+      </select>
+    </td>
+  </tr>
+  <tr>
+    <td valign="top">
+      <label for="state">Status:</label><br/>
+      <select name="change_state" id="state" class="tracker_select">
+        <option value="-1">Do not change</option>
+        <option stl:repeat="item states" value="${item/id}"
+          selected="${item/is_selected}">${item/title}</option>
+      </select>
+    </td>
+    <td valign="top">
+      <label for="assigned_to">Assign To:</label><br/>
+      <select name="change_assigned_to" id="assigned_to" class="tracker_select">
+        <option value="do-not-change">Do not change</option>
+        <option value=""></option>
+        <option stl:repeat="item users" value="${item/id}"
+          selected="${item/is_selected}">${item/title}</option>
+      </select>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="6">
+      <label for="comment">Comment:</label>
+      <br/>
+      <textarea name="comment" id="comment" rows="10" cols="68"></textarea>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="6">
+      <input type="submit" class="button_ok" value="Edit Issues" />
+    </td>
+  </tr>
+</table>
+  </fieldset>
+</form>
+
+</stl:block>

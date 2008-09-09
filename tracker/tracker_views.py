@@ -175,15 +175,6 @@ class TrackerView(BrowseForm):
     }
 
 
-    def view__sublabel__(self, **kw):
-        search_name = kw.get('search_name')
-        if search_name is None:
-            return None
-        resource = get_context().resource
-        search = resource.get_resource(search_name)
-        return search.get_title()
-
-
     def get_query_schema(self):
         schema = BrowseForm.get_query_schema(self)
         schema.update(self.tracker_schema)
@@ -230,42 +221,6 @@ class TrackerView(BrowseForm):
                 criteria.append({'name': key, 'value': value})
         namespace['criteria'] = criteria
 
-        # Export_to_text
-        namespace['export_to_text'] = False
-        if query['export_to_text']:
-            namespace['method'] = 'GET'
-            namespace['action'] = ';view'
-            namespace['export_to_text'] = True
-            namespace['columns'] = []
-            # List columns
-            column_select = context.get_form_values('column_selection',
-                                                    default=['title'])
-            # Use columns in a different order and without the id
-            export_columns = columns[2:] + [columns[1]]
-            for name, title in export_columns:
-                namespace['columns'].append({'name': name, 'title': title,
-                                             'checked': name in columns})
-            namespace['text'] = resource.get_export_to_text(context)
-        # Export_to_csv
-        namespace['export_to_csv'] = False
-        if query['export_to_csv']:
-            namespace['export_to_csv'] = True
-            namespace['method'] = 'GET'
-            namespace['action'] = ';export_to_csv'
-        # Edit several bugs at once
-        namespace['change_several_bugs'] = False
-        if query['change_several_bugs']:
-            get = resource.get_resource
-            namespace['method'] = 'POST'
-            namespace['action'] = ';change_several_bugs'
-            namespace['change_several_bugs'] = True
-            namespace['modules'] = get('modules').get_options()
-            namespace['versions'] = get('versions').get_options()
-            namespace['priorities'] = get('priorities').get_options()
-            namespace['types'] = get('types').get_options()
-            namespace['states'] = get('states').get_options()
-            users = resource.get_resource('/users')
-            namespace['users'] = resource.get_members_namespace('')
 
         return namespace
 
@@ -497,6 +452,54 @@ class TrackerGoToIssue(BaseView):
 
 
 
+class TrackerExportToText(TrackerView):
+
+    template = '/ui/tracker/export_to_text.xml'
+
+    def get_query_schema(self):
+        schema = TrackerView.get_query_schema(self)        
+        schema['ids'] = String(multiple=True, default=[])
+        schema['column_selection'] = String(multiple=True, default=['title'])
+        return schema
+
+
+    def get_namespace(self, resource, context):
+        namespace = TrackerView.get_namespace(self, resource, context)
+
+        # Column Selector
+        selection = context.query['column_selection']
+        export_columns = columns[2:] + [columns[1]]
+        namespace['columns'] = [
+            {'name': name, 'title': title, 'checked': name in selection}
+            for name, title in export_columns ]
+
+        # Text
+        items = self.get_items(resource, context)
+        items = self.sort_and_batch(resource, context, items)
+        selected_items = context.query['ids']
+        if selected_items:
+            items = [ x for x in items if x.name in selected_items ]
+        items = [ x.get_informations() for x in items ]
+        # Create the text
+        lines = []
+        for item in items:
+            name = item['name']
+            line = [u'#%s' % name] + [ unicode(item[x]) for x in selection ]
+            line = u'\t'.join(line)
+            lines.append(line)
+        namespace['text'] = u'\n'.join(lines)
+
+        # Ok
+        return namespace
+
+
+
+class TrackerExportToCSVForm(TrackerView):
+
+    template = '/ui/tracker/export_to_csv.xml'
+
+
+
 class TrackerExportToCSV(BaseView):
 
     access = 'is_allowed_to_view'
@@ -554,10 +557,12 @@ class TrackerExportToCSV(BaseView):
         return csv.to_str(separator=separator)
 
 
-class TrackerChangeSeveralBugs(BaseForm):
+
+class TrackerChangeSeveralBugs(TrackerView):
 
     access = 'is_allowed_to_view'
     title = MSG(u'Change Several Issues')
+    template = '/ui/tracker/change_bugs.xml'
     schema = {
         'comment': Unicode,
         'ids': String(multiple=True),
@@ -568,6 +573,23 @@ class TrackerChangeSeveralBugs(BaseForm):
         'change_assigned_to': String,
         'change_state': Integer,
     }
+
+
+    def get_namespace(self, resource, context):
+        namespace = TrackerView.get_namespace(self, resource, context)
+        # Edit several bugs at once
+        get_resource = resource.get_resource
+        namespace['modules'] = get_resource('modules').get_options()
+        namespace['versions'] = get_resource('versions').get_options()
+        namespace['priorities'] = get_resource('priorities').get_options()
+        namespace['types'] = get_resource('types').get_options()
+        namespace['states'] = get_resource('states').get_options()
+        users = resource.get_resource('/users')
+        namespace['users'] = resource.get_members_namespace('')
+
+        # Ok
+        return namespace
+
 
     def action(self, resource, context, form):
         # Get search results

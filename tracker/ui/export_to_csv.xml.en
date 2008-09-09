@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<stl:block xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:stl="http://xml.itools.org/namespaces/stl">
+
+<form action=";export_to_csv" method="GET" id="form_table">
+  ${batch}
+  ${table}
+
+  <br/>
+  <fieldset>
+    <legend>Export to CSV</legend>
+    Please select encoding:<br/><br/>
+    <input type="radio" name="editor" id="editor_oo" value="oo" checked="on" />
+    <label for="editor_oo">
+      For OpenOffice (Encoding: UTF-8, Separator: ",")
+    </label>
+    <br/>
+    <input type="radio" name="editor" id="editor_excel" value="excel" />
+    <label for="editor_excel">
+      For Excel (Encoding: CP1252, Separator: ";")
+    </label>
+    <br/><br/>
+    <input type="submit" class="button_ok" value="Export" />
+  </fieldset>
+
+</form>
+
+</stl:block>
