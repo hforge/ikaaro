@@ -67,7 +67,9 @@ class OrderedTableFile(TableFile):
     def get_record_ids(self):
         # Override to skip the record '0' (start in '1')
         i = 1
-        for record in self.records:
+        n = len(self.records)
+        while i < n:
+            record = self.records[i]
             if record is not None:
                 yield i
             i += 1
