@@ -56,7 +56,7 @@ class WebSite(RoleAware, Folder):
                    'control_panel', 'last_changes']
     class_control_panel = ['permissions', 'new_user', 'edit_virtual_hosts',
                            'edit_security_policy', 'edit_languages',
-                           'edit_contact_options', 'broken_links', 'orphans'],
+                           'edit_contact_options', 'broken_links', 'orphans']
 
 
     __fixed_handlers__ = ['skin', 'index']
