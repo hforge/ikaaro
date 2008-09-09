@@ -137,7 +137,7 @@ legend {
  *************************************************************************/
 
 .context_menu {
-  font-size: 1.0em;
+  font-size: 0.8em;
   padding-left: 8px;
 }
 
@@ -170,10 +170,10 @@ legend {
   padding: 0;
   background-repeat: no-repeat;
   background-position: top left;
-  line-height: 1.6em;
+  line-height: 1.4em;
   list-style: none;
   overflow: hidden;
-  line-height: 1.6em;
+  line-height: 1.4em;
   border-bottom: 1px solid #d3d7cf;
 }
 
