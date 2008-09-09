@@ -19,54 +19,14 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.datatypes import Unicode
 from itools.gettext import MSG
-from itools.uri import get_reference
-from itools.web import BaseView
 
 # Import from ikaaro
 from ikaaro.file import File
 from ikaaro.folder import Folder
 from ikaaro.registry import register_object_class
-from ikaaro.views import ContextMenu
+from folder_views import WikiMenu, GoToFrontPage
 from page import WikiPage
-
-
-class WikiMenu(ContextMenu):
-
-    title = MSG(u'Wiki')
-
-    def get_items(self, resource, context):
-        # If called from a child
-        if isinstance(resource, WikiPage):
-            resource = resource.parent
-
-        # Namespace
-        base = '/%s' % context.site_root.get_pathto(resource)
-        return [
-            {'title': resource.get_view(x).title,
-             'href': '%s/;%s' % (base, x)}
-            for x in resource.class_views ]
-
-
-
-class GoToFrontPage(BaseView):
-
-    access = 'is_allowed_to_view'
-    title = MSG(u'View')
-    icon = 'view.png'
-
-    def GET(self, resource, context):
-        goto = '/%s/FrontPage' % context.site_root.get_pathto(resource)
-        goto = get_reference(goto)
-
-        # Keep the message
-        if context.has_form_value('message'):
-            message = context.get_form_value('message')
-            goto = goto.replace(message=message)
-
-        return goto
-
 
 
 class WikiFolder(Folder):
