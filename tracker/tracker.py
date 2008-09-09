@@ -27,15 +27,14 @@ from string import Template
 # Import from itools
 from itools.datatypes import Integer, String, Unicode
 from itools.gettext import MSG
-from itools.handlers import ConfigFile as BaseConfigFile
 from itools.uri import Reference
 from itools.xapian import EqQuery, RangeQuery, AndQuery, OrQuery, PhraseQuery
 
 # Import from ikaaro
 from ikaaro.folder import Folder
 from ikaaro.registry import register_object_class
-from ikaaro.text import Text
 from resources import Resources
+from stored import StoredSearch, StoredSearchFile
 from tables import SelectTableTable, SelectTable
 from tables import OrderedSelectTableTable, OrderedSelectTable
 from tables import Versions, VersionsTable
@@ -100,9 +99,9 @@ class Tracker(Folder):
             metadata = OrderedSelectTable.build_metadata()
             folder.set_handler('%s/%s.metadata' % (name, table_name), metadata)
         # Pre-defined stored searches
-        open = ConfigFile(state='0')
-        not_assigned = ConfigFile(assigned_to='nobody')
-        high_priority = ConfigFile(state='0', priority='0')
+        open = StoredSearchFile(state='0')
+        not_assigned = StoredSearchFile(assigned_to='nobody')
+        high_priority = StoredSearchFile(state='0', priority='0')
         i = 0
         for search, title in [(open, u'Open Issues'),
                               (not_assigned, u'Not Assigned'),
@@ -303,43 +302,6 @@ class Tracker(Folder):
 
 
 ###########################################################################
-# Stored Searches
-###########################################################################
-class ConfigFile(BaseConfigFile):
-
-    schema = {
-        'search_name': Unicode(),
-        'mtime': Integer(default=0),
-        'module': Integer(multiple=True, default=()),
-        'version': Integer(multiple=True, default=()),
-        'type': Integer(multiple=True, default=()),
-        'priority': Integer(multiple=True, default=()),
-        'assigned_to': String(multiple=True, default=()),
-        'state': Integer(multiple=True, default=()),
-        }
-
-
-class StoredSearch(Text):
-
-    class_id = 'stored_search'
-    class_version = '20071215'
-    class_title = MSG(u'Stored Search')
-    class_handler = ConfigFile
-
-
-    def get_values(self, name, type=None):
-        return self.handler.get_value(name)
-
-
-    def set_values(self, name, value, type=String):
-        value = [ type.encode(x) for x in value ]
-        value = ' '.join(value)
-        self.handler.set_value(name, value)
-
-
-
-###########################################################################
 # Register
 ###########################################################################
 register_object_class(Tracker)
-register_object_class(StoredSearch)

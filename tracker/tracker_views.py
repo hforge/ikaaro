@@ -39,6 +39,7 @@ from ikaaro.messages import MSG_NONE_REMOVED, MSG_OBJECTS_REMOVED
 from ikaaro.messages import MSG_NAME_MISSING, MSG_CHANGES_SAVED
 from ikaaro.views import BrowseForm, SearchForm as BaseSearchForm, ContextMenu
 from issue import Issue, issue_fields
+from stored import StoredSearch
 
 
 columns = [
@@ -74,11 +75,13 @@ class StoredSearchesMenu(ContextMenu):
             resource = resource.parent
 
         # Namespace
+        search_name = context.get_query_value('search_name')
         base = '/%s/;view' % context.site_root.get_pathto(resource)
-        items = resource.search_resources(format='stored_search')
+        items = resource.search_resources(cls=StoredSearch)
         items = [
             {'title': x.get_property('title'),
-             'href': '%s?search_name=%s' % (base, x.name)}
+             'href': '%s?search_name=%s' % (base, x.name),
+             'class': 'nav_active' if (x.name == search_name) else None}
             for x in items ]
         items.sort(lambda x, y: cmp(x['title'], y['title']))
 
@@ -436,7 +439,7 @@ class TrackerStoredSearches(STLForm):
     def get_namespace(self, resource, context):
         stored_searches = [
             {'name': x.name, 'title': x.get_title()}
-            for x in resource.search_resources(format='stored_search') ]
+            for x in resource.search_resources(cls=StoredSearch) ]
         stored_searches.sort(key=itemgetter('title'))
 
         return {'stored_searches': stored_searches}

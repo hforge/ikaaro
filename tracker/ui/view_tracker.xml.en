@@ -8,7 +8,6 @@
 <form id="browse_list" name="browse_list" method="${method}"
   action="${action}">
 
-<p><a href=";search?${search_parameters}">Edit <em>${title}</em> search</a>.</p>
 ${batch}
 ${table}
 
@@ -16,6 +15,8 @@ ${table}
 <!-- Links -->
 <p stl:if="nb_results">
   <a name="link"/>
+  <a href=";search?${search_parameters}">Edit this search</a>
+  &nbsp;|
   <a href=";view?${search_parameters}&amp;change_several_bugs=1#link">Change
   Several Issues</a>
   &nbsp;|
