@@ -28,6 +28,7 @@ from operator import itemgetter
 from itools.csv import CSVFile
 from itools.datatypes import Boolean, Integer, String, Unicode
 from itools.gettext import MSG
+from itools.handlers import merge_dics
 from itools.stl import stl
 from itools.uri import encode_query, Reference
 from itools.web import BaseView, BaseForm, STLForm, get_context
@@ -176,9 +177,8 @@ class TrackerView(BrowseForm):
 
 
     def get_query_schema(self):
-        schema = BrowseForm.get_query_schema(self)
-        schema.update(self.tracker_schema)
-        return schema
+        return merge_dics(BrowseForm.get_query_schema(self),
+                          self.tracker_schema)
 
 
     def get_namespace(self, resource, context):
@@ -457,10 +457,10 @@ class TrackerExportToText(TrackerView):
     template = '/ui/tracker/export_to_text.xml'
 
     def get_query_schema(self):
-        schema = TrackerView.get_query_schema(self)        
-        schema['ids'] = String(multiple=True, default=[])
-        schema['column_selection'] = String(multiple=True, default=['title'])
-        return schema
+        return merge_dics(TrackerView.get_query_schema(self),
+                          ids=String(multiple=True, default=[]),
+                          column_selection=String(multiple=True,
+                                                  default=['title']))
 
 
     def get_namespace(self, resource, context):

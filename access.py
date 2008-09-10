@@ -24,6 +24,7 @@ from operator import itemgetter
 # Import from itools
 from itools.datatypes import Boolean, Email, Integer, Tokens, Unicode, String
 from itools.gettext import MSG
+from itools.handlers import merge_dics
 from itools.stl import stl
 from itools.uri import get_reference
 from itools.web import AccessControl as BaseAccessControl, STLForm
@@ -50,8 +51,9 @@ class PermissionsForm(SearchForm):
 
     def get_query_schema(self):
         schema = SearchForm.get_query_schema(self)
-        schema['sort_by'] = String(default='login_name')
-        return schema
+        return merge_dics(SearchForm.get_query_schema(self),
+                          sort_by=String(default='login_name'))
+
 
     search_schema = {
         'search_field': String,

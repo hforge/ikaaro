@@ -24,7 +24,7 @@ from itools import get_abspath
 from itools.datatypes import Boolean, Email, Integer, String, Unicode
 from itools.datatypes import DynamicEnumerate
 from itools.gettext import MSG
-from itools.handlers import checkid
+from itools.handlers import checkid, merge_dics
 from itools.i18n import get_language_name, get_languages
 from itools.stl import stl
 from itools.uri import Path, get_reference
@@ -692,8 +692,7 @@ class SiteSearchView(SearchForm):
 
 
     def get_query_schema(self):
-        schema = SearchForm.get_query_schema(self)
-        schema = schema.copy()
+        schema = merge_dics(SearchForm.get_query_schema(self))
         del schema['sort_by']
         del schema['reverse']
         return schema

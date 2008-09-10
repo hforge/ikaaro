@@ -20,7 +20,7 @@ from urllib import quote
 # Import from itools
 from itools.datatypes import Boolean, Integer, String, Unicode
 from itools.gettext import MSG
-from itools.handlers import checkid
+from itools.handlers import checkid, merge_dics
 from itools.i18n import format_datetime
 from itools.stl import stl
 from itools.uri import get_reference
@@ -523,11 +523,10 @@ class FolderPreviewContent(FolderBrowseContent):
 
 
     def get_query_schema(self):
-        schema = FolderBrowseContent.get_query_schema(self)
         # Define a huge batch limit, and the image size parameter
-        schema['batch_size'] = Integer(default=0)
-        schema['size'] = Integer(default=128)
-        return schema
+        return merge_dics(FolderBrowseContent.get_query_schema(self),
+                          batch_size=Integer(default=0),
+                          size=Integer(default=128))
 
 
     def get_items(self, resource, context):
@@ -562,10 +561,9 @@ class FolderLastChanges(FolderBrowseContent):
     title = MSG(u"Last Changes")
 
     def get_query_schema(self):
-        schema = FolderBrowseContent.get_query_schema(self)
         # Search subfolders by default
-        schema['search_subfolders'] = Boolean(default=True)
-        return schema
+        return merge_dics(FolderBrowseContent.get_query_schema(self),
+                          search_subfolders=Boolean(default=True))
 
 
     def get_items(self, resource, context):

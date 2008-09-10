@@ -17,6 +17,7 @@
 # Import from itools
 from itools.datatypes import Boolean, Integer, String, Unicode
 from itools.gettext import MSG
+from itools.handlers import merge_dics
 from itools.stl import stl
 from itools.uri import Path
 from itools.web import BaseView, STLView, STLForm, get_context
@@ -299,9 +300,8 @@ class SearchForm(BrowseForm):
 
 
     def get_query_schema(self):
-        schema = BrowseForm.get_query_schema(self)
-        schema.update(self.search_schema)
-        return schema
+        return merge_dics(BrowseForm.get_query_schema(self),
+                          self.search_schema)
 
 
     def get_namespace(self, resource, context):
