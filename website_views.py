@@ -21,15 +21,15 @@
 # Import from itools
 import itools
 from itools import get_abspath
-from itools.datatypes import Boolean, Email, Integer, String, Unicode, URI
+from itools.datatypes import Boolean, Email, String, Unicode
 from itools.datatypes import DynamicEnumerate
 from itools.gettext import MSG
 from itools.handlers import checkid, merge_dics
 from itools.i18n import get_language_name, get_languages
 from itools.stl import stl
-from itools.uri import Path, get_reference
+from itools.uri import Path
 from itools import vfs
-from itools.web import FormError, STLView, STLForm
+from itools.web import STLView, STLForm
 from itools.xapian import EqQuery, OrQuery, AndQuery, TextField
 
 # Import from ikaaro
@@ -40,7 +40,6 @@ from registry import get_object_class
 from registry import get_register_websites, get_website_class
 from resource_views import AddResourceMenu
 from views import IconsView, NewInstanceForm, SearchForm, ContextMenu
-from workflow import WorkflowAware
 
 
 
@@ -118,103 +117,10 @@ class NewWebSiteForm(NewInstanceForm):
         return context.come_back(MSG_NEW_RESOURCE, goto=goto)
 
 
+
 ###########################################################################
-# Views / Login, Logout
+# Views / Forgotten Password
 ###########################################################################
-class LoginView(STLForm):
-
-    access = True
-    title = MSG(u'Login')
-    template = '/ui/website/login.xml'
-    schema = {
-        'username': Unicode(mandatory=True),
-        'password': String(mandatory=True),
-    }
-
-
-    def get_namespace(self, resource, context):
-        site_root = resource.get_site_root()
-        comeback = context.get_form_value('comeback', type=URI)
-        if comeback is None:
-            comeback = context.uri
-        if comeback.path:
-            params = comeback.path[-1].params
-            if params and params[0] == 'login':
-                comeback = comeback.resolve('.')
-        # Protection: only progagate paths
-        comeback = str(comeback.path)
-
-        return {
-            'action': '%s/;login' % resource.get_pathto(site_root),
-            'username': context.get_form_value('username'),
-            'comeback': comeback,
-        }
-
-
-    def action(self, resource, context, form, goto=None):
-        email = form['username']
-        password = form['password']
-
-        # Check the user exists
-        root = context.root
-
-        # Search the user by username (login name)
-        results = root.search(username=email)
-        if results.get_n_documents() == 0:
-            message = MSG(u'The user "$username" does not exist.')
-            context.message = message.gettext(username=email)
-            return
-
-        # Get the user
-        brain = results.get_documents()[0]
-        user = root.get_resource('users/%s' % brain.name)
-
-        # Check the user is active
-        if user.get_property('user_must_confirm'):
-            message = MSG(u'The user "$username" is not active.')
-            context.message = message.gettext(username=email)
-            return
-
-        # Check the password is right
-        if not user.authenticate(password):
-            context.message = MSG(u'The password is wrong.')
-            return
-
-        # Set cookie
-        user.set_auth_cookie(context, password)
-
-        # Set context
-        context.user = user
-
-        # Come back
-        comeback = context.get_form_value('comeback', type=URI)
-        if comeback is not None:
-            # Protection: only progagate paths
-            return get_reference(str(comeback.path))
-
-        if goto is not None:
-            return get_reference(goto)
-
-        return get_reference('users/%s' % user.name)
-
-
-
-class LogoutView(STLView):
-    """Logs out of the application.
-    """
-
-    access = True
-    template = '/ui/website/logout.xml'
-
-
-    def get_namespace(self, resource, context):
-        # Log-out
-        context.del_cookie('__ac')
-        context.user = None
-
-        return {}
-
-
 
 class ForgottenPasswordForm(STLForm):
 

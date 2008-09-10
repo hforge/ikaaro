@@ -377,12 +377,16 @@ class Skin(UIFolder):
     def build_namespace(self, context):
         context_menus = self.get_context_menus(context)
         context_menus = list(context_menus)
+
         return {
             # HTML head
             'title': self.get_template_title(context),
             'styles': self.get_styles(context),
             'scripts': self.get_scripts(context),
             'meta_tags': self.get_meta_tags(context),
+            # Log in/out
+            'login': ';login',
+            'logout': ';logout',
             # User
             'user': self.get_user_menu(context),
             # Location & Views

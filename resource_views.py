@@ -29,9 +29,9 @@ from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.i18n import get_language_name
 from itools.stl import stl
-from itools.uri import Path
+from itools.uri import Path, get_reference
 from itools.vfs import FileName
-from itools.web import STLForm, get_context
+from itools.web import BaseView, STLForm, get_context
 
 # Import from ikaaro
 from datatypes import FileDataType
@@ -469,3 +469,94 @@ class DBResourceAddLink(STLForm):
         context.message = uri.query['message']
         return
 
+
+
+###########################################################################
+# Views / Login, Logout
+###########################################################################
+
+class LoginView(STLForm):
+
+    access = True
+    title = MSG(u'Login')
+    template = '/ui/website/login.xml'
+    schema = {
+        'username': Unicode(mandatory=True),
+        'password': String(mandatory=True),
+    }
+
+
+    def get_namespace(self, resource, context):
+        return {
+            'username': context.get_form_value('username'),
+        }
+
+
+    def action(self, resource, context, form):
+        email = form['username']
+        password = form['password']
+
+        # Check the user exists
+        root = context.root
+
+        # Search the user by username (login name)
+        results = root.search(username=email)
+        if results.get_n_documents() == 0:
+            message = MSG(u'The user "$username" does not exist.')
+            context.message = message.gettext(username=email)
+            return
+
+        # Get the user
+        brain = results.get_documents()[0]
+        user = root.get_resource('users/%s' % brain.name)
+
+        # Check the user is active
+        if user.get_property('user_must_confirm'):
+            message = MSG(u'The user "$username" is not active.')
+            context.message = message.gettext(username=email)
+            return
+
+        # Check the password is right
+        if not user.authenticate(password):
+            context.message = MSG(u'The password is wrong.')
+            return
+
+        # Set cookie
+        user.set_auth_cookie(context, password)
+
+        # Set context
+        context.user = user
+
+        # Come back
+        goto = None
+        referrer = context.request.referrer
+        if referrer:
+            if not referrer.path:
+                goto = referrer
+            else:
+                params = referrer.path[-1].params
+                if not params:
+                    goto = referrer
+                elif params[0] != 'login':
+                    goto = referrer
+        if goto is None:
+            goto = get_reference('./')
+
+        return context.come_back(MSG("Welcome!"), goto)
+
+
+
+class LogoutView(BaseView):
+    """Logs out of the application.
+    """
+
+    access = True
+
+
+    def GET(self, resource, context):
+        # Log-out
+        context.del_cookie('__ac')
+        context.user = None
+
+        message = MSG(u'You Are Now Logged out.')
+        return context.come_back(message, goto='./')

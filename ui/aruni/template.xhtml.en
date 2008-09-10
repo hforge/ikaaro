@@ -24,13 +24,13 @@
     <!-- Header -->
     <div id="header">
       <stl:block stl:if="not user/info">
-        <a href="/;login" id="top_menu_login">Log in</a>
+        <a href="${login}" id="top_menu_login">Log in</a>
         <a href="/;register" id="top_menu_register"
           stl:if="user/joinisopen">Register</a>
       </stl:block>
       <stl:block stl:if="user/info">
         <a href="${user/info/home}" id="top_menu_profile">My Profile</a>
-        <a href="/;logout" id="top_menu_logout">Log out</a>
+        <a href="${logout}" id="top_menu_logout">Log out</a>
       </stl:block>
       <a href="/;site_search" id="top_menu_search">Search</a>
       <a href="/;contact" id="top_menu_contact">Contact</a>

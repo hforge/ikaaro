@@ -35,6 +35,7 @@ from lock import Lock
 from metadata import Metadata
 from resource_views import DBResourceNewInstance, DBResourceEditMetadata
 from resource_views import DBResourceAddImage, DBResourceAddLink
+from resource_views import LoginView, LogoutView
 from workflow import WorkflowAware
 
 
@@ -446,6 +447,13 @@ class DBResource(CatalogAware, IResource):
             return language
         # Default
         return languages[0]
+
+
+    ########################################################################
+    # UI / Login, Logout
+    ########################################################################
+    login = LoginView()
+    logout = LogoutView()
 
 
     ########################################################################

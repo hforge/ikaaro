@@ -4,7 +4,7 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
-  <form id="loginform" name="loginform" method="post" action="${action}">
+  <form id="loginform" name="loginform" method="post" action=";login">
     <dl>
       <dt><label for="username">Email Address</label></dt>
       <dd>
@@ -17,7 +17,6 @@
       </dd>
     </dl>
     <p>
-      <input type="hidden" name="comeback" value="${comeback}" />
       <input type="submit" value="Log in" class="button_ok"/>
     </p>
   </form>

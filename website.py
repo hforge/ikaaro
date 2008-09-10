@@ -34,11 +34,12 @@ from access import RoleAware
 from folder import Folder
 from registry import register_object_class
 from registry import register_website
+from resource_views import LoginView
 from skins import UI, ui_path
 from website_views import AboutView, BrokenLinks, ContactForm
 from website_views import ContactOptionsForm, ControlPanel, CreditsView
-from website_views import EditLanguagesForm, ForgottenPasswordForm, LoginView
-from website_views import LogoutView, NewWebSiteForm, RegisterForm
+from website_views import EditLanguagesForm, ForgottenPasswordForm
+from website_views import NewWebSiteForm, RegisterForm
 from website_views import SecurityPolicyForm, SiteSearchView, VHostsForm
 
 
@@ -151,8 +152,6 @@ class WebSite(RoleAware, Folder):
     broken_links = BrokenLinks()
     # Register / Login
     register = RegisterForm()
-    login = LoginView()
-    logout = LogoutView()
     forgotten_password = ForgottenPasswordForm()
     # Public views
     site_search = SiteSearchView()
