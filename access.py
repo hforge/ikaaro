@@ -91,8 +91,15 @@ class PermissionsForm(SearchForm):
         # Sort
         sort_by = context.query['sort_by']
         reverse = context.query['reverse']
-        f = lambda x, y: cmp(getattr(x, sort_by), getattr(y, sort_by))
-        items.sort(cmp=f, reverse=reverse)
+        if sort_by in ('user_id', 'login_name', 'role'):
+            f = lambda x: self.get_item_value(resource, context, x, sort_by)
+        elif sort_by == 'account_state':
+            f = lambda x: self.get_item_value(resource, context, x,
+                                              sort_by)[0].gettext()
+        else:
+            f = lambda x: getattr(x, sort_by)
+
+        items.sort(cmp=lambda x,y: cmp(f(x), f(y)), reverse=reverse)
         # Batch
         start = context.query['batch_start']
         size = context.query['batch_size']
@@ -134,7 +141,7 @@ class PermissionsForm(SearchForm):
             if user.get_property('user_must_confirm'):
                 href = '/users/%s/;resend_confirmation' % item.name
                 return MSG(u'Inactive'), href
-            return MSG(u'Active')
+            return MSG(u'Active'), None
 
 
     def action_remove(self, resource, context, form):
