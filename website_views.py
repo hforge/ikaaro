@@ -21,7 +21,7 @@
 # Import from itools
 import itools
 from itools import get_abspath
-from itools.datatypes import Boolean, Email, Integer, String, Unicode
+from itools.datatypes import Boolean, Email, Integer, String, Unicode, URI
 from itools.datatypes import DynamicEnumerate
 from itools.gettext import MSG
 from itools.handlers import checkid, merge_dics
@@ -134,10 +134,20 @@ class LoginView(STLForm):
 
     def get_namespace(self, resource, context):
         site_root = resource.get_site_root()
+        comeback = context.get_form_value('comeback', type=URI)
+        if comeback is None:
+            comeback = context.uri
+        if comeback.path:
+            params = comeback.path[-1].params
+            if params and params[0] == 'login':
+                comeback = comeback.resolve('.')
+        # Protection: only progagate paths
+        comeback = str(comeback.path)
 
         return {
             'action': '%s/;login' % resource.get_pathto(site_root),
             'username': context.get_form_value('username'),
+            'comeback': comeback,
         }
 
 
@@ -177,15 +187,10 @@ class LoginView(STLForm):
         context.user = user
 
         # Come back
-        referrer = context.request.referrer
-        if referrer:
-            if not referrer.path:
-                return referrer
-            params = referrer.path[-1].params
-            if not params:
-                return referrer
-            if params[0] != 'login':
-                return referrer
+        comeback = context.get_form_value('comeback', type=URI)
+        if comeback is not None:
+            # Protection: only progagate paths
+            return get_reference(str(comeback.path))
 
         if goto is not None:
             return get_reference(goto)

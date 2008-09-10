@@ -17,6 +17,7 @@
       </dd>
     </dl>
     <p>
+      <input type="hidden" name="comeback" value="${comeback}" />
       <input type="submit" value="Log in" class="button_ok"/>
     </p>
   </form>
