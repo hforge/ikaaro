@@ -856,7 +856,7 @@ class CalendarUpload(FileUpload):
         except:
             context.message = u'Failed to load the file, may contain errors.'
         else:
-            context.server.change_object(resource)
+            context.server.change_resource(resource)
             context.message = u'Version uploaded'
 
 

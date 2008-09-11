@@ -193,7 +193,7 @@ class EditIssueForm(STLForm):
         # Edit
         resource._add_record(context, form)
         # Change
-        context.server.change_object(resource)
+        context.server.change_resource(resource)
         context.message = MSG_CHANGES_SAVED
 
 

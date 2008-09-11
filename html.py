@@ -97,7 +97,7 @@ class HTMLEditView(STLForm):
                   + document.events[old_body.end:])
         # Change
         document.set_events(events)
-        context.server.change_object(resource)
+        context.server.change_resource(resource)
         context.message = MSG_CHANGES_SAVED
 
 

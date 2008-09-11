@@ -275,8 +275,8 @@ class Dressable(Folder, EpozEditable):
                   + document.events[old_body.end:])
         # Change
         document.set_events(events)
-        context.server.change_object(dress_object)
-        context.server.change_object(self)
+        context.server.change_resource(dress_object)
+        context.server.change_resource(self)
 
         return context.come_back(MSG_CHANGES_SAVED)
 

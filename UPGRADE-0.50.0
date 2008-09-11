@@ -146,6 +146,16 @@ This is a summary of the methods that were renamed or changed their signature:
   # Now
   Folder.search_resources(cls=None, format=None, state=None)
 
+  # Before
+  context.server.change_object(...)
+  context.server.add_object(...)
+  context.server.remove_object(...)
+
+  # After
+  context.server.change_resource(...)
+  context.server.add_resource(...)
+  context.server.remove_resource(...)
+
 
 Javascript
 ====================

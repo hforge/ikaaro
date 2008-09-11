@@ -185,7 +185,7 @@ class FileUpload(STLForm):
             return
 
         # Ok
-        context.server.change_object(resource)
+        context.server.change_resource(resource)
         context.message = MSG(u'Version uploaded')
 
 

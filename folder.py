@@ -101,24 +101,24 @@ class Folder(DBResource):
 
 
     def del_resource(self, name):
-        object = self.get_resource(name)
+        resource = self.get_resource(name)
 
         # Check referencial-integrity
         # FIXME Check sub-objects too
-        path = str(object.abspath)
+        path = str(resource.abspath)
         root = self.get_root()
         results = root.search(links=path)
         n = results.get_n_documents()
         if n:
-            message = 'cannot delete, object "%s" is referenced' % path
+            message = 'cannot delete, resource "%s" is referenced' % path
             raise ConsistencyError, message
 
         # Events, remove
-        get_context().server.remove_object(object)
+        get_context().server.remove_resource(resource)
         # Remove
         folder = self.handler
         folder.del_handler('%s.metadata' % name)
-        for handler in object.get_handlers():
+        for handler in resource.get_handlers():
             if folder.has_handler(handler.uri):
                 folder.del_handler(handler.uri)
 
@@ -143,8 +143,8 @@ class Folder(DBResource):
         folder.copy_handler('%s.metadata' % source_uri,
                             '%s.metadata' % target_uri)
         # Copy the content
-        object = self.get_resource(source)
-        for old_name, new_name in object.rename_handlers(new_name):
+        resource = self.get_resource(source)
+        for old_name, new_name in resource.rename_handlers(new_name):
             if old_name is None:
                 continue
             src_uri = source_uri.resolve(old_name)
@@ -153,15 +153,15 @@ class Folder(DBResource):
                 folder.copy_handler(src_uri, dst_uri)
 
         # Events, add
-        object = self.get_resource(target)
-        context.server.add_object(object)
+        resource = self.get_resource(target)
+        context.server.add_resource(resource)
 
 
     def move_resource(self, source, target):
         context = get_context()
         # Events, remove
-        object = self.get_resource(source)
-        context.server.remove_object(object)
+        resource = self.get_resource(source)
+        context.server.remove_resource(resource)
 
         # Find out the source and target absolute URIs
         folder = self.handler
@@ -180,7 +180,7 @@ class Folder(DBResource):
         folder.move_handler('%s.metadata' % source_uri,
                             '%s.metadata' % target_uri)
         # Move the content
-        for old_name, new_name in object.rename_handlers(new_name):
+        for old_name, new_name in resource.rename_handlers(new_name):
             if old_name is None:
                 continue
             src_uri = source_uri.resolve(old_name)
@@ -189,19 +189,19 @@ class Folder(DBResource):
                 folder.move_handler(src_uri, dst_uri)
 
         # Events, add
-        object = self.get_resource(target)
-        context.server.add_object(object)
+        resource = self.get_resource(target)
+        context.server.add_resource(resource)
 
 
     def traverse_resources(self):
         yield self
         for name in self._get_names():
-            object = self.get_resource(name)
-            if isinstance(object, Folder):
-                for x in object.traverse_resources():
+            resource = self.get_resource(name)
+            if isinstance(resource, Folder):
+                for x in resource.traverse_resources():
                     yield x
             else:
-                yield object
+                yield resource
 
 
     def search_resources(self, cls=None, format=None, state=None):

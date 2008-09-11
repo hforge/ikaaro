@@ -135,11 +135,11 @@ class DBResource(CatalogAware, IResource):
     @staticmethod
     def make_object(cls, container, name, *args, **kw):
         cls._make_object(cls, container.handler, name, *args, **kw)
-        object = container.get_resource(name)
+        resource = container.get_resource(name)
         # Events, add
-        get_context().server.add_object(object)
+        get_context().server.add_resource(resource)
 
-        return object
+        return resource
 
 
     @staticmethod
@@ -192,12 +192,12 @@ class DBResource(CatalogAware, IResource):
 
 
     def set_property(self, name, value, language=None):
-        get_context().server.change_object(self)
+        get_context().server.change_resource(self)
         self.metadata.set_property(name, value, language=language)
 
 
     def del_property(self, name, language=None):
-        get_context().server.change_object(self)
+        get_context().server.change_resource(self)
         self.metadata.del_property(name, language=language)
 
 
@@ -415,7 +415,7 @@ class DBResource(CatalogAware, IResource):
         # Save the data
         body = context.get_form_value('body')
         self.handler.load_state_from_string(body)
-        context.server.change_object(self)
+        context.server.change_resource(self)
 
 
     ########################################################################

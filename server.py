@@ -102,7 +102,7 @@ def get_root(database, target):
     path = '%s/database/.metadata' % target
     metadata = database.get_handler(path, cls=Metadata)
     cls = get_object_class(metadata.format)
-    # Build the root object
+    # Build the root resource
     root = cls(metadata)
     root.name = root.class_title.message
     return root
@@ -212,19 +212,19 @@ class Server(BaseServer):
 
         # Added
         for path in self.objects_added:
-            object = root.get_resource(path)
-            if isinstance(object, VersioningAware):
-                object.commit_revision()
-            catalog.index_document(object)
+            resource = root.get_resource(path)
+            if isinstance(resource, VersioningAware):
+                resource.commit_revision()
+            catalog.index_document(resource)
         self.objects_added.clear()
 
         # Changed
         for path in self.objects_changed:
-            object = root.get_resource(path)
-            if isinstance(object, VersioningAware):
-                object.commit_revision()
+            resource = root.get_resource(path)
+            if isinstance(resource, VersioningAware):
+                resource.commit_revision()
             catalog.unindex_document(path)
-            catalog.index_document(object)
+            catalog.index_document(resource)
         self.objects_changed.clear()
 
 
@@ -262,34 +262,33 @@ class Server(BaseServer):
         context.site_root = root
 
 
-    def remove_object(self, object):
+    def remove_resource(self, resource):
         objects_removed = self.objects_removed
         objects_added = self.objects_added
 
-        if isinstance(object, Folder):
-            for x in object.traverse_resources():
+        if isinstance(resource, Folder):
+            for x in resource.traverse_resources():
                 path = str(x.get_canonical_path())
                 if path in objects_added:
                     objects_added.remove(path)
                 objects_removed.add(path)
         else:
-            path = str(object.get_canonical_path())
+            path = str(resource.get_canonical_path())
             if path in objects_added:
                 objects_added.remove(path)
             objects_removed.add(path)
 
 
-    def add_object(self, object):
-        if isinstance(object, Folder):
-            for x in object.traverse_resources():
+    def add_resource(self, resource):
+        if isinstance(resource, Folder):
+            for x in resource.traverse_resources():
                 path = str(x.get_canonical_path())
                 self.objects_added.add(path)
         else:
-            path = str(object.get_canonical_path())
+            path = str(resource.get_canonical_path())
             self.objects_added.add(path)
 
 
-    def change_object(self, object):
-        path = str(object.get_canonical_path())
+    def change_resource(self, resource):
+        path = str(resource.get_canonical_path())
         self.objects_changed.add(path)
-
