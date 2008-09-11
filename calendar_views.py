@@ -33,7 +33,7 @@ from itools.web import BaseView, STLForm, STLView, get_context
 
 # Import from ikaaro
 from file import FileView, FileUpload
-from table import Multiple
+from table_views import Multiple
 
 
 resolution = timedelta.resolution

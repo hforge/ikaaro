@@ -39,7 +39,7 @@ from calendar_views import get_current_date
 from folder import Folder
 from messages import MSG_CHANGES_SAVED
 from registry import register_object_class
-from table import Multiple, Table, EditRecordForm
+from table import Table, TableEditRecord
 from text import Text
 
 
@@ -497,7 +497,7 @@ class CalendarTable(CalendarBase, Table):
 
 
     # Use edit_event instead
-    edit_record = EditRecordForm(access=False)
+    edit_record = TableEditRecord(access=False)
 
 
 
