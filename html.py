@@ -27,11 +27,10 @@ from itools.handlers import File
 from itools.gettext import MSG
 from itools.http import Forbidden
 from itools.html import xhtml_uri, XHTMLFile, sanitize_stream, HTMLParser
-from itools.html import stream_to_str_as_xhtml, stream_to_str_as_html
 from itools.stl import stl
 from itools.uri import get_reference
-from itools.web import BaseView, STLView
-from itools.xml import TEXT, START_ELEMENT, XMLError, XMLParser
+from itools.web import STLView, STLForm
+from itools.xml import TEXT, START_ELEMENT, XMLError, XMLParser, stream_to_str
 
 # Import from ikaaro
 from messages import *
@@ -45,53 +44,52 @@ from resource_ import DBResource
 ###########################################################################
 # Views
 ###########################################################################
-class HTMLEditView(BaseView):
+class HTMLEditView(STLForm):
     """WYSIWYG editor for HTML documents.
     """
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Edit Inline')
-    icon = 'edit.png'
+    template = '/ui/html/edit.xml'
+    schema = {
+        'data': String,
+        'timestamp': DateTime}
+
+    sanitize_html = False
 
 
-    def GET(self, resource, context):
-        data = context.get_form_value('data')
-        if data:
-            data = stream_to_str_as_html(XMLParser(data))
-        else:
-            data = resource.get_epoz_data()
-            # If the document has not a body (e.g. a frameset), edit as plain
-            # text
-            if data is None:
-                return Text.edit_form(self, context)
-            data = stream_to_str_as_html(data)
+    def get_namespace(self, resource, context):
+        data = resource.get_epoz_data()
+        # If the document has not a body (e.g. a frameset), edit as plain text
+        if data is None:
+            return Text.edit_form(self, context)
+        data = stream_to_str(data)
 
         # Edit with a rich text editor
-        namespace = {}
-        namespace['timestamp'] = DateTime.encode(datetime.now())
-        namespace['rte'] = resource.get_rte(context, 'data', data)
-
-        handler = resource.get_resource('/ui/html/edit.xml')
-        return stl(handler, namespace)
+        return {
+            'timestamp': DateTime.encode(datetime.now()),
+            'rte': resource.get_rte(context, 'data', data)}
 
 
-    def POST(self, resource, context, sanitize=False):
-        timestamp = context.get_form_value('timestamp', type=DateTime)
+    def action(self, resource, context, form):
+        timestamp = form['timestamp']
         if timestamp is None:
-            return context.come_back(MSG_EDIT_CONFLICT)
+            context.message = MSG_EDIT_CONFLICT
+            return
         document = resource.get_epoz_document()
         if document.timestamp is not None and timestamp < document.timestamp:
-            return context.come_back(MSG_EDIT_CONFLICT)
+            context.message = MSG_EDIT_CONFLICT
+            return
 
         # Sanitize
-        new_body = context.get_form_value('data')
+        new_body = form['data']
         namespaces = {None: 'http://www.w3.org/1999/xhtml'}
         try:
             new_body = list(XMLParser(new_body, namespaces))
         except XMLError:
-            message = MSG(u'Invalid HTML code.')
-            return context.come_back(message, keep=['data'])
-        if sanitize:
+            context.message = MSG(u'Invalid HTML code.')
+            return
+        if self.sanitize_html:
             new_body = sanitize_stream(new_body)
         # "get_epoz_document" is to set in your editable handler
         old_body = document.get_body()
@@ -100,8 +98,7 @@ class HTMLEditView(BaseView):
         # Change
         document.set_events(events)
         context.server.change_object(resource)
-
-        return context.come_back(MSG_CHANGES_SAVED)
+        context.message = MSG_CHANGES_SAVED
 
 
 
