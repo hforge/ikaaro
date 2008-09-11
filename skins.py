@@ -104,7 +104,7 @@ class UIFolder(IResource, Folder):
             languages = [ x for x in languages if has_language(x) ]
 
             if not languages:
-                raise LookupError, 'XXX'
+                raise LookupError, 'resource "%s" not found' % name
 
             # Get the best variant
             context = get_context()
