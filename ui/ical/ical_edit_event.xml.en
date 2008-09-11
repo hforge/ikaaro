@@ -4,7 +4,7 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
-<form id="edit_event" action=";edit_event" method="post">
+<form id="edit_event" action="${action}" method="post" stl:if="action">
   <p>(To add an event lasting all day long, leave time fields empty.)</p>
   <input stl:if="resource" type="hidden" name="resource" value="${resource}" />
   <table class="form">
@@ -32,35 +32,23 @@
     <tr>
       <td>Start</td>
       <td>
-        <input type="text" name="DTSTART_day" id="DTSTART_day" size="2"
-          maxlength="2" value="${DTSTART_day}" /> /
-        <input type="text" name="DTSTART_month" id="DTSTART_month" size="2"
-          maxlength="2" value="${DTSTART_month}" /> /
-        <input type="text" name="DTSTART_year" id="DTSTART_year" size="4"
-          maxlength="4" value="${DTSTART_year}" />
+        <input type="text" name="dtstart" id="dtstart" size="10"
+          maxlength="10" value="${dtstart}" />
         <input type="button" id="trigger_dtstart" value="..." />
         &nbsp;
-        <input type="text" name="DTSTART_hours" id="DTSTART_hours" size="2"
-          maxlength="2" value="${DTSTART_hours}" /> :
-        <input type="text" name="DTSTART_minutes" id="DTSTART_minutes" size="2"
-          maxlength="2" value="${DTSTART_minutes}" />
+        <input type="text" name="dtstart_time" id="dtstart_time" size="5"
+          maxlength="5" value="${dtstart_time}" />
       </td>
     </tr>
     <tr>
       <td>End</td>
       <td>
-        <input type="text" name="DTEND_day" id="DTEND_day" size="2"
-          value="${DTEND_day}" /> /
-        <input type="text" name="DTEND_month" id="DTEND_month" size="2"
-          value="${DTEND_month}" /> /
-        <input type="text" name="DTEND_year" id="DTEND_year" size="4"
-          value="${DTEND_year}" />
+        <input type="text" name="dtend" id="dtend" size="10"
+          maxlength="10" value="${dtend}" />
         <input type="button" id="trigger_dtend" value="..." />
         &nbsp;
-        <input type="text" name="DTEND_hours" id="DTEND_hours" size="2"
-          value="${DTEND_hours}" /> :
-        <input type="text" name="DTEND_minutes" id="DTEND_minutes" size="2"
-          value="${DTEND_minutes}" />
+        <input type="text" name="dtend_time" id="dtend_time" size="5"
+          maxlength="5" value="${dtend_time}" />
       </td>
     </tr>
     <tr>
@@ -69,7 +57,7 @@
         <textarea name="DESCRIPTION" cols="65">${DESCRIPTION}</textarea>
       </td>
     </tr>
-    
+
     <!-- STATUS -->
     <tr stl:if="STATUS">
       <td>Status</td>
@@ -82,6 +70,7 @@
     </tr>
 
     <!-- ATTENDEES -->
+    <!--
     <tr stl:if="ATTENDEE">
       <td>Attendees</td>
       <td>
@@ -124,17 +113,18 @@
         </table>
       </td>
     </tr>
+    -->
 
     <!-- COMMENTS -->
+    <!--
     <tr stl:repeat="comment COMMENT">
       <td>Comment</td>
       <td>
         <textarea name="${comment/name}" cols="65">${comment/value}</textarea>
       </td>
     </tr>
+    -->
   </table>
-
-  <input type="hidden" name="id" stl:if="UID" value="${UID}" />
 
   <p stl:if="allowed">
      <input type="submit" name=";edit_event" value="OK" class="button_ok"/>
@@ -143,24 +133,15 @@
      <input stl:if="not remove" type="submit" name=";cancel"
        value="Cancel" class="button_cancel" />
   </p>
+
+  <script language="javascript">
+  $("#SUMMARY").focus();
+
+  Calendar.setup({inputField: "dtstart", ifFormat: "%Y-%m-%d",
+    button: "trigger_dtstart"});
+  Calendar.setup({inputField: "dtend", ifFormat: "%Y-%m-%d",
+    button: "trigger_dtend"});
+  </script>
 </form>
-
-<script language="javascript">
-$("#SUMMARY").focus();
-
-Calendar.setup({
-    inputField: "DTSTART_day",
-    ifFormat: "%d",
-    firstDay: ${firstday},
-    button: "trigger_dtstart",
-    onUpdate: update_dtstart});
-
-Calendar.setup({
-    inputField: "DTEND_day",
-    ifFormat: "%d",
-    firstDay: ${firstday},
-    button: "trigger_dtend",
-    onUpdate: update_dtend});
-</script>
 
 </stl:block>

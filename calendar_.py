@@ -33,7 +33,8 @@ from itools.web import FormError
 from itools.web import MSG_MISSING_OR_INVALID
 
 # Import from ikaaro
-from calendar_views import CalendarUpload, DownloadView, EditEventForm
+from calendar_views import CalendarUpload, DownloadView
+from calendar_views import AddEventForm, EditEventForm
 from calendar_views import MonthlyView, TimetablesForm, WeeklyView
 from calendar_views import get_current_date
 from folder import Folder
@@ -155,15 +156,15 @@ class CalendarView(object):
             end = Time.encode(end)
             tmp_args['end_time'] = end
             tmp_args['id'] = calendar_name
-            new_url = ';edit_event?%s' % encode_query(tmp_args)
-            column =  {'class': None,
-                       'colspan': 1,
-                       'rowspan': 1,
-                       'DTSTART': start,
-                       'DTEND': end,
-                       'new_url': new_url,
-                       'new_class': new_class,
-                       'new_value': new_value}
+            column =  {
+                'class': None,
+                'colspan': 1,
+                'rowspan': 1,
+                'DTSTART': start,
+                'DTEND': end,
+                'new_url': ';xedit_event?%s' % encode_query(tmp_args),
+                'new_class': new_class,
+                'new_value': new_value}
             # Fields in template but not shown
             for field in cal_fields:
                 if field not in column:
@@ -275,7 +276,7 @@ class CalendarAwareView(CalendarView):
                 tmp_args = dict(args)
                 tmp_args['start_time'] = Time.encode(start)
                 tmp_args['end_time'] = Time.encode(end)
-                new_url = ';edit_event?%s' % encode_query(tmp_args)
+                new_url = ';xxedit_event?%s' % encode_query(tmp_args)
                 # Init column
                 column =  {'class': None,
                            'colspan': 1,
@@ -290,7 +291,7 @@ class CalendarAwareView(CalendarView):
                     uid = event['UID']
                     tmp_args = dict(args)
                     tmp_args['id'] = uid
-                    go_url = ';edit_event?%s' % encode_query(tmp_args)
+                    go_url = ';xxxedit_event?%s' % encode_query(tmp_args)
                     if show_conflicts and uid in conflicts_list:
                         css_class = 'cal_conflict'
                     else:
@@ -400,15 +401,12 @@ class CalendarBase(object):
 
 
     def get_action_url(self, **kw):
-        url = ';edit_event'
-        params = []
         if 'day' in kw:
-            params.append('date=%s' % Date.encode(kw['day']))
+            return ';add_event?date=%s' % Date.encode(kw['day'])
         if 'id' in kw:
-            params.append('id=%s' % kw['id'])
-        if params != []:
-            url = '%s?%s' % (url, '&'.join(params))
-        return url
+            return ';edit_event?id=%s' % kw['id']
+
+        return None
 
 
     # Test if user in context is the organizer of a given event (or is admin)
@@ -458,6 +456,7 @@ class CalendarBase(object):
     monthly_view = MonthlyView()
     weekly_view = WeeklyView()
     edit_timetables = TimetablesForm()
+    add_event = AddEventForm()
     edit_event = EditEventForm()
 
 

@@ -20,11 +20,11 @@
 # Import from Standard Library
 from calendar import monthrange, isleap
 from cStringIO import StringIO
-from datetime import date, timedelta
+from datetime import date, datetime, time, timedelta
 
 # Import from itools
 from itools.csv import Property
-from itools.datatypes import Date, Enumerate, Integer, Unicode
+from itools.datatypes import Date, Enumerate, Integer, String, Unicode
 from itools.gettext import MSG
 from itools.ical import get_grid_data
 from itools.ical import DateTime, Time
@@ -33,7 +33,6 @@ from itools.web import BaseView, STLForm, STLView, get_context
 
 # Import from ikaaro
 from file import FileView, FileUpload
-from table_views import Multiple
 
 
 resolution = timedelta.resolution
@@ -104,7 +103,6 @@ class TimetablesForm(STLForm):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Timetables')
-    icon = 'settings.png'
     template = '/ui/ical/ical_edit_timetables.xml'
     schema = {}
 
@@ -176,18 +174,8 @@ class CalendarView(STLView):
 
     class_weekly_shown = ('SUMMARY', )
 
-    # default values for fields within namespace
-    default_fields = {
-        'UID': None, 'SUMMARY': u'', 'LOCATION': u'', 'DESCRIPTION': u'',
-        'DTSTART_year': None, 'DTSTART_month': None, 'DTSTART_day': None,
-        'DTSTART_hours': '', 'DTSTART_minutes': '',
-        'DTEND_year': None, 'DTEND_month': None, 'DTEND_day': None,
-        'DTEND_hours': '', 'DTEND_minutes': '',
-        'ATTENDEE': [], 'COMMENT': [], 'STATUS': {}
-      }
-
     # default viewed fields on monthly_view
-    default_viewed_fields = ('DTSTART', 'DTEND', 'SUMMARY', 'STATUS')
+    default_viewed_fields = ('dtstart', 'dtend', 'SUMMARY', 'STATUS')
 
 
     @classmethod
@@ -403,294 +391,170 @@ class EditEventForm(CalendarView, STLForm):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Edit Event')
-    icon = 'button_calendar.png'
     template = '/ui/ical/ical_edit_event.xml'
+    query_schema = {
+        'id': String,
+    }
     schema = {
-        'DTSTART_day': Integer(mandatory=True),
-        'DTSTART_month': Integer(mandatory=True),
-        'DTSTART_year': Integer(mandatory=True),
-        'DTSTART_hours': Integer(),
-        'DTSTART_minutes': Integer(),
-        'DTEND_day': Integer(mandatory=True),
-        'DTEND_month': Integer(mandatory=True),
-        'DTEND_year': Integer(mandatory=True),
-        'DTEND_hours': Integer(),
-        'DTEND_minutes': Integer(),
         'SUMMARY': Unicode(mandatory=True),
+        'LOCATION': Unicode,
+        'dtstart': Date(mandatory=True),
+        'dtstart_time': Time,
+        'dtend': Date(mandatory=True),
+        'dtend_time': Time,
         'DESCRIPTION': Unicode(),
         'STATUS': Status(mandatory=True),
         }
 
 
-    @classmethod
-    def get_defaults(cls, selected_date=None, tt_start=None, tt_end=None):
-        """Return a dic with default values for default fields.
-        """
-        # Default values for DTSTART and DTEND
-        default = cls.default_fields.copy()
-
-        if selected_date:
-            year, month, day = selected_date.split('-')
-            default['DTSTART_year'] = default['DTEND_year'] = year
-            default['DTSTART_month'] = default['DTEND_month'] = month
-            default['DTSTART_day'] = default['DTEND_day'] = day
-        if tt_start:
-            hours, minutes = Time.encode(tt_start).split(':')
-            default['DTSTART_hours'] = hours
-            default['DTSTART_minutes'] = minutes
-        if tt_end:
-            hours, minutes = Time.encode(tt_end).split(':')
-            default['DTEND_hours'] = hours
-            default['DTEND_minutes'] = minutes
-
-        return default
-
-
     def get_namespace(self, resource, context):
-        uid = context.get_form_value('id')
-        # Method
-        method = context.get_cookie('method') or 'monthly_view'
-        goto = ';%s' % method
+        # Get event id
+        id = context.query['id']
+        if id is None:
+            message = MSG(u'Expected query parameter "id" is missing.')
+            context.message = message
+            return {'action': None}
 
-        # Get date to add event
-        selected_date = context.get_form_value('date')
-        if uid is None:
-            if not selected_date:
-                message = u'To add an event, click on + symbol from the views.'
-                message = MSG(message)
-                return context.come_back(message, goto=goto)
+        # Get the resource if different
+        if '/' in id:
+            name, id = id.split('/')
+            if not resource.has_resource(name):
+                message = MSG(u'Resource "${name}" not found.')
+                context.message = message.gettext(name=name)
+                return {'action': None}
+            resource = resource.get_resource(name)
+
+        # Get the event
+        event = resource.get_record(id)
+        if event is None:
+            context.message = MSG(u'Event not found')
+            return {'action': None}
+
+        properties = event.get_property()
+        # Date start
+        value = properties['DTSTART']
+        value, params = value.value, value.parameters
+        dtstart = Date.encode(value)
+        param = params.get('VALUE', '')
+        if not param or param != ['DATE']:
+            dtstart_time = Time.encode(value)
         else:
-            # Get it as a datetime object
-            if not selected_date:
-                c_date = get_current_date(selected_date)
-                selected_date = Date.encode(c_date)
+            dtstart_time = None
+        # Date end
+        value = properties['DTEND']
+        value, params = value.value, value.parameters
+        dtend = Date.encode(value)
+        param = params.get('VALUE', '')
+        if not param or param != ['DATE']:
+            dtend_time = Time.encode(value)
+        else:
+            dtend_time = None
 
-        # Timetables
-        tt_start = context.get_form_value('start_time', type=Time)
-        tt_end = context.get_form_value('end_time', type=Time)
-
-        # Initialization
-        namespace = {}
-        namespace['remove'] = None
-        namespace['resources'] = namespace['resource'] = None
-        properties = []
-        status = Status()
-
-        # Existant event
-        object = None
-        if uid is not None:
-            id = uid
-            if '/' in uid:
-                name, id = uid.split('/')
-                if not resource.has_resource(name):
-                    message = MSG(u'Invalid argument.')
-                    return context.come_back(message, keep=True,
-                                             goto=';edit_event')
-                object = resource.get_resource(name)
-            else:
-                object = resource
-
-            # UID is used to remind which object/id is being modified
-            namespace['UID'] = uid
-
-            if id != '':
-                event = object.get_record(id)
-                if event is None:
-                    message = MSG(u'Event not found')
-                    return context.come_back(message, goto=goto)
-                namespace['remove'] = True
-                properties = event.get_property()
-                # Get values
-                for key in properties:
-                    if key == 'UID':
-                        continue
-                    value = properties[key]
-                    if isinstance(value, list):
-                        namespace[key] = value
-                    elif key == 'STATUS':
-                        namespace['STATUS'] = value.value
-                    # Split date fields into dd/mm/yyyy and hh:mm
-                    elif key in ('DTSTART', 'DTEND'):
-                        value, params = value.value, value.parameters
-                        year, month, day = Date.encode(value).split('-')
-                        namespace['%s_year' % key] = year
-                        namespace['%s_month' % key] = month
-                        namespace['%s_day' % key] = day
-                        param = params.get('VALUE', '')
-                        if not param or param != ['DATE']:
-                            hours, minutes = Time.encode(value).split(':')
-                            namespace['%s_hours' % key] = hours
-                            namespace['%s_minutes' % key] = minutes
-                        else:
-                            namespace['%s_hours' % key] = ''
-                            namespace['%s_minutes' % key] = ''
-                    else:
-                        namespace[key] = value.value
-            else:
-                event = None
-
-        if not uid:
-            event = None
-            # Selected calendar
-            ns_calendars = []
-            for calendar in resource.get_calendars():
-                ns_calendars.append({'name': calendar.name,
-                                     'value': calendar.get_title(),
-                                     'selected': False})
-            namespace['resources'] = ns_calendars
-
-        # Default managed fields are :
-        # SUMMARY, LOCATION, DTSTART, DTEND, DESCRIPTION,
-        # STATUS ({}), ATTENDEE ([]), COMMENT ([])
-        defaults = self.get_defaults(selected_date, tt_start, tt_end)
-        # Set values from context or default, if not already set
-        for field in defaults:
-            if field not in namespace:
-                if field.startswith('DTSTART_') or field.startswith('DTEND_'):
-                    for attr in ('year', 'month', 'day', 'hours', 'minutes'):
-                        key = 'DTSTART_%s' % attr
-                        if field.startswith('DTEND_'):
-                            key = 'DTEND_%s' % attr
-                        default = defaults[key]
-                        value = context.get_form_value(key, default=default)
-                        namespace[key] = value
-                # Get value from context, used when invalid input given
-                elif context.has_form_value(field):
-                    namespace[field] = context.get_form_value(field)
-                else:
-                    # Set default value in the right format
-                    namespace[field] = defaults[field]
         # STATUS is an enumerate
-        try:
-            namespace['STATUS'] = status.get_namespace(namespace['STATUS'])
-        except:
-            namespace['STATUS'] = status.get_namespace('TENTATIVE')
-        # Call to gettext on Status values
-        for value in namespace['STATUS']:
-            value['value'] = value['value'].gettext()
+        status = properties.get('STATUS')
+        status = Status().get_namespace(status)
 
         # Show action buttons only if current user is authorized
-        if object is None:
-            namespace['allowed'] = True
+        if resource is None:
+            allowed = True
         else:
-            namespace['allowed'] = object.is_organizer_or_admin(context, event)
-        # Set first day of week
-        namespace['firstday'] = self.get_first_day()
+            allowed = resource.is_organizer_or_admin(context, event)
+
+        # The namespace
+        namespace = {
+            'action': ';edit_event?id=%s' % id,
+            'dtstart': dtstart,
+            'dtstart_time': dtstart_time,
+            'dtend': dtend,
+            'dtend_time': dtend_time,
+            'resources': None,
+            'resource': None,
+            'remove': True,
+            'firstday': self.get_first_day(),
+            'STATUS': status,
+            'allowed': allowed,
+        }
+
+        # Get values
+        for key in self.schema:
+            if key in namespace:
+                continue
+            value = properties.get(key)
+            if value is None:
+                namespace[key] = value
+            elif isinstance(value, list):
+                namespace[key] = value
+            else:
+                namespace[key] = value.value
+
+        from pprint import pprint
+        pprint(namespace)
 
         return namespace
 
 
-    action_edit_event__access__ = 'is_allowed_to_edit'
+    def get_properties(self, form):
+        """Return the properties dict, ready to be used by the add or update
+        actions.
+        """
+        # Start
+        dtstart = form['dtstart']
+        dtstart_time = form['dtstart_time']
+        if dtstart_time is None:
+            dtstart = datetime.combine(dtstart, time(0, 0))
+            dtstart = Property(dtstart, {'VALUE': ['DATE']})
+        else:
+            dtstart = datetime.combine(dtstart, dtstart_time)
+        # End
+        dtend = form['dtend']
+        dtend_time = form['dtend_time']
+        if dtend_time is None:
+            dtend = datetime.combine(dtend, time(0, 0))
+            dtend = dtend + timedelta(days=1) - resolution
+            dtend = Property(dtend, {'VALUE': ['DATE']})
+        else:
+            dtend = datetime.combine(dtend, dtend_time)
+
+        # Get id and Record object
+        properties = {
+            'DTSTART': dtstart,
+            'DTEND': dtend,
+        }
+
+        for key in self.schema:
+            if key.startswith('dtstart') or key.startswith('dtend'):
+                continue
+            properties[key] = form[key]
+
+        return properties
+
+
+
     def action_edit_event(self, resource, context, form):
-        goto = ';%s' % context.get_cookie('method') or 'monthly_view'
-
-        # Get selected_date from the 3 fields 'dd','mm','yyyy' into
-        # 'yyyy/mm/dd'
-        selected_date = [ str(form.get('DTSTART_%s' % x))
-                          for x in ('year', 'month', 'day') ]
-        selected_date = '-'.join(selected_date)
-
         # Get event id
         uid = context.get_form_value('id')
         if uid is not None and '/' in uid:
             name, uid = uid.split('/', 1)
 
         # Get id and Record object
-        properties = {}
-        if uid is None:
-            # Add user as Organizer
-            organizer = str(context.user.get_abspath())
-            properties['ORGANIZER'] = Property(organizer)
-        else:
-            event = resource.get_record(uid)
-            if event is None:
-                message = u'Cannot modify event, because it has been removed.'
-                message = MSG(message)
-                return context.come_back(message, goto=goto)
-            # Test if current user is admin or organizer of this event
-            if not resource.is_organizer_or_admin(context, event):
-                message = u'You are not authorized to modify this event.'
-                message = MSG(message)
-                return context.come_back(message, goto, keep=True)
+        event = resource.get_record(uid)
+        if event is None:
+            message = u'Cannot modify event, because it has been removed.'
+            context.message = MSG(message)
+            return
+        # Test if current user is admin or organizer of this event
+        if not resource.is_organizer_or_admin(context, event):
+            message = MSG(u'You are not authorized to modify this event.')
+            context.message = message
+            return
 
-        for key in context.get_form_keys():
-            if key in ('id', ';edit_event', 'resource'):
-                continue
-            # Get date and time for DTSTART and DTEND
-            if key.startswith('DTSTART_day'):
-                values = {}
-                for real_key in ('DTSTART', 'DTEND'):
-                    # Get date
-                    v_date = [ str(form.get('%s_%s' % (real_key, x)))
-                               for x in ('year', 'month', 'day') ]
-                    v_date = '-'.join(v_date)
-                    # Get time
-                    hours = form.get('%s_hours' % real_key)
-                    minutes = form.get('%s_minutes' % real_key)
-                    params = {}
-                    if hours is None:
-                        value = v_date
-                        params['VALUE'] = ['DATE']
-                    else:
-                        if minutes is None:
-                            minutes = 0
-                        v_time = '%s:%s' % (hours, minutes)
-                        value = ' '.join([v_date, v_time])
-                    # Get value as a datetime object
-                    try:
-                        value = DateTime.from_str(value)
-                    except ValueError:
-                        goto = ';edit_event?date=%s' % selected_date
-                        message = u'One or more field is invalid.'
-                        message = MSG(message)
-                        return context.come_back(message, goto, keep=True)
-                    values[real_key] = value, params
-                # Check if start <= end
-                if values['DTSTART'][0] > values['DTEND'][0]:
-                    message = u'Start date MUST be earlier than end date.'
-                    message = MSG(message)
-                    goto = ';edit_event?date=%s' % \
-                                             Date.encode(values['DTSTART'][0])
-                    if uid is not None:
-                        goto = goto + '&id=%s' % uid
-                    elif 'timetable' in form:
-                        timetable = form.get('timetable', '0')
-                        goto = goto + '&timetable=%s' % timetable
-                    return context.come_back(message, goto, keep=True)
-                # Save values
-                for key in ('DTSTART', 'DTEND'):
-                    if key == 'DTEND' and 'VALUE' in values[key][1]:
-                        value = values[key][0] + timedelta(days=1) - resolution
-                        value = Property(value, values[key][1])
-                    else:
-                        value = Property(values[key][0], values[key][1])
-                    properties[key] = value
-            elif key.startswith('DTSTART') or key.startswith('DTEND'):
-                continue
-            else:
-                datatype = resource.handler.get_datatype(key)
-                multiple = getattr(datatype, 'multiple', False) is True
-                if multiple:
-                    datatype = Multiple(type=datatype)
-                # Set
-                values = form.get(key, [])
-                if multiple:
-                    properties[key] = [ Property(x) for x in values]
-                else:
-                    if values != []:
-                        properties[key] = Property(values)
-
-        if uid is not None:
-            resource.update_record(uid, properties)
-        else:
-            resource.add_record('VEVENT', properties)
-
-        goto = '%s?date=%s' % (goto, selected_date)
-        message = MSG(u'Data updated')
-        return context.come_back(message, goto=goto, keep=True)
+        # Update
+        properties = self.get_properties(form)
+        resource.update_record(uid, properties)
+        # Ok
+        context.message = MSG(u'Data updated')
 
 
-    action_remove_event__access__ = 'is_allowed_to_edit'
     def action_remove_event(self, resource, context, form):
         method = context.get_cookie('method') or 'monthly_view'
         goto = ';%s?%s' % (method, date.today())
@@ -704,18 +568,86 @@ class EditEventForm(CalendarView, STLForm):
             return context.come_back(None, goto)
         if resource.get_record(uid) is None:
             message = u'Cannot delete event, because it was already removed.'
-            message = MSG(message)
-            return context.come_back(message, goto=goto)
+            context.message = MSG(message)
+            return
 
         resource._remove_event(uid)
+        # Ok
         message = MSG(u'Event definitely deleted.')
         return context.come_back(message, goto=goto)
 
 
-    action_cancel__access__ = 'is_allowed_to_edit'
     def action_cancel(self, resource, context, form):
         goto = ';%s' % context.get_cookie('method') or 'monthly_view'
         return context.come_back(None, goto)
+
+
+
+class AddEventForm(EditEventForm):
+
+    query_schema = {
+        'date': Date,
+        'start_time': Time,
+        'end_time': Time,
+    }
+
+
+    def get_namespace(self, resource, context):
+        # Get date to add event
+        selected_date = context.query['date']
+        if selected_date is None:
+            message = u'To add an event, click on + symbol from the views.'
+            context.message = MSG(message)
+            return {}
+
+        # Timetables
+        start_time = context.query['start_time']
+        if start_time:
+            start_time = Time.encode(start_time)
+        end_time = context.query['end_time']
+        if end_time:
+            end_time = Time.encode(end_time)
+
+        # The namespace
+        resources = [
+            {'name': x.name, 'value': x.get_title(), 'selected': False}
+            for x in resource.get_calendars() ]
+        namespace = {
+            'action': ';add_event?date=%s' % selected_date,
+            'dtstart': selected_date,
+            'dtstart_time': start_time,
+            'dtend': selected_date,
+            'dtend_time': end_time,
+            'resources': resources,
+            'resource': None,
+            'remove': False,
+            'firstday': self.get_first_day(),
+            'STATUS': Status().get_namespace(None),
+            'allowed': True,
+        }
+
+        # Get values
+        for key in self.schema:
+            if key in namespace:
+                continue
+            if context.has_form_value(key):
+                namespace[key] = context.get_form_value(key)
+            else:
+                namespace[key] = None
+
+        return namespace
+
+
+    def action_edit_event(self, resource, context, form):
+        # Add
+        properties = self.get_properties(form)
+        organizer = str(context.user.get_abspath())
+        properties['ORGANIZER'] = Property(organizer)
+        resource.add_record('VEVENT', properties)
+        # Ok
+        message = MSG(u'Data updated')
+        goto = ';%s' % context.get_cookie('method') or 'monthly_view'
+        return context.come_back(message, goto=goto)
 
 
 
@@ -723,7 +655,6 @@ class MonthlyView(CalendarView):
 
     access = 'is_allowed_to_view'
     title = MSG(u'Monthly View')
-    icon = 'icalendar.png'
     template = '/ui/ical/ical_monthly_view.xml'
     monthly_template = '/ui/ical/monthly_template.xml'
 
@@ -800,7 +731,6 @@ class WeeklyView(CalendarView):
 
     access = 'is_allowed_to_view'
     title = MSG(u'Weekly View')
-    icon = 'icalendar.png'
     template = '/ui/ical/ical_grid_weekly_view.xml'
 
 
