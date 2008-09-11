@@ -39,7 +39,7 @@ from calendar_views import get_current_date
 from folder import Folder
 from messages import MSG_CHANGES_SAVED
 from registry import register_object_class
-from table import Multiple, Table
+from table import Multiple, Table, EditRecordForm
 from text import Text
 
 
@@ -496,44 +496,8 @@ class CalendarTable(CalendarBase, Table):
         return schema
 
 
-    edit_record__access__ = 'is_allowed_to_edit'
-    def edit_record(self, context):
-        # check form
-        check_fields = {}
-        for name, kk in self.get_fields():
-            datatype = self.handler.get_datatype(name)
-            if getattr(datatype, 'multiple', False) is True:
-                datatype = Multiple(type=datatype)
-            check_fields[name] = datatype
-
-        try:
-            form = context.check_form_input(check_fields)
-        except FormError:
-            return context.come_back(MSG_MISSING_OR_INVALID, keep=True)
-
-        # Get the record
-        id = context.get_form_value('id', type=Integer)
-        record = {}
-        for name, title in self.get_fields():
-            datatype = self.handler.get_datatype(name)
-            if getattr(datatype, 'multiple', False) is True:
-                if is_datatype(datatype, Enumerate):
-                    value = context.get_form_values(name)
-                else: # textarea -> string
-                    values = context.get_form_value(name)
-                    values = values.splitlines()
-                    value = []
-                    for index in range(len(values)):
-                        tmp = values[index].strip()
-                        if tmp:
-                            value.append(datatype.decode(tmp))
-            else:
-                value = form[value]
-            record[name] = value
-
-        self.handler.update_record(id, **record)
-        goto = context.uri.resolve2('../;edit_record_form')
-        return context.come_back(MSG_CHANGES_SAVED, goto=goto, keep=['id'])
+    # Use edit_event instead
+    edit_record = EditRecordForm(access=False)
 
 
 
