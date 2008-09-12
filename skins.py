@@ -344,8 +344,8 @@ class Skin(UIFolder):
             get_page_title = view.get_page_title
         except AttributeError:
             return resource.get_title()
-        else:
-            return get_page_title(resource, context)
+
+        return get_page_title(resource, context)
 
 
     def get_message(self, context):
@@ -395,8 +395,6 @@ class Skin(UIFolder):
             'page_title': self.get_page_title(context),
             'message': self.get_message(context),
             'context_menus': context_menus,
-            # FIXME
-            'view_description': getattr(context.view, 'description', None),
         }
 
 
