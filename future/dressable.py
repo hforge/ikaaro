@@ -107,20 +107,20 @@ class Dressable(Folder, EpozEditable):
     #######################################################################
     # API / Private
     #######################################################################
-    def _get_image(self, context, object):
+    def _get_image(self, context, resource):
         here = context.resource
-        path = here.get_pathto(object)
+        path = here.get_pathto(resource)
         content = '<img src="%s"/>' % path
         return XMLParser(content)
 
 
-    def _get_document(self, context, object):
+    def _get_document(self, context, resource):
         here = context.resource
-        body = object.get_epoz_document().get_body()
+        body = resource.get_epoz_document().get_body()
         if body is None:
             return None
         stream = body.get_content_elements()
-        prefix = here.get_pathto(object)
+        prefix = here.get_pathto(resource)
         return set_prefix(stream, prefix)
 
 
@@ -135,8 +135,8 @@ class Dressable(Folder, EpozEditable):
 
     def _get_resource_label(self, name):
         if self.has_resource(name):
-            object = self.get_resource(name)
-            label = object.get_property('title')
+            resource = self.get_resource(name)
+            label = resource.get_property('title')
             if label:
                 return label
 
@@ -159,11 +159,11 @@ class Dressable(Folder, EpozEditable):
             if isinstance(data, tuple):
                 name, kk = data
                 if self.has_resource(name):
-                    object = self.get_resource(name)
-                    if is_datatype(object, Image):
-                        content = self._get_image(context, object)
-                    elif is_datatype(object, WebPage):
-                        content = self._get_document(context, object)
+                    resource = self.get_resource(name)
+                    if is_datatype(resource, Image):
+                        content = self._get_image(context, resource)
+                    elif is_datatype(resource, WebPage):
+                        content = self._get_document(context, resource)
                     else:
                         raise NotImplementedError
             else:
@@ -201,9 +201,9 @@ class Dressable(Folder, EpozEditable):
         name = context.get_form_value('dress_name', 'index')
         if context.get_form_value('external'):
             return context.uri.resolve('%s/;externaledit' % name)
-        object = self.get_resource(name)
+        resource = self.get_resource(name)
         cls = self.get_class(name)
-        return cls.edit_form(object, context)
+        return cls.edit_form(resource, context)
 
 
     edit_image__access__ = 'is_allowed_to_edit'
@@ -223,8 +223,8 @@ class Dressable(Folder, EpozEditable):
         namespace['remove_action'] = msg
 
         # size
-        object = self.get_resource(name)
-        size = object.handler.get_size()
+        resource = self.get_resource(name)
+        size = resource.handler.get_size()
         if size is not None:
             width, height = size
             ratio = width / float(height)
@@ -334,15 +334,14 @@ class Dressable(Folder, EpozEditable):
         name = FileName.encode((name, extension, None))
 
         if self.has_resource(image_name):
-            object = self.get_resource(image_name)
-            object.handler.load_state_from_string(body)
+            child = self.get_resource(image_name)
+            child.handler.load_state_from_string(body)
         else:
-            # Build the object
-            container = self
-            object = cls.make_resource(cls, container, name, body=body)
+            # Build the resource
+            child = cls.make_resource(cls, self, name, body=body)
             # The metadata
-            metadata = object.metadata
-            language = container.get_content_language(context)
+            metadata = child.metadata
+            language = resource.get_content_language(context)
             metadata.set_property('title', name, language=language)
             metadata.set_property('state', 'public')
 

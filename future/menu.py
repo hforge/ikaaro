@@ -164,15 +164,15 @@ class Link(File):
 ###########################################################################
 # Menu gestion
 ###########################################################################
-def get_target_info(context, object):
+def get_target_info(context, resource):
     """Return a tuple with:
-    - a list made with the target path and if any the target object
+    - a list made with the target path and if any the target resource
     - the target info '_top' or '_blank' or ...
     """
-    if object.has_target() is False:
+    if resource.has_target() is False:
         return None, None
 
-    new_window, target = object.get_target_info()
+    new_window, target = resource.get_target_info()
     if target and target.startswith('http://'):
         return [target], new_window
 
@@ -184,15 +184,15 @@ def get_target_info(context, object):
     else:
         target_method = None
 
-    # get the real target object
+    # get the real target resource
     site_root = context.resource.get_site_root()
     try:
-        o = object.get_resource(target_rpath)
+        child = resource.get_resource(target_rpath)
     except LookupError:
         return None, None
 
-    # make a url list with the target object
-    target_url = [ x.name for x in site_root.get_pathto(o) if x.name ]
+    # make a url list with the target resource
+    target_url = [ x.name for x in site_root.get_pathto(child) if x.name ]
     if target_method is not None:
         target_url.append(target_method)
 
@@ -222,25 +222,25 @@ def get_menu_namespace_level(context, url, menu_root, depth, show_first_child,
 
     for name in menu_root.get_ordered_names('ordered'):
         # Get the objects, check security
-        object = menu_root.get_resource(name)
+        resource = menu_root.get_resource(name)
 
-        ac = object.get_access_control()
-        if ac.is_allowed_to_view(user, object) is False:
+        ac = resource.get_access_control()
+        if ac.is_allowed_to_view(user, resource) is False:
             continue
 
         # Link special case for target and actual_url
         target = '_top'
-        actual_url = here.get_abspath() == object.get_abspath()
-        is_link = (link_like and isinstance(object, link_like))
+        actual_url = here == resource
+        is_link = (link_like and isinstance(resource, link_like))
         if is_link is True:
-            target_url, new_window = get_target_info(context, object)
+            target_url, new_window = get_target_info(context, resource)
             if target_url:
                 actual_url = url == target_url
 
         # Subtabs
         subtabs = {}
         if depth > 1:
-            subtabs = get_menu_namespace_level(context, url, object, depth-1,
+            subtabs = get_menu_namespace_level(context, url, resource, depth-1,
                                                show_first_child, link_like)
 
         # set active, in_path
@@ -252,8 +252,8 @@ def get_menu_namespace_level(context, url, menu_root, depth, show_first_child,
         css = (active and 'active') or (in_path and 'in_path') or None
 
         # set label and description
-        label = object.get_property('title') or name
-        description = object.get_property('description') or label
+        label = resource.get_title()
+        description = resource.get_property('description') or label
 
         # set path
         if is_link is True:
@@ -261,9 +261,9 @@ def get_menu_namespace_level(context, url, menu_root, depth, show_first_child,
             if target_url is None:
                 path = None
             else:
-                path = str(here.get_pathto(object))
+                path = str(here.get_pathto(resource))
         else:
-            path = str(here.get_pathto(object))
+            path = str(here.get_pathto(resource))
             if show_first_child and depth > 1:
                 if subtabs.get('items', None):
                     childs = subtabs['items']

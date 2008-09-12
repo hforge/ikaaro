@@ -135,7 +135,7 @@ class WebSite(RoleAware, Folder):
         context.entity = context.root.get_skin().template(body)
 
 
-    def is_allowed_to_register(self, user, object):
+    def is_allowed_to_register(self, user, resource):
         return self.get_property('website_is_open')
 
 

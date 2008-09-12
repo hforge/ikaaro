@@ -184,8 +184,8 @@ class CalendarAwareView(CalendarView):
         else:
             name = context.get_form_value('resource')
         if name and self.has_resource(name):
-            object = self.get_resource(name)
-            return object.edit_event(context)
+            child = self.get_resource(name)
+            return child.edit_event(context)
         message = MSG(u'Resource not found.')
         return context.come_back(message)
 

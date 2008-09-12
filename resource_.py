@@ -48,10 +48,10 @@ class IResource(Resource):
 
     def get_site_root(self):
         from website import WebSite
-        object = self
-        while not isinstance(object, WebSite):
-            object = object.parent
-        return object
+        resource = self
+        while not isinstance(resource, WebSite):
+            resource = resource.parent
+        return resource
 
 
     def get_default_view_name(self):

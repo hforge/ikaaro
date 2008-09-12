@@ -127,12 +127,12 @@ class DBResourceNewInstance(NewInstanceForm):
             context.message = MSG_NAME_CLASH
             return
 
-        # Create the object
+        # Create the resource
         class_id = context.query['type']
         cls = get_resource_class(class_id)
-        object = cls.make_resource(cls, resource, name)
+        child = cls.make_resource(cls, resource, name)
         # The metadata
-        metadata = object.metadata
+        metadata = child.metadata
         language = resource.get_content_language(context)
         metadata.set_property('title', title, language=language)
 
@@ -226,11 +226,11 @@ class Breadcrumb(object):
             target = root.get_resource(target_path)
         self.target_path = str(target.get_abspath())
 
-        # Object to link
-        object = request.get_parameter('object')
-        if object == '':
-            object = '.'
-        self.object = object
+        # Resource to link
+        resource = request.get_parameter('resource')
+        if resource == '':
+            resource = '.'
+        self.resource = resource
 
         # The breadcrumb
         breadcrumb = []
@@ -250,32 +250,32 @@ class Breadcrumb(object):
         self.is_submit = False
         user = context.user
         filter = (Folder, filter_type)
-        for object in target.search_resources(cls=filter):
-            ac = object.get_access_control()
-            if not ac.is_allowed_to_view(user, object):
+        for resource in target.search_resources(cls=filter):
+            ac = resource.get_access_control()
+            if not ac.is_allowed_to_view(user, resource):
                 continue
 
-            path = here.get_pathto(object)
-            bc_target = str(root.get_pathto(object))
+            path = here.get_pathto(resource)
+            bc_target = str(root.get_pathto(resource))
             url = context.uri.replace(bc_target=bc_target)
 
             self.is_submit = True
             # Calculate path
-            path_to_icon = object.get_resource_icon(icon_size)
+            path_to_icon = resource.get_resource_icon(icon_size)
             if path:
                 path_to_resource = Path(str(path) + '/')
                 path_to_icon = path_to_resource.resolve(path_to_icon)
-            title = object.get_title()
-            objects.append({'name': object.name,
+            title = resource.get_title()
+            objects.append({'name': resource.name,
                             'title': title,
                             'short_title': reduce_string(title, 12, 40),
-                            'is_folder': isinstance(object, Folder),
-                            'is_image': isinstance(object, Image),
+                            'is_folder': isinstance(resource, Folder),
+                            'is_image': isinstance(resource, Image),
                             'is_selectable': True,
                             'path': path,
                             'url': url,
                             'icon': path_to_icon,
-                            'resource_type': object.handler.get_mimetype()})
+                            'resource_type': resource.handler.get_mimetype()})
 
         objects.sort(key=itemgetter('is_folder'), reverse=True)
         self.objects = objects
@@ -357,7 +357,7 @@ class DBResourceAddImage(STLForm):
             context.message = MSG_NAME_CLASH
             return
 
-        # Add the image to the object
+        # Add the image to the resource
         cls.make_resource(cls, container, name, body, type=type)
 
         # Ok
@@ -369,8 +369,8 @@ class DBResourceAddImage(STLForm):
                        '/ui/tiny_mce/tiny_mce_src.js',
                        '/ui/tiny_mce/tiny_mce_popup.js']
 
-        object = container.get_resource(name)
-        path = resource.get_pathto(object)
+        child = container.get_resource(name)
+        path = resource.get_pathto(child)
         script_template = '<script type="text/javascript" src="%s" />'
         body = ''
         for script in scripts:
@@ -439,7 +439,7 @@ class DBResourceAddLink(STLForm):
         # Get the container
         root = context.root
         container = root.get_resource(context.get_form_value('target_path'))
-        # Add the file to the object
+        # Add the file to the resource
         class_id = context.get_form_value('type')
         cls = get_resource_class(class_id)
         uri = cls.new_instance(cls, container, context)
@@ -453,8 +453,8 @@ class DBResourceAddLink(STLForm):
                            '/ui/tiny_mce/tiny_mce_src.js',
                            '/ui/tiny_mce/tiny_mce_popup.js']
 
-            object = container.get_resource(uri.path[0])
-            path = context.resource.get_pathto(object)
+            child = container.get_resource(uri.path[0])
+            path = context.resource.get_pathto(child)
             script_template = '<script type="text/javascript" src="%s" />'
             body = ''
             for script in scripts:

@@ -381,9 +381,9 @@ class FolderBrowseContent(SearchForm):
         ids.sort()
         ids.reverse()
         for name in ids:
-            object = resource.get_resource(name)
-            ac = object.get_access_control()
-            if ac.is_allowed_to_remove(user, object):
+            child = resource.get_resource(name)
+            ac = child.get_access_control()
+            if ac.is_allowed_to_remove(user, child):
                 # Remove object
                 try:
                     resource.del_resource(name)

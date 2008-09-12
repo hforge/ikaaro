@@ -105,10 +105,10 @@ class FileNewInstance(NewInstanceForm):
             kw['language'] = language
         else:
             kw['extension'] = type
-        object = cls.make_resource(cls, resource, name, body, **kw)
+        child = cls.make_resource(cls, resource, name, body, **kw)
         # The title
         language = resource.get_content_language(context)
-        object.metadata.set_property('title', title, language=language)
+        child.metadata.set_property('title', title, language=language)
 
         goto = './%s/' % name
         return context.come_back(MSG_NEW_RESOURCE, goto=goto)
@@ -305,8 +305,8 @@ class ImageThumbnail(BaseView):
 
         data, format = resource.handler.get_thumbnail(width, height)
         if data is None:
-            object = resource.get_resource('/ui/icons/48x48/image.png')
-            data = object.to_str()
+            default = resource.get_resource('/ui/icons/48x48/image.png')
+            data = default.to_str()
             format = 'png'
 
         response = context.response

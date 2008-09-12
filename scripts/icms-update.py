@@ -52,14 +52,14 @@ def update(parser, options, target):
 
     # Find out the versions to upgrade
     versions = set()
-    for object in root.traverse_resources():
-        # Skip non-database objects
-        if not isinstance(object, DBResource):
+    for resource in root.traverse_resources():
+        # Skip non-database resources
+        if not isinstance(resource, DBResource):
             continue
 
-        # Skip up-to-date objects
-        obj_version = object.metadata.version
-        cls_version = object.class_version
+        # Skip up-to-date resources
+        obj_version = resource.metadata.version
+        cls_version = resource.class_version
         if obj_version == cls_version:
             continue
 
@@ -67,13 +67,13 @@ def update(parser, options, target):
         if obj_version > cls_version:
             print
             print '*'
-            print '* ERROR: object is newer than its class'
-            print '* %s <%s>' % (object.abspath, object.__class__.__name__)
+            print '* ERROR: resource is newer than its class'
+            print '* %s <%s>' % (resource.abspath, resource.__class__.__name__)
             print '* %s > %s' % (obj_version, cls_version)
             print '*'
             return
 
-        next_versions = object.get_next_versions()
+        next_versions = resource.get_next_versions()
         if not next_versions:
             continue
 
@@ -117,18 +117,18 @@ def update(parser, options, target):
             return
         # Go ahead
         bad = 0
-        for object in root.traverse_resources():
-            # Skip non-database objects
-            if not isinstance(object, DBResource):
+        for resource in root.traverse_resources():
+            # Skip non-database resources
+            if not isinstance(resource, DBResource):
                 continue
 
-            # Skip up-to-date objects
-            obj_version = object.metadata.version
-            cls_version = object.class_version
+            # Skip up-to-date resources
+            obj_version = resource.metadata.version
+            cls_version = resource.class_version
             if obj_version == cls_version:
                 continue
 
-            next_versions = object.get_next_versions()
+            next_versions = resource.get_next_versions()
             if not next_versions:
                 continue
 
@@ -139,11 +139,11 @@ def update(parser, options, target):
             sys.stdout.write('.')
             sys.stdout.flush()
             try:
-                object.update(version)
+                resource.update(version)
                 database.save_changes()
             except:
-                path = object.get_abspath()
-                log.write('%s <%s>\n' % (path, object.__class__.__name__))
+                path = resource.get_abspath()
+                log.write('%s <%s>\n' % (path, resource.__class__.__name__))
                 print_exc(file=log)
                 log.write('\n')
                 bad += 1
@@ -153,7 +153,7 @@ def update(parser, options, target):
         print
         if bad > 0:
             print '*'
-            print '* ERROR: %s objects failed to upgrade to version %s' \
+            print '* ERROR: %s resources failed to upgrade to version %s' \
                   % (bad, version)
             print '* Check the "%s/log/update" file.' % target
             print '*'

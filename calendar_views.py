@@ -487,9 +487,6 @@ class EditEventForm(CalendarView, STLForm):
             else:
                 namespace[key] = value.value
 
-        from pprint import pprint
-        pprint(namespace)
-
         return namespace
 
 

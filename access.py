@@ -268,62 +268,62 @@ class NewUserForm(STLForm):
 ###########################################################################
 class AccessControl(BaseAccessControl):
 
-    def is_admin(self, user, object):
+    def is_admin(self, user, resource):
         if user is None:
             return False
         # WebSite admin?
-        root = object.get_site_root()
+        root = resource.get_site_root()
         if root.has_user_role(user.name, 'admins'):
             return True
         # Global admin?
-        root = object.get_root()
+        root = resource.get_root()
         return root.has_user_role(user.name, 'admins')
 
 
-    def is_allowed_to_view(self, user, object):
+    def is_allowed_to_view(self, user, resource):
         # Objects with workflow
-        if isinstance(object, WorkflowAware):
-            state = object.workflow_state
+        if isinstance(resource, WorkflowAware):
+            state = resource.workflow_state
             # Anybody can see public objects
             if state == 'public':
                 return True
 
             # Only those who can edit are allowed to see non-public objects
-            return self.is_allowed_to_edit(user, object)
+            return self.is_allowed_to_edit(user, resource)
 
         # Everybody can see objects without workflow
         return True
 
 
-    def is_allowed_to_edit(self, user, object):
+    def is_allowed_to_edit(self, user, resource):
         # By default only the admin can touch stuff
-        return self.is_admin(user, object)
+        return self.is_admin(user, resource)
 
 
     # By default all other change operations (add, remove, copy, etc.)
     # are equivalent to "edit".
-    def is_allowed_to_lock(self, user, object):
-        return self.is_allowed_to_edit(user, object)
+    def is_allowed_to_lock(self, user, resource):
+        return self.is_allowed_to_edit(user, resource)
 
 
-    def is_allowed_to_add(self, user, object):
-        return self.is_allowed_to_edit(user, object)
+    def is_allowed_to_add(self, user, resource):
+        return self.is_allowed_to_edit(user, resource)
 
 
-    def is_allowed_to_remove(self, user, object):
-        return self.is_allowed_to_edit(user, object)
+    def is_allowed_to_remove(self, user, resource):
+        return self.is_allowed_to_edit(user, resource)
 
 
-    def is_allowed_to_copy(self, user, object):
-        return self.is_allowed_to_edit(user, object)
+    def is_allowed_to_copy(self, user, resource):
+        return self.is_allowed_to_edit(user, resource)
 
 
-    def is_allowed_to_move(self, user, object):
-        return self.is_allowed_to_edit(user, object)
+    def is_allowed_to_move(self, user, resource):
+        return self.is_allowed_to_edit(user, resource)
 
 
-    def is_allowed_to_trans(self, user, object, name):
-        return self.is_allowed_to_edit(user, object)
+    def is_allowed_to_trans(self, user, resource, name):
+        return self.is_allowed_to_edit(user, resource)
 
 
 
@@ -357,20 +357,20 @@ class RoleAware(AccessControl):
     #########################################################################
     # Access Control
     #########################################################################
-    def is_allowed_to_view(self, user, object):
+    def is_allowed_to_view(self, user, resource):
         # Get the variables to resolve the formula
         # Intranet or Extranet
         is_open = self.get_property('website_is_open')
         # The role of the user
         if user is None:
             role = None
-        elif self.is_admin(user, object):
+        elif self.is_admin(user, resource):
             role = 'admins'
         else:
             role = self.get_user_role(user.name)
-        # The state of the object
-        if isinstance(object, WorkflowAware):
-            state = object.workflow_state
+        # The state of the resource
+        if isinstance(resource, WorkflowAware):
+            state = resource.workflow_state
         else:
             state = 'public'
 
@@ -388,13 +388,13 @@ class RoleAware(AccessControl):
         return False
 
 
-    def is_allowed_to_edit(self, user, object):
+    def is_allowed_to_edit(self, user, resource):
         # Anonymous can touch nothing
         if user is None:
             return False
 
         # Admins are all powerfull
-        if self.is_admin(user, object):
+        if self.is_admin(user, resource):
             return True
 
         # Reviewers too
@@ -403,8 +403,8 @@ class RoleAware(AccessControl):
 
         # Members only can touch not-yet-published documents
         if self.has_user_role(user.name, 'members'):
-            if isinstance(object, WorkflowAware):
-                state = object.workflow_state
+            if isinstance(resource, WorkflowAware):
+                state = resource.workflow_state
                 # Anybody can see public objects
                 if state != 'public':
                     return True
@@ -412,26 +412,26 @@ class RoleAware(AccessControl):
         return False
 
 
-    def is_allowed_to_add(self, user, object):
+    def is_allowed_to_add(self, user, resource):
         # Anonymous can touch nothing
         if user is None:
             return False
 
         # Admins are all powerfull
-        if self.is_admin(user, object):
+        if self.is_admin(user, resource):
             return True
 
         # Reviewers too
         return self.has_user_role(user.name, 'reviewers', 'members')
 
 
-    def is_allowed_to_trans(self, user, object, name):
+    def is_allowed_to_trans(self, user, resource, name):
         # Anonymous can touch nothing
         if user is None:
             return False
 
         # Admins are all powerfull
-        if self.is_admin(user, object):
+        if self.is_admin(user, resource):
             return True
 
         # Reviewers can do everything

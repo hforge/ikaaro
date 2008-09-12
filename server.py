@@ -156,9 +156,9 @@ class Server(BaseServer):
             debug_log = None
 
         # Events
-        self.objects_added = set()
-        self.objects_changed = set()
-        self.objects_removed = set()
+        self.resources_added = set()
+        self.resources_changed = set()
+        self.resources_removed = set()
 
         # Initialize
         BaseServer.__init__(self, root, address=address, port=port,
@@ -195,9 +195,9 @@ class Server(BaseServer):
 
     def abort_transaction(self, context):
         # Clear events
-        self.objects_removed.clear()
-        self.objects_added.clear()
-        self.objects_changed.clear()
+        self.resources_removed.clear()
+        self.resources_added.clear()
+        self.resources_changed.clear()
         # Follow-up
         BaseServer.abort_transaction(self, context)
 
@@ -206,26 +206,26 @@ class Server(BaseServer):
         root = self.root
         catalog = self.catalog
         # Removed
-        for path in self.objects_removed:
+        for path in self.resources_removed:
             catalog.unindex_document(path)
-        self.objects_removed.clear()
+        self.resources_removed.clear()
 
         # Added
-        for path in self.objects_added:
+        for path in self.resources_added:
             resource = root.get_resource(path)
             if isinstance(resource, VersioningAware):
                 resource.commit_revision()
             catalog.index_document(resource)
-        self.objects_added.clear()
+        self.resources_added.clear()
 
         # Changed
-        for path in self.objects_changed:
+        for path in self.resources_changed:
             resource = root.get_resource(path)
             if isinstance(resource, VersioningAware):
                 resource.commit_revision()
             catalog.unindex_document(path)
             catalog.index_document(resource)
-        self.objects_changed.clear()
+        self.resources_changed.clear()
 
 
     #######################################################################
@@ -263,32 +263,32 @@ class Server(BaseServer):
 
 
     def remove_resource(self, resource):
-        objects_removed = self.objects_removed
-        objects_added = self.objects_added
+        resources_removed = self.resources_removed
+        resources_added = self.resources_added
 
         if isinstance(resource, Folder):
             for x in resource.traverse_resources():
                 path = str(x.get_canonical_path())
-                if path in objects_added:
-                    objects_added.remove(path)
-                objects_removed.add(path)
+                if path in resources_added:
+                    resources_added.remove(path)
+                resources_removed.add(path)
         else:
             path = str(resource.get_canonical_path())
-            if path in objects_added:
-                objects_added.remove(path)
-            objects_removed.add(path)
+            if path in resources_added:
+                resources_added.remove(path)
+            resources_removed.add(path)
 
 
     def add_resource(self, resource):
         if isinstance(resource, Folder):
             for x in resource.traverse_resources():
                 path = str(x.get_canonical_path())
-                self.objects_added.add(path)
+                self.resources_added.add(path)
         else:
             path = str(resource.get_canonical_path())
-            self.objects_added.add(path)
+            self.resources_added.add(path)
 
 
     def change_resource(self, resource):
         path = str(resource.get_canonical_path())
-        self.objects_changed.add(path)
+        self.resources_changed.add(path)

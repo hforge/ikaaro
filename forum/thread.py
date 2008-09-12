@@ -92,9 +92,9 @@ class ThreadView(STLForm):
     def action_remove(self, resource, context, form):
         user = context.user
         for name in form['ids']:
-            object = resource.get_resource(name)
-            ac = object.get_access_control()
-            if ac.is_allowed_to_remove(user, object):
+            child = resource.get_resource(name)
+            ac = child.get_access_control()
+            if ac.is_allowed_to_remove(user, child):
                 resource.del_resource(name)
         message = MSG(u"Message(s) deleted !")
         return context.come_back(message, goto='#new_reply')

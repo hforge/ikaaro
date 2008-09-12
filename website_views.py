@@ -107,9 +107,9 @@ class NewWebSiteForm(NewInstanceForm):
             return
 
         cls = get_website_class(class_id)
-        object = cls.make_resource(cls, resource, name)
+        child = cls.make_resource(cls, resource, name)
         # The metadata
-        metadata = object.metadata
+        metadata = child.metadata
         language = resource.get_site_root().get_default_language()
         metadata.set_property('title', title, language=language)
 
@@ -636,14 +636,14 @@ class SiteSearchView(SearchForm):
 
         # Check access rights
         user = context.user
-        objects = []
+        items = []
         for document in documents:
-            object = root.get_resource(document.abspath)
-            ac = object.get_access_control()
-            if ac.is_allowed_to_view(user, object):
-                objects.append(object)
+            child = root.get_resource(document.abspath)
+            ac = child.get_access_control()
+            if ac.is_allowed_to_view(user, child):
+                objects.append(child)
 
-        return objects
+        return items
 
 
     def sort_and_batch(self, resource, context, items):
