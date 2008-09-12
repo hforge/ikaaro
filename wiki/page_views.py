@@ -378,7 +378,7 @@ class WikiPageEdit(STLForm):
 
         # OK, committing
         page.load_state_from_string(data)
-        context.server.change_object(resource)
+        context.server.change_resource(resource)
 
         # But warn about non-critical syntax errors
         if 'class="system-message"' in resource.view.GET(resource, context):

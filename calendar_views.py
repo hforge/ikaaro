@@ -350,7 +350,7 @@ class CalendarView(STLView):
                 if len(cal_indexes.items()) < 2:
                     resource_name = None
                 if resource_name is not None:
-                    current_resource = self.get_object(resource_name)
+                    current_resource = self.get_resource(resource_name)
                 else:
                     current_resource = resource
                 conflicts_list = set()
