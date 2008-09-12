@@ -255,18 +255,16 @@ class SecurityPolicyForm(STLForm):
     icon = 'lock.png'
     description = MSG(u'Choose the security policy.')
     context_menus = [ControlPanelMenu()]
-    template = '/ui/website/anonymous.xml'
+    template = '/ui/website/security_policy.xml'
     schema = {
-        'website_is_open': Boolean(default=False),
-    }
+        'website_is_open': Boolean(default=False)}
 
 
     def get_namespace(self, resource, context):
         is_open = resource.get_property('website_is_open')
         return {
             'is_open': is_open,
-            'is_closed': not is_open,
-        }
+            'is_closed': not is_open}
 
 
     def action(self, resource, context, form):

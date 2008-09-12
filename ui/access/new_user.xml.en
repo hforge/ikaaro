@@ -6,7 +6,7 @@
 
   <form name="addform" action=";new_user" method="post">
     <fieldset>
-      <legend>Add New User</legend>
+      <legend>Add New Member</legend>
       <dl>
         <dt>Email</dt>
         <dd>
@@ -22,12 +22,7 @@
             <input id="newpass2" type="password" name="newpass2" />
           </dd>
         </stl:block>
-      </dl>
-    </fieldset>
-    <fieldset>
-      <legend>Choose the role for the new member</legend>
-      <dl>
-        <dt>Role</dt>
+        <dt>Choose the role for the new member</dt>
         <dd>
           <select name="role">
             <option stl:repeat="role roles" value="${role/name}"
@@ -35,12 +30,10 @@
           </select>
         </dd>
       </dl>
-    </fieldset>
-    <p>
       <input type="submit" name="add_and_view" value="Add and view"
         class="button_ok" />
       <input type="submit" name="add_and_return" value="Add and return" />
-    </p>
+    </fieldset>
   </form>
 
   <script language="javascript">

@@ -194,15 +194,13 @@ class NewUserForm(STLForm):
         'email': Email(mandatory=True),
         'role': String(mandatory=True),
         'newpass': String,
-        'newpass2': String,
-    }
+        'newpass2': String}
 
 
     def get_namespace(self, resource, context):
         return {
             'is_admin': resource.is_admin(context.user, resource),
-            'roles': resource.get_roles_namespace(),
-        }
+            'roles': resource.get_roles_namespace()}
 
 
     def action(self, resource, context, form):

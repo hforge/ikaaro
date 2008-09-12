@@ -4,7 +4,9 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
-  <form action=";edit_security_policy" method="post">
+<form action=";edit_security_policy" method="post">
+  <fieldset>
+    <legend>Edit Security Policy</legend>
     <p>
       <input type="radio" name="website_is_open" value="0" id="intranet"
         checked="${is_closed}" />
@@ -13,7 +15,6 @@
       Authentication will be required for any level of access. Only
       administrators will be able to register new users.
     </p>
-    <br/>
     <p>
       <input type="radio" name="website_is_open" value="1" id="extranet"
         checked="${is_open}" />
@@ -22,9 +23,8 @@
       Non authenticated users will be able to access published content,
       and to register by themselves.
     </p>
-    <p>
-      <input type="submit" value="Change" class="button_ok"/>
-    </p>
-  </form>
+    <input type="submit" value="Save Changes" class="button_ok"/>
+  </fieldset>
+</form>
 
 </stl:block>

@@ -4,18 +4,22 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
-  <form action=";edit_contact_options" method="post">
+<form action=";edit_contact_options" method="post">
+  <fieldset>
+    <legend>Edit Contact Options</legend>
     <dl>
-      <dt><label for="contacts">Contacts</label></dt>
+      <dt><label for="contacts">Select the contact accounts</label></dt>
       <dd>
         <select name="contacts" id="contacts"
           multiple="multiple" size="15">
           <option stl:repeat="contact contacts" value="${contact/name}"
-            selected="${contact/is_selected}">${contact/title} (${contact/email})</option>
+            selected="${contact/is_selected}">${contact/title}
+            (${contact/email})</option>
         </select>
       </dd>
     </dl>
     <input type="submit" value="Change" class="button_ok"/>
-  </form>
+  </fieldset>
+</form>
 
 </stl:block>
