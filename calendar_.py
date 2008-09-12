@@ -37,26 +37,6 @@ from table import Table
 from text import Text
 
 
-def build_timetables(start_time, end_time, interval):
-    """Build a list of timetables represented as tuples(start, end).
-    Interval is given by minutes.
-    """
-    start =  datetime(2000, 1, 1)
-    if start_time:
-        start = datetime.combine(start.date(), start_time)
-    end =  datetime(2000, 1, 1, 23, 59)
-    if end_time:
-        end = datetime.combine(start.date(), end_time)
-
-    timetables, tt_start = [], start
-    while tt_start < end:
-        tt_end = tt_start + timedelta(minutes=interval)
-        timetables.append((tt_start.time(), tt_end.time()))
-        tt_start = tt_end
-    return timetables
-
-
-
 class Timetables(DataType):
     """Timetables are tuples of time objects (start, end) used by cms.ical.
 

@@ -63,6 +63,27 @@ days = {
     6: MSG(u'Sunday')}
 
 
+
+def build_timetables(start_time, end_time, interval):
+    """Build a list of timetables represented as tuples(start, end).
+    Interval is given by minutes.
+    """
+    start =  datetime(2000, 1, 1)
+    if start_time:
+        start = datetime.combine(start.date(), start_time)
+    end =  datetime(2000, 1, 1, 23, 59)
+    if end_time:
+        end = datetime.combine(start.date(), end_time)
+
+    timetables, tt_start = [], start
+    while tt_start < end:
+        tt_end = tt_start + timedelta(minutes=interval)
+        timetables.append((tt_start.time(), tt_end.time()))
+        tt_start = tt_end
+    return timetables
+
+
+
 def get_current_date(value):
     """Get date as a date object from string value.
     By default, get today's date as a date object.
@@ -838,6 +859,11 @@ class WeeklyView(CalendarView):
 
 class DailyView(CalendarView):
 
+    access = 'is_allowed_to_view'
+    title = MSG(u'Daily View')
+    template = '/ui/ical/daily_view.xml'
+
+
     # Start 07:00, End 21:00, Interval 30min
     class_cal_range = (time(7,0), time(21,0), 30)
     class_cal_fields = ('SUMMARY', 'DTSTART', 'DTEND')
@@ -1052,9 +1078,7 @@ class DailyView(CalendarView):
         return ns_calendar
 
 
-    daily_view__access__ = 'is_allowed_to_edit'
-    daily_view__label__ = u'Daily View'
-    def daily_view(self, context):
+    def get_namespace(self, resource, context):
         method = context.get_cookie('method')
         if method != 'daily_view':
             context.set_cookie('method', 'daily_view')
@@ -1068,27 +1092,25 @@ class DailyView(CalendarView):
         cal_fields = self.get_cal_fields()
         shown_fields = self.get_weekly_shown()
 
-        namespace = {}
         # Add date selector
-        namespace['date'] = selected_date
-        namespace['firstday'] = self.get_first_day()
-        namespace['link_on_summary'] = True
-
         # Add a header line with start time of each timetable
         start, end, interval = self.get_cal_range()
         timetables = build_timetables(start, end, interval)
-        namespace['header_timetables'] = self.get_header_timetables(timetables)
 
         # For each found calendar
-        ns_calendars = []
-        for calendar in self.get_calendars():
-            ns_calendar = self.get_ns_calendar(calendar, c_date, cal_fields,
-                                               shown_fields, timetables)
-            ns_calendars.append(ns_calendar)
-        namespace['calendars'] = ns_calendars
+        ns_calendars = [
+            self.get_ns_calendar(x, c_date, cal_fields, shown_fields,
+                                 timetables)
+            for x in self.get_calendars() ]
 
-        handler = self.get_resource('/ui/ical/daily_view.xml')
-        return stl(handler, namespace)
+        # Ok
+        return {
+            'date': selected_date,
+            'firstday': self.get_first_day(),
+            'link_on_summary': True,
+            'header_timetables': self.get_header_timetables(timetables),
+            'calendars': ns_calendars,
+        }
 
 
 
