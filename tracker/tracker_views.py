@@ -36,7 +36,7 @@ from itools.web import BaseView, BaseForm, STLForm, get_context
 # Import from ikaaro
 from ikaaro.datatypes import CopyCookie
 from ikaaro.exceptions import ConsistencyError
-from ikaaro.messages import MSG_NONE_REMOVED, MSG_OBJECTS_REMOVED
+from ikaaro.messages import MSG_NONE_REMOVED, MSG_RESOURCES_REMOVED
 from ikaaro.messages import MSG_NAME_MISSING, MSG_CHANGES_SAVED
 from ikaaro.views import BrowseForm, SearchForm as BaseSearchForm, ContextMenu
 from issue import Issue, issue_fields
@@ -426,7 +426,7 @@ class TrackerStoredSearches(STLForm):
 
         if removed:
             resources = ', '.join(removed)
-            context.message = MSG_OBJECTS_REMOVED.gettext(resources=resources)
+            context.message = MSG_RESOURCES_REMOVED.gettext(resources=resources)
         else:
             context.message = MSG_NONE_REMOVED
 

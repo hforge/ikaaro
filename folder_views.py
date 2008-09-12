@@ -400,7 +400,7 @@ class FolderBrowseContent(SearchForm):
 
         if removed:
             resources = ', '.join(removed)
-            context.message = MSG_OBJECTS_REMOVED.gettext(resources=resources)
+            context.message = MSG_RESOURCES_REMOVED.gettext(resources=resources)
         else:
             context.message = MSG_NONE_REMOVED
 

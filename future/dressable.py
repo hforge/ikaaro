@@ -218,7 +218,7 @@ class Dressable(Folder, EpozEditable):
         name = context.get_form_value('name')
         namespace['name'] = name
         namespace['class_id'] = self.get_class(name).class_id
-        message = self.gettext(MSG_DELETE_OBJECT)
+        message = self.gettext(MSG_DELETE_RESOURCE)
         msg = 'return confirm("%s");' % message.encode('utf_8')
         namespace['remove_action'] = msg
 
@@ -360,7 +360,7 @@ class Dressable(Folder, EpozEditable):
             pass
 
         goto = './;view'
-        return context.come_back(MSG_OBJECTS_REMOVED, resources=resources,
+        return context.come_back(MSG_RESOURCES_REMOVED, resources=resources,
                                  goto=goto)
 
 

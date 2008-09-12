@@ -36,7 +36,7 @@ MSG_CHANGES_SAVED = MSG(
 MSG_CHANGES_SAVED2 = MSG(
     u'The changes have been saved ($time).')
 
-MSG_DELETE_OBJECT = MSG(
+MSG_DELETE_RESOURCE = MSG(
     u'Are you sure you want to delete this resource?')
 
 MSG_DELETE_SELECTION = MSG(
@@ -66,7 +66,7 @@ MSG_NEW_RESOURCE = MSG(
 MSG_NONE_REMOVED = MSG(
     u'No resource removed.')
 
-MSG_OBJECTS_REMOVED = MSG(
+MSG_RESOURCES_REMOVED = MSG(
     u'Resources removed: $resources.')
 
 MSG_PAGE_LOCK = MSG(
