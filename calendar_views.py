@@ -96,23 +96,6 @@ def get_current_date(value):
         return date.today()
 
 
-def check_timetable_entry(context, key_start, key_end):
-    """Check if timetable built from given key value is valid or not.
-    """
-    start = context.get_form_value(key_start)
-    end = context.get_form_value(key_end)
-    if not start or start == '__:__' or not end or end == '__:__':
-        return MSG(u'Wrong time selection.')
-    try:
-        start = Time.decode(start)
-        end = Time.decode(end)
-    except ValueError:
-        return MSG(u'Wrong time selection (HH:MM).')
-    if start >= end:
-        return MSG(u'Start time must be earlier than end time.')
-    return (start, end)
-
-
 
 class Status(Enumerate):
 
@@ -127,69 +110,94 @@ class TimetablesForm(STLForm):
     access = 'is_allowed_to_edit'
     title = MSG(u'Timetables')
     template = '/ui/ical/ical_edit_timetables.xml'
-    schema = {}
+    schema = {
+        'ids': String(multiple=True),
+    }
 
 
     def get_namespace(self, resource, context):
-        # Initialization
-        namespace = {'timetables': []}
-
         # Show current timetables only if previously set in metadata
         if resource.has_property('timetables'):
             timetables = resource.get_property('timetables')
-            for index, (start, end) in enumerate(timetables):
-                ns = {}
-                ns['index'] = index
-                ns['startname'] = '%s_start' % index
-                ns['endname'] = '%s_end' % index
-                ns['start'] = Time.encode(start)
-                ns['end'] = Time.encode(end)
-                namespace['timetables'].append(ns)
-        return namespace
+            timetables_ns = [
+                {'index': index,
+                 'startname': '%s_start' % index,
+                 'endname': '%s_end' % index,
+                 'start': Time.encode(start),
+                 'end': Time.encode(end)}
+                for index, (start, end) in enumerate(timetables) ]
+        else:
+            timetables_ns = []
+
+        # Ok
+        return {'timetables': timetables_ns}
 
 
-    def action(self, resource, context, form):
+    action_add_schema = {'new_start': Time, 'new_end': Time}
+    def action_add(self, resource, context, form):
+        start = form['new_start']
+        end = form['new_end']
+        if start >= end:
+            context.message = MSG(u'Start time must be earlier than end time.')
+            return
+
+        # Change
+        new_timetables.append((start, end))
+        new_timetables.sort()
+        resource.set_property('timetables', tuple(new_timetables))
+        # Ok
+        context.message = MSG(u'Timetables updated successfully.')
+
+
+    def action_remove(self, resource, context, form):
+        ids = form['ids']
+        if ids == []:
+            message = MSG(u'Nothing to remove.')
+            return
+
         timetables = []
         if resource.has_property('timetables'):
             timetables = resource.get_property('timetables')
 
-        # Nothing to change
-        if timetables == [] and not context.has_form_value('add'):
-            context.message = u'Nothing to change.'
+        # Change
+        new_timetables = [
+            timetable for index, timetable in enumerate(timetables)
+            if str(index) not in ids ]
+        resource.set_property('timetables', tuple(new_timetables))
+        # Ok
+        context.message = MSG(u'Timetable(s) removed successfully.')
+
+
+    def action_update(self, resource, context, form):
+        timetables = []
+        if resource.has_property('timetables'):
+            timetables = resource.get_property('timetables')
+
+        if timetables == []:
+            context.message = MSG(u'Nothing to change.')
             return
 
-        # Remove selected lines
-        if context.has_form_value('remove'):
-            ids = context.get_form_values('ids')
-            if ids == []:
-                return context.come_back(MSG(u'Nothing to remove.'))
-            new_timetables = []
-            for index, timetable in enumerate(timetables):
-                if str(index) not in ids:
-                    new_timetables.append(timetable)
-            context.message = u'Timetable(s) removed successfully.'
-        else:
-            new_timetables = []
-            # Update timetable or just set index to next index
-            for index in range(len(timetables)):
-                timetable = check_timetable_entry(context, '%s_start' % index,
-                                                           '%s_end' % index)
-                if not isinstance(timetable, tuple):
-                    return context.come_back(timetable)
-                new_timetables.append(timetable)
+        # Update timetable or just set index to next index
+        new_timetables = []
+        for index in range(len(timetables)):
+            try:
+                start = context.get_form_value('%s_start' % index, type=Time)
+                end = context.get_form_value('%s_end' % index, type=Time)
+            except:
+                context.message = MSG(u'Wrong time selection (HH:MM).')
+                return
 
-            # Add a new timetable
-            if context.has_form_value('add'):
-                timetable = check_timetable_entry(context, 'new_start',
-                                                           'new_end')
-                if not isinstance(timetable, tuple):
-                    return context.come_back(timetable)
-                new_timetables.append(timetable)
+            if start >= end:
+                message = MSG(u'Start time must be earlier than end time.')
+                context.message = message
+                return
 
-            new_timetables.sort()
-            context.message = u'Timetables updated successfully.'
+            new_timetables.append(timetable)
 
+        new_timetables.sort()
         resource.set_property('timetables', tuple(new_timetables))
+        # Ok
+        context.message = MSG(u'Timetables updated successfully.')
 
 
 

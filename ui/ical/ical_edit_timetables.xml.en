@@ -10,15 +10,18 @@
   <table class="form">
     <tr stl:repeat="timetable timetables">
       <td>
-        <input class="checkbox" type="checkbox" name="ids" value="${timetable/index}" />
+        <input class="checkbox" type="checkbox" name="ids"
+          value="${timetable/index}" />
       </td>
       <td width="50">From</td>
       <td>
-        <input type="text" size="8" name="${timetable/startname}" value="${timetable/start}" />
+        <input type="text" size="8" name="${timetable/startname}"
+          value="${timetable/start}" />
       </td>
       <td width="45" align="center">to</td>
       <td>
-        <input type="text" size="8" name="${timetable/endname}" value="${timetable/end}" />
+        <input type="text" size="8" name="${timetable/endname}"
+          value="${timetable/end}" />
       </td>
       <td />
     </tr>
@@ -26,21 +29,23 @@
       <td />
       <td width="50">From</td>
       <td>
-        <input type="text" size="8" name="new_start" value="__:__" />
+        <input type="text" name="new_start" size="5" maxlength="5"
+          value="--:--" />
       </td>
       <td width="45" align="center">to</td>
       <td>
-        <input type="text" size="8" name="new_end" value="__:__" />
+        <input type="text" name="new_end" size="5" maxlength="5"
+          value="--:--" />
       </td>
       <td>
-        <input type="submit" name="add" value="Add" />
+        <input type="submit" name=";add" value="Add" />
       </td>
     </tr>
   </table>
-  
+
   <p>
-    <input type="submit" name="remove" value="Remove" class="button_delete" />
-    <input type="submit" name="update" value="Update" class="button_ok"/>
+    <input type="submit" name=";remove" value="Remove" class="button_delete" />
+    <input type="submit" name=";update" value="Update" class="button_ok" />
   </p>
 
 </form>
