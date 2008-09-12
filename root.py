@@ -93,7 +93,7 @@ class Root(WebSite):
 
 
     @staticmethod
-    def _make_object(cls, folder, email, password):
+    def _make_resource(cls, folder, email, password):
         # The metadata
         metadata = cls.build_metadata(admins=('0',))
         folder.set_handler('.metadata', metadata)

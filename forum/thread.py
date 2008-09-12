@@ -84,7 +84,7 @@ class ThreadView(STLForm):
         name = str(id + 1)
         data = form['data']
         language = resource.get_content_language()
-        thread = Message.make_object(Message, resource, name, data, language)
+        thread = Message.make_resource(Message, resource, name, data, language)
         # Ok
         return context.come_back(MSG(u'Reply posted'))
 
@@ -118,8 +118,8 @@ class Thread(Folder):
 
 
     @staticmethod
-    def _make_object(cls, folder, name, data=u'', language='en'):
-        Folder._make_object(cls, folder, name)
+    def _make_resource(cls, folder, name, data=u'', language='en'):
+        Folder._make_resource(cls, folder, name)
         # First post
         folder.set_handler('%s/0.metadata' % name, Message.build_metadata())
         message = build_message(data)

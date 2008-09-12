@@ -64,8 +64,8 @@ class Tracker(Folder):
         'states', 'resources']
 
     @staticmethod
-    def _make_object(cls, folder, name):
-        Folder._make_object(cls, folder, name)
+    def _make_resource(cls, folder, name):
+        Folder._make_resource(cls, folder, name)
         # Versions
         table = VersionsTable()
         table.add_record({'title': u'1.0', 'released': False})

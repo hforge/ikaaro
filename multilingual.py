@@ -35,9 +35,9 @@ class Multilingual(DBResource):
 
 
     @staticmethod
-    def _make_object(cls, folder, name, body=None, filename=None,
+    def _make_resource(cls, folder, name, body=None, filename=None,
                      language=None, **kw):
-        DBResource._make_object(cls, folder, name, filename=filename, **kw)
+        DBResource._make_resource(cls, folder, name, filename=filename, **kw)
         # Add the body
         if body is not None:
             cls = cls.class_handler

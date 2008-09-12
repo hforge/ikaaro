@@ -76,8 +76,8 @@ class Dressable(Folder, EpozEditable):
     """))
 
     @staticmethod
-    def _make_object(cls, folder, name, **kw):
-        Folder._make_object(cls, folder, name, **kw)
+    def _make_resource(cls, folder, name, **kw):
+        Folder._make_resource(cls, folder, name, **kw)
         # populate the dressable
         cls._populate(cls, folder, name)
 
@@ -251,7 +251,7 @@ class Dressable(Folder, EpozEditable):
     def edit(self, context, sanitize=False):
         # FIXME Duplicated code (cms.html)
         dress_name = context.get_form_value('dress_name', 'index')
-        dress_object = self.get_resource(dress_name)
+        dress_resource = self.get_resource(dress_name)
         timestamp = context.get_form_value('timestamp', type=DateTime)
         # Compare the dressable's timestamp and not the folder's timestamp
         if timestamp is None:
@@ -275,7 +275,7 @@ class Dressable(Folder, EpozEditable):
                   + document.events[old_body.end:])
         # Change
         document.set_events(events)
-        context.server.change_resource(dress_object)
+        context.server.change_resource(dress_resource)
         context.server.change_resource(self)
 
         return context.come_back(MSG_CHANGES_SAVED)
@@ -339,7 +339,7 @@ class Dressable(Folder, EpozEditable):
         else:
             # Build the object
             container = self
-            object = cls.make_object(cls, container, name, body=body)
+            object = cls.make_resource(cls, container, name, body=body)
             # The metadata
             metadata = object.metadata
             language = container.get_content_language(context)

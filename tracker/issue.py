@@ -359,8 +359,8 @@ class Issue(Folder):
 
 
     @staticmethod
-    def _make_object(cls, folder, name):
-        Folder._make_object(cls, folder, name)
+    def _make_resource(cls, folder, name):
+        Folder._make_resource(cls, folder, name)
         folder.set_handler('%s/.history' % name, History())
 
 
@@ -487,7 +487,7 @@ class Issue(Folder):
             name = generate_name(name, self.get_names())
             # Add attachement
             cls = get_resource_class(mimetype)
-            cls.make_object(cls, self, name, body=body, filename=filename,
+            cls.make_resource(cls, self, name, body=body, filename=filename,
                             extension=extension, format=mimetype)
             # Link
             record['file'] = name

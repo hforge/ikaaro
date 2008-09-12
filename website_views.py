@@ -107,7 +107,7 @@ class NewWebSiteForm(NewInstanceForm):
             return
 
         cls = get_website_class(class_id)
-        object = cls.make_object(cls, resource, name)
+        object = cls.make_resource(cls, resource, name)
         # The metadata
         metadata = object.metadata
         language = resource.get_site_root().get_default_language()

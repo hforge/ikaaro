@@ -125,7 +125,7 @@ def init(parser, options, target):
     database = Database()
     base = get_absolute_reference(target).resolve2('database')
     folder = database.get_handler(base)
-    root = root_class._make_object(root_class, folder, email, password)
+    root = root_class._make_resource(root_class, folder, email, password)
     database.save_changes()
     # Index everything
     catalog = make_catalog('%s/catalog' % target)

@@ -130,7 +130,7 @@ class DBResourceNewInstance(NewInstanceForm):
         # Create the object
         class_id = context.query['type']
         cls = get_resource_class(class_id)
-        object = cls.make_object(cls, resource, name)
+        object = cls.make_resource(cls, resource, name)
         # The metadata
         metadata = object.metadata
         language = resource.get_content_language(context)
@@ -263,8 +263,8 @@ class Breadcrumb(object):
             # Calculate path
             path_to_icon = object.get_resource_icon(icon_size)
             if path:
-                path_to_object = Path(str(path) + '/')
-                path_to_icon = path_to_object.resolve(path_to_icon)
+                path_to_resource = Path(str(path) + '/')
+                path_to_icon = path_to_resource.resolve(path_to_icon)
             title = object.get_title()
             objects.append({'name': object.name,
                             'title': title,
@@ -358,7 +358,7 @@ class DBResourceAddImage(STLForm):
             return
 
         # Add the image to the object
-        cls.make_object(cls, container, name, body, type=type)
+        cls.make_resource(cls, container, name, body, type=type)
 
         # Ok
         caption = MSG_CAPTION.gettext().encode('utf_8')

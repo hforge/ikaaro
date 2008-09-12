@@ -63,9 +63,9 @@ class File(WorkflowAware, VersioningAware):
 
 
     @staticmethod
-    def _make_object(cls, folder, name, body=None, filename=None,
+    def _make_resource(cls, folder, name, body=None, filename=None,
                      extension=None, **kw):
-        VersioningAware._make_object(cls, folder, name, filename=filename,
+        VersioningAware._make_resource(cls, folder, name, filename=filename,
                                      **kw)
         # Add the body
         if body is not None:

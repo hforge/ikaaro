@@ -105,7 +105,7 @@ class FileNewInstance(NewInstanceForm):
             kw['language'] = language
         else:
             kw['extension'] = type
-        object = cls.make_object(cls, resource, name, body, **kw)
+        object = cls.make_resource(cls, resource, name, body, **kw)
         # The title
         language = resource.get_content_language(context)
         object.metadata.set_property('title', title, language=language)

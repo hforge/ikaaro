@@ -53,8 +53,8 @@ class Message(WebPage):
 
 
     @staticmethod
-    def _make_object(cls, folder, name, data, language):
-        WebPage._make_object(cls, folder, name)
+    def _make_resource(cls, folder, name, data, language):
+        WebPage._make_resource(cls, folder, name)
         # The message
         document = build_message(data)
         folder.set_handler('%s.xhtml.%s' % (name, language), document)

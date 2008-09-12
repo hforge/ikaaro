@@ -133,8 +133,8 @@ class DBResource(CatalogAware, IResource):
 
 
     @staticmethod
-    def make_object(cls, container, name, *args, **kw):
-        cls._make_object(cls, container.handler, name, *args, **kw)
+    def make_resource(cls, container, name, *args, **kw):
+        cls._make_resource(cls, container.handler, name, *args, **kw)
         resource = container.get_resource(name)
         # Events, add
         get_context().server.add_resource(resource)
@@ -143,7 +143,7 @@ class DBResource(CatalogAware, IResource):
 
 
     @staticmethod
-    def _make_object(cls, folder, name, **kw):
+    def _make_resource(cls, folder, name, **kw):
         metadata = cls.build_metadata(**kw)
         folder.set_handler('%s.metadata' % name, metadata)
 

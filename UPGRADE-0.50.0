@@ -149,13 +149,15 @@ This is a summary of the methods that changed their signature:
   Folder.search_resources(cls=None, format=None, state=None)
 
 This is a summary of the methods that were renamed ("object" and "resource"
-designate the same variable)
+designate the same variable but renamed):
 
   # Before                       # After
   context.server.change_object   context.server.change_resource
   context.server.add_object      context.server.add_resource
   context.server.remove_object   context.server.remove_resource
   object.get_object_icon         resource.get_resource_icon
+  object.make_object             resource.make_resource
+  object._make_object            resource._make_resource
   container.get_object           container.get_resource
 
 

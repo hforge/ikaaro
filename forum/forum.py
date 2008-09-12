@@ -112,7 +112,7 @@ class AddThreadForm(STLForm):
             return
 
         language = resource.get_content_language()
-        thread = Thread.make_object(Thread, resource, name, data, language)
+        thread = Thread.make_resource(Thread, resource, name, data, language)
         thread.set_property('title', title, language=language)
 
         # Ok
