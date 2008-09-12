@@ -191,7 +191,7 @@ class UserEditPreferences(STLForm):
     title = MSG(u'Edit Preferences')
     description = MSG(u'Set your preferred language.')
     icon = 'preferences.png'
-    template = '/ui/user/edit_language_form.xml'
+    template = '/ui/user/edit_preferences.xml'
     schema = {
         'user_language': String(mandatory=True),
     }

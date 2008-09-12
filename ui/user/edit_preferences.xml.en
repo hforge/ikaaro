@@ -4,9 +4,11 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
-  <form action=";edit_preferences" method="post">
+<form action=";edit_preferences" method="post">
+  <fieldset>
+    <legend>Edit Preferences</legend>
     <dl>
-      <dt><label for="user_language">Language</label></dt>
+      <dt><label for="user_language">Preferred Language</label></dt>
       <dd>
         <select id="user_language" name="user_language">
           <option stl:repeat="language languages" value="${language/code}"
@@ -14,9 +16,8 @@
         </select>
       </dd>
     </dl>
-    <p>
-      <input type="submit" value="Change language" class="button_ok"/>
-    </p>
-  </form>
+    <input type="submit" value="Save Changes" class="button_ok" />
+  </fieldset>
+</form>
 
 </stl:block>
