@@ -38,7 +38,7 @@ class FileDataType(DataType):
 
     @staticmethod
     def decode(data):
-        """Find out the object class (the mimetype sent by the browser can be
+        """Find out the resource class (the mimetype sent by the browser can be
         minimalistic).
         """
         filename, mimetype, body = data

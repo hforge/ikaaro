@@ -108,7 +108,7 @@ if __name__ == '__main__':
     version = 'itools %s' % itools.__version__
     description = (
         'Rebuilds the catalog: first removes and creates a new empty one;'
-        ' then traverses and indexes all objects in the database.')
+        ' then traverses and indexes all resources in the database.')
     parser = OptionParser(usage, version=version, description=description)
     parser.add_option(
         '-y', '--yes', action='store_true', dest='confirm',

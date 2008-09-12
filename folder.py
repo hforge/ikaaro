@@ -104,7 +104,7 @@ class Folder(DBResource):
         resource = self.get_resource(name)
 
         # Check referencial-integrity
-        # FIXME Check sub-objects too
+        # FIXME Check sub-resources too
         path = str(resource.abspath)
         root = self.get_root()
         results = root.search(links=path)

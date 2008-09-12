@@ -111,7 +111,7 @@ class FolderNewResource(IconsView):
 class FolderRename(STLForm):
 
     access = 'is_allowed_to_edit'
-    title = MSG(u'Rename objects')
+    title = MSG(u'Rename resources')
     template = '/ui/folder/rename.xml'
     schema = {
         'paths': String(multiple=True, mandatory=True),
@@ -130,7 +130,7 @@ class FolderRename(STLForm):
         # Build the namespace
         paths.sort()
         paths.reverse()
-        objects = []
+        resources = []
         for path in paths:
             if '/' in path:
                 parent_path, name = path.rsplit('/', 1)
@@ -138,12 +138,12 @@ class FolderRename(STLForm):
             else:
                 parent_path = ''
                 name = path
-            objects.append({
+            resources.append({
                 'path': path,
                 'parent_path': parent_path,
                 'name': name})
 
-        return {'objects': objects}
+        return {'resources': resources}
 
 
     def action(self, resource, context, form):
@@ -184,7 +184,7 @@ class FolderRename(STLForm):
             # Rename
             container.move_resource(old_name, new_name)
 
-        message = MSG(u'Objects renamed.')
+        message = MSG(u'Resources renamed.')
         return context.come_back(message, goto=';browse_content')
 
 
@@ -370,7 +370,7 @@ class FolderBrowseContent(SearchForm):
         # Clean the copy cookie if needed
         cut, paths = context.get_cookie('ikaaro_cp', type=CopyCookie)
 
-        # Remove objects
+        # Remove resources
         removed = []
         not_removed = []
         user = context.user
@@ -384,7 +384,7 @@ class FolderBrowseContent(SearchForm):
             child = resource.get_resource(name)
             ac = child.get_access_control()
             if ac.is_allowed_to_remove(user, child):
-                # Remove object
+                # Remove resource
                 try:
                     resource.del_resource(name)
                 except ConsistencyError:
@@ -399,8 +399,8 @@ class FolderBrowseContent(SearchForm):
                 not_removed.append(name)
 
         if removed:
-            objects = ', '.join(removed)
-            context.message = MSG_OBJECTS_REMOVED.gettext(objects=objects)
+            resources = ', '.join(removed)
+            context.message = MSG_OBJECTS_REMOVED.gettext(resources=resources)
         else:
             context.message = MSG_NONE_REMOVED
 
@@ -415,7 +415,7 @@ class FolderBrowseContent(SearchForm):
 
         # Check input data
         if not paths:
-            context.message = MSG(u'No objects selected.')
+            context.message = MSG(u'No resource selected.')
             return
 
         # FIXME Hack to get rename working. The current user interface forces
@@ -436,7 +436,7 @@ class FolderBrowseContent(SearchForm):
 
         # Check input data
         if not names:
-            message = MSG(u'No objects selected.')
+            message = MSG(u'No resource selected.')
             return
 
         abspath = resource.get_abspath()
@@ -444,7 +444,7 @@ class FolderBrowseContent(SearchForm):
         cp = CopyCookie.encode(cp)
         context.set_cookie('ikaaro_cp', cp, path='/')
         # Ok
-        context.message = MSG(u'Objects copied.')
+        context.message = MSG(u'Resources copied.')
 
 
     def action_cut(self, resource, context, form):
@@ -457,7 +457,7 @@ class FolderBrowseContent(SearchForm):
 
         # Check input data
         if not names:
-            message = MSG(u'No objects selected.')
+            message = MSG(u'No resource selected.')
             return
 
         abspath = resource.get_abspath()
@@ -465,7 +465,7 @@ class FolderBrowseContent(SearchForm):
         cp = CopyCookie.encode(cp)
         context.set_cookie('ikaaro_cp', cp, path='/')
 
-        context.message = MSG(u'Objects cut.')
+        context.message = MSG(u'Resources cut.')
 
 
     action_paste_schema = {}
@@ -511,7 +511,7 @@ class FolderBrowseContent(SearchForm):
         if cut is True:
             context.del_cookie('ikaaro_cp')
 
-        context.message = MSG(u'Objects pasted.')
+        context.message = MSG(u'Resources pasted.')
 
 
 
@@ -550,7 +550,7 @@ class FolderPreviewContent(FolderBrowseContent):
             items_namespace.append({'id': id, 'href': href})
 
         return {
-            'objects': items_namespace,
+            'items': items_namespace,
             'size': current_size,
         }
 
@@ -574,9 +574,9 @@ class FolderLastChanges(FolderBrowseContent):
 
 
 class FolderOrphans(FolderBrowseContent):
-    """Orphans are files not referenced in another object of the database.  It
+    """Orphans are files not referenced in another resource of the database.  It
     extends the concept of "orphans pages" from the wiki to all file-like
-    objects.
+    resources.
 
     Orphans folders generally don't make sense because they serve as
     containers. TODO or list empty folders?
@@ -585,7 +585,7 @@ class FolderOrphans(FolderBrowseContent):
     access = 'is_allowed_to_view'
     title = MSG(u"Orphans")
     icon = 'orphans.png'
-    description = MSG(u"Show objects not linked from anywhere.")
+    description = MSG(u"Show resources not linked from anywhere.")
 
 
     def get_items(self, resource, context):

@@ -246,7 +246,7 @@ class Breadcrumb(object):
         self.path = breadcrumb
 
         # Content
-        objects = []
+        resources = []
         self.is_submit = False
         user = context.user
         filter = (Folder, filter_type)
@@ -266,7 +266,7 @@ class Breadcrumb(object):
                 path_to_resource = Path(str(path) + '/')
                 path_to_icon = path_to_resource.resolve(path_to_icon)
             title = resource.get_title()
-            objects.append({'name': resource.name,
+            resources.append({'name': resource.name,
                             'title': title,
                             'short_title': reduce_string(title, 12, 40),
                             'is_folder': isinstance(resource, Folder),
@@ -277,8 +277,8 @@ class Breadcrumb(object):
                             'icon': path_to_icon,
                             'resource_type': resource.handler.get_mimetype()})
 
-        objects.sort(key=itemgetter('is_folder'), reverse=True)
-        self.objects = objects
+        resources.sort(key=itemgetter('is_folder'), reverse=True)
+        self.resources = resources
 
         # Avoid general template
         response.set_header('Content-Type', 'text/html; charset=UTF-8')

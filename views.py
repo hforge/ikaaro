@@ -27,7 +27,7 @@ from itools.xml import XMLParser
 from registry import get_resource_class
 
 
-"""This module contains some generic views used by different objects.
+"""This module contains some generic views used by different resources.
 """
 
 
@@ -61,7 +61,7 @@ class IconsView(STLView):
 
 class NewInstanceForm(STLForm):
     """This is the base class for all ikaaro forms meant to create and
-    add a new object to the database.
+    add a new resource to the database.
     """
 
     def icon(self, resource, **kw):

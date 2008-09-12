@@ -84,7 +84,7 @@ class FileNewInstance(NewInstanceForm):
             class_id = mimetype
         cls = get_resource_class(class_id)
 
-        # Multilingual objects, find out the language
+        # Multilingual resources, find out the language
         name, type, language = FileName.decode(name)
         if issubclass(cls, Multilingual):
             if language is None:
@@ -99,7 +99,7 @@ class FileNewInstance(NewInstanceForm):
             context.message = MSG_NAME_CLASH
             return
 
-        # Build the object
+        # Build the resource
         kw = {'format': class_id, 'filename': filename}
         if issubclass(cls, Multilingual):
             kw['language'] = language
@@ -260,8 +260,8 @@ class FileExternalEdit(BaseView):
 
 
 class FileBacklinks(FolderBrowseContent):
-    """Backlinks are the list of objects pointing to this object.  This view
-    answers the question "where is this object used?" You'll see all WebPages
+    """Backlinks are the list of resources pointing to this resource.  This view
+    answers the question "where is this resource used?" You'll see all WebPages
     and WikiPages (for example) referencing it.  If the list is empty, you can
     consider it is "orphan".
     """

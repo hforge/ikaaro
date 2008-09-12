@@ -218,8 +218,8 @@ class DBResource(CatalogAware, IResource):
             KeywordField('format', is_stored=True),
             KeywordField('workflow_state', is_stored=True),
             KeywordField('members'),
-            # For referencial-integrity, keep links between cms objects, where
-            # a link is the physical path.
+            # For referencial-integrity, keep links between cms resources,
+            # where a link is the physical path.
             KeywordField('links'),
             # Folder's view
             KeywordField('parent_path'),
@@ -301,14 +301,14 @@ class DBResource(CatalogAware, IResource):
     # API
     ########################################################################
     def get_handlers(self):
-        """Return all the handlers attached to this object, except the
+        """Return all the handlers attached to this resource, except the
         metadata.
         """
         return [self.handler]
 
 
     def rename_handlers(self, new_name):
-        """Consider we want to rename this object to the given 'new_name',
+        """Consider we want to rename this resource to the given 'new_name',
         return the old a new names for all the attached handlers (except the
         metadata).
 
@@ -342,7 +342,7 @@ class DBResource(CatalogAware, IResource):
     def get_next_versions(self):
         cls_version = self.class_version
         obj_version = self.metadata.version
-        # Set zero version if the object does not have a version
+        # Set zero version if the resource does not have a version
         if obj_version is None:
             obj_version = '00000000'
 
@@ -428,7 +428,7 @@ class DBResource(CatalogAware, IResource):
         title = self.get_property('title', language=language)
         if title:
             return title
-        # Fallback to the object's name
+        # Fallback to the resource's name
         title = self.name
         if isinstance(title, MSG):
             return title.gettext(language)

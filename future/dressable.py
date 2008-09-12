@@ -45,7 +45,7 @@ from ikaaro.workflow import WorkflowAware
 
 
 class Dressable(Folder, EpozEditable):
-    """A Dressable object is a folder with a specific view which is defined
+    """A Dressable resource is a folder with a specific view which is defined
     by the layout. In addition of the layout, it is necessary to redefine
     the variable __fixed_handlers__.
     """
@@ -352,15 +352,15 @@ class Dressable(Folder, EpozEditable):
     remove_image__access__ = 'is_allowed_to_edit'
     def remove_image(self, context):
         name = context.get_form_value('name')
-        objects = ''
+        resources = ''
         try:
             self.del_resource(name)
-            objects = name
+            resources = name
         except ConsistencyError:
             pass
 
         goto = './;view'
-        return context.come_back(MSG_OBJECTS_REMOVED, objects=objects,
+        return context.come_back(MSG_OBJECTS_REMOVED, resources=resources,
                                  goto=goto)
 
 

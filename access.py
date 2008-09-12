@@ -281,17 +281,17 @@ class AccessControl(BaseAccessControl):
 
 
     def is_allowed_to_view(self, user, resource):
-        # Objects with workflow
+        # Resources with workflow
         if isinstance(resource, WorkflowAware):
             state = resource.workflow_state
-            # Anybody can see public objects
+            # Anybody can see public resources
             if state == 'public':
                 return True
 
-            # Only those who can edit are allowed to see non-public objects
+            # Only those who can edit are allowed to see non-public resources
             return self.is_allowed_to_edit(user, resource)
 
-        # Everybody can see objects without workflow
+        # Everybody can see resources without workflow
         return True
 
 
@@ -405,7 +405,7 @@ class RoleAware(AccessControl):
         if self.has_user_role(user.name, 'members'):
             if isinstance(resource, WorkflowAware):
                 state = resource.workflow_state
-                # Anybody can see public objects
+                # Anybody can see public resources
                 if state != 'public':
                     return True
 

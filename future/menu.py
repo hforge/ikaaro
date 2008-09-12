@@ -221,7 +221,7 @@ def get_menu_namespace_level(context, url, menu_root, depth, show_first_child,
     tabs = {}
 
     for name in menu_root.get_ordered_names('ordered'):
-        # Get the objects, check security
+        # Get the resources, check security
         resource = menu_root.get_resource(name)
 
         ac = resource.get_access_control()

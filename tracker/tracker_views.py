@@ -407,7 +407,7 @@ class TrackerStoredSearches(STLForm):
         # Clean the copy cookie if needed
         cut, paths = context.get_cookie('ikaaro_cp', type=CopyCookie)
 
-        # Remove objects
+        # Remove resources
         removed = []
         not_removed = []
         abspath = resource.get_abspath()
@@ -425,8 +425,8 @@ class TrackerStoredSearches(STLForm):
                 paths = []
 
         if removed:
-            objects = ', '.join(removed)
-            context.message = MSG_OBJECTS_REMOVED.gettext(objects=objects)
+            resources = ', '.join(removed)
+            context.message = MSG_OBJECTS_REMOVED.gettext(resources=resources)
         else:
             context.message = MSG_NONE_REMOVED
 

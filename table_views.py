@@ -327,41 +327,41 @@ class OrderedTableView(TableView):
     def action_order_up(self, resource, context, form):
         ids = form['ids']
         if not ids:
-            context.message = MSG(u'Please select the objects to order up.')
+            context.message = MSG(u'Please select the resources to order up.')
             return
 
         resource.handler.order_up(ids)
-        context.message = MSG(u'Objects ordered up.')
+        context.message = MSG(u'Resources ordered up.')
 
 
     def action_order_down(self, resource, context, form):
         ids = form['ids']
         if not ids:
-            context.message = MSG(u'Please select the objects to order down.')
+            context.message = MSG(u'Please select the resources to order down.')
             return
 
         resource.handler.order_down(ids)
-        context.message = MSG(u'Objects ordered down.')
+        context.message = MSG(u'Resources ordered down.')
 
 
     def action_order_top(self, resource, context, form):
         ids = form['ids']
         if not ids:
-            message = MSG(u'Please select the objects to order on top.')
+            message = MSG(u'Please select the resources to order on top.')
             context.message = message
             return
 
         resource.handler.order_top(ids)
-        context.message = MSG(u'Objects ordered on top.')
+        context.message = MSG(u'Resources ordered on top.')
 
 
     def action_order_bottom(self, resource, context, form):
         ids = form['ids']
         if not ids:
-            message = MSG(u'Please select the objects to order on bottom.')
+            message = MSG(u'Please select the resources to order on bottom.')
             context.message = message
             return
 
         resource.handler.order_bottom(ids)
-        context.message = MSG(u'Objects ordered on bottom.')
+        context.message = MSG(u'Resources ordered on bottom.')
 

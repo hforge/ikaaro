@@ -16,28 +16,28 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-objects_registry = {}
+resources_registry = {}
 
-def register_resource_class(object, format=None):
+def register_resource_class(resource_class, format=None):
     if format is None:
-        format = object.class_id
-    objects_registry[format] = object
+        format = resource_class.class_id
+    resources_registry[format] = resource_class
 
 
 def get_resource_class(class_id, is_file=True):
-    if class_id in objects_registry:
-        return objects_registry[class_id]
+    if class_id in resources_registry:
+        return resources_registry[class_id]
 
     if '/' in class_id:
         class_id = class_id.split('/')[0]
-        if class_id in objects_registry:
-            return objects_registry[class_id]
+        if class_id in resources_registry:
+            return resources_registry[class_id]
 
     # Default
     if is_file:
-        return objects_registry['application/octet-stream']
+        return resources_registry['application/octet-stream']
 
-    return objects_registry['application/x-not-regular-file']
+    return resources_registry['application/x-not-regular-file']
 
 
 websites_registry = {}

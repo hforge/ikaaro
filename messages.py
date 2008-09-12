@@ -37,7 +37,7 @@ MSG_CHANGES_SAVED2 = MSG(
     u'The changes have been saved ($time).')
 
 MSG_DELETE_OBJECT = MSG(
-    u'Are you sure you want to delete this object?')
+    u'Are you sure you want to delete this resource?')
 
 MSG_DELETE_SELECTION = MSG(
     u'Are you sure you want to delete the selection?')
@@ -55,7 +55,7 @@ MSG_INVALID_EMAIL = MSG(
     u'The email address provided is invalid.')
 
 MSG_NAME_CLASH = MSG(
-    u'There is already another object with this name.')
+    u'There is already another resource with this name.')
 
 MSG_NAME_MISSING = MSG(
     u'The name is missing.')
@@ -64,10 +64,10 @@ MSG_NEW_RESOURCE = MSG(
     u'A new resource has been added.')
 
 MSG_NONE_REMOVED = MSG(
-    u'No Object removed.')
+    u'No resource removed.')
 
 MSG_OBJECTS_REMOVED = MSG(
-    u'Objects removed: $objects.')
+    u'Resources removed: $resources.')
 
 MSG_PAGE_LOCK = MSG(
     u'This page is locked by $user')

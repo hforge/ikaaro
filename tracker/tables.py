@@ -124,7 +124,7 @@ class SelectTable(Table):
         # check input
         ids = context.get_form_values('ids', type=Integer)
         if not ids:
-            return context.come_back(MSG(u'No objects selected.'))
+            return context.come_back(MSG(u'No resource selected.'))
 
         filter = self.name[:-1]
         if self.name.startswith('priorit'):
@@ -143,8 +143,8 @@ class SelectTable(Table):
                 self.handler.del_record(id)
                 removed.append(str(id))
 
-        message = u'Objects removed: $objects.'
-        return context.come_back(message, objects=', '.join(removed))
+        message = u'Resources removed: $resources.'
+        return context.come_back(message, resources=', '.join(removed))
 
 
 

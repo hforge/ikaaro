@@ -351,7 +351,7 @@ class BrokenLinks(STLView):
                 broken.setdefault(brain.abspath, []).append(link)
         # Build the namespace
         namespace = {}
-        objects = []
+        items = []
         total = 0
         keys = broken.keys()
         keys.sort()
@@ -359,9 +359,9 @@ class BrokenLinks(STLView):
             links = broken[path]
             path = str(base.get_pathto(Path(path)))
             n = len(links)
-            objects.append({'path': path, 'links': links, 'n': n})
+            items.append({'path': path, 'links': links, 'n': n})
             total += n
-        namespace['objects'] = objects
+        namespace['items'] = items
         namespace['total'] = total
 
         return namespace
@@ -641,7 +641,7 @@ class SiteSearchView(SearchForm):
             child = root.get_resource(document.abspath)
             ac = child.get_access_control()
             if ac.is_allowed_to_view(user, child):
-                objects.append(child)
+                items.append(child)
 
         return items
 
@@ -665,7 +665,7 @@ class SiteSearchView(SearchForm):
             'icon': item.get_class_icon(),
         } for item in items ]
 
-        return {'objects': items_ns}
+        return {'items': items_ns}
 
 
 

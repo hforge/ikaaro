@@ -45,7 +45,7 @@ def get_parameters(prefix, **kw):
 
     For example, call it like:
 
-      get_parameters('objects', sortby='id', sortorder='up')
+      get_parameters('resources', sortby='id', sortorder='up')
     """
     # Get the form field from the request (a zope idiom)
     get_parameter = get_context().request.get_parameter
