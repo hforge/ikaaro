@@ -59,6 +59,7 @@ class FileNewInstance(NewInstanceForm):
         cls = get_resource_class(type)
         return {
             'class_id': cls.class_id,
+            'class_title': cls.class_title,
             'title': context.get_form_value('title', type=Unicode),
         }
 

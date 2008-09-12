@@ -51,7 +51,7 @@ class NewWebSiteForm(NewInstanceForm):
     schema = {
         'name': String,
         'title': Unicode,
-    }
+        'class_id': String}
     context_menus = [AddResourceMenu()]
 
 
@@ -59,26 +59,27 @@ class NewWebSiteForm(NewInstanceForm):
         type = context.get_query_value('type')
         cls = get_resource_class(type)
 
-        websites = []
-        for handler_class in get_register_websites():
-            title = handler_class.class_title
-            websites.append({
-                'title': title.gettext(),
-                'class_id': handler_class.class_id,
-                'selected': False,
-                'icon': '/ui/' + handler_class.class_icon16})
-
+        # Specific Websites
+        websites = get_register_websites()
+        websites = list(websites)
         if len(websites) == 1:
-            alone = websites[0]
+            websites = None
         else:
-            alone = None
-            websites[0]['selected'] = True
+            selected = context.get_form_value('class_id')
+            websites = [
+                {'title': x.class_title.gettext(),
+                 'class_id': x.class_id,
+                 'selected': x.class_id == selected,
+                 'icon': '/ui/' + x.class_icon16}
+                for x in websites ]
+            if selected is None:
+                websites[0]['selected'] = True
 
+        # Ok
         return {
+            'class_id': cls.class_id,
             'class_title': cls.class_title.gettext(),
-            'websites': websites,
-            'alone': alone,
-        }
+            'websites': websites}
 
 
     def action(self, resource, context, form):
@@ -101,10 +102,11 @@ class NewWebSiteForm(NewInstanceForm):
             context.message = MSG_NAME_CLASH
             return
 
-        class_id = context.get_form_value('class_id')
+        class_id = form['class_id']
         if class_id is None:
-            context.message = MSG(u'Please select a website.')
-            return
+            websites = get_register_websites()
+            websites = list(websites)
+            class_id = websites[0].class_id
 
         cls = get_website_class(class_id)
         child = cls.make_resource(cls, resource, name)

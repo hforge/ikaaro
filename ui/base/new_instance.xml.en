@@ -4,26 +4,27 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
-  <form name="new_document" action=";new_resource?type=${class_id}"
-    method="post">
+<form name="new_document" action=";new_resource?type=${class_id}"
+  method="post">
+  <fieldset>
+    <legend>Add a new ${class_title}</legend>
     <dl>
       <dt><label for="title">Title</label></dt>
       <dd>
-        <input type="text" id="title" name="title" size="40"
-          value="${title}" />
+        <input type="text" id="title" name="title" size="40" value="${title}"
+          />
       </dd>
       <dt><label for="name">Name</label></dt>
       <dd>
         <input type="text" id="name" name="name" size="40" value="${name}" />
       </dd>
     </dl>
-    <p>
-      <input type="submit" value="Add" class="button_ok"/>
-    </p>
-  </form>
+    <input type="submit" value="Add" class="button_ok"/>
+  </fieldset>
+</form>
 
-  <script type="text/javascript">
-    $("#title").focus();
-  </script>
+<script type="text/javascript">
+  $("#title").focus();
+</script>
 
 </stl:block>

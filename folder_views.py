@@ -93,18 +93,16 @@ class FolderNewResource(IconsView):
 
     def get_namespace(self, resource, context):
         items = [
-            {
-                'icon': '/ui/' + cls.class_icon48,
-                'title': cls.class_title.gettext(),
-                'description': cls.class_description.gettext(),
-                'url': ';new_resource?type=%s' % quote(cls.class_id)
+            {'icon': '/ui/' + cls.class_icon48,
+             'title': cls.class_title.gettext(),
+             'description': cls.class_description.gettext(),
+             'url': ';new_resource?type=%s' % quote(cls.class_id)
             }
             for cls in resource.get_document_types() ]
 
         return {
             'batch': None,
-            'items': items,
-        }
+            'items': items}
 
 
 

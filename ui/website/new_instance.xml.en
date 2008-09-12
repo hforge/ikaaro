@@ -4,7 +4,9 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
-  <form name="new_resource" action=";new_instance" method="post">
+<form action=";new_resource?type=${class_id}" method="post">
+  <fieldset>
+    <legend>Add a new ${class_title}</legend>
     <dl>
       <dt><label for="title">Title</label></dt>
       <dd>
@@ -14,28 +16,24 @@
       <dd>
         <input type="text" id="name" name="name" size="40" />
       </dd>
+      <stl:block stl:if="websites">
+        <dt>Choose the Web Site type</dt>
+        <dd>
+          <div stl:repeat="website websites">
+            <input id="${website/class_id}" name="class_id" type="radio"
+              value="${website/class_id}" checked="${website/selected}" />
+            <img border="0" src="${website/icon}" />
+            <label for="${website/class_id}">${website/title}</label>
+          </div>
+        </dd>
+      </stl:block>
     </dl>
-    <table stl:if="not alone">
-      <tr stl:repeat="website websites">
-        <td>
-          <input id="${website/class_id}" name="class_id" type="radio"
-                 value="${website/class_id}" checked="checked" stl:if="website/selected"/>
-          <input id="${website/class_id}" name="class_id" type="radio"
-                 value="${website/class_id}" stl:if="not website/selected"/>
-        </td>
-        <td><img border="0" src="${website/icon}"/></td>
-        <td><label for="${website/class_id}">${website/title}</label></td>
-      </tr>
-    </table>
-    <stl:block stl:if="alone">
-      <input type="hidden" name="class_id" value="${alone/class_id}" />
-    </stl:block>
-    <p>
-      <input type="submit" value="Add" class="button_ok"/>
-    </p>
-  </form>
+    <input type="submit" value="Add" class="button_ok" />
+  </fieldset>
+</form>
 
-  <script type="text/javascript">
-    $("#title").focus();
-  </script>
+<script type="text/javascript">
+  $("#title").focus();
+</script>
+
 </stl:block>

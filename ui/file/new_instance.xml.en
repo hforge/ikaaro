@@ -4,8 +4,10 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
-  <form name="new_resource" action=";new_resource?type=${class_id}"
-    method="post" enctype="multipart/form-data">
+<form name="new_resource" action=";new_resource?type=${class_id}"
+  method="post" enctype="multipart/form-data">
+  <fieldset>
+    <legend>Upload a ${class_title}</legend>
     <dl>
       <dt><label for="title">Title</label></dt>
       <dd>
@@ -17,10 +19,8 @@
         <input type="file" id="file" name="file" size="35" />
       </dd>
     </dl>
-    <p>
-      <input type="hidden" name="class_id" value="${class_id}"/>
-      <input type="submit" value="Add" class="button_ok"/>
-    </p>
-  </form>
+    <input type="submit" value="Upload" class="button_ok" />
+  </fieldset>
+</form>
 
 </stl:block>
