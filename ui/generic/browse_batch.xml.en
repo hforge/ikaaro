@@ -5,12 +5,14 @@
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
 <p class="batchcontrol">
-${msg}
-<stl:block stl:if="control">
-View from ${start} to ${end}
-(<a stl:omit-tag="not previous" href="${previous}" title="Previous"
->&lt;&lt;</a> <a stl:omit-tag="not next" href="${next}" title="Next">>></a>)
-</stl:block>
+  ${msg}
+  <stl:block stl:if="control">
+    View from ${start} to ${end}
+    (<a stl:if="previous" href="${previous}" title="Previous"><img
+        src="/ui/icons/16x16/previous.png" style="vertical-align: bottom" /></a>
+    <a stl:if="next" href="${next}" title="Next"><img
+        src="/ui/icons/16x16/next.png" style="vertical-align: bottom" /></a>)
+  </stl:block>
 </p>
 
 </stl:block>

@@ -258,7 +258,7 @@ class WikiPageToPDF(BaseView):
         finally:
             file.close()
         # The 'powered' image...
-        image = resource.get_resource('/ui/images/ikaaro_powered.png')
+        image = resource.get_resource('/ui/aruni/images/ikaaro_powered.png')
         file = tempdir.make_file('ikaaro.png')
         try:
             image.save_state_to_file(file)

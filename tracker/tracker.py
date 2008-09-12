@@ -55,8 +55,8 @@ class Tracker(Folder):
     class_version = '20080415'
     class_title = MSG(u'Issue Tracker')
     class_description = MSG(u'To manage bugs and tasks')
-    class_icon16 = 'images/tracker16.png'
-    class_icon48 = 'images/tracker48.png'
+    class_icon16 = 'tracker/tracker16.png'
+    class_icon48 = 'tracker/tracker48.png'
     class_views = ['search', 'add_issue', 'stored_searches', 'browse_content',
                    'edit']
 

@@ -752,7 +752,7 @@ class MonthlyView(CalendarView):
                 day = day + timedelta(1)
             namespace['weeks'].append(ns_week)
 
-        namespace['add_icon'] = '/ui/images/button_add.png'
+        namespace['add_icon'] = '/ui/icons/16x16/add.png'
         return namespace
 
 
@@ -840,7 +840,7 @@ class WeeklyView(CalendarView):
         namespace = self.add_selector_ns(c_date, 'weekly_view' ,namespace)
 
         # Get icon to appear to add a new event
-        namespace['add_icon'] = '/ui/images/button_add.png'
+        namespace['add_icon'] = '/ui/icons/16x16/add.png'
 
         # Get header line with days of the week
         days_of_week_ns = self.days_of_week_ns(start, True, ndays, c_date)

@@ -307,7 +307,7 @@ class TrackerSearch(BaseSearchForm, TrackerView):
 
     access = 'is_allowed_to_view'
     title = MSG(u'Search')
-    icon = 'button_search.png'
+    icon = 'search.png'
 
     # Search Form
     search_template = '/ui/tracker/search.xml'

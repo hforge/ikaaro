@@ -74,7 +74,7 @@ class TextExternalEdit(STLView):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'External Editor')
-    icon = 'button_external.png'
+    icon = 'external.png'
     template = '/ui/text/externaledit.xml'
 
 

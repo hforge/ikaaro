@@ -159,7 +159,7 @@ class FileUpload(STLForm):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Replace')
-    icon = 'button_upload.png'
+    icon = 'upload.png'
     template = '/ui/file/upload.xml'
     schema = {
         'file': FileDataType(mandatory=True),
@@ -270,7 +270,7 @@ class FileBacklinks(FolderBrowseContent):
 
     access = 'is_allowed_to_view'
     title = MSG(u"Backlinks")
-    icon = 'button_rename.png'
+    icon = 'rename.png'
 
     search_template = None
     search_schema = {}
