@@ -40,9 +40,10 @@
   </tbody>
 </table>
 <p stl:if="actions">
-  <input stl:repeat="action actions" type="submit" name=";${action/name}"
-    value="${action/value}" class="${action/class}"
-    onclick="${action/onclick}" />
+  <stl:block stl:repeat="action actions">
+    <input type="submit" name=";${action/name}" value="${action/value}"
+      class="${action/class}" onclick="${action/onclick}" />
+  </stl:block>
 </p>
 </form>
 
