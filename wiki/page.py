@@ -30,7 +30,7 @@ from itools.uri import get_reference
 
 # Import from ikaaro
 from ikaaro.text import Text
-from ikaaro.registry import register_object_class
+from ikaaro.registry import register_resource_class
 from ikaaro.resource_views import DBResourceNewInstance
 from page_views import WikiPageView, WikiPageToPDF, WikiPageEdit, WikiPageHelp
 
@@ -48,7 +48,7 @@ class WikiPage(Text):
     class_icon16 = 'wiki/WikiPage16.png'
     class_icon48 = 'wiki/WikiPage48.png'
     class_views = ['view', 'to_pdf', 'edit', 'externaledit', 'upload',
-                   'backlinks', 'edit_metadata_form', 'state_form', 'help']
+                   'backlinks', 'edit_state', 'help']
 
     overrides = {
         # Security
@@ -60,20 +60,17 @@ class WikiPage(Text):
     }
 
 
-    new_instance = DBResourceNewInstance
-
-
     #######################################################################
     # API
     #######################################################################
     def resolve_link(self, title):
         parent = self.parent
 
-        # Try regular object name or path
+        # Try regular resource name or path
         try:
             return parent.get_resource(title)
         except (LookupError, UnicodeEncodeError):
-            # Convert wiki name to object name
+            # Convert wiki name to resource name
             name = checkid(title)
             if name is None:
                 return None
@@ -92,13 +89,13 @@ class WikiPage(Text):
 
             def wiki_reference_resolver(target):
                 title = target['name']
-                object = self.resolve_link(title)
-                if object is None:
+                resource = self.resolve_link(title)
+                if resource is None:
                     # Not Found
                     target['wiki_name'] = False
                 else:
                     # Found
-                    target['wiki_name'] = str(self.get_pathto(object))
+                    target['wiki_name'] = str(self.get_pathto(resource))
 
                 return True
 
@@ -122,8 +119,8 @@ class WikiPage(Text):
                 continue
             # Note: absolute paths will be rewritten as relative paths
             try:
-                object = parent.get_resource(reference.path)
-                node['refuri'] = str(self.get_pathto(object))
+                resource = parent.get_resource(reference.path)
+                node['refuri'] = str(self.get_pathto(resource))
             except LookupError:
                 pass
 
@@ -135,8 +132,8 @@ class WikiPage(Text):
             if reference.scheme or reference.authority:
                 continue
             try:
-                object = parent.get_resource(reference.path)
-                node['uri'] = str(self.get_pathto(object))
+                resource = parent.get_resource(reference.path)
+                node['uri'] = str(self.get_pathto(resource))
             except LookupError:
                 pass
 
@@ -187,6 +184,7 @@ class WikiPage(Text):
     #######################################################################
     # User Interface
     #######################################################################
+    new_instance = DBResourceNewInstance()
     view = WikiPageView()
     to_pdf = WikiPageToPDF()
     edit = WikiPageEdit()
@@ -201,4 +199,4 @@ class WikiPage(Text):
 ###########################################################################
 # Register
 ###########################################################################
-register_object_class(WikiPage)
+register_resource_class(WikiPage)

@@ -36,13 +36,12 @@ class WikiMenu(ContextMenu):
         # If called from a child
         if isinstance(resource, WikiPage):
             resource = resource.parent
-
         # Namespace
         base = '/%s' % context.site_root.get_pathto(resource)
         return [
-            {'title': resource.get_view(x).title,
-             'href': '%s/;%s' % (base, x)}
-            for x in resource.class_views ]
+            {'title': resource.get_view(view).title,
+             'href': '%s/;%s' % (base, view)}
+                for view in resource.class_views ]
 
 
 

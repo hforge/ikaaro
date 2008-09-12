@@ -24,7 +24,7 @@ from itools.gettext import MSG
 # Import from ikaaro
 from ikaaro.file import File
 from ikaaro.folder import Folder
-from ikaaro.registry import register_object_class
+from ikaaro.registry import register_resource_class
 from folder_views import WikiMenu, GoToFrontPage
 from page import WikiPage
 
@@ -38,14 +38,14 @@ class WikiFolder(Folder):
     class_icon16 = 'wiki/WikiFolder16.png'
     class_icon48 = 'wiki/WikiFolder48.png'
     class_views = ['view', 'browse_content', 'preview_content',
-                   'new_resource', 'orphans', 'edit_metadata', 'last_changes']
+                   'edit', 'new_resource', 'orphans', 'last_changes']
 
     __fixed_handlers__ = ['FrontPage']
 
 
     @staticmethod
-    def _make_object(cls, folder, name):
-        Folder._make_object(cls, folder, name)
+    def _make_resource(cls, folder, name):
+        Folder._make_resource(cls, folder, name)
         # FrontPage
         metadata = WikiPage.build_metadata(title={'en': u"Front Page"})
         folder.set_handler('%s/FrontPage.metadata' % name, metadata)
@@ -65,4 +65,4 @@ class WikiFolder(Folder):
 ###########################################################################
 # Register
 ###########################################################################
-register_object_class(WikiFolder)
+register_resource_class(WikiFolder)

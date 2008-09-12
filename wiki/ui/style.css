@@ -1,19 +1,9 @@
-textarea#wpTextbox1 {
+.defaultSkin textarea {
+  width: 100%;
+  height: 100%;
+  color: #000;
+  background: #fff;
   font-size: 1.2em;
-}
-
-#content .button {
-  width: 22px;
-  height: 22px;
-  margin: 1px;
-  border-bottom: 2px solid #fff;
-  padding-bottom: 1px;
-  background-color: #fff;
-  cursor: pointer;
-}
-
-#content .separator {
-  margin: 1em;
 }
 
 #content .document h1 {

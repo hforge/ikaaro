@@ -118,6 +118,7 @@ class FileNewInstance(NewInstanceForm):
 class FileDownload(BaseView):
 
     access = 'is_allowed_to_view'
+    title = MSG(u"Download")
 
 
     def get_mtime(self, resource):

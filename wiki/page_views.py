@@ -34,7 +34,7 @@ from docutils import nodes
 
 # Import from itools
 from itools import vfs
-from itools.datatypes import DateTime, String, XMLContent
+from itools.datatypes import DateTime, String, XMLContent, Unicode
 from itools.gettext import MSG
 from itools.handlers import checkid, get_handler, File as FileHandler
 from itools.i18n import format_datetime
@@ -59,9 +59,8 @@ class WikiPageView(BaseView):
     def GET(self, resource, context):
         context.styles.append('/ui/wiki/style.css')
         parent = resource.parent
-        here = context.resource
 
-        # Decorate the links and resolve them against the published object
+        # Decorate the links and resolve them against the published resource
         document = resource.get_document()
         for node in document.traverse(condition=nodes.reference):
             refname = node.get('wiki_name')
@@ -77,27 +76,26 @@ class WikiPageView(BaseView):
                         node['classes'].append('external')
                         continue
                     try:
-                        object = resource.get_resource(reference.path)
-                        node['refuri'] = str(here.get_pathto(object))
+                        destination = resource.get_resource(reference.path)
+                        node['refuri'] = str(resource.get_pathto(destination))
                     except LookupError:
                         pass
             elif refname is False:
                     # Wiki link not found
                     node['classes'].append('nowiki')
-                    prefix = here.get_pathto(parent)
+                    prefix = resource.get_pathto(parent)
                     title = node['name']
                     title_encoded = title.encode('utf_8')
                     params = {'type': resource.__class__.__name__,
                               'title': title_encoded,
                               'name': checkid(title) or title_encoded}
-                    refuri = "%s/;new_resource_form?%s" % (prefix,
-                                                           urlencode(params))
+                    refuri = "%s/;new_resource?%s" % (prefix, urlencode(params))
                     node['refuri'] = refuri
             else:
                 # Wiki link found, "refname" is the path
                 node['classes'].append('wiki')
-                object = resource.get_resource(refname)
-                node['refuri'] = str(here.get_pathto(object))
+                destination = resource.get_resource(refname)
+                node['refuri'] = str(resource.get_pathto(destination))
 
         # Manipulate publisher directly (from publish_from_doctree)
         reader = Reader(parser_name='null')
@@ -148,17 +146,17 @@ class WikiPageToPDF(BaseView):
             if refname is False:
                 continue
             # We extend the main page with the first level of subpages
-            object = resource.get_resource(refname)
-            abspath = object.get_abspath()
+            destination = resource.get_resource(refname)
+            abspath = destination.get_abspath()
             if abspath not in pages:
                 from page import WikiPage
-                if not isinstance(object, WikiPage):
+                if not isinstance(destination, WikiPage):
                     # Link to a file, set the URI to download it
-                    prefix = context.resource.get_pathto(object)
+                    prefix = context.resource.get_pathto(destination)
                     node['refuri'] = str(context.uri.resolve(prefix))
                     continue
                 # Adding the page to this one
-                subdoc = object.get_document()
+                subdoc = destination.get_document()
                 # We point the second level of links to the website
                 for node in subdoc.traverse(condition=nodes.reference):
                     refname = node.get('wiki_name')
@@ -182,8 +180,8 @@ class WikiPageToPDF(BaseView):
                     # The journey ends here for broken links
                     if refname is False:
                         continue
-                    object = resource.get_resource(refname)
-                    prefix = context.resource.get_pathto(object)
+                    destination = resource.get_resource(refname)
+                    prefix = context.resource.get_pathto(destination)
                     node['refuri'] = str(context.uri.resolve(prefix))
                 # Now include the page
                 # A page may begin with a section or a list of sections
@@ -321,32 +319,25 @@ class WikiPageEdit(STLForm):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Edit')
-    template = '/ui/wiki/WikiPage_edit.xml'
+    template = '/ui/wiki/edit.xml'
     schema = {
+        'title': Unicode,
         'data': String,
     }
 
 
     def get_namespace(self, resource, context):
+        context.styles.append(
+                '/ui/tiny_mce/themes/advanced/skins/default/ui.css')
         context.styles.append('/ui/wiki/style.css')
+        context.scripts.append('/ui/tiny_mce/tiny_mce_src.js')
         context.scripts.append('/ui/wiki/javascript.js')
-        text_size = context.get_form_value('text_size');
-        text_size_cookie = context.get_cookie('wiki_text_size')
-
-        if text_size_cookie is None:
-            if not text_size:
-                text_size = 'small'
-            context.set_cookie('wiki_text_size', text_size)
-        elif text_size is None:
-            text_size = context.get_cookie('wiki_text_size')
-        elif text_size != text_size_cookie:
-            context.set_cookie('wiki_text_size', text_size)
 
         data = context.get_form_value('data') or resource.handler.to_str()
         return {
-            'timestamp': DateTime.encode(datetime.now()),
+            'title': resource.get_title(),
             'data': data,
-            'text_size': text_size,
+            'timestamp': DateTime.encode(datetime.now()),
         }
 
 
@@ -359,6 +350,10 @@ class WikiPageEdit(STLForm):
         if page.timestamp is not None and timestamp < page.timestamp:
             context.message = messages.MSG_EDIT_CONFLICT
             return
+
+        title = form['title']
+        language = resource.get_content_language(context)
+        resource.set_property('title', title, language=language)
 
         # Data is assumed to be encoded in UTF-8
         data = form['data']
@@ -384,14 +379,14 @@ class WikiPageEdit(STLForm):
         if 'class="system-message"' in resource.view.GET(resource, context):
             message = MSG(u"Syntax error, please check the view for details.")
         else:
-            message = messages.MSG_CHANGES_SAVED2
             accept = context.accept_language
             time = format_datetime(datetime.now(), accept=accept)
-            message = message.gettext(time=time)
+            message = messages.MSG_CHANGES_SAVED2.gettext(time=time)
+            message = MSG(message)
 
         # Come back to the desired view
         if context.has_form_value('view'):
-            goto = context.come_back(message, keep=['text_size'])
+            goto = context.come_back(message)
             query = goto.query
             goto = goto.resolve(';view')
             goto.query = query
@@ -405,7 +400,7 @@ class WikiPageHelp(STLView):
 
     access = 'is_allowed_to_view'
     title = MSG(u"Help")
-    template = '/ui/wiki/WikiPage_help.xml'
+    template = '/ui/wiki/help.xml'
 
 
     def get_namespace(self, resource, context):
