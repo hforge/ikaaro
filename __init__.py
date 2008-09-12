@@ -50,7 +50,6 @@ Folder.register_document_type(CalendarTable)
 # Import ikaaro sub-packages (NOTE must be imported after so they are
 # register after)
 import forum
-import shop
 import tracker
 import wiki
 
