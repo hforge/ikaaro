@@ -48,7 +48,7 @@
       <stl:block stl:repeat="object bc/objects">
         <dl class="thumb" stl:if="object/is_image">
           <dt>
-            <img alt="" title="${object/object_type}" src="${object/icon}/"
+            <img alt="" title="${object/resource_type}" src="${object/icon}/"
               width="48" height="48" />
           </dt>
           <dd>

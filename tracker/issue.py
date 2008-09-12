@@ -43,7 +43,7 @@ from itools.xml import XMLParser, START_ELEMENT, END_ELEMENT, TEXT
 from ikaaro.file import File
 from ikaaro.folder import Folder
 from ikaaro.messages import MSG_CHANGES_SAVED
-from ikaaro.registry import register_object_class, get_object_class
+from ikaaro.registry import register_resource_class, get_resource_class
 from ikaaro.tracker.resources import EditResourcesForm
 from ikaaro.utils import generate_name
 
@@ -486,7 +486,7 @@ class Issue(Folder):
             name, extension, language = FileName.decode(name)
             name = generate_name(name, self.get_names())
             # Add attachement
-            cls = get_object_class(mimetype)
+            cls = get_resource_class(mimetype)
             cls.make_object(cls, self, name, body=body, filename=filename,
                             extension=extension, format=mimetype)
             # Link
@@ -733,4 +733,4 @@ class Issue(Folder):
 ###########################################################################
 # Register
 ###########################################################################
-register_object_class(Issue)
+register_resource_class(Issue)

@@ -73,7 +73,7 @@
             <stl:block stl:repeat="object bc/objects">
               <dl class="thumb">
                 <dt>
-                  <img alt="" title="${object/object_type}"
+                  <img alt="" title="${object/resource_type}"
                     src="${object/icon}" width="48" height="48" />
                 </dt>
                 <dd>

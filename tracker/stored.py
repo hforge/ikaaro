@@ -25,7 +25,7 @@ from itools.gettext import MSG
 from itools.handlers import ConfigFile
 
 # Import from ikaaro
-from ikaaro.registry import register_object_class
+from ikaaro.registry import register_resource_class
 from ikaaro.text import Text
 
 
@@ -64,4 +64,4 @@ class StoredSearch(Text):
 
 
 # Register
-register_object_class(StoredSearch)
+register_resource_class(StoredSearch)

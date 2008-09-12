@@ -55,6 +55,8 @@ summizes these changes:
   ikaaro.users.UserFolder                 ikaaro.user.UserFolder
   ikaaro.widgets.Breadcrumb               ikaaro.resource_views.Breadcrumb
   ikaaro.widgets.build_menu               ikaaro.views.build_menu
+  ikaaro.registry.register_object_class   ikaaro.registry.register_resource_class
+  ikaaro.registry.get_object_class        ikaaro.registry.get_resource_class
 
 
 Architecture
@@ -138,7 +140,7 @@ resource has been simplified:
 API
 ====================
 
-This is a summary of the methods that were renamed or changed their signature:
+This is a summary of the methods that changed their signature:
 
   # Before
   Folder.search_objects(path='.', format=None, state=None, object_class=None)
@@ -146,15 +148,15 @@ This is a summary of the methods that were renamed or changed their signature:
   # Now
   Folder.search_resources(cls=None, format=None, state=None)
 
-  # Before
-  context.server.change_object(...)
-  context.server.add_object(...)
-  context.server.remove_object(...)
+This is a summary of the methods that were renamed ("object" and "resource"
+designate the same variable)
 
-  # After
-  context.server.change_resource(...)
-  context.server.add_resource(...)
-  context.server.remove_resource(...)
+  # Before                       # After
+  context.server.change_object   context.server.change_resource
+  context.server.add_object      context.server.add_resource
+  context.server.remove_object   context.server.remove_resource
+  object.get_object_icon         resource.get_resource_icon
+  container.get_object           container.get_resource
 
 
 Javascript

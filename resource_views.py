@@ -36,7 +36,7 @@ from itools.web import BaseView, STLForm, get_context
 # Import from ikaaro
 from datatypes import FileDataType
 from messages import *
-from registry import get_object_class
+from registry import get_resource_class
 from utils import get_parameters, reduce_string
 from views import NewInstanceForm, ContextMenu
 
@@ -90,7 +90,7 @@ class DBResourceNewInstance(NewInstanceForm):
         type = context.get_query_value('type')
         if not type:
             return MSG(u'Add resource').gettext()
-        cls = get_object_class(type)
+        cls = get_resource_class(type)
         class_title = cls.class_title.gettext()
         title = MSG(u'Add $class_title')
         return title.gettext(class_title=class_title)
@@ -98,7 +98,7 @@ class DBResourceNewInstance(NewInstanceForm):
 
     def get_namespace(self, resource, context):
         type = context.query['type']
-        cls = get_object_class(type)
+        cls = get_resource_class(type)
         return {
             'title': context.get_form_value('title', type=Unicode),
             'name': context.get_form_value('name', default=''),
@@ -129,7 +129,7 @@ class DBResourceNewInstance(NewInstanceForm):
 
         # Create the object
         class_id = context.query['type']
-        cls = get_object_class(class_id)
+        cls = get_resource_class(class_id)
         object = cls.make_object(cls, resource, name)
         # The metadata
         metadata = object.metadata
@@ -261,7 +261,7 @@ class Breadcrumb(object):
 
             self.is_submit = True
             # Calculate path
-            path_to_icon = object.get_object_icon(icon_size)
+            path_to_icon = object.get_resource_icon(icon_size)
             if path:
                 path_to_object = Path(str(path) + '/')
                 path_to_icon = path_to_object.resolve(path_to_icon)
@@ -275,7 +275,7 @@ class Breadcrumb(object):
                             'path': path,
                             'url': url,
                             'icon': path_to_icon,
-                            'object_type': object.handler.get_mimetype()})
+                            'resource_type': object.handler.get_mimetype()})
 
         objects.sort(key=itemgetter('is_folder'), reverse=True)
         self.objects = objects
@@ -344,7 +344,7 @@ class DBResourceAddImage(STLForm):
             return
 
         # Check it is an image
-        cls = get_object_class(mimetype)
+        cls = get_resource_class(mimetype)
         if not issubclass(cls, Image):
             context.message = MSG(u'The given file is not an image.')
             return
@@ -441,7 +441,7 @@ class DBResourceAddLink(STLForm):
         container = root.get_resource(context.get_form_value('target_path'))
         # Add the file to the object
         class_id = context.get_form_value('type')
-        cls = get_object_class(class_id)
+        cls = get_resource_class(class_id)
         uri = cls.new_instance(cls, container, context)
 
         if ';add_link' not in uri.path:

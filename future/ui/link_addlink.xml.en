@@ -77,10 +77,10 @@
             </td>
             <td>
               <a stl:if="object/is_folder" href="${object/url}">
-                <img border="0" alt="${object/object_type}"
+                <img border="0" alt="${object/resource_type}"
                   src="${object/icon}" />
               </a>
-              <img border="0" alt="${object/object_type}"
+              <img border="0" alt="${object/resource_type}"
                 src="${object/icon}" stl:if="not object/is_folder"/>
             </td>
             <td>

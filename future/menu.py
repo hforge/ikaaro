@@ -31,7 +31,7 @@ from itools.uri import Path
 from ikaaro.file import File
 from ikaaro.forms import BooleanRadio
 from ikaaro.messages import MSG_CHANGES_SAVED
-from ikaaro.registry import register_object_class
+from ikaaro.registry import register_resource_class
 from ikaaro.resource_ import DBResource
 from ikaaro.resource_views import Breadcrumb
 from ikaaro.skins import register_skin
@@ -343,4 +343,4 @@ def get_menu_namespace(context, depth=3, show_first_child=False, flat=True,
 #
 # Register
 #
-register_object_class(Link)
+register_resource_class(Link)

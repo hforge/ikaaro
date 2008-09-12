@@ -26,7 +26,7 @@ from itools.xapian import EqQuery, AndQuery
 
 # Import from ikaaro
 from ikaaro.forms import TextWidget, BooleanCheckBox
-from ikaaro.registry import register_object_class
+from ikaaro.registry import register_resource_class
 from ikaaro.table import Table, OrderedTable, OrderedTableFile, TableView
 
 
@@ -207,6 +207,6 @@ class Versions(SelectTable):
 ###########################################################################
 # Register
 ###########################################################################
-register_object_class(SelectTable)
-register_object_class(OrderedSelectTable)
-register_object_class(Versions)
+register_resource_class(SelectTable)
+register_resource_class(OrderedSelectTable)
+register_resource_class(Versions)

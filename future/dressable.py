@@ -39,7 +39,7 @@ from ikaaro.file import File, Image
 from ikaaro.folder import Folder
 from ikaaro.html import WebPage, EpozEditable
 from ikaaro.messages import *
-from ikaaro.registry import register_object_class
+from ikaaro.registry import register_resource_class
 from ikaaro.workflow import WorkflowAware
 
 
@@ -133,7 +133,7 @@ class Dressable(Folder, EpozEditable):
         return handlers
 
 
-    def _get_object_label(self, name):
+    def _get_resource_label(self, name):
         if self.has_resource(name):
             object = self.get_resource(name)
             label = object.get_property('title')
@@ -454,7 +454,7 @@ class Dressable(Folder, EpozEditable):
 
     def edit_document__sublabel__(self, **kw):
         dress_name = kw.get('dress_name')
-        label = self._get_object_label(dress_name)
+        label = self._get_resource_label(dress_name)
         if kw.get('external'):
             label = Template(u'$label (External)').substitute(label=label)
         return label
@@ -462,8 +462,8 @@ class Dressable(Folder, EpozEditable):
 
     def edit_image__sublabel__(self, **kw):
         name = kw.get('name')
-        return self._get_object_label(name)
+        return self._get_resource_label(name)
 
 
 
-register_object_class(Dressable)
+register_resource_class(Dressable)

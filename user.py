@@ -31,7 +31,7 @@ from itools.xapian import TextField, KeywordField
 from access import AccessControl
 from datatypes import Password
 from folder import Folder
-from registry import register_object_class, get_object_class
+from registry import register_resource_class, get_resource_class
 from resource_views import DBResourceEditMetadata
 from user_views import UserConfirmRegistration, UserProfile, UserEditAccount
 from user_views import UserEditPreferences, UserEditPassword, UserTasks
@@ -238,7 +238,7 @@ class UserFolder(Folder):
 
 
     def get_document_types(self):
-        return [get_object_class('user')]
+        return [get_resource_class('user')]
 
 
     #######################################################################
@@ -260,7 +260,7 @@ class UserFolder(Folder):
             user_id = '0'
 
         # Add the user
-        cls = get_object_class('user')
+        cls = get_resource_class('user')
         user = cls.make_object(cls, self, user_id)
         # Set the email and paswword
         if email is not None:
@@ -307,5 +307,5 @@ class UserFolder(Folder):
 ###########################################################################
 # Register
 ###########################################################################
-register_object_class(UserFolder)
-register_object_class(User)
+register_resource_class(UserFolder)
+register_resource_class(User)

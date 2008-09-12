@@ -36,7 +36,7 @@ from ikaaro.calendar_views import WeeklyView
 from ikaaro.forms import DateWidget, MultilineWidget, Select, TextWidget
 from ikaaro.messages import MSG_CHANGES_SAVED
 from ikaaro.table import Table, TableView
-from ikaaro.registry import register_object_class
+from ikaaro.registry import register_resource_class
 
 
 resolution = timedelta.resolution
@@ -305,4 +305,4 @@ class EditResourcesForm(STLForm):
 ###########################################################################
 # Register
 ###########################################################################
-register_object_class(Resources)
+register_resource_class(Resources)

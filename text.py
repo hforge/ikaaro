@@ -25,7 +25,7 @@ from itools.xml import XMLFile
 
 # Import from ikaaro
 from file import File
-from registry import register_object_class
+from registry import register_resource_class
 from text_views import TextEdit, TextView, TextExternalEdit, POEdit
 from text_views import CSVView, CSVAddRow, CSVEditRow
 
@@ -155,14 +155,14 @@ class CSV(Text):
 ###########################################################################
 # Register
 ###########################################################################
-register_object_class(Text)
-register_object_class(Python)
-register_object_class(PO)
-register_object_class(CSS)
-register_object_class(XML)
-register_object_class(XML, format='application/xml')
-register_object_class(HTML)
-register_object_class(CSV)
-register_object_class(CSV, 'text/x-comma-separated-values')
-register_object_class(CSV, 'text/csv')
+register_resource_class(Text)
+register_resource_class(Python)
+register_resource_class(PO)
+register_resource_class(CSS)
+register_resource_class(XML)
+register_resource_class(XML, format='application/xml')
+register_resource_class(HTML)
+register_resource_class(CSV)
+register_resource_class(CSV, 'text/x-comma-separated-values')
+register_resource_class(CSV, 'text/csv')
 

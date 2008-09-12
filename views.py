@@ -24,7 +24,7 @@ from itools.web import BaseView, STLView, STLForm, get_context
 from itools.xml import XMLParser
 
 # Import from ikaaro
-from registry import get_object_class
+from registry import get_resource_class
 
 
 """This module contains some generic views used by different objects.
@@ -66,7 +66,7 @@ class NewInstanceForm(STLForm):
 
     def icon(self, resource, **kw):
         type = kw.get('type')
-        cls = get_object_class(type)
+        cls = get_resource_class(type)
         if cls is not None:
             return cls.get_class_icon()
         # Default

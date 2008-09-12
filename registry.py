@@ -18,13 +18,13 @@
 
 objects_registry = {}
 
-def register_object_class(object, format=None):
+def register_resource_class(object, format=None):
     if format is None:
         format = object.class_id
     objects_registry[format] = object
 
 
-def get_object_class(class_id, is_file=True):
+def get_resource_class(class_id, is_file=True):
     if class_id in objects_registry:
         return objects_registry[class_id]
 

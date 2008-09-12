@@ -32,7 +32,7 @@ from itools.xapian import EqQuery, RangeQuery, AndQuery, OrQuery, PhraseQuery
 
 # Import from ikaaro
 from ikaaro.folder import Folder
-from ikaaro.registry import register_object_class
+from ikaaro.registry import register_resource_class
 from resources import Resources
 from stored import StoredSearch, StoredSearchFile
 from tables import SelectTableTable, SelectTable
@@ -269,4 +269,4 @@ class Tracker(Folder):
 ###########################################################################
 # Register
 ###########################################################################
-register_object_class(Tracker)
+register_resource_class(Tracker)

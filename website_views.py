@@ -36,7 +36,7 @@ from itools.xapian import EqQuery, OrQuery, AndQuery, TextField
 import ikaaro
 from forms import AutoForm, Select, MultilineWidget, TextWidget
 from messages import *
-from registry import get_object_class
+from registry import get_resource_class
 from registry import get_register_websites, get_website_class
 from resource_views import AddResourceMenu
 from views import IconsView, NewInstanceForm, SearchForm, ContextMenu
@@ -57,7 +57,7 @@ class NewWebSiteForm(NewInstanceForm):
 
     def get_namespace(self, resource, context):
         type = context.get_query_value('type')
-        cls = get_object_class(type)
+        cls = get_resource_class(type)
 
         websites = []
         for handler_class in get_register_websites():

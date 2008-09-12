@@ -284,7 +284,7 @@ class FolderBrowseContent(SearchForm):
             return id, False
         elif column == 'icon':
             # icon
-            path_to_icon = item.get_object_icon(16)
+            path_to_icon = item.get_resource_icon(16)
             if path_to_icon.startswith(';'):
                 path_to_icon = Path('%s/' % item.name).resolve(path_to_icon)
             return path_to_icon

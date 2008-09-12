@@ -39,7 +39,7 @@ from calendar_views import MonthlyView, TimetablesForm, WeeklyView
 from calendar_views import get_current_date
 from folder import Folder
 from messages import MSG_CHANGES_SAVED
-from registry import register_object_class
+from registry import register_resource_class
 from table import Table, TableEditRecord
 from text import Text
 
@@ -564,5 +564,5 @@ class CalendarContainer(CalendarBase):
 ###########################################################################
 # Register
 ###########################################################################
-register_object_class(CalendarTable)
-register_object_class(Calendar)
+register_resource_class(CalendarTable)
+register_resource_class(Calendar)

@@ -34,7 +34,7 @@ from itools.xapian import Catalog
 # Import from ikaaro
 from folder import Folder
 from metadata import Metadata
-from registry import get_object_class
+from registry import get_resource_class
 from utils import is_pid_running
 from versioning import VersioningAware
 from website import WebSite
@@ -101,7 +101,7 @@ def get_pid(target):
 def get_root(database, target):
     path = '%s/database/.metadata' % target
     metadata = database.get_handler(path, cls=Metadata)
-    cls = get_object_class(metadata.format)
+    cls = get_resource_class(metadata.format)
     # Build the root resource
     root = cls(metadata)
     root.name = root.class_title.message

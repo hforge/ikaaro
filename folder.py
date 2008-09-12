@@ -29,7 +29,7 @@ from exceptions import ConsistencyError
 from folder_views import FolderBrowseContent, FolderLastChanges
 from folder_views import FolderNewResource, FolderOrphans
 from folder_views import FolderPreviewContent, FolderRename, FolderView
-from registry import register_object_class, get_object_class
+from registry import register_resource_class, get_resource_class
 from resource_ import DBResource
 
 
@@ -96,7 +96,7 @@ class Folder(DBResource):
             # FIXME This is just a guess, it may fail.
             is_file = '/' in format
 
-        cls = get_object_class(format, is_file=is_file)
+        cls = get_resource_class(format, is_file=is_file)
         return cls(metadata)
 
 
@@ -244,7 +244,7 @@ class Folder(DBResource):
         # Add resource form
         if name == 'new_resource':
             if query is not None and 'type' in query:
-                view = get_object_class(query['type']).new_instance
+                view = get_resource_class(query['type']).new_instance
                 if isinstance(view, BaseView):
                     return view
 
@@ -267,5 +267,5 @@ class Folder(DBResource):
 ###########################################################################
 # Register
 ###########################################################################
-register_object_class(Folder)
-register_object_class(Folder, format="application/x-not-regular-file")
+register_resource_class(Folder)
+register_resource_class(Folder, format="application/x-not-regular-file")

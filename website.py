@@ -32,7 +32,7 @@ from itools.xml import XMLParser
 # Import from ikaaro
 from access import RoleAware
 from folder import Folder
-from registry import register_object_class
+from registry import register_resource_class
 from registry import register_website
 from resource_views import LoginView
 from skins import UI, ui_path
@@ -165,5 +165,5 @@ class WebSite(RoleAware, Folder):
 ###########################################################################
 # Register
 ###########################################################################
-register_object_class(WebSite)
+register_resource_class(WebSite)
 register_website(WebSite)

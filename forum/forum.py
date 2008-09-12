@@ -31,7 +31,7 @@ from itools.web import STLForm
 # Import from ikaaro
 from ikaaro.folder import Folder
 from ikaaro.messages import MSG_NAME_CLASH
-from ikaaro.registry import register_object_class
+from ikaaro.registry import register_resource_class
 from thread import Thread
 from message import Message
 
@@ -150,4 +150,4 @@ class Forum(Folder):
 ###########################################################################
 # Register
 ###########################################################################
-register_object_class(Forum)
+register_resource_class(Forum)

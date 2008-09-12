@@ -28,7 +28,7 @@ from itools.web import STLForm
 # Import from ikaaro
 from ikaaro.folder import Folder
 from ikaaro.messages import MSG_DELETE_SELECTION, MSG_CHANGES_SAVED
-from ikaaro.registry import register_object_class
+from ikaaro.registry import register_resource_class
 from message import Message, build_message
 
 
@@ -155,4 +155,4 @@ class Thread(Folder):
 ###########################################################################
 # Register
 ###########################################################################
-register_object_class(Thread)
+register_resource_class(Thread)

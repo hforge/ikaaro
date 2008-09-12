@@ -25,7 +25,7 @@ from itools.web import STLForm
 
 # Import from ikaaro
 from ikaaro.messages import *
-from ikaaro.registry import register_object_class
+from ikaaro.registry import register_resource_class
 from ikaaro.html import WebPage
 
 
@@ -67,4 +67,4 @@ class Message(WebPage):
 
 
 
-register_object_class(Message)
+register_resource_class(Message)

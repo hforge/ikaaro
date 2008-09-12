@@ -92,7 +92,7 @@ class IResource(Resource):
 
 
     @classmethod
-    def get_object_icon(cls, size=16):
+    def get_resource_icon(cls, size=16):
         icon = getattr(cls, 'icon%s' % size, None)
         if icon is None:
             return cls.get_class_icon(size)

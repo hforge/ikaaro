@@ -36,7 +36,7 @@ from itools.xml import MSPowerPoint as MSPowerPointFile, RTF as RTFFile
 
 # Import from ikaaro
 from folder_views import FolderBrowseContent
-from registry import register_object_class
+from registry import register_resource_class
 from versioning import VersioningAware
 from workflow import WorkflowAware
 from file_views import FileNewInstance, FileDownload, FileView
@@ -422,18 +422,18 @@ class Bzip2(File):
 ###########################################################################
 # Register
 ###########################################################################
-register_object_class(File)
-register_object_class(File, format="application/octet-stream")
+register_resource_class(File)
+register_resource_class(File, format="application/octet-stream")
 # Media
 for cls in Image, Video, Flash:
-    register_object_class(cls)
+    register_resource_class(cls)
 # Office
 for cls in MSWord, MSExcel, MSPowerPoint, PDF, RTF:
-    register_object_class(cls)
+    register_resource_class(cls)
 # OpenOffice 1.0 & ODF
 for cls in OOWriter, OOCalc, OOImpress, ODT, ODS, ODP:
-    register_object_class(cls)
+    register_resource_class(cls)
 # Archives
 for cls in ZipArchive, TarArchive, Gzip, Bzip2:
-    register_object_class(cls)
+    register_resource_class(cls)
 

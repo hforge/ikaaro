@@ -37,7 +37,7 @@ from datatypes import FileDataType
 from folder_views import FolderBrowseContent
 from messages import MSG_BAD_NAME, MSG_NAME_CLASH, MSG_NEW_RESOURCE
 from multilingual import Multilingual
-from registry import get_object_class
+from registry import get_resource_class
 from resource_views import AddResourceMenu
 from views import NewInstanceForm
 
@@ -56,7 +56,7 @@ class FileNewInstance(NewInstanceForm):
 
     def get_namespace(self, resource, context):
         type = context.get_query_value('type')
-        cls = get_object_class(type)
+        cls = get_resource_class(type)
         return {
             'class_id': cls.class_id,
             'title': context.get_form_value('title', type=Unicode),
@@ -82,7 +82,7 @@ class FileNewInstance(NewInstanceForm):
             class_id = 'webpage'
         else:
             class_id = mimetype
-        cls = get_object_class(class_id)
+        cls = get_resource_class(class_id)
 
         # Multilingual objects, find out the language
         name, type, language = FileName.decode(name)

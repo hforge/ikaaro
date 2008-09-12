@@ -41,7 +41,7 @@ from itools.xml import XMLParser
 from access import RoleAware
 from folder import Folder
 from html import WebPage
-from registry import register_object_class, get_object_class
+from registry import register_resource_class, get_resource_class
 from skins import UI, ui_path
 from text import PO
 from user import UserFolder
@@ -102,7 +102,7 @@ class Root(WebSite):
         folder.set_handler('users.metadata', users)
         # Default User
         password = crypt_password(password)
-        user_class = get_object_class('user')
+        user_class = get_resource_class('user')
         user = user_class.build_metadata(email=email, password=password)
         folder.set_handler('users/0.metadata', user)
         # Return
@@ -277,4 +277,4 @@ class Root(WebSite):
 ###########################################################################
 # Register
 ###########################################################################
-register_object_class(Root)
+register_resource_class(Root)

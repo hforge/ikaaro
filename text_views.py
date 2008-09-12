@@ -29,7 +29,7 @@ from itools.web import STLForm, STLView
 # Import from ikaaro
 from forms import AutoForm, get_default_widget
 from messages import MSG_CHANGES_SAVED
-from registry import register_object_class
+from registry import register_resource_class
 from utils import get_parameters
 from views import BrowseForm
 

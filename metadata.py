@@ -26,7 +26,7 @@ from itools.xml import xml_uri, XMLParser, START_ELEMENT, END_ELEMENT, TEXT
 
 # Import from ikaaro
 from exceptions import ParserError
-from registry import get_object_class
+from registry import get_resource_class
 
 
 
@@ -40,7 +40,7 @@ def get_datatype(format, name):
     if format is None:
         return String
 
-    cls = get_object_class(format)
+    cls = get_resource_class(format)
     if cls is None:
         return String
 
@@ -93,7 +93,7 @@ class Metadata(File):
                     if self.format is None:
                         schema = {}
                     else:
-                        cls = get_object_class(self.format)
+                        cls = get_resource_class(self.format)
                         schema = cls.get_metadata_schema()
                     stack.append((name, None, {}))
                     continue
@@ -156,7 +156,7 @@ class Metadata(File):
         # format, version, schema
         format = self.format
         version = self.version
-        cls = get_object_class(format)
+        cls = get_resource_class(format)
         if cls is None:
             schema = {}
         else:

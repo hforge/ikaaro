@@ -36,7 +36,7 @@ from itools.xml import TEXT, START_ELEMENT, XMLError, XMLParser, stream_to_str
 from messages import *
 from multilingual import Multilingual
 from text import Text
-from registry import register_object_class
+from registry import register_resource_class
 from resource_ import DBResource
 
 
@@ -275,5 +275,5 @@ class WebPage(EpozEditable, Multilingual, Text):
 ###########################################################################
 # Register
 ###########################################################################
-register_object_class(WebPage)
-register_object_class(WebPage, format='application/xhtml+xml')
+register_resource_class(WebPage)
+register_resource_class(WebPage, format='application/xhtml+xml')
