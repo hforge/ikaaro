@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://xml.itools.org/namespaces/stl">
-
 
 <form action="" method="get" stl:if="search_fields">
   <fieldset>
@@ -14,13 +15,14 @@
     <!-- Term -->
     <input type="text" name="search_term" size="35" value="${search_term}" />
     <!-- SubFolders -->
+    &nbsp;
     <input type="checkbox" name="search_subfolders" id="search_subfolders"
-      checked="${search_subfolders}" value="1" />
-    <label for="search_subfolders">Search subfolders</label>
+      checked="${search_subfolders}" value="1" /><label
+      for="search_subfolders">Search subfolders</label>
     <!-- OK -->
+    &nbsp; &nbsp;
     <input type="submit" value="OK" class="button_search"/>
   </fieldset>
 </form>
-
 
 </stl:block>
