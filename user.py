@@ -47,9 +47,8 @@ class User(AccessControl, Folder):
     class_title = MSG(u'User')
     class_icon16 = 'icons/16x16/user.png'
     class_icon48 = 'icons/48x48/user.png'
-    class_views = ['profile', 'browse_content', 'preview_content',
-                   'edit_account', 'edit_preferences', 'edit_password',
-                   'tasks']
+    class_views = ['profile', 'edit_account', 'edit_preferences',
+                   'edit_password', 'tasks']
 
 
     ########################################################################
