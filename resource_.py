@@ -33,7 +33,7 @@ from itools.xapian import TextField, KeywordField, IntegerField, BoolField
 # Import from ikaaro
 from lock import Lock
 from metadata import Metadata
-from resource_views import DBResourceNewInstance, DBResourceEditMetadata
+from resource_views import DBResourceNewInstance, DBResourceEdit
 from resource_views import DBResourceAddImage, DBResourceAddLink
 from resource_views import LoginView, LogoutView
 from workflow import WorkflowAware
@@ -457,7 +457,7 @@ class DBResource(CatalogAware, IResource):
 
 
     ########################################################################
-    # UI / Metadata
+    # UI / Edit
     ########################################################################
     @classmethod
     def build_metadata(cls, format=None, **kw):
@@ -472,7 +472,7 @@ class DBResource(CatalogAware, IResource):
         return Metadata(handler_class=cls, format=format, **kw)
 
 
-    edit_metadata = DBResourceEditMetadata()
+    edit = DBResourceEdit()
 
 
     ########################################################################

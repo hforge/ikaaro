@@ -134,7 +134,7 @@ class Forum(Folder):
     class_description = MSG(u'An iKaaro forum')
     class_icon16 = 'forum/Forum16.png'
     class_icon48 = 'forum/Forum48.png'
-    class_views = ['view', 'add_thread', 'edit_metadata_form']
+    class_views = ['view', 'add_thread', 'edit']
 
 
     #######################################################################

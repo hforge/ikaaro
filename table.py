@@ -38,7 +38,7 @@ from table_views import OrderedTableView
 class Table(File):
 
     class_version = '20071216'
-    class_views = ['view', 'add_record', 'edit_metadata', 'history']
+    class_views = ['view', 'add_record', 'edit', 'history']
     class_handler = TableFile
     record_class = Record
     form = []

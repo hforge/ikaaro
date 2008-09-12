@@ -58,7 +58,7 @@ class Tracker(Folder):
     class_icon16 = 'images/tracker16.png'
     class_icon48 = 'images/tracker48.png'
     class_views = ['search', 'add_issue', 'stored_searches', 'browse_content',
-                   'edit_metadata']
+                   'edit']
 
     __fixed_handlers__ = ['modules', 'versions', 'types', 'priorities',
         'states', 'resources']

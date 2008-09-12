@@ -6,7 +6,7 @@
 
   <h2>Edit Metadata in ${language_name}</h2>
 
-  <form action=";edit_metadata" method="post">
+  <form action=";edit" method="post">
     <dl>
       <dt><label for="title">Title</label></dt>
       <dd>

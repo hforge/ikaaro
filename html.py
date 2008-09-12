@@ -22,7 +22,7 @@
 from datetime import datetime
 
 # Import from itools
-from itools.datatypes import DateTime, String
+from itools.datatypes import DateTime, String, Unicode
 from itools.handlers import File
 from itools.gettext import MSG
 from itools.http import Forbidden
@@ -38,27 +38,34 @@ from multilingual import Multilingual
 from text import Text
 from registry import register_resource_class
 from resource_ import DBResource
+from resource_views import DBResourceEdit, EditLanguageMenu
 
 
 
 ###########################################################################
 # Views
 ###########################################################################
-class HTMLEditView(STLForm):
+class HTMLEditView(DBResourceEdit):
     """WYSIWYG editor for HTML documents.
     """
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Edit Inline')
+    context_menus = [EditLanguageMenu()]
     template = '/ui/html/edit.xml'
     schema = {
+        'title': Unicode,
+        'description': Unicode,
+        'subject': Unicode,
         'data': String,
-        'timestamp': DateTime}
+        'timestamp': DateTime
+    }
 
     sanitize_html = False
 
 
     def get_namespace(self, resource, context):
+        namespace = DBResourceEdit.get_namespace(self, resource, context)
         data = resource.get_epoz_data()
         # If the document has not a body (e.g. a frameset), edit as plain text
         if data is None:
@@ -66,9 +73,9 @@ class HTMLEditView(STLForm):
         data = stream_to_str(data)
 
         # Edit with a rich text editor
-        return {
-            'timestamp': DateTime.encode(datetime.now()),
-            'rte': resource.get_rte(context, 'data', data)}
+        namespace['rte'] = resource.get_rte(context, 'data', data)
+        namespace['timestamp'] = DateTime.encode(datetime.now())
+        return namespace
 
 
     def action(self, resource, context, form):
@@ -81,6 +88,8 @@ class HTMLEditView(STLForm):
             context.message = MSG_EDIT_CONFLICT
             return
 
+        # Properties
+        DBResourceEdit.action(self, resource, context, form)
         # Sanitize
         new_body = form['data']
         namespaces = {None: 'http://www.w3.org/1999/xhtml'}
@@ -152,7 +161,7 @@ class WebPage(EpozEditable, Multilingual, Text):
     class_icon16 = 'icons/16x16/html.png'
     class_icon48 = 'icons/48x48/html.png'
     class_views = ['view', 'edit', 'externaledit', 'upload', 'backlinks',
-                   'edit_metadata', 'edit_state', 'history']
+                   'edit_state', 'history']
     class_handler = XHTMLFile
 
 

@@ -110,7 +110,7 @@ class Thread(Folder):
     class_version = '20071215'
     class_title = MSG(u'Thread')
     class_description = u"A thread to discuss"
-    class_views = ['view', 'edit_metadata_form']
+    class_views = ['view', 'edit']
 
     # XXX
     #addlink_form__access__ = False

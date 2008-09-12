@@ -42,7 +42,7 @@ class Folder(DBResource):
     class_description = MSG(u'Organize your files and documents with folders.')
     class_icon16 = 'icons/16x16/folder.png'
     class_icon48 = 'icons/48x48/folder.png'
-    class_views = ['browse_content', 'preview_content', 'edit_metadata']
+    class_views = ['browse_content', 'preview_content', 'edit']
     class_handler = FolderHandler
 
 

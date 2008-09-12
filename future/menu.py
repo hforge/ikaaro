@@ -52,7 +52,7 @@ class Link(File):
     class_description = MSG(u'Link')
     class_icon48 = 'future/images/Link48.png'
     class_icon16 = 'future/images/Link16.png'
-    class_views = ['edit_metadata_form', 'state_form']
+    class_views = ['edit', 'state_form']
 
 
     @classmethod
@@ -97,7 +97,7 @@ class Link(File):
         return stl(handler, namespace, prefix=prefix)
 
 
-    def edit_metadata_form(self, context):
+    def edit_form(self, context):
         # Build the namespace
         namespace = {}
         # Language
@@ -117,11 +117,11 @@ class Link(File):
         # Add a script
         context.scripts.append('/ui/future/link.js')
 
-        handler = self.get_resource('/ui/future/link_edit_metadata.xml')
+        handler = self.get_resource('/ui/future/link_edit.xml')
         return stl(handler, namespace)
 
 
-    def edit_metadata(self, context):
+    def edit(self, context):
         link = context.get_form_value('link').strip()
         if not link:
             return context.come_back(u'The link must be entered.')

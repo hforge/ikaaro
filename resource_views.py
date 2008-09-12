@@ -141,14 +141,14 @@ class DBResourceNewInstance(NewInstanceForm):
 
 
 
-class DBResourceEditMetadata(STLForm):
+class DBResourceEdit(STLForm):
 
     access = 'is_allowed_to_edit'
-    title = MSG(u'Edit Metadata')
+    title = MSG(u'Edit')
     icon = 'metadata.png'
     context_menus = [EditLanguageMenu()]
 
-    template = '/ui/base/edit_metadata.xml'
+    template = '/ui/base/edit.xml'
     schema = {
         'title': Unicode,
         'description': Unicode,

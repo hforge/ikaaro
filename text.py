@@ -38,7 +38,7 @@ class Text(File):
     class_title = MSG(u'Plain Text')
     class_icon16 = 'icons/16x16/text.png'
     class_icon48 = 'icons/48x48/text.png'
-    class_views = ['view', 'edit', 'externaledit', 'upload', 'edit_metadata',
+    class_views = ['view', 'edit', 'externaledit', 'upload', 'edit',
                    'edit_state', 'history']
     class_handler = TextFile
 
@@ -112,8 +112,8 @@ class CSV(Text):
     class_id = 'text/comma-separated-values'
     class_version = '20071216'
     class_title = MSG(u'Comma Separated Values')
-    class_views = ['view', 'add_row', 'externaledit', 'upload',
-                   'edit_metadata', 'history']
+    class_views = ['view', 'add_row', 'edit', 'externaledit', 'upload',
+                   'history']
     class_handler = CSVFile
 
 

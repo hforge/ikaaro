@@ -32,7 +32,7 @@ from access import AccessControl
 from datatypes import Password
 from folder import Folder
 from registry import register_resource_class, get_resource_class
-from resource_views import DBResourceEditMetadata
+from resource_views import DBResourceEdit
 from user_views import UserConfirmRegistration, UserProfile, UserEditAccount
 from user_views import UserEditPreferences, UserEditPassword, UserTasks
 from utils import crypt_password, generate_password
@@ -234,7 +234,7 @@ class UserFolder(Folder):
     class_version = '20071215'
     class_icon16 = 'icons/16x16/userfolder.png'
     class_icon48 = 'icons/48x48/userfolder.png'
-    class_views = ['view', 'browse_content', 'edit_metadata']
+    class_views = ['view', 'browse_content', 'edit']
 
 
     def get_document_types(self):
@@ -290,7 +290,7 @@ class UserFolder(Folder):
     paste__access__ = False
 
 
-    edit_metadata = DBResourceEditMetadata(access='is_admin')
+    edit = DBResourceEdit(access='is_admin')
 
 
     #######################################################################
