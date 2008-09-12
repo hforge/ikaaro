@@ -7,10 +7,10 @@
   <p>
   Found <b>${total}</b> broken links.
   </p>
-  <stl:block stl:repeat="object objects">
-    (${object/n}) <a href="${object/path}">${object/path}</a>
+  <stl:block stl:repeat="item items">
+    (${item/n}) <a href="${item/path}">${item/path}</a>
     <ul>
-      <stl:block stl:repeat="link object/links"><li>${link}</li></stl:block>
+      <stl:block stl:repeat="link item/links"><li>${link}</li></stl:block>
     </ul>
   </stl:block>
 

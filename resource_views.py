@@ -204,8 +204,6 @@ class Breadcrumb(object):
             filter_type = DBResource
 
         context = get_context()
-        request, response = context.request, context.response
-
         here = context.resource
         if root is None:
             root = here.get_site_root()
@@ -227,10 +225,10 @@ class Breadcrumb(object):
         self.target_path = str(target.get_abspath())
 
         # Resource to link
-        resource = request.get_parameter('resource')
-        if resource == '':
-            resource = '.'
-        self.resource = resource
+        item = context.get_form_value('item', default='')
+        if item == '':
+            item = '.'
+        self.item = item
 
         # The breadcrumb
         breadcrumb = []
@@ -246,7 +244,7 @@ class Breadcrumb(object):
         self.path = breadcrumb
 
         # Content
-        resources = []
+        items = []
         self.is_submit = False
         user = context.user
         filter = (Folder, filter_type)
@@ -254,7 +252,6 @@ class Breadcrumb(object):
             ac = resource.get_access_control()
             if not ac.is_allowed_to_view(user, resource):
                 continue
-
             path = here.get_pathto(resource)
             bc_target = str(root.get_pathto(resource))
             url = context.uri.replace(bc_target=bc_target)
@@ -266,21 +263,22 @@ class Breadcrumb(object):
                 path_to_resource = Path(str(path) + '/')
                 path_to_icon = path_to_resource.resolve(path_to_icon)
             title = resource.get_title()
-            resources.append({'name': resource.name,
-                            'title': title,
-                            'short_title': reduce_string(title, 12, 40),
-                            'is_folder': isinstance(resource, Folder),
-                            'is_image': isinstance(resource, Image),
-                            'is_selectable': True,
-                            'path': path,
-                            'url': url,
-                            'icon': path_to_icon,
-                            'resource_type': resource.handler.get_mimetype()})
+            items.append({'name': resource.name,
+                          'title': title,
+                          'short_title': reduce_string(title, 12, 40),
+                          'is_folder': isinstance(resource, Folder),
+                          'is_image': isinstance(resource, Image),
+                          'is_selectable': True,
+                          'path': path,
+                          'url': url,
+                          'icon': path_to_icon,
+                          'item_type': resource.handler.get_mimetype()})
 
-        resources.sort(key=itemgetter('is_folder'), reverse=True)
-        self.resources = resources
+        items.sort(key=itemgetter('is_folder'), reverse=True)
+        self.items = items
 
         # Avoid general template
+        response = context.response
         response.set_header('Content-Type', 'text/html; charset=UTF-8')
 
 

@@ -9,7 +9,7 @@
     <script type="text/javascript">
       function select_link(){
         value = ''
-        elements = document.all['object']
+        elements = document.all['item']
         if (elements.nodeName ) {
           value = elements.value
         }else{
@@ -71,23 +71,23 @@
       </div>
       <form action=";addlink_form" method="get">
         <table id="insert_link">
-          <tr stl:repeat="object bc/objects">
+          <tr stl:repeat="item bc/items">
             <td>
-              <input type="radio" name="object" value="${object/path}" />
+              <input type="radio" name="item" value="${item/path}" />
             </td>
             <td>
-              <a stl:if="object/is_folder" href="${object/url}">
-                <img border="0" alt="${object/resource_type}"
-                  src="${object/icon}" />
+              <a stl:if="item/is_folder" href="${item/url}">
+                <img border="0" alt="${item/item_type}"
+                  src="${item/icon}" />
               </a>
-              <img border="0" alt="${object/resource_type}"
-                src="${object/icon}" stl:if="not object/is_folder"/>
+              <img border="0" alt="${item/item_type}"
+                src="${item/icon}" stl:if="not item/is_folder"/>
             </td>
             <td>
-              <a stl:if="object/is_folder" href="${object/url}">
-                ${object/name}
+              <a stl:if="item/is_folder" href="${item/url}">
+                ${item/name}
               </a>
-              <stl:inline if="not object/is_folder">${object/name}</stl:inline>
+              <stl:inline if="not item/is_folder">${item/name}</stl:inline>
             </td>
           </tr>
         </table>

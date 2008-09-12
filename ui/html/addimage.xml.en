@@ -32,28 +32,28 @@
       </div>
       <!-- Content -->
       <!-- Folders first -->
-      <stl:block stl:repeat="object bc/objects">
-        <dl class="thumb" stl:if="object/is_folder">
+      <stl:block stl:repeat="item bc/items">
+        <dl class="thumb" stl:if="item/is_folder">
           <dt>
-            <a href="${object/url}"><img alt="" src="${object/icon}"
+            <a href="${item/url}"><img alt="" src="${item/icon}"
               width="48" height="48"/></a>
           </dt>
           <dd>
-            <abbr title="${object/title}">${object/short_title}</abbr><br />
-            <a href="${object/url}" title="${object/title}">Browse</a>
+            <abbr title="${item/title}">${item/short_title}</abbr><br />
+            <a href="${item/url}" title="${item/title}">Browse</a>
           </dd>
         </dl>
       </stl:block>
       <!-- Images next -->
-      <stl:block stl:repeat="object bc/objects">
-        <dl class="thumb" stl:if="object/is_image">
+      <stl:block stl:repeat="item bc/items">
+        <dl class="thumb" stl:if="item/is_image">
           <dt>
-            <img alt="" title="${object/resource_type}" src="${object/icon}/"
+            <img alt="" title="${item/item_type}" src="${item/icon}/"
               width="48" height="48" />
           </dt>
           <dd>
-            <abbr title="${object/title}">${object/short_title}</abbr><br />
-            <a href="javascript:select_img('${object/path}/;download',
+            <abbr title="${item/title}">${item/short_title}</abbr><br />
+            <a href="javascript:select_img('${item/path}/;download',
               '${caption}')" >Select</a>
           </dd>
         </dl>

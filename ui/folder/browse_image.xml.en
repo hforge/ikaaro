@@ -5,8 +5,8 @@
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
   <div id="browse_image">
-    <a stl:repeat="object objects" href="${object/href}">
-      <img src="${object/id}/;thumb?width=${size}&amp;height=${size}" />
+    <a stl:repeat="item items" href="${item/href}">
+      <img src="${item/id}/;thumb?width=${size}&amp;height=${size}" />
     </a>
   </div>
 

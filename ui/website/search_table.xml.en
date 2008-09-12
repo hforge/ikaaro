@@ -4,14 +4,14 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
-  <ol class="results" stl:if="objects">
-    <li stl:repeat="object objects">
-      <img src="${object/icon}" width="16" height="16" />
-      <a class="result_title" href="${object/url}">${object/title}</a>
+  <ol class="results" stl:if="items">
+    <li stl:repeat="item items">
+      <img src="${item/icon}" width="16" height="16" />
+      <a class="result_title" href="${item/url}">${item/title}</a>
       <br />
-      <span class="result_url">${object/abspath}</span>&nbsp;-
-      <span class="result_type">${object/type}</span>&nbsp;-
-      <span class="result_size">${object/size}</span>
+      <span class="result_url">${item/abspath}</span>&nbsp;-
+      <span class="result_type">${item/type}</span>&nbsp;-
+      <span class="result_size">${item/size}</span>
     </li>
   </ol>
 

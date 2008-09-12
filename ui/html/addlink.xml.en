@@ -58,28 +58,28 @@
         <tr>
           <td valign="top">
             <!-- Browse Folders -->
-            <stl:block stl:repeat="object bc/objects">
-              <dl stl:if="object/is_folder">
+            <stl:block stl:repeat="item bc/items">
+              <dl stl:if="item/is_folder">
                 <dt>
-                  <a href="${object/url}" title="${object/title}"><img alt=""
-                      src="${object/icon}" width="16"
-                      height="16"/>&nbsp;${object/short_title}</a>
+                  <a href="${item/url}" title="${item/title}"><img alt=""
+                      src="${item/icon}" width="16"
+                      height="16"/>&nbsp;${item/short_title}</a>
                 </dt>
               </dl>
             </stl:block>
           </td>
           <td valign="top">
             <!-- Files and Folders to select -->
-            <stl:block stl:repeat="object bc/objects">
+            <stl:block stl:repeat="item bc/items">
               <dl class="thumb">
                 <dt>
-                  <img alt="" title="${object/resource_type}"
-                    src="${object/icon}" width="48" height="48" />
+                  <img alt="" title="${item/item_type}"
+                    src="${item/icon}" width="48" height="48" />
                 </dt>
                 <dd>
                   <abbr
-                    title="${object/title}">${object/short_title}</abbr><br/>
-                  <a href="javascript:select_link('${object/path}')">Select</a>
+                    title="${item/title}">${item/short_title}</abbr><br/>
+                  <a href="javascript:select_link('${item/path}')">Select</a>
                 </dd>
               </dl>
             </stl:block>

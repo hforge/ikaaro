@@ -130,7 +130,7 @@ class FolderRename(STLForm):
         # Build the namespace
         paths.sort()
         paths.reverse()
-        resources = []
+        items = []
         for path in paths:
             if '/' in path:
                 parent_path, name = path.rsplit('/', 1)
@@ -138,12 +138,12 @@ class FolderRename(STLForm):
             else:
                 parent_path = ''
                 name = path
-            resources.append({
+            items.append({
                 'path': path,
                 'parent_path': parent_path,
                 'name': name})
 
-        return {'resources': resources}
+        return {'items': items}
 
 
     def action(self, resource, context, form):
