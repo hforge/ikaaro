@@ -4,21 +4,21 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
-  <p>
-    You can upload a new file to replace the current one. Note the name
-    and title won't change.
-  </p>
-
   <form action=";upload" method="post" enctype="multipart/form-data">
-    <dl>
-      <dt><label for="file">File</label></dt>
-      <dd>
-        <input type="file" id="file" name="file" size="35" />
-      </dd>
-    </dl>
-    <p>
+    <fieldset>
+      <legend>Upload</legend>
+      <p>
+      You can upload a new file to replace the current one. Note the name
+      and title won't change.
+      </p>
+      <dl>
+        <dt></dt>
+        <dd>
+          <input type="file" id="file" name="file" size="35" />
+        </dd>
+      </dl>
       <input type="submit" value="Replace" class="button_upload"/>
-    </p>
+    </fieldset>
   </form>
 
 </stl:block>
