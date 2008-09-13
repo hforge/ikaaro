@@ -109,7 +109,7 @@ class TimetablesForm(STLForm):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Timetables')
-    template = '/ui/ical/ical_edit_timetables.xml'
+    template = '/ui/ical/edit_timetables.xml'
 
 
     def get_namespace(self, resource, context):
@@ -422,7 +422,7 @@ class EditEventForm(CalendarView, STLForm):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Edit Event')
-    template = '/ui/ical/ical_edit_event.xml'
+    template = '/ui/ical/edit_event.xml'
     query_schema = {
         'id': String,
     }
@@ -685,7 +685,7 @@ class MonthlyView(CalendarView):
 
     access = 'is_allowed_to_view'
     title = MSG(u'Monthly View')
-    template = '/ui/ical/ical_monthly_view.xml'
+    template = '/ui/ical/monthly_view.xml'
     monthly_template = '/ui/ical/monthly_template.xml'
 
 
@@ -761,7 +761,7 @@ class WeeklyView(CalendarView):
 
     access = 'is_allowed_to_view'
     title = MSG(u'Weekly View')
-    template = '/ui/ical/ical_grid_weekly_view.xml'
+    template = '/ui/ical/grid_weekly_view.xml'
 
 
     def get_weekly_templates(self):
