@@ -2,52 +2,47 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
-<h3>Edit the timetable grid</h3>
 
-<p>You can specify timetables to limit the range when an event can be set</p>
 
 <form id="edit_timetables" action=";edit_timetables" method="post">
-  <table class="form">
-    <tr stl:repeat="timetable timetables">
-      <td>
-        <input class="checkbox" type="checkbox" name="ids"
-          value="${timetable/index}" />
-      </td>
-      <td width="50">From</td>
-      <td>
-        <input type="text" size="8" name="${timetable/startname}"
-          value="${timetable/start}" />
-      </td>
-      <td width="45" align="center">to</td>
-      <td>
-        <input type="text" size="8" name="${timetable/endname}"
-          value="${timetable/end}" />
-      </td>
-      <td />
-    </tr>
-    <tr>
-      <td />
-      <td width="50">From</td>
-      <td>
-        <input type="text" name="new_start" size="5" maxlength="5"
-          value="--:--" />
-      </td>
-      <td width="45" align="center">to</td>
-      <td>
-        <input type="text" name="new_end" size="5" maxlength="5"
-          value="--:--" />
-      </td>
-      <td>
-        <input type="submit" name=";add" value="Add" />
-      </td>
-    </tr>
-  </table>
+  <fieldset>
+    <legend>Edit the timetable grid</legend>
+    <p>
+    You can specify timetables to limit the range when an event can be set.
+    </p>
+    <table class="form">
+      <tr stl:repeat="timetable timetables">
+        <td>
+          <input class="checkbox" type="checkbox" name="ids"
+            value="${timetable/index}" />
+        </td>
+        <td>
+          From <input type="text" name="${timetable/startname}"
+            value="${timetable/start}" size="5" maxlength="5" />
+        </td>
+        <td style="padding-left: 10px;">
+          to <input type="text" name="${timetable/endname}"
+            value="${timetable/end}" size="5" maxlength="5" />
+        </td>
+      </tr>
+      <tr>
+        <td />
+        <td>
+          From <input type="text" name="new_start" value="--:--" size="5"
+            maxlength="5" />
+        </td>
+        <td style="padding-left: 10px;">
+          to <input type="text" name="new_end" value="--:--" size="5"
+            maxlength="5" />
+          <input type="submit" name=";add" value="Add" class="button_add" />
+        </td>
+      </tr>
+    </table>
 
-  <p>
+    <br/>
     <input type="submit" name=";remove" value="Remove" class="button_delete" />
     <input type="submit" name=";update" value="Update" class="button_ok" />
-  </p>
-
+  </fieldset>
 </form>
 
 </stl:block>

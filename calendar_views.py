@@ -110,9 +110,6 @@ class TimetablesForm(STLForm):
     access = 'is_allowed_to_edit'
     title = MSG(u'Timetables')
     template = '/ui/ical/ical_edit_timetables.xml'
-    schema = {
-        'ids': String(multiple=True),
-    }
 
 
     def get_namespace(self, resource, context):
@@ -135,45 +132,48 @@ class TimetablesForm(STLForm):
 
     action_add_schema = {'new_start': Time, 'new_end': Time}
     def action_add(self, resource, context, form):
+        # Check start time is before end time
         start = form['new_start']
         end = form['new_end']
         if start >= end:
             context.message = MSG(u'Start time must be earlier than end time.')
             return
 
-        # Change
-        new_timetables.append((start, end))
-        new_timetables.sort()
-        resource.set_property('timetables', tuple(new_timetables))
+        # Check the given range is not defined yet
+        timetables = resource.get_property('timetables')
+        if (start, end) in timetables:
+            context.message = MSG(u'The given range is already defined.')
+            return
+
+        # Add new range
+        timetables = list(timetables)
+        timetables.append((start, end))
+        timetables.sort()
+        resource.set_property('timetables', tuple(timetables))
         # Ok
         context.message = MSG(u'Timetables updated successfully.')
 
 
+    action_remove_schema = {'ids': Integer(multiple=True)}
     def action_remove(self, resource, context, form):
         ids = form['ids']
-        if ids == []:
-            message = MSG(u'Nothing to remove.')
+        if len(ids) == 0:
+            context.message = MSG(u'Nothing to remove.')
             return
 
-        timetables = []
-        if resource.has_property('timetables'):
-            timetables = resource.get_property('timetables')
-
-        # Change
-        new_timetables = [
+        # New timetables
+        timetables = resource.get_property('timetables')
+        timetables = [
             timetable for index, timetable in enumerate(timetables)
-            if str(index) not in ids ]
-        resource.set_property('timetables', tuple(new_timetables))
+            if index not in ids ]
+        resource.set_property('timetables', tuple(timetables))
         # Ok
         context.message = MSG(u'Timetable(s) removed successfully.')
 
 
     def action_update(self, resource, context, form):
-        timetables = []
-        if resource.has_property('timetables'):
-            timetables = resource.get_property('timetables')
-
-        if timetables == []:
+        timetables = resource.get_property('timetables')
+        if len(timetables) == 0:
             context.message = MSG(u'Nothing to change.')
             return
 
@@ -192,7 +192,7 @@ class TimetablesForm(STLForm):
                 context.message = message
                 return
 
-            new_timetables.append(timetable)
+            new_timetables.append((start, end))
 
         new_timetables.sort()
         resource.set_property('timetables', tuple(new_timetables))

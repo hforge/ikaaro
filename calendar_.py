@@ -48,6 +48,8 @@ class Timetables(DataType):
          (time(15,30), time(17, 30))]
     """
 
+    default = ()
+
     @staticmethod
     def decode(value):
         if not value:
