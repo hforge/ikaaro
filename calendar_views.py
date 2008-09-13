@@ -34,7 +34,7 @@ from itools.uri import encode_query
 from itools.web import BaseView, STLForm, STLView, get_context
 
 # Import from ikaaro
-from file import FileView, FileUpload
+from file import FileUpload
 
 
 resolution = timedelta.resolution
@@ -1124,38 +1124,36 @@ class DailyView(CalendarView):
 
 class CalendarUpload(FileUpload):
 
-    title = MSG(u'Upload from an ical file')
-
-
     def action(self, resource, context, form):
         file = form['file']
         filename, mimetype, body = file
 
-##        # Check wether the handler is able to deal with the uploaded file
+        # Check wether the handler is able to deal with the uploaded file
         handler = resource.handler
-##        if mimetype != handler.get_mimetype():
-##            context.message = u'Unexpected file of mimetype %s' % mimetype
-##            return
+        if mimetype != 'text/calendar':
+            message = MSG(u'Unexpected file of mimetype ${mimetype}.')
+            context.message =  message.gettext(mimetype=mimetype)
+            return
 
         # Replace
         try:
             handler.load_state_from_ical_file(StringIO(body))
         except:
-            context.message = u'Failed to load the file, may contain errors.'
+            message = MSG(u'Failed to load the file, may contain errors.')
+            context.message = message
         else:
             context.server.change_resource(resource)
-            context.message = u'Version uploaded'
+            context.message = MSG(u'Version uploaded')
 
 
 
-class DownloadView(FileView):
+class CalendarDownload(BaseView):
 
-    title = MSG(u'Export in ical format')
+    access = 'is_allowed_to_view'
 
-##    XXX Check header is correct
-##    def download(self, context):
-##        response = context.response
-##        response.set_header('Content-Type', 'text/calendar')
-##        return self.handler.to_ical()
-
+    def GET(self, resource, context):
+        response = context.response
+        response.set_header('Content-Type', 'text/calendar')
+        # TODO Set a filename
+        return resource.handler.to_ical()
 

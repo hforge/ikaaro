@@ -27,9 +27,10 @@ from itools.ical import icalendar, icalendarTable
 from itools.ical import Record
 
 # Import from ikaaro
-from calendar_views import CalendarUpload, DownloadView
+from calendar_views import CalendarUpload, CalendarDownload
 from calendar_views import AddEventForm, EditEventForm
 from calendar_views import MonthlyView, TimetablesForm, WeeklyView, DailyView
+from file_views import FileView
 from folder import Folder
 from registry import register_resource_class
 from resource_ import DBResource
@@ -84,8 +85,8 @@ class CalendarBase(DBResource):
     class_description = MSG(u'Schedule your time with calendar files.')
     class_icon16 = 'icons/16x16/icalendar.png'
     class_icon48 = 'icons/48x48/icalendar.png'
-    class_views = ['monthly_view', 'weekly_view', 'download', 'edit',
-                   'edit_timetables', 'upload']
+    class_views = ['monthly_view', 'weekly_view', 'daily_view', 'edit',
+                   'edit_timetables', 'upload', 'download_form']
 
 
     timetables = [((7,0),(8,0)), ((8,0),(9,0)), ((9,0),(10,0)),
@@ -150,14 +151,15 @@ class CalendarBase(DBResource):
     #######################################################################
     # Views
     #######################################################################
-    download = DownloadView()
-    upload = CalendarUpload()
     monthly_view = MonthlyView()
     weekly_view = WeeklyView()
     daily_view = DailyView()
-    edit_timetables = TimetablesForm()
     add_event = AddEventForm()
     edit_event = EditEventForm()
+    edit_timetables = TimetablesForm()
+    download = CalendarDownload()
+    upload = CalendarUpload()
+    download_form = FileView()
 
 
 
