@@ -148,10 +148,12 @@ class FileView(STLView):
 
 
     def get_namespace(self, resource, context):
+        filename = resource.get_property('filename')
+        if not filename:
+            filename = resource.get_title()
         return {
             'url': '../' + resource.name,
-            'filename': resource.get_property('filename'),
-        }
+            'filename': filename}
 
 
 
