@@ -4,57 +4,56 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
-  <div id="cal_daily_view">
-    <form id="attributes" action=";daily_view" method="get">
-      Date:
-      <input type="text" name="date" id="date" size="11" value="${date}" />
-      <input type="button" id="trigger_date" value="..." />
-      <input type="submit" value="OK" class="button_ok" />
-    </form>
+<div id="cal_daily_view">
+  <form id="attributes" action=";daily_view" method="get">
+    Date:
+    <input type="text" name="date" id="date" size="11" value="${date}" />
+    <input type="button" id="trigger_date" value="..." />
+    <input type="submit" value="OK" class="button_ok" />
+  </form>
 
-    <table cellspacing="0" cellpadding="0">
-      <tr class="header_timetables">
-        <td />
-        <td stl:repeat="tt header_timetables">
-          <span stl:if="tt">${tt}</span>
+  <table cellspacing="0" cellpadding="0">
+    <tr class="header_timetables">
+      <td />
+      <td stl:repeat="tt header_timetables">
+        <span stl:if="tt">${tt}</span>
+      </td>
+    </tr>
+    <stl:block stl:repeat="calendar calendars">
+      <tr class="header_columns">
+        <th rowspan="${calendar/rowspan}">
+          <a href="${calendar/url}">${calendar/name}</a>
+        </th>
+        <td align="center" stl:repeat="col calendar/header_columns">
+          <a href="${col}" class="add_event">+</a>
         </td>
       </tr>
-      <stl:block stl:repeat="calendar calendars">
-        <tr class="header_columns">
-          <th rowspan="${calendar/rowspan}">
-            <a href="${calendar/url}">${calendar/name}</a>
-          </th>
-          <td align="center" stl:repeat="col calendar/header_columns">
-            <a href="${col/new_url}" class="${col/new_class}"
-              >${col/new_value}</a>
-          </td>
-        </tr>
-        <tr stl:repeat="row calendar/rows">
-          <td stl:repeat="col row/columns" align="center" class="${col/class}"
-            colspan="${col/colspan}" rowspan="${col/rowspan}">
-            <a href="${col/evt_url}" stl:omit-tag="not col/evt_url"
-              class="evt_value">${col/SUMMARY}</a>
-            <span stl:if="col/DTSTART">${col/DTSTART}</span>
-            <span stl:if="col/DTEND">${col/DTEND}</span>
-          </td>
-        </tr>
-      </stl:block>
-      <tr class="header_timetables">
-        <td />
-        <td stl:repeat="tt header_timetables">
-          <span stl:if="tt">${tt}</span>
+      <tr stl:repeat="row calendar/rows">
+        <td stl:repeat="col row/columns" align="center" class="${col/class}"
+          colspan="${col/colspan}" rowspan="${col/rowspan}">
+          <a href="${col/evt_url}" stl:omit-tag="not col/evt_url"
+            class="evt_value">${col/SUMMARY}</a>
+          <span stl:if="col/DTSTART">${col/DTSTART}</span>
+          <span stl:if="col/DTEND">${col/DTEND}</span>
         </td>
       </tr>
-    </table>
-  </div>
+    </stl:block>
+    <tr class="header_timetables">
+      <td />
+      <td stl:repeat="tt header_timetables">
+        <span stl:if="tt">${tt}</span>
+      </td>
+    </tr>
+  </table>
+</div>
 
-  <script language="javascript">
-    $("#date").focus();
-    Calendar.setup({
-      inputField: "date",
-      ifFormat: "%Y-%m-%d",
-      firstDay: ${firstday},
-      button: "trigger_date"});
-  </script>
+<script language="javascript">
+  $("#date").focus();
+  Calendar.setup({
+    inputField: "date",
+    ifFormat: "%Y-%m-%d",
+    firstDay: ${firstday},
+    button: "trigger_date"});
+</script>
 
 </stl:block>

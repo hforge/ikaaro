@@ -30,7 +30,7 @@ from itools.gettext import MSG
 from itools.ical import get_grid_data
 from itools.ical import DateTime, Time
 from itools.stl import stl
-from itools.uri import encode_query
+from itools.uri import encode_query, get_reference
 from itools.web import BaseView, STLForm, STLView, get_context
 
 # Import from ikaaro
@@ -888,7 +888,8 @@ class DailyView(CalendarView):
     access = 'is_allowed_to_view'
     title = MSG(u'Daily View')
     template = '/ui/ical/daily_view.xml'
-    class_weekly_shown = ('SUMMARY',)
+    query_schema = {
+        'date': Date}
 
 
     # Start 07:00, End 21:00, Interval 30min
@@ -896,65 +897,13 @@ class DailyView(CalendarView):
     class_cal_fields = ('SUMMARY', 'DTSTART', 'DTEND')
 
 
-    @classmethod
-    def get_cal_range(cls):
-        return cls.class_cal_range
-
-
-    # Get one line with times of timetables for daily_view
-    def get_header_timetables(self, timetables, delta=45):
-        current_date = date.today()
-        timetable = timetables[0]
-        last_start = datetime.combine(current_date, timetable[0])
-
-        # Add first timetable start time
-        ns_timetables = [last_start.strftime('%H:%M')]
-
-        # Add next ones if delta time > delta minutes
-        for timetable in timetables[1:]:
-            tt_start = timetable[0]
-            tt_start = datetime.combine(current_date, tt_start)
-            if tt_start - last_start > timedelta(minutes=delta):
-                ns_timetables.append(tt_start.strftime('%H:%M'))
-                last_start = tt_start
-            else:
-                ns_timetables.append(None)
-
-        return ns_timetables
-
-
-    # Get one line with header and empty cases with only '+' for daily_view
-    def get_header_columns(self, calendar_name, args, timetables, cal_fields,
-                           new_class='add_event', new_value='+'):
-        ns_columns = []
-        for start, end in timetables:
-            start = Time.encode(start)
-            end = Time.encode(end)
-            tmp_args = args.copy()
-            tmp_args['start_time'] = start
-            tmp_args['end_time'] = end
-            tmp_args['id'] = calendar_name
-            column =  {
-                'class': None,
-                'colspan': 1,
-                'rowspan': 1,
-                'DTSTART': start,
-                'DTEND': end,
-                'new_url': ';add_event?%s' % encode_query(tmp_args),
-                'new_class': new_class,
-                'new_value': new_value}
-            # Fields in template but not shown
-            for field in cal_fields:
-                if field not in column:
-                    column[field] = None
-            ns_columns.append(column)
-        return ns_columns
+    def get_cal_range(self):
+        return self.class_cal_range
 
 
     # Get namespace for a resource's lines into daily_view
     def get_ns_calendar(self, calendar, c_date, timetables,
                         method='daily_view', show_conflicts=False):
-        shown_fields = self.class_weekly_shown
         cal_fields = self.class_cal_fields
         calendar_name = calendar.name
         args = {'date': Date.encode(c_date), 'method': method}
@@ -963,9 +912,6 @@ class DailyView(CalendarView):
         handler = calendar.handler
         events_by_index = {}
         for event in handler.search_events_in_date(c_date):
-            event_namespace = {}
-            for field in shown_fields:
-                event_namespace[field] = event.get_property(field).value
             event_start = event.get_property('DTSTART').value
             event_end = event.get_property('DTEND').value
             # Compute start and end indexes
@@ -979,16 +925,15 @@ class DailyView(CalendarView):
                 if end >= event_end:
                     tt_end = tt_index
                     break
-            event_namespace['tt_start'] = tt_start
-            event_namespace['tt_end'] = tt_end
             uid = getattr(event, 'id', getattr(event, 'uid', None))
-            if uid:
-                uid = '%s/%s' % (calendar_name, uid)
-            event_namespace['UID'] = uid
-            event_namespace['colspan'] = tt_end - tt_start + 1
-            if not tt_start in events_by_index:
-                events_by_index[tt_start] = []
-            events_by_index[tt_start].append(event_namespace)
+            events_by_index.setdefault(tt_start, [])
+            events_by_index[tt_start].append({
+                'SUMMARY': event.get_property('SUMMARY').value,
+                'tt_start': tt_start,
+                'tt_end': tt_end,
+                'resource_id': calendar_name,
+                'event_id': uid,
+                'colspan': tt_end - tt_start + 1})
 
         # Organize events in rows
         # If a row index is busy, start a new row
@@ -1043,9 +988,11 @@ class DailyView(CalendarView):
                            'evt_url': None}
                 # Add event
                 if event and tt_index == event['tt_start']:
-                    uid = event['UID']
+                    resource_id = event['resource_id']
+                    event_id = event['event_id']
                     tmp_args = args.copy()
-                    tmp_args['id'] = uid
+                    tmp_args['resource'] = resource_id
+                    tmp_args['id'] = event_id
                     go_url = ';edit_event?%s' % encode_query(tmp_args)
                     if show_conflicts and uid in conflicts_list:
                         css_class = 'cal_conflict'
@@ -1054,12 +1001,7 @@ class DailyView(CalendarView):
                     column['class'] = css_class
                     column['colspan'] = event['colspan']
                     column['evt_url'] = go_url
-                    # Fields to show
-                    for field in shown_fields:
-                        value = event[field]
-                        if isinstance(value, datetime):
-                            value = value.strftime('%H:%M')
-                        column[field] = value
+                    column['SUMMARY'] = event['SUMMARY']
                     # Set colspan
                     colspan = event['colspan'] - 1
                     # Delete added event
@@ -1074,9 +1016,15 @@ class DailyView(CalendarView):
                 row_namespace['columns'] = columns_namespace
             rows_namespace.append(row_namespace)
 
+        # Header columns (one line with header and empty cases with only
+        # '+' for daily_view)
+        url = ';add_event?%s' % encode_query(args)
+        url = get_reference(url).replace(id=calendar_name)
+        header_columns = [
+            url.replace(start_time=Time.encode(x), end_time=Time.encode(y))
+            for x, y in timetables ]
+
         # Return namespace
-        header_columns = self.get_header_columns(calendar_name, args,
-                                                 timetables, cal_fields)
         return {
             'name': calendar.get_title(),
             'rows': rows_namespace,
@@ -1092,13 +1040,27 @@ class DailyView(CalendarView):
             context.set_cookie('method', 'daily_view')
 
         # Current date
-        selected_date = context.get_form_value('date')
-        c_date = get_current_date(selected_date)
-        selected_date = Date.encode(c_date)
+        c_date = context.query['date']
+        if c_date is None:
+            c_date = date.today()
 
         # Add a header line with start time of each timetable
         start, end, interval = self.get_cal_range()
         timetables = build_timetables(start, end, interval)
+
+        # Table heading and footer with the time ranges
+        delta = timedelta(minutes=45)
+        tt_start, tt_end = timetables[0]
+        last_start = datetime.combine(c_date, tt_start)
+        ns_timetables = [last_start.strftime('%H:%M')]
+        # Add next ones if delta time > delta minutes
+        for tt_start, tt_end in timetables[1:]:
+            tt_start = datetime.combine(c_date, tt_start)
+            if (tt_start - last_start) > delta:
+                ns_timetables.append(tt_start.strftime('%H:%M'))
+                last_start = tt_start
+            else:
+                ns_timetables.append(None)
 
         # For each found calendar
         ns_calendars = [
@@ -1107,9 +1069,9 @@ class DailyView(CalendarView):
 
         # Ok
         return {
-            'date': selected_date,
+            'date': Date.encode(c_date),
             'firstday': self.get_first_day(),
-            'header_timetables': self.get_header_timetables(timetables),
+            'header_timetables': ns_timetables,
             'calendars': ns_calendars}
 
 
