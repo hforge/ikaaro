@@ -411,6 +411,7 @@ class EditEventForm(CalendarView, STLForm):
     title = MSG(u'Edit Event')
     template = '/ui/ical/edit_event.xml'
     query_schema = {
+        'resource': String,
         'id': String,
     }
     schema = {
@@ -425,29 +426,47 @@ class EditEventForm(CalendarView, STLForm):
         }
 
 
-    def get_namespace(self, resource, context):
-        # Get event id
+    def get_resource(self, resource, context):
+        resource_id = context.query['resource']
+        if resource_id is None:
+            return resource
+
+        if resource.has_resource(resource_id):
+            return resource.get_resource(resource_id)
+
+        # Error
+        message = MSG(u'Resource "${name}" not found.')
+        context.message = message.gettext(name=resource_id)
+        return None
+
+
+    def get_event_id(self, resource, context):
         id = context.query['id']
-        if id is None:
-            message = MSG(u'Expected query parameter "id" is missing.')
-            context.message = message
+        if id is not None:
+            return id
+
+        # Error
+        message = MSG(u'Expected query parameter "id" is missing.')
+        context.message = message
+        return None
+
+
+    def get_namespace(self, resource, context):
+        # Get the resource
+        resource = self.get_resource(resource, context)
+        if resource is None:
             return {'action': None}
-
-        # Get the resource if different
-        if '/' in id:
-            name, id = id.split('/')
-            if not resource.has_resource(name):
-                message = MSG(u'Resource "${name}" not found.')
-                context.message = message.gettext(name=name)
-                return {'action': None}
-            resource = resource.get_resource(name)
-
+        # Get the event id
+        id = self.get_event_id(resource, context)
+        if id is None:
+            return {'action': None}
         # Get the event
         event = resource.get_record(id)
         if event is None:
             context.message = MSG(u'Event not found')
             return {'action': None}
 
+        # Ok
         properties = event.get_property()
         # Date start
         value = properties['DTSTART']
@@ -544,21 +563,21 @@ class EditEventForm(CalendarView, STLForm):
         return properties
 
 
-
     def action_edit_event(self, resource, context, form):
-        # Get event id
-        uid = context.get_form_value('id')
-        if uid is not None and '/' in uid:
-            name, uid = uid.split('/', 1)
-
-        # TODO Handle "name"
-
-        # Get id and Record object
-        event = resource.get_record(uid)
+        # Get the resource
+        resource = self.get_resource(resource, context)
+        if resource is None:
+            return {'action': None}
+        # Get the event id
+        id = self.get_event_id(resource, context)
+        if id is None:
+            return {'action': None}
+        # Get the event
+        event = resource.get_record(id)
         if event is None:
-            message = u'Cannot modify event, because it has been removed.'
-            context.message = MSG(message)
-            return
+            context.message = MSG(u'Event not found')
+            return {'action': None}
+
         # Test if current user is admin or organizer of this event
         if not resource.is_organizer_or_admin(context, event):
             message = MSG(u'You are not authorized to modify this event.')
@@ -567,29 +586,36 @@ class EditEventForm(CalendarView, STLForm):
 
         # Update
         properties = self.get_properties(form)
-        resource.update_record(uid, properties)
+        resource.update_record(id, properties)
         # Ok
         context.message = MSG(u'Data updated')
 
 
     def action_remove_event(self, resource, context, form):
-        method = context.get_cookie('method') or 'monthly_view'
-        goto = ';%s?%s' % (method, date.today())
-        if method not in dir(resource):
-            goto = '../;%s?%s' % (method, date.today())
-        # uid
-        uid = context.get_form_value('id', default='')
-        if '/' in uid:
-            kk, uid = uid.split('/', 1)
-        if uid =='':
-            return context.come_back(None, goto)
-        if resource.get_record(uid) is None:
-            message = u'Cannot delete event, because it was already removed.'
-            context.message = MSG(message)
-            return
+        # Get the resource
+        resource = self.get_resource(resource, context)
+        if resource is None:
+            return {'action': None}
+        # Get the event id
+        id = self.get_event_id(resource, context)
+        if id is None:
+            return {'action': None}
+        # Get the event
+        event = resource.get_record(id)
+        if event is None:
+            context.message = MSG(u'Event not found')
+            return {'action': None}
 
-        resource._remove_event(uid)
-        # Ok
+        # Remove
+        resource._remove_event(id)
+
+        # Back
+        method = context.get_cookie('method') or 'monthly_view'
+        if method in dir(resource):
+            goto = ';%s?%s' % (method, date.today())
+        else:
+            goto = '../;%s?%s' % (method, date.today())
+
         message = MSG(u'Event definitely deleted.')
         return context.come_back(message, goto=goto)
 
@@ -603,6 +629,7 @@ class EditEventForm(CalendarView, STLForm):
 class AddEventForm(EditEventForm):
 
     query_schema = {
+        'resource': String,
         'date': Date,
         'start_time': Time,
         'end_time': Time,
@@ -656,6 +683,11 @@ class AddEventForm(EditEventForm):
 
 
     def action_edit_event(self, resource, context, form):
+        # Get the resource
+        resource = self.get_resource(resource, context)
+        if resource is None:
+            return {'action': None}
+
         # Add
         properties = self.get_properties(form)
         organizer = str(context.user.get_abspath())
@@ -856,7 +888,7 @@ class DailyView(CalendarView):
     access = 'is_allowed_to_view'
     title = MSG(u'Daily View')
     template = '/ui/ical/daily_view.xml'
-    class_weekly_shown = ('SUMMARY', )
+    class_weekly_shown = ('SUMMARY',)
 
 
     # Start 07:00, End 21:00, Interval 30min
@@ -896,10 +928,10 @@ class DailyView(CalendarView):
                            new_class='add_event', new_value='+'):
         ns_columns = []
         for start, end in timetables:
-            tmp_args = dict(args)
             start = Time.encode(start)
-            tmp_args['start_time'] = start
             end = Time.encode(end)
+            tmp_args = args.copy()
+            tmp_args['start_time'] = start
             tmp_args['end_time'] = end
             tmp_args['id'] = calendar_name
             column =  {
