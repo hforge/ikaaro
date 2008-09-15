@@ -289,7 +289,7 @@ class WikiPageToPDF(BaseView):
             call(['pdflatex', '-8bit', '-no-file-line-error',
                   '-interaction=batchmode', resource.name], cwd=dirname)
         except OSError:
-            msg = u"PDF generation failed. Please install pdflatex."
+            msg = MSG(u"PDF generation failed. Please install pdflatex.")
             return context.come_back(msg)
 
         pdfname = '%s.pdf' % resource.name

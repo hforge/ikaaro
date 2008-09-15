@@ -195,11 +195,11 @@ class User(AccessControl, Folder):
         # Build the email
         subject = u"Confirmation required"
         subject = self.gettext(subject)
-        body = self.gettext(
+        body = MSG(
             u"To confirm your identity click the link:\n"
             u"\n"
             u"  $confirm_url")
-        body = Template(body).substitute({'confirm_url': confirm_url})
+        body = body.gettext(confirm_url=confirm_url)
         # Send
         context.root.send_email(email, subject, text=body)
 
