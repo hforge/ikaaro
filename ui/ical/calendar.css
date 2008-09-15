@@ -1,22 +1,29 @@
 
 /* Selector */
 
-#cal_monthly_view #selector, #cal_weekly_view #selector,
+#cal_monthly_view #selector,
+#cal_weekly_view #selector,
 #cal_daily_view #selector {
   margin: 5px 0px 5px 0px;
   font-size:18px;
 }
-#cal_monthly_view #selector ul, #cal_weekly_view #selector ul,
+
+#cal_monthly_view #selector ul,
+#cal_weekly_view #selector ul,
 #cal_daily_view #selector ul {
   list-style:none;
   display:inline;
 }
-#cal_monthly_view #selector li, #cal_weekly_view #selector li,
+
+#cal_monthly_view #selector li,
+#cal_weekly_view #selector li,
 #cal_daily_view #selector li {
   display: inline;
   padding: 26px;
 }
-#cal_monthly_view #selector li a, #cal_weekly_view #selector li a,
+
+#cal_monthly_view #selector li a,
+#cal_weekly_view #selector li a,
 #cal_daily_view #selector li a {
   text-decoration:none;
   color: #cc0000;
@@ -174,11 +181,14 @@ table.timetable {
  background-color: #A5A590;
 }
 
-/* daily_view */
 
+/**************************************************************************
+ * daily_view
+ **************************************************************************/
 #cal_daily_view #attributes {
   margin: 5px 0 8px 0;
 }
+
 #cal_daily_view #attributes span {
   margin: 0 8px 0 0;
 }
@@ -187,6 +197,7 @@ table.timetable {
   border-collapse: collapse;
   border-spacing: 1px;
 }
+
 #cal_daily_view td {
   border: 1px solid #000;
 }
@@ -196,10 +207,12 @@ table.timetable {
   font-size: 11px;
   font-weight: bold;
 }
+
 #cal_daily_view .header_columns td {
   padding: 6px;
   background: #e9b96e;
 }
+
 #cal_daily_view .header_columns th a {
   font-weight: bold;
   text-decoration: none;
@@ -209,21 +222,25 @@ table.timetable {
 #cal_daily_view .header_timetables * {
   border: none;
 }
+
 #cal_daily_view .header_timetables td {
   color: #fce94f;
   background: #cc0000;
   font-weight: bold;
 }
+
 #cal_daily_view .header_timetables span {
   margin-left: -15px; /* See below */
   font-size: 9px;
   font-weight: bold;
   text-align: left;
 }
+
 /* Prevent IE from eating the time outside the box */
 * html #cal_daily_view .header_timetables span {
   margin-left: 0;
 }
+
 #cal_daily_view .evt_value {
   font-size: 12px;
   text-decoration: none;
