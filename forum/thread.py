@@ -86,7 +86,7 @@ class ThreadView(STLForm):
         language = resource.get_content_language()
         thread = Message.make_resource(Message, resource, name, data, language)
         # Ok
-        return context.come_back(MSG(u'Reply posted'))
+        return context.come_back(INFO(u'Reply posted'))
 
 
     def action_remove(self, resource, context, form):

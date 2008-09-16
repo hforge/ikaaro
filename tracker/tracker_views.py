@@ -443,11 +443,11 @@ class TrackerGoToIssue(BaseView):
             return context.come_back(messages.MSG_NAME_MISSING)
 
         if not resource.has_resource(issue_name):
-            return context.come_back(MSG(u'Issue not found.'))
+            return context.come_back(ERROR(u'Issue not found.'))
 
         issue = resource.get_resource(issue_name)
         if not isinstance(issue, Issue):
-            return context.come_back(MSG(u'Issue not found.'))
+            return context.come_back(ERROR(u'Issue not found.'))
 
         return context.uri.resolve2('../%s/;edit' % issue_name)
 

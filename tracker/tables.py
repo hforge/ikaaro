@@ -23,6 +23,7 @@ from itools.csv import Table as BaseTable
 from itools.datatypes import Boolean, Integer, Unicode
 from itools.gettext import MSG
 from itools.xapian import EqQuery, AndQuery
+from itools.web import INFO
 
 # Import from ikaaro
 from ikaaro.forms import TextWidget, BooleanCheckBox
@@ -124,7 +125,7 @@ class SelectTable(Table):
         # check input
         ids = context.get_form_values('ids', type=Integer)
         if not ids:
-            return context.come_back(MSG(u'No resource selected.'))
+            return context.come_back(INFO(u'No resource selected.'))
 
         filter = self.name[:-1]
         if self.name.startswith('priorit'):
