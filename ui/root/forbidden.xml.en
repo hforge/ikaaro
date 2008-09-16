@@ -4,8 +4,9 @@
 <div xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
-  <h3>Forbidden</h3>
-
-  <p>Access forbidden, you are not authorized to access this resource.</p>
+  <fieldset>
+    <legend>Access Forbidden</legend>
+    You are not authorized to access this resource.
+  </fieldset>
 
 </div>

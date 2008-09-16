@@ -129,8 +129,7 @@ class Root(WebSite):
     # Publish
     ########################################################################
     forbidden = STLView(
-        template='/ui/root/forbidden.xml',
-    )
+        template='/ui/root/forbidden.xml')
 
 
     def internal_server_error(self, context):
