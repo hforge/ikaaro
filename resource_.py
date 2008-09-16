@@ -495,10 +495,10 @@ class DBResource(CatalogAware, IResource):
 
 
     @classmethod
-    def get_rte(cls, context, name, data, template='/ui/tiny_mce/rte.xml'):
+    def get_rte(cls, context, name, source, template='/ui/tiny_mce/rte.xml'):
         namespace = {}
         namespace['form_name'] = name
-        namespace['js_data'] = data
+        namespace['source'] = source
         namespace['scripts'] = ['/ui/tiny_mce/tiny_mce_src.js',
                                 '/ui/tiny_mce/javascript.js']
         namespace['css'] = cls.get_rte_css(context)

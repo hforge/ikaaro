@@ -27,10 +27,12 @@ from itools.handlers import File
 from itools.gettext import MSG
 from itools.http import Forbidden
 from itools.html import xhtml_uri, XHTMLFile, sanitize_stream, HTMLParser
+from itools.html import stream_to_str_as_html
 from itools.stl import stl
 from itools.uri import get_reference
 from itools.web import STLView, STLForm, ERROR
-from itools.xml import TEXT, START_ELEMENT, XMLError, XMLParser, stream_to_str
+from itools.xml import TEXT, START_ELEMENT, XMLError, XMLParser
+from itools.xml import stream_to_str
 
 # Import from ikaaro
 import messages
@@ -66,14 +68,20 @@ class HTMLEditView(DBResourceEdit):
 
     def get_namespace(self, resource, context):
         namespace = DBResourceEdit.get_namespace(self, resource, context)
-        data = resource.get_epoz_data()
+        data = context.get_form_value('data')
+        if data is not None:
+            namespaces = {None: 'http://www.w3.org/1999/xhtml'}
+            data = XMLParser(data, namespaces)
+        else:
+            data = resource.get_epoz_data()
+        source = stream_to_str_as_html(data)
         # If the document has not a body (e.g. a frameset), edit as plain text
         if data is None:
             return Text.edit_form(self, context)
         data = stream_to_str(data)
 
         # Edit with a rich text editor
-        namespace['rte'] = resource.get_rte(context, 'data', data)
+        namespace['rte'] = resource.get_rte(context, 'data', source)
         namespace['timestamp'] = DateTime.encode(datetime.now())
         return namespace
 
