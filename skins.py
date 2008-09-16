@@ -18,9 +18,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Import from the Standard Library
-from string import Template
-
 # Import from itools
 from itools import get_abspath
 from itools.gettext import MSG
@@ -29,8 +26,8 @@ from itools.http import NotFound
 from itools.i18n import has_language
 from itools.stl import stl
 from itools.uri import decode_query
-from itools.web import get_context, BaseView
-from itools.xml import XMLParser, XMLFile
+from itools.web import get_context, BaseView, ERROR
+from itools.xml import XMLFile
 
 # Import from ikaaro
 from resource_ import IResource
@@ -349,15 +346,25 @@ class Skin(UIFolder):
 
 
     def get_message(self, context):
-        """Return a message string from de request.
+        """Return a message string from the request.
         """
-        # FIXME At some point we should deprecate usage of message in the URL
-        if context.message is None:
-            if context.has_form_value('message'):
-                message = context.get_form_value('message')
-                return XMLParser(message)
+        message = None
+        if context.message is not None:
+            message = context.message
+        elif context.has_form_value('message'):
+            # FIXME At some point we should deprecate usage
+            # of message in the URL
+            message = context.get_form_value('message')
 
-        return context.message
+        return message
+
+
+    def get_message_level(self, context):
+        message = context.message
+        if message is not None:
+            if isinstance(message, ERROR):
+                return 'error'
+        return 'info'
 
 
     def get_context_menus(self, context):
@@ -394,6 +401,7 @@ class Skin(UIFolder):
             # Body
             'page_title': self.get_page_title(context),
             'message': self.get_message(context),
+            'message_level': self.get_message_level(context),
             'context_menus': context_menus,
         }
 

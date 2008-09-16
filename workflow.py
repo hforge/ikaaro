@@ -24,7 +24,7 @@ from itools.datatypes import DateTime, String, Unicode
 from itools.gettext import MSG
 from itools.i18n import format_datetime
 from itools.stl import stl
-from itools.web import STLForm
+from itools.web import STLForm, INFO, ERROR
 from itools.workflow import Workflow, WorkflowAware as BaseWorkflowAware
 from itools.workflow import WorkflowError
 
@@ -97,11 +97,11 @@ class StateForm(STLForm):
             resource.do_trans(transition)
         except WorkflowError, excp:
             context.server.log_error(context)
-            context.message = unicode(excp.message, 'utf-8')
+            context.message = ERROR(unicode(excp.message, 'utf-8'))
             return
 
         # Ok
-        context.message = MSG(u'Transition done.')
+        context.message = INFO(u'Transition done.')
 
 
 

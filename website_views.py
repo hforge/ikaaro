@@ -29,13 +29,13 @@ from itools.i18n import get_language_name, get_languages
 from itools.stl import stl
 from itools.uri import Path
 from itools import vfs
-from itools.web import STLView, STLForm
+from itools.web import STLView, STLForm, INFO, ERROR
 from itools.xapian import EqQuery, OrQuery, AndQuery, TextField
 
 # Import from ikaaro
 import ikaaro
 from forms import AutoForm, Select, MultilineWidget, TextWidget
-from messages import *
+import messages
 from registry import get_resource_class
 from registry import get_register_websites, get_website_class
 from resource_views import AddResourceMenu
@@ -89,17 +89,17 @@ class NewWebSiteForm(NewInstanceForm):
         # Check the name
         name = name.strip() or title.strip()
         if not name:
-            context.message = MSG_NAME_MISSING
+            context.message = messages.MSG_NAME_MISSING
             return
 
         name = checkid(name)
         if name is None:
-            context.message = MSG_BAD_NAME
+            context.message = messages.MSG_BAD_NAME
             return
 
         # Check the name is free
         if resource.has_resource(name):
-            context.message = MSG_NAME_CLASH
+            context.message = messages.MSG_NAME_CLASH
             return
 
         class_id = form['class_id']
@@ -116,7 +116,7 @@ class NewWebSiteForm(NewInstanceForm):
         metadata.set_property('title', title, language=language)
 
         goto = './%s/' % name
-        return context.come_back(MSG_NEW_RESOURCE, goto=goto)
+        return context.come_back(messages.MSG_NEW_RESOURCE, goto=goto)
 
 
 
@@ -147,8 +147,9 @@ class ForgottenPasswordForm(STLForm):
         results = root.search(username=username)
         if results.get_n_documents() == 0:
             goto = ';forgotten_password_form'
-            message = MSG(u'There is not a user identified as "$username"')
-            context.message =  message.gettext(username=username)
+            message = ERROR(u'There is not a user identified as "$username"',
+                      username=username)
+            context.message = message
             return
 
         user = results.get_documents()[0]
@@ -244,7 +245,7 @@ class VHostsForm(STLForm):
         vhosts = tuple(vhosts)
         resource.set_property('vhosts', vhosts)
         # Ok
-        context.message = MSG_CHANGES_SAVED
+        context.message = messages.MSG_CHANGES_SAVED
 
 
 
@@ -271,7 +272,7 @@ class SecurityPolicyForm(STLForm):
         value = form['website_is_open']
         resource.set_property('website_is_open', value)
         # Ok
-        context.message = MSG_CHANGES_SAVED
+        context.message = messages.MSG_CHANGES_SAVED
 
 
 
@@ -319,7 +320,7 @@ class ContactOptionsForm(STLForm):
         contacts = tuple(contacts)
         resource.set_property('contacts', contacts)
         # Ok
-        context.message = MSG_CHANGES_SAVED
+        context.message = messages.MSG_CHANGES_SAVED
 
 
 
@@ -414,8 +415,8 @@ class EditLanguagesForm(STLForm):
 
         # This action requires only one language to be selected
         if len(codes) != 1:
-            context.message = MSG(
-                u'You must select one and only one language.')
+            message = ERROR(u'You must select one and only one language.')
+            context.message = message
             return
         default = codes[0]
 
@@ -425,7 +426,7 @@ class EditLanguagesForm(STLForm):
         languages.insert(0, default)
         resource.set_property('website_languages', tuple(languages))
         # Ok
-        context.message = MSG(u'The default language has been changed.')
+        context.message = INFO(u'The default language has been changed.')
 
 
     def action_remove_languages(self, resource, context, form):
@@ -435,14 +436,15 @@ class EditLanguagesForm(STLForm):
         languages = resource.get_property('website_languages')
         default = languages[0]
         if default in codes:
-            context.message = MSG(u'You can not remove the default language.')
+            message = ERROR(u'You can not remove the default language.')
+            context.message = message
             return
 
         # Remove the languages
         languages = [ x for x in languages if x not in codes ]
         resource.set_property('website_languages', tuple(languages))
         # Ok
-        context.message = MSG(u'Languages removed.')
+        context.message = INFO(u'Languages removed.')
 
 
     #######################################################################
@@ -457,7 +459,7 @@ class EditLanguagesForm(STLForm):
         ws_languages = resource.get_property('website_languages')
         resource.set_property('website_languages', ws_languages + (code,))
         # Ok
-        context.message = MSG(u'Language added.')
+        context.message = INFO(u'Language added.')
 
 
 
@@ -496,8 +498,8 @@ class RegisterForm(AutoForm):
             user = results.get_documents()[0]
             user = users.get_resource(user.name)
             if not user.has_property('user_must_confirm'):
-                context.message = MSG(
-                    u'There is already an active user with that email.')
+                message = u'There is already an active user with that email.'
+                context.message = ERROR(message)
                 return
         else:
             # Add the user
@@ -581,7 +583,7 @@ class ContactForm(AutoForm):
         root = resource.get_root()
         root.send_email(contact, subject, from_addr=from_addr, text=body)
         # Ok
-        context.message = MSG(u'Message sent.')
+        context.message = INFO(u'Message sent.')
 
 
 

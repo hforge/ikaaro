@@ -23,11 +23,11 @@ from itools.datatypes import Unicode, String
 from itools.gettext import MSG
 from itools.i18n import format_datetime
 from itools.vfs import FileName
-from itools.web import STLForm
+from itools.web import STLForm, INFO
 
 # Import from ikaaro
 from ikaaro.folder import Folder
-from ikaaro.messages import MSG_DELETE_SELECTION, MSG_CHANGES_SAVED
+from ikaaro import messages
 from ikaaro.registry import register_resource_class
 from message import Message, build_message
 
@@ -56,7 +56,7 @@ class ThreadView(STLForm):
         namespace = {'editable': ac.is_admin(user, resource)}
         # Actions
         actions = []
-        message = MSG_DELETE_SELECTION.gettext()
+        message = messages.MSG_DELETE_SELECTION
         remove_message = 'return confirm("%s");' % message
         namespace['remove_message'] = remove_message
 
@@ -96,7 +96,7 @@ class ThreadView(STLForm):
             ac = child.get_access_control()
             if ac.is_allowed_to_remove(user, child):
                 resource.del_resource(name)
-        message = MSG(u"Message(s) deleted !")
+        message = INFO(u"Message(s) deleted !")
         return context.come_back(message, goto='#new_reply')
 
 

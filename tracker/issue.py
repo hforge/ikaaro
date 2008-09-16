@@ -21,7 +21,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
-from datetime import datetime
+from datetime import datetime as pydatetime
 from re import compile
 from textwrap import wrap
 
@@ -445,7 +445,7 @@ class Issue(Folder):
 
         record = {}
         # Datetime
-        record['datetime'] = datetime.now()
+        record['datetime'] = pydatetime.now()
         # User XXX
         if user is None:
             record['username'] = ''

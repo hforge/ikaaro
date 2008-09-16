@@ -42,7 +42,7 @@ from itools.xml import XMLParser, XMLError
 from itools.uri import get_reference
 from itools.uri.mailto import Mailto
 from itools.vfs import FileName
-from itools.web import BaseView, STLForm, STLView
+from itools.web import BaseView, STLForm, STLView, ERROR
 
 # Import from ikaaro
 from ikaaro import messages
@@ -289,7 +289,7 @@ class WikiPageToPDF(BaseView):
             call(['pdflatex', '-8bit', '-no-file-line-error',
                   '-interaction=batchmode', resource.name], cwd=dirname)
         except OSError:
-            msg = MSG(u"PDF generation failed. Please install pdflatex.")
+            msg = ERROR(u"PDF generation failed. Please install pdflatex.")
             return context.come_back(msg)
 
         pdfname = '%s.pdf' % resource.name
@@ -364,11 +364,11 @@ class WikiPageEdit(STLForm):
                                   settings_overrides=resource.overrides)
         except SystemMessage, message:
             # Critical error
-            msg = MSG(u'A syntax error prevented from saving the changes:'
-                      u' $error')
+            msg = (u'A syntax error prevented from saving the changes:'
+                   u' $error')
             # docutils is using tags to represent the error
             error = XMLContent.encode(message.message)
-            context.message = msg.gettext(error=error)
+            context.message = ERROR(msg, error=error)
             return
 
         # OK, committing
@@ -376,13 +376,14 @@ class WikiPageEdit(STLForm):
         context.server.change_resource(resource)
 
         # But warn about non-critical syntax errors
+        message = None
         if 'class="system-message"' in resource.view.GET(resource, context):
-            message = MSG(u"Syntax error, please check the view for details.")
+            message = ERROR(u"Syntax error, please check the view for "
+                            u"details.")
         else:
             accept = context.accept_language
             time = format_datetime(datetime.now(), accept=accept)
-            message = messages.MSG_CHANGES_SAVED2.gettext(time=time)
-            message = MSG(message)
+            message = messages.MSG_CHANGES_SAVED2(time=time)
 
         # Come back to the desired view
         if context.has_form_value('view'):

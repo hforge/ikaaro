@@ -19,15 +19,15 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.csv import Record, UniqueError
+from itools.csv import UniqueError
 from itools.datatypes import DataType, is_datatype
 from itools.datatypes import Integer, Enumerate, Tokens
 from itools.gettext import MSG
-from itools.web import FormError, MSG_MISSING_OR_INVALID
+from itools.web import MSG_MISSING_OR_INVALID, INFO, ERROR
 
 # Import from ikaaro
 from forms import AutoForm
-from messages import *
+import messages
 from views import BrowseForm
 
 
@@ -130,7 +130,8 @@ class TableView(BrowseForm):
 
         ac = resource.get_access_control()
         if ac.is_allowed_to_edit(context.user, resource):
-            message_utf8 = MSG_DELETE_SELECTION.gettext().encode('utf_8')
+            message = messages.MSG_DELETE_SELECTION.gettext()
+            message_utf8 = message.encode('utf_8')
             return [('remove', u'Remove', 'button_delete',
                      'return confirm("%s");' % message_utf8)]
 
@@ -202,16 +203,14 @@ class TableAddRecord(AutoForm):
             record[name] = value
         try:
             handler.add_record(record)
-            message = u'New record added.'
+            context.message = INFO(u'New record added.')
         except UniqueError, error:
             title = resource.get_field_title(error.name)
-            message = str(error) % (title, error.value)
+            context.message = ERROR(error, field=title, value=error.value)
         except ValueError, error:
-            title = resource.get_field_title(error.name)
-            message = MSG(u'Error: $message')
-            message = message.gettext(message=strerror)
+            message = ERROR(u'Error: $message', message=str(error))
+            context.message = message
 
-        context.message = message
 
 
 class TableEditRecord(AutoForm):
@@ -277,15 +276,13 @@ class TableEditRecord(AutoForm):
 
         try:
             resource.handler.update_record(id, **record)
+            context.message = messages.MSG_CHANGES_SAVED
         except UniqueError, error:
             title = resource.get_field_title(error.name)
-            context.message = str(error) % (title, error.value)
+            context.message = ERROR(error, field=title, value=error.value)
         except ValueError, error:
-            title = resource.get_field_title(error.name)
-            message = MSG(u'Error: $message')
-            context.message = message.gettext(message=strerror)
-        else:
-            context.message = MSG_CHANGES_SAVED
+            message = ERROR(u'Error: $message', message=str(error))
+            context.message = message
 
 
 
@@ -302,7 +299,8 @@ class OrderedTableView(TableView):
 
         ac = resource.get_access_control()
         if ac.is_allowed_to_edit(context.user, resource):
-            message_utf8 = MSG_DELETE_SELECTION.gettext().encode('utf_8')
+            message = messages.MSG_DELETE_SELECTION.gettext()
+            message_utf8 = message.encode('utf_8')
             return [('remove', u'Remove', 'button_delete',
                      'return confirm("%s");' % message_utf8),
                     ('order_up', u'Order up', 'button_ok', None),
@@ -327,41 +325,41 @@ class OrderedTableView(TableView):
     def action_order_up(self, resource, context, form):
         ids = form['ids']
         if not ids:
-            context.message = MSG(u'Please select the resources to order up.')
+            context.message = ERROR(u'Please select the resources to order up.')
             return
 
         resource.handler.order_up(ids)
-        context.message = MSG(u'Resources ordered up.')
+        context.message = INFO(u'Resources ordered up.')
 
 
     def action_order_down(self, resource, context, form):
         ids = form['ids']
         if not ids:
-            context.message = MSG(u'Please select the resources to order down.')
+            context.message = ERROR(u'Please select the resources to order down.')
             return
 
         resource.handler.order_down(ids)
-        context.message = MSG(u'Resources ordered down.')
+        context.message = INFO(u'Resources ordered down.')
 
 
     def action_order_top(self, resource, context, form):
         ids = form['ids']
         if not ids:
-            message = MSG(u'Please select the resources to order on top.')
+            message = ERROR(u'Please select the resources to order on top.')
             context.message = message
             return
 
         resource.handler.order_top(ids)
-        context.message = MSG(u'Resources ordered on top.')
+        context.message = INFO(u'Resources ordered on top.')
 
 
     def action_order_bottom(self, resource, context, form):
         ids = form['ids']
         if not ids:
-            message = MSG(u'Please select the resources to order on bottom.')
+            message = ERROR(u'Please select the resources to order on bottom.')
             context.message = message
             return
 
         resource.handler.order_bottom(ids)
-        context.message = MSG(u'Resources ordered on bottom.')
+        context.message = INFO(u'Resources ordered on bottom.')
 

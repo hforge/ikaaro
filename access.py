@@ -27,10 +27,10 @@ from itools.gettext import MSG
 from itools.handlers import merge_dics
 from itools.stl import stl
 from itools.uri import get_reference
-from itools.web import AccessControl as BaseAccessControl, STLForm
+from itools.web import AccessControl as BaseAccessControl, STLForm, INFO, ERROR
 
 # Import from ikaaro
-from messages import *
+import messages
 from views import SearchForm
 from workflow import WorkflowAware
 
@@ -71,7 +71,7 @@ class PermissionsForm(SearchForm):
         search_query = {'format': 'user'}
         field = context.query['search_field']
         if field:
-            query[field] = context.query['search_term'].strip()
+            search_query[field] = context.query['search_term'].strip()
         results = context.root.search(**search_query)
 
         # Show only users that belong to this group (FIXME Use the catalog)
@@ -225,7 +225,7 @@ class NewUserForm(STLForm):
                 password2 = form['newpass2']
                 # Check the password is right
                 if password != password2:
-                    context.message = MSG_PASSWORD_MISMATCH
+                    context.message = messages.MSG_PASSWORD_MISMATCH
                     return
                 if not password:
                     # Admin can set no password
@@ -244,7 +244,7 @@ class NewUserForm(STLForm):
             # Check the user is not yet in the group
             members = resource.get_members()
             if user_id in members:
-                context.message = MSG(u'The user is already here.')
+                context.message = ERROR(u'The user is already here.')
                 return
 
         # Set the role
@@ -256,7 +256,7 @@ class NewUserForm(STLForm):
             return
 
         goto = '/users/%s/' % user.name
-        message = MSG(u'User added.')
+        message = INFO(u'User added.')
         return context.come_back(message, goto=goto)
 
 

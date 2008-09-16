@@ -21,11 +21,11 @@
 from itools.datatypes import Email, String, Unicode
 from itools.gettext import MSG
 from itools.i18n import get_language_name
-from itools.web import STLView, STLForm
+from itools.web import STLView, STLForm, INFO, ERROR
 from itools.xapian import EqQuery, AndQuery, OrQuery
 
 # Import from ikaaro
-from messages import MSG_REGISTERED, MSG_BAD_KEY, MSG_PASSWORD_MISMATCH
+import messages
 from utils import resolve_view
 
 
@@ -44,10 +44,10 @@ class UserConfirmRegistration(STLForm):
         must_confirm = resource.get_property('user_must_confirm')
         username = context.get_form_value('username', default='')
         if must_confirm is None:
-            return context.come_back(MSG_REGISTERED,
+            return context.come_back(messages.MSG_REGISTERED,
                     goto='/;login?username=%s' % username)
         elif context.get_form_value('key') != must_confirm:
-            return context.come_back(MSG_BAD_KEY,
+            return context.come_back(messages.MSG_BAD_KEY,
                     goto='/;login?username=%s' % username)
 
         # Ok
@@ -60,14 +60,14 @@ class UserConfirmRegistration(STLForm):
         # Check register key
         must_confirm = resource.get_property('user_must_confirm')
         if form['key'] != must_confirm:
-            context.message = MSG_BAD_KEY
+            context.message = messages.MSG_BAD_KEY
             return
 
         # Check passwords
         password = form['newpass']
         password2 = form['newpass2']
         if password != password2:
-            context.message = MSG_PASSWORD_MISMATCH
+            context.message = messages.MSG_PASSWORD_MISMATCH
             return
 
         # Set user
@@ -77,7 +77,7 @@ class UserConfirmRegistration(STLForm):
         resource.set_auth_cookie(context, password)
 
         # Ok
-        message = MSG(u'Operation successful! Welcome.')
+        message = INFO(u'Operation successful! Welcome.')
         return context.come_back(message, goto='./')
 
 
@@ -160,7 +160,7 @@ class UserEditAccount(STLForm):
         if is_same_user:
             password = form['password']
             if not resource.authenticate(password):
-                context.message = (
+                context.message = ERROR(
                     u"You mistyped your actual password, your account is"
                     u" not changed.")
                 return
@@ -170,10 +170,9 @@ class UserEditAccount(STLForm):
         if email != resource.get_property('email'):
             results = context.root.search(email=email)
             if results.get_n_documents():
-                message = MSG(
+                context.message = ERROR(
                     u'There is another user with the email "${email}", please'
-                    u' try again.')
-                context.message = message.gettext(email=email)
+                    u' try again.').gettext(email=email)
                 return
 
         # Save changes
@@ -181,7 +180,7 @@ class UserEditAccount(STLForm):
         resource.set_property('lastname', lastname)
         resource.set_property('email', email)
         # Ok
-        context.message = MSG(u'Account changed.')
+        context.message = INFO(u'Account changed.')
 
 
 
@@ -215,7 +214,7 @@ class UserEditPreferences(STLForm):
         value = form['user_language']
         resource.set_property('user_language', value)
         # Ok
-        context.message = MSG(u'Application preferences changed.')
+        context.message = INFO(u'Application preferences changed.')
 
 
 
@@ -249,14 +248,15 @@ class UserEditPassword(STLForm):
         if is_same_user:
             password = form['password']
             if not resource.authenticate(password):
-                context.message = (
+                context.message = ERROR(
                     u"You mistyped your actual password, your account is"
                     u" not changed.")
                 return
 
         # Check the new password matches
         if newpass != newpass2:
-            context.message = u"Passwords mismatch, please try again."
+            context.message = ERROR(
+                    u"Passwords mismatch, please try again.")
             return
 
         # Clear confirmation key
@@ -271,7 +271,7 @@ class UserEditPassword(STLForm):
             resource.set_auth_cookie(context, newpass)
 
         # Ok
-        context.message = MSG(u'Password changed.')
+        context.message = INFO(u'Password changed.')
 
 
 

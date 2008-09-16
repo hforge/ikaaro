@@ -32,12 +32,12 @@ from itools.handlers import merge_dics
 from itools.stl import stl
 from itools.uri import encode_query, Reference
 from itools.web import BaseView, BaseForm, STLForm, get_context
+from itools.web import INFO, ERROR
 
 # Import from ikaaro
 from ikaaro.datatypes import CopyCookie
 from ikaaro.exceptions import ConsistencyError
-from ikaaro.messages import MSG_NONE_REMOVED, MSG_RESOURCES_REMOVED
-from ikaaro.messages import MSG_NAME_MISSING, MSG_CHANGES_SAVED
+from ikaaro import messages
 from ikaaro.views import BrowseForm, SearchForm as BaseSearchForm, ContextMenu
 from issue import Issue, issue_fields
 from stored import StoredSearch
@@ -137,7 +137,7 @@ class TrackerAddIssue(STLForm):
         issue._add_record(context, form)
 
         # Ok
-        message = MSG(u'New issue added.')
+        message = INFO(u'New issue added.')
         goto = './%s/' % id
         return context.come_back(message, goto=goto)
 
@@ -426,9 +426,10 @@ class TrackerStoredSearches(STLForm):
 
         if removed:
             resources = ', '.join(removed)
-            context.message = MSG_RESOURCES_REMOVED.gettext(resources=resources)
+            message = messages.MSG_RESOURCES_REMOVED(resources=resources)
+            context.message = message
         else:
-            context.message = MSG_NONE_REMOVED
+            context.message = messages.MSG_NONE_REMOVED
 
 
 
@@ -439,7 +440,7 @@ class TrackerGoToIssue(BaseView):
     def GET(self, resource, context):
         issue_name = context.get_form_value('issue_name')
         if not issue_name:
-            return context.come_back(MSG_NAME_MISSING)
+            return context.come_back(messages.MSG_NAME_MISSING)
 
         if not resource.has_resource(issue_name):
             return context.come_back(MSG(u'Issue not found.'))
@@ -522,8 +523,8 @@ class TrackerExportToCSV(BaseView):
             issues = [ x for x in issues if x.name in selected_issues ]
 
         if len(issues) == 0:
-            message = MSG(u"No data to export.")
-            return context.come_back(message)
+            context.message = ERROR(u"No data to export.")
+            return
 
         # Get CSV encoding and separator (OpenOffice or Excel)
         editor = context.query['editor']
@@ -604,8 +605,8 @@ class TrackerChangeSeveralBugs(TrackerView):
             issues = [ x for x in issues if x.name in selected_issues ]
 
         if len(issues) == 0:
-            message = MSG(u"No data to export.")
-            return context.come_back(message)
+            context.message = ERROR(u"No data to export.")
+            return
 
         # Modify all issues selected
         comment = form['comment']
@@ -686,5 +687,6 @@ class TrackerChangeSeveralBugs(TrackerView):
         keep = ['search_name', 'mtime', 'module', 'version', 'type',
                 'priority', 'assigned_to', 'state']
         keep = [ x for x in keep if x in keys]
-        return context.come_back(MSG_CHANGES_SAVED, goto=goto, keep=keep)
+        return context.come_back(messages.MSG_CHANGES_SAVED, goto=goto,
+                                 keep=keep)
 

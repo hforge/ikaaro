@@ -31,11 +31,11 @@ from itools.i18n import get_language_name
 from itools.stl import stl
 from itools.uri import Path, get_reference
 from itools.vfs import FileName
-from itools.web import BaseView, STLForm, get_context
+from itools.web import BaseView, STLForm, get_context, INFO, ERROR
 
 # Import from ikaaro
 from datatypes import FileDataType
-from messages import *
+import messages
 from registry import get_resource_class
 from utils import get_parameters, reduce_string
 from views import NewInstanceForm, ContextMenu
@@ -114,17 +114,17 @@ class DBResourceNewInstance(NewInstanceForm):
         # Check the name
         name = name.strip() or title.strip()
         if not name:
-            context.message = MSG_NAME_MISSING
+            context.message = messages.MSG_NAME_MISSING
             return
 
         name = checkid(name)
         if name is None:
-            context.message = MSG_BAD_NAME
+            context.message = messages.MSG_BAD_NAME
             return
 
         # Check the name is free
         if resource.has_resource(name):
-            context.message = MSG_NAME_CLASH
+            context.message = messages.MSG_NAME_CLASH
             return
 
         # Create the resource
@@ -137,7 +137,7 @@ class DBResourceNewInstance(NewInstanceForm):
         metadata.set_property('title', title, language=language)
 
         goto = './%s/' % name
-        return context.come_back(MSG_NEW_RESOURCE, goto=goto)
+        return context.come_back(messages.MSG_NEW_RESOURCE, goto=goto)
 
 
 
@@ -178,7 +178,7 @@ class DBResourceEdit(STLForm):
         resource.set_property('description', description, language=language)
         resource.set_property('subject', subject, language=language)
 
-        context.message = MSG_CHANGES_SAVED
+        context.message = messages.MSG_CHANGES_SAVED
 
 
 
@@ -318,7 +318,7 @@ class DBResourceAddImage(STLForm):
             'message': context.message,
             'mode': mode,
             'scripts': scripts,
-            'caption': MSG_CAPTION.gettext().encode('utf_8'),
+            'caption': messages.MSG_CAPTION.gettext().encode('utf_8'),
         }
 
 
@@ -338,13 +338,13 @@ class DBResourceAddImage(STLForm):
         filename, mimetype, body = form['file']
         name = checkid(filename)
         if name is None:
-            context.message = MSG_BAD_NAME
+            context.message = messages.MSG_BAD_NAME
             return
 
         # Check it is an image
         cls = get_resource_class(mimetype)
         if not issubclass(cls, Image):
-            context.message = MSG(u'The given file is not an image.')
+            context.message = ERROR(u'The given file is not an image.')
             return
 
         # Get the container
@@ -352,14 +352,14 @@ class DBResourceAddImage(STLForm):
         # Check the name is free
         name, type, language = FileName.decode(name)
         if container.has_resource(name):
-            context.message = MSG_NAME_CLASH
+            context.message = messages.MSG_NAME_CLASH
             return
 
         # Add the image to the resource
         cls.make_resource(cls, container, name, body, type=type)
 
         # Ok
-        caption = MSG_CAPTION.gettext().encode('utf_8')
+        caption = messages.MSG_CAPTION.gettext().encode('utf_8')
         if form['mode'] == 'wiki':
             scripts = ['/ui/wiki/javascript.js']
         else:
@@ -500,8 +500,9 @@ class LoginView(STLForm):
         # Search the user by username (login name)
         results = root.search(username=email)
         if results.get_n_documents() == 0:
-            message = MSG(u'The user "$username" does not exist.')
-            context.message = message.gettext(username=email)
+            message = ERROR(u'The user "$username" does not exist.',
+                            username=email)
+            context.message = message
             return
 
         # Get the user
@@ -510,13 +511,14 @@ class LoginView(STLForm):
 
         # Check the user is active
         if user.get_property('user_must_confirm'):
-            message = MSG(u'The user "$username" is not active.')
-            context.message = message.gettext(username=email)
+            message = ERROR(u'The user "$username" is not active.',
+                            username=email)
+            context.message = message
             return
 
         # Check the password is right
         if not user.authenticate(password):
-            context.message = MSG(u'The password is wrong.')
+            context.message = ERROR(u'The password is wrong.')
             return
 
         # Set cookie
@@ -556,5 +558,5 @@ class LogoutView(BaseView):
         context.del_cookie('__ac')
         context.user = None
 
-        message = MSG(u'You Are Now Logged out.')
+        message = INFO(u'You Are Now Logged out.')
         return context.come_back(message, goto='./')

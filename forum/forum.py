@@ -26,11 +26,11 @@ from itools.datatypes import Unicode, String
 from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.i18n import format_datetime
-from itools.web import STLForm
+from itools.web import STLForm, INFO
 
 # Import from ikaaro
 from ikaaro.folder import Folder
-from ikaaro.messages import MSG_NAME_CLASH
+from ikaaro import messages
 from ikaaro.registry import register_resource_class
 from thread import Thread
 from message import Message
@@ -106,7 +106,7 @@ class AddThreadForm(STLForm):
 
         # Check the name is free
         if resource.has_resource(name):
-            context.message = MSG_NAME_CLASH
+            context.message = messages.MSG_NAME_CLASH
             return
 
         language = resource.get_content_language()
@@ -114,7 +114,7 @@ class AddThreadForm(STLForm):
         thread.set_property('title', title, language=language)
 
         # Ok
-        message = MSG(u'Thread Created.')
+        message = INFO(u'Thread Created.')
         goto = './%s/' % name
         return context.come_back(message, goto=goto)
 

@@ -24,11 +24,11 @@ from operator import itemgetter
 from itools.datatypes import Integer, String
 from itools.gettext import MSG
 from itools.stl import stl
-from itools.web import STLForm, STLView
+from itools.web import STLForm, STLView, INFO
 
 # Import from ikaaro
 from forms import AutoForm, get_default_widget
-from messages import MSG_CHANGES_SAVED
+import messages
 from registry import register_resource_class
 from utils import get_parameters
 from views import BrowseForm
@@ -53,7 +53,7 @@ class TextEdit(STLForm):
         data = form['data']
         resource.handler.load_state_from_string(data)
         # Ok
-        context.message = MSG_CHANGES_SAVED
+        context.message = messages.MSG_CHANGES_SAVED
 
 
 
@@ -153,7 +153,7 @@ class POEdit(STLForm):
         context.server.change_resource(resource)
 
         # Ok
-        context.message = MSG_CHANGES_SAVED
+        context.message = messages.MSG_CHANGES_SAVED
 
 
 
@@ -229,7 +229,7 @@ class CSVView(BrowseForm):
         ids = form['ids']
         resource.handler.del_rows(ids)
         # Ok
-        context.message = MSG(u'Row deleted.')
+        context.message = INFO(u'Row deleted.')
 
 
 
@@ -269,7 +269,7 @@ class CSVAddRow(RowForm):
         row = [ form[name] for name, title in resource.get_columns() ]
         row = resource.handler.add_row(row)
         # Ok
-        message = MSG(u'New row added.')
+        message = INFO(u'New row added.')
         goto = ';edit_row?index=%s' % row.number
         return context.come_back(message, goto=goto)
 
@@ -299,5 +299,5 @@ class CSVEditRow(RowForm):
         index = context.query['index']
         resource.handler.update_row(index, **form)
         # Ok
-        context.message = MSG_CHANGES_SAVED
+        context.message = messages.MSG_CHANGES_SAVED
 

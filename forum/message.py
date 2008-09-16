@@ -24,7 +24,6 @@ from itools.html import HTMLParser, sanitize_stream, XHTMLFile
 from itools.web import STLForm
 
 # Import from ikaaro
-from ikaaro.messages import *
 from ikaaro.registry import register_resource_class
 from ikaaro.html import WebPage
 

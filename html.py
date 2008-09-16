@@ -29,11 +29,11 @@ from itools.http import Forbidden
 from itools.html import xhtml_uri, XHTMLFile, sanitize_stream, HTMLParser
 from itools.stl import stl
 from itools.uri import get_reference
-from itools.web import STLView, STLForm
+from itools.web import STLView, STLForm, ERROR
 from itools.xml import TEXT, START_ELEMENT, XMLError, XMLParser, stream_to_str
 
 # Import from ikaaro
-from messages import *
+import messages
 from multilingual import Multilingual
 from text import Text
 from registry import register_resource_class
@@ -81,11 +81,11 @@ class HTMLEditView(DBResourceEdit):
     def action(self, resource, context, form):
         timestamp = form['timestamp']
         if timestamp is None:
-            context.message = MSG_EDIT_CONFLICT
+            context.message = messages.MSG_EDIT_CONFLICT
             return
         document = resource.get_epoz_document()
         if document.timestamp is not None and timestamp < document.timestamp:
-            context.message = MSG_EDIT_CONFLICT
+            context.message = messages.MSG_EDIT_CONFLICT
             return
 
         # Properties
@@ -96,7 +96,7 @@ class HTMLEditView(DBResourceEdit):
         try:
             new_body = list(XMLParser(new_body, namespaces))
         except XMLError:
-            context.message = MSG(u'Invalid HTML code.')
+            context.message = ERROR(u'Invalid HTML code.')
             return
         if self.sanitize_html:
             new_body = sanitize_stream(new_body)
@@ -107,7 +107,7 @@ class HTMLEditView(DBResourceEdit):
         # Change
         document.set_events(events)
         context.server.change_resource(resource)
-        context.message = MSG_CHANGES_SAVED
+        context.message = messages.MSG_CHANGES_SAVED
 
 
 

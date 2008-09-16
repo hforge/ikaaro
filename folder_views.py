@@ -23,15 +23,15 @@ from itools.gettext import MSG
 from itools.handlers import checkid, merge_dics
 from itools.i18n import format_datetime
 from itools.stl import stl
-from itools.uri import get_reference
-from itools.web import BaseView, STLForm
+from itools.uri import get_reference, Path
+from itools.web import BaseView, STLForm, INFO, ERROR
 from itools.xapian import AndQuery, EqQuery, OrQuery, PhraseQuery
 from itools.xml import XMLParser
 
 # Import from ikaaro
 from datatypes import CopyCookie
 from exceptions import ConsistencyError
-from messages import *
+import messages
 from resource_views import AddResourceMenu
 from utils import generate_name, reduce_string
 from versioning import VersioningAware
@@ -159,7 +159,7 @@ class FolderRename(STLForm):
             new_name = new_names[i]
             new_name = checkid(new_name)
             if new_name is None:
-                context.message = MSG_BAD_NAME
+                context.message = messages.MSG_BAD_NAME
                 return
             # Split the path
             if '/' in path:
@@ -173,7 +173,7 @@ class FolderRename(STLForm):
                 continue
             # Check there is not another resource with the same name
             if container.has_resource(new_name):
-                context.message = MSG_EXISTANT_FILENAME
+                context.message = messages.MSG_EXISTANT_FILENAME
                 return
             # Clean cookie (FIXME Do not clean the cookie, update it)
             if cp_paths and str(abspath.resolve2(path)) in cp_paths:
@@ -182,7 +182,7 @@ class FolderRename(STLForm):
             # Rename
             container.move_resource(old_name, new_name)
 
-        message = MSG(u'Resources renamed.')
+        message = INFO(u'Resources renamed.')
         return context.come_back(message, goto=';browse_content')
 
 
@@ -344,10 +344,10 @@ class FolderBrowseContent(SearchForm):
         # Remove, Copy, Cut, Paste
         actions = []
         if len(items):
-            message = MSG_DELETE_SELECTION.gettext()
+            message = messages.MSG_DELETE_SELECTION
             actions = [
                 ('remove', MSG(u'Remove'), 'button_delete',
-                 'return confirm("%s");' % message.encode('utf_8')),
+                 'return confirm("%s");' % message.gettext().encode('utf_8')),
                 ('rename', MSG(u'Rename'), 'button_rename', None),
                 ('copy', MSG(u'Copy'), 'button_copy', None),
                 ('cut', MSG(u'Cut'), 'button_cut', None)]
@@ -398,9 +398,10 @@ class FolderBrowseContent(SearchForm):
 
         if removed:
             resources = ', '.join(removed)
-            context.message = MSG_RESOURCES_REMOVED.gettext(resources=resources)
+            message = messages.MSG_RESOURCES_REMOVED(resources=resources)
+            context.message = message
         else:
-            context.message = MSG_NONE_REMOVED
+            context.message = messages.MSG_NONE_REMOVED
 
 
     def action_rename(self, resource, context, form):
@@ -413,7 +414,7 @@ class FolderBrowseContent(SearchForm):
 
         # Check input data
         if not paths:
-            context.message = MSG(u'No resource selected.')
+            context.message = ERROR(u'No resource selected.')
             return
 
         # FIXME Hack to get rename working. The current user interface forces
@@ -434,7 +435,7 @@ class FolderBrowseContent(SearchForm):
 
         # Check input data
         if not names:
-            message = MSG(u'No resource selected.')
+            message = ERROR(u'No resource selected.')
             return
 
         abspath = resource.get_abspath()
@@ -442,7 +443,7 @@ class FolderBrowseContent(SearchForm):
         cp = CopyCookie.encode(cp)
         context.set_cookie('ikaaro_cp', cp, path='/')
         # Ok
-        context.message = MSG(u'Resources copied.')
+        context.message = INFO(u'Resources copied.')
 
 
     def action_cut(self, resource, context, form):
@@ -455,7 +456,7 @@ class FolderBrowseContent(SearchForm):
 
         # Check input data
         if not names:
-            message = MSG(u'No resource selected.')
+            context.message = ERROR(u'No resource selected.')
             return
 
         abspath = resource.get_abspath()
@@ -463,7 +464,7 @@ class FolderBrowseContent(SearchForm):
         cp = CopyCookie.encode(cp)
         context.set_cookie('ikaaro_cp', cp, path='/')
 
-        context.message = MSG(u'Resources cut.')
+        context.message = INFO(u'Resources cut.')
 
 
     action_paste_schema = {}
@@ -471,7 +472,7 @@ class FolderBrowseContent(SearchForm):
         # Check there is something to paste
         cut, paths = context.get_cookie('ikaaro_cp', type=CopyCookie)
         if len(paths) == 0:
-            context.message = MSG(u'Nothing to paste.')
+            context.message = ERROR(u'Nothing to paste.')
             return
 
         # Paste
@@ -509,7 +510,7 @@ class FolderBrowseContent(SearchForm):
         if cut is True:
             context.del_cookie('ikaaro_cp')
 
-        context.message = MSG(u'Resources pasted.')
+        context.message = INFO(u'Resources pasted.')
 
 
 

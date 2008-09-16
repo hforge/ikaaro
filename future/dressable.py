@@ -38,7 +38,7 @@ from ikaaro.exceptions import ConsistencyError
 from ikaaro.file import File, Image
 from ikaaro.folder import Folder
 from ikaaro.html import WebPage, EpozEditable
-from ikaaro.messages import *
+from ikaaro import messages
 from ikaaro.registry import register_resource_class
 from ikaaro.workflow import WorkflowAware
 
@@ -218,7 +218,7 @@ class Dressable(Folder, EpozEditable):
         name = context.get_form_value('name')
         namespace['name'] = name
         namespace['class_id'] = self.get_class(name).class_id
-        message = self.gettext(MSG_DELETE_RESOURCE)
+        message = self.gettext(messages.MSG_DELETE_RESOURCE)
         msg = 'return confirm("%s");' % message.encode('utf_8')
         namespace['remove_action'] = msg
 
@@ -255,10 +255,10 @@ class Dressable(Folder, EpozEditable):
         timestamp = context.get_form_value('timestamp', type=DateTime)
         # Compare the dressable's timestamp and not the folder's timestamp
         if timestamp is None:
-            return context.come_back(MSG_EDIT_CONFLICT)
+            return context.come_back(messages.MSG_EDIT_CONFLICT)
         document = self.get_epoz_document()
         if document.timestamp is not None and timestamp < document.timestamp:
-            return context.come_back(MSG_EDIT_CONFLICT)
+            return context.come_back(messages.MSG_EDIT_CONFLICT)
 
         # Sanitize
         new_body = context.get_form_value('data')
@@ -278,7 +278,7 @@ class Dressable(Folder, EpozEditable):
         context.server.change_resource(dress_resource)
         context.server.change_resource(self)
 
-        return context.come_back(MSG_CHANGES_SAVED)
+        return context.come_back(messages.MSG_CHANGES_SAVED)
 
 
     def get_class(self, handler_name):
@@ -312,7 +312,7 @@ class Dressable(Folder, EpozEditable):
         # Check input data
         file = context.get_form_value('file')
         if file is None:
-            return context.come_back(MSG_EMPTY_FILENAME)
+            return context.come_back(messages.MSG_EMPTY_FILENAME)
 
         # Interpret input data (the mimetype sent by the browser can be
         # minimalistic)
@@ -322,7 +322,7 @@ class Dressable(Folder, EpozEditable):
         # Check the name
         name = checkid(image_name)
         if name is None:
-            return context.come_back(MSG_BAD_NAME)
+            return context.come_back(messages.MSG_BAD_NAME)
 
         # Check the mimetype
         if mimetype.startswith('image/') is False:
@@ -346,7 +346,7 @@ class Dressable(Folder, EpozEditable):
             metadata.set_property('state', 'public')
 
         goto = './;view'
-        return context.come_back(MSG_NEW_RESOURCE, goto=goto)
+        return context.come_back(messages.MSG_NEW_RESOURCE, goto=goto)
 
 
     remove_image__access__ = 'is_allowed_to_edit'
@@ -360,8 +360,8 @@ class Dressable(Folder, EpozEditable):
             pass
 
         goto = './;view'
-        return context.come_back(MSG_RESOURCES_REMOVED, resources=resources,
-                                 goto=goto)
+        return context.come_back(messages.MSG_RESOURCES_REMOVED,
+                                 resources=resources, goto=goto)
 
 
     def get_epoz_document(self):

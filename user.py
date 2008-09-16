@@ -26,6 +26,7 @@ from itools.datatypes import Email, String, Unicode
 from itools.gettext import MSG
 from itools.uri import Path
 from itools.xapian import TextField, KeywordField
+from itools.web import INFO
 
 # Import from ikaaro
 from access import AccessControl
@@ -298,8 +299,8 @@ class UserFolder(Folder):
         access='is_admin',
         title=MSG(u'View'),
         icon='view.png',
-        message = MSG(u'To manage the users please go '
-                      u'<a href="/;permissions">here</a>.'))
+        message = INFO(u'To manage the users please go '
+                       u'<a href="/;permissions">here</a>.'))
 
 
 

@@ -29,13 +29,13 @@ from itools.html import HTMLParser, stream_to_str_as_xhtml
 from itools.i18n import guess_language
 from itools.uri import get_reference
 from itools.vfs import FileName
-from itools.web import BaseView, STLView, STLForm
+from itools.web import BaseView, STLView, STLForm, INFO, ERROR
 from itools.xapian import EqQuery
 
 # Import from ikaaro
 from datatypes import FileDataType
 from folder_views import FolderBrowseContent
-from messages import MSG_BAD_NAME, MSG_NAME_CLASH, MSG_NEW_RESOURCE
+import messages
 from multilingual import Multilingual
 from registry import get_resource_class
 from resource_views import AddResourceMenu
@@ -72,7 +72,7 @@ class FileNewInstance(NewInstanceForm):
         name = title.strip() or filename
         name = checkid(name)
         if name is None:
-            context.message = MSG_BAD_NAME
+            context.message = messages.MSG_BAD_NAME
             return
 
         # Web Pages are first class citizens
@@ -97,7 +97,7 @@ class FileNewInstance(NewInstanceForm):
 
         # Check the name is free
         if resource.has_resource(name):
-            context.message = MSG_NAME_CLASH
+            context.message = messages.MSG_NAME_CLASH
             return
 
         # Build the resource
@@ -112,7 +112,7 @@ class FileNewInstance(NewInstanceForm):
         child.metadata.set_property('title', title, language=language)
 
         goto = './%s/' % name
-        return context.come_back(MSG_NEW_RESOURCE, goto=goto)
+        return context.come_back(messages.MSG_NEW_RESOURCE, goto=goto)
 
 
 
@@ -175,8 +175,9 @@ class FileUpload(STLForm):
         # Check wether the handler is able to deal with the uploaded file
         handler = resource.handler
         if mimetype != handler.get_mimetype():
-            message = MSG(u'Unexpected file of mimetype ${type}')
-            context.message = message.gettext(type=mimetype)
+            message = ERROR(u'Unexpected file of mimetype ${type}',
+                            type=mimetype)
+            context.message = message
             return
 
         # Replace
@@ -184,13 +185,13 @@ class FileUpload(STLForm):
             handler.load_state_from_string(body)
         except:
             handler.load_state()
-            message = MSG(u'Failed to load the file, may contain errors.')
+            message = ERROR(u'Failed to load the file, may contain errors.')
             context.message = message
             return
 
         # Ok
         context.server.change_resource(resource)
-        context.message = MSG(u'Version uploaded')
+        context.message = INFO(u'Version uploaded')
 
 
 
@@ -235,8 +236,8 @@ class FileExternalEdit(BaseView):
                     r.append('lock-token:%s' % lock.key)
                     r.append('borrow_lock:1')
                 else:
-                    msg = MSG(u'This page is lock by another user')
-                    return context.come_back(message=msg, goto='.')
+                    message = ERROR(u'This page is locked by another user')
+                    return context.come_back(message, goto='.')
 
         if request.has_header('Authorization'):
             r.append('auth:%s' % request.get_header('Authorization'))

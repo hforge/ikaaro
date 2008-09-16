@@ -19,21 +19,23 @@
 
 # Import from itools
 from itools.gettext import MSG
+from itools.web import INFO, ERROR
 
 
-MSG_BAD_KEY = MSG(
+
+MSG_BAD_KEY = ERROR(
     u"Your confirmation key is invalid.")
 
-MSG_BAD_NAME = MSG(
+MSG_BAD_NAME = ERROR(
     u'The document name contains illegal characters, choose another one.')
 
-MSG_CAPTION = MSG(
+MSG_CAPTION = ERROR(
     u'Caption')
 
-MSG_CHANGES_SAVED = MSG(
+MSG_CHANGES_SAVED = INFO(
     u'The changes have been saved.')
 
-MSG_CHANGES_SAVED2 = MSG(
+MSG_CHANGES_SAVED2 = INFO(
     u'The changes have been saved ($time).')
 
 MSG_DELETE_RESOURCE = MSG(
@@ -42,40 +44,39 @@ MSG_DELETE_RESOURCE = MSG(
 MSG_DELETE_SELECTION = MSG(
     u'Are you sure you want to delete the selection?')
 
-MSG_EDIT_CONFLICT = MSG(
-    u'Changes could not be saved, there was an edit conflict.')
+MSG_EDIT_CONFLICT = ERROR(
+    u'Someone already saved this document, click "Save" again to force.')
 
-MSG_EMPTY_FILENAME = MSG(
+MSG_EMPTY_FILENAME = ERROR(
     u'The file must be entered.')
 
-MSG_EXISTANT_FILENAME = MSG(
+MSG_EXISTANT_FILENAME = ERROR(
     u'A given name already exists.')
 
-MSG_INVALID_EMAIL = MSG(
+MSG_INVALID_EMAIL = ERROR(
     u'The email address provided is invalid.')
 
-MSG_NAME_CLASH = MSG(
+MSG_NAME_CLASH = ERROR(
     u'There is already another resource with this name.')
 
-MSG_NAME_MISSING = MSG(
+MSG_NAME_MISSING = ERROR(
     u'The name is missing.')
 
-MSG_NEW_RESOURCE = MSG(
+MSG_NEW_RESOURCE = INFO(
     u'A new resource has been added.')
 
-MSG_NONE_REMOVED = MSG(
+MSG_NONE_REMOVED = ERROR(
     u'No resource removed.')
 
-MSG_RESOURCES_REMOVED = MSG(
+MSG_RESOURCES_REMOVED = INFO(
     u'Resources removed: $resources.')
 
-MSG_PAGE_LOCK = MSG(
-    u'This page is locked by $user')
+MSG_PAGE_LOCK = ERROR(
+    message = u'This page is locked by $user')
 
-MSG_PASSWORD_MISMATCH = MSG(
+MSG_PASSWORD_MISMATCH = ERROR(
     u'The provided passwords do not match.')
 
-MSG_REGISTERED = MSG(
+MSG_REGISTERED = ERROR(
     u"You have already confirmed your registration. "
     u"Try to log in or ask for a new password.")
-

@@ -31,7 +31,7 @@ from itools.ical import get_grid_data
 from itools.ical import DateTime, Time
 from itools.stl import stl
 from itools.uri import encode_query, get_reference
-from itools.web import BaseView, STLForm, STLView, get_context
+from itools.web import BaseView, STLForm, STLView, get_context, INFO, ERROR
 
 # Import from ikaaro
 from file import FileUpload
@@ -136,13 +136,14 @@ class TimetablesForm(STLForm):
         start = form['new_start']
         end = form['new_end']
         if start >= end:
-            context.message = MSG(u'Start time must be earlier than end time.')
+            message = ERROR(u'Start time must be earlier than end time.')
+            context.message = message
             return
 
         # Check the given range is not defined yet
         timetables = resource.get_property('timetables')
         if (start, end) in timetables:
-            context.message = MSG(u'The given range is already defined.')
+            context.message = ERROR(u'The given range is already defined.')
             return
 
         # Add new range
@@ -151,14 +152,14 @@ class TimetablesForm(STLForm):
         timetables.sort()
         resource.set_property('timetables', tuple(timetables))
         # Ok
-        context.message = MSG(u'Timetables updated successfully.')
+        context.message = INFO(u'Timetables updated successfully.')
 
 
     action_remove_schema = {'ids': Integer(multiple=True)}
     def action_remove(self, resource, context, form):
         ids = form['ids']
         if len(ids) == 0:
-            context.message = MSG(u'Nothing to remove.')
+            context.message = ERROR(u'Nothing to remove.')
             return
 
         # New timetables
@@ -168,13 +169,13 @@ class TimetablesForm(STLForm):
             if index not in ids ]
         resource.set_property('timetables', tuple(timetables))
         # Ok
-        context.message = MSG(u'Timetable(s) removed successfully.')
+        context.message = INFO(u'Timetable(s) removed successfully.')
 
 
     def action_update(self, resource, context, form):
         timetables = resource.get_property('timetables')
         if len(timetables) == 0:
-            context.message = MSG(u'Nothing to change.')
+            context.message = ERROR(u'Nothing to change.')
             return
 
         # Update timetable or just set index to next index
@@ -184,11 +185,11 @@ class TimetablesForm(STLForm):
                 start = context.get_form_value('%s_start' % index, type=Time)
                 end = context.get_form_value('%s_end' % index, type=Time)
             except:
-                context.message = MSG(u'Wrong time selection (HH:MM).')
+                context.message = ERROR(u'Wrong time selection (HH:MM).')
                 return
 
             if start >= end:
-                message = MSG(u'Start time must be earlier than end time.')
+                message = ERROR(u'Start time must be earlier than end time.')
                 context.message = message
                 return
 
@@ -197,7 +198,7 @@ class TimetablesForm(STLForm):
         new_timetables.sort()
         resource.set_property('timetables', tuple(new_timetables))
         # Ok
-        context.message = MSG(u'Timetables updated successfully.')
+        context.message = INFO(u'Timetables updated successfully.')
 
 
 
@@ -446,7 +447,7 @@ class EditEventForm(CalendarView, STLForm):
             return id
 
         # Error
-        message = MSG(u'Expected query parameter "id" is missing.')
+        message = ERROR(u'Expected query parameter "id" is missing.')
         context.message = message
         return None
 
@@ -463,7 +464,7 @@ class EditEventForm(CalendarView, STLForm):
         # Get the event
         event = resource.get_record(id)
         if event is None:
-            context.message = MSG(u'Event not found')
+            context.message = ERROR(u'Event not found')
             return {'action': None}
 
         # Ok
@@ -575,12 +576,12 @@ class EditEventForm(CalendarView, STLForm):
         # Get the event
         event = resource.get_record(id)
         if event is None:
-            context.message = MSG(u'Event not found')
+            context.message = ERROR(u'Event not found')
             return {'action': None}
 
         # Test if current user is admin or organizer of this event
         if not resource.is_organizer_or_admin(context, event):
-            message = MSG(u'You are not authorized to modify this event.')
+            message = ERROR(u'You are not authorized to modify this event.')
             context.message = message
             return
 
@@ -588,7 +589,7 @@ class EditEventForm(CalendarView, STLForm):
         properties = self.get_properties(form)
         resource.update_record(id, properties)
         # Ok
-        context.message = MSG(u'Data updated')
+        context.message = INFO(u'Data updated')
 
 
     def action_remove_event(self, resource, context, form):
@@ -616,7 +617,7 @@ class EditEventForm(CalendarView, STLForm):
         else:
             goto = '../;%s?%s' % (method, date.today())
 
-        message = MSG(u'Event definitely deleted.')
+        message = ERROR(u'Event definitely deleted.')
         return context.come_back(message, goto=goto)
 
 
@@ -641,7 +642,7 @@ class AddEventForm(EditEventForm):
         selected_date = context.query['date']
         if selected_date is None:
             message = u'To add an event, click on + symbol from the views.'
-            context.message = MSG(message)
+            context.message = ERROR(message)
             return {}
 
         # Timetables
@@ -694,7 +695,7 @@ class AddEventForm(EditEventForm):
         properties['ORGANIZER'] = Property(organizer)
         resource.add_record('VEVENT', properties)
         # Ok
-        message = MSG(u'Data updated')
+        message = INFO(u'Data updated')
         goto = ';%s' % context.get_cookie('method') or 'monthly_view'
         return context.come_back(message, goto=goto)
 
@@ -1085,19 +1086,19 @@ class CalendarUpload(FileUpload):
         # Check wether the handler is able to deal with the uploaded file
         handler = resource.handler
         if mimetype != 'text/calendar':
-            message = MSG(u'Unexpected file of mimetype ${mimetype}.')
-            context.message =  message.gettext(mimetype=mimetype)
+            message = u'Unexpected file of mimetype ${mimetype}.'
+            context.message = ERROR(message, mimetype=mimetype)
             return
 
         # Replace
         try:
             handler.load_state_from_ical_file(StringIO(body))
         except:
-            message = MSG(u'Failed to load the file, may contain errors.')
+            message = ERROR(u'Failed to load the file, may contain errors.')
             context.message = message
         else:
             context.server.change_resource(resource)
-            context.message = MSG(u'Version uploaded')
+            context.message = INFO(u'Version uploaded')
 
 
 
