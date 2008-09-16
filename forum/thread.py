@@ -118,7 +118,7 @@ class Thread(Folder):
 
 
     @staticmethod
-    def _make_resource(cls, folder, name, data=u'', language='en'):
+    def _make_resource(cls, folder, name, data='', language='en'):
         Folder._make_resource(cls, folder, name)
         # First post
         folder.set_handler('%s/0.metadata' % name, Message.build_metadata())

@@ -36,9 +36,6 @@ from thread import Thread
 from message import Message
 
 
-###########################################################################
-# Views
-###########################################################################
 
 class ForumView(STLForm):
 
@@ -82,9 +79,8 @@ class AddThreadForm(STLForm):
     template = '/ui/forum/Forum_new_thread.xml'
 
     schema = {
-        'title': String(mandatory=True),
-        'data': Unicode(mandatory=True),
-        }
+        'title': Unicode(mandatory=True),
+        'data': String(mandatory=True)}
 
 
     def get_namespace(self, resource, context):
@@ -100,11 +96,13 @@ class AddThreadForm(STLForm):
         title = form['title']
         name = checkid(title)
         if name is None:
-            return context.come_back(u"Invalid title.", keep=True)
+            context.message = MSG(u"Invalid title.")
+            return
 
         data = form['data'].strip()
         if not data:
-            return context.come_back("Thread can't be None.", keep=True)
+            context.message = MSG(u"Thread can't be None.")
+            return
 
         # Check the name is free
         if resource.has_resource(name):
@@ -121,10 +119,6 @@ class AddThreadForm(STLForm):
         return context.come_back(message, goto=goto)
 
 
-###########################################################################
-# Model
-###########################################################################
-
 
 class Forum(Folder):
 
@@ -137,10 +131,7 @@ class Forum(Folder):
     class_views = ['view', 'add_thread', 'edit']
 
 
-    #######################################################################
     # Views
-    #######################################################################
-
     view = ForumView()
     add_thread = AddThreadForm()
 

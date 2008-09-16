@@ -39,9 +39,7 @@ def build_message(data):
                        + document.events[old_body.end:])
     return document
 
-###########################################################################
-# Model
-###########################################################################
+
 
 class Message(WebPage):
 
