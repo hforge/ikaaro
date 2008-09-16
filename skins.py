@@ -340,7 +340,7 @@ class Skin(UIFolder):
         try:
             get_page_title = view.get_page_title
         except AttributeError:
-            return resource.get_title()
+            return resource.get_page_title()
 
         return get_page_title(resource, context)
 

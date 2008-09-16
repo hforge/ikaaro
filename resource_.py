@@ -80,6 +80,10 @@ class IResource(Resource):
         return self.name
 
 
+    def get_page_title(self):
+        return self.get_title()
+
+
     ########################################################################
     # Icons
     ########################################################################

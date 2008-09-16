@@ -41,7 +41,7 @@
 
     <!-- Body -->
     <div id="body">
-      <h1>${page_title}</h1>
+      <h1 stl:if="page_title">${page_title}</h1>
       <div id="message" class="${message_level}"
         stl:if="message">${message}</div>
       <table cellpadding="0" cellspacing="0" border="0" width="100%">
