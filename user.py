@@ -194,8 +194,7 @@ class User(AccessControl, Folder):
         confirm_url = str(confirm_url)
 
         # Build the email
-        subject = u"Confirmation required"
-        subject = self.gettext(subject)
+        subject = MSG(u"Confirmation required").gettext()
         body = MSG(
             u"To confirm your identity click the link:\n"
             u"\n"

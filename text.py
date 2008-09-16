@@ -138,7 +138,7 @@ class CSV(Text):
             if title is None:
                 title = name
             else:
-                title = self.gettext(title)
+                title = title.gettext()
             columns.append((name, title))
 
         return columns

@@ -103,7 +103,7 @@ class Link(File):
         # Language
         language = self.get_content_language(context)
         language_name = get_language_name(language)
-        namespace['language_name'] = self.gettext(language_name)
+        namespace['language_name'] = language_name.gettext()
         # Title
         namespace['title'] = self.get_property('title', language=language)
         # Description
