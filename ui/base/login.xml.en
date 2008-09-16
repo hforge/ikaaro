@@ -4,7 +4,9 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
-  <form id="loginform" name="loginform" method="post" action=";login">
+<form id="loginform" name="loginform" method="post" action=";login">
+  <fieldset>
+    <legend>Login</legend>
     <dl>
       <dt><label for="username">Email Address</label></dt>
       <dd>
@@ -16,14 +18,13 @@
         <a href="/;forgotten_password">I forgot my password</a>
       </dd>
     </dl>
-    <p>
-      <input type="submit" value="Log in" class="button_ok"/>
-    </p>
-  </form>
+    <input type="submit" value="Log in" class="button_ok"/>
+  </fieldset>
 
   <script language="javascript">
     <stl:inline stl:if="not username">$("#username").focus();</stl:inline>
     <stl:inline stl:if="username">$("#password").focus();</stl:inline>
   </script>
+</form>
 
 </stl:block>
