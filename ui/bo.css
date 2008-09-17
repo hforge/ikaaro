@@ -1,0 +1,414 @@
+
+body {
+  margin: 0;
+  padding: 0;
+  color: #000;
+  background-color: #fff;
+  /* 1em = 10px */
+  font-size: 62.5%;
+  font-family: "Arial", "DejaVu Sans", sans-serif;
+}
+
+a img { border: 0; }
+
+select, input, textarea, button {
+  color: #000;
+  background-color: #fff;
+  font-size: 1.0em;
+}
+
+input {
+  background-position: left center;
+  background-repeat: no-repeat;
+}
+
+.clear {
+  clear: both;
+}
+
+
+/**************************************************************************
+ * itools.web.BaseForm
+ *************************************************************************/
+
+.field_is_required {
+  font-style: italic;
+}
+
+.field_is_missing {
+  color: #ff0000;
+}
+
+
+/**************************************************************************
+ * Buttons
+ *************************************************************************/
+.button_ok {
+  background-image: url(icons/16x16/ok.png);
+  padding-left: 16px;
+}
+
+.button_cancel {
+  background-image: url(icons/16x16/cancel.png);
+  padding-left: 16px;
+}
+
+.button_search {
+  background-image: url(icons/16x16/search.png);
+  padding-left: 16px;
+}
+
+.button_calendar {
+  background-image: url(icons/16x16/calendar.png);
+  padding-left: 16px;
+}
+
+.button_upload {
+  background-image: url(icons/16x16/upload.png);
+  padding-left: 16px;
+}
+
+.button_external {
+  background-image: url(icons/16x16/external.png);
+  padding-left: 16px;
+}
+
+.button_rename {
+  background-image: url(icons/16x16/rename.png);
+  padding-left: 16px;
+}
+
+.button_delete {
+  background-image: url(icons/16x16/delete.png);
+  padding-left: 16px;
+}
+
+.button_copy {
+  background-image: url(icons/16x16/copy.png);
+  padding-left: 16px;
+}
+
+.button_cut {
+  background-image: url(icons/16x16/cut.png);
+  padding-left: 16px;
+}
+
+.button_paste {
+  background-image: url(icons/16x16/paste.png);
+  padding-left: 16px;
+}
+
+.button_translate {
+  background-image: url(icons/16x16/languages.png);
+  padding-left: 16px;
+}
+
+.button_compare {
+  background-image: url(icons/16x16/compare.png);
+  padding-left: 16px;
+}
+
+.button_add {
+  background-image: url(icons/16x16/add.png);
+  padding-left: 16px;
+}
+
+.button_select_all {
+  background-image: url(icons/16x16/select_all.png);
+  padding-left: 16px;
+}
+
+.button_select_none {
+  background-image: url(icons/16x16/select_none.png);
+  padding-left: 16px;
+}
+
+
+/**************************************************************************
+ * ui/aruni/location.xml.en
+ *************************************************************************/
+
+#location {
+  margin: 0px 10px 0px 0px;
+  padding: 0px 0px 4px 8px;
+  width: 99%;
+}
+
+#tabs {
+  padding: 2px 4px 2px 0px;
+  float: right;
+  font-size: 1.1em;
+}
+
+#tabs a {
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+#tabs .menu a {
+  padding: 2px 4px 2px 4px;
+}
+
+#tabs .menu a:hover {
+  background-color: #3465a4;
+  color: #ffffff;
+}
+
+#tabs .active a {
+  font-weight: bold;
+}
+
+
+/**************************************************************************
+ * ui/aruni/location.xml.en
+ * ui/html/addlink.xml.en
+ * ui/html/addimage.xml.en
+ *************************************************************************/
+
+#breadcrumbs {
+  float: left;
+  font-size: 1.1em;
+  margin: 2px 0px 2px 0px;
+}
+
+#breadcrumbs span {
+  color: #888a85;
+}
+
+#breadcrumbs a {
+  text-decoration: none;
+  padding: 2px 4px 2px 4px;
+}
+
+#breadcrumbs a:hover {
+  background-color: #3465a4;
+  color: #ffffff;
+}
+
+
+/**************************************************************************
+ * ui/aruni/message.xml.en
+ * ui/html/addlink.xml.en
+ * ui/html/addimage.xml.en
+ *************************************************************************/
+
+#message {
+  margin: 3px;
+  border-width: 2px;
+  border-style: solid;
+  padding: 3px 0 3px 20px;
+  background-position: left center;
+  background-repeat: no-repeat;
+}
+
+#message.info {
+  border-color: #ff0;
+  background-color: #ffffc2;
+  background-image: url(icons/16x16/message.png);
+}
+
+#message.error {
+ border-color: #f00;
+ background-color: #ffc2c2;
+ background-image: url(icons/16x16/error.png);
+}
+
+
+/**************************************************************************
+ * ui/generic/menu.xml.en
+ *************************************************************************/
+
+.context_menu {
+  font-size: 0.8em;
+  padding-left: 8px;
+}
+
+.context_menu a,
+.context_menu a:link,
+.context_menu a:visited,
+.context_menu a:hover,
+.context_menu a:active {
+  text-decoration: none;
+  color: #3465a4;
+}
+
+.context_menu label {
+  display: block;
+  width: 205px;
+  margin: 3px;
+  padding: 3px 6px;
+  color: #fff;
+  background-color: #c17d11;
+}
+
+.context_menu ul {
+  margin: 3px 6px 10px 3px;
+  list-style: none;
+  padding: 3px;
+}
+
+.context_menu li {
+  margin: 3px;
+  padding: 0;
+  background-repeat: no-repeat;
+  background-position: top left;
+  line-height: 1.4em;
+  list-style: none;
+  overflow: hidden;
+  line-height: 1.4em;
+  border-bottom: 1px solid #d3d7cf;
+}
+
+
+/**************************************************************************
+ * ui/generic/icons_view.xml.en
+ * ui/user/profile.xml.en
+ *************************************************************************/
+
+table.new_resource_thumb {
+  float: left;
+  margin-bottom: 10px;
+  width: 18em;
+}
+
+/**************************************************************************
+ * ui/generic/browse_table.xml.en
+ * ui/website/edit_languages.xml.en
+ * tracker/ui/view_tracker.xml.en
+ *************************************************************************/
+
+#browse_list thead th {
+  padding: 6px;
+  background-color: #d3d7cf;
+  white-space: nowrap;
+}
+
+#browse_list thead th.checkbox {
+  padding: 6px 3px;
+}
+
+#browse_list thead th.checkbox input {
+  background-color: #d3d7cf;
+}
+
+#browse_list tbody td {
+  padding: 3px;
+  vertical-align: top;
+}
+
+
+/**************************************************************************
+ * ui/generic/browse_table.xml.en
+ *************************************************************************/
+
+th a.sort_up {
+  background: transparent url(icons/16x16/up.png) right top no-repeat;
+  padding-right: 20px;
+  text-decoration: none;
+}
+
+th a.sort_down {
+  background: transparent url(icons/16x16/down.png) right top no-repeat;
+  padding-right: 20px;
+  text-decoration: none;
+}
+
+th a.sort_none {
+  background: transparent url(icons/16x16/none.png) right top no-repeat;
+  padding-right: 20px;
+  text-decoration: none;
+}
+
+
+/**************************************************************************
+ * folder_views.FolderBrowseContent
+ *************************************************************************/
+
+.workflow { text-decoration: none; }
+
+
+/**************************************************************************
+ * ui/WorkflowAware_state.xml.en
+ *************************************************************************/
+
+.wf_private { color: #c00; }
+.wf_pending { color: #f57900; }
+.wf_public { color: #4e9a06; }
+
+
+/**************************************************************************
+ * ui/website/search_table.xml.en
+ *************************************************************************/
+
+.results li {
+  margin: 3px 3px 6px;
+}
+
+.result_url, .result_type, .result_size {
+  font-size: 0.9em;
+}
+
+.result_url {
+  color: #008000;
+}
+
+
+/**************************************************************************
+ * ui/html/addlink.xml.en
+ * ui/html/addimage.xml.en
+ *************************************************************************/
+
+#maintitle h1 {
+  margin: 0;
+  padding: 9px 0 0 0;
+}
+
+
+/**************************************************************************
+ * ui/html/addlink.xml.en
+ * ui/html/addimage.xml.en
+ *************************************************************************/
+
+dl.thumb {
+  float: left;
+  width: 8em;
+  height: 8em;
+  margin: 0;
+  padding: 5px;
+  text-align: center;
+}
+
+dl.thumb dt {
+  margin: 0;
+  padding: 0;
+  font-weight: bold;
+}
+
+dl.thumb dd {
+  margin: 0;
+  padding: 0;
+}
+
+
+/**************************************************************************
+ * Defined by resource_views.DBResourceEdit
+ * Used by views.build_menu
+ *************************************************************************/
+
+.nav_active {
+  font-weight: bold;
+}
+
+
+/**************************************************************************
+ * NOT YET CLASSIFIED
+ *************************************************************************/
+
+.number { text-align: right; }
+
+
+tr.odd th, tr.odd td,
+tr.odd td input {
+  background-color: #eeeeec;
+}
+

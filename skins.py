@@ -153,15 +153,18 @@ class Skin(UIFolder):
 
 
     def get_styles(self, context):
-        styles = []
-        # Calendar JavaScript Widget (http://dynarch.com/mishoo/calendar.epl)
-        styles.append('/ui/calendar/calendar-aruni.css')
-        # Aruni (default skin)
-        styles.append('/ui/aruni/aruni.css')
-        # Calendar
-        styles.append('/ui/ical/calendar.css')
-        # Table
-        styles.append('/ui/table/style.css')
+        styles = [
+            # BackOffice style
+            '/ui/bo.css',
+            # Default skin: aruni
+            '/ui/aruni/aruni.css',
+            # Calendar JS Widget (http://dynarch.com/mishoo/calendar.epl)
+            '/ui/calendar/calendar-aruni.css',
+            # Calendar
+            '/ui/ical/calendar.css',
+            # Table
+            '/ui/table/style.css']
+
         # This skin's style
         if self.has_handler('style.css'):
             styles.append('%s/style.css' % self.get_abspath())
@@ -319,13 +322,11 @@ class Skin(UIFolder):
 
 
     def get_location(self, context):
-        root = context.root
-
         namespace = {
             'breadcrumb': self.get_breadcrumb(context),
             'tabs': self.get_tabs(context)}
 
-        template = root.get_resource('/ui/aruni/location.xml')
+        template = context.root.get_resource('/ui/aruni/location.xml')
         return stl(template, namespace)
 
 
@@ -348,23 +349,22 @@ class Skin(UIFolder):
     def get_message(self, context):
         """Return a message string from the request.
         """
-        message = None
+        # Text
         if context.message is not None:
             message = context.message
         elif context.has_form_value('message'):
-            # FIXME At some point we should deprecate usage
-            # of message in the URL
+            # TODO Do not use this anymore
             message = context.get_form_value('message')
+        else:
+            return None
 
-        return message
+        # Level
+        level = 'error' if isinstance(message, ERROR) else 'info'
 
-
-    def get_message_level(self, context):
-        message = context.message
-        if message is not None:
-            if isinstance(message, ERROR):
-                return 'error'
-        return 'info'
+        # Ok
+        namespace = {'message': message, 'level': level}
+        template = context.root.get_resource('/ui/aruni/message.xml')
+        return stl(template, namespace)
 
 
     def get_context_menus(self, context):
@@ -403,7 +403,6 @@ class Skin(UIFolder):
             # Body
             'page_title': self.get_page_title(context),
             'message': self.get_message(context),
-            'message_level': self.get_message_level(context),
             'context_menus': context_menus,
         }
 
