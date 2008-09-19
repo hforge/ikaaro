@@ -188,7 +188,7 @@ class User(AccessControl, Folder):
 
         # Build the confirmation link
         confirm_url = deepcopy(context.uri)
-        path = '/users/%s/;confirm_registration_form' % self.name
+        path = '/users/%s/;confirm_registration' % self.name
         confirm_url.path = Path(path)
         confirm_url.query = {'key': key, 'username': self.get_login_name()}
         confirm_url = str(confirm_url)

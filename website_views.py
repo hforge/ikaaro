@@ -146,7 +146,6 @@ class ForgottenPasswordForm(STLForm):
         # Get the user with the given login name
         results = root.search(username=username)
         if results.get_n_documents() == 0:
-            goto = ';forgotten_password_form'
             message = ERROR(u'There is not a user identified as "$username"',
                       username=username)
             context.message = message
