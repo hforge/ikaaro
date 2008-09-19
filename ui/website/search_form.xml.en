@@ -8,7 +8,7 @@
     <fieldset>
       <legend>Search</legend>
       <input name="site_search_text" type="text" value="${text}" />
-      <input class="button_search" type="submit" value="Ok" />
+      <input class="button_search" type="submit" value="OK" />
     </fieldset>
   </form>
 
