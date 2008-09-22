@@ -235,10 +235,10 @@ class EditResourcesForm(STLForm):
 
     schema = {
         'resource': String,
-        'dtstart': Date,
-        'dtend': Date,
-        'tstart': Time,
-        'tend': Time,
+        'dtstart': Date(mandatory=True),
+        'dtend': Date(mandatory=True),
+        'tstart': Time(default=time(0, 0)),
+        'tend': Time(default=time(0, 0)),
         'comment': Unicode,
         }
 
@@ -283,15 +283,18 @@ class EditResourcesForm(STLForm):
 
 
     def action(self, resource, context, form):
-        tstart = form['tstart'] or time(0,0)
-        tend = form['tend'] or time(0,0)
-        record = {}
-        record['issue'] = resource.name
-        record['resource'] = form['resource']
-        record['dtstart'] = datetime.combine(form['dtstart'], tstart)
-        record['dtend'] = datetime.combine(form['dtend'], tend)
+        dtstart = datetime.combine(form['dtstart'], form['tstart'])
+        dtend = datetime.combine(form['dtend'], form['tend'])
+        record = {
+            'issue': resource.name,
+            'resource': form['resource'],
+            'dtstart': dtstart,
+            'dtend': dtend}
+
+        # Change
         resources = resource.get_resources()
         resources.handler.add_record(record)
+        # Ok
         context.message = MSG_CHANGES_SAVED
 
 
