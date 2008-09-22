@@ -4,10 +4,9 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
-  <h2>Issue #${issue/number}</h2>
-  <h3>${issue/title}</h3>
-
-  <form action=";edit_resources" method="post">
+<form action=";edit_resources" method="post">
+  <fieldset>
+    <legend>Assign a resource</legend>
     <table>
       <tr>
         <td valign="top">
@@ -47,32 +46,34 @@
         </td>
       </tr>
     </table>
-    <input type="hidden" name="issue" value="${issue/number}" />
+    <input type="hidden" name="issue" value="${issue}" />
     <input type="submit" class="button_ok" value="Assign" />
-  </form>
-  <br/>
+  </fieldset>
+</form>
+<br/>
 
-  <!-- Previous assignments -->
-  ${table}
+<!-- Previous assignments -->
+${table}
 
-  <script language="javascript">
-    Calendar.setup({inputField: "dtstart", ifFormat: "%Y-%m-%d",
-      button: "trigger_dtstart"});
-    Calendar.setup({inputField: "dtend", ifFormat: "%Y-%m-%d",
-      button: "trigger_dtend"});
+<script language="javascript">
+Calendar.setup({inputField: "dtstart", ifFormat: "%Y-%m-%d",
+  button: "trigger_dtstart"});
+Calendar.setup({inputField: "dtend", ifFormat: "%Y-%m-%d",
+  button: "trigger_dtend"});
 
-    function update_time(name){
-      var elt = document.getElementById(name);
-      var text = elt.options.item(elt.selectedIndex).text;
-      var start = ""; var end = "";
-      if (text != ""){
-        var reg = new RegExp(" - +", "g");
-        var value = text.split(reg);
-        start = value[0];
-        end = value[1];
-        }
-      document.getElementById("tstart").value = start;
-      document.getElementById("tend").value = end;
+function update_time(name){
+  var elt = document.getElementById(name);
+  var text = elt.options.item(elt.selectedIndex).text;
+  var start = ""; var end = "";
+  if (text != ""){
+    var reg = new RegExp(" - +", "g");
+    var value = text.split(reg);
+    start = value[0];
+    end = value[1];
     }
-  </script>
+  document.getElementById("tstart").value = start;
+  document.getElementById("tend").value = end;
+}
+</script>
+
 </stl:block>

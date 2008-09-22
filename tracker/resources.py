@@ -243,7 +243,7 @@ class EditResourcesForm(STLForm):
         }
 
     query_schema = {
-        'resource': String,
+        'resource': String(default=''),
         'dtstart': Date,
         'dtend': Date,
         'tstart': Time,
@@ -259,33 +259,27 @@ class EditResourcesForm(STLForm):
 
     def get_namespace(self, resource, context):
         query = context.query
-        q_resource = query.get('resource') or ''
-        dtstart = query.get('dtstart', date.today())
-        dtend = query.get('dtend', date.today())
-        tstart = query['tstart']
-        tend = query['tend']
+        today = date.today()
+        # Users
+        users = resource.parent.get_members_namespace(query['resource'])
+        # Time select
         time_select = query['time_select']
-        comment = query['comment']
-
-        namespace = {}
-        # New assignment
-        namespace['issue'] = {'number': resource.name,
-                              'title': resource.get_title()}
-        namespace['users'] = resource.parent.get_members_namespace(q_resource)
-        namespace['dtstart'] = dtstart
-        namespace['tstart'] = tstart
-        namespace['dtend'] = dtend
-        namespace['tend'] = tend
-        namespace['comment'] = comment
-        namespace['time_select'] = resource.get_time_select('time_select',
-                                                            time_select)
+        time_select = resource.get_time_select('time_select', time_select)
         # Existent ones
         resources = resource.get_resources()
         template = resource.get_resource(ResourcesView.template)
         ns_table = ResourcesView().get_namespace(resources, context)
-        namespace['table'] = stl(template, ns_table)
-
-        return namespace
+        # Ok
+        return {
+            'issue': resource.name,
+            'users': users,
+            'dtstart': query.get('dtstart', today),
+            'tstart': query['tstart'],
+            'dtend': query.get('dtend', today),
+            'tend': query['tend'],
+            'comment': query['comment'],
+            'time_select': time_select,
+            'table': stl(template, ns_table)}
 
 
     def action(self, resource, context, form):
