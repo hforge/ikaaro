@@ -4,9 +4,9 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
-  <h2>Add Issue</h2>
-
-  <form action=";add_issue" method="post" enctype="multipart/form-data">
+<form action=";add_issue" method="post" enctype="multipart/form-data">
+  <fieldset>
+    <legend>Add Issue</legend>
     <table>
       <tr>
         <td colspan="2">
@@ -90,11 +90,12 @@
         </td>
       </tr>
       <tr>
-        <td>
+        <td colspan="2">
           <input type="submit" class="button_ok" value="Add" />
         </td>
       </tr>
     </table>
-  </form>
+  </fieldset>
+</form>
 
 </stl:block>
