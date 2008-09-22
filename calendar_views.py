@@ -781,7 +781,7 @@ class WeeklyView(CalendarView):
 
     access = 'is_allowed_to_view'
     title = MSG(u'Weekly View')
-    template = '/ui/ical/grid_weekly_view.xml'
+    template = '/ui/ical/weekly_view.xml'
 
 
     def get_weekly_templates(self):
