@@ -4,11 +4,13 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
-  <p stl:if="reported_by">
-    Reported by <em>${reported_by}</em>
-  </p>
+<p stl:if="reported_by">
+  Reported by <em>${reported_by}</em>
+</p>
 
-  <form action=";edit" method="post" enctype="multipart/form-data">
+<form action=";edit" method="post" enctype="multipart/form-data">
+  <fieldset>
+    <legend>Edit Issue</legend>
     <table>
       <tr>
         <td colspan="2">
@@ -104,41 +106,42 @@
         </td>
       </tr>
       <tr>
-        <td>
+        <td colspant="2">
           <input type="submit" class="button_ok" value="Edit" />
         </td>
       </tr>
     </table>
-  </form>
+  </fieldset>
+</form>
 
+<br/>
+<stl:block stl:repeat="comment comments">
+  <table width="100%" border="0" cellpadding="0" cellspacing="0">
+    <tr class="tracker_issue_comment_title">
+      <td><a name="c${comment/number}"/></td>
+      <td>Comment <a href="#c${comment/number}">${comment/number}</a></td>
+      <td>${comment/user}</td>
+      <td align="right">${comment/datetime}</td>
+      <td align="right">
+      &nbsp;[
+      <a href="#new_comment"
+        onclick="javascript:reply('${comment/number}');">
+        Reply
+      </a>]&nbsp;
+      </td>
+    </tr>
+    <tr stl:if="comment/file">
+      <td colspan="5">
+        Attachement: <a href="${comment/file}">${comment/file}</a>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="5">
+      <pre class="com" id="comment${comment/number}">${comment/comment}</pre>
+      </td>
+    </tr>
+  </table>
   <br/>
-  <stl:block stl:repeat="comment comments">
-    <table width="100%" border="0" cellpadding="0" cellspacing="0">
-      <tr class="tracker_issue_comment_title">
-        <td><a name="c${comment/number}"/></td>
-        <td>Comment <a href="#c${comment/number}">${comment/number}</a></td>
-        <td>${comment/user}</td>
-        <td align="right">${comment/datetime}</td>
-        <td align="right">
-        &nbsp;[
-        <a href="#new_comment"
-          onclick="javascript:reply('${comment/number}');">
-          Reply
-        </a>]&nbsp;
-        </td>
-      </tr>
-      <tr stl:if="comment/file">
-        <td colspan="5">
-          Attachement: <a href="${comment/file}">${comment/file}</a>
-        </td>
-      </tr>
-      <tr>
-        <td colspan="5">
-        <pre class="com" id="comment${comment/number}">${comment/comment}</pre>
-        </td>
-      </tr>
-    </table>
-    <br/>
-  </stl:block>
+</stl:block>
 
 </stl:block>
