@@ -146,7 +146,6 @@ class Resource(Record):
                         value = '...' + value
                 ns['TIME'] = '(' + value + ')'
 
-        print ns
         return ns
 
 
