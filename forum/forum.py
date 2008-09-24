@@ -32,6 +32,7 @@ from itools.web import STLForm, INFO
 from ikaaro.folder import Folder
 from ikaaro import messages
 from ikaaro.registry import register_resource_class
+from ikaaro.resource_views import RTE
 from thread import Thread
 from message import Message
 
@@ -45,33 +46,32 @@ class ForumView(STLForm):
 
     def get_namespace(self, resource, context):
         context.styles.append('/ui/forum/forum.css')
-        # Namespace
-        namespace = {}
-        namespace['title'] = resource.get_title()
-        namespace['description'] = resource.get_property('description')
-        # Namespace / Threads
+        # Threads
         accept_language = context.accept_language
         users = resource.get_resource('/users')
-        namespace['threads'] = []
+        threads = []
         for thread in resource.search_resources(cls=Thread):
             message = thread.get_resource('0')
             author = users.get_resource(message.get_owner())
             posts = thread.search_resources(cls=Message)
             posts = list(posts)
-            namespace['threads'].append({
+            threads.append({
                 'name': thread.name,
                 'title': thread.get_title(),
                 'author': author.get_title(),
                 'date': format_datetime(message.get_mtime(), accept_language),
                 'comments': len(posts) - 1,
-                'description': thread.get_property('description'),
-           })
-        namespace['threads'].sort(key=itemgetter('date'), reverse=True)
-        return namespace
+                'description': thread.get_property('description')})
+        threads.sort(key=itemgetter('date'), reverse=True)
+        # Ok
+        return {
+            'title': resource.get_title(),
+            'description': resource.get_property('description'),
+            'threads': threads}
 
 
 
-class AddThreadForm(STLForm):
+class AddThreadForm(RTE, STLForm):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Add a thread')
@@ -87,7 +87,7 @@ class AddThreadForm(STLForm):
         context.styles.append('/ui/forum/forum.css')
         namespace = self.build_namespace(resource, context)
         data = context.get_form_value('data') or None
-        namespace['data']['value'] = resource.get_rte(context, 'data', data)
+        namespace['data']['value'] = self.get_rte(context, data)
         return namespace
 
 

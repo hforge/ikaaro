@@ -4,27 +4,25 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
-  <h2>New Thread</h2>
 
-  <form name="add_thread" action=";add_thread" method="post">
-    <dl>
-      <dt class="${title/class}">Title:</dt>
-      <dd>
-        <input type="text" id="title" name="title" size="40"
-            value="${title/value}"/>
-      </dd>
-      <dt class="${data/class}">Message:</dt>
-      <dd>
-        ${data/value}
-      </dd>
-    </dl>
+<form name="add_thread" action=";add_thread" method="post">
+  <fieldset>
+    <legend>New Thread</legend>
     <p>
-      <input type="submit" value="Create" class="button_ok"/>
+      <label for="title">Title:</label>
+      <input type="text" id="title" name="title" size="40"
+        value="${title/value}" />
     </p>
-  </form>
+    <label class="${data/class}">Message</label>
+    ${data/value}
+    <p>
+      <input type="submit" value="Add" class="button_add" />
+    </p>
+  </fieldset>
 
   <script type="text/javascript">
     $("#title").focus();
   </script>
+</form>
 
 </stl:block>

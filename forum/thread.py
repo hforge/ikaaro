@@ -29,13 +29,14 @@ from itools.web import STLForm, INFO
 from ikaaro.folder import Folder
 from ikaaro import messages
 from ikaaro.registry import register_resource_class
+from ikaaro.resource_views import RTE
 from message import Message, build_message
 
 
 ###########################################################################
 # Views
 ###########################################################################
-class ThreadView(STLForm):
+class ThreadView(RTE, STLForm):
 
     access = 'is_allowed_to_view'
     title = MSG(u'View')
@@ -73,11 +74,11 @@ class ThreadView(STLForm):
             })
         namespace['is_allowed_to_add'] = ac.is_allowed_to_add(user, resource)
         if namespace['is_allowed_to_add']:
-            namespace['rte'] = resource.get_rte(context, 'data', None)
+            namespace['rte'] = self.get_rte(context, None)
         return namespace
 
 
-    action_new_reply_schema = {'data': Unicode(mandatory=True)}
+    action_new_reply_schema = {'data': String(mandatory=True)}
     def action_new_reply(self, resource, context, form):
         # Add
         id = resource.get_last_post_id()

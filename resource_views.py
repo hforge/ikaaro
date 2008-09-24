@@ -560,3 +560,40 @@ class LogoutView(BaseView):
 
         message = INFO(u'You Are Now Logged out.')
         return context.come_back(message, goto='./')
+
+
+###########################################################################
+# RTE, TinyMCE
+###########################################################################
+
+class RTE(object):
+
+    rte_template = '/ui/tiny_mce/rte.xml'
+    rte_name = 'data'
+    rte_css = ['/ui/aruni/aruni.css', '/ui/tiny_mce/content.css']
+    rte_scripts = [
+        '/ui/tiny_mce/tiny_mce_src.js',
+        '/ui/tiny_mce/javascript.js']
+
+    def get_rte_css(self, context):
+        return self.rte_css
+
+
+    def get_rte(self, context, source):
+        # Namespace
+        css_names = self.get_rte_css(context)
+        namespace = {
+            'form_name': self.rte_name,
+            'source': source,
+            'scripts': self.rte_scripts,
+            'css': ','.join(css_names),
+        }
+
+        # Template
+        template = self.rte_template
+        here = context.resource.get_abspath()
+        prefix = here.get_pathto(template)
+        handler = context.root.get_resource(template)
+
+        # Ok
+        return stl(handler, namespace, prefix=prefix)

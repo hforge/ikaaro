@@ -40,20 +40,20 @@ from multilingual import Multilingual
 from text import Text
 from registry import register_resource_class
 from resource_ import DBResource
-from resource_views import DBResourceEdit, EditLanguageMenu
+from resource_views import DBResourceEdit, EditLanguageMenu, RTE
 
 
 
 ###########################################################################
 # Views
 ###########################################################################
-class HTMLEditView(DBResourceEdit):
+class HTMLEditView(RTE, DBResourceEdit):
     """WYSIWYG editor for HTML documents.
     """
 
-    access = 'is_allowed_to_edit'
-    title = MSG(u'Edit Inline')
-    context_menus = [EditLanguageMenu()]
+#   access = 'is_allowed_to_edit'
+#   title = MSG(u'Edit')
+#   context_menus = [EditLanguageMenu()]
     template = '/ui/html/edit.xml'
     schema = {
         'title': Unicode,
@@ -81,7 +81,7 @@ class HTMLEditView(DBResourceEdit):
         data = stream_to_str(data)
 
         # Edit with a rich text editor
-        namespace['rte'] = resource.get_rte(context, 'data', source)
+        namespace['rte'] = self.get_rte(context, source)
         namespace['timestamp'] = DateTime.encode(datetime.now())
         return namespace
 

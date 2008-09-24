@@ -5,34 +5,29 @@
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
 <form name="edit" action=";edit" method="post">
-  <p>
+  <input type="hidden" name="timestamp" value="${timestamp}" />
+  <fieldset>
+    <legend>Edit</legend>
+    <!-- Title -->
     <label for="title">Title</label>
-    <input type="text" size="40" id="title" name="title" value="${title}" />
-  </p>
-  ${rte}
-  <p>
-    <input type="submit" value="Change" class="button_ok" />
-  </p>
-  <dl>
-    <dt>
-      <label for="description">Description</label>
-    </dt>
-    <dd>
-      <textarea cols="50" rows="8" id="description" name="description"
-        >${description}</textarea>
-    </dd>
-    <dt>
-      <label for="subject">Keywords</label> (Separated by comma)
-    </dt>
-    <dd>
-      <input type="text" size="40" id="subject" name="subject"
-        value="${subject}" />
-    </dd>
-  </dl>
-  <p>
-    <input type="hidden" name="timestamp" value="${timestamp}" />
-    <input type="submit" value="Change" class="button_ok" />
-  </p>
+    <input type="text" size="65" id="title" name="title" value="${title}" />
+    <p></p>
+    <!-- Body -->
+    ${rte}
+    <br/>
+    <!-- Description -->
+    <label for="description">Description</label><br/>
+    <textarea cols="72" rows="5" id="description" name="description"
+      style="xwidth: 90%">${description}</textarea>
+    <p></p>
+    <!-- Keywords -->
+    <label for="subject">Keywords (Separated by comma)</label><br/>
+    <input type="text" size="65" id="subject" name="subject"
+      value="${subject}" />
+    <p></p>
+    <!-- Submit -->
+    <input type="submit" value="Save Changes" class="button_ok" />
+  </fieldset>
 </form>
 
 </stl:block>

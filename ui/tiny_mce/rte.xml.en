@@ -22,11 +22,12 @@
       language : "en",
       /* css */
       content_css : "${css}",
-      height : "440px",
+      height : "340px",
 
       /* cleanup html code */
       cleanup : true,
-      /* Warning: This option is somewhat experimental so use it on your own risk. */
+      /* Warning: This option is somewhat experimental so use it on your own
+      risk. */
       cleanup_serializer : "xml",
 
       file_browser_callback : "ikaaro_filebrowser",
@@ -42,10 +43,10 @@
   });
   </script>
 
-	<!-- Gets replaced with TinyMCE, remember HTML in a textarea should be quoted -->
-  <textarea id="${form_name}" name="${form_name}" rows="15" cols="80" style="width: 80%">
-    ${source}
-  </textarea>
-  <input type="hidden" name="dress_name" value="${dress_name}" />
+	<!--
+  Gets replaced with TinyMCE, remember HTML in a textarea should be quoted
+  -->
+  <textarea id="${form_name}" name="${form_name}" rows="15" cols="80"
+    style="width: 80%">${source}</textarea>
 
 </stl:block>
