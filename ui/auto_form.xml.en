@@ -4,34 +4,32 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
-<fieldset>
-<legend>${title}</legend>
 <form action="${action}" method="POST">
-  <p stl:if="has_required_widget">${required_msg}</p>
-  <dl>
-    <stl:block stl:repeat="widget widgets">
-      <dt class="${widget/class}">
-        <label for="${widget/name}" class="${widget/class}">
-          ${widget/title}
-        </label>
-        <span stl:if="widget/mandatory">(mandatory)</span>
-        <span stl:if="widget/multiple">(multiple)</span>
-        <span stl:if="widget/is_date">Format: 'yyyy-mm-dd'</span>
-      </dt>
-      <dd>
-        ${widget/widget}
-      </dd>
-    </stl:block>
-  </dl>
-  <p>
-  <input type="submit" value="${submit_value}" class="${submit_class}" />
-  </p>
+  <fieldset>
+    <legend>${title}</legend>
+    <p stl:if="has_required_widget">${required_msg}</p>
+    <dl>
+      <stl:block stl:repeat="widget widgets">
+        <dt class="${widget/class}">
+          <label for="${widget/name}" class="${widget/class}">
+            ${widget/title}
+          </label>
+          <span stl:if="widget/mandatory">(mandatory)</span>
+          <span stl:if="widget/multiple">(multiple)</span>
+          <span stl:if="widget/is_date">Format: 'yyyy-mm-dd'</span>
+        </dt>
+        <dd>
+          ${widget/widget}
+        </dd>
+      </stl:block>
+    </dl>
+    <p>
+    <input type="submit" value="${submit_value}" class="${submit_class}" />
+    </p>
+  </fieldset>
+  <script language="javascript">
+    $("#${first_widget}").focus();
+  </script>
 </form>
-</fieldset>
-
-
-<script language="javascript">
-  $("#${first_widget}").focus();
-</script>
 
 </stl:block>

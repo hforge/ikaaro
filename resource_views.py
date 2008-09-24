@@ -35,6 +35,7 @@ from itools.web import BaseView, STLForm, get_context, INFO, ERROR
 
 # Import from ikaaro
 from datatypes import FileDataType
+from forms import AutoForm, MultilineWidget, TextWidget
 import messages
 from registry import get_resource_class
 from utils import get_parameters, reduce_string
@@ -141,32 +142,28 @@ class DBResourceNewInstance(NewInstanceForm):
 
 
 
-class DBResourceEdit(STLForm):
+class DBResourceEdit(AutoForm):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Edit')
     icon = 'metadata.png'
     context_menus = [EditLanguageMenu()]
+    submit_value = MSG(u'Save Changes')
+    submit_class = 'button_ok'
 
-    template = '/ui/base/edit.xml'
     schema = {
         'title': Unicode,
         'description': Unicode,
-        'subject': Unicode,
-    }
+        'subject': Unicode}
+    widgets = [
+        TextWidget('title', title=MSG(u'Title')),
+        MultilineWidget('description', title=MSG(u'Description'), rows=8),
+        TextWidget('subject', title=MSG(u'Keywords (Separated by comma)'))]
 
 
-    def get_namespace(self, resource, context):
+    def get_value(self, resource, context, name, datatype):
         language = resource.get_content_language(context)
-        language_name = get_language_name(language)
-
-        get_property = resource.get_property
-        return {
-            'language_name': language_name,
-            'title': get_property('title', language=language),
-            'description': get_property('description', language=language),
-            'subject': get_property('subject', language=language),
-        }
+        return resource.get_property(name, language=language)
 
 
     def action(self, resource, context, form):
@@ -177,7 +174,7 @@ class DBResourceEdit(STLForm):
         resource.set_property('title', title, language=language)
         resource.set_property('description', description, language=language)
         resource.set_property('subject', subject, language=language)
-
+        # Ok
         context.message = messages.MSG_CHANGES_SAVED
 
 

@@ -84,7 +84,7 @@ class Widget(object):
 
 class TextWidget(Widget):
 
-    pass
+    size = 40
 
 
 
@@ -115,7 +115,7 @@ class ReadOnlyWidget(Widget):
 class MultilineWidget(Widget):
 
     rows = 5
-    cols = 25
+    cols = 60
 
     template = list(XMLParser(
         """<textarea rows="${rows}" cols="${cols}" name="${name}"
@@ -338,8 +338,8 @@ class AutoForm(STLForm):
 
     Widgets is a list:
 
-      [TextWidget('firstname', title=u'Firstname'),
-       TextWidget('lastname', title=u'Lastname')]
+      [TextWidget('firstname', title=MSG(u'Firstname')),
+       TextWidget('lastname', title=MSG(u'Lastname'))]
     """
 
     widgets = []
@@ -367,18 +367,10 @@ class AutoForm(STLForm):
         required_msg = required_msg.encode('utf-8')
         required_msg = XMLParser(required_msg)
 
-        # Build namespace
-        namespace = {}
-        namespace['title'] = self.get_title(context)
-        namespace['required_msg'] = required_msg
-        namespace['first_widget'] = widgets[0].name
-        namespace['action'] = context.uri
-        namespace['submit_value'] = self.submit_value
-        namespace['submit_class'] = self.submit_class
         # Build widgets namespace
         has_required_widget = False
         widgets_namespace = self.build_namespace(resource, context)
-        namespace['widgets'] = []
+        ns_widgets = []
         for widget in widgets:
             datatype = fields[widget.name]
             is_mandatory = getattr(datatype, 'mandatory', False)
@@ -391,7 +383,16 @@ class AutoForm(STLForm):
             widget_namespace['multiple'] = getattr(datatype, 'multiple', False)
             widget_namespace['is_date'] = is_datatype(datatype, Date)
             widget_namespace['widget'] = widget.to_html(datatype, value)
-            namespace['widgets'].append(widget_namespace)
-        namespace['has_required_widget'] = has_required_widget
+            ns_widgets.append(widget_namespace)
 
-        return namespace
+        # Build namespace
+        return {
+            'title': self.get_title(context),
+            'required_msg': required_msg,
+            'first_widget': widgets[0].name,
+            'action': context.uri,
+            'submit_value': self.submit_value,
+            'submit_class': self.submit_class,
+            'widgets': ns_widgets,
+            'has_required_widget': has_required_widget,
+            }
