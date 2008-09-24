@@ -152,6 +152,19 @@ class DBResource(CatalogAware, IResource):
         folder.set_handler('%s.metadata' % name, metadata)
 
 
+    @classmethod
+    def build_metadata(cls, format=None, **kw):
+        """Return a Metadata object with sensible default values.
+        """
+        if format is None:
+            format = cls.class_id
+
+        if isinstance(cls, WorkflowAware):
+            kw['state'] = cls.workflow.initstate
+
+        return Metadata(handler_class=cls, format=format, **kw)
+
+
     def get_handler(self):
         if self._handler is None:
             cls = self.class_handler
@@ -425,9 +438,6 @@ class DBResource(CatalogAware, IResource):
     ########################################################################
     # User interface
     ########################################################################
-    new_instance = DBResourceNewInstance()
-
-
     def get_title(self, language=None):
         title = self.get_property('title', language=language)
         if title:
@@ -453,30 +463,13 @@ class DBResource(CatalogAware, IResource):
         return languages[0]
 
 
-    ########################################################################
-    # UI / Login, Logout
-    ########################################################################
+    # Views
+    new_instance = DBResourceNewInstance()
     login = LoginView()
     logout = LogoutView()
-
-
-    ########################################################################
-    # UI / Edit
-    ########################################################################
-    @classmethod
-    def build_metadata(cls, format=None, **kw):
-        """Return a Metadata object with sensible default values.
-        """
-        if format is None:
-            format = cls.class_id
-
-        if isinstance(cls, WorkflowAware):
-            kw['state'] = cls.workflow.initstate
-
-        return Metadata(handler_class=cls, format=format, **kw)
-
-
     edit = DBResourceEdit()
+    add_image = DBResourceAddImage()
+    add_link = DBResourceAddLink()
 
 
     ########################################################################
@@ -496,16 +489,19 @@ class DBResource(CatalogAware, IResource):
 
     @classmethod
     def get_rte(cls, context, name, source, template='/ui/tiny_mce/rte.xml'):
-        namespace = {}
-        namespace['form_name'] = name
-        namespace['source'] = source
-        namespace['scripts'] = ['/ui/tiny_mce/tiny_mce_src.js',
-                                '/ui/tiny_mce/javascript.js']
-        namespace['css'] = cls.get_rte_css(context)
-        # Dressable
+        scripts = ['/ui/tiny_mce/tiny_mce_src.js',
+                   '/ui/tiny_mce/javascript.js']
+        namespace = {
+            'form_name': name,
+            'source': source,
+            'scripts': scripts,
+            'css': cls.get_rte_css(context),
+        }
+        # TODO language
+
+        # Dressable (FIXME this belongs to future)
         dress_name = context.get_form_value('dress_name', default='index')
         namespace['dress_name'] = dress_name
-        # TODO language
 
         here = context.resource.get_abspath()
         prefix = here.get_pathto(template)
@@ -513,9 +509,3 @@ class DBResource(CatalogAware, IResource):
         handler = context.root.get_resource(template)
         return stl(handler, namespace, prefix=prefix)
 
-
-    #######################################################################
-    # UI / Edit Inline (toolbox)
-    #######################################################################
-    add_image = DBResourceAddImage()
-    add_link = DBResourceAddLink()
