@@ -390,7 +390,7 @@ class RoleAware(AccessControl):
             # State
             user_object = root.get_object(user.abspath)
             if user_object.get_property('user_must_confirm'):
-                account_state = (self.gettext(u'Inactive'),
+                account_state = (self.gettext(u'Resend Confirmation'),
                                  '/users/%s/;resend_confirmation' % user_id)
             else:
                 account_state = self.gettext(u'Active')
