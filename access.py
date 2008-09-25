@@ -140,7 +140,7 @@ class PermissionsForm(SearchForm):
             user = context.root.get_resource(item.abspath)
             if user.get_property('user_must_confirm'):
                 href = '/users/%s/;resend_confirmation' % item.name
-                return MSG(u'Inactive'), href
+                return MSG(u'Resend Confirmation'), href
             return MSG(u'Active'), None
 
 
