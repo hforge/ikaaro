@@ -23,6 +23,9 @@ from os import fdopen
 import sys
 from tempfile import mkstemp
 
+# Import from xapian
+from xapian import DatabaseOpeningError
+
 # Import from itools
 from itools.datatypes import Boolean, Integer, String, Tokens
 from itools.handlers import ConfigFile, SafeDatabase
@@ -141,7 +144,12 @@ class Server(BaseServer):
                                 events_log)
         self.database = database
         # The catalog
-        self.catalog = Catalog('%s/catalog' % target, read_only=read_only)
+        # FIXME Backwards compatibility with 0.20
+        try:
+            self.catalog = Catalog('%s/catalog' % target, read_only=read_only)
+        except DatabaseOpeningError, e:
+            print e
+            self.catalog = None
 
         # Find out the root class
         root = get_root(database, target)
