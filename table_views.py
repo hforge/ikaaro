@@ -99,8 +99,8 @@ class TableView(BrowseForm):
 
         # Columns
         handler = resource.handler
-        value = handler.get_value(item, column)
-        datatype = handler.get_datatype(column)
+        value = handler.get_record_value(item, column)
+        datatype = handler.get_record_datatype(column)
 
         multiple = getattr(datatype, 'multiple', False)
         is_tokens = is_datatype(datatype, Tokens)
@@ -160,7 +160,7 @@ class TableAddRecord(AutoForm):
 
 
     def get_schema(self, resource, context):
-        return resource.handler.schema
+        return resource.handler.record_schema
 
 
     def get_widgets(self, resource, context):
@@ -173,7 +173,7 @@ class TableAddRecord(AutoForm):
 #       # check form
 #       check_fields = {}
 #       for name in schema:
-#           datatype = handler.get_datatype(name)
+#           datatype = handler.get_record_datatype(name)
 #           if getattr(datatype, 'multiple', False) is True:
 #               datatype = Multiple(type=datatype)
 #           check_fields[name] = datatype
@@ -186,7 +186,7 @@ class TableAddRecord(AutoForm):
 
         record = {}
         for name in schema:
-            datatype = handler.get_datatype(name)
+            datatype = handler.get_record_datatype(name)
             if getattr(datatype, 'multiple', False) is True:
                 if is_datatype(datatype, Enumerate):
                     value = form[name]
@@ -225,11 +225,11 @@ class TableEditRecord(AutoForm):
     def get_value(self, resource, context, name, datatype):
         id = context.query['id']
         record = resource.get_handler().get_record(id)
-        return resource.handler.get_value(record, name)
+        return resource.handler.get_record_value(record, name)
 
 
     def get_schema(self, resource, context):
-        return resource.get_handler().schema
+        return resource.get_handler().record_schema
 
 
     def get_widgets(self, resource, context):
@@ -250,7 +250,7 @@ class TableEditRecord(AutoForm):
         # check form
         check_fields = {}
         for widget in resource.get_form():
-            datatype = resource.handler.get_datatype(widget.name)
+            datatype = resource.handler.get_record_datatype(widget.name)
             if getattr(datatype, 'multiple', False) is True:
                 datatype = Multiple(type=datatype)
             check_fields[widget.name] = datatype
@@ -258,7 +258,7 @@ class TableEditRecord(AutoForm):
         # Get the record
         record = {}
         for widget in resource.get_form():
-            datatype = resource.handler.get_datatype(widget.name)
+            datatype = resource.handler.get_record_datatype(widget.name)
             if getattr(datatype, 'multiple', False) is True:
                 if is_datatype(datatype, Enumerate):
                     value = form[widget.name]

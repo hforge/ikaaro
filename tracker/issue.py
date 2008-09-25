@@ -334,18 +334,18 @@ class HistoryForm(STLView):
 
 class History(Table):
 
-    schema = {'datetime': DateTime,
-              'username': String,
-              'title': Unicode,
-              'module': Integer,
-              'version': Integer,
-              'type': Integer,
-              'priority': Integer,
-              'assigned_to': String,
-              'state': Integer,
-              'comment': Unicode,
-              'cc_list': Tokens(),
-              'file': String}
+    record_schema = {'datetime': DateTime,
+                     'username': String,
+                     'title': Unicode,
+                     'module': Integer,
+                     'version': Integer,
+                     'type': Integer,
+                     'priority': Integer,
+                     'assigned_to': String,
+                     'state': Integer,
+                     'comment': Unicode,
+                     'cc_list': Tokens(),
+                     'file': String}
 
 
 

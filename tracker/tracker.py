@@ -52,7 +52,7 @@ resolution = timedelta.resolution
 class Tracker(Folder):
 
     class_id = 'tracker'
-    class_version = '20080415'
+    class_version = '20080416'
     class_title = MSG(u'Issue Tracker')
     class_description = MSG(u'To manage bugs and tasks')
     class_icon16 = 'tracker/tracker16.png'
@@ -263,6 +263,21 @@ class Tracker(Folder):
             handler.metadata.format = OrderedSelectTable.class_id
             for index, record in enumerate(handler.handler.get_records()):
                 handler.handler.update_record(record.id, rank=str(index))
+
+
+    def update_20080416(self):
+        for name in ('priorities', 'states'):
+            if not self.has_resource(name):
+                continue
+            handler = self.get_resource(name)
+            order = []
+            for record in handler.handler.get_records():
+                # rank is not in the record_schema -> multiple string
+                order.append((record.id, int(record.rank[0])))
+
+            order.sort(cmp=lambda x,y: cmp(x[1], y[1]))
+            order = [ str(x[0]) for x in order ]
+            handler.handler.update_properties(order=tuple(order))
 
 
 

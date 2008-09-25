@@ -162,7 +162,7 @@ class ListOfUsers(Enumerate):
 
 class BaseResources(BaseTable):
 
-    schema = {
+    record_schema = {
         'dtstart': DateTime(mandatory=True, index='keyword'),
         'dtend': DateTime(mandatory=True, index='keyword'),
         'issue': String(mandatory=True, index='keyword'),
@@ -232,7 +232,7 @@ class EditResourcesForm(STLForm):
     icon = 'edit.png'
     template = '/ui/tracker/edit_resources.xml'
 
-    schema = {
+    record_schema = {
         'resource': String,
         'dtstart': Date(mandatory=True),
         'dtend': Date(mandatory=True),

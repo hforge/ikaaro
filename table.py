@@ -48,10 +48,10 @@ class Table(File):
     def get_form(cls):
         if cls.form != []:
             return cls.form
-        schema = cls.class_handler.schema
+        record_schema = cls.class_handler.record_schema
         return [
             get_default_widget(datatype)(name)
-            for name, datatype in schema.items()
+            for name, datatype in record_schema.items()
         ]
 
 
@@ -76,39 +76,15 @@ class Table(File):
 ###########################################################################
 class OrderedTableFile(TableFile):
 
-    def get_datatype(self, name):
-        if name == 'order':
-            return Tokens()
-        return TableFile.get_datatype(self, name)
-
-
-    def new(self):
-        # Add the record 0 which stocks the records order
-        record = self.record_class(0)
-        record.append({
-            'ts': Property(datetime.now()),
-            'order': Property(())})
-        self.records.append(record)
+    schema = {'order': Tokens(default=())}
 
 
     #######################################################################
     # API
     #######################################################################
-    def get_record_ids(self):
-        # Override to skip the record '0' (start in '1')
-        i = 1
-        n = len(self.records)
-        while i < n:
-            record = self.records[i]
-            if record is not None:
-                yield i
-            i += 1
-
-
     def get_record_ids_in_order(self):
         """Return ids sort by order"""
-        record_order = self.get_record(0)
-        ordered = record_order.get_value('order')
+        ordered = self.get_property_value('order') or []
         ordered = [ int(x) for x in ordered ]
         record_ids = list(self.get_record_ids())
         for id in ordered:
@@ -136,7 +112,7 @@ class OrderedTableFile(TableFile):
                 order.insert(index - 1, id)
         # Update the order
         order = [ str(x) for x in order ]
-        self.update_record(0, order=tuple(order))
+        self.update_properties(order=tuple(order))
 
 
     def order_down(self, ids):
@@ -148,7 +124,7 @@ class OrderedTableFile(TableFile):
             order.insert(index + 1, id)
         # Update the order
         order = [ str(x) for x in order ]
-        self.update_record(0, order=tuple(order))
+        self.update_properties(order=tuple(order))
 
 
     def order_top(self, ids):
@@ -157,7 +133,7 @@ class OrderedTableFile(TableFile):
         order = ids + [ id for id in order if id not in ids ]
         # Update the order
         order = [ str(x) for x in order ]
-        self.update_record(0, order=tuple(order))
+        self.update_properties(order=tuple(order))
 
 
     def order_bottom(self, ids):
@@ -166,7 +142,7 @@ class OrderedTableFile(TableFile):
         order = [ id for id in order if id not in ids ] + ids
         # Update the order
         order = [ str(x) for x in order ]
-        self.update_record(0, order=tuple(order))
+        self.update_properties(order=tuple(order))
 
 
 

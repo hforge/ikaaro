@@ -82,7 +82,7 @@ class SelectTableView(TableView):
 ###########################################################################
 class SelectTableTable(BaseTable):
 
-    schema = {'title': Unicode}
+    record_schema = {'title': Unicode}
 
 
 class SelectTable(Table):
@@ -152,7 +152,7 @@ class SelectTable(Table):
 
 class OrderedSelectTableTable(OrderedTableFile):
 
-    schema = {'title': Unicode}
+    record_schema = {'title': Unicode}
 
 
 class OrderedSelectTable(OrderedTable, SelectTable):
@@ -190,8 +190,8 @@ class OrderedSelectTable(OrderedTable, SelectTable):
 
 class VersionsTable(BaseTable):
 
-    schema = {'title': Unicode(),
-              'released': Boolean()}
+    record_schema = {'title': Unicode(),
+                     'released': Boolean()}
 
 
 class Versions(SelectTable):
