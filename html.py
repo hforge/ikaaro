@@ -40,20 +40,20 @@ from multilingual import Multilingual
 from text import Text
 from registry import register_resource_class
 from resource_ import DBResource
-from resource_views import DBResourceEdit, EditLanguageMenu, RTE
+from resource_views import EditLanguageMenu, RTE
 
 
 
 ###########################################################################
 # Views
 ###########################################################################
-class HTMLEditView(RTE, DBResourceEdit):
+class HTMLEditView(RTE, STLForm):
     """WYSIWYG editor for HTML documents.
     """
 
-#   access = 'is_allowed_to_edit'
-#   title = MSG(u'Edit')
-#   context_menus = [EditLanguageMenu()]
+    access = 'is_allowed_to_edit'
+    title = MSG(u'Edit')
+    context_menus = [EditLanguageMenu()]
     template = '/ui/html/edit.xml'
     schema = {
         'title': Unicode,
@@ -67,7 +67,9 @@ class HTMLEditView(RTE, DBResourceEdit):
 
 
     def get_namespace(self, resource, context):
-        namespace = DBResourceEdit.get_namespace(self, resource, context)
+        # WebPage body: use TinyMCE
+        # FIXME Use a text-area when the document has not a body (e.g. a
+        # frameset)
         data = context.get_form_value('data')
         if data is not None:
             namespaces = {None: 'http://www.w3.org/1999/xhtml'}
@@ -75,15 +77,16 @@ class HTMLEditView(RTE, DBResourceEdit):
         else:
             data = resource.get_epoz_data()
         source = stream_to_str_as_html(data)
-        # If the document has not a body (e.g. a frameset), edit as plain text
-        if data is None:
-            return Text.edit_form(self, context)
-        data = stream_to_str(data)
 
-        # Edit with a rich text editor
-        namespace['rte'] = self.get_rte(context, source)
-        namespace['timestamp'] = DateTime.encode(datetime.now())
-        return namespace
+        # Ok
+        language = resource.get_content_language(context)
+        get_property = resource.get_property
+        return {
+            'timestamp': DateTime.encode(datetime.now()),
+            'title': get_property('title', language=language),
+            'rte': self.get_rte(context, source),
+            'description': get_property('description', language=language),
+            'subject': get_property('subject', language=language)}
 
 
     def action(self, resource, context, form):
@@ -97,7 +100,10 @@ class HTMLEditView(RTE, DBResourceEdit):
             return
 
         # Properties
-        DBResourceEdit.action(self, resource, context, form)
+        language = resource.get_content_language(context)
+        for name in 'title', 'description', 'subject':
+            value = form[name]
+            resource.set_property(name, value, language=language)
         # Sanitize
         new_body = form['data']
         namespaces = {None: 'http://www.w3.org/1999/xhtml'}
