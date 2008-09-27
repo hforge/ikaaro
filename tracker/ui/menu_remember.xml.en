@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<stl:block xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:stl="http://xml.itools.org/namespaces/stl">
+
+<div class="context_menu">
+  <label>${title}</label>
+  <form action=";remember_search" method="post"
+    style="margin: 4px 0px 0px 5px;">
+    <input type="hidden" name="search_name" value="${search_name}"
+      stl:if="search_name" />
+    <input type="text" name="search_title" value="${search_title}" size="18"
+      style="width: 73%" />
+    <input type="submit" class="button_ok" value="OK" />
+  </form>
+</div>
+
+</stl:block>

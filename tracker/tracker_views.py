@@ -66,7 +66,31 @@ class GoToIssueMenu(ContextMenu):
 
 
 
+class StoreSearchMenu(ContextMenu):
+    """Form to store a search.
+    """
+
+    title = MSG(u'Remember this search')
+    template = '/ui/tracker/menu_remember.xml'
+
+    def get_namespace(self, resource, context):
+        name = context.get_query_value('search_name')
+        if name:
+            search = resource.get_resource(name)
+            search_title = search.get_title()
+        else:
+            search_title = None
+
+        return {
+            'title': self.title,
+            'search_name': name,
+            'search_title': search_title}
+
+
+
 class StoredSearchesMenu(ContextMenu):
+    """Provides links to every stored search.
+    """
 
     title = MSG(u'Stored Searches')
 
@@ -151,8 +175,7 @@ class TrackerView(BrowseForm):
     template = '/ui/tracker/view_tracker.xml'
 
     schema = {
-        'ids': String(multiple=True, mandatory=True),
-    }
+        'ids': String(multiple=True, mandatory=True)}
 
     tracker_schema = {
         # search_fields
@@ -174,6 +197,8 @@ class TrackerView(BrowseForm):
         # BrowseForm fields
         'sort_by': String(multiple=True, default=['title']),
     }
+
+    context_menus = [StoreSearchMenu()]
 
 
     def get_query_schema(self):
@@ -376,6 +401,39 @@ class TrackerSearch(BaseSearchForm, TrackerView):
         namespace['batch'] = None
         namespace['table'] = None
         return namespace
+
+
+
+class TrackerRememberSearch(BaseForm):
+
+    access = 'is_allowed_to_edit'
+    schema = {
+        'search_name': String,
+        'search_title': Unicode(mandatory=True)}
+
+
+    def GET(self, resource, context):
+        # Required for when the form fails the automatic checks
+        return context.come_back(message=context.message)
+
+
+    def action(self, resource, context, form):
+        name = form['search_name']
+        if name is None:
+            # New search
+            name = resource.get_new_id('s')
+            search = StoredSearch.make_resource(StoredSearch, resource, name)
+            message = MSG(u'The search has been stored.')
+        else:
+            search = resource.get_resource(name)
+            message = MSG(u'The search title has been changed.')
+
+        # Set title
+        title = form['search_title']
+        search.set_property('title', title)
+
+        # Go
+        return context.come_back(message, goto=';view?search_name=%s' % name)
 
 
 
