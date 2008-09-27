@@ -329,26 +329,22 @@ class TrackerSearch(BaseSearchForm, TrackerView):
         # Set Style
         context.styles.append('/ui/tracker/tracker.css')
 
-        # Build the namespace
-        namespace = {}
-
         # Search Form
+        get_resource = resource.get_resource
         query = context.query
         search_name = query['search_name']
         if search_name:
-            search = resource.get_resource(search_name)
+            search = get_resource(search_name)
             get_value = search.handler.get_value
             get_values = search.get_values
-            namespace['search_name'] = search_name
-            namespace['search_title'] = search.get_property('title')
+            search_title = search.get_property('title')
         else:
             get_value = query.get
             get_values = query.get
-            namespace['search_name'] = None
-            namespace['search_title'] = query['search_title']
+            search_name = None
+            search_title = query['search_title']
 
-        namespace['text'] = get_value('text')
-        namespace['mtime'] = get_value('mtime')
+        # Build the namespace
         module = get_values('module')
         type = get_values('type')
         version = get_values('version')
@@ -356,21 +352,23 @@ class TrackerSearch(BaseSearchForm, TrackerView):
         assign = get_values('assigned_to')
         state = get_values('state')
 
-        get = resource.get_resource
-        namespace['modules'] = get('modules').get_options(module)
-        namespace['types'] = get('types').get_options(type)
-        namespace['versions'] = get('versions').get_options(version)
-        namespace['priorities'] = get('priorities').get_options(priority)
-        namespace['states'] = get('states').get_options(state)
-        namespace['users'] = resource.get_members_namespace(assign, True)
-
         # is_admin
         ac = resource.get_access_control()
-        namespace['is_admin'] = ac.is_admin(context.user, resource)
         pathto_website = resource.get_pathto(resource.get_site_root())
-        namespace['manage_assigned'] = '%s/;permissions' % pathto_website
-
-        return namespace
+        return {
+            'search_name': search_name,
+            'search_title': search_title,
+            'text': get_value('text'),
+            'mtime': get_value('mtime'),
+            'modules': get_resource('modules').get_options(module),
+            'types': get_resource('types').get_options(type),
+            'versions': get_resource('versions').get_options(version),
+            'priorities': get_resource('priorities').get_options(priority),
+            'states': get_resource('states').get_options(state),
+            'users': resource.get_members_namespace(assign, True),
+            'is_admin': ac.is_admin(context.user, resource),
+            'manage_assigned': '%s/;permissions' % pathto_website,
+        }
 
 
     def get_namespace(self, resource, context):
