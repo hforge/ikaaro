@@ -457,7 +457,7 @@ class Issue(Folder):
         # Version, Priority, etc.
         for name in ['module', 'version', 'type', 'priority', 'assigned_to',
                      'state', 'comment']:
-            type = History.schema[name]
+            type = History.record_schema[name]
             value = context.get_form_value(name, type=type)
             if type == Unicode:
                 value = value.strip()
