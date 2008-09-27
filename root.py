@@ -63,11 +63,18 @@ add_codec('utf-8', 'utf_8')
 
 
 class NotFoundView(STLView):
-
     template = '/ui/root/not_found.xml'
 
     def get_namespace(self, resource, context):
         return {'uri': str(context.uri)}
+
+
+class ForbiddenView(STLView):
+    template = '/ui/root/forbidden.xml'
+
+    def POST(self, resource, context):
+        return self.GET
+
 
 
 
@@ -128,8 +135,7 @@ class Root(WebSite):
     ########################################################################
     # Publish
     ########################################################################
-    forbidden = STLView(
-        template='/ui/root/forbidden.xml')
+    forbidden = ForbiddenView()
 
 
     def internal_server_error(self, context):
