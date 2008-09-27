@@ -453,58 +453,6 @@ class TrackerForgetSearch(BaseForm):
 
 
 
-class TrackerStoredSearches(STLForm):
-
-    access = 'is_allowed_to_edit'
-    title = MSG(u'Stored Searches')
-    template = '/ui/tracker/stored_searches.xml'
-    schema = {
-        'ids': String(multiple=True, mandatory=True),
-    }
-
-
-    def get_namespace(self, resource, context):
-        stored_searches = [
-            {'name': x.name, 'title': x.get_title()}
-            for x in resource.search_resources(cls=StoredSearch) ]
-        stored_searches.sort(key=itemgetter('title'))
-
-        return {'stored_searches': stored_searches}
-
-
-    def action(self, resource, context, form):
-        # FIXME This is a simplified version of 'BrowseContent.remove'
-        ids = form['ids']
-
-        # Clean the copy cookie if needed
-        cut, paths = context.get_cookie('ikaaro_cp', type=CopyCookie)
-
-        # Remove resources
-        removed = []
-        not_removed = []
-        abspath = resource.get_abspath()
-
-        for name in ids:
-            try:
-                resource.del_resource(name)
-            except ConsistencyError:
-                not_removed.append(name)
-                continue
-            removed.append(name)
-            # Clean cookie
-            if str(abspath.resolve2(name)) in paths:
-                context.del_cookie('ikaaro_cp')
-                paths = []
-
-        if removed:
-            resources = ', '.join(removed)
-            message = messages.MSG_RESOURCES_REMOVED(resources=resources)
-            context.message = message
-        else:
-            context.message = messages.MSG_NONE_REMOVED
-
-
-
 class TrackerGoToIssue(BaseView):
 
     access = 'is_allowed_to_view'

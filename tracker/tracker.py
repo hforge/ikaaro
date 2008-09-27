@@ -40,7 +40,7 @@ from tables import OrderedSelectTableTable, OrderedSelectTable
 from tables import Versions, VersionsTable
 from tracker_views import GoToIssueMenu, StoredSearchesMenu
 from tracker_views import TrackerSearch, TrackerView, TrackerAddIssue
-from tracker_views import TrackerGoToIssue, TrackerStoredSearches
+from tracker_views import TrackerGoToIssue
 from tracker_views import TrackerRememberSearch, TrackerForgetSearch
 from tracker_views import TrackerExportToText, TrackerChangeSeveralBugs
 from tracker_views import TrackerExportToCSVForm, TrackerExportToCSV
@@ -58,8 +58,7 @@ class Tracker(Folder):
     class_description = MSG(u'To manage bugs and tasks')
     class_icon16 = 'tracker/tracker16.png'
     class_icon48 = 'tracker/tracker48.png'
-    class_views = ['search', 'add_issue', 'stored_searches', 'browse_content',
-                   'edit']
+    class_views = ['search', 'add_issue', 'browse_content', 'edit']
 
     __fixed_handlers__ = ['modules', 'versions', 'types', 'priorities',
         'states', 'resources']
@@ -239,7 +238,6 @@ class Tracker(Folder):
     add_issue = TrackerAddIssue()
     remember_search = TrackerRememberSearch()
     forget_search = TrackerForgetSearch()
-    stored_searches = TrackerStoredSearches()
     go_to_issue = TrackerGoToIssue()
     export_to_text = TrackerExportToText()
     export_to_csv_form = TrackerExportToCSVForm()
