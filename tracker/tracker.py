@@ -40,8 +40,8 @@ from tables import OrderedSelectTableTable, OrderedSelectTable
 from tables import Versions, VersionsTable
 from tracker_views import GoToIssueMenu, StoredSearchesMenu
 from tracker_views import TrackerSearch, TrackerView, TrackerAddIssue
-from tracker_views import TrackerGoToIssue
-from tracker_views import TrackerRememberSearch, TrackerStoredSearches
+from tracker_views import TrackerGoToIssue, TrackerStoredSearches
+from tracker_views import TrackerRememberSearch, TrackerForgetSearch
 from tracker_views import TrackerExportToText, TrackerChangeSeveralBugs
 from tracker_views import TrackerExportToCSVForm, TrackerExportToCSV
 
@@ -238,6 +238,7 @@ class Tracker(Folder):
     view = TrackerView()
     add_issue = TrackerAddIssue()
     remember_search = TrackerRememberSearch()
+    forget_search = TrackerForgetSearch()
     stored_searches = TrackerStoredSearches()
     go_to_issue = TrackerGoToIssue()
     export_to_text = TrackerExportToText()

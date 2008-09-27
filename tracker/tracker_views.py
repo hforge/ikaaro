@@ -437,6 +437,22 @@ class TrackerRememberSearch(BaseForm):
 
 
 
+class TrackerForgetSearch(BaseForm):
+
+    access = 'is_allowed_to_edit'
+    schema = {
+        'search_name': String(mandatory=True)}
+
+
+    def action(self, resource, context, form):
+        name = form['search_name']
+        resource.del_resource(name)
+        # Ok
+        message = MSG(u'The search has been removed.')
+        return context.come_back(message, goto=';search')
+
+
+
 class TrackerStoredSearches(STLForm):
 
     access = 'is_allowed_to_edit'
