@@ -392,7 +392,7 @@ class TrackerSearch(BaseSearchForm, TrackerView):
             'states': get_resource('states').get_options(state),
             'users': resource.get_members_namespace(assign, True),
             'is_admin': ac.is_admin(context.user, resource),
-            'manage_assigned': '%s/;permissions' % pathto_website,
+            'manage_assigned': '%s/;browse_users' % pathto_website,
         }
 
 

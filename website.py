@@ -55,7 +55,7 @@ class WebSite(RoleAware, Folder):
     class_skin = 'ui/aruni'
     class_views = ['browse_content', 'preview_content', 'edit',
                    'control_panel', 'last_changes']
-    class_control_panel = ['permissions', 'new_user', 'edit_virtual_hosts',
+    class_control_panel = ['browse_users', 'add_user', 'edit_virtual_hosts',
                            'edit_security_policy', 'edit_languages',
                            'edit_contact_options', 'broken_links', 'orphans']
 

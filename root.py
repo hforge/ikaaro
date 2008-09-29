@@ -87,7 +87,7 @@ class Root(WebSite):
     class_icon48 = 'icons/48x48/root.png'
     class_views = ['browse_content', 'preview_content', 'edit',
                    'control_panel', 'last_changes']
-    class_control_panel = ['permissions', 'new_user', 'edit_virtual_hosts',
+    class_control_panel = ['browse_users', 'add_user', 'edit_virtual_hosts',
                            'edit_security_policy', 'edit_languages',
                            'edit_contact_options']
 

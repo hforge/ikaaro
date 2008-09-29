@@ -38,7 +38,7 @@ from workflow import WorkflowAware
 ###########################################################################
 # Views
 ###########################################################################
-class PermissionsForm(SearchForm):
+class BrowseUsersForm(SearchForm):
 
     access = 'is_admin'
     title = MSG(u'Browse Members')
@@ -46,8 +46,7 @@ class PermissionsForm(SearchForm):
     description = MSG(u'See the users and their roles.')
 
     schema = {
-        'ids': String(multiple=True, mandatory=True),
-    }
+        'ids': String(multiple=True, mandatory=True)}
 
     def get_query_schema(self):
         schema = SearchForm.get_query_schema(self)
@@ -57,8 +56,7 @@ class PermissionsForm(SearchForm):
 
     search_schema = {
         'search_field': String,
-        'search_term': Unicode,
-    }
+        'search_term': Unicode}
 
     search_fields = [
         ('username', MSG(u'Login')),
@@ -158,8 +156,7 @@ class MembershipForm(STLForm):
     template = '/ui/access/edit_membership_form.xml'
     schema = {
         'id': String(mandatory=True),
-        'role': String(mandatory=True),
-    }
+        'role': String(mandatory=True)}
 
 
     def get_namespace(self, resource, context):
@@ -169,8 +166,7 @@ class MembershipForm(STLForm):
         return {
             'id': user_id,
             'name': user.get_title(),
-            'roles': resource.get_roles_namespace(user_id),
-        }
+            'roles': resource.get_roles_namespace(user_id)}
 
 
     def action(self, resource, context, form):
@@ -183,7 +179,7 @@ class MembershipForm(STLForm):
 
 
 
-class NewUserForm(STLForm):
+class AddUserForm(STLForm):
 
     access = 'is_admin'
     title = MSG(u'Add New Member')
@@ -557,6 +553,6 @@ class RoleAware(AccessControl):
     #######################################################################
     # UI / Views
     #######################################################################
-    permissions = PermissionsForm()
+    browse_users = BrowseUsersForm()
     edit_membership = MembershipForm()
-    new_user = NewUserForm()
+    add_user = AddUserForm()
