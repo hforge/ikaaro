@@ -31,9 +31,10 @@ from itools.xml import XMLParser
 
 # Import from ikaaro
 from access import RoleAware
-from control_panel import ControlPanel, CPBrokenLinks, CPEditContactOptions
-from control_panel import CPEditLanguages, CPEditSecurityPolicy
-from control_panel import CPEditVirtualHosts
+from control_panel import ControlPanel, CPAddUser, CPBrokenLinks
+from control_panel import CPBrowseUsers, CPEditContactOptions, CPEditLanguages
+from control_panel import CPEditMembership, CPEditSecurityPolicy
+from control_panel import CPEditVirtualHosts, CPOrphans
 from folder import Folder
 from registry import register_resource_class
 from registry import register_website
@@ -146,11 +147,15 @@ class WebSite(RoleAware, Folder):
     new_instance = NewWebSiteForm()
     # Control Panel
     control_panel = ControlPanel()
+    browse_users = CPBrowseUsers()
+    add_user = CPAddUser()
+    edit_membership = CPEditMembership()
     edit_virtual_hosts = CPEditVirtualHosts()
     edit_security_policy = CPEditSecurityPolicy()
     edit_contact_options = CPEditContactOptions()
     edit_languages = CPEditLanguages()
     broken_links = CPBrokenLinks()
+    orphans = CPOrphans()
     # Register / Login
     register = RegisterForm()
     forgotten_password = ForgottenPasswordForm()

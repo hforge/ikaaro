@@ -27,11 +27,16 @@ from itools.web import STLView, STLForm, INFO, ERROR
 from itools.xapian import EqQuery, AndQuery
 
 # Import from ikaaro
+from access import BrowseUsersForm, AddUserForm, MembershipForm
+from folder_views import FolderOrphans
 import messages
 from views import IconsView, ContextMenu
 
 
 
+###########################################################################
+# The menu
+###########################################################################
 class ControlPanelMenu(ContextMenu):
 
     title = MSG(u'Control Panel')
@@ -53,12 +58,19 @@ class ControlPanelMenu(ContextMenu):
 
 
 
-class ControlPanel(IconsView):
+class CPBaseView(object):
+    context_menus = [ControlPanelMenu()]
+
+
+
+###########################################################################
+# Views
+###########################################################################
+class ControlPanel(CPBaseView, IconsView):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Control Panel')
     icon = 'settings.png'
-    context_menus = [ControlPanelMenu()]
 
 
     def get_namespace(self, resource, context):
@@ -82,13 +94,12 @@ class ControlPanel(IconsView):
 
 
 
-class CPEditVirtualHosts(STLForm):
+class CPEditVirtualHosts(CPBaseView, STLForm):
 
     access = 'is_admin'
     title = MSG(u'Virtual Hosts')
     icon = 'website.png'
     description = MSG(u'Define the domain names for this Web Site.')
-    context_menus = [ControlPanelMenu()]
     template = '/ui/website/virtual_hosts.xml'
     schema = {
         'vhosts': String}
@@ -111,13 +122,12 @@ class CPEditVirtualHosts(STLForm):
 
 
 
-class CPEditSecurityPolicy(STLForm):
+class CPEditSecurityPolicy(CPBaseView, STLForm):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Security Policy')
     icon = 'lock.png'
     description = MSG(u'Choose the security policy.')
-    context_menus = [ControlPanelMenu()]
     template = '/ui/website/security_policy.xml'
     schema = {
         'website_is_open': Boolean(default=False)}
@@ -138,13 +148,12 @@ class CPEditSecurityPolicy(STLForm):
 
 
 
-class CPEditContactOptions(STLForm):
+class CPEditContactOptions(CPBaseView, STLForm):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Contact Options')
     icon = 'mail.png'
     description = MSG(u'Configure the Contact form.')
-    context_menus = [ControlPanelMenu()]
     template = '/ui/website/contact_options.xml'
     schema = {
         'contacts': String(multiple=True)}
@@ -185,13 +194,12 @@ class CPEditContactOptions(STLForm):
 
 
 
-class CPBrokenLinks(STLView):
+class CPBrokenLinks(CPBaseView, STLView):
 
     access = 'is_admin'
     title = MSG(u'Broken Links')
     icon = 'clear.png'
     description = MSG(u'Check the referential integrity.')
-    context_menus = [ControlPanelMenu()]
     template = '/ui/website/broken_links.xml'
 
 
@@ -230,12 +238,11 @@ class CPBrokenLinks(STLView):
 
 
 
-class CPEditLanguages(STLForm):
+class CPEditLanguages(CPBaseView, STLForm):
 
     access = 'is_admin'
     title = MSG(u'Languages')
     description = MSG(u'Define the Web Site languages.')
-    context_menus = [ControlPanelMenu()]
     icon = 'languages.png'
     template = '/ui/website/edit_languages.xml'
     schema = {
@@ -317,4 +324,25 @@ class CPEditLanguages(STLForm):
         resource.set_property('website_languages', ws_languages + (code,))
         # Ok
         context.message = INFO(u'Language added.')
+
+
+
+
+###########################################################################
+# Add the control panel menu to views defined somewhere else
+###########################################################################
+class CPBrowseUsers(CPBaseView, BrowseUsersForm):
+    pass
+
+
+class CPAddUser(CPBaseView, AddUserForm):
+    pass
+
+
+class CPEditMembership(CPBaseView, MembershipForm):
+    pass
+
+
+class CPOrphans(CPBaseView, FolderOrphans):
+    pass
 
