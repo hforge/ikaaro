@@ -71,14 +71,21 @@ class Widget(object):
             setattr(self, key, kw[key])
 
 
-    def to_html(self, datatype, value):
-        namespace = {
+    def get_template(self, datatype, value):
+        return self.template
+
+
+    def get_namespace(self, datatype, value):
+        return {
             'name': self.name,
             'value': value,
-            'size': self.size,
-        }
+            'size': self.size}
 
-        return stl(events=self.template, namespace=namespace)
+
+    def to_html(self, datatype, value):
+        template = self.get_template(datatype, value)
+        namespace = self.get_namespace(datatype, value)
+        return stl(events=template, namespace=namespace)
 
 
 
@@ -100,15 +107,11 @@ class ReadOnlyWidget(Widget):
         """))
 
 
-    def to_html(self, datatype, value):
-        namespace = {}
-        namespace['name'] = self.name
-        namespace['value'] = value
-        namespace['displayed'] = value
-        displayed = getattr(self, 'displayed', None)
-        if displayed is not None:
-            namespace['displayed'] = displayed
-        return stl(events=self.template, namespace=namespace)
+    def get_namespace(self, datatype, value):
+        return {
+            'name': self.name,
+            'value': value,
+            'displayed': getattr(self, 'displayed', value)}
 
 
 
@@ -123,15 +126,12 @@ class MultilineWidget(Widget):
         namespaces))
 
 
-    def to_html(self, datatype, value):
-        namespace = {
+    def get_namespace(self, datatype, value):
+        return {
             'name': self.name,
             'value': value,
             'rows': self.rows,
-            'cols': self.cols,
-            }
-
-        return stl(events=self.template, namespace=namespace)
+            'cols': self.cols}
 
 
 
@@ -143,13 +143,11 @@ class CheckBoxWidget(Widget):
         """, namespaces))
 
 
-    def to_html(self, datatype, value):
-        namespace = {}
-        namespace['name'] = self.name
-        namespace['value'] = value
-        namespace['is_selected'] = getattr(self, 'is_selected', False)
-
-        return stl(events=self.template, namespace=namespace)
+    def get_namespace(self, datatype, value):
+        return {
+            'name': self.name,
+            'value': value,
+            'is_selected': getattr(self, 'is_selected', False)}
 
 
 
@@ -161,12 +159,10 @@ class BooleanCheckBox(Widget):
         """, namespaces))
 
 
-    def to_html(self, datatype, value):
-        namespace = {}
-        namespace['name'] = self.name
-        namespace['is_selected'] = value in [True, 1, '1']
-
-        return stl(events=self.template, namespace=namespace)
+    def get_namespace(self, datatype, value):
+        return {
+            'name': self.name,
+            'is_selected': value in [True, 1, '1']}
 
 
 
@@ -187,14 +183,12 @@ class BooleanRadio(Widget):
         """, namespaces))
 
 
-    def to_html(self, datatype, value):
-        namespace = {}
-        namespace['name'] = self.name
-        namespace['is_yes'] = value in [True, 1, '1']
+    def get_namespace(self, datatype, value):
         labels = getattr(self, 'labels', {'yes': 'Yes', 'no': 'No'})
-        namespace['labels'] = labels
-
-        return stl(events=self.template, namespace=namespace)
+        return {
+            'name': self.name,
+            'is_yes': value in [True, 1, '1'],
+            'labels': labels}
 
 
 
@@ -209,13 +203,12 @@ class Select(Widget):
         """, namespaces))
 
 
-    def to_html(self, datatype, value):
-        namespace = {}
-        namespace['name'] = self.name
-        namespace['multiple'] = getattr(datatype, 'multiple', False)
-        namespace['options'] = datatype.get_namespace(value)
+    def get_namespace(self, datatype, value):
+        return {
+            'name': self.name,
+            'multiple': getattr(datatype, 'multiple', False),
+            'options': datatype.get_namespace(value)}
 
-        return stl(events=self.template, namespace=namespace)
 
 
 class SelectRadio(Widget):
@@ -245,22 +238,23 @@ class SelectRadio(Widget):
         """, namespaces))
 
 
-    def to_html(self, datatype, value):
-        namespace = {}
-        namespace['name'] = self.name
+    def get_template(self, datatype, value):
+        if getattr(datatype, 'multiple', False) is True:
+            return self.template_multiple
+        return self.template
+
+
+    def get_namespace(self, datatype, value):
         none_selected = True
         options = datatype.get_namespace(value)
         for option in options:
             if option is True:
                 none_selected = False
                 break
-        namespace['none_selected'] = none_selected
-        namespace['options'] = options
-        if getattr(datatype, 'multiple', False) is True:
-            return stl(events=self.template_multiple,
-                       namespace=namespace)
-        else:
-            return stl(events=self.template, namespace=namespace)
+        return {
+            'name': self.name,
+            'none_selected': none_selected,
+            'options': options}
 
 
 class DateWidget(Widget):
@@ -299,7 +293,7 @@ class DateWidget(Widget):
                     ifFormat     : '${format}'});
                 var elt_${name} = document.getElementById('${name}');
                 if (!browser.isIE) {
-                    document.getElementById('btn_blur_${name}').style.display = 'none';
+                    $("#btn_blur_${name}").style.display = 'none';
                     elt_${name}.setAttribute('onblur',
                         'tableFlatOuputOnBlur(elt_${name}, cal_${name})');
                 }
@@ -310,20 +304,25 @@ class DateWidget(Widget):
         """, namespaces))
 
 
-    def to_html(self, datatype, value):
-        if not value:
+    def get_template(self, datatype, value):
+        if getattr(datatype, 'multiple', False) is True:
+            return self.template_multiple
+        return self.template
+
+
+    def get_namespace(self, datatype, value):
+        if value is None:
             value = ''
-        namespace = {}
-        namespace['name'] = self.name
-        namespace['format'] = getattr(self, 'format', '%Y-%m-%d')
-        if getattr(datatype, 'multiple', False) is False:
-            namespace['value'] = value
-            return stl(events=self.template, namespace=namespace)
-        if isinstance(value, list): # ['2007-08-01\r\n2007-08-02']
-            value = value[0]
-        namespace['value'] = value
-        namespace['dates'] = value.splitlines()
-        return stl(events=self.template_multiple, namespace=namespace)
+        format = getattr(self, 'format', '%Y-%m-%d')
+
+        if getattr(datatype, 'multiple', False) is True:
+            if isinstance(value, list): # ['2007-08-01\r\n2007-08-02']
+                value = value[0]
+            return {
+                'name': self.name, 'format': format, 'value': value,
+                'dates': value.splitlines()}
+
+        return {'name': self.name, 'format': format, 'value': value}
 
 
 
