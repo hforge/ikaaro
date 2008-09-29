@@ -27,7 +27,8 @@ from itools.web import STLView, STLForm, INFO, ERROR
 from itools.xapian import EqQuery, AndQuery
 
 # Import from ikaaro
-from access import BrowseUsersForm, AddUserForm, MembershipForm
+from access import RoleAware_BrowseUsers, RoleAware_AddUser
+from access import RoleAware_EditMembership
 from folder_views import FolderOrphans
 import messages
 from views import IconsView, ContextMenu
@@ -331,15 +332,15 @@ class CPEditLanguages(CPBaseView, STLForm):
 ###########################################################################
 # Add the control panel menu to views defined somewhere else
 ###########################################################################
-class CPBrowseUsers(CPBaseView, BrowseUsersForm):
+class CPBrowseUsers(CPBaseView, RoleAware_BrowseUsers):
     pass
 
 
-class CPAddUser(CPBaseView, AddUserForm):
+class CPAddUser(CPBaseView, RoleAware_AddUser):
     pass
 
 
-class CPEditMembership(CPBaseView, MembershipForm):
+class CPEditMembership(CPBaseView, RoleAware_EditMembership):
     pass
 
 

@@ -38,7 +38,7 @@ from workflow import WorkflowAware
 ###########################################################################
 # Views
 ###########################################################################
-class BrowseUsersForm(SearchForm):
+class RoleAware_BrowseUsers(SearchForm):
 
     access = 'is_admin'
     title = MSG(u'Browse Members')
@@ -150,7 +150,7 @@ class BrowseUsersForm(SearchForm):
 
 
 
-class MembershipForm(STLForm):
+class RoleAware_EditMembership(STLForm):
 
     access = 'is_admin'
     template = '/ui/access/edit_membership_form.xml'
@@ -179,7 +179,7 @@ class MembershipForm(STLForm):
 
 
 
-class AddUserForm(STLForm):
+class RoleAware_AddUser(STLForm):
 
     access = 'is_admin'
     title = MSG(u'Add New Member')
@@ -553,6 +553,6 @@ class RoleAware(AccessControl):
     #######################################################################
     # UI / Views
     #######################################################################
-    browse_users = BrowseUsersForm()
-    edit_membership = MembershipForm()
-    add_user = AddUserForm()
+    browse_users = RoleAware_BrowseUsers()
+    edit_membership = RoleAware_EditMembership()
+    add_user = RoleAware_AddUser()
