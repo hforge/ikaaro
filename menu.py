@@ -60,10 +60,11 @@ class Target(Enumerate):
 
 class MenuFile(OrderedTableFile):
 
-    schema = {'title': Unicode(title=u'Title'),
-              'path': String(title=u'Path'),
-              'target': Target(title=u'Target', mandatory=True, default='_top'),
-              'child': String(title=u'Child')}
+    record_schema = {
+        'title': Unicode(title=u'Title'),
+        'path': String(title=u'Path'),
+        'target': Target(title=u'Target', mandatory=True, default='_top'),
+        'child': String(title=u'Child')}
 
 
 class MenuView(OrderedTableView):
