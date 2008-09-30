@@ -31,8 +31,8 @@ from itools.web import STLForm, INFO
 # Import from ikaaro
 from ikaaro.folder import Folder
 from ikaaro import messages
+from ikaaro.forms import RTEWidget
 from ikaaro.registry import register_resource_class
-from ikaaro.resource_views import RTE
 from thread import Thread
 from message import Message
 
@@ -71,7 +71,7 @@ class ForumView(STLForm):
 
 
 
-class AddThreadForm(RTE, STLForm):
+class AddThreadForm(STLForm):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Add a thread')
@@ -87,7 +87,7 @@ class AddThreadForm(RTE, STLForm):
         context.styles.append('/ui/forum/forum.css')
         namespace = self.build_namespace(resource, context)
         data = context.get_form_value('data') or None
-        namespace['data']['value'] = self.get_rte(context, data)
+        namespace['data']['value'] = RTEWidget('data').to_html(String, data)
         return namespace
 
 

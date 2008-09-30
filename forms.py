@@ -22,9 +22,8 @@
 from itools.datatypes import is_datatype, Unicode, Date, Enumerate, Boolean
 from itools.gettext import MSG
 from itools.stl import stl
-from itools.web import STLForm
+from itools.web import STLForm, get_context
 from itools.xml import XMLParser
-
 
 
 namespaces = {
@@ -71,6 +70,10 @@ class Widget(object):
             setattr(self, key, kw[key])
 
 
+    def get_prefix(self):
+        return None
+
+
     def get_template(self, datatype, value):
         return self.template
 
@@ -85,7 +88,8 @@ class Widget(object):
     def to_html(self, datatype, value):
         template = self.get_template(datatype, value)
         namespace = self.get_namespace(datatype, value)
-        return stl(events=template, namespace=namespace)
+        prefix = self.get_prefix()
+        return stl(events=template, namespace=namespace, prefix=prefix)
 
 
 
@@ -323,6 +327,48 @@ class DateWidget(Widget):
                 'dates': value.splitlines()}
 
         return {'name': self.name, 'format': format, 'value': value}
+
+
+
+class RTEWidget(Widget):
+
+    template = list(XMLParser("""
+        ${rte}
+        """, namespaces))
+
+
+    rte_template = '/ui/tiny_mce/rte.xml'
+    rte_name = 'data'
+    rte_css = ['/ui/aruni/aruni.css', '/ui/tiny_mce/content.css']
+    rte_scripts = [
+        '/ui/tiny_mce/tiny_mce_src.js',
+        '/ui/tiny_mce/javascript.js']
+
+
+    def get_rte_css(self):
+        return self.rte_css
+
+
+    def get_prefix(self):
+        context = get_context()
+        here = context.resource.get_abspath()
+        prefix = here.get_pathto(self.rte_template)
+        return prefix
+
+
+    def get_template(self, datatype, value):
+        context = get_context()
+        handler = context.root.get_resource(self.rte_template)
+        return handler.events
+
+
+    def get_namespace(self, datatype, value):
+        context = get_context()
+        css_names = self.get_rte_css()
+        return {'form_name': self.rte_name,
+                'source': value,
+                'scripts': self.rte_scripts,
+                'css': ','.join(css_names)}
 
 
 

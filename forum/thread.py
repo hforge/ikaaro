@@ -28,15 +28,15 @@ from itools.web import STLForm, INFO
 # Import from ikaaro
 from ikaaro.folder import Folder
 from ikaaro import messages
+from ikaaro.forms import RTEWidget
 from ikaaro.registry import register_resource_class
-from ikaaro.resource_views import RTE
 from message import Message, build_message
 
 
 ###########################################################################
 # Views
 ###########################################################################
-class ThreadView(RTE, STLForm):
+class ThreadView(STLForm):
 
     access = 'is_allowed_to_view'
     title = MSG(u'View')
@@ -74,7 +74,7 @@ class ThreadView(RTE, STLForm):
             })
         namespace['is_allowed_to_add'] = ac.is_allowed_to_add(user, resource)
         if namespace['is_allowed_to_add']:
-            namespace['rte'] = self.get_rte(context, None)
+            namespace['rte'] = RTEWidget('data').to_html(String, None)
         return namespace
 
 

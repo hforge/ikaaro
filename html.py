@@ -36,18 +36,19 @@ from itools.xml import stream_to_str
 
 # Import from ikaaro
 import messages
+from forms import RTEWidget
 from multilingual import Multilingual
 from text import Text
 from registry import register_resource_class
 from resource_ import DBResource
-from resource_views import EditLanguageMenu, RTE
+from resource_views import EditLanguageMenu
 
 
 
 ###########################################################################
 # Views
 ###########################################################################
-class HTMLEditView(RTE, STLForm):
+class HTMLEditView(STLForm):
     """WYSIWYG editor for HTML documents.
     """
 
@@ -84,7 +85,7 @@ class HTMLEditView(RTE, STLForm):
         return {
             'timestamp': DateTime.encode(datetime.now()),
             'title': get_property('title', language=language),
-            'rte': self.get_rte(context, source),
+            'rte': RTEWidget('data').to_html(String, source),
             'description': get_property('description', language=language),
             'subject': get_property('subject', language=language)}
 
