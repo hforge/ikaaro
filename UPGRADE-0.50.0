@@ -50,6 +50,8 @@ summizes these changes:
   --------------------------------------  ---------------------------------
   ikaaro.base.Node                        ikaaro.resource_.IResource
   ikaaro.base.DBObject                    ikaaro.resource_.DBResource
+  ikaaro.binary                           ikaaro.file
+  ikaaro.folder.CopyCookie                ikaaro.datatypes.CopyCookie
   ikaaro.messages.MSG_MISSING_OR_INVALID  itools.web.MSG_MISSING_OR_INVALID
   ikaaro.users.User                       ikaaro.user.User
   ikaaro.users.UserFolder                 ikaaro.user.UserFolder
