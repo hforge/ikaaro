@@ -81,7 +81,7 @@ class TableView(BrowseForm):
     def get_table_columns(self, resource, context):
         columns = [
             ('checkbox', None),
-            ('id', u'id')]
+            ('id', MSG(u'id'))]
         # From the schema
         for widget in self.get_widgets(resource, context):
             column = (widget.name, getattr(widget, 'title', widget.name))
@@ -132,7 +132,7 @@ class TableView(BrowseForm):
         if ac.is_allowed_to_edit(context.user, resource):
             message = messages.MSG_DELETE_SELECTION.gettext()
             message_utf8 = message.encode('utf_8')
-            return [('remove', u'Remove', 'button_delete',
+            return [('remove', MSG(u'Remove'), 'button_delete',
                      'return confirm("%s");' % message_utf8)]
 
         return []
@@ -146,7 +146,7 @@ class TableView(BrowseForm):
         for id in ids:
             resource.handler.del_record(id)
 
-        context.message = u'Record deleted.'
+        context.message = INFO(u'Record deleted.')
 
 
 
@@ -301,12 +301,12 @@ class OrderedTableView(TableView):
         if ac.is_allowed_to_edit(context.user, resource):
             message = messages.MSG_DELETE_SELECTION.gettext()
             message_utf8 = message.encode('utf_8')
-            return [('remove', u'Remove', 'button_delete',
+            return [('remove', MSG(u'Remove'), 'button_delete',
                      'return confirm("%s");' % message_utf8),
-                    ('order_up', u'Order up', 'button_ok', None),
-                    ('order_down', u'Order down', 'button_ok', None),
-                    ('order_top', u'Order top', 'button_ok', None),
-                    ('order_bottom', u'Order bottom', 'button_ok', None)]
+                    ('order_up', MSG(u'Order up'), 'button_ok', None),
+                    ('order_down', MSG(u'Order down'), 'button_ok', None),
+                    ('order_top', MSG(u'Order top'), 'button_ok', None),
+                    ('order_bottom', MSG(u'Order bottom'), 'button_ok', None)]
 
         return []
 
@@ -319,13 +319,14 @@ class OrderedTableView(TableView):
         for id in ids:
             resource.handler.del_record(id)
 
-        context.message = u'Record deleted.'
+        context.message = INFO(u'Record deleted.')
 
 
     def action_order_up(self, resource, context, form):
         ids = form['ids']
         if not ids:
-            context.message = ERROR(u'Please select the resources to order up.')
+            message = ERROR(u'Please select the resources to order up.')
+            context.message = message
             return
 
         resource.handler.order_up(ids)
@@ -335,7 +336,8 @@ class OrderedTableView(TableView):
     def action_order_down(self, resource, context, form):
         ids = form['ids']
         if not ids:
-            context.message = ERROR(u'Please select the resources to order down.')
+            message = ERROR(u'Please select the resources to order down.')
+            context.message = message
             return
 
         resource.handler.order_down(ids)
