@@ -99,6 +99,8 @@ class BrowseForm(STLForm):
 
 
     def get_namespace(self, resource, context):
+        batch = None
+        table = None
         # Batch
         items = self.get_items(resource, context)
         if self.batch_template is not None:
