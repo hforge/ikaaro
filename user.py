@@ -210,7 +210,7 @@ class User(AccessControl, Folder):
         if must_confirm:
             context.commit = True
             self.send_confirmation(context, self.get_property('email'))
-            msg = MSG(u'Confirmation sended!')
+            msg = MSG(u'Confirmation sent!')
         else:
             msg = MSG(u'User has already confirm his registration!')
         return context.come_back(msg)
