@@ -333,8 +333,8 @@ class ImageView(STLView):
         site_root = context.site_root
         user = context.user
         size = context.get_form_value('size', type=Integer)
-        width = context.get_form_value('width')
-        height = context.get_form_value('height')
+        width = context.get_form_value('width', default='')
+        height = context.get_form_value('height', default='')
 
         parent = resource.parent
         ac = parent.get_access_control()
@@ -354,8 +354,10 @@ class ImageView(STLView):
         if my_index > 0:
             prev_image = images[my_index - 1]
 
-        next_images = images[my_index + 2:]
-        previous_images = images[:my_index - 1]
+        next_images = images[my_index + 2:my_index + 6]
+        min_index = my_index - 5 if my_index > 5 else 0
+        max_index = my_index - 1 if my_index > 1 else 0
+        previous_images = images[min_index:max_index]
         previous_images.reverse()
         images = []
         for image in ([resource, next_image, prev_image]
