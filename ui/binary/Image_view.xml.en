@@ -19,7 +19,7 @@
         style="vertical-align: bottom" /></a>
     <a stl:if="next" href="${next}" title="Next"><img
         src="/ui/icons/16x16/next.png" style="vertical-align: bottom" /></a>
-    <a href="?width=${option/name}&amp;height=${option/name}"
+    <a href="?size=${size}&amp;width=${option/name}&amp;height=${option/name}"
       stl:omit-tag="option/selected"
       stl:repeat="option widths">${option/value}</a>
     (${dimensions})

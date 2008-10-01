@@ -368,7 +368,6 @@ class ImageView(STLView):
                                                         height=height)
             else:
                 uri = prefix.resolve2(';download')
-            uri = uri.replace(size=size)
             images.append(str(uri))
 
         if next_image:
