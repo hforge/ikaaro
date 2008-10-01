@@ -533,8 +533,8 @@ class FolderPreviewContent(FolderBrowseContent):
         return merge_dics(FolderBrowseContent.get_query_schema(self),
                           batch_size=Integer(default=0),
                           size=Integer(default=128),
-                          width=Integer,
-                          height=Integer)
+                          width=String,
+                          height=String)
 
 
     def get_items(self, resource, context):

@@ -333,8 +333,8 @@ class ImageView(STLView):
         site_root = context.site_root
         user = context.user
         size = context.get_form_value('size', type=Integer)
-        width = context.get_form_value('width', type=Integer)
-        height = context.get_form_value('height', type=Integer)
+        width = context.get_form_value('width')
+        height = context.get_form_value('height')
 
         parent = resource.parent
         ac = parent.get_access_control()
