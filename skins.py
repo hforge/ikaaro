@@ -21,7 +21,7 @@
 # Import from itools
 from itools import get_abspath
 from itools.gettext import MSG
-from itools.handlers import File, Folder
+from itools.handlers import File, Folder, Image
 from itools.http import NotFound
 from itools.i18n import has_language
 from itools.stl import stl
@@ -67,6 +67,11 @@ class UIFile(IResource, File):
 
 
 
+class UIImage(Image, UIFile):
+    pass
+
+
+
 class UITemplate(UIFile, XMLFile):
     pass
 
@@ -76,6 +81,8 @@ map = {
     'application/xml': UITemplate,
     'application/xhtml+xml': UITemplate,
     'text/xml': UITemplate,
+    'image/png': UIImage,
+    'image/jpeg': UIImage,
 }
 
 

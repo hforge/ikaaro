@@ -1,0 +1,58 @@
+.thumbnail {
+  float: left;
+  margin: 12px;
+}
+/* Thumbnail width + margin-left + margin-right */
+/* Thumbnail height + margin-top + margin-bottom */
+.thumbnail.size32 { width: 56px; height: 56px; }
+.thumbnail.size48 { width: 72px; height: 72px; }
+.thumbnail.size64 { width: 88px; height: 88px; }
+.thumbnail.size128 { width: 152px; height: 152px; }
+.thumbnail.size256 { width: 280px; height: 280px; }
+.thumbnail.size512 { width: 536px; height: 536px; }
+
+.thumbnail .folder {
+  border-left: 6px solid #3465a4;
+}
+/* Adjust border size */
+.thumbnail.size32 .folder {
+  border-width: 3px;
+}
+.thumbnail.size256 .folder,
+.thumbnail.size512 .folder {
+  border-width: 12px;
+}
+
+.thumbnail a {
+  display: block;
+  border: 1px solid #ccc;
+  padding: 3px;
+  background: #fff;
+  text-align: center;
+  overflow: hidden;
+}
+.thumbnail .folder a {
+  border: 1px solid #3465A4;
+}
+
+/* Thumbnail size */
+.thumbnail.size32 a { width: 32px; height: 32px; }
+.thumbnail.size48 a { width: 48px; height: 48px; }
+.thumbnail.size64 a { width: 64px; height: 64px; }
+.thumbnail.size128 a { width: 128px; height: 128px; }
+.thumbnail.size256 a { width: 256px; height: 256px; }
+.thumbnail.size512 a { width: 512px; height: 512px; }
+
+.thumbnail p {
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+#image_toolbar {
+  margin: 0 0 6px 0;
+}
+
+#image_toolbar a {
+  margin: 6px;
+}

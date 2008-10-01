@@ -4,10 +4,65 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
-  <div id="browse_image">
-    <a stl:repeat="item items" href="${item/href}">
-      <img src="${item/id}/;thumb?width=${size}&amp;height=${size}" />
-    </a>
-  </div>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      var resolutions = new Array(${widths});
+      apply_best_resolution(resolutions);
+    });
+  </script>
+
+  <table id="browse_list" class="${css}">
+    <thead stl:if="columns">
+      <tr>
+        <stl:block stl:repeat="column columns">
+          <!-- checkbox -->
+          <th stl:if="column/is_checkbox" class="checkbox">
+            <label for="browse_list_select_all">Select All</label>
+            <input type="checkbox" id="browse_list_select_all"
+              title="Click to select/unselect all rows"
+              onclick="select_checkboxes('form_table', this.checked);" />
+          </th>
+          <!-- checkbox -->
+          <th stl:if="not column/is_checkbox">
+            <a stl:if="column/href" href="${column/href}"
+              class="sort_${column/order}">${column/title}</a>
+          </th>
+        </stl:block>
+      </tr>
+    </thead>
+  </table>
+
+  <form action="" method="post" name="browse_list" id="form_table"
+    stl:omit-tag="not actions">
+    <div id="browse_image">
+      <a href="../;preview_content?size=${size}&amp;width=${width}&amp;height=${height}"
+        title="Back"><img src="/ui/icons/16x16/up.png" /></a>
+      <div class="thumbnail size${size}" stl:repeat="row rows">
+        <div class="folder" stl:omit-tag="not row/is_folder">
+          <a href="${row/href}" stl:omit-tag="not row/href">
+            <img src="${row/name}/;thumb?width=${size}&amp;height=${size}" />
+          </a>
+        </div>
+        <p>
+          <!-- checkbox -->
+          <stl:block stl:if="row/checkbox">
+            <input type="checkbox" id="id_${row/id}" name="ids"
+              value="${row/id}" checked="${row/checked}" class="checkbox" />
+            <label class="wf_${row/workflow_statename}"
+              for="id_${row/id}">${row/title_or_name}</label>
+          </stl:block>
+          <stl:block stl:if="not row/checkbox">
+            <label>${row/title_or_name}</label>
+          </stl:block>
+        </p>
+      </div>
+    </div>
+    <p stl:if="actions">
+      <stl:block stl:repeat="action actions">
+        <input type="submit" name=";${action/name}" value="${action/value}"
+          class="${action/class}" onclick="${action/onclick}" />
+      </stl:block>
+    </p>
+  </form>
 
 </stl:block>

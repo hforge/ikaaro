@@ -80,3 +80,27 @@ MSG_PASSWORD_MISMATCH = ERROR(
 MSG_REGISTERED = ERROR(
     u"You have already confirmed your registration. "
     u"Try to log in or ask for a new password.")
+
+MSG_NONE_SELECTED = ERROR(
+    u'No resource selected.')
+
+MSG_NONE_ALLOWED = ERROR(
+    u"No resource allowed.")
+
+MSG_NO_PASTE = ERROR(
+    u'Nothing to paste.')
+
+MSG_RENAMED = INFO(
+    u'Resources renamed.')
+
+MSG_COPIED = INFO(
+    u'Resources copied.')
+
+MSG_CUT = INFO(
+    u'Resources cut.')
+
+MSG_PASTED = INFO(
+    u'Resources pasted.')
+
+MSG_PUBLISHED = INFO(
+    u'Resources published.')

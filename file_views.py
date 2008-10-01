@@ -33,7 +33,7 @@ from itools.web import BaseView, STLView, STLForm, INFO, ERROR
 from itools.xapian import EqQuery
 
 # Import from ikaaro
-from datatypes import FileDataType
+from datatypes import FileDataType, ImageWidth
 from folder_views import FolderBrowseContent
 import messages
 from multilingual import Multilingual
@@ -327,8 +327,71 @@ class ImageView(STLView):
     template = '/ui/binary/Image_view.xml'
 
     def get_namespace(self, resource, context):
-        path = context.site_root.get_pathto(resource)
-        return {'src': '/%s/;download' % path}
+        from file import Image
+        context.styles.append('/ui/gallery/style.css')
+        context.scripts.append('/ui/gallery/javascript.js')
+        site_root = context.site_root
+        user = context.user
+        size = context.get_form_value('size', type=Integer)
+        width = context.get_form_value('width', type=Integer)
+        height = context.get_form_value('height', type=Integer)
+
+        parent = resource.parent
+        ac = parent.get_access_control()
+        images = [image for image in parent.search_resources(cls=Image)
+                    if ac.is_allowed_to_view(user, image)]
+
+        my_index = None
+        for index, image in enumerate(images):
+            if image == resource:
+                my_index = index
+                break
+
+        next_image = None
+        if my_index + 1 < len(images):
+            next_image = images[my_index + 1]
+        prev_image = None
+        if my_index > 0:
+            prev_image = images[my_index - 1]
+
+        next_images = images[my_index + 2:]
+        previous_images = images[:my_index - 1]
+        previous_images.reverse()
+        images = []
+        for image in ([resource, next_image, prev_image]
+                      + next_images + previous_images):
+            if image is None:
+                continue
+            prefix = get_reference('/%s' % site_root.get_pathto(image))
+            if width and height:
+                uri = prefix.resolve2(';thumb').replace(width=width,
+                                                        height=height)
+            else:
+                uri = prefix.resolve2(';download')
+            uri = uri.replace(size=size)
+            images.append(str(uri))
+
+        if next_image:
+            next_image = '/%s' % site_root.get_pathto(next_image)
+            next_image = get_reference(next_image).replace(width=width,
+                    height=height, size=size)
+            next_image = str(next_image)
+        if prev_image:
+            prev_image = '/%s' % site_root.get_pathto(prev_image)
+            prev_image = get_reference(prev_image).replace(width=width,
+                    height=height, size=size)
+            prev_image = str(prev_image)
+
+        return {'size': size,
+                'width': width,
+                'height': height,
+                'images': '"' + '", "'.join(images) + '"',
+                'previous': prev_image,
+                'next': next_image,
+                'widths': ImageWidth.get_namespace(width),
+                'dimensions': "%sx%s" % resource.handler.get_size(),
+                'download': '/%s/;download' % site_root.get_pathto(resource),
+                'current': images[0]}
 
 
 

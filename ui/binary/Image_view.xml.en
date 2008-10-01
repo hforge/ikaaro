@@ -3,7 +3,30 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://xml.itools.org/namespaces/stl">
+  <script type="text/javascript">
+    $(document).ready(function() {
+      // "images" is defined in "/ui/gallery/javascript.js"
+      images = new Array(${images});
+      preload_init();
+    });
+  </script>
 
-<img src="${src}" border="0" />
+  <p id="image_toolbar">
+    <a href="../;preview_content?size=${size}&amp;width=${width}&amp;height=${height}"
+      title="Back"><img src="/ui/icons/16x16/up.png" /></a>
+    <a stl:if="previous" href="${previous}" title="Previous"><img
+        src="/ui/icons/16x16/previous.png"
+        style="vertical-align: bottom" /></a>
+    <a stl:if="next" href="${next}" title="Next"><img
+        src="/ui/icons/16x16/next.png" style="vertical-align: bottom" /></a>
+    <a href="?width=${option/name}&amp;height=${option/name}"
+      stl:omit-tag="option/selected"
+      stl:repeat="option widths">${option/value}</a>
+    (${dimensions})
+  </p>
+
+  <a href="${download}">
+    <img src="${current}" />
+  </a>
 
 </stl:block>

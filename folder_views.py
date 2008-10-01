@@ -16,24 +16,30 @@
 
 # Import from the Standard Library
 from urllib import quote
+from datetime import datetime
+
+# Import from the Python Image Library
+try:
+    from PIL import Image as PILImage
+except ImportError:
+    PILImage = None
 
 # Import from itools
 from itools.datatypes import Boolean, Integer, String, Unicode
 from itools.gettext import MSG
 from itools.handlers import checkid, merge_dics
 from itools.i18n import format_datetime
-from itools.stl import stl
 from itools.uri import get_reference, Path
-from itools.web import BaseView, STLForm, INFO, ERROR
+from itools.web import BaseView, STLForm
 from itools.xapian import AndQuery, EqQuery, OrQuery, PhraseQuery
 from itools.xml import XMLParser
 
 # Import from ikaaro
-from datatypes import CopyCookie
+from datatypes import CopyCookie, ImageWidth
 from exceptions import ConsistencyError
 import messages
 from resource_views import AddResourceMenu
-from utils import generate_name, reduce_string
+from utils import generate_name
 from versioning import VersioningAware
 from views import IconsView, SearchForm, ContextMenu
 from workflow import WorkflowAware
@@ -182,7 +188,7 @@ class FolderRename(STLForm):
             # Rename
             container.move_resource(old_name, new_name)
 
-        message = INFO(u'Resources renamed.')
+        message = messages.MSG_RENAMED
         return context.come_back(message, goto=';browse_content')
 
 
@@ -414,7 +420,7 @@ class FolderBrowseContent(SearchForm):
 
         # Check input data
         if not paths:
-            context.message = ERROR(u'No resource selected.')
+            context.message = messages.MSG_NONE_SELECTED
             return
 
         # FIXME Hack to get rename working. The current user interface forces
@@ -435,7 +441,7 @@ class FolderBrowseContent(SearchForm):
 
         # Check input data
         if not names:
-            message = ERROR(u'No resource selected.')
+            message = messages.MSG_NONE_SELECTED
             return
 
         abspath = resource.get_abspath()
@@ -443,7 +449,7 @@ class FolderBrowseContent(SearchForm):
         cp = CopyCookie.encode(cp)
         context.set_cookie('ikaaro_cp', cp, path='/')
         # Ok
-        context.message = INFO(u'Resources copied.')
+        context.message = messages.MSG_COPIED
 
 
     def action_cut(self, resource, context, form):
@@ -456,7 +462,7 @@ class FolderBrowseContent(SearchForm):
 
         # Check input data
         if not names:
-            context.message = ERROR(u'No resource selected.')
+            context.message = messages.MSG_NONE_SELECTED
             return
 
         abspath = resource.get_abspath()
@@ -464,7 +470,7 @@ class FolderBrowseContent(SearchForm):
         cp = CopyCookie.encode(cp)
         context.set_cookie('ikaaro_cp', cp, path='/')
 
-        context.message = INFO(u'Resources cut.')
+        context.message = messages.MSG_CUT
 
 
     action_paste_schema = {}
@@ -472,7 +478,7 @@ class FolderBrowseContent(SearchForm):
         # Check there is something to paste
         cut, paths = context.get_cookie('ikaaro_cp', type=CopyCookie)
         if len(paths) == 0:
-            context.message = ERROR(u'Nothing to paste.')
+            context.message = messages.MSG_NO_PASTE
             return
 
         # Paste
@@ -510,48 +516,178 @@ class FolderBrowseContent(SearchForm):
         if cut is True:
             context.del_cookie('ikaaro_cp')
 
-        context.message = INFO(u'Resources pasted.')
+        context.message = messages.MSG_PASTED
 
 
 
 class FolderPreviewContent(FolderBrowseContent):
 
     title = MSG(u'Preview Content')
-    table_template = '/ui/folder/browse_image.xml'
     context_menus = FolderBrowseContent.context_menus + [ZoomMenu()]
+    # Table
+    table_template = '/ui/folder/browse_image.xml'
 
 
     def get_query_schema(self):
         # Define a huge batch limit, and the image size parameter
         return merge_dics(FolderBrowseContent.get_query_schema(self),
                           batch_size=Integer(default=0),
-                          size=Integer(default=128))
+                          size=Integer(default=128),
+                          width=Integer,
+                          height=Integer)
 
 
     def get_items(self, resource, context):
         # Show only images
-        query = EqQuery('is_image', '1')
+        query = OrQuery(EqQuery('is_image', '1'),
+                        EqQuery('format', 'folder'))
         return FolderBrowseContent.get_items(self, resource, context, query)
 
 
-    def get_table_namespace(self, resource, context, items):
-        context.styles.append('/ui/gallery.css')
+    def get_actions(self, resource, context, items):
+        actions = FolderBrowseContent.get_actions(self, resource, context,
+                                                  items)
+        if not actions:
+            return []
 
-        # Zoom
-        current_size = context.query['size']
+        # Publish at once
+        actions.append(('publish', MSG(u"Publish"), 'button_publish', None))
+
+        return actions
+
+
+    def get_table_namespace(self, resource, context, items):
+        context.styles.append('/ui/gallery/style.css')
+        context.scripts.append('/ui/gallery/javascript.js')
+
+        # Get from the query
+        query = context.query
+        sort_by = query['sort_by']
+        reverse = query['reverse']
+        width = query['width']
+        height = query['height']
+
+        # (0) Zoom
+        current_size = query['size']
         min_size = resource.MIN_SIZE
         max_size = resource.MAX_SIZE
         current_size = max(min_size, min(current_size, max_size))
 
-        items_namespace = []
-        for item in items:
-            id, href = self.get_item_value(resource, context, item, 'name')
-            items_namespace.append({'id': id, 'href': href})
+        # (1) Actions (submit buttons)
+        actions = self.get_actions(resource, context, items)
+        actions = [{'name': name,
+                    'value': value,
+                    'class': cls,
+                    'onclick': onclick}
+                    for name, value, cls, onclick in actions ]
 
-        return {
-            'items': items_namespace,
-            'size': current_size,
-        }
+        # (2) Table Head: columns
+        columns = self.get_table_columns(resource, context)
+        columns_ns = []
+        for name, title in columns:
+            if name == 'checkbox':
+                # Type: checkbox
+                if  actions:
+                    columns_ns.append({'is_checkbox': True})
+            elif title is None:
+                # Type: nothing
+                continue
+            else:
+                # Type: normal
+                kw = {'sort_by': name}
+                if name == sort_by:
+                    col_reverse = (not reverse)
+                    order = 'up' if reverse else 'down'
+                else:
+                    col_reverse = False
+                    order = 'none'
+                kw['reverse'] = Boolean.encode(col_reverse)
+                columns_ns.append({
+                    'is_checkbox': False,
+                    'title': title,
+                    'order': order,
+                    'href': context.uri.replace(**kw),
+                    })
+
+        # (3) Table Body: rows
+        rows = []
+        for item in items:
+            row = {'checkbox': False,
+                   # These are required for internal use
+                   'title_or_name': item.get_title(),
+                   'workflow_statename': None}
+            # XXX Already hard-coded in the catalog search
+            row['is_folder'] = (item.class_id == 'folder')
+            if isinstance(item, WorkflowAware):
+                row['workflow_statename'] = item.get_statename()
+            for name, title in columns:
+                value = self.get_item_value(resource, context, item, name)
+                if value is None:
+                    continue
+                elif name == 'checkbox':
+                    if actions:
+                        value, checked = value
+                        row['checkbox'] = True
+                        row['id'] = value
+                        row['checked'] = checked
+                elif name == 'name':
+                    if type(value) is tuple:
+                        value, href = value
+                        href = get_reference(href)
+                        if row['is_folder']:
+                            href = href.resolve2(';preview_content')
+                        href = href.replace(size=current_size, width=width,
+                                height=height)
+                        href = str(href)
+                    else:
+                        href = None
+                    row['name'] = value
+                    row['href'] = href
+                else:
+                    row[name] = value
+            rows.append(row)
+
+        widths = ", ".join([str(o['name']) for o in ImageWidth.get_options()
+                            if o['name'] is not None])
+
+        return {'size': current_size,
+                'width': width,
+                'height': height,
+                'widths': widths,
+                'css': self.table_css,
+                'columns': columns_ns,
+                'rows': rows,
+                'actions': actions}
+
+
+    def action_publish(self, resource, context, form):
+        resources = [resource.get_resource(id) for id in form['ids']]
+        ac = resource.get_access_control()
+        user = context.user
+        transition = 'publish'
+        allowed = [image for image in resources
+                    if isinstance(image, WorkflowAware)
+                    and ac.is_allowed_to_trans(user, image, transition)]
+
+        if not allowed:
+            context.message = messages.MSG_NONE_ALLOWED
+            return
+
+        for image in resources:
+            if not isinstance(image, WorkflowAware):
+                # A folder was selected
+                continue
+            if image.get_statename() == 'public':
+                continue
+            # Update workflow history
+            property = {'date': datetime.now(),
+                        'user': user.name,
+                        'name': transition,
+                        'comments': u""}
+            image.set_property('wf_transition', property)
+            image.do_trans(transition)
+
+        context.message = messages.MSG_PUBLISHED
 
 
 
@@ -610,3 +746,51 @@ class FolderOrphans(FolderBrowseContent):
         # Ok
         return items
 
+
+
+class FolderThumbnail(BaseView):
+
+    access = True
+
+    default_icon = '/ui/gallery/folder.png'
+
+    def get_mtime(self, resource):
+        return resource.get_mtime()
+
+
+    def GET(self, resource, context):
+        from file import Image
+
+        width = context.get_form_value('width', type=Integer, default=48)
+        height = context.get_form_value('height', type=Integer, default=48)
+        size = (width, height)
+        data = None
+        format = "jpeg"
+
+        # Choose an image to illustrate
+        default_icon = resource.get_resource(self.default_icon)
+        if PILImage is None:
+            # Full size but better than nothing
+            data = default_icon.to_str()
+            format = 'png'
+        else:
+            # Find the first accessible image
+            user = context.user
+            ac = resource.get_access_control()
+            for image in resource.search_resources(cls=Image):
+                # Search public image safe for all
+                if ac.is_allowed_to_view(user, image):
+                    data, format = image.handler.get_thumbnail(width, height)
+                    break
+            else:
+                # Default icon for empty or inaccessible folders
+                data, format = default_icon.get_thumbnail(width, height)
+
+        # XXX Don't cache nothing here
+        # The image thumbnail was cached in the image handler
+        # The folder thumbnail was cached in the folder handler
+        # Accessible images depend on too many parameters
+
+        response = context.response
+        response.set_header('Content-Type', 'image/%s' % format)
+        return data

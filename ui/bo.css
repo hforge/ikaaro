@@ -123,6 +123,11 @@ input {
   padding-left: 16px;
 }
 
+.button_publish {
+  background-image: url(icons/16x16/public.png);
+  padding-left: 16px;
+}
+
 
 /**************************************************************************
  * ui/aruni/location.xml.en

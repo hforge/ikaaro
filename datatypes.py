@@ -22,7 +22,7 @@ from urllib import quote, unquote
 from zlib import compress, decompress
 
 # Import from itools
-from itools.datatypes import DataType
+from itools.datatypes import DataType, Enumerate
 
 
 """This module defines some datatypes used in ikaaro, whose inclusion in
@@ -82,3 +82,11 @@ class CopyCookie(DataType):
     def decode(str):
         return loads(decompress(unquote(str)))
 
+
+
+class ImageWidth(Enumerate):
+    options = [{'name': 640, 'value': u"small"},
+               {'name': 800, 'value': u"medium"},
+               {'name': 1024, 'value': u"large"},
+               {'name': 1280, 'value': u"huge"},
+               {'name': None, 'value': u"original"}]
