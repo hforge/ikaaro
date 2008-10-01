@@ -332,13 +332,10 @@ class DateWidget(Widget):
 
 class RTEWidget(Widget):
 
-    template = list(XMLParser("""
-        ${rte}
-        """, namespaces))
+    template = list(XMLParser("""${rte}""", namespaces))
 
 
     rte_template = '/ui/tiny_mce/rte.xml'
-    rte_name = 'data'
     rte_css = ['/ui/aruni/aruni.css', '/ui/tiny_mce/content.css']
     rte_scripts = [
         '/ui/tiny_mce/tiny_mce_src.js',
@@ -365,7 +362,7 @@ class RTEWidget(Widget):
     def get_namespace(self, datatype, value):
         context = get_context()
         css_names = self.get_rte_css()
-        return {'form_name': self.rte_name,
+        return {'form_name': self.name,
                 'source': value,
                 'scripts': self.rte_scripts,
                 'css': ','.join(css_names)}
