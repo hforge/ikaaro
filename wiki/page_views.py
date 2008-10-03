@@ -304,7 +304,7 @@ class WikiPageToPDF(BaseView):
         vfs.remove(dirname)
 
         if data is None:
-            return context.come_back(u"PDF generation failed.")
+            return context.come_back(MSG(u"PDF generation failed."))
 
         response = context.response
         response.set_header('Content-Type', 'application/pdf')
