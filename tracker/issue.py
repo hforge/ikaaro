@@ -278,32 +278,32 @@ class HistoryForm(STLView):
                         row_ns['version'] = version.get_value('title')
             if type != previous_type:
                 previous_type = type
-                if type is None:
-                    row_ns['type'] = ' '
-                else:
+                row_ns['type'] = ' '
+                if type is not None:
                     type = types.handler.get_record(int(type))
-                    row_ns['type'] = type.get_value('title')
+                    if type is not None:
+                        row_ns['type'] = type.get_value('title')
             if state != previous_state:
                 previous_state = state
-                if state is None:
-                    row_ns['state'] = ' '
-                else:
+                row_ns['state'] = ' '
+                if state is not None:
                     state = states.handler.get_record(int(state))
-                    row_ns['state'] = state.get_value('title')
+                    if state is not None:
+                        row_ns['state'] = state.get_value('title')
             if module != previous_module:
                 previous_module = module
-                if module is None:
-                    row_ns['module'] = ' '
-                else:
+                row_ns['module'] = ' '
+                if module is not None:
                     module = modules.handler.get_record(int(module))
-                    row_ns['module'] = module.get_value('title')
+                    if module is not None:
+                        row_ns['module'] = module.get_value('title')
             if priority != previous_priority:
                 previous_priority = priority
-                if priority is None:
-                    row_ns['priority'] = ' '
-                else:
+                row_ns['priority'] = ' '
+                if priority is not None:
                     priority = priorities.handler.get_record(int(priority))
-                    row_ns['priority'] = priority.get_value('title')
+                    if priority is not None:
+                        row_ns['priority'] = priority.get_value('title')
             if assigned_to != previous_assigned_to:
                 previous_assigned_to = assigned_to
                 if assigned_to and users.has_resource(assigned_to):
