@@ -215,8 +215,6 @@ class MenuAddLink(DBResourceAddLink):
     template = '/ui/menu/addlink.xml'
 
     def get_namespace(self, resource, context):
-        scripts = ['/ui/future/link.js']
-
         # For the breadcrumb
         if isinstance(resource, Menu):
             start = resource.parent.parent
