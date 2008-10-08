@@ -31,7 +31,7 @@ from itools.html import stream_to_str_as_html
 from itools.stl import stl
 from itools.uri import get_reference
 from itools.web import STLView, STLForm, ERROR
-from itools.xml import TEXT, START_ELEMENT, XMLError, XMLParser
+from itools.xml import TEXT, START_ELEMENT, XMLError, XMLParser, DocType
 from itools.xml import stream_to_str
 
 # Import from ikaaro
@@ -43,6 +43,12 @@ from registry import register_resource_class
 from resource_ import DBResource
 from resource_views import EditLanguageMenu
 
+
+
+xhtml_namespaces = {None: 'http://www.w3.org/1999/xhtml'}
+xhtml_doctype = DocType(
+    '-//W3C//DTD XHTML 1.0 Strict//EN',
+    'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd')
 
 
 ###########################################################################
@@ -73,8 +79,7 @@ class HTMLEditView(STLForm):
         # frameset)
         data = context.get_form_value('data')
         if data is not None:
-            namespaces = {None: 'http://www.w3.org/1999/xhtml'}
-            data = XMLParser(data, namespaces)
+            data = XMLParser(data, xhtml_namespaces, doctype=xhtml_doctype)
         else:
             data = resource.get_epoz_data()
         source = stream_to_str_as_html(data)
@@ -107,9 +112,9 @@ class HTMLEditView(STLForm):
             resource.set_property(name, value, language=language)
         # Sanitize
         new_body = form['data']
-        namespaces = {None: 'http://www.w3.org/1999/xhtml'}
         try:
-            new_body = list(XMLParser(new_body, namespaces))
+            p = XMLParser(new_body, xhtml_namespaces, doctype=xhtml_doctype)
+            new_body = list(p)
         except XMLError:
             context.message = ERROR(u'Invalid HTML code.')
             return
