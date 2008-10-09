@@ -232,7 +232,7 @@ class EditResourcesForm(STLForm):
     icon = 'edit.png'
     template = '/ui/tracker/edit_resources.xml'
 
-    record_schema = {
+    schema = {
         'resource': String,
         'dtstart': Date(mandatory=True),
         'dtend': Date(mandatory=True),
