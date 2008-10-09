@@ -4,7 +4,7 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
-  <form name="addform" action=";new_user" method="post">
+  <form name="addform" action=";add_user" method="post">
     <fieldset>
       <legend>Add New Member</legend>
       <dl>
