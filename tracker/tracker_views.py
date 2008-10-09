@@ -39,7 +39,8 @@ from ikaaro.datatypes import CopyCookie
 from ikaaro.exceptions import ConsistencyError
 from ikaaro import messages
 from ikaaro.views import BrowseForm, SearchForm as BaseSearchForm, ContextMenu
-from issue import Issue, issue_fields
+from issue import Issue
+from issue_views import issue_fields
 from stored import StoredSearch
 
 
