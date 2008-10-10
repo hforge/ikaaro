@@ -306,6 +306,10 @@ class SearchForm(BrowseForm):
                           self.search_schema)
 
 
+    def get_search_fields(self, resource, context):
+        return self.search_fields
+
+
     def get_namespace(self, resource, context):
         namespace = BrowseForm.get_namespace(self, resource, context)
 
@@ -331,7 +335,7 @@ class SearchForm(BrowseForm):
         # Build the namespace
         search_fields = [
             {'name': name, 'title': title, 'selected': name == field}
-            for name, title in self.search_fields ]
+            for name, title in self.get_search_fields(resource, context) ]
 
         return {
             'search_term': term,

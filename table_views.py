@@ -24,11 +24,12 @@ from itools.datatypes import DataType, is_datatype
 from itools.datatypes import Integer, Enumerate, Tokens
 from itools.gettext import MSG
 from itools.web import MSG_MISSING_OR_INVALID, INFO, ERROR
+from itools.xapian import PhraseQuery
 
 # Import from ikaaro
 from forms import AutoForm
 import messages
-from views import BrowseForm
+from views import SearchForm
 
 
 
@@ -44,7 +45,7 @@ class Multiple(DataType):
 
 
 
-class TableView(BrowseForm):
+class TableView(SearchForm):
 
     access = 'is_allowed_to_view'
     access_POST = 'is_allowed_to_edit'
@@ -59,9 +60,28 @@ class TableView(BrowseForm):
         return resource.get_form()
 
 
+    def get_schema(self, resource, context):
+        return resource.handler.record_schema
+
+
     def get_items(self, resource, context):
-        items = resource.handler.get_records()
+        query = context.query
+        search_term = query['search_term'].strip()
+        search_query = None
+        if search_term:
+            search_query = PhraseQuery(query['search_field'], search_term)
+        items = resource.handler.search(search_query)
         return list(items)
+
+
+    def get_search_fields(self, resource, context):
+        search_fields = []
+        schema = self.get_schema(resource, context)
+        for widget in self.get_widgets(resource, context):
+            if hasattr(schema[widget.name], 'index'):
+                title = getattr(widget, 'title', widget.name)
+                search_fields.append((widget.name, title))
+        return search_fields
 
 
     def sort_and_batch(self, resource, context, items):
