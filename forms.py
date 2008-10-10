@@ -303,11 +303,11 @@ class DateWidget(Widget):
 
     template = list(XMLParser("""
         <input type="text" name="${name}" value="${value}" id="${name}" />
-        <input id="trigger_date" type="button" value="..."
-          name="trigger_date"/>
+        <input id="trigger_date_${name}" type="button" value="..."
+          name="trigger_date_${name}"/>
         <script language="javascript">
           Calendar.setup({inputField: "${name}", ifFormat: "${format}",
-                          button: "trigger_date"});
+                          button: "trigger_date_${name}"});
         </script>
         """, stl_namespaces))
 
