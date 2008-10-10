@@ -168,7 +168,7 @@ class CSVView(BrowseForm):
 
 
     def get_items(self, resource, context):
-        return list(resource.handler.lines)
+        return list(resource.handler.get_rows())
 
 
     def sort_and_batch(self, resource, context, items):
