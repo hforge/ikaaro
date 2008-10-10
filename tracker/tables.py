@@ -26,7 +26,7 @@ from itools.xapian import EqQuery, AndQuery
 from itools.web import INFO
 
 # Import from ikaaro
-from ikaaro.forms import TextWidget, BooleanCheckBox
+from ikaaro.forms import title_widget, BooleanCheckBox
 from ikaaro.registry import register_resource_class
 from ikaaro.table import Table, OrderedTable, OrderedTableFile, TableView
 
@@ -92,7 +92,7 @@ class SelectTable(Table):
     class_title = MSG(u'Select Table')
     class_handler = SelectTableTable
 
-    form = [TextWidget('title', title=u'Title')]
+    form = [title_widget]
 
 
     def get_options(self, value=None, sort='title'):
@@ -162,7 +162,7 @@ class OrderedSelectTable(OrderedTable, SelectTable):
     class_title = MSG(u'Ordered select table')
     class_handler = OrderedSelectTableTable
 
-    form = [TextWidget('title', title=u'Title')]
+    form = [title_widget]
 
 
     def get_options(self, value=None, sort=None):
@@ -200,8 +200,7 @@ class Versions(SelectTable):
     class_version = '20071216'
     class_handler = VersionsTable
 
-    form = [TextWidget('title', title=u'Title'),
-            BooleanCheckBox('released', title=u'Released')]
+    form = [title_widget, BooleanCheckBox('released', title=MSG(u'Released'))]
 
 
 

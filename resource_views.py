@@ -35,7 +35,7 @@ from itools.web import BaseView, STLForm, get_context, INFO, ERROR
 
 # Import from ikaaro
 from datatypes import FileDataType
-from forms import AutoForm, MultilineWidget, TextWidget
+from forms import AutoForm, title_widget, description_widget, subject_widget
 import messages
 from registry import get_resource_class
 from utils import get_parameters, reduce_string
@@ -155,10 +155,7 @@ class DBResourceEdit(AutoForm):
         'title': Unicode,
         'description': Unicode,
         'subject': Unicode}
-    widgets = [
-        TextWidget('title', title=MSG(u'Title')),
-        MultilineWidget('description', title=MSG(u'Description'), rows=8),
-        TextWidget('subject', title=MSG(u'Keywords (Separated by comma)'))]
+    widgets = [title_widget, description_widget, subject_widget]
 
 
     def get_value(self, resource, context, name, datatype):

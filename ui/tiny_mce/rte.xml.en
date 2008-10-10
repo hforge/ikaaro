@@ -42,6 +42,9 @@
       theme_advanced_resizing : true
   });
   </script>
+  <noscript>
+    (Javascript is deactivated or missing: the Rich Text Editor is unavailable.)
+  </noscript>
 
 	<!--
   Gets replaced with TinyMCE, remember HTML in a textarea should be quoted

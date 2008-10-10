@@ -23,7 +23,7 @@ from itools.gettext import MSG
 # Import from ikaaro
 from file import File
 from folder import Folder
-from forms import Widget, TextWidget, Select, ReadOnlyWidget, namespaces
+from forms import Widget, TextWidget, Select, ReadOnlyWidget, stl_namespaces
 from messages import MSG_DELETE_SELECTION, MSG_NEW_RESOURCE
 from registry import register_resource_class
 from resource_views import Breadcrumb, DBResourceAddLink
@@ -39,7 +39,7 @@ class PathWidget(Widget):
                name="trigger_link"
                onclick="popup(';add_link?target_id=${name}&amp;mode=menu',
                               620, 300);"/>
-        """, namespaces))
+        """, stl_namespaces))
 
 
     def to_html(self, datatype, value):
@@ -225,7 +225,7 @@ class MenuAddLink(DBResourceAddLink):
         return {
             'bc': Breadcrumb(filter_type=File, start=start, icon_size=48),
             'message': context.message,
-            'scripts': scripts,
+            'scripts': context.scripts,
             'target_id': context.get_form_value('target_id')
         }
 

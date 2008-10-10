@@ -22,77 +22,57 @@
 from datetime import datetime
 
 # Import from itools
-from itools.datatypes import DateTime, String, Unicode
-from itools.handlers import File
+from itools.datatypes import DateTime
 from itools.gettext import MSG
-from itools.http import Forbidden
-from itools.html import xhtml_uri, XHTMLFile, sanitize_stream, HTMLParser
-from itools.html import stream_to_str_as_html
-from itools.stl import stl
+from itools.handlers import merge_dics
+from itools.html import xhtml_uri, XHTMLFile
 from itools.uri import get_reference
-from itools.web import STLView, STLForm, ERROR
-from itools.xml import TEXT, START_ELEMENT, XMLError, XMLParser, DocType
-from itools.xml import stream_to_str
+from itools.web import BaseView
+from itools.xml import TEXT, START_ELEMENT
 
 # Import from ikaaro
 import messages
-from forms import RTEWidget
+from forms import HTMLBody
+from forms import title_widget, description_widget, subject_widget
+from forms import rte_widget, timestamp_widget
 from multilingual import Multilingual
 from text import Text
 from registry import register_resource_class
 from resource_ import DBResource
-from resource_views import EditLanguageMenu
+from resource_views import DBResourceEdit
 
-
-
-xhtml_namespaces = {None: 'http://www.w3.org/1999/xhtml'}
-xhtml_doctype = DocType(
-    '-//W3C//DTD XHTML 1.0 Strict//EN',
-    'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd')
 
 
 ###########################################################################
 # Views
 ###########################################################################
-class HTMLEditView(STLForm):
+class WebPageView(BaseView):
+    access = 'is_allowed_to_view'
+    title = MSG(u'View')
+    icon = 'view.png'
+
+
+    def GET(self, resource, context):
+        return resource.get_epoz_data()
+
+
+
+class HTMLEditView(DBResourceEdit):
     """WYSIWYG editor for HTML documents.
     """
-
-    access = 'is_allowed_to_edit'
-    title = MSG(u'Edit')
-    context_menus = [EditLanguageMenu()]
-    template = '/ui/html/edit.xml'
-    schema = {
-        'title': Unicode,
-        'description': Unicode,
-        'subject': Unicode,
-        'data': String,
-        'timestamp': DateTime
-    }
-
-    sanitize_html = False
+    schema = merge_dics(DBResourceEdit.schema,
+                        data=HTMLBody, timestamp=DateTime(readonly=True))
+    widgets = [title_widget, rte_widget, description_widget, subject_widget,
+               timestamp_widget]
 
 
-    def get_namespace(self, resource, context):
-        # WebPage body: use TinyMCE
-        # FIXME Use a text-area when the document has not a body (e.g. a
-        # frameset)
-        data = context.get_form_value('data')
-        if data is not None:
-            data = XMLParser(data, xhtml_namespaces, doctype=xhtml_doctype)
-        else:
-            data = resource.get_epoz_data()
-        source = stream_to_str_as_html(data)
-
-        # Ok
-        language = resource.get_content_language(context)
-        get_property = resource.get_property
-        return {
-            'timestamp': DateTime.encode(datetime.now()),
-            'title': get_property('title', language=language),
-            'rte': RTEWidget('data').to_html(String, source),
-            'description': get_property('description', language=language),
-            'subject': get_property('subject', language=language)}
+    def get_value(self, resource, context, name, datatype):
+        if name == 'data':
+            return resource.get_epoz_data()
+        elif name == 'timestamp':
+            return datetime.now()
+        return DBResourceEdit.get_value(self, resource, context, name,
+                                        datatype)
 
 
     def action(self, resource, context, form):
@@ -106,44 +86,14 @@ class HTMLEditView(STLForm):
             return
 
         # Properties
-        language = resource.get_content_language(context)
-        for name in 'title', 'description', 'subject':
-            value = form[name]
-            resource.set_property(name, value, language=language)
-        # Sanitize
+        DBResourceEdit.action(self, resource, context, form)
+
+        # Body
         new_body = form['data']
-        try:
-            p = XMLParser(new_body, xhtml_namespaces, doctype=xhtml_doctype)
-            new_body = list(p)
-        except XMLError:
-            context.message = ERROR(u'Invalid HTML code.')
-            return
-        if self.sanitize_html:
-            new_body = sanitize_stream(new_body)
-        # "get_epoz_document" is to set in your editable handler
-        old_body = document.get_body()
-        events = (document.events[:old_body.start+1] + new_body
-                  + document.events[old_body.end:])
-        # Change
-        document.set_events(events)
-        context.server.change_resource(resource)
+        document.set_body(new_body)
+
+        # Ok
         context.message = messages.MSG_CHANGES_SAVED
-
-
-
-class WebPageView(STLView):
-
-    access = 'is_allowed_to_view'
-    title = MSG(u'View')
-    icon = 'view.png'
-    template = '/ui/html/view.xml'
-
-
-    def get_namespace(self, resource, context):
-        body = resource.handler.get_body()
-        return {
-            'text': body.get_content_elements() if body else None,
-        }
 
 
 

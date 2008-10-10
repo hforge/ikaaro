@@ -19,16 +19,46 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.datatypes import is_datatype, Unicode, Date, Enumerate, Boolean
+from itools.datatypes import is_datatype, DataType
+from itools.datatypes import Unicode, Date, Enumerate, Boolean
 from itools.gettext import MSG
+from itools.html import sanitize_stream, stream_to_str_as_html
 from itools.stl import stl
 from itools.web import STLForm, get_context
-from itools.xml import XMLParser
+from itools.xml import XMLParser, DocType
 
 
-namespaces = {
+stl_namespaces = {
     None: 'http://www.w3.org/1999/xhtml',
     'stl': 'http://xml.itools.org/namespaces/stl'}
+xhtml_namespaces = {None: 'http://www.w3.org/1999/xhtml'}
+xhtml_doctype = DocType(
+    '-//W3C//DTD XHTML 1.0 Strict//EN',
+    'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd')
+
+
+
+###########################################################################
+# DataTypes
+###########################################################################
+class HTMLBody(DataType):
+    """TinyMCE specifics: read as XHTML, rendered as HTML.
+    """
+    sanitize_html = True
+
+
+    @classmethod
+    def decode(cls, data):
+        events = XMLParser(data, namespaces=xhtml_namespaces,
+                           doctype=xhtml_doctype)
+        if cls.sanitize_html is True:
+            events = sanitize_stream(events)
+        return list(events)
+
+    @staticmethod
+    def encode(value):
+        return stream_to_str_as_html(value)
+
 
 
 ###########################################################################
@@ -57,7 +87,7 @@ class Widget(object):
     template = list(XMLParser(
         """<input type="text" name="${name}" value="${value}" size="${size}"
         />""",
-        namespaces))
+        stl_namespaces))
 
 
     def __init__(self, name, template=None, template_multiple=None, **kw):
@@ -99,16 +129,24 @@ class TextWidget(Widget):
 
 
 
+class HiddenWidget(Widget):
+
+    template = list(XMLParser(
+        """<input type="hidden" name="${name}" value="${value}" />""",
+        stl_namespaces))
+
+
+    def get_namespace(self, datatype, value):
+        return {'name': self.name,
+                'value': value}
+
+
+
 class ReadOnlyWidget(Widget):
 
     template = list(XMLParser(
-        """
-        <stl:block xmlns="http://www.w3.org/1999/xhtml"
-                   xmlns:stl="http://xml.itools.org/namespaces/stl">
-            <input type="hidden" name="${name}" value="${value}" />
-            ${displayed}
-        </stl:block>
-        """))
+        """<input type="hidden" name="${name}" value="${value}" />
+           ${displayed}""", stl_namespaces))
 
 
     def get_namespace(self, datatype, value):
@@ -127,7 +165,7 @@ class MultilineWidget(Widget):
     template = list(XMLParser(
         """<textarea rows="${rows}" cols="${cols}" name="${name}"
         >${value}</textarea>""",
-        namespaces))
+        stl_namespaces))
 
 
     def get_namespace(self, datatype, value):
@@ -144,7 +182,7 @@ class CheckBoxWidget(Widget):
     template = list(XMLParser("""
         <input type="checkbox" name="${name}" value="${value}"
           checked="${is_selected}" />
-        """, namespaces))
+        """, stl_namespaces))
 
 
     def get_namespace(self, datatype, value):
@@ -160,7 +198,7 @@ class BooleanCheckBox(Widget):
     template = list(XMLParser("""
         <input type="checkbox" name="${name}" value="1"
           checked="${is_selected}" />
-        """, namespaces))
+        """, stl_namespaces))
 
 
     def get_namespace(self, datatype, value):
@@ -184,7 +222,7 @@ class BooleanRadio(Widget):
           checked="checked" stl:if="not is_yes"/>
         <input id="${name}_no" name="${name}" type="radio" value="0"
           stl:if="is_yes"/>
-        """, namespaces))
+        """, stl_namespaces))
 
 
     def get_namespace(self, datatype, value):
@@ -204,7 +242,7 @@ class Select(Widget):
           <option stl:repeat="option options" value="${option/name}"
             selected="${option/selected}">${option/value}</option>
         </select>
-        """, namespaces))
+        """, stl_namespaces))
 
 
     def get_namespace(self, datatype, value):
@@ -231,7 +269,7 @@ class SelectRadio(Widget):
             value="${option/name}" stl:if="not option/selected"/>
           <label for="${name}_${option/name}">${option/value}</label><br/>
         </stl:block>
-        """, namespaces))
+        """, stl_namespaces))
 
     template_multiple = list(XMLParser("""
         <stl:block stl:repeat="option options">
@@ -239,7 +277,7 @@ class SelectRadio(Widget):
             value="${option/name}" checked="${option/selected}" />
           <label for="${name}_${option/name}">${option/value}</label><br/>
         </stl:block>
-        """, namespaces))
+        """, stl_namespaces))
 
 
     def get_template(self, datatype, value):
@@ -271,7 +309,7 @@ class DateWidget(Widget):
           Calendar.setup({inputField: "${name}", ifFormat: "${format}",
                           button: "trigger_date"});
         </script>
-        """, namespaces))
+        """, stl_namespaces))
 
     template_multiple = list(XMLParser("""
         <table class="table_calendar">
@@ -305,7 +343,7 @@ class DateWidget(Widget):
             </td>
           </tr>
         </table>
-        """, namespaces))
+        """, stl_namespaces))
 
 
     def get_template(self, datatype, value):
@@ -332,8 +370,7 @@ class DateWidget(Widget):
 
 class RTEWidget(Widget):
 
-    template = list(XMLParser("""${rte}""", namespaces))
-
+    template = list(XMLParser("""${rte}""", stl_namespaces))
 
     rte_template = '/ui/tiny_mce/rte.xml'
     rte_css = ['/ui/aruni/aruni.css', '/ui/tiny_mce/content.css']
@@ -367,6 +404,17 @@ class RTEWidget(Widget):
                 'scripts': self.rte_scripts,
                 'css': ','.join(css_names)}
 
+
+###########################################################################
+# Common widgets to reuse
+###########################################################################
+title_widget = TextWidget('title', title=MSG(u'Title'))
+description_widget = MultilineWidget('description',
+                                     title=MSG(u'Description'), rows=8)
+subject_widget = TextWidget('subject',
+                            title=MSG(u'Keywords (Separated by comma)'))
+rte_widget = RTEWidget('data', title=MSG(u'Body'))
+timestamp_widget = HiddenWidget('timestamp')
 
 
 ###########################################################################
@@ -420,7 +468,7 @@ class AutoForm(STLForm):
                 has_required_widget = True
             widget_namespace = widgets_namespace[widget.name]
             value = widget_namespace['value']
-            widget_namespace['title'] = getattr(widget, 'title', widget.name)
+            widget_namespace['title'] = getattr(widget, 'title', None)
             widget_namespace['mandatory'] = is_mandatory
             widget_namespace['multiple'] = getattr(datatype, 'multiple', False)
             widget_namespace['is_date'] = is_datatype(datatype, Date)
