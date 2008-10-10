@@ -44,7 +44,7 @@ Imports
 ====================
 
 Some things have changed names, or moved somewhere else.  The table below
-summizes these changes:
+summarizes these changes:
 
   Before                                  Now
   --------------------------------------  ---------------------------------
@@ -59,6 +59,7 @@ summizes these changes:
   ikaaro.widgets.build_menu               ikaaro.views.build_menu
   ikaaro.registry.register_object_class   ikaaro.registry.register_resource_class
   ikaaro.registry.get_object_class        ikaaro.registry.get_resource_class
+  ikaaro.csv.CSV                          ikaaro.text.CSV
 
 
 Architecture
@@ -91,7 +92,7 @@ written now also as views:
 User Interface
 ====================
 
-(1) The two level drop-down menu has ben flat to just one level.  As a side
+(1) The two level drop-down menu has been flattened to just one level.  As a side
 effect the 'class_views' variable has become a simple list.
 
   # Before
@@ -107,7 +108,7 @@ has been simplified:
 
   1. '__label__', '__sublabel__' and '__title__' have been merged into 'title'
 
-  2. '__access__' and '__description__' are just the same
+  2. '__access__' and '__description__' become 'access' and 'description'
 
   3. '__icon__' is not used anymore
 
@@ -136,7 +137,34 @@ resource has been simplified:
   goto = '%s/;%s' % (resource.name, resource.get_firstview())
 
   # Now
-  goto = '%s' % resource.name
+  goto = resource.name
+
+
+(3) The "edit" and "edit_metadata" views have been merged. So that both
+Folder-like and File-like resources offer a "edit" view. Folders only offer
+metadata to edit by default, while Files offer content and metadata to edit in
+a single form. Try to use that pattern in your forms, starting with more
+important data at the top (title, content), and ending with optional properties
+like keywords. The AutoForm class may be handy.
+
+
+Messages
+========
+
+As pointed out in the itools UPGRADE-0.50.0 documentation, translatable
+messages are instances of the MSG class. It also applies to resources:
+
+  # Before
+  class MyClass(...):
+    ...
+    class_title = u"My Class"
+    class_description = u"This is my class"
+
+  # Now
+  class MyClass(...):
+    ...
+    class_title = MSG(u"My Class")
+    class_description = MSG(u"This is my class")
 
 
 API
@@ -166,7 +194,7 @@ designate the same variable but renamed):
 Javascript
 ====================
 
-Our uncohrent javascript library has been happily replaced by jQuery [1]. Most
+Our uncohrent Javascript library has been happily replaced by jQuery [1]. Most
 of what you need is already included. See the documentation [2].
 
 For the few functions that were eventually used, the usage has changed.
