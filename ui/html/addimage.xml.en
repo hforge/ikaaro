@@ -5,9 +5,15 @@
   xmlns:stl="http://xml.itools.org/namespaces/stl">
   <head>
     <title>Epoz-Toolbox</title>
-    <link rel="stylesheet" type="text/css" href="../aruni/aruni.css" />
-    <script type="text/javascript" stl:repeat="script scripts" src="${script}"
-      />
+    <link type="text/css" rel="stylesheet" stl:repeat="style styles"
+      href="${style}" />
+    <script type="text/javascript" stl:repeat="script scripts"
+      src="${script}" />
+    <script type="text/javascript">
+      $(document).ready(function() {
+        tabme();
+      })
+    </script>
     <style>
       #body {
         border-top: 20px solid #30569D;
@@ -18,56 +24,70 @@
 
   <body>
     <div id="body">
+
+      <!-- tabs -->
+      <p class="tabme">
+        <a href="#browse" onclick="tabme_show(event, this)">Browse</a>
+        <a href="#upload" onclick="tabme_show(event, this)">Upload</a>
+      </p>
+
       <div id="message" stl:if="message">${message}</div>
+
       <!-- List of files -->
-      <h3>Browse and insert an Image from the workspace</h3>
-      <!-- Breadcrumbs -->
-      <div id="maintitle">
-        <div id="breadcrumbs">
-          <label>Location:</label>
-          <span stl:repeat="x bc/path">
-            <a href="${x/url}" title="${x/title}">${x/short_title}</a> /
-          </span>
+      <div id="browse">
+        <h3>Browse and insert an Image from the workspace</h3>
+        <!-- Breadcrumbs -->
+        <div id="maintitle">
+          <div id="breadcrumbs">
+            <label>Location:</label>
+            <span stl:repeat="x bc/path">
+              <a href="${x/url}" title="${x/title}">${x/short_title}</a> /
+            </span>
+          </div>
         </div>
+        <!-- Content -->
+        <!-- Folders first -->
+        <stl:block stl:repeat="item bc/items">
+          <dl class="thumb" stl:if="item/is_folder">
+            <dt>
+              <a href="${item/url}"><img alt="" src="${item/icon}"
+                width="48" height="48"/></a>
+            </dt>
+            <dd>
+              <abbr title="${item/title}">${item/short_title}</abbr><br />
+              <a href="${item/url}" title="${item/title}">Browse</a>
+            </dd>
+          </dl>
+        </stl:block>
+        <!-- Images next -->
+        <stl:block stl:repeat="item bc/items">
+          <dl class="thumb" stl:if="item/is_image">
+            <dt>
+              <img alt="" title="${item/item_type}" src="${item/icon}/"
+                width="48" height="48" />
+            </dt>
+            <dd>
+              <abbr title="${item/title}">${item/short_title}</abbr><br />
+              <a href="javascript:select_img('${item/path}/;download',
+                '${caption}')" >Select</a>
+            </dd>
+          </dl>
+        </stl:block>
+        <div class="clear"></div>
       </div>
-      <!-- Content -->
-      <!-- Folders first -->
-      <stl:block stl:repeat="item bc/items">
-        <dl class="thumb" stl:if="item/is_folder">
-          <dt>
-            <a href="${item/url}"><img alt="" src="${item/icon}"
-              width="48" height="48"/></a>
-          </dt>
-          <dd>
-            <abbr title="${item/title}">${item/short_title}</abbr><br />
-            <a href="${item/url}" title="${item/title}">Browse</a>
-          </dd>
-        </dl>
-      </stl:block>
-      <!-- Images next -->
-      <stl:block stl:repeat="item bc/items">
-        <dl class="thumb" stl:if="item/is_image">
-          <dt>
-            <img alt="" title="${item/item_type}" src="${item/icon}/"
-              width="48" height="48" />
-          </dt>
-          <dd>
-            <abbr title="${item/title}">${item/short_title}</abbr><br />
-            <a href="javascript:select_img('${item/path}/;download',
-              '${caption}')" >Select</a>
-          </dd>
-        </dl>
-      </stl:block>
-      <div class="clear"></div>
+
       <!-- Add an image -->
-      <h3>Upload an image to the current folder and insert it:</h3>
-      <form action=";add_image" method="post" enctype="multipart/form-data">
-        <input type="hidden" name="target_path" value="${bc/target_path}" />
-        <input type="hidden" name="mode" value="${mode}" />
-        <input id="file" name="file" size="35" type="file" />
-        <br/>
-        <input class="button_upload" type="submit" value="Upload and Insert" />
-      </form>
+      <div id="upload">
+        <h3>Upload an image to the current folder and insert it:</h3>
+        <form action=";add_image" method="post" enctype="multipart/form-data">
+          <input type="hidden" name="target_path" value="${bc/target_path}" />
+          <input type="hidden" name="mode" value="${mode}" />
+          <input id="file" name="file" size="35" type="file" />
+          <br/>
+          <input class="button_upload" type="submit" value="Upload and Insert" />
+        </form>
+      </div>
+
     </div>
   </body>
 </html>

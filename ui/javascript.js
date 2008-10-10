@@ -20,3 +20,35 @@ function popup(url, width, height) {
     popup_window = window.open(url, 'itools_popup', options);
     return false;
 }
+
+
+function tabme_show(event, tab) {
+    event.preventDefault();
+    $(".tabme a").each(function() {
+        // Hide all divs
+        $(this.hash).hide();
+        // Remove flag
+        $(this).removeClass("selected");
+    });
+    // Show selected div
+    $(tab.hash).show('fast');
+    // Add flag
+    $(tab).addClass("selected");
+}
+
+
+function tabme() {
+    // Find a tab menu and hook it
+    var tabs = $(".tabme a");
+    if (tabs.length) {
+        // Hide all divs at start
+        tabs.each(function() { $(this.hash).hide(); });
+        // But show a default one, the one in the URL first
+        var hash = window.location.hash ? window.location.hash : tabs.eq(0).attr("hash");
+        $(hash).show();
+        // Select the matching tab
+        $("a[hash=" + hash + "]").addClass("selected");
+        // Hook the onclick event
+        tabs.click(tabme_show);
+    }
+}

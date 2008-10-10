@@ -286,21 +286,35 @@ class DBResourceAddImage(STLForm):
         'file': FileDataType(mandatory=True),
         'mode': String(default='html'),
     }
+    query_schema = {
+        'mode': String(default='html'),
+    }
+
+
+    def get_filter_type(self):
+        from file import Image
+        return Image
 
 
     def get_namespace(self, resource, context):
-        from file import File, Image
+        from file import File
 
+        styles = ['/ui/bo.css',
+                  '/ui/aruni/aruni.css']
+
+        scripts = ['/ui/jquery.js',
+                   '/ui/javascript.js']
         # HTML or Wiki
-        mode = context.get_form_value('mode', default='html')
+        mode = context.query['mode']
         if mode == 'wiki':
-            scripts = ['/ui/wiki/javascript.js']
+            scripts.append('/ui/wiki/javascript.js')
         else:
-            scripts = ['/ui/tiny_mce/javascript.js',
-                       '/ui/tiny_mce/tiny_mce_src.js',
-                       '/ui/tiny_mce/tiny_mce_popup.js']
+            scripts.extend(['/ui/tiny_mce/javascript.js',
+                            '/ui/tiny_mce/tiny_mce_src.js',
+                            '/ui/tiny_mce/tiny_mce_popup.js'])
 
         # For the breadcrumb
+        filter_type = self.get_filter_type()
         if isinstance(resource, File):
             start = resource.parent
         else:
@@ -308,9 +322,11 @@ class DBResourceAddImage(STLForm):
 
         # Construct namespace
         return {
-            'bc': Breadcrumb(filter_type=Image, start=start, icon_size=48),
+            'bc': Breadcrumb(filter_type=filter_type, start=start,
+                             icon_size=48),
             'message': context.message,
             'mode': mode,
+            'styles': styles,
             'scripts': scripts,
             'caption': messages.MSG_CAPTION.gettext().encode('utf_8'),
         }
@@ -370,59 +386,34 @@ class DBResourceAddImage(STLForm):
 
         body += """
             <script type="text/javascript">
-                select_img('%s', '%s');
+                select_img('%s/;download', '%s');
             </script>"""
         return body % (path, caption)
 
 
 
-class DBResourceAddLink(STLForm):
+class DBResourceAddLink(DBResourceAddImage):
 
-    access = 'is_allowed_to_edit'
     template = '/ui/html/addlink.xml'
-    schema = {
-        'target_path': String(mandatory=True),
-        'file': FileDataType(mandatory=True),
-        'mode': String(default='html'),
-    }
+
+
+    def get_filter_type(self):
+        from file import File
+        return File
 
 
     def get_namespace(self, resource, context):
-        from file import File
+        namespace = DBResourceAddImage.get_namespace(self, resource, context)
 
-        # HTML or Wiki
-        mode = context.get_form_value('mode', default='html')
+        mode = context.query['mode']
         if mode == 'wiki':
-            scripts = ['/ui/wiki/javascript.js']
             type = 'WikiPage'
         else:
-            scripts = ['/ui/tiny_mce/javascript.js',
-                       '/ui/tiny_mce/tiny_mce_src.js',
-                       '/ui/tiny_mce/tiny_mce_popup.js']
             type = 'application/xhtml+xml'
+        namespace['type'] = type,
+        namespace['wiki_mode'] = (mode == 'wiki'),
 
-        # For the breadcrumb
-        if isinstance(resource, File):
-            start = resource.parent
-        else:
-            start = resource
-
-        # Construct namespace
-        return {
-            'mode': mode,
-            'bc': Breadcrumb(filter_type=File, start=start, icon_size=48),
-            'message': context.message,
-            'scripts': scripts,
-            'type': type,
-            'wiki_mode': (mode == 'wiki'),
-        }
-
-
-    def GET(self, resource, context):
-        template = resource.get_resource(self.template)
-        namespace = self.get_namespace(resource, context)
-        prefix = resource.get_pathto(template)
-        return stl(template, namespace, prefix=prefix)
+        return namespace
 
 
     def add_page(self, resource, context, form):
@@ -437,7 +428,7 @@ class DBResourceAddLink(STLForm):
         uri = cls.new_instance(cls, container, context)
 
         if ';add_link' not in uri.path:
-            mode = context.get_form_value('mode', default='html')
+            mode = form['mode']
             if mode == 'wiki':
                 scripts = ['/ui/wiki/javascript.js']
             else:

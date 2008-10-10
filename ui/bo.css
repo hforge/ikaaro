@@ -406,6 +406,24 @@ dl.thumb dd {
 
 
 /**************************************************************************
+ * Defined for Javascript-based tabs (splitting a view in panels)
+ *************************************************************************/
+
+p.tabme {
+  border-bottom: 1px solid #3465A4;
+  padding: 0.5em 0;
+}
+p.tabme a {
+  text-decoration: none;
+  padding: 0.5em 1em;
+}
+p.tabme a.selected {
+  color: #fff;
+  background: #3465A4;
+}
+
+
+/**************************************************************************
  * NOT YET CLASSIFIED
  *************************************************************************/
 
