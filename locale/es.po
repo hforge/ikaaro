@@ -56,10 +56,9 @@ msgid "${DESCRIPTION}"
 msgstr ""
 
 #: ../ui/generic/browse_table.xml.en:44
-#, fuzzy
 msgctxt "input[value]"
 msgid "${action/value}"
-msgstr "Descripción"
+msgstr ""
 
 #: ../ui/generic/icons_view.xml.en:8
 msgid "${batch}"
@@ -84,10 +83,9 @@ msgid "${body}"
 msgstr ""
 
 #: ../future/ui/dressable_view.xml.en:14
-#, fuzzy
 msgctxt "td"
 msgid "${browse_file}"
-msgstr "Comentarios"
+msgstr ""
 
 #: ../future/ui/dressable_view.xml.en:13
 msgctxt "td"
@@ -95,64 +93,54 @@ msgid "${browse_folder}"
 msgstr ""
 
 #: ../ui/ical/daily_view.xml.en:25
-#, fuzzy
 msgctxt "link to"
 msgid "${calendar/name}"
-msgstr "Renombrar"
+msgstr ""
 
 #: ../ui/ical/weekly_view.xml.en:46
-#, fuzzy
 msgctxt "div"
 msgid "${cell/ns}"
-msgstr "Comentarios"
+msgstr ""
 
 #: ../tracker/ui/export_to_text.xml.en:17
-#, fuzzy
 msgctxt "label"
 msgid "${column/title}"
-msgstr "Descripción"
+msgstr ""
 
 #: ../ui/generic/browse_table.xml.en:21
-#, fuzzy
 msgctxt "link to"
 msgid "${column/title}"
-msgstr "Descripción"
+msgstr ""
 
 #: ../ui/generic/browse_table.xml.en:37
-#, fuzzy
 msgctxt "link to"
 msgid "${column/value}"
-msgstr "Descripción"
+msgstr ""
 
 #: ../tracker/ui/edit_issue.xml.en:140
-#, fuzzy
 msgctxt "pre"
 msgid "${comment/comment}"
-msgstr "Comentarios"
+msgstr ""
 
 #: ../tracker/ui/edit_issue.xml.en:124
-#, fuzzy
 msgctxt "td"
 msgid "${comment/datetime}"
-msgstr "Comentarios"
+msgstr ""
 
 #: ../tracker/ui/edit_issue.xml.en:135
-#, fuzzy
 msgctxt "link to"
 msgid "${comment/file}"
-msgstr "Comentarios"
+msgstr ""
 
 #: ../tracker/ui/edit_issue.xml.en:123
-#, fuzzy
 msgctxt "td"
 msgid "${comment/user}"
-msgstr "Comentarios"
+msgstr ""
 
 #: ../tracker/ui/edit_resources.xml.en:45
-#, fuzzy
 msgctxt "textarea"
 msgid "${comment}"
-msgstr "Comentarios"
+msgstr ""
 
 #: ../ui/website/contact_options.xml.en:16
 msgctxt "option"
@@ -160,64 +148,54 @@ msgid "${contact/title} (${contact/email})"
 msgstr ""
 
 #: ../ui/binary/Archive_view.xml.en:6
-#, fuzzy
 msgctxt "pre"
 msgid "${contents}"
-msgstr "Comentarios"
+msgstr ""
 
 #: ../future/ui/dressable_view.xml.en:8
-#, fuzzy
 msgctxt "div"
 msgid "${content}"
-msgstr "Comentarios"
+msgstr ""
 
 #: ../ui/text/view.xml.en:7
-#, fuzzy
 msgctxt "pre"
 msgid "${data}"
-msgstr "Comentarios"
+msgstr ""
 
 #: ../wiki/ui/edit.xml.en:157
-#, fuzzy
 msgctxt "textarea"
 msgid "${data}"
-msgstr "Comentarios"
+msgstr ""
 
 #: ../ui/ical/monthly_view.xml.en:37
-#, fuzzy
 msgctxt "span"
 msgid "${day/name}"
-msgstr "Renombrar"
+msgstr ""
 
 #: ../forum/ui/Forum_view.xml.en:7
-#, fuzzy
 msgctxt "em"
 msgid "${description}"
-msgstr "Descripción"
+msgstr ""
 
 #: ../ui/user/tasks.xml.en:17
-#, fuzzy
 msgctxt "link to"
 msgid "${doc/title}"
-msgstr "Comentarios"
+msgstr ""
 
 #: ../ui/text/externaledit.xml.en:35
-#, fuzzy
 msgctxt "option"
 msgid "${encoding/title}"
-msgstr "Comentarios"
+msgstr ""
 
 #: ../ui/ical/weekly_view.xml.en:67
-#, fuzzy
 msgctxt "tr"
 msgid "${event/ns}"
-msgstr "Comentarios"
+msgstr ""
 
 #: ../ui/generic/browse_search.xml.en:11
-#, fuzzy
 msgctxt "option"
 msgid "${field/title}"
-msgstr "Comentarios"
+msgstr ""
 
 #: ../ui/ical/weekly_view.xml.en:36
 msgctxt "th"
@@ -230,10 +208,9 @@ msgid "${help_html}"
 msgstr ""
 
 #: ../wiki/ui/help.xml.en:7
-#, fuzzy
 msgctxt "pre"
 msgid "${help_source}"
-msgstr "Nuevo Recurso"
+msgstr ""
 
 #: ../ui/menu/addlink.xml.en:87
 msgctxt "img[title]"
@@ -241,52 +218,44 @@ msgid "${item/item_type}"
 msgstr ""
 
 #: ../ui/aruni/location.xml.en:11
-#, fuzzy
 msgctxt "a[title]"
 msgid "${item/name}"
-msgstr "Renombrar"
+msgstr ""
 
 #: ../ui/folder/rename.xml.en:12
-#, fuzzy
 msgctxt "td"
 msgid "${item/path}"
-msgstr "Comentarios"
+msgstr ""
 
 #: ../ui/menu/addlink.xml.en:77
-#, fuzzy
 msgctxt "link to"
 msgid "${item/short_title}"
-msgstr "Comentarios"
+msgstr ""
 
 #: ../ui/menu/addlink.xml.en:75
-#, fuzzy
 msgctxt "a[title]"
 msgid "${item/title}"
-msgstr "Comentarios"
+msgstr ""
 
 #: ../ui/menu/addlink.xml.en:91
-#, fuzzy
 msgctxt "abbr[title]"
 msgid "${item/title}"
-msgstr "Comentarios"
+msgstr ""
 
 #: ../ui/generic/menu.xml.en:12
-#, fuzzy
 msgctxt "link to"
 msgid "${item/title}"
-msgstr "Comentarios"
+msgstr ""
 
 #: ../tracker/ui/search.xml.en:88
-#, fuzzy
 msgctxt "option"
 msgid "${item/title}"
-msgstr "Comentarios"
+msgstr ""
 
 #: ../ui/ical/edit_event.xml.en:16
-#, fuzzy
 msgctxt "option"
 msgid "${item/value}"
-msgstr "Descripción"
+msgstr ""
 
 #: ../ui/website/edit_languages.xml.en:28
 msgctxt "td"
@@ -294,16 +263,14 @@ msgid "${language/code}"
 msgstr ""
 
 #: ../ui/website/edit_languages.xml.en:53
-#, fuzzy
 msgctxt "option"
 msgid "${language/name}"
-msgstr "Renombrar"
+msgstr ""
 
 #: ../ui/website/edit_languages.xml.en:27
-#, fuzzy
 msgctxt "td"
 msgid "${language/name}"
-msgstr "Renombrar"
+msgstr ""
 
 #: ../ui/website/broken_links.xml.en:13
 msgctxt "li"
@@ -331,44 +298,38 @@ msgid "${message/body}"
 msgstr ""
 
 #: ../forum/ui/Thread_view.xml.en:17
-#, fuzzy
 msgctxt "paragraph"
 msgid "${message/mtime}"
-msgstr "Comentarios"
+msgstr ""
 
 #: ../ui/generic/message_view.xml.en:7
 msgid "${message}"
 msgstr ""
 
 #: ../ui/html/addimage.xml.en:34
-#, fuzzy
 msgctxt "div"
 msgid "${message}"
-msgstr "Renombrar"
+msgstr ""
 
 #: ../ui/PO_edit.xml.en:23
-#, fuzzy
 msgctxt "textarea"
 msgid "${msgid}"
-msgstr "Renombrar"
+msgstr ""
 
 #: ../ui/PO_edit.xml.en:31
-#, fuzzy
 msgctxt "textarea"
 msgid "${msgstr}"
-msgstr "Renombrar"
+msgstr ""
 
 #: ../ui/generic/browse_batch.xml.en:8
-#, fuzzy
 msgctxt "paragraph"
 msgid "${msg}"
-msgstr "Renombrar"
+msgstr ""
 
 #: ../ui/root/credits.xml.en:12
-#, fuzzy
 msgctxt "li"
 msgid "${name}"
-msgstr "Renombrar"
+msgstr ""
 
 #: ../ui/aruni/template.xhtml.en:44
 msgctxt "heading"
@@ -381,10 +342,9 @@ msgid "${required_msg}"
 msgstr ""
 
 #: ../ui/file/history.xml.en:19
-#, fuzzy
 msgctxt "td"
 msgid "${revision/date}"
-msgstr "Descripción"
+msgstr ""
 
 #: ../ui/file/history.xml.en:20
 msgctxt "td"
@@ -392,22 +352,19 @@ msgid "${revision/size}"
 msgstr ""
 
 #: ../ui/file/history.xml.en:18
-#, fuzzy
 msgctxt "td"
 msgid "${revision/username}"
-msgstr "Renombrar"
+msgstr ""
 
 #: ../ui/access/edit_membership_form.xml.en:15
-#, fuzzy
 msgctxt "label"
 msgid "${role/title}"
-msgstr "Comentarios"
+msgstr ""
 
 #: ../ui/access/add_user.xml.en:29
-#, fuzzy
 msgctxt "option"
 msgid "${role/title}"
-msgstr "Comentarios"
+msgstr ""
 
 #: ../skins.py:157
 msgid "${root_title}: ${here_title}"
@@ -424,10 +381,9 @@ msgid "${row/cc_list}"
 msgstr ""
 
 #: ../tracker/ui/issue_history.xml.en:46
-#, fuzzy
 msgctxt "td"
 msgid "${row/comment}"
-msgstr "Comentarios"
+msgstr ""
 
 #: ../tracker/ui/issue_history.xml.en:12
 msgctxt "td"
@@ -435,10 +391,9 @@ msgid "${row/datetime}"
 msgstr ""
 
 #: ../tracker/ui/issue_history.xml.en:42
-#, fuzzy
 msgctxt "link to"
 msgid "${row/file}"
-msgstr "Comentarios"
+msgstr ""
 
 #: ../tracker/ui/issue_history.xml.en:30
 msgctxt "td"
@@ -456,10 +411,9 @@ msgid "${row/start}-${row/end}"
 msgstr ""
 
 #: ../tracker/ui/issue_history.xml.en:27
-#, fuzzy
 msgctxt "td"
 msgid "${row/state}"
-msgstr "Comentarios"
+msgstr ""
 
 #: ../ui/folder/browse_image.xml.en:55
 msgctxt "label"
@@ -467,10 +421,9 @@ msgid "${row/title_or_name}"
 msgstr ""
 
 #: ../tracker/ui/issue_history.xml.en:18
-#, fuzzy
 msgctxt "td"
 msgid "${row/title}"
-msgstr "Comentarios"
+msgstr ""
 
 #: ../tracker/ui/issue_history.xml.en:24
 msgctxt "td"
@@ -478,10 +431,9 @@ msgid "${row/type}"
 msgstr ""
 
 #: ../tracker/ui/issue_history.xml.en:13
-#, fuzzy
 msgctxt "td"
 msgid "${row/user}"
-msgstr "Comentarios"
+msgstr ""
 
 #: ../tracker/ui/issue_history.xml.en:21
 msgctxt "td"
@@ -489,59 +441,51 @@ msgid "${row/version}"
 msgstr ""
 
 #: ../forum/ui/Thread_view.xml.en:43
-#, fuzzy
 msgctxt "paragraph"
 msgid "${rte}"
-msgstr "Comentarios"
+msgstr ""
 
 #: ../ui/ical/edit_event.xml.en:67
-#, fuzzy
 msgctxt "option"
 msgid "${s/value}"
-msgstr "Descripción"
+msgstr ""
 
 #: ../tracker/ui/search.xml.en:9
-#, fuzzy
 msgctxt "legend"
 msgid "${search_title}"
-msgstr "Buscar"
+msgstr ""
 
 #: ../ui/website/search.xml.en:8
-#, fuzzy
 msgid "${search}"
-msgstr "Buscar"
+msgstr ""
 
 #: ../ui/generic/search.xml.en:8
 msgid "${search} <x id='1'/> ${batch} <x id='2'/> ${table}"
 msgstr ""
 
 #: ../ui/tiny_mce/rte.xml.en:53
-#, fuzzy
 msgctxt "textarea"
 msgid "${source}"
-msgstr "Nuevo Recurso"
+msgstr ""
 
 #: ../ui/WorkflowAware_state.xml.en:8
-#, fuzzy
 msgctxt "strong"
 msgid "${state}"
-msgstr "Comentarios"
+msgstr ""
 
 #: ../ui/auto_form.xml.en:27
-#, fuzzy
 msgctxt "input[value]"
 msgid "${submit_value}"
-msgstr "Descripción"
+msgstr ""
 
 #: ../tracker/ui/edit_resources.xml.en:56
 msgid "${table}"
 msgstr ""
 
 #: ../tracker/ui/export_to_text.xml.en:25
-#, fuzzy
 msgctxt "pre"
 msgid "${text}"
-msgstr "Comentarios"
+msgstr ""
 
 #: ../forum/ui/Forum_view.xml.en:15
 msgctxt "paragraph"
@@ -554,16 +498,14 @@ msgid "${time_select} <x id='13'/>  <x id='14'/> (HH:MM)"
 msgstr ""
 
 #: ../ui/generic/menu.xml.en:8
-#, fuzzy
 msgctxt "label"
 msgid "${title}"
-msgstr "Comentarios"
+msgstr ""
 
 #: ../ui/auto_form.xml.en:9
-#, fuzzy
 msgctxt "legend"
 msgid "${title}"
-msgstr "Comentarios"
+msgstr ""
 
 #: ../ui/aruni/template.xhtml.en:7
 msgctxt "title"
@@ -576,58 +518,49 @@ msgid "${traceback}"
 msgstr ""
 
 #: ../ui/WorkflowAware_state.xml.en:54
-#, fuzzy
 msgctxt "td"
 msgid "${transition/comments}"
-msgstr "Comentarios"
+msgstr ""
 
 #: ../ui/WorkflowAware_state.xml.en:51
-#, fuzzy
 msgctxt "td"
 msgid "${transition/date}"
-msgstr "Descripción"
+msgstr ""
 
 #: ../ui/WorkflowAware_state.xml.en:19
-#, fuzzy
 msgctxt "label"
 msgid "${transition/description}"
-msgstr "Descripción"
+msgstr ""
 
 #: ../ui/WorkflowAware_state.xml.en:52
-#, fuzzy
 msgctxt "td"
 msgid "${transition/title}"
-msgstr "Descripción"
+msgstr ""
 
 #: ../ui/WorkflowAware_state.xml.en:53
-#, fuzzy
 msgctxt "td"
 msgid "${transition/user}"
-msgstr "Descripción"
+msgstr ""
 
 #: ../ui/ical/daily_view.xml.en:44
-#, fuzzy
 msgctxt "span"
 msgid "${tt}"
-msgstr "Comentarios"
+msgstr ""
 
 #: ../ui/user/confirm_registration.xml.en:21
-#, fuzzy
 msgctxt "strong"
 msgid "${username}"
-msgstr "Renombrar"
+msgstr ""
 
 #: ../ui/website/virtual_hosts.xml.en:12
-#, fuzzy
 msgctxt "textarea"
 msgid "${vhosts}"
-msgstr "Comentarios"
+msgstr ""
 
 #: ../ui/website/new_instance.xml.en:26
-#, fuzzy
 msgctxt "label"
 msgid "${website/title}"
-msgstr "Comentarios"
+msgstr ""
 
 #: ../ui/ical/monthly_view.xml.en:42
 msgctxt "td"
@@ -640,10 +573,9 @@ msgid "${widget/widget}"
 msgstr ""
 
 #: ../ui/menu/addlink.xml.en:59
-#, fuzzy
 msgctxt "a[title]"
 msgid "${x/title}"
-msgstr "Comentarios"
+msgstr ""
 
 #: ../file.py:174
 msgid "%.01f KB"
@@ -2213,9 +2145,8 @@ msgid "Last Modified"
 msgstr ""
 
 #: ../website_views.py:173
-#, fuzzy
 msgid "Last Name"
-msgstr "Nombre"
+msgstr "Apellidos"
 
 #: ../website.py:167
 msgid "License"
@@ -2342,21 +2273,18 @@ msgid "Modified since:"
 msgstr ""
 
 #: ../tracker/tracker_views.py:51
-#, fuzzy
 msgid "Module"
-msgstr "Código"
+msgstr "Módulo"
 
 #: ../tracker/ui/edit_issue.xml.en:32
-#, fuzzy
 msgctxt "label"
 msgid "Module:"
-msgstr "Código"
+msgstr "Módulo:"
 
 #: ../tracker/ui/issue_history.xml.en:30
-#, fuzzy
 msgctxt "strong"
 msgid "Module:"
-msgstr "Código"
+msgstr "Módulo:"
 
 #: ../tracker/ui/search.xml.en:40
 msgctxt "label"
@@ -2368,22 +2296,19 @@ msgid "Monday"
 msgstr "Lunes"
 
 #: ../calendar_views.py:707
-#, fuzzy
 msgid "Monthly View"
-msgstr "Mensualmente"
+msgstr "Vista Mensual"
 
 #: ../views.py:300
 msgid "Name"
 msgstr "Nombre"
 
 #: ../ui/website/new_instance.xml.en:15
-#, fuzzy
 msgctxt "label"
 msgid "Name"
 msgstr "Nombre"
 
 #: ../ui/website/edit_languages.xml.en:15
-#, fuzzy
 msgctxt "th"
 msgid "Name"
 msgstr "Nombre"
@@ -2443,10 +2368,9 @@ msgid "Next"
 msgstr "Texto"
 
 #: ../ui/user/confirm_registration.xml.en:38
-#, fuzzy
 msgctxt "input[value]"
 msgid "Next"
-msgstr "Texto"
+msgstr "Siguiente"
 
 #: ../ui/root/credits.xml.en:19
 msgctxt "li"
@@ -2672,10 +2596,9 @@ msgid "Paolo Dina (Italian)"
 msgstr ""
 
 #: ../ui/access/add_user.xml.en:16
-#, fuzzy
 msgctxt "dt"
 msgid "Password"
-msgstr "Clave de acceso"
+msgstr "Contraseña"
 
 #: ../ui/user/confirm_registration.xml.en:24
 msgctxt "label"
