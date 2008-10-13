@@ -912,7 +912,7 @@ msgstr ""
 #: ../ui/aruni/template.xhtml.en:32
 msgctxt "link to"
 msgid "<g id='8'>My Profile</g>  <g id='9'>Log out</g>"
-msgstr ""
+msgstr "<g id='8'>Mi Perfil</g>  <g id='9'>Terminar sesión</g>"
 
 #: ../ui/ical/monthly_view.xml.en:44
 msgctxt "span"
@@ -1741,10 +1741,9 @@ msgid "Email Address"
 msgstr ""
 
 #: ../ui/base/login.xml.en:11
-#, fuzzy
 msgctxt "label"
 msgid "Email Address"
-msgstr "Agregar"
+msgstr "Dirección de correo electrónico"
 
 #: ../tracker/resources.py:158
 msgid "End"
@@ -2048,10 +2047,9 @@ msgid "Hungarian"
 msgstr ""
 
 #: ../ui/base/login.xml.en:18
-#, fuzzy
 msgctxt "link to"
 msgid "I forgot my password"
-msgstr "Modificar clave de acceso"
+msgstr "Olvidé mi contraseña"
 
 #: ../tracker/tracker_views.py:48
 msgid "Id"
@@ -2236,16 +2234,14 @@ msgid "Location:"
 msgstr "Acción"
 
 #: ../ui/base/login.xml.en:21
-#, fuzzy
 msgctxt "input[value]"
 msgid "Log in"
-msgstr "Enlace"
+msgstr "Identificarse"
 
 #: ../ui/base/login.xml.en:9
-#, fuzzy
 msgctxt "legend"
 msgid "Log in"
-msgstr "Enlace"
+msgstr "Identificarse"
 
 #: ../resource_views.py:465
 msgid "Login"
@@ -2682,10 +2678,9 @@ msgid "Password"
 msgstr "Clave de acceso"
 
 #: ../ui/user/confirm_registration.xml.en:24
-#, fuzzy
 msgctxt "label"
 msgid "Password"
-msgstr "Clave de acceso"
+msgstr "Contraseña"
 
 #: ../user_views.py:287
 msgid "Password changed."
@@ -4153,484 +4148,3 @@ msgstr ""
 msgctxt "td"
 msgid "⇒ ${item/parent_path}"
 msgstr ""
-
-#, fuzzy
-#~ msgid "  State: %s"
-#~ msgstr "Estado"
-
-#, fuzzy
-#~ msgid "  Title: %s"
-#~ msgstr "Título"
-
-#, fuzzy
-#~ msgid "${description}<br/> Price:"
-#~ msgstr "Descripción"
-
-#, fuzzy
-#~ msgid "${option/label}"
-#~ msgstr "Descripción"
-
-#, fuzzy
-#~ msgid "${title}<br/> Description:"
-#~ msgstr "Descripción"
-
-#, fuzzy
-#~ msgid "<b>Firstname:</b>"
-#~ msgstr "Nombre completo"
-
-#, fuzzy
-#~ msgid "<span>There are ${n} orders</span>"
-#~ msgstr "No hay mensajes."
-
-#, fuzzy
-#~ msgid "<span>There is one order.</span>"
-#~ msgstr "No hay mensajes."
-
-#, fuzzy
-#~ msgid "<span>You have ${n} orders</span>"
-#~ msgstr "No hay mensajes."
-
-#, fuzzy
-#~ msgid "<span>You have one order.</span>"
-#~ msgstr "No hay mensajes."
-
-#, fuzzy
-#~ msgid "Actions"
-#~ msgstr "Acción"
-
-#~ msgid "Add New User"
-#~ msgstr "Añadir un Nuevo Usuario"
-
-#, fuzzy
-#~ msgid "Add a Book"
-#~ msgstr "Añadir un Nuevo Usuario"
-
-#, fuzzy
-#~ msgid "Add a Product"
-#~ msgstr "Añadir un Nuevo Usuario"
-
-#, fuzzy
-#~ msgid "Add a new row"
-#~ msgstr "Añadir un Nuevo Usuario"
-
-#, fuzzy
-#~ msgid "Add to cart"
-#~ msgstr "Añadir Documento"
-
-#, fuzzy
-#~ msgid "Address 1:"
-#~ msgstr "Agregar"
-
-#, fuzzy
-#~ msgid "Address 2:"
-#~ msgstr "Agregar"
-
-#~ msgid "Advanced Search"
-#~ msgstr "Búsqueda Avanzada"
-
-#~ msgid "Anonymous"
-#~ msgstr "Anónimo"
-
-#, fuzzy
-#~ msgid "Application Language"
-#~ msgstr "Aplicación"
-
-#~ msgid "Application Preferences"
-#~ msgstr "Preferencias de la Aplicación"
-
-#~ msgid "As Icons"
-#~ msgstr "Como Iconos"
-
-#~ msgid "Background Color"
-#~ msgstr "Color de Fondo"
-
-#, fuzzy
-#~ msgid "Cart"
-#~ msgstr "Empezar"
-
-#~ msgid "Change"
-#~ msgstr "Modificar"
-
-#, fuzzy
-#~ msgid "Change language"
-#~ msgstr "Debes elijir un idioma"
-
-#~ msgid "Change password"
-#~ msgstr "Modificar clave de acceso"
-
-#~ msgid "Change preferences"
-#~ msgstr "Modificar preferencias"
-
-#, fuzzy
-#~ msgid "Change you password"
-#~ msgstr "Modificar clave de acceso"
-
-#~ msgid "Choose a template:"
-#~ msgstr "Elije una plantilla:"
-
-#, fuzzy
-#~ msgid "Close"
-#~ msgstr "Código"
-
-#, fuzzy
-#~ msgid "Close Order"
-#~ msgstr "Código"
-
-#, fuzzy
-#~ msgid "Contacts"
-#~ msgstr "Comentarios"
-
-#, fuzzy
-#~ msgid "Content Language"
-#~ msgstr "Idioma"
-
-#, fuzzy
-#~ msgid "Create"
-#~ msgstr "Centrar"
-
-#, fuzzy
-#~ msgid "Current window"
-#~ msgstr "Estado actual:"
-
-#, fuzzy
-#~ msgid "Definitions."
-#~ msgstr "Descripción"
-
-#~ msgid "Document Excel"
-#~ msgstr "Documento Excel"
-
-#~ msgid "Document PDF"
-#~ msgstr "Documento PDF"
-
-#~ msgid "Document PowerPoint"
-#~ msgstr "Documento PowerPoint"
-
-#~ msgid "Document State"
-#~ msgstr "Estado del Documento"
-
-#~ msgid "Document Word"
-#~ msgstr "Documento Word"
-
-#, fuzzy
-#~ msgid "E-Mail"
-#~ msgstr "Correo electrónico"
-
-#~ msgid "E-mail"
-#~ msgstr "Correo electrónico"
-
-#, fuzzy
-#~ msgctxt "legend"
-#~ msgid "Edit Account"
-#~ msgstr "Cuenta"
-
-#, fuzzy
-#~ msgid "Edit Metadata"
-#~ msgstr "Editar Texto"
-
-#, fuzzy
-#~ msgid "Edit language preferences;"
-#~ msgstr "Editar Preferencias;"
-
-#~ msgid "External"
-#~ msgstr "Externo"
-
-#~ msgid "External Editor.."
-#~ msgstr "Editor Externo.."
-
-#, fuzzy
-#~ msgid "Extranet"
-#~ msgstr "Externo"
-
-#, fuzzy
-#~ msgctxt "label"
-#~ msgid "First Name"
-#~ msgstr "Nombre completo"
-
-#, fuzzy
-#~ msgid "Firstname:"
-#~ msgstr "Nombre completo"
-
-#, fuzzy
-#~ msgid "Grid_Weekly"
-#~ msgstr "Semanalmente"
-
-#~ msgid "Groups fixed."
-#~ msgstr "Grupos corregidos"
-
-#, fuzzy
-#~ msgid "Guests"
-#~ msgstr "Resultados de la Búsqueda"
-
-#, fuzzy
-#~ msgid ""
-#~ "Insert\n"
-#~ "        Table"
-#~ msgstr "Insertar Tabla"
-
-#~ msgid "Insert Rule"
-#~ msgstr "Insertar Regla"
-
-#~ msgid "Insert Table"
-#~ msgstr "Insertar Tabla"
-
-#~ msgid "Language"
-#~ msgstr "Idioma"
-
-#, fuzzy
-#~ msgctxt "label"
-#~ msgid "Last Name"
-#~ msgstr "Nombre"
-
-#, fuzzy
-#~ msgctxt "legend"
-#~ msgid "Login"
-#~ msgstr "Enlace"
-
-#~ msgid "Maintenance"
-#~ msgstr "Mantenimiento"
-
-#, fuzzy
-#~ msgid "Message:"
-#~ msgstr "Mensaje"
-
-#, fuzzy
-#~ msgid "My Profile"
-#~ msgstr "Perfil"
-
-#, fuzzy
-#~ msgid "My orders"
-#~ msgstr "Borde"
-
-#~ msgid "Name:"
-#~ msgstr "Nombre:"
-
-#~ msgid "Navigation"
-#~ msgstr "Navigación"
-
-#~ msgid "New Resource"
-#~ msgstr "Nuevo Recurso"
-
-#~ msgid "New WebSite"
-#~ msgstr "Nuevo Sitio Web"
-
-#, fuzzy
-#~ msgid "Normal"
-#~ msgstr "Formato:"
-
-#~ msgid "Note:"
-#~ msgstr "Nota:"
-
-#, fuzzy
-#~ msgid "ODP Document"
-#~ msgstr "Añadir Documento"
-
-#, fuzzy
-#~ msgid "ODS Document"
-#~ msgstr "Añadir Documento"
-
-#, fuzzy
-#~ msgid "ODT Document"
-#~ msgstr "Añadir Documento"
-
-#, fuzzy
-#~ msgid "Objects already down."
-#~ msgstr "Objetos renombrados."
-
-#, fuzzy
-#~ msgid "Objects already on bottom."
-#~ msgstr "Objetos renombrados."
-
-#, fuzzy
-#~ msgid "Objects already on top."
-#~ msgstr "Objetos renombrados."
-
-#, fuzzy
-#~ msgid "Objects already up."
-#~ msgstr "Objetos renombrados."
-
-#~ msgid "Objects copied."
-#~ msgstr "Objetos copiados."
-
-#, fuzzy
-#~ msgid "Objects moved to ordered category."
-#~ msgstr "Objetos suprimidos: $objects"
-
-#~ msgid "Objects pasted."
-#~ msgstr "Objetos pegados."
-
-#, fuzzy
-#~ msgid "Objects removed: %s"
-#~ msgstr "Objetos suprimidos: $objects"
-
-#, fuzzy
-#~ msgid "Order close"
-#~ msgstr "Lista Ordenada"
-
-#, fuzzy
-#~ msgid "Order created."
-#~ msgstr "Lista Ordenada"
-
-#, fuzzy
-#~ msgid "Order id"
-#~ msgstr "Lista Ordenada"
-
-#, fuzzy
-#~ msgid "Order id:"
-#~ msgstr "Lista Ordenada"
-
-#, fuzzy
-#~ msgid "Order number %s"
-#~ msgstr "Lista Ordenada"
-
-#, fuzzy
-#~ msgid "Ordered Objects"
-#~ msgstr "Lista Ordenada"
-
-#, fuzzy
-#~ msgid "Orders"
-#~ msgstr "Lista Ordenada"
-
-#, fuzzy
-#~ msgid "Our orders"
-#~ msgstr "Borde"
-
-#, fuzzy
-#~ msgid "Patents."
-#~ msgstr "Pegar"
-
-#, fuzzy
-#~ msgid "Post"
-#~ msgstr "Pegar"
-
-#~ msgid "Presence"
-#~ msgstr "Presencia"
-
-#, fuzzy
-#~ msgid "Price"
-#~ msgstr "Privado"
-
-#, fuzzy
-#~ msgid "Re-Open"
-#~ msgstr "Revisores"
-
-#, fuzzy
-#~ msgid "Reference"
-#~ msgstr "Preferencias"
-
-#, fuzzy
-#~ msgid "Registration"
-#~ msgstr "Descripción"
-
-#~ msgid "Remove Format"
-#~ msgstr "Suprimir Formato"
-
-#, fuzzy
-#~ msgid "Rename objects"
-#~ msgstr "Lista Ordenada"
-
-#~ msgid "Rename.."
-#~ msgstr "Renombrar.."
-
-#~ msgid "Reviewers"
-#~ msgstr "Revisores"
-
-#, fuzzy
-#~ msgid "Search:"
-#~ msgstr "Buscar"
-
-#, fuzzy
-#~ msgid "Sender"
-#~ msgstr "Centrar"
-
-#, fuzzy
-#~ msgid "Settings"
-#~ msgstr "Configuración de los Idiomas"
-
-#~ msgid "Size:"
-#~ msgstr "Tamaño:"
-
-#, fuzzy
-#~ msgid "Table"
-#~ msgstr "Preámbulo"
-
-#, fuzzy
-#~ msgid "Termination."
-#~ msgstr "Traducir"
-
-#, fuzzy
-#~ msgid "Test"
-#~ msgstr "Texto"
-
-#, fuzzy
-#~ msgid ""
-#~ "Text\n"
-#~ "        Color"
-#~ msgstr "Color del Texto"
-
-#~ msgid "Text Color"
-#~ msgstr "Color del Texto"
-
-#, fuzzy
-#~ msgid "The email address is missing, please type it."
-#~ msgstr ""
-#~ "La dirección de correo electrónico es incorrecta, por favor intentelo de "
-#~ "nuevo."
-
-#, fuzzy
-#~ msgid "There are ${n} results."
-#~ msgstr "No hay mensajes."
-
-#, fuzzy
-#~ msgid "There are no ordered objects"
-#~ msgstr "No hay mensajes."
-
-#, fuzzy
-#~ msgid "There are no unordered objects"
-#~ msgstr "No hay mensajes."
-
-#, fuzzy
-#~ msgid "There are not stored searches."
-#~ msgstr "No hay mensajes."
-
-#, fuzzy
-#~ msgid "There is 1 result."
-#~ msgstr "No hay mensajes."
-
-#~ msgid "This folder is empty."
-#~ msgstr "Esta carpeta está vacía."
-
-#, fuzzy
-#~ msgid "Total"
-#~ msgstr "Preámbulo"
-
-#~ msgid "Translate"
-#~ msgstr "Traducir"
-
-#~ msgid "Underline"
-#~ msgstr "Subrayar"
-
-#~ msgid "Undo"
-#~ msgstr "Deshacer"
-
-#, fuzzy
-#~ msgid "Wiki Folder"
-#~ msgstr "Carpeta"
-
-#~ msgid "You must choose a language"
-#~ msgstr "Debes elijir un idioma"
-
-#, fuzzy
-#~ msgid "Your account"
-#~ msgstr "Cuenta"
-
-#, fuzzy
-#~ msgid "Your order"
-#~ msgstr "Borde"
-
-#, fuzzy
-#~ msgid "false"
-#~ msgstr "Pegar"
-
-#, fuzzy
-#~ msgid "yes"
-#~ msgstr "Sí"
