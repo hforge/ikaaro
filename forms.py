@@ -82,10 +82,11 @@ def get_default_widget(datatype):
 
 class Widget(object):
 
+    type = 'text'
     size = None
 
     template = list(XMLParser(
-        """<input type="text" name="${name}" value="${value}" size="${size}"
+        """<input type="${type}" name="${name}" value="${value}" size="${size}"
         />""",
         stl_namespaces))
 
@@ -110,6 +111,7 @@ class Widget(object):
 
     def get_namespace(self, datatype, value):
         return {
+            'type': self.type,
             'name': self.name,
             'value': value,
             'size': self.size}
@@ -131,14 +133,13 @@ class TextWidget(Widget):
 
 class HiddenWidget(Widget):
 
-    template = list(XMLParser(
-        """<input type="hidden" name="${name}" value="${value}" />""",
-        stl_namespaces))
+    type = 'hidden'
 
 
-    def get_namespace(self, datatype, value):
-        return {'name': self.name,
-                'value': value}
+
+class FileWidget(Widget):
+
+    type = 'file'
 
 
 
@@ -417,6 +418,7 @@ subject_widget = TextWidget('subject',
                             title=MSG(u'Keywords (Separated by comma)'))
 rte_widget = RTEWidget('data', title=MSG(u'Body'))
 timestamp_widget = HiddenWidget('timestamp')
+file_widget = FileWidget('file', title=MSG(u'Replace file'))
 
 
 ###########################################################################

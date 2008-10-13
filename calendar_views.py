@@ -34,7 +34,7 @@ from itools.uri import encode_query, get_reference
 from itools.web import BaseView, STLForm, STLView, get_context, INFO, ERROR
 
 # Import from ikaaro
-from file import FileUpload
+from file_views import FileUpload
 
 
 resolution = timedelta.resolution

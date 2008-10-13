@@ -4,7 +4,7 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://xml.itools.org/namespaces/stl">
 
-<form action="${action}" method="POST">
+<form action="${action}" method="post" enctype="multipart/form-data">
   <fieldset>
     <legend>${title}</legend>
     <p stl:if="has_required_widget">${required_msg}</p>

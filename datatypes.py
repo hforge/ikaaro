@@ -35,6 +35,12 @@ class FileDataType(DataType):
     a byte string, but from a tuple.  Some day we should find a correct
     solution.
     """
+    @staticmethod
+    def encode(value):
+        """Cannot preload anything in a file input.
+        """
+        return None
+
 
     @staticmethod
     def decode(data):

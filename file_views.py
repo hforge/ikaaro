@@ -24,7 +24,7 @@ from datetime import datetime, timedelta
 # Import from itools
 from itools.datatypes import Integer, Unicode
 from itools.gettext import MSG
-from itools.handlers import guess_encoding, checkid
+from itools.handlers import guess_encoding, checkid, merge_dics
 from itools.html import HTMLParser, stream_to_str_as_xhtml
 from itools.i18n import guess_language
 from itools.uri import get_reference
@@ -35,10 +35,11 @@ from itools.xapian import EqQuery
 # Import from ikaaro
 from datatypes import FileDataType, ImageWidth
 from folder_views import FolderBrowseContent
+from forms import title_widget, file_widget, description_widget, subject_widget
 import messages
 from multilingual import Multilingual
 from registry import get_resource_class
-from resource_views import AddResourceMenu
+from resource_views import AddResourceMenu, DBResourceEdit
 from views import NewInstanceForm
 
 
@@ -168,8 +169,13 @@ class FileUpload(STLForm):
     }
 
 
-    def action(self, resource, context, form):
-        file = form['file']
+    def action(self, resource, context, form, file='file'):
+        file = form[file]
+        # Added for views reusing this method but where the file is not
+        # mandatory.
+        if file is None:
+            return
+
         filename, mimetype, body = file
 
         # Check wether the handler is able to deal with the uploaded file
@@ -192,6 +198,27 @@ class FileUpload(STLForm):
         # Ok
         context.server.change_resource(resource)
         context.message = INFO(u'Version uploaded')
+
+
+
+class FileEdit(DBResourceEdit, FileUpload):
+    schema = merge_dics(DBResourceEdit.schema,
+                        file=FileDataType)
+    widgets = [title_widget, file_widget, description_widget,
+               subject_widget]
+
+
+    def get_value(self, resource, context, name, datatype):
+        if name == 'file':
+            return None
+        return DBResourceEdit.get_value(self, resource, context, name,
+                                        datatype)
+
+
+    def action(self, resource, context, form):
+        DBResourceEdit.action(self, resource, context, form)
+        FileUpload.action(self, resource, context, form)
+
 
 
 

@@ -35,12 +35,11 @@ from itools.xml import MSWord as MSWordFile, MSExcel as MSExcelFile
 from itools.xml import MSPowerPoint as MSPowerPointFile, RTF as RTFFile
 
 # Import from ikaaro
-from folder_views import FolderBrowseContent
 from registry import register_resource_class
 from versioning import VersioningAware
 from workflow import WorkflowAware
 from file_views import FileNewInstance, FileDownload, FileView
-from file_views import FileExternalEdit, FileUpload, FileBacklinks
+from file_views import FileEdit, FileExternalEdit, FileBacklinks
 from file_views import ImageThumbnail, ImageView, VideoView, ArchiveView
 
 
@@ -184,13 +183,13 @@ class File(WorkflowAware, VersioningAware):
     new_instance = FileNewInstance()
     download = FileDownload()
     view = FileView()
+    edit = FileEdit()
     externaledit = STLView(
         access='is_allowed_to_edit',
         title=MSG(u'External Editor'),
         icon='external.png',
         template='/ui/file/externaledit.xml')
     external_edit = FileExternalEdit()
-    upload = FileUpload()
     backlinks = FileBacklinks()
 
 
