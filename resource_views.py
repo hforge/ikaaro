@@ -342,31 +342,34 @@ class DBResourceAddImage(STLForm):
     def action(self, resource, context, form):
         """Allow to upload and add an image to epoz
         """
-        from file import Image
+        filename, mimetype, body = form['file']
+        name, type, language = FileName.decode(filename)
 
         # Check the filename is good
-        filename, mimetype, body = form['file']
-        name = checkid(filename)
+        name = checkid(name)
         if name is None:
             context.message = messages.MSG_BAD_NAME
-            return
-
-        # Check it is an image
-        cls = get_resource_class(mimetype)
-        if not issubclass(cls, Image):
-            context.message = ERROR(u'The given file is not an image.')
             return
 
         # Get the container
         container = context.root.get_resource(form['target_path'])
         # Check the name is free
-        name, type, language = FileName.decode(name)
         if container.has_resource(name):
             context.message = messages.MSG_NAME_CLASH
             return
 
+        # Check it is of the expected type
+        filter_type = self.get_filter_type()
+        cls = get_resource_class(mimetype)
+        if not issubclass(cls, filter_type):
+            context.message = ERROR(u'The given file is not of the type '
+                                    u'"$class_id".',
+                                    class_id=filter_type.class_id)
+            return
+
         # Add the image to the resource
-        cls.make_resource(cls, container, name, body, type=type)
+        cls.make_resource(cls, container, name, body, format=mimetype,
+                          filename=filename, extension=type)
 
         # Ok
         caption = messages.MSG_CAPTION.gettext().encode('utf_8')

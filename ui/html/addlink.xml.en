@@ -107,9 +107,9 @@
         </form>
       </div>
 
-      <!-- New Web Page -->
+      <!-- New Web or Wiki Page -->
       <div id="insert">
-        <h3>Create a new Web Page and link to it:</h3>
+        <h3>Create a new page and link to it:</h3>
         <form action=";add_link" method="post">
           <input type="hidden" name="type" value="${type}" />
           <input type="hidden" name="target_path" value="${bc/target_path}"/>
@@ -124,13 +124,11 @@
       <div id="upload">
         <h3>Upload a file to the current folder and link to it:</h3>
         <form action=";add_link" method="post" enctype="multipart/form-data">
-          <input type="hidden" name="type" value="file" />
           <input type="hidden" name="target_path" value="${bc/target_path}"/>
           <input type="hidden" name="mode" value="${mode}" />
           <input id="file" name="file" size="35" type="file"/>
           <br/>
-          <input class="button_upload" type="submit" value="Upload and Link"
-            name=";add_file" />
+          <input class="button_upload" type="submit" value="Upload and Link"/>
         </form>
       </div>
     </div>
