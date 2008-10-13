@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-10-13 14:10+CET\n"
+"POT-Creation-Date: 2008-10-13 16:10+CET\n"
 "PO-Revision-Date: 2008-07-24 16:17+0200\n"
 "Last-Translator: \n"
 "Language-Team:  <fr@li.org>\n"
@@ -686,11 +686,11 @@ msgctxt "a[title]"
 msgid "${x/title}"
 msgstr "${title}"
 
-#: ../file.py:175
+#: ../file.py:174
 msgid "%.01f KB"
 msgstr "%.01f Ko"
 
-#: ../file.py:173
+#: ../file.py:172
 msgid "%.01f MB"
 msgstr "%.01f Mo"
 
@@ -1088,7 +1088,7 @@ msgctxt "legend"
 msgid "Add New Member"
 msgstr "Ajouter un nouveau membre"
 
-#: ../table_views.py:156
+#: ../table_views.py:176
 #, fuzzy
 msgid "Add Record"
 msgstr "Ajouter un nouvel enregistrement"
@@ -1246,7 +1246,7 @@ msgctxt "a[title]"
 msgid "Back"
 msgstr "Rétroliens"
 
-#: ../file_views.py:275
+#: ../file_views.py:302
 msgid "Backlinks"
 msgstr "Rétroliens"
 
@@ -1310,11 +1310,11 @@ msgctxt "th"
 msgid "By"
 msgstr "Par"
 
-#: ../file.py:415
+#: ../file.py:414
 msgid "Bzip2"
 msgstr "Bzip2"
 
-#: ../file.py:416
+#: ../file.py:415
 msgid "Bzip2 Compressed"
 msgstr "Compacté en bzip2"
 
@@ -1559,15 +1559,15 @@ msgstr "Paneau de contrôle"
 msgid "Copy"
 msgstr "Copier"
 
-#: ../ui/html/addlink.xml.en:112
-#, fuzzy
-msgctxt "heading"
-msgid "Create a new Web Page and link to it:"
-msgstr "Créer une nouvelle page et la lier"
-
 #: ../website.py:54
 msgid "Create a new Web Site or Work Place."
 msgstr "Créer un nouveau site Web"
+
+#: ../ui/html/addlink.xml.en:112
+#, fuzzy
+msgctxt "heading"
+msgid "Create a new page and link to it:"
+msgstr "Créer une nouvelle page et la lier"
 
 #: ../html.py:130
 msgid "Create and publish a Web Page."
@@ -1650,7 +1650,7 @@ msgstr "Supprimer définitivement"
 msgid "Delete"
 msgstr "Supprimer"
 
-#: ../forms.py:415
+#: ../forms.py:416
 msgid "Description"
 msgstr "Description"
 
@@ -1676,7 +1676,7 @@ msgstr "Laisser tel quel"
 msgid "Documentation"
 msgstr "Documentation"
 
-#: ../file_views.py:145
+#: ../file_views.py:146
 msgid "Download"
 msgstr "Télécharger"
 
@@ -1786,7 +1786,7 @@ msgstr "Hôtes virtuels"
 msgid "Edit image"
 msgstr "Modifier une image"
 
-#: ../table_views.py:219
+#: ../table_views.py:239
 #, fuzzy
 msgid "Edit record ${id}"
 msgstr "Editer l'enregistrement %s"
@@ -1859,7 +1859,7 @@ msgctxt "title"
 msgid "Epoz-Toolbox"
 msgstr "boite à outils Epoz"
 
-#: ../table_views.py:284
+#: ../table_views.py:304
 msgid "Error: $message"
 msgstr "Erreur : $message"
 
@@ -1871,11 +1871,11 @@ msgstr "Evénement définitivement supprimé."
 msgid "Event not found"
 msgstr "Evénement introuvable"
 
-#: ../file.py:263
+#: ../file.py:262
 msgid "Excel"
 msgstr "Classeur MS Excel"
 
-#: ../file.py:264
+#: ../file.py:263
 msgid "Excel Spreadsheet"
 msgstr "Classeur au format MS Excel"
 
@@ -1915,7 +1915,7 @@ msgctxt "input[value]"
 msgid "External Editor..."
 msgstr "Éditeur externe..."
 
-#: ../file_views.py:188
+#: ../file_views.py:194
 msgid "Failed to load the file, may contain errors."
 msgstr "Echec lors du chargement du fichier, il doit contenir des erreurs."
 
@@ -1923,7 +1923,7 @@ msgstr "Echec lors du chargement du fichier, il doit contenir des erreurs."
 msgid "February"
 msgstr "Février"
 
-#: ../file.py:55
+#: ../file.py:54
 msgid "File"
 msgstr "Fichier"
 
@@ -1947,11 +1947,11 @@ msgstr "Prénom"
 msgid "Fixed"
 msgstr "Corrigé"
 
-#: ../file.py:233
+#: ../file.py:232
 msgid "Flash"
 msgstr "Animation Flash"
 
-#: ../file.py:234
+#: ../file.py:233
 msgid "Flash Document"
 msgstr "Animation au format Flash"
 
@@ -2063,11 +2063,11 @@ msgstr "Accorder l'accès à un nouvel utilisateur."
 msgid "Guest"
 msgstr "Invité"
 
-#: ../file.py:404
+#: ../file.py:403
 msgid "Gzip"
 msgstr "Gzip"
 
-#: ../file.py:405
+#: ../file.py:404
 msgid "Gzip Compressed"
 msgstr "Compacté en gzip"
 
@@ -2189,7 +2189,7 @@ msgstr ""
 "Si vous trouvez un bug ou vous souhaitez une nouvelle fonctionnalité, "
 "veuillez <a href=\"http://bugs.ikaaro.org\">ouvrir un ticket</a>."
 
-#: ../file.py:204
+#: ../file.py:203
 msgid "Image"
 msgstr "Image"
 
@@ -2286,7 +2286,7 @@ msgstr "Juillet"
 msgid "June"
 msgstr "Juin"
 
-#: ../forms.py:417
+#: ../forms.py:418
 #, fuzzy
 msgid "Keywords (Separated by comma)"
 msgstr "<label for=\"subject\">Mots-clé</label> (séparés par des virgules)"
@@ -2359,13 +2359,13 @@ msgctxt "input[value]"
 msgid "Log in"
 msgstr "Connexion"
 
-#: ../resource_views.py:464
-msgid "Login"
-msgstr "Connexion"
-
 #: ../ui/base/login.xml.en:9
 #, fuzzy
 msgctxt "legend"
+msgid "Log in"
+msgstr "Connexion"
+
+#: ../resource_views.py:467
 msgid "Login"
 msgstr "Connexion"
 
@@ -2551,7 +2551,7 @@ msgstr "Nouvelle fiche ajoutée."
 msgid "New page"
 msgstr "Nouvelle page Wiki"
 
-#: ../table_views.py:206
+#: ../table_views.py:226
 msgid "New record added."
 msgstr "Nouvel enregistrement ajouté."
 
@@ -2639,15 +2639,15 @@ msgstr "Rien à supprimer."
 msgid "November"
 msgstr "Novembre"
 
-#: ../file.py:362
+#: ../file.py:361
 msgid "ODP"
 msgstr "Présentation OpenDocument"
 
-#: ../file.py:351
+#: ../file.py:350
 msgid "ODS"
 msgstr "Classeur OpenDocument"
 
-#: ../file.py:340
+#: ../file.py:339
 msgid "ODT"
 msgstr "Texte OpenDocument"
 
@@ -2657,15 +2657,15 @@ msgctxt "input[value]"
 msgid "OK"
 msgstr "OK"
 
-#: ../file.py:296
+#: ../file.py:295
 msgid "OOo Calc"
 msgstr "Classeur OpenOffice.org"
 
-#: ../file.py:307
+#: ../file.py:306
 msgid "OOo Impress"
 msgstr "Présentation OpenOffice.org"
 
-#: ../file.py:285
+#: ../file.py:284
 msgid "OOo Writer"
 msgstr "Texte OpenOffice.org"
 
@@ -2704,27 +2704,27 @@ msgstr "Ouvert"
 msgid "Open Issues"
 msgstr "Fiches ouvertes"
 
-#: ../file.py:363
+#: ../file.py:362
 msgid "OpenDocument Presentation"
 msgstr "Présentation au format OpenDocument"
 
-#: ../file.py:352
+#: ../file.py:351
 msgid "OpenDocument Spreadsheet"
 msgstr "Classeur au format OpenDocument"
 
-#: ../file.py:341
+#: ../file.py:340
 msgid "OpenDocument Text"
 msgstr "Texte au format OpenDocument"
 
-#: ../file.py:308
+#: ../file.py:307
 msgid "OpenOffice.org Presentation"
 msgstr "Présentation au format OpenOffice.org"
 
-#: ../file.py:297
+#: ../file.py:296
 msgid "OpenOffice.org Spreadsheet"
 msgstr "Classeur au format OpenOffice.org"
 
-#: ../file.py:286
+#: ../file.py:285
 msgid "OpenOffice.org Text"
 msgstr "Texte au format OpenOffice.org"
 
@@ -2733,19 +2733,19 @@ msgstr "Texte au format OpenOffice.org"
 msgid "Operation successful! Welcome."
 msgstr "Votre compte est activé. Bienvenue&nbsp;!"
 
-#: ../table_views.py:309
+#: ../table_views.py:329
 msgid "Order bottom"
 msgstr "Tout en bas"
 
-#: ../table_views.py:307
+#: ../table_views.py:327
 msgid "Order down"
 msgstr "Descendre"
 
-#: ../table_views.py:308
+#: ../table_views.py:328
 msgid "Order top"
 msgstr "Tout en haut"
 
-#: ../table_views.py:306
+#: ../table_views.py:326
 msgid "Order up"
 msgstr "Monter"
 
@@ -2772,11 +2772,11 @@ msgstr "Organisez vos fichiers et documents dans des dossiers."
 msgid "Orphans"
 msgstr "Orphelins"
 
-#: ../file.py:318
+#: ../file.py:317
 msgid "PDF"
 msgstr "Document PDF"
 
-#: ../file.py:319
+#: ../file.py:318
 msgid "PDF Document"
 msgstr "Document au format PDF"
 
@@ -2867,22 +2867,22 @@ msgstr "Veuillez sélectionner les objets à déplacer en haut."
 msgid "Please select the objects to order up."
 msgstr "Veuillez sélectionner les objets à monter."
 
-#: ../table_views.py:339
+#: ../table_views.py:359
 #, fuzzy
 msgid "Please select the resources to order down."
 msgstr "Veuillez sélectionner les objets à descendre."
 
-#: ../table_views.py:361
+#: ../table_views.py:381
 #, fuzzy
 msgid "Please select the resources to order on bottom."
 msgstr "Veuillez sélectionner les objets à déplacer en bas."
 
-#: ../table_views.py:350
+#: ../table_views.py:370
 #, fuzzy
 msgid "Please select the resources to order on top."
 msgstr "Veuillez sélectionner les objets à déplacer en haut."
 
-#: ../table_views.py:328
+#: ../table_views.py:348
 #, fuzzy
 msgid "Please select the resources to order up."
 msgstr "Veuillez sélectionner les objets à monter."
@@ -2897,11 +2897,11 @@ msgctxt "heading"
 msgid "Post a Reply"
 msgstr "Poster une réponse"
 
-#: ../file.py:274
+#: ../file.py:273
 msgid "PowerPoint"
 msgstr "Présentation MS PowerPoint"
 
-#: ../file.py:275
+#: ../file.py:274
 msgid "PowerPoint Presentation"
 msgstr "Présentation au format MS PowerPoint"
 
@@ -2981,11 +2981,11 @@ msgstr "Publier le document."
 msgid "Python"
 msgstr "Python"
 
-#: ../file.py:329
+#: ../file.py:328
 msgid "RTF"
 msgstr "Document RTF"
 
-#: ../file.py:330
+#: ../file.py:329
 msgid "RTF Document"
 msgstr "Document au format RTF"
 
@@ -2993,7 +2993,7 @@ msgstr "Document au format RTF"
 msgid "Recipient"
 msgstr "Destinataire"
 
-#: ../table_views.py:322
+#: ../table_views.py:342
 msgid "Record deleted."
 msgstr "Enregistrement supprimé."
 
@@ -3055,7 +3055,7 @@ msgctxt "label"
 msgid "Repeat Password"
 msgstr "Confirmer le mot de passe"
 
-#: ../file_views.py:163
+#: ../file_views.py:164
 msgid "Replace"
 msgstr "Remplacer"
 
@@ -3063,6 +3063,11 @@ msgstr "Remplacer"
 #, fuzzy
 msgctxt "input[value]"
 msgid "Replace"
+msgstr "Remplacer"
+
+#: ../forms.py:421
+#, fuzzy
+msgid "Replace file"
 msgstr "Remplacer"
 
 #: ../forum/ui/Thread_view.xml.en:44
@@ -3130,22 +3135,22 @@ msgstr "Ressources"
 msgid "Resources cut."
 msgstr "Ressources"
 
-#: ../table_views.py:344
+#: ../table_views.py:364
 #, fuzzy
 msgid "Resources ordered down."
 msgstr "Objets descendus."
 
-#: ../table_views.py:366
+#: ../table_views.py:386
 #, fuzzy
 msgid "Resources ordered on bottom."
 msgstr "Objets déplacés tout en bas."
 
-#: ../table_views.py:355
+#: ../table_views.py:375
 #, fuzzy
 msgid "Resources ordered on top."
 msgstr "Objets déplacés tout en haut."
 
-#: ../table_views.py:333
+#: ../table_views.py:353
 #, fuzzy
 msgid "Resources ordered up."
 msgstr "Objets montés."
@@ -3446,11 +3451,11 @@ msgstr "Sylvain Taverne (français)"
 msgid "Syntax error, please check the view for details."
 msgstr "Erreur de syntaxe, merci de vérifier la vue pour plus de détails"
 
-#: ../file.py:393
+#: ../file.py:392
 msgid "Tar"
 msgstr "Tar"
 
-#: ../file.py:394
+#: ../file.py:393
 msgid "Tar Archive"
 msgstr "Archive Tar"
 
@@ -3479,7 +3484,7 @@ msgctxt "label"
 msgid "Text (search within the title and all comments)"
 msgstr ""
 
-#: ../forms.py:456
+#: ../forms.py:458
 #, fuzzy
 msgid ""
 "The <span class=\"field_is_required\">emphasized</span> fields are required."
@@ -3522,9 +3527,9 @@ msgstr "ce fichier n'est pas une image."
 msgid "The file must be entered."
 msgstr "Le fichier doit être saisi."
 
-#: ../resource_views.py:357
+#: ../resource_views.py:365
 #, fuzzy
-msgid "The given file is not an image."
+msgid "The given file is not of the type \"$class_id\"."
 msgstr "ce fichier n'est pas une image."
 
 #: ../calendar_views.py:146
@@ -3536,7 +3541,7 @@ msgstr "L'utilisateur est déjà membre."
 msgid "The name is missing."
 msgstr "Le nom doit être saisi."
 
-#: ../resource_views.py:506
+#: ../resource_views.py:509
 msgid "The password is wrong."
 msgstr "Le mot de passe est incorrect."
 
@@ -3565,11 +3570,11 @@ msgstr "Changements sauvegardés."
 msgid "The search title has been changed."
 msgstr "La langue par défaut a été changée."
 
-#: ../resource_views.py:488
+#: ../resource_views.py:491
 msgid "The user \"$username\" does not exist."
 msgstr "L'utilisateur « $username » n'existe pas."
 
-#: ../resource_views.py:499
+#: ../resource_views.py:502
 msgid "The user \"$username\" is not active."
 msgstr "L'utilisateur « $username » n'a pas activé son compte."
 
@@ -3631,7 +3636,7 @@ msgstr "Il n'existe pas d'utilisateur « $username »."
 msgid "This page is locked by $user"
 msgstr "Cette page est verrouillée par $user"
 
-#: ../file_views.py:239
+#: ../file_views.py:266
 #, fuzzy
 msgid "This page is locked by another user"
 msgstr "Cette page est verrouillée par un autre utilisateur."
@@ -3847,7 +3852,7 @@ msgstr ""
 msgid "Unexpected file of mimetype ${mimetype}."
 msgstr "Mimetype %s inattendu"
 
-#: ../file_views.py:178
+#: ../file_views.py:184
 #, fuzzy
 msgid "Unexpected file of mimetype ${type}"
 msgstr "Mimetype %s inattendu"
@@ -3890,7 +3895,7 @@ msgctxt "legend"
 msgid "Upload"
 msgstr "Remplacer"
 
-#: ../file_views.py:48
+#: ../file_views.py:49
 msgid "Upload File"
 msgstr "Remplacer par un autre fichier"
 
@@ -3924,13 +3929,13 @@ msgctxt "input[value]"
 msgid "Upload and Insert"
 msgstr "Importer et insérer"
 
-#: ../ui/html/addlink.xml.en:132
+#: ../ui/html/addlink.xml.en:131
 #, fuzzy
 msgctxt "input[value]"
 msgid "Upload and Link"
 msgstr "Importer et lier"
 
-#: ../file.py:57
+#: ../file.py:56
 msgid "Upload office documents, images, media files, etc."
 msgstr ""
 "Importer des documents bureautiques, des images, des fichiers de média, etc."
@@ -3985,7 +3990,7 @@ msgctxt "label"
 msgid "Version (mandatory):"
 msgstr ""
 
-#: ../file_views.py:194
+#: ../file_views.py:200
 msgid "Version uploaded"
 msgstr "Version chargée"
 
@@ -4006,7 +4011,7 @@ msgctxt "label"
 msgid "Version:<g id='17'> (<g id='18'>Edit</g>)</g>"
 msgstr ""
 
-#: ../file.py:221
+#: ../file.py:220
 msgid "Video"
 msgstr "Vidéo"
 
@@ -4074,11 +4079,11 @@ msgstr "Page de Wiki"
 msgid "Wiki contents"
 msgstr "Contenu du wiki"
 
-#: ../file.py:252
+#: ../file.py:251
 msgid "Word"
 msgstr "Texte MS Word"
 
-#: ../file.py:253
+#: ../file.py:252
 msgid "Word Text"
 msgstr "Texte au format MS Word"
 
@@ -4106,7 +4111,7 @@ msgctxt "td"
 msgid "Yes"
 msgstr "Oui"
 
-#: ../resource_views.py:546
+#: ../resource_views.py:549
 #, fuzzy
 msgid "You Are Now Logged out."
 msgstr "Vous êtes maintenant déconnecté."
@@ -4213,11 +4218,11 @@ msgctxt "li"
 msgid "Zhou Li (Chinese)"
 msgstr "Zhou Li (chinois)"
 
-#: ../file.py:382
+#: ../file.py:381
 msgid "Zip"
 msgstr "Zip"
 
-#: ../file.py:383
+#: ../file.py:382
 msgid "Zip Archive"
 msgstr "Archive Zip"
 
@@ -4252,7 +4257,7 @@ msgctxt "td"
 msgid "days ago"
 msgstr ""
 
-#: ../datatypes.py:91
+#: ../datatypes.py:97
 #, fuzzy
 msgid "huge"
 msgstr "Modifier"
@@ -4277,22 +4282,22 @@ msgstr ""
 "programmation <a href=\"http://www.python.org\">Python</a>, et basé sur la "
 "bibliothèque <a href=\"http://www.ikaaro.org/itools\">itools</a>."
 
-#: ../table_views.py:84
+#: ../table_views.py:104
 #, fuzzy
 msgid "id"
 msgstr "#$id"
 
-#: ../datatypes.py:90
+#: ../datatypes.py:96
 #, fuzzy
 msgid "large"
 msgstr "Destination"
 
-#: ../datatypes.py:89
+#: ../datatypes.py:95
 #, fuzzy
 msgid "medium"
 msgstr "Moyenne"
 
-#: ../datatypes.py:92
+#: ../datatypes.py:98
 #, fuzzy
 msgid "original"
 msgstr "Connexion"
@@ -4303,7 +4308,7 @@ msgctxt "legend"
 msgid "select the columns to export"
 msgstr "Veuillez sélectionner les colonnes à exporter&nbsp;:"
 
-#: ../datatypes.py:88
+#: ../datatypes.py:94
 #, fuzzy
 msgid "small"
 msgstr "Courriel"
@@ -5042,6 +5047,11 @@ msgstr ""
 
 #~ msgid "Literal Block"
 #~ msgstr "Bloc littéral"
+
+#, fuzzy
+#~ msgctxt "legend"
+#~ msgid "Login"
+#~ msgstr "Connexion"
 
 #~ msgid "Manage personal content;"
 #~ msgstr "Gérer les documents personnels&nbsp;;"

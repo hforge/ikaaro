@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 0.3.0\n"
-"POT-Creation-Date: 2008-10-13 14:10+CET\n"
+"POT-Creation-Date: 2008-10-13 16:10+CET\n"
 "PO-Revision-Date: 2001-07-08 17:07+CET\n"
 "Last-Translator: jdavid\n"
 "Language-Team: ??\n"
@@ -573,11 +573,11 @@ msgctxt "a[title]"
 msgid "${x/title}"
 msgstr ""
 
-#: ../file.py:175
+#: ../file.py:174
 msgid "%.01f KB"
 msgstr ""
 
-#: ../file.py:173
+#: ../file.py:172
 msgid "%.01f MB"
 msgstr ""
 
@@ -951,7 +951,7 @@ msgctxt "legend"
 msgid "Add New Member"
 msgstr ""
 
-#: ../table_views.py:156
+#: ../table_views.py:176
 msgid "Add Record"
 msgstr ""
 
@@ -1085,7 +1085,7 @@ msgctxt "a[title]"
 msgid "Back"
 msgstr ""
 
-#: ../file_views.py:275
+#: ../file_views.py:302
 msgid "Backlinks"
 msgstr ""
 
@@ -1143,11 +1143,11 @@ msgctxt "th"
 msgid "By"
 msgstr ""
 
-#: ../file.py:415
+#: ../file.py:414
 msgid "Bzip2"
 msgstr ""
 
-#: ../file.py:416
+#: ../file.py:415
 msgid "Bzip2 Compressed"
 msgstr ""
 
@@ -1366,13 +1366,13 @@ msgstr ""
 msgid "Copy"
 msgstr ""
 
-#: ../ui/html/addlink.xml.en:112
-msgctxt "heading"
-msgid "Create a new Web Page and link to it:"
-msgstr ""
-
 #: ../website.py:54
 msgid "Create a new Web Site or Work Place."
+msgstr ""
+
+#: ../ui/html/addlink.xml.en:112
+msgctxt "heading"
+msgid "Create a new page and link to it:"
 msgstr ""
 
 #: ../html.py:130
@@ -1449,7 +1449,7 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: ../forms.py:415
+#: ../forms.py:416
 msgid "Description"
 msgstr ""
 
@@ -1472,7 +1472,7 @@ msgstr ""
 msgid "Documentation"
 msgstr ""
 
-#: ../file_views.py:145
+#: ../file_views.py:146
 msgid "Download"
 msgstr ""
 
@@ -1566,7 +1566,7 @@ msgstr ""
 msgid "Edit image"
 msgstr ""
 
-#: ../table_views.py:219
+#: ../table_views.py:239
 msgid "Edit record ${id}"
 msgstr ""
 
@@ -1629,7 +1629,7 @@ msgctxt "title"
 msgid "Epoz-Toolbox"
 msgstr ""
 
-#: ../table_views.py:284
+#: ../table_views.py:304
 msgid "Error: $message"
 msgstr ""
 
@@ -1641,11 +1641,11 @@ msgstr ""
 msgid "Event not found"
 msgstr ""
 
-#: ../file.py:263
+#: ../file.py:262
 msgid "Excel"
 msgstr ""
 
-#: ../file.py:264
+#: ../file.py:263
 msgid "Excel Spreadsheet"
 msgstr ""
 
@@ -1681,7 +1681,7 @@ msgctxt "input[value]"
 msgid "External Editor..."
 msgstr ""
 
-#: ../file_views.py:188
+#: ../file_views.py:194
 msgid "Failed to load the file, may contain errors."
 msgstr ""
 
@@ -1689,7 +1689,7 @@ msgstr ""
 msgid "February"
 msgstr ""
 
-#: ../file.py:55
+#: ../file.py:54
 msgid "File"
 msgstr ""
 
@@ -1711,11 +1711,11 @@ msgstr ""
 msgid "Fixed"
 msgstr ""
 
-#: ../file.py:233
+#: ../file.py:232
 msgid "Flash"
 msgstr ""
 
-#: ../file.py:234
+#: ../file.py:233
 msgid "Flash Document"
 msgstr ""
 
@@ -1819,11 +1819,11 @@ msgstr ""
 msgid "Guest"
 msgstr ""
 
-#: ../file.py:404
+#: ../file.py:403
 msgid "Gzip"
 msgstr ""
 
-#: ../file.py:405
+#: ../file.py:404
 msgid "Gzip Compressed"
 msgstr ""
 
@@ -1927,7 +1927,7 @@ msgid ""
 "report</g>."
 msgstr ""
 
-#: ../file.py:204
+#: ../file.py:203
 msgid "Image"
 msgstr ""
 
@@ -2015,7 +2015,7 @@ msgstr ""
 msgid "June"
 msgstr ""
 
-#: ../forms.py:417
+#: ../forms.py:418
 msgid "Keywords (Separated by comma)"
 msgstr ""
 
@@ -2081,12 +2081,12 @@ msgctxt "input[value]"
 msgid "Log in"
 msgstr ""
 
-#: ../resource_views.py:464
-msgid "Login"
-msgstr ""
-
 #: ../ui/base/login.xml.en:9
 msgctxt "legend"
+msgid "Log in"
+msgstr ""
+
+#: ../resource_views.py:467
 msgid "Login"
 msgstr ""
 
@@ -2251,7 +2251,7 @@ msgstr ""
 msgid "New page"
 msgstr ""
 
-#: ../table_views.py:206
+#: ../table_views.py:226
 msgid "New record added."
 msgstr ""
 
@@ -2330,15 +2330,15 @@ msgstr ""
 msgid "November"
 msgstr ""
 
-#: ../file.py:362
+#: ../file.py:361
 msgid "ODP"
 msgstr ""
 
-#: ../file.py:351
+#: ../file.py:350
 msgid "ODS"
 msgstr ""
 
-#: ../file.py:340
+#: ../file.py:339
 msgid "ODT"
 msgstr ""
 
@@ -2347,15 +2347,15 @@ msgctxt "input[value]"
 msgid "OK"
 msgstr ""
 
-#: ../file.py:296
+#: ../file.py:295
 msgid "OOo Calc"
 msgstr ""
 
-#: ../file.py:307
+#: ../file.py:306
 msgid "OOo Impress"
 msgstr ""
 
-#: ../file.py:285
+#: ../file.py:284
 msgid "OOo Writer"
 msgstr ""
 
@@ -2392,27 +2392,27 @@ msgstr ""
 msgid "Open Issues"
 msgstr ""
 
-#: ../file.py:363
+#: ../file.py:362
 msgid "OpenDocument Presentation"
 msgstr ""
 
-#: ../file.py:352
+#: ../file.py:351
 msgid "OpenDocument Spreadsheet"
 msgstr ""
 
-#: ../file.py:341
+#: ../file.py:340
 msgid "OpenDocument Text"
 msgstr ""
 
-#: ../file.py:308
+#: ../file.py:307
 msgid "OpenOffice.org Presentation"
 msgstr ""
 
-#: ../file.py:297
+#: ../file.py:296
 msgid "OpenOffice.org Spreadsheet"
 msgstr ""
 
-#: ../file.py:286
+#: ../file.py:285
 msgid "OpenOffice.org Text"
 msgstr ""
 
@@ -2420,19 +2420,19 @@ msgstr ""
 msgid "Operation successful! Welcome."
 msgstr ""
 
-#: ../table_views.py:309
+#: ../table_views.py:329
 msgid "Order bottom"
 msgstr ""
 
-#: ../table_views.py:307
+#: ../table_views.py:327
 msgid "Order down"
 msgstr ""
 
-#: ../table_views.py:308
+#: ../table_views.py:328
 msgid "Order top"
 msgstr ""
 
-#: ../table_views.py:306
+#: ../table_views.py:326
 msgid "Order up"
 msgstr ""
 
@@ -2457,11 +2457,11 @@ msgstr ""
 msgid "Orphans"
 msgstr ""
 
-#: ../file.py:318
+#: ../file.py:317
 msgid "PDF"
 msgstr ""
 
-#: ../file.py:319
+#: ../file.py:318
 msgid "PDF Document"
 msgstr ""
 
@@ -2542,19 +2542,19 @@ msgstr ""
 msgid "Please select the objects to order up."
 msgstr ""
 
-#: ../table_views.py:339
+#: ../table_views.py:359
 msgid "Please select the resources to order down."
 msgstr ""
 
-#: ../table_views.py:361
+#: ../table_views.py:381
 msgid "Please select the resources to order on bottom."
 msgstr ""
 
-#: ../table_views.py:350
+#: ../table_views.py:370
 msgid "Please select the resources to order on top."
 msgstr ""
 
-#: ../table_views.py:328
+#: ../table_views.py:348
 msgid "Please select the resources to order up."
 msgstr ""
 
@@ -2567,11 +2567,11 @@ msgctxt "heading"
 msgid "Post a Reply"
 msgstr ""
 
-#: ../file.py:274
+#: ../file.py:273
 msgid "PowerPoint"
 msgstr ""
 
-#: ../file.py:275
+#: ../file.py:274
 msgid "PowerPoint Presentation"
 msgstr ""
 
@@ -2646,11 +2646,11 @@ msgstr ""
 msgid "Python"
 msgstr ""
 
-#: ../file.py:329
+#: ../file.py:328
 msgid "RTF"
 msgstr ""
 
-#: ../file.py:330
+#: ../file.py:329
 msgid "RTF Document"
 msgstr ""
 
@@ -2658,7 +2658,7 @@ msgstr ""
 msgid "Recipient"
 msgstr ""
 
-#: ../table_views.py:322
+#: ../table_views.py:342
 msgid "Record deleted."
 msgstr ""
 
@@ -2715,13 +2715,17 @@ msgctxt "label"
 msgid "Repeat Password"
 msgstr ""
 
-#: ../file_views.py:163
+#: ../file_views.py:164
 msgid "Replace"
 msgstr ""
 
 #: ../ui/file/upload.xml.en:20
 msgctxt "input[value]"
 msgid "Replace"
+msgstr ""
+
+#: ../forms.py:421
+msgid "Replace file"
 msgstr ""
 
 #: ../forum/ui/Thread_view.xml.en:44
@@ -2780,19 +2784,19 @@ msgstr ""
 msgid "Resources cut."
 msgstr ""
 
-#: ../table_views.py:344
+#: ../table_views.py:364
 msgid "Resources ordered down."
 msgstr ""
 
-#: ../table_views.py:366
+#: ../table_views.py:386
 msgid "Resources ordered on bottom."
 msgstr ""
 
-#: ../table_views.py:355
+#: ../table_views.py:375
 msgid "Resources ordered on top."
 msgstr ""
 
-#: ../table_views.py:333
+#: ../table_views.py:353
 msgid "Resources ordered up."
 msgstr ""
 
@@ -3064,11 +3068,11 @@ msgstr ""
 msgid "Syntax error, please check the view for details."
 msgstr ""
 
-#: ../file.py:393
+#: ../file.py:392
 msgid "Tar"
 msgstr ""
 
-#: ../file.py:394
+#: ../file.py:393
 msgid "Tar Archive"
 msgstr ""
 
@@ -3097,7 +3101,7 @@ msgctxt "label"
 msgid "Text (search within the title and all comments)"
 msgstr ""
 
-#: ../forms.py:456
+#: ../forms.py:458
 msgid ""
 "The <span class=\"field_is_required\">emphasized</span> fields are required."
 msgstr ""
@@ -3135,8 +3139,8 @@ msgstr ""
 msgid "The file must be entered."
 msgstr ""
 
-#: ../resource_views.py:357
-msgid "The given file is not an image."
+#: ../resource_views.py:365
+msgid "The given file is not of the type \"$class_id\"."
 msgstr ""
 
 #: ../calendar_views.py:146
@@ -3147,7 +3151,7 @@ msgstr ""
 msgid "The name is missing."
 msgstr ""
 
-#: ../resource_views.py:506
+#: ../resource_views.py:509
 msgid "The password is wrong."
 msgstr ""
 
@@ -3172,11 +3176,11 @@ msgstr ""
 msgid "The search title has been changed."
 msgstr ""
 
-#: ../resource_views.py:488
+#: ../resource_views.py:491
 msgid "The user \"$username\" does not exist."
 msgstr ""
 
-#: ../resource_views.py:499
+#: ../resource_views.py:502
 msgid "The user \"$username\" is not active."
 msgstr ""
 
@@ -3231,7 +3235,7 @@ msgstr ""
 msgid "This page is locked by $user"
 msgstr ""
 
-#: ../file_views.py:239
+#: ../file_views.py:266
 msgid "This page is locked by another user"
 msgstr ""
 
@@ -3413,7 +3417,7 @@ msgstr ""
 msgid "Unexpected file of mimetype ${mimetype}."
 msgstr ""
 
-#: ../file_views.py:178
+#: ../file_views.py:184
 msgid "Unexpected file of mimetype ${type}"
 msgstr ""
 
@@ -3450,7 +3454,7 @@ msgctxt "legend"
 msgid "Upload"
 msgstr ""
 
-#: ../file_views.py:48
+#: ../file_views.py:49
 msgid "Upload File"
 msgstr ""
 
@@ -3479,12 +3483,12 @@ msgctxt "input[value]"
 msgid "Upload and Insert"
 msgstr ""
 
-#: ../ui/html/addlink.xml.en:132
+#: ../ui/html/addlink.xml.en:131
 msgctxt "input[value]"
 msgid "Upload and Link"
 msgstr ""
 
-#: ../file.py:57
+#: ../file.py:56
 msgid "Upload office documents, images, media files, etc."
 msgstr ""
 
@@ -3535,7 +3539,7 @@ msgctxt "label"
 msgid "Version (mandatory):"
 msgstr ""
 
-#: ../file_views.py:194
+#: ../file_views.py:200
 msgid "Version uploaded"
 msgstr ""
 
@@ -3554,7 +3558,7 @@ msgctxt "label"
 msgid "Version:<g id='17'> (<g id='18'>Edit</g>)</g>"
 msgstr ""
 
-#: ../file.py:221
+#: ../file.py:220
 msgid "Video"
 msgstr ""
 
@@ -3619,11 +3623,11 @@ msgstr ""
 msgid "Wiki contents"
 msgstr ""
 
-#: ../file.py:252
+#: ../file.py:251
 msgid "Word"
 msgstr ""
 
-#: ../file.py:253
+#: ../file.py:252
 msgid "Word Text"
 msgstr ""
 
@@ -3649,7 +3653,7 @@ msgctxt "td"
 msgid "Yes"
 msgstr ""
 
-#: ../resource_views.py:546
+#: ../resource_views.py:549
 msgid "You Are Now Logged out."
 msgstr ""
 
@@ -3732,11 +3736,11 @@ msgctxt "li"
 msgid "Zhou Li (Chinese)"
 msgstr ""
 
-#: ../file.py:382
+#: ../file.py:381
 msgid "Zip"
 msgstr ""
 
-#: ../file.py:383
+#: ../file.py:382
 msgid "Zip Archive"
 msgstr ""
 
@@ -3771,7 +3775,7 @@ msgctxt "td"
 msgid "days ago"
 msgstr ""
 
-#: ../datatypes.py:91
+#: ../datatypes.py:97
 msgid "huge"
 msgstr ""
 
@@ -3790,19 +3794,19 @@ msgid ""
 "programming language, and based on the <g id='7'>itools</g> library."
 msgstr ""
 
-#: ../table_views.py:84
+#: ../table_views.py:104
 msgid "id"
 msgstr ""
 
-#: ../datatypes.py:90
+#: ../datatypes.py:96
 msgid "large"
 msgstr ""
 
-#: ../datatypes.py:89
+#: ../datatypes.py:95
 msgid "medium"
 msgstr ""
 
-#: ../datatypes.py:92
+#: ../datatypes.py:98
 msgid "original"
 msgstr ""
 
@@ -3811,7 +3815,7 @@ msgctxt "legend"
 msgid "select the columns to export"
 msgstr ""
 
-#: ../datatypes.py:88
+#: ../datatypes.py:94
 msgid "small"
 msgstr ""
 
