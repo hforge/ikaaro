@@ -67,10 +67,11 @@ class FileNewInstance(NewInstanceForm):
 
     def action(self, resource, context, form):
         filename, mimetype, body = form['file']
+        name, type, language = FileName.decode(filename)
         title = form['title']
 
-        # Check the filename is good
-        name = title.strip() or filename
+        name = title.strip() or name
+        # Check the name is good
         name = checkid(name)
         if name is None:
             context.message = messages.MSG_BAD_NAME
@@ -87,7 +88,6 @@ class FileNewInstance(NewInstanceForm):
         cls = get_resource_class(class_id)
 
         # Multilingual resources, find out the language
-        name, type, language = FileName.decode(name)
         if issubclass(cls, Multilingual):
             if language is None:
                 encoding = guess_encoding(body)
