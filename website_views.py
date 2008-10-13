@@ -171,7 +171,7 @@ class RegisterForm(AutoForm):
     widgets = [
         TextWidget('firstname', title=u'First Name'),
         TextWidget('lastname', title=u'Last Name'),
-        TextWidget('email', title=u'Email Address')]
+        TextWidget('email', title=u'E-mail Address')]
 
 
     def action(self, resource, context, form):

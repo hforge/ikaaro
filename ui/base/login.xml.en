@@ -8,7 +8,7 @@
   <fieldset>
     <legend>Log in</legend>
     <dl>
-      <dt><label for="username">Email Address</label></dt>
+      <dt><label for="username">E-mail Address</label></dt>
       <dd>
         <input type="text" id="username" name="username" value="${username}" />
       </dd>
