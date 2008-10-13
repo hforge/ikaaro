@@ -867,9 +867,8 @@ msgid "A given name already exists."
 msgstr ""
 
 #: ../messages.py:66
-#, fuzzy
 msgid "A new resource has been added."
-msgstr "Nuevo recurso agregado."
+msgstr "Un nuevo recurso a sido agregado."
 
 #: ../workflow.py:122
 msgid "A pending document awaits review from authorized users to be published."
@@ -913,22 +912,19 @@ msgid "Account changed."
 msgstr ""
 
 #: ../ui/WorkflowAware_state.xml.en:44
-#, fuzzy
 msgctxt "th"
 msgid "Action"
 msgstr "Acción"
 
 #: ../access.py:142
-#, fuzzy
 msgid "Active"
-msgstr "Acción"
+msgstr "Activo"
 
 #: ../tracker/tracker_views.py:121
 msgid "Add"
 msgstr "Agregar"
 
 #: ../ui/website/new_instance.xml.en:31
-#, fuzzy
 msgctxt "input[value]"
 msgid "Add"
 msgstr "Agregar"
@@ -1403,7 +1399,7 @@ msgstr ""
 
 #: ../control_panel.py:92
 msgid "Control Panel"
-msgstr ""
+msgstr "Panel de Control"
 
 #: ../folder_views.py:358
 msgid "Copy"
@@ -1798,10 +1794,9 @@ msgid "Folder"
 msgstr "Carpeta"
 
 #: ../tracker/ui/menu_remember.xml.en:20
-#, fuzzy
 msgctxt "input[value]"
 msgid "Forget this Search"
-msgstr "Búsqueda Avanzada"
+msgstr "Olvidar esta Búsqueda"
 
 #: ../website_views.py:124
 #, fuzzy
@@ -1809,27 +1804,23 @@ msgid "Forgotten password"
 msgstr "Modificar clave de acceso"
 
 #: ../wiki/ui/edit.xml.en:97
-#, fuzzy
 msgctxt "link to"
 msgid "Format"
-msgstr "Formato:"
+msgstr "Formato"
 
 #: ../wiki/ui/edit.xml.en:193
-#, fuzzy
 msgctxt "span"
 msgid "Format"
-msgstr "Formato:"
+msgstr "Formato"
 
 #: ../wiki/ui/edit.xml.en:193
-#, fuzzy
 msgctxt "span[title]"
 msgid "Format"
-msgstr "Formato:"
+msgstr "Formato"
 
 #: ../forum/forum.py:127
-#, fuzzy
 msgid "Forum"
-msgstr "Formato:"
+msgstr "Foro"
 
 #: ../ui/website/broken_links.xml.en:8
 msgctxt "paragraph"
@@ -3037,22 +3028,19 @@ msgid "Search"
 msgstr "Buscar"
 
 #: ../tracker/ui/search.xml.en:94
-#, fuzzy
 msgctxt "input[value]"
 msgid "Search"
 msgstr "Buscar"
 
 #: ../ui/website/search_form.xml.en:9
-#, fuzzy
 msgctxt "legend"
 msgid "Search"
 msgstr "Buscar"
 
 #: ../ui/folder/browse_search.xml.en:21
-#, fuzzy
 msgctxt "label"
 msgid "Search subfolders"
-msgstr "Nuevo Recurso"
+msgstr "Buscar subcarpetas"
 
 #: ../tracker/tracker.py:81
 #, fuzzy
@@ -3060,9 +3048,8 @@ msgid "Security Issue"
 msgstr "Seguridad"
 
 #: ../control_panel.py:129
-#, fuzzy
 msgid "Security Policy"
-msgstr "Seguridad"
+msgstr "Política de Seguridad"
 
 #: ../ui/root/license.xml.en:17
 msgctxt "paragraph"
