@@ -357,8 +357,8 @@ class DateWidget(Widget):
         if value is None:
             value = ''
         format = getattr(self, 'format', '%Y-%m-%d')
-        css = getattr(self, 'css', '')
-        size = getattr(self, 'size', '')
+        css = getattr(self, 'css', None)
+        size = getattr(self, 'size', None)
 
         if getattr(datatype, 'multiple', False) is True:
             if isinstance(value, list): # ['2007-08-01\r\n2007-08-02']
