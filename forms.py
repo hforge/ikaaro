@@ -304,7 +304,7 @@ class DateWidget(Widget):
     template = list(XMLParser("""
         <input type="text" name="${name}" value="${value}" id="${name}" />
         <input id="trigger_date_${name}" type="button" value="..."
-          name="trigger_date_${name}" class="${class} ${size}/>
+          name="trigger_date_${name}" class="${class}" size="${size}" />
         <script language="javascript">
           Calendar.setup({inputField: "${name}", ifFormat: "${format}",
                           button: "trigger_date_${name}"});
@@ -358,8 +358,6 @@ class DateWidget(Widget):
         format = getattr(self, 'format', '%Y-%m-%d')
         css = getattr(self, 'css', '')
         size = getattr(self, 'size', '')
-        if size:
-            size = 'size=\'%s\'' % size
 
         if getattr(datatype, 'multiple', False) is True:
             if isinstance(value, list): # ['2007-08-01\r\n2007-08-02']
