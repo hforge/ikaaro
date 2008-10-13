@@ -311,16 +311,14 @@ msgid "${link}"
 msgstr ""
 
 #: ../ui/aruni/template.xhtml.en:40
-#, fuzzy
 msgctxt "body"
 msgid "${location}"
-msgstr "Acción"
+msgstr ""
 
 #: ../ui/aruni/template.xhtml.en:52
-#, fuzzy
 msgctxt "td"
 msgid "${menu}"
-msgstr "Renombrar"
+msgstr ""
 
 #: ../forum/ui/Thread_view.xml.en:16
 msgctxt "paragraph"
@@ -373,10 +371,9 @@ msgid "${name}"
 msgstr "Renombrar"
 
 #: ../ui/aruni/template.xhtml.en:44
-#, fuzzy
 msgctxt "heading"
 msgid "${page_title}"
-msgstr "Comentarios"
+msgstr ""
 
 #: ../ui/auto_form.xml.en:10
 msgctxt "paragraph"
@@ -569,16 +566,14 @@ msgid "${title}"
 msgstr "Comentarios"
 
 #: ../ui/aruni/template.xhtml.en:7
-#, fuzzy
 msgctxt "title"
 msgid "${title}"
-msgstr "Comentarios"
+msgstr ""
 
 #: ../ui/root/internal_server_error.xml.en:17
-#, fuzzy
 msgctxt "pre"
 msgid "${traceback}"
-msgstr "Comentarios"
+msgstr ""
 
 #: ../ui/WorkflowAware_state.xml.en:54
 #, fuzzy
@@ -778,7 +773,7 @@ msgstr ""
 #: ../ui/aruni/template.xhtml.en:35
 msgctxt "link to"
 msgid "<g id='10'>Search</g>  <g id='11'>Contact</g>"
-msgstr ""
+msgstr "<g id='10'>Buscar</g>  <g id='11'>Contacto</g>"
 
 #: ../ui/html/addlink.xml.en:89
 msgctxt "abbr"
@@ -793,7 +788,7 @@ msgstr ""
 #: ../ui/aruni/template.xhtml.en:60
 msgctxt "link to"
 msgid "<g id='14'>About</g>  <g id='15'>Credits</g>  <g id='16'>License</g>"
-msgstr ""
+msgstr "<g id='14'>Acerca de</g>  <g id='15'>Creditos</g>  <g id='16'>Licencia</g>"
 
 #: ../ui/website/search_table.xml.en:10
 msgctxt "link to"
@@ -894,7 +889,7 @@ msgstr ""
 #: ../ui/aruni/template.xhtml.en:27
 msgctxt "link to"
 msgid "<g id='6'>Log in</g>  <g id='7'>Register</g>"
-msgstr ""
+msgstr "<g id='6'>Identificarse</g>  <g id='7'>Registrarse</g>"
 
 #: ../ui/ical/weekly_view.xml.en:23
 msgctxt "link to"
