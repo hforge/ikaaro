@@ -1557,8 +1557,14 @@ msgstr ""
 msgid "Dressable"
 msgstr "Preámbulo"
 
-#: ../user_views.py:144
+#: ../user_views.py:144 ../website_views.py:174
 #, fuzzy
+msgid "E-mail Address"
+msgstr "Agregar"
+
+#: ../ui/base/login.xml.en:11
+#, fuzzy
+msgctxt "label"
 msgid "E-mail Address"
 msgstr "Agregar"
 
@@ -1691,15 +1697,6 @@ msgstr ""
 msgctxt "dt"
 msgid "Email"
 msgstr "Correo electrónico"
-
-#: ../website_views.py:174
-msgid "Email Address"
-msgstr ""
-
-#: ../ui/base/login.xml.en:11
-msgctxt "label"
-msgid "Email Address"
-msgstr "Dirección de correo electrónico"
 
 #: ../tracker/resources.py:158
 msgid "End"
@@ -4112,3 +4109,7 @@ msgstr ""
 msgctxt "td"
 msgid "⇒ ${item/parent_path}"
 msgstr ""
+
+#~ msgctxt "label"
+#~ msgid "Email Address"
+#~ msgstr "Dirección de correo electrónico"

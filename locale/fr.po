@@ -1709,8 +1709,14 @@ msgstr "Télécharger"
 msgid "Dressable"
 msgstr "Habillable"
 
-#: ../user_views.py:144
+#: ../user_views.py:144 ../website_views.py:174
 #, fuzzy
+msgid "E-mail Address"
+msgstr "Adresse de courriel"
+
+#: ../ui/base/login.xml.en:11
+#, fuzzy
+msgctxt "label"
 msgid "E-mail Address"
 msgstr "Adresse de courriel"
 
@@ -1847,16 +1853,6 @@ msgstr "Votre adresse de courriel"
 msgctxt "dt"
 msgid "Email"
 msgstr "Courriel"
-
-#: ../website_views.py:174
-msgid "Email Address"
-msgstr "Adresse de courriel"
-
-#: ../ui/base/login.xml.en:11
-#, fuzzy
-msgctxt "label"
-msgid "Email Address"
-msgstr "Adresse de courriel"
 
 #: ../tracker/resources.py:158
 msgid "End"
@@ -5054,6 +5050,14 @@ msgstr ""
 
 #~ msgid "Edit your personal data"
 #~ msgstr "Modifier vous informations personnelles"
+
+#~ msgid "Email Address"
+#~ msgstr "Adresse de courriel"
+
+#, fuzzy
+#~ msgctxt "label"
+#~ msgid "Email Address"
+#~ msgstr "Adresse de courriel"
 
 #~ msgid "Email address"
 #~ msgstr "Adresse de courriel"

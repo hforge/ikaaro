@@ -443,6 +443,7 @@ msgid "Dressable"
 msgstr ""
 
 #: ../user_views.py:144
+#: ../website_views.py:174
 msgid "E-mail Address"
 msgstr ""
 
@@ -499,10 +500,6 @@ msgstr ""
 
 #: ../user_views.py:134
 msgid "Edit your name and email address."
-msgstr ""
-
-#: ../website_views.py:174
-msgid "Email Address"
 msgstr ""
 
 #: ../tracker/resources.py:158
@@ -2477,7 +2474,7 @@ msgstr ""
 
 #: ../ui/base/login.xml.en:11
 msgctxt "label"
-msgid "Email Address"
+msgid "E-mail Address"
 msgstr ""
 
 #: ../tracker/ui/edit_resources.xml.en:30

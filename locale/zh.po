@@ -1669,8 +1669,14 @@ msgstr ""
 msgid "Dressable"
 msgstr "信息"
 
-#: ../user_views.py:144
+#: ../user_views.py:144 ../website_views.py:174
 #, fuzzy
+msgid "E-mail Address"
+msgstr "用户"
+
+#: ../ui/base/login.xml.en:11
+#, fuzzy
+msgctxt "label"
 msgid "E-mail Address"
 msgstr "用户"
 
@@ -1803,16 +1809,6 @@ msgstr ""
 msgctxt "dt"
 msgid "Email"
 msgstr ""
-
-#: ../website_views.py:174
-msgid "Email Address"
-msgstr ""
-
-#: ../ui/base/login.xml.en:11
-#, fuzzy
-msgctxt "label"
-msgid "Email Address"
-msgstr "用户"
 
 #: ../tracker/resources.py:158
 msgid "End"
@@ -4639,6 +4635,11 @@ msgstr ""
 #, fuzzy
 #~ msgid "Edit language preferences;"
 #~ msgstr "优先"
+
+#, fuzzy
+#~ msgctxt "label"
+#~ msgid "Email Address"
+#~ msgstr "用户"
 
 #~ msgid "External"
 #~ msgstr "外部"

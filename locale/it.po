@@ -1691,8 +1691,14 @@ msgstr ""
 msgid "Dressable"
 msgstr "Preambolo"
 
-#: ../user_views.py:144
+#: ../user_views.py:144 ../website_views.py:174
 #, fuzzy
+msgid "E-mail Address"
+msgstr "Utenti"
+
+#: ../ui/base/login.xml.en:11
+#, fuzzy
+msgctxt "label"
 msgid "E-mail Address"
 msgstr "Utenti"
 
@@ -1827,16 +1833,6 @@ msgstr ""
 msgctxt "dt"
 msgid "Email"
 msgstr "Email"
-
-#: ../website_views.py:174
-msgid "Email Address"
-msgstr ""
-
-#: ../ui/base/login.xml.en:11
-#, fuzzy
-msgctxt "label"
-msgid "Email Address"
-msgstr "Utenti"
 
 #: ../tracker/resources.py:158
 msgid "End"
@@ -5278,6 +5274,11 @@ msgstr ""
 #, fuzzy
 #~ msgid "Edit language preferences;"
 #~ msgstr "Preferenze"
+
+#, fuzzy
+#~ msgctxt "label"
+#~ msgid "Email Address"
+#~ msgstr "Utenti"
 
 #~ msgid "External"
 #~ msgstr "Esterno"

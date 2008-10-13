@@ -1505,7 +1505,12 @@ msgstr ""
 msgid "Dressable"
 msgstr ""
 
-#: ../user_views.py:144
+#: ../user_views.py:144 ../website_views.py:174
+msgid "E-mail Address"
+msgstr ""
+
+#: ../ui/base/login.xml.en:11
+msgctxt "label"
 msgid "E-mail Address"
 msgstr ""
 
@@ -1620,15 +1625,6 @@ msgstr ""
 #: ../ui/access/add_user.xml.en:11
 msgctxt "dt"
 msgid "Email"
-msgstr ""
-
-#: ../website_views.py:174
-msgid "Email Address"
-msgstr ""
-
-#: ../ui/base/login.xml.en:11
-msgctxt "label"
-msgid "Email Address"
 msgstr ""
 
 #: ../tracker/resources.py:158
