@@ -6,7 +6,7 @@
 
 <form id="loginform" name="loginform" method="post" action=";login">
   <fieldset>
-    <legend>Login</legend>
+    <legend>Log in</legend>
     <dl>
       <dt><label for="username">Email Address</label></dt>
       <dd>
