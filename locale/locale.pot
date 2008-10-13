@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2008-10-13 17:10+CET\n"
+"POT-Creation-Date: 2008-10-13 18:10+CET\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -51,10 +51,12 @@ msgstr ""
 msgid "${batch}"
 msgstr ""
 
+#: ../tracker/ui/view_tracker.xml.en:7
 #: ../ui/table/view.xml.en:5
 msgid "${batch} ${table}"
 msgstr ""
 
+#: ../ui/generic/browse.xml.en:8
 #: ../ui/website/search.xml.en:13
 msgid "${batch} <x id='1'/> ${table}"
 msgstr ""
@@ -95,6 +97,7 @@ msgstr ""
 msgid "--- Comment from: $user ---\n\n$comment\n\n$issues"
 msgstr ""
 
+#: ../tracker/issue.py:258
 #: ../tracker/issue.py:260
 msgid "-------\n\n"
 msgstr ""
@@ -140,6 +143,7 @@ msgid "A thread to discuss"
 msgstr ""
 
 #: ../tracker/tracker_views.py:685
+#: ../tracker/issue.py:223
 msgid "ANONYMOUS"
 msgstr ""
 
@@ -159,6 +163,8 @@ msgstr ""
 msgid "Active"
 msgstr ""
 
+#: ../text_views.py:264
+#: ../table_views.py:178
 #: ../tracker/tracker_views.py:121
 msgid "Add"
 msgstr ""
@@ -192,10 +198,12 @@ msgid "Add a thread"
 msgstr ""
 
 #: ../resource_views.py:93
+#: ../folder_views.py:96
 msgid "Add resource"
 msgstr ""
 
 #: ../root.py:99
+#: ../access.py:334
 msgid "Admin"
 msgstr ""
 
@@ -224,6 +232,7 @@ msgid "Are you sure you want to delete this resource?"
 msgstr ""
 
 #: ../tracker/tracker_views.py:55
+#: ../tracker/issue.py:320
 msgid "Assigned To"
 msgstr ""
 
@@ -240,6 +249,7 @@ msgid "Basque"
 msgstr ""
 
 #: ../website_views.py:246
+#: ../forms.py:425
 msgid "Body"
 msgstr ""
 
@@ -324,6 +334,7 @@ msgid "Command Line Interface"
 msgstr ""
 
 #: ../tracker/resources.py:159
+#: ../tracker/issue.py:257
 msgid "Comment"
 msgstr ""
 
@@ -355,6 +366,8 @@ msgstr ""
 msgid "Container for a wiki"
 msgstr ""
 
+#: ../control_panel.py:43
+#: ../control_panel.py:73
 #: ../control_panel.py:92
 msgid "Control Panel"
 msgstr ""
@@ -391,6 +404,7 @@ msgstr ""
 msgid "Data Corruption Issue"
 msgstr ""
 
+#: ../calendar_views.py:592
 #: ../calendar_views.py:698
 msgid "Data updated"
 msgstr ""
@@ -419,6 +433,7 @@ msgstr ""
 msgid "Documentation"
 msgstr ""
 
+#: ../file_views.py:123
 #: ../file_views.py:146
 msgid "Download"
 msgstr ""
@@ -431,7 +446,10 @@ msgstr ""
 msgid "E-mail Address"
 msgstr ""
 
+#: ../resource_views.py:148
+#: ../text_views.py:97
 #: ../wiki/page_views.py:321
+#: ../future/dressable.py:198
 msgid "Edit"
 msgstr ""
 
@@ -495,6 +513,7 @@ msgstr ""
 msgid "English"
 msgstr ""
 
+#: ../table_views.py:230
 #: ../table_views.py:301
 msgid "Error: $message"
 msgstr ""
@@ -503,6 +522,8 @@ msgstr ""
 msgid "Event definitely deleted."
 msgstr ""
 
+#: ../calendar_views.py:467
+#: ../calendar_views.py:579
 #: ../calendar_views.py:607
 msgid "Event not found"
 msgstr ""
@@ -523,10 +544,12 @@ msgstr ""
 msgid "Export to CSV"
 msgstr ""
 
+#: ../file.py:189
 #: ../text_views.py:76
 msgid "External Editor"
 msgstr ""
 
+#: ../calendar_views.py:1097
 #: ../file_views.py:194
 msgid "Failed to load the file, may contain errors."
 msgstr ""
@@ -539,7 +562,10 @@ msgstr ""
 msgid "File"
 msgstr ""
 
+#: ../user_views.py:142
 #: ../website_views.py:172
+#: ../access.py:64
+#: ../access.py:116
 msgid "First Name"
 msgstr ""
 
@@ -620,6 +646,7 @@ msgid "High Priority"
 msgstr ""
 
 #: ../versioning.py:41
+#: ../tracker/issue_views.py:186
 msgid "History"
 msgstr ""
 
@@ -644,6 +671,8 @@ msgid "Invalid title."
 msgstr ""
 
 #: ../tracker/resources.py:160
+#: ../tracker/issue.py:78
+#: ../tracker/issue.py:79
 msgid "Issue"
 msgstr ""
 
@@ -651,6 +680,7 @@ msgstr ""
 msgid "Issue Tracker"
 msgstr ""
 
+#: ../tracker/tracker_views.py:467
 #: ../tracker/tracker_views.py:471
 msgid "Issue not found."
 msgstr ""
@@ -707,7 +737,10 @@ msgstr ""
 msgid "Last Modified"
 msgstr ""
 
+#: ../user_views.py:143
 #: ../website_views.py:173
+#: ../access.py:63
+#: ../access.py:117
 msgid "Last Name"
 msgstr ""
 
@@ -716,6 +749,8 @@ msgid "License"
 msgstr ""
 
 #: ../resource_views.py:465
+#: ../access.py:62
+#: ../access.py:115
 msgid "Login"
 msgstr ""
 
@@ -743,6 +778,7 @@ msgstr ""
 msgid "Members deleted."
 msgstr ""
 
+#: ../menu.py:339
 #: ../menu.py:339
 msgid "Menu"
 msgstr ""
@@ -776,6 +812,7 @@ msgid "Modified"
 msgstr ""
 
 #: ../tracker/tracker_views.py:51
+#: ../tracker/issue.py:290
 msgid "Module"
 msgstr ""
 
@@ -788,6 +825,7 @@ msgid "Monthly View"
 msgstr ""
 
 #: ../views.py:300
+#: ../folder_views.py:217
 msgid "Name"
 msgstr ""
 
@@ -811,6 +849,7 @@ msgstr ""
 msgid "New row added."
 msgstr ""
 
+#: ../tracker/tracker_views.py:547
 #: ../tracker/tracker_views.py:629
 msgid "No data to export."
 msgstr ""
@@ -823,6 +862,7 @@ msgstr ""
 msgid "No resource removed."
 msgstr ""
 
+#: ../messages.py:85
 #: ../tracker/tables.py:128
 msgid "No resource selected."
 msgstr ""
@@ -927,18 +967,22 @@ msgstr ""
 msgid "Operation successful! Welcome."
 msgstr ""
 
+#: ../menu.py:124
 #: ../table_views.py:326
 msgid "Order bottom"
 msgstr ""
 
+#: ../menu.py:122
 #: ../table_views.py:324
 msgid "Order down"
 msgstr ""
 
+#: ../menu.py:123
 #: ../table_views.py:325
 msgid "Order top"
 msgstr ""
 
+#: ../menu.py:121
 #: ../table_views.py:323
 msgid "Order up"
 msgstr ""
@@ -987,6 +1031,7 @@ msgstr ""
 msgid "Paste"
 msgstr ""
 
+#: ../menu.py:66
 #: ../menu.py:247
 msgid "Path"
 msgstr ""
@@ -1052,6 +1097,7 @@ msgid "Preview Content"
 msgstr ""
 
 #: ../tracker/tracker_views.py:53
+#: ../tracker/issue.py:293
 msgid "Priority"
 msgstr ""
 
@@ -1095,10 +1141,13 @@ msgstr ""
 msgid "Recipient"
 msgstr ""
 
+#: ../menu.py:138
+#: ../table_views.py:169
 #: ../table_views.py:339
 msgid "Record deleted."
 msgstr ""
 
+#: ../website_views.py:163
 #: ../website_views.py:164
 msgid "Register"
 msgstr ""
@@ -1115,6 +1164,11 @@ msgstr ""
 msgid "Remember this search"
 msgstr ""
 
+#: ../text_views.py:223
+#: ../menu.py:119
+#: ../table_views.py:155
+#: ../table_views.py:321
+#: ../folder_views.py:355
 #: ../tracker/tracker_views.py:322
 msgid "Remove"
 msgstr ""
@@ -1195,6 +1249,7 @@ msgstr ""
 msgid "Resources published."
 msgstr ""
 
+#: ../messages.py:72
 #: ../tracker/tables.py:147
 msgid "Resources removed: $resources."
 msgstr ""
@@ -1239,6 +1294,7 @@ msgstr ""
 msgid "Schedule your time with calendar files."
 msgstr ""
 
+#: ../tracker/tracker_views.py:335
 #: ../website_views.py:282
 msgid "Search"
 msgstr ""
@@ -1307,11 +1363,15 @@ msgstr ""
 msgid "Start YYYY-MM-DD HH:MM"
 msgstr ""
 
+#: ../calendar_views.py:139
 #: ../calendar_views.py:192
 msgid "Start time must be earlier than end time."
 msgstr ""
 
 #: ../tracker/tracker_views.py:54
+#: ../access.py:119
+#: ../folder_views.py:223
+#: ../tracker/issue.py:294
 msgid "State"
 msgstr ""
 
@@ -1343,6 +1403,7 @@ msgstr ""
 msgid "Tar Archive"
 msgstr ""
 
+#: ../menu.py:67
 #: ../menu.py:248
 msgid "Target"
 msgstr ""
@@ -1499,11 +1560,18 @@ msgstr ""
 msgid "Timetables"
 msgstr ""
 
+#: ../calendar_views.py:155
 #: ../calendar_views.py:201
 msgid "Timetables updated successfully."
 msgstr ""
 
+#: ../tracker/tracker_views.py:49
+#: ../tracker/issue.py:285
 #: ../views.py:298
+#: ../menu.py:65
+#: ../menu.py:246
+#: ../forms.py:420
+#: ../folder_views.py:218
 msgid "Title"
 msgstr ""
 
@@ -1540,6 +1608,8 @@ msgid "Tuesday"
 msgstr ""
 
 #: ../tracker/tracker_views.py:52
+#: ../folder_views.py:219
+#: ../tracker/issue.py:292
 msgid "Type"
 msgstr ""
 
@@ -1600,18 +1670,35 @@ msgid "Verified"
 msgstr ""
 
 #: ../tracker/tracker_views.py:50
+#: ../tracker/issue.py:291
 msgid "Version"
 msgstr ""
 
+#: ../calendar_views.py:1101
 #: ../file_views.py:200
 msgid "Version uploaded"
 msgstr ""
 
+#: ../file.py:219
 #: ../file.py:220
 msgid "Video"
 msgstr ""
 
+#: ../file_views.py:353
+#: ../file_views.py:430
+#: ../file_views.py:442
+#: ../text_views.py:63
+#: ../text_views.py:164
+#: ../html.py:51
+#: ../tracker/tracker_views.py:174
+#: ../file.py:240
+#: ../user.py:299
+#: ../table_views.py:52
 #: ../wiki/page_views.py:55
+#: ../forum/thread.py:42
+#: ../wiki/folder_views.py:51
+#: ../forum/forum.py:44
+#: ../future/dressable.py:152
 msgid "View"
 msgstr ""
 
@@ -1628,6 +1715,7 @@ msgid "Web Page"
 msgstr ""
 
 #: ../website_views.py:47
+#: ../website.py:53
 msgid "Web Site"
 msgstr ""
 
@@ -1643,6 +1731,7 @@ msgstr ""
 msgid "Weekly View"
 msgstr ""
 
+#: ../wiki/folder.py:36
 #: ../wiki/folder_views.py:33
 msgid "Wiki"
 msgstr ""
@@ -1691,6 +1780,7 @@ msgstr ""
 msgid "You have already confirmed your registration. Try to log in or ask for a new password."
 msgstr ""
 
+#: ../user_views.py:177
 #: ../user_views.py:265
 msgid "You mistyped your actual password, your account is not changed."
 msgstr ""
@@ -1735,10 +1825,12 @@ msgstr ""
 msgid "iKaaro"
 msgstr ""
 
+#: ../menu.py:238
 #: ../menu.py:331
 msgid "iKaaro Menu"
 msgstr ""
 
+#: ../menu.py:85
 #: ../table_views.py:104
 msgid "id"
 msgstr ""
@@ -1764,17 +1856,22 @@ msgctxt "a[title]"
 msgid "${item/name}"
 msgstr ""
 
+#: ../ui/html/addimage.xml.en:58
+#: ../ui/html/addlink.xml.en:73
 #: ../ui/menu/addlink.xml.en:75
 msgctxt "a[title]"
 msgid "${item/title}"
 msgstr ""
 
+#: ../ui/html/addimage.xml.en:44
+#: ../ui/html/addlink.xml.en:57
 #: ../ui/menu/addlink.xml.en:59
 msgctxt "a[title]"
 msgid "${x/title}"
 msgstr ""
 
 #: ../ui/folder/browse_image.xml.en:38
+#: ../ui/binary/Image_view.xml.en:15
 msgctxt "a[title]"
 msgid "Back"
 msgstr ""
@@ -1840,6 +1937,7 @@ msgid "Medium Edit Text"
 msgstr ""
 
 #: ../ui/generic/browse_batch.xml.en:13
+#: ../ui/binary/Image_view.xml.en:20
 msgctxt "a[title]"
 msgid "Next"
 msgstr ""
@@ -1850,6 +1948,7 @@ msgid "Ordered list"
 msgstr ""
 
 #: ../ui/generic/browse_batch.xml.en:11
+#: ../ui/binary/Image_view.xml.en:17
 msgctxt "a[title]"
 msgid "Previous"
 msgstr ""
@@ -1884,6 +1983,9 @@ msgctxt "abbr"
 msgid "<g id='9'>${item/short_title}</g><x id='10'/>  <g id='11'>Browse</g>"
 msgstr ""
 
+#: ../ui/html/addimage.xml.en:57
+#: ../ui/html/addimage.xml.en:70
+#: ../ui/html/addlink.xml.en:89
 #: ../ui/menu/addlink.xml.en:91
 msgctxt "abbr[title]"
 msgid "${item/title}"
@@ -1910,10 +2012,13 @@ msgid "${content}"
 msgstr ""
 
 #: ../ui/html/addimage.xml.en:34
+#: ../ui/aruni/message.xml.en:6
+#: ../ui/aruni/template.xhtml.en:45
 msgctxt "div"
 msgid "${message}"
 msgstr ""
 
+#: ../ui/html/addlink.xml.en:47
 #: ../ui/menu/addlink.xml.en:44
 msgctxt "div"
 msgid "Message :${message}"
@@ -1969,6 +2074,8 @@ msgctxt "fieldset"
 msgid "You are not authorized to access this resource."
 msgstr ""
 
+#: ../tracker/ui/export_to_csv.xml.en:8
+#: ../tracker/ui/change_bugs.xml.en:8
 #: ../tracker/ui/export_to_text.xml.en:8
 msgctxt "form"
 msgid "${batch} ${table}"
@@ -1989,6 +2096,7 @@ msgctxt "heading"
 msgid "Browse and insert an Image from the workspace"
 msgstr ""
 
+#: ../ui/html/addlink.xml.en:51
 #: ../ui/menu/addlink.xml.en:53
 msgctxt "heading"
 msgid "Browse and link to a File from the workspace"
@@ -2034,12 +2142,14 @@ msgctxt "heading"
 msgid "Translators"
 msgstr ""
 
+#: ../ui/html/addlink.xml.en:102
 #: ../ui/menu/addlink.xml.en:46
 msgctxt "heading"
 msgid "Type the URL of an external resource"
 msgstr ""
 
 #: ../future/ui/dressable_edit_image.xml.en:7
+#: ../future/ui/dressable_add_image.xml.en:7
 msgctxt "heading"
 msgid "Upload Image"
 msgstr ""
@@ -2054,16 +2164,20 @@ msgctxt "heading"
 msgid "Upload an image to the current folder and insert it:"
 msgstr ""
 
+#: ../ui/html/addimage.xml.en:66
+#: ../ui/html/addlink.xml.en:85
 #: ../ui/menu/addlink.xml.en:87
 msgctxt "img[title]"
 msgid "${item/item_type}"
 msgstr ""
 
+#: ../ui/folder/browse_image.xml.en:21
 #: ../ui/generic/browse_table.xml.en:15
 msgctxt "input[title]"
 msgid "Click to select/unselect all rows"
 msgstr ""
 
+#: ../ui/folder/browse_image.xml.en:62
 #: ../ui/generic/browse_table.xml.en:44
 msgctxt "input[value]"
 msgid "${action/value}"
@@ -2074,7 +2188,13 @@ msgctxt "input[value]"
 msgid "${submit_value}"
 msgstr ""
 
+#: ../tracker/ui/add_issue.xml.en:94
+#: ../forum/ui/Forum_new_thread.xml.en:19
+#: ../ui/website/edit_languages.xml.en:55
 #: ../ui/website/new_instance.xml.en:31
+#: ../ui/base/new_instance.xml.en:22
+#: ../future/ui/dressable_add_image.xml.en:20
+#: ../ui/ical/edit_timetables.xml.en:37
 msgctxt "input[value]"
 msgid "Add"
 msgstr ""
@@ -2099,6 +2219,9 @@ msgctxt "input[value]"
 msgid "Cancel"
 msgstr ""
 
+#: ../ui/WorkflowAware_state.xml.en:30
+#: ../ui/text/edit.xml.en:12
+#: ../ui/PO_edit.xml.en:37
 #: ../ui/website/contact_options.xml.en:21
 msgctxt "input[value]"
 msgid "Change"
@@ -2130,6 +2253,7 @@ msgid "Export"
 msgstr ""
 
 #: ../ui/text/externaledit.xml.en:39
+#: ../ui/file/externaledit.xml.en:25
 msgctxt "input[value]"
 msgid "External Editor..."
 msgstr ""
@@ -2154,12 +2278,22 @@ msgctxt "input[value]"
 msgid "Next"
 msgstr ""
 
+#: ../ui/html/addlink.xml.en:119
+#: ../ui/ical/daily_view.xml.en:12
+#: ../ui/website/forgotten_password_form.xml.en:19
+#: ../ui/ical/edit_event.xml.en:130
+#: ../tracker/ui/menu_remember.xml.en:15
+#: ../ui/folder/browse_search.xml.en:24
+#: ../ui/generic/browse_search.xml.en:16
 #: ../ui/website/search_form.xml.en:11
 msgctxt "input[value]"
 msgid "OK"
 msgstr ""
 
+#: ../future/ui/dressable_edit_image.xml.en:40
+#: ../forum/ui/Thread_view.xml.en:33
 #: ../ui/website/edit_languages.xml.en:38
+#: ../ui/ical/edit_timetables.xml.en:43
 msgctxt "input[value]"
 msgid "Remove"
 msgstr ""
@@ -2190,6 +2324,9 @@ msgid "Save &amp; View"
 msgstr ""
 
 #: ../ui/website/virtual_hosts.xml.en:14
+#: ../ui/user/edit_password.xml.en:30
+#: ../ui/website/security_policy.xml.en:26
+#: ../ui/user/edit_preferences.xml.en:19
 msgctxt "input[value]"
 msgid "Save Changes"
 msgstr ""
@@ -2200,6 +2337,7 @@ msgid "Search"
 msgstr ""
 
 #: ../ui/ical/edit_timetables.xml.en:44
+#: ../ui/access/edit_membership_form.xml.en:18
 msgctxt "input[value]"
 msgid "Update"
 msgstr ""
@@ -2209,6 +2347,7 @@ msgctxt "input[value]"
 msgid "Update text export"
 msgstr ""
 
+#: ../future/ui/dressable_edit_image.xml.en:27
 #: ../ui/file/new_instance.xml.en:22
 msgctxt "input[value]"
 msgid "Upload"
@@ -2234,11 +2373,14 @@ msgctxt "label"
 msgid "${role/title}"
 msgstr ""
 
+#: ../ui/folder/browse_image.xml.en:52
 #: ../ui/folder/browse_image.xml.en:55
 msgctxt "label"
 msgid "${row/title_or_name}"
 msgstr ""
 
+#: ../tracker/ui/menu_goto.xml.en:8
+#: ../tracker/ui/menu_remember.xml.en:8
 #: ../ui/generic/menu.xml.en:8
 msgctxt "label"
 msgid "${title}"
@@ -2284,6 +2426,8 @@ msgctxt "label"
 msgid "Add CC:"
 msgstr ""
 
+#: ../tracker/ui/add_issue.xml.en:46
+#: ../tracker/ui/change_bugs.xml.en:63
 #: ../tracker/ui/edit_issue.xml.en:50
 msgctxt "label"
 msgid "Assign To:"
@@ -2299,6 +2443,7 @@ msgctxt "label"
 msgid "Attachement:"
 msgstr ""
 
+#: ../tracker/ui/add_issue.xml.en:71
 #: ../tracker/ui/edit_issue.xml.en:83
 msgctxt "label"
 msgid "CC:"
@@ -2310,6 +2455,7 @@ msgid "Character encoding"
 msgstr ""
 
 #: ../tracker/ui/edit_resources.xml.en:43
+#: ../tracker/ui/change_bugs.xml.en:74
 msgctxt "label"
 msgid "Comment:"
 msgstr ""
@@ -2345,11 +2491,15 @@ msgid "File"
 msgstr ""
 
 #: ../future/ui/dressable_edit_image.xml.en:18
+#: ../future/ui/dressable_add_image.xml.en:12
 msgctxt "label"
 msgid "Image"
 msgstr ""
 
+#: ../ui/aruni/location.xml.en:10
+#: ../ui/html/addimage.xml.en:42
 #: ../ui/menu/addlink.xml.en:57
+#: ../ui/html/addlink.xml.en:55
 msgctxt "label"
 msgid "Location:"
 msgstr ""
@@ -2359,6 +2509,8 @@ msgctxt "label"
 msgid "Modified since:"
 msgstr ""
 
+#: ../tracker/ui/add_issue.xml.en:28
+#: ../tracker/ui/change_bugs.xml.en:25
 #: ../tracker/ui/edit_issue.xml.en:32
 msgctxt "label"
 msgid "Module:"
@@ -2370,6 +2522,7 @@ msgid "Module:<g id='13'> (<g id='14'>Edit</g>)</g>"
 msgstr ""
 
 #: ../ui/website/new_instance.xml.en:15
+#: ../ui/base/new_instance.xml.en:17
 msgctxt "label"
 msgid "Name"
 msgstr ""
@@ -2389,6 +2542,7 @@ msgctxt "label"
 msgid "New Password"
 msgstr ""
 
+#: ../ui/base/login.xml.en:15
 #: ../ui/user/confirm_registration.xml.en:24
 msgctxt "label"
 msgid "Password"
@@ -2399,6 +2553,8 @@ msgctxt "label"
 msgid "Preferred Language"
 msgstr ""
 
+#: ../tracker/ui/add_issue.xml.en:61
+#: ../tracker/ui/change_bugs.xml.en:44
 #: ../tracker/ui/edit_issue.xml.en:65
 msgctxt "label"
 msgid "Priority:"
@@ -2444,6 +2600,7 @@ msgctxt "label"
 msgid "Start:"
 msgstr ""
 
+#: ../tracker/ui/add_issue.xml.en:54
 #: ../tracker/ui/edit_issue.xml.en:58
 msgctxt "label"
 msgid "Status (mandatory):"
@@ -2465,10 +2622,13 @@ msgid "Text (search within the title and all comments)"
 msgstr ""
 
 #: ../ui/website/new_instance.xml.en:11
+#: ../ui/base/new_instance.xml.en:12
+#: ../ui/file/new_instance.xml.en:12
 msgctxt "label"
 msgid "Title"
 msgstr ""
 
+#: ../tracker/ui/add_issue.xml.en:13
 #: ../tracker/ui/edit_issue.xml.en:17
 msgctxt "label"
 msgid "Title (mandatory):"
@@ -2484,6 +2644,7 @@ msgctxt "label"
 msgid "To confirm these changes, you must type your current password"
 msgstr ""
 
+#: ../tracker/ui/add_issue.xml.en:20
 #: ../tracker/ui/edit_issue.xml.en:24
 msgctxt "label"
 msgid "Type (mandatory):"
@@ -2509,6 +2670,7 @@ msgctxt "label"
 msgid "Username"
 msgstr ""
 
+#: ../tracker/ui/add_issue.xml.en:36
 #: ../tracker/ui/edit_issue.xml.en:40
 msgctxt "label"
 msgid "Version (mandatory):"
@@ -2555,6 +2717,7 @@ msgid "Add New Member"
 msgstr ""
 
 #: ../ui/website/new_instance.xml.en:9
+#: ../ui/base/new_instance.xml.en:10
 msgctxt "legend"
 msgid "Add a new ${class_title}"
 msgstr ""
@@ -2659,7 +2822,10 @@ msgctxt "legend"
 msgid "Password remainder"
 msgstr ""
 
+#: ../tracker/ui/search.xml.en:9
 #: ../ui/website/search_form.xml.en:9
+#: ../ui/folder/browse_search.xml.en:9
+#: ../ui/generic/browse_search.xml.en:7
 msgctxt "legend"
 msgid "Search"
 msgstr ""
@@ -2764,6 +2930,7 @@ msgctxt "link to"
 msgid "${calendar/name}"
 msgstr ""
 
+#: ../ui/folder/browse_image.xml.en:28
 #: ../ui/generic/browse_table.xml.en:21
 msgctxt "link to"
 msgid "${column/title}"
@@ -2784,6 +2951,7 @@ msgctxt "link to"
 msgid "${doc/title}"
 msgstr ""
 
+#: ../ui/html/addlink.xml.en:75
 #: ../ui/menu/addlink.xml.en:77
 msgctxt "link to"
 msgid "${item/short_title}"
@@ -2820,6 +2988,7 @@ msgid "<g id='1'> ${event/SUMMARY}</g>  <g id='2'>${event/TIME}</g>"
 msgstr ""
 
 #: ../ui/text/externaledit.xml.en:17
+#: ../ui/file/externaledit.xml.en:17
 msgctxt "link to"
 msgid "<g id='1'>Download External Editor for Windows</g>."
 msgstr ""
@@ -2870,6 +3039,7 @@ msgid "<g id='2'>Browse</g>  <g id='3'>Upload</g>"
 msgstr ""
 
 #: ../ui/text/externaledit.xml.en:20
+#: ../ui/file/externaledit.xml.en:20
 msgctxt "link to"
 msgid "<g id='2'>Download External Editor for Unix and MacOSX</g>."
 msgstr ""
@@ -2880,6 +3050,7 @@ msgid "<g id='2'>Edit this search</g> | <g id='3'>Change Several Issues</g> | <g
 msgstr ""
 
 #: ../ui/ical/weekly_view.xml.en:13
+#: ../ui/ical/monthly_view.xml.en:13
 msgctxt "link to"
 msgid "<g id='2'>«</g> ${current_week} <g id='3'>»</g>"
 msgstr ""
@@ -2890,11 +3061,13 @@ msgid "<g id='3'>${item/short_name}</g><g id='4'>/</g>"
 msgstr ""
 
 #: ../ui/user/profile.xml.en:17
+#: ../ui/generic/icons_view.xml.en:16
 msgctxt "link to"
 msgid "<g id='3'>${item/title}</g>  <x id='4'/> ${item/description}"
 msgstr ""
 
 #: ../ui/ical/weekly_view.xml.en:18
+#: ../ui/ical/monthly_view.xml.en:18
 msgctxt "link to"
 msgid "<g id='4'>«</g> ${current_month} <g id='5'>»</g>"
 msgstr ""
@@ -2904,6 +3077,7 @@ msgctxt "link to"
 msgid "<g id='5'>></g>  <g id='6'>>></g>"
 msgstr ""
 
+#: ../ui/html/addimage.xml.en:44
 #: ../ui/menu/addlink.xml.en:59
 msgctxt "link to"
 msgid "<g id='6'>${x/short_title}</g> /"
@@ -2915,6 +3089,7 @@ msgid "<g id='6'>Log in</g>  <g id='7'>Register</g>"
 msgstr ""
 
 #: ../ui/ical/weekly_view.xml.en:23
+#: ../ui/ical/monthly_view.xml.en:23
 msgctxt "link to"
 msgid "<g id='6'>«</g> ${current_year} <g id='7'>»</g>"
 msgstr ""
@@ -2935,6 +3110,7 @@ msgid "<g id='8'>My Profile</g>  <g id='9'>Log out</g>"
 msgstr ""
 
 #: ../ui/ical/weekly_view.xml.en:10
+#: ../ui/ical/monthly_view.xml.en:10
 msgctxt "link to"
 msgid "Come back to today"
 msgstr ""
@@ -2974,12 +3150,40 @@ msgctxt "option"
 msgid "${encoding/title}"
 msgstr ""
 
+#: ../ui/folder/browse_search.xml.en:13
 #: ../ui/generic/browse_search.xml.en:11
 msgctxt "option"
 msgid "${field/title}"
 msgstr ""
 
+#: ../tracker/ui/add_issue.xml.en:24
+#: ../tracker/ui/add_issue.xml.en:32
+#: ../tracker/ui/add_issue.xml.en:40
+#: ../tracker/ui/add_issue.xml.en:50
+#: ../tracker/ui/add_issue.xml.en:57
+#: ../tracker/ui/add_issue.xml.en:65
+#: ../tracker/ui/add_issue.xml.en:75
+#: ../tracker/ui/search.xml.en:36
+#: ../tracker/ui/search.xml.en:46
+#: ../tracker/ui/search.xml.en:56
+#: ../tracker/ui/search.xml.en:68
+#: ../tracker/ui/search.xml.en:78
 #: ../tracker/ui/search.xml.en:88
+#: ../tracker/ui/edit_resources.xml.en:16
+#: ../tracker/ui/change_bugs.xml.en:21
+#: ../tracker/ui/change_bugs.xml.en:30
+#: ../tracker/ui/change_bugs.xml.en:40
+#: ../tracker/ui/change_bugs.xml.en:49
+#: ../tracker/ui/change_bugs.xml.en:59
+#: ../tracker/ui/change_bugs.xml.en:68
+#: ../tracker/ui/edit_issue.xml.en:28
+#: ../tracker/ui/edit_issue.xml.en:36
+#: ../tracker/ui/edit_issue.xml.en:44
+#: ../tracker/ui/edit_issue.xml.en:54
+#: ../tracker/ui/edit_issue.xml.en:61
+#: ../tracker/ui/edit_issue.xml.en:69
+#: ../tracker/ui/edit_issue.xml.en:79
+#: ../tracker/ui/edit_issue.xml.en:87
 msgctxt "option"
 msgid "${item/title}"
 msgstr ""
@@ -2990,6 +3194,7 @@ msgid "${item/value}"
 msgstr ""
 
 #: ../ui/website/edit_languages.xml.en:53
+#: ../ui/user/edit_preferences.xml.en:15
 msgctxt "option"
 msgid "${language/name}"
 msgstr ""
@@ -3009,6 +3214,11 @@ msgctxt "option"
 msgid "Choose a language"
 msgstr ""
 
+#: ../tracker/ui/change_bugs.xml.en:19
+#: ../tracker/ui/change_bugs.xml.en:27
+#: ../tracker/ui/change_bugs.xml.en:38
+#: ../tracker/ui/change_bugs.xml.en:46
+#: ../tracker/ui/change_bugs.xml.en:57
 #: ../tracker/ui/change_bugs.xml.en:65
 msgctxt "option"
 msgid "Do not change"
@@ -3075,6 +3285,7 @@ msgid "Apologies for the inconvenience."
 msgstr ""
 
 #: ../ui/text/externaledit.xml.en:12
+#: ../ui/file/externaledit.xml.en:12
 msgctxt "paragraph"
 msgid "Be sure your have the external editor plug-in installed."
 msgstr ""
@@ -3100,6 +3311,7 @@ msgid "If the error persists contact with the system administrator."
 msgstr ""
 
 #: ../ui/text/externaledit.xml.en:12
+#: ../ui/file/externaledit.xml.en:12
 msgctxt "paragraph"
 msgid "If you don't, you can download it from a link below."
 msgstr ""
@@ -3114,6 +3326,7 @@ msgctxt "paragraph"
 msgid "No history."
 msgstr ""
 
+#: ../future/ui/dressable_edit_image.xml.en:10
 #: ../ui/file/upload.xml.en:11
 msgctxt "paragraph"
 msgid "Note the name and title won't change."
@@ -3205,6 +3418,7 @@ msgid "You can download the current picture by clicking right on the image and c
 msgstr ""
 
 #: ../ui/text/externaledit.xml.en:8
+#: ../ui/file/externaledit.xml.en:8
 msgctxt "paragraph"
 msgid "You can edit this document using an application from your desktop, like MS Office or OpenOffice.org."
 msgstr ""
@@ -3214,6 +3428,7 @@ msgctxt "paragraph"
 msgid "You can specify timetables to limit the range when an event can be set."
 msgstr ""
 
+#: ../future/ui/dressable_edit_image.xml.en:10
 #: ../ui/file/upload.xml.en:11
 msgctxt "paragraph"
 msgid "You can upload a new file to replace the current one."
@@ -3279,6 +3494,7 @@ msgctxt "span"
 msgid "${day/name}"
 msgstr ""
 
+#: ../ui/ical/daily_view.xml.en:19
 #: ../ui/ical/daily_view.xml.en:44
 msgctxt "span"
 msgid "${tt}"
@@ -3579,6 +3795,7 @@ msgctxt "td"
 msgid "End"
 msgstr ""
 
+#: ../ui/ical/edit_timetables.xml.en:20
 #: ../ui/ical/edit_timetables.xml.en:31
 msgctxt "td"
 msgid "From"
@@ -3624,6 +3841,7 @@ msgctxt "td"
 msgid "days ago"
 msgstr ""
 
+#: ../ui/ical/edit_timetables.xml.en:24
 #: ../ui/ical/edit_timetables.xml.en:35
 msgctxt "td"
 msgid "to"
@@ -3639,11 +3857,13 @@ msgctxt "textarea"
 msgid "${DESCRIPTION}"
 msgstr ""
 
+#: ../tracker/ui/add_issue.xml.en:83
 #: ../tracker/ui/edit_resources.xml.en:45
 msgctxt "textarea"
 msgid "${comment}"
 msgstr ""
 
+#: ../ui/text/edit.xml.en:9
 #: ../wiki/ui/edit.xml.en:157
 msgctxt "textarea"
 msgid "${data}"
@@ -3684,6 +3904,7 @@ msgctxt "th"
 msgid "Action"
 msgstr ""
 
+#: ../ui/html/addlink.xml.en:64
 #: ../ui/menu/addlink.xml.en:66
 msgctxt "th"
 msgid "Browse Content"
@@ -3704,6 +3925,7 @@ msgctxt "th"
 msgid "Comments"
 msgstr ""
 
+#: ../ui/WorkflowAware_state.xml.en:43
 #: ../ui/file/history.xml.en:12
 msgctxt "th"
 msgid "Date"
@@ -3729,6 +3951,7 @@ msgctxt "th"
 msgid "Name"
 msgstr ""
 
+#: ../ui/html/addlink.xml.en:65
 #: ../ui/menu/addlink.xml.en:67
 msgctxt "th"
 msgid "Select Resource"
@@ -3754,6 +3977,8 @@ msgctxt "title"
 msgid "${title}"
 msgstr ""
 
+#: ../ui/html/addimage.xml.en:7
+#: ../ui/html/addlink.xml.en:7
 #: ../ui/menu/addlink.xml.en:7
 msgctxt "title"
 msgid "Epoz-Toolbox"
