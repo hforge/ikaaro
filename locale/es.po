@@ -1222,10 +1222,9 @@ msgstr ""
 
 #: ../calendar_.py:84
 msgid "Calendar"
-msgstr ""
+msgstr "Calendario"
 
 #: ../ui/ical/edit_event.xml.en:133
-#, fuzzy
 msgctxt "input[value]"
 msgid "Cancel"
 msgstr "Cancelar"
@@ -1623,9 +1622,8 @@ msgid "Edit Language"
 msgstr "Idioma"
 
 #: ../user_views.py:237
-#, fuzzy
 msgid "Edit Password"
-msgstr "Clave de acceso"
+msgstr "Cambiar la contraseña"
 
 #: ../ui/user/edit_password.xml.en:9
 #, fuzzy
@@ -1803,9 +1801,8 @@ msgstr "Fichero"
 
 #: ../user_views.py:142 ../website_views.py:172 ../access.py:64
 #: ../access.py:116
-#, fuzzy
 msgid "First Name"
-msgstr "Nombre completo"
+msgstr "Nombre"
 
 #: ../tracker/tracker.py:94
 #, fuzzy
@@ -2160,9 +2157,8 @@ msgid "Last Author"
 msgstr ""
 
 #: ../folder_views.py:696
-#, fuzzy
 msgid "Last Changes"
-msgstr "Guardar Cambios"
+msgstr "Últimas Modificaciones"
 
 #: ../folder_views.py:220
 msgid "Last Modified"
@@ -2747,7 +2743,7 @@ msgstr "Formato:"
 
 #: ../folder_views.py:525
 msgid "Preview Content"
-msgstr ""
+msgstr "Previsualizar el Contenido"
 
 #: ../ui/generic/browse_batch.xml.en:11 ../ui/binary/Image_view.xml.en:17
 msgctxt "a[title]"
@@ -3850,9 +3846,8 @@ msgid "Want to know who is behind this software?"
 msgstr ""
 
 #: ../html.py:129
-#, fuzzy
 msgid "Web Page"
-msgstr "Sitio Web"
+msgstr "Página Web"
 
 #: ../website_views.py:47 ../website.py:53
 msgid "Web Site"
