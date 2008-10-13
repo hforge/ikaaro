@@ -32,7 +32,7 @@ from itools.xapian import EqQuery, OrQuery, AndQuery, TextField
 
 # Import from ikaaro
 import ikaaro
-from forms import AutoForm, Select, MultilineWidget, TextWidget
+from forms import AutoForm, SelectWidget, MultilineWidget, TextWidget
 import messages
 from registry import get_resource_class
 from registry import get_register_websites, get_website_class
@@ -162,7 +162,6 @@ class RegisterForm(AutoForm):
     access = 'is_allowed_to_register'
     title = MSG(u'Register')
     submit_value = MSG(u'Register')
-    submit_class = 'button_ok'
 
     schema = {
         'firstname': Unicode(mandatory=True),
@@ -229,7 +228,6 @@ class ContactForm(AutoForm):
 
     access = True
     title = MSG(u'Contact')
-    submit_class = 'button_ok'
     submit_value = MSG(u'Send')
 
     def get_schema(self, resource, context):
@@ -242,7 +240,7 @@ class ContactForm(AutoForm):
 
 
     widgets = [
-        Select('to', title=MSG(u'Recipient')),
+        SelectWidget('to', title=MSG(u'Recipient')),
         TextWidget('from', title=MSG(u'Sender email address'), size=40),
         TextWidget('subject', title=MSG(u'Subject'), size=40),
         MultilineWidget('body', title=MSG(u'Body'), rows=8, cols=50),

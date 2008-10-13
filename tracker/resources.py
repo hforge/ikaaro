@@ -31,7 +31,7 @@ from itools.xapian import OrQuery, AndQuery, RangeQuery
 from ikaaro.calendar_ import CalendarBase
 from ikaaro.calendar_views import MonthlyView
 from ikaaro.calendar_views import WeeklyView
-from ikaaro.forms import DateWidget, MultilineWidget, Select, TextWidget
+from ikaaro.forms import DateWidget, MultilineWidget, SelectWidget, TextWidget
 from ikaaro.table import Table
 from ikaaro.registry import register_resource_class
 
@@ -153,7 +153,7 @@ class BaseResources(BaseTable):
         'comment': Unicode}
 
     form = [
-        Select('resource', title=u'Resource'),
+        SelectWidget('resource', title=u'Resource'),
         DateWidget('dtstart', title=u'Start YYYY-MM-DD HH:MM'),
         DateWidget('dtend', title=u'End'),
         MultilineWidget('comment', title=u'Comment'),

@@ -23,7 +23,8 @@ from itools.gettext import MSG
 # Import from ikaaro
 from file import File
 from folder import Folder
-from forms import Widget, TextWidget, Select, ReadOnlyWidget, stl_namespaces
+from forms import Widget, TextWidget, SelectWidget, ReadOnlyWidget
+from forms import stl_namespaces
 from messages import MSG_DELETE_SELECTION, MSG_NEW_RESOURCE
 from registry import register_resource_class
 from resource_views import Breadcrumb, DBResourceAddLink
@@ -61,10 +62,10 @@ class Target(Enumerate):
 class MenuFile(OrderedTableFile):
 
     record_schema = {
-        'title': Unicode(title=u'Title'),
-        'path': String(title=u'Path'),
-        'target': Target(title=u'Target', mandatory=True, default='_top'),
-        'child': String(title=u'Child')}
+        'title': Unicode(title=MSG(u'Title')),
+        'path': String(title=MSG(u'Path')),
+        'target': Target(title=MSG(u'Target'), mandatory=True, default='_top'),
+        'child': String(title=MSG(u'Child'))}
 
 
 class MenuView(OrderedTableView):
@@ -242,9 +243,9 @@ class Menu(OrderedTable):
     view = MenuView()
     add_link = MenuAddLink()
 
-    form = [TextWidget(title=u'Title', name='title'),
-            PathWidget(title=u'Path', name='path'),
-            Select(title=u'Target', name='target'),
+    form = [TextWidget(title=MSG(u'Title'), name='title'),
+            PathWidget(title=MSG(u'Path'), name='path'),
+            SelectWidget(title=MSG(u'Target'), name='target'),
             ReadOnlyWidget(name='child')]
 
 

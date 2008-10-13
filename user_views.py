@@ -25,6 +25,7 @@ from itools.web import STLView, STLForm, INFO, ERROR
 from itools.xapian import EqQuery, AndQuery, OrQuery
 
 # Import from ikaaro
+from forms import TextWidget, PasswordWidget, AutoForm
 import messages
 from utils import resolve_view
 
@@ -126,28 +127,40 @@ class UserProfile(STLView):
 
 
 
-class UserEditAccount(STLForm):
+class UserEditAccount(AutoForm):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Edit Account')
     description = MSG(u'Edit your name and email address.')
     icon = 'card.png'
-    template = '/ui/user/edit_account.xml'
     schema = {
-        'password': String,
-        'email': Email,
         'firstname': Unicode,
         'lastname': Unicode,
+        'email': Email,
+        'password': String,
     }
+    widgets = [TextWidget('firstname', title=MSG(u"First Name")),
+               TextWidget('lastname', title=MSG(u"Last Name")),
+               TextWidget('email', title=MSG(u"E-mail Address"))]
 
 
-    def get_namespace(self, resource, context):
-        return {
-            'firstname': resource.get_property('firstname'),
-            'lastname': resource.get_property('lastname'),
-            'email': resource.get_property('email'),
-            'must_confirm': (resource.name == context.user.name),
-        }
+    def get_widgets(self, resource, context):
+        widgets = list(self.widgets)
+
+        # User must confirm?
+        if resource.name == context.user.name:
+            widgets.append(PasswordWidget('password',
+                mandatory=True,
+                title=MSG(u"To confirm these changes, "
+                          u"you must type your password")))
+
+        return widgets
+
+
+    def get_value(self, resource, context, name, datatype):
+        if name == 'password':
+            return None
+        return resource.get_property(name)
 
 
     def action(self, resource, context, form):

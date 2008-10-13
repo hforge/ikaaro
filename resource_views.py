@@ -148,8 +148,6 @@ class DBResourceEdit(AutoForm):
     title = MSG(u'Edit')
     icon = 'metadata.png'
     context_menus = [EditLanguageMenu()]
-    submit_value = MSG(u'Save Changes')
-    submit_class = 'button_ok'
 
     schema = {
         'title': Unicode,

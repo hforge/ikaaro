@@ -176,7 +176,6 @@ class TableAddRecord(AutoForm):
     title = MSG(u'Add Record')
     icon = 'new.png'
     submit_value = MSG(u'Add')
-    submit_class = 'button_ok'
 
 
     def get_schema(self, resource, context):
@@ -237,8 +236,6 @@ class TableEditRecord(AutoForm):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Edit record ${id}')
-    submit_value = MSG(u'Change')
-    submit_class = 'button_ok'
     query_schema = {'id': Integer}
 
 

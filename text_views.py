@@ -236,7 +236,6 @@ class CSVView(BrowseForm):
 class RowForm(AutoForm):
 
     access = 'is_allowed_to_edit'
-    submit_class = 'button_ok'
 
     def get_schema(self, resource, context):
         schema = resource.handler.schema
@@ -278,7 +277,6 @@ class CSVAddRow(RowForm):
 class CSVEditRow(RowForm):
 
     title = MSG(u'Edit row #${id}')
-    submit_value = MSG(u'Change')
     query_schema = {
         'index': Integer,
     }

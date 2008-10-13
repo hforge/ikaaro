@@ -74,7 +74,7 @@ def get_default_widget(datatype):
     elif is_datatype(datatype, Date):
         return DateWidget
     elif is_datatype(datatype, Enumerate):
-        return Select
+        return SelectWidget
 
     return TextWidget
 
@@ -140,6 +140,12 @@ class HiddenWidget(Widget):
 class FileWidget(Widget):
 
     type = 'file'
+
+
+
+class PasswordWidget(Widget):
+
+    type = 'password'
 
 
 
@@ -235,7 +241,7 @@ class BooleanRadio(Widget):
 
 
 
-class Select(Widget):
+class SelectWidget(Widget):
 
     template = list(XMLParser("""
         <select name="${name}" multiple="${multiple}">
@@ -439,6 +445,8 @@ class AutoForm(STLForm):
     widgets = []
     required_msg = None
     template = '/ui/auto_form.xml'
+    submit_value = MSG(u'Save Changes')
+    submit_class = 'button_ok'
 
 
     def get_widgets(self, resource, context):
