@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: it\n"
-"POT-Creation-Date: 2008-10-13 16:10+CET\n"
+"POT-Creation-Date: 2008-10-13 17:10+CET\n"
 "PO-Revision-Date: 2004-11-26 14:39+0100\n"
 "Last-Translator: Paolo Dina <paolo@php3.it>\n"
 "Language-Team: Italian <paolo@php3.it>\n"
@@ -1002,7 +1002,7 @@ msgstr ""
 msgid "ANONYMOUS"
 msgstr ""
 
-#: ../website_views.py:368
+#: ../website_views.py:366
 msgid "About"
 msgstr "A proposito di"
 
@@ -1015,7 +1015,7 @@ msgctxt "legend"
 msgid "Access Forbidden"
 msgstr ""
 
-#: ../user_views.py:183
+#: ../user_views.py:196
 #, fuzzy
 msgid "Account changed."
 msgstr "Metadati modificati"
@@ -1052,7 +1052,7 @@ msgctxt "label"
 msgid "Add CC:"
 msgstr "Aggiungi"
 
-#: ../menu.py:117
+#: ../menu.py:118
 msgid "Add Child"
 msgstr ""
 
@@ -1083,7 +1083,7 @@ msgstr "Nuovo utente"
 msgid "Add Resource"
 msgstr "Nuovo utente"
 
-#: ../text_views.py:263
+#: ../text_views.py:262
 #, fuzzy
 msgid "Add Row"
 msgstr "Aggiungi"
@@ -1132,7 +1132,7 @@ msgid ""
 "An email has been sent to you with the procedure to change your password."
 msgstr ""
 
-#: ../website_views.py:209
+#: ../website_views.py:208
 msgid ""
 "An email has been sent to you, to finish the registration process follow the "
 "instructions detailed in it."
@@ -1148,7 +1148,7 @@ msgctxt "paragraph"
 msgid "Apologies for the inconvenience."
 msgstr "Siamo spiacenti dell'inconveniente."
 
-#: ../user_views.py:217
+#: ../user_views.py:230
 msgid "Application preferences changed."
 msgstr ""
 
@@ -1237,7 +1237,7 @@ msgctxt "paragraph"
 msgid "Be sure your have the external editor plug-in installed."
 msgstr ""
 
-#: ../website_views.py:248
+#: ../website_views.py:246
 #, fuzzy
 msgid "Body"
 msgstr "Cartella"
@@ -1343,10 +1343,6 @@ msgstr "Azione"
 msgid "Catalan"
 msgstr "Catalano"
 
-#: ../text_views.py:281
-msgid "Change"
-msgstr "OK"
-
 #: ../ui/website/contact_options.xml.en:21
 #, fuzzy
 msgctxt "input[value]"
@@ -1375,7 +1371,7 @@ msgctxt "input[value]"
 msgid "Change default"
 msgstr "Modifica l'impostazione predefinita"
 
-#: ../user_views.py:225
+#: ../user_views.py:238
 #, fuzzy
 msgid "Change your password."
 msgstr "Modifica l'impostazione predefinita"
@@ -1399,7 +1395,7 @@ msgstr ""
 msgid "Check the referential integrity."
 msgstr ""
 
-#: ../menu.py:67
+#: ../menu.py:68
 msgid "Child"
 msgstr ""
 
@@ -1517,7 +1513,7 @@ msgstr "Anteprima"
 msgid "Confirmed"
 msgstr ""
 
-#: ../website_views.py:231
+#: ../website_views.py:230
 #, fuzzy
 msgid "Contact"
 msgstr "Contenuti"
@@ -1552,7 +1548,7 @@ msgstr ""
 msgid "Create and publish a Web Page."
 msgstr "Pubblica il documento."
 
-#: ../website_views.py:383
+#: ../website_views.py:381
 msgid "Credits"
 msgstr ""
 
@@ -1562,7 +1558,7 @@ msgctxt "heading"
 msgid "Current image"
 msgstr "Testo integrale"
 
-#: ../menu.py:57
+#: ../menu.py:58
 msgid "Current page"
 msgstr ""
 
@@ -1630,7 +1626,7 @@ msgstr ""
 msgid "Delete"
 msgstr "Default"
 
-#: ../forms.py:416
+#: ../forms.py:422
 msgid "Description"
 msgstr "Descrizione"
 
@@ -1666,6 +1662,11 @@ msgstr ""
 msgid "Dressable"
 msgstr "Preambolo"
 
+#: ../user_views.py:144
+#, fuzzy
+msgid "E-mail Address"
+msgstr "Utenti"
+
 #: ../wiki/page_views.py:321
 msgid "Edit"
 msgstr "Modifica"
@@ -1682,14 +1683,8 @@ msgctxt "link to"
 msgid "Edit"
 msgstr "Modifica"
 
-#: ../user_views.py:132
+#: ../user_views.py:133
 #, fuzzy
-msgid "Edit Account"
-msgstr "A proposito di"
-
-#: ../ui/user/edit_account.xml.en:9
-#, fuzzy
-msgctxt "legend"
 msgid "Edit Account"
 msgstr "A proposito di"
 
@@ -1730,7 +1725,7 @@ msgstr "Utenti"
 msgid "Edit Language"
 msgstr "Linguaggio"
 
-#: ../user_views.py:224
+#: ../user_views.py:237
 #, fuzzy
 msgid "Edit Password"
 msgstr "Parola d'accesso"
@@ -1741,7 +1736,7 @@ msgctxt "legend"
 msgid "Edit Password"
 msgstr "Parola d'accesso"
 
-#: ../user_views.py:190
+#: ../user_views.py:203
 #, fuzzy
 msgid "Edit Preferences"
 msgstr "Preferenze"
@@ -1768,7 +1763,7 @@ msgstr ""
 msgid "Edit image"
 msgstr "Testo integrale"
 
-#: ../table_views.py:239
+#: ../table_views.py:238
 #, fuzzy
 msgid "Edit record ${id}"
 msgstr "Gruppi"
@@ -1778,7 +1773,7 @@ msgstr "Gruppi"
 msgid "Edit resources"
 msgstr "Utenti"
 
-#: ../text_views.py:280
+#: ../text_views.py:279
 msgid "Edit row #${id}"
 msgstr ""
 
@@ -1793,7 +1788,7 @@ msgctxt "legend"
 msgid "Edit the timetable grid"
 msgstr ""
 
-#: ../user_views.py:133
+#: ../user_views.py:134
 msgid "Edit your name and email address."
 msgstr ""
 
@@ -1803,11 +1798,11 @@ msgctxt "dt"
 msgid "Email"
 msgstr "Email"
 
-#: ../website_views.py:175
+#: ../website_views.py:174
 msgid "Email Address"
 msgstr ""
 
-#: ../ui/user/edit_account.xml.en:21
+#: ../ui/base/login.xml.en:11
 #, fuzzy
 msgctxt "label"
 msgid "Email Address"
@@ -1837,7 +1832,7 @@ msgctxt "title"
 msgid "Epoz-Toolbox"
 msgstr "Epoz-Toolbox"
 
-#: ../table_views.py:304
+#: ../table_views.py:301
 #, fuzzy
 msgid "Error: $message"
 msgstr "Messaggio"
@@ -1914,14 +1909,8 @@ msgctxt "label"
 msgid "File"
 msgstr "File"
 
-#: ../website_views.py:173
+#: ../website_views.py:172
 #, fuzzy
-msgid "First Name"
-msgstr "Nome completo"
-
-#: ../ui/user/edit_account.xml.en:11
-#, fuzzy
-msgctxt "label"
 msgid "First Name"
 msgstr "Nome completo"
 
@@ -2266,7 +2255,7 @@ msgstr ""
 msgid "June"
 msgstr ""
 
-#: ../forms.py:418
+#: ../forms.py:424
 msgid "Keywords (Separated by comma)"
 msgstr ""
 
@@ -2308,14 +2297,8 @@ msgstr "OK"
 msgid "Last Modified"
 msgstr "modificato:"
 
-#: ../website_views.py:174
+#: ../website_views.py:173
 #, fuzzy
-msgid "Last Name"
-msgstr "Nome"
-
-#: ../ui/user/edit_account.xml.en:16
-#, fuzzy
-msgctxt "label"
 msgid "Last Name"
 msgstr "Nome"
 
@@ -2347,7 +2330,7 @@ msgctxt "legend"
 msgid "Log in"
 msgstr "Entra"
 
-#: ../resource_views.py:467
+#: ../resource_views.py:465
 msgid "Login"
 msgstr "Entra"
 
@@ -2393,7 +2376,7 @@ msgstr ""
 msgid "Members deleted."
 msgstr "Nessun oggetto selezionato."
 
-#: ../menu.py:338
+#: ../menu.py:339
 msgid "Menu"
 msgstr ""
 
@@ -2424,7 +2407,7 @@ msgstr "Salva la traduzione"
 msgid "Message in a thread"
 msgstr "Messaggio modificato."
 
-#: ../website_views.py:277
+#: ../website_views.py:275
 #, fuzzy
 msgid "Message sent."
 msgstr "Messaggio modificato."
@@ -2530,17 +2513,17 @@ msgstr "leggi"
 msgid "New issue added."
 msgstr "Aggiunta nuova risorsa"
 
-#: ../menu.py:56
+#: ../menu.py:57
 #, fuzzy
 msgid "New page"
 msgstr "Nuova area di lavoro"
 
-#: ../table_views.py:226
+#: ../table_views.py:225
 #, fuzzy
 msgid "New record added."
 msgstr "Aggiunta nuova risorsa"
 
-#: ../text_views.py:272
+#: ../text_views.py:271
 #, fuzzy
 msgid "New row added."
 msgstr "Aggiunta nuova risorsa"
@@ -2657,22 +2640,22 @@ msgstr "Documento modificato."
 msgid "OOo Writer"
 msgstr "scrivi"
 
-#: ../menu.py:157
+#: ../menu.py:158
 #, fuzzy
 msgid "Objects ordered down."
 msgstr "Oggetti rinominati."
 
-#: ../menu.py:179
+#: ../menu.py:180
 #, fuzzy
 msgid "Objects ordered on bottom."
 msgstr "Tutti gli utenti sono stati aggiunti."
 
-#: ../menu.py:168
+#: ../menu.py:169
 #, fuzzy
 msgid "Objects ordered on top."
 msgstr "Tutti gli utenti sono stati aggiunti."
 
-#: ../menu.py:147
+#: ../menu.py:148
 #, fuzzy
 msgid "Objects ordered up."
 msgstr "Oggetti rinominati."
@@ -2721,24 +2704,24 @@ msgstr ""
 msgid "OpenOffice.org Text"
 msgstr ""
 
-#: ../user_views.py:80
+#: ../user_views.py:81
 msgid "Operation successful! Welcome."
 msgstr ""
 
-#: ../table_views.py:329
+#: ../table_views.py:326
 msgid "Order bottom"
 msgstr ""
 
-#: ../table_views.py:327
+#: ../table_views.py:324
 msgid "Order down"
 msgstr ""
 
-#: ../table_views.py:328
+#: ../table_views.py:325
 #, fuzzy
 msgid "Order top"
 msgstr "Cartella"
 
-#: ../table_views.py:326
+#: ../table_views.py:323
 msgid "Order up"
 msgstr ""
 
@@ -2800,7 +2783,7 @@ msgctxt "label"
 msgid "Password"
 msgstr "Parola d'accesso"
 
-#: ../user_views.py:274
+#: ../user_views.py:287
 msgid "Password changed."
 msgstr "Parola d'accesso modificata."
 
@@ -2810,7 +2793,7 @@ msgctxt "legend"
 msgid "Password remainder"
 msgstr "Parola d'accesso modificata."
 
-#: ../user_views.py:259
+#: ../user_views.py:272
 #, fuzzy
 msgid "Passwords mismatch, please try again."
 msgstr "La password è errata, tenta di nuovo."
@@ -2819,7 +2802,7 @@ msgstr "La password è errata, tenta di nuovo."
 msgid "Paste"
 msgstr "Incolla"
 
-#: ../menu.py:246
+#: ../menu.py:247
 #, fuzzy
 msgid "Path"
 msgstr "Incolla"
@@ -2843,42 +2826,42 @@ msgctxt "fieldset"
 msgid "Please select encoding:"
 msgstr "Devi scegliere un collaboratore da rimuovere."
 
-#: ../menu.py:153
+#: ../menu.py:154
 #, fuzzy
 msgid "Please select the objects to order down."
 msgstr "Devi scegliere un collaboratore da rimuovere."
 
-#: ../menu.py:174
+#: ../menu.py:175
 #, fuzzy
 msgid "Please select the objects to order on bottom."
 msgstr "Devi scegliere un collaboratore da rimuovere."
 
-#: ../menu.py:163
+#: ../menu.py:164
 #, fuzzy
 msgid "Please select the objects to order on top."
 msgstr "Devi scegliere un collaboratore da rimuovere."
 
-#: ../menu.py:143
+#: ../menu.py:144
 #, fuzzy
 msgid "Please select the objects to order up."
 msgstr "Devi scegliere un collaboratore da rimuovere."
 
-#: ../table_views.py:359
+#: ../table_views.py:356
 #, fuzzy
 msgid "Please select the resources to order down."
 msgstr "Devi scegliere un collaboratore da rimuovere."
 
-#: ../table_views.py:381
+#: ../table_views.py:378
 #, fuzzy
 msgid "Please select the resources to order on bottom."
 msgstr "Devi scegliere un collaboratore da rimuovere."
 
-#: ../table_views.py:370
+#: ../table_views.py:367
 #, fuzzy
 msgid "Please select the resources to order on top."
 msgstr "Devi scegliere un collaboratore da rimuovere."
 
-#: ../table_views.py:348
+#: ../table_views.py:345
 #, fuzzy
 msgid "Please select the resources to order up."
 msgstr "Devi scegliere un collaboratore da rimuovere."
@@ -2953,7 +2936,7 @@ msgstr ""
 msgid "Private"
 msgstr "privato"
 
-#: ../user_views.py:88
+#: ../user_views.py:89
 msgid "Profile"
 msgstr ""
 
@@ -2988,12 +2971,12 @@ msgstr ""
 msgid "RTF Document"
 msgstr "Nuovo documento"
 
-#: ../website_views.py:245
+#: ../website_views.py:243
 #, fuzzy
 msgid "Recipient"
 msgstr "Anteprima"
 
-#: ../table_views.py:342
+#: ../table_views.py:339
 #, fuzzy
 msgid "Record deleted."
 msgstr "Registrazione modificata."
@@ -3071,7 +3054,7 @@ msgctxt "input[value]"
 msgid "Replace"
 msgstr "Anteprima"
 
-#: ../forms.py:421
+#: ../forms.py:427
 #, fuzzy
 msgid "Replace file"
 msgstr "Carica file"
@@ -3141,22 +3124,22 @@ msgstr "Nuova risorsa"
 msgid "Resources cut."
 msgstr "Nuova risorsa"
 
-#: ../table_views.py:364
+#: ../table_views.py:361
 #, fuzzy
 msgid "Resources ordered down."
 msgstr "Oggetti rinominati."
 
-#: ../table_views.py:386
+#: ../table_views.py:383
 #, fuzzy
 msgid "Resources ordered on bottom."
 msgstr "Tutti gli utenti sono stati aggiunti."
 
-#: ../table_views.py:375
+#: ../table_views.py:372
 #, fuzzy
 msgid "Resources ordered on top."
 msgstr "Tutti gli utenti sono stati aggiunti."
 
-#: ../table_views.py:353
+#: ../table_views.py:350
 #, fuzzy
 msgid "Resources ordered up."
 msgstr "Oggetti rinominati."
@@ -3231,7 +3214,7 @@ msgctxt "input[value]"
 msgid "Save &amp; View"
 msgstr ""
 
-#: ../resource_views.py:151
+#: ../forms.py:448
 #, fuzzy
 msgid "Save Changes"
 msgstr "OK"
@@ -3246,7 +3229,7 @@ msgstr "OK"
 msgid "Schedule your time with calendar files."
 msgstr ""
 
-#: ../website_views.py:284
+#: ../website_views.py:282
 msgid "Search"
 msgstr "Cerca"
 
@@ -3291,7 +3274,7 @@ msgstr ""
 msgid "See the users and their roles."
 msgstr "Tutti gli utenti sono stati aggiunti."
 
-#: ../user_views.py:282
+#: ../user_views.py:295
 #, fuzzy
 msgid "See your pending tasks."
 msgstr "in attesa di pubblicazione"
@@ -3316,11 +3299,11 @@ msgctxt "label"
 msgid "Select the contact accounts"
 msgstr ""
 
-#: ../website_views.py:233
+#: ../website_views.py:231
 msgid "Send"
 msgstr ""
 
-#: ../website_views.py:246
+#: ../website_views.py:244
 msgid "Sender email address"
 msgstr ""
 
@@ -3328,7 +3311,7 @@ msgstr ""
 msgid "September"
 msgstr ""
 
-#: ../user_views.py:191
+#: ../user_views.py:204
 #, fuzzy
 msgid "Set your preferred language."
 msgstr "Scegli il tuo linguaggio:"
@@ -3442,7 +3425,7 @@ msgstr "Cerca"
 msgid "Stored Searches"
 msgstr ""
 
-#: ../website_views.py:247
+#: ../website_views.py:245
 #, fuzzy
 msgid "Subject"
 msgstr "Soggetto"
@@ -3474,12 +3457,12 @@ msgstr "Confronta"
 msgid "Tar Archive"
 msgstr ""
 
-#: ../menu.py:247
+#: ../menu.py:248
 #, fuzzy
 msgid "Target"
 msgstr "Confronta"
 
-#: ../user_views.py:281
+#: ../user_views.py:294
 msgid "Tasks"
 msgstr "Incarichi"
 
@@ -3501,7 +3484,7 @@ msgctxt "label"
 msgid "Text (search within the title and all comments)"
 msgstr ""
 
-#: ../forms.py:458
+#: ../forms.py:466
 msgid ""
 "The <span class=\"field_is_required\">emphasized</span> fields are required."
 msgstr ""
@@ -3544,7 +3527,7 @@ msgstr ""
 msgid "The file must be entered."
 msgstr "Deve essere inserito un file"
 
-#: ../resource_views.py:365
+#: ../resource_views.py:363
 msgid "The given file is not of the type \"$class_id\"."
 msgstr ""
 
@@ -3557,7 +3540,7 @@ msgstr "Tutti gli utenti sono stati aggiunti."
 msgid "The name is missing."
 msgstr ""
 
-#: ../resource_views.py:509
+#: ../resource_views.py:507
 #, fuzzy
 msgid "The password is wrong."
 msgstr "La password è errata"
@@ -3587,12 +3570,12 @@ msgstr "Il linguaggio predefinito è stato modificato."
 msgid "The search title has been changed."
 msgstr "Il linguaggio predefinito è stato modificato."
 
-#: ../resource_views.py:491
+#: ../resource_views.py:489
 #, fuzzy
 msgid "The user \"$username\" does not exist."
 msgstr "L'utente \"%s\" non esiste"
 
-#: ../resource_views.py:502
+#: ../resource_views.py:500
 #, fuzzy
 msgid "The user \"$username\" is not active."
 msgstr "L'utente \"%s\" non esiste"
@@ -3634,7 +3617,7 @@ msgstr "Il nome utente è errato, tenta di nuovo"
 msgid "There is 1 item."
 msgstr "Il titolo"
 
-#: ../website_views.py:192
+#: ../website_views.py:191
 #, fuzzy
 msgid "There is already an active user with that email."
 msgstr "Esiste già un altro gruppo con questo nome."
@@ -3643,7 +3626,7 @@ msgstr "Esiste già un altro gruppo con questo nome."
 msgid "There is already another resource with this name."
 msgstr "Esiste già un'altra risorsa con questo nome."
 
-#: ../user_views.py:174
+#: ../user_views.py:187
 #, fuzzy
 msgid "There is another user with the email \"${email}\", please try again."
 msgstr ""
@@ -3754,8 +3737,7 @@ msgctxt "label"
 msgid "To confirm these changes, you must type your current password"
 msgstr ""
 
-#: ../ui/user/edit_account.xml.en:28
-msgctxt "label"
+#: ../user_views.py:154
 msgid "To confirm these changes, you must type your password"
 msgstr ""
 
@@ -3965,7 +3947,7 @@ msgstr "Utente aggiunto"
 msgid "User has already confirm his registration!"
 msgstr ""
 
-#: ../user_views.py:89
+#: ../user_views.py:90
 msgid "User's profile page."
 msgstr ""
 
@@ -4118,7 +4100,7 @@ msgctxt "td"
 msgid "Yes"
 msgstr ""
 
-#: ../resource_views.py:549
+#: ../resource_views.py:547
 msgid "You Are Now Logged out."
 msgstr ""
 
@@ -4179,7 +4161,7 @@ msgid ""
 "support UTF-8 (not recommended)."
 msgstr ""
 
-#: ../user_views.py:252
+#: ../user_views.py:265
 msgid "You mistyped your actual password, your account is not changed."
 msgstr ""
 
@@ -4254,7 +4236,7 @@ msgstr "OK"
 msgid "iKaaro"
 msgstr "iKaaro"
 
-#: ../menu.py:330
+#: ../menu.py:331
 #, fuzzy
 msgid "iKaaro Menu"
 msgstr "iKaaro"
@@ -5003,6 +4985,9 @@ msgstr ""
 #~ msgid "Center"
 #~ msgstr "Generale"
 
+#~ msgid "Change"
+#~ msgstr "OK"
+
 #, fuzzy
 #~ msgid "Change account"
 #~ msgstr "Modifica l'impostazione predefinita"
@@ -5211,6 +5196,11 @@ msgstr ""
 #~ msgstr "Ad ogni versione è associato un numero di versione univoco."
 
 #, fuzzy
+#~ msgctxt "legend"
+#~ msgid "Edit Account"
+#~ msgstr "A proposito di"
+
+#, fuzzy
 #~ msgid "Edit Metadata"
 #~ msgstr "Metadati"
 
@@ -5248,6 +5238,11 @@ msgstr ""
 #~ msgid "Finally, every program is threatened constantly by software patents."
 #~ msgstr ""
 #~ "Finally, any free program is threatened constantly by software patents."
+
+#, fuzzy
+#~ msgctxt "label"
+#~ msgid "First Name"
+#~ msgstr "Nome completo"
 
 #, fuzzy
 #~ msgid "Firstname:"
@@ -5583,6 +5578,11 @@ msgstr ""
 #~ "Language <stl:inline content=\"table/sortcontrol(language)\"></stl:inline>"
 #~ msgstr ""
 #~ "Nome utente <stl:inline content=\"table/sortcontrol(name)\"></stl:inline>"
+
+#, fuzzy
+#~ msgctxt "label"
+#~ msgid "Last Name"
+#~ msgstr "Nome"
 
 #, fuzzy
 #~ msgid "Last name"

@@ -3,7 +3,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: zh\n"
-"POT-Creation-Date: 2008-10-13 16:10+CET\n"
+"POT-Creation-Date: 2008-10-13 17:10+CET\n"
 "PO-Revision-Date: 2007-10-30 17:58+0100\n"
 "Last-Translator: Zhouli <zhouli@in-girum.net>\n"
 "Language-Team:  <zh@li.org>\n"
@@ -989,7 +989,7 @@ msgstr ""
 msgid "ANONYMOUS"
 msgstr ""
 
-#: ../website_views.py:368
+#: ../website_views.py:366
 msgid "About"
 msgstr "关于IKAARO"
 
@@ -1002,7 +1002,7 @@ msgctxt "legend"
 msgid "Access Forbidden"
 msgstr ""
 
-#: ../user_views.py:183
+#: ../user_views.py:196
 #, fuzzy
 msgid "Account changed."
 msgstr "用户资料被变更."
@@ -1038,7 +1038,7 @@ msgctxt "label"
 msgid "Add CC:"
 msgstr "加入"
 
-#: ../menu.py:117
+#: ../menu.py:118
 msgid "Add Child"
 msgstr ""
 
@@ -1069,7 +1069,7 @@ msgstr "新用户"
 msgid "Add Resource"
 msgstr "新用户"
 
-#: ../text_views.py:263
+#: ../text_views.py:262
 #, fuzzy
 msgid "Add Row"
 msgstr "加入"
@@ -1118,7 +1118,7 @@ msgid ""
 "An email has been sent to you with the procedure to change your password."
 msgstr ""
 
-#: ../website_views.py:209
+#: ../website_views.py:208
 msgid ""
 "An email has been sent to you, to finish the registration process follow the "
 "instructions detailed in it."
@@ -1133,7 +1133,7 @@ msgctxt "paragraph"
 msgid "Apologies for the inconvenience."
 msgstr ""
 
-#: ../user_views.py:217
+#: ../user_views.py:230
 msgid "Application preferences changed."
 msgstr ""
 
@@ -1218,7 +1218,7 @@ msgctxt "paragraph"
 msgid "Be sure your have the external editor plug-in installed."
 msgstr ""
 
-#: ../website_views.py:248
+#: ../website_views.py:246
 msgid "Body"
 msgstr "正文"
 
@@ -1323,10 +1323,6 @@ msgstr "登录"
 msgid "Catalan"
 msgstr "加泰隆尼语"
 
-#: ../text_views.py:281
-msgid "Change"
-msgstr "改换"
-
 #: ../ui/website/contact_options.xml.en:21
 #, fuzzy
 msgctxt "input[value]"
@@ -1355,7 +1351,7 @@ msgctxt "input[value]"
 msgid "Change default"
 msgstr "改变内设"
 
-#: ../user_views.py:225
+#: ../user_views.py:238
 #, fuzzy
 msgid "Change your password."
 msgstr "改变内设"
@@ -1379,7 +1375,7 @@ msgstr ""
 msgid "Check the referential integrity."
 msgstr ""
 
-#: ../menu.py:67
+#: ../menu.py:68
 msgid "Child"
 msgstr ""
 
@@ -1496,7 +1492,7 @@ msgstr "查阅"
 msgid "Confirmed"
 msgstr ""
 
-#: ../website_views.py:231
+#: ../website_views.py:230
 msgid "Contact"
 msgstr "联系我们"
 
@@ -1530,7 +1526,7 @@ msgstr ""
 msgid "Create and publish a Web Page."
 msgstr "列出文档"
 
-#: ../website_views.py:383
+#: ../website_views.py:381
 msgid "Credits"
 msgstr ""
 
@@ -1540,7 +1536,7 @@ msgctxt "heading"
 msgid "Current image"
 msgstr "简易文件"
 
-#: ../menu.py:57
+#: ../menu.py:58
 msgid "Current page"
 msgstr ""
 
@@ -1608,7 +1604,7 @@ msgstr ""
 msgid "Delete"
 msgstr "设置"
 
-#: ../forms.py:416
+#: ../forms.py:422
 msgid "Description"
 msgstr ""
 
@@ -1644,6 +1640,11 @@ msgstr ""
 msgid "Dressable"
 msgstr "信息"
 
+#: ../user_views.py:144
+#, fuzzy
+msgid "E-mail Address"
+msgstr "用户"
+
 #: ../wiki/page_views.py:321
 msgid "Edit"
 msgstr "编辑"
@@ -1660,14 +1661,8 @@ msgctxt "link to"
 msgid "Edit"
 msgstr "编辑"
 
-#: ../user_views.py:132
+#: ../user_views.py:133
 #, fuzzy
-msgid "Edit Account"
-msgstr "关于IKAARO"
-
-#: ../ui/user/edit_account.xml.en:9
-#, fuzzy
-msgctxt "legend"
 msgid "Edit Account"
 msgstr "关于IKAARO"
 
@@ -1708,7 +1703,7 @@ msgstr "用户"
 msgid "Edit Language"
 msgstr "语言"
 
-#: ../user_views.py:224
+#: ../user_views.py:237
 #, fuzzy
 msgid "Edit Password"
 msgstr "密码"
@@ -1719,7 +1714,7 @@ msgctxt "legend"
 msgid "Edit Password"
 msgstr "密码"
 
-#: ../user_views.py:190
+#: ../user_views.py:203
 #, fuzzy
 msgid "Edit Preferences"
 msgstr "优先"
@@ -1746,7 +1741,7 @@ msgstr ""
 msgid "Edit image"
 msgstr "简易文件"
 
-#: ../table_views.py:239
+#: ../table_views.py:238
 msgid "Edit record ${id}"
 msgstr ""
 
@@ -1755,7 +1750,7 @@ msgstr ""
 msgid "Edit resources"
 msgstr "用户"
 
-#: ../text_views.py:280
+#: ../text_views.py:279
 msgid "Edit row #${id}"
 msgstr ""
 
@@ -1770,7 +1765,7 @@ msgctxt "legend"
 msgid "Edit the timetable grid"
 msgstr ""
 
-#: ../user_views.py:133
+#: ../user_views.py:134
 msgid "Edit your name and email address."
 msgstr ""
 
@@ -1779,11 +1774,11 @@ msgctxt "dt"
 msgid "Email"
 msgstr ""
 
-#: ../website_views.py:175
+#: ../website_views.py:174
 msgid "Email Address"
 msgstr ""
 
-#: ../ui/user/edit_account.xml.en:21
+#: ../ui/base/login.xml.en:11
 #, fuzzy
 msgctxt "label"
 msgid "Email Address"
@@ -1812,7 +1807,7 @@ msgctxt "title"
 msgid "Epoz-Toolbox"
 msgstr ""
 
-#: ../table_views.py:304
+#: ../table_views.py:301
 #, fuzzy
 msgid "Error: $message"
 msgstr "信息"
@@ -1889,14 +1884,8 @@ msgctxt "label"
 msgid "File"
 msgstr "名称"
 
-#: ../website_views.py:173
+#: ../website_views.py:172
 #, fuzzy
-msgid "First Name"
-msgstr "你的全名"
-
-#: ../ui/user/edit_account.xml.en:11
-#, fuzzy
-msgctxt "label"
 msgid "First Name"
 msgstr "你的全名"
 
@@ -2228,7 +2217,7 @@ msgstr ""
 msgid "June"
 msgstr ""
 
-#: ../forms.py:418
+#: ../forms.py:424
 msgid "Keywords (Separated by comma)"
 msgstr ""
 
@@ -2269,14 +2258,8 @@ msgstr "改换"
 msgid "Last Modified"
 msgstr ""
 
-#: ../website_views.py:174
+#: ../website_views.py:173
 #, fuzzy
-msgid "Last Name"
-msgstr "姓名"
-
-#: ../ui/user/edit_account.xml.en:16
-#, fuzzy
-msgctxt "label"
 msgid "Last Name"
 msgstr "姓名"
 
@@ -2308,7 +2291,7 @@ msgctxt "legend"
 msgid "Log in"
 msgstr "登录"
 
-#: ../resource_views.py:467
+#: ../resource_views.py:465
 msgid "Login"
 msgstr "登录"
 
@@ -2354,7 +2337,7 @@ msgstr ""
 msgid "Members deleted."
 msgstr "没有物件被选中"
 
-#: ../menu.py:338
+#: ../menu.py:339
 msgid "Menu"
 msgstr ""
 
@@ -2385,7 +2368,7 @@ msgstr "信息"
 msgid "Message in a thread"
 msgstr "信息被修正."
 
-#: ../website_views.py:277
+#: ../website_views.py:275
 #, fuzzy
 msgid "Message sent."
 msgstr "信息被修正."
@@ -2490,17 +2473,17 @@ msgstr "读入"
 msgid "New issue added."
 msgstr "新资料被加入."
 
-#: ../menu.py:56
+#: ../menu.py:57
 #, fuzzy
 msgid "New page"
 msgstr "新工作界面"
 
-#: ../table_views.py:226
+#: ../table_views.py:225
 #, fuzzy
 msgid "New record added."
 msgstr "新资料被加入."
 
-#: ../text_views.py:272
+#: ../text_views.py:271
 #, fuzzy
 msgid "New row added."
 msgstr "新资料被加入."
@@ -2614,22 +2597,22 @@ msgstr "编辑文档"
 msgid "OOo Writer"
 msgstr "写入"
 
-#: ../menu.py:157
+#: ../menu.py:158
 #, fuzzy
 msgid "Objects ordered down."
 msgstr "物件被更名"
 
-#: ../menu.py:179
+#: ../menu.py:180
 #, fuzzy
 msgid "Objects ordered on bottom."
 msgstr "用户被加入."
 
-#: ../menu.py:168
+#: ../menu.py:169
 #, fuzzy
 msgid "Objects ordered on top."
 msgstr "用户被加入."
 
-#: ../menu.py:147
+#: ../menu.py:148
 #, fuzzy
 msgid "Objects ordered up."
 msgstr "物件被更名"
@@ -2678,24 +2661,24 @@ msgstr ""
 msgid "OpenOffice.org Text"
 msgstr ""
 
-#: ../user_views.py:80
+#: ../user_views.py:81
 msgid "Operation successful! Welcome."
 msgstr ""
 
-#: ../table_views.py:329
+#: ../table_views.py:326
 msgid "Order bottom"
 msgstr ""
 
-#: ../table_views.py:327
+#: ../table_views.py:324
 msgid "Order down"
 msgstr ""
 
-#: ../table_views.py:328
+#: ../table_views.py:325
 #, fuzzy
 msgid "Order top"
 msgstr "文件夹"
 
-#: ../table_views.py:326
+#: ../table_views.py:323
 msgid "Order up"
 msgstr ""
 
@@ -2757,7 +2740,7 @@ msgctxt "label"
 msgid "Password"
 msgstr "密码"
 
-#: ../user_views.py:274
+#: ../user_views.py:287
 msgid "Password changed."
 msgstr "密码被修改."
 
@@ -2767,7 +2750,7 @@ msgctxt "legend"
 msgid "Password remainder"
 msgstr "密码被修改."
 
-#: ../user_views.py:259
+#: ../user_views.py:272
 #, fuzzy
 msgid "Passwords mismatch, please try again."
 msgstr "密码错误,请再输入."
@@ -2776,7 +2759,7 @@ msgstr "密码错误,请再输入."
 msgid "Paste"
 msgstr "粘贴"
 
-#: ../menu.py:246
+#: ../menu.py:247
 #, fuzzy
 msgid "Path"
 msgstr "粘贴"
@@ -2799,42 +2782,42 @@ msgctxt "fieldset"
 msgid "Please select encoding:"
 msgstr "你必须选择删除成员."
 
-#: ../menu.py:153
+#: ../menu.py:154
 #, fuzzy
 msgid "Please select the objects to order down."
 msgstr "你必须选择删除成员."
 
-#: ../menu.py:174
+#: ../menu.py:175
 #, fuzzy
 msgid "Please select the objects to order on bottom."
 msgstr "你必须选择删除成员."
 
-#: ../menu.py:163
+#: ../menu.py:164
 #, fuzzy
 msgid "Please select the objects to order on top."
 msgstr "你必须选择删除成员."
 
-#: ../menu.py:143
+#: ../menu.py:144
 #, fuzzy
 msgid "Please select the objects to order up."
 msgstr "你必须选择删除成员."
 
-#: ../table_views.py:359
+#: ../table_views.py:356
 #, fuzzy
 msgid "Please select the resources to order down."
 msgstr "你必须选择删除成员."
 
-#: ../table_views.py:381
+#: ../table_views.py:378
 #, fuzzy
 msgid "Please select the resources to order on bottom."
 msgstr "你必须选择删除成员."
 
-#: ../table_views.py:370
+#: ../table_views.py:367
 #, fuzzy
 msgid "Please select the resources to order on top."
 msgstr "你必须选择删除成员."
 
-#: ../table_views.py:348
+#: ../table_views.py:345
 #, fuzzy
 msgid "Please select the resources to order up."
 msgstr "你必须选择删除成员."
@@ -2909,7 +2892,7 @@ msgstr ""
 msgid "Private"
 msgstr "隐私"
 
-#: ../user_views.py:88
+#: ../user_views.py:89
 msgid "Profile"
 msgstr ""
 
@@ -2944,11 +2927,11 @@ msgstr ""
 msgid "RTF Document"
 msgstr "新文件"
 
-#: ../website_views.py:245
+#: ../website_views.py:243
 msgid "Recipient"
 msgstr "收件人"
 
-#: ../table_views.py:342
+#: ../table_views.py:339
 #, fuzzy
 msgid "Record deleted."
 msgstr "记录被修正."
@@ -3026,7 +3009,7 @@ msgctxt "input[value]"
 msgid "Replace"
 msgstr "查阅"
 
-#: ../forms.py:421
+#: ../forms.py:427
 #, fuzzy
 msgid "Replace file"
 msgstr "上载文件"
@@ -3096,22 +3079,22 @@ msgstr "新文件夹"
 msgid "Resources cut."
 msgstr "新文件夹"
 
-#: ../table_views.py:364
+#: ../table_views.py:361
 #, fuzzy
 msgid "Resources ordered down."
 msgstr "物件被更名"
 
-#: ../table_views.py:386
+#: ../table_views.py:383
 #, fuzzy
 msgid "Resources ordered on bottom."
 msgstr "用户被加入."
 
-#: ../table_views.py:375
+#: ../table_views.py:372
 #, fuzzy
 msgid "Resources ordered on top."
 msgstr "用户被加入."
 
-#: ../table_views.py:353
+#: ../table_views.py:350
 #, fuzzy
 msgid "Resources ordered up."
 msgstr "物件被更名"
@@ -3186,7 +3169,7 @@ msgctxt "input[value]"
 msgid "Save &amp; View"
 msgstr ""
 
-#: ../resource_views.py:151
+#: ../forms.py:448
 #, fuzzy
 msgid "Save Changes"
 msgstr "改换"
@@ -3201,7 +3184,7 @@ msgstr "改换"
 msgid "Schedule your time with calendar files."
 msgstr ""
 
-#: ../website_views.py:284
+#: ../website_views.py:282
 msgid "Search"
 msgstr "搜索"
 
@@ -3243,7 +3226,7 @@ msgstr ""
 msgid "See the users and their roles."
 msgstr "用户被加入."
 
-#: ../user_views.py:282
+#: ../user_views.py:295
 msgid "See your pending tasks."
 msgstr ""
 
@@ -3267,11 +3250,11 @@ msgctxt "label"
 msgid "Select the contact accounts"
 msgstr ""
 
-#: ../website_views.py:233
+#: ../website_views.py:231
 msgid "Send"
 msgstr "发送"
 
-#: ../website_views.py:246
+#: ../website_views.py:244
 msgid "Sender email address"
 msgstr ""
 
@@ -3279,7 +3262,7 @@ msgstr ""
 msgid "September"
 msgstr ""
 
-#: ../user_views.py:191
+#: ../user_views.py:204
 #, fuzzy
 msgid "Set your preferred language."
 msgstr "选择你的语言"
@@ -3393,7 +3376,7 @@ msgstr "搜索"
 msgid "Stored Searches"
 msgstr ""
 
-#: ../website_views.py:247
+#: ../website_views.py:245
 msgid "Subject"
 msgstr "主题"
 
@@ -3424,12 +3407,12 @@ msgstr "对照"
 msgid "Tar Archive"
 msgstr ""
 
-#: ../menu.py:247
+#: ../menu.py:248
 #, fuzzy
 msgid "Target"
 msgstr "对照"
 
-#: ../user_views.py:281
+#: ../user_views.py:294
 msgid "Tasks"
 msgstr ""
 
@@ -3451,7 +3434,7 @@ msgctxt "label"
 msgid "Text (search within the title and all comments)"
 msgstr ""
 
-#: ../forms.py:458
+#: ../forms.py:466
 msgid ""
 "The <span class=\"field_is_required\">emphasized</span> fields are required."
 msgstr ""
@@ -3493,7 +3476,7 @@ msgstr ""
 msgid "The file must be entered."
 msgstr "必须写入文件."
 
-#: ../resource_views.py:365
+#: ../resource_views.py:363
 msgid "The given file is not of the type \"$class_id\"."
 msgstr ""
 
@@ -3506,7 +3489,7 @@ msgstr "用户被加入."
 msgid "The name is missing."
 msgstr ""
 
-#: ../resource_views.py:509
+#: ../resource_views.py:507
 #, fuzzy
 msgid "The password is wrong."
 msgstr "密码错误,请再输入."
@@ -3536,11 +3519,11 @@ msgstr "预设语言已被改变."
 msgid "The search title has been changed."
 msgstr "预设语言已被改变."
 
-#: ../resource_views.py:491
+#: ../resource_views.py:489
 msgid "The user \"$username\" does not exist."
 msgstr ""
 
-#: ../resource_views.py:502
+#: ../resource_views.py:500
 msgid "The user \"$username\" is not active."
 msgstr ""
 
@@ -3581,7 +3564,7 @@ msgstr "用户名错误,请再输入."
 msgid "There is 1 item."
 msgstr "名称"
 
-#: ../website_views.py:192
+#: ../website_views.py:191
 #, fuzzy
 msgid "There is already an active user with that email."
 msgstr "此文件名已被另外资源占有."
@@ -3590,7 +3573,7 @@ msgstr "此文件名已被另外资源占有."
 msgid "There is already another resource with this name."
 msgstr "此文件名已被另外资源占有."
 
-#: ../user_views.py:174
+#: ../user_views.py:187
 #, fuzzy
 msgid "There is another user with the email \"${email}\", please try again."
 msgstr "此用户名已登记\"%s\", 请输入另一用户名."
@@ -3697,8 +3680,7 @@ msgctxt "label"
 msgid "To confirm these changes, you must type your current password"
 msgstr ""
 
-#: ../ui/user/edit_account.xml.en:28
-msgctxt "label"
+#: ../user_views.py:154
 msgid "To confirm these changes, you must type your password"
 msgstr ""
 
@@ -3906,7 +3888,7 @@ msgstr "加入用户"
 msgid "User has already confirm his registration!"
 msgstr ""
 
-#: ../user_views.py:89
+#: ../user_views.py:90
 msgid "User's profile page."
 msgstr ""
 
@@ -4056,7 +4038,7 @@ msgctxt "td"
 msgid "Yes"
 msgstr ""
 
-#: ../resource_views.py:549
+#: ../resource_views.py:547
 msgid "You Are Now Logged out."
 msgstr ""
 
@@ -4117,7 +4099,7 @@ msgid ""
 "support UTF-8 (not recommended)."
 msgstr ""
 
-#: ../user_views.py:252
+#: ../user_views.py:265
 msgid "You mistyped your actual password, your account is not changed."
 msgstr ""
 
@@ -4189,7 +4171,7 @@ msgstr "改换"
 msgid "iKaaro"
 msgstr ""
 
-#: ../menu.py:330
+#: ../menu.py:331
 msgid "iKaaro Menu"
 msgstr ""
 
@@ -4472,6 +4454,9 @@ msgstr ""
 #~ msgid "Catalog"
 #~ msgstr "分类"
 
+#~ msgid "Change"
+#~ msgstr "改换"
+
 #, fuzzy
 #~ msgid "Change account"
 #~ msgstr "改变内设"
@@ -4576,6 +4561,11 @@ msgstr ""
 #~ msgstr "文件在数据存储处."
 
 #, fuzzy
+#~ msgctxt "legend"
+#~ msgid "Edit Account"
+#~ msgstr "关于IKAARO"
+
+#, fuzzy
 #~ msgid "Edit Metadata"
 #~ msgstr "附加信息"
 
@@ -4604,6 +4594,11 @@ msgstr ""
 
 #~ msgid "File uploaded."
 #~ msgstr "文件被上载."
+
+#, fuzzy
+#~ msgctxt "label"
+#~ msgid "First Name"
+#~ msgstr "你的全名"
 
 #, fuzzy
 #~ msgid "Firstname:"
@@ -4656,6 +4651,11 @@ msgstr ""
 
 #~ msgid "Language"
 #~ msgstr "语言"
+
+#, fuzzy
+#~ msgctxt "label"
+#~ msgid "Last Name"
+#~ msgstr "姓名"
 
 #, fuzzy
 #~ msgid "Last name"

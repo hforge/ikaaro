@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2008-10-13 16:10+CET\n"
+"POT-Creation-Date: 2008-10-13 17:10+CET\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -143,7 +143,7 @@ msgstr ""
 msgid "ANONYMOUS"
 msgstr ""
 
-#: ../website_views.py:368
+#: ../website_views.py:366
 msgid "About"
 msgstr ""
 
@@ -151,7 +151,7 @@ msgstr ""
 msgid "Accept the document."
 msgstr ""
 
-#: ../user_views.py:183
+#: ../user_views.py:196
 msgid "Account changed."
 msgstr ""
 
@@ -167,7 +167,7 @@ msgstr ""
 msgid "Add $class_title"
 msgstr ""
 
-#: ../menu.py:117
+#: ../menu.py:118
 msgid "Add Child"
 msgstr ""
 
@@ -183,7 +183,7 @@ msgstr ""
 msgid "Add Resource"
 msgstr ""
 
-#: ../text_views.py:263
+#: ../text_views.py:262
 msgid "Add Row"
 msgstr ""
 
@@ -199,7 +199,7 @@ msgstr ""
 msgid "Admin"
 msgstr ""
 
-#: ../website_views.py:209
+#: ../website_views.py:208
 msgid "An email has been sent to you, to finish the registration process follow the instructions detailed in it."
 msgstr ""
 
@@ -207,7 +207,7 @@ msgstr ""
 msgid "An iKaaro forum"
 msgstr ""
 
-#: ../user_views.py:217
+#: ../user_views.py:230
 msgid "Application preferences changed."
 msgstr ""
 
@@ -239,7 +239,7 @@ msgstr ""
 msgid "Basque"
 msgstr ""
 
-#: ../website_views.py:248
+#: ../website_views.py:246
 msgid "Body"
 msgstr ""
 
@@ -291,15 +291,11 @@ msgstr ""
 msgid "Catalan"
 msgstr ""
 
-#: ../text_views.py:281
-msgid "Change"
-msgstr ""
-
 #: ../tracker/tracker_views.py:586
 msgid "Change Several Issues"
 msgstr ""
 
-#: ../user_views.py:225
+#: ../user_views.py:238
 msgid "Change your password."
 msgstr ""
 
@@ -307,7 +303,7 @@ msgstr ""
 msgid "Check the referential integrity."
 msgstr ""
 
-#: ../menu.py:67
+#: ../menu.py:68
 msgid "Child"
 msgstr ""
 
@@ -347,7 +343,7 @@ msgstr ""
 msgid "Confirmed"
 msgstr ""
 
-#: ../website_views.py:231
+#: ../website_views.py:230
 msgid "Contact"
 msgstr ""
 
@@ -375,11 +371,11 @@ msgstr ""
 msgid "Create and publish a Web Page."
 msgstr ""
 
-#: ../website_views.py:383
+#: ../website_views.py:381
 msgid "Credits"
 msgstr ""
 
-#: ../menu.py:57
+#: ../menu.py:58
 msgid "Current page"
 msgstr ""
 
@@ -415,7 +411,7 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: ../forms.py:416
+#: ../forms.py:422
 msgid "Description"
 msgstr ""
 
@@ -431,11 +427,15 @@ msgstr ""
 msgid "Dressable"
 msgstr ""
 
+#: ../user_views.py:144
+msgid "E-mail Address"
+msgstr ""
+
 #: ../wiki/page_views.py:321
 msgid "Edit"
 msgstr ""
 
-#: ../user_views.py:132
+#: ../user_views.py:133
 msgid "Edit Account"
 msgstr ""
 
@@ -455,11 +455,11 @@ msgstr ""
 msgid "Edit Language"
 msgstr ""
 
-#: ../user_views.py:224
+#: ../user_views.py:237
 msgid "Edit Password"
 msgstr ""
 
-#: ../user_views.py:190
+#: ../user_views.py:203
 msgid "Edit Preferences"
 msgstr ""
 
@@ -467,7 +467,7 @@ msgstr ""
 msgid "Edit image"
 msgstr ""
 
-#: ../table_views.py:239
+#: ../table_views.py:238
 msgid "Edit record ${id}"
 msgstr ""
 
@@ -475,15 +475,15 @@ msgstr ""
 msgid "Edit resources"
 msgstr ""
 
-#: ../text_views.py:280
+#: ../text_views.py:279
 msgid "Edit row #${id}"
 msgstr ""
 
-#: ../user_views.py:133
+#: ../user_views.py:134
 msgid "Edit your name and email address."
 msgstr ""
 
-#: ../website_views.py:175
+#: ../website_views.py:174
 msgid "Email Address"
 msgstr ""
 
@@ -495,7 +495,7 @@ msgstr ""
 msgid "English"
 msgstr ""
 
-#: ../table_views.py:304
+#: ../table_views.py:301
 msgid "Error: $message"
 msgstr ""
 
@@ -539,7 +539,7 @@ msgstr ""
 msgid "File"
 msgstr ""
 
-#: ../website_views.py:173
+#: ../website_views.py:172
 msgid "First Name"
 msgstr ""
 
@@ -679,7 +679,7 @@ msgstr ""
 msgid "June"
 msgstr ""
 
-#: ../forms.py:418
+#: ../forms.py:424
 msgid "Keywords (Separated by comma)"
 msgstr ""
 
@@ -707,7 +707,7 @@ msgstr ""
 msgid "Last Modified"
 msgstr ""
 
-#: ../website_views.py:174
+#: ../website_views.py:173
 msgid "Last Name"
 msgstr ""
 
@@ -715,7 +715,7 @@ msgstr ""
 msgid "License"
 msgstr ""
 
-#: ../resource_views.py:467
+#: ../resource_views.py:465
 msgid "Login"
 msgstr ""
 
@@ -743,7 +743,7 @@ msgstr ""
 msgid "Members deleted."
 msgstr ""
 
-#: ../menu.py:338
+#: ../menu.py:339
 msgid "Menu"
 msgstr ""
 
@@ -759,7 +759,7 @@ msgstr ""
 msgid "Message in a thread"
 msgstr ""
 
-#: ../website_views.py:277
+#: ../website_views.py:275
 msgid "Message sent."
 msgstr ""
 
@@ -799,15 +799,15 @@ msgstr ""
 msgid "New issue added."
 msgstr ""
 
-#: ../menu.py:56
+#: ../menu.py:57
 msgid "New page"
 msgstr ""
 
-#: ../table_views.py:226
+#: ../table_views.py:225
 msgid "New record added."
 msgstr ""
 
-#: ../text_views.py:272
+#: ../text_views.py:271
 msgid "New row added."
 msgstr ""
 
@@ -871,19 +871,19 @@ msgstr ""
 msgid "OOo Writer"
 msgstr ""
 
-#: ../menu.py:157
+#: ../menu.py:158
 msgid "Objects ordered down."
 msgstr ""
 
-#: ../menu.py:179
+#: ../menu.py:180
 msgid "Objects ordered on bottom."
 msgstr ""
 
-#: ../menu.py:168
+#: ../menu.py:169
 msgid "Objects ordered on top."
 msgstr ""
 
-#: ../menu.py:147
+#: ../menu.py:148
 msgid "Objects ordered up."
 msgstr ""
 
@@ -923,23 +923,23 @@ msgstr ""
 msgid "OpenOffice.org Text"
 msgstr ""
 
-#: ../user_views.py:80
+#: ../user_views.py:81
 msgid "Operation successful! Welcome."
 msgstr ""
 
-#: ../table_views.py:329
+#: ../table_views.py:326
 msgid "Order bottom"
 msgstr ""
 
-#: ../table_views.py:327
+#: ../table_views.py:324
 msgid "Order down"
 msgstr ""
 
-#: ../table_views.py:328
+#: ../table_views.py:325
 msgid "Order top"
 msgstr ""
 
-#: ../table_views.py:326
+#: ../table_views.py:323
 msgid "Order up"
 msgstr ""
 
@@ -975,11 +975,11 @@ msgstr ""
 msgid "PDF generation failed. Please install pdflatex."
 msgstr ""
 
-#: ../user_views.py:274
+#: ../user_views.py:287
 msgid "Password changed."
 msgstr ""
 
-#: ../user_views.py:259
+#: ../user_views.py:272
 msgid "Passwords mismatch, please try again."
 msgstr ""
 
@@ -987,7 +987,7 @@ msgstr ""
 msgid "Paste"
 msgstr ""
 
-#: ../menu.py:246
+#: ../menu.py:247
 msgid "Path"
 msgstr ""
 
@@ -1003,35 +1003,35 @@ msgstr ""
 msgid "Plain Text"
 msgstr ""
 
-#: ../menu.py:153
+#: ../menu.py:154
 msgid "Please select the objects to order down."
 msgstr ""
 
-#: ../menu.py:174
+#: ../menu.py:175
 msgid "Please select the objects to order on bottom."
 msgstr ""
 
-#: ../menu.py:163
+#: ../menu.py:164
 msgid "Please select the objects to order on top."
 msgstr ""
 
-#: ../menu.py:143
+#: ../menu.py:144
 msgid "Please select the objects to order up."
 msgstr ""
 
-#: ../table_views.py:359
+#: ../table_views.py:356
 msgid "Please select the resources to order down."
 msgstr ""
 
-#: ../table_views.py:381
+#: ../table_views.py:378
 msgid "Please select the resources to order on bottom."
 msgstr ""
 
-#: ../table_views.py:370
+#: ../table_views.py:367
 msgid "Please select the resources to order on top."
 msgstr ""
 
-#: ../table_views.py:348
+#: ../table_views.py:345
 msgid "Please select the resources to order up."
 msgstr ""
 
@@ -1059,7 +1059,7 @@ msgstr ""
 msgid "Private"
 msgstr ""
 
-#: ../user_views.py:88
+#: ../user_views.py:89
 msgid "Profile"
 msgstr ""
 
@@ -1091,11 +1091,11 @@ msgstr ""
 msgid "RTF Document"
 msgstr ""
 
-#: ../website_views.py:245
+#: ../website_views.py:243
 msgid "Recipient"
 msgstr ""
 
-#: ../table_views.py:342
+#: ../table_views.py:339
 msgid "Record deleted."
 msgstr ""
 
@@ -1131,7 +1131,7 @@ msgstr ""
 msgid "Replace"
 msgstr ""
 
-#: ../forms.py:421
+#: ../forms.py:427
 msgid "Replace file"
 msgstr ""
 
@@ -1171,19 +1171,19 @@ msgstr ""
 msgid "Resources cut."
 msgstr ""
 
-#: ../table_views.py:364
+#: ../table_views.py:361
 msgid "Resources ordered down."
 msgstr ""
 
-#: ../table_views.py:386
+#: ../table_views.py:383
 msgid "Resources ordered on bottom."
 msgstr ""
 
-#: ../table_views.py:375
+#: ../table_views.py:372
 msgid "Resources ordered on top."
 msgstr ""
 
-#: ../table_views.py:353
+#: ../table_views.py:350
 msgid "Resources ordered up."
 msgstr ""
 
@@ -1231,7 +1231,7 @@ msgstr ""
 msgid "Saturday"
 msgstr ""
 
-#: ../resource_views.py:151
+#: ../forms.py:448
 msgid "Save Changes"
 msgstr ""
 
@@ -1239,7 +1239,7 @@ msgstr ""
 msgid "Schedule your time with calendar files."
 msgstr ""
 
-#: ../website_views.py:284
+#: ../website_views.py:282
 msgid "Search"
 msgstr ""
 
@@ -1255,7 +1255,7 @@ msgstr ""
 msgid "See the users and their roles."
 msgstr ""
 
-#: ../user_views.py:282
+#: ../user_views.py:295
 msgid "See your pending tasks."
 msgstr ""
 
@@ -1263,11 +1263,11 @@ msgstr ""
 msgid "Select Table"
 msgstr ""
 
-#: ../website_views.py:233
+#: ../website_views.py:231
 msgid "Send"
 msgstr ""
 
-#: ../website_views.py:246
+#: ../website_views.py:244
 msgid "Sender email address"
 msgstr ""
 
@@ -1275,7 +1275,7 @@ msgstr ""
 msgid "September"
 msgstr ""
 
-#: ../user_views.py:191
+#: ../user_views.py:204
 msgid "Set your preferred language."
 msgstr ""
 
@@ -1323,7 +1323,7 @@ msgstr ""
 msgid "Stored Searches"
 msgstr ""
 
-#: ../website_views.py:247
+#: ../website_views.py:245
 msgid "Subject"
 msgstr ""
 
@@ -1343,11 +1343,11 @@ msgstr ""
 msgid "Tar Archive"
 msgstr ""
 
-#: ../menu.py:247
+#: ../menu.py:248
 msgid "Target"
 msgstr ""
 
-#: ../user_views.py:281
+#: ../user_views.py:294
 msgid "Tasks"
 msgstr ""
 
@@ -1363,7 +1363,7 @@ msgstr ""
 msgid "Text"
 msgstr ""
 
-#: ../forms.py:458
+#: ../forms.py:466
 msgid "The <span class=\"field_is_required\">emphasized</span> fields are required."
 msgstr ""
 
@@ -1395,7 +1395,7 @@ msgstr ""
 msgid "The file must be entered."
 msgstr ""
 
-#: ../resource_views.py:365
+#: ../resource_views.py:363
 msgid "The given file is not of the type \"$class_id\"."
 msgstr ""
 
@@ -1407,7 +1407,7 @@ msgstr ""
 msgid "The name is missing."
 msgstr ""
 
-#: ../resource_views.py:509
+#: ../resource_views.py:507
 msgid "The password is wrong."
 msgstr ""
 
@@ -1427,11 +1427,11 @@ msgstr ""
 msgid "The search title has been changed."
 msgstr ""
 
-#: ../resource_views.py:491
+#: ../resource_views.py:489
 msgid "The user \"$username\" does not exist."
 msgstr ""
 
-#: ../resource_views.py:502
+#: ../resource_views.py:500
 msgid "The user \"$username\" is not active."
 msgstr ""
 
@@ -1451,7 +1451,7 @@ msgstr ""
 msgid "There is 1 item."
 msgstr ""
 
-#: ../website_views.py:192
+#: ../website_views.py:191
 msgid "There is already an active user with that email."
 msgstr ""
 
@@ -1459,7 +1459,7 @@ msgstr ""
 msgid "There is already another resource with this name."
 msgstr ""
 
-#: ../user_views.py:174
+#: ../user_views.py:187
 msgid "There is another user with the email \"${email}\", please try again."
 msgstr ""
 
@@ -1513,6 +1513,10 @@ msgstr ""
 
 #: ../calendar_views.py:644
 msgid "To add an event, click on + symbol from the views."
+msgstr ""
+
+#: ../user_views.py:154
+msgid "To confirm these changes, you must type your password"
 msgstr ""
 
 #: ../user.py:199
@@ -1583,7 +1587,7 @@ msgstr ""
 msgid "User has already confirm his registration!"
 msgstr ""
 
-#: ../user_views.py:89
+#: ../user_views.py:90
 msgid "User's profile page."
 msgstr ""
 
@@ -1671,7 +1675,7 @@ msgstr ""
 msgid "XML File"
 msgstr ""
 
-#: ../resource_views.py:549
+#: ../resource_views.py:547
 msgid "You Are Now Logged out."
 msgstr ""
 
@@ -1687,7 +1691,7 @@ msgstr ""
 msgid "You have already confirmed your registration. Try to log in or ask for a new password."
 msgstr ""
 
-#: ../user_views.py:252
+#: ../user_views.py:265
 msgid "You mistyped your actual password, your account is not changed."
 msgstr ""
 
@@ -1731,7 +1735,7 @@ msgstr ""
 msgid "iKaaro"
 msgstr ""
 
-#: ../menu.py:330
+#: ../menu.py:331
 msgid "iKaaro Menu"
 msgstr ""
 
@@ -2325,7 +2329,7 @@ msgctxt "label"
 msgid "Description:"
 msgstr ""
 
-#: ../ui/user/edit_account.xml.en:21
+#: ../ui/base/login.xml.en:11
 msgctxt "label"
 msgid "Email Address"
 msgstr ""
@@ -2340,19 +2344,9 @@ msgctxt "label"
 msgid "File"
 msgstr ""
 
-#: ../ui/user/edit_account.xml.en:11
-msgctxt "label"
-msgid "First Name"
-msgstr ""
-
 #: ../future/ui/dressable_edit_image.xml.en:18
 msgctxt "label"
 msgid "Image"
-msgstr ""
-
-#: ../ui/user/edit_account.xml.en:16
-msgctxt "label"
-msgid "Last Name"
 msgstr ""
 
 #: ../ui/menu/addlink.xml.en:57
@@ -2490,11 +2484,6 @@ msgctxt "label"
 msgid "To confirm these changes, you must type your current password"
 msgstr ""
 
-#: ../ui/user/edit_account.xml.en:28
-msgctxt "label"
-msgid "To confirm these changes, you must type your password"
-msgstr ""
-
 #: ../tracker/ui/edit_issue.xml.en:24
 msgctxt "label"
 msgid "Type (mandatory):"
@@ -2593,11 +2582,6 @@ msgstr ""
 #: ../ui/user/confirm_registration.xml.en:12
 msgctxt "legend"
 msgid "Choose your password"
-msgstr ""
-
-#: ../ui/user/edit_account.xml.en:9
-msgctxt "legend"
-msgid "Edit Account"
 msgstr ""
 
 #: ../ui/website/contact_options.xml.en:9
