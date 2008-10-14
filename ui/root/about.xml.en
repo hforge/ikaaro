@@ -16,7 +16,7 @@
   <p>
     iKaaro is a Content Management System, written in the
     <a href="http://www.python.org">Python</a> programming language,
-    and based on the <a href="http://www.ikaaro.org/itools">itools</a>
+    and based on the <a href="http://www.hforge.org/itools">itools</a>
     library.
   </p>
 
@@ -42,11 +42,11 @@
       <a href=";credits">Credits</a>;
     </li>
     <li>
-      Visit the project's <a href="http://www.ikaaro.org/">Web Site</a>;
+      Visit the project's <a href="http://www.hforge.org/">Web Site</a>;
     </li>
     <li>
       If you find a bug or wish some new feature, please
-      <a href="http://bugs.ikaaro.org">file a bug report</a>.
+      <a href="http://bugs.hforge.org">file a bug report</a>.
     </li>
   </ul>
 
