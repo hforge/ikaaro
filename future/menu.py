@@ -213,7 +213,7 @@ class MenuView(OrderedTableView):
 class MenuAddLink(DBResourceAddLink):
 
     access = 'is_allowed_to_edit'
-    template = '/ui/menu/addlink.xml'
+    template = '/ui/future/menu_addlink.xml'
 
     def get_namespace(self, resource, context):
         # For the breadcrumb
