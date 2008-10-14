@@ -808,7 +808,7 @@ msgstr ""
 #: ../forum/ui/Forum_new_thread.xml.en:16
 msgctxt "label"
 msgid "<g id='3'>Message</g> ${data/value}"
-msgstr ""
+msgstr "<g id='3'>Mensaje</g> ${data/value}"
 
 #: ../ui/ical/weekly_view.xml.en:18 ../ui/ical/monthly_view.xml.en:18
 msgctxt "link to"
@@ -893,7 +893,7 @@ msgstr "Un nuevo recurso a sido agregado."
 
 #: ../workflow.py:122
 msgid "A pending document awaits review from authorized users to be published."
-msgstr ""
+msgstr "Un documento privado está en espera a ser revisado, por usuarios autorizados, para su publicación."
 
 #: ../workflow.py:117
 msgid "A private document only can be reached by authorized users."
@@ -905,7 +905,7 @@ msgstr ""
 
 #: ../wiki/page_views.py:367
 msgid "A syntax error prevented from saving the changes: $error"
-msgstr ""
+msgstr "Un error de sintaxis ha impedido que las modificaciones sean guardadas: $error"
 
 #: ../forum/thread.py:113
 msgid "A thread to discuss"
@@ -913,7 +913,7 @@ msgstr ""
 
 #: ../tracker/tracker_views.py:685 ../tracker/issue.py:223
 msgid "ANONYMOUS"
-msgstr ""
+msgstr "ANÓNIMO"
 
 #: ../website_views.py:366
 msgid "About"
@@ -950,7 +950,6 @@ msgstr "Agregar"
 #: ../ui/base/new_instance.xml.en:22
 #: ../future/ui/dressable_add_image.xml.en:20
 #: ../ui/ical/edit_timetables.xml.en:37
-#, fuzzy
 msgctxt "button"
 msgid "Add"
 msgstr "Agregar"
@@ -1085,12 +1084,12 @@ msgstr ""
 #: ../tracker/ui/edit_issue.xml.en:50
 msgctxt "label"
 msgid "Assign To:"
-msgstr ""
+msgstr "Asignar a:"
 
 #: ../tracker/ui/issue_history.xml.en:36
 msgctxt "strong"
 msgid "Assign To:"
-msgstr ""
+msgstr "Asignar a:"
 
 #: ../tracker/ui/edit_resources.xml.en:9
 #, fuzzy
@@ -1150,7 +1149,6 @@ msgid "Body"
 msgstr "Negrita"
 
 #: ../wiki/ui/edit.xml.en:28
-#, fuzzy
 msgctxt "a[title]"
 msgid "Bold"
 msgstr "Negrita"
@@ -1184,7 +1182,7 @@ msgstr ""
 
 #: ../tracker/tracker.py:81
 msgid "Bug"
-msgstr ""
+msgstr "Error"
 
 #: ../ui/WorkflowAware_state.xml.en:45
 #, fuzzy
@@ -1206,16 +1204,14 @@ msgid "CC"
 msgstr "Agregar"
 
 #: ../tracker/ui/add_issue.xml.en:71 ../tracker/ui/edit_issue.xml.en:83
-#, fuzzy
 msgctxt "label"
 msgid "CC:"
-msgstr "Agregar"
+msgstr ""
 
 #: ../tracker/ui/issue_history.xml.en:39
-#, fuzzy
 msgctxt "strong"
 msgid "CC:"
-msgstr "Agregar"
+msgstr ""
 
 #: ../text.py:75
 msgid "CSS"
@@ -1303,10 +1299,9 @@ msgid "Child"
 msgstr ""
 
 #: ../ui/website/edit_languages.xml.en:51
-#, fuzzy
 msgctxt "option"
 msgid "Choose a language"
-msgstr "Debes elijir un idioma"
+msgstr "Elije un idioma"
 
 #: ../ui/website/new_instance.xml.en:20
 #, fuzzy
@@ -1555,20 +1550,17 @@ msgid "Download"
 msgstr ""
 
 #: ../future/dressable.py:55
-#, fuzzy
 msgid "Dressable"
-msgstr "Preámbulo"
+msgstr ""
 
 #: ../user_views.py:144 ../website_views.py:174
-#, fuzzy
 msgid "E-mail Address"
-msgstr "Agregar"
+msgstr "Dirección de correo electrónico"
 
 #: ../ui/base/login.xml.en:11
-#, fuzzy
 msgctxt "label"
 msgid "E-mail Address"
-msgstr "Agregar"
+msgstr "Dirección de correo electrónico"
 
 #: ../resource_views.py:148 ../text_views.py:97 ../wiki/page_views.py:321
 #: ../future/dressable.py:198
@@ -2093,15 +2085,13 @@ msgid "Issues"
 msgstr ""
 
 #: ../utils.py:94
-#, fuzzy
 msgid "Italian"
-msgstr "Cursiva"
+msgstr "Italiano"
 
 #: ../wiki/ui/edit.xml.en:35
-#, fuzzy
 msgctxt "a[title]"
 msgid "Italic"
-msgstr "Cursiva"
+msgstr "Italiano"
 
 #: ../calendar_views.py:43
 msgid "January"
@@ -2109,7 +2099,7 @@ msgstr "Enero"
 
 #: ../utils.py:95
 msgid "Japanese"
-msgstr ""
+msgstr "Japonés"
 
 #: ../ui/root/credits.xml.en:21
 msgctxt "li"
@@ -2174,20 +2164,17 @@ msgid "License"
 msgstr "Licencia"
 
 #: ../ui/ical/edit_event.xml.en:27
-#, fuzzy
 msgctxt "td"
 msgid "Location"
-msgstr "Acción"
+msgstr "Localización"
 
 #: ../ui/aruni/location.xml.en:10 ../ui/html/addimage.xml.en:42
 #: ../ui/menu/addlink.xml.en:57 ../ui/html/addlink.xml.en:55
-#, fuzzy
 msgctxt "label"
 msgid "Location:"
-msgstr "Acción"
+msgstr "Localización:"
 
 #: ../ui/base/login.xml.en:21
-#, fuzzy
 msgctxt "button"
 msgid "Log in"
 msgstr "Identificarse"
