@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: it\n"
-"POT-Creation-Date: 2008-10-13 18:10+CET\n"
+"POT-Creation-Date: 2008-10-14 09:10+CET\n"
 "PO-Revision-Date: 2004-11-26 14:39+0100\n"
 "Last-Translator: Paolo Dina <paolo@php3.it>\n"
 "Language-Team: Italian <paolo@php3.it>\n"
@@ -62,7 +62,7 @@ msgstr ""
 
 #: ../ui/folder/browse_image.xml.en:62 ../ui/generic/browse_table.xml.en:44
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "${action/value}"
 msgstr "Commenti:"
 
@@ -579,7 +579,7 @@ msgstr "Titolo"
 
 #: ../ui/auto_form.xml.en:27
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "${submit_value}"
 msgstr "Titolo"
 
@@ -1062,7 +1062,7 @@ msgstr "Aggiungi"
 #: ../future/ui/dressable_add_image.xml.en:20
 #: ../ui/ical/edit_timetables.xml.en:37
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Add"
 msgstr "Aggiungi"
 
@@ -1126,13 +1126,13 @@ msgstr "Nuovo utente"
 
 #: ../ui/access/add_user.xml.en:35
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Add and return"
 msgstr "Nuovo utente"
 
 #: ../ui/access/add_user.xml.en:33
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Add and view"
 msgstr "Nuovo utente"
 
@@ -1193,7 +1193,7 @@ msgstr ""
 "content=\"name\"></b> :"
 
 #: ../tracker/ui/edit_resources.xml.en:50
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Assign"
 msgstr ""
 
@@ -1351,7 +1351,7 @@ msgstr ""
 
 #: ../ui/ical/edit_event.xml.en:133
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Cancel"
 msgstr "OK"
 
@@ -1372,7 +1372,7 @@ msgstr "Catalano"
 #: ../ui/WorkflowAware_state.xml.en:30 ../ui/text/edit.xml.en:12
 #: ../ui/PO_edit.xml.en:37 ../ui/website/contact_options.xml.en:21
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Change"
 msgstr "OK"
 
@@ -1394,7 +1394,7 @@ msgstr "Modifica l'impostazione predefinita"
 
 #: ../ui/website/edit_languages.xml.en:36
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Change default"
 msgstr "Modifica l'impostazione predefinita"
 
@@ -1644,7 +1644,7 @@ msgid "Define the domain names for this Web Site."
 msgstr ""
 
 #: ../ui/ical/edit_event.xml.en:131
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Definitely remove"
 msgstr ""
 
@@ -1709,7 +1709,7 @@ msgstr "Modifica"
 
 #: ../tracker/ui/edit_issue.xml.en:110
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Edit"
 msgstr "Modifica"
 
@@ -1752,7 +1752,7 @@ msgstr "Utenti"
 
 #: ../tracker/ui/change_bugs.xml.en:81
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Edit Issues"
 msgstr "Utenti"
 
@@ -1887,7 +1887,7 @@ msgstr ""
 
 #: ../tracker/ui/export_to_csv.xml.en:25
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Export"
 msgstr "Testo integrale"
 
@@ -1914,7 +1914,7 @@ msgstr "Editor esterno"
 
 #: ../ui/text/externaledit.xml.en:39 ../ui/file/externaledit.xml.en:25
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "External Editor..."
 msgstr "Editor esterno"
 
@@ -1962,7 +1962,7 @@ msgstr "Cartella"
 
 #: ../tracker/ui/menu_remember.xml.en:20
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Forget this Search"
 msgstr "Cerca"
 
@@ -2029,7 +2029,7 @@ msgid "German"
 msgstr "Generale"
 
 #: ../tracker/ui/menu_goto.xml.en:11
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Go"
 msgstr ""
 
@@ -2351,7 +2351,7 @@ msgstr "Azione"
 
 #: ../ui/base/login.xml.en:21
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Log in"
 msgstr "Entra"
 
@@ -2568,7 +2568,7 @@ msgstr "Testo"
 
 #: ../ui/user/confirm_registration.xml.en:38
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Next"
 msgstr "Testo"
 
@@ -2658,7 +2658,7 @@ msgstr ""
 #: ../ui/folder/browse_search.xml.en:24 ../ui/generic/browse_search.xml.en:16
 #: ../ui/website/search_form.xml.en:11
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "OK"
 msgstr "OK"
 
@@ -3047,7 +3047,7 @@ msgstr "Rimuovi"
 #: ../forum/ui/Thread_view.xml.en:33 ../ui/website/edit_languages.xml.en:38
 #: ../ui/ical/edit_timetables.xml.en:43
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Remove"
 msgstr "Rimuovi"
 
@@ -3063,7 +3063,7 @@ msgstr "Rinomina.."
 
 #: ../ui/folder/rename.xml.en:20
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Rename"
 msgstr "Rinomina.."
 
@@ -3091,7 +3091,7 @@ msgstr "Anteprima"
 
 #: ../ui/file/upload.xml.en:20
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Replace"
 msgstr "Anteprima"
 
@@ -3102,7 +3102,7 @@ msgstr "Carica file"
 
 #: ../forum/ui/Thread_view.xml.en:44
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Reply"
 msgstr "Anteprima"
 
@@ -3246,12 +3246,12 @@ msgstr ""
 
 #: ../wiki/ui/edit.xml.en:174
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Save"
 msgstr "Salva"
 
 #: ../wiki/ui/edit.xml.en:175
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Save &amp; View"
 msgstr ""
 
@@ -3264,7 +3264,7 @@ msgstr "OK"
 #: ../ui/website/security_policy.xml.en:26
 #: ../ui/user/edit_preferences.xml.en:19
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Save Changes"
 msgstr "OK"
 
@@ -3278,7 +3278,7 @@ msgstr "Cerca"
 
 #: ../tracker/ui/search.xml.en:94
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Search"
 msgstr "Cerca"
 
@@ -3909,19 +3909,19 @@ msgstr "Lista utenti:"
 #: ../ui/ical/edit_timetables.xml.en:44
 #: ../ui/access/edit_membership_form.xml.en:18
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Update"
 msgstr "Aggiorna il catalogo"
 
 #: ../tracker/ui/export_to_text.xml.en:20
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Update text export"
 msgstr ""
 
 #: ../future/ui/dressable_edit_image.xml.en:27
 #: ../ui/file/new_instance.xml.en:22
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Upload"
 msgstr "Carica"
 
@@ -3960,13 +3960,13 @@ msgstr ""
 
 #: ../ui/html/addimage.xml.en:87
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Upload and Insert"
 msgstr "Carica un file"
 
 #: ../ui/html/addlink.xml.en:131
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Upload and Link"
 msgstr "Carica un file"
 
@@ -4907,6 +4907,11 @@ msgstr ""
 #~ "rappresenta un linguaggio diverso."
 
 #, fuzzy
+#~ msgctxt "input[value]"
+#~ msgid "Add"
+#~ msgstr "Aggiungi"
+
+#, fuzzy
 #~ msgid "Add New User"
 #~ msgstr "Nuovo utente"
 
@@ -5040,6 +5045,8 @@ msgstr ""
 #~ msgid "Center"
 #~ msgstr "Generale"
 
+#, fuzzy
+#~ msgctxt "input[value]"
 #~ msgid "Change"
 #~ msgstr "OK"
 
@@ -5249,6 +5256,11 @@ msgstr ""
 
 #~ msgid "Each version is given a distinguishing version number."
 #~ msgstr "Ad ogni versione è associato un numero di versione univoco."
+
+#, fuzzy
+#~ msgctxt "input[value]"
+#~ msgid "Edit"
+#~ msgstr "Modifica"
 
 #, fuzzy
 #~ msgctxt "legend"
@@ -5794,6 +5806,11 @@ msgstr ""
 #~ msgid "New Resource"
 #~ msgstr "Nuova risorsa"
 
+#, fuzzy
+#~ msgctxt "input[value]"
+#~ msgid "Next"
+#~ msgstr "Testo"
+
 #~ msgid "No file has been entered."
 #~ msgstr "Nessun file è stato inserito."
 
@@ -6010,8 +6027,18 @@ msgstr ""
 #~ "utenti:"
 
 #, fuzzy
+#~ msgctxt "input[value]"
+#~ msgid "Remove"
+#~ msgstr "Rimuovi"
+
+#, fuzzy
 #~ msgid "Remove Format"
 #~ msgstr "Rimuovi"
+
+#, fuzzy
+#~ msgctxt "input[value]"
+#~ msgid "Rename"
+#~ msgstr "Rinomina.."
 
 #, fuzzy
 #~ msgid "Rename objects"
@@ -6019,6 +6046,11 @@ msgstr ""
 
 #~ msgid "Rename.."
 #~ msgstr "Rinomina.."
+
+#, fuzzy
+#~ msgctxt "input[value]"
+#~ msgid "Replace"
+#~ msgstr "Anteprima"
 
 #, fuzzy
 #~ msgid "Reviewers"
@@ -6035,8 +6067,18 @@ msgstr ""
 #~ "SERVICING, REPAIR OR CORRECTION."
 
 #, fuzzy
+#~ msgctxt "input[value]"
+#~ msgid "Save Changes"
+#~ msgstr "OK"
+
+#, fuzzy
 #~ msgid "Save the translation"
 #~ msgstr "Salva la traduzione"
+
+#, fuzzy
+#~ msgctxt "input[value]"
+#~ msgid "Search"
+#~ msgstr "Cerca"
 
 #, fuzzy
 #~ msgid "Search on resources"

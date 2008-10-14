@@ -3,7 +3,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: zh\n"
-"POT-Creation-Date: 2008-10-13 18:10+CET\n"
+"POT-Creation-Date: 2008-10-14 09:10+CET\n"
 "PO-Revision-Date: 2007-10-30 17:58+0100\n"
 "Last-Translator: Zhouli <zhouli@in-girum.net>\n"
 "Language-Team:  <zh@li.org>\n"
@@ -57,7 +57,7 @@ msgstr ""
 
 #: ../ui/folder/browse_image.xml.en:62 ../ui/generic/browse_table.xml.en:44
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "${action/value}"
 msgstr "名称"
 
@@ -570,7 +570,7 @@ msgstr "名称"
 
 #: ../ui/auto_form.xml.en:27
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "${submit_value}"
 msgstr "名称"
 
@@ -1049,7 +1049,7 @@ msgstr "加入"
 #: ../future/ui/dressable_add_image.xml.en:20
 #: ../ui/ical/edit_timetables.xml.en:37
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Add"
 msgstr "加入"
 
@@ -1112,13 +1112,13 @@ msgstr "新用户"
 
 #: ../ui/access/add_user.xml.en:35
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Add and return"
 msgstr "新用户"
 
 #: ../ui/access/add_user.xml.en:33
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Add and view"
 msgstr "新用户"
 
@@ -1175,7 +1175,7 @@ msgid "Are you sure you want to delete this resource?"
 msgstr ""
 
 #: ../tracker/ui/edit_resources.xml.en:50
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Assign"
 msgstr ""
 
@@ -1331,7 +1331,7 @@ msgstr ""
 
 #: ../ui/ical/edit_event.xml.en:133
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Cancel"
 msgstr "改换"
 
@@ -1352,7 +1352,7 @@ msgstr "加泰隆尼语"
 #: ../ui/WorkflowAware_state.xml.en:30 ../ui/text/edit.xml.en:12
 #: ../ui/PO_edit.xml.en:37 ../ui/website/contact_options.xml.en:21
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Change"
 msgstr "改换"
 
@@ -1374,7 +1374,7 @@ msgstr "改变内设"
 
 #: ../ui/website/edit_languages.xml.en:36
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Change default"
 msgstr "改变内设"
 
@@ -1622,7 +1622,7 @@ msgid "Define the domain names for this Web Site."
 msgstr ""
 
 #: ../ui/ical/edit_event.xml.en:131
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Definitely remove"
 msgstr ""
 
@@ -1687,7 +1687,7 @@ msgstr "编辑"
 
 #: ../tracker/ui/edit_issue.xml.en:110
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Edit"
 msgstr "编辑"
 
@@ -1730,7 +1730,7 @@ msgstr "用户"
 
 #: ../tracker/ui/change_bugs.xml.en:81
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Edit Issues"
 msgstr "用户"
 
@@ -1862,7 +1862,7 @@ msgstr ""
 
 #: ../tracker/ui/export_to_csv.xml.en:25
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Export"
 msgstr "简易文件"
 
@@ -1889,7 +1889,7 @@ msgstr "外部"
 
 #: ../ui/text/externaledit.xml.en:39 ../ui/file/externaledit.xml.en:25
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "External Editor..."
 msgstr "外部"
 
@@ -1936,7 +1936,7 @@ msgstr "文件夹"
 
 #: ../tracker/ui/menu_remember.xml.en:20
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Forget this Search"
 msgstr "搜索"
 
@@ -2003,7 +2003,7 @@ msgid "German"
 msgstr "概略"
 
 #: ../tracker/ui/menu_goto.xml.en:11
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Go"
 msgstr ""
 
@@ -2312,7 +2312,7 @@ msgstr "登录"
 
 #: ../ui/base/login.xml.en:21
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Log in"
 msgstr "登录"
 
@@ -2526,7 +2526,7 @@ msgid "Next"
 msgstr ""
 
 #: ../ui/user/confirm_registration.xml.en:38
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Next"
 msgstr ""
 
@@ -2615,7 +2615,7 @@ msgstr ""
 #: ../ui/ical/edit_event.xml.en:130 ../tracker/ui/menu_remember.xml.en:15
 #: ../ui/folder/browse_search.xml.en:24 ../ui/generic/browse_search.xml.en:16
 #: ../ui/website/search_form.xml.en:11
-msgctxt "input[value]"
+msgctxt "button"
 msgid "OK"
 msgstr ""
 
@@ -3002,7 +3002,7 @@ msgstr "删除"
 #: ../forum/ui/Thread_view.xml.en:33 ../ui/website/edit_languages.xml.en:38
 #: ../ui/ical/edit_timetables.xml.en:43
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Remove"
 msgstr "删除"
 
@@ -3018,7 +3018,7 @@ msgstr "重命名"
 
 #: ../ui/folder/rename.xml.en:20
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Rename"
 msgstr "重命名"
 
@@ -3046,7 +3046,7 @@ msgstr "查阅"
 
 #: ../ui/file/upload.xml.en:20
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Replace"
 msgstr "查阅"
 
@@ -3057,7 +3057,7 @@ msgstr "上载文件"
 
 #: ../forum/ui/Thread_view.xml.en:44
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Reply"
 msgstr "查阅"
 
@@ -3201,12 +3201,12 @@ msgstr ""
 
 #: ../wiki/ui/edit.xml.en:174
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Save"
 msgstr "保存"
 
 #: ../wiki/ui/edit.xml.en:175
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Save &amp; View"
 msgstr ""
 
@@ -3219,7 +3219,7 @@ msgstr "改换"
 #: ../ui/website/security_policy.xml.en:26
 #: ../ui/user/edit_preferences.xml.en:19
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Save Changes"
 msgstr "改换"
 
@@ -3233,7 +3233,7 @@ msgstr "搜索"
 
 #: ../tracker/ui/search.xml.en:94
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Search"
 msgstr "搜索"
 
@@ -3851,19 +3851,19 @@ msgstr "目录"
 #: ../ui/ical/edit_timetables.xml.en:44
 #: ../ui/access/edit_membership_form.xml.en:18
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Update"
 msgstr "更新目录"
 
 #: ../tracker/ui/export_to_text.xml.en:20
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Update text export"
 msgstr ""
 
 #: ../future/ui/dressable_edit_image.xml.en:27
 #: ../ui/file/new_instance.xml.en:22
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Upload"
 msgstr "上载"
 
@@ -3901,13 +3901,13 @@ msgstr ""
 
 #: ../ui/html/addimage.xml.en:87
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Upload and Insert"
 msgstr "上载文件"
 
 #: ../ui/html/addlink.xml.en:131
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Upload and Link"
 msgstr "上载文件"
 
@@ -4447,6 +4447,11 @@ msgstr ""
 #~ msgstr "改换"
 
 #, fuzzy
+#~ msgctxt "input[value]"
+#~ msgid "Add"
+#~ msgstr "加入"
+
+#, fuzzy
 #~ msgid "Add New User"
 #~ msgstr "新用户"
 
@@ -4509,6 +4514,8 @@ msgstr ""
 #~ msgid "Catalog"
 #~ msgstr "分类"
 
+#, fuzzy
+#~ msgctxt "input[value]"
 #~ msgid "Change"
 #~ msgstr "改换"
 
@@ -4614,6 +4621,11 @@ msgstr ""
 
 #~ msgid "Documents are where the data is stored"
 #~ msgstr "文件在数据存储处."
+
+#, fuzzy
+#~ msgctxt "input[value]"
+#~ msgid "Edit"
+#~ msgstr "编辑"
 
 #, fuzzy
 #~ msgctxt "legend"
@@ -4947,8 +4959,18 @@ msgstr ""
 #~ msgstr "查阅"
 
 #, fuzzy
+#~ msgctxt "input[value]"
+#~ msgid "Remove"
+#~ msgstr "删除"
+
+#, fuzzy
 #~ msgid "Remove Format"
 #~ msgstr "删除"
+
+#, fuzzy
+#~ msgctxt "input[value]"
+#~ msgid "Rename"
+#~ msgstr "重命名"
 
 #, fuzzy
 #~ msgid "Rename objects"
@@ -4958,11 +4980,26 @@ msgstr ""
 #~ msgstr "重命名"
 
 #, fuzzy
+#~ msgctxt "input[value]"
+#~ msgid "Replace"
+#~ msgstr "查阅"
+
+#, fuzzy
 #~ msgid "Reviewers"
 #~ msgstr "查阅"
 
 #~ msgid "Revision copied to present."
 #~ msgstr "校定版被复制此当前."
+
+#, fuzzy
+#~ msgctxt "input[value]"
+#~ msgid "Save Changes"
+#~ msgstr "改换"
+
+#, fuzzy
+#~ msgctxt "input[value]"
+#~ msgid "Search"
+#~ msgstr "搜索"
 
 #, fuzzy
 #~ msgid "Search on resources"

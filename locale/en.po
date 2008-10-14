@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 0.3.0\n"
-"POT-Creation-Date: 2008-10-13 18:10+CET\n"
+"POT-Creation-Date: 2008-10-14 09:10+CET\n"
 "PO-Revision-Date: 2001-07-08 17:07+CET\n"
 "Last-Translator: jdavid\n"
 "Language-Team: ??\n"
@@ -52,7 +52,7 @@ msgid "${DESCRIPTION}"
 msgstr ""
 
 #: ../ui/folder/browse_image.xml.en:62 ../ui/generic/browse_table.xml.en:44
-msgctxt "input[value]"
+msgctxt "button"
 msgid "${action/value}"
 msgstr ""
 
@@ -489,7 +489,7 @@ msgid "${state}"
 msgstr ""
 
 #: ../ui/auto_form.xml.en:27
-msgctxt "input[value]"
+msgctxt "button"
 msgid "${submit_value}"
 msgstr ""
 
@@ -945,7 +945,7 @@ msgstr ""
 #: ../ui/base/new_instance.xml.en:22
 #: ../future/ui/dressable_add_image.xml.en:20
 #: ../ui/ical/edit_timetables.xml.en:37
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Add"
 msgstr ""
 
@@ -998,12 +998,12 @@ msgid "Add a thread"
 msgstr ""
 
 #: ../ui/access/add_user.xml.en:35
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Add and return"
 msgstr ""
 
 #: ../ui/access/add_user.xml.en:33
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Add and view"
 msgstr ""
 
@@ -1058,7 +1058,7 @@ msgid "Are you sure you want to delete this resource?"
 msgstr ""
 
 #: ../tracker/ui/edit_resources.xml.en:50
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Assign"
 msgstr ""
 
@@ -1200,7 +1200,7 @@ msgid "Calendar"
 msgstr ""
 
 #: ../ui/ical/edit_event.xml.en:133
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Cancel"
 msgstr ""
 
@@ -1218,7 +1218,7 @@ msgstr ""
 
 #: ../ui/WorkflowAware_state.xml.en:30 ../ui/text/edit.xml.en:12
 #: ../ui/PO_edit.xml.en:37 ../ui/website/contact_options.xml.en:21
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Change"
 msgstr ""
 
@@ -1237,7 +1237,7 @@ msgid "Change Several Issues"
 msgstr ""
 
 #: ../ui/website/edit_languages.xml.en:36
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Change default"
 msgstr ""
 
@@ -1464,7 +1464,7 @@ msgid "Define the domain names for this Web Site."
 msgstr ""
 
 #: ../ui/ical/edit_event.xml.en:131
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Definitely remove"
 msgstr ""
 
@@ -1520,7 +1520,7 @@ msgid "Edit"
 msgstr ""
 
 #: ../tracker/ui/edit_issue.xml.en:110
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Edit"
 msgstr ""
 
@@ -1556,7 +1556,7 @@ msgid "Edit Issue"
 msgstr ""
 
 #: ../tracker/ui/change_bugs.xml.en:81
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Edit Issues"
 msgstr ""
 
@@ -1676,7 +1676,7 @@ msgid "Expected query parameter \"id\" is missing."
 msgstr ""
 
 #: ../tracker/ui/export_to_csv.xml.en:25
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Export"
 msgstr ""
 
@@ -1699,7 +1699,7 @@ msgid "External Editor"
 msgstr ""
 
 #: ../ui/text/externaledit.xml.en:39 ../ui/file/externaledit.xml.en:25
-msgctxt "input[value]"
+msgctxt "button"
 msgid "External Editor..."
 msgstr ""
 
@@ -1742,7 +1742,7 @@ msgid "Folder"
 msgstr ""
 
 #: ../tracker/ui/menu_remember.xml.en:20
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Forget this Search"
 msgstr ""
 
@@ -1801,7 +1801,7 @@ msgid "German"
 msgstr ""
 
 #: ../tracker/ui/menu_goto.xml.en:11
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Go"
 msgstr ""
 
@@ -2093,7 +2093,7 @@ msgid "Location:"
 msgstr ""
 
 #: ../ui/base/login.xml.en:21
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Log in"
 msgstr ""
 
@@ -2282,7 +2282,7 @@ msgid "Next"
 msgstr ""
 
 #: ../ui/user/confirm_registration.xml.en:38
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Next"
 msgstr ""
 
@@ -2364,7 +2364,7 @@ msgstr ""
 #: ../ui/ical/edit_event.xml.en:130 ../tracker/ui/menu_remember.xml.en:15
 #: ../ui/folder/browse_search.xml.en:24 ../ui/generic/browse_search.xml.en:16
 #: ../ui/website/search_form.xml.en:11
-msgctxt "input[value]"
+msgctxt "button"
 msgid "OK"
 msgstr ""
 
@@ -2709,7 +2709,7 @@ msgstr ""
 #: ../future/ui/dressable_edit_image.xml.en:40
 #: ../forum/ui/Thread_view.xml.en:33 ../ui/website/edit_languages.xml.en:38
 #: ../ui/ical/edit_timetables.xml.en:43
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Remove"
 msgstr ""
 
@@ -2723,7 +2723,7 @@ msgid "Rename"
 msgstr ""
 
 #: ../ui/folder/rename.xml.en:20
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Rename"
 msgstr ""
 
@@ -2746,7 +2746,7 @@ msgid "Replace"
 msgstr ""
 
 #: ../ui/file/upload.xml.en:20
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Replace"
 msgstr ""
 
@@ -2755,7 +2755,7 @@ msgid "Replace file"
 msgstr ""
 
 #: ../forum/ui/Thread_view.xml.en:44
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Reply"
 msgstr ""
 
@@ -2876,12 +2876,12 @@ msgid "Saturday"
 msgstr ""
 
 #: ../wiki/ui/edit.xml.en:174
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Save"
 msgstr ""
 
 #: ../wiki/ui/edit.xml.en:175
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Save &amp; View"
 msgstr ""
 
@@ -2892,7 +2892,7 @@ msgstr ""
 #: ../ui/website/virtual_hosts.xml.en:14 ../ui/user/edit_password.xml.en:30
 #: ../ui/website/security_policy.xml.en:26
 #: ../ui/user/edit_preferences.xml.en:19
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Save Changes"
 msgstr ""
 
@@ -2905,7 +2905,7 @@ msgid "Search"
 msgstr ""
 
 #: ../tracker/ui/search.xml.en:94
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Search"
 msgstr ""
 
@@ -3468,18 +3468,18 @@ msgstr ""
 
 #: ../ui/ical/edit_timetables.xml.en:44
 #: ../ui/access/edit_membership_form.xml.en:18
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Update"
 msgstr ""
 
 #: ../tracker/ui/export_to_text.xml.en:20
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Update text export"
 msgstr ""
 
 #: ../future/ui/dressable_edit_image.xml.en:27
 #: ../ui/file/new_instance.xml.en:22
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Upload"
 msgstr ""
 
@@ -3514,12 +3514,12 @@ msgid "Upload an image to the current folder and insert it:"
 msgstr ""
 
 #: ../ui/html/addimage.xml.en:87
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Upload and Insert"
 msgstr ""
 
 #: ../ui/html/addlink.xml.en:131
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Upload and Link"
 msgstr ""
 

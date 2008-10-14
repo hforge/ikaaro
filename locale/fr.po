@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-10-13 18:10+CET\n"
+"POT-Creation-Date: 2008-10-14 09:10+CET\n"
 "PO-Revision-Date: 2008-07-24 16:17+0200\n"
 "Last-Translator: \n"
 "Language-Team:  <fr@li.org>\n"
@@ -70,7 +70,7 @@ msgstr "${DESCRIPTION}"
 
 #: ../ui/folder/browse_image.xml.en:62 ../ui/generic/browse_table.xml.en:44
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "${action/value}"
 msgstr "${option/value}"
 
@@ -585,7 +585,7 @@ msgstr "${table}"
 
 #: ../ui/auto_form.xml.en:27
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "${submit_value}"
 msgstr "${s/value}"
 
@@ -1079,7 +1079,7 @@ msgstr "Ajouter"
 #: ../future/ui/dressable_add_image.xml.en:20
 #: ../ui/ical/edit_timetables.xml.en:37
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Add"
 msgstr "Ajouter"
 
@@ -1141,13 +1141,13 @@ msgstr "Ajouter un nouvel enregistrement"
 
 #: ../ui/access/add_user.xml.en:35
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Add and return"
 msgstr "Ajouter et revenir"
 
 #: ../ui/access/add_user.xml.en:33
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Add and view"
 msgstr "Ajouter et voir"
 
@@ -1212,7 +1212,7 @@ msgstr "Êtes-vous sûr de vouloir supprimer cet objet ?"
 
 #: ../tracker/ui/edit_resources.xml.en:50
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Assign"
 msgstr "Assigner"
 
@@ -1371,7 +1371,7 @@ msgstr "Calendrier"
 
 #: ../ui/ical/edit_event.xml.en:133
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -1390,7 +1390,7 @@ msgstr ""
 #: ../ui/WorkflowAware_state.xml.en:30 ../ui/text/edit.xml.en:12
 #: ../ui/PO_edit.xml.en:37 ../ui/website/contact_options.xml.en:21
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Change"
 msgstr "Modifier"
 
@@ -1412,7 +1412,7 @@ msgstr "Modifier un lot de fiches"
 
 #: ../ui/website/edit_languages.xml.en:36
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Change default"
 msgstr "Modifier la langue par défaut"
 
@@ -1665,7 +1665,7 @@ msgstr "Définir le nom de domaine pour ce Site Web."
 
 #: ../ui/ical/edit_event.xml.en:131
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Definitely remove"
 msgstr "Supprimer définitivement"
 
@@ -1727,7 +1727,7 @@ msgstr "Modifier"
 
 #: ../tracker/ui/edit_issue.xml.en:110
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Edit"
 msgstr "Modifier"
 
@@ -1770,7 +1770,7 @@ msgstr "Modifier une fiche"
 
 #: ../tracker/ui/change_bugs.xml.en:81
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Edit Issues"
 msgstr "Modifier les fiches"
 
@@ -1907,7 +1907,7 @@ msgstr ""
 
 #: ../tracker/ui/export_to_csv.xml.en:25
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Export"
 msgstr "Exporter en CSV"
 
@@ -1933,7 +1933,7 @@ msgstr "Éditeur externe"
 
 #: ../ui/text/externaledit.xml.en:39 ../ui/file/externaledit.xml.en:25
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "External Editor..."
 msgstr "Éditeur externe..."
 
@@ -1978,7 +1978,7 @@ msgstr "Dossier"
 
 #: ../tracker/ui/menu_remember.xml.en:20
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Forget this Search"
 msgstr "Recherche enregistrée"
 
@@ -2043,7 +2043,7 @@ msgid "German"
 msgstr ""
 
 #: ../tracker/ui/menu_goto.xml.en:11
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Go"
 msgstr ""
 
@@ -2369,7 +2369,7 @@ msgstr "Emplacement&nbsp;:"
 
 #: ../ui/base/login.xml.en:21
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Log in"
 msgstr "Connexion"
 
@@ -2582,7 +2582,7 @@ msgstr "Suivant"
 
 #: ../ui/user/confirm_registration.xml.en:38
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Next"
 msgstr "Suivant"
 
@@ -2672,7 +2672,7 @@ msgstr "Texte OpenDocument"
 #: ../ui/folder/browse_search.xml.en:24 ../ui/generic/browse_search.xml.en:16
 #: ../ui/website/search_form.xml.en:11
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "OK"
 msgstr "OK"
 
@@ -3043,7 +3043,7 @@ msgstr "Supprimer"
 #: ../forum/ui/Thread_view.xml.en:33 ../ui/website/edit_languages.xml.en:38
 #: ../ui/ical/edit_timetables.xml.en:43
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Remove"
 msgstr "Supprimer"
 
@@ -3058,7 +3058,7 @@ msgstr "Renommer"
 
 #: ../ui/folder/rename.xml.en:20
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Rename"
 msgstr "Renommer"
 
@@ -3085,7 +3085,7 @@ msgstr "Remplacer"
 
 #: ../ui/file/upload.xml.en:20
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Replace"
 msgstr "Remplacer"
 
@@ -3096,7 +3096,7 @@ msgstr "Remplacer"
 
 #: ../forum/ui/Thread_view.xml.en:44
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Reply"
 msgstr "Remplacer"
 
@@ -3235,13 +3235,13 @@ msgstr "Samedi"
 
 #: ../wiki/ui/edit.xml.en:174
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Save"
 msgstr "Sauvegarder"
 
 #: ../wiki/ui/edit.xml.en:175
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Save &amp; View"
 msgstr "Sauvegarder & Visualiser"
 
@@ -3254,7 +3254,7 @@ msgstr "Dernier changements"
 #: ../ui/website/security_policy.xml.en:26
 #: ../ui/user/edit_preferences.xml.en:19
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Save Changes"
 msgstr "Dernier changements"
 
@@ -3268,7 +3268,7 @@ msgstr "Rechercher"
 
 #: ../tracker/ui/search.xml.en:94
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Search"
 msgstr "Rechercher"
 
@@ -3904,20 +3904,20 @@ msgstr "Liste à puces"
 #: ../ui/ical/edit_timetables.xml.en:44
 #: ../ui/access/edit_membership_form.xml.en:18
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Update"
 msgstr "Mettre à jour"
 
 #: ../tracker/ui/export_to_text.xml.en:20
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Update text export"
 msgstr "Mettre à jour l'export texte"
 
 #: ../future/ui/dressable_edit_image.xml.en:27
 #: ../ui/file/new_instance.xml.en:22
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Upload"
 msgstr "Remplacer"
 
@@ -3958,13 +3958,13 @@ msgstr "Importer une image ici et l'insérer&nbsp;:"
 
 #: ../ui/html/addimage.xml.en:87
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Upload and Insert"
 msgstr "Importer et insérer"
 
 #: ../ui/html/addlink.xml.en:131
 #, fuzzy
-msgctxt "input[value]"
+msgctxt "button"
 msgid "Upload and Link"
 msgstr "Importer et lier"
 
@@ -4903,6 +4903,11 @@ msgstr ""
 #~ msgid "Actions"
 #~ msgstr "Actions"
 
+#, fuzzy
+#~ msgctxt "input[value]"
+#~ msgid "Add"
+#~ msgstr "Ajouter"
+
 #~ msgid "Add New User"
 #~ msgstr "Ajouter un nouvel utilisateur"
 
@@ -4959,6 +4964,8 @@ msgstr ""
 #~ msgid "Cart"
 #~ msgstr "Panier"
 
+#, fuzzy
+#~ msgctxt "input[value]"
 #~ msgid "Change"
 #~ msgstr "Modifier"
 
@@ -5019,6 +5026,11 @@ msgstr ""
 
 #~ msgid "E-commerce Shop"
 #~ msgstr "Boutique de E-commerce"
+
+#, fuzzy
+#~ msgctxt "input[value]"
+#~ msgid "Edit"
+#~ msgstr "Modifier"
 
 #, fuzzy
 #~ msgctxt "legend"
@@ -5142,6 +5154,11 @@ msgstr ""
 
 #~ msgid "New window"
 #~ msgstr "Nouvelle fenêtre"
+
+#, fuzzy
+#~ msgctxt "input[value]"
+#~ msgid "Next"
+#~ msgstr "Suivant"
 
 #~ msgid "No products in your cart"
 #~ msgstr "Aucun produit dans votre panier"
@@ -5267,8 +5284,33 @@ msgstr ""
 #~ msgid "Registration"
 #~ msgstr "Inscription"
 
+#, fuzzy
+#~ msgctxt "input[value]"
+#~ msgid "Remove"
+#~ msgstr "Supprimer"
+
+#, fuzzy
+#~ msgctxt "input[value]"
+#~ msgid "Rename"
+#~ msgstr "Renommer"
+
 #~ msgid "Rename objects"
 #~ msgstr "Renommer les objets"
+
+#, fuzzy
+#~ msgctxt "input[value]"
+#~ msgid "Replace"
+#~ msgstr "Remplacer"
+
+#, fuzzy
+#~ msgctxt "input[value]"
+#~ msgid "Save Changes"
+#~ msgstr "Dernier changements"
+
+#, fuzzy
+#~ msgctxt "input[value]"
+#~ msgid "Search"
+#~ msgstr "Rechercher"
 
 #~ msgid "Search:"
 #~ msgstr "Rechercher&nbsp;:"

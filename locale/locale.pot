@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2008-10-13 18:10+CET\n"
+"POT-Creation-Date: 2008-10-14 09:10+CET\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1993,6 +1993,192 @@ msgctxt "body"
 msgid "${location}"
 msgstr ""
 
+#: ../ui/folder/browse_image.xml.en:62
+#: ../ui/generic/browse_table.xml.en:44
+msgctxt "button"
+msgid "${action/value}"
+msgstr ""
+
+#: ../ui/auto_form.xml.en:27
+msgctxt "button"
+msgid "${submit_value}"
+msgstr ""
+
+#: ../tracker/ui/add_issue.xml.en:94
+#: ../forum/ui/Forum_new_thread.xml.en:19
+#: ../ui/website/edit_languages.xml.en:55
+#: ../ui/website/new_instance.xml.en:31
+#: ../ui/base/new_instance.xml.en:22
+#: ../future/ui/dressable_add_image.xml.en:20
+#: ../ui/ical/edit_timetables.xml.en:37
+msgctxt "button"
+msgid "Add"
+msgstr ""
+
+#: ../ui/access/add_user.xml.en:35
+msgctxt "button"
+msgid "Add and return"
+msgstr ""
+
+#: ../ui/access/add_user.xml.en:33
+msgctxt "button"
+msgid "Add and view"
+msgstr ""
+
+#: ../tracker/ui/edit_resources.xml.en:50
+msgctxt "button"
+msgid "Assign"
+msgstr ""
+
+#: ../ui/ical/edit_event.xml.en:133
+msgctxt "button"
+msgid "Cancel"
+msgstr ""
+
+#: ../ui/WorkflowAware_state.xml.en:30
+#: ../ui/text/edit.xml.en:12
+#: ../ui/PO_edit.xml.en:37
+#: ../ui/website/contact_options.xml.en:21
+msgctxt "button"
+msgid "Change"
+msgstr ""
+
+#: ../ui/website/edit_languages.xml.en:36
+msgctxt "button"
+msgid "Change default"
+msgstr ""
+
+#: ../ui/ical/edit_event.xml.en:131
+msgctxt "button"
+msgid "Definitely remove"
+msgstr ""
+
+#: ../tracker/ui/edit_issue.xml.en:110
+msgctxt "button"
+msgid "Edit"
+msgstr ""
+
+#: ../tracker/ui/change_bugs.xml.en:81
+msgctxt "button"
+msgid "Edit Issues"
+msgstr ""
+
+#: ../tracker/ui/export_to_csv.xml.en:25
+msgctxt "button"
+msgid "Export"
+msgstr ""
+
+#: ../ui/text/externaledit.xml.en:39
+#: ../ui/file/externaledit.xml.en:25
+msgctxt "button"
+msgid "External Editor..."
+msgstr ""
+
+#: ../tracker/ui/menu_remember.xml.en:20
+msgctxt "button"
+msgid "Forget this Search"
+msgstr ""
+
+#: ../tracker/ui/menu_goto.xml.en:11
+msgctxt "button"
+msgid "Go"
+msgstr ""
+
+#: ../ui/base/login.xml.en:21
+msgctxt "button"
+msgid "Log in"
+msgstr ""
+
+#: ../ui/user/confirm_registration.xml.en:38
+msgctxt "button"
+msgid "Next"
+msgstr ""
+
+#: ../ui/html/addlink.xml.en:119
+#: ../ui/ical/daily_view.xml.en:12
+#: ../ui/website/forgotten_password_form.xml.en:19
+#: ../ui/ical/edit_event.xml.en:130
+#: ../tracker/ui/menu_remember.xml.en:15
+#: ../ui/folder/browse_search.xml.en:24
+#: ../ui/generic/browse_search.xml.en:16
+#: ../ui/website/search_form.xml.en:11
+msgctxt "button"
+msgid "OK"
+msgstr ""
+
+#: ../future/ui/dressable_edit_image.xml.en:40
+#: ../forum/ui/Thread_view.xml.en:33
+#: ../ui/website/edit_languages.xml.en:38
+#: ../ui/ical/edit_timetables.xml.en:43
+msgctxt "button"
+msgid "Remove"
+msgstr ""
+
+#: ../ui/folder/rename.xml.en:20
+msgctxt "button"
+msgid "Rename"
+msgstr ""
+
+#: ../ui/file/upload.xml.en:20
+msgctxt "button"
+msgid "Replace"
+msgstr ""
+
+#: ../forum/ui/Thread_view.xml.en:44
+msgctxt "button"
+msgid "Reply"
+msgstr ""
+
+#: ../wiki/ui/edit.xml.en:174
+msgctxt "button"
+msgid "Save"
+msgstr ""
+
+#: ../wiki/ui/edit.xml.en:175
+msgctxt "button"
+msgid "Save &amp; View"
+msgstr ""
+
+#: ../ui/website/virtual_hosts.xml.en:14
+#: ../ui/user/edit_password.xml.en:30
+#: ../ui/website/security_policy.xml.en:26
+#: ../ui/user/edit_preferences.xml.en:19
+msgctxt "button"
+msgid "Save Changes"
+msgstr ""
+
+#: ../tracker/ui/search.xml.en:94
+msgctxt "button"
+msgid "Search"
+msgstr ""
+
+#: ../ui/ical/edit_timetables.xml.en:44
+#: ../ui/access/edit_membership_form.xml.en:18
+msgctxt "button"
+msgid "Update"
+msgstr ""
+
+#: ../tracker/ui/export_to_text.xml.en:20
+msgctxt "button"
+msgid "Update text export"
+msgstr ""
+
+#: ../future/ui/dressable_edit_image.xml.en:27
+#: ../ui/file/new_instance.xml.en:22
+msgctxt "button"
+msgid "Upload"
+msgstr ""
+
+#: ../ui/html/addimage.xml.en:87
+msgctxt "button"
+msgid "Upload and Insert"
+msgstr ""
+
+#: ../ui/html/addlink.xml.en:131
+msgctxt "button"
+msgid "Upload and Link"
+msgstr ""
+
 #: ../ui/auto_form.xml.en:22
 msgctxt "dd"
 msgid "${widget/widget}"
@@ -2172,192 +2358,6 @@ msgstr ""
 #: ../ui/generic/browse_table.xml.en:15
 msgctxt "input[title]"
 msgid "Click to select/unselect all rows"
-msgstr ""
-
-#: ../ui/folder/browse_image.xml.en:62
-#: ../ui/generic/browse_table.xml.en:44
-msgctxt "input[value]"
-msgid "${action/value}"
-msgstr ""
-
-#: ../ui/auto_form.xml.en:27
-msgctxt "input[value]"
-msgid "${submit_value}"
-msgstr ""
-
-#: ../tracker/ui/add_issue.xml.en:94
-#: ../forum/ui/Forum_new_thread.xml.en:19
-#: ../ui/website/edit_languages.xml.en:55
-#: ../ui/website/new_instance.xml.en:31
-#: ../ui/base/new_instance.xml.en:22
-#: ../future/ui/dressable_add_image.xml.en:20
-#: ../ui/ical/edit_timetables.xml.en:37
-msgctxt "input[value]"
-msgid "Add"
-msgstr ""
-
-#: ../ui/access/add_user.xml.en:35
-msgctxt "input[value]"
-msgid "Add and return"
-msgstr ""
-
-#: ../ui/access/add_user.xml.en:33
-msgctxt "input[value]"
-msgid "Add and view"
-msgstr ""
-
-#: ../tracker/ui/edit_resources.xml.en:50
-msgctxt "input[value]"
-msgid "Assign"
-msgstr ""
-
-#: ../ui/ical/edit_event.xml.en:133
-msgctxt "input[value]"
-msgid "Cancel"
-msgstr ""
-
-#: ../ui/WorkflowAware_state.xml.en:30
-#: ../ui/text/edit.xml.en:12
-#: ../ui/PO_edit.xml.en:37
-#: ../ui/website/contact_options.xml.en:21
-msgctxt "input[value]"
-msgid "Change"
-msgstr ""
-
-#: ../ui/website/edit_languages.xml.en:36
-msgctxt "input[value]"
-msgid "Change default"
-msgstr ""
-
-#: ../ui/ical/edit_event.xml.en:131
-msgctxt "input[value]"
-msgid "Definitely remove"
-msgstr ""
-
-#: ../tracker/ui/edit_issue.xml.en:110
-msgctxt "input[value]"
-msgid "Edit"
-msgstr ""
-
-#: ../tracker/ui/change_bugs.xml.en:81
-msgctxt "input[value]"
-msgid "Edit Issues"
-msgstr ""
-
-#: ../tracker/ui/export_to_csv.xml.en:25
-msgctxt "input[value]"
-msgid "Export"
-msgstr ""
-
-#: ../ui/text/externaledit.xml.en:39
-#: ../ui/file/externaledit.xml.en:25
-msgctxt "input[value]"
-msgid "External Editor..."
-msgstr ""
-
-#: ../tracker/ui/menu_remember.xml.en:20
-msgctxt "input[value]"
-msgid "Forget this Search"
-msgstr ""
-
-#: ../tracker/ui/menu_goto.xml.en:11
-msgctxt "input[value]"
-msgid "Go"
-msgstr ""
-
-#: ../ui/base/login.xml.en:21
-msgctxt "input[value]"
-msgid "Log in"
-msgstr ""
-
-#: ../ui/user/confirm_registration.xml.en:38
-msgctxt "input[value]"
-msgid "Next"
-msgstr ""
-
-#: ../ui/html/addlink.xml.en:119
-#: ../ui/ical/daily_view.xml.en:12
-#: ../ui/website/forgotten_password_form.xml.en:19
-#: ../ui/ical/edit_event.xml.en:130
-#: ../tracker/ui/menu_remember.xml.en:15
-#: ../ui/folder/browse_search.xml.en:24
-#: ../ui/generic/browse_search.xml.en:16
-#: ../ui/website/search_form.xml.en:11
-msgctxt "input[value]"
-msgid "OK"
-msgstr ""
-
-#: ../future/ui/dressable_edit_image.xml.en:40
-#: ../forum/ui/Thread_view.xml.en:33
-#: ../ui/website/edit_languages.xml.en:38
-#: ../ui/ical/edit_timetables.xml.en:43
-msgctxt "input[value]"
-msgid "Remove"
-msgstr ""
-
-#: ../ui/folder/rename.xml.en:20
-msgctxt "input[value]"
-msgid "Rename"
-msgstr ""
-
-#: ../ui/file/upload.xml.en:20
-msgctxt "input[value]"
-msgid "Replace"
-msgstr ""
-
-#: ../forum/ui/Thread_view.xml.en:44
-msgctxt "input[value]"
-msgid "Reply"
-msgstr ""
-
-#: ../wiki/ui/edit.xml.en:174
-msgctxt "input[value]"
-msgid "Save"
-msgstr ""
-
-#: ../wiki/ui/edit.xml.en:175
-msgctxt "input[value]"
-msgid "Save &amp; View"
-msgstr ""
-
-#: ../ui/website/virtual_hosts.xml.en:14
-#: ../ui/user/edit_password.xml.en:30
-#: ../ui/website/security_policy.xml.en:26
-#: ../ui/user/edit_preferences.xml.en:19
-msgctxt "input[value]"
-msgid "Save Changes"
-msgstr ""
-
-#: ../tracker/ui/search.xml.en:94
-msgctxt "input[value]"
-msgid "Search"
-msgstr ""
-
-#: ../ui/ical/edit_timetables.xml.en:44
-#: ../ui/access/edit_membership_form.xml.en:18
-msgctxt "input[value]"
-msgid "Update"
-msgstr ""
-
-#: ../tracker/ui/export_to_text.xml.en:20
-msgctxt "input[value]"
-msgid "Update text export"
-msgstr ""
-
-#: ../future/ui/dressable_edit_image.xml.en:27
-#: ../ui/file/new_instance.xml.en:22
-msgctxt "input[value]"
-msgid "Upload"
-msgstr ""
-
-#: ../ui/html/addimage.xml.en:87
-msgctxt "input[value]"
-msgid "Upload and Insert"
-msgstr ""
-
-#: ../ui/html/addlink.xml.en:131
-msgctxt "input[value]"
-msgid "Upload and Link"
 msgstr ""
 
 #: ../tracker/ui/export_to_text.xml.en:17
