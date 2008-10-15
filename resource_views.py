@@ -88,6 +88,8 @@ class DBResourceNewInstance(NewInstanceForm):
 
 
     def get_title(self, context):
+        if self.title is not None:
+            return self.title
         type = context.get_query_value('type')
         if not type:
             return MSG(u'Add resource').gettext()
