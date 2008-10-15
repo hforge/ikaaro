@@ -38,6 +38,7 @@ from resources import Resources
 from stored import StoredSearch, StoredSearchFile
 from tables import TableResource, TableHandler
 from tables import OrderedTableResource, OrderedTableHandler
+from tables import ModulesResource, ModulesHandler
 from tables import VersionsResource, VersionsHandler
 from tracker_views import GoToIssueMenu, StoredSearchesMenu
 from tracker_views import TrackerSearch, TrackerView, TrackerAddIssue
@@ -61,35 +62,37 @@ class Tracker(Folder):
     class_icon48 = 'tracker/tracker48.png'
     class_views = ['search', 'add_issue', 'browse_content', 'edit']
 
-    __fixed_handlers__ = ['modules', 'versions', 'types', 'priorities',
-        'states', 'resources']
+    __fixed_handlers__ = ['products', 'modules', 'versions', 'types',
+        'priorities', 'states', 'resources']
 
     @staticmethod
     def _make_resource(cls, folder, name):
         Folder._make_resource(cls, folder, name)
+        # Products
+        table = TableHandler()
+        folder.set_handler('%s/products' % name, table)
+        metadata = TableResource.build_metadata()
+        folder.set_handler('%s/products.metadata' % name, metadata)
+        # Modules
+        table = ModulesHandler()
+        folder.set_handler('%s/modules' % name, table)
+        metadata = ModulesResource.build_metadata()
+        folder.set_handler('%s/modules.metadata' % name, metadata)
         # Versions
         table = VersionsHandler()
-        table.add_record({'title': u'1.0', 'released': False})
-        table.add_record({'title': u'2.0', 'released': False})
         folder.set_handler('%s/versions' % name, table)
         metadata = VersionsResource.build_metadata()
         folder.set_handler('%s/versions.metadata' % name, metadata)
-        # Modules and Types Select Tables
-        tables = [
-            ('modules', [u'Documentation', u'Unit Tests',
-                u'Programming Interface', u'Command Line Interface',
-                u'Visual Interface']),
-            ('types', [u'Bug', u'New Feature', u'Security Issue',
-                u'Stability Issue', u'Data Corruption Issue',
-                u'Performance Improvement', u'Technology Upgrade'])]
-        for table_name, values in tables:
-            table = TableHandler()
-            for title in values:
-                table.add_record({'title': title})
-            folder.set_handler('%s/%s' % (name, table_name), table)
-            metadata = TableResource.build_metadata()
-            folder.set_handler('%s/%s.metadata' % (name, table_name), metadata)
-        # Priorities and States Ordered Select Tables
+        # Types
+        table = TableHandler()
+        for title in [u'Bug', u'New Feature', u'Security Issue',
+                      u'Stability Issue', u'Data Corruption Issue',
+                      u'Performance Improvement', u'Technology Upgrade']:
+            table.add_record({'title': title})
+        folder.set_handler('%s/types' % name, table)
+        metadata = TableResource.build_metadata()
+        folder.set_handler('%s/types.metadata' % name, metadata)
+        # Priorities and States (Ordered Select Tables)
         tables = [
             ('priorities', [u'High', u'Medium', u'Low']),
             ('states', [u'Open', u'Fixed', u'Verified', u'Closed'])]
@@ -269,31 +272,17 @@ class Tracker(Folder):
             metadata.format = OrderedTableResource.class_id
 
 
-    def update_20080416(self):
-        pass
-#       for name in ('priorities', 'states'):
-#           if not self.has_resource(name):
-#               continue
-#           handler = self.get_resource(name)
-#           order = []
-#           for record in handler.handler.get_records():
-#               # rank is not in the record_schema -> multiple string
-#               order.append((record.id, int(record.rank[0])))
-
-#           order.sort(cmp=lambda x,y: cmp(x[1], y[1]))
-#           order = [ str(x[0]) for x in order ]
-#           handler.handler.update_properties(order=tuple(order))
-
-
     def update_20081015(self):
         """Add the 'products' table.
         """
         # Add the products table
         cls = TableResource
         cls.make_resource(cls, self, 'products')
-#       # Add the products column
-#       for name in ['versions']:
-#           resource = self.get_resource(name)
+        # Change the format of the 'modules' table
+        resource = self.get_resource('modules')
+        metadata = resource.metadata
+        metadata.set_changed()
+        metadata.format = ModulesResource.class_id
 
 
 

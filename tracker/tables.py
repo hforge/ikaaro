@@ -200,12 +200,40 @@ class OrderedTableResource(OrderedTable, TableResource):
 
 
 
+class ModulesHandler(BaseTable):
+
+    record_schema = {
+        'product': String,
+        'title': Unicode}
+
+
+
+class ModulesResource(TableResource):
+
+    class_id = 'tracker_modules'
+    class_version = '20081015'
+    class_handler = ModulesHandler
+
+    def get_schema(self):
+        products = self.parent.get_resource('products')
+        return merge_dics(
+            ModulesHandler.record_schema,
+            product=ProductsEnumerate(products=products))
+
+
+    form = [
+        SelectWidget('product', title=MSG(u'Product')),
+        title_widget]
+
+
+
 class VersionsHandler(BaseTable):
 
     record_schema = {
         'product': String,
         'title': Unicode,
         'released': Boolean}
+
 
 
 class VersionsResource(TableResource):
@@ -233,4 +261,5 @@ class VersionsResource(TableResource):
 ###########################################################################
 register_resource_class(TableResource)
 register_resource_class(OrderedTableResource)
+register_resource_class(ModulesResource)
 register_resource_class(VersionsResource)
