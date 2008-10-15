@@ -246,7 +246,7 @@ class TableEditRecord(AutoForm):
 
 
     def get_schema(self, resource, context):
-        return resource.get_handler().record_schema
+        return resource.get_schema()
 
 
     def get_widgets(self, resource, context):

@@ -253,10 +253,17 @@ class SelectWidget(Widget):
 
 
     def get_namespace(self, datatype, value):
+        # Check whether the value is already a list of options
+        # FIXME This is done to avoid a bug when using a select widget in an
+        # auto-form, where the 'datatype.get_namespace' method is called
+        # twice (there may be a better way of handling this).
+        if type(value) is not list:
+            value = datatype.get_namespace(value)
+
         return {
             'name': self.name,
             'multiple': getattr(datatype, 'multiple', False),
-            'options': datatype.get_namespace(value)}
+            'options': value}
 
 
 

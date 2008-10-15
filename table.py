@@ -55,8 +55,7 @@ class Table(File):
         record_schema = cls.class_handler.record_schema
         return [
             get_default_widget(datatype)(name)
-            for name, datatype in record_schema.items()
-        ]
+            for name, datatype in record_schema.items() ]
 
 
     @classmethod
