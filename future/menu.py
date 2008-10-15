@@ -21,14 +21,14 @@ from itools.xml import XMLParser
 from itools.gettext import MSG
 
 # Import from ikaaro
-from file import File
-from folder import Folder
-from forms import Widget, TextWidget, SelectWidget, ReadOnlyWidget
-from forms import stl_namespaces
-from messages import MSG_DELETE_SELECTION, MSG_NEW_RESOURCE
-from registry import register_resource_class
-from resource_views import Breadcrumb, DBResourceAddLink
-from table import OrderedTableFile, OrderedTable, OrderedTableView
+from ikaaro.file import File
+from ikaaro.folder import Folder
+from ikaaro.forms import Widget, TextWidget, SelectWidget, ReadOnlyWidget
+from ikaaro.forms import stl_namespaces
+from ikaaro.messages import MSG_DELETE_SELECTION, MSG_NEW_RESOURCE
+from ikaaro.registry import register_resource_class
+from ikaaro.resource_views import Breadcrumb, DBResourceAddLink
+from ikaaro.table import OrderedTableFile, OrderedTable, OrderedTableView
 
 
 
