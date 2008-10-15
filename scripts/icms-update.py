@@ -143,7 +143,7 @@ def update(parser, options, target):
                 database.save_changes()
             except:
                 path = resource.get_abspath()
-                log.write('%s <%s>\n' % (path, resource.__class__.__name__))
+                log.write('%s %s\n' % (path, resource.__class__))
                 print_exc(file=log)
                 log.write('\n')
                 bad += 1
