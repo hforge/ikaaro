@@ -44,6 +44,10 @@ class Table(File):
     form = []
 
 
+    def get_schema(self):
+        return self.handler.record_schema
+
+
     @classmethod
     def get_form(cls):
         if cls.form != []:
@@ -79,9 +83,6 @@ class OrderedTableFile(TableFile):
     schema = {'order': Tokens(default=())}
 
 
-    #######################################################################
-    # API
-    #######################################################################
     def get_record_ids_in_order(self):
         """Return ids sort by order"""
         ordered = self.get_property_value('order') or []

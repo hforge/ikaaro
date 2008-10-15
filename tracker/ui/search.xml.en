@@ -27,12 +27,12 @@
         </tr>
         <tr>
           <td valign="top">
-            <label for="type">Type:<stl:inline stl:if="is_admin"> (<a
-              href="./types/;view">Edit</a>)</stl:inline></label>
+            <label for="product">Product:<stl:inline stl:if="is_admin"> (<a
+              href="./products/;view">Edit</a>)</stl:inline></label>
             <br/>
-            <select name="type" id="type" class="tracker_select"
+            <select name="product" id="product" class="tracker_select"
               multiple="multiple" size="4">
-              <option stl:repeat="item types" value="${item/id}"
+              <option stl:repeat="item products" value="${item/id}"
                 selected="${item/is_selected}">${item/title}</option>
             </select>
           </td>
@@ -59,12 +59,12 @@
         </tr>
         <tr>
           <td valign="top">
-            <label for="assigned_to">Assigned To:<stl:inline stl:if="is_admin">
-            (<a href="${manage_assigned}">Edit</a>)</stl:inline></label>
+            <label for="type">Type:<stl:inline stl:if="is_admin"> (<a
+              href="./types/;view">Edit</a>)</stl:inline></label>
             <br/>
-            <select name="assigned_to" id="assigned_to"
-              class="tracker_select" multiple="multiple" size="4">
-              <option stl:repeat="item users" value="${item/id}"
+            <select name="type" id="type" class="tracker_select"
+              multiple="multiple" size="4">
+              <option stl:repeat="item types" value="${item/id}"
                 selected="${item/is_selected}">${item/title}</option>
             </select>
           </td>
@@ -85,6 +85,18 @@
             <select name="priority" id="priority" class="tracker_select"
               multiple="multiple" size="4">
               <option stl:repeat="item priorities" value="${item/id}"
+                selected="${item/is_selected}">${item/title}</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top" colspan="3">
+            <label for="assigned_to">Assigned To:<stl:inline stl:if="is_admin">
+            (<a href="${manage_assigned}">Edit</a>)</stl:inline></label>
+            <br/>
+            <select name="assigned_to" id="assigned_to"
+              class="tracker_select" multiple="multiple" size="4">
+              <option stl:repeat="item users" value="${item/id}"
                 selected="${item/is_selected}">${item/title}</option>
             </select>
           </td>

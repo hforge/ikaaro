@@ -219,8 +219,7 @@ class ContactOptions(DynamicEnumerate):
 
         return [
             {'name': x, 'value': users.get_resource(x).get_title()}
-            for x in resource.get_property('contacts')
-        ]
+            for x in resource.get_property('contacts') ]
 
 
 
@@ -235,7 +234,7 @@ class ContactForm(AutoForm):
             'to': ContactOptions(resource=resource, mandatory=True),
             'from': Email(mandatory=True),
             'subject': Unicode(mandatory=True),
-            'body': Unicode(mandatory=True)
+            'body': Unicode(mandatory=True),
         }
 
 

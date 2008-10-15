@@ -60,7 +60,7 @@ class TableView(SearchForm):
         return resource.get_form()
 
 
-    def get_schema(self, resource, context):
+    def get_search_schema(self, resource, context):
         return resource.handler.record_schema
 
 
@@ -76,7 +76,7 @@ class TableView(SearchForm):
 
     def get_search_fields(self, resource, context):
         search_fields = []
-        schema = self.get_schema(resource, context)
+        schema = self.get_search_schema(resource, context)
         for widget in self.get_widgets(resource, context):
             if hasattr(schema[widget.name], 'index'):
                 title = getattr(widget, 'title', widget.name)
@@ -179,7 +179,7 @@ class TableAddRecord(AutoForm):
 
 
     def get_schema(self, resource, context):
-        return resource.handler.record_schema
+        return resource.get_schema()
 
 
     def get_widgets(self, resource, context):

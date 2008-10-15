@@ -20,15 +20,29 @@
 
 # Import from itools
 from itools.csv import Table as BaseTable
-from itools.datatypes import Boolean, Integer, Unicode
+from itools.datatypes import Boolean, Integer, String, Unicode
+from itools.datatypes import DynamicEnumerate
 from itools.gettext import MSG
+from itools.handlers import merge_dics
 from itools.xapian import EqQuery, AndQuery
 from itools.web import ERROR, INFO
 
 # Import from ikaaro
-from ikaaro.forms import title_widget, BooleanCheckBox
+from ikaaro.forms import title_widget, BooleanCheckBox, SelectWidget
 from ikaaro.registry import register_resource_class
-from ikaaro.table import Table, OrderedTable, OrderedTableFile, TableView
+from ikaaro.table import Table, OrderedTable, OrderedTableFile
+from ikaaro.table_views import TableView
+
+
+
+class ProductsEnumerate(DynamicEnumerate):
+
+    def get_options(self):
+        products = self.products.handler
+        return [
+            {'name': str(x.id),
+             'value': products.get_record_value(x, 'title')}
+            for x in products.get_records() ]
 
 
 ###########################################################################
@@ -96,11 +110,9 @@ class SelectTable(Table):
 
 
     def get_options(self, value=None, sort='title'):
-        table = self.handler
-        options = []
-        for x in table.get_records():
-            ns = {'id': x.id, 'title': x.title}
-            options.append(ns)
+        options = [
+            {'id': x.id, 'title': x.title}
+            for x in self.handler.get_records() ]
 
         if sort is not None:
             options.sort(key=lambda x: x.get(sort))
@@ -149,7 +161,6 @@ class SelectTable(Table):
 
 
 
-
 class OrderedSelectTableTable(OrderedTableFile):
 
     record_schema = {'title': Unicode}
@@ -190,8 +201,10 @@ class OrderedSelectTable(OrderedTable, SelectTable):
 
 class VersionsTable(BaseTable):
 
-    record_schema = {'title': Unicode(),
-                     'released': Boolean()}
+    record_schema = {
+        'product': String,
+        'title': Unicode,
+        'released': Boolean}
 
 
 class Versions(SelectTable):
@@ -200,7 +213,17 @@ class Versions(SelectTable):
     class_version = '20071216'
     class_handler = VersionsTable
 
-    form = [title_widget, BooleanCheckBox('released', title=MSG(u'Released'))]
+    def get_schema(self):
+        products = self.parent.get_resource('products')
+        return merge_dics(
+            VersionsTable.record_schema,
+            product=ProductsEnumerate(products=products))
+
+
+    form = [
+        SelectWidget('product', title=MSG(u'Product')),
+        title_widget,
+        BooleanCheckBox('released', title=MSG(u'Released'))]
 
 
 

@@ -342,12 +342,13 @@ class TrackerSearch(BaseSearchForm, TrackerView):
         'search_title': Unicode(),
         'text': Unicode(),
         'mtime': Integer(),
+        'product': Integer(multiple=True),
         'module': Integer(multiple=True),
         'version': Integer(multiple=True),
         'type': Integer(multiple=True),
+        'state': Integer(multiple=True),
         'priority': Integer(multiple=True),
         'assigned_to': String(multiple=True),
-        'state': Integer(multiple=True),
         }
 
 
@@ -371,12 +372,13 @@ class TrackerSearch(BaseSearchForm, TrackerView):
             search_title = query['search_title']
 
         # Build the namespace
+        product = get_values('product')
         module = get_values('module')
-        type = get_values('type')
         version = get_values('version')
+        type = get_values('type')
+        state = get_values('state')
         priority = get_values('priority')
         assign = get_values('assigned_to')
-        state = get_values('state')
 
         # is_admin
         ac = resource.get_access_control()
@@ -386,6 +388,7 @@ class TrackerSearch(BaseSearchForm, TrackerView):
             'search_title': search_title,
             'text': get_value('text'),
             'mtime': get_value('mtime'),
+            'products': get_resource('products').get_options(product),
             'modules': get_resource('modules').get_options(module),
             'types': get_resource('types').get_options(type),
             'versions': get_resource('versions').get_options(version),
