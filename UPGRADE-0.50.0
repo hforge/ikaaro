@@ -52,6 +52,8 @@ summarizes these changes:
   ikaaro.base.DBObject                    ikaaro.resource_.DBResource
   ikaaro.binary                           ikaaro.file
   ikaaro.folder.CopyCookie                ikaaro.datatypes.CopyCookie
+  ikaaro.forms.namespaces                 ikaaro.forms.stl_namespaces
+  ikaaro.forms.Select                     ikaaro.forms.SelectWidget
   ikaaro.messages.MSG_MISSING_OR_INVALID  itools.web.MSG_MISSING_OR_INVALID
   ikaaro.users.User                       ikaaro.user.User
   ikaaro.users.UserFolder                 ikaaro.user.UserFolder
