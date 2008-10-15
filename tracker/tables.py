@@ -94,17 +94,17 @@ class SelectTableView(TableView):
 ###########################################################################
 # Resources
 ###########################################################################
-class SelectTableTable(BaseTable):
+class TableHandler(BaseTable):
 
     record_schema = {'title': Unicode}
 
 
-class SelectTable(Table):
+class TableResource(Table):
 
     class_id = 'tracker_select_table'
     class_version = '20071216'
     class_title = MSG(u'Select Table')
-    class_handler = SelectTableTable
+    class_handler = TableHandler
 
     form = [title_widget]
 
@@ -161,17 +161,17 @@ class SelectTable(Table):
 
 
 
-class OrderedSelectTableTable(OrderedTableFile):
+class OrderedTableHandler(OrderedTableFile):
 
     record_schema = {'title': Unicode}
 
 
-class OrderedSelectTable(OrderedTable, SelectTable):
+class OrderedTableResource(OrderedTable, TableResource):
 
     class_id = 'tracker_ordered_select_table'
     class_version = '20080415'
     class_title = MSG(u'Ordered select table')
-    class_handler = OrderedSelectTableTable
+    class_handler = OrderedTableHandler
 
     form = [title_widget]
 
@@ -199,7 +199,8 @@ class OrderedSelectTable(OrderedTable, SelectTable):
         return options
 
 
-class VersionsTable(BaseTable):
+
+class VersionsHandler(BaseTable):
 
     record_schema = {
         'product': String,
@@ -207,16 +208,16 @@ class VersionsTable(BaseTable):
         'released': Boolean}
 
 
-class Versions(SelectTable):
+class VersionsResource(TableResource):
 
     class_id = 'tracker_versions'
     class_version = '20071216'
-    class_handler = VersionsTable
+    class_handler = VersionsHandler
 
     def get_schema(self):
         products = self.parent.get_resource('products')
         return merge_dics(
-            VersionsTable.record_schema,
+            VersionsHandler.record_schema,
             product=ProductsEnumerate(products=products))
 
 
@@ -230,6 +231,6 @@ class Versions(SelectTable):
 ###########################################################################
 # Register
 ###########################################################################
-register_resource_class(SelectTable)
-register_resource_class(OrderedSelectTable)
-register_resource_class(Versions)
+register_resource_class(TableResource)
+register_resource_class(OrderedTableResource)
+register_resource_class(VersionsResource)

@@ -36,9 +36,9 @@ from ikaaro.folder import Folder
 from ikaaro.registry import register_resource_class
 from resources import Resources
 from stored import StoredSearch, StoredSearchFile
-from tables import SelectTableTable, SelectTable
-from tables import OrderedSelectTableTable, OrderedSelectTable
-from tables import Versions, VersionsTable
+from tables import TableResource, TableHandler
+from tables import OrderedTableResource, OrderedTableHandler
+from tables import VersionsResource, VersionsHandler
 from tracker_views import GoToIssueMenu, StoredSearchesMenu
 from tracker_views import TrackerSearch, TrackerView, TrackerAddIssue
 from tracker_views import TrackerGoToIssue
@@ -68,11 +68,11 @@ class Tracker(Folder):
     def _make_resource(cls, folder, name):
         Folder._make_resource(cls, folder, name)
         # Versions
-        table = VersionsTable()
+        table = VersionsHandler()
         table.add_record({'title': u'1.0', 'released': False})
         table.add_record({'title': u'2.0', 'released': False})
         folder.set_handler('%s/versions' % name, table)
-        metadata = Versions.build_metadata()
+        metadata = VersionsResource.build_metadata()
         folder.set_handler('%s/versions.metadata' % name, metadata)
         # Modules and Types Select Tables
         tables = [
@@ -83,22 +83,22 @@ class Tracker(Folder):
                 u'Stability Issue', u'Data Corruption Issue',
                 u'Performance Improvement', u'Technology Upgrade'])]
         for table_name, values in tables:
-            table = SelectTableTable()
+            table = TableHandler()
             for title in values:
                 table.add_record({'title': title})
             folder.set_handler('%s/%s' % (name, table_name), table)
-            metadata = SelectTable.build_metadata()
+            metadata = TableResource.build_metadata()
             folder.set_handler('%s/%s.metadata' % (name, table_name), metadata)
         # Priorities and States Ordered Select Tables
         tables = [
             ('priorities', [u'High', u'Medium', u'Low']),
             ('states', [u'Open', u'Fixed', u'Verified', u'Closed'])]
         for table_name, values in tables:
-            table = OrderedSelectTableTable()
+            table = OrderedTableHandler()
             for index, title in enumerate(values):
                 table.add_record({'title': title})
             folder.set_handler('%s/%s' % (name, table_name), table)
-            metadata = OrderedSelectTable.build_metadata()
+            metadata = OrderedTableResource.build_metadata()
             folder.set_handler('%s/%s.metadata' % (name, table_name), metadata)
         # Pre-defined stored searches
         open = StoredSearchFile(state='0')
@@ -266,7 +266,7 @@ class Tracker(Folder):
             # Change format
             metadata = resource.metadata
             metadata.set_changed()
-            metadata.format = OrderedSelectTable.class_id
+            metadata.format = OrderedTableResource.class_id
 
 
     def update_20080416(self):
@@ -289,7 +289,7 @@ class Tracker(Folder):
         """Add the 'products' table.
         """
         # Add the products table
-        cls = SelectTable
+        cls = TableResource
         cls.make_resource(cls, self, 'products')
 #       # Add the products column
 #       for name in ['versions']:
