@@ -23,7 +23,7 @@ from itools.csv import Table as BaseTable
 from itools.datatypes import Boolean, Integer, Unicode
 from itools.gettext import MSG
 from itools.xapian import EqQuery, AndQuery
-from itools.web import INFO
+from itools.web import ERROR, INFO
 
 # Import from ikaaro
 from ikaaro.forms import title_widget, BooleanCheckBox
@@ -38,7 +38,7 @@ class SelectTableView(TableView):
 
     def get_table_columns(self, resource, context):
         columns = TableView.get_table_columns(self, resource, context)
-        columns.append(('issues', u'Issues'))
+        columns.append(('issues', MSG(u'Issues')))
         return columns
 
 
@@ -125,7 +125,7 @@ class SelectTable(Table):
         # check input
         ids = context.get_form_values('ids', type=Integer)
         if not ids:
-            return context.come_back(INFO(u'No resource selected.'))
+            return context.come_back(ERROR(u'No resource selected.'))
 
         filter = self.name[:-1]
         if self.name.startswith('priorit'):
@@ -144,7 +144,7 @@ class SelectTable(Table):
                 self.handler.del_record(id)
                 removed.append(str(id))
 
-        message = u'Resources removed: $resources.'
+        message = INFO(u'Resources removed: $resources.')
         return context.come_back(message, resources=', '.join(removed))
 
 

@@ -153,11 +153,11 @@ class BaseResources(BaseTable):
         'comment': Unicode}
 
     form = [
-        SelectWidget('resource', title=u'Resource'),
-        DateWidget('dtstart', title=u'Start YYYY-MM-DD HH:MM'),
-        DateWidget('dtend', title=u'End'),
-        MultilineWidget('comment', title=u'Comment'),
-        TextWidget('issue', title=u'Issue')]
+        SelectWidget('resource', title=MSG(u'Resource')),
+        DateWidget('dtstart', title=MSG(u'Start YYYY-MM-DD HH:MM')),
+        DateWidget('dtend', title=MSG(u'End')),
+        MultilineWidget('comment', title=MSG(u'Comment')),
+        TextWidget('issue', title=MSG(u'Issue'))]
 
     record_class = Resource
 

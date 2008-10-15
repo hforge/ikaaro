@@ -364,8 +364,7 @@ class WikiPageEdit(STLForm):
                                   settings_overrides=resource.overrides)
         except SystemMessage, message:
             # Critical error
-            msg = (u'A syntax error prevented from saving the changes:'
-                   u' $error')
+            msg = u'A syntax error prevented from saving the changes: $error'
             # docutils is using tags to represent the error
             error = XMLContent.encode(message.message)
             context.message = ERROR(msg, error=error)

@@ -20,7 +20,6 @@
 
 # Import from the Standard Library
 from mimetypes import guess_type
-from string import Template
 
 # Import from itools
 from itools.datatypes import is_datatype, DateTime
@@ -30,7 +29,7 @@ from itools.html import sanitize_stream
 from itools.stl import stl, set_prefix
 from itools.uri import Path
 from itools.vfs import FileName
-from itools.web import get_context
+from itools.web import get_context, ERROR
 from itools.xml import XMLParser, XMLError
 
 # Import from ikaaro
@@ -149,7 +148,7 @@ class Dressable(Folder, EpozEditable):
 
 
     view__access__ = 'is_allowed_to_view'
-    view__label__ = u'View'
+    view__label__ = MSG(u'View')
     view__icon__ = 'view.png'
     def view(self, context):
         namespace = {}
@@ -195,7 +194,7 @@ class Dressable(Folder, EpozEditable):
     # API
     #######################################################################
     edit_document__access__ = 'is_allowed_to_edit'
-    edit_document__label__ = u'Edit'
+    edit_document__label__ = MSG(u'Edit')
     edit_document__icon__ = 'edit.png'
     def edit_document(self, context):
         name = context.get_form_value('dress_name', 'index')
@@ -207,7 +206,7 @@ class Dressable(Folder, EpozEditable):
 
 
     edit_image__access__ = 'is_allowed_to_edit'
-    edit_image__label__ = u'Edit image'
+    edit_image__label__ = MSG(u'Edit image')
     edit_image__icon__ = 'image.png'
     def edit_image(self, context):
         name = context.get_form_value('name')
@@ -266,7 +265,8 @@ class Dressable(Folder, EpozEditable):
             new_body = list(XMLParser(new_body,
                                       {None: 'http://www.w3.org/1999/xhtml'}))
         except XMLError:
-            return context.come_back(u'Invalid HTML code.')
+            error = ERROR(u'Invalid HTML code.')
+            return context.come_back(error)
         if sanitize:
             new_body = sanitize_stream(new_body)
         # "get_epoz_document" is to set in your editable handler
@@ -326,7 +326,8 @@ class Dressable(Folder, EpozEditable):
 
         # Check the mimetype
         if mimetype.startswith('image/') is False:
-            return context.come_back(u'The file is not an image')
+            error = ERROR(u'The file is not an image')
+            return context.come_back(error)
 
         # Add the language extension to the name
         cls = Image
@@ -455,7 +456,7 @@ class Dressable(Folder, EpozEditable):
         dress_name = kw.get('dress_name')
         label = self._get_resource_label(dress_name)
         if kw.get('external'):
-            label = Template(u'$label (External)').substitute(label=label)
+            return MSG(u'$label (External)').gettext(label=label)
         return label
 
 

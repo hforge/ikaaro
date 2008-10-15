@@ -54,8 +54,8 @@ class PathWidget(Widget):
 
 class Target(Enumerate):
 
-    options = [{'name': '_blank', 'value': u'New page'},
-               {'name': '_top', 'value': u'Current page'}]
+    options = [{'name': '_blank', 'value': MSG(u'New page')},
+               {'name': '_top', 'value': MSG(u'Current page')}]
 
 
 
@@ -82,7 +82,7 @@ class MenuView(OrderedTableView):
     def get_table_columns(self, resource, context):
         columns = [
             ('checkbox', None),
-            ('id', u'id')]
+            ('id', MSG(u'id'))]
         # From the schema
         for widget in self.get_widgets(resource, context):
             if widget.name == 'path':
@@ -115,13 +115,13 @@ class MenuView(OrderedTableView):
         ac = resource.get_access_control()
         if ac.is_allowed_to_edit(context.user, resource):
             message_utf8 = MSG_DELETE_SELECTION.gettext().encode('utf_8')
-            return [('add_child', u'Add Child', 'button_add', None),
-                    ('remove', u'Remove', 'button_delete',
+            return [('add_child', MSG(u'Add Child'), 'button_add', None),
+                    ('remove', MSG(u'Remove'), 'button_delete',
                      'return confirm("%s");' % message_utf8),
-                    ('order_up', u'Order up', 'button_ok', None),
-                    ('order_down', u'Order down', 'button_ok', None),
-                    ('order_top', u'Order top', 'button_ok', None),
-                    ('order_bottom', u'Order bottom', 'button_ok', None)]
+                    ('order_up', MSG(u'Order up'), 'button_ok', None),
+                    ('order_down', MSG(u'Order down'), 'button_ok', None),
+                    ('order_top', MSG(u'Order top'), 'button_ok', None),
+                    ('order_bottom', MSG(u'Order bottom'), 'button_ok', None)]
 
         return []
 
@@ -135,7 +135,7 @@ class MenuView(OrderedTableView):
             resource.before_remove_record(id)
             resource.handler.del_record(id)
 
-        context.message = u'Record deleted.'
+        context.message = MSG(u'Record deleted.')
 
 
     def action_order_up(self, resource, context, form):
@@ -359,14 +359,14 @@ def get_menu_namespace(context, depth=3, show_first_child=False, flat=True):
     Where the list of items is the first level
     and item_dic = {'active': True or False,
                     'class': 'active' or 'in_path' or None,
-                    'description': u'About Python',
-                    'id': u'tab_python',
+                    'description': MSG(u'About Python'),
+                    'id': 'tab_python',
                     'in_path': True or False,
                     'items': [item_dic11, ..., item_dic1N] or None,
                     'name': 'python',
                     'path': '../python',
                     'target': '_top' or '_blank' or None,
-                    'title': u'Python'}
+                    'title': MSG(u'Python')}
 
     If "flat" is true (the default), the menu is also represented with a
     flattened structure:

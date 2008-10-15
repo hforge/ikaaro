@@ -28,6 +28,7 @@ from string import Template
 from itools.datatypes import Integer, String, Unicode
 from itools.gettext import MSG
 from itools.uri import Reference
+from itools.web import ERROR
 from itools.xapian import EqQuery, RangeQuery, AndQuery, OrQuery, PhraseQuery
 
 # Import from ikaaro
@@ -173,8 +174,8 @@ class Tracker(Folder):
             try:
                 search = self.get_resource(search_name)
             except LookupError:
+                msg = ERROR(u'Unknown stored search "${sname}".')
                 goto = ';search'
-                msg = u'Unknown stored search "${sname}".'
                 return context.come_back(msg, goto=goto, sname=search_name)
             get_value = search.handler.get_value
             get_values = search.get_values

@@ -22,6 +22,7 @@
 
 # Import from the Standard Library
 from datetime import datetime
+from string import Template
 
 # Import from itools
 from itools.csv import Table
@@ -254,10 +255,12 @@ class Issue(Folder):
             body += message + '\n'
         comment = context.get_form_value('comment', type=Unicode)
         if comment:
-            body += MSG(u'Comment').gettext() + u'\n'
-            body += u'-------\n\n'
-            body += comment + u'\n\n'
-            body += u'-------\n\n'
+            title = MSG(u'Comment').gettext()
+            separator = len(title) * u'-'
+            template = u'${title}\n${separator}\n\n${comment}\n\n${separator}'
+            template = Template(template)
+            body += template.substitute(title=title, separator=separator,
+                                        comment=comment)
         if modifications:
             body += modifications
         # Notify / Send
@@ -287,13 +290,13 @@ class Issue(Folder):
                                     new_value=new_title)
             modifications.append(text)
         # List modifications
-        for key in [(u'Module', 'module', 'modules'),
-                    (u'Version', 'version', 'versions'),
-                    (u'Type', 'type', 'types'),
-                    (u'Priority', 'priority', 'priorities'),
-                    (u'State', 'state', 'states')]:
-            field, name, csv_name = key
-            field = MSG(field).gettext()
+        fields = [(MSG(u'Module'), 'module', 'modules'),
+                  (MSG(u'Version'), 'version', 'versions'),
+                  (MSG(u'Type'), 'type', 'types'),
+                  (MSG(u'Priority'), 'priority', 'priorities'),
+                  (MSG(u'State'), 'state', 'states')]
+        for field, name, csv_name in fields:
+            field = field.gettext()
             new_value = record[name]
             last_value = self.get_value(name)
             # Detect if modifications

@@ -220,7 +220,7 @@ class CSVView(BrowseForm):
 
         ac = resource.get_access_control()
         if ac.is_allowed_to_edit(context.user, resource):
-            return [('remove', u'Remove', 'button_delete',None)]
+            return [('remove', MSG(u'Remove'), 'button_delete', None)]
 
         return []
 
