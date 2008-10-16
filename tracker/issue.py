@@ -90,16 +90,17 @@ class Issue(Folder):
 
 
     def get_catalog_fields(self):
-       fields = Folder.get_catalog_fields(self) + \
-                [ IntegerField('module'), IntegerField('version'),
-                  IntegerField('type'), IntegerField('priority'),
-                  KeywordField('assigned_to'),  IntegerField('state')]
-       return fields
+       return Folder.get_catalog_fields(self) + \
+              [IntegerField('product'), IntegerField('module'),
+               IntegerField('version'), IntegerField('type'),
+               IntegerField('state'), IntegerField('priority'),
+               KeywordField('assigned_to')]
 
 
     def get_catalog_values(self):
         document = Folder.get_catalog_values(self)
-        for name in ('module', 'version', 'type', 'priority', 'state'):
+        names = 'product', 'module', 'version', 'type', 'priority', 'state'
+        for name in names:
             document[name] = self.get_value(name)
         document['assigned_to'] = self.get_value('assigned_to') or 'nobody'
         return document
