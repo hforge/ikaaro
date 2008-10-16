@@ -975,25 +975,21 @@ msgid "Add Issue"
 msgstr "Seguridad"
 
 #: ../access.py:185
-#, fuzzy
 msgid "Add New Member"
-msgstr "Nuevo Sitio Web"
+msgstr "Agregar Usuario"
 
 #: ../ui/access/add_user.xml.en:9
-#, fuzzy
 msgctxt "legend"
 msgid "Add New Member"
-msgstr "Nuevo Sitio Web"
+msgstr "Agregar un nuevo usuario"
 
 #: ../table_views.py:176
-#, fuzzy
 msgid "Add Record"
-msgstr "Añadir un Nuevo Usuario"
+msgstr "Agregar Registro"
 
 #: ../resource_views.py:67
-#, fuzzy
 msgid "Add Resource"
-msgstr "Añadir un Nuevo Usuario"
+msgstr "Agregar Recurso"
 
 #: ../text_views.py:262
 #, fuzzy
@@ -1001,15 +997,13 @@ msgid "Add Row"
 msgstr "Agregar"
 
 #: ../ui/website/new_instance.xml.en:9 ../ui/base/new_instance.xml.en:10
-#, fuzzy
 msgctxt "legend"
 msgid "Add a new ${class_title}"
-msgstr "Añadir un Nuevo Usuario"
+msgstr "Agregar un nuevo ${class_title}"
 
 #: ../forum/forum.py:77
-#, fuzzy
 msgid "Add a thread"
-msgstr "Añadir un Nuevo Usuario"
+msgstr "Agregar un hilo"
 
 #: ../ui/access/add_user.xml.en:35
 #, fuzzy
@@ -1032,7 +1026,7 @@ msgstr "Idioma"
 #: ../resource_views.py:93 ../folder_views.py:96
 #, fuzzy
 msgid "Add resource"
-msgstr "Añadir un Nuevo Usuario"
+msgstr "Agregar recurso"
 
 #: ../root.py:99 ../access.py:334
 msgid "Admin"
