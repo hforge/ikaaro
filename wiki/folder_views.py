@@ -48,7 +48,7 @@ class WikiMenu(ContextMenu):
 class GoToFrontPage(BaseView):
 
     access = 'is_allowed_to_view'
-    title = MSG(u'View')
+    title = MSG(u'Front Page')
     icon = 'view.png'
 
     def GET(self, resource, context):
