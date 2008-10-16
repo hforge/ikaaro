@@ -57,18 +57,20 @@ time_select_template = list(XMLParser("""
 
 class History(Table):
 
-    record_schema = {'datetime': DateTime,
-                     'username': String,
-                     'title': Unicode,
-                     'module': Integer,
-                     'version': Integer,
-                     'type': Integer,
-                     'priority': Integer,
-                     'assigned_to': String,
-                     'state': Integer,
-                     'comment': Unicode,
-                     'cc_list': Tokens(),
-                     'file': String}
+    record_schema = {
+        'datetime': DateTime,
+        'username': String,
+        'title': Unicode,
+        'product': Integer,
+        'module': Integer,
+        'version': Integer,
+        'type': Integer,
+        'state': Integer,
+        'priority': Integer,
+        'assigned_to': String,
+        'comment': Unicode,
+        'cc_list': Tokens(),
+        'file': String}
 
 
 
@@ -178,8 +180,8 @@ class Issue(Folder):
         title = context.get_form_value('title', type=Unicode).strip()
         record['title'] = title
         # Version, Priority, etc.
-        for name in ['module', 'version', 'type', 'priority', 'assigned_to',
-                     'state', 'comment']:
+        for name in ['product', 'module', 'version', 'type', 'state',
+                     'priority', 'assigned_to', 'comment']:
             type = History.record_schema[name]
             value = context.get_form_value(name, type=type)
             if type == Unicode:
