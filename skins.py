@@ -353,23 +353,31 @@ class Skin(UIFolder):
         return get_page_title(resource, context)
 
 
-    def get_message(self, context):
-        """Return a message string from the request.
+    def get_messages(self, context):
+        """Return the message string of the last action.
+        A list of messages is supported.
         """
         # Text
         if context.message is not None:
-            message = context.message
+            messages = context.message
         elif context.has_form_value('message'):
             # TODO Do not use this anymore
-            message = context.get_form_value('message')
+            messages = context.get_form_value('message')
         else:
             return None
 
-        # Level
-        level = 'error' if isinstance(message, ERROR) else 'info'
+        # Multiple messages:
+        if not isinstance(messages, list):
+            messages = [messages]
 
-        # Ok
-        namespace = {'message': message, 'level': level}
+        messages_ns = []
+        for message in messages:
+            css_class = 'error' if isinstance(message, ERROR) else 'info'
+            messages_ns.append({'message': message, 'class': css_class})
+
+        namespace = {}
+        namespace['messages'] = messages_ns
+
         template = context.root.get_resource('/ui/aruni/message.xml')
         return stl(template, namespace)
 
@@ -409,7 +417,7 @@ class Skin(UIFolder):
             'location': self.get_location(context),
             # Body
             'page_title': self.get_page_title(context),
-            'message': self.get_message(context),
+            'message': self.get_messages(context),
             'context_menus': context_menus,
         }
 

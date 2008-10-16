@@ -197,7 +197,7 @@ input {
  * ui/html/addimage.xml.en
  *************************************************************************/
 
-#message {
+#message * {
   margin: 3px;
   border-width: 2px;
   border-style: solid;
@@ -206,13 +206,13 @@ input {
   background-repeat: no-repeat;
 }
 
-#message.info {
+#message .info {
   border-color: #ff0;
   background-color: #ffffc2;
   background-image: url(icons/16x16/message.png);
 }
 
-#message.error {
+#message .error {
  border-color: #f00;
  background-color: #ffc2c2;
  background-image: url(icons/16x16/error.png);

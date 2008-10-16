@@ -376,6 +376,7 @@ class FolderBrowseContent(SearchForm):
 
         # Remove resources
         removed = []
+        referenced = []
         not_removed = []
         user = context.user
         abspath = resource.get_abspath()
@@ -392,7 +393,7 @@ class FolderBrowseContent(SearchForm):
                 try:
                     resource.del_resource(name)
                 except ConsistencyError:
-                    not_removed.append(name)
+                    referenced.append(name)
                     continue
                 removed.append(name)
                 # Clean cookie
@@ -406,7 +407,23 @@ class FolderBrowseContent(SearchForm):
             resources = ', '.join(removed)
             message = messages.MSG_RESOURCES_REMOVED(resources=resources)
             context.message = message
-        else:
+        if referenced:
+            resources = ', '.join(referenced)
+            message = messages.MSG_RESOURCES_REFERENCED(resources=resources)
+            if context.message is None:
+                context.message = message
+            else:
+                # Merge messages
+                context.message = [context.message, message]
+        if not_removed:
+            resources = ', '.join(not_removed)
+            message = messages.MSG_RESOURCES_NOT_REMOVED(resources=resources)
+            if context.message is None:
+                context.message = message
+            else:
+                # Merge messages
+                context.message = [context.message, message]
+        if not removed and not referenced and not not_removed:
             context.message = messages.MSG_NONE_REMOVED
 
 
