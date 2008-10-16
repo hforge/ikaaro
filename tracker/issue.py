@@ -371,10 +371,11 @@ class Issue(Folder):
 
         # Select Tables
         get_resource = self.parent.get_resource
-        tables = {'module': 'modules', 'version': 'versions', 'type': 'types',
-                  'priority': 'priorities', 'state': 'states'}
-
-        for name in ('module', 'version', 'type', 'priority', 'state'):
+        tables = {'product': 'products', 'module': 'modules',
+                  'version': 'versions', 'type': 'types', 'state': 'states',
+                  'priority': 'priorities'}
+        names = 'product', 'module', 'version', 'type', 'priority', 'state'
+        for name in names:
             value = get_value(name)
             if value is None:
                 infos[name] = None

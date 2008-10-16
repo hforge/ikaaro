@@ -190,6 +190,7 @@ class Tracker(Folder):
         if text is not None:
             text = text.strip().lower()
         mtime = get_value('mtime', type=Integer)
+        products = get_values('product', type=Integer)
         modules = get_values('module', type=Integer)
         versions = get_values('version', type=Integer)
         types = get_values('type', type=Integer)
@@ -204,9 +205,9 @@ class Tracker(Folder):
         if text:
             query2 = [PhraseQuery('title', text), PhraseQuery('text', text)]
             query = AndQuery(query, OrQuery(*query2))
-        for name, data in (('module', modules), ('version', versions),
-                           ('type', types), ('priority', priorities),
-                           ('state', states)):
+        for name, data in (('product', products), ('module', modules),
+                           ('version', versions), ('type', types),
+                           ('priority', priorities), ('state', states)):
             if data != []:
                 query2 = []
                 for value in data:

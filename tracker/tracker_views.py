@@ -47,11 +47,12 @@ from stored import StoredSearch
 columns = [
     ('id', MSG(u'Id')),
     ('title', MSG(u'Title')),
-    ('version', MSG(u'Version')),
+    ('product', MSG(u'Product')),
     ('module', MSG(u'Module')),
+    ('version', MSG(u'Version')),
     ('type', MSG(u'Type')),
-    ('priority', MSG(u'Priority')),
     ('state', MSG(u'State')),
+    ('priority', MSG(u'Priority')),
     ('assigned_to', MSG(u'Assigned To')),
     ('mtime', MSG(u'Modified'))]
 
@@ -187,12 +188,13 @@ class TrackerView(BrowseForm):
         # search_fields
         'search_name': Unicode(),
         'mtime': Integer(default=0),
+        'product': Integer(multiple=True, default=()),
         'module': Integer(multiple=True, default=()),
         'version': Integer(multiple=True, default=()),
         'type': Integer(multiple=True, default=()),
+        'state': Integer(multiple=True, default=()),
         'priority': Integer(multiple=True, default=()),
         'assigned_to': String(multiple=True, default=()),
-        'state': Integer(multiple=True, default=()),
         # Specific fields
         'export_to_text': Boolean,
         'export_to_csv': Boolean,
@@ -246,12 +248,12 @@ class TrackerView(BrowseForm):
         for key in ['search_name', 'mtime']:
             value = query[key]
             criteria.append({'name': key, 'value': value})
-        keys = 'module', 'version', 'type', 'priority', 'assigned_to', 'state'
+        keys = ['product', 'module', 'version', 'type', 'priority',
+                'assigned_to', 'state']
         for key in keys:
             for value in query[key]:
                 criteria.append({'name': key, 'value': value})
         namespace['criteria'] = criteria
-
 
         return namespace
 
