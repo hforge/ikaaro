@@ -24,7 +24,8 @@ from datetime import datetime, timedelta
 # Import from itools
 from itools.datatypes import Integer, Unicode
 from itools.gettext import MSG
-from itools.handlers import guess_encoding, checkid, merge_dics
+from itools.handlers import get_handler_class_by_mimetype, guess_encoding
+from itools.handlers import checkid, merge_dics
 from itools.html import HTMLParser, stream_to_str_as_xhtml
 from itools.i18n import guess_language
 from itools.uri import get_reference
@@ -180,7 +181,8 @@ class FileUpload(STLForm):
 
         # Check wether the handler is able to deal with the uploaded file
         handler = resource.handler
-        if mimetype != handler.get_mimetype():
+        handler_class = get_handler_class_by_mimetype(mimetype)
+        if not isinstance(handler, handler_class):
             message = ERROR(u'Unexpected file of mimetype ${type}',
                             type=mimetype)
             context.message = message
@@ -189,11 +191,30 @@ class FileUpload(STLForm):
         # Replace
         try:
             handler.load_state_from_string(body)
-        except:
+        except Exception, e:
             handler.load_state()
-            message = ERROR(u'Failed to load the file, may contain errors.')
+            message = ERROR(u'Failed to load the file: ${error}',
+                            error=str(e))
             context.message = message
             return
+
+        # Update "filename" property
+        resource.set_property("filename", filename)
+        # Update metadata format
+        metadata = resource.metadata
+        if '/' in metadata.format:
+            if mimetype != metadata.format:
+                metadata.format = mimetype
+
+        # Update handler name
+        handler_name = handler.uri.path.get_name()
+        old_name, old_extension, old_lang = FileName.decode(handler_name)
+        new_name, new_extension, new_lang = FileName.decode(filename)
+        if old_extension != new_extension:
+            # "handler.png" -> "handler.jpg"
+            folder = resource.parent.handler
+            filename = FileName.encode((old_name, new_extension, old_lang))
+            folder.move_handler(handler_name, filename)
 
         # Ok
         context.server.change_resource(resource)
