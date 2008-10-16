@@ -19,9 +19,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from docutils
+from docutils import nodes
 from docutils.core import publish_doctree
 from docutils.readers import get_reader_class
-from docutils import nodes
+from docutils.utils import SystemMessage
 
 # Import from itools
 from itools.gettext import MSG
@@ -144,7 +145,11 @@ class WikiPage(Text):
         base = self.get_abspath()
 
         links = []
-        document = self.get_document()
+        try:
+            document = self.get_document()
+        except SystemMessage:
+            # The document is in a incoherent state
+            return None
         for node in document.traverse(condition=nodes.reference):
             refname = node.get('wiki_name')
             if refname is False:

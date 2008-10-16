@@ -34,7 +34,7 @@ from docutils import nodes
 
 # Import from itools
 from itools import vfs
-from itools.datatypes import DateTime, String, XMLContent, Unicode
+from itools.datatypes import DateTime, String, Unicode
 from itools.gettext import MSG
 from itools.handlers import checkid, get_handler, File as FileHandler
 from itools.i18n import format_datetime
@@ -60,8 +60,14 @@ class WikiPageView(BaseView):
         context.styles.append('/ui/wiki/style.css')
         parent = resource.parent
 
+        try:
+            document = resource.get_document()
+        except SystemMessage, e:
+            # Critical
+            context.message = ERROR(u'Syntax error: $error', error=e.message)
+            return XMLParser('<pre>' + resource.handler.to_str() + '</pre>')
+
         # Decorate the links and resolve them against the published resource
-        document = resource.get_document()
         for node in document.traverse(condition=nodes.reference):
             refname = node.get('wiki_name')
             if refname is None:
@@ -346,8 +352,8 @@ class WikiPageEdit(STLForm):
         if timestamp is None:
             context.message = messages.MSG_EDIT_CONFLICT
             return
-        page = resource.handler
-        if page.timestamp is not None and timestamp < page.timestamp:
+        handler = resource.handler
+        if handler.timestamp is not None and timestamp < handler.timestamp:
             context.message = messages.MSG_EDIT_CONFLICT
             return
 
@@ -355,31 +361,25 @@ class WikiPageEdit(STLForm):
         language = resource.get_content_language(context)
         resource.set_property('title', title, language=language)
 
+        # Committing
         # Data is assumed to be encoded in UTF-8
         data = form['data']
+        handler.load_state_from_string(data)
+        context.server.change_resource(resource)
 
-        # Validate data by compiling it
+        # Warn about syntax errors
+        message = None
         try:
             html = publish_string(data, writer_name='html',
                                   settings_overrides=resource.overrides)
-        except SystemMessage, message:
-            # Critical error
-            msg = u'A syntax error prevented from saving the changes: $error'
-            # docutils is using tags to represent the error
-            error = XMLContent.encode(message.message)
-            context.message = ERROR(msg, error=error)
-            return
-
-        # OK, committing
-        page.load_state_from_string(data)
-        context.server.change_resource(resource)
-
-        # But warn about non-critical syntax errors
-        message = None
-        if 'class="system-message"' in resource.view.GET(resource, context):
-            message = ERROR(u"Syntax error, please check the view for "
-                            u"details.")
-        else:
+            # Non-critical
+            if 'class="system-message"' in html:
+                message = ERROR(u"Syntax error, please check the view for "
+                                u"details.")
+        except SystemMessage, e:
+            # Critical
+            message = ERROR(u'Syntax error: $error', error=e.message)
+        if message is None:
             accept = context.accept_language
             time = format_datetime(datetime.now(), accept=accept)
             message = messages.MSG_CHANGES_SAVED2(time=time)
@@ -391,8 +391,8 @@ class WikiPageEdit(STLForm):
             goto = goto.resolve(';view')
             goto.query = query
             return goto
-        else:
-            context.message = message
+
+        context.message = message
 
 
 
