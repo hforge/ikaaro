@@ -42,6 +42,25 @@ from resource_ import DBResource
 from resource_views import DBResourceEdit
 
 
+def is_edit_conflict(resource, context, timestamp):
+    if timestamp is None:
+        context.message = messages.MSG_EDIT_CONFLICT
+        return True
+    handler = resource.handler
+    if handler.timestamp is not None and timestamp < handler.timestamp:
+        # Conlicft unless we are overwriting our own work
+        last_author = resource.get_last_author()
+        if last_author != context.user.name:
+            root = context.root
+            try:
+                user = root.get_user(last_author)
+                user = user.get_title()
+            except LookupError:
+                user = last_author
+            context.message = messages.MSG_EDIT_CONFLICT2(user=user)
+            return True
+    return False
+
 
 ###########################################################################
 # Views
@@ -76,13 +95,7 @@ class HTMLEditView(DBResourceEdit):
 
 
     def action(self, resource, context, form):
-        timestamp = form['timestamp']
-        if timestamp is None:
-            context.message = messages.MSG_EDIT_CONFLICT
-            return
-        document = resource.get_epoz_document()
-        if document.timestamp is not None and timestamp < document.timestamp:
-            context.message = messages.MSG_EDIT_CONFLICT
+        if is_edit_conflict(resource, context, form['timestamp']):
             return
 
         # Properties
@@ -90,7 +103,7 @@ class HTMLEditView(DBResourceEdit):
 
         # Body
         new_body = form['data']
-        document.set_body(new_body)
+        resource.handler.set_body(new_body)
 
         # Ok
         context.message = messages.MSG_CHANGES_SAVED

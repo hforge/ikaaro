@@ -46,6 +46,7 @@ from itools.web import BaseView, STLForm, STLView, ERROR
 
 # Import from ikaaro
 from ikaaro import messages
+from ikaaro.html import is_edit_conflict
 
 
 
@@ -329,6 +330,7 @@ class WikiPageEdit(STLForm):
     schema = {
         'title': Unicode,
         'data': String,
+        'timestamp': DateTime,
     }
 
 
@@ -348,24 +350,16 @@ class WikiPageEdit(STLForm):
 
 
     def action(self, resource, context, form):
-        timestamp = context.get_form_value('timestamp', type=DateTime)
-        if timestamp is None:
-            context.message = messages.MSG_EDIT_CONFLICT
-            return
-        handler = resource.handler
-        if handler.timestamp is not None and timestamp < handler.timestamp:
-            context.message = messages.MSG_EDIT_CONFLICT
+        if is_edit_conflict(resource, context, form['timestamp']):
             return
 
         title = form['title']
         language = resource.get_content_language(context)
         resource.set_property('title', title, language=language)
 
-        # Committing
         # Data is assumed to be encoded in UTF-8
         data = form['data']
-        handler.load_state_from_string(data)
-        context.server.change_resource(resource)
+        resource.handler.load_state_from_string(data)
 
         # Warn about syntax errors
         message = None

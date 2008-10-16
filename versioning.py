@@ -110,6 +110,12 @@ class VersioningAware(DBResource):
         return history[0]['user']
 
 
+    def get_last_author(self):
+        history = self.get_property('history')
+        if history:
+            return history[-1]['user']
+
+
     def get_mtime(self):
         history = self.get_property('history')
         if not history:
@@ -132,12 +138,11 @@ class VersioningAware(DBResource):
 
         document['is_version_aware'] = True
         # Last Author (used in the Last Changes view)
-        history = self.get_property('history')
-        if history:
-            user_id = history[-1]['user']
+        last_author = self.get_last_author()
+        if last_author is not None:
             users = self.get_resource('/users')
             try:
-                user = users.get_resource(user_id)
+                user = users.get_resource(last_author)
             except LookupError:
                 document['last_author'] = None
             else:

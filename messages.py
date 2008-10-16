@@ -41,6 +41,9 @@ MSG_DELETE_SELECTION = MSG(u'Are you sure you want to delete the selection?')
 MSG_EDIT_CONFLICT = ERROR(
     u'Someone already saved this document, click "Save" again to force.')
 
+MSG_EDIT_CONFLICT2 = ERROR(
+    u'User $user already saved this document, click "Save" again to force.')
+
 MSG_EMPTY_FILENAME = ERROR(u'The file must be entered.')
 
 MSG_EXISTANT_FILENAME = ERROR(u'A given name already exists.')
