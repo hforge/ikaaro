@@ -63,7 +63,10 @@ class GoToIssueMenu(ContextMenu):
     template = '/ui/tracker/menu_goto.xml'
 
     def get_namespace(self, resource, context):
-        return {'title': self.title}
+        path_to_tracker = '..' if isinstance(resource, Issue) else '.'
+        return {
+            'path_to_tracker': path_to_tracker,
+            'title': self.title}
 
 
 
