@@ -135,6 +135,8 @@ class TrackerAddIssue(STLForm):
         namespace['comment'] = context.get_form_value('comment', type=Unicode)
         # Others
         get = resource.get_resource
+        product = context.get_form_value('product', type=Integer)
+        namespace['products'] = get('products').get_options(product)
         module = context.get_form_value('module', type=Integer)
         namespace['modules'] = get('modules').get_options(module)
         version = context.get_form_value('version', type=Integer)

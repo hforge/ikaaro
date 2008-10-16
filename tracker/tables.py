@@ -203,8 +203,8 @@ class OrderedTableResource(OrderedTable, TableResource):
 class ModulesHandler(BaseTable):
 
     record_schema = {
-        'product': String,
-        'title': Unicode}
+        'product': String(mandatory=True),
+        'title': Unicode(mandatory=True)}
 
 
 
@@ -218,7 +218,7 @@ class ModulesResource(TableResource):
         products = self.parent.get_resource('products')
         return merge_dics(
             ModulesHandler.record_schema,
-            product=ProductsEnumerate(products=products))
+            product=ProductsEnumerate(products=products, mandatory=True))
 
 
     form = [
@@ -230,8 +230,8 @@ class ModulesResource(TableResource):
 class VersionsHandler(BaseTable):
 
     record_schema = {
-        'product': String,
-        'title': Unicode,
+        'product': String(mandatory=True),
+        'title': Unicode(mandatory=True),
         'released': Boolean}
 
 
@@ -246,7 +246,7 @@ class VersionsResource(TableResource):
         products = self.parent.get_resource('products')
         return merge_dics(
             VersionsHandler.record_schema,
-            product=ProductsEnumerate(products=products))
+            product=ProductsEnumerate(products=products, mandatory=True))
 
 
     form = [

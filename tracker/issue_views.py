@@ -70,17 +70,18 @@ def indent(text):
 # Definition of the fields of the forms to add and edit an issue
 issue_fields = {
     'title': String(mandatory=True),
-    'version': String(mandatory=True),
+    'product': String(mandatory=True),
+    'module': String,
+    'version': String,
     'type': String(mandatory=True),
     'state': String(mandatory=True),
-    'module': String(),
-    'priority': String(),
-    'assigned_to': String(),
-    'comment': String(),
-    'cc_add': String(),
-    'cc_list': String(),
-    'cc_remove': Boolean(),
-    'file': String()}
+    'priority': String,
+    'assigned_to': String,
+    'comment': String,
+    'cc_add': String,
+    'cc_list': String,
+    'cc_remove': Boolean,
+    'file': String}
 
 
 class Issue_Edit(STLForm):
@@ -102,6 +103,7 @@ class Issue_Edit(STLForm):
         users = resource.get_resource('/users')
         record = resource.get_last_history_record()
         title = record.get_value('title')
+        product = record.get_value('product')
         module = record.get_value('module')
         version = record.get_value('version')
         type = record.get_value('type')
@@ -120,6 +122,7 @@ class Issue_Edit(STLForm):
         namespace['reported_by'] = users.get_resource(reported_by).get_title()
         # Topics, Version, Priority, etc.
         get = resource.parent.get_resource
+        namespace['products'] = get('products').get_options(product)
         namespace['modules'] = get('modules').get_options(module)
         namespace['versions'] = get('versions').get_options(version)
         namespace['types'] = get('types').get_options(type)

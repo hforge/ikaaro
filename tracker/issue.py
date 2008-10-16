@@ -254,15 +254,16 @@ class Issue(Folder):
             message = message.gettext(filename=filename)
             body += message + '\n'
         comment = context.get_form_value('comment', type=Unicode)
+        if modifications:
+            body += modifications
+            body += '\n\n'
         if comment:
             title = MSG(u'Comment').gettext()
             separator = len(title) * u'-'
-            template = u'${title}\n${separator}\n\n${comment}\n\n${separator}'
+            template = u'${title}\n${separator}\n\n${comment}\n'
             template = Template(template)
             body += template.substitute(title=title, separator=separator,
                                         comment=comment)
-        if modifications:
-            body += modifications
         # Notify / Send
         for to_addr in to_addrs:
             to_addr = users.get_resource(to_addr).get_property('email')

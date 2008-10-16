@@ -9,7 +9,7 @@
     <legend>Add Issue</legend>
     <table>
       <tr>
-        <td colspan="2">
+        <td colspan="3">
           <label for="title">Title (mandatory):</label><br/>
           <input type="text" name="title" id="title" value="${title}"
             size="48" />
@@ -17,10 +17,10 @@
       </tr>
       <tr>
         <td valign="top">
-          <label for="type">Type (mandatory):</label><br/>
-          <select name="type" id="type" class="tracker_select">
+          <label for="product">Product (mandatory):</label><br/>
+          <select name="product" id="product" class="tracker_select">
             <option value=""></option>
-            <option stl:repeat="item types" value="${item/id}"
+            <option stl:repeat="item products" value="${item/id}"
               selected="${item/is_selected}">${item/title}</option>
           </select>
         </td>
@@ -33,7 +33,7 @@
           </select>
         </td>
         <td valign="top">
-          <label for="version">Version (mandatory):</label><br/>
+          <label for="version">Version:</label><br/>
           <select name="version" id="version" class="tracker_select">
             <option value=""></option>
             <option stl:repeat="item versions" value="${item/id}"
@@ -43,10 +43,10 @@
       </tr>
       <tr>
         <td valign="top">
-          <label for="assigned_to">Assign To:</label><br/>
-          <select name="assigned_to" id="assigned_to" class="tracker_select">
+          <label for="type">Type (mandatory):</label><br/>
+          <select name="type" id="type" class="tracker_select">
             <option value=""></option>
-            <option stl:repeat="item users" value="${item/id}"
+            <option stl:repeat="item types" value="${item/id}"
               selected="${item/is_selected}">${item/title}</option>
           </select>
         </td>
@@ -68,6 +68,14 @@
       </tr>
       <tr>
         <td valign="top">
+          <label for="assigned_to">Assign To:</label><br/>
+          <select name="assigned_to" id="assigned_to" class="tracker_select">
+            <option value=""></option>
+            <option stl:repeat="item users" value="${item/id}"
+              selected="${item/is_selected}">${item/title}</option>
+          </select>
+        </td>
+        <td valign="top" colspan="2">
           <label for="cc_add">CC:</label><br/>
           <select name="cc_add" id="cc_add" class="tracker_select"
             multiple="multiple" size="5">
@@ -77,20 +85,20 @@
         </td>
       </tr>
       <tr>
-        <td valign="top" colspan="2">
+        <td valign="top" colspan="3">
           <label for="description">Description:</label><br/>
           <textarea name="comment" id="description" cols="80" rows="10"
             >${comment}</textarea>
         </td>
       </tr>
       <tr>
-        <td valign="top" colspan="2">
+        <td valign="top" colspan="3">
           <label for="attachement">Attachement:</label><br/>
           <input type="file" name="file" id="attachement" size="36" />
         </td>
       </tr>
       <tr>
-        <td colspan="2">
+        <td colspan="3">
           <input type="submit" class="button_ok" value="Add" />
         </td>
       </tr>
