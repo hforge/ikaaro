@@ -18,7 +18,7 @@
 
 # Import from the Standard Library
 from random import sample
-import sha
+from hashlib import sha1
 from sys import platform
 from urllib import quote
 
@@ -53,7 +53,8 @@ def get_parameters(prefix, **kw):
     # Get the parameters
     parameters = {}
     for key, value in kw.items():
-        parameters[key] = get_parameter('%s_%s' % (prefix, key), default=value)
+        parameters[key] = get_parameter('%s_%s' % (prefix, key),
+                                        default=value)
 
     return parameters
 
@@ -126,7 +127,7 @@ def generate_password(length=6):
 
 
 def crypt_password(password):
-    return sha.new(password).digest()
+    return sha1(password).digest()
 
 
 ###########################################################################
