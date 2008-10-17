@@ -400,7 +400,11 @@ class Skin(UIFolder):
         context_menus = self._get_context_menus(context)
         context_menus = list(context_menus)
 
-        base = '/%s' % context.site_root.get_pathto(context.resource)
+        base = context.resource
+        # In case of UI objects, fallback to site root
+        if isinstance(base, (UIFile, UIFolder)):
+            base = context.site_root
+        base_path = '/%s' % context.site_root.get_pathto(base)
 
         return {
             # HTML head
@@ -409,8 +413,8 @@ class Skin(UIFolder):
             'scripts': self.get_scripts(context),
             'meta_tags': self.get_meta_tags(context),
             # Log in/out
-            'login': '%s/;login' % base,
-            'logout': '%s/;logout' % base,
+            'login': '%s/;login' % base_path,
+            'logout': '%s/;logout' % base_path,
             # User
             'user': self.get_user_menu(context),
             # Location & Views
