@@ -41,7 +41,7 @@ from ikaaro.messages import MSG_CHANGES_SAVED
 from ikaaro.table import TableView
 
 
-url_expr = compile('(https?://[\w./;?=&#\-%:]*)')
+url_expr = compile('(https?://[\w.@/;?=&#\-%:]*)')
 def indent(text):
     """Replace URLs by HTML links.  Wrap lines (with spaces) to 150 chars.
     """
@@ -130,7 +130,8 @@ class Issue_Edit(STLForm):
             sort=False)
         namespace['states'] = get('states').get_options(state, sort=False)
         # Assign To
-        namespace['users'] = resource.parent.get_members_namespace(assigned_to)
+        namespace['users'] = resource.parent.get_members_namespace(
+                                                        assigned_to)
         # Comments
         comments = []
         i = 0
