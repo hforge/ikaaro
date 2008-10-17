@@ -340,7 +340,7 @@ class Skin(UIFolder):
     #######################################################################
     # Body
     #######################################################################
-    def get_page_title(self, context):
+    def _get_page_title(self, context):
         resource = context.resource
         view = context.view
 
@@ -382,7 +382,7 @@ class Skin(UIFolder):
         return stl(template, namespace)
 
 
-    def get_context_menus(self, context):
+    def _get_context_menus(self, context):
         resource = context.resource
         # Resource
         for menu in resource.get_context_menus():
@@ -397,7 +397,7 @@ class Skin(UIFolder):
     # Main
     #######################################################################
     def build_namespace(self, context):
-        context_menus = self.get_context_menus(context)
+        context_menus = self._get_context_menus(context)
         context_menus = list(context_menus)
 
         base = '/%s' % context.site_root.get_pathto(context.resource)
@@ -416,7 +416,7 @@ class Skin(UIFolder):
             # Location & Views
             'location': self.get_location(context),
             # Body
-            'page_title': self.get_page_title(context),
+            'page_title': self._get_page_title(context),
             'message': self.get_messages(context),
             'context_menus': context_menus,
         }
