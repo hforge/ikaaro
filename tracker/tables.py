@@ -227,7 +227,7 @@ class ModulesResource(TableResource):
 
 
 
-class VersionsHandler(BaseTable):
+class VersionsHandler(OrderedTableFile):
 
     record_schema = {
         'product': String(mandatory=True),
@@ -236,7 +236,7 @@ class VersionsHandler(BaseTable):
 
 
 
-class VersionsResource(TableResource):
+class VersionsResource(OrderedTableResource):
 
     class_id = 'tracker_versions'
     class_version = '20071216'
