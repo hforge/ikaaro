@@ -299,7 +299,8 @@ class FolderBrowseContent(SearchForm):
             view = item.get_view(None)
             if view is None:
                 return id
-            href = '%s/' % id
+            base = context.get_abspath(resource)
+            href = '%s/%s/' % (base, id)
             return id, href
         elif column == 'title':
             # Title
@@ -334,10 +335,11 @@ class FolderBrowseContent(SearchForm):
             statename = item.get_statename()
             state = item.get_state()
             msg = state['title'].gettext().encode('utf-8')
+            path = context.get_abspath(item)
             # TODO Include the template in the base table
             state = ('<a href="%s/;edit_state" class="workflow">'
                      '<strong class="wf_%s">%s</strong>'
-                     '</a>') % (resource.get_pathto(item), statename, msg)
+                     '</a>') % (path, statename, msg)
             return XMLParser(state)
 
 
