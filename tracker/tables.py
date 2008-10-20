@@ -57,8 +57,8 @@ class SelectTableView(TableView):
 
 
     def get_item_value(self, resource, context, item, column):
+        # Append a column with the number of issues
         if column == 'issues':
-            # Append a column for the number of issues
             root = context.root
             abspath = resource.parent.get_canonical_path()
             base_query = AndQuery(
@@ -71,7 +71,19 @@ class SelectTableView(TableView):
                 return 0, None
             return count, '../;view?%s=%s' % (filter, id)
 
-        return TableView.get_item_value(self, resource, context, item, column)
+        # Default
+        value = TableView.get_item_value(self, resource, context, item, column)
+
+        # NOTE The field 'product' is reserved to make a reference to the
+        # 'products' table.  Currently it is used by the 'versions' and
+        # 'modules' tables.
+        if column == 'product':
+            value = int(value)
+            handler = resource.parent.get_resource('products').handler
+            record = handler.get_record(value)
+            return handler.get_record_value(record, 'title')
+
+        return value
 
 
     def sort_and_batch(self, resource, context, items):
@@ -166,7 +178,7 @@ class OrderedTableHandler(OrderedTableFile):
     record_schema = {'title': Unicode}
 
 
-class OrderedTableResource(OrderedTable, TableResource):
+class OrderedTableResource(TableResource, OrderedTable):
 
     class_id = 'tracker_ordered_select_table'
     class_version = '20080415'
