@@ -36,6 +36,7 @@ from itools.web import BaseView, STLForm, get_context, INFO, ERROR
 # Import from ikaaro
 from datatypes import FileDataType
 from forms import AutoForm, title_widget, description_widget, subject_widget
+from forms import TextWidget
 import messages
 from registry import get_resource_class
 from utils import get_parameters, reduce_string
@@ -75,15 +76,18 @@ class AddResourceMenu(ContextMenu):
             for cls in document_types ]
 
 
-class DBResourceNewInstance(NewInstanceForm):
+class DBResourceNewInstance(NewInstanceForm, AutoForm):
 
     access = 'is_allowed_to_add'
-    template = '/ui/base/new_instance.xml'
     query_schema = {
         'type': String}
     schema = {
         'name': String,
         'title': Unicode}
+    widgets = [
+        title_widget,
+        TextWidget('name', title=MSG(u'Name'), default='')]
+    submit_value = MSG(u'Add')
     context_menus = [AddResourceMenu()]
 
 
@@ -97,17 +101,6 @@ class DBResourceNewInstance(NewInstanceForm):
         class_title = cls.class_title.gettext()
         title = MSG(u'Add $class_title')
         return title.gettext(class_title=class_title)
-
-
-    def get_namespace(self, resource, context):
-        type = context.query['type']
-        cls = get_resource_class(type)
-        return {
-            'title': context.get_form_value('title', type=Unicode),
-            'name': context.get_form_value('name', default=''),
-            'class_id': cls.class_id,
-            'class_title': cls.class_title.gettext(),
-        }
 
 
     def action(self, resource, context, form):
