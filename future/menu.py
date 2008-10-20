@@ -309,7 +309,7 @@ class Menu(OrderedTable):
                 css = (active and 'in_path') or (in_path and 'in_path') or None
 
                 items.append({'id': 'menu_%s' % name,
-                              'path': context.get_abspath(resource),
+                              'path': context.get_link(resource),
                               'title': get('title'),
                               'description': None, # FIXME
                               'in_path': css == 'in_path' or active,

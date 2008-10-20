@@ -68,7 +68,7 @@ class AddResourceMenu(ContextMenu):
     title = MSG(u'Add Resource')
 
     def get_items(self, resource, context):
-        base = '%s/;new_resource' % context.get_abspath(resource)
+        base = '%s/;new_resource' % context.get_link(resource)
         document_types = resource.get_document_types()
         return [
             {'src': '/ui/' + cls.class_icon16,

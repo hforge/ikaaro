@@ -411,7 +411,7 @@ class ImageView(STLView):
                       + next_images + previous_images):
             if image is None:
                 continue
-            prefix = get_reference(context.get_abspath(image))
+            prefix = get_reference(context.get_link(image))
             if width and height:
                 uri = prefix.resolve2(';thumb').replace(width=width,
                                                         height=height)
@@ -421,11 +421,11 @@ class ImageView(STLView):
 
         kw = {'width': width, 'height': height, 'size': size}
         if next_image:
-            next_image = context.get_abspath(next_image)
+            next_image = context.get_link(next_image)
             next_image = get_reference(next_image).replace(**kw)
             next_image = str(next_image)
         if prev_image:
-            prev_image = context.get_abspath(prev_image)
+            prev_image = context.get_link(prev_image)
             prev_image = get_reference(prev_image).replace(**kw)
             prev_image = str(prev_image)
 
@@ -437,7 +437,7 @@ class ImageView(STLView):
                 'next': next_image,
                 'widths': ImageWidth.get_namespace(width),
                 'dimensions': "%sx%s" % resource.handler.get_size(),
-                'download': '%s/;download' % context.get_abspath(resource),
+                'download': '%s/;download' % context.get_link(resource),
                 'current': images[0]}
 
 

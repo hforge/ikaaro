@@ -405,7 +405,7 @@ class Skin(UIFolder):
         if isinstance(here, (UIFile, UIFolder)):
             base_path = ''
         else:
-            base_path = context.get_abspath(here)
+            base_path = context.get_link(here)
 
         return {
             # HTML head
