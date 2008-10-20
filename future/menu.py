@@ -292,27 +292,24 @@ class Menu(OrderedTable):
                     continue
 
                 if depth > 1:
-                    # check the child
+                    # Check the child
                     child_path = get('child')
                     if child_path and parent.has_resource(child_path):
-                        # sub level
+                        # Sub level
                         child = parent.get_resource(child_path)
                         get_menu_ns_lvl = child.get_menu_namespace_level
                         subtabs = get_menu_ns_lvl(context, url, depth - 1,
                                                   use_first_child, flat)
-                # set active, in_path
+                # Set active, in_path
                 active, in_path = False, name in url
                 if here.get_abspath() == resource.get_abspath():
                     active, in_path = True, False
 
-                # set css class to 'active', 'in_path' or None
+                # Set css class to 'active', 'in_path' or None
                 css = (active and 'in_path') or (in_path and 'in_path') or None
 
-                # set absolute path
-                path = '/%s' % str(site_root.get_pathto(resource))
-
                 items.append({'id': 'menu_%s' % name,
-                              'path': path,
+                              'path': context.get_abspath(resource),
                               'title': get('title'),
                               'description': None, # FIXME
                               'in_path': css == 'in_path' or active,

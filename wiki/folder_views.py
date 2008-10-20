@@ -37,11 +37,11 @@ class WikiMenu(ContextMenu):
         if isinstance(resource, WikiPage):
             resource = resource.parent
         # Namespace
-        base = '/%s' % context.site_root.get_pathto(resource)
+        base = context.get_abspath(resource)
         return [
             {'title': resource.get_view(view).title,
              'href': '%s/;%s' % (base, view)}
-                for view in resource.class_views ]
+            for view in resource.class_views ]
 
 
 
@@ -52,7 +52,7 @@ class GoToFrontPage(BaseView):
     icon = 'view.png'
 
     def GET(self, resource, context):
-        goto = '/%s/FrontPage' % context.site_root.get_pathto(resource)
+        goto = '%s/FrontPage' % context.get_abspath(resource)
         goto = get_reference(goto)
 
         # Keep the message

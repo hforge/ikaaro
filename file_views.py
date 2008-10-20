@@ -378,7 +378,6 @@ class ImageView(STLView):
         from file import Image
         context.styles.append('/ui/gallery/style.css')
         context.scripts.append('/ui/gallery/javascript.js')
-        site_root = context.site_root
         user = context.user
         size = context.get_form_value('size', type=Integer)
         width = context.get_form_value('width', default='')
@@ -386,8 +385,8 @@ class ImageView(STLView):
 
         parent = resource.parent
         ac = parent.get_access_control()
-        images = [image for image in parent.search_resources(cls=Image)
-                    if ac.is_allowed_to_view(user, image)]
+        images = [ image for image in parent.search_resources(cls=Image)
+                   if ac.is_allowed_to_view(user, image) ]
 
         my_index = None
         for index, image in enumerate(images):
@@ -412,7 +411,7 @@ class ImageView(STLView):
                       + next_images + previous_images):
             if image is None:
                 continue
-            prefix = get_reference('/%s' % site_root.get_pathto(image))
+            prefix = get_reference(context.get_abspath(image))
             if width and height:
                 uri = prefix.resolve2(';thumb').replace(width=width,
                                                         height=height)
@@ -420,15 +419,14 @@ class ImageView(STLView):
                 uri = prefix.resolve2(';download')
             images.append(str(uri))
 
+        kw = {'width': width, 'height': height, 'size': size}
         if next_image:
-            next_image = '/%s' % site_root.get_pathto(next_image)
-            next_image = get_reference(next_image).replace(width=width,
-                    height=height, size=size)
+            next_image = context.get_abspath(next_image)
+            next_image = get_reference(next_image).replace(**kw)
             next_image = str(next_image)
         if prev_image:
-            prev_image = '/%s' % site_root.get_pathto(prev_image)
-            prev_image = get_reference(prev_image).replace(width=width,
-                    height=height, size=size)
+            prev_image = context.get_abspath(prev_image)
+            prev_image = get_reference(prev_image).replace(**kw)
             prev_image = str(prev_image)
 
         return {'size': size,
@@ -439,7 +437,7 @@ class ImageView(STLView):
                 'next': next_image,
                 'widths': ImageWidth.get_namespace(width),
                 'dimensions': "%sx%s" % resource.handler.get_size(),
-                'download': '/%s/;download' % site_root.get_pathto(resource),
+                'download': '%s/;download' % context.get_abspath(resource),
                 'current': images[0]}
 
 

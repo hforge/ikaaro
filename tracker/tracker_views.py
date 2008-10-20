@@ -106,7 +106,7 @@ class StoredSearchesMenu(ContextMenu):
 
         # Namespace
         search_name = context.get_query_value('search_name')
-        base = '/%s/;view' % context.site_root.get_pathto(resource)
+        base = '%s/;view' % context.get_abspath(resource)
         items = resource.search_resources(cls=StoredSearch)
         items = [
             {'title': x.get_property('title'),

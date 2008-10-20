@@ -400,11 +400,12 @@ class Skin(UIFolder):
         context_menus = self._get_context_menus(context)
         context_menus = list(context_menus)
 
-        base = context.resource
         # In case of UI objects, fallback to site root
-        if isinstance(base, (UIFile, UIFolder)):
-            base = context.site_root
-        base_path = '/%s' % context.site_root.get_pathto(base)
+        here = context.resource
+        if isinstance(here, (UIFile, UIFolder)):
+            base_path = ''
+        else:
+            base_path = context.get_abspath(here)
 
         return {
             # HTML head
