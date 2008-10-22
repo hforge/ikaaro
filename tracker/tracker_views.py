@@ -203,7 +203,7 @@ class TrackerView(BrowseForm):
         'search_term': Unicode,
         'search_subfolders': Boolean(default=False),
         # BrowseForm fields
-        'sort_by': String(multiple=True, default=['title']),
+        'sort_by': String(default='title'),
     }
 
     context_menus = [StoreSearchMenu()]

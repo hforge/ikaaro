@@ -90,11 +90,17 @@ class Issue(Folder):
 
 
     def get_catalog_fields(self):
-       return Folder.get_catalog_fields(self) + \
-              [IntegerField('product'), IntegerField('module'),
-               IntegerField('version'), IntegerField('type'),
-               IntegerField('state'), IntegerField('priority'),
-               KeywordField('assigned_to')]
+        fields = Folder.get_catalog_fields(self)
+        # Metadata
+        names = ['product', 'module', 'version', 'type', 'state', 'priority']
+        for name in names:
+            field = IntegerField(name, is_stored=True)
+            fields.append(field)
+        # Assign To
+        field = KeywordField('assigned_to', is_stored=True)
+        fields.append(field)
+        # Ok
+        return fields
 
 
     def get_catalog_values(self):
