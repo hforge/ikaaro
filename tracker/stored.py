@@ -35,6 +35,7 @@ class StoredSearchFile(ConfigFile):
     schema = {
         'search_name': Unicode(),
         'mtime': Integer(default=0),
+        'product': Integer(multiple=True, default=()),
         'module': Integer(multiple=True, default=()),
         'version': Integer(multiple=True, default=()),
         'type': Integer(multiple=True, default=()),

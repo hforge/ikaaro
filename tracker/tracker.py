@@ -167,12 +167,13 @@ class Tracker(Folder):
         return members
 
 
-    def get_search_results(self, context, form=None, start=None, end=None):
+    def get_search_results(self, context):
         """Method that return a list of issues that correspond to the search
         """
         users = self.get_resource('/users')
         # Choose stored Search or personalized search
-        search_name = form and form['search_name']
+        query = context.query
+        search_name = query.get('search_name')
         if search_name:
             try:
                 search = self.get_resource(search_name)
@@ -200,36 +201,40 @@ class Tracker(Folder):
 
         # Build the query
         abspath = self.get_canonical_path()
-        query = EqQuery('parent_path', str(abspath))
-        query = AndQuery(query, EqQuery('format', 'issue'))
+        query = [
+            EqQuery('parent_path', str(abspath)),
+            EqQuery('format', 'issue')]
+        # Text search
         if text:
             query2 = [PhraseQuery('title', text), PhraseQuery('text', text)]
-            query = AndQuery(query, OrQuery(*query2))
+            query2 = OrQuery(*query2)
+            query.append(query2)
+        # Metadata
         for name, data in (('product', products), ('module', modules),
                            ('version', versions), ('type', types),
                            ('priority', priorities), ('state', states)):
-            if data != []:
-                query2 = []
-                for value in data:
-                    query2.append(EqQuery(name, value))
-                if query2:
-                    query = AndQuery(query, OrQuery(*query2))
+            if len(data) > 0:
+                query2 = [ EqQuery(name, value) for value in data ]
+                query2 = OrQuery(*query2)
+                query.append(query2)
+        # Modification time
         if mtime:
             date = datetime.now() - timedelta(mtime)
             date = date.strftime('%Y%m%d%H%M%S')
-            query = AndQuery(query, RangeQuery('mtime', date, None))
-        if assigns != []:
+            query2 = RangeQuery('mtime', date, None)
+            query.append(query2)
+        # Assign To
+        if len(assigns) > 0:
             query2 = []
             for value in assigns:
-                if value == '':
-                    value = 'nobody'
+                value = value or 'nobody'
                 query2.append(EqQuery('assigned_to', value))
-            query = AndQuery(query, OrQuery(*query2))
+            query2 = OrQuery(*query2)
+            query.append(query2)
 
         # Execute the search
-        root = context.root
-        results = root.search(query)
-        return results
+        query = AndQuery(*query)
+        return context.root.search(query)
 
 
     #######################################################################
