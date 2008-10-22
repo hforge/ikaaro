@@ -63,7 +63,7 @@ class Dressable(Folder, EpozEditable):
 
     browse_template = list(XMLParser("""
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
-  xmlns:stl="http://xml.itools.org/namespaces/stl">
+  xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
   <h2>${title}</h2>
   <ul id="${id}">
     <li stl:repeat="handler handlers">

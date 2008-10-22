@@ -2,7 +2,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
-  xmlns:stl="http://xml.itools.org/namespaces/stl">
+  xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
   <p>
   You can edit this document using an application from your desktop, like MS
@@ -18,7 +18,7 @@
     </li>
     <li>
       <a href="http://plope.org/software/ExternalEditor/zopeedit-0.9.2-src.tgz">Download External Editor for Unix and MacOSX</a>.
-    </li> 
+    </li>
   </ul>
 
   <form action=";external_edit" method="get">

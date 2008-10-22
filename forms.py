@@ -30,7 +30,7 @@ from itools.xml import XMLParser, DocType
 
 stl_namespaces = {
     None: 'http://www.w3.org/1999/xhtml',
-    'stl': 'http://xml.itools.org/namespaces/stl'}
+    'stl': 'http://www.hforge.org/xml-namespaces/stl'}
 xhtml_namespaces = {None: 'http://www.w3.org/1999/xhtml'}
 xhtml_doctype = DocType(
     '-//W3C//DTD XHTML 1.0 Strict//EN',

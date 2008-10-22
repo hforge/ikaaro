@@ -52,7 +52,7 @@ time_select_template = list(XMLParser("""
         selected="${option/selected}">${option/value}</option>
     </select> """,
     { None: 'http://www.w3.org/1999/xhtml',
-     'stl': 'http://xml.itools.org/namespaces/stl'}))
+     'stl': 'http://www.hforge.org/xml-namespaces/stl'}))
 
 
 class History(Table):
