@@ -115,7 +115,8 @@ class TableView(SearchForm):
             return item.id, False
         elif column == 'id':
             id = item.id
-            return id, ';edit_record?id=%s' % id
+            link = context.get_link(resource)
+            return id, '%s/;edit_record?id=%s' % (link, id)
 
         # Columns
         handler = resource.handler
