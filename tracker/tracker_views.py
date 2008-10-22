@@ -218,42 +218,23 @@ class TrackerView(BrowseForm):
         # Set Style
         context.styles.append('/ui/tracker/tracker.css')
 
+        # Default table namespace
         namespace = BrowseForm.get_namespace(self, resource, context)
-        namespace['method'] = 'GET'
-        namespace['action'] = '.'
-        # Set title of search
+
+        # Number of results
         query = context.query
         search_name = query['search_name']
         if search_name:
             search = resource.get_resource(search_name)
-            title = search.get_title()
-        else:
-            title = None
-#        nb_results = len(lines)
-        namespace['nb_results'] = 'XXX'
-        namespace['title'] = title
+        lines = ['XXX'] # XXX
+        namespace['nb_results'] = len(lines)
+
         # Keep the search_parameters, clean different actions
-        query_params = deepcopy(context.uri.query)
-        params = {}
-        for key in query_params:
-            if not key.startswith(';'):
-                params[key] = query_params[key]
-        params = encode_query(params)
-        params = params.replace('change_several_bugs=1', '')
-        params = params.replace('export_to_csv=1', '')
-        params = params.replace('export_to_text=1', '')
-        params = params.replace('&&', '&').replace('?&', '?').replace('&#', '#')
-        namespace['search_parameters'] = params
-        criteria = []
-        for key in ['search_name', 'mtime']:
-            value = query[key]
-            criteria.append({'name': key, 'value': value})
-        keys = ['product', 'module', 'version', 'type', 'priority',
-                'assigned_to', 'state']
-        for key in keys:
-            for value in query[key]:
-                criteria.append({'name': key, 'value': value})
-        namespace['criteria'] = criteria
+        schema = self.get_query_schema()
+        params = query.copy()
+        for name in 'change_several_bugs', 'export_to_csv', 'export_to_text':
+            del params[name]
+        namespace['search_parameters'] = encode_query(params, schema)
 
         return namespace
 
@@ -273,8 +254,6 @@ class TrackerView(BrowseForm):
             sort_by = 'mtime_sort'
         elif sort_by in ('priority', 'state'):
             sort_by = '%s_rank' % sort_by
-        elif sort_by:
-            sort_by = sort_by[0]
         items = results.get_documents(sort_by=sort_by, reverse=reverse,
                                       start=start, size=size)
 
