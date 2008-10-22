@@ -19,7 +19,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.csv import Table as BaseTable
 from itools.datatypes import Boolean, Integer, String, Unicode
 from itools.datatypes import DynamicEnumerate
 from itools.gettext import MSG
@@ -30,8 +29,8 @@ from itools.web import ERROR, INFO
 # Import from ikaaro
 from ikaaro.forms import title_widget, BooleanCheckBox, SelectWidget
 from ikaaro.registry import register_resource_class
-from ikaaro.table import Table, OrderedTable, OrderedTableFile
-from ikaaro.table_views import TableView
+from ikaaro.table import OrderedTable, OrderedTableFile
+from ikaaro.table_views import OrderedTableView
 
 
 
@@ -48,10 +47,11 @@ class ProductsEnumerate(DynamicEnumerate):
 ###########################################################################
 # Views
 ###########################################################################
-class SelectTableView(TableView):
+class SelectTableView(OrderedTableView):
 
     def get_table_columns(self, resource, context):
-        columns = TableView.get_table_columns(self, resource, context)
+        cls = OrderedTableView
+        columns = cls.get_table_columns(self, resource, context)
         columns.append(('issues', MSG(u'Issues')))
         return columns
 
@@ -72,7 +72,8 @@ class SelectTableView(TableView):
             return count, '../;view?%s=%s' % (filter, id)
 
         # Default
-        value = TableView.get_item_value(self, resource, context, item, column)
+        cls = OrderedTableView
+        value = cls.get_item_value(self, resource, context, item, column)
 
         # NOTE The field 'product' is reserved to make a reference to the
         # 'products' table.  Currently it is used by the 'versions' and
@@ -90,7 +91,8 @@ class SelectTableView(TableView):
         # Sort
         sort_by = context.query['sort_by']
         if sort_by != 'issues':
-            return TableView.sort_and_batch(self, resource, context, items)
+            cls = OrderedTableView
+            return cls.sort_and_batch(self, resource, context, items)
 
         reverse = context.query['reverse']
         f = lambda x: self.get_item_value(resource, context, x, 'issues')[0]
@@ -106,25 +108,26 @@ class SelectTableView(TableView):
 ###########################################################################
 # Resources
 ###########################################################################
-class TableHandler(BaseTable):
+class Tracker_TableHandler(OrderedTableFile):
 
     record_schema = {'title': Unicode}
 
 
-class TableResource(Table):
+
+class Tracker_TableResource(OrderedTable):
 
     class_id = 'tracker_select_table'
     class_version = '20071216'
     class_title = MSG(u'Select Table')
-    class_handler = TableHandler
+    class_handler = Tracker_TableHandler
 
     form = [title_widget]
 
 
-    def get_options(self, value=None, sort='title'):
+    def get_options(self, value=None, sort=None):
         options = [
             {'id': x.id, 'title': x.title}
-            for x in self.handler.get_records() ]
+            for x in self.handler.get_records_in_order() ]
 
         if sort is not None:
             options.sort(key=lambda x: x.get(sort))
@@ -173,46 +176,7 @@ class TableResource(Table):
 
 
 
-class OrderedTableHandler(OrderedTableFile):
-
-    record_schema = {'title': Unicode}
-
-
-class OrderedTableResource(TableResource, OrderedTable):
-
-    class_id = 'tracker_ordered_select_table'
-    class_version = '20080415'
-    class_title = MSG(u'Ordered select table')
-    class_handler = OrderedTableHandler
-
-    form = [title_widget]
-
-
-    def get_options(self, value=None, sort=None):
-        table = self.handler
-        options = []
-        for x in table.get_records_in_order():
-            ns = {'id': x.id, 'title': x.title}
-            options.append(ns)
-
-        if sort is not None:
-            options.sort(key=lambda x: x.get(sort))
-        # Set 'is_selected'
-        if value is None:
-            for option in options:
-                option['is_selected'] = False
-        elif isinstance(value, list):
-            for option in options:
-                option['is_selected'] = (option['id'] in value)
-        else:
-            for option in options:
-                option['is_selected'] = (option['id'] == value)
-
-        return options
-
-
-
-class ModulesHandler(BaseTable):
+class ModulesHandler(Tracker_TableHandler):
 
     record_schema = {
         'product': String(mandatory=True),
@@ -220,7 +184,7 @@ class ModulesHandler(BaseTable):
 
 
 
-class ModulesResource(TableResource):
+class ModulesResource(Tracker_TableResource):
 
     class_id = 'tracker_modules'
     class_version = '20081015'
@@ -239,7 +203,7 @@ class ModulesResource(TableResource):
 
 
 
-class VersionsHandler(OrderedTableFile):
+class VersionsHandler(Tracker_TableHandler):
 
     record_schema = {
         'product': String(mandatory=True),
@@ -248,7 +212,7 @@ class VersionsHandler(OrderedTableFile):
 
 
 
-class VersionsResource(OrderedTableResource):
+class VersionsResource(Tracker_TableResource):
 
     class_id = 'tracker_versions'
     class_version = '20071216'
@@ -271,7 +235,6 @@ class VersionsResource(OrderedTableResource):
 ###########################################################################
 # Register
 ###########################################################################
-register_resource_class(TableResource)
-register_resource_class(OrderedTableResource)
+register_resource_class(Tracker_TableResource)
 register_resource_class(ModulesResource)
 register_resource_class(VersionsResource)

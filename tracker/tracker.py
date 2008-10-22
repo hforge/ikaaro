@@ -36,8 +36,7 @@ from ikaaro.folder import Folder
 from ikaaro.registry import register_resource_class
 from resources import Resources
 from stored import StoredSearch, StoredSearchFile
-from tables import TableResource, TableHandler
-from tables import OrderedTableResource, OrderedTableHandler
+from tables import Tracker_TableResource, Tracker_TableHandler
 from tables import ModulesResource, ModulesHandler
 from tables import VersionsResource, VersionsHandler
 from tracker_views import GoToIssueMenu, StoredSearchesMenu
@@ -50,6 +49,19 @@ from tracker_views import TrackerExportToCSVForm, TrackerExportToCSV
 
 resolution = timedelta.resolution
 
+
+
+default_types = [
+    u'Bug', u'New Feature', u'Security Issue', u'Stability Issue',
+    u'Data Corruption Issue', u'Performance Improvement',
+    u'Technology Upgrade']
+
+default_tables = [
+    ('products', []),
+    ('types', default_types),
+    ('states', [u'Open', u'Fixed', u'Verified', u'Closed']),
+    ('priorities', [u'High', u'Medium', u'Low']),
+    ]
 
 
 class Tracker(Folder):
@@ -68,11 +80,15 @@ class Tracker(Folder):
     @staticmethod
     def _make_resource(cls, folder, name):
         Folder._make_resource(cls, folder, name)
-        # Products
-        table = TableHandler()
-        folder.set_handler('%s/products' % name, table)
-        metadata = TableResource.build_metadata()
-        folder.set_handler('%s/products.metadata' % name, metadata)
+        # Products / Types / Priorities / States
+        for table_name, values in default_tables:
+            table_path = '%s/%s' % (name, table_name)
+            table = Tracker_TableHandler()
+            for title in values:
+                table.add_record({'title': title})
+            folder.set_handler(table_path, table)
+            metadata = Tracker_TableResource.build_metadata()
+            folder.set_handler('%s.metadata' % table_path, metadata)
         # Modules
         table = ModulesHandler()
         folder.set_handler('%s/modules' % name, table)
@@ -83,26 +99,6 @@ class Tracker(Folder):
         folder.set_handler('%s/versions' % name, table)
         metadata = VersionsResource.build_metadata()
         folder.set_handler('%s/versions.metadata' % name, metadata)
-        # Types
-        table = TableHandler()
-        for title in [u'Bug', u'New Feature', u'Security Issue',
-                      u'Stability Issue', u'Data Corruption Issue',
-                      u'Performance Improvement', u'Technology Upgrade']:
-            table.add_record({'title': title})
-        folder.set_handler('%s/types' % name, table)
-        metadata = TableResource.build_metadata()
-        folder.set_handler('%s/types.metadata' % name, metadata)
-        # Priorities and States (Ordered Select Tables)
-        tables = [
-            ('priorities', [u'High', u'Medium', u'Low']),
-            ('states', [u'Open', u'Fixed', u'Verified', u'Closed'])]
-        for table_name, values in tables:
-            table = OrderedTableHandler()
-            for index, title in enumerate(values):
-                table.add_record({'title': title})
-            folder.set_handler('%s/%s' % (name, table_name), table)
-            metadata = OrderedTableResource.build_metadata()
-            folder.set_handler('%s/%s.metadata' % (name, table_name), metadata)
         # Pre-defined stored searches
         open = StoredSearchFile(state='0')
         not_assigned = StoredSearchFile(assigned_to='nobody')
@@ -265,24 +261,11 @@ class Tracker(Folder):
         self.handler.set_handler('resources.metadata', metadata)
 
 
-    def update_20080415(self):
-        """Change 'priority' and 'status' tables to be sorted.
-        """
-        for name in ('priorities', 'states'):
-            if not self.has_resource(name):
-                continue
-            resource = self.get_resource(name)
-            # Change format
-            metadata = resource.metadata
-            metadata.set_changed()
-            metadata.format = OrderedTableResource.class_id
-
-
     def update_20081015(self):
         """Add the 'products' table.
         """
         # Add the products table
-        cls = TableResource
+        cls = Tracker_TableResource
         cls.make_resource(cls, self, 'products')
         # Change the format of the 'modules' table
         resource = self.get_resource('modules')
