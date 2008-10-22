@@ -19,6 +19,8 @@
         <th stl:if="not column/is_checkbox">
           <a stl:if="column/href" href="${column/href}"
             class="sort_${column/order}">${column/title}</a>
+          <span stl:if="not column/href" class="no_sort">
+            ${column/title}</span>
         </th>
       </stl:block>
     </tr>

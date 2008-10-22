@@ -124,6 +124,17 @@ class BrowseForm(STLForm):
         return self.table_columns
 
 
+    def _get_table_columns(self, resource, context):
+        """ Always return a tuple of 3 elements. """
+        table_columns = []
+        for column in self.get_table_columns(resource, context):
+            if len(column) == 2:
+                name, title = column
+                column = (name, title, True)
+            table_columns.append(column)
+        return table_columns
+
+
     def get_items(self, resource, context):
         name = 'get_items'
         raise NotImplementedError, "the '%s' method is not defined" % name
@@ -188,29 +199,25 @@ class BrowseForm(STLForm):
 
     #######################################################################
     # Table
-    def get_table_namespace(self, resource, context, items):
+    def get_table_head(self, resource, context, items, actions=None):
         # Get from the query
         query = context.query
         sort_by = query['sort_by']
         reverse = query['reverse']
 
-        # (1) Actions (submit buttons)
-        actions = self.get_actions(resource, context, items)
-        actions = [
-            {'name': name, 'value': value, 'class': cls, 'onclick': onclick}
-            for name, value, cls, onclick in actions ]
-
-        # (2) Table Head: columns
-        columns = self.get_table_columns(resource, context)
+        columns = self._get_table_columns(resource, context)
         columns_ns = []
-        for name, title in columns:
+        for name, title, sortable in columns:
             if name == 'checkbox':
                 # Type: checkbox
                 if  actions:
                     columns_ns.append({'is_checkbox': True})
-            elif title is None:
-                # Type: nothing
-                columns_ns.append({'is_checkbox': False, 'href': None})
+            elif title is None or not sortable:
+                # Type: nothing or not sortable
+                columns_ns.append({
+                    'is_checkbox': False,
+                    'title': title,
+                    'href': None})
             else:
                 # Type: normal
                 kw = {'sort_by': name}
@@ -227,12 +234,26 @@ class BrowseForm(STLForm):
                     'order': order,
                     'href': context.uri.replace(**kw),
                     })
+        return columns_ns
+
+
+    def get_table_namespace(self, resource, context, items):
+        # (1) Actions (submit buttons)
+        actions = self.get_actions(resource, context, items)
+        actions = [
+            {'name': name, 'value': value, 'class': cls, 'onclick': onclick}
+            for name, value, cls, onclick in actions ]
+
+        # (2) Table Head: columns
+        table_head = self.get_table_head(resource, context, items, actions)
 
         # (3) Table Body: rows
+        columns = self.get_table_columns(resource, context)
         rows = []
         for item in items:
             row_columns = []
-            for column, column_title in columns:
+            for column in columns:
+                column = column[0]
                 # Skip the checkbox column if there are not any actions
                 if column == 'checkbox' and not actions:
                     continue
@@ -275,7 +296,7 @@ class BrowseForm(STLForm):
         # Ok
         return {
             'css': self.table_css,
-            'columns': columns_ns,
+            'columns': table_head,
             'rows': rows,
             'actions': actions,
         }

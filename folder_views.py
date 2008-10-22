@@ -574,14 +574,52 @@ class FolderPreviewContent(FolderBrowseContent):
         return actions
 
 
+    def get_table_head(self, resource, context, items, actions=None):
+        # Get from the query
+        query = context.query
+        sort_by = query['sort_by']
+        reverse = query['reverse']
+
+        columns = self._get_table_columns(resource, context)
+        columns_ns = []
+        for name, title, sortable in columns:
+            if name == 'checkbox':
+                # Type: checkbox
+                if  actions:
+                    columns_ns.append({'is_checkbox': True})
+            elif title is None:
+                # Type: nothing
+                continue
+            elif not sortable:
+                # Type: nothing or not sortable
+                columns_ns.append({
+                    'is_checkbox': False,
+                    'title': title,
+                    'href': None})
+            else:
+                # Type: normal
+                kw = {'sort_by': name}
+                if name == sort_by:
+                    col_reverse = (not reverse)
+                    order = 'up' if reverse else 'down'
+                else:
+                    col_reverse = False
+                    order = 'none'
+                kw['reverse'] = Boolean.encode(col_reverse)
+                columns_ns.append({
+                    'is_checkbox': False,
+                    'title': title,
+                    'order': order,
+                    'href': context.uri.replace(**kw),
+                    })
+
+
     def get_table_namespace(self, resource, context, items):
         context.styles.append('/ui/gallery/style.css')
         context.scripts.append('/ui/gallery/javascript.js')
 
         # Get from the query
         query = context.query
-        sort_by = query['sort_by']
-        reverse = query['reverse']
         width = query['width']
         height = query['height']
 
@@ -600,34 +638,10 @@ class FolderPreviewContent(FolderBrowseContent):
                     for name, value, cls, onclick in actions ]
 
         # (2) Table Head: columns
-        columns = self.get_table_columns(resource, context)
-        columns_ns = []
-        for name, title in columns:
-            if name == 'checkbox':
-                # Type: checkbox
-                if  actions:
-                    columns_ns.append({'is_checkbox': True})
-            elif title is None:
-                # Type: nothing
-                continue
-            else:
-                # Type: normal
-                kw = {'sort_by': name}
-                if name == sort_by:
-                    col_reverse = (not reverse)
-                    order = 'up' if reverse else 'down'
-                else:
-                    col_reverse = False
-                    order = 'none'
-                kw['reverse'] = Boolean.encode(col_reverse)
-                columns_ns.append({
-                    'is_checkbox': False,
-                    'title': title,
-                    'order': order,
-                    'href': context.uri.replace(**kw),
-                    })
+        table_head = self.get_table_head(resource, context, items, actions)
 
         # (3) Table Body: rows
+        columns = self._get_table_columns(resource, context)
         rows = []
         for item in items:
             row = {'checkbox': False,
@@ -638,7 +652,7 @@ class FolderPreviewContent(FolderBrowseContent):
             row['is_folder'] = (item.class_id == 'folder')
             if isinstance(item, WorkflowAware):
                 row['workflow_statename'] = item.get_statename()
-            for name, title in columns:
+            for name, title, sortable in columns:
                 value = self.get_item_value(resource, context, item, name)
                 if value is None:
                     continue
@@ -673,7 +687,7 @@ class FolderPreviewContent(FolderBrowseContent):
                 'height': height,
                 'widths': widths,
                 'css': self.table_css,
-                'columns': columns_ns,
+                'columns': table_head,
                 'rows': rows,
                 'actions': actions}
 
