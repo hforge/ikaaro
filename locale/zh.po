@@ -1250,7 +1250,7 @@ msgctxt "paragraph"
 msgid "Be sure your have the external editor plug-in installed."
 msgstr ""
 
-#: ../website_views.py:245 ../forms.py:432
+#: ../forms.py:432
 msgid "Body"
 msgstr "正文"
 
@@ -2409,6 +2409,11 @@ msgstr "信息"
 msgid "Message Catalog"
 msgstr "信息"
 
+#: ../website_views.py:245
+#, fuzzy
+msgid "Message body"
+msgstr "信息"
+
 #: ../forum/message.py:48
 #, fuzzy
 msgid "Message in a thread"
@@ -2418,6 +2423,10 @@ msgstr "信息被修正."
 #, fuzzy
 msgid "Message sent."
 msgstr "信息被修正."
+
+#: ../website_views.py:244
+msgid "Message subject"
+msgstr "信息目的"
 
 #: ../forum/thread.py:100
 #, fuzzy
@@ -3325,10 +3334,6 @@ msgstr ""
 msgid "Send"
 msgstr "发送"
 
-#: ../website_views.py:243
-msgid "Sender email address"
-msgstr ""
-
 #: ../calendar_views.py:51
 msgid "September"
 msgstr ""
@@ -3447,10 +3452,6 @@ msgstr "搜索"
 #: ../tracker/tracker_views.py:100
 msgid "Stored Searches"
 msgstr ""
-
-#: ../website_views.py:244
-msgid "Subject"
-msgstr "主题"
 
 #: ../ui/ical/edit_event.xml.en:21
 msgctxt "td"
@@ -4197,6 +4198,11 @@ msgstr ""
 msgid "Your confirmation key is invalid."
 msgstr ""
 
+#: ../website_views.py:243
+#, fuzzy
+msgid "Your email address"
+msgstr "用户"
+
 #: ../ui/root/credits.xml.en:22
 msgctxt "li"
 msgid "Zhou Li (Chinese)"
@@ -4676,11 +4682,6 @@ msgstr ""
 #~ msgid "Edit language preferences;"
 #~ msgstr "优先"
 
-#, fuzzy
-#~ msgctxt "label"
-#~ msgid "Email Address"
-#~ msgstr "用户"
-
 #~ msgid "External"
 #~ msgstr "外部"
 
@@ -4784,9 +4785,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "Members added."
 #~ msgstr "加入用户"
-
-#~ msgid "Message subject"
-#~ msgstr "信息目的"
 
 #~ msgid "Message!"
 #~ msgstr "信息"
@@ -5063,6 +5061,9 @@ msgstr ""
 #, fuzzy
 #~ msgid "Size:"
 #~ msgstr "尺寸"
+
+#~ msgid "Subject"
+#~ msgstr "主题"
 
 #, fuzzy
 #~ msgid "Superscript"

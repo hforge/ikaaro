@@ -1129,7 +1129,7 @@ msgctxt "paragraph"
 msgid "Be sure your have the external editor plug-in installed."
 msgstr ""
 
-#: ../website_views.py:245 ../forms.py:432
+#: ../forms.py:432
 msgid "Body"
 msgstr ""
 
@@ -2182,12 +2182,20 @@ msgstr ""
 msgid "Message Catalog"
 msgstr ""
 
+#: ../website_views.py:245
+msgid "Message body"
+msgstr ""
+
 #: ../forum/message.py:48
 msgid "Message in a thread"
 msgstr ""
 
 #: ../website_views.py:274
 msgid "Message sent."
+msgstr ""
+
+#: ../website_views.py:244
+msgid "Message subject"
 msgstr ""
 
 #: ../forum/thread.py:100
@@ -2987,10 +2995,6 @@ msgstr ""
 msgid "Send"
 msgstr ""
 
-#: ../website_views.py:243
-msgid "Sender email address"
-msgstr ""
-
 #: ../calendar_views.py:51
 msgid "September"
 msgstr ""
@@ -3097,10 +3101,6 @@ msgstr ""
 
 #: ../tracker/tracker_views.py:100
 msgid "Stored Searches"
-msgstr ""
-
-#: ../website_views.py:244
-msgid "Subject"
 msgstr ""
 
 #: ../ui/ical/edit_event.xml.en:21
@@ -3791,6 +3791,10 @@ msgstr ""
 
 #: ../messages.py:26
 msgid "Your confirmation key is invalid."
+msgstr ""
+
+#: ../website_views.py:243
+msgid "Your email address"
 msgstr ""
 
 #: ../ui/root/credits.xml.en:22

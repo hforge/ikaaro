@@ -1146,7 +1146,7 @@ msgctxt "paragraph"
 msgid "Be sure your have the external editor plug-in installed."
 msgstr ""
 
-#: ../website_views.py:245 ../forms.py:432
+#: ../forms.py:432
 #, fuzzy
 msgid "Body"
 msgstr "Negrita"
@@ -2266,6 +2266,11 @@ msgstr "Mensaje"
 msgid "Message Catalog"
 msgstr "Catalogo de Mensajes"
 
+#: ../website_views.py:245
+#, fuzzy
+msgid "Message body"
+msgstr "Mensaje"
+
 #: ../forum/message.py:48
 #, fuzzy
 msgid "Message in a thread"
@@ -2274,6 +2279,11 @@ msgstr "Catalogo de Mensajes"
 #: ../website_views.py:274
 #, fuzzy
 msgid "Message sent."
+msgstr "Mensaje"
+
+#: ../website_views.py:244
+#, fuzzy
+msgid "Message subject"
 msgstr "Mensaje"
 
 #: ../forum/thread.py:100
@@ -3146,10 +3156,6 @@ msgstr ""
 msgid "Send"
 msgstr "Enviar"
 
-#: ../website_views.py:243
-msgid "Sender email address"
-msgstr ""
-
 #: ../calendar_views.py:51
 msgid "September"
 msgstr ""
@@ -3267,10 +3273,6 @@ msgstr "Búsqueda Avanzada"
 #, fuzzy
 msgid "Stored Searches"
 msgstr "Búsqueda Avanzada"
-
-#: ../website_views.py:244
-msgid "Subject"
-msgstr ""
 
 #: ../ui/ical/edit_event.xml.en:21
 msgctxt "td"
@@ -4000,6 +4002,11 @@ msgstr ""
 #: ../messages.py:26
 msgid "Your confirmation key is invalid."
 msgstr ""
+
+#: ../website_views.py:243
+#, fuzzy
+msgid "Your email address"
+msgstr "Escribe tu dirección de correo electrónico"
 
 #: ../ui/root/credits.xml.en:22
 msgctxt "li"

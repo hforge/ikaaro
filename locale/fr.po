@@ -1185,7 +1185,7 @@ msgctxt "paragraph"
 msgid "Be sure your have the external editor plug-in installed."
 msgstr "Assurez-vous d'avoir l'extension 'éditeur externe' d'installée."
 
-#: ../website_views.py:245 ../forms.py:432
+#: ../forms.py:432
 msgid "Body"
 msgstr "Message"
 
@@ -2246,12 +2246,22 @@ msgstr ""
 msgid "Message Catalog"
 msgstr "Catalogue de messages"
 
+#: ../website_views.py:245
+#, fuzzy
+msgid "Message body"
+msgstr "Message"
+
 #: ../forum/message.py:48
 msgid "Message in a thread"
 msgstr "Message d'un fil de discussion"
 
 #: ../website_views.py:274
 msgid "Message sent."
+msgstr "Message envoyé."
+
+#: ../website_views.py:244
+#, fuzzy
+msgid "Message subject"
 msgstr "Message envoyé."
 
 #: ../forum/thread.py:100
@@ -3056,10 +3066,6 @@ msgstr "Sélectionner les comptes des contacts"
 msgid "Send"
 msgstr "Envoyer"
 
-#: ../website_views.py:243
-msgid "Sender email address"
-msgstr "Votre adresse de courriel"
-
 #: ../calendar_views.py:51
 msgid "September"
 msgstr "Septembre"
@@ -3169,10 +3175,6 @@ msgstr "Recherche enregistrée"
 #: ../tracker/tracker_views.py:100
 msgid "Stored Searches"
 msgstr "Recherches enregistrées"
-
-#: ../website_views.py:244
-msgid "Subject"
-msgstr "Sujet"
 
 #: ../ui/ical/edit_event.xml.en:21
 msgctxt "td"
@@ -3895,6 +3897,11 @@ msgstr ""
 #: ../messages.py:26
 msgid "Your confirmation key is invalid."
 msgstr "Votre clé de confirmation est invalide."
+
+#: ../website_views.py:243
+#, fuzzy
+msgid "Your email address"
+msgstr "Veuillez taper votre adresse de courriel."
 
 #: ../ui/root/credits.xml.en:22
 msgctxt "li"
@@ -4961,6 +4968,9 @@ msgstr ""
 #~ msgid "Search:"
 #~ msgstr "Rechercher&nbsp;:"
 
+#~ msgid "Sender email address"
+#~ msgstr "Votre adresse de courriel"
+
 #~ msgid "Shop"
 #~ msgstr "Boutique"
 
@@ -4979,6 +4989,9 @@ msgstr ""
 
 #~ msgid "Stock quantity"
 #~ msgstr "Quantité en stock"
+
+#~ msgid "Subject"
+#~ msgstr "Sujet"
 
 #~ msgid "Submit"
 #~ msgstr "Envoyer"

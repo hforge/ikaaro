@@ -1269,7 +1269,7 @@ msgctxt "paragraph"
 msgid "Be sure your have the external editor plug-in installed."
 msgstr ""
 
-#: ../website_views.py:245 ../forms.py:432
+#: ../forms.py:432
 #, fuzzy
 msgid "Body"
 msgstr "Cartella"
@@ -2448,6 +2448,11 @@ msgstr "Messaggio"
 msgid "Message Catalog"
 msgstr "Salva la traduzione"
 
+#: ../website_views.py:245
+#, fuzzy
+msgid "Message body"
+msgstr "Messaggio"
+
 #: ../forum/message.py:48
 #, fuzzy
 msgid "Message in a thread"
@@ -2457,6 +2462,10 @@ msgstr "Messaggio modificato."
 #, fuzzy
 msgid "Message sent."
 msgstr "Messaggio modificato."
+
+#: ../website_views.py:244
+msgid "Message subject"
+msgstr "Titolo del messaggio"
 
 #: ../forum/thread.py:100
 #, fuzzy
@@ -3374,10 +3383,6 @@ msgstr ""
 msgid "Send"
 msgstr ""
 
-#: ../website_views.py:243
-msgid "Sender email address"
-msgstr ""
-
 #: ../calendar_views.py:51
 msgid "September"
 msgstr ""
@@ -3496,11 +3501,6 @@ msgstr "Cerca"
 #: ../tracker/tracker_views.py:100
 msgid "Stored Searches"
 msgstr ""
-
-#: ../website_views.py:244
-#, fuzzy
-msgid "Subject"
-msgstr "Soggetto"
 
 #: ../ui/ical/edit_event.xml.en:21
 msgctxt "td"
@@ -4261,6 +4261,11 @@ msgstr ""
 #: ../messages.py:26
 msgid "Your confirmation key is invalid."
 msgstr ""
+
+#: ../website_views.py:243
+#, fuzzy
+msgid "Your email address"
+msgstr "Utenti"
 
 #: ../ui/root/credits.xml.en:22
 msgctxt "li"
@@ -5315,11 +5320,6 @@ msgstr ""
 #~ msgid "Edit language preferences;"
 #~ msgstr "Preferenze"
 
-#, fuzzy
-#~ msgctxt "label"
-#~ msgid "Email Address"
-#~ msgstr "Utenti"
-
 #~ msgid "External"
 #~ msgstr "Esterno"
 
@@ -5782,9 +5782,6 @@ msgstr ""
 #~ msgid "Message Translation"
 #~ msgstr "Salva la traduzione"
 
-#~ msgid "Message subject"
-#~ msgstr "Titolo del messaggio"
-
 #~ msgid "Message!"
 #~ msgstr "Mesaggio!"
 
@@ -6150,6 +6147,10 @@ msgstr ""
 #~ "inline>"
 #~ msgstr ""
 #~ "Stato <stl:inline content=\"table/sortcontrol(state)\"></stl:inline>"
+
+#, fuzzy
+#~ msgid "Subject"
+#~ msgstr "Soggetto"
 
 #, fuzzy
 #~ msgid "Submit"
