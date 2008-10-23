@@ -684,6 +684,8 @@ msgid ""
 "<g id='1'> ${widget/title} </g>  <g id='2'>(mandatory)</g>  <g id='3'>"
 "(multiple)</g>  <g id='4'>Format: 'yyyy-mm-dd'</g>"
 msgstr ""
+"<g id='1'> ${widget/title} </g>  <g id='2'>(obligatorio)</g>  <g id='3'>"
+"(multiple)</g>  <g id='4'>Formato: 'yyyy-mm-dd'</g>"
 
 #: ../ui/root/about.xml.en:8
 msgctxt "paragraph"
@@ -1409,7 +1411,7 @@ msgstr ""
 
 #: ../website_views.py:229
 msgid "Contact"
-msgstr ""
+msgstr "Contacto"
 
 #: ../control_panel.py:155
 msgid "Contact Options"
@@ -2267,9 +2269,8 @@ msgid "Message Catalog"
 msgstr "Catalogo de Mensajes"
 
 #: ../website_views.py:245
-#, fuzzy
 msgid "Message body"
-msgstr "Mensaje"
+msgstr "Cuerpo del mensaje"
 
 #: ../forum/message.py:48
 #, fuzzy
@@ -2282,9 +2283,8 @@ msgid "Message sent."
 msgstr "Mensaje"
 
 #: ../website_views.py:244
-#, fuzzy
 msgid "Message subject"
-msgstr "Mensaje"
+msgstr "Tema del mensaje"
 
 #: ../forum/thread.py:100
 #, fuzzy
@@ -3334,6 +3334,7 @@ msgstr ""
 msgid ""
 "The <span class=\"field_is_required\">emphasized</span> fields are required."
 msgstr ""
+"Los campos <span class=\"field_is_required\">enfatizados</span> son obligatorios."
 
 #: ../messages.py:35
 #, fuzzy
@@ -4004,9 +4005,8 @@ msgid "Your confirmation key is invalid."
 msgstr ""
 
 #: ../website_views.py:243
-#, fuzzy
 msgid "Your email address"
-msgstr "Escribe tu dirección de correo electrónico"
+msgstr "Tu dirección de correo electrónico"
 
 #: ../ui/root/credits.xml.en:22
 msgctxt "li"
