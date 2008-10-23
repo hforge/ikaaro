@@ -2830,7 +2830,7 @@ msgstr "Roles actualizados."
 
 #: ../website_views.py:163 ../website_views.py:164
 msgid "Register"
-msgstr ""
+msgstr "Registrarse"
 
 #: ../workflow.py:140
 msgid "Reject the document."
@@ -2842,23 +2842,21 @@ msgid "Released"
 msgstr "Revisores"
 
 #: ../tracker/tracker_views.py:78
-#, fuzzy
 msgid "Remember this search"
-msgstr "Revisores"
+msgstr "Recordar esta búsqueda"
 
 #: ../text_views.py:223 ../table_views.py:162 ../table_views.py:328
 #: ../folder_views.py:358 ../future/menu.py:119
 #: ../tracker/tracker_views.py:308
 msgid "Remove"
-msgstr ""
+msgstr "Suprimir"
 
 #: ../future/ui/dressable_edit_image.xml.en:40
 #: ../forum/ui/Thread_view.xml.en:33 ../ui/website/edit_languages.xml.en:38
 #: ../ui/ical/edit_timetables.xml.en:43
-#, fuzzy
 msgctxt "button"
 msgid "Remove"
-msgstr "Renombrar"
+msgstr "Suprimir"
 
 #: ../tracker/ui/edit_issue.xml.en:99
 msgctxt "label"
@@ -2870,7 +2868,6 @@ msgid "Rename"
 msgstr "Renombrar"
 
 #: ../ui/folder/rename.xml.en:20
-#, fuzzy
 msgctxt "button"
 msgid "Rename"
 msgstr "Renombrar"
@@ -2887,21 +2884,18 @@ msgid "Repeat Password"
 msgstr "Nueca Clave de Acceso"
 
 #: ../ui/user/confirm_registration.xml.en:30
-#, fuzzy
 msgctxt "label"
 msgid "Repeat Password"
-msgstr "Nueca Clave de Acceso"
+msgstr "Repetir contraseña"
 
 #: ../file_views.py:165
-#, fuzzy
 msgid "Replace"
-msgstr "Revisores"
+msgstr "Reemplazar"
 
 #: ../ui/file/upload.xml.en:20
-#, fuzzy
 msgctxt "button"
 msgid "Replace"
-msgstr "Revisores"
+msgstr "Reemplazar"
 
 #: ../forms.py:434
 #, fuzzy
@@ -2909,10 +2903,9 @@ msgid "Replace file"
 msgstr "Revisores"
 
 #: ../forum/ui/Thread_view.xml.en:44
-#, fuzzy
 msgctxt "button"
 msgid "Reply"
-msgstr "Revisores"
+msgstr "Responder"
 
 #: ../forum/thread.py:90
 #, fuzzy
@@ -2931,7 +2924,7 @@ msgstr ""
 #: ../access.py:141
 #, fuzzy
 msgid "Resend Confirmation"
-msgstr "Descripción"
+msgstr "Reenviar confirmación"
 
 #: ../tracker/resources.py:156
 #, fuzzy
