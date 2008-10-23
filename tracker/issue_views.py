@@ -320,6 +320,8 @@ class Issue_History(STLView):
 
 class ResourcesView(TableView):
 
+    search_template = None
+
     def get_widgets(self, resource, context):
         return resource.get_form()
 
@@ -355,6 +357,7 @@ class Issue_EditResources(STLForm):
         'tend': Time,
         'time_select': String,
         'comment': Unicode,
+        # Batch / Sort
         'batch_start': Integer(default=0),
         'batch_size': Integer(default=20),
         'sort_by': String,

@@ -65,11 +65,17 @@ class TableView(SearchForm):
 
 
     def get_items(self, resource, context):
-        query = context.query
-        search_term = query['search_term'].strip()
         search_query = None
-        if search_term:
-            search_query = PhraseQuery(query['search_field'], search_term)
+
+        # Build the search query
+        if self.search_template is not None:
+            query = context.query
+            search_term = query['search_term'].strip()
+            if search_term:
+                search_field = query['search_field']
+                search_query = PhraseQuery(search_field, search_term)
+
+        # Ok
         items = resource.handler.search(search_query)
         return list(items)
 
