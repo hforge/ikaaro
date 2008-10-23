@@ -3024,10 +3024,9 @@ msgid "Resources renamed."
 msgstr "Objetos renombrados."
 
 #: ../ui/website/search.xml.en:11
-#, fuzzy
 msgctxt "heading"
 msgid "Results"
-msgstr "Resultados de la Búsqueda"
+msgstr "Resultados"
 
 #: ../workflow.py:146
 msgid "Retire the document."
@@ -3438,9 +3437,8 @@ msgid "The user is not active, (s)he has not confirmed registration."
 msgstr ""
 
 #: ../views.py:93
-#, fuzzy
 msgid "There are ${n} items."
-msgstr "No hay mensajes."
+msgstr "Hay ${n} elementos."
 
 #: ../ui/PO_edit.xml.en:44
 #, fuzzy
