@@ -31,7 +31,7 @@ from itools.handlers import checkid, merge_dics
 from itools.i18n import format_datetime
 from itools.uri import get_reference, Path
 from itools.web import BaseView, STLForm
-from itools.xapian import AndQuery, EqQuery, OrQuery, PhraseQuery
+from itools.xapian import AndQuery, EqQuery, NotQuery, OrQuery, PhraseQuery
 from itools.xml import XMLParser
 
 # Import from ikaaro
@@ -241,6 +241,8 @@ class FolderBrowseContent(SearchForm):
         abspath = str(resource.get_canonical_path())
         if search_subfolders is True:
             args.append(EqQuery('paths', abspath))
+            # Avoid the container
+            args.append(NotQuery(EqQuery('abspath', abspath)))
         else:
             args.append(EqQuery('parent_path', abspath))
         if search_term:
