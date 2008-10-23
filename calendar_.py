@@ -23,7 +23,7 @@ from datetime import datetime, time, timedelta
 # Import from itools
 from itools.datatypes import DataType, Date
 from itools.gettext import MSG
-from itools.ical import icalendar, icalendarTable
+from itools.ical import iCalendar, icalendarTable
 from itools.ical import Record
 
 # Import from ikaaro
@@ -206,7 +206,7 @@ class Calendar(CalendarBase, Text):
 
     class_id = 'text/calendar'
     class_version = '20071216'
-    class_handler = icalendar
+    class_handler = iCalendar
 
 
     def get_record(self, id):
