@@ -524,7 +524,7 @@ class LoginView(STLForm):
         if goto is None:
             goto = get_reference('./')
 
-        return context.come_back(INFO("Welcome!"), goto)
+        return context.come_back(INFO(u"Welcome!"), goto)
 
 
 
