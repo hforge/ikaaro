@@ -2029,10 +2029,9 @@ msgid ""
 msgstr ""
 
 #: ../ui/website/forgotten_password_form.xml.en:10
-#, fuzzy
 msgctxt "legend"
 msgid "If you have forgotten your password"
-msgstr "Olvidé mi contraseña"
+msgstr "Si olvidaste tu contraseña"
 
 #: ../file.py:203
 msgid "Image"
@@ -2480,7 +2479,7 @@ msgstr ""
 #: ../ui/website/search_form.xml.en:11
 msgctxt "button"
 msgid "OK"
-msgstr ""
+msgstr "Aceptar"
 
 #: ../file.py:295
 msgid "OOo Calc"
@@ -3644,7 +3643,7 @@ msgstr ""
 #: ../ui/website/forgotten_password_form.xml.en:13
 msgctxt "label"
 msgid "Type your email address"
-msgstr ""
+msgstr "Escribe tu dirección de correo electrónico"
 
 #: ../tracker/ui/change_bugs.xml.en:36
 #, fuzzy
