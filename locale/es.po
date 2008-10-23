@@ -2810,9 +2810,8 @@ msgid "RTF Document"
 msgstr "Añadir Documento"
 
 #: ../website_views.py:242
-#, fuzzy
 msgid "Recipient"
-msgstr "Revisores"
+msgstr "Destinatario"
 
 #: ../table_views.py:176 ../table_views.py:346 ../future/menu.py:138
 #, fuzzy
@@ -3145,7 +3144,7 @@ msgstr ""
 
 #: ../website_views.py:230
 msgid "Send"
-msgstr ""
+msgstr "Enviar"
 
 #: ../website_views.py:243
 msgid "Sender email address"

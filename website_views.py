@@ -240,9 +240,9 @@ class ContactForm(AutoForm):
 
     widgets = [
         SelectWidget('to', title=MSG(u'Recipient')),
-        TextWidget('from', title=MSG(u'Sender email address'), size=40),
-        TextWidget('subject', title=MSG(u'Subject'), size=40),
-        MultilineWidget('body', title=MSG(u'Body'), rows=8, cols=50),
+        TextWidget('from', title=MSG(u'Your email address'), size=40),
+        TextWidget('subject', title=MSG(u'Message subject'), size=40),
+        MultilineWidget('body', title=MSG(u'Message body'), rows=8, cols=50),
     ]
 
 
