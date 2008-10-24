@@ -171,7 +171,7 @@ class WorkflowAware(BaseWorkflowAware):
     def get_metadata_schema(cls):
         return {
             'state': String,
-            'wf_transition': WFTransition,
+            'wf_transition': WFTransition(default=[]),
             }
 
 

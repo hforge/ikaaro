@@ -66,7 +66,7 @@ class VersioningAware(DBResource):
     @classmethod
     def get_metadata_schema(cls):
         schema = DBResource.get_metadata_schema()
-        schema['history'] = History
+        schema['history'] = History(default=[])
         return schema
 
 

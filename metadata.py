@@ -19,7 +19,7 @@
 from mimetypes import add_type
 
 # Import from itools
-from itools.datatypes import is_datatype, String, Unicode, XMLContent
+from itools.datatypes import is_datatype, DataType, String, Unicode, XMLContent
 from itools.handlers import File, register_handler_class
 from itools.web import get_context
 from itools.xml import xml_uri, XMLParser, START_ELEMENT, END_ELEMENT, TEXT
@@ -30,10 +30,12 @@ from registry import get_resource_class
 
 
 
-class Record(object):
+class Record(DataType):
 
+    # Set your own default list to avoid sharing this instance
     default = []
     schema = {}
+
 
 
 def get_datatype(format, name):
