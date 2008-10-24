@@ -250,8 +250,6 @@ class TrackerView(BrowseForm):
         sort_by = context.query['sort_by']
         reverse = context.query['reverse']
         # Adjust Sorting
-        if sort_by == 'mtime':
-            sort_by = 'mtime_sort'
         items = results.get_documents(sort_by=sort_by, reverse=reverse,
                                       start=start, size=size)
 
