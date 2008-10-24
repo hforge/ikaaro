@@ -32,13 +32,13 @@ from itools.gettext import MSG
 from itools.ical import Time
 from itools.html import xhtml_uri
 from itools.i18n import format_datetime
-from itools.stl import stl
 from itools.web import STLForm, STLView
 from itools.xml import XMLParser, START_ELEMENT, END_ELEMENT, TEXT
 
 # Import from ikaaro
 from ikaaro.messages import MSG_CHANGES_SAVED
 from ikaaro.table import TableView
+from ikaaro.views import CompositeForm
 
 
 url_expr = compile('(https?://[\w.@/;?=&#\-%:]*)')
@@ -231,7 +231,7 @@ class Issue_History(STLView):
             comment = record.get_value('comment')
             cc_list = record.get_value('cc_list') or ()
             file = record.get_value('file')
-            # solid in case the user has been removed
+            # Solid in case the user has been removed
             user_exist = users.has_resource(username)
             usertitle = (user_exist and
                          users.get_resource(username).get_title() or username)
@@ -318,28 +318,31 @@ class Issue_History(STLView):
 
 
 
-class ResourcesView(TableView):
+class Issue_ViewResources(TableView):
 
     search_template = None
 
-    def get_widgets(self, resource, context):
-        return resource.get_form()
-
 
     def get_item_value(self, resource, context, item, column):
-        if column == 'index':
+        if column == 'id':
             id = item.id
-            return id, '../resources/;edit_record?id=%s' % id
+            return id, ';edit_resources?id=%s' % id
         return TableView.get_item_value(self, resource, context, item, column)
 
 
+    def action_remove(self, resource, context, form):
+        resource = resource.get_resources()
+        TableView.action_remove(self, resource, context, form)
 
-class Issue_EditResources(STLForm):
+
+
+class Issue_AddEditResource(STLForm):
 
     access = 'is_allowed_to_edit'
-    title = MSG(u'Edit resources')
-    icon = 'edit.png'
-    template = '/ui/tracker/edit_resources.xml'
+    template = '/ui/tracker/edit_resource.xml'
+
+    query_schema = {
+        'id': Integer}
 
     schema = {
         'resource': String,
@@ -349,54 +352,64 @@ class Issue_EditResources(STLForm):
         'tend': Time(default=time(0, 0)),
         'comment': Unicode}
 
-    query_schema = {
-        'resource': String(default=''),
-        'dtstart': Date,
-        'dtend': Date,
-        'tstart': Time,
-        'tend': Time,
-        'time_select': String,
-        'comment': Unicode,
-        # Batch / Sort
-        'batch_start': Integer(default=0),
-        'batch_size': Integer(default=20),
-        'sort_by': String,
-        'reverse': Boolean(default=False)}
-
 
     def get_namespace(self, resource, context):
-        query = context.query
-        today = date.today()
-        # Users
-        users = resource.parent.get_members_namespace(query['resource'])
-        # Time select
-        time_select = query['time_select']
-        time_select = resource.get_time_select('time_select', time_select)
-        # Existent ones
         resources = resource.get_resources()
-        template = resource.get_resource(ResourcesView.template)
-        ns_table = ResourcesView().get_namespace(resources, context)
+
+        # Add or Edit
+        id = context.query['id']
+        if id is None:
+            # Add a new resource-issue
+            action = ';edit_resources'
+            user = None
+            d_start = d_end = date.today()
+            t_start = t_end = ''
+            comment = u''
+        else:
+            # Edit a resource-issue
+            action = ';edit_resources?id=%s' % id
+            record = resources.handler.get_record(id)
+            get_value = resources.handler.get_record_value
+            user = get_value(record, 'resource')
+            dtstart = get_value(record, 'dtstart')
+            dtend = get_value(record, 'dtend')
+            comment = get_value(record, 'comment')
+            d_start, t_start = dtstart.date(), dtstart.time()
+            d_end, t_end = dtend.date(), dtend.time()
+            t_start = t_start.strftime('%H:%M')
+            t_end = t_end.strftime('%H:%M')
+            id = str(id)
+
+        # Time select
+        timetables = resources.get_timetables()
+        time_select = [
+            {'name': index,
+             'start': start.strftime('%H:%M'),
+             'end': end.strftime('%H:%M')}
+            for index, (start, end) in enumerate(timetables) ]
+
         # Ok
         return {
-            'issue': resource.name,
-            'users': users,
-            'dtstart': query.get('dtstart', today),
-            'tstart': query['tstart'],
-            'dtend': query.get('dtend', today),
-            'tend': query['tend'],
-            'comment': query['comment'],
+            'action': action,
+            'id': id,
+            'users': resource.parent.get_members_namespace(user),
+            'd_start': d_start.strftime('%Y-%m-%d'),
+            't_start': t_start,
+            'd_end': d_end.strftime('%Y-%m-%d'),
+            't_end': t_end,
             'time_select': time_select,
-            'table': stl(template, ns_table)}
+            'comment': comment}
 
 
-    def action(self, resource, context, form):
+    def action_add(self, resource, context, form):
         dtstart = datetime.combine(form['dtstart'], form['tstart'])
         dtend = datetime.combine(form['dtend'], form['tend'])
         record = {
             'issue': resource.name,
             'resource': form['resource'],
             'dtstart': dtstart,
-            'dtend': dtend}
+            'dtend': dtend,
+            'comment': form['comment']}
 
         # Change
         resources = resource.get_resources()
@@ -405,3 +418,44 @@ class Issue_EditResources(STLForm):
         context.message = MSG_CHANGES_SAVED
 
 
+    def action_edit(self, resource, context, form):
+        id = context.query['id']
+        resource.get_resources()
+
+        # New record
+        dtstart = datetime.combine(form['dtstart'], form['tstart'])
+        dtend = datetime.combine(form['dtend'], form['tend'])
+        record = {
+            'issue': resource.name,
+            'resource': form['resource'],
+            'dtstart': dtstart,
+            'dtend': dtend,
+            'comment': form['comment']}
+
+        # Change
+        resources = resource.get_resources()
+        resources.handler.update_record(id, **record)
+        # Ok
+        context.message = MSG_CHANGES_SAVED
+
+
+
+class Issue_EditResources(CompositeForm):
+
+    access = 'is_allowed_to_edit'
+    title = MSG(u'Edit resources')
+    icon = 'edit.png'
+
+    subviews = [
+        Issue_AddEditResource(),
+        Issue_ViewResources(),
+    ]
+
+    def get_namespace(self, resource, context):
+        # Override so we can pass a different resource to Issue_ViewResources
+        resources = resource.get_resources()
+        views = [
+            self.subviews[0].GET(resource, context),
+            self.subviews[1].GET(resources, context) ]
+
+        return {'views': views}

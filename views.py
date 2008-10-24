@@ -31,6 +31,54 @@ from registry import get_resource_class
 """
 
 
+class CompositeForm(STLForm):
+    """This view renders the sub-views defined by the class variable
+    'subviews' one after the other.
+    """
+
+    template = '/ui/generic/cascade.xml'
+    subviews = []
+
+    def get_query_schema(self):
+        schema = {}
+        for view in self.subviews:
+            view_schema = view.get_query_schema()
+            for key in view_schema:
+                if key in schema:
+                    msg = 'query schema key "%s" defined twice'
+                    raise ValueError, msg % key
+                schema[key] = view_schema[key]
+        return schema
+
+
+    def get_namespace(self, resource, context):
+        views = [ view.GET(resource, context) for view in self.subviews ]
+        return {'views': views}
+
+
+    def get_schema(self, resource, context):
+        # Check for specific schema
+        action = context.form_action
+        for view in self.subviews:
+            method = getattr(view, context.form_action, None)
+            if method is None:
+                continue
+            schema = getattr(view, '%s_schema' % action, None)
+            if schema is not None:
+                return schema
+            return view.schema
+        return {}
+
+
+    def get_action_method(self, resource, context):
+        for view in self.subviews:
+            method = getattr(view, context.form_action, None)
+            if method is not None:
+                return method
+        return None
+
+
+
 class MessageView(STLView):
 
     template = '/ui/generic/message_view.xml'

@@ -30,10 +30,8 @@ from itools.datatypes import DateTime, Integer, String, Unicode, Tokens
 from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.i18n import format_datetime
-from itools.stl import stl
 from itools.vfs import FileName
 from itools.xapian import IntegerField, KeywordField
-from itools.xml import XMLParser
 
 # Import from ikaaro
 from ikaaro.file import File
@@ -41,18 +39,6 @@ from ikaaro.folder import Folder
 from ikaaro.registry import register_resource_class, get_resource_class
 from ikaaro.utils import generate_name
 from issue_views import Issue_Edit, Issue_EditResources, Issue_History
-
-
-# Select widget with onchange attribute to update time values.
-time_select_template = list(XMLParser("""
-    <select name="${name}" id="${name}" multiple="${multiple}"
-     onchange="update_time('${name}')">
-      <option value=""></option>
-      <option stl:repeat="option options" value="${option/name}"
-        selected="${option/selected}">${option/value}</option>
-    </select> """,
-    { None: 'http://www.w3.org/1999/xhtml',
-     'stl': 'http://www.hforge.org/xml-namespaces/stl'}))
 
 
 class History(Table):
@@ -433,18 +419,6 @@ class Issue(Folder):
         if text in self.get_value('title').lower():
             return True
         return text in self.get_comment().lower()
-
-
-    def get_time_select(self, name, value):
-        timetables = self.get_resources().get_timetables()
-        options = []
-        for index, (tstart, tend) in enumerate(timetables):
-            opt = '%s - %s' % (tstart.strftime('%H:%M'), tend.strftime('%H:%M'))
-            options.append(
-                {'name': index, 'value': opt, 'selected': index == value})
-        namespace = {'name': name, 'multiple': False, 'options': options}
-
-        return stl(events=time_select_template, namespace=namespace)
 
 
     def get_size(self):

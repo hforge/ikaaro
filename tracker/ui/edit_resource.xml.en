@@ -4,9 +4,10 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
-<form action=";edit_resources" method="post">
+<form action="${action}" method="post">
   <fieldset>
-    <legend>Assign a resource</legend>
+    <legend stl:if="not id">Assign a resource</legend>
+    <legend stl:if="id">Edit the assignment #${id}</legend>
     <table>
       <tr>
         <td valign="top">
@@ -18,24 +19,30 @@
         </td>
         <td valign="top">
           <label for="dtstart">Start:</label><br/>
-          <input type="text" name="dtstart" value="${dtstart}" id="dtstart"
+          <input type="text" name="dtstart" value="${d_start}" id="dtstart"
             size="10" />
           <input id="trigger_dtstart" type="button" value="..."
             name="trigger_dtstart"/>
           <br />
-          <input type="text" name="tstart" value="${tstart}" id="tstart"
+          <input type="text" name="tstart" value="${t_start}" id="tstart"
             size="5" /> (HH:MM)
         </td>
         <td valign="top">
           <label for="dtend">End:</label><br/>
-          <input type="text" name="dtend" value="${dtend}" id="dtend"
+          <input type="text" name="dtend" value="${d_end}" id="dtend"
             size="10" />
           <input id="trigger_dtend" type="button" value="..."
             name="trigger_dtend"/>
-          &nbsp;&nbsp;${time_select}
+          &nbsp;&nbsp;
+          <select name="time_select" id="time_select"
+            onchange="update_time('time_select')">
+            <option value=""></option>
+            <option stl:repeat="option time_select" value="${option/name}"
+              >${option/start} - ${option/end}</option>
+          </select>
           <br />
-          <input type="text" name="tend" value="${tend}" id="tend"
-            size="5" /> (HH:MM)
+          <input type="text" name="tend" value="${t_end}" id="tend" size="5"
+            /> (HH:MM)
         </td>
       </tr>
       <tr>
@@ -46,14 +53,13 @@
         </td>
       </tr>
     </table>
-    <input type="hidden" name="issue" value="${issue}" />
-    <input type="submit" class="button_ok" value="Assign" />
+    <input type="submit" name=";add" class="button_ok" value="Assign"
+      stl:if="not id" />
+    <input type="submit" name=";edit" class="button_ok" value="Save Changes"
+      stl:if="id" />
   </fieldset>
 </form>
 <br/>
-
-<!-- Previous assignments -->
-${table}
 
 <script language="javascript">
 Calendar.setup({inputField: "dtstart", ifFormat: "%Y-%m-%d",

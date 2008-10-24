@@ -153,13 +153,21 @@ class Tracker(Folder):
         for username in self.get_site_root().get_members():
             user = users.get_resource(username)
             members.append({'id': username, 'title': user.get_title()})
-        # Select
-        if isinstance(value, str):
-            value = [value]
+
+        # Add 'is_selected'
+        if value is None:
+            condition = lambda x: False
+        elif type(value) is str:
+            condition = lambda x: (x == value)
+        else:
+            condition = lambda x: (x in value)
         for member in members:
-            member['is_selected'] = (member['id'] in value)
+            member['is_selected'] = condition(member['id'])
+
+        # Sort
         members.sort(key=itemgetter('title'))
 
+        # Ok
         return members
 
 
