@@ -359,25 +359,24 @@ class Issue(Folder):
             'id': int(self.name),
             'title': get_value('title'),
             'comment': get_value('comment'),
-            'rank': None,
             }
 
         # Select Tables
         get_resource = self.parent.get_resource
-        tables = {'product': 'products', 'module': 'modules',
-                  'version': 'versions', 'type': 'types', 'state': 'states',
-                  'priority': 'priorities'}
-        names = 'product', 'module', 'version', 'type', 'priority', 'state'
-        for name in names:
+        tables = {
+            'product': 'products',
+            'module': 'modules',
+            'version': 'versions',
+            'type': 'types',
+            'state': 'states',
+            'priority': 'priorities'}
+        for name in tables:
             value = get_value(name)
             if value is None:
                 infos[name] = None
-                infos['%s_rank'% name] = None
             else:
                 record = get_resource(tables[name]).handler.get_record(value)
                 infos[name] = record and record.title or None
-                if name in ('priority', 'state'):
-                    infos['%s_rank'% name] = record.get_value('rank')
 
         # Assigned-To
         assigned_to = get_value('assigned_to')
