@@ -18,7 +18,7 @@
 from mimetypes import add_type
 
 # Import from itools
-from itools.datatypes import is_datatype, String, Unicode, XML
+from itools.datatypes import is_datatype, DataType, String, Unicode, XML
 from itools.handlers import File, register_handler_class
 from itools.web import get_context
 from itools.xml import (XMLNamespace, XMLParser, START_ELEMENT, END_ELEMENT,
@@ -30,10 +30,12 @@ from registry import get_object_class
 
 
 
-class Record(object):
+class Record(DataType):
 
+    # Set your own default list to avoid sharing this instance
     default = []
     schema = {}
+
 
 
 def get_datatype(format, name):
@@ -117,7 +119,7 @@ class Metadata(File):
                     # FIXME tell how to decode Records while migrating from
                     # 0.16 to 0.20
                     if name in ('ikaaro:wf_transition', 'ikaaro:history'):
-                        datatype = Record
+                        datatype = Record(default=[])
                     else:
                         datatype = schema.get(name, String)
                 else:
