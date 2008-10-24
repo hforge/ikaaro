@@ -252,8 +252,6 @@ class TrackerView(BrowseForm):
         # Adjust Sorting
         if sort_by == 'mtime':
             sort_by = 'mtime_sort'
-        elif sort_by == 'id':
-            sort_by = 'name'
         items = results.get_documents(sort_by=sort_by, reverse=reverse,
                                       start=start, size=size)
 

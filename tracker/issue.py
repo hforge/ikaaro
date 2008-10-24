@@ -78,7 +78,8 @@ class Issue(Folder):
     def get_catalog_fields(self):
         fields = Folder.get_catalog_fields(self)
         # Metadata
-        names = ['product', 'module', 'version', 'type', 'state', 'priority']
+        names = [
+            'id', 'product', 'module', 'version', 'type', 'state', 'priority']
         for name in names:
             field = IntegerField(name, is_stored=True)
             fields.append(field)
@@ -91,6 +92,7 @@ class Issue(Folder):
 
     def get_catalog_values(self):
         document = Folder.get_catalog_values(self)
+        document['id'] = int(self.name)
         names = 'product', 'module', 'version', 'type', 'priority', 'state'
         for name in names:
             document[name] = self.get_value(name)
