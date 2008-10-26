@@ -79,13 +79,20 @@ class StoreSearchMenu(ContextMenu):
     template = '/ui/tracker/menu_remember.xml'
 
     def get_namespace(self, resource, context):
+        # Default
+        search_title = None
+
+        # Selected Search
         name = context.get_query_value('search_name')
         if name:
-            search = resource.get_resource(name)
-            search_title = search.get_title()
-        else:
-            search_title = None
+            try:
+                search = resource.get_resource(name)
+            except LookupError:
+                pass
+            else:
+                search_title = search.get_title()
 
+        # Ok
         return {
             'title': self.title,
             'search_name': name,
@@ -212,6 +219,21 @@ class TrackerView(BrowseForm):
     def get_query_schema(self):
         return merge_dics(BrowseForm.get_query_schema(self),
                           self.tracker_schema)
+
+
+    def GET(self, resource, context):
+        # Check stored search
+        search_name = context.query['search_name']
+        if search_name:
+            try:
+                search = resource.get_resource(search_name)
+            except LookupError:
+                msg = MSG(u'Unknown stored search "${sname}".')
+                goto = ';search'
+                return context.come_back(msg, goto=goto, sname=search_name)
+
+        # Ok
+        return BrowseForm.GET(self, resource, context)
 
 
     def get_namespace(self, resource, context):

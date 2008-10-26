@@ -179,12 +179,7 @@ class Tracker(Folder):
         query = context.query
         search_name = query.get('search_name')
         if search_name:
-            try:
-                search = self.get_resource(search_name)
-            except LookupError:
-                msg = ERROR(u'Unknown stored search "${sname}".')
-                goto = ';search'
-                return context.come_back(msg, goto=goto, sname=search_name)
+            search = self.get_resource(search_name)
             get_value = search.handler.get_value
             get_values = search.get_values
         else:
