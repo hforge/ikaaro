@@ -365,7 +365,8 @@ class FolderBrowseContent(SearchForm):
                  'return confirm("%s");' % message.gettext().encode('utf_8')),
                 ('rename', MSG(u'Rename'), 'button_rename', None),
                 ('copy', MSG(u'Copy'), 'button_copy', None),
-                ('cut', MSG(u'Cut'), 'button_cut', None)]
+                ('cut', MSG(u'Cut'), 'button_cut', None),
+                ('publish', MSG(u"Publish"), 'button_publish', None)]
 
         # Paste
         if context.has_cookie('ikaaro_cp'):
@@ -545,6 +546,36 @@ class FolderBrowseContent(SearchForm):
         context.message = messages.MSG_PASTED
 
 
+    def action_publish(self, resource, context, form):
+        resources = [resource.get_resource(id) for id in form['ids']]
+        ac = resource.get_access_control()
+        user = context.user
+        transition = 'publish'
+        allowed = [image for image in resources
+                    if isinstance(image, WorkflowAware)
+                    and ac.is_allowed_to_trans(user, image, transition)]
+
+        if not allowed:
+            context.message = messages.MSG_NONE_ALLOWED
+            return
+
+        for image in resources:
+            if not isinstance(image, WorkflowAware):
+                # A folder was selected
+                continue
+            if image.get_statename() == 'public':
+                continue
+            # Update workflow history
+            property = {'date': datetime.now(),
+                        'user': user.name,
+                        'name': transition,
+                        'comments': u""}
+            image.set_property('wf_transition', property)
+            image.do_trans(transition)
+
+        context.message = messages.MSG_PUBLISHED
+
+
 
 class FolderPreviewContent(FolderBrowseContent):
 
@@ -568,18 +599,6 @@ class FolderPreviewContent(FolderBrowseContent):
         query = OrQuery(EqQuery('is_image', '1'),
                         EqQuery('format', 'folder'))
         return FolderBrowseContent.get_items(self, resource, context, query)
-
-
-    def get_actions(self, resource, context, items):
-        actions = FolderBrowseContent.get_actions(self, resource, context,
-                                                  items)
-        if not actions:
-            return []
-
-        # Publish at once
-        actions.append(('publish', MSG(u"Publish"), 'button_publish', None))
-
-        return actions
 
 
     def get_table_head(self, resource, context, items, actions=None):
@@ -698,36 +717,6 @@ class FolderPreviewContent(FolderBrowseContent):
                 'columns': table_head,
                 'rows': rows,
                 'actions': actions}
-
-
-    def action_publish(self, resource, context, form):
-        resources = [resource.get_resource(id) for id in form['ids']]
-        ac = resource.get_access_control()
-        user = context.user
-        transition = 'publish'
-        allowed = [image for image in resources
-                    if isinstance(image, WorkflowAware)
-                    and ac.is_allowed_to_trans(user, image, transition)]
-
-        if not allowed:
-            context.message = messages.MSG_NONE_ALLOWED
-            return
-
-        for image in resources:
-            if not isinstance(image, WorkflowAware):
-                # A folder was selected
-                continue
-            if image.get_statename() == 'public':
-                continue
-            # Update workflow history
-            property = {'date': datetime.now(),
-                        'user': user.name,
-                        'name': transition,
-                        'comments': u""}
-            image.set_property('wf_transition', property)
-            image.do_trans(transition)
-
-        context.message = messages.MSG_PUBLISHED
 
 
 
