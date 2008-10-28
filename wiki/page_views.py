@@ -37,6 +37,7 @@ from itools import vfs
 from itools.datatypes import DateTime, String, Unicode
 from itools.gettext import MSG
 from itools.handlers import checkid, get_handler, File as FileHandler
+from itools.html import XHTMLFile
 from itools.i18n import format_datetime
 from itools.xml import XMLParser, XMLError
 from itools.uri import get_reference
@@ -402,10 +403,18 @@ class WikiPageHelp(STLView):
 
         source = resource.get_resource('/ui/wiki/help.txt')
         source = source.to_str()
+
+        overrides = dict(resource.overrides)
+        overrides['stylesheet'] = ''
         html = publish_string(source, writer_name='html',
-                              settings_overrides=resource.overrides)
+                               settings_overrides=overrides)
+        document = XHTMLFile(string=html)
+        events = document.get_body().get_content_elements()
+
+        # Now remove some magic to make the help work like a wiki page
+        source = source.split('.. XXX SPLIT HERE')[0]
 
         return {
             'help_source': source,
-            'help_html': XMLParser(html),
+            'help_html': events,
         }
