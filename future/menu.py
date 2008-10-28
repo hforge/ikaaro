@@ -28,6 +28,7 @@ from ikaaro.forms import stl_namespaces
 from ikaaro.messages import MSG_DELETE_SELECTION, MSG_NEW_RESOURCE
 from ikaaro.registry import register_resource_class
 from ikaaro.resource_views import Breadcrumb, DBResourceAddLink
+from ikaaro.resource_views import DBResourceNewInstance
 from ikaaro.table import OrderedTableFile, OrderedTable, OrderedTableView
 
 
@@ -216,6 +217,8 @@ class MenuAddLink(DBResourceAddLink):
     template = '/ui/future/menu_addlink.xml'
 
     def get_namespace(self, resource, context):
+        namespace = DBResourceAddLink.get_namespace(self, resource, context)
+
         # For the breadcrumb
         if isinstance(resource, Menu):
             start = resource.parent.parent
@@ -223,12 +226,11 @@ class MenuAddLink(DBResourceAddLink):
             start = resource.parent
 
         # Construct namespace
-        return {
-            'bc': Breadcrumb(filter_type=File, start=start, icon_size=48),
-            'message': context.message,
-            'scripts': context.scripts,
-            'target_id': context.get_form_value('target_id')
-        }
+        namespace['bc'] = Breadcrumb(filter_type=File, start=start,
+                                     icon_size=48)
+        namespace['target_id'] = context.get_form_value('target_id')
+
+        return namespace
 
 
 
@@ -327,7 +329,6 @@ class MenuFolder(Folder):
     class_id = 'menu-folder'
     class_title = MSG(u'iKaaro Menu')
     __fixed_handlers__ = Folder.__fixed_handlers__ + ['menu']
-
 
     @staticmethod
     def _make_resource(cls, folder, name, **kw):

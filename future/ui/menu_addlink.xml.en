@@ -5,8 +5,15 @@
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
   <head>
     <title>Epoz-Toolbox</title>
-    <link rel="stylesheet" type="text/css" href="../aruni/aruni.css" />
-    <script type="text/javascript" stl:repeat="script scripts" src="${script}" />
+    <link type="text/css" rel="stylesheet" stl:repeat="style styles"
+      href="${style}" />
+    <script type="text/javascript" stl:repeat="script scripts"
+      src="${script}" />
+    <script type="text/javascript">
+      $(document).ready(function() {
+        tabme();
+      })
+    </script>
     <script type="text/javascript">
       function select_link(value) {
         var opener = window.opener;
@@ -40,63 +47,90 @@
 
   <body>
     <div id="body">
+
+      <!-- tabs -->
+      <p class="tabme">
+        <a href="#browse" onclick="tabme_show(event, this)">Browse</a>
+        <a href="#external" onclick="tabme_show(event, this)">External Link</a>
+        <a href="#upload" onclick="tabme_show(event, this)">Upload</a>
+      </p>
+
       <!-- Message -->
       <div id="message" stl:if="message">Message :${message}</div>
-      <!-- External Link -->
-      <h3>Type the URL of an external resource</h3>
-      <form>
-        <input type="text" id="uri" name="uri" size="40" value="http://"/>
-        <input type="button" value="Add" class="button_ok"
-          onclick="select_uri()"/>
-      </form>
+
       <!-- Internal Link -->
-      <h3>Browse and link to a File from the workspace</h3>
-      <!-- Breadcrumbs -->
-      <div id="maintitle">
-        <div id="breadcrumbs">
-          <label>Location:</label>
-          <span stl:repeat="x bc/path">
-            <a href="${x/url}" title="${x/title}">${x/short_title}</a> /
-          </span>
+      <div id="browse">
+        <h3>Browse and link to a File from the workspace</h3>
+        <!-- Breadcrumbs -->
+        <div id="maintitle">
+          <div id="breadcrumbs">
+            <label>Location:</label>
+            <span stl:repeat="x bc/path">
+              <a href="${x/url}" title="${x/title}">${x/short_title}</a> /
+            </span>
+          </div>
         </div>
+        <table border="0" cellpadding="1" cellspacing="1" width="100%"
+          class="thumbs">
+          <tr>
+            <th width="150">Browse Content</th>
+            <th>Select Resource</th>
+          </tr>
+          <tr>
+            <td valign="top">
+              <!-- Browse Folders -->
+              <stl:block stl:repeat="item bc/items">
+                <dl stl:if="item/is_folder">
+                  <dt>
+                    <a href="${item/url}" title="${item/title}"><img alt=""
+                        src="${item/icon}" width="16"
+                        height="16"/>&nbsp;${item/short_title}</a>
+                  </dt>
+                </dl>
+              </stl:block>
+            </td>
+            <td valign="top">
+              <!-- Files and Folders to select -->
+              <stl:block stl:repeat="item bc/items">
+                <dl class="thumb">
+                  <dt>
+                    <img alt="" title="${item/item_type}"
+                      src="${item/icon}" width="48" height="48" />
+                  </dt>
+                  <dd>
+                    <abbr
+                      title="${item/title}">${item/short_title}</abbr><br/>
+                    <a href="javascript:select_link('${item/path}')">Select</a>
+                  </dd>
+                </dl>
+              </stl:block>
+            </td>
+          </tr>
+        </table>
       </div>
-      <table border="0" cellpadding="1" cellspacing="1" width="100%"
-        class="thumbs">
-        <tr>
-          <th width="150">Browse Content</th>
-          <th>Select Resource</th>
-        </tr>
-        <tr>
-          <td valign="top">
-            <!-- Browse Folders -->
-            <stl:block stl:repeat="item bc/items">
-              <dl stl:if="item/is_folder">
-                <dt>
-                  <a href="${item/url}" title="${item/title}"><img alt=""
-                      src="${item/icon}" width="16"
-                      height="16"/>&nbsp;${item/short_title}</a>
-                </dt>
-              </dl>
-            </stl:block>
-          </td>
-          <td valign="top">
-            <!-- Files and Folders to select -->
-            <stl:block stl:repeat="item bc/items">
-              <dl class="thumb">
-                <dt>
-                  <img alt="" title="${item/item_type}"
-                    src="${item/icon}" width="48" height="48" />
-                </dt>
-                <dd>
-                  <abbr
-                    title="${item/title}">${item/short_title}</abbr><br/>
-                  <a href="javascript:select_link('${item/path}')">Select</a>
-                </dd>
-              </dl>
-            </stl:block>
-          </td>
-        </tr>
-      </table>
+
+      <!-- External Link -->
+      <div id="external" stl:if="wiki_mode">
+        <h3>Type the URL of an external resource</h3>
+        <form>
+          <input type="text" id="uri" name="uri" size="40" value="http://"/>
+          <input type="button" value="Add" class="button_ok"
+            onclick="select_uri()"/>
+        </form>
+      </div>
+
+      <!-- Upload and Link -->
+      <div id="upload">
+        <h3>Upload a file to the current folder and link to it:</h3>
+        <form action=";add_link" method="post" enctype="multipart/form-data">
+          <input type="hidden" name="target_path" value="${bc/target_path}"/>
+          <input type="hidden" name="mode" value="${mode}" />
+          <input id="file" name="file" size="35" type="file"/>
+          <br/>
+          <input class="button_upload" type="submit" value="Upload and Link"/>
+        </form>
+      </div>
     </div>
+
   </body>
 </html>
