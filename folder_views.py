@@ -30,7 +30,7 @@ from itools.gettext import MSG
 from itools.handlers import checkid, merge_dics
 from itools.i18n import format_datetime
 from itools.uri import get_reference, Path
-from itools.web import BaseView, STLForm
+from itools.web import BaseView, STLForm, ERROR
 from itools.xapian import AndQuery, EqQuery, NotQuery, OrQuery, PhraseQuery
 from itools.xml import XMLParser
 
@@ -84,7 +84,13 @@ class FolderView(BaseView):
     access = True
 
     def GET(self, resource, context):
-        index = resource.get_resource('index')
+        try:
+            index = resource.get_resource('index')
+        except LookupError:
+            context.message = ERROR(
+                u'There is not an "index" web page. Could not render this '
+                u'view.')
+            return ''
         # FIXME We need to rewrite the URLs
         return index.view.GET(index, context)
 
