@@ -5,10 +5,10 @@
   <table>
     <tr>
       <td valign="top" width="50%">
-        <pre>${help_source}</pre>
+        ${help_html}
       </td>
       <td valign="top" width="50%">
-        ${help_html}
+        <pre>${help_source}</pre>
       </td>
     </tr>
   </table>
