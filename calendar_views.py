@@ -489,7 +489,8 @@ class EditEventForm(CalendarView, STLForm):
             dtend_time = None
 
         # STATUS is an enumerate
-        status = properties.get('STATUS')
+        get_value = resource.handler.get_record_value
+        status = get_value(event, 'STATUS')
         status = Status().get_namespace(status)
 
         # Show action buttons only if current user is authorized
