@@ -73,6 +73,10 @@ legend {
   background-image: url(../icons/16x16/mail.png);
 }
 
+#content {
+  width: 100%;
+}
+
 #right {
   width: 210px;
 }
