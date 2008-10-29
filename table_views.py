@@ -317,6 +317,38 @@ class OrderedTableView(TableView):
         return list(items)
 
 
+    def sort_and_batch(self, resource, context, items):
+        # Sort
+        sort_by = context.query['sort_by']
+        if sort_by == 'order':
+            reverse = context.query['reverse']
+            ordered_ids = list(resource.handler.get_record_ids_in_order())
+            f = lambda x: ordered_ids.index(x.id)
+            items.sort(cmp=lambda x,y: cmp(f(x), f(y)), reverse=reverse)
+
+            # Batch
+            start = context.query['batch_start']
+            size = context.query['batch_size']
+            return items[start:start+size]
+
+        return TableView.sort_and_batch(self, resource, context, items)
+
+
+    def get_table_columns(self, resource, context):
+        columns = TableView.get_table_columns(self, resource, context)
+        columns.append(('order', MSG(u'Order')))
+
+        return columns
+
+
+    def get_item_value(self, resource, context, item, column):
+        if column == 'order':
+            ordered_ids = list(resource.handler.get_record_ids_in_order())
+            return ordered_ids.index(item.id) + 1
+
+        return TableView.get_item_value(self, resource, context, item, column)
+
+
     def get_actions(self, resource, context, items):
         if len(items) == 0:
             return []
