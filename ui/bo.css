@@ -207,14 +207,14 @@ input {
 }
 
 #message .info {
-  border-color: #ff0;
-  background-color: #ffffc2;
+  border-color: #e7db52;
+  background-color: #ffffe7;
   background-image: url(icons/16x16/message.png);
 }
 
 #message .error {
- border-color: #f00;
- background-color: #ffc2c2;
+ border-color: #e75252;
+ background-color: #ffe7e7;
  background-image: url(icons/16x16/error.png);
 }
 
