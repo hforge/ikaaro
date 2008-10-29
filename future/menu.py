@@ -23,33 +23,23 @@ from itools.gettext import MSG
 # Import from ikaaro
 from ikaaro.file import File
 from ikaaro.folder import Folder
-from ikaaro.forms import Widget, TextWidget, SelectWidget, ReadOnlyWidget
+from ikaaro.forms import TextWidget, SelectWidget, ReadOnlyWidget
 from ikaaro.forms import stl_namespaces
 from ikaaro.messages import MSG_DELETE_SELECTION, MSG_NEW_RESOURCE
 from ikaaro.registry import register_resource_class
 from ikaaro.resource_views import Breadcrumb, DBResourceAddLink
-from ikaaro.resource_views import DBResourceNewInstance
 from ikaaro.table import OrderedTableFile, OrderedTable, OrderedTableView
 
 
 
-class PathWidget(Widget):
+class PathWidget(TextWidget):
 
-    template = list(XMLParser("""
-        <input type="text" name="${name}" value="${value}" id="${name}" />
+    template = TextWidget.template + list(XMLParser("""
         <input id="trigger_link" type="button" value="..."
                name="trigger_link"
                onclick="popup(';add_link?target_id=${name}&amp;mode=menu',
                               620, 300);"/>
         """, stl_namespaces))
-
-
-    def to_html(self, datatype, value):
-        namespace = {}
-        namespace['name'] = self.name
-        namespace['value'] = value
-
-        return stl(events=self.template, namespace=namespace)
 
 
 
@@ -63,10 +53,10 @@ class Target(Enumerate):
 class MenuFile(OrderedTableFile):
 
     record_schema = {
-        'title': Unicode(title=MSG(u'Title')),
-        'path': String(title=MSG(u'Path')),
-        'target': Target(title=MSG(u'Target'), mandatory=True, default='_top'),
-        'child': String(title=MSG(u'Child'))}
+        'title': Unicode,
+        'path': String,
+        'target': Target(mandatory=True, default='_top'),
+        'child': String}
 
 
 class MenuView(OrderedTableView):
@@ -74,6 +64,7 @@ class MenuView(OrderedTableView):
     schema = {
         'ids': Integer(multiple=True, mandatory=True),
     }
+
 
     def get_items(self, resource, context):
         items = resource.handler.get_records_in_order()
@@ -245,10 +236,10 @@ class Menu(OrderedTable):
     view = MenuView()
     add_link = MenuAddLink()
 
-    form = [TextWidget(title=MSG(u'Title'), name='title'),
-            PathWidget(title=MSG(u'Path'), name='path'),
-            SelectWidget(title=MSG(u'Target'), name='target'),
-            ReadOnlyWidget(name='child')]
+    form = [TextWidget('title', title=MSG(u'Title')),
+            PathWidget('path', title=MSG(u'Path')),
+            SelectWidget('target', title=MSG(u'Target')),
+            ReadOnlyWidget('child')]
 
 
     def before_remove_record(self, id):
@@ -329,13 +320,16 @@ class MenuFolder(Folder):
     class_id = 'menu-folder'
     class_title = MSG(u'iKaaro Menu')
     __fixed_handlers__ = Folder.__fixed_handlers__ + ['menu']
+    # Your menu ressource (for overriding the record_schema and form)
+    class_menu = Menu
 
     @staticmethod
     def _make_resource(cls, folder, name, **kw):
         Folder._make_resource(cls, folder, name, **kw)
         # Menu root
-        metadata = Menu.build_metadata(title={'en': u"Menu", 'fr': u"Menu"})
-        folder.set_handler('%s/menu.metadata' % name, metadata)
+        cls_menu = cls.class_menu
+        cls_menu._make_resource(cls_menu, folder, '%s/menu' % name,
+                                title={'en': u"Menu", 'fr': u"Menu"})
 
 
     def get_document_types(self):
