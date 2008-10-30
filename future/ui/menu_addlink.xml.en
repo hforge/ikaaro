@@ -17,7 +17,8 @@
     <script type="text/javascript">
       function select_link(value) {
         var opener = window.opener;
-        var target = opener.document.getElementById('${target_id}');
+        var form = opener.document.getElementById('autoform');
+        var target = form.${target_id};
         if (target)
           target.value = value;
         window.close();

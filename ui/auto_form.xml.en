@@ -4,7 +4,8 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
-<form action="${action}" method="post" enctype="multipart/form-data">
+<form id="autoform" name="autoform" action="${action}" method="post"
+  enctype="multipart/form-data">
   <fieldset>
     <legend>${title}</legend>
     <p stl:if="has_required_widget">${required_msg}</p>
