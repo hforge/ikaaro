@@ -23,37 +23,40 @@ from operator import itemgetter
 # Import from itools
 from itools.datatypes import Integer, String
 from itools.gettext import MSG
-from itools.stl import stl
+from itools.handlers import merge_dics
 from itools.web import STLForm, STLView, INFO
 
 # Import from ikaaro
-from forms import AutoForm, get_default_widget
+from forms import AutoForm, get_default_widget, MultilineWidget
+from forms import title_widget, description_widget, subject_widget
 import messages
-from registry import register_resource_class
+from resource_views import DBResourceEdit
 from utils import get_parameters
 from views import BrowseForm
 
 
-class TextEdit(STLForm):
+class TextEdit(DBResourceEdit):
 
-    access = 'is_allowed_to_edit'
     title = MSG(u'Edit Inline')
     icon = 'edit.png'
-    template = '/ui/text/edit.xml'
-    schema = {
-        'data': String(mandatory=True),
-    }
+    schema = merge_dics(DBResourceEdit.schema,
+                        data=String(mandatory=True))
+    widgets = [title_widget, MultilineWidget('data', title=MSG(u"Content"),
+                                             rows=19, cols=69),
+               description_widget, subject_widget]
 
 
-    def get_namespace(self, resource, context):
-        return {'data': resource.handler.to_str()}
+    def get_value(self, resource, context, name, datatype):
+        if name == 'data':
+            return resource.handler.to_str()
+        return DBResourceEdit.get_value(self, resource, context, name,
+                                        datatype)
 
 
     def action(self, resource, context, form):
         data = form['data']
         resource.handler.load_state_from_string(data)
-        # Ok
-        context.message = messages.MSG_CHANGES_SAVED
+        return DBResourceEdit.action(self, resource, context, form)
 
 
 

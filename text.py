@@ -25,6 +25,7 @@ from itools.xml import XMLFile
 
 # Import from ikaaro
 from file import File
+from file_views import FileUpload
 from registry import register_resource_class
 from text_views import TextEdit, TextView, TextExternalEdit, POEdit
 from text_views import CSVView, CSVAddRow, CSVEditRow
@@ -38,7 +39,7 @@ class Text(File):
     class_title = MSG(u'Plain Text')
     class_icon16 = 'icons/16x16/text.png'
     class_icon48 = 'icons/48x48/text.png'
-    class_views = ['view', 'edit', 'externaledit', 'upload', 'edit',
+    class_views = ['view', 'edit', 'externaledit', 'upload',
                    'edit_state', 'history']
     class_handler = TextFile
 
@@ -48,8 +49,9 @@ class Text(File):
 
 
     # Views
-    edit = TextEdit()
     view = TextView()
+    edit = TextEdit()
+    upload = FileUpload()
     externaledit = TextExternalEdit()
 
 
