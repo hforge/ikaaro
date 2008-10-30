@@ -316,9 +316,10 @@ class SelectRadio(Widget):
 class DateWidget(Widget):
 
     template = list(XMLParser("""
-        <input type="text" name="${name}" value="${value}" id="${name}" />
+        <input type="text" name="${name}" value="${value}" id="${name}"
+          size="${size}"/>
         <input id="trigger_date_${name}" type="button" value="..."
-          name="trigger_date_${name}" class="${class}" size="${size}" />
+          name="trigger_date_${name}" class="${class}" />
         <script language="javascript">
           Calendar.setup({inputField: "${name}", ifFormat: "${format}",
                           button: "trigger_date_${name}"});
