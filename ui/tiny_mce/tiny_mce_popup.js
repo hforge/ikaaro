@@ -25,13 +25,16 @@ tinyMCEPopup = {
 
 		// Setup local DOM
 		t.dom = t.editor.windowManager.createInstance('tinymce.dom.DOMUtils', document);
+
         /*
          * iKaaro: choose if we include original css or not
          */
         if (t.getWindowArg('use_css') == "no")
             ;
         else
-            t.dom.loadCSS(t.features.popup_css || t.editor.settings.popup_css);
+           // Enables you to skip loading the default css
+           if (t.features.popup_css !== false)
+               t.dom.loadCSS(t.features.popup_css || t.editor.settings.popup_css);
 
 		// Setup on init listeners
 		t.listeners = [];
@@ -183,76 +186,72 @@ tinyMCEPopup = {
 	},*/
 
 	_onDOMLoaded : function() {
-		var t = this, ti = document.title, bm, h;
-
-        /*
-         * iKaaro: check if tinymce is not null before calling tinymce methods,
-         * because when we upload and insert a document tinymce is null with
-         * Gecko engine.
-         */
-        var ikaaro_tinymce_ok = (tinymce != null);
+		var t = this, ti = document.title, bm, h, nv;
 
 		// Translate page
-		h = document.body.innerHTML;
+		if (t.features.translate_i18n !== false) {
+			h = document.body.innerHTML;
 
-        if (ikaaro_tinymce_ok) { // iKaaro
-            // Replace a=x with a="x" in IE
-            if (tinymce.isIE)
-                h = h.replace(/ (value|title|alt)=([^"][^\s>]+)/gi, ' $1="$2"')
+			// Replace a=x with a="x" in IE
+			if (tinymce.isIE)
+				h = h.replace(/ (value|title|alt)=([^"][^\s>]+)/gi, ' $1="$2"')
 
-            document.dir = t.editor.getParam('directionality','');
-            document.body.innerHTML = t.editor.translate(h);
-            document.title = ti = t.editor.translate(ti);
-            document.body.style.display = '';
-        }
+			document.dir = t.editor.getParam('directionality','');
+
+			if ((nv = t.editor.translate(h)) && nv != h)
+				document.body.innerHTML = nv;
+
+			if ((nv = t.editor.translate(ti)) && nv != ti)
+				document.title = ti = nv;
+		}
+
+		document.body.style.display = '';
 
 		// Restore selection in IE when focus is placed on a non textarea or input element of the type text
-        if (ikaaro_tinymce_ok) { // iKaaro
-            if (tinymce.isIE)
-                document.attachEvent('onmouseup', tinyMCEPopup._restoreSelection);
-        }
+		if (tinymce.isIE)
+			document.attachEvent('onmouseup', tinyMCEPopup._restoreSelection);
+
 		t.restoreSelection();
 		t.resizeToInnerSize();
 
 		// Set inline title
-        if (ikaaro_tinymce_ok) { // iKaaro
-            if (!t.isWindow)
-                t.editor.windowManager.setTitle(window, ti);
-            else
-                window.focus();
+		if (!t.isWindow)
+			t.editor.windowManager.setTitle(window, ti);
+		else
+			window.focus();
 
-            if (!tinymce.isIE && !t.isWindow) {
-                tinymce.dom.Event._add(document, 'focus', function() {
-                    t.editor.windowManager.focus(t.id)
-                });
-            }
+		if (!tinymce.isIE && !t.isWindow) {
+			tinymce.dom.Event._add(document, 'focus', function() {
+				t.editor.windowManager.focus(t.id)
+			});
+		}
 
-            // Patch for accessibility
-            tinymce.each(t.dom.select('select'), function(e) {
-                e.onkeydown = tinyMCEPopup._accessHandler;
-            });
+		// Patch for accessibility
+		tinymce.each(t.dom.select('select'), function(e) {
+			e.onkeydown = tinyMCEPopup._accessHandler;
+		});
 
-            // Call onInit
-            // Init must be called before focus so the selection won't get lost by the focus call
-            tinymce.each(t.listeners, function(o) {
-                o.func.call(o.scope, t.editor);
-            });
+		// Call onInit
+		// Init must be called before focus so the selection won't get lost by the focus call
+		tinymce.each(t.listeners, function(o) {
+			o.func.call(o.scope, t.editor);
+		});
 
-            // Move focus to window
-            if (t.getWindowArg('mce_auto_focus', true)) {
-                window.focus();
+		// Move focus to window
+		if (t.getWindowArg('mce_auto_focus', true)) {
+			window.focus();
 
-                // Focus element with mceFocus class
-                tinymce.each(document.forms, function(f) {
-                    tinymce.each(f.elements, function(e) {
-                        if (t.dom.hasClass(e, 'mceFocus') && !e.disabled) {
-                            e.focus();
-                            return false; // Break loop
-                        }
-                    });
-                });
-            }
-        }
+			// Focus element with mceFocus class
+			tinymce.each(document.forms, function(f) {
+				tinymce.each(f.elements, function(e) {
+					if (t.dom.hasClass(e, 'mceFocus') && !e.disabled) {
+						e.focus();
+						return false; // Break loop
+					}
+				});
+			});
+		}
+
 		document.onkeyup = tinyMCEPopup._closeWinKeyHandler;
 	},
 
