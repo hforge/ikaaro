@@ -341,10 +341,14 @@ class OrderedTableView(TableView):
 
     table_actions = [
         RemoveButton,
-        Button(name='order_up', title=MSG(u'Order up')),
-        Button(name='order_down', title=MSG(u'Order down')),
-        Button(name='order_top', title=MSG(u'Order top')),
-        Button(name='order_bottom', title=MSG(u'Order bottom')),
+        Button(name='order_up', title=MSG(u'Order up'),
+               access='is_allowed_to_edit'),
+        Button(name='order_down', title=MSG(u'Order down'),
+               access='is_allowed_to_edit'),
+        Button(name='order_top', title=MSG(u'Order top'),
+               access='is_allowed_to_edit'),
+        Button(name='order_bottom', title=MSG(u'Order bottom'),
+               access='is_allowed_to_edit'),
     ]
 
 

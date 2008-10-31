@@ -16,16 +16,16 @@
 
 # Import from itools
 from itools.datatypes import String, Enumerate, Unicode, Integer
-from itools.stl import stl
 from itools.xml import XMLParser
 from itools.gettext import MSG
 
 # Import from ikaaro
+from ikaaro.buttons import Button
 from ikaaro.file import File
 from ikaaro.folder import Folder
 from ikaaro.forms import TextWidget, SelectWidget, ReadOnlyWidget
 from ikaaro.forms import stl_namespaces
-from ikaaro.messages import MSG_DELETE_SELECTION, MSG_NEW_RESOURCE
+from ikaaro import messages
 from ikaaro.registry import register_resource_class
 from ikaaro.resource_views import Breadcrumb, DBResourceAddLink
 from ikaaro.table import OrderedTableFile, OrderedTable, OrderedTableView
@@ -59,11 +59,23 @@ class MenuFile(OrderedTableFile):
         'child': String}
 
 
+
+class ChildButton(Button):
+
+    access = 'is_allowed_to_edit'
+    name = 'add_child'
+    title = MSG(u'Add Child')
+    css = 'button_add'
+
+
+
 class MenuView(OrderedTableView):
 
     schema = {
         'ids': Integer(multiple=True, mandatory=True),
     }
+
+    table_actions = [ChildButton] + OrderedTableView.table_actions
 
 
     def get_items(self, resource, context):
@@ -98,14 +110,6 @@ class MenuView(OrderedTableView):
 
         return OrderedTableView.get_item_value(self, resource, context, item,
                                                column)
-
-
-    def get_table_actions(self, resource, context):
-        actions = OrderedTableView.get_table_actions(self, resource, context)
-        actions.insert(0,
-            Button(name='add_child', title=MSG(u'Add Child'),
-                   css='button_add'))
-        return actions
 
 
     #######################################################################
@@ -188,7 +192,7 @@ class MenuView(OrderedTableView):
             resource.handler.update_record(parent_id,
                                            **{'child': name})
 
-        context.message = MSG_NEW_RESOURCE
+        context.message = messages.MSG_NEW_RESOURCE
 
 
 
