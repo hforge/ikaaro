@@ -145,6 +145,8 @@ class BrowseForm(STLForm):
     table_css = None
     table_columns = []
     table_actions = []
+    # Actions are external to current form
+    external_form = False
 
 
     def get_namespace(self, resource, context):
@@ -258,7 +260,7 @@ class BrowseForm(STLForm):
         for name, title, sortable in columns:
             if name == 'checkbox':
                 # Type: checkbox
-                if  actions:
+                if self.external_form or actions:
                     columns_ns.append({'is_checkbox': True})
             elif title is None or not sortable:
                 # Type: nothing or not sortable
@@ -317,8 +319,9 @@ class BrowseForm(STLForm):
             for column in columns:
                 column = column[0]
                 # Skip the checkbox column if there are not any actions
-                if column == 'checkbox' and not actions:
-                    continue
+                if column == 'checkbox':
+                    if not self.external_form and not actions:
+                        continue
 
                 value = self.get_item_value(resource, context, item, column)
                 column_ns = {
