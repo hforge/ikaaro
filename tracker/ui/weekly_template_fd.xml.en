@@ -5,9 +5,9 @@
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
   <td class="color0">
-    <a href="${issue/url}">[#${issue/number}]</a>
-    ${issue/title}
-    (${resource/title})
+    <a href="${event/issue/url}">[#${event/issue/number}]</a>
+    ${event/issue/title}
+    (${event/resource/title})
   </td>
 
 </stl:block>
