@@ -35,6 +35,8 @@ from itools.xapian import AndQuery, EqQuery, NotQuery, OrQuery, PhraseQuery
 from itools.xml import XMLParser
 
 # Import from ikaaro
+from buttons import RemoveButton, RenameButton, CopyButton, CutButton
+from buttons import PasteButton, PublishButton
 from datatypes import CopyCookie, ImageWidth
 from exceptions import ConsistencyError
 import messages
@@ -350,29 +352,9 @@ class FolderBrowseContent(SearchForm):
             return XMLParser(state)
 
 
-    def get_actions(self, resource, context, items):
-        # Access Control
-        ac = resource.get_access_control()
-        if not ac.is_allowed_to_edit(context.user, resource):
-            return []
-
-        # Remove, Copy, Cut, Paste
-        actions = []
-        if len(items):
-            message = messages.MSG_DELETE_SELECTION
-            actions = [
-                ('remove', MSG(u'Remove'), 'button_delete',
-                 'return confirm("%s");' % message.gettext().encode('utf_8')),
-                ('rename', MSG(u'Rename'), 'button_rename', None),
-                ('copy', MSG(u'Copy'), 'button_copy', None),
-                ('cut', MSG(u'Cut'), 'button_cut', None),
-                ('publish', MSG(u"Publish"), 'button_publish', None)]
-
-        # Paste
-        if context.has_cookie('ikaaro_cp'):
-            actions.append(('paste', MSG(u'Paste'), 'button_paste', None))
-
-        return actions
+    table_actions = [
+        RemoveButton, RenameButton, CopyButton, CutButton, PasteButton,
+        PublishButton]
 
 
     #######################################################################
@@ -738,8 +720,8 @@ class FolderLastChanges(FolderBrowseContent):
 
 
 class FolderOrphans(FolderBrowseContent):
-    """Orphans are files not referenced in another resource of the database.  It
-    extends the concept of "orphans pages" from the wiki to all file-like
+    """Orphans are files not referenced in another resource of the database.
+    It extends the concept of "orphans pages" from the wiki to all file-like
     resources.
 
     Orphans folders generally don't make sense because they serve as

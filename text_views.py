@@ -27,6 +27,7 @@ from itools.handlers import merge_dics
 from itools.web import STLForm, STLView, INFO
 
 # Import from ikaaro
+from buttons import RemoveButton
 from forms import AutoForm, get_default_widget, MultilineWidget
 from forms import title_widget, description_widget, subject_widget
 import messages
@@ -217,15 +218,7 @@ class CSVView(BrowseForm):
         return value
 
 
-    def get_actions(self, resource, context, items):
-        if len(items) == 0:
-            return []
-
-        ac = resource.get_access_control()
-        if ac.is_allowed_to_edit(context.user, resource):
-            return [('remove', MSG(u'Remove'), 'button_delete', None)]
-
-        return []
+    table_actions = [RemoveButton]
 
 
     def action_remove(self, resource, context, form):

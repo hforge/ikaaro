@@ -27,6 +27,7 @@ from itools.web import MSG_MISSING_OR_INVALID, INFO, ERROR
 from itools.xapian import PhraseQuery
 
 # Import from ikaaro
+from buttons import Button, RemoveButton
 from forms import AutoForm
 import messages
 from views import SearchForm
@@ -151,18 +152,7 @@ class TableView(SearchForm):
         return value
 
 
-    def get_actions(self, resource, context, items):
-        if len(items) == 0:
-            return []
-
-        ac = resource.get_access_control()
-        if ac.is_allowed_to_edit(context.user, resource):
-            message = messages.MSG_DELETE_SELECTION.gettext()
-            message_utf8 = message.encode('utf_8')
-            return [('remove', MSG(u'Remove'), 'button_delete',
-                     'return confirm("%s");' % message_utf8)]
-
-        return []
+    table_actions = [RemoveButton]
 
 
     #######################################################################
@@ -349,22 +339,13 @@ class OrderedTableView(TableView):
         return TableView.get_item_value(self, resource, context, item, column)
 
 
-    def get_actions(self, resource, context, items):
-        if len(items) == 0:
-            return []
-
-        ac = resource.get_access_control()
-        if ac.is_allowed_to_edit(context.user, resource):
-            message = messages.MSG_DELETE_SELECTION.gettext()
-            message_utf8 = message.encode('utf_8')
-            return [('remove', MSG(u'Remove'), 'button_delete',
-                     'return confirm("%s");' % message_utf8),
-                    ('order_up', MSG(u'Order up'), 'button_ok', None),
-                    ('order_down', MSG(u'Order down'), 'button_ok', None),
-                    ('order_top', MSG(u'Order top'), 'button_ok', None),
-                    ('order_bottom', MSG(u'Order bottom'), 'button_ok', None)]
-
-        return []
+    table_actions = [
+        RemoveButton,
+        Button(name='order_up', title=MSG(u'Order up')),
+        Button(name='order_down', title=MSG(u'Order down')),
+        Button(name='order_top', title=MSG(u'Order top')),
+        Button(name='order_bottom', title=MSG(u'Order bottom')),
+    ]
 
 
     #######################################################################

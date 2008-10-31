@@ -313,10 +313,10 @@ class FileExternalEdit(BaseView):
 
 
 class FileBacklinks(FolderBrowseContent):
-    """Backlinks are the list of resources pointing to this resource.  This view
-    answers the question "where is this resource used?" You'll see all WebPages
-    and WikiPages (for example) referencing it.  If the list is empty, you can
-    consider it is "orphan".
+    """Backlinks are the list of resources pointing to this resource.  This
+    view answers the question "where is this resource used?" You'll see all
+    WebPages and WikiPages (for example) referencing it.  If the list is
+    empty, you can consider it is "orphan".
     """
 
     access = 'is_allowed_to_view'
@@ -339,8 +339,7 @@ class FileBacklinks(FolderBrowseContent):
         return context.root.search(query)
 
 
-    def get_actions(self, resource, context, results):
-        return []
+    table_actions = []
 
 
 

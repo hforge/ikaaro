@@ -100,22 +100,12 @@ class MenuView(OrderedTableView):
                                                column)
 
 
-    def get_actions(self, resource, context, items):
-        if len(items) == 0:
-            return []
-
-        ac = resource.get_access_control()
-        if ac.is_allowed_to_edit(context.user, resource):
-            message_utf8 = MSG_DELETE_SELECTION.gettext().encode('utf_8')
-            return [('add_child', MSG(u'Add Child'), 'button_add', None),
-                    ('remove', MSG(u'Remove'), 'button_delete',
-                     'return confirm("%s");' % message_utf8),
-                    ('order_up', MSG(u'Order up'), 'button_ok', None),
-                    ('order_down', MSG(u'Order down'), 'button_ok', None),
-                    ('order_top', MSG(u'Order top'), 'button_ok', None),
-                    ('order_bottom', MSG(u'Order bottom'), 'button_ok', None)]
-
-        return []
+    def get_table_actions(self, resource, context):
+        actions = OrderedTableView.get_table_actions(self, resource, context)
+        actions.insert(0,
+            Button(name='add_child', title=MSG(u'Add Child'),
+                   css='button_add'))
+        return actions
 
 
     #######################################################################

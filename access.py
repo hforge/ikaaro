@@ -30,6 +30,7 @@ from itools.uri import get_reference
 from itools.web import AccessControl as BaseAccessControl, STLForm, INFO, ERROR
 
 # Import from ikaaro
+from buttons import RemoveButton
 import messages
 from views import SearchForm
 from workflow import WorkflowAware
@@ -104,11 +105,6 @@ class RoleAware_BrowseUsers(SearchForm):
         return items[start:start+size]
 
 
-    def get_actions(self, resource, context, items):
-        return [
-            ('remove', MSG(u'Delete'), 'button_delete', None)]
-
-
     table_columns = [
         ('checkbox', None),
         ('user_id', MSG(u'User ID')),
@@ -117,6 +113,9 @@ class RoleAware_BrowseUsers(SearchForm):
         ('lastname', MSG(u'Last Name')),
         ('role', MSG(u'Role')),
         ('account_state', MSG(u'State'))]
+
+
+    table_actions = [RemoveButton]
 
 
     def get_item_value(self, resource, context, item, column):
@@ -318,6 +317,10 @@ class AccessControl(BaseAccessControl):
 
     def is_allowed_to_trans(self, user, resource, name):
         return self.is_allowed_to_edit(user, resource)
+
+
+    def is_allowed_to_publish(self, user, resource):
+        return self.is_allowed_to_trans(user, resource, 'publish')
 
 
 

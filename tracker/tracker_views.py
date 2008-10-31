@@ -35,6 +35,7 @@ from itools.web import BaseView, BaseForm, STLForm, get_context
 from itools.web import INFO, ERROR
 
 # Import from ikaaro
+from ikaaro.buttons import RemoveButton
 from ikaaro.datatypes import CopyCookie
 from ikaaro.exceptions import ConsistencyError
 from ikaaro import messages
@@ -315,17 +316,7 @@ class TrackerView(BrowseForm):
             return line[column]
 
 
-    def get_actions(self, resource, context, items):
-        if len(items) == 0:
-            return []
-
-        return []
-        # XXX
-        ac = resource.get_access_control()
-        if ac.is_allowed_to_edit(context.user, resource):
-            return [('remove', MSG(u'Remove'), 'button_delete',None)]
-
-        return []
+    table_actions = [RemoveButton]
 
 
     def get_table_columns(self, resource, context):

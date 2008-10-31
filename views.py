@@ -144,6 +144,7 @@ class BrowseForm(STLForm):
     table_template = '/ui/generic/browse_table.xml'
     table_css = None
     table_columns = []
+    table_actions = []
 
 
     def get_namespace(self, resource, context):
@@ -198,9 +199,8 @@ class BrowseForm(STLForm):
         raise NotImplementedError, "the '%s' method is not defined" % name
 
 
-    def get_actions(self, resource, context, items):
-        name = 'get_actions'
-        raise NotImplementedError, "the '%s' method is not defined" % name
+    def get_table_actions(self, resource, context):
+        return self.table_actions
 
 
     #######################################################################
@@ -286,11 +286,25 @@ class BrowseForm(STLForm):
 
 
     def get_table_namespace(self, resource, context, items):
+        ac = resource.get_access_control()
+
         # (1) Actions (submit buttons)
-        actions = self.get_actions(resource, context, items)
-        actions = [
-            {'name': name, 'value': value, 'class': cls, 'onclick': onclick}
-            for name, value, cls, onclick in actions ]
+        actions = []
+        for button in self.get_table_actions(resource, context):
+            if button.requires_items and not items:
+                continue
+            if not ac.is_access_allowed(context.user, resource, button):
+                continue
+            if button.confirm:
+                confirm = button.confirm.gettext().encode('utf_8')
+                onclick = 'return confirm("%s");' % confirm
+            else:
+                onclick = None
+            actions.append(
+                {'name': button.name,
+                 'value': button.title,
+                 'class': button.css,
+                 'onclick': onclick})
 
         # (2) Table Head: columns
         table_head = self.get_table_head(resource, context, items, actions)
