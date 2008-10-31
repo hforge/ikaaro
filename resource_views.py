@@ -491,13 +491,6 @@ class LoginView(STLForm):
         brain = results.get_documents()[0]
         user = root.get_resource('users/%s' % brain.name)
 
-        # Check the user is active
-        if user.get_property('user_must_confirm'):
-            message = ERROR(u'The user "$username" is not active.',
-                            username=email)
-            context.message = message
-            return
-
         # Check the password is right
         if not user.authenticate(password):
             context.message = ERROR(u'The password is wrong.')

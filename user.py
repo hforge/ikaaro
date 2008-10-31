@@ -124,8 +124,6 @@ class User(AccessControl, Folder):
 
 
     def authenticate(self, password):
-        if self.get_property('user_must_confirm'):
-            return False
         # Is password crypted?
         if password == self.get_property('password'):
             return True
