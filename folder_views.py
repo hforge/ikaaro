@@ -639,12 +639,23 @@ class FolderPreviewContent(FolderBrowseContent):
         current_size = max(min_size, min(current_size, max_size))
 
         # (1) Actions (submit buttons)
-        actions = self.get_actions(resource, context, items)
-        actions = [{'name': name,
-                    'value': value,
-                    'class': cls,
-                    'onclick': onclick}
-                    for name, value, cls, onclick in actions ]
+        ac = resource.get_access_control()
+        actions = []
+        for button in self.get_table_actions(resource, context):
+            if button.requires_items and not items:
+                continue
+            if not ac.is_access_allowed(context.user, resource, button):
+                continue
+            if button.confirm:
+                confirm = button.confirm.gettext().encode('utf_8')
+                onclick = 'return confirm("%s");' % confirm
+            else:
+                onclick = None
+            actions.append(
+                {'name': button.name,
+                 'value': button.title,
+                 'class': button.css,
+                 'onclick': onclick})
 
         # (2) Table Head: columns
         table_head = self.get_table_head(resource, context, items, actions)
