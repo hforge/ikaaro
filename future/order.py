@@ -114,7 +114,7 @@ class OrderAware(object):
             for name in names:
                 object = self.get_object(name)
                 ns = self._browse_namespace(object, 16)
-                ns['name'] = name
+                ns['name'] = str(name)
                 path = None
                 if isinstance(object, OrderAware):
                     path = '%s/;order_form' % name
