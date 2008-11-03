@@ -4,7 +4,8 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
-<form action=";change_several_bugs" method="POST" id="form_table">
+<form action=";change_several_bugs?${search_parameters}" method="POST"
+  id="form_table">
   ${batch}
   ${table}
 

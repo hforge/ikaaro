@@ -7,7 +7,6 @@
 <form action=";export_to_text" method="GET" id="form_table">
   ${batch}
   ${table}
-
   <br/>
   <fieldset>
     <legend>Export to Text: select the columns to export</legend>
@@ -19,11 +18,11 @@
     </stl:block>
     <input type="submit" class="button_ok" value="Update text export" />
   </fieldset>
-
   <br/>
   <div style="height: 200px; border: 1px solid #9FB7D4; overflow: auto">
     <pre>${text}</pre>
   </div>
+  <stl:block stl:repeat="param search_parameters">${param}</stl:block>
 </form>
 
 </stl:block>

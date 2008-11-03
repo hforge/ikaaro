@@ -35,11 +35,14 @@ from itools.web import BaseView, BaseForm, STLForm, get_context
 from itools.web import INFO, ERROR
 
 # Import from ikaaro
-from ikaaro.buttons import RemoveButton
+from ikaaro.buttons import Button, RemoveButton
 from ikaaro.datatypes import CopyCookie
 from ikaaro.exceptions import ConsistencyError
+from ikaaro.forms import HiddenWidget
 from ikaaro import messages
 from ikaaro.views import BrowseForm, SearchForm as BaseSearchForm, ContextMenu
+
+# Import from ikaaro.tracker
 from issue import Issue
 from issue_views import issue_fields
 from stored import StoredSearch
@@ -182,12 +185,34 @@ class TrackerAddIssue(STLForm):
 
 
 
+class TrackerViewMenu(ContextMenu):
+
+    title = MSG(u'Advanced')
+
+    def get_items(self, resource, context):
+        # Keep the query parameters
+        schema = context.view.get_query_schema()
+        params = encode_query(context.query, schema)
+        items = [
+            {'title': MSG(u'Edit this search'),
+             'href': ';search?%s' % params},
+            {'title': MSG(u'Change Several Issues'),
+             'href': ';change_several_bugs?%s' % params},
+            {'title': MSG(u'Export to Text'),
+             'href': ';export_to_text?%s' % params},
+            {'title': MSG(u'Export to CSV'),
+             'href': ';export_to_csv_form?%s' % params},
+            {'title': MSG(u'Resources'),
+             'href': 'resources/;monthly_view?%s' % params}]
+        return items
+
+
+
 class TrackerView(BrowseForm):
 
     access = 'is_allowed_to_view'
     title = MSG(u'View')
     icon = 'view.png'
-    template = '/ui/tracker/view_tracker.xml'
 
     schema = {
         'ids': String(multiple=True, mandatory=True)}
@@ -204,9 +229,6 @@ class TrackerView(BrowseForm):
         'priority': Integer(multiple=True, default=()),
         'assigned_to': String(multiple=True, default=()),
         # Specific fields
-        'export_to_text': Boolean,
-        'export_to_csv': Boolean,
-        'change_several_bugs': Boolean,
         'search_field': String,
         'search_term': Unicode,
         'search_subfolders': Boolean(default=False),
@@ -214,7 +236,7 @@ class TrackerView(BrowseForm):
         'sort_by': String(default='title'),
     }
 
-    context_menus = [StoreSearchMenu()]
+    context_menus = [StoreSearchMenu(), TrackerViewMenu()]
 
 
     def get_query_schema(self):
@@ -232,7 +254,6 @@ class TrackerView(BrowseForm):
                 msg = MSG(u'Unknown stored search "${sname}".')
                 goto = ';search'
                 return context.come_back(msg, goto=goto, sname=search_name)
-
         # Ok
         return BrowseForm.GET(self, resource, context)
 
@@ -249,15 +270,10 @@ class TrackerView(BrowseForm):
         search_name = query['search_name']
         if search_name:
             search = resource.get_resource(search_name)
-        lines = ['XXX'] # XXX
-        namespace['nb_results'] = len(lines)
 
         # Keep the search_parameters, clean different actions
         schema = self.get_query_schema()
-        params = query.copy()
-        for name in 'change_several_bugs', 'export_to_csv', 'export_to_text':
-            del params[name]
-        namespace['search_parameters'] = encode_query(params, schema)
+        namespace['search_parameters'] = encode_query(query, schema)
 
         return namespace
 
@@ -290,23 +306,13 @@ class TrackerView(BrowseForm):
 
 
     def get_item_value(self, resource, context, item, column):
-        if column in ('checkbox', 'checked'):
-            # Show checkbox or not
-            show_checkbox = False
-            query = context.query
-            if (query['export_to_text'] or query['export_to_csv'] or
-                query['change_several_bugs']):
-                show_checkbox = True
-            if column == 'checkbox':
-                return show_checkbox
-            selected_issues = context.get_form_values('ids')
-            if not selected_issues:
-                return True
-            else:
-                if item.name in selected_issues:
-                    return item.name
-                    ##return issue.name, False ???
-
+        if column == 'id':
+            id = item.name
+            link = context.get_link(item)
+            return id, '%s/;edit' % link
+        if column == 'checkbox':
+            selected_issues = context.get_form_values('ids') or []
+            return item.name, item.name in selected_issues
         line = item.get_informations()
         if column == 'title':
             # Add link to title
@@ -316,11 +322,13 @@ class TrackerView(BrowseForm):
             return line[column]
 
 
-    table_actions = [RemoveButton]
+    table_actions = []
 
 
     def get_table_columns(self, resource, context):
-        return columns
+        table_columns = columns[:]
+        table_columns.insert(0, ('checkbox', None))
+        return table_columns
 
 
 
@@ -475,6 +483,7 @@ class TrackerGoToIssue(BaseView):
 class TrackerExportToText(TrackerView):
 
     template = '/ui/tracker/export_to_text.xml'
+    external_form = True
 
     def get_query_schema(self):
         return merge_dics(TrackerView.get_query_schema(self),
@@ -482,12 +491,12 @@ class TrackerExportToText(TrackerView):
                           column_selection=String(multiple=True,
                                                   default=['title']))
 
-
     def get_namespace(self, resource, context):
         namespace = TrackerView.get_namespace(self, resource, context)
+        query = context.query
 
         # Column Selector
-        selection = context.query['column_selection']
+        selection = query['column_selection']
         export_columns = columns[2:] + [columns[1]]
         namespace['columns'] = [
             {'name': name, 'title': title, 'checked': name in selection}
@@ -496,7 +505,7 @@ class TrackerExportToText(TrackerView):
         # Text
         items = self.get_items(resource, context)
         items = self.sort_and_batch(resource, context, items)
-        selected_items = context.query['ids']
+        selected_items = query['ids']
         if selected_items:
             items = [ x for x in items if x.name in selected_items ]
         items = [ x.get_informations() for x in items ]
@@ -509,6 +518,18 @@ class TrackerExportToText(TrackerView):
             lines.append(line)
         namespace['text'] = u'\n'.join(lines)
 
+        # Insert query parameters as hidden input fields
+        parameters = []
+        schema = TrackerView.get_query_schema(self)
+        for name in schema:
+            if name in namespace:
+                continue
+            value = query[name]
+            if value:
+                datatype = schema.get(name, String)
+                parameters.append(HiddenWidget(name).to_html(datatype, value))
+        namespace['search_parameters'] = parameters
+
         # Ok
         return namespace
 
@@ -517,6 +538,27 @@ class TrackerExportToText(TrackerView):
 class TrackerExportToCSVForm(TrackerView):
 
     template = '/ui/tracker/export_to_csv.xml'
+    external_form = True
+
+
+    def get_namespace(self, resource, context):
+        namespace = TrackerView.get_namespace(self, resource, context)
+        query = context.query
+
+        # Insert query parameters as hidden input fields
+        parameters = []
+        schema = TrackerView.get_query_schema(self)
+        for name in schema:
+            if name in namespace:
+                continue
+            value = query[name]
+            if value:
+                datatype = schema.get(name, String)
+                parameters.append(HiddenWidget(name).to_html(datatype, value))
+        namespace['search_parameters'] = parameters
+
+        # Ok
+        return namespace
 
 
 
@@ -528,6 +570,7 @@ class TrackerExportToCSV(BaseView):
         'editor': String(default='excel'),
         'ids': String(multiple=True),
     }
+
 
     def GET(self, resource, context):
         # Get search results
@@ -593,6 +636,11 @@ class TrackerChangeSeveralBugs(TrackerView):
         'change_assigned_to': String,
         'change_state': Integer,
     }
+
+    external_form = True
+
+    table_actions = [
+        Button(name='change_several_bugs', title=MSG(u'Edit issues'))]
 
 
     def get_namespace(self, resource, context):
@@ -697,15 +745,5 @@ class TrackerChangeSeveralBugs(TrackerView):
             to_addr = root.get_user(user_id).get_property('email')
             root.send_email(to_addr, subject, text=body)
 
-        # Redirect on the new search
-        query = encode_query(context.uri.query)
-        reference = ';view?%s&change_several_bugs=1#link' % query
-        goto = context.uri.resolve(reference)
-
-        keys = context.get_form_keys()
-        keep = ['search_name', 'mtime', 'module', 'version', 'type',
-                'priority', 'assigned_to', 'state']
-        keep = [ x for x in keep if x in keys]
-        return context.come_back(messages.MSG_CHANGES_SAVED, goto=goto,
-                                 keep=keep)
+        context.message = messages.MSG_CHANGES_SAVED
 
