@@ -1,0 +1,52 @@
+
+ikaaro 0.50.0 (2008/11/22)
+==========================
+
+This is a Content Management System built on Python & itools, among
+other features ikaaro provides:
+
+ - content and document management (index&search, metadata, etc.)
+ - multilingual user interfaces and content
+ - high level modules: wiki, forum, tracker, etc.
+
+
+UI / Rest
+
+- 2 page tiles => 1 page title
+- flat menu tab
+- variable size layout
+- right menu: global => contextual
+- 302 Found => 200 Ok (edit forms, firstview)
+- The tracker: +resources, +products, ordered tables
+- Improved Image Gallery
+- login: stay in the same page
+- merge edit & edit_metadata
+- distinct messages: ERROR, INFO
+- improved add link&images in tinymce
+- add the spanish translation
+
+Architecture / API
+
+- New architecture: Resources + Views
+- self.gettext(u'') => MSG(u'').gettext
+- catalog => xapian
+- add jquery
+- Python 2.6 supported
+
+
+Resources
+---------
+
+Download
+http://download.hforge.org/ikaaro/ikaaro-0.50.0.tar.gz
+
+Home
+http://www.hforge.org/ikaaro
+
+Mailing list
+http://www.hforge.org/community/
+http://archives.hforge.org/index.cgi?list=itools
+
+Bug Tracker
+http://bugs.hforge.org/
+

@@ -46,22 +46,27 @@ Imports
 Some things have changed names, or moved somewhere else.  The table below
 summarizes these changes:
 
-  Before                                  Now
-  --------------------------------------  ---------------------------------
-  ikaaro.base.Node                        ikaaro.resource_.IResource
-  ikaaro.base.DBObject                    ikaaro.resource_.DBResource
-  ikaaro.binary                           ikaaro.file
-  ikaaro.folder.CopyCookie                ikaaro.datatypes.CopyCookie
-  ikaaro.forms.namespaces                 ikaaro.forms.stl_namespaces
-  ikaaro.forms.Select                     ikaaro.forms.SelectWidget
-  ikaaro.messages.MSG_MISSING_OR_INVALID  itools.web.MSG_MISSING_OR_INVALID
-  ikaaro.users.User                       ikaaro.user.User
-  ikaaro.users.UserFolder                 ikaaro.user.UserFolder
-  ikaaro.widgets.Breadcrumb               ikaaro.resource_views.Breadcrumb
-  ikaaro.widgets.build_menu               ikaaro.views.build_menu
-  ikaaro.registry.register_object_class   ikaaro.registry.register_resource_class
-  ikaaro.registry.get_object_class        ikaaro.registry.get_resource_class
-  ikaaro.csv.CSV                          ikaaro.text.CSV
+  Before                           Now
+  -------------------------------  --------------------------
+  base.Node                        resource_.IResource
+  base.DBObject                    resource_.DBResource
+  binary                           file
+  folder.CopyCookie                datatypes.CopyCookie
+  forms.namespaces                 forms.stl_namespaces
+  forms.Select                     forms.SelectWidget
+  users.User                       user.User
+  users.UserFolder                 user.UserFolder
+  widgets.Breadcrumb               resource_views.Breadcrumb
+  widgets.build_menu               views.build_menu
+  registry.register_object_class   registry.register_resource_class
+  registry.get_object_class        registry.get_resource_class
+  csv.CSV                          text.CSV
+
+A few things have been moved to itools:
+
+  Before (ikaaro)                  Now (itools)
+  -------------------------------  --------------------------
+  messages.MSG_MISSING_OR_INVALID  web.MSG_MISSING_OR_INVALID
 
 
 Architecture
@@ -94,8 +99,8 @@ written now also as views:
 User Interface
 ====================
 
-(1) The two level drop-down menu has been flattened to just one level.  As a side
-effect the 'class_views' variable has become a simple list.
+(1) The two level drop-down menu has been flattened to just one level.  As
+a side effect the 'class_views' variable has become a simple list.
 
   # Before
   class MyClass(...):
@@ -144,29 +149,29 @@ resource has been simplified:
 
 (3) The "edit" and "edit_metadata" views have been merged. So that both
 Folder-like and File-like resources offer a "edit" view. Folders only offer
-metadata to edit by default, while Files offer content and metadata to edit in
-a single form. Try to use that pattern in your forms, starting with more
-important data at the top (title, content), and ending with optional properties
-like keywords. The AutoForm class may be handy.
+metadata to edit by default, while Files offer content and metadata to edit
+in a single form. Try to use that pattern in your forms, starting with more
+important data at the top (title, content), and ending with optional
+properties like keywords. The AutoForm class may be handy.
 
 
-Messages
-========
+(4) Messages
 
-As pointed out in the itools UPGRADE-0.50.0 documentation, translatable
-messages are instances of the MSG class. It also applies to resources:
+Now there is a distinction between error and informational messages:
 
   # Before
-  class MyClass(...):
-    ...
-    class_title = u"My Class"
-    class_description = u"This is my class"
+  return context.come_back(u'Something')
 
   # Now
-  class MyClass(...):
-    ...
-    class_title = MSG(u"My Class")
-    class_description = MSG(u"This is my class")
+  from itools.web import INFO, ERROR
+  context.message = INFO(u'Something')
+  context.message = ERROR(u'Something')
+
+Note that as of now there is no support for this distinction when passing
+the message through a query parameter.  In that case we have:
+
+  # Now
+  return context.come_back(MSG(u'Something'))
 
 
 API
@@ -193,11 +198,29 @@ designate the same variable but renamed):
   container.get_object           container.get_resource
 
 
+(1) Gettext Messages
+
+As pointed out in the itools UPGRADE-0.50.0 documentation, translatable
+messages are instances of the MSG class. It also applies to resources:
+
+  # Before
+  class MyClass(...):
+      ...
+      class_title = u"My Class"
+      class_description = u"This is my class"
+
+  # Now
+  class MyClass(...):
+      ...
+      class_title = MSG(u"My Class")
+      class_description = MSG(u"This is my class")
+
+
 Javascript
 ====================
 
-Our uncohrent Javascript library has been happily replaced by jQuery [1]. Most
-of what you need is already included. See the documentation [2].
+Our uncohrent Javascript library has been happily replaced by jQuery [1].
+Most of what you need is already included. See the documentation [2].
 
 For the few functions that were eventually used, the usage has changed.
 
