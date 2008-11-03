@@ -687,6 +687,7 @@ class TrackerChangeSeveralBugs(TrackerView):
                 'datetime': datetime.now(),
                 'username': username,
                 'title': issue.get_value('title'),
+                'product': issue.get_value('product'),
                 'cc_list': issue.get_value('cc_list'),
                 'file': '',
             }
