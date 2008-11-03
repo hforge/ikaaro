@@ -35,6 +35,9 @@ from ikaaro.forms import DateWidget, MultilineWidget, SelectWidget, TextWidget
 from ikaaro.table import Table
 from ikaaro.registry import register_resource_class
 
+# Import from ikaaro.tracker
+from tracker_views import TrackerView
+
 
 resolution = timedelta.resolution
 
@@ -42,16 +45,17 @@ resolution = timedelta.resolution
 class TrackerMonthlyView(MonthlyView):
 
     monthly_template = '/ui/tracker/monthly_template.xml'
+    query_schema = TrackerView.tracker_schema
 
     def get_with_new_url(self):
         return False
-
 
 
 class TrackerWeeklyView(WeeklyView):
 
     weekly_template_fd = '/ui/tracker/weekly_template_fd.xml'
     weekly_template = '/ui/tracker/weekly_template.xml'
+    query_schema = TrackerView.tracker_schema
 
 
     def get_weekly_templates(self):

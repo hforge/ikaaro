@@ -327,6 +327,14 @@ class Issue_ViewResources(TableView):
 
     search_template = None
 
+    batch_msg1 = MSG(u"There is 1 assignment.")
+    batch_msg2 = MSG(u"There are ${n} assignments.")
+
+
+    def get_items(self, resource, context):
+        issue = context.resource
+        return resource.handler.search(issue=issue.name)
+
 
     def get_item_value(self, resource, context, item, column):
         if column == 'id':
