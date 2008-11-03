@@ -39,11 +39,11 @@ Install
 
 If you are reading this instructions you probably have already unpacked
 the ikaaro tarball with the command line:
-    
+
   $ tar xzf ikaaro-X.Y.Z.tar.gz
 
 And changed the working directory this way:
-    
+
   $ cd ikaaro-X.Y.Z
 
 So now to install ikaaro you just need to type this:
