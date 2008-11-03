@@ -41,7 +41,7 @@ from ikaaro.table import TableView
 from ikaaro.views import CompositeForm
 
 
-url_expr = compile('(https?://[\w.@/;?=&#\-%:]*)')
+url_expr = compile('([fh]t?tps?://[\w.@/;?=&#\-%:]*)')
 def indent(text):
     """Replace URLs by HTML links.  Wrap lines (with spaces) to 150 chars.
     """
@@ -49,7 +49,7 @@ def indent(text):
     # Wrap
     lines = []
     for line in text.splitlines():
-        for line in wrap(line, 150):
+        for line in wrap(line, 150, break_long_words=False):
             lines.append(line)
         else:
             if line is '':
@@ -57,9 +57,14 @@ def indent(text):
     text = '\n'.join(lines)
     # Links
     for segment in url_expr.split(text):
-        if segment.startswith('http://') or segment.startswith('https://'):
+        if (segment.startswith('http://') or
+            segment.startswith('https://') or
+            segment.startswith('ftp://')):
             attributes = {(xhtml_uri, 'href'): segment}
             yield START_ELEMENT, (xhtml_uri, 'a', attributes), 1
+            # Reduce too long URI
+            if len(segment) > 70:
+                segment = segment[:34] + '...' + segment[-33:]
             yield TEXT, segment, 1
             yield END_ELEMENT, (xhtml_uri, 'a'), 1
         else:
