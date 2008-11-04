@@ -38,8 +38,9 @@ from itools.web import INFO, ERROR
 from ikaaro.buttons import Button, RemoveButton
 from ikaaro.datatypes import CopyCookie
 from ikaaro.exceptions import ConsistencyError
-from ikaaro.forms import HiddenWidget
+from ikaaro.forms import HiddenWidget, TextWidget
 from ikaaro import messages
+from ikaaro.resource_views import DBResourceNewInstance
 from ikaaro.views import BrowseForm, SearchForm as BaseSearchForm, ContextMenu
 
 # Import from ikaaro.tracker
@@ -62,6 +63,9 @@ columns = [
 
 
 
+###########################################################################
+# Menus
+###########################################################################
 class GoToIssueMenu(ContextMenu):
 
     title = MSG(u'Go To Issue')
@@ -130,6 +134,58 @@ class StoredSearchesMenu(ContextMenu):
 
 
 
+class TrackerViewMenu(ContextMenu):
+
+    title = MSG(u'Advanced')
+
+    def get_items(self, resource, context):
+        # Keep the query parameters
+        schema = context.view.get_query_schema()
+        params = encode_query(context.query, schema)
+        items = [
+            {'title': MSG(u'Edit this search'),
+             'href': ';search?%s' % params},
+            {'title': MSG(u'Change Several Issues'),
+             'href': ';change_several_bugs?%s' % params},
+            {'title': MSG(u'Export to Text'),
+             'href': ';export_to_text?%s' % params},
+            {'title': MSG(u'Export to CSV'),
+             'href': ';export_to_csv_form?%s' % params},
+            {'title': MSG(u'Resources'),
+             'href': 'resources/;monthly_view?%s' % params}]
+        return items
+
+
+
+###########################################################################
+# Views
+###########################################################################
+class Tracker_NewInstance(DBResourceNewInstance):
+
+    schema = merge_dics(
+        DBResourceNewInstance.schema,
+        product=Unicode(mandatory=True))
+
+    widgets = DBResourceNewInstance.widgets + \
+        [TextWidget('product', title=MSG(u'Give the title of one Product'))]
+
+
+    def action(self, resource, context, form):
+        ok = DBResourceNewInstance.action(self, resource, context, form)
+        if ok is None:
+            return
+
+        # Add the initial product
+        name = form['name']
+        product = form['product']
+        table = resource.get_resource('%s/products' % name).get_handler()
+        table.add_record({'title': product})
+
+        # Ok
+        return ok
+
+
+
 class Tracker_AddIssue(STLForm):
 
     access = 'is_allowed_to_edit'
@@ -182,29 +238,6 @@ class Tracker_AddIssue(STLForm):
         message = INFO(u'New issue added.')
         goto = './%s/' % id
         return context.come_back(message, goto=goto)
-
-
-
-class TrackerViewMenu(ContextMenu):
-
-    title = MSG(u'Advanced')
-
-    def get_items(self, resource, context):
-        # Keep the query parameters
-        schema = context.view.get_query_schema()
-        params = encode_query(context.query, schema)
-        items = [
-            {'title': MSG(u'Edit this search'),
-             'href': ';search?%s' % params},
-            {'title': MSG(u'Change Several Issues'),
-             'href': ';change_several_bugs?%s' % params},
-            {'title': MSG(u'Export to Text'),
-             'href': ';export_to_text?%s' % params},
-            {'title': MSG(u'Export to CSV'),
-             'href': ';export_to_csv_form?%s' % params},
-            {'title': MSG(u'Resources'),
-             'href': 'resources/;monthly_view?%s' % params}]
-        return items
 
 
 

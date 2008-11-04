@@ -40,8 +40,8 @@ from tables import Tracker_TableResource, Tracker_TableHandler
 from tables import ModulesResource, ModulesHandler
 from tables import VersionsResource, VersionsHandler
 from tracker_views import GoToIssueMenu, StoredSearchesMenu
-from tracker_views import Tracker_Search, Tracker_View, Tracker_AddIssue
-from tracker_views import Tracker_GoToIssue
+from tracker_views import Tracker_NewInstance, Tracker_Search, Tracker_View
+from tracker_views import Tracker_AddIssue, Tracker_GoToIssue
 from tracker_views import Tracker_RememberSearch, Tracker_ForgetSearch
 from tracker_views import Tracker_ExportToText, Tracker_ChangeSeveralBugs
 from tracker_views import Tracker_ExportToCSVForm, Tracker_ExportToCSV
@@ -242,6 +242,7 @@ class Tracker(Folder):
     context_menus = [GoToIssueMenu(), StoredSearchesMenu()]
 
     # Views
+    new_instance = Tracker_NewInstance()
     search = Tracker_Search()
     view = Tracker_View()
     add_issue = Tracker_AddIssue()
