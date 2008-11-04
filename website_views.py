@@ -24,7 +24,7 @@ from itools import get_abspath
 from itools.datatypes import Email, String, Unicode
 from itools.datatypes import DynamicEnumerate
 from itools.gettext import MSG
-from itools.handlers import checkid, merge_dics
+from itools.handlers import merge_dics
 from itools.stl import stl
 from itools import vfs
 from itools.web import STLView, STLForm, INFO, ERROR
@@ -80,35 +80,27 @@ class NewWebSiteForm(NewInstanceForm):
             'websites': websites}
 
 
+    def get_new_resource_name(self, form):
+        # If the name is not explicitly given, use the title
+        return form['name'].strip() or form['title'].strip()
+
+
     def action(self, resource, context, form):
         name = form['name']
         title = form['title']
-
-        # Check the name
-        name = name.strip() or title.strip()
-        if not name:
-            context.message = messages.MSG_NAME_MISSING
-            return
-
-        name = checkid(name)
-        if name is None:
-            context.message = messages.MSG_BAD_NAME
-            return
-
-        # Check the name is free
-        if resource.has_resource(name):
-            context.message = messages.MSG_NAME_CLASH
-            return
-
         class_id = form['class_id']
+
+        # Find out the class id
         if class_id is None:
             websites = get_register_websites()
             websites = list(websites)
             class_id = websites[0].class_id
 
+        # Make resource
         cls = get_website_class(class_id)
         child = cls.make_resource(cls, resource, name)
-        # The metadata
+
+        # Add title
         metadata = child.metadata
         language = resource.get_site_root().get_default_language()
         metadata.set_property('title', title, language=language)

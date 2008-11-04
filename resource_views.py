@@ -31,7 +31,7 @@ from itools.i18n import get_language_name
 from itools.stl import stl
 from itools.uri import Path, get_reference
 from itools.vfs import FileName
-from itools.web import BaseView, STLForm, get_context, INFO, ERROR
+from itools.web import get_context, BaseView, STLForm, INFO, ERROR
 
 # Import from ikaaro
 from datatypes import FileDataType
@@ -104,25 +104,14 @@ class DBResourceNewInstance(NewInstanceForm, AutoForm):
         return title.gettext(class_title=class_title)
 
 
+    def get_new_resource_name(self, form):
+        # If the name is not explicitly given, use the title
+        return form['name'].strip() or form['title'].strip()
+
+
     def action(self, resource, context, form):
         name = form['name']
         title = form['title']
-
-        # Check the name
-        name = name.strip() or title.strip()
-        if not name:
-            context.message = messages.MSG_NAME_MISSING
-            return
-
-        name = checkid(name)
-        if name is None:
-            context.message = messages.MSG_BAD_NAME
-            return
-
-        # Check the name is free
-        if resource.has_resource(name):
-            context.message = messages.MSG_NAME_CLASH
-            return
 
         # Create the resource
         class_id = context.query['type']

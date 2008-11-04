@@ -17,10 +17,10 @@
 # Import from itools
 from itools.datatypes import Boolean, Integer, String, Unicode
 from itools.gettext import MSG
-from itools.handlers import merge_dics
+from itools.handlers import checkid, merge_dics
 from itools.stl import stl
 from itools.uri import Path
-from itools.web import BaseView, STLView, STLForm, get_context
+from itools.web import FormError, get_context, BaseView, STLView, STLForm
 from itools.xml import XMLParser
 
 # Import from ikaaro
@@ -112,6 +112,10 @@ class NewInstanceForm(STLForm):
     add a new resource to the database.
     """
 
+    schema = {
+        'name': String}
+
+
     def icon(self, resource, **kw):
         type = kw.get('type')
         cls = get_resource_class(type)
@@ -119,6 +123,34 @@ class NewInstanceForm(STLForm):
             return cls.get_class_icon()
         # Default
         return 'new.png'
+
+
+    def get_new_resource_name(self, form):
+        return form['name'].strip()
+
+
+    def _get_form(self, resource, context):
+        form = STLForm._get_form(self, resource, context)
+        name = self.get_new_resource_name(form)
+
+        # Check the name
+        if not name:
+#            context.message = messages.MSG_NAME_MISSING
+            raise FormError
+
+        name = checkid(name)
+        if name is None:
+#            context.message = messages.MSG_BAD_NAME
+            raise FormError
+
+        # Check the name is free
+        if resource.has_resource(name):
+#            context.message = messages.MSG_NAME_CLASH
+            raise FormError
+
+        # Ok
+        form['name'] = name
+        return form
 
 
 ###########################################################################

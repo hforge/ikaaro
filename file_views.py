@@ -25,7 +25,7 @@ from datetime import datetime, timedelta
 from itools.datatypes import Integer, Unicode
 from itools.gettext import MSG
 from itools.handlers import get_handler_class_by_mimetype, guess_encoding
-from itools.handlers import checkid, merge_dics
+from itools.handlers import merge_dics
 from itools.html import HTMLParser, stream_to_str_as_xhtml
 from itools.i18n import guess_language
 from itools.uri import get_reference
@@ -66,17 +66,16 @@ class FileNewInstance(NewInstanceForm):
         }
 
 
-    def action(self, resource, context, form):
+    def get_new_resource_name(self, form):
         filename, mimetype, body = form['file']
         name, type, language = FileName.decode(filename)
-        title = form['title']
 
-        name = title.strip() or name
-        # Check the name is good
-        name = checkid(name)
-        if name is None:
-            context.message = messages.MSG_BAD_NAME
-            return
+        return form['title'].strip() or name
+
+
+    def action(self, resource, context, form):
+        filename, mimetype, body = form['file']
+        kk, type, language = FileName.decode(filename)
 
         # Web Pages are first class citizens
         if mimetype == 'text/html':
@@ -97,22 +96,21 @@ class FileNewInstance(NewInstanceForm):
                 if language is None:
                     language = resource.get_content_language(context)
 
-        # Check the name is free
-        if resource.has_resource(name):
-            context.message = messages.MSG_NAME_CLASH
-            return
-
         # Build the resource
+        name = form['name']
         kw = {'format': class_id, 'filename': filename}
         if issubclass(cls, Multilingual):
             kw['language'] = language
         else:
             kw['extension'] = type
         child = cls.make_resource(cls, resource, name, body, **kw)
+
         # The title
+        title = form['title'].strip()
         language = resource.get_content_language(context)
         child.metadata.set_property('title', title, language=language)
 
+        # Ok
         goto = './%s/' % name
         return context.come_back(messages.MSG_NEW_RESOURCE, goto=goto)
 
