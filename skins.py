@@ -375,8 +375,7 @@ class Skin(UIFolder):
             css_class = 'error' if isinstance(message, ERROR) else 'info'
             messages_ns.append({'message': message, 'class': css_class})
 
-        namespace = {}
-        namespace['messages'] = messages_ns
+        namespace = {'messages': messages_ns}
 
         template = context.root.get_resource('/ui/aruni/message.xml')
         return stl(template, namespace)
