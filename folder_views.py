@@ -248,6 +248,14 @@ class FolderBrowseContent(SearchForm):
         args = list(args)
         abspath = str(resource.get_canonical_path())
         if search_subfolders is True:
+#           # FIXME This should work, but does not (see bug 408)
+#           from itools.xapian import StartQuery
+#           if abspath == '/':
+#               args.append(StartQuery('abspath', abspath))
+#               args.append(NotQuery(EqQuery('abspath', abspath)))
+#           else:
+#               args.append(StartQuery('abspath', abspath + '/'))
+
             args.append(EqQuery('paths', abspath))
             # Avoid the container
             args.append(NotQuery(EqQuery('abspath', abspath)))
