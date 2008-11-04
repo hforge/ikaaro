@@ -688,9 +688,10 @@ class WebSite(RoleAware, Folder):
 
             # Build the namespace
             ns_objects = []
+            site_root = context.object.get_site_root()
             for object in objects[start:start+size]:
                 info = {}
-                info['abspath'] = str(object.get_abspath())
+                info['abspath'] = '/%s' % site_root.get_pathto(object)
                 info['title'] = object.get_title()
                 info['type'] = self.gettext(object.class_title)
                 info['size'] = object.get_human_size()
