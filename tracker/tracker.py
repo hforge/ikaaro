@@ -40,11 +40,11 @@ from tables import Tracker_TableResource, Tracker_TableHandler
 from tables import ModulesResource, ModulesHandler
 from tables import VersionsResource, VersionsHandler
 from tracker_views import GoToIssueMenu, StoredSearchesMenu
-from tracker_views import TrackerSearch, TrackerView, TrackerAddIssue
-from tracker_views import TrackerGoToIssue
-from tracker_views import TrackerRememberSearch, TrackerForgetSearch
-from tracker_views import TrackerExportToText, TrackerChangeSeveralBugs
-from tracker_views import TrackerExportToCSVForm, TrackerExportToCSV
+from tracker_views import Tracker_Search, Tracker_View, Tracker_AddIssue
+from tracker_views import Tracker_GoToIssue
+from tracker_views import Tracker_RememberSearch, Tracker_ForgetSearch
+from tracker_views import Tracker_ExportToText, Tracker_ChangeSeveralBugs
+from tracker_views import Tracker_ExportToCSVForm, Tracker_ExportToCSV
 
 
 resolution = timedelta.resolution
@@ -242,16 +242,16 @@ class Tracker(Folder):
     context_menus = [GoToIssueMenu(), StoredSearchesMenu()]
 
     # Views
-    search = TrackerSearch()
-    view = TrackerView()
-    add_issue = TrackerAddIssue()
-    remember_search = TrackerRememberSearch()
-    forget_search = TrackerForgetSearch()
-    go_to_issue = TrackerGoToIssue()
-    export_to_text = TrackerExportToText()
-    export_to_csv_form = TrackerExportToCSVForm()
-    export_to_csv = TrackerExportToCSV()
-    change_several_bugs = TrackerChangeSeveralBugs()
+    search = Tracker_Search()
+    view = Tracker_View()
+    add_issue = Tracker_AddIssue()
+    remember_search = Tracker_RememberSearch()
+    forget_search = Tracker_ForgetSearch()
+    go_to_issue = Tracker_GoToIssue()
+    export_to_text = Tracker_ExportToText()
+    export_to_csv_form = Tracker_ExportToCSVForm()
+    export_to_csv = Tracker_ExportToCSV()
+    change_several_bugs = Tracker_ChangeSeveralBugs()
 
 
     #######################################################################

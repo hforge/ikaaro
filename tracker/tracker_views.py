@@ -130,7 +130,7 @@ class StoredSearchesMenu(ContextMenu):
 
 
 
-class TrackerAddIssue(STLForm):
+class Tracker_AddIssue(STLForm):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Add')
@@ -208,7 +208,7 @@ class TrackerViewMenu(ContextMenu):
 
 
 
-class TrackerView(BrowseForm):
+class Tracker_View(BrowseForm):
 
     access = 'is_allowed_to_view'
     title = MSG(u'View')
@@ -332,7 +332,7 @@ class TrackerView(BrowseForm):
 
 
 
-class TrackerSearch(BaseSearchForm, TrackerView):
+class Tracker_Search(BaseSearchForm, Tracker_View):
 
     access = 'is_allowed_to_view'
     title = MSG(u'Search')
@@ -411,7 +411,7 @@ class TrackerSearch(BaseSearchForm, TrackerView):
 
 
 
-class TrackerRememberSearch(BaseForm):
+class Tracker_RememberSearch(BaseForm):
 
     access = 'is_allowed_to_edit'
     schema = {
@@ -444,7 +444,7 @@ class TrackerRememberSearch(BaseForm):
 
 
 
-class TrackerForgetSearch(BaseForm):
+class Tracker_ForgetSearch(BaseForm):
 
     access = 'is_allowed_to_edit'
     schema = {
@@ -460,7 +460,7 @@ class TrackerForgetSearch(BaseForm):
 
 
 
-class TrackerGoToIssue(BaseView):
+class Tracker_GoToIssue(BaseView):
 
     access = 'is_allowed_to_view'
 
@@ -480,19 +480,19 @@ class TrackerGoToIssue(BaseView):
 
 
 
-class TrackerExportToText(TrackerView):
+class Tracker_ExportToText(Tracker_View):
 
     template = '/ui/tracker/export_to_text.xml'
     external_form = True
 
     def get_query_schema(self):
-        return merge_dics(TrackerView.get_query_schema(self),
+        return merge_dics(Tracker_View.get_query_schema(self),
                           ids=String(multiple=True, default=[]),
                           column_selection=String(multiple=True,
                                                   default=['title']))
 
     def get_namespace(self, resource, context):
-        namespace = TrackerView.get_namespace(self, resource, context)
+        namespace = Tracker_View.get_namespace(self, resource, context)
         query = context.query
 
         # Column Selector
@@ -520,7 +520,7 @@ class TrackerExportToText(TrackerView):
 
         # Insert query parameters as hidden input fields
         parameters = []
-        schema = TrackerView.get_query_schema(self)
+        schema = Tracker_View.get_query_schema(self)
         for name in schema:
             if name in namespace:
                 continue
@@ -535,19 +535,19 @@ class TrackerExportToText(TrackerView):
 
 
 
-class TrackerExportToCSVForm(TrackerView):
+class Tracker_ExportToCSVForm(Tracker_View):
 
     template = '/ui/tracker/export_to_csv.xml'
     external_form = True
 
 
     def get_namespace(self, resource, context):
-        namespace = TrackerView.get_namespace(self, resource, context)
+        namespace = Tracker_View.get_namespace(self, resource, context)
         query = context.query
 
         # Insert query parameters as hidden input fields
         parameters = []
-        schema = TrackerView.get_query_schema(self)
+        schema = Tracker_View.get_query_schema(self)
         for name in schema:
             if name in namespace:
                 continue
@@ -562,7 +562,7 @@ class TrackerExportToCSVForm(TrackerView):
 
 
 
-class TrackerExportToCSV(BaseView):
+class Tracker_ExportToCSV(BaseView):
 
     access = 'is_allowed_to_view'
     title = MSG(u'Export to CSV')
@@ -621,7 +621,7 @@ class TrackerExportToCSV(BaseView):
 
 
 
-class TrackerChangeSeveralBugs(TrackerView):
+class Tracker_ChangeSeveralBugs(Tracker_View):
 
     access = 'is_allowed_to_view'
     title = MSG(u'Change Several Issues')
@@ -644,7 +644,7 @@ class TrackerChangeSeveralBugs(TrackerView):
 
 
     def get_namespace(self, resource, context):
-        namespace = TrackerView.get_namespace(self, resource, context)
+        namespace = Tracker_View.get_namespace(self, resource, context)
         # Edit several bugs at once
         get_resource = resource.get_resource
         namespace['modules'] = get_resource('modules').get_options()
