@@ -81,7 +81,7 @@ class ZoomMenu(ContextMenu):
 
 
 
-class FolderView(BaseView):
+class Folder_View(BaseView):
 
     access = True
 
@@ -98,7 +98,7 @@ class FolderView(BaseView):
 
 
 
-class FolderNewResource(IconsView):
+class Folder_NewResource(IconsView):
 
     access = 'is_allowed_to_add'
     title = MSG(u'Add resource')
@@ -120,7 +120,7 @@ class FolderNewResource(IconsView):
 
 
 
-class FolderRename(STLForm):
+class Folder_Rename(STLForm):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Rename resources')
@@ -201,7 +201,7 @@ class FolderRename(STLForm):
 
 
 
-class FolderBrowseContent(SearchForm):
+class Folder_BrowseContent(SearchForm):
 
     access = 'is_allowed_to_view'
     title = MSG(u'Browse Content')
@@ -567,17 +567,17 @@ class FolderBrowseContent(SearchForm):
 
 
 
-class FolderPreviewContent(FolderBrowseContent):
+class Folder_PreviewContent(Folder_BrowseContent):
 
     title = MSG(u'Preview Content')
-    context_menus = FolderBrowseContent.context_menus + [ZoomMenu()]
+    context_menus = Folder_BrowseContent.context_menus + [ZoomMenu()]
     # Table
     table_template = '/ui/folder/browse_image.xml'
 
 
     def get_query_schema(self):
         # Define a huge batch limit, and the image size parameter
-        return merge_dics(FolderBrowseContent.get_query_schema(self),
+        return merge_dics(Folder_BrowseContent.get_query_schema(self),
                           batch_size=Integer(default=0),
                           size=Integer(default=128),
                           width=String,
@@ -588,7 +588,7 @@ class FolderPreviewContent(FolderBrowseContent):
         # Show only images
         query = OrQuery(EqQuery('is_image', '1'),
                         EqQuery('format', 'folder'))
-        return FolderBrowseContent.get_items(self, resource, context, query)
+        return Folder_BrowseContent.get_items(self, resource, context, query)
 
 
     def get_table_head(self, resource, context, items, actions=None):
@@ -721,24 +721,24 @@ class FolderPreviewContent(FolderBrowseContent):
 
 
 
-class FolderLastChanges(FolderBrowseContent):
+class Folder_LastChanges(Folder_BrowseContent):
 
     title = MSG(u"Last Changes")
 
     def get_query_schema(self):
         # Search subfolders by default
-        return merge_dics(FolderBrowseContent.get_query_schema(self),
+        return merge_dics(Folder_BrowseContent.get_query_schema(self),
                           search_subfolders=Boolean(default=True))
 
 
     def get_items(self, resource, context):
         # Show only version aware resources
         query = EqQuery('is_version_aware', '1')
-        return FolderBrowseContent.get_items(self, resource, context, query)
+        return Folder_BrowseContent.get_items(self, resource, context, query)
 
 
 
-class FolderOrphans(FolderBrowseContent):
+class Folder_Orphans(Folder_BrowseContent):
     """Orphans are files not referenced in another resource of the database.
     It extends the concept of "orphans pages" from the wiki to all file-like
     resources.
@@ -755,7 +755,7 @@ class FolderOrphans(FolderBrowseContent):
 
     def get_items(self, resource, context):
         # Make the base search
-        items = FolderBrowseContent.get_items(self, resource, context)
+        items = Folder_BrowseContent.get_items(self, resource, context)
 
         # Find out the orphans
         root = context.root
@@ -778,7 +778,7 @@ class FolderOrphans(FolderBrowseContent):
 
 
 
-class FolderThumbnail(BaseView):
+class Folder_Thumbnail(BaseView):
 
     access = True
 

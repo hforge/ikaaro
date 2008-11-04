@@ -32,8 +32,9 @@ from itools.uri import get_reference
 # Import from ikaaro
 from ikaaro.text import Text
 from ikaaro.registry import register_resource_class
-from ikaaro.resource_views import DBResourceNewInstance
-from page_views import WikiPageView, WikiPageToPDF, WikiPageEdit, WikiPageHelp
+from ikaaro.resource_views import DBResource_NewInstance
+from page_views import WikiPage_Edit, WikiPage_Help, WikiPage_ToPDF
+from page_views import WikiPage_View
 
 
 
@@ -189,11 +190,11 @@ class WikiPage(Text):
     #######################################################################
     # User Interface
     #######################################################################
-    new_instance = DBResourceNewInstance()
-    view = WikiPageView()
-    to_pdf = WikiPageToPDF()
-    edit = WikiPageEdit()
-    help = WikiPageHelp()
+    new_instance = DBResource_NewInstance()
+    view = WikiPage_View()
+    to_pdf = WikiPage_ToPDF()
+    edit = WikiPage_Edit()
+    help = WikiPage_Help()
 
 
     def get_context_menus(self):

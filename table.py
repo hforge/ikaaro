@@ -30,8 +30,8 @@ from itools.gettext import MSG
 from file import File
 from forms import get_default_widget
 from resource_ import DBResource
-from table_views import TableView, TableAddRecord, TableEditRecord
-from table_views import OrderedTableView
+from table_views import Table_View, Table_AddRecord, Table_EditRecord
+from table_views import OrderedTable_View
 
 
 
@@ -68,9 +68,9 @@ class Table(File):
 
     # Views
     new_instance = DBResource.new_instance
-    view = TableView()
-    add_record = TableAddRecord()
-    edit_record = TableEditRecord()
+    view = Table_View()
+    add_record = Table_AddRecord()
+    edit_record = Table_EditRecord()
 
 
 
@@ -153,5 +153,5 @@ class OrderedTable(Table):
     class_handler = OrderedTableFile
 
     # Views
-    view = OrderedTableView()
+    view = OrderedTable_View()
 

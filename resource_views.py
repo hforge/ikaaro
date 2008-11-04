@@ -77,7 +77,7 @@ class AddResourceMenu(ContextMenu):
             for cls in document_types ]
 
 
-class DBResourceNewInstance(NewInstanceForm, AutoForm):
+class DBResource_NewInstance(NewInstanceForm, AutoForm):
 
     access = 'is_allowed_to_add'
     query_schema = {
@@ -127,7 +127,7 @@ class DBResourceNewInstance(NewInstanceForm, AutoForm):
 
 
 
-class DBResourceEdit(AutoForm):
+class DBResource_Edit(AutoForm):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Edit')
@@ -260,7 +260,7 @@ class Breadcrumb(object):
 
 
 
-class DBResourceAddImage(STLForm):
+class DBResource_AddImage(STLForm):
 
     access = 'is_allowed_to_edit'
     template = '/ui/html/addimage.xml'
@@ -378,7 +378,7 @@ class DBResourceAddImage(STLForm):
 
 
 
-class DBResourceAddLink(DBResourceAddImage):
+class DBResource_AddLink(DBResource_AddImage):
 
     template = '/ui/html/addlink.xml'
 
@@ -389,7 +389,7 @@ class DBResourceAddLink(DBResourceAddImage):
 
 
     def get_namespace(self, resource, context):
-        namespace = DBResourceAddImage.get_namespace(self, resource, context)
+        namespace = DBResource_AddImage.get_namespace(self, resource, context)
 
         mode = context.query['mode']
         if mode == 'wiki':

@@ -18,7 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from Standard Library
-from datetime import datetime, time, timedelta
+from datetime import time
 
 # Import from itools
 from itools.datatypes import DataType, Date
@@ -27,10 +27,10 @@ from itools.ical import iCalendar, icalendarTable
 from itools.ical import Record
 
 # Import from ikaaro
-from calendar_views import CalendarUpload, CalendarDownload
+from calendar_views import Calendar_Upload, Calendar_Download
 from calendar_views import AddEventForm, EditEventForm
 from calendar_views import MonthlyView, TimetablesForm, WeeklyView, DailyView
-from file_views import FileView
+from file_views import File_View
 from folder import Folder
 from registry import register_resource_class
 from resource_ import DBResource
@@ -157,9 +157,9 @@ class CalendarBase(DBResource):
     add_event = AddEventForm()
     edit_event = EditEventForm()
     edit_timetables = TimetablesForm()
-    download = CalendarDownload()
-    upload = CalendarUpload()
-    download_form = FileView()
+    download = Calendar_Download()
+    upload = Calendar_Upload()
+    download_form = File_View()
 
 
 

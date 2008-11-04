@@ -27,8 +27,9 @@ from ikaaro.forms import TextWidget, SelectWidget, ReadOnlyWidget
 from ikaaro.forms import stl_namespaces
 from ikaaro import messages
 from ikaaro.registry import register_resource_class
-from ikaaro.resource_views import Breadcrumb, DBResourceAddLink
-from ikaaro.table import OrderedTableFile, OrderedTable, OrderedTableView
+from ikaaro.resource_views import Breadcrumb, DBResource_AddLink
+from ikaaro.table import OrderedTableFile, OrderedTable
+from ikaaro.table_views import OrderedTable_View
 
 
 
@@ -69,13 +70,13 @@ class ChildButton(Button):
 
 
 
-class MenuView(OrderedTableView):
+class Menu_View(OrderedTable_View):
 
     schema = {
         'ids': Integer(multiple=True, mandatory=True),
     }
 
-    table_actions = [ChildButton] + OrderedTableView.table_actions
+    table_actions = [ChildButton] + OrderedTable_View.table_actions
 
 
     def get_items(self, resource, context):
@@ -108,7 +109,7 @@ class MenuView(OrderedTableView):
                 child = 'edit', resource.get_pathto(child)
             return child
 
-        return OrderedTableView.get_item_value(self, resource, context, item,
+        return OrderedTable_View.get_item_value(self, resource, context, item,
                                                column)
 
 
@@ -196,13 +197,13 @@ class MenuView(OrderedTableView):
 
 
 
-class MenuAddLink(DBResourceAddLink):
+class Menu_AddLink(DBResource_AddLink):
 
     access = 'is_allowed_to_edit'
     template = '/ui/future/menu_addlink.xml'
 
     def get_namespace(self, resource, context):
-        namespace = DBResourceAddLink.get_namespace(self, resource, context)
+        namespace = DBResource_AddLink.get_namespace(self, resource, context)
 
         # For the breadcrumb
         if isinstance(resource, Menu):
@@ -227,8 +228,8 @@ class Menu(OrderedTable):
     class_views = ['view', 'add_record']
 
     # Views
-    view = MenuView()
-    add_link = MenuAddLink()
+    view = Menu_View()
+    add_link = Menu_AddLink()
 
     form = [TextWidget('title', title=MSG(u'Title')),
             PathWidget('path', title=MSG(u'Path')),

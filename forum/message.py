@@ -21,7 +21,6 @@
 # Import from itools
 from itools.gettext import MSG
 from itools.html import HTMLParser, sanitize_stream, XHTMLFile
-from itools.web import STLForm
 
 # Import from ikaaro
 from ikaaro.registry import register_resource_class

@@ -51,7 +51,7 @@ from ikaaro.html import is_edit_conflict
 
 
 
-class WikiPageView(BaseView):
+class WikiPage_View(BaseView):
 
     access = 'is_allowed_to_view'
     title = MSG(u'View')
@@ -120,7 +120,7 @@ class WikiPageView(BaseView):
 
 
 
-class WikiPageToPDF(BaseView):
+class WikiPage_ToPDF(BaseView):
 
     access = 'is_allowed_to_view'
     title = MSG(u"To PDF")
@@ -323,7 +323,7 @@ class WikiPageToPDF(BaseView):
 
 
 
-class WikiPageEdit(STLForm):
+class WikiPage_Edit(STLForm):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Edit Page')
@@ -391,7 +391,7 @@ class WikiPageEdit(STLForm):
 
 
 
-class WikiPageHelp(STLView):
+class WikiPage_Help(STLView):
 
     access = 'is_allowed_to_view'
     title = MSG(u"Help")

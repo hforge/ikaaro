@@ -35,16 +35,16 @@ from itools.xapian import EqQuery
 
 # Import from ikaaro
 from datatypes import FileDataType, ImageWidth
-from folder_views import FolderBrowseContent
+from folder_views import Folder_BrowseContent
 from forms import title_widget, file_widget, description_widget, subject_widget
 import messages
 from multilingual import Multilingual
 from registry import get_resource_class
-from resource_views import AddResourceMenu, DBResourceEdit
+from resource_views import AddResourceMenu, DBResource_Edit
 from views import NewInstanceForm
 
 
-class FileNewInstance(NewInstanceForm):
+class File_NewInstance(NewInstanceForm):
 
     access = 'is_allowed_to_add'
     title = MSG(u'Upload File')
@@ -116,7 +116,7 @@ class FileNewInstance(NewInstanceForm):
 
 
 
-class FileDownload(BaseView):
+class File_Download(BaseView):
 
     access = 'is_allowed_to_view'
     title = MSG(u"Download")
@@ -139,7 +139,7 @@ class FileDownload(BaseView):
 
 
 
-class FileView(STLView):
+class File_View(STLView):
 
     access = 'is_allowed_to_view'
     title = MSG(u'Download')
@@ -157,7 +157,7 @@ class FileView(STLView):
 
 
 
-class FileUpload(STLForm):
+class File_Upload(STLForm):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Replace')
@@ -220,8 +220,8 @@ class FileUpload(STLForm):
 
 
 
-class FileEdit(DBResourceEdit, FileUpload):
-    schema = merge_dics(DBResourceEdit.schema,
+class File_Edit(DBResource_Edit, File_Upload):
+    schema = merge_dics(DBResource_Edit.schema,
                         file=FileDataType)
     widgets = [title_widget, file_widget, description_widget,
                subject_widget]
@@ -230,18 +230,18 @@ class FileEdit(DBResourceEdit, FileUpload):
     def get_value(self, resource, context, name, datatype):
         if name == 'file':
             return None
-        return DBResourceEdit.get_value(self, resource, context, name,
+        return DBResource_Edit.get_value(self, resource, context, name,
                                         datatype)
 
 
     def action(self, resource, context, form):
-        DBResourceEdit.action(self, resource, context, form)
-        FileUpload.action(self, resource, context, form)
+        DBResource_Edit.action(self, resource, context, form)
+        File_Upload.action(self, resource, context, form)
 
 
 
 
-class FileExternalEdit(BaseView):
+class File_ExternalEdit(BaseView):
 
     access = 'is_allowed_to_edit'
 
@@ -310,7 +310,7 @@ class FileExternalEdit(BaseView):
 
 
 
-class FileBacklinks(FolderBrowseContent):
+class File_Backlinks(Folder_BrowseContent):
     """Backlinks are the list of resources pointing to this resource.  This
     view answers the question "where is this resource used?" You'll see all
     WebPages and WikiPages (for example) referencing it.  If the list is
@@ -328,7 +328,7 @@ class FileBacklinks(FolderBrowseContent):
     context_menus = []
 
     def get_table_columns(self, resource, context):
-        cols = FolderBrowseContent.get_table_columns(self, resource, context)
+        cols = Folder_BrowseContent.get_table_columns(self, resource, context)
         return [ col for col in cols if col[0] != 'checkbox' ]
 
 
@@ -341,7 +341,7 @@ class FileBacklinks(FolderBrowseContent):
 
 
 
-class ImageThumbnail(BaseView):
+class Image_Thumbnail(BaseView):
 
     access = True
 
@@ -365,7 +365,7 @@ class ImageThumbnail(BaseView):
 
 
 
-class ImageView(STLView):
+class Image_View(STLView):
 
     access = 'is_allowed_to_view'
     title = MSG(u'View')
@@ -440,7 +440,7 @@ class ImageView(STLView):
 
 
 # FIXME This is broken, check http://alistapart.com/articles/byebyeembed
-class VideoView(STLView):
+class Video_View(STLView):
 
     access = 'is_allowed_to_view'
     title = MSG(u'View')
@@ -452,7 +452,7 @@ class VideoView(STLView):
 
 
 
-class ArchiveView(STLView):
+class Archive_View(STLView):
 
     access = 'is_allowed_to_view'
     title = MSG(u'View')

@@ -30,7 +30,7 @@ import messages
 from utils import resolve_view
 
 
-class UserConfirmRegistration(STLForm):
+class User_ConfirmRegistration(STLForm):
 
     access = True
     template = '/ui/user/confirm_registration.xml'
@@ -83,7 +83,7 @@ class UserConfirmRegistration(STLForm):
 
 
 
-class UserProfile(STLView):
+class User_Profile(STLView):
 
     access = 'is_allowed_to_view'
     title = MSG(u'Profile')
@@ -127,7 +127,7 @@ class UserProfile(STLView):
 
 
 
-class UserEditAccount(AutoForm):
+class User_EditAccount(AutoForm):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Edit Account')
@@ -197,7 +197,7 @@ class UserEditAccount(AutoForm):
 
 
 
-class UserEditPreferences(STLForm):
+class User_EditPreferences(STLForm):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Edit Preferences')
@@ -231,7 +231,7 @@ class UserEditPreferences(STLForm):
 
 
 
-class UserEditPassword(STLForm):
+class User_EditPassword(STLForm):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Edit Password')
@@ -288,7 +288,7 @@ class UserEditPassword(STLForm):
 
 
 
-class UserTasks(STLView):
+class User_Tasks(STLView):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Tasks')

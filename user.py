@@ -33,9 +33,9 @@ from access import AccessControl
 from datatypes import Password
 from folder import Folder
 from registry import register_resource_class, get_resource_class
-from resource_views import DBResourceEdit
-from user_views import UserConfirmRegistration, UserProfile, UserEditAccount
-from user_views import UserEditPreferences, UserEditPassword, UserTasks
+from resource_views import DBResource_Edit
+from user_views import User_ConfirmRegistration, User_Profile, User_EditAccount
+from user_views import User_EditPreferences, User_EditPassword, User_Tasks
 from utils import crypt_password, generate_password
 from views import MessageView
 
@@ -216,12 +216,12 @@ class User(AccessControl, Folder):
 
     #######################################################################
     # Views
-    confirm_registration = UserConfirmRegistration()
-    profile = UserProfile()
-    edit_account = UserEditAccount()
-    edit_preferences = UserEditPreferences()
-    edit_password = UserEditPassword()
-    tasks = UserTasks()
+    confirm_registration = User_ConfirmRegistration()
+    profile = User_Profile()
+    edit_account = User_EditAccount()
+    edit_preferences = User_EditPreferences()
+    edit_password = User_EditPassword()
+    tasks = User_Tasks()
 
 
 
@@ -287,7 +287,7 @@ class UserFolder(Folder):
     paste__access__ = False
 
 
-    edit = DBResourceEdit(access='is_admin')
+    edit = DBResource_Edit(access='is_admin')
 
 
     #######################################################################

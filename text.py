@@ -25,10 +25,10 @@ from itools.xml import XMLFile
 
 # Import from ikaaro
 from file import File
-from file_views import FileUpload
+from file_views import File_Upload
 from registry import register_resource_class
-from text_views import TextEdit, TextView, TextExternalEdit, POEdit
-from text_views import CSVView, CSVAddRow, CSVEditRow
+from text_views import Text_Edit, Text_View, Text_ExternalEdit, PO_Edit
+from text_views import CSV_View, CSV_AddRow, CSV_EditRow
 
 
 
@@ -49,10 +49,10 @@ class Text(File):
 
 
     # Views
-    view = TextView()
-    edit = TextEdit()
-    upload = FileUpload()
-    externaledit = TextExternalEdit()
+    view = Text_View()
+    edit = Text_Edit()
+    upload = File_Upload()
+    externaledit = Text_ExternalEdit()
 
 
 
@@ -66,7 +66,7 @@ class PO(Text):
     class_handler = POFile
 
     # Views
-    edit = POEdit()
+    edit = PO_Edit()
 
 
 
@@ -148,9 +148,9 @@ class CSV(Text):
 
     # Views
     edit = None
-    view = CSVView()
-    add_row = CSVAddRow()
-    edit_row = CSVEditRow()
+    view = CSV_View()
+    add_row = CSV_AddRow()
+    edit_row = CSV_EditRow()
 
 
 

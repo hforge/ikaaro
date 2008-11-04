@@ -28,13 +28,13 @@ from itools.csv import Property
 from itools.datatypes import Date, Enumerate, Integer, String, Unicode
 from itools.gettext import MSG
 from itools.ical import get_grid_data
-from itools.ical import DateTime, Time
+from itools.ical import Time
 from itools.stl import stl
 from itools.uri import encode_query, get_reference
 from itools.web import BaseView, STLForm, STLView, get_context, INFO, ERROR
 
 # Import from ikaaro
-from file_views import FileUpload
+from file_views import File_Upload
 
 
 resolution = timedelta.resolution
@@ -1078,7 +1078,7 @@ class DailyView(CalendarView):
 
 
 
-class CalendarUpload(FileUpload):
+class Calendar_Upload(File_Upload):
 
     def action(self, resource, context, form):
         file = form['file']
@@ -1103,7 +1103,7 @@ class CalendarUpload(FileUpload):
 
 
 
-class CalendarDownload(BaseView):
+class Calendar_Download(BaseView):
 
     access = 'is_allowed_to_view'
 

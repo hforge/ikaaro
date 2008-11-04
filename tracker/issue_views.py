@@ -37,7 +37,7 @@ from itools.xml import XMLParser, START_ELEMENT, END_ELEMENT, TEXT
 
 # Import from ikaaro
 from ikaaro.messages import MSG_CHANGES_SAVED
-from ikaaro.table import TableView
+from ikaaro.table_views import Table_View
 from ikaaro.views import CompositeForm
 
 
@@ -145,7 +145,7 @@ class Issue_Edit(STLForm):
             file = record.file
             if not comment and not file:
                 continue
-            datetime = record.datetime
+            rdatetime = record.datetime
             # solid in case the user has been removed
             username = record.username
             user_title = username
@@ -155,7 +155,7 @@ class Issue_Edit(STLForm):
             comments.append({
                 'number': i,
                 'user': user_title,
-                'datetime': format_datetime(datetime),
+                'datetime': format_datetime(rdatetime),
                 'comment': indent(comment),
                 'file': file})
         comments.reverse()
@@ -224,7 +224,7 @@ class Issue_History(STLView):
         rows = []
         i = 0
         for record in resource.get_history_records():
-            datetime = record.get_value('datetime')
+            rdatetime = record.get_value('datetime')
             username = record.get_value('username')
             title = record.get_value('title')
             module = record.get_value('module')
@@ -245,7 +245,7 @@ class Issue_History(STLView):
             i += 1
             row_ns = {'number': i,
                       'user': usertitle,
-                      'datetime': format_datetime(datetime),
+                      'datetime': format_datetime(rdatetime),
                       'title': None,
                       'version': None,
                       'type': None,
@@ -323,7 +323,7 @@ class Issue_History(STLView):
 
 
 
-class Issue_ViewResources(TableView):
+class Issue_ViewResources(Table_View):
 
     search_template = None
 
@@ -340,12 +340,12 @@ class Issue_ViewResources(TableView):
         if column == 'id':
             id = item.id
             return id, ';edit_resources?id=%s' % id
-        return TableView.get_item_value(self, resource, context, item, column)
+        return Table_View.get_item_value(self, resource, context, item, column)
 
 
     def action_remove(self, resource, context, form):
         resource = resource.get_resources()
-        TableView.action_remove(self, resource, context, form)
+        Table_View.action_remove(self, resource, context, form)
 
 
 

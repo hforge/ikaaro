@@ -326,7 +326,7 @@ th a.sort_none {
 
 
 /**************************************************************************
- * folder_views.FolderBrowseContent
+ * folder_views.Folder_BrowseContent
  *************************************************************************/
 
 .workflow { text-decoration: none; }
@@ -396,7 +396,7 @@ dl.thumb dd {
 
 
 /**************************************************************************
- * Defined by resource_views.DBResourceEdit
+ * Defined by resource_views.DBResource_Edit
  * Used by views.build_menu
  *************************************************************************/
 

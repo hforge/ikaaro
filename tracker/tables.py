@@ -30,7 +30,7 @@ from itools.web import ERROR, INFO
 from ikaaro.forms import title_widget, BooleanCheckBox, SelectWidget
 from ikaaro.registry import register_resource_class
 from ikaaro.table import OrderedTable, OrderedTableFile
-from ikaaro.table_views import OrderedTableView
+from ikaaro.table_views import OrderedTable_View
 
 
 
@@ -47,10 +47,10 @@ class ProductsEnumerate(DynamicEnumerate):
 ###########################################################################
 # Views
 ###########################################################################
-class SelectTableView(OrderedTableView):
+class SelectTable_View(OrderedTable_View):
 
     def get_table_columns(self, resource, context):
-        cls = OrderedTableView
+        cls = OrderedTable_View
         columns = cls.get_table_columns(self, resource, context)
         columns.append(('issues', MSG(u'Issues')))
         return columns
@@ -72,7 +72,7 @@ class SelectTableView(OrderedTableView):
             return count, '../;view?%s=%s' % (filter, id)
 
         # Default
-        cls = OrderedTableView
+        cls = OrderedTable_View
         value = cls.get_item_value(self, resource, context, item, column)
 
         # NOTE The field 'product' is reserved to make a reference to the
@@ -91,7 +91,7 @@ class SelectTableView(OrderedTableView):
         # Sort
         sort_by = context.query['sort_by']
         if sort_by != 'issues':
-            cls = OrderedTableView
+            cls = OrderedTable_View
             return cls.sort_and_batch(self, resource, context, items)
 
         reverse = context.query['reverse']
@@ -145,7 +145,7 @@ class Tracker_TableResource(OrderedTable):
         return options
 
 
-    view = SelectTableView()
+    view = SelectTable_View()
 
 
     def del_record_action(self, context):

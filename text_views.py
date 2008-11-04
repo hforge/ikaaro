@@ -31,16 +31,16 @@ from buttons import RemoveButton
 from forms import AutoForm, get_default_widget, MultilineWidget
 from forms import title_widget, description_widget, subject_widget
 import messages
-from resource_views import DBResourceEdit
+from resource_views import DBResource_Edit
 from utils import get_parameters
 from views import BrowseForm
 
 
-class TextEdit(DBResourceEdit):
+class Text_Edit(DBResource_Edit):
 
     title = MSG(u'Edit Inline')
     icon = 'edit.png'
-    schema = merge_dics(DBResourceEdit.schema,
+    schema = merge_dics(DBResource_Edit.schema,
                         data=String(mandatory=True))
     widgets = [title_widget, MultilineWidget('data', title=MSG(u"Content"),
                                              rows=19, cols=69),
@@ -50,18 +50,18 @@ class TextEdit(DBResourceEdit):
     def get_value(self, resource, context, name, datatype):
         if name == 'data':
             return resource.handler.to_str()
-        return DBResourceEdit.get_value(self, resource, context, name,
-                                        datatype)
+        return DBResource_Edit.get_value(self, resource, context, name,
+                                         datatype)
 
 
     def action(self, resource, context, form):
         data = form['data']
         resource.handler.load_state_from_string(data)
-        return DBResourceEdit.action(self, resource, context, form)
+        return DBResource_Edit.action(self, resource, context, form)
 
 
 
-class TextView(STLView):
+class Text_View(STLView):
 
     access = 'is_allowed_to_view'
     title = MSG(u'View')
@@ -74,7 +74,7 @@ class TextView(STLView):
 
 
 
-class TextExternalEdit(STLView):
+class Text_ExternalEdit(STLView):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'External Editor')
@@ -95,7 +95,7 @@ class TextExternalEdit(STLView):
 
 
 
-class POEdit(STLForm):
+class PO_Edit(STLForm):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Edit')
@@ -161,7 +161,7 @@ class POEdit(STLForm):
 
 
 
-class CSVView(BrowseForm):
+class CSV_View(BrowseForm):
 
     # FIXME We need different permissions for GET and POST
     access = 'is_allowed_to_edit'
@@ -253,7 +253,7 @@ class RowForm(AutoForm):
 
 
 
-class CSVAddRow(RowForm):
+class CSV_AddRow(RowForm):
 
     title = MSG(u'Add Row')
     icon = 'new.png'
@@ -270,7 +270,7 @@ class CSVAddRow(RowForm):
 
 
 
-class CSVEditRow(RowForm):
+class CSV_EditRow(RowForm):
 
     title = MSG(u'Edit row #${id}')
     query_schema = {

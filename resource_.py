@@ -33,8 +33,8 @@ from itools.xapian import TextField, KeywordField, IntegerField, BoolField
 # Import from ikaaro
 from lock import Lock
 from metadata import Metadata
-from resource_views import DBResourceNewInstance, DBResourceEdit
-from resource_views import DBResourceAddImage, DBResourceAddLink
+from resource_views import DBResource_NewInstance, DBResource_Edit
+from resource_views import DBResource_AddImage, DBResource_AddLink
 from resource_views import LoginView, LogoutView
 from workflow import WorkflowAware
 
@@ -464,10 +464,10 @@ class DBResource(CatalogAware, IResource):
 
 
     # Views
-    new_instance = DBResourceNewInstance()
+    new_instance = DBResource_NewInstance()
     login = LoginView()
     logout = LogoutView()
-    edit = DBResourceEdit()
-    add_image = DBResourceAddImage()
-    add_link = DBResourceAddLink()
+    edit = DBResource_Edit()
+    add_image = DBResource_AddImage()
+    add_link = DBResource_AddLink()
 

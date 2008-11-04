@@ -39,7 +39,7 @@ from multilingual import Multilingual
 from text import Text
 from registry import register_resource_class
 from resource_ import DBResource
-from resource_views import DBResourceEdit
+from resource_views import DBResource_Edit
 
 
 def is_edit_conflict(resource, context, timestamp):
@@ -65,7 +65,7 @@ def is_edit_conflict(resource, context, timestamp):
 ###########################################################################
 # Views
 ###########################################################################
-class WebPageView(BaseView):
+class WebPage_View(BaseView):
     access = 'is_allowed_to_view'
     title = MSG(u'View')
     icon = 'view.png'
@@ -76,10 +76,10 @@ class WebPageView(BaseView):
 
 
 
-class HTMLEditView(DBResourceEdit):
+class HTMLEditView(DBResource_Edit):
     """WYSIWYG editor for HTML documents.
     """
-    schema = merge_dics(DBResourceEdit.schema,
+    schema = merge_dics(DBResource_Edit.schema,
                         data=HTMLBody, timestamp=DateTime(readonly=True))
     widgets = [title_widget, rte_widget, description_widget, subject_widget,
                timestamp_widget]
@@ -90,8 +90,8 @@ class HTMLEditView(DBResourceEdit):
             return resource.get_epoz_data()
         elif name == 'timestamp':
             return datetime.now()
-        return DBResourceEdit.get_value(self, resource, context, name,
-                                        datatype)
+        return DBResource_Edit.get_value(self, resource, context, name,
+                                         datatype)
 
 
     def action(self, resource, context, form):
@@ -99,7 +99,7 @@ class HTMLEditView(DBResourceEdit):
             return
 
         # Properties
-        DBResourceEdit.action(self, resource, context, form)
+        DBResource_Edit.action(self, resource, context, form)
 
         # Body
         new_body = form['data']
@@ -212,7 +212,7 @@ class WebPage(EpozEditable, Multilingual, Text):
     # UI
     #######################################################################
     new_instance = DBResource.new_instance
-    view = WebPageView()
+    view = WebPage_View()
 
     def get_epoz_document(self):
         return self.handler

@@ -29,7 +29,7 @@ from itools.xapian import EqQuery, AndQuery
 # Import from ikaaro
 from access import RoleAware_BrowseUsers, RoleAware_AddUser
 from access import RoleAware_EditMembership
-from folder_views import FolderOrphans
+from folder_views import Folder_Orphans
 import messages
 from views import IconsView, ContextMenu
 
@@ -344,6 +344,6 @@ class CPEditMembership(CPBaseView, RoleAware_EditMembership):
     pass
 
 
-class CPOrphans(CPBaseView, FolderOrphans):
+class CPOrphans(CPBaseView, Folder_Orphans):
     pass
 

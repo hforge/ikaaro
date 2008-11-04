@@ -26,9 +26,9 @@ from itools.web import get_context, BaseView
 
 # Import from ikaaro
 from exceptions import ConsistencyError
-from folder_views import FolderBrowseContent, FolderLastChanges
-from folder_views import FolderNewResource, FolderOrphans, FolderThumbnail
-from folder_views import FolderPreviewContent, FolderRename, FolderView
+from folder_views import Folder_BrowseContent, Folder_LastChanges
+from folder_views import Folder_NewResource, Folder_Orphans, Folder_Thumbnail
+from folder_views import Folder_PreviewContent, Folder_Rename, Folder_View
 from registry import register_resource_class, get_resource_class
 from resource_ import DBResource
 
@@ -254,14 +254,14 @@ class Folder(DBResource):
 
     #######################################################################
     # Views
-    view = FolderView()
-    new_resource = FolderNewResource()
-    browse_content = FolderBrowseContent()
-    rename = FolderRename()
-    preview_content = FolderPreviewContent()
-    last_changes = FolderLastChanges()
-    orphans = FolderOrphans()
-    thumb = FolderThumbnail()
+    view = Folder_View()
+    new_resource = Folder_NewResource()
+    browse_content = Folder_BrowseContent()
+    rename = Folder_Rename()
+    preview_content = Folder_PreviewContent()
+    last_changes = Folder_LastChanges()
+    orphans = Folder_Orphans()
+    thumb = Folder_Thumbnail()
 
 
 

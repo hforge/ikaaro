@@ -40,7 +40,7 @@ from ikaaro.datatypes import CopyCookie
 from ikaaro.exceptions import ConsistencyError
 from ikaaro.forms import HiddenWidget, TextWidget
 from ikaaro import messages
-from ikaaro.resource_views import DBResourceNewInstance
+from ikaaro.resource_views import DBResource_NewInstance
 from ikaaro.views import BrowseForm, SearchForm as BaseSearchForm, ContextMenu
 
 # Import from ikaaro.tracker
@@ -160,18 +160,18 @@ class TrackerViewMenu(ContextMenu):
 ###########################################################################
 # Views
 ###########################################################################
-class Tracker_NewInstance(DBResourceNewInstance):
+class Tracker_NewInstance(DBResource_NewInstance):
 
     schema = merge_dics(
-        DBResourceNewInstance.schema,
+        DBResource_NewInstance.schema,
         product=Unicode(mandatory=True))
 
-    widgets = DBResourceNewInstance.widgets + \
+    widgets = DBResource_NewInstance.widgets + \
         [TextWidget('product', title=MSG(u'Give the title of one Product'))]
 
 
     def action(self, resource, context, form):
-        ok = DBResourceNewInstance.action(self, resource, context, form)
+        ok = DBResource_NewInstance.action(self, resource, context, form)
         if ok is None:
             return
 

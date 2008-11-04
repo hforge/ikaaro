@@ -46,7 +46,7 @@ class Multiple(DataType):
 
 
 
-class TableView(SearchForm):
+class Table_View(SearchForm):
 
     access = 'is_allowed_to_view'
     access_POST = 'is_allowed_to_edit'
@@ -167,7 +167,7 @@ class TableView(SearchForm):
 
 
 
-class TableAddRecord(AutoForm):
+class Table_AddRecord(AutoForm):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Add Record')
@@ -229,7 +229,7 @@ class TableAddRecord(AutoForm):
 
 
 
-class TableEditRecord(AutoForm):
+class Table_EditRecord(AutoForm):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Edit record ${id}')
@@ -300,7 +300,7 @@ class TableEditRecord(AutoForm):
 
 
 
-class OrderedTableView(TableView):
+class OrderedTable_View(Table_View):
 
     def get_items(self, resource, context):
         items = resource.handler.get_records_in_order()
@@ -321,11 +321,11 @@ class OrderedTableView(TableView):
             size = context.query['batch_size']
             return items[start:start+size]
 
-        return TableView.sort_and_batch(self, resource, context, items)
+        return Table_View.sort_and_batch(self, resource, context, items)
 
 
     def get_table_columns(self, resource, context):
-        columns = TableView.get_table_columns(self, resource, context)
+        columns = Table_View.get_table_columns(self, resource, context)
         columns.append(('order', MSG(u'Order')))
 
         return columns
@@ -336,7 +336,7 @@ class OrderedTableView(TableView):
             ordered_ids = list(resource.handler.get_record_ids_in_order())
             return ordered_ids.index(item.id) + 1
 
-        return TableView.get_item_value(self, resource, context, item, column)
+        return Table_View.get_item_value(self, resource, context, item, column)
 
 
     table_actions = [

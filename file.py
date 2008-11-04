@@ -38,9 +38,9 @@ from itools.xml import MSPowerPoint as MSPowerPointFile, RTF as RTFFile
 from registry import register_resource_class
 from versioning import VersioningAware
 from workflow import WorkflowAware
-from file_views import FileNewInstance, FileDownload, FileView
-from file_views import FileEdit, FileExternalEdit, FileBacklinks
-from file_views import ImageThumbnail, ImageView, VideoView, ArchiveView
+from file_views import File_NewInstance, File_Download, File_View
+from file_views import File_Edit, File_ExternalEdit, File_Backlinks
+from file_views import Image_Thumbnail, Image_View, Video_View, Archive_View
 
 
 
@@ -180,17 +180,17 @@ class File(WorkflowAware, VersioningAware):
         return self.handler.get_mimetype()
 
     # Views
-    new_instance = FileNewInstance()
-    download = FileDownload()
-    view = FileView()
-    edit = FileEdit()
+    new_instance = File_NewInstance()
+    download = File_Download()
+    view = File_View()
+    edit = File_Edit()
     externaledit = STLView(
         access='is_allowed_to_edit',
         title=MSG(u'External Editor'),
         icon='external.png',
         template='/ui/file/externaledit.xml')
-    external_edit = FileExternalEdit()
-    backlinks = FileBacklinks()
+    external_edit = File_ExternalEdit()
+    backlinks = File_Backlinks()
 
 
 
@@ -208,8 +208,8 @@ class Image(File):
     class_handler = ImageHandler
 
     # Views
-    thumb = ImageThumbnail()
-    view = ImageView()
+    thumb = Image_Thumbnail()
+    view = Image_View()
 
 
 
@@ -222,7 +222,7 @@ class Video(File):
     class_icon48 = 'icons/48x48/flash.png'
 
     # Views
-    view = VideoView()
+    view = Video_View()
 
 
 
@@ -371,7 +371,7 @@ class ODP(File):
 ###########################################################################
 class Archive(File):
 
-    view = ArchiveView()
+    view = Archive_View()
 
 
 

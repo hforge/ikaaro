@@ -19,7 +19,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.datatypes import Unicode, String
+from itools.datatypes import String
 from itools.gettext import MSG
 from itools.i18n import format_datetime
 from itools.vfs import FileName
@@ -36,7 +36,7 @@ from message import Message, build_message
 ###########################################################################
 # Views
 ###########################################################################
-class ThreadView(STLForm):
+class Thread_View(STLForm):
 
     access = 'is_allowed_to_view'
     title = MSG(u'View')
@@ -150,7 +150,7 @@ class Thread(Folder):
 
 
     # Views
-    view = ThreadView()
+    view = Thread_View()
 
 
 ###########################################################################

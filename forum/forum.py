@@ -38,7 +38,7 @@ from message import Message
 
 
 
-class ForumView(STLForm):
+class Forum_View(STLForm):
 
     access = 'is_allowed_to_view'
     title = MSG(u'View')
@@ -132,7 +132,7 @@ class Forum(Folder):
 
 
     # Views
-    view = ForumView()
+    view = Forum_View()
     add_thread = AddThreadForm()
 
 
