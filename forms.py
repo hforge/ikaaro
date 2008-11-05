@@ -244,8 +244,9 @@ class BooleanRadio(Widget):
 class SelectWidget(Widget):
 
     template = list(XMLParser("""
-        <select name="${name}" multiple="${multiple}">
-          <option value=""></option>
+        <select name="${name}" multiple="${multiple}" size="${size}"
+            class="${css}">
+          <option value="" stl:if="has_empty_option"></option>
           <option stl:repeat="option options" value="${option/name}"
             selected="${option/selected}">${option/value}</option>
         </select>
@@ -259,11 +260,13 @@ class SelectWidget(Widget):
         # twice (there may be a better way of handling this).
         if type(value) is not list:
             value = datatype.get_namespace(value)
-
         return {
+            'css': getattr(self, 'css', None),
+            'has_empty_option': getattr(self, 'has_empty_option', True),
             'name': self.name,
             'multiple': getattr(datatype, 'multiple', False),
-            'options': value}
+            'options': value,
+            'size':  getattr(self, 'size', None)}
 
 
 
