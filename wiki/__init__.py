@@ -18,11 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from docutils
-try:
-    import docutils
-except ImportError:
-    print "docutils is not installed, wiki deactivated."
-    raise
+import docutils
 
 # Import from itools
 from itools import get_abspath

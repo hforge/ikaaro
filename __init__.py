@@ -51,7 +51,12 @@ Folder.register_document_type(CalendarTable)
 # register after)
 import forum
 import tracker
-import wiki
+try:
+    import docutils
+except ImportError:
+    print "docutils is not installed, wiki deactivated."
+else:
+    import wiki
 
 
 ###########################################################################
