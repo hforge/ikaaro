@@ -3036,7 +3036,7 @@ msgstr "Rechercher"
 #: ../ui/folder/browse_search.xml.en:21
 msgctxt "label"
 msgid "Search subfolders"
-msgstr "Rechercher dans les ressources"
+msgstr "Rechercher dans les sous-dossiers"
 
 #: ../tracker/tracker.py:55
 msgid "Security Issue"
