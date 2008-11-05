@@ -42,7 +42,7 @@ from datatypes import CopyCookie, ImageWidth
 from exceptions import ConsistencyError
 import messages
 from resource_views import AddResourceMenu
-from utils import generate_name
+from utils import generate_name, get_base_path_query
 from versioning import VersioningAware
 from views import IconsView, SearchForm, ContextMenu
 from workflow import WorkflowAware
@@ -249,11 +249,7 @@ class Folder_BrowseContent(SearchForm):
         args = list(args)
         abspath = str(resource.get_canonical_path())
         if search_subfolders is True:
-            if abspath == '/':
-                args.append(StartQuery('abspath', abspath))
-                args.append(NotQuery(EqQuery('abspath', abspath)))
-            else:
-                args.append(StartQuery('abspath', abspath + '/'))
+            args.append(get_base_path_query(abspath))
         else:
             args.append(EqQuery('parent_path', abspath))
         if search_term:

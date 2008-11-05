@@ -24,6 +24,8 @@ from urllib import quote
 
 # Import from itools
 from itools.web import get_context
+from itools.xapian import AllQuery, EqQuery, NotQuery, OrQuery, StartQuery
+from itools.xapian import AndQuery
 
 if platform[:3] == 'win':
     from utils_win import is_pid_running, kill
@@ -171,7 +173,7 @@ def generate_name(name, used, suffix='_'):
 
 
 ###########################################################################
-# Generate next name
+# Build link to view
 ###########################################################################
 def resolve_view(context, view_name):
     # Case 1: /a/b/;view
@@ -185,4 +187,39 @@ def resolve_view(context, view_name):
         return ';%s' % view_name
     # Case 4: /a/b
     return '%s/;%s' % (context.uri.path[-1], view_name)
+
+
+
+###########################################################################
+# Index and Search
+###########################################################################
+def get_base_path_query(abspath, include_container=False):
+    """Builds a query that will return all the objects within the given
+    absolute path, like it is returned by 'resource.get_abspath()'.
+
+    If 'include_container' is true the resource at the given path will be
+    returned too.
+    """
+    # Case 1: everything
+    if abspath == '/' and include_container is True:
+        return AllQuery()
+
+    # Case 2: everything but the root
+    if abspath == '/':
+        return NotQuery(EqQuery('abspath', '/'))
+
+    # Case 3: some subfolder
+    all = EqQuery('paths', abspath)
+    if include_container is True:
+        return all
+
+    return AndQuery(all, NotQuery(EqQuery('abspath', abspath)))
+
+    # FIXME We should use the code below for 'Case 3', but it is 3x slower
+#   content = StartQuery('abspath', abspath + '/')
+#   if include_container is False:
+#       return content
+
+#   container = EqQuery('abspath', abspath)
+#   return OrQuery(container, content)
 

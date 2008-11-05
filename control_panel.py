@@ -31,6 +31,7 @@ from access import RoleAware_BrowseUsers, RoleAware_AddUser
 from access import RoleAware_EditMembership
 from folder_views import Folder_Orphans
 import messages
+from utils import get_base_path_query
 from views import IconsView, ContextMenu
 
 
@@ -205,23 +206,27 @@ class CPBrokenLinks(CPBaseView, STLView):
 
 
     def get_namespace(self, resource, context):
-        root = context.root
-
         # Find out broken links
-        broken = {}
         catalog = context.server.catalog
         base = resource.get_abspath()
+
+        # Search only within the given resource
         base_str = str(base)
+        query = get_base_path_query(base_str, include_container=True)
+        results = catalog.search(query)
+
+        # Find out the broken links
+        root = context.root
+        broken = {}
         for link in catalog.get_unique_values('links'):
             if root.has_resource(link):
                 continue
-            query = AndQuery(EqQuery('paths', base_str),
-                             EqQuery('links', link))
+            sub_results = results.search(EqQuery('links', link))
             link = str(base.get_pathto(Path(link)))
-            for brain in catalog.search(query).get_documents():
+            for brain in sub_results.get_documents():
                 broken.setdefault(brain.abspath, []).append(link)
+
         # Build the namespace
-        namespace = {}
         items = []
         total = 0
         keys = broken.keys()
@@ -232,10 +237,10 @@ class CPBrokenLinks(CPBaseView, STLView):
             n = len(links)
             items.append({'path': path, 'links': links, 'n': n})
             total += n
-        namespace['items'] = items
-        namespace['total'] = total
 
-        return namespace
+        return {
+            'items': items,
+            'total': total}
 
 
 
