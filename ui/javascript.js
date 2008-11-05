@@ -22,7 +22,7 @@ function popup(url, width, height) {
 }
 
 
-function tabme_show(event, tab) {
+function tabme_show(event) {
     event.preventDefault();
     $(".tabme a").each(function() {
         // Hide all divs
@@ -31,9 +31,9 @@ function tabme_show(event, tab) {
         $(this).removeClass("selected");
     });
     // Show selected div
-    $(tab.hash).show('fast');
+    $(this.hash).show('fast');
     // Add flag
-    $(tab).addClass("selected");
+    $(this).addClass("selected");
 }
 
 

@@ -267,10 +267,10 @@ class DBResource_AddImage(STLForm):
     schema = {
         'target_path': String(mandatory=True),
         'file': FileDataType(mandatory=True),
-        'mode': String(default='html'),
+        'mode': String,
     }
     query_schema = {
-        'mode': String(default='html'),
+        'mode': String,
     }
 
 
@@ -291,7 +291,7 @@ class DBResource_AddImage(STLForm):
         mode = context.query['mode']
         if mode == 'wiki':
             scripts.append('/ui/wiki/javascript.js')
-        else:
+        elif mode == 'menu':
             scripts.extend(['/ui/tiny_mce/javascript.js',
                             '/ui/tiny_mce/tiny_mce_src.js',
                             '/ui/tiny_mce/tiny_mce_popup.js'])
@@ -356,9 +356,10 @@ class DBResource_AddImage(STLForm):
 
         # Ok
         caption = messages.MSG_CAPTION.gettext().encode('utf_8')
-        if form['mode'] == 'wiki':
+        mode = form['mode']
+        if mode == 'wiki':
             scripts = ['/ui/wiki/javascript.js']
-        else:
+        elif mode == 'html':
             scripts = ['/ui/tiny_mce/javascript.js',
                        '/ui/tiny_mce/tiny_mce_src.js',
                        '/ui/tiny_mce/tiny_mce_popup.js']
@@ -392,9 +393,10 @@ class DBResource_AddLink(DBResource_AddImage):
         namespace = DBResource_AddImage.get_namespace(self, resource, context)
 
         mode = context.query['mode']
+        type = None
         if mode == 'wiki':
             type = 'WikiPage'
-        else:
+        elif mode == 'html':
             type = 'application/xhtml+xml'
         namespace['type'] = type,
         namespace['wiki_mode'] = (mode == 'wiki'),
@@ -417,7 +419,7 @@ class DBResource_AddLink(DBResource_AddImage):
             mode = form['mode']
             if mode == 'wiki':
                 scripts = ['/ui/wiki/javascript.js']
-            else:
+            elif mode == 'html':
                 scripts = ['/ui/tiny_mce/javascript.js',
                            '/ui/tiny_mce/tiny_mce_src.js',
                            '/ui/tiny_mce/tiny_mce_popup.js']
