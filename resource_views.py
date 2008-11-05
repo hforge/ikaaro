@@ -235,7 +235,12 @@ class Breadcrumb(object):
 
             self.is_submit = True
             # Calculate path
-            path_to_icon = resource.get_resource_icon(icon_size)
+            is_image = isinstance(resource, Image)
+            if is_image:
+                path_to_icon = ";thumb?width=%s&height=%s" % (icon_size,
+                                                              icon_size)
+            else:
+                path_to_icon = resource.get_resource_icon(icon_size)
             if path:
                 path_to_resource = Path(str(path) + '/')
                 path_to_icon = path_to_resource.resolve(path_to_icon)
@@ -244,7 +249,7 @@ class Breadcrumb(object):
                           'title': title,
                           'short_title': reduce_string(title, 12, 40),
                           'is_folder': isinstance(resource, Folder),
-                          'is_image': isinstance(resource, Image),
+                          'is_image': is_image,
                           'is_selectable': True,
                           'path': path,
                           'url': url,
