@@ -338,8 +338,9 @@ class SiteSearchView(SearchForm):
     table_template = '/ui/website/search_table.xml'
     def get_table_namespace(self, resource, context, items):
         # Build the namespace
+        site_root = resource.get_site_root()
         items_ns = [{
-            'abspath': str(item.get_abspath()),
+            'abspath': '/%s' % site_root.get_pathto(item),
             'title': item.get_title(),
             'type': item.class_title.gettext(),
             'size': item.get_human_size(),
