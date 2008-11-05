@@ -32,6 +32,7 @@ from itools.i18n import format_datetime
 from itools.uri import get_reference, Path
 from itools.web import BaseView, STLForm, ERROR
 from itools.xapian import AndQuery, EqQuery, NotQuery, OrQuery, PhraseQuery
+from itools.xapian import StartQuery
 from itools.xml import XMLParser
 
 # Import from ikaaro
@@ -248,17 +249,11 @@ class Folder_BrowseContent(SearchForm):
         args = list(args)
         abspath = str(resource.get_canonical_path())
         if search_subfolders is True:
-#           # FIXME This should work, but does not (see bug 408)
-#           from itools.xapian import StartQuery
-#           if abspath == '/':
-#               args.append(StartQuery('abspath', abspath))
-#               args.append(NotQuery(EqQuery('abspath', abspath)))
-#           else:
-#               args.append(StartQuery('abspath', abspath + '/'))
-
-            args.append(EqQuery('paths', abspath))
-            # Avoid the container
-            args.append(NotQuery(EqQuery('abspath', abspath)))
+            if abspath == '/':
+                args.append(StartQuery('abspath', abspath))
+                args.append(NotQuery(EqQuery('abspath', abspath)))
+            else:
+                args.append(StartQuery('abspath', abspath + '/'))
         else:
             args.append(EqQuery('parent_path', abspath))
         if search_term:
@@ -527,7 +522,8 @@ class Folder_BrowseContent(SearchForm):
                 resource = target.get_resource(name)
                 if isinstance(resource, WorkflowAware):
                     metadata = resource.metadata
-                    metadata.set_property('state', resource.workflow.initstate)
+                    metadata.set_property('state',
+                                          resource.workflow.initstate)
 
         # Cut, clean cookie
         if cut is True:
