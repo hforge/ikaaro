@@ -20,7 +20,7 @@
 # Import from the Standard Library
 from optparse import OptionParser
 from subprocess import Popen
-import sys
+from sys import argv, exit
 from os.path import dirname, join, realpath
 from time import sleep
 
@@ -42,7 +42,7 @@ def start(parser, options, target):
         return
 
     # Start Server
-    script_path = dirname(realpath(sys.argv[0]))
+    script_path = dirname(realpath(argv[0]))
     path_icms_start_server = join(script_path, 'icms-start-server.py')
     args = [path_icms_start_server, target]
     if options.debug:
@@ -54,7 +54,7 @@ def start(parser, options, target):
     if options.address:
         args.append('--address=%s' % options.address)
     args = ' '.join(args)
-    p_server = Popen(args, 0, None, None, None, None, shell=True)
+    p_server = Popen(args, shell=True)
 
     # Start the Mail Spool
     path_icms_start_spool = join(script_path, 'icms-start-spool.py')
@@ -62,19 +62,19 @@ def start(parser, options, target):
     if options.detach:
         args.append('--detach')
     args = ' '.join(args)
-    p_spool = Popen(args, 0, None, None, None, None, shell=True)
+    p_spool = Popen(args, shell=True)
 
     # Detach
     if options.detach:
-        sleep(0.5)
-        return
+        sleep(2)
+        exit(abs(p_server.poll() or 0)+abs(p_spool.poll() or 0))
 
     # Do not detach: wait for the child process
     try:
-        p_server.wait()
+        ret = p_server.wait()
     except:
-        pass
-
+        ret = 1
+    exit(abs(ret or 0)+abs(p_spool.poll() or 0))
 
 
 
@@ -106,8 +106,8 @@ if __name__ == '__main__':
     elif n_args == 1:
         pass
     elif options.address or options.debug or options.detach or options.port:
-        parser.error(
-            'Options are not available when starting several servers at once.')
+        parser.error('Options are not available when starting several '
+                     'servers at once.')
 
     # Action!
     for target in args:
