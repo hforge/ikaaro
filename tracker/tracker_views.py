@@ -25,7 +25,7 @@ from datetime import datetime
 from operator import itemgetter
 
 # Import from itools
-from itools.csv import CSVFile
+from itools.csv import CSVFile, Property
 from itools.datatypes import Boolean, Integer, String, Unicode
 from itools.gettext import MSG
 from itools.handlers import merge_dics
@@ -179,6 +179,7 @@ class Tracker_NewInstance(DBResource_NewInstance):
         name = form['name']
         product = form['product']
         table = resource.get_resource('%s/products' % name).get_handler()
+        product = Property(product, {'language': 'en'})
         table.add_record({'title': product})
 
         # Ok

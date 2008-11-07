@@ -25,6 +25,7 @@ from operator import itemgetter
 from string import Template
 
 # Import from itools
+from itools.csv import Property
 from itools.datatypes import Integer, String, Unicode
 from itools.gettext import MSG
 from itools.uri import Reference
@@ -85,6 +86,7 @@ class Tracker(Folder):
             table_path = '%s/%s' % (name, table_name)
             table = Tracker_TableHandler()
             for title in values:
+                title = Property(title, {'language': 'en'})
                 table.add_record({'title': title})
             folder.set_handler(table_path, table)
             metadata = Tracker_TableResource.build_metadata()

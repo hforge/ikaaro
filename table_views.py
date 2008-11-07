@@ -21,7 +21,7 @@
 # Import from itools
 from itools.csv import UniqueError
 from itools.datatypes import DataType, is_datatype
-from itools.datatypes import Integer, Enumerate, Tokens
+from itools.datatypes import Integer, Enumerate, Tokens, Unicode
 from itools.gettext import MSG
 from itools.web import MSG_MISSING_OR_INVALID, INFO, ERROR
 from itools.xapian import PhraseQuery
@@ -30,6 +30,7 @@ from itools.xapian import PhraseQuery
 from buttons import Button, RemoveButton
 from forms import AutoForm
 import messages
+from resource_views import EditLanguageMenu
 from views import SearchForm
 
 
@@ -235,11 +236,20 @@ class Table_EditRecord(AutoForm):
     title = MSG(u'Edit record ${id}')
     query_schema = {'id': Integer}
 
+    context_menus = [EditLanguageMenu()]
+
 
     def get_value(self, resource, context, name, datatype):
+        handler = resource.get_handler()
+        # Get the record
         id = context.query['id']
-        record = resource.get_handler().get_record(id)
-        return resource.handler.get_record_value(record, name)
+        record = handler.get_record(id)
+        # Is mulitilingual
+        if is_datatype(datatype, Unicode):
+            language = resource.get_content_language(context)
+            return handler.get_record_value(record, name, language=language)
+
+        return handler.get_record_value(record, name)
 
 
     def get_schema(self, resource, context):

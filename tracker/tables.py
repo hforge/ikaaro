@@ -110,7 +110,7 @@ class SelectTable_View(OrderedTable_View):
 ###########################################################################
 class Tracker_TableHandler(OrderedTableFile):
 
-    record_schema = {'title': Unicode}
+    record_schema = {'title': Unicode(multiple=True)}
 
 
 
@@ -125,12 +125,19 @@ class Tracker_TableResource(OrderedTable):
 
 
     def get_options(self, value=None, sort=None):
-        options = [
-            {'id': x.id, 'title': x.title}
-            for x in self.handler.get_records_in_order() ]
+        # Find out the options
+        handler = self.handler
+        options = []
+        for id in handler.get_record_ids_in_order():
+            record = handler.get_record(id)
+            # FIXME The language is hardcoded
+            title = handler.get_record_value(record, 'title', language='en')
+            options.append({'id': id, 'title': title})
 
+        # Sort
         if sort is not None:
             options.sort(key=lambda x: x.get(sort))
+
         # Set 'is_selected'
         if value is None:
             for option in options:
@@ -180,7 +187,7 @@ class ModulesHandler(Tracker_TableHandler):
 
     record_schema = {
         'product': String(mandatory=True),
-        'title': Unicode(mandatory=True)}
+        'title': Unicode(multiple=True, mandatory=True)}
 
 
 
@@ -207,7 +214,7 @@ class VersionsHandler(Tracker_TableHandler):
 
     record_schema = {
         'product': String(mandatory=True),
-        'title': Unicode(mandatory=True),
+        'title': Unicode(multiple=True, mandatory=True),
         'released': Boolean}
 
 
