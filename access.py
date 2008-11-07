@@ -402,7 +402,7 @@ class RoleAware(AccessControl):
         if self.has_user_role(user.name, 'members'):
             if isinstance(resource, WorkflowAware):
                 state = resource.workflow_state
-                # Anybody can see public resources
+                # Public resources are frozen for members
                 if state != 'public':
                     return True
 
