@@ -243,8 +243,8 @@ class Skin(UIFolder):
         user = context.user
 
         if user is None:
-            root = context.site_root
-            joinisopen = root.get_property('website_is_open')
+            site_root = context.site_root
+            joinisopen = site_root.is_allowed_to_register(user, site_root)
             return {'info': None, 'joinisopen': joinisopen}
 
         home = '/users/%s' % user.name
@@ -259,11 +259,11 @@ class Skin(UIFolder):
     def get_breadcrumb(self, context):
         """Return a list of dicts [{name, url}...]
         """
-        root = context.site_root
+        site_root = context.site_root
 
         # Initialize the breadcrumb with the root resource
         path = '/'
-        title = root.get_title()
+        title = site_root.get_title()
         breadcrumb = [{
             'url': path,
             'name': title,
@@ -271,7 +271,7 @@ class Skin(UIFolder):
             }]
 
         # Complete the breadcrumb
-        resource = root
+        resource = site_root
         for name in context.uri.path:
             path = path + ('%s/' % name)
             try:
