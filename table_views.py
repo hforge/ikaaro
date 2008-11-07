@@ -19,7 +19,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.csv import UniqueError
+from itools.csv import UniqueError, Property
 from itools.datatypes import DataType, is_datatype
 from itools.datatypes import Integer, Enumerate, Tokens, Unicode
 from itools.gettext import MSG
@@ -271,21 +271,27 @@ class Table_EditRecord(AutoForm):
             context.message = MSG_MISSING_OR_INVALID
             return
 
-        # check form
+        # Check form
+        handler = resource.handler
         check_fields = {}
         for widget in resource.get_form():
-            datatype = resource.handler.get_record_datatype(widget.name)
+            datatype = handler.get_record_datatype(widget.name)
             if getattr(datatype, 'multiple', False) is True:
                 datatype = Multiple(type=datatype)
             check_fields[widget.name] = datatype
 
         # Get the record
+        language = resource.get_content_language(context)
         record = {}
         for widget in resource.get_form():
-            datatype = resource.handler.get_record_datatype(widget.name)
+            datatype = handler.get_record_datatype(widget.name)
             if getattr(datatype, 'multiple', False) is True:
                 if is_datatype(datatype, Enumerate):
                     value = form[widget.name]
+                elif is_datatype(datatype, Unicode):
+                    value = form[widget.name]
+                    value = value[0]
+                    value = Property(value, {'language': language})
                 else: # textarea -> string
                     values = form[widget.name]
                     values = values.splitlines()
@@ -299,7 +305,7 @@ class Table_EditRecord(AutoForm):
             record[widget.name] = value
 
         try:
-            resource.handler.update_record(id, **record)
+            handler.update_record(id, **record)
             context.message = messages.MSG_CHANGES_SAVED
         except UniqueError, error:
             title = resource.get_field_title(error.name)
