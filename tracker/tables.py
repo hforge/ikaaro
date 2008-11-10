@@ -130,8 +130,7 @@ class Tracker_TableResource(OrderedTable):
         options = []
         for id in handler.get_record_ids_in_order():
             record = handler.get_record(id)
-            # FIXME The language is hardcoded
-            title = handler.get_record_value(record, 'title', language='en')
+            title = handler.get_record_value(record, 'title')
             options.append({'id': id, 'title': title})
 
         # Sort
