@@ -20,7 +20,7 @@
 
 # Import from itools
 from itools.csv import UniqueError, Property
-from itools.datatypes import DataType, is_datatype
+from itools.datatypes import DataType, is_datatype, copy_datatype
 from itools.datatypes import Integer, Enumerate, Tokens, Unicode
 from itools.gettext import MSG
 from itools.web import MSG_MISSING_OR_INVALID, INFO, ERROR
@@ -257,7 +257,15 @@ class Table_EditRecord(AutoForm):
 
 
     def get_schema(self, resource, context):
-        return resource.get_schema()
+        schema = resource.get_schema()
+        # Change Unicode datatypes to be not-multiple
+        schema = schema.copy()
+        for name in schema:
+            datatype = schema[name]
+            if is_datatype(datatype, Unicode):
+                schema[name] = copy_datatype(datatype, multiple=False)
+        # Ok
+        return schema
 
 
     def get_widgets(self, resource, context):
@@ -294,7 +302,6 @@ class Table_EditRecord(AutoForm):
                     value = form[widget.name]
                 elif is_datatype(datatype, Unicode):
                     value = form[widget.name]
-                    value = value[0]
                     value = Property(value, {'language': language})
                 else: # textarea -> string
                     values = form[widget.name]
