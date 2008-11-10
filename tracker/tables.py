@@ -23,7 +23,7 @@ from itools.datatypes import Boolean, Integer, String, Unicode
 from itools.datatypes import DynamicEnumerate
 from itools.gettext import MSG
 from itools.handlers import merge_dics
-from itools.xapian import EqQuery, AndQuery
+from itools.xapian import PhraseQuery, AndQuery
 from itools.web import ERROR, INFO
 
 # Import from ikaaro
@@ -62,9 +62,9 @@ class SelectTable_View(OrderedTable_View):
             root = context.root
             abspath = resource.parent.get_canonical_path()
             base_query = AndQuery(
-                            EqQuery('parent_path', str(abspath)),
-                            EqQuery('format', 'issue'))
-            search_query = AndQuery(base_query, EqQuery(filter, id))
+                            PhraseQuery('parent_path', str(abspath)),
+                            PhraseQuery('format', 'issue'))
+            search_query = AndQuery(base_query, PhraseQuery(filter, id))
             results = root.search(search_query)
             count = len(results)
             if count == 0:
@@ -167,11 +167,11 @@ class Tracker_TableResource(OrderedTable):
         abspath = self.parent.get_canonical_path()
 
         # Search
-        base_query = EqQuery('parent_path', str(abspath))
-        base_query = AndQuery(base_query, EqQuery('format', 'issue'))
+        base_query = PhraseQuery('parent_path', str(abspath))
+        base_query = AndQuery(base_query, PhraseQuery('format', 'issue'))
         removed = []
         for id in ids:
-            query = AndQuery(base_query, EqQuery(filter, id))
+            query = AndQuery(base_query, PhraseQuery(filter, id))
             count = root.search(query).get_n_documents()
             if count == 0:
                 self.handler.del_record(id)

@@ -30,7 +30,7 @@ from itools.datatypes import Integer, String, Unicode
 from itools.gettext import MSG
 from itools.uri import Reference
 from itools.web import ERROR
-from itools.xapian import EqQuery, RangeQuery, AndQuery, OrQuery, PhraseQuery
+from itools.xapian import RangeQuery, AndQuery, OrQuery, PhraseQuery
 
 # Import from ikaaro
 from ikaaro.folder import Folder
@@ -203,8 +203,8 @@ class Tracker(Folder):
         # Build the query
         abspath = self.get_canonical_path()
         query = [
-            EqQuery('parent_path', str(abspath)),
-            EqQuery('format', 'issue')]
+            PhraseQuery('parent_path', str(abspath)),
+            PhraseQuery('format', 'issue')]
         # Text search
         if text:
             query2 = [PhraseQuery('title', text), PhraseQuery('text', text)]
@@ -215,7 +215,7 @@ class Tracker(Folder):
                            ('version', versions), ('type', types),
                            ('priority', priorities), ('state', states)):
             if len(data) > 0:
-                query2 = [ EqQuery(name, value) for value in data ]
+                query2 = [ PhraseQuery(name, value) for value in data ]
                 query2 = OrQuery(*query2)
                 query.append(query2)
         # Modification time
@@ -229,7 +229,7 @@ class Tracker(Folder):
             query2 = []
             for value in assigns:
                 value = value or 'nobody'
-                query2.append(EqQuery('assigned_to', value))
+                query2.append(PhraseQuery('assigned_to', value))
             query2 = OrQuery(*query2)
             query.append(query2)
 

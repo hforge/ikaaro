@@ -24,7 +24,7 @@ from itools.gettext import MSG
 from itools.i18n import get_language_name, get_languages
 from itools.uri import Path
 from itools.web import STLView, STLForm, INFO, ERROR
-from itools.xapian import EqQuery, AndQuery
+from itools.xapian import PhraseQuery, AndQuery
 
 # Import from ikaaro
 from access import RoleAware_BrowseUsers, RoleAware_AddUser
@@ -221,7 +221,7 @@ class CPBrokenLinks(CPBaseView, STLView):
         for link in catalog.get_unique_values('links'):
             if root.has_resource(link):
                 continue
-            sub_results = results.search(EqQuery('links', link))
+            sub_results = results.search(PhraseQuery('links', link))
             link = str(base.get_pathto(Path(link)))
             for brain in sub_results.get_documents():
                 broken.setdefault(brain.abspath, []).append(link)

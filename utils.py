@@ -24,7 +24,7 @@ from urllib import quote
 
 # Import from itools
 from itools.web import get_context
-from itools.xapian import AllQuery, EqQuery, NotQuery, OrQuery, StartQuery
+from itools.xapian import AllQuery, PhraseQuery, NotQuery, OrQuery, StartQuery
 from itools.xapian import AndQuery
 
 if platform[:3] == 'win':
@@ -206,20 +206,20 @@ def get_base_path_query(abspath, include_container=False):
 
     # Case 2: everything but the root
     if abspath == '/':
-        return NotQuery(EqQuery('abspath', '/'))
+        return NotQuery(PhraseQuery('abspath', '/'))
 
     # Case 3: some subfolder
-    all = EqQuery('paths', abspath)
+    all = PhraseQuery('paths', abspath)
     if include_container is True:
         return all
 
-    return AndQuery(all, NotQuery(EqQuery('abspath', abspath)))
+    return AndQuery(all, NotQuery(PhraseQuery('abspath', abspath)))
 
     # FIXME We should use the code below for 'Case 3', but it is 3x slower
 #   content = StartQuery('abspath', abspath + '/')
 #   if include_container is False:
 #       return content
 
-#   container = EqQuery('abspath', abspath)
+#   container = PhraseQuery('abspath', abspath)
 #   return OrQuery(container, content)
 

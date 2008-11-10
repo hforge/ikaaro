@@ -28,7 +28,7 @@ from itools.handlers import merge_dics
 from itools.stl import stl
 from itools import vfs
 from itools.web import STLView, STLForm, INFO, ERROR
-from itools.xapian import EqQuery, OrQuery, AndQuery, TextField
+from itools.xapian import PhraseQuery, OrQuery, AndQuery, TextField
 
 # Import from ikaaro
 import ikaaro
@@ -303,14 +303,15 @@ class SiteSearchView(SearchForm):
             return []
 
         # The Search Query
-        query = [ OrQuery(EqQuery('title', word), EqQuery('text', word))
-                  for word, kk in TextField.split(text) ]
+        query = [ OrQuery(PhraseQuery('title', word),
+                  PhraseQuery('text', word))
+                    for word, kk in TextField.split(text) ]
         if not query:
             return []
 
         # Search
         abspath = resource.get_canonical_path()
-        q1 = EqQuery('paths', str(abspath))
+        q1 = PhraseQuery('paths', str(abspath))
         query = AndQuery(q1, *query)
         root = context.root
         results = root.search(query=query)

@@ -31,7 +31,7 @@ from itools.handlers import checkid, merge_dics
 from itools.i18n import format_datetime
 from itools.uri import get_reference, Path
 from itools.web import BaseView, STLForm, ERROR
-from itools.xapian import AndQuery, EqQuery, NotQuery, OrQuery, PhraseQuery
+from itools.xapian import AndQuery, NotQuery, OrQuery, PhraseQuery
 from itools.xapian import StartQuery
 from itools.xml import XMLParser
 
@@ -251,7 +251,7 @@ class Folder_BrowseContent(SearchForm):
         if search_subfolders is True:
             args.append(get_base_path_query(abspath))
         else:
-            args.append(EqQuery('parent_path', abspath))
+            args.append(PhraseQuery('parent_path', abspath))
         if search_term:
             args.append(PhraseQuery(field, search_term))
         if len(args) == 1:
@@ -578,8 +578,8 @@ class Folder_PreviewContent(Folder_BrowseContent):
 
     def get_items(self, resource, context):
         # Show only images
-        query = OrQuery(EqQuery('is_image', '1'),
-                        EqQuery('format', 'folder'))
+        query = OrQuery(PhraseQuery('is_image', '1'),
+                        PhraseQuery('format', 'folder'))
         return Folder_BrowseContent.get_items(self, resource, context, query)
 
 
@@ -725,7 +725,7 @@ class Folder_LastChanges(Folder_BrowseContent):
 
     def get_items(self, resource, context):
         # Show only version aware resources
-        query = EqQuery('is_version_aware', '1')
+        query = PhraseQuery('is_version_aware', '1')
         return Folder_BrowseContent.get_items(self, resource, context, query)
 
 
@@ -753,7 +753,7 @@ class Folder_Orphans(Folder_BrowseContent):
         root = context.root
         orphans = []
         for item in items.get_documents():
-            query = EqQuery('links', item.abspath)
+            query = PhraseQuery('links', item.abspath)
             results = root.search(query)
             if len(results) == 0:
                 orphans.append(item)
@@ -761,7 +761,7 @@ class Folder_Orphans(Folder_BrowseContent):
         # Transform back the items found in a SearchResults object.
         # FIXME This is required by 'get_item_value', we should change that,
         # for better performance.
-        args = [ EqQuery('abspath', x.abspath) for x in orphans ]
+        args = [ PhraseQuery('abspath', x.abspath) for x in orphans ]
         query = OrQuery(*args)
         items = root.search(query)
 

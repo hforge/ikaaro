@@ -31,12 +31,13 @@ from itools.i18n import guess_language
 from itools.uri import get_reference
 from itools.vfs import FileName
 from itools.web import BaseView, STLView, STLForm, INFO, ERROR
-from itools.xapian import EqQuery
+from itools.xapian import PhraseQuery
 
 # Import from ikaaro
 from datatypes import FileDataType, ImageWidth
 from folder_views import Folder_BrowseContent
-from forms import title_widget, file_widget, description_widget, subject_widget
+from forms import title_widget, file_widget, description_widget
+from forms import subject_widget
 import messages
 from multilingual import Multilingual
 from registry import get_resource_class
@@ -333,7 +334,7 @@ class File_Backlinks(Folder_BrowseContent):
 
 
     def get_items(self, resource, context):
-        query = EqQuery('links', str(resource.get_abspath()))
+        query = PhraseQuery('links', str(resource.get_abspath()))
         return context.root.search(query)
 
 
