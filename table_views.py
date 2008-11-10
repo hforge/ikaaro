@@ -131,10 +131,13 @@ class Table_View(SearchForm):
         value = handler.get_record_value(item, column)
         datatype = handler.get_record_datatype(column)
 
-        multiple = getattr(datatype, 'multiple', False)
+        # Multiple
+        is_unicode = is_datatype(datatype, Unicode)
+        is_multiple = getattr(datatype, 'multiple', False)
         is_tokens = is_datatype(datatype, Tokens)
-        if multiple is True or is_tokens:
-            if multiple:
+
+        if (is_multiple and not is_unicode) or is_tokens:
+            if is_multiple:
                 value.sort()
             value_length = len(value)
             if value_length > 0:
@@ -144,11 +147,12 @@ class Table_View(SearchForm):
                 rmultiple = False
                 value = None
 
+        # Enumerate
         is_enumerate = getattr(datatype, 'is_enumerate', False)
         if is_enumerate:
             value = datatype.get_value(value)
 
-        if multiple is True or is_tokens:
+        if (is_multiple and not is_unicode) or is_tokens:
             return value, rmultiple
         return value
 
