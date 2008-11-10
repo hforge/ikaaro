@@ -181,7 +181,15 @@ class Table_AddRecord(AutoForm):
 
 
     def get_schema(self, resource, context):
-        return resource.get_schema()
+        schema = resource.get_schema()
+        # Change Unicode datatypes to be not-multiple
+        schema = schema.copy()
+        for name in schema:
+            datatype = schema[name]
+            if is_datatype(datatype, Unicode):
+                schema[name] = copy_datatype(datatype, multiple=False)
+        # Ok
+        return schema
 
 
     def get_widgets(self, resource, context):
@@ -205,12 +213,16 @@ class Table_AddRecord(AutoForm):
 #           context.message = MSG_MISSING_OR_INVALID
 #           return
 
+        language = resource.get_content_language(context)
         record = {}
         for name in schema:
             datatype = handler.get_record_datatype(name)
             if getattr(datatype, 'multiple', False) is True:
                 if is_datatype(datatype, Enumerate):
                     value = form[name]
+                elif is_datatype(datatype, Unicode):
+                    value = form[name]
+                    value = Property(value, {'language': language})
                 else: # textarea -> string
                     values = form[name]
                     values = values.splitlines()
