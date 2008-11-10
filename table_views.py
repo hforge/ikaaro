@@ -35,18 +35,6 @@ from views import SearchForm
 
 
 
-class Multiple(DataType):
-
-    def decode(self, data):
-        if isinstance(data, list):
-            lines = data
-        else:
-            lines = data.splitlines()
-
-        return [ self.type.decode(x) for x in lines ]
-
-
-
 class Table_View(SearchForm):
 
     access = 'is_allowed_to_view'
@@ -172,12 +160,13 @@ class Table_View(SearchForm):
 
 
 
-class Table_AddRecord(AutoForm):
+###########################################################################
+# Add/Edit records
+###########################################################################
+class Table_AddEditRecord(AutoForm):
 
     access = 'is_allowed_to_edit'
-    title = MSG(u'Add Record')
-    icon = 'new.png'
-    submit_value = MSG(u'Add')
+    context_menus = [EditLanguageMenu()]
 
 
     def get_schema(self, resource, context):
@@ -197,46 +186,29 @@ class Table_AddRecord(AutoForm):
 
 
     def action(self, resource, context, form):
+        """Code shared by the add & edit actions.  It builds a new record
+        from the form.
+        """
         schema = self.get_schema(resource, context)
-        handler = resource.handler
-#       # check form
-#       check_fields = {}
-#       for name in schema:
-#           datatype = handler.get_record_datatype(name)
-#           if getattr(datatype, 'multiple', False) is True:
-#               datatype = Multiple(type=datatype)
-#           check_fields[name] = datatype
-
-#       try:
-#           form = self.check_form_input(resource, check_fields)
-#       except FormError:
-#           context.message = MSG_MISSING_OR_INVALID
-#           return
-
         language = resource.get_content_language(context)
+
+        # Builds a new record from the form.
         record = {}
         for name in schema:
-            datatype = handler.get_record_datatype(name)
-            if getattr(datatype, 'multiple', False) is True:
-                if is_datatype(datatype, Enumerate):
-                    value = form[name]
-                elif is_datatype(datatype, Unicode):
-                    value = form[name]
-                    value = Property(value, {'language': language})
-                else: # textarea -> string
-                    values = form[name]
-                    values = values.splitlines()
-                    value = []
-                    for index in range(len(values)):
-                        tmp = values[index].strip()
-                        if tmp:
-                            value.append(datatype.decode(tmp))
-            else:
-                value = form[name]
+            datatype = schema[name]
+            value = form[name]
+            if is_datatype(datatype, Unicode):
+                value = Property(value, {'language': language})
+            elif getattr(datatype, 'multiple', False) is True:
+                # textarea -> string
+                if not is_datatype(datatype, Enumerate):
+                    value = [ x.strip() for x in value.splitlines() ]
+                    value = [ datatype.decode(x) for x in value if x ]
             record[name] = value
+
+        # Ok
         try:
-            handler.add_record(record)
-            context.message = INFO(u'New record added.')
+            self.action_add_or_edit(resource, context, record)
         except UniqueError, error:
             title = resource.get_field_title(error.name)
             context.message = ERROR(error, field=title, value=error.value)
@@ -246,13 +218,23 @@ class Table_AddRecord(AutoForm):
 
 
 
-class Table_EditRecord(AutoForm):
+class Table_AddRecord(Table_AddEditRecord):
 
-    access = 'is_allowed_to_edit'
+    title = MSG(u'Add Record')
+    icon = 'new.png'
+    submit_value = MSG(u'Add')
+
+
+    def action_add_or_edit(self, resource, context, record):
+        resource.handler.add_record(record)
+        context.message = INFO(u'New record added.')
+
+
+
+class Table_EditRecord(Table_AddEditRecord):
+
     title = MSG(u'Edit record ${id}')
-    query_schema = {'id': Integer}
-
-    context_menus = [EditLanguageMenu()]
+    query_schema = {'id': Integer(mandatory=True)}
 
 
     def get_value(self, resource, context, name, datatype):
@@ -268,77 +250,21 @@ class Table_EditRecord(AutoForm):
         return handler.get_record_value(record, name)
 
 
-    def get_schema(self, resource, context):
-        schema = resource.get_schema()
-        # Change Unicode datatypes to be not-multiple
-        schema = schema.copy()
-        for name in schema:
-            datatype = schema[name]
-            if is_datatype(datatype, Unicode):
-                schema[name] = copy_datatype(datatype, multiple=False)
-        # Ok
-        return schema
-
-
-    def get_widgets(self, resource, context):
-        return resource.get_form()
-
-
     def get_title(self, context):
         id = context.query['id']
         return self.title.gettext(id=id)
 
 
-    def action(self, resource, context, form):
-        id = context.query.get('id')
-        if id is None:
-            context.message = MSG_MISSING_OR_INVALID
-            return
-
-        # Check form
-        handler = resource.handler
-        check_fields = {}
-        for widget in resource.get_form():
-            datatype = handler.get_record_datatype(widget.name)
-            if getattr(datatype, 'multiple', False) is True:
-                datatype = Multiple(type=datatype)
-            check_fields[widget.name] = datatype
-
-        # Get the record
-        language = resource.get_content_language(context)
-        record = {}
-        for widget in resource.get_form():
-            datatype = handler.get_record_datatype(widget.name)
-            if getattr(datatype, 'multiple', False) is True:
-                if is_datatype(datatype, Enumerate):
-                    value = form[widget.name]
-                elif is_datatype(datatype, Unicode):
-                    value = form[widget.name]
-                    value = Property(value, {'language': language})
-                else: # textarea -> string
-                    values = form[widget.name]
-                    values = values.splitlines()
-                    value = []
-                    for index in range(len(values)):
-                        tmp = values[index].strip()
-                        if tmp:
-                            value.append(datatype.decode(tmp))
-            else:
-                value = form[widget.name]
-            record[widget.name] = value
-
-        try:
-            handler.update_record(id, **record)
-            context.message = messages.MSG_CHANGES_SAVED
-        except UniqueError, error:
-            title = resource.get_field_title(error.name)
-            context.message = ERROR(error, field=title, value=error.value)
-        except ValueError, error:
-            message = ERROR(u'Error: $message', message=str(error))
-            context.message = message
+    def action_add_or_edit(self, resource, context, record):
+        id = context.query['id']
+        resource.handler.update_record(id, **record)
+        context.message = messages.MSG_CHANGES_SAVED
 
 
 
+###########################################################################
+# Oredered Views
+###########################################################################
 class OrderedTable_View(Table_View):
 
     def get_items(self, resource, context):
