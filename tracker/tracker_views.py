@@ -390,8 +390,9 @@ class Tracker_Search(BaseSearchForm, Tracker_View):
 
 
     def get_search_namespace(self, resource, context):
-        # Set Style
+        # Set Style & JS
         context.styles.append('/ui/tracker/tracker.css')
+        context.scripts.append('/ui/tracker/tracker.js')
 
         # Search Form
         get_resource = resource.get_resource
@@ -417,6 +418,40 @@ class Tracker_Search(BaseSearchForm, Tracker_View):
         priority = get_values('priority')
         assign = get_values('assigned_to')
 
+        # Build javascript list of products/modules/versions
+        products = get_resource('products').handler
+        modules = get_resource('modules').handler
+        versions = get_resource('versions').handler
+        modules_options = []
+        for record in modules.get_records():
+            title = modules.get_record_value(record, 'title')
+            id_product = int(modules.get_record_value(record, 'product'))
+            product = products.get_record(id_product)
+            product_title = products.get_record_value(product, 'title')
+            modules_options.append({'id': record.id,
+                                    'value': title,
+                                    'title': '%s - %s' % (product_title, title),
+                                    'product': id_product,
+                                    'is_selected': module==record.id})
+        versions_options = []
+        for record in versions.get_records():
+            title = versions.get_record_value(record, 'title')
+            id_product = int(modules.get_record_value(record, 'product'))
+            product = products.get_record(id_product)
+            product_title = products.get_record_value(product, 'title')
+            versions_options.append({'id': record.id,
+                                     'value': title,
+                                     'title': '%s - %s' % (product_title, title),
+                                     'product': id_product,
+                                     'is_selected': version==record.id})
+        # Build the list of products (And associated modules/versions)
+        list_products = []
+        for record in products.get_records():
+            modules = [x for x in modules_options if x['product']==record.id]
+            versions = [x for x in versions_options if x['product']==record.id]
+            list_products.append({'id': record.id,
+                                  'modules': modules,
+                                  'versions': versions})
         # is_admin
         ac = resource.get_access_control()
         pathto_website = resource.get_pathto(resource.get_site_root())
@@ -426,14 +461,15 @@ class Tracker_Search(BaseSearchForm, Tracker_View):
             'text': get_value('text'),
             'mtime': get_value('mtime'),
             'products': get_resource('products').get_options(product),
-            'modules': get_resource('modules').get_options(module),
+            'modules': modules_options,
             'types': get_resource('types').get_options(type),
-            'versions': get_resource('versions').get_options(version),
+            'versions': versions_options,
             'priorities': get_resource('priorities').get_options(priority),
             'states': get_resource('states').get_options(state),
             'users': resource.get_members_namespace(assign, True),
             'is_admin': ac.is_admin(context.user, resource),
             'manage_assigned': '%s/;browse_users' % pathto_website,
+            'list_products': list_products,
         }
 
 
