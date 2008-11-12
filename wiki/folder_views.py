@@ -43,21 +43,3 @@ class WikiMenu(ContextMenu):
              'href': '%s/;%s' % (base, view)}
             for view in resource.class_views ]
 
-
-
-class GoToFrontPage(BaseView):
-
-    access = 'is_allowed_to_view'
-    title = MSG(u'Front Page')
-    icon = 'view.png'
-
-    def GET(self, resource, context):
-        goto = '%s/FrontPage' % context.get_link(resource)
-        goto = get_reference(goto)
-
-        # Keep the message
-        if context.has_form_value('message'):
-            message = context.get_form_value('message')
-            goto = goto.replace(message=message)
-
-        return goto

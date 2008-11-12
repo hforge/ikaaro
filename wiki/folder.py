@@ -24,9 +24,10 @@ from itools.gettext import MSG
 # Import from ikaaro
 from ikaaro.file import File
 from ikaaro.folder import Folder
+from ikaaro.folder_views import GoToSpecificDocument
 from ikaaro.registry import register_resource_class
 from ikaaro.resource_views import DBResource_Edit
-from folder_views import WikiMenu, GoToFrontPage
+from folder_views import WikiMenu
 from page import WikiPage
 
 
@@ -59,7 +60,7 @@ class WikiFolder(Folder):
     # User Interface
     context_menus = [WikiMenu()]
 
-    view = GoToFrontPage()
+    view = GoToSpecificDocument(specific_document='FrontPage')
     edit = DBResource_Edit(title=MSG(u"Edit Wiki"))
 
 

@@ -816,3 +816,25 @@ class Folder_Thumbnail(BaseView):
         response = context.response
         response.set_header('Content-Type', 'image/%s' % format)
         return data
+
+
+
+class GoToSpecificDocument(BaseView):
+
+    access = 'is_allowed_to_view'
+    title = MSG(u'Front Page')
+    icon = 'view.png'
+    specific_document = 'FrontPage'
+
+
+    def GET(self, resource, context):
+        goto = '%s/%s' % (context.get_link(resource), self.specific_document)
+        goto = get_reference(goto)
+
+        # Keep the message
+        if context.has_form_value('message'):
+            message = context.get_form_value('message')
+            goto = goto.replace(message=message)
+
+        return goto
+
