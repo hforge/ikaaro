@@ -211,7 +211,7 @@ class WikiPage_ToPDF(BaseView):
         for node in document.traverse(condition=nodes.image):
             uri = node['uri'].encode('utf_8')
 
-            # Hack to handle local images, is it good ?
+            # Hack to handle local images
             reference = get_reference(uri)
             if not reference.scheme and uri.endswith('/;download'):
                 reference = get_reference(uri[:-len('/;download')])

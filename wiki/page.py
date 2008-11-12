@@ -134,8 +134,14 @@ class WikiPage(Text):
             if reference.scheme or reference.authority:
                 continue
             try:
-                resource = parent.get_resource(reference.path)
-                node['uri'] = str(self.get_pathto(resource))
+                # Hack to handle local images
+                if not reference.scheme and uri.endswith('/;download'):
+                    reference = get_reference(uri[:-len('/;download')])
+                    resource = parent.get_resource(reference.path)
+                    node['uri'] = '%s/;download' % resource.get_abspath()
+                else:
+                    resource = parent.get_resource(reference.path)
+                    node['uri'] = str(self.get_pathto(resource))
             except LookupError:
                 pass
 
