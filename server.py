@@ -145,7 +145,10 @@ class Server(BaseServer):
         debug = debug or config.get_value('debug')
 
         # The database
-        database = SafeDatabase('%s/database.commit' % path, event_log)
+        if debug:
+            database = SafeDatabase('%s/database.commit' % path, event_log)
+        else:
+            database = SafeDatabase('%s/database.commit' % path)
         self.database = database
         # The catalog
         # FIXME Backwards compatibility with 0.20
