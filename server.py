@@ -118,6 +118,7 @@ class Server(BaseServer):
                  read_only=False):
         target = get_absolute_reference2(target)
         self.target = target
+        path = target.path
 
         # Load the config
         config = get_config(target)
@@ -138,10 +139,13 @@ class Server(BaseServer):
         self.index_text =  config.get_value('index-text', type=Boolean,
                                             default=True)
 
+        # Logs
+        event_log = '%s/log/events' % path
+        access_log = '%s/log/access' % path
+        debug = debug or config.get_value('debug')
+
         # The database
-        events_log = '%s/log/events' % target.path
-        database = SafeDatabase('%s/database.commit' % target.path,
-                                events_log)
+        database = SafeDatabase('%s/database.commit' % path, event_log)
         self.database = database
         # The catalog
         # FIXME Backwards compatibility with 0.20
@@ -154,15 +158,6 @@ class Server(BaseServer):
         # Find out the root class
         root = get_root(database, target)
 
-        # Logs
-        path = target.path
-        access_log = '%s/log/access' % path
-        error_log = '%s/log/error' % path
-        if debug or config.get_value('debug'):
-            debug_log = events_log
-        else:
-            debug_log = None
-
         # Events
         self.resources_added = set()
         self.resources_changed = set()
@@ -170,8 +165,8 @@ class Server(BaseServer):
 
         # Initialize
         BaseServer.__init__(self, root, address=address, port=port,
-                            access_log=access_log, error_log=error_log,
-                            debug_log=debug_log, pid_file='%s/pid' % path)
+                            access_log=access_log, event_log=event_log,
+                            debug=debug, pid_file='%s/pid' % path)
 
 
     #######################################################################
