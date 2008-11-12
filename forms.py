@@ -22,7 +22,8 @@
 from itools.datatypes import is_datatype, DataType
 from itools.datatypes import Unicode, Date, Enumerate, Boolean
 from itools.gettext import MSG
-from itools.html import sanitize_stream, stream_to_str_as_html
+from itools.html import sanitize_stream
+from itools.html import stream_to_str_as_xhtml, stream_to_str_as_html
 from itools.stl import stl
 from itools.web import STLForm, get_context
 from itools.xml import XMLParser, DocType
@@ -41,8 +42,8 @@ xhtml_doctype = DocType(
 ###########################################################################
 # DataTypes
 ###########################################################################
-class HTMLBody(DataType):
-    """TinyMCE specifics: read as XHTML, rendered as HTML.
+class XHTMLBody(DataType):
+    """Read and write XHTML.
     """
     sanitize_html = True
 
@@ -54,6 +55,16 @@ class HTMLBody(DataType):
         if cls.sanitize_html is True:
             events = sanitize_stream(events)
         return list(events)
+
+    @staticmethod
+    def encode(value):
+        return stream_to_str_as_xhtml(value)
+
+
+
+class HTMLBody(XHTMLBody):
+    """TinyMCE specifics: read as XHTML, rendered as HTML.
+    """
 
     @staticmethod
     def encode(value):
