@@ -273,8 +273,8 @@ class DBResource(CatalogAware, IResource):
                 server = context.server
                 server.log_error(context)
                 log = "%s failed" % self.get_abspath()
-                server.error_log.write(log)
-                server.error_log.flush()
+                server.event_log.write(log)
+                server.event_log.flush()
             else:
                 document['text'] = text
 
