@@ -376,19 +376,23 @@ class Image_View(STLView):
     default_height = ''
 
 
-    def get_namespace(self, resource, context):
+    def get_browse_images(self, resource, context):
         from file import Image
+        user = context.user
+        parent = resource.parent
+        ac = parent.get_access_control()
+
+        return [ image for image in parent.search_resources(cls=Image)
+                   if ac.is_allowed_to_view(user, image) ]
+
+
+    def get_namespace(self, resource, context):
         context.styles.append('/ui/gallery/style.css')
         context.scripts.append('/ui/gallery/javascript.js')
-        user = context.user
         size = context.get_form_value('size', type=Integer)
         width = context.get_form_value('width', default=self.default_width)
         height = context.get_form_value('height', default=self.default_height)
-
-        parent = resource.parent
-        ac = parent.get_access_control()
-        images = [ image for image in parent.search_resources(cls=Image)
-                   if ac.is_allowed_to_view(user, image) ]
+        images = self.get_browse_images(resource, context)
 
         my_index = None
         for index, image in enumerate(images):
@@ -396,13 +400,21 @@ class Image_View(STLView):
                 my_index = index
                 break
 
+        # Navigate to next image
         next_image = None
+        next_link = None
         if my_index + 1 < len(images):
             next_image = images[my_index + 1]
+            next_link = context.get_link(next_image)
+
+        # Navigate to previous image
         prev_image = None
+        prev_link = None
         if my_index > 0:
             prev_image = images[my_index - 1]
+            prev_link = context.get_link(prev_image)
 
+        # List of 5 next and previous images to preload
         next_images = images[my_index + 2:my_index + 6]
         min_index = my_index - 5 if my_index > 5 else 0
         max_index = my_index - 1 if my_index > 1 else 0
@@ -414,23 +426,20 @@ class Image_View(STLView):
             if image is None:
                 continue
             prefix = get_reference(context.get_link(image))
+            # Preload with same size preferences than the current one
             if width and height:
+                # Preload a thumbnail
                 uri = prefix.resolve2(';thumb').replace(width=width,
                                                         height=height)
             else:
+                # Preload the full size
                 uri = prefix.resolve2(';download')
             preload.append(str(uri))
 
-        next_link = None
-        if next_image:
-            next_link = context.get_link(next_image)
-        prev_link = None
-        if prev_image:
-            prev_link = context.get_link(prev_image)
-
+        # Real width and height (displayed for reference)
         image_width, image_height = resource.handler.get_size()
 
-        return {'parent_link': context.get_link(parent),
+        return {'parent_link': context.get_link(resource.parent),
                 'size': size,
                 'width': width,
                 'height': height,
