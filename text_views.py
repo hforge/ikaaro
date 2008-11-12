@@ -41,7 +41,7 @@ class Text_Edit(DBResource_Edit):
     title = MSG(u'Edit Inline')
     icon = 'edit.png'
     schema = merge_dics(DBResource_Edit.schema,
-                        data=String(mandatory=True))
+                        data=String)
     widgets = [title_widget, MultilineWidget('data', title=MSG(u"Content"),
                                              rows=19, cols=69),
                description_widget, subject_widget]
