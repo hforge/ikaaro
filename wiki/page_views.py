@@ -97,7 +97,8 @@ class WikiPage_View(BaseView):
                     params = {'type': resource.__class__.__name__,
                               'title': title_encoded,
                               'name': checkid(title) or title_encoded}
-                    refuri = "%s/;new_resource?%s" % (prefix, urlencode(params))
+                    refuri = "%s/;new_resource?%s" % (prefix,
+                                                      urlencode(params))
                     node['refuri'] = refuri
             else:
                 # Wiki link found, "refname" is the path
@@ -144,7 +145,8 @@ class WikiPage_ToPDF(BaseView):
                         # mailto:
                         node['refuri'] = str(reference)
                     else:
-                        # Make canonical URI to the website for future download
+                        # Make canonical URI to the website for future
+                        # download
                         node['refuri'] = str(context.uri.resolve(reference))
                 continue
             # Now consider the link is valid
@@ -208,7 +210,12 @@ class WikiPage_ToPDF(BaseView):
         # Find the list of images to append
         for node in document.traverse(condition=nodes.image):
             uri = node['uri'].encode('utf_8')
+
+            # Hack to handle local images, is it good ?
             reference = get_reference(uri)
+            if not reference.scheme and uri.endswith('/;download'):
+                reference = get_reference(uri[:-len('/;download')])
+
             if reference.scheme or reference.authority:
                 # Fetch external image
                 try:
