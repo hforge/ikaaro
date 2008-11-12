@@ -127,7 +127,7 @@ class Table_View(SearchForm):
         is_multiple = getattr(datatype, 'multiple', False)
         is_tokens = is_datatype(datatype, Tokens)
 
-        if is_multiple and or is_tokens:
+        if is_multiple or is_tokens:
             if is_multiple:
                 value.sort()
             value_length = len(value)
