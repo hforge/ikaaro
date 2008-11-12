@@ -19,7 +19,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.csv import UniqueError, Property
+from itools.csv import UniqueError, Property, is_multilingual
 from itools.datatypes import DataType, is_datatype, copy_datatype
 from itools.datatypes import Integer, Enumerate, Tokens, Unicode
 from itools.gettext import MSG
@@ -119,12 +119,15 @@ class Table_View(SearchForm):
         value = handler.get_record_value(item, column)
         datatype = handler.get_record_datatype(column)
 
+        # Multilingual
+        if is_multilingual(datatype):
+            return value
+
         # Multiple
-        is_unicode = is_datatype(datatype, Unicode)
         is_multiple = getattr(datatype, 'multiple', False)
         is_tokens = is_datatype(datatype, Tokens)
 
-        if (is_multiple and not is_unicode) or is_tokens:
+        if is_multiple and or is_tokens:
             if is_multiple:
                 value.sort()
             value_length = len(value)
@@ -140,7 +143,7 @@ class Table_View(SearchForm):
         if is_enumerate:
             value = datatype.get_value(value)
 
-        if (is_multiple and not is_unicode) or is_tokens:
+        if is_multiple or is_tokens:
             return value, rmultiple
         return value
 
@@ -175,7 +178,7 @@ class Table_AddEditRecord(AutoForm):
         schema = schema.copy()
         for name in schema:
             datatype = schema[name]
-            if is_datatype(datatype, Unicode):
+            if is_multilingual(datatype):
                 schema[name] = copy_datatype(datatype, multiple=False)
         # Ok
         return schema
@@ -197,7 +200,7 @@ class Table_AddEditRecord(AutoForm):
         for name in schema:
             datatype = schema[name]
             value = form[name]
-            if is_datatype(datatype, Unicode):
+            if is_multilingual(datatype):
                 value = Property(value, language=language)
             elif getattr(datatype, 'multiple', False) is True:
                 # textarea -> string
@@ -243,7 +246,7 @@ class Table_EditRecord(Table_AddEditRecord):
         id = context.query['id']
         record = handler.get_record(id)
         # Is mulitilingual
-        if is_datatype(datatype, Unicode):
+        if is_multilingual(datatype):
             language = resource.get_content_language(context)
             return handler.get_record_value(record, name, language=language)
 

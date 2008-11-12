@@ -65,11 +65,7 @@ class HTMLBody(DataType):
 # Widgets
 ###########################################################################
 def get_default_widget(datatype):
-    if is_datatype(datatype, Unicode):
-        if getattr(datatype, 'multiple', False) is True:
-            return MultilineWidget
-        return TextWidget
-    elif is_datatype(datatype, Boolean):
+    if is_datatype(datatype, Boolean):
         return BooleanCheckBox
     elif is_datatype(datatype, Date):
         return DateWidget
