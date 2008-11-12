@@ -198,7 +198,7 @@ class Table_AddEditRecord(AutoForm):
             datatype = schema[name]
             value = form[name]
             if is_datatype(datatype, Unicode):
-                value = Property(value, {'language': language})
+                value = Property(value, language=language)
             elif getattr(datatype, 'multiple', False) is True:
                 # textarea -> string
                 if not is_datatype(datatype, Enumerate):

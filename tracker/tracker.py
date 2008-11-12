@@ -86,7 +86,7 @@ class Tracker(Folder):
             table_path = '%s/%s' % (name, table_name)
             table = Tracker_TableHandler()
             for title in values:
-                title = Property(title, {'language': 'en'})
+                title = Property(title, language='en')
                 table.add_record({'title': title})
             folder.set_handler(table_path, table)
             metadata = Tracker_TableResource.build_metadata()

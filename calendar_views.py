@@ -538,7 +538,7 @@ class EditEventForm(CalendarView, STLForm):
         dtstart_time = form['dtstart_time']
         if dtstart_time is None:
             dtstart = datetime.combine(dtstart, time(0, 0))
-            dtstart = Property(dtstart, {'VALUE': ['DATE']})
+            dtstart = Property(dtstart, VALUE=['DATE'])
         else:
             dtstart = datetime.combine(dtstart, dtstart_time)
         # End
@@ -547,7 +547,7 @@ class EditEventForm(CalendarView, STLForm):
         if dtend_time is None:
             dtend = datetime.combine(dtend, time(0, 0))
             dtend = dtend + timedelta(days=1) - resolution
-            dtend = Property(dtend, {'VALUE': ['DATE']})
+            dtend = Property(dtend, VALUE=['DATE'])
         else:
             dtend = datetime.combine(dtend, dtend_time)
 

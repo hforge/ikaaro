@@ -179,7 +179,7 @@ class Tracker_NewInstance(DBResource_NewInstance):
         name = form['name']
         product = form['product']
         table = resource.get_resource('%s/products' % name).get_handler()
-        product = Property(product, {'language': 'en'})
+        product = Property(product, language='en')
         table.add_record({'title': product})
 
         # Ok
