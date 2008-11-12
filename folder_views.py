@@ -699,8 +699,8 @@ class Folder_PreviewContent(Folder_BrowseContent):
                     row[name] = value
             rows.append(row)
 
-        widths = ", ".join([str(o['name']) for o in ImageWidth.get_options()
-                            if o['name'] is not None])
+        widths = ", ".join([repr(o['name']) for o in ImageWidth.get_options()
+                            if o['name'].strip()])
 
         return {'size': current_size,
                 'width': width,

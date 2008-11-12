@@ -6,27 +6,27 @@
   <script type="text/javascript">
     $(document).ready(function() {
       // "images" is defined in "/ui/gallery/javascript.js"
-      images = new Array(${images});
+      images = new Array(${preload});
       preload_init();
     });
   </script>
 
   <p id="image_toolbar">
-    <a href="../;preview_content?size=${size}&amp;width=${width}&amp;height=${height}"
+    <a href="${parent_link}/;preview_content?size=${size}&amp;width=${width}&amp;height=${height}"
       title="Back"><img src="/ui/icons/16x16/up.png" /></a>
-    <a stl:if="previous" href="${previous}" title="Previous"><img
+    <a stl:if="prev_link" href="${prev_link}/;view?size=${size}&amp;width=${width}&amp;height=${height}" title="Previous"><img
         src="/ui/icons/16x16/previous.png"
         style="vertical-align: bottom" /></a>
-    <a stl:if="next" href="${next}" title="Next"><img
+    <a stl:if="next_link" href="${next_link}/;view?size=${size}&amp;width=${width}&amp;height=${height}" title="Next"><img
         src="/ui/icons/16x16/next.png" style="vertical-align: bottom" /></a>
     <a href="?size=${size}&amp;width=${option/name}&amp;height=${option/name}"
       stl:omit-tag="option/selected"
       stl:repeat="option widths">${option/value}</a>
-    (${dimensions})
+    (${image_width}x${image_height})
   </p>
 
-  <a href="${download}">
-    <img src="${current}" />
+  <a href="${image_link}/;download">
+    <img src="${image_view}" />
   </a>
 
 </stl:block>

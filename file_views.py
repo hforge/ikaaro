@@ -371,6 +371,10 @@ class Image_View(STLView):
     access = 'is_allowed_to_view'
     title = MSG(u'View')
     template = '/ui/binary/Image_view.xml'
+    # Image default size as a string (empty = full size)
+    default_width = ''
+    default_height = ''
+
 
     def get_namespace(self, resource, context):
         from file import Image
@@ -378,8 +382,8 @@ class Image_View(STLView):
         context.scripts.append('/ui/gallery/javascript.js')
         user = context.user
         size = context.get_form_value('size', type=Integer)
-        width = context.get_form_value('width', default='')
-        height = context.get_form_value('height', default='')
+        width = context.get_form_value('width', default=self.default_width)
+        height = context.get_form_value('height', default=self.default_height)
 
         parent = resource.parent
         ac = parent.get_access_control()
@@ -404,7 +408,7 @@ class Image_View(STLView):
         max_index = my_index - 1 if my_index > 1 else 0
         previous_images = images[min_index:max_index]
         previous_images.reverse()
-        images = []
+        preload = []
         for image in ([resource, next_image, prev_image]
                       + next_images + previous_images):
             if image is None:
@@ -415,28 +419,31 @@ class Image_View(STLView):
                                                         height=height)
             else:
                 uri = prefix.resolve2(';download')
-            images.append(str(uri))
+            preload.append(str(uri))
 
-        kw = {'width': width, 'height': height, 'size': size}
+        next_link = None
         if next_image:
-            next_image = context.get_link(next_image)
-            next_image = get_reference(next_image).replace(**kw)
-            next_image = str(next_image)
+            next_link = context.get_link(next_image)
+        prev_link = None
         if prev_image:
-            prev_image = context.get_link(prev_image)
-            prev_image = get_reference(prev_image).replace(**kw)
-            prev_image = str(prev_image)
+            prev_link = context.get_link(prev_image)
 
-        return {'size': size,
+        image_width, image_height = resource.handler.get_size()
+
+        return {'parent_link': context.get_link(parent),
+                'size': size,
                 'width': width,
                 'height': height,
-                'images': '"' + '", "'.join(images) + '"',
-                'previous': prev_image,
-                'next': next_image,
+                'preload': '"' + '", "'.join(preload) + '"',
+                'prev_link': prev_link,
+                'next_link': next_link,
                 'widths': ImageWidth.get_namespace(width),
-                'dimensions': "%sx%s" % resource.handler.get_size(),
-                'download': '%s/;download' % context.get_link(resource),
-                'current': images[0]}
+                'image_width': image_width,
+                'image_height': image_height,
+                'image_link': context.get_link(resource),
+                'index': my_index + 1,
+                'total': len(images),
+                'image_view': preload[0]}
 
 
 
