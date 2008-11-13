@@ -384,7 +384,7 @@ class WikiPage(Text):
                     image = None
             else:
                 try:
-                    image = parent.get_object(reference.path)
+                    image = self.get_object(reference.path)
                     filename = image.get_property('filename')
                 except LookupError:
                     image = None
