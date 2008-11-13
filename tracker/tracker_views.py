@@ -425,30 +425,40 @@ class Tracker_Search(BaseSearchForm, Tracker_View):
         modules_options = []
         for record in modules.get_records():
             title = modules.get_record_value(record, 'title')
-            id_product = int(modules.get_record_value(record, 'product'))
+            id_product = modules.get_record_value(record, 'product')
+            if id_product is None:
+                continue
+            id_product = int(id_product)
             product = products.get_record(id_product)
             product_title = products.get_record_value(product, 'title')
-            modules_options.append({'id': record.id,
-                                    'value': title,
-                                    'title': '%s - %s' % (product_title, title),
-                                    'product': id_product,
-                                    'is_selected': module==record.id})
+            modules_options.append({
+                'id': record.id,
+                'value': title,
+                'title': '%s - %s' % (product_title, title),
+                'product': id_product,
+                'is_selected': module==record.id})
         versions_options = []
         for record in versions.get_records():
             title = versions.get_record_value(record, 'title')
-            id_product = int(modules.get_record_value(record, 'product'))
+            id_product = versions.get_record_value(record, 'product')
+            if id_product is None:
+                continue
+            id_product = int(id_product)
             product = products.get_record(id_product)
             product_title = products.get_record_value(product, 'title')
-            versions_options.append({'id': record.id,
-                                     'value': title,
-                                     'title': '%s - %s' % (product_title, title),
-                                     'product': id_product,
-                                     'is_selected': version==record.id})
+            versions_options.append({
+                'id': record.id,
+                'value': title,
+                'title': '%s - %s' % (product_title, title),
+                'product': id_product,
+                'is_selected': version==record.id})
         # Build the list of products (And associated modules/versions)
         list_products = []
         for record in products.get_records():
-            modules = [x for x in modules_options if x['product']==record.id]
-            versions = [x for x in versions_options if x['product']==record.id]
+            modules = [
+                x for x in modules_options if x['product'] == record.id ]
+            versions = [
+                x for x in versions_options if x['product'] == record.id ]
             list_products.append({'id': record.id,
                                   'modules': modules,
                                   'versions': versions})
