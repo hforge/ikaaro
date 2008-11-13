@@ -27,7 +27,7 @@ from itools.handlers import Database
 from itools.utils import vmsize
 from itools import vfs
 from itools.xapian import make_catalog, CatalogAware
-from itools.web import set_context, Context
+from itools.web import Context
 from itools.i18n.accept import AcceptLanguage
 from itools.http import Request
 
@@ -70,10 +70,9 @@ def update_catalog(parser, options, target):
 
     # Build a fake context
     context = Context(Request())
-    context.server = server
     context.accept_language = AcceptLanguage()
     context.uri = None
-    set_context(context)
+    server.init_context(context)
 
     # Update
     t0, v0 = time(), vmsize()

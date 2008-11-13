@@ -250,12 +250,20 @@ class Server(BaseServer):
 
 
     def find_site_root(self, context):
-        hostname = context.uri.authority.host
+        # Default to root
+        root = self.root
+        context.site_root = root
+
+        # Check we have a URI
+        uri = context.uri
+        if uri is None:
+            return
+
+        # The site root depends on the host
+        hostname = uri.authority.host
 
         # Check first the root
-        root = self.root
         if hostname in root.get_property('vhosts'):
-            context.site_root = root
             return
 
         # Check the sub-sites
@@ -264,8 +272,6 @@ class Server(BaseServer):
                 context.site_root = site
                 return
 
-        # Default to root
-        context.site_root = root
 
 
     def remove_resource(self, resource):
