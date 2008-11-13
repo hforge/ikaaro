@@ -24,6 +24,7 @@ from tempfile import mkdtemp
 from subprocess import call
 from urllib import urlencode
 from mimetypes import guess_extension
+from re import compile
 
 # Import from docutils
 from docutils.core import (Publisher, publish_doctree, publish_from_doctree,
@@ -53,7 +54,7 @@ from ikaaro.registry import register_object_class
 
 
 StandaloneReader = get_reader_class('standalone')
-
+figure_style_converter = compile(r'\\begin\{figure\}\[.*?\]')
 
 
 class WikiPage(Text):
@@ -305,7 +306,8 @@ class WikiPage(Text):
                         # mailto:
                         node['refuri'] = str(reference)
                     else:
-                        # Make canonical URI to the website for future download
+                        # Make canonical URI to the website for future
+                        # download
                         node['refuri'] = str(context.uri.resolve(reference))
                 continue
             # Now consider the link is valid
@@ -404,10 +406,12 @@ class WikiPage(Text):
                 node['uri'] = filename
                 images.append((image, filename))
 
+        # Make some modifications
         overrides = dict(self.overrides)
         overrides['stylesheet'] = 'style.tex'
         output = publish_from_doctree(document, writer_name='latex',
                 settings_overrides=overrides)
+        output = figure_style_converter.sub(r'\\begin{figure}[H]', output)
 
         dirname = mkdtemp('wiki', 'itools')
         tempdir = vfs.open(dirname)
