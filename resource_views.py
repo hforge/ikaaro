@@ -254,6 +254,7 @@ class Breadcrumb(object):
                           'path': path,
                           'url': url,
                           'icon': path_to_icon,
+                          'type': type(resource),
                           'item_type': resource.handler.get_mimetype()})
 
         items.sort(key=itemgetter('is_folder'), reverse=True)
