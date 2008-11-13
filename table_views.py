@@ -173,15 +173,7 @@ class Table_AddEditRecord(AutoForm):
 
 
     def get_schema(self, resource, context):
-        schema = resource.get_schema()
-        # Change Unicode datatypes to be not-multiple
-        schema = schema.copy()
-        for name in schema:
-            datatype = schema[name]
-            if is_multilingual(datatype):
-                schema[name] = copy_datatype(datatype, multiple=False)
-        # Ok
-        return schema
+        return resource.get_schema()
 
 
     def get_widgets(self, resource, context):
@@ -201,6 +193,7 @@ class Table_AddEditRecord(AutoForm):
             datatype = schema[name]
             value = form[name]
             if is_multilingual(datatype):
+                value = value[0]
                 value = Property(value, language=language)
             elif getattr(datatype, 'multiple', False) is True:
                 # textarea -> string
@@ -209,7 +202,7 @@ class Table_AddEditRecord(AutoForm):
                     value = [ datatype.decode(x) for x in value if x ]
             record[name] = value
 
-        # Ok
+        # Change
         try:
             self.action_add_or_edit(resource, context, record)
         except UniqueError, error:
@@ -218,6 +211,8 @@ class Table_AddEditRecord(AutoForm):
         except ValueError, error:
             message = ERROR(u'Error: $message', message=str(error))
             context.message = message
+        else:
+            return self.action_on_success(resource, context)
 
 
 
@@ -230,7 +225,12 @@ class Table_AddRecord(Table_AddEditRecord):
 
     def action_add_or_edit(self, resource, context, record):
         resource.handler.add_record(record)
-        context.message = INFO(u'New record added.')
+
+
+    def action_on_success(self, resource, context):
+        n = len(resource.handler.records) - 1
+        goto = ';edit_record?id=%s' % n
+        return context.come_back(MSG(u'New record added.'), goto=goto)
 
 
 
@@ -261,6 +261,9 @@ class Table_EditRecord(Table_AddEditRecord):
     def action_add_or_edit(self, resource, context, record):
         id = context.query['id']
         resource.handler.update_record(id, **record)
+
+
+    def action_on_success(self, resource, context):
         context.message = messages.MSG_CHANGES_SAVED
 
 
