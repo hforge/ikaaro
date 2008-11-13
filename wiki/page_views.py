@@ -24,6 +24,7 @@ from tempfile import mkdtemp
 from subprocess import call
 from urllib import urlencode
 from mimetypes import guess_extension
+from re import compile
 
 # Import from docutils
 from docutils.core import Publisher, publish_from_doctree, publish_string
@@ -50,6 +51,7 @@ from ikaaro import messages
 from ikaaro.html import is_edit_conflict
 
 
+figure_style_converter = compile(r'\\begin\{figure\}\[.*?\]')
 
 class WikiPage_View(BaseView):
 
@@ -251,10 +253,12 @@ class WikiPage_ToPDF(BaseView):
                 node['uri'] = filename
                 images.append((image, filename))
 
+        # Make some modifications
         overrides = dict(resource.overrides)
         overrides['stylesheet'] = 'style.tex'
         output = publish_from_doctree(document, writer_name='latex',
-                settings_overrides=overrides)
+                                      settings_overrides=overrides)
+        output = figure_style_converter.sub(r'\\begin{figure}[H]', output)
 
         dirname = mkdtemp('wiki', 'itools')
         tempdir = vfs.open(dirname)
