@@ -28,6 +28,7 @@ from docutils.utils import SystemMessage
 from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.uri import get_reference
+from itools.web import get_context
 
 # Import from ikaaro
 from ikaaro.text import Text
@@ -127,23 +128,24 @@ class WikiPage(Text):
                 pass
 
         # Assume image paths are relative to the container
+        context = get_context()
         for node in document.traverse(condition=nodes.image):
             uri  = node['uri'].encode('utf_8')
             reference = get_reference(uri)
             # Skip external
             if reference.scheme or reference.authority:
                 continue
+            # Strip the view
+            path = reference.path
+            if reference.path[-1] == ';download':
+                path = path[:-1]
+            # Get the resource
             try:
-                # Hack to handle local images
-                if not reference.scheme and uri.endswith('/;download'):
-                    reference = get_reference(uri[:-len('/;download')])
-                    resource = parent.get_resource(reference.path)
-                    node['uri'] = '%s/;download' % resource.get_abspath()
-                else:
-                    resource = parent.get_resource(reference.path)
-                    node['uri'] = str(self.get_pathto(resource))
+                resource = parent.get_resource(path)
             except LookupError:
                 pass
+            else:
+                node['uri'] = '%s/;download' % context.get_link(resource)
 
         return document
 
