@@ -297,35 +297,38 @@ class WikiPage_ToPDF(BaseView):
             finally:
                 file.close()
 
+        # From latex to PDF
+        command = ['pdflatex', '-8bit', '-no-file-line-error',
+                   '-interaction=batchmode', resource.name]
         try:
-            call(['pdflatex', '-8bit', '-no-file-line-error',
-                  '-interaction=batchmode', resource.name], cwd=dirname)
+            call(command, cwd=dirname)
             # Twice for correct page numbering
-            call(['pdflatex', '-8bit', '-no-file-line-error',
-                  '-interaction=batchmode', resource.name], cwd=dirname)
+            call(command, cwd=dirname)
         except OSError:
             msg = ERROR(u"PDF generation failed. Please install pdflatex.")
             return context.come_back(msg)
 
         pdfname = '%s.pdf' % resource.name
-        if tempdir.exists(pdfname):
-            file = tempdir.open(pdfname)
-            try:
-                data = file.read()
-            finally:
-                file.close()
-        else:
-            data = None
-        vfs.remove(dirname)
-
-        if data is None:
+        if not tempdir.exists(pdfname):
+            # TODO Print an error message somewhere with the 'dirname' for
+            # inspection of the problem.
             return context.come_back(MSG(u"PDF generation failed."))
 
+        # Read the file's data
+        file = tempdir.open(pdfname)
+        try:
+            data = file.read()
+        finally:
+            file.close()
+
+        # Clean the temporary folder
+        vfs.remove(dirname)
+
+        # Ok
         response = context.response
         response.set_header('Content-Type', 'application/pdf')
         response.set_header('Content-Disposition',
-                'attachment; filename=%s' % pdfname)
-
+                            'attachment; filename=%s' % pdfname)
         return data
 
 
