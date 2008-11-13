@@ -117,7 +117,6 @@ class Tracker_TableHandler(OrderedTableFile):
 class Tracker_TableResource(OrderedTable):
 
     class_id = 'tracker_select_table'
-    class_version = '20071216'
     class_title = MSG(u'Select Table')
     class_handler = Tracker_TableHandler
 
@@ -193,7 +192,6 @@ class ModulesHandler(Tracker_TableHandler):
 class ModulesResource(Tracker_TableResource):
 
     class_id = 'tracker_modules'
-    class_version = '20081015'
     class_handler = ModulesHandler
 
     def get_schema(self):
@@ -221,7 +219,6 @@ class VersionsHandler(Tracker_TableHandler):
 class VersionsResource(Tracker_TableResource):
 
     class_id = 'tracker_versions'
-    class_version = '20071216'
     class_handler = VersionsHandler
 
     def get_schema(self):

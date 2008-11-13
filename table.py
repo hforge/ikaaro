@@ -22,7 +22,7 @@
 from datetime import datetime
 
 # Import from itools
-from itools.csv import Record, Table as TableFile, Property
+from itools.csv import Record, Table as TableFile, Property, is_multilingual
 from itools.datatypes import Tokens
 from itools.gettext import MSG
 
@@ -37,7 +37,7 @@ from table_views import OrderedTable_View
 
 class Table(File):
 
-    class_version = '20071216'
+    class_version = '20081113'
     class_views = ['view', 'add_record', 'edit', 'history']
     class_handler = TableFile
     record_class = Record
@@ -71,6 +71,31 @@ class Table(File):
     view = Table_View()
     add_record = Table_AddRecord()
     edit_record = Table_EditRecord()
+
+
+    def update_20081113(self):
+        # XXX Hardcoded because too hard to get right.  Maybe changed
+        # for specific tables.
+        language = 'en'
+
+        handler = self.get_handler()
+        schema = handler.record_schema
+
+        handler.set_changed()
+        handler.incremental_save = False
+        for record in handler.records:
+            # XXX Not that versions of deleted records won't be updated.
+            # This may be fixed by compacting a table.
+            if record is None:
+                continue
+            for version in record:
+                for name in version:
+                    if name not in schema:
+                        continue
+                    datatype = schema[name]
+                    if is_multilingual(datatype):
+                        for property in version[name]:
+                            property.parameters['language'] = language
 
 
 
@@ -148,7 +173,6 @@ class OrderedTableFile(TableFile):
 
 class OrderedTable(Table):
 
-    class_version = '20071216'
     class_title = MSG(u'Ordered Table')
     class_handler = OrderedTableFile
 
