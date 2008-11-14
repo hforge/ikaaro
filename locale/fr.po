@@ -1125,7 +1125,7 @@ msgstr "Êtes-vous sûr de vouloir supprimer la sélection ?"
 
 #: ../messages.py:37
 msgid "Are you sure you want to delete this resource?"
-msgstr "Êtes-vous sûr de vouloir supprimer cet objet ?"
+msgstr "Êtes-vous sûr de vouloir supprimer cette ressource ?"
 
 #: ../tracker/ui/edit_resource.xml.en:56
 msgctxt "button"
@@ -2412,15 +2412,15 @@ msgstr "Rien dans l'historique."
 
 #: ../messages.py:79
 msgid "No resource allowed."
-msgstr "Aucun objet n'a de permission."
+msgstr "Aucune ressource n'a de permission."
 
 #: ../messages.py:59
 msgid "No resource removed."
-msgstr "Aucun objet supprimé."
+msgstr "Aucune ressource supprimée."
 
 #: ../messages.py:77 ../tracker/tables.py:155
 msgid "No resource selected."
-msgstr "Aucun objet sélectionné."
+msgstr "Aucune ressource sélectionnée."
 
 #: ../tracker/tracker.py:108
 msgid "Not Assigned"
@@ -2666,19 +2666,19 @@ msgstr "Veuillez sélectionner les objets à monter."
 
 #: ../table_views.py:380
 msgid "Please select the resources to order down."
-msgstr "Veuillez sélectionner les objets à descendre."
+msgstr "Veuillez sélectionner les ressources à descendre."
 
 #: ../table_views.py:402
 msgid "Please select the resources to order on bottom."
-msgstr "Veuillez sélectionner les objets à déplacer en bas."
+msgstr "Veuillez sélectionner les ressources à déplacer en bas."
 
 #: ../table_views.py:391
 msgid "Please select the resources to order on top."
-msgstr "Veuillez sélectionner les objets à déplacer en haut."
+msgstr "Veuillez sélectionner les ressources à déplacer en haut."
 
 #: ../table_views.py:369
 msgid "Please select the resources to order up."
-msgstr "Veuillez sélectionner les objets à monter."
+msgstr "Veuillez sélectionner les ressources à monter."
 
 #: ../utils.py:97
 msgid "Portuguese"
@@ -2926,7 +2926,7 @@ msgstr "Ressources interdites de suppression&nbsp;: $resources."
 
 #: ../messages.py:63
 msgid "Resources not removed (they are in use): $resources."
-msgstr "Resources non supprimées (utilisées)&nbsp;: $resources."
+msgstr "Ressources non supprimées (utilisées)&nbsp;: $resources."
 
 #: ../table_views.py:385
 msgid "Resources ordered down."
@@ -2954,11 +2954,11 @@ msgstr "Ressources publiées."
 
 #: ../messages.py:61 ../tracker/tables.py:174
 msgid "Resources removed: $resources."
-msgstr "Objets supprimés&nbsp;: $resources."
+msgstr "Ressources supprimées&nbsp;: $resources."
 
 #: ../messages.py:83
 msgid "Resources renamed."
-msgstr "Objets renommés."
+msgstr "Ressources renommés."
 
 #: ../ui/website/search.xml.en:11
 msgctxt "heading"
@@ -3092,7 +3092,7 @@ msgstr "Choisissez votre langue"
 
 #: ../folder_views.py:745
 msgid "Show resources not linked from anywhere."
-msgstr "Montre les objets qui ne sont liés à rien."
+msgstr "Montre les ressources qui ne sont liées à rien."
 
 #: ../folder_views.py:230
 msgid "Size"
@@ -3343,13 +3343,12 @@ msgid "The user is not active, (s)he has not confirmed registration."
 msgstr "L'utilisateur n'est pas actif, il n'a pas confirmé son enregistrement."
 
 #: ../tracker/issue_views.py:331
-#, fuzzy
 msgid "There are ${n} assignments."
-msgstr "Il y a ${n} objets."
+msgstr "Il y a ${n} affectations."
 
 #: ../views.py:141
 msgid "There are ${n} items."
-msgstr "Il y a ${n} objets."
+msgstr "Il y a ${n} éléments."
 
 #: ../ui/PO_edit.xml.en:44
 msgctxt "paragraph"
@@ -3362,13 +3361,12 @@ msgid "There has been an error, please try again later."
 msgstr "Une erreur s'est produite, veuillez réessayer plus tard."
 
 #: ../tracker/issue_views.py:330
-#, fuzzy
 msgid "There is 1 assignment."
-msgstr "Il y a 1 objet."
+msgstr "Il y a 1 affectation."
 
 #: ../views.py:140
 msgid "There is 1 item."
-msgstr "Il y a 1 objet."
+msgstr "Il y a 1 élément."
 
 #: ../website_views.py:191
 msgid "There is already an active user with that email."
@@ -3376,7 +3374,7 @@ msgstr "Il existe déjà un utilisateur avec cette adresse de courriel."
 
 #: ../messages.py:53
 msgid "There is already another resource with this name."
-msgstr "Il existe déjà un objet avec ce nom."
+msgstr "Il existe déjà une ressource avec ce nom."
 
 #: ../user_views.py:187
 msgid "There is another user with the email \"${email}\", please try again."
@@ -4419,7 +4417,7 @@ msgstr ""
 #~ msgstr "<label for=\"priority\">Priorité :</label><br/>"
 
 #~ msgid "<label for=\"resource\">Resource:</label><br/>"
-#~ msgstr "<label for=\"resource\">Resource :</label><br/>"
+#~ msgstr "<label for=\"resource\">Ressource :</label><br/>"
 
 #~ msgid ""
 #~ "<label for=\"search_title\">Remember as</label>  <input id=\"search_title"
