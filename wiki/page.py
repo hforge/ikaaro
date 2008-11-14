@@ -18,6 +18,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# Import from the Standard Library
+from re import compile
+
 # Import from docutils
 from docutils import nodes
 from docutils.core import publish_doctree
@@ -45,7 +48,7 @@ StandaloneReader = get_reader_class('standalone')
 class WikiPage(Text):
 
     class_id = 'WikiPage'
-    class_version = '20071217'
+    class_version = '20081114'
     class_title = MSG(u"Wiki Page")
     class_description = MSG(u"Wiki contents")
     class_icon16 = 'wiki/WikiPage16.png'
@@ -198,6 +201,17 @@ class WikiPage(Text):
             links.append(path)
 
         return links
+
+
+    #######################################################################
+    # Update service
+    #######################################################################
+    def update_20081114(self,
+            links_migration_re = compile(r'\.\. figure:: ([^;]*?)(?!;)(\s)'),
+            links_migration_sub = r'.. figure:: \1/;download\2'):
+        data = self.handler.to_str()
+        data = links_migration_re.sub(links_migration_sub, data)
+        self.handler.load_state_from_string(data)
 
 
     #######################################################################
