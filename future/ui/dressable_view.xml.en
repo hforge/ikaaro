@@ -4,16 +4,8 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
   <div id="dressable">
-    <div id="content">
-      ${content}
-    </div>
-    <div id="browse">
-      <table>
-        <tr valign="top">
-          <td>${browse_folder}</td>
-          <td>${browse_file}</td>
-        </tr>
-      </table>
+    <div id="${item/id}" stl:repeat="item items">
+      ${item/content}
     </div>
   </div>
 </stl:block>

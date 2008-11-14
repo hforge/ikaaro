@@ -22,9 +22,9 @@
 from mimetypes import guess_type
 
 # Import from itools
-from itools.datatypes import is_datatype, DateTime
+from itools.datatypes import is_datatype, DateTime, String
 from itools.gettext import MSG
-from itools.handlers import checkid
+from itools.handlers import checkid, merge_dics
 from itools.html import sanitize_stream
 from itools.stl import stl, set_prefix
 from itools.uri import Path
@@ -39,7 +39,91 @@ from ikaaro.folder import Folder
 from ikaaro.html import WebPage, EpozEditable
 from ikaaro import messages
 from ikaaro.registry import register_resource_class
+from ikaaro.resource_views import DBResource_Edit
+from ikaaro.views import CompositeForm, ContextMenu
 from ikaaro.workflow import WorkflowAware
+
+
+class Dressable_Menu(ContextMenu):
+
+    title = MSG(u'Edit')
+
+    def get_items(self, resource, context):
+        base_path = '.'
+        dressable = resource
+        if not isinstance(dressable, Dressable):
+            dressable = resource.parent
+            if not isinstance(dressable, Dressable):
+                return []
+            base_path = '..'
+        elif not str(context.uri).endswith('/'):
+            base_path = resource.name
+
+        # Dressable metadata
+        items = [
+            {'title': MSG(u'Metadata'),
+             'href': '%s/;edit' % base_path,
+             'class': 'nav_active'},]
+        for name, value in dressable.layout.iteritems():
+            if isinstance(value, tuple):
+                name, cls = value
+            if dressable.has_resource(name):
+                # Add edit link
+                items.append(
+                    {'title': MSG(u'%s %s' % (cls.class_title.gettext(), name)),
+                     'href': '%s/%s/;edit' % (base_path, name),
+                     'class': 'nav_active'})
+            else:
+                # Add new_resource link
+                items.append(
+                    {'title': MSG(u'Add new %s' % cls.class_title.gettext()),
+                     'href': ('%s/;new_resource?type=%s&title=%s' %
+                              (base_path, cls.class_id, name)),
+                     'class': 'nav_active'})
+        # Back to preview
+        items.append(
+            {'title': MSG(u'Preview'),
+             'href': base_path,
+             'class': 'nav_active'})
+        return items
+
+
+
+class Dressable_View(CompositeForm):
+
+    access = 'is_allowed_to_view'
+    title = MSG(u'View')
+    icon = 'view.png'
+    template = '/ui/future/dressable_view.xml'
+    context_menus = [Dressable_Menu()]
+
+
+    def get_view(self, resource, context, item):
+        if is_datatype(item, WebPage):
+            return WebPage.view.GET
+        if is_datatype(item, Image):
+            return resource._get_image
+        return getattr(self, item, None)
+
+
+    def get_namespace(self, resource, context):
+        items = []
+        for name, value in resource.layout.iteritems():
+            content = ''
+            if isinstance(value, tuple):
+                name, kk = value
+                if resource.has_resource(name):
+                    item = resource.get_resource(name)
+                    # get view to show current item
+                    method = self.get_view(resource, context, item)
+                    value = method(item, context)
+                else:
+                    value = None
+            else:
+                # get view to display
+                value = getattr(resource, data)(context)
+            items.append({'id': name, 'content': value})
+        return {'items': items}
 
 
 
@@ -53,26 +137,11 @@ class Dressable(Folder, EpozEditable):
     class_version = '20071215'
     class_title = MSG(u'Dressable')
     class_description = MSG(u'A dressable folder')
-    class_views = ['browse_content', 'preview_content', 'view', 'edit',
-                   'edit_document', 'new_resource']
+    class_views = ['view', 'browse_content', 'preview_content']
     __fixed_handlers__ = ['index']
-    template = '/ui/future/dressable_view.xml'
     layout = {'content': ('index', WebPage),
-              'browse_folder': 'browse_folder',
-              'browse_file': 'browse_file'}
+              'image1': ('image1', Image)}
 
-    browse_template = list(XMLParser("""
-<stl:block xmlns="http://www.w3.org/1999/xhtml"
-  xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
-  <h2>${title}</h2>
-  <ul id="${id}">
-    <li stl:repeat="handler handlers">
-      <img src="${handler/icon}" />
-      <a href="${handler/path}">${handler/label}</a>
-    </li>
-  </ul>
-</stl:block>
-    """))
 
     @staticmethod
     def _make_resource(cls, folder, name, **kw):
@@ -99,371 +168,17 @@ class Dressable(Folder, EpozEditable):
         return Folder.get_document_types(self) + [Dressable]
 
 
-    def GET(self, context):
-        return context.uri.resolve2(';view')
-
-
     #######################################################################
     # API / Private
     #######################################################################
-    def _get_image(self, context, resource):
-        here = context.resource
-        path = here.get_pathto(resource)
-        content = '<img src="%s"/>' % path
-        return XMLParser(content)
-
-
-    def _get_document(self, context, resource):
-        here = context.resource
-        body = resource.get_epoz_document().get_body()
-        if body is None:
-            return None
-        stream = body.get_content_elements()
-        prefix = here.get_pathto(resource)
-        return set_prefix(stream, prefix)
-
-
-    def _get_layout_handler_names(self):
-        handlers = []
-        for key, data in self.layout.iteritems():
-            if isinstance(data, tuple):
-                name, kk = data
-                handlers.append(name)
-        return handlers
-
-
-    def _get_resource_label(self, name):
-        if self.has_resource(name):
-            resource = self.get_resource(name)
-            label = resource.get_property('title')
-            if label:
-                return label
-
-        for key, data in self.layout.iteritems():
-            if isinstance(data, tuple):
-                handler_name, kk = data
-                if handler_name == name:
-                    return unicode(key)
-        return None
-
-
-    view__access__ = 'is_allowed_to_view'
-    view__label__ = MSG(u'View')
-    view__icon__ = 'view.png'
-    def view(self, context):
-        namespace = {}
-
-        for key, data in self.layout.iteritems():
-            content = ''
-            if isinstance(data, tuple):
-                name, kk = data
-                if self.has_resource(name):
-                    resource = self.get_resource(name)
-                    if is_datatype(resource, Image):
-                        content = self._get_image(context, resource)
-                    elif is_datatype(resource, WebPage):
-                        content = self._get_document(context, resource)
-                    else:
-                        raise NotImplementedError
-            else:
-                content = getattr(self, data)(context)
-            namespace[key] = content
-
-        context.styles.append('/ui/future/dressable.css')
-
-        handler = self.get_resource(self.template)
-        return stl(handler, namespace)
-
-
-    def get_views(self):
-        views = Folder.get_views(self)
-        views = list(views)
-        try:
-            edit_index = views.index('edit_document')
-            first_edit_subview = self.get_first_edit_subview()
-            if first_edit_subview is not None:
-                views[edit_index] = first_edit_subview
-            else:
-                views.pop(edit_index)
-        except ValueError: # FO
-            pass
-        return views
-
-
-    #######################################################################
-    # API
-    #######################################################################
-    edit_document__access__ = 'is_allowed_to_edit'
-    edit_document__label__ = MSG(u'Edit')
-    edit_document__icon__ = 'edit.png'
-    def edit_document(self, context):
-        name = context.get_form_value('dress_name', 'index')
-        if context.get_form_value('external'):
-            return context.uri.resolve('%s/;externaledit' % name)
-        resource = self.get_resource(name)
-        cls = self.get_class(name)
-        return cls.edit_form(resource, context)
-
-
-    edit_image__access__ = 'is_allowed_to_edit'
-    edit_image__label__ = MSG(u'Edit image')
-    edit_image__icon__ = 'image.png'
-    def edit_image(self, context):
-        name = context.get_form_value('name')
-        if self.has_resource(name) is False:
-            return context.uri.resolve2('../;add_image_form?name=%s' % name)
-
-        namespace = {}
-        name = context.get_form_value('name')
-        namespace['name'] = name
-        namespace['class_id'] = self.get_class(name).class_id
-        message = messages.MSG_DELETE_RESOURCE.gettext()
-        msg = 'return confirm("%s");' % message.encode('utf_8')
-        namespace['remove_action'] = msg
-
-        # size
-        resource = self.get_resource(name)
-        size = resource.handler.get_size()
-        if size is not None:
-            width, height = size
-            ratio = width / float(height)
-            if ratio > 1:
-                if width > 640:
-                    height = height * 640.0 / width
-                    width = 640
-            else:
-                if height > 480:
-                    width = width * 480.0 / height
-                    height = 480
-        else:
-            width, height = (None, None)
-        namespace['width'] = width
-        namespace['height'] = height
-
-        handler = self.get_resource('/ui/future/dressable_edit_image.xml')
-        return stl(handler, namespace)
-
-
-    #######################################################################
-    # Edit / Inline / edit
-    edit__access__ = 'is_allowed_to_edit'
-    def edit(self, context, sanitize=False):
-        # FIXME Duplicated code (cms.html)
-        dress_name = context.get_form_value('dress_name', 'index')
-        dress_resource = self.get_resource(dress_name)
-        timestamp = context.get_form_value('timestamp', type=DateTime)
-        # Compare the dressable's timestamp and not the folder's timestamp
-        if timestamp is None:
-            return context.come_back(messages.MSG_EDIT_CONFLICT)
-        document = self.get_epoz_document()
-        if document.timestamp is not None and timestamp < document.timestamp:
-            return context.come_back(messages.MSG_EDIT_CONFLICT)
-
-        # Sanitize
-        new_body = context.get_form_value('data')
-        try:
-            new_body = list(XMLParser(new_body,
-                                      {None: 'http://www.w3.org/1999/xhtml'}))
-        except XMLError:
-            error = ERROR(u'Invalid HTML code.')
-            return context.come_back(error)
-        if sanitize:
-            new_body = sanitize_stream(new_body)
-        # "get_epoz_document" is to set in your editable handler
-        old_body = document.get_body()
-        events = (document.events[:old_body.start+1] + new_body
-                  + document.events[old_body.end:])
-        # Change
-        document.set_events(events)
-        context.server.change_resource(dress_resource)
-        context.server.change_resource(self)
-
-        return context.come_back(messages.MSG_CHANGES_SAVED)
-
-
-    def get_class(self, handler_name):
-        """
-        Return the class of a handler
-        """
-        for key, data in self.layout.iteritems():
-            if isinstance(data, tuple):
-                name, cls = data
-                if name == handler_name:
-                    return cls
-        raise AttributeError
-
-
-    add_image_form__access__ = 'is_allowed_to_edit'
-    def add_image_form(self, context):
-        namespace = {}
-        name = context.get_form_value('name')
-        namespace['name'] = name
-        namespace['class_id'] = self.get_class(name).class_id
-
-        handler = self.get_resource('/ui/future/dressable_add_image.xml')
-        return stl(handler, namespace)
-
-
-    new_image_resource__access__ = 'is_allowed_to_edit'
-    def new_image_resource(self, context):
-        class_id = context.get_form_value('class_id')
-        image_name = context.get_form_value('name')
-
-        # Check input data
-        file = context.get_form_value('file')
-        if file is None:
-            return context.come_back(messages.MSG_EMPTY_FILENAME)
-
-        # Interpret input data (the mimetype sent by the browser can be
-        # minimalistic)
-        kk, mimetype, body = file
-        guessed, encoding = guess_type(image_name)
-
-        # Check the name
-        name = checkid(image_name)
-        if name is None:
-            return context.come_back(messages.MSG_BAD_NAME)
-
-        # Check the mimetype
-        if mimetype.startswith('image/') is False:
-            error = ERROR(u'The file is not an image')
-            return context.come_back(error)
-
-        # Add the language extension to the name
-        cls = Image
-        extension = cls.class_handler.class_extension
-        name = FileName.encode((name, extension, None))
-
-        if self.has_resource(image_name):
-            child = self.get_resource(image_name)
-            child.handler.load_state_from_string(body)
-        else:
-            # Build the resource
-            child = cls.make_resource(cls, self, name, body=body)
-            # The metadata
-            metadata = child.metadata
-            language = resource.get_content_language(context)
-            metadata.set_property('title', name, language=language)
-            metadata.set_property('state', 'public')
-
-        goto = './;view'
-        return context.come_back(messages.MSG_NEW_RESOURCE, goto=goto)
-
-
-    remove_image__access__ = 'is_allowed_to_edit'
-    def remove_image(self, context):
-        name = context.get_form_value('name')
-        resources = ''
-        try:
-            self.del_resource(name)
-            resources = name
-        except ConsistencyError:
-            pass
-
-        goto = './;view'
-        return context.come_back(messages.MSG_RESOURCES_REMOVED,
-                                 resources=resources, goto=goto)
-
-
-    def get_epoz_document(self):
-        name = get_context().get_form_value('dress_name', 'index')
-        return self.get_resource(name).handler
-
-
-    def get_browse(self, context, cls, exclude=[]):
-        namespace = {}
-        here = context.resource
-        folders = []
-        handlers = self.search_resources(cls=cls)
-        # Check access rights
-        user = context.user
-
-        for handler in handlers:
-            if handler.name in exclude:
-                continue
-            ac = handler.get_access_control()
-            if ac.is_allowed_to_view(user, handler):
-                d = {}
-                label = handler.get_property('title')
-                if label is None or label == '':
-                    label = handler.name
-                path_to_icon = handler.get_class_icon()
-                if path_to_icon.startswith(';'):
-                    path_to_icon = Path('%s/' % handler.name)
-                    path_to_icon = path_to_icon.resolve(path_to_icon)
-                d['label'] = label
-                d['icon'] = path_to_icon
-                d['path'] = here.get_pathto(handler)
-                folders.append((label, d))
-
-        folders.sort()
-        return [folder for kk, folder in folders]
-
-
-    def browse_folder(self, context):
-        namespace = {}
-        namespace['id'] = 'browse_folder'
-        namespace['title'] = 'Folders'
-        namespace['handlers'] = self.get_browse(context, Folder)
-        return stl(events=self.browse_template, namespace=namespace)
-
-
-    def browse_file(self, context):
-        exclude = self._get_layout_handler_names()
-        namespace = {}
-        namespace['id'] = 'browse_file'
-        namespace['title'] = 'Files'
-        namespace['handlers'] = self.get_browse(context, File, exclude=exclude)
-        return stl(events=self.browse_template, namespace=namespace)
+    def _get_image(self, item, context):
+        return XMLParser('<img src="%s/;download"/>' % context.get_link(item))
 
 
     #######################################################################
     # User interface
     #######################################################################
-    def get_subviews(self, name):
-        if name.split('?')[0] in ('edit_document', 'edit_image'):
-            subviews = []
-            for key, data in self.layout.iteritems():
-                if isinstance(data, tuple):
-                    name, cls = data
-                    if is_datatype(cls, WebPage):
-                        ref = 'edit_document?dress_name=%s' % name
-                        subviews.append(ref)
-                    elif is_datatype(cls, Image):
-                        ref = 'edit_image?name=%s' % name
-                        subviews.append(ref)
-            subviews.sort()
-            return subviews
-
-        return Folder.get_subviews(self, name)
-
-
-    def get_first_edit_subview(self):
-        keys = self.layout.keys()
-        keys.sort()
-        for key in keys:
-            data = self.layout[key]
-            if isinstance(data, tuple):
-                name, cls = data
-                if is_datatype(cls, WebPage):
-                    return 'edit_document?dress_name=%s' % name
-                elif is_datatype(cls, Image):
-                    return 'edit_image?name=%s' % name
-        return None
-
-
-    def edit_document__sublabel__(self, **kw):
-        dress_name = kw.get('dress_name')
-        label = self._get_resource_label(dress_name)
-        if kw.get('external'):
-            return MSG(u'$label (External)').gettext(label=label)
-        return label
-
-
-    def edit_image__sublabel__(self, **kw):
-        name = kw.get('name')
-        return self._get_resource_label(name)
-
+    view = Dressable_View()
 
 
 register_resource_class(Dressable)
