@@ -110,6 +110,7 @@ class WikiPage(Text):
         document = publish_doctree(self.handler.to_str(), reader=reader,
                                    settings_overrides=self.overrides)
 
+        context = get_context()
         # Assume internal paths are relative to the container
         for node in document.traverse(condition=nodes.reference):
             refuri = node.get('refuri')
@@ -123,12 +124,11 @@ class WikiPage(Text):
             # Note: absolute paths will be rewritten as relative paths
             try:
                 resource = parent.get_resource(reference.path)
-                node['refuri'] = str(self.get_pathto(resource))
+                node['refuri'] = str(context.get_link(resource))
             except LookupError:
                 pass
 
         # Assume image paths are relative to the container
-        context = get_context()
         for node in document.traverse(condition=nodes.image):
             uri  = node['uri'].encode('utf_8')
             reference = get_reference(uri)
@@ -188,7 +188,12 @@ class WikiPage(Text):
             # Skip external image
             if reference.scheme or reference.authority:
                 continue
-            path = base.resolve2(reference.path)
+            # Strip the view
+            path = reference.path
+            if reference.path[-1] == ';download':
+                path = path[:-1]
+            # Resolve the path
+            path = base.resolve2(path)
             path = str(path)
             links.append(path)
 

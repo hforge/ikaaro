@@ -87,7 +87,7 @@ class WikiPage_View(BaseView):
                         continue
                     try:
                         destination = resource.get_resource(reference.path)
-                        node['refuri'] = str(resource.get_pathto(destination))
+                        node['refuri'] = str(context.get_link(destination))
                     except LookupError:
                         pass
             elif refname is False:
@@ -106,7 +106,7 @@ class WikiPage_View(BaseView):
                 # Wiki link found, "refname" is the path
                 node['classes'].append('wiki')
                 destination = resource.get_resource(refname)
-                node['refuri'] = str(resource.get_pathto(destination))
+                node['refuri'] = str(context.get_link(destination))
 
         # Manipulate publisher directly (from publish_from_doctree)
         reader = Reader(parser_name='null')
