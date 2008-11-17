@@ -3785,7 +3785,7 @@ msgstr "Hebdomadaire"
 
 #: ../resource_views.py:520
 msgid "Welcome!"
-msgstr ""
+msgstr "Bienvenu(e) !"
 
 #: ../wiki/folder.py:37 ../wiki/folder_views.py:33
 msgid "Wiki"
