@@ -323,6 +323,14 @@ class AccessControl(BaseAccessControl):
         return self.is_allowed_to_trans(user, resource, 'publish')
 
 
+    def is_allowed_to_view_folder(self, user, resource):
+        try:
+            index = resource.get_resource('index')
+        except LookupError:
+            return False
+        return self.is_allowed_to_view(user, index)
+
+
 
 class RoleAware(AccessControl):
     """This base class implements access control based on the concept of

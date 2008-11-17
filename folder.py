@@ -234,7 +234,10 @@ class Folder(DBResource):
     #######################################################################
     def get_default_view_name(self):
         # Index page
-        if self.has_resource('index'):
+        ac = self.get_access_control()
+        context = get_context()
+        user = context.user
+        if ac.is_allowed_to_view_folder(user, self):
             return 'view'
 
         return DBResource.get_default_view_name(self)

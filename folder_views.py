@@ -31,8 +31,7 @@ from itools.handlers import checkid, merge_dics
 from itools.i18n import format_datetime
 from itools.uri import get_reference, Path
 from itools.web import BaseView, STLForm, ERROR
-from itools.xapian import AndQuery, NotQuery, OrQuery, PhraseQuery
-from itools.xapian import StartQuery
+from itools.xapian import AndQuery, OrQuery, PhraseQuery
 from itools.xml import XMLParser
 
 # Import from ikaaro
@@ -84,7 +83,8 @@ class ZoomMenu(ContextMenu):
 
 class Folder_View(BaseView):
 
-    access = True
+    access = 'is_allowed_to_view_folder'
+
 
     def GET(self, resource, context):
         try:
