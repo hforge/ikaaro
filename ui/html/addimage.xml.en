@@ -63,7 +63,7 @@
         <stl:block stl:repeat="item bc/items">
           <dl class="thumb" stl:if="item/is_image">
             <dt>
-              <img alt="" title="${item/item_type}" src="${item/icon}/"
+              <img alt="" title="${item/item_type}" src="${item/icon}"
                 width="48" height="48" />
             </dt>
             <dd>
@@ -84,7 +84,8 @@
           <input type="hidden" name="mode" value="${mode}" />
           <input id="file" name="file" size="35" type="file" />
           <br/>
-          <input class="button_upload" type="submit" value="Upload and Insert" />
+          <input class="button_upload" type="submit"
+                 value="Upload and Insert" />
         </form>
       </div>
 

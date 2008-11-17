@@ -297,7 +297,7 @@ class DBResource_AddImage(STLForm):
         mode = context.query['mode']
         if mode == 'wiki':
             scripts.append('/ui/wiki/javascript.js')
-        elif mode == 'menu':
+        elif mode is None or mode == 'menu':
             scripts.extend(['/ui/tiny_mce/javascript.js',
                             '/ui/tiny_mce/tiny_mce_src.js',
                             '/ui/tiny_mce/tiny_mce_popup.js'])
