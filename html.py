@@ -86,8 +86,9 @@ class HTMLEditView(DBResource_Edit):
 
 
     def get_value(self, resource, context, name, datatype):
+        language = resource.get_content_language(context)
         if name == 'data':
-            return resource.get_epoz_data()
+            return resource.get_epoz_data(language=language)
         elif name == 'timestamp':
             return datetime.now()
         return DBResource_Edit.get_value(self, resource, context, name,
@@ -103,7 +104,9 @@ class HTMLEditView(DBResource_Edit):
 
         # Body
         new_body = form['data']
-        resource.handler.set_body(new_body)
+        language = resource.get_content_language(context)
+        handler = resource.get_handler(language=language)
+        handler.set_body(new_body)
 
         # Ok
         context.message = messages.MSG_CHANGES_SAVED
@@ -120,13 +123,13 @@ class EpozEditable(object):
     edit = HTMLEditView()
 
 
-    def get_epoz_document(self):
+    def get_epoz_document(self, language=None):
         # Implement it in your editable handler
         raise NotImplementedError
 
 
-    def get_epoz_data(self):
-        document = self.get_epoz_document()
+    def get_epoz_data(self, language=None):
+        document = self.get_epoz_document(language=language)
         body = document.get_body()
         if body is None:
             return None
@@ -207,8 +210,8 @@ class WebPage(EpozEditable, Multilingual, Text):
     new_instance = DBResource.new_instance
     view = WebPage_View()
 
-    def get_epoz_document(self):
-        return self.handler
+    def get_epoz_document(self, language=None):
+        return self.get_handler(language=language)
 
 
     #######################################################################
