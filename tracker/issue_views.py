@@ -344,8 +344,8 @@ class Issue_ViewResources(Table_View):
 
 
     def action_remove(self, resource, context, form):
-        resource = resource.get_resources()
-        Table_View.action_remove(self, resource, context, form)
+        calendar = resource.get_calendar()
+        Table_View.action_remove(self, calendar, context, form)
 
 
 
@@ -367,7 +367,7 @@ class Issue_AddEditResource(STLForm):
 
 
     def get_namespace(self, resource, context):
-        resources = resource.get_resources()
+        calendar = resource.get_calendar()
 
         # Add or Edit
         id = context.query['id']
@@ -381,8 +381,8 @@ class Issue_AddEditResource(STLForm):
         else:
             # Edit a resource-issue
             action = ';edit_resources?id=%s' % id
-            record = resources.handler.get_record(id)
-            get_value = resources.handler.get_record_value
+            record = calendar.handler.get_record(id)
+            get_value = calendar.handler.get_record_value
             user = get_value(record, 'resource')
             dtstart = get_value(record, 'dtstart')
             dtend = get_value(record, 'dtend')
@@ -394,7 +394,7 @@ class Issue_AddEditResource(STLForm):
             id = str(id)
 
         # Time select
-        timetables = resources.get_timetables()
+        timetables = calendar.get_timetables()
         time_select = [
             {'name': index,
              'start': start.strftime('%H:%M'),
@@ -425,15 +425,14 @@ class Issue_AddEditResource(STLForm):
             'comment': form['comment']}
 
         # Change
-        resources = resource.get_resources()
-        resources.handler.add_record(record)
+        calendar = resource.get_calendar()
+        calendar.handler.add_record(record)
         # Ok
         context.message = MSG_CHANGES_SAVED
 
 
     def action_edit(self, resource, context, form):
         id = context.query['id']
-        resource.get_resources()
 
         # New record
         dtstart = datetime.combine(form['dtstart'], form['tstart'])
@@ -446,8 +445,8 @@ class Issue_AddEditResource(STLForm):
             'comment': form['comment']}
 
         # Change
-        resources = resource.get_resources()
-        resources.handler.update_record(id, **record)
+        calendar = resource.get_calendar()
+        calendar.handler.update_record(id, **record)
         # Ok
         context.message = MSG_CHANGES_SAVED
 
@@ -466,9 +465,9 @@ class Issue_EditResources(CompositeForm):
 
     def get_namespace(self, resource, context):
         # Override so we can pass a different resource to Issue_ViewResources
-        resources = resource.get_resources()
+        calendar = resource.get_calendar()
         views = [
             self.subviews[0].GET(resource, context),
-            self.subviews[1].GET(resources, context) ]
+            self.subviews[1].GET(calendar, context) ]
 
         return {'views': views}

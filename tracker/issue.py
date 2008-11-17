@@ -130,8 +130,8 @@ class Issue(Folder):
         return '#%s %s' % (self.name, self.get_value('title'))
 
 
-    def get_resources(self):
-        return self.parent.get_resource('resources')
+    def get_calendar(self):
+        return self.parent.get_resource('calendar')
 
 
     def get_history(self):

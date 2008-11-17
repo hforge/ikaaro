@@ -76,7 +76,7 @@ class Tracker(Folder):
     class_views = ['search', 'add_issue', 'browse_content', 'edit']
 
     __fixed_handlers__ = ['products', 'modules', 'versions', 'types',
-        'priorities', 'states', 'resources']
+        'priorities', 'states', 'calendar']
 
     @staticmethod
     def _make_resource(cls, folder, name):
@@ -114,7 +114,7 @@ class Tracker(Folder):
             folder.set_handler('%s/s%s.metadata' % (name, i), metadata)
             i += 1
         metadata = Resources.build_metadata()
-        folder.set_handler('%s/resources.metadata' % name, metadata)
+        folder.set_handler('%s/calendar.metadata' % name, metadata)
 
 
     def get_document_types(self):
@@ -261,10 +261,10 @@ class Tracker(Folder):
     # Update
     #######################################################################
     def update_20080407(self):
-        """Add resources to tracker.
+        """Add calendar to tracker.
         """
         metadata = Resources.build_metadata()
-        self.handler.set_handler('resources.metadata', metadata)
+        self.handler.set_handler('calendar.metadata', metadata)
 
 
     def update_20081015(self):

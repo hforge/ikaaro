@@ -169,7 +169,7 @@ class BaseResources(BaseTable):
 
 class Resources(Table, CalendarBase):
 
-    class_id = 'resources'
+    class_id = 'tracker_calendar'
     class_version = '20071216'
     class_title = MSG(u'Resources')
     class_description = MSG(u'Resources assigned to issues')
@@ -186,8 +186,7 @@ class Resources(Table, CalendarBase):
 
 
     def get_events_to_display(self, start, end):
-        results = self.parent.get_search_results(get_context())
-        results = [result.name for result in results.get_documents()]
+        # Build the query
         dtstart = str(start)
         dtend = str(end)
         dtstart_limit = str(start + resolution)
@@ -196,15 +195,22 @@ class Resources(Table, CalendarBase):
                         RangeQuery('dtend', dtstart_limit, dtend_limit),
                         AndQuery(RangeQuery('dtstart', None, dtstart),
                                  RangeQuery('dtend', dtend, None)))
-        resources = self.handler.search(query)
 
-        resource_names, events = {}, []
-        for record in resources:
-            if record.get_value('issue') in results:
-                e_dtstart = record.get_value('dtstart')
-                events.append((0, e_dtstart, record))
-        events.sort(lambda x, y : cmp(x[1], y[1]))
-        return {0:self.name}, events
+        # Define the set of concerned issues
+        tracker = self.parent
+        issues = tracker.get_search_results(get_context())
+        issues = [ x.name for x in issues.get_documents() ]
+
+        # Find out the events
+        handler = self.handler
+        events = [
+            (0, handler.get_record_value(x, 'dtstart'), x)
+            for x in handler.search(query)
+            if handler.get_record_value(x, 'issue') in issues ]
+        events.sort(lambda x, y: cmp(x[1], y[1]))
+
+        # Ok
+        return {0: self.name}, events
 
 
     monthly_view = TrackerMonthlyView()

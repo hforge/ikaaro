@@ -152,7 +152,7 @@ class TrackerViewMenu(ContextMenu):
             {'title': MSG(u'Export to CSV'),
              'href': ';export_to_csv_form?%s' % params},
             {'title': MSG(u'Resources'),
-             'href': 'resources/;monthly_view?%s' % params}]
+             'href': 'calendar/;monthly_view?%s' % params}]
         return items
 
 

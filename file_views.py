@@ -383,7 +383,7 @@ class Image_View(STLView):
         ac = parent.get_access_control()
 
         return [ image for image in parent.search_resources(cls=Image)
-                   if ac.is_allowed_to_view(user, image) ]
+                 if ac.is_allowed_to_view(user, image) ]
 
 
     def get_namespace(self, resource, context):
