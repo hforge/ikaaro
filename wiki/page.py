@@ -124,7 +124,7 @@ class WikiPage(Text):
             # Note: absolute paths will be rewritten as relative paths
             try:
                 resource = parent.get_resource(reference.path)
-                node['refuri'] = str(context.get_link(resource))
+                node['refuri'] = context.get_link(resource)
             except LookupError:
                 pass
 
