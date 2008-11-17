@@ -273,10 +273,10 @@ class DBResource_AddImage(STLForm):
     schema = {
         'target_path': String(mandatory=True),
         'file': FileDataType(mandatory=True),
-        'mode': String,
+        'mode': String(default='html'),
     }
     query_schema = {
-        'mode': String,
+        'mode': String(default='html'),
     }
 
 
@@ -297,7 +297,7 @@ class DBResource_AddImage(STLForm):
         mode = context.query['mode']
         if mode == 'wiki':
             scripts.append('/ui/wiki/javascript.js')
-        elif mode is None or mode == 'menu':
+        elif mode == 'html':
             scripts.extend(['/ui/tiny_mce/javascript.js',
                             '/ui/tiny_mce/tiny_mce_src.js',
                             '/ui/tiny_mce/tiny_mce_popup.js'])
