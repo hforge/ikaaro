@@ -16,7 +16,7 @@
             <p class="forum_message_author">${message/author}</p>
             <p class="forum_message_date">${message/mtime}</p>
             <stl:block stl:if="editable">
-              <a href="${message/name}/;edit">Edit</a>
+              <a href="${message/link}/;edit">Edit</a>
               <stl:block stl:if="not repeat/message/start">
                 <br/>
                 <input type="checkbox" name="ids" value="${message/name}" />

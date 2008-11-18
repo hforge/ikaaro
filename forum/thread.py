@@ -68,6 +68,7 @@ class Thread_View(STLForm):
                 author = users.get_resource(author).get_title()
             namespace['messages'].append({
                 'name': message.name,
+                'link': context.get_link(message),
                 'author': author,
                 'mtime': format_datetime(message.get_mtime(), accept_language),
                 'body': message.handler.events,
