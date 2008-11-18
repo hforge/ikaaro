@@ -34,21 +34,21 @@ function update_tracker_list(list_name){
   $('#product option:selected').each(function() {
     var id_product = $(this).val();
     for (var i=0; i < list_products[id_product][list_name].length; i++) {
-     options += '<option value="' + list_products[id_product][list_name][i]['id'] + '">'
-     options += list_products[id_product][list_name][i]['value']
+     options += '<option value="';
+     options += list_products[id_product][list_name][i]['id'] + '">';
+     options += list_products[id_product][list_name][i]['value'];
      options += '</option>';
     }
   });
   $("#" + list_name).html(options);
 }
 
-
-$(document).ready(function () {
-  $('#module').children().remove();
-  $('#version').children().remove();
-  $("#product").bind("change",
-    function() {
+function update_tracker(){
       update_tracker_list('version');
       update_tracker_list('module');
-    });
+}
+
+$(document).ready(function () {
+  update_tracker();
+  $("#product").bind("change", update_tracker);
 });
