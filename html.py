@@ -163,17 +163,25 @@ class WebPage(EpozEditable, Multilingual, Text):
                 if tag_uri != xhtml_uri:
                     continue
                 if tag_name == 'a':
-                    value = attributes.get((xhtml_uri, 'href'))
+                    value = attributes.get((None, 'href'))
+                    uri = get_reference(value)
+                    if uri.scheme or uri.authority or not uri.path:
+                        continue
+                    path = uri.path
                 elif tag_name == 'img':
-                    value = attributes.get((xhtml_uri, 'src'))
+                    value = attributes.get((None, 'src'))
+                    uri = get_reference(value)
+                    if uri.scheme or uri.authority or not uri.path:
+                        continue
+                    path = uri.path
+                    # Strip the view
+                    if path[-1] == ';download':
+                        path = path[:-1]
                 else:
                     continue
                 if value is None:
                     continue
-                uri = get_reference(value)
-                if uri.scheme or uri.authority or not uri.path:
-                    continue
-                uri = base.resolve(uri.path)
+                uri = base.resolve2(path)
                 uri = str(uri)
                 links.append(uri)
         return links

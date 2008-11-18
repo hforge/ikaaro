@@ -193,7 +193,7 @@ class WikiPage(Text):
                 continue
             # Strip the view
             path = reference.path
-            if reference.path[-1] == ';download':
+            if path[-1] == ';download':
                 path = path[:-1]
             # Resolve the path
             path = base.resolve2(path)
