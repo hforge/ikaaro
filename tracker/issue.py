@@ -105,10 +105,12 @@ class Issue(Folder):
 
 
     def get_mtime(self):
-        """Return the datetime of the last record"""
-        last_record = self.get_last_history_record()
-        if last_record:
-            return last_record.datetime
+        """Return the datetime of the last record.
+        """
+        history = self.get_history()
+        record = history.get_record(-1)
+        if record:
+            return history.get_record_value(record, 'datetime')
         return self.get_mtime()
 
 
@@ -142,18 +144,11 @@ class Issue(Folder):
         return self.get_history().get_records()
 
 
-    def get_last_history_record(self):
-        history = self.handler.get_handler('.history', cls=History)
-        n_records = history.get_n_records()
-        if n_records == 0:
-            return None
-        return history.get_record(n_records - 1)
-
-
     def get_value(self, name):
-        record = self.get_last_history_record()
+        history = self.get_history()
+        record = history.get_record(-1)
         if record:
-            return record.get_value(name)
+            return history.get_record_value(record, name)
         return None
 
 
@@ -355,13 +350,13 @@ class Issue(Folder):
         construct a line for a table.
         """
         # Build the namespace
-        get_value = self.get_last_history_record().get_value
+        history = self.get_history()
+        record = history.get_record(-1)
         infos = {
             'name': self.name,
             'id': int(self.name),
-            'title': get_value('title'),
-            'comment': get_value('comment'),
-            }
+            'title': history.get_record_value(record, 'title'),
+            'comment': history.get_record_value(record, 'comment')}
 
         # Select Tables
         get_resource = self.parent.get_resource
@@ -373,15 +368,18 @@ class Issue(Folder):
             'state': 'states',
             'priority': 'priorities'}
         for name in tables:
-            value = get_value(name)
+            infos[name] = None
+            value = history.get_record_value(record, name)
             if value is None:
-                infos[name] = None
-            else:
-                record = get_resource(tables[name]).handler.get_record(value)
-                infos[name] = record and record.title or None
+                continue
+            table = get_resource(tables[name]).handler
+            table_record = table.get_record(value)
+            if table_record is None:
+                continue
+            infos[name] = table.get_record_value(table_record, 'title')
 
         # Assigned-To
-        assigned_to = get_value('assigned_to')
+        assigned_to = history.get_record_value(record, 'assigned_to')
         infos['assigned_to'] = ''
         if assigned_to:
             users = self.get_resource('/users')

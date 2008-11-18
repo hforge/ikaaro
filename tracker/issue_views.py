@@ -106,7 +106,8 @@ class Issue_Edit(STLForm):
 
         # Local variables
         users = resource.get_resource('/users')
-        record = resource.get_last_history_record()
+        history = resource.get_history()
+        record = history.get_record(-1)
         title = record.get_value('title')
         product = record.get_value('product')
         module = record.get_value('module')
