@@ -30,7 +30,7 @@ from itools.xml import XMLFile
 
 # Import from ikaaro
 from resource_ import IResource
-from skins_views import LocationTemplate
+from skins_views import LanguagesTemplate, LocationTemplate
 
 
 
@@ -334,6 +334,7 @@ class Skin(UIFolder):
             'user': self.get_user_menu(context),
             # Location & Views
             'location': LocationTemplate(context),
+            'languages': LanguagesTemplate(context),
             # Body
             'page_title': self._get_page_title(context),
             'message': self.get_messages(context),

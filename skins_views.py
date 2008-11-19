@@ -19,6 +19,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
+from itools.i18n import get_language_name
 from itools.stl import STLTemplate
 from itools.uri import decode_query
 
@@ -26,10 +27,55 @@ from itools.uri import decode_query
 from utils import reduce_string, resolve_view
 
 
+###########################################################################
+# Global language selector
+###########################################################################
+class LanguagesTemplate(STLTemplate):
+
+    def __init__(self, context):
+        self.context = context
+
+
+    def get_template(self):
+        return self.context.root.get_resource('/ui/aruni/languages.xml')
+
+
+    def get_namespace(self):
+        context = self.context
+        # Website languages
+        site_root = context.site_root
+        ws_languages = site_root.get_property('website_languages')
+        if len(ws_languages) == 1:
+            return {'languages': []}
+
+        # Select language
+        accept = context.accept_language
+        current_language = site_root.get_content_language()
+
+        languages = []
+        for language in ws_languages:
+            href = context.uri.replace(language=language)
+            css_class = 'selected' if (language == current_language) else None
+            languages.append({
+                'name': language,
+                'value': get_language_name(language),
+                'href': href,
+                'class': css_class})
+
+        return {'languages': languages}
+
+
+###########################################################################
+# Resource location & menu
+###########################################################################
 class LocationTemplate(STLTemplate):
 
     def __init__(self, context):
         self.context = context
+
+
+    def get_template(self):
+        return self.context.root.get_resource('/ui/aruni/location.xml')
 
 
     def get_breadcrumb(self, context):
@@ -102,10 +148,6 @@ class LocationTemplate(STLTemplate):
                 'class': active and 'active' or None})
 
         return tabs
-
-
-    def get_template(self):
-        return self.context.root.get_resource('/ui/aruni/location.xml')
 
 
     def get_namespace(self):

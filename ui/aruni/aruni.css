@@ -21,19 +21,18 @@ legend {
   text-align: right;
   background: #729fcf url(images/logo.png) left bottom no-repeat;
   color: #fff;
-  font-size: 1.1em;
+  font-size: 1.2em;
   margin-bottom: 10px;
-  padding: 32px 10px 3px 25px;
+  padding: 6px 10px 3px 25px;
 }
 
 #header a {
   background-position: left center;
   background-repeat: no-repeat;
   color: white;
-  font-size: 1.1em;
-  font-weight: bold;
-  margin: 0px 0px 0px 10px;
-  padding: 4px 0px 4px 20px;
+  font-size: 1.2em;
+  margin: 0px 0px 0px 0px;
+  padding: 4px 2px 4px 2px;
   text-decoration: none;
 }
 
@@ -43,6 +42,23 @@ legend {
 
 #header a:hover {
   text-decoration: underline;
+}
+
+#header #languages {
+  margin-bottom: 12px;
+}
+
+#header #languages a {
+  font-size: 1.1em;
+}
+
+#header #languages a.selected {
+  font-weight: bold;
+}
+
+#header #top_menu a {
+  margin: 0px 0px 0px 10px;
+  padding: 4px 0px 4px 19px;
 }
 
 #header a#top_menu_login {
