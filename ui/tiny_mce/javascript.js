@@ -29,8 +29,19 @@ function tiny_mce_set_uri_value(uri) {
  * Use our own filebrowser
  */
 function ikaaro_filebrowser(field_name, url, type, win) {
-    var cms_location = window.location.href
-    var cms_base = cms_location.substring(0, cms_location.indexOf(';'))
+    var cms_location = window.location.href;
+
+    // Strip the view
+    var cms_index = cms_location.indexOf(';');
+    var cms_base;
+    if (cms_index == -1) {
+        if (cms_location[cms_location.length - 1] == '/')
+            cms_base = cms_location;
+	else
+	    cms_base = cms_location + '/';
+    } else
+        cms_base = cms_location.substring(0, cms_index);
+
     var cms_specific_action = ';add_link';
     if (type == 'image')
         cms_specific_action = ';add_image';
