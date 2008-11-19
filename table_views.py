@@ -209,7 +209,7 @@ class Table_AddEditRecord(AutoForm):
             title = resource.get_field_title(error.name)
             context.message = ERROR(error, field=title, value=error.value)
         except ValueError, error:
-            message = ERROR(u'Error: $message', message=str(error))
+            message = ERROR(u'Error: $msg', msg=str(error))
             context.message = message
         else:
             return self.action_on_success(resource, context)
