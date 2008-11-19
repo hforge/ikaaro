@@ -416,6 +416,24 @@ class RTEWidget(Widget):
         '/ui/tiny_mce/tiny_mce_src.js',
         '/ui/tiny_mce/javascript.js']
 
+    # Configuration
+    # See http://wiki.moxiecode.com/index.php/TinyMCE:Configuration
+    width = None
+    height = '340px'
+    # toolbar
+    toolbar1 = ('newdocument,code,|,bold,italic,underline,strikethrough,|,'
+                'justifyleft,justifycenter,justifyright, justifyfull,|,'
+                'bullist,numlist,|, outdent, indent,|,undo,redo,|,link,'
+                'unlink,image,media')
+    toolbar2 = ('tablecontrols,|,removeformat,forecolor,backcolor,|,'
+                'formatselect')
+    toolbar3 = None
+    resizing = True
+    plugins = 'safari,table,media'
+    # css
+    advanced_styles = None
+    table_styles = None
+
 
     def get_rte_css(self):
         return self.rte_css
@@ -441,13 +459,24 @@ class RTEWidget(Widget):
         website_languages = site_root.get_property('website_languages')
         accept = context.accept_language
         current_language = accept.select_language(website_languages)
+        # configuration
+        resizing = 'true' if self.resizing else 'false'
 
         css_names = self.get_rte_css()
         return {'form_name': self.name,
                 'source': value,
                 'scripts': self.rte_scripts,
                 'css': ','.join(css_names),
-                'language': current_language}
+                'language': current_language,
+                'width': self.width,
+                'height': self.height,
+                'toolbar1': self.toolbar1,
+                'toolbar2': self.toolbar2,
+                'toolbar3': self.toolbar3,
+                'resizing': resizing,
+                'plugins': self.plugins,
+                'advanced_styles': self.advanced_styles,
+                'table_styles': self.table_styles}
 
 
 ###########################################################################
