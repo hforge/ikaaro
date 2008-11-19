@@ -26,6 +26,7 @@ from itools.datatypes import DateTime
 from itools.gettext import MSG
 from itools.handlers import merge_dics
 from itools.html import xhtml_uri, XHTMLFile
+from itools.stl import set_prefix
 from itools.uri import get_reference
 from itools.web import BaseView
 from itools.xml import TEXT, START_ELEMENT
@@ -72,7 +73,14 @@ class WebPage_View(BaseView):
 
 
     def GET(self, resource, context):
-        return resource.get_epoz_data()
+        stream = resource.get_epoz_data()
+        path = context.uri.path
+        if path.endswith_slash or path[-1][0] == ';':
+            return stream
+
+        # Rewrite URLs
+        prefix = 'toto/'
+        return set_prefix(stream, prefix)
 
 
 
