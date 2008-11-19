@@ -374,13 +374,13 @@ class WikiPage_Edit(STLForm):
 
         # Data is assumed to be encoded in UTF-8
         data = form['data']
+        # Save even if broken
         resource.handler.load_state_from_string(data)
 
         # Warn about syntax errors
         message = None
         try:
-            html = publish_string(data, writer_name='html',
-                                  settings_overrides=resource.overrides)
+            html = resource.view.GET(resource, context)
             # Non-critical
             if 'class="system-message"' in html:
                 message = ERROR(u"Syntax error, please check the view for "
