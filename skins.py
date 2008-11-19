@@ -25,13 +25,12 @@ from itools.handlers import File, Folder, Image
 from itools.http import NotFound
 from itools.i18n import has_language
 from itools.stl import stl
-from itools.uri import decode_query
 from itools.web import get_context, BaseView, ERROR
 from itools.xml import XMLFile
 
 # Import from ikaaro
 from resource_ import IResource
-from utils import reduce_string, resolve_view
+from skins_views import LocationTemplate
 
 
 
@@ -254,90 +253,6 @@ class Skin(UIFolder):
 
 
     #######################################################################
-    # Location & Views
-    #######################################################################
-    def get_breadcrumb(self, context):
-        """Return a list of dicts [{name, url}...]
-        """
-        site_root = context.site_root
-
-        # Initialize the breadcrumb with the root resource
-        path = '/'
-        title = site_root.get_title()
-        breadcrumb = [{
-            'url': path,
-            'name': title,
-            'short_name': reduce_string(title, 15, 30),
-            }]
-
-        # Complete the breadcrumb
-        resource = site_root
-        for name in context.uri.path:
-            path = path + ('%s/' % name)
-            try:
-                resource = resource.get_resource(name)
-            except LookupError:
-                break
-            # Append
-            title = resource.get_title()
-            breadcrumb.append({
-                'url': path,
-                'name': title,
-                'short_name': reduce_string(title, 15, 30),
-            })
-
-        return breadcrumb
-
-
-    def get_tabs(self, context):
-        """Return tabs and subtabs as a dict {tabs, subtabs} of list of dicts
-        [{name, label, active, style}...].
-        """
-        # Get request, path, etc...
-        here = context.resource
-
-        # Get access control
-        user = context.user
-        ac = here.get_access_control()
-
-        # Tabs
-        tabs = []
-        for link, view in here.get_views():
-            active = False
-
-            # From method?param1=value1&param2=value2&...
-            # we separate method and arguments, then we get a dict with
-            # the arguments and the subview active state
-            if '?' in link:
-                name, args = link.split('?')
-                args = decode_query(args)
-            else:
-                name, args = link, {}
-
-            # Active
-            if context.view == here.get_view(name, args):
-                active = True
-
-            # Add the menu
-            tabs.append({
-                'name': resolve_view(context, link),
-                'label': view.get_title(context),
-                'active': active,
-                'class': active and 'active' or None})
-
-        return tabs
-
-
-    def get_location(self, context):
-        namespace = {
-            'breadcrumb': self.get_breadcrumb(context),
-            'tabs': self.get_tabs(context)}
-
-        template = context.root.get_resource('/ui/aruni/location.xml')
-        return stl(template, namespace)
-
-
-    #######################################################################
     # Body
     #######################################################################
     def _get_page_title(self, context):
@@ -418,7 +333,7 @@ class Skin(UIFolder):
             # User
             'user': self.get_user_menu(context),
             # Location & Views
-            'location': self.get_location(context),
+            'location': LocationTemplate(context),
             # Body
             'page_title': self._get_page_title(context),
             'message': self.get_messages(context),
