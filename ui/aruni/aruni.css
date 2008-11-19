@@ -113,21 +113,21 @@ legend {
   min-height: 280px;
 }
 
-#body h1, #body h2, #body h3, #body h4, #body h5, #body h6 {
+#content h1, #content h2, #content h3, #content h4, #content h5, #content h6 {
   border-bottom: 1px solid #d3d7cf;
 }
 
-#body ol li { list-style-type: decimal; }
-#body ul li { list-style-type: square; }
+#content ol li { list-style-type: decimal; }
+#content ul li { list-style-type: square; }
 
-#body form fieldset {
+#content form fieldset {
   border-bottom: 1px solid #d3d7cf;
 }
 
-#body form legend {
+#content form legend {
   font-size: 0.9em;
 }
 
-#body form dd { padding-bottom: 5px; }
-#body form p { clear: both; }
+#content form dd { padding-bottom: 5px; }
+#content form p { clear: both; }
 
