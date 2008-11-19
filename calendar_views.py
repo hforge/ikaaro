@@ -541,6 +541,7 @@ class EditEventForm(CalendarView, STLForm):
             dtstart = Property(dtstart, VALUE=['DATE'])
         else:
             dtstart = datetime.combine(dtstart, dtstart_time)
+            dtstart = Property(dtstart)
         # End
         dtend = form['dtend']
         dtend_time = form['dtend_time']
@@ -550,17 +551,17 @@ class EditEventForm(CalendarView, STLForm):
             dtend = Property(dtend, VALUE=['DATE'])
         else:
             dtend = datetime.combine(dtend, dtend_time)
+            dtend = Property(dtend)
 
         # Get id and Record object
         properties = {
             'DTSTART': dtstart,
-            'DTEND': dtend,
-        }
+            'DTEND': dtend}
 
         for key in self.schema:
             if key.startswith('dtstart') or key.startswith('dtend'):
                 continue
-            properties[key] = form[key]
+            properties[key] = Property(form[key])
 
         return properties
 
