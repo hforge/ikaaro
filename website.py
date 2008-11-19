@@ -100,24 +100,27 @@ class WebSite(RoleAware, Folder):
 
     def before_traverse(self, context, min=Decimal('0.000001'),
                         zero=Decimal('0.0')):
-        # The default language
+        # Set the language cookie if specified by the query.
+        # NOTE We do it this way, instead of through a specific action,
+        # to avoid redirections.
+        language = context.get_form_value('language')
+        if language is not None:
+            context.set_cookie('language', language)
+
+        # The default language (give a minimum weight)
         accept = context.accept_language
         default = self.get_default_language()
         if accept.get(default, zero) < min:
             accept.set(default, min)
-        # The Query
-        language = context.get_form_value('language')
-        if language is not None:
-            context.set_cookie('language', language)
-        # Language negotiation
+        # User Profile (2.0)
         user = context.user
-        if user is None:
-            language = context.get_cookie('language')
-            if language is not None:
-                accept.set(language, 2.0)
-        else:
+        if user is not None:
             language = user.get_property('user_language')
             accept.set(language, 2.0)
+        # Cookie (2.5)
+        language = context.get_cookie('language')
+        if language is not None:
+            accept.set(language, 2.5)
 
 
     def after_traverse(self, context):

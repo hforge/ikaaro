@@ -50,7 +50,7 @@ class LanguagesTemplate(STLTemplate):
 
         # Select language
         accept = context.accept_language
-        current_language = site_root.get_content_language()
+        current_language = accept.get_top_language()
 
         languages = []
         for language in ws_languages:

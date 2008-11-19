@@ -455,12 +455,13 @@ class DBResource(CatalogAware, IResource):
 
         site_root = self.get_site_root()
         languages = site_root.get_property('website_languages')
-        # Check cookie
-        language = context.get_cookie('language')
+        # Check query
+        language = context.get_query_value('content_language')
         if language in languages:
             return language
         # Default
-        return languages[0]
+        accept = context.accept_language
+        return accept.get_top_language()
 
 
     # Views
