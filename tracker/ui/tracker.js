@@ -29,15 +29,27 @@ function reply(id){
 }
 
 function update_tracker_list(list_name){
+  /* Search the selected elements */
+  var selected_id = {};
+  $('#' + list_name + ' option:selected').each(function() {
+    selected_id[$(this).val()] = true;
+  });
+
+  /* Update the list */
   $('#' + list_name).children().remove();
   var options = '' ;
   $('#product option:selected').each(function() {
     var id_product = $(this).val();
     for (var i=0; i < list_products[id_product][list_name].length; i++) {
-     options += '<option value="';
-     options += list_products[id_product][list_name][i]['id'] + '">';
-     options += list_products[id_product][list_name][i]['value'];
-     options += '</option>';
+      id = list_products[id_product][list_name][i]['id'];
+      options += '<option value="';
+      options += id + '"';
+      if (id in selected_id)
+        options += ' selected="selected">';
+      else
+        options += '>';
+      options += list_products[id_product][list_name][i]['value'];
+      options += '</option>';
     }
   });
   $("#" + list_name).html(options);
