@@ -22,7 +22,7 @@
 from itools.datatypes import is_datatype, DataType
 from itools.datatypes import Unicode, Date, Enumerate, Boolean
 from itools.gettext import MSG
-from itools.html import sanitize_stream
+from itools.html import xhtml_doctype, sanitize_stream
 from itools.html import stream_to_str_as_xhtml, stream_to_str_as_html
 from itools.stl import stl
 from itools.web import STLForm, get_context
@@ -33,9 +33,6 @@ stl_namespaces = {
     None: 'http://www.w3.org/1999/xhtml',
     'stl': 'http://www.hforge.org/xml-namespaces/stl'}
 xhtml_namespaces = {None: 'http://www.w3.org/1999/xhtml'}
-xhtml_doctype = DocType(
-    '-//W3C//DTD XHTML 1.0 Strict//EN',
-    'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd')
 
 
 

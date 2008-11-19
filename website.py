@@ -25,7 +25,7 @@ from types import GeneratorType
 # Import from itools
 from itools.datatypes import Tokens
 from itools.gettext import MSG
-from itools.html import stream_to_str_as_html
+from itools.html import stream_to_str_as_html, xhtml_doctype
 from itools.web import STLView
 from itools.xml import XMLParser
 
@@ -133,7 +133,7 @@ class WebSite(RoleAware, Folder):
             return
 
         if isinstance(body, str):
-            body = XMLParser(body)
+            body = XMLParser(body, doctype=xhtml_doctype)
         context.entity = context.root.get_skin().template(body)
 
 
