@@ -172,6 +172,8 @@ class WebPage(EpozEditable, Multilingual, Text):
                     continue
                 if tag_name == 'a':
                     value = attributes.get((None, 'href'))
+                    if value is None:
+                        continue
                     uri = get_reference(value)
                     if uri.scheme or uri.authority or not uri.path:
                         continue
