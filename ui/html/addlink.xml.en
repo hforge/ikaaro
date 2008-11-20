@@ -13,6 +13,7 @@
       $(document).ready(function() {
         tabme();
       })
+      ${additional_javascript}
     </script>
     <style>
       #body {
@@ -37,17 +38,17 @@
 
       <!-- tabs -->
       <p class="tabme">
-        <a href="#browse" onclick="tabme_show(event, this)">Browse</a>
-        <a href="#external" onclick="tabme_show(event, this)">External Link</a>
-        <a href="#insert" onclick="tabme_show(event, this)">Insert</a>
-        <a href="#upload" onclick="tabme_show(event, this)">Upload</a>
+        <a href="#browse" onclick="tabme_show(event, this)" stl:if="show_browse">Browse</a>
+        <a href="#external" onclick="tabme_show(event, this)" stl:if="show_external">External Link</a>
+        <a href="#insert" onclick="tabme_show(event, this)" stl:if="show_insert">Insert</a>
+        <a href="#upload" onclick="tabme_show(event, this)" stl:if="show_upload">Upload</a>
       </p>
 
       <!-- Message -->
       <div id="message" stl:if="message">Message :${message}</div>
 
       <!-- Internal Link -->
-      <div id="browse">
+      <div id="browse" stl:if="show_browse">
         <h3>Browse and link to a File from the workspace</h3>
         <!-- Breadcrumbs -->
         <div id="maintitle">
@@ -88,7 +89,9 @@
                   <dd>
                     <abbr
                       title="${item/title}">${item/short_title}</abbr><br/>
-                    <a href="javascript:select_link('${item/path}')">Select</a>
+                    <a href="javascript:select_element('${element_to_add}', '${item/path}', '${item/title}')">
+                      Select
+                    </a>
                   </dd>
                 </dl>
               </stl:block>
@@ -98,37 +101,39 @@
       </div>
 
       <!-- External Link -->
-      <div id="external" stl:if="wiki_mode">
+      <div id="external" stl:if="show_external">
         <h3>Type the URL of an external resource</h3>
         <form>
           <input type="text" id="uri" name="uri" size="40" value="http://"/>
           <input type="button" value="Add" class="button_ok"
-            onclick="select_uri()"/>
+            onclick="select_element('${element_to_add}', $('#uri').val(), '');"/>
         </form>
       </div>
 
       <!-- New Web or Wiki Page -->
-      <div id="insert">
+      <div id="insert" stl:if="show_insert">
         <h3>Create a new page and link to it:</h3>
-        <form action=";add_link" method="post">
-          <input type="hidden" name="type" value="${type}" />
+        <form action=";add_link#insert" method="post">
           <input type="hidden" name="target_path" value="${bc/target_path}"/>
+          <input type="hidden" name="target_id" value="${target_id}" />
           <input type="hidden" name="mode" value="${mode}" />
           <input type="text" name="title" size="40" />
           <input type="hidden" name="name" value="" />
-          <input class="button_ok" type="submit" value="OK" name=";add_page" />
+          <input class="button_ok" type="submit" value="OK" name=";add_resource"/>
         </form>
       </div>
 
       <!-- Upload and Link -->
-      <div id="upload">
+      <div id="upload" stl:if="show_upload">
         <h3>Upload a file to the current folder and link to it:</h3>
-        <form action=";add_link" method="post" enctype="multipart/form-data">
+        <form action=";add_link#upload" method="post" enctype="multipart/form-data">
           <input type="hidden" name="target_path" value="${bc/target_path}"/>
+          <input type="hidden" name="target_id" value="${target_id}" />
           <input type="hidden" name="mode" value="${mode}" />
           <input id="file" name="file" size="35" type="file"/>
           <br/>
-          <input class="button_upload" type="submit" value="Upload and Link"/>
+          <input class="button_upload" type="submit" value="Upload and Link"
+            name=";upload"/>
         </form>
       </div>
     </div>

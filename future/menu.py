@@ -212,7 +212,7 @@ class Menu_AddLink(DBResource_AddLink):
             start = resource.parent
 
         # Construct namespace
-        namespace['bc'] = Breadcrumb(filter_type=File, start=start,
+        namespace['bc'] = Breadcrumb(filter_types=(File,), start=start,
                                      icon_size=48)
         namespace['target_id'] = context.get_form_value('target_id')
 

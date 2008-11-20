@@ -13,6 +13,7 @@
       $(document).ready(function() {
         tabme();
       })
+      ${additional_javascript}
     </script>
     <style>
       #body {
@@ -27,14 +28,14 @@
 
       <!-- tabs -->
       <p class="tabme">
-        <a href="#browse" onclick="tabme_show(event, this)">Browse</a>
-        <a href="#upload" onclick="tabme_show(event, this)">Upload</a>
+        <a href="#browse" onclick="tabme_show(event, this)" stl:if="show_browse">Browse</a>
+        <a href="#upload" onclick="tabme_show(event, this)" stl:if="show_upload">Upload</a>
       </p>
 
       <div id="message" stl:if="message">${message}</div>
 
       <!-- List of files -->
-      <div id="browse">
+      <div id="browse" stl:if="show_browse">
         <h3>Browse and insert an Image from the workspace</h3>
         <!-- Breadcrumbs -->
         <div id="maintitle">
@@ -68,8 +69,9 @@
             </dt>
             <dd>
               <abbr title="${item/title}">${item/short_title}</abbr><br />
-              <a href="javascript:select_img('${item/path}/;download',
-                '${caption}')" >Select</a>
+              <a href="javascript:select_element('${element_to_add}', '${item/path}/;download', '${item/short_title}')">
+                Select
+              </a>
             </dd>
           </dl>
         </stl:block>
@@ -77,15 +79,16 @@
       </div>
 
       <!-- Add an image -->
-      <div id="upload">
+      <div id="upload" stl:if="show_upload">
         <h3>Upload an image to the current folder and insert it:</h3>
-        <form action=";add_image" method="post" enctype="multipart/form-data">
+        <form action=";add_image#upload" method="post" enctype="multipart/form-data">
           <input type="hidden" name="target_path" value="${bc/target_path}" />
-          <input type="hidden" name="mode" value="${mode}" />
+          <input type="hidden" name="target_id" value="${target_id}" />
           <input id="file" name="file" size="35" type="file" />
+          <input id="mode" name="mode" type="hidden" value="${mode}"/>
           <br/>
           <input class="button_upload" type="submit"
-                 value="Upload and Insert" />
+                 value="Upload and Insert" name=";upload"/>
         </form>
       </div>
 

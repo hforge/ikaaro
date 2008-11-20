@@ -28,6 +28,7 @@ from itools.datatypes import String, Unicode
 from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.i18n import get_language_name
+from itools.handlers import merge_dics
 from itools.stl import stl
 from itools.uri import Path, get_reference
 from itools.vfs import FileName
@@ -166,7 +167,7 @@ class Breadcrumb(object):
     the tree root to another tree node, and the content of that node.
     """
 
-    def __init__(self, filter_type=None, root=None, start=None,
+    def __init__(self, filter_types=None, root=None, start=None,
             icon_size=16):
         """The 'start' must be a handler, 'filter_type' must be a handler
         class.
@@ -175,8 +176,8 @@ class Breadcrumb(object):
         from folder import Folder
         from resource_ import DBResource
 
-        if filter_type is None:
-            filter_type = DBResource
+        if filter_types is None:
+            filter_types = (DBResource,)
 
         context = get_context()
         here = context.resource
@@ -222,8 +223,8 @@ class Breadcrumb(object):
         items = []
         self.is_submit = False
         user = context.user
-        filter = (Folder, filter_type)
-        for resource in target.search_resources(cls=filter):
+        filters = (Folder,) + filter_types
+        for resource in target.search_resources(cls=filters):
             ac = resource.get_access_control()
             if not ac.is_allowed_to_view(user, resource):
                 continue
@@ -264,69 +265,91 @@ class Breadcrumb(object):
 
 
 
-class DBResource_AddImage(STLForm):
+class DBResource_AddBase(STLForm):
 
     access = 'is_allowed_to_edit'
-    template = '/ui/html/addimage.xml'
+
+    element_to_add = None
+
+    configuration = {}
+
     schema = {
         'target_path': String(mandatory=True),
-        'file': FileDataType(mandatory=True),
-        'mode': String(default='html'),
-    }
-    query_schema = {
-        'mode': String(default='html'),
-    }
+        'target_id': String(default=None),
+        'mode': String(mandatory=True),
+      }
+
+    styles = ['/ui/bo.css',
+              '/ui/aruni/aruni.css']
+
+    base_scripts = ['/ui/jquery.js',
+                    '/ui/javascript.js']
 
 
-    def get_filter_type(self):
-        from file import Image
-        return Image
+    scripts = {'wiki': ['/ui/wiki/javascript.js'],
+               'tiny_mce': ['/ui/tiny_mce/javascript.js',
+                            '/ui/tiny_mce/tiny_mce_src.js',
+                            '/ui/tiny_mce/tiny_mce_popup.js'],
+               'input': []}
+
+
+    action_upload_schema = merge_dics(schema,
+                              {'file': FileDataType(mandatory=True)})
+
+
+    additional_javascript = """
+          function select_element(type, value, caption) {
+            window.opener.$("#%s").val(value);
+            window.close();
+          }
+          """
+
+
+    def get_filter_types(self):
+        from file import File
+        return (File,)
 
 
     def get_namespace(self, resource, context):
         from file import File
-
-        styles = ['/ui/bo.css',
-                  '/ui/aruni/aruni.css']
-
-        scripts = ['/ui/jquery.js',
-                   '/ui/javascript.js']
-        # HTML or Wiki
-        mode = context.query['mode']
-        if mode == 'wiki':
-            scripts.append('/ui/wiki/javascript.js')
-        elif mode == 'html':
-            scripts.extend(['/ui/tiny_mce/javascript.js',
-                            '/ui/tiny_mce/tiny_mce_src.js',
-                            '/ui/tiny_mce/tiny_mce_popup.js'])
-
+        # Get some informations
+        mode = context.get_form_value('mode')
         # For the breadcrumb
-        filter_type = self.get_filter_type()
+        filter_types = self.get_filter_types()
         if isinstance(resource, File):
             start = resource.parent
         else:
             start = resource
-
         # Construct namespace
-        return {
-            'bc': Breadcrumb(filter_type=filter_type, start=start,
+        namespace = self.configuration
+        namespace.update({
+            'additional_javascript': self.get_additional_javascript(context),
+            'bc': Breadcrumb(filter_types=filter_types, start=start,
                              icon_size=48),
+            'element_to_add': self.element_to_add,
+            'target_id': context.get_form_value('target_id'),
             'message': context.message,
             'mode': mode,
-            'styles': styles,
-            'scripts': scripts,
-            'caption': messages.MSG_CAPTION.gettext().encode('utf_8'),
-        }
+            'styles': self.styles,
+            'scripts': self.get_scripts(mode)})
+        return namespace
 
 
-    def GET(self, resource, context):
-        template = resource.get_resource(self.template)
-        namespace = self.get_namespace(resource, context)
-        prefix = resource.get_pathto(template)
-        return stl(template, namespace, prefix=prefix)
+    def get_scripts(self, mode):
+        if mode is None:
+            return self.base_scripts
+        return self.base_scripts + self.scripts[mode]
 
 
-    def action(self, resource, context, form):
+    def get_additional_javascript(self, context):
+        mode = context.get_form_value('mode')
+        if mode!='input':
+            return ''
+        target_id = context.get_form_value('target_id')
+        return self.additional_javascript % target_id
+
+
+    def action_upload(self, resource, context, form):
         """Allow to upload and add an image to epoz
         """
         filename, mimetype, body = form['file']
@@ -340,13 +363,14 @@ class DBResource_AddImage(STLForm):
 
         # Get the container
         container = context.root.get_resource(form['target_path'])
+
         # Check the name is free
         if container.has_resource(name):
             context.message = messages.MSG_NAME_CLASH
             return
 
         # Check it is of the expected type
-        filter_type = self.get_filter_type()
+        filter_type = self.get_filter_types()
         cls = get_resource_class(mimetype)
         if not issubclass(cls, filter_type):
             context.message = ERROR(u'The given file is not of the type '
@@ -358,92 +382,102 @@ class DBResource_AddImage(STLForm):
         cls.make_resource(cls, container, name, body, format=mimetype,
                           filename=filename, extension=type)
 
-        # Ok
-        caption = messages.MSG_CAPTION.gettext().encode('utf_8')
-        mode = form['mode']
-        if mode == 'wiki':
-            scripts = ['/ui/wiki/javascript.js']
-        elif mode == 'html':
-            scripts = ['/ui/tiny_mce/javascript.js',
-                       '/ui/tiny_mce/tiny_mce_src.js',
-                       '/ui/tiny_mce/tiny_mce_popup.js']
-
+        # Return javascript
+        mode = context.get_form_value('mode')
         child = container.get_resource(name)
-        path = resource.get_pathto(child)
-        script_template = '<script type="text/javascript" src="%s" />'
-        body = ''
-        for script in scripts:
-            body += script_template % script
+        path = self.get_element_path(resource, child, mode)
+        context.scripts.extend(self.get_scripts(mode))
+        return self.get_javascript_return(context, path)
 
-        body += """
+
+    def get_element_path(self, container, child, mode):
+        return container.get_pathto(child)
+
+
+    def get_javascript_return(self, context, path):
+        return """
             <script type="text/javascript">
-                select_img('%s/;download', '%s');
-            </script>"""
-        return body % (path, caption)
+                %s
+                select_element('%s', '%s', '');
+            </script>""" % (self.get_additional_javascript(context),
+                            self.element_to_add, path)
 
 
 
-class DBResource_AddLink(DBResource_AddImage):
+class DBResource_AddImage(DBResource_AddBase):
+
+    element_to_add = 'image'
+
+    template = '/ui/html/addimage.xml'
+
+    configuration = {'show_browse': True,
+                     'show_upload': True}
+
+
+    def get_filter_types(self):
+        from file import Image
+        return (Image,)
+
+
+    def get_element_path(self, resource, child, mode):
+        path = resource.get_pathto(child)
+        if mode in ['tiny_mce', 'input']:
+            return '%s/;download' % path
+        return path
+
+
+
+class DBResource_AddLink(DBResource_AddBase):
 
     template = '/ui/html/addlink.xml'
 
+    element_to_add = 'link'
 
-    def get_filter_type(self):
-        from file import File
-        return File
+    action_add_resource_schema = merge_dics(DBResource_AddImage.schema,
+                                    {'title': String(mandatory=True)})
 
-
-    def get_namespace(self, resource, context):
-        namespace = DBResource_AddImage.get_namespace(self, resource, context)
-
-        mode = context.query['mode']
-        type = None
-        if mode == 'wiki':
-            type = 'WikiPage'
-        elif mode == 'html':
-            type = 'application/xhtml+xml'
-        namespace['type'] = type,
-        namespace['wiki_mode'] = (mode == 'wiki'),
-
-        return namespace
+    configuration = {'show_browse': True,
+                     'show_external': True,
+                     'show_insert': True,
+                     'show_upload': True}
 
 
-    def add_page(self, resource, context, form):
+    def action_add_resource(self, resource, context, form):
         """Allow to upload a file and link it to epoz
         """
+        mode = form['mode']
+        name = checkid(form['title'])
+        # Check name validity
+        if name is None:
+            context.message = MSG(u"Invalid title.")
+            return
         # Get the container
         root = context.root
         container = root.get_resource(context.get_form_value('target_path'))
-        # Add the file to the resource
-        class_id = context.get_form_value('type')
-        cls = get_resource_class(class_id)
-        uri = cls.new_instance(cls, container, context)
+        # Check the name is free
+        if container.has_resource(name):
+            context.message = messages.MSG_NAME_CLASH
+            return
+        # Get the type of resource to add
+        cls = self.get_page_type(mode)
+        # Create the resource
+        child = cls.make_resource(cls, container, name)
+        path = context.resource.get_pathto(child)
+        context.scripts.extend(self.get_scripts(mode))
+        return self.get_javascript_return(context, path)
 
-        if ';add_link' not in uri.path:
-            mode = form['mode']
-            if mode == 'wiki':
-                scripts = ['/ui/wiki/javascript.js']
-            elif mode == 'html':
-                scripts = ['/ui/tiny_mce/javascript.js',
-                           '/ui/tiny_mce/tiny_mce_src.js',
-                           '/ui/tiny_mce/tiny_mce_popup.js']
 
-            child = container.get_resource(uri.path[0])
-            path = context.resource.get_pathto(child)
-            script_template = '<script type="text/javascript" src="%s" />'
-            body = ''
-            for script in scripts:
-                body += script_template % script
-
-            body += """
-                <script type="text/javascript">
-                    select_link('%s');
-                </script>"""
-            return body % path
-
-        context.message = uri.query['message']
-        return
-
+    def get_page_type(self, mode):
+        """Return the type of page to add corresponding to the mode
+        """
+        if mode=='tiny_mce':
+            from wiki.page import WikiPage
+            return WikiPage
+        elif mode=='wiki':
+            from ikaaro.html import WebPage
+            return WebPage
+        else:
+            raise ValueError, 'Incorrect mode %s' % mode
 
 
 ###########################################################################

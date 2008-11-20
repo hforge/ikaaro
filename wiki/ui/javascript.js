@@ -186,14 +186,17 @@ function wiki_help() {
  * Insert image or link from popup
  */
 
-function select_img(value, caption) {
-  window.opener.insertTags('\n\n.. figure:: ' + value + '\n\n   ',
-                           '\n\n', caption);
+function select_element(type, value, caption) {
+  if(type=='image'){
+      window.opener.insertTags('\n\n.. figure:: ' + value + '\n\n   ',
+                               '\n\n', caption);
+  }else{
+      window.opener.insertTags('`', '`_', value, true);
+  }
   window.close();
 }
 
 function select_link(value) {
-  window.opener.insertTags('`', '`_', value, true);
   window.close();
 }
 

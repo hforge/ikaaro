@@ -2,11 +2,8 @@
  * Insert image or link from popup
  */
 
-function select_img(value, caption) {
-  tiny_mce_set_uri_value(value);
-}
 
-function select_link(value) {
+function select_element(type, value, caption) {
     tiny_mce_set_uri_value(value);
 }
 
@@ -42,13 +39,13 @@ function ikaaro_filebrowser(field_name, url, type, win) {
     } else
         cms_base = cms_location.substring(0, cms_index);
 
-    var cms_specific_action = ';add_link';
+    var cms_specific_action = ';add_link?mode=tiny_mce';
     if (type == 'image')
-        cms_specific_action = ';add_image';
+        cms_specific_action = ';add_image?mode=tiny_mce';
     var cmsURL = cms_base + cms_specific_action;      // script URL
 
     tinyMCE.activeEditor.windowManager.open({
-        file : cmsURL + "?type=" + type,
+        file : cmsURL + "&type=" + type,
         width : 640,  // Your dimensions may differ - toy around with them!
         height : 480,
         resizable : "yes",
