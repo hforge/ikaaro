@@ -338,7 +338,9 @@ class MenuFolder(Folder):
                                                   use_first_child, flat)
 
 
-def get_menu_namespace(context, depth=3, show_first_child=False, flat=True):
+
+def get_menu_namespace(context, depth=3, show_first_child=False, flat=True,
+                       src=None):
     """Return dict with the following structure:
 
     {'items': [item_dic01, ..., item_dic0N]}
@@ -386,8 +388,10 @@ def get_menu_namespace(context, depth=3, show_first_child=False, flat=True):
 
     # Get the menu
     tabs = {'items': []}
-    if site_root.has_resource('menu'):
-        menu = site_root.get_resource('menu')
+    if src is None:
+        src = 'menu'
+    if site_root.has_resource(src):
+        menu = site_root.get_resource(src)
         tabs = menu.get_menu_namespace_level(context, url, depth,
                                              show_first_child)
 
@@ -413,8 +417,6 @@ def get_menu_namespace(context, depth=3, show_first_child=False, flat=True):
                         items = None
                         break
     return tabs
-
-
 
 #
 # Register
