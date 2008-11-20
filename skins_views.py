@@ -50,7 +50,7 @@ class LanguagesTemplate(STLTemplate):
 
         # Select language
         accept = context.accept_language
-        current_language = accept.select_language(languages)
+        current_language = accept.select_language(ws_languages)
 
         languages = []
         for language in ws_languages:
