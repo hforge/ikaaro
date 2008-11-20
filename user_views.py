@@ -205,7 +205,7 @@ class User_EditPreferences(STLForm):
     icon = 'preferences.png'
     template = '/ui/user/edit_preferences.xml'
     schema = {
-        'user_language': String(mandatory=True),
+        'user_language': String,
     }
 
 
@@ -216,7 +216,8 @@ class User_EditPreferences(STLForm):
         # Languages
         user_language = resource.get_property('user_language')
         languages = [
-            {'code': code, 'name': get_language_name(code),
+            {'code': code,
+             'name': get_language_name(code),
              'is_selected': code == user_language}
             for code in root.get_available_languages() ]
 
@@ -224,8 +225,11 @@ class User_EditPreferences(STLForm):
 
 
     def action(self, resource, context, form):
-        value = form['user_language']
-        resource.set_property('user_language', value)
+        value = form['user_language'] or None
+        if value:
+            resource.set_property('user_language', value)
+        else:
+            resource.del_property('user_language')
         # Ok
         context.message = INFO(u'Application preferences changed.')
 

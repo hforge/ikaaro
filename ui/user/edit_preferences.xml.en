@@ -11,6 +11,7 @@
       <dt><label for="user_language">Preferred Language</label></dt>
       <dd>
         <select id="user_language" name="user_language">
+          <option>Default</option>
           <option stl:repeat="language languages" value="${language/code}"
             selected="${language/is_selected}">${language/name}</option>
         </select>

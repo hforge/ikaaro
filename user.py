@@ -62,7 +62,7 @@ class User(AccessControl, Folder):
             'lastname': Unicode,
             'email': Email,
             'password': Password,
-            'user_language': String(default='en'),
+            'user_language': String,
             'user_must_confirm': String,
             # Backwards compatibility
             'username': String,

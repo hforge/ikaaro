@@ -116,7 +116,8 @@ class WebSite(RoleAware, Folder):
         user = context.user
         if user is not None:
             language = user.get_property('user_language')
-            accept.set(language, 2.0)
+            if language is not None:
+                accept.set(language, 2.0)
         # Cookie (2.5)
         language = context.get_cookie('language')
         if language is not None:
