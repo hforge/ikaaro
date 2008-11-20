@@ -143,6 +143,10 @@ class Skin(UIFolder):
     class_icon16 = 'icons/16x16/skin.png'
     class_icon48 = 'icons/48x48/skin.png'
 
+    # User Interface widgets
+    languages_template = LanguagesTemplate
+    location_template = LocationTemplate
+
 
     #######################################################################
     # HTML head
@@ -348,8 +352,8 @@ class Skin(UIFolder):
             # User
             'user': self.get_user_menu(context),
             # Location & Views
-            'location': LocationTemplate(context),
-            'languages': LanguagesTemplate(context),
+            'location': self.location_template(context),
+            'languages': self.languages_template(context),
             # Body
             'page_title': self._get_page_title(context),
             'message': self.get_messages(context),

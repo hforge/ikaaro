@@ -27,17 +27,29 @@ from itools.uri import decode_query
 from utils import reduce_string
 
 
-###########################################################################
-# Global language selector
-###########################################################################
-class LanguagesTemplate(STLTemplate):
+
+class SkinTemplate(STLTemplate):
+    template = None
 
     def __init__(self, context):
         self.context = context
 
 
     def get_template(self):
-        return self.context.root.get_resource('/ui/aruni/languages.xml')
+        template = self.template
+        if template is None:
+            msg = "%s is missing the 'template' variable"
+            raise NotImplementedError, msg % repr(self.__class__)
+        return self.context.root.get_resource(template)
+
+
+
+###########################################################################
+# Global language selector
+###########################################################################
+class LanguagesTemplate(SkinTemplate):
+
+    template = '/ui/aruni/languages.xml'
 
 
     def get_namespace(self):
@@ -55,11 +67,13 @@ class LanguagesTemplate(STLTemplate):
         languages = []
         for language in ws_languages:
             href = context.uri.replace(language=language)
-            css_class = 'selected' if (language == current_language) else None
+            selected = (language == current_language)
+            css_class = 'selected' if selected else None
             languages.append({
                 'name': language,
                 'value': get_language_name(language),
                 'href': href,
+                'selected': selected,
                 'class': css_class})
 
         return {'languages': languages}
@@ -68,14 +82,9 @@ class LanguagesTemplate(STLTemplate):
 ###########################################################################
 # Resource location & menu
 ###########################################################################
-class LocationTemplate(STLTemplate):
+class LocationTemplate(SkinTemplate):
 
-    def __init__(self, context):
-        self.context = context
-
-
-    def get_template(self):
-        return self.context.root.get_resource('/ui/aruni/location.xml')
+    template = '/ui/aruni/location.xml'
 
 
     def get_breadcrumb(self, context):
@@ -155,4 +164,3 @@ class LocationTemplate(STLTemplate):
         return {
             'breadcrumb': self.get_breadcrumb(context),
             'tabs': self.get_tabs(context)}
-
