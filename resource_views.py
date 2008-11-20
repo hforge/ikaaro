@@ -105,7 +105,11 @@ class DBResource_NewInstance(NewInstanceForm, AutoForm):
 
     def get_new_resource_name(self, form):
         # If the name is not explicitly given, use the title
-        return form['name'].strip() or form['title'].strip()
+        name = form['name']
+        title = form['title'].strip()
+        if name is None:
+            return title
+        return name or title
 
 
     def action(self, resource, context, form):
