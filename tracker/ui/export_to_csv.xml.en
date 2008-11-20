@@ -4,7 +4,7 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
-<form action=";export_to_csv" method="GET" id="form_table">
+<form action=";export_to_csv?${query}" method="GET" id="form_table">
   ${batch}
   ${table}
 
@@ -24,7 +24,6 @@
     <br/><br/>
     <input type="submit" class="button_ok" value="Export" />
   </fieldset>
-  <stl:block stl:repeat="param search_parameters">${param}</stl:block>
 </form>
 
 </stl:block>

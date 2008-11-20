@@ -623,21 +623,7 @@ class Tracker_ExportToCSVForm(Tracker_View):
 
     def get_namespace(self, resource, context):
         namespace = Tracker_View.get_namespace(self, resource, context)
-        query = context.query
-
-        # Insert query parameters as hidden input fields
-        parameters = []
-        schema = Tracker_View.get_query_schema(self)
-        for name in schema:
-            if name in namespace:
-                continue
-            value = query[name]
-            if value:
-                datatype = schema.get(name, String)
-                parameters.append(HiddenWidget(name).to_html(datatype, value))
-        namespace['search_parameters'] = parameters
-
-        # Ok
+        namespace['query'] = encode_query(context.uri.query)
         return namespace
 
 
