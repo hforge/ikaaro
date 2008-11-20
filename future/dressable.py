@@ -18,28 +18,19 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Import from the Standard Library
-from mimetypes import guess_type
-
 # Import from itools
-from itools.datatypes import is_datatype, DateTime, String
+from itools.datatypes import is_datatype
 from itools.gettext import MSG
-from itools.handlers import checkid, merge_dics
-from itools.html import sanitize_stream
-from itools.stl import stl, set_prefix
-from itools.uri import Path
-from itools.vfs import FileName
-from itools.web import get_context, ERROR
-from itools.xml import XMLParser, XMLError
+from itools.html import xhtml_uri
+from itools.stl import set_prefix
+from itools.uri import get_reference
+from itools.xml import XMLParser, START_ELEMENT
 
 # Import from ikaaro
-from ikaaro.exceptions import ConsistencyError
-from ikaaro.file import File, Image
+from ikaaro.file import Image
 from ikaaro.folder import Folder
-from ikaaro.html import WebPage, EpozEditable
-from ikaaro import messages
+from ikaaro.html import EpozEditable, WebPage, WebPage_View
 from ikaaro.registry import register_resource_class
-from ikaaro.resource_views import DBResource_Edit
 from ikaaro.views import CompositeForm, ContextMenu
 from ikaaro.workflow import WorkflowAware
 
@@ -89,6 +80,31 @@ class Dressable_Menu(ContextMenu):
 
 
 
+class DressableWebPage_View(WebPage_View):
+
+    def GET(self, resource, context):
+        here = context.resource
+        path = context.uri.path
+        site_root = resource.get_site_root()
+        stream = resource.get_epoz_data()
+
+        path_to_webpage = site_root.get_pathto(resource.parent)
+        if here != resource:
+            prefix = str(path_to_webpage)
+            if not (path.endswith_slash or (len(path) and path[-1][0] == ';')):
+                prefix +=  '/%s' % resource.name
+        else:
+            prefix = resource.name
+        prefix += '/'
+        return set_prefix(stream, prefix)
+
+
+
+class DressableWebPage(WebPage):
+    view = DressableWebPage_View()
+
+
+
 class Dressable_View(CompositeForm):
 
     access = 'is_allowed_to_view'
@@ -100,7 +116,7 @@ class Dressable_View(CompositeForm):
 
     def get_view(self, resource, context, item):
         if is_datatype(item, WebPage):
-            return WebPage.view.GET
+            return DressableWebPage.view.GET
         if is_datatype(item, Image):
             return resource._get_image
         return getattr(self, item, None)
@@ -121,7 +137,7 @@ class Dressable_View(CompositeForm):
                     value = None
             else:
                 # get view to display
-                value = getattr(resource, data)(context)
+                value = getattr(resource, 'data')(context)
             items.append({'id': name, 'content': value})
         return {'items': items}
 
@@ -134,7 +150,7 @@ class Dressable(Folder, EpozEditable):
     """
 
     class_id = 'dressable'
-    class_version = '20071215'
+    class_version = '20081118'
     class_title = MSG(u'Dressable')
     class_description = MSG(u'A dressable folder')
     class_views = ['view', 'browse_content', 'preview_content']
@@ -179,6 +195,52 @@ class Dressable(Folder, EpozEditable):
     # User interface
     #######################################################################
     view = Dressable_View()
+
+    #######################################################################
+    # Update
+    #######################################################################
+    def update_20081118(self):
+        def fix_links(stream):
+            for event in stream:
+                type, value, line = event
+                if type != START_ELEMENT:
+                    yield event
+                    continue
+                tag_uri, tag_name, attributes = value
+                if tag_uri != xhtml_uri:
+                    yield event
+                    continue
+                if tag_name not in ('img', 'a'):
+                    yield event
+                    continue
+                if tag_name == 'img':
+                    attr_name = 'src'
+                else:
+                    attr_name = 'href'
+                value = attributes.get((None, attr_name))
+                if value is None:
+                    yield event
+                    continue
+                uri = get_reference(value)
+                if uri.scheme or uri.authority or not uri.path:
+                    yield event
+                    continue
+                if value.startswith('/ui/'):
+                    yield event
+                    continue
+                # Fix link
+                uri = '../' + str(uri)
+                attributes = attributes.copy()
+                attributes[(None, attr_name)] = str(uri)
+                yield START_ELEMENT, (tag_uri, tag_name, attributes), line
+
+        languages = self.get_site_root().get_property('website_languages')
+        for wp in self.search_resources(cls=WebPage):
+            for language in languages:
+                handler = wp.get_handler(language=language)
+                events = list(fix_links(handler.events))
+                handler.set_changed()
+                handler.events = events
 
 
 register_resource_class(Dressable)

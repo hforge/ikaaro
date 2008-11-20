@@ -61,7 +61,6 @@ class ChildrenOrderedTable_AddLink(DBResource_AddLink):
             if item['name'] in exclude:
                 continue
             if not issubclass(item_type, orderable_classes):
-                print item, item_type, orderable_classes
                 continue
             path = str(item['path'])
             if path.startswith('../'):
