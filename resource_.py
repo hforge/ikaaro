@@ -461,7 +461,7 @@ class DBResource(CatalogAware, IResource):
             return language
         # Default
         accept = context.accept_language
-        return accept.get_top_language()
+        return accept.select_language(languages)
 
 
     # Views
