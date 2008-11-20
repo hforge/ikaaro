@@ -75,11 +75,11 @@ class WebPage_View(BaseView):
     def GET(self, resource, context):
         stream = resource.get_epoz_data()
         path = context.uri.path
-        if path.endswith_slash or path[-1][0] == ';':
+        if path.endswith_slash or len(path) == 0 or path[-1][0] == ';':
             return stream
 
         # Rewrite URLs
-        prefix = 'toto/'
+        prefix = '%s/' % resource.name
         return set_prefix(stream, prefix)
 
 
