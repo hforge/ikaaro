@@ -334,6 +334,7 @@ class DBResource_AddBase(STLForm):
             'target_id': context.get_form_value('target_id'),
             'message': context.message,
             'mode': mode,
+            'resource_action': self.get_resource_action(context),
             'styles': self.styles,
             'scripts': self.get_scripts(mode)})
         return namespace
@@ -385,17 +386,17 @@ class DBResource_AddBase(STLForm):
         # Add the image to the resource
         cls.make_resource(cls, container, name, body, format=mimetype,
                           filename=filename, extension=type)
-
-        # Return javascript
-        mode = context.get_form_value('mode')
+        # Get resource path
         child = container.get_resource(name)
-        path = self.get_element_path(resource, child, mode)
+        path = resource.get_pathto(child)
+        # Add an action to the resource
+        action = self.get_resource_action(context)
+        if action:
+            path = path.resolve2('.%s' % action)
+        # Return javascript
+        mode = form['mode']
         context.scripts.extend(self.get_scripts(mode))
         return self.get_javascript_return(context, path)
-
-
-    def get_element_path(self, container, child, mode):
-        return container.get_pathto(child)
 
 
     def get_javascript_return(self, context, path):
@@ -405,6 +406,10 @@ class DBResource_AddBase(STLForm):
                 select_element('%s', '%s', '');
             </script>""" % (self.get_additional_javascript(context),
                             self.element_to_add, path)
+
+
+    def get_resource_action(self, context):
+        return ''
 
 
 
@@ -423,11 +428,11 @@ class DBResource_AddImage(DBResource_AddBase):
         return (Image,)
 
 
-    def get_element_path(self, resource, child, mode):
-        path = resource.get_pathto(child)
-        if mode in ['tiny_mce', 'input']:
-            return '%s/;download' % path
-        return path
+    def get_resource_action(self, context):
+        mode = context.get_form_value('mode')
+        if mode=='tiny_mce':
+            return '/;download'
+        return DBResource_AddBase.get_resource_action(self, context)
 
 
 

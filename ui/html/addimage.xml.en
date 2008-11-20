@@ -69,7 +69,7 @@
             </dt>
             <dd>
               <abbr title="${item/title}">${item/short_title}</abbr><br />
-              <a href="javascript:select_element('${element_to_add}', '${item/path}/;download', '${item/short_title}')">
+              <a href="javascript:select_element('${element_to_add}', '${item/path}${resource_action}', '${item/short_title}')">
                 Select
               </a>
             </dd>

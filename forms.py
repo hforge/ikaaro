@@ -401,7 +401,7 @@ class ImageSelectorWidget(Widget):
        <input id="selector_button_${name}" type="button" value="..."
               name="selector_button_${name}"
               onclick="popup(';add_image?target_id=selector_${name}&amp;mode=input', 620, 300);" />
-       <img src="${value}/../;thumb?width=128&amp;height=128" stl:if="value"/>
+       <img src="${value}/;thumb?width=128&amp;height=128" stl:if="value"/>
        """, stl_namespaces))
 
 
