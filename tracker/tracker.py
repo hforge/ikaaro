@@ -68,7 +68,7 @@ default_tables = [
 class Tracker(Folder):
 
     class_id = 'tracker'
-    class_version = '20081015'
+    class_version = '20081120'
     class_title = MSG(u'Issue Tracker')
     class_description = MSG(u'To manage bugs and tasks')
     class_icon16 = 'tracker/tracker16.png'
@@ -279,6 +279,32 @@ class Tracker(Folder):
         metadata.set_changed()
         metadata.format = ModulesResource.class_id
 
+
+    def update_20081120(self):
+        """Add a default product.
+        """
+        from issue import Issue
+        # Add a default product
+        products = self.get_resource('products').get_handler()
+        title = Property(u'Default', language='en')
+        record = products.add_record({'title': title})
+        product = record.id
+        # Update Modules/Versions
+        product_pro = Property(str(product))
+        for name in 'modules', 'versions':
+            handler = self.get_resource(name).handler
+            handler.set_changed()
+            handler.incremental_save = False
+            for record in handler.get_records():
+                for version in record:
+                    version.setdefault('product', product_pro)
+        # Update issues
+        for issue in self.search_resources(cls=Issue):
+            history = issue.get_history()
+            handler.incremental_save = False
+            for record in history.get_records():
+                version = record[-1]
+                version.setdefault('product', product)
 
 
 ###########################################################################
