@@ -225,11 +225,11 @@ class User_EditPreferences(STLForm):
 
 
     def action(self, resource, context, form):
-        value = form['user_language'] or None
-        if value:
-            resource.set_property('user_language', value)
-        else:
+        value = form['user_language']
+        if value == '':
             resource.del_property('user_language')
+        else:
+            resource.set_property('user_language', value)
         # Ok
         context.message = INFO(u'Application preferences changed.')
 
