@@ -436,11 +436,18 @@ class RTEWidget(Widget):
 
     def get_namespace(self, datatype, value):
         context = get_context()
+        # language
+        site_root = context.site_root
+        website_languages = site_root.get_property('website_languages')
+        accept = context.accept_language
+        current_language = accept.select_language(website_languages)
+
         css_names = self.get_rte_css()
         return {'form_name': self.name,
                 'source': value,
                 'scripts': self.rte_scripts,
-                'css': ','.join(css_names)}
+                'css': ','.join(css_names),
+                'language': current_language}
 
 
 ###########################################################################

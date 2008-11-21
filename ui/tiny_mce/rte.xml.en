@@ -19,7 +19,7 @@
       plugins : "safari,table,media",
 
       /* language */
-      language : "en",
+      language : "${language}",
       /* css */
       content_css : "${css}",
       height : "340px",
