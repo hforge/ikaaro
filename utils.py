@@ -209,17 +209,10 @@ def get_base_path_query(abspath, include_container=False):
         return NotQuery(PhraseQuery('abspath', '/'))
 
     # Case 3: some subfolder
-    all = PhraseQuery('paths', abspath)
-    if include_container is True:
-        return all
+    content = StartQuery('abspath', abspath + '/')
+    if include_container is False:
+        return content
 
-    return AndQuery(all, NotQuery(PhraseQuery('abspath', abspath)))
-
-    # FIXME We should use the code below for 'Case 3', but it is 3x slower
-#   content = StartQuery('abspath', abspath + '/')
-#   if include_container is False:
-#       return content
-
-#   container = PhraseQuery('abspath', abspath)
-#   return OrQuery(container, content)
+    container = PhraseQuery('abspath', abspath)
+    return OrQuery(container, content)
 
