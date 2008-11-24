@@ -3,7 +3,27 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
-
+  <!-- Javascript -->
+  <script language="javascript">
+  var list_products = {<stl:inline stl:repeat="product list_products">
+                       "${product/id}":
+                          {'module':
+                           [<stl:inline stl:repeat="module product/modules">
+                             {"id": "${module/id}",
+                              "value": "${module/value}"},
+                              </stl:inline>],
+                           'version':
+                           [<stl:inline stl:repeat="version product/versions">
+                             {"id": "${version/id}",
+                              "value": "${version/value}"},
+                              </stl:inline>]}
+                       ,</stl:inline>
+                      }
+  function update_tracker(){
+      update_tracker_list('version', true);
+      update_tracker_list('module', true);
+  }
+  </script>
 <form action=";add_issue" method="post" enctype="multipart/form-data">
   <fieldset>
     <legend>Add Issue</legend>
@@ -19,7 +39,7 @@
         <td valign="top">
           <label for="product">Product (mandatory):</label><br/>
           <select name="product" id="product" class="tracker_select">
-            <option value=""></option>
+            <option value="-1"></option>
             <option stl:repeat="item products" value="${item/id}"
               selected="${item/is_selected}">${item/title}</option>
           </select>

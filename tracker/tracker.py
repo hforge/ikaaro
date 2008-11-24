@@ -173,6 +173,58 @@ class Tracker(Folder):
         return members
 
 
+    def get_products_namespace(self, product, module, version):
+        # Build javascript list of products/modules/versions
+        products = self.get_resource('products').handler
+        modules = self.get_resource('modules').handler
+        versions = self.get_resource('versions').handler
+        modules_options = []
+        for record in modules.get_records():
+            title = modules.get_record_value(record, 'title')
+            product_id = modules.get_record_value(record, 'product')
+            if product_id is None:
+                continue
+            product_id = int(product_id)
+            product_record = products.get_record(product_id)
+            product_title = products.get_record_value(product_record, 'title')
+            modules_options.append({
+                'id': record.id,
+                'value': title,
+                'title': '%s - %s' % (product_title, title),
+                'product': product_id,
+                'is_selected': module==record.id})
+        versions_options = []
+        for record in versions.get_records():
+            title = versions.get_record_value(record, 'title')
+            product_id = versions.get_record_value(record, 'product')
+            if product_id is None:
+                continue
+            product_id = int(product_id)
+            product_record = products.get_record(product_id)
+            product_title = products.get_record_value(product_record, 'title')
+            versions_options.append({
+                'id': record.id,
+                'value': title,
+                'title': '%s - %s' % (product_title, title),
+                'product': product_id,
+                'is_selected': version==record.id})
+        # Build the list of products (And associated modules/versions)
+        list_products = [{'id': '-1', 'modules': [], 'versions': []}]
+        for record in products.get_records():
+            modules = [
+                x for x in modules_options if x['product'] == record.id ]
+            versions = [
+                x for x in versions_options if x['product'] == record.id ]
+            list_products.append({'id': record.id,
+                                  'modules': modules,
+                                  'versions': versions})
+        return {
+              'products': self.get_resource('products').get_options(product),
+              'modules': modules_options,
+              'versions': versions_options,
+              'list_products': list_products}
+
+
     def get_search_results(self, context):
         """Method that return a list of issues that correspond to the search
         """

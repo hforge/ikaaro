@@ -28,7 +28,7 @@ function reply(id){
   textarea.focus();
 }
 
-function update_tracker_list(list_name){
+function update_tracker_list(list_name, empty_choice){
   /* Search the selected elements */
   var selected_id = {};
   $('#' + list_name + ' option:selected').each(function() {
@@ -40,6 +40,8 @@ function update_tracker_list(list_name){
   var options = '' ;
   $('#product option:selected').each(function() {
     var id_product = $(this).val();
+    if (empty_choice)
+      options += '<option value=""></option>';
     for (var i=0; i < list_products[id_product][list_name].length; i++) {
       id = list_products[id_product][list_name][i]['id'];
       options += '<option value="';
@@ -53,11 +55,6 @@ function update_tracker_list(list_name){
     }
   });
   $("#" + list_name).html(options);
-}
-
-function update_tracker(){
-      update_tracker_list('version');
-      update_tracker_list('module');
 }
 
 $(document).ready(function () {

@@ -121,16 +121,16 @@ class Issue_Edit(STLForm):
         file = record.get_value('file')
 
         # Build the namespace
-        namespace = {}
+        # Product / Modules /Versions
+        namespace = resource.parent.get_products_namespace(product, version,
+                                                           module)
+        # Title
         namespace['title'] = title
         # Reported by
         reported_by = resource.get_reported_by()
         namespace['reported_by'] = users.get_resource(reported_by).get_title()
-        # Topics, Version, Priority, etc.
+        # Others
         get = resource.parent.get_resource
-        namespace['products'] = get('products').get_options(product)
-        namespace['modules'] = get('modules').get_options(module)
-        namespace['versions'] = get('versions').get_options(version)
         namespace['types'] = get('types').get_options(type)
         namespace['priorities'] = get('priorities').get_options(priority,
             sort=False)
@@ -341,7 +341,8 @@ class Issue_ViewResources(Table_View):
         if column == 'id':
             id = item.id
             return id, ';edit_resources?id=%s' % id
-        return Table_View.get_item_value(self, resource, context, item, column)
+        return Table_View.get_item_value(self, resource, context, item,
+                                         column)
 
 
     def action_remove(self, resource, context, form):
