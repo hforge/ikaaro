@@ -20,13 +20,13 @@
 
 # Import from itools
 from itools.datatypes import is_datatype, DataType
-from itools.datatypes import Unicode, Date, Enumerate, Boolean
+from itools.datatypes import Date, Enumerate, Boolean
 from itools.gettext import MSG
 from itools.html import xhtml_doctype, sanitize_stream
 from itools.html import stream_to_str_as_xhtml, stream_to_str_as_html
 from itools.stl import stl
 from itools.web import STLForm, get_context
-from itools.xml import XMLParser, DocType
+from itools.xml import XMLParser
 
 
 stl_namespaces = {
@@ -401,7 +401,20 @@ class DateWidget(Widget):
 
 
 
-class ImageSelectorWidget(Widget):
+class PathSelectorWidget(TextWidget):
+
+    template = list(XMLParser(
+    """
+    <input type="text" id="selector_${name}" size="${size}" name="${name}"
+      value="${value}" />
+    <input id="selector_button_${name}" type="button" value="..."
+      name="selector_button_${name}"
+      onclick="popup(';add_link?target_id=selector_${name}&amp;mode=input', 620, 300);"/>
+    """, stl_namespaces))
+
+
+
+class ImageSelectorWidget(TextWidget):
 
     template = list(XMLParser(
     """
@@ -410,9 +423,9 @@ class ImageSelectorWidget(Widget):
     <input id="selector_button_${name}" type="button" value="..."
       name="selector_button_${name}"
       onclick="popup(';add_image?target_id=selector_${name}&amp;mode=input', 620, 300);" />
-     <br/>
-     <img src="${value}/;thumb?width=128&amp;height=128" stl:if="value"/>
-     """, stl_namespaces))
+    <br/>
+    <img src="${value}/;thumb?width=128&amp;height=128" stl:if="value"/>
+    """, stl_namespaces))
 
 
 
