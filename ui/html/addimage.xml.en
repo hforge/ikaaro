@@ -47,6 +47,7 @@
           </div>
         </div>
         <!-- Content -->
+        <div style="clear: both"/>
         <!-- Folders first -->
         <stl:block stl:repeat="item bc/items">
           <dl class="thumb" stl:if="item/is_folder">
