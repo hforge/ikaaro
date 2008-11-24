@@ -38,7 +38,7 @@ from views import BrowseForm
 
 class Text_Edit(DBResource_Edit):
 
-    title = MSG(u'Edit Inline')
+    title = MSG(u'Edit')
     icon = 'edit.png'
     schema = merge_dics(DBResource_Edit.schema,
                         data=String)
