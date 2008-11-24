@@ -2753,7 +2753,7 @@ msgstr "Produit"
 #: ../tracker/ui/add_issue.xml.en:20 ../tracker/ui/edit_issue.xml.en:24
 msgctxt "label"
 msgid "Product (mandatory):"
-msgstr "Version (obligatoire)&nbsp;:"
+msgstr "Produit (obligatoire)&nbsp;:"
 
 #: ../tracker/ui/search.xml.en:30
 msgctxt "label"
