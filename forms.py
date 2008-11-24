@@ -435,6 +435,12 @@ class RTEWidget(Widget):
     table_styles = None
 
 
+    def get_available_tiny_mce_languages(self, context):
+        here = context.resource
+        dir = here.get_resource('/ui/tiny_mce/langs')
+        return [ lang[:-3] for lang in dir.get_names() ]
+
+
     def get_rte_css(self):
         return self.rte_css
 
@@ -456,9 +462,9 @@ class RTEWidget(Widget):
         context = get_context()
         # language
         site_root = context.site_root
-        website_languages = site_root.get_property('website_languages')
+        tiny_mce_languages = self.get_available_tiny_mce_languages(context)
         accept = context.accept_language
-        current_language = accept.select_language(website_languages)
+        current_language = accept.select_language(tiny_mce_languages)
         # configuration
         resizing = 'true' if self.resizing else 'false'
 
