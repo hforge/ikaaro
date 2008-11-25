@@ -197,23 +197,6 @@ class WebPage(EpozEditable, Multilingual, Text):
         return u' '.join(text)
 
 
-    def is_empty(self):
-        """Test if XML doc is empty
-        """
-        body = self.handler.get_body()
-        if body is None:
-            return True
-        for type, value, line in body.events:
-            if type == TEXT:
-                if value.replace('&nbsp;', '').strip():
-                    return False
-            elif type == START_ELEMENT:
-                tag_uri, tag_name, attributes = value
-                if tag_name == 'img':
-                    return False
-        return True
-
-
     def get_content_type(self):
         return 'application/xhtml+xml; charset=UTF-8'
 
