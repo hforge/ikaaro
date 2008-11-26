@@ -309,9 +309,17 @@ class SelectRadio(Widget):
 
     def get_namespace(self, datatype, value):
         none_selected = True
-        options = datatype.get_namespace(value)
+        # Check whether the value is already a list of options
+        # FIXME This is done to avoid a bug when using a select widget in an
+        # auto-form, where the 'datatype.get_namespace' method is called
+        # twice (there may be a better way of handling this).
+        if type(value) is not list:
+            options = datatype.get_namespace(value)
+        else:
+            options = value
+
         for option in options:
-            if option is True:
+            if option['selected'] is True:
                 none_selected = False
                 break
         return {
