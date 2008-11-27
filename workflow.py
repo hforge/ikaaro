@@ -23,7 +23,6 @@ from datetime import datetime
 from itools.datatypes import DateTime, String, Unicode
 from itools.gettext import MSG
 from itools.i18n import format_datetime
-from itools.stl import stl
 from itools.web import STLForm, INFO, ERROR
 from itools.workflow import Workflow, WorkflowAware as BaseWorkflowAware
 from itools.workflow import WorkflowError

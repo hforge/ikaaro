@@ -25,7 +25,6 @@ from datetime import datetime
 # Import from itools
 from itools.datatypes import Unicode
 from itools.gettext import MSG
-from itools.stl import stl
 from itools.web import Resource, get_context
 from itools.xapian import CatalogAware
 from itools.xapian import TextField, KeywordField, IntegerField, BoolField
@@ -166,8 +165,12 @@ class DBResource(CatalogAware, IResource):
         if format is None:
             format = cls.class_id
 
-        if isinstance(cls, WorkflowAware):
-            kw['state'] = cls.workflow.initstate
+        if issubclass(cls, WorkflowAware):
+            schema = cls.get_metadata_schema()
+            state = schema['state'].default
+            if state is None:
+                state  = cls.workflow.initstate
+            kw['state'] = state
 
         return Metadata(handler_class=cls, format=format, **kw)
 
