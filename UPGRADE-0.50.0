@@ -239,3 +239,31 @@ selector syntax.
 
 [1] http://www.jquery.com/
 [2] http://docs.jquery.com/
+
+
+
+NOT CLASSIFIED
+====================
+
+UI / Rest
+
+- 2 page tiles => 1 page title
+- flat menu tab
+- variable size layout
+- right menu: global => contextual
+- 302 Found => 200 Ok (edit forms, firstview)
+- The tracker: +resources, +products, ordered tables
+- Improved Image Gallery
+- login: stay in the same page
+- merge edit & edit_metadata
+- distinct messages: ERROR, INFO
+- improved add link&images in tinymce
+- add the spanish translation
+
+Architecture / API
+
+- New architecture: Resources + Views
+- self.gettext(u'') => MSG(u'').gettext
+- catalog => xapian
+- add jquery
+

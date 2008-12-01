@@ -1,5 +1,5 @@
 
-ikaaro 0.50.0 (2008/11/22)
+ikaaro 0.50.0 (2008/12/XX)
 ==========================
 
 This is a Content Management System built on Python & itools, among
@@ -9,29 +9,50 @@ other features ikaaro provides:
  - multilingual user interfaces and content
  - high level modules: wiki, forum, tracker, etc.
 
+This release has seen the major changes in the user interface for a
+long time.  Most notably the backoffice is now integrated into the
+frontoffice.  When the user logs in the application, the backoffice
+interfaces appear.
 
-UI / Rest
+A number of changes have been made to satisfy this new approach.  In
+particular the backoffice interfaces are lighter.  For instance the
+two level drop down menu has been replaced by a discrete flat menu.
+Another example, now the right column, instead of being always visible,
+contains context menus that appear or dissappear depending on the
+resource & view being displayed.
 
-- 2 page tiles => 1 page title
-- flat menu tab
-- variable size layout
-- right menu: global => contextual
-- 302 Found => 200 Ok (edit forms, firstview)
-- The tracker: +resources, +products, ordered tables
-- Improved Image Gallery
-- login: stay in the same page
-- merge edit & edit_metadata
-- distinct messages: ERROR, INFO
-- improved add link&images in tinymce
-- add the spanish translation
+The internationalization and localization of the user interfaces has
+also been considerably improved.  For example now there is a global
+language selector, available in both the front and back office modes.
+And several components are multilingual now, like the HTML editor
+(TinyMCE [1]) and the tracker tables.
 
-Architecture / API
+Some other features have been added to the issue tracker.  First, a
+calendar has been integrated, in order to track resources attached
+to an issue.  Another important change, there is a new field called
+'Products', and now modules and versions are classified by product
+(inspiration from bugzilla [2]).
 
-- New architecture: Resources + Views
-- self.gettext(u'') => MSG(u'').gettext
-- catalog => xapian
-- add jquery
-- Python 2.6 supported
+Many other changes have been made to the user interface, too many to
+enumerate them here.
+
+The application behaviour is also more respectful of the REST [3]
+paradigm.  For instance now there are much less redirections than
+before.
+
+However, it is probably the changes under the hood that are most
+important.  Specifically the architecture changes concerning the
+way a resource view is built.  Before a view was a resource method,
+simple enough but not very scalable.  Now a view is a class in
+itself, what enhances the possibilities of code refactoring.
+
+Again, the changes to the programming interface are too many to
+enumerate here.  See the upgrade notes for more.
+
+
+[1]
+[2]
+[3]
 
 
 Resources
@@ -49,4 +70,3 @@ http://archives.hforge.org/index.cgi?list=itools
 
 Bug Tracker
 http://bugs.hforge.org/
-
