@@ -27,7 +27,7 @@ from itools.web import STLForm, INFO
 
 # Import from ikaaro
 from ikaaro.folder import Folder
-from ikaaro import messages
+from ikaaro.messages import MSG_DELETE_SELECTION
 from ikaaro.forms import RTEWidget
 from ikaaro.registry import register_resource_class
 from message import Message, build_message
@@ -52,28 +52,28 @@ class Thread_View(STLForm):
         user = context.user
         users = resource.get_resource('/users')
         ac = resource.get_access_control()
-        accept_language = context.accept_language
-        # The namespace
-        namespace = {'editable': ac.is_admin(user, resource)}
-        # Actions
-        actions = []
-        message = messages.MSG_DELETE_SELECTION
-        remove_message = 'return confirm("%s");' % message
-        namespace['remove_message'] = remove_message
+        accept = context.accept_language
 
-        namespace['messages'] = []
+        messages = []
         for message in resource.get_posts():
             author = message.get_owner()
             if author is not None:
                 author = users.get_resource(author).get_title()
-            namespace['messages'].append({
+            messages.append({
                 'name': message.name,
                 'link': context.get_link(message),
                 'author': author,
-                'mtime': format_datetime(message.get_mtime(), accept_language),
+                'mtime': format_datetime(message.get_mtime(), accept),
                 'body': message.handler.events,
             })
-        namespace['is_allowed_to_add'] = ac.is_allowed_to_add(user, resource)
+
+        # The namespace
+        namespace = {
+            'editable': ac.is_admin(user, resource),
+            'remove_message': MSG_DELETE_SELECTION,
+            'messages': messages,
+            'is_allowed_to_add': ac.is_allowed_to_add(user, resource),
+            }
         if namespace['is_allowed_to_add']:
             namespace['rte'] = RTEWidget('data').to_html(String, None)
         return namespace

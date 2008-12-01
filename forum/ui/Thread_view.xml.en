@@ -31,17 +31,17 @@
     </table>
     <p stl:if="editable">
       <input type="submit" name=";remove" value="Remove" class="button_delete"
-             onclick="${remove_message}" />
+        onclick="return confirm('${remove_message}');" />
     </p>
   </form>
 
   <a name="new_reply" />
   <form action="." method="post" stl:if="is_allowed_to_add">
-  <hr />
-  <h3>Post a Reply</h3>
+    <hr />
+    <h3>Post a Reply</h3>
+    ${rte}
     <p>
-      ${rte}
-      <input type="submit" name=";new_reply" value="Reply" class="button_ok"/>
+    <input type="submit" name=";new_reply" value="Reply" class="button_ok"/>
     </p>
   </form>
 
