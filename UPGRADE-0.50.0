@@ -99,8 +99,13 @@ written now also as views:
 User Interface
 ====================
 
-(1) The two level drop-down menu has been flattened to just one level.  As
-a side effect the 'class_views' variable has become a simple list.
+(1) Now all web pages must include the "<base>" tag.  Add this line to
+the HTML head in custom skin templates (before any relative URL):
+
+  <base href="${base_uri}" />
+
+(2) The two level drop-down menu has been flattened to just one level.
+As a side effect the 'class_views' variable has become a simple list.
 
   # Before
   class MyClass(...):
@@ -137,7 +142,7 @@ For instance:
     title = MSG(u'View')
     description = MSG(u'...')
 
-(2) The 'get_firstview' method has been removed.  So making a link to a
+(3) The 'get_firstview' method has been removed.  So making a link to a
 resource has been simplified:
 
   # Before
@@ -146,16 +151,14 @@ resource has been simplified:
   # Now
   goto = resource.name
 
-
-(3) The "edit" and "edit_metadata" views have been merged. So that both
+(4) The "edit" and "edit_metadata" views have been merged. So that both
 Folder-like and File-like resources offer a "edit" view. Folders only offer
 metadata to edit by default, while Files offer content and metadata to edit
 in a single form. Try to use that pattern in your forms, starting with more
 important data at the top (title, content), and ending with optional
 properties like keywords. The AutoForm class may be handy.
 
-
-(4) Messages
+(5) Messages
 
 Now there is a distinction between error and informational messages:
 
