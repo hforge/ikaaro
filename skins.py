@@ -18,6 +18,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# Import from the Standard Library
+from copy import deepcopy
+
 # Import from itools
 from itools import get_abspath
 from itools.gettext import MSG
@@ -314,6 +317,12 @@ class Skin(UIFolder):
         context_menus = self._get_context_menus(context)
         context_menus = list(context_menus)
 
+        # The base URI
+        uri = context.uri
+        if not uri.path.endswith_slash:
+            uri = deepcopy(uri)
+            uri.path.endswith_slash = True
+
         # In case of UI objects, fallback to site root
         here = context.resource
         if isinstance(here, (UIFile, UIFolder)):
@@ -324,6 +333,7 @@ class Skin(UIFolder):
         return {
             # HTML head
             'title': self.get_template_title(context),
+            'base_uri': str(uri),
             'styles': self.get_styles(context),
             'scripts': self.get_scripts(context),
             'meta_tags': self.get_meta_tags(context),
