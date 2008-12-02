@@ -36,16 +36,3 @@ p.even, p.odd {
   font-weight: bold;
 }
 
-
-/* Hide epoz buttons */
-#content .formatblock {
-  display: none;
-}
-
-#epoz_button_hyperlink,
-#epoz_button_anchor,
-#epoz_button_image,
-#epoz_button_table,
-#epoz_button_bgcolor {
-  display: none;
-}
