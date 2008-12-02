@@ -59,17 +59,22 @@ class SelectTable_View(OrderedTable_View):
     def get_item_value(self, resource, context, item, column):
         # Append a column with the number of issues
         if column == 'issues':
+            # FIXME Too much of an heuristic
+            filter = resource.name[:-1]
+            if filter.startswith('priorit'):
+                filter = 'priority'
+
             root = context.root
             abspath = resource.parent.get_canonical_path()
-            base_query = AndQuery(
-                            PhraseQuery('parent_path', str(abspath)),
-                            PhraseQuery('format', 'issue'))
-            search_query = AndQuery(base_query, PhraseQuery(filter, id))
+            search_query = AndQuery(
+                PhraseQuery('parent_path', str(abspath)),
+                PhraseQuery('format', 'issue'),
+                PhraseQuery(filter, item.id))
             results = root.search(search_query)
             count = len(results)
             if count == 0:
                 return 0, None
-            return count, '../;view?%s=%s' % (filter, id)
+            return count, '../;view?%s=%s' % (filter, item.id)
 
         # Default
         cls = OrderedTable_View
