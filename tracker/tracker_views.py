@@ -254,6 +254,8 @@ class Tracker_View(BrowseForm):
         'ids': String(multiple=True, mandatory=True)}
 
     tracker_schema = {
+        # Do not batch
+        'batch_size': Integer(default=0),
         # search_fields
         'search_name': Unicode(),
         'mtime': Integer(default=0),
