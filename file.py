@@ -41,6 +41,7 @@ from workflow import WorkflowAware
 from file_views import File_NewInstance, File_Download, File_View
 from file_views import File_Edit, File_ExternalEdit, File_Backlinks
 from file_views import Image_Thumbnail, Image_View, Video_View, Archive_View
+from file_views import Flash_View
 
 
 
@@ -235,10 +236,7 @@ class Flash(File):
     class_icon48 = 'icons/48x48/flash.png'
 
     # Views
-    view = STLView(
-        access='is_allowed_to_view',
-        title=MSG(u'View'),
-        template='/ui/binary/Flash_view.xml')
+    view = Flash_View()
 
 
 

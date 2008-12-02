@@ -469,14 +469,23 @@ class Video_View(STLView):
 
 
 
-class Archive_View(STLView):
+class Archive_View(File_View):
 
     access = 'is_allowed_to_view'
     title = MSG(u'View')
     template = '/ui/binary/Archive_view.xml'
 
     def get_namespace(self, resource, context):
+        namespace = File_View.get_namespace(self, resource, context)
         contents = resource.handler.get_contents()
-        return {
-            'contents': '\n'.join(contents)}
+        namespace['contents'] = '\n'.join(contents)
+        return namespace
+
+
+
+class Flash_View(File_View):
+
+    access = 'is_allowed_to_view'
+    title = MSG(u'View')
+    template = '/ui/binary/Flash_view.xml'
 
