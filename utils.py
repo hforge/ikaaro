@@ -176,17 +176,8 @@ def generate_name(name, used, suffix='_'):
 # Build link to view
 ###########################################################################
 def resolve_view(context, view_name):
-    # Case 1: /a/b/;view
-    if context.view_name is not None:
-        return ';%s' % view_name
-    # Case 2: /
-    if not context.uri.path:
-        return ';%s' % view_name
-    # Case 3: /a/b/
-    if context.uri.path.endswith_slash:
-        return ';%s' % view_name
-    # Case 4: /a/b
-    return '%s/;%s' % (context.uri.path[-1], view_name)
+    # XXX still useful or API?
+    return ';%s' % view_name
 
 
 
