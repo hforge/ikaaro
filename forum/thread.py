@@ -85,7 +85,7 @@ class Thread_View(STLForm):
         id = resource.get_last_post_id()
         name = str(id + 1)
         data = form['data']
-        language = resource.get_content_language()
+        language = resource.get_content_language(context)
         thread = Message.make_resource(Message, resource, name, data, language)
         # Ok
         return context.come_back(INFO(u'Reply posted'))

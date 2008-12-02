@@ -19,6 +19,7 @@ from datetime import datetime
 
 # Import from itools
 from itools.vfs import FileName
+from itools.web import get_context
 
 # Import from ikaaro
 from resource_ import DBResource
@@ -49,7 +50,8 @@ class Multilingual(DBResource):
     def get_handler(self, language=None):
         # Content language
         if language is None:
-            language = self.get_content_language()
+            context = get_context()
+            language = self.get_content_language(context)
         # Hit
         if language in self.handlers:
             return self.handlers[language]

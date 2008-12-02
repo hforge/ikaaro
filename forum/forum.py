@@ -109,7 +109,7 @@ class AddThreadForm(STLForm):
             context.message = messages.MSG_NAME_CLASH
             return
 
-        language = resource.get_content_language()
+        language = resource.get_content_language(context)
         thread = Thread.make_resource(Thread, resource, name, data, language)
         thread.set_property('title', title, language=language)
 

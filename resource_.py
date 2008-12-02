@@ -446,10 +446,7 @@ class DBResource(CatalogAware, IResource):
         return title
 
 
-    def get_content_language(self, context=None):
-        if context is None:
-            context = get_context()
-
+    def get_content_language(self, context):
         site_root = self.get_site_root()
         languages = site_root.get_property('website_languages')
         # Check query

@@ -218,6 +218,16 @@ messages are instances of the MSG class. It also applies to resources:
       class_title = MSG(u"My Class")
       class_description = MSG(u"This is my class")
 
+(2) The prototype of some functions has changed:
+
+Now it is mandatory to pass the context to 'get_content_language':
+
+  # Before
+  self.get_content_language()
+
+  # Before
+  self.get_content_language(context)
+
 
 Javascript
 ====================
