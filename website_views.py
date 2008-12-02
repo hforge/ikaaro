@@ -29,6 +29,7 @@ from itools.stl import stl
 from itools import vfs
 from itools.web import STLView, STLForm, INFO, ERROR
 from itools.xapian import PhraseQuery, OrQuery, AndQuery, TextField
+from itools.xapian import StartQuery
 
 # Import from ikaaro
 import ikaaro
@@ -311,7 +312,7 @@ class SiteSearchView(SearchForm):
 
         # Search
         abspath = resource.get_canonical_path()
-        q1 = PhraseQuery('paths', str(abspath))
+        q1 = StartQuery('abspath', str(abspath))
         query = AndQuery(q1, *query)
         root = context.root
         results = root.search(query=query)

@@ -22,7 +22,7 @@ from itools.datatypes import Email, String, Unicode
 from itools.gettext import MSG
 from itools.i18n import get_language_name
 from itools.web import STLView, STLForm, INFO, ERROR
-from itools.xapian import PhraseQuery, AndQuery, OrQuery
+from itools.xapian import PhraseQuery, AndQuery, OrQuery, StartQuery
 
 # Import from ikaaro
 from forms import TextWidget, PasswordWidget, AutoForm
@@ -307,8 +307,9 @@ class User_Tasks(STLView):
         # Build the query
         site_root = resource.get_site_root()
         q1 = PhraseQuery('workflow_state', 'pending')
-        q2 = OrQuery(PhraseQuery('paths', str(site_root.get_abspath())),
-                     PhraseQuery('paths', str(resource.get_canonical_path())))
+        q2 = OrQuery(StartQuery('abspath', str(site_root.get_abspath())),
+                     StartQuery('abspath',
+                                     str(resource.get_canonical_path())))
         query = AndQuery(q1, q2)
 
         # Build the list of documents

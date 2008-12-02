@@ -205,7 +205,8 @@ class DBResource(CatalogAware, IResource):
 
 
     def get_property_and_language(self, name, language=None):
-        return self.metadata.get_property_and_language(name, language=language)
+        return self.metadata.get_property_and_language(name,
+                                                       language=language)
 
 
     def set_property(self, name, value, language=None):
@@ -240,7 +241,6 @@ class DBResource(CatalogAware, IResource):
             KeywordField('links'),
             # Folder's view
             KeywordField('parent_path'),
-            KeywordField('paths'),
             KeywordField('name', is_stored=True),
             KeywordField('mtime', is_indexed=True, is_stored=True),
             IntegerField('size', is_indexed=False, is_stored=True)]
@@ -285,9 +285,6 @@ class DBResource(CatalogAware, IResource):
         if str(abspath) != '/':
             parent_path = abspath.resolve2('..')
             document['parent_path'] = str(parent_path)
-
-        # All paths
-        document['paths'] = [ abspath[:x] for x in range(len(abspath) + 1) ]
 
         # Size
         if isinstance(self, File):
