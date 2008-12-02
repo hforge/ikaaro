@@ -319,11 +319,8 @@ class Skin(UIFolder):
 
         # The base URI
         uri = context.uri
-        if not uri.path.endswith_slash:
+        if (not uri.path.endswith_slash) and (context.view_name is None):
             uri = deepcopy(uri)
-            if context.view_name:
-                # Remove the method
-                uri.path = uri.path[:-1]
             uri.path.endswith_slash = True
 
         # In case of UI objects, fallback to site root
