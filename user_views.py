@@ -27,7 +27,6 @@ from itools.xapian import PhraseQuery, AndQuery, OrQuery
 # Import from ikaaro
 from forms import TextWidget, PasswordWidget, AutoForm
 import messages
-from utils import resolve_view
 
 
 class User_ConfirmRegistration(STLForm):
@@ -110,7 +109,7 @@ class User_Profile(STLView):
                 continue
             # Append
             items.append({
-                'url': resolve_view(context, name),
+                'url': ';%s' % name,
                 'title': view.title,
                 'description': getattr(view, 'description', None),
                 'icon': resource.get_method_icon(view, size='48x48'),

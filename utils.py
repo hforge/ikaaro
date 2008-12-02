@@ -173,15 +173,6 @@ def generate_name(name, used, suffix='_'):
 
 
 ###########################################################################
-# Build link to view
-###########################################################################
-def resolve_view(context, view_name):
-    # XXX still useful or API?
-    return ';%s' % view_name
-
-
-
-###########################################################################
 # Index and Search
 ###########################################################################
 def get_base_path_query(abspath, include_container=False):

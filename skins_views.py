@@ -24,7 +24,7 @@ from itools.stl import STLTemplate
 from itools.uri import decode_query
 
 # Import from ikaaro
-from utils import reduce_string, resolve_view
+from utils import reduce_string
 
 
 ###########################################################################
@@ -142,7 +142,7 @@ class LocationTemplate(STLTemplate):
 
             # Add the menu
             tabs.append({
-                'name': resolve_view(context, link),
+                'name': ';%s' % link,
                 'label': view.get_title(context),
                 'active': active,
                 'class': active and 'active' or None})
