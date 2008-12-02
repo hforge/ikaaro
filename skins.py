@@ -319,7 +319,7 @@ class Skin(UIFolder):
 
         # The base URI
         uri = context.uri
-        if (not uri.path.endswith_slash) and (context.view_name is None):
+        if uri.path and not context.view_name and not uri.path.endswith_slash:
             uri = deepcopy(uri)
             uri.path.endswith_slash = True
 
