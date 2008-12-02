@@ -29,6 +29,7 @@ from itools.datatypes import Boolean, Integer, String, Unicode
 from itools.gettext import MSG
 from itools.handlers import checkid, merge_dics
 from itools.i18n import format_datetime
+from itools.stl import set_prefix
 from itools.uri import get_reference, Path
 from itools.web import BaseView, STLForm, ERROR
 from itools.xapian import AndQuery, OrQuery, PhraseQuery
@@ -94,8 +95,11 @@ class Folder_View(BaseView):
                 u'There is not an "index" web page. Could not render this '
                 u'view.')
             return ''
-        # FIXME We need to rewrite the URLs
-        return index.view.GET(index, context)
+
+        # Rewrite the URLs
+        stream = index.get_epoz_data()
+        prefix = '%s/' % resource.name
+        return set_prefix(stream, prefix)
 
 
 
