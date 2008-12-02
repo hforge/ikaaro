@@ -50,8 +50,12 @@ class Multilingual(DBResource):
     def get_handler(self, language=None):
         # Content language
         if language is None:
-            context = get_context()
-            language = self.get_content_language(context)
+            site_root = self.get_site_root()
+            handlers = [
+                (x, self.get_handler(language=x))
+                for x in site_root.get_property('website_languages') ]
+            languages = [ x for (x, y) in handlers if not y.is_empty() ]
+            language = self.get_content_language(get_context(), languages)
         # Hit
         if language in self.handlers:
             return self.handlers[language]
