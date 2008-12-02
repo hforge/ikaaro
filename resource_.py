@@ -119,8 +119,8 @@ class IResource(Resource):
         user = get_context().user
         ac = self.get_access_control()
         for name in self.class_views:
-            name = name.split('?')[0]
-            view = self.get_view(name)
+            view_name = name.split('?')[0]
+            view = self.get_view(view_name)
             if ac.is_access_allowed(user, self, view):
                 yield name, view
 
