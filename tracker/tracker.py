@@ -167,7 +167,8 @@ class Tracker(Folder):
             member['is_selected'] = condition(member['id'])
 
         # Sort
-        members.sort(key=itemgetter('title'))
+        members.sort(cmp=lambda x,y: cmp(x['title'].lower(),
+                                         y['title'].lower()))
 
         # Ok
         return members
