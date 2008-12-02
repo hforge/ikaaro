@@ -148,13 +148,17 @@ class Tracker(Folder):
         """Returns a namespace (list of dictionaries) to be used for the
         selection box of users (the 'assigned to' and 'cc' fields).
         """
+        # Members
         users = self.get_resource('/users')
-        members = []
+        members = [
+            {'id': x, 'title': users.get_resource(x).get_title()}
+            for x in self.get_site_root().get_members() ]
+        sort_cmp = lambda x, y: cmp(x['title'].lower(), y['title'].lower())
+        members.sort(cmp=sort_cmp)
+
+        # Not assigend
         if not_assigned is True:
-            members.append({'id': 'nobody', 'title': 'NOT ASSIGNED'})
-        for username in self.get_site_root().get_members():
-            user = users.get_resource(username)
-            members.append({'id': username, 'title': user.get_title()})
+            members.insert(0, {'id': 'nobody', 'title': 'NOT ASSIGNED'})
 
         # Add 'is_selected'
         if value is None:
@@ -165,10 +169,6 @@ class Tracker(Folder):
             condition = lambda x: (x in value)
         for member in members:
             member['is_selected'] = condition(member['id'])
-
-        # Sort
-        members.sort(cmp=lambda x,y: cmp(x['title'].lower(),
-                                         y['title'].lower()))
 
         # Ok
         return members
