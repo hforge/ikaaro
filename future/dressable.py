@@ -18,6 +18,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# Import from the Standard Library
+from operator import itemgetter
+
 # Import from itools
 from itools.datatypes import is_datatype
 from itools.gettext import MSG
@@ -29,7 +32,7 @@ from itools.xml import XMLParser, START_ELEMENT
 # Import from ikaaro
 from ikaaro.file import Image
 from ikaaro.folder import Folder
-from ikaaro.html import EpozEditable, WebPage, WebPage_View
+from ikaaro.html import EpozEditable, WebPage
 from ikaaro.registry import register_resource_class
 from ikaaro.views import CompositeForm, ContextMenu
 from ikaaro.workflow import WorkflowAware
@@ -40,68 +43,35 @@ class Dressable_Menu(ContextMenu):
     title = MSG(u'Edit')
 
     def get_items(self, resource, context):
-        base_path = '.'
-        dressable = resource
-        if not isinstance(dressable, Dressable):
-            dressable = resource.parent
-            if not isinstance(dressable, Dressable):
-                return []
-            base_path = '..'
-        elif not str(context.uri).endswith('/'):
-            base_path = resource.name
-
-        # Dressable metadata
-        items = [
-            {'title': MSG(u'Metadata'),
-             'href': '%s/;edit' % base_path,
-             'class': 'nav_active'},]
-        for name, value in dressable.layout.iteritems():
+        items = []
+        for name, value in resource.layout.iteritems():
             if isinstance(value, tuple):
                 name, cls = value
-            if dressable.has_resource(name):
+            if resource.has_resource(name):
                 # Add edit link
                 items.append(
-                    {'title': MSG(u'%s %s' % (cls.class_title.gettext(), name)),
-                     'href': '%s/%s/;edit' % (base_path, name),
+                    {'name': name,
+                     'title': MSG(u'%s %s' % (cls.class_title.gettext(), name)),
+                     'href': '%s/;edit' % name,
                      'class': 'nav_active'})
             else:
                 # Add new_resource link
                 items.append(
-                    {'title': MSG(u'Add new %s' % cls.class_title.gettext()),
-                     'href': ('%s/;new_resource?type=%s&title=%s' %
-                              (base_path, cls.class_id, name)),
+                    {'name': name,
+                     'title': MSG(u'Add new %s' % cls.class_title.gettext()),
+                     'href': (';new_resource?type=%s&title=%s' %
+                              (cls.class_id, name)),
                      'class': 'nav_active'})
+        items.sort(key=itemgetter('name'))
+        # Dressable metadata
+        items.insert(0,
+            {'title': MSG(u'Metadata'), 'href': ';edit', 'class': 'nav_active'})
         # Back to preview
         items.append(
             {'title': MSG(u'Preview'),
-             'href': base_path,
+             'href': '.',
              'class': 'nav_active'})
         return items
-
-
-
-class DressableWebPage_View(WebPage_View):
-
-    def GET(self, resource, context):
-        here = context.resource
-        path = context.uri.path
-        site_root = resource.get_site_root()
-        stream = resource.get_epoz_data()
-
-        path_to_webpage = site_root.get_pathto(resource.parent)
-        if here != resource:
-            prefix = str(path_to_webpage)
-            if not (path.endswith_slash or (len(path) and path[-1][0] == ';')):
-                prefix +=  '/%s' % resource.name
-        else:
-            prefix = resource.name
-        prefix += '/'
-        return set_prefix(stream, prefix)
-
-
-
-class DressableWebPage(WebPage):
-    view = DressableWebPage_View()
 
 
 
@@ -111,12 +81,17 @@ class Dressable_View(CompositeForm):
     title = MSG(u'View')
     icon = 'view.png'
     template = '/ui/future/dressable_view.xml'
-    context_menus = [Dressable_Menu()]
+
+
+    def GET(self, resource, context):
+        stream = CompositeForm.GET(self, resource, context)
+        prefix = '%s/' % resource.name
+        return set_prefix(stream, prefix)
 
 
     def get_view(self, resource, context, item):
         if is_datatype(item, WebPage):
-            return DressableWebPage.view.GET
+            return WebPage.view.GET
         if is_datatype(item, Image):
             return resource._get_image
         return getattr(self, item, None)
@@ -157,6 +132,7 @@ class Dressable(Folder, EpozEditable):
     __fixed_handlers__ = ['index']
     layout = {'content': ('index', WebPage),
               'image1': ('image1', Image)}
+    context_menus = [Dressable_Menu()]
 
 
     @staticmethod
@@ -183,6 +159,10 @@ class Dressable(Folder, EpozEditable):
     def get_document_types(self):
         return Folder.get_document_types(self) + [Dressable]
 
+
+    def get_epoz_document(self, language=None):
+        resource = self.get_resource('index')
+        return resource.get_epoz_document(language)
 
     #######################################################################
     # API / Private
