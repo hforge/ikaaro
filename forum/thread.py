@@ -28,7 +28,7 @@ from itools.web import STLForm, INFO
 # Import from ikaaro
 from ikaaro.folder import Folder
 from ikaaro.messages import MSG_DELETE_SELECTION
-from ikaaro.forms import RTEWidget
+from ikaaro.forms import rte_widget
 from ikaaro.registry import register_resource_class
 from message import Message, build_message
 
@@ -75,7 +75,7 @@ class Thread_View(STLForm):
             'is_allowed_to_add': ac.is_allowed_to_add(user, resource),
             }
         if namespace['is_allowed_to_add']:
-            namespace['rte'] = RTEWidget('data').to_html(String, None)
+            namespace['rte'] = rte_widget.to_html(String, None)
         return namespace
 
 

@@ -1057,7 +1057,7 @@ msgstr "Ajouter une ressource de type « ${class_title} »"
 
 #: ../forum/forum.py:77
 msgid "Add a thread"
-msgstr "Ajouter un nouvel enregistrement"
+msgstr "Ajouter un fil de discussion"
 
 #: ../ui/access/add_user.xml.en:35
 msgctxt "button"
