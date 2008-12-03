@@ -204,11 +204,12 @@ class Issue_History(STLView):
 
         # Local variables
         users = resource.get_resource('/users')
-        versions = resource.get_resource('../versions')
-        types = resource.get_resource('../types')
-        states = resource.get_resource('../states')
-        modules = resource.get_resource('../modules')
-        priorities = resource.get_resource('../priorities')
+        tracker = resource.parent
+        versions = tracker.get_resource('versions').handler
+        types = tracker.get_resource('types').handler
+        states = tracker.get_resource('states').handler
+        modules = tracker.get_resource('modules').handler
+        priorities = tracker.get_resource('priorities').handler
         # Initial values
         previous_title = None
         previous_version = None
@@ -220,8 +221,6 @@ class Issue_History(STLView):
         previous_cc_list = None
 
         # Build the namespace
-        namespace = {}
-        namespace['number'] = resource.name
         rows = []
         i = 0
         for record in resource.get_history_records():
@@ -265,37 +264,42 @@ class Issue_History(STLView):
                 previous_version = version
                 row_ns['version'] = ' '
                 if module is not None:
-                    version = versions.handler.get_record(int(version))
+                    version = versions.get_record(int(version))
                     if version:
-                        row_ns['version'] = version.get_value('title')
+                        value = versions.get_record_value(version, 'title')
+                        row_ns['version'] = value
             if type != previous_type:
                 previous_type = type
                 row_ns['type'] = ' '
                 if type is not None:
-                    type = types.handler.get_record(int(type))
+                    type = types.get_record(int(type))
                     if type is not None:
-                        row_ns['type'] = type.get_value('title')
+                        value = types.get_record_value(type, 'title')
+                        row_ns['type'] = value
             if state != previous_state:
                 previous_state = state
                 row_ns['state'] = ' '
                 if state is not None:
-                    state = states.handler.get_record(int(state))
+                    state = states.get_record(int(state))
                     if state is not None:
-                        row_ns['state'] = state.get_value('title')
+                        value = states.get_record_value(state, 'title')
+                        row_ns['state'] = value
             if module != previous_module:
                 previous_module = module
                 row_ns['module'] = ' '
                 if module is not None:
-                    module = modules.handler.get_record(int(module))
+                    module = modules.get_record(int(module))
                     if module is not None:
-                        row_ns['module'] = module.get_value('title')
+                        value = modules.get_record_value(module, 'title')
+                        row_ns['module'] = value
             if priority != previous_priority:
                 previous_priority = priority
                 row_ns['priority'] = ' '
                 if priority is not None:
-                    priority = priorities.handler.get_record(int(priority))
+                    priority = priorities.get_record(int(priority))
                     if priority is not None:
-                        row_ns['priority'] = priority.get_value('title')
+                        value = priorities.get_record_value(priority, 'title')
+                        row_ns['priority'] = value
             if assigned_to != previous_assigned_to:
                 previous_assigned_to = assigned_to
                 if assigned_to and users.has_resource(assigned_to):
@@ -318,9 +322,9 @@ class Issue_History(STLView):
             rows.append(row_ns)
 
         rows.reverse()
-        namespace['rows'] = rows
 
-        return namespace
+        # Ok
+        return {'number': resource.name, 'rows': rows}
 
 
 
