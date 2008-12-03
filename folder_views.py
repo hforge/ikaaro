@@ -85,6 +85,7 @@ class ZoomMenu(ContextMenu):
 class Folder_View(BaseView):
 
     access = 'is_allowed_to_view_folder'
+    title = MSG(u'View')
 
 
     def GET(self, resource, context):
