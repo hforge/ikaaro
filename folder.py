@@ -42,7 +42,7 @@ class Folder(DBResource):
     class_description = MSG(u'Organize your files and documents with folders.')
     class_icon16 = 'icons/16x16/folder.png'
     class_icon48 = 'icons/48x48/folder.png'
-    class_views = ['browse_content', 'preview_content', 'edit']
+    class_views = ['view', 'browse_content', 'preview_content', 'edit']
     class_handler = FolderHandler
 
 
@@ -232,17 +232,6 @@ class Folder(DBResource):
     #######################################################################
     # User interface
     #######################################################################
-    def get_default_view_name(self):
-        # Index page
-        ac = self.get_access_control()
-        context = get_context()
-        user = context.user
-        if ac.is_allowed_to_view_folder(user, self):
-            return 'view'
-
-        return DBResource.get_default_view_name(self)
-
-
     def get_view(self, name, query=None):
         # Add resource form
         if name == 'new_resource':

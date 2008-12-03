@@ -55,10 +55,14 @@ class IResource(Resource):
 
 
     def get_default_view_name(self):
-        views = self.class_views
-        if not views:
-            return None
-        return views[0]
+        context = get_context()
+        user = context.user
+        ac = self.get_access_control()
+        for view in self.class_views:
+            access = getattr(self, view).access
+            if getattr(ac, access)(user, self):
+                return view
+        return None
 
 
     def get_context_menus(self):
