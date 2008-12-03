@@ -56,7 +56,7 @@ class WebSite(RoleAware, Folder):
     class_icon48 = 'icons/48x48/website.png'
     class_skin = 'ui/aruni'
     class_views = ['browse_content', 'preview_content', 'edit',
-                   'control_panel', 'last_changes']
+                   'control_panel', 'last_changes', 'view']
     class_control_panel = ['browse_users', 'add_user', 'edit_virtual_hosts',
                            'edit_security_policy', 'edit_languages',
                            'edit_contact_options', 'broken_links', 'orphans']
