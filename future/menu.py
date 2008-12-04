@@ -24,23 +24,12 @@ from ikaaro.buttons import Button
 from ikaaro.file import File
 from ikaaro.folder import Folder
 from ikaaro.forms import TextWidget, SelectWidget, ReadOnlyWidget
-from ikaaro.forms import stl_namespaces
+from ikaaro.forms import stl_namespaces, PathSelectorWidget
 from ikaaro import messages
 from ikaaro.registry import register_resource_class
 from ikaaro.resource_views import Breadcrumb, DBResource_AddLink
 from ikaaro.table import OrderedTableFile, OrderedTable
 from ikaaro.table_views import OrderedTable_View
-
-
-
-class PathWidget(TextWidget):
-
-    template = TextWidget.template + list(XMLParser("""
-        <input id="trigger_link" type="button" value="..."
-               name="trigger_link"
-               onclick="popup(';add_link?target_id=${name}&amp;mode=menu',
-                              620, 300);"/>
-        """, stl_namespaces))
 
 
 
@@ -197,29 +186,6 @@ class Menu_View(OrderedTable_View):
 
 
 
-class Menu_AddLink(DBResource_AddLink):
-
-    access = 'is_allowed_to_edit'
-    template = '/ui/future/menu_addlink.xml'
-
-    def get_namespace(self, resource, context):
-        namespace = DBResource_AddLink.get_namespace(self, resource, context)
-
-        # For the breadcrumb
-        if isinstance(resource, Menu):
-            start = resource.parent.parent
-        else:
-            start = resource.parent
-
-        # Construct namespace
-        namespace['bc'] = Breadcrumb(filter_types=(File,), start=start,
-                                     icon_size=48)
-        namespace['target_id'] = context.get_form_value('target_id')
-
-        return namespace
-
-
-
 class Menu(OrderedTable):
 
     class_id = 'ikaaro-menu'
@@ -229,10 +195,9 @@ class Menu(OrderedTable):
 
     # Views
     view = Menu_View()
-    add_link = Menu_AddLink()
 
     form = [TextWidget('title', title=MSG(u'Title')),
-            PathWidget('path', title=MSG(u'Path')),
+            PathSelectorWidget('path', title=MSG(u'Path')),
             SelectWidget('target', title=MSG(u'Target')),
             ReadOnlyWidget('child')]
 

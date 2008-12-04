@@ -19,7 +19,7 @@ from itools.datatypes import String
 from itools.gettext import MSG
 
 # Import from ikaaro
-from ikaaro.future.menu import PathWidget
+from ikaaro.forms import PathSelectorWidget
 from ikaaro.registry import register_resource_class
 from ikaaro.resource_views import Breadcrumb, DBResource_AddLink
 from ikaaro.table import OrderedTableFile, OrderedTable
@@ -87,7 +87,7 @@ class ChildrenOrderedTable(OrderedTable):
     class_handler = ChildrenOrderedTableFile
 
     orderable_classes = None
-    form = [PathWidget('name', title=MSG(u'Path'))]
+    form = [PathSelectorWidget('name', title=MSG(u'Path'))]
 
 
     def get_orderable_classes(self):
