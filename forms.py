@@ -237,7 +237,8 @@ class BooleanRadio(Widget):
 
 
     def get_namespace(self, datatype, value):
-        labels = getattr(self, 'labels', {'yes': 'Yes', 'no': 'No'})
+        default_labels = {'yes': MSG(u'Yes'), 'no': MSG(u'No')}
+        labels = getattr(self, 'labels', default_labels)
         return {
             'name': self.name,
             'is_yes': value in [True, 1, '1'],
