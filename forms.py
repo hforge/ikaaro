@@ -404,13 +404,14 @@ class ImageSelectorWidget(Widget):
 
     template = list(XMLParser(
     """
-       <input type="text" id="selector_${name}" size="${size}" name="${name}"
-          value="${value}" />
-       <input id="selector_button_${name}" type="button" value="..."
-              name="selector_button_${name}"
-              onclick="popup(';add_image?target_id=selector_${name}&amp;mode=input', 620, 300);" />
-       <img src="${value}/;thumb?width=128&amp;height=128" stl:if="value"/>
-       """, stl_namespaces))
+    <input type="text" id="selector_${name}" size="${size}" name="${name}"
+      value="${value}" />
+    <input id="selector_button_${name}" type="button" value="..."
+      name="selector_button_${name}"
+      onclick="popup(';add_image?target_id=selector_${name}&amp;mode=input', 620, 300);" />
+     <br/>
+     <img src="${value}/;thumb?width=128&amp;height=128" stl:if="value"/>
+     """, stl_namespaces))
 
 
 
