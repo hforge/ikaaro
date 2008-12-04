@@ -99,8 +99,7 @@ class Folder_View(BaseView):
 
         # Rewrite the URLs
         stream = index.get_epoz_data()
-        prefix = '%s/' % resource.name
-        return set_prefix(stream, prefix)
+        return set_prefix(stream, 'index/')
 
 
 

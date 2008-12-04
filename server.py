@@ -107,7 +107,8 @@ def get_root(database, target):
     cls = get_resource_class(metadata.format)
     # Build the root resource
     root = cls(metadata)
-    root.name = root.class_title.message
+    # FIXME Should be None
+    root.name = root.class_title.message.encode('utf_8')
     return root
 
 
