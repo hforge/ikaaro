@@ -679,7 +679,6 @@ class Tracker_ChangeSeveralBugs(Tracker_View):
         namespace['priorities'] = get_resource('priorities').get_options()
         namespace['types'] = get_resource('types').get_options()
         namespace['states'] = get_resource('states').get_options()
-        users = resource.get_resource('/users')
         namespace['users'] = resource.get_members_namespace('')
 
         # Ok
