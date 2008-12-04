@@ -654,6 +654,7 @@ class Tracker_ChangeSeveralBugs(Tracker_View):
     schema = {
         'comment': Unicode,
         'ids': String(multiple=True),
+        'change_product': Integer,
         'change_module': Integer,
         'change_version': Integer,
         'change_type': Integer,
@@ -672,6 +673,7 @@ class Tracker_ChangeSeveralBugs(Tracker_View):
         namespace = Tracker_View.get_namespace(self, resource, context)
         # Edit several bugs at once
         get_resource = resource.get_resource
+        namespace['products'] = get_resource('products').get_options()
         namespace['modules'] = get_resource('modules').get_options()
         namespace['versions'] = get_resource('versions').get_options()
         namespace['priorities'] = get_resource('priorities').get_options()
@@ -701,6 +703,7 @@ class Tracker_ChangeSeveralBugs(Tracker_View):
             return
 
         # Modify all issues selected
+        names = ['product', 'module', 'version', 'type', 'priority', 'state']
         comment = form['comment']
         user = context.user
         username = user and user.name or ''
@@ -724,7 +727,7 @@ class Tracker_ChangeSeveralBugs(Tracker_View):
             else:
                 record['assigned_to'] = new_assigned_to
             # Integer Fields
-            for name in 'module', 'version', 'type', 'priority', 'state':
+            for name in names:
                 new_value = form['change_%s' % name]
                 if new_value == -1:
                     record[name] = issue.get_value(name)
