@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 0.3.0\n"
-"POT-Creation-Date: 2008-12-05 17:12+CET\n"
+"POT-Creation-Date: 2008-12-05 18:12+CET\n"
 "PO-Revision-Date: 2001-07-08 17:07+CET\n"
 "Last-Translator: jdavid\n"
 "Language-Team: ??\n"
@@ -71,12 +71,12 @@ msgid "${batch} <x id='1'/> ${table}"
 msgstr ""
 
 #: ../ui/aruni/template.xhtml.en:53
-msgctxt "td"
+msgctxt "table cell"
 msgid "${body}"
 msgstr ""
 
 #: ../ui/ical/daily_view.xml.en:25
-msgctxt "link to"
+msgctxt "link"
 msgid "${calendar/name}"
 msgstr ""
 
@@ -91,12 +91,12 @@ msgid "${column/title}"
 msgstr ""
 
 #: ../ui/folder/browse_image.xml.en:28
-msgctxt "link to"
+msgctxt "link"
 msgid "${column/title}"
 msgstr ""
 
 #: ../ui/generic/browse_table.xml.en:39
-msgctxt "link to"
+msgctxt "link"
 msgid "${column/value}"
 msgstr ""
 
@@ -106,17 +106,17 @@ msgid "${comment/comment}"
 msgstr ""
 
 #: ../tracker/ui/edit_issue.xml.en:152
-msgctxt "td"
+msgctxt "table cell"
 msgid "${comment/datetime}"
 msgstr ""
 
 #: ../tracker/ui/edit_issue.xml.en:163
-msgctxt "link to"
+msgctxt "link"
 msgid "${comment/file}"
 msgstr ""
 
 #: ../tracker/ui/edit_issue.xml.en:151
-msgctxt "td"
+msgctxt "table cell"
 msgid "${comment/user}"
 msgstr ""
 
@@ -156,7 +156,7 @@ msgid "${description}"
 msgstr ""
 
 #: ../ui/user/tasks.xml.en:17
-msgctxt "link to"
+msgctxt "link"
 msgid "${doc/title}"
 msgstr ""
 
@@ -176,12 +176,12 @@ msgid "${field/title}"
 msgstr ""
 
 #: ../ui/ical/weekly_view.xml.en:36
-msgctxt "th"
+msgctxt "table cell"
 msgid "${header/header}"
 msgstr ""
 
 #: ../wiki/ui/help.xml.en:8
-msgctxt "td"
+msgctxt "table cell"
 msgid "${help_html}"
 msgstr ""
 
@@ -207,12 +207,12 @@ msgid "${item/name}"
 msgstr ""
 
 #: ../ui/folder/rename.xml.en:12
-msgctxt "td"
+msgctxt "table cell"
 msgid "${item/path}"
 msgstr ""
 
 #: ../ui/html/addlink.xml.en:76
-msgctxt "link to"
+msgctxt "link"
 msgid "${item/short_title}"
 msgstr ""
 
@@ -228,7 +228,7 @@ msgid "${item/title}"
 msgstr ""
 
 #: ../ui/generic/menu.xml.en:12
-msgctxt "link to"
+msgctxt "link"
 msgid "${item/title}"
 msgstr ""
 
@@ -258,7 +258,7 @@ msgid "${item/value}"
 msgstr ""
 
 #: ../ui/website/edit_languages.xml.en:28
-msgctxt "td"
+msgctxt "table cell"
 msgid "${language/code}"
 msgstr ""
 
@@ -269,7 +269,7 @@ msgid "${language/name}"
 msgstr ""
 
 #: ../ui/website/edit_languages.xml.en:27
-msgctxt "td"
+msgctxt "table cell"
 msgid "${language/name}"
 msgstr ""
 
@@ -289,7 +289,7 @@ msgid "${location}"
 msgstr ""
 
 #: ../ui/aruni/template.xhtml.en:56
-msgctxt "td"
+msgctxt "table cell"
 msgid "${menu}"
 msgstr ""
 
@@ -363,17 +363,17 @@ msgid "${required_msg}"
 msgstr ""
 
 #: ../ui/file/history.xml.en:19
-msgctxt "td"
+msgctxt "table cell"
 msgid "${revision/date}"
 msgstr ""
 
 #: ../ui/file/history.xml.en:20
-msgctxt "td"
+msgctxt "table cell"
 msgid "${revision/size}"
 msgstr ""
 
 #: ../ui/file/history.xml.en:18
-msgctxt "td"
+msgctxt "table cell"
 msgid "${revision/username}"
 msgstr ""
 
@@ -392,47 +392,47 @@ msgid "${root_title}: ${here_title}"
 msgstr ""
 
 #: ../tracker/ui/issue_history.xml.en:36
-msgctxt "td"
+msgctxt "table cell"
 msgid "${row/assigned_to}"
 msgstr ""
 
 #: ../tracker/ui/issue_history.xml.en:39
-msgctxt "td"
+msgctxt "table cell"
 msgid "${row/cc_list}"
 msgstr ""
 
 #: ../tracker/ui/issue_history.xml.en:46
-msgctxt "td"
+msgctxt "table cell"
 msgid "${row/comment}"
 msgstr ""
 
 #: ../tracker/ui/issue_history.xml.en:12
-msgctxt "td"
+msgctxt "table cell"
 msgid "${row/datetime}"
 msgstr ""
 
 #: ../tracker/ui/issue_history.xml.en:42
-msgctxt "link to"
+msgctxt "link"
 msgid "${row/file}"
 msgstr ""
 
 #: ../tracker/ui/issue_history.xml.en:30
-msgctxt "td"
+msgctxt "table cell"
 msgid "${row/module}"
 msgstr ""
 
 #: ../tracker/ui/issue_history.xml.en:33
-msgctxt "td"
+msgctxt "table cell"
 msgid "${row/priority}"
 msgstr ""
 
 #: ../ui/ical/weekly_view.xml.en:42
-msgctxt "th"
+msgctxt "table cell"
 msgid "${row/start}-${row/end}"
 msgstr ""
 
 #: ../tracker/ui/issue_history.xml.en:27
-msgctxt "td"
+msgctxt "table cell"
 msgid "${row/state}"
 msgstr ""
 
@@ -442,22 +442,22 @@ msgid "${row/title_or_name}"
 msgstr ""
 
 #: ../tracker/ui/issue_history.xml.en:18
-msgctxt "td"
+msgctxt "table cell"
 msgid "${row/title}"
 msgstr ""
 
 #: ../tracker/ui/issue_history.xml.en:24
-msgctxt "td"
+msgctxt "table cell"
 msgid "${row/type}"
 msgstr ""
 
 #: ../tracker/ui/issue_history.xml.en:13
-msgctxt "td"
+msgctxt "table cell"
 msgid "${row/user}"
 msgstr ""
 
 #: ../tracker/ui/issue_history.xml.en:21
-msgctxt "td"
+msgctxt "table cell"
 msgid "${row/version}"
 msgstr ""
 
@@ -539,12 +539,12 @@ msgid "${traceback}"
 msgstr ""
 
 #: ../ui/WorkflowAware_state.xml.en:54
-msgctxt "td"
+msgctxt "table cell"
 msgid "${transition/comments}"
 msgstr ""
 
 #: ../ui/WorkflowAware_state.xml.en:51
-msgctxt "td"
+msgctxt "table cell"
 msgid "${transition/date}"
 msgstr ""
 
@@ -554,12 +554,12 @@ msgid "${transition/description}"
 msgstr ""
 
 #: ../ui/WorkflowAware_state.xml.en:52
-msgctxt "td"
+msgctxt "table cell"
 msgid "${transition/title}"
 msgstr ""
 
 #: ../ui/WorkflowAware_state.xml.en:53
-msgctxt "td"
+msgctxt "table cell"
 msgid "${transition/user}"
 msgstr ""
 
@@ -588,7 +588,7 @@ msgid "${website/title}"
 msgstr ""
 
 #: ../ui/ical/monthly_view.xml.en:42
-msgctxt "td"
+msgctxt "table cell"
 msgid "${week/month}"
 msgstr ""
 
@@ -616,17 +616,17 @@ msgid "%s %s"
 msgstr ""
 
 #: ../ui/PO_edit.xml.en:17
-msgctxt "link to"
+msgctxt "link"
 msgid "&lt;"
 msgstr ""
 
 #: ../ui/website/broken_links.xml.en:11
-msgctxt "link to"
+msgctxt "link"
 msgid "(${item/n}) <g id='2'>${item/path}</g>"
 msgstr ""
 
 #: ../tracker/ui/edit_resource.xml.en:28 ../tracker/ui/edit_resource.xml.en:45
-msgctxt "td"
+msgctxt "table cell"
 msgid "(HH:MM)"
 msgstr ""
 
@@ -641,7 +641,7 @@ msgid "(To add an event lasting all day long, leave time fields empty.)"
 msgstr ""
 
 #: ../ui/ical/daily_view.xml.en:28
-msgctxt "link to"
+msgctxt "link"
 msgid "+"
 msgstr ""
 
@@ -673,7 +673,7 @@ msgid ":"
 msgstr ""
 
 #: ../ui/ical/monthly_template.xml.en:10
-msgctxt "link to"
+msgctxt "link"
 msgid "<g id='1'> ${event/SUMMARY}</g>  <g id='2'>${event/TIME}</g>"
 msgstr ""
 
@@ -699,33 +699,33 @@ msgid ""
 msgstr ""
 
 #: ../ui/text/externaledit.xml.en:17 ../ui/file/externaledit.xml.en:17
-msgctxt "link to"
+msgctxt "link"
 msgid "<g id='1'>Download External Editor for Windows</g>."
 msgstr ""
 
 #: ../tracker/ui/weekly_template.xml.en:9
-msgctxt "link to"
+msgctxt "link"
 msgid ""
 "<g id='1'>[#${cell/content/issue/number}]</g> ${cell/content/issue/title} "
 "(${cell/content/resource/title})"
 msgstr ""
 
 #: ../tracker/ui/weekly_template_fd.xml.en:8
-msgctxt "link to"
+msgctxt "link"
 msgid ""
 "<g id='1'>[#${event/issue/number}]</g> ${event/issue/title} (${event/"
 "resource/title})"
 msgstr ""
 
 #: ../tracker/ui/monthly_template.xml.en:10
-msgctxt "link to"
+msgctxt "link"
 msgid ""
 "<g id='1'>[#${event/issue/number}]</g> ${event/issue/title} <g id='2'>"
 "${event/TIME}</g> (${event/resource/title})"
 msgstr ""
 
 #: ../ui/aruni/template.xhtml.en:38
-msgctxt "link to"
+msgctxt "link"
 msgid "<g id='10'>Search</g>  <g id='11'>Contact</g>"
 msgstr ""
 
@@ -740,48 +740,48 @@ msgid "<g id='13'>${item/short_title}</g><x id='14'/>  <g id='15'> Select </g>"
 msgstr ""
 
 #: ../ui/aruni/template.xhtml.en:64
-msgctxt "link to"
+msgctxt "link"
 msgid "<g id='14'>About</g>  <g id='15'>Credits</g>  <g id='16'>License</g>"
 msgstr ""
 
 #: ../ui/generic/browse_table.xml.en:20
-msgctxt "link to"
+msgctxt "link"
 msgid "<g id='2'>${column/title}</g>  <g id='3'> ${column/title}</g>"
 msgstr ""
 
 #: ../ui/website/search_table.xml.en:10
-msgctxt "link to"
+msgctxt "link"
 msgid ""
 "<g id='2'>${item/title}</g>  <x id='3'/>  <g id='4'>${item/abspath}</g> - <g "
 "id='5'>${item/type}</g> - <g id='6'>${item/size}</g>"
 msgstr ""
 
 #: ../ui/aruni/languages.xml.en:9
-msgctxt "link to"
+msgctxt "link"
 msgid "<g id='2'>${lang/value}</g>  <g id='3'>|</g>"
 msgstr ""
 
 #: ../forum/ui/Forum_view.xml.en:10
-msgctxt "link to"
+msgctxt "link"
 msgid ""
 "<g id='2'>${thread/title}</g>  <x id='3'/> Posted by <g id='4'>${thread/"
 "author}</g>, the <g id='5'>${thread/date}</g>."
 msgstr ""
 
 #: ../ui/html/addlink.xml.en:41
-msgctxt "link to"
+msgctxt "link"
 msgid ""
 "<g id='2'>Browse</g>  <g id='3'>External Link</g>  <g id='4'>Insert</g>  <g "
 "id='5'>Upload</g>"
 msgstr ""
 
 #: ../ui/html/addimage.xml.en:31
-msgctxt "link to"
+msgctxt "link"
 msgid "<g id='2'>Browse</g>  <g id='3'>Upload</g>"
 msgstr ""
 
 #: ../ui/text/externaledit.xml.en:20 ../ui/file/externaledit.xml.en:20
-msgctxt "link to"
+msgctxt "link"
 msgid "<g id='2'>Download External Editor for Unix and MacOSX</g>."
 msgstr ""
 
@@ -793,27 +793,27 @@ msgid ""
 msgstr ""
 
 #: ../ui/ical/weekly_view.xml.en:13 ../ui/ical/monthly_view.xml.en:13
-msgctxt "link to"
+msgctxt "link"
 msgid "<g id='2'>«</g> ${current_week} <g id='3'>»</g>"
 msgstr ""
 
 #: ../ui/aruni/location.xml.en:11
-msgctxt "link to"
+msgctxt "link"
 msgid "<g id='3'>${item/short_name}</g><g id='4'>/</g>"
 msgstr ""
 
 #: ../ui/user/profile.xml.en:17 ../ui/generic/icons_view.xml.en:16
-msgctxt "link to"
+msgctxt "link"
 msgid "<g id='3'>${item/title}</g>  <x id='4'/> ${item/description}"
 msgstr ""
 
 #: ../future/ui/order_addlink.xml.en:61
-msgctxt "link to"
+msgctxt "link"
 msgid "<g id='4'>${x/short_title}</g> /"
 msgstr ""
 
 #: ../ui/ical/weekly_view.xml.en:18 ../ui/ical/monthly_view.xml.en:18
-msgctxt "link to"
+msgctxt "link"
 msgid "<g id='4'>«</g> ${current_month} <g id='5'>»</g>"
 msgstr ""
 
@@ -826,7 +826,7 @@ msgid ""
 msgstr ""
 
 #: ../ui/PO_edit.xml.en:18
-msgctxt "link to"
+msgctxt "link"
 msgid "<g id='5'>></g>  <g id='6'>>></g>"
 msgstr ""
 
@@ -838,22 +838,22 @@ msgid ""
 msgstr ""
 
 #: ../ui/html/addimage.xml.en:45
-msgctxt "link to"
+msgctxt "link"
 msgid "<g id='6'>${x/short_title}</g> /"
 msgstr ""
 
 #: ../ui/aruni/template.xhtml.en:30
-msgctxt "link to"
+msgctxt "link"
 msgid "<g id='6'>Log in</g>  <g id='7'>Register</g>"
 msgstr ""
 
 #: ../ui/ical/weekly_view.xml.en:23 ../ui/ical/monthly_view.xml.en:23
-msgctxt "link to"
+msgctxt "link"
 msgid "<g id='6'>«</g> ${current_year} <g id='7'>»</g>"
 msgstr ""
 
 #: ../ui/ical/daily_view.xml.en:34
-msgctxt "link to"
+msgctxt "link"
 msgid ""
 "<g id='7'>${col/SUMMARY}</g>  <g id='8'>${col/DTSTART}</g>  <g id='9'>${col/"
 "DTEND}</g>"
@@ -865,12 +865,12 @@ msgid "<g id='7'>${item/short_title}</g><x id='8'/>  <g id='9'>Select</g>"
 msgstr ""
 
 #: ../ui/html/addlink.xml.en:58
-msgctxt "link to"
+msgctxt "link"
 msgid "<g id='8'>${x/short_title}</g> /"
 msgstr ""
 
 #: ../ui/aruni/template.xhtml.en:35
-msgctxt "link to"
+msgctxt "link"
 msgid "<g id='8'>My Profile</g>  <g id='9'>Log out</g>"
 msgstr ""
 
@@ -936,7 +936,7 @@ msgid "Account changed."
 msgstr ""
 
 #: ../ui/WorkflowAware_state.xml.en:44
-msgctxt "th"
+msgctxt "table cell"
 msgid "Action"
 msgstr ""
 
@@ -1112,7 +1112,7 @@ msgid "Attachement:"
 msgstr ""
 
 #: ../tracker/ui/edit_issue.xml.en:163
-msgctxt "td"
+msgctxt "table cell"
 msgid "Attachement:"
 msgstr ""
 
@@ -1156,7 +1156,7 @@ msgid "Browse Content"
 msgstr ""
 
 #: ../ui/html/addlink.xml.en:65
-msgctxt "th"
+msgctxt "table cell"
 msgid "Browse Content"
 msgstr ""
 
@@ -1179,7 +1179,7 @@ msgid "Bug"
 msgstr ""
 
 #: ../ui/WorkflowAware_state.xml.en:45
-msgctxt "th"
+msgctxt "table cell"
 msgid "By"
 msgstr ""
 
@@ -1316,12 +1316,12 @@ msgid "Closed"
 msgstr ""
 
 #: ../ui/website/edit_languages.xml.en:16
-msgctxt "th"
+msgctxt "table cell"
 msgid "Code"
 msgstr ""
 
 #: ../ui/ical/weekly_view.xml.en:10 ../ui/ical/monthly_view.xml.en:10
-msgctxt "link to"
+msgctxt "link"
 msgid "Come back to today"
 msgstr ""
 
@@ -1334,7 +1334,7 @@ msgid "Comment"
 msgstr ""
 
 #: ../tracker/ui/edit_issue.xml.en:150
-msgctxt "td"
+msgctxt "table cell"
 msgid "Comment <g id='35'>${comment/number}</g>"
 msgstr ""
 
@@ -1349,7 +1349,7 @@ msgid "Comment:"
 msgstr ""
 
 #: ../ui/WorkflowAware_state.xml.en:46
-msgctxt "th"
+msgctxt "table cell"
 msgid "Comments"
 msgstr ""
 
@@ -1446,7 +1446,7 @@ msgid "Data updated"
 msgstr ""
 
 #: ../ui/WorkflowAware_state.xml.en:43 ../ui/file/history.xml.en:12
-msgctxt "th"
+msgctxt "table cell"
 msgid "Date"
 msgstr ""
 
@@ -1464,7 +1464,7 @@ msgid "Default"
 msgstr ""
 
 #: ../ui/website/edit_languages.xml.en:17
-msgctxt "th"
+msgctxt "table cell"
 msgid "Default"
 msgstr ""
 
@@ -1486,7 +1486,7 @@ msgid "Description"
 msgstr ""
 
 #: ../ui/ical/edit_event.xml.en:55
-msgctxt "td"
+msgctxt "table cell"
 msgid "Description"
 msgstr ""
 
@@ -1531,7 +1531,7 @@ msgid "Edit"
 msgstr ""
 
 #: ../forum/ui/Thread_view.xml.en:19
-msgctxt "link to"
+msgctxt "link"
 msgid "Edit"
 msgstr ""
 
@@ -1651,7 +1651,7 @@ msgid "End"
 msgstr ""
 
 #: ../ui/ical/edit_event.xml.en:44
-msgctxt "td"
+msgctxt "table cell"
 msgid "End"
 msgstr ""
 
@@ -1778,7 +1778,7 @@ msgid "Forgotten password"
 msgstr ""
 
 #: ../wiki/ui/edit.xml.en:97
-msgctxt "link to"
+msgctxt "link"
 msgid "Format"
 msgstr ""
 
@@ -1810,7 +1810,7 @@ msgid "Friday"
 msgstr ""
 
 #: ../ui/ical/edit_timetables.xml.en:20 ../ui/ical/edit_timetables.xml.en:31
-msgctxt "td"
+msgctxt "table cell"
 msgid "From"
 msgstr ""
 
@@ -1819,7 +1819,7 @@ msgid "Front Page"
 msgstr ""
 
 #: ../ui/ical/weekly_view.xml.en:62
-msgctxt "th"
+msgctxt "table cell"
 msgid "Full day"
 msgstr ""
 
@@ -1946,7 +1946,7 @@ msgid "Hungarian"
 msgstr ""
 
 #: ../ui/base/login.xml.en:18
-msgctxt "link to"
+msgctxt "link"
 msgid "I forgot my password"
 msgstr ""
 
@@ -2108,7 +2108,7 @@ msgid "License"
 msgstr ""
 
 #: ../ui/ical/edit_event.xml.en:27
-msgctxt "td"
+msgctxt "table cell"
 msgid "Location"
 msgstr ""
 
@@ -2180,7 +2180,7 @@ msgid "Message"
 msgstr ""
 
 #: ../ui/PO_edit.xml.en:12
-msgctxt "th"
+msgctxt "table cell"
 msgid ""
 "Message ${messages_index} / ${messages_total} <x id='2'/>  <g id='3'>&lt;&lt;"
 "</g>"
@@ -2270,7 +2270,7 @@ msgid "Name"
 msgstr ""
 
 #: ../ui/website/edit_languages.xml.en:15
-msgctxt "th"
+msgctxt "table cell"
 msgid "Name"
 msgstr ""
 
@@ -2830,7 +2830,7 @@ msgid "Resource"
 msgstr ""
 
 #: ../ui/ical/edit_event.xml.en:12
-msgctxt "td"
+msgctxt "table cell"
 msgid "Resource"
 msgstr ""
 
@@ -3004,7 +3004,7 @@ msgid "Select All"
 msgstr ""
 
 #: ../ui/html/addlink.xml.en:66 ../future/ui/order_addlink.xml.en:69
-msgctxt "th"
+msgctxt "table cell"
 msgid "Select Resource"
 msgstr ""
 
@@ -3038,7 +3038,7 @@ msgid "Size"
 msgstr ""
 
 #: ../ui/file/history.xml.en:13
-msgctxt "th"
+msgctxt "table cell"
 msgid "Size (bytes)"
 msgstr ""
 
@@ -3069,7 +3069,7 @@ msgid "Stability Issue"
 msgstr ""
 
 #: ../ui/ical/edit_event.xml.en:33
-msgctxt "td"
+msgctxt "table cell"
 msgid "Start"
 msgstr ""
 
@@ -3102,7 +3102,7 @@ msgid "State:"
 msgstr ""
 
 #: ../ui/ical/edit_event.xml.en:63
-msgctxt "td"
+msgctxt "table cell"
 msgid "Status"
 msgstr ""
 
@@ -3130,7 +3130,7 @@ msgid "Stored Searches"
 msgstr ""
 
 #: ../ui/ical/edit_event.xml.en:21
-msgctxt "td"
+msgctxt "table cell"
 msgid "Summary"
 msgstr ""
 
@@ -3440,7 +3440,7 @@ msgid "Transition done."
 msgstr ""
 
 #: ../ui/PO_edit.xml.en:28
-msgctxt "th"
+msgctxt "table cell"
 msgid "Translation"
 msgstr ""
 
@@ -3574,7 +3574,7 @@ msgid "User"
 msgstr ""
 
 #: ../ui/file/history.xml.en:11
-msgctxt "th"
+msgctxt "table cell"
 msgid "User"
 msgstr ""
 
@@ -3734,7 +3734,7 @@ msgid "Yes"
 msgstr ""
 
 #: ../ui/website/edit_languages.xml.en:30
-msgctxt "td"
+msgctxt "table cell"
 msgid "Yes"
 msgstr ""
 
@@ -3839,7 +3839,7 @@ msgid "Zoom Out"
 msgstr ""
 
 #: ../tracker/ui/edit_issue.xml.en:154
-msgctxt "td"
+msgctxt "table cell"
 msgid "[ <g id='36'> Reply </g>]"
 msgstr ""
 
@@ -3853,7 +3853,7 @@ msgid "[%s]"
 msgstr ""
 
 #: ../tracker/ui/search.xml.en:45
-msgctxt "td"
+msgctxt "table cell"
 msgid "days ago"
 msgstr ""
 
@@ -3907,7 +3907,7 @@ msgid "the Rich Text Editor is unavailable.)"
 msgstr ""
 
 #: ../ui/ical/edit_timetables.xml.en:24 ../ui/ical/edit_timetables.xml.en:35
-msgctxt "td"
+msgctxt "table cell"
 msgid "to"
 msgstr ""
 
@@ -3927,6 +3927,6 @@ msgid ""
 msgstr ""
 
 #: ../ui/folder/rename.xml.en:15
-msgctxt "td"
+msgctxt "table cell"
 msgid "⇒ ${item/parent_path}"
 msgstr ""

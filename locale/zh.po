@@ -3,7 +3,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: zh\n"
-"POT-Creation-Date: 2008-12-05 17:12+CET\n"
+"POT-Creation-Date: 2008-12-05 18:12+CET\n"
 "PO-Revision-Date: 2007-10-30 17:58+0100\n"
 "Last-Translator: Zhouli <zhouli@in-girum.net>\n"
 "Language-Team:  <zh@li.org>\n"
@@ -80,13 +80,13 @@ msgstr "名称"
 
 #: ../ui/aruni/template.xhtml.en:53
 #, fuzzy
-msgctxt "td"
+msgctxt "table cell"
 msgid "${body}"
 msgstr "名称"
 
 #: ../ui/ical/daily_view.xml.en:25
 #, fuzzy
-msgctxt "link to"
+msgctxt "link"
 msgid "${calendar/name}"
 msgstr "物件被更名"
 
@@ -104,13 +104,13 @@ msgstr "名称"
 
 #: ../ui/folder/browse_image.xml.en:28
 #, fuzzy
-msgctxt "link to"
+msgctxt "link"
 msgid "${column/title}"
 msgstr "名称"
 
 #: ../ui/generic/browse_table.xml.en:39
 #, fuzzy
-msgctxt "link to"
+msgctxt "link"
 msgid "${column/value}"
 msgstr "名称"
 
@@ -122,19 +122,19 @@ msgstr "名称"
 
 #: ../tracker/ui/edit_issue.xml.en:152
 #, fuzzy
-msgctxt "td"
+msgctxt "table cell"
 msgid "${comment/datetime}"
 msgstr "用户资料列单"
 
 #: ../tracker/ui/edit_issue.xml.en:163
 #, fuzzy
-msgctxt "link to"
+msgctxt "link"
 msgid "${comment/file}"
 msgstr "名称"
 
 #: ../tracker/ui/edit_issue.xml.en:151
 #, fuzzy
-msgctxt "td"
+msgctxt "table cell"
 msgid "${comment/user}"
 msgstr "名称"
 
@@ -182,7 +182,7 @@ msgstr "名称"
 
 #: ../ui/user/tasks.xml.en:17
 #, fuzzy
-msgctxt "link to"
+msgctxt "link"
 msgid "${doc/title}"
 msgstr "名称"
 
@@ -206,14 +206,15 @@ msgstr "名称"
 
 #: ../ui/ical/weekly_view.xml.en:36
 #, fuzzy
-msgctxt "th"
+msgctxt "table cell"
 msgid "${header/header}"
 msgstr "用户资料列单"
 
 #: ../wiki/ui/help.xml.en:8
-msgctxt "td"
+#, fuzzy
+msgctxt "table cell"
 msgid "${help_html}"
-msgstr ""
+msgstr "新文件夹"
 
 #: ../wiki/ui/help.xml.en:11
 #, fuzzy
@@ -242,13 +243,13 @@ msgstr "名称"
 
 #: ../ui/folder/rename.xml.en:12
 #, fuzzy
-msgctxt "td"
+msgctxt "table cell"
 msgid "${item/path}"
 msgstr "名称"
 
 #: ../ui/html/addlink.xml.en:76
 #, fuzzy
-msgctxt "link to"
+msgctxt "link"
 msgid "${item/short_title}"
 msgstr "名称"
 
@@ -267,7 +268,7 @@ msgstr "名称"
 
 #: ../ui/generic/menu.xml.en:12
 #, fuzzy
-msgctxt "link to"
+msgctxt "link"
 msgid "${item/title}"
 msgstr "名称"
 
@@ -300,7 +301,7 @@ msgstr "名称"
 
 #: ../ui/website/edit_languages.xml.en:28
 #, fuzzy
-msgctxt "td"
+msgctxt "table cell"
 msgid "${language/code}"
 msgstr "语言"
 
@@ -313,7 +314,7 @@ msgstr "语言"
 
 #: ../ui/website/edit_languages.xml.en:27
 #, fuzzy
-msgctxt "td"
+msgctxt "table cell"
 msgid "${language/name}"
 msgstr "语言"
 
@@ -336,7 +337,7 @@ msgstr "登录"
 
 #: ../ui/aruni/template.xhtml.en:56
 #, fuzzy
-msgctxt "td"
+msgctxt "table cell"
 msgid "${menu}"
 msgstr "物件被更名"
 
@@ -423,19 +424,19 @@ msgstr ""
 
 #: ../ui/file/history.xml.en:19
 #, fuzzy
-msgctxt "td"
+msgctxt "table cell"
 msgid "${revision/date}"
 msgstr "用户资料列单"
 
 #: ../ui/file/history.xml.en:20
 #, fuzzy
-msgctxt "td"
+msgctxt "table cell"
 msgid "${revision/size}"
 msgstr "用户资料列单"
 
 #: ../ui/file/history.xml.en:18
 #, fuzzy
-msgctxt "td"
+msgctxt "table cell"
 msgid "${revision/username}"
 msgstr "物件被更名"
 
@@ -456,53 +457,56 @@ msgid "${root_title}: ${here_title}"
 msgstr ""
 
 #: ../tracker/ui/issue_history.xml.en:36
-msgctxt "td"
+#, fuzzy
+msgctxt "table cell"
 msgid "${row/assigned_to}"
-msgstr ""
+msgstr "名称"
 
 #: ../tracker/ui/issue_history.xml.en:39
 #, fuzzy
-msgctxt "td"
+msgctxt "table cell"
 msgid "${row/cc_list}"
 msgstr "名称"
 
 #: ../tracker/ui/issue_history.xml.en:46
 #, fuzzy
-msgctxt "td"
+msgctxt "table cell"
 msgid "${row/comment}"
 msgstr "名称"
 
 #: ../tracker/ui/issue_history.xml.en:12
 #, fuzzy
-msgctxt "td"
+msgctxt "table cell"
 msgid "${row/datetime}"
 msgstr "用户资料列单"
 
 #: ../tracker/ui/issue_history.xml.en:42
 #, fuzzy
-msgctxt "link to"
+msgctxt "link"
 msgid "${row/file}"
 msgstr "名称"
 
 #: ../tracker/ui/issue_history.xml.en:30
 #, fuzzy
-msgctxt "td"
+msgctxt "table cell"
 msgid "${row/module}"
 msgstr "物件被更名"
 
 #: ../tracker/ui/issue_history.xml.en:33
-msgctxt "td"
+#, fuzzy
+msgctxt "table cell"
 msgid "${row/priority}"
-msgstr ""
+msgstr "名称"
 
 #: ../ui/ical/weekly_view.xml.en:42
-msgctxt "th"
+#, fuzzy
+msgctxt "table cell"
 msgid "${row/start}-${row/end}"
-msgstr ""
+msgstr "名称"
 
 #: ../tracker/ui/issue_history.xml.en:27
 #, fuzzy
-msgctxt "td"
+msgctxt "table cell"
 msgid "${row/state}"
 msgstr "名称"
 
@@ -514,26 +518,27 @@ msgstr "名称"
 
 #: ../tracker/ui/issue_history.xml.en:18
 #, fuzzy
-msgctxt "td"
+msgctxt "table cell"
 msgid "${row/title}"
 msgstr "名称"
 
 #: ../tracker/ui/issue_history.xml.en:24
 #, fuzzy
-msgctxt "td"
+msgctxt "table cell"
 msgid "${row/type}"
 msgstr "名称"
 
 #: ../tracker/ui/issue_history.xml.en:13
 #, fuzzy
-msgctxt "td"
+msgctxt "table cell"
 msgid "${row/user}"
 msgstr "名称"
 
 #: ../tracker/ui/issue_history.xml.en:21
-msgctxt "td"
+#, fuzzy
+msgctxt "table cell"
 msgid "${row/version}"
-msgstr ""
+msgstr "名称"
 
 #: ../forum/ui/Thread_view.xml.en:42
 #, fuzzy
@@ -626,13 +631,13 @@ msgstr "名称"
 
 #: ../ui/WorkflowAware_state.xml.en:54
 #, fuzzy
-msgctxt "td"
+msgctxt "table cell"
 msgid "${transition/comments}"
 msgstr "用户资料列单"
 
 #: ../ui/WorkflowAware_state.xml.en:51
 #, fuzzy
-msgctxt "td"
+msgctxt "table cell"
 msgid "${transition/date}"
 msgstr "用户资料列单"
 
@@ -644,13 +649,13 @@ msgstr "用户资料列单"
 
 #: ../ui/WorkflowAware_state.xml.en:52
 #, fuzzy
-msgctxt "td"
+msgctxt "table cell"
 msgid "${transition/title}"
 msgstr "用户资料列单"
 
 #: ../ui/WorkflowAware_state.xml.en:53
 #, fuzzy
-msgctxt "td"
+msgctxt "table cell"
 msgid "${transition/user}"
 msgstr "用户资料列单"
 
@@ -684,7 +689,7 @@ msgid "${website/title}"
 msgstr "名称"
 
 #: ../ui/ical/monthly_view.xml.en:42
-msgctxt "td"
+msgctxt "table cell"
 msgid "${week/month}"
 msgstr ""
 
@@ -714,17 +719,17 @@ msgid "%s %s"
 msgstr ""
 
 #: ../ui/PO_edit.xml.en:17
-msgctxt "link to"
+msgctxt "link"
 msgid "&lt;"
 msgstr ""
 
 #: ../ui/website/broken_links.xml.en:11
-msgctxt "link to"
+msgctxt "link"
 msgid "(${item/n}) <g id='2'>${item/path}</g>"
 msgstr ""
 
 #: ../tracker/ui/edit_resource.xml.en:28 ../tracker/ui/edit_resource.xml.en:45
-msgctxt "td"
+msgctxt "table cell"
 msgid "(HH:MM)"
 msgstr ""
 
@@ -739,7 +744,7 @@ msgid "(To add an event lasting all day long, leave time fields empty.)"
 msgstr ""
 
 #: ../ui/ical/daily_view.xml.en:28
-msgctxt "link to"
+msgctxt "link"
 msgid "+"
 msgstr ""
 
@@ -771,7 +776,7 @@ msgid ":"
 msgstr ""
 
 #: ../ui/ical/monthly_template.xml.en:10
-msgctxt "link to"
+msgctxt "link"
 msgid "<g id='1'> ${event/SUMMARY}</g>  <g id='2'>${event/TIME}</g>"
 msgstr ""
 
@@ -797,33 +802,33 @@ msgid ""
 msgstr ""
 
 #: ../ui/text/externaledit.xml.en:17 ../ui/file/externaledit.xml.en:17
-msgctxt "link to"
+msgctxt "link"
 msgid "<g id='1'>Download External Editor for Windows</g>."
 msgstr ""
 
 #: ../tracker/ui/weekly_template.xml.en:9
-msgctxt "link to"
+msgctxt "link"
 msgid ""
 "<g id='1'>[#${cell/content/issue/number}]</g> ${cell/content/issue/title} "
 "(${cell/content/resource/title})"
 msgstr ""
 
 #: ../tracker/ui/weekly_template_fd.xml.en:8
-msgctxt "link to"
+msgctxt "link"
 msgid ""
 "<g id='1'>[#${event/issue/number}]</g> ${event/issue/title} (${event/"
 "resource/title})"
 msgstr ""
 
 #: ../tracker/ui/monthly_template.xml.en:10
-msgctxt "link to"
+msgctxt "link"
 msgid ""
 "<g id='1'>[#${event/issue/number}]</g> ${event/issue/title} <g id='2'>"
 "${event/TIME}</g> (${event/resource/title})"
 msgstr ""
 
 #: ../ui/aruni/template.xhtml.en:38
-msgctxt "link to"
+msgctxt "link"
 msgid "<g id='10'>Search</g>  <g id='11'>Contact</g>"
 msgstr ""
 
@@ -838,48 +843,48 @@ msgid "<g id='13'>${item/short_title}</g><x id='14'/>  <g id='15'> Select </g>"
 msgstr ""
 
 #: ../ui/aruni/template.xhtml.en:64
-msgctxt "link to"
+msgctxt "link"
 msgid "<g id='14'>About</g>  <g id='15'>Credits</g>  <g id='16'>License</g>"
 msgstr ""
 
 #: ../ui/generic/browse_table.xml.en:20
-msgctxt "link to"
+msgctxt "link"
 msgid "<g id='2'>${column/title}</g>  <g id='3'> ${column/title}</g>"
 msgstr ""
 
 #: ../ui/website/search_table.xml.en:10
-msgctxt "link to"
+msgctxt "link"
 msgid ""
 "<g id='2'>${item/title}</g>  <x id='3'/>  <g id='4'>${item/abspath}</g> - <g "
 "id='5'>${item/type}</g> - <g id='6'>${item/size}</g>"
 msgstr ""
 
 #: ../ui/aruni/languages.xml.en:9
-msgctxt "link to"
+msgctxt "link"
 msgid "<g id='2'>${lang/value}</g>  <g id='3'>|</g>"
 msgstr ""
 
 #: ../forum/ui/Forum_view.xml.en:10
-msgctxt "link to"
+msgctxt "link"
 msgid ""
 "<g id='2'>${thread/title}</g>  <x id='3'/> Posted by <g id='4'>${thread/"
 "author}</g>, the <g id='5'>${thread/date}</g>."
 msgstr ""
 
 #: ../ui/html/addlink.xml.en:41
-msgctxt "link to"
+msgctxt "link"
 msgid ""
 "<g id='2'>Browse</g>  <g id='3'>External Link</g>  <g id='4'>Insert</g>  <g "
 "id='5'>Upload</g>"
 msgstr ""
 
 #: ../ui/html/addimage.xml.en:31
-msgctxt "link to"
+msgctxt "link"
 msgid "<g id='2'>Browse</g>  <g id='3'>Upload</g>"
 msgstr ""
 
 #: ../ui/text/externaledit.xml.en:20 ../ui/file/externaledit.xml.en:20
-msgctxt "link to"
+msgctxt "link"
 msgid "<g id='2'>Download External Editor for Unix and MacOSX</g>."
 msgstr ""
 
@@ -891,27 +896,27 @@ msgid ""
 msgstr ""
 
 #: ../ui/ical/weekly_view.xml.en:13 ../ui/ical/monthly_view.xml.en:13
-msgctxt "link to"
+msgctxt "link"
 msgid "<g id='2'>«</g> ${current_week} <g id='3'>»</g>"
 msgstr ""
 
 #: ../ui/aruni/location.xml.en:11
-msgctxt "link to"
+msgctxt "link"
 msgid "<g id='3'>${item/short_name}</g><g id='4'>/</g>"
 msgstr ""
 
 #: ../ui/user/profile.xml.en:17 ../ui/generic/icons_view.xml.en:16
-msgctxt "link to"
+msgctxt "link"
 msgid "<g id='3'>${item/title}</g>  <x id='4'/> ${item/description}"
 msgstr ""
 
 #: ../future/ui/order_addlink.xml.en:61
-msgctxt "link to"
+msgctxt "link"
 msgid "<g id='4'>${x/short_title}</g> /"
 msgstr ""
 
 #: ../ui/ical/weekly_view.xml.en:18 ../ui/ical/monthly_view.xml.en:18
-msgctxt "link to"
+msgctxt "link"
 msgid "<g id='4'>«</g> ${current_month} <g id='5'>»</g>"
 msgstr ""
 
@@ -924,7 +929,7 @@ msgid ""
 msgstr ""
 
 #: ../ui/PO_edit.xml.en:18
-msgctxt "link to"
+msgctxt "link"
 msgid "<g id='5'>></g>  <g id='6'>>></g>"
 msgstr ""
 
@@ -936,22 +941,22 @@ msgid ""
 msgstr ""
 
 #: ../ui/html/addimage.xml.en:45
-msgctxt "link to"
+msgctxt "link"
 msgid "<g id='6'>${x/short_title}</g> /"
 msgstr ""
 
 #: ../ui/aruni/template.xhtml.en:30
-msgctxt "link to"
+msgctxt "link"
 msgid "<g id='6'>Log in</g>  <g id='7'>Register</g>"
 msgstr ""
 
 #: ../ui/ical/weekly_view.xml.en:23 ../ui/ical/monthly_view.xml.en:23
-msgctxt "link to"
+msgctxt "link"
 msgid "<g id='6'>«</g> ${current_year} <g id='7'>»</g>"
 msgstr ""
 
 #: ../ui/ical/daily_view.xml.en:34
-msgctxt "link to"
+msgctxt "link"
 msgid ""
 "<g id='7'>${col/SUMMARY}</g>  <g id='8'>${col/DTSTART}</g>  <g id='9'>${col/"
 "DTEND}</g>"
@@ -963,12 +968,12 @@ msgid "<g id='7'>${item/short_title}</g><x id='8'/>  <g id='9'>Select</g>"
 msgstr ""
 
 #: ../ui/html/addlink.xml.en:58
-msgctxt "link to"
+msgctxt "link"
 msgid "<g id='8'>${x/short_title}</g> /"
 msgstr ""
 
 #: ../ui/aruni/template.xhtml.en:35
-msgctxt "link to"
+msgctxt "link"
 msgid "<g id='8'>My Profile</g>  <g id='9'>Log out</g>"
 msgstr ""
 
@@ -1038,7 +1043,7 @@ msgstr "用户资料被变更."
 
 #: ../ui/WorkflowAware_state.xml.en:44
 #, fuzzy
-msgctxt "th"
+msgctxt "table cell"
 msgid "Action"
 msgstr "登录"
 
@@ -1231,9 +1236,10 @@ msgid "Attachement:"
 msgstr ""
 
 #: ../tracker/ui/edit_issue.xml.en:163
-msgctxt "td"
+#, fuzzy
+msgctxt "table cell"
 msgid "Attachement:"
-msgstr ""
+msgstr "新文件"
 
 #: ../calendar_views.py:50
 msgid "August"
@@ -1280,7 +1286,7 @@ msgstr "浏览"
 
 #: ../ui/html/addlink.xml.en:65
 #, fuzzy
-msgctxt "th"
+msgctxt "table cell"
 msgid "Browse Content"
 msgstr "浏览"
 
@@ -1307,7 +1313,7 @@ msgstr ""
 
 #: ../ui/WorkflowAware_state.xml.en:45
 #, fuzzy
-msgctxt "th"
+msgctxt "table cell"
 msgid "By"
 msgstr "正文"
 
@@ -1462,12 +1468,12 @@ msgstr "编码"
 
 #: ../ui/website/edit_languages.xml.en:16
 #, fuzzy
-msgctxt "th"
+msgctxt "table cell"
 msgid "Code"
 msgstr "编码"
 
 #: ../ui/ical/weekly_view.xml.en:10 ../ui/ical/monthly_view.xml.en:10
-msgctxt "link to"
+msgctxt "link"
 msgid "Come back to today"
 msgstr ""
 
@@ -1481,7 +1487,7 @@ msgid "Comment"
 msgstr "新文件"
 
 #: ../tracker/ui/edit_issue.xml.en:150
-msgctxt "td"
+msgctxt "table cell"
 msgid "Comment <g id='35'>${comment/number}</g>"
 msgstr ""
 
@@ -1499,7 +1505,7 @@ msgstr "新文件"
 
 #: ../ui/WorkflowAware_state.xml.en:46
 #, fuzzy
-msgctxt "th"
+msgctxt "table cell"
 msgid "Comments"
 msgstr "新文件"
 
@@ -1603,7 +1609,7 @@ msgstr "文件被上载."
 
 #: ../ui/WorkflowAware_state.xml.en:43 ../ui/file/history.xml.en:12
 #, fuzzy
-msgctxt "th"
+msgctxt "table cell"
 msgid "Date"
 msgstr "日期"
 
@@ -1624,7 +1630,7 @@ msgstr "设置"
 
 #: ../ui/website/edit_languages.xml.en:17
 #, fuzzy
-msgctxt "th"
+msgctxt "table cell"
 msgid "Default"
 msgstr "设置"
 
@@ -1647,7 +1653,7 @@ msgstr ""
 
 #: ../ui/ical/edit_event.xml.en:55
 #, fuzzy
-msgctxt "td"
+msgctxt "table cell"
 msgid "Description"
 msgstr "名称"
 
@@ -1699,7 +1705,7 @@ msgstr "编辑"
 
 #: ../forum/ui/Thread_view.xml.en:19
 #, fuzzy
-msgctxt "link to"
+msgctxt "link"
 msgid "Edit"
 msgstr "编辑"
 
@@ -1836,7 +1842,7 @@ msgid "End"
 msgstr ""
 
 #: ../ui/ical/edit_event.xml.en:44
-msgctxt "td"
+msgctxt "table cell"
 msgid "End"
 msgstr ""
 
@@ -1977,7 +1983,7 @@ msgstr "改变内设"
 
 #: ../wiki/ui/edit.xml.en:97
 #, fuzzy
-msgctxt "link to"
+msgctxt "link"
 msgid "Format"
 msgstr "格式"
 
@@ -2014,7 +2020,7 @@ msgstr ""
 
 #: ../ui/ical/edit_timetables.xml.en:20 ../ui/ical/edit_timetables.xml.en:31
 #, fuzzy
-msgctxt "td"
+msgctxt "table cell"
 msgid "From"
 msgstr "格式"
 
@@ -2023,7 +2029,7 @@ msgid "Front Page"
 msgstr ""
 
 #: ../ui/ical/weekly_view.xml.en:62
-msgctxt "th"
+msgctxt "table cell"
 msgid "Full day"
 msgstr ""
 
@@ -2155,7 +2161,7 @@ msgstr "匈牙利语"
 
 #: ../ui/base/login.xml.en:18
 #, fuzzy
-msgctxt "link to"
+msgctxt "link"
 msgid "I forgot my password"
 msgstr "改变内设"
 
@@ -2329,7 +2335,7 @@ msgstr "许可证"
 
 #: ../ui/ical/edit_event.xml.en:27
 #, fuzzy
-msgctxt "td"
+msgctxt "table cell"
 msgid "Location"
 msgstr "登录"
 
@@ -2407,7 +2413,7 @@ msgid "Message"
 msgstr "信息"
 
 #: ../ui/PO_edit.xml.en:12
-msgctxt "th"
+msgctxt "table cell"
 msgid ""
 "Message ${messages_index} / ${messages_total} <x id='2'/>  <g id='3'>&lt;&lt;"
 "</g>"
@@ -2511,7 +2517,7 @@ msgstr "姓名"
 
 #: ../ui/website/edit_languages.xml.en:15
 #, fuzzy
-msgctxt "th"
+msgctxt "table cell"
 msgid "Name"
 msgstr "姓名"
 
@@ -3144,7 +3150,7 @@ msgstr "新文件夹"
 
 #: ../ui/ical/edit_event.xml.en:12
 #, fuzzy
-msgctxt "td"
+msgctxt "table cell"
 msgid "Resource"
 msgstr "新文件夹"
 
@@ -3348,7 +3354,7 @@ msgstr ""
 
 #: ../ui/html/addlink.xml.en:66 ../future/ui/order_addlink.xml.en:69
 #, fuzzy
-msgctxt "th"
+msgctxt "table cell"
 msgid "Select Resource"
 msgstr "新文件夹"
 
@@ -3383,7 +3389,7 @@ msgid "Size"
 msgstr "尺寸"
 
 #: ../ui/file/history.xml.en:13
-msgctxt "th"
+msgctxt "table cell"
 msgid "Size (bytes)"
 msgstr ""
 
@@ -3417,7 +3423,7 @@ msgstr ""
 
 #: ../ui/ical/edit_event.xml.en:33
 #, fuzzy
-msgctxt "td"
+msgctxt "table cell"
 msgid "Start"
 msgstr "状态"
 
@@ -3454,7 +3460,7 @@ msgstr "状态"
 
 #: ../ui/ical/edit_event.xml.en:63
 #, fuzzy
-msgctxt "td"
+msgctxt "table cell"
 msgid "Status"
 msgstr "状态"
 
@@ -3485,7 +3491,7 @@ msgid "Stored Searches"
 msgstr ""
 
 #: ../ui/ical/edit_event.xml.en:21
-msgctxt "td"
+msgctxt "table cell"
 msgid "Summary"
 msgstr ""
 
@@ -3826,7 +3832,7 @@ msgstr ""
 
 #: ../ui/PO_edit.xml.en:28
 #, fuzzy
-msgctxt "th"
+msgctxt "table cell"
 msgid "Translation"
 msgstr "保存翻译件"
 
@@ -3972,7 +3978,7 @@ msgstr "用户"
 
 #: ../ui/file/history.xml.en:11
 #, fuzzy
-msgctxt "th"
+msgctxt "table cell"
 msgid "User"
 msgstr "用户"
 
@@ -4142,7 +4148,7 @@ msgid "Yes"
 msgstr ""
 
 #: ../ui/website/edit_languages.xml.en:30
-msgctxt "td"
+msgctxt "table cell"
 msgid "Yes"
 msgstr ""
 
@@ -4250,7 +4256,7 @@ msgid "Zoom Out"
 msgstr ""
 
 #: ../tracker/ui/edit_issue.xml.en:154
-msgctxt "td"
+msgctxt "table cell"
 msgid "[ <g id='36'> Reply </g>]"
 msgstr ""
 
@@ -4264,7 +4270,7 @@ msgid "[%s]"
 msgstr ""
 
 #: ../tracker/ui/search.xml.en:45
-msgctxt "td"
+msgctxt "table cell"
 msgid "days ago"
 msgstr ""
 
@@ -4322,7 +4328,7 @@ msgid "the Rich Text Editor is unavailable.)"
 msgstr ""
 
 #: ../ui/ical/edit_timetables.xml.en:24 ../ui/ical/edit_timetables.xml.en:35
-msgctxt "td"
+msgctxt "table cell"
 msgid "to"
 msgstr ""
 
@@ -4342,9 +4348,10 @@ msgid ""
 msgstr ""
 
 #: ../ui/folder/rename.xml.en:15
-msgctxt "td"
+#, fuzzy
+msgctxt "table cell"
 msgid "⇒ ${item/parent_path}"
-msgstr ""
+msgstr "名称"
 
 #, fuzzy
 #~ msgid "  State: %s"
@@ -4385,6 +4392,11 @@ msgstr ""
 #~ msgstr "名称"
 
 #, fuzzy
+#~ msgctxt "link to"
+#~ msgid "${column/title}"
+#~ msgstr "名称"
+
+#, fuzzy
 #~ msgid "${contact/title}"
 #~ msgstr "用户资料列单"
 
@@ -4399,6 +4411,16 @@ msgstr ""
 #, fuzzy
 #~ msgid "${issue/title}"
 #~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "link to"
+#~ msgid "${item/title}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "td"
+#~ msgid "${language/name}"
+#~ msgstr "语言"
 
 #, fuzzy
 #~ msgid "${menu/title}"
@@ -4561,6 +4583,11 @@ msgstr ""
 #~ msgid "As List"
 #~ msgstr "目录"
 
+#, fuzzy
+#~ msgctxt "th"
+#~ msgid "Browse Content"
+#~ msgstr "浏览"
+
 #~ msgid "Browse-Directories"
 #~ msgstr "浏览"
 
@@ -4651,6 +4678,11 @@ msgstr ""
 #~ msgstr "简易文件"
 
 #, fuzzy
+#~ msgctxt "th"
+#~ msgid "Default"
+#~ msgstr "设置"
+
+#, fuzzy
 #~ msgid "Delete"
 #~ msgstr "设置"
 
@@ -4695,6 +4727,11 @@ msgstr ""
 
 #~ msgid "Documents are where the data is stored"
 #~ msgstr "文件在数据存储处."
+
+#, fuzzy
+#~ msgctxt "link to"
+#~ msgid "Edit"
+#~ msgstr "编辑"
 
 #, fuzzy
 #~ msgctxt "input[value]"
@@ -4843,6 +4880,11 @@ msgstr ""
 #, fuzzy
 #~ msgid "My orders"
 #~ msgstr "文件夹"
+
+#, fuzzy
+#~ msgctxt "th"
+#~ msgid "Name"
+#~ msgstr "姓名"
 
 #, fuzzy
 #~ msgid "Name:"
@@ -5059,6 +5101,11 @@ msgstr ""
 #~ msgctxt "input[value]"
 #~ msgid "Replace"
 #~ msgstr "查阅"
+
+#, fuzzy
+#~ msgctxt "td"
+#~ msgid "Resource"
+#~ msgstr "新文件夹"
 
 #, fuzzy
 #~ msgid "Reviewers"
@@ -5279,6 +5326,11 @@ msgstr ""
 #, fuzzy
 #~ msgid "Upload from an ical file"
 #~ msgstr "上载文件"
+
+#, fuzzy
+#~ msgctxt "th"
+#~ msgid "User"
+#~ msgstr "用户"
 
 #~ msgid "User added"
 #~ msgstr "加入用户"
