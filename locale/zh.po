@@ -231,13 +231,13 @@ msgstr "名称"
 #: ../ui/html/addimage.xml.en:68 ../ui/html/addlink.xml.en:86
 #: ../future/ui/order_addlink.xml.en:77
 #, fuzzy
-msgctxt "img[title]"
+msgctxt "title attribute"
 msgid "${item/item_type}"
 msgstr "名称"
 
 #: ../ui/aruni/location.xml.en:11
 #, fuzzy
-msgctxt "a[title]"
+msgctxt "title attribute"
 msgid "${item/name}"
 msgstr "名称"
 
@@ -251,19 +251,6 @@ msgstr "名称"
 #, fuzzy
 msgctxt "link"
 msgid "${item/short_title}"
-msgstr "名称"
-
-#: ../ui/html/addimage.xml.en:60 ../ui/html/addlink.xml.en:74
-#, fuzzy
-msgctxt "a[title]"
-msgid "${item/title}"
-msgstr "名称"
-
-#: ../ui/html/addimage.xml.en:59 ../ui/html/addimage.xml.en:72
-#: ../ui/html/addlink.xml.en:90 ../future/ui/order_addlink.xml.en:81
-#, fuzzy
-msgctxt "abbr[title]"
-msgid "${item/title}"
 msgstr "名称"
 
 #: ../ui/generic/menu.xml.en:12
@@ -290,6 +277,14 @@ msgstr "名称"
 #: ../tracker/ui/edit_issue.xml.en:115 ../tracker/ui/edit_resource.xml.en:17
 #, fuzzy
 msgctxt "option"
+msgid "${item/title}"
+msgstr "名称"
+
+#: ../ui/html/addimage.xml.en:59 ../ui/html/addimage.xml.en:60
+#: ../ui/html/addimage.xml.en:72 ../ui/html/addlink.xml.en:74
+#: ../ui/html/addlink.xml.en:90 ../future/ui/order_addlink.xml.en:81
+#, fuzzy
+msgctxt "title attribute"
 msgid "${item/title}"
 msgstr "名称"
 
@@ -702,7 +697,7 @@ msgstr "名称"
 #: ../ui/html/addimage.xml.en:45 ../ui/html/addlink.xml.en:58
 #: ../future/ui/order_addlink.xml.en:61
 #, fuzzy
-msgctxt "a[title]"
+msgctxt "title attribute"
 msgid "${x/title}"
 msgstr "名称"
 
@@ -1247,7 +1242,7 @@ msgstr ""
 
 #: ../ui/folder/browse_image.xml.en:38 ../ui/binary/Image_view.xml.en:15
 #, fuzzy
-msgctxt "a[title]"
+msgctxt "title attribute"
 msgid "Back"
 msgstr "卸下"
 
@@ -1271,7 +1266,7 @@ msgstr "正文"
 
 #: ../wiki/ui/edit.xml.en:28
 #, fuzzy
-msgctxt "a[title]"
+msgctxt "title attribute"
 msgid "Bold"
 msgstr "文件夹"
 
@@ -1457,7 +1452,7 @@ msgid "Choose your password"
 msgstr "改变内设"
 
 #: ../ui/folder/browse_image.xml.en:21 ../ui/generic/browse_table.xml.en:15
-msgctxt "input[title]"
+msgctxt "title attribute"
 msgid "Click to select/unselect all rows"
 msgstr ""
 
@@ -1995,7 +1990,7 @@ msgstr "格式"
 
 #: ../wiki/ui/edit.xml.en:193
 #, fuzzy
-msgctxt "span[title]"
+msgctxt "title attribute"
 msgid "Format"
 msgstr "格式"
 
@@ -2053,25 +2048,28 @@ msgid "Go To Issue"
 msgstr "用户"
 
 #: ../ui/PO_edit.xml.en:14
-msgctxt "a[title]"
+#, fuzzy
+msgctxt "title attribute"
 msgid "Go to first message"
-msgstr ""
+msgstr "此处无内容."
 
 #: ../ui/PO_edit.xml.en:19
-msgctxt "a[title]"
+#, fuzzy
+msgctxt "title attribute"
 msgid "Go to last message"
-msgstr ""
+msgstr "此处无内容."
 
 #: ../ui/PO_edit.xml.en:18
 #, fuzzy
-msgctxt "a[title]"
+msgctxt "title attribute"
 msgid "Go to next message"
 msgstr "此处无内容."
 
 #: ../ui/PO_edit.xml.en:16
-msgctxt "a[title]"
+#, fuzzy
+msgctxt "title attribute"
 msgid "Go to previous message"
-msgstr ""
+msgstr "此处无内容."
 
 #: ../access.py:186
 msgid "Grant access to a new user."
@@ -2104,7 +2102,7 @@ msgid "Heading 1"
 msgstr ""
 
 #: ../wiki/ui/edit.xml.en:210
-msgctxt "span[title]"
+msgctxt "title attribute"
 msgid "Heading 1"
 msgstr ""
 
@@ -2114,7 +2112,7 @@ msgid "Heading 2"
 msgstr ""
 
 #: ../wiki/ui/edit.xml.en:218
-msgctxt "span[title]"
+msgctxt "title attribute"
 msgid "Heading 2"
 msgstr ""
 
@@ -2124,7 +2122,7 @@ msgid "Heading 3"
 msgstr ""
 
 #: ../wiki/ui/edit.xml.en:226
-msgctxt "span[title]"
+msgctxt "title attribute"
 msgid "Heading 3"
 msgstr ""
 
@@ -2134,7 +2132,7 @@ msgstr "帮助"
 
 #: ../wiki/ui/edit.xml.en:138
 #, fuzzy
-msgctxt "a[title]"
+msgctxt "title attribute"
 msgid "Help"
 msgstr "帮助"
 
@@ -2203,19 +2201,19 @@ msgstr ""
 
 #: ../wiki/ui/edit.xml.en:69
 #, fuzzy
-msgctxt "a[title]"
+msgctxt "title attribute"
 msgid "Insert image"
 msgstr "新链接"
 
 #: ../wiki/ui/edit.xml.en:62
 #, fuzzy
-msgctxt "a[title]"
+msgctxt "title attribute"
 msgid "Insert link"
 msgstr "新链接"
 
 #: ../wiki/ui/edit.xml.en:79
 #, fuzzy
-msgctxt "a[title]"
+msgctxt "title attribute"
 msgid "Insert table"
 msgstr "新链接"
 
@@ -2257,7 +2255,7 @@ msgstr "意在利语"
 
 #: ../wiki/ui/edit.xml.en:35
 #, fuzzy
-msgctxt "a[title]"
+msgctxt "title attribute"
 msgid "Italic"
 msgstr "意在利语"
 
@@ -2306,7 +2304,7 @@ msgstr "语言被改变."
 
 #: ../wiki/ui/edit.xml.en:130
 #, fuzzy
-msgctxt "a[title]"
+msgctxt "title attribute"
 msgid "Large Edit Text"
 msgstr "简易文件"
 
@@ -2391,7 +2389,7 @@ msgstr ""
 
 #: ../wiki/ui/edit.xml.en:122
 #, fuzzy
-msgctxt "a[title]"
+msgctxt "title attribute"
 msgid "Medium Edit Text"
 msgstr "简易文件"
 
@@ -2564,13 +2562,13 @@ msgstr "新资料被加入."
 msgid "New row added."
 msgstr "新资料被加入."
 
-#: ../ui/generic/browse_batch.xml.en:13 ../ui/binary/Image_view.xml.en:20
-msgctxt "a[title]"
+#: ../ui/user/confirm_registration.xml.en:38
+msgctxt "button"
 msgid "Next"
 msgstr ""
 
-#: ../ui/user/confirm_registration.xml.en:38
-msgctxt "button"
+#: ../ui/generic/browse_batch.xml.en:13 ../ui/binary/Image_view.xml.en:20
+msgctxt "title attribute"
 msgid "Next"
 msgstr ""
 
@@ -2778,7 +2776,7 @@ msgstr "重命名物件"
 
 #: ../wiki/ui/edit.xml.en:52
 #, fuzzy
-msgctxt "a[title]"
+msgctxt "title attribute"
 msgid "Ordered list"
 msgstr "文件夹"
 
@@ -2931,7 +2929,7 @@ msgstr "格式"
 
 #: ../wiki/ui/edit.xml.en:201
 #, fuzzy
-msgctxt "span[title]"
+msgctxt "title attribute"
 msgid "Preformatted"
 msgstr "格式"
 
@@ -2947,7 +2945,7 @@ msgstr "浏览"
 
 #: ../ui/generic/browse_batch.xml.en:11 ../ui/binary/Image_view.xml.en:17
 #, fuzzy
-msgctxt "a[title]"
+msgctxt "title attribute"
 msgid "Previous"
 msgstr "查阅"
 
@@ -3399,7 +3397,7 @@ msgstr ""
 
 #: ../wiki/ui/edit.xml.en:114
 #, fuzzy
-msgctxt "a[title]"
+msgctxt "title attribute"
 msgid "Small Edit Text"
 msgstr "简易文件"
 
@@ -3909,7 +3907,7 @@ msgstr ""
 
 #: ../wiki/ui/edit.xml.en:45
 #, fuzzy
-msgctxt "a[title]"
+msgctxt "title attribute"
 msgid "Unordered list"
 msgstr "目录"
 
@@ -4413,6 +4411,11 @@ msgstr "名称"
 #~ msgstr "名称"
 
 #, fuzzy
+#~ msgctxt "abbr[title]"
+#~ msgid "${item/title}"
+#~ msgstr "名称"
+
+#, fuzzy
 #~ msgctxt "link to"
 #~ msgid "${item/title}"
 #~ msgstr "名称"
@@ -4795,6 +4798,11 @@ msgstr "名称"
 #~ msgid "Folders let to classify other resources."
 #~ msgstr "文件夹用于文件分类."
 
+#, fuzzy
+#~ msgctxt "span[title]"
+#~ msgid "Format"
+#~ msgstr "格式"
+
 #~ msgid "GNU GENERAL PUBLIC LICENSE"
 #~ msgstr "GNU通用公共许可证(GPL)\t"
 
@@ -4812,6 +4820,11 @@ msgstr "名称"
 #, fuzzy
 #~ msgid "Guests"
 #~ msgstr "搜索替代文件夹"
+
+#, fuzzy
+#~ msgctxt "a[title]"
+#~ msgid "Help"
+#~ msgstr "帮助"
 
 #~ msgid "Home"
 #~ msgstr "主页"
@@ -5034,6 +5047,11 @@ msgstr "名称"
 #, fuzzy
 #~ msgid "Post"
 #~ msgstr "粘贴"
+
+#, fuzzy
+#~ msgctxt "span[title]"
+#~ msgid "Preformatted"
+#~ msgstr "格式"
 
 #, fuzzy
 #~ msgid "Presence"

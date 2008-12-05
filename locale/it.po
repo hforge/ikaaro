@@ -236,13 +236,13 @@ msgstr "Contenuti"
 #: ../ui/html/addimage.xml.en:68 ../ui/html/addlink.xml.en:86
 #: ../future/ui/order_addlink.xml.en:77
 #, fuzzy
-msgctxt "img[title]"
+msgctxt "title attribute"
 msgid "${item/item_type}"
 msgstr "Titolo"
 
 #: ../ui/aruni/location.xml.en:11
 #, fuzzy
-msgctxt "a[title]"
+msgctxt "title attribute"
 msgid "${item/name}"
 msgstr "Titolo"
 
@@ -256,19 +256,6 @@ msgstr "Titolo"
 #, fuzzy
 msgctxt "link"
 msgid "${item/short_title}"
-msgstr "Titolo"
-
-#: ../ui/html/addimage.xml.en:60 ../ui/html/addlink.xml.en:74
-#, fuzzy
-msgctxt "a[title]"
-msgid "${item/title}"
-msgstr "Titolo"
-
-#: ../ui/html/addimage.xml.en:59 ../ui/html/addimage.xml.en:72
-#: ../ui/html/addlink.xml.en:90 ../future/ui/order_addlink.xml.en:81
-#, fuzzy
-msgctxt "abbr[title]"
-msgid "${item/title}"
 msgstr "Titolo"
 
 #: ../ui/generic/menu.xml.en:12
@@ -295,6 +282,14 @@ msgstr "Titolo"
 #: ../tracker/ui/edit_issue.xml.en:115 ../tracker/ui/edit_resource.xml.en:17
 #, fuzzy
 msgctxt "option"
+msgid "${item/title}"
+msgstr "Titolo"
+
+#: ../ui/html/addimage.xml.en:59 ../ui/html/addimage.xml.en:60
+#: ../ui/html/addimage.xml.en:72 ../ui/html/addlink.xml.en:74
+#: ../ui/html/addlink.xml.en:90 ../future/ui/order_addlink.xml.en:81
+#, fuzzy
+msgctxt "title attribute"
 msgid "${item/title}"
 msgstr "Titolo"
 
@@ -709,7 +704,7 @@ msgstr "Titolo"
 #: ../ui/html/addimage.xml.en:45 ../ui/html/addlink.xml.en:58
 #: ../future/ui/order_addlink.xml.en:61
 #, fuzzy
-msgctxt "a[title]"
+msgctxt "title attribute"
 msgid "${x/title}"
 msgstr "Titolo"
 
@@ -1262,7 +1257,7 @@ msgstr ""
 
 #: ../ui/folder/browse_image.xml.en:38 ../ui/binary/Image_view.xml.en:15
 #, fuzzy
-msgctxt "a[title]"
+msgctxt "title attribute"
 msgid "Back"
 msgstr "in attesa di pubblicazione"
 
@@ -1288,7 +1283,7 @@ msgstr "Cartella"
 
 #: ../wiki/ui/edit.xml.en:28
 #, fuzzy
-msgctxt "a[title]"
+msgctxt "title attribute"
 msgid "Bold"
 msgstr "Cartella"
 
@@ -1474,7 +1469,7 @@ msgid "Choose your password"
 msgstr "Modifica l'impostazione predefinita"
 
 #: ../ui/folder/browse_image.xml.en:21 ../ui/generic/browse_table.xml.en:15
-msgctxt "input[title]"
+msgctxt "title attribute"
 msgid "Click to select/unselect all rows"
 msgstr ""
 
@@ -2018,7 +2013,7 @@ msgstr "Formato"
 
 #: ../wiki/ui/edit.xml.en:193
 #, fuzzy
-msgctxt "span[title]"
+msgctxt "title attribute"
 msgid "Format"
 msgstr "Formato"
 
@@ -2076,25 +2071,28 @@ msgid "Go To Issue"
 msgstr "Utenti"
 
 #: ../ui/PO_edit.xml.en:14
-msgctxt "a[title]"
+#, fuzzy
+msgctxt "title attribute"
 msgid "Go to first message"
-msgstr ""
+msgstr "Non sono presenti messaggi."
 
 #: ../ui/PO_edit.xml.en:19
-msgctxt "a[title]"
+#, fuzzy
+msgctxt "title attribute"
 msgid "Go to last message"
-msgstr ""
+msgstr "Non sono presenti messaggi."
 
 #: ../ui/PO_edit.xml.en:18
 #, fuzzy
-msgctxt "a[title]"
+msgctxt "title attribute"
 msgid "Go to next message"
 msgstr "Non sono presenti messaggi."
 
 #: ../ui/PO_edit.xml.en:16
-msgctxt "a[title]"
+#, fuzzy
+msgctxt "title attribute"
 msgid "Go to previous message"
-msgstr ""
+msgstr "Non sono presenti messaggi."
 
 #: ../access.py:186
 msgid "Grant access to a new user."
@@ -2131,7 +2129,7 @@ msgstr "in attesa di pubblicazione"
 
 #: ../wiki/ui/edit.xml.en:210
 #, fuzzy
-msgctxt "span[title]"
+msgctxt "title attribute"
 msgid "Heading 1"
 msgstr "in attesa di pubblicazione"
 
@@ -2143,7 +2141,7 @@ msgstr "in attesa di pubblicazione"
 
 #: ../wiki/ui/edit.xml.en:218
 #, fuzzy
-msgctxt "span[title]"
+msgctxt "title attribute"
 msgid "Heading 2"
 msgstr "in attesa di pubblicazione"
 
@@ -2155,7 +2153,7 @@ msgstr "in attesa di pubblicazione"
 
 #: ../wiki/ui/edit.xml.en:226
 #, fuzzy
-msgctxt "span[title]"
+msgctxt "title attribute"
 msgid "Heading 3"
 msgstr "in attesa di pubblicazione"
 
@@ -2165,7 +2163,7 @@ msgstr "Aiuto"
 
 #: ../wiki/ui/edit.xml.en:138
 #, fuzzy
-msgctxt "a[title]"
+msgctxt "title attribute"
 msgid "Help"
 msgstr "Aiuto"
 
@@ -2237,19 +2235,19 @@ msgstr ""
 
 #: ../wiki/ui/edit.xml.en:69
 #, fuzzy
-msgctxt "a[title]"
+msgctxt "title attribute"
 msgid "Insert image"
 msgstr "Nuovo collegamento"
 
 #: ../wiki/ui/edit.xml.en:62
 #, fuzzy
-msgctxt "a[title]"
+msgctxt "title attribute"
 msgid "Insert link"
 msgstr "Nuovo collegamento"
 
 #: ../wiki/ui/edit.xml.en:79
 #, fuzzy
-msgctxt "a[title]"
+msgctxt "title attribute"
 msgid "Insert table"
 msgstr "Nuovo collegamento"
 
@@ -2291,7 +2289,7 @@ msgstr "Italiano"
 
 #: ../wiki/ui/edit.xml.en:35
 #, fuzzy
-msgctxt "a[title]"
+msgctxt "title attribute"
 msgid "Italic"
 msgstr "Italiano"
 
@@ -2341,7 +2339,7 @@ msgstr "Linguaggi rimossi"
 
 #: ../wiki/ui/edit.xml.en:130
 #, fuzzy
-msgctxt "a[title]"
+msgctxt "title attribute"
 msgid "Large Edit Text"
 msgstr "Testo integrale"
 
@@ -2427,7 +2425,7 @@ msgstr ""
 
 #: ../wiki/ui/edit.xml.en:122
 #, fuzzy
-msgctxt "a[title]"
+msgctxt "title attribute"
 msgid "Medium Edit Text"
 msgstr "Testo integrale"
 
@@ -2601,15 +2599,15 @@ msgstr "Aggiunta nuova risorsa"
 msgid "New row added."
 msgstr "Aggiunta nuova risorsa"
 
-#: ../ui/generic/browse_batch.xml.en:13 ../ui/binary/Image_view.xml.en:20
-#, fuzzy
-msgctxt "a[title]"
-msgid "Next"
-msgstr "Testo"
-
 #: ../ui/user/confirm_registration.xml.en:38
 #, fuzzy
 msgctxt "button"
+msgid "Next"
+msgstr "Testo"
+
+#: ../ui/generic/browse_batch.xml.en:13 ../ui/binary/Image_view.xml.en:20
+#, fuzzy
+msgctxt "title attribute"
 msgid "Next"
 msgstr "Testo"
 
@@ -2818,7 +2816,7 @@ msgstr "Rinomina oggetti.."
 
 #: ../wiki/ui/edit.xml.en:52
 #, fuzzy
-msgctxt "a[title]"
+msgctxt "title attribute"
 msgid "Ordered list"
 msgstr "Cartella"
 
@@ -2972,7 +2970,7 @@ msgstr "Formato"
 
 #: ../wiki/ui/edit.xml.en:201
 #, fuzzy
-msgctxt "span[title]"
+msgctxt "title attribute"
 msgid "Preformatted"
 msgstr "Formato"
 
@@ -2987,7 +2985,7 @@ msgstr "Contenuti"
 
 #: ../ui/generic/browse_batch.xml.en:11 ../ui/binary/Image_view.xml.en:17
 #, fuzzy
-msgctxt "a[title]"
+msgctxt "title attribute"
 msgid "Previous"
 msgstr "Gruppi"
 
@@ -3444,7 +3442,7 @@ msgstr ""
 
 #: ../wiki/ui/edit.xml.en:114
 #, fuzzy
-msgctxt "a[title]"
+msgctxt "title attribute"
 msgid "Small Edit Text"
 msgstr "Testo integrale"
 
@@ -3961,7 +3959,7 @@ msgstr ""
 
 #: ../wiki/ui/edit.xml.en:45
 #, fuzzy
-msgctxt "a[title]"
+msgctxt "title attribute"
 msgid "Unordered list"
 msgstr "Lista utenti:"
 
@@ -4495,6 +4493,11 @@ msgstr "Titolo"
 
 #, fuzzy
 #~ msgid "${issue/title}"
+#~ msgstr "Titolo"
+
+#, fuzzy
+#~ msgctxt "abbr[title]"
+#~ msgid "${item/title}"
 #~ msgstr "Titolo"
 
 #, fuzzy
@@ -5487,6 +5490,11 @@ msgstr "Titolo"
 #~ "everyone understands that there is no warranty for this free software."
 
 #, fuzzy
+#~ msgctxt "span[title]"
+#~ msgid "Format"
+#~ msgstr "Formato"
+
+#, fuzzy
 #~ msgid ""
 #~ "Fullname <stl:inline stl:content=\"table/sortcontrol(fullname)\"></stl:"
 #~ "inline>"
@@ -5529,6 +5537,21 @@ msgstr "Titolo"
 #~ msgstr "I documenti HTML permettono di memorizzare testo formattato."
 
 #, fuzzy
+#~ msgctxt "span[title]"
+#~ msgid "Heading 1"
+#~ msgstr "in attesa di pubblicazione"
+
+#, fuzzy
+#~ msgctxt "span[title]"
+#~ msgid "Heading 2"
+#~ msgstr "in attesa di pubblicazione"
+
+#, fuzzy
+#~ msgctxt "span[title]"
+#~ msgid "Heading 3"
+#~ msgstr "in attesa di pubblicazione"
+
+#, fuzzy
 #~ msgid "Heading 4"
 #~ msgstr "in attesa di pubblicazione"
 
@@ -5539,6 +5562,11 @@ msgstr "Titolo"
 #, fuzzy
 #~ msgid "Heading 6"
 #~ msgstr "in attesa di pubblicazione"
+
+#, fuzzy
+#~ msgctxt "a[title]"
+#~ msgid "Help"
+#~ msgstr "Aiuto"
 
 #~ msgid "Here, you can configure your web application."
 #~ msgstr "Da questa posizione puoi configurare l'applicazione."
@@ -6085,6 +6113,11 @@ msgstr "Titolo"
 #, fuzzy
 #~ msgid "Post"
 #~ msgstr "Incolla"
+
+#, fuzzy
+#~ msgctxt "span[title]"
+#~ msgid "Preformatted"
+#~ msgstr "Formato"
 
 #, fuzzy
 #~ msgid "Presence"

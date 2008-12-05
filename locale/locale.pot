@@ -1891,117 +1891,6 @@ msgstr ""
 msgid "small"
 msgstr ""
 
-#: ../ui/aruni/location.xml.en:11
-msgctxt "a[title]"
-msgid "${item/name}"
-msgstr ""
-
-#: ../ui/html/addimage.xml.en:60
-#: ../ui/html/addlink.xml.en:74
-msgctxt "a[title]"
-msgid "${item/title}"
-msgstr ""
-
-#: ../ui/html/addimage.xml.en:45
-#: ../ui/html/addlink.xml.en:58
-#: ../future/ui/order_addlink.xml.en:61
-msgctxt "a[title]"
-msgid "${x/title}"
-msgstr ""
-
-#: ../ui/folder/browse_image.xml.en:38
-#: ../ui/binary/Image_view.xml.en:15
-msgctxt "a[title]"
-msgid "Back"
-msgstr ""
-
-#: ../wiki/ui/edit.xml.en:28
-msgctxt "a[title]"
-msgid "Bold"
-msgstr ""
-
-#: ../ui/PO_edit.xml.en:14
-msgctxt "a[title]"
-msgid "Go to first message"
-msgstr ""
-
-#: ../ui/PO_edit.xml.en:19
-msgctxt "a[title]"
-msgid "Go to last message"
-msgstr ""
-
-#: ../ui/PO_edit.xml.en:18
-msgctxt "a[title]"
-msgid "Go to next message"
-msgstr ""
-
-#: ../ui/PO_edit.xml.en:16
-msgctxt "a[title]"
-msgid "Go to previous message"
-msgstr ""
-
-#: ../wiki/ui/edit.xml.en:138
-msgctxt "a[title]"
-msgid "Help"
-msgstr ""
-
-#: ../wiki/ui/edit.xml.en:69
-msgctxt "a[title]"
-msgid "Insert image"
-msgstr ""
-
-#: ../wiki/ui/edit.xml.en:62
-msgctxt "a[title]"
-msgid "Insert link"
-msgstr ""
-
-#: ../wiki/ui/edit.xml.en:79
-msgctxt "a[title]"
-msgid "Insert table"
-msgstr ""
-
-#: ../wiki/ui/edit.xml.en:35
-msgctxt "a[title]"
-msgid "Italic"
-msgstr ""
-
-#: ../wiki/ui/edit.xml.en:130
-msgctxt "a[title]"
-msgid "Large Edit Text"
-msgstr ""
-
-#: ../wiki/ui/edit.xml.en:122
-msgctxt "a[title]"
-msgid "Medium Edit Text"
-msgstr ""
-
-#: ../ui/generic/browse_batch.xml.en:13
-#: ../ui/binary/Image_view.xml.en:20
-msgctxt "a[title]"
-msgid "Next"
-msgstr ""
-
-#: ../wiki/ui/edit.xml.en:52
-msgctxt "a[title]"
-msgid "Ordered list"
-msgstr ""
-
-#: ../ui/generic/browse_batch.xml.en:11
-#: ../ui/binary/Image_view.xml.en:17
-msgctxt "a[title]"
-msgid "Previous"
-msgstr ""
-
-#: ../wiki/ui/edit.xml.en:114
-msgctxt "a[title]"
-msgid "Small Edit Text"
-msgstr ""
-
-#: ../wiki/ui/edit.xml.en:45
-msgctxt "a[title]"
-msgid "Unordered list"
-msgstr ""
-
 #: ../ui/html/addlink.xml.en:90
 msgctxt "abbr"
 msgid "<g id='12'>${item/short_title}</g><x id='13'/>  <g id='14'> Select </g>"
@@ -2020,14 +1909,6 @@ msgstr ""
 #: ../ui/html/addimage.xml.en:59
 msgctxt "abbr"
 msgid "<g id='9'>${item/short_title}</g><x id='10'/>  <g id='11'>Browse</g>"
-msgstr ""
-
-#: ../ui/html/addimage.xml.en:59
-#: ../ui/html/addimage.xml.en:72
-#: ../ui/html/addlink.xml.en:90
-#: ../future/ui/order_addlink.xml.en:81
-msgctxt "abbr[title]"
-msgid "${item/title}"
 msgstr ""
 
 #: ../ui/aruni/template.xhtml.en:44
@@ -2388,19 +2269,6 @@ msgstr ""
 #: ../ui/html/addimage.xml.en:84
 msgctxt "heading"
 msgid "Upload an image to the current folder and insert it:"
-msgstr ""
-
-#: ../ui/html/addimage.xml.en:68
-#: ../ui/html/addlink.xml.en:86
-#: ../future/ui/order_addlink.xml.en:77
-msgctxt "img[title]"
-msgid "${item/item_type}"
-msgstr ""
-
-#: ../ui/folder/browse_image.xml.en:21
-#: ../ui/generic/browse_table.xml.en:15
-msgctxt "input[title]"
-msgid "Click to select/unselect all rows"
 msgstr ""
 
 #: ../tracker/ui/export_to_text.xml.en:16
@@ -3575,31 +3443,6 @@ msgctxt "span"
 msgid "Preformatted"
 msgstr ""
 
-#: ../wiki/ui/edit.xml.en:193
-msgctxt "span[title]"
-msgid "Format"
-msgstr ""
-
-#: ../wiki/ui/edit.xml.en:210
-msgctxt "span[title]"
-msgid "Heading 1"
-msgstr ""
-
-#: ../wiki/ui/edit.xml.en:218
-msgctxt "span[title]"
-msgid "Heading 2"
-msgstr ""
-
-#: ../wiki/ui/edit.xml.en:226
-msgctxt "span[title]"
-msgid "Heading 3"
-msgstr ""
-
-#: ../wiki/ui/edit.xml.en:201
-msgctxt "span[title]"
-msgid "Preformatted"
-msgstr ""
-
 #: ../ui/WorkflowAware_state.xml.en:8
 msgctxt "strong"
 msgid "${state}"
@@ -4011,6 +3854,159 @@ msgstr ""
 #: ../future/ui/order_addlink.xml.en:7
 msgctxt "title"
 msgid "Epoz-Toolbox"
+msgstr ""
+
+#: ../ui/html/addimage.xml.en:68
+#: ../ui/html/addlink.xml.en:86
+#: ../future/ui/order_addlink.xml.en:77
+msgctxt "title attribute"
+msgid "${item/item_type}"
+msgstr ""
+
+#: ../ui/aruni/location.xml.en:11
+msgctxt "title attribute"
+msgid "${item/name}"
+msgstr ""
+
+#: ../ui/html/addimage.xml.en:59
+#: ../ui/html/addimage.xml.en:60
+#: ../ui/html/addimage.xml.en:72
+#: ../ui/html/addlink.xml.en:74
+#: ../ui/html/addlink.xml.en:90
+#: ../future/ui/order_addlink.xml.en:81
+msgctxt "title attribute"
+msgid "${item/title}"
+msgstr ""
+
+#: ../ui/html/addimage.xml.en:45
+#: ../ui/html/addlink.xml.en:58
+#: ../future/ui/order_addlink.xml.en:61
+msgctxt "title attribute"
+msgid "${x/title}"
+msgstr ""
+
+#: ../ui/folder/browse_image.xml.en:38
+#: ../ui/binary/Image_view.xml.en:15
+msgctxt "title attribute"
+msgid "Back"
+msgstr ""
+
+#: ../wiki/ui/edit.xml.en:28
+msgctxt "title attribute"
+msgid "Bold"
+msgstr ""
+
+#: ../ui/folder/browse_image.xml.en:21
+#: ../ui/generic/browse_table.xml.en:15
+msgctxt "title attribute"
+msgid "Click to select/unselect all rows"
+msgstr ""
+
+#: ../wiki/ui/edit.xml.en:193
+msgctxt "title attribute"
+msgid "Format"
+msgstr ""
+
+#: ../ui/PO_edit.xml.en:14
+msgctxt "title attribute"
+msgid "Go to first message"
+msgstr ""
+
+#: ../ui/PO_edit.xml.en:19
+msgctxt "title attribute"
+msgid "Go to last message"
+msgstr ""
+
+#: ../ui/PO_edit.xml.en:18
+msgctxt "title attribute"
+msgid "Go to next message"
+msgstr ""
+
+#: ../ui/PO_edit.xml.en:16
+msgctxt "title attribute"
+msgid "Go to previous message"
+msgstr ""
+
+#: ../wiki/ui/edit.xml.en:210
+msgctxt "title attribute"
+msgid "Heading 1"
+msgstr ""
+
+#: ../wiki/ui/edit.xml.en:218
+msgctxt "title attribute"
+msgid "Heading 2"
+msgstr ""
+
+#: ../wiki/ui/edit.xml.en:226
+msgctxt "title attribute"
+msgid "Heading 3"
+msgstr ""
+
+#: ../wiki/ui/edit.xml.en:138
+msgctxt "title attribute"
+msgid "Help"
+msgstr ""
+
+#: ../wiki/ui/edit.xml.en:69
+msgctxt "title attribute"
+msgid "Insert image"
+msgstr ""
+
+#: ../wiki/ui/edit.xml.en:62
+msgctxt "title attribute"
+msgid "Insert link"
+msgstr ""
+
+#: ../wiki/ui/edit.xml.en:79
+msgctxt "title attribute"
+msgid "Insert table"
+msgstr ""
+
+#: ../wiki/ui/edit.xml.en:35
+msgctxt "title attribute"
+msgid "Italic"
+msgstr ""
+
+#: ../wiki/ui/edit.xml.en:130
+msgctxt "title attribute"
+msgid "Large Edit Text"
+msgstr ""
+
+#: ../wiki/ui/edit.xml.en:122
+msgctxt "title attribute"
+msgid "Medium Edit Text"
+msgstr ""
+
+#: ../ui/generic/browse_batch.xml.en:13
+#: ../ui/binary/Image_view.xml.en:20
+msgctxt "title attribute"
+msgid "Next"
+msgstr ""
+
+#: ../wiki/ui/edit.xml.en:52
+msgctxt "title attribute"
+msgid "Ordered list"
+msgstr ""
+
+#: ../wiki/ui/edit.xml.en:201
+msgctxt "title attribute"
+msgid "Preformatted"
+msgstr ""
+
+#: ../ui/generic/browse_batch.xml.en:11
+#: ../ui/binary/Image_view.xml.en:17
+msgctxt "title attribute"
+msgid "Previous"
+msgstr ""
+
+#: ../wiki/ui/edit.xml.en:114
+msgctxt "title attribute"
+msgid "Small Edit Text"
+msgstr ""
+
+#: ../wiki/ui/edit.xml.en:45
+msgctxt "title attribute"
+msgid "Unordered list"
 msgstr ""
 
 #: ../ui/ical/weekly_view.xml.en:67

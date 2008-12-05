@@ -197,12 +197,12 @@ msgstr ""
 
 #: ../ui/html/addimage.xml.en:68 ../ui/html/addlink.xml.en:86
 #: ../future/ui/order_addlink.xml.en:77
-msgctxt "img[title]"
+msgctxt "title attribute"
 msgid "${item/item_type}"
 msgstr ""
 
 #: ../ui/aruni/location.xml.en:11
-msgctxt "a[title]"
+msgctxt "title attribute"
 msgid "${item/name}"
 msgstr ""
 
@@ -214,17 +214,6 @@ msgstr ""
 #: ../ui/html/addlink.xml.en:76
 msgctxt "link"
 msgid "${item/short_title}"
-msgstr ""
-
-#: ../ui/html/addimage.xml.en:60 ../ui/html/addlink.xml.en:74
-msgctxt "a[title]"
-msgid "${item/title}"
-msgstr ""
-
-#: ../ui/html/addimage.xml.en:59 ../ui/html/addimage.xml.en:72
-#: ../ui/html/addlink.xml.en:90 ../future/ui/order_addlink.xml.en:81
-msgctxt "abbr[title]"
-msgid "${item/title}"
 msgstr ""
 
 #: ../ui/generic/menu.xml.en:12
@@ -249,6 +238,13 @@ msgstr ""
 #: ../tracker/ui/edit_issue.xml.en:99 ../tracker/ui/edit_issue.xml.en:107
 #: ../tracker/ui/edit_issue.xml.en:115 ../tracker/ui/edit_resource.xml.en:17
 msgctxt "option"
+msgid "${item/title}"
+msgstr ""
+
+#: ../ui/html/addimage.xml.en:59 ../ui/html/addimage.xml.en:60
+#: ../ui/html/addimage.xml.en:72 ../ui/html/addlink.xml.en:74
+#: ../ui/html/addlink.xml.en:90 ../future/ui/order_addlink.xml.en:81
+msgctxt "title attribute"
 msgid "${item/title}"
 msgstr ""
 
@@ -599,7 +595,7 @@ msgstr ""
 
 #: ../ui/html/addimage.xml.en:45 ../ui/html/addlink.xml.en:58
 #: ../future/ui/order_addlink.xml.en:61
-msgctxt "a[title]"
+msgctxt "title attribute"
 msgid "${x/title}"
 msgstr ""
 
@@ -1121,7 +1117,7 @@ msgid "August"
 msgstr ""
 
 #: ../ui/folder/browse_image.xml.en:38 ../ui/binary/Image_view.xml.en:15
-msgctxt "a[title]"
+msgctxt "title attribute"
 msgid "Back"
 msgstr ""
 
@@ -1143,7 +1139,7 @@ msgid "Body"
 msgstr ""
 
 #: ../wiki/ui/edit.xml.en:28
-msgctxt "a[title]"
+msgctxt "title attribute"
 msgid "Bold"
 msgstr ""
 
@@ -1307,7 +1303,7 @@ msgid "Choose your password"
 msgstr ""
 
 #: ../ui/folder/browse_image.xml.en:21 ../ui/generic/browse_table.xml.en:15
-msgctxt "input[title]"
+msgctxt "title attribute"
 msgid "Click to select/unselect all rows"
 msgstr ""
 
@@ -1788,7 +1784,7 @@ msgid "Format"
 msgstr ""
 
 #: ../wiki/ui/edit.xml.en:193
-msgctxt "span[title]"
+msgctxt "title attribute"
 msgid "Format"
 msgstr ""
 
@@ -1841,22 +1837,22 @@ msgid "Go To Issue"
 msgstr ""
 
 #: ../ui/PO_edit.xml.en:14
-msgctxt "a[title]"
+msgctxt "title attribute"
 msgid "Go to first message"
 msgstr ""
 
 #: ../ui/PO_edit.xml.en:19
-msgctxt "a[title]"
+msgctxt "title attribute"
 msgid "Go to last message"
 msgstr ""
 
 #: ../ui/PO_edit.xml.en:18
-msgctxt "a[title]"
+msgctxt "title attribute"
 msgid "Go to next message"
 msgstr ""
 
 #: ../ui/PO_edit.xml.en:16
-msgctxt "a[title]"
+msgctxt "title attribute"
 msgid "Go to previous message"
 msgstr ""
 
@@ -1891,7 +1887,7 @@ msgid "Heading 1"
 msgstr ""
 
 #: ../wiki/ui/edit.xml.en:210
-msgctxt "span[title]"
+msgctxt "title attribute"
 msgid "Heading 1"
 msgstr ""
 
@@ -1901,7 +1897,7 @@ msgid "Heading 2"
 msgstr ""
 
 #: ../wiki/ui/edit.xml.en:218
-msgctxt "span[title]"
+msgctxt "title attribute"
 msgid "Heading 2"
 msgstr ""
 
@@ -1911,7 +1907,7 @@ msgid "Heading 3"
 msgstr ""
 
 #: ../wiki/ui/edit.xml.en:226
-msgctxt "span[title]"
+msgctxt "title attribute"
 msgid "Heading 3"
 msgstr ""
 
@@ -1920,7 +1916,7 @@ msgid "Help"
 msgstr ""
 
 #: ../wiki/ui/edit.xml.en:138
-msgctxt "a[title]"
+msgctxt "title attribute"
 msgid "Help"
 msgstr ""
 
@@ -1986,17 +1982,17 @@ msgid "Image"
 msgstr ""
 
 #: ../wiki/ui/edit.xml.en:69
-msgctxt "a[title]"
+msgctxt "title attribute"
 msgid "Insert image"
 msgstr ""
 
 #: ../wiki/ui/edit.xml.en:62
-msgctxt "a[title]"
+msgctxt "title attribute"
 msgid "Insert link"
 msgstr ""
 
 #: ../wiki/ui/edit.xml.en:79
-msgctxt "a[title]"
+msgctxt "title attribute"
 msgid "Insert table"
 msgstr ""
 
@@ -2035,7 +2031,7 @@ msgid "Italian"
 msgstr ""
 
 #: ../wiki/ui/edit.xml.en:35
-msgctxt "a[title]"
+msgctxt "title attribute"
 msgid "Italic"
 msgstr ""
 
@@ -2082,7 +2078,7 @@ msgid "Languages removed."
 msgstr ""
 
 #: ../wiki/ui/edit.xml.en:130
-msgctxt "a[title]"
+msgctxt "title attribute"
 msgid "Large Edit Text"
 msgstr ""
 
@@ -2159,7 +2155,7 @@ msgid "Medium"
 msgstr ""
 
 #: ../wiki/ui/edit.xml.en:122
-msgctxt "a[title]"
+msgctxt "title attribute"
 msgid "Medium Edit Text"
 msgstr ""
 
@@ -2309,13 +2305,13 @@ msgstr ""
 msgid "New row added."
 msgstr ""
 
-#: ../ui/generic/browse_batch.xml.en:13 ../ui/binary/Image_view.xml.en:20
-msgctxt "a[title]"
+#: ../ui/user/confirm_registration.xml.en:38
+msgctxt "button"
 msgid "Next"
 msgstr ""
 
-#: ../ui/user/confirm_registration.xml.en:38
-msgctxt "button"
+#: ../ui/generic/browse_batch.xml.en:13 ../ui/binary/Image_view.xml.en:20
+msgctxt "title attribute"
 msgid "Next"
 msgstr ""
 
@@ -2503,7 +2499,7 @@ msgid "Ordered Table"
 msgstr ""
 
 #: ../wiki/ui/edit.xml.en:52
-msgctxt "a[title]"
+msgctxt "title attribute"
 msgid "Ordered list"
 msgstr ""
 
@@ -2639,7 +2635,7 @@ msgid "Preformatted"
 msgstr ""
 
 #: ../wiki/ui/edit.xml.en:201
-msgctxt "span[title]"
+msgctxt "title attribute"
 msgid "Preformatted"
 msgstr ""
 
@@ -2652,7 +2648,7 @@ msgid "Preview Content"
 msgstr ""
 
 #: ../ui/generic/browse_batch.xml.en:11 ../ui/binary/Image_view.xml.en:17
-msgctxt "a[title]"
+msgctxt "title attribute"
 msgid "Previous"
 msgstr ""
 
@@ -3047,7 +3043,7 @@ msgid "Skin"
 msgstr ""
 
 #: ../wiki/ui/edit.xml.en:114
-msgctxt "a[title]"
+msgctxt "title attribute"
 msgid "Small Edit Text"
 msgstr ""
 
@@ -3511,7 +3507,7 @@ msgid "Unknown stored search \"${sname}\"."
 msgstr ""
 
 #: ../wiki/ui/edit.xml.en:45
-msgctxt "a[title]"
+msgctxt "title attribute"
 msgid "Unordered list"
 msgstr ""
 
