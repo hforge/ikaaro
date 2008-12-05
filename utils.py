@@ -23,7 +23,7 @@ from sys import platform
 from urllib import quote
 
 # Import from itools
-from itools.utils import frozenlist
+from itools.utils import freeze
 from itools.web import get_context
 from itools.xapian import AllQuery, PhraseQuery, NotQuery, OrQuery, StartQuery
 from itools.xapian import AndQuery
@@ -62,7 +62,7 @@ def get_parameters(prefix, **kw):
     return parameters
 
 
-def preserve_parameters(preserve=frozenlist()):
+def preserve_parameters(preserve=freeze([])):
     """Returns an HTML snippet with hidden input html elements, there will
     be one element for each request parameter that starts with any of
     the prefixes contained in the preserve parameter.

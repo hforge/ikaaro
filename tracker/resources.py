@@ -24,7 +24,7 @@ from itools.csv import Table as BaseTable, Record
 from itools.datatypes import DateTime, String, Unicode, Enumerate
 from itools.gettext import MSG
 from itools.ical import Time
-from itools.utils import frozenlist
+from itools.utils import freeze
 from itools.web import get_context
 from itools.xapian import OrQuery, AndQuery, RangeQuery
 
@@ -90,9 +90,9 @@ class Resource(Record):
         return self.get_value('dtend')
 
 
-    def get_ns_event(self, day, resource_name=None,
-                     conflicts_list=frozenlist(), timetable=None, grid=False,
-                     starts_on=True, ends_on=True, out_on=True):
+    def get_ns_event(self, day, resource_name=None, conflicts_list=freeze([]),
+                     timetable=None, grid=False, starts_on=True, ends_on=True,
+                     out_on=True):
         context = get_context()
         here = context.resource
         issue = here.parent.get_resource(self.get_value('issue'))
