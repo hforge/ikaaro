@@ -23,7 +23,6 @@
 from itools.datatypes import Integer, String, Unicode
 from itools.gettext import MSG
 from itools.handlers import ConfigFile
-from itools.utils import freeze
 
 # Import from ikaaro
 from ikaaro.registry import register_resource_class
@@ -36,13 +35,13 @@ class StoredSearchFile(ConfigFile):
     schema = {
         'search_name': Unicode(),
         'mtime': Integer(default=0),
-        'product': Integer(multiple=True, default=freeze([])),
-        'module': Integer(multiple=True, default=freeze([])),
-        'version': Integer(multiple=True, default=freeze([])),
-        'type': Integer(multiple=True, default=freeze([])),
-        'priority': Integer(multiple=True, default=freeze([])),
-        'assigned_to': String(multiple=True, default=freeze([])),
-        'state': Integer(multiple=True, default=freeze([])),
+        'product': Integer(multiple=True),
+        'module': Integer(multiple=True),
+        'version': Integer(multiple=True),
+        'type': Integer(multiple=True),
+        'priority': Integer(multiple=True),
+        'assigned_to': String(multiple=True),
+        'state': Integer(multiple=True),
         }
 
 
