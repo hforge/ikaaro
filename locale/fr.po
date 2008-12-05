@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-12-05 18:12+CET\n"
+"POT-Creation-Date: 2008-12-05 19:12+CET\n"
 "PO-Revision-Date: 2008-07-24 16:17+0200\n"
 "Last-Translator: \n"
 "Language-Team:  <fr@li.org>\n"
@@ -174,9 +174,10 @@ msgid "${day/name}"
 msgstr ""
 
 #: ../forum/ui/Forum_view.xml.en:7
-msgctxt "em"
+#, fuzzy
+msgctxt "emphasis"
 msgid "${description}"
-msgstr ""
+msgstr "Description"
 
 #: ../ui/user/tasks.xml.en:17
 #, fuzzy
@@ -527,9 +528,10 @@ msgid "${source}"
 msgstr ""
 
 #: ../ui/WorkflowAware_state.xml.en:8
-msgctxt "strong"
+#, fuzzy
+msgctxt "emphasis"
 msgid "${state}"
-msgstr ""
+msgstr "${tt/start}"
 
 #: ../ui/auto_form.xml.en:28
 msgctxt "button"
@@ -608,9 +610,10 @@ msgid "${tt}"
 msgstr ""
 
 #: ../ui/user/confirm_registration.xml.en:21
-msgctxt "strong"
+#, fuzzy
+msgctxt "emphasis"
 msgid "${username}"
-msgstr ""
+msgstr "Nom d'utilisateur"
 
 #: ../ui/website/virtual_hosts.xml.en:12
 msgctxt "textarea"
@@ -1189,14 +1192,15 @@ msgctxt "button"
 msgid "Assign"
 msgstr "Assigner"
 
-#: ../tracker/ui/add_issue.xml.en:91 ../tracker/ui/change_bugs.xml.en:72
-#: ../tracker/ui/edit_issue.xml.en:95
-msgctxt "label"
+#: ../tracker/ui/issue_history.xml.en:36
+#, fuzzy
+msgctxt "emphasis"
 msgid "Assign To:"
 msgstr "Assigné à&nbsp;:"
 
-#: ../tracker/ui/issue_history.xml.en:36
-msgctxt "strong"
+#: ../tracker/ui/add_issue.xml.en:91 ../tracker/ui/change_bugs.xml.en:72
+#: ../tracker/ui/edit_issue.xml.en:95
+msgctxt "label"
 msgid "Assign To:"
 msgstr "Assigné à&nbsp;:"
 
@@ -1214,13 +1218,14 @@ msgctxt "label"
 msgid "Assigned To:<g id='33'> (<g id='34'>Edit</g>)</g>"
 msgstr "Assigné à&nbsp;:<g id='33'> (<g id='34'>Modifier</g>)</g>"
 
-#: ../tracker/ui/add_issue.xml.en:116
-msgctxt "label"
+#: ../tracker/ui/issue_history.xml.en:42
+#, fuzzy
+msgctxt "emphasis"
 msgid "Attachement:"
 msgstr "Pièce jointe&nbsp;:"
 
-#: ../tracker/ui/issue_history.xml.en:42
-msgctxt "strong"
+#: ../tracker/ui/add_issue.xml.en:116
+msgctxt "label"
 msgid "Attachement:"
 msgstr "Pièce jointe&nbsp;:"
 
@@ -1314,13 +1319,14 @@ msgstr "Compacté en bzip2"
 msgid "CC"
 msgstr ""
 
-#: ../tracker/ui/add_issue.xml.en:99 ../tracker/ui/edit_issue.xml.en:111
-msgctxt "label"
+#: ../tracker/ui/issue_history.xml.en:39
+#, fuzzy
+msgctxt "emphasis"
 msgid "CC:"
 msgstr "CC :"
 
-#: ../tracker/ui/issue_history.xml.en:39
-msgctxt "strong"
+#: ../tracker/ui/add_issue.xml.en:99 ../tracker/ui/edit_issue.xml.en:111
+msgctxt "label"
 msgid "CC:"
 msgstr "CC :"
 
@@ -1462,13 +1468,14 @@ msgctxt "table cell"
 msgid "Comment <g id='35'>${comment/number}</g>"
 msgstr "Commentaire <g id='35'>${comment/number}</g>"
 
-#: ../tracker/ui/change_bugs.xml.en:84 ../tracker/ui/edit_resource.xml.en:50
-msgctxt "label"
+#: ../tracker/ui/issue_history.xml.en:46
+#, fuzzy
+msgctxt "emphasis"
 msgid "Comment:"
 msgstr "Commentaire&nbsp;:"
 
-#: ../tracker/ui/issue_history.xml.en:46
-msgctxt "strong"
+#: ../tracker/ui/change_bugs.xml.en:84 ../tracker/ui/edit_resource.xml.en:50
+msgctxt "label"
 msgid "Comment:"
 msgstr "Commentaire&nbsp;:"
 
@@ -2395,14 +2402,15 @@ msgstr "Dernière modification&nbsp;:"
 msgid "Module"
 msgstr ""
 
-#: ../tracker/ui/add_issue.xml.en:48 ../tracker/ui/change_bugs.xml.en:26
-#: ../tracker/ui/edit_issue.xml.en:52
-msgctxt "label"
+#: ../tracker/ui/issue_history.xml.en:30
+#, fuzzy
+msgctxt "emphasis"
 msgid "Module:"
 msgstr "Module&nbsp;:"
 
-#: ../tracker/ui/issue_history.xml.en:30
-msgctxt "strong"
+#: ../tracker/ui/add_issue.xml.en:48 ../tracker/ui/change_bugs.xml.en:26
+#: ../tracker/ui/edit_issue.xml.en:52
+msgctxt "label"
 msgid "Module:"
 msgstr "Module&nbsp;:"
 
@@ -2826,14 +2834,15 @@ msgstr "Précédent"
 msgid "Priority"
 msgstr "Priorité"
 
-#: ../tracker/ui/add_issue.xml.en:81 ../tracker/ui/change_bugs.xml.en:61
-#: ../tracker/ui/edit_issue.xml.en:85
-msgctxt "label"
+#: ../tracker/ui/issue_history.xml.en:33
+#, fuzzy
+msgctxt "emphasis"
 msgid "Priority:"
 msgstr "Priorité&nbsp;:"
 
-#: ../tracker/ui/issue_history.xml.en:33
-msgctxt "strong"
+#: ../tracker/ui/add_issue.xml.en:81 ../tracker/ui/change_bugs.xml.en:61
+#: ../tracker/ui/edit_issue.xml.en:85
+msgctxt "label"
 msgid "Priority:"
 msgstr "Priorité&nbsp;:"
 
@@ -3271,7 +3280,8 @@ msgid "State History"
 msgstr "Historique de publication"
 
 #: ../tracker/ui/issue_history.xml.en:27
-msgctxt "strong"
+#, fuzzy
+msgctxt "emphasis"
 msgid "State:"
 msgstr "État&nbsp;:"
 
@@ -3564,7 +3574,8 @@ msgid "Title (mandatory):"
 msgstr "Titre (obligatoire)"
 
 #: ../tracker/ui/issue_history.xml.en:18
-msgctxt "strong"
+#, fuzzy
+msgctxt "emphasis"
 msgid "Title:"
 msgstr "Titre&nbsp;:"
 
@@ -3669,13 +3680,14 @@ msgctxt "label"
 msgid "Type your email address"
 msgstr "Veuillez taper votre adresse de courriel."
 
-#: ../tracker/ui/change_bugs.xml.en:45
-msgctxt "label"
+#: ../tracker/ui/issue_history.xml.en:24
+#, fuzzy
+msgctxt "emphasis"
 msgid "Type:"
 msgstr "Type&nbsp;:"
 
-#: ../tracker/ui/issue_history.xml.en:24
-msgctxt "strong"
+#: ../tracker/ui/change_bugs.xml.en:45
+msgctxt "label"
 msgid "Type:"
 msgstr "Type&nbsp;:"
 
@@ -3814,14 +3826,15 @@ msgstr "Version"
 msgid "Version uploaded"
 msgstr "Version chargée"
 
-#: ../tracker/ui/add_issue.xml.en:56 ../tracker/ui/change_bugs.xml.en:35
-#: ../tracker/ui/edit_issue.xml.en:60
-msgctxt "label"
+#: ../tracker/ui/issue_history.xml.en:21
+#, fuzzy
+msgctxt "emphasis"
 msgid "Version:"
 msgstr "Version&nbsp;:"
 
-#: ../tracker/ui/issue_history.xml.en:21
-msgctxt "strong"
+#: ../tracker/ui/add_issue.xml.en:56 ../tracker/ui/change_bugs.xml.en:35
+#: ../tracker/ui/edit_issue.xml.en:60
+msgctxt "label"
 msgid "Version:"
 msgstr "Version&nbsp;:"
 
@@ -4588,6 +4601,14 @@ msgstr ""
 #~ msgid "As calendar"
 #~ msgstr "Calendrier"
 
+#~ msgctxt "strong"
+#~ msgid "Assign To:"
+#~ msgstr "Assigné à&nbsp;:"
+
+#~ msgctxt "strong"
+#~ msgid "Attachement:"
+#~ msgstr "Pièce jointe&nbsp;:"
+
 #~ msgctxt "td"
 #~ msgid "Attachement:"
 #~ msgstr "Pièce jointe&nbsp;:"
@@ -4607,6 +4628,10 @@ msgstr ""
 #~ msgctxt "th"
 #~ msgid "Browse Content"
 #~ msgstr "Parcourir"
+
+#~ msgctxt "strong"
+#~ msgid "CC:"
+#~ msgstr "CC :"
 
 #~ msgid "Cannot delete event, because it was already removed."
 #~ msgstr "Ne peux supprimer cet évènement, car il a déjà été supprimé."
@@ -4654,6 +4679,10 @@ msgstr ""
 
 #~ msgid "Command Line Interface"
 #~ msgstr "Interface en ligne de commande"
+
+#~ msgctxt "strong"
+#~ msgid "Comment:"
+#~ msgstr "Commentaire&nbsp;:"
 
 #~ msgid "Common Name"
 #~ msgstr "Nom"
@@ -4793,6 +4822,10 @@ msgstr ""
 #~ msgid "Message:"
 #~ msgstr "Message&nbsp;:"
 
+#~ msgctxt "strong"
+#~ msgid "Module:"
+#~ msgstr "Module&nbsp;:"
+
 #~ msgid "Move into ordered category"
 #~ msgstr "Déplacer vers ordonnés"
 
@@ -4922,6 +4955,10 @@ msgstr ""
 #~ msgid "Price"
 #~ msgstr "Prix"
 
+#~ msgctxt "strong"
+#~ msgid "Priority:"
+#~ msgstr "Priorité&nbsp;:"
+
 #~ msgid "Product added to the cart"
 #~ msgstr "Produit ajouté au panier"
 
@@ -5044,6 +5081,10 @@ msgstr ""
 #~ msgid "Type your text here..."
 #~ msgstr "Tapez votre texte ici..."
 
+#~ msgctxt "strong"
+#~ msgid "Type:"
+#~ msgstr "Type&nbsp;:"
+
 #~ msgid "URL"
 #~ msgstr "URL"
 
@@ -5075,6 +5116,10 @@ msgstr ""
 
 #~ msgid "VAT"
 #~ msgstr "TVA"
+
+#~ msgctxt "strong"
+#~ msgid "Version:"
+#~ msgstr "Version&nbsp;:"
 
 #~ msgid "View Tracker"
 #~ msgstr "Voir le tracker"

@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2008-12-05 18:12+CET\n"
+"POT-Creation-Date: 2008-12-05 19:12+CET\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2170,8 +2170,68 @@ msgid "You can do the following actions:"
 msgstr ""
 
 #: ../forum/ui/Forum_view.xml.en:7
-msgctxt "em"
+msgctxt "emphasis"
 msgid "${description}"
+msgstr ""
+
+#: ../ui/WorkflowAware_state.xml.en:8
+msgctxt "emphasis"
+msgid "${state}"
+msgstr ""
+
+#: ../ui/user/confirm_registration.xml.en:21
+msgctxt "emphasis"
+msgid "${username}"
+msgstr ""
+
+#: ../tracker/ui/issue_history.xml.en:36
+msgctxt "emphasis"
+msgid "Assign To:"
+msgstr ""
+
+#: ../tracker/ui/issue_history.xml.en:42
+msgctxt "emphasis"
+msgid "Attachement:"
+msgstr ""
+
+#: ../tracker/ui/issue_history.xml.en:39
+msgctxt "emphasis"
+msgid "CC:"
+msgstr ""
+
+#: ../tracker/ui/issue_history.xml.en:46
+msgctxt "emphasis"
+msgid "Comment:"
+msgstr ""
+
+#: ../tracker/ui/issue_history.xml.en:30
+msgctxt "emphasis"
+msgid "Module:"
+msgstr ""
+
+#: ../tracker/ui/issue_history.xml.en:33
+msgctxt "emphasis"
+msgid "Priority:"
+msgstr ""
+
+#: ../tracker/ui/issue_history.xml.en:27
+msgctxt "emphasis"
+msgid "State:"
+msgstr ""
+
+#: ../tracker/ui/issue_history.xml.en:18
+msgctxt "emphasis"
+msgid "Title:"
+msgstr ""
+
+#: ../tracker/ui/issue_history.xml.en:24
+msgctxt "emphasis"
+msgid "Type:"
+msgstr ""
+
+#: ../tracker/ui/issue_history.xml.en:21
+msgctxt "emphasis"
+msgid "Version:"
 msgstr ""
 
 #: ../tracker/ui/export_to_csv.xml.en:14
@@ -3441,66 +3501,6 @@ msgstr ""
 #: ../wiki/ui/edit.xml.en:202
 msgctxt "span"
 msgid "Preformatted"
-msgstr ""
-
-#: ../ui/WorkflowAware_state.xml.en:8
-msgctxt "strong"
-msgid "${state}"
-msgstr ""
-
-#: ../ui/user/confirm_registration.xml.en:21
-msgctxt "strong"
-msgid "${username}"
-msgstr ""
-
-#: ../tracker/ui/issue_history.xml.en:36
-msgctxt "strong"
-msgid "Assign To:"
-msgstr ""
-
-#: ../tracker/ui/issue_history.xml.en:42
-msgctxt "strong"
-msgid "Attachement:"
-msgstr ""
-
-#: ../tracker/ui/issue_history.xml.en:39
-msgctxt "strong"
-msgid "CC:"
-msgstr ""
-
-#: ../tracker/ui/issue_history.xml.en:46
-msgctxt "strong"
-msgid "Comment:"
-msgstr ""
-
-#: ../tracker/ui/issue_history.xml.en:30
-msgctxt "strong"
-msgid "Module:"
-msgstr ""
-
-#: ../tracker/ui/issue_history.xml.en:33
-msgctxt "strong"
-msgid "Priority:"
-msgstr ""
-
-#: ../tracker/ui/issue_history.xml.en:27
-msgctxt "strong"
-msgid "State:"
-msgstr ""
-
-#: ../tracker/ui/issue_history.xml.en:18
-msgctxt "strong"
-msgid "Title:"
-msgstr ""
-
-#: ../tracker/ui/issue_history.xml.en:24
-msgctxt "strong"
-msgid "Type:"
-msgstr ""
-
-#: ../tracker/ui/issue_history.xml.en:21
-msgctxt "strong"
-msgid "Version:"
 msgstr ""
 
 #: ../ui/aruni/template.xhtml.en:53

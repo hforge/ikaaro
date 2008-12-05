@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: it\n"
-"POT-Creation-Date: 2008-12-05 18:12+CET\n"
+"POT-Creation-Date: 2008-12-05 19:12+CET\n"
 "PO-Revision-Date: 2004-11-26 14:39+0100\n"
 "Last-Translator: Paolo Dina <paolo@php3.it>\n"
 "Language-Team: Italian <paolo@php3.it>\n"
@@ -181,7 +181,7 @@ msgstr "Oggetti rinominati."
 
 #: ../forum/ui/Forum_view.xml.en:7
 #, fuzzy
-msgctxt "em"
+msgctxt "emphasis"
 msgid "${description}"
 msgstr "Descrizione"
 
@@ -576,7 +576,7 @@ msgstr "Nuova risorsa"
 
 #: ../ui/WorkflowAware_state.xml.en:8
 #, fuzzy
-msgctxt "strong"
+msgctxt "emphasis"
 msgid "${state}"
 msgstr "Titolo"
 
@@ -669,7 +669,7 @@ msgstr "Titolo"
 
 #: ../ui/user/confirm_registration.xml.en:21
 #, fuzzy
-msgctxt "strong"
+msgctxt "emphasis"
 msgid "${username}"
 msgstr "Oggetti rinominati."
 
@@ -1209,14 +1209,14 @@ msgctxt "button"
 msgid "Assign"
 msgstr ""
 
-#: ../tracker/ui/add_issue.xml.en:91 ../tracker/ui/change_bugs.xml.en:72
-#: ../tracker/ui/edit_issue.xml.en:95
-msgctxt "label"
+#: ../tracker/ui/issue_history.xml.en:36
+msgctxt "emphasis"
 msgid "Assign To:"
 msgstr ""
 
-#: ../tracker/ui/issue_history.xml.en:36
-msgctxt "strong"
+#: ../tracker/ui/add_issue.xml.en:91 ../tracker/ui/change_bugs.xml.en:72
+#: ../tracker/ui/edit_issue.xml.en:95
+msgctxt "label"
 msgid "Assign To:"
 msgstr ""
 
@@ -1235,13 +1235,14 @@ msgctxt "label"
 msgid "Assigned To:<g id='33'> (<g id='34'>Edit</g>)</g>"
 msgstr ""
 
+#: ../tracker/ui/issue_history.xml.en:42
+#, fuzzy
+msgctxt "emphasis"
+msgid "Attachement:"
+msgstr "Commenti:"
+
 #: ../tracker/ui/add_issue.xml.en:116
 msgctxt "label"
-msgid "Attachement:"
-msgstr ""
-
-#: ../tracker/ui/issue_history.xml.en:42
-msgctxt "strong"
 msgid "Attachement:"
 msgstr ""
 
@@ -1342,15 +1343,15 @@ msgstr ""
 msgid "CC"
 msgstr "Aggiungi"
 
-#: ../tracker/ui/add_issue.xml.en:99 ../tracker/ui/edit_issue.xml.en:111
+#: ../tracker/ui/issue_history.xml.en:39
 #, fuzzy
-msgctxt "label"
+msgctxt "emphasis"
 msgid "CC:"
 msgstr "Aggiungi"
 
-#: ../tracker/ui/issue_history.xml.en:39
+#: ../tracker/ui/add_issue.xml.en:99 ../tracker/ui/edit_issue.xml.en:111
 #, fuzzy
-msgctxt "strong"
+msgctxt "label"
 msgid "CC:"
 msgstr "Aggiungi"
 
@@ -1503,15 +1504,15 @@ msgctxt "table cell"
 msgid "Comment <g id='35'>${comment/number}</g>"
 msgstr ""
 
-#: ../tracker/ui/change_bugs.xml.en:84 ../tracker/ui/edit_resource.xml.en:50
+#: ../tracker/ui/issue_history.xml.en:46
 #, fuzzy
-msgctxt "label"
+msgctxt "emphasis"
 msgid "Comment:"
 msgstr "Commenti:"
 
-#: ../tracker/ui/issue_history.xml.en:46
+#: ../tracker/ui/change_bugs.xml.en:84 ../tracker/ui/edit_resource.xml.en:50
 #, fuzzy
-msgctxt "strong"
+msgctxt "label"
 msgid "Comment:"
 msgstr "Commenti:"
 
@@ -2514,16 +2515,16 @@ msgstr "modificato:"
 msgid "Module"
 msgstr "Codice"
 
+#: ../tracker/ui/issue_history.xml.en:30
+#, fuzzy
+msgctxt "emphasis"
+msgid "Module:"
+msgstr "Codice"
+
 #: ../tracker/ui/add_issue.xml.en:48 ../tracker/ui/change_bugs.xml.en:26
 #: ../tracker/ui/edit_issue.xml.en:52
 #, fuzzy
 msgctxt "label"
-msgid "Module:"
-msgstr "Codice"
-
-#: ../tracker/ui/issue_history.xml.en:30
-#, fuzzy
-msgctxt "strong"
 msgid "Module:"
 msgstr "Codice"
 
@@ -2993,14 +2994,14 @@ msgstr "Gruppi"
 msgid "Priority"
 msgstr ""
 
-#: ../tracker/ui/add_issue.xml.en:81 ../tracker/ui/change_bugs.xml.en:61
-#: ../tracker/ui/edit_issue.xml.en:85
-msgctxt "label"
+#: ../tracker/ui/issue_history.xml.en:33
+msgctxt "emphasis"
 msgid "Priority:"
 msgstr ""
 
-#: ../tracker/ui/issue_history.xml.en:33
-msgctxt "strong"
+#: ../tracker/ui/add_issue.xml.en:81 ../tracker/ui/change_bugs.xml.en:61
+#: ../tracker/ui/edit_issue.xml.en:85
+msgctxt "label"
 msgid "Priority:"
 msgstr ""
 
@@ -3497,7 +3498,7 @@ msgstr "Storico"
 
 #: ../tracker/ui/issue_history.xml.en:27
 #, fuzzy
-msgctxt "strong"
+msgctxt "emphasis"
 msgid "State:"
 msgstr "Stato"
 
@@ -3823,7 +3824,7 @@ msgstr "La password è errata"
 
 #: ../tracker/ui/issue_history.xml.en:18
 #, fuzzy
-msgctxt "strong"
+msgctxt "emphasis"
 msgid "Title:"
 msgstr "Titolo"
 
@@ -3924,15 +3925,15 @@ msgctxt "label"
 msgid "Type your email address"
 msgstr ""
 
-#: ../tracker/ui/change_bugs.xml.en:45
+#: ../tracker/ui/issue_history.xml.en:24
 #, fuzzy
-msgctxt "label"
+msgctxt "emphasis"
 msgid "Type:"
 msgstr "Tipo"
 
-#: ../tracker/ui/issue_history.xml.en:24
+#: ../tracker/ui/change_bugs.xml.en:45
 #, fuzzy
-msgctxt "strong"
+msgctxt "label"
 msgid "Type:"
 msgstr "Tipo"
 
@@ -4080,16 +4081,16 @@ msgstr "Personale"
 msgid "Version uploaded"
 msgstr "Versione caricata."
 
+#: ../tracker/ui/issue_history.xml.en:21
+#, fuzzy
+msgctxt "emphasis"
+msgid "Version:"
+msgstr "Personale"
+
 #: ../tracker/ui/add_issue.xml.en:56 ../tracker/ui/change_bugs.xml.en:35
 #: ../tracker/ui/edit_issue.xml.en:60
 #, fuzzy
 msgctxt "label"
-msgid "Version:"
-msgstr "Personale"
-
-#: ../tracker/ui/issue_history.xml.en:21
-#, fuzzy
-msgctxt "strong"
 msgid "Version:"
 msgstr "Personale"
 
@@ -5116,6 +5117,11 @@ msgstr "Titolo"
 #~ "free for all its users."
 
 #, fuzzy
+#~ msgctxt "strong"
+#~ msgid "CC:"
+#~ msgstr "Aggiungi"
+
+#, fuzzy
 #~ msgid "Cart"
 #~ msgstr "Stato"
 
@@ -5184,6 +5190,11 @@ msgstr "Titolo"
 #, fuzzy
 #~ msgid "Command Line Interface"
 #~ msgstr "Scegli un'interfaccia"
+
+#, fuzzy
+#~ msgctxt "strong"
+#~ msgid "Comment:"
+#~ msgstr "Commenti:"
 
 #, fuzzy
 #~ msgid "Common Name"
@@ -5901,6 +5912,11 @@ msgstr "Titolo"
 #, fuzzy
 #~ msgid "Modified after"
 #~ msgstr "modificato:"
+
+#, fuzzy
+#~ msgctxt "strong"
+#~ msgid "Module:"
+#~ msgstr "Codice"
 
 #, fuzzy
 #~ msgid "My Content"
@@ -6641,6 +6657,11 @@ msgstr "Titolo"
 #~ msgstr "Data <stl:block content=\"table/sortcontrol(name)\"></stl:block>"
 
 #, fuzzy
+#~ msgctxt "strong"
+#~ msgid "Type:"
+#~ msgstr "Tipo"
+
+#, fuzzy
 #~ msgid "URL"
 #~ msgstr "URI"
 
@@ -6718,6 +6739,11 @@ msgstr "Titolo"
 
 #~ msgid "Version edited."
 #~ msgstr "Versione modificata."
+
+#, fuzzy
+#~ msgctxt "strong"
+#~ msgid "Version:"
+#~ msgstr "Personale"
 
 #, fuzzy
 #~ msgid "Visual Interface"
