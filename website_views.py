@@ -22,7 +22,7 @@
 import itools
 from itools import get_abspath
 from itools.datatypes import Email, String, Unicode
-from itools.datatypes import DynamicEnumerate
+from itools.datatypes import Enumerate
 from itools.gettext import MSG
 from itools.handlers import merge_dics
 from itools.stl import stl
@@ -204,10 +204,11 @@ class RegisterForm(AutoForm):
 
 
 
-class ContactOptions(DynamicEnumerate):
+class ContactOptions(Enumerate):
 
-    def get_options(self):
-        resource = self.resource
+    @classmethod
+    def get_options(cls):
+        resource = cls.resource
         users = resource.get_resource('/users')
 
         return [

@@ -20,7 +20,7 @@
 
 # Import from itools
 from itools.datatypes import Boolean, Integer, String, Unicode
-from itools.datatypes import DynamicEnumerate
+from itools.datatypes import Enumerate
 from itools.gettext import MSG
 from itools.handlers import merge_dics
 from itools.xapian import PhraseQuery, AndQuery
@@ -34,10 +34,11 @@ from ikaaro.table_views import OrderedTable_View
 
 
 
-class ProductsEnumerate(DynamicEnumerate):
+class ProductsEnumerate(Enumerate):
 
-    def get_options(self):
-        products = self.products.handler
+    @classmethod
+    def get_options(cls):
+        products = cls.products.handler
         return [
             {'name': str(x.id),
              'value': products.get_record_value(x, 'title')}
