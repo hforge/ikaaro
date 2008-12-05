@@ -2180,7 +2180,7 @@ msgstr "Editar Texto"
 
 #: ../folder_views.py:234
 msgid "Last Author"
-msgstr ""
+msgstr "Último Autor"
 
 #: ../folder_views.py:722
 msgid "Last Changes"
@@ -2188,7 +2188,7 @@ msgstr "Últimas Modificaciones"
 
 #: ../folder_views.py:233
 msgid "Last Modified"
-msgstr ""
+msgstr "Última Modificación"
 
 #: ../user_views.py:142 ../website_views.py:166 ../access.py:64
 #: ../access.py:113
@@ -2837,9 +2837,8 @@ msgid "Public"
 msgstr "Público"
 
 #: ../buttons.py:91
-#, fuzzy
 msgid "Publish"
-msgstr "Público"
+msgstr "Publicar"
 
 #: ../workflow.py:130
 msgid "Publish the document."
