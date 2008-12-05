@@ -20,24 +20,20 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
-from copy import deepcopy
 from datetime import datetime
-from operator import itemgetter
 
 # Import from itools
 from itools.csv import CSVFile, Property
 from itools.datatypes import Boolean, Integer, String, Unicode
 from itools.gettext import MSG
 from itools.handlers import merge_dics
-from itools.stl import stl
 from itools.uri import encode_query, Reference
-from itools.web import BaseView, BaseForm, STLForm, get_context
+from itools.utils import freeze
+from itools.web import BaseView, BaseForm, STLForm
 from itools.web import INFO, ERROR
 
 # Import from ikaaro
-from ikaaro.buttons import Button, RemoveButton
-from ikaaro.datatypes import CopyCookie
-from ikaaro.exceptions import ConsistencyError
+from ikaaro.buttons import Button
 from ikaaro.forms import HiddenWidget, TextWidget
 from ikaaro import messages
 from ikaaro.resource_views import DBResource_NewInstance
@@ -259,13 +255,13 @@ class Tracker_View(BrowseForm):
         # search_fields
         'search_name': Unicode(),
         'mtime': Integer(default=0),
-        'product': Integer(multiple=True, default=()),
-        'module': Integer(multiple=True, default=()),
-        'version': Integer(multiple=True, default=()),
-        'type': Integer(multiple=True, default=()),
-        'state': Integer(multiple=True, default=()),
-        'priority': Integer(multiple=True, default=()),
-        'assigned_to': String(multiple=True, default=()),
+        'product': Integer(multiple=True, default=freeze([])),
+        'module': Integer(multiple=True, default=freeze([])),
+        'version': Integer(multiple=True, default=freeze([])),
+        'type': Integer(multiple=True, default=freeze([])),
+        'state': Integer(multiple=True, default=freeze([])),
+        'priority': Integer(multiple=True, default=freeze([])),
+        'assigned_to': String(multiple=True, default=freeze([])),
         # Specific fields
         'search_field': String,
         'search_term': Unicode,

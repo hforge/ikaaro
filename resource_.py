@@ -167,7 +167,7 @@ class DBResource(CatalogAware, IResource):
 
         if issubclass(cls, WorkflowAware):
             schema = cls.get_metadata_schema()
-            state = schema['state'].default
+            state = schema['state'].get_default()
             if state is None:
                 state  = cls.workflow.initstate
             kw['state'] = state

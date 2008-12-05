@@ -244,7 +244,7 @@ class ContactForm(AutoForm):
             user = context.user
             if user is not None:
                 return user.get_property('email')
-        return datatype.default
+        return datatype.get_default()
 
 
     def action(self, resource, context, form):

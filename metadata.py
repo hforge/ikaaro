@@ -21,6 +21,7 @@ from mimetypes import add_type
 # Import from itools
 from itools.datatypes import is_datatype, DataType, String, Unicode, XMLContent
 from itools.handlers import File, register_handler_class
+from itools.utils import freeze
 from itools.web import get_context
 from itools.xml import xml_uri, XMLParser, START_ELEMENT, END_ELEMENT, TEXT
 
@@ -33,7 +34,7 @@ from registry import get_resource_class
 class Record(DataType):
 
     # Set your own default list to avoid sharing this instance
-    default = []
+    default = freeze([])
     schema = {}
 
 
@@ -133,7 +134,7 @@ class Metadata(File):
                     value = datatype.decode(value)
 
                 # Set property
-                if isinstance(datatype.default, list):
+                if isinstance(datatype.get_default(), list):
                     stack[-1][2].setdefault(name, []).append(value)
                 elif language is None:
                     stack[-1][2][name] = value
@@ -222,7 +223,8 @@ class Metadata(File):
         # Check the property exists
         datatype = get_datatype(self.format, name)
         if name not in self.properties:
-            return datatype.default, None
+            default = datatype.get_default()
+            return default, None
         # Get the value
         value = self.properties[name]
 
@@ -247,7 +249,7 @@ class Metadata(File):
 
         if language in value:
             return value[language], language
-        return datatype.default, None
+        return datatype.get_default(), None
 
 
     def get_property(self, name, language=None):
@@ -271,7 +273,7 @@ class Metadata(File):
         if language is None:
             datatype = get_datatype(self.format, name)
 
-            default = datatype.default
+            default = datatype.get_default()
             if isinstance(default, list):
                 if isinstance(value, list):
                     self.properties[name] = value

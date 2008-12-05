@@ -23,6 +23,7 @@ from zlib import compress, decompress
 
 # Import from itools
 from itools.datatypes import DataType, Enumerate
+from itools.utils import freeze
 
 
 """This module defines some datatypes used in ikaaro, whose inclusion in
@@ -77,7 +78,7 @@ class Password(DataType):
 
 class CopyCookie(DataType):
 
-    default = None, []
+    default = None, freeze([])
 
     @staticmethod
     def encode(value):
