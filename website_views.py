@@ -39,6 +39,7 @@ from registry import get_resource_class
 from registry import get_register_websites, get_website_class
 from resource_views import AddResourceMenu
 from views import NewInstanceForm, SearchForm
+from utils import get_base_path_query
 
 
 
@@ -313,7 +314,7 @@ class SiteSearchView(SearchForm):
 
         # Search
         abspath = resource.get_canonical_path()
-        q1 = StartQuery('abspath', str(abspath))
+        q1= get_base_path_query(str(abspath))
         query = AndQuery(q1, *query)
         root = context.root
         results = root.search(query=query)
