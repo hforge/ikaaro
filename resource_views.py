@@ -270,6 +270,9 @@ class Breadcrumb(object):
 
 
 class DBResource_AddBase(STLForm):
+    """Base class for 'DBResource_AddImage' and 'DBResource_AddLink' (used
+    by the Web Page editor).
+    """
 
     access = 'is_allowed_to_edit'
 
@@ -355,8 +358,6 @@ class DBResource_AddBase(STLForm):
 
 
     def action_upload(self, resource, context, form):
-        """Allow to upload and add an image to epoz
-        """
         filename, mimetype, body = form['file']
         name, type, language = FileName.decode(filename)
 
@@ -443,7 +444,7 @@ class DBResource_AddLink(DBResource_AddBase):
     element_to_add = 'link'
 
     action_add_resource_schema = merge_dics(DBResource_AddImage.schema,
-                                    {'title': String(mandatory=True)})
+                                            title=String(mandatory=True))
 
     configuration = {'show_browse': True,
                      'show_external': True,
@@ -452,8 +453,6 @@ class DBResource_AddLink(DBResource_AddBase):
 
 
     def action_add_resource(self, resource, context, form):
-        """Allow to upload a file and link it to epoz
-        """
         mode = form['mode']
         name = checkid(form['title'])
         # Check name validity

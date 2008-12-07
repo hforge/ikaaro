@@ -98,7 +98,7 @@ class Folder_View(BaseView):
             return ''
 
         # Rewrite the URLs
-        stream = index.get_epoz_data()
+        stream = index.get_html_data()
         return set_prefix(stream, 'index/')
 
 

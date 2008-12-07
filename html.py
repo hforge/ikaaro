@@ -72,7 +72,7 @@ class WebPage_View(BaseView):
 
 
     def GET(self, resource, context):
-        return resource.get_epoz_data()
+        return resource.get_html_data()
 
 
 
@@ -88,7 +88,7 @@ class HTMLEditView(DBResource_Edit):
     def get_value(self, resource, context, name, datatype):
         language = resource.get_content_language(context)
         if name == 'data':
-            return resource.get_epoz_data(language=language)
+            return resource.get_html_data(language=language)
         elif name == 'timestamp':
             return datetime.now()
         return DBResource_Edit.get_value(self, resource, context, name,
@@ -116,20 +116,20 @@ class HTMLEditView(DBResource_Edit):
 ###########################################################################
 # Model
 ###########################################################################
-class EpozEditable(object):
+class ResourceWithHTML(object):
     """A mixin class for handlers implementing HTML editing.
     """
 
     edit = HTMLEditView()
 
 
-    def get_epoz_document(self, language=None):
+    def get_html_document(self, language=None):
         # Implement it in your editable handler
         raise NotImplementedError
 
 
-    def get_epoz_data(self, language=None):
-        document = self.get_epoz_document(language=language)
+    def get_html_data(self, language=None):
+        document = self.get_html_document(language=language)
         body = document.get_body()
         if body is None:
             return None
@@ -138,7 +138,7 @@ class EpozEditable(object):
 
 
 
-class WebPage(EpozEditable, Multilingual, Text):
+class WebPage(ResourceWithHTML, Multilingual, Text):
 
     class_id = 'webpage'
     class_version = '20080902'
@@ -210,7 +210,7 @@ class WebPage(EpozEditable, Multilingual, Text):
     new_instance = DBResource.new_instance
     view = WebPage_View()
 
-    def get_epoz_document(self, language=None):
+    def get_html_document(self, language=None):
         return self.get_handler(language=language)
 
 

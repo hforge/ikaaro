@@ -54,6 +54,7 @@ summarizes these changes:
   folder.CopyCookie                datatypes.CopyCookie
   forms.namespaces                 forms.stl_namespaces
   forms.Select                     forms.SelectWidget
+  html.EpozEditable                html.ResouceWithHTML
   users.User                       user.User
   users.UserFolder                 user.UserFolder
   widgets.Breadcrumb               resource_views.Breadcrumb
@@ -199,7 +200,8 @@ designate the same variable but renamed):
   object.make_object             resource.make_resource
   object._make_object            resource._make_resource
   container.get_object           container.get_resource
-
+  EpozEditable.get_epoz_document ResourceWithHTML.get_epoz_document
+  EpozEditable.get_epoz_data     ResourceWithHTML.get_epoz_data
 
 (1) Gettext Messages
 

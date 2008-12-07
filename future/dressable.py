@@ -32,7 +32,7 @@ from itools.xml import XMLParser, START_ELEMENT
 # Import from ikaaro
 from ikaaro.file import Image
 from ikaaro.folder import Folder
-from ikaaro.html import EpozEditable, WebPage
+from ikaaro.html import ResourceWithHTML, WebPage
 from ikaaro.registry import register_resource_class
 from ikaaro.views import CompositeForm, ContextMenu
 from ikaaro.workflow import WorkflowAware
@@ -118,7 +118,7 @@ class Dressable_View(CompositeForm):
 
 
 
-class Dressable(Folder, EpozEditable):
+class Dressable(Folder, ResourceWithHTML):
     """A Dressable resource is a folder with a specific view which is defined
     by the layout. In addition of the layout, it is necessary to redefine
     the variable __fixed_handlers__.
@@ -160,13 +160,11 @@ class Dressable(Folder, EpozEditable):
         return Folder.get_document_types(self) + [Dressable]
 
 
-    def get_epoz_document(self, language=None):
+    def get_html_document(self, language=None):
         resource = self.get_resource('index')
-        return resource.get_epoz_document(language)
+        return resource.get_html_document(language)
 
-    #######################################################################
-    # API / Private
-    #######################################################################
+
     def _get_image(self, item, context):
         return XMLParser('<img src="%s/;download"/>' % context.get_link(item))
 
@@ -175,6 +173,7 @@ class Dressable(Folder, EpozEditable):
     # User interface
     #######################################################################
     view = Dressable_View()
+
 
     #######################################################################
     # Update
