@@ -124,7 +124,7 @@ class Table_View(SearchForm):
             return value
 
         # Multiple
-        is_multiple = getattr(datatype, 'multiple', False)
+        is_multiple = datatype.multiple
         is_tokens = is_datatype(datatype, Tokens)
 
         if is_multiple or is_tokens:
@@ -195,7 +195,7 @@ class Table_AddEditRecord(AutoForm):
             if is_multilingual(datatype):
                 value = value[0]
                 value = Property(value, language=language)
-            elif getattr(datatype, 'multiple', False) is True:
+            elif datatype.multiple:
                 # textarea -> string
                 if not is_datatype(datatype, Enumerate):
                     value = [ x.strip() for x in value.splitlines() ]

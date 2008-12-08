@@ -269,7 +269,7 @@ class SelectWidget(Widget):
             'css': getattr(self, 'css', None),
             'has_empty_option': getattr(self, 'has_empty_option', True),
             'name': self.name,
-            'multiple': getattr(datatype, 'multiple', False),
+            'multiple': datatype.multiple,
             'options': value,
             'size':  getattr(self, 'size', None)}
 
@@ -303,7 +303,7 @@ class SelectRadio(Widget):
 
 
     def get_template(self, datatype, value):
-        if getattr(datatype, 'multiple', False) is True:
+        if datatype.multiple:
             return self.template_multiple
         return self.template
 
@@ -378,7 +378,7 @@ class DateWidget(Widget):
 
 
     def get_template(self, datatype, value):
-        if getattr(datatype, 'multiple', False) is True:
+        if datatype.multiple:
             return self.template_multiple
         return self.template
 
@@ -390,7 +390,7 @@ class DateWidget(Widget):
         css = getattr(self, 'css', None)
         size = getattr(self, 'size', None)
 
-        if getattr(datatype, 'multiple', False) is True:
+        if datatype.multiple:
             if isinstance(value, list): # ['2007-08-01\r\n2007-08-02']
                 value = value[0]
             return {'name': self.name, 'format': format, 'class': css,
@@ -576,7 +576,7 @@ class AutoForm(STLForm):
             value = widget_namespace['value']
             widget_namespace['title'] = getattr(widget, 'title', None)
             widget_namespace['mandatory'] = is_mandatory
-            widget_namespace['multiple'] = getattr(datatype, 'multiple', False)
+            widget_namespace['multiple'] = datatype.multiple
             widget_namespace['is_date'] = is_datatype(datatype, Date)
             widget_namespace['widget'] = widget.to_html(datatype, value)
             ns_widgets.append(widget_namespace)
