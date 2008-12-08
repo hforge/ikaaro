@@ -122,22 +122,21 @@ class Issue_Edit(STLForm):
 
         # Build the namespace
         # Product / Modules /Versions
-        namespace = resource.parent.get_products_namespace(product, version,
-                                                           module)
+        tracker = resource.parent
+        namespace = tracker.get_products_namespace(product, version, module)
         # Title
         namespace['title'] = title
         # Reported by
         reported_by = resource.get_reported_by()
         namespace['reported_by'] = users.get_resource(reported_by).get_title()
         # Others
-        get = resource.parent.get_resource
+        get = tracker.get_resource
         namespace['types'] = get('types').get_options(type)
         namespace['priorities'] = get('priorities').get_options(priority,
             sort=False)
         namespace['states'] = get('states').get_options(state, sort=False)
         # Assign To
-        namespace['users'] = resource.parent.get_members_namespace(
-                                                        assigned_to)
+        namespace['users'] = tracker.get_members_namespace(assigned_to)
         # Comments
         comments = []
         i = 0
@@ -162,7 +161,7 @@ class Issue_Edit(STLForm):
         comments.reverse()
         namespace['comments'] = comments
 
-        users = resource.parent.get_members_namespace(cc_list, False)
+        users = tracker.get_members_namespace(cc_list, False)
         cc_list = []
         cc_add = []
         for user in users:
