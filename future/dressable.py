@@ -22,7 +22,6 @@
 from operator import itemgetter
 
 # Import from itools
-from itools.datatypes import is_datatype
 from itools.gettext import MSG
 from itools.html import xhtml_uri
 from itools.stl import set_prefix
@@ -90,9 +89,9 @@ class Dressable_View(CompositeForm):
 
 
     def get_view(self, resource, context, item):
-        if is_datatype(item, WebPage):
+        if isinstance(item, WebPage):
             return WebPage.view.GET
-        if is_datatype(item, Image):
+        if isinstance(item, Image):
             return resource._get_image
         return getattr(self, item, None)
 
