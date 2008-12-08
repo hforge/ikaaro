@@ -35,6 +35,7 @@
       <label for="version">Version:</label><br/>
       <select name="change_version" id="version" class="tracker_select">
         <option value="-1">Do not change</option>
+        <option value=""></option>
         <option stl:repeat="item versions" value="${item/id}"
           selected="${item/is_selected}">${item/title}</option>
       </select>
