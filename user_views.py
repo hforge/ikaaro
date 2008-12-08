@@ -21,7 +21,7 @@
 from itools.datatypes import Email, String, Unicode
 from itools.gettext import MSG
 from itools.i18n import get_language_name
-from itools.web import STLView, STLForm, INFO, ERROR
+from itools.web import BaseView, STLView, STLForm, INFO, ERROR
 from itools.xapian import PhraseQuery, AndQuery, OrQuery, StartQuery
 
 # Import from ikaaro
@@ -79,6 +79,24 @@ class User_ConfirmRegistration(STLForm):
         # Ok
         message = INFO(u'Operation successful! Welcome.')
         return context.come_back(message, goto='./')
+
+
+
+class User_ResendConfirmation(BaseView):
+
+    access = 'is_admin'
+
+    def GET(self, resource, context):
+        # Already confirmed
+        if not resource.has_property('user_must_confirm'):
+            msg = MSG(u'User has already confirmed his registration!')
+            return context.come_back(msg)
+
+        # Resend confirmation
+        resource.send_confirmation(context, resource.get_property('email'))
+        # Ok
+        msg = MSG(u'Confirmation sent!')
+        return context.come_back(msg)
 
 
 

@@ -34,8 +34,9 @@ from datatypes import Password
 from folder import Folder
 from registry import register_resource_class, get_resource_class
 from resource_views import DBResource_Edit
-from user_views import User_ConfirmRegistration, User_Profile, User_EditAccount
-from user_views import User_EditPreferences, User_EditPassword, User_Tasks
+from user_views import User_ConfirmRegistration, User_EditAccount
+from user_views import User_EditPassword, User_EditPreferences, User_Profile
+from user_views import User_ResendConfirmation, User_Tasks
 from utils import crypt_password, generate_password
 from views import MessageView
 
@@ -155,34 +156,13 @@ class User(AccessControl, Folder):
             context.set_cookie('__ac', cookie, path='/', expires=expires)
 
 
-    ########################################################################
-    # Access control
-    def is_self_or_admin(self, user, resource):
-        # You are nobody here, ha ha ha
-        if user is None:
-            return False
-
-        # In my home I am the king
-        if self.name == user.name:
-            return True
-
-        # The all-powerfull
-        return self.is_admin(user, resource)
-
-
-    is_allowed_to_edit = is_self_or_admin
-
-
-    #######################################################################
-    # User interface
-    #######################################################################
-
-    #######################################################################
-    # Registration
     def send_confirmation(self, context, email):
         # Set the confirmation key
-        key = generate_password(30)
-        self.set_property('user_must_confirm', key)
+        if self.has_property('user_must_confirm'):
+            key = self.get_property('user_must_confirm')
+        else:
+            key = generate_password(30)
+            self.set_property('user_must_confirm', key)
 
         # Build the confirmation link
         confirm_url = deepcopy(context.uri)
@@ -202,20 +182,28 @@ class User(AccessControl, Folder):
         context.root.send_email(email, subject, text=body)
 
 
-    resend_confirmation__access__ = 'is_admin'
-    def resend_confirmation(self, context):
-        must_confirm = self.has_property('user_must_confirm')
-        if must_confirm:
-            context.commit = True
-            self.send_confirmation(context, self.get_property('email'))
-            msg = MSG(u'Confirmation sent!')
-        else:
-            msg = MSG(u'User has already confirm his registration!')
-        return context.come_back(msg)
+    ########################################################################
+    # Access control
+    def is_self_or_admin(self, user, resource):
+        # You are nobody here, ha ha ha
+        if user is None:
+            return False
+
+        # In my home I am the king
+        if self.name == user.name:
+            return True
+
+        # The all-powerfull
+        return self.is_admin(user, resource)
+
+
+    is_allowed_to_edit = is_self_or_admin
 
 
     #######################################################################
     # Views
+    #######################################################################
+    resend_confirmation = User_ResendConfirmation()
     confirm_registration = User_ConfirmRegistration()
     profile = User_Profile()
     edit_account = User_EditAccount()
