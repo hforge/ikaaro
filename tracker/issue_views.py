@@ -123,7 +123,7 @@ class Issue_Edit(STLForm):
         # Build the namespace
         # Product / Modules /Versions
         tracker = resource.parent
-        namespace = tracker.get_products_namespace(product, version, module)
+        namespace = tracker.get_products_namespace(product, module, version)
         # Title
         namespace['title'] = title
         # Reported by
