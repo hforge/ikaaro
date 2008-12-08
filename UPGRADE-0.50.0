@@ -200,8 +200,8 @@ designate the same variable but renamed):
   object.make_object             resource.make_resource
   object._make_object            resource._make_resource
   container.get_object           container.get_resource
-  EpozEditable.get_epoz_document ResourceWithHTML.get_epoz_document
-  EpozEditable.get_epoz_data     ResourceWithHTML.get_epoz_data
+  EpozEditable.get_epoz_document ResourceWithHTML.get_html_document
+  EpozEditable.get_epoz_data     ResourceWithHTML.get_html_data
 
 (1) Gettext Messages
 
