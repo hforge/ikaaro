@@ -230,6 +230,19 @@ Now it is mandatory to pass the context to 'get_content_language':
   # Before
   self.get_content_language(context)
 
+(3) Indexing.  The 'paths' index has been removed.
+
+  # Before
+  path = container.get_abspath()
+  query = PhraseQuery('paths', path)
+
+  # Now
+  from ikaaro.utils import get_base_path_query
+  path = container.get_abspath()
+  query = get_base_path_query(path)
+
+(The helper function uses the new 'StartQuery'.)
+
 
 Javascript
 ====================
