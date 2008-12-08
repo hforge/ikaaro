@@ -19,7 +19,7 @@
 # Import from the Standard Library
 from optparse import OptionParser
 from os import open, devnull, dup2, O_RDWR
-import sys
+from sys import stdin, stdout, stderr, exit
 
 # Import from itools
 import itools
@@ -36,23 +36,23 @@ def start(optios, target):
         print
         print '    $ icms-update.py <instance>'
         print
-        return
+        exit(1)
 
     spool = Spool(target)
     pid = spool.get_pid()
     if pid is not None:
         print '[%s] The Mail Spool is already running.' % target
-        return
+        exit(1)
 
     print '[%s] Start Mail Spool.' % target
     # Detach: redirect standard file descriptors to '/dev/null'
     if options.detach:
         file_desc = open(devnull, O_RDWR)
-        sys.stdin.close()
+        stdin.close()
         dup2(file_desc, 0)
-        sys.stdout.flush()
+        stdout.flush()
         dup2(file_desc, 1)
-        sys.stderr.flush()
+        stderr.flush()
         dup2(file_desc, 2)
     # Start
     spool.start()
