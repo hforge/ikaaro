@@ -89,13 +89,14 @@ class Menu_View(OrderedTable_View):
 
     def get_item_value(self, resource, context, item, column):
         if column == 'title':
-            return item.title, item.path
+            return item.get_value('title'), item.get_value('path')
         elif column == 'child':
             child = None
             parent = resource.parent
-            if item.child and parent.has_resource(item.child):
-                child = parent.get_resource(item.child)
-                child = 'edit', resource.get_pathto(child)
+            child_path = item.get_value('child')
+            if child_path and parent.has_resource(child_path):
+                child = parent.get_resource(child_path)
+                child = 'edit', context.get_link(child)
             return child
 
         return OrderedTable_View.get_item_value(self, resource, context, item,
@@ -161,7 +162,7 @@ class Menu_View(OrderedTable_View):
             # generate the name of the new table
             parent_record = resource.handler.get_record(parent_id)
             # check if the child already exists
-            child_path = parent_record.child
+            child_path = parent_record.get_value('child')
             if child_path and resource.parent.has_resource(child_path):
                 continue
 
