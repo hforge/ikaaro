@@ -19,12 +19,12 @@
 
 # Import from the Standard Library
 from optparse import OptionParser
-from os import open, devnull, dup2, O_RDWR
-from sys import stdin, stdout, stderr, exit
+from sys import exit
 
 # Import from itools
 import itools
 from itools import vfs
+from itools.utils import become_daemon
 
 # Import from ikaaro
 from ikaaro.server import Server, get_pid
@@ -62,13 +62,8 @@ def start(options, target):
     print '[%s] Web Server listens %s:%s' % (target, address, port)
     # Detach: redirect standard file descriptors to '/dev/null'
     if options.detach:
-        file_desc = open(devnull, O_RDWR)
-        stdin.close()
-        dup2(file_desc, 0)
-        stdout.flush()
-        dup2(file_desc, 1)
-        stderr.flush()
-        dup2(file_desc, 2)
+        become_daemon()
+
     # Start
     server.start()
 
