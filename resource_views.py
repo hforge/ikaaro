@@ -29,7 +29,6 @@ from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.i18n import get_language_name
 from itools.handlers import merge_dics
-from itools.stl import stl
 from itools.uri import Path, get_reference
 from itools.vfs import FileName
 from itools.web import get_context, BaseView, STLForm, INFO, ERROR
@@ -515,18 +514,12 @@ class LoginView(STLForm):
 
         # Check the user exists
         root = context.root
-
-        # Search the user by username (login name)
-        results = root.search(username=email)
-        if results.get_n_documents() == 0:
+        user = root.get_user_from_login(email)
+        if user is None:
             message = ERROR(u'The user "$username" does not exist.',
                             username=email)
             context.message = message
             return
-
-        # Get the user
-        brain = results.get_documents()[0]
-        user = root.get_resource('users/%s' % brain.name)
 
         # Check the password is right
         if not user.authenticate(password):

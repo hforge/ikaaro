@@ -24,26 +24,20 @@ from email.MIMEText import MIMEText
 from email.MIMEMultipart import MIMEMultipart
 from email.Utils import formatdate
 from email.header import Header
-from time import time
 import traceback
-from types import GeneratorType
 
 # Import from itools
 from itools import get_abspath
 from itools.gettext import MSG
-from itools.handlers import File, ConfigFile, Folder as FolderHandler
+from itools.handlers import ConfigFile
 from itools.stl import stl
 from itools.uri import Path
 from itools.web import get_context, STLView
-from itools.xml import XMLParser
 
 # Import from ikaaro
-from access import RoleAware
 from folder import Folder
-from html import WebPage
 from registry import register_resource_class, get_resource_class
 from skins import UI, ui_path
-from text import PO
 from user import UserFolder
 from utils import crypt_password
 from website import WebSite
@@ -128,6 +122,19 @@ class Root(WebSite):
         if users.has_resource(name):
             return users.get_resource(name)
         return None
+
+
+    def get_user_from_login(self, username):
+        """Return the user identified by its unique e-mail or username, or
+        return None.
+        """
+        # Search the user by username (login name)
+        results = self.search(username=username)
+        if len(results) == 0:
+            return None
+        # Get the user
+        brain = results.get_documents()[0]
+        return self.get_user(brain.name)
 
 
     ########################################################################
