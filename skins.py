@@ -317,6 +317,11 @@ class Skin(UIFolder):
         context_menus = self._get_context_menus(context)
         context_menus = list(context_menus)
 
+        # The document language
+        here = context.resource
+        languages = here.get_site_root().get_property('website_languages')
+        language = context.accept_language.select_language(languages)
+
         # The base URI
         uri = context.uri
         if uri.path and not context.view_name and not uri.path.endswith_slash:
@@ -324,7 +329,6 @@ class Skin(UIFolder):
             uri.path.endswith_slash = True
 
         # In case of UI objects, fallback to site root
-        here = context.resource
         if isinstance(here, (UIFile, UIFolder)):
             base_path = ''
         else:
@@ -332,6 +336,7 @@ class Skin(UIFolder):
 
         return {
             # HTML head
+            'language': language,
             'title': self.get_template_title(context),
             'base_uri': str(uri),
             'styles': self.get_styles(context),
