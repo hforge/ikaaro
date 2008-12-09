@@ -114,11 +114,6 @@ class Thread(Folder):
     class_description = u"A thread to discuss"
     class_views = ['view', 'edit']
 
-    # XXX
-    #addlink_form__access__ = False
-    #addimage_form__access__ = False
-
-
     @staticmethod
     def _make_resource(cls, folder, name, data='', language='en'):
         Folder._make_resource(cls, folder, name)

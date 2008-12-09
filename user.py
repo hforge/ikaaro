@@ -32,6 +32,7 @@ from itools.web import INFO
 from access import AccessControl
 from datatypes import Password
 from folder import Folder
+from folder_views import Folder_BrowseContent
 from registry import register_resource_class, get_resource_class
 from resource_views import DBResource_Edit
 from user_views import User_ConfirmRegistration, User_EditAccount
@@ -266,15 +267,7 @@ class UserFolder(Folder):
     #######################################################################
     # Back-Office
     #######################################################################
-    browse_content__access__ = 'is_admin'
-    rename_form__access__ = False
-    rename__access__ = False
-    cut__access__ = False
-    #remove__access__ = False
-    copy__access__ = False
-    paste__access__ = False
-
-
+    browse_content = Folder_BrowseContent(access='is_admin')
     edit = DBResource_Edit(access='is_admin')
 
 
