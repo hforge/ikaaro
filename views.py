@@ -323,9 +323,7 @@ class BrowseForm(STLForm):
         # (1) Actions (submit buttons)
         actions = []
         for button in self.get_table_actions(resource, context):
-            if button.hide(items, context) is True:
-                continue
-            if not ac.is_access_allowed(context.user, resource, button):
+            if button.show(resource, context, items) is False:
                 continue
             if button.confirm:
                 confirm = button.confirm.gettext().encode('utf_8')

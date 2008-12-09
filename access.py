@@ -316,6 +316,9 @@ class AccessControl(BaseAccessControl):
 
 
     def is_allowed_to_trans(self, user, resource, name):
+        if not isinstance(resource, WorkflowAware):
+            return False
+
         return self.is_allowed_to_edit(user, resource)
 
 
@@ -431,6 +434,9 @@ class RoleAware(AccessControl):
 
 
     def is_allowed_to_trans(self, user, resource, name):
+        if not isinstance(resource, WorkflowAware):
+            return False
+
         # Anonymous can touch nothing
         if user is None:
             return False

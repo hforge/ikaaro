@@ -36,8 +36,11 @@ class Button(object):
 
 
     @classmethod
-    def hide(cls, items, context):
-        return len(items) == 0
+    def show(cls, resource, context, items):
+        if len(items) == 0:
+            return False
+        ac = resource.get_access_control()
+        return ac.is_access_allowed(context.user, resource, cls)
 
 
 
@@ -87,9 +90,12 @@ class PasteButton(Button):
 
 
     @classmethod
-    def hide(cls, items, context):
+    def show(cls, resource, context, items):
         cut, paths = context.get_cookie('ikaaro_cp', type=CopyCookie)
-        return len(paths) == 0
+        if len(paths) == 0:
+            return False
+        ac = resource.get_access_control()
+        return ac.is_access_allowed(context.user, resource, cls)
 
 
 
@@ -99,4 +105,13 @@ class PublishButton(Button):
     css = 'button_publish'
     name = 'publish'
     title = MSG(u'Publish')
+
+
+    @classmethod
+    def show(cls, resource, context, items):
+        ac = resource.get_access_control()
+        for item in items:
+            if ac.is_allowed_to_trans(context.user, item, 'publish'):
+                return True
+        return False
 

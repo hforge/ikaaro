@@ -533,32 +533,30 @@ class Folder_BrowseContent(SearchForm):
 
 
     def action_publish(self, resource, context, form):
-        resources = [resource.get_resource(id) for id in form['ids']]
-        ac = resource.get_access_control()
+        resources = [ resource.get_resource(id) for id in form['ids'] ]
         user = context.user
         transition = 'publish'
-        allowed = [image for image in resources
-                    if isinstance(image, WorkflowAware)
-                    and ac.is_allowed_to_trans(user, image, transition)]
-
+        # Check there is at least one item we can publish
+        ac = resource.get_access_control()
+        allowed = [ x for x in resources
+                    if ac.is_allowed_to_trans(user, x, transition) ]
         if not allowed:
             context.message = messages.MSG_NONE_ALLOWED
             return
 
-        for image in resources:
-            if not isinstance(image, WorkflowAware):
-                # A folder was selected
-                continue
-            if image.get_statename() == 'public':
+        # Publish
+        for item in allowed:
+            if item.get_statename() == 'public':
                 continue
             # Update workflow history
             property = {'date': datetime.now(),
                         'user': user.name,
                         'name': transition,
                         'comments': u""}
-            image.set_property('wf_transition', property)
-            image.do_trans(transition)
+            item.set_property('wf_transition', property)
+            item.do_trans(transition)
 
+        # Ok
         context.message = messages.MSG_PUBLISHED
 
 
@@ -646,9 +644,7 @@ class Folder_PreviewContent(Folder_BrowseContent):
         ac = resource.get_access_control()
         actions = []
         for button in self.get_table_actions(resource, context):
-            if button.hide(items, context) is True:
-                continue
-            if not ac.is_access_allowed(context.user, resource, button):
+            if button.show(resource, context, items) is False:
                 continue
             if button.confirm:
                 confirm = button.confirm.gettext().encode('utf_8')
