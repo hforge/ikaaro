@@ -18,6 +18,7 @@
 from itools.gettext import MSG
 
 # Import from ikaaro
+from datatypes import CopyCookie
 import messages
 
 
@@ -27,12 +28,16 @@ class Button(object):
     confirm = None
     css = 'button_ok'
     name = None
-    requires_items = True
     title = None
 
     def __init__(self, **kw):
         for key in kw:
             setattr(self, key, kw[key])
+
+
+    @classmethod
+    def hide(cls, items, context):
+        return len(items) == 0
 
 
 
@@ -78,8 +83,13 @@ class PasteButton(Button):
     access = 'is_allowed_to_move'
     css = 'button_paste'
     name = 'paste'
-    requires_items = False
     title = MSG(u'Paste')
+
+
+    @classmethod
+    def hide(cls, items, context):
+        cut, paths = context.get_cookie('ikaaro_cp', type=CopyCookie)
+        return len(paths) == 0
 
 
 

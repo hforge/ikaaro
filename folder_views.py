@@ -646,7 +646,7 @@ class Folder_PreviewContent(Folder_BrowseContent):
         ac = resource.get_access_control()
         actions = []
         for button in self.get_table_actions(resource, context):
-            if button.requires_items and not items:
+            if button.hide(items, context) is True:
                 continue
             if not ac.is_access_allowed(context.user, resource, button):
                 continue
