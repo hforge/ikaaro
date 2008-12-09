@@ -24,6 +24,7 @@ from itools.web import FormError, get_context, BaseView, STLView, STLForm
 from itools.xml import XMLParser
 
 # Import from ikaaro
+import messages
 from registry import get_resource_class
 
 
@@ -135,18 +136,15 @@ class NewInstanceForm(STLForm):
 
         # Check the name
         if not name:
-#            context.message = messages.MSG_NAME_MISSING
-            raise FormError
+            raise FormError, messages.MSG_NAME_MISSING
 
         name = checkid(name)
         if name is None:
-#            context.message = messages.MSG_BAD_NAME
-            raise FormError
+            raise FormError, messages.MSG_BAD_NAME
 
         # Check the name is free
         if resource.has_resource(name):
-#            context.message = messages.MSG_NAME_CLASH
-            raise FormError
+            raise FormError, messages.MSG_NAME_CLASH
 
         # Ok
         form['name'] = name
