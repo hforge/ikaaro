@@ -1486,7 +1486,7 @@ msgstr "Crédits"
 
 #: ../future/menu.py:39
 msgid "Current page"
-msgstr "Image actuelle"
+msgstr "Même page"
 
 #: ../ui/WorkflowAware_state.xml.en:8
 msgctxt "paragraph"
