@@ -375,12 +375,17 @@ class DBResource_AddBase(STLForm):
             return
 
         # Check it is of the expected type
-        filter_type = self.get_filter_types()
+        filter_types = self.get_filter_types()
         cls = get_resource_class(mimetype)
-        if not issubclass(cls, filter_type):
-            context.message = ERROR(u'The given file is not of the type '
-                                    u'"$class_id".',
-                                    class_id=filter_type.class_id)
+        is_compatible = False
+        for filter_type in filter_types:
+            if issubclass(cls, filter_type):
+                is_compatible = True
+                break
+        if is_compatible is False:
+            class_ids = ', '.join([x.class_id for x in filter_types])
+            context.message = ERROR(u'The given file is none of the types '
+                                    u'$class_ids.', class_ids=class_ids)
             return
 
         # Add the image to the resource
