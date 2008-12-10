@@ -176,7 +176,6 @@ class Menu_View(OrderedTable_View):
                 index = index + 1
                 name = '%s%03d' % (base, index)
 
-            context.commit = True
             object = Menu.make_resource(Menu, resource.parent, name)
 
             # update the parent record
