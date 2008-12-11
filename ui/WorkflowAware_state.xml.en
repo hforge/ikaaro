@@ -11,16 +11,13 @@
   <form action=";edit_state" method="post">
     <dl>
       <dt>You can do the following actions:</dt>
-      <dd>
-        <stl:block stl:repeat="transition transitions">
-          <br/>
-          <input type="radio" name="transition" id="${transition/name}"
-            value="${transition/name}" />
-          <label for="${transition/name}">${transition/description}</label>
-        </stl:block>
+      <dd stl:repeat="transition transitions">
+        <input type="radio" name="transition" id="${transition/name}"
+          value="${transition/name}" />
+        <label for="${transition/name}">${transition/description}</label>
       </dd>
     </dl>
-    <dl class="clear">
+    <dl>
       <dt><label for="comments">Comments (optional):</label></dt>
       <dd>
         <textarea id="comments" name="comments" cols="52" rows="7" />
@@ -37,7 +34,7 @@
     No history.
   </p>
 
-  <table stl:if="history">
+  <table id="browse_list" stl:if="history">
     <thead>
       <tr>
         <th>Date</th>
