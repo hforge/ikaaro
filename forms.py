@@ -338,6 +338,7 @@ class DateWidget(Widget):
           name="trigger_date_${name}" class="${class}" />
         <script language="javascript">
           Calendar.setup({inputField: "${name}", ifFormat: "${format}",
+                          showsTime: ${show_time}, timeFormat: "24",
                           button: "trigger_date_${name}"});
         </script>
         """, stl_namespaces))
@@ -387,16 +388,21 @@ class DateWidget(Widget):
         if value is None:
             value = ''
         format = getattr(self, 'format', '%Y-%m-%d')
+        show_time = getattr(self, 'show_time', False)
+        # True -> true for Javascript
+        show_time = str(show_time).lower()
         css = getattr(self, 'css', None)
         size = getattr(self, 'size', None)
 
         if datatype.multiple:
             if isinstance(value, list): # ['2007-08-01\r\n2007-08-02']
                 value = value[0]
-            return {'name': self.name, 'format': format, 'class': css,
+            return {'name': self.name, 'format': format,
+                    'show_time': show_time, 'class': css,
                     'value': value, 'dates': value.splitlines()}
 
-        return {'name': self.name, 'format': format, 'class': css,
+        return {'name': self.name, 'format': format,
+                'show_time': show_time, 'class': css,
                 'size': size, 'value': value}
 
 
