@@ -130,6 +130,9 @@ class Folder_Rename(STLForm):
     access = 'is_allowed_to_edit'
     title = MSG(u'Rename resources')
     template = '/ui/folder/rename.xml'
+    query_schema = {
+        'ids': String(multiple=True, mandatory=True),
+    }
     schema = {
         'paths': String(multiple=True, mandatory=True),
         'new_names': String(multiple=True, mandatory=True),
@@ -137,7 +140,7 @@ class Folder_Rename(STLForm):
 
 
     def get_namespace(self, resource, context):
-        ids = context.get_form_values('ids')
+        ids = context.query['ids']
         # Filter names which the authenticated user is not allowed to move
         ac = resource.get_access_control()
         user = context.user
@@ -440,7 +443,8 @@ class Folder_BrowseContent(SearchForm):
         # method, but it should be a GET method. Maybe it will be solved after
         # the needed folder browse overhaul.
         ids_list = '&'.join([ 'ids=%s' % x for x in paths ])
-        return get_reference(';rename?%s' % ids_list)
+        uri = '%s/;rename?%s' % (context.get_link(resource), ids_list)
+        return get_reference(uri)
 
 
     def action_copy(self, resource, context, form):

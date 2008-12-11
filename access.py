@@ -50,7 +50,6 @@ class RoleAware_BrowseUsers(SearchForm):
         'ids': String(multiple=True, mandatory=True)}
 
     def get_query_schema(self):
-        schema = SearchForm.get_query_schema(self)
         return merge_dics(SearchForm.get_query_schema(self),
                           sort_by=String(default='login_name'))
 
