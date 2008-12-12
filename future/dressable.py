@@ -20,6 +20,7 @@
 
 # Import from the Standard Library
 from operator import itemgetter
+from warnings import warn
 
 # Import from itools
 from itools.gettext import MSG
@@ -34,6 +35,7 @@ from ikaaro.folder import Folder
 from ikaaro.html import ResourceWithHTML, WebPage
 from ikaaro.registry import register_resource_class
 from ikaaro.views import CompositeForm, ContextMenu
+from ikaaro.wiki import WikiPage
 from ikaaro.workflow import WorkflowAware
 
 
@@ -43,32 +45,45 @@ class Dressable_Menu(ContextMenu):
 
     def get_items(self, resource, context):
         items = []
+        base_path = ''
+        if not isinstance(resource, Dressable):
+            resource = resource.parent
+            base_path = '../'
+            if not isinstance(resource, Dressable):
+                return []
+
         for name, value in resource.layout.iteritems():
-            if isinstance(value, tuple):
-                name, cls = value
+            if not isinstance(value, tuple):
+                msg = u'Layout items MUST be 2 values tuples: '
+                msg += u'"%s" is incorrect' % name
+                warn(msg)
+                continue
+            name, cls = value
             if resource.has_resource(name):
                 # Add edit link
                 items.append(
                     {'name': name,
                      'title': MSG(u'%s %s' % (cls.class_title.gettext(), name)),
-                     'href': '%s/;edit' % name,
+                     'href': '%s%s/;edit' % (base_path, name),
                      'class': 'nav_active'})
             else:
                 # Add new_resource link
                 items.append(
                     {'name': name,
                      'title': MSG(u'Add new %s' % cls.class_title.gettext()),
-                     'href': (';new_resource?type=%s&title=%s' %
-                              (cls.class_id, name)),
+                     'href': ('%s;new_resource?type=%s&title=%s' %
+                              (base_path, cls.class_id, name)),
                      'class': 'nav_active'})
         items.sort(key=itemgetter('name'))
         # Dressable metadata
         items.insert(0,
-            {'title': MSG(u'Metadata'), 'href': ';edit', 'class': 'nav_active'})
+            {'title': MSG(u'Metadata'),
+             'href': '%s;edit' % base_path,
+             'class': 'nav_active'})
         # Back to preview
         items.append(
             {'title': MSG(u'Preview'),
-             'href': '.',
+             'href': '%s.' % base_path,
              'class': 'nav_active'})
         return items
 
@@ -90,9 +105,12 @@ class Dressable_View(CompositeForm):
 
     def get_view(self, resource, context, item):
         if isinstance(item, WebPage):
-            return WebPage.view.GET
+            return item.view.GET
         if isinstance(item, Image):
             return resource._get_image
+        # TODO We should implement a specific view to display wiki page as HTML
+        if isinstance(item, WikiPage):
+            return item.view.GET
         return getattr(self, item, None)
 
 
