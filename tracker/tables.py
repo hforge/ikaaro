@@ -86,7 +86,7 @@ class SelectTable_View(OrderedTable_View):
         # 'modules' tables.
         if column == 'product':
             value = int(value)
-            handler = resource.parent.get_resource('products').handler
+            handler = resource.parent.get_resource('product').handler
             record = handler.get_record(value)
             return handler.get_record_value(record, 'title')
 
@@ -201,7 +201,7 @@ class ModulesResource(Tracker_TableResource):
     class_handler = ModulesHandler
 
     def get_schema(self):
-        products = self.parent.get_resource('products')
+        products = self.parent.get_resource('product')
         return merge_dics(
             ModulesHandler.record_schema,
             product=ProductsEnumerate(products=products, mandatory=True))
@@ -228,7 +228,7 @@ class VersionsResource(Tracker_TableResource):
     class_handler = VersionsHandler
 
     def get_schema(self):
-        products = self.parent.get_resource('products')
+        products = self.parent.get_resource('product')
         return merge_dics(
             VersionsHandler.record_schema,
             product=ProductsEnumerate(products=products, mandatory=True))

@@ -173,7 +173,7 @@ class Tracker_NewInstance(DBResource_NewInstance):
         # Add the initial product
         name = form['name']
         product = form['product']
-        table = resource.get_resource('%s/products' % name).get_handler()
+        table = resource.get_resource('%s/product' % name).get_handler()
         product = Property(product, language='en')
         table.add_record({'title': product})
 
@@ -193,34 +193,33 @@ class Tracker_AddIssue(STLForm):
 
 
     def get_namespace(self, resource, context):
-        get = resource.get_resource
         context.styles.append('/ui/tracker/tracker.css')
         context.scripts.append('/ui/tracker/tracker.js')
 
-        # Build the namespace
-        namespace = {}
-        namespace['title'] = context.get_form_value('title', type=Unicode)
-        namespace['comment'] = context.get_form_value('comment', type=Unicode)
-        # Product / Modules /Versions
+        # Get form values
         product = context.get_form_value('product', type=Integer)
         version = context.get_form_value('version', type=Integer)
         module = context.get_form_value('module', type=Integer)
-        namespace = merge_dics(namespace,
-                               resource.get_products_namespace(product,
-                                                               version,
-                                                               module))
-        # Others
         type = context.get_form_value('type', type=Integer)
-        namespace['types'] = get('types').get_options(type)
         priority = context.get_form_value('priority', type=Integer)
-        namespace['priorities'] = get('priorities').get_options(priority)
         state = context.get_form_value('state', type=Integer)
-        namespace['states'] = get('states').get_options(state)
 
+        # Product / Modules / Versions
+        namespace = resource.get_products_namespace(product, version, module)
+
+        # Title, comment
+        namespace['title'] = context.get_form_value('title', type=Unicode)
+        namespace['comment'] = context.get_form_value('comment', type=Unicode)
+        # Type, priority, state
+        get_resource = resource.get_resource
+        namespace['types'] = get_resource('type').get_options(type)
+        namespace['priorities'] = get_resource('priority').get_options(priority)
+        namespace['states'] = get_resource('state').get_options(state)
+
+        # Others
         users = resource.get_resource('/users')
         assigned_to = context.get_form_values('assigned_to', type=String)
         namespace['users'] = resource.get_members_namespace(assigned_to)
-
         namespace['cc_add'] = resource.get_members_namespace(())
 
         return namespace
@@ -425,9 +424,9 @@ class Tracker_Search(BaseSearchForm, Tracker_View):
             'search_title': search_title,
             'text': get_value('text'),
             'mtime': get_value('mtime'),
-            'types': get_resource('types').get_options(type),
-            'priorities': get_resource('priorities').get_options(priority),
-            'states': get_resource('states').get_options(state),
+            'types': get_resource('type').get_options(type),
+            'priorities': get_resource('priority').get_options(priority),
+            'states': get_resource('state').get_options(state),
             'users': resource.get_members_namespace(assign, True),
             'is_admin': ac.is_admin(context.user, resource),
             'manage_assigned': '%s/;browse_users' % pathto_website}
@@ -668,12 +667,12 @@ class Tracker_ChangeSeveralBugs(Tracker_View):
         namespace = Tracker_View.get_namespace(self, resource, context)
         # Edit several bugs at once
         get_resource = resource.get_resource
-        namespace['products'] = get_resource('products').get_options()
-        namespace['modules'] = get_resource('modules').get_options()
-        namespace['versions'] = get_resource('versions').get_options()
-        namespace['priorities'] = get_resource('priorities').get_options()
-        namespace['types'] = get_resource('types').get_options()
-        namespace['states'] = get_resource('states').get_options()
+        namespace['products'] = get_resource('product').get_options()
+        namespace['modules'] = get_resource('module').get_options()
+        namespace['versions'] = get_resource('version').get_options()
+        namespace['priorities'] = get_resource('priority').get_options()
+        namespace['types'] = get_resource('type').get_options()
+        namespace['states'] = get_resource('state').get_options()
         namespace['users'] = resource.get_members_namespace('')
 
         # Ok

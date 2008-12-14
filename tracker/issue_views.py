@@ -131,10 +131,10 @@ class Issue_Edit(STLForm):
         namespace['reported_by'] = users.get_resource(reported_by).get_title()
         # Others
         get = tracker.get_resource
-        namespace['types'] = get('types').get_options(type)
-        namespace['priorities'] = get('priorities').get_options(priority,
+        namespace['types'] = get('type').get_options(type)
+        namespace['priorities'] = get('priority').get_options(priority,
             sort=False)
-        namespace['states'] = get('states').get_options(state, sort=False)
+        namespace['states'] = get('state').get_options(state, sort=False)
         # Assign To
         namespace['users'] = tracker.get_members_namespace(assigned_to)
         # Comments
@@ -204,11 +204,11 @@ class Issue_History(STLView):
         # Local variables
         users = resource.get_resource('/users')
         tracker = resource.parent
-        versions = tracker.get_resource('versions').handler
-        types = tracker.get_resource('types').handler
-        states = tracker.get_resource('states').handler
-        modules = tracker.get_resource('modules').handler
-        priorities = tracker.get_resource('priorities').handler
+        versions = tracker.get_resource('version').handler
+        types = tracker.get_resource('type').handler
+        states = tracker.get_resource('state').handler
+        modules = tracker.get_resource('module').handler
+        priorities = tracker.get_resource('priority').handler
         # Initial values
         previous_title = None
         previous_version = None

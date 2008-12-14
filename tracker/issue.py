@@ -283,12 +283,13 @@ class Issue(Folder):
                                     new_value=new_title)
             modifications.append(text)
         # List modifications
-        fields = [(MSG(u'Module'), 'module', 'modules'),
-                  (MSG(u'Version'), 'version', 'versions'),
-                  (MSG(u'Type'), 'type', 'types'),
-                  (MSG(u'Priority'), 'priority', 'priorities'),
-                  (MSG(u'State'), 'state', 'states')]
-        for field, name, csv_name in fields:
+        fields = [
+            ('module', MSG(u'Module')),
+            ('version', MSG(u'Version')),
+            ('type', MSG(u'Type')),
+            ('priority', MSG(u'Priority')),
+            ('state', MSG(u'State'))]
+        for name, field in fields:
             field = field.gettext()
             new_value = record[name]
             last_value = self.get_value(name)
@@ -296,7 +297,7 @@ class Issue(Folder):
             if last_value == new_value:
                 continue
             new_title = last_title = u''
-            csv = self.parent.get_resource(csv_name).handler
+            csv = self.parent.get_resource(name).handler
             if last_value or last_value == 0:
                 last_title = csv.get_record(last_value).title
             if new_value or new_value == 0:
@@ -360,19 +361,13 @@ class Issue(Folder):
 
         # Select Tables
         get_resource = self.parent.get_resource
-        tables = {
-            'product': 'products',
-            'module': 'modules',
-            'version': 'versions',
-            'type': 'types',
-            'state': 'states',
-            'priority': 'priorities'}
+        tables = ['product', 'module', 'version', 'type', 'state', 'priority']
         for name in tables:
             infos[name] = None
             value = history.get_record_value(record, name)
             if value is None:
                 continue
-            table = get_resource(tables[name]).handler
+            table = get_resource(name).handler
             table_record = table.get_record(value)
             if table_record is None:
                 continue

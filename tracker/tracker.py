@@ -58,25 +58,25 @@ default_types = [
     u'Technology Upgrade']
 
 default_tables = [
-    ('products', []),
-    ('types', default_types),
-    ('states', [u'Open', u'Fixed', u'Verified', u'Closed']),
-    ('priorities', [u'High', u'Medium', u'Low']),
+    ('product', []),
+    ('type', default_types),
+    ('state', [u'Open', u'Fixed', u'Verified', u'Closed']),
+    ('priority', [u'High', u'Medium', u'Low']),
     ]
 
 
 class Tracker(Folder):
 
     class_id = 'tracker'
-    class_version = '20081120'
+    class_version = '20081214'
     class_title = MSG(u'Issue Tracker')
     class_description = MSG(u'To manage bugs and tasks')
     class_icon16 = 'tracker/tracker16.png'
     class_icon48 = 'tracker/tracker48.png'
     class_views = ['search', 'add_issue', 'browse_content', 'edit']
 
-    __fixed_handlers__ = ['products', 'modules', 'versions', 'types',
-        'priorities', 'states', 'calendar']
+    __fixed_handlers__ = ['product', 'module', 'version', 'type', 'priority',
+        'state', 'calendar']
 
     @staticmethod
     def _make_resource(cls, folder, name):
@@ -93,14 +93,14 @@ class Tracker(Folder):
             folder.set_handler('%s.metadata' % table_path, metadata)
         # Modules
         table = ModulesHandler()
-        folder.set_handler('%s/modules' % name, table)
+        folder.set_handler('%s/module' % name, table)
         metadata = ModulesResource.build_metadata()
-        folder.set_handler('%s/modules.metadata' % name, metadata)
+        folder.set_handler('%s/module.metadata' % name, metadata)
         # Versions
         table = VersionsHandler()
-        folder.set_handler('%s/versions' % name, table)
+        folder.set_handler('%s/version' % name, table)
         metadata = VersionsResource.build_metadata()
-        folder.set_handler('%s/versions.metadata' % name, metadata)
+        folder.set_handler('%s/version.metadata' % name, metadata)
         # Pre-defined stored searches
         open = StoredSearchFile(state='0')
         not_assigned = StoredSearchFile(assigned_to='nobody')
@@ -176,9 +176,9 @@ class Tracker(Folder):
 
     def get_products_namespace(self, product, module, version):
         # Build javascript list of products/modules/versions
-        products = self.get_resource('products').handler
-        modules = self.get_resource('modules').handler
-        versions = self.get_resource('versions').handler
+        products = self.get_resource('product').handler
+        modules = self.get_resource('module').handler
+        versions = self.get_resource('version').handler
         modules_options = []
         for record in modules.get_records():
             title = modules.get_record_value(record, 'title')
@@ -220,7 +220,7 @@ class Tracker(Folder):
                                   'modules': modules,
                                   'versions': versions})
         return {
-              'products': self.get_resource('products').get_options(product),
+              'products': self.get_resource('product').get_options(product),
               'modules': modules_options,
               'versions': versions_options,
               'list_products': list_products}
@@ -358,6 +358,18 @@ class Tracker(Folder):
             for record in history.get_records():
                 version = record[-1]
                 version.setdefault('product', product)
+
+
+    def update_20081214(self):
+        """Rename tables.
+        """
+        self.move_resource('products', 'product')
+        self.move_resource('modules', 'module')
+        self.move_resource('versions', 'version')
+        self.move_resource('types', 'type')
+        self.move_resource('states', 'state')
+        self.move_resource('priorities', 'priority')
+
 
 
 ###########################################################################
