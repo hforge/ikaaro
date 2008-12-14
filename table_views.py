@@ -20,8 +20,8 @@
 
 # Import from itools
 from itools.csv import UniqueError, Property, is_multilingual
-from itools.datatypes import DataType, is_datatype, copy_datatype
-from itools.datatypes import Integer, Enumerate, Tokens, Unicode
+from itools.datatypes import DataType, Integer, Enumerate, Tokens, Unicode
+from itools.datatypes import copy_datatype
 from itools.gettext import MSG
 from itools.web import MSG_MISSING_OR_INVALID, INFO, ERROR
 from itools.xapian import PhraseQuery
@@ -125,7 +125,7 @@ class Table_View(SearchForm):
 
         # Multiple
         is_multiple = datatype.multiple
-        is_tokens = is_datatype(datatype, Tokens)
+        is_tokens = issubclass(datatype, Tokens)
 
         if is_multiple or is_tokens:
             if is_multiple:
@@ -197,7 +197,7 @@ class Table_AddEditRecord(AutoForm):
                 value = Property(value, language=language)
             elif datatype.multiple:
                 # textarea -> string
-                if not is_datatype(datatype, Enumerate):
+                if not issubclass(datatype, Enumerate):
                     value = [ x.strip() for x in value.splitlines() ]
                     value = [ datatype.decode(x) for x in value if x ]
             record[name] = value

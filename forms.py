@@ -19,8 +19,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.datatypes import is_datatype, DataType
-from itools.datatypes import Date, Enumerate, Boolean
+from itools.datatypes import DataType, Date, Enumerate, Boolean
 from itools.gettext import MSG
 from itools.html import xhtml_doctype, sanitize_stream
 from itools.html import stream_to_str_as_xhtml, stream_to_str_as_html
@@ -73,11 +72,11 @@ class HTMLBody(XHTMLBody):
 # Widgets
 ###########################################################################
 def get_default_widget(datatype):
-    if is_datatype(datatype, Boolean):
+    if issubclass(datatype, Boolean):
         return BooleanCheckBox
-    elif is_datatype(datatype, Date):
+    elif issubclass(datatype, Date):
         return DateWidget
-    elif is_datatype(datatype, Enumerate):
+    elif issubclass(datatype, Enumerate):
         return SelectWidget
 
     return TextWidget
@@ -583,7 +582,7 @@ class AutoForm(STLForm):
             widget_namespace['title'] = getattr(widget, 'title', None)
             widget_namespace['mandatory'] = is_mandatory
             widget_namespace['multiple'] = datatype.multiple
-            widget_namespace['is_date'] = is_datatype(datatype, Date)
+            widget_namespace['is_date'] = issubclass(datatype, Date)
             widget_namespace['widget'] = widget.to_html(datatype, value)
             ns_widgets.append(widget_namespace)
 

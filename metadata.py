@@ -19,7 +19,7 @@
 from mimetypes import add_type
 
 # Import from itools
-from itools.datatypes import is_datatype, DataType, String, Unicode, XMLContent
+from itools.datatypes import DataType, String, Unicode, XMLContent
 from itools.handlers import File, register_handler_class
 from itools.utils import freeze
 from itools.web import get_context
@@ -106,12 +106,12 @@ class Metadata(File):
                     datatype = schema.get(name, String)
                 else:
                     datatype = stack[-1][1]
-                    if is_datatype(datatype, Record):
+                    if issubclass(datatype, Record):
                         datatype = datatype.schema.get(name, String)
                     else:
                         raise ParserError, error1 % (name, line)
 
-                if is_datatype(datatype, Record):
+                if issubclass(datatype, Record):
                     stack.append((name, datatype, {}))
                 else:
                     stack.append((name, datatype, ''))
@@ -126,9 +126,9 @@ class Metadata(File):
                     break
 
                 # Decode value
-                if is_datatype(datatype, Record):
+                if issubclass(datatype, Record):
                     pass
-                elif is_datatype(datatype, Unicode):
+                elif issubclass(datatype, Unicode):
                     value = datatype.decode(value, 'utf-8')
                 else:
                     value = datatype.decode(value)
@@ -184,7 +184,7 @@ class Metadata(File):
             # Multiple values
             elif isinstance(value, list):
                 # Record
-                if is_datatype(datatype, Record):
+                if issubclass(datatype, Record):
                     aux = datatype.schema
                     for value in value:
                         lines.append('  <%s>\n' % name)
