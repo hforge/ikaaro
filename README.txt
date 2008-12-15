@@ -21,17 +21,16 @@ The scripts included are:
 Requirements
 ------------
 
-Python 2.5 and itools 0.20 are required.
+Python 2.5.2 or later and itools 0.50 are required.
 
-It is recommended to install PIL [1]. For the Wiki to work, docutils [2] is
-required.
+It is recommended to install PIL [1].  For the Wiki to work, docutils [2]
+is required.
 
 Apart from the Python packages listed above, the commands xlhtml, ppthtml,
 pdftotext, wvText and unrtf are required to index some types of documents.
 
 [1] http://www.pythonware.com/products/pil/
 [2] http://docutils.sourceforge.net/
-
 
 
 Install
@@ -51,13 +50,11 @@ So now to install ikaaro you just need to type this:
   $ python setup.py install
 
 
-
 Documentation
 -------------
 
 The documentation is distributed as a separate package, ikaaro-docs.
 The PDF file can be downloaded from http://www.hforge.org/ikaaro
-
 
 
 Resources
