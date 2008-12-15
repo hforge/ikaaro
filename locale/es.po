@@ -1048,7 +1048,7 @@ msgstr ""
 
 #: ../tracker/tracker_views.py:151
 msgid "Advanced"
-msgstr ""
+msgstr "Avanzado"
 
 #: ../ui/website/forgotten_password.xml.en:8
 msgctxt "paragraph"
@@ -1171,13 +1171,12 @@ msgstr ""
 
 #: ../folder_views.py:215
 msgid "Browse Content"
-msgstr ""
+msgstr "Inspeccionar el Contenido"
 
 #: ../ui/html/addlink.xml.en:65
-#, fuzzy
 msgctxt "table cell"
 msgid "Browse Content"
-msgstr "Previsualizar el Contenido"
+msgstr "Inspeccionar el Contenido"
 
 #: ../access.py:45
 msgid "Browse Members"
@@ -1689,16 +1688,14 @@ msgid "Edit the timetable grid"
 msgstr ""
 
 #: ../tracker/tracker_views.py:158
-#, fuzzy
 msgid "Edit this search"
-msgstr "Olvidar esta Búsqueda"
+msgstr "Editar esta búsqueda"
 
 #: ../user_views.py:151
 msgid "Edit your name and email address."
 msgstr ""
 
 #: ../ui/access/add_user.xml.en:11
-#, fuzzy
 msgctxt "dt"
 msgid "Email"
 msgstr "Correo electrónico"
@@ -1746,41 +1743,36 @@ msgid "Expected query parameter \"id\" is missing."
 msgstr ""
 
 #: ../tracker/ui/export_to_csv.xml.en:25
-#, fuzzy
 msgctxt "button"
 msgid "Export"
-msgstr "Editar Texto"
+msgstr "Exportar"
 
 #: ../tracker/tracker_views.py:164 ../tracker/tracker_views.py:604
 msgid "Export to CSV"
-msgstr ""
+msgstr "Exportar a CSV"
 
 #: ../tracker/ui/export_to_csv.xml.en:13
-#, fuzzy
 msgctxt "legend"
 msgid "Export to CSV"
-msgstr "Editar Texto"
+msgstr "Exportar a CSV"
 
 #: ../tracker/tracker_views.py:162
-#, fuzzy
 msgid "Export to Text"
-msgstr "Editar Texto"
+msgstr "Exportar a texto"
 
 #: ../tracker/ui/export_to_text.xml.en:12
-#, fuzzy
 msgctxt "legend"
 msgid "Export to Text:"
-msgstr "Editar Texto"
+msgstr "Exportar a texto:"
 
 #: ../file.py:190 ../text_views.py:80
 msgid "External Editor"
 msgstr "Editor Externo"
 
 #: ../ui/text/externaledit.xml.en:39 ../ui/file/externaledit.xml.en:25
-#, fuzzy
 msgctxt "button"
 msgid "External Editor..."
-msgstr "Editor Externo..."
+msgstr "Editor externo..."
 
 #: ../calendar_views.py:1099
 msgid "Failed to load the file, may contain errors."
@@ -1799,7 +1791,6 @@ msgid "File"
 msgstr "Fichero"
 
 #: ../ui/file/new_instance.xml.en:17
-#, fuzzy
 msgctxt "label"
 msgid "File"
 msgstr "Fichero"
@@ -1810,25 +1801,22 @@ msgid "First Name"
 msgstr "Nombre"
 
 #: ../tracker/tracker.py:63
-#, fuzzy
 msgid "Fixed"
-msgstr "Campo"
+msgstr "Fijo"
 
 #: ../file.py:233
 msgid "Flash"
 msgstr ""
 
 #: ../file.py:234
-#, fuzzy
 msgid "Flash Document"
-msgstr "Añadir Documento"
+msgstr "Documento Flash"
 
 #: ../folder.py:41
 msgid "Folder"
 msgstr "Carpeta"
 
 #: ../tracker/ui/menu_remember.xml.en:22
-#, fuzzy
 msgctxt "button"
 msgid "Forget this Search"
 msgstr "Olvidar esta Búsqueda"
@@ -1891,7 +1879,7 @@ msgstr ""
 
 #: ../tracker/tracker_views.py:182
 msgid "Give the title of one Product"
-msgstr ""
+msgstr "Introduce el título de un producto"
 
 #: ../tracker/ui/menu_goto.xml.en:12
 msgctxt "button"
@@ -1998,7 +1986,7 @@ msgstr ""
 
 #: ../tracker/tracker.py:111
 msgid "High Priority"
-msgstr ""
+msgstr "Alta Prioridad"
 
 #: ../versioning.py:41 ../tracker/issue_views.py:195
 msgid "History"
@@ -2341,7 +2329,7 @@ msgstr "Módulo:"
 #: ../tracker/ui/search.xml.en:60
 msgctxt "label"
 msgid "Module:<g id='13'> (<g id='14'>Edit</g>)</g>"
-msgstr ""
+msgstr "Módulo:<g id='13'> (<g id='14'>Editar</g>)</g>"
 
 #: ../calendar_views.py:57
 msgid "Monday"
@@ -2779,23 +2767,23 @@ msgstr ""
 
 #: ../tracker/tracker_views.py:55 ../tracker/issue.py:290
 msgid "Priority"
-msgstr ""
+msgstr "Prioridad"
 
 #: ../tracker/ui/issue_history.xml.en:33
 msgctxt "emphasis"
 msgid "Priority:"
-msgstr ""
+msgstr "Prioridad:"
 
 #: ../tracker/ui/add_issue.xml.en:81 ../tracker/ui/change_bugs.xml.en:62
 #: ../tracker/ui/edit_issue.xml.en:85
 msgctxt "label"
 msgid "Priority:"
-msgstr ""
+msgstr "Prioridad:"
 
 #: ../tracker/ui/search.xml.en:102
 msgctxt "label"
 msgid "Priority:<g id='29'> (<g id='30'>Edit</g>)</g>"
-msgstr ""
+msgstr "Prioridad:<g id='29'> (<g id='30'>Editar</g>)</g>"
 
 #: ../workflow.py:117
 msgid "Private"
@@ -2804,22 +2792,22 @@ msgstr "Privado"
 #: ../tracker/tracker_views.py:50 ../tracker/tables.py:211
 #: ../tracker/tables.py:238
 msgid "Product"
-msgstr ""
+msgstr "Producto"
 
 #: ../tracker/ui/add_issue.xml.en:40 ../tracker/ui/edit_issue.xml.en:44
 msgctxt "label"
 msgid "Product (mandatory):"
-msgstr ""
+msgstr "Producto (obligatorio)"
 
 #: ../tracker/ui/change_bugs.xml.en:18
 msgctxt "label"
 msgid "Product:"
-msgstr ""
+msgstr "Producto:"
 
 #: ../tracker/ui/search.xml.en:50
 msgctxt "label"
 msgid "Product:<g id='9'> (<g id='10'>Edit</g>)</g>"
-msgstr ""
+msgstr "Producto:<g id='9'> (<g id='10'>Editar</g>)</g>"
 
 #: ../user_views.py:106
 msgid "Profile"
@@ -3077,7 +3065,7 @@ msgstr "Roles actualizados."
 
 #: ../calendar_views.py:62
 msgid "Saturday"
-msgstr ""
+msgstr "Sábado"
 
 #: ../forms.py:547
 #, fuzzy
@@ -3270,18 +3258,17 @@ msgstr "Estado"
 #: ../tracker/ui/add_issue.xml.en:74 ../tracker/ui/edit_issue.xml.en:78
 msgctxt "label"
 msgid "Status (mandatory):"
-msgstr ""
+msgstr "Estado (obligatorio):"
 
 #: ../tracker/ui/change_bugs.xml.en:54
-#, fuzzy
 msgctxt "label"
 msgid "Status:"
-msgstr "Estado"
+msgstr "Estado:"
 
 #: ../tracker/ui/search.xml.en:92
 msgctxt "label"
 msgid "Status:<g id='25'> (<g id='26'>Edit</g>)</g>"
-msgstr ""
+msgstr "Estado:<g id='25'> (<g id='26'>Editar</g>)</g>"
 
 #: ../tracker/stored.py:52
 #, fuzzy
@@ -3300,7 +3287,7 @@ msgstr ""
 
 #: ../calendar_views.py:63
 msgid "Sunday"
-msgstr ""
+msgstr "Domingo"
 
 #: ../ui/root/credits.xml.en:23
 msgctxt "li"
@@ -3518,7 +3505,7 @@ msgstr ""
 #: ../ui/root/license.xml.en:8
 msgctxt "paragraph"
 msgid "This program is free software:"
-msgstr ""
+msgstr "Este programa es software libre:"
 
 #: ../forum/thread.py:113
 msgid "Thread"
@@ -3535,7 +3522,7 @@ msgstr "No hay mensajes."
 
 #: ../calendar_views.py:60
 msgid "Thursday"
-msgstr ""
+msgstr "Jueves"
 
 #: ../calendar_views.py:172
 msgid "Timetable(s) removed successfully."
@@ -3626,20 +3613,18 @@ msgid "Transition done."
 msgstr "Transición realizada."
 
 #: ../ui/PO_edit.xml.en:28
-#, fuzzy
 msgctxt "table cell"
 msgid "Translation"
-msgstr "Traducir"
+msgstr "Traducción"
 
 #: ../ui/root/credits.xml.en:16
-#, fuzzy
 msgctxt "heading"
 msgid "Translators"
-msgstr "Traducir"
+msgstr "Traductores"
 
 #: ../calendar_views.py:58
 msgid "Tuesday"
-msgstr ""
+msgstr "Martes"
 
 #: ../tracker/tracker_views.py:53 ../folder_views.py:235
 #: ../tracker/issue.py:289
@@ -3649,7 +3634,7 @@ msgstr "Tipo"
 #: ../tracker/ui/add_issue.xml.en:66 ../tracker/ui/edit_issue.xml.en:70
 msgctxt "label"
 msgid "Type (mandatory):"
-msgstr ""
+msgstr "Tipo (obligatorio)"
 
 #: ../ui/html/addlink.xml.en:105
 msgctxt "heading"
@@ -3680,7 +3665,7 @@ msgstr "Tipo:"
 #: ../tracker/ui/search.xml.en:82
 msgctxt "label"
 msgid "Type:<g id='21'> (<g id='22'>Edit</g>)</g>"
-msgstr ""
+msgstr "Tipo:<g id='21'> (<g id='22'>Editar</g>)</g>"
 
 #: ../skins.py:94
 msgid "UI"
@@ -3877,18 +3862,16 @@ msgid "Wednesday"
 msgstr ""
 
 #: ../calendar_views.py:245
-#, fuzzy
 msgid "Week $n"
-msgstr "Semana"
+msgstr "Semana $n"
 
 #: ../calendar_views.py:785
-#, fuzzy
 msgid "Weekly View"
-msgstr "Semanalmente"
+msgstr "Vista semanal"
 
 #: ../resource_views.py:555
 msgid "Welcome!"
-msgstr ""
+msgstr "Bienvenido/a!"
 
 #: ../wiki/folder.py:38 ../wiki/folder_views.py:33
 msgid "Wiki"
@@ -3896,7 +3879,7 @@ msgstr ""
 
 #: ../wiki/page.py:52
 msgid "Wiki Page"
-msgstr ""
+msgstr "Página Wiki"
 
 #: ../wiki/page.py:53
 msgid "Wiki contents"
@@ -3925,12 +3908,10 @@ msgid "Wrong time selection (HH:MM)."
 msgstr ""
 
 #: ../text.py:98
-#, fuzzy
 msgid "XML File"
-msgstr "Fichero"
+msgstr "Fichero XML"
 
 #: ../forms.py:239
-#, fuzzy
 msgid "Yes"
 msgstr "Sí"
 
@@ -4060,9 +4041,8 @@ msgid "days ago"
 msgstr ""
 
 #: ../datatypes.py:98
-#, fuzzy
 msgid "huge"
-msgstr "Modificar"
+msgstr "enorme"
 
 #: ../root.py:79
 msgid "iKaaro"
@@ -4085,13 +4065,12 @@ msgid "id"
 msgstr ""
 
 #: ../datatypes.py:97
-#, fuzzy
 msgid "large"
-msgstr "Texto"
+msgstr "grande"
 
 #: ../datatypes.py:96
 msgid "medium"
-msgstr ""
+msgstr "mediano"
 
 #: ../datatypes.py:99
 msgid "original"
@@ -4100,12 +4079,11 @@ msgstr ""
 #: ../tracker/ui/export_to_text.xml.en:12
 msgctxt "legend"
 msgid "select the columns to export"
-msgstr ""
+msgstr "selecciona las columnas a exportar"
 
 #: ../datatypes.py:95
-#, fuzzy
 msgid "small"
-msgstr "Correo electrónico"
+msgstr "pequeño"
 
 #: ../ui/tiny_mce/rte.xml.en:45
 msgctxt "noscript"
