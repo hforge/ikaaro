@@ -178,16 +178,15 @@ class Issue(Folder):
                 value = value.strip()
             record[name] = value
         # CCs
-        cc_list = list(self.get_value('cc_list') or ())
+        cc_list = set(self.get_value('cc_list') or ())
         cc_remove = context.get_form_value('cc_remove')
         if cc_remove:
             cc_remove = context.get_form_values('cc_list')
-            for cc in cc_remove:
-                cc_list.remove(cc)
+            cc_list = cc_list.difference(cc_remove)
         cc_add = context.get_form_values('cc_add')
         if cc_add:
-            cc_list.extend(cc_add)
-        record['cc_list'] = cc_list
+            cc_list = cc_list.union(cc_add)
+        record['cc_list'] = list(cc_list)
 
         # Files XXX
         file = context.get_form_value('file')
@@ -236,7 +235,8 @@ class Issue(Folder):
             uri = context.uri.resolve('%s/;edit' % self.name)
         else:
             uri = context.uri.resolve(';edit')
-        body = '#%s %s %s\n\n' % (self.name, self.get_value('title'), str(uri))
+        body = '#%s %s %s\n\n' % (self.name, self.get_value('title'),
+                                  str(uri))
         message = MSG(u'The user $title did some changes.')
         body +=  message.gettext(title=user_title)
         body += '\n\n'

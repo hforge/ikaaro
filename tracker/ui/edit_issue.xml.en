@@ -34,85 +34,86 @@
     <table>
       <tr>
         <td colspan="2">
-          <label for="title">Title (mandatory):</label><br/>
-          <input type="text" name="title" id="title" value="${title}"
+          <label for="title" class="${title/class}">Title (mandatory):</label><br/>
+          <input type="text" name="title" id="title" value="${title/value}"
             size="48" />
         </td>
       </tr>
       <tr>
         <td valign="top">
-          <label for="product">Product (mandatory):</label><br/>
+          <label for="product" class="${product/class}">Product (mandatory):</label><br/>
           <select name="product" id="product" class="tracker_select">
             <option value="-1"></option>
-            <option stl:repeat="item products" value="${item/id}"
-              selected="${item/is_selected}">${item/title}</option>
+            <option stl:repeat="item product/value" value="${item/name}"
+              selected="${item/selected}">${item/value}</option>
           </select>
         </td>
         <td valign="top">
-          <label for="module">Module:</label><br/>
+          <label for="module" class="${module/class}">Module:</label><br/>
           <select name="module" id="module" class="tracker_select">
             <option value=""></option>
-            <option stl:repeat="item modules" value="${item/id}"
-              selected="${item/is_selected}">${item/title}</option>
+            <option stl:repeat="item module/value" value="${item/name}"
+              selected="${item/selected}">${item/value}</option>
           </select>
         </td>
-        <td>
-          <label for="version">Version:</label><br/>
+        <td valign="top">
+          <label for="version" class="${version/class}">Version:</label><br/>
           <select name="version" id="version" class="tracker_select">
             <option value=""></option>
-            <option stl:repeat="item versions" value="${item/id}"
-              selected="${item/is_selected}">${item/title}</option>
+            <option stl:repeat="item version/value" value="${item/name}"
+              selected="${item/selected}">${item/value}</option>
           </select>
         </td>
       </tr>
       <tr>
         <td valign="top">
-          <label for="type">Type (mandatory):</label><br/>
+          <label for="type" class="${type/class}">Type (mandatory):</label><br/>
           <select name="type" id="type" class="tracker_select">
             <option value=""></option>
-            <option stl:repeat="item types" value="${item/id}"
-              selected="${item/is_selected}">${item/title}</option>
+            <option stl:repeat="item type/value" value="${item/name}"
+              selected="${item/selected}">${item/value}</option>
           </select>
         </td>
         <td valign="top">
-          <label for="state">Status (mandatory):</label><br/>
+          <label for="state" class="${state/class}">Status (mandatory):</label><br/>
           <select name="state" id="state" class="tracker_select">
-            <option stl:repeat="item states" value="${item/id}"
-              selected="${item/is_selected}">${item/title}</option>
+            <option value=""></option>
+            <option stl:repeat="item state/value" value="${item/name}"
+              selected="${item/selected}">${item/value}</option>
           </select>
         </td>
         <td valign="top">
-          <label for="priority">Priority:</label><br/>
+          <label for="priority" class="${priority/class}">Priority:</label><br/>
           <select name="priority" id="priority" class="tracker_select">
             <option value=""></option>
-            <option stl:repeat="item priorities" value="${item/id}"
-              selected="${item/is_selected}">${item/title}</option>
+            <option stl:repeat="item priority/value" value="${item/name}"
+              selected="${item/selected}">${item/value}</option>
           </select>
         </td>
       </tr>
       <tr>
         <td valign="top">
-          <label for="assigned_to">Assign To:</label><br/>
+          <label for="assigned_to" class="${assigned_to/class}">Assign To:</label><br/>
           <select name="assigned_to" id="assigned_to" class="tracker_select">
             <option value=""></option>
-            <option stl:repeat="item users" value="${item/id}"
-              selected="${item/is_selected}">${item/title}</option>
+            <option stl:repeat="item assigned_to/value" value="${item/name}"
+              selected="${item/selected}">${item/value}</option>
           </select>
         </td>
         <td valign="top">
-          <label for="cc_add">Add CC:</label><br/>
+          <label for="cc_add" class="${cc_add/class}">Add CC:</label><br/>
           <select name="cc_add" id="cc_add" class="tracker_select"
             multiple="multiple" size="5">
-            <option stl:repeat="item cc_add" value="${item/id}"
-              selected="${item/is_selected}">${item/title}</option>
+            <option stl:repeat="item cc_add/value" value="${item/name}"
+              selected="${item/selected}">${item/value}</option>
           </select>
         </td>
         <td valign="top">
-          <label for="cc_list">CC:</label><br/>
+          <label for="cc_list" class="${cc_list/class}">CC:</label><br/>
           <select name="cc_list" id="cc_list" class="tracker_select"
             multiple="multiple" size="4">
-            <option stl:repeat="item cc_list" value="${item/id}"
-              selected="${item/is_selected}">${item/title}</option>
+            <option stl:repeat="item cc_list/value" value="${item/name}"
+              selected="${item/selected}">${item/value}</option>
           </select>
           <input type="checkbox" name="cc_remove" value="1"
             checked="${cc_remove}" />
@@ -122,7 +123,7 @@
       <tr>
         <td valign="top" colspan="2">
           <a name="new_comment"></a>
-          <label for="comment">New Comment:</label><br/>
+          <label for="comment" class="${comment/class}">New Comment:</label><br/>
           <textarea name="comment" id="comment" cols="80" rows="10"
             ></textarea>
         </td>

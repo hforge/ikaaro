@@ -40,6 +40,9 @@ from ikaaro.messages import MSG_CHANGES_SAVED
 from ikaaro.table_views import Table_View
 from ikaaro.views import CompositeForm
 
+# Local import
+from datatypes import issue_fields, UsersList
+
 
 url_expr = compile('([fh]t?tps?://[\w.@/;?=&#\-%:]*)')
 def indent(text):
@@ -72,23 +75,6 @@ def indent(text):
 
 
 
-# Definition of the fields of the forms to add and edit an issue
-issue_fields = {
-    'title': String(mandatory=True),
-    'product': String(mandatory=True),
-    'module': String,
-    'version': String,
-    'type': String(mandatory=True),
-    'state': String(mandatory=True),
-    'priority': String,
-    'assigned_to': String,
-    'comment': String,
-    'cc_add': String,
-    'cc_list': String,
-    'cc_remove': Boolean,
-    'file': String}
-
-
 class Issue_Edit(STLForm):
 
     access = 'is_allowed_to_edit'
@@ -101,6 +87,12 @@ class Issue_Edit(STLForm):
         return issue_fields
 
 
+    def get_value(self, resource, context, name, datatype):
+        history = resource.get_history()
+        record = history.get_record(-1)
+        return  record.get_value(name)
+
+
     def get_namespace(self, resource, context):
         # Set Style & JS
         context.styles.append('/ui/tracker/tracker.css')
@@ -110,35 +102,10 @@ class Issue_Edit(STLForm):
         users = resource.get_resource('/users')
         history = resource.get_history()
         record = history.get_record(-1)
-        title = record.get_value('title')
-        product = record.get_value('product')
-        module = record.get_value('module')
-        version = record.get_value('version')
-        type = record.get_value('type')
-        priority = record.get_value('priority')
-        assigned_to = record.get_value('assigned_to')
-        state = record.get_value('state')
-        comment = record.get_value('comment')
-        cc_list = list(record.get_value('cc_list') or ())
-        file = record.get_value('file')
 
         # Build the namespace
-        # Product / Modules /Versions
-        tracker = resource.parent
-        namespace = tracker.get_products_namespace(product, module, version)
-        # Title
-        namespace['title'] = title
-        # Reported by
-        reported_by = resource.get_reported_by()
-        namespace['reported_by'] = users.get_resource(reported_by).get_title()
-        # Others
-        get = tracker.get_resource
-        namespace['types'] = get('type').get_options(type)
-        namespace['priorities'] = get('priority').get_options(priority,
-            sort=False)
-        namespace['states'] = get('state').get_options(state, sort=False)
-        # Assign To
-        namespace['users'] = tracker.get_members_namespace(assigned_to)
+        namespace = self.build_namespace(resource, context)
+
         # Comments
         comments = []
         i = 0
@@ -163,21 +130,31 @@ class Issue_Edit(STLForm):
         comments.reverse()
         namespace['comments'] = comments
 
-        users = tracker.get_members_namespace(cc_list, False)
-        cc_list = []
-        cc_add = []
-        for user in users:
-            user_id = user['id']
-            if user_id == reported_by:
-                continue
-            if user['is_selected']:
-                user['is_selected'] = False
-                cc_list.append(user)
+        # cc_list / cc_add / cc_remove
+        cc_list = record.get_value('cc_list') or ()
+        namespace['cc_list']= {'name': 'cc_list',
+                              'value': [],
+                              'class': None}
+        namespace['cc_add']= {'name': 'cc_add',
+                              'value': [],
+                              'class': None}
+        cc_value = namespace['cc_list']['value']
+        add_value = namespace['cc_add']['value']
+        for user in UsersList.get_options():
+            user['selected'] = False
+            if user['name'] in cc_list:
+                cc_value.append(user)
             else:
-                cc_add.append(user)
-        namespace['cc_add'] = cc_add
-        namespace['cc_list'] = cc_list
+                add_value.append(user)
         namespace['cc_remove'] = None
+
+        # Reported by
+        reported_by = resource.get_reported_by()
+        namespace['reported_by'] = users.get_resource(reported_by).get_title()
+
+        # list_products
+        tracker = resource.parent
+        namespace['list_products'] = tracker.get_list_products_namespace()
 
         return namespace
 

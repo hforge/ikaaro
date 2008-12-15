@@ -24,7 +24,7 @@ from datetime import datetime
 
 # Import from itools
 from itools.csv import CSVFile, Property
-from itools.datatypes import Boolean, Integer, String, Unicode
+from itools.datatypes import Boolean, Integer, String, Unicode, Enumerate
 from itools.gettext import MSG
 from itools.handlers import merge_dics
 from itools.uri import encode_query, Reference
@@ -40,7 +40,7 @@ from ikaaro.views import BrowseForm, SearchForm as BaseSearchForm, ContextMenu
 
 # Import from ikaaro.tracker
 from issue import Issue
-from issue_views import issue_fields
+from datatypes import issue_fields, TrackerList, ProductInfoList, UsersList
 from stored import StoredSearch
 
 
@@ -215,31 +215,8 @@ class Tracker_AddIssue(STLForm):
         context.styles.append('/ui/tracker/tracker.css')
         context.scripts.append('/ui/tracker/tracker.js')
 
-        # Get form values
-        product = context.get_form_value('product', type=Integer)
-        version = context.get_form_value('version', type=Integer)
-        module = context.get_form_value('module', type=Integer)
-        type = context.get_form_value('type', type=Integer)
-        priority = context.get_form_value('priority', type=Integer)
-        state = context.get_form_value('state', type=Integer)
-
-        # Product / Modules / Versions
-        namespace = resource.get_products_namespace(product, version, module)
-
-        # Title, comment
-        namespace['title'] = context.get_form_value('title', type=Unicode)
-        namespace['comment'] = context.get_form_value('comment', type=Unicode)
-        # Type, priority, state
-        get_resource = resource.get_resource
-        namespace['types'] = get_resource('type').get_options(type)
-        namespace['priorities'] = get_resource('priority').get_options(priority)
-        namespace['states'] = get_resource('state').get_options(state)
-
-        # Others
-        users = resource.get_resource('/users')
-        assigned_to = context.get_form_values('assigned_to', type=String)
-        namespace['users'] = resource.get_members_namespace(assigned_to)
-        namespace['cc_add'] = resource.get_members_namespace(())
+        namespace =  self.build_namespace(resource, context)
+        namespace['list_products'] = resource.get_list_products_namespace()
 
         return namespace
 
@@ -402,7 +379,7 @@ class Tracker_Search(BaseSearchForm, Tracker_View):
         'type': Integer(multiple=True),
         'state': Integer(multiple=True),
         'priority': Integer(multiple=True),
-        'assigned_to': String(multiple=True),
+        'assigned_to': String(multiple=True)
         }
 
 
@@ -433,26 +410,29 @@ class Tracker_Search(BaseSearchForm, Tracker_View):
         type = get_values('type')
         state = get_values('state')
         priority = get_values('priority')
-        assign = get_values('assigned_to')
+        assigned_to = get_values('assigned_to')
 
         # is_admin
         ac = resource.get_access_control()
         pathto_website = resource.get_pathto(resource.get_site_root())
-        namespace =  {
-            'search_name': search_name,
-            'search_title': search_title,
-            'text': get_value('text'),
-            'mtime': get_value('mtime'),
-            'types': get_resource('type').get_options(type),
-            'priorities': get_resource('priority').get_options(priority),
-            'states': get_resource('state').get_options(state),
-            'users': resource.get_members_namespace(assign, True),
-            'is_admin': ac.is_admin(context.user, resource),
-            'manage_assigned': '%s/;browse_users' % pathto_website}
 
-        return merge_dics(namespace,
-                          resource.get_products_namespace(product, module,
-                                                          version))
+        return  {
+           'search_name': search_name,
+           'search_title': search_title,
+           'text': get_value('text'),
+           'mtime': get_value('mtime'),
+           'is_admin': ac.is_admin(context.user, resource),
+           'manage_assigned': '%s/;browse_users' % pathto_website,
+           'products': TrackerList(element='product').get_namespace(product),
+           'modules': ProductInfoList(element='module').get_namespace(module),
+           'versions': ProductInfoList(element='version').get_namespace(
+                                                               version),
+           'types': TrackerList(element='type').get_namespace(type),
+           'states': TrackerList(element='state').get_namespace(state),
+           'priorities': TrackerList(element='priority').get_namespace(
+                                                               priority),
+           'assigned_to': UsersList.get_namespace(assigned_to),
+           'list_products': resource.get_list_products_namespace()}
 
 
     def get_namespace(self, resource, context):
