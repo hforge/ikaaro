@@ -80,26 +80,43 @@ class StoreSearchMenu(ContextMenu):
 
     title = MSG(u'Remember this search')
     template = '/ui/tracker/menu_remember.xml'
+    query_schema = {
+        'text': Unicode(),
+        'mtime': Integer(default=0),
+        'product': Integer(multiple=True),
+        'module': Integer(multiple=True),
+        'version': Integer(multiple=True),
+        'type': Integer(multiple=True),
+        'state': Integer(multiple=True),
+        'priority': Integer(multiple=True),
+        'assigned_to': String(multiple=True),
+    }
 
     def get_namespace(self, resource, context):
-        # Default
-        search_title = None
-
-        # Selected Search
         name = context.get_query_value('search_name')
+        # Get the stored search
+        search = None
         if name:
             try:
                 search = resource.get_resource(name)
             except LookupError:
                 pass
-            else:
-                search_title = search.get_title()
+
+        fields = []
+        if search is None:
+            # Edit an stored search
+            search_title = None
+        else:
+            # Add a new stored search
+            search_title = search.get_title()
 
         # Ok
         return {
             'title': self.title,
             'search_name': name,
-            'search_title': search_title}
+            'search_title': search_title,
+            'search_fields': fields,
+            }
 
 
 
