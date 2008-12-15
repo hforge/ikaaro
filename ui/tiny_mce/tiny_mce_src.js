@@ -1,3 +1,20 @@
+/*
+ * iKaaro
+ */
+function tiny_mce_fix_path_for_ie(u) {
+    /*
+     * ikaaro
+     * IEx asks buggy uri
+     */
+    // rewrite u
+    var ui_index = u.indexOf('//ui');
+    if (ui_index != -1) {
+        var domain = u.substring(0, u.indexOf("/",7));
+        var end_url = u.substring(ui_index + 2);
+        u = domain + '/' + end_url;
+    }
+    return u;
+}
 
 /* file:jscripts/tiny_mce/classes/tinymce.js */
 
@@ -590,7 +607,12 @@ tinymce.create('tinymce.util.Dispatcher', {
 		toAbsolute : function(u, nh) {
 			var u = new tinymce.util.URI(u, {base_uri : this});
 
-			return u.getURI(this.host == u.host ? nh : 0);
+			//return u.getURI(this.host == u.host ? nh : 0);
+			var tmp = u.getURI(this.host == u.host ? nh : 0);
+            /*
+             * ikaaro
+             */
+            return tiny_mce_fix_path_for_ie(tmp);
 		},
 
 		toRelPath : function(base, path) {
@@ -1848,6 +1870,11 @@ tinymce.create('static tinymce.util.XHR', {
 		},
 
 		loadCSS : function(u) {
+            /*
+             * ikaaro
+             */
+            u = tiny_mce_fix_path_for_ie(u);
+
 			var t = this, d = t.doc;
 
 			if (!u)
@@ -4587,6 +4614,11 @@ tinymce.create('static tinymce.util.XHR', {
 		},
 
 		add : function(u, cb, s, pr) {
+            /*
+             * ikaaro
+             */
+            u = tiny_mce_fix_path_for_ie(u);
+
 			var t = this, lo = t.lookup, o;
 
 			if (o = lo[u]) {
@@ -4610,6 +4642,11 @@ tinymce.create('static tinymce.util.XHR', {
 		},
 
 		load : function(u, cb, s) {
+            /*
+             * ikaaro
+             */
+            u = tiny_mce_fix_path_for_ie(u);
+
 			var t = this, o;
 
 			if (o = t.lookup[u]) {
@@ -6259,6 +6296,11 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 		},
 
 		load : function(n, u, cb, s) {
+            /*
+             * ikaaro
+             */
+            u = tiny_mce_fix_path_for_ie(u);
+
 			var t = this;
 
 			if (t.urls[n])
