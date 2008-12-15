@@ -3,7 +3,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: zh\n"
-"POT-Creation-Date: 2008-12-05 19:12+CET\n"
+"POT-Creation-Date: 2008-12-15 17:12+CET\n"
 "PO-Revision-Date: 2007-10-30 17:58+0100\n"
 "Last-Translator: Zhouli <zhouli@in-girum.net>\n"
 "Language-Team:  <zh@li.org>\n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../tracker/tracker_views.py:736
+#: ../tracker/tracker_views.py:751
 msgid ""
 "\n"
 "\n"
@@ -24,11 +24,15 @@ msgstr ""
 msgid "  New Attachment: $filename"
 msgstr ""
 
-#: ../tracker/tracker_views.py:551
+#: ../future/dressable.py:58
+msgid "\"%s\" is incorrect"
+msgstr ""
+
+#: ../tracker/tracker_views.py:566
 msgid "#%s"
 msgstr ""
 
-#: ../tracker/tracker_views.py:763
+#: ../tracker/tracker_views.py:778
 msgid "#%s - %s - %s"
 msgstr ""
 
@@ -267,9 +271,9 @@ msgstr "名称"
 #: ../tracker/ui/search.xml.en:76 ../tracker/ui/search.xml.en:88
 #: ../tracker/ui/search.xml.en:98 ../tracker/ui/search.xml.en:108
 #: ../tracker/ui/search.xml.en:120 ../tracker/ui/change_bugs.xml.en:22
-#: ../tracker/ui/change_bugs.xml.en:31 ../tracker/ui/change_bugs.xml.en:39
-#: ../tracker/ui/change_bugs.xml.en:49 ../tracker/ui/change_bugs.xml.en:57
-#: ../tracker/ui/change_bugs.xml.en:66 ../tracker/ui/change_bugs.xml.en:78
+#: ../tracker/ui/change_bugs.xml.en:31 ../tracker/ui/change_bugs.xml.en:40
+#: ../tracker/ui/change_bugs.xml.en:50 ../tracker/ui/change_bugs.xml.en:58
+#: ../tracker/ui/change_bugs.xml.en:67 ../tracker/ui/change_bugs.xml.en:79
 #: ../tracker/ui/edit_issue.xml.en:48 ../tracker/ui/edit_issue.xml.en:56
 #: ../tracker/ui/edit_issue.xml.en:64 ../tracker/ui/edit_issue.xml.en:74
 #: ../tracker/ui/edit_issue.xml.en:81 ../tracker/ui/edit_issue.xml.en:89
@@ -447,7 +451,7 @@ msgctxt "option"
 msgid "${role/title}"
 msgstr "名称"
 
-#: ../skins.py:159
+#: ../skins.py:163
 msgid "${root_title}: ${here_title}"
 msgstr ""
 
@@ -624,31 +628,31 @@ msgctxt "pre"
 msgid "${traceback}"
 msgstr "名称"
 
-#: ../ui/WorkflowAware_state.xml.en:54
+#: ../ui/WorkflowAware_state.xml.en:51
 #, fuzzy
 msgctxt "table cell"
 msgid "${transition/comments}"
 msgstr "用户资料列单"
 
-#: ../ui/WorkflowAware_state.xml.en:51
+#: ../ui/WorkflowAware_state.xml.en:48
 #, fuzzy
 msgctxt "table cell"
 msgid "${transition/date}"
 msgstr "用户资料列单"
 
-#: ../ui/WorkflowAware_state.xml.en:19
+#: ../ui/WorkflowAware_state.xml.en:17
 #, fuzzy
 msgctxt "label"
 msgid "${transition/description}"
 msgstr "用户资料列单"
 
-#: ../ui/WorkflowAware_state.xml.en:52
+#: ../ui/WorkflowAware_state.xml.en:49
 #, fuzzy
 msgctxt "table cell"
 msgid "${transition/title}"
 msgstr "用户资料列单"
 
-#: ../ui/WorkflowAware_state.xml.en:53
+#: ../ui/WorkflowAware_state.xml.en:50
 #, fuzzy
 msgctxt "table cell"
 msgid "${transition/user}"
@@ -709,7 +713,7 @@ msgstr ""
 msgid "%.01f MB"
 msgstr ""
 
-#: ../future/dressable.py:54
+#: ../future/dressable.py:66
 msgid "%s %s"
 msgstr ""
 
@@ -743,7 +747,7 @@ msgctxt "link"
 msgid "+"
 msgstr ""
 
-#: ../tracker/issue_views.py:318
+#: ../tracker/issue_views.py:317
 msgid ", "
 msgstr ""
 
@@ -756,7 +760,7 @@ msgctxt "option"
 msgid "-- not defined --"
 msgstr ""
 
-#: ../tracker/tracker_views.py:758
+#: ../tracker/tracker_views.py:773
 msgid ""
 "--- Comment from: $user ---\n"
 "\n"
@@ -984,7 +988,7 @@ msgctxt "abbr"
 msgid "<g id='9'>${item/short_title}</g><x id='10'/>  <g id='11'>Browse</g>"
 msgstr ""
 
-#: ../future/dressable.py:130
+#: ../future/dressable.py:147
 #, fuzzy
 msgid "A dressable folder"
 msgstr "文件夹"
@@ -1014,11 +1018,11 @@ msgstr ""
 msgid "A thread to discuss"
 msgstr ""
 
-#: ../tracker/tracker_views.py:755 ../tracker/issue.py:216
+#: ../tracker/tracker_views.py:770 ../tracker/issue.py:216
 msgid "ANONYMOUS"
 msgstr ""
 
-#: ../website_views.py:361
+#: ../website_views.py:362
 msgid "About"
 msgstr "关于IKAARO"
 
@@ -1031,24 +1035,24 @@ msgctxt "legend"
 msgid "Access Forbidden"
 msgstr ""
 
-#: ../user_views.py:195
+#: ../user_views.py:213
 #, fuzzy
 msgid "Account changed."
 msgstr "用户资料被变更."
 
-#: ../ui/WorkflowAware_state.xml.en:44
+#: ../ui/WorkflowAware_state.xml.en:41
 #, fuzzy
 msgctxt "table cell"
 msgid "Action"
 msgstr "登录"
 
-#: ../access.py:141
+#: ../access.py:140
 #, fuzzy
 msgid "Active"
 msgstr "名称"
 
-#: ../text_views.py:260 ../resource_views.py:90 ../table_views.py:223
-#: ../tracker/tracker_views.py:189
+#: ../text_views.py:260 ../resource_views.py:89 ../table_views.py:223
+#: ../tracker/tracker_views.py:205
 msgid "Add"
 msgstr "加入"
 
@@ -1059,7 +1063,7 @@ msgctxt "button"
 msgid "Add"
 msgstr "加入"
 
-#: ../resource_views.py:102
+#: ../resource_views.py:101
 msgid "Add $class_title"
 msgstr ""
 
@@ -1079,7 +1083,7 @@ msgctxt "legend"
 msgid "Add Issue"
 msgstr "用户"
 
-#: ../access.py:184
+#: ../access.py:183
 #, fuzzy
 msgid "Add New Member"
 msgstr "新文件夹"
@@ -1095,7 +1099,7 @@ msgstr "新文件夹"
 msgid "Add Record"
 msgstr "新用户"
 
-#: ../resource_views.py:67
+#: ../resource_views.py:66
 #, fuzzy
 msgid "Add Resource"
 msgstr "新用户"
@@ -1134,21 +1138,21 @@ msgctxt "legend"
 msgid "Add another language"
 msgstr "语言"
 
-#: ../future/dressable.py:61
+#: ../future/dressable.py:73
 #, fuzzy
 msgid "Add new %s"
 msgstr "新用户"
 
-#: ../resource_views.py:99 ../folder_views.py:109
+#: ../resource_views.py:98 ../folder_views.py:109
 #, fuzzy
 msgid "Add resource"
 msgstr "新用户"
 
-#: ../root.py:97 ../access.py:345
+#: ../root.py:91 ../access.py:347
 msgid "Admin"
 msgstr ""
 
-#: ../tracker/tracker_views.py:135
+#: ../tracker/tracker_views.py:151
 msgid "Advanced"
 msgstr ""
 
@@ -1158,7 +1162,7 @@ msgid ""
 "An email has been sent to you with the procedure to change your password."
 msgstr ""
 
-#: ../website_views.py:201
+#: ../website_views.py:202
 msgid ""
 "An email has been sent to you, to finish the registration process follow the "
 "instructions detailed in it."
@@ -1173,7 +1177,7 @@ msgctxt "paragraph"
 msgid "Apologies for the inconvenience."
 msgstr ""
 
-#: ../user_views.py:233
+#: ../user_views.py:251
 msgid "Application preferences changed."
 msgstr ""
 
@@ -1199,7 +1203,7 @@ msgctxt "emphasis"
 msgid "Assign To:"
 msgstr ""
 
-#: ../tracker/ui/add_issue.xml.en:91 ../tracker/ui/change_bugs.xml.en:72
+#: ../tracker/ui/add_issue.xml.en:91 ../tracker/ui/change_bugs.xml.en:73
 #: ../tracker/ui/edit_issue.xml.en:95
 msgctxt "label"
 msgid "Assign To:"
@@ -1211,7 +1215,7 @@ msgctxt "legend"
 msgid "Assign a resource"
 msgstr "新用户"
 
-#: ../tracker/tracker_views.py:57 ../tracker/issue.py:316
+#: ../tracker/tracker_views.py:56 ../tracker/issue.py:317
 msgid "Assigned To"
 msgstr ""
 
@@ -1261,7 +1265,7 @@ msgctxt "paragraph"
 msgid "Be sure your have the external editor plug-in installed."
 msgstr ""
 
-#: ../forms.py:519
+#: ../forms.py:524
 msgid "Body"
 msgstr "正文"
 
@@ -1275,7 +1279,7 @@ msgstr "文件夹"
 msgid "Broken Links"
 msgstr ""
 
-#: ../folder_views.py:212
+#: ../folder_views.py:215
 #, fuzzy
 msgid "Browse Content"
 msgstr "浏览"
@@ -1307,7 +1311,7 @@ msgstr "禄 Browse and link an image from the workspace:"
 msgid "Bug"
 msgstr ""
 
-#: ../ui/WorkflowAware_state.xml.en:45
+#: ../ui/WorkflowAware_state.xml.en:42
 #, fuzzy
 msgctxt "table cell"
 msgid "By"
@@ -1321,7 +1325,7 @@ msgstr ""
 msgid "Bzip2 Compressed"
 msgstr ""
 
-#: ../tracker/issue.py:333
+#: ../tracker/issue.py:334
 #, fuzzy
 msgid "CC"
 msgstr "加入"
@@ -1366,7 +1370,7 @@ msgstr "登录"
 msgid "Catalan"
 msgstr "加泰隆尼语"
 
-#: ../ui/WorkflowAware_state.xml.en:30 ../ui/PO_edit.xml.en:37
+#: ../ui/WorkflowAware_state.xml.en:27 ../ui/PO_edit.xml.en:37
 #: ../ui/website/contact_options.xml.en:21
 #, fuzzy
 msgctxt "button"
@@ -1378,7 +1382,7 @@ msgctxt "legend"
 msgid "Change Role of ${name}"
 msgstr ""
 
-#: ../tracker/tracker_views.py:144 ../tracker/tracker_views.py:648
+#: ../tracker/tracker_views.py:160 ../tracker/tracker_views.py:663
 #, fuzzy
 msgid "Change Several Issues"
 msgstr "改变内设"
@@ -1395,7 +1399,7 @@ msgctxt "button"
 msgid "Change default"
 msgstr "改变内设"
 
-#: ../user_views.py:241
+#: ../user_views.py:259
 #, fuzzy
 msgid "Change your password."
 msgstr "改变内设"
@@ -1493,19 +1497,19 @@ msgctxt "emphasis"
 msgid "Comment:"
 msgstr "新文件"
 
-#: ../tracker/ui/change_bugs.xml.en:84 ../tracker/ui/edit_resource.xml.en:50
+#: ../tracker/ui/change_bugs.xml.en:85 ../tracker/ui/edit_resource.xml.en:50
 #, fuzzy
 msgctxt "label"
 msgid "Comment:"
 msgstr "新文件"
 
-#: ../ui/WorkflowAware_state.xml.en:46
+#: ../ui/WorkflowAware_state.xml.en:43
 #, fuzzy
 msgctxt "table cell"
 msgid "Comments"
 msgstr "新文件"
 
-#: ../ui/WorkflowAware_state.xml.en:24
+#: ../ui/WorkflowAware_state.xml.en:21
 msgctxt "label"
 msgid "Comments (optional):"
 msgstr ""
@@ -1519,11 +1523,11 @@ msgctxt "label"
 msgid "Confirm"
 msgstr ""
 
-#: ../user.py:195
+#: ../user.py:176
 msgid "Confirmation required"
 msgstr ""
 
-#: ../user.py:211
+#: ../user_views.py:98
 #, fuzzy
 msgid "Confirmation sent!"
 msgstr "查阅"
@@ -1532,7 +1536,7 @@ msgstr "查阅"
 msgid "Confirmed"
 msgstr ""
 
-#: ../website_views.py:223
+#: ../website_views.py:224
 msgid "Contact"
 msgstr "联系我们"
 
@@ -1553,7 +1557,7 @@ msgstr "浏览"
 msgid "Control Panel"
 msgstr ""
 
-#: ../buttons.py:63
+#: ../buttons.py:71
 msgid "Copy"
 msgstr "复制"
 
@@ -1571,7 +1575,7 @@ msgstr ""
 msgid "Create and publish a Web Page."
 msgstr "列出文档"
 
-#: ../website_views.py:376
+#: ../website_views.py:377
 msgid "Credits"
 msgstr ""
 
@@ -1585,7 +1589,7 @@ msgctxt "paragraph"
 msgid "Current state:"
 msgstr "编辑文档"
 
-#: ../buttons.py:72
+#: ../buttons.py:80
 msgid "Cut"
 msgstr "剪切"
 
@@ -1603,7 +1607,7 @@ msgstr ""
 msgid "Data updated"
 msgstr "文件被上载."
 
-#: ../ui/WorkflowAware_state.xml.en:43 ../ui/file/history.xml.en:12
+#: ../ui/WorkflowAware_state.xml.en:40 ../ui/file/history.xml.en:12
 #, fuzzy
 msgctxt "table cell"
 msgid "Date"
@@ -1643,7 +1647,7 @@ msgctxt "button"
 msgid "Definitely remove"
 msgstr ""
 
-#: ../forms.py:516
+#: ../forms.py:521
 msgid "Description"
 msgstr ""
 
@@ -1660,9 +1664,9 @@ msgid "Description:"
 msgstr "名称"
 
 #: ../tracker/ui/change_bugs.xml.en:20 ../tracker/ui/change_bugs.xml.en:28
-#: ../tracker/ui/change_bugs.xml.en:37 ../tracker/ui/change_bugs.xml.en:47
-#: ../tracker/ui/change_bugs.xml.en:55 ../tracker/ui/change_bugs.xml.en:63
-#: ../tracker/ui/change_bugs.xml.en:75
+#: ../tracker/ui/change_bugs.xml.en:37 ../tracker/ui/change_bugs.xml.en:48
+#: ../tracker/ui/change_bugs.xml.en:56 ../tracker/ui/change_bugs.xml.en:64
+#: ../tracker/ui/change_bugs.xml.en:76
 #, fuzzy
 msgctxt "option"
 msgid "Do not change"
@@ -1672,12 +1676,12 @@ msgstr "编辑文档"
 msgid "Download"
 msgstr ""
 
-#: ../future/dressable.py:129
+#: ../future/dressable.py:146
 #, fuzzy
 msgid "Dressable"
 msgstr "信息"
 
-#: ../user_views.py:143 ../website_views.py:167
+#: ../user_views.py:161 ../website_views.py:168
 #, fuzzy
 msgid "E-mail Address"
 msgstr "用户"
@@ -1688,8 +1692,8 @@ msgctxt "label"
 msgid "E-mail Address"
 msgstr "用户"
 
-#: ../resource_views.py:136 ../text_views.py:41 ../text_views.py:101
-#: ../future/dressable.py:43
+#: ../resource_views.py:135 ../text_views.py:41 ../text_views.py:101
+#: ../future/dressable.py:44
 msgid "Edit"
 msgstr "编辑"
 
@@ -1705,7 +1709,7 @@ msgctxt "link"
 msgid "Edit"
 msgstr "编辑"
 
-#: ../user_views.py:132
+#: ../user_views.py:150
 #, fuzzy
 msgid "Edit Account"
 msgstr "关于IKAARO"
@@ -1731,13 +1735,13 @@ msgctxt "legend"
 msgid "Edit Issue"
 msgstr "用户"
 
-#: ../tracker/ui/change_bugs.xml.en:91
+#: ../tracker/ui/change_bugs.xml.en:92
 #, fuzzy
 msgctxt "button"
 msgid "Edit Issues"
 msgstr "用户"
 
-#: ../resource_views.py:50
+#: ../resource_views.py:49
 #, fuzzy
 msgid "Edit Language"
 msgstr "语言"
@@ -1747,7 +1751,7 @@ msgstr "语言"
 msgid "Edit Page"
 msgstr "简易文件"
 
-#: ../user_views.py:240
+#: ../user_views.py:258
 #, fuzzy
 msgid "Edit Password"
 msgstr "密码"
@@ -1758,7 +1762,7 @@ msgctxt "legend"
 msgid "Edit Password"
 msgstr "密码"
 
-#: ../user_views.py:202
+#: ../user_views.py:220
 #, fuzzy
 msgid "Edit Preferences"
 msgstr "优先"
@@ -1785,7 +1789,7 @@ msgstr ""
 msgid "Edit Wiki"
 msgstr "简易文件"
 
-#: ../tracker/tracker_views.py:665
+#: ../tracker/tracker_views.py:680
 #, fuzzy
 msgid "Edit issues"
 msgstr "用户"
@@ -1794,7 +1798,7 @@ msgstr "用户"
 msgid "Edit record ${id}"
 msgstr ""
 
-#: ../tracker/issue_views.py:464
+#: ../tracker/issue_views.py:463
 #, fuzzy
 msgid "Edit resources"
 msgstr "用户"
@@ -1819,12 +1823,12 @@ msgctxt "legend"
 msgid "Edit the timetable grid"
 msgstr ""
 
-#: ../tracker/tracker_views.py:142
+#: ../tracker/tracker_views.py:158
 #, fuzzy
 msgid "Edit this search"
 msgstr "搜索"
 
-#: ../user_views.py:133
+#: ../user_views.py:151
 msgid "Edit your name and email address."
 msgstr ""
 
@@ -1850,12 +1854,6 @@ msgstr ""
 #: ../utils.py:94
 msgid "English"
 msgstr "英语"
-
-#: ../ui/html/addimage.xml.en:7 ../ui/html/addlink.xml.en:7
-#: ../future/ui/order_addlink.xml.en:7
-msgctxt "title"
-msgid "Epoz-Toolbox"
-msgstr ""
 
 #: ../table_views.py:212
 #, fuzzy
@@ -1889,7 +1887,7 @@ msgctxt "button"
 msgid "Export"
 msgstr "简易文件"
 
-#: ../tracker/tracker_views.py:148 ../tracker/tracker_views.py:589
+#: ../tracker/tracker_views.py:164 ../tracker/tracker_views.py:604
 msgid "Export to CSV"
 msgstr ""
 
@@ -1899,7 +1897,7 @@ msgctxt "legend"
 msgid "Export to CSV"
 msgstr "简易文件"
 
-#: ../tracker/tracker_views.py:146
+#: ../tracker/tracker_views.py:162
 #, fuzzy
 msgid "Export to Text"
 msgstr "简易文件"
@@ -1943,8 +1941,8 @@ msgctxt "label"
 msgid "File"
 msgstr "名称"
 
-#: ../user_views.py:141 ../website_views.py:165 ../access.py:65
-#: ../access.py:112
+#: ../user_views.py:159 ../website_views.py:166 ../access.py:64
+#: ../access.py:111
 #, fuzzy
 msgid "First Name"
 msgstr "你的全名"
@@ -1966,13 +1964,13 @@ msgstr "新文件"
 msgid "Folder"
 msgstr "文件夹"
 
-#: ../tracker/ui/menu_remember.xml.en:20
+#: ../tracker/ui/menu_remember.xml.en:22
 #, fuzzy
 msgctxt "button"
 msgid "Forget this Search"
 msgstr "搜索"
 
-#: ../website_views.py:117
+#: ../website_views.py:118
 #, fuzzy
 msgid "Forgotten password"
 msgstr "改变内设"
@@ -2034,7 +2032,7 @@ msgstr ""
 msgid "German"
 msgstr "概略"
 
-#: ../tracker/tracker_views.py:166
+#: ../tracker/tracker_views.py:182
 msgid "Give the title of one Product"
 msgstr ""
 
@@ -2043,7 +2041,7 @@ msgctxt "button"
 msgid "Go"
 msgstr ""
 
-#: ../tracker/tracker_views.py:67
+#: ../tracker/tracker_views.py:66
 #, fuzzy
 msgid "Go To Issue"
 msgstr "用户"
@@ -2072,11 +2070,11 @@ msgctxt "title attribute"
 msgid "Go to previous message"
 msgstr "此处无内容."
 
-#: ../access.py:186
+#: ../access.py:185
 msgid "Grant access to a new user."
 msgstr ""
 
-#: ../access.py:342
+#: ../access.py:344
 msgid "Guest"
 msgstr ""
 
@@ -2150,7 +2148,7 @@ msgstr ""
 msgid "High Priority"
 msgstr ""
 
-#: ../versioning.py:41 ../tracker/issue_views.py:196
+#: ../versioning.py:41 ../tracker/issue_views.py:195
 msgid "History"
 msgstr "记录"
 
@@ -2164,7 +2162,7 @@ msgctxt "link"
 msgid "I forgot my password"
 msgstr "改变内设"
 
-#: ../tracker/tracker_views.py:49
+#: ../tracker/tracker_views.py:48
 msgid "Id"
 msgstr ""
 
@@ -2200,6 +2198,18 @@ msgstr "改变内设"
 msgid "Image"
 msgstr ""
 
+#: ../ui/html/addimage.xml.en:7
+#, fuzzy
+msgctxt "title"
+msgid "Insert Image"
+msgstr "新链接"
+
+#: ../ui/html/addlink.xml.en:7 ../future/ui/order_addlink.xml.en:7
+#, fuzzy
+msgctxt "title"
+msgid "Insert Link"
+msgstr "新链接"
+
 #: ../wiki/ui/edit.xml.en:69
 #, fuzzy
 msgctxt "title attribute"
@@ -2223,7 +2233,7 @@ msgctxt "legend"
 msgid "Internal Server Error"
 msgstr ""
 
-#: ../resource_views.py:461 ../forum/forum.py:92
+#: ../resource_views.py:464 ../forum/forum.py:92
 msgid "Invalid title."
 msgstr ""
 
@@ -2240,7 +2250,7 @@ msgstr ""
 msgid "Issue Tracker"
 msgstr ""
 
-#: ../tracker/tracker_views.py:508 ../tracker/tracker_views.py:512
+#: ../tracker/tracker_views.py:523 ../tracker/tracker_views.py:527
 msgid "Issue not found."
 msgstr ""
 
@@ -2281,7 +2291,7 @@ msgstr ""
 msgid "June"
 msgstr ""
 
-#: ../forms.py:518
+#: ../forms.py:523
 msgid "Keywords (Separated by comma)"
 msgstr ""
 
@@ -2309,7 +2319,7 @@ msgctxt "title attribute"
 msgid "Large Edit Text"
 msgstr "简易文件"
 
-#: ../folder_views.py:234
+#: ../folder_views.py:237
 msgid "Last Author"
 msgstr ""
 
@@ -2318,15 +2328,19 @@ msgstr ""
 msgid "Last Changes"
 msgstr "改换"
 
-#: ../folder_views.py:233
+#: ../folder_views.py:236
 msgid "Last Modified"
 msgstr ""
 
-#: ../user_views.py:142 ../website_views.py:166 ../access.py:64
-#: ../access.py:113
+#: ../user_views.py:160 ../website_views.py:167 ../access.py:63
+#: ../access.py:112
 #, fuzzy
 msgid "Last Name"
 msgstr "姓名"
+
+#: ../future/dressable.py:57
+msgid "Layout items MUST be 2 values tuples: "
+msgstr ""
 
 #: ../website.py:170
 msgid "License"
@@ -2357,7 +2371,7 @@ msgctxt "legend"
 msgid "Log in"
 msgstr "登录"
 
-#: ../resource_views.py:499 ../access.py:63 ../access.py:111
+#: ../resource_views.py:502 ../access.py:62 ../access.py:110
 msgid "Login"
 msgstr "登录"
 
@@ -2394,11 +2408,11 @@ msgctxt "title attribute"
 msgid "Medium Edit Text"
 msgstr "简易文件"
 
-#: ../access.py:343
+#: ../access.py:345
 msgid "Member"
 msgstr ""
 
-#: ../access.py:148
+#: ../access.py:147
 #, fuzzy
 msgid "Members deleted."
 msgstr "没有物件被选中"
@@ -2429,7 +2443,7 @@ msgstr "信息"
 msgid "Message Catalog"
 msgstr "信息"
 
-#: ../website_views.py:239
+#: ../website_views.py:240
 #, fuzzy
 msgid "Message body"
 msgstr "信息"
@@ -2439,12 +2453,12 @@ msgstr "信息"
 msgid "Message in a thread"
 msgstr "信息被修正."
 
-#: ../website_views.py:268
+#: ../website_views.py:269
 #, fuzzy
 msgid "Message sent."
 msgstr "信息被修正."
 
-#: ../website_views.py:238
+#: ../website_views.py:239
 msgid "Message subject"
 msgstr "信息目的"
 
@@ -2453,17 +2467,17 @@ msgstr "信息目的"
 msgid "Message(s) deleted !"
 msgstr "信息被修正."
 
-#: ../future/dressable.py:68
+#: ../future/dressable.py:80
 #, fuzzy
 msgid "Metadata"
 msgstr "附加信息"
 
-#: ../tracker/tracker_views.py:735
+#: ../tracker/tracker_views.py:750
 #, fuzzy
 msgid "Modifications:"
 msgstr "登录"
 
-#: ../tracker/tracker_views.py:58
+#: ../tracker/tracker_views.py:57
 msgid "Modified"
 msgstr ""
 
@@ -2473,7 +2487,7 @@ msgctxt "label"
 msgid "Modified since:"
 msgstr "登录"
 
-#: ../tracker/tracker_views.py:52 ../tracker/issue.py:286
+#: ../tracker/tracker_views.py:51 ../tracker/issue.py:287
 #, fuzzy
 msgid "Module"
 msgstr "编码"
@@ -2504,7 +2518,7 @@ msgstr ""
 msgid "Monthly View"
 msgstr ""
 
-#: ../views.py:418 ../resource_views.py:89 ../folder_views.py:230
+#: ../views.py:414 ../resource_views.py:88 ../folder_views.py:233
 msgid "Name"
 msgstr "姓名"
 
@@ -2543,7 +2557,7 @@ msgctxt "label"
 msgid "New Password"
 msgstr "密码"
 
-#: ../tracker/tracker_views.py:237
+#: ../tracker/tracker_views.py:252
 #, fuzzy
 msgid "New issue added."
 msgstr "新资料被加入."
@@ -2578,11 +2592,11 @@ msgctxt "li"
 msgid "Nicolas Deram (French)"
 msgstr ""
 
-#: ../forms.py:240
+#: ../forms.py:239
 msgid "No"
 msgstr ""
 
-#: ../tracker/tracker_views.py:609 ../tracker/tracker_views.py:697
+#: ../tracker/tracker_views.py:624 ../tracker/tracker_views.py:712
 msgid "No data to export."
 msgstr ""
 
@@ -2591,7 +2605,7 @@ msgctxt "paragraph"
 msgid "No document awaits your review."
 msgstr ""
 
-#: ../ui/WorkflowAware_state.xml.en:37
+#: ../ui/WorkflowAware_state.xml.en:34
 #, fuzzy
 msgctxt "paragraph"
 msgid "No history."
@@ -2659,7 +2673,7 @@ msgstr ""
 
 #: ../ui/html/addlink.xml.en:122 ../ui/ical/daily_view.xml.en:12
 #: ../ui/website/forgotten_password_form.xml.en:19
-#: ../ui/ical/edit_event.xml.en:130 ../tracker/ui/menu_remember.xml.en:15
+#: ../ui/ical/edit_event.xml.en:130 ../tracker/ui/menu_remember.xml.en:17
 #: ../ui/folder/browse_search.xml.en:24 ../ui/generic/browse_search.xml.en:16
 #: ../ui/website/search_form.xml.en:11
 msgctxt "button"
@@ -2680,22 +2694,22 @@ msgstr "编辑文档"
 msgid "OOo Writer"
 msgstr "写入"
 
-#: ../future/menu.py:134
+#: ../future/menu.py:135
 #, fuzzy
 msgid "Objects ordered down."
 msgstr "物件被更名"
 
-#: ../future/menu.py:156
+#: ../future/menu.py:157
 #, fuzzy
 msgid "Objects ordered on bottom."
 msgstr "用户被加入."
 
-#: ../future/menu.py:145
+#: ../future/menu.py:146
 #, fuzzy
 msgid "Objects ordered on top."
 msgstr "用户被加入."
 
-#: ../future/menu.py:124
+#: ../future/menu.py:125
 #, fuzzy
 msgid "Objects ordered up."
 msgstr "物件被更名"
@@ -2823,16 +2837,16 @@ msgctxt "label"
 msgid "Password"
 msgstr "密码"
 
-#: ../user_views.py:290
+#: ../user_views.py:308
 msgid "Password changed."
 msgstr "密码被修改."
 
-#: ../user_views.py:275
+#: ../user_views.py:293
 #, fuzzy
 msgid "Passwords mismatch, please try again."
 msgstr "密码错误,请再输入."
 
-#: ../buttons.py:82
+#: ../buttons.py:89
 msgid "Paste"
 msgstr "粘贴"
 
@@ -2859,22 +2873,22 @@ msgctxt "fieldset"
 msgid "Please select encoding:"
 msgstr "你必须选择删除成员."
 
-#: ../future/menu.py:130
+#: ../future/menu.py:131
 #, fuzzy
 msgid "Please select the objects to order down."
 msgstr "你必须选择删除成员."
 
-#: ../future/menu.py:151
+#: ../future/menu.py:152
 #, fuzzy
 msgid "Please select the objects to order on bottom."
 msgstr "你必须选择删除成员."
 
-#: ../future/menu.py:140
+#: ../future/menu.py:141
 #, fuzzy
 msgid "Please select the objects to order on top."
 msgstr "你必须选择删除成员."
 
-#: ../future/menu.py:120
+#: ../future/menu.py:121
 #, fuzzy
 msgid "Please select the objects to order up."
 msgstr "你必须选择删除成员."
@@ -2934,12 +2948,12 @@ msgctxt "title attribute"
 msgid "Preformatted"
 msgstr "格式"
 
-#: ../future/dressable.py:71
+#: ../future/dressable.py:85
 #, fuzzy
 msgid "Preview"
 msgstr "查阅"
 
-#: ../folder_views.py:568
+#: ../folder_views.py:570
 #, fuzzy
 msgid "Preview Content"
 msgstr "浏览"
@@ -2950,7 +2964,7 @@ msgctxt "title attribute"
 msgid "Previous"
 msgstr "查阅"
 
-#: ../tracker/tracker_views.py:56 ../tracker/issue.py:289
+#: ../tracker/tracker_views.py:55 ../tracker/issue.py:290
 msgid "Priority"
 msgstr ""
 
@@ -2959,7 +2973,7 @@ msgctxt "emphasis"
 msgid "Priority:"
 msgstr ""
 
-#: ../tracker/ui/add_issue.xml.en:81 ../tracker/ui/change_bugs.xml.en:61
+#: ../tracker/ui/add_issue.xml.en:81 ../tracker/ui/change_bugs.xml.en:62
 #: ../tracker/ui/edit_issue.xml.en:85
 msgctxt "label"
 msgid "Priority:"
@@ -2975,7 +2989,7 @@ msgstr ""
 msgid "Private"
 msgstr "隐私"
 
-#: ../tracker/tracker_views.py:51 ../tracker/tables.py:211
+#: ../tracker/tracker_views.py:50 ../tracker/tables.py:211
 #: ../tracker/tables.py:238
 #, fuzzy
 msgid "Product"
@@ -2998,7 +3012,7 @@ msgctxt "label"
 msgid "Product:<g id='9'> (<g id='10'>Edit</g>)</g>"
 msgstr ""
 
-#: ../user_views.py:88
+#: ../user_views.py:106
 msgid "Profile"
 msgstr ""
 
@@ -3007,7 +3021,7 @@ msgstr ""
 msgid "Public"
 msgstr "公共"
 
-#: ../buttons.py:91
+#: ../buttons.py:107
 #, fuzzy
 msgid "Publish"
 msgstr "公共"
@@ -3029,16 +3043,16 @@ msgstr ""
 msgid "RTF Document"
 msgstr "新文件"
 
-#: ../website_views.py:236
+#: ../website_views.py:237
 msgid "Recipient"
 msgstr "收件人"
 
-#: ../table_views.py:162 ../table_views.py:334 ../future/menu.py:114
+#: ../table_views.py:162 ../table_views.py:334 ../future/menu.py:115
 #, fuzzy
 msgid "Record deleted."
 msgstr "记录被修正."
 
-#: ../website_views.py:156 ../website_views.py:157
+#: ../website_views.py:157 ../website_views.py:158
 #, fuzzy
 msgid "Register"
 msgstr "查阅"
@@ -3052,12 +3066,12 @@ msgstr "删除文档"
 msgid "Released"
 msgstr "查阅"
 
-#: ../tracker/tracker_views.py:82
+#: ../tracker/tracker_views.py:81
 #, fuzzy
 msgid "Remember this search"
 msgstr "查阅"
 
-#: ../buttons.py:45
+#: ../buttons.py:53
 msgid "Remove"
 msgstr "删除"
 
@@ -3073,7 +3087,7 @@ msgctxt "label"
 msgid "Remove selected CCs"
 msgstr ""
 
-#: ../buttons.py:54
+#: ../buttons.py:62
 #, fuzzy
 msgid "Rename"
 msgstr "重命名"
@@ -3112,7 +3126,7 @@ msgctxt "button"
 msgid "Replace"
 msgstr "查阅"
 
-#: ../forms.py:521
+#: ../forms.py:526
 #, fuzzy
 msgid "Replace file"
 msgstr "上载文件"
@@ -3137,7 +3151,7 @@ msgstr ""
 msgid "Request the document publication."
 msgstr ""
 
-#: ../access.py:140
+#: ../access.py:139
 #, fuzzy
 msgid "Resend Confirmation"
 msgstr "查阅"
@@ -3163,7 +3177,7 @@ msgctxt "label"
 msgid "Resource:"
 msgstr "新文件夹"
 
-#: ../tracker/tracker_views.py:150 ../tracker/resources.py:175
+#: ../tracker/tracker_views.py:166 ../tracker/resources.py:175
 #, fuzzy
 msgid "Resources"
 msgstr "新文件夹"
@@ -3247,17 +3261,17 @@ msgstr "删除文档"
 msgid "Retract the document."
 msgstr "删除文档"
 
-#: ../access.py:344
+#: ../access.py:346
 #, fuzzy
 msgid "Reviewer"
 msgstr "查阅"
 
-#: ../access.py:114
+#: ../access.py:113
 #, fuzzy
 msgid "Role"
 msgstr "删除"
 
-#: ../access.py:177
+#: ../access.py:176
 #, fuzzy
 msgid "Role updated."
 msgstr "文件被上载."
@@ -3271,7 +3285,7 @@ msgstr "没有物件被选中"
 msgid "Saturday"
 msgstr ""
 
-#: ../forms.py:542
+#: ../forms.py:547
 #, fuzzy
 msgid "Save"
 msgstr "保存"
@@ -3299,7 +3313,7 @@ msgstr "改换"
 msgid "Schedule your time with calendar files."
 msgstr ""
 
-#: ../tracker/tracker_views.py:372 ../website_views.py:275
+#: ../tracker/tracker_views.py:387 ../website_views.py:276
 msgid "Search"
 msgstr "搜索"
 
@@ -3342,7 +3356,7 @@ msgstr ""
 msgid "See the users and their roles."
 msgstr "用户被加入."
 
-#: ../user_views.py:298
+#: ../user_views.py:316
 msgid "See your pending tasks."
 msgstr ""
 
@@ -3366,7 +3380,7 @@ msgctxt "label"
 msgid "Select the contact accounts"
 msgstr ""
 
-#: ../website_views.py:224
+#: ../website_views.py:225
 msgid "Send"
 msgstr "发送"
 
@@ -3374,7 +3388,7 @@ msgstr "发送"
 msgid "September"
 msgstr ""
 
-#: ../user_views.py:203
+#: ../user_views.py:221
 #, fuzzy
 msgid "Set your preferred language."
 msgstr "选择你的语言"
@@ -3383,7 +3397,7 @@ msgstr "选择你的语言"
 msgid "Show resources not linked from anywhere."
 msgstr ""
 
-#: ../folder_views.py:235
+#: ../folder_views.py:238
 msgid "Size"
 msgstr "尺寸"
 
@@ -3440,12 +3454,12 @@ msgctxt "label"
 msgid "Start:"
 msgstr "状态"
 
-#: ../tracker/tracker_views.py:55 ../access.py:115 ../folder_views.py:236
-#: ../tracker/issue.py:290
+#: ../tracker/tracker_views.py:54 ../access.py:114 ../folder_views.py:239
+#: ../tracker/issue.py:291
 msgid "State"
 msgstr "状态"
 
-#: ../ui/WorkflowAware_state.xml.en:34
+#: ../ui/WorkflowAware_state.xml.en:31
 #, fuzzy
 msgctxt "heading"
 msgid "State History"
@@ -3469,7 +3483,7 @@ msgctxt "label"
 msgid "Status (mandatory):"
 msgstr "密码错误,请再输入."
 
-#: ../tracker/ui/change_bugs.xml.en:53
+#: ../tracker/ui/change_bugs.xml.en:54
 #, fuzzy
 msgctxt "label"
 msgid "Status:"
@@ -3480,12 +3494,12 @@ msgctxt "label"
 msgid "Status:<g id='25'> (<g id='26'>Edit</g>)</g>"
 msgstr ""
 
-#: ../tracker/stored.py:53
+#: ../tracker/stored.py:52
 #, fuzzy
 msgid "Stored Search"
 msgstr "搜索"
 
-#: ../tracker/tracker_views.py:111
+#: ../tracker/tracker_views.py:127
 msgid "Stored Searches"
 msgstr ""
 
@@ -3525,7 +3539,7 @@ msgstr ""
 msgid "Target"
 msgstr "对照"
 
-#: ../user_views.py:297
+#: ../user_views.py:315
 msgid "Tasks"
 msgstr ""
 
@@ -3538,7 +3552,7 @@ msgstr ""
 msgid "Tentative"
 msgstr "名称"
 
-#: ../views.py:417
+#: ../views.py:413
 msgid "Text"
 msgstr ""
 
@@ -3547,7 +3561,7 @@ msgctxt "label"
 msgid "Text (search within the title and all comments)"
 msgstr ""
 
-#: ../forms.py:560
+#: ../forms.py:565
 msgid ""
 "The <span class=\"field_is_required\">emphasized</span> fields are required."
 msgstr ""
@@ -3585,8 +3599,8 @@ msgstr "用户名错误,请再输入."
 msgid "The file must be entered."
 msgstr "必须写入文件."
 
-#: ../resource_views.py:381
-msgid "The given file is not of the type \"$class_id\"."
+#: ../resource_views.py:387
+msgid "The given file is none of the types $class_ids."
 msgstr ""
 
 #: ../calendar_views.py:146
@@ -3598,7 +3612,7 @@ msgstr "用户被加入."
 msgid "The name is missing."
 msgstr ""
 
-#: ../resource_views.py:534
+#: ../resource_views.py:531
 #, fuzzy
 msgid "The password is wrong."
 msgstr "密码错误,请再输入."
@@ -3613,22 +3627,22 @@ msgctxt "paragraph"
 msgid "The requested URL « ${uri} » was not found on this server."
 msgstr ""
 
-#: ../tracker/tracker_views.py:493
+#: ../tracker/tracker_views.py:508
 #, fuzzy
 msgid "The search has been removed."
 msgstr "预设语言已被改变."
 
-#: ../tracker/tracker_views.py:468
+#: ../tracker/tracker_views.py:483
 #, fuzzy
 msgid "The search has been stored."
 msgstr "预设语言已被改变."
 
-#: ../tracker/tracker_views.py:471
+#: ../tracker/tracker_views.py:486
 #, fuzzy
 msgid "The search title has been changed."
 msgstr "预设语言已被改变."
 
-#: ../resource_views.py:523
+#: ../resource_views.py:524
 msgid "The user \"$username\" does not exist."
 msgstr ""
 
@@ -3637,7 +3651,7 @@ msgstr ""
 msgid "The user $title did some changes."
 msgstr "名称"
 
-#: ../access.py:242
+#: ../access.py:241
 #, fuzzy
 msgid "The user is already here."
 msgstr "用户被加入."
@@ -3647,12 +3661,12 @@ msgctxt "paragraph"
 msgid "The user is not active, (s)he has not confirmed registration."
 msgstr ""
 
-#: ../tracker/issue_views.py:336
+#: ../tracker/issue_views.py:335
 #, fuzzy
 msgid "There are ${n} assignments."
 msgstr "此处无图片."
 
-#: ../views.py:173
+#: ../views.py:171
 #, fuzzy
 msgid "There are ${n} items."
 msgstr "此处无图片."
@@ -3669,17 +3683,17 @@ msgctxt "paragraph"
 msgid "There has been an error, please try again later."
 msgstr "用户名错误,请再输入."
 
-#: ../tracker/issue_views.py:335
+#: ../tracker/issue_views.py:334
 #, fuzzy
 msgid "There is 1 assignment."
 msgstr "名称"
 
-#: ../views.py:172
+#: ../views.py:170
 #, fuzzy
 msgid "There is 1 item."
 msgstr "名称"
 
-#: ../website_views.py:184
+#: ../website_views.py:185
 #, fuzzy
 msgid "There is already an active user with that email."
 msgstr "此文件名已被另外资源占有."
@@ -3688,12 +3702,12 @@ msgstr "此文件名已被另外资源占有."
 msgid "There is already another resource with this name."
 msgstr "此文件名已被另外资源占有."
 
-#: ../user_views.py:186
+#: ../user_views.py:204
 #, fuzzy
 msgid "There is another user with the email \"${email}\", please try again."
 msgstr "此用户名已登记\"%s\", 请输入另一用户名."
 
-#: ../website_views.py:136
+#: ../website_views.py:137
 #, fuzzy
 msgid "There is not a user identified as \"$username\""
 msgstr "此用户名已登记\"%s\", 请输入另一用户名."
@@ -3753,8 +3767,8 @@ msgstr "名称"
 msgid "Timetables updated successfully."
 msgstr ""
 
-#: ../tracker/tracker_views.py:50 ../tracker/issue.py:281 ../views.py:416
-#: ../future/order.py:33 ../forms.py:514 ../folder_views.py:231
+#: ../tracker/tracker_views.py:49 ../tracker/issue.py:281 ../views.py:412
+#: ../future/order.py:33 ../forms.py:519 ../folder_views.py:234
 #: ../future/menu.py:199
 msgid "Title"
 msgstr "名称"
@@ -3795,11 +3809,11 @@ msgctxt "label"
 msgid "To confirm these changes, you must type your current password"
 msgstr ""
 
-#: ../user_views.py:153
+#: ../user_views.py:171
 msgid "To confirm these changes, you must type your password"
 msgstr ""
 
-#: ../user.py:197
+#: ../user.py:178
 msgid ""
 "To confirm your identity click the link:\n"
 "\n"
@@ -3821,7 +3835,7 @@ msgstr ""
 msgid "To manage bugs and tasks"
 msgstr ""
 
-#: ../user.py:299
+#: ../user.py:280
 msgid "To manage the users please go <a href=\"/;browse_users\">here</a>."
 msgstr ""
 
@@ -3845,8 +3859,8 @@ msgstr "保存翻译件"
 msgid "Tuesday"
 msgstr ""
 
-#: ../tracker/tracker_views.py:54 ../folder_views.py:232
-#: ../tracker/issue.py:288
+#: ../tracker/tracker_views.py:53 ../folder_views.py:235
+#: ../tracker/issue.py:289
 #, fuzzy
 msgid "Type"
 msgstr "种类"
@@ -3879,7 +3893,7 @@ msgctxt "emphasis"
 msgid "Type:"
 msgstr "种类"
 
-#: ../tracker/ui/change_bugs.xml.en:45
+#: ../tracker/ui/change_bugs.xml.en:46
 #, fuzzy
 msgctxt "label"
 msgid "Type:"
@@ -3902,7 +3916,7 @@ msgstr ""
 msgid "Unexpected file of mimetype ${type}"
 msgstr ""
 
-#: ../tracker/tracker_views.py:288
+#: ../tracker/tracker_views.py:303
 msgid "Unknown stored search \"${sname}\"."
 msgstr ""
 
@@ -3971,7 +3985,7 @@ msgstr "上载文件"
 msgid "Upload office documents, images, media files, etc."
 msgstr ""
 
-#: ../user.py:48
+#: ../user.py:50
 msgid "User"
 msgstr "用户"
 
@@ -3985,21 +3999,21 @@ msgstr "用户"
 msgid "User $user already saved this document, click \"Save\" again to force."
 msgstr ""
 
-#: ../access.py:110
+#: ../access.py:109
 #, fuzzy
 msgid "User ID"
 msgstr "用户"
 
-#: ../access.py:254
+#: ../access.py:253
 #, fuzzy
 msgid "User added."
 msgstr "加入用户"
 
-#: ../user.py:213
-msgid "User has already confirm his registration!"
+#: ../user_views.py:92
+msgid "User has already confirmed his registration!"
 msgstr ""
 
-#: ../user_views.py:89
+#: ../user_views.py:107
 msgid "User's profile page."
 msgstr ""
 
@@ -4009,7 +4023,7 @@ msgctxt "label"
 msgid "Username"
 msgstr "用户姓名"
 
-#: ../root.py:106
+#: ../root.py:100
 msgid "Users"
 msgstr "用户"
 
@@ -4018,7 +4032,7 @@ msgstr "用户"
 msgid "Verified"
 msgstr "版本被修正."
 
-#: ../tracker/tracker_views.py:53 ../tracker/issue.py:287
+#: ../tracker/tracker_views.py:52 ../tracker/issue.py:288
 #, fuzzy
 msgid "Version"
 msgstr "个人"
@@ -4053,9 +4067,9 @@ msgstr "浏览"
 
 #: ../file_views.py:372 ../file_views.py:463 ../file_views.py:475
 #: ../file_views.py:489 ../text_views.py:67 ../text_views.py:168 ../html.py:70
-#: ../tracker/tracker_views.py:246 ../user.py:297 ../table_views.py:42
+#: ../tracker/tracker_views.py:261 ../user.py:278 ../table_views.py:42
 #: ../wiki/page_views.py:59 ../forum/thread.py:42 ../folder_views.py:88
-#: ../forum/forum.py:44 ../future/dressable.py:81
+#: ../forum/forum.py:44 ../future/dressable.py:95
 msgid "View"
 msgstr "浏览"
 
@@ -4084,7 +4098,7 @@ msgstr ""
 msgid "Web Page"
 msgstr ""
 
-#: ../website_views.py:48 ../website.py:53
+#: ../website_views.py:49 ../website.py:53
 msgid "Web Site"
 msgstr ""
 
@@ -4100,7 +4114,7 @@ msgstr ""
 msgid "Weekly View"
 msgstr ""
 
-#: ../resource_views.py:558
+#: ../resource_views.py:555
 msgid "Welcome!"
 msgstr ""
 
@@ -4142,7 +4156,7 @@ msgstr ""
 msgid "XML File"
 msgstr ""
 
-#: ../forms.py:240
+#: ../forms.py:239
 msgid "Yes"
 msgstr ""
 
@@ -4151,7 +4165,7 @@ msgctxt "table cell"
 msgid "Yes"
 msgstr ""
 
-#: ../resource_views.py:574
+#: ../resource_views.py:571
 msgid "You Are Now Logged out."
 msgstr ""
 
@@ -4205,7 +4219,7 @@ msgid ""
 "support UTF-8 (not recommended)."
 msgstr ""
 
-#: ../user_views.py:176 ../user_views.py:268
+#: ../user_views.py:194 ../user_views.py:286
 msgid "You mistyped your actual password, your account is not changed."
 msgstr ""
 
@@ -4224,7 +4238,7 @@ msgstr ""
 msgid "Your confirmation key is invalid."
 msgstr ""
 
-#: ../website_views.py:237
+#: ../website_views.py:238
 #, fuzzy
 msgid "Your email address"
 msgstr "用户"
@@ -4264,7 +4278,7 @@ msgctxt "div"
 msgid "[ <g id='5'>  <g id='6'>${menu/label}</g>  <g id='7'>|</g>  </g> ]"
 msgstr ""
 
-#: ../tracker/tracker_views.py:760
+#: ../tracker/tracker_views.py:775
 msgid "[%s]"
 msgstr ""
 
@@ -4278,7 +4292,7 @@ msgstr ""
 msgid "huge"
 msgstr "改换"
 
-#: ../root.py:85
+#: ../root.py:79
 msgid "iKaaro"
 msgstr ""
 
