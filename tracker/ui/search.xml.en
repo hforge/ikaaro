@@ -48,7 +48,7 @@
         <tr>
           <td valign="top">
             <label for="product">Product:<stl:inline stl:if="is_admin"> (<a
-              href="./products/;view">Edit</a>)</stl:inline></label>
+              href="./product/;view">Edit</a>)</stl:inline></label>
             <br/>
             <select name="product" id="product" class="tracker_select"
               multiple="multiple" size="4">
@@ -58,7 +58,7 @@
           </td>
           <td valign="top">
             <label for="module">Module:<stl:inline stl:if="is_admin"> (<a
-              href="./modules/;view">Edit</a>)</stl:inline></label>
+              href="./module/;view">Edit</a>)</stl:inline></label>
             <br/>
             <select name="module" id="module" class="tracker_select"
               multiple="multiple" size="4">
@@ -68,7 +68,7 @@
           </td>
           <td valign="top">
             <label for="version">Version:<stl:inline stl:if="is_admin"> (<a
-              href="./versions/;view">Edit</a>)</stl:inline></label>
+              href="./version/;view">Edit</a>)</stl:inline></label>
             <br/>
             <select name="version" id="version" class="tracker_select"
               multiple="multiple" size="4">
@@ -80,7 +80,7 @@
         <tr>
           <td valign="top">
             <label for="type">Type:<stl:inline stl:if="is_admin"> (<a
-              href="./types/;view">Edit</a>)</stl:inline></label>
+              href="./type/;view">Edit</a>)</stl:inline></label>
             <br/>
             <select name="type" id="type" class="tracker_select"
               multiple="multiple" size="4">
@@ -90,7 +90,7 @@
           </td>
           <td valign="top">
             <label for="state">Status:<stl:inline stl:if="is_admin"> (<a
-              href="./states/;view">Edit</a>)</stl:inline></label>
+              href="./state/;view">Edit</a>)</stl:inline></label>
             <br/>
             <select name="state" id="state" class="tracker_select"
               multiple="multiple" size="4">
@@ -100,7 +100,7 @@
           </td>
           <td valign="top">
             <label for="priority">Priority:<stl:inline stl:if="is_admin"> (<a
-              href="./priorities/;view">Edit</a>)</stl:inline></label>
+              href="./priority/;view">Edit</a>)</stl:inline></label>
             <br/>
             <select name="priority" id="priority" class="tracker_select"
               multiple="multiple" size="4">
