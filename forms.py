@@ -439,7 +439,7 @@ class RTEWidget(Widget):
     template = list(XMLParser("""${rte}""", stl_namespaces))
 
     rte_template = '/ui/tiny_mce/rte.xml'
-    rte_css = ['/ui/aruni/aruni.css', '/ui/tiny_mce/content.css']
+    rte_css = ['/ui/aruni/style.css', '/ui/tiny_mce/content.css']
     rte_scripts = [
         '/ui/tiny_mce/tiny_mce_src.js',
         '/ui/tiny_mce/javascript.js']

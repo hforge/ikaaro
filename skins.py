@@ -169,8 +169,6 @@ class Skin(UIFolder):
         styles = [
             # BackOffice style
             '/ui/bo.css',
-            # Default skin: aruni
-            '/ui/aruni/aruni.css',
             # Calendar JS Widget (http://dynarch.com/mishoo/calendar.epl)
             '/ui/calendar/calendar-aruni.css',
             # Calendar

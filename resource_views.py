@@ -286,7 +286,7 @@ class DBResource_AddBase(STLForm):
       }
 
     styles = ['/ui/bo.css',
-              '/ui/aruni/aruni.css']
+              '/ui/aruni/style.css']
 
     base_scripts = ['/ui/jquery.js',
                     '/ui/javascript.js']
