@@ -7,7 +7,6 @@
   <!-- Location & Views-->
   <div id="location">
     <div id="breadcrumbs">
-      <label>Location:</label>
       <span stl:repeat="item breadcrumb"><a stl:omit-tag="not item/url"
         href="${item/url}" title="${item/name}">${item/short_name}</a
         ><stl:inline stl:if="not repeat/item/end">/</stl:inline></span>
