@@ -27,13 +27,29 @@ from itools.gettext import MSG
 from itools.handlers import merge_dics
 from itools.stl import stl
 from itools.uri import get_reference
-from itools.web import AccessControl as BaseAccessControl, STLForm, INFO, ERROR
+from itools.web import AccessControl as BaseAccessControl, STLForm, INFO
+from itools.web import ERROR
 
 # Import from ikaaro
 from buttons import RemoveButton
 import messages
 from views import SearchForm
 from workflow import WorkflowAware
+
+
+###########################################################################
+# Utility
+###########################################################################
+def is_admin(user, resource):
+    if user is None:
+        return False
+    # WebSite admin?
+    root = resource.get_site_root()
+    if root.has_user_role(user.name, 'admins'):
+        return True
+    # Global admin?
+    root = resource.get_root()
+    return root.has_user_role(user.name, 'admins')
 
 
 ###########################################################################
@@ -46,8 +62,7 @@ class RoleAware_BrowseUsers(SearchForm):
     icon = 'userfolder.png'
     description = MSG(u'See the users and their roles.')
 
-    schema = {
-        'ids': String(multiple=True, mandatory=True)}
+    schema = {'ids': String(multiple=True, mandatory=True)}
 
     def get_query_schema(self):
         return merge_dics(SearchForm.get_query_schema(self),
@@ -142,7 +157,17 @@ class RoleAware_BrowseUsers(SearchForm):
 
     def action_remove(self, resource, context, form):
         usernames = form['ids']
+
+        # Verify if after this operation, all is ok
+        user = context.user
+        if (str(user.name) in usernames and
+            not is_admin(user, resource.parent)):
+            context.message = ERROR(u'You cannot remove yourself')
+            return
+
+        # Make the operation
         resource.set_user_role(usernames, None)
+
         # Ok
         context.message = u"Members deleted."
 
@@ -171,7 +196,16 @@ class RoleAware_EditMembership(STLForm):
         user_id = form['id']
         role = form['role']
 
+        # Verify if after this operation, all is ok
+        user = context.user
+        if (str(user.name) == user_id and role != 'admins' and
+            not is_admin(user, resource.parent)):
+            context.message = ERROR(u'You cannot degrade your own role')
+            return
+
+        # Make the operation
         resource.set_user_role(user_id, role)
+
         # Ok
         context.message = u"Role updated."
 
@@ -261,15 +295,7 @@ class RoleAware_AddUser(STLForm):
 class AccessControl(BaseAccessControl):
 
     def is_admin(self, user, resource):
-        if user is None:
-            return False
-        # WebSite admin?
-        root = resource.get_site_root()
-        if root.has_user_role(user.name, 'admins'):
-            return True
-        # Global admin?
-        root = resource.get_root()
-        return root.has_user_role(user.name, 'admins')
+        return is_admin(user, resource)
 
 
     def is_allowed_to_view(self, user, resource):
@@ -486,7 +512,7 @@ class RoleAware(AccessControl):
 
 
     def has_user_role(self, user_id, *roles):
-        """Return True if the given user has any of the the given roles,
+        """Return True if the given user has any of the given roles,
         False otherwise.
         """
         for role_name in roles:
