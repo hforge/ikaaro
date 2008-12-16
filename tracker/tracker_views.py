@@ -206,7 +206,9 @@ class Tracker_AddIssue(STLForm):
     icon = 'new.png'
     template = '/ui/tracker/add_issue.xml'
 
-    schema = issue_fields
+
+    def get_schema(self, resource, context):
+        return issue_fields
 
 
     def get_namespace(self, resource, context):

@@ -96,7 +96,9 @@ class Issue_Edit(STLForm):
     icon = 'edit.png'
     template = '/ui/tracker/edit_issue.xml'
 
-    schema = issue_fields
+
+    def get_schema(self, resource, context):
+        return issue_fields
 
 
     def get_namespace(self, resource, context):
