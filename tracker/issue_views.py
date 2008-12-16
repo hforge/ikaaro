@@ -41,7 +41,7 @@ from ikaaro.table_views import Table_View
 from ikaaro.views import CompositeForm
 
 # Local import
-from datatypes import issue_fields, UsersList
+from datatypes import get_issue_fields, UsersList
 
 
 url_expr = compile('([fh]t?tps?://[\w.@/;?=&#\-%:]*)')
@@ -84,7 +84,7 @@ class Issue_Edit(STLForm):
 
 
     def get_schema(self, resource, context):
-        return issue_fields
+        return get_issue_fields(resource.parent)
 
 
     def get_value(self, resource, context, name, datatype):
@@ -140,7 +140,7 @@ class Issue_Edit(STLForm):
                               'class': None}
         cc_value = namespace['cc_list']['value']
         add_value = namespace['cc_add']['value']
-        for user in UsersList.get_options():
+        for user in UsersList(tracker=resource.parent).get_options():
             user['selected'] = False
             if user['name'] in cc_list:
                 cc_value.append(user)

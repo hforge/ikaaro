@@ -41,7 +41,8 @@ from ikaaro.views import BrowseForm, SearchForm as BaseSearchForm, ContextMenu
 
 # Import from ikaaro.tracker
 from issue import Issue
-from datatypes import issue_fields, TrackerList, ProductInfoList, UsersList
+from datatypes import get_issue_fields, TrackerList, ProductInfoList
+from datatypes import UsersList
 from stored import StoredSearchFile, StoredSearch
 
 
@@ -209,7 +210,7 @@ class Tracker_AddIssue(STLForm):
 
 
     def get_schema(self, resource, context):
-        return issue_fields
+        return get_issue_fields(resource)
 
 
     def get_namespace(self, resource, context):
@@ -425,15 +426,20 @@ class Tracker_Search(BaseSearchForm, Tracker_View):
            'mtime': get_value('mtime'),
            'is_admin': ac.is_admin(context.user, resource),
            'manage_assigned': '%s/;browse_users' % pathto_website,
-           'products': TrackerList(element='product').get_namespace(product),
-           'modules': ProductInfoList(element='module').get_namespace(module),
-           'versions': ProductInfoList(element='version').get_namespace(
-                                                               version),
-           'types': TrackerList(element='type').get_namespace(type),
-           'states': TrackerList(element='state').get_namespace(state),
-           'priorities': TrackerList(element='priority').get_namespace(
-                                                               priority),
-           'assigned_to': UsersList.get_namespace(assigned_to),
+           'products': TrackerList(element='product',
+                                   tracker=resource).get_namespace(product),
+           'modules': ProductInfoList(element='module',
+                                      tracker=resource).get_namespace(module),
+           'versions': ProductInfoList(element='version',
+                                     tracker=resource).get_namespace(version),
+           'types': TrackerList(element='type',
+                                tracker=resource).get_namespace(type),
+           'states': TrackerList(element='state',
+                                 tracker=resource).get_namespace(state),
+           'priorities': TrackerList(element='priority',
+                                 tracker=resource).get_namespace(priority),
+           'assigned_to': UsersList(tracker=resource).get_namespace(
+                                                         assigned_to),
            'list_products': resource.get_list_products_namespace()}
 
 

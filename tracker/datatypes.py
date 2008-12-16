@@ -23,17 +23,6 @@ from itools.web import get_context
 
 
 
-def _get_tracker():
-    from tracker import Tracker
-    # Find the tracker
-    resource = get_context().resource
-    if isinstance(resource, Tracker):
-        return resource
-    else:
-        return resource.parent
-
-
-
 class TrackerList(Enumerate):
 
     @staticmethod
@@ -52,8 +41,7 @@ class TrackerList(Enumerate):
 
     @classmethod
     def get_options(cls):
-        tracker = _get_tracker()
-        elements = tracker.get_resource(cls.element).handler
+        elements = cls.tracker.get_resource(cls.element).handler
         return [{'name': record.id,
                  'value': elements.get_record_value(record, 'title')}
                 for record in elements.get_records()]
@@ -78,7 +66,7 @@ class ProductInfoList(Enumerate):
 
     @classmethod
     def get_options(cls):
-        tracker = _get_tracker()
+        tracker = cls.tracker
         products = tracker.get_resource('product').handler
         elements = tracker.get_resource(cls.element).handler
 
@@ -109,8 +97,7 @@ class ProductInfoList(Enumerate):
 
         # Match our choice ?
         choice = int(name)
-        tracker = _get_tracker()
-        elements = tracker.get_resource(cls.element).handler
+        elements = cls.tracker.get_resource(cls.element).handler
         record = elements.get_record(choice)
         product_id = int(elements.get_record_value(record, 'product'))
 
@@ -121,7 +108,7 @@ class ProductInfoList(Enumerate):
 class UsersList(Enumerate):
     @classmethod
     def get_options(cls):
-        site_root = get_context().site_root
+        site_root = cls.tracker.get_site_root()
         users = site_root.get_resource('/users')
         options = [{'name': x,
                     'value': users.get_resource(x).get_title()}
@@ -130,20 +117,24 @@ class UsersList(Enumerate):
         return options
 
 
-
-# Issue Fields
-issue_fields = {
-    'title': String(mandatory=True),
-    'product': TrackerList(element='product', mandatory=True),
-    'module': ProductInfoList(element='module'),
-    'version': ProductInfoList(element='version'),
-    'type': TrackerList(element='type', mandatory=True),
-    'state': TrackerList(element='state', mandatory=True),
-    'priority': TrackerList(element='priority'),
-    'assigned_to': UsersList,
-    'cc_list': UsersList(multiple=True),
-    'comment': String,
-    'file': String}
+def get_issue_fields(resource_tracker):
+    return {'title': String(mandatory=True),
+            'product': TrackerList(element='product',
+                                   tracker=resource_tracker, mandatory=True),
+            'module': ProductInfoList(element='module',
+                                      tracker=resource_tracker),
+            'version': ProductInfoList(element='version',
+                                       tracker=resource_tracker),
+            'type': TrackerList(element='type', tracker=resource_tracker,
+                                mandatory=True),
+            'state': TrackerList(element='state', tracker=resource_tracker,
+                                 mandatory=True),
+            'priority': TrackerList(element='priority',
+                                    tracker=resource_tracker),
+            'assigned_to': UsersList(tracker=resource_tracker),
+            'cc_list': UsersList(tracker=resource_tracker, multiple=True),
+            'comment': String,
+            'file': String}
 
 
 
