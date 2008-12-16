@@ -160,6 +160,9 @@ class ReadOnlyWidget(Widget):
 
 
     def get_namespace(self, datatype, value):
+        if issubclass(datatype, Enumerate) and isinstance(value, list):
+            selected = [x for x in value if x['selected'] is True]
+            value = selected[0]['value'] if selected else datatype.default
         return {
             'name': self.name,
             'value': value,
