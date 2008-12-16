@@ -280,9 +280,9 @@ class Skin(UIFolder):
         # Text
         if context.message is not None:
             messages = context.message
-        elif context.has_form_value('message'):
+        elif 'message' in context.uri.query:
             # TODO Do not use this anymore
-            messages = context.get_form_value('message')
+            messages = context.get_query_value('message')
         else:
             return None
 
