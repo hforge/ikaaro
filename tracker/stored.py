@@ -33,7 +33,7 @@ from ikaaro.text import Text
 class StoredSearchFile(ConfigFile):
 
     schema = {
-        'search_name': Unicode(),
+        'text': Unicode,
         'mtime': Integer(default=0),
         'product': Integer(multiple=True),
         'module': Integer(multiple=True),
@@ -56,11 +56,14 @@ class StoredSearch(Text):
     def get_values(self, name, type=None):
         return self.handler.get_value(name)
 
-
     def set_values(self, name, value, type=String):
-        value = [ type.encode(x) for x in value ]
-        value = ' '.join(value)
+        if isinstance(value, list):
+            value = [ type.encode(x) for x in value ]
+            value = ' '.join(value)
+        else:
+            value = type.encode(value)
         self.handler.set_value(name, value)
+
 
 
 

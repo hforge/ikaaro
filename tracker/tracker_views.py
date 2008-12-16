@@ -30,6 +30,7 @@ from itools.handlers import merge_dics
 from itools.uri import encode_query, Reference
 from itools.web import BaseView, BaseForm, STLForm
 from itools.web import INFO, ERROR
+from itools.web.views import process_form
 
 # Import from ikaaro
 from ikaaro.buttons import Button
@@ -41,7 +42,7 @@ from ikaaro.views import BrowseForm, SearchForm as BaseSearchForm, ContextMenu
 # Import from ikaaro.tracker
 from issue import Issue
 from datatypes import issue_fields, TrackerList, ProductInfoList, UsersList
-from stored import StoredSearch
+from stored import StoredSearchFile, StoredSearch
 
 
 columns = [
@@ -80,43 +81,43 @@ class StoreSearchMenu(ContextMenu):
 
     title = MSG(u'Remember this search')
     template = '/ui/tracker/menu_remember.xml'
-    query_schema = {
-        'text': Unicode(),
-        'mtime': Integer(default=0),
-        'product': Integer(multiple=True),
-        'module': Integer(multiple=True),
-        'version': Integer(multiple=True),
-        'type': Integer(multiple=True),
-        'state': Integer(multiple=True),
-        'priority': Integer(multiple=True),
-        'assigned_to': String(multiple=True),
-    }
+    query_schema = StoredSearchFile.schema
 
     def get_namespace(self, resource, context):
-        name = context.get_query_value('search_name')
-        # Get the stored search
+        # This search exists ?
+        search_name = context.get_query_value('search_name')
         search = None
-        if name:
+        if search_name:
             try:
-                search = resource.get_resource(name)
+                search = resource.get_resource(search_name)
             except LookupError:
                 pass
 
-        fields = []
-        if search is None:
-            # Edit an stored search
-            search_title = None
-        else:
-            # Add a new stored search
+        # Set the get function and the title
+        if search:
+            get = search.get_values
             search_title = search.get_title()
+        else:
+            # Warning, a menu is not the default view!
+            query = process_form(context.get_query_value, self.query_schema)
+            get = query.get
+            search_title = None
+
+        # Fill the fields
+        fields = []
+        for name, type in StoredSearchFile.schema.iteritems():
+            value = get(name)
+            if isinstance(value, list):
+                for x in value:
+                    fields.append({'name': name, 'value': type.encode(x)})
+            elif value is not None:
+                fields.append({'name': name, 'value': type.encode(value)})
 
         # Ok
-        return {
-            'title': self.title,
-            'search_name': name,
-            'search_title': search_title,
-            'search_fields': fields,
-            }
+        return {'title': self.title,
+                'search_title': search_title,
+                'search_name': search_name,
+                'search_fields': fields }
 
 
 
@@ -382,6 +383,7 @@ class Tracker_Search(BaseSearchForm, Tracker_View):
         'assigned_to': String(multiple=True)
         }
 
+    context_menus = []
 
     def get_search_namespace(self, resource, context):
         # Set Style & JS
@@ -446,9 +448,7 @@ class Tracker_Search(BaseSearchForm, Tracker_View):
 class Tracker_RememberSearch(BaseForm):
 
     access = 'is_allowed_to_edit'
-    schema = {
-        'search_name': String,
-        'search_title': Unicode(mandatory=True)}
+    schema = merge_dics(StoredSearchFile.schema, {'search_title': String})
 
 
     def GET(self, resource, context):
@@ -457,22 +457,30 @@ class Tracker_RememberSearch(BaseForm):
 
 
     def action(self, resource, context, form):
-        name = form['search_name']
-        if name is None:
+        search_name = form.get('search_name')
+        if search_name is None:
             # New search
-            name = resource.get_new_id('s')
-            search = StoredSearch.make_resource(StoredSearch, resource, name)
+            search_name = resource.get_new_id('s')
+            search = StoredSearch.make_resource(StoredSearch, resource,
+                                                search_name)
             message = MSG(u'The search has been stored.')
         else:
-            search = resource.get_resource(name)
+            search = resource.get_resource(search_name)
             message = MSG(u'The search title has been changed.')
 
         # Set title
         title = form['search_title']
         search.set_property('title', title)
 
+        # Save the value
+        for name, type in StoredSearchFile.schema.iteritems():
+            value = form[name]
+            if value:
+                search.set_values(name, value, type)
+
         # Go
-        return context.come_back(message, goto=';view?search_name=%s' % name)
+        return context.come_back(message, goto=';view?search_name=%s' %
+                                          search_name)
 
 
 

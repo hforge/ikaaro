@@ -29,7 +29,6 @@
     <legend>Search<stl:block stl:if="search_name">: ${search_title}</stl:block>
     </legend>
     <form action=";view" method="get">
-      <input type="hidden" name="search_name" value="${search_name}" />
       <table>
         <tr>
           <td colspan="2">
