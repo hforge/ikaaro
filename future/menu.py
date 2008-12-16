@@ -15,6 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
+from itools.csv import Property
 from itools.datatypes import String, Enumerate, Unicode, Integer
 from itools.xml import XMLParser
 from itools.gettext import MSG
@@ -43,7 +44,7 @@ class Target(Enumerate):
 class MenuFile(OrderedTableFile):
 
     record_schema = {
-        'title': Unicode,
+        'title': Unicode(multiple=True),
         'path': String,
         'target': Target(mandatory=True, default='_top'),
         'child': String}
@@ -88,14 +89,17 @@ class Menu_View(OrderedTable_View):
 
 
     def get_item_value(self, resource, context, item, column):
+        get_value = resource.handler.get_record_value
+        value = get_value(item, column)
         if column == 'title':
-            return item.get_value('title'), item.get_value('path')
+            path = get_value(item, 'path')
+            return value, path
         elif column == 'child':
             child = None
             parent = resource.parent
-            child_path = item.get_value('child')
-            if child_path and parent.has_resource(child_path):
-                child = parent.get_resource(child_path)
+            child_path = value
+            if value and parent.has_resource(value):
+                child = parent.get_resource(value)
                 child = 'edit', context.get_link(child)
             return child
 
@@ -158,15 +162,16 @@ class Menu_View(OrderedTable_View):
 
 
     def action_add_child(self, resource, context, form):
+        handler = resource.handler
+        parent = resource.parent
         for parent_id in form['ids']:
             # generate the name of the new table
-            parent_record = resource.handler.get_record(parent_id)
+            parent_record = handler.get_record(parent_id)
             # check if the child already exists
-            child_path = parent_record.get_value('child')
-            if child_path and resource.parent.has_resource(child_path):
+            child_path = handler.get_record_value(parent_record, 'child')
+            if child_path and parent.has_resource(child_path):
                 continue
 
-            parent = resource.parent
             names = parent.get_names()
             index = len(names) / 2
             base = 'menu_'
@@ -176,10 +181,10 @@ class Menu_View(OrderedTable_View):
                 index = index + 1
                 name = '%s%03d' % (base, index)
 
-            object = Menu.make_resource(Menu, resource.parent, name)
+            object = Menu.make_resource(Menu, parent, name)
 
             # update the parent record
-            resource.handler.update_record(parent_id,
+            handler.update_record(parent_id,
                                            **{'child': name})
 
         context.message = messages.MSG_NEW_RESOURCE
@@ -216,26 +221,30 @@ class Menu(OrderedTable):
     def get_menu_namespace_level(self, context, url, depth=2,
                                  use_first_child=False, flat=False):
         parent = self.parent
+        handler = self.handler
         site_root = context.site_root
-        here, user = context.resource, context.user
+        user = context.user
+        here_abspath = context.resource.get_abspath()
         items = []
         tabs = {}
-        for record in self.handler.get_records_in_order():
-            get = record.get_value
+        get_value = handler.get_record_value
+        for record in handler.get_records_in_order():
             # Get the objects, check security
-            path = get('path')
+            path = get_value(record, 'path')
+            title = get_value(record, 'title')
+            target = get_value(record, 'target')
             # Subtabs
             subtabs = {}
             if path.startswith(('http://', 'https://')) or path.count(';'):
                 # Special case for external link & method
                 items.append({'id': 'menu_', # FIXME
                               'path': path,
-                              'title': get('title'),
+                              'title': title,
                               'description': None, # FIXME
                               'in_path': False,
                               'active': False,
                               'class': None,
-                              'target': get('target')})
+                              'target': target})
             else:
                 resource = self.get_resource(path)
                 name = resource.name
@@ -246,7 +255,7 @@ class Menu(OrderedTable):
 
                 if depth > 1:
                     # Check the child
-                    child_path = get('child')
+                    child_path = get_value(record, 'child')
                     if child_path and parent.has_resource(child_path):
                         # Sub level
                         child = parent.get_resource(child_path)
@@ -255,7 +264,7 @@ class Menu(OrderedTable):
                                                   use_first_child, flat)
                 # Set active, in_path
                 active, in_path = False, name in url
-                if here.get_abspath() == resource.get_abspath():
+                if here_abspath == resource.get_abspath():
                     active, in_path = True, False
 
                 # Set css class to 'active', 'in_path' or None
@@ -263,12 +272,12 @@ class Menu(OrderedTable):
 
                 items.append({'id': 'menu_%s' % name,
                               'path': context.get_link(resource),
-                              'title': get('title'),
+                              'title': title,
                               'description': None, # FIXME
                               'in_path': css == 'in_path' or active,
                               'active': active,
                               'class': css,
-                              'target': get('target')})
+                              'target': target})
             items[-1]['items'] = subtabs.get('items', [])
         tabs['items'] = items
         return tabs
