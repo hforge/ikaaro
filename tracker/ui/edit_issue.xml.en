@@ -20,8 +20,8 @@
                        ,</stl:inline>
                       }
   function update_tracker(){
-      update_tracker_list('version', true);
-      update_tracker_list('module', true);
+      update_tracker_list('version');
+      update_tracker_list('module');
   }
   </script>
 <p stl:if="reported_by">

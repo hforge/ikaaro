@@ -690,6 +690,7 @@ class Tracker_ChangeSeveralBugs(Tracker_View):
 
 
     def get_namespace(self, resource, context):
+        context.scripts.append('/ui/tracker/tracker.js')
         namespace = Tracker_View.get_namespace(self, resource, context)
         # Edit several bugs at once
         get_resource = resource.get_resource
@@ -700,6 +701,7 @@ class Tracker_ChangeSeveralBugs(Tracker_View):
         namespace['types'] = get_resource('type').get_options()
         namespace['states'] = get_resource('state').get_options()
         namespace['users'] = resource.get_members_namespace('')
+        namespace['list_products'] = resource.get_list_products_namespace()
 
         # Ok
         return namespace

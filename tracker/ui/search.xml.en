@@ -20,8 +20,8 @@
                        ,</stl:inline>
                       }
   function update_tracker(){
-      update_tracker_list('version', false);
-      update_tracker_list('module', false);
+      update_tracker_list('version');
+      update_tracker_list('module');
   }
   </script>
   <!-- Advanced Search -->
