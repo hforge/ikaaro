@@ -52,7 +52,7 @@ def indent(text):
     # Wrap
     lines = []
     for line in text.splitlines():
-        for line in wrap(line, 95, break_long_words=False):
+        for line in wrap(line, 95):
             lines.append(line)
         else:
             if line is '':
