@@ -27,7 +27,7 @@ msgstr ""
 
 #: ../future/dressable.py:58
 msgid "\"%s\" is incorrect"
-msgstr ""
+msgstr "\"%s\" es incorrecto"
 
 #: ../tracker/tracker_views.py:566
 msgid "#%s"
@@ -307,10 +307,9 @@ msgid "${message/body}"
 msgstr ""
 
 #: ../ui/aruni/message.xml.en:8
-#, fuzzy
 msgctxt "div"
 msgid "${message/message}"
-msgstr "Mensaje"
+msgstr ""
 
 #: ../forum/ui/Thread_view.xml.en:17
 msgctxt "paragraph"
@@ -1001,9 +1000,8 @@ msgid "Add Resource"
 msgstr "Agregar Recurso"
 
 #: ../text_views.py:258
-#, fuzzy
 msgid "Add Row"
-msgstr "Agregar"
+msgstr "Agregar fila"
 
 #: ../ui/website/new_instance.xml.en:9
 msgctxt "legend"
@@ -1015,30 +1013,25 @@ msgid "Add a thread"
 msgstr "Agregar un hilo"
 
 #: ../ui/access/add_user.xml.en:35
-#, fuzzy
 msgctxt "button"
 msgid "Add and return"
 msgstr "Agregar y regresar"
 
 #: ../ui/access/add_user.xml.en:33
-#, fuzzy
 msgctxt "button"
 msgid "Add and view"
 msgstr "Agregar y ver"
 
 #: ../ui/website/edit_languages.xml.en:48
-#, fuzzy
 msgctxt "legend"
 msgid "Add another language"
-msgstr "Idioma"
+msgstr "Agregar otro idioma"
 
 #: ../future/dressable.py:73
-#, fuzzy
 msgid "Add new %s"
-msgstr "Agregar y ver"
+msgstr "Agregar nuevo %s"
 
 #: ../resource_views.py:98 ../folder_views.py:109
-#, fuzzy
 msgid "Add resource"
 msgstr "Agregar recurso"
 
@@ -1104,10 +1097,9 @@ msgid "Assign To:"
 msgstr "Asignar a:"
 
 #: ../tracker/ui/edit_resource.xml.en:9
-#, fuzzy
 msgctxt "legend"
 msgid "Assign a resource"
-msgstr "Añadir un Nuevo Usuario"
+msgstr "Asignar un recurso"
 
 #: ../tracker/tracker_views.py:56 ../tracker/issue.py:317
 msgid "Assigned To"
@@ -1232,20 +1224,17 @@ msgid "Calendar"
 msgstr "Calendario"
 
 #: ../ui/ical/edit_event.xml.en:133
-#, fuzzy
 msgctxt "button"
 msgid "Cancel"
 msgstr "Cancelar"
 
 #: ../calendar_views.py:104
-#, fuzzy
 msgid "Cancelled"
-msgstr "Cancelar"
+msgstr "Cancelado"
 
 #: ../messages.py:31
-#, fuzzy
 msgid "Caption"
-msgstr "Acción"
+msgstr ""
 
 #: ../utils.py:93
 msgid "Catalan"
@@ -1281,9 +1270,8 @@ msgid "Change default"
 msgstr "Modificar"
 
 #: ../user_views.py:259
-#, fuzzy
 msgid "Change your password."
-msgstr "Modificar clave de acceso"
+msgstr "Modificar clave de acceso."
 
 #: ../ui/text/externaledit.xml.en:31
 msgctxt "label"
@@ -1342,9 +1330,8 @@ msgid "Click to select/unselect all rows"
 msgstr ""
 
 #: ../tracker/tracker.py:63
-#, fuzzy
 msgid "Closed"
-msgstr "Código"
+msgstr "Cerrado"
 
 #: ../ui/website/edit_languages.xml.en:16
 msgctxt "table cell"
@@ -1403,9 +1390,8 @@ msgid "Confirmation required"
 msgstr ""
 
 #: ../user_views.py:98
-#, fuzzy
 msgid "Confirmation sent!"
-msgstr "Descripción"
+msgstr "¡Confirmación enviada!"
 
 #: ../calendar_views.py:103
 msgid "Confirmed"
@@ -1424,9 +1410,8 @@ msgid "Container for a wiki"
 msgstr ""
 
 #: ../text_views.py:45
-#, fuzzy
 msgid "Content"
-msgstr "Comentario"
+msgstr "Contenido"
 
 #: ../control_panel.py:44 ../control_panel.py:74 ../control_panel.py:93
 msgid "Control Panel"
@@ -1459,7 +1444,6 @@ msgid "Current page"
 msgstr "Estado actual:"
 
 #: ../ui/WorkflowAware_state.xml.en:8
-#, fuzzy
 msgctxt "paragraph"
 msgid "Current state:"
 msgstr "Estado actual:"
@@ -1486,10 +1470,9 @@ msgid "Date"
 msgstr "Fecha"
 
 #: ../ui/ical/daily_view.xml.en:9
-#, fuzzy
 msgctxt "form"
 msgid "Date:"
-msgstr "Fecha"
+msgstr "Fecha:"
 
 #: ../calendar_views.py:54
 msgid "December"
@@ -1527,10 +1510,9 @@ msgid "Description"
 msgstr "Descripción"
 
 #: ../tracker/ui/add_issue.xml.en:109
-#, fuzzy
 msgctxt "label"
 msgid "Description:"
-msgstr "Descripción"
+msgstr "Descripción:"
 
 #: ../tracker/ui/change_bugs.xml.en:20 ../tracker/ui/change_bugs.xml.en:28
 #: ../tracker/ui/change_bugs.xml.en:37 ../tracker/ui/change_bugs.xml.en:48
@@ -1585,9 +1567,8 @@ msgid "Edit Contact Options"
 msgstr ""
 
 #: ../calendar_views.py:412
-#, fuzzy
 msgid "Edit Event"
-msgstr "Editar Texto"
+msgstr "Editar evento"
 
 #: ../tracker/issue_views.py:95
 #, fuzzy
@@ -1595,16 +1576,14 @@ msgid "Edit Issue"
 msgstr "Seguridad"
 
 #: ../tracker/ui/edit_issue.xml.en:33
-#, fuzzy
 msgctxt "legend"
 msgid "Edit Issue"
-msgstr "Seguridad"
+msgstr ""
 
 #: ../tracker/ui/change_bugs.xml.en:92
-#, fuzzy
 msgctxt "button"
 msgid "Edit Issues"
-msgstr "Seguridad"
+msgstr ""
 
 #: ../resource_views.py:49
 #, fuzzy
@@ -1654,18 +1633,16 @@ msgid "Edit Wiki"
 msgstr "Editar Texto"
 
 #: ../tracker/tracker_views.py:680
-#, fuzzy
 msgid "Edit issues"
-msgstr "Seguridad"
+msgstr ""
 
 #: ../table_views.py:239
 msgid "Edit record ${id}"
 msgstr ""
 
 #: ../tracker/issue_views.py:463
-#, fuzzy
 msgid "Edit resources"
-msgstr "Seguridad"
+msgstr ""
 
 #: ../text_views.py:275
 msgid "Edit row #${id}"
@@ -1822,9 +1799,8 @@ msgid "Forget this Search"
 msgstr "Olvidar esta Búsqueda"
 
 #: ../website_views.py:118
-#, fuzzy
 msgid "Forgotten password"
-msgstr "Modificar clave de acceso"
+msgstr "Clave de acceso olvidada"
 
 #: ../wiki/ui/edit.xml.en:97
 msgctxt "link"
@@ -1927,9 +1903,8 @@ msgid "Gzip Compressed"
 msgstr ""
 
 #: ../text.py:107
-#, fuzzy
 msgid "HTML File"
-msgstr "Fichero"
+msgstr "Fichero HTML"
 
 #: ../ui/root/credits.xml.en:10
 msgctxt "heading"
@@ -2037,31 +2012,26 @@ msgid "Image"
 msgstr "Imagen"
 
 #: ../ui/html/addimage.xml.en:7
-#, fuzzy
 msgctxt "title"
 msgid "Insert Image"
 msgstr "Insertar Imagen"
 
 #: ../ui/html/addlink.xml.en:7 ../future/ui/order_addlink.xml.en:7
-#, fuzzy
 msgctxt "title"
 msgid "Insert Link"
 msgstr "Insertar Enlace"
 
 #: ../wiki/ui/edit.xml.en:69
-#, fuzzy
 msgctxt "title attribute"
 msgid "Insert image"
-msgstr "Insertar Imagen"
+msgstr "Insertar imagen"
 
 #: ../wiki/ui/edit.xml.en:62
-#, fuzzy
 msgctxt "title attribute"
 msgid "Insert link"
-msgstr "Insertar Enlace"
+msgstr "Insertar enlace"
 
 #: ../wiki/ui/edit.xml.en:79
-#, fuzzy
 msgctxt "title attribute"
 msgid "Insert table"
 msgstr "Insertar tabla"
@@ -2101,10 +2071,9 @@ msgid "Italian"
 msgstr "Italiano"
 
 #: ../wiki/ui/edit.xml.en:35
-#, fuzzy
 msgctxt "title attribute"
 msgid "Italic"
-msgstr "Italiano"
+msgstr "Cursiva"
 
 #: ../calendar_views.py:43
 msgid "January"
@@ -2246,9 +2215,8 @@ msgid "Members deleted."
 msgstr ""
 
 #: ../future/menu.py:292
-#, fuzzy
 msgid "Menu"
-msgstr "Mantenimiento"
+msgstr "Menú"
 
 #: ../forum/message.py:46
 msgid "Message"
