@@ -11,11 +11,18 @@ body {
 
 a img { border: 0; }
 
-select, input, textarea, button {
+select, input, button {
   color: #000;
   background-color: #fff;
   font-size: 1.0em;
 }
+
+textarea {
+  color: #000;
+  background-color: #fff;
+  font-size: 1.4em;
+}
+
 
 input {
   background-position: left center;
