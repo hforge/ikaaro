@@ -242,7 +242,7 @@ class Issue(Folder):
         body += '\n\n'
         if file:
             filename = unicode(filename, 'utf-8')
-            message = MSG(u'  New Attachment: $filename')
+            message = MSG(u'New Attachment: $filename')
             message = message.gettext(filename=filename)
             body += message + '\n'
         comment = context.get_form_value('comment', type=Unicode)
@@ -271,11 +271,13 @@ class Issue(Folder):
         if history.get_n_records() > 0:
             # Edit issue
             template = MSG(u'$field: $old_value to $new_value')
+            empty = MSG(u'[empty]').gettext()
         else:
             # New issue
             template = MSG(u'$field: $old_value$new_value')
+            empty = u''
         # Modification of title
-        last_title = self.get_value('title') or ''
+        last_title = self.get_value('title') or empty
         new_title = record['title']
         if last_title != new_title:
             field = MSG(u'Title').gettext()
@@ -296,12 +298,14 @@ class Issue(Folder):
             # Detect if modifications
             if last_value == new_value:
                 continue
-            new_title = last_title = u''
+            new_title = last_title = empty
             csv = self.parent.get_resource(name).handler
             if last_value or last_value == 0:
-                last_title = csv.get_record(last_value).title
+                rec = csv.get_record(last_value)
+                last_title = csv.get_record_value(rec, 'title')
             if new_value or new_value == 0:
-                new_title = csv.get_record(new_value).title
+                rec = csv.get_record(new_value)
+                new_title = csv.get_record_value(rec, 'title')
             text = template.gettext(field=field, old_value=last_title,
                                     new_value=new_title)
             modifications.append(text)
@@ -314,9 +318,9 @@ class Issue(Folder):
                 last_user = root.get_user(last_user).get_property('email')
             if new_user:
                 new_user = root.get_user(new_user).get_property('email')
-            field = MSG(u'Assigned To')
-            text = field.gettext(field=field, old_value=last_user,
-                                 new_value=new_user)
+            field = MSG(u'Assigned To').gettext()
+            text = template.gettext(field=field, old_value=last_user or empty,
+                                    new_value=new_user or empty)
             modifications.append(text)
 
         # Modifications of cc_list
@@ -332,8 +336,8 @@ class Issue(Folder):
                 value = root.get_user(cc).get_property('email')
                 new_values.append(value)
             field = MSG(u'CC').gettext()
-            last_values = ', '.join(last_values)
-            new_values = ', '.join(new_values)
+            last_values = ', '.join(last_values) or empty
+            new_values = ', '.join(new_values) or empty
             text = template.gettext(field=field, old_value=last_values,
                                     new_value=new_values)
             modifications.append(text)
