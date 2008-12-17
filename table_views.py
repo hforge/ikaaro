@@ -27,7 +27,8 @@ from itools.web import MSG_MISSING_OR_INVALID, INFO, ERROR
 from itools.xapian import PhraseQuery
 
 # Import from ikaaro
-from buttons import Button, RemoveButton
+from buttons import Button, RemoveButton, OrderUpButton, OrderDownButton
+from buttons import OrderBottomButton, OrderTopButton
 from forms import AutoForm
 import messages
 from resource_views import EditLanguageMenu
@@ -310,18 +311,8 @@ class OrderedTable_View(Table_View):
         return Table_View.get_item_value(self, resource, context, item, column)
 
 
-    table_actions = [
-        RemoveButton,
-        Button(name='order_up', title=MSG(u'Order up'),
-               access='is_allowed_to_edit'),
-        Button(name='order_down', title=MSG(u'Order down'),
-               access='is_allowed_to_edit'),
-        Button(name='order_top', title=MSG(u'Order top'),
-               access='is_allowed_to_edit'),
-        Button(name='order_bottom', title=MSG(u'Order bottom'),
-               access='is_allowed_to_edit'),
-    ]
-
+    table_actions = [RemoveButton, OrderUpButton, OrderDownButton,
+                     OrderTopButton, OrderBottomButton]
 
     #######################################################################
     # Form Actions

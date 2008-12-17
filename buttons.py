@@ -115,3 +115,35 @@ class PublishButton(Button):
                 return True
         return False
 
+
+
+class OrderUpButton(Button):
+
+    access = 'is_allowed_to_edit'
+    name = 'order_up'
+    title = MSG(u'Order up')
+
+
+
+class OrderDownButton(Button):
+
+    access = 'is_allowed_to_edit'
+    name = 'order_down'
+    title = MSG(u'Order down')
+
+
+
+class OrderTopButton(Button):
+
+    access = 'is_allowed_to_edit'
+    name = 'order_top'
+    title = MSG(u'Order top')
+
+
+
+class OrderBottomButton(Button):
+
+    access = 'is_allowed_to_edit'
+    name = 'order_bottom'
+    title = MSG(u'Order bottom')
+
