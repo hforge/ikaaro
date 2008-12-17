@@ -831,8 +831,13 @@ class GoToSpecificDocument(BaseView):
     specific_document = 'FrontPage'
 
 
+    def get_specific_document(self, ressource, context):
+        return self.specific_document
+
+
     def GET(self, resource, context):
-        goto = '%s/%s' % (context.get_link(resource), self.specific_document)
+        specific_document = self.get_specific_document(resource, context)
+        goto = '%s/%s' % (context.get_link(resource), specific_document)
         goto = get_reference(goto)
 
         # Keep the message
