@@ -41,7 +41,7 @@ from workflow import WorkflowAware
 # Utility
 ###########################################################################
 def is_admin(user, resource):
-    if user is None:
+    if user is None or resource is None:
         return False
     # WebSite admin?
     root = resource.get_site_root()
@@ -160,10 +160,10 @@ class RoleAware_BrowseUsers(SearchForm):
 
         # Verify if after this operation, all is ok
         user = context.user
-        if (str(user.name) in usernames and
-            not is_admin(user, resource.parent)):
-            context.message = ERROR(u'You cannot remove yourself')
-            return
+        if str(user.name) in usernames:
+            if not is_admin(user, resource.parent):
+                context.message = ERROR(u'You cannot remove yourself.')
+                return
 
         # Make the operation
         resource.set_user_role(usernames, None)
@@ -198,10 +198,10 @@ class RoleAware_EditMembership(STLForm):
 
         # Verify if after this operation, all is ok
         user = context.user
-        if (str(user.name) == user_id and role != 'admins' and
-            not is_admin(user, resource.parent)):
-            context.message = ERROR(u'You cannot degrade your own role')
-            return
+        if str(user.name) == user_id and role != 'admins':
+            if not is_admin(user, resource.parent):
+                context.message = ERROR(u'You cannot degrade your own role.')
+                return
 
         # Make the operation
         resource.set_user_role(user_id, role)
