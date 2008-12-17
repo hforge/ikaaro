@@ -238,8 +238,6 @@ class BrowseForm(STLForm):
     #######################################################################
     # Batch
     def get_batch_namespace(self, resource, context, items):
-        start = context.query['batch_start']
-        size = context.query['batch_size']
         namespace = {}
         namespace['control'] = False
 
@@ -251,6 +249,11 @@ class BrowseForm(STLForm):
             namespace['msg'] = self.batch_msg2.gettext(n=total)
 
         # Start & End
+        start = context.query['batch_start']
+        size = context.query['batch_size']
+        # If batch_size == 0 => All
+        if size == 0:
+            size = total
         end = min(start + size, total)
         namespace['start'] = start + 1
         namespace['end'] = end
