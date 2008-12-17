@@ -188,8 +188,8 @@ class RegisterForm(AutoForm):
         else:
             # Add the user
             user = users.set_user(email, None)
-            user.set_property('firstname', firstname, language='en')
-            user.set_property('lastname', lastname, language='en')
+            user.set_property('firstname', firstname)
+            user.set_property('lastname', lastname)
             # Set the role
             default_role = resource.__roles__[0]['name']
             resource.set_user_role(user.name, default_role)

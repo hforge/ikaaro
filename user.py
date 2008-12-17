@@ -46,7 +46,7 @@ from views import MessageView
 class User(AccessControl, Folder):
 
     class_id = 'user'
-    class_version = '20071215'
+    class_version = '20081217'
     class_title = MSG(u'User')
     class_icon16 = 'icons/16x16/user.png'
     class_icon48 = 'icons/48x48/user.png'
@@ -211,6 +211,15 @@ class User(AccessControl, Folder):
     edit_preferences = User_EditPreferences()
     edit_password = User_EditPassword()
     tasks = User_Tasks()
+
+
+    def update_20081217(self):
+        # Some users were registered with multilingual names
+        for key in ('firstname', 'lastname'):
+            value, language = self.get_property_and_language(key)
+            if language is not None:
+                self.del_property(key)
+                self.set_property(key, value)
 
 
 
