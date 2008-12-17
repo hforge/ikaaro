@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
   <head>
-    <title>Insert Link</title>
+    <title>Insert link</title>
     <link type="text/css" rel="stylesheet" stl:repeat="style styles"
       href="${style}" />
     <script type="text/javascript" stl:repeat="script scripts"
@@ -45,7 +45,7 @@
       </p>
 
       <!-- Message -->
-      <div id="message" stl:if="message">Message :${message}</div>
+      <div id="message" stl:if="message">Message: ${message}</div>
 
       <!-- Internal Link -->
       <div id="browse" stl:if="show_browse">
