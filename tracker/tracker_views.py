@@ -83,8 +83,8 @@ class StoreSearchMenu(ContextMenu):
     title = MSG(u'Remember this search')
     template = '/ui/tracker/menu_remember.xml'
     query_schema = merge_dics(StoredSearchFile.schema,
-                              {'search_name': String,
-                               'search_title': Unicode})
+                              search_name=String,
+                              search_title=Unicode)
 
     def get_namespace(self, resource, context):
         # This search exists ?
@@ -457,8 +457,8 @@ class Tracker_RememberSearch(BaseForm):
 
     access = 'is_allowed_to_edit'
     schema = merge_dics(StoredSearchFile.schema,
-                        {'search_name': String,
-                         'search_title': Unicode})
+                        search_name=String,
+                        search_title=Unicode)
 
 
     def GET(self, resource, context):
