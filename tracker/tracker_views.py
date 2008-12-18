@@ -314,27 +314,13 @@ class Tracker_View(BrowseForm):
         return resource.get_search_results(context)
 
 
-    # XXX Copied from folder_views except Adjust sorting
     def sort_and_batch(self, resource, context, results):
-        start = context.query['batch_start']
-        size = context.query['batch_size']
         sort_by = context.query['sort_by']
         reverse = context.query['reverse']
-        # Adjust Sorting
-        items = results.get_documents(sort_by=sort_by, reverse=reverse,
-                                      start=start, size=size)
+        items = results.get_documents(sort_by=sort_by, reverse=reverse)
 
-        # Access Control (FIXME this should be done before batch)
-        user = context.user
         root = context.root
-        allowed_items = []
-        for item in items:
-            item = root.get_resource(item.abspath)
-            ac = item.get_access_control()
-            if ac.is_allowed_to_view(user, item):
-                allowed_items.append(item)
-
-        return allowed_items
+        return [ root.get_resource(item.abspath) for item in items ]
 
 
     def get_item_value(self, resource, context, item, column):

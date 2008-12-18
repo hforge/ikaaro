@@ -385,9 +385,7 @@ class BrowseForm(STLForm):
                 row_columns.append(column_ns)
 
             # Append
-            rows.append({
-                'columns': row_columns,
-            })
+            rows.append({'columns': row_columns})
 
         # Ok
         return {
