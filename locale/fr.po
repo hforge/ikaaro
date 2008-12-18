@@ -1703,7 +1703,7 @@ msgstr "Modifier les plages horaires"
 
 #: ../tracker/tracker_views.py:158
 msgid "Edit this search"
-msgstr "Modifier cette recherche"
+msgstr "Editer cette recherche"
 
 #: ../user_views.py:151
 msgid "Edit your name and email address."
