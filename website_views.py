@@ -29,7 +29,6 @@ from itools.stl import stl
 from itools import vfs
 from itools.web import STLView, STLForm, INFO, ERROR
 from itools.xapian import PhraseQuery, OrQuery, AndQuery, TextField
-from itools.xapian import StartQuery
 
 # Import from ikaaro
 import ikaaro
@@ -176,17 +175,15 @@ class RegisterForm(AutoForm):
 
         # Do we already have a user with that email?
         root = context.root
-        results = root.search(email=email)
-        users = resource.get_resource('users')
-        if results.get_n_documents():
-            user = results.get_documents()[0]
-            user = users.get_resource(user.name)
+        user = root.get_user_from_login(email)
+        if user is not None:
             if not user.has_property('user_must_confirm'):
                 message = u'There is already an active user with that email.'
                 context.message = ERROR(message)
                 return
         else:
             # Add the user
+            users = resource.get_resource('users')
             user = users.set_user(email, None)
             user.set_property('firstname', firstname)
             user.set_property('lastname', lastname)
