@@ -121,7 +121,7 @@
         </td>
       </tr>
       <tr>
-        <td valign="top" colspan="2">
+        <td valign="top" colspan="3">
           <a name="new_comment"></a>
           <label for="comment" class="${comment/class}">New Comment:</label><br/>
           <textarea name="comment" id="comment" cols="80" rows="10"
