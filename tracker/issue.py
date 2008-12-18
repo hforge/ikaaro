@@ -29,7 +29,6 @@ from itools.csv import Table
 from itools.datatypes import DateTime, Integer, String, Unicode, Tokens
 from itools.gettext import MSG
 from itools.handlers import checkid
-from itools.i18n import format_datetime
 from itools.vfs import FileName
 from itools.xapian import IntegerField, KeywordField
 
@@ -97,6 +96,7 @@ class Issue(Folder):
         for name in names:
             document[name] = self.get_value(name)
         document['assigned_to'] = self.get_value('assigned_to') or 'nobody'
+        document['title'] = self.get_value('title')
         return document
 
 
@@ -348,50 +348,6 @@ class Issue(Folder):
     def get_reported_by(self):
         history = self.get_history()
         return history.get_record(0).username
-
-
-    def get_informations(self):
-        """Construct a dict with issue informations.  This dict is used to
-        construct a line for a table.
-        """
-        # Build the namespace
-        history = self.get_history()
-        record = history.get_record(-1)
-        infos = {
-            'name': self.name,
-            'id': int(self.name),
-            'title': history.get_record_value(record, 'title'),
-            'comment': history.get_record_value(record, 'comment')}
-
-        # Select Tables
-        get_resource = self.parent.get_resource
-        tables = ['product', 'module', 'version', 'type', 'state', 'priority']
-        for name in tables:
-            infos[name] = None
-            value = history.get_record_value(record, name)
-            if value is None:
-                continue
-            table = get_resource(name).handler
-            table_record = table.get_record(value)
-            if table_record is None:
-                continue
-            infos[name] = table.get_record_value(table_record, 'title')
-
-        # Assigned-To
-        assigned_to = history.get_record_value(record, 'assigned_to')
-        infos['assigned_to'] = ''
-        if assigned_to:
-            users = self.get_resource('/users')
-            if users.has_resource(assigned_to):
-                user = users.get_resource(assigned_to)
-                infos['assigned_to'] = user.get_title()
-
-        # Modification Time
-        mtime = self.get_mtime()
-        infos['mtime'] = format_datetime(mtime)
-        infos['mtime_sort'] = mtime
-
-        return infos
 
 
     def get_comment(self):

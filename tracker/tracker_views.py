@@ -26,6 +26,7 @@ from datetime import datetime
 from itools.csv import CSVFile, Property
 from itools.datatypes import Boolean, Integer, String, Unicode, Enumerate
 from itools.gettext import MSG
+from itools.i18n import format_datetime
 from itools.handlers import merge_dics
 from itools.uri import encode_query, Reference
 from itools.web import BaseView, BaseForm, STLForm
@@ -317,21 +318,17 @@ class Tracker_View(BrowseForm):
     def sort_and_batch(self, resource, context, results):
         sort_by = context.query['sort_by']
         reverse = context.query['reverse']
-        items = results.get_documents(sort_by=sort_by, reverse=reverse)
-
-        root = context.root
-        return [ root.get_resource(item.abspath) for item in items ]
+        return results.get_documents(sort_by=sort_by, reverse=reverse)
 
 
     def get_item_value(self, resource, context, item, column):
         if column == 'id':
             id = item.name
-            link = context.get_link(item)
-            return id, '%s/;edit' % link
+            return id, '%s/;edit' % id
         if column == 'checkbox':
             selected_issues = context.get_form_values('ids') or []
             return item.name, item.name in selected_issues
-        line = item.get_informations()
+        line = get_issue_informations(resource, item)
         if column == 'title':
             # Add link to title
             link = '%s/;edit' % item.name
@@ -544,12 +541,21 @@ class Tracker_ExportToText(Tracker_View):
         selected_items = query['ids']
         if selected_items:
             items = [ x for x in items if x.name in selected_items ]
-        items = [ x.get_informations() for x in items ]
+        items = [ get_issue_informations(resource, x) for x in items ]
         # Create the text
         lines = []
         for item in items:
             name = item['name']
-            line = [u'#%s' % name] + [ unicode(item[x]) for x in selection ]
+            line = [u'#%s' % name]
+            for x in selection:
+                value = item[x]
+                if type(value) is unicode:
+                    pass
+                elif type(value) is str:
+                    value = unicode(value, 'utf-8')
+                else:
+                    value = unicode(value)
+                line.append(value)
             line = u'\t'.join(line)
             lines.append(line)
         namespace['text'] = u'\n'.join(lines)
@@ -622,8 +628,7 @@ class Tracker_ExportToCSV(BaseView):
         # Create the CSV
         csv = CSVFile()
         for issue in issues:
-            issue = resource.get_resource(issue.name)
-            issue = issue.get_informations()
+            issue = get_issue_informations(resource, issue)
             row = []
             for name, label in columns:
                 value = issue[name]
@@ -771,4 +776,49 @@ class Tracker_ChangeSeveralBugs(Tracker_View):
             root.send_email(to_addr, subject, text=body)
 
         context.message = messages.MSG_CHANGES_SAVED
+
+
+
+def get_issue_informations(resource, item):
+    """Construct a dict with issue informations.  This dict is used to
+    construct a line for a table.
+    """
+    # Build the namespace
+    infos = {
+        'name': item.name,
+        'id': item.id,
+        'title': item.title,
+    }
+
+    # Select Tables
+    get_resource = resource.get_resource
+    tables = ['product', 'module', 'version', 'type', 'state', 'priority']
+    for name in tables:
+        infos[name] = None
+        value = getattr(item, name)
+        if value is None:
+            continue
+        table = get_resource(name).handler
+        table_record = table.get_record(value)
+        if table_record is None:
+            continue
+        infos[name] = table.get_record_value(table_record, 'title')
+
+    # Assigned-To
+    assigned_to = getattr(item, 'assigned_to')
+    infos['assigned_to'] = ''
+    if assigned_to:
+        users = resource.get_resource('/users')
+        if users.has_resource(assigned_to):
+            user = users.get_resource(assigned_to)
+            infos['assigned_to'] = user.get_title()
+
+    # Modification Time
+    mtime_sort = item.mtime
+    mtime = datetime.strptime(mtime_sort, '%Y%m%d%H%M%S')
+    infos['mtime'] = format_datetime(mtime)
+    infos['mtime_sort'] = mtime_sort
+
+    return infos
+
 
