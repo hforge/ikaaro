@@ -208,8 +208,9 @@ class Menu(OrderedTable):
 
 
     def before_remove_record(self, id):
-        record = self.handler.get_record(id)
-        child_path = record.child
+        handler = self.handler
+        record = handler.get_record(id)
+        child_path = handler.get_record_value(record, 'child')
         container = self.parent
         if child_path and container.has_resource(child_path):
             child = container.get_resource(child_path)
