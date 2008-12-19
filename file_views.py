@@ -361,6 +361,12 @@ class Image_Thumbnail(BaseView):
             format = 'png'
 
         response = context.response
+        # Filename
+        filename = resource.get_property('filename')
+        if filename is not None:
+            response.set_header('Content-Disposition',
+                                'inline; filename="%s"' % filename)
+        # Content-Type
         response.set_header('Content-Type', 'image/%s' % format)
         return data
 
