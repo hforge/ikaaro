@@ -27,23 +27,7 @@ from ikaaro.registry import register_resource_class
 from ikaaro.resource_views import Breadcrumb, DBResource_AddLink
 from ikaaro.table import OrderedTableFile, OrderedTable
 from ikaaro.table_views import OrderedTable_View
-
-
-class ChildrenOrderedTable_View(OrderedTable_View):
-
-    def get_table_columns(self, resource, context):
-        columns = OrderedTable_View.get_table_columns(self, resource, context)
-        columns.insert(2, ('title', MSG(u'Title')))
-        return columns
-
-
-    def get_item_value(self, resource, context, item, column):
-        if column == 'title':
-            item = resource.parent.get_resource(item.name)
-            return item.get_title()
-        return OrderedTable_View.get_item_value(self, resource, context, item,
-                                                column)
-
+from ikaaro.views import BrowseForm, CompositeForm
 
 
 class AddButton(Button):
@@ -54,7 +38,27 @@ class AddButton(Button):
 
 
 
-class ChildrenOrderedTable_UnorderedView(Folder_BrowseContent):
+class ChildrenOrderedTable_Ordered(OrderedTable_View):
+
+    title = MSG('Ordered items')
+
+    def get_table_columns(self, resource, context):
+        columns = OrderedTable_View.get_table_columns(self, resource, context)
+        # Remove column with id and replace it by title
+        columns[1] = ('title', MSG(u'Title'))
+        return columns
+
+
+    def get_item_value(self, resource, context, item, column):
+        if column == 'title':
+            item = resource.parent.get_resource(item.name)
+            return item.get_title(), context.get_link(item)
+        return OrderedTable_View.get_item_value(self, resource, context, item,
+                                                column)
+
+
+
+class ChildrenOrderedTable_Unordered(Folder_BrowseContent):
 
     access = 'is_allowed_to_edit'
     title = MSG('Unordered items')
@@ -62,7 +66,7 @@ class ChildrenOrderedTable_UnorderedView(Folder_BrowseContent):
     table_columns = [
         ('checkbox', None),
         ('title', MSG(u'Title')),
-        ('name', MSG(u'Name'))]
+        ('path', MSG(u'Chemin'))]
 
     table_actions = [AddButton]
 
@@ -71,6 +75,8 @@ class ChildrenOrderedTable_UnorderedView(Folder_BrowseContent):
     search_template = None
     search_schema = {}
     def get_search_namespace(self, resource, context):
+        return {}
+    def get_query_schema(self):
         return {}
 
 
@@ -87,10 +93,10 @@ class ChildrenOrderedTable_UnorderedView(Folder_BrowseContent):
     def get_item_value(self, resource, context, item, column):
         if column == 'checkbox':
             return item.name, False
-        if column == 'name':
-            return item.name, context.get_link(item)
         if column == 'title':
-            return item.get_title()
+            return item.get_title(), context.get_link(item)
+        if column == 'path':
+            return item.name
 
 
     def sort_and_batch(self, resource, context, items):
@@ -112,8 +118,26 @@ class ChildrenOrderedTable_UnorderedView(Folder_BrowseContent):
             index += 1
 
         resource.set_property('order', order)
-        return context.come_back(INFO(u'Resources added to ordered list.'),
-                                 goto=';view')
+        context.message = INFO(u'Resources added to ordered list.')
+
+
+
+class ChildrenOrderedTable_View(CompositeForm):
+
+    access = 'is_allowed_to_edit'
+    title = MSG(u'View')
+    template = '/ui/future/order_view.xml'
+
+    subviews = [ChildrenOrderedTable_Ordered(),
+                ChildrenOrderedTable_Unordered()]
+
+
+    def get_namespace(self, resource, context):
+        views = []
+        for view in self.subviews:
+            views.append({'title': view.title,
+                          'view': view.GET(resource, context)})
+        return {'views': views}
 
 
 
@@ -176,8 +200,9 @@ class ChildrenOrderedTable(OrderedTable):
 
     # Views
     add_link = ChildrenOrderedTable_AddLink()
+    ordered = ChildrenOrderedTable_Ordered()
+    unordered = ChildrenOrderedTable_Unordered()
     view = ChildrenOrderedTable_View()
-    unordered = ChildrenOrderedTable_UnorderedView()
 
 
 register_resource_class(ChildrenOrderedTable)
