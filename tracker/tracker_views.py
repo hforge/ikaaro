@@ -322,19 +322,37 @@ class Tracker_View(BrowseForm):
 
 
     def get_item_value(self, resource, context, item, column):
-        if column == 'id':
-            id = item.name
-            return id, '%s/;edit' % id
         if column == 'checkbox':
             selected_issues = context.get_form_values('ids') or []
             return item.name, item.name in selected_issues
-        line = get_issue_informations(resource, item)
+        if column == 'id':
+            id = item.name
+            return id, '%s/;edit' % id
+
+        value = getattr(item, column)
+        if value is None:
+            return None
         if column == 'title':
-            # Add link to title
-            link = '%s/;edit' % item.name
-            return (line['title'], link)
-        if column in line:
-            return line[column]
+            return value, '%s/;edit' % item.name
+        # Assigned to
+        if column == 'assigned_to':
+            users = resource.get_resource('/users')
+            try:
+                user = users.get_resource(value)
+            except LookupError:
+                return None
+            return user.get_title()
+        # Mtime
+        if column == 'mtime':
+            mtime = datetime.strptime(value, '%Y%m%d%H%M%S')
+            return format_datetime(mtime)
+
+        # Tables
+        table = resource.get_resource(column).handler
+        table_record = table.get_record(value)
+        if table_record is None:
+            return None
+        return table.get_record_value(table_record, 'title')
 
 
     table_actions = []
