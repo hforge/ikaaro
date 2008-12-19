@@ -17,8 +17,11 @@
 # Import from itools
 from itools.datatypes import String
 from itools.gettext import MSG
+from itools.web import INFO
 
 # Import from ikaaro
+from ikaaro.buttons import Button
+from ikaaro.folder_views import Folder_BrowseContent
 from ikaaro.forms import PathSelectorWidget
 from ikaaro.registry import register_resource_class
 from ikaaro.resource_views import Breadcrumb, DBResource_AddLink
@@ -40,6 +43,78 @@ class ChildrenOrderedTable_View(OrderedTable_View):
             return item.get_title()
         return OrderedTable_View.get_item_value(self, resource, context, item,
                                                 column)
+
+
+
+class AddButton(Button):
+
+    access = 'is_allowed_to_edit'
+    name = 'add'
+    title = MSG(u'Add to ordered list')
+
+
+
+class ChildrenOrderedTable_UnorderedView(Folder_BrowseContent):
+
+    access = 'is_allowed_to_edit'
+    title = MSG('Unordered items')
+
+    table_columns = [
+        ('checkbox', None),
+        ('title', MSG(u'Title')),
+        ('name', MSG(u'Name'))]
+
+    table_actions = [AddButton]
+
+    # Reset unrequired stuff
+    context_menus = []
+    search_template = None
+    search_schema = {}
+    def get_search_namespace(self, resource, context):
+        return {}
+
+
+    def get_items(self, resource, context):
+        exclude = [resource.name] + list(resource.get_ordered_names())
+        orderable_classes = resource.get_orderable_classes() or ()
+        items = []
+        for item in resource.parent.search_resources(cls=orderable_classes):
+            if item.name not in exclude:
+                items.append(item)
+        return items
+
+
+    def get_item_value(self, resource, context, item, column):
+        if column == 'checkbox':
+            return item.name, False
+        if column == 'name':
+            return item.name, context.get_link(item)
+        if column == 'title':
+            return item.get_title()
+
+
+    def sort_and_batch(self, resource, context, items):
+        return items
+
+
+    def action_add(self, resource, context, form):
+        parent = resource.parent
+        handler = resource.handler
+
+        order = resource.get_property('order') or []
+        if not isinstance(order, list):
+            order = list(order)
+
+        index = handler.get_n_records()
+        for name in form['ids']:
+            handler.add_record({'name': name})
+            order.append(str(index))
+            index += 1
+
+        resource.set_property('order', order)
+        return context.come_back(INFO(u'Resources added to ordered list.'),
+                                 goto=';view')
+
 
 
 class ChildrenOrderedTable_AddLink(DBResource_AddLink):
@@ -102,6 +177,7 @@ class ChildrenOrderedTable(OrderedTable):
     # Views
     add_link = ChildrenOrderedTable_AddLink()
     view = ChildrenOrderedTable_View()
+    unordered = ChildrenOrderedTable_UnorderedView()
 
 
 register_resource_class(ChildrenOrderedTable)
