@@ -131,12 +131,10 @@ class Folder_Rename(STLForm):
     title = MSG(u'Rename resources')
     template = '/ui/folder/rename.xml'
     query_schema = {
-        'ids': String(multiple=True, mandatory=True),
-    }
+        'ids': String(multiple=True)}
     schema = {
         'paths': String(multiple=True, mandatory=True),
-        'new_names': String(multiple=True, mandatory=True),
-    }
+        'new_names': String(multiple=True, mandatory=True)}
 
 
     def get_namespace(self, resource, context):
