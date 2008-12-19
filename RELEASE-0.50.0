@@ -1,5 +1,5 @@
 
-ikaaro 0.50.0 (2008/12/1X)
+ikaaro 0.50.0 (2008/12/19)
 ==========================
 
 This is a Content Management System built on Python & itools, among
@@ -50,9 +50,9 @@ Again, the changes to the programming interface are too many to
 enumerate here.  See the upgrade notes for more.
 
 
-[1]
+[1] http://tinymce.moxiecode.com/
 [2] http://www.bugzilla.org/
-[3]
+[3] http://en.wikipedia.org/wiki/Representational_State_Transfer
 
 
 Resources
