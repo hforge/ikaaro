@@ -115,7 +115,7 @@ class Issue(Folder):
 
 
     def get_links(self):
-        base = str(self.abspath)
+        base = str(self.get_abspath())
 
         links = []
         for record in self.get_history_records():

@@ -105,7 +105,7 @@ class Folder(DBResource):
 
         # Check referencial-integrity
         # FIXME Check sub-resources too
-        path = str(resource.abspath)
+        path = str(resource.get_abspath())
         root = self.get_root()
         results = root.search(links=path)
         n = results.get_n_documents()

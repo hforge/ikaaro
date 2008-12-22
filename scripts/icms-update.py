@@ -68,7 +68,7 @@ def update(parser, options, target):
             print
             print '*'
             print '* ERROR: resource is newer than its class'
-            print '* %s <%s>' % (resource.abspath, resource.__class__.__name__)
+            print '* %s <%s>' % (resource.get_abspath(), resource.__class__.__name__)
             print '* %s > %s' % (obj_version, cls_version)
             print '*'
             return
