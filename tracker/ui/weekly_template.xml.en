@@ -7,8 +7,10 @@
 <td colspan="${cell/colspan}" rowspan="${cell/rowspan}" valign="top"
   class="color0">
   <a href="${cell/content/issue/url}">[#${cell/content/issue/number}]</a>
-    ${cell/content/issue/title}
-    (${cell/content/resource/title})
+  <span class="tracker_product"
+    stl:if="cell/content/issue/product">${cell/content/issue/product}</span>
+  ${cell/content/issue/title}
+  <span class="tracker_resource">(${cell/content/resource/title})</span>
 </td>
 
 </stl:block>

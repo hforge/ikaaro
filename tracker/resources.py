@@ -52,6 +52,12 @@ class TrackerMonthlyView(MonthlyView):
         return False
 
 
+    def get_namespace(self, resource, context):
+        context.styles.append('/ui/tracker/tracker.css')
+        return MonthlyView.get_namespace(self, resource, context)
+
+
+
 class TrackerWeeklyView(WeeklyView):
 
     weekly_template_fd = '/ui/tracker/weekly_template_fd.xml'
@@ -83,6 +89,11 @@ class TrackerWeeklyView(WeeklyView):
         return ns_timetables
 
 
+    def get_namespace(self, resource, context):
+        context.styles.append('/ui/tracker/tracker.css')
+        return WeeklyView.get_namespace(self, resource, context)
+
+
 
 class Resource(Record):
 
@@ -94,15 +105,23 @@ class Resource(Record):
                      timetable=None, grid=False, starts_on=True, ends_on=True,
                      out_on=True):
         context = get_context()
-        here = context.resource
-        issue = here.parent.get_resource(self.get_value('issue'))
+        tracker = context.resource.parent
+        issue = tracker.get_resource(self.get_value('issue'))
+
         users = context.root.get_resource('/users')
         user = self.get_value('resource')
         user_title = users.get_resource(user).get_title()
+
+        products = tracker.get_resource('product').handler
+        product = issue.get_value('product')
+        product = products.get_record(product)
+        product = products.get_record_value(product, 'title')
+
         ns = {}
         ns['resource'] = {'name': user, 'title': user_title}
+
         ns['issue'] = {'number': issue.name, 'title': issue.get_value('title'),
-                       'url': '../%s/;edit' % issue.name}
+                       'url': '../%s/;edit' % issue.name, 'product': product}
 
         ###############################################################
         # Set dtstart and dtend values using '...' for events which
