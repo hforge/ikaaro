@@ -459,7 +459,7 @@ class Tracker_RememberSearch(BaseForm):
     access = 'is_allowed_to_edit'
     schema = merge_dics(StoredSearchFile.schema,
                         search_name=String,
-                        search_title=Unicode)
+                        search_title=Unicode(mandatory=True))
 
 
     def GET(self, resource, context):
@@ -469,18 +469,37 @@ class Tracker_RememberSearch(BaseForm):
 
     def action(self, resource, context, form):
         search_name = form.get('search_name')
+        title = form['search_title']
+
+        # Already a search name ?
+
+        # No
         if search_name is None:
-            # New search
-            search_name = resource.get_new_id('s')
-            search = StoredSearch.make_resource(StoredSearch, resource,
-                                                search_name)
-            message = MSG(u'The search has been stored.')
+            # Search for a search with the same title
+            if isinstance(resource, Issue):
+                resource = resource.parent
+            searches = resource.search_resources(cls=StoredSearch)
+            for search in searches:
+                # Found !
+                if title == search.get_property('title'):
+                    search_name = search.name
+                    message = MSG(u'The search has been modified.')
+                    break
+            else:
+                # Not found => so we make a new search resource
+                search_name = resource.get_new_id('s')
+                search = StoredSearch.make_resource(StoredSearch, resource,
+                                                    search_name)
+                message = MSG(u'The search has been stored.')
+        # Yes
         else:
             search = resource.get_resource(search_name)
             message = MSG(u'The search title has been changed.')
 
+        # Reset the search
+        search.handler.load_state_from_string('')
+
         # Set title
-        title = form['search_title']
         search.set_property('title', title)
 
         # Save the value
