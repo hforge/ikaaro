@@ -720,9 +720,13 @@ class Folder_LastChanges(Folder_BrowseContent):
     title = MSG(u"Last Changes")
 
     def get_query_schema(self):
-        # Search subfolders by default
-        return merge_dics(Folder_BrowseContent.get_query_schema(self),
-                          search_subfolders=Boolean(default=True))
+        schema = Folder_BrowseContent.get_query_schema(self)
+
+        # Override the default values
+        schema['reverse'] = Boolean(default=True)
+        schema['sort_by'] = String(default='mtime')
+        schema['search_subfolders'] = Boolean(default=True)
+        return schema
 
 
     def get_items(self, resource, context):
