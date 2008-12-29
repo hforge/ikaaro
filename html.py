@@ -27,7 +27,7 @@ from itools.gettext import MSG
 from itools.handlers import merge_dics
 from itools.html import xhtml_uri, XHTMLFile
 from itools.uri import get_reference
-from itools.web import BaseView
+from itools.web import BaseView, get_context
 from itools.xml import TEXT, START_ELEMENT
 
 # Import from ikaaro
@@ -60,6 +60,56 @@ def is_edit_conflict(resource, context, timestamp):
             context.message = messages.MSG_EDIT_CONFLICT2(user=user)
             return True
     return False
+
+
+def _change_link(old_path, new_path, base, stream):
+    for event in stream:
+        type, value, line = event
+        if type != START_ELEMENT:
+            yield event
+            continue
+        tag_uri, tag_name, attributes = value
+        if tag_uri != xhtml_uri:
+            yield event
+            continue
+        if tag_name != 'a' and tag_name != 'img':
+            yield event
+            continue
+
+        if tag_name == 'a':
+            attr_name = (None, 'href')
+        else:
+            attr_name = (None, 'src')
+
+        value = attributes.get(attr_name)
+        reference = get_reference(value)
+
+         # Skip bad links
+        if (reference.scheme or reference.authority or
+            not reference.path):
+            yield event
+            continue
+        if value.startswith('/ui/'):
+            yield event
+            continue
+
+        # Strip the view
+        path = reference.path
+        if path[-1] == ';download':
+            path = path[:-1]
+            view = '/;download'
+        else:
+            view = ''
+
+        # Resolve the path
+        path = base.resolve2(path)
+
+        # Match ?
+        if path == old_path:
+            value = str(base.get_pathto(new_path)) + view
+
+        attributes[attr_name] = value
+        yield START_ELEMENT, (tag_uri, tag_name, attributes), line
 
 
 ###########################################################################
@@ -190,6 +240,19 @@ class WebPage(ResourceWithHTML, Multilingual, Text):
                 uri = str(uri)
                 links.append(uri)
         return links
+
+
+    def change_link(self,  old_path, new_path):
+        base = self.get_abspath()
+
+        languages = self.get_site_root().get_property('website_languages')
+        for language in languages:
+            handler = self.get_handler(language=language)
+            events = list(_change_link(old_path, new_path, base,
+                                       handler.events))
+            handler.set_changed()
+            handler.events = events
+        get_context().server.change_resource(self)
 
 
     #######################################################################

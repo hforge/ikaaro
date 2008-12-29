@@ -23,6 +23,7 @@ from itools.gettext import MSG
 from itools.handlers import Folder as FolderHandler
 from itools import vfs
 from itools.web import get_context, BaseView
+from itools.xapian import PhraseQuery
 
 # Import from ikaaro
 from exceptions import ConsistencyError
@@ -100,6 +101,25 @@ class Folder(DBResource):
         return cls(metadata)
 
 
+    def update_links(self, new_name):
+        """The resource must update its links to itself and to its content
+        """
+        old_base_path = self.get_abspath()
+        new_base_path = old_base_path.resolve(new_name)
+        for resource in self.traverse_resources():
+            # Old and new paths
+            old_path = resource.get_abspath()
+            pathto = old_base_path.get_pathto(old_path)
+            new_path = new_base_path.resolve2(pathto)
+
+            # Get all the resources that have a link to this resource
+            query = PhraseQuery('links', str(old_path))
+            results = self.get_root().search(query).get_documents()
+            for result in results:
+                resource = self.get_resource(result.abspath)
+                resource.change_link(old_path, new_path)
+
+
     def del_resource(self, name):
         resource = self.get_resource(name)
 
@@ -175,6 +195,9 @@ class Folder(DBResource):
             target_uri = folder.uri.resolve2(target)
         old_name = source_uri.path[-1]
         new_name = target_uri.path[-1]
+
+        # The resource must update its links
+        resource.update_links(target)
 
         # Move the metadata
         folder.move_handler('%s.metadata' % source_uri,

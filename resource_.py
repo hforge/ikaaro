@@ -28,6 +28,7 @@ from itools.gettext import MSG
 from itools.web import Resource, get_context
 from itools.xapian import CatalogAware
 from itools.xapian import TextField, KeywordField, IntegerField, BoolField
+from itools.xapian import PhraseQuery
 
 # Import from ikaaro
 from lock import Lock
@@ -339,6 +340,26 @@ class DBResource(CatalogAware, IResource):
         This method is required by the "move_resource" method.
         """
         return [(self.name, new_name)]
+
+
+    def update_links(self, new_name):
+        """The resource must update its links to itself.
+        """
+        old_path = self.get_abspath()
+        new_path = old_path.resolve(new_name)
+
+        # Get all the resources that have a link to me
+        query = PhraseQuery('links', str(old_path))
+        results = self.get_root().search(query).get_documents()
+        for result in results:
+            resource = self.get_resource(result.abspath)
+            resource.change_link(old_path, new_path)
+
+
+    def change_link(self, old_path, new_path):
+        """The resource "old_name" has a "new_name", we must update its link
+        """
+        pass
 
 
     def get_mtime(self):

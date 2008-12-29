@@ -196,11 +196,48 @@ class WikiPage(Text):
             if path[-1] == ';download':
                 path = path[:-1]
             # Resolve the path
-            path = base.resolve2(path)
+            path = base.resolve(path)
             path = str(path)
             links.append(path)
 
         return links
+
+
+    def change_link(self, old_path, new_path,
+                    links_re = compile(r'(\.\. .*?: )(\S*)')):
+        old_data = self.handler.to_str()
+        new_data = []
+
+        not_uri = 0
+        base = self.parent.get_abspath()
+        for segment in links_re.split(old_data):
+            not_uri = (not_uri + 1) % 3
+            if not not_uri:
+                reference = get_reference(segment)
+
+                # Skip external link
+                if reference.scheme or reference.authority:
+                    new_data.append(segment)
+                    continue
+
+                # Strip the view
+                path = reference.path
+                if path[-1] == ';download':
+                    path = path[:-1]
+                    view = '/;download'
+                else:
+                    view = ''
+
+                # Resolve the path
+                path = base.resolve(path)
+
+                # Match ?
+                if path == old_path:
+                    segment = str(base.get_pathto(new_path)) + view
+            new_data.append(segment)
+        new_data = ''.join(new_data)
+        self.handler.load_state_from_string(new_data)
+        get_context().server.change_resource(self)
 
 
     #######################################################################
