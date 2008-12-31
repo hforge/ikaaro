@@ -247,7 +247,7 @@ class RowForm(AutoForm):
     def get_widgets(self, resource, context):
         schema = self.get_schema(resource, context)
         return [
-            get_default_widget(schema[name])(name)
+            get_default_widget(schema[name])(name, title=title)
             for name, title in resource.get_columns()
         ]
 
