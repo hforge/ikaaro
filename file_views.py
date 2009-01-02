@@ -209,6 +209,8 @@ class File_Upload(STLForm):
         handler_name = handler.uri.path.get_name()
         old_name, old_extension, old_lang = FileName.decode(handler_name)
         new_name, new_extension, new_lang = FileName.decode(filename)
+        # FIXME Should 'FileName.decode' return lowercase extensions?
+        new_extension = new_extension.lower()
         if old_extension != new_extension:
             # "handler.png" -> "handler.jpg"
             folder = resource.parent.handler

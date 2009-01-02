@@ -66,11 +66,14 @@ class File(WorkflowAware, VersioningAware):
     def _make_resource(cls, folder, name, body=None, filename=None,
                      extension=None, **kw):
         VersioningAware._make_resource(cls, folder, name, filename=filename,
-                                     **kw)
+                                       **kw)
         # Add the body
         if body is not None:
             handler = cls.class_handler(string=body)
-            extension = extension or handler.class_extension
+            if extension:
+                extension = extension.lower()
+            else:
+                extension = handler.class_extension
             name = FileName.encode((name, extension, None))
             folder.set_handler(name, handler)
 
