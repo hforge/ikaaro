@@ -213,7 +213,10 @@ function select_uri() {
 }
 
 
-var Cookie = tinymce.util.Cookie;
+var Cookie = null;
+$(document).ready(function() {
+    Cookie = tinymce.util.Cookie;
+});
 
 function text_small() {
   $("#data").css("font-size", "1.2em");
