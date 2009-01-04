@@ -20,14 +20,13 @@
 
 # Import from itools
 from itools.csv import UniqueError, Property, is_multilingual
-from itools.datatypes import DataType, Integer, Enumerate, Tokens, Unicode
-from itools.datatypes import copy_datatype
+from itools.datatypes import Integer, Enumerate, Tokens
 from itools.gettext import MSG
-from itools.web import MSG_MISSING_OR_INVALID, INFO, ERROR
+from itools.web import INFO, ERROR
 from itools.xapian import PhraseQuery
 
 # Import from ikaaro
-from buttons import Button, RemoveButton, OrderUpButton, OrderDownButton
+from buttons import RemoveButton, OrderUpButton, OrderDownButton
 from buttons import OrderBottomButton, OrderTopButton
 from forms import AutoForm
 import messages
