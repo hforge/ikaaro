@@ -54,6 +54,8 @@ class XHTMLBody(DataType):
 
     @staticmethod
     def encode(value):
+        if value is None:
+            return ''
         return stream_to_str_as_xhtml(value)
 
 
@@ -64,6 +66,8 @@ class HTMLBody(XHTMLBody):
 
     @staticmethod
     def encode(value):
+        if value is None:
+            return ''
         return stream_to_str_as_html(value)
 
 
