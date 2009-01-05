@@ -23,7 +23,7 @@
 # Import from the Standard Library
 from datetime import date, datetime, time
 from re import compile
-from textwrap import wrap
+from textwrap import TextWrapper
 
 # Import from itools
 from itools.datatypes import Boolean, Date, Integer, String, Unicode
@@ -44,34 +44,62 @@ from ikaaro.views import CompositeForm
 from datatypes import get_issue_fields, UsersList
 
 
+
 url_expr = compile('([fh]t?tps?://[\w.@/;?=&#\-%:]*)')
+class OurWrapper(TextWrapper):
+
+    def _split(self, text):
+        # Override default's '_split' method to define URLs as unbreakable,
+        # and reduce URLs if needed.
+        # XXX This is fragile, since it uses TextWrapper private API.
+
+        # Keep a mapping from reduced URL to full URL
+        self.urls_map = {}
+
+        # Get the chunks
+        chunks = []
+        for segment in url_expr.split(text):
+            starts = segment.startswith
+            if starts('http://') or starts('https://') or starts('ftp://'):
+                if len(segment) > 70:
+                    # Reduce URL
+                    url = segment
+                    segment = segment[:34] + '...' + segment[-33:]
+                    self.urls_map[segment] = url
+                else:
+                    self.urls_map[segment] = segment
+                chunks.append(segment)
+            else:
+                chunks.extend(TextWrapper._split(self, segment))
+        return chunks
+
+
+
 def indent(text):
-    """Replace URLs by HTML links.  Wrap lines (with spaces) to 150 chars.
+    """Replace URLs by HTML links.  Wrap lines (with spaces) to 95 chars.
     """
     text = text.encode('utf-8')
     # Wrap
-    lines = []
-    for line in text.splitlines():
-        for line in wrap(line, 95):
-            lines.append(line)
-        else:
-            if line is '':
-                lines.append(line)
-    text = '\n'.join(lines)
-    # Links
-    for segment in url_expr.split(text):
-        if (segment.startswith('http://') or
-            segment.startswith('https://') or
-            segment.startswith('ftp://')):
-            attributes = {(xhtml_uri, 'href'): segment}
-            yield START_ELEMENT, (xhtml_uri, 'a', attributes), 1
-            # Reduce too long URI
-            if len(segment) > 70:
-                segment = segment[:34] + '...' + segment[-33:]
-            yield TEXT, segment, 1
-            yield END_ELEMENT, (xhtml_uri, 'a'), 1
-        else:
-            yield TEXT, segment, 1
+    buffer = []
+    text_wrapper = OurWrapper(95)
+    for line in text.splitlines(True):
+        line = text_wrapper.fill(line)
+        for segment in url_expr.split(line):
+            url = text_wrapper.urls_map.get(segment)
+            if url is None:
+                buffer.append(segment)
+            else:
+                if buffer:
+                    yield TEXT, ''.join(buffer), 1
+                    buffer = []
+                # <a>...</a>
+                attributes = {(None, 'href'): url}
+                yield START_ELEMENT, (xhtml_uri, 'a', attributes), 1
+                yield TEXT, segment, 1
+                yield END_ELEMENT, (xhtml_uri, 'a'), 1
+    if buffer:
+        yield TEXT, ''.join(buffer), 1
+        buffer = []
 
 
 
