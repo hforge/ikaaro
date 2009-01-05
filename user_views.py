@@ -202,7 +202,7 @@ class User_EditAccount(AutoForm):
             if results.get_n_documents():
                 context.message = ERROR(
                     u'There is another user with the email "${email}", please'
-                    u' try again.').gettext(email=email)
+                    u' try again.', email=email).gettext()
                 return
 
         # Save changes
