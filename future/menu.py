@@ -31,6 +31,7 @@ from ikaaro.registry import register_resource_class
 from ikaaro.resource_views import Breadcrumb, DBResource_AddLink
 from ikaaro.table import OrderedTableFile, OrderedTable
 from ikaaro.table_views import OrderedTable_View
+from ikaaro.workflow import WorkflowAware
 
 
 
@@ -84,6 +85,8 @@ class Menu_View(OrderedTable_View):
                 continue
             column = (widget.name, getattr(widget, 'title', widget.name))
             columns.append(column)
+        # Add the workflow state
+        columns.append(('workflow_state', MSG(u'Workflow State')))
 
         return columns
 
@@ -93,7 +96,14 @@ class Menu_View(OrderedTable_View):
         value = get_value(item, column)
         if column == 'title':
             path = get_value(item, 'path')
-            return value, path
+            if path.startswith(('http://', 'https://')) or path.count(';'):
+                # External link
+                return value, path
+            if resource.has_resource(path) is False:
+                # Broken link
+                return value
+            resource_item = resource.get_resource(path)
+            return value, context.get_link(resource_item)
         elif column == 'child':
             child = None
             parent = resource.parent
@@ -102,9 +112,40 @@ class Menu_View(OrderedTable_View):
                 child = parent.get_resource(value)
                 child = 'edit', context.get_link(child)
             return child
+        elif column == 'workflow_state':
+            path = get_value(item, 'path')
+            if path.startswith(('http://', 'https://')) or path.count(';'):
+                # External link
+                return None
+            if resource.has_resource(path) is False:
+                # Broken link
+                title = MSG(u'The resource does not exist anymore.')
+                title = title.gettext().encode('utf-8')
+                label = MSG(u'Broken').gettext().encode('utf-8')
+                link = context.get_link(resource)
+                state = ('<a href="%s/;edit_record?id=%s" class="workflow"'
+                         'title="%s"><strong class="broken">%s</strong>'
+                         '</a>') % (link, item.id, title, label)
+                return XMLParser(state)
+            item_resource = resource.get_resource(path)
+            if not isinstance(item_resource, WorkflowAware):
+                return None
+            statename = item_resource.get_statename()
+            state = item_resource.get_state()
+            msg = state['title'].gettext().encode('utf-8')
+            path = context.get_link(item_resource)
+            # TODO Include the template in the base table
+            state = ('<a href="%s/;edit_state" class="workflow">'
+                     '<strong class="wf_%s">%s</strong>'
+                     '</a>') % (path, statename, msg)
+            return XMLParser(state)
 
         return OrderedTable_View.get_item_value(self, resource, context, item,
                                                column)
+
+    def get_namespace(self, resource, context):
+        context.styles.append('/ui/future/style.css')
+        return OrderedTable_View.get_namespace(self, resource, context)
 
 
     #######################################################################
@@ -247,6 +288,9 @@ class Menu(OrderedTable):
                               'class': None,
                               'target': target})
             else:
+                if self.has_resource(path) is False:
+                    # Broken link
+                    continue
                 resource = self.get_resource(path)
                 name = resource.name
 
