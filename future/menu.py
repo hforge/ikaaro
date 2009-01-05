@@ -17,8 +17,9 @@
 # Import from itools
 from itools.csv import Property
 from itools.datatypes import String, Enumerate, Unicode, Integer
-from itools.xml import XMLParser
 from itools.gettext import MSG
+from itools.uri import Path
+from itools.xml import XMLParser
 
 # Import from ikaaro
 from ikaaro.buttons import Button
@@ -326,6 +327,36 @@ class Menu(OrderedTable):
             items[-1]['items'] = subtabs.get('items', [])
         tabs['items'] = items
         return tabs
+
+
+    def get_links(self):
+        base = self.get_abspath()
+        handler = self.handler
+        links = []
+
+        for record in handler.get_records_in_order():
+            path = handler.get_record_value(record, 'path')
+            if path.startswith(('http://', 'https://')) or path.count(';'):
+                continue
+            uri = base.resolve2(path)
+            links.append(str(uri))
+
+        return links
+
+
+    def change_link(self, old_path, new_path):
+        handler = self.handler
+        base = self.get_abspath()
+
+        for record in handler.get_records_in_order():
+            path = handler.get_record_value(record, 'path')
+            if path.startswith(('http://', 'https://')) or path.count(';'):
+                continue
+            uri = str(base.resolve2(path))
+            if uri == old_path:
+                # Hit the old name
+                new_path2 = base.get_pathto(Path(new_path))
+                handler.update_record(record.id, **{'path': str(new_path2)})
 
 
 
