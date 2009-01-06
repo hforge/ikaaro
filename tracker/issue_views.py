@@ -45,7 +45,7 @@ from datatypes import get_issue_fields, UsersList
 
 
 
-url_expr = compile('([fh]t?tps?://[\w.@/;?=&#\-%:]*)')
+url_expr = compile('([fh]t?tps?://[\w;/?:@&=+$,.#\-%]*)')
 class OurWrapper(TextWrapper):
 
     def _split(self, text):
