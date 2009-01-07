@@ -82,8 +82,8 @@ def indent(text):
     # Wrap
     buffer = []
     text_wrapper = OurWrapper(95)
-    for line in text.splitlines(True):
-        line = text_wrapper.fill(line)
+    for line in text.splitlines():
+        line = text_wrapper.fill(line) + '\n'
         for segment in url_expr.split(line):
             url = text_wrapper.urls_map.get(segment)
             if url is None:
