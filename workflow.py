@@ -37,7 +37,7 @@ from metadata import Record
 class StateForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    title = MSG(u'Workflow State')
+    title = MSG(u'Publication')
     icon = 'state.png'
     template = '/ui/WorkflowAware_state.xml'
     schema = {
