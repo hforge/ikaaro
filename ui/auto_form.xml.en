@@ -8,16 +8,20 @@
   enctype="multipart/form-data" stl:omit-tag="not submit_value">
   <fieldset>
     <legend>${title}</legend>
-    <p stl:if="has_required_widget">${required_msg}</p>
+    <p stl:if="has_required_widget"
+      class="field-required">${required_msg}</p>
     <dl>
       <stl:block stl:repeat="widget widgets">
         <dt class="${widget/class}">
           <label for="${widget/name}" class="${widget/class}">
             ${widget/title}
           </label>
-          <span stl:if="widget/mandatory">(mandatory)</span>
-          <span stl:if="widget/multiple">(multiple)</span>
-          <span stl:if="widget/is_date">Format: 'yyyy-mm-dd'</span>
+          <span stl:if="widget/mandatory"
+            class="field-mandatory">(mandatory)</span>
+          <span stl:if="widget/multiple"
+            class="field-multiple">(multiple)</span>
+          <span stl:if="widget/is_date"
+            class="field-format">Format: 'yyyy-mm-dd'</span>
         </dt>
         <dd>
           ${widget/widget}
