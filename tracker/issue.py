@@ -38,6 +38,7 @@ from ikaaro.folder import Folder
 from ikaaro.registry import register_resource_class, get_resource_class
 from ikaaro.utils import generate_name
 from issue_views import Issue_Edit, Issue_EditResources, Issue_History
+from issue_views import IssueTrackerMenu
 
 
 class History(Table):
@@ -384,7 +385,7 @@ class Issue(Folder):
     # User Interface
     #######################################################################
     def get_context_menus(self):
-        return self.parent.get_context_menus()
+        return self.parent.get_context_menus() + [IssueTrackerMenu()]
 
 
     edit = Issue_Edit()

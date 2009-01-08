@@ -39,12 +39,15 @@ from itools.xml import XMLParser, START_ELEMENT, END_ELEMENT, TEXT
 from ikaaro.messages import MSG_CHANGES_SAVED
 from ikaaro.table_views import Table_View
 from ikaaro.views import CompositeForm
+from ikaaro.views import ContextMenu
 
 # Local import
 from datatypes import get_issue_fields, UsersList
 
 
-
+###########################################################################
+# Utilities
+###########################################################################
 url_expr = compile('([fh]t?tps?://[\w;/?:@&=+$,.#\-%]*)')
 class OurWrapper(TextWrapper):
 
@@ -103,6 +106,26 @@ def indent(text):
 
 
 
+###########################################################################
+# Menu
+###########################################################################
+class IssueTrackerMenu(ContextMenu):
+
+    title = MSG(u'Tracker')
+
+    def get_items(self, resource, context):
+        items = [
+            {'title': MSG(u'Search for issues'),
+             'href': '%s/;search' % context.get_link(resource.parent)},
+            {'title': MSG(u'Add a new issue'),
+             'href': '%s/;add_issue' % context.get_link(resource.parent)}]
+        return items
+
+
+
+###########################################################################
+# Views
+###########################################################################
 class Issue_Edit(STLForm):
 
     access = 'is_allowed_to_edit'
