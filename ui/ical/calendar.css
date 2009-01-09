@@ -227,6 +227,7 @@ table.timetable {
   color: #fce94f;
   background: #cc0000;
   font-weight: bold;
+  width: 40px;
 }
 
 #cal_daily_view .header_timetables span {

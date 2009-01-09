@@ -434,6 +434,8 @@ class EditEventForm(CalendarView, STLForm):
 
         if resource.has_resource(resource_id):
             return resource.get_resource(resource_id)
+        elif resource_id == resource.name:
+            return resource
 
         # Error
         message = MSG(u'Resource "${name}" not found.')
@@ -908,7 +910,7 @@ class DailyView(CalendarView):
     def get_ns_calendar(self, calendar, c_date, timetables,
                         method='daily_view', show_conflicts=False):
         cal_fields = self.class_cal_fields
-        calendar_name = calendar.name
+        calendar_name = str(calendar.name)
         args = {'date': Date.encode(c_date), 'method': method}
 
         # Get a dict for each event, compute colspan
@@ -935,7 +937,7 @@ class DailyView(CalendarView):
                 'tt_start': tt_start,
                 'tt_end': tt_end,
                 'resource_id': calendar_name,
-                'event_id': uid,
+                'event_id': str(uid),
                 'colspan': tt_end - tt_start + 1})
 
         # Organize events in rows
@@ -1022,7 +1024,7 @@ class DailyView(CalendarView):
         # Header columns (one line with header and empty cases with only
         # '+' for daily_view)
         url = ';add_event?%s' % encode_query(args)
-        url = get_reference(url).replace(id=calendar_name)
+        url = get_reference(url).replace(resource=calendar_name)
         header_columns = [
             url.replace(start_time=Time.encode(x), end_time=Time.encode(y))
             for x, y in timetables ]
