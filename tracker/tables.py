@@ -19,10 +19,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
+from itools.core import merge_dicts
 from itools.datatypes import Boolean, Integer, String, Unicode
 from itools.datatypes import Enumerate
 from itools.gettext import MSG
-from itools.handlers import merge_dicts
 from itools.xapian import PhraseQuery, AndQuery
 from itools.web import ERROR, INFO
 

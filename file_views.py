@@ -22,10 +22,10 @@
 from datetime import datetime, timedelta
 
 # Import from itools
+from itools.core import merge_dicts
 from itools.datatypes import Integer, Unicode
 from itools.gettext import MSG
 from itools.handlers import get_handler_class_by_mimetype, guess_encoding
-from itools.handlers import merge_dicts
 from itools.html import HTMLParser, stream_to_str_as_xhtml
 from itools.i18n import guess_language
 from itools.uri import get_reference

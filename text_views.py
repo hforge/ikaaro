@@ -21,9 +21,9 @@ from cgi import escape
 from operator import itemgetter
 
 # Import from itools
+from itools.core import merge_dicts
 from itools.datatypes import Integer, String
 from itools.gettext import MSG
-from itools.handlers import merge_dicts
 from itools.web import STLForm, STLView, INFO
 
 # Import from ikaaro

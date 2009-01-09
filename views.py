@@ -15,9 +15,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
+from itools.core import merge_dicts
 from itools.datatypes import Boolean, Integer, String, Unicode
 from itools.gettext import MSG
-from itools.handlers import checkid, merge_dicts
+from itools.handlers import checkid
 from itools.stl import stl
 from itools.uri import Path
 from itools.web import FormError, get_context, BaseView, STLView, STLForm

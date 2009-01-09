@@ -24,11 +24,11 @@ from operator import itemgetter
 from urllib import quote
 
 # Import from itools
+from itools.core import merge_dicts
 from itools.datatypes import String, Unicode
 from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.i18n import get_language_name
-from itools.handlers import merge_dicts
 from itools.uri import Path, get_reference
 from itools.vfs import FileName
 from itools.web import get_context, BaseView, STLForm, INFO, ERROR

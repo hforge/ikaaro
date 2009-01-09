@@ -22,9 +22,9 @@
 from operator import itemgetter
 
 # Import from itools
+from itools.core import merge_dicts
 from itools.datatypes import Boolean, Email, Integer, Tokens, Unicode, String
 from itools.gettext import MSG
-from itools.handlers import merge_dicts
 from itools.stl import stl
 from itools.uri import get_reference
 from itools.web import AccessControl as BaseAccessControl, STLForm, INFO

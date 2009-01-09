@@ -20,11 +20,10 @@
 
 # Import from itools
 import itools
-from itools.core import get_abspath
+from itools.core import get_abspath, merge_dicts
 from itools.datatypes import Email, String, Unicode
 from itools.datatypes import Enumerate
 from itools.gettext import MSG
-from itools.handlers import merge_dicts
 from itools.stl import stl
 from itools import vfs
 from itools.web import STLView, STLForm, INFO, ERROR

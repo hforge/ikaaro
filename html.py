@@ -22,9 +22,9 @@
 from datetime import datetime
 
 # Import from itools
+from itools.core import merge_dicts
 from itools.datatypes import DateTime
 from itools.gettext import MSG
-from itools.handlers import merge_dicts
 from itools.html import xhtml_uri, XHTMLFile
 from itools.uri import get_reference
 from itools.web import BaseView, get_context

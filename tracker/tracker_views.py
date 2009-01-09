@@ -23,11 +23,11 @@
 from datetime import datetime
 
 # Import from itools
+from itools.core import merge_dicts
 from itools.csv import CSVFile, Property
 from itools.datatypes import Boolean, Integer, String, Unicode, Enumerate
 from itools.gettext import MSG
 from itools.i18n import format_datetime
-from itools.handlers import merge_dicts
 from itools.uri import encode_query, Reference
 from itools.web import BaseView, BaseForm, STLForm
 from itools.web import INFO, ERROR

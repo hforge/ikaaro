@@ -25,9 +25,10 @@ except ImportError:
     PILImage = None
 
 # Import from itools
+from itools.core import merge_dicts
 from itools.datatypes import Boolean, Integer, String, Unicode
 from itools.gettext import MSG
-from itools.handlers import checkid, merge_dicts
+from itools.handlers import checkid
 from itools.i18n import format_datetime
 from itools.stl import set_prefix
 from itools.uri import get_reference, Path
