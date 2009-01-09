@@ -152,12 +152,7 @@ class Server(BaseServer):
             database = SafeDatabase('%s/database.commit' % path)
         self.database = database
         # The catalog
-        # FIXME Backwards compatibility with 0.20
-        try:
-            self.catalog = Catalog('%s/catalog' % target, read_only=read_only)
-        except DatabaseOpeningError, e:
-            print e
-            self.catalog = None
+        self.catalog = Catalog('%s/catalog' % target, read_only=read_only)
 
         # Find out the root class
         root = get_root(database, target)
