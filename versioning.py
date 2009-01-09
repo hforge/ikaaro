@@ -19,17 +19,83 @@
 # Import from the Standard Library
 from datetime import datetime
 from operator import itemgetter
+from os import devnull
+from subprocess import call, Popen, PIPE
 
 # Import from itools
 from itools.datatypes import DateTime, String
 from itools.gettext import MSG
+from itools import git
 from itools.i18n import format_datetime
+from itools.uri import get_absolute_reference
+from itools import vfs
 from itools.web import get_context, STLView
 from itools.xapian import KeywordField, BoolField
 
 # Import from ikaaro
+from file import File
 from metadata import Record
-from resource_ import DBResource
+
+
+class GitArchive(object):
+
+    def __init__(self, uri, read_only=False):
+        uri = get_absolute_reference(uri)
+        if uri.scheme != 'file':
+            raise IOError, "unexpected '%s' scheme" % uri.scheme
+
+        self.path = str(uri.path)
+
+        # Read Only
+        if read_only is True:
+            raise NotImplementedError, 'read-only mode not yet implemented'
+
+        # We only track new & changed files, since files removed are
+        # automatically handled by 'git commit -a'.
+        self.new_files = []
+
+
+    def save_changes(self):
+        # Add
+        new_files = [ x for x in self.new_files if vfs.exists(x) ]
+        if new_files:
+            command = ['git', 'add'] + new_files
+            call(command, cwd=self.path)
+        if self.new_files:
+            self.new_files = []
+
+        # Commit message
+        message = 'none'
+        context = get_context()
+        if context is not None:
+            user = context.user
+            if user is not None:
+                message = user.name
+        # Commit
+        command = ['git', 'commit', '-a', '-m', message]
+        with open(devnull) as null:
+            call(command, cwd=self.path, stdout=null)
+
+
+    def abort_changes(self):
+        self.new_files = []
+        command = ['git', 'reset', '--']
+        call(command, cwd=self.path)
+
+
+    def add_resource(self, resource):
+        for handler in resource.get_handlers():
+            path = str(handler.uri.path)
+            self.new_files.append(path)
+
+
+
+def make_git_archive(path):
+    command = ['git', 'init']
+    with open(devnull) as null:
+        call(command, cwd=path, stdout=null)
+
+    return GitArchive(path)
 
 
 ###########################################################################
@@ -61,80 +127,69 @@ class History(Record):
         'size': String}
 
 
-class VersioningAware(DBResource):
+class VersioningAware(File):
 
-    @classmethod
-    def get_metadata_schema(cls):
-        schema = DBResource.get_metadata_schema()
-        schema['history'] = History
-        return schema
+    def get_revisions(self, context=None):
+        if context is None:
+            context = get_context()
 
-
-    ########################################################################
-    # API
-    ########################################################################
-    def commit_revision(self):
-        context = get_context()
-        username = ''
-        if context is not None:
-            user = context.user
-            if user is not None:
-                username = user.name
-
-        property = {'user': username,
-                    'date': datetime.now(),
-                    'size': str(self.get_size())}
-        self.metadata.set_property('history', property)
-
-
-    def get_revisions(self, context):
         accept = context.accept_language
+
+        # Get the list of revisions
+        command = ['git', 'rev-list', 'HEAD', '--']
+        for handler in self.get_handlers():
+            path = str(handler.uri.path)
+            command.append(path)
+        cwd = context.server.archive.path
+        pipe = Popen(command, cwd=cwd, stdout=PIPE).stdout
+
+        # Get the metadata
         revisions = []
-
-        for revision in self.get_property('history'):
-            date = revision['date']
+        for line in pipe.readlines():
+            line = line.strip()
+            metadata = git.get_metadata(line, cwd=cwd)
+            date = metadata['committer'][1]
+            username = metadata['message'].strip()
             revisions.append({
-                'username': revision['user'],
-                'date': format_datetime(date, accept=accept),
-                'sort_date': date,
-                'size': revision['size']})
+                'username': username,
+                'date': format_datetime(date, accept=accept)})
 
-        revisions.sort(key=itemgetter('sort_date'), reverse=True)
         return revisions
 
 
     def get_owner(self):
-        history = self.get_property('history')
-        if not history:
+        revisions = self.get_revisions()
+        if not revisions:
             return None
-        return history[0]['user']
+        return revisions[-1]['username']
 
 
     def get_last_author(self):
-        history = self.get_property('history')
-        if history:
-            return history[-1]['user']
+        revisions = self.get_revisions()
+        if not revisions:
+            return None
+        return revisions[0]['username']
 
 
     def get_mtime(self):
-        history = self.get_property('history')
-        if not history:
-            return DBResource.get_mtime(self)
-        return history[-1]['date']
+        revisions = self.get_revisions()
+        if not revisions:
+            return File.get_mtime(self)
+        return revisions[0]['date']
 
 
     ########################################################################
     # Index & Search
     ########################################################################
     def get_catalog_fields(self):
-        return DBResource.get_catalog_fields(self) + [
+        return File.get_catalog_fields(self) + [
             # Versioning Aware
             BoolField('is_version_aware'),
             KeywordField('last_author', is_indexed=False, is_stored=True)]
 
 
     def get_catalog_values(self):
-        document = DBResource.get_catalog_values(self)
+        document = File.get_catalog_values(self)
 
         document['is_version_aware'] = True
         # Last Author (used in the Last Changes view)

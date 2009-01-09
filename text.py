@@ -24,28 +24,27 @@ from itools.html import HTMLFile
 from itools.xml import XMLFile
 
 # Import from ikaaro
-from file import File
 from file_views import File_Upload
 from registry import register_resource_class
 from text_views import Text_Edit, Text_View, Text_ExternalEdit, PO_Edit
 from text_views import CSV_View, CSV_AddRow, CSV_EditRow
+from versioning import VersioningAware
 
 
 
-class Text(File):
+class Text(VersioningAware):
 
     class_id = 'text'
-    class_version = '20071216'
     class_title = MSG(u'Plain Text')
     class_icon16 = 'icons/16x16/text.png'
     class_icon48 = 'icons/48x48/text.png'
-    class_views = ['view', 'edit', 'externaledit', 'upload',
-                   'edit_state', 'history']
+    class_views = ['view', 'edit', 'externaledit', 'upload', 'edit_state',
+                   'history']
     class_handler = TextFile
 
 
     def get_content_type(self):
-        return '%s; charset=UTF-8' % File.get_content_type(self)
+        return '%s; charset=UTF-8' % VersioningAware.get_content_type(self)
 
 
     # Views
@@ -59,7 +58,6 @@ class Text(File):
 class PO(Text):
 
     class_id = 'text/x-gettext-translation'
-    class_version = '20071216'
     class_title = MSG(u'Message Catalog')
     class_icon16 = 'icons/16x16/po.png'
     class_icon48 = 'icons/48x48/po.png'
@@ -73,7 +71,6 @@ class PO(Text):
 class CSS(Text):
 
     class_id = 'text/css'
-    class_version = '20071216'
     class_title = MSG(u'CSS')
     class_icon16 = 'icons/16x16/css.png'
     class_icon48 = 'icons/48x48/css.png'
@@ -83,7 +80,6 @@ class CSS(Text):
 class Python(Text):
 
     class_id = 'text/x-python'
-    class_version = '20071216'
     class_title = MSG(u'Python')
     class_icon16 = 'icons/16x16/python.png'
     class_icon48 = 'icons/48x48/python.png'
@@ -94,7 +90,6 @@ class Python(Text):
 class XML(Text):
 
     class_id = 'text/xml'
-    class_version = '20071216'
     class_title = MSG(u'XML File')
     class_handler = XMLFile
 
@@ -103,7 +98,6 @@ class XML(Text):
 class HTML(Text):
 
     class_id = 'text/html'
-    class_version = '20071216'
     class_title = MSG(u'HTML File')
     class_handler = HTMLFile
 
@@ -112,7 +106,6 @@ class HTML(Text):
 class CSV(Text):
 
     class_id = 'text/comma-separated-values'
-    class_version = '20071216'
     class_title = MSG(u'Comma Separated Values')
     class_views = ['view', 'add_row', 'edit', 'externaledit', 'upload',
                    'history']

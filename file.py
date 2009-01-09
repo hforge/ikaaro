@@ -23,6 +23,7 @@ from datetime import datetime
 from mimetypes import guess_all_extensions
 
 # Import from itools
+from itools.core import merge_dicts
 from itools.datatypes import String
 from itools.gettext import MSG
 from itools.handlers import File as FileHandler, Image as ImageHandler
@@ -35,8 +36,9 @@ from itools.xml import MSWord as MSWordFile, MSExcel as MSExcelFile
 from itools.xml import MSPowerPoint as MSPowerPointFile, RTF as RTFFile
 
 # Import from ikaaro
+from metadata import Record
 from registry import register_resource_class
-from versioning import VersioningAware
+from resource_ import DBResource
 from workflow import WorkflowAware
 from file_views import File_NewInstance, File_Download, File_View
 from file_views import File_Edit, File_ExternalEdit, File_Backlinks
@@ -45,28 +47,32 @@ from file_views import Flash_View
 
 
 
+# XXX Backwards compatibility with 0.50
+class History(Record):
+    schema = {'date': String, 'user': String, 'size': String}
+
+
 ###########################################################################
 # Base File
 ###########################################################################
-class File(WorkflowAware, VersioningAware):
+class File(WorkflowAware, DBResource):
 
     class_id = 'file'
-    class_version = '20071216'
+    class_version = '20090112'
     class_title = MSG(u'File')
     class_description = MSG(
         u'Upload office documents, images, media files, etc.')
     class_icon16 = 'icons/16x16/file.png'
     class_icon48 = 'icons/48x48/file.png'
     class_views = ['view', 'edit', 'externaledit', 'upload', 'backlinks',
-                   'edit_state', 'history']
+                   'edit_state']
     class_handler = FileHandler
 
 
     @staticmethod
     def _make_resource(cls, folder, name, body=None, filename=None,
                      extension=None, **kw):
-        VersioningAware._make_resource(cls, folder, name, filename=filename,
-                                       **kw)
+        DBResource._make_resource(cls, folder, name, filename=filename, **kw)
         # Add the body
         if body is not None:
             handler = cls.class_handler(string=body)
@@ -145,10 +151,12 @@ class File(WorkflowAware, VersioningAware):
     #######################################################################
     @classmethod
     def get_metadata_schema(cls):
-        schema = VersioningAware.get_metadata_schema()
-        schema.update(WorkflowAware.get_metadata_schema())
-        schema['filename'] = String
-        return schema
+        return merge_dicts(
+            DBResource.get_metadata_schema(),
+            WorkflowAware.get_metadata_schema(),
+            filename=String,
+            history=History, # XXX Backwards compatibility with 0.50
+            )
 
 
     #######################################################################
@@ -197,18 +205,25 @@ class File(WorkflowAware, VersioningAware):
     backlinks = File_Backlinks()
 
 
+    #######################################################################
+    # Update
+    #######################################################################
+    def update_20090112(self):
+        metadata = self.metadata
+        if metadata.has_property('history'):
+            metadata.del_property('history')
+
 
 ###########################################################################
 # Media
 ###########################################################################
 class Image(File):
     class_id = 'image'
-    class_version = '20071216'
     class_title = MSG(u'Image')
     class_icon16 = 'icons/16x16/image.png'
     class_icon48 = 'icons/48x48/image.png'
     class_views = ['view', 'download', 'edit', 'externaledit', 'upload',
-                   'backlinks', 'edit_state', 'history']
+                   'backlinks', 'edit_state']
     class_handler = ImageHandler
 
     # Views
@@ -219,7 +234,6 @@ class Image(File):
 
 class Video(File):
     class_id = 'video'
-    class_version = '20071216'
     class_title = MSG(u'Video')
     class_description = MSG(u'Video')
     class_icon16 = 'icons/16x16/flash.png'
@@ -232,7 +246,6 @@ class Video(File):
 
 class Flash(File):
     class_id = 'application/x-shockwave-flash'
-    class_version = '20071216'
     class_title = MSG(u'Flash')
     class_description = MSG(u'Flash Document')
     class_icon16 = 'icons/16x16/flash.png'
@@ -248,7 +261,6 @@ class Flash(File):
 ###########################################################################
 class MSWord(File):
     class_id = 'application/msword'
-    class_version = '20071216'
     class_title = MSG(u'Word')
     class_description = MSG(u'Word Text')
     class_icon16 = 'icons/16x16/word.png'
@@ -259,7 +271,6 @@ class MSWord(File):
 
 class MSExcel(File):
     class_id = 'application/vnd.ms-excel'
-    class_version = '20071216'
     class_title = MSG(u'Excel')
     class_description = MSG(u'Excel Spreadsheet')
     class_icon16 = 'icons/16x16/excel.png'
@@ -270,7 +281,6 @@ class MSExcel(File):
 
 class MSPowerPoint(File):
     class_id = 'application/vnd.ms-powerpoint'
-    class_version = '20071216'
     class_title = MSG(u'PowerPoint')
     class_description = MSG(u'PowerPoint Presentation')
     class_icon16 = 'icons/16x16/powerpoint.png'
@@ -281,7 +291,6 @@ class MSPowerPoint(File):
 
 class OOWriter(File):
     class_id = 'application/vnd.sun.xml.writer'
-    class_version = '20071216'
     class_title = MSG(u'OOo Writer')
     class_description = MSG(u'OpenOffice.org Text')
     class_icon16 = 'icons/16x16/oowriter.png'
@@ -292,7 +301,6 @@ class OOWriter(File):
 
 class OOCalc(File):
     class_id = 'application/vnd.sun.xml.calc'
-    class_version = '20071216'
     class_title = MSG(u'OOo Calc')
     class_description = MSG(u'OpenOffice.org Spreadsheet')
     class_icon16 = 'icons/16x16/oocalc.png'
@@ -303,7 +311,6 @@ class OOCalc(File):
 
 class OOImpress(File):
     class_id = 'application/vnd.sun.xml.impress'
-    class_version = '20071216'
     class_title = MSG(u'OOo Impress')
     class_description = MSG(u'OpenOffice.org Presentation')
     class_icon16 = 'icons/16x16/ooimpress.png'
@@ -314,7 +321,6 @@ class OOImpress(File):
 
 class PDF(File):
     class_id = 'application/pdf'
-    class_version = '20071216'
     class_title = MSG(u'PDF')
     class_description = MSG(u'PDF Document')
     class_icon16 = 'icons/16x16/pdf.png'
@@ -325,7 +331,6 @@ class PDF(File):
 
 class RTF(File):
     class_id = 'text/rtf'
-    class_version = '20071216'
     class_title = MSG(u"RTF")
     class_description = MSG(u'RTF Document')
     class_icon16 = 'icons/16x16/text.png'
@@ -336,7 +341,6 @@ class RTF(File):
 
 class ODT(File):
     class_id = 'application/vnd.oasis.opendocument.text'
-    class_version = '20071216'
     class_title = MSG(u'ODT')
     class_description = MSG(u'OpenDocument Text')
     class_icon16 = 'icons/16x16/odt.png'
@@ -347,7 +351,6 @@ class ODT(File):
 
 class ODS(File):
     class_id = 'application/vnd.oasis.opendocument.spreadsheet'
-    class_version = '20071216'
     class_title = MSG(u'ODS')
     class_description = MSG(u'OpenDocument Spreadsheet')
     class_icon16 = 'icons/16x16/ods.png'
@@ -358,7 +361,6 @@ class ODS(File):
 
 class ODP(File):
     class_id = 'application/vnd.oasis.opendocument.presentation'
-    class_version = '20071216'
     class_title = MSG(u'ODP')
     class_description = MSG(u'OpenDocument Presentation')
     class_icon16 = 'icons/16x16/odp.png'
@@ -378,7 +380,6 @@ class Archive(File):
 
 class ZipArchive(Archive):
     class_id = 'application/zip'
-    class_version = '20071216'
     class_title = MSG(u"Zip")
     class_description = MSG(u'Zip Archive')
     class_icon16 = 'icons/16x16/zip.png'
@@ -389,7 +390,6 @@ class ZipArchive(Archive):
 
 class TarArchive(Archive):
     class_id = 'application/x-tar'
-    class_version = '20071216'
     class_title = MSG(u"Tar")
     class_description = MSG(u'Tar Archive')
     class_icon16 = 'icons/16x16/tar.png'
@@ -400,7 +400,6 @@ class TarArchive(Archive):
 
 class Gzip(File):
     class_id = 'application/x-gzip'
-    class_version = '20071216'
     class_title = MSG(u"Gzip")
     class_description = MSG(u'Gzip Compressed')
     class_icon16 = 'icons/16x16/gzip.png'
@@ -411,7 +410,6 @@ class Gzip(File):
 
 class Bzip2(File):
     class_id = 'application/x-bzip2'
-    class_version = '20071216'
     class_title = MSG(u"Bzip2")
     class_description = MSG(u'Bzip2 Compressed')
     class_icon16 = 'icons/16x16/bzip.png'

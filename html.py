@@ -191,7 +191,6 @@ class ResourceWithHTML(object):
 class WebPage(ResourceWithHTML, Multilingual, Text):
 
     class_id = 'webpage'
-    class_version = '20080902'
     class_title = MSG(u'Web Page')
     class_description = MSG(u'Create and publish a Web Page.')
     class_icon16 = 'icons/16x16/html.png'

@@ -166,7 +166,6 @@ class CalendarBase(DBResource):
 class CalendarTable(CalendarBase, Table):
 
     class_id = 'calendarTable'
-    class_version = '20071216'
     class_handler = icalendarTable
     record_class = Record
 
@@ -205,7 +204,6 @@ class CalendarTable(CalendarBase, Table):
 class Calendar(CalendarBase, Text):
 
     class_id = 'text/calendar'
-    class_version = '20071216'
     class_handler = iCalendar
 
 

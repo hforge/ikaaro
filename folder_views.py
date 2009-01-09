@@ -44,7 +44,6 @@ from exceptions import ConsistencyError
 import messages
 from resource_views import AddResourceMenu
 from utils import generate_name, get_base_path_query
-from versioning import VersioningAware
 from views import IconsView, SearchForm, ContextMenu
 from workflow import WorkflowAware
 
@@ -327,6 +326,7 @@ class Folder_BrowseContent(SearchForm):
             accept = context.accept_language
             return format_datetime(item.get_mtime(), accept=accept)
         elif column == 'last_author':
+            from versioning import VersioningAware
             # Last author
             if not isinstance(item, VersioningAware):
                 return None

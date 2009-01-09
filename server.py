@@ -39,7 +39,7 @@ from folder import Folder
 from metadata import Metadata
 from registry import get_resource_class
 from utils import is_pid_running
-from versioning import VersioningAware
+from versioning import GitArchive
 from website import WebSite
 
 
@@ -151,8 +151,9 @@ class Server(BaseServer):
         else:
             database = SafeDatabase('%s/database.commit' % path)
         self.database = database
-        # The catalog
+        # The catalog & archive
         self.catalog = Catalog('%s/catalog' % target, read_only=read_only)
+        self.archive = GitArchive('%s/database' % target, read_only=read_only)
 
         # Find out the root class
         root = get_root(database, target)
@@ -192,7 +193,7 @@ class Server(BaseServer):
 
 
     def get_databases(self):
-        return [self.database, self.catalog]
+        return [self.database, self.archive, self.catalog]
 
 
     def abort_transaction(self, context):
@@ -207,6 +208,7 @@ class Server(BaseServer):
     def before_commit(self):
         root = self.root
         catalog = self.catalog
+        archive = self.archive
         # Removed
         for path in self.resources_removed:
             catalog.unindex_document(path)
@@ -215,16 +217,14 @@ class Server(BaseServer):
         # Added
         for path in self.resources_added:
             resource = root.get_resource(path)
-            if isinstance(resource, VersioningAware):
-                resource.commit_revision()
+            archive.add_resource(resource)
             catalog.index_document(resource)
         self.resources_added.clear()
 
         # Changed
         for path in self.resources_changed:
             resource = root.get_resource(path)
-            if isinstance(resource, VersioningAware):
-                resource.commit_revision()
+            archive.add_resource(resource)
             catalog.unindex_document(path)
             catalog.index_document(resource)
         self.resources_changed.clear()

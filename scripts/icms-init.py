@@ -32,6 +32,7 @@ from itools.xapian import make_catalog, CatalogAware
 # Import from ikaaro
 from ikaaro.root import Root
 from ikaaro.utils import generate_password
+from ikaaro.versioning import VersioningAware, make_git_archive
 
 
 template = Template(
@@ -127,12 +128,18 @@ def init(parser, options, target):
     folder = database.get_handler(base)
     root = root_class._make_resource(root_class, folder, email, password)
     database.save_changes()
-    # Index everything
+    # Initialize the catalog and the git archive
     catalog = make_catalog('%s/catalog' % target)
-    for handler in root.traverse_resources():
-        if isinstance(handler, CatalogAware):
-            catalog.index_document(handler)
+    archive = make_git_archive('%s/database' % target)
+    # Index and Archive
+    for resource in root.traverse_resources():
+        if isinstance(resource, CatalogAware):
+            catalog.index_document(resource)
+        if isinstance(resource, VersioningAware):
+            archive.add_resource(resource)
+    # Save catalog and git
     catalog.save_changes()
+    archive.save_changes()
 
     # Bravo!
     print '*'

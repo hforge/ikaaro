@@ -10,14 +10,12 @@
         <tr>
           <th>User</th>
           <th>Date</th>
-          <th>Size (bytes)</th>
         </tr>
       </thead>
       <tbody>
         <tr stl:repeat="revision revisions" class="${repeat/revision/even}">
           <td>${revision/username}</td>
           <td>${revision/date}</td>
-          <td class="number">${revision/size}</td>
         </tr>
       </tbody>
     </table>

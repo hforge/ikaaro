@@ -48,7 +48,6 @@ StandaloneReader = get_reader_class('standalone')
 class WikiPage(Text):
 
     class_id = 'WikiPage'
-    class_version = '20081114'
     class_title = MSG(u"Wiki Page")
     class_description = MSG(u"Wiki contents")
     class_icon16 = 'wiki/WikiPage16.png'

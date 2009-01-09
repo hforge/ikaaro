@@ -30,25 +30,38 @@ from itools.web import set_context, Context
 # Import from ikaaro
 from ikaaro.resource_ import DBResource
 from ikaaro.server import Server, ask_confirmation
+from ikaaro.versioning import VersioningAware, make_git_archive
 
 
 def update(parser, options, target):
     folder = vfs.open(target)
     confirm = options.confirm
 
+    # Build the server object
+    server = Server(target)
+    database = server.database
+    root = server.root
+
     #######################################################################
     # STAGE 0: Specific upgrades
     #######################################################################
+
+    # XXX Introduced in 0.60
+    # Initialize the archive
+    if not vfs.exists('%s/database/.git' % target):
+        message = 'Add the Git archive to the database (y/N)? '
+        if ask_confirmation(message, confirm) is False:
+            return
+        archive = make_git_archive('%s/database' % target)
+        for resource in root.traverse_resources():
+            if isinstance(resource, VersioningAware):
+                archive.add_resource(resource)
+        archive.save_changes()
 
     #######################################################################
     # STAGE 1: Find out the versions to upgrade
     #######################################################################
     print 'Please wait while we find out the versions to upgrade.'
-
-    # Build the server object
-    server = Server(target)
-    database = server.database
-    root = server.root
 
     # Find out the versions to upgrade
     versions = set()

@@ -37,7 +37,6 @@ from table_views import OrderedTable_View
 
 class Table(File):
 
-    class_version = '20081113'
     class_views = ['view', 'add_record', 'edit', 'history']
     class_handler = TableFile
     record_class = Record
