@@ -17,7 +17,7 @@
 # Import from itools
 from itools.datatypes import Boolean, Integer, String, Unicode
 from itools.gettext import MSG
-from itools.handlers import checkid, merge_dics
+from itools.handlers import checkid, merge_dicts
 from itools.stl import stl
 from itools.uri import Path
 from itools.web import FormError, get_context, BaseView, STLView, STLForm
@@ -417,8 +417,8 @@ class SearchForm(BrowseForm):
 
 
     def get_query_schema(self):
-        return merge_dics(BrowseForm.get_query_schema(self),
-                          self.search_schema)
+        return merge_dicts(BrowseForm.get_query_schema(self),
+                           self.search_schema)
 
 
     def get_search_fields(self, resource, context):

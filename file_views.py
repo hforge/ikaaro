@@ -25,7 +25,7 @@ from datetime import datetime, timedelta
 from itools.datatypes import Integer, Unicode
 from itools.gettext import MSG
 from itools.handlers import get_handler_class_by_mimetype, guess_encoding
-from itools.handlers import merge_dics
+from itools.handlers import merge_dicts
 from itools.html import HTMLParser, stream_to_str_as_xhtml
 from itools.i18n import guess_language
 from itools.uri import get_reference
@@ -224,17 +224,15 @@ class File_Upload(STLForm):
 
 
 class File_Edit(DBResource_Edit, File_Upload):
-    schema = merge_dics(DBResource_Edit.schema,
-                        file=FileDataType)
-    widgets = [title_widget, file_widget, description_widget,
-               subject_widget]
+    schema = merge_dicts(DBResource_Edit.schema, file=FileDataType)
+    widgets = [title_widget, file_widget, description_widget, subject_widget]
 
 
     def get_value(self, resource, context, name, datatype):
         if name == 'file':
             return None
         return DBResource_Edit.get_value(self, resource, context, name,
-                                        datatype)
+                                         datatype)
 
 
     def action(self, resource, context, form):

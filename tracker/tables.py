@@ -22,7 +22,7 @@
 from itools.datatypes import Boolean, Integer, String, Unicode
 from itools.datatypes import Enumerate
 from itools.gettext import MSG
-from itools.handlers import merge_dics
+from itools.handlers import merge_dicts
 from itools.xapian import PhraseQuery, AndQuery
 from itools.web import ERROR, INFO
 
@@ -202,7 +202,7 @@ class ModulesResource(Tracker_TableResource):
 
     def get_schema(self):
         products = self.parent.get_resource('product')
-        return merge_dics(
+        return merge_dicts(
             ModulesHandler.record_schema,
             product=ProductsEnumerate(products=products, mandatory=True))
 
@@ -229,7 +229,7 @@ class VersionsResource(Tracker_TableResource):
 
     def get_schema(self):
         products = self.parent.get_resource('product')
-        return merge_dics(
+        return merge_dicts(
             VersionsHandler.record_schema,
             product=ProductsEnumerate(products=products, mandatory=True))
 

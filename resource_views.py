@@ -28,7 +28,7 @@ from itools.datatypes import String, Unicode
 from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.i18n import get_language_name
-from itools.handlers import merge_dics
+from itools.handlers import merge_dicts
 from itools.uri import Path, get_reference
 from itools.vfs import FileName
 from itools.web import get_context, BaseView, STLForm, INFO, ERROR
@@ -299,8 +299,8 @@ class DBResource_AddBase(STLForm):
                'input': []}
 
 
-    action_upload_schema = merge_dics(schema,
-                              {'file': FileDataType(mandatory=True)})
+    action_upload_schema = merge_dicts(schema,
+                                       file=FileDataType(mandatory=True))
 
 
     additional_javascript = """
@@ -447,8 +447,8 @@ class DBResource_AddLink(DBResource_AddBase):
 
     element_to_add = 'link'
 
-    action_add_resource_schema = merge_dics(DBResource_AddImage.schema,
-                                            title=String(mandatory=True))
+    action_add_resource_schema = merge_dicts(DBResource_AddImage.schema,
+                                             title=String(mandatory=True))
 
     configuration = {'show_browse': True,
                      'show_external': True,
