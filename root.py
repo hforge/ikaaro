@@ -27,7 +27,7 @@ from email.header import Header
 import traceback
 
 # Import from itools
-from itools import get_abspath
+from itools.core import get_abspath
 from itools.gettext import MSG
 from itools.handlers import ConfigFile
 from itools.stl import stl

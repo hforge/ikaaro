@@ -22,7 +22,7 @@
 from copy import deepcopy
 
 # Import from itools
-from itools import get_abspath
+from itools.core import get_abspath
 from itools.gettext import MSG
 from itools.handlers import File, Folder, Image
 from itools.http import NotFound

@@ -21,7 +21,7 @@
 from os import getenv, listdir
 
 # Import from itools
-from itools import get_abspath
+from itools.core import get_abspath
 from itools.gettext import register_domain
 from itools.utils import get_version
 

@@ -20,11 +20,11 @@
 from datetime import time, timedelta
 
 # Import from itools
+from itools.core import freeze
 from itools.csv import Table as BaseTable, Record
 from itools.datatypes import DateTime, String, Unicode, Enumerate
 from itools.gettext import MSG
 from itools.ical import Time
-from itools.utils import freeze
 from itools.web import get_context
 from itools.xapian import OrQuery, AndQuery, RangeQuery
 

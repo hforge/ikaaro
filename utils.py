@@ -23,7 +23,7 @@ from sys import platform
 from urllib import quote
 
 # Import from itools
-from itools.utils import freeze
+from itools.core import freeze
 from itools.web import get_context
 from itools.xapian import AllQuery, PhraseQuery, NotQuery, OrQuery, StartQuery
 from itools.xapian import AndQuery

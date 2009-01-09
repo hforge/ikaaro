@@ -22,8 +22,8 @@ from urllib import quote, unquote
 from zlib import compress, decompress
 
 # Import from itools
+from itools.core import freeze
 from itools.datatypes import DataType, Enumerate
-from itools.utils import freeze
 
 
 """This module defines some datatypes used in ikaaro, whose inclusion in

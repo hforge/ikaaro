@@ -20,7 +20,7 @@
 
 # Import from itools
 import itools
-from itools import get_abspath
+from itools.core import get_abspath
 from itools.datatypes import Email, String, Unicode
 from itools.datatypes import Enumerate
 from itools.gettext import MSG

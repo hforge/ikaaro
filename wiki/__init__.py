@@ -21,7 +21,7 @@
 import docutils
 
 # Import from itools
-from itools import get_abspath
+from itools.core import get_abspath
 
 # Import from ikaaro
 from ikaaro.folder import Folder

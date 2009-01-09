@@ -23,8 +23,8 @@ from sys import exit
 
 # Import from itools
 import itools
+from itools.core import become_daemon
 from itools import vfs
-from itools.utils import become_daemon
 
 # Import from ikaaro
 from ikaaro.server import Server, get_pid

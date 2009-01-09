@@ -21,8 +21,8 @@ from optparse import OptionParser
 from sys import exit
 
 # Import from itools
+from itools.core import become_daemon
 import itools
-from itools.utils import become_daemon
 
 # Import from ikaaro
 from ikaaro.spool import Spool
