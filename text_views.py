@@ -23,7 +23,7 @@ from operator import itemgetter
 # Import from itools
 from itools.datatypes import Integer, String
 from itools.gettext import MSG
-from itools.handlers import merge_dics
+from itools.handlers import merge_dicts
 from itools.web import STLForm, STLView, INFO
 
 # Import from ikaaro
@@ -40,11 +40,11 @@ class Text_Edit(DBResource_Edit):
 
     title = MSG(u'Edit')
     icon = 'edit.png'
-    schema = merge_dics(DBResource_Edit.schema,
-                        data=String)
-    widgets = [title_widget, MultilineWidget('data', title=MSG(u"Content"),
-                                             rows=19, cols=69),
-               description_widget, subject_widget]
+    schema = merge_dicts(DBResource_Edit.schema, data=String)
+    widgets = [
+        title_widget,
+        MultilineWidget('data', title=MSG(u"Content"), rows=19, cols=69),
+        description_widget, subject_widget]
 
 
     def get_value(self, resource, context, name, datatype):

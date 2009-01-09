@@ -27,7 +27,7 @@ except ImportError:
 # Import from itools
 from itools.datatypes import Boolean, Integer, String, Unicode
 from itools.gettext import MSG
-from itools.handlers import checkid, merge_dics
+from itools.handlers import checkid, merge_dicts
 from itools.i18n import format_datetime
 from itools.stl import set_prefix
 from itools.uri import get_reference, Path
@@ -573,11 +573,11 @@ class Folder_PreviewContent(Folder_BrowseContent):
 
     def get_query_schema(self):
         # Define a huge batch limit, and the image size parameter
-        return merge_dics(Folder_BrowseContent.get_query_schema(self),
-                          batch_size=Integer(default=0),
-                          size=Integer(default=128),
-                          width=String,
-                          height=String)
+        return merge_dicts(Folder_BrowseContent.get_query_schema(self),
+                           batch_size=Integer(default=0),
+                           size=Integer(default=128),
+                           width=String,
+                           height=String)
 
 
     def get_items(self, resource, context):

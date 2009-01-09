@@ -24,7 +24,7 @@ from operator import itemgetter
 # Import from itools
 from itools.datatypes import Boolean, Email, Integer, Tokens, Unicode, String
 from itools.gettext import MSG
-from itools.handlers import merge_dics
+from itools.handlers import merge_dicts
 from itools.stl import stl
 from itools.uri import get_reference
 from itools.web import AccessControl as BaseAccessControl, STLForm, INFO
@@ -65,7 +65,7 @@ class RoleAware_BrowseUsers(SearchForm):
     schema = {'ids': String(multiple=True, mandatory=True)}
 
     def get_query_schema(self):
-        return merge_dics(SearchForm.get_query_schema(self),
+        return merge_dicts(SearchForm.get_query_schema(self),
                           sort_by=String(default='login_name'))
 
 

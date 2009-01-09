@@ -27,7 +27,7 @@ from itools.csv import CSVFile, Property
 from itools.datatypes import Boolean, Integer, String, Unicode, Enumerate
 from itools.gettext import MSG
 from itools.i18n import format_datetime
-from itools.handlers import merge_dics
+from itools.handlers import merge_dicts
 from itools.uri import encode_query, Reference
 from itools.web import BaseView, BaseForm, STLForm
 from itools.web import INFO, ERROR
@@ -83,9 +83,9 @@ class StoreSearchMenu(ContextMenu):
 
     title = MSG(u'Remember this search')
     template = '/ui/tracker/menu_remember.xml'
-    query_schema = merge_dics(StoredSearchFile.schema,
-                              search_name=String,
-                              search_title=Unicode)
+    query_schema = merge_dicts(StoredSearchFile.schema,
+                               search_name=String,
+                               search_title=Unicode)
 
     def get_namespace(self, resource, context):
         # This search exists ?
@@ -179,7 +179,7 @@ class TrackerViewMenu(ContextMenu):
 ###########################################################################
 class Tracker_NewInstance(DBResource_NewInstance):
 
-    schema = merge_dics(
+    schema = merge_dicts(
         DBResource_NewInstance.schema,
         product=Unicode(mandatory=True))
 
@@ -273,8 +273,8 @@ class Tracker_View(BrowseForm):
 
 
     def get_query_schema(self):
-        return merge_dics(BrowseForm.get_query_schema(self),
-                          self.tracker_schema)
+        return merge_dicts(BrowseForm.get_query_schema(self),
+                           self.tracker_schema)
 
 
     def GET(self, resource, context):
@@ -457,9 +457,9 @@ class Tracker_Search(BaseSearchForm, Tracker_View):
 class Tracker_RememberSearch(BaseForm):
 
     access = 'is_allowed_to_edit'
-    schema = merge_dics(StoredSearchFile.schema,
-                        search_name=String,
-                        search_title=Unicode(mandatory=True))
+    schema = merge_dicts(StoredSearchFile.schema,
+                         search_name=String,
+                         search_title=Unicode(mandatory=True))
 
 
     def GET(self, resource, context):
@@ -556,10 +556,10 @@ class Tracker_ExportToText(Tracker_View):
     external_form = True
 
     def get_query_schema(self):
-        return merge_dics(Tracker_View.get_query_schema(self),
-                          ids=String(multiple=True, default=[]),
-                          column_selection=String(multiple=True,
-                                                  default=['title']))
+        return merge_dicts(
+            Tracker_View.get_query_schema(self),
+            ids=String(multiple=True, default=[]),
+            column_selection=String(multiple=True, default=['title']))
 
     def get_namespace(self, resource, context):
         namespace = Tracker_View.get_namespace(self, resource, context)

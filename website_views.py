@@ -24,7 +24,7 @@ from itools.core import get_abspath
 from itools.datatypes import Email, String, Unicode
 from itools.datatypes import Enumerate
 from itools.gettext import MSG
-from itools.handlers import merge_dics
+from itools.handlers import merge_dicts
 from itools.stl import stl
 from itools import vfs
 from itools.web import STLView, STLForm, INFO, ERROR
@@ -285,7 +285,7 @@ class SiteSearchView(SearchForm):
 
 
     def get_query_schema(self):
-        schema = merge_dics(SearchForm.get_query_schema(self))
+        schema = merge_dicts(SearchForm.get_query_schema(self))
         del schema['sort_by']
         del schema['reverse']
         return schema

@@ -24,7 +24,7 @@ from datetime import datetime
 # Import from itools
 from itools.datatypes import DateTime
 from itools.gettext import MSG
-from itools.handlers import merge_dics
+from itools.handlers import merge_dicts
 from itools.html import xhtml_uri, XHTMLFile
 from itools.uri import get_reference
 from itools.web import BaseView, get_context
@@ -129,8 +129,8 @@ class WebPage_View(BaseView):
 class HTMLEditView(DBResource_Edit):
     """WYSIWYG editor for HTML documents.
     """
-    schema = merge_dics(DBResource_Edit.schema,
-                        data=HTMLBody, timestamp=DateTime(readonly=True))
+    schema = merge_dicts(DBResource_Edit.schema,
+                         data=HTMLBody, timestamp=DateTime(readonly=True))
     widgets = [title_widget, rte_widget, description_widget, subject_widget,
                timestamp_widget]
 
