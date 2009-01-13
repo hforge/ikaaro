@@ -37,6 +37,8 @@ class Record(DataType):
     default = freeze([])
     schema = {}
 
+    multiple = True
+
 
 
 def get_datatype(format, name):
@@ -134,7 +136,8 @@ class Metadata(File):
                     value = datatype.decode(value)
 
                 # Set property
-                if isinstance(datatype.get_default(), list):
+                is_multiple = getattr(datatype, 'multiple', False)
+                if is_multiple:
                     stack[-1][2].setdefault(name, []).append(value)
                 elif language is None:
                     stack[-1][2][name] = value
@@ -173,6 +176,7 @@ class Metadata(File):
         for name in self.properties:
             value = self.properties[name]
             datatype = schema.get(name, String)
+            is_multiple = getattr(datatype, 'multiple', False)
 
             # Multilingual properties
             if isinstance(value, dict):
@@ -182,7 +186,9 @@ class Metadata(File):
                     value = XMLContent.encode(value)
                     lines.append(template % (name, language, value, name))
             # Multiple values
-            elif isinstance(value, list):
+            elif is_multiple:
+                if not isinstance(value, list):
+                    raise TypeError, 'multiple values must be lists'
                 # Record
                 if issubclass(datatype, Record):
                     aux = datatype.schema
@@ -272,9 +278,10 @@ class Metadata(File):
         # Set the value
         if language is None:
             datatype = get_datatype(self.format, name)
+            is_multiple = getattr(datatype, 'multiple', False)
 
             default = datatype.get_default()
-            if isinstance(default, list):
+            if is_multiple:
                 if isinstance(value, list):
                     self.properties[name] = value
                 else:
