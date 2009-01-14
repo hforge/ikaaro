@@ -107,6 +107,7 @@ class Resource(Record):
         context = get_context()
         tracker = context.resource.parent
         issue = tracker.get_resource(self.get_value('issue'))
+        comment = self.get_value('comment')
 
         users = context.root.get_resource('/users')
         user = self.get_value('resource')
@@ -121,7 +122,8 @@ class Resource(Record):
         ns['resource'] = {'name': user, 'title': user_title}
 
         ns['issue'] = {'number': issue.name, 'title': issue.get_value('title'),
-                       'url': '../%s/;edit' % issue.name, 'product': product}
+                       'url': '../%s/;edit' % issue.name, 'product': product,
+                       'comment': comment}
 
         ###############################################################
         # Set dtstart and dtend values using '...' for events which
