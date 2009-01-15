@@ -1,0 +1,57 @@
+
+**********************************************************************
+Upgrade to ikaaro 0.60.0
+System Administrators
+**********************************************************************
+
+Configuration File
+====================
+
+Some variables in the configuration file have changed names:
+
+  Before            Now
+  ---------------   -------------------
+  XXX
+
+
+Update the database
+====================
+
+As usual instances must be updated following the standard procedure:
+
+  1. Make a backup
+
+  2. Update the database:
+
+     $ icms-update.py xxx
+
+  3. Rebuild the catalog:
+
+     $ icms-update-catalog.py xxx
+
+
+**********************************************************************
+Upgrade to ikaaro 0.60.0
+Developers
+**********************************************************************
+
+Note that the documentation below is not complete.  For any specific
+problem, please ask the mailing list.
+
+Imports
+====================
+
+Some things have changed names, or moved somewhere else.  The table below
+summarizes these changes:
+
+  Before                           Now
+  -------------------------------  --------------------------
+  XXX
+
+A few things have been moved to itools:
+
+  Before (ikaaro)                  Now (itools)
+  -------------------------------  --------------------------
+  XXX
+
+
