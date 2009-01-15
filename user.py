@@ -19,7 +19,6 @@
 
 # Import from the Standard Library
 from copy import deepcopy
-from string import Template
 
 # Import from itools
 from itools.datatypes import Email, String, Unicode

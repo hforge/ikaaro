@@ -22,7 +22,6 @@
 # Import from the Standard Library
 from datetime import datetime, timedelta
 from operator import itemgetter
-from string import Template
 
 # Import from itools
 from itools.csv import Property

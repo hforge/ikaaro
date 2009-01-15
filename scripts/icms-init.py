@@ -20,7 +20,6 @@
 # Import from the Standard Library
 from optparse import OptionParser
 from os import mkdir
-from string import Template
 import sys
 
 # Import from itools
@@ -35,11 +34,11 @@ from ikaaro.utils import generate_password
 from ikaaro.versioning import VersioningAware, make_git_archive
 
 
-template = Template(
+template = (
 """# The "modules" variable lists the Python modules or packages that will be
 # loaded when the applications starts.
 #
-modules = ${modules}
+modules = {modules}
 
 # The "listen-address" and "listen-port" variables define, respectively, the
 # internet address and the port number the web server listens to for HTTP
@@ -48,8 +47,8 @@ modules = ${modules}
 # By default connections are accepted from any internet address.  And the
 # server listens the 8080 port number.
 #
-listen-address = ${listen_address}
-listen-port = ${listen_port}
+listen-address = {listen_address}
+listen-port = {listen_port}
 
 # The "smtp-host" variable defines the name or IP address of the SMTP relay.
 # The "smtp-from" variable is the email address used in the From field when
@@ -59,8 +58,8 @@ listen-port = ${listen_port}
 # The "smtp-login" and "smtp-password" variables define the credentials
 # required to access a secured SMTP server.
 #
-smtp-host = ${smtp_host}
-smtp-from = ${smtp_from}
+smtp-host = {smtp_host}
+smtp-from = {smtp_from}
 smtp-login =
 smtp-password =
 
@@ -115,7 +114,7 @@ def init(parser, options, target):
         'smtp_host': getattr(options, 'smtp_host') or 'localhost',
         'smtp_from': email,
     }
-    config = template.substitute(**namespace)
+    config = template.format(**namespace)
     open('%s/config.conf' % target, 'w').write(config)
 
     # Create the folder structure

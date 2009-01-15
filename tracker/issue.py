@@ -22,7 +22,6 @@
 
 # Import from the Standard Library
 from datetime import datetime
-from string import Template
 
 # Import from itools
 from itools.csv import Table
@@ -253,10 +252,9 @@ class Issue(Folder):
         if comment:
             title = MSG(u'Comment').gettext()
             separator = len(title) * u'-'
-            template = u'${title}\n${separator}\n\n${comment}\n'
-            template = Template(template)
-            body += template.substitute(title=title, separator=separator,
-                                        comment=comment)
+            template = u'{title}\n{separator}\n\n{comment}\n'
+            body += template.format(title=title, separator=separator,
+                                    comment=comment)
         # Notify / Send
         for to_addr in to_addrs:
             to_addr = users.get_resource(to_addr).get_property('email')
