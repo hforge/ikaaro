@@ -45,8 +45,6 @@ def start(parser, options, target):
     script_path = dirname(realpath(argv[0]))
     path_icms_start_server = join(script_path, 'icms-start-server.py')
     args = [path_icms_start_server, target]
-    if options.debug:
-        args.append('--debug')
     if options.detach:
         args.append('--detach')
     if options.port:
@@ -91,9 +89,6 @@ if __name__ == '__main__':
     parser.add_option(
         '-a', '--address', help='listen to IP ADDRESS')
     parser.add_option(
-        '', '--debug', action="store_true", default=False,
-        help="Start the server on debug mode.")
-    parser.add_option(
         '-d', '--detach', action="store_true", default=False,
         help="Detach from the console.")
     parser.add_option(
@@ -105,7 +100,7 @@ if __name__ == '__main__':
         parser.error('The TARGET argument is missing.')
     elif n_args == 1:
         pass
-    elif options.address or options.debug or options.detach or options.port:
+    elif options.address or options.detach or options.port:
         parser.error('Options are not available when starting several '
                      'servers at once.')
 

@@ -63,12 +63,11 @@ smtp-from = {smtp_from}
 smtp-login =
 smtp-password =
 
-# The "debug" variable defines whether the web server will be run in debug
-# mode or not.  When run in debug mode (debug = 1), debugging information
-# will be written to the "log/events" file.  By default debug mode is not
-# active (debug = 0).
+# The "log-level" variable may have one of these values (from lower to
+# higher verbosity): 'critical' 'error', 'warning', 'info' and 'debug'.
+# The default is 'warning'.
 #
-debug = 0
+log-level = warning
 
 # The "index-text" vairable defines whether the catalog must process full-text
 # indexing. It requires (much) more time and third-party applications.

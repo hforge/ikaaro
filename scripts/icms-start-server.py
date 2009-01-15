@@ -55,7 +55,7 @@ def start(options, target):
         exit(1)
 
     # Set-up the server
-    server = Server(target, options.address, options.port, options.debug)
+    server = Server(target, options.address, options.port)
 
     address = server.address or '*'
     port = server.port
@@ -79,8 +79,6 @@ if __name__ == '__main__':
     parser.add_option('-a', '--address', help='listen to IP ADDRESS')
     parser.add_option('-p', '--port', type='int',
                       help='listen to PORT number')
-    parser.add_option('', '--debug', action="store_true", default=False,
-                      help="Start the server on debug mode.")
     parser.add_option(
         '-d', '--detach', action="store_true", default=False,
         help="Detach from the console.")

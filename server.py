@@ -19,6 +19,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
+from logging import DEBUG, INFO, WARNING, ERROR, CRITICAL
 from os import fdopen
 import sys
 from tempfile import mkstemp
@@ -50,14 +51,20 @@ class ServerConfig(ConfigFile):
         'modules': Tokens(default=()),
         'listen-address': String(default=''),
         'listen-port': Integer(default=8080),
+        'log-level': String(default='warning'),
         'smtp-host': String(default=''),
         'smtp-from': String(default=''),
         'smtp-login': String(default=''),
         'smtp-password': String(default=''),
-        'debug': Boolean(default=False),
     }
 
 
+log_levels = {
+    'debug': DEBUG,
+    'info': INFO,
+    'warning': WARNING,
+    'error': ERROR,
+    'critical': CRITICAL}
 
 
 def ask_confirmation(message, confirm=False):
@@ -115,8 +122,7 @@ def get_root(database, target):
 
 class Server(BaseServer):
 
-    def __init__(self, target, address=None, port=None, debug=False,
-                 read_only=False):
+    def __init__(self, target, address=None, port=None, read_only=False):
         target = get_absolute_reference2(target)
         self.target = target
         path = target.path
@@ -143,7 +149,12 @@ class Server(BaseServer):
         # Logs
         event_log = '%s/log/events' % path
         access_log = '%s/log/access' % path
-        debug = debug or config.get_value('debug')
+        log_level = config.get_value('log-level')
+        try:
+            log_level = log_levels[log_level]
+        except KeyError:
+            msg = 'configuraion error, unexpected "%s" value for log-level'
+            raise ValueError, msg % log_level
 
         # The database
         database = SafeDatabase('%s/database.commit' % path)
@@ -163,7 +174,7 @@ class Server(BaseServer):
         # Initialize
         BaseServer.__init__(self, root, address=address, port=port,
                             access_log=access_log, event_log=event_log,
-                            debug=debug, pid_file='%s/pid' % path)
+                            log_level=log_level, pid_file='%s/pid' % path)
 
 
     #######################################################################
