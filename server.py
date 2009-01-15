@@ -146,10 +146,7 @@ class Server(BaseServer):
         debug = debug or config.get_value('debug')
 
         # The database
-        if debug:
-            database = SafeDatabase('%s/database.commit' % path, event_log)
-        else:
-            database = SafeDatabase('%s/database.commit' % path)
+        database = SafeDatabase('%s/database.commit' % path)
         self.database = database
         # The catalog & archive
         self.catalog = Catalog('%s/catalog' % target, read_only=read_only)
