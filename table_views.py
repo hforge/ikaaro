@@ -209,7 +209,7 @@ class Table_AddEditRecord(AutoForm):
             title = resource.get_field_title(error.name)
             context.message = ERROR(error, field=title, value=error.value)
         except ValueError, error:
-            message = ERROR(u'Error: $msg', msg=str(error))
+            message = ERROR(u'Error: {msg}', msg=str(error))
             context.message = message
         else:
             return self.action_on_success(resource, context)
@@ -236,7 +236,7 @@ class Table_AddRecord(Table_AddEditRecord):
 
 class Table_EditRecord(Table_AddEditRecord):
 
-    title = MSG(u'Edit record ${id}')
+    title = MSG(u'Edit record {id}')
     query_schema = {'id': Integer(mandatory=True)}
 
 

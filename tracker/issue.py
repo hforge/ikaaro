@@ -237,12 +237,12 @@ class Issue(Folder):
             uri = context.uri.resolve(';edit')
         body = '#%s %s %s\n\n' % (self.name, self.get_value('title'),
                                   str(uri))
-        message = MSG(u'The user $title did some changes.')
+        message = MSG(u'The user {title} did some changes.')
         body +=  message.gettext(title=user_title)
         body += '\n\n'
         if file:
             filename = unicode(filename, 'utf-8')
-            message = MSG(u'New Attachment: $filename')
+            message = MSG(u'New Attachment: {filename}')
             message = message.gettext(filename=filename)
             body += message + '\n'
         comment = context.get_form_value('comment', type=Unicode)
@@ -269,11 +269,11 @@ class Issue(Folder):
         history = self.get_history()
         if history.get_n_records() > 0:
             # Edit issue
-            template = MSG(u'$field: $old_value to $new_value')
+            template = MSG(u'{field}: {old_value} to {new_value}')
             empty = MSG(u'[empty]').gettext()
         else:
             # New issue
-            template = MSG(u'$field: $old_value$new_value')
+            template = MSG(u'{field}: {old_value}{new_value}')
             empty = u''
         # Modification of title
         last_title = self.get_value('title') or empty

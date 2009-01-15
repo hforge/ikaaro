@@ -68,7 +68,7 @@ class WikiPage_View(BaseView):
             document = resource.get_document()
         except SystemMessage, e:
             # Critical
-            context.message = ERROR(u'Syntax error: $error', error=e.message)
+            context.message = ERROR(u'Syntax error: {error}', error=e.message)
             return XMLParser('<pre>' + resource.handler.to_str() + '</pre>')
 
         # Decorate the links and resolve them against the published resource
@@ -387,7 +387,7 @@ class WikiPage_Edit(STLForm):
                                 u"details.")
         except SystemMessage, e:
             # Critical
-            message = ERROR(u'Syntax error: $error', error=e.message)
+            message = ERROR(u'Syntax error: {error}', error=e.message)
         if message is None:
             accept = context.accept_language
             time = format_datetime(datetime.now(), accept=accept)

@@ -32,7 +32,7 @@ MSG_CAPTION = ERROR(u'Caption')
 
 MSG_CHANGES_SAVED = INFO(u'The changes have been saved.')
 
-MSG_CHANGES_SAVED2 = INFO(u'The changes have been saved ($time).')
+MSG_CHANGES_SAVED2 = INFO(u'The changes have been saved ({time}).')
 
 MSG_DELETE_RESOURCE = MSG(u'Are you sure you want to delete this resource?')
 
@@ -42,7 +42,7 @@ MSG_EDIT_CONFLICT = ERROR(
     u'Someone already saved this document, click "Save" again to force.')
 
 MSG_EDIT_CONFLICT2 = ERROR(
-    u'User $user already saved this document, click "Save" again to force.')
+    u'User {user} already saved this document, click "Save" again to force.')
 
 MSG_EMPTY_FILENAME = ERROR(u'The file must be entered.')
 
@@ -58,15 +58,15 @@ MSG_NEW_RESOURCE = INFO(u'A new resource has been added.')
 
 MSG_NONE_REMOVED = ERROR(u'No resource removed.')
 
-MSG_RESOURCES_REMOVED = INFO(u'Resources removed: $resources.')
+MSG_RESOURCES_REMOVED = INFO(u'Resources removed: {resources}.')
 
-MSG_RESOURCES_REFERENCED = ERROR(u'Resources not removed '
-                                 u'(they are in use): $resources.')
+MSG_RESOURCES_REFERENCED = ERROR(
+    u'Resources not removed (they are in use): {resources}.')
 
-MSG_RESOURCES_NOT_REMOVED = ERROR(u'Resources not allowed to remove: '
-                                  u'$resources.')
+MSG_RESOURCES_NOT_REMOVED = ERROR(
+    u'Resources not allowed to remove: {resources}.')
 
-MSG_PAGE_LOCK = ERROR(u'This page is locked by $user')
+MSG_PAGE_LOCK = ERROR(u'This page is locked by {user}')
 
 MSG_PASSWORD_MISMATCH = ERROR(u'The provided passwords do not match.')
 

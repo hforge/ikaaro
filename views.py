@@ -169,7 +169,7 @@ class BrowseForm(STLForm):
     # Batch
     batch_template = '/ui/generic/browse_batch.xml'
     batch_msg1 = MSG(u"There is 1 item.") # FIXME Use plural forms
-    batch_msg2 = MSG(u"There are ${n} items.")
+    batch_msg2 = MSG(u"There are {n} items.")
 
     # Content
     table_template = '/ui/generic/browse_table.xml'

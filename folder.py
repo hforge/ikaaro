@@ -249,7 +249,7 @@ class Folder(DBResource):
         names = self.get_names()
         size = len(names)
 
-        return MSG(u'$n obs').gettext(n=size)
+        return MSG(u'{n} obs').gettext(n=size)
 
 
     #######################################################################

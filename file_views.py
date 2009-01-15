@@ -182,7 +182,7 @@ class File_Upload(STLForm):
         handler = resource.handler
         handler_class = get_handler_class_by_mimetype(mimetype)
         if not isinstance(handler, handler_class):
-            message = ERROR(u'Unexpected file of mimetype ${type}',
+            message = ERROR(u'Unexpected file of mimetype {type}',
                             type=mimetype)
             context.message = message
             return
@@ -192,8 +192,7 @@ class File_Upload(STLForm):
             handler.load_state_from_string(body)
         except Exception, e:
             handler.load_state()
-            message = ERROR(u'Failed to load the file: ${error}',
-                            error=str(e))
+            message = ERROR(u'Failed to load the file: {error}', error=str(e))
             context.message = message
             return
 

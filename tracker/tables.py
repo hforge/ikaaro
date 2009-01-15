@@ -182,7 +182,7 @@ class Tracker_TableResource(OrderedTable):
                 self.handler.del_record(id)
                 removed.append(str(id))
 
-        message = INFO(u'Resources removed: $resources.')
+        message = INFO(u'Resources removed: {resources}.')
         return context.come_back(message, resources=', '.join(removed))
 
 

@@ -201,7 +201,7 @@ class User_EditAccount(AutoForm):
             results = context.root.search(email=email)
             if results.get_n_documents():
                 context.message = ERROR(
-                    u'There is another user with the email "${email}", please'
+                    u'There is another user with the email "{email}", please'
                     u' try again.', email=email).gettext()
                 return
 

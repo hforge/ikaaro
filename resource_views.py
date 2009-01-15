@@ -98,7 +98,7 @@ class DBResource_NewInstance(NewInstanceForm, AutoForm):
             return MSG(u'Add resource').gettext()
         cls = get_resource_class(type)
         class_title = cls.class_title.gettext()
-        title = MSG(u'Add $class_title')
+        title = MSG(u'Add {class_title}')
         return title.gettext(class_title=class_title)
 
 
@@ -385,7 +385,7 @@ class DBResource_AddBase(STLForm):
         if is_compatible is False:
             class_ids = ', '.join([x.class_id for x in filter_types])
             context.message = ERROR(u'The given file is none of the types '
-                                    u'$class_ids.', class_ids=class_ids)
+                                    u'{class_ids}.', class_ids=class_ids)
             return
 
         # Add the image to the resource
@@ -521,7 +521,7 @@ class LoginView(STLForm):
         root = context.root
         user = root.get_user_from_login(email)
         if user is None:
-            message = ERROR(u'The user "$username" does not exist.',
+            message = ERROR(u'The user "{username}" does not exist.',
                             username=email)
             context.message = message
             return

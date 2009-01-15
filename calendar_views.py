@@ -242,7 +242,7 @@ class CalendarView(STLView):
             week_number = str(int(week_number) + 1)
             if len(week_number) == 1:
                 week_number = '0%s' % week_number
-        current_week = MSG(u'Week $n').gettext(n=week_number)
+        current_week = MSG(u'Week {n}').gettext(n=week_number)
         tmp_date = c_date - timedelta(7)
         previous_week = ";%s?date=%s" % (method, Date.encode(tmp_date))
         tmp_date = c_date + timedelta(7)
@@ -438,7 +438,7 @@ class EditEventForm(CalendarView, STLForm):
             return resource
 
         # Error
-        message = MSG(u'Resource "${name}" not found.')
+        message = MSG(u'Resource "{name}" not found.')
         context.message = message.gettext(name=resource_id)
         return None
 
@@ -1090,7 +1090,7 @@ class Calendar_Upload(File_Upload):
         # Check wether the handler is able to deal with the uploaded file
         handler = resource.handler
         if mimetype != 'text/calendar':
-            message = u'Unexpected file of mimetype ${mimetype}.'
+            message = u'Unexpected file of mimetype {mimetype}.'
             context.message = ERROR(message, mimetype=mimetype)
             return
 

@@ -160,7 +160,7 @@ class Skin(UIFolder):
         if root is here:
             return root.get_title()
         # Somewhere else
-        message = MSG(u"${root_title}: ${here_title}")
+        message = MSG(u"{root_title}: {here_title}")
         return message.gettext(root_title=root.get_title(),
                                here_title=here.get_title())
 

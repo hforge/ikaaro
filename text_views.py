@@ -272,7 +272,7 @@ class CSV_AddRow(RowForm):
 
 class CSV_EditRow(RowForm):
 
-    title = MSG(u'Edit row #${id}')
+    title = MSG(u'Edit row #{id}')
     query_schema = {
         'index': Integer,
     }

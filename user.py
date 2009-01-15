@@ -176,7 +176,7 @@ class User(AccessControl, Folder):
         body = MSG(
             u"To confirm your identity click the link:\n"
             u"\n"
-            u"  $confirm_url")
+            u"  {confirm_url}")
         body = body.gettext(confirm_url=confirm_url)
         # Send
         context.root.send_email(email, subject, text=body)

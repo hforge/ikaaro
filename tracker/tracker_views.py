@@ -284,7 +284,7 @@ class Tracker_View(BrowseForm):
             try:
                 search = resource.get_resource(search_name)
             except LookupError:
-                msg = MSG(u'Unknown stored search "${sname}".')
+                msg = MSG(u'Unknown stored search "{sname}".')
                 goto = ';search'
                 return context.come_back(msg, goto=goto, sname=search_name)
         # Ok
@@ -800,7 +800,8 @@ class Tracker_ChangeSeveralBugs(Tracker_View):
             user_title = MSG(u'ANONYMOUS').gettext()
         else:
             user_title = user.get_title()
-        template = MSG(u'--- Comment from: $user ---\n\n$comment\n\n$issues')
+        template = MSG(
+            u'--- Comment from: {user} ---\n\n{comment}\n\n{issues}')
         tracker_title = resource.get_property('title') or 'Tracker Issue'
         subject = u'[%s]' % tracker_title
         for user_id in users_issues:
