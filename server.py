@@ -56,6 +56,7 @@ class ServerConfig(ConfigFile):
         'smtp-from': String(default=''),
         'smtp-login': String(default=''),
         'smtp-password': String(default=''),
+        'profile': Boolean(default=False),
     }
 
 
@@ -156,6 +157,15 @@ class Server(BaseServer):
             msg = 'configuraion error, unexpected "%s" value for log-level'
             raise ValueError, msg % log_level
 
+        # Profile
+        profile = config.get_value('profile')
+        if profile is True:
+            profile_path = '%s/log/profile' % path
+            if not vfs.exists(profile_path):
+                vfs.make_folder(profile_path)
+        else:
+            profile_path = None
+
         # The database
         database = SafeDatabase('%s/database.commit' % path)
         self.database = database
@@ -174,7 +184,8 @@ class Server(BaseServer):
         # Initialize
         BaseServer.__init__(self, root, address=address, port=port,
                             access_log=access_log, event_log=event_log,
-                            log_level=log_level, pid_file='%s/pid' % path)
+                            log_level=log_level, pid_file='%s/pid' % path,
+                            profile_path=profile_path)
 
 
     #######################################################################

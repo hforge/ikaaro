@@ -69,6 +69,11 @@ smtp-password =
 #
 log-level = warning
 
+# If the "profile" variable is set to "1", profiling information will be
+# written for every request to the 'log/profile' folder.  Defaults to "0".
+#
+profile = 0
+
 # The "index-text" vairable defines whether the catalog must process full-text
 # indexing. It requires (much) more time and third-party applications.
 # To speed up catalog updates, set this option to 0 (default is 1).
