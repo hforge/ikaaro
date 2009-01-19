@@ -550,52 +550,20 @@ class Tracker_GoToIssue(BaseView):
 
 
 
-class Tracker_ExportToText(Tracker_View):
+class Tracker_ExportToCSVForm(Tracker_View):
 
-    template = '/ui/tracker/export_to_text.xml'
+    template = '/ui/tracker/export_to_csv.xml'
     external_form = True
 
     def get_query_schema(self):
-        return merge_dicts(
-            Tracker_View.get_query_schema(self),
-            ids=String(multiple=True, default=[]),
-            column_selection=String(multiple=True, default=['title']))
+        schema = Tracker_View.get_query_schema(self)
+        schema['ids'] = String(multiple=True, default=[])
+        return schema
+
 
     def get_namespace(self, resource, context):
         namespace = Tracker_View.get_namespace(self, resource, context)
         query = context.query
-
-        # Column Selector
-        selection = query['column_selection']
-        export_columns = columns[2:] + [columns[1]]
-        namespace['columns'] = [
-            {'name': name, 'title': title, 'checked': name in selection}
-            for name, title in export_columns ]
-
-        # Text
-        items = self.get_items(resource, context)
-        items = self.sort_and_batch(resource, context, items)
-        selected_items = query['ids']
-        if selected_items:
-            items = [ x for x in items if x.name in selected_items ]
-        items = [ get_issue_informations(resource, x) for x in items ]
-        # Create the text
-        lines = []
-        for item in items:
-            name = item['name']
-            line = [u'#%s' % name]
-            for x in selection:
-                value = item[x]
-                if type(value) is unicode:
-                    pass
-                elif type(value) is str:
-                    value = unicode(value, 'utf-8')
-                else:
-                    value = unicode(value)
-                line.append(value)
-            line = u'\t'.join(line)
-            lines.append(line)
-        namespace['text'] = u'\n'.join(lines)
 
         # Insert query parameters as hidden input fields
         parameters = []
@@ -604,25 +572,15 @@ class Tracker_ExportToText(Tracker_View):
             if name in namespace:
                 continue
             value = query[name]
-            if value:
-                datatype = schema.get(name, String)
-                parameters.append(HiddenWidget(name).to_html(datatype, value))
+            datatype = schema[name]
+            widget = HiddenWidget(name)
+            if datatype.multiple is True:
+                for value in value:
+                    parameters.append(widget.to_html(datatype, value))
+            elif value:
+                parameters.append(widget.to_html(datatype, value))
         namespace['search_parameters'] = parameters
 
-        # Ok
-        return namespace
-
-
-
-class Tracker_ExportToCSVForm(Tracker_View):
-
-    template = '/ui/tracker/export_to_csv.xml'
-    external_form = True
-
-
-    def get_namespace(self, resource, context):
-        namespace = Tracker_View.get_namespace(self, resource, context)
-        namespace['query'] = encode_query(context.uri.query)
         return namespace
 
 
@@ -682,6 +640,58 @@ class Tracker_ExportToCSV(BaseView):
         response.set_header('Content-Disposition',
                             'attachment; filename=export.csv')
         return csv.to_str(separator=separator)
+
+
+
+class Tracker_ExportToText(Tracker_ExportToCSVForm):
+
+    template = '/ui/tracker/export_to_text.xml'
+
+    def get_query_schema(self):
+        schema = Tracker_ExportToCSVForm.get_query_schema(self)
+        schema['column_selection'] = String(multiple=True, default=['title'])
+        return schema
+
+
+    def get_namespace(self, resource, context):
+        namespace = Tracker_ExportToCSVForm.get_namespace(self, resource,
+                                                          context)
+        query = context.query
+
+        # Column Selector
+        selection = query['column_selection']
+        export_columns = columns[2:] + [columns[1]]
+        namespace['columns'] = [
+            {'name': name, 'title': title, 'checked': name in selection}
+            for name, title in export_columns ]
+
+        # Text
+        items = self.get_items(resource, context)
+        items = self.sort_and_batch(resource, context, items)
+        selected_items = query['ids']
+        if selected_items:
+            items = [ x for x in items if x.name in selected_items ]
+        items = [ get_issue_informations(resource, x) for x in items ]
+        # Create the text
+        lines = []
+        for item in items:
+            name = item['name']
+            line = [u'#%s' % name]
+            for x in selection:
+                value = item[x]
+                if type(value) is unicode:
+                    pass
+                elif type(value) is str:
+                    value = unicode(value, 'utf-8')
+                else:
+                    value = unicode(value)
+                line.append(value)
+            line = u'\t'.join(line)
+            lines.append(line)
+        namespace['text'] = u'\n'.join(lines)
+
+        # Ok
+        return namespace
 
 
 

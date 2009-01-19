@@ -6,7 +6,8 @@
 
 <td colspan="${cell/colspan}" rowspan="${cell/rowspan}" valign="top"
   class="color0">
-  <a href="${cell/content/issue/url}">[#${cell/content/issue/number}]</a>
+  <a href="${cell/content/issue/url}"
+    title="${cell/content/issue/comment}">[#${cell/content/issue/number}]</a>
   <span class="tracker_product"
     stl:if="cell/content/issue/product">${cell/content/issue/product}</span>
   ${cell/content/issue/title}

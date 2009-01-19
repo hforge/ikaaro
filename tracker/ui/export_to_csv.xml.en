@@ -4,10 +4,11 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
-<form action=";export_to_csv?${query}" method="GET" id="form_table">
+<form action=";export_to_csv" method="GET" id="form_table">
+  <stl:block stl:repeat="param search_parameters">${param}</stl:block>
+
   ${batch}
   ${table}
-
   <br/>
   <fieldset>
     <legend>Export to CSV</legend>

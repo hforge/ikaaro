@@ -5,6 +5,8 @@
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
 <form action=";export_to_text" method="GET" id="form_table">
+  <stl:block stl:repeat="param search_parameters">${param}</stl:block>
+
   ${batch}
   ${table}
   <br/>
@@ -22,7 +24,6 @@
   <div style="height: 200px; border: 1px solid #9FB7D4; overflow: auto">
     <pre>${text}</pre>
   </div>
-  <stl:block stl:repeat="param search_parameters">${param}</stl:block>
 </form>
 
 </stl:block>

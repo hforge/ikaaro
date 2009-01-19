@@ -1083,6 +1083,8 @@ class DailyView(CalendarView):
 
 class Calendar_Upload(File_Upload):
 
+    template = '/ui/ical/upload.xml'
+
     def action(self, resource, context, form):
         file = form['file']
         filename, mimetype, body = file

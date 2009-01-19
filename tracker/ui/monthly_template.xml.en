@@ -7,7 +7,8 @@
 <table class="event">
   <tr stl:repeat="event events" class="color0">
     <td>
-      <a href="${event/issue/url}">[#${event/issue/number}]</a>
+      <a href="${event/issue/url}"
+        title="${event/issue/comment}">[#${event/issue/number}]</a>
       <span class="tracker_product"
         stl:if="event/issue/product">${event/issue/product}</span>
       ${event/issue/title}

@@ -5,7 +5,8 @@
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
 <td class="color0">
-  <a href="${event/issue/url}">[#${event/issue/number}]</a>
+  <a href="${event/issue/url}"
+    title="${event/issue/comment}">[#${event/issue/number}]</a>
   <span class="tracker_product"
     stl:if="event/issue/product">${event/issue/product}</span>
   ${event/issue/title}

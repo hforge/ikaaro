@@ -18,6 +18,7 @@
 from itools.datatypes import String
 from itools.gettext import MSG
 from itools.web import INFO
+from itools.xml import XMLParser
 
 # Import from ikaaro
 from ikaaro.buttons import Button
@@ -28,6 +29,7 @@ from ikaaro.resource_views import Breadcrumb, DBResource_AddLink
 from ikaaro.table import OrderedTableFile, OrderedTable
 from ikaaro.table_views import OrderedTable_View
 from ikaaro.views import BrowseForm, CompositeForm
+from ikaaro.workflow import WorkflowAware
 
 
 class AddButton(Button):
@@ -44,8 +46,10 @@ class ChildrenOrderedTable_Ordered(OrderedTable_View):
 
     def get_table_columns(self, resource, context):
         columns = OrderedTable_View.get_table_columns(self, resource, context)
-        # Remove column with id and replace it by title
+        # Remove column with id and replace it by title,
+        # and add a column for the workflow state
         columns[1] = ('title', MSG(u'Title'))
+        columns.append(('workflow_state', MSG(u'State')))
         return columns
 
 
@@ -53,6 +57,20 @@ class ChildrenOrderedTable_Ordered(OrderedTable_View):
         if column == 'title':
             item = resource.parent.get_resource(item.name)
             return item.get_title(), context.get_link(item)
+        elif column == 'workflow_state':
+            # The workflow state
+            item = resource.parent.get_resource(item.name)
+            if not isinstance(item, WorkflowAware):
+                return None
+            statename = item.get_statename()
+            state = item.get_state()
+            msg = state['title'].gettext().encode('utf-8')
+            path = context.get_link(item)
+            # TODO Include the template in the base table
+            state = ('<a href="%s/;edit_state" class="workflow">'
+                     '<strong class="wf_%s">%s</strong>'
+                     '</a>') % (path, statename, msg)
+            return XMLParser(state)
         return OrderedTable_View.get_item_value(self, resource, context, item,
                                                 column)
 
@@ -66,7 +84,8 @@ class ChildrenOrderedTable_Unordered(Folder_BrowseContent):
     table_columns = [
         ('checkbox', None),
         ('title', MSG(u'Title')),
-        ('path', MSG(u'Chemin'))]
+        ('path', MSG(u'Path')),
+        ('workflow_state', MSG(u'State'))]
 
     table_actions = [AddButton]
 
@@ -97,6 +116,20 @@ class ChildrenOrderedTable_Unordered(Folder_BrowseContent):
             return item.get_title(), context.get_link(item)
         if column == 'path':
             return item.name
+        if column == 'workflow_state':
+            # The workflow state
+            item = resource.parent.get_resource(item.name)
+            if not isinstance(item, WorkflowAware):
+                return None
+            statename = item.get_statename()
+            state = item.get_state()
+            msg = state['title'].gettext().encode('utf-8')
+            path = context.get_link(item)
+            # TODO Include the template in the base table
+            state = ('<a href="%s/;edit_state" class="workflow">'
+                     '<strong class="wf_%s">%s</strong>'
+                     '</a>') % (path, statename, msg)
+            return XMLParser(state)
 
 
     def sort_and_batch(self, resource, context, items):
