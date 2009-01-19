@@ -201,7 +201,7 @@ class Tracker(Folder):
 
 
     def get_search_results(self, context):
-        """Method that return a list of issues that correspond to the search
+        """Method that return a list of issues that correspond to the search.
         """
         users = self.get_resource('/users')
         # Choose stored Search or personalized search
@@ -210,22 +210,13 @@ class Tracker(Folder):
         if search_name:
             search = self.get_resource(search_name)
             get_value = search.handler.get_value
-            get_values = search.get_values
         else:
-            get_value = context.get_form_value
-            get_values = context.get_form_values
+            get_value = context.get_query_value
         # Get search criteria
         text = get_value('text', type=Unicode)
         if text is not None:
             text = text.strip().lower()
         mtime = get_value('mtime', type=Integer)
-        products = get_values('product', type=Integer)
-        modules = get_values('module', type=Integer)
-        versions = get_values('version', type=Integer)
-        types = get_values('type', type=Integer)
-        priorities = get_values('priority', type=Integer)
-        assigns = get_values('assigned_to', type=String)
-        states = get_values('state', type=Integer)
 
         # Build the query
         abspath = self.get_canonical_path()
@@ -238,9 +229,10 @@ class Tracker(Folder):
             query2 = OrQuery(*query2)
             query.append(query2)
         # Metadata
-        for name, data in (('product', products), ('module', modules),
-                           ('version', versions), ('type', types),
-                           ('priority', priorities), ('state', states)):
+        integers_type = Integer(multiple=True)
+        names = 'product', 'module', 'version', 'type', 'priority', 'state'
+        for name in names:
+            data = get_value(name, type=integers_type)
             if len(data) > 0:
                 query2 = [ PhraseQuery(name, value) for value in data ]
                 query2 = OrQuery(*query2)
@@ -252,6 +244,7 @@ class Tracker(Folder):
             query2 = RangeQuery('mtime', date, None)
             query.append(query2)
         # Assign To
+        assigns = get_value('assigned_to', type=String(multiple=True))
         if len(assigns) > 0:
             query2 = []
             for value in assigns:
