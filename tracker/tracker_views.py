@@ -561,6 +561,7 @@ class Tracker_ExportToText(Tracker_View):
             ids=String(multiple=True, default=[]),
             column_selection=String(multiple=True, default=['title']))
 
+
     def get_namespace(self, resource, context):
         namespace = Tracker_View.get_namespace(self, resource, context)
         query = context.query
@@ -604,9 +605,13 @@ class Tracker_ExportToText(Tracker_View):
             if name in namespace:
                 continue
             value = query[name]
-            if value:
-                datatype = schema.get(name, String)
-                parameters.append(HiddenWidget(name).to_html(datatype, value))
+            datatype = schema[name]
+            widget = HiddenWidget(name)
+            if datatype.multiple is True:
+                for value in value:
+                    parameters.append(widget.to_html(datatype, value))
+            elif value:
+                parameters.append(widget.to_html(datatype, value))
         namespace['search_parameters'] = parameters
 
         # Ok
