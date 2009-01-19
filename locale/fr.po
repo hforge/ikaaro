@@ -3972,8 +3972,8 @@ msgctxt "paragraph"
 msgid ""
 "You can upload a new ical file (.ics extension) to replace the current one."
 msgstr ""
-"Vous pouvez importer un nouveau fichier ical (extension .ics) de votre
-ordinateur pour remplacer l'actuel."
+"Vous pouvez importer un nouveau fichier ical (extension .ics) de votre "
+"ordinateur pour remplacer l'actuel."
 
 #: ../access.py:203
 msgid "You cannot degrade your own role."
