@@ -31,6 +31,7 @@ from itools.gettext import MSG
 from itools.uri import Reference
 from itools.web import ERROR
 from itools.xapian import RangeQuery, AndQuery, OrQuery, PhraseQuery
+from itools.xapian import StartQuery
 
 # Import from ikaaro
 from ikaaro.folder import Folder
@@ -205,8 +206,7 @@ class Tracker(Folder):
         """
         users = self.get_resource('/users')
         # Choose stored Search or personalized search
-        query = context.query
-        search_name = query.get('search_name')
+        search_name = context.query.get('search_name')
         if search_name:
             search = self.get_resource(search_name)
             get_value = search.handler.get_value
@@ -221,7 +221,7 @@ class Tracker(Folder):
         # Build the query
         abspath = self.get_canonical_path()
         query = [
-            PhraseQuery('parent_path', str(abspath)),
+            StartQuery('abspath', str(abspath) + '/'),
             PhraseQuery('format', 'issue')]
         # Text search
         if text:
