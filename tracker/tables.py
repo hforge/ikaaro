@@ -61,9 +61,7 @@ class SelectTable_View(OrderedTable_View):
         # Append a column with the number of issues
         if column == 'issues':
             # FIXME Too much of an heuristic
-            filter = resource.name[:-1]
-            if filter.startswith('priorit'):
-                filter = 'priority'
+            filter = str(resource.name)
 
             root = context.root
             abspath = resource.parent.get_canonical_path()
