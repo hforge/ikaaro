@@ -20,5 +20,5 @@ from itools import vfs
 
 
 def is_instance_up_to_date(target):
-    # All tests pass
+    # Ok
     return True

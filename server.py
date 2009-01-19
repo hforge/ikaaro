@@ -29,18 +29,16 @@ from xapian import DatabaseOpeningError
 
 # Import from itools
 from itools.datatypes import Boolean, Integer, String, Tokens
-from itools.handlers import ConfigFile, SafeDatabase
+from itools.handlers import ConfigFile
 from itools.uri import get_absolute_reference2
 from itools import vfs
 from itools.web import Server as BaseServer
-from itools.xapian import Catalog
 
 # Import from ikaaro
-from folder import Folder
+from database import get_database
 from metadata import Metadata
 from registry import get_resource_class
 from utils import is_pid_running
-from versioning import GitArchive
 from website import WebSite
 
 
@@ -167,19 +165,11 @@ class Server(BaseServer):
             profile_path = None
 
         # The database
-        database = SafeDatabase('%s/database.commit' % path)
+        database = get_database(path, read_only=read_only)
         self.database = database
-        # The catalog & archive
-        self.catalog = Catalog('%s/catalog' % target, read_only=read_only)
-        self.archive = GitArchive('%s/database' % target, read_only=read_only)
 
         # Find out the root class
         root = get_root(database, target)
-
-        # Events
-        self.resources_added = set()
-        self.resources_changed = set()
-        self.resources_removed = set()
 
         # Initialize
         BaseServer.__init__(self, root, address=address, port=port,
@@ -209,44 +199,6 @@ class Server(BaseServer):
             file.write(message.as_string())
         finally:
             file.close()
-
-
-    def get_databases(self):
-        return [self.database, self.archive, self.catalog]
-
-
-    def abort_transaction(self, context):
-        # Clear events
-        self.resources_removed.clear()
-        self.resources_added.clear()
-        self.resources_changed.clear()
-        # Follow-up
-        BaseServer.abort_transaction(self, context)
-
-
-    def before_commit(self):
-        root = self.root
-        catalog = self.catalog
-        archive = self.archive
-        # Removed
-        for path in self.resources_removed:
-            catalog.unindex_document(path)
-        self.resources_removed.clear()
-
-        # Added
-        for path in self.resources_added:
-            resource = root.get_resource(path)
-            archive.add_resource(resource)
-            catalog.index_document(resource)
-        self.resources_added.clear()
-
-        # Changed
-        for path in self.resources_changed:
-            resource = root.get_resource(path)
-            archive.add_resource(resource)
-            catalog.unindex_document(path)
-            catalog.index_document(resource)
-        self.resources_changed.clear()
 
 
     #######################################################################
@@ -288,34 +240,6 @@ class Server(BaseServer):
                 return
 
 
-
-    def remove_resource(self, resource):
-        resources_removed = self.resources_removed
-        resources_added = self.resources_added
-
-        if isinstance(resource, Folder):
-            for x in resource.traverse_resources():
-                path = str(x.get_canonical_path())
-                if path in resources_added:
-                    resources_added.remove(path)
-                resources_removed.add(path)
-        else:
-            path = str(resource.get_canonical_path())
-            if path in resources_added:
-                resources_added.remove(path)
-            resources_removed.add(path)
-
-
-    def add_resource(self, resource):
-        if isinstance(resource, Folder):
-            for x in resource.traverse_resources():
-                path = str(x.get_canonical_path())
-                self.resources_added.add(path)
-        else:
-            path = str(resource.get_canonical_path())
-            self.resources_added.add(path)
-
-
+    # FIXME Short-cut, to be removed
     def change_resource(self, resource):
-        path = str(resource.get_canonical_path())
-        self.resources_changed.add(path)
+        self.database.change_resource(resource)

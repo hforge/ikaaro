@@ -30,7 +30,7 @@ from itools.web import set_context, Context
 # Import from ikaaro
 from ikaaro.resource_ import DBResource
 from ikaaro.server import Server, ask_confirmation
-from ikaaro.versioning import VersioningAware, make_git_archive
+from ikaaro.update import is_instance_up_to_date
 
 
 def update(parser, options, target):
@@ -46,17 +46,15 @@ def update(parser, options, target):
     # STAGE 0: Specific upgrades
     #######################################################################
 
-    # XXX Introduced in 0.60
-    # Initialize the archive
-    if not vfs.exists('%s/database/.git' % target):
-        message = 'Add the Git archive to the database (y/N)? '
+    if not is_instance_up_to_date(target):
+        raise NotImplementedError, 'upgrade code not yet implemented'
+
+    # The database
+    if not database.is_up_to_date():
+        message = 'Update the database (y/N)? '
         if ask_confirmation(message, confirm) is False:
             return
-        archive = make_git_archive('%s/database' % target)
-        for resource in root.traverse_resources():
-            if isinstance(resource, VersioningAware):
-                archive.add_resource(resource)
-        archive.save_changes()
+        database.update()
 
     #######################################################################
     # STAGE 1: Find out the versions to upgrade
@@ -153,13 +151,14 @@ def update(parser, options, target):
             sys.stdout.flush()
             try:
                 resource.update(version)
-                database.save_changes()
             except:
                 path = resource.get_abspath()
                 log.write('%s %s\n' % (path, resource.__class__))
                 print_exc(file=log)
                 log.write('\n')
                 bad += 1
+        # Commit
+        database.save_changes()
         # Reset the state
         database.cache = {}
         # Stop if there were errors

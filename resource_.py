@@ -148,7 +148,7 @@ class DBResource(CatalogAware, IResource):
         cls._make_resource(cls, container.handler, name, *args, **kw)
         resource = container.get_resource(name)
         # Events, add
-        get_context().server.add_resource(resource)
+        get_context().server.database.add_resource(resource)
 
         return resource
 

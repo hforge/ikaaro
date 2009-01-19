@@ -17,18 +17,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
-from datetime import datetime
-from operator import itemgetter
-from os import devnull
-from subprocess import call, Popen, PIPE
+from subprocess import Popen, PIPE
 
 # Import from itools
 from itools.datatypes import DateTime, String
 from itools.gettext import MSG
 from itools import git
 from itools.i18n import format_datetime
-from itools.uri import get_absolute_reference
-from itools import vfs
 from itools.web import get_context, STLView
 from itools.xapian import KeywordField, BoolField
 
@@ -36,66 +31,6 @@ from itools.xapian import KeywordField, BoolField
 from file import File
 from metadata import Record
 
-
-class GitArchive(object):
-
-    def __init__(self, uri, read_only=False):
-        uri = get_absolute_reference(uri)
-        if uri.scheme != 'file':
-            raise IOError, "unexpected '%s' scheme" % uri.scheme
-
-        self.path = str(uri.path)
-
-        # Read Only
-        if read_only is True:
-            raise NotImplementedError, 'read-only mode not yet implemented'
-
-        # We only track new & changed files, since files removed are
-        # automatically handled by 'git commit -a'.
-        self.new_files = []
-
-
-    def save_changes(self):
-        # Add
-        new_files = [ x for x in self.new_files if vfs.exists(x) ]
-        if new_files:
-            command = ['git', 'add'] + new_files
-            call(command, cwd=self.path)
-        if self.new_files:
-            self.new_files = []
-
-        # Commit message
-        message = 'none'
-        context = get_context()
-        if context is not None:
-            user = context.user
-            if user is not None:
-                message = user.name
-        # Commit
-        command = ['git', 'commit', '-a', '-m', message]
-        with open(devnull) as null:
-            call(command, cwd=self.path, stdout=null)
-
-
-    def abort_changes(self):
-        self.new_files = []
-        command = ['git', 'reset', '--']
-        call(command, cwd=self.path)
-
-
-    def add_resource(self, resource):
-        for handler in resource.get_handlers():
-            path = str(handler.uri.path)
-            self.new_files.append(path)
-
-
-
-def make_git_archive(path):
-    command = ['git', 'init']
-    with open(devnull) as null:
-        call(command, cwd=path, stdout=null)
-
-    return GitArchive(path)
 
 
 ###########################################################################
@@ -129,6 +64,8 @@ class History(Record):
 
 class VersioningAware(File):
 
+    class_version = '20090119'
+
     def get_revisions(self, context=None):
         if context is None:
             context = get_context()
@@ -140,7 +77,7 @@ class VersioningAware(File):
         for handler in self.get_handlers():
             path = str(handler.uri.path)
             command.append(path)
-        cwd = context.server.archive.path
+        cwd = context.server.database.path
         pipe = Popen(command, cwd=cwd, stdout=PIPE).stdout
 
         # Get the metadata
@@ -210,3 +147,10 @@ class VersioningAware(File):
     # User Interface
     ########################################################################
     history = HistoryView()
+
+
+    ########################################################################
+    # Update
+    ########################################################################
+    def update_20090119(self):
+        get_context().server.database.add_resource(self)

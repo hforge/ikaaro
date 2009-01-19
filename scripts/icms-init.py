@@ -26,12 +26,13 @@ import sys
 import itools
 from itools.handlers import Database
 from itools.uri import get_absolute_reference
-from itools.xapian import make_catalog, CatalogAware
+from itools.xapian import CatalogAware
 
 # Import from ikaaro
+from ikaaro.database import make_database
 from ikaaro.root import Root
 from ikaaro.utils import generate_password
-from ikaaro.versioning import VersioningAware, make_git_archive
+from ikaaro.versioning import VersioningAware
 
 
 template = (
@@ -126,23 +127,19 @@ def init(parser, options, target):
     mkdir('%s/log' % target)
     mkdir('%s/spool' % target)
     # Make the root
-    database = Database()
+    database = make_database(target)
     base = get_absolute_reference(target).resolve2('database')
     folder = database.get_handler(base)
     root = root_class._make_resource(root_class, folder, email, password)
-    database.save_changes()
-    # Initialize the catalog and the git archive
-    catalog = make_catalog('%s/catalog' % target)
-    archive = make_git_archive('%s/database' % target)
     # Index and Archive
+    catalog = database.catalog
     for resource in root.traverse_resources():
         if isinstance(resource, CatalogAware):
             catalog.index_document(resource)
         if isinstance(resource, VersioningAware):
-            archive.add_resource(resource)
-    # Save catalog and git
-    catalog.save_changes()
-    archive.save_changes()
+            database.add_resource(resource)
+    # Save changes
+    database.save_changes()
 
     # Bravo!
     print '*'

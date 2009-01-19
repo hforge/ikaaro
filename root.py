@@ -176,7 +176,7 @@ class Root(WebSite):
     ########################################################################
     # Search
     def search(self, query=None, **kw):
-        catalog = get_context().server.catalog
+        catalog = get_context().server.database.catalog
         return catalog.search(query, **kw)
 
 
