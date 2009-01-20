@@ -71,6 +71,18 @@ class VersioningAware(File):
 
     class_version = '20090119'
 
+    def get_files_to_archive(self):
+        # Metadata
+        metadata = str(self.metadata.uri.path)
+        files = [metadata]
+        # Handlers
+        for handler in self.get_handlers():
+            path = str(handler.uri.path)
+            files.append(path)
+        # Ok
+        return files
+
+
     def get_revisions(self, context=None):
         if context is None:
             context = get_context()

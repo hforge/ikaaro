@@ -30,6 +30,7 @@ from itools.xapian import CatalogAware
 
 # Import from ikaaro
 from ikaaro.database import make_database
+from ikaaro.resource_ import DBResource
 from ikaaro.root import Root
 from ikaaro.utils import generate_password
 from ikaaro.versioning import VersioningAware
@@ -132,13 +133,12 @@ def init(parser, options, target):
     folder = database.get_handler(base)
     root = root_class._make_resource(root_class, folder, email, password)
     # Index and Archive
-    catalog = database.catalog
     for resource in root.traverse_resources():
-        if isinstance(resource, CatalogAware):
-            catalog.index_document(resource)
-        if isinstance(resource, VersioningAware):
-            database.add_resource(resource)
+        if isinstance(resource, DBResource):
+            path = str(resource.get_canonical_path())
+            database.resources_added[path] = resource
     # Save changes
+    database.before_commit()
     database.save_changes()
 
     # Bravo!

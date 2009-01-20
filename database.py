@@ -107,14 +107,10 @@ class Database(SafeDatabase):
     #######################################################################
     # Transactions API
     #######################################################################
-    def git_add(self, resource):
-        for handler in resource.get_handlers():
-            path = str(handler.uri.path)
-            self.new_files.append(path)
-
-
     def before_commit(self):
         catalog = self.catalog
+        new_files = self.new_files
+
         # Removed
         for path in self.resources_removed:
             catalog.unindex_document(path)
@@ -124,7 +120,9 @@ class Database(SafeDatabase):
         resources_added = self.resources_added
         for path in resources_added:
             resource = resources_added[path]
-            self.git_add(resource)
+            # Git
+            new_files.extend(resource.get_files_to_archive())
+            # Catalog
             catalog.index_document(resource)
         resources_added.clear()
 
@@ -132,7 +130,9 @@ class Database(SafeDatabase):
         resources_changed = self.resources_changed
         for path in resources_changed:
             resource = resources_changed[path]
-            self.git_add(resource)
+            # Git
+            new_files.extend(resource.get_files_to_archive())
+            # Catalog
             catalog.unindex_document(path)
             catalog.index_document(resource)
         resources_changed.clear()

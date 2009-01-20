@@ -199,6 +199,11 @@ class DBResource(CatalogAware, IResource):
     handler = property(get_handler, None, None, '')
 
 
+    def get_files_to_archive(self):
+        metadata = str(self.metadata.uri.path)
+        return [metadata]
+
+
     ########################################################################
     # Metadata
     ########################################################################
