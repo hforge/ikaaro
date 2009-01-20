@@ -161,6 +161,9 @@ class Database(SafeDatabase):
         with open(devnull) as null:
             call(command, cwd=self.path, stdout=null)
 
+        # Catalog
+        self.catalog.save_changes()
+
 
     def abort_changes(self):
         SafeDatabase.abort_changes(self)
@@ -169,6 +172,9 @@ class Database(SafeDatabase):
         self.new_files = []
         command = ['git', 'reset', '--']
         call(command, cwd=self.path)
+
+        # Catalog
+        self.catalog.abort_changes()
 
         # Clear events
         self.resources_removed.clear()
