@@ -45,9 +45,14 @@ class HistoryView(STLView):
 
 
     def get_namespace(self, resource, context):
-        return {
-            'revisions': resource.get_revisions(context),
-        }
+        # Change the dates
+        accept = context.accept_language
+        revisions = resource.get_revisions(context)
+        for revision in revisions:
+            date = revision['date']
+            revision['date'] = format_datetime(date, accept=accept)
+
+        return {'revisions': revisions}
 
 
 
@@ -70,8 +75,6 @@ class VersioningAware(File):
         if context is None:
             context = get_context()
 
-        accept = context.accept_language
-
         # Get the list of revisions
         command = ['git', 'rev-list', 'HEAD', '--']
         for handler in self.get_handlers():
@@ -89,7 +92,7 @@ class VersioningAware(File):
             username = metadata['message'].strip()
             revisions.append({
                 'username': username,
-                'date': format_datetime(date, accept=accept)})
+                'date': date})
 
         return revisions
 

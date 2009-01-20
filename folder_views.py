@@ -330,10 +330,7 @@ class Folder_BrowseContent(SearchForm):
             # Last author
             if not isinstance(item, VersioningAware):
                 return None
-            revisions = item.get_revisions(context)
-            if not revisions:
-                return None
-            username = revisions[0]['username']
+            username = item.get_last_author()
             try:
                 user = resource.get_resource('/users/%s' % username)
             except LookupError:
