@@ -22,6 +22,7 @@ from subprocess import call
 from xapian import WritableDatabase, DB_CREATE
 
 # Import from itools
+from itools.handlers import ReadOnlyDatabase as BaseReadOnlyDatabase
 from itools.handlers import SafeDatabase
 from itools import vfs
 from itools.web import get_context
@@ -29,6 +30,20 @@ from itools.xapian import Catalog, make_catalog
 
 # Import from ikaaro
 from folder import Folder
+
+
+
+class ReadOnlyDatabase(BaseReadOnlyDatabase):
+
+    def __init__(self, target):
+        BaseReadOnlyDatabase.__init__(self)
+
+        # Git archive
+        self.path = '%s/database' % target
+
+        # The catalog
+        self.catalog = Catalog('%s/catalog' % target, read_only=True)
+
 
 
 class Database(SafeDatabase):
@@ -200,8 +215,7 @@ def make_database(target):
 
 
 def get_database(path, read_only=False):
-    # TODO Read Only
     if read_only is True:
-        raise NotImplementedError, 'read-only mode not yet implemented'
+        return ReadOnlyDatabase(path)
 
     return Database(path)
