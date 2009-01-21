@@ -21,20 +21,22 @@ from itools.csv import CSVFile
 from itools.gettext import POFile, MSG
 from itools.handlers import TextFile, Python as PythonFile
 from itools.html import HTMLFile
+from itools.web import get_context
 from itools.xml import XMLFile
 
 # Import from ikaaro
+from file import File
 from file_views import File_Upload
 from registry import register_resource_class
 from text_views import Text_Edit, Text_View, Text_ExternalEdit, PO_Edit
 from text_views import CSV_View, CSV_AddRow, CSV_EditRow
-from versioning import VersioningAware
 
 
 
-class Text(VersioningAware):
+class Text(File):
 
     class_id = 'text'
+    class_version = '20090119'
     class_title = MSG(u'Plain Text')
     class_icon16 = 'icons/16x16/text.png'
     class_icon48 = 'icons/48x48/text.png'
@@ -44,14 +46,35 @@ class Text(VersioningAware):
 
 
     def get_content_type(self):
-        return '%s; charset=UTF-8' % VersioningAware.get_content_type(self)
+        return '%s; charset=UTF-8' % File.get_content_type(self)
 
 
+    #######################################################################
+    # Versioning
+    def get_files_to_archive(self):
+        # Metadata
+        metadata = str(self.metadata.uri.path)
+        files = [metadata]
+        # Handlers
+        for handler in self.get_handlers():
+            path = str(handler.uri.path)
+            files.append(path)
+        # Ok
+        return files
+
+
+    #######################################################################
     # Views
     view = Text_View()
     edit = Text_Edit()
     upload = File_Upload()
     externaledit = Text_ExternalEdit()
+
+
+    #######################################################################
+    # Update
+    def update_20090119(self):
+        get_context().server.database.add_resource(self)
 
 
 

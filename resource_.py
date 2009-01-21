@@ -21,10 +21,12 @@
 
 # Import from the Standard Library
 from datetime import datetime
+from subprocess import Popen, PIPE
 
 # Import from itools
 from itools.datatypes import Unicode
 from itools.gettext import MSG
+from itools import git
 from itools.web import Resource, get_context
 from itools.xapian import CatalogAware
 from itools.xapian import TextField, KeywordField, IntegerField, BoolField
@@ -35,7 +37,7 @@ from lock import Lock
 from metadata import Metadata
 from resource_views import DBResource_NewInstance, DBResource_Edit
 from resource_views import DBResource_AddImage, DBResource_AddLink
-from resource_views import LoginView, LogoutView
+from resource_views import LoginView, LogoutView, DBResource_History
 from workflow import WorkflowAware
 
 
@@ -236,6 +238,67 @@ class DBResource(CatalogAware, IResource):
 
 
     ########################################################################
+    # Versioning
+    ########################################################################
+    def get_revisions(self, context=None):
+        if context is None:
+            context = get_context()
+
+        # Get the list of revisions
+        command = ['git', 'rev-list', 'HEAD', '--']
+        for handler in self.get_handlers():
+            path = str(handler.uri.path)
+            command.append(path)
+        cwd = context.server.database.path
+        pipe = Popen(command, cwd=cwd, stdout=PIPE).stdout
+
+        # Get the metadata
+        revisions = []
+        for line in pipe.readlines():
+            line = line.strip()
+            metadata = git.get_metadata(line, cwd=cwd)
+            date = metadata['committer'][1]
+            username = metadata['message'].strip()
+            revisions.append({
+                'username': username,
+                'date': date})
+
+        return revisions
+
+
+    def get_owner(self):
+        revisions = self.get_revisions()
+        if not revisions:
+            return None
+        return revisions[-1]['username']
+
+
+    def get_last_author(self):
+        revisions = self.get_revisions()
+        if not revisions:
+            return None
+        return revisions[0]['username']
+
+
+    def get_mtime(self):
+        # TODO Not very efficient, it may be better to "cache" the mtime
+        # into the metadata.
+
+        # Git
+        revisions = self.get_revisions()
+        mtime = revisions[0]['date']
+
+        # Consider files not tracked by Git
+        for handler in self.get_handlers():
+            if handler is not None:
+                handler_mtime = handler.get_mtime()
+                if handler_mtime is not None and handler_mtime > mtime:
+                    mtime = handler_mtime
+
+        return mtime
+
+
+    ########################################################################
     # Indexing
     ########################################################################
     def to_text(self):
@@ -252,13 +315,15 @@ class DBResource(CatalogAware, IResource):
             KeywordField('format', is_stored=True),
             KeywordField('workflow_state', is_stored=True),
             KeywordField('members'),
+            # Versioning
+            KeywordField('mtime', is_indexed=True, is_stored=True),
+            KeywordField('last_author', is_indexed=False, is_stored=True),
             # For referencial-integrity, keep links between cms resources,
             # where a link is the physical path.
             KeywordField('links'),
             # Folder's view
             KeywordField('parent_path'),
             KeywordField('name', is_stored=True),
-            KeywordField('mtime', is_indexed=True, is_stored=True),
             IntegerField('size', is_indexed=False, is_stored=True)]
 
 
@@ -277,6 +342,17 @@ class DBResource(CatalogAware, IResource):
             'format': self.metadata.format,
             'title': self.get_title(),
             'mtime': mtime.strftime('%Y%m%d%H%M%S')}
+
+        # Last Author (used in the Last Changes view)
+        last_author = self.get_last_author()
+        if last_author is not None:
+            users = self.get_resource('/users')
+            try:
+                user = users.get_resource(last_author)
+            except LookupError:
+                document['last_author'] = None
+            else:
+                document['last_author'] = user.get_title()
 
         # Full text
         context = get_context()
@@ -365,21 +441,6 @@ class DBResource(CatalogAware, IResource):
         """The resource "old_name" has a "new_name", we must update its link
         """
         pass
-
-
-    def get_mtime(self):
-        handlers = [self.metadata] + self.get_handlers()
-
-        mtimes = []
-        for handler in handlers:
-            if handler is not None:
-                mtime = handler.get_mtime()
-                if mtime is not None:
-                    mtimes.append(mtime)
-
-        if not mtimes:
-            return None
-        return max(mtimes)
 
 
     def get_links(self):
@@ -503,4 +564,5 @@ class DBResource(CatalogAware, IResource):
     edit = DBResource_Edit()
     add_image = DBResource_AddImage()
     add_link = DBResource_AddLink()
+    history = DBResource_History()
 

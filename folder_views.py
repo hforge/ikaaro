@@ -326,10 +326,7 @@ class Folder_BrowseContent(SearchForm):
             accept = context.accept_language
             return format_datetime(item.get_mtime(), accept=accept)
         elif column == 'last_author':
-            from versioning import VersioningAware
             # Last author
-            if not isinstance(item, VersioningAware):
-                return None
             username = item.get_last_author()
             try:
                 user = resource.get_resource('/users/%s' % username)
@@ -725,12 +722,6 @@ class Folder_LastChanges(Folder_BrowseContent):
         schema['sort_by'] = String(default='mtime')
         schema['search_subfolders'] = Boolean(default=True)
         return schema
-
-
-    def get_items(self, resource, context):
-        # Show only version aware resources
-        query = PhraseQuery('is_version_aware', '1')
-        return Folder_BrowseContent.get_items(self, resource, context, query)
 
 
 

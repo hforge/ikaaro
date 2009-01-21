@@ -33,7 +33,6 @@ from ikaaro.database import make_database
 from ikaaro.resource_ import DBResource
 from ikaaro.root import Root
 from ikaaro.utils import generate_password
-from ikaaro.versioning import VersioningAware
 
 
 template = (
