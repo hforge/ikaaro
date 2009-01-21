@@ -134,7 +134,7 @@ class Folder(DBResource):
             raise ConsistencyError, message
 
         # Events, remove
-        get_context().server.database.remove_resource(resource)
+        get_context().database.remove_resource(resource)
         # Remove
         folder = self.handler
         folder.del_handler('%s.metadata' % name)
@@ -174,14 +174,14 @@ class Folder(DBResource):
 
         # Events, add
         resource = self.get_resource(target)
-        context.server.database.add_resource(resource)
+        context.database.add_resource(resource)
 
 
     def move_resource(self, source, target):
         context = get_context()
         # Events, remove
         resource = self.get_resource(source)
-        context.server.database.remove_resource(resource)
+        context.database.remove_resource(resource)
 
         # Find out the source and target absolute URIs
         folder = self.handler
@@ -213,7 +213,7 @@ class Folder(DBResource):
 
         # Events, add
         resource = self.get_resource(target)
-        context.server.database.add_resource(resource)
+        context.database.add_resource(resource)
 
 
     def traverse_resources(self):

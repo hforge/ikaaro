@@ -150,7 +150,7 @@ class DBResource(CatalogAware, IResource):
         cls._make_resource(cls, container.handler, name, *args, **kw)
         resource = container.get_resource(name)
         # Events, add
-        get_context().server.database.add_resource(resource)
+        get_context().database.add_resource(resource)
 
         return resource
 
@@ -249,7 +249,7 @@ class DBResource(CatalogAware, IResource):
         for handler in self.get_handlers():
             path = str(handler.uri.path)
             command.append(path)
-        cwd = context.server.database.path
+        cwd = context.database.path
         pipe = Popen(command, cwd=cwd, stdout=PIPE).stdout
 
         # Get the metadata
@@ -286,7 +286,10 @@ class DBResource(CatalogAware, IResource):
 
         # Git
         revisions = self.get_revisions()
-        mtime = revisions[0]['date']
+        if revisions:
+            mtime = revisions[0]['date']
+        else:
+            mtime = self.metadata.get_mtime()
 
         # Consider files not tracked by Git
         for handler in self.get_handlers():
@@ -356,13 +359,16 @@ class DBResource(CatalogAware, IResource):
 
         # Full text
         context = get_context()
-        if context is not None and context.server.index_text:
+        try:
+            server = context.server
+        except AttributeError:
+            server = None
+        if server is not None and server.index_text:
             try:
                 text = self.to_text()
             except NotImplementedError:
                 pass
             except:
-                server = context.server
                 server.log_error(context)
                 log = "%s failed" % self.get_abspath()
                 server.event_log.write(log)

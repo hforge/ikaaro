@@ -25,7 +25,9 @@ import sys
 # Import from itools
 import itools
 from itools.handlers import Database
+from itools.http import Request
 from itools.uri import get_absolute_reference
+from itools.web import Context, set_context
 from itools.xapian import CatalogAware
 
 # Import from ikaaro
@@ -126,8 +128,15 @@ def init(parser, options, target):
     mkdir('%s/database' % target)
     mkdir('%s/log' % target)
     mkdir('%s/spool' % target)
-    # Make the root
     database = make_database(target)
+
+    # Create a fake context
+    request = Request()
+    context = Context(request)
+    set_context(context)
+    context.database = database
+
+    # Make the root
     base = get_absolute_reference(target).resolve2('database')
     folder = database.get_handler(base)
     root = root_class._make_resource(root_class, folder, email, password)

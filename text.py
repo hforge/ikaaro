@@ -74,7 +74,7 @@ class Text(File):
     #######################################################################
     # Update
     def update_20090119(self):
-        get_context().server.database.add_resource(self)
+        get_context().database.add_resource(self)
 
 
 

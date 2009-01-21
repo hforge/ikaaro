@@ -207,7 +207,7 @@ class CPBrokenLinks(CPBaseView, STLView):
 
     def get_namespace(self, resource, context):
         # Find out broken links
-        catalog = context.server.database.catalog
+        catalog = context.database.catalog
         base = resource.get_abspath()
 
         # Search only within the given resource
