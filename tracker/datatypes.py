@@ -44,7 +44,7 @@ class TrackerList(Enumerate):
         elements = cls.tracker.get_resource(cls.element).handler
         return [{'name': record.id,
                  'value': elements.get_record_value(record, 'title')}
-                for record in elements.get_records()]
+                for record in elements.get_records_in_order()]
 
 
 
@@ -71,7 +71,7 @@ class ProductInfoList(Enumerate):
         elements = tracker.get_resource(cls.element).handler
 
         options = []
-        for record in elements.get_records():
+        for record in elements.get_records_in_order():
             title = elements.get_record_value(record, 'title')
             product_id = elements.get_record_value(record, 'product')
 

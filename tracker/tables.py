@@ -42,7 +42,7 @@ class ProductsEnumerate(Enumerate):
         return [
             {'name': str(x.id),
              'value': products.get_record_value(x, 'title')}
-            for x in products.get_records() ]
+            for x in products.get_records_in_order() ]
 
 
 ###########################################################################
