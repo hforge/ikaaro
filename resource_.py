@@ -246,9 +246,7 @@ class DBResource(CatalogAware, IResource):
 
         # Get the list of revisions
         command = ['git', 'rev-list', 'HEAD', '--']
-        for handler in self.get_handlers():
-            path = str(handler.uri.path)
-            command.append(path)
+        command.extend(self.get_files_to_archive())
         cwd = context.database.path
         pipe = Popen(command, cwd=cwd, stdout=PIPE).stdout
 
@@ -258,7 +256,7 @@ class DBResource(CatalogAware, IResource):
             line = line.strip()
             metadata = git.get_metadata(line, cwd=cwd)
             date = metadata['committer'][1]
-            username = metadata['message'].strip()
+            username = metadata['author'][0].split()[0]
             revisions.append({
                 'username': username,
                 'date': date})
