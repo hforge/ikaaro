@@ -259,7 +259,9 @@ class DBResource(CatalogAware, IResource):
             username = metadata['author'][0].split()[0]
             revisions.append({
                 'username': username,
-                'date': date})
+                'date': date,
+                'message': metadata['message'],
+                })
 
         return revisions
 

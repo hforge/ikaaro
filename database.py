@@ -149,15 +149,23 @@ class Database(SafeDatabase):
         if self.new_files:
             self.new_files = []
 
-        # Commit author
+        # Commit author & message
         author = 'nobody <>'
+        message = 'no comment'
         context = get_context()
         if context is not None:
+            # Author
             user = context.user
             if user is not None:
                 author = '%s <%s>' % (user.name, user.get_property('email'))
-        # Commit message
-        message = 'no comment'
+            # Message
+            try:
+                message = getattr(context, 'git_message')
+            except AttributeError:
+                pass
+            else:
+                message = message.encode('utf-8')
+
         # Commit
         command = [
             'git', 'commit', '-a', '--author=%s' % author, '-m', message]

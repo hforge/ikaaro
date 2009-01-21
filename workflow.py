@@ -61,14 +61,15 @@ class StateForm(STLForm):
         # Workflow history
         users = resource.get_resource('/users')
         history = []
-        for transition in resource.get_property('wf_transition'):
-            userid = transition['user']
-            user = users.get_resource(userid)
-            history.append(
-                {'title': transition['name'],
-                 'date': format_datetime(transition['date']),
-                 'user': user.get_title(),
-                 'comments': transition['comments']})
+        for revision in resource.get_revisions():
+            transition, comment = parse_git_message(revision['message'])
+            if transition is not None:
+                user = users.get_resource(revision['username'])
+                history.append(
+                    {'title': transition,
+                     'date': format_datetime(revision['date']),
+                     'user': user.get_title(),
+                     'comments': comment})
         history.reverse()
 
         # Ok
@@ -84,13 +85,6 @@ class StateForm(STLForm):
         transition = form['transition']
         comments = form['comments']
 
-        # Keep workflow history
-        property = {
-            'date': datetime.now(),
-            'user': context.user.name,
-            'name': transition,
-            'comments': comments}
-        resource.set_property('wf_transition', property)
         # Change the state, through the itools.workflow way
         try:
             resource.do_trans(transition)
@@ -98,6 +92,13 @@ class StateForm(STLForm):
             context.server.log_error(context)
             context.message = ERROR(unicode(excp.message, 'utf-8'))
             return
+
+        # Keep workflow history
+        if comments:
+            git_message = u'edit state: %s\n\n%s' % (transition, comments)
+        else:
+            git_message = u'edit state: %s' % transition
+        context.git_message = u'edit state: %s\n\n%s' % (transition, comments)
 
         # Ok
         context.message = INFO(u'Transition done.')
@@ -158,6 +159,28 @@ class WFTransition(Record):
 
 
 
+def parse_git_message(message):
+    """Parses a git message of the form:
+
+      edit state: <transition>
+
+      <comment>
+
+    Returns a tuple with the transition and comment.
+    """
+    n = len('edit state: ')
+    if message[:n] != 'edit state: ':
+        return None, None
+
+    m = message.find('\n')
+    # No comment
+    if m == -1:
+        return message[n:], u''
+    # With comment
+    return message[n:m], unicode(message[m+2:], 'utf-8')
+
+
+
 class WorkflowAware(BaseWorkflowAware):
 
     workflow = workflow
@@ -195,20 +218,11 @@ class WorkflowAware(BaseWorkflowAware):
         if state != 'public':
             return None
 
-        dates = []
-        for transition in self.get_property('wf_transition'):
-            date = transition.get('date')
-            # Be robust
-            if date is None:
-                continue
-            dates.append(date)
+        for revision in self.get_revisions():
+            if revision['message'].startswith('edit state: '):
+                return revision['committer'][1]
 
-        # Be robust
-        if not dates:
-            return None
-
-        dates.sort()
-        return dates[-1]
+        return None
 
 
     ########################################################################
