@@ -19,18 +19,20 @@
 # Import from the Standard Library
 from datetime import datetime
 from email.parser import HeaderParser
-from os import fstat, getpid, remove as remove_file
-from signal import signal, SIGINT
+from os import fstat
 from smtplib import SMTP, SMTPRecipientsRefused, SMTPResponseException
 from socket import gaierror
-from time import sleep
 from traceback import print_exc
 
 # Import from itools
 from itools.uri import get_absolute_reference2
 from itools import vfs
-from server import get_config
-from utils import is_pid_running
+
+# Import from ikaaro
+from config import get_config
+
+# Import from gobject
+from gobject import timeout_add
 
 
 
@@ -39,8 +41,8 @@ class Spool(object):
     def __init__(self, target):
         target = get_absolute_reference2(target)
         self.target = target
-        self.spool = target.resolve2('spool')
-        self._stop = False
+        spool = target.resolve2('spool')
+        self.spool = vfs.open(spool)
 
         # The SMTP host
         get_value = get_config(target).get_value
@@ -54,95 +56,71 @@ class Spool(object):
         self.error_log_path = '%s/log/spool_error' % target.path
         self.error_log = open(self.error_log_path, 'a+')
 
-
-    def get_pid(self):
-        try:
-            pid = open('%s/spool_pid' % self.target.path).read()
-        except IOError:
-            return None
-
-        pid = int(pid)
-        if is_pid_running(pid):
-            return pid
-        return None
+        # Set up the callback function, every 10s
+        timeout_add(10000, self.send_emails)
 
 
-    def start(self):
-        # Pid
-        open('%s/spool_pid' % self.target.path, 'w').write(str(getpid()))
-
-        # Graceful stop
-        signal(SIGINT, self.stop)
-
-        # Go
-        spool = vfs.open(self.spool)
+    def send_emails(self):
+        spool = self.spool
         smtp_host = self.smtp_host
         log = self.log_activity
-        while self._stop is False:
-            sleep(10)
-            # Find out emails to send
-            locks = set()
-            names = set()
-            for name in spool.get_names():
-                if name[-5:] == '.lock':
-                    locks.add(name[:-5])
-                else:
-                    names.add(name)
-            names.difference_update(locks)
-            # Is there something to send?
-            if len(names) == 0:
-                continue
 
-            # Open connection
+        # Find out emails to send
+        locks = set()
+        names = set()
+        for name in spool.get_names():
+            if name[-5:] == '.lock':
+                locks.add(name[:-5])
+            else:
+                names.add(name)
+        names.difference_update(locks)
+        # Is there something to send?
+        if len(names) == 0:
+            return True
+
+        # Open connection
+        try:
+            smtp = SMTP(smtp_host)
+            if self.smtp_login and self.smtp_password:
+                smtp.login(self.smtp_login, self.smtp_password)
+        except gaierror, excp:
+            log('%s: "%s"' % (excp[1], smtp_host))
+            return True
+        except:
+            self.log_error()
+            return True
+
+        # Send emails
+        for name in names:
             try:
-                smtp = SMTP(smtp_host)
-                if self.smtp_login and self.smtp_password:
-                    smtp.login(self.smtp_login, self.smtp_password)
-            except gaierror, excp:
-                log('%s: "%s"' % (excp[1], smtp_host))
-                continue
-            except:
-                self.log_error()
-                continue
-            # Send emails
-            for name in names:
-                try:
-                    # Send message
-                    message = spool.open(name).read()
-                    headers = HeaderParser().parsestr(message)
-                    subject = headers['subject']
-                    from_addr = headers['from']
-                    to_addr = headers['to']
-                    # Send message
-                    smtp.sendmail(from_addr, to_addr, message)
+                # Send message
+                message = spool.open(name).read()
+                headers = HeaderParser().parsestr(message)
+                subject = headers['subject']
+                from_addr = headers['from']
+                to_addr = headers['to']
+                # Send message
+                smtp.sendmail(from_addr, to_addr, message)
+                # Remove
+                spool.remove(name)
+                # Log
+                log('SENT "%s" from "%s" to "%s"' % (subject, from_addr,
+                    to_addr))
+            except (SMTPRecipientsRefused, SMTPResponseException):
+                    # the SMTP server returns an error code
+                    # or the recipient addresses has been refused
+                    # Log
+                    self.log_error()
                     # Remove
                     spool.remove(name)
-                    # Log
-                    log('SENT "%s" from "%s" to "%s"' % (subject, from_addr,
-                        to_addr))
-                except (SMTPRecipientsRefused, SMTPResponseException):
-                        # the SMTP server returns an error code
-                        # or the recipient addresses has been refused
-                        # Log
-                        self.log_error()
-                        # Remove
-                        spool.remove(name)
-                    # Other error ...
-                except:
-                    self.log_error()
-            # Close connection
-            smtp.quit()
+                # Other error ...
+            except:
+                self.log_error()
 
-        # Close files
-        self.activity_log.close()
-        self.error_log.close()
-        # Remove pid file
-        remove_file('%s/spool_pid' % self.target.path)
+        # Close connection
+        smtp.quit()
 
-
-    def stop(self, n, frame):
-        self._stop = True
-        print 'Shutting down the mail spool (gracefully)...'
+        return True
 
 
     def log_activity(self, msg):

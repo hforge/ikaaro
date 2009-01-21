@@ -28,34 +28,19 @@ from tempfile import mkstemp
 from xapian import DatabaseOpeningError
 
 # Import from itools
-from itools.datatypes import Boolean, Integer, String, Tokens
-from itools.handlers import ConfigFile
+from itools.datatypes import Boolean
 from itools.uri import get_absolute_reference2
 from itools import vfs
 from itools.web import Server as BaseServer
 
 # Import from ikaaro
+from config import get_config
 from database import get_database
 from metadata import Metadata
 from registry import get_resource_class
+from spool import Spool
 from utils import is_pid_running
 from website import WebSite
-
-
-
-class ServerConfig(ConfigFile):
-
-    schema = {
-        'modules': Tokens(default=()),
-        'listen-address': String(default=''),
-        'listen-port': Integer(default=8080),
-        'log-level': String(default='warning'),
-        'smtp-host': String(default=''),
-        'smtp-from': String(default=''),
-        'smtp-login': String(default=''),
-        'smtp-password': String(default=''),
-        'profile': Boolean(default=False),
-    }
 
 
 log_levels = {
@@ -76,11 +61,6 @@ def ask_confirmation(message, confirm=False):
     line = sys.stdin.readline()
     line = line.strip().lower()
     return line == 'y'
-
-
-
-def get_config(target):
-    return ServerConfig('%s/config.conf' % target)
 
 
 
@@ -176,6 +156,9 @@ class Server(BaseServer):
                             access_log=access_log, event_log=event_log,
                             log_level=log_level, pid_file='%s/pid' % path,
                             profile_path=profile_path)
+
+        # Initialize the spool
+        self.spool = Spool(target)
 
 
     #######################################################################

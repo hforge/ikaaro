@@ -25,7 +25,6 @@ import itools
 
 # Import from ikaaro
 from ikaaro.server import Server
-from ikaaro.spool import Spool
 from ikaaro.utils import kill
 
 
@@ -39,15 +38,6 @@ def stop(parser, options, target):
     else:
         kill(pid)
         print '[%s] Web Server shutting down (gracefully)...' % target
-    # Stop the Mail Spool
-    spool = Spool(target)
-    pid = spool.get_pid()
-    if pid is None:
-        print '[%s] Mail Spool not running.' % target
-    else:
-        kill(pid)
-        print '[%s] Mail Spool shutting down (gracefully)...' % target
-
 
 
 if __name__ == '__main__':
