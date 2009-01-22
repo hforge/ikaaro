@@ -23,7 +23,7 @@ from datetime import datetime
 from itools.datatypes import DateTime, String, Unicode
 from itools.gettext import MSG
 from itools.i18n import format_datetime
-from itools.web import STLForm, INFO, ERROR
+from itools.web import STLForm, INFO, ERROR, get_context
 from itools.workflow import Workflow, WorkflowAware as BaseWorkflowAware
 from itools.workflow import WorkflowError
 
@@ -82,23 +82,12 @@ class StateForm(STLForm):
 
 
     def action(self, resource, context, form):
-        transition = form['transition']
-        comments = form['comments']
-
-        # Change the state, through the itools.workflow way
         try:
-            resource.do_trans(transition)
+            resurce.make_transition(form['transition'], form['comments'])
         except WorkflowError, excp:
             context.server.log_error(context)
             context.message = ERROR(unicode(excp.message, 'utf-8'))
             return
-
-        # Keep workflow history
-        if comments:
-            git_message = u'edit state: %s\n\n%s' % (transition, comments)
-        else:
-            git_message = u'edit state: %s' % transition
-        context.git_message = u'edit state: %s\n\n%s' % (transition, comments)
 
         # Ok
         context.message = INFO(u'Transition done.')
@@ -149,13 +138,13 @@ workflow.set_initstate('private')
 
 
 
+# XXX Backwards compatibility with 0.50
 class WFTransition(Record):
-
     schema = {
-        'date': DateTime,
+        'date': String,
         'name': String,
         'user': String,
-        'comments': Unicode}
+        'comments': String}
 
 
 
@@ -183,6 +172,7 @@ def parse_git_message(message):
 
 class WorkflowAware(BaseWorkflowAware):
 
+    class_version = '20090122'
     workflow = workflow
 
 
@@ -193,6 +183,7 @@ class WorkflowAware(BaseWorkflowAware):
     def get_metadata_schema(cls):
         return {
             'state': String,
+            # XXX Backwards compatibility with 0.50
             'wf_transition': WFTransition,
             }
 
@@ -225,7 +216,30 @@ class WorkflowAware(BaseWorkflowAware):
         return None
 
 
+    def make_transition(self, transition, comments=u''):
+        # Change the state, with the itools.workflow API
+        self.do_trans(transition)
+
+        # Keep workflow history
+        if comments:
+            git_message = u'edit state: %s\n\n%s' % (transition, comments)
+        else:
+            git_message = u'edit state: %s' % transition
+        context = get_context()
+        context.git_message = u'edit state: %s\n\n%s' % (transition, comments)
+
+
     ########################################################################
     # User Interface
     ########################################################################
     edit_state = StateForm()
+
+
+    ########################################################################
+    # Update
+    ########################################################################
+    def update_20090122(self):
+        metadata = self.metadata
+        if metadata.has_property('wf_transition'):
+            metadata.del_property('wf_transition')
+

@@ -546,12 +546,7 @@ class Folder_BrowseContent(SearchForm):
             if item.get_statename() == 'public':
                 continue
             # Update workflow history
-            property = {'date': datetime.now(),
-                        'user': user.name,
-                        'name': transition,
-                        'comments': u""}
-            item.set_property('wf_transition', property)
-            item.do_trans(transition)
+            item.make_transition(transition)
 
         # Ok
         context.message = messages.MSG_PUBLISHED

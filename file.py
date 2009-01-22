@@ -58,7 +58,7 @@ class History(Record):
 class File(WorkflowAware, DBResource):
 
     class_id = 'file'
-    class_version = '20090112'
+    class_version = '20090122'
     class_title = MSG(u'File')
     class_description = MSG(
         u'Upload office documents, images, media files, etc.')
@@ -208,7 +208,9 @@ class File(WorkflowAware, DBResource):
     #######################################################################
     # Update
     #######################################################################
-    def update_20090112(self):
+    def update_20090122(self):
+        WorkflowAware.update_20090122(self)
+
         metadata = self.metadata
         if metadata.has_property('history'):
             metadata.del_property('history')
