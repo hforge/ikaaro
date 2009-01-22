@@ -179,13 +179,13 @@ class Tracker(Folder):
         products = self.get_resource('product').handler
 
         list_products = [{'id': '-1', 'modules': [], 'versions': []}]
-        for product_record in products.get_records():
+        for product_record in products.get_records_in_order():
             product = {'id': product_record.id}
             for element in ['module', 'version']:
                 elements = self.get_resource(element).handler
 
                 content = []
-                for record in elements.get_records():
+                for record in elements.get_records_in_order():
                     product_id = elements.get_record_value(record, 'product')
                     if product_id is None:
                         continue

@@ -219,6 +219,9 @@ class ContactForm(AutoForm):
     access = True
     title = MSG(u'Contact')
     submit_value = MSG(u'Send')
+    query_schema = {'to': String,
+                    'subject': Unicode,
+                    'body': Unicode}
 
     def get_schema(self, resource, context):
         return {
@@ -242,6 +245,10 @@ class ContactForm(AutoForm):
             user = context.user
             if user is not None:
                 return user.get_property('email')
+        else:
+            query = context.query
+            if name in query:
+                return query[name]
         return datatype.get_default()
 
 
