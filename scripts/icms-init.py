@@ -25,9 +25,7 @@ import sys
 # Import from itools
 import itools
 from itools.handlers import Database
-from itools.http import Request
 from itools.uri import get_absolute_reference
-from itools.web import Context, set_context
 from itools.xapian import CatalogAware
 
 # Import from ikaaro
@@ -35,6 +33,7 @@ from ikaaro.database import make_database
 from ikaaro.resource_ import DBResource
 from ikaaro.root import Root
 from ikaaro.utils import generate_password
+from ikaaro.server import get_fake_context
 
 
 template = (
@@ -131,9 +130,7 @@ def init(parser, options, target):
     database = make_database(target)
 
     # Create a fake context
-    request = Request()
-    context = Context(request)
-    set_context(context)
+    context = get_fake_context()
     context.database = database
 
     # Make the root

@@ -36,7 +36,6 @@ from text_views import CSV_View, CSV_AddRow, CSV_EditRow
 class Text(File):
 
     class_id = 'text'
-    class_version = '20090119'
     class_title = MSG(u'Plain Text')
     class_icon16 = 'icons/16x16/text.png'
     class_icon48 = 'icons/48x48/text.png'
@@ -69,12 +68,6 @@ class Text(File):
     edit = Text_Edit()
     upload = File_Upload()
     externaledit = Text_ExternalEdit()
-
-
-    #######################################################################
-    # Update
-    def update_20090119(self):
-        get_context().database.add_resource(self)
 
 
 

@@ -19,6 +19,7 @@ from itools import vfs
 
 
 
-def is_instance_up_to_date(target):
-    # Ok
-    return True
+def is_instance_up_to_date(root):
+    # 0.60 Check the Git archive has been initalized
+    revisions = root.get_revisions()
+    return len(revisions) > 0

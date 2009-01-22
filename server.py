@@ -29,9 +29,10 @@ from xapian import DatabaseOpeningError
 
 # Import from itools
 from itools.datatypes import Boolean
+from itools.http import Request
 from itools.uri import get_absolute_reference2
 from itools import vfs
-from itools.web import Server as BaseServer
+from itools.web import Server as BaseServer, Context, set_context
 
 # Import from ikaaro
 from config import get_config
@@ -97,6 +98,12 @@ def get_root(database, target):
     root.name = root.class_title.message.encode('utf_8')
     return root
 
+
+def get_fake_context():
+    request = Request()
+    context = Context(request)
+    set_context(context)
+    return context
 
 
 class Server(BaseServer):

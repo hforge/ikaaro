@@ -27,13 +27,10 @@ from itools.core import vmsize
 from itools.handlers import Database
 from itools import vfs
 from itools.xapian import make_catalog, CatalogAware
-from itools.web import Context
 from itools.i18n.accept import AcceptLanguage
-from itools.http import Request
 
 # Import from ikaaro
-from ikaaro.server import ask_confirmation
-from ikaaro.server import Server, get_pid
+from ikaaro.server import Server, ask_confirmation, get_pid, get_fake_context
 
 
 def update_catalog(parser, options, target):
@@ -69,7 +66,7 @@ def update_catalog(parser, options, target):
     root = server.root
 
     # Build a fake context
-    context = Context(Request())
+    context = get_fake_context()
     context.accept_language = AcceptLanguage()
     context.uri = None
     server.init_context(context)

@@ -18,49 +18,29 @@
 
 # Import from the Standard Library
 from optparse import OptionParser
-import sys
+from os import devnull
+from subprocess import call
+from sys import exit, stdout
 from traceback import print_exc
 
 # Import from itools
 import itools
-from itools.http import Request
 from itools import vfs
-from itools.web import set_context, Context
 
 # Import from ikaaro
 from ikaaro.resource_ import DBResource
-from ikaaro.server import Server, ask_confirmation
-from ikaaro.update import is_instance_up_to_date
+from ikaaro.server import Server, ask_confirmation, get_fake_context
 
 
-def update(parser, options, target):
-    folder = vfs.open(target)
-    confirm = options.confirm
+def abort():
+    print '*'
+    print '* Upgrade process not finished!'
+    print '*'
+    exit(0)
 
-    # Build the server object
-    server = Server(target)
-    database = server.database
-    root = server.root
 
-    #######################################################################
-    # STAGE 0: Specific upgrades
-    #######################################################################
 
-    if not is_instance_up_to_date(target):
-        raise NotImplementedError, 'upgrade code not yet implemented'
-
-    # The database
-    if not database.is_up_to_date():
-        message = 'Update the database (y/N)? '
-        if ask_confirmation(message, confirm) is False:
-            return
-        database.update()
-
-    #######################################################################
-    # STAGE 1: Find out the versions to upgrade
-    #######################################################################
-    print 'Please wait while we find out the versions to upgrade.'
-
+def find_versions_to_update(root):
     # Find out the versions to upgrade
     versions = set()
     for resource in root.traverse_resources():
@@ -79,53 +59,38 @@ def update(parser, options, target):
             print
             print '*'
             print '* ERROR: resource is newer than its class'
-            print '* %s <%s>' % (resource.get_abspath(), resource.__class__.__name__)
+            print '* %s <%s>' % (resource.get_abspath(),
+                                 resource.__class__.__name__)
             print '* %s > %s' % (obj_version, cls_version)
             print '*'
-            return
+            exit(1)
 
         next_versions = resource.get_next_versions()
         if not next_versions:
             continue
 
-        sys.stdout.write('.')
-        sys.stdout.flush()
+        stdout.write('.')
+        stdout.flush()
         for version in next_versions:
             versions.add(version)
 
     versions = list(versions)
     versions.sort()
+    return versions
 
-    if not versions:
-        print '*'
-        print '* The instance is up-to-date: nothing to do.'
-        print '*'
-        return
 
-    print
-    print '*'
-    print '* Versions to upgrade: %s' % ', '.join(versions)
-    print '*'
 
-    #######################################################################
-    # STAGE 2: General Upgrade code
-    #######################################################################
-    # Build a fake context
-    context = Context(Request())
-    context.server = server
-    set_context(context)
-
+def update_versions(target, database, root, versions, confirm):
+    """Update the database to the given versions.
+    """
     # Open the update log
     log = open('%s/log/update' % target, 'w')
 
     # Update
     for version in versions:
-        message = 'Upgrade to version %s (y/N)? ' % version
+        message = 'STAGE 1: Upgrade to version %s (y/N)? ' % version
         if ask_confirmation(message, confirm) is False:
-            print '*'
-            print '* WARNING: Upgrade process not finished.'
-            print '*'
-            return
+            abort()
         # Go ahead
         bad = 0
         for resource in root.traverse_resources():
@@ -147,8 +112,8 @@ def update(parser, options, target):
                 continue
 
             # Update
-            sys.stdout.write('.')
-            sys.stdout.flush()
+            stdout.write('.')
+            stdout.flush()
             try:
                 resource.update(version)
             except:
@@ -169,7 +134,64 @@ def update(parser, options, target):
                   % (bad, version)
             print '* Check the "%s/log/update" file.' % target
             print '*'
-            return
+            exit(1)
+
+
+
+def update(parser, options, target):
+    folder = vfs.open(target)
+    confirm = options.confirm
+
+    # Build the server object
+    server = Server(target)
+    database = server.database
+    root = server.root
+    # Build a fake context
+    context = get_fake_context()
+    server.init_context(context)
+
+    #######################################################################
+    # STAGE 0: Initialize '.git'
+    # XXX Specific to the migration from 0.50 to 0.60
+    #######################################################################
+    if not vfs.exists('%s/.git' % database.path):
+        message = 'STAGE 0: Add the Git achive (y/N)? '
+        if ask_confirmation(message, confirm) is False:
+            abort()
+        # Init
+        command = ['git', 'init']
+        with open(devnull) as null:
+            call(command, cwd=database.path, stdout=null)
+
+    #######################################################################
+    # STAGE 1: Find out the versions to upgrade
+    #######################################################################
+    print 'STAGE 1: Find out the versions to upgrade (may take a while).'
+    versions = find_versions_to_update(root)
+
+    if versions:
+        print
+        print 'STAGE 1: Versions to upgrade: %s.' % ', '.join(versions)
+        update_versions(target, database, root, versions, confirm)
+    else:
+        print 'STAGE 1: Nothing to do.'
+
+    #######################################################################
+    # STAGE 2: Commit to Git
+    # XXX Specific to the migration from 0.50 to 0.60
+    #######################################################################
+    revisions = root.get_revisions()
+    if len(revisions) == 0:
+        message = 'STAGE 2: Commit files to the Git Archive (y/N)? '
+        if ask_confirmation(message, confirm) is False:
+            abort()
+        # git add
+        for resource in root.traverse_resources():
+            if not isinstance(resource, DBResource):
+                continue
+            database.new_files.extend(resource.get_files_to_archive())
+        context.git_commit = 'Initial commit.'
+        database.save_changes()
 
     # It is Done
     print '*'

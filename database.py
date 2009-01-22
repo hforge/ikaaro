@@ -193,29 +193,6 @@ class Database(SafeDatabase):
         self.resources_changed.clear()
 
 
-    #######################################################################
-    # Update
-    #######################################################################
-    def is_up_to_date(self):
-        if not vfs.exists('%s/.git' % self.path):
-            return False
-
-        # Ok
-        return True
-
-
-    def update(self):
-        # Check the database
-        if not vfs.exists('%s/.git' % self.path):
-            # Init
-            command = ['git', 'init']
-            with open(devnull) as null:
-                call(command, cwd=self.path, stdout=null)
-
-        # Ok
-        return True
-
-
 
 def make_database(target):
     # Init git
