@@ -38,6 +38,7 @@ from resource_views import DBResource_Edit
 from user_views import User_ConfirmRegistration, User_EditAccount
 from user_views import User_EditPassword, User_EditPreferences, User_Profile
 from user_views import User_ResendConfirmation, User_Tasks
+from user_views import User_ChangePasswordForgotten
 from utils import crypt_password, generate_password
 from views import MessageView
 
@@ -157,7 +158,29 @@ class User(AccessControl, Folder):
             context.set_cookie('__ac', cookie, path='/', expires=expires)
 
 
+    ########################################################################
+    # Email: Register confirmation & Password forgotten
+    ########################################################################
+
+    confirmation_subject = MSG(u"Confirmation required")
+    confirmation_txt = MSG(u"To confirm your identity, click the link:"
+                           u"\n"
+                           u"\n $uri")
     def send_confirmation(self, context, email):
+        self.send_confirm_url(context, email, self.confirmation_subject,
+            self.confirmation_txt, ';confirm_registration')
+
+
+    forgotten_subject = MSG(u"Choose a new password")
+    forgotten_txt = MSG(u"To choose a new password, click the link:"
+                        u"\n"
+                        u"\n $uri")
+    def send_forgotten_password(self, context, email):
+        self.send_confirm_url(context, email, self.forgotten_subject,
+            self.forgotten_txt, ';change_password_forgotten')
+
+
+    def send_confirm_url(self, context, email, subject, text, view):
         # Set the confirmation key
         if self.has_property('user_must_confirm'):
             key = self.get_property('user_must_confirm')
@@ -167,21 +190,12 @@ class User(AccessControl, Folder):
 
         # Build the confirmation link
         confirm_url = deepcopy(context.uri)
-        path = '/users/%s/;confirm_registration' % self.name
+        path = '/users/%s/%s' % (self.name, view)
         confirm_url.path = Path(path)
         confirm_url.query = {'key': key, 'username': self.get_login_name()}
         confirm_url = str(confirm_url)
-
-        # Build the email
-        subject = MSG(u"Confirmation required").gettext()
-        body = MSG(
-            u"To confirm your identity click the link:\n"
-            u"\n"
-            u"  $confirm_url")
-        body = body.gettext(confirm_url=confirm_url)
-        # Send
-        context.root.send_email(email, subject, text=body)
-
+        text = text.gettext(uri=confirm_url)
+        context.root.send_email(email, subject.gettext(), text=text)
 
     ########################################################################
     # Access control
@@ -206,6 +220,7 @@ class User(AccessControl, Folder):
     #######################################################################
     resend_confirmation = User_ResendConfirmation()
     confirm_registration = User_ConfirmRegistration()
+    change_password_forgotten = User_ChangePasswordForgotten()
     profile = User_Profile()
     edit_account = User_EditAccount()
     edit_preferences = User_EditPreferences()

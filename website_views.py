@@ -27,7 +27,7 @@ from itools.gettext import MSG
 from itools.handlers import merge_dicts
 from itools.stl import stl
 from itools import vfs
-from itools.web import STLView, STLForm, INFO, ERROR
+from itools.web import STLView, INFO, ERROR
 from itools.xapian import PhraseQuery, OrQuery, AndQuery, TextField
 
 # Import from ikaaro
@@ -111,13 +111,18 @@ class NewWebSiteForm(NewInstanceForm):
 
 
 
-class ForgottenPasswordForm(STLForm):
+class ForgottenPasswordForm(AutoForm):
 
     access = True
     title = MSG(u'Forgotten password')
-    template = '/ui/website/forgotten_password_form.xml'
+    submit_value = MSG(u'Ok')
+
+    widgets = [
+        TextWidget('username', title=MSG(u'Type your email address')),
+        ]
+
     schema = {
-        'username': String(default=''),
+        'username': Email(default=''),
     }
 
 
@@ -143,7 +148,7 @@ class ForgottenPasswordForm(STLForm):
 
         # Send email of confirmation
         email = user.get_property('email')
-        user.send_confirmation(context, email)
+        user.send_forgotten_password(context, email)
 
         handler = resource.get_resource('/ui/website/forgotten_password.xml')
         return stl(handler)
