@@ -369,10 +369,11 @@ class DBResource(CatalogAware, IResource):
             except NotImplementedError:
                 pass
             except:
+                # FIXME Use a different logger
                 server.log_error(context)
-                log = "%s failed" % self.get_abspath()
-                server.event_log.write(log)
-                server.event_log.flush()
+#                log = "%s failed" % self.get_abspath()
+#               server.event_log.write(log)
+#               server.event_log.flush()
             else:
                 document['text'] = text
 
