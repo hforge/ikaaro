@@ -138,16 +138,6 @@ workflow.set_initstate('private')
 
 
 
-# XXX Backwards compatibility with 0.50
-class WFTransition(Record):
-    schema = {
-        'date': String,
-        'name': String,
-        'user': String,
-        'comments': String}
-
-
-
 def parse_git_message(message):
     """Parses a git message of the form:
 
@@ -181,6 +171,7 @@ class WorkflowAware(BaseWorkflowAware):
     ########################################################################
     @classmethod
     def get_metadata_schema(cls):
+        from obsolete import WFTransition
         return {
             'state': String,
             # XXX Backwards compatibility with 0.50

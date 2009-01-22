@@ -19,25 +19,15 @@
 from mimetypes import add_type
 
 # Import from itools
-from itools.core import freeze
-from itools.datatypes import DataType, String, Unicode, XMLContent
+from itools.datatypes import String, Unicode, XMLContent
 from itools.handlers import File, register_handler_class
 from itools.web import get_context
 from itools.xml import xml_uri, XMLParser, START_ELEMENT, END_ELEMENT, TEXT
 
 # Import from ikaaro
 from exceptions import ParserError
+from obsolete import Record
 from registry import get_resource_class
-
-
-
-class Record(DataType):
-
-    # Set your own default list to avoid sharing this instance
-    default = freeze([])
-    schema = {}
-
-    multiple = True
 
 
 

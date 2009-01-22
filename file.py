@@ -47,11 +47,6 @@ from file_views import Flash_View
 
 
 
-# XXX Backwards compatibility with 0.50
-class History(Record):
-    schema = {'date': String, 'user': String, 'size': String}
-
-
 ###########################################################################
 # Base File
 ###########################################################################
@@ -151,6 +146,7 @@ class File(WorkflowAware, DBResource):
     #######################################################################
     @classmethod
     def get_metadata_schema(cls):
+        from obsolete import History
         return merge_dicts(
             DBResource.get_metadata_schema(),
             WorkflowAware.get_metadata_schema(),
