@@ -215,7 +215,11 @@ function select_uri() {
 
 var Cookie = null;
 $(document).ready(function() {
-    Cookie = tinymce.util.Cookie;
+    try {
+        Cookie = tinymce.util.Cookie;
+    }
+    catch {
+    }
 });
 
 function text_small() {
