@@ -18,6 +18,7 @@
 from itools.csv import Property
 from itools.datatypes import String, Enumerate, Unicode, Integer
 from itools.gettext import MSG
+from itools.handlers import checkid
 from itools.uri import Path
 from itools.xml import XMLParser
 
@@ -216,18 +217,18 @@ class Menu_View(OrderedTable_View):
 
             names = parent.get_names()
             index = len(names) / 2
-            base = 'menu_'
-            name = '%s%03d' % (base, index)
+            base = 'menu '
+            name = checkid('%s%03d' % (base, index))
 
             while name in names:
                 index = index + 1
-                name = '%s%03d' % (base, index)
+                name = checkid('%s%03d' % (base, index))
 
             object = Menu.make_resource(Menu, parent, name)
 
             # update the parent record
-            handler.update_record(parent_id,
-                                           **{'child': name})
+            handler.update_record(parent_id, **{'child': name})
+            context.server.change_resource(resource)
 
         context.message = messages.MSG_NEW_RESOURCE
 
@@ -335,11 +336,17 @@ class Menu(OrderedTable):
         links = []
 
         for record in handler.get_records_in_order():
+            # Target resources
             path = handler.get_record_value(record, 'path')
             if path.startswith(('http://', 'https://')) or path.count(';'):
                 continue
             uri = base.resolve2(path)
             links.append(str(uri))
+            # Submenu resources
+            path = handler.get_record_value(record, 'child')
+            if path:
+                uri = base.resolve(path)
+                links.append(str(uri))
 
         return links
 
