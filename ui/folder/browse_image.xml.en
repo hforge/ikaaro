@@ -11,30 +11,30 @@
     });
   </script>
 
-  <table id="browse_list" class="${css}">
+  <table id="browse-list" class="${css}">
     <thead stl:if="columns">
       <tr>
         <stl:block stl:repeat="column columns">
           <!-- checkbox -->
           <th stl:if="column/is_checkbox" class="checkbox">
-            <label for="browse_list_select_all">Select All</label>
-            <input type="checkbox" id="browse_list_select_all"
+            <label for="browse-list-select-all">Select All</label>
+            <input type="checkbox" id="browse-list-select-all"
               title="Click to select/unselect all rows"
-              onclick="select_checkboxes('form_table', this.checked);" />
+              onclick="select_checkboxes('form-table', this.checked);" />
           </th>
           <!-- checkbox -->
           <th stl:if="not column/is_checkbox">
             <a stl:if="column/href" href="${column/href}"
-              class="sort_${column/order}">${column/title}</a>
+              class="sort-${column/order}">${column/title}</a>
           </th>
         </stl:block>
       </tr>
     </thead>
   </table>
 
-  <form action="" method="post" name="browse_list" id="form_table"
+  <form action="" method="post" name="browse_list" id="form-table"
     stl:omit-tag="not actions">
-    <div id="browse_image">
+    <div id="browse-image">
       <a href="../;preview_content?size=${size}&amp;width=${width}&amp;height=${height}"
         title="Back"><img src="/ui/icons/16x16/up.png" /></a>
       <div class="thumbnail size${size}" stl:repeat="row rows">
@@ -46,10 +46,10 @@
         <p>
           <!-- checkbox -->
           <stl:block stl:if="row/checkbox">
-            <input type="checkbox" id="id_${row/id}" name="ids"
+            <input type="checkbox" id="id-${row/id}" name="ids"
               value="${row/id}" checked="${row/checked}" class="checkbox" />
-            <label class="wf_${row/workflow_statename}"
-              for="id_${row/id}">${row/title_or_name}</label>
+            <label class="wf-${row/workflow_statename}"
+              for="id-${row/id}">${row/title_or_name}</label>
           </stl:block>
           <stl:block stl:if="not row/checkbox">
             <label>${row/title_or_name}</label>

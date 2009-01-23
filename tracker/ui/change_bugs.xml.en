@@ -36,7 +36,7 @@
   <tr>
     <td valign="top">
       <label for="product">Product:</label><br/>
-      <select name="change_product" id="product" class="tracker_select">
+      <select name="change_product" id="product" class="tracker-select">
         <option value="-1">Do not change</option>
         <option stl:repeat="item products" value="${item/id}"
           selected="${item/is_selected}">${item/title}</option>
@@ -44,7 +44,7 @@
     </td>
     <td valign="top">
       <label for="module">Module:</label><br/>
-      <select name="change_module" id="module" class="tracker_select">
+      <select name="change_module" id="module" class="tracker-select">
         <option value="-1">Do not change</option>
         <option value=""></option>
         <option stl:repeat="item modules" value="${item/id}"
@@ -53,7 +53,7 @@
     </td>
     <td valign="top">
       <label for="version">Version:</label><br/>
-      <select name="change_version" id="version" class="tracker_select">
+      <select name="change_version" id="version" class="tracker-select">
         <option value="-1">Do not change</option>
         <option value=""></option>
         <option stl:repeat="item versions" value="${item/id}"
@@ -64,7 +64,7 @@
   <tr>
     <td valign="top">
       <label for="type">Type:</label><br/>
-      <select name="change_type" id="type" class="tracker_select">
+      <select name="change_type" id="type" class="tracker-select">
         <option value="-1">Do not change</option>
         <option stl:repeat="item types" value="${item/id}"
           selected="${item/is_selected}">${item/title}</option>
@@ -72,7 +72,7 @@
     </td>
     <td valign="top">
       <label for="state">Status:</label><br/>
-      <select name="change_state" id="state" class="tracker_select">
+      <select name="change_state" id="state" class="tracker-select">
         <option value="-1">Do not change</option>
         <option stl:repeat="item states" value="${item/id}"
           selected="${item/is_selected}">${item/title}</option>
@@ -80,7 +80,7 @@
     </td>
     <td valign="top">
       <label for="priority">Priority:</label><br/>
-      <select name="change_priority" id="priority" class="tracker_select">
+      <select name="change_priority" id="priority" class="tracker-select">
         <option value="-1">Do not change</option>
         <option value=""></option>
         <option stl:repeat="item priorities" value="${item/id}"
@@ -90,9 +90,9 @@
   </tr>
   <tr>
     <td valign="top" colspan="3">
-      <label for="assigned_to">Assign To:</label><br/>
-      <select name="change_assigned_to" id="assigned_to"
-        class="tracker_select">
+      <label for="assigned-to">Assign To:</label><br/>
+      <select name="change-assigned-to" id="assigned-to"
+        class="tracker-select">
         <option value="do-not-change">Do not change</option>
         <option value=""></option>
         <option stl:repeat="item users" value="${item/id}"
@@ -109,7 +109,7 @@
   </tr>
   <tr>
     <td colspan="6">
-      <input type="submit" class="button_ok" value="Edit Issues" />
+      <input type="submit" class="button-ok" value="Edit Issues" />
     </td>
   </tr>
 </table>

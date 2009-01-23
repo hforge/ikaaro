@@ -26,7 +26,7 @@ class Button(object):
 
     access = False
     confirm = None
-    css = 'button_ok'
+    css = 'button-ok'
     name = None
     title = None
 
@@ -48,7 +48,7 @@ class RemoveButton(Button):
 
     access = 'is_allowed_to_remove'
     confirm = messages.MSG_DELETE_SELECTION
-    css = 'button_delete'
+    css = 'button-delete'
     name = 'remove'
     title = MSG(u'Remove')
 
@@ -57,7 +57,7 @@ class RemoveButton(Button):
 class RenameButton(Button):
 
     access = 'is_allowed_to_move'
-    css = 'button_rename'
+    css = 'button-rename'
     name = 'rename'
     title = MSG(u'Rename')
 
@@ -66,7 +66,7 @@ class RenameButton(Button):
 class CopyButton(Button):
 
     access = 'is_allowed_to_copy'
-    css = 'button_copy'
+    css = 'button-copy'
     name = 'copy'
     title = MSG(u'Copy')
 
@@ -75,7 +75,7 @@ class CopyButton(Button):
 class CutButton(Button):
 
     access = 'is_allowed_to_move'
-    css = 'button_cut'
+    css = 'button-cut'
     name = 'cut'
     title = MSG(u'Cut')
 
@@ -84,7 +84,7 @@ class CutButton(Button):
 class PasteButton(Button):
 
     access = 'is_allowed_to_move'
-    css = 'button_paste'
+    css = 'button-paste'
     name = 'paste'
     title = MSG(u'Paste')
 
@@ -102,7 +102,7 @@ class PasteButton(Button):
 class PublishButton(Button):
 
     access = 'is_allowed_to_publish'
-    css = 'button_publish'
+    css = 'button-publish'
     name = 'publish'
     title = MSG(u'Publish')
 

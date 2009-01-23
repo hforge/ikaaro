@@ -105,7 +105,7 @@
         <h3>Type the URL of an external resource</h3>
         <form>
           <input type="text" id="uri" name="uri" size="40" value="http://"/>
-          <input type="button" value="Add" class="button_ok"
+          <input type="button" value="Add" class="button-ok"
             onclick="select_element('${element_to_add}', $('#uri').val(), '');"/>
         </form>
       </div>
@@ -119,7 +119,7 @@
           <input type="hidden" name="mode" value="${mode}" />
           <input type="text" name="title" size="40" />
           <input type="hidden" name="name" value="" />
-          <input class="button_ok" type="submit" value="OK" name=";add_resource"/>
+          <input class="button-ok" type="submit" value="OK" name=";add_resource"/>
         </form>
       </div>
 
@@ -132,7 +132,7 @@
           <input type="hidden" name="mode" value="${mode}" />
           <input id="file" name="file" size="35" type="file"/>
           <br/>
-          <input class="button_upload" type="submit" value="Upload and Link"
+          <input class="button-upload" type="submit" value="Upload and Link"
             name=";upload"/>
         </form>
       </div>

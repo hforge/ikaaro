@@ -38,11 +38,11 @@ input {
  * itools.web.BaseForm
  *************************************************************************/
 
-.field_is_required {
+.field-is-required {
   font-style: italic;
 }
 
-.field_is_missing {
+.field-is-missing {
   color: #ff0000;
 }
 
@@ -50,87 +50,87 @@ input {
 /**************************************************************************
  * Buttons
  *************************************************************************/
-.button_ok {
+.button-ok {
   background-image: url(icons/16x16/ok.png);
   padding-left: 16px;
 }
 
-.button_cancel {
+.button-cancel {
   background-image: url(icons/16x16/cancel.png);
   padding-left: 16px;
 }
 
-.button_search {
+.button-search {
   background-image: url(icons/16x16/search.png);
   padding-left: 16px;
 }
 
-.button_calendar {
+.button-calendar {
   background-image: url(icons/16x16/calendar.png);
   padding-left: 16px;
 }
 
-.button_upload {
+.button-upload {
   background-image: url(icons/16x16/upload.png);
   padding-left: 16px;
 }
 
-.button_external {
+.button-external {
   background-image: url(icons/16x16/external.png);
   padding-left: 16px;
 }
 
-.button_rename {
+.button-rename {
   background-image: url(icons/16x16/rename.png);
   padding-left: 16px;
 }
 
-.button_delete {
+.button-delete {
   background-image: url(icons/16x16/delete.png);
   padding-left: 16px;
 }
 
-.button_copy {
+.button-copy {
   background-image: url(icons/16x16/copy.png);
   padding-left: 16px;
 }
 
-.button_cut {
+.button-cut {
   background-image: url(icons/16x16/cut.png);
   padding-left: 16px;
 }
 
-.button_paste {
+.button-paste {
   background-image: url(icons/16x16/paste.png);
   padding-left: 16px;
 }
 
-.button_translate {
+.button-translate {
   background-image: url(icons/16x16/languages.png);
   padding-left: 16px;
 }
 
-.button_compare {
+.button-compare {
   background-image: url(icons/16x16/compare.png);
   padding-left: 16px;
 }
 
-.button_add {
+.button-add {
   background-image: url(icons/16x16/add.png);
   padding-left: 16px;
 }
 
-.button_select_all {
+.button-select-all {
   background-image: url(icons/16x16/select_all.png);
   padding-left: 16px;
 }
 
-.button_select_none {
+.button-select-none {
   background-image: url(icons/16x16/select_none.png);
   padding-left: 16px;
 }
 
-.button_publish {
+.button-publish {
   background-image: url(icons/16x16/public.png);
   padding-left: 16px;
 }
@@ -230,21 +230,21 @@ input {
  * ui/generic/menu.xml.en
  *************************************************************************/
 
-.context_menu {
+.context-menu {
   font-size: 0.8em;
   padding-left: 8px;
 }
 
-.context_menu a,
-.context_menu a:link,
-.context_menu a:visited,
-.context_menu a:hover,
-.context_menu a:active {
+.context-menu a,
+.context-menu a:link,
+.context-menu a:visited,
+.context-menu a:hover,
+.context-menu a:active {
   text-decoration: none;
   color: #3465a4;
 }
 
-.context_menu label {
+.context-menu label {
   display: block;
   width: 205px;
   margin: 3px;
@@ -253,13 +253,13 @@ input {
   background-color: #c17d11;
 }
 
-.context_menu ul {
+.context-menu ul {
   margin: 3px 6px 10px 3px;
   list-style: none;
   padding: 3px;
 }
 
-.context_menu li {
+.context-menu li {
   margin: 3px;
   padding: 0;
   background-repeat: no-repeat;
@@ -277,7 +277,7 @@ input {
  * ui/user/profile.xml.en
  *************************************************************************/
 
-table.new_resource_thumb {
+table.new-resource-thumb {
   float: left;
   margin-bottom: 10px;
   width: 18em;
@@ -289,21 +289,21 @@ table.new_resource_thumb {
  * tracker/ui/view_tracker.xml.en
  *************************************************************************/
 
-#browse_list thead th {
+#browse-list thead th {
   padding: 6px;
   background-color: #d3d7cf;
   white-space: nowrap;
 }
 
-#browse_list thead th.checkbox {
+#browse-list thead th.checkbox {
   padding: 6px 3px;
 }
 
-#browse_list thead th.checkbox input {
+#browse-list thead th.checkbox input {
   background-color: #d3d7cf;
 }
 
-#browse_list tbody td {
+#browse-list tbody td {
   padding: 3px;
   vertical-align: top;
 }
@@ -313,19 +313,19 @@ table.new_resource_thumb {
  * ui/generic/browse_table.xml.en
  *************************************************************************/
 
-th a.sort_up {
+th a.sort-up {
   background: transparent url(icons/16x16/up.png) right top no-repeat;
   padding-right: 20px;
   text-decoration: none;
 }
 
-th a.sort_down {
+th a.sort-down {
   background: transparent url(icons/16x16/down.png) right top no-repeat;
   padding-right: 20px;
   text-decoration: none;
 }
 
-th a.sort_none {
+th a.sort-none {
   background: transparent url(icons/16x16/none.png) right top no-repeat;
   padding-right: 20px;
   text-decoration: none;
@@ -343,9 +343,9 @@ th a.sort_none {
  * ui/WorkflowAware_state.xml.en
  *************************************************************************/
 
-.wf_private { color: #c00; }
-.wf_pending { color: #f57900; }
-.wf_public { color: #4e9a06; }
+.wf-private { color: #c00; }
+.wf-pending { color: #f57900; }
+.wf-public { color: #4e9a06; }
 
 
 /**************************************************************************
@@ -356,11 +356,11 @@ th a.sort_none {
   margin: 3px 3px 6px;
 }
 
-.result_url, .result_type, .result_size {
+.result-url, .result-type, .result-size {
   font-size: 0.9em;
 }
 
-.result_url {
+.result-url {
   color: #008000;
 }
 
@@ -407,7 +407,7 @@ dl.thumb dd {
  * Used by views.build_menu
  *************************************************************************/
 
-.nav_active {
+.nav-active {
   font-weight: bold;
 }
 

@@ -11,7 +11,7 @@
     });
   </script>
 
-  <p id="image_toolbar">
+  <p id="image-toolbar">
     <a href="${parent_link}/;preview_content?size=${size}&amp;width=${width}&amp;height=${height}"
       title="Back"><img src="/ui/icons/16x16/up.png" /></a>
     <a stl:if="prev_link" href="${prev_link}/;view?size=${size}&amp;width=${width}&amp;height=${height}" title="Previous"><img

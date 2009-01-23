@@ -4,9 +4,9 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
-<div id="cal_monthly_view">
+<div id="cal-monthly-view">
   <div id="selector">
-    <a stl:if="today" href="${today}" class="cal_today">
+    <a stl:if="today" href="${today}" class="cal-today">
       Come back to today</a>
     <ul>
       <li>
@@ -42,9 +42,9 @@
       <td class="month">${week/month}</td>
       <td stl:repeat="day week/days" class="day">
         <span stl:if="not day/selected" class="bold">${day/nday}</span>
-        <span stl:if="day/selected" class="cal_day_selected">${day/nday}</span>
+        <span stl:if="day/selected" class="cal-day-selected">${day/nday}</span>
 
-        <a stl:if="day/url" class="add_event" href="${day/url}">
+        <a stl:if="day/url" class="add-event" href="${day/url}">
           <img width="16" height="16" src="${add_icon}" /></a>
 
         ${day/events}

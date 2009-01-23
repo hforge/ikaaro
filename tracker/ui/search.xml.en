@@ -36,7 +36,7 @@
             </label>
             <br/>
             <input type="text" name="text" id="text" size="30" value="${text}"
-              class="tracker_select" />
+              class="tracker-select" />
           </td>
           <td colspan="1">
             <label for="mtime">Modified since:</label><br/>
@@ -49,7 +49,7 @@
             <label for="product">Product:<stl:inline stl:if="is_admin"> (<a
               href="./product/;view">Edit</a>)</stl:inline></label>
             <br/>
-            <select name="product" id="product" class="tracker_select"
+            <select name="product" id="product" class="tracker-select"
               multiple="multiple" size="4">
               <option stl:repeat="item products" value="${item/name}"
                 selected="${item/selected}">${item/value}</option>
@@ -59,7 +59,7 @@
             <label for="module">Module:<stl:inline stl:if="is_admin"> (<a
               href="./module/;view">Edit</a>)</stl:inline></label>
             <br/>
-            <select name="module" id="module" class="tracker_select"
+            <select name="module" id="module" class="tracker-select"
               multiple="multiple" size="4">
               <option stl:repeat="item modules" value="${item/name}"
                 selected="${item/selected}">${item/value}</option>
@@ -69,7 +69,7 @@
             <label for="version">Version:<stl:inline stl:if="is_admin"> (<a
               href="./version/;view">Edit</a>)</stl:inline></label>
             <br/>
-            <select name="version" id="version" class="tracker_select"
+            <select name="version" id="version" class="tracker-select"
               multiple="multiple" size="4">
               <option stl:repeat="item versions" value="${item/name}"
                 selected="${item/selected}">${item/value}</option>
@@ -81,7 +81,7 @@
             <label for="type">Type:<stl:inline stl:if="is_admin"> (<a
               href="./type/;view">Edit</a>)</stl:inline></label>
             <br/>
-            <select name="type" id="type" class="tracker_select"
+            <select name="type" id="type" class="tracker-select"
               multiple="multiple" size="4">
               <option stl:repeat="item types" value="${item/name}"
                 selected="${item/selected}">${item/value}</option>
@@ -91,7 +91,7 @@
             <label for="state">Status:<stl:inline stl:if="is_admin"> (<a
               href="./state/;view">Edit</a>)</stl:inline></label>
             <br/>
-            <select name="state" id="state" class="tracker_select"
+            <select name="state" id="state" class="tracker-select"
               multiple="multiple" size="4">
               <option stl:repeat="item states" value="${item/name}"
                 selected="${item/selected}">${item/value}</option>
@@ -101,7 +101,7 @@
             <label for="priority">Priority:<stl:inline stl:if="is_admin"> (<a
               href="./priority/;view">Edit</a>)</stl:inline></label>
             <br/>
-            <select name="priority" id="priority" class="tracker_select"
+            <select name="priority" id="priority" class="tracker-select"
               multiple="multiple" size="4">
               <option stl:repeat="item priorities" value="${item/name}"
                 selected="${item/selected}">${item/value}</option>
@@ -110,11 +110,11 @@
         </tr>
         <tr>
           <td valign="top" colspan="3">
-            <label for="assigned_to">Assigned To:<stl:inline stl:if="is_admin">
+            <label for="assigned-to">Assigned To:<stl:inline stl:if="is_admin">
             (<a href="${manage_assigned}">Edit</a>)</stl:inline></label>
             <br/>
-            <select name="assigned_to" id="assigned_to"
-              class="tracker_select" multiple="multiple" size="4">
+            <select name="assigned_to" id="assigned-to"
+              class="tracker-select" multiple="multiple" size="4">
               <option stl:repeat="item assigned_to" value="${item/name}"
                 selected="${item/selected}">${item/value}</option>
             </select>
@@ -122,7 +122,7 @@
         </tr>
       </table>
       <br/>
-      <input type="submit" name=";view" class="button_search" value="Search" />
+      <input type="submit" name=";view" class="button-search" value="Search" />
     </form>
   </fieldset>
 

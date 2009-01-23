@@ -18,7 +18,7 @@
         </select>
       </dd>
     </dl>
-    <input type="submit" value="Change" class="button_ok"/>
+    <input type="submit" value="Change" class="button-ok"/>
   </fieldset>
 </form>
 

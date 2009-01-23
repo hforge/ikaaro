@@ -4,9 +4,9 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
-<div id="cal_weekly_view">
+<div id="cal-weekly-view">
   <div id="selector">
-    <a stl:if="today" href="${today}" class="cal_today">
+    <a stl:if="today" href="${today}" class="cal-today">
       Come back to today</a>
     <ul>
       <li>
@@ -47,7 +47,7 @@
 
           <div stl:if="cell/free">
             <td colspan="${cell/colspan}" class="free" valign="top">
-              <a stl:if="cell/newurl" class="add_event" href="${cell/newurl}">
+              <a stl:if="cell/newurl" class="add-event" href="${cell/newurl}">
                 <img width="16" height="16" src="${add_icon}" />
               </a>
               <div>&nbsp;</div>
@@ -58,7 +58,7 @@
     </tr>
 
   <!-- FULL DAYS SPECIAL BEHAVIOUR -->
-    <tr stl:if="timetable_data/full_day_events" id="full_day_events">
+    <tr stl:if="timetable_data/full_day_events" id="full-day-events">
       <th class="time">Full day</th>
       <td valign="top" colspan="${item/width}"
           stl:repeat="item timetable_data/full_day_events">

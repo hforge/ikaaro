@@ -4,7 +4,7 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
-<div class="context_menu">
+<div class="context-menu">
   <label>${title}</label>
   <form action=";remember_search" method="post"
     style="margin: 4px 0px 0px 5px;">
@@ -14,12 +14,12 @@
       value="${item/value}" />
     <input type="text" name="search_title" value="${search_title}" size="18"
       style="width: 73%" />
-    <input type="submit" class="button_ok" value="OK" />
+    <input type="submit" class="button-ok" value="OK" />
   </form>
 
   <form action=";forget_search" method="post" stl:if="search_name">
     <input type="hidden" name="search_name" value="${search_name}" />
-    <input type="submit" class="button_delete" value="Forget this Search"
+    <input type="submit" class="button-delete" value="Forget this Search"
       onclick="return confirm('Are you sure you want to forget this search?');"
       />
   </form>

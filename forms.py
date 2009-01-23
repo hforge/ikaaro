@@ -228,16 +228,16 @@ class BooleanCheckBox(Widget):
 class BooleanRadio(Widget):
 
     template = list(XMLParser("""
-        <label for="${name}_yes">${labels/yes}</label>
-        <input id="${name}_yes" name="${name}" type="radio" value="1"
+        <label for="${name}-yes">${labels/yes}</label>
+        <input id="${name}-yes" name="${name}" type="radio" value="1"
           checked="checked" stl:if="is_yes"/>
-        <input id="${name}_yes" name="${name}" type="radio" value="1"
+        <input id="${name}-yes" name="${name}" type="radio" value="1"
           stl:if="not is_yes"/>
 
-        <label for="${name}_no">${labels/no}</label>
-        <input id="${name}_no" name="${name}" type="radio" value="0"
+        <label for="${name}-no">${labels/no}</label>
+        <input id="${name}-no" name="${name}" type="radio" value="0"
           checked="checked" stl:if="not is_yes"/>
-        <input id="${name}_no" name="${name}" type="radio" value="0"
+        <input id="${name}-no" name="${name}" type="radio" value="0"
           stl:if="is_yes"/>
         """, stl_namespaces))
 
@@ -290,10 +290,10 @@ class SelectRadio(Widget):
           stl:if="not none_selected"/>
         <br/>
         <stl:block stl:repeat="option options">
-          <input type="radio" id="${name}_${option/name}" name="${name}"
+          <input type="radio" id="${name}-${option/name}" name="${name}"
             value="${option/name}" checked="checked"
             stl:if="option/selected"/>
-          <input type="radio" id="${name}_${option/name}" name="${name}"
+          <input type="radio" id="${name}-${option/name}" name="${name}"
             value="${option/name}" stl:if="not option/selected"/>
           <label for="${name}_${option/name}">${option/value}</label><br/>
         </stl:block>
@@ -301,7 +301,7 @@ class SelectRadio(Widget):
 
     template_multiple = list(XMLParser("""
         <stl:block stl:repeat="option options">
-          <input type="checkbox" name="${name}" id="${name}_${option/name}"
+          <input type="checkbox" name="${name}" id="${name}-${option/name}"
             value="${option/name}" checked="${option/selected}" />
           <label for="${name}_${option/name}">${option/value}</label><br/>
         </stl:block>
@@ -340,7 +340,7 @@ class DateWidget(Widget):
     template = list(XMLParser("""
         <input type="text" name="${name}" value="${value}" id="${name}"
           size="${size}"/>
-        <input id="trigger_date_${name}" type="button" value="..."
+        <input id="trigger-date-${name}" type="button" value="..."
           name="trigger_date_${name}" class="${class}" />
         <script language="javascript">
           Calendar.setup({inputField: "${name}", ifFormat: "${format}",
@@ -350,12 +350,12 @@ class DateWidget(Widget):
         """, stl_namespaces))
 
     template_multiple = list(XMLParser("""
-        <table class="table_calendar">
+        <table class="table-calendar">
           <tr>
             <td>
               <textarea rows="5" cols="25" name="${name}" id="${name}"
                 >${value}</textarea>
-              <input type="button" value="update" id="btn_blur_${name}"
+              <input type="button" value="update" id="btn-blur-${name}"
                 onclick="tableFlatOuputOnBlur(elt_${name}, cal_${name});" />
             </td>
             <td>
@@ -417,11 +417,11 @@ class PathSelectorWidget(TextWidget):
 
     template = list(XMLParser(
     """
-    <input type="text" id="selector_${name}" size="${size}" name="${name}"
+    <input type="text" id="selector-${name}" size="${size}" name="${name}"
       value="${value}" />
-    <input id="selector_button_${name}" type="button" value="..."
+    <input id="selector-button-${name}" type="button" value="..."
       name="selector_button_${name}"
-      onclick="popup(';add_link?target_id=selector_${name}&amp;mode=input', 620, 300);"/>
+      onclick="popup(';add_link?target_id=selector-${name}&amp;mode=input', 620, 300);"/>
     """, stl_namespaces))
 
 
@@ -430,11 +430,11 @@ class ImageSelectorWidget(TextWidget):
 
     template = list(XMLParser(
     """
-    <input type="text" id="selector_${name}" size="${size}" name="${name}"
+    <input type="text" id="selector-${name}" size="${size}" name="${name}"
       value="${value}" />
-    <input id="selector_button_${name}" type="button" value="..."
+    <input id="selector-button-${name}" type="button" value="..."
       name="selector_button_${name}"
-      onclick="popup(';add_image?target_id=selector_${name}&amp;mode=input', 620, 300);" />
+      onclick="popup(';add_image?target_id=selector-${name}&amp;mode=input', 620, 300);" />
     <br/>
     <img src="${value}/;thumb?width=128&amp;height=128" stl:if="value"/>
     """, stl_namespaces))
@@ -552,7 +552,7 @@ class AutoForm(STLForm):
     required_msg = None
     template = '/ui/auto_form.xml'
     submit_value = MSG(u'Save')
-    submit_class = 'button_ok'
+    submit_class = 'button-ok'
 
 
     def get_widgets(self, resource, context):
@@ -569,7 +569,7 @@ class AutoForm(STLForm):
         required_msg = self.required_msg
         if required_msg is None:
             required_msg = MSG(
-                u'The <span class="field_is_required">emphasized</span> fields'
+                u'The <span class="field-is-required">emphasized</span> fields'
                 u' are required.')
         required_msg = required_msg.gettext()
         required_msg = required_msg.encode('utf-8')

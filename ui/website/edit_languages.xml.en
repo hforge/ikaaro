@@ -7,7 +7,7 @@
   <!-- Edit Languages -->
   <fieldset>
     <legend>Edit the active languages</legend>
-    <form action="" method="post" id="browse_list">
+    <form action="" method="post" id="browse-list">
       <table summary="Language settings">
         <thead>
           <tr>
@@ -34,8 +34,8 @@
       </table>
       <p>
         <input type="submit" name=";change_default_language"
-          value="Change default" class="button_ok"/>
-        <input type="submit" name=";remove_languages" class="button_delete"
+          value="Change default" class="button-ok"/>
+        <input type="submit" name=";remove_languages" class="button-delete"
           value="Remove" />
       </p>
     </form>
@@ -47,12 +47,12 @@
   <fieldset>
     <legend>Add another language</legend>
     <form action="" method="post">
-      <select name="code" id="new_language">
+      <select name="code" id="new-language">
         <option value="">Choose a language</option>
         <option stl:repeat="language not_active_languages"
           value="${language/code}">${language/name}</option>
       </select>
-      <input type="submit" name=";add_language" value="Add" class="button_ok"/>
+      <input type="submit" name=";add_language" value="Add" class="button-ok"/>
     </form>
   </fieldset>
 

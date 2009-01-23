@@ -217,7 +217,7 @@ class Tracker_AddIssue(STLForm):
 
 
     def get_namespace(self, resource, context):
-        context.styles.append('/ui/tracker/tracker.css')
+        context.styles.append('/ui/tracker/style.css')
         context.scripts.append('/ui/tracker/tracker.js')
 
         namespace =  self.build_namespace(resource, context)
@@ -293,7 +293,7 @@ class Tracker_View(BrowseForm):
 
     def get_namespace(self, resource, context):
         # Set Style
-        context.styles.append('/ui/tracker/tracker.css')
+        context.styles.append('/ui/tracker/style.css')
 
         # Default table namespace
         namespace = BrowseForm.get_namespace(self, resource, context)
@@ -391,7 +391,7 @@ class Tracker_Search(BaseSearchForm, Tracker_View):
 
     def get_search_namespace(self, resource, context):
         # Set Style & JS
-        context.styles.append('/ui/tracker/tracker.css')
+        context.styles.append('/ui/tracker/style.css')
         context.scripts.append('/ui/tracker/tracker.js')
 
         # Search Form

@@ -4,7 +4,7 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
-<form action=";export_to_text" method="GET" id="form_table">
+<form action=";export_to_text" method="GET" id="form-table">
   <stl:block stl:repeat="param search_parameters">${param}</stl:block>
 
   ${batch}
@@ -18,7 +18,7 @@
         <label for="${column/name}">${column/title}</label>
       &nbsp;
     </stl:block>
-    <input type="submit" class="button_ok" value="Update text export" />
+    <input type="submit" class="button-ok" value="Update text export" />
   </fieldset>
   <br/>
   <div style="height: 200px; border: 1px solid #9FB7D4; overflow: auto">

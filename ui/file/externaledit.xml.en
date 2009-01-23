@@ -22,7 +22,7 @@
   </ul>
 
   <form action=";external_edit" method="get">
-    <input type="submit" value="External Editor..." class="button_external"/>
+    <input type="submit" value="External Editor..." class="button-external"/>
   </form>
 
 </stl:block>

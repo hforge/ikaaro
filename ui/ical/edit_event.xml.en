@@ -34,9 +34,9 @@
       <td>
         <input type="text" name="dtstart" id="dtstart" size="10"
           maxlength="10" value="${dtstart}" />
-        <input type="button" id="trigger_dtstart" value="..." />
+        <input type="button" id="trigger-dtstart" value="..." />
         &nbsp;
-        <input type="text" name="dtstart_time" id="dtstart_time" size="5"
+        <input type="text" name="dtstart_time" id="dtstart-time" size="5"
           maxlength="5" value="${dtstart_time}" />
       </td>
     </tr>
@@ -45,9 +45,9 @@
       <td>
         <input type="text" name="dtend" id="dtend" size="10"
           maxlength="10" value="${dtend}" />
-        <input type="button" id="trigger_dtend" value="..." />
+        <input type="button" id="trigger-dtend" value="..." />
         &nbsp;
-        <input type="text" name="dtend_time" id="dtend_time" size="5"
+        <input type="text" name="dtend_time" id="dtend-time" size="5"
           maxlength="5" value="${dtend_time}" />
       </td>
     </tr>
@@ -127,20 +127,20 @@
   </table>
 
   <p stl:if="allowed">
-     <input type="submit" name=";edit_event" value="OK" class="button_ok"/>
+     <input type="submit" name=";edit_event" value="OK" class="button-ok"/>
      <input stl:if="remove" type="submit" name=";remove_event"
-       value="Definitely remove" class="button_delete" />
+       value="Definitely remove" class="button-delete" />
      <input stl:if="not remove" type="submit" name=";cancel"
-       value="Cancel" class="button_cancel" />
+       value="Cancel" class="button-cancel" />
   </p>
 
   <script language="javascript">
   $("#SUMMARY").focus();
 
   Calendar.setup({inputField: "dtstart", ifFormat: "%Y-%m-%d",
-    button: "trigger_dtstart"});
+    button: "trigger-dtstart"});
   Calendar.setup({inputField: "dtend", ifFormat: "%Y-%m-%d",
-    button: "trigger_dtend"});
+    button: "trigger-dtend"});
   </script>
 </form>
 

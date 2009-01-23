@@ -8,16 +8,16 @@
   <fieldset>
     <legend>Edit Preferences</legend>
     <dl>
-      <dt><label for="user_language">Preferred Language</label></dt>
+      <dt><label for="user-language">Preferred Language</label></dt>
       <dd>
-        <select id="user_language" name="user_language">
+        <select id="user-language" name="user_language">
           <option>-- not defined --</option>
           <option stl:repeat="language languages" value="${language/code}"
             selected="${language/is_selected}">${language/name}</option>
         </select>
       </dd>
     </dl>
-    <input type="submit" value="Save Changes" class="button_ok" />
+    <input type="submit" value="Save Changes" class="button-ok" />
   </fieldset>
 </form>
 

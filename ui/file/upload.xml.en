@@ -17,7 +17,7 @@
           <input type="file" id="file" name="file" size="35" />
         </dd>
       </dl>
-      <input type="submit" value="Replace" class="button_upload"/>
+      <input type="submit" value="Replace" class="button-upload"/>
     </fieldset>
   </form>
 

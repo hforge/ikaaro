@@ -4,7 +4,7 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
-<form action=";export_to_csv" method="GET" id="form_table">
+<form action=";export_to_csv" method="GET" id="form-table">
   <stl:block stl:repeat="param search_parameters">${param}</stl:block>
 
   ${batch}
@@ -13,17 +13,17 @@
   <fieldset>
     <legend>Export to CSV</legend>
     Please select encoding:<br/><br/>
-    <input type="radio" name="editor" id="editor_oo" value="oo" checked="on" />
-    <label for="editor_oo">
+    <input type="radio" name="editor" id="editor-oo" value="oo" checked="on" />
+    <label for="editor-oo">
       For OpenOffice (Encoding: UTF-8, Separator: ",")
     </label>
     <br/>
-    <input type="radio" name="editor" id="editor_excel" value="excel" />
-    <label for="editor_excel">
+    <input type="radio" name="editor" id="editor-excel" value="excel" />
+    <label for="editor-excel">
       For Excel (Encoding: CP1252, Separator: ";")
     </label>
     <br/><br/>
-    <input type="submit" class="button_ok" value="Export" />
+    <input type="submit" class="button-ok" value="Export" />
   </fieldset>
 </form>
 

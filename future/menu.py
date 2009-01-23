@@ -59,7 +59,7 @@ class ChildButton(Button):
     access = 'is_allowed_to_edit'
     name = 'add_child'
     title = MSG(u'Add Child')
-    css = 'button_add'
+    css = 'button-add'
 
 
 
@@ -138,7 +138,7 @@ class Menu_View(OrderedTable_View):
             path = context.get_link(item_resource)
             # TODO Include the template in the base table
             state = ('<a href="%s/;edit_state" class="workflow">'
-                     '<strong class="wf_%s">%s</strong>'
+                     '<strong class="wf-%s">%s</strong>'
                      '</a>') % (path, statename, msg)
             return XMLParser(state)
 

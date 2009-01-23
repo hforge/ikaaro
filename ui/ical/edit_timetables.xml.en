@@ -4,7 +4,7 @@
 
 
 
-<form id="edit_timetables" action=";edit_timetables" method="post">
+<form id="edit-timetables" action=";edit_timetables" method="post">
   <fieldset>
     <legend>Edit the timetable grid</legend>
     <p>
@@ -34,14 +34,14 @@
         <td style="padding-left: 10px;">
           to <input type="text" name="new_end" value="--:--" size="5"
             maxlength="5" />
-          <input type="submit" name=";add" value="Add" class="button_add" />
+          <input type="submit" name=";add" value="Add" class="button-add" />
         </td>
       </tr>
     </table>
 
     <br/>
-    <input type="submit" name=";remove" value="Remove" class="button_delete" />
-    <input type="submit" name=";update" value="Update" class="button_ok" />
+    <input type="submit" name=";remove" value="Remove" class="button-delete" />
+    <input type="submit" name=";update" value="Update" class="button-ok" />
   </fieldset>
 </form>
 

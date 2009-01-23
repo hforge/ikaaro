@@ -16,12 +16,12 @@
     <input type="text" name="search_term" size="35" value="${search_term}" />
     <!-- SubFolders -->
     &nbsp;
-    <input type="checkbox" name="search_subfolders" id="search_subfolders"
+    <input type="checkbox" name="search_subfolders" id="search-subfolders"
       checked="${search_subfolders}" value="1" /><label
-      for="search_subfolders">Search subfolders</label>
+      for="search-subfolders">Search subfolders</label>
     <!-- OK -->
     &nbsp; &nbsp;
-    <input type="submit" value="OK" class="button_search"/>
+    <input type="submit" value="OK" class="button-search"/>
   </fieldset>
 </form>
 

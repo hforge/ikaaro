@@ -42,7 +42,7 @@
       <tr>
         <td valign="top">
           <label for="product" class="${product/class}">Product (mandatory):</label><br/>
-          <select name="product" id="product" class="tracker_select">
+          <select name="product" id="product" class="tracker-select">
             <option value="-1"></option>
             <option stl:repeat="item product/value" value="${item/name}"
               selected="${item/selected}">${item/value}</option>
@@ -50,7 +50,7 @@
         </td>
         <td valign="top">
           <label for="module" class="${module/class}">Module:</label><br/>
-          <select name="module" id="module" class="tracker_select">
+          <select name="module" id="module" class="tracker-select">
             <option value=""></option>
             <option stl:repeat="item module/value" value="${item/name}"
               selected="${item/selected}">${item/value}</option>
@@ -58,7 +58,7 @@
         </td>
         <td valign="top">
           <label for="version" class="${version/class}">Version:</label><br/>
-          <select name="version" id="version" class="tracker_select">
+          <select name="version" id="version" class="tracker-select">
             <option value=""></option>
             <option stl:repeat="item version/value" value="${item/name}"
               selected="${item/selected}">${item/value}</option>
@@ -68,7 +68,7 @@
       <tr>
         <td valign="top">
           <label for="type" class="${type/class}">Type (mandatory):</label><br/>
-          <select name="type" id="type" class="tracker_select">
+          <select name="type" id="type" class="tracker-select">
             <option value=""></option>
             <option stl:repeat="item type/value" value="${item/name}"
               selected="${item/selected}">${item/value}</option>
@@ -76,7 +76,7 @@
         </td>
         <td valign="top">
           <label for="state" class="${state/class}">Status (mandatory):</label><br/>
-          <select name="state" id="state" class="tracker_select">
+          <select name="state" id="state" class="tracker-select">
             <option value=""></option>
             <option stl:repeat="item state/value" value="${item/name}"
               selected="${item/selected}">${item/value}</option>
@@ -84,7 +84,7 @@
         </td>
         <td valign="top">
           <label for="priority" class="${priority/class}">Priority:</label><br/>
-          <select name="priority" id="priority" class="tracker_select">
+          <select name="priority" id="priority" class="tracker-select">
             <option value=""></option>
             <option stl:repeat="item priority/value" value="${item/name}"
               selected="${item/selected}">${item/value}</option>
@@ -93,31 +93,31 @@
       </tr>
       <tr>
         <td valign="top">
-          <label for="assigned_to" class="${assigned_to/class}">Assign To:</label><br/>
-          <select name="assigned_to" id="assigned_to" class="tracker_select">
+          <label for="assigned-to" class="${assigned_to/class}">Assign To:</label><br/>
+          <select name="assigned_to" id="assigned-to" class="tracker-select">
             <option value=""></option>
             <option stl:repeat="item assigned_to/value" value="${item/name}"
               selected="${item/selected}">${item/value}</option>
           </select>
         </td>
         <td valign="top">
-          <label for="cc_add" class="${cc_add/class}">Add CC:</label><br/>
-          <select name="cc_add" id="cc_add" class="tracker_select"
+          <label for="cc-add" class="${cc_add/class}">Add CC:</label><br/>
+          <select name="cc_add" id="cc-add" class="tracker-select"
             multiple="multiple" size="5">
             <option stl:repeat="item cc_add/value" value="${item/name}"
               selected="${item/selected}">${item/value}</option>
           </select>
         </td>
         <td valign="top">
-          <label for="cc_list" class="${cc_list/class}">CC:</label><br/>
-          <select name="cc_list" id="cc_list" class="tracker_select"
+          <label for="cc-list" class="${cc_list/class}">CC:</label><br/>
+          <select name="cc_list" id="cc-list" class="tracker-select"
             multiple="multiple" size="4">
             <option stl:repeat="item cc_list/value" value="${item/name}"
               selected="${item/selected}">${item/value}</option>
           </select>
           <input type="checkbox" name="cc_remove" value="1"
             checked="${cc_remove}" />
-          <label for="cc_remove">Remove selected CCs</label>
+          <label for="cc-remove">Remove selected CCs</label>
         </td>
       </tr>
       <tr>
@@ -136,7 +136,7 @@
       </tr>
       <tr>
         <td colspan="2">
-          <input type="submit" class="button_ok" value="Edit" />
+          <input type="submit" class="button-ok" value="Edit" />
         </td>
       </tr>
     </table>
@@ -146,7 +146,7 @@
 <br/>
 <stl:block stl:repeat="comment comments">
   <table width="100%" border="0" cellpadding="0" cellspacing="0">
-    <tr class="tracker_issue_comment_title">
+    <tr class="tracker-issue-comment-title">
       <td><a name="c${comment/number}"/></td>
       <td>Comment <a href="#c${comment/number}">${comment/number}</a></td>
       <td>${comment/user}</td>

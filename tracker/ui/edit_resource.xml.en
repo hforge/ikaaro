@@ -12,7 +12,7 @@
       <tr>
         <td valign="top">
           <label for="resource">Resource:</label><br/>
-          <select name="resource" id="resource" class="tracker_select">
+          <select name="resource" id="resource" class="tracker-select">
             <option stl:repeat="item users" value="${item/id}"
               selected="${item/is_selected}">${item/title}</option>
           </select>
@@ -21,7 +21,7 @@
           <label for="dtstart">Start:</label><br/>
           <input type="text" name="dtstart" value="${d_start}" id="dtstart"
             size="10" />
-          <input id="trigger_dtstart" type="button" value="..."
+          <input id="trigger-dtstart" type="button" value="..."
             name="trigger_dtstart"/>
           <br />
           <input type="text" name="tstart" value="${t_start}" id="tstart"
@@ -31,11 +31,11 @@
           <label for="dtend">End:</label><br/>
           <input type="text" name="dtend" value="${d_end}" id="dtend"
             size="10" />
-          <input id="trigger_dtend" type="button" value="..."
+          <input id="trigger-dtend" type="button" value="..."
             name="trigger_dtend"/>
           &nbsp;&nbsp;
-          <select name="time_select" id="time_select"
-            onchange="update_time('time_select')">
+          <select name="time_select" id="time-select"
+            onchange="update_time('time-select')">
             <option value=""></option>
             <option stl:repeat="option time_select" value="${option/name}"
               >${option/start} - ${option/end}</option>
@@ -53,9 +53,9 @@
         </td>
       </tr>
     </table>
-    <input type="submit" name=";add" class="button_ok" value="Assign"
+    <input type="submit" name=";add" class="button-ok" value="Assign"
       stl:if="not id" />
-    <input type="submit" name=";edit" class="button_ok" value="Save Changes"
+    <input type="submit" name=";edit" class="button-ok" value="Save Changes"
       stl:if="id" />
   </fieldset>
 </form>
@@ -63,9 +63,9 @@
 
 <script language="javascript">
 Calendar.setup({inputField: "dtstart", ifFormat: "%Y-%m-%d",
-  button: "trigger_dtstart"});
+  button: "trigger-dtstart"});
 Calendar.setup({inputField: "dtend", ifFormat: "%Y-%m-%d",
-  button: "trigger_dtend"});
+  button: "trigger-dtend"});
 
 function update_time(name){
   var elt = document.getElementById(name);

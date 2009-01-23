@@ -8,7 +8,7 @@
   The user is not active, (s)he has not confirmed registration.
   </p>
 
-  <table stl:repeat="item items" class="new_resource_thumb">
+  <table stl:repeat="item items" class="new-resource-thumb">
     <tr>
       <td valign="top" style="width: 48px">
         <a href="${item/url}"><img alt="" src="${item/icon}" /></a>

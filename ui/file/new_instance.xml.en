@@ -19,7 +19,7 @@
         <input type="file" id="file" name="file" size="35" />
       </dd>
     </dl>
-    <input type="submit" value="Upload" class="button_ok" />
+    <input type="submit" value="Upload" class="button-ok" />
   </fieldset>
 </form>
 

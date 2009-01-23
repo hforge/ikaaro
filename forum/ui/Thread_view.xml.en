@@ -5,16 +5,16 @@
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
   <form action="." method="post">
-    <table id="forum_message_list" width="100%">
+    <table id="forum-message-list" width="100%">
       <colgroup>
         <col width="20%" />
         <col width="80%" />
       </colgroup>
       <tbody>
         <tr stl:repeat="message messages" class="${repeat/message/even}">
-          <td valign="top" class="forum_message_info">
-            <p class="forum_message_author">${message/author}</p>
-            <p class="forum_message_date">${message/mtime}</p>
+          <td valign="top" class="forum-message-info">
+            <p class="forum-message-author">${message/author}</p>
+            <p class="forum-message-date">${message/mtime}</p>
             <stl:block stl:if="editable">
               <a href="${message/link}/;edit">Edit</a>
               <stl:block stl:if="not repeat/message/start">
@@ -23,14 +23,14 @@
               </stl:block>
             </stl:block>
           </td>
-          <td valign="top" class="forum_message_body">
+          <td valign="top" class="forum-message-body">
             <p>${message/body}</p>
           </td>
         </tr>
       </tbody>
     </table>
     <p stl:if="editable">
-      <input type="submit" name=";remove" value="Remove" class="button_delete"
+      <input type="submit" name=";remove" value="Remove" class="button-delete"
         onclick="return confirm('${remove_message}');" />
     </p>
   </form>
@@ -41,7 +41,7 @@
     <h3>Post a Reply</h3>
     ${rte}
     <p>
-    <input type="submit" name=";new_reply" value="Reply" class="button_ok"/>
+    <input type="submit" name=";new_reply" value="Reply" class="button-ok"/>
     </p>
   </form>
 

@@ -4,7 +4,7 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
-<div class="context_menu" stl:if="items">
+<div class="context-menu" stl:if="items">
   <label>${title}</label>
   <ul>
     <li class="${item/class}" stl:repeat="item items">

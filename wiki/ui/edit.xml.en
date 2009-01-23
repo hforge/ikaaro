@@ -9,15 +9,15 @@
       $('#data').focus();
     });
   </script>
-  <form id="wiki_form" action=";edit" method="post">
+  <form id="wiki-form" action=";edit" method="post">
     <input type="text" id="title" name="title" value="${title}" size="70" />
     <div class="mceEditor defaultSkin">
-      <table cellspacing="0" cellpadding="0" id="data_table"
+      <table cellspacing="0" cellpadding="0" id="data-table"
         class="mceLayout">
         <tbody>
           <tr class="mceFirst">
             <td class="mceToolbar mceLeft mceFirst mceLast">
-              <table id="data_toolbar1" cellspacing="0" cellpadding="0"
+              <table id="data-toolbar1" cellspacing="0" cellpadding="0"
                 align="" class="mceToolbar mceToolbarRow1 Enabled">
                 <tbody>
                   <tr>
@@ -25,14 +25,14 @@
                       <span><!-- IE --></span>
                     </td>
                     <td>
-                      <a id="data_bold" title="Bold"
+                      <a id="data-bold" title="Bold"
                         class="mceButton mceButtonEnabled mce_bold"
                         onclick="return wiki_bold();" href="javascript:;">
                         <span class="mceIcon mce_bold"></span>
                       </a>
                     </td>
                     <td>
-                      <a id="data_italic" title="Italic"
+                      <a id="data-italic" title="Italic"
                         class="mceButton mceButtonEnabled mce_italic"
                         onclick="return wiki_italic();" href="javascript:;">
                         <span class="mceIcon mce_italic"></span>
@@ -42,14 +42,14 @@
                       <span class="mceSeparator"></span>
                     </td>
                     <td>
-                      <a id="data_bullist" title="Unordered list"
+                      <a id="data-bullist" title="Unordered list"
                         class="mceButton mceButtonEnabled mce_bullist"
                         onclick="return wiki_bullist();" href="javascript:;">
                         <span class="mceIcon mce_bullist"></span>
                       </a>
                     </td>
                     <td>
-                      <a id="data_numlist" title="Ordered list"
+                      <a id="data-numlist" title="Ordered list"
                         class="mceButton mceButtonEnabled mce_numlist"
                         onclick="return wiki_numlist();" href="javascript:;">
                         <span class="mceIcon mce_numlist"></span>
@@ -59,14 +59,14 @@
                       <span class="mceSeparator"></span>
                     </td>
                     <td>
-                      <a id="data_link" title="Insert link"
+                      <a id="data-link" title="Insert link"
                         class="mceButton mce_link mceButtonEnabled"
                         onclick="return wiki_link();" href="javascript:;">
                         <span class="mceIcon mce_link"></span>
                       </a>
                     </td>
                     <td>
-                      <a id="data_image" title="Insert image"
+                      <a id="data-image" title="Insert image"
                         class="mceButton mceButtonEnabled mce_image"
                         onclick="return wiki_image();" href="javascript:;">
                         <span class="mceIcon mce_image"></span>
@@ -76,7 +76,7 @@
                       <span class="mceSeparator"></span>
                     </td>
                     <td>
-                      <a id="data_table" title="Insert table"
+                      <a id="data-table" title="Insert table"
                         class="mceButton mceButtonEnabled mce_table"
                         onclick="return wiki_table();" href="javascript:;">
                         <span class="mceIcon mce_table"></span>
@@ -88,16 +88,16 @@
                     <td>
                       <table cellspacing="0" cellpadding="0"
                         class="mceListBox mceListBoxEnabled mce_formatselect"
-                        id="data_formatselect">
+                        id="data-formatselect">
                         <tbody>
                           <tr>
                             <td class="mceFirst">
-                              <a id="data_formatselect_text" class="mceText"
+                              <a id="data-formatselect-text" class="mceText"
                                 onclick="return wiki_format();"
                                 href="javascript:;">Format</a>
                             </td>
                             <td class="mceLast">
-                              <a id="data_formatselect_open" class="mceOpen"
+                              <a id="data-formatselect-open" class="mceOpen"
                                 onclick="return wiki_format();"
                                 href="javascript:;" tabindex="-1">
                                 <span><!-- IE --></span>
@@ -111,7 +111,7 @@
                       <span class="mceSeparator"></span>
                     </td>
                     <td>
-                      <a id="data_small" title="Small Edit Text"
+                      <a id="data-small" title="Small Edit Text"
                         class="mceButton mceButtonEnabled"
                         onclick="return text_small();"
                         href="javascript:;">
@@ -119,7 +119,7 @@
                       </a>
                     </td>
                     <td>
-                      <a id="data_medium" title="Medium Edit Text"
+                      <a id="data-medium" title="Medium Edit Text"
                         class="mceButton mceButtonEnabled"
                         onclick="return text_medium();"
                         href="javascript:;">
@@ -127,7 +127,7 @@
                       </a>
                     </td>
                     <td>
-                      <a id="data_large" title="Large Edit Text"
+                      <a id="data-large" title="Large Edit Text"
                         class="mceButton mceButtonEnabled"
                         onclick="return text_large();"
                         href="javascript:;">
@@ -135,7 +135,7 @@
                       </a>
                     </td>
                     <td>
-                      <a id="data_help" title="Help"
+                      <a id="data-help" title="Help"
                         class="mceButton mceButtonEnabled"
                         onclick="return wiki_help();"
                         href="javascript:;">
@@ -160,7 +160,7 @@
           </tr>
           <tr class="mceLast">
             <td class="mceStatusbar mceFirst mceLast">
-              <a id="data_resize" href="javascript:;" class="mceResize"></a>
+              <a id="data-resize" href="javascript:;" class="mceResize"></a>
             </td>
           </tr>
         </tbody>
@@ -171,20 +171,20 @@
     <p>
       <a name="bottom" style="float: right" id="bottom"></a>
       <input type="hidden" name="timestamp" value="${timestamp}" />
-      <input type="submit" name="save" value="Save" class="button_ok" />
-      <input type="submit" name="view" value="Save &amp; View" class="button_ok" />
+      <input type="submit" name="save" value="Save" class="button-ok" />
+      <input type="submit" name="view" value="Save &amp; View" class="button-ok" />
     </p>
   </form>
-  <div id="data_formatselect_menu"
+  <div id="data-formatselect-menu"
     class="mceListBoxMenu mceNoIcons defaultSkin"
     style="position: absolute; left: 625px; top: 199px;
     z-index: 200000; display: none; width: 129px; height: 120px;">
-    <div id="data_formatselect_menu_co"
+    <div id="data-formatselect-menu-co"
       class="mceMenu mceListBoxMenu mceNoIcons defaultSkin"
       style="width: 129px; height: 120px;">
       <span class="mceMenuLine"/>
       <table cellspacing="0" cellpadding="0" border="0"
-        id="data_formatselect_menu_tbl">
+        id="data-formatselect-menu-tbl">
         <tbody>
           <tr id="mce_0" class="mceMenuItem mceMenuItemEnabled mceFirst">
             <td class="mceMenuItemTitle">

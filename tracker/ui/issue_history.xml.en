@@ -8,7 +8,7 @@
 
   <stl:block stl:repeat="row rows">
     <table width="100%" border="0" cellpadding="0" cellspacing="0">
-      <tr class="tracker_issue_comment_title">
+      <tr class="tracker-issue-comment-title">
         <td><a href="#${row/number}">${row/datetime}</a> <a name="${row/number}" /></td>
         <td>${row/user}</td>
       </tr>

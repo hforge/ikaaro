@@ -38,7 +38,7 @@
       <tr>
         <td valign="top">
           <label for="product" class="${product/class}">Product (mandatory):</label><br/>
-          <select name="product" id="product" class="tracker_select">
+          <select name="product" id="product" class="tracker-select">
             <option value="-1"></option>
             <option stl:repeat="item product/value" value="${item/name}"
               selected="${item/selected}">${item/value}</option>
@@ -46,7 +46,7 @@
         </td>
         <td valign="top">
           <label for="module" class="${module/class}">Module:</label><br/>
-          <select name="module" id="module" class="tracker_select">
+          <select name="module" id="module" class="tracker-select">
             <option value=""></option>
             <option stl:repeat="item module/value" value="${item/name}"
               selected="${item/selected}">${item/value}</option>
@@ -54,7 +54,7 @@
         </td>
         <td valign="top">
           <label for="version" class="${version/class}">Version:</label><br/>
-          <select name="version" id="version" class="tracker_select">
+          <select name="version" id="version" class="tracker-select">
             <option value=""></option>
             <option stl:repeat="item version/value" value="${item/name}"
               selected="${item/selected}">${item/value}</option>
@@ -64,7 +64,7 @@
       <tr>
         <td valign="top">
           <label for="type" class="${type/class}">Type (mandatory):</label><br/>
-          <select name="type" id="type" class="tracker_select">
+          <select name="type" id="type" class="tracker-select">
             <option value="-1"></option>
             <option stl:repeat="item type/value" value="${item/name}"
               selected="${item/selected}">${item/value}</option>
@@ -72,7 +72,7 @@
         </td>
         <td valign="top">
           <label for="state" class="${state/class}">Status (mandatory):</label><br/>
-          <select name="state" id="state" class="tracker_select">
+          <select name="state" id="state" class="tracker-select">
             <option value="-1"></option>
             <option stl:repeat="item state/value" value="${item/name}"
               selected="${item/selected}">${item/value}</option>
@@ -80,7 +80,7 @@
         </td>
         <td valign="top">
           <label for="priority" class="${priority/class}">Priority:</label><br/>
-          <select name="priority" id="priority" class="tracker_select">
+          <select name="priority" id="priority" class="tracker-select">
             <option value=""></option>
             <option stl:repeat="item priority/value" value="${item/name}"
               selected="${item/selected}">${item/value}</option>
@@ -89,16 +89,16 @@
       </tr>
       <tr>
         <td valign="top">
-          <label for="assigned_to" class="${assigned_to/class}">Assign To:</label><br/>
-          <select name="assigned_to" id="assigned_to" class="tracker_select">
+          <label for="assigned-to" class="${assigned_to/class}">Assign To:</label><br/>
+          <select name="assigned_to" id="assigned-to" class="tracker-select">
             <option value=""></option>
             <option stl:repeat="item assigned_to/value" value="${item/name}"
               selected="${item/selected}">${item/value}</option>
           </select>
         </td>
         <td valign="top" colspan="2">
-          <label for="cc_add" class="${cc_list/class}">CC:</label><br/>
-          <select name="cc_add" id="cc_add" class="tracker_select"
+          <label for="cc-add" class="${cc_list/class}">CC:</label><br/>
+          <select name="cc_add" id="cc-add" class="tracker-select"
             multiple="multiple" size="5">
             <option stl:repeat="item cc_list/value" value="${item/name}"
               selected="${item/selected}">${item/value}</option>
@@ -120,7 +120,7 @@
       </tr>
       <tr>
         <td colspan="3">
-          <input type="submit" class="button_ok" value="Add" />
+          <input type="submit" class="button-ok" value="Add" />
         </td>
       </tr>
     </table>

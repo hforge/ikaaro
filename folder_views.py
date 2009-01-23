@@ -346,7 +346,7 @@ class Folder_BrowseContent(SearchForm):
             path = context.get_link(item)
             # TODO Include the template in the base table
             state = ('<a href="%s/;edit_state" class="workflow">'
-                     '<strong class="wf_%s">%s</strong>'
+                     '<strong class="wf-%s">%s</strong>'
                      '</a>') % (path, statename, msg)
             return XMLParser(state)
 

@@ -148,32 +148,32 @@ function wiki_table() {
 }
 
 function wiki_format() {
-  var formatselect = $("#data_formatselect");
+  var formatselect = $("#data-formatselect");
   var offset = formatselect.offset();
   offset.top += formatselect.height();
-  var menu = $("#data_formatselect_menu");
+  var menu = $("#data-formatselect-menu");
   menu.css(offset);
   menu.toggle('fast');
 }
 
 function wiki_preformatted() {
-  $("#data_formatselect_menu").hide('fast');
+  $("#data-formatselect-menu").hide('fast');
   return insertTags('\n\n::\n\n  ', '\n\n',
                     'Type text not to interpret with identation');
 }
 
 function wiki_heading1() {
-  $("#data_formatselect_menu").hide('fast');
+  $("#data-formatselect-menu").hide('fast');
   return insertTags('\n\n=====\n', '\n=====\n\n', 'Title');
 }
 
 function wiki_heading2() {
-  $("#data_formatselect_menu").hide('fast');
+  $("#data-formatselect-menu").hide('fast');
   return insertTags('\n\n', '\n=====\n\n', 'Title');
 }
 
 function wiki_heading3() {
-  $("#data_formatselect_menu").hide('fast');
+  $("#data-formatselect-menu").hide('fast');
   return insertTags('\n\n', '\n-----\n\n', 'Title');
 }
 
@@ -251,8 +251,8 @@ function setup_size() {
 
 
 function setup_resize() {
-  var handle = $("#data_resize");
-  var editor = $("#data_table");
+  var handle = $("#data-resize");
+  var editor = $("#data-table");
   var txtarea = $("#data");
   var ghost = $("#mcePlaceHolder");
   var body = $(document.body);

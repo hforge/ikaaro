@@ -5,7 +5,7 @@
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
   <p>
-  Current state: <strong class="wf_${statename}">${state}</strong>
+  Current state: <strong class="wf-${statename}">${state}</strong>
   </p>
 
   <form action=";edit_state" method="post">
@@ -24,7 +24,7 @@
       </dd>
     </dl>
     <p>
-      <input type="submit" value="Change" class="button_ok" />
+      <input type="submit" value="Change" class="button-ok" />
     </p>
   </form>
 
@@ -34,7 +34,7 @@
     No history.
   </p>
 
-  <table id="browse_list" stl:if="history">
+  <table id="browse-list" stl:if="history">
     <thead>
       <tr>
         <th>Date</th>

@@ -56,36 +56,36 @@ legend {
   font-weight: bold;
 }
 
-#header #top_menu a {
+#header #top-menu a {
   margin: 0px 0px 0px 10px;
   padding: 4px 0px 4px 19px;
 }
 
-#header a#top_menu_login {
+#header a#top-menu-login {
   background-image: url(../icons/16x16/lock.png);
 }
 
-#header a#top_menu_register {
+#header a#top-menu-register {
   background-image: url(../icons/16x16/card.png);
 }
 
-#header a#top_menu_home {
+#header a#top-menu-home {
   background-image: url(../icons/16x16/action_home.png);
 }
 
-#header a#top_menu_profile {
+#header a#top-menu-profile {
   background-image: url(../icons/16x16/action_home.png);
 }
 
-#header a#top_menu_logout {
+#header a#top-menu-logout {
   background-image: url(../icons/16x16/action_logout.png);
 }
 
-#header a#top_menu_search {
+#header a#top-menu-search {
   background-image: url(../icons/16x16/search.png);
 }
 
-#header a#top_menu_contact {
+#header a#top-menu-contact {
   background-image: url(../icons/16x16/mail.png);
 }
 

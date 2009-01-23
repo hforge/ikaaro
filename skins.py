@@ -172,7 +172,7 @@ class Skin(UIFolder):
             # Calendar JS Widget (http://dynarch.com/mishoo/calendar.epl)
             '/ui/calendar/calendar-aruni.css',
             # Calendar
-            '/ui/ical/calendar.css',
+            '/ui/ical/style.css',
             # Table
             '/ui/table/style.css']
 

@@ -25,18 +25,18 @@
     <!-- Header -->
     <div id="header">
       ${languages}
-      <div id="top_menu">
+      <div id="top-menu">
         <stl:block stl:if="not user/info">
-          <a href="${login}" id="top_menu_login">Log in</a>
-          <a href="/;register" id="top_menu_register"
+          <a href="${login}" id="top-menu-login">Log in</a>
+          <a href="/;register" id="top-menu-register"
             stl:if="user/joinisopen">Register</a>
         </stl:block>
         <stl:block stl:if="user/info">
-          <a href="${user/info/home}" id="top_menu_profile">My Profile</a>
-          <a href="${logout}" id="top_menu_logout">Log out</a>
+          <a href="${user/info/home}" id="top-menu-profile">My Profile</a>
+          <a href="${logout}" id="top-menu-logout">Log out</a>
         </stl:block>
-        <a href="/;site_search" id="top_menu_search">Search</a>
-        <a href="/;contact" id="top_menu_contact">Contact</a>
+        <a href="/;site_search" id="top-menu-search">Search</a>
+        <a href="/;contact" id="top-menu-contact">Contact</a>
       </div>
     </div>
 

@@ -88,7 +88,7 @@
           <input id="file" name="file" size="35" type="file" />
           <input id="mode" name="mode" type="hidden" value="${mode}"/>
           <br/>
-          <input class="button_upload" type="submit"
+          <input class="button-upload" type="submit"
                  value="Upload and Insert" name=";upload"/>
         </form>
       </div>

@@ -7,11 +7,11 @@
   <ol class="results" stl:if="items">
     <li stl:repeat="item items">
       <img src="${item/icon}" width="16" height="16" />
-      <a class="result_title" href="${item/url}">${item/title}</a>
+      <a class="result-title" href="${item/url}">${item/title}</a>
       <br />
-      <span class="result_url">${item/abspath}</span>&nbsp;-
-      <span class="result_type">${item/type}</span>&nbsp;-
-      <span class="result_size">${item/size}</span>
+      <span class="result-url">${item/abspath}</span>&nbsp;-
+      <span class="result-type">${item/type}</span>&nbsp;-
+      <span class="result-size">${item/size}</span>
     </li>
   </ol>
 

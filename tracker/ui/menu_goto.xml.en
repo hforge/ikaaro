@@ -4,12 +4,12 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
-<div class="context_menu">
+<div class="context-menu">
   <label>${title}</label>
   <form action="${path_to_tracker}/;go_to_issue" method="get"
     style="margin: 4px 0px 0px 5px;">
     <input type="text" name="issue_name" size="6" />
-    <input type="submit" class="button_ok" value="Go" />
+    <input type="submit" class="button-ok" value="Go" />
   </form>
 </div>
 

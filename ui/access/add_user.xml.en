@@ -31,7 +31,7 @@
         </dd>
       </dl>
       <input type="submit" name="add_and_view" value="Add and view"
-        class="button_ok" />
+        class="button-ok" />
       <input type="submit" name="add_and_return" value="Add and return" />
     </fieldset>
   </form>

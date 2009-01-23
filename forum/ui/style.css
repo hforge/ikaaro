@@ -1,4 +1,4 @@
-#forum_thread_list th {
+#forum-thread-list th {
   text-align: left;
 }
 
@@ -11,28 +11,28 @@ p.even, p.odd {
   background-color: #ededed;
 }
 
-.forum_message_info {
+.forum-message-info {
   color: #fff;
 }
 
-.even .forum_message_info {
+.even .forum-message-info {
   background-color: #c17d11;
 }
 
-.odd .forum_message_info {
+.odd .forum-message-info {
   background-color: #729fcf;
 }
 
-.forum_thread_title {
+.forum-thread-title {
   font-size: 1.2em;
   font-weight: bold;
 }
 
-.forum_thread_author {
+.forum-thread-author {
   font-weight: bold;
 }
 
-.forum_message_author {
+.forum-message-author {
   font-weight: bold;
 }
 

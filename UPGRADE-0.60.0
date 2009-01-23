@@ -62,3 +62,15 @@ A few things have been moved to itools:
   XXX
 
 
+User Interface
+===============
+
+CSS ids and classes are now named with dashes "-" instead of underscores "_".
+
+Some CSS files have been renamed for consistency:
+
+  Before                           Now
+  -------------------------------  --------------------------
+  forum/ui/forum.css               forum/ui/style.css
+  tracker/ui/tracker.css           tracker/ui/style.css
+  ui/ical/calendar.css             ui/ical/style.css
