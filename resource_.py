@@ -530,6 +530,9 @@ class DBResource(CatalogAware, IResource):
 
 
     def put(self, context):
+        request = context.request
+        if request.has_header('content-range'):
+            raise NotImplemented
         # Save the data
         body = context.get_form_value('body')
         self.handler.load_state_from_string(body)
