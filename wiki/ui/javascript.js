@@ -218,7 +218,7 @@ $(document).ready(function() {
     try {
         Cookie = tinymce.util.Cookie;
     }
-    catch {
+    catch (error) {
     }
 });
 
