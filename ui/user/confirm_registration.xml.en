@@ -5,7 +5,7 @@
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
   <p>
-  To activate your account, please type a password.
+  ${confirmation_msg}
   </p>
 
   <fieldset>

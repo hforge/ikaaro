@@ -20,7 +20,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.datatypes import Integer, String, Unicode
+from itools.datatypes import Boolean, Integer, String, Unicode
 from itools.gettext import MSG
 from itools.handlers import ConfigFile
 
@@ -42,6 +42,8 @@ class StoredSearchFile(ConfigFile):
         'priority': Integer(multiple=True),
         'assigned_to': String(multiple=True),
         'state': Integer(multiple=True),
+        'sort_by': String,
+        'reverse': Boolean,
         }
 
 
@@ -55,12 +57,10 @@ class StoredSearch(Text):
     def get_values(self, name, type=None):
         return self.handler.get_value(name)
 
-    def set_values(self, name, value, type=String):
+    def set_values(self, name, value, type):
         if isinstance(value, list):
             value = [ type.encode(x) for x in value ]
             value = ' '.join(value)
-        else:
-            value = type.encode(value)
         self.handler.set_value(name, value)
 
 

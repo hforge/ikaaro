@@ -266,7 +266,8 @@ class Tracker_View(BrowseForm):
         'search_term': Unicode,
         'search_subfolders': Boolean(default=False),
         # BrowseForm fields
-        'sort_by': String(default='title'),
+        'sort_by': String,
+        'reverse': Boolean(default=None),
     }
 
     context_menus = [StoreSearchMenu(), TrackerViewMenu()]
@@ -316,8 +317,21 @@ class Tracker_View(BrowseForm):
 
 
     def sort_and_batch(self, resource, context, results):
-        sort_by = context.query['sort_by']
-        reverse = context.query['reverse']
+        query = context.query
+        # Stored search, or default
+        search_name = query['search_name']
+        if search_name:
+            search = resource.get_resource(search_name).handler
+            sort_by = search.get_value('sort_by')
+            reverse = search.get_value('reverse')
+        else:
+            sort_by = 'title'
+            reverse = False
+        # Query takes precedence
+        if query['sort_by'] is not None:
+            sort_by = query['sort_by']
+        if query['reverse'] is not None:
+            reverse = query['reverse']
         return results.get_documents(sort_by=sort_by, reverse=reverse)
 
 

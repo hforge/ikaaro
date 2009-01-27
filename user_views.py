@@ -38,6 +38,8 @@ class User_ConfirmRegistration(STLForm):
         'newpass': String(mandatory=True),
         'newpass2': String(mandatory=True)}
 
+    msg = MSG(u'To activate your account, please type a password.')
+
     def get_namespace(self, resource, context):
         # Check register key
         # FIXME This does not work
@@ -53,7 +55,8 @@ class User_ConfirmRegistration(STLForm):
         # Ok
         return {
             'key': must_confirm,
-            'username': resource.get_login_name()}
+            'username': resource.get_login_name(),
+            'confirmation_msg': self.msg.gettext()}
 
 
     def action(self, resource, context, form):
@@ -79,6 +82,12 @@ class User_ConfirmRegistration(STLForm):
         # Ok
         message = INFO(u'Operation successful! Welcome.')
         return context.come_back(message, goto='./')
+
+
+
+class User_ChangePasswordForgotten(User_ConfirmRegistration):
+
+    msg = MSG(u'Please choose a new password for your account')
 
 
 
