@@ -28,6 +28,7 @@ from itools.core import merge_dicts
 from itools.datatypes import String, Unicode
 from itools.gettext import MSG
 from itools.handlers import checkid
+from itools.http import Conflict, NotImplemented
 from itools.i18n import format_datetime, get_language_name
 from itools.uri import Path, get_reference
 from itools.vfs import FileName
@@ -596,3 +597,32 @@ class LogoutView(BaseView):
 
         message = INFO(u'You Are Now Logged out.')
         return context.come_back(message, goto='./')
+
+
+
+###########################################################################
+# Views / HTTP, WebDAV
+###########################################################################
+
+class Put_View(BaseView):
+
+    access = 'is_allowed_to_lock'
+
+
+    def PUT(self, resource, context):
+        # Check whether the resource is already locked
+        if not resource.is_locked():
+            raise Conflict
+
+        request = context.request
+        if request.has_header('content-range'):
+            raise NotImplemented
+
+        # Save the data
+        body = context.get_form_value('body')
+        self.handler.load_state_from_string(body)
+        context.server.change_resource(self)
+
+        response = context.response
+        response.set_status(204)
+        return None
