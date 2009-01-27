@@ -28,14 +28,15 @@ from itools.core import merge_dicts
 from itools.datatypes import String, Unicode
 from itools.gettext import MSG
 from itools.handlers import checkid
-from itools.http import Conflict, NotImplemented
+from itools.http import Conflict, NotImplemented, MethodNotAllowed
 from itools.i18n import format_datetime, get_language_name
 from itools.uri import Path, get_reference
 from itools.vfs import FileName
 from itools.web import get_context, BaseView, STLView, STLForm, INFO, ERROR
 
 # Import from ikaaro
-from datatypes import FileDataType
+from datatypes import FileDataType, CopyCookie
+from exceptions import ConsistencyError
 from forms import AutoForm, title_widget, description_widget, subject_widget
 from forms import TextWidget
 import messages
@@ -623,6 +624,28 @@ class Put_View(BaseView):
         self.handler.load_state_from_string(body)
         context.server.change_resource(self)
 
-        response = context.response
-        response.set_status(204)
-        return None
+
+
+class Delete_View(BaseView):
+
+    access = 'is_allowed_to_remove'
+
+
+    def DELETE(self, resource, context):
+        parent = resource.parent
+        # The root cannot delete itself
+        if parent is None:
+            raise MethodNotAllowed
+
+        name = resource.name
+        try:
+            parent.del_resource(name)
+        except ConsistencyError:
+            raise Conflict
+
+        # Clean the copy cookie if needed
+        cut, paths = context.get_cookie('ikaaro_cp', type=CopyCookie)
+        # Clean cookie
+        if str(resource.get_abspath()) in paths:
+            context.del_cookie('ikaaro_cp')
+            paths = []
