@@ -566,5 +566,5 @@ class DBResource(CatalogAware, IResource):
     add_image = DBResource_AddImage()
     add_link = DBResource_AddLink()
     history = DBResource_History()
-    put = Put_View()
-    delete = Delete_View()
+    http_put = Put_View()
+    http_delete = Delete_View()
