@@ -611,9 +611,6 @@ class Put_View(BaseView):
 
 
     def PUT(self, resource, context):
-        # Check whether the resource is already locked
-        if not resource.is_locked():
-            raise Conflict
 
         request = context.request
         if request.has_header('content-range'):
@@ -632,11 +629,6 @@ class Delete_View(BaseView):
 
 
     def DELETE(self, resource, context):
-        parent = resource.parent
-        # The root cannot delete itself
-        if parent is None:
-            raise MethodNotAllowed
-
         name = resource.name
         try:
             parent.del_resource(name)
