@@ -3,7 +3,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: es\n"
-"POT-Creation-Date: 2009-01-16 13:01+CET\n"
+"POT-Creation-Date: 2009-01-28 15:01+CET\n"
 "PO-Revision-Date: 2006-12-06 16:23+0100\n"
 "Last-Translator: J. David Ibáñez <jdavid@itaapy.com>\n"
 "Language-Team: Spanish\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.11.4\n"
 
-#: ../tracker/tracker_views.py:781
+#: ../tracker/tracker_views.py:805
 msgid ""
 "\n"
 "\n"
@@ -25,11 +25,11 @@ msgstr ""
 msgid "\"%s\" is incorrect"
 msgstr "\"%s\" es incorrecto"
 
-#: ../tracker/tracker_views.py:586
+#: ../tracker/tracker_views.py:693
 msgid "#%s"
 msgstr ""
 
-#: ../tracker/tracker_views.py:808
+#: ../tracker/tracker_views.py:832
 msgid "#%s - %s - %s"
 msgstr ""
 
@@ -63,8 +63,8 @@ msgstr ""
 msgid "${batch} ${table}"
 msgstr ""
 
-#: ../tracker/ui/export_to_csv.xml.en:8 ../tracker/ui/change_bugs.xml.en:29
-#: ../tracker/ui/export_to_text.xml.en:8
+#: ../tracker/ui/export_to_csv.xml.en:10 ../tracker/ui/change_bugs.xml.en:29
+#: ../tracker/ui/export_to_text.xml.en:10
 msgctxt "form"
 msgid "${batch} ${table}"
 msgstr ""
@@ -93,7 +93,7 @@ msgctxt "div"
 msgid "${cell/ns}"
 msgstr ""
 
-#: ../tracker/ui/export_to_text.xml.en:16
+#: ../tracker/ui/export_to_text.xml.en:18
 msgctxt "label"
 msgid "${column/title}"
 msgstr ""
@@ -137,6 +137,12 @@ msgstr ""
 msgctxt "textarea"
 msgid "${comment}"
 msgstr ""
+
+#: ../ui/user/confirm_registration.xml.en:8
+#, fuzzy
+msgctxt "paragraph"
+msgid "${confirmation_msg}"
+msgstr "¡Confirmación enviada!"
 
 #: ../ui/website/contact_options.xml.en:16
 msgctxt "option"
@@ -368,7 +374,7 @@ msgctxt "heading"
 msgid "${page_title}"
 msgstr ""
 
-#: ../tracker/ui/export_to_text.xml.en:25
+#: ../tracker/ui/export_to_csv.xml.en:8 ../tracker/ui/export_to_text.xml.en:8
 msgctxt "form"
 msgid "${param}"
 msgstr ""
@@ -423,7 +429,7 @@ msgid "${row/comment}"
 msgstr ""
 
 #: ../tracker/ui/issue_history.xml.en:12
-msgctxt "table cell"
+msgctxt "link"
 msgid "${row/datetime}"
 msgstr ""
 
@@ -515,7 +521,7 @@ msgctxt "button"
 msgid "${submit_value}"
 msgstr ""
 
-#: ../tracker/ui/export_to_text.xml.en:23
+#: ../tracker/ui/export_to_text.xml.en:25
 msgctxt "pre"
 msgid "${text}"
 msgstr ""
@@ -683,7 +689,7 @@ msgctxt "option"
 msgid "-- not defined --"
 msgstr ""
 
-#: ../tracker/tracker_views.py:803
+#: ../tracker/tracker_views.py:827
 msgid ""
 "--- Comment from: $user ---\n"
 "\n"
@@ -848,7 +854,7 @@ msgctxt "link"
 msgid "<g id='4'>«</g> ${current_month} <g id='5'>»</g>"
 msgstr ""
 
-#: ../tracker/ui/export_to_csv.xml.en:16
+#: ../tracker/ui/export_to_csv.xml.en:17
 msgctxt "label"
 msgid ""
 "<g id='5'> For OpenOffice (Encoding: UTF-8, Separator: \",\") </g>  <x "
@@ -947,11 +953,11 @@ msgstr ""
 msgid "A thread to discuss"
 msgstr ""
 
-#: ../tracker/tracker_views.py:800 ../tracker/issue.py:216
+#: ../tracker/tracker_views.py:824 ../tracker/issue.py:216
 msgid "ANONYMOUS"
 msgstr "ANÓNIMO"
 
-#: ../website_views.py:359
+#: ../website_views.py:371
 msgid "About"
 msgstr "Acerca de"
 
@@ -964,7 +970,7 @@ msgctxt "legend"
 msgid "Access Forbidden"
 msgstr ""
 
-#: ../user_views.py:213
+#: ../user_views.py:222
 msgid "Account changed."
 msgstr ""
 
@@ -998,7 +1004,7 @@ msgctxt "label"
 msgid "Add CC:"
 msgstr "Agregar"
 
-#: ../future/menu.py:60
+#: ../future/menu.py:61
 msgid "Add Child"
 msgstr ""
 
@@ -1065,7 +1071,7 @@ msgstr "Agregar nuevo %s"
 msgid "Add resource"
 msgstr "Agregar recurso"
 
-#: ../future/order.py:37
+#: ../future/order.py:39
 #, fuzzy
 msgid "Add to ordered list"
 msgstr "Lista Ordenada"
@@ -1084,7 +1090,7 @@ msgid ""
 "An email has been sent to you with the procedure to change your password."
 msgstr ""
 
-#: ../website_views.py:199
+#: ../website_views.py:204
 msgid ""
 "An email has been sent to you, to finish the registration process follow the "
 "instructions detailed in it."
@@ -1099,7 +1105,7 @@ msgctxt "paragraph"
 msgid "Apologies for the inconvenience."
 msgstr ""
 
-#: ../user_views.py:251
+#: ../user_views.py:260
 msgid "Application preferences changed."
 msgstr ""
 
@@ -1193,7 +1199,7 @@ msgctxt "title attribute"
 msgid "Bold"
 msgstr "Negrita"
 
-#: ../future/menu.py:125
+#: ../future/menu.py:126
 msgid "Broken"
 msgstr ""
 
@@ -1224,7 +1230,7 @@ msgctxt "heading"
 msgid "Browse and link to a File from the workspace"
 msgstr ""
 
-#: ../tracker/tracker.py:56
+#: ../tracker/tracker.py:57
 msgid "Bug"
 msgstr "Error"
 
@@ -1292,7 +1298,7 @@ msgctxt "legend"
 msgid "Change Role of ${name}"
 msgstr ""
 
-#: ../tracker/tracker_views.py:165 ../tracker/tracker_views.py:691
+#: ../tracker/tracker_views.py:165 ../tracker/tracker_views.py:715
 #, fuzzy
 msgid "Change Several Issues"
 msgstr "Modificar"
@@ -1309,7 +1315,7 @@ msgctxt "button"
 msgid "Change default"
 msgstr "Modificar"
 
-#: ../user_views.py:259
+#: ../user_views.py:268
 msgid "Change your password."
 msgstr "Modificar clave de acceso."
 
@@ -1332,11 +1338,7 @@ msgstr ""
 msgid "Check the referential integrity."
 msgstr ""
 
-#: ../future/order.py:69
-msgid "Chemin"
-msgstr ""
-
-#: ../future/order.py:185
+#: ../future/order.py:218
 #, fuzzy
 msgid "Children Ordered Table"
 msgstr "Lista Ordenada"
@@ -1345,6 +1347,11 @@ msgstr "Lista Ordenada"
 msgctxt "option"
 msgid "Choose a language"
 msgstr "Elije un idioma"
+
+#: ../user.py:174
+#, fuzzy
+msgid "Choose a new password"
+msgstr "Modificar clave de acceso"
 
 #: ../ui/website/new_instance.xml.en:20
 #, fuzzy
@@ -1373,7 +1380,7 @@ msgctxt "title attribute"
 msgid "Click to select/unselect all rows"
 msgstr ""
 
-#: ../tracker/tracker.py:63
+#: ../tracker/tracker.py:64
 msgid "Closed"
 msgstr "Cerrado"
 
@@ -1429,11 +1436,11 @@ msgctxt "label"
 msgid "Confirm"
 msgstr ""
 
-#: ../user.py:176
+#: ../user.py:165
 msgid "Confirmation required"
 msgstr ""
 
-#: ../user_views.py:98
+#: ../user_views.py:107
 msgid "Confirmation sent!"
 msgstr "¡Confirmación enviada!"
 
@@ -1441,7 +1448,7 @@ msgstr "¡Confirmación enviada!"
 msgid "Confirmed"
 msgstr ""
 
-#: ../website_views.py:221
+#: ../website_views.py:226
 msgid "Contact"
 msgstr "Contacto"
 
@@ -1478,11 +1485,11 @@ msgstr ""
 msgid "Create and publish a Web Page."
 msgstr ""
 
-#: ../website_views.py:374
+#: ../website_views.py:386
 msgid "Credits"
 msgstr ""
 
-#: ../future/menu.py:42
+#: ../future/menu.py:43
 #, fuzzy
 msgid "Current page"
 msgstr "Estado actual:"
@@ -1500,7 +1507,7 @@ msgstr "Cortar"
 msgid "Daily View"
 msgstr ""
 
-#: ../tracker/tracker.py:57
+#: ../tracker/tracker.py:58
 msgid "Data Corruption Issue"
 msgstr ""
 
@@ -1522,7 +1529,7 @@ msgstr "Fecha:"
 msgid "December"
 msgstr ""
 
-#: ../tracker/tracker.py:316
+#: ../tracker/tracker.py:309
 msgid "Default"
 msgstr ""
 
@@ -1575,7 +1582,7 @@ msgstr ""
 msgid "Dressable"
 msgstr ""
 
-#: ../user_views.py:161 ../website_views.py:167
+#: ../user_views.py:170 ../website_views.py:172
 msgid "E-mail Address"
 msgstr "Dirección de correo electrónico"
 
@@ -1600,7 +1607,7 @@ msgctxt "link"
 msgid "Edit"
 msgstr "Editar"
 
-#: ../user_views.py:150
+#: ../user_views.py:159
 #, fuzzy
 msgid "Edit Account"
 msgstr "Cuenta"
@@ -1639,7 +1646,7 @@ msgstr "Idioma"
 msgid "Edit Page"
 msgstr "Editar Texto"
 
-#: ../user_views.py:258
+#: ../user_views.py:267
 msgid "Edit Password"
 msgstr "Cambiar la contraseña"
 
@@ -1649,7 +1656,7 @@ msgctxt "legend"
 msgid "Edit Password"
 msgstr "Clave de acceso"
 
-#: ../user_views.py:220
+#: ../user_views.py:229
 #, fuzzy
 msgid "Edit Preferences"
 msgstr "Preferencias"
@@ -1676,7 +1683,7 @@ msgstr ""
 msgid "Edit Wiki"
 msgstr "Editar Texto"
 
-#: ../tracker/tracker_views.py:708
+#: ../tracker/tracker_views.py:732
 msgid "Edit issues"
 msgstr ""
 
@@ -1712,7 +1719,7 @@ msgstr ""
 msgid "Edit this search"
 msgstr "Editar esta búsqueda"
 
-#: ../user_views.py:151
+#: ../user_views.py:160
 msgid "Edit your name and email address."
 msgstr ""
 
@@ -1763,16 +1770,16 @@ msgstr ""
 msgid "Expected query parameter \"id\" is missing."
 msgstr ""
 
-#: ../tracker/ui/export_to_csv.xml.en:25
+#: ../tracker/ui/export_to_csv.xml.en:26
 msgctxt "button"
 msgid "Export"
 msgstr "Exportar"
 
-#: ../tracker/tracker_views.py:169 ../tracker/tracker_views.py:633
+#: ../tracker/tracker_views.py:169 ../tracker/tracker_views.py:605
 msgid "Export to CSV"
 msgstr "Exportar a CSV"
 
-#: ../tracker/ui/export_to_csv.xml.en:13
+#: ../tracker/ui/export_to_csv.xml.en:14
 msgctxt "legend"
 msgid "Export to CSV"
 msgstr "Exportar a CSV"
@@ -1781,7 +1788,7 @@ msgstr "Exportar a CSV"
 msgid "Export to Text"
 msgstr "Exportar a texto"
 
-#: ../tracker/ui/export_to_text.xml.en:12
+#: ../tracker/ui/export_to_text.xml.en:14
 msgctxt "legend"
 msgid "Export to Text:"
 msgstr "Exportar a texto:"
@@ -1816,12 +1823,12 @@ msgctxt "label"
 msgid "File"
 msgstr "Fichero"
 
-#: ../user_views.py:159 ../website_views.py:165 ../access.py:79
+#: ../user_views.py:168 ../website_views.py:170 ../access.py:79
 #: ../access.py:126
 msgid "First Name"
 msgstr "Nombre"
 
-#: ../tracker/tracker.py:63
+#: ../tracker/tracker.py:64
 msgid "Fixed"
 msgstr "Fijo"
 
@@ -1999,11 +2006,11 @@ msgctxt "li"
 msgid "Hervé Cauwelier (French)"
 msgstr ""
 
-#: ../tracker/tracker.py:64
+#: ../tracker/tracker.py:65
 msgid "High"
 msgstr ""
 
-#: ../tracker/tracker.py:111
+#: ../tracker/tracker.py:112
 msgid "High Priority"
 msgstr "Alta Prioridad"
 
@@ -2046,11 +2053,6 @@ msgid ""
 "report</g>."
 msgstr ""
 
-#: ../ui/website/forgotten_password_form.xml.en:10
-msgctxt "legend"
-msgid "If you have forgotten your password"
-msgstr "Si olvidaste tu contraseña"
-
 #: ../file.py:207
 msgid "Image"
 msgstr "Imagen"
@@ -2087,7 +2089,7 @@ msgctxt "legend"
 msgid "Internal Server Error"
 msgstr ""
 
-#: ../resource_views.py:464 ../forum/forum.py:92
+#: ../resource_views.py:470 ../forum/forum.py:92
 msgid "Invalid title."
 msgstr ""
 
@@ -2100,11 +2102,11 @@ msgctxt "heading"
 msgid "Issue #${number}"
 msgstr ""
 
-#: ../tracker/tracker.py:72
+#: ../tracker/tracker.py:73
 msgid "Issue Tracker"
 msgstr ""
 
-#: ../tracker/tracker_views.py:543 ../tracker/tracker_views.py:547
+#: ../tracker/tracker_views.py:557 ../tracker/tracker_views.py:561
 msgid "Issue not found."
 msgstr ""
 
@@ -2182,7 +2184,7 @@ msgstr "Últimas Modificaciones"
 msgid "Last Modified"
 msgstr "Última Modificación"
 
-#: ../user_views.py:160 ../website_views.py:166 ../access.py:78
+#: ../user_views.py:169 ../website_views.py:171 ../access.py:78
 #: ../access.py:127
 msgid "Last Name"
 msgstr "Apellidos"
@@ -2216,11 +2218,11 @@ msgctxt "legend"
 msgid "Log in"
 msgstr "Identificarse"
 
-#: ../resource_views.py:502 ../access.py:77 ../access.py:125
+#: ../resource_views.py:508 ../access.py:77 ../access.py:125
 msgid "Login"
 msgstr ""
 
-#: ../tracker/tracker.py:64
+#: ../tracker/tracker.py:65
 msgid "Low"
 msgstr ""
 
@@ -2242,7 +2244,7 @@ msgstr "Marzo"
 msgid "May"
 msgstr "Mayo"
 
-#: ../tracker/tracker.py:64
+#: ../tracker/tracker.py:65
 msgid "Medium"
 msgstr ""
 
@@ -2260,7 +2262,7 @@ msgstr ""
 msgid "Members deleted."
 msgstr ""
 
-#: ../future/menu.py:377
+#: ../future/menu.py:384
 msgid "Menu"
 msgstr "Menú"
 
@@ -2279,7 +2281,7 @@ msgstr ""
 msgid "Message Catalog"
 msgstr "Catalogo de Mensajes"
 
-#: ../website_views.py:237
+#: ../website_views.py:245
 msgid "Message body"
 msgstr "Cuerpo del mensaje"
 
@@ -2288,12 +2290,12 @@ msgstr "Cuerpo del mensaje"
 msgid "Message in a thread"
 msgstr "Catalogo de Mensajes"
 
-#: ../website_views.py:266
+#: ../website_views.py:278
 #, fuzzy
 msgid "Message sent."
 msgstr "Mensaje"
 
-#: ../website_views.py:236
+#: ../website_views.py:244
 msgid "Message subject"
 msgstr "Tema del mensaje"
 
@@ -2312,7 +2314,7 @@ msgstr "Mensaje"
 msgid "Metadata"
 msgstr ""
 
-#: ../tracker/tracker_views.py:780
+#: ../tracker/tracker_views.py:804
 msgid "Modifications:"
 msgstr ""
 
@@ -2385,7 +2387,7 @@ msgctxt "label"
 msgid "New Comment:"
 msgstr "Comentario"
 
-#: ../tracker/tracker.py:56
+#: ../tracker/tracker.py:57
 #, fuzzy
 msgid "New Feature"
 msgstr "Nuevo Recurso"
@@ -2401,7 +2403,7 @@ msgstr "Nueca Clave de Acceso"
 msgid "New issue added."
 msgstr "Nuevo recurso agregado."
 
-#: ../future/menu.py:41
+#: ../future/menu.py:42
 #, fuzzy
 msgid "New page"
 msgstr "Idioma"
@@ -2437,7 +2439,7 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#: ../tracker/tracker_views.py:653 ../tracker/tracker_views.py:742
+#: ../tracker/tracker_views.py:625 ../tracker/tracker_views.py:766
 msgid "No data to export."
 msgstr ""
 
@@ -2460,12 +2462,12 @@ msgstr ""
 msgid "No resource removed."
 msgstr "Objetos renombrados."
 
-#: ../messages.py:77 ../tracker/tables.py:166
+#: ../messages.py:77 ../tracker/tables.py:164
 #, fuzzy
 msgid "No resource selected."
 msgstr "No se ha seleccionado ningún objeto."
 
-#: ../tracker/tracker.py:110
+#: ../tracker/tracker.py:111
 msgid "Not Assigned"
 msgstr ""
 
@@ -2509,7 +2511,6 @@ msgid "ODT"
 msgstr ""
 
 #: ../ui/html/addlink.xml.en:122 ../ui/ical/daily_view.xml.en:12
-#: ../ui/website/forgotten_password_form.xml.en:19
 #: ../ui/ical/edit_event.xml.en:130 ../tracker/ui/menu_remember.xml.en:17
 #: ../ui/folder/browse_search.xml.en:24 ../ui/generic/browse_search.xml.en:16
 #: ../ui/website/search_form.xml.en:11
@@ -2529,22 +2530,22 @@ msgstr ""
 msgid "OOo Writer"
 msgstr ""
 
-#: ../future/menu.py:181
+#: ../future/menu.py:182
 #, fuzzy
 msgid "Objects ordered down."
 msgstr "Objetos renombrados."
 
-#: ../future/menu.py:203
+#: ../future/menu.py:204
 #, fuzzy
 msgid "Objects ordered on bottom."
 msgstr "Objetos suprimidos: $objects"
 
-#: ../future/menu.py:192
+#: ../future/menu.py:193
 #, fuzzy
 msgid "Objects ordered on top."
 msgstr "Objetos renombrados."
 
-#: ../future/menu.py:171
+#: ../future/menu.py:172
 #, fuzzy
 msgid "Objects ordered up."
 msgstr "Objetos renombrados."
@@ -2553,16 +2554,20 @@ msgstr "Objetos renombrados."
 msgid "October"
 msgstr ""
 
+#: ../website_views.py:118
+msgid "Ok"
+msgstr ""
+
 #: ../ui/website/security_policy.xml.en:15
 msgctxt "paragraph"
 msgid "Only administrators will be able to register new users."
 msgstr ""
 
-#: ../tracker/tracker.py:63
+#: ../tracker/tracker.py:64
 msgid "Open"
 msgstr ""
 
-#: ../tracker/tracker.py:109
+#: ../tracker/tracker.py:110
 msgid "Open Issues"
 msgstr ""
 
@@ -2593,7 +2598,7 @@ msgstr ""
 msgid "OpenOffice.org Text"
 msgstr ""
 
-#: ../user_views.py:80
+#: ../user_views.py:83
 msgid "Operation successful! Welcome."
 msgstr ""
 
@@ -2668,11 +2673,11 @@ msgctxt "label"
 msgid "Password"
 msgstr "Contraseña"
 
-#: ../user_views.py:308
+#: ../user_views.py:317
 msgid "Password changed."
 msgstr ""
 
-#: ../user_views.py:293
+#: ../user_views.py:302
 msgid "Passwords mismatch, please try again."
 msgstr ""
 
@@ -2680,7 +2685,7 @@ msgstr ""
 msgid "Paste"
 msgstr "Pegar"
 
-#: ../future/order.py:189 ../future/menu.py:247
+#: ../future/order.py:87 ../future/order.py:222 ../future/menu.py:248
 #, fuzzy
 msgid "Path"
 msgstr "Pegar"
@@ -2689,7 +2694,7 @@ msgstr "Pegar"
 msgid "Pending"
 msgstr ""
 
-#: ../tracker/tracker.py:57
+#: ../tracker/tracker.py:58
 msgid "Performance Improvement"
 msgstr ""
 
@@ -2697,26 +2702,30 @@ msgstr ""
 msgid "Plain Text"
 msgstr ""
 
-#: ../tracker/ui/export_to_csv.xml.en:14
+#: ../user_views.py:90
+msgid "Please choose a new password for your account"
+msgstr ""
+
+#: ../tracker/ui/export_to_csv.xml.en:15
 msgctxt "fieldset"
 msgid "Please select encoding:"
 msgstr ""
 
-#: ../future/menu.py:177
+#: ../future/menu.py:178
 msgid "Please select the objects to order down."
 msgstr ""
 
-#: ../future/menu.py:198
+#: ../future/menu.py:199
 #, fuzzy
 msgid "Please select the objects to order on bottom."
 msgstr "Objetos suprimidos: $objects"
 
-#: ../future/menu.py:187
+#: ../future/menu.py:188
 #, fuzzy
 msgid "Please select the objects to order on top."
 msgstr "Objetos renombrados."
 
-#: ../future/menu.py:167
+#: ../future/menu.py:168
 msgid "Please select the objects to order up."
 msgstr ""
 
@@ -2810,8 +2819,8 @@ msgstr "Prioridad:<g id='29'> (<g id='30'>Editar</g>)</g>"
 msgid "Private"
 msgstr "Privado"
 
-#: ../tracker/tracker_views.py:53 ../tracker/tables.py:211
-#: ../tracker/tables.py:238
+#: ../tracker/tracker_views.py:53 ../tracker/tables.py:209
+#: ../tracker/tables.py:236
 msgid "Product"
 msgstr "Producto"
 
@@ -2831,7 +2840,7 @@ msgctxt "label"
 msgid "Product:<g id='8'> (<g id='9'>Edit</g>)</g>"
 msgstr "Producto:<g id='9'> (<g id='10'>Editar</g>)</g>"
 
-#: ../user_views.py:106
+#: ../user_views.py:115
 msgid "Profile"
 msgstr "Perfil"
 
@@ -2865,16 +2874,16 @@ msgstr ""
 msgid "RTF Document"
 msgstr "Añadir Documento"
 
-#: ../website_views.py:234
+#: ../website_views.py:242
 msgid "Recipient"
 msgstr "Destinatario"
 
-#: ../table_views.py:162 ../table_views.py:324 ../future/menu.py:161
+#: ../table_views.py:162 ../table_views.py:324 ../future/menu.py:162
 #, fuzzy
 msgid "Record deleted."
 msgstr "Roles actualizados."
 
-#: ../website_views.py:156 ../website_views.py:157
+#: ../website_views.py:161 ../website_views.py:162
 msgid "Register"
 msgstr "Registrarse"
 
@@ -2882,7 +2891,7 @@ msgstr "Registrarse"
 msgid "Reject the document."
 msgstr "Rechazar el documento."
 
-#: ../tracker/tables.py:240
+#: ../tracker/tables.py:238
 #, fuzzy
 msgid "Released"
 msgstr "Revisores"
@@ -2995,7 +3004,7 @@ msgstr "Nuevo Recurso"
 msgid "Resources"
 msgstr "Nuevo Recurso"
 
-#: ../future/order.py:121
+#: ../future/order.py:154
 #, fuzzy
 msgid "Resources added to ordered list."
 msgstr "Objetos renombrados."
@@ -3054,7 +3063,7 @@ msgstr "Nuevo Recurso"
 msgid "Resources published."
 msgstr "Nuevo Recurso"
 
-#: ../messages.py:61 ../tracker/tables.py:185
+#: ../messages.py:61 ../tracker/tables.py:183
 #, fuzzy
 msgid "Resources removed: $resources."
 msgstr "Objetos suprimidos: $objects"
@@ -3127,7 +3136,7 @@ msgstr "Guardar Cambios"
 msgid "Schedule your time with calendar files."
 msgstr ""
 
-#: ../tracker/tracker_views.py:371 ../website_views.py:273
+#: ../tracker/tracker_views.py:385 ../website_views.py:285
 msgid "Search"
 msgstr "Buscar"
 
@@ -3153,7 +3162,7 @@ msgctxt "label"
 msgid "Search subfolders"
 msgstr "Buscar subcarpetas"
 
-#: ../tracker/tracker.py:56
+#: ../tracker/tracker.py:57
 #, fuzzy
 msgid "Security Issue"
 msgstr "Seguridad"
@@ -3171,7 +3180,7 @@ msgstr ""
 msgid "See the users and their roles."
 msgstr ""
 
-#: ../user_views.py:316
+#: ../user_views.py:325
 #, fuzzy
 msgid "See your pending tasks."
 msgstr "Tareas pendientes."
@@ -3188,7 +3197,7 @@ msgctxt "table cell"
 msgid "Select Resource"
 msgstr "Nuevo Recurso"
 
-#: ../tracker/tables.py:126
+#: ../tracker/tables.py:124
 #, fuzzy
 msgid "Select Table"
 msgstr "Insertar Tabla"
@@ -3198,7 +3207,7 @@ msgctxt "label"
 msgid "Select the contact accounts"
 msgstr ""
 
-#: ../website_views.py:222
+#: ../website_views.py:227
 msgid "Send"
 msgstr "Enviar"
 
@@ -3206,7 +3215,7 @@ msgstr "Enviar"
 msgid "September"
 msgstr ""
 
-#: ../user_views.py:221
+#: ../user_views.py:230
 msgid "Set your preferred language."
 msgstr ""
 
@@ -3246,7 +3255,7 @@ msgstr ""
 msgid "Spanish"
 msgstr ""
 
-#: ../tracker/tracker.py:56
+#: ../tracker/tracker.py:57
 msgid "Stability Issue"
 msgstr ""
 
@@ -3270,7 +3279,8 @@ msgctxt "label"
 msgid "Start:"
 msgstr "Empezar"
 
-#: ../tracker/tracker_views.py:57 ../access.py:129 ../folder_views.py:237
+#: ../future/order.py:52 ../future/order.py:88 ../access.py:129
+#: ../folder_views.py:237 ../tracker/tracker_views.py:57
 #: ../tracker/issue.py:294
 msgid "State"
 msgstr "Estado"
@@ -3308,7 +3318,7 @@ msgctxt "label"
 msgid "Status:<g id='24'> (<g id='25'>Edit</g>)</g>"
 msgstr "Estado:<g id='25'> (<g id='26'>Editar</g>)</g>"
 
-#: ../tracker/stored.py:52
+#: ../tracker/stored.py:54
 #, fuzzy
 msgid "Stored Search"
 msgstr "Búsqueda Avanzada"
@@ -3348,16 +3358,16 @@ msgstr ""
 msgid "Tar Archive"
 msgstr ""
 
-#: ../future/menu.py:248
+#: ../future/menu.py:249
 #, fuzzy
 msgid "Target"
 msgstr "Texto"
 
-#: ../user_views.py:315
+#: ../user_views.py:324
 msgid "Tasks"
 msgstr "Tareas"
 
-#: ../tracker/tracker.py:58
+#: ../tracker/tracker.py:59
 msgid "Technology Upgrade"
 msgstr ""
 
@@ -3415,7 +3425,7 @@ msgstr ""
 msgid "The file must be entered."
 msgstr ""
 
-#: ../resource_views.py:387
+#: ../resource_views.py:393
 msgid "The given file is none of the types $class_ids."
 msgstr ""
 
@@ -3427,7 +3437,7 @@ msgstr ""
 msgid "The name is missing."
 msgstr ""
 
-#: ../resource_views.py:531
+#: ../resource_views.py:537
 msgid "The password is wrong."
 msgstr ""
 
@@ -3441,31 +3451,31 @@ msgctxt "paragraph"
 msgid "The requested URL « ${uri} » was not found on this server."
 msgstr ""
 
-#: ../future/menu.py:123
+#: ../future/menu.py:124
 msgid "The resource does not exist anymore."
 msgstr ""
 
-#: ../tracker/tracker_views.py:486
+#: ../tracker/tracker_views.py:500
 #, fuzzy
 msgid "The search has been modified."
 msgstr "Modificaciones guardadas"
 
-#: ../tracker/tracker_views.py:528
+#: ../tracker/tracker_views.py:542
 #, fuzzy
 msgid "The search has been removed."
 msgstr "Modificaciones guardadas"
 
-#: ../tracker/tracker_views.py:493
+#: ../tracker/tracker_views.py:507
 #, fuzzy
 msgid "The search has been stored."
 msgstr "Modificaciones guardadas"
 
-#: ../tracker/tracker_views.py:497
+#: ../tracker/tracker_views.py:511
 #, fuzzy
 msgid "The search title has been changed."
 msgstr "Las claves de acceso no concuerdan."
 
-#: ../resource_views.py:524
+#: ../resource_views.py:530
 msgid "The user \"$username\" does not exist."
 msgstr ""
 
@@ -3514,7 +3524,7 @@ msgstr "No hay mensajes."
 msgid "There is 1 item."
 msgstr "No hay mensajes."
 
-#: ../website_views.py:181
+#: ../website_views.py:186
 msgid "There is already an active user with that email."
 msgstr ""
 
@@ -3522,11 +3532,11 @@ msgstr ""
 msgid "There is already another resource with this name."
 msgstr ""
 
-#: ../user_views.py:204
+#: ../user_views.py:213
 msgid "There is another user with the email \"${email}\", please try again."
 msgstr ""
 
-#: ../website_views.py:136
+#: ../website_views.py:141
 msgid "There is not a user identified as \"$username\""
 msgstr ""
 
@@ -3584,8 +3594,8 @@ msgid "Timetables updated successfully."
 msgstr ""
 
 #: ../tracker/tracker_views.py:52 ../tracker/issue.py:284 ../views.py:413
-#: ../future/order.py:48 ../future/order.py:68 ../forms.py:526
-#: ../folder_views.py:232 ../future/menu.py:246
+#: ../future/order.py:51 ../future/order.py:86 ../forms.py:526
+#: ../folder_views.py:232 ../future/menu.py:247
 msgid "Title"
 msgstr "Título"
 
@@ -3611,8 +3621,7 @@ msgstr "Título"
 msgid "To PDF"
 msgstr "PDF"
 
-#: ../ui/user/confirm_registration.xml.en:8
-msgctxt "paragraph"
+#: ../user_views.py:41
 msgid "To activate your account, please type a password."
 msgstr ""
 
@@ -3620,20 +3629,27 @@ msgstr ""
 msgid "To add an event, click on + symbol from the views."
 msgstr ""
 
+#: ../user.py:175
+msgid ""
+"To choose a new password, click the link:\n"
+"\n"
+" $uri"
+msgstr ""
+
 #: ../ui/user/edit_password.xml.en:22
 msgctxt "label"
 msgid "To confirm these changes, you must type your current password"
 msgstr ""
 
-#: ../user_views.py:171
+#: ../user_views.py:180
 msgid "To confirm these changes, you must type your password"
 msgstr ""
 
-#: ../user.py:178
+#: ../user.py:166
 msgid ""
-"To confirm your identity click the link:\n"
+"To confirm your identity, click the link:\n"
 "\n"
-"  $confirm_url"
+" $uri"
 msgstr ""
 
 #: ../ui/binary/Archive_view.xml.en:7 ../ui/file/download_form.xml.en:8
@@ -3647,11 +3663,11 @@ msgctxt "paragraph"
 msgid "To learn more, check out these resources:"
 msgstr ""
 
-#: ../tracker/tracker.py:73
+#: ../tracker/tracker.py:74
 msgid "To manage bugs and tasks"
 msgstr ""
 
-#: ../user.py:289
+#: ../user.py:304
 msgid "To manage the users please go <a href=\"/;browse_users\">here</a>."
 msgstr ""
 
@@ -3698,8 +3714,8 @@ msgid ""
 "Type the hostnames this website will apply to, each one in a different line."
 msgstr ""
 
-#: ../ui/website/forgotten_password_form.xml.en:13
-msgctxt "label"
+#: ../website_views.py:121
+#, fuzzy
 msgid "Type your email address"
 msgstr "Escribe tu dirección de correo electrónico"
 
@@ -3731,7 +3747,7 @@ msgstr ""
 msgid "Unexpected file of mimetype ${type}"
 msgstr ""
 
-#: ../tracker/tracker_views.py:287
+#: ../tracker/tracker_views.py:288
 msgid "Unknown stored search \"${sname}\"."
 msgstr ""
 
@@ -3748,7 +3764,7 @@ msgctxt "button"
 msgid "Update"
 msgstr "Actualizar"
 
-#: ../tracker/ui/export_to_text.xml.en:19
+#: ../tracker/ui/export_to_text.xml.en:21
 msgctxt "button"
 msgid "Update text export"
 msgstr ""
@@ -3796,7 +3812,7 @@ msgstr ""
 msgid "Upload office documents, images, media files, etc."
 msgstr ""
 
-#: ../user.py:50
+#: ../user.py:51
 msgid "User"
 msgstr "Usuario"
 
@@ -3818,11 +3834,11 @@ msgstr "Usuario"
 msgid "User added."
 msgstr "Usuario añadido."
 
-#: ../user_views.py:92
+#: ../user_views.py:101
 msgid "User has already confirmed his registration!"
 msgstr ""
 
-#: ../user_views.py:107
+#: ../user_views.py:116
 msgid "User's profile page."
 msgstr ""
 
@@ -3836,7 +3852,7 @@ msgstr "Renombrar"
 msgid "Users"
 msgstr "Usuarios"
 
-#: ../tracker/tracker.py:63
+#: ../tracker/tracker.py:64
 msgid "Verified"
 msgstr ""
 
@@ -3875,8 +3891,8 @@ msgstr ""
 
 #: ../file_views.py:378 ../file_views.py:469 ../file_views.py:481
 #: ../file_views.py:495 ../text_views.py:67 ../text_views.py:168
-#: ../html.py:120 ../tracker/tracker_views.py:245 ../user.py:287
-#: ../table_views.py:42 ../wiki/page_views.py:59 ../future/order.py:128
+#: ../html.py:120 ../tracker/tracker_views.py:245 ../user.py:302
+#: ../table_views.py:42 ../wiki/page_views.py:59 ../future/order.py:161
 #: ../forum/thread.py:42 ../folder_views.py:88 ../forum/forum.py:44
 #: ../future/dressable.py:95
 msgid "View"
@@ -3923,7 +3939,7 @@ msgstr "Semana $n"
 msgid "Weekly View"
 msgstr "Vista semanal"
 
-#: ../resource_views.py:555
+#: ../resource_views.py:561
 msgid "Welcome!"
 msgstr "Bienvenido/a!"
 
@@ -3953,7 +3969,7 @@ msgctxt "li"
 msgid "Work together with the Wiki;"
 msgstr ""
 
-#: ../future/menu.py:90
+#: ../future/menu.py:91
 msgid "Workflow State"
 msgstr ""
 
@@ -3974,7 +3990,7 @@ msgctxt "table cell"
 msgid "Yes"
 msgstr "Sí"
 
-#: ../resource_views.py:571
+#: ../resource_views.py:577
 msgid "You Are Now Logged out."
 msgstr ""
 
@@ -4041,7 +4057,7 @@ msgid ""
 "support UTF-8 (not recommended)."
 msgstr ""
 
-#: ../user_views.py:194 ../user_views.py:286
+#: ../user_views.py:203 ../user_views.py:295
 msgid "You mistyped your actual password, your account is not changed."
 msgstr ""
 
@@ -4060,7 +4076,7 @@ msgstr ""
 msgid "Your confirmation key is invalid."
 msgstr ""
 
-#: ../website_views.py:235
+#: ../website_views.py:243
 msgid "Your email address"
 msgstr "Tu dirección de correo electrónico"
 
@@ -4101,7 +4117,7 @@ msgid "[ <g id='4'>  <g id='5'>${menu/label}</g>  <g id='6'>|</g>  </g> ]"
 msgstr ""
 "<g id='14'>Acerca de</g>  <g id='15'>Creditos</g>  <g id='16'>Licencia</g>"
 
-#: ../tracker/tracker_views.py:805
+#: ../tracker/tracker_views.py:829
 msgid "[%s]"
 msgstr ""
 
@@ -4122,7 +4138,7 @@ msgstr "enorme"
 msgid "iKaaro"
 msgstr ""
 
-#: ../future/menu.py:239 ../future/menu.py:366
+#: ../future/menu.py:240 ../future/menu.py:373
 #, fuzzy
 msgid "iKaaro Menu"
 msgstr "Mantenimiento"
@@ -4134,7 +4150,7 @@ msgid ""
 "programming language, and based on the <g id='7'>itools</g> library."
 msgstr ""
 
-#: ../table_views.py:100 ../future/menu.py:82
+#: ../table_views.py:100 ../future/menu.py:83
 msgid "id"
 msgstr ""
 
@@ -4150,7 +4166,7 @@ msgstr "mediano"
 msgid "original"
 msgstr ""
 
-#: ../tracker/ui/export_to_text.xml.en:12
+#: ../tracker/ui/export_to_text.xml.en:14
 msgctxt "legend"
 msgid "select the columns to export"
 msgstr "selecciona las columnas a exportar"
@@ -4188,6 +4204,10 @@ msgstr ""
 msgctxt "table cell"
 msgid "⇒ ${item/parent_path}"
 msgstr ""
+
+#~ msgctxt "legend"
+#~ msgid "If you have forgotten your password"
+#~ msgstr "Si olvidaste tu contraseña"
 
 #~ msgctxt "title"
 #~ msgid "Insert Image"
