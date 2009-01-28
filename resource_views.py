@@ -235,9 +235,12 @@ class Breadcrumb(object):
         while node is not root.parent:
             url = context.uri.replace(bc_target=str(root.get_pathto(node)))
             title = node.get_title()
+            short_title = reduce_string(title, 12, 40)
+            quoted_title = short_title.replace("'", "\\'")
             breadcrumb.insert(0, {'name': node.name,
                                   'title': title,
-                                  'short_title': reduce_string(title, 12, 40),
+                                  'short_title': short_title,
+                                  'quoted_title': quoted_title,
                                   'url': url})
             node = node.parent
         self.path = breadcrumb
@@ -267,9 +270,12 @@ class Breadcrumb(object):
                 path_to_resource = Path(str(path) + '/')
                 path_to_icon = path_to_resource.resolve(path_to_icon)
             title = resource.get_title()
+            short_title = reduce_string(title, 12, 40)
+            quoted_title = short_title.replace("'", "\\'")
             items.append({'name': resource.name,
                           'title': title,
-                          'short_title': reduce_string(title, 12, 40),
+                          'short_title': short_title,
+                          'quoted_title': quoted_title,
                           'is_folder': isinstance(resource, Folder),
                           'is_image': is_image,
                           'is_selectable': True,

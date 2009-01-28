@@ -89,7 +89,7 @@
                   <dd>
                     <abbr
                       title="${item/title}">${item/short_title}</abbr><br/>
-                    <a href="javascript:select_element('${element_to_add}', '${item/path}', '${item/title}')">
+                    <a href="javascript:select_element('${element_to_add}', '${item/path}', '${item/quoted_title}')">
                       Select
                     </a>
                   </dd>
