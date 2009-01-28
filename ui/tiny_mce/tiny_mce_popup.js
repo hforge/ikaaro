@@ -29,12 +29,11 @@ tinyMCEPopup = {
         /*
          * iKaaro: choose if we include original css or not
          */
-        if (t.getWindowArg('use_css') == "no")
-            ;
-        else
-           // Enables you to skip loading the default css
-           if (t.features.popup_css !== false)
-               t.dom.loadCSS(t.features.popup_css || t.editor.settings.popup_css);
+        if (t.getWindowArg('use_css') != "no") {
+            // Enables you to skip loading the default css
+            if (t.features.popup_css !== false)
+                t.dom.loadCSS(t.features.popup_css || t.editor.settings.popup_css);
+        }
 
 		// Setup on init listeners
 		t.listeners = [];
@@ -82,17 +81,17 @@ tinyMCEPopup = {
          * Because when we upload and insert an image
          * t.dom is undefined
          */
-        if (t.dom) {
-            var n, b = document.body, vp = t.dom.getViewPort(window), dw, dh;
+        if (!t.dom)
+            return ;
+        var n, b = document.body, vp = t.dom.getViewPort(window), dw, dh;
 
-            dw = t.getWindowArg('mce_width') - vp.w;
-            dh = t.getWindowArg('mce_height') - vp.h;
+        dw = t.getWindowArg('mce_width') - vp.w;
+        dh = t.getWindowArg('mce_height') - vp.h;
 
-            if (t.isWindow)
-                window.resizeBy(dw, dh);
-            else
-                t.editor.windowManager.resizeBy(dw, dh, t.id);
-        }
+        if (t.isWindow)
+            window.resizeBy(dw, dh);
+        else
+            t.editor.windowManager.resizeBy(dw, dh, t.id);
 	},
 
 	executeOnLoad : function(s) {
