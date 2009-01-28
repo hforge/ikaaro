@@ -5,7 +5,7 @@
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
   <p>
-  ${confirmation_msg}
+  ${confirmation_msg}<br/>
   </p>
 
   <fieldset>
