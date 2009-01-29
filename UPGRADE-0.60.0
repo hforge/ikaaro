@@ -17,8 +17,9 @@ Some variables in the configuration file have been replaced by others:
 Scripts
 ====================
 
-The "icms-start.py" and "icms-start-server.py" scripts do not accept the
-"debug" parameter anymore.
+The "icms-start-server.py" and "icms-start-spool.py" scripts have been
+removed.  The "icms-start.py" script does not take the "debug" paramater
+anymore.
 
 
 Update the database

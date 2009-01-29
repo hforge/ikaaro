@@ -11,11 +11,12 @@ other features ikaaro provides:
 
 Changes:
 
-- Now we use Git [1] for versioning-aware resources.  Only text files are
-  versining-aware now, not binary files.
+- Now we use Git [1] to track changes to the metadata and to text files.
+- New profiling capabilities: profile-cpu, profile-memory (with guppy [2])
 
 
 [1] http://git-scm.com/
+[2] http://guppy-pe.sourceforge.net/
 
 
 Resources
