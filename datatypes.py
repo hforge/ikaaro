@@ -17,12 +17,11 @@
 # Import from the Standard Library
 from base64 import decodestring, encodestring
 from marshal import dumps, loads
-from mimetypes import guess_type
 from urllib import quote, unquote
 from zlib import compress, decompress
 
 # Import from itools
-from itools.core import freeze
+from itools.core import freeze, guess_type
 from itools.datatypes import DataType, Enumerate
 
 
