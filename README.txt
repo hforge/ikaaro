@@ -29,8 +29,11 @@ is required.
 Apart from the Python packages listed above, the commands xlhtml, ppthtml,
 pdftotext, wvText and unrtf are required to index some types of documents.
 
+For profiling the memory, guppy [3] is required.
+
 [1] http://www.pythonware.com/products/pil/
 [2] http://docutils.sourceforge.net/
+[3] http://guppy-pe.sourceforge.net/
 
 
 Install

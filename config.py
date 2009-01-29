@@ -35,7 +35,8 @@ class ServerConfig(ConfigFile):
         'smtp-from': String(default=''),
         'smtp-login': String(default=''),
         'smtp-password': String(default=''),
-        'profile': Boolean(default=False),
+        'profile-cpu': Boolean(default=False),
+        'profile-memory': Boolean(default=False),
     }
 
 

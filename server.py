@@ -142,14 +142,17 @@ class Server(BaseServer):
             msg = 'configuraion error, unexpected "%s" value for log-level'
             raise ValueError, msg % log_level
 
-        # Profile
-        profile = config.get_value('profile')
+        # Profile CPU
+        profile = config.get_value('profile-cpu')
         if profile is True:
             profile_path = '%s/log/profile' % path
             if not vfs.exists(profile_path):
                 vfs.make_folder(profile_path)
         else:
             profile_path = None
+        # Profile Memory
+        if config.get_value('profile-memory') is True:
+            import guppy.heapy.RM
 
         # The database
         database = get_database(path, read_only=read_only)
