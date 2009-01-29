@@ -74,3 +74,18 @@ Some CSS files have been renamed for consistency:
   forum/ui/forum.css               forum/ui/style.css
   tracker/ui/tracker.css           tracker/ui/style.css
   ui/ical/calendar.css             ui/ical/style.css
+
+
+The Ikaaro Catalog
+===================
+
+Due to the changes in itools.xapian, we have a new register in registry.py:
+"register_field".
+
+Now to add a field in the catalog of ikaaro, we must write:
+
+  register_field('foo', String(is_indexed=True))
+
+instead of overload the "get_catalog_fields" method in a CatalogAware object.
+
+
