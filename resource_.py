@@ -24,13 +24,11 @@ from datetime import datetime
 from subprocess import Popen, PIPE
 
 # Import from itools
-from itools.datatypes import Unicode
+from itools.datatypes import Unicode, String, Integer, Boolean, DateTime
 from itools.gettext import MSG
 from itools import git
 from itools.web import Resource, get_context
-from itools.xapian import CatalogAware
-from itools.xapian import TextField, KeywordField, IntegerField, BoolField
-from itools.xapian import PhraseQuery
+from itools.xapian import CatalogAware, PhraseQuery
 
 # Import from ikaaro
 from lock import Lock
@@ -40,7 +38,7 @@ from resource_views import DBResource_AddImage, DBResource_AddLink
 from resource_views import LoginView, LogoutView, DBResource_History
 from resource_views import Put_View, Delete_View
 from workflow import WorkflowAware
-
+from registry import register_field
 
 
 class IResource(Resource):
@@ -309,28 +307,6 @@ class DBResource(CatalogAware, IResource):
         raise NotImplementedError
 
 
-    def get_catalog_fields(self):
-        return [
-            KeywordField('abspath', is_stored=True),
-            TextField('text'),
-            TextField('title', is_stored=True),
-            BoolField('is_role_aware'),
-            BoolField('is_image'),
-            KeywordField('format', is_stored=True),
-            KeywordField('workflow_state', is_stored=True),
-            KeywordField('members'),
-            # Versioning
-            KeywordField('mtime', is_indexed=True, is_stored=True),
-            KeywordField('last_author', is_indexed=False, is_stored=True),
-            # For referencial-integrity, keep links between cms resources,
-            # where a link is the physical path.
-            KeywordField('links'),
-            # Folder's view
-            KeywordField('parent_path'),
-            KeywordField('name', is_stored=True),
-            IntegerField('size', is_indexed=False, is_stored=True)]
-
-
     def get_catalog_values(self):
         from access import RoleAware
         from file import File, Image
@@ -345,7 +321,7 @@ class DBResource(CatalogAware, IResource):
             'abspath': str(abspath),
             'format': self.metadata.format,
             'title': self.get_title(),
-            'mtime': mtime.strftime('%Y%m%d%H%M%S')}
+            'mtime': mtime}
 
         # Last Author (used in the Last Changes view)
         last_author = self.get_last_author()
@@ -568,3 +544,30 @@ class DBResource(CatalogAware, IResource):
     history = DBResource_History()
     http_put = Put_View()
     http_delete = Delete_View()
+
+
+
+###################################
+# Register the new catalog fields #
+###################################
+
+register_field('abspath', String(is_key_field=True, is_stored=True,
+                                 is_indexed=True))
+register_field('text', Unicode(is_indexed=True))
+register_field('title', Unicode(is_stored=True, is_indexed=True))
+register_field('is_role_aware', Boolean(is_indexed=True))
+register_field('is_image', Boolean(is_indexed=True))
+register_field('format', String(is_stored=True, is_indexed=True))
+register_field('workflow_state', String(is_stored=True, is_indexed=True))
+register_field('members', String(is_indexed=True, multiple=True))
+# Versioning
+register_field('mtime', DateTime(is_stored=True, is_indexed=True))
+register_field('last_author', String(is_stored=True, is_indexed=False))
+# For referencial-integrity, keep links between cms resources,
+# where a link is the physical path.
+register_field('links', String(is_indexed=True, multiple=True))
+# Folder's view
+register_field('parent_path', String(is_indexed=True))
+register_field('name', String(is_stored=True, is_indexed=True))
+register_field('size', Integer(is_stored=True, is_indexed=False))
+

@@ -29,12 +29,12 @@ from itools.datatypes import DateTime, Integer, String, Unicode, Tokens
 from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.vfs import FileName
-from itools.xapian import IntegerField, KeywordField
 
 # Import from ikaaro
 from ikaaro.file import File
 from ikaaro.folder import Folder
 from ikaaro.registry import register_resource_class, get_resource_class
+from ikaaro.registry import register_field
 from ikaaro.utils import generate_name
 from issue_views import Issue_Edit, Issue_EditResources, Issue_History
 from issue_views import IssueTrackerMenu
@@ -72,21 +72,6 @@ class Issue(Folder):
     def _make_resource(cls, folder, name):
         Folder._make_resource(cls, folder, name)
         folder.set_handler('%s/.history' % name, History())
-
-
-    def get_catalog_fields(self):
-        fields = Folder.get_catalog_fields(self)
-        # Metadata
-        names = [
-            'id', 'product', 'module', 'version', 'type', 'state', 'priority']
-        for name in names:
-            field = IntegerField(name, is_stored=True)
-            fields.append(field)
-        # Assign To
-        field = KeywordField('assigned_to', is_stored=True)
-        fields.append(field)
-        # Ok
-        return fields
 
 
     def get_catalog_values(self):
@@ -396,4 +381,14 @@ class Issue(Folder):
 ###########################################################################
 # Register
 ###########################################################################
+# The class
 register_resource_class(Issue)
+
+
+# The fields
+for name in [ 'id', 'product', 'module', 'version', 'type', 'state',
+              'priority' ]:
+    register_field(name, Integer(is_stored=True, is_indexed=True))
+register_field('assigned_to', String(is_stored=True, is_indexed=True))
+
+

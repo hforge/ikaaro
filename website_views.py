@@ -27,7 +27,7 @@ from itools.gettext import MSG
 from itools.stl import stl
 from itools import vfs
 from itools.web import STLView, INFO, ERROR
-from itools.xapian import PhraseQuery, OrQuery, AndQuery, TextField
+from itools.xapian import PhraseQuery, OrQuery, AndQuery
 
 # Import from ikaaro
 import ikaaro
@@ -316,7 +316,7 @@ class SiteSearchView(SearchForm):
         # The Search Query
         query = [ OrQuery(PhraseQuery('title', word),
                   PhraseQuery('text', word))
-                    for word, kk in TextField.split(text) ]
+                    for word, kk in Unicode.split(text) ]
         if not query:
             return []
 

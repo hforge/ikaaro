@@ -18,9 +18,6 @@
 from os import devnull
 from subprocess import call
 
-# Import from Xapian
-from xapian import WritableDatabase, DB_CREATE
-
 # Import from itools
 from itools.handlers import ReadOnlyDatabase as BaseReadOnlyDatabase
 from itools.handlers import SafeDatabase
@@ -30,6 +27,7 @@ from itools.xapian import Catalog, make_catalog
 
 # Import from ikaaro
 from folder import Folder
+from registry import get_register_fields
 
 
 
@@ -42,7 +40,8 @@ class ReadOnlyDatabase(BaseReadOnlyDatabase):
         self.path = '%s/database' % target
 
         # The catalog
-        self.catalog = Catalog('%s/catalog' % target, read_only=True)
+        self.catalog = Catalog('%s/catalog' % target, get_register_fields(),
+                               read_only=True)
 
 
 
@@ -58,7 +57,7 @@ class Database(SafeDatabase):
         self.new_files = []
 
         # The catalog
-        self.catalog = Catalog('%s/catalog' % target)
+        self.catalog = Catalog('%s/catalog' % target, get_register_fields())
 
         # Events
         self.resources_added = {}
@@ -202,7 +201,7 @@ def make_database(target):
         call(command, cwd=path, stdout=null)
 
     # The catalog
-    WritableDatabase('%s/catalog' % target, DB_CREATE)
+    make_catalog('%s/catalog' % target, get_register_fields())
 
     # Ok
     return Database(target)

@@ -31,7 +31,7 @@ from itools.i18n.accept import AcceptLanguage
 
 # Import from ikaaro
 from ikaaro.server import Server, ask_confirmation, get_pid, get_fake_context
-
+from ikaaro.registry import get_register_fields
 
 def update_catalog(parser, options, target):
     # Check for database consistency
@@ -58,7 +58,7 @@ def update_catalog(parser, options, target):
     catalog_path = '%s/catalog' % target
     if vfs.exists(catalog_path):
         vfs.remove(catalog_path)
-    catalog = make_catalog(catalog_path)
+    catalog = make_catalog(catalog_path, get_register_fields())
 
     # Get the root
     server = Server(target, read_only=True)

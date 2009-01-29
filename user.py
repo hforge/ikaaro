@@ -24,7 +24,6 @@ from copy import deepcopy
 from itools.datatypes import Email, String, Unicode
 from itools.gettext import MSG
 from itools.uri import Path
-from itools.xapian import TextField, KeywordField
 from itools.web import INFO
 
 # Import from ikaaro
@@ -33,6 +32,7 @@ from datatypes import Password
 from folder import Folder
 from folder_views import Folder_BrowseContent
 from registry import register_resource_class, get_resource_class
+from registry import register_field
 from resource_views import DBResource_Edit
 from user_views import User_ConfirmRegistration, User_EditAccount
 from user_views import User_EditPassword, User_EditPreferences, User_Profile
@@ -74,16 +74,6 @@ class User(AccessControl, Folder):
     ########################################################################
     # Indexing
     ########################################################################
-    def get_catalog_fields(self):
-        fields = Folder.get_catalog_fields(self)
-        fields += [KeywordField('email', is_stored=True),
-                   TextField('lastname', is_stored=True),
-                   TextField('firstname', is_stored=True),
-                   # Login Name
-                   KeywordField('username', is_stored=True)]
-        return fields
-
-
     def get_catalog_values(self):
         values = Folder.get_catalog_values(self)
         values['email'] = self.get_property('email')
@@ -308,5 +298,14 @@ class UserFolder(Folder):
 ###########################################################################
 # Register
 ###########################################################################
+# The classes
 register_resource_class(UserFolder)
 register_resource_class(User)
+
+# The fields
+for name in ['email', 'username']:
+    register_field(name, String(is_stored=True, is_indexed=True))
+for name in ['lastname', 'firstname']:
+    register_field(name, Unicode(is_stored=True, is_indexed=True))
+
+

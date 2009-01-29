@@ -572,7 +572,7 @@ class Folder_PreviewContent(Folder_BrowseContent):
 
     def get_items(self, resource, context):
         # Show only images
-        query = OrQuery(PhraseQuery('is_image', '1'),
+        query = OrQuery(PhraseQuery('is_image', True),
                         PhraseQuery('format', 'folder'))
         return Folder_BrowseContent.get_items(self, resource, context, query)
 

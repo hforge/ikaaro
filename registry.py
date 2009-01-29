@@ -52,3 +52,17 @@ def get_register_websites():
 
 def get_website_class(class_id):
     return websites_registry[class_id]
+
+
+fields_registry = {}
+
+def register_field(name, field_cls):
+    if name in fields_registry:
+        raise ValueError, ('You have already register a field with this name '
+                           '"%s"') % name
+    fields_registry[name] = field_cls
+
+
+def get_register_fields():
+    return fields_registry
+
