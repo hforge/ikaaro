@@ -23,7 +23,6 @@ from datetime import datetime
 from tempfile import mkdtemp
 from subprocess import call
 from urllib import urlencode
-from mimetypes import guess_extension
 from re import compile
 
 # Import from docutils
@@ -34,7 +33,7 @@ from docutils.utils import SystemMessage
 from docutils import nodes
 
 # Import from itools
-from itools import vfs
+from itools.core import guess_extension
 from itools.datatypes import DateTime, String, Unicode
 from itools.gettext import MSG
 from itools.handlers import checkid, get_handler, File as FileHandler
@@ -43,6 +42,7 @@ from itools.i18n import format_datetime
 from itools.xml import XMLParser, XMLError
 from itools.uri import get_reference
 from itools.uri.mailto import Mailto
+from itools import vfs
 from itools.vfs import FileName
 from itools.web import BaseView, STLForm, STLView, ERROR
 

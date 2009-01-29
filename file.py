@@ -20,10 +20,9 @@
 
 # Import from the Standard Library
 from datetime import datetime
-from mimetypes import guess_all_extensions
 
 # Import from itools
-from itools.core import merge_dicts
+from itools.core import guess_all_extensions, merge_dicts
 from itools.datatypes import String
 from itools.gettext import MSG
 from itools.handlers import File as FileHandler, Image as ImageHandler
