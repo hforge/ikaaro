@@ -16,11 +16,11 @@
 
 # Import from the Standard Library
 from datetime import datetime
-from mimetypes import add_type
 from random import random
 from time import time
 
 # Import from itools
+from itools.core import add_type
 from itools.datatypes import DateTime
 from itools.handlers import TextFile, register_handler_class
 

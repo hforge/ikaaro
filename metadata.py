@@ -15,10 +15,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Import from the Standard Library
-from mimetypes import add_type
-
 # Import from itools
+from itools.core import add_type
 from itools.datatypes import String, Unicode, XMLContent
 from itools.handlers import File, register_handler_class
 from itools.web import get_context
