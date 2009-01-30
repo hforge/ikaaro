@@ -23,7 +23,6 @@ from datetime import datetime
 from tempfile import mkdtemp
 from subprocess import call
 from urllib import urlencode
-from mimetypes import guess_extension
 from re import compile
 
 # Import from docutils
@@ -40,11 +39,12 @@ from itools.gettext import MSG
 from itools.handlers import checkid, get_handler, File as FileHandler
 from itools.html import XHTMLFile
 from itools.i18n import format_datetime
-from itools.xml import XMLParser, XMLError
 from itools.uri import get_reference
 from itools.uri.mailto import Mailto
+from itools.utils import guess_extension
 from itools.vfs import FileName
 from itools.web import BaseView, STLForm, STLView, ERROR
+from itools.xml import XMLParser, XMLError
 
 # Import from ikaaro
 from ikaaro import messages

@@ -17,13 +17,12 @@
 # Import from the Standard Library
 from base64 import decodestring, encodestring
 from marshal import dumps, loads
-from mimetypes import guess_type
 from urllib import quote, unquote
 from zlib import compress, decompress
 
 # Import from itools
 from itools.datatypes import DataType, Enumerate
-from itools.utils import freeze
+from itools.utils import freeze, guess_type
 
 
 """This module defines some datatypes used in ikaaro, whose inclusion in
