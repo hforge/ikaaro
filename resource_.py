@@ -37,7 +37,7 @@ from metadata import Metadata
 from resource_views import DBResource_NewInstance, DBResource_Edit
 from resource_views import DBResource_AddImage, DBResource_AddLink
 from resource_views import LoginView, LogoutView, DBResource_History
-from resource_views import Put_View, Delete_View
+from resource_views import Put_View, Delete_View, Lock_View
 from workflow import WorkflowAware
 from registry import register_field
 
@@ -547,6 +547,8 @@ class DBResource(CatalogAware, IResource):
     history = DBResource_History()
     http_put = Put_View()
     http_delete = Delete_View()
+    http_lock = Lock_View()
+    http_unlock = Lock_View()
 
 
 

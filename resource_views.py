@@ -28,11 +28,12 @@ from itools.core import merge_dicts
 from itools.datatypes import String, Unicode
 from itools.gettext import MSG
 from itools.handlers import checkid
-from itools.http import Conflict, NotImplemented, MethodNotAllowed
+from itools.http import Conflict, NotImplemented
 from itools.i18n import format_datetime, get_language_name
 from itools.uri import Path, get_reference
 from itools.vfs import FileName
 from itools.web import get_context, BaseView, STLView, STLForm, INFO, ERROR
+from itools.webdav import lock_body
 
 # Import from ikaaro
 from datatypes import FileDataType, CopyCookie
@@ -630,6 +631,7 @@ class Delete_View(BaseView):
 
     def DELETE(self, resource, context):
         name = resource.name
+        parent = resource.parent
         try:
             parent.del_resource(name)
         except ConsistencyError:
@@ -641,3 +643,29 @@ class Delete_View(BaseView):
         if str(resource.get_abspath()) in paths:
             context.del_cookie('ikaaro_cp')
             paths = []
+
+
+
+class Lock_View(BaseView):
+
+    access = 'is_allowed_to_lock'
+
+
+    def LOCK(self, resource, context):
+        lock = resource.lock()
+
+        # TODO move in the request handler
+        response = context.response
+        response.set_header('Content-Type', 'text/xml; charset="utf-8"')
+        response.set_header('Lock-Token', 'opaquelocktoken:%s' % lock)
+        return lock_body % {'owner': context.user.name, 'locktoken': lock}
+
+
+    def UNLOCK(self, resource, context):
+        lock = resource.get_lock()
+        resource.unlock()
+
+        # TODO move in the request handler
+        response = context.response
+        response.set_header('Content-Type', 'text/xml; charset="utf-8"')
+        response.set_header('Lock-Token', 'opaquelocktoken:%s' % lock)
