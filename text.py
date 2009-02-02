@@ -19,8 +19,9 @@
 # Import from itools
 from itools.csv import CSVFile
 from itools.gettext import POFile, MSG
-from itools.handlers import TextFile, Python as PythonFile
+from itools.handlers import TextFile
 from itools.html import HTMLFile
+from itools.python import Python as PythonFile
 from itools.web import get_context
 from itools.xmlfile import XMLFile
 
