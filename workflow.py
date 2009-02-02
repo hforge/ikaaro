@@ -83,7 +83,7 @@ class StateForm(STLForm):
 
     def action(self, resource, context, form):
         try:
-            resurce.make_transition(form['transition'], form['comments'])
+            resource.make_transition(form['transition'], form['comments'])
         except WorkflowError, excp:
             context.server.log_error(context)
             context.message = ERROR(unicode(excp.message, 'utf-8'))
