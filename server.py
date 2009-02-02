@@ -19,6 +19,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
+from cProfile import runctx
 from logging import DEBUG, INFO, WARNING, ERROR, CRITICAL
 from os import fdopen
 import sys
@@ -145,11 +146,9 @@ class Server(BaseServer):
         # Profile CPU
         profile = config.get_value('profile-cpu')
         if profile is True:
-            profile_path = '%s/log/profile' % path
-            if not vfs.exists(profile_path):
-                vfs.make_folder(profile_path)
+            self.profile_path = '%s/log/profile' % path
         else:
-            profile_path = None
+            self.profile_path = None
         # Profile Memory
         if config.get_value('profile-memory') is True:
             import guppy.heapy.RM
@@ -164,8 +163,7 @@ class Server(BaseServer):
         # Initialize
         BaseServer.__init__(self, root, address=address, port=port,
                             access_log=access_log, event_log=event_log,
-                            log_level=log_level, pid_file='%s/pid' % path,
-                            profile_path=profile_path)
+                            log_level=log_level, pid_file='%s/pid' % path)
 
         # Initialize the spool
         self.spool = Spool(target)
@@ -237,3 +235,11 @@ class Server(BaseServer):
     # FIXME Short-cut, to be removed
     def change_resource(self, resource):
         self.database.change_resource(resource)
+
+
+    def start(self):
+        if self.profile_path is not None:
+            filename = self.profile_path
+            runctx("BaseServer.start(self)", globals(), locals(), filename)
+        else:
+            BaseServer.start(self)
