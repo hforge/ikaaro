@@ -15,8 +15,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.datatypes import String
+from itools.datatypes import String, Tokens
 from itools.gettext import MSG
+from itools.handlers import merge_dicts
 from itools.web import INFO
 from itools.xml import XMLParser
 
@@ -220,6 +221,12 @@ class ChildrenOrderedTable(OrderedTable):
 
     orderable_classes = None
     form = [PathSelectorWidget('name', title=MSG(u'Path'))]
+
+
+    @classmethod
+    def get_metadata_schema(cls):
+        return merge_dicts(OrderedTable.get_metadata_schema(),
+                           order=Tokens(default=()))
 
 
     def get_orderable_classes(self):
