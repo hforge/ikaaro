@@ -22,7 +22,7 @@ from itools.gettext import POFile, MSG
 from itools.handlers import TextFile, Python as PythonFile
 from itools.html import HTMLFile
 from itools.web import get_context
-from itools.xml import XMLFile
+from itools.xmlfile import XMLFile
 
 # Import from ikaaro
 from file import File

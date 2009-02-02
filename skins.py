@@ -29,7 +29,7 @@ from itools.http import NotFound
 from itools.i18n import has_language
 from itools.stl import stl
 from itools.web import get_context, BaseView, ERROR
-from itools.xml import XMLFile
+from itools.xmlfile import XMLFile
 
 # Import from ikaaro
 from resource_ import IResource
