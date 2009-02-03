@@ -186,6 +186,8 @@ class Table(File):
         ids = context.get_form_values('ids', type=Integer)
         for id in ids:
             self.handler.del_record(id)
+        # Change
+        context.server.change_object(self)
 
         message = u'Record deleted.'
         return context.come_back(message)
@@ -272,6 +274,8 @@ class Table(File):
         try:
             self.handler.add_record(record)
             message = u'New record added.'
+            # Change
+            context.server.change_object(self)
         except ValueError, strerror:
             template = Template(self.gettext(u'Error: $message'))
             message = template.substitute(message=strerror)
@@ -381,6 +385,8 @@ class Table(File):
         try:
             self.handler.update_record(id, **record)
             message = MSG_CHANGES_SAVED
+            # Change
+            context.server.change_object(self)
         except ValueError, strerror:
             template = Template(self.gettext(u'Error: $message'))
             message = template.substitute(message=strerror)
