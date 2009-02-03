@@ -158,6 +158,8 @@ class Table_View(SearchForm):
         ids = form['ids']
         for id in ids:
             resource.handler.del_record(id)
+        # Reindex the resource
+        context.server.change_resource(resource)
 
         context.message = INFO(u'Record deleted.')
 
@@ -225,6 +227,8 @@ class Table_AddRecord(Table_AddEditRecord):
 
     def action_add_or_edit(self, resource, context, record):
         resource.handler.add_record(record)
+        # Reindex the resource
+        context.server.change_resource(resource)
 
 
     def action_on_success(self, resource, context):
@@ -261,6 +265,8 @@ class Table_EditRecord(Table_AddEditRecord):
     def action_add_or_edit(self, resource, context, record):
         id = context.query['id']
         resource.handler.update_record(id, **record)
+        # Reindex the resource
+        context.server.change_resource(resource)
 
 
     def action_on_success(self, resource, context):
@@ -320,6 +326,8 @@ class OrderedTable_View(Table_View):
         ids = form['ids']
         for id in ids:
             resource.handler.del_record(id)
+        # Reindex the resource
+        context.server.change_resource(resource)
 
         context.message = INFO(u'Record deleted.')
 
