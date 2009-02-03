@@ -160,7 +160,7 @@ class Menu_View(OrderedTable_View):
             resource.before_remove_record(id)
             resource.handler.del_record(id)
 
-        # update the resource to update the backlinks
+        # Reindex the resource
         context.server.change_resource(resource)
         context.message = MSG(u'Record deleted.')
 
@@ -231,28 +231,8 @@ class Menu_View(OrderedTable_View):
 
             # update the parent record
             handler.update_record(parent_id, **{'child': name})
-            # update the resource to update the backlinks
-            context.server.change_resource(resource)
 
         context.message = messages.MSG_NEW_RESOURCE
-
-
-
-class Menu_AddRecord(Table_AddRecord):
-
-    def action_add_or_edit(self, resource, context, record):
-        Table_AddRecord.action_add_or_edit(self, resource, context, record)
-        # update the resource to update the backlinks
-        context.server.change_resource(resource)
-
-
-
-class Menu_EditRecord(Table_EditRecord):
-
-    def action_add_or_edit(self, resource, context, record):
-        Table_EditRecord.action_add_or_edit(self, resource, context, record)
-        # update the resource to update the backlinks
-        context.server.change_resource(resource)
 
 
 
@@ -265,8 +245,6 @@ class Menu(OrderedTable):
 
     # Views
     view = Menu_View()
-    add_record = Menu_AddRecord()
-    edit_record = Menu_EditRecord()
 
 
     form = [TextWidget('title', title=MSG(u'Title')),
