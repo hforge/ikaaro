@@ -31,7 +31,7 @@ from itools.datatypes import (DataType, Date, Enumerate, Integer, Unicode,
 from itools.ical import (get_grid_data, icalendar, DateTime, icalendarTable,
     Record, Time)
 from itools.stl import stl
-from itools.web import FormError
+from itools.web import FormError, get_context
 
 # Import from ikaaro
 from base import DBObject
@@ -1227,9 +1227,13 @@ class Calendar(CalendarView, Text):
 
     def update_record(self, id, properties):
         self.handler.update_component(id, **properties)
+        # Change
+        get_context().server.change_object(self)
 
 
     def add_record(self, type, properties):
+        # Change
+        get_context().server.change_object(self)
         return self.handler.add_component(type, **properties)
 
 
@@ -1299,6 +1303,8 @@ class Calendar(CalendarView, Text):
 
     def _remove_event(self, uid):
         self.handler.remove(uid)
+        # Change
+        get_context().server.change_object(self)
 
 
     download_form__access__ = 'is_allowed_to_view'
@@ -1359,10 +1365,14 @@ class CalendarTable(CalendarView, Table):
     def update_record(self, id, properties):
         id = int(id)
         self.handler.update_record(id, **properties)
+        # Change
+        get_context().server.change_object(self)
 
 
     def add_record(self, type, properties):
         properties['type'] = type
+        # Change
+        get_context().server.change_object(self)
         return self.handler.add_record(properties)
 
 
@@ -1402,6 +1412,8 @@ class CalendarTable(CalendarView, Table):
                 value = form[value]
             record[name] = value
 
+        # Change
+        context.server.change_object(self)
         self.handler.update_record(id, **record)
         goto = context.uri.resolve2('../;edit_record_form')
         return context.come_back(MSG_CHANGES_SAVED, goto=goto, keep=['id'])
@@ -1474,6 +1486,8 @@ class CalendarTable(CalendarView, Table):
 
     def _remove_event(self, uid):
         self.handler.del_record(int(uid))
+        # Change
+        get_context().server.change_object(self)
 
 
 
