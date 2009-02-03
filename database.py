@@ -15,7 +15,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
-from os import devnull
 from subprocess import call
 
 # Import from itools
@@ -167,9 +166,8 @@ class Database(SafeDatabase):
 
         # Commit
         command = [
-            'git', 'commit', '-a', '--author=%s' % author, '-m', message]
-        with open(devnull) as null:
-            call(command, cwd=self.path, stdout=null)
+            'git', 'commit', '-aq', '--author=%s' % author, '-m', message]
+        call(command, cwd=self.path)
 
         # Catalog
         self.catalog.save_changes()
@@ -197,8 +195,7 @@ def make_database(target):
     # Init git
     path = '%s/database' % target
     command = ['git', 'init']
-    with open(devnull) as null:
-        call(command, cwd=path, stdout=null)
+    call(command, cwd=path)
 
     # The catalog
     make_catalog('%s/catalog' % target, get_register_fields())
