@@ -25,6 +25,7 @@ from itools.datatypes import DataType, Date
 from itools.gettext import MSG
 from itools.ical import iCalendar, icalendarTable
 from itools.ical import Record
+from itools.web import get_context
 
 # Import from ikaaro
 from calendar_views import Calendar_Upload, Calendar_Download
@@ -178,16 +179,22 @@ class CalendarTable(CalendarBase, Table):
 
     def add_record(self, type, properties):
         properties['type'] = type
+        # Reindex the resource
+        get_context().server.change_resource(self)
         return self.handler.add_record(properties)
 
 
     def update_record(self, id, properties):
         id = int(id)
         self.handler.update_record(id, **properties)
+        # Reindex the resource
+        get_context().server.change_resource(self)
 
 
     def _remove_event(self, uid):
         self.handler.del_record(int(uid))
+        # Reindex the resource
+        get_context().server.change_resource(self)
 
 
     @classmethod
@@ -214,15 +221,21 @@ class Calendar(CalendarBase, Text):
 
 
     def add_record(self, type, properties):
+        # Reindex the resource
+        get_context().server.change_resource(self)
         return self.handler.add_component(type, **properties)
 
 
     def update_record(self, id, properties):
         self.handler.update_component(id, **properties)
+        # Reindex the resource
+        get_context().server.change_resource(self)
 
 
     def _remove_event(self, uid):
         self.handler.remove(uid)
+        # Reindex the resource
+        get_context().server.change_resource(self)
 
 
     @classmethod
