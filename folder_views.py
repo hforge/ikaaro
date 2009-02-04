@@ -17,6 +17,7 @@
 # Import from the Standard Library
 from urllib import quote
 from datetime import datetime
+from operator import itemgetter
 
 # Import from the Python Image Library
 try:
@@ -28,6 +29,7 @@ except ImportError:
 from itools.core import merge_dicts
 from itools.datatypes import Boolean, Integer, String, Unicode
 from itools.gettext import MSG
+from itools import git
 from itools.handlers import checkid
 from itools.i18n import format_datetime
 from itools.stl import set_prefix
@@ -44,7 +46,7 @@ from exceptions import ConsistencyError
 import messages
 from resource_views import AddResourceMenu
 from utils import generate_name, get_base_path_query
-from views import IconsView, SearchForm, ContextMenu
+from views import IconsView, BrowseForm, SearchForm, ContextMenu
 from workflow import WorkflowAware
 
 
@@ -705,18 +707,57 @@ class Folder_PreviewContent(Folder_BrowseContent):
 
 
 
-class Folder_LastChanges(Folder_BrowseContent):
+class Folder_LastChanges(BrowseForm):
 
+    access = 'is_allowed_to_view'
     title = MSG(u"Last Changes")
 
-    def get_query_schema(self):
-        schema = Folder_BrowseContent.get_query_schema(self)
+    query_schema = merge_dicts(BrowseForm.query_schema,
+                               sort_by=String(default='mtime'),
+                               reverse=Boolean(default=True))
 
-        # Override the default values
-        schema['reverse'] = Boolean(default=True)
-        schema['sort_by'] = String(default='mtime')
-        schema['search_subfolders'] = Boolean(default=True)
-        return schema
+
+    table_columns = [
+        ('mtime', MSG(u'Last Change')),
+        ('author', MSG(u'Author')),
+    ]
+
+
+    def get_items(self, resource, context):
+        cwd = context.database.path
+        revisions = git.get_revisions(cwd=cwd)
+
+        users = resource.get_resource('/users')
+
+        items = []
+        for revision in revisions:
+            metadata = git.get_metadata(revision, cwd=cwd)
+            author, mtime = metadata['author']
+            username = author.split()[0]
+            if username == 'nobody':
+                author = ''
+            else:
+                author = users.get_resource(username).get_title()
+            items.append({
+                'mtime': mtime,
+                'author': author,
+            })
+
+        return items
+
+
+    def sort_and_batch(self, resource, context, results):
+        start = context.query['batch_start']
+        size = context.query['batch_size']
+        sort_by = context.query['sort_by']
+        reverse = context.query['reverse']
+
+        results.sort(key=itemgetter(sort_by), reverse=reverse)
+        return results[start:start+size]
+
+
+    def get_item_value(self, resource, context, item, column):
+        return item[column]
 
 
 

@@ -21,8 +21,6 @@
 
 # Import from the Standard Library
 from datetime import datetime
-from os import devnull
-from subprocess import Popen, PIPE
 
 # Import from itools
 from itools.datatypes import Unicode, String, Integer, Boolean, DateTime
@@ -245,17 +243,13 @@ class DBResource(CatalogAware, IResource):
             context = get_context()
 
         # Get the list of revisions
-        command = ['git', 'rev-list', 'HEAD', '--']
-        command.extend(self.get_files_to_archive())
         cwd = context.database.path
-        with open(devnull) as null:
-            popen = Popen(command, cwd=cwd, stdout=PIPE, stderr=null)
-            returncode = popen.wait()
+        files = self.get_files_to_archive()
+        lines = git.get_revisions(files, cwd=cwd)
 
         # Get the metadata
         revisions = []
-        for line in popen.stdout.readlines():
-            line = line.strip()
+        for line in lines:
             metadata = git.get_metadata(line, cwd=cwd)
             date = metadata['committer'][1]
             username = metadata['author'][0].split()[0]
