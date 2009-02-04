@@ -33,7 +33,7 @@ from itools.i18n import format_datetime, get_language_name
 from itools.uri import Path, get_reference
 from itools.vfs import FileName
 from itools.web import get_context, BaseView, STLView, STLForm, INFO, ERROR
-from itools.webdav import lock_body
+from itools.web import lock_body
 
 # Import from ikaaro
 from datatypes import FileDataType, CopyCookie
