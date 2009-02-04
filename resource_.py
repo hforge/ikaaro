@@ -245,7 +245,10 @@ class DBResource(CatalogAware, IResource):
         # Get the list of revisions
         cwd = context.database.path
         files = self.get_files_to_archive()
-        lines = git.get_revisions(files, cwd=cwd)
+        try:
+            lines = git.get_revisions(files, cwd=cwd)
+        except EnvironmentError:
+            return []
 
         # Get the metadata
         revisions = []
