@@ -224,6 +224,8 @@ class Tracker(Folder):
             PhraseQuery('format', 'issue')]
         # Text search
         if text:
+            # XXX The language of text should be given
+            #     => {'en': text}
             query2 = [PhraseQuery('title', text), PhraseQuery('text', text)]
             query2 = OrQuery(*query2)
             query.append(query2)

@@ -304,6 +304,13 @@ class DBResource(CatalogAware, IResource):
     # Indexing
     ########################################################################
     def to_text(self):
+        """This function must return:
+           1) An unicode text.
+            or
+           2) A dict in a multilingual context:
+              {'fr': u'....',
+               'en': u'....' ....}
+        """
         raise NotImplementedError
 
 

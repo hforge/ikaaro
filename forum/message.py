@@ -55,10 +55,11 @@ class Message(WebPage):
         folder.set_handler('%s.xhtml.%s' % (name, language), document)
 
 
-    def get_catalog_fields(self):
+    def get_catalog_values(self):
         # text field was already indexed at the thread level
-        return [ x for x in WebPage.get_catalog_fields(self)
-                 if x.name != 'text' ]
+        result = WebPage.get_catalog_values(self)
+        del result['text']
+        return result
 
 
 

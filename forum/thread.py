@@ -86,7 +86,8 @@ class Thread_View(STLForm):
         name = str(id + 1)
         data = form['data']
         language = resource.get_content_language(context)
-        thread = Message.make_resource(Message, resource, name, data, language)
+        thread = Message.make_resource(Message, resource, name, data,
+                                       language)
         # Ok
         return context.come_back(INFO(u'Reply posted'))
 
@@ -125,8 +126,17 @@ class Thread(Folder):
 
     def to_text(self):
         # Index the thread by the content of all its posts
-        text = [ x.to_text() for x in self.search_resources(cls=Message) ]
-        return u'\n'.join(text)
+        result = {}
+        for message in self.search_resources(cls=Message):
+            for language, text in message.to_text().iteritems():
+                texts = result.setdefault(language, [])
+                texts.append(text)
+
+        # Join
+        for language, texts in result.iteritems():
+            result[language] = u'\n'.join(texts)
+
+        return result
 
 
     def get_document_types(self):

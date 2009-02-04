@@ -258,8 +258,12 @@ class WebPage(ResourceWithHTML, Multilingual, Text):
     # API
     #######################################################################
     def to_text(self):
-        text = [ x.to_text() for x in self.get_handlers() ]
-        return u' '.join(text)
+        result = {}
+        languages = self.get_site_root().get_property('website_languages')
+        for language in languages:
+            handler = self.get_handler(language=language)
+            result[language] = handler.to_text()
+        return result
 
 
     def get_content_type(self):

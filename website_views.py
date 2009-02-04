@@ -27,7 +27,7 @@ from itools.gettext import MSG
 from itools.stl import stl
 from itools import vfs
 from itools.web import STLView, INFO, ERROR
-from itools.xapian import PhraseQuery, OrQuery, AndQuery
+from itools.xapian import PhraseQuery, OrQuery, AndQuery, split_unicode
 
 # Import from ikaaro
 import ikaaro
@@ -314,16 +314,23 @@ class SiteSearchView(SearchForm):
             return []
 
         # The Search Query
-        query = [ OrQuery(PhraseQuery('title', word),
-                  PhraseQuery('text', word))
-                    for word, kk in Unicode.split(text) ]
-        if not query:
+        languages = resource.get_property('website_languages')
+        queries = []
+        for language in languages:
+            query = [ OrQuery(PhraseQuery('title', word),
+                              PhraseQuery('text', word))
+                      for word in split_unicode(text, language) ]
+            if query:
+                queries.append(AndQuery(*query))
+
+        if not queries:
             return []
+        query = OrQuery(*queries)
 
         # Search
         abspath = resource.get_canonical_path()
         q1= get_base_path_query(str(abspath))
-        query = AndQuery(q1, *query)
+        query = AndQuery(q1, query)
         root = context.root
         results = root.search(query=query)
         documents = results.get_documents()
