@@ -176,29 +176,22 @@ class Menu_View(OrderedTable_View):
             else:
                 removed.append(str(id))
 
+        message = []
         if removed:
             resources = ', '.join(removed)
-            message = messages.MSG_RESOURCES_REMOVED(resources=resources)
-            context.message = message
+            msg = messages.MSG_RESOURCES_REMOVED(resources=resources)
+            message.append(msg)
         if referenced:
             resources = ', '.join(referenced)
-            message = messages.MSG_RESOURCES_REFERENCED(resources=resources)
-            if context.message is None:
-                context.message = message
-            else:
-                # Merge messages
-                context.message = [context.message, message]
+            msg = messages.MSG_RESOURCES_REFERENCED(resources=resources)
+            message.append(msg)
         if not_removed:
             resources = ', '.join(not_removed)
-            message = messages.MSG_RESOURCES_NOT_REMOVED(resources=resources)
-            if context.message is None:
-                context.message = message
-            else:
-                # Merge messages
-                context.message = [context.message, message]
+            msg = messages.MSG_RESOURCES_NOT_REMOVED(resources=resources)
+            message.append(msg)
         if not removed and not referenced and not not_removed:
-            context.message = messages.MSG_NONE_REMOVED
-        print context.message
+            message.append(messages.MSG_NONE_REMOVED)
+        context.message = message
 
         # Reindex the resource
         context.server.change_resource(resource)
