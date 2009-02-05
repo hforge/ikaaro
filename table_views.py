@@ -325,7 +325,7 @@ class OrderedTable_View(Table_View):
     def action_remove(self, resource, context, form):
         ids = form['ids']
         for id in ids:
-            resource.handler.del_record(id)
+            resource.del_record(id)
         # Reindex the resource
         context.server.change_resource(resource)
 

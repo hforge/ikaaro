@@ -20,21 +20,28 @@ from itools.datatypes import String, Enumerate, Unicode, Integer
 from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.uri import Path
+from itools.web import get_context
 from itools.xml import XMLParser
 
 # Import from ikaaro
+from ikaaro import messages
 from ikaaro.buttons import Button
+from ikaaro.exceptions import ConsistencyError
 from ikaaro.file import File
 from ikaaro.folder import Folder
 from ikaaro.forms import TextWidget, SelectWidget, ReadOnlyWidget
 from ikaaro.forms import stl_namespaces, PathSelectorWidget
-from ikaaro import messages
 from ikaaro.registry import register_resource_class
 from ikaaro.resource_views import Breadcrumb, DBResource_AddLink
 from ikaaro.table import OrderedTableFile, OrderedTable
 from ikaaro.table_views import OrderedTable_View, Table_AddRecord
 from ikaaro.table_views import Table_EditRecord
 from ikaaro.workflow import WorkflowAware
+
+
+
+class NotAllowedError(Exception):
+    pass
 
 
 
@@ -156,13 +163,45 @@ class Menu_View(OrderedTable_View):
     #######################################################################
     def action_remove(self, resource, context, form):
         ids = form['ids']
+        removed = []
+        not_removed = []
+        referenced = []
         for id in ids:
-            resource.before_remove_record(id)
-            resource.handler.del_record(id)
+            try:
+                resource.del_record(id)
+            except ConsistencyError, e:
+                referenced.append(str(id))
+            except NotAllowedError:
+                not_removed.append(str(id))
+            else:
+                removed.append(str(id))
+
+        if removed:
+            resources = ', '.join(removed)
+            message = messages.MSG_RESOURCES_REMOVED(resources=resources)
+            context.message = message
+        if referenced:
+            resources = ', '.join(referenced)
+            message = messages.MSG_RESOURCES_REFERENCED(resources=resources)
+            if context.message is None:
+                context.message = message
+            else:
+                # Merge messages
+                context.message = [context.message, message]
+        if not_removed:
+            resources = ', '.join(not_removed)
+            message = messages.MSG_RESOURCES_NOT_REMOVED(resources=resources)
+            if context.message is None:
+                context.message = message
+            else:
+                # Merge messages
+                context.message = [context.message, message]
+        if not removed and not referenced and not not_removed:
+            context.message = messages.MSG_NONE_REMOVED
+        print context.message
 
         # Reindex the resource
         context.server.change_resource(resource)
-        context.message = MSG(u'Record deleted.')
 
 
     def action_order_up(self, resource, context, form):
@@ -253,16 +292,26 @@ class Menu(OrderedTable):
             ReadOnlyWidget('child')]
 
 
-    def before_remove_record(self, id):
+    def del_record(self, id):
         handler = self.handler
         record = handler.get_record(id)
         child_path = handler.get_record_value(record, 'child')
         container = self.parent
+        user = get_context().user
         if child_path and container.has_resource(child_path):
             child = container.get_resource(child_path)
-            for record_id in child.handler.get_record_ids():
-                child.before_remove_record(record_id)
-            container.del_resource(child_path)
+            ac = child.get_access_control()
+            if ac.is_allowed_to_remove(user, child):
+                if child.handler.get_n_records():
+                    raise NotAllowedError
+                # Remove the child table
+                # May raise a ConsistencyError
+                container.del_resource(child_path)
+            else:
+                raise NotAllowedError
+
+        # Delete the record
+        handler.del_record(id)
 
 
     def get_menu_namespace_level(self, context, url, depth=2,
@@ -348,8 +397,13 @@ class Menu(OrderedTable):
             # Submenu resources
             path = handler.get_record_value(record, 'child')
             if path:
-                uri = base.resolve(path)
-                links.append(str(uri))
+                container = self.parent
+                if container.has_resource(path):
+                    # take into account the submenu if it is not empty
+                    child = container.get_resource(path)
+                    if child.handler.get_n_records():
+                        uri = base.resolve(path)
+                        links.append(str(uri))
 
         return links
 
