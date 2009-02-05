@@ -19,6 +19,7 @@ from itools.datatypes import String, Tokens
 from itools.gettext import MSG
 from itools.handlers import merge_dicts
 from itools.web import INFO
+from itools.xapian import AndQuery, PhraseQuery, StartQuery
 from itools.xml import XMLParser
 
 # Import from ikaaro
@@ -41,7 +42,11 @@ class AddButton(Button):
 
 
 
-class ChildrenOrderedTable_Ordered(OrderedTable_View):
+###########################################################################
+# ResourcesOrderedTable
+###########################################################################
+
+class ResourcesOrderedTable_Ordered(OrderedTable_View):
 
     title = MSG('Ordered items')
 
@@ -56,11 +61,11 @@ class ChildrenOrderedTable_Ordered(OrderedTable_View):
 
     def get_item_value(self, resource, context, item, column):
         if column == 'title':
-            item = resource.parent.get_resource(item.name)
+            item = resource.get_resource_by_name(item.name, context)
             return item.get_title(), context.get_link(item)
         elif column == 'workflow_state':
             # The workflow state
-            item = resource.parent.get_resource(item.name)
+            item = resource.get_resource_by_name(item.name, context)
             if not isinstance(item, WorkflowAware):
                 return None
             statename = item.get_statename()
@@ -76,8 +81,7 @@ class ChildrenOrderedTable_Ordered(OrderedTable_View):
                                                 column)
 
 
-
-class ChildrenOrderedTable_Unordered(Folder_BrowseContent):
+class ResourcesOrderedTable_Unordered(Folder_BrowseContent):
 
     access = 'is_allowed_to_edit'
     title = MSG('Unordered items')
@@ -103,9 +107,18 @@ class ChildrenOrderedTable_Unordered(Folder_BrowseContent):
     def get_items(self, resource, context):
         exclude = [resource.name] + list(resource.get_ordered_names())
         orderable_classes = resource.get_orderable_classes() or ()
+        path = resource.get_root_order_path(context)
+
+        query = [StartQuery('abspath', str(path))]
+        for cl in orderable_classes:
+            query.append(PhraseQuery('format', cl.class_id))
+        query = AndQuery(*query)
+        root = context.root
+        results = root.search(query).get_documents()
         items = []
-        for item in resource.parent.search_resources(cls=orderable_classes):
+        for item in results:
             if item.name not in exclude:
+                item = root.get_resource(item.abspath)
                 items.append(item)
         return items
 
@@ -119,7 +132,6 @@ class ChildrenOrderedTable_Unordered(Folder_BrowseContent):
             return item.name
         if column == 'workflow_state':
             # The workflow state
-            item = resource.parent.get_resource(item.name)
             if not isinstance(item, WorkflowAware):
                 return None
             statename = item.get_statename()
@@ -138,7 +150,6 @@ class ChildrenOrderedTable_Unordered(Folder_BrowseContent):
 
 
     def action_add(self, resource, context, form):
-        parent = resource.parent
         handler = resource.handler
 
         order = resource.get_property('order') or []
@@ -156,14 +167,14 @@ class ChildrenOrderedTable_Unordered(Folder_BrowseContent):
 
 
 
-class ChildrenOrderedTable_View(CompositeForm):
+class ResourcesOrderedTable_View(CompositeForm):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'View')
     template = '/ui/future/order_view.xml'
 
-    subviews = [ChildrenOrderedTable_Ordered(),
-                ChildrenOrderedTable_Unordered()]
+    subviews = [ResourcesOrderedTable_Ordered(),
+                ResourcesOrderedTable_Unordered()]
 
 
     def get_namespace(self, resource, context):
@@ -172,6 +183,34 @@ class ChildrenOrderedTable_View(CompositeForm):
             views.append({'title': view.title,
                           'view': view.GET(resource, context)})
         return {'views': views}
+
+
+###########################################################################
+# ChildrenOrderedTable
+###########################################################################
+
+class ChildrenOrderedTable_Ordered(ResourcesOrderedTable_Ordered):
+    pass
+
+
+
+class ChildrenOrderedTable_Unordered(ResourcesOrderedTable_Unordered):
+
+    def get_items(self, resource, context):
+        exclude = [resource.name] + list(resource.get_ordered_names())
+        orderable_classes = resource.get_orderable_classes() or ()
+        items = []
+        for item in resource.parent.search_resources(cls=orderable_classes):
+            if item.name not in exclude:
+                items.append(item)
+        return items
+
+
+
+class ChildrenOrderedTable_View(ResourcesOrderedTable_View):
+
+    subviews = [ChildrenOrderedTable_Ordered(),
+                ChildrenOrderedTable_Unordered()]
 
 
 
@@ -206,18 +245,27 @@ class ChildrenOrderedTable_AddLink(DBResource_AddLink):
         return namespace
 
 
+###########################################################################
+# Resources
+###########################################################################
 
-class ChildrenOrderedTableFile(OrderedTableFile):
+class ResourcesOrderedTableFile(OrderedTableFile):
 
+    record_schema = {'name': String(mandatory=True, unique=True, index='keyword')}
+
+
+
+class ChildrenOrderedTableFile(ResourcesOrderedTableFile):
+    # FIXME 0.60 -> to remove
     record_schema = {'name': String}
 
 
 
-class ChildrenOrderedTable(OrderedTable):
+class ResourcesOrderedTable(OrderedTable):
 
-    class_id = 'children-ordered-table'
-    class_title = MSG(u'Children Ordered Table')
-    class_handler = ChildrenOrderedTableFile
+    class_id = 'resources-ordered-table'
+    class_title = MSG(u'Resources Ordered Table')
+    class_handler = ResourcesOrderedTableFile
 
     orderable_classes = None
     form = [PathSelectorWidget('name', title=MSG(u'Path'))]
@@ -233,10 +281,37 @@ class ChildrenOrderedTable(OrderedTable):
         return self.orderable_classes
 
 
+    def get_root_order_path(self, context):
+        """ Every item will be into this path. """
+        return context.root.get_abspath()
+
+
     def get_ordered_names(self):
         for record in self.handler.get_records_in_order():
             yield record.name
 
+
+    def get_resource_by_name(self, name, context):
+        root_order_path = self.get_root_order_path(context)
+        folder = self.get_resource(root_order_path)
+        return folder.get_resource(name)
+
+
+
+class ChildrenOrderedTable(ResourcesOrderedTable):
+
+    class_id = 'children-ordered-table'
+    class_title = MSG(u'Children Ordered Table')
+    class_handler = ChildrenOrderedTableFile
+
+
+    def get_root_order_path(self, context):
+        """ Every item will be into this path. """
+        return self.parent.get_abspath()
+
+
+    def get_resource_by_name(self, name, context):
+        return self.parent.get_resource(name)
 
     # Views
     add_link = ChildrenOrderedTable_AddLink()
@@ -245,4 +320,5 @@ class ChildrenOrderedTable(OrderedTable):
     view = ChildrenOrderedTable_View()
 
 
+register_resource_class(ResourcesOrderedTable)
 register_resource_class(ChildrenOrderedTable)
