@@ -65,6 +65,10 @@ class Table(File):
         return name
 
 
+    def del_record(self, id):
+        self.handler.del_record(id)
+
+
     # Views
     new_instance = DBResource.new_instance
     view = Table_View()
