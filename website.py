@@ -36,12 +36,11 @@ from control_panel import CPBrowseUsers, CPEditContactOptions, CPEditLanguages
 from control_panel import CPEditMembership, CPEditSecurityPolicy
 from control_panel import CPEditVirtualHosts, CPOrphans
 from folder import Folder
-from registry import register_resource_class
-from registry import register_website
+from registry import register_resource_class, register_document_type
 from resource_views import LoginView
 from skins import UI, ui_path
 from website_views import AboutView, ContactForm, CreditsView
-from website_views import ForgottenPasswordForm, NewWebSiteForm, RegisterForm
+from website_views import ForgottenPasswordForm, RegisterForm
 from website_views import SiteSearchView
 
 
@@ -147,7 +146,6 @@ class WebSite(RoleAware, Folder):
     #######################################################################
     # UI
     #######################################################################
-    new_instance = NewWebSiteForm()
     # Control Panel
     control_panel = ControlPanel()
     browse_users = CPBrowseUsers()
@@ -175,4 +173,4 @@ class WebSite(RoleAware, Folder):
 # Register
 ###########################################################################
 register_resource_class(WebSite)
-register_website(WebSite)
+register_document_type(WebSite, WebSite.class_id)

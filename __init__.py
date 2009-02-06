@@ -30,6 +30,7 @@ from calendar_ import CalendarTable
 from file import File
 from folder import Folder
 from html import WebPage
+from registry import register_document_type
 import root
 
 
@@ -42,10 +43,10 @@ path = get_abspath('locale')
 register_domain('ikaaro', path)
 
 # Register document types
-Folder.register_document_type(WebPage)
-Folder.register_document_type(Folder)
-Folder.register_document_type(File)
-Folder.register_document_type(CalendarTable)
+register_document_type(WebPage)
+register_document_type(Folder)
+register_document_type(File)
+register_document_type(CalendarTable)
 
 # Import ikaaro sub-packages (NOTE must be imported after so they are
 # register after)

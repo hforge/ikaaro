@@ -40,9 +40,8 @@ from itools.web import lock_body
 from datatypes import FileDataType, CopyCookie
 from exceptions import ConsistencyError
 from forms import AutoForm, title_widget, description_widget, subject_widget
-from forms import TextWidget
 import messages
-from registry import get_resource_class
+from registry import get_resource_class, get_document_types
 from utils import get_parameters, reduce_string
 from views import NewInstanceForm, ContextMenu
 
@@ -79,20 +78,18 @@ class AddResourceMenu(ContextMenu):
             for cls in document_types ]
 
 
-class DBResource_NewInstance(NewInstanceForm, AutoForm):
+
+class DBResource_NewInstance(NewInstanceForm):
 
     access = 'is_allowed_to_add'
+    template = '/ui/base/new_instance.xml'
     query_schema = {
         'type': String}
     schema = {
         'name': String,
-        'title': Unicode}
-    widgets = [
-        title_widget,
-        TextWidget('name', title=MSG(u'Name'), default='')]
-    submit_value = MSG(u'Add')
+        'title': Unicode,
+        'class_id': String}
     context_menus = [AddResourceMenu()]
-
 
     def get_title(self, context):
         if self.title is not None:
@@ -115,12 +112,42 @@ class DBResource_NewInstance(NewInstanceForm, AutoForm):
         return name or title
 
 
+    def get_namespace(self, resource, context):
+        type = context.get_query_value('type')
+        cls = get_resource_class(type)
+
+        document_types = get_document_types(type)
+        items = []
+        if document_types:
+            # Multiple types
+            if len(document_types) == 1:
+                items = None
+            else:
+                selected = context.get_form_value('class_id')
+                items = [
+                    {'title': x.class_title.gettext(),
+                     'class_id': x.class_id,
+                     'selected': x.class_id == selected,
+                     'icon': '/ui/' + x.class_icon16}
+                    for x in document_types ]
+                if selected is None:
+                    items[0]['selected'] = True
+        # Ok
+        return {
+            'class_id': cls.class_id,
+            'class_title': cls.class_title.gettext(),
+            'items': items}
+
+
     def action(self, resource, context, form):
         name = form['name']
         title = form['title']
 
         # Create the resource
-        class_id = context.query['type']
+        class_id = form['class_id']
+        if class_id is None:
+            # Get it from the query
+            class_id = context.query['type']
         cls = get_resource_class(class_id)
         child = cls.make_resource(cls, resource, name)
         # The metadata

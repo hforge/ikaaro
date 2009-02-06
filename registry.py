@@ -40,18 +40,18 @@ def get_resource_class(class_id, is_file=True):
     return resources_registry['application/x-not-regular-file']
 
 
-websites_registry = {}
 
-def register_website(website):
-    websites_registry[website.class_id] = website
+documents_registry = {}
+
+def register_document_type(resource_class, type=None):
+    if not type in documents_registry:
+        documents_registry[type] = []
+    documents_registry[type].append(resource_class)
 
 
-def get_register_websites():
-    return websites_registry.itervalues()
+def get_document_types(type=None, default=None):
+    return documents_registry.get(type, default)
 
-
-def get_website_class(class_id):
-    return websites_registry[class_id]
 
 
 fields_registry = {}

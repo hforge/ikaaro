@@ -20,8 +20,8 @@
 from itools.core import get_abspath
 
 # Import from ikaaro
-from ikaaro.folder import Folder
 from ikaaro.skins import register_skin
+from ikaaro.registry import register_document_type
 from forum import Forum
 from thread import Thread
 from message import Message
@@ -32,4 +32,4 @@ path = get_abspath('ui')
 register_skin('forum', path)
 
 # Register document type
-Folder.register_document_type(Forum)
+register_document_type(Forum)

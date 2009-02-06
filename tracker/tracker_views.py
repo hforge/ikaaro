@@ -25,7 +25,7 @@ from datetime import datetime
 # Import from itools
 from itools.core import merge_dicts
 from itools.csv import CSVFile, Property
-from itools.datatypes import Boolean, Integer, String, Unicode, Enumerate
+from itools.datatypes import Boolean, Integer, String, Unicode
 from itools.gettext import MSG
 from itools.i18n import format_datetime
 from itools.uri import encode_query, Reference
@@ -35,10 +35,12 @@ from itools.web.views import process_form
 
 # Import from ikaaro
 from ikaaro.buttons import Button
-from ikaaro.forms import HiddenWidget, TextWidget
+from ikaaro.forms import HiddenWidget, TextWidget, AutoForm, title_widget
 from ikaaro import messages
-from ikaaro.resource_views import DBResource_NewInstance
+from ikaaro.views import NewInstanceForm
 from ikaaro.views import BrowseForm, SearchForm as BaseSearchForm, ContextMenu
+from ikaaro.resource_views import AddResourceMenu
+from ikaaro.registry import get_resource_class
 
 # Import from ikaaro.tracker
 from issue import Issue
@@ -177,30 +179,65 @@ class TrackerViewMenu(ContextMenu):
 ###########################################################################
 # Views
 ###########################################################################
-class Tracker_NewInstance(DBResource_NewInstance):
+class Tracker_NewInstance(NewInstanceForm, AutoForm):
 
-    schema = merge_dicts(
-        DBResource_NewInstance.schema,
-        product=Unicode(mandatory=True))
+    access = 'is_allowed_to_add'
+    query_schema = {
+        'type': String}
+    schema = {
+        'name': String,
+        'title': Unicode,
+        'class_id': String,
+        'product': Unicode(mandatory=True)}
+    widgets = [
+        title_widget,
+        TextWidget('name', title=MSG(u'Name'), default=''),
+        TextWidget('product', title=MSG(u'Give the title of one Product'))]
+    submit_value = MSG(u'Add')
+    context_menus = [AddResourceMenu()]
 
-    widgets = DBResource_NewInstance.widgets + \
-        [TextWidget('product', title=MSG(u'Give the title of one Product'))]
+
+    def get_title(self, context):
+        if self.title is not None:
+            return self.title
+        type = context.get_query_value('type')
+        if not type:
+            return MSG(u'Add resource').gettext()
+        cls = get_resource_class(type)
+        class_title = cls.class_title.gettext()
+        title = MSG(u'Add {class_title}')
+        return title.gettext(class_title=class_title)
+
+
+    def get_new_resource_name(self, form):
+        # If the name is not explicitly given, use the title
+        name = form['name']
+        title = form['title'].strip()
+        if name is None:
+            return title
+        return name or title
 
 
     def action(self, resource, context, form):
-        ok = DBResource_NewInstance.action(self, resource, context, form)
-        if ok is None:
-            return
-
-        # Add the initial product
         name = form['name']
+        title = form['title']
+
+        # Create the resource
+        class_id = context.query['type']
+        cls = get_resource_class(class_id)
+        child = cls.make_resource(cls, resource, name)
+        # The metadata
+        metadata = child.metadata
+        language = resource.get_content_language(context)
+        metadata.set_property('title', title, language=language)
+        # Add the initial product
         product = form['product']
         table = resource.get_resource('%s/product' % name).get_handler()
         product = Property(product, language='en')
         table.add_record({'title': product})
 
-        # Ok
-        return ok
+        goto = './%s/' % name
+        return context.come_back(messages.MSG_NEW_RESOURCE, goto=goto)
 
 
 

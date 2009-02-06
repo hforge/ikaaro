@@ -31,6 +31,7 @@ from folder_views import Folder_BrowseContent
 from folder_views import Folder_NewResource, Folder_Orphans, Folder_Thumbnail
 from folder_views import Folder_PreviewContent, Folder_Rename, Folder_View
 from registry import register_resource_class, get_resource_class
+from registry import register_document_type, get_document_types
 from resource_ import DBResource
 
 
@@ -65,11 +66,11 @@ class Folder(DBResource):
 
     @classmethod
     def register_document_type(cls, handler_class):
-        cls.class_document_types.append(handler_class)
+        register_document_type(handler_class)
 
 
     def get_document_types(self):
-        return self.class_document_types
+        return get_document_types()
 
 
     #######################################################################

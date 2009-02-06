@@ -24,7 +24,7 @@ import docutils
 from itools.core import get_abspath
 
 # Import from ikaaro
-from ikaaro.folder import Folder
+from ikaaro.registry import register_document_type
 from ikaaro.skins import register_skin
 from folder import WikiFolder
 from page import WikiPage
@@ -35,4 +35,4 @@ path = get_abspath('ui')
 register_skin('wiki', path)
 
 # Register document type
-Folder.register_document_type(WikiFolder)
+register_document_type(WikiFolder)

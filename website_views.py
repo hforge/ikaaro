@@ -32,81 +32,8 @@ from itools.xapian import PhraseQuery, OrQuery, AndQuery, split_unicode
 # Import from ikaaro
 import ikaaro
 from forms import AutoForm, SelectWidget, MultilineWidget, TextWidget
-import messages
-from registry import get_resource_class
-from registry import get_register_websites, get_website_class
-from resource_views import AddResourceMenu
-from views import NewInstanceForm, SearchForm
+from views import SearchForm
 from utils import get_base_path_query
-
-
-
-class NewWebSiteForm(NewInstanceForm):
-
-    access = 'is_allowed_to_add'
-    title = MSG(u'Web Site')
-    template = '/ui/website/new_instance.xml'
-    schema = {
-        'name': String,
-        'title': Unicode,
-        'class_id': String}
-    context_menus = [AddResourceMenu()]
-
-
-    def get_namespace(self, resource, context):
-        type = context.get_query_value('type')
-        cls = get_resource_class(type)
-
-        # Specific Websites
-        websites = get_register_websites()
-        websites = list(websites)
-        if len(websites) == 1:
-            websites = None
-        else:
-            selected = context.get_form_value('class_id')
-            websites = [
-                {'title': x.class_title.gettext(),
-                 'class_id': x.class_id,
-                 'selected': x.class_id == selected,
-                 'icon': '/ui/' + x.class_icon16}
-                for x in websites ]
-            if selected is None:
-                websites[0]['selected'] = True
-
-        # Ok
-        return {
-            'class_id': cls.class_id,
-            'class_title': cls.class_title.gettext(),
-            'websites': websites}
-
-
-    def get_new_resource_name(self, form):
-        # If the name is not explicitly given, use the title
-        return form['name'].strip() or form['title'].strip()
-
-
-    def action(self, resource, context, form):
-        name = form['name']
-        title = form['title']
-        class_id = form['class_id']
-
-        # Find out the class id
-        if class_id is None:
-            websites = get_register_websites()
-            websites = list(websites)
-            class_id = websites[0].class_id
-
-        # Make resource
-        cls = get_website_class(class_id)
-        child = cls.make_resource(cls, resource, name)
-
-        # Add title
-        metadata = child.metadata
-        language = resource.get_site_root().get_default_language()
-        metadata.set_property('title', title, language=language)
-
-        goto = './%s/' % name
-        return context.come_back(messages.MSG_NEW_RESOURCE, goto=goto)
 
 
 

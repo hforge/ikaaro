@@ -16,14 +16,14 @@
       <dd>
         <input type="text" id="name" name="name" size="40" />
       </dd>
-      <stl:block stl:if="websites">
-        <dt>Choose the Web Site type</dt>
+      <stl:block stl:if="items">
+        <dt>Choose the ${class_title} type</dt>
         <dd>
-          <div stl:repeat="website websites">
-            <input id="${website/class_id}" name="class_id" type="radio"
-              value="${website/class_id}" checked="${website/selected}" />
-            <img border="0" src="${website/icon}" />
-            <label for="${website/class_id}">${website/title}</label>
+          <div stl:repeat="item items">
+            <input id="${item/class_id}" name="class_id" type="radio"
+              value="${item/class_id}" checked="${item/selected}" />
+            <img border="0" src="${item/icon}" />
+            <label for="${item/class_id}">${item/title}</label>
           </div>
         </dd>
       </stl:block>
