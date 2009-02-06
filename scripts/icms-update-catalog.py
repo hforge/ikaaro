@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
+from cProfile import runctx
 from optparse import OptionParser
 import sys
 from time import time
@@ -109,6 +110,8 @@ if __name__ == '__main__':
     parser.add_option(
         '-y', '--yes', action='store_true', dest='confirm',
         help="start the update without asking confirmation")
+    parser.add_option('--profile',
+        help="print profile information to the given file")
 
     options, args = parser.parse_args()
     if len(args) != 1:
@@ -117,4 +120,8 @@ if __name__ == '__main__':
     target = args[0]
 
     # Action!
-    update_catalog(parser, options, target)
+    if options.profile is not None:
+        runctx("update_catalog(parser, options, target)", globals(), locals(),
+               options.profile)
+    else:
+        update_catalog(parser, options, target)
