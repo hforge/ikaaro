@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
+from cProfile import runctx
 from optparse import OptionParser
 from os import devnull
 from subprocess import call
@@ -212,6 +213,8 @@ if __name__ == '__main__':
     parser.add_option(
         '-y', '--yes', action='store_true', dest='confirm',
         help="start the update without asking confirmation")
+    parser.add_option('--profile',
+        help="print profile information to the given file")
 
     # TODO Add option --pretend (to know whether the database needs to be
     # updated)
@@ -223,4 +226,8 @@ if __name__ == '__main__':
     target = args[0]
 
     # Action!
-    update(parser, options, target)
+    if options.profile is not None:
+        runctx("update(parser, options, target)", globals(), locals(),
+               options.profile)
+    else:
+        update(parser, options, target)
