@@ -288,20 +288,24 @@ class Menu(OrderedTable):
     def del_record(self, id):
         handler = self.handler
         record = handler.get_record(id)
-        child_path = handler.get_record_value(record, 'child')
-        container = self.parent
-        user = get_context().user
-        if child_path and container.has_resource(child_path):
-            child = container.get_resource(child_path)
-            ac = child.get_access_control()
-            if ac.is_allowed_to_remove(user, child):
-                if child.handler.get_n_records():
+        record_schema = handler.record_schema
+
+        # Delete submenu
+        if 'child' in record_schema:
+            child_path = handler.get_record_value(record, 'child')
+            container = self.parent
+            user = get_context().user
+            if child_path and container.has_resource(child_path):
+                child = container.get_resource(child_path)
+                ac = child.get_access_control()
+                if ac.is_allowed_to_remove(user, child):
+                    if child.handler.get_n_records():
+                        raise NotAllowedError
+                    # Remove the child table
+                    # May raise a ConsistencyError
+                    container.del_resource(child_path)
+                else:
                     raise NotAllowedError
-                # Remove the child table
-                # May raise a ConsistencyError
-                container.del_resource(child_path)
-            else:
-                raise NotAllowedError
 
         # Delete the record
         handler.del_record(id)
@@ -378,6 +382,7 @@ class Menu(OrderedTable):
     def get_links(self):
         base = self.get_abspath()
         handler = self.handler
+        record_schema = handler.record_schema
         links = []
 
         for record in handler.get_records_in_order():
@@ -388,6 +393,8 @@ class Menu(OrderedTable):
             uri = base.resolve2(path)
             links.append(str(uri))
             # Submenu resources
+            if not 'child' in record_schema:
+                continue
             path = handler.get_record_value(record, 'child')
             if path:
                 container = self.parent
