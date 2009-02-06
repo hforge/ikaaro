@@ -30,15 +30,12 @@ from registry import get_resource_class
 
 
 def get_datatype(format, name):
-    if format is None:
-        return String
-
     cls = get_resource_class(format)
-    if cls is None:
-        return String
-
     schema = cls.get_metadata_schema()
-    return schema.get(name, String)
+    if name not in schema:
+        error = "'%s' class does not define the '%s' metadata"
+        raise ValueError, error % (cls.__name__, name)
+    return schema[name]
 
 
 
