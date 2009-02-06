@@ -318,31 +318,41 @@ class DBResource(CatalogAware, IResource):
         from access import RoleAware
         from file import File, Image
 
-        abspath = self.get_canonical_path()
-        mtime = self.get_mtime()
-        if mtime is None:
-            mtime = datetime.now()
+        context = get_context()
 
+        # Values
+        abspath = self.get_canonical_path()
         document = {
             'name': self.name,
             'abspath': str(abspath),
             'format': self.metadata.format,
-            'title': self.get_title(),
-            'mtime': mtime}
+            'title': self.get_title()}
 
-        # Last Author (used in the Last Changes view)
-        last_author = self.get_last_author()
-        if last_author is not None:
-            users = self.get_resource('/users')
-            try:
-                user = users.get_resource(last_author)
-            except LookupError:
-                document['last_author'] = None
-            else:
-                document['last_author'] = user.get_title()
+        # Versioning
+        revisions = self.get_revisions()
+        if revisions:
+            revision = revisions[0]
+            # Author (used in the last-changes view)
+            author = revision['username']
+            if author is not None:
+                root = context.root
+                author = root.get_user(author)
+                if author is not None:
+                    document['last_author'] = author.get_title()
+            # Modification time
+            mtime = revision['date']
+        else:
+            mtime = self.metadata.get_mtime()
+
+        # Modification time (FIXME duplicated code with 'get_mtime')
+        for handler in self.get_handlers():
+            if handler is not None:
+                handler_mtime = handler.get_mtime()
+                if handler_mtime is not None and handler_mtime > mtime:
+                    mtime = handler_mtime
+        document['mtime'] = mtime
 
         # Full text
-        context = get_context()
         try:
             server = context.server
         except AttributeError:
@@ -560,8 +570,8 @@ class DBResource(CatalogAware, IResource):
 # Register the new catalog fields #
 ###################################
 
-register_field('abspath', String(is_key_field=True, is_stored=True,
-                                 is_indexed=True))
+register_field(
+    'abspath', String(is_key_field=True, is_stored=True, is_indexed=True))
 register_field('text', Unicode(is_indexed=True))
 register_field('title', Unicode(is_stored=True, is_indexed=True))
 register_field('is_role_aware', Boolean(is_indexed=True))
