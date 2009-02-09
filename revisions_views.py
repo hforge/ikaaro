@@ -16,6 +16,7 @@
 
 # Import from standard library
 from operator import itemgetter
+from re import compile, sub
 
 # Import from itools
 from itools.core import merge_dicts
@@ -81,6 +82,7 @@ class Revisions_Changes(STLView):
     def get_namespace(self, resource, context):
         changes = []
         cwd = context.database.path
+        password_re = compile('<password>(.*)</password>')
         revision = context.get_form_value('revision')
         ns = resource.get_revision(revision, context)
         for line in git.get_diff(revision, cwd):
@@ -96,6 +98,9 @@ class Revisions_Changes(STLView):
                 css = 'add'
             elif line.startswith('diff'):
                 css = 'header'
+            # HACK for security, we hide password
+            line = sub(password_re, '<password>***</password>', line)
+            # Add the line
             changes.append({'css': css,
                             'value': line})
         ns['changes'] = changes
