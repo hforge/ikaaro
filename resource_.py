@@ -34,8 +34,9 @@ from lock import Lock
 from metadata import Metadata
 from resource_views import DBResource_NewInstance, DBResource_Edit
 from resource_views import DBResource_AddImage, DBResource_AddLink
-from resource_views import LoginView, LogoutView, DBResource_History
+from resource_views import LoginView, LogoutView
 from resource_views import Put_View, Delete_View, Lock_View
+from revisions_views import Revisions_LastChanges, Revisions_Changes
 from workflow import WorkflowAware
 from registry import register_field
 
@@ -245,24 +246,33 @@ class DBResource(CatalogAware, IResource):
         # Get the list of revisions
         cwd = context.database.path
         files = self.get_files_to_archive()
+        handler_path = str(self.handler.uri.path)
+        if handler_path not in files:
+            files.append(handler_path)
         try:
-            lines = git.get_revisions(files, cwd=cwd)
+            revisions = git.get_revisions(files, cwd=cwd)
         except EnvironmentError:
             return []
 
         # Get the metadata
-        revisions = []
-        for line in lines:
-            metadata = git.get_metadata(line, cwd=cwd)
-            date = metadata['committer'][1]
-            username = metadata['author'][0].split()[0]
-            revisions.append({
-                'username': username,
+        resource_revisions = []
+        for revision in revisions:
+            resource_revisions.append(self.get_revision(revision, context))
+        return resource_revisions
+
+
+    def get_revision(self, revision, context):
+        users = self.get_resource('/users')
+        cwd = context.database.path
+        metadata = git.get_metadata(revision, cwd=cwd)
+        date = metadata['committer'][1]
+        username = metadata['author'][0].split()[0]
+        if username != 'nobody':
+            username = users.get_resource(username).get_title()
+        return {'username': username,
                 'date': date,
                 'message': metadata['message'],
-                })
-
-        return revisions
+                'revision': revision}
 
 
     def get_owner(self):
@@ -558,7 +568,8 @@ class DBResource(CatalogAware, IResource):
     edit = DBResource_Edit()
     add_image = DBResource_AddImage()
     add_link = DBResource_AddLink()
-    history = DBResource_History()
+    last_changes = Revisions_LastChanges()
+    changes = Revisions_Changes()
     http_put = Put_View()
     http_delete = Delete_View()
     http_lock = Lock_View()

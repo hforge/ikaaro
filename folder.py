@@ -27,7 +27,7 @@ from itools.xapian import PhraseQuery
 
 # Import from ikaaro
 from exceptions import ConsistencyError
-from folder_views import Folder_BrowseContent, Folder_LastChanges
+from folder_views import Folder_BrowseContent
 from folder_views import Folder_NewResource, Folder_Orphans, Folder_Thumbnail
 from folder_views import Folder_PreviewContent, Folder_Rename, Folder_View
 from registry import register_resource_class, get_resource_class
@@ -43,7 +43,8 @@ class Folder(DBResource):
     class_description = MSG(u'Organize your files and documents with folders.')
     class_icon16 = 'icons/16x16/folder.png'
     class_icon48 = 'icons/48x48/folder.png'
-    class_views = ['view', 'browse_content', 'preview_content', 'edit']
+    class_views = ['view', 'browse_content', 'preview_content', 'edit',
+                   'last_changes']
     class_handler = FolderHandler
 
 
@@ -274,7 +275,6 @@ class Folder(DBResource):
     browse_content = Folder_BrowseContent()
     rename = Folder_Rename()
     preview_content = Folder_PreviewContent()
-    last_changes = Folder_LastChanges()
     orphans = Folder_Orphans()
     thumb = Folder_Thumbnail()
 

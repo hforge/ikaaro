@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<stl:block xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
+
+  <a href=";last_changes">
+    <img src="/ui/icons/16x16/previous.png"/>
+    Come back to last changes view
+  </a>
+
+  <h1>Informations</h1>
+
+  <b>Modification date:</b> ${date}<br/>
+  <b>Message:</b> ${message}<br/>
+  <b>Author:</b> ${username}
+
+  <h1>Changes</h1>
+
+  <div id="differ">
+    <div class="diff ${change/css}" stl:repeat="change changes">${change/value}</div>
+  </div>
+</stl:block>

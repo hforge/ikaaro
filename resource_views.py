@@ -27,6 +27,7 @@ from urllib import quote
 from itools.core import merge_dicts
 from itools.datatypes import String, Unicode
 from itools.gettext import MSG
+from itools import git
 from itools.handlers import checkid
 from itools.http import Conflict, NotImplemented
 from itools.i18n import format_datetime, get_language_name
@@ -161,26 +162,6 @@ class DBResource_Edit(AutoForm):
         resource.set_property('subject', subject, language=language)
         # Ok
         context.message = messages.MSG_CHANGES_SAVED
-
-
-
-class DBResource_History(STLView):
-
-    access = 'is_allowed_to_view'
-    title = MSG(u'History')
-    icon = 'history.png'
-    template = '/ui/file/history.xml'
-
-
-    def get_namespace(self, resource, context):
-        # Change the dates
-        accept = context.accept_language
-        revisions = resource.get_revisions(context)
-        for revision in revisions:
-            date = revision['date']
-            revision['date'] = format_datetime(date, accept=accept)
-
-        return {'revisions': revisions}
 
 
 
@@ -519,6 +500,7 @@ class DBResource_AddLink(DBResource_AddBase):
             return WebPage
         else:
             raise ValueError, 'Incorrect mode %s' % mode
+
 
 
 ###########################################################################

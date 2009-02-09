@@ -701,60 +701,6 @@ class Folder_PreviewContent(Folder_BrowseContent):
 
 
 
-class Folder_LastChanges(BrowseForm):
-
-    access = 'is_allowed_to_view'
-    title = MSG(u"Last Changes")
-
-    query_schema = merge_dicts(BrowseForm.query_schema,
-                               sort_by=String(default='mtime'),
-                               reverse=Boolean(default=True))
-
-
-    table_columns = [
-        ('mtime', MSG(u'Last Change')),
-        ('author', MSG(u'Author')),
-    ]
-
-
-    def get_items(self, resource, context):
-        cwd = context.database.path
-        revisions = git.get_revisions(cwd=cwd)
-
-        users = resource.get_resource('/users')
-
-        items = []
-        for revision in revisions:
-            metadata = git.get_metadata(revision, cwd=cwd)
-            author, mtime = metadata['author']
-            username = author.split()[0]
-            if username == 'nobody':
-                author = ''
-            else:
-                author = users.get_resource(username).get_title()
-            items.append({
-                'mtime': mtime,
-                'author': author,
-            })
-
-        return items
-
-
-    def sort_and_batch(self, resource, context, results):
-        start = context.query['batch_start']
-        size = context.query['batch_size']
-        sort_by = context.query['sort_by']
-        reverse = context.query['reverse']
-
-        results.sort(key=itemgetter(sort_by), reverse=reverse)
-        return results[start:start+size]
-
-
-    def get_item_value(self, resource, context, item, column):
-        return item[column]
-
-
-
 class Folder_Orphans(Folder_BrowseContent):
     """Orphans are files not referenced in another resource of the database.
     It extends the concept of "orphans pages" from the wiki to all file-like
