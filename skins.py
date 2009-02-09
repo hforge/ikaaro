@@ -222,13 +222,21 @@ class Skin(UIFolder):
 
         meta = []
         # Set description
-        value, language = here.get_property_and_language('description')
-        if value:
-            meta.append({'name': 'description', 'lang': language,
-                         'content': value})
+        try:
+            value, language = here.get_property_and_language('description')
+        except ValueError:
+            pass
+        else:
+            if value:
+                meta.append({'name': 'description', 'lang': language,
+                             'content': value})
+
         # Set keywords for all languages
         for language in root.get_property('website_languages'):
-            value = here.get_property('subject', language)
+            try:
+                value = here.get_property('subject', language)
+            except ValueError:
+                continue
             if value is None:
                 continue
             value = value.strip()
