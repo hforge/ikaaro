@@ -49,10 +49,7 @@ class Folder(DBResource):
     class_handler = FolderHandler
 
 
-    #########################################################################
     # Aggregation relationship (what a generic folder can contain)
-    class_document_types = []
-
     __fixed_handlers__ = []
 
 
@@ -62,15 +59,6 @@ class Folder(DBResource):
     MIN_SIZE = 32
     MAX_SIZE = 512
     SIZE_STEPS = (32, 48, 64, 128, 256, 512)
-
-
-    @classmethod
-    def register_document_type(cls, handler_class):
-        register_document_type(handler_class)
-
-
-    def get_document_types(self):
-        return get_document_types()
 
 
     #######################################################################

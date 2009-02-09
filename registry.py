@@ -44,7 +44,7 @@ def get_resource_class(class_id, is_file=True):
 documents_registry = {}
 
 def register_document_type(resource_class, type=None):
-    if not type in documents_registry:
+    if type not in documents_registry:
         documents_registry[type] = []
     documents_registry[type].append(resource_class)
 
