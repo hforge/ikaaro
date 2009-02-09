@@ -395,8 +395,7 @@ class Tracker_View(BrowseForm):
             return user.get_title()
         # Mtime
         if column == 'mtime':
-            mtime = datetime.strptime(value, '%Y%m%d%H%M%S')
-            return format_datetime(mtime)
+            return format_datetime(value)
 
         # Tables
         table = resource.get_resource(column).handler
