@@ -31,7 +31,7 @@ from folder_views import Folder_BrowseContent
 from folder_views import Folder_NewResource, Folder_Orphans, Folder_Thumbnail
 from folder_views import Folder_PreviewContent, Folder_Rename, Folder_View
 from registry import register_resource_class, get_resource_class
-from registry import register_document_type, get_document_types
+from registry import get_document_types
 from resource_ import DBResource
 
 
@@ -59,6 +59,10 @@ class Folder(DBResource):
     MIN_SIZE = 32
     MAX_SIZE = 512
     SIZE_STEPS = (32, 48, 64, 128, 256, 512)
+
+
+    def get_document_types(self):
+        return get_document_types()
 
 
     #######################################################################
