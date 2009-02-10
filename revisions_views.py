@@ -49,7 +49,11 @@ class Revisions_LastChanges(BrowseForm):
 
 
     def get_items(self, resource, context):
-        return resource.get_revisions(context)
+        root = context.root
+        items = resource.get_revisions(context)
+        for item in items:
+            item['username'] = root.get_user_title(item['username'])
+        return items
 
 
     def sort_and_batch(self, resource, context, results):
@@ -80,11 +84,16 @@ class Revisions_Changes(STLView):
         }
 
     def get_namespace(self, resource, context):
+        revision = context.get_form_value('revision')
+
+        # Get the revision data
+        ns = resource.get_revision(revision, context)
+        ns['username'] = context.root.get_user_title(ns['username'])
+
+        # Diff
         changes = []
         cwd = context.database.path
         password_re = compile('<password>(.*)</password>')
-        revision = context.get_form_value('revision')
-        ns = resource.get_revision(revision, context)
         for line in git.get_diff(revision, cwd):
             css = None
             if line.startswith('index') or \
@@ -101,7 +110,6 @@ class Revisions_Changes(STLView):
             # HACK for security, we hide password
             line = sub(password_re, '<password>***</password>', line)
             # Add the line
-            changes.append({'css': css,
-                            'value': line})
+            changes.append({'css': css, 'value': line})
         ns['changes'] = changes
         return ns

@@ -342,12 +342,10 @@ class DBResource(CatalogAware, IResource):
         if revisions:
             revision = revisions[0]
             # Author (used in the last-changes view)
-            author = revision['username']
+            root = context.root
+            author = root.get_user_title(revision['username'])
             if author is not None:
-                root = context.root
-                author = root.get_user(author)
-                if author is not None:
-                    document['last_author'] = author.get_title()
+                document['last_author'] = author
             # Modification time
             mtime = revision['date']
         else:

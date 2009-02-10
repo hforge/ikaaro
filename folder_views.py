@@ -330,11 +330,7 @@ class Folder_BrowseContent(SearchForm):
         elif column == 'last_author':
             # Last author
             username = item.get_last_author()
-            try:
-                user = resource.get_resource('/users/%s' % username)
-            except LookupError:
-                return username
-            return user.get_title()
+            return context.root.get_user_title(username)
         elif column == 'size':
             # Size
             return item.get_human_size()

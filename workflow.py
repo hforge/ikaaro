@@ -47,6 +47,8 @@ class StateForm(STLForm):
 
 
     def get_namespace(self, resource, context):
+        root = context.root
+        user = context.user
         # State
         state = resource.get_state()
         # Posible transitions
@@ -54,21 +56,19 @@ class StateForm(STLForm):
         transitions = []
         for name, trans in state.transitions.items():
             view = resource.get_view(name)
-            if ac.is_allowed_to_trans(context.user, resource, view) is False:
+            if ac.is_allowed_to_trans(user, resource, view) is False:
                 continue
             description = trans['description'].gettext()
             transitions.append({'name': name, 'description': description})
         # Workflow history
-        users = resource.get_resource('/users')
         history = []
         for revision in resource.get_revisions():
             transition, comment = parse_git_message(revision['message'])
             if transition is not None:
-                user = users.get_resource(revision['username'])
                 history.append(
                     {'title': transition,
                      'date': format_datetime(revision['date']),
-                     'user': user.get_title(),
+                     'user': root.get_user_title(revision['username']),
                      'comments': comment})
         history.reverse()
 

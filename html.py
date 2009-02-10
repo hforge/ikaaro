@@ -51,12 +51,7 @@ def is_edit_conflict(resource, context, timestamp):
         # Conlicft unless we are overwriting our own work
         last_author = resource.get_last_author()
         if last_author != context.user.name:
-            root = context.root
-            try:
-                user = root.get_user(last_author)
-                user = user.get_title()
-            except LookupError:
-                user = last_author
+            user = context.root.get_user_title(last_author)
             context.message = messages.MSG_EDIT_CONFLICT2(user=user)
             return True
     return False

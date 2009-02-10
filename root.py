@@ -137,6 +137,17 @@ class Root(WebSite):
         return self.get_user(brain.name)
 
 
+    def get_user_title(self, username):
+        if username is None:
+            return None
+        users = self.get_resource('users')
+        try:
+            user = users.get_resource(username)
+        except LookupError:
+            return username
+        return user.get_title()
+
+
     ########################################################################
     # Publish
     ########################################################################
