@@ -262,13 +262,12 @@ class DBResource(CatalogAware, IResource):
 
 
     def get_revision(self, revision, context):
-        users = self.get_resource('/users')
         cwd = context.database.path
         metadata = git.get_metadata(revision, cwd=cwd)
         date = metadata['committer'][1]
         username = metadata['author'][0].split()[0]
-        if username != 'nobody':
-            username = users.get_resource(username).get_title()
+        if username == 'nobody':
+            username = None
         return {'username': username,
                 'date': date,
                 'message': metadata['message'],
