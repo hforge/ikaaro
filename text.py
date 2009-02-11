@@ -51,7 +51,7 @@ class Text(File):
 
     #######################################################################
     # Versioning
-    def get_files_to_archive(self):
+    def get_files_to_archive(self, content=False):
         # Metadata
         metadata = str(self.metadata.uri.path)
         files = [metadata]

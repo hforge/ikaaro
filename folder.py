@@ -65,6 +65,14 @@ class Folder(DBResource):
         return get_document_types()
 
 
+    def get_files_to_archive(self, content=False):
+        metadata = str(self.metadata.uri.path)
+        if content is True:
+            folder = str(self.handler.uri.path)
+            return [metadata, folder]
+        return [metadata]
+
+
     #######################################################################
     # API
     #######################################################################

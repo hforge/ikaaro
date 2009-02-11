@@ -200,7 +200,7 @@ class DBResource(CatalogAware, IResource):
     handler = property(get_handler, None, None, '')
 
 
-    def get_files_to_archive(self):
+    def get_files_to_archive(self, content=False):
         metadata = str(self.metadata.uri.path)
         return [metadata]
 
@@ -239,26 +239,22 @@ class DBResource(CatalogAware, IResource):
     ########################################################################
     # Versioning
     ########################################################################
-    def get_revisions(self, context=None):
+    def get_revisions(self, context=None, content=False):
         if context is None:
             context = get_context()
 
-        # Get the list of revisions
+        # Get the list of files to check
+        files = self.get_files_to_archive(content)
+
+        # Call git
         cwd = context.database.path
-        files = self.get_files_to_archive()
-        handler_path = str(self.handler.uri.path)
-        if handler_path not in files:
-            files.append(handler_path)
         try:
             revisions = git.get_revisions(files, cwd=cwd)
         except EnvironmentError:
             return []
 
         # Get the metadata
-        resource_revisions = []
-        for revision in revisions:
-            resource_revisions.append(self.get_revision(revision, context))
-        return resource_revisions
+        return [ self.get_revision(x, context) for x in revisions ]
 
 
     def get_revision(self, revision, context):
