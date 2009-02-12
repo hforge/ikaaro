@@ -18,7 +18,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
-from mimetypes import guess_type
 from string import Template
 
 # Import from itools
@@ -29,6 +28,7 @@ from itools.stl import stl, set_prefix
 from itools.uri import Path
 from itools.web import get_context
 from itools.xml import XMLParser, XMLError
+from itools.utils import guess_type
 
 # Import from ikaaro
 from ikaaro.binary import Image

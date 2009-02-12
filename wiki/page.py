@@ -23,7 +23,6 @@ from re import subn
 from tempfile import mkdtemp
 from subprocess import call
 from urllib import urlencode
-from mimetypes import guess_extension
 from re import compile
 
 # Import from docutils
@@ -44,6 +43,7 @@ from itools.stl import stl
 from itools.xml import XMLParser, XMLError
 from itools.uri import get_reference
 from itools.uri.mailto import Mailto
+from itools.utils import guess_extension
 
 # Import from ikaaro
 from ikaaro.base import DBObject

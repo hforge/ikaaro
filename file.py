@@ -19,7 +19,6 @@
 
 # Import from the Standard Library
 from datetime import datetime, timedelta
-from mimetypes import guess_all_extensions, guess_type
 
 # Import from itools
 from itools.datatypes import FileName, String, Unicode
@@ -29,6 +28,7 @@ from itools.i18n import guess_language
 from itools.stl import stl
 from itools.uri import get_reference
 from itools.catalog import EqQuery
+from itools.utils import guess_all_extensions, guess_type
 
 # Import from ikaaro
 from messages import *

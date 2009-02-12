@@ -14,15 +14,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Import from the Standard Library
-from mimetypes import add_type
-
 # Import from itools
 from itools.datatypes import is_datatype, DataType, String, Unicode, XML
 from itools.handlers import File, register_handler_class
 from itools.web import get_context
 from itools.xml import (XMLNamespace, XMLParser, START_ELEMENT, END_ELEMENT,
     TEXT)
+from itools.utils import add_type
 
 # Import from ikaaro
 from exceptions import ParserError

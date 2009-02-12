@@ -17,7 +17,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
-from mimetypes import guess_type
 from random import sample
 import sha
 from sys import platform
@@ -25,6 +24,8 @@ from urllib import quote
 
 # Import from itools
 from itools.web import get_context
+from itools.utils import guess_type
+
 
 if platform[:3] == 'win':
     from utils_win import is_pid_running, kill
