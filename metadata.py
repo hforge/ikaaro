@@ -182,16 +182,7 @@ class Metadata(File):
                     raise TypeError, 'multiple values must be lists'
                 # Record
                 if issubclass(datatype, Record):
-                    aux = datatype.schema
-                    for value in value:
-                        lines.append('  <%s>\n' % name)
-                        for key, value in value.items():
-                            value = aux.get(key, String).encode(value)
-                            value = XMLContent.encode(value)
-                            lines.append('    <%s>%s</%s>\n'
-                                         % (key, value, key))
-                        lines.append('  </%s>\n' % name)
-                    continue
+                    raise TypeError, 'records are not supported anymore'
                 # Regular field
                 for value in value:
                     value = datatype.encode(value)
