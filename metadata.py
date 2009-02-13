@@ -157,8 +157,12 @@ class Metadata(File):
         lines = ['<?xml version="1.0" encoding="UTF-8"?>\n',
                  '<metadata format="%s" version="%s">\n' % (format, version)]
 
+        # Sort properties
+        names = self.properties.keys()
+        names.sort()
+
         # Properties
-        for name in self.properties:
+        for name in names:
             value = self.properties[name]
             datatype = schema.get(name, String)
             is_multiple = getattr(datatype, 'multiple', False)
