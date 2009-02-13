@@ -165,15 +165,17 @@ class Metadata(File):
         for name in names:
             value = self.properties[name]
             datatype = schema.get(name, String)
+            default = datatype.get_default()
             is_multiple = getattr(datatype, 'multiple', False)
 
             # Multilingual properties
             if isinstance(value, dict):
                 template = '  <%s xml:lang="%s">%s</%s>\n'
                 for language, value in value.items():
-                    value = datatype.encode(value)
-                    value = XMLContent.encode(value)
-                    lines.append(template % (name, language, value, name))
+                    if value != default:
+                        value = datatype.encode(value)
+                        value = XMLContent.encode(value)
+                        lines.append(template % (name, language, value, name))
             # Multiple values
             elif is_multiple:
                 if not isinstance(value, list):
@@ -197,7 +199,7 @@ class Metadata(File):
                     lines.append('  <%s>%s</%s>\n' % (name, value, name))
                 continue
             # Simple properties
-            else:
+            elif value != default:
                 value = datatype.encode(value)
                 value = XMLContent.encode(value)
                 lines.append('  <%s>%s</%s>\n' % (name, value, name))
