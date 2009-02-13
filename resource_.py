@@ -266,11 +266,16 @@ class DBResource(CatalogAware, IResource):
         if mtime is None:
             mtime = datetime.now()
 
+        # FIXME Index a single language for now
+        site_root = self.get_site_root()
+        languages = site_root.get_property('website_languages')
+        language = languages[0]
+
         document = {
             'name': self.name,
             'abspath': str(abspath),
             'format': self.metadata.format,
-            'title': self.get_title(),
+            'title': self.get_title(language=language),
             'mtime': mtime.strftime('%Y%m%d%H%M%S')}
 
         # Full text
