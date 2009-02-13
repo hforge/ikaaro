@@ -77,11 +77,18 @@ class Issue(Folder):
     def get_catalog_values(self):
         document = Folder.get_catalog_values(self)
         document['id'] = int(self.name)
-        names = 'product', 'module', 'version', 'type', 'priority', 'state'
-        for name in names:
-            document[name] = self.get_value(name)
-        document['assigned_to'] = self.get_value('assigned_to') or 'nobody'
-        document['title'] = self.get_value('title')
+
+        # Get the last record
+        history = self.get_history()
+        record = history.get_record(-1)
+        if record:
+            get_record_value = history.get_record_value
+            names = 'product', 'module', 'version', 'type', 'priority', 'state'
+            for name in names:
+                document[name] = get_record_value(record, name)
+            assigned_to = get_record_value(record, 'assigned_to') or 'nobody'
+            document['assigned_to'] = assigned_to
+            document['title'] = get_record_value(record, 'title')
         return document
 
 
