@@ -21,6 +21,7 @@ from subprocess import call
 from itools.handlers import ReadOnlyDatabase as BaseReadOnlyDatabase
 from itools.handlers import SafeDatabase
 from itools import vfs
+from itools.vfs import cwd
 from itools.web import get_context
 from itools.xapian import Catalog, make_catalog
 
@@ -41,6 +42,10 @@ class ReadOnlyDatabase(BaseReadOnlyDatabase):
         # The catalog
         self.catalog = Catalog('%s/catalog' % target, get_register_fields(),
                                read_only=True)
+
+
+    def cleanup(self):
+        self.make_room()
 
 
 
@@ -188,6 +193,10 @@ class Database(SafeDatabase):
         self.resources_removed.clear()
         self.resources_added.clear()
         self.resources_changed.clear()
+
+
+    def cleanup(self):
+        self.make_room()
 
 
 

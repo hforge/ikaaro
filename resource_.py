@@ -186,15 +186,11 @@ class DBResource(CatalogAware, IResource):
             else:
                 uri = self.metadata.uri.resolve(self.name)
             if database.has_handler(uri):
-                self._handler = database.get_handler(uri, cls=cls)
+                handler = database.get_handler(uri, cls=cls)
             else:
                 handler = cls()
-                handler.database = database
-                handler.uri = uri
-                handler.timestamp = None
-                handler.dirty = datetime.now()
-                database.add_to_cache(uri, handler)
-                self._handler = handler
+                database.push_handler(uri, handler)
+            self._handler = handler
         return self._handler
 
     handler = property(get_handler, None, None, '')

@@ -37,7 +37,7 @@ class Multilingual(DBResource):
 
     @staticmethod
     def _make_resource(cls, folder, name, body=None, filename=None,
-                     language=None, **kw):
+                       language=None, **kw):
         DBResource._make_resource(cls, folder, name, filename=filename, **kw)
         # Add the body
         if body is not None:
@@ -51,11 +51,14 @@ class Multilingual(DBResource):
         # Content language
         if language is None:
             site_root = self.get_site_root()
+            ws_languages = site_root.get_property('website_languages')
             handlers = [
-                (x, self.get_handler(language=x))
-                for x in site_root.get_property('website_languages') ]
+                (x, self.get_handler(language=x)) for x in ws_languages ]
             languages = [ x for (x, y) in handlers if not y.is_empty() ]
             language = self.get_content_language(get_context(), languages)
+            # Default
+            if language is None:
+                language = ws_languages[0]
         # Hit
         if language in self.handlers:
             return self.handlers[language]
@@ -68,11 +71,7 @@ class Multilingual(DBResource):
             handler = database.get_handler(uri, cls=cls)
         else:
             handler = cls()
-            handler.database = database
-            handler.uri = uri
-            handler.timestamp = None
-            handler.dirty = datetime.now()
-            database.add_to_cache(uri, handler)
+            database.push_handler(uri, handler)
 
         self.handlers[language] = handler
         return handler

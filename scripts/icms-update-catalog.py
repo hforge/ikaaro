@@ -63,7 +63,6 @@ def update_catalog(parser, options, target):
 
     # Get the root
     server = Server(target, read_only=True)
-    server.database.set_use_cache(False)
     root = server.root
 
     # Build a fake context

@@ -139,10 +139,10 @@ class Folder(DBResource):
         get_context().database.remove_resource(resource)
         # Remove
         folder = self.handler
-        folder.del_handler('%s.metadata' % name)
         for handler in resource.get_handlers():
             if folder.has_handler(handler.uri):
                 folder.del_handler(handler.uri)
+        folder.del_handler('%s.metadata' % name)
 
 
     def copy_resource(self, source, target):

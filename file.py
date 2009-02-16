@@ -119,11 +119,7 @@ class File(WorkflowAware, DBResource):
         name = FileName.encode((self.name, cls.class_extension, None))
         uri = base.resolve(name)
         handler = cls()
-        handler.database = database
-        handler.uri = uri
-        handler.timestamp = None
-        handler.dirty = datetime.now()
-        database.add_to_cache(uri, handler)
+        database.push_handler(uri, handler)
         self._handler = handler
         return self._handler
 
