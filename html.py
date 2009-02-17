@@ -82,6 +82,10 @@ def _change_link(old_path, new_path, base, stream):
             attr_name = (None, 'src')
 
         value = attributes.get(attr_name)
+        if tag_name == 'a' and value is None:
+            # The tag looks like an anchor
+            yield event
+            continue
         reference = get_reference(value)
 
          # Skip bad links
