@@ -181,6 +181,17 @@ class Folder(DBResource):
         context = get_context()
         # Events, remove
         resource = self.get_resource(source)
+
+        # Check referencial-integrity
+        # FIXME Check sub-resources too
+        path = str(resource.get_abspath())
+        root = self.get_root()
+        results = root.search(links=path)
+        n = results.get_n_documents()
+        if n:
+            message = 'cannot rename, resource "%s" is referenced' % path
+            raise ConsistencyError, message
+
         context.server.remove_resource(resource)
 
         # Find out the source and target absolute URIs

@@ -173,6 +173,8 @@ class Folder_Rename(STLForm):
         # Clean the copy cookie if needed
         cut, cp_paths = context.get_cookie('ikaaro_cp', type=CopyCookie)
 
+        renamed = []
+        referenced = []
         # Process input data
         abspath = resource.get_abspath()
         for i, path in enumerate(paths):
@@ -200,9 +202,19 @@ class Folder_Rename(STLForm):
                 context.del_cookie('ikaaro_cp')
                 cp_paths = []
             # Rename
-            container.move_resource(old_name, new_name)
+            try:
+                container.move_resource(old_name, new_name)
+            except ConsistencyError:
+                referenced.append(old_name)
+                continue
+            else:
+                renamed.append(old_name)
 
-        message = messages.MSG_RENAMED
+        if referenced and not renamed:
+            resources = ', '.join(referenced)
+            message = messages.MSG_RESOURCES_REFERENCED(resources=resources)
+        else:
+            message = messages.MSG_RENAMED
         return context.come_back(message, goto=';browse_content')
 
 

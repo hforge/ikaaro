@@ -60,8 +60,8 @@ MSG_NONE_REMOVED = ERROR(u'No resource removed.')
 
 MSG_RESOURCES_REMOVED = INFO(u'Resources removed: $resources.')
 
-MSG_RESOURCES_REFERENCED = ERROR(u'Resources not removed '
-                                 u'(they are in use): $resources.')
+MSG_RESOURCES_REFERENCED = ERROR(u'Action impossible '
+                                 u'(the resources are in use): $resources.')
 
 MSG_RESOURCES_NOT_REMOVED = ERROR(u'Resources not allowed to remove: '
                                   u'$resources.')
