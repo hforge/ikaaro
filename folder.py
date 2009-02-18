@@ -120,25 +120,24 @@ class Folder(DBResource):
                 resource.change_link(old_path, new_path)
 
 
-    def _check_referencial_integrity(self, resource):
-        # Check referencial-integrity
-        # FIXME Check sub-resources too
-        path = str(resource.get_abspath())
-        root = self.get_root()
-        results = root.search(links=path)
-        n = results.get_n_documents()
-        if n:
-            message = 'cannot delete, resource "%s" is referenced' % path
-            raise ConsistencyError, message
-
-
     def del_resource(self, name):
+        context = get_context()
         resource = self.get_resource(name)
 
         # Check referencial-integrity
-        self._check_referencial_integrity(resource)
+        catalog = context.server.catalog
+        # The catalog is not available when updating (icms-update.py)
+        # FIXME We do not guarantee referencial-integrity when updating
+        if catalog is not None:
+            # FIXME Check sub-resources too
+            path = str(resource.get_abspath())
+            results = catalog.search(links=path)
+            if results.get_n_documents() > 0:
+                message = 'cannot delete, resource "%s" is referenced' % path
+                raise ConsistencyError, message
+
         # Events, remove
-        get_context().server.remove_resource(resource)
+        context.server.remove_resource(resource)
         # Remove
         folder = self.handler
         folder.del_handler('%s.metadata' % name)
@@ -186,8 +185,6 @@ class Folder(DBResource):
         # Events, remove
         resource = self.get_resource(source)
 
-        # Check referencial-integrity
-        self._check_referencial_integrity(resource)
         # Events, remove
         context.server.remove_resource(resource)
 
