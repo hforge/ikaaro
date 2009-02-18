@@ -120,9 +120,7 @@ class Folder(DBResource):
                 resource.change_link(old_path, new_path)
 
 
-    def del_resource(self, name):
-        resource = self.get_resource(name)
-
+    def _check_referencial_integrity(self, resource):
         # Check referencial-integrity
         # FIXME Check sub-resources too
         path = str(resource.get_abspath())
@@ -133,6 +131,12 @@ class Folder(DBResource):
             message = 'cannot delete, resource "%s" is referenced' % path
             raise ConsistencyError, message
 
+
+    def del_resource(self, name):
+        resource = self.get_resource(name)
+
+        # Check referencial-integrity
+        self._check_referencial_integrity(resource)
         # Events, remove
         get_context().server.remove_resource(resource)
         # Remove
@@ -183,15 +187,8 @@ class Folder(DBResource):
         resource = self.get_resource(source)
 
         # Check referencial-integrity
-        # FIXME Check sub-resources too
-        path = str(resource.get_abspath())
-        root = self.get_root()
-        results = root.search(links=path)
-        n = results.get_n_documents()
-        if n:
-            message = 'cannot rename, resource "%s" is referenced' % path
-            raise ConsistencyError, message
-
+        self._check_referencial_integrity(resource)
+        # Events, remove
         context.server.remove_resource(resource)
 
         # Find out the source and target absolute URIs
