@@ -347,11 +347,11 @@ class DBResource(CatalogAware, IResource):
         return [(self.name, new_name)]
 
 
-    def update_links(self, new_name):
+    def update_links(self, new_name, base_path):
         """The resource must update its links to itself.
         """
         old_path = self.get_abspath()
-        new_path = old_path.resolve(new_name)
+        new_path = base_path.resolve2(new_name)
 
         # Get all the resources that have a link to me
         query = PhraseQuery('links', str(old_path))

@@ -101,11 +101,12 @@ class Folder(DBResource):
         return cls(metadata)
 
 
-    def update_links(self, new_name):
+    def update_links(self, new_name, base_path):
         """The resource must update its links to itself and to its content
         """
+        root = self.get_root()
         old_base_path = self.get_abspath()
-        new_base_path = old_base_path.resolve(new_name)
+        new_base_path = base_path.resolve2(new_name)
         for resource in self.traverse_resources():
             # Old and new paths
             old_path = resource.get_abspath()
@@ -114,7 +115,7 @@ class Folder(DBResource):
 
             # Get all the resources that have a link to this resource
             query = PhraseQuery('links', str(old_path))
-            results = self.get_root().search(query).get_documents()
+            results = root.search(query).get_documents()
             for result in results:
                 resource = self.get_resource(result.abspath)
                 resource.change_link(old_path, new_path)
@@ -202,7 +203,7 @@ class Folder(DBResource):
         new_name = target_uri.path[-1]
 
         # The resource must update its links
-        resource.update_links(target)
+        resource.update_links(target, self.get_abspath())
 
         # Move the metadata
         folder.move_handler('%s.metadata' % source_uri,
