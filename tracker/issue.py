@@ -31,6 +31,7 @@ from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.vfs import FileName
 from itools.xapian import IntegerField, KeywordField
+from itools.web import get_context
 
 # Import from ikaaro
 from ikaaro.file import File
@@ -116,14 +117,27 @@ class Issue(Folder):
 
 
     def get_links(self):
-        base = str(self.get_abspath())
+        base = self.get_abspath()
 
         links = []
         for record in self.get_history_records():
             filename = record.file
             if filename:
-                links.append('%s/%s' % (base, filename))
+                links.append(str(base.resolve2(filename)))
         return links
+
+
+    def change_link(self, old_path, new_path):
+        base = self.get_abspath()
+        old_name = base.get_pathto(old_path)
+        history = self.get_history()
+        for record in history.get_records():
+            file = history.get_record_value(record, 'file')
+            if file == old_name:
+                value = str(base.get_pathto(new_path))
+                history.update_record(record.id, **{'file': value})
+        # Reindex
+        get_context().server.change_resource(self)
 
 
     #######################################################################
