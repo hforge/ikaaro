@@ -332,6 +332,7 @@ class Menu(OrderedTable):
                 # Special case for external link & method
                 items.append({'id': 'menu_', # FIXME
                               'path': path,
+                              'real_path': None,
                               'title': title,
                               'description': None, # FIXME
                               'in_path': False,
@@ -349,6 +350,8 @@ class Menu(OrderedTable):
                 if ac.is_allowed_to_view(user, resource) is False:
                     continue
 
+                # use first child by default we use the resource itself
+                path_resource = resource
                 if depth > 1:
                     # Check the child
                     child_path = get_value(record, 'child')
@@ -358,6 +361,13 @@ class Menu(OrderedTable):
                         get_menu_ns_lvl = child.get_menu_namespace_level
                         subtabs = get_menu_ns_lvl(context, url, depth - 1,
                                                   use_first_child, flat)
+                        # use first child
+                        if subtabs['items']:
+                            sub_path = subtabs['items'][0]['real_path']
+                            # if the first child is an external link => skip it
+                            if sub_path is not None:
+                                path_resource = site_root.get_resource(sub_path)
+
                 # Set active, in_path
                 active, in_path = False, name in url
                 if here_abspath == resource.get_abspath():
@@ -367,7 +377,8 @@ class Menu(OrderedTable):
                 css = (active and 'in_path') or (in_path and 'in_path') or None
 
                 items.append({'id': 'menu_%s' % name,
-                              'path': context.get_link(resource),
+                              'path': context.get_link(path_resource),
+                              'real_path': resource.get_abspath(),
                               'title': title,
                               'description': None, # FIXME
                               'in_path': css == 'in_path' or active,
