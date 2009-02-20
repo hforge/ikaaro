@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
-from subprocess import call
+from subprocess import call, PIPE
 
 # Import from itools
 from itools.handlers import ReadOnlyDatabase as BaseReadOnlyDatabase
@@ -170,9 +170,11 @@ class Database(SafeDatabase):
                 message = message.encode('utf-8')
 
         # Commit
+        # TODO Do not commit if there is nothing to commit (for example when
+        # login).
         command = [
             'git', 'commit', '-aq', '--author=%s' % author, '-m', message]
-        call(command, cwd=self.path)
+        call(command, cwd=self.path, stdout=PIPE)
 
         # Catalog
         self.catalog.save_changes()
