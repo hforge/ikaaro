@@ -29,7 +29,6 @@ from itools.handlers import File as FileHandler, Image as ImageHandler
 from itools.handlers import TARFile, ZIPFile, GzipFile, Bzip2File
 from itools.odf import SXWFile, SXCFile, SXIFile, ODTFile, ODSFile, ODPFile
 from itools.pdf import PDFFile
-from itools.utils import guess_all_extensions
 from itools.vfs import FileName
 from itools.web import STLView
 from itools.xml import MSPowerPoint as MSPowerPointFile, RTF as RTFFile

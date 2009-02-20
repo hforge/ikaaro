@@ -23,7 +23,6 @@ from time import time
 from itools.core import add_type
 from itools.datatypes import DateTime
 from itools.handlers import TextFile, register_handler_class
-from itools.utils import add_type
 
 
 class Lock(TextFile):
