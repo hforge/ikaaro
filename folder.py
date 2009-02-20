@@ -103,11 +103,18 @@ class Folder(DBResource):
         return cls(metadata)
 
 
-    def update_links(self, new_name):
+    def update_links(self, new_name, base_path):
         """The resource must update its links to itself and to its content
         """
+        # Check referencial-integrity
+        catalog = get_context().server.catalog
+        # The catalog is not available when updating (icms-update.py)
+        # FIXME We do not guarantee referencial-integrity when updating
+        if catalog is None:
+            return
+
         old_base_path = self.get_abspath()
-        new_base_path = old_base_path.resolve(new_name)
+        new_base_path = base_path.resolve2(new_name)
         for resource in self.traverse_resources():
             # Old and new paths
             old_path = resource.get_abspath()
@@ -116,27 +123,30 @@ class Folder(DBResource):
 
             # Get all the resources that have a link to this resource
             query = PhraseQuery('links', str(old_path))
-            results = self.get_root().search(query).get_documents()
+            results = catalog.search(query).get_documents()
             for result in results:
                 resource = self.get_resource(result.abspath)
                 resource.change_link(old_path, new_path)
 
 
     def del_resource(self, name):
+        context = get_context()
         resource = self.get_resource(name)
 
         # Check referencial-integrity
-        # FIXME Check sub-resources too
-        path = str(resource.get_abspath())
-        root = self.get_root()
-        results = root.search(links=path)
-        n = results.get_n_documents()
-        if n:
-            message = 'cannot delete, resource "%s" is referenced' % path
-            raise ConsistencyError, message
+        catalog = context.server.catalog
+        # The catalog is not available when updating (icms-update.py)
+        # FIXME We do not guarantee referencial-integrity when updating
+        if catalog is not None:
+            # FIXME Check sub-resources too
+            path = str(resource.get_abspath())
+            results = catalog.search(links=path)
+            if results.get_n_documents() > 0:
+                message = 'cannot delete, resource "%s" is referenced' % path
+                raise ConsistencyError, message
 
         # Events, remove
-        get_context().database.remove_resource(resource)
+        context.database.remove_resource(resource)
         # Remove
         folder = self.handler
         for handler in resource.get_handlers():
@@ -199,7 +209,7 @@ class Folder(DBResource):
         new_name = target_uri.path[-1]
 
         # The resource must update its links
-        resource.update_links(target)
+        resource.update_links(target, self.get_abspath())
 
         # Move the metadata
         folder.move_handler('%s.metadata' % source_uri,

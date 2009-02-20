@@ -39,12 +39,12 @@ from itools.gettext import MSG
 from itools.handlers import checkid, get_handler, File as FileHandler
 from itools.html import XHTMLFile
 from itools.i18n import format_datetime
-from itools.xml import XMLParser, XMLError
 from itools.uri import get_reference
 from itools.uri.mailto import Mailto
 from itools import vfs
 from itools.vfs import FileName
 from itools.web import BaseView, STLForm, STLView, ERROR
+from itools.xml import XMLParser, XMLError
 
 # Import from ikaaro
 from ikaaro import messages

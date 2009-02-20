@@ -323,11 +323,16 @@ class DBResource(CatalogAware, IResource):
 
         # Values
         abspath = self.get_canonical_path()
+        # FIXME Index a single language for now
+        site_root = self.get_site_root()
+        languages = site_root.get_property('website_languages')
+        language = languages[0]
+
         document = {
             'name': self.name,
             'abspath': str(abspath),
             'format': self.metadata.format,
-            'title': self.get_title()}
+            'title': self.get_title(language=language)}
 
         # Versioning
         revisions = self.get_revisions()
@@ -423,15 +428,22 @@ class DBResource(CatalogAware, IResource):
         return [(self.name, new_name)]
 
 
-    def update_links(self, new_name):
+    def update_links(self, new_name, base_path):
         """The resource must update its links to itself.
         """
+        # Check referencial-integrity
+        catalog = get_context().server.catalog
+        # The catalog is not available when updating (icms-update.py)
+        # FIXME We do not guarantee referencial-integrity when updating
+        if catalog is None:
+            return
+
         old_path = self.get_abspath()
-        new_path = old_path.resolve(new_name)
+        new_path = base_path.resolve2(new_name)
 
         # Get all the resources that have a link to me
         query = PhraseQuery('links', str(old_path))
-        results = self.get_root().search(query).get_documents()
+        results = catalog.search(query).get_documents()
         for result in results:
             resource = self.get_resource(result.abspath)
             resource.change_link(old_path, new_path)
