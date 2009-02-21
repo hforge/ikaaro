@@ -144,7 +144,6 @@ def init(parser, options, target):
             path = str(resource.get_canonical_path())
             database.resources_added[path] = resource
     # Save changes
-    database.before_commit()
     database.save_changes()
 
     # Bravo!

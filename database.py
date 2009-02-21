@@ -18,8 +18,7 @@
 from subprocess import call, PIPE
 
 # Import from itools
-from itools.handlers import ReadOnlyDatabase as BaseReadOnlyDatabase
-from itools.handlers import SafeDatabase
+from itools.handlers import RODatabase, SolidDatabase
 from itools import vfs
 from itools.vfs import cwd
 from itools.web import get_context
@@ -31,10 +30,10 @@ from registry import get_register_fields
 
 
 
-class ReadOnlyDatabase(BaseReadOnlyDatabase):
+class ReadOnlyDatabase(RODatabase):
 
     def __init__(self, target):
-        BaseReadOnlyDatabase.__init__(self)
+        RODatabase.__init__(self)
 
         # Git archive
         self.path = '%s/database' % target
@@ -44,17 +43,13 @@ class ReadOnlyDatabase(BaseReadOnlyDatabase):
                                read_only=True)
 
 
-    def cleanup(self):
-        self.make_room()
 
-
-
-class Database(SafeDatabase):
+class Database(SolidDatabase):
     """Adds a Git archive to the itools database.
     """
 
     def __init__(self, target):
-        SafeDatabase.__init__(self, '%s/database.commit' % target)
+        SolidDatabase.__init__(self, '%s/database.commit' % target)
 
         # Git archive
         self.path = '%s/database' % target
@@ -110,7 +105,7 @@ class Database(SafeDatabase):
     #######################################################################
     # Transactions API
     #######################################################################
-    def before_commit(self):
+    def _before_commit(self):
         catalog = self.catalog
         new_files = self.new_files
 
@@ -141,8 +136,8 @@ class Database(SafeDatabase):
         resources_changed.clear()
 
 
-    def save_changes(self):
-        SafeDatabase.save_changes(self)
+    def _save_changes(self):
+        SolidDatabase._save_changes(self)
 
         # Git
         new_files = [ x for x in self.new_files if vfs.exists(x) ]
@@ -180,8 +175,8 @@ class Database(SafeDatabase):
         self.catalog.save_changes()
 
 
-    def abort_changes(self):
-        SafeDatabase.abort_changes(self)
+    def _abort_changes(self):
+        SolidDatabase._abort_changes(self)
 
         # Git
         self.new_files = []
@@ -195,10 +190,6 @@ class Database(SafeDatabase):
         self.resources_removed.clear()
         self.resources_added.clear()
         self.resources_changed.clear()
-
-
-    def cleanup(self):
-        self.make_room()
 
 
 
