@@ -53,7 +53,6 @@ class Database(SolidDatabase):
 
         # Git archive
         self.path = '%s/database' % target
-        self.new_files = []
 
         # The catalog
         self.catalog = Catalog('%s/catalog' % target, get_register_fields())
@@ -107,7 +106,7 @@ class Database(SolidDatabase):
     #######################################################################
     def _before_commit(self):
         catalog = self.catalog
-        new_files = self.new_files
+        new_files = []
 
         # Removed
         for path in self.resources_removed:
@@ -128,26 +127,12 @@ class Database(SolidDatabase):
         resources_changed = self.resources_changed
         for path in resources_changed:
             resource = resources_changed[path]
-            # Git
-            new_files.extend(resource.get_files_to_archive())
             # Catalog
             catalog.unindex_document(path)
             catalog.index_document(resource)
         resources_changed.clear()
 
-
-    def _save_changes(self):
-        SolidDatabase._save_changes(self)
-
-        # Git
-        new_files = [ x for x in self.new_files if vfs.exists(x) ]
-        if new_files:
-            command = ['git', 'add'] + new_files
-            call(command, cwd=self.path)
-        if self.new_files:
-            self.new_files = []
-
-        # Commit author & message
+        # Find out commit author & message
         author = 'nobody <>'
         message = 'no comment'
         context = get_context()
@@ -164,14 +149,27 @@ class Database(SolidDatabase):
             else:
                 message = message.encode('utf-8')
 
-        # Commit
-        # TODO Do not commit if there is nothing to commit (for example when
-        # login).
+        # Ok
+        return new_files, author, message
+
+
+    def _save_changes(self, data):
+        # (1) Save filesystem changes
+        SolidDatabase._save_changes(self, data)
+
+        # (2) Git
+        new_files, author, message = data
+        new_files = [ x for x in new_files if vfs.exists(x) ]
+        if new_files:
+            command = ['git', 'add'] + new_files
+            call(command, cwd=self.path)
+
+        # TODO Don't commit if there is nothing to commit (e.g. when login)
         command = [
             'git', 'commit', '-aq', '--author=%s' % author, '-m', message]
         call(command, cwd=self.path, stdout=PIPE)
 
-        # Catalog
+        # (3) Catalog
         self.catalog.save_changes()
 
 
@@ -179,7 +177,6 @@ class Database(SolidDatabase):
         SolidDatabase._abort_changes(self)
 
         # Git
-        self.new_files = []
         command = ['git', 'reset', '--']
         call(command, cwd=self.path)
 
