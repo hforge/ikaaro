@@ -328,25 +328,18 @@ class DBResource(CatalogAware, IResource):
         languages = site_root.get_property('website_languages')
         language = languages[0]
 
-        document = {
-            'name': self.name,
-            'abspath': str(abspath),
-            'format': self.metadata.format,
-            'title': self.get_title(language=language)}
-
         # Versioning
         revisions = self.get_revisions()
         if revisions:
             revision = revisions[0]
             # Author (used in the last-changes view)
             root = context.root
-            author = root.get_user_title(revision['username'])
-            if author is not None:
-                document['last_author'] = author
+            last_author = root.get_user_title(revision['username'])
             # Modification time
             mtime = revision['date']
         else:
             mtime = self.metadata.get_mtime()
+            last_author = None
 
         # Modification time (FIXME duplicated code with 'get_mtime')
         for handler in self.get_handlers():
@@ -354,9 +347,9 @@ class DBResource(CatalogAware, IResource):
                 handler_mtime = handler.get_mtime()
                 if handler_mtime is not None and handler_mtime > mtime:
                     mtime = handler_mtime
-        document['mtime'] = mtime
 
         # Full text
+        text = None
         try:
             server = context.server
         except AttributeError:
@@ -372,40 +365,56 @@ class DBResource(CatalogAware, IResource):
 #                log = "%s failed" % self.get_abspath()
 #               server.event_log.write(log)
 #               server.event_log.flush()
-            else:
-                document['text'] = text
-
-        # Links
-        document['links'] = self.get_links()
 
         # Parent path
-        if str(abspath) != '/':
+        parent_path = None
+        abspath_str = str(abspath)
+        if abspath_str != '/':
             parent_path = abspath.resolve2('..')
-            document['parent_path'] = str(parent_path)
+            parent_path = str(parent_path)
 
         # Size
         if isinstance(self, File):
             # FIXME We add an arbitrary size so files will always be bigger
             # than folders. This won't work when there is a folder with more
             # than that size.
-            document['size'] = 2**30 + self.get_size()
+            size = 2**30 + self.get_size()
         else:
             names = self.get_names()
-            document['size'] = len(names)
+            size = len(names)
 
         # Workflow state
         if isinstance(self, WorkflowAware):
-            document['workflow_state'] = self.get_workflow_state()
+            workflow_state = self.get_workflow_state()
+        else:
+            workflow_state = None
 
         # Role Aware
-        if isinstance(self, RoleAware):
-            document['is_role_aware'] = True
-            document['members'] = self.get_members()
+        is_role_aware = isinstance(self, RoleAware)
+        if is_role_aware:
+            members = self.get_members()
+        else:
+            members = None
 
-        # Browse in image mode
-        document['is_image'] = isinstance(self, Image)
-
-        return document
+        # Ok
+        return {
+            'name': self.name,
+            'abspath': abspath_str,
+            'format': self.metadata.format,
+            'title': self.get_title(language=language),
+            'text': text,
+            'links': self.get_links(),
+            'parent_path': parent_path,
+            # From Git
+            'last_author': last_author,
+            'mtime': mtime,
+            # This should be defined by subclasses
+            'is_image': isinstance(self, Image),
+            'is_role_aware': is_role_aware,
+            'members': members,
+            'size': size,
+            'workflow_state': workflow_state,
+        }
 
 
     ########################################################################
