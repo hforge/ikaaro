@@ -25,7 +25,6 @@ from time import time
 # Import from itools
 import itools
 from itools.core import vmsize
-from itools.handlers import Database
 from itools import vfs
 from itools.xapian import make_catalog, CatalogAware
 from itools.i18n.accept import AcceptLanguage
