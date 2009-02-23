@@ -106,7 +106,7 @@ class Database(SolidDatabase):
     #######################################################################
     def _before_commit(self):
         catalog = self.catalog
-        new_files = []
+        git_files = []
 
         # Removed
         for path in self.resources_removed:
@@ -117,60 +117,64 @@ class Database(SolidDatabase):
         resources_added = self.resources_added
         for path in resources_added:
             resource = resources_added[path]
-            # Git
-            new_files.extend(resource.get_files_to_archive())
-            # Catalog
-            catalog.index_document(resource)
-        resources_added.clear()
+            git_files.extend(resource.get_files_to_archive())
 
         # Changed
-        resources_changed = self.resources_changed
-        for path in resources_changed:
-            resource = resources_changed[path]
-            # Catalog
+        for path in self.resources_changed:
             catalog.unindex_document(path)
-            catalog.index_document(resource)
-        resources_changed.clear()
 
         # Find out commit author & message
-        author = 'nobody <>'
-        message = 'no comment'
+        git_author = 'nobody <>'
+        git_message = 'no comment'
         context = get_context()
         if context is not None:
             # Author
             user = context.user
             if user is not None:
-                author = '%s <%s>' % (user.name, user.get_property('email'))
+                email = user.get_property('email')
+                git_author = '%s <%s>' % (user.name, email)
             # Message
             try:
-                message = getattr(context, 'git_message')
+                git_message = getattr(context, 'git_message')
             except AttributeError:
                 pass
             else:
-                message = message.encode('utf-8')
+                git_message = git_message.encode('utf-8')
 
         # Ok
-        return new_files, author, message
+        return git_files, git_author, git_message
 
 
     def _save_changes(self, data):
         # (1) Save filesystem changes
         SolidDatabase._save_changes(self, data)
 
+        # Unpack data
+        git_files, git_author, git_message = data
+
         # (2) Git
-        new_files, author, message = data
-        new_files = [ x for x in new_files if vfs.exists(x) ]
-        if new_files:
-            command = ['git', 'add'] + new_files
+        git_files = [ x for x in git_files if vfs.exists(x) ]
+        if git_files:
+            command = ['git', 'add'] + git_files
             call(command, cwd=self.path)
 
         # TODO Don't commit if there is nothing to commit (e.g. when login)
-        command = [
-            'git', 'commit', '-aq', '--author=%s' % author, '-m', message]
+        command = ['git', 'commit', '-aq', '--author=%s' % git_author,
+                   '-m', git_message]
         call(command, cwd=self.path, stdout=PIPE)
 
         # (3) Catalog
-        self.catalog.save_changes()
+        catalog = self.catalog
+        # Added
+        for path, resource in self.resources_added.iteritems():
+            catalog.index_document(resource)
+        self.resources_added.clear()
+        # Changed
+        for path, resource in self.resources_changed.iteritems():
+            catalog.index_document(resource)
+        self.resources_changed.clear()
+        # Save
+        catalog.save_changes()
 
 
     def _abort_changes(self):
