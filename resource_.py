@@ -311,10 +311,9 @@ class DBResource(CatalogAware, IResource):
 
         # Values
         abspath = self.get_canonical_path()
-        # FIXME Index a single language for now
+        # Get the languages
         site_root = self.get_site_root()
         languages = site_root.get_property('website_languages')
-        language = languages[0]
 
         # Versioning
         revisions = self.get_revisions()
@@ -335,6 +334,11 @@ class DBResource(CatalogAware, IResource):
                 handler_mtime = handler.get_mtime()
                 if handler_mtime is not None and handler_mtime > mtime:
                     mtime = handler_mtime
+
+        # Titles
+        title = {}
+        for language in languages:
+            title[language] = self.get_title(language=language)
 
         # Full text
         text = None
@@ -389,7 +393,7 @@ class DBResource(CatalogAware, IResource):
             'name': self.name,
             'abspath': abspath_str,
             'format': self.metadata.format,
-            'title': self.get_title(language=language),
+            'title': title,
             'text': text,
             'links': self.get_links(),
             'parent_path': parent_path,

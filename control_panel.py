@@ -24,7 +24,7 @@ from itools.gettext import MSG
 from itools.i18n import get_language_name, get_languages
 from itools.uri import Path
 from itools.web import STLView, STLForm, INFO, ERROR
-from itools.xapian import PhraseQuery, AndQuery
+from itools.xapian import PhraseQuery
 
 # Import from ikaaro
 from access import RoleAware_BrowseUsers, RoleAware_AddUser
