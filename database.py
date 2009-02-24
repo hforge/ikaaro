@@ -18,6 +18,7 @@
 from subprocess import call, PIPE
 
 # Import from itools
+from itools import git
 from itools.handlers import RODatabase, SolidDatabase
 from itools import vfs
 from itools.vfs import cwd
@@ -29,32 +30,48 @@ from folder import Folder
 from registry import get_register_fields
 
 
-
-class ReadOnlyDatabase(RODatabase):
+class GitCommon(object):
 
     def __init__(self, target):
-        RODatabase.__init__(self)
-
-        # Git archive
         self.path = '%s/database' % target
 
-        # The catalog
+
+    def get_revision(self, revision):
+        cwd = self.path
+        metadata = git.get_metadata(revision, cwd=cwd)
+        date = metadata['committer'][1]
+        username = metadata['author'][0].split()[0]
+        if username == 'nobody':
+            username = None
+        return {'username': username,
+                'date': date,
+                'message': metadata['message'],
+                'revision': revision}
+
+
+
+
+class ReadOnlyDatabase(GitCommon, RODatabase):
+
+    def __init__(self, target):
+        GitCommon.__init__(self, target)
+
+        # Database/Catalog
+        RODatabase.__init__(self)
         self.catalog = Catalog('%s/catalog' % target, get_register_fields(),
                                read_only=True)
 
 
 
-class Database(SolidDatabase):
+class Database(GitCommon, SolidDatabase):
     """Adds a Git archive to the itools database.
     """
 
     def __init__(self, target):
+        GitCommon.__init__(self, target)
+
+        # Database/Catalog
         SolidDatabase.__init__(self, '%s/database.commit' % target)
-
-        # Git archive
-        self.path = '%s/database' % target
-
-        # The catalog
         self.catalog = Catalog('%s/catalog' % target, get_register_fields())
 
         # Events

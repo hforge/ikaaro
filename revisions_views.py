@@ -86,7 +86,8 @@ class Revisions_Changes(STLView):
         revision = context.get_form_value('revision')
 
         # Get the revision data
-        ns = resource.get_revision(revision, context)
+        database = context.database
+        ns = database.get_revision(revision)
         ns['username'] = context.root.get_user_title(ns['username'])
 
         # Diff
