@@ -297,6 +297,19 @@ class ResourcesOrderedTable(OrderedTable):
         return folder.get_resource(name)
 
 
+    def get_links(self):
+        base = self.get_abspath()
+        handler = self.handler
+        links = []
+
+        for record in handler.get_records_in_order():
+            # Target resources
+            path = handler.get_record_value(record, 'name')
+            links.append(str(base.resolve(path)))
+
+        return links
+
+
 
 class ChildrenOrderedTable(ResourcesOrderedTable):
 
