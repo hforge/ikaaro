@@ -19,7 +19,7 @@ from itools.csv import Property
 from itools.datatypes import String, Enumerate, Unicode, Integer
 from itools.gettext import MSG
 from itools.handlers import checkid
-from itools.uri import Path
+from itools.uri import Path, Reference, get_reference
 from itools.web import get_context
 from itools.xml import XMLParser
 
@@ -340,10 +340,12 @@ class Menu(OrderedTable):
                               'class': None,
                               'target': target})
             else:
-                if self.has_resource(path) is False:
+                ref = get_reference(path)
+                ref_path = str(ref.path)
+                if self.has_resource(ref_path) is False:
                     # Broken link
                     continue
-                resource = self.get_resource(path)
+                resource = self.get_resource(ref_path)
                 name = resource.name
 
                 ac = resource.get_access_control()
@@ -352,6 +354,7 @@ class Menu(OrderedTable):
 
                 # use first child by default we use the resource itself
                 path_resource = resource
+                resource_path = path
                 if depth > 1:
                     # Check the child
                     child_path = get_value(record, 'child')
@@ -366,7 +369,7 @@ class Menu(OrderedTable):
                             sub_path = subtabs['items'][0]['real_path']
                             # if the first child is an external link => skip it
                             if sub_path is not None:
-                                path_resource = site_root.get_resource(sub_path)
+                                resource_path = sub_path
 
                 # Set active, in_path
                 active, in_path = False, name in url
@@ -376,8 +379,13 @@ class Menu(OrderedTable):
                 # Set css class to 'active', 'in_path' or None
                 css = (active and 'in_path') or (in_path and 'in_path') or None
 
+                # get path and keep query and fragment
+                ref = get_reference(resource_path)
+                path = context.get_link(self.get_resource(str(ref.path)))
+                ref2 = Reference(ref.scheme, ref.authority, path, ref.query,
+                                 ref.fragment)
                 items.append({'id': 'menu_%s' % name,
-                              'path': context.get_link(path_resource),
+                              'path': str(ref2),
                               'real_path': resource.get_abspath(),
                               'title': title,
                               'description': None, # FIXME
