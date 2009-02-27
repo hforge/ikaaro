@@ -14,12 +14,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# Import from standard Library
+from copy import deepcopy
+
 # Import from itools
-from itools.csv import Property
 from itools.datatypes import String, Enumerate, Unicode, Integer
 from itools.gettext import MSG
 from itools.handlers import checkid
-from itools.uri import Path
+from itools.uri import Path, get_reference
 from itools.web import get_context
 from itools.xml import XMLParser
 
@@ -27,17 +29,22 @@ from itools.xml import XMLParser
 from ikaaro import messages
 from ikaaro.buttons import Button
 from ikaaro.exceptions import ConsistencyError
-from ikaaro.file import File
 from ikaaro.folder import Folder
 from ikaaro.forms import TextWidget, SelectWidget, ReadOnlyWidget
-from ikaaro.forms import stl_namespaces, PathSelectorWidget
+from ikaaro.forms import PathSelectorWidget
 from ikaaro.registry import register_resource_class
-from ikaaro.resource_views import Breadcrumb, DBResource_AddLink
 from ikaaro.table import OrderedTableFile, OrderedTable
-from ikaaro.table_views import OrderedTable_View, Table_AddRecord
-from ikaaro.table_views import Table_EditRecord
+from ikaaro.table_views import OrderedTable_View
 from ikaaro.workflow import WorkflowAware
 
+
+
+def get_reference_and_path(path):
+    """Return the reference associated to the path and the path
+    without query/fragment.
+    """
+    ref = get_reference(path)
+    return ref, str(ref.path)
 
 
 class NotAllowedError(Exception):
@@ -106,14 +113,19 @@ class Menu_View(OrderedTable_View):
         value = get_value(item, column)
         if column == 'title':
             path = get_value(item, 'path')
-            if path.startswith(('http://', 'https://')) or path.count(';'):
-                # External link
+            # Get the reference and path
+            ref, path = get_reference_and_path(path)
+            if ref.scheme or str(path).count(';'):
+                # External link or method
                 return value, path
             if resource.has_resource(path) is False:
                 # Broken link
                 return value
             resource_item = resource.get_resource(path)
-            return value, context.get_link(resource_item)
+            # Build the new reference with the right path
+            ref2 = deepcopy(ref)
+            ref2.path = context.get_link(resource_item)
+            return value, str(ref2)
         elif column == 'child':
             child = None
             parent = resource.parent
@@ -124,8 +136,10 @@ class Menu_View(OrderedTable_View):
             return child
         elif column == 'workflow_state':
             path = get_value(item, 'path')
-            if path.startswith(('http://', 'https://')) or path.count(';'):
-                # External link
+            # Get the reference and path
+            ref, path = get_reference_and_path(path)
+            if ref.scheme or str(path).count(';'):
+                # External link or method
                 return None
             if resource.has_resource(path) is False:
                 # Broken link
@@ -143,11 +157,13 @@ class Menu_View(OrderedTable_View):
             statename = item_resource.get_statename()
             state = item_resource.get_state()
             msg = state['title'].gettext().encode('utf-8')
-            path = context.get_link(item_resource)
+            # Build the new reference with the right path
+            ref2 = deepcopy(ref)
+            ref2.path = context.get_link(item_resource)
             # TODO Include the template in the base table
             state = ('<a href="%s/;edit_state" class="workflow">'
                      '<strong class="wf-%s">%s</strong>'
-                     '</a>') % (path, statename, msg)
+                     '</a>') % (str(ref2), statename, msg)
             return XMLParser(state)
 
         return OrderedTable_View.get_item_value(self, resource, context, item,
@@ -328,8 +344,10 @@ class Menu(OrderedTable):
             target = get_value(record, 'target')
             # Subtabs
             subtabs = {}
-            if path.startswith(('http://', 'https://')) or path.count(';'):
-                # Special case for external link & method
+            # Get the reference and path
+            ref, path = get_reference_and_path(path)
+            if ref.scheme or str(path).count(';'):
+                # Special case for external link and method
                 items.append({'id': 'menu_', # FIXME
                               'path': path,
                               'real_path': None,
@@ -351,7 +369,7 @@ class Menu(OrderedTable):
                     continue
 
                 # use first child by default we use the resource itself
-                path_resource = resource
+                resource_path = path
                 if depth > 1:
                     # Check the child
                     child_path = get_value(record, 'child')
@@ -366,7 +384,7 @@ class Menu(OrderedTable):
                             sub_path = subtabs['items'][0]['real_path']
                             # if the first child is an external link => skip it
                             if sub_path is not None:
-                                path_resource = site_root.get_resource(sub_path)
+                                resource_path = sub_path
 
                 # Set active, in_path
                 active, in_path = False, name in url
@@ -376,8 +394,12 @@ class Menu(OrderedTable):
                 # Set css class to 'active', 'in_path' or None
                 css = (active and 'in_path') or (in_path and 'in_path') or None
 
+                # Build the new reference with the right path
+                ref2 = deepcopy(ref)
+                resource = self.get_resource(path)
+                ref2.path = context.get_link(resource)
                 items.append({'id': 'menu_%s' % name,
-                              'path': context.get_link(path_resource),
+                              'path': str(ref2),
                               'real_path': resource.get_abspath(),
                               'title': title,
                               'description': None, # FIXME

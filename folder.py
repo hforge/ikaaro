@@ -76,11 +76,6 @@ class Folder(DBResource):
     #######################################################################
     # API
     #######################################################################
-    def _has_resource(self, name):
-        folder = self.handler
-        return folder.has_handler('%s.metadata' % name)
-
-
     def _get_names(self):
         folder = self.handler
         return [ x[:-9] for x in folder.get_handler_names()
