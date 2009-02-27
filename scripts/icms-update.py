@@ -20,7 +20,7 @@
 from cProfile import runctx
 from optparse import OptionParser
 from os import devnull
-from subprocess import call
+from subprocess import call, PIPE
 from sys import exit, stdout
 from traceback import print_exc
 
@@ -126,7 +126,7 @@ def update_versions(target, database, root, versions, confirm):
         # Commit
         database.save_changes()
         # Reset the state
-        database.cache = {}
+        database.cache.clear()
         # Stop if there were errors
         print
         if bad > 0:
@@ -187,12 +187,19 @@ def update(parser, options, target):
         if ask_confirmation(message, confirm) is False:
             abort()
         # git add
+        git_files = []
         for resource in root.traverse_resources():
             if not isinstance(resource, DBResource):
                 continue
-            database.new_files.extend(resource.get_files_to_archive())
-        context.git_commit = 'Initial commit.'
-        database.save_changes()
+            for uri in resource.get_files_to_archive():
+                if vfs.exists(uri):
+                    git_files.append(uri)
+        command = ['git', 'add'] + git_files
+        call(command, cwd=database.path)
+        # Commit
+        command = ['git', 'commit', '-aq', '--author=nobody <>',
+                   '-m', 'Initial commit.']
+        call(command, cwd=database.path, stdout=PIPE)
 
     # It is Done
     print '*'
