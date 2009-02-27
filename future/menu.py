@@ -115,7 +115,7 @@ class Menu_View(OrderedTable_View):
             path = get_value(item, 'path')
             # Get the reference and path
             ref, path = get_reference_and_path(path)
-            if ref.scheme or str(path).count(';'):
+            if ref.scheme or path.count(';'):
                 # External link or method
                 return value, path
             if resource.has_resource(path) is False:
@@ -138,7 +138,7 @@ class Menu_View(OrderedTable_View):
             path = get_value(item, 'path')
             # Get the reference and path
             ref, path = get_reference_and_path(path)
-            if ref.scheme or str(path).count(';'):
+            if ref.scheme or path.count(';'):
                 # External link or method
                 return None
             if resource.has_resource(path) is False:
@@ -331,9 +331,10 @@ class Menu(OrderedTable):
                                  use_first_child=False, flat=False):
         parent = self.parent
         handler = self.handler
-        site_root = context.site_root
         user = context.user
-        here_abspath = context.resource.get_abspath()
+        here = context.resource
+        here_abspath = here.get_abspath()
+        site_root_abspath = here.get_site_root().get_abspath()
         items = []
         tabs = {}
         get_value = handler.get_record_value
@@ -346,16 +347,33 @@ class Menu(OrderedTable):
             subtabs = {}
             # Get the reference and path
             ref, path = get_reference_and_path(path)
-            if ref.scheme or str(path).count(';'):
+            if ref.scheme or path.count(';'):
                 # Special case for external link and method
-                items.append({'id': 'menu_', # FIXME
-                              'path': path,
+                id = 'menu_'
+                css = None
+                if not ref.scheme:
+                    # FIXME We should check the ACL of the method
+                    # Get the resource associated to the method
+                    _path, _method = path.split(';')
+                    if ref.path.is_absolute():
+                        real_path = site_root_abspath.resolve2('.%s' % _path)
+                    else:
+                        real_path = _path
+                    if self.has_resource(real_path):
+                        resource = self.get_resource(real_path)
+                        if here_abspath == resource.get_abspath():
+
+                            if context.view_name == _method:
+                                css = 'in_path'
+                    id += _method
+                items.append({'id': id,
+                              'path': str(ref),
                               'real_path': None,
                               'title': title,
-                              'description': None, # FIXME
+                              'description': None,
                               'in_path': False,
                               'active': False,
-                              'class': None,
+                              'class': css,
                               'target': target})
             else:
                 if self.has_resource(path) is False:
