@@ -154,7 +154,8 @@ class Server(BaseServer):
             import guppy.heapy.RM
 
         # The database
-        database = get_database(path, read_only=read_only)
+        size = config.get_value('database-size')
+        database = get_database(path, size, read_only=read_only)
         self.database = database
 
         # Find out the root class

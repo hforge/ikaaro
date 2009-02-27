@@ -69,6 +69,11 @@ smtp-password =
 #
 log-level = warning
 
+# The "database-size" variable defined the maximum number of file handlers
+# to store in the database cache.
+#
+database-size = 5000
+
 # If the "profile-cpu" variable is set to "1", profiling information will
 # be written for every request to the 'log/profile' folder.  If the
 # "profile-memory" variable is set to "1", remote monitoring will be
@@ -138,6 +143,7 @@ def init(parser, options, target):
     base = get_absolute_reference(target).resolve2('database')
     folder = database.get_handler(base)
     root = root_class._make_resource(root_class, folder, email, password)
+    context.root = root
     # Index and Archive
     for resource in root.traverse_resources():
         if isinstance(resource, DBResource):

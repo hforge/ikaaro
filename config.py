@@ -30,13 +30,15 @@ class ServerConfig(ConfigFile):
         'modules': Tokens(default=()),
         'listen-address': String(default=''),
         'listen-port': Integer(default=8080),
-        'log-level': String(default='warning'),
         'smtp-host': String(default=''),
         'smtp-from': String(default=''),
         'smtp-login': String(default=''),
         'smtp-password': String(default=''),
+        'log-level': String(default='warning'),
+        'database-size': Integer(default=5000),
         'profile-cpu': Boolean(default=False),
         'profile-memory': Boolean(default=False),
+        'index-text': Boolean(default=True),
     }
 
 

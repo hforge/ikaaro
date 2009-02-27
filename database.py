@@ -61,11 +61,11 @@ class GitCommon(object):
 
 class ReadOnlyDatabase(GitCommon, RODatabase):
 
-    def __init__(self, target):
+    def __init__(self, target, cache_size):
         GitCommon.__init__(self, target)
 
         # Database/Catalog
-        RODatabase.__init__(self)
+        RODatabase.__init__(self, cache_size)
         self.catalog = Catalog('%s/catalog' % target, get_register_fields(),
                                read_only=True)
 
@@ -75,11 +75,12 @@ class Database(GitCommon, SolidDatabase):
     """Adds a Git archive to the itools database.
     """
 
-    def __init__(self, target):
+    def __init__(self, target, cache_size):
         GitCommon.__init__(self, target)
 
         # Database/Catalog
-        SolidDatabase.__init__(self, '%s/database.commit' % target)
+        commit = '%s/database.commit' % target
+        SolidDatabase.__init__(self, commit, cache_size)
         self.catalog = Catalog('%s/catalog' % target, get_register_fields())
 
         # Events
@@ -229,11 +230,11 @@ def make_database(target):
     make_catalog('%s/catalog' % target, get_register_fields())
 
     # Ok
-    return Database(target)
+    return Database(target, 5000)
 
 
-def get_database(path, read_only=False):
+def get_database(path, cache_size, read_only=False):
     if read_only is True:
-        return ReadOnlyDatabase(path)
+        return ReadOnlyDatabase(path, cache_size)
 
-    return Database(path)
+    return Database(path, cache_size)
