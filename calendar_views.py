@@ -432,8 +432,9 @@ class EditEventForm(CalendarView, STLForm):
         if resource_id is None:
             return resource
 
-        if resource.has_resource(resource_id):
-            return resource.get_resource(resource_id)
+        aux = resource.get_resource(resource_id)
+        if aux is not None:
+            return aux
         elif resource_id == resource.name:
             return resource
 

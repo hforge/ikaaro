@@ -85,11 +85,9 @@ class WikiPage_View(BaseView):
                     if reference.scheme or reference.authority:
                         node['classes'].append('external')
                         continue
-                    try:
-                        destination = resource.get_resource(reference.path)
+                    destination = resource.get_resource(reference.path)
+                    if destination is not None:
                         node['refuri'] = context.get_link(destination)
-                    except LookupError:
-                        pass
             elif refname is False:
                     # Wiki link not found
                     node['classes'].append('nowiki')
@@ -222,6 +220,9 @@ class WikiPage_ToPDF(BaseView):
                 # Fetch external image
                 try:
                     image = get_handler(reference)
+                except LookupError:
+                    image = None
+                else:
                     filename = reference.path.get_name()
                     name, ext, lang = FileName.decode(filename)
                     # At least images from ikaaro won't have an extension
@@ -229,14 +230,10 @@ class WikiPage_ToPDF(BaseView):
                         mimetype = vfs.get_mimetype(reference)
                         ext = guess_extension(mimetype)[1:]
                         filename = FileName.encode((name, ext, lang))
-                except LookupError:
-                    image = None
             else:
-                try:
-                    image = parent.get_resource(reference.path)
+                image = parent.get_resource(reference.path)
+                if image is not None:
                     filename = image.get_property('filename')
-                except LookupError:
-                    image = None
             if image is None:
                 # Missing image, prevent pdfLaTeX failure
                 image = resource.get_resource('/ui/wiki/missing.png')

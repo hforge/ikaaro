@@ -105,9 +105,8 @@ class LocationTemplate(SkinTemplate):
         resource = site_root
         for name in context.uri.path:
             path = path + ('%s/' % name)
-            try:
-                resource = resource.get_resource(name)
-            except LookupError:
+            resource = resource.get_resource(name)
+            if resource is None:
                 break
             # Append
             title = resource.get_title()

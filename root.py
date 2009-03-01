@@ -118,10 +118,7 @@ class Root(WebSite):
     # Override itools.web.root.Root
     ########################################################################
     def get_user(self, name):
-        users = self.get_resource('users')
-        if users.has_resource(name):
-            return users.get_resource(name)
-        return None
+        return self.get_resource('users/%s' % name)
 
 
     def get_user_from_login(self, username):
@@ -141,9 +138,8 @@ class Root(WebSite):
         if username is None:
             return None
         users = self.get_resource('users')
-        try:
-            user = users.get_resource(username)
-        except LookupError:
+        user = users.get_resource(username)
+        if user is None:
             return username
         return user.get_title()
 

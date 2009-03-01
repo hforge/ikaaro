@@ -92,12 +92,10 @@ class StoreSearchMenu(ContextMenu):
     def get_namespace(self, resource, context):
         # This search exists ?
         search_name = context.get_query_value('search_name')
-        search = None
         if search_name:
-            try:
-                search = resource.get_resource(search_name)
-            except LookupError:
-                pass
+            search = resource.get_resource(search_name)
+        else:
+            search = None
 
         # Set the get function and the title
         if search:
@@ -319,9 +317,8 @@ class Tracker_View(BrowseForm):
         # Check stored search
         search_name = context.query['search_name']
         if search_name:
-            try:
-                search = resource.get_resource(search_name)
-            except LookupError:
+            search = resource.get_resource(search_name)
+            if search is None:
                 msg = MSG(u'Unknown stored search "{sname}".')
                 goto = ';search'
                 return context.come_back(msg, goto=goto, sname=search_name)
@@ -388,9 +385,8 @@ class Tracker_View(BrowseForm):
         # Assigned to
         if column == 'assigned_to':
             users = resource.get_resource('/users')
-            try:
-                user = users.get_resource(value)
-            except LookupError:
+            user = users.get_resource(value)
+            if user is None:
                 return None
             return user.get_title()
         # Mtime
@@ -589,11 +585,8 @@ class Tracker_GoToIssue(BaseView):
         if not issue_name:
             return context.come_back(messages.MSG_NAME_MISSING)
 
-        if not resource.has_resource(issue_name):
-            return context.come_back(ERROR(u'Issue not found.'))
-
         issue = resource.get_resource(issue_name)
-        if not isinstance(issue, Issue):
+        if issue is None or not isinstance(issue, Issue):
             return context.come_back(ERROR(u'Issue not found.'))
 
         return context.uri.resolve2('../%s/;edit' % issue_name)
@@ -909,8 +902,8 @@ def get_issue_informations(resource, item):
     infos['assigned_to'] = ''
     if assigned_to:
         users = resource.get_resource('/users')
-        if users.has_resource(assigned_to):
-            user = users.get_resource(assigned_to)
+        user = users.get_resource(assigned_to)
+        if user is not None:
             infos['assigned_to'] = user.get_title()
 
     # Modification Time

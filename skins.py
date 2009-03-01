@@ -110,7 +110,7 @@ class UIFolder(IResource, Folder):
             languages = [ x for x in languages if has_language(x) ]
 
             if not languages:
-                raise LookupError, 'resource "%s" not found' % name
+                return None
 
             # Get the best variant
             context = get_context()
@@ -368,11 +368,12 @@ class Skin(UIFolder):
 
 
     def get_template(self):
-        try:
-            return self.get_resource('template.xhtml')
-        except LookupError:
-            # Default, aruni
-            return self.get_resource('/ui/aruni/template.xhtml')
+        template = self.get_resource('template.xhtml')
+        if template is not None:
+            return template
+
+        # Default: aruni
+        return self.get_resource('/ui/aruni/template.xhtml')
 
 
     def template(self, content):

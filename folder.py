@@ -83,10 +83,17 @@ class Folder(DBResource):
 
 
     def _get_resource(self, name):
+        # Look for the resource
         folder = self.handler
-        metadata = folder.get_handler('%s.metadata' % name)
+        try:
+            metadata = folder.get_handler('%s.metadata' % name)
+        except LookupError:
+            return None
+
+        # Format (class id)
         format = metadata.format
 
+        # File or folder
         uri = folder.uri.resolve2(name)
         if vfs.exists(uri):
             is_file = vfs.is_file(uri)
@@ -94,6 +101,7 @@ class Folder(DBResource):
             # FIXME This is just a guess, it may fail.
             is_file = '/' in format
 
+        # Ok
         cls = get_resource_class(format, is_file=is_file)
         return cls(metadata)
 

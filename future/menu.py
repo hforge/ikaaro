@@ -118,22 +118,21 @@ class Menu_View(OrderedTable_View):
             if ref.scheme or str(path).count(';'):
                 # External link or method
                 return value, path
-            if resource.has_resource(path) is False:
-                # Broken link
-                return value
             resource_item = resource.get_resource(path)
+            # Broken link
+            if resource_item is None:
+                return value
             # Build the new reference with the right path
             ref2 = deepcopy(ref)
             ref2.path = context.get_link(resource_item)
             return value, str(ref2)
         elif column == 'child':
-            child = None
-            parent = resource.parent
-            child_path = value
-            if value and parent.has_resource(value):
-                child = parent.get_resource(value)
-                child = 'edit', context.get_link(child)
-            return child
+            if not value:
+                return None
+            child = resource.parent.get_resource(value)
+            if child is None:
+                return None
+            return 'edit', context.get_link(child)
         elif column == 'workflow_state':
             path = get_value(item, 'path')
             # Get the reference and path
@@ -141,8 +140,9 @@ class Menu_View(OrderedTable_View):
             if ref.scheme or str(path).count(';'):
                 # External link or method
                 return None
-            if resource.has_resource(path) is False:
-                # Broken link
+            item_resource = resource.get_resource(path)
+            # Broken link
+            if item_resource is None:
                 title = MSG(u'The resource does not exist anymore.')
                 title = title.gettext().encode('utf-8')
                 label = MSG(u'Broken').gettext().encode('utf-8')
@@ -151,7 +151,6 @@ class Menu_View(OrderedTable_View):
                          'title="%s"><strong class="broken">%s</strong>'
                          '</a>') % (link, item.id, title, label)
                 return XMLParser(state)
-            item_resource = resource.get_resource(path)
             if not isinstance(item_resource, WorkflowAware):
                 return None
             statename = item_resource.get_statename()
@@ -167,7 +166,8 @@ class Menu_View(OrderedTable_View):
             return XMLParser(state)
 
         return OrderedTable_View.get_item_value(self, resource, context, item,
-                                               column)
+                                                column)
+
 
     def get_namespace(self, resource, context):
         context.styles.append('/ui/future/style.css')
@@ -263,7 +263,7 @@ class Menu_View(OrderedTable_View):
             parent_record = handler.get_record(parent_id)
             # check if the child already exists
             child_path = handler.get_record_value(parent_record, 'child')
-            if child_path and parent.has_resource(child_path):
+            if child_path and parent.get_resource(child_path) is not None:
                 continue
 
             names = parent.get_names()
@@ -309,19 +309,20 @@ class Menu(OrderedTable):
         # Delete submenu
         if 'child' in record_schema:
             child_path = handler.get_record_value(record, 'child')
-            container = self.parent
-            user = get_context().user
-            if child_path and container.has_resource(child_path):
+            if child_path:
+                container = self.parent
                 child = container.get_resource(child_path)
-                ac = child.get_access_control()
-                if ac.is_allowed_to_remove(user, child):
-                    if child.handler.get_n_records():
+                if child is not None:
+                    ac = child.get_access_control()
+                    user = get_context().user
+                    if ac.is_allowed_to_remove(user, child):
+                        if child.handler.get_n_records():
+                            raise NotAllowedError
+                        # Remove the child table
+                        # May raise a ConsistencyError
+                        container.del_resource(child_path)
+                    else:
                         raise NotAllowedError
-                    # Remove the child table
-                    # May raise a ConsistencyError
-                    container.del_resource(child_path)
-                else:
-                    raise NotAllowedError
 
         # Delete the record
         handler.del_record(id)
@@ -358,10 +359,10 @@ class Menu(OrderedTable):
                               'class': None,
                               'target': target})
             else:
-                if self.has_resource(path) is False:
-                    # Broken link
-                    continue
                 resource = self.get_resource(path)
+                # Broken link
+                if resource is None:
+                    continue
                 name = resource.name
 
                 ac = resource.get_access_control()
@@ -373,18 +374,20 @@ class Menu(OrderedTable):
                 if depth > 1:
                     # Check the child
                     child_path = get_value(record, 'child')
-                    if child_path and parent.has_resource(child_path):
-                        # Sub level
+                    if child_path:
                         child = parent.get_resource(child_path)
-                        get_menu_ns_lvl = child.get_menu_namespace_level
-                        subtabs = get_menu_ns_lvl(context, url, depth - 1,
-                                                  use_first_child, flat)
-                        # use first child
-                        if subtabs['items']:
-                            sub_path = subtabs['items'][0]['real_path']
-                            # if the first child is an external link => skip it
-                            if sub_path is not None:
-                                resource_path = sub_path
+                        if child is not None:
+                            # Sub level
+                            get_menu_ns_lvl = child.get_menu_namespace_level
+                            subtabs = get_menu_ns_lvl(context, url, depth - 1,
+                                                      use_first_child, flat)
+                            # use first child
+                            if subtabs['items']:
+                                sub_path = subtabs['items'][0]['real_path']
+                                # if the first child is an external link =>
+                                # skip it
+                                if sub_path is not None:
+                                    resource_path = sub_path
 
                 # Set active, in_path
                 active, in_path = False, name in url
@@ -431,9 +434,9 @@ class Menu(OrderedTable):
             path = handler.get_record_value(record, 'child')
             if path:
                 container = self.parent
-                if container.has_resource(path):
+                child = container.get_resource(path)
+                if child is not None:
                     # take into account the submenu if it is not empty
-                    child = container.get_resource(path)
                     if child.handler.get_n_records():
                         uri = base.resolve(path)
                         links.append(str(uri))
@@ -537,8 +540,8 @@ def get_menu_namespace(context, depth=3, show_first_child=False, flat=True,
     tabs = {'items': []}
     if src is None:
         src = 'menu'
-    if site_root.has_resource(src):
-        menu = site_root.get_resource(src)
+    menu = site_root.get_resource(src)
+    if menu is not None:
         tabs = menu.get_menu_namespace_level(context, url, depth,
                                              show_first_child)
 

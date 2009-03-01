@@ -91,9 +91,8 @@ class Folder_View(BaseView):
 
 
     def GET(self, resource, context):
-        try:
-            index = resource.get_resource('index')
-        except LookupError:
+        index = resource.get_resource('index')
+        if index is None:
             context.message = ERROR(
                 u'There is not an "index" web page. Could not render this '
                 u'view.')
@@ -196,7 +195,7 @@ class Folder_Rename(STLForm):
             if new_name == old_name:
                 continue
             # Check there is not another resource with the same name
-            if container.has_resource(new_name):
+            if container.get_resource(new_name) is not None:
                 context.message = messages.MSG_EXISTANT_FILENAME
                 return
             # Clean cookie (FIXME Do not clean the cookie, update it)
@@ -499,9 +498,8 @@ class Folder_BrowseContent(SearchForm):
         allowed_types = tuple(target.get_document_types())
         for path in paths:
             # Check the resource actually exists
-            try:
-                resource = target.get_resource(path)
-            except LookupError:
+            resource = target.get_resource(path)
+            if resource is None:
                 continue
             if not isinstance(resource, allowed_types):
                 continue

@@ -59,20 +59,20 @@ class Dressable_Menu(ContextMenu):
                 warn(msg)
                 continue
             name, cls = value
-            if resource.has_resource(name):
-                # Add edit link
-                items.append(
-                    {'name': name,
-                     'title': MSG(u'%s %s' % (cls.class_title.gettext(), name)),
-                     'href': '%s%s/;edit' % (base_path, name),
-                     'class': 'nav_active'})
-            else:
+            if resource.get_resource(name) is None:
                 # Add new_resource link
                 items.append(
                     {'name': name,
                      'title': MSG(u'Add new %s' % cls.class_title.gettext()),
                      'href': ('%s;new_resource?type=%s&title=%s' %
                               (base_path, cls.class_id, name)),
+                     'class': 'nav_active'})
+            else:
+                # Add edit link
+                items.append(
+                    {'name': name,
+                     'title': MSG(u'%s %s' % (cls.class_title.gettext(), name)),
+                     'href': '%s%s/;edit' % (base_path, name),
                      'class': 'nav_active'})
         items.sort(key=itemgetter('name'))
         # Dressable metadata
@@ -120,13 +120,13 @@ class Dressable_View(CompositeForm):
             content = ''
             if isinstance(value, tuple):
                 name, kk = value
-                if resource.has_resource(name):
-                    item = resource.get_resource(name)
+                item = resource.get_resource(name)
+                if item is None:
+                    value = None
+                else:
                     # get view to show current item
                     method = self.get_view(resource, context, item)
                     value = method(item, context)
-                else:
-                    value = None
             else:
                 # get view to display
                 value = getattr(resource, 'data')(context)

@@ -73,16 +73,18 @@ class WikiPage(Text):
 
         # Try regular resource name or path
         try:
-            return parent.get_resource(title)
-        except (LookupError, UnicodeEncodeError):
-            # Convert wiki name to resource name
-            name = checkid(title)
-            if name is None:
-                return None
-            try:
-                return parent.get_resource(name)
-            except LookupError:
-                return None
+            resource = parent.get_resource(title)
+        except UnicodeEncodeError:
+            pass
+        else:
+            if resource is not None:
+                return resource
+
+        # Convert wiki name to resource name
+        name = checkid(title)
+        if name is None:
+            return None
+        return parent.get_resource(name)
 
 
     def get_document(self):
@@ -124,11 +126,9 @@ class WikiPage(Text):
             if reference.scheme or reference.authority:
                 continue
             # Note: absolute paths will be rewritten as relative paths
-            try:
-                resource = parent.get_resource(reference.path)
+            resource = parent.get_resource(reference.path)
+            if resource is not None:
                 node['refuri'] = context.get_link(resource)
-            except LookupError:
-                pass
 
         # Assume image paths are relative to the container
         for node in document.traverse(condition=nodes.image):
@@ -142,11 +142,8 @@ class WikiPage(Text):
             if reference.path[-1] == ';download':
                 path = path[:-1]
             # Get the resource
-            try:
-                resource = parent.get_resource(path)
-            except LookupError:
-                pass
-            else:
+            resource = parent.get_resource(path)
+            if resource is not None:
                 node['uri'] = '%s/;download' % context.get_link(resource)
 
         return document
