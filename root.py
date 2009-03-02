@@ -180,26 +180,6 @@ class Root(WebSite):
         return WebSite.get_document_types(self) + [WebSite]
 
 
-    ########################################################################
-    # Search
-    def search(self, query=None, **kw):
-        catalog = get_context().database.catalog
-        return catalog.search(query, **kw)
-
-
-    ########################################################################
-    # Skins
-    def get_skin(self):
-        context = get_context()
-        # Back-Office
-        hostname = context.uri.authority.host
-        if hostname[:3] in ['bo.', 'bo-']:
-            return self.get_resource('ui/aruni')
-        # Fron-Office
-        skin = context.site_root.class_skin
-        return self.get_resource(skin)
-
-
     def get_available_languages(self):
         """Returns the language codes for the user interface.
         """
@@ -220,6 +200,13 @@ class Root(WebSite):
 
         target.insert(0, source)
         return target
+
+
+    ########################################################################
+    # Search
+    def search(self, query=None, **kw):
+        catalog = get_context().database.catalog
+        return catalog.search(query, **kw)
 
 
     ########################################################################

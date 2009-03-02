@@ -122,21 +122,32 @@ class WebSite(RoleAware, Folder):
             accept.set(language, 2.5)
 
 
+    def get_skin(self, context):
+        # Back-Office
+        hostname = context.uri.authority.host
+        if hostname[:3] in ['bo.', 'bo-']:
+            return self.get_resource('/ui/aruni')
+        # Fron-Office
+        return self.get_resource(self.class_skin)
+
+
     def after_traverse(self, context):
         body = context.entity
-        if not isinstance(body, (str, list, GeneratorType, XMLParser)):
+        is_str = type(body) is str
+        is_xml = isinstance(body, (list, GeneratorType, XMLParser))
+        if not is_str and not is_xml:
             return
 
-        # If there is not content type and the body is not None, wrap it in
-        # the skin template
+        # If there is not a content type, just serialize the content
         if context.response.has_header('Content-Type'):
-            if isinstance(body, (list, GeneratorType, XMLParser)):
+            if is_xml:
                 context.entity = stream_to_str_as_html(body)
             return
 
-        if isinstance(body, str):
+        # Standard page, wrap the content into the general template
+        if is_str:
             body = XMLParser(body, doctype=xhtml_doctype)
-        context.entity = context.root.get_skin().template(body)
+        context.entity = self.get_skin(context).template(body)
 
 
     def is_allowed_to_register(self, user, resource):
