@@ -30,8 +30,8 @@ from ikaaro import messages
 from ikaaro.buttons import Button
 from ikaaro.exceptions import ConsistencyError
 from ikaaro.folder import Folder
-from ikaaro.forms import TextWidget, SelectWidget, ReadOnlyWidget
 from ikaaro.forms import PathSelectorWidget
+from ikaaro.forms import TextWidget, SelectWidget, ReadOnlyWidget
 from ikaaro.registry import register_resource_class
 from ikaaro.table import OrderedTableFile, OrderedTable
 from ikaaro.table_views import OrderedTable_View
@@ -115,9 +115,12 @@ class Menu_View(OrderedTable_View):
             path = get_value(item, 'path')
             # Get the reference and path
             ref, path = get_reference_and_path(path)
-            if ref.scheme or str(path).count(';'):
+            if ref.scheme or path.count(';'):
                 # External link or method
                 return value, path
+            if ref.path.is_absolute():
+                site_root = context.resource.get_site_root()
+                path = site_root.get_abspath().resolve2('.%s' % path)
             resource_item = resource.get_resource(path)
             # Broken link
             if resource_item is None:
@@ -137,9 +140,12 @@ class Menu_View(OrderedTable_View):
             path = get_value(item, 'path')
             # Get the reference and path
             ref, path = get_reference_and_path(path)
-            if ref.scheme or str(path).count(';'):
+            if ref.scheme or path.count(';'):
                 # External link or method
                 return None
+            if ref.path.is_absolute():
+                site_root = context.resource.get_site_root()
+                path = site_root.get_abspath().resolve2('.%s' % path)
             item_resource = resource.get_resource(path)
             # Broken link
             if item_resource is None:
@@ -211,48 +217,6 @@ class Menu_View(OrderedTable_View):
 
         # Reindex the resource
         context.server.change_resource(resource)
-
-
-    def action_order_up(self, resource, context, form):
-        ids = form['ids']
-        if not ids:
-            context.message = MSG(u'Please select the objects to order up.')
-            return
-
-        resource.handler.order_up(ids)
-        context.message = MSG(u'Objects ordered up.')
-
-
-    def action_order_down(self, resource, context, form):
-        ids = form['ids']
-        if not ids:
-            context.message = MSG(u'Please select the objects to order down.')
-            return
-
-        resource.handler.order_down(ids)
-        context.message = MSG(u'Objects ordered down.')
-
-
-    def action_order_top(self, resource, context, form):
-        ids = form['ids']
-        if not ids:
-            message = MSG(u'Please select the objects to order on top.')
-            context.message = message
-            return
-
-        resource.handler.order_top(ids)
-        context.message = MSG(u'Objects ordered on top.')
-
-
-    def action_order_bottom(self, resource, context, form):
-        ids = form['ids']
-        if not ids:
-            message = MSG(u'Please select the objects to order on bottom.')
-            context.message = message
-            return
-
-        resource.handler.order_bottom(ids)
-        context.message = MSG(u'Objects ordered on bottom.')
 
 
     def action_add_child(self, resource, context, form):
@@ -328,46 +292,102 @@ class Menu(OrderedTable):
         handler.del_record(id)
 
 
+    def _is_allowed_to_access(self, context, uri):
+        # Get the reference and path
+        ref, path = get_reference_and_path(uri)
+        if ref.scheme:
+            # External link
+            return True
+
+        user = context.user
+        site_root_abspath = context.resource.get_site_root().get_abspath()
+        if ref is None or path == '':
+            # Skip broken entry
+            return False
+        elif path.count(';'):
+            path, method = path.split(';')
+            if ref.path.is_absolute():
+                path = site_root_abspath.resolve2('.%s' % path)
+            if self.has_resource(path):
+                resource = self.get_resource(path)
+                ac = resource.get_access_control()
+                view = resource.get_view(method, ref.query)
+                # Check ACL
+                if view:
+                    return ac.is_access_allowed(user, resource, view)
+            # Miss
+            return False
+        else:
+            # Internal link
+            if ref.path.is_absolute():
+                path = site_root_abspath.resolve2('.%s' % path)
+            if self.has_resource(path) is False:
+                # Broken link
+                return False
+
+            # FIXME We should take into account the show_first_child
+            # parameter
+            resource = self.get_resource(path)
+            ac = resource.get_access_control()
+            return ac.is_allowed_to_view(user, resource)
+
+
     def get_menu_namespace_level(self, context, url, depth=2,
                                  use_first_child=False, flat=False):
         parent = self.parent
         handler = self.handler
-        site_root = context.site_root
-        user = context.user
-        here_abspath = context.resource.get_abspath()
+        here = context.resource
+        here_abspath = here.get_abspath()
+        site_root_abspath = here.get_site_root().get_abspath()
         items = []
         tabs = {}
         get_value = handler.get_record_value
         for record in handler.get_records_in_order():
             # Get the objects, check security
-            path = get_value(record, 'path')
+            uri = get_value(record, 'path')
+            if self._is_allowed_to_access(context, uri) is False:
+                continue
             title = get_value(record, 'title')
             target = get_value(record, 'target')
             # Subtabs
             subtabs = {}
             # Get the reference and path
-            ref, path = get_reference_and_path(path)
-            if ref.scheme or str(path).count(';'):
+            ref, path = get_reference_and_path(uri)
+            if ref.scheme or path.count(';'):
                 # Special case for external link and method
-                items.append({'id': 'menu_', # FIXME
-                              'path': path,
+                id = 'menu_'
+                css = None
+                if not ref.scheme:
+                    # FIXME We should check the ACL of the method
+                    # Get the resource associated to the method
+                    _path, _method = path.split(';')
+                    if ref.path.is_absolute():
+                        real_path = site_root_abspath.resolve2('.%s' % _path)
+                    else:
+                        real_path = _path
+                    resource = self.get_resource(real_path)
+                    if here_abspath == resource.get_abspath():
+                        if context.view_name == _method:
+                            css = 'in_path'
+                    id += _method
+                items.append({'id': id,
+                              'path': str(ref),
                               'real_path': None,
                               'title': title,
-                              'description': None, # FIXME
+                              'description': None,
                               'in_path': False,
                               'active': False,
-                              'class': None,
+                              'class': css,
                               'target': target})
             else:
+                # Internal link
+                if ref.path.is_absolute():
+                    path = site_root_abspath.resolve2('.%s' % path)
                 resource = self.get_resource(path)
                 # Broken link
                 if resource is None:
                     continue
                 name = resource.name
-
-                ac = resource.get_access_control()
-                if ac.is_allowed_to_view(user, resource) is False:
-                    continue
 
                 # use first child by default we use the resource itself
                 resource_path = path
@@ -415,8 +435,46 @@ class Menu(OrderedTable):
         return tabs
 
 
+    def get_first_level_uris(self, context):
+        """Return a list of the URI of all entries in the first level
+        """
+        handler = self.handler
+        site_root = context.resource.get_site_root()
+        site_root_abspath = site_root.get_abspath()
+        user = context.user
+        get_value = handler.get_record_value
+        uris = []
+        for record in handler.get_records_in_order():
+            # Get the objects, check security
+            uri = get_value(record, 'path')
+            # Get the reference and path
+            ref, path = get_reference_and_path(uri)
+            if ref.scheme:
+                # External link
+                uris.append(uri)
+                continue
+            if self._is_allowed_to_access(context, uri) is False:
+                continue
+            if path.count(';'):
+                path, method = path.split(';')
+                if ref.path.is_absolute():
+                    path = site_root_abspath.resolve2('.%s' % path)
+                resource = self.get_resource(path)
+            else:
+                path = site_root_abspath.resolve2('.%s' % path)
+                resource = self.get_resource(path)
+            # Build the new reference with the right path
+            ref2 = deepcopy(ref)
+            ref2.path = context.get_link(resource)
+            uris.append(ref2)
+
+        return uris
+
+
     def get_links(self):
         base = self.get_abspath()
+        # FIXME The context is not available when updating the catalog.
+        site_root_abspath = self.parent.parent.get_abspath()
         handler = self.handler
         record_schema = handler.record_schema
         links = []
@@ -424,9 +482,15 @@ class Menu(OrderedTable):
         for record in handler.get_records_in_order():
             # Target resources
             path = handler.get_record_value(record, 'path')
-            if path.startswith(('http://', 'https://')) or path.count(';'):
+            ref, path = get_reference_and_path(path)
+            if ref.scheme:
                 continue
-            uri = base.resolve2(path)
+            if path.count(';'):
+                path, method = path.split(';')
+            if ref.path.is_absolute():
+                uri = site_root_abspath.resolve2('.%s' % path)
+            else:
+                uri = base.resolve2(path)
             links.append(str(uri))
             # Submenu resources
             if not 'child' in record_schema:
@@ -438,7 +502,7 @@ class Menu(OrderedTable):
                 if child is not None:
                     # take into account the submenu if it is not empty
                     if child.handler.get_n_records():
-                        uri = base.resolve(path)
+                        uri = site_root_abspath.resolve(path)
                         links.append(str(uri))
 
         return links
@@ -447,12 +511,21 @@ class Menu(OrderedTable):
     def change_link(self, old_path, new_path):
         handler = self.handler
         base = self.get_abspath()
+        # FIXME The context is not available when updating the catalog.
+        site_root_abspath = self.parent.parent.get_abspath()
 
         for record in handler.get_records_in_order():
             path = handler.get_record_value(record, 'path')
-            if path.startswith(('http://', 'https://')) or path.count(';'):
+            ref, path = get_reference_and_path(path)
+            if ref.scheme:
                 continue
-            uri = str(base.resolve2(path))
+            if path.count(';'):
+                path, method = path.split(';')
+            if ref.path.is_absolute():
+                uri = site_root_abspath.resolve2('.%s' % path)
+            else:
+                uri = base.resolve2(path)
+            uri = str(uri)
             if uri == old_path:
                 # Hit the old name
                 new_path2 = base.get_pathto(Path(new_path))
@@ -486,6 +559,11 @@ class MenuFolder(Folder):
         menu_root = self.get_resource('menu')
         return menu_root.get_menu_namespace_level(context, url, depth,
                                                   use_first_child, flat)
+
+
+    def get_first_level_uris(self, context):
+        menu_root = self.get_resource('menu')
+        return menu_root.get_first_level_uris(context)
 
 
 
