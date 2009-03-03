@@ -430,6 +430,42 @@ class Menu(OrderedTable):
         return tabs
 
 
+    def get_first_level_uris(self, context):
+        """Return a list of the URI of all entries in the first level
+        """
+        handler = self.handler
+        user = context.user
+        get_value = handler.get_record_value
+        uris = []
+        for record in handler.get_records_in_order():
+            # Get the objects, check security
+            path = get_value(record, 'path')
+            # Get the reference and path
+            ref, path = get_reference_and_path(path)
+            if ref.scheme or str(path).count(';'):
+                # Special case for external link and method
+                uris.append(ref)
+            else:
+                # Internal link
+                if self.has_resource(path) is False:
+                    # Broken link
+                    continue
+
+                # FIXME We should take into account the show_first_child
+                # parameter
+                resource = self.get_resource(path)
+                ac = resource.get_access_control()
+                if ac.is_allowed_to_view(user, resource) is False:
+                    continue
+
+                # Build the new reference with the right path
+                ref2 = deepcopy(ref)
+                ref2.path = context.get_link(resource)
+                uris.append(ref2)
+
+        return uris
+
+
     def get_links(self):
         base = self.get_abspath()
         handler = self.handler
@@ -439,7 +475,8 @@ class Menu(OrderedTable):
         for record in handler.get_records_in_order():
             # Target resources
             path = handler.get_record_value(record, 'path')
-            if path.startswith(('http://', 'https://')) or path.count(';'):
+            ref, path = get_reference_and_path(path)
+            if ref.scheme or path.count(';'):
                 continue
             uri = base.resolve2(path)
             links.append(str(uri))
@@ -465,7 +502,8 @@ class Menu(OrderedTable):
 
         for record in handler.get_records_in_order():
             path = handler.get_record_value(record, 'path')
-            if path.startswith(('http://', 'https://')) or path.count(';'):
+            ref, path = get_reference_and_path(path)
+            if ref.scheme or path.count(';'):
                 continue
             uri = str(base.resolve2(path))
             if uri == old_path:
@@ -501,6 +539,11 @@ class MenuFolder(Folder):
         menu_root = self.get_resource('menu')
         return menu_root.get_menu_namespace_level(context, url, depth,
                                                   use_first_child, flat)
+
+
+    def get_first_level_uris(self, context):
+        menu_root = self.get_resource('menu')
+        return menu_root.get_first_level_uris(context)
 
 
 
