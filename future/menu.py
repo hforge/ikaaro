@@ -30,8 +30,8 @@ from ikaaro import messages
 from ikaaro.buttons import Button
 from ikaaro.exceptions import ConsistencyError
 from ikaaro.folder import Folder
-from ikaaro.forms import TextWidget, SelectWidget, ReadOnlyWidget
 from ikaaro.forms import PathSelectorWidget
+from ikaaro.forms import TextWidget, SelectWidget, ReadOnlyWidget
 from ikaaro.registry import register_resource_class
 from ikaaro.table import OrderedTableFile, OrderedTable
 from ikaaro.table_views import OrderedTable_View
@@ -217,48 +217,6 @@ class Menu_View(OrderedTable_View):
 
         # Reindex the resource
         context.server.change_resource(resource)
-
-
-    def action_order_up(self, resource, context, form):
-        ids = form['ids']
-        if not ids:
-            context.message = MSG(u'Please select the objects to order up.')
-            return
-
-        resource.handler.order_up(ids)
-        context.message = MSG(u'Objects ordered up.')
-
-
-    def action_order_down(self, resource, context, form):
-        ids = form['ids']
-        if not ids:
-            context.message = MSG(u'Please select the objects to order down.')
-            return
-
-        resource.handler.order_down(ids)
-        context.message = MSG(u'Objects ordered down.')
-
-
-    def action_order_top(self, resource, context, form):
-        ids = form['ids']
-        if not ids:
-            message = MSG(u'Please select the objects to order on top.')
-            context.message = message
-            return
-
-        resource.handler.order_top(ids)
-        context.message = MSG(u'Objects ordered on top.')
-
-
-    def action_order_bottom(self, resource, context, form):
-        ids = form['ids']
-        if not ids:
-            message = MSG(u'Please select the objects to order on bottom.')
-            context.message = message
-            return
-
-        resource.handler.order_bottom(ids)
-        context.message = MSG(u'Objects ordered on bottom.')
 
 
     def action_add_child(self, resource, context, form):
@@ -547,13 +505,21 @@ class Menu(OrderedTable):
     def change_link(self, old_path, new_path):
         handler = self.handler
         base = self.get_abspath()
+        # FIXME The context is not available when updating the catalog.
+        site_root_abspath = self.parent.parent.get_abspath()
 
         for record in handler.get_records_in_order():
             path = handler.get_record_value(record, 'path')
             ref, path = get_reference_and_path(path)
-            if ref.scheme or path.count(';'):
+            if ref.scheme:
                 continue
-            uri = str(base.resolve2(path))
+            if path.count(';'):
+                path, method = path.split(';')
+            if ref.path.is_absolute():
+                uri = site_root_abspath.resolve2('.%s' % path)
+            else:
+                uri = base.resolve2(path)
+            uri = str(uri)
             if uri == old_path:
                 # Hit the old name
                 new_path2 = base.get_pathto(Path(new_path))
