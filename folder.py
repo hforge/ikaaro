@@ -183,12 +183,15 @@ class Folder(DBResource):
 
 
     def move_resource(self, source, target):
-        context = get_context()
-        # Events, remove
+        server = get_context().server
+        # Get the resource to remove
         resource = self.get_resource(source)
 
+        # Update the links to the resources that are to be moved
+        resource.update_links(target, self.get_abspath())
+
         # Events, remove
-        context.server.remove_resource(resource)
+        server.remove_resource(resource)
 
         # Find out the source and target absolute URIs
         folder = self.handler
@@ -202,9 +205,6 @@ class Folder(DBResource):
             target_uri = folder.uri.resolve2(target)
         old_name = source_uri.path[-1]
         new_name = target_uri.path[-1]
-
-        # The resource must update its links
-        resource.update_links(target, self.get_abspath())
 
         # Move the metadata
         folder.move_handler('%s.metadata' % source_uri,
@@ -220,7 +220,7 @@ class Folder(DBResource):
 
         # Events, add
         resource = self.get_resource(target)
-        context.server.add_resource(resource)
+        server.add_resource(resource)
 
 
     def traverse_resources(self):
