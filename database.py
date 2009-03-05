@@ -95,17 +95,22 @@ class Database(GitCommon, SolidDatabase):
     def remove_resource(self, resource):
         resources_removed = self.resources_removed
         resources_added = self.resources_added
+        resources_changed = self.resources_changed
 
         if isinstance(resource, Folder):
             for x in resource.traverse_resources():
                 path = str(x.get_canonical_path())
                 if path in resources_added:
                     del resources_added[path]
+                if path in resources_changed:
+                    resources_changed.remove(path)
                 resources_removed.add(path)
         else:
             path = str(resource.get_canonical_path())
             if path in resources_added:
                 del resources_added[path]
+            if path in resources_changed:
+                resources_changed.remove(path)
             resources_removed.add(path)
 
 
@@ -124,6 +129,10 @@ class Database(GitCommon, SolidDatabase):
 
     def change_resource(self, resource):
         path = str(resource.get_canonical_path())
+        if path in self.resources_removed:
+            raise ValueError, 'XXX'
+        if path in self.resources_added:
+            return
         self.resources_changed[path] = resource
 
 
