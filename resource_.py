@@ -303,11 +303,9 @@ class DBResource(CatalogAware, IResource):
         raise NotImplementedError
 
 
-    def get_catalog_values(self):
+    def _get_catalog_values(self):
         from access import RoleAware
         from file import File, Image
-
-        context = get_context()
 
         # Values
         abspath = self.get_canonical_path()
@@ -315,32 +313,13 @@ class DBResource(CatalogAware, IResource):
         site_root = self.get_site_root()
         languages = site_root.get_property('website_languages')
 
-        # Versioning
-        revisions = self.get_revisions()
-        if revisions:
-            revision = revisions[0]
-            # Author (used in the last-changes view)
-            root = context.root
-            last_author = root.get_user_title(revision['username'])
-            # Modification time
-            mtime = revision['date']
-        else:
-            mtime = self.metadata.get_mtime()
-            last_author = None
-
-        # Modification time (FIXME duplicated code with 'get_mtime')
-        for handler in self.get_handlers():
-            if handler is not None:
-                handler_mtime = handler.get_mtime()
-                if handler_mtime is not None and handler_mtime > mtime:
-                    mtime = handler_mtime
-
         # Titles
         title = {}
         for language in languages:
             title[language] = self.get_title(language=language)
 
         # Full text
+        context = get_context()
         text = None
         try:
             server = context.server
@@ -397,9 +376,6 @@ class DBResource(CatalogAware, IResource):
             'text': text,
             'links': self.get_links(),
             'parent_path': parent_path,
-            # From Git
-            'last_author': last_author,
-            'mtime': mtime,
             # This should be defined by subclasses
             'is_image': isinstance(self, Image),
             'is_role_aware': is_role_aware,
@@ -407,6 +383,36 @@ class DBResource(CatalogAware, IResource):
             'size': size,
             'workflow_state': workflow_state,
         }
+
+
+    def get_catalog_values(self, values=None):
+        if values is None:
+            values = self._get_catalog_values()
+
+        # Versioning
+        revisions = self.get_revisions()
+        if revisions:
+            revision = revisions[0]
+            # Author (used in the last-changes view)
+            root = get_context().root
+            last_author = root.get_user_title(revision['username'])
+            # Modification time
+            mtime = revision['date']
+        else:
+            mtime = self.metadata.get_mtime()
+            last_author = None
+
+        # Modification time (FIXME duplicated code with 'get_mtime')
+        for handler in self.get_handlers():
+            if handler is not None:
+                handler_mtime = handler.get_mtime()
+                if handler_mtime is not None and handler_mtime > mtime:
+                    mtime = handler_mtime
+
+        # Ok
+        values['last_author'] = last_author
+        values['mtime'] = mtime
+        return values
 
 
     ########################################################################

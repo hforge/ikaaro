@@ -80,13 +80,27 @@ Some CSS files have been renamed for consistency:
 The Ikaaro Catalog
 ===================
 
-Due to the changes in itools.xapian, we have a new register in registry.py:
-"register_field".
+(1) The 'get_catalog_fields' method in 'CatalogAware' has been removed,
+use instead the new fields registry:
 
-Now to add a field in the catalog of ikaaro, we must write:
+  # Before
+  def get_catalog_fields(self):
+      return [
+          KeywordField('foo', is_indexed=True),
+          ...
 
+  # Now
+  from registry import register_field
   register_field('foo', String(is_indexed=True))
+  ...
 
-instead of overload the "get_catalog_fields" method in a CatalogAware object.
+(2) The 'get_catalog_values' method has been renamed to '_get_catalog_values':
 
+  # Before
+  def get_catalog_values(self):
+      ...
+
+  # Now
+  def _get_catalog_values(self):
+      ...
 

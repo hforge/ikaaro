@@ -74,8 +74,8 @@ class User(AccessControl, Folder):
     ########################################################################
     # Indexing
     ########################################################################
-    def get_catalog_values(self):
-        values = Folder.get_catalog_values(self)
+    def _get_catalog_values(self):
+        values = Folder._get_catalog_values(self)
         values['email'] = self.get_property('email')
         values['username'] = self.get_login_name()
         values['firstname'] = self.get_property('firstname')

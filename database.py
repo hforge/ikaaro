@@ -158,7 +158,8 @@ class Database(GitCommon, SolidDatabase):
         # Changed
         for path, resource in self.resources_changed.iteritems():
             catalog.unindex_document(path)
-            documents_to_index.append(resource)
+            values = resource._get_catalog_values()
+            documents_to_index.append((resource, values))
         self.resources_changed.clear()
 
         # Find out commit author & message
@@ -203,8 +204,9 @@ class Database(GitCommon, SolidDatabase):
 
         # (3) Catalog
         catalog = self.catalog
-        for resource in documents_to_index:
-            catalog.index_document(resource)
+        for resource, values in documents_to_index:
+            values = resource.get_catalog_values(values)
+            catalog.index_document(values)
         catalog.save_changes()
 
 

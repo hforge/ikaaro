@@ -75,8 +75,8 @@ class Issue(Folder):
         folder.set_handler('%s/.history' % name, History())
 
 
-    def get_catalog_values(self):
-        document = Folder.get_catalog_values(self)
+    def _get_catalog_values(self):
+        document = Folder._get_catalog_values(self)
         document['id'] = int(self.name)
 
         # Get the last record
