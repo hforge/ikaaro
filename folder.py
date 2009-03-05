@@ -167,9 +167,7 @@ class Folder(DBObject):
                 folder.del_handler(handler.uri)
 
 
-    def copy_object(self, source, target):
-        context = get_context()
-
+    def _resolve_source_target(self, source, target):
         # Find out the source and target absolute URIs
         folder = self.handler
         if source[0] == '/':
@@ -180,14 +178,39 @@ class Folder(DBObject):
             target_uri = self.get_root().handler.uri.resolve2(target[1:])
         else:
             target_uri = folder.uri.resolve2(target)
-        old_name = source_uri.path[-1]
+
+        # Load the handlers so they are of the right class, for resources
+        # like that define explicitly the handler class.  This fixes for
+        # instance copy&cut&paste of a tracker in a just started server.
+        # TODO this is a work-around, there should be another way to define
+        # explicitly the handler class.
+        resource = self.get_object(source)
+        if isinstance(resource, Folder):
+            for resource in resource.traverse_objects():
+                for handler in resource.get_handlers():
+                    pass
+        else:
+            for handler in resource.get_handlers():
+                pass
+
+        return source_uri, target_uri
+
+
+    def copy_object(self, source, target):
+        server = get_context().server
+
+        # Find out the source and target absolute URIs
+        source_uri, target_uri = self._resolve_source_target(source, target)
         new_name = target_uri.path[-1]
 
+        # Get the source resource
+        object = self.get_object(source)
+
         # Copy the metadata
+        folder = self.handler
         folder.copy_handler('%s.metadata' % source_uri,
                             '%s.metadata' % target_uri)
         # Copy the content
-        object = self.get_object(source)
         for old_name, new_name in object.rename_handlers(new_name):
             if old_name is None:
                 continue
@@ -198,29 +221,22 @@ class Folder(DBObject):
 
         # Events, add
         object = self.get_object(target)
-        context.server.add_object(object)
+        server.add_object(object)
 
 
     def move_object(self, source, target):
-        context = get_context()
-        # Events, remove
-        object = self.get_object(source)
-        context.server.remove_object(object)
+        server = get_context().server
 
         # Find out the source and target absolute URIs
-        folder = self.handler
-        if source[0] == '/':
-            source_uri = self.get_root().handler.uri.resolve2(source[1:])
-        else:
-            source_uri = folder.uri.resolve2(source)
-        if target[0] == '/':
-            target_uri = self.get_root().handler.uri.resolve2(target[1:])
-        else:
-            target_uri = folder.uri.resolve2(target)
-        old_name = source_uri.path[-1]
+        source_uri, target_uri = self._resolve_source_target(source, target)
         new_name = target_uri.path[-1]
 
+        # Events, remove
+        object = self.get_object(source)
+        server.remove_object(object)
+
         # Move the metadata
+        folder = self.handler
         folder.move_handler('%s.metadata' % source_uri,
                             '%s.metadata' % target_uri)
         # Move the content
@@ -234,7 +250,7 @@ class Folder(DBObject):
 
         # Events, add
         object = self.get_object(target)
-        context.server.add_object(object)
+        server.add_object(object)
 
 
     def traverse_objects(self):
