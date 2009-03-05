@@ -142,6 +142,7 @@ class Database(GitCommon, SolidDatabase):
     def _before_commit(self):
         catalog = self.catalog
         git_files = []
+        documents_to_index = []
 
         # Removed
         for path in self.resources_removed:
@@ -149,14 +150,16 @@ class Database(GitCommon, SolidDatabase):
         self.resources_removed.clear()
 
         # Added
-        resources_added = self.resources_added
-        for path in resources_added:
-            resource = resources_added[path]
+        for path, resource in self.resources_added.iteritems():
             git_files.extend(resource.get_files_to_archive())
+            documents_to_index.append(resource)
+        self.resources_added.clear()
 
         # Changed
-        for path in self.resources_changed:
+        for path, resource in self.resources_changed.iteritems():
             catalog.unindex_document(path)
+            documents_to_index.append(resource)
+        self.resources_changed.clear()
 
         # Find out commit author & message
         git_author = 'nobody <>'
@@ -177,7 +180,7 @@ class Database(GitCommon, SolidDatabase):
                 git_message = git_message.encode('utf-8')
 
         # Ok
-        return git_files, git_author, git_message
+        return git_files, git_author, git_message, documents_to_index
 
 
     def _save_changes(self, data):
@@ -185,7 +188,7 @@ class Database(GitCommon, SolidDatabase):
         SolidDatabase._save_changes(self, data)
 
         # Unpack data
-        git_files, git_author, git_message = data
+        git_files, git_author, git_message, documents_to_index = data
 
         # (2) Git
         git_files = [ x for x in git_files if vfs.exists(x) ]
@@ -200,15 +203,8 @@ class Database(GitCommon, SolidDatabase):
 
         # (3) Catalog
         catalog = self.catalog
-        # Added
-        for path, resource in self.resources_added.iteritems():
+        for resource in documents_to_index:
             catalog.index_document(resource)
-        self.resources_added.clear()
-        # Changed
-        for path, resource in self.resources_changed.iteritems():
-            catalog.index_document(resource)
-        self.resources_changed.clear()
-        # Save
         catalog.save_changes()
 
 
