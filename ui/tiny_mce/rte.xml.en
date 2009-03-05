@@ -28,6 +28,8 @@
       /* Warning: This option is somewhat experimental so use it on your own
       risk. */
       cleanup_serializer : "xml",
+      /* Extending the existing rule set. */
+      extended_valid_elements : "${extended_valid_elements}",
 
       file_browser_callback : "ikaaro_filebrowser",
 

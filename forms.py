@@ -480,6 +480,8 @@ class RTEWidget(Widget):
     toolbar3 = None
     resizing = True
     plugins = 'safari,table,media'
+    # Extending the existing rule set.
+    extended_valid_elements = None
     # css
     advanced_styles = None
     table_styles = None
@@ -519,20 +521,21 @@ class RTEWidget(Widget):
         resizing = 'true' if self.resizing else 'false'
 
         css_names = self.get_rte_css()
-        return {'form_name': self.name,
-                'source': value,
-                'scripts': self.rte_scripts,
+        return {'advanced_styles': self.advanced_styles,
                 'css': ','.join(css_names),
-                'language': current_language,
-                'width': self.width,
+                'extended_valid_elements': self.extended_valid_elements,
+                'form_name': self.name,
                 'height': self.height,
+                'language': current_language,
+                'plugins': self.plugins,
+                'resizing': resizing,
+                'scripts': self.rte_scripts,
+                'source': value,
+                'table_styles': self.table_styles,
                 'toolbar1': self.toolbar1,
                 'toolbar2': self.toolbar2,
                 'toolbar3': self.toolbar3,
-                'resizing': resizing,
-                'plugins': self.plugins,
-                'advanced_styles': self.advanced_styles,
-                'table_styles': self.table_styles}
+                'width': self.width}
 
 
 ###########################################################################
