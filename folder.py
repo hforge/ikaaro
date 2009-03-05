@@ -166,7 +166,11 @@ class Folder(DBResource):
         # TODO this is a work-around, there should be another way to define
         # explicitly the handler class.
         resource = self.get_resource(source)
-        for resource in resource.traverse_resources():
+        if isinstance(resource, Folder):
+            for resource in resource.traverse_resources():
+                for handler in resource.get_handlers():
+                    pass
+        else:
             for handler in resource.get_handlers():
                 pass
 
