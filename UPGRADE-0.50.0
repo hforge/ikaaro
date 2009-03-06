@@ -55,6 +55,9 @@ summarizes these changes:
   forms.namespaces                 forms.stl_namespaces
   forms.Select                     forms.SelectWidget
   html.EpozEditable                html.ResouceWithHTML
+  ical                             calendar_
+  ical.CalendarView                calendar_views.CalendarView
+  ical.get_current_date            calendar_views.get_current_date
   users.User                       user.User
   users.UserFolder                 user.UserFolder
   widgets.Breadcrumb               resource_views.Breadcrumb

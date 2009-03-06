@@ -299,11 +299,13 @@ class SelectWidget(Widget):
 class SelectRadio(Widget):
 
     template = list(XMLParser("""
-        <input type="radio" name="${name}" value="" checked="checked"
-          stl:if="none_selected"/>
-        <input type="radio" name="${name}" value=""
-          stl:if="not none_selected"/>
-        <br/>
+        <stl:block stl:if="has_empty_option">
+          <input type="radio" name="${name}" value="" checked="checked"
+            stl:if="none_selected"/>
+          <input type="radio" name="${name}" value=""
+            stl:if="not none_selected"/>
+          <br/>
+        </stl:block>
         <stl:block stl:repeat="option options">
           <input type="radio" id="${name}-${option/name}" name="${name}"
             value="${option/name}" checked="checked"
@@ -340,14 +342,21 @@ class SelectRadio(Widget):
         else:
             options = value
 
+        has_empty_option = getattr(self, 'has_empty_option', True)
         for option in options:
             if option['selected'] is True:
                 none_selected = False
                 break
+        else:
+            # Select first item if no empty option
+            if not has_empty_option and options:
+                options[0]['selected'] = True
         return {
             'name': self.name,
+            'has_empty_option': has_empty_option,
             'none_selected': none_selected,
             'options': options}
+
 
 
 class DateWidget(Widget):
@@ -480,6 +489,8 @@ class RTEWidget(Widget):
     toolbar3 = None
     resizing = True
     plugins = 'safari,table,media'
+    # Extending the existing rule set.
+    extended_valid_elements = None
     # css
     advanced_styles = None
     table_styles = None
@@ -519,20 +530,21 @@ class RTEWidget(Widget):
         resizing = 'true' if self.resizing else 'false'
 
         css_names = self.get_rte_css()
-        return {'form_name': self.name,
-                'source': value,
-                'scripts': self.rte_scripts,
+        return {'advanced_styles': self.advanced_styles,
                 'css': ','.join(css_names),
-                'language': current_language,
-                'width': self.width,
+                'extended_valid_elements': self.extended_valid_elements,
+                'form_name': self.name,
                 'height': self.height,
+                'language': current_language,
+                'plugins': self.plugins,
+                'resizing': resizing,
+                'scripts': self.rte_scripts,
+                'source': value,
+                'table_styles': self.table_styles,
                 'toolbar1': self.toolbar1,
                 'toolbar2': self.toolbar2,
                 'toolbar3': self.toolbar3,
-                'resizing': resizing,
-                'plugins': self.plugins,
-                'advanced_styles': self.advanced_styles,
-                'table_styles': self.table_styles}
+                'width': self.width}
 
 
 ###########################################################################
