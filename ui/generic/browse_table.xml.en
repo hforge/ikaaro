@@ -17,10 +17,18 @@
         </th>
         <!-- checkbox -->
         <th stl:if="not column/is_checkbox">
-          <a stl:if="column/href" href="${column/href}"
-            class="sort-${column/order}">${column/title}</a>
-          <span stl:if="not column/href" class="no-sort">
-            ${column/title}</span>
+          ${column/title}
+          <stl:block stl:if="column/sortable">
+            <br/>
+            <a stl:if="not column/sort_up_active" href="${column/href_up}"
+              class="sort sort-up"/>
+            <a stl:if="column/sort_up_active" href="${column/href}"
+              class="sort sort-up-active"/>
+            <a stl:if="not column/sort_down_active" href="${column/href_down}"
+              class="sort sort-down"/>
+            <a stl:if="column/sort_down_active" href="${column/href}"
+              class="sort sort-down-active"/>
+          </stl:block>
         </th>
       </stl:block>
     </tr>

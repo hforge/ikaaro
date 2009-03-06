@@ -301,22 +301,25 @@ class BrowseForm(STLForm):
                 columns_ns.append({
                     'is_checkbox': False,
                     'title': title,
-                    'href': None})
+                    'href': None,
+                    'sortable': False})
             else:
                 # Type: normal
-                kw = {'sort_by': name}
+                base_href = context.uri.replace(sort_by=name)
                 if name == sort_by:
-                    col_reverse = (not reverse)
-                    order = 'up' if reverse else 'down'
+                    sort_up_active = reverse is False
+                    sort_down_active = reverse is True
                 else:
-                    col_reverse = False
-                    order = 'none'
-                kw['reverse'] = Boolean.encode(col_reverse)
+                    sort_up_active = sort_down_active = False
                 columns_ns.append({
                     'is_checkbox': False,
                     'title': title,
-                    'order': order,
-                    'href': context.uri.replace(**kw),
+                    'sortable': True,
+                    'href': context.uri.path,
+                    'href_up': base_href.replace(reverse=0),
+                    'href_down': base_href.replace(reverse=1),
+                    'sort_up_active': sort_up_active,
+                    'sort_down_active': sort_down_active
                     })
         return columns_ns
 

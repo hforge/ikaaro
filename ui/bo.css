@@ -289,9 +289,11 @@ table.new-resource-thumb {
  * tracker/ui/view_tracker.xml.en
  *************************************************************************/
 
+
 #browse-list thead th {
-  padding: 6px;
+  text-align: left;
   background-color: #d3d7cf;
+  padding: 0 5px;
   white-space: nowrap;
 }
 
@@ -312,17 +314,26 @@ table.new-resource-thumb {
 /**************************************************************************
  * ui/generic/browse_table.xml.en
  *************************************************************************/
+th a.sort{
+  float: left;
+  width: 9px;
+  height: 9px;
+}
 
 th a.sort-up {
-  background: transparent url(icons/16x16/up.png) right top no-repeat;
-  padding-right: 20px;
-  text-decoration: none;
+  background: transparent url(/ui/aruni/images/sort_up.png) no-repeat;
 }
 
 th a.sort-down {
-  background: transparent url(icons/16x16/down.png) right top no-repeat;
-  padding-right: 20px;
-  text-decoration: none;
+  background: transparent url(/ui/aruni/images/sort_down.png) no-repeat;
+}
+
+th a.sort-up-active {
+  background: transparent url(/ui/aruni/images/sort_up2.png) no-repeat;
+}
+
+th a.sort-down-active {
+  background: transparent url(/ui/aruni/images/sort_down2.png) no-repeat;
 }
 
 th a.sort-none {
