@@ -174,7 +174,7 @@ class Dressable(Folder, ResourceWithHTML):
 
 
     def get_document_types(self):
-        return Folder.get_document_types(self) + [Dressable]
+        return [self.__class__] + Folder.get_document_types(self)
 
 
     def get_html_document(self, language=None):
