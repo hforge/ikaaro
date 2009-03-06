@@ -152,7 +152,8 @@ class Database(GitCommon, SolidDatabase):
         # Added
         for path, resource in self.resources_added.iteritems():
             git_files.extend(resource.get_files_to_archive())
-            documents_to_index.append(resource)
+            values = resource._get_catalog_values()
+            documents_to_index.append((resource, values))
         self.resources_added.clear()
 
         # Changed
