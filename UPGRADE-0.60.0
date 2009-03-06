@@ -7,11 +7,18 @@ System Administrators
 Configuration File
 ====================
 
-Some variables in the configuration file have been replaced by others:
+(1) The 'debug' config variable has been replaced by 'log-level':
 
   Before            Now
   ---------------   -------------------
-  debug             log-level
+  debug = 0         log-level = warning
+  debug = 1         log-level = debug
+
+(2) There are a few new variables, these are the default values:
+
+  database-size = 5000
+  profile-cpu = 0
+  profile-memory = 0
 
 
 Scripts
@@ -75,6 +82,32 @@ Some CSS files have been renamed for consistency:
   forum/ui/forum.css               forum/ui/style.css
   tracker/ui/tracker.css           tracker/ui/style.css
   ui/ical/calendar.css             ui/ical/style.css
+
+
+Resource's Registry
+===================
+
+(1) The 'Folder.register_document_type' method is now a function:
+
+  # Before
+  from ikaaro.folder import Folder
+  Folder.register_document_type(WebPage)
+
+  # Now
+  from ikaaro.registry import register_document_type
+  register_document_type(WebPage)
+
+(2) The 'register_website' function has been removed, use instead the new
+'register_document_type' function:
+
+  # Before
+  from ikaaro.registry import register_website
+  register_website(MyWebSite)
+
+  # Now
+  from ikaaro.registry import register_document_type
+  from ikaaro.website import WebSite
+  register_document_type(MyWebSite, WebSite.class_id)
 
 
 The Ikaaro Catalog

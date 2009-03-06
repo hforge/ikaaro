@@ -11,8 +11,11 @@ other features ikaaro provides:
 
 Changes:
 
-- Now we use Git [1] to track changes to the metadata and to text files.
-- New profiling capabilities: profile-cpu, profile-memory (with guppy [2])
+* New 'database-size' variables defines the size of the cache.
+* Now we use Git [1] to track changes to the metadata and to text files.
+* New profiling capabilities: profile-cpu, profile-memory (with guppy [2])
+* New --profile parameter for icms-update.py & icms-update-catalog.py scripts
+* Ability to index & store multilingual fields (title_en, title_fr, etc.)
 
 
 [1] http://git-scm.com/
