@@ -139,6 +139,9 @@ class Menu_View(OrderedTable_View):
             return child
         elif column == 'workflow_state':
             path = get_value(item, 'path')
+            if not path:
+                # Do not display a workflow state if there is no path defined.
+                return
             # Get the reference and path
             ref, path = get_reference_and_path(path)
             if ref.scheme or path.count(';'):
