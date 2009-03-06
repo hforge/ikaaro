@@ -299,11 +299,13 @@ class SelectWidget(Widget):
 class SelectRadio(Widget):
 
     template = list(XMLParser("""
-        <input type="radio" name="${name}" value="" checked="checked"
-          stl:if="none_selected"/>
-        <input type="radio" name="${name}" value=""
-          stl:if="not none_selected"/>
-        <br/>
+        <stl:block stl:if="has_empty_option">
+          <input type="radio" name="${name}" value="" checked="checked"
+            stl:if="none_selected"/>
+          <input type="radio" name="${name}" value=""
+            stl:if="not none_selected"/>
+          <br/>
+        </stl:block>
         <stl:block stl:repeat="option options">
           <input type="radio" id="${name}_${option/name}" name="${name}"
             value="${option/name}" checked="checked"
@@ -340,14 +342,21 @@ class SelectRadio(Widget):
         else:
             options = value
 
+        has_empty_option = getattr(self, 'has_empty_option', True)
         for option in options:
             if option['selected'] is True:
                 none_selected = False
                 break
+        else:
+            # Select first item if no empty option
+            if not has_empty_option and options:
+                options[0]['selected'] = True
         return {
             'name': self.name,
+            'has_empty_option': has_empty_option,
             'none_selected': none_selected,
             'options': options}
+
 
 
 class DateWidget(Widget):
