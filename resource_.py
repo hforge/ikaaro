@@ -238,20 +238,23 @@ class DBResource(CatalogAware, IResource):
     def get_revisions(self, context=None, content=False):
         if context is None:
             context = get_context()
-        database = context.database
 
         # Get the list of files to check
         files = self.get_files_to_archive(content)
 
         # Call git
-        cwd = database.path
+        cwd = context.database.path
         try:
-            revisions = git.get_revisions(files, cwd=cwd)
+            revisions = git.get_revisions_metadata(files, cwd=cwd)
         except EnvironmentError:
             return []
 
-        # Get the metadata
-        return [ database.get_revision(x) for x in revisions ]
+        return [
+            {'username': x['author_name'],
+             'date': x['author_date'],
+             'message': x['subject'],
+             'revision': x['commit']}
+            for x in revisions ]
 
 
     def get_owner(self):
