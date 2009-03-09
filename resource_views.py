@@ -27,7 +27,6 @@ from urllib import quote
 from itools.core import merge_dicts
 from itools.datatypes import String, Unicode
 from itools.gettext import MSG
-from itools import git
 from itools.handlers import checkid
 from itools.http import Conflict, NotImplemented
 from itools.i18n import format_datetime, get_language_name
