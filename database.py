@@ -18,11 +18,8 @@
 from subprocess import call, PIPE
 
 # Import from itools
-from itools.core import LRUCache
-from itools import git
 from itools.handlers import RODatabase, SolidDatabase
 from itools import vfs
-from itools.vfs import cwd
 from itools.web import get_context
 from itools.xapian import Catalog, make_catalog
 
@@ -31,38 +28,11 @@ from folder import Folder
 from registry import get_register_fields
 
 
-class GitCommon(object):
 
-    def __init__(self, target):
-        self.path = '%s/database' % target
-        self.git_cache = LRUCache(50)
-
-
-    def get_revision(self, revision_key):
-        cache = self.git_cache
-        if revision_key in cache:
-            return cache[revision_key]
-
-        cwd = self.path
-        metadata = git.get_metadata(revision_key, cwd=cwd)
-        date = metadata['committer'][1]
-        username = metadata['author'][0].split()[0]
-        if username == 'nobody':
-            username = None
-        revision = {
-            'username': username,
-            'date': date,
-            'message': metadata['message'],
-            'revision': revision_key}
-        cache[revision_key] = revision
-        return revision
-
-
-
-class ReadOnlyDatabase(GitCommon, RODatabase):
+class ReadOnlyDatabase(RODatabase):
 
     def __init__(self, target, cache_size):
-        GitCommon.__init__(self, target)
+        self.path = '%s/database' % target
 
         # Database/Catalog
         RODatabase.__init__(self, cache_size)
@@ -71,12 +41,12 @@ class ReadOnlyDatabase(GitCommon, RODatabase):
 
 
 
-class Database(GitCommon, SolidDatabase):
+class Database(SolidDatabase):
     """Adds a Git archive to the itools database.
     """
 
     def __init__(self, target, cache_size):
-        GitCommon.__init__(self, target)
+        self.path = '%s/database' % target
 
         # Database/Catalog
         commit = '%s/database.commit' % target

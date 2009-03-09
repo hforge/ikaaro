@@ -86,30 +86,30 @@ class Revisions_Changes(STLView):
         revision = context.get_form_value('revision')
 
         # Get the revision data
-        database = context.database
-        ns = database.get_revision(revision)
-        ns['username'] = context.root.get_user_title(ns['username'])
+        namespace = git.get_diff(revision, cwd=context.database.path)
+        author_name = namespace['author_name']
+        namespace['aurhor_name'] = context.root.get_user_title(author_name)
 
         # Diff
         changes = []
-        cwd = context.database.path
         password_re = compile('<password>(.*)</password>')
-        for line in git.get_diff(revision, cwd):
-            css = None
-            if line.startswith('index') or \
-               line.startswith('---') or \
-               line.startswith('+++') or \
-               line.startswith('@@'):
+        for line in namespace['diff'].splitlines():
+            if line[:5] == 'index' or line[:3] in ('---', '+++', '@@ '):
                 continue
-            elif line.startswith('-'):
+            # CSS
+            if line[0] == '-':
                 css = 'rem'
-            elif line.startswith('+'):
+            elif line[0] == '+':
                 css = 'add'
-            elif line.startswith('diff'):
+            elif line[:4] == 'diff':
                 css = 'header'
-            # HACK for security, we hide password
+            else:
+                css = None
+            # For security, hide password the of metadata files
             line = sub(password_re, '<password>***</password>', line)
             # Add the line
             changes.append({'css': css, 'value': line})
-        ns['changes'] = changes
-        return ns
+        namespace['changes'] = changes
+
+        # Ok
+        return namespace

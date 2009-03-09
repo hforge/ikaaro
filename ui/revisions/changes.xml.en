@@ -10,14 +10,13 @@
   </a>
 
   <h1>Informations</h1>
-
-  <b>Modification date:</b> ${date}<br/>
-  <b>Message:</b> ${message}<br/>
-  <b>Author:</b> ${username}
+  <b>Modification date:</b> ${author_date}<br/>
+  <b>Message:</b> ${subject}<br/>
+  <b>Author:</b> ${author_name}
 
   <h1>Changes</h1>
-
   <div id="differ">
-    <div class="diff ${change/css}" stl:repeat="change changes">${change/value}</div>
+    <div class="diff ${change/css}" stl:repeat="change changes">
+    ${change/value}</div>
   </div>
 </stl:block>
