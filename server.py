@@ -222,15 +222,13 @@ class Server(BaseServer):
         # The site root depends on the host
         hostname = uri.authority.host
 
-        # Check first the root
-        if hostname in root.get_property('vhosts'):
+        results = self.database.catalog.search(vhosts=hostname)
+        if len(results) == 0:
             return
 
-        # Check the sub-sites
-        for site in root.search_resources(cls=WebSite):
-            if hostname in site.get_property('vhosts'):
-                context.site_root = site
-                return
+        documents = results.get_documents()
+        path = documents[0].abspath
+        context.site_root = root.get_resource(path)
 
 
     # FIXME Short-cut, to be removed

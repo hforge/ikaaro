@@ -83,10 +83,10 @@ class WebSite(RoleAware, Folder):
         return schema
 
 
-    ########################################################################
-    # Publish
-    ########################################################################
-    unauthorized = LoginView()
+    def _get_catalog_values(self):
+        values = Folder._get_catalog_values(self)
+        values['vhosts'] = self.get_property('vhosts')
+        return values
 
 
     ########################################################################
@@ -178,6 +178,9 @@ class WebSite(RoleAware, Folder):
     credits = CreditsView()
     license = STLView(access=True, title=MSG(u'License'),
                       template='/ui/root/license.xml')
+    # Special
+    unauthorized = LoginView()
+
 
 
 ###########################################################################

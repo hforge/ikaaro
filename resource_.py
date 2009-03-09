@@ -604,11 +604,13 @@ register_field('members', String(is_indexed=True, multiple=True))
 # Versioning
 register_field('mtime', DateTime(is_stored=True, is_indexed=True))
 register_field('last_author', String(is_stored=True, is_indexed=False))
-# For referencial-integrity, keep links between cms resources,
-# where a link is the physical path.
+# For referencial-integrity, keep links between resources, where a link is the
+# physical path.
 register_field('links', String(is_indexed=True, multiple=True))
 # Folder's view
 register_field('parent_path', String(is_indexed=True))
 register_field('name', String(is_stored=True, is_indexed=True))
 register_field('size', Integer(is_stored=True, is_indexed=False))
+# Optimize 'Server.find_site_root'
+register_field('vhosts', String(is_indexed=True, multiple=True))
 
