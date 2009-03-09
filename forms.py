@@ -21,8 +21,9 @@
 # Import from itools
 from itools.datatypes import DataType, Date, Enumerate, Boolean
 from itools.gettext import MSG
-from itools.html import xhtml_doctype, sanitize_stream
+from itools.handlers import merge_dicts
 from itools.html import stream_to_str_as_xhtml, stream_to_str_as_html
+from itools.html import xhtml_doctype, sanitize_stream
 from itools.stl import stl
 from itools.web import STLForm, get_context
 from itools.xml import XMLParser
@@ -452,6 +453,9 @@ class PathSelectorWidget(TextWidget):
 
 class ImageSelectorWidget(TextWidget):
 
+    width = 128
+    height = 128
+
     template = list(XMLParser(
     """
     <input type="text" id="selector_${name}" size="${size}" name="${name}"
@@ -460,8 +464,13 @@ class ImageSelectorWidget(TextWidget):
       name="selector_button_${name}"
       onclick="popup(';add_image?target_id=selector_${name}&amp;mode=input', 620, 300);" />
     <br/>
-    <img src="${value}/;thumb?width=128&amp;height=128" stl:if="value"/>
+    <img src="${value}/;thumb?width=${width}&amp;height=${height}" stl:if="value"/>
     """, stl_namespaces))
+
+
+    def get_namespace(self, datatype, value):
+        return merge_dicts(TextWidget.get_namespace(self, datatype, value),
+                           width=self.width, height=self.height)
 
 
 
