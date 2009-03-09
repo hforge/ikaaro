@@ -110,35 +110,29 @@ class Database(SolidDatabase):
     # Transactions API
     #######################################################################
     def _before_commit(self):
-        resources_added = self.resources_added
-        resources_removed = self.resources_removed
-        resources_changed = self.resources_changed
-        if not (resources_added or resources_removed or resources_changed):
-            return None
-
         catalog = self.catalog
         git_files = []
         documents_to_index = []
 
         # Removed
-        for path in resources_removed:
+        for path in self.resources_removed:
             catalog.unindex_document(path)
-        resources_removed.clear()
+        self.resources_removed.clear()
 
         # Added
-        for path, resource in resources_added.iteritems():
+        for path, resource in self.resources_added.iteritems():
             git_files.extend(resource.get_files_to_archive())
             values = resource._get_catalog_values()
             documents_to_index.append((resource, values))
-        resources_added.clear()
+        self.resources_added.clear()
 
         # Changed
-        for path, resource in resources_changed.iteritems():
+        for path, resource in self.resources_changed.iteritems():
             git_files.extend(resource.get_files_to_archive())
             catalog.unindex_document(path)
             values = resource._get_catalog_values()
             documents_to_index.append((resource, values))
-        resources_changed.clear()
+        self.resources_changed.clear()
 
         # Find out commit author & message
         git_author = 'nobody <>'
@@ -163,8 +157,6 @@ class Database(SolidDatabase):
 
 
     def _save_changes(self, data):
-        if data is None:
-            return
         git_files, git_author, git_message, documents_to_index = data
 
         # (1) Save filesystem changes
