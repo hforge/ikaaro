@@ -110,29 +110,35 @@ class Database(SolidDatabase):
     # Transactions API
     #######################################################################
     def _before_commit(self):
+        resources_added = self.resources_added
+        resources_removed = self.resources_removed
+        resources_changed = self.resources_changed
+        if not (resources_added or resources_removed or resources_changed):
+            return None
+
         catalog = self.catalog
         git_files = []
         documents_to_index = []
 
         # Removed
-        for path in self.resources_removed:
+        for path in resources_removed:
             catalog.unindex_document(path)
-        self.resources_removed.clear()
+        resources_removed.clear()
 
         # Added
-        for path, resource in self.resources_added.iteritems():
+        for path, resource in resources_added.iteritems():
             git_files.extend(resource.get_files_to_archive())
             values = resource._get_catalog_values()
             documents_to_index.append((resource, values))
-        self.resources_added.clear()
+        resources_added.clear()
 
         # Changed
-        for path, resource in self.resources_changed.iteritems():
+        for path, resource in resources_changed.iteritems():
             git_files.extend(resource.get_files_to_archive())
             catalog.unindex_document(path)
             values = resource._get_catalog_values()
             documents_to_index.append((resource, values))
-        self.resources_changed.clear()
+        resources_changed.clear()
 
         # Find out commit author & message
         git_author = 'nobody <>'
@@ -157,11 +163,12 @@ class Database(SolidDatabase):
 
 
     def _save_changes(self, data):
+        if data is None:
+            return
+        git_files, git_author, git_message, documents_to_index = data
+
         # (1) Save filesystem changes
         SolidDatabase._save_changes(self, data)
-
-        # Unpack data
-        git_files, git_author, git_message, documents_to_index = data
 
         # (2) Git
         git_files = [ x for x in git_files if vfs.exists(x) ]
