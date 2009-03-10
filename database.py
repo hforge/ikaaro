@@ -18,7 +18,7 @@
 from subprocess import call, PIPE
 
 # Import from itools
-from itools.handlers import RODatabase, SolidDatabase
+from itools.handlers import RODatabase, GitDatabase, make_git_database
 from itools import vfs
 from itools.web import get_context
 from itools.xapian import Catalog, make_catalog
@@ -41,16 +41,14 @@ class ReadOnlyDatabase(RODatabase):
 
 
 
-class Database(SolidDatabase):
+class Database(GitDatabase):
     """Adds a Git archive to the itools database.
     """
 
     def __init__(self, target, cache_size):
-        self.path = '%s/database' % target
-
         # Database/Catalog
-        commit = '%s/database.commit' % target
-        SolidDatabase.__init__(self, commit, cache_size)
+        path = '%s/database' % target
+        GitDatabase.__init__(self, path, cache_size)
         self.catalog = Catalog('%s/catalog' % target, get_register_fields())
 
         # Events
@@ -111,7 +109,6 @@ class Database(SolidDatabase):
     #######################################################################
     def _before_commit(self):
         catalog = self.catalog
-        git_files = []
         documents_to_index = []
 
         # Removed
@@ -121,14 +118,12 @@ class Database(SolidDatabase):
 
         # Added
         for path, resource in self.resources_added.iteritems():
-            git_files.extend(resource.get_files_to_archive())
             values = resource._get_catalog_values()
             documents_to_index.append((resource, values))
         self.resources_added.clear()
 
         # Changed
         for path, resource in self.resources_changed.iteritems():
-            git_files.extend(resource.get_files_to_archive())
             catalog.unindex_document(path)
             values = resource._get_catalog_values()
             documents_to_index.append((resource, values))
@@ -153,27 +148,16 @@ class Database(SolidDatabase):
                 git_message = git_message.encode('utf-8')
 
         # Ok
-        return git_files, git_author, git_message, documents_to_index
+        return git_author, git_message, documents_to_index
 
 
     def _save_changes(self, data):
-        git_files, git_author, git_message, documents_to_index = data
+        git_author, git_message, documents_to_index = data
 
         # (1) Save filesystem changes
-        SolidDatabase._save_changes(self, data)
+        GitDatabase._save_changes(self, (git_author, git_message))
 
-        # (2) Git
-        git_files = [ x for x in git_files if vfs.exists(x) ]
-        if git_files:
-            command = ['git', 'add'] + git_files
-            call(command, cwd=self.path)
-
-        # TODO Don't commit if there is nothing to commit (e.g. when login)
-        command = ['git', 'commit', '-aq', '--author=%s' % git_author,
-                   '-m', git_message]
-        call(command, cwd=self.path, stdout=PIPE)
-
-        # (3) Catalog
+        # (2) Catalog
         catalog = self.catalog
         for resource, values in documents_to_index:
             values = resource.get_catalog_values(values)
@@ -182,11 +166,7 @@ class Database(SolidDatabase):
 
 
     def _abort_changes(self):
-        SolidDatabase._abort_changes(self)
-
-        # Git
-        command = ['git', 'reset', '--']
-        call(command, cwd=self.path)
+        GitDatabase._abort_changes(self)
 
         # Catalog
         self.catalog.abort_changes()
@@ -199,16 +179,14 @@ class Database(SolidDatabase):
 
 
 def make_database(target):
-    # Init git
+    size = 5000
+    # GitDatabase
     path = '%s/database' % target
-    command = ['git', 'init']
-    call(command, cwd=path)
-
+    make_git_database(path, size)
     # The catalog
     make_catalog('%s/catalog' % target, get_register_fields())
-
     # Ok
-    return Database(target, 5000)
+    return Database(target, size)
 
 
 def get_database(path, cache_size, read_only=False):

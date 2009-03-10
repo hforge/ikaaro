@@ -50,20 +50,6 @@ class Text(File):
 
 
     #######################################################################
-    # Versioning
-    def get_files_to_archive(self, content=False):
-        # Metadata
-        metadata = str(self.metadata.uri.path)
-        files = [metadata]
-        # Handlers
-        for handler in self.get_handlers():
-            path = str(handler.uri.path)
-            files.append(path)
-        # Ok
-        return files
-
-
-    #######################################################################
     # Views
     view = Text_View()
     edit = Text_Edit()

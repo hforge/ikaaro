@@ -20,8 +20,9 @@
 from cProfile import runctx
 from optparse import OptionParser
 from os import devnull
-from subprocess import call, PIPE
+from subprocess import Popen, call, PIPE
 from sys import exit, stdout
+from time import time
 from traceback import print_exc
 
 # Import from itools
@@ -160,9 +161,25 @@ def update(parser, options, target):
         if ask_confirmation(message, confirm) is False:
             abort()
         # Init
+        print 'STAGE 0: git init'
         command = ['git', 'init']
-        with open(devnull) as null:
-            call(command, cwd=database.path, stdout=null)
+        call(command, cwd=database.path, stdout=PIPE)
+        # Add
+        print 'STAGE 0: git add (may take a while)'
+        command = ['git', 'add', '.']
+        t0 = time()
+        call(command, cwd=database.path, stdout=PIPE)
+        print 'STAGE: %f seconds' % (time() - t0)
+        # Commit
+        print 'STAGE 0: git commit (may take a while)'
+        command = ['git', 'commit', '--author=nobody <>',
+                   '-m', 'Initial commit.']
+        t0 = time()
+        p = Popen(command, cwd=database.path, stdout=PIPE)
+        p.communicate()
+        print 'STAGE: %f seconds' % (time() - t0)
+        # Ok
+        print 'STAGE 0: done.'
 
     #######################################################################
     # STAGE 1: Find out the versions to upgrade
@@ -176,30 +193,6 @@ def update(parser, options, target):
         update_versions(target, database, root, versions, confirm)
     else:
         print 'STAGE 1: Nothing to do.'
-
-    #######################################################################
-    # STAGE 2: Commit to Git
-    # XXX Specific to the migration from 0.50 to 0.60
-    #######################################################################
-    revisions = root.get_revisions()
-    if len(revisions) == 0:
-        message = 'STAGE 2: Commit files to the Git Archive (y/N)? '
-        if ask_confirmation(message, confirm) is False:
-            abort()
-        # git add
-        git_files = []
-        for resource in root.traverse_resources():
-            if not isinstance(resource, DBResource):
-                continue
-            for uri in resource.get_files_to_archive():
-                if vfs.exists(uri):
-                    git_files.append(uri)
-        command = ['git', 'add'] + git_files
-        call(command, cwd=database.path)
-        # Commit
-        command = ['git', 'commit', '-aq', '--author=nobody <>',
-                   '-m', 'Initial commit.']
-        call(command, cwd=database.path, stdout=PIPE)
 
     # It is Done
     print '*'

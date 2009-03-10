@@ -130,10 +130,9 @@ def init(parser, options, target):
     open('%s/config.conf' % target, 'w').write(config)
 
     # Create the folder structure
-    mkdir('%s/database' % target)
+    database = make_database(target)
     mkdir('%s/log' % target)
     mkdir('%s/spool' % target)
-    database = make_database(target)
 
     # Create a fake context
     context = get_fake_context()

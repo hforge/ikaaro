@@ -110,7 +110,7 @@ class Folder(DBResource):
         """The resource must update its links to itself and to its content
         """
         # Check referencial-integrity
-        catalog = get_context().server.catalog
+        catalog = get_context().database.catalog
         # The catalog is not available when updating (icms-update.py)
         # FIXME We do not guarantee referencial-integrity when updating
         if catalog is None:
@@ -133,11 +133,11 @@ class Folder(DBResource):
 
 
     def del_resource(self, name):
-        context = get_context()
+        database = get_context().database
         resource = self.get_resource(name)
 
         # Check referencial-integrity
-        catalog = context.server.catalog
+        catalog = database.catalog
         # The catalog is not available when updating (icms-update.py)
         # FIXME We do not guarantee referencial-integrity when updating
         if catalog is not None:
@@ -149,7 +149,7 @@ class Folder(DBResource):
                 raise ConsistencyError, message
 
         # Events, remove
-        context.database.remove_resource(resource)
+        database.remove_resource(resource)
         # Remove
         folder = self.handler
         for handler in resource.get_handlers():

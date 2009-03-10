@@ -163,6 +163,15 @@ class File(WorkflowAware, DBResource):
         return max(sizes)
 
 
+    def get_files_to_archive(self, content=False):
+        # Handlers
+        files = [ str(x.uri.path) for x in self.get_handlers() ]
+        # Metadata
+        metadata = str(self.metadata.uri.path)
+        files.append(metadata)
+        return files
+
+
     #######################################################################
     # User Interface
     #######################################################################

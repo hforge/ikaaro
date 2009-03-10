@@ -196,11 +196,6 @@ class DBResource(CatalogAware, IResource):
     handler = property(get_handler, None, None, '')
 
 
-    def get_files_to_archive(self, content=False):
-        metadata = str(self.metadata.uri.path)
-        return [metadata]
-
-
     ########################################################################
     # Metadata
     ########################################################################
@@ -272,24 +267,8 @@ class DBResource(CatalogAware, IResource):
 
 
     def get_mtime(self):
-        # TODO Not very efficient, it may be better to "cache" the mtime
-        # into the metadata.
-
-        # Git
         revisions = self.get_revisions()
-        if revisions:
-            mtime = revisions[0]['date']
-        else:
-            mtime = self.metadata.get_mtime()
-
-        # Consider files not tracked by Git
-        for handler in self.get_handlers():
-            if handler is not None:
-                handler_mtime = handler.get_mtime()
-                if handler_mtime is not None and handler_mtime > mtime:
-                    mtime = handler_mtime
-
-        return mtime
+        return revisions[0]['date'] if revisions else None
 
 
     ########################################################################
@@ -392,29 +371,16 @@ class DBResource(CatalogAware, IResource):
         if values is None:
             values = self._get_catalog_values()
 
-        # Versioning
+        # Get revisions
         revisions = self.get_revisions()
-        if revisions:
-            revision = revisions[0]
-            # Author (used in the last-changes view)
-            root = get_context().root
-            last_author = root.get_user_title(revision['username'])
-            # Modification time
-            mtime = revision['date']
-        else:
-            mtime = self.metadata.get_mtime()
-            last_author = None
-
-        # Modification time (FIXME duplicated code with 'get_mtime')
-        for handler in self.get_handlers():
-            if handler is not None:
-                handler_mtime = handler.get_mtime()
-                if handler_mtime is not None and handler_mtime > mtime:
-                    mtime = handler_mtime
+        if not revisions:
+            return values
 
         # Ok
-        values['last_author'] = last_author
-        values['mtime'] = mtime
+        revision = revisions[0]
+        root = get_context().root
+        values['last_author'] = root.get_user_title(revision['username'])
+        values['mtime'] = revision['date']
         return values
 
 
