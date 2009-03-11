@@ -1,5 +1,5 @@
 
-ikaaro 0.60.0 (2009/XX/XX)
+ikaaro 0.60.0 (2009/0X/XX)
 ==========================
 
 This is a Content Management System built on Python & itools, among
@@ -9,17 +9,30 @@ other features ikaaro provides:
  - multilingual user interfaces and content
  - high level modules: wiki, forum, tracker, etc.
 
-Changes:
+This version adds versioning of the whole database using Git [1].  The
+user interface for the "Last Changes" view is now the database log; and
+every commit in the log can be inspected to see what changed.
 
-* New 'database-size' variables defines the size of the cache.
-* Now we use Git [1] to track changes to the metadata and to text files.
-* New profiling capabilities: profile-cpu, profile-memory (with guppy [2])
-* New --profile parameter for icms-update.py & icms-update-catalog.py scripts
-* Ability to index & store multilingual fields (title_en, title_fr, etc.)
+A profiling framework for both time and space [2] usage has been added.
+Profiling is disabled by default, it can be enabled by setting the
+'profile-cpu' and 'profile-memory' parameters in the configuration file.
+The icms-update.py and icms-update-catalog.py scripts also accept the
+'--profile' parameter to produce time profiling information.  To learn
+more about profiling ikaaro see the documentation [3].
+
+The new configuration variable 'database-size' can be used to define the
+maximum number of file handlers that will be stored in the cache, and so
+limit the space usage.
+
+Now it is possible to index and store multilingual information in the
+catalog.  For example, all the translations of the title propery are
+now indexed, and so it is possible to search in some specific language
+(title_en, title_fr, etc.) or in all languages (title).
 
 
 [1] http://git-scm.com/
-[2] http://guppy-pe.sourceforge.net/
+[2] Space profiling uses Heapy, http://guppy-pe.sourceforge.net/
+[3] XXX profiling (chapter in the documentation)
 
 
 Resources
