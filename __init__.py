@@ -63,19 +63,10 @@ else:
 ###########################################################################
 # Check for required software
 ###########################################################################
-cmds = ['wvText', 'xlhtml', 'ppthtml', 'pdftotext', 'unrtf']
-
-paths = getenv('PATH').split(':')
-all_names = set()
-for path in paths:
-    path = path.strip()
+for name, import_path in [("poppler", "itools.pdf.pdftotext"),
+                          ("wv2", "itools.office.doctotext"),
+                          ("xlrd", "xlrd")]:
     try:
-        names = listdir(path)
-    except OSError:
-        pass
-    else:
-        all_names = all_names.union(names)
-
-for name in cmds:
-    if name not in all_names:
-        print 'You need to install the command "%s".' % name
+        __import__(import_path)
+    except ImportError:
+        print 'You need to install "%s".' % name
