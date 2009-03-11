@@ -144,13 +144,13 @@ class Server(BaseServer):
             raise ValueError, msg % log_level
 
         # Profile CPU
-        profile = config.get_value('profile-cpu')
+        profile = config.get_value('profile-time')
         if profile is True:
             self.profile_path = '%s/log/profile' % path
         else:
             self.profile_path = None
         # Profile Memory
-        if config.get_value('profile-memory') is True:
+        if config.get_value('profile-space') is True:
             import guppy.heapy.RM
 
         # The database

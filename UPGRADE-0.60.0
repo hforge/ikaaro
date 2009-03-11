@@ -17,8 +17,8 @@ Configuration File
 (2) There are a few new variables, these are the default values:
 
   database-size = 5000
-  profile-cpu = 0
-  profile-memory = 0
+  profile-time = 0
+  profile-space = 0
 
 
 Scripts

@@ -74,13 +74,13 @@ log-level = warning
 #
 database-size = 5000
 
-# If the "profile-cpu" variable is set to "1", profiling information will
+# If the "profile-time" variable is set to "1", profiling information will
 # be written for every request to the 'log/profile' folder.  If the
-# "profile-memory" variable is set to "1", remote monitoring will be
-# enabled (see http://guppy-pe.sf.net/ to learn more).
+# "profile-space" variable is set to "1", remote monitoring will be enabled
+# (see http://guppy-pe.sf.net/ to learn more).
 #
-profile-cpu = 0
-profile-memory = 0
+profile-time = 0
+profile-space = 0
 
 # The "index-text" vairable defines whether the catalog must process full-text
 # indexing. It requires (much) more time and third-party applications.

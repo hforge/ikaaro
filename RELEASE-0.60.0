@@ -15,7 +15,7 @@ every commit in the log can be inspected to see what changed.
 
 A profiling framework for both time and space [2] usage has been added.
 Profiling is disabled by default, it can be enabled by setting the
-'profile-cpu' and 'profile-memory' parameters in the configuration file.
+'profile-time' and 'profile-space' parameters in the configuration file.
 The icms-update.py and icms-update-catalog.py scripts also accept the
 '--profile' parameter to produce time profiling information.  To learn
 more about profiling ikaaro see the documentation [3].
