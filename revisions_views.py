@@ -88,7 +88,7 @@ class Revisions_Changes(STLView):
         # Get the revision data
         namespace = git.get_diff(revision, cwd=context.database.path)
         author_name = namespace['author_name']
-        namespace['aurhor_name'] = context.root.get_user_title(author_name)
+        namespace['author_name'] = context.root.get_user_title(author_name)
 
         # Diff
         changes = []
@@ -96,19 +96,17 @@ class Revisions_Changes(STLView):
         for line in namespace['diff'].splitlines():
             if line[:5] == 'index' or line[:3] in ('---', '+++', '@@ '):
                 continue
-            # CSS
-            if line[0] == '-':
-                css = 'rem'
-            elif line[0] == '+':
-                css = 'add'
-            elif line[:4] == 'diff':
-                css = 'header'
-            else:
-                css = None
-            # For security, hide password the of metadata files
-            line = sub(password_re, '<password>***</password>', line)
+            css = None
+            is_header = (line[:4] == 'diff')
+            if not is_header:
+                # For security, hide password the of metadata files
+                line = sub(password_re, '<password>***</password>', line)
+                if line[0] == '-':
+                    css = 'rem'
+                elif line[0] == '+':
+                    css = 'add'
             # Add the line
-            changes.append({'css': css, 'value': line})
+            changes.append({'css': css, 'value': line, 'is_header': is_header})
         namespace['changes'] = changes
 
         # Ok

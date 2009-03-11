@@ -4,19 +4,31 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
-  <a href=";last_changes">
-    <img src="/ui/icons/16x16/previous.png"/>
-    Come back to last changes view
-  </a>
+  <fieldset>
+    <legend>Change metadata</legend>
+    <table>
+      <tr>
+        <td><b>Author</b></td>
+        <td>: ${author_name}</td>
+      </tr>
+      <tr>
+        <td><b>Date</b></td>
+        <td>: ${author_date}</td>
+      </tr>
+      <tr>
+        <td><b>Message</b></td>
+        <td>: ${subject}</td>
+      </tr>
+    </table>
+  </fieldset>
 
-  <h1>Informations</h1>
-  <b>Modification date:</b> ${author_date}<br/>
-  <b>Message:</b> ${subject}<br/>
-  <b>Author:</b> ${author_name}
-
-  <h1>Changes</h1>
+  <h3>Details</h3>
   <div id="differ">
-    <div class="diff ${change/css}" stl:repeat="change changes">
-    ${change/value}</div>
+    <stl:block stl:repeat="change changes">
+      <div stl:if="change/is_header">${change/value}</div>
+      <stl:block stl:if="not change/is_header">
+        <span class="${change/css}">${change/value}</span><br/>
+      </stl:block>
+    </stl:block>
   </div>
 </stl:block>
