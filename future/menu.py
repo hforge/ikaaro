@@ -543,8 +543,7 @@ class MenuFolder(Folder):
         Folder._make_resource(cls, folder, name, **kw)
         # Menu root
         cls_menu = cls.class_menu
-        cls_menu._make_resource(cls_menu, folder, '%s/menu' % name,
-                                title={'en': u"Menu", 'fr': u"Menu"})
+        cls_menu._make_resource(cls_menu, folder, '%s/menu' % name)
 
 
     def get_document_types(self):
