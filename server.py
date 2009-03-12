@@ -31,8 +31,8 @@ from xapian import DatabaseOpeningError
 # Import from itools
 from itools.datatypes import Boolean
 from itools.http import Request
-from itools.uri import get_absolute_reference2
 from itools import vfs
+from itools.vfs import cwd
 from itools.web import Server as BaseServer, Context, set_context
 
 # Import from ikaaro
@@ -110,7 +110,7 @@ def get_fake_context():
 class Server(BaseServer):
 
     def __init__(self, target, address=None, port=None, read_only=False):
-        target = get_absolute_reference2(target)
+        target = cwd.get_reference(target)
         self.target = target
         path = target.path
 

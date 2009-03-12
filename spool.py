@@ -25,8 +25,8 @@ from socket import gaierror
 from traceback import print_exc
 
 # Import from itools
-from itools.uri import get_absolute_reference2
 from itools import vfs
+from itools.vfs import cwd
 
 # Import from ikaaro
 from config import get_config
@@ -39,7 +39,7 @@ from gobject import timeout_add
 class Spool(object):
 
     def __init__(self, target):
-        target = get_absolute_reference2(target)
+        target = cwd.get_reference(target)
         self.target = target
         spool = target.resolve2('spool')
         self.spool = vfs.open(spool)
