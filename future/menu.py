@@ -242,7 +242,8 @@ class Menu_View(OrderedTable_View):
                 index = index + 1
                 name = checkid('%s%03d' % (base, index))
 
-            object = Menu.make_resource(Menu, parent, name)
+            cls = resource.parent.class_menu
+            object = cls.make_resource(cls, parent, name)
 
             # update the parent record
             handler.update_record(parent_id, **{'child': name})
