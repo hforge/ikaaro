@@ -58,10 +58,15 @@ MSG_NEW_RESOURCE = INFO(u'A new resource has been added.')
 
 MSG_NONE_REMOVED = ERROR(u'No resource removed.')
 
+MSG_RESOURCES_PASTED = INFO(u'Resources pasted: $resources.')
+
 MSG_RESOURCES_REMOVED = INFO(u'Resources removed: $resources.')
 
 MSG_RESOURCES_REFERENCED = ERROR(u'Action impossible '
                                  u'(the resources are in use): $resources.')
+
+MSG_RESOURCES_NOT_PASTED = ERROR(u'Resources not allowed to paste here: '
+                                 u'$resources.')
 
 MSG_RESOURCES_NOT_REMOVED = ERROR(u'Resources not allowed to remove: '
                                   u'$resources.')
@@ -85,7 +90,5 @@ MSG_RENAMED = INFO(u'Resources renamed.')
 MSG_COPIED = INFO(u'Resources copied.')
 
 MSG_CUT = INFO(u'Resources cut.')
-
-MSG_PASTED = INFO(u'Resources pasted.')
 
 MSG_PUBLISHED = INFO(u'Resources published.')
