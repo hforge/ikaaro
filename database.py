@@ -19,7 +19,6 @@ from subprocess import call, PIPE
 
 # Import from itools
 from itools.handlers import RODatabase, GitDatabase, make_git_database
-from itools import vfs
 from itools.web import get_context
 from itools.xapian import Catalog, make_catalog
 

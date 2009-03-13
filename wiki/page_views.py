@@ -227,6 +227,7 @@ class WikiPage_ToPDF(BaseView):
                     name, ext, lang = FileName.decode(filename)
                     # At least images from ikaaro won't have an extension
                     if ext is None:
+                        reference = str(reference)
                         mimetype = vfs.get_mimetype(reference)
                         ext = guess_extension(mimetype)[1:]
                         filename = FileName.encode((name, ext, lang))

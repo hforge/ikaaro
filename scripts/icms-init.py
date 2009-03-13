@@ -24,7 +24,6 @@ import sys
 
 # Import from itools
 import itools
-from itools.vfs import cwd
 
 # Import from ikaaro
 from ikaaro.database import make_database
@@ -139,8 +138,7 @@ def init(parser, options, target):
     context.database = database
 
     # Make the root
-    base = cwd.get_reference(target).resolve2('database')
-    folder = database.get_handler(base)
+    folder = database.get_handler('%s/database' % target)
     root = root_class._make_resource(root_class, folder, email, password)
     context.root = root
     # Index and Archive

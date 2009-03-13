@@ -31,7 +31,7 @@ from xapian import DatabaseOpeningError
 # Import from itools
 from itools.datatypes import Boolean
 from itools.http import Request
-from itools import vfs
+from itools.uri import get_reference
 from itools.vfs import cwd
 from itools.web import Server as BaseServer, Context, set_context
 
@@ -110,9 +110,9 @@ def get_fake_context():
 class Server(BaseServer):
 
     def __init__(self, target, address=None, port=None, read_only=False):
-        target = cwd.get_reference(target)
+        target = cwd.get_uri(target)
         self.target = target
-        path = target.path
+        path = get_reference(target).path
 
         # Load the config
         config = get_config(target)

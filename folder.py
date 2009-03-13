@@ -95,6 +95,7 @@ class Folder(DBResource):
 
         # File or folder
         uri = folder.uri.resolve2(name)
+        uri = str(uri)
         if vfs.exists(uri):
             is_file = vfs.is_file(uri)
         else:

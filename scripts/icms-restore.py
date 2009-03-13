@@ -21,7 +21,6 @@ from optparse import OptionParser
 
 # Import from itools
 import itools
-from itools import vfs
 from itools.handlers import (SafeDatabase, READY, TRANSACTION_PHASE1,
     TRANSACTION_PHASE2)
 

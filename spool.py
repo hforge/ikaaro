@@ -24,24 +24,27 @@ from smtplib import SMTP, SMTPRecipientsRefused, SMTPResponseException
 from socket import gaierror
 from traceback import print_exc
 
+# Import from pygobject
+from gobject import timeout_add
+
 # Import from itools
+from itools.uri import get_reference
 from itools import vfs
 from itools.vfs import cwd
 
 # Import from ikaaro
 from config import get_config
 
-# Import from gobject
-from gobject import timeout_add
-
 
 
 class Spool(object):
 
     def __init__(self, target):
-        target = cwd.get_reference(target)
+        target = cwd.get_uri(target)
+        target = get_reference(target)
         self.target = target
         spool = target.resolve2('spool')
+        spool = str(spool)
         self.spool = vfs.open(spool)
 
         # The SMTP host
