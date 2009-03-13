@@ -111,8 +111,8 @@ class Server(BaseServer):
 
     def __init__(self, target, address=None, port=None, read_only=False):
         target = cwd.get_uri(target)
-        self.target = target
-        path = get_reference(target).path
+        self.target = get_reference(target)
+        path = self.target.path
 
         # Load the config
         config = get_config(target)
