@@ -242,7 +242,8 @@ class Menu_View(OrderedTable_View):
                 index = index + 1
                 name = checkid('%s%03d' % (base, index))
 
-            object = Menu.make_resource(Menu, parent, name)
+            cls = resource.parent.class_menu
+            object = cls.make_resource(cls, parent, name)
 
             # update the parent record
             handler.update_record(parent_id, **{'child': name})
@@ -549,8 +550,7 @@ class MenuFolder(Folder):
         Folder._make_resource(cls, folder, name, **kw)
         # Menu root
         cls_menu = cls.class_menu
-        cls_menu._make_resource(cls_menu, folder, '%s/menu' % name,
-                                title={'en': u"Menu", 'fr': u"Menu"})
+        cls_menu._make_resource(cls_menu, folder, '%s/menu' % name)
 
 
     def get_document_types(self):
