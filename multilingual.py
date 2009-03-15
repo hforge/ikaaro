@@ -18,6 +18,7 @@
 from datetime import datetime
 
 # Import from itools
+from itools.uri import resolve_uri
 from itools.vfs import FileName
 from itools.web import get_context
 
@@ -66,7 +67,7 @@ class Multilingual(DBResource):
         cls = self.class_handler
         database = self.metadata.database
         name = FileName.encode((self.name, cls.class_extension, language))
-        uri = self.metadata.uri.resolve(name)
+        uri = resolve_uri(self.metadata.uri, name)
         if database.has_handler(uri):
             handler = database.get_handler(uri, cls=cls)
         else:

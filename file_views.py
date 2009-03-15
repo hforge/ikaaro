@@ -28,7 +28,7 @@ from itools.gettext import MSG
 from itools.handlers import get_handler_class_by_mimetype, guess_encoding
 from itools.html import HTMLParser, stream_to_str_as_xhtml
 from itools.i18n import guess_language
-from itools.uri import get_reference
+from itools.uri import get_reference, get_uri_name
 from itools.vfs import FileName
 from itools.web import BaseView, STLView, STLForm, INFO, ERROR
 from itools.xapian import PhraseQuery
@@ -205,7 +205,7 @@ class File_Upload(STLForm):
                 metadata.format = mimetype
 
         # Update handler name
-        handler_name = handler.uri.path.get_name()
+        handler_name = get_uri_name(handler.uri)
         old_name, old_extension, old_lang = FileName.decode(handler_name)
         new_name, new_extension, new_lang = FileName.decode(filename)
         # FIXME Should 'FileName.decode' return lowercase extensions?

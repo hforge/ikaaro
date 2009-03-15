@@ -21,6 +21,7 @@
 # Import from itools
 from itools.gettext import MSG
 from itools.handlers import Folder as FolderHandler
+from itools.uri import get_uri_path, get_uri_name, resolve_uri, resolve_uri2
 from itools import vfs
 from itools.web import get_context, BaseView
 from itools.xapian import PhraseQuery
@@ -66,9 +67,9 @@ class Folder(DBResource):
 
 
     def get_files_to_archive(self, content=False):
-        metadata = str(self.metadata.uri.path)
+        metadata = get_uri_path(self.metadata.uri)
         if content is True:
-            folder = str(self.handler.uri.path)
+            folder = get_uri_path(self.handler)
             return [metadata, folder]
         return [metadata]
 
@@ -94,8 +95,7 @@ class Folder(DBResource):
         format = metadata.format
 
         # File or folder
-        uri = folder.uri.resolve2(name)
-        uri = str(uri)
+        uri = resolve_uri2(folder.uri, name)
         if vfs.exists(uri):
             is_file = vfs.is_file(uri)
         else:
@@ -163,13 +163,13 @@ class Folder(DBResource):
         # Find out the source and target absolute URIs
         folder = self.handler
         if source[0] == '/':
-            source_uri = self.get_root().handler.uri.resolve2(source[1:])
+            source_uri = resolve_uri2(self.get_root().handler.uri, source[1:])
         else:
-            source_uri = folder.uri.resolve2(source)
+            source_uri = resolve_uri2(folder.uri, source)
         if target[0] == '/':
-            target_uri = self.get_root().handler.uri.resolve2(target[1:])
+            target_uri = resolve_uri2(self.get_root().handler.uri, target[1:])
         else:
-            target_uri = folder.uri.resolve2(target)
+            target_uri = resolve_uri2(folder.uri, target)
 
         # Load the handlers so they are of the right class, for resources
         # like that define explicitly the handler class.  This fixes for
@@ -193,7 +193,7 @@ class Folder(DBResource):
 
         # Find out the source and target absolute URIs
         source_uri, target_uri = self._resolve_source_target(source, target)
-        new_name = target_uri.path[-1]
+        new_name = get_uri_name(target_uri)
 
         # Get the source resource
         resource = self.get_resource(source)
@@ -206,8 +206,8 @@ class Folder(DBResource):
         for old_name, new_name in resource.rename_handlers(new_name):
             if old_name is None:
                 continue
-            src_uri = source_uri.resolve(old_name)
-            dst_uri = target_uri.resolve(new_name)
+            src_uri = resolve_uri(source_uri, old_name)
+            dst_uri = resolve_uri(source_uri, new_name)
             if folder.has_handler(src_uri):
                 folder.copy_handler(src_uri, dst_uri)
 
@@ -221,7 +221,7 @@ class Folder(DBResource):
 
         # Find out the source and target absolute URIs
         source_uri, target_uri = self._resolve_source_target(source, target)
-        new_name = target_uri.path[-1]
+        new_name = get_uri_name(target_uri)
 
         # Get the source resource
         resource = self.get_resource(source)
@@ -239,8 +239,8 @@ class Folder(DBResource):
         for old_name, new_name in resource.rename_handlers(new_name):
             if old_name is None:
                 continue
-            src_uri = source_uri.resolve(old_name)
-            dst_uri = target_uri.resolve(new_name)
+            src_uri = resolve_uri(source_uri, old_name)
+            dst_uri = resolve_uri(source_uri, new_name)
             if folder.has_handler(src_uri):
                 folder.move_handler(src_uri, dst_uri)
 

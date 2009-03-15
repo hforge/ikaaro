@@ -29,6 +29,7 @@ from itools.handlers import File as FileHandler, Image as ImageHandler
 from itools.handlers import TARFile, ZIPFile, GzipFile, Bzip2File
 from itools.odf import SXWFile, SXCFile, SXIFile, ODTFile, ODSFile, ODPFile
 from itools.pdf import PDFFile
+from itools.uri import get_uri_path
 from itools.vfs import FileName
 from itools.web import STLView
 from itools.office import MSPowerPoint as MSPowerPointFile, RTF as RTFFile
@@ -165,9 +166,9 @@ class File(WorkflowAware, DBResource):
 
     def get_files_to_archive(self, content=False):
         # Handlers
-        files = [ str(x.uri.path) for x in self.get_handlers() ]
+        files = [ get_uri_path(x.uri) for x in self.get_handlers() ]
         # Metadata
-        metadata = str(self.metadata.uri.path)
+        metadata = get_uri_path(self.metadata.uri)
         files.append(metadata)
         return files
 

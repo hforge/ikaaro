@@ -26,6 +26,7 @@ from datetime import datetime
 from itools.datatypes import Unicode, String, Integer, Boolean, DateTime
 from itools.gettext import MSG
 from itools import git
+from itools.uri import resolve_uri
 from itools.web import Resource, get_context
 from itools.xapian import CatalogAware, PhraseQuery
 
@@ -182,9 +183,9 @@ class DBResource(CatalogAware, IResource):
             cls = self.class_handler
             database = self.metadata.database
             if self.parent is None:
-                uri = self.metadata.uri.resolve('.')
+                uri = resolve_uri(self.metadata.uri, '.')
             else:
-                uri = self.metadata.uri.resolve(self.name)
+                uri = resolve_uri(self.metadata.uri, self.name)
             if database.has_handler(uri):
                 handler = database.get_handler(uri, cls=cls)
             else:
