@@ -409,7 +409,7 @@ class DBResource(CatalogAware, IResource):
         """The resource must update its links to itself.
         """
         # Check referencial-integrity
-        catalog = get_context().server.catalog
+        catalog = get_context().database.catalog
         # The catalog is not available when updating (icms-update.py)
         # FIXME We do not guarantee referencial-integrity when updating
         if catalog is None:
