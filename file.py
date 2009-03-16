@@ -29,7 +29,7 @@ from itools.handlers import File as FileHandler, Image as ImageHandler
 from itools.handlers import TARFile, ZIPFile, GzipFile, Bzip2File
 from itools.odf import SXWFile, SXCFile, SXIFile, ODTFile, ODSFile, ODPFile
 from itools.pdf import PDFFile
-from itools.uri import get_uri_path
+from itools.uri import get_uri_path, resolve_uri
 from itools.vfs import FileName
 from itools.web import STLView
 from itools.office import MSPowerPoint as MSPowerPointFile, RTF as RTFFile
@@ -110,7 +110,7 @@ class File(WorkflowAware, DBResource):
         extensions = self.get_all_extensions()
         for extension in extensions:
             name = FileName.encode((self.name, extension, None))
-            uri = base.resolve(name)
+            uri = resolve_uri(base, name)
             # Found
             if database.has_handler(uri):
                 self._handler = database.get_handler(uri, cls=cls)
@@ -118,9 +118,9 @@ class File(WorkflowAware, DBResource):
 
         # Not found, build a dummy one
         name = FileName.encode((self.name, cls.class_extension, None))
-        uri = base.resolve(name)
+        uri = resolve_uri(base, name)
         handler = cls()
-        database.push_handler(str(uri), handler)
+        database.push_handler(uri, handler)
         self._handler = handler
         return self._handler
 
