@@ -187,12 +187,12 @@ class Skin(UIFolder):
 
 
     def get_scripts(self, context):
-        scripts = []
-        # Aruni (default skin)
-        scripts.append('/ui/jquery.js')
-        scripts.append('/ui/javascript.js')
-        # Calendar (http://dynarch.com/mishoo/calendar.epl)
-        scripts.append('/ui/calendar/calendar.js')
+        scripts = [
+            # Aruni (default skin)
+            '/ui/jquery.js',
+            '/ui/javascript.js',
+            # Calendar (http://dynarch.com/mishoo/calendar.epl)
+            '/ui/calendar/calendar.js']
         languages = [
             'af', 'al', 'bg', 'br', 'ca', 'da', 'de', 'du', 'el', 'en', 'es',
             'fi', 'fr', 'hr', 'hu', 'it', 'jp', 'ko', 'lt', 'lv', 'nl', 'no',
