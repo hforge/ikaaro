@@ -341,8 +341,9 @@ class Issue_History(STLView):
                 previous_cc_list = cc_list
                 new_values = []
                 for cc in cc_list:
-                    value = root.get_user(cc).get_property('email')
-                    new_values.append(value)
+                    user = root.get_user(cc)
+                    if user:
+                        new_values.append(user.get_property('email'))
                 if new_values:
                     row_ns['cc_list'] = u', '.join(new_values)
                 else:
