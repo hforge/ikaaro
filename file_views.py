@@ -434,11 +434,11 @@ class Image_View(STLView):
             # Preload with same size preferences than the current one
             if width and height:
                 # Preload a thumbnail
-                uri = prefix.resolve2(';thumb').replace(width=width,
-                                                        height=height)
+                uri = prefix.resolve_name(';thumb').replace(width=width,
+                                                            height=height)
             else:
                 # Preload the full size
-                uri = prefix.resolve2(';download')
+                uri = prefix.resolve_name(';download')
             preload.append(str(uri))
 
         # Real width and height (displayed for reference)

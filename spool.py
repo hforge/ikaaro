@@ -43,7 +43,7 @@ class Spool(object):
         target = cwd.get_uri(target)
         target = get_reference(target)
         self.target = target
-        spool = target.resolve2('spool')
+        spool = target.resolve_name('spool')
         spool = str(spool)
         self.spool = vfs.open(spool)
 

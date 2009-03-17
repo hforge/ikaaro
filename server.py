@@ -183,7 +183,7 @@ class Server(BaseServer):
         if not config.get_value('smtp-host'):
             raise ValueError, '"smtp-host" is not set in config.conf'
 
-        spool = self.target.resolve2('spool')
+        spool = self.target.resolve_name('spool')
         spool = str(spool.path)
         tmp_file, tmp_path = mkstemp(dir=spool)
         file = fdopen(tmp_file, 'w')

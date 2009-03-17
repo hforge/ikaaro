@@ -311,7 +311,7 @@ class WebPage(ResourceWithHTML, Multilingual, Text):
                     yield event
                     continue
                 # Fix link
-                uri = uri.resolve2(';download')
+                uri = uri.resolve_name(';download')
                 attributes = attributes.copy()
                 attributes[(None, 'src')] = str(uri)
                 yield START_ELEMENT, (tag_uri, tag_name, attributes), line

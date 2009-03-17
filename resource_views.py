@@ -433,7 +433,7 @@ class DBResource_AddBase(STLForm):
         # Add an action to the resource
         action = self.get_resource_action(context)
         if action:
-            path = path.resolve2('.%s' % action)
+            path = path.resolve_name('.%s' % action)
         # Return javascript
         mode = form['mode']
         context.scripts.extend(self.get_scripts(mode))

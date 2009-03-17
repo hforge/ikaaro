@@ -680,7 +680,7 @@ class Folder_PreviewContent(Folder_BrowseContent):
                         value, href = value
                         href = get_reference(href)
                         if row['is_folder']:
-                            href = href.resolve2(';preview_content')
+                            href = href.resolve_name(';preview_content')
                         href = href.replace(size=current_size, width=width,
                                 height=height)
                         href = str(href)

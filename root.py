@@ -189,7 +189,7 @@ class Root(WebSite):
         cls = self.__class__
         if cls is not Root:
             exec('import %s as pkg' % cls.__module__.split('.', 1)[0])
-            config = Path(pkg.__path__[0]).resolve2('setup.conf')
+            config = Path(pkg.__path__[0]).resolve_name('setup.conf')
             config = ConfigFile(str(config))
             source = config.get_value('source_language', default=source)
             target = config.get_value('target_languages', default=target)
