@@ -73,10 +73,11 @@ class WikiPage(Text):
 
         # Try regular resource name or path
         try:
-            resource = parent.get_resource(title)
+            name = str(title)
         except UnicodeEncodeError:
             pass
         else:
+            resource = parent.get_resource(name)
             if resource is not None:
                 return resource
 
