@@ -240,10 +240,7 @@ class DBResource(CatalogAware, IResource):
 
         # Call git
         cwd = context.database.path
-        try:
-            revisions = git.get_revisions_metadata(files, cwd=cwd)
-        except EnvironmentError:
-            return []
+        revisions = git.get_revisions_metadata(files, cwd=cwd)
 
         return [
             {'username': x['author_name'],
