@@ -61,7 +61,7 @@ def update_catalog(parser, options, target):
     catalog = make_catalog(catalog_path, get_register_fields())
 
     # Get the root
-    server = Server(target, read_only=True)
+    server = Server(target, read_only=True, cache_size=50)
     root = server.root
 
     # Build a fake context
@@ -81,6 +81,7 @@ def update_catalog(parser, options, target):
         catalog.index_document(obj)
         # Free Memory
         del obj
+        server.database.make_room()
     # Update / Report
     t1, v1 = time(), vmsize()
     v = (v1 - v0)/1024

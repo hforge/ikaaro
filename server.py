@@ -109,7 +109,8 @@ def get_fake_context():
 
 class Server(BaseServer):
 
-    def __init__(self, target, address=None, port=None, read_only=False):
+    def __init__(self, target, address=None, port=None, read_only=False,
+                 cache_size=None):
         target = cwd.get_uri(target)
         self.target = get_reference(target)
         path = self.target.path
@@ -119,11 +120,11 @@ class Server(BaseServer):
         load_modules(config)
 
         # Find out the IP to listen to
-        if not address:
+        if address is None:
             address = config.get_value('listen-address').strip()
 
         # Find out the port to listen
-        if not port:
+        if port is None:
             port = config.get_value('listen-port')
 
         # Contact Email
@@ -154,8 +155,9 @@ class Server(BaseServer):
             import guppy.heapy.RM
 
         # The database
-        size = config.get_value('database-size')
-        database = get_database(path, size, read_only=read_only)
+        if cache_size is None:
+            cache_size = config.get_value('database-size')
+        database = get_database(path, cache_size, read_only=read_only)
         self.database = database
 
         # Find out the root class
