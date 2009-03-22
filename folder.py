@@ -69,7 +69,7 @@ class Folder(DBResource):
     def get_files_to_archive(self, content=False):
         metadata = get_uri_path(self.metadata.uri)
         if content is True:
-            folder = get_uri_path(self.handler)
+            folder = get_uri_path(self.handler.uri)
             return [metadata, folder]
         return [metadata]
 
