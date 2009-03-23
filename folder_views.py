@@ -495,21 +495,26 @@ class Folder_BrowseContent(SearchForm):
         # Paste
         target = resource
         allowed_types = tuple(target.get_document_types())
+        pasted = []
+        not_allowed = []
         for path in paths:
             # Check the resource actually exists
             resource = target.get_resource(path)
             if resource is None:
                 continue
             if not isinstance(resource, allowed_types):
+                not_allowed.append(resource.name)
                 continue
 
             # If cut&paste in the same place, do nothing
             if cut is True:
                 source = resource.parent
                 if target.get_canonical_path() == source.get_canonical_path():
+                    pasted.append(resource.name)
                     continue
 
             name = generate_name(resource.name, target.get_names(), '_copy_')
+            pasted.append(name)
             if cut is True:
                 # Cut&Paste
                 target.move_resource(path, name)
@@ -527,7 +532,16 @@ class Folder_BrowseContent(SearchForm):
         if cut is True:
             context.del_cookie('ikaaro_cp')
 
-        context.message = messages.MSG_PASTED
+        message = []
+        if pasted:
+            resources = ', '.join(pasted)
+            message.append(messages.MSG_RESOURCES_PASTED(resources=resources))
+        if not_allowed:
+            resources = ', '.join(not_allowed)
+            msg = messages.MSG_RESOURCES_NOT_PASTED(resources=resources)
+            message.append(msg)
+
+        context.message = message
 
 
     def action_publish(self, resource, context, form):

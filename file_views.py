@@ -343,7 +343,7 @@ class File_Backlinks(Folder_BrowseContent):
 
 class Image_Thumbnail(BaseView):
 
-    access = True
+    access = 'is_allowed_to_view'
 
     def get_mtime(self, resource):
         return resource.get_mtime()

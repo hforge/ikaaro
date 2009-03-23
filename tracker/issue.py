@@ -263,7 +263,10 @@ class Issue(Folder):
                                     comment=comment)
         # Notify / Send
         for to_addr in to_addrs:
-            to_addr = users.get_resource(to_addr).get_property('email')
+            user = root.get_user(to_addr)
+            if not user:
+                continue
+            to_addr = user.get_property('email')
             root.send_email(to_addr, subject, text=body)
 
 
