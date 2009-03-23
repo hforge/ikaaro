@@ -575,19 +575,13 @@ class LoginView(STLForm):
         context.user = user
 
         # Come back
-        goto = None
         referrer = context.request.referrer
-        if referrer:
-            if not referrer.path:
-                goto = referrer
-            else:
-                params = referrer.path[-1].params
-                if not params:
-                    goto = referrer
-                elif params[0] != 'login':
-                    goto = referrer
-        if goto is None:
+        if referrer is None:
             goto = get_reference('./')
+        elif referrer.path and referrer.path[-1] == ';login':
+            goto = get_reference('./')
+        else:
+            goto = referrer
 
         return context.come_back(INFO(u"Welcome!"), goto)
 
