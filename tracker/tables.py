@@ -60,16 +60,15 @@ class SelectTable_View(OrderedTable_View):
     def get_item_value(self, resource, context, item, column):
         # Append a column with the number of issues
         if column == 'issues':
-            # FIXME Too much of an heuristic
             filter = str(resource.name)
 
-            root = context.root
-            abspath = resource.parent.get_canonical_path()
-            search_query = AndQuery(
-                PhraseQuery('parent_path', str(abspath)),
-                PhraseQuery('format', 'issue'),
-                PhraseQuery(filter, item.id))
-            results = root.search(search_query)
+            # Build the search query
+            query_terms = resource.parent.get_issues_query_terms()
+            query_terms.append(PhraseQuery(filter, item.id))
+            query = AndQuery(*query_terms)
+
+            # Search
+            results = context.root.search(query)
             count = len(results)
             if count == 0:
                 return 0, None
@@ -158,28 +157,27 @@ class Tracker_TableResource(OrderedTable):
 
 
     def del_record_action(self, context):
-        # check input
+        # Check input
         ids = context.get_form_values('ids', type=Integer)
         if not ids:
             return context.come_back(ERROR(u'No resource selected.'))
 
-        filter = self.name[:-1]
-        if self.name.startswith('priorit'):
-            filter = 'priority'
-        root = context.root
-        abspath = self.parent.get_canonical_path()
+        # Search all issues
+        query_terms = resource.parent.get_issues_query_terms()
+        query = AndQuery(*query_terms)
+        results = context.root.search(query)
 
-        # Search
-        base_query = PhraseQuery('parent_path', str(abspath))
-        base_query = AndQuery(base_query, PhraseQuery('format', 'issue'))
+        # Remove values only if no issues have them
+        filter = str(self.name)
         removed = []
         for id in ids:
-            query = AndQuery(base_query, PhraseQuery(filter, id))
-            count = root.search(query).get_n_documents()
+            query = PhraseQuery(filter, id)
+            count = results.search(query).get_n_documents()
             if count == 0:
                 self.handler.del_record(id)
                 removed.append(str(id))
 
+        # Ok
         message = INFO(u'Resources removed: $resources.')
         return context.come_back(message, resources=', '.join(removed))
 
