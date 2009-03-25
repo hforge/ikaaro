@@ -28,13 +28,19 @@ from ikaaro.html import WebPage
 
 
 def build_message(data):
-    document = XHTMLFile()
+    # Parse and clean the data
     new_body = HTMLParser(data)
     new_body = sanitize_stream(new_body)
+    new_body = list(new_body)
+
+    # Insert the data in a new document
+    document = XHTMLFile()
     old_body = document.get_body()
     document.events = (document.events[:old_body.start+1]
                        + new_body
                        + document.events[old_body.end:])
+
+    # Ok
     return document
 
 
