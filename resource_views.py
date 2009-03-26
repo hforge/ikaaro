@@ -30,7 +30,7 @@ from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.http import Conflict, NotImplemented
 from itools.i18n import format_datetime, get_language_name
-from itools.uri import Path, get_reference
+from itools.uri import Path, get_reference, get_uri_path
 from itools.vfs import FileName
 from itools.web import get_context, BaseView, STLView, STLForm, INFO, ERROR
 from itools.web import lock_body
@@ -578,10 +578,12 @@ class LoginView(STLForm):
         referrer = context.request.referrer
         if referrer is None:
             goto = get_reference('./')
-        elif referrer.path and referrer.path[-1] == ';login':
-            goto = get_reference('./')
         else:
-            goto = referrer
+            path = get_uri_path(referrer)
+            if path and path[-1] == ';login':
+                goto = get_reference('./')
+            else:
+                goto = referrer
 
         return context.come_back(INFO(u"Welcome!"), goto)
 
