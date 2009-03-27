@@ -203,19 +203,26 @@ def check_database(target):
 
     This is meant to be used by scripts, like 'icms-start.py'
     """
-    # FIXME This does not show modifications that are already in the cache
-    # but not committed.
     cwd = '%s/database' % target
-    command = ['git', 'ls-files', '-m', '-d', '-o']
-    pipe = get_pipe(command, cwd=cwd)
-    if pipe.read():
-        print 'The database is not in a consistent state.  Fix it manually'
-        print 'with the help of Git:'
-        print
-        print '  $ cd %s/database' % target
-        print '  $ git clean -fxd'
-        print '  $ git checkout -f'
-        print
-        return False
 
-    return True
+    # Check modifications to the working tree not yet in the index.
+    command = ['git', 'ls-files', '-m', '-d', '-o']
+    data1 = get_pipe(command, cwd=cwd).read()
+
+    # Check changes in the index not yet committed.
+    command = ['git', 'diff-index', 'HEAD', '--name-only']
+    data2 = get_pipe(command, cwd=cwd).read()
+
+    # Everything looks fine
+    if len(data1) == 0 and len(data2) == 0:
+        return True
+
+    # Something went wrong
+    print 'The database is not in a consistent state.  Fix it manually with'
+    print 'the help of Git:'
+    print
+    print '  $ cd %s/database' % target
+    print '  $ git clean -fxd'
+    print '  $ git checkout -f'
+    print
+    return False
