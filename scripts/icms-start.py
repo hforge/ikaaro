@@ -26,23 +26,20 @@ from itools import __version__, vfs
 from itools.core import become_daemon, fork
 
 # Import from ikaaro
+from ikaaro.database import check_database
 from ikaaro.update import is_instance_up_to_date
 from ikaaro.server import Server, get_pid, get_fake_context
 
 
 def start(options, target):
-    # Check for database consistency
-    if vfs.exists('%s/database.commit' % target):
-        print 'The database is not in a consistent state, to fix it up type:'
-        print
-        print '    $ icms-restore.py %s' % target
-        print
-        return 1
-
     # Check the server is not running
     pid = get_pid(target)
     if pid is not None:
         print '[%s] The Web Server is already running.' % target
+        return 1
+
+    # Check for database consistency
+    if check_database(target) is False:
         return 1
 
     # Set-up the server

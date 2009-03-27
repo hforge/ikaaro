@@ -30,24 +30,23 @@ from itools.xapian import make_catalog, CatalogAware
 from itools.i18n.accept import AcceptLanguage
 
 # Import from ikaaro
+from ikaaro.database import check_database
 from ikaaro.server import Server, ask_confirmation, get_pid, get_fake_context
 from ikaaro.registry import get_register_fields
 
-def update_catalog(parser, options, target):
-    # Check for database consistency
-    if vfs.exists('%s/database.commit' % target):
-        print 'The database is not in a consistent state, to fix it up type:'
-        print
-        print '    $ icms-restore.py <instance>'
-        print
-        return
 
+
+def update_catalog(parser, options, target):
     # Check the server is not running
     pid = get_pid(target)
     if pid is not None:
         print 'The server is running. To update the catalog first stop the'
         print 'server.'
         return
+
+    # Check for database consistency
+    if check_database(target) is False:
+        return 1
 
     # Ask
     message = 'Update the catalog (y/N)? '

@@ -18,6 +18,7 @@
 from subprocess import call, PIPE
 
 # Import from itools
+from itools.core import get_pipe
 from itools.handlers import RODatabase, GitDatabase, make_git_database
 from itools.web import get_context
 from itools.xapian import Catalog, make_catalog
@@ -193,3 +194,28 @@ def get_database(path, cache_size, read_only=False):
         return ReadOnlyDatabase(path, cache_size)
 
     return Database(path, cache_size)
+
+
+def check_database(target):
+    """This function checks whether the database is in a consisitent state,
+    this is to say whether a transaction was not brutally aborted and left
+    the working directory with changes not committed.
+
+    This is meant to be used by scripts, like 'icms-start.py'
+    """
+    # FIXME This does not show modifications that are already in the cache
+    # but not committed.
+    cwd = '%s/database' % target
+    command = ['git', 'ls-files', '-m', '-d', '-o']
+    pipe = get_pipe(command, cwd=cwd)
+    if pipe.read():
+        print 'The database is not in a consistent state.  Fix it manually'
+        print 'with the help of Git:'
+        print
+        print '  $ cd %s/database' % target
+        print '  $ git clean -fxd'
+        print '  $ git checkout -f'
+        print
+        return False
+
+    return True
