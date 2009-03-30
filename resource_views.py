@@ -623,8 +623,8 @@ class Put_View(BaseView):
 
         # Save the data
         body = context.get_form_value('body')
-        self.handler.load_state_from_string(body)
-        context.server.change_resource(self)
+        resource.handler.load_state_from_string(body)
+        context.server.change_resource(resource)
 
 
 
