@@ -21,9 +21,8 @@
 from os import getenv, listdir
 
 # Import from itools
-from itools.core import get_abspath
+from itools.core import get_abspath, get_version
 from itools.gettext import register_domain
-from itools.pkg import get_version
 
 # Import from ikaaro
 from calendar_ import CalendarTable
