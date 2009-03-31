@@ -366,7 +366,7 @@ class Skin(UIFolder):
 
 
     def get_template(self):
-        template = self.get_resource('template.xhtml')
+        template = self.get_resource('template.xhtml', soft=True)
         if template is not None:
             return template
 

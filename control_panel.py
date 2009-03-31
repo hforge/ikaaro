@@ -219,7 +219,7 @@ class CPBrokenLinks(CPBaseView, STLView):
         root = context.root
         broken = {}
         for link in catalog.get_unique_values('links'):
-            if root.get_resource(link) is not None:
+            if root.get_resource(link, soft=True) is not None:
                 continue
             sub_results = results.search(PhraseQuery('links', link))
             link = str(base.get_pathto(Path(link)))

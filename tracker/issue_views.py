@@ -168,7 +168,7 @@ class Issue_Edit(STLForm):
             rdatetime = record.datetime
             # solid in case the user has been removed
             username = record.username
-            user = users.get_resource(username)
+            user = users.get_resource(username, soft=True)
             user_title = user and user.get_title() or username
             i += 1
             comments.append({
@@ -265,7 +265,7 @@ class Issue_History(STLView):
             cc_list = record.get_value('cc_list') or ()
             file = record.get_value('file')
             # Solid in case the user has been removed
-            user = users.get_resource(username)
+            user = users.get_resource(username, soft=True)
             usertitle = user and user.get_title() or username
             comment = XMLContent.encode(Unicode.encode(comment))
             comment = XMLParser(comment.replace('\n', '<br />'))
@@ -331,7 +331,7 @@ class Issue_History(STLView):
                 previous_assigned_to = assigned_to
                 row_ns['assigned_to'] = ' '
                 if assigned_to:
-                    assigned_to_user = users.get_resource(assigned_to)
+                    assigned_to_user = users.get_resource(assigned_to, soft=True)
                     if assigned_to_user is not None:
                         row_ns['assigned_to'] = assigned_to_user.get_title()
             if cc_list != previous_cc_list:

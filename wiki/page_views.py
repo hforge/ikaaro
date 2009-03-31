@@ -85,7 +85,7 @@ class WikiPage_View(BaseView):
                     if reference.scheme or reference.authority:
                         node['classes'].append('external')
                         continue
-                    destination = resource.get_resource(reference.path)
+                    destination = resource.get_resource(reference.path, soft=True)
                     if destination is not None:
                         node['refuri'] = context.get_link(destination)
             elif refname is False:
@@ -232,7 +232,7 @@ class WikiPage_ToPDF(BaseView):
                         ext = guess_extension(mimetype)[1:]
                         filename = FileName.encode((name, ext, lang))
             else:
-                image = parent.get_resource(reference.path)
+                image = parent.get_resource(reference.path, soft=True)
                 if image is not None:
                     filename = image.get_property('filename')
             if image is None:

@@ -98,7 +98,7 @@ class AddThreadForm(AutoForm):
             return
 
         # Check the name is free
-        if resource.get_resource(name) is not None:
+        if resource.get_resource(name, soft=True) is not None:
             context.message = messages.MSG_NAME_CLASH
             return
 

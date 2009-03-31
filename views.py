@@ -144,7 +144,7 @@ class NewInstanceForm(STLForm):
             raise FormError, messages.MSG_BAD_NAME
 
         # Check the name is free
-        if resource.get_resource(name) is not None:
+        if resource.get_resource(name, soft=True) is not None:
             raise FormError, messages.MSG_NAME_CLASH
 
         # Ok

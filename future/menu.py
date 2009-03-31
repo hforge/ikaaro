@@ -121,7 +121,7 @@ class Menu_View(OrderedTable_View):
             if ref.path.is_absolute():
                 site_root = context.resource.get_site_root()
                 path = site_root.get_abspath().resolve2('.%s' % path)
-            resource_item = resource.get_resource(path)
+            resource_item = resource.get_resource(path, soft=True)
             # Broken link
             if resource_item is None:
                 return value
@@ -132,7 +132,7 @@ class Menu_View(OrderedTable_View):
         elif column == 'child':
             if not value:
                 return None
-            child = resource.parent.get_resource(value)
+            child = resource.parent.get_resource(value, soft=True)
             if child is None:
                 return None
             return 'edit', context.get_link(child)
@@ -149,7 +149,7 @@ class Menu_View(OrderedTable_View):
             if ref.path.is_absolute():
                 site_root = context.resource.get_site_root()
                 path = site_root.get_abspath().resolve2('.%s' % path)
-            item_resource = resource.get_resource(path)
+            item_resource = resource.get_resource(path, soft=True)
             # Broken link
             if item_resource is None:
                 title = MSG(u'The resource does not exist anymore.')
@@ -230,7 +230,7 @@ class Menu_View(OrderedTable_View):
             parent_record = handler.get_record(parent_id)
             # check if the child already exists
             child_path = handler.get_record_value(parent_record, 'child')
-            if child_path and parent.get_resource(child_path) is not None:
+            if child_path and parent.get_resource(child_path, soft=True):
                 continue
 
             names = parent.get_names()
@@ -279,7 +279,7 @@ class Menu(OrderedTable):
             child_path = handler.get_record_value(record, 'child')
             if child_path:
                 container = self.parent
-                child = container.get_resource(child_path)
+                child = container.get_resource(child_path, soft=True)
                 if child is not None:
                     ac = child.get_access_control()
                     user = get_context().user
@@ -312,26 +312,25 @@ class Menu(OrderedTable):
             path, method = path.split(';')
             if ref.path.is_absolute():
                 path = site_root_abspath.resolve2('.%s' % path)
-            if self.has_resource(path):
-                resource = self.get_resource(path)
-                ac = resource.get_access_control()
-                view = resource.get_view(method, ref.query)
-                # Check ACL
-                if view:
-                    return ac.is_access_allowed(user, resource, view)
-            # Miss
-            return False
+            resource = self.get_resource(path, soft=True)
+            if resource is None:
+                return False
+            # Check ACL
+            ac = resource.get_access_control()
+            view = resource.get_view(method, ref.query)
+            if view:
+                return ac.is_access_allowed(user, resource, view)
         else:
             # Internal link
             if ref.path.is_absolute():
                 path = site_root_abspath.resolve2('.%s' % path)
-            if self.has_resource(path) is False:
-                # Broken link
+            resource = self.get_resource(path, soft=True)
+            # Broken link
+            if resource is None:
                 return False
 
             # FIXME We should take into account the show_first_child
             # parameter
-            resource = self.get_resource(path)
             ac = resource.get_access_control()
             return ac.is_allowed_to_view(user, resource)
 
@@ -387,7 +386,7 @@ class Menu(OrderedTable):
                 # Internal link
                 if ref.path.is_absolute():
                     path = site_root_abspath.resolve2('.%s' % path)
-                resource = self.get_resource(path)
+                resource = self.get_resource(path, soft=True)
                 # Broken link
                 if resource is None:
                     continue
@@ -399,7 +398,7 @@ class Menu(OrderedTable):
                     # Check the child
                     child_path = get_value(record, 'child')
                     if child_path:
-                        child = parent.get_resource(child_path)
+                        child = parent.get_resource(child_path, soft=True)
                         if child is not None:
                             # Sub level
                             get_menu_ns_lvl = child.get_menu_namespace_level
@@ -502,7 +501,7 @@ class Menu(OrderedTable):
             path = handler.get_record_value(record, 'child')
             if path:
                 container = self.parent
-                child = container.get_resource(path)
+                child = container.get_resource(path, soft=True)
                 if child is not None:
                     # take into account the submenu if it is not empty
                     if child.handler.get_n_records():
@@ -621,7 +620,7 @@ def get_menu_namespace(context, depth=3, show_first_child=False, flat=True,
     tabs = {'items': []}
     if src is None:
         src = 'menu'
-    menu = site_root.get_resource(src)
+    menu = site_root.get_resource(src, soft=True)
     if menu is not None:
         tabs = menu.get_menu_namespace_level(context, url, depth,
                                              show_first_child)

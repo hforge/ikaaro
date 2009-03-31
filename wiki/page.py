@@ -77,7 +77,7 @@ class WikiPage(Text):
         except UnicodeEncodeError:
             pass
         else:
-            resource = parent.get_resource(name)
+            resource = parent.get_resource(name, soft=True)
             if resource is not None:
                 return resource
 
@@ -85,7 +85,7 @@ class WikiPage(Text):
         name = checkid(title)
         if name is None:
             return None
-        return parent.get_resource(name)
+        return parent.get_resource(name, soft=True)
 
 
     def get_document(self):
@@ -127,7 +127,7 @@ class WikiPage(Text):
             if reference.scheme or reference.authority:
                 continue
             # Note: absolute paths will be rewritten as relative paths
-            resource = parent.get_resource(reference.path)
+            resource = parent.get_resource(reference.path, soft=True)
             if resource is not None:
                 node['refuri'] = context.get_link(resource)
 
@@ -143,7 +143,7 @@ class WikiPage(Text):
             if reference.path[-1] == ';download':
                 path = path[:-1]
             # Get the resource
-            resource = parent.get_resource(path)
+            resource = parent.get_resource(path, soft=True)
             if resource is not None:
                 node['uri'] = '%s/;download' % context.get_link(resource)
 

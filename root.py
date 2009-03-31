@@ -118,7 +118,7 @@ class Root(WebSite):
     # Override itools.web.root.Root
     ########################################################################
     def get_user(self, name):
-        return self.get_resource('users/%s' % name)
+        return self.get_resource('users/%s' % name, soft=True)
 
 
     def get_user_from_login(self, username):
@@ -138,7 +138,7 @@ class Root(WebSite):
         if username is None:
             return None
         users = self.get_resource('users')
-        user = users.get_resource(username)
+        user = users.get_resource(username, soft=True)
         if user is None:
             return username
         return user.get_title()

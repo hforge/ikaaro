@@ -105,7 +105,7 @@ class LocationTemplate(SkinTemplate):
         resource = site_root
         for name in context.uri.path:
             path = path + ('%s/' % name)
-            resource = resource.get_resource(name)
+            resource = resource.get_resource(name, soft=True)
             if resource is None:
                 break
             # Append

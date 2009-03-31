@@ -406,7 +406,7 @@ class DBResource_AddBase(STLForm):
         container = context.root.get_resource(form['target_path'])
 
         # Check the name is free
-        if container.get_resource(name) is not None:
+        if container.get_resource(name, soft=True) is not None:
             context.message = messages.MSG_NAME_CLASH
             return
 
@@ -503,7 +503,7 @@ class DBResource_AddLink(DBResource_AddBase):
         root = context.root
         container = root.get_resource(context.get_form_value('target_path'))
         # Check the name is free
-        if container.get_resource(name) is not None:
+        if container.get_resource(name, soft=True) is not None:
             context.message = messages.MSG_NAME_CLASH
             return
         # Get the type of resource to add

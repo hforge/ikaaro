@@ -352,7 +352,7 @@ class AccessControl(BaseAccessControl):
 
 
     def is_allowed_to_view_folder(self, user, resource):
-        index = resource.get_resource('index')
+        index = resource.get_resource('index', soft=True)
         if index is None:
             return False
         return self.is_allowed_to_view(user, index)

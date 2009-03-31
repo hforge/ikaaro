@@ -59,7 +59,7 @@ class Dressable_Menu(ContextMenu):
                 warn(msg)
                 continue
             name, cls = value
-            if resource.get_resource(name) is None:
+            if resource.get_resource(name, soft=True) is None:
                 # Add new_resource link
                 items.append(
                     {'name': name,
@@ -120,7 +120,7 @@ class Dressable_View(CompositeForm):
             content = ''
             if isinstance(value, tuple):
                 name, kk = value
-                item = resource.get_resource(name)
+                item = resource.get_resource(name, soft=True)
                 if item is None:
                     value = None
                 else:

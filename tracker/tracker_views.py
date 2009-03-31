@@ -93,7 +93,7 @@ class StoreSearchMenu(ContextMenu):
         # This search exists ?
         search_name = context.get_query_value('search_name')
         if search_name:
-            search = resource.get_resource(search_name)
+            search = resource.get_resource(search_name, soft=True)
         else:
             search = None
 
@@ -317,7 +317,7 @@ class Tracker_View(BrowseForm):
         # Check stored search
         search_name = context.query['search_name']
         if search_name:
-            search = resource.get_resource(search_name)
+            search = resource.get_resource(search_name, soft=True)
             if search is None:
                 msg = MSG(u'Unknown stored search "{sname}".')
                 goto = ';search'
@@ -385,7 +385,7 @@ class Tracker_View(BrowseForm):
         # Assigned to
         if column == 'assigned_to':
             users = resource.get_resource('/users')
-            user = users.get_resource(value)
+            user = users.get_resource(value, soft=True)
             if user is None:
                 return None
             return user.get_title()
@@ -585,7 +585,7 @@ class Tracker_GoToIssue(BaseView):
         if not issue_name:
             return context.come_back(messages.MSG_NAME_MISSING)
 
-        issue = resource.get_resource(issue_name)
+        issue = resource.get_resource(issue_name, soft=True)
         if issue is None or not isinstance(issue, Issue):
             return context.come_back(ERROR(u'Issue not found.'))
 
@@ -902,7 +902,7 @@ def get_issue_informations(resource, item):
     infos['assigned_to'] = ''
     if assigned_to:
         users = resource.get_resource('/users')
-        user = users.get_resource(assigned_to)
+        user = users.get_resource(assigned_to, soft=True)
         if user is not None:
             infos['assigned_to'] = user.get_title()
 
