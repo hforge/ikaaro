@@ -55,9 +55,7 @@ class FileGET(BaseView):
 
 class UIFile(IResource, File):
 
-    def clone(self, cls=None, exclude=('database', 'uri', 'timestamp',
-                                       'dirty', 'parent', 'name')):
-        return File.clone(self, cls=cls, exclude=exclude)
+    clone_exclude = File.clone_exclude | frozenset(['parent', 'name'])
 
 
     download = FileGET()
