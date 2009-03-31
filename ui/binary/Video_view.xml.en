@@ -15,7 +15,7 @@
   <param name="controls" value="ControlPanel" />
   <param name="console" value="video" />
   -->
-  <embed src="." type="${format}">
+  <embed src=";download" type="${format}">
 <!--
     width="320" height="30" controls="ControlPanel"
     console="video" autostart="true">
