@@ -19,7 +19,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-import itools
 from itools.core import get_abspath, merge_dicts
 from itools.datatypes import Email, String, Unicode
 from itools.datatypes import Enumerate
@@ -30,7 +29,7 @@ from itools.web import STLView, INFO, ERROR
 from itools.xapian import PhraseQuery, OrQuery, AndQuery, split_unicode
 
 # Import from ikaaro
-import ikaaro
+from config import get_config
 from forms import AutoForm, SelectWidget, MultilineWidget, TextWidget
 from views import SearchForm
 from utils import get_base_path_query
@@ -306,10 +305,43 @@ class AboutView(STLView):
 
 
     def get_namespace(self, resource, context):
-        return  {
-            'itools_version': itools.__version__,
-            'ikaaro_version': ikaaro.__version__,
-        }
+        packages = ['itools', 'ikaaro']
+        config = get_config(context.server.target)
+        packages.extend(config.get_value('modules'))
+        # Try packages we frequently use
+        packages.extend(['gio', 'xapian', 'pywin32', 'PIL.Image', 'docutils',
+                        'reportlab', 'xlrd'])
+        packages_ns = []
+        for name in packages:
+            try:
+                if '.' in name:
+                    name, subname = name.split('.')
+                    package = __import__(subname, fromlist=[name])
+                else:
+                    package = __import__(name)
+            except ImportError:
+                continue
+            for attribute in ('__version__', # default
+                              'VERSION', # PIL
+                              '__VERSION__', # xlrd
+                              'version_string', # xapian
+                              'pygio_version'): # gio
+                try:
+                    version = getattr(package, attribute)
+                except AttributeError:
+                    continue
+                else:
+                    if hasattr(version, '__call__'):
+                        version = version()
+                    if isinstance(version, tuple):
+                        version = '.'.join([str(v) for v in version])
+                    break
+            else:
+                    version = MSG(u'no version found')
+            packages_ns.append({'name': name,
+                               'version': version})
+        namespace = {'packages': packages_ns}
+        return namespace
 
 
 

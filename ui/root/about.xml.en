@@ -4,15 +4,21 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
-  <p>
-    <stl:inline stl:if="itools_version">
-      itools <strong>${itools_version}</strong>
-    </stl:inline>
-    <br/>
-    <stl:inline stl:if="ikaaro_version">
-      iKaaro <strong>${ikaaro_version}</strong>
-    </stl:inline>
-  </p>
+  <table id="browse-list">
+    <thead>
+      <tr class="odd">
+        <th>Package</th>
+        <th>Version</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr stl:repeat="package packages" class="${repeat/package/even}">
+        <td>${package/name}</td>
+        <td>${package/version}</td>
+      </tr>
+    </tbody>
+  </table>
+
   <p>
     iKaaro is a Content Management System, written in the
     <a href="http://www.python.org">Python</a> programming language,
