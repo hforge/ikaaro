@@ -197,6 +197,10 @@ class DBResource(CatalogAware, IResource):
     handler = property(get_handler, None, None, '')
 
 
+    def load_handlers(self):
+        self.get_handlers()
+
+
     ########################################################################
     # Metadata
     ########################################################################

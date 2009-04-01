@@ -179,11 +179,9 @@ class Folder(DBResource):
         resource = self.get_resource(source)
         if isinstance(resource, Folder):
             for resource in resource.traverse_resources():
-                for handler in resource.get_handlers():
-                    pass
+                resource.load_handlers()
         else:
-            for handler in resource.get_handlers():
-                pass
+            resource.load_handlers()
 
         return source_uri, target_uri
 
