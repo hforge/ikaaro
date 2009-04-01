@@ -144,6 +144,12 @@ class Tracker(Folder):
         return prefix + '0'
 
 
+    def get_issues_query_terms(self):
+        abspath = self.get_canonical_path()
+        abspath = '%s/' % abspath
+        return [StartQuery('abspath', abspath), PhraseQuery('format', 'issue')]
+
+
     def get_members_namespace(self, value, not_assigned=False):
         """Returns a namespace (list of dictionaries) to be used for the
         selection box of users (the 'assigned to' and 'cc' fields).
@@ -218,10 +224,7 @@ class Tracker(Folder):
         mtime = get_value('mtime', type=Integer)
 
         # Build the query
-        abspath = self.get_canonical_path()
-        query = [
-            StartQuery('abspath', str(abspath) + '/'),
-            PhraseQuery('format', 'issue')]
+        query = self.get_issues_query_terms()
         # Text search
         if text:
             # XXX The language of text should be given
