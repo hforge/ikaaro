@@ -26,8 +26,8 @@ Python 2.5.2 or later and itools 0.50 are required.
 It is recommended to install PIL [1].  For the Wiki to work, docutils [2]
 is required.
 
-Apart from the Python packages listed above, the commands xlhtml, ppthtml,
-pdftotext, wvText and unrtf are required to index some types of documents.
+Apart from the Python packages listed above, the libraries poppler and wv2,
+and the Python package xlrd are required to index some types of documents.
 
 For profiling the memory, guppy [3] is required.
 
