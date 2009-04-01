@@ -151,6 +151,11 @@ class Issue(Folder):
         return self.parent.get_resource('calendar')
 
 
+    def load_handlers(self):
+        Folder.load_handlers(self)
+        self.get_history()
+
+
     def get_history(self):
         return self.handler.get_handler('.history', cls=History)
 
