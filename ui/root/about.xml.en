@@ -4,20 +4,23 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
-  <table id="browse-list">
-    <thead>
-      <tr class="odd">
-        <th>Package</th>
-        <th>Version</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr stl:repeat="package packages" class="${repeat/package/even}">
-        <td>${package/name}</td>
-        <td>${package/version}</td>
-      </tr>
-    </tbody>
-  </table>
+  <fieldset style="float: right">
+    <legend>Installed software</legend>
+    <table id="browse-list">
+      <thead>
+        <tr class="odd">
+          <th>Package</th>
+          <th>Version</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr stl:repeat="package packages" class="${repeat/package/even}">
+          <td>${package/name}</td>
+          <td>${package/version}</td>
+        </tr>
+      </tbody>
+    </table>
+  </fieldset>
 
   <p>
     iKaaro is a Content Management System, written in the
@@ -27,33 +30,19 @@
   </p>
 
   <p>
-  Some things you can do with ikaaro:
+  Key features of iKaaro include:
   </p>
   <ul>
-    <li>Manage Web Content and Electronic Documents;</li>
-    <li>Work together with the Wiki;</li>
-    <li>Manage a project with the issue tracker.</li>
+    <li>Content &amp; Document Management.</li>
+    <li>Collaboration with the Wiki module, the issue tracker, etc.</li>
+    <li>Multiple web sites in one instance, with separate access rights.</li>
+    <li>Mulitilingual interfaces and content.</li>
   </ul>
 
   <p>
-    To learn more, check out these resources:
+    To learn more visit the project's <a
+    href="http://www.hforge.org/ikaaro">Web Site</a>.
   </p>
 
-  <ul>
-    <li>
-      Check the <a href=";license">License</a>;
-    </li>
-    <li>
-      Want to know who is behind this software? Check the
-      <a href=";credits">Credits</a>;
-    </li>
-    <li>
-      Visit the project's <a href="http://www.hforge.org/">Web Site</a>;
-    </li>
-    <li>
-      If you find a bug or wish some new feature, please
-      <a href="http://bugs.hforge.org">file a bug report</a>.
-    </li>
-  </ul>
 
 </stl:block>

@@ -309,10 +309,23 @@ class AboutView(STLView):
         config = get_config(context.server.target)
         packages.extend(config.get_value('modules'))
         # Try packages we frequently use
-        packages.extend(['gio', 'xapian', 'pywin32', 'PIL.Image', 'docutils',
-                        'reportlab', 'xlrd'])
+        packages.extend([
+            'gio', 'xapian', 'pywin32', 'PIL.Image', 'docutils', 'reportlab',
+            'xlrd'])
+        # Mapping from package to version attribute
+        package2version = {
+            'gio': 'pygio_version',
+            'xapian': 'version_string',
+            'PIL.Image': 'VERSION',
+            'reportlab': 'Version',
+            'xlrd': '__VERSION__',
+        }
+
+        # Namespace
         packages_ns = []
         for name in packages:
+            attribute = package2version.get(name, '__version__')
+            # Import
             try:
                 if '.' in name:
                     name, subname = name.split('.')
@@ -321,25 +334,20 @@ class AboutView(STLView):
                     package = __import__(name)
             except ImportError:
                 continue
-            for attribute in ('__version__', # default
-                              'VERSION', # PIL
-                              '__VERSION__', # xlrd
-                              'version_string', # xapian
-                              'pygio_version'): # gio
-                try:
-                    version = getattr(package, attribute)
-                except AttributeError:
-                    continue
-                else:
-                    if hasattr(version, '__call__'):
-                        version = version()
-                    if isinstance(version, tuple):
-                        version = '.'.join([str(v) for v in version])
-                    break
+
+            # Version
+            try:
+                version = getattr(package, attribute)
+            except AttributeError:
+                version = MSG(u'no version found')
             else:
-                    version = MSG(u'no version found')
-            packages_ns.append({'name': name,
-                               'version': version})
+                if hasattr(version, '__call__'):
+                    version = version()
+                if isinstance(version, tuple):
+                    version = '.'.join([str(v) for v in version])
+            # Ok
+            packages_ns.append({'name': name, 'version': version})
+
         namespace = {'packages': packages_ns}
         return namespace
 
