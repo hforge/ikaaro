@@ -38,33 +38,24 @@ from datatypes import FileDataType, ImageWidth
 from folder_views import Folder_BrowseContent
 from forms import title_widget, file_widget, description_widget
 from forms import subject_widget
+from forms import AutoForm, FileWidget, TextWidget
 import messages
 from multilingual import Multilingual
 from registry import get_resource_class
-from resource_views import AddResourceMenu, DBResource_Edit
-from views import NewInstanceForm
+from resource_views import DBResource_Edit
+from views_new import NewInstance
 
 
-class File_NewInstance(NewInstanceForm):
+class File_NewInstance(AutoForm, NewInstance):
 
-    access = 'is_allowed_to_add'
     title = MSG(u'Upload File')
-    template = '/ui/file/new_instance.xml'
     schema = {
         'title': Unicode,
-        'file': FileDataType(mandatory=True),
-    }
-    context_menus = [AddResourceMenu()]
-
-
-    def get_namespace(self, resource, context):
-        type = context.get_query_value('type')
-        cls = get_resource_class(type)
-        return {
-            'class_id': cls.class_id,
-            'class_title': cls.class_title,
-            'title': context.get_form_value('title', type=Unicode),
-        }
+        'file': FileDataType(mandatory=True)}
+    widgets = [
+        TextWidget('title', title=MSG(u'Title')),
+        FileWidget('file', title=MSG(u'File'), size=35)]
+    submit_value = MSG(u'Upload')
 
 
     def get_new_resource_name(self, form):

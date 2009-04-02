@@ -18,15 +18,9 @@
 from itools.core import merge_dicts
 from itools.datatypes import Boolean, Integer, String, Unicode
 from itools.gettext import MSG
-from itools.handlers import checkid
 from itools.stl import stl
-from itools.uri import Path
-from itools.web import FormError, get_context, BaseView, STLView, STLForm
+from itools.web import get_context, BaseView, STLView, STLForm
 from itools.xml import XMLParser
-
-# Import from ikaaro
-import messages
-from registry import get_resource_class
 
 
 """This module contains some generic views used by different resources.
@@ -107,49 +101,6 @@ class IconsView(STLView):
         """
         raise NotImplementedError
 
-
-
-class NewInstanceForm(STLForm):
-    """This is the base class for all ikaaro forms meant to create and
-    add a new resource to the database.
-    """
-
-    schema = {
-        'name': String}
-
-
-    def icon(self, resource, **kw):
-        type = kw.get('type')
-        cls = get_resource_class(type)
-        if cls is not None:
-            return cls.get_class_icon()
-        # Default
-        return 'new.png'
-
-
-    def get_new_resource_name(self, form):
-        return form['name'].strip()
-
-
-    def _get_form(self, resource, context):
-        form = STLForm._get_form(self, resource, context)
-        name = self.get_new_resource_name(form)
-
-        # Check the name
-        if not name:
-            raise FormError, messages.MSG_NAME_MISSING
-
-        name = checkid(name)
-        if name is None:
-            raise FormError, messages.MSG_BAD_NAME
-
-        # Check the name is free
-        if resource.get_resource(name, soft=True) is not None:
-            raise FormError, messages.MSG_NAME_CLASH
-
-        # Ok
-        form['name'] = name
-        return form
 
 
 ###########################################################################

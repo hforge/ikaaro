@@ -21,7 +21,6 @@
 
 # Import from the Standard Library
 from operator import itemgetter
-from urllib import quote
 
 # Import from itools
 from itools.core import merge_dicts
@@ -42,7 +41,8 @@ from forms import AutoForm, title_widget, description_widget, subject_widget
 import messages
 from registry import get_resource_class, get_document_types
 from utils import get_parameters, reduce_string
-from views import NewInstanceForm, ContextMenu
+from views import ContextMenu
+from views_new import NewInstance
 
 
 
@@ -63,56 +63,17 @@ class EditLanguageMenu(ContextMenu):
 
 
 
-class AddResourceMenu(ContextMenu):
+class DBResource_NewInstance(NewInstance):
 
-    title = MSG(u'Add Resource')
-
-    def get_items(self, resource, context):
-        base = '%s/;new_resource' % context.get_link(resource)
-        document_types = resource.get_document_types()
-        return [
-            {'src': '/ui/' + cls.class_icon16,
-             'title': cls.class_title.gettext(),
-             'href': '%s?type=%s' % (base, quote(cls.class_id))}
-            for cls in document_types ]
-
-
-
-class DBResource_NewInstance(NewInstanceForm):
-
-    access = 'is_allowed_to_add'
     template = '/ui/base/new_instance.xml'
-    query_schema = {
-        'type': String}
     schema = {
         'name': String,
         'title': Unicode,
         'class_id': String}
-    context_menus = [AddResourceMenu()]
-
-    def get_title(self, context):
-        if self.title is not None:
-            return self.title
-        type = context.get_query_value('type')
-        if not type:
-            return MSG(u'Add resource').gettext()
-        cls = get_resource_class(type)
-        class_title = cls.class_title.gettext()
-        title = MSG(u'Add {class_title}')
-        return title.gettext(class_title=class_title)
-
-
-    def get_new_resource_name(self, form):
-        # If the name is not explicitly given, use the title
-        name = form['name']
-        title = form['title'].strip()
-        if name is None:
-            return title
-        return name or title
 
 
     def get_namespace(self, resource, context):
-        type = context.get_query_value('type')
+        type = context.query['type']
         cls = get_resource_class(type)
 
         document_types = get_document_types(type)

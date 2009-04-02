@@ -37,9 +37,8 @@ from itools.web.views import process_form
 from ikaaro.buttons import Button
 from ikaaro.forms import HiddenWidget, TextWidget, AutoForm, title_widget
 from ikaaro import messages
-from ikaaro.views import NewInstanceForm
 from ikaaro.views import BrowseForm, SearchForm as BaseSearchForm, ContextMenu
-from ikaaro.resource_views import AddResourceMenu
+from ikaaro.views_new import NewInstance
 from ikaaro.registry import get_resource_class
 
 # Import from ikaaro.tracker
@@ -177,11 +176,8 @@ class TrackerViewMenu(ContextMenu):
 ###########################################################################
 # Views
 ###########################################################################
-class Tracker_NewInstance(NewInstanceForm, AutoForm):
+class Tracker_NewInstance(NewInstance, AutoForm):
 
-    access = 'is_allowed_to_add'
-    query_schema = {
-        'type': String}
     schema = {
         'name': String,
         'title': Unicode,
@@ -192,28 +188,6 @@ class Tracker_NewInstance(NewInstanceForm, AutoForm):
         TextWidget('name', title=MSG(u'Name'), default=''),
         TextWidget('product', title=MSG(u'Give the title of one Product'))]
     submit_value = MSG(u'Add')
-    context_menus = [AddResourceMenu()]
-
-
-    def get_title(self, context):
-        if self.title is not None:
-            return self.title
-        type = context.get_query_value('type')
-        if not type:
-            return MSG(u'Add resource').gettext()
-        cls = get_resource_class(type)
-        class_title = cls.class_title.gettext()
-        title = MSG(u'Add {class_title}')
-        return title.gettext(class_title=class_title)
-
-
-    def get_new_resource_name(self, form):
-        # If the name is not explicitly given, use the title
-        name = form['name']
-        title = form['title'].strip()
-        if name is None:
-            return title
-        return name or title
 
 
     def action(self, resource, context, form):

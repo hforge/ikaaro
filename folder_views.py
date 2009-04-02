@@ -43,9 +43,9 @@ from buttons import PasteButton, PublishButton
 from datatypes import CopyCookie, ImageWidth
 from exceptions import ConsistencyError
 import messages
-from resource_views import AddResourceMenu
 from utils import generate_name, get_base_path_query
 from views import IconsView, BrowseForm, SearchForm, ContextMenu
+from views_new import AddResourceMenu
 from workflow import WorkflowAware
 
 
