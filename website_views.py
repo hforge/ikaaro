@@ -320,6 +320,9 @@ class AboutView(STLView):
             'reportlab': 'Version',
             'xlrd': '__VERSION__',
         }
+        package2title = {
+            'gio': 'pygobject',
+        }
 
         # Namespace
         packages_ns = []
@@ -346,7 +349,8 @@ class AboutView(STLView):
                 if isinstance(version, tuple):
                     version = '.'.join([str(v) for v in version])
             # Ok
-            packages_ns.append({'name': name, 'version': version})
+            title = package2title.get(name, name)
+            packages_ns.append({'name': title, 'version': version})
 
         namespace = {'packages': packages_ns}
         return namespace
