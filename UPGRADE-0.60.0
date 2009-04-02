@@ -59,9 +59,9 @@ Imports
 Some things have changed names, or moved somewhere else.  The table below
 summarizes these changes:
 
-  Before                           Now
-  -------------------------------  --------------------------
-  XXX
+  Before                                Now
+  ------------------------------------  -------------------------------------
+  folder_views.Folder_LastChanges       revisions_views.Revisions_LastChanges
 
 A few things have been moved to itools:
 
