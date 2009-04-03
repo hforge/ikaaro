@@ -34,7 +34,7 @@ from itools.uri import encode_query, get_reference
 from itools.web import BaseView, STLForm, STLView, get_context, INFO, ERROR
 
 # Import from ikaaro
-from file_views import File_Upload
+from ikaaro.file_views import File_Upload
 
 
 resolution = timedelta.resolution
@@ -109,10 +109,12 @@ class TimetablesForm(STLForm):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Timetables')
-    template = '/ui/ical/edit_timetables.xml'
+    template = '/ui/calendar/edit_timetables.xml'
 
 
     def get_namespace(self, resource, context):
+        context.styles.append('/ui/calendar/style.css')
+
         # Show current timetables only if previously set in metadata
         if resource.has_property('timetables'):
             timetables = resource.get_property('timetables')
@@ -410,7 +412,7 @@ class EditEventForm(CalendarView, STLForm):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Edit Event')
-    template = '/ui/ical/edit_event.xml'
+    template = '/ui/calendar/edit_event.xml'
     query_schema = {
         'resource': String,
         'id': String,
@@ -456,6 +458,8 @@ class EditEventForm(CalendarView, STLForm):
 
 
     def get_namespace(self, resource, context):
+        context.styles.append('/ui/calendar/style.css')
+
         # Get the resource
         resource = self.get_resource(resource, context)
         if resource is None:
@@ -643,6 +647,8 @@ class AddEventForm(EditEventForm):
 
 
     def get_namespace(self, resource, context):
+        context.styles.append('/ui/calendar/style.css')
+
         # Get date to add event
         selected_date = context.query['date']
         if selected_date is None:
@@ -710,11 +716,13 @@ class MonthlyView(CalendarView):
 
     access = 'is_allowed_to_view'
     title = MSG(u'Monthly View')
-    template = '/ui/ical/monthly_view.xml'
-    monthly_template = '/ui/ical/monthly_template.xml'
+    template = '/ui/calendar/monthly_view.xml'
+    monthly_template = '/ui/calendar/monthly_template.xml'
 
 
     def get_namespace(self, resource, context, ndays=7):
+        context.styles.append('/ui/calendar/style.css')
+
         today_date = date.today()
 
         # Current date
@@ -786,7 +794,7 @@ class WeeklyView(CalendarView):
 
     access = 'is_allowed_to_view'
     title = MSG(u'Weekly View')
-    template = '/ui/ical/weekly_view.xml'
+    template = '/ui/calendar/weekly_view.xml'
 
 
     def get_weekly_templates(self):
@@ -841,6 +849,8 @@ class WeeklyView(CalendarView):
 
 
     def get_namespace(self, resource, context, ndays=7):
+        context.styles.append('/ui/calendar/style.css')
+
         # Current date
         c_date = context.get_form_value('date')
         if not c_date:
@@ -893,7 +903,7 @@ class DailyView(CalendarView):
 
     access = 'is_allowed_to_view'
     title = MSG(u'Daily View')
-    template = '/ui/ical/daily_view.xml'
+    template = '/ui/calendar/daily_view.xml'
     query_schema = {
         'date': Date}
 
@@ -1041,6 +1051,8 @@ class DailyView(CalendarView):
 
 
     def get_namespace(self, resource, context):
+        context.styles.append('/ui/calendar/style.css')
+
         method = context.get_cookie('method')
         if method != 'daily_view':
             context.set_cookie('method', 'daily_view')
@@ -1084,7 +1096,7 @@ class DailyView(CalendarView):
 
 class Calendar_Upload(File_Upload):
 
-    template = '/ui/ical/upload.xml'
+    template = '/ui/calendar/upload.xml'
 
     def action(self, resource, context, form):
         file = form['file']

@@ -168,9 +168,7 @@ class Skin(UIFolder):
             # BackOffice style
             '/ui/bo.css',
             # Calendar JS Widget (http://dynarch.com/mishoo/calendar.epl)
-            '/ui/calendar/calendar-aruni.css',
-            # Calendar
-            '/ui/ical/style.css',
+            '/ui/js_calendar/calendar-aruni.css',
             # Table
             '/ui/table/style.css']
 
@@ -190,15 +188,15 @@ class Skin(UIFolder):
             '/ui/jquery.js',
             '/ui/javascript.js',
             # Calendar (http://dynarch.com/mishoo/calendar.epl)
-            '/ui/calendar/calendar.js']
+            '/ui/js_calendar/calendar.js']
         languages = [
             'af', 'al', 'bg', 'br', 'ca', 'da', 'de', 'du', 'el', 'en', 'es',
             'fi', 'fr', 'hr', 'hu', 'it', 'jp', 'ko', 'lt', 'lv', 'nl', 'no',
             'pl', 'pt', 'ro', 'ru', 'si', 'sk', 'sp', 'sv', 'tr', 'zh']
         accept = context.accept_language
         language = accept.select_language(languages)
-        scripts.append('/ui/calendar/lang/calendar-%s.js' % language)
-        scripts.append('/ui/calendar/calendar-setup.js')
+        scripts.append('/ui/js_calendar/lang/calendar-%s.js' % language)
+        scripts.append('/ui/js_calendar/calendar-setup.js')
         # Table
         scripts.append('/ui/table/javascript.js')
         # This skin's JavaScript

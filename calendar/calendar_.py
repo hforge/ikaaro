@@ -28,15 +28,15 @@ from itools.ical import Record
 from itools.web import get_context
 
 # Import from ikaaro
+from ikaaro.file_views import File_View
+from ikaaro.folder import Folder
+from ikaaro.registry import register_resource_class
+from ikaaro.resource_ import DBResource
+from ikaaro.table import Table
+from ikaaro.text import Text
 from calendar_views import Calendar_Upload, Calendar_Download
 from calendar_views import AddEventForm, EditEventForm
 from calendar_views import MonthlyView, TimetablesForm, WeeklyView, DailyView
-from file_views import File_View
-from folder import Folder
-from registry import register_resource_class
-from resource_ import DBResource
-from table import Table
-from text import Text
 
 
 class Timetables(DataType):

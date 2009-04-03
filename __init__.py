@@ -25,7 +25,6 @@ from itools.core import get_abspath, get_version
 from itools.gettext import register_domain
 
 # Import from ikaaro
-from calendar_ import CalendarTable
 from file import File
 from folder import Folder
 from html import WebPage
@@ -45,10 +44,10 @@ register_domain('ikaaro', path)
 register_document_type(WebPage)
 register_document_type(Folder)
 register_document_type(File)
-register_document_type(CalendarTable)
 
 # Import ikaaro sub-packages (NOTE must be imported after so they are
 # register after)
+import calendar
 import forum
 import tracker
 try:

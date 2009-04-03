@@ -61,13 +61,16 @@ summarizes these changes:
 
   Before                                 Now
   -------------------------------------  -------------------------------------
+  calendar_.CalendarBase                 calendar.CalendarBase
+  calendar_views.MonthlyView             calendar.MonthlyView
+  calendar_views.WeeklyView              calendar.WeeklyView
   folder_views.Folder_LastChanges        revisions_views.Revisions_LastChanges
   resource_views.DBResource_NewInstance  views_new.NewInstance
 
 A few things have been moved to itools:
 
-  Before (ikaaro)                  Now (itools)
-  -------------------------------  --------------------------
+  Before (ikaaro)                        Now (itools)
+  -------------------------------------  -------------------------------------
   XXX
 
 
@@ -76,13 +79,15 @@ User Interface
 
 CSS ids and classes are now named with dashes "-" instead of underscores "_".
 
-Some CSS files have been renamed for consistency:
+Some files in the '/ui/' path have changed places:
 
-  Before                           Now
-  -------------------------------  --------------------------
-  forum/ui/forum.css               forum/ui/style.css
-  tracker/ui/tracker.css           tracker/ui/style.css
-  ui/ical/calendar.css             ui/ical/style.css
+  Before                                 Now
+  -------------------------------------  -------------------------------------
+  /ui/calendar/*                         /ui/js_calendar/*
+  /ui/forum/forum.css                    /ui/forum/style.css
+  /ui/tracker/tracker.css                /ui/tracker/style.css
+  /ui/ical/calendar.css                  /ui/calendar/style.css
+  /ui/ical/*                             /ui/calendar/*
 
 
 Resource's Registry
