@@ -116,6 +116,23 @@ class NewInstance(AutoForm):
         return form
 
 
+    def action(self, resource, context, form):
+        name = form['name']
+        title = form['title']
+
+        # Create the resource
+        class_id = context.query['type']
+        cls = get_resource_class(class_id)
+        child = cls.make_resource(cls, resource, name)
+        # The metadata
+        metadata = child.metadata
+        language = resource.get_content_language(context)
+        metadata.set_property('title', title, language=language)
+
+        goto = './%s/' % name
+        return context.come_back(messages.MSG_NEW_RESOURCE, goto=goto)
+
+
 
 class ProxyNewInstance(NewInstance):
     """This particular view allows to choose the resource to add from a
@@ -174,6 +191,4 @@ class ProxyNewInstance(NewInstance):
 
         goto = './%s/' % name
         return context.come_back(messages.MSG_NEW_RESOURCE, goto=goto)
-
-
 
