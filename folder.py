@@ -154,8 +154,7 @@ class Folder(DBResource):
         # Remove
         folder = self.handler
         for handler in resource.get_handlers():
-            if folder.has_handler(handler.uri):
-                folder.del_handler(handler.uri)
+            folder.del_handler(handler.uri)
         folder.del_handler('%s.metadata' % name)
 
 
