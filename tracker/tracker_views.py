@@ -35,7 +35,7 @@ from itools.web.views import process_form
 
 # Import from ikaaro
 from ikaaro.buttons import Button
-from ikaaro.forms import HiddenWidget, TextWidget, AutoForm, title_widget
+from ikaaro.forms import HiddenWidget, TextWidget
 from ikaaro import messages
 from ikaaro.views import BrowseForm, SearchForm as BaseSearchForm, ContextMenu
 from ikaaro.views_new import NewInstance
@@ -176,18 +176,11 @@ class TrackerViewMenu(ContextMenu):
 ###########################################################################
 # Views
 ###########################################################################
-class Tracker_NewInstance(NewInstance, AutoForm):
+class Tracker_NewInstance(NewInstance):
 
-    schema = {
-        'name': String,
-        'title': Unicode,
-        'class_id': String,
-        'product': Unicode(mandatory=True)}
-    widgets = [
-        title_widget,
-        TextWidget('name', title=MSG(u'Name'), default=''),
+    schema = merge_dicts(NewInstance.schema, product=Unicode(mandatory=True))
+    widgets = NewInstance.widgets + [
         TextWidget('product', title=MSG(u'Give the title of one Product'))]
-    submit_value = MSG(u'Add')
 
 
     def action(self, resource, context, form):

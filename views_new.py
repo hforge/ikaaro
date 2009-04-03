@@ -18,12 +18,14 @@
 from urllib import quote
 
 # Import from itools
+from itools.core import freeze
 from itools.datatypes import String, Unicode
 from itools.gettext import MSG
 from itools.handlers import checkid
-from itools.web import FormError, STLForm
+from itools.web import FormError
 
 # Import from ikaaro
+from forms import AutoForm, TextWidget, title_widget
 import messages
 from registry import get_resource_class
 from views import ContextMenu
@@ -45,18 +47,22 @@ class AddResourceMenu(ContextMenu):
 
 
 
-class NewInstance(STLForm):
+class NewInstance(AutoForm):
     """This is the base class for all ikaaro forms meant to create and
     add a new resource to the database.
     """
 
     access = 'is_allowed_to_add'
-    query_schema = {
-        'type': String}
-    schema = {
+    query_schema = freeze({
+        'type': String})
+    schema = freeze({
         'name': String,
-        'title': Unicode}
-    context_menus = [AddResourceMenu()]
+        'title': Unicode})
+    widgets = freeze([
+        title_widget,
+        TextWidget('name', title=MSG(u'Name'), default='')])
+    submit_value = MSG(u'Add')
+    context_menus = freeze([AddResourceMenu()])
 
 
     def get_title(self, context):
@@ -90,7 +96,7 @@ class NewInstance(STLForm):
 
 
     def _get_form(self, resource, context):
-        form = STLForm._get_form(self, resource, context)
+        form = AutoForm._get_form(self, resource, context)
         name = self.get_new_resource_name(form)
 
         # Check the name

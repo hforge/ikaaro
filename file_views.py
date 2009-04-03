@@ -38,7 +38,7 @@ from datatypes import FileDataType, ImageWidth
 from folder_views import Folder_BrowseContent
 from forms import title_widget, file_widget, description_widget
 from forms import subject_widget
-from forms import AutoForm, FileWidget, TextWidget
+from forms import FileWidget
 import messages
 from multilingual import Multilingual
 from registry import get_resource_class
@@ -46,14 +46,14 @@ from resource_views import DBResource_Edit
 from views_new import NewInstance
 
 
-class File_NewInstance(AutoForm, NewInstance):
+class File_NewInstance(NewInstance):
 
     title = MSG(u'Upload File')
     schema = {
         'title': Unicode,
         'file': FileDataType(mandatory=True)}
     widgets = [
-        TextWidget('title', title=MSG(u'Title')),
+        title_widget,
         FileWidget('file', title=MSG(u'File'), size=35)]
     submit_value = MSG(u'Upload')
 
