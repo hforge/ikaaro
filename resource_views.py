@@ -28,10 +28,10 @@ from itools.datatypes import String, Unicode
 from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.http import Conflict, NotImplemented
-from itools.i18n import format_datetime, get_language_name
+from itools.i18n import get_language_name
 from itools.uri import Path, get_reference, get_uri_path
 from itools.vfs import FileName
-from itools.web import get_context, BaseView, STLView, STLForm, INFO, ERROR
+from itools.web import get_context, BaseView, STLForm, INFO, ERROR
 from itools.web import lock_body
 
 # Import from ikaaro
@@ -39,10 +39,9 @@ from datatypes import FileDataType, CopyCookie
 from exceptions import ConsistencyError
 from forms import AutoForm, title_widget, description_widget, subject_widget
 import messages
-from registry import get_resource_class, get_document_types
+from registry import get_resource_class
 from utils import get_parameters, reduce_string
 from views import ContextMenu
-from views_new import NewInstance
 
 
 
@@ -60,63 +59,6 @@ class EditLanguageMenu(ContextMenu):
              'href': context.uri.replace(content_language=x),
              'class': 'nav_active' if (x == content_language) else None}
             for x in languages ]
-
-
-
-class DBResource_NewInstance(NewInstance):
-
-    template = '/ui/base/new_instance.xml'
-    schema = {
-        'name': String,
-        'title': Unicode,
-        'class_id': String}
-
-
-    def get_namespace(self, resource, context):
-        type = context.query['type']
-        cls = get_resource_class(type)
-
-        document_types = get_document_types(type)
-        items = []
-        if document_types:
-            # Multiple types
-            if len(document_types) == 1:
-                items = None
-            else:
-                selected = context.get_form_value('class_id')
-                items = [
-                    {'title': x.class_title.gettext(),
-                     'class_id': x.class_id,
-                     'selected': x.class_id == selected,
-                     'icon': '/ui/' + x.class_icon16}
-                    for x in document_types ]
-                if selected is None:
-                    items[0]['selected'] = True
-        # Ok
-        return {
-            'class_id': cls.class_id,
-            'class_title': cls.class_title.gettext(),
-            'items': items}
-
-
-    def action(self, resource, context, form):
-        name = form['name']
-        title = form['title']
-
-        # Create the resource
-        class_id = form['class_id']
-        if class_id is None:
-            # Get it from the query
-            class_id = context.query['type']
-        cls = get_resource_class(class_id)
-        child = cls.make_resource(cls, resource, name)
-        # The metadata
-        metadata = child.metadata
-        language = resource.get_content_language(context)
-        metadata.set_property('title', title, language=language)
-
-        goto = './%s/' % name
-        return context.come_back(messages.MSG_NEW_RESOURCE, goto=goto)
 
 
 

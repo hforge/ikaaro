@@ -59,9 +59,10 @@ Imports
 Some things have changed names, or moved somewhere else.  The table below
 summarizes these changes:
 
-  Before                                Now
-  ------------------------------------  -------------------------------------
-  folder_views.Folder_LastChanges       revisions_views.Revisions_LastChanges
+  Before                                 Now
+  -------------------------------------  -------------------------------------
+  folder_views.Folder_LastChanges        revisions_views.Revisions_LastChanges
+  resource_views.DBResource_NewInstance  views_new.NewInstance
 
 A few things have been moved to itools:
 

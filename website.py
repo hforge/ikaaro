@@ -39,6 +39,7 @@ from folder import Folder
 from registry import register_resource_class, register_document_type
 from resource_views import LoginView
 from skins import UI, ui_path
+from views_new import ProxyNewInstance
 from website_views import AboutView, ContactForm, CreditsView
 from website_views import ForgottenPasswordForm, RegisterForm
 from website_views import SiteSearchView
@@ -157,6 +158,7 @@ class WebSite(RoleAware, Folder):
     #######################################################################
     # UI
     #######################################################################
+    new_instance = ProxyNewInstance()
     # Control Panel
     control_panel = ControlPanel()
     browse_users = CPBrowseUsers()

@@ -27,7 +27,7 @@ from itools.web import FormError
 # Import from ikaaro
 from forms import AutoForm, TextWidget, title_widget
 import messages
-from registry import get_resource_class
+from registry import get_resource_class, get_document_types
 from views import ContextMenu
 
 
@@ -114,5 +114,66 @@ class NewInstance(AutoForm):
         # Ok
         form['name'] = name
         return form
+
+
+
+class ProxyNewInstance(NewInstance):
+    """This particular view allows to choose the resource to add from a
+    collection of resource classes, with radio buttons.
+    """
+
+    template = '/ui/base/proxy_new_instance.xml'
+    schema = {
+        'name': String,
+        'title': Unicode,
+        'class_id': String}
+
+
+    def get_namespace(self, resource, context):
+        type = context.query['type']
+        cls = get_resource_class(type)
+
+        document_types = get_document_types(type)
+        items = []
+        if document_types:
+            # Multiple types
+            if len(document_types) == 1:
+                items = None
+            else:
+                selected = context.get_form_value('class_id')
+                items = [
+                    {'title': x.class_title.gettext(),
+                     'class_id': x.class_id,
+                     'selected': x.class_id == selected,
+                     'icon': '/ui/' + x.class_icon16}
+                    for x in document_types ]
+                if selected is None:
+                    items[0]['selected'] = True
+        # Ok
+        return {
+            'class_id': cls.class_id,
+            'class_title': cls.class_title.gettext(),
+            'items': items}
+
+
+    def action(self, resource, context, form):
+        name = form['name']
+        title = form['title']
+
+        # Create the resource
+        class_id = form['class_id']
+        if class_id is None:
+            # Get it from the query
+            class_id = context.query['type']
+        cls = get_resource_class(class_id)
+        child = cls.make_resource(cls, resource, name)
+        # The metadata
+        metadata = child.metadata
+        language = resource.get_content_language(context)
+        metadata.set_property('title', title, language=language)
+
+        goto = './%s/' % name
+        return context.come_back(messages.MSG_NEW_RESOURCE, goto=goto)
+
 
 

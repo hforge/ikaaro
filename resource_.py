@@ -33,13 +33,14 @@ from itools.xapian import CatalogAware, PhraseQuery
 # Import from ikaaro
 from lock import Lock
 from metadata import Metadata
-from resource_views import DBResource_NewInstance, DBResource_Edit
+from registry import register_field
+from resource_views import DBResource_Edit
 from resource_views import DBResource_AddImage, DBResource_AddLink
 from resource_views import LoginView, LogoutView
 from resource_views import Put_View, Delete_View, Lock_View
 from revisions_views import Revisions_LastChanges, Revisions_Changes
 from workflow import WorkflowAware
-from registry import register_field
+from views_new import NewInstance
 
 
 class IResource(Resource):
@@ -541,7 +542,7 @@ class DBResource(CatalogAware, IResource):
 
 
     # Views
-    new_instance = DBResource_NewInstance()
+    new_instance = NewInstance()
     login = LoginView()
     logout = LogoutView()
     edit = DBResource_Edit()
