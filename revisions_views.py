@@ -29,7 +29,7 @@ from itools.web import STLView
 from folder_views import BrowseForm
 
 
-class Revisions_LastChanges(BrowseForm):
+class DBResource_LastChanges(BrowseForm):
 
 
     access = 'is_allowed_to_view'
@@ -72,7 +72,7 @@ class Revisions_LastChanges(BrowseForm):
 
 
 
-class Revisions_Changes(STLView):
+class DBResource_Changes(STLView):
 
     access = 'is_allowed_to_view'
     title = MSG(u'Changes')

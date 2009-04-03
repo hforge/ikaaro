@@ -38,7 +38,7 @@ from resource_views import DBResource_Edit
 from resource_views import DBResource_AddImage, DBResource_AddLink
 from resource_views import LoginView, LogoutView
 from resource_views import Put_View, Delete_View, Lock_View
-from revisions_views import Revisions_LastChanges, Revisions_Changes
+from revisions_views import DBResource_LastChanges, DBResource_Changes
 from workflow import WorkflowAware
 from views_new import NewInstance
 
@@ -548,8 +548,8 @@ class DBResource(CatalogAware, IResource):
     edit = DBResource_Edit()
     add_image = DBResource_AddImage()
     add_link = DBResource_AddLink()
-    last_changes = Revisions_LastChanges()
-    changes = Revisions_Changes()
+    last_changes = DBResource_LastChanges()
+    changes = DBResource_Changes()
     http_put = Put_View()
     http_delete = Delete_View()
     http_lock = Lock_View()
