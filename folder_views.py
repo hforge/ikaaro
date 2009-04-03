@@ -853,7 +853,7 @@ class GoToSpecificDocument(BaseView):
     specific_document = 'FrontPage'
 
 
-    def get_specific_document(self, ressource, context):
+    def get_specific_document(self, resource, context):
         return self.specific_document
 
 
