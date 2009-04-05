@@ -27,9 +27,9 @@ from itools.gettext import register_domain
 # Import from ikaaro
 from file import File
 from folder import Folder
-from html import WebPage
 from registry import register_document_type
 import root
+from webpage import WebPage
 
 
 # The version

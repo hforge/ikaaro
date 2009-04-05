@@ -48,7 +48,7 @@ from itools.xml import XMLParser, XMLError
 
 # Import from ikaaro
 from ikaaro import messages
-from ikaaro.html import is_edit_conflict
+from ikaaro.webpage import is_edit_conflict
 
 
 figure_style_converter = compile(r'\\begin\{figure\}\[.*?\]')

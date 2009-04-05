@@ -24,7 +24,7 @@ from itools.html import HTMLParser, sanitize_stream, XHTMLFile
 
 # Import from ikaaro
 from ikaaro.registry import register_resource_class
-from ikaaro.html import WebPage
+from ikaaro.webpage import WebPage
 
 
 def build_message(data):
