@@ -148,7 +148,8 @@ class Tracker(Folder):
     def get_issues_query_terms(self):
         abspath = self.get_canonical_path()
         abspath = '%s/' % abspath
-        return [StartQuery('abspath', abspath), PhraseQuery('format', 'issue')]
+        return [StartQuery('abspath', abspath),
+                PhraseQuery('format', 'issue')]
 
 
     def get_members_namespace(self, value, not_assigned=False):
@@ -207,17 +208,10 @@ class Tracker(Folder):
         return list_products
 
 
-    def get_search_results(self, context):
-        """Method that return a list of issues that correspond to the search.
+    def get_search_query(self, get_value):
+        """This method is like get_search_results, but works with
+           get_value and returns a query
         """
-        users = self.get_resource('/users')
-        # Choose stored Search or personalized search
-        search_name = context.query.get('search_name')
-        if search_name:
-            search = self.get_resource(search_name)
-            get_value = search.handler.get_value
-        else:
-            get_value = context.get_query_value
         # Get search criteria
         text = get_value('text', type=Unicode)
         if text is not None:
@@ -256,9 +250,26 @@ class Tracker(Folder):
             query2 = OrQuery(*query2)
             query.append(query2)
 
-        # Execute the search
-        query = AndQuery(*query)
+        # Return the query
+        return AndQuery(*query)
+
+
+    def get_search_results(self, context):
+        """Method that return a list of issues that correspond to the search.
+        """
+        users = self.get_resource('/users')
+        # Choose stored Search or personalized search
+        search_name = context.query.get('search_name')
+        if search_name:
+            search = self.get_resource(search_name)
+            get_value = search.handler.get_value
+        else:
+            get_value = context.get_query_value
+
+        # Compute the query and return the result
+        query = self.get_search_query(get_value)
         return context.root.search(query)
+
 
 
     #######################################################################
