@@ -50,6 +50,8 @@ class ProductsEnumerate(Enumerate):
 ###########################################################################
 class SelectTable_View(OrderedTable_View):
 
+    access = True
+
     def get_table_columns(self, resource, context):
         cls = OrderedTable_View
         columns = cls.get_table_columns(self, resource, context)
@@ -73,6 +75,17 @@ class SelectTable_View(OrderedTable_View):
             if count == 0:
                 return 0, None
             return count, '../;view?%s=%s' % (filter, item.id)
+        # Don't show the "edit" link when i am not an admin.
+        elif column == 'id':
+            ac = resource.get_access_control()
+            is_admin =  ac.is_admin(context.user, resource)
+
+            id = item.id
+            if is_admin:
+                link = context.get_link(resource)
+                return id, '%s/;edit_record?id=%s' % (link, id)
+            else:
+                return id
 
         # Default
         cls = OrderedTable_View
