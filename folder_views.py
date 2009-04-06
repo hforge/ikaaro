@@ -281,16 +281,10 @@ class Folder_BrowseContent(SearchForm):
 
 
     def sort_and_batch(self, resource, context, results):
-        language = resource.get_content_language(context)
-
         start = context.query['batch_start']
         size = context.query['batch_size']
-        reverse = context.query['reverse']
-
         sort_by = context.query['sort_by']
-        if sort_by == 'title' and language is not None:
-            sort_by = 'title_' + language
-
+        reverse = context.query['reverse']
         items = results.get_documents(sort_by=sort_by, reverse=reverse,
                                       start=start, size=size)
 
