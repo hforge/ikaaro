@@ -64,10 +64,10 @@ class OurWrapper(TextWrapper):
         for segment in url_expr.split(text):
             starts = segment.startswith
             if starts('http://') or starts('https://') or starts('ftp://'):
-                if len(segment) > 70:
+                if len(segment) > 95:
                     # Reduce URL
                     url = segment
-                    segment = segment[:34] + '...' + segment[-33:]
+                    segment = segment[:46] + '...' + segment[-46:]
                     self.urls_map[segment] = url
                 else:
                     self.urls_map[segment] = segment
@@ -84,7 +84,7 @@ def indent(text):
     text = text.encode('utf-8')
     # Wrap
     buffer = []
-    text_wrapper = OurWrapper(95)
+    text_wrapper = OurWrapper(width=95)
     for line in text.splitlines():
         line = text_wrapper.fill(line) + '\n'
         for segment in url_expr.split(line):
