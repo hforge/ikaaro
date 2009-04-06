@@ -9,35 +9,27 @@ other feautres it provides:
 The scripts included are:
 
   icms-init.py
-  icms-restore.py
   icms-start.py
-  icms-start-server.py
-  icms-start-spool.py
   icms-stop.py
   icms-update.py
   icms-update-catalog.py
 
 
 Requirements
-------------
+=============
 
-Python 2.5.2 or later and itools 0.50 are required.
+Software    Version  Used by           Home
+----------  -------  ----------------  --------------------------------------
+Python        2.5.2  ikaaro            http://www.python.org/
+itools       0.60.0  ikaaro            http://www.hforge.org/itools
+docutils        0.5  Wiki              http://docutils.sourceforge.net/
+guppy         0.1.8  Memory profiling  http://guppy-pe.sourceforge.net/
 
-It is recommended to install PIL [1].  For the Wiki to work, docutils [2]
-is required.
-
-Apart from the Python packages listed above, the libraries poppler and wv2,
-and the Python package xlrd are required to index some types of documents.
-
-For profiling the memory, guppy [3] is required.
-
-[1] http://www.pythonware.com/products/pil/
-[2] http://docutils.sourceforge.net/
-[3] http://guppy-pe.sourceforge.net/
+Python 2.6 is recommended.  Check the itools requirements.
 
 
 Install
--------
+=============
 
 If you are reading this instructions you probably have already unpacked
 the ikaaro tarball with the command line:
@@ -54,14 +46,14 @@ So now to install ikaaro you just need to type this:
 
 
 Documentation
--------------
+=============
 
 The documentation is distributed as a separate package, ikaaro-docs.
 The PDF file can be downloaded from http://www.hforge.org/ikaaro
 
 
 Resources
----------
+=============
 
 Home
 http://www.hforge.org/ikaaro
@@ -75,21 +67,22 @@ http://bugs.hforge.org
 
 
 Copyright
----------
+=============
 
-Copyright (C) 2003-2008 Juan David Ibáñez Palomar <jdavid@itaapy.com>
-Copyright (C) 2005-2008 Luis Arturo Belmar-Letelier <luis@itaapy.com>
-Copyright (C) 2005-2008 Hervé Cauwelier <herve@itaapy.com>
-Copyright (C) 2005-2008 Nicolas Deram <nicolas@itaapy.com>
+Copyright (C) 2003-2009 Juan David Ibáñez Palomar <jdavid@itaapy.com>
+Copyright (C) 2005-2009 Luis Arturo Belmar-Letelier <luis@itaapy.com>
+Copyright (C) 2005-2009 Hervé Cauwelier <herve@itaapy.com>
+Copyright (C) 2005-2009 Nicolas Deram <nicolas@itaapy.com>
 
 And others. Check the CREDITS file for complete list.
 
-Includes the TinyMCE editor (http://tinymce.moxiecode.com/), available
-under the terms and conditions of the GNU Lesser General Public License.
+Includes some external free software:
 
-Includes the DHTML Calendar (http://www.dynarch.com/projects/calendar/),
-authored by Mihai Bazon and published under the terms of the GNU Lesser
-General Public License.
+Software        License  Home
+--------------  -------  -----------------------------------------
+jquery          GPL      http://jquery.com
+TinyMCE         LGPL     http://tinymce.moxiecode.com
+DHTML Calendar  LGPL     http://www.dynarch.com/projects/calendar/
 
 Most icons used are copyrighted by the Tango Desktop Project, and licensed
 under the Creative Commons Attribution Share-Alike license, including the
@@ -97,7 +90,7 @@ modifications to them. (http://creativecommons.org/licenses/by-sa/2.5/)
 
 
 License
--------
+=============
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
