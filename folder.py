@@ -230,8 +230,7 @@ class Folder(DBObject):
             src_uri = source_uri.resolve(old_name)
             dst_uri = target_uri.resolve(new_name)
             if folder.has_handler(src_uri):
-                folder.move_handler(src_uri, dst_uri,
-                                    cls=object.class_handler)
+                folder.move_handler(src_uri, dst_uri)
 
         # Events, add
         object = self.get_object(target)
