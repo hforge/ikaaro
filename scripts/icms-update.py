@@ -28,6 +28,7 @@ from traceback import print_exc
 # Import from itools
 import itools
 from itools import vfs
+from itools.web import get_context
 
 # Import from ikaaro
 from ikaaro.resource_ import DBResource
@@ -125,6 +126,7 @@ def update_versions(target, database, root, versions, confirm):
                 log.write('\n')
                 bad += 1
         # Commit
+        get_context().git_message = u'Upgrade to version %s' % version
         database.save_changes()
         # Reset the state
         database.cache.clear()
@@ -169,17 +171,15 @@ def update(parser, options, target):
         command = ['git', 'add', '.']
         t0 = time()
         call(command, cwd=database.path, stdout=PIPE)
-        print 'STAGE: %f seconds' % (time() - t0)
+        print '       : %f seconds' % (time() - t0)
         # Commit
-        print 'STAGE 0: git commit (may take a while)'
+        print 'STAGE 0: git commit'
         command = ['git', 'commit', '--author=nobody <>',
                    '-m', 'Initial commit.']
         t0 = time()
         p = Popen(command, cwd=database.path, stdout=PIPE)
         p.communicate()
-        print 'STAGE: %f seconds' % (time() - t0)
-        # Ok
-        print 'STAGE 0: done.'
+        print '       : %f seconds' % (time() - t0)
 
     #######################################################################
     # STAGE 1: Find out the versions to upgrade
