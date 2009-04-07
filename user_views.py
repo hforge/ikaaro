@@ -25,6 +25,7 @@ from itools.web import BaseView, STLView, STLForm, INFO, ERROR
 from itools.xapian import PhraseQuery, AndQuery, OrQuery, StartQuery
 
 # Import from ikaaro
+from folder import Folder_BrowseContent
 from forms import TextWidget, PasswordWidget, AutoForm
 import messages
 
@@ -354,3 +355,13 @@ class User_Tasks(STLView):
 
         return {'documents': documents}
 
+
+
+class UserFolder_BrowseContent(Folder_BrowseContent):
+
+    access = 'is_admin'
+
+    search_fields = (Folder_BrowseContent.search_fields
+                     + [('username', MSG(u'Login')),
+                        ('lastname', MSG(u'Last Name')),
+                        ('firstname', MSG(u'First Name'))])
