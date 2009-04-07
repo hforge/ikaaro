@@ -346,6 +346,29 @@ class Tracker_View(BrowseForm):
             sort_by = query['sort_by']
         if query['reverse'] is not None:
             reverse = query['reverse']
+
+        # If an ordered table => sort the result with its natural order
+        if sort_by in ('produit', 'module', 'version', 'type', 'state',
+                       'priority'):
+            # Make the key function
+            table_handler = resource.get_resource(sort_by).handler
+            sorted_ids = list(table_handler.get_record_ids_in_order())
+            ids_nb = len(sorted_ids)
+            inversed_ids = [ sorted_ids.index(x) for x in range(ids_nb) ]
+            def key(issue):
+                value = getattr(issue, sort_by)
+                if value is None:
+                    return ids_nb
+                return inversed_ids[value]
+
+            # Sort issues
+            issues = results.get_documents()
+            issues.sort(key=key, reverse=reverse)
+
+            # Return the result
+            return issues
+
+        # Else, ...
         return results.get_documents(sort_by=sort_by, reverse=reverse)
 
 
