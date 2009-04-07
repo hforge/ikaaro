@@ -18,6 +18,9 @@
     <!-- JavaScript -->
     <script type="text/javascript" stl:repeat="script scripts" src="${script}"
       />
+
+    <!-- Icon -->
+    <link rel="shortcut icon" href="${favicon_href}" type="${favicon_type}" />
   </head>
 
   <body>
