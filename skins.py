@@ -325,8 +325,8 @@ class Skin(UIFolder):
 
         # The favicon.ico
         site_root = context.site_root
-        if site_root.has_resource('favicon'):
-            resource = site_root.get_resource('favicon')
+        resource = site_root.get_resource('favicon', soft=True)
+        if resource:
             favicon_href = '/favicon/;download'
             favicon_type = resource.metadata.format
         else:
