@@ -46,9 +46,13 @@ class ForgottenPasswordForm(AutoForm):
         TextWidget('username', title=MSG(u'Type your email address')),
         ]
 
-    schema = {
-        'username': Email(default=''),
-    }
+    schema = query_schema = {'username': Email(default='')}
+
+
+    def get_value(self, resource, context, name, datatype):
+        if name == 'username':
+            return context.get_query_value('username')
+        return AutoForm.get_value(self, resource, context, name, datatype)
 
 
     def action(self, resource, context, form):
