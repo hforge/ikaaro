@@ -323,6 +323,16 @@ class Skin(UIFolder):
         context_menus = self._get_context_menus(context)
         context_menus = list(context_menus)
 
+        # The favicon.ico
+        site_root = context.site_root
+        if site_root.has_resource('favicon'):
+            resource = site_root.get_resource('favicon')
+            favicon_href = '/favicon/;download'
+            favicon_type = resource.metadata.format
+        else:
+            favicon_href = '/ui/favicon.ico'
+            favicon_type = 'image/x-icon'
+
         # The document language
         here = context.resource
         languages = here.get_site_root().get_property('website_languages')
@@ -360,6 +370,9 @@ class Skin(UIFolder):
             'page_title': self._get_page_title(context),
             'message': self.get_messages(context),
             'context_menus': context_menus,
+            # favicon
+            'favicon_href': favicon_href,
+            'favicon_type': favicon_type,
         }
 
 
