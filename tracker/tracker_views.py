@@ -254,7 +254,7 @@ class Tracker_View(BrowseForm):
         # Do not batch
         'batch_size': Integer(default=0),
         # search_fields
-        'search_name': Unicode(),
+        'search_name': String(),
         'mtime': Integer(default=0),
         'product': Integer(multiple=True),
         'module': Integer(multiple=True),
@@ -387,7 +387,7 @@ class Tracker_Search(BaseSearchForm, Tracker_View):
     # Search Form
     search_template = '/ui/tracker/search.xml'
     search_schema = {
-        'search_name': Unicode(),
+        'search_name': String(),
         'search_title': Unicode(),
         'text': Unicode(),
         'mtime': Integer(),
