@@ -30,14 +30,13 @@ from itools.web import INFO
 from access import AccessControl
 from datatypes import Password
 from folder import Folder
-from folder_views import Folder_BrowseContent
 from registry import register_resource_class, get_resource_class
 from registry import register_field
 from resource_views import DBResource_Edit
 from user_views import User_ConfirmRegistration, User_EditAccount
 from user_views import User_EditPassword, User_EditPreferences, User_Profile
 from user_views import User_ResendConfirmation, User_Tasks
-from user_views import User_ChangePasswordForgotten
+from user_views import User_ChangePasswordForgotten, UserFolder_BrowseContent
 from utils import crypt_password, generate_password
 from views import MessageView
 
@@ -280,7 +279,7 @@ class UserFolder(Folder):
     #######################################################################
     # Back-Office
     #######################################################################
-    browse_content = Folder_BrowseContent(access='is_admin')
+    browse_content = UserFolder_BrowseContent()
     edit = DBResource_Edit(access='is_admin')
 
 

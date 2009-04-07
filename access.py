@@ -18,17 +18,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Import from the Standard Library
-from operator import itemgetter
-
 # Import from itools
 from itools.core import merge_dicts
-from itools.datatypes import Boolean, Email, Integer, Tokens, Unicode, String
+from itools.datatypes import Boolean, Email, Tokens, Unicode, String
 from itools.gettext import MSG
-from itools.stl import stl
-from itools.uri import get_reference
 from itools.web import AccessControl as BaseAccessControl, STLForm, INFO
 from itools.web import ERROR
+from itools.xapian import AndQuery, OrQuery, PhraseQuery, StartQuery
 
 # Import from ikaaro
 from buttons import RemoveButton
@@ -74,6 +70,7 @@ class RoleAware_BrowseUsers(SearchForm):
         'search_term': Unicode}
 
     search_fields = [
+        ('', MSG(u'All Fields')),
         ('username', MSG(u'Login')),
         ('lastname', MSG(u'Last Name')),
         ('firstname', MSG(u'First Name'))]
@@ -81,11 +78,19 @@ class RoleAware_BrowseUsers(SearchForm):
 
     def get_items(self, resource, context):
         # Search
-        search_query = {'format': 'user'}
-        field = context.query['search_field']
-        if field:
-            search_query[field] = context.query['search_term'].strip()
-        results = context.root.search(**search_query)
+        search_query = PhraseQuery('format', 'user')
+        search_field = context.query['search_field']
+        search_term = context.query['search_term'].strip()
+        if not search_field and search_term:
+            or_query = []
+            for field, label in self.get_search_fields(resource, context):
+                if field:
+                    or_query.append(StartQuery(field, search_term))
+            search_query = AndQuery(search_query, OrQuery(*or_query))
+        elif search_field and search_term:
+            search_query = AndQuery(search_query,
+                                    StartQuery(search_field, search_term))
+        results = context.root.search(search_query)
 
         # Show only users that belong to this group (FIXME Use the catalog)
         users = []
