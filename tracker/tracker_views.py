@@ -131,6 +131,9 @@ class StoredSearchesMenu(ContextMenu):
     title = MSG(u'Stored Searches')
 
     def get_items(self, resource, context):
+        language = resource.get_content_language(context)
+        root = context.root
+
         # If called from a child
         if isinstance(resource, Issue):
             resource = resource.parent
@@ -138,12 +141,22 @@ class StoredSearchesMenu(ContextMenu):
         # Namespace
         search_name = context.get_query_value('search_name')
         base = '%s/;view' % context.get_link(resource)
-        items = resource.search_resources(cls=StoredSearch)
-        items = [
-            {'title': x.get_property('title'),
-             'href': '%s?search_name=%s' % (base, x.name),
-             'class': 'nav_active' if (x.name == search_name) else None}
-            for x in items ]
+        items = []
+        for item in resource.search_resources(cls=StoredSearch):
+            # Make the title
+            get_value = item.handler.get_value
+            query = resource.get_search_query(get_value)
+            issues_nb = len(root.search(query))
+            kw = {'search_title': item.get_property('title'),
+                  'issues_nb': issues_nb}
+            title = MSG(u'${search_title} (${issues_nb})')
+            title = title.gettext(language=language, **kw)
+
+            # Namespace
+            items.append({'title': title,
+                          'href': '%s?search_name=%s' % (base, item.name),
+                          'class': 'nav_active' if (item.name == search_name)
+                                                else None})
         items.sort(lambda x, y: cmp(x['title'], y['title']))
 
         return items
