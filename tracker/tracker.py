@@ -238,7 +238,6 @@ class Tracker(Folder):
         # Modification time
         if mtime:
             date = datetime.now() - timedelta(mtime)
-            date = date.strftime('%Y%m%d%H%M%S')
             query2 = RangeQuery('mtime', date, None)
             query.append(query2)
         # Assign To
