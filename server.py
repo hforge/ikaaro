@@ -31,7 +31,7 @@ from xapian import DatabaseOpeningError
 # Import from itools
 from itools.datatypes import Boolean
 from itools.http import Request
-from itools.uri import get_reference
+from itools.uri import get_reference, get_host_from_authority
 from itools.vfs import cwd
 from itools.web import Server as BaseServer, Context, set_context
 
@@ -222,7 +222,7 @@ class Server(BaseServer):
             return
 
         # The site root depends on the host
-        hostname = uri.authority.host
+        hostname = get_host_from_authority(uri.authority)
 
         results = self.database.catalog.search(vhosts=hostname)
         if len(results) == 0:

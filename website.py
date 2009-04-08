@@ -125,7 +125,7 @@ class WebSite(RoleAware, Folder):
 
     def get_skin(self, context):
         # Back-Office
-        hostname = context.uri.authority.host
+        hostname = context.uri.authority
         if hostname[:3] in ['bo.', 'bo-']:
             return self.get_resource('/ui/aruni')
         # Fron-Office

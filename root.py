@@ -237,8 +237,7 @@ class Root(WebSite):
         # Set the subject
         subject = subject.encode(encoding)
         if subject_with_host is True:
-            host = context.uri.authority.host
-            subject = '[%s] %s' % (host, subject)
+            subject = '[%s] %s' % (context.uri.authority, subject)
         # Build the message
         message = MIMEMultipart('related')
         message['Subject'] = Header(subject, encoding)
