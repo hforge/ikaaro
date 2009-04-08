@@ -31,7 +31,7 @@ from file import File
 from forms import get_default_widget
 from resource_ import DBResource
 from table_views import Table_View, Table_AddRecord, Table_EditRecord
-from table_views import OrderedTable_View
+from table_views import OrderedTable_View, Table_ExportCSV
 
 
 
@@ -74,6 +74,7 @@ class Table(File):
     view = Table_View()
     add_record = Table_AddRecord()
     edit_record = Table_EditRecord()
+    export_csv = Table_ExportCSV()
 
 
     def update_20081113(self):

@@ -22,7 +22,7 @@
 from itools.csv import UniqueError, Property, is_multilingual
 from itools.datatypes import Integer, Enumerate, Tokens
 from itools.gettext import MSG
-from itools.web import INFO, ERROR
+from itools.web import INFO, ERROR, BaseView
 from itools.xapian import PhraseQuery
 
 # Import from ikaaro
@@ -375,3 +375,31 @@ class OrderedTable_View(Table_View):
         resource.handler.order_bottom(ids)
         context.message = INFO(u'Resources ordered on bottom.')
 
+
+
+class Table_ExportCSV(BaseView):
+
+    access = 'is_admin'
+    title = MSG(u"Export to CSV")
+    # String to join multiple values (or they will raise an error)
+    separator = None
+
+
+    def get_mtime(self, resource):
+        return resource.get_mtime()
+
+
+    def GET(self, resource, context):
+        response = context.response
+        # Filename
+        filename = "%s.csv" % resource.name
+        response.set_header('Content-Disposition',
+                            'inline; filename="%s"' % filename)
+        # Content-Type
+        response.set_header('Content-Type', 'text/comma-separated-values')
+
+        handler = resource.handler
+        columns = ['id'] + [widget.name for widget in self.get_form()]
+        language = resource.get_content_language(context)
+        return handler.to_csv(columns, separator=self.separator,
+                              language=language)
