@@ -149,7 +149,7 @@ class StoredSearchesMenu(ContextMenu):
             issues_nb = len(root.search(query))
             kw = {'search_title': item.get_property('title'),
                   'issues_nb': issues_nb}
-            title = MSG(u'${search_title} (${issues_nb})')
+            title = MSG(u'{search_title} ({issues_nb})')
             title = title.gettext(language=language, **kw)
 
             # Namespace
