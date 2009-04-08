@@ -207,7 +207,7 @@ class Folder(DBResource):
             if old_name is None:
                 continue
             src_uri = resolve_uri(source_uri, old_name)
-            dst_uri = resolve_uri(source_uri, new_name)
+            dst_uri = resolve_uri(target_uri, new_name)
             if folder.has_handler(src_uri):
                 folder.copy_handler(src_uri, dst_uri)
 
@@ -240,7 +240,7 @@ class Folder(DBResource):
             if old_name is None:
                 continue
             src_uri = resolve_uri(source_uri, old_name)
-            dst_uri = resolve_uri(source_uri, new_name)
+            dst_uri = resolve_uri(target_uri, new_name)
             if folder.has_handler(src_uri):
                 folder.move_handler(src_uri, dst_uri)
 
