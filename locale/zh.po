@@ -3,7 +3,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: zh\n"
-"POT-Creation-Date: 2009-04-01 16:04+CET\n"
+"POT-Creation-Date: 2009-04-08 15:04+CET\n"
 "PO-Revision-Date: 2007-10-30 17:58+0100\n"
 "Last-Translator: Zhouli <zhouli@in-girum.net>\n"
 "Language-Team:  <zh@li.org>\n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../tracker/tracker_views.py:834
+#: ../tracker/tracker_views.py:814
 msgid ""
 "\n"
 "\n"
@@ -24,15 +24,15 @@ msgstr ""
 msgid "\"%s\" is incorrect"
 msgstr ""
 
-#: ../tracker/tracker_views.py:722
+#: ../tracker/tracker_views.py:702
 msgid "#%s"
 msgstr ""
 
-#: ../tracker/tracker_views.py:862
+#: ../tracker/tracker_views.py:842
 msgid "#%s - %s - %s"
 msgstr ""
 
-#: ../ui/ical/edit_event.xml.en:57
+#: ../calendar/ui/edit_event.xml.en:57
 msgctxt "textarea"
 msgid "${DESCRIPTION}"
 msgstr ""
@@ -77,13 +77,13 @@ msgstr "名称"
 msgid "${batch} <x id='1'/> ${table}"
 msgstr "名称"
 
-#: ../ui/aruni/template.xhtml.en:53
+#: ../ui/aruni/template.xhtml.en:56
 #, fuzzy
 msgctxt "table cell"
 msgid "${body}"
 msgstr "名称"
 
-#: ../ui/ical/daily_view.xml.en:25
+#: ../calendar/ui/daily_view.xml.en:25
 #, fuzzy
 msgctxt "link"
 msgid "${calendar/name}"
@@ -95,7 +95,7 @@ msgctxt "title attribute"
 msgid "${cell/content/issue/comment}"
 msgstr "名称"
 
-#: ../ui/ical/weekly_view.xml.en:46
+#: ../calendar/ui/weekly_view.xml.en:46
 #, fuzzy
 msgctxt "div"
 msgid "${cell/ns}"
@@ -197,7 +197,7 @@ msgctxt "textarea"
 msgid "${data}"
 msgstr "名称"
 
-#: ../ui/ical/monthly_view.xml.en:37
+#: ../calendar/ui/monthly_view.xml.en:37
 #, fuzzy
 msgctxt "span"
 msgid "${day/name}"
@@ -228,7 +228,7 @@ msgctxt "title attribute"
 msgid "${event/issue/comment}"
 msgstr "名称"
 
-#: ../ui/ical/weekly_view.xml.en:67
+#: ../calendar/ui/weekly_view.xml.en:67
 #, fuzzy
 msgctxt "tr"
 msgid "${event/ns}"
@@ -240,7 +240,7 @@ msgctxt "option"
 msgid "${field/title}"
 msgstr "名称"
 
-#: ../ui/ical/weekly_view.xml.en:36
+#: ../calendar/ui/weekly_view.xml.en:36
 #, fuzzy
 msgctxt "table cell"
 msgid "${header/header}"
@@ -283,7 +283,7 @@ msgctxt "table cell"
 msgid "${item/path}"
 msgstr "名称"
 
-#: ../ui/base/new_instance.xml.en:26
+#: ../ui/base/proxy_new_instance.xml.en:26
 #, fuzzy
 msgctxt "label"
 msgid "${item/title}"
@@ -329,7 +329,7 @@ msgctxt "option"
 msgid "${item/value}"
 msgstr "名称"
 
-#: ../ui/ical/edit_event.xml.en:16
+#: ../calendar/ui/edit_event.xml.en:16
 #, fuzzy
 msgctxt "option"
 msgid "${item/value} "
@@ -354,7 +354,7 @@ msgctxt "table cell"
 msgid "${language/name}"
 msgstr "语言"
 
-#: ../ui/aruni/template.xhtml.en:27
+#: ../ui/aruni/template.xhtml.en:30
 #, fuzzy
 msgctxt "div"
 msgid "${languages}"
@@ -365,13 +365,13 @@ msgctxt "li"
 msgid "${link}"
 msgstr ""
 
-#: ../ui/aruni/template.xhtml.en:44
+#: ../ui/aruni/template.xhtml.en:47
 #, fuzzy
 msgctxt "body"
 msgid "${location}"
 msgstr "登录"
 
-#: ../ui/aruni/template.xhtml.en:56
+#: ../ui/aruni/template.xhtml.en:59
 #, fuzzy
 msgctxt "table cell"
 msgid "${menu}"
@@ -407,7 +407,7 @@ msgid "${message}"
 msgstr "信息"
 
 #: ../ui/html/addimage.xml.en:35 ../ui/html/addlink.xml.en:48
-#: ../ui/aruni/template.xhtml.en:49 ../future/ui/order_addlink.xml.en:52
+#: ../ui/aruni/template.xhtml.en:52 ../future/ui/order_addlink.xml.en:52
 #, fuzzy
 msgctxt "div"
 msgid "${message}"
@@ -442,7 +442,19 @@ msgctxt "option"
 msgid "${option/start} - ${option/end}"
 msgstr ""
 
-#: ../ui/aruni/template.xhtml.en:48
+#: ../ui/root/about.xml.en:18
+#, fuzzy
+msgctxt "table cell"
+msgid "${package/name}"
+msgstr "语言"
+
+#: ../ui/root/about.xml.en:19
+#, fuzzy
+msgctxt "table cell"
+msgid "${package/version}"
+msgstr "名称"
+
+#: ../ui/aruni/template.xhtml.en:51
 #, fuzzy
 msgctxt "heading"
 msgid "${page_title}"
@@ -525,7 +537,7 @@ msgctxt "table cell"
 msgid "${row/priority}"
 msgstr "名称"
 
-#: ../ui/ical/weekly_view.xml.en:42
+#: ../calendar/ui/weekly_view.xml.en:42
 #, fuzzy
 msgctxt "table cell"
 msgid "${row/start}-${row/end}"
@@ -573,7 +585,7 @@ msgctxt "form"
 msgid "${rte}"
 msgstr "名称"
 
-#: ../ui/ical/edit_event.xml.en:67
+#: ../calendar/ui/edit_event.xml.en:67
 #, fuzzy
 msgctxt "option"
 msgid "${s/value}"
@@ -684,7 +696,7 @@ msgctxt "table cell"
 msgid "${transition/user}"
 msgstr "用户资料列单"
 
-#: ../ui/ical/daily_view.xml.en:19 ../ui/ical/daily_view.xml.en:44
+#: ../calendar/ui/daily_view.xml.en:19 ../calendar/ui/daily_view.xml.en:44
 #, fuzzy
 msgctxt "span"
 msgid "${tt}"
@@ -718,7 +730,7 @@ msgstr "名称"
 msgid "${view}"
 msgstr "名称"
 
-#: ../ui/ical/monthly_view.xml.en:42
+#: ../calendar/ui/monthly_view.xml.en:42
 msgctxt "table cell"
 msgid "${week/month}"
 msgstr ""
@@ -768,12 +780,12 @@ msgctxt "noscript"
 msgid "(Javascript is deactivated or missing:"
 msgstr ""
 
-#: ../ui/ical/edit_event.xml.en:8
+#: ../calendar/ui/edit_event.xml.en:8
 msgctxt "paragraph"
 msgid "(To add an event lasting all day long, leave time fields empty.)"
 msgstr ""
 
-#: ../ui/ical/daily_view.xml.en:28
+#: ../calendar/ui/daily_view.xml.en:28
 msgctxt "link"
 msgid "+"
 msgstr ""
@@ -791,7 +803,7 @@ msgctxt "option"
 msgid "-- not defined --"
 msgstr ""
 
-#: ../tracker/tracker_views.py:857
+#: ../tracker/tracker_views.py:837
 msgid ""
 "--- Comment from: {user} ---\n"
 "\n"
@@ -811,7 +823,7 @@ msgctxt "table cell"
 msgid ":"
 msgstr ""
 
-#: ../ui/ical/monthly_template.xml.en:10
+#: ../calendar/ui/monthly_template.xml.en:10
 msgctxt "link"
 msgid "<g id='1'> ${event/SUMMARY}</g>  <g id='2'>${event/TIME}</g>"
 msgstr ""
@@ -821,13 +833,6 @@ msgctxt "label"
 msgid ""
 "<g id='1'> ${widget/title} </g>  <g id='2'>(mandatory)</g>  <g id='3'>"
 "(multiple)</g>  <g id='4'>Format: 'yyyy-mm-dd'</g>"
-msgstr ""
-
-#: ../ui/root/about.xml.en:8
-msgctxt "paragraph"
-msgid ""
-"<g id='1'> itools <g id='2'>${itools_version}</g>  </g>  <x id='3'/>  <g "
-"id='4'> iKaaro <g id='5'>${ikaaro_version}</g>  </g>"
 msgstr ""
 
 #: ../ui/binary/Image_view.xml.en:15
@@ -865,9 +870,9 @@ msgid ""
 "${event/issue/title} <g id='3'>(${event/resource/title})</g>"
 msgstr ""
 
-#: ../ui/aruni/template.xhtml.en:38
+#: ../ui/aruni/template.xhtml.en:41
 msgctxt "link"
-msgid "<g id='10'>Search</g>  <g id='11'>Contact</g>"
+msgid "<g id='11'>Search</g>  <g id='12'>Contact</g>"
 msgstr ""
 
 #: ../ui/html/addlink.xml.en:90
@@ -880,9 +885,9 @@ msgctxt "abbr"
 msgid "<g id='13'>${item/short_title}</g><x id='14'/>  <g id='15'> Select </g>"
 msgstr ""
 
-#: ../ui/aruni/template.xhtml.en:64
+#: ../ui/aruni/template.xhtml.en:67
 msgctxt "link"
-msgid "<g id='14'>About</g>  <g id='15'>Credits</g>  <g id='16'>License</g>"
+msgid "<g id='15'>About</g>  <g id='16'>Credits</g>  <g id='17'>License</g>"
 msgstr ""
 
 #: ../ui/aruni/location.xml.en:10
@@ -933,7 +938,7 @@ msgid ""
 "level of access."
 msgstr ""
 
-#: ../ui/ical/weekly_view.xml.en:13 ../ui/ical/monthly_view.xml.en:13
+#: ../calendar/ui/weekly_view.xml.en:13 ../calendar/ui/monthly_view.xml.en:13
 msgctxt "link"
 msgid "<g id='2'>«</g> ${current_week} <g id='3'>»</g>"
 msgstr ""
@@ -954,7 +959,7 @@ msgctxt "link"
 msgid "<g id='4'>${x/short_title}</g> /"
 msgstr ""
 
-#: ../ui/ical/weekly_view.xml.en:18 ../ui/ical/monthly_view.xml.en:18
+#: ../calendar/ui/weekly_view.xml.en:18 ../calendar/ui/monthly_view.xml.en:18
 msgctxt "link"
 msgid "<g id='4'>«</g> ${current_month} <g id='5'>»</g>"
 msgstr ""
@@ -984,17 +989,12 @@ msgctxt "link"
 msgid "<g id='6'>${x/short_title}</g> /"
 msgstr ""
 
-#: ../ui/aruni/template.xhtml.en:30
-msgctxt "link"
-msgid "<g id='6'>Log in</g>  <g id='7'>Register</g>"
-msgstr ""
-
-#: ../ui/ical/weekly_view.xml.en:23 ../ui/ical/monthly_view.xml.en:23
+#: ../calendar/ui/weekly_view.xml.en:23 ../calendar/ui/monthly_view.xml.en:23
 msgctxt "link"
 msgid "<g id='6'>«</g> ${current_year} <g id='7'>»</g>"
 msgstr ""
 
-#: ../ui/ical/daily_view.xml.en:34
+#: ../calendar/ui/daily_view.xml.en:34
 msgctxt "link"
 msgid ""
 "<g id='7'>${col/SUMMARY}</g>  <g id='8'>${col/DTSTART}</g>  <g id='9'>${col/"
@@ -1006,17 +1006,17 @@ msgctxt "abbr"
 msgid "<g id='7'>${item/short_title}</g><x id='8'/>  <g id='9'>Select</g>"
 msgstr ""
 
+#: ../ui/aruni/template.xhtml.en:33
+msgctxt "link"
+msgid "<g id='7'>Log in</g>  <g id='8'>Register</g>"
+msgstr ""
+
 #: ../ui/html/addlink.xml.en:58
 msgctxt "link"
 msgid "<g id='8'>${x/short_title}</g> /"
 msgstr ""
 
-#: ../ui/aruni/template.xhtml.en:35
-msgctxt "link"
-msgid "<g id='8'>My Profile</g>  <g id='9'>Log out</g>"
-msgstr ""
-
-#: ../ui/ical/monthly_view.xml.en:44
+#: ../calendar/ui/monthly_view.xml.en:44
 msgctxt "span"
 msgid ""
 "<g id='9'>${day/nday}</g>  <g id='10'>${day/nday}</g>  <g id='11'>  <x "
@@ -1026,6 +1026,11 @@ msgstr ""
 #: ../ui/html/addimage.xml.en:59
 msgctxt "abbr"
 msgid "<g id='9'>${item/short_title}</g><x id='10'/>  <g id='11'>Browse</g>"
+msgstr ""
+
+#: ../ui/aruni/template.xhtml.en:38
+msgctxt "link"
+msgid "<g id='9'>My Profile</g>  <g id='10'>Log out</g>"
 msgstr ""
 
 #: ../future/dressable.py:147
@@ -1058,11 +1063,11 @@ msgstr ""
 msgid "A thread to discuss"
 msgstr ""
 
-#: ../tracker/tracker_views.py:853 ../tracker/issue.py:227
+#: ../tracker/tracker_views.py:833 ../tracker/issue.py:227
 msgid "ANONYMOUS"
 msgstr ""
 
-#: ../website_views.py:304
+#: ../website_views.py:307
 msgid "About"
 msgstr "关于IKAARO"
 
@@ -1096,13 +1101,14 @@ msgstr "Objects removed: %s."
 msgid "Active"
 msgstr "名称"
 
-#: ../text_views.py:260 ../table_views.py:225 ../tracker/tracker_views.py:194
-#: ../tracker/tracker_views.py:245
+#: ../views_new.py:64 ../text_views.py:260 ../table_views.py:225
+#: ../tracker/tracker_views.py:225
 msgid "Add"
 msgstr "加入"
 
-#: ../tracker/ui/add_issue.xml.en:123 ../ui/base/new_instance.xml.en:31
-#: ../ui/website/edit_languages.xml.en:55 ../ui/ical/edit_timetables.xml.en:37
+#: ../tracker/ui/add_issue.xml.en:123 ../calendar/ui/edit_timetables.xml.en:37
+#: ../ui/base/proxy_new_instance.xml.en:31
+#: ../ui/website/edit_languages.xml.en:55
 #, fuzzy
 msgctxt "button"
 msgid "Add"
@@ -1140,7 +1146,7 @@ msgstr "新文件夹"
 msgid "Add Record"
 msgstr "新用户"
 
-#: ../resource_views.py:68
+#: ../views_new.py:37
 #, fuzzy
 msgid "Add Resource"
 msgstr "新用户"
@@ -1150,7 +1156,7 @@ msgstr "新用户"
 msgid "Add Row"
 msgstr "加入"
 
-#: ../ui/base/new_instance.xml.en:9
+#: ../ui/base/proxy_new_instance.xml.en:9
 #, fuzzy
 msgctxt "legend"
 msgid "Add a new ${class_title}"
@@ -1189,8 +1195,7 @@ msgstr "语言"
 msgid "Add new %s"
 msgstr "新用户"
 
-#: ../tracker/tracker_views.py:203 ../resource_views.py:98
-#: ../folder_views.py:109
+#: ../views_new.py:73 ../folder_views.py:109
 #, fuzzy
 msgid "Add resource"
 msgstr "新用户"
@@ -1200,7 +1205,7 @@ msgstr "新用户"
 msgid "Add to ordered list"
 msgstr "目录"
 
-#: ../tracker/tracker_views.py:206 ../resource_views.py:101
+#: ../views_new.py:76
 #, fuzzy
 msgid "Add {class_title}"
 msgstr "新用户"
@@ -1209,7 +1214,7 @@ msgstr "新用户"
 msgid "Admin"
 msgstr ""
 
-#: ../tracker/tracker_views.py:156
+#: ../tracker/tracker_views.py:168
 msgid "Advanced"
 msgstr ""
 
@@ -1219,7 +1224,7 @@ msgid ""
 "An email has been sent to you with the procedure to change your password."
 msgstr ""
 
-#: ../website_views.py:130
+#: ../website_views.py:133
 msgid ""
 "An email has been sent to you, to finish the registration process follow the "
 "instructions detailed in it."
@@ -1238,7 +1243,7 @@ msgstr ""
 msgid "Application preferences changed."
 msgstr ""
 
-#: ../calendar_views.py:46
+#: ../calendar/calendar_views.py:46
 msgid "April"
 msgstr ""
 
@@ -1272,7 +1277,7 @@ msgctxt "legend"
 msgid "Assign a resource"
 msgstr "新用户"
 
-#: ../tracker/tracker_views.py:61 ../tracker/issue.py:335
+#: ../tracker/tracker_views.py:60 ../tracker/issue.py:335
 msgid "Assigned To"
 msgstr ""
 
@@ -1298,7 +1303,7 @@ msgctxt "table cell"
 msgid "Attachement:"
 msgstr "新文件"
 
-#: ../calendar_views.py:50
+#: ../calendar/calendar_views.py:50
 msgid "August"
 msgstr ""
 
@@ -1317,7 +1322,7 @@ msgctxt "title attribute"
 msgid "Back"
 msgstr "卸下"
 
-#: ../file_views.py:321
+#: ../file_views.py:312
 msgid "Backlinks"
 msgstr ""
 
@@ -1331,7 +1336,7 @@ msgctxt "paragraph"
 msgid "Be sure your have the external editor plug-in installed."
 msgstr ""
 
-#: ../forms.py:567
+#: ../forms.py:574
 msgid "Body"
 msgstr "正文"
 
@@ -1416,17 +1421,17 @@ msgstr "加入"
 msgid "CSS"
 msgstr ""
 
-#: ../calendar_.py:85
+#: ../calendar/calendar_.py:85
 msgid "Calendar"
 msgstr ""
 
-#: ../ui/ical/edit_event.xml.en:133
+#: ../calendar/ui/edit_event.xml.en:133
 #, fuzzy
 msgctxt "button"
 msgid "Cancel"
 msgstr "改换"
 
-#: ../calendar_views.py:104
+#: ../calendar/calendar_views.py:104
 #, fuzzy
 msgid "Cancelled"
 msgstr "改换"
@@ -1452,7 +1457,7 @@ msgctxt "legend"
 msgid "Change Role of ${name}"
 msgstr ""
 
-#: ../tracker/tracker_views.py:165 ../tracker/tracker_views.py:744
+#: ../tracker/tracker_views.py:177 ../tracker/tracker_views.py:724
 #, fuzzy
 msgid "Change Several Issues"
 msgstr "改变内设"
@@ -1490,16 +1495,6 @@ msgctxt "label"
 msgid "Character encoding"
 msgstr ""
 
-#: ../ui/root/about.xml.en:38
-msgctxt "li"
-msgid "Check the <g id='8'>License</g>;"
-msgstr ""
-
-#: ../ui/root/about.xml.en:41
-msgctxt "li"
-msgid "Check the <g id='9'>Credits</g>;"
-msgstr ""
-
 #: ../control_panel.py:204
 msgid "Check the referential integrity."
 msgstr ""
@@ -1520,7 +1515,7 @@ msgstr "选择语言"
 msgid "Choose a new password"
 msgstr "改变内设"
 
-#: ../ui/base/new_instance.xml.en:20
+#: ../ui/base/proxy_new_instance.xml.en:20
 #, fuzzy
 msgctxt "dt"
 msgid "Choose the ${class_title} type"
@@ -1558,7 +1553,12 @@ msgctxt "table cell"
 msgid "Code"
 msgstr "编码"
 
-#: ../ui/ical/weekly_view.xml.en:10 ../ui/ical/monthly_view.xml.en:10
+#: ../ui/root/about.xml.en:37
+msgctxt "li"
+msgid "Collaboration with the Wiki module, the issue tracker, etc."
+msgstr ""
+
+#: ../calendar/ui/weekly_view.xml.en:10 ../calendar/ui/monthly_view.xml.en:10
 msgctxt "link"
 msgid "Come back to today"
 msgstr ""
@@ -1567,7 +1567,7 @@ msgstr ""
 msgid "Comma Separated Values"
 msgstr ""
 
-#: ../tracker/resources.py:185 ../revisions_views.py:46
+#: ../tracker/resources.py:183 ../revisions_views.py:46
 #: ../tracker/issue.py:265
 #, fuzzy
 msgid "Comment"
@@ -1619,11 +1619,11 @@ msgstr ""
 msgid "Confirmation sent!"
 msgstr "查阅"
 
-#: ../calendar_views.py:103
+#: ../calendar/calendar_views.py:103
 msgid "Confirmed"
 msgstr ""
 
-#: ../website_views.py:152
+#: ../website_views.py:155
 msgid "Contact"
 msgstr "联系我们"
 
@@ -1640,6 +1640,12 @@ msgstr ""
 msgid "Content"
 msgstr "浏览"
 
+#: ../ui/root/about.xml.en:36
+#, fuzzy
+msgctxt "li"
+msgid "Content &amp;"
+msgstr "浏览"
+
 #: ../control_panel.py:44 ../control_panel.py:74 ../control_panel.py:93
 msgid "Control Panel"
 msgstr ""
@@ -1648,7 +1654,7 @@ msgstr ""
 msgid "Copy"
 msgstr "复制"
 
-#: ../website.py:53
+#: ../website.py:54
 msgid "Create a new Web Site or Work Place."
 msgstr ""
 
@@ -1657,12 +1663,12 @@ msgctxt "heading"
 msgid "Create a new page and link to it:"
 msgstr ""
 
-#: ../html.py:194
+#: ../webpage.py:194
 #, fuzzy
 msgid "Create and publish a Web Page."
 msgstr "列出文档"
 
-#: ../website_views.py:319
+#: ../website_views.py:367
 msgid "Credits"
 msgstr ""
 
@@ -1680,7 +1686,7 @@ msgstr "编辑文档"
 msgid "Cut"
 msgstr "剪切"
 
-#: ../calendar_views.py:895
+#: ../calendar/calendar_views.py:905
 #, fuzzy
 msgid "Daily View"
 msgstr "名称"
@@ -1689,7 +1695,7 @@ msgstr "名称"
 msgid "Data Corruption Issue"
 msgstr ""
 
-#: ../calendar_views.py:597 ../calendar_views.py:703
+#: ../calendar/calendar_views.py:601 ../calendar/calendar_views.py:709
 #, fuzzy
 msgid "Data updated"
 msgstr "文件被上载."
@@ -1706,17 +1712,17 @@ msgctxt "table cell"
 msgid "Date"
 msgstr "日期"
 
-#: ../ui/ical/daily_view.xml.en:9
+#: ../calendar/ui/daily_view.xml.en:9
 #, fuzzy
 msgctxt "form"
 msgid "Date:"
 msgstr "日期"
 
-#: ../calendar_views.py:54
+#: ../calendar/calendar_views.py:54
 msgid "December"
 msgstr ""
 
-#: ../tracker/tracker.py:313
+#: ../tracker/tracker.py:323
 #, fuzzy
 msgid "Default"
 msgstr "设置"
@@ -1735,16 +1741,16 @@ msgstr ""
 msgid "Define the domain names for this Web Site."
 msgstr ""
 
-#: ../ui/ical/edit_event.xml.en:131
+#: ../calendar/ui/edit_event.xml.en:131
 msgctxt "button"
 msgid "Definitely remove"
 msgstr ""
 
-#: ../forms.py:564
+#: ../forms.py:571
 msgid "Description"
 msgstr ""
 
-#: ../ui/ical/edit_event.xml.en:55
+#: ../calendar/ui/edit_event.xml.en:55
 #, fuzzy
 msgctxt "table cell"
 msgid "Description"
@@ -1770,7 +1776,13 @@ msgctxt "option"
 msgid "Do not change"
 msgstr "编辑文档"
 
-#: ../file_views.py:123 ../file_views.py:146
+#: ../ui/root/about.xml.en:36
+#, fuzzy
+msgctxt "li"
+msgid "Document Management."
+msgstr "编辑文档"
+
+#: ../file_views.py:114 ../file_views.py:137
 msgid "Download"
 msgstr ""
 
@@ -1779,7 +1791,7 @@ msgstr ""
 msgid "Dressable"
 msgstr "信息"
 
-#: ../user_views.py:170 ../website_views.py:98
+#: ../user_views.py:170 ../website_views.py:101
 #, fuzzy
 msgid "E-mail Address"
 msgstr "用户"
@@ -1790,7 +1802,7 @@ msgctxt "label"
 msgid "E-mail Address"
 msgstr "用户"
 
-#: ../resource_views.py:165 ../text_views.py:41 ../text_views.py:101
+#: ../resource_views.py:68 ../text_views.py:41 ../text_views.py:101
 #: ../future/dressable.py:44
 msgid "Edit"
 msgstr "编辑"
@@ -1817,7 +1829,7 @@ msgctxt "legend"
 msgid "Edit Contact Options"
 msgstr ""
 
-#: ../calendar_views.py:412
+#: ../calendar/calendar_views.py:414
 #, fuzzy
 msgid "Edit Event"
 msgstr "简易文件"
@@ -1839,7 +1851,7 @@ msgctxt "button"
 msgid "Edit Issues"
 msgstr "用户"
 
-#: ../resource_views.py:51
+#: ../resource_views.py:50
 #, fuzzy
 msgid "Edit Language"
 msgstr "语言"
@@ -1887,7 +1899,7 @@ msgstr ""
 msgid "Edit Wiki"
 msgstr "简易文件"
 
-#: ../tracker/tracker_views.py:761
+#: ../tracker/tracker_views.py:741
 #, fuzzy
 msgid "Edit issues"
 msgstr "用户"
@@ -1917,12 +1929,12 @@ msgctxt "legend"
 msgid "Edit the assignment #${id}"
 msgstr ""
 
-#: ../ui/ical/edit_timetables.xml.en:9
+#: ../calendar/ui/edit_timetables.xml.en:9
 msgctxt "legend"
 msgid "Edit the timetable grid"
 msgstr ""
 
-#: ../tracker/tracker_views.py:163
+#: ../tracker/tracker_views.py:175
 #, fuzzy
 msgid "Edit this search"
 msgstr "搜索"
@@ -1936,11 +1948,11 @@ msgctxt "dt"
 msgid "Email"
 msgstr ""
 
-#: ../tracker/resources.py:184
+#: ../tracker/resources.py:182
 msgid "End"
 msgstr ""
 
-#: ../ui/ical/edit_event.xml.en:44
+#: ../calendar/ui/edit_event.xml.en:44
 msgctxt "table cell"
 msgid "End"
 msgstr ""
@@ -1959,11 +1971,12 @@ msgstr "英语"
 msgid "Error: {msg}"
 msgstr "信息"
 
-#: ../calendar_views.py:625
+#: ../calendar/calendar_views.py:629
 msgid "Event definitely deleted."
 msgstr ""
 
-#: ../calendar_views.py:470 ../calendar_views.py:584 ../calendar_views.py:612
+#: ../calendar/calendar_views.py:474 ../calendar/calendar_views.py:588
+#: ../calendar/calendar_views.py:616
 msgid "Event not found"
 msgstr ""
 
@@ -1976,7 +1989,7 @@ msgstr "外部"
 msgid "Excel Spreadsheet"
 msgstr ""
 
-#: ../calendar_views.py:453
+#: ../calendar/calendar_views.py:455
 msgid "Expected query parameter \"id\" is missing."
 msgstr ""
 
@@ -1986,7 +1999,8 @@ msgctxt "button"
 msgid "Export"
 msgstr "简易文件"
 
-#: ../tracker/tracker_views.py:169 ../tracker/tracker_views.py:634
+#: ../tracker/tracker_views.py:181 ../tracker/tracker_views.py:614
+#: ../table_views.py:383
 msgid "Export to CSV"
 msgstr ""
 
@@ -1996,7 +2010,7 @@ msgctxt "legend"
 msgid "Export to CSV"
 msgstr "简易文件"
 
-#: ../tracker/tracker_views.py:167
+#: ../tracker/tracker_views.py:179
 #, fuzzy
 msgid "Export to Text"
 msgstr "简易文件"
@@ -2018,29 +2032,23 @@ msgctxt "button"
 msgid "External Editor..."
 msgstr "外部"
 
-#: ../calendar_views.py:1104
+#: ../calendar/calendar_views.py:1116
 msgid "Failed to load the file, may contain errors."
 msgstr ""
 
-#: ../file_views.py:195
+#: ../file_views.py:186
 msgid "Failed to load the file: {error}"
 msgstr ""
 
-#: ../calendar_views.py:44
+#: ../calendar/calendar_views.py:44
 msgid "February"
 msgstr ""
 
-#: ../file.py:57
+#: ../file_views.py:57 ../file.py:57
 msgid "File"
 msgstr ""
 
-#: ../ui/file/new_instance.xml.en:17
-#, fuzzy
-msgctxt "label"
-msgid "File"
-msgstr "名称"
-
-#: ../user_views.py:168 ../website_views.py:96 ../access.py:79
+#: ../user_views.py:168 ../website_views.py:99 ../access.py:79
 #: ../access.py:126
 #, fuzzy
 msgid "First Name"
@@ -2069,7 +2077,7 @@ msgctxt "button"
 msgid "Forget this Search"
 msgstr "搜索"
 
-#: ../website_views.py:43
+#: ../website_views.py:42
 #, fuzzy
 msgid "Forgotten password"
 msgstr "改变内设"
@@ -2107,21 +2115,22 @@ msgstr ""
 msgid "French"
 msgstr "法语"
 
-#: ../calendar_views.py:61
+#: ../calendar/calendar_views.py:61
 msgid "Friday"
 msgstr ""
 
-#: ../ui/ical/edit_timetables.xml.en:20 ../ui/ical/edit_timetables.xml.en:31
+#: ../calendar/ui/edit_timetables.xml.en:20
+#: ../calendar/ui/edit_timetables.xml.en:31
 #, fuzzy
 msgctxt "table cell"
 msgid "From"
 msgstr "格式"
 
-#: ../wiki/folder.py:52 ../folder_views.py:815
+#: ../wiki/folder.py:52 ../folder_views.py:821
 msgid "Front Page"
 msgstr ""
 
-#: ../ui/ical/weekly_view.xml.en:62
+#: ../calendar/ui/weekly_view.xml.en:62
 msgctxt "table cell"
 msgid "Full day"
 msgstr ""
@@ -2131,7 +2140,7 @@ msgstr ""
 msgid "German"
 msgstr "概略"
 
-#: ../tracker/tracker_views.py:193
+#: ../tracker/tracker_views.py:196
 msgid "Give the title of one Product"
 msgstr ""
 
@@ -2140,7 +2149,7 @@ msgctxt "button"
 msgid "Go"
 msgstr ""
 
-#: ../tracker/tracker_views.py:71
+#: ../tracker/tracker_views.py:70
 #, fuzzy
 msgid "Go To Issue"
 msgstr "用户"
@@ -2261,7 +2270,7 @@ msgctxt "link"
 msgid "I forgot my password"
 msgstr "改变内设"
 
-#: ../tracker/tracker_views.py:53
+#: ../tracker/tracker_views.py:52
 msgid "Id"
 msgstr ""
 
@@ -2278,13 +2287,6 @@ msgstr ""
 #: ../ui/text/externaledit.xml.en:12 ../ui/file/externaledit.xml.en:12
 msgctxt "paragraph"
 msgid "If you don't, you can download it from a link below."
-msgstr ""
-
-#: ../ui/root/about.xml.en:48
-msgctxt "li"
-msgid ""
-"If you find a bug or wish some new feature, please <g id='11'>file a bug "
-"report</g>."
 msgstr ""
 
 #: ../file.py:225
@@ -2321,16 +2323,21 @@ msgctxt "title attribute"
 msgid "Insert table"
 msgstr "新链接"
 
+#: ../ui/root/about.xml.en:8
+msgctxt "legend"
+msgid "Installed software"
+msgstr ""
+
 #: ../ui/root/internal_server_error.xml.en:8
 msgctxt "legend"
 msgid "Internal Server Error"
 msgstr ""
 
-#: ../resource_views.py:500 ../forum/forum.py:92
+#: ../resource_views.py:403 ../forum/forum.py:92
 msgid "Invalid title."
 msgstr ""
 
-#: ../tracker/resources.py:186 ../tracker/issue.py:68 ../tracker/issue.py:69
+#: ../tracker/resources.py:184 ../tracker/issue.py:68 ../tracker/issue.py:69
 msgid "Issue"
 msgstr ""
 
@@ -2343,7 +2350,7 @@ msgstr ""
 msgid "Issue Tracker"
 msgstr ""
 
-#: ../tracker/tracker_views.py:590
+#: ../tracker/tracker_views.py:570
 msgid "Issue not found."
 msgstr ""
 
@@ -2363,7 +2370,7 @@ msgctxt "title attribute"
 msgid "Italic"
 msgstr "意在利语"
 
-#: ../calendar_views.py:43
+#: ../calendar/calendar_views.py:43
 msgid "January"
 msgstr ""
 
@@ -2376,15 +2383,20 @@ msgctxt "li"
 msgid "Juan David Ibáñez Palomar (Spanish)"
 msgstr ""
 
-#: ../calendar_views.py:49
+#: ../calendar/calendar_views.py:49
 msgid "July"
 msgstr ""
 
-#: ../calendar_views.py:48
+#: ../calendar/calendar_views.py:48
 msgid "June"
 msgstr ""
 
-#: ../forms.py:566
+#: ../ui/root/about.xml.en:33
+msgctxt "paragraph"
+msgid "Key features of iKaaro include:"
+msgstr ""
+
+#: ../forms.py:573
 msgid "Keywords (Separated by comma)"
 msgstr ""
 
@@ -2430,7 +2442,7 @@ msgstr "改换"
 msgid "Last Modified"
 msgstr ""
 
-#: ../user_views.py:169 ../website_views.py:97 ../access.py:78
+#: ../user_views.py:169 ../website_views.py:100 ../access.py:78
 #: ../access.py:127
 #, fuzzy
 msgid "Last Name"
@@ -2440,11 +2452,11 @@ msgstr "姓名"
 msgid "Layout items MUST be 2 values tuples: "
 msgstr ""
 
-#: ../website.py:179
+#: ../website.py:181
 msgid "License"
 msgstr "许可证"
 
-#: ../ui/ical/edit_event.xml.en:27
+#: ../calendar/ui/edit_event.xml.en:27
 #, fuzzy
 msgctxt "table cell"
 msgid "Location"
@@ -2469,7 +2481,7 @@ msgctxt "legend"
 msgid "Log in"
 msgstr "登录"
 
-#: ../resource_views.py:539 ../access.py:77 ../access.py:125
+#: ../resource_views.py:442 ../access.py:77 ../access.py:125
 msgid "Login"
 msgstr "登录"
 
@@ -2477,22 +2489,12 @@ msgstr "登录"
 msgid "Low"
 msgstr ""
 
-#: ../ui/root/about.xml.en:27
-msgctxt "li"
-msgid "Manage Web Content and Electronic Documents;"
-msgstr ""
-
-#: ../ui/root/about.xml.en:29
-msgctxt "li"
-msgid "Manage a project with the issue tracker."
-msgstr ""
-
-#: ../calendar_views.py:45
+#: ../calendar/calendar_views.py:45
 #, fuzzy
 msgid "March"
 msgstr "搜索"
 
-#: ../calendar_views.py:47
+#: ../calendar/calendar_views.py:47
 msgid "May"
 msgstr ""
 
@@ -2537,7 +2539,7 @@ msgstr ""
 msgid "Message Catalog"
 msgstr "信息"
 
-#: ../website_views.py:171
+#: ../website_views.py:174
 #, fuzzy
 msgid "Message body"
 msgstr "信息"
@@ -2547,12 +2549,12 @@ msgstr "信息"
 msgid "Message in a thread"
 msgstr "信息被修正."
 
-#: ../website_views.py:204
+#: ../website_views.py:207
 #, fuzzy
 msgid "Message sent."
 msgstr "信息被修正."
 
-#: ../website_views.py:170
+#: ../website_views.py:173
 msgid "Message subject"
 msgstr "信息目的"
 
@@ -2572,12 +2574,12 @@ msgstr "信息"
 msgid "Metadata"
 msgstr "附加信息"
 
-#: ../tracker/tracker_views.py:833
+#: ../tracker/tracker_views.py:813
 #, fuzzy
 msgid "Modifications:"
 msgstr "登录"
 
-#: ../tracker/tracker_views.py:62
+#: ../tracker/tracker_views.py:61
 msgid "Modified"
 msgstr ""
 
@@ -2587,7 +2589,7 @@ msgctxt "label"
 msgid "Modified since:"
 msgstr "登录"
 
-#: ../tracker/tracker_views.py:56 ../tracker/issue.py:303
+#: ../tracker/tracker_views.py:55 ../tracker/issue.py:303
 #, fuzzy
 msgid "Module"
 msgstr "编码"
@@ -2610,19 +2612,29 @@ msgctxt "label"
 msgid "Module:<g id='12'> (<g id='13'>Edit</g>)</g>"
 msgstr ""
 
-#: ../calendar_views.py:57
+#: ../calendar/calendar_views.py:57
 msgid "Monday"
 msgstr ""
 
-#: ../calendar_views.py:712
+#: ../calendar/calendar_views.py:718
 msgid "Monthly View"
 msgstr ""
 
-#: ../tracker/tracker_views.py:192 ../folder_views.py:243 ../views.py:419
+#: ../ui/root/about.xml.en:39
+msgctxt "li"
+msgid "Mulitilingual interfaces and content."
+msgstr ""
+
+#: ../ui/root/about.xml.en:38
+msgctxt "li"
+msgid "Multiple web sites in one instance, with separate access rights."
+msgstr ""
+
+#: ../views_new.py:63 ../views.py:370 ../folder_views.py:243
 msgid "Name"
 msgstr "姓名"
 
-#: ../ui/base/new_instance.xml.en:15
+#: ../ui/base/proxy_new_instance.xml.en:15
 #, fuzzy
 msgctxt "label"
 msgid "Name"
@@ -2662,7 +2674,7 @@ msgctxt "label"
 msgid "New Password"
 msgstr "密码"
 
-#: ../tracker/tracker_views.py:271
+#: ../tracker/tracker_views.py:251
 #, fuzzy
 msgid "New issue added."
 msgstr "新资料被加入."
@@ -2701,7 +2713,7 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#: ../tracker/tracker_views.py:654 ../tracker/tracker_views.py:795
+#: ../tracker/tracker_views.py:634 ../tracker/tracker_views.py:775
 msgid "No data to export."
 msgstr ""
 
@@ -2741,12 +2753,12 @@ msgctxt "legend"
 msgid "Not Found"
 msgstr "未发现物件."
 
-#: ../ui/file/upload.xml.en:11 ../ui/ical/upload.xml.en:10
+#: ../calendar/ui/upload.xml.en:10 ../ui/file/upload.xml.en:11
 msgctxt "paragraph"
 msgid "Note the name and title won't change."
 msgstr ""
 
-#: ../calendar_views.py:178
+#: ../calendar/calendar_views.py:180
 #, fuzzy
 msgid "Nothing to change."
 msgstr "用户资料被变更."
@@ -2756,11 +2768,11 @@ msgstr "用户资料被变更."
 msgid "Nothing to paste."
 msgstr "用户资料被变更."
 
-#: ../calendar_views.py:162
+#: ../calendar/calendar_views.py:164
 msgid "Nothing to remove."
 msgstr ""
 
-#: ../calendar_views.py:53
+#: ../calendar/calendar_views.py:53
 msgid "November"
 msgstr ""
 
@@ -2776,10 +2788,10 @@ msgstr ""
 msgid "ODT"
 msgstr ""
 
-#: ../ui/html/addlink.xml.en:122 ../ui/ical/daily_view.xml.en:12
-#: ../ui/ical/edit_event.xml.en:130 ../tracker/ui/menu_remember.xml.en:17
+#: ../ui/html/addlink.xml.en:122 ../tracker/ui/menu_remember.xml.en:17
 #: ../ui/folder/browse_search.xml.en:24 ../ui/generic/browse_search.xml.en:16
-#: ../ui/website/search_form.xml.en:11
+#: ../calendar/ui/daily_view.xml.en:12 ../ui/website/search_form.xml.en:11
+#: ../calendar/ui/edit_event.xml.en:130
 msgctxt "button"
 msgid "OK"
 msgstr ""
@@ -2798,11 +2810,11 @@ msgstr "编辑文档"
 msgid "OOo Writer"
 msgstr "写入"
 
-#: ../calendar_views.py:52
+#: ../calendar/calendar_views.py:52
 msgid "October"
 msgstr ""
 
-#: ../website_views.py:44
+#: ../website_views.py:43
 msgid "Ok"
 msgstr ""
 
@@ -2872,7 +2884,7 @@ msgstr "文件夹"
 msgid "Order up"
 msgstr ""
 
-#: ../table.py:179
+#: ../table.py:180
 #, fuzzy
 msgid "Ordered Table"
 msgstr "重命名物件"
@@ -2887,7 +2899,7 @@ msgstr "文件夹"
 msgid "Organize your files and documents with folders."
 msgstr ""
 
-#: ../folder_views.py:733
+#: ../folder_views.py:739
 msgid "Orphans"
 msgstr ""
 
@@ -2906,6 +2918,11 @@ msgstr ""
 
 #: ../wiki/page_views.py:310
 msgid "PDF generation failed. Please install pdflatex."
+msgstr ""
+
+#: ../ui/root/about.xml.en:12
+msgctxt "table cell"
+msgid "Package"
 msgstr ""
 
 #: ../ui/root/credits.xml.en:20
@@ -3025,7 +3042,7 @@ msgstr "格式"
 msgid "Preview"
 msgstr "查阅"
 
-#: ../folder_views.py:573
+#: ../folder_views.py:579
 #, fuzzy
 msgid "Preview Content"
 msgstr "浏览"
@@ -3036,7 +3053,7 @@ msgctxt "title attribute"
 msgid "Previous"
 msgstr "查阅"
 
-#: ../tracker/tracker_views.py:60 ../tracker/issue.py:306
+#: ../tracker/tracker_views.py:59 ../tracker/issue.py:306
 msgid "Priority"
 msgstr ""
 
@@ -3061,7 +3078,7 @@ msgstr ""
 msgid "Private"
 msgstr "隐私"
 
-#: ../tracker/tracker_views.py:55 ../tracker/tables.py:207
+#: ../tracker/tracker_views.py:54 ../tracker/tables.py:207
 #: ../tracker/tables.py:234
 #, fuzzy
 msgid "Product"
@@ -3120,7 +3137,7 @@ msgstr ""
 msgid "RTF Document"
 msgstr "新文件"
 
-#: ../website_views.py:168
+#: ../website_views.py:171
 msgid "Recipient"
 msgstr "收件人"
 
@@ -3129,7 +3146,7 @@ msgstr "收件人"
 msgid "Record deleted."
 msgstr "记录被修正."
 
-#: ../website_views.py:87 ../website_views.py:88
+#: ../website_views.py:90 ../website_views.py:91
 #, fuzzy
 msgid "Register"
 msgstr "查阅"
@@ -3143,7 +3160,7 @@ msgstr "删除文档"
 msgid "Released"
 msgstr "查阅"
 
-#: ../tracker/tracker_views.py:86
+#: ../tracker/tracker_views.py:85
 #, fuzzy
 msgid "Remember this search"
 msgstr "查阅"
@@ -3152,8 +3169,8 @@ msgstr "查阅"
 msgid "Remove"
 msgstr "删除"
 
-#: ../forum/ui/Thread_view.xml.en:33 ../ui/website/edit_languages.xml.en:38
-#: ../ui/ical/edit_timetables.xml.en:43
+#: ../calendar/ui/edit_timetables.xml.en:43 ../forum/ui/Thread_view.xml.en:33
+#: ../ui/website/edit_languages.xml.en:38
 #, fuzzy
 msgctxt "button"
 msgid "Remove"
@@ -3192,18 +3209,18 @@ msgctxt "label"
 msgid "Repeat Password"
 msgstr "重复密码"
 
-#: ../file_views.py:164
+#: ../file_views.py:155
 #, fuzzy
 msgid "Replace"
 msgstr "查阅"
 
-#: ../ui/file/upload.xml.en:20 ../ui/ical/upload.xml.en:15
+#: ../calendar/ui/upload.xml.en:15 ../ui/file/upload.xml.en:20
 #, fuzzy
 msgctxt "button"
 msgid "Replace"
 msgstr "查阅"
 
-#: ../forms.py:569
+#: ../forms.py:576
 #, fuzzy
 msgid "Replace file"
 msgstr "上载文件"
@@ -3233,18 +3250,18 @@ msgstr ""
 msgid "Resend Confirmation"
 msgstr "查阅"
 
-#: ../tracker/resources.py:182
+#: ../tracker/resources.py:180
 #, fuzzy
 msgid "Resource"
 msgstr "新文件夹"
 
-#: ../ui/ical/edit_event.xml.en:12
+#: ../calendar/ui/edit_event.xml.en:12
 #, fuzzy
 msgctxt "table cell"
 msgid "Resource"
 msgstr "新文件夹"
 
-#: ../calendar_views.py:442
+#: ../calendar/calendar_views.py:444
 #, fuzzy
 msgid "Resource \"{name}\" not found."
 msgstr "物件被更名"
@@ -3255,7 +3272,7 @@ msgctxt "label"
 msgid "Resource:"
 msgstr "新文件夹"
 
-#: ../tracker/tracker_views.py:171 ../tracker/resources.py:195
+#: ../tracker/tracker_views.py:183 ../tracker/resources.py:193
 #, fuzzy
 msgid "Resources"
 msgstr "新文件夹"
@@ -3270,7 +3287,7 @@ msgstr "物件被更名"
 msgid "Resources added to ordered list."
 msgstr "物件被更名"
 
-#: ../tracker/resources.py:196
+#: ../tracker/resources.py:194
 msgid "Resources assigned to issues"
 msgstr ""
 
@@ -3369,11 +3386,11 @@ msgstr "文件被上载."
 msgid "Row deleted."
 msgstr "没有物件被选中"
 
-#: ../calendar_views.py:62
+#: ../calendar/calendar_views.py:62
 msgid "Saturday"
 msgstr ""
 
-#: ../forms.py:590
+#: ../forms.py:597
 #, fuzzy
 msgid "Save"
 msgstr "保存"
@@ -3397,11 +3414,11 @@ msgctxt "button"
 msgid "Save Changes"
 msgstr "改换"
 
-#: ../calendar_.py:86
+#: ../calendar/calendar_.py:86
 msgid "Schedule your time with calendar files."
 msgstr ""
 
-#: ../tracker/tracker_views.py:417 ../website_views.py:211
+#: ../tracker/tracker_views.py:397 ../website_views.py:214
 msgid "Search"
 msgstr "搜索"
 
@@ -3467,11 +3484,11 @@ msgctxt "label"
 msgid "Select the contact accounts"
 msgstr ""
 
-#: ../website_views.py:153
+#: ../website_views.py:156
 msgid "Send"
 msgstr "发送"
 
-#: ../calendar_views.py:51
+#: ../calendar/calendar_views.py:51
 msgid "September"
 msgstr ""
 
@@ -3480,7 +3497,7 @@ msgstr ""
 msgid "Set your preferred language."
 msgstr "选择你的语言"
 
-#: ../folder_views.py:735
+#: ../folder_views.py:741
 msgid "Show resources not linked from anywhere."
 msgstr ""
 
@@ -3498,11 +3515,6 @@ msgctxt "title attribute"
 msgid "Small Edit Text"
 msgstr "简易文件"
 
-#: ../ui/root/about.xml.en:24
-msgctxt "paragraph"
-msgid "Some things you can do with ikaaro:"
-msgstr ""
-
 #: ../messages.py:42
 msgid "Someone already saved this document, click \"Save\" again to force."
 msgstr ""
@@ -3516,17 +3528,17 @@ msgstr "西班牙语"
 msgid "Stability Issue"
 msgstr ""
 
-#: ../ui/ical/edit_event.xml.en:33
+#: ../calendar/ui/edit_event.xml.en:33
 #, fuzzy
 msgctxt "table cell"
 msgid "Start"
 msgstr "状态"
 
-#: ../tracker/resources.py:183
+#: ../tracker/resources.py:181
 msgid "Start YYYY-MM-DD HH:MM"
 msgstr ""
 
-#: ../calendar_views.py:139 ../calendar_views.py:192
+#: ../calendar/calendar_views.py:141 ../calendar/calendar_views.py:194
 msgid "Start time must be earlier than end time."
 msgstr ""
 
@@ -3537,7 +3549,7 @@ msgid "Start:"
 msgstr "状态"
 
 #: ../future/order.py:58 ../future/order.py:93 ../access.py:129
-#: ../folder_views.py:249 ../tracker/tracker_views.py:59
+#: ../folder_views.py:249 ../tracker/tracker_views.py:58
 #: ../tracker/issue.py:307
 msgid "State"
 msgstr "状态"
@@ -3554,7 +3566,7 @@ msgctxt "emphasis"
 msgid "State:"
 msgstr "状态"
 
-#: ../ui/ical/edit_event.xml.en:63
+#: ../calendar/ui/edit_event.xml.en:63
 #, fuzzy
 msgctxt "table cell"
 msgid "Status"
@@ -3582,16 +3594,16 @@ msgstr ""
 msgid "Stored Search"
 msgstr "搜索"
 
-#: ../tracker/tracker_views.py:132
+#: ../tracker/tracker_views.py:131
 msgid "Stored Searches"
 msgstr ""
 
-#: ../ui/ical/edit_event.xml.en:21
+#: ../calendar/ui/edit_event.xml.en:21
 msgctxt "table cell"
 msgid "Summary"
 msgstr ""
 
-#: ../calendar_views.py:63
+#: ../calendar/calendar_views.py:63
 msgid "Sunday"
 msgstr ""
 
@@ -3630,12 +3642,12 @@ msgstr ""
 msgid "Technology Upgrade"
 msgstr ""
 
-#: ../calendar_views.py:102
+#: ../calendar/calendar_views.py:102
 #, fuzzy
 msgid "Tentative"
 msgstr "名称"
 
-#: ../views.py:418
+#: ../views.py:369
 msgid "Text"
 msgstr ""
 
@@ -3644,7 +3656,7 @@ msgctxt "label"
 msgid "Text (search within the title and all comments)"
 msgstr ""
 
-#: ../forms.py:608
+#: ../forms.py:615
 msgid ""
 "The <span class=\"field-is-required\">emphasized</span> fields are required."
 msgstr ""
@@ -3682,11 +3694,11 @@ msgstr "用户名错误,请再输入."
 msgid "The file must be entered."
 msgstr "必须写入文件."
 
-#: ../resource_views.py:423
+#: ../resource_views.py:326
 msgid "The given file is none of the types {class_ids}."
 msgstr ""
 
-#: ../calendar_views.py:146
+#: ../calendar/calendar_views.py:148
 #, fuzzy
 msgid "The given range is already defined."
 msgstr "用户被加入."
@@ -3695,7 +3707,7 @@ msgstr "用户被加入."
 msgid "The name is missing."
 msgstr ""
 
-#: ../resource_views.py:568
+#: ../resource_views.py:471
 #, fuzzy
 msgid "The password is wrong."
 msgstr "密码错误,请再输入."
@@ -3714,27 +3726,27 @@ msgstr ""
 msgid "The resource does not exist anymore."
 msgstr ""
 
-#: ../tracker/tracker_views.py:532
+#: ../tracker/tracker_views.py:512
 #, fuzzy
 msgid "The search has been modified."
 msgstr "预设语言已被改变."
 
-#: ../tracker/tracker_views.py:574
+#: ../tracker/tracker_views.py:554
 #, fuzzy
 msgid "The search has been removed."
 msgstr "预设语言已被改变."
 
-#: ../tracker/tracker_views.py:539
+#: ../tracker/tracker_views.py:519
 #, fuzzy
 msgid "The search has been stored."
 msgstr "预设语言已被改变."
 
-#: ../tracker/tracker_views.py:543
+#: ../tracker/tracker_views.py:523
 #, fuzzy
 msgid "The search title has been changed."
 msgstr "预设语言已被改变."
 
-#: ../resource_views.py:561
+#: ../resource_views.py:464
 msgid "The user \"{username}\" does not exist."
 msgstr ""
 
@@ -3758,7 +3770,7 @@ msgstr "名称"
 msgid "There are {n} assignments."
 msgstr "此处无图片."
 
-#: ../views.py:172
+#: ../views.py:123
 #, fuzzy
 msgid "There are {n} items."
 msgstr "此处无图片."
@@ -3780,12 +3792,12 @@ msgstr "用户名错误,请再输入."
 msgid "There is 1 assignment."
 msgstr "名称"
 
-#: ../views.py:171
+#: ../views.py:122
 #, fuzzy
 msgid "There is 1 item."
 msgstr "名称"
 
-#: ../website_views.py:112
+#: ../website_views.py:115
 #, fuzzy
 msgid "There is already an active user with that email."
 msgstr "此文件名已被另外资源占有."
@@ -3799,7 +3811,7 @@ msgstr "此文件名已被另外资源占有."
 msgid "There is another user with the email \"{email}\", please try again."
 msgstr "此用户名已登记\"%s\", 请输入另一用户名."
 
-#: ../website_views.py:67
+#: ../website_views.py:70
 #, fuzzy
 msgid "There is not a user identified as \"{username}\""
 msgstr "此用户名已登记\"%s\", 请输入另一用户名."
@@ -3808,7 +3820,7 @@ msgstr "此用户名已登记\"%s\", 请输入另一用户名."
 msgid "There is not an \"index\" web page. Could not render this view."
 msgstr ""
 
-#: ../file_views.py:285
+#: ../file_views.py:276
 msgid "This page is locked by another user"
 msgstr ""
 
@@ -3842,30 +3854,30 @@ msgstr ""
 msgid "Thread can't be None."
 msgstr "此处无内容."
 
-#: ../calendar_views.py:60
+#: ../calendar/calendar_views.py:60
 msgid "Thursday"
 msgstr ""
 
-#: ../calendar_views.py:172
+#: ../calendar/calendar_views.py:174
 msgid "Timetable(s) removed successfully."
 msgstr ""
 
-#: ../calendar_views.py:111
+#: ../calendar/calendar_views.py:111
 #, fuzzy
 msgid "Timetables"
 msgstr "名称"
 
-#: ../calendar_views.py:155 ../calendar_views.py:201
+#: ../calendar/calendar_views.py:157 ../calendar/calendar_views.py:203
 msgid "Timetables updated successfully."
 msgstr ""
 
-#: ../tracker/tracker_views.py:54 ../tracker/issue.py:297 ../views.py:417
-#: ../future/order.py:57 ../future/order.py:91 ../forms.py:562
+#: ../tracker/tracker_views.py:53 ../tracker/issue.py:297 ../views.py:368
+#: ../future/order.py:57 ../future/order.py:91 ../forms.py:569
 #: ../folder_views.py:244 ../future/menu.py:266
 msgid "Title"
 msgstr "名称"
 
-#: ../ui/base/new_instance.xml.en:11 ../ui/file/new_instance.xml.en:12
+#: ../ui/base/proxy_new_instance.xml.en:11
 #, fuzzy
 msgctxt "label"
 msgid "Title"
@@ -3891,7 +3903,7 @@ msgstr ""
 msgid "To activate your account, please type a password."
 msgstr ""
 
-#: ../calendar_views.py:649
+#: ../calendar/calendar_views.py:655
 msgid "To add an event, click on + symbol from the views."
 msgstr ""
 
@@ -3924,9 +3936,9 @@ msgctxt "paragraph"
 msgid "To download this file, click on <g id='1'>${filename}</g>"
 msgstr ""
 
-#: ../ui/root/about.xml.en:33
+#: ../ui/root/about.xml.en:43
 msgctxt "paragraph"
-msgid "To learn more, check out these resources:"
+msgid "To learn more visit the project's <g id='3'>Web Site</g>."
 msgstr ""
 
 #: ../tracker/tracker.py:73
@@ -3958,11 +3970,11 @@ msgctxt "heading"
 msgid "Translators"
 msgstr "保存翻译件"
 
-#: ../calendar_views.py:58
+#: ../calendar/calendar_views.py:58
 msgid "Tuesday"
 msgstr ""
 
-#: ../tracker/tracker_views.py:58 ../folder_views.py:245
+#: ../tracker/tracker_views.py:57 ../folder_views.py:245
 #: ../tracker/issue.py:305
 #, fuzzy
 msgid "Type"
@@ -3985,7 +3997,7 @@ msgid ""
 "Type the hostnames this website will apply to, each one in a different line."
 msgstr ""
 
-#: ../website_views.py:47
+#: ../website_views.py:46
 #, fuzzy
 msgid "Type your email address"
 msgstr "用户"
@@ -4011,15 +4023,15 @@ msgstr ""
 msgid "UI"
 msgstr ""
 
-#: ../calendar_views.py:1096
+#: ../calendar/calendar_views.py:1108
 msgid "Unexpected file of mimetype {mimetype}."
 msgstr ""
 
-#: ../file_views.py:185
+#: ../file_views.py:176
 msgid "Unexpected file of mimetype {type}"
 msgstr ""
 
-#: ../tracker/tracker_views.py:322
+#: ../tracker/tracker_views.py:302
 msgid "Unknown stored search \"{sname}\"."
 msgstr ""
 
@@ -4029,7 +4041,7 @@ msgctxt "title attribute"
 msgid "Unordered list"
 msgstr "目录"
 
-#: ../ui/ical/edit_timetables.xml.en:44
+#: ../calendar/ui/edit_timetables.xml.en:44
 #: ../ui/access/edit_membership_form.xml.en:18
 #, fuzzy
 msgctxt "button"
@@ -4041,13 +4053,16 @@ msgctxt "button"
 msgid "Update text export"
 msgstr ""
 
-#: ../ui/file/new_instance.xml.en:22
+#: ../scripts/icms-update.py:129
+msgid "Upgrade to version %s"
+msgstr ""
+
+#: ../file_views.py:58
 #, fuzzy
-msgctxt "button"
 msgid "Upload"
 msgstr "上载"
 
-#: ../ui/file/upload.xml.en:9 ../ui/ical/upload.xml.en:8
+#: ../calendar/ui/upload.xml.en:8 ../ui/file/upload.xml.en:9
 #, fuzzy
 msgctxt "legend"
 msgid "Upload"
@@ -4056,11 +4071,6 @@ msgstr "上载"
 #: ../file_views.py:51
 msgid "Upload File"
 msgstr "上载文件"
-
-#: ../ui/file/new_instance.xml.en:10
-msgctxt "legend"
-msgid "Upload a ${class_title}"
-msgstr ""
 
 #: ../ui/html/addlink.xml.en:128
 msgctxt "heading"
@@ -4135,12 +4145,18 @@ msgstr "用户"
 msgid "Verified"
 msgstr "版本被修正."
 
-#: ../tracker/tracker_views.py:57 ../tracker/issue.py:304
+#: ../tracker/tracker_views.py:56 ../tracker/issue.py:304
 #, fuzzy
 msgid "Version"
 msgstr "个人"
 
-#: ../calendar_views.py:1108 ../file_views.py:221
+#: ../ui/root/about.xml.en:13
+#, fuzzy
+msgctxt "table cell"
+msgid "Version"
+msgstr "个人"
+
+#: ../calendar/calendar_views.py:1120 ../file_views.py:212
 #, fuzzy
 msgid "Version uploaded"
 msgstr "版本上载."
@@ -4168,10 +4184,10 @@ msgstr ""
 msgid "Video"
 msgstr "浏览"
 
-#: ../file_views.py:377 ../file_views.py:468 ../file_views.py:480
-#: ../file_views.py:494 ../text_views.py:67 ../text_views.py:168
-#: ../html.py:119 ../tracker/tracker_views.py:280 ../user.py:291
-#: ../table_views.py:42 ../wiki/page_views.py:59 ../future/order.py:173
+#: ../file_views.py:368 ../file_views.py:459 ../file_views.py:471
+#: ../file_views.py:485 ../text_views.py:67 ../text_views.py:168
+#: ../tracker/tracker_views.py:260 ../user.py:291 ../table_views.py:42
+#: ../wiki/page_views.py:59 ../future/order.py:173 ../webpage.py:119
 #: ../forum/thread.py:42 ../folder_views.py:89 ../forum/forum.py:44
 #: ../future/dressable.py:95
 msgid "View"
@@ -4188,37 +4204,27 @@ msgstr ""
 msgid "Virtual Hosts"
 msgstr ""
 
-#: ../ui/root/about.xml.en:45
-msgctxt "li"
-msgid "Visit the project's <g id='10'>Web Site</g>;"
-msgstr ""
-
-#: ../ui/root/about.xml.en:41
-msgctxt "li"
-msgid "Want to know who is behind this software?"
-msgstr ""
-
-#: ../html.py:193
+#: ../webpage.py:193
 msgid "Web Page"
 msgstr ""
 
-#: ../website.py:52
+#: ../website.py:53
 msgid "Web Site"
 msgstr ""
 
-#: ../calendar_views.py:59
+#: ../calendar/calendar_views.py:59
 msgid "Wednesday"
 msgstr ""
 
-#: ../calendar_views.py:245
+#: ../calendar/calendar_views.py:247
 msgid "Week {n}"
 msgstr ""
 
-#: ../calendar_views.py:788
+#: ../calendar/calendar_views.py:796
 msgid "Weekly View"
 msgstr ""
 
-#: ../resource_views.py:588
+#: ../resource_views.py:491
 msgid "Welcome!"
 msgstr ""
 
@@ -4243,16 +4249,11 @@ msgstr ""
 msgid "Word Text"
 msgstr "简易文件"
 
-#: ../ui/root/about.xml.en:28
-msgctxt "li"
-msgid "Work together with the Wiki;"
-msgstr ""
-
 #: ../future/menu.py:106
 msgid "Workflow State"
 msgstr ""
 
-#: ../calendar_views.py:188
+#: ../calendar/calendar_views.py:190
 msgid "Wrong time selection (HH:MM)."
 msgstr ""
 
@@ -4269,7 +4270,7 @@ msgctxt "table cell"
 msgid "Yes"
 msgstr ""
 
-#: ../resource_views.py:604
+#: ../resource_views.py:507
 msgid "You Are Now Logged out."
 msgstr ""
 
@@ -4278,7 +4279,7 @@ msgctxt "fieldset"
 msgid "You are not authorized to access this resource."
 msgstr ""
 
-#: ../calendar_views.py:589
+#: ../calendar/calendar_views.py:593
 msgid "You are not authorized to modify this event."
 msgstr ""
 
@@ -4299,7 +4300,7 @@ msgstr ""
 msgid "You can not remove the default language."
 msgstr "你不能改变预设语言."
 
-#: ../ui/ical/edit_timetables.xml.en:11
+#: ../calendar/ui/edit_timetables.xml.en:11
 msgctxt "paragraph"
 msgid "You can specify timetables to limit the range when an event can be set."
 msgstr ""
@@ -4310,7 +4311,7 @@ msgctxt "paragraph"
 msgid "You can upload a new file to replace the current one."
 msgstr " 你可以上载一个文件通过内存系统建立一个新文档."
 
-#: ../ui/ical/upload.xml.en:9
+#: ../calendar/ui/upload.xml.en:9
 #, fuzzy
 msgctxt "paragraph"
 msgid ""
@@ -4358,7 +4359,7 @@ msgstr ""
 msgid "Your confirmation key is invalid."
 msgstr ""
 
-#: ../website_views.py:169
+#: ../website_views.py:172
 #, fuzzy
 msgid "Your email address"
 msgstr "用户"
@@ -4393,7 +4394,7 @@ msgctxt "div"
 msgid "[ <g id='4'>  <g id='5'>${menu/label}</g>  <g id='6'>|</g>  </g> ]"
 msgstr ""
 
-#: ../tracker/tracker_views.py:859
+#: ../tracker/tracker_views.py:839
 msgid "[%s]"
 msgstr ""
 
@@ -4432,11 +4433,11 @@ msgstr ""
 msgid "iKaaro Menu"
 msgstr ""
 
-#: ../ui/root/about.xml.en:17
+#: ../ui/root/about.xml.en:26
 msgctxt "paragraph"
 msgid ""
-"iKaaro is a Content Management System, written in the <g id='6'>Python</g> "
-"programming language, and based on the <g id='7'>itools</g> library."
+"iKaaro is a Content Management System, written in the <g id='1'>Python</g> "
+"programming language, and based on the <g id='2'>itools</g> library."
 msgstr ""
 
 #: ../table_views.py:100 ../future/menu.py:98
@@ -4450,6 +4451,10 @@ msgstr "对照"
 
 #: ../datatypes.py:95
 msgid "medium"
+msgstr ""
+
+#: ../website_views.py:349
+msgid "no version found"
 msgstr ""
 
 #: ../datatypes.py:98
@@ -4472,7 +4477,8 @@ msgctxt "noscript"
 msgid "the Rich Text Editor is unavailable.)"
 msgstr ""
 
-#: ../ui/ical/edit_timetables.xml.en:24 ../ui/ical/edit_timetables.xml.en:35
+#: ../calendar/ui/edit_timetables.xml.en:24
+#: ../calendar/ui/edit_timetables.xml.en:35
 msgctxt "table cell"
 msgid "to"
 msgstr ""
@@ -4500,7 +4506,7 @@ msgstr ""
 msgid "{field}: {old_value}{new_value}"
 msgstr ""
 
-#: ../folder.py:283
+#: ../folder.py:285
 #, fuzzy
 msgid "{n} obs"
 msgstr "%d 字节"
@@ -4508,6 +4514,11 @@ msgstr "%d 字节"
 #: ../skins.py:161
 msgid "{root_title}: {here_title}"
 msgstr ""
+
+#: ../tracker/tracker_views.py:152
+#, fuzzy
+msgid "{search_title} ({issues_nb})"
+msgstr "名称"
 
 #: ../tracker/issue.py:267
 msgid ""
@@ -4517,12 +4528,12 @@ msgid ""
 "{comment}\n"
 msgstr ""
 
-#: ../ui/ical/weekly_view.xml.en:53 ../ui/aruni/languages.xml.en:7
+#: ../calendar/ui/weekly_view.xml.en:53 ../ui/aruni/languages.xml.en:7
 msgctxt "div"
 msgid " "
 msgstr ""
 
-#: ../ui/ical/edit_event.xml.en:38 ../ui/ical/edit_event.xml.en:49
+#: ../calendar/ui/edit_event.xml.en:38 ../calendar/ui/edit_event.xml.en:49
 msgctxt "table cell"
 msgid " "
 msgstr ""
@@ -4546,6 +4557,10 @@ msgstr ""
 #: ../tracker/ui/edit_resource.xml.en:36
 msgctxt "table cell"
 msgid "  "
+msgstr ""
+
+#: ../utils.py:113
+msgid "…"
 msgstr ""
 
 #: ../ui/folder/rename.xml.en:15
@@ -4925,10 +4940,6 @@ msgstr "名称"
 #~ msgstr "新文件"
 
 #, fuzzy
-#~ msgid "Document PowerPoint"
-#~ msgstr "编辑文档"
-
-#, fuzzy
 #~ msgid "Document Word"
 #~ msgstr "编辑文档"
 
@@ -4991,6 +5002,11 @@ msgstr "名称"
 #, fuzzy
 #~ msgid "Extranet"
 #~ msgstr "外部"
+
+#, fuzzy
+#~ msgctxt "label"
+#~ msgid "File"
+#~ msgstr "名称"
 
 #~ msgid "File uploaded."
 #~ msgstr "文件被上载."
