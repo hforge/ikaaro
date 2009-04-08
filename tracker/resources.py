@@ -119,7 +119,8 @@ class Resource(Record):
         ns = {}
         ns['resource'] = {'name': user, 'title': user_title}
 
-        ns['issue'] = {'number': issue.name, 'title': issue.get_value('title'),
+        ns['issue'] = {'number': issue.name,
+                       'title': issue.get_value('title'),
                        'url': '../%s/;edit' % issue.name, 'product': product,
                        'comment': comment}
 
@@ -170,10 +171,10 @@ class ListOfUsers(Enumerate):
 class BaseResources(BaseTable):
 
     record_schema = {
-        'dtstart': DateTime(mandatory=True, index='keyword'),
-        'dtend': DateTime(mandatory=True, index='keyword'),
-        'issue': String(mandatory=True, index='keyword'),
-        'resource': ListOfUsers(mandatory=True, index='keyword'),
+        'dtstart': DateTime(mandatory=True, is_stored=True, is_indexed=True),
+        'dtend': DateTime(mandatory=True, is_stored=True, is_indexed=True),
+        'issue': String(mandatory=True, is_indexed=True),
+        'resource': ListOfUsers(mandatory=True, is_indexed=True),
         'comment': Unicode}
 
     form = [
@@ -206,14 +207,12 @@ class Resources(Table, CalendarBase):
 
     def get_events_to_display(self, start, end):
         # Build the query
-        dtstart = str(start)
-        dtend = str(end)
-        dtstart_limit = str(start + resolution)
-        dtend_limit = str(end + resolution)
-        query = OrQuery(RangeQuery('dtstart', dtstart, dtend),
-                        RangeQuery('dtend', dtstart_limit, dtend_limit),
-                        AndQuery(RangeQuery('dtstart', None, dtstart),
-                                 RangeQuery('dtend', dtend, None)))
+        start_limit = start + resolution
+        end_limit = end + resolution
+        query = OrQuery(RangeQuery('dtstart', start, end),
+                        RangeQuery('dtend', start_limit, end_limit),
+                        AndQuery(RangeQuery('dtstart', None, start),
+                                 RangeQuery('dtend', end, None)))
 
         # Define the set of concerned issues
         tracker = self.parent

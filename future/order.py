@@ -251,7 +251,8 @@ class ChildrenOrderedTable_AddLink(DBResource_AddLink):
 
 class ResourcesOrderedTableFile(OrderedTableFile):
 
-    record_schema = {'name': String(mandatory=True, unique=True, index='keyword')}
+    record_schema = {'name': String(mandatory=True, unique=True,
+                                    is_indexed=True)}
 
 
 
