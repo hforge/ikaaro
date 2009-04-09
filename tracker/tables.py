@@ -50,7 +50,7 @@ class ProductsEnumerate(Enumerate):
 ###########################################################################
 class SelectTable_View(OrderedTable_View):
 
-    access = True
+    access = 'is_allowed_to_view'
 
     def get_table_columns(self, resource, context):
         cls = OrderedTable_View
