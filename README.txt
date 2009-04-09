@@ -2,9 +2,10 @@
 ikaaro is a Content Management System built on Python & itools, among
 other feautres it provides:
 
- - content and document mangement (full index&search, metadata, etc.)
- - multilingual user interfaces and content
- - high level modules: wiki, forum, tracker, etc.
+ - Content & Document Management.
+ - Collaboration with the Wiki module, the issue tracker, etc.
+ - Multiple web sites in one instance, with separate access rights.
+ - Mulitilingual interfaces and content.
 
 The scripts included are:
 
