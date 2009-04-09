@@ -27,7 +27,7 @@ from itools.datatypes import Boolean, Integer, String, Tokens
 class ServerConfig(ConfigFile):
 
     schema = {
-        'modules': Tokens(default=()),
+        'modules': Tokens,
         'listen-address': String(default=''),
         'listen-port': Integer(default=8080),
         'smtp-host': String(default=''),

@@ -56,7 +56,7 @@ class History(Table):
         'priority': Integer,
         'assigned_to': String,
         'comment': Unicode,
-        'cc_list': Tokens(),
+        'cc_list': Tokens,
         'file': String}
 
 

@@ -78,8 +78,8 @@ class WebSite(RoleAware, Folder):
     def get_metadata_schema(cls):
         schema = Folder.get_metadata_schema()
         schema.update(RoleAware.get_metadata_schema())
-        schema['vhosts'] = Tokens(default=())
-        schema['contacts'] = Tokens(default=())
+        schema['vhosts'] = Tokens
+        schema['contacts'] = Tokens
         schema['website_languages'] = Tokens(default=('en',))
         return schema
 

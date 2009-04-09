@@ -274,8 +274,7 @@ class ResourcesOrderedTable(OrderedTable):
 
     @classmethod
     def get_metadata_schema(cls):
-        return merge_dicts(OrderedTable.get_metadata_schema(),
-                           order=Tokens(default=()))
+        return merge_dicts(OrderedTable.get_metadata_schema(), order=Tokens)
 
 
     def get_orderable_classes(self):

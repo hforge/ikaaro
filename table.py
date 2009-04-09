@@ -108,7 +108,7 @@ class Table(File):
 ###########################################################################
 class OrderedTableFile(TableFile):
 
-    schema = {'order': Tokens(default=())}
+    schema = {'order': Tokens}
 
 
     def get_record_ids_in_order(self):
