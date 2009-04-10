@@ -57,8 +57,11 @@ def is_edit_conflict(resource, context, timestamp):
     return False
 
 
-def _change_link(old_path, new_path, base, stream):
+def _change_link(source, target, base, stream):
+    map = {'a': 'href', 'img': 'src'}
+
     for event in stream:
+        # Process only elements of the XHTML namespace
         type, value, line = event
         if type != START_ELEMENT:
             yield event
@@ -67,47 +70,45 @@ def _change_link(old_path, new_path, base, stream):
         if tag_uri != xhtml_uri:
             yield event
             continue
-        if tag_name != 'a' and tag_name != 'img':
+
+        # Get the attribute name and value
+        attr_name = map.get(tag_name)
+        if attr_name is None:
             yield event
             continue
 
-        if tag_name == 'a':
-            attr_name = (None, 'href')
-        else:
-            attr_name = (None, 'src')
-
+        attr_name = (None, attr_name)
         value = attributes.get(attr_name)
-        if tag_name == 'a' and value is None:
-            # The tag looks like an anchor
+        if value is None:
             yield event
             continue
+
         reference = get_reference(value)
 
-         # Skip bad links
-        if (reference.scheme or reference.authority or
-            not reference.path):
+        # Skip empty links, external links and links to '/ui/'
+        if reference.scheme or reference.authority:
             yield event
             continue
-        if value.startswith('/ui/'):
+        path = reference.path
+        if not path or path.is_absolute() and path[0] == 'ui':
             yield event
             continue
 
         # Strip the view
-        path = reference.path
         if path[-1] == ';download':
             path = path[:-1]
             view = '/;download'
         else:
             view = ''
 
-        # Resolve the path
+        # Check the link points to the resource that is moving
         path = base.resolve2(path)
+        if path != source:
+            yield event
+            continue
 
-        # Match ?
-        if path == old_path:
-            value = str(base.get_pathto(new_path)) + view
-
-        attributes[attr_name] = value
+        # Update the link
+        attributes[attr_name] = str(base.get_pathto(target)) + view
         yield START_ELEMENT, (tag_uri, tag_name, attributes), line
 
 
@@ -240,14 +241,12 @@ class WebPage(ResourceWithHTML, Multilingual, Text):
         return links
 
 
-    def change_link(self,  old_path, new_path):
+    def update_links(self,  source, target):
         base = self.get_abspath()
 
-        languages = self.get_site_root().get_property('website_languages')
-        for language in languages:
-            handler = self.get_handler(language=language)
-            events = list(_change_link(old_path, new_path, base,
-                                       handler.events))
+        for handler in self.get_handlers():
+            events = _change_link(source, target, base, handler.events)
+            events = list(events)
             handler.set_changed()
             handler.events = events
         get_context().server.change_resource(self)

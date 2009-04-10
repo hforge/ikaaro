@@ -407,8 +407,13 @@ class DBResource(CatalogAware, IResource):
         return [(self.name, new_name)]
 
 
-    def update_links(self, new_name, base_path):
-        """The resource must update its links to itself.
+    def _on_move_resource(self, target):
+        """This method is to be called when moving the resource somewhere
+        else, before it has been moved.  The 'target' parameter is the
+        place it will be moved to.
+
+        Called by 'Folder.move_resource'.  It is used to update the resources
+        that link to this one.
         """
         # Check referencial-integrity
         catalog = get_context().database.catalog
@@ -417,21 +422,22 @@ class DBResource(CatalogAware, IResource):
         if catalog is None:
             return
 
-        old_path = self.get_abspath()
-        new_path = base_path.resolve2(new_name)
+        source = self.get_abspath()
 
         # Get all the resources that have a link to me
-        query = PhraseQuery('links', str(old_path))
+        query = PhraseQuery('links', str(source))
         results = catalog.search(query).get_documents()
         for result in results:
             resource = self.get_resource(result.abspath)
-            resource.change_link(old_path, new_path)
+            resource.update_links(source, target)
 
 
-    def change_link(self, old_path, new_path):
-        """The resource "old_name" has a "new_name", we must update its link
+    def update_links(self, source, target):
+        """The resource identified by 'source' is going to be moved to
+        'target'.  Update our links to it.
+
+        The parameters 'source' and 'target' are absolute 'Path' objects.
         """
-        pass
 
 
     def get_links(self):

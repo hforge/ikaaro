@@ -511,7 +511,7 @@ class Menu(OrderedTable):
         return links
 
 
-    def change_link(self, old_path, new_path):
+    def update_links(self, old_path, new_path):
         handler = self.handler
         base = self.get_abspath()
         # FIXME The context is not available when updating the catalog.

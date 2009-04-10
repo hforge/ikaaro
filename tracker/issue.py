@@ -119,7 +119,7 @@ class Issue(Folder):
         return links
 
 
-    def change_link(self, old_path, new_path):
+    def update_links(self, old_path, new_path):
         base = self.get_abspath()
         old_name = base.get_pathto(old_path)
         history = self.get_history()

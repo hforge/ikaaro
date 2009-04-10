@@ -200,8 +200,8 @@ class WikiPage(Text):
         return links
 
 
-    def change_link(self, old_path, new_path,
-                    links_re = compile(r'(\.\. .*?: )(\S*)')):
+    def update_links(self, old_path, new_path,
+                     links_re = compile(r'(\.\. .*?: )(\S*)')):
         old_data = self.handler.to_str()
         new_data = []
 

@@ -107,30 +107,11 @@ class Folder(DBResource):
         return cls(metadata)
 
 
-    def update_links(self, new_name, base_path):
-        """The resource must update its links to itself and to its content
+    def _on_move_resource(self, target):
+        """Called by 'Folder.move_resource'.
         """
-        # Check referencial-integrity
-        catalog = get_context().database.catalog
-        # The catalog is not available when updating (icms-update.py)
-        # FIXME We do not guarantee referencial-integrity when updating
-        if catalog is None:
-            return
-
-        old_base_path = self.get_abspath()
-        new_base_path = base_path.resolve2(new_name)
-        for resource in self.traverse_resources():
-            # Old and new paths
-            old_path = resource.get_abspath()
-            pathto = old_base_path.get_pathto(old_path)
-            new_path = new_base_path.resolve2(pathto)
-
-            # Get all the resources that have a link to this resource
-            query = PhraseQuery('links', str(old_path))
-            results = catalog.search(query).get_documents()
-            for result in results:
-                resource = self.get_resource(result.abspath)
-                resource.change_link(old_path, new_path)
+        for resource in self.get_resources():
+            resource._on_move_resource(target.resolve_name(resource.name))
 
 
     def del_resource(self, name):
@@ -227,7 +208,8 @@ class Folder(DBResource):
         resource = self.get_resource(source)
 
         # Update the links to the resources that are to be moved
-        resource.update_links(target, self.get_abspath())
+        new_path = self.get_abspath().resolve2(target)
+        resource._on_move_resource(new_path)
         # Events, remove
         database.remove_resource(resource)
 
