@@ -415,6 +415,10 @@ class DBResource(CatalogAware, IResource):
         Called by 'Folder.move_resource'.  It is used to update the resources
         that link to this one.
         """
+        # (1) Update links to other resources
+        self.update_relative_links(target)
+
+        # (2) Update resources that link to me
         # Check referencial-integrity
         catalog = get_context().database.catalog
         # The catalog is not available when updating (icms-update.py)
@@ -437,6 +441,12 @@ class DBResource(CatalogAware, IResource):
         'target'.  Update our links to it.
 
         The parameters 'source' and 'target' are absolute 'Path' objects.
+        """
+
+
+    def update_relative_links(self, target):
+        """Update the relative links coming out from this resource, so they
+        are not broken when this resource moves to 'target'.
         """
 
 

@@ -26,6 +26,7 @@ from itools.core import merge_dicts
 from itools.datatypes import DateTime
 from itools.gettext import MSG
 from itools.html import xhtml_uri, XHTMLFile
+from itools.stl import set_prefix
 from itools.uri import get_reference
 from itools.web import BaseView, get_context
 from itools.xml import TEXT, START_ELEMENT
@@ -243,9 +244,20 @@ class WebPage(ResourceWithHTML, Multilingual, Text):
 
     def update_links(self,  source, target):
         base = self.get_abspath()
-
         for handler in self.get_handlers():
             events = _change_link(source, target, base, handler.events)
+            events = list(events)
+            handler.set_changed()
+            handler.events = events
+        get_context().server.change_resource(self)
+
+
+    def update_relative_links(self, target):
+        source = self.get_abspath()
+        prefix = target.get_pathto(source)
+
+        for handler in self.get_handlers():
+            events = set_prefix(handler.events, prefix)
             events = list(events)
             handler.set_changed()
             handler.events = events
