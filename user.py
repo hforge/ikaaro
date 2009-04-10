@@ -154,7 +154,7 @@ class User(AccessControl, Folder):
     confirmation_subject = MSG(u"Confirmation required")
     confirmation_txt = MSG(u"To confirm your identity, click the link:"
                            u"\n"
-                           u"\n $uri")
+                           u"\n {uri}")
     def send_confirmation(self, context, email):
         self.send_confirm_url(context, email, self.confirmation_subject,
             self.confirmation_txt, ';confirm_registration')
@@ -163,7 +163,7 @@ class User(AccessControl, Folder):
     forgotten_subject = MSG(u"Choose a new password")
     forgotten_txt = MSG(u"To choose a new password, click the link:"
                         u"\n"
-                        u"\n $uri")
+                        u"\n {uri}")
     def send_forgotten_password(self, context, email):
         self.send_confirm_url(context, email, self.forgotten_subject,
             self.forgotten_txt, ';change_password_forgotten')
