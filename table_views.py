@@ -382,7 +382,9 @@ class Table_ExportCSV(BaseView):
     access = 'is_admin'
     title = MSG(u"Export to CSV")
     # String to join multiple values (or they will raise an error)
-    separator = None
+    multiple_separator = None
+    # CSV columns separator
+    csv_separator = ','
 
 
     def get_mtime(self, resource):
@@ -390,6 +392,12 @@ class Table_ExportCSV(BaseView):
 
 
     def GET(self, resource, context):
+        handler = resource.handler
+        columns = ['id'] + [widget.name for widget in self.get_form()]
+        language = resource.get_content_language(context)
+        csv = handler.to_csv(columns, separator=self.multiple_separator,
+                             language=language)
+
         response = context.response
         # Filename
         filename = "%s.csv" % resource.name
@@ -397,9 +405,4 @@ class Table_ExportCSV(BaseView):
                             'inline; filename="%s"' % filename)
         # Content-Type
         response.set_header('Content-Type', 'text/comma-separated-values')
-
-        handler = resource.handler
-        columns = ['id'] + [widget.name for widget in self.get_form()]
-        language = resource.get_content_language(context)
-        return handler.to_csv(columns, separator=self.separator,
-                              language=language)
+        return csv.to_str(separator=self.csv_separator)
