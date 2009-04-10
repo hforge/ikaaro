@@ -59,15 +59,19 @@ class StateForm(STLForm):
             description = trans['description'].gettext()
             transitions.append({'name': name, 'description': description})
         # Workflow history
-        users = resource.get_resource('/users')
+        root = context.root
         history = []
         for transition in resource.get_property('wf_transition'):
             userid = transition['user']
-            user = users.get_resource(userid)
+            user = root.get_user(userid)
+            if user:
+                user_title = user.get_title()
+            else:
+                user_title = userid
             history.append(
                 {'title': transition['name'],
                  'date': format_datetime(transition['date']),
-                 'user': user.get_title(),
+                 'user': user_title,
                  'comments': transition['comments']})
         history.reverse()
 
