@@ -21,6 +21,7 @@ from itools.csv import CSVFile
 from itools.gettext import POFile, MSG
 from itools.handlers import TextFile, Python as PythonFile
 from itools.html import HTMLFile
+from itools.utils import add_type
 from itools.xml import XMLFile
 
 # Import from ikaaro
@@ -88,6 +89,16 @@ class Python(Text):
     class_icon16 = 'icons/16x16/python.png'
     class_icon48 = 'icons/48x48/python.png'
     class_handler = PythonFile
+
+
+
+class JS(Text):
+
+    class_id = 'application/x-javascript'
+    class_version = '20071216'
+    class_title = MSG(u'Javascript')
+    class_icon16 = 'icons/16x16/js.png'
+    class_icon48 = 'icons/48x48/js.png'
 
 
 
@@ -159,6 +170,10 @@ class CSV(Text):
 ###########################################################################
 register_resource_class(Text)
 register_resource_class(Python)
+for js_mime in ['application/x-javascript', 'text/javascript',
+                'application/javascript']:
+    register_resource_class(JS, js_mime)
+    add_type(js_mime, '.js')
 register_resource_class(PO)
 register_resource_class(CSS)
 register_resource_class(XML)
