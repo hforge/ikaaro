@@ -71,14 +71,14 @@ class Database(GitDatabase):
                 if path in resources_added:
                     del resources_added[path]
                 if path in resources_changed:
-                    resources_changed.remove(path)
+                    del resources_changed[path]
                 resources_removed.add(path)
         else:
             path = str(resource.get_canonical_path())
             if path in resources_added:
                 del resources_added[path]
             if path in resources_changed:
-                resources_changed.remove(path)
+                del resources_changed[path]
             resources_removed.add(path)
 
 
