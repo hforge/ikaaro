@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 0.3.0\n"
-"POT-Creation-Date: 2009-04-08 15:04+CET\n"
+"POT-Creation-Date: 2009-04-10 12:04+CET\n"
 "PO-Revision-Date: 2001-07-08 17:07+CET\n"
 "Last-Translator: jdavid\n"
 "Language-Team: ??\n"
@@ -657,6 +657,36 @@ msgctxt "link"
 msgid "(${item/n}) <g id='2'>${item/path}</g>"
 msgstr ""
 
+#: ../tracker/ui/search.xml.en:59
+msgctxt "label"
+msgid "(<g id='11'>more ...</g>)"
+msgstr ""
+
+#: ../tracker/ui/search.xml.en:69
+msgctxt "label"
+msgid "(<g id='14'>more ...</g>)"
+msgstr ""
+
+#: ../tracker/ui/search.xml.en:81
+msgctxt "label"
+msgid "(<g id='17'>more ...</g>)"
+msgstr ""
+
+#: ../tracker/ui/search.xml.en:91
+msgctxt "label"
+msgid "(<g id='20'>more ...</g>)"
+msgstr ""
+
+#: ../tracker/ui/search.xml.en:101
+msgctxt "label"
+msgid "(<g id='23'>more ...</g>)"
+msgstr ""
+
+#: ../tracker/ui/search.xml.en:49
+msgctxt "label"
+msgid "(<g id='8'>more ...</g>)"
+msgstr ""
+
 #: ../tracker/ui/edit_resource.xml.en:28 ../tracker/ui/edit_resource.xml.en:45
 msgctxt "table cell"
 msgid "(HH:MM)"
@@ -1144,7 +1174,7 @@ msgstr ""
 
 #: ../tracker/ui/search.xml.en:113
 msgctxt "label"
-msgid "Assigned To:<g id='32'> (<g id='33'>Edit</g>)</g>"
+msgid "Assigned To:<g id='26'> (<g id='27'>edit</g>)</g>"
 msgstr ""
 
 #: ../tracker/ui/issue_history.xml.en:42
@@ -1396,7 +1426,7 @@ msgstr ""
 msgid "Comma Separated Values"
 msgstr ""
 
-#: ../tracker/resources.py:183 ../revisions_views.py:46
+#: ../tracker/resources.py:184 ../revisions_views.py:46
 #: ../tracker/issue.py:265
 msgid "Comment"
 msgstr ""
@@ -1734,7 +1764,7 @@ msgctxt "dt"
 msgid "Email"
 msgstr ""
 
-#: ../tracker/resources.py:182
+#: ../tracker/resources.py:183
 msgid "End"
 msgstr ""
 
@@ -2092,7 +2122,7 @@ msgstr ""
 msgid "Invalid title."
 msgstr ""
 
-#: ../tracker/resources.py:184 ../tracker/issue.py:68 ../tracker/issue.py:69
+#: ../tracker/resources.py:185 ../tracker/issue.py:68 ../tracker/issue.py:69
 msgid "Issue"
 msgstr ""
 
@@ -2109,7 +2139,7 @@ msgstr ""
 msgid "Issue not found."
 msgstr ""
 
-#: ../tracker/tables.py:56
+#: ../tracker/tables.py:58
 msgid "Issues"
 msgstr ""
 
@@ -2328,15 +2358,10 @@ msgctxt "emphasis"
 msgid "Module:"
 msgstr ""
 
-#: ../tracker/ui/add_issue.xml.en:48 ../tracker/ui/change_bugs.xml.en:46
-#: ../tracker/ui/edit_issue.xml.en:52
+#: ../tracker/ui/add_issue.xml.en:48 ../tracker/ui/search.xml.en:59
+#: ../tracker/ui/change_bugs.xml.en:46 ../tracker/ui/edit_issue.xml.en:52
 msgctxt "label"
 msgid "Module:"
-msgstr ""
-
-#: ../tracker/ui/search.xml.en:59
-msgctxt "label"
-msgid "Module:<g id='12'> (<g id='13'>Edit</g>)</g>"
 msgstr ""
 
 #: ../calendar/calendar_views.py:57
@@ -2451,7 +2476,7 @@ msgstr ""
 msgid "No resource removed."
 msgstr ""
 
-#: ../messages.py:82 ../tracker/tables.py:163
+#: ../messages.py:82 ../tracker/tables.py:176
 msgid "No resource selected."
 msgstr ""
 
@@ -2651,7 +2676,7 @@ msgstr ""
 msgid "Paste"
 msgstr ""
 
-#: ../future/order.py:92 ../future/order.py:271 ../future/menu.py:267
+#: ../future/order.py:92 ../future/order.py:272 ../future/menu.py:267
 msgid "Path"
 msgstr ""
 
@@ -2746,23 +2771,18 @@ msgctxt "emphasis"
 msgid "Priority:"
 msgstr ""
 
-#: ../tracker/ui/add_issue.xml.en:82 ../tracker/ui/change_bugs.xml.en:82
-#: ../tracker/ui/edit_issue.xml.en:86
+#: ../tracker/ui/add_issue.xml.en:82 ../tracker/ui/search.xml.en:101
+#: ../tracker/ui/change_bugs.xml.en:82 ../tracker/ui/edit_issue.xml.en:86
 msgctxt "label"
 msgid "Priority:"
-msgstr ""
-
-#: ../tracker/ui/search.xml.en:101
-msgctxt "label"
-msgid "Priority:<g id='28'> (<g id='29'>Edit</g>)</g>"
 msgstr ""
 
 #: ../workflow.py:107
 msgid "Private"
 msgstr ""
 
-#: ../tracker/tracker_views.py:54 ../tracker/tables.py:207
-#: ../tracker/tables.py:234
+#: ../tracker/tracker_views.py:54 ../tracker/tables.py:220
+#: ../tracker/tables.py:247
 msgid "Product"
 msgstr ""
 
@@ -2771,14 +2791,9 @@ msgctxt "label"
 msgid "Product (mandatory):"
 msgstr ""
 
-#: ../tracker/ui/change_bugs.xml.en:38
+#: ../tracker/ui/search.xml.en:49 ../tracker/ui/change_bugs.xml.en:38
 msgctxt "label"
 msgid "Product:"
-msgstr ""
-
-#: ../tracker/ui/search.xml.en:49
-msgctxt "label"
-msgid "Product:<g id='8'> (<g id='9'>Edit</g>)</g>"
 msgstr ""
 
 #: ../user_views.py:115
@@ -2829,7 +2844,7 @@ msgstr ""
 msgid "Reject the document."
 msgstr ""
 
-#: ../tracker/tables.py:236
+#: ../tracker/tables.py:249
 msgid "Released"
 msgstr ""
 
@@ -2910,7 +2925,7 @@ msgstr ""
 msgid "Resend Confirmation"
 msgstr ""
 
-#: ../tracker/resources.py:180
+#: ../tracker/resources.py:181
 msgid "Resource"
 msgstr ""
 
@@ -2928,11 +2943,11 @@ msgctxt "label"
 msgid "Resource:"
 msgstr ""
 
-#: ../tracker/tracker_views.py:183 ../tracker/resources.py:193
+#: ../tracker/tracker_views.py:183 ../tracker/resources.py:194
 msgid "Resources"
 msgstr ""
 
-#: ../future/order.py:267
+#: ../future/order.py:268
 msgid "Resources Ordered Table"
 msgstr ""
 
@@ -2940,7 +2955,7 @@ msgstr ""
 msgid "Resources added to ordered list."
 msgstr ""
 
-#: ../tracker/resources.py:194
+#: ../tracker/resources.py:195
 msgid "Resources assigned to issues"
 msgstr ""
 
@@ -2984,7 +2999,7 @@ msgstr ""
 msgid "Resources published."
 msgstr ""
 
-#: ../messages.py:63 ../tracker/tables.py:181
+#: ../messages.py:63 ../tracker/tables.py:194
 msgid "Resources removed: {resources}."
 msgstr ""
 
@@ -3100,7 +3115,7 @@ msgctxt "table cell"
 msgid "Select Resource"
 msgstr ""
 
-#: ../tracker/tables.py:123
+#: ../tracker/tables.py:136
 msgid "Select Table"
 msgstr ""
 
@@ -3155,7 +3170,7 @@ msgctxt "table cell"
 msgid "Start"
 msgstr ""
 
-#: ../tracker/resources.py:181
+#: ../tracker/resources.py:182
 msgid "Start YYYY-MM-DD HH:MM"
 msgstr ""
 
@@ -3194,14 +3209,9 @@ msgctxt "label"
 msgid "Status (mandatory):"
 msgstr ""
 
-#: ../tracker/ui/change_bugs.xml.en:74
+#: ../tracker/ui/search.xml.en:91 ../tracker/ui/change_bugs.xml.en:74
 msgctxt "label"
 msgid "Status:"
-msgstr ""
-
-#: ../tracker/ui/search.xml.en:91
-msgctxt "label"
-msgid "Status:<g id='24'> (<g id='25'>Edit</g>)</g>"
 msgstr ""
 
 #: ../tracker/stored.py:53
@@ -3494,7 +3504,7 @@ msgstr ""
 msgid ""
 "To choose a new password, click the link:\n"
 "\n"
-" $uri"
+" {uri}"
 msgstr ""
 
 #: ../ui/user/edit_password.xml.en:22
@@ -3510,7 +3520,7 @@ msgstr ""
 msgid ""
 "To confirm your identity, click the link:\n"
 "\n"
-" $uri"
+" {uri}"
 msgstr ""
 
 #: ../ui/binary/Archive_view.xml.en:7 ../ui/file/download_form.xml.en:8
@@ -3584,14 +3594,9 @@ msgctxt "emphasis"
 msgid "Type:"
 msgstr ""
 
-#: ../tracker/ui/change_bugs.xml.en:66
+#: ../tracker/ui/search.xml.en:81 ../tracker/ui/change_bugs.xml.en:66
 msgctxt "label"
 msgid "Type:"
-msgstr ""
-
-#: ../tracker/ui/search.xml.en:81
-msgctxt "label"
-msgid "Type:<g id='20'> (<g id='21'>Edit</g>)</g>"
 msgstr ""
 
 #: ../skins.py:92
@@ -3727,15 +3732,10 @@ msgctxt "emphasis"
 msgid "Version:"
 msgstr ""
 
-#: ../tracker/ui/add_issue.xml.en:56 ../tracker/ui/change_bugs.xml.en:55
-#: ../tracker/ui/edit_issue.xml.en:60
+#: ../tracker/ui/add_issue.xml.en:56 ../tracker/ui/search.xml.en:69
+#: ../tracker/ui/change_bugs.xml.en:55 ../tracker/ui/edit_issue.xml.en:60
 msgctxt "label"
 msgid "Version:"
-msgstr ""
-
-#: ../tracker/ui/search.xml.en:69
-msgctxt "label"
-msgid "Version:<g id='16'> (<g id='17'>Edit</g>)</g>"
 msgstr ""
 
 #: ../file.py:240 ../file.py:241
