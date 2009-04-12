@@ -159,7 +159,7 @@ def update(parser, options, target):
     # XXX Specific to the migration from 0.50 to 0.60
     #######################################################################
     if not vfs.exists('%s/.git' % database.path):
-        message = 'STAGE 0: Add the Git achive (y/N)? '
+        message = 'STAGE 0: Add the Git archive (y/N)? '
         if ask_confirmation(message, confirm) is False:
             abort()
         # Init
