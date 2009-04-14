@@ -1921,7 +1921,7 @@ msgstr "Exporter en CSV"
 
 #: ../tracker/tracker_views.py:179
 msgid "Export to Text"
-msgstr "Exporter en texte&nbsp;:"
+msgstr "Exporter en texte"
 
 #: ../tracker/ui/export_to_text.xml.en:14
 msgctxt "legend"
