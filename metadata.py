@@ -33,8 +33,7 @@ def get_datatype(format, name):
     cls = get_resource_class(format)
     schema = cls.get_metadata_schema()
     if name not in schema:
-        error = "'%s' class does not define the '%s' metadata"
-        raise ValueError, error % (cls.__name__, name)
+        return String
     return schema[name]
 
 
