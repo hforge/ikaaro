@@ -14,9 +14,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# Import from itools
+from itools import vfs
 
 
 def is_instance_up_to_date(root):
     # 0.60 Check the Git archive has been initalized
-    revisions = root.get_revisions()
-    return len(revisions) > 0
+    return vfs.exists('%s/.git' % root.handler.uri)

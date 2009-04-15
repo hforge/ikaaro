@@ -21,6 +21,7 @@
 # Import from the Standard Library
 from cProfile import runctx
 from logging import DEBUG, INFO, WARNING, ERROR, CRITICAL
+from multiprocessing import Process, Pipe
 from os import fdopen
 import sys
 from tempfile import mkstemp
@@ -30,6 +31,7 @@ from xapian import DatabaseOpeningError
 
 # Import from itools
 from itools.datatypes import Boolean
+from itools import git
 from itools.http import Request
 from itools.uri import get_reference, get_host_from_authority
 from itools.vfs import cwd
@@ -239,8 +241,65 @@ class Server(BaseServer):
 
 
     def start(self):
+        self.git_start()
+
+        # Go
         if self.profile_path is not None:
             filename = self.profile_path
             runctx("BaseServer.start(self)", globals(), locals(), filename)
         else:
             BaseServer.start(self)
+
+
+    #######################################################################
+    # Git API
+    #######################################################################
+    def git_start(self):
+        """This methods starts another process that will be used to make
+        questions to git.  This is done so because we fork to call the git
+        commands, and using an specific process for this purpose minimizes
+        memory usage (because fork duplicates the memory).
+        """
+        # Process to fork git
+        path = self.database.path
+        self.git_pipe, child_pipe = Pipe()
+        p = Process(target=git_process, args=(path, child_pipe))
+        p.start()
+
+
+    def git_stop(self):
+        self.git_pipe.send((GIT_STOP, None))
+
+
+    def get_revisions_metadata(self, files):
+        self.git_pipe.send((GIT_REVISIONS, files))
+        return self.git_pipe.recv()
+
+
+    def get_diff(self, revision):
+        self.git_pipe.send((GIT_DIFF, revision))
+        return self.git_pipe.recv()
+
+
+
+# The git process
+GIT_STOP = 0
+GIT_REVISIONS = 1
+GIT_DIFF = 2
+
+
+def git_process(cwd, conn):
+    while conn.poll(None):
+        # Recv
+        command, data = conn.recv()
+        # Action
+        if command == GIT_REVISIONS:
+            results = git.get_revisions_metadata(data, cwd=cwd)
+        elif command == GIT_DIFF:
+            results = git.get_diff(data, cwd=cwd)
+        elif GIT_STOP:
+            break
+        else:
+            results = None
+        # Send
+        conn.send(results)

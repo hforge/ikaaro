@@ -68,6 +68,7 @@ def update_catalog(parser, options, target):
     context.accept_language = AcceptLanguage()
     context.uri = None
     server.init_context(context)
+    server.git_start()
 
     # Update
     t0, v0 = time(), vmsize()
@@ -94,6 +95,8 @@ def update_catalog(parser, options, target):
     t2, v2 = time(), vmsize()
     v = (v2 - v1)/1024
     print 'Time: %.02f seconds. Memory: %s Kb' % (t2 - t1, v)
+
+    server.git_stop()
 
 
 

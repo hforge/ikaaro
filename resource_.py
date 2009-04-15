@@ -25,7 +25,6 @@ from datetime import datetime
 # Import from itools
 from itools.datatypes import Unicode, String, Integer, Boolean, DateTime
 from itools.gettext import MSG
-from itools import git
 from itools.uri import resolve_uri
 from itools.web import Resource, get_context
 from itools.xapian import CatalogAware, PhraseQuery
@@ -244,9 +243,7 @@ class DBResource(CatalogAware, IResource):
         files = self.get_files_to_archive(content)
 
         # Call git
-        cwd = context.database.path
-        revisions = git.get_revisions_metadata(files, cwd=cwd)
-
+        revisions = context.server.get_revisions_metadata(files)
         return [
             {'username': x['author_name'],
              'date': x['author_date'],

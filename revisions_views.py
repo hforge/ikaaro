@@ -86,7 +86,7 @@ class DBResource_Changes(STLView):
         revision = context.get_form_value('revision')
 
         # Get the revision data
-        namespace = git.get_diff(revision, cwd=context.database.path)
+        namespace = context.server.get_diff(revision)
         author_name = namespace['author_name']
         namespace['author_name'] = context.root.get_user_title(author_name)
 
