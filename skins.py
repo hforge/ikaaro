@@ -173,9 +173,9 @@ class Skin(UIFolder):
             '/ui/table/style.css']
 
         # This skin's style
-        site_root = context.site_root
         if self.has_handler('style.css'):
-            styles.append('%s/style.css' % site_root.get_pathto(self))
+            here = context.resource
+            styles.append('%s/style.css' % here.get_pathto(self))
         # Dynamic styles
         for style in context.styles:
             styles.append(style)
