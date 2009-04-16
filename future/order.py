@@ -60,18 +60,30 @@ class ResourcesOrderedTable_Ordered(OrderedTable_View):
 
 
     def get_item_value(self, resource, context, item, column):
+        try:
+            item_resource = resource.get_resource_by_name(item.name, context)
+        except LookupError:
+            item_resource = None
+
         if column == 'title':
-            item = resource.get_resource_by_name(item.name, context)
-            return item.get_title(), context.get_link(item)
+            if item_resource:
+                title = item_resource.get_title()
+                return title, context.get_link(item_resource)
+            # Miss
+            return item.name
         elif column == 'workflow_state':
             # The workflow state
-            item = resource.get_resource_by_name(item.name, context)
-            if not isinstance(item, WorkflowAware):
+            if item_resource is None:
+                # Miss
+                label = MSG(u'Broken').gettext().encode('utf-8')
+                state = '<strong class="broken">%s</strong>' % label
+                return XMLParser(state)
+            if not isinstance(item_resource, WorkflowAware):
                 return None
-            statename = item.get_statename()
-            state = item.get_state()
+            statename = item_resource.get_statename()
+            state = item_resource.get_state()
             msg = state['title'].gettext().encode('utf-8')
-            path = context.get_link(item)
+            path = context.get_link(item_resource)
             # TODO Include the template in the base table
             state = ('<a href="%s/;edit_state" class="workflow">'
                      '<strong class="wf-%s">%s</strong>'
