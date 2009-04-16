@@ -66,7 +66,7 @@ class RoleAware_BrowseUsers(SearchForm):
 
     def get_query_schema(self):
         return merge_dicts(SearchForm.get_query_schema(self),
-                          sort_by=String(default='login_name'))
+                           sort_by=String(default='login_name'))
 
 
     search_schema = {

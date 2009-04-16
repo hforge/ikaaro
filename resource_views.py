@@ -443,14 +443,12 @@ class LoginView(STLForm):
     template = '/ui/base/login.xml'
     schema = {
         'username': Unicode(mandatory=True),
-        'password': String(mandatory=True),
-    }
+        'password': String(mandatory=True)}
 
 
     def get_namespace(self, resource, context):
         return {
-            'username': context.get_form_value('username'),
-        }
+            'username': context.get_form_value('username')}
 
 
     def action(self, resource, context, form):

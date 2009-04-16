@@ -127,8 +127,12 @@ class Root(WebSite):
         """
         # Search the user by username (login name)
         results = self.search(username=username)
-        if len(results) == 0:
+        n = len(results)
+        if n == 0:
             return None
+        if n > 1:
+            error = 'There are %s users in the database identified as "%s"'
+            raise ValueError, error % (n, username)
         # Get the user
         brain = results.get_documents()[0]
         return self.get_user(brain.name)
