@@ -507,6 +507,25 @@ class DBResource(CatalogAware, IResource):
         return context.accept_language.select_language(languages)
 
 
+    ########################################################################
+    # Cut & Paste Resources
+    ########################################################################
+    def can_paste(self, source):
+        """Is the source resource can be pasted into myself.
+        Question is "can I handle this type of resource?"
+        """
+        raise NotImplementedError
+
+
+    def can_paste_into(self, target):
+        """Can I be pasted into the given target.
+        Question is "Is this container compatible with myself?"
+        """
+        # No restriction by default. Functional modules will want to keep
+        # their specific resources for them.
+        return True
+
+
     # Views
     new_instance = DBResource_NewInstance()
     login = LoginView()
