@@ -74,6 +74,16 @@ class Folder(DBResource):
         return [metadata]
 
 
+    ########################################################################
+    # Cut & Paste Resources
+    ########################################################################
+    def can_paste(self, source):
+        """Is the source resource can be pasted into myself.
+        """
+        allowed_types = tuple(self.get_document_types())
+        return isinstance(source, allowed_types)
+
+
     #######################################################################
     # API
     #######################################################################
@@ -142,49 +152,59 @@ class Folder(DBResource):
         folder.del_handler('%s.metadata' % name)
 
 
-    def _resolve_source_target(self, source, target):
+    def _resolve_source_target(self, source_path, target_path):
         # Find out the source and target absolute URIs
-        folder = self.handler
-        if source[0] == '/':
-            source_uri = resolve_uri2(self.get_root().handler.uri, source[1:])
+        root_uri = self.get_root().handler.uri
+        folder_uri = self.handler.uri
+        if source_path[0] == '/':
+            source_uri = resolve_uri2(root_uri, source_path[1:])
         else:
-            source_uri = resolve_uri2(folder.uri, source)
-        if target[0] == '/':
-            target_uri = resolve_uri2(self.get_root().handler.uri, target[1:])
+            source_uri = resolve_uri2(folder_uri, source_path)
+        if target_path[0] == '/':
+            target_uri = resolve_uri2(root_uri, target_path[1:])
         else:
-            target_uri = resolve_uri2(folder.uri, target)
+            target_uri = resolve_uri2(folder_uri, target_path)
 
         # Load the handlers so they are of the right class, for resources
         # like that define explicitly the handler class.  This fixes for
         # instance copy&cut&paste of a tracker in a just started server.
         # TODO this is a work-around, there should be another way to define
         # explicitly the handler class.
-        resource = self.get_resource(source)
-        if isinstance(resource, Folder):
-            for resource in resource.traverse_resources():
+        source = self.get_resource(source_path)
+        if isinstance(source, Folder):
+            for resource in source.traverse_resources():
                 resource.load_handlers()
         else:
-            resource.load_handlers()
+            source.load_handlers()
 
         return source_uri, target_uri
 
 
-    def copy_resource(self, source, target):
+    def copy_resource(self, source_path, target_path):
         database = get_context().database
 
         # Find out the source and target absolute URIs
-        source_uri, target_uri = self._resolve_source_target(source, target)
+        source_uri, target_uri = self._resolve_source_target(source_path,
+                                                             target_path)
         new_name = get_uri_name(target_uri)
 
-        # Get the source resource
-        resource = self.get_resource(source)
+        # Get the source and target resources
+        source = self.get_resource(source_path)
+        parent_path = self.get_abspath().resolve2(target_path)[:-1]
+        target_parent = self.get_resource(parent_path)
+
+        # Check compatibility
+        if (not target_parent.can_paste(source)
+                or not source.can_paste_into(target_parent)):
+            message = 'resource type "%r" cannot be copied into type "%r"'
+            raise ConsistencyError, message % (source, target_parent)
 
         # Copy the metadata
         folder = self.handler
         folder.copy_handler('%s.metadata' % source_uri,
                             '%s.metadata' % target_uri)
         # Copy the content
-        for old_name, new_name in resource.rename_handlers(new_name):
+        for old_name, new_name in source.rename_handlers(new_name):
             if old_name is None:
                 continue
             src_uri = resolve_uri(source_uri, old_name)
@@ -193,32 +213,41 @@ class Folder(DBResource):
                 folder.copy_handler(src_uri, dst_uri)
 
         # Events, add
-        resource = self.get_resource(target)
+        resource = self.get_resource(target_path)
         database.add_resource(resource)
 
 
-    def move_resource(self, source, target):
+    def move_resource(self, source_path, target_path):
         database = get_context().database
 
         # Find out the source and target absolute URIs
-        source_uri, target_uri = self._resolve_source_target(source, target)
+        source_uri, target_uri = self._resolve_source_target(source_path,
+                                                             target_path)
         new_name = get_uri_name(target_uri)
 
-        # Get the source resource
-        resource = self.get_resource(source)
+        # Get the source and target resources
+        source = self.get_resource(source_path)
+        parent_path = self.get_abspath().resolve2(target_path)[:-1]
+        target_parent = self.get_resource(parent_path)
+
+        # Check compatibility
+        if (not target_parent.can_paste(source)
+                or not source.can_paste_into(target_parent)):
+            message = 'resource type "%r" cannot be moved into type "%r"'
+            raise ConsistencyError, message % (source, target_parent)
 
         # Update the links to the resources that are to be moved
-        new_path = self.get_abspath().resolve2(target)
-        resource._on_move_resource(new_path)
+        new_path = self.get_abspath().resolve2(target_path)
+        source._on_move_resource(new_path)
         # Events, remove
-        database.remove_resource(resource)
+        database.remove_resource(source)
 
         # Move the metadata
         folder = self.handler
         folder.move_handler('%s.metadata' % source_uri,
                             '%s.metadata' % target_uri)
         # Move the content
-        for old_name, new_name in resource.rename_handlers(new_name):
+        for old_name, new_name in source.rename_handlers(new_name):
             if old_name is None:
                 continue
             src_uri = resolve_uri(source_uri, old_name)
@@ -227,7 +256,7 @@ class Folder(DBResource):
                 folder.move_handler(src_uri, dst_uri)
 
         # Events, add
-        resource = self.get_resource(target)
+        resource = self.get_resource(target_path)
         database.add_resource(resource)
 
 

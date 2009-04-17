@@ -500,39 +500,45 @@ class Folder_BrowseContent(SearchForm):
 
         # Paste
         target = resource
-        allowed_types = tuple(target.get_document_types())
         pasted = []
         not_allowed = []
         for path in paths:
-            # Check the resource actually exists
-            resource = target.get_resource(path, soft=True)
-            if resource is None:
-                continue
-            if not isinstance(resource, allowed_types):
-                not_allowed.append(resource.name)
+            # Check the source resource still exists
+            source = target.get_resource(path, soft=True)
+            if source is None:
                 continue
 
             # If cut&paste in the same place, do nothing
             if cut is True:
-                source = resource.parent
-                if target.get_canonical_path() == source.get_canonical_path():
-                    pasted.append(resource.name)
+                if target == source.parent:
+                    pasted.append(source.name)
                     continue
 
-            name = generate_name(resource.name, target.get_names(), '_copy_')
-            pasted.append(name)
+            name = generate_name(source.name, target.get_names(), '_copy_')
             if cut is True:
                 # Cut&Paste
-                target.move_resource(path, name)
+                try:
+                    target.move_resource(path, name)
+                except ConsistencyError:
+                    not_allowed.append(source.name)
+                    continue
+                else:
+                    pasted.append(name)
             else:
                 # Copy&Paste
-                target.copy_resource(path, name)
-                # Fix state
-                resource = target.get_resource(name)
-                if isinstance(resource, WorkflowAware):
-                    metadata = resource.metadata
-                    metadata.set_property('state',
-                                          resource.workflow.initstate)
+                try:
+                    target.copy_resource(path, name)
+                except ConsistencyError:
+                    not_allowed.append(source.name)
+                    continue
+                else:
+                    pasted.append(name)
+                    # Fix state
+                    copy = target.get_resource(name)
+                    if isinstance(copy, WorkflowAware):
+                        metadata = copy.metadata
+                        metadata.set_property('state',
+                                              copy.workflow.initstate)
 
         # Cut, clean cookie
         if cut is True:
