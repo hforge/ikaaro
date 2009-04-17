@@ -305,7 +305,7 @@ class SelectRadio(Widget):
             stl:if="none_selected"/>
           <input type="radio" name="${name}" value=""
             stl:if="not none_selected"/>
-          <br/>
+          <stl:block stl:if="not is_inline"><br/></stl:block>
         </stl:block>
         <stl:block stl:repeat="option options">
           <input type="radio" id="${name}-${option/name}" name="${name}"
@@ -313,7 +313,8 @@ class SelectRadio(Widget):
             stl:if="option/selected"/>
           <input type="radio" id="${name}-${option/name}" name="${name}"
             value="${option/name}" stl:if="not option/selected"/>
-          <label for="${name}_${option/name}">${option/value}</label><br/>
+          <label for="${name}_${option/name}">${option/value}</label>
+          <stl:block stl:if="not is_inline"><br/></stl:block>
         </stl:block>
         """, stl_namespaces))
 
@@ -321,7 +322,8 @@ class SelectRadio(Widget):
         <stl:block stl:repeat="option options">
           <input type="checkbox" name="${name}" id="${name}-${option/name}"
             value="${option/name}" checked="${option/selected}" />
-          <label for="${name}_${option/name}">${option/value}</label><br/>
+          <label for="${name}_${option/name}">${option/value}</label>
+          <stl:block stl:if="not is_inline"><br/></stl:block>
         </stl:block>
         """, stl_namespaces))
 
@@ -343,6 +345,7 @@ class SelectRadio(Widget):
         else:
             options = value
 
+        is_inline = getattr(self, 'is_inline', False)
         has_empty_option = getattr(self, 'has_empty_option', True)
         for option in options:
             if option['selected'] is True:
@@ -354,6 +357,7 @@ class SelectRadio(Widget):
                 options[0]['selected'] = True
         return {
             'name': self.name,
+            'is_inline': is_inline,
             'has_empty_option': has_empty_option,
             'none_selected': none_selected,
             'options': options}
