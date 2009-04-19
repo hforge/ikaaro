@@ -297,7 +297,7 @@ def git_process(cwd, conn):
             results = git.get_revisions_metadata(data, cwd=cwd)
         elif command == GIT_DIFF:
             results = git.get_diff(data, cwd=cwd)
-        elif GIT_STOP:
+        elif command == GIT_STOP:
             break
         else:
             results = None
