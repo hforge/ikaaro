@@ -21,12 +21,12 @@ Requirements
 
 Software    Version  Used by           Home
 ----------  -------  ----------------  --------------------------------------
-Python        2.5.2  ikaaro            http://www.python.org/
+Python          2.6  ikaaro            http://www.python.org/
 itools       0.60.0  ikaaro            http://www.hforge.org/itools
 docutils        0.5  Wiki              http://docutils.sourceforge.net/
 guppy         0.1.8  Memory profiling  http://guppy-pe.sourceforge.net/
 
-Python 2.6 is recommended.  Check the itools requirements.
+Check the itools requirements.
 
 
 Install
