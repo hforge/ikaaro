@@ -86,7 +86,7 @@ class DBResource_Changes(STLView):
         revision = context.get_form_value('revision')
 
         # Get the revision data
-        namespace = context.server.get_diff(revision)
+        namespace = context.server.database.get_diff(revision)
         author_name = namespace['author_name']
         namespace['author_name'] = context.root.get_user_title(author_name)
 

@@ -30,7 +30,6 @@ from xapian import DatabaseOpeningError
 
 # Import from itools
 from itools.datatypes import Boolean
-from itools.git import start_git_process, GIT_STOP, GIT_REVISIONS, GIT_DIFF
 from itools.http import Request
 from itools.uri import get_reference, get_host_from_authority
 from itools.vfs import cwd
@@ -240,7 +239,7 @@ class Server(BaseServer):
 
 
     def start(self):
-        self.git_start()
+        self.database.git_start()
 
         # Go
         if self.profile_path is not None:
@@ -248,32 +247,3 @@ class Server(BaseServer):
             runctx("BaseServer.start(self)", globals(), locals(), filename)
         else:
             BaseServer.start(self)
-
-
-    #######################################################################
-    # Git API
-    #######################################################################
-    def git_start(self):
-        """This methods starts another process that will be used to make
-        questions to git.  This is done so because we fork to call the git
-        commands, and using an specific process for this purpose minimizes
-        memory usage (because fork duplicates the memory).
-        """
-        # Process to fork git
-        path = self.database.path
-        self.git_pipe = start_git_process(path)
-
-
-    def git_stop(self):
-        self.git_pipe.send((GIT_STOP, None))
-
-
-    def get_revisions_metadata(self, files):
-        self.git_pipe.send((GIT_REVISIONS, files))
-        return self.git_pipe.recv()
-
-
-    def get_diff(self, revision):
-        self.git_pipe.send((GIT_DIFF, revision))
-        return self.git_pipe.recv()
-
