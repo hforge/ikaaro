@@ -35,7 +35,8 @@
   <form action="" method="post" name="browse_list" id="form-table"
     stl:omit-tag="not actions">
     <div id="browse-image">
-      <a href="../;preview_content?size=${size}&amp;width=${width}&amp;height=${height}"
+      <a stl:if="not root"
+        href="../;preview_content?size=${size}&amp;width=${width}&amp;height=${height}"
         title="Back"><img src="/ui/icons/16x16/up.png" /></a>
       <div class="thumbnail size${size}" stl:repeat="row rows">
         <div class="folder" stl:omit-tag="not row/is_folder">

@@ -715,14 +715,17 @@ class Folder_PreviewContent(Folder_BrowseContent):
         widths = ", ".join([repr(o['name']) for o in ImageWidth.get_options()
                             if o['name'].strip()])
 
-        return {'size': current_size,
-                'width': width,
-                'height': height,
-                'widths': widths,
-                'css': self.table_css,
-                'columns': table_head,
-                'rows': rows,
-                'actions': actions}
+        return {
+            'root': resource.parent is None,
+            'size': current_size,
+            'width': width,
+            'height': height,
+            'widths': widths,
+            'css': self.table_css,
+            'columns': table_head,
+            'rows': rows,
+            'actions': actions}
+
 
 
 
