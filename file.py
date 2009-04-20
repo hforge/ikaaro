@@ -134,7 +134,7 @@ class File(WorkflowAware, DBResource):
             old = FileName.encode((old_name, extension, None))
             if folder.has_handler(old):
                 return [(old, FileName.encode((new_name, extension, None)))]
-        return None, None
+        return [(None, None)]
 
 
     #######################################################################
