@@ -7,13 +7,14 @@
 # Hervé Cauwelier <herve@itaapy.com>, 2007.
 # Taverne Sylvain <sylvain@itaapy.com>, 2007.
 # Obein Henry <henry@itaapy.com>, 2007.
+#  <>, 2009.
 msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-01-28 15:01+CET\n"
-"PO-Revision-Date: 2008-07-24 16:17+0200\n"
-"Last-Translator: \n"
+"PO-Revision-Date: 2009-04-20 10:38+0200\n"
+"Last-Translator:  <>\n"
 "Language-Team:  <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,7 +37,7 @@ msgstr ""
 
 #: ../future/dressable.py:58
 msgid "\"%s\" is incorrect"
-msgstr ""
+msgstr "\"%s\" est incorrect"
 
 #: ../tracker/tracker_views.py:693
 msgid "#%s"
@@ -441,7 +442,6 @@ msgid "${row/comment}"
 msgstr "${row/comment}"
 
 #: ../tracker/ui/issue_history.xml.en:12
-#, fuzzy
 msgctxt "link"
 msgid "${row/datetime}"
 msgstr "${row/datetime}"
@@ -824,10 +824,9 @@ msgid "<g id='2'>${column/title}</g>  <g id='3'> ${column/title}</g>"
 msgstr "<g id='2'>${column/title}</g>  <g id='3'> ${column/title}</g>"
 
 #: ../ui/aruni/location.xml.en:10
-#, fuzzy
 msgctxt "link"
 msgid "<g id='2'>${item/short_name}</g><g id='3'>/</g>"
-msgstr "<g id='3'>${item/short_name}</g><g id='4'>/</g>"
+msgstr "<g id='2'>${item/short_name}</g><g id='3'>/</g>"
 
 #: ../ui/website/search_table.xml.en:10
 msgctxt "link"
@@ -1205,10 +1204,9 @@ msgid "Assigned To"
 msgstr "Assigné à"
 
 #: ../tracker/ui/search.xml.en:113
-#, fuzzy
 msgctxt "label"
 msgid "Assigned To:<g id='32'> (<g id='33'>Edit</g>)</g>"
-msgstr "Assigné à&nbsp;:<g id='33'> (<g id='34'>Modifier</g>)</g>"
+msgstr "Assigné à&nbsp;:<g id='32'> (<g id='33'>Modifier</g>)</g>"
 
 #: ../tracker/ui/issue_history.xml.en:42
 msgctxt "emphasis"
@@ -2095,7 +2093,6 @@ msgid "Image"
 msgstr "Image"
 
 #: ../ui/html/addimage.xml.en:7
-#, fuzzy
 msgctxt "title"
 msgid "Insert image"
 msgstr "Insérer une image"
@@ -2106,7 +2103,6 @@ msgid "Insert image"
 msgstr "Insérer une image"
 
 #: ../ui/html/addlink.xml.en:7 ../future/ui/order_addlink.xml.en:7
-#, fuzzy
 msgctxt "title"
 msgid "Insert link"
 msgstr "Insérer un lien"
@@ -2226,7 +2222,7 @@ msgstr "Nom"
 
 #: ../future/dressable.py:57
 msgid "Layout items MUST be 2 values tuples: "
-msgstr ""
+msgstr "Layout items MUST be 2 values tuples: "
 
 #: ../website.py:170
 msgid "License"
@@ -2375,10 +2371,9 @@ msgid "Module:"
 msgstr "Module&nbsp;:"
 
 #: ../tracker/ui/search.xml.en:59
-#, fuzzy
 msgctxt "label"
 msgid "Module:<g id='12'> (<g id='13'>Edit</g>)</g>"
-msgstr "Module&nbsp;:<g id='13'> (<g id='14'>Modifier</g>)</g>"
+msgstr "Module&nbsp;:<g id='12'> (<g id='13'>Modifier</g>)</g>"
 
 #: ../calendar_views.py:57
 msgid "Monday"
@@ -2408,9 +2403,8 @@ msgid "New Attachement:"
 msgstr "Nouvelle pièce jointe&nbsp;:"
 
 #: ../tracker/issue.py:246
-#, fuzzy
 msgid "New Attachment: $filename"
-msgstr "  Nouvelle pièce jointe : $filename"
+msgstr "Nouvelle pièce jointe : $filename"
 
 #: ../tracker/ui/edit_issue.xml.en:126
 msgctxt "label"
@@ -2571,7 +2565,7 @@ msgstr "Octobre"
 
 #: ../website_views.py:118
 msgid "Ok"
-msgstr ""
+msgstr "Ok"
 
 #: ../ui/website/security_policy.xml.en:15
 msgctxt "paragraph"
@@ -2813,10 +2807,9 @@ msgid "Priority:"
 msgstr "Priorité&nbsp;:"
 
 #: ../tracker/ui/search.xml.en:101
-#, fuzzy
 msgctxt "label"
 msgid "Priority:<g id='28'> (<g id='29'>Edit</g>)</g>"
-msgstr "Priorité&nbsp;:<g id='29'> (<g id='30'>Modifier</g>)</g>"
+msgstr "Priorité&nbsp;:<g id='28'> (<g id='29'>Modifier</g>)</g>"
 
 #: ../workflow.py:117
 msgid "Private"
@@ -2838,10 +2831,9 @@ msgid "Product:"
 msgstr "Produit&nbsp;:"
 
 #: ../tracker/ui/search.xml.en:49
-#, fuzzy
 msgctxt "label"
 msgid "Product:<g id='8'> (<g id='9'>Edit</g>)</g>"
-msgstr "Produit&nbsp;:<g id='9'> (<g id='10'>Modifier</g>)</g>"
+msgstr "Produit&nbsp;:<g id='8'> (<g id='9'>Modifier</g>)</g>"
 
 #: ../user_views.py:115
 msgid "Profile"
@@ -3008,7 +3000,7 @@ msgstr "Ressources copiée."
 
 #: ../messages.py:87
 msgid "Resources cut."
-msgstr "Ressources supprimées."
+msgstr "Ressources coupées."
 
 #: ../messages.py:66
 msgid "Resources not allowed to remove: $resources."
@@ -3275,10 +3267,9 @@ msgid "Status:"
 msgstr "État&nbsp;:"
 
 #: ../tracker/ui/search.xml.en:91
-#, fuzzy
 msgctxt "label"
 msgid "Status:<g id='24'> (<g id='25'>Edit</g>)</g>"
-msgstr "État&nbsp;:<g id='25'> (<g id='26'>Modifier</g>)</g>"
+msgstr "État&nbsp;:<g id='24'> (<g id='25'>Modifier</g>)</g>"
 
 #: ../tracker/stored.py:54
 msgid "Stored Search"
@@ -3381,9 +3372,8 @@ msgid "The file must be entered."
 msgstr "Le fichier doit être saisi."
 
 #: ../resource_views.py:393
-#, fuzzy
 msgid "The given file is none of the types $class_ids."
-msgstr "Ce fichier n'est pas du type \"$class_id\"."
+msgstr "Ce fichier n'est pas du type \"$class_ids\"."
 
 #: ../calendar_views.py:146
 msgid "The given range is already defined."
@@ -3685,10 +3675,9 @@ msgid "Type:"
 msgstr "Type&nbsp;:"
 
 #: ../tracker/ui/search.xml.en:81
-#, fuzzy
 msgctxt "label"
 msgid "Type:<g id='20'> (<g id='21'>Edit</g>)</g>"
-msgstr "Type&nbsp;:<g id='21'> (<g id='22'>Modifier</g>)</g>"
+msgstr "Type&nbsp;:<g id='20'> (<g id='21'>Modifier</g>)</g>"
 
 #: ../skins.py:94
 msgid "UI"
@@ -3830,10 +3819,9 @@ msgid "Version:"
 msgstr "Version&nbsp;:"
 
 #: ../tracker/ui/search.xml.en:69
-#, fuzzy
 msgctxt "label"
 msgid "Version:<g id='16'> (<g id='17'>Edit</g>)</g>"
-msgstr "Version&nbsp;:<g id='17'> (<g id='18'>Modifier</g>)</g>"
+msgstr "Version&nbsp;:<g id='16'> (<g id='17'>Modifier</g>)</g>"
 
 #: ../file.py:223 ../file.py:224
 msgid "Video"
@@ -3994,7 +3982,7 @@ msgstr ""
 
 #: ../access.py:203
 msgid "You cannot degrade your own role."
-msgstr ""
+msgstr "Vous ne pouvez pas dégrader vos propres droits."
 
 #: ../access.py:165
 msgid "You cannot remove yourself."
@@ -4075,10 +4063,9 @@ msgid "[ <g id='36'> Reply </g>]"
 msgstr "[ <g id='36'> Répondre </g>]"
 
 #: ../ui/aruni/location.xml.en:15
-#, fuzzy
 msgctxt "div"
 msgid "[ <g id='4'>  <g id='5'>${menu/label}</g>  <g id='6'>|</g>  </g> ]"
-msgstr "[ <g id='5'>  <g id='6'>${menu/label}</g>  <g id='7'>|</g>  </g> ]"
+msgstr "[ <g id='4'>  <g id='5'>${menu/label}</g>  <g id='6'>|</g>  </g> ]"
 
 #: ../tracker/tracker_views.py:829
 msgid "[%s]"
@@ -4086,7 +4073,7 @@ msgstr "[%s]"
 
 #: ../tracker/issue.py:275
 msgid "[empty]"
-msgstr ""
+msgstr "[vide]"
 
 #: ../tracker/ui/search.xml.en:44
 msgctxt "table cell"
