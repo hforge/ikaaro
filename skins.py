@@ -185,24 +185,29 @@ class Skin(UIFolder):
 
     def get_scripts(self, context):
         scripts = [
-            # Aruni (default skin)
             '/ui/jquery.js',
-            '/ui/javascript.js',
-            # Calendar (http://dynarch.com/mishoo/calendar.epl)
-            '/ui/js_calendar/calendar.js']
+            '/ui/javascript.js']
+
+        # Calendar (http://dynarch.com/mishoo/calendar.epl)
+        scripts.append('/ui/js_calendar/calendar.js')
         languages = [
             'af', 'al', 'bg', 'br', 'ca', 'da', 'de', 'du', 'el', 'en', 'es',
             'fi', 'fr', 'hr', 'hu', 'it', 'jp', 'ko', 'lt', 'lv', 'nl', 'no',
             'pl', 'pt', 'ro', 'ru', 'si', 'sk', 'sp', 'sv', 'tr', 'zh']
         accept = context.accept_language
         language = accept.select_language(languages)
+        if language is None:
+            language = 'en'
         scripts.append('/ui/js_calendar/lang/calendar-%s.js' % language)
         scripts.append('/ui/js_calendar/calendar-setup.js')
+
         # Table
         scripts.append('/ui/table/javascript.js')
+
         # This skin's JavaScript
         if self.has_handler('javascript.js'):
             scripts.append('%s/javascript.js' % self.get_abspath())
+
         # Dynamic scripts
         for script in context.scripts:
             scripts.append(script)
