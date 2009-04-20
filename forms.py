@@ -462,7 +462,7 @@ class PathSelectorWidget(TextWidget):
 
 
 
-class ImageSelectorWidget(TextWidget):
+class ImageSelectorWidget(PathSelectorWidget):
 
     width = 128
     height = 128
@@ -473,14 +473,15 @@ class ImageSelectorWidget(TextWidget):
       value="${value}" />
     <input id="selector-button-${name}" type="button" value="..."
       name="selector_button_${name}"
-      onclick="popup(';add_image?target_id=selector-${name}&amp;mode=input', 620, 300);" />
+      onclick="popup(';add_image?target_id=selector-${name}&amp;mode=input&amp;bc_target=${target}', 620, 300);" />
     <br/>
     <img src="${value}/;thumb?width=${width}&amp;height=${height}" stl:if="value"/>
     """, stl_namespaces))
 
 
     def get_namespace(self, datatype, value):
-        return merge_dicts(TextWidget.get_namespace(self, datatype, value),
+        return merge_dicts(PathSelectorWidget.get_namespace(self, datatype,
+                                                            value),
                            width=self.width, height=self.height)
 
 
