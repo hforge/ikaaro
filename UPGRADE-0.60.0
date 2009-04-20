@@ -68,12 +68,6 @@ summarizes these changes:
   html.*                                 webpage.*
   resource_views.DBResource_NewInstance  views_new.NewInstance
 
-A few things have been moved to itools:
-
-  Before (ikaaro)                        Now (itools)
-  -------------------------------------  -------------------------------------
-  XXX
-
 
 User Interface
 ===============
