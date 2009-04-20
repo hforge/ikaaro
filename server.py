@@ -21,7 +21,6 @@
 # Import from the Standard Library
 from cProfile import runctx
 from logging import DEBUG, INFO, WARNING, ERROR, CRITICAL
-from multiprocessing import Process, Pipe
 from os import fdopen
 import sys
 from tempfile import mkstemp
@@ -31,7 +30,7 @@ from xapian import DatabaseOpeningError
 
 # Import from itools
 from itools.datatypes import Boolean
-from itools import git
+from itools.git import start_git_process, GIT_STOP, GIT_REVISIONS, GIT_DIFF
 from itools.http import Request
 from itools.uri import get_reference, get_host_from_authority
 from itools.vfs import cwd
@@ -262,9 +261,7 @@ class Server(BaseServer):
         """
         # Process to fork git
         path = self.database.path
-        self.git_pipe, child_pipe = Pipe()
-        p = Process(target=git_process, args=(path, child_pipe))
-        p.start()
+        self.git_pipe = start_git_process(path)
 
 
     def git_stop(self):
@@ -280,26 +277,3 @@ class Server(BaseServer):
         self.git_pipe.send((GIT_DIFF, revision))
         return self.git_pipe.recv()
 
-
-
-# The git process
-GIT_STOP = 0
-GIT_REVISIONS = 1
-GIT_DIFF = 2
-
-
-def git_process(cwd, conn):
-    while conn.poll(None):
-        # Recv
-        command, data = conn.recv()
-        # Action
-        if command == GIT_REVISIONS:
-            results = git.get_revisions_metadata(data, cwd=cwd)
-        elif command == GIT_DIFF:
-            results = git.get_diff(data, cwd=cwd)
-        elif command == GIT_STOP:
-            break
-        else:
-            results = None
-        # Send
-        conn.send(results)
