@@ -10,19 +10,17 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta stl:repeat="meta meta_tags" name="${meta/name}" lang="${meta/lang}"
       content="${meta/content}" />
-
+    <!-- Canonical URL for search engines -->
+    <link rel="canonical" href="${canonical_uri}" />
     <!-- CSS -->
     <link type="text/css" rel="stylesheet" stl:repeat="style styles"
       href="${style}" />
-
     <!-- JavaScript -->
-    <script type="text/javascript" stl:repeat="script scripts" src="${script}"
-      />
-
+    <script type="text/javascript" stl:repeat="script scripts"
+        src="${script}" />
     <!-- Icon -->
     <link rel="shortcut icon" href="${favicon_href}" type="${favicon_type}" />
   </head>
-
   <body>
 
     <!-- Header -->

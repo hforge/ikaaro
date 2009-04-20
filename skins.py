@@ -367,11 +367,15 @@ class Skin(UIFolder):
         else:
             base_path = context.get_link(here)
 
+        # The view
+        view = context.view
+
         return {
             # HTML head
             'language': language,
             'title': self.get_template_title(context),
             'base_uri': str(uri),
+            'canonical_uri': view.get_canonical_uri(context),
             'styles': self.get_styles(context),
             'scripts': self.get_scripts(context),
             'meta_tags': self.get_meta_tags(context),
