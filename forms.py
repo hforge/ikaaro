@@ -90,8 +90,9 @@ def get_default_widget(datatype):
 
 class Widget(object):
 
-    type = 'text'
     size = None
+    tip = None
+    type = 'text'
 
     template = list(XMLParser(
         """<input type="${type}" name="${name}" value="${value}" size="${size}"
@@ -366,6 +367,8 @@ class SelectRadio(Widget):
 
 class DateWidget(Widget):
 
+    tip = MSG(u"Format: 'yyyy-mm-dd'")
+
     template = list(XMLParser("""
         <input type="text" name="${name}" value="${value}" id="${name}"
           size="${size}"/>
@@ -638,6 +641,7 @@ class AutoForm(STLForm):
             widget_namespace['mandatory'] = is_mandatory
             widget_namespace['multiple'] = datatype.multiple
             widget_namespace['is_date'] = issubclass(datatype, Date)
+            widget_namespace['tip'] = widget.tip
             widget_namespace['widget'] = widget.to_html(datatype, value)
             ns_widgets.append(widget_namespace)
 
