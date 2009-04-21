@@ -247,3 +247,10 @@ class Server(BaseServer):
             runctx("BaseServer.start(self)", globals(), locals(), filename)
         else:
             BaseServer.start(self)
+
+
+    def stop(self):
+        BaseServer.stop(self)
+        self.database.git_stop()
+
+
