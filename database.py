@@ -19,7 +19,7 @@ from subprocess import call, PIPE
 
 # Import from itools
 from itools.core import get_pipe
-from itools.handlers import RODatabase, GitDatabase, make_git_database
+from itools.handlers import ROGitDatabase, GitDatabase, make_git_database
 from itools.web import get_context
 from itools.xapian import Catalog, make_catalog
 
@@ -29,13 +29,13 @@ from registry import get_register_fields
 
 
 
-class ReadOnlyDatabase(RODatabase):
+class ReadOnlyDatabase(ROGitDatabase):
 
     def __init__(self, target, cache_size):
         self.path = '%s/database' % target
 
         # Database/Catalog
-        RODatabase.__init__(self, cache_size)
+        ROGitDatabase.__init__(self, self.path, cache_size)
         self.catalog = Catalog('%s/catalog' % target, get_register_fields(),
                                read_only=True)
 
