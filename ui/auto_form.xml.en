@@ -20,8 +20,8 @@
             class="field-mandatory">(mandatory)</span>
           <span stl:if="widget/multiple"
             class="field-multiple">(multiple)</span>
-          <span stl:if="widget/is_date"
-            class="field-format">Format: 'yyyy-mm-dd'</span>
+          <span stl:if="widget/tip"
+            class="field-format">${widget/tip}</span>
         </dt>
         <dd>
           ${widget/widget}
