@@ -229,7 +229,7 @@ class User(AccessControl, Folder):
 class UserFolder(Folder):
 
     class_id = 'users'
-    class_version = '20071215'
+    class_title = MSG(u'User Folder')
     class_icon16 = 'icons/16x16/userfolder.png'
     class_icon48 = 'icons/48x48/userfolder.png'
     class_views = ['view', 'browse_content', 'edit']
