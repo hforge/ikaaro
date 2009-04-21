@@ -24,7 +24,6 @@ import sys
 
 # Import from itools
 import itools
-from itools.core import format
 
 # Import from ikaaro
 from ikaaro.database import make_database
@@ -126,7 +125,7 @@ def init(parser, options, target):
         'smtp_host': getattr(options, 'smtp_host') or 'localhost',
         'smtp_from': email,
     }
-    config = format(template, **namespace)
+    config = template.format(**namespace)
     open('%s/config.conf' % target, 'w').write(config)
 
     # Create the folder structure

@@ -24,7 +24,6 @@
 from datetime import datetime
 
 # Import from itools
-from itools.core import format
 from itools.csv import Table
 from itools.datatypes import DateTime, Integer, String, Unicode, Tokens
 from itools.gettext import MSG
@@ -265,8 +264,8 @@ class Issue(Folder):
             title = MSG(u'Comment').gettext()
             separator = len(title) * u'-'
             template = u'{title}\n{separator}\n\n{comment}\n'
-            body += format(template, title=title, separator=separator,
-                           comment=comment)
+            body += template.format(title=title, separator=separator,
+                                    comment=comment)
         # Notify / Send
         for to_addr in to_addrs:
             user = root.get_user(to_addr)
