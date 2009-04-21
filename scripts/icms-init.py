@@ -148,7 +148,9 @@ def init(parser, options, target):
             path = str(resource.get_canonical_path())
             database.resources_added[path] = resource
     # Save changes
+    database.git_start()
     database.save_changes()
+    database.git_stop()
 
     # Bravo!
     print '*'

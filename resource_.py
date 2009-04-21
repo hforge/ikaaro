@@ -243,7 +243,7 @@ class DBResource(CatalogAware, IResource):
         files = self.get_files_to_archive(content)
 
         # Call git
-        revisions = context.server.database.get_revisions_metadata(files)
+        revisions = context.database.get_revisions_metadata(files)
         return [
             {'username': x['author_name'],
              'date': x['author_date'],
