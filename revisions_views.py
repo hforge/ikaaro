@@ -74,7 +74,7 @@ class DBResource_LastChanges(BrowseForm):
 
 class DBResource_Changes(STLView):
 
-    access = 'is_allowed_to_view'
+    access = 'is_admin'
     title = MSG(u'Changes')
     template = '/ui/revisions/changes.xml'
 
