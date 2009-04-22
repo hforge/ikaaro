@@ -918,10 +918,7 @@ def get_issue_informations(resource, item):
             infos['assigned_to'] = user.get_title()
 
     # Modification Time
-    mtime_sort = item.mtime
-    mtime = datetime.strptime(mtime_sort, '%Y%m%d%H%M%S')
-    infos['mtime'] = format_datetime(mtime)
-    infos['mtime_sort'] = mtime_sort
+    infos['mtime'] = format_datetime(item.mtime)
 
     return infos
 
