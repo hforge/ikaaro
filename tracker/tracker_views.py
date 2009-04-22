@@ -348,7 +348,7 @@ class Tracker_View(BrowseForm):
             reverse = query['reverse']
 
         # If an ordered table => sort the result with its natural order
-        if sort_by in ('produit', 'module', 'version', 'type', 'state',
+        if sort_by in ('product', 'module', 'version', 'type', 'state',
                        'priority'):
             # Make the key function
             table_handler = resource.get_resource(sort_by).handler
