@@ -91,7 +91,7 @@
   <tr>
     <td valign="top" colspan="3">
       <label for="assigned-to">Assign To:</label><br/>
-      <select name="change-assigned-to" id="assigned-to"
+      <select name="change_assigned_to" id="assigned-to"
         class="tracker-select">
         <option value="do-not-change">Do not change</option>
         <option value=""></option>
