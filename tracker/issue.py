@@ -415,9 +415,8 @@ register_resource_class(Issue)
 
 
 # The fields
-for name in [ 'id', 'product', 'module', 'version', 'type', 'state',
-              'priority' ]:
+for name in ['id', 'product', 'module', 'version', 'type', 'state',
+             'priority']:
     register_field(name, Integer(is_stored=True, is_indexed=True))
 register_field('assigned_to', String(is_stored=True, is_indexed=True))
-
 

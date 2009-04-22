@@ -353,17 +353,25 @@ class Tracker_View(BrowseForm):
             # Make the key function
             table_handler = resource.get_resource(sort_by).handler
             sorted_ids = list(table_handler.get_record_ids_in_order())
-            ids_nb = len(sorted_ids)
-            inversed_ids = [ sorted_ids.index(x) for x in range(ids_nb) ]
-            def key(issue):
-                value = getattr(issue, sort_by)
-                if value is None:
-                    return ids_nb
-                return inversed_ids[value]
+
+            def cmp_xy(x, y):
+                x_value = getattr(x, sort_by)
+                try:
+                    x_idx = sorted_ids.index(x_value)
+                except ValueError:
+                    x_idx = None
+
+                y_value = getattr(y, sort_by)
+                try:
+                    y_idx = sorted_ids.index(y_value)
+                except ValueError:
+                    y_idx = None
+
+                return cmp(x_idx, y_idx)
 
             # Sort issues
             issues = results.get_documents()
-            issues.sort(key=key, reverse=reverse)
+            issues.sort(cmp_xy, reverse=reverse)
 
             # Return the result
             return issues
