@@ -27,13 +27,11 @@ from itools.xml import XMLParser
 """
 
 
-class CompositeForm(STLForm):
-    """This view renders the sub-views defined by the class variable
-    'subviews' one after the other.
-    """
+class CompositeView(STLView):
 
     template = '/ui/generic/cascade.xml'
     subviews = []
+
 
     def get_query_schema(self):
         schema = {}
@@ -51,6 +49,12 @@ class CompositeForm(STLForm):
         views = [ view.GET(resource, context) for view in self.subviews ]
         return {'views': views}
 
+
+
+class CompositeForm(CompositeView, STLForm):
+    """This view renders the sub-views defined by the class variable
+    'subviews' one after the other.
+    """
 
     def get_schema(self, resource, context):
         # Check for specific schema
