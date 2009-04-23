@@ -168,7 +168,7 @@ class DBResource(CatalogAware, IResource):
         if format is None:
             format = cls.class_id
 
-        if issubclass(cls, WorkflowAware):
+        if kw.get('state') is None and issubclass(cls, WorkflowAware):
             schema = cls.get_metadata_schema()
             state = schema['state'].get_default()
             if state is None:
