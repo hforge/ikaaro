@@ -28,7 +28,7 @@ from itools.csv import Property
 from itools.datatypes import Integer, String, Unicode
 from itools.gettext import MSG
 from itools.uri import Reference
-from itools.web import ERROR, get_context
+from itools.web import ERROR
 from itools.xapian import RangeQuery, AndQuery, OrQuery, PhraseQuery
 from itools.xapian import StartQuery
 
@@ -119,22 +119,6 @@ class Tracker(Folder):
 
     def get_document_types(self):
         return []
-
-
-    def get_title(self, language=None):
-        title = Folder.get_title(self, language)
-
-        context = get_context()
-        if context.view_name == 'view':
-            search_name = context.query.get('search_name', None)
-            if search_name:
-                search = self.get_resource(search_name, soft=True)
-                search_title = search.get_title()
-                if search_title:
-                    return MSG(u'{title}-{search}').gettext(
-                                                        title=title,
-                                                        search=search_title)
-        return title
 
 
     #######################################################################
