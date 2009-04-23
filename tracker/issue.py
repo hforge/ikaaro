@@ -29,6 +29,7 @@ from itools.datatypes import DateTime, Integer, String, Unicode, Tokens
 from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.vfs import FileName
+from itools.uri import get_uri_path
 from itools.web import get_context
 
 # Import from ikaaro
@@ -95,6 +96,13 @@ class Issue(Folder):
 
     def get_document_types(self):
         return [File]
+
+
+    def get_files_to_archive(self, content=False):
+        files = Folder.get_files_to_archive(self, content)
+        history = get_uri_path(self.handler.get_handler('.history').uri)
+        files.append(history)
+        return files
 
 
     def get_mtime(self):

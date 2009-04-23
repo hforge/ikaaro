@@ -235,6 +235,10 @@ class DBResource(CatalogAware, IResource):
     ########################################################################
     # Versioning
     ########################################################################
+    def get_files_to_archive(self, content=False):
+        raise NotImplementedError
+
+
     def get_revisions(self, context=None, content=False):
         if context is None:
             context = get_context()
