@@ -19,7 +19,7 @@
 #cal_weekly_view #selector li,
 #cal_daily_view #selector li {
   display: inline;
-  padding: 26px;
+  padding: 0 26px;
 }
 
 #cal_monthly_view #selector li a,
