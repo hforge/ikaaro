@@ -61,6 +61,11 @@ class DBResource_LastChanges(BrowseForm):
         sort_by = context.query['sort_by']
         reverse = context.query['reverse']
 
+        # Do not give a traceback if 'sort_by' has an unexpected value
+        if sort_by not in [ x[0] for x in self.table_columns ]:
+            sort_by = self.query_schema['sort_by'].default
+
+        # Sort & batch
         results.sort(key=itemgetter(sort_by), reverse=reverse)
         return results[start:start+size]
 
