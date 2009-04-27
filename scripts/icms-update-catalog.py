@@ -17,26 +17,28 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
-from cProfile import runctx
 from optparse import OptionParser
-import sys
-from time import time
 
 # Import from itools
 import itools
-from itools.core import vmsize, start_subprocess
-from itools import vfs
-from itools.xapian import make_catalog, CatalogAware
-from itools.i18n.accept import AcceptLanguage
+from itools.core import start_subprocess
 
-# Import from ikaaro
-from ikaaro.database import check_database
-from ikaaro.server import Server, ask_confirmation, get_pid, get_fake_context
-from ikaaro.registry import get_register_fields
 
 
 
 def update_catalog(parser, options, target):
+    # Imports
+    import sys
+    from time import time
+    from itools.core import vmsize
+    from itools.i18n.accept import AcceptLanguage
+    from itools import vfs
+    from itools.xapian import make_catalog, CatalogAware
+    from ikaaro.database import check_database
+    from ikaaro.server import Server, ask_confirmation, get_pid
+    from ikaaro.server import get_fake_context
+    from ikaaro.registry import get_register_fields
+
     # Check the server is not running
     pid = get_pid(target)
     if pid is not None:
@@ -120,6 +122,7 @@ if __name__ == '__main__':
     # Action!
     start_subprocess('%s/database' % target)
     if options.profile is not None:
+        from cProfile import runctx
         runctx("update_catalog(parser, options, target)", globals(), locals(),
                options.profile)
     else:
