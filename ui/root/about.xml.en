@@ -9,8 +9,8 @@
     <table id="browse-list">
       <thead>
         <tr class="odd">
-          <th>Package</th>
-          <th>Version</th>
+          <th style="width: 8em">Software</th>
+          <th style="width: 8em">Version</th>
         </tr>
       </thead>
       <tbody>

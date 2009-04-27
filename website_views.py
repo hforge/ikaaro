@@ -18,6 +18,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# Import from the Standard Library
+import sys
+
 # Import from itools
 from itools.core import get_abspath, merge_dicts
 from itools.datatypes import Email, String, Unicode
@@ -309,7 +312,8 @@ class AboutView(STLView):
 
 
     def get_namespace(self, resource, context):
-        packages = ['itools', 'ikaaro']
+        # Python, itools & ikaaro
+        packages = ['sys', 'itools', 'ikaaro']
         config = get_config(context.server.target)
         packages.extend(config.get_value('modules'))
         # Try packages we frequently use
@@ -322,25 +326,29 @@ class AboutView(STLView):
             'xapian': 'version_string',
             'PIL.Image': 'VERSION',
             'reportlab': 'Version',
-            'xlrd': '__VERSION__',
-        }
+            'sys': 'version_info',
+            'xlrd': '__VERSION__'}
         package2title = {
             'gio': 'pygobject',
-        }
+            'sys': 'Python',
+            }
 
         # Namespace
         packages_ns = []
         for name in packages:
             attribute = package2version.get(name, '__version__')
             # Import
-            try:
-                if '.' in name:
-                    name, subname = name.split('.')
+            if '.' in name:
+                name, subname = name.split('.')
+                try:
                     package = __import__(subname, fromlist=[name])
-                else:
+                except ImportError:
+                    continue
+            else:
+                try:
                     package = __import__(name)
-            except ImportError:
-                continue
+                except ImportError:
+                    continue
 
             # Version
             try:
@@ -355,6 +363,14 @@ class AboutView(STLView):
             # Ok
             title = package2title.get(name, name)
             packages_ns.append({'name': title, 'version': version})
+
+        # Insert first the platform
+        platform = {
+            'linux2': 'GNU/Linux',
+            'darwin': 'Mac OS X',
+            'win32': 'Windows'}.get(sys.platform, sys.platform)
+        packages_ns.insert(0,
+            {'name': MSG(u'Operating System'), 'version': platform})
 
         namespace = {'packages': packages_ns}
         return namespace
