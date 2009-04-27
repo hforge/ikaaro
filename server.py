@@ -29,7 +29,7 @@ from tempfile import mkstemp
 from xapian import DatabaseOpeningError
 
 # Import from itools
-from itools.core import start_subprocess, stop_subprocess
+from itools.core import start_subprocess
 from itools.datatypes import Boolean
 from itools.http import Request
 from itools.uri import get_reference, get_host_from_authority
@@ -248,10 +248,4 @@ class Server(BaseServer):
             runctx("BaseServer.start(self)", globals(), locals(), filename)
         else:
             BaseServer.start(self)
-
-
-    def stop(self):
-        BaseServer.stop(self)
-        stop_subprocess()
-
 

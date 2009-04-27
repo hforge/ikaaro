@@ -24,7 +24,7 @@ from time import time
 
 # Import from itools
 import itools
-from itools.core import vmsize, start_subprocess, stop_subprocess
+from itools.core import vmsize, start_subprocess
 from itools import vfs
 from itools.xapian import make_catalog, CatalogAware
 from itools.i18n.accept import AcceptLanguage
@@ -124,4 +124,3 @@ if __name__ == '__main__':
                options.profile)
     else:
         update_catalog(parser, options, target)
-    stop_subprocess()
