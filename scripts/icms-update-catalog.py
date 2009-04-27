@@ -24,7 +24,7 @@ from time import time
 
 # Import from itools
 import itools
-from itools.core import vmsize
+from itools.core import vmsize, start_subprocess, stop_subprocess
 from itools import vfs
 from itools.xapian import make_catalog, CatalogAware
 from itools.i18n.accept import AcceptLanguage
@@ -68,7 +68,6 @@ def update_catalog(parser, options, target):
     context.accept_language = AcceptLanguage()
     context.uri = None
     server.init_context(context)
-    server.database.git_start()
 
     # Update
     t0, v0 = time(), vmsize()
@@ -96,8 +95,6 @@ def update_catalog(parser, options, target):
     v = (v2 - v1)/1024
     print 'Time: %.02f seconds. Memory: %s Kb' % (t2 - t1, v)
 
-    server.database.git_stop()
-
 
 
 if __name__ == '__main__':
@@ -121,8 +118,10 @@ if __name__ == '__main__':
     target = args[0]
 
     # Action!
+    start_subprocess('%s/database' % target)
     if options.profile is not None:
         runctx("update_catalog(parser, options, target)", globals(), locals(),
                options.profile)
     else:
         update_catalog(parser, options, target)
+    stop_subprocess()

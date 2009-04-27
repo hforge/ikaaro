@@ -24,6 +24,7 @@ import sys
 
 # Import from itools
 import itools
+from itools.core import start_subprocess, stop_subprocess
 
 # Import from ikaaro
 from ikaaro.database import make_database
@@ -147,9 +148,11 @@ def init(parser, options, target):
             path = str(resource.get_canonical_path())
             database.resources_added[path] = resource
     # Save changes
-    database.git_start()
-    database.save_changes()
-    database.git_stop()
+    start_subprocess(database.path)
+    try:
+        database.save_changes()
+    finally:
+        stop_subprocess()
 
     # Bravo!
     print '*'
