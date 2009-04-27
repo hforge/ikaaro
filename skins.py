@@ -153,14 +153,25 @@ class Skin(UIFolder):
         """Return the title to give to the template document.
         """
         here = context.resource
-        # In the Root
         root = here.get_site_root()
+        root_title = root.get_title()
+
+        # Choose the template
         if root is here:
-            return root.get_title()
-        # Somewhere else
-        message = MSG(u"{root_title}: {here_title}")
-        return message.gettext(root_title=root.get_title(),
-                               here_title=here.get_title())
+            template = MSG(u"{root_title} - {view_title}")
+            here_title = None
+        else:
+            template = MSG(u"{root_title} - {here_title} - {view_title}")
+            here_title = here.get_title()
+
+        # The view
+        view_title = context.view.get_title(context)
+        if type(view_title) is MSG:
+            view_title = view_title.gettext()
+
+        # Ok
+        return template.gettext(root_title=root_title, here_title=here_title,
+                                view_title=view_title)
 
 
     def get_styles(self, context):

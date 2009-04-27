@@ -293,6 +293,19 @@ class Tracker_View(BrowseForm):
                            self.tracker_schema)
 
 
+    def get_title(self, context):
+        search_name = context.query['search_name']
+        if search_name:
+            search = context.resource.get_resource(search_name, soft=True)
+            if search:
+                search = search.get_title()
+                template = MSG(u'{title} - {search}')
+                title = self.title.gettext()
+                return template.gettext(title=title, search=search)
+
+        return self.title
+
+
     def GET(self, resource, context):
         # Check stored search
         search_name = context.query['search_name']
