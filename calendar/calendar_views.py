@@ -221,29 +221,32 @@ class CalendarView(STLView):
         return True
 
 
-    def add_selector_ns(self, c_date, method, namespace):
-        """Set header used to navigate into time.
+    def get_week_number(self, c_date):
+        """datetime.strftime('%U') gives week number, starting week by sunday
+           datetime.strftime('%W') gives week number, starting week by monday
+           This week number is calculated as "Week 1" begins on the first
+           sunday/monday of the year. Its range is [0, 53].
 
-          datetime.strftime('%U') gives week number, starting week by Sunday
-          datetime.strftime('%W') gives week number, starting week by Monday
-          This week number is calculated as "Week O1" begins on the first
-          Sunday/Monday of the year. Its range is [0,53].
-
-        We adjust week numbers to fit rules which are used by french people.
-        XXX Check for other countries
+        We adjust week numbers to fit rules which are used by French people.
+        XXX Check for other countries.
         """
-        resource = get_context().resource
         if self.get_first_day() == 1:
             format = '%W'
         else:
             format = '%U'
-        week_number = Unicode.encode(c_date.strftime(format))
+        week_number = int(c_date.strftime(format))
         # Get day of 1st January, if < friday and != monday then number++
         day, kk = monthrange(c_date.year, 1)
         if day in (1, 2, 3):
-            week_number = str(int(week_number) + 1)
-            if len(week_number) == 1:
-                week_number = '0%s' % week_number
+            week_number = week_number + 1
+        return week_number
+
+
+    def add_selector_ns(self, c_date, method, namespace):
+        """Set header used to navigate into time.
+
+        """
+        week_number = '%0d' % self.get_week_number(c_date)
         current_week = MSG(u'Week {n}').gettext(n=week_number)
         tmp_date = c_date - timedelta(7)
         previous_week = ";%s?date=%s" % (method, Date.encode(tmp_date))
