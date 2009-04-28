@@ -23,7 +23,7 @@
 from datetime import datetime
 
 # Import from itools
-from itools.core import send_subprocess
+from itools.core import send_subprocess, read_subprocess
 from itools.datatypes import Unicode, String, Integer, Boolean, DateTime
 from itools.gettext import MSG
 from itools.uri import resolve_uri
@@ -240,17 +240,27 @@ class DBResource(CatalogAware, IResource):
         raise NotImplementedError
 
 
-    def get_revisions(self, n=None, content=False):
-        # Get the list of files to check
-        files = self.get_files_to_archive(content)
+    def get_revisions(self, n=None, content=False, action=0):
+        # action
+        # 0: normal
+        # 1: call git, and come back
+        # 2: read the the data from git
 
-        # Call Git command
-        cmd = ['git', 'rev-list', '--pretty=format:%an%n%at%n%s']
-        if n is not None:
-            cmd = cmd + ['-n', str(n)]
-        cmd = cmd + ['HEAD', '--'] + files
-        cmd = cmd + files
-        data = send_subprocess(cmd)
+        if action == 0 or action == 1:
+            # Make the Git command
+            files = self.get_files_to_archive(content)
+            cmd = ['git', 'rev-list', '--pretty=format:%an%n%at%n%s']
+            if n is not None:
+                cmd = cmd + ['-n', str(n)]
+            cmd = cmd + ['HEAD', '--'] + files
+            cmd = cmd + files
+            if action == 0:
+                data = send_subprocess(cmd)
+            else:
+                send_subprocess(cmd, wait=False)
+                return
+        else:
+            data = read_subprocess()
 
         # Parse output
         revisions = []
@@ -384,11 +394,12 @@ class DBResource(CatalogAware, IResource):
 
 
     def get_catalog_values(self, values=None):
+        revisions = self.get_revisions(1, action=1)
         if values is None:
             values = self._get_catalog_values()
 
         # Get revisions
-        revisions = self.get_revisions(1)
+        revisions = self.get_revisions(action=2)
         if not revisions:
             return values
 
