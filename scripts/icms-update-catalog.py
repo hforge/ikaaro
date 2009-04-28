@@ -77,7 +77,8 @@ def update_catalog(parser, options, target):
     for obj in root.traverse_resources():
         if not isinstance(obj, CatalogAware):
             continue
-        print doc_n, obj.get_abspath()
+        if not options.quiet:
+            print doc_n, obj.get_abspath()
         doc_n += 1
         catalog.index_document(obj)
         # Free Memory
@@ -112,6 +113,8 @@ if __name__ == '__main__':
         help="start the update without asking confirmation")
     parser.add_option('--profile',
         help="print profile information to the given file")
+    parser.add_option('-q', '--quiet', action='store_true',
+        help="be quiet")
 
     options, args = parser.parse_args()
     if len(args) != 1:
