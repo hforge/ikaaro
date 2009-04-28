@@ -66,25 +66,25 @@ class Dressable_Menu(ContextMenu):
                      'title': MSG(u'Add new %s' % cls.class_title.gettext()),
                      'href': ('%s;new_resource?type=%s&title=%s' %
                               (base_path, cls.class_id, name)),
-                     'class': 'nav_active'})
+                     'class': 'nav-active'})
             else:
                 # Add edit link
                 items.append(
                     {'name': name,
                      'title': MSG(u'%s %s' % (cls.class_title.gettext(), name)),
                      'href': '%s%s/;edit' % (base_path, name),
-                     'class': 'nav_active'})
+                     'class': 'nav-active'})
         items.sort(key=itemgetter('name'))
         # Dressable metadata
         items.insert(0,
             {'title': MSG(u'Metadata'),
              'href': '%s;edit' % base_path,
-             'class': 'nav_active'})
+             'class': 'nav-active'})
         # Back to preview
         items.append(
             {'title': MSG(u'Preview'),
              'href': '%s.' % base_path,
-             'class': 'nav_active'})
+             'class': 'nav-active'})
         return items
 
 

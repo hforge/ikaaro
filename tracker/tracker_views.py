@@ -155,7 +155,7 @@ class StoredSearchesMenu(ContextMenu):
             # Namespace
             items.append({'title': title,
                           'href': '%s?search_name=%s' % (base, item.name),
-                          'class': 'nav_active' if (item.name == search_name)
+                          'class': 'nav-active' if (item.name == search_name)
                                                 else None})
         items.sort(lambda x, y: cmp(x['title'], y['title']))
 

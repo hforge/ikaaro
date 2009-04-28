@@ -57,7 +57,7 @@ class EditLanguageMenu(ContextMenu):
         return [
             {'title': get_language_name(x),
              'href': context.uri.replace(content_language=x),
-             'class': 'nav_active' if (x == content_language) else None}
+             'class': 'nav-active' if (x == content_language) else None}
             for x in languages ]
 
 
