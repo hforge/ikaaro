@@ -239,15 +239,14 @@ class DBResource(CatalogAware, IResource):
         raise NotImplementedError
 
 
-    def get_revisions(self, context=None, content=False):
-        if context is None:
-            context = get_context()
+    def get_revisions(self, n=None, content=False):
+        database = self.metadata.database
 
         # Get the list of files to check
         files = self.get_files_to_archive(content)
 
         # Call git
-        revisions = context.database.get_revisions_metadata(files)
+        revisions = database.get_revisions_metadata(files, n)
         return [
             {'username': x['author_name'],
              'date': x['author_date'],
@@ -264,14 +263,14 @@ class DBResource(CatalogAware, IResource):
 
 
     def get_last_author(self):
-        revisions = self.get_revisions()
+        revisions = self.get_revisions(1)
         if not revisions:
             return None
         return revisions[0]['username']
 
 
     def get_mtime(self):
-        revisions = self.get_revisions()
+        revisions = self.get_revisions(1)
         return revisions[0]['date'] if revisions else None
 
 
@@ -376,7 +375,7 @@ class DBResource(CatalogAware, IResource):
             values = self._get_catalog_values()
 
         # Get revisions
-        revisions = self.get_revisions()
+        revisions = self.get_revisions(1)
         if not revisions:
             return values
 

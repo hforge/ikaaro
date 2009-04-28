@@ -49,7 +49,7 @@ class DBResource_LastChanges(BrowseForm):
 
     def get_items(self, resource, context):
         root = context.root
-        items = resource.get_revisions(context, content=True)
+        items = resource.get_revisions(content=True)
         for item in items:
             item['username'] = root.get_user_title(item['username'])
         return items
