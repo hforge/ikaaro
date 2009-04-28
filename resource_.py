@@ -23,6 +23,7 @@
 from datetime import datetime
 
 # Import from itools
+from itools.core import send_subprocess
 from itools.datatypes import Unicode, String, Integer, Boolean, DateTime
 from itools.gettext import MSG
 from itools.uri import resolve_uri
@@ -240,19 +241,31 @@ class DBResource(CatalogAware, IResource):
 
 
     def get_revisions(self, n=None, content=False):
-        database = self.metadata.database
-
         # Get the list of files to check
         files = self.get_files_to_archive(content)
 
-        # Call git
-        revisions = database.get_revisions_metadata(files, n)
-        return [
-            {'username': x['author_name'],
-             'date': x['author_date'],
-             'message': x['subject'],
-             'revision': x['commit']}
-            for x in revisions ]
+        # Call Git command
+        cmd = ['git', 'rev-list', '--pretty=format:%an%n%at%n%s']
+        if n is not None:
+            cmd = cmd + ['-n', str(n)]
+        cmd = cmd + ['HEAD', '--'] + files
+        cmd = cmd + files
+        data = send_subprocess(cmd)
+
+        # Parse output
+        revisions = []
+        lines = data.splitlines()
+        for idx in range(len(lines) / 4):
+            base = idx * 4
+            ts = int(lines[base+2])
+            revisions.append(
+                {'revision': lines[base].split()[1], # commit
+                 'username': lines[base+1],          # author name
+                 'date': datetime.fromtimestamp(ts), # author date
+                 'message': lines[base+3],           # subject
+                })
+        # Ok
+        return revisions
 
 
     def get_owner(self):
