@@ -23,7 +23,7 @@ from sys import exit
 
 # Import from itools
 from itools import __version__, vfs
-from itools.core import become_daemon, fork
+from itools.core import become_daemon, fork, start_subprocess
 
 # Import from ikaaro
 from ikaaro.database import check_database
@@ -67,6 +67,7 @@ def start(options, target):
             become_daemon()
 
         # Start
+        start_subprocess('%s/database' % target)
         server.start()
         exit(0)
 

@@ -29,7 +29,6 @@ from tempfile import mkstemp
 from xapian import DatabaseOpeningError
 
 # Import from itools
-from itools.core import start_subprocess
 from itools.datatypes import Boolean
 from itools.http import Request
 from itools.uri import get_reference, get_host_from_authority
@@ -240,8 +239,6 @@ class Server(BaseServer):
 
 
     def start(self):
-        start_subprocess(self.database.path)
-
         # Go
         if self.profile_path is not None:
             filename = self.profile_path
