@@ -42,7 +42,7 @@ from resource_views import LoginView
 from skins import UI, ui_path
 from website_views import AboutView, ContactForm, CreditsView
 from website_views import ForgottenPasswordForm, NewWebSiteForm, RegisterForm
-from website_views import SiteSearchView
+from website_views import SiteSearchView, NotFoundView, ForbiddenView
 
 
 
@@ -87,6 +87,7 @@ class WebSite(RoleAware, Folder):
     ########################################################################
     # Publish
     ########################################################################
+    forbidden = ForbiddenView()
     unauthorized = LoginView()
 
 
@@ -169,6 +170,7 @@ class WebSite(RoleAware, Folder):
     credits = CreditsView()
     license = STLView(access=True, title=MSG(u'License'),
                       template='/ui/root/license.xml')
+    not_found = NotFoundView()
 
 
 ###########################################################################
