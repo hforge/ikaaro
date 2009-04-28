@@ -25,7 +25,7 @@
   }
   </script>
 <form action=";change_several_bugs?${search_parameters}" method="POST"
-  id="form_table">
+  id="form-table">
   ${batch}
   ${table}
 
