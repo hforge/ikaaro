@@ -39,6 +39,21 @@ from utils import get_base_path_query
 
 
 
+class NotFoundView(STLView):
+    template = '/ui/root/not_found.xml'
+
+    def get_namespace(self, resource, context):
+        return {'uri': str(context.uri)}
+
+
+class ForbiddenView(STLView):
+    template = '/ui/root/forbidden.xml'
+
+    def POST(self, resource, context):
+        return self.GET
+
+
+
 class ForgottenPasswordForm(AutoForm):
 
     access = True

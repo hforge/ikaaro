@@ -32,7 +32,7 @@ from itools.gettext import MSG
 from itools.handlers import ConfigFile
 from itools.stl import stl
 from itools.uri import Path
-from itools.web import get_context, STLView
+from itools.web import get_context
 
 # Import from ikaaro
 from folder import Folder
@@ -53,22 +53,6 @@ itools_target_languages = config.get_value('target_languages')
 # Force email to send UTF-8 mails in plain text
 add_charset('utf-8', QP, None, 'utf-8')
 add_codec('utf-8', 'utf_8')
-
-
-
-class NotFoundView(STLView):
-    template = '/ui/root/not_found.xml'
-
-    def get_namespace(self, resource, context):
-        return {'uri': str(context.uri)}
-
-
-class ForbiddenView(STLView):
-    template = '/ui/root/forbidden.xml'
-
-    def POST(self, resource, context):
-        return self.GET
-
 
 
 
@@ -151,9 +135,6 @@ class Root(WebSite):
     ########################################################################
     # Publish
     ########################################################################
-    forbidden = ForbiddenView()
-
-
     def internal_server_error(self, context):
         namespace = {'traceback': traceback.format_exc()}
 
@@ -278,7 +259,6 @@ class Root(WebSite):
         server.send_email(message)
 
 
-    not_found = NotFoundView()
 
 
 ###########################################################################

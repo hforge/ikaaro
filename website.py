@@ -42,7 +42,7 @@ from skins import UI, ui_path
 from views_new import ProxyNewInstance
 from website_views import AboutView, ContactForm, CreditsView
 from website_views import ForgottenPasswordForm, RegisterForm
-from website_views import SiteSearchView
+from website_views import SiteSearchView, NotFoundView, ForbiddenView
 
 
 
@@ -181,8 +181,9 @@ class WebSite(RoleAware, Folder):
     license = STLView(access=True, title=MSG(u'License'),
                       template='/ui/root/license.xml')
     # Special
+    forbidden = ForbiddenView()
     unauthorized = LoginView()
-
+    not_found = NotFoundView()
 
 
 ###########################################################################
