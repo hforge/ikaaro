@@ -27,6 +27,7 @@ from traceback import print_exc
 
 # Import from itools
 import itools
+from itools.core import start_subprocess
 from itools import vfs
 from itools.web import get_context
 
@@ -190,6 +191,7 @@ def update(parser, options, target):
     if versions:
         print
         print 'STAGE 1: Versions to upgrade: %s.' % ', '.join(versions)
+        start_subprocess('%s/database' % target)
         update_versions(target, database, root, versions, confirm)
     else:
         print 'STAGE 1: Nothing to do.'
