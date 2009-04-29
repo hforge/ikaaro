@@ -15,9 +15,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
+from itools.core import merge_dicts
 from itools.datatypes import String, Tokens
 from itools.gettext import MSG
-from itools.handlers import merge_dicts
 from itools.web import INFO
 from itools.xapian import AndQuery, PhraseQuery, StartQuery
 from itools.xml import XMLParser
