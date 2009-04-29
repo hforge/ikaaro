@@ -294,7 +294,7 @@ class Tracker_View(BrowseForm):
 
 
     def get_title(self, context):
-        search_name = context.query['search_name']
+        search_name = context.query.get('search_name')
         if search_name:
             search = context.resource.get_resource(search_name, soft=True)
             if search:
