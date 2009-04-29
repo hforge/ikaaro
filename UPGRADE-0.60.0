@@ -138,3 +138,14 @@ use instead the new fields registry:
   def _get_catalog_values(self):
       ...
 
+
+The Ikaaro Catalog
+===================
+
+(1) The 'get_skin' method now takes the 'context' parameter.
+
+  # Before
+  def get_skin(self):
+
+  # Now
+  def get_skin(self, context):
