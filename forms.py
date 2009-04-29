@@ -447,21 +447,14 @@ class DateWidget(Widget):
 
 class PathSelectorWidget(TextWidget):
 
-    target = '.'
     template = list(XMLParser(
     """
     <input type="text" id="selector-${name}" size="${size}" name="${name}"
       value="${value}" />
     <input id="selector-button-${name}" type="button" value="..."
       name="selector_button_${name}"
-      onclick="popup(';add_link?target_id=selector-${name}&amp;mode=input&amp;bc_target=${target}', 620, 300);"/>
+      onclick="popup(';add_link?target_id=selector-${name}&amp;mode=input', 620, 300);"/>
     """, stl_namespaces))
-
-
-    def get_namespace(self, datatype, value):
-        namespace = TextWidget.get_namespace(self, datatype, value)
-        namespace['target'] = self.target
-        return namespace
 
 
 
