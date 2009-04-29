@@ -124,7 +124,7 @@ use instead the new fields registry:
           ...
 
   # Now
-  from registry import register_field
+  from ikaaro.registry import register_field
   register_field('foo', String(is_indexed=True))
   ...
 
@@ -139,7 +139,7 @@ use instead the new fields registry:
       ...
 
 
-The Ikaaro Catalog
+Other API
 ===================
 
 (1) The 'get_skin' method now takes the 'context' parameter.
