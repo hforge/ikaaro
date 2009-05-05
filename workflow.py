@@ -183,8 +183,9 @@ class WorkflowAware(BaseWorkflowAware):
     # API
     ########################################################################
     def get_workflow_state(self):
-        if self.has_property('state'):
-            return self.get_property('state')
+        state = self.get_property('state')
+        if state:
+            return state
         return self.workflow.initstate
 
     def set_workflow_state(self, value):
