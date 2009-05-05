@@ -49,7 +49,6 @@ from website_views import SiteSearchView, NotFoundView, ForbiddenView
 class WebSite(RoleAware, Folder):
 
     class_id = 'WebSite'
-    class_version = '20071215'
     class_title = MSG(u'Web Site')
     class_description = MSG(u'Create a new Web Site or Work Place.')
     class_icon16 = 'icons/16x16/website.png'

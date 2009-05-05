@@ -59,7 +59,6 @@ add_codec('utf-8', 'utf_8')
 class Root(WebSite):
 
     class_id = 'iKaaro'
-    class_version = '20071215'
     class_title = MSG(u'iKaaro')
     class_icon16 = 'icons/16x16/root.png'
     class_icon48 = 'icons/48x48/root.png'
