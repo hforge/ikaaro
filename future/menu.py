@@ -476,8 +476,7 @@ class Menu(OrderedTable):
 
     def get_links(self):
         base = self.get_abspath()
-        # FIXME The context is not available when updating the catalog.
-        site_root_abspath = self.parent.parent.get_abspath()
+        site_root_abspath = self.get_site_root().get_abspath()
         handler = self.handler
         record_schema = handler.record_schema
         links = []
