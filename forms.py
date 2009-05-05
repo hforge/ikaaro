@@ -377,7 +377,7 @@ class DateWidget(Widget):
         <script language="javascript">
           Calendar.setup({inputField: "${name}", ifFormat: "${format}",
                           showsTime: ${show_time}, timeFormat: "24",
-                          button: "trigger_date_${name}"});
+                          button: "trigger-date-${name}"});
         </script>
         """, stl_namespaces))
 
