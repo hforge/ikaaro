@@ -606,20 +606,17 @@ def get_menu_namespace(context, depth=3, show_first_child=False, flat=True,
     Activate "use_first_child" to automatically point to the first child of
     each item instead of the item itself.
     """
-
-    request = context.request
-    request_uri = str(request.request_uri)
-    site_root = context.resource.get_site_root()
-    method = context.view_name or context.resource.get_default_view_name()
-    path = context.uri.path
-    url = [seg.name for seg in path if seg.name]
-    if method:
-        url += [';%s' % method]
+    resource = context.resource
+    url = list(context.uri.path)
+    if not url or url[-1][0] != ';':
+        method = resource.get_default_view_name()
+        url.append(';%s' % method)
 
     # Get the menu
     tabs = {'items': []}
     if src is None:
         src = 'menu'
+    site_root = resource.get_site_root()
     menu = site_root.get_resource(src, soft=True)
     if menu is not None:
         tabs = menu.get_menu_namespace_level(context, url, depth,
