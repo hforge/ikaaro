@@ -28,7 +28,7 @@ from itools.handlers import merge_dicts
 from itools.html import xhtml_uri, XHTMLFile
 from itools.uri import get_reference
 from itools.web import BaseView, get_context
-from itools.xml import TEXT, START_ELEMENT
+from itools.xml import START_ELEMENT
 
 # Import from ikaaro
 import messages
@@ -62,10 +62,44 @@ def is_edit_conflict(resource, context, timestamp):
     return False
 
 
+def _get_links(base, events):
+    links = []
+    for event, value, line in events:
+        if event != START_ELEMENT:
+            continue
+        tag_uri, tag_name, attributes = value
+        if tag_uri != xhtml_uri:
+            continue
+        if tag_name == 'a':
+            value = attributes.get((None, 'href'))
+            if value is None:
+                continue
+            uri = get_reference(value)
+            if uri.scheme or uri.authority or not uri.path:
+                continue
+            path = uri.path
+        elif tag_name == 'img':
+            value = attributes.get((None, 'src'))
+            uri = get_reference(value)
+            if uri.scheme or uri.authority or not uri.path:
+                continue
+            path = uri.path
+            # Strip the view
+            if path[-1] == ';download':
+                path = path[:-1]
+        else:
+            continue
+        if value is None:
+            continue
+        uri = base.resolve2(path)
+        uri = str(uri)
+        links.append(uri)
+    return links
+
+
 def _change_link(old_path, new_path, base, stream):
-    for event in stream:
-        type, value, line = event
-        if type != START_ELEMENT:
+    for event, value, line in stream:
+        if event != START_ELEMENT:
             yield event
             continue
         tag_uri, tag_name, attributes = value
@@ -212,37 +246,8 @@ class WebPage(ResourceWithHTML, Multilingual, Text):
         links = []
         for language in languages:
             handler = self.get_handler(language=language)
-            for event in handler.events:
-                type, value, line = event
-                if type != START_ELEMENT:
-                    continue
-                tag_uri, tag_name, attributes = value
-                if tag_uri != xhtml_uri:
-                    continue
-                if tag_name == 'a':
-                    value = attributes.get((None, 'href'))
-                    if value is None:
-                        continue
-                    uri = get_reference(value)
-                    if uri.scheme or uri.authority or not uri.path:
-                        continue
-                    path = uri.path
-                elif tag_name == 'img':
-                    value = attributes.get((None, 'src'))
-                    uri = get_reference(value)
-                    if uri.scheme or uri.authority or not uri.path:
-                        continue
-                    path = uri.path
-                    # Strip the view
-                    if path[-1] == ';download':
-                        path = path[:-1]
-                else:
-                    continue
-                if value is None:
-                    continue
-                uri = base.resolve2(path)
-                uri = str(uri)
-                links.append(uri)
+            links.extend(_get_links(base, handler.events))
+
         return links
 
 
