@@ -371,7 +371,7 @@ class Menu(OrderedTable):
                     resource = self.get_resource(real_path)
                     if here_abspath == resource.get_abspath():
                         if context.view_name == _method:
-                            css = 'in_path'
+                            css = 'in-path'
                     id += _method
                 items.append({'id': id,
                               'path': str(ref),
@@ -417,8 +417,8 @@ class Menu(OrderedTable):
                 if here_abspath == resource.get_abspath():
                     active, in_path = True, False
 
-                # Set css class to 'active', 'in_path' or None
-                css = (active and 'in_path') or (in_path and 'in_path') or None
+                # Set css class to 'active', 'in-path' or None
+                css = 'in-path' if (active or in_path) else None
 
                 # Build the new reference with the right path
                 ref2 = deepcopy(ref)
@@ -429,7 +429,7 @@ class Menu(OrderedTable):
                               'real_path': resource.get_abspath(),
                               'title': title,
                               'description': None, # FIXME
-                              'in_path': css == 'in_path' or active,
+                              'in_path': css == 'in-path' or active,
                               'active': active,
                               'class': css,
                               'target': target})
@@ -633,7 +633,7 @@ def get_menu_namespace(context, depth=3, show_first_child=False, flat=True,
         while (items is not None) and exist_items:
             exist_items = False
             for item in items:
-                if item['class'] in ['active', 'in_path']:
+                if item['class'] in ['active', 'in-path']:
                     if item['items']:
                         items = exist_items = item['items']
                         if items:
