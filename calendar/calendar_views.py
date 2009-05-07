@@ -1130,7 +1130,10 @@ class Calendar_Download(BaseView):
 
     def GET(self, resource, context):
         response = context.response
+        # Filename
+        filename = "%s.ics" % resource.name
+        response.set_header('Content-Disposition',
+                            'inline; filename="%s"' % filename)
+        # Content-Type
         response.set_header('Content-Type', 'text/calendar')
-        # TODO Set a filename
         return resource.handler.to_ical()
-
