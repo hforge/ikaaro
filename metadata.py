@@ -24,7 +24,7 @@ from itools.xml import xml_uri, XMLParser, START_ELEMENT, END_ELEMENT, TEXT
 
 # Import from ikaaro
 from exceptions import ParserError
-from obsolete import Record
+from obsolete.metadata import Record
 from registry import get_resource_class
 
 

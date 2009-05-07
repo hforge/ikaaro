@@ -168,7 +168,7 @@ class WorkflowAware(BaseWorkflowAware):
     ########################################################################
     @classmethod
     def get_metadata_schema(cls):
-        from obsolete import WFTransition
+        from obsolete.metadata import WFTransition
         return {
             'state': String,
             # XXX Backwards compatibility with 0.50

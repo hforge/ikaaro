@@ -141,7 +141,7 @@ class File(WorkflowAware, DBResource):
     #######################################################################
     @classmethod
     def get_metadata_schema(cls):
-        from obsolete import History
+        from obsolete.metadata import History
         return merge_dicts(
             DBResource.get_metadata_schema(),
             WorkflowAware.get_metadata_schema(),
