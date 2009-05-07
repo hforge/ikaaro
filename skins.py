@@ -28,6 +28,7 @@ from itools.handlers import File, Folder, Image
 from itools.http import NotFound
 from itools.i18n import has_language
 from itools.stl import stl
+from itools.uri import Path
 from itools.web import get_context, BaseView, ERROR
 from itools.xmlfile import XMLFile
 
@@ -185,8 +186,7 @@ class Skin(UIFolder):
 
         # This skin's style
         if self.has_handler('style.css'):
-            here = context.resource
-            styles.append('%s/style.css' % here.get_pathto(self))
+            styles.append('%s/style.css' % self.get_canonical_path())
         # Dynamic styles
         for style in context.styles:
             styles.append(style)
@@ -217,7 +217,7 @@ class Skin(UIFolder):
 
         # This skin's JavaScript
         if self.has_handler('javascript.js'):
-            scripts.append('%s/javascript.js' % self.get_abspath())
+            scripts.append('%s/javascript.js' % self.get_canonical_path())
 
         # Dynamic scripts
         for script in context.scripts:
@@ -451,3 +451,6 @@ class UI(UIFolder):
             return skin
         return UIFolder._get_resource(self, name)
 
+
+    def get_canonical_path(self):
+        return Path('/ui')
