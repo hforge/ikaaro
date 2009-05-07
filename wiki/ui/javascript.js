@@ -187,10 +187,10 @@ function wiki_help() {
  */
 
 function select_element(type, value, caption) {
-  if(type=='image'){
-      window.opener.insertTags('\n\n.. figure:: ' + value + '\n\n   ',
-                               '\n\n', caption);
-  }else{
+  if (type == 'image') {
+      window.opener.insertTags('\n\n.. figure:: ' + value + '\n   :width: 350px\n\n   ',
+                               '\n\n', 'Description of `' + value + '`_');
+  } else {
       window.opener.insertTags('`', '`_', value, true);
   }
   window.close();
