@@ -82,10 +82,6 @@ class User(AccessControl, Folder):
         return values
 
 
-    def get_canonical_path(self):
-        return Path('/users/%s' % self.name)
-
-
     ########################################################################
     # API
     ########################################################################
@@ -237,6 +233,10 @@ class UserFolder(Folder):
 
     def get_document_types(self):
         return [get_resource_class('user')]
+
+
+    def get_canonical_path(self):
+        return Path('/users')
 
 
     #######################################################################
