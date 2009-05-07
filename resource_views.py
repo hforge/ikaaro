@@ -421,12 +421,12 @@ class DBResource_AddLink(DBResource_AddBase):
     def get_page_type(self, mode):
         """Return the type of page to add corresponding to the mode
         """
-        if mode=='tiny_mce':
-            from wiki.page import WikiPage
-            return WikiPage
-        elif mode=='wiki':
-            from ikaaro.html import WebPage
+        if mode == 'tiny_mce':
+            from webpage import WebPage
             return WebPage
+        elif mode == 'wiki':
+            from wiki import WikiPage
+            return WikiPage
         else:
             raise ValueError, 'Incorrect mode %s' % mode
 
