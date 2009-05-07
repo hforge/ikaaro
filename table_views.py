@@ -209,7 +209,7 @@ class Table_AddEditRecord(AutoForm):
             self.action_add_or_edit(resource, context, record)
         except UniqueError, error:
             title = resource.get_field_title(error.name)
-            context.message = ERROR(error, field=title, value=error.value)
+            context.message = ERROR(str(error), field=title, value=error.value)
         except ValueError, error:
             message = ERROR(u'Error: {msg}', msg=str(error))
             context.message = message
