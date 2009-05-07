@@ -15,20 +15,33 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
-from unittest import TestLoader, TestSuite, TextTestRunner
+from datetime import datetime
+from unittest import TestCase, main
 
-# Import tests
-import test_metadata
-
-
-test_modules = [test_metadata]
+# Import from ikaaro
+from ikaaro.metadata_ng import MetadataNG
 
 
-loader = TestLoader()
+metadata_str = """
+format:webpage
+version:20090122
+title;lang=en:hello
+title;lang=fr:bonjur
+title;lang=fr:bonjour
+"""
+
+
+
+
+class MetadataTestCase(TestCase):
+
+    def test_parse(self):
+        metadata = MetadataNG(string=metadata_str)
+        self.assertEqual(metadata.format, 'webpage')
+        self.assertEqual(
+            metadata.get_property('version').value, '20090122')
+
+
 
 if __name__ == '__main__':
-    suite = TestSuite()
-    for module in test_modules:
-        suite.addTest(loader.loadTestsFromModule(module))
-
-    TextTestRunner(verbosity=1).run(suite)
+    main()
