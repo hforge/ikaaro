@@ -77,6 +77,12 @@ class NewInstance(AutoForm):
         return title.gettext(class_title=class_title)
 
 
+    def get_value(self, resource, context, name, datatype):
+        if name in self.schema:
+            return context.get_query_value(name, type=datatype)
+        return AutoForm.get_value(self, resource, context, name, datatype)
+
+
     def icon(self, resource, **kw):
         type = kw.get('type')
         cls = get_resource_class(type)
