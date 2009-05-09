@@ -220,9 +220,9 @@ class DBResource(CatalogAware, IResource):
     @classmethod
     def get_metadata_schema(cls):
         return {
-            'title': Unicode,
-            'description': Unicode,
-            'subject': Unicode,
+            'title': Unicode(multilingual=True),
+            'description': Unicode(multilingual=True),
+            'subject': Unicode(multilingual=True),
             }
 
 
