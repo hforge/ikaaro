@@ -35,11 +35,23 @@ title;lang=fr:bonjour
 
 class MetadataTestCase(TestCase):
 
-    def test_parse(self):
-        metadata = MetadataNG(string=metadata_str)
-        self.assertEqual(metadata.format, 'webpage')
-        self.assertEqual(
-            metadata.get_property('version').value, '20090122')
+    def setUp(self):
+        self.metadata = MetadataNG(string=metadata_str)
+
+
+    def test_format(self):
+        format = self.metadata.format
+        self.assertEqual(format, 'webpage')
+
+
+    def test_version(self):
+        version = self.metadata.get_property('version').value
+        self.assertEqual(version, '20090122')
+
+
+    def test_title(self):
+        title = self.metadata.get_property('title', language='fr').value
+        self.assertEqual(title, 'bonjour')
 
 
 
