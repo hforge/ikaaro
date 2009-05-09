@@ -114,12 +114,6 @@ class Root(WebSite):
         return cls(metadata)
 
 
-    @classmethod
-    def get_metadata_schema(cls):
-        schema = WebSite.get_metadata_schema()
-        return schema
-
-
     ########################################################################
     # Override itools.web.root.Root
     ########################################################################
