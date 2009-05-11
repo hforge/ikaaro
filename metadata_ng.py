@@ -23,6 +23,12 @@ from itools.handlers import File
 from registry import get_resource_class
 
 
+# This is the datatype used for properties not defined in the schema
+multiple_datatype = String(multiple=True, multilingual=False)
+multilingual_datatype = String(multiple=False, multilingual=True)
+
+
+
 def get_schema(format):
     cls = get_resource_class(format)
     return cls.get_metadata_schema()
@@ -70,15 +76,27 @@ class MetadataNG(File):
         for name, value, parameters in parser:
             if name == 'format':
                 raise ValueError, 'unexpected "format" property'
-            # Get the datatype
-            datatype = schema[name]
+
+            # 1. Get the datatype
+            datatype = schema.get(name)
+            if not datatype:
+                # Guess the datatype for properties not defined by the schema
+                if 'lang' in parameters:
+                    datatype = multilingual_datatype
+                else:
+                    datatype = multiple_datatype
+
+            # 2. Get the datatype properties
             multiple = is_multiple(datatype)
             multilingual = is_multilingual(datatype)
             if multiple and multilingual:
                 error = 'property "%s" is both multilingual and multiple'
                 raise ValueError, error % name
-            # Build the property
+
+            # 3. Build the property
+            value = datatype.decode(value)
             property = Property(value, **parameters)
+
             # Case 1: Multilingual
             if multilingual:
                 language = parameters.get('lang')
@@ -98,44 +116,63 @@ class MetadataNG(File):
     ########################################################################
     # API
     ########################################################################
-    def get_property_and_language(self, name, language=None):
-        """Return the value for the given property and the language of that
-        value.
+    def _get_property(self, name, language=None):
+        """Return the property for the given property name.  If it is missing
+        return None.
 
-        For monolingual properties, the language always will be None.
+        If it is a multilingual property, return only the property for the
+        given language (negotiate the language if needed).
+
+        If it is a multiple property, return the list of properties.
         """
-        # Check the property exists
+        # Return 'None' if the property is missing
+        property = self.properties.get(name)
+        if not property:
+            return None
+
+        # Monolingual property, we are done
+        if type(property) is not dict:
+            return property
+
+        # The language has been given
+        if language:
+            return property.get(language)
+
+        # Consider only the properties with a non empty value
         datatype = get_datatype(self.format, name)
-        if name not in self.properties:
-            default = datatype.get_default()
-            return default, None
-        # Get the value
-        value = self.properties[name]
+        languages = [
+            x for x in property if not datatype.is_empty(property[x].value) ]
+        if not languages:
+            return None
 
-        # Monolingual property
-        if not isinstance(value, dict):
-            return value, None
+        # Negotiate the language (if the context is available)
+        context = get_context()
+        if context:
+            language = context.accept_language.select_language(languages)
+        else:
+            language = None
 
-        # Language negotiation
+        # Negotiation failed, pick a language at random
+        # FIXME We can do better than this
         if language is None:
-            context = get_context()
-            if context is None:
-                language = None
-            else:
-                languages = [
-                    k for k, v in value.items() if not datatype.is_empty(v) ]
-                accept = context.accept_language
-                language = accept.select_language(languages)
-            # Default (FIXME pick one at random)
-            if language is None:
-                language = value.keys()[0]
-            return value[language], language
+            language = languages[0]
 
-        if language in value:
-            return value[language], language
-        return datatype.get_default(), None
+        return property[language]
 
 
     def get_property(self, name, language=None):
-        return self.get_property_and_language(name, language=language)[0]
+        """Return the property value for the given property name.
+        """
+        property = self._get_property(name, language=language)
+        # Default
+        if not property:
+            datatype = get_datatype(self.format, name)
+            return datatype.get_default()
+
+        # Multiple
+        if type(property) is list:
+            return [ x.value for x in property ]
+
+        # Simple
+        return property.value
 
