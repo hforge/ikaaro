@@ -18,19 +18,23 @@
 from itools.core import merge_dicts
 from itools.datatypes import String, Tokens
 from itools.gettext import MSG
+from itools.uri import Path
 from itools.web import INFO
-from itools.xapian import AndQuery, PhraseQuery, StartQuery
+from itools.xapian import AndQuery, OrQuery, PhraseQuery
 from itools.xml import XMLParser
 
 # Import from ikaaro
-from ikaaro.buttons import Button
-from ikaaro.folder_views import Folder_BrowseContent
-from ikaaro.forms import PathSelectorWidget
+from ikaaro.buttons import Button, RemoveButton, OrderUpButton
+from ikaaro.buttons import OrderDownButton, OrderBottomButton, OrderTopButton
+from ikaaro.file import Image
+from ikaaro.folder import Folder
+from ikaaro.folder_views import Folder_BrowseContent, GoToSpecificDocument
+from ikaaro.folder_views import get_workflow_preview
 from ikaaro.registry import register_resource_class
-from ikaaro.resource_views import Breadcrumb, DBResource_AddLink
 from ikaaro.table import OrderedTableFile, OrderedTable
 from ikaaro.table_views import OrderedTable_View
-from ikaaro.views import BrowseForm, CompositeForm
+from ikaaro.utils import get_base_path_query
+from ikaaro.views import CompositeForm
 from ikaaro.workflow import WorkflowAware
 
 
@@ -43,25 +47,60 @@ class AddButton(Button):
 
 
 ###########################################################################
-# ResourcesOrderedTable
+# Views
 ###########################################################################
+
+def get_resource_preview(resource, image_width, image_height, text_length,
+                         context):
+    # Search for a "order_preview" view
+    view = getattr(resource, 'order_preview', None)
+    if view is not None:
+        return view.GET(resource, context)
+    # Render image thumbnail
+    if isinstance(resource, Image):
+        template = '<img src="%s/;thumb?width=%s&amp;height=%s"/>'
+        return XMLParser(template % (
+            context.get_link(resource), image_width, image_height))
+    # Or textual representation
+    text = resource.to_text()
+    if isinstance(text, dict):
+        language = resource.get_content_language(context)
+        text = text.get(language, text.keys()[0])
+    return text[:text_length] + u"…"
+
+
 
 class ResourcesOrderedTable_Ordered(OrderedTable_View):
 
     title = MSG('Ordered items')
 
+    order_preview = True
+    preview_image_width = 64
+    preview_image_height = 64
+    preview_text_length = 100
+
+    table_actions = [RemoveButton(confirm=None,
+                                  title=MSG(u"Remove from ordered list")),
+                     OrderUpButton, OrderDownButton, OrderTopButton,
+                     OrderBottomButton]
+
+
     def get_table_columns(self, resource, context):
-        columns = OrderedTable_View.get_table_columns(self, resource, context)
+        columns = OrderedTable_View.get_table_columns(self, resource,
+                                                      context)
         # Remove column with id and replace it by title,
         # and add a column for the workflow state
         columns[1] = ('title', MSG(u'Title'))
         columns.append(('workflow_state', MSG(u'State')))
+        if self.order_preview:
+            columns.append(('order_preview', MSG(u"Preview")))
         return columns
 
 
     def get_item_value(self, resource, context, item, column):
+        order_root = resource.get_order_root()
         try:
-            item_resource = resource.get_resource_by_name(item.name, context)
+            item_resource = order_root.get_resource(item.name)
         except LookupError:
             item_resource = None
 
@@ -80,17 +119,15 @@ class ResourcesOrderedTable_Ordered(OrderedTable_View):
                 return XMLParser(state)
             if not isinstance(item_resource, WorkflowAware):
                 return None
-            statename = item_resource.get_statename()
-            state = item_resource.get_state()
-            msg = state['title'].gettext().encode('utf-8')
-            path = context.get_link(item_resource)
-            # TODO Include the template in the base table
-            state = ('<a href="%s/;edit_state" class="workflow">'
-                     '<strong class="wf-%s">%s</strong>'
-                     '</a>') % (path, statename, msg)
-            return XMLParser(state)
-        return OrderedTable_View.get_item_value(self, resource, context, item,
-                                                column)
+            return get_workflow_preview(item_resource, context)
+        elif column == 'order_preview':
+            if item_resource is None:
+                return None
+            return get_resource_preview(item_resource,
+                    self.preview_image_width, self.preview_image_height,
+                    self.preview_text_length, context)
+        return OrderedTable_View.get_item_value(self, resource, context,
+                                                item, column)
 
 
 class ResourcesOrderedTable_Unordered(Folder_BrowseContent):
@@ -98,11 +135,10 @@ class ResourcesOrderedTable_Unordered(Folder_BrowseContent):
     access = 'is_allowed_to_edit'
     title = MSG('Unordered items')
 
-    table_columns = [
-        ('checkbox', None),
-        ('title', MSG(u'Title')),
-        ('path', MSG(u'Path')),
-        ('workflow_state', MSG(u'State'))]
+    order_preview = True
+    preview_image_width = 64
+    preview_image_height = 64
+    preview_text_length = 100
 
     table_actions = [AddButton]
 
@@ -116,17 +152,29 @@ class ResourcesOrderedTable_Unordered(Folder_BrowseContent):
         return {}
 
 
-    def get_items(self, resource, context):
-        exclude = [resource.name] + list(resource.get_ordered_names())
-        orderable_classes = resource.get_orderable_classes() or ()
-        path = resource.get_root_order_path(context)
+    def get_table_columns(self, resource, context):
+        columns = [('checkbox', None),
+                   ('title', MSG(u'Title')),
+                   ('path', MSG(u'Path')),
+                   ('workflow_state', MSG(u'State'))]
+        if self.order_preview:
+            columns.append(('order_preview', MSG(u"Preview")))
+        return columns
 
-        query = [StartQuery('abspath', str(path))]
-        for cl in orderable_classes:
-            query.append(PhraseQuery('format', cl.class_id))
-        query = AndQuery(*query)
+
+    def get_items(self, resource, context):
+        # Only in the given root
+        parent_path = resource.get_order_root().get_abspath()
+        query_base_path = get_base_path_query(str(parent_path))
+        # Only the given types
+        query_formats = [PhraseQuery('format', cls.class_id)
+                         for cls in resource.get_orderable_classes()]
+        query_formats = OrQuery(*query_formats)
+        query = AndQuery(query_base_path, query_formats)
         root = context.root
         results = root.search(query).get_documents()
+
+        exclude = [resource.name] + list(resource.get_ordered_names())
         items = []
         for item in results:
             if item.name not in exclude:
@@ -138,23 +186,21 @@ class ResourcesOrderedTable_Unordered(Folder_BrowseContent):
     def get_item_value(self, resource, context, item, column):
         if column == 'checkbox':
             return item.name, False
-        if column == 'title':
+        elif column == 'title':
             return item.get_title(), context.get_link(item)
-        if column == 'path':
+        elif column == 'path':
             return item.name
-        if column == 'workflow_state':
+        elif column == 'workflow_state':
             # The workflow state
             if not isinstance(item, WorkflowAware):
                 return None
-            statename = item.get_statename()
-            state = item.get_state()
-            msg = state['title'].gettext().encode('utf-8')
-            path = context.get_link(item)
-            # TODO Include the template in the base table
-            state = ('<a href="%s/;edit_state" class="workflow">'
-                     '<strong class="wf-%s">%s</strong>'
-                     '</a>') % (path, statename, msg)
-            return XMLParser(state)
+            return get_workflow_preview(resource, context)
+        elif column == 'order_preview':
+            return get_resource_preview(item, self.preview_image_width,
+                    self.preview_image_height, self.preview_text_length,
+                    context)
+        return Folder_BrowseContent.get_item_value(self, resource, context,
+                                                   item, column)
 
 
     def sort_and_batch(self, resource, context, items):
@@ -197,64 +243,39 @@ class ResourcesOrderedTable_View(CompositeForm):
         return {'views': views}
 
 
-###########################################################################
-# ChildrenOrderedTable
-###########################################################################
 
-class ChildrenOrderedTable_Ordered(ResourcesOrderedTable_Ordered):
-    pass
-
-
-
-class ChildrenOrderedTable_Unordered(ResourcesOrderedTable_Unordered):
-
-    def get_items(self, resource, context):
-        exclude = [resource.name] + list(resource.get_ordered_names())
-        orderable_classes = resource.get_orderable_classes() or ()
-        items = []
-        for item in resource.parent.search_resources(cls=orderable_classes):
-            if item.name not in exclude:
-                items.append(item)
-        return items
-
-
-
-class ChildrenOrderedTable_View(ResourcesOrderedTable_View):
-
-    subviews = [ChildrenOrderedTable_Ordered(),
-                ChildrenOrderedTable_Unordered()]
-
-
-
-class ChildrenOrderedTable_AddLink(DBResource_AddLink):
+class GoToOrderedTable(GoToSpecificDocument):
 
     access = 'is_allowed_to_edit'
-    template = '/ui/future/order_addlink.xml'
+    title = MSG(u'Order resources')
 
-    def get_namespace(self, resource, context):
-        namespace = DBResource_AddLink.get_namespace(self, resource, context)
-        exclude = [resource.name] + list(resource.get_ordered_names())
-        orderable_classes = resource.get_orderable_classes() or ()
 
-        # Construct namespace
-        start = resource.parent
-        bc = Breadcrumb(root=start, start=start, icon_size=48)
-        items = []
-        for item in bc.items:
-            item_type = item['type']
-            if item['name'] in exclude:
-                continue
-            if not issubclass(item_type, orderable_classes):
-                continue
-            path = str(item['path'])
-            if path.startswith('../'):
-                item['path'] = path[3:]
-            items.append(item)
-        bc.items = items
-        namespace['bc'] = bc
-        namespace['target_id'] = context.get_form_value('target_id')
+    def get_specific_document(self, resource, context):
+        return resource.order_path
 
-        return namespace
+
+
+class GoToFirstOrderedResource(GoToSpecificDocument):
+
+    access = 'is_allowed_to_view'
+    title = MSG(u'View')
+
+
+    def GET(self, resource, context):
+        specific_document = self.get_specific_document(resource, context)
+        if specific_document is None:
+            # XXX White page
+            return ''
+        return GoToSpecificDocument.GET(self, resource, context)
+
+
+    def get_specific_document(self, resource, context):
+        # TODO ACL?
+        names = list(resource.get_ordered_names())
+        if names:
+            return names[0]
+        return None
+
 
 
 ###########################################################################
@@ -268,45 +289,40 @@ class ResourcesOrderedTableFile(OrderedTableFile):
 
 
 
-class ChildrenOrderedTableFile(ResourcesOrderedTableFile):
-    # FIXME 0.60 -> to remove
-    record_schema = {'name': String}
-
-
-
 class ResourcesOrderedTable(OrderedTable):
 
     class_id = 'resources-ordered-table'
     class_title = MSG(u'Resources Ordered Table')
     class_handler = ResourcesOrderedTableFile
+    class_views = ['view', 'last_changes']
 
-    orderable_classes = None
-    form = [PathSelectorWidget('name', title=MSG(u'Path'))]
+    # All types by default
+    orderable_classes = ()
+    # Every item will be into this resource
+    order_root_path = '..'
+
+    # Views
+    view = ResourcesOrderedTable_View()
 
 
     @classmethod
     def get_metadata_schema(cls):
-        return merge_dicts(OrderedTable.get_metadata_schema(), order=Tokens)
+        return merge_dicts(OrderedTable.get_metadata_schema(),
+                           order=Tokens)
 
 
     def get_orderable_classes(self):
         return self.orderable_classes
 
 
-    def get_root_order_path(self, context):
-        """ Every item will be into this path. """
-        return context.root.get_abspath()
+    def get_order_root(self):
+        return self.get_resource(self.order_root_path)
 
 
     def get_ordered_names(self):
-        for record in self.handler.get_records_in_order():
+        handler = self.handler
+        for record in handler.get_records_in_order():
             yield record.name
-
-
-    def get_resource_by_name(self, name, context):
-        root_order_path = self.get_root_order_path(context)
-        folder = self.get_resource(root_order_path)
-        return folder.get_resource(name)
 
 
     def get_links(self):
@@ -322,27 +338,66 @@ class ResourcesOrderedTable(OrderedTable):
         return links
 
 
+    def change_link(self, old_path, new_path):
+        handler = self.handler
+        old_name = Path(old_path).get_name()
+        new_name = Path(new_path).get_name()
+        for record in handler.get_records_in_order():
+            name = handler.get_record_value(record, 'name')
+            if name == old_name:
+                handler.update_record(record.id, **{'name': new_name})
+
+
+
+class ResourcesOrderedContainer(Folder):
+
+    class_id = 'resources-ordered-container'
+    class_views = Folder.class_views + ['order']
+
+    __fixed_handlers__ = ['order-resources']
+
+    order_path = 'order-resources'
+    order_class = ResourcesOrderedTable
+
+
+    # Views
+    order = GoToOrderedTable()
+
+
+    @staticmethod
+    def _make_resource(cls, folder, name, **kw):
+        Folder._make_resource(cls, folder, name, **kw)
+        # Make the table
+        order_class = cls.order_class
+        order_class._make_resource(order_class, folder,
+                                   '%s/%s' % (name, cls.order_path))
+
+
+    def get_ordered_names(self, context=None):
+        order_table = self.get_resource(self.order_path)
+        if context is None:
+            for name in order_table.get_ordered_names():
+                yield name
+            return
+        # Apply ACL
+        order_root = order_table.get_order_root()
+        for name in order_table.get_ordered_names():
+            resource = order_root.get_resource(name)
+            ac = resource.get_access_control()
+            if ac.is_allowed_to_view(context.user, resource):
+                yield name
+
+
+
+###########################################################################
+# XXX migrate to "resource-ordered-table" in your project
+# TODO remove in 0.70
+###########################################################################
 
 class ChildrenOrderedTable(ResourcesOrderedTable):
 
     class_id = 'children-ordered-table'
-    class_title = MSG(u'Children Ordered Table')
-    class_handler = ChildrenOrderedTableFile
 
-
-    def get_root_order_path(self, context):
-        """ Every item will be into this path. """
-        return self.parent.get_abspath()
-
-
-    def get_resource_by_name(self, name, context):
-        return self.parent.get_resource(name)
-
-    # Views
-    add_link = ChildrenOrderedTable_AddLink()
-    ordered = ChildrenOrderedTable_Ordered()
-    unordered = ChildrenOrderedTable_Unordered()
-    view = ChildrenOrderedTable_View()
 
 
 register_resource_class(ResourcesOrderedTable)

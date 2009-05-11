@@ -26,7 +26,7 @@ from itools.gettext import MSG
 from itools.web import STLView
 
 # Import from ikaaro
-from folder_views import BrowseForm
+from views import BrowseForm
 
 
 class DBResource_LastChanges(BrowseForm):

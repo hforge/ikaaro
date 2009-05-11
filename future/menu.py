@@ -30,6 +30,7 @@ from ikaaro import messages
 from ikaaro.buttons import Button
 from ikaaro.exceptions import ConsistencyError
 from ikaaro.folder import Folder
+from ikaaro.folder_views import get_workflow_preview
 from ikaaro.forms import PathSelectorWidget
 from ikaaro.forms import TextWidget, SelectWidget, ReadOnlyWidget
 from ikaaro.registry import register_resource_class
@@ -162,17 +163,7 @@ class Menu_View(OrderedTable_View):
                 return XMLParser(state)
             if not isinstance(item_resource, WorkflowAware):
                 return None
-            statename = item_resource.get_statename()
-            state = item_resource.get_state()
-            msg = state['title'].gettext().encode('utf-8')
-            # Build the new reference with the right path
-            ref2 = deepcopy(ref)
-            ref2.path = context.get_link(item_resource)
-            # TODO Include the template in the base table
-            state = ('<a href="%s/;edit_state" class="workflow">'
-                     '<strong class="wf-%s">%s</strong>'
-                     '</a>') % (str(ref2), statename, msg)
-            return XMLParser(state)
+            return get_workflow_preview(item_resource, context)
 
         return OrderedTable_View.get_item_value(self, resource, context, item,
                                                 column)

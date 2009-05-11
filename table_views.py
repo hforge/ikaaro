@@ -274,9 +274,9 @@ class Table_EditRecord(Table_AddEditRecord):
 
 
 
-###########################################################################
-# Oredered Views
-###########################################################################
+##########################################################################
+# Ordered Views
+##########################################################################
 class OrderedTable_View(Table_View):
 
     def get_items(self, resource, context):
@@ -319,9 +319,9 @@ class OrderedTable_View(Table_View):
     table_actions = [RemoveButton, OrderUpButton, OrderDownButton,
                      OrderTopButton, OrderBottomButton]
 
-    #######################################################################
+    ######################################################################
     # Form Actions
-    #######################################################################
+    ######################################################################
     def action_remove(self, resource, context, form):
         ids = form['ids']
         for id in ids:

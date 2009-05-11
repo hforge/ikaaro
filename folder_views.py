@@ -16,8 +16,6 @@
 
 # Import from the Standard Library
 from urllib import quote
-from datetime import datetime
-from operator import itemgetter
 
 # Import from the Python Image Library
 try:
@@ -44,9 +42,21 @@ from datatypes import CopyCookie, ImageWidth
 from exceptions import ConsistencyError
 import messages
 from utils import generate_name, get_base_path_query
-from views import IconsView, BrowseForm, SearchForm, ContextMenu
+from views import IconsView, SearchForm, ContextMenu
 from views_new import AddResourceMenu
 from workflow import WorkflowAware
+
+
+def get_workflow_preview(resource, context):
+    statename = resource.get_statename()
+    state = resource.get_state()
+    msg = state['title'].gettext().encode('utf-8')
+    path = context.get_link(resource)
+    # TODO Include the template in the base table
+    state = ('<a href="%s/;edit_state" class="workflow">'
+             '<strong class="wf-%s">%s</strong>'
+             '</a>') % (path, statename, msg)
+    return XMLParser(state)
 
 
 
@@ -354,15 +364,7 @@ class Folder_BrowseContent(SearchForm):
             # The workflow state
             if not isinstance(item, WorkflowAware):
                 return None
-            statename = item.get_statename()
-            state = item.get_state()
-            msg = state['title'].gettext().encode('utf-8')
-            path = context.get_link(item)
-            # TODO Include the template in the base table
-            state = ('<a href="%s/;edit_state" class="workflow">'
-                     '<strong class="wf-%s">%s</strong>'
-                     '</a>') % (path, statename, msg)
-            return XMLParser(state)
+            return get_workflow_preview(item, context)
 
 
     table_actions = [
