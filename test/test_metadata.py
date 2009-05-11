@@ -28,6 +28,9 @@ version:20090122
 title;lang=en:hello
 title;lang=fr:bonjur
 title;lang=fr:bonjour
+free_title;lang=en:bye
+free_title;lang=fr:aurevoir
+free_title;lang=fr:au revoir
 """
 
 
@@ -45,13 +48,20 @@ class MetadataTestCase(TestCase):
 
 
     def test_version(self):
-        version = self.metadata.get_property('version').value
-        self.assertEqual(version, '20090122')
+        value = self.metadata.get_property('version')
+        self.assertEqual(value, '20090122')
 
 
     def test_title(self):
-        title = self.metadata.get_property('title', language='fr').value
-        self.assertEqual(title, 'bonjour')
+        value = self.metadata.get_property('title', language='fr')
+        self.assertEqual(type(value), unicode)
+        self.assertEqual(value, u'bonjour')
+
+
+    def test_free_title(self):
+        value = self.metadata.get_property('free_title', language='fr')
+        self.assertEqual(type(value), str)
+        self.assertEqual(value, 'au revoir')
 
 
 
