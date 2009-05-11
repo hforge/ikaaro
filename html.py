@@ -80,6 +80,8 @@ def _get_links(base, events):
             path = uri.path
         elif tag_name == 'img':
             value = attributes.get((None, 'src'))
+            if value is None:
+                continue
             uri = get_reference(value)
             if uri.scheme or uri.authority or not uri.path:
                 continue
