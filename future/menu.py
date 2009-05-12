@@ -454,7 +454,7 @@ class Menu(OrderedTable):
             ref, path = get_reference_and_path(uri)
             if ref.scheme:
                 # External link
-                uris.append(uri)
+                uris.append(ref)
                 continue
             if self._is_allowed_to_access(context, uri) is False:
                 continue
