@@ -54,7 +54,9 @@ class NewInstance(AutoForm):
 
     access = 'is_allowed_to_add'
     query_schema = freeze({
-        'type': String})
+        'type': String,
+        'name': String,
+        'title': Unicode})
     schema = freeze({
         'name': String,
         'title': Unicode})
@@ -78,8 +80,8 @@ class NewInstance(AutoForm):
 
 
     def get_value(self, resource, context, name, datatype):
-        if name in self.schema:
-            return context.get_query_value(name, type=datatype)
+        if name in self.get_query_schema():
+            return context.query[name]
         return AutoForm.get_value(self, resource, context, name, datatype)
 
 
