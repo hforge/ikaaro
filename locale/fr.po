@@ -1782,7 +1782,7 @@ msgstr "Anglais"
 
 #: ../table_views.py:212
 msgid "Error: $msg"
-msgstr "Erreur&nbsp;: $message"
+msgstr "Erreur&nbsp;: $msg"
 
 #: ../calendar_views.py:624
 msgid "Event definitely deleted."
