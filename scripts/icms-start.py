@@ -60,17 +60,14 @@ def start(options, target):
     port = server.port
     print '[%s] Web Server listens %s:%s' % (target, address, port)
 
-    # GO GO GO
-    pid = fork()
-    if pid > 0:
-        if options.detach:
-            become_daemon()
+    # Daemon mode
+    if options.detach:
+        become_daemon()
 
-        # Start
-        start_subprocess('%s/database' % target)
-        server.start()
-        exit(0)
-
+    # Start
+    start_subprocess('%s/database' % target)
+    server.start()
+    # Ok
     return 0
 
 
@@ -88,18 +85,33 @@ if __name__ == '__main__':
         '-d', '--detach', action="store_true", default=False,
         help="Detach from the console.")
 
+    # Parse arguments
     options, args = parser.parse_args()
     n_args = len(args)
     if n_args == 0:
         parser.error('The TARGET argument is missing.')
-    elif n_args == 1:
-        pass
-    elif options.detach:
-        parser.error('Options are not available when starting several '
-                     'servers at once.')
 
-    # Action!
+    # Case 1: One target
+    if n_args == 1:
+        target = args[0]
+        ret = start(options, target)
+        exit(ret)
+
+    # Case 2: Multiple targets
+    if not options.detach:
+        print 'icms-start.py: wrong command line options.'
+        print
+        print 'To start more than one instance at once use the detached mode:'
+        print
+        print '    $ icms-update.py --detach %s' % ' '.join(args)
+        print
+        exit(1)
+
     ret = 0
     for target in args:
+        pid = fork()
+        if pid == 0:
+            continue
         ret += start(options, target)
     exit(ret)
+
