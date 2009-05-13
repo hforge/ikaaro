@@ -18,8 +18,12 @@
 from datetime import datetime
 from unittest import TestCase, main
 
+# Import from itools
+from itools.csv import Property
+
 # Import from ikaaro
 from ikaaro.metadata_ng import MetadataNG
+from ikaaro.webpage import WebPage
 
 
 metadata_str = """
@@ -36,7 +40,7 @@ free_title;lang=fr:au revoir
 
 
 
-class MetadataTestCase(TestCase):
+class LoadTestCase(TestCase):
 
     def setUp(self):
         self.metadata = MetadataNG(string=metadata_str)
@@ -62,6 +66,31 @@ class MetadataTestCase(TestCase):
         value = self.metadata.get_property('free_title', language='fr')
         self.assertEqual(type(value), str)
         self.assertEqual(value, 'au revoir')
+
+
+
+class NewTestCase(TestCase):
+
+    def setUp(self):
+        metadata = MetadataNG(cls=WebPage)
+        metadata.set_property('title', Property(u'Hello World', lang='en'))
+        self.metadata = metadata
+
+
+    def test_format(self):
+        format = self.metadata.format
+        self.assertEqual(format, WebPage.class_id)
+
+
+    def test_version(self):
+        value = self.metadata.get_property('version')
+        self.assertEqual(value, WebPage.class_version)
+
+
+    def test_title(self):
+        value = self.metadata.get_property('title', language='en')
+        self.assertEqual(type(value), unicode)
+        self.assertEqual(value, u'Hello World')
 
 
 

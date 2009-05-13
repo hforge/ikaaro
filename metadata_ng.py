@@ -57,6 +57,11 @@ class MetadataNG(File):
         self.properties = {}
 
 
+    def new(self, cls=None, format=None):
+        self.format = format or cls.class_id
+        self.properties['version'] = Property(cls.class_version)
+
+
     def _load_state_from_file(self, file):
         properties = self.properties
         data = file.read()
@@ -175,4 +180,22 @@ class MetadataNG(File):
 
         # Simple
         return property.value
+
+
+    def set_property(self, name, value):
+        self.set_changed()
+        properties = self.properties
+
+        if value is None:
+            # Remove property
+            if name in properties:
+                del properties[name]
+        elif type(value) is Property:
+            language = value.parameters.get('lang')
+            if language:
+                properties.setdefault(name, {})[language] = value
+            else:
+                properties[name] = value
+        else:
+            properties[name] = Property(value)
 
