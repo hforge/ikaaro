@@ -43,7 +43,7 @@ def start(options, target):
         return 1
 
     # Set-up the server
-    server = Server(target, options.address, options.port)
+    server = Server(target)
 
     # Check instance is up to date
     context = get_fake_context()
@@ -85,12 +85,8 @@ if __name__ == '__main__':
                    ' options are available).')
     parser = OptionParser(usage, version=version, description=description)
     parser.add_option(
-        '-a', '--address', help='listen to IP ADDRESS')
-    parser.add_option(
         '-d', '--detach', action="store_true", default=False,
         help="Detach from the console.")
-    parser.add_option(
-        '-p', '--port', type='int', help='listen to PORT number')
 
     options, args = parser.parse_args()
     n_args = len(args)
@@ -98,7 +94,7 @@ if __name__ == '__main__':
         parser.error('The TARGET argument is missing.')
     elif n_args == 1:
         pass
-    elif options.address or options.detach or options.port:
+    elif options.detach:
         parser.error('Options are not available when starting several '
                      'servers at once.')
 
