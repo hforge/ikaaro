@@ -41,9 +41,9 @@ class User_ConfirmRegistration(STLForm):
 
     msg = MSG(u'To activate your account, please type a password.')
 
-    def get_namespace(self, resource, context):
+
+    def GET(self, resource, context):
         # Check register key
-        # FIXME This does not work
         must_confirm = resource.get_property('user_must_confirm')
         username = context.get_form_value('username', default='')
         if must_confirm is None:
@@ -52,10 +52,12 @@ class User_ConfirmRegistration(STLForm):
         elif context.get_form_value('key') != must_confirm:
             return context.come_back(messages.MSG_BAD_KEY,
                     goto='/;login?username=%s' % username)
+        return STLForm.GET(self, resource, context)
 
-        # Ok
+
+    def get_namespace(self, resource, context):
         return {
-            'key': must_confirm,
+            'key': resource.get_property('user_must_confirm'),
             'username': resource.get_login_name(),
             'confirmation_msg': self.msg.gettext()}
 
