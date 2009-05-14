@@ -20,6 +20,7 @@ from unittest import TestCase, main
 
 # Import from itools
 from itools.csv import Property
+from itools import vfs
 
 # Import from ikaaro
 from ikaaro.metadata_ng import MetadataNG
@@ -75,6 +76,13 @@ class NewTestCase(TestCase):
         metadata = MetadataNG(cls=WebPage)
         metadata.set_property('title', Property(u'Hello World', lang='en'))
         self.metadata = metadata
+        # Sandbox
+        vfs.make_folder('sandbox')
+
+
+    def tearDown(self):
+        if vfs.exists('sandbox'):
+            vfs.remove('sandbox')
 
 
     def test_format(self):
@@ -91,6 +99,12 @@ class NewTestCase(TestCase):
         value = self.metadata.get_property('title', language='en')
         self.assertEqual(type(value), unicode)
         self.assertEqual(value, u'Hello World')
+
+
+    def test_save(self):
+        self.metadata.save_state_to('sandbox/metadata')
+        # TODO
+
 
 
 
