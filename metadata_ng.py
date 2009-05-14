@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.csv import parse_table, Property
+from itools.csv import parse_table, Property, property_to_str
 from itools.datatypes import String
 from itools.handlers import File
 
@@ -116,6 +116,43 @@ class MetadataNG(File):
             # Case 3: simple
             else:
                 properties[name] = property
+
+
+    def to_str(self):
+        schema = get_schema(self.format)
+        p_schema = {'lang': String(multiple=False)}
+
+        lines = []
+        lines.append('format:%s\n' % self.format)
+        # Define the order by which the properties should be serialized
+        # (first the version, then by alphabetical order)
+        properties = self.properties
+        names = properties.keys()
+        names.sort()
+        if 'version' in names:
+            names.remove('version')
+            names.insert(0, 'version')
+
+        # Properties
+        for name in names:
+            property = properties[name]
+            datatype = schema[name]
+            p_type = type(property)
+            if p_type is dict:
+                languages = property.keys()
+                languages.sort()
+                lines += [
+                    property_to_str(name, property[x], datatype, p_schema)
+                    for x in languages ]
+            elif p_type is list:
+                lines += [
+                    property_to_str(name, x, datatype, p_schema)
+                    for x in property ]
+            else:
+                lines.append(
+                    property_to_str(name, property, datatype, p_schema))
+
+        return ''.join(lines)
 
 
     ########################################################################
