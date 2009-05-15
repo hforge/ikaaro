@@ -36,13 +36,6 @@ def get_schema(format):
     return cls.get_metadata_schema()
 
 
-def get_datatype(format, name):
-    schema = get_schema(format)
-    if name not in schema:
-        return String
-    return schema[name]
-
-
 def is_multiple(datatype):
     return getattr(datatype, 'multiple', False)
 
@@ -164,7 +157,7 @@ class Metadata(File):
     ########################################################################
     # API
     ########################################################################
-    def _get_property(self, name, language=None):
+    def get_property(self, name, language=None):
         """Return the property for the given property name.  If it is missing
         return None.
 
@@ -187,7 +180,8 @@ class Metadata(File):
             return property.get(language)
 
         # Consider only the properties with a non empty value
-        datatype = get_datatype(self.format, name)
+        cls = get_resource_class(self.format)
+        datatype = cls.get_property_datatype(name)
         languages = [
             x for x in property if not datatype.is_empty(property[x].value) ]
         if not languages:
@@ -206,23 +200,6 @@ class Metadata(File):
             language = languages[0]
 
         return property[language]
-
-
-    def get_property(self, name, language=None):
-        """Return the property value for the given property name.
-        """
-        property = self._get_property(name, language=language)
-        # Default
-        if not property:
-            datatype = get_datatype(self.format, name)
-            return datatype.get_default()
-
-        # Multiple
-        if type(property) is list:
-            return [ x.value for x in property ]
-
-        # Simple
-        return property.value
 
 
     def has_property(self, name, language=None):

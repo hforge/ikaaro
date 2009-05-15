@@ -53,18 +53,18 @@ class LoadTestCase(TestCase):
 
 
     def test_version(self):
-        value = self.metadata.get_property('version')
+        value = self.metadata.get_property('version').value
         self.assertEqual(value, '20090122')
 
 
     def test_title(self):
-        value = self.metadata.get_property('title', language='fr')
+        value = self.metadata.get_property('title', language='fr').value
         self.assertEqual(type(value), unicode)
         self.assertEqual(value, u'bonjour')
 
 
     def test_free_title(self):
-        value = self.metadata.get_property('free_title', language='fr')
+        value = self.metadata.get_property('free_title', language='fr').value
         self.assertEqual(type(value), str)
         self.assertEqual(value, 'au revoir')
 
@@ -91,12 +91,12 @@ class NewTestCase(TestCase):
 
 
     def test_version(self):
-        value = self.metadata.get_property('version')
+        value = self.metadata.get_property('version').value
         self.assertEqual(value, WebPage.class_version)
 
 
     def test_title(self):
-        value = self.metadata.get_property('title', language='en')
+        value = self.metadata.get_property('title', language='en').value
         self.assertEqual(type(value), unicode)
         self.assertEqual(value, u'Hello World')
 

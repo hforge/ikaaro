@@ -75,12 +75,30 @@ class IResource(Resource):
     ########################################################################
     # Properties
     ########################################################################
+    @classmethod
+    def get_property_datatype(cls, name):
+        return String
+
+
     def _get_property(self, name, language=None):
         return None
 
 
     def get_property(self, name, language=None):
-        return None
+        """Return the property value for the given property name.
+        """
+        property = self._get_property(name, language=language)
+        # Default
+        if not property:
+            datatype = self.get_property_datatype(name)
+            return datatype.get_default()
+
+        # Multiple
+        if type(property) is list:
+            return [ x.value for x in property ]
+
+        # Simple
+        return property.value
 
 
     def get_title(self):
@@ -174,33 +192,6 @@ class DBResource(CatalogAware, IResource):
         folder.set_handler('%s.metadata' % name, metadata)
 
 
-    @classmethod
-    def build_metadata(cls, format=None, **kw):
-        """Return a Metadata object with sensible default values.
-        """
-        metadata = Metadata(cls=cls, format=format)
-        # Properties
-        for key in kw:
-            value = kw[key]
-            if type(value) is dict:
-                for lang in value:
-                    property = Property(value[lang], lang=lang)
-                    metadata._set_property(key, property)
-            else:
-                metadata._set_property(key, value)
-
-        # Workflow State (default)
-        if kw.get('state') is None and issubclass(cls, WorkflowAware):
-            schema = cls.get_metadata_schema()
-            state = schema['state'].get_default()
-            if state is None:
-                state  = cls.workflow.initstate
-            metadata._set_property('state', state)
-
-        # Ok
-        return metadata
-
-
     def get_handler(self):
         if self._handler is None:
             cls = self.class_handler
@@ -238,21 +229,52 @@ class DBResource(CatalogAware, IResource):
             }
 
 
+    @classmethod
+    def build_metadata(cls, format=None, **kw):
+        """Return a Metadata object with sensible default values.
+        """
+        metadata = Metadata(cls=cls, format=format)
+        # Properties
+        for key in kw:
+            value = kw[key]
+            if type(value) is dict:
+                for lang in value:
+                    property = Property(value[lang], lang=lang)
+                    metadata._set_property(key, property)
+            else:
+                metadata._set_property(key, value)
+
+        # Workflow State (default)
+        if kw.get('state') is None and issubclass(cls, WorkflowAware):
+            schema = cls.get_metadata_schema()
+            state = schema['state'].get_default()
+            if state is None:
+                state  = cls.workflow.initstate
+            metadata._set_property('state', state)
+
+        # Ok
+        return metadata
+
+
     def has_property(self, name, language=None):
         return self.metadata.has_property(name, language=language)
 
 
+    @classmethod
+    def get_property_datatype(cls, name):
+         schema = cls.get_metadata_schema()
+         return schema.get(name, String)
+
+
     def _get_property(self, name, language=None):
-        return self.metadata._get_property(name, language=language)
-
-
-    def get_property(self, name, language=None):
         return self.metadata.get_property(name, language=language)
 
 
     def set_property(self, name, value, language=None):
         get_context().server.change_resource(self)
-        self.metadata.set_property(name, value, language=language)
+        if language:
+            value = Property(value, lang=language)
+        self.metadata.set_property(name, property)
 
 
     def del_property(self, name, language=None):
