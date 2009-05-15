@@ -30,6 +30,10 @@ from ikaaro import messages
 from ikaaro.buttons import Button
 from ikaaro.exceptions import ConsistencyError
 from ikaaro.folder import Folder
+from ikaaro.folder_views import Folder_NewResource, Folder_BrowseContent
+from ikaaro.folder_views import Folder_Rename, Folder_PreviewContent
+from ikaaro.folder_views import Folder_LastChanges, Folder_Orphans
+from ikaaro.folder_views import Folder_Thumbnail, GoToSpecificDocument
 from ikaaro.forms import PathSelectorWidget
 from ikaaro.forms import TextWidget, SelectWidget, ReadOnlyWidget
 from ikaaro.registry import register_resource_class
@@ -80,6 +84,7 @@ class ChildButton(Button):
 
 class Menu_View(OrderedTable_View):
 
+    access = 'is_allowed_to_edit'
     schema = {
         'ids': Integer(multiple=True, mandatory=True),
     }
@@ -534,9 +539,24 @@ class MenuFolder(Folder):
 
     class_id = 'menu-folder'
     class_title = MSG(u'iKaaro Menu')
+    class_views = ['view']
     __fixed_handlers__ = Folder.__fixed_handlers__ + ['menu']
     # Your menu ressource (for overriding the record_schema and form)
     class_menu = Menu
+
+    # Views
+    view = GoToSpecificDocument(specific_document='menu',
+                                title=MSG(u'View'),
+                                access='is_allowed_to_edit')
+    # Disable all default views
+    new_resource = Folder_NewResource(access='is_admin')
+    browse_content = Folder_BrowseContent(access='is_admin')
+    rename = Folder_Rename(access='is_admin')
+    preview_content = Folder_PreviewContent(access='is_admin')
+    last_changes = Folder_LastChanges(access='is_admin')
+    orphans = Folder_Orphans(access='is_admin')
+    thumb = Folder_Thumbnail(access='is_admin')
+
 
     @staticmethod
     def _make_resource(cls, folder, name, **kw):
