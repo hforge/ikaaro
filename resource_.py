@@ -23,6 +23,7 @@
 from datetime import datetime
 
 # Import from itools
+from itools.csv import Property
 from itools.core import send_subprocess, read_subprocess
 from itools.datatypes import Unicode, String, Integer, Boolean, DateTime
 from itools.gettext import MSG
@@ -78,12 +79,12 @@ class IResource(Resource):
     ########################################################################
     # Properties
     ########################################################################
-    def get_property_and_language(self, name, language=None):
-        return None, None
+    def _get_property(self, name, language=None):
+        return None
 
 
     def get_property(self, name, language=None):
-        return self.get_property_and_language(name, language=language)[0]
+        return None
 
 
     def get_title(self):
@@ -166,17 +167,27 @@ class DBResource(CatalogAware, IResource):
     def build_metadata(cls, format=None, **kw):
         """Return a Metadata object with sensible default values.
         """
-        if format is None:
-            format = cls.class_id
+        metadata = Metadata(cls=cls, format=format)
+        # Properties
+        for key in kw:
+            value = kw[key]
+            if type(value) is dict:
+                for lang in value:
+                    property = Property(value[lang], lang=lang)
+                    metadata._set_property(key, property)
+            else:
+                metadata._set_property(key, value)
 
+        # Workflow State (default)
         if kw.get('state') is None and issubclass(cls, WorkflowAware):
             schema = cls.get_metadata_schema()
             state = schema['state'].get_default()
             if state is None:
                 state  = cls.workflow.initstate
-            kw['state'] = state
+            metadata._set_property('state', state)
 
-        return Metadata(handler_class=cls, format=format, **kw)
+        # Ok
+        return metadata
 
 
     def get_handler(self):
@@ -219,9 +230,12 @@ class DBResource(CatalogAware, IResource):
         return self.metadata.has_property(name, language=language)
 
 
-    def get_property_and_language(self, name, language=None):
-        return self.metadata.get_property_and_language(name,
-                                                       language=language)
+    def _get_property(self, name, language=None):
+        return self.metadata._get_property(name, language=language)
+
+
+    def get_property(self, name, language=None):
+        return self.metadata.get_property(name, language=language)
 
 
     def set_property(self, name, value, language=None):

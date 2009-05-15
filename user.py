@@ -59,6 +59,7 @@ class User(AccessControl, Folder):
     @classmethod
     def get_metadata_schema(cls):
         return {
+            'version': String,
             'firstname': Unicode,
             'lastname': Unicode,
             'email': Email,
@@ -215,10 +216,10 @@ class User(AccessControl, Folder):
     def update_20081217(self):
         # Some users were registered with multilingual names
         for key in ('firstname', 'lastname'):
-            value, language = self.get_property_and_language(key)
-            if language is not None:
+            property = self._get_property(key)
+            if 'lang' in property.parameters:
                 self.del_property(key)
-                self.set_property(key, value)
+                self.set_property(key, property.value)
 
 
 
