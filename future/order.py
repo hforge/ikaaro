@@ -20,7 +20,6 @@ from itools.datatypes import String, Tokens
 from itools.gettext import MSG
 from itools.uri import Path
 from itools.web import INFO
-from itools.xapian import AndQuery, OrQuery, PhraseQuery
 from itools.xml import XMLParser
 
 # Import from ikaaro
@@ -33,7 +32,6 @@ from ikaaro.folder_views import get_workflow_preview
 from ikaaro.registry import register_resource_class
 from ikaaro.table import OrderedTableFile, OrderedTable
 from ikaaro.table_views import OrderedTable_View
-from ikaaro.utils import get_base_path_query
 from ikaaro.views import CompositeForm
 from ikaaro.workflow import WorkflowAware
 
@@ -164,22 +162,13 @@ class ResourcesOrderedTable_Unordered(Folder_BrowseContent):
 
     def get_items(self, resource, context):
         # Only in the given root
-        parent_path = resource.get_order_root().get_abspath()
-        query_base_path = get_base_path_query(str(parent_path))
+        order_root = resource.get_order_root()
         # Only the given types
-        query_formats = [PhraseQuery('format', cls.class_id)
-                         for cls in resource.get_orderable_classes()]
-        query_formats = OrQuery(*query_formats)
-        query = AndQuery(query_base_path, query_formats)
-        root = context.root
-        results = root.search(query).get_documents()
-
-        exclude = [resource.name] + list(resource.get_ordered_names())
-        items = []
-        for item in results:
-            if item.name not in exclude:
-                item = root.get_resource(item.abspath)
-                items.append(item)
+        classes = resource.get_orderable_classes()
+        # Except the given names
+        excluded = [resource.name] + list(resource.get_ordered_names())
+        items = [item for item in order_root.search_resources(cls=classes)
+                 if item.name not in excluded]
         return items
 
 
