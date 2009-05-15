@@ -225,6 +225,16 @@ class Metadata(File):
         return property.value
 
 
+    def has_property(self, name, language=None):
+        if name not in self.properties:
+            return False
+
+        if language is not None:
+            return language in self.properties[name]
+
+        return True
+
+
     def _set_property(self, name, value):
         properties = self.properties
 
