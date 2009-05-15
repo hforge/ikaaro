@@ -58,6 +58,7 @@ class User(AccessControl, Folder):
     @classmethod
     def get_metadata_schema(cls):
         return {
+            'version': String,
             'firstname': Unicode,
             'lastname': Unicode,
             'email': Email,

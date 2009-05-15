@@ -23,7 +23,7 @@ from itools.csv import Property
 from itools import vfs
 
 # Import from ikaaro
-from ikaaro.metadata_ng import MetadataNG
+from ikaaro.metadata import Metadata
 from ikaaro.webpage import WebPage
 
 
@@ -44,7 +44,7 @@ free_title;lang=fr:au revoir
 class LoadTestCase(TestCase):
 
     def setUp(self):
-        self.metadata = MetadataNG(string=metadata_str)
+        self.metadata = Metadata(string=metadata_str)
 
 
     def test_format(self):
@@ -73,7 +73,7 @@ class LoadTestCase(TestCase):
 class NewTestCase(TestCase):
 
     def setUp(self):
-        metadata = MetadataNG(cls=WebPage)
+        metadata = Metadata(cls=WebPage)
         metadata.set_property('title', Property(u'Hello World', lang='en'))
         self.metadata = metadata
         # Sandbox
