@@ -36,7 +36,6 @@ from itools.office import MSPowerPoint as MSPowerPointFile, RTF as RTFFile
 from itools.office import MSWord as MSWordFile, MSExcel as MSExcelFile
 
 # Import from ikaaro
-from metadata import Record
 from registry import register_resource_class
 from resource_ import DBResource
 from workflow import WorkflowAware

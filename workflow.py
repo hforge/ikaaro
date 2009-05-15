@@ -27,9 +27,6 @@ from itools.web import STLForm, INFO, ERROR, get_context
 from itools.workflow import Workflow, WorkflowAware as BaseWorkflowAware
 from itools.workflow import WorkflowError
 
-# Import from ikaaro
-from metadata import Record
-
 
 ###########################################################################
 # Views
