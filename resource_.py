@@ -262,7 +262,7 @@ class DBResource(CatalogAware, IResource):
         get_context().server.change_resource(self)
         if language:
             value = Property(value, lang=language)
-        self.metadata.set_property(name, property)
+        self.metadata.set_property(name, value)
 
 
     def del_property(self, name, language=None):

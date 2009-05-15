@@ -142,12 +142,12 @@ class Metadata(File):
                 languages.sort()
                 lines += [
                     property_to_str(name, property[x], datatype, p_schema)
-                    for x in languages ]
+                    for x in languages if property[x].value ]
             elif p_type is list:
                 lines += [
                     property_to_str(name, x, datatype, p_schema)
-                    for x in property ]
-            else:
+                    for x in property if x.value ]
+            elif property.value:
                 lines.append(
                     property_to_str(name, property, datatype, p_schema))
 
