@@ -1,6 +1,5 @@
 # -*- coding: UTF-8 -*-
-# Copyright (C) 2006-2008 Juan David Ibáñez Palomar <jdavid@itaapy.com>
-# Copyright (C) 2007 Hervé Cauwelier <herve@itaapy.com>
+# Copyright (C) 2009 Juan David Ibáñez Palomar <jdavid@itaapy.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,24 +16,39 @@
 
 # Import from itools
 from itools.core import add_type
-from itools.datatypes import String, Unicode, XMLContent
+from itools.csv import parse_table, Property, property_to_str
+from itools.datatypes import String
 from itools.handlers import File, register_handler_class
 from itools.web import get_context
-from itools.xml import xml_uri, XMLParser, START_ELEMENT, END_ELEMENT, TEXT
 
 # Import from ikaaro
-from exceptions import ParserError
-from obsolete.metadata import Record
 from registry import get_resource_class
 
 
+# This is the datatype used for properties not defined in the schema
+multiple_datatype = String(multiple=True, multilingual=False)
+multilingual_datatype = String(multiple=False, multilingual=True)
+
+
+
+def get_schema(format):
+    cls = get_resource_class(format)
+    return cls.get_metadata_schema()
+
 
 def get_datatype(format, name):
-    cls = get_resource_class(format)
-    schema = cls.get_metadata_schema()
+    schema = get_schema(format)
     if name not in schema:
         return String
     return schema[name]
+
+
+def is_multiple(datatype):
+    return getattr(datatype, 'multiple', False)
+
+
+def is_multilingual(datatype):
+    return getattr(datatype, 'multilingual', False)
 
 
 
@@ -44,257 +58,193 @@ class Metadata(File):
     class_extension = 'metadata'
 
 
-    def new(self, handler_class=None, format=None, **kw):
-        # Add format and version
-        self.format = format or handler_class.class_id
-        self.version = handler_class.class_version
+    def reset(self):
+        self.format = None
+        self.properties = {}
 
-        # Initialize
-        properties = {}
-        for name in kw:
-            value = kw[name]
-            if value is not None:
-                properties[name] = value
 
-        # Set state
-        self.properties = properties
+    def new(self, cls=None, format=None):
+        self.format = format or cls.class_id
+        self.properties['version'] = Property(cls.class_version)
 
 
     def _load_state_from_file(self, file):
-        # Constants
-        xml_lang = (xml_uri, 'lang')
-        error1 = 'unexpected start tag "%s" at line "%s"'
-        # Local variables
-        language = None
-        stack = []
+        properties = self.properties
+        data = file.read()
+        parser = parse_table(data)
+
+        # Read the format
+        name, value, parameters = parser.next()
+        if name != 'format':
+            raise ValueError, 'unexpected "%s" property' % name
+        if parameters:
+            raise ValueError, 'unexpected parameters for the format property'
+        self.format = value
+        # Get the schema
+        schema = get_schema(value)
 
         # Parse
-        for type, value, line in XMLParser(file.read()):
-            if type == START_ELEMENT:
-                ns_uri, name, attributes = value
-                # First tag: <metadata>
-                n = len(stack)
-                if n == 0:
-                    if name != 'metadata':
-                        raise ParserError, error1 % (name, line)
-                    self.format = attributes.get((None, 'format'))
-                    self.version = attributes.get((None, 'version'))
-                    if self.format is None:
-                        schema = {}
-                    else:
-                        cls = get_resource_class(self.format)
-                        schema = cls.get_metadata_schema()
-                    stack.append((name, None, {}))
-                    continue
+        for name, value, parameters in parser:
+            if name == 'format':
+                raise ValueError, 'unexpected "format" property'
 
-                # Find out datatype
-                if n == 1:
-                    datatype = schema.get(name, String)
+            # 1. Get the datatype
+            datatype = schema.get(name)
+            if not datatype:
+                # Guess the datatype for properties not defined by the schema
+                if 'lang' in parameters:
+                    datatype = multilingual_datatype
                 else:
-                    datatype = stack[-1][1]
-                    if issubclass(datatype, Record):
-                        datatype = datatype.schema.get(name, String)
-                    else:
-                        raise ParserError, error1 % (name, line)
+                    datatype = multiple_datatype
 
-                if issubclass(datatype, Record):
-                    stack.append((name, datatype, {}))
-                else:
-                    stack.append((name, datatype, ''))
-                    language = attributes.get(xml_lang)
-            elif type == END_ELEMENT:
-                name, datatype, value = stack.pop()
+            # 2. Get the datatype properties
+            multiple = is_multiple(datatype)
+            multilingual = is_multilingual(datatype)
+            if multiple and multilingual:
+                error = 'property "%s" is both multilingual and multiple'
+                raise ValueError, error % name
 
-                # Last tag: </metadata>
-                n = len(stack)
-                if n == 0:
-                    self.properties = value
-                    break
+            # 3. Build the property
+            value = datatype.decode(value)
+            property = Property(value, **parameters)
 
-                # Decode value
-                if issubclass(datatype, Record):
-                    pass
-                elif issubclass(datatype, Unicode):
-                    value = datatype.decode(value, 'utf-8')
-                else:
-                    value = datatype.decode(value)
-
-                # Set property
-                is_multiple = getattr(datatype, 'multiple', False)
-                if is_multiple:
-                    stack[-1][2].setdefault(name, []).append(value)
-                elif language is None:
-                    stack[-1][2][name] = value
-                else:
-                    stack[-1][2].setdefault(name, {})
-                    stack[-1][2][name][language] = value
-                # Reset variables
-                language = None
-            elif type == TEXT:
-                n = len(stack)
-                if n == 0:
-                    continue
-                if isinstance(stack[-1][2], dict):
-                    continue
-
-                name, datatype, last_value = stack.pop()
-                value = last_value + value
-                stack.append((name, datatype, value))
+            # Case 1: Multilingual
+            if multilingual:
+                language = parameters.get('lang')
+                if language is None:
+                    err = 'multilingual property "%s" is missing the language'
+                    raise ValueError, err % name
+                language = language[0]
+                properties.setdefault(name, {})[language] = property
+            # Case 2: multiple
+            elif multiple:
+                raise NotImplementedError
+            # Case 3: simple
+            else:
+                properties[name] = property
 
 
     def to_str(self):
-        # format, version, schema
-        format = self.format
-        version = self.version
-        cls = get_resource_class(format)
-        if cls is None:
-            schema = {}
-        else:
-            schema = cls.get_metadata_schema()
+        schema = get_schema(self.format)
+        p_schema = {'lang': String(multiple=False)}
 
-        # Opening
-        lines = ['<?xml version="1.0" encoding="UTF-8"?>\n',
-                 '<metadata format="%s" version="%s">\n' % (format, version)]
-
-        # Sort properties
-        names = self.properties.keys()
+        lines = []
+        lines.append('format:%s\n' % self.format)
+        # Define the order by which the properties should be serialized
+        # (first the version, then by alphabetical order)
+        properties = self.properties
+        names = properties.keys()
         names.sort()
+        if 'version' in names:
+            names.remove('version')
+            names.insert(0, 'version')
 
         # Properties
         for name in names:
-            value = self.properties[name]
-            datatype = schema.get(name, String)
-            default = datatype.get_default()
-            is_multiple = getattr(datatype, 'multiple', False)
+            property = properties[name]
+            datatype = schema[name]
+            p_type = type(property)
+            if p_type is dict:
+                languages = property.keys()
+                languages.sort()
+                lines += [
+                    property_to_str(name, property[x], datatype, p_schema)
+                    for x in languages ]
+            elif p_type is list:
+                lines += [
+                    property_to_str(name, x, datatype, p_schema)
+                    for x in property ]
+            else:
+                lines.append(
+                    property_to_str(name, property, datatype, p_schema))
 
-            # Multilingual properties
-            if isinstance(value, dict):
-                template = '  <%s xml:lang="%s">%s</%s>\n'
-                for language, value in value.items():
-                    if value != default:
-                        value = datatype.encode(value)
-                        value = XMLContent.encode(value)
-                        lines.append(template % (name, language, value, name))
-            # Multiple values
-            elif is_multiple:
-                if not isinstance(value, list):
-                    raise TypeError, 'multiple values must be lists'
-                # Record
-                if issubclass(datatype, Record):
-                    aux = datatype.schema
-                    for value in value:
-                        lines.append('  <%s>\n' % name)
-                        for key, value in value.items():
-                            value = aux.get(key, String).encode(value)
-                            value = XMLContent.encode(value)
-                            lines.append('    <%s>%s</%s>\n'
-                                         % (key, value, key))
-                        lines.append('  </%s>\n' % name)
-                    continue
-                # Regular field
-                for value in value:
-                    value = datatype.encode(value)
-                    value = XMLContent.encode(value)
-                    lines.append('  <%s>%s</%s>\n' % (name, value, name))
-                continue
-            # Simple properties
-            elif value != default:
-                value = datatype.encode(value)
-                value = XMLContent.encode(value)
-                lines.append('  <%s>%s</%s>\n' % (name, value, name))
-
-        lines.append('</metadata>\n')
         return ''.join(lines)
 
 
     ########################################################################
     # API
     ########################################################################
-    def get_property_and_language(self, name, language=None):
-        """Return the value for the given property and the language of that
-        value.
+    def _get_property(self, name, language=None):
+        """Return the property for the given property name.  If it is missing
+        return None.
 
-        For monolingual properties, the language always will be None.
+        If it is a multilingual property, return only the property for the
+        given language (negotiate the language if needed).
+
+        If it is a multiple property, return the list of properties.
         """
-        # Check the property exists
+        # Return 'None' if the property is missing
+        property = self.properties.get(name)
+        if not property:
+            return None
+
+        # Monolingual property, we are done
+        if type(property) is not dict:
+            return property
+
+        # The language has been given
+        if language:
+            return property.get(language)
+
+        # Consider only the properties with a non empty value
         datatype = get_datatype(self.format, name)
-        if name not in self.properties:
-            default = datatype.get_default()
-            return default, None
-        # Get the value
-        value = self.properties[name]
+        languages = [
+            x for x in property if not datatype.is_empty(property[x].value) ]
+        if not languages:
+            return None
 
-        # Monolingual property
-        if not isinstance(value, dict):
-            return value, None
+        # Negotiate the language (if the context is available)
+        context = get_context()
+        if context:
+            language = context.accept_language.select_language(languages)
+        else:
+            language = None
 
-        # Language negotiation
+        # Negotiation failed, pick a language at random
+        # FIXME We can do better than this
         if language is None:
-            context = get_context()
-            if context is None:
-                language = None
-            else:
-                languages = [
-                    k for k, v in value.items() if not datatype.is_empty(v) ]
-                accept = context.accept_language
-                language = accept.select_language(languages)
-            # Default (FIXME pick one at random)
-            if language is None:
-                language = value.keys()[0]
-            return value[language], language
+            language = languages[0]
 
-        if language in value:
-            return value[language], language
-        return datatype.get_default(), None
+        return property[language]
 
 
     def get_property(self, name, language=None):
-        return self.get_property_and_language(name, language=language)[0]
-
-
-    def has_property(self, name, language=None):
-        if name not in self.properties:
-            return False
-
-        if language is not None:
-            return language in self.properties[name]
-
-        return True
-
-
-    def set_property(self, name, value, language=None):
-        self.set_changed()
-
-        # Set the value
-        if language is None:
+        """Return the property value for the given property name.
+        """
+        property = self._get_property(name, language=language)
+        # Default
+        if not property:
             datatype = get_datatype(self.format, name)
-            is_multiple = getattr(datatype, 'multiple', False)
+            return datatype.get_default()
 
-            default = datatype.get_default()
-            if is_multiple:
-                if isinstance(value, list):
-                    self.properties[name] = value
-                else:
-                    values = self.properties.setdefault(name, [])
-                    values.append(value)
+        # Multiple
+        if type(property) is list:
+            return [ x.value for x in property ]
+
+        # Simple
+        return property.value
+
+
+    def _set_property(self, name, value):
+        properties = self.properties
+
+        if value is None:
+            # Remove property
+            if name in properties:
+                del properties[name]
+        elif type(value) is Property:
+            language = value.parameters.get('lang')
+            if language:
+                properties.setdefault(name, {})[language] = value
             else:
-                self.properties[name] = value
+                properties[name] = value
         else:
-            values = self.properties.setdefault(name, {})
-            values[language] = value
+            properties[name] = Property(value)
 
 
-    def del_property(self, name, language=None):
-        if name in self.properties:
-            if language is None:
-                self.set_changed()
-                del self.properties[name]
-            else:
-                values = self.properties[name]
-                if language in values:
-                    self.set_changed()
-                    del values[language]
-
+    def set_property(self, name, value):
+        self.set_changed()
+        self._set_property(name, value)
 
 
 ###########################################################################
