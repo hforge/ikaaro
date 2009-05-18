@@ -20,6 +20,7 @@ from itools.datatypes import String, Tokens
 from itools.gettext import MSG
 from itools.uri import Path
 from itools.web import INFO
+from itools.xapian import AndQuery, OrQuery, PhraseQuery, NotQuery
 from itools.xml import XMLParser
 
 # Import from ikaaro
@@ -32,6 +33,7 @@ from ikaaro.folder_views import get_workflow_preview
 from ikaaro.registry import register_resource_class
 from ikaaro.table import OrderedTableFile, OrderedTable
 from ikaaro.table_views import OrderedTable_View
+from ikaaro.utils import get_base_path_query
 from ikaaro.views import CompositeForm
 from ikaaro.workflow import WorkflowAware
 
@@ -86,12 +88,14 @@ class ResourcesOrderedTable_Ordered(OrderedTable_View):
     def get_table_columns(self, resource, context):
         columns = OrderedTable_View.get_table_columns(self, resource,
                                                       context)
+        # Remove "sortable" status
+        columns = [(name, title, False) for name, title in columns]
         # Remove column with id and replace it by title,
         # and add a column for the workflow state
-        columns[1] = ('title', MSG(u'Title'))
-        columns.append(('workflow_state', MSG(u'State')))
+        columns[1] = ('title', MSG(u'Title'), False)
+        columns.append(('workflow_state', MSG(u'State'), False))
         if self.order_preview:
-            columns.append(('order_preview', MSG(u"Preview")))
+            columns.append(('order_preview', MSG(u"Preview"), False))
         return columns
 
 
@@ -128,6 +132,13 @@ class ResourcesOrderedTable_Ordered(OrderedTable_View):
                                                 item, column)
 
 
+    def sort_and_batch(self, resource, context, items):
+        # Preserve the order
+        return items
+
+
+
+
 class ResourcesOrderedTable_Unordered(Folder_BrowseContent):
 
     access = 'is_allowed_to_edit'
@@ -162,14 +173,16 @@ class ResourcesOrderedTable_Unordered(Folder_BrowseContent):
 
     def get_items(self, resource, context):
         # Only in the given root
-        order_root = resource.get_order_root()
+        parent_path = resource.get_order_root().get_abspath()
+        query_base_path = get_base_path_query(str(parent_path))
         # Only the given types
-        classes = resource.get_orderable_classes()
-        # Except the given names
-        excluded = [resource.name] + list(resource.get_ordered_names())
-        items = [item for item in order_root.search_resources(cls=classes)
-                 if item.name not in excluded]
-        return items
+        query_formats = [PhraseQuery('format', cls.class_id)
+                         for cls in resource.get_orderable_classes()]
+        query_formats = OrQuery(*query_formats)
+        query_excluded = [NotQuery(PhraseQuery('name', name))
+                          for name in resource.get_ordered_names()]
+        query = AndQuery(query_base_path, query_formats, *query_excluded)
+        return context.root.search(query)
 
 
     def get_item_value(self, resource, context, item, column):
@@ -190,10 +203,6 @@ class ResourcesOrderedTable_Unordered(Folder_BrowseContent):
                     context)
         return Folder_BrowseContent.get_item_value(self, resource, context,
                                                    item, column)
-
-
-    def sort_and_batch(self, resource, context, items):
-        return items
 
 
     def action_add(self, resource, context, form):
