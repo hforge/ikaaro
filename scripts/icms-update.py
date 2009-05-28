@@ -25,10 +25,13 @@ from traceback import print_exc
 # Import from itools
 import itools
 from itools.core import start_subprocess
+from itools.csv import Property
 from itools.fs import lfs
 from itools.web import get_context
 
 # Import from ikaaro
+from ikaaro.metadata import Metadata
+from ikaaro.obsolete.metadata import Metadata as OldMetadata
 from ikaaro.resource_ import DBResource
 from ikaaro.server import Server, ask_confirmation, get_fake_context
 
@@ -54,7 +57,7 @@ def find_versions_to_update(root):
             continue
 
         # Skip up-to-date resources
-        obj_version = resource.metadata.version
+        obj_version = resource.metadata.get_property('version').value
         cls_version = resource.class_version
         if obj_version == cls_version:
             continue
@@ -104,7 +107,7 @@ def update_versions(target, database, version, paths, root):
 
         # Skip up-to-date resources
         resource = root.get_resource(abspath)
-        obj_version = resource.metadata.version
+        obj_version = resource.metadata.get_property('version').value
         cls_version = resource.class_version
         if obj_version == cls_version:
             continue
@@ -152,6 +155,59 @@ def update(parser, options, target):
         print 'Cannot proceed, the server is running in read-write mode.'
         return
 
+    #######################################################################
+    # STAGE 0: Change format of the metadata
+    # XXX Specific to the migration from 0.61 to 0.62
+    #######################################################################
+    metadata = Metadata('%s/.metadata' % path)
+    try:
+        metadata.load_state()
+    except SyntaxError:
+        message = 'STAGE 0: Update metadata to the new format (y/N)? '
+        if ask_confirmation(message, confirm) is False:
+            abort()
+        print 'STAGE 0: Updating metadata (may take a while)'
+        t0 = time()
+        for filename in lfs.traverse(path):
+            if not filename.endswith('.metadata'):
+                continue
+            # Load the old metadata
+            old_metadata = OldMetadata(filename)
+            old_metadata.load_state()
+            # Make the new metadata
+            format = old_metadata.format
+            version = old_metadata.version
+            new_metadata = Metadata(format=format, version=version)
+            # Copy properties
+            for name in old_metadata.properties:
+                value = old_metadata.properties[name]
+                if type(value) is dict:
+                    for lang in value:
+                        property = Property(value[lang], lang=lang)
+                        new_metadata.set_property(name, property)
+                elif type(value) is list:
+                    error = 'unexpected "%s" property in "%s"'
+                    raise NotImplementedError, error % (name, filename)
+                else:
+                    property = Property(value)
+                    new_metadata.set_property(name, property)
+            # Save
+            del old_metadata
+            lfs.remove(filename)
+            new_metadata.save_state_to(filename)
+        print '       : %f seconds' % (time() - t0)
+        # Commit
+        print 'STAGE 0: Committing changes to git (may take a while)'
+        t0 = time()
+        command = ['git', 'commit', '--author=nobody <>',
+                   '-m', 'Update metadata to new format']
+        p = Popen(command, cwd=path, stdout=PIPE)
+        p.communicate()
+        print '       : %f seconds' % (time() - t0)
+
+    #######################################################################
+    # STAGE 1: Find out the versions to upgrade
+    #######################################################################
     # Build a fake context
     context = get_fake_context()
     server.init_context(context)
@@ -159,9 +215,9 @@ def update(parser, options, target):
     database = server.database
     root = server.root
 
-    #######################################################################
-    # STAGE 1: Find out the versions to upgrade
-    #######################################################################
+    print 'STAGE 1: Find out the versions to upgrade (may take a while).'
+    versions = find_versions_to_update(root)
+
     start_subprocess('%s/database' % target)
     version, paths = find_versions_to_update(root)
     while version:
