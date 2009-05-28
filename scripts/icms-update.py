@@ -28,10 +28,14 @@ from traceback import print_exc
 # Import from itools
 import itools
 from itools.core import start_subprocess
+from itools.csv import Property
+from itools.handlers import get_handler
 from itools import vfs
 from itools.web import get_context
 
 # Import from ikaaro
+from ikaaro.metadata import Metadata
+from ikaaro.obsolete.metadata import Metadata as OldMetadata
 from ikaaro.resource_ import DBResource
 from ikaaro.server import Server, ask_confirmation, get_fake_context
 
@@ -53,7 +57,7 @@ def find_versions_to_update(root):
             continue
 
         # Skip up-to-date resources
-        obj_version = resource.metadata.version
+        obj_version = resource.metadata.get_property('version').value
         cls_version = resource.class_version
         if obj_version == cls_version:
             continue
@@ -92,7 +96,7 @@ def update_versions(target, database, root, versions, confirm):
 
     # Update
     for version in versions:
-        message = 'STAGE 1: Upgrade to version %s (y/N)? ' % version
+        message = 'STAGE 2: Upgrade to version %s (y/N)? ' % version
         if ask_confirmation(message, confirm) is False:
             abort()
         # Go ahead
@@ -103,7 +107,7 @@ def update_versions(target, database, root, versions, confirm):
                 continue
 
             # Skip up-to-date resources
-            obj_version = resource.metadata.version
+            obj_version = resource.metadata.get_property('version').value
             cls_version = resource.class_version
             if obj_version == cls_version:
                 continue
@@ -147,6 +151,87 @@ def update(parser, options, target):
     folder = vfs.open(target)
     confirm = options.confirm
 
+    #######################################################################
+    # STAGE 0: Initialize '.git'
+    # XXX Specific to the migration from 0.50 to 0.60
+    #######################################################################
+    path = '%s/database' % target
+    if not vfs.exists('%s/.git' % path):
+        message = 'STAGE 0: Add the Git archive (y/N)? '
+        if ask_confirmation(message, confirm) is False:
+            abort()
+        # Init
+        print 'STAGE 0: git init'
+        command = ['git', 'init']
+        call(command, cwd=path, stdout=PIPE)
+        # Add
+        print 'STAGE 0: git add (may take a while)'
+        command = ['git', 'add', '.']
+        t0 = time()
+        call(command, cwd=path, stdout=PIPE)
+        print '       : %f seconds' % (time() - t0)
+        # Commit
+        print 'STAGE 0: git commit'
+        command = ['git', 'commit', '--author=nobody <>',
+                   '-m', 'First commit']
+        t0 = time()
+        p = Popen(command, cwd=path, stdout=PIPE)
+        p.communicate()
+        print '       : %f seconds' % (time() - t0)
+
+    #######################################################################
+    # STAGE 1: Change format of the metadata
+    # XXX Specific to the migration from 0.60 to 0.65
+    #######################################################################
+    metadata = Metadata('%s/.metadata' % path)
+    try:
+        metadata.load_state()
+    except SyntaxError:
+        message = 'STAGE 1: Update metadata to the new format (y/N)? '
+        if ask_confirmation(message, confirm) is False:
+            abort()
+        print 'STAGE 1: Updating metadata (may take a while)'
+        t0 = time()
+        for filename in vfs.traverse(path):
+            if not filename.endswith('.metadata'):
+                continue
+            # Load the old metadata
+            old_metadata = OldMetadata(filename)
+            old_metadata.load_state()
+            # Make the new metadata
+            format = old_metadata.format
+            version = old_metadata.version
+            new_metadata = Metadata(format=format, version=version)
+            # Copy properties
+            for name in old_metadata.properties:
+                value = old_metadata.properties[name]
+                if type(value) is dict:
+                    for lang in value:
+                        property = Property(value[lang], lang=lang)
+                        new_metadata.set_property(name, property)
+                elif type(value) is list:
+                    error = 'unexpected "%s" property in "%s"'
+                    raise NotImplementedError, error % (name, filename)
+                else:
+                    property = Property(value)
+                    new_metadata.set_property(name, property)
+            # Save
+            del old_metadata
+            vfs.remove(filename)
+            new_metadata.save_state_to(filename)
+        print '       : %f seconds' % (time() - t0)
+        # Commit
+        print 'STAGE 1: Committing changes to git (may take a while)'
+        t0 = time()
+        command = ['git', 'commit', '--author=nobody <>',
+                   '-m', 'Update metadata to new format']
+        p = Popen(command, cwd=path, stdout=PIPE)
+        p.communicate()
+        print '       : %f seconds' % (time() - t0)
+
+    #######################################################################
+    # STAGE 2: Find out the versions to upgrade
+    #######################################################################
     # Build the server object
     server = Server(target)
     database = server.database
@@ -155,46 +240,16 @@ def update(parser, options, target):
     context = get_fake_context()
     server.init_context(context)
 
-    #######################################################################
-    # STAGE 0: Initialize '.git'
-    # XXX Specific to the migration from 0.50 to 0.60
-    #######################################################################
-    if not vfs.exists('%s/.git' % database.path):
-        message = 'STAGE 0: Add the Git archive (y/N)? '
-        if ask_confirmation(message, confirm) is False:
-            abort()
-        # Init
-        print 'STAGE 0: git init'
-        command = ['git', 'init']
-        call(command, cwd=database.path, stdout=PIPE)
-        # Add
-        print 'STAGE 0: git add (may take a while)'
-        command = ['git', 'add', '.']
-        t0 = time()
-        call(command, cwd=database.path, stdout=PIPE)
-        print '       : %f seconds' % (time() - t0)
-        # Commit
-        print 'STAGE 0: git commit'
-        command = ['git', 'commit', '--author=nobody <>',
-                   '-m', 'Initial commit.']
-        t0 = time()
-        p = Popen(command, cwd=database.path, stdout=PIPE)
-        p.communicate()
-        print '       : %f seconds' % (time() - t0)
-
-    #######################################################################
-    # STAGE 1: Find out the versions to upgrade
-    #######################################################################
-    print 'STAGE 1: Find out the versions to upgrade (may take a while).'
+    print 'STAGE 2: Find out the versions to upgrade (may take a while).'
     versions = find_versions_to_update(root)
 
     if versions:
         print
-        print 'STAGE 1: Versions to upgrade: %s.' % ', '.join(versions)
+        print 'STAGE 2: Versions to upgrade: %s.' % ', '.join(versions)
         start_subprocess('%s/database' % target)
         update_versions(target, database, root, versions, confirm)
     else:
-        print 'STAGE 1: Nothing to do.'
+        print 'STAGE 2: Nothing to do.'
 
     # It is Done
     print '*'
