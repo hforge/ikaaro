@@ -507,7 +507,7 @@ class DBResource(CatalogAware, IResource):
     ########################################################################
     def get_next_versions(self):
         cls_version = self.class_version
-        obj_version = self.metadata.version
+        obj_version = self.metadata.get_property('version').value
         # Set zero version if the resource does not have a version
         if obj_version is None:
             obj_version = '00000000'
@@ -537,7 +537,7 @@ class DBResource(CatalogAware, IResource):
         getattr(self, 'update_%s' % version)()
         metadata = self.metadata
         metadata.set_changed()
-        metadata.version = version
+        metadata.set_property('version', version)
 
 
     ########################################################################

@@ -56,9 +56,9 @@ class Metadata(File):
         self.properties = {}
 
 
-    def new(self, cls=None, format=None):
+    def new(self, cls=None, format=None, version=None):
         self.format = format or cls.class_id
-        self.properties['version'] = Property(cls.class_version)
+        self.properties['version'] = Property(version or cls.class_version)
 
 
     def _load_state_from_file(self, file):
