@@ -186,21 +186,22 @@ class ResourcesOrderedTable_Unordered(Folder_BrowseContent):
 
 
     def get_item_value(self, resource, context, item, column):
+        item_brain, item_resource = item
         if column == 'checkbox':
-            return item.name, False
+            return item_brain.name, False
         elif column == 'title':
-            return item.get_title(), context.get_link(item)
+            return item_resource.get_title(), context.get_link(item_resource)
         elif column == 'path':
-            return item.name
+            return item_brain.name
         elif column == 'workflow_state':
             # The workflow state
-            if not isinstance(item, WorkflowAware):
+            if not isinstance(item_resource, WorkflowAware):
                 return None
             return get_workflow_preview(resource, context)
         elif column == 'order_preview':
-            return get_resource_preview(item, self.preview_image_width,
-                    self.preview_image_height, self.preview_text_length,
-                    context)
+            return get_resource_preview(item_resource,
+                self.preview_image_width, self.preview_image_height,
+                self.preview_text_length, context)
         return Folder_BrowseContent.get_item_value(self, resource, context,
                                                    item, column)
 

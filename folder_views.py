@@ -309,62 +309,62 @@ class Folder_BrowseContent(SearchForm):
         root = context.root
         allowed_items = []
         for item in items:
-            item = root.get_resource(item.abspath)
-            ac = item.get_access_control()
-            if ac.is_allowed_to_view(user, item):
-                allowed_items.append(item)
+            resource = root.get_resource(item.abspath)
+            ac = resource.get_access_control()
+            if ac.is_allowed_to_view(user, resource):
+                allowed_items.append((item, resource))
 
         return allowed_items
 
 
     def get_item_value(self, resource, context, item, column):
+        brain, item_resource = item
         if column == 'checkbox':
             # checkbox
-            parent = item.parent
+            parent = item_resource.parent
             if parent is None:
                 return None
-            if item.name in parent.__fixed_handlers__:
+            if item_resource.name in parent.__fixed_handlers__:
                 return None
-            id = resource.get_canonical_path().get_pathto(item.get_abspath())
+            id = resource.get_canonical_path().get_pathto(brain.abspath)
             id = str(id)
             return id, False
         elif column == 'icon':
             # icon
-            path_to_icon = item.get_resource_icon(16)
+            path_to_icon = item_resource.get_resource_icon(16)
             if path_to_icon.startswith(';'):
-                path_to_icon = Path('%s/' % item.name).resolve(path_to_icon)
+                path_to_icon = Path('%s/' % brain.name).resolve(path_to_icon)
             return path_to_icon
         elif column == 'name':
             # Name
-            id = resource.get_canonical_path().get_pathto(item.get_abspath())
+            id = resource.get_canonical_path().get_pathto(brain.abspath)
             id = str(id)
-            view = item.get_view(None)
+            view = item_resource.get_view(None)
             if view is None:
                 return id
-            href = '%s/' % context.get_link(item)
+            href = '%s/' % context.get_link(item_resource)
             return id, href
         elif column == 'title':
             # Title
-            return item.get_property('title')
+            return item_resource.get_property('title')
         elif column == 'format':
             # Type
-            return item.class_title.gettext()
+            return item_resource.class_title.gettext()
         elif column == 'mtime':
             # Last Modified
             accept = context.accept_language
-            return format_datetime(item.get_mtime(), accept=accept)
+            return format_datetime(brain.mtime, accept=accept)
         elif column == 'last_author':
             # Last author
-            username = item.get_last_author()
-            return context.root.get_user_title(username)
+            return context.root.get_user_title(brain.last_author)
         elif column == 'size':
             # Size
-            return item.get_human_size()
+            return item_resource.get_human_size()
         elif column == 'workflow_state':
             # The workflow state
-            if not isinstance(item, WorkflowAware):
+            if not isinstance(item_resource, WorkflowAware):
                 return None
-            return get_workflow_preview(item, context)
+            return get_workflow_preview(item_resource, context)
 
 
     table_actions = [
@@ -685,14 +685,15 @@ class Folder_PreviewContent(Folder_BrowseContent):
         columns = self._get_table_columns(resource, context)
         rows = []
         for item in items:
+            item_brain, item_resource = item
             row = {'checkbox': False,
                    # These are required for internal use
-                   'title_or_name': item.get_title(),
+                   'title_or_name': item_resource.get_title(),
                    'workflow_statename': None}
             # XXX Already hard-coded in the catalog search
-            row['is_folder'] = (item.class_id == 'folder')
-            if isinstance(item, WorkflowAware):
-                row['workflow_statename'] = item.get_statename()
+            row['is_folder'] = (item_brain.format == 'folder')
+            if isinstance(item_resource, WorkflowAware):
+                row['workflow_statename'] = item_resource.get_statename()
             for name, title, sortable in columns:
                 value = self.get_item_value(resource, context, item, name)
                 if value is None:
