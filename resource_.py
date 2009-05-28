@@ -253,7 +253,6 @@ class DBResource(CatalogAware, IResource):
             if n is not None:
                 cmd = cmd + ['-n', str(n)]
             cmd = cmd + ['HEAD', '--'] + files
-            cmd = cmd + files
             if action == 0:
                 data = send_subprocess(cmd)
             else:
