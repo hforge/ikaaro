@@ -227,7 +227,7 @@ def update(parser, options, target):
         # Commit
         print 'STAGE 1: Committing changes to git (may take a while)'
         t0 = time()
-        command = ['git', 'commit', '--author=nobody <>',
+        command = ['git', 'commit', '-a', '--author=nobody <>',
                    '-m', 'Update metadata to new format']
         p = Popen(command, cwd=path, stdout=PIPE)
         p.communicate()
