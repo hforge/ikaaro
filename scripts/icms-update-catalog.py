@@ -55,8 +55,8 @@ def update_catalog(parser, options, target):
     if ask_confirmation(message, options.confirm) is False:
         return
 
-    # Remove the old catalog and create a new one
-    catalog_path = '%s/catalog' % target
+    # Create a temporary new catalog
+    catalog_path = '%s/catalog.new' % target
     if vfs.exists(catalog_path):
         vfs.remove(catalog_path)
     catalog = make_catalog(catalog_path, get_register_fields())
@@ -93,6 +93,11 @@ def update_catalog(parser, options, target):
     print '[Commit]',
     sys.stdout.flush()
     catalog.save_changes()
+    # Commit / Replace
+    old_catalog_path = '%s/catalog' % target
+    if vfs.exists(old_catalog_path):
+        vfs.remove(old_catalog_path)
+    vfs.move(catalog_path, old_catalog_path)
     # Commit / Report
     t2, v2 = time(), vmsize()
     v = (v2 - v1)/1024
