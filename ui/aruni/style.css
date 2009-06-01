@@ -146,29 +146,3 @@ legend {
 
 #content form dd { padding-bottom: 5px; }
 #content form p { clear: both; }
-
-/* Versionning views */
-
-#differ span, #differ div {
-  font-family: monospace;
-  font-size: 1em;
-  white-space: pre;
-}
-
-#differ .rem {
-  color: red;
-}
-
-#differ .add {
-  color: green;
-}
-
-#differ div {
-  background-color: #EDECE6;
-  border-color: #D9D8D1;
-  border-style: solid;
-  border-width: 1px 0;
-  font-weight: bold;
-  margin: 15px 0 4px 0;
-  padding: 4px 0 2px;
-}
