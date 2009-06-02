@@ -277,9 +277,9 @@ class DBResource(CatalogAware, IResource):
         self.metadata.set_property(name, value)
 
 
-    def del_property(self, name, language=None):
+    def del_property(self, name):
         get_context().server.change_resource(self)
-        self.metadata.del_property(name, language=language)
+        self.metadata.del_property(name)
 
 
     ########################################################################

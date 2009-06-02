@@ -234,6 +234,12 @@ class Metadata(File):
         self._set_property(name, value)
 
 
+    def del_property(self, name):
+        if name in self.properties:
+            self.set_changed()
+            del self.properties[name]
+
+
 ###########################################################################
 # Register
 ###########################################################################
