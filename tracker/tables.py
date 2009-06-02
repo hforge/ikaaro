@@ -158,7 +158,7 @@ class SelectTable_View(OrderedTable_View):
         removed = []
         for id in ids:
             query = PhraseQuery(filter, id)
-            count = results.search(query).get_n_documents()
+            count = len(results.search(query))
             if check_associated:
                 product_query = PhraseQuery('product', str(id))
                 module_count = len(module_handler.search(product_query))
