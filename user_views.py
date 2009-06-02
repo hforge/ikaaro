@@ -211,7 +211,7 @@ class User_EditAccount(AutoForm):
         # user with the same email in the database.
         if email != resource.get_property('email'):
             results = context.root.search(email=email)
-            if results.get_n_documents():
+            if len(results):
                 context.message = ERROR(
                     u'There is another user with the email "{email}", please'
                     u' try again.', email=email).gettext()

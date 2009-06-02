@@ -136,7 +136,7 @@ class Folder(DBResource):
             # FIXME Check sub-resources too
             path = str(resource.get_abspath())
             results = catalog.search(links=path)
-            if results.get_n_documents() > 0:
+            if len(results):
                 message = 'cannot delete, resource "%s" is referenced' % path
                 raise ConsistencyError, message
 

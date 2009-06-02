@@ -197,8 +197,8 @@ class Tracker_TableResource(OrderedTable):
         removed = []
         for id in ids:
             query = PhraseQuery(filter, id)
-            count = results.search(query).get_n_documents()
-            if count == 0:
+            subresults = results.search(query)
+            if len(subresults) == 0:
                 self.handler.del_record(id)
                 removed.append(str(id))
 
