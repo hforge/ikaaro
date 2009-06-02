@@ -171,7 +171,7 @@ class ResourcesOrderedTable_Unordered(Folder_BrowseContent):
         return columns
 
 
-    def get_items(self, resource, context):
+    def get_query(self, resource, context):
         # Only in the given root
         parent_path = resource.get_order_root().get_abspath()
         query_base_path = get_base_path_query(str(parent_path))
@@ -181,7 +181,11 @@ class ResourcesOrderedTable_Unordered(Folder_BrowseContent):
         query_formats = OrQuery(*query_formats)
         query_excluded = [NotQuery(PhraseQuery('name', name))
                           for name in resource.get_ordered_names()]
-        query = AndQuery(query_base_path, query_formats, *query_excluded)
+        return AndQuery(query_base_path, query_formats, *query_excluded)
+
+
+    def get_items(self, resource, context):
+        query = self.get_query(resource, context)
         return context.root.search(query)
 
 
@@ -197,7 +201,7 @@ class ResourcesOrderedTable_Unordered(Folder_BrowseContent):
             # The workflow state
             if not isinstance(item_resource, WorkflowAware):
                 return None
-            return get_workflow_preview(resource, context)
+            return get_workflow_preview(item_resource, context)
         elif column == 'order_preview':
             return get_resource_preview(item_resource,
                 self.preview_image_width, self.preview_image_height,
