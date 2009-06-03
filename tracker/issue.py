@@ -44,7 +44,7 @@ from issue_views import IssueTrackerMenu
 
 class History(Table):
 
-    record_schema = {
+    record_properties = {
         'datetime': DateTime,
         'username': String,
         'title': Unicode,
@@ -200,7 +200,7 @@ class Issue(Folder):
         # Version, Priority, etc.
         for name in ['product', 'module', 'version', 'type', 'state',
                      'priority', 'assigned_to', 'comment']:
-            type = History.record_schema[name]
+            type = History.record_properties[name]
             value = context.get_form_value(name, type=type)
             if type == Unicode:
                 value = value.strip()

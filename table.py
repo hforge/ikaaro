@@ -42,17 +42,17 @@ class Table(File):
 
 
     def get_schema(self):
-        return self.handler.record_schema
+        return self.handler.record_properties
 
 
     @classmethod
     def get_form(cls):
         if cls.form:
             return cls.form
-        record_schema = cls.class_handler.record_schema
+        record_properties = cls.class_handler.record_properties
         return [
             get_default_widget(datatype)(name)
-            for name, datatype in record_schema.items() ]
+            for name, datatype in record_properties.items() ]
 
 
     def add_new_record(self, record):
@@ -84,7 +84,7 @@ class Table(File):
         language = 'en'
 
         handler = self.get_handler()
-        schema = handler.record_schema
+        schema = handler.record_properties
 
         handler.set_changed()
         handler.incremental_save = False

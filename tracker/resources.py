@@ -171,7 +171,7 @@ class ListOfUsers(Enumerate):
 
 class BaseResources(BaseTable):
 
-    record_schema = {
+    record_properties = {
         'dtstart': DateTime(mandatory=True, is_stored=True, is_indexed=True),
         'dtend': DateTime(mandatory=True, is_stored=True, is_indexed=True),
         'issue': String(mandatory=True, is_indexed=True),
