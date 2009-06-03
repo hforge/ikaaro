@@ -19,6 +19,7 @@ from itools.core import merge_dicts
 from itools.datatypes import String, Tokens
 from itools.gettext import MSG
 from itools.uri import Path
+from itools.stl import set_prefix
 from itools.web import INFO
 from itools.xapian import AndQuery, OrQuery, PhraseQuery, NotQuery
 from itools.xml import XMLParser
@@ -55,7 +56,8 @@ def get_resource_preview(resource, image_width, image_height, text_length,
     # Search for a "order_preview" view
     view = getattr(resource, 'order_preview', None)
     if view is not None:
-        return view.GET(resource, context)
+        prefix  = context.resource.get_pathto(resource)
+        return set_prefix(view.GET(resource, context), '%s/' % prefix)
     # Render image thumbnail
     if isinstance(resource, Image):
         template = '<img src="%s/;thumb?width=%s&amp;height=%s"/>'
