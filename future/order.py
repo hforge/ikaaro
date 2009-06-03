@@ -64,7 +64,10 @@ def get_resource_preview(resource, image_width, image_height, text_length,
         return XMLParser(template % (
             context.get_link(resource), image_width, image_height))
     # Or textual representation
-    text = resource.to_text()
+    try:
+        text = resource.to_text()
+    except NotImplementedError:
+        text = u""
     if isinstance(text, dict):
         language = resource.get_content_language(context)
         text = text.get(language, text.keys()[0])
