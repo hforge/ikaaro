@@ -51,7 +51,7 @@ class Table_View(SearchForm):
 
 
     def get_search_schema(self, resource, context):
-        return resource.handler.record_schema
+        return resource.handler.record_properties
 
 
     def get_items(self, resource, context):

@@ -289,8 +289,8 @@ class GoToFirstOrderedResource(GoToSpecificDocument):
 
 class ResourcesOrderedTableFile(OrderedTableFile):
 
-    record_schema = {'name': String(mandatory=True, unique=True,
-                                    is_indexed=True)}
+    record_properties = {
+        'name': String(mandatory=True, unique=True, is_indexed=True)}
 
 
 

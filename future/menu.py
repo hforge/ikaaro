@@ -66,7 +66,7 @@ class Target(Enumerate):
 
 class MenuFile(OrderedTableFile):
 
-    record_schema = {
+    record_properties = {
         'title': Unicode(multiple=True),
         'path': String,
         'target': Target(mandatory=True, default='_top'),
@@ -268,10 +268,10 @@ class Menu(OrderedTable):
     def del_record(self, id):
         handler = self.handler
         record = handler.get_record(id)
-        record_schema = handler.record_schema
+        record_properties = handler.record_properties
 
         # Delete submenu
-        if 'child' in record_schema:
+        if 'child' in record_properties:
             child_path = handler.get_record_value(record, 'child')
             if child_path:
                 container = self.parent
@@ -474,7 +474,7 @@ class Menu(OrderedTable):
         base = self.get_abspath()
         site_root_abspath = self.get_site_root().get_abspath()
         handler = self.handler
-        record_schema = handler.record_schema
+        record_properties = handler.record_properties
         links = []
 
         for record in handler.get_records_in_order():
@@ -498,7 +498,7 @@ class Menu(OrderedTable):
                 link = str(uri)
             links.append(link)
             # Submenu resources
-            if not 'child' in record_schema:
+            if not 'child' in record_properties:
                 continue
             path = handler.get_record_value(record, 'child')
             if path:
@@ -544,7 +544,7 @@ class MenuFolder(Folder):
     class_title = MSG(u'iKaaro Menu')
     class_views = ['view']
     __fixed_handlers__ = Folder.__fixed_handlers__ + ['menu']
-    # Your menu ressource (for overriding the record_schema and form)
+    # Your menu ressource (for overriding the record_properties and form)
     class_menu = Menu
 
     # Views

@@ -137,7 +137,7 @@ class SelectTable_EditRecord(Table_EditRecord):
 ###########################################################################
 class Tracker_TableHandler(OrderedTableFile):
 
-    record_schema = {'title': Unicode(multiple=True)}
+    record_properties = {'title': Unicode(multiple=True)}
 
 
 
@@ -210,7 +210,7 @@ class Tracker_TableResource(OrderedTable):
 
 class ModulesHandler(Tracker_TableHandler):
 
-    record_schema = {
+    record_properties = {
         'product': String(mandatory=True),
         'title': Unicode(multiple=True, mandatory=True)}
 
@@ -224,7 +224,7 @@ class ModulesResource(Tracker_TableResource):
     def get_schema(self):
         products = self.parent.get_resource('product')
         return merge_dicts(
-            ModulesHandler.record_schema,
+            ModulesHandler.record_properties,
             product=ProductsEnumerate(products=products, mandatory=True))
 
 
@@ -236,7 +236,7 @@ class ModulesResource(Tracker_TableResource):
 
 class VersionsHandler(Tracker_TableHandler):
 
-    record_schema = {
+    record_properties = {
         'product': String(mandatory=True),
         'title': Unicode(multiple=True, mandatory=True),
         'released': Boolean}
@@ -251,7 +251,7 @@ class VersionsResource(Tracker_TableResource):
     def get_schema(self):
         products = self.parent.get_resource('product')
         return merge_dicts(
-            VersionsHandler.record_schema,
+            VersionsHandler.record_properties,
             product=ProductsEnumerate(products=products, mandatory=True))
 
 
