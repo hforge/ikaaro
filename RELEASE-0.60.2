@@ -1,0 +1,41 @@
+
+ikaaro 0.60.2 (2009/06/03)
+==========================
+
+This is a Content Management System built on Python & itools, among
+other features ikaaro provides:
+
+ - content and document management (index&search, metadata, etc.)
+ - multilingual user interfaces and content
+ - high level modules: wiki, forum, tracker, etc.
+
+There have been various optimizations, most notably of the folder's
+browse content view, which now retrieves the last modification time
+and last author from the catalog instead of asking Git.
+
+The 'icms-update-catalog.py' script has been optimized too, specially
+by parallelizing the calls to Git.  Also, this script accepts a new
+'--quiet' option.
+
+The 'icms-start.py' script does not accept anymore the '--address' and
+'--port' options.
+
+Many bugs have been fixed, including #585, #592, #663, #664, #667, #668,
+#673, #674, #683 and #692.
+
+
+Resources
+---------
+
+Download
+http://download.hforge.org/ikaaro/0.60/ikaaro-0.60.2.tar.gz
+
+Home
+http://www.hforge.org/ikaaro
+
+Mailing list
+http://www.hforge.org/community/
+http://archives.hforge.org/index.cgi?list=itools
+
+Bug Tracker
+http://bugs.hforge.org/
