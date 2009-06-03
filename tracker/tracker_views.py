@@ -570,7 +570,8 @@ class Tracker_RememberSearch(BaseForm):
         search.handler.load_state_from_string('')
 
         # Set title
-        search.set_property('title', title)
+        language = resource.get_content_language(context)
+        search.set_property('title', title, language=language)
 
         # Save the value
         for name, type in StoredSearchFile.schema.iteritems():
