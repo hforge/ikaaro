@@ -262,6 +262,7 @@ class Table_EditRecord(Table_AddEditRecord):
         handler = resource.get_handler()
         record = handler.get_record(id)
         if record is None:
+            context.query = query
             raise FormError, MSG(u'The {id} record is missing.', id=id)
         # Ok
         return query
