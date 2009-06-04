@@ -134,6 +134,10 @@ class BrowseForm(STLForm):
     # Actions are external to current form
     external_form = False
 
+    # Keep the batch in the canonical URL
+    canonical_query_parameters = (STLForm.canonical_query_parameters
+                                  + ['batch_start'])
+
 
     def get_namespace(self, resource, context):
         batch = None
