@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
+from itools.csv import Property
 from itools.datatypes import String, Unicode
 from itools.gettext import MSG
 from itools.i18n import format_datetime
@@ -59,14 +60,12 @@ class StateForm(STLForm):
             transitions.append({'name': name, 'description': description})
         # Workflow history
         history = []
-        for revision in resource.get_revisions():
-            transition, comment = parse_git_message(revision['message'])
-            if transition is not None:
-                history.append(
-                    {'title': transition,
-                     'date': format_datetime(revision['date']),
-                     'user': root.get_user_title(revision['username']),
-                     'comments': comment})
+        for wf in resource.metadata.get_property('workflow'):
+            history.append(
+                {'title': wf.parameters['transition'][0],
+                 'date': format_datetime(wf.parameters['date']),
+                 'user': root.get_user_title(wf.parameters['author']),
+                 'comments': wf.value})
         history.reverse()
 
         # Ok
@@ -135,28 +134,6 @@ workflow.set_initstate('private')
 
 
 
-def parse_git_message(message):
-    """Parses a git message of the form:
-
-      edit state: <transition>
-
-      <comment>
-
-    Returns a tuple with the transition and comment.
-    """
-    n = len('edit state: ')
-    if message[:n] != 'edit state: ':
-        return None, None
-
-    m = message.find('\n')
-    # No comment
-    if m == -1:
-        return message[n:], u''
-    # With comment
-    return message[n:m], unicode(message[m+2:], 'utf-8')
-
-
-
 class WorkflowAware(BaseWorkflowAware):
 
     class_version = '20090122'
@@ -171,8 +148,9 @@ class WorkflowAware(BaseWorkflowAware):
         from obsolete.metadata import WFTransition
         return {
             'state': String,
+            'workflow': Unicode(multiple=True),
             # XXX Backwards compatibility with 0.50
-            'wf_transition': WFTransition,
+#            'wf_transition': WFTransition,
             }
 
 
@@ -198,24 +176,23 @@ class WorkflowAware(BaseWorkflowAware):
         if state != 'public':
             return None
 
-        for revision in self.get_revisions():
-            if revision['message'].startswith('edit state: '):
-                return revision['committer'][1]
-
-        return None
+        workflow = self.get_property('workflow')
+        if not workflow:
+            return None
+        return workflow[-1].parameters['date']
 
 
     def make_transition(self, transition, comments=u''):
         # Change the state, with the itools.workflow API
         self.do_trans(transition)
 
-        # Keep workflow history
-        if comments:
-            git_message = u'edit state: %s\n\n%s' % (transition, comments)
-        else:
-            git_message = u'edit state: %s' % transition
-        context = get_context()
-        context.git_message = git_message
+        # Keep comment
+        user = get_context().user
+        username = user and user.name or None
+        now = datetime.now()
+        workflow = Property(comments, date=now, author=username,
+                            transition=[transition])
+        self.set_property('workflow', workflow)
 
 
     ########################################################################
