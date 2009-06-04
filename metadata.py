@@ -17,7 +17,8 @@
 # Import from itools
 from itools.core import add_type
 from itools.csv import parse_table, Property, property_to_str
-from itools.datatypes import String
+from itools.csv import deserialize_parameters
+from itools.datatypes import DateTime, String
 from itools.handlers import File, register_handler_class
 from itools.web import get_context
 
@@ -28,6 +29,15 @@ from registry import get_resource_class
 # This is the datatype used for properties not defined in the schema
 multiple_datatype = String(multiple=True, multilingual=False)
 multilingual_datatype = String(multiple=False, multilingual=True)
+
+
+# Possible parameters that can be used in a metadata
+# FIXME This list is hardcoded, we should have a way to extend or change it
+metadata_parameters = {
+    'lang': String(multiple=False),
+    'date': DateTime(multitple=False),
+    'author': String(multiple=False)}
+
 
 
 
@@ -81,7 +91,10 @@ class Metadata(File):
             if name == 'format':
                 raise ValueError, 'unexpected "format" property'
 
-            # 1. Get the datatype
+            # 1. Deserialize the parameters
+            deserialize_parameters(parameters, metadata_parameters)
+
+            # 2. Get the datatype
             datatype = schema.get(name)
             if not datatype:
                 # Guess the datatype for properties not defined by the schema
@@ -90,14 +103,14 @@ class Metadata(File):
                 else:
                     datatype = multiple_datatype
 
-            # 2. Get the datatype properties
+            # 3. Get the datatype properties
             multiple = is_multiple(datatype)
             multilingual = is_multilingual(datatype)
             if multiple and multilingual:
                 error = 'property "%s" is both multilingual and multiple'
                 raise ValueError, error % name
 
-            # 3. Build the property
+            # 4. Build the property
             value = datatype.decode(value)
             property = Property(value, **parameters)
 
@@ -107,7 +120,6 @@ class Metadata(File):
                 if language is None:
                     err = 'multilingual property "%s" is missing the language'
                     raise ValueError, err % name
-                language = language[0]
                 properties.setdefault(name, {})[language] = property
             # Case 2: multiple
             elif multiple:
