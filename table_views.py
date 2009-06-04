@@ -22,7 +22,7 @@
 from itools.csv import UniqueError, Property, is_multilingual
 from itools.datatypes import Integer, Enumerate, Tokens
 from itools.gettext import MSG
-from itools.web import INFO, ERROR, BaseView
+from itools.web import INFO, ERROR, BaseView, FormError
 from itools.xapian import PhraseQuery
 
 # Import from ikaaro
@@ -252,6 +252,19 @@ class Table_EditRecord(Table_AddEditRecord):
 
     title = MSG(u'Edit record {id}')
     query_schema = {'id': Integer(mandatory=True)}
+
+
+    def get_query(self, context):
+        query = Table_AddEditRecord.get_query(self, context)
+        # Test the id is valid
+        id = query['id']
+        resource = context.resource
+        handler = resource.get_handler()
+        record = handler.get_record(id)
+        if record is None:
+            raise FormError, MSG(u'The {id} record is missing.', id=id)
+        # Ok
+        return query
 
 
     def get_value(self, resource, context, name, datatype):
