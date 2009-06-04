@@ -131,7 +131,7 @@ class Metadata(File):
 
     def to_str(self):
         schema = get_schema(self.format)
-        p_schema = {'lang': String(multiple=False)}
+        p_schema = metadata_parameters
 
         lines = []
         lines.append('format:%s\n' % self.format)
