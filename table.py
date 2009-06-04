@@ -49,20 +49,12 @@ class Table(File):
 
     @classmethod
     def get_form(cls):
-        if cls.form != []:
+        if cls.form:
             return cls.form
         record_schema = cls.class_handler.record_schema
         return [
             get_default_widget(datatype)(name)
             for name, datatype in record_schema.items() ]
-
-
-    @classmethod
-    def get_field_title(cls, name):
-        for widget in cls.form:
-            if widget.name == name:
-                return getattr(widget, 'title', name)
-        return name
 
 
     def del_record(self, id):

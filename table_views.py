@@ -182,6 +182,16 @@ class Table_AddEditRecord(AutoForm):
         return resource.get_form()
 
 
+    def get_field_title(self, resource, name):
+        for widget in resource.get_form():
+            if widget.name == name:
+                title = getattr(widget, 'title', None)
+                if title:
+                    return title.gettext()
+                return name
+        return name
+
+
     def action(self, resource, context, form):
         """Code shared by the add & edit actions.  It builds a new record
         from the form.
@@ -208,7 +218,7 @@ class Table_AddEditRecord(AutoForm):
         try:
             self.action_add_or_edit(resource, context, record)
         except UniqueError, error:
-            title = resource.get_field_title(error.name)
+            title = self.get_field_title(resource, error.name)
             context.message = ERROR(str(error), field=title, value=error.value)
         except ValueError, error:
             message = ERROR(u'Error: {msg}', msg=str(error))
