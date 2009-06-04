@@ -123,7 +123,7 @@ class Metadata(File):
                 properties.setdefault(name, {})[language] = property
             # Case 2: multiple
             elif multiple:
-                raise NotImplementedError
+                properties.setdefault(name, []).append(property)
             # Case 3: simple
             else:
                 properties[name] = property
