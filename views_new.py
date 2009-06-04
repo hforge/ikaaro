@@ -19,6 +19,7 @@ from urllib import quote
 
 # Import from itools
 from itools.core import freeze
+from itools.csv import Property
 from itools.datatypes import String, Unicode
 from itools.gettext import MSG
 from itools.handlers import checkid
@@ -133,9 +134,9 @@ class NewInstance(AutoForm):
         cls = get_resource_class(class_id)
         child = cls.make_resource(cls, resource, name)
         # The metadata
-        metadata = child.metadata
         language = resource.get_content_language(context)
-        metadata.set_property('title', title, language=language)
+        title = Property(title, lang=language)
+        child.metadata.set_property('title', title)
 
         goto = './%s/' % name
         return context.come_back(messages.MSG_NEW_RESOURCE, goto=goto)
@@ -193,9 +194,9 @@ class ProxyNewInstance(NewInstance):
         cls = get_resource_class(class_id)
         child = cls.make_resource(cls, resource, name)
         # The metadata
-        metadata = child.metadata
         language = resource.get_content_language(context)
-        metadata.set_property('title', title, language=language)
+        title = Property(title, lang=language)
+        child.metadata.set_property('title', title)
 
         goto = './%s/' % name
         return context.come_back(messages.MSG_NEW_RESOURCE, goto=goto)

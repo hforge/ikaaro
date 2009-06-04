@@ -74,7 +74,8 @@ class NewTestCase(TestCase):
 
     def setUp(self):
         metadata = Metadata(cls=WebPage)
-        metadata.set_property('title', Property(u'Hello World', lang='en'))
+        title = Property(u'Hello World', lang='en')
+        metadata.set_property('title', title)
         self.metadata = metadata
         # Sandbox
         vfs.make_folder('sandbox')

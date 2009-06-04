@@ -23,6 +23,7 @@ from datetime import datetime, timedelta
 
 # Import from itools
 from itools.core import merge_dicts
+from itools.csv import Property
 from itools.datatypes import Integer, Unicode
 from itools.gettext import MSG
 from itools.handlers import get_handler_class_by_mimetype, guess_encoding
@@ -100,7 +101,8 @@ class File_NewInstance(NewInstance):
         # The title
         title = form['title'].strip()
         language = resource.get_content_language(context)
-        child.metadata.set_property('title', title, language=language)
+        title = Property(title, lang=language)
+        child.metadata.set_property('title', title)
 
         # Ok
         goto = './%s/' % name

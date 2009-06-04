@@ -205,9 +205,9 @@ class Tracker_NewInstance(NewInstance):
         cls = get_resource_class(class_id)
         child = cls.make_resource(cls, resource, name)
         # The metadata
-        metadata = child.metadata
         language = resource.get_content_language(context)
-        metadata.set_property('title', title, language=language)
+        title = Property(title, lang=language)
+        child.metadata.set_property('title', title)
         # Add the initial product
         product = form['product']
         table = resource.get_resource('%s/product' % name).get_handler()
