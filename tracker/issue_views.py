@@ -154,36 +154,25 @@ class Issue_Edit(STLForm):
         record = history.get_record(-1)
 
         # Comments
-        comments = []
-        i = 0
-        for record in resource.get_history_records():
-            comment = record.comment
-            file = record.file
-            if not comment and not file:
-                continue
-            rdatetime = record.datetime
-            # solid in case the user has been removed
-            username = record.username
-            user = users.get_resource(username, soft=True)
-            user_title = user and user.get_title() or username
-            i += 1
-            comments.append({
-                'number': i,
-                'user': user_title,
-                'datetime': format_datetime(rdatetime),
-                'comment': indent(comment),
-                'file': file})
-        comments.reverse()
+        comments = resource.metadata.get_property('comment')
+        if comments is None:
+            comments = []
+        else:
+            root = context.root
+            comments = [
+                {'number': i,
+                 'user': root.get_user_title(x.parameters['author']),
+                 'datetime': format_datetime(x.parameters['date']),
+                 'comment': indent(x.value),
+                 'file': x.parameters.get('file')})
+                for i, x in enumerate(comments) ]
+            comments.reverse()
         namespace['comments'] = comments
 
         # cc_list / cc_add / cc_remove
         cc_list = record.get_value('cc_list') or ()
-        namespace['cc_list']= {'name': 'cc_list',
-                              'value': [],
-                              'class': None}
-        namespace['cc_add']= {'name': 'cc_add',
-                              'value': [],
-                              'class': None}
+        namespace['cc_list']= {'name': 'cc_list', 'value': [], 'class': None}
+        namespace['cc_add']= {'name': 'cc_add', 'value': [], 'class': None}
         cc_value = namespace['cc_list']['value']
         add_value = namespace['cc_add']['value']
 
@@ -247,7 +236,7 @@ class Issue_History(STLView):
         # Build the namespace
         rows = []
         i = 0
-        for record in resource.get_history_records():
+        for record in resource.get_history().get_records():
             rdatetime = record.get_value('datetime')
             username = record.get_value('username')
             title = record.get_value('title')
