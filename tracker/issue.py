@@ -24,8 +24,7 @@
 from datetime import datetime
 
 # Import from itools
-from itools.csv import Table
-from itools.datatypes import DateTime, Integer, String, Unicode, Tokens
+from itools.datatypes import Integer, String, Unicode, Tokens
 from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.vfs import FileName
@@ -42,25 +41,6 @@ from issue_views import Issue_Edit, Issue_EditResources, Issue_History
 from issue_views import IssueTrackerMenu
 
 
-class History(Table):
-
-    record_properties = {
-        'datetime': DateTime,
-        'username': String,
-        'title': Unicode,
-        'product': Integer,
-        'module': Integer,
-        'version': Integer,
-        'type': Integer,
-        'state': Integer,
-        'priority': Integer,
-        'assigned_to': String,
-        'comment': Unicode,
-        'cc_list': Tokens,
-        'file': String}
-
-
-
 class Issue(Folder):
 
     class_id = 'issue'
@@ -70,27 +50,28 @@ class Issue(Folder):
     class_views = ['edit', 'edit_resources', 'browse_content', 'history']
 
 
-    @staticmethod
-    def _make_resource(cls, folder, name):
-        Folder._make_resource(cls, folder, name)
-        folder.set_handler('%s/.history' % name, History())
+    @classmethod
+    def get_metadata_schema(cls):
+        schema = Folder.get_metadata_schema()
+        schema['product'] = Integer
+        schema['module'] = Integer
+        schema['version'] = Integer
+        schema['type'] = Integer
+        schema['state'] = Integer
+        schema['priority'] = Integer
+        schema['assigned_to'] = String
+        schema['cc_list'] = Tokens
+        schema['comment'] = Unicode # parameters: date, author, file
+        return schema
 
 
     def _get_catalog_values(self):
         document = Folder._get_catalog_values(self)
         document['id'] = int(self.name)
-
-        # Get the last record
-        history = self.get_history()
-        record = history.get_record(-1)
-        if record:
-            get_record_value = history.get_record_value
-            names = 'product', 'module', 'version', 'type', 'priority', 'state'
-            for name in names:
-                document[name] = get_record_value(record, name)
-            assigned_to = get_record_value(record, 'assigned_to') or 'nobody'
-            document['assigned_to'] = assigned_to
-            document['title'] = get_record_value(record, 'title')
+        names = 'product', 'module', 'version', 'type', 'priority', 'state'
+        for name in names:
+            document[name] = self.get_property(name)
+        document['assigned_to'] = self.get_property('assigned_to') or 'nobody'
         return document
 
 
@@ -98,29 +79,16 @@ class Issue(Folder):
         return [File]
 
 
-    def get_files_to_archive(self, content=False):
-        files = Folder.get_files_to_archive(self, content)
-        history = get_uri_path(self.get_history().uri)
-        files.append(history)
-        return files
-
-
-    def get_mtime(self):
-        """Return the datetime of the last record.
-        """
-        history = self.get_history()
-        record = history.get_record(-1)
-        if record:
-            return history.get_record_value(record, 'datetime')
-        return self.get_mtime()
-
-
     def get_links(self):
         base = self.get_abspath()
 
+        comments = self.metadata.get_property('comment')
+        if comments is None:
+            return []
+
         links = []
-        for record in self.get_history_records():
-            filename = record.file
+        for comment in comments:
+            filename = comment.parameters.get('file')
             if filename:
                 links.append(str(base.resolve2(filename)))
         return links
@@ -143,35 +111,18 @@ class Issue(Folder):
     # API
     #######################################################################
     def get_title(self, language=None):
-        return '#%s %s' % (self.name, self.get_value('title'))
+        return '#%s %s' % (self.name, self.get_property('title'))
 
 
     def get_calendar(self):
         return self.parent.get_resource('calendar')
 
 
-    def load_handlers(self):
-        Folder.load_handlers(self)
-        self.get_history()
-
-
     def get_history(self):
-        return self.handler.get_handler('.history', cls=History)
+        raise NotImplementedError, 'this method is to be removed'
 
 
-    def get_history_records(self):
-        return self.get_history().get_records()
-
-
-    def get_value(self, name):
-        history = self.get_history()
-        record = history.get_record(-1)
-        if record:
-            return history.get_record_value(record, name)
-        return None
-
-
-    def _add_record(self, context, form):
+    def _add_record(self, context, form, new=False):
         user = context.user
         root = context.root
         parent = self.parent
@@ -189,15 +140,17 @@ class Issue(Folder):
         title = context.get_form_value('title', type=Unicode).strip()
         record['title'] = title
         # Version, Priority, etc.
+        schema = self.get_metadata_schema()
         for name in ['product', 'module', 'version', 'type', 'state',
                      'priority', 'assigned_to', 'comment']:
-            type = History.record_properties[name]
-            value = context.get_form_value(name, type=type)
-            if type == Unicode:
+            datatype = schema[name]
+            value = context.get_form_value(name, type=datatype)
+            if isinstance(datatype, Unicode):
                 value = value.strip()
             record[name] = value
         # CCs
-        cc_list = set(self.get_value('cc_list') or ())
+        cc_list = self.get_property('cc_list')
+        cc_list = set(cc_list) if cc_list else set()
         cc_remove = context.get_form_value('cc_remove')
         if cc_remove:
             cc_remove = context.get_form_values('cc_list')
@@ -225,7 +178,7 @@ class Issue(Folder):
             # Link
             record['file'] = name
         # Update
-        modifications = self.get_diff_with(record, context)
+        modifications = self.get_diff_with(record, context, new=new)
         history = self.get_history()
         history.add_record(record)
         # Send a Notification Email
@@ -241,7 +194,7 @@ class Issue(Folder):
             to_addrs.add(reported_by)
         for cc in cc_list:
             to_addrs.add(cc)
-        assigned_to = self.get_value('assigned_to')
+        assigned_to = self.get_property('assigned_to')
         if assigned_to:
             to_addrs.add(assigned_to)
         if user.name in to_addrs:
@@ -254,8 +207,7 @@ class Issue(Folder):
             uri = context.uri.resolve('%s/;edit' % self.name)
         else:
             uri = context.uri.resolve(';edit')
-        body = '#%s %s %s\n\n' % (self.name, self.get_value('title'),
-                                  str(uri))
+        body = '#%s %s %s\n\n' % (self.name, self.get_property('title'), uri)
         message = MSG(u'The user {title} did some changes.')
         body +=  message.gettext(title=user_title)
         body += '\n\n'
@@ -283,22 +235,21 @@ class Issue(Folder):
             root.send_email(to_addr, subject, text=body)
 
 
-    def get_diff_with(self, record, context):
-        """Return a text with the diff between the last and new issue state
+    def get_diff_with(self, record, context, new=False):
+        """Return a text with the diff between the last and new issue state.
         """
         root = context.root
         modifications = []
-        history = self.get_history()
-        if history.get_n_records() > 0:
-            # Edit issue
-            template = MSG(u'{field}: {old_value} to {new_value}')
-            empty = MSG(u'[empty]').gettext()
-        else:
+        if new:
             # New issue
             template = MSG(u'{field}: {old_value}{new_value}')
             empty = u''
+        else:
+            # Edit issue
+            template = MSG(u'{field}: {old_value} to {new_value}')
+            empty = MSG(u'[empty]').gettext()
         # Modification of title
-        last_title = self.get_value('title') or empty
+        last_title = self.get_property('title') or empty
         new_title = record['title']
         if last_title != new_title:
             field = MSG(u'Title').gettext()
@@ -315,7 +266,7 @@ class Issue(Folder):
         for name, field in fields:
             field = field.gettext()
             new_value = record[name]
-            last_value = self.get_value(name)
+            last_value = self.get_property(name)
             # Detect if modifications
             if last_value == new_value:
                 continue
@@ -332,7 +283,7 @@ class Issue(Folder):
             modifications.append(text)
 
         # Modifications of assigned_to
-        last_user = self.get_value('assigned_to') or ''
+        last_user = self.get_property('assigned_to') or ''
         new_user = record['assigned_to']
         if last_user != new_user:
             if last_user:
@@ -345,7 +296,8 @@ class Issue(Folder):
             modifications.append(text)
 
         # Modifications of cc_list
-        last_cc = list(self.get_value('cc_list') or ())
+        last_cc = self.get_property('cc_list')
+        last_cc = list(last_cc) if last_cc else []
         new_cc = list(record['cc_list'] or ())
         if last_cc != new_cc:
             last_values = []
@@ -371,29 +323,9 @@ class Issue(Folder):
         return history.get_record(0).username
 
 
-    def get_comment(self):
-        records = list(self.get_history_records())
-        i = len(records) - 1
-        while i >= 0:
-            record = records[i]
-            comment = record.comment
-            if comment:
-                return comment
-            i -= 1
-        return ''
-
-
     def to_text(self):
-        records = list(self.get_history_records())
-        comments = [ r.comment for r in records
-                     if r.comment ]
+        comments = self.get_property('comment')
         return u'\n'.join(comments)
-
-
-    def has_text(self, text):
-        if text in self.get_value('title').lower():
-            return True
-        return text in self.get_comment().lower()
 
 
     def get_size(self):

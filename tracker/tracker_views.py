@@ -245,7 +245,7 @@ class Tracker_AddIssue(STLForm):
         # Add
         id = resource.get_new_id()
         issue = Issue.make_resource(Issue, resource, id)
-        issue._add_record(context, form)
+        issue._add_record(context, form, new=True)
 
         # Ok
         message = INFO(u'New issue added.')
@@ -832,13 +832,13 @@ class Tracker_ChangeSeveralBugs(Tracker_View):
             record = {
                 'datetime': datetime.now(),
                 'username': username,
-                'title': issue.get_value('title'),
-                'product': issue.get_value('product'),
-                'cc_list': issue.get_value('cc_list'),
+                'title': issue.get_property('title'),
+                'product': issue.get_property('product'),
+                'cc_list': issue.get_property('cc_list'),
                 'file': '',
             }
             # Assign-To
-            assigned_to = issue.get_value('assigned_to')
+            assigned_to = issue.get_property('assigned_to')
             new_assigned_to = form['change_assigned_to']
             if new_assigned_to == 'do-not-change':
                 record['assigned_to'] = assigned_to
@@ -848,7 +848,7 @@ class Tracker_ChangeSeveralBugs(Tracker_View):
             for name in names:
                 new_value = form['change_%s' % name]
                 if new_value == -1:
-                    record[name] = issue.get_value(name)
+                    record[name] = issue.get_property(name)
                 else:
                     record[name] = new_value
             # Comment
