@@ -227,18 +227,30 @@ class Metadata(File):
     def _set_property(self, name, value):
         properties = self.properties
 
+        # Case 1: Remove property
         if value is None:
-            # Remove property
             if name in properties:
                 del properties[name]
-        elif type(value) is Property:
+            return
+
+        # Case 2: Multilingual
+        if type(value) is Property:
             language = value.parameters.get('lang')
             if language:
                 properties.setdefault(name, {})[language] = value
-            else:
-                properties[name] = value
+                return
         else:
-            properties[name] = Property(value)
+            value = Property(value)
+
+        # Case 3: Simple
+        schema = get_schema(self.format)
+        datatype = schema.get(name)
+        if datatype is None or getattr(datatype, 'multiple', False) is False:
+            properties[name] = value
+            return
+
+        # Case 4: Multiple
+        properties.setdefault(name, []).append(value)
 
 
     def set_property(self, name, value):

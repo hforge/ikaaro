@@ -60,13 +60,15 @@ class StateForm(STLForm):
             transitions.append({'name': name, 'description': description})
         # Workflow history
         history = []
-        for wf in resource.metadata.get_property('workflow'):
-            history.append(
-                {'title': wf.parameters['transition'][0],
-                 'date': format_datetime(wf.parameters['date']),
-                 'user': root.get_user_title(wf.parameters['author']),
-                 'comments': wf.value})
-        history.reverse()
+        workflow = resource.metadata.get_property('workflow')
+        if workflow is not None:
+            for wf in workflow:
+                history.append(
+                    {'title': wf.parameters['transition'][0],
+                     'date': format_datetime(wf.parameters['date']),
+                     'user': root.get_user_title(wf.parameters['author']),
+                     'comments': wf.value})
+            history.reverse()
 
         # Ok
         return {
