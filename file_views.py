@@ -27,6 +27,7 @@ from itools.datatypes import Integer, Unicode
 from itools.gettext import MSG
 from itools.handlers import get_handler_class_by_mimetype, guess_encoding
 from itools.html import HTMLParser, stream_to_str_as_xhtml
+from itools.http.headers import Authorization
 from itools.i18n import guess_language
 from itools.uri import get_reference, get_uri_name
 from itools.vfs import FileName
@@ -277,7 +278,9 @@ class File_ExternalEdit(BaseView):
                     return context.come_back(message, goto='.')
 
         if request.has_header('Authorization'):
-            r.append('auth:%s' % request.get_header('Authorization'))
+            auth = request.get_header('Authorization')
+            auth = Authorization.encode(auth)
+            r.append('auth:%s' % auth)
 
         r.append('')
 
