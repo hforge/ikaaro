@@ -23,6 +23,7 @@ from copy import deepcopy
 
 # Import from itools
 from itools.core import get_abspath
+from itools.datatypes import Unicode
 from itools.gettext import MSG
 from itools.handlers import File, Folder, Image
 from itools.http import NotFound
@@ -302,12 +303,12 @@ class Skin(UIFolder):
         if context.message is not None:
             messages = context.message
         elif 'error' in context.uri.query:
-            messages = ERROR(context.get_query_value('error'))
+            messages = ERROR(context.get_query_value('error', type=Unicode))
         elif 'info' in context.uri.query:
-            messages = INFO(context.get_query_value('info'))
+            messages = INFO(context.get_query_value('info', type=Unicode))
         # XXX For backwards compatibility
         elif 'message' in context.uri.query:
-            messages = INFO(context.get_query_value('message'))
+            messages = INFO(context.get_query_value('message', type=Unicode))
         else:
             return None
 
