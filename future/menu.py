@@ -536,6 +536,8 @@ class Menu(OrderedTable):
                 new_path2 = base.get_pathto(Path(new_path))
                 handler.update_record(record.id, **{'path': str(new_path2)})
 
+        get_context().server.change_resource(self)
+
 
 
 class MenuFolder(Folder):
