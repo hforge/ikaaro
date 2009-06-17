@@ -168,7 +168,7 @@ class Issue_Edit(STLForm):
                  'user': root.get_user_title(x.parameters['author']),
                  'datetime': format_datetime(x.parameters['date']),
                  'comment': indent(x.value),
-                 'file': x.parameters.get('file')})
+                 'file': x.parameters.get('file')}
                 for i, x in enumerate(comments) ]
             comments.reverse()
         namespace['comments'] = comments
