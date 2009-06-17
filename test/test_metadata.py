@@ -28,8 +28,7 @@ from ikaaro.webpage import WebPage
 
 
 metadata_str = """
-format:webpage
-version:20090122
+format;version=20090122:webpage
 title;lang=en:hello
 title;lang=fr:bonjur
 title;lang=fr:bonjour
@@ -53,7 +52,7 @@ class LoadTestCase(TestCase):
 
 
     def test_version(self):
-        value = self.metadata.get_property('version').value
+        value = self.metadata.version
         self.assertEqual(value, '20090122')
 
 
@@ -92,7 +91,7 @@ class NewTestCase(TestCase):
 
 
     def test_version(self):
-        value = self.metadata.get_property('version').value
+        value = self.metadata.version
         self.assertEqual(value, WebPage.class_version)
 
 

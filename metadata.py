@@ -63,12 +63,13 @@ class Metadata(File):
 
     def reset(self):
         self.format = None
+        self.version = None
         self.properties = {}
 
 
     def new(self, cls=None, format=None, version=None):
         self.format = format or cls.class_id
-        self.properties['version'] = Property(version or cls.class_version)
+        self.version = version or cls.class_version
 
 
     def _load_state_from_file(self, file):
@@ -76,10 +77,15 @@ class Metadata(File):
         data = file.read()
         parser = parse_table(data)
 
-        # Read the format
+        # Read the format & version
         name, value, parameters = parser.next()
         if name != 'format':
             raise ValueError, 'unexpected "%s" property' % name
+        if 'version' in parameters:
+            version = parameters.pop('version')
+            if len(version) > 1:
+                raise ValueError, 'version parameter cannot be repeated'
+            self.version = version[0]
         if parameters:
             raise ValueError, 'unexpected parameters for the format property'
         self.format = value
@@ -133,16 +139,14 @@ class Metadata(File):
         schema = get_schema(self.format)
         p_schema = metadata_parameters
 
-        lines = []
-        lines.append('format:%s\n' % self.format)
-        # Define the order by which the properties should be serialized
-        # (first the version, then by alphabetical order)
+        if self.version is None:
+            lines = ['format:%s\n' % self.format]
+        else:
+            lines = ['format;version=%s:%s\n' % (self.version, self.format)]
+        # Properties are to be sorted by alphabetical order
         properties = self.properties
         names = properties.keys()
         names.sort()
-        if 'version' in names:
-            names.remove('version')
-            names.insert(0, 'version')
 
         # Properties
         for name in names:
