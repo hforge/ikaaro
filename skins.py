@@ -23,13 +23,14 @@ from copy import deepcopy
 
 # Import from itools
 from itools.core import get_abspath
+from itools.datatypes import Unicode
 from itools.gettext import MSG
 from itools.handlers import File, Folder, Image
 from itools.http import NotFound
 from itools.i18n import has_language
 from itools.stl import stl
 from itools.uri import Path
-from itools.web import get_context, BaseView, ERROR
+from itools.web import get_context, BaseView, ERROR, INFO
 from itools.xmlfile import XMLFile
 
 # Import from ikaaro
@@ -303,9 +304,13 @@ class Skin(UIFolder):
         # Text
         if context.message is not None:
             messages = context.message
+        elif 'error' in context.uri.query:
+            messages = ERROR(context.get_query_value('error', type=Unicode))
+        elif 'info' in context.uri.query:
+            messages = INFO(context.get_query_value('info', type=Unicode))
+        # XXX For backwards compatibility
         elif 'message' in context.uri.query:
-            # TODO Do not use this anymore
-            messages = context.get_query_value('message')
+            messages = INFO(context.get_query_value('message', type=Unicode))
         else:
             return None
 

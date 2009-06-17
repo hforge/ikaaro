@@ -418,7 +418,7 @@ class Menu(OrderedTable):
 
                 # Build the new reference with the right path
                 ref2 = deepcopy(ref)
-                resource = self.get_resource(path)
+                resource = self.get_resource(resource_path)
                 ref2.path = context.get_link(resource)
                 items.append({'id': 'menu_%s' % name,
                               'path': str(ref2),
@@ -535,6 +535,8 @@ class Menu(OrderedTable):
                 # Hit the old name
                 new_path2 = base.get_pathto(Path(new_path))
                 handler.update_record(record.id, **{'path': str(new_path2)})
+
+        get_context().server.change_resource(self)
 
 
 
