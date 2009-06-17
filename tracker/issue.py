@@ -24,6 +24,7 @@
 from datetime import datetime
 
 # Import from itools
+from itools.csv import Property
 from itools.datatypes import Integer, String, Unicode, Tokens
 from itools.gettext import MSG
 from itools.handlers import checkid
@@ -135,26 +136,19 @@ class Issue(Folder):
         parent = self.parent
         users = root.get_resource('users')
 
-        record = {}
-        # Datetime
-        record['datetime'] = datetime.now()
-        # User XXX
-        if user is None:
-            record['username'] = ''
-        else:
-            record['username'] = user.name
         # Title
         title = context.get_form_value('title', type=Unicode).strip()
-        record['title'] = title
+        language = self.get_content_language(context)
+        self.set_property('title', title, language=language)
         # Version, Priority, etc.
         schema = self.get_metadata_schema()
         for name in ['product', 'module', 'version', 'type', 'state',
-                     'priority', 'assigned_to', 'comment']:
+                     'priority', 'assigned_to']:
             datatype = schema[name]
             value = context.get_form_value(name, type=datatype)
             if isinstance(datatype, Unicode):
                 value = value.strip()
-            record[name] = value
+            self.set_property(name, value)
         # CCs
         cc_list = self.get_property('cc_list')
         cc_list = set(cc_list) if cc_list else set()
@@ -166,13 +160,11 @@ class Issue(Folder):
         cc_add = context.get_form_value('cc_add', type=datatype)
         if cc_add:
             cc_list = cc_list.union(cc_add)
-        record['cc_list'] = list(cc_list)
+        self.set_property('cc_list', tuple(cc_list))
 
         # Files XXX
         file = context.get_form_value('file')
-        if file is None:
-            record['file'] = ''
-        else:
+        if file is not None:
             # Upload
             filename, mimetype, body = form['file']
             # Find a non used name
@@ -184,11 +176,17 @@ class Issue(Folder):
             cls.make_resource(cls, self, name, body=body, filename=filename,
                             extension=extension, format=mimetype)
             # Link
-            record['file'] = name
+            file = name
+
+        # Comment
+        now = datetime.now()
+        author = user.name if user else None
+        comment = context.get_form_value('comment', type=Unicode)
+        comment = Property(comment, date=now, author=author, file=file)
+        self.set_property('comment', comment)
+
         # Update
         modifications = self.get_diff_with(record, context, new=new)
-        history = self.get_history()
-        history.add_record(record)
         # Send a Notification Email
         # Notify / From
         if user is None:
