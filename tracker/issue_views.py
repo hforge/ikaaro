@@ -152,8 +152,12 @@ class Issue_Edit(STLForm):
     def get_namespace(self, resource, context):
         namespace = STLForm.get_namespace(self, resource, context)
 
+        # The first lines are very much the same of the add issue form
+        tracker = resource.parent
+        namespace['list_products'] = tracker.get_list_products_namespace()
+
         # Local variables
-        users = resource.get_resource('/users')
+        root = context.root
         history = resource.get_history()
         record = history.get_record(-1)
 
@@ -162,7 +166,6 @@ class Issue_Edit(STLForm):
         if comments is None:
             comments = []
         else:
-            root = context.root
             comments = [
                 {'number': i,
                  'user': root.get_user_title(x.parameters['author']),
@@ -191,11 +194,7 @@ class Issue_Edit(STLForm):
 
         # Reported by
         reported_by = resource.get_reported_by()
-        namespace['reported_by'] = users.get_resource(reported_by).get_title()
-
-        # list_products
-        tracker = resource.parent
-        namespace['list_products'] = tracker.get_list_products_namespace()
+        namespace['reported_by'] = root.get_user_title(reported_by)
 
         return namespace
 
