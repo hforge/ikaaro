@@ -335,6 +335,7 @@ class Menu(OrderedTable):
                                  use_first_child=False, flat=False):
         parent = self.parent
         handler = self.handler
+        menu_abspath = self.get_abspath()
         here = context.resource
         here_abspath = here.get_abspath()
         site_root_abspath = here.get_site_root().get_abspath()
@@ -409,9 +410,13 @@ class Menu(OrderedTable):
                                     resource_path = sub_path
 
                 # Set active, in_path
-                active, in_path = False, name in url
+                active = False
                 if here_abspath == resource.get_abspath():
                     active, in_path = True, False
+                else:
+                    res_abspath = menu_abspath.resolve2(resource_path)
+                    common_prefix = here_abspath.get_prefix(res_abspath)
+                    in_path = (common_prefix == res_abspath)
 
                 # Set css class to 'active', 'in-path' or None
                 css = 'in-path' if (active or in_path) else None
