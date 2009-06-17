@@ -18,7 +18,7 @@
 from operator import itemgetter
 
 # Import from itools
-from itools.datatypes import Enumerate, String
+from itools.datatypes import Enumerate, String, Unicode
 from itools.web import get_context
 
 # Import from ikaaro
@@ -128,9 +128,9 @@ class UsersList(Enumerate):
             members = site_root.get_members()
 
         users = site_root.get_resource('/users')
-        options = [{'name': x,
-                    'value': users.get_resource(x).get_title()}
-                    for x in members]
+        options = [
+            {'name': x, 'value': users.get_resource(x).get_title()}
+            for x in members ]
         options.sort(key=itemgetter('value'))
         return options
 
@@ -138,7 +138,7 @@ class UsersList(Enumerate):
 
 def get_issue_fields(tracker):
     return {
-        'title': String(mandatory=True),
+        'title': Unicode(mandatory=True),
         'product': TrackerList(element='product', tracker=tracker,
                                mandatory=True),
         'module': ProductInfoList(element='module', tracker=tracker),
@@ -147,7 +147,7 @@ def get_issue_fields(tracker):
         'state': TrackerList(element='state', tracker=tracker, mandatory=True),
         'priority': TrackerList(element='priority', tracker=tracker),
         'assigned_to': UsersList(tracker=tracker, excluded_roles=('guests',)),
-        'cc_list': UsersList(tracker=tracker, multiple=True),
-        'comment': String,
+        'cc_add': UsersList(tracker=tracker, multiple=True),
+        'comment': Unicode,
         'file': FileDataType}
 
