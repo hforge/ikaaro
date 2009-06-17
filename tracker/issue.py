@@ -62,7 +62,8 @@ class Issue(Folder):
         schema['priority'] = Integer
         schema['assigned_to'] = String
         schema['cc_list'] = Tokens
-        schema['comment'] = Unicode # parameters: date, author, file
+        # parameters: date, author, file
+        schema['comment'] = Unicode(multiple=True)
         return schema
 
 
@@ -124,38 +125,34 @@ class Issue(Folder):
 
 
     def _add_record(self, context, form, new=False):
-        user = context.user
-        root = context.root
-        parent = self.parent
-        users = root.get_resource('users')
-
         # Title
-        title = context.get_form_value('title', type=Unicode).strip()
+        title = form['title'].strip()
         language = self.get_content_language(context)
         self.set_property('title', title, language=language)
         # Version, Priority, etc.
         schema = self.get_metadata_schema()
         for name in ['product', 'module', 'version', 'type', 'state',
                      'priority', 'assigned_to']:
-            datatype = schema[name]
-            value = context.get_form_value(name, type=datatype)
-            if isinstance(datatype, Unicode):
-                value = value.strip()
+            value = form[name]
             self.set_property(name, value)
         # CCs
-        cc_list = self.get_property('cc_list')
-        cc_list = set(cc_list) if cc_list else set()
-        cc_remove = context.get_form_value('cc_remove')
-        if cc_remove:
-            cc_remove = context.get_form_values('cc_list')
-            cc_list = cc_list.difference(cc_remove)
-        cc_add = context.get_form_values('cc_add')
-        if cc_add:
+        if new:
+            cc_add = form['cc_add']
+            if cc_add:
+                self.set_property('cc_list', tuple(cc_add))
+        else:
+            cc_list = self.get_property('cc_list')
+            cc_list = set(cc_list)
+            cc_remove = form['cc_remove']
+            if cc_remove:
+                cc_remove = form['cc_list']
+                cc_list = cc_list.difference(cc_remove)
+            cc_add = form['cc_add']
             cc_list = cc_list.union(cc_add)
-        self.set_property('cc_list', tuple(cc_list))
+            self.set_property('cc_list', tuple(cc_list))
 
         # Files XXX
-        file = context.get_form_value('file')
+        file = form['file']
         if file is not None:
             # Upload
             filename, mimetype, body = form['file']
@@ -166,19 +163,18 @@ class Issue(Folder):
             # Add attachement
             cls = get_resource_class(mimetype)
             cls.make_resource(cls, self, name, body=body, filename=filename,
-                            extension=extension, format=mimetype)
+                              extension=extension, format=mimetype)
             # Link
             file = name
 
         # Comment
         now = datetime.now()
+        user = context.user
         author = user.name if user else None
-        comment = context.get_form_value('comment', type=Unicode)
+        comment = form['comment']
         comment = Property(comment, date=now, author=author, file=file)
         self.set_property('comment', comment)
 
-        # Update
-        modifications = self.get_diff_with(record, context, new=new)
         # Send a Notification Email
         # Notify / From
         if user is None:
@@ -215,6 +211,7 @@ class Issue(Folder):
             message = message.gettext(filename=filename)
             body += message + '\n'
         comment = context.get_form_value('comment', type=Unicode)
+        modifications = self.get_diff_with(record, context, new=new)
         if modifications:
             body += modifications
             body += '\n\n'
@@ -225,6 +222,7 @@ class Issue(Folder):
             body += template.format(title=title, separator=separator,
                                     comment=comment)
         # Notify / Send
+        root = context.root
         for to_addr in to_addrs:
             user = root.get_user(to_addr)
             if not user:
@@ -317,8 +315,8 @@ class Issue(Folder):
 
 
     def get_reported_by(self):
-        history = self.get_history()
-        return history.get_record(0).username
+        comments = self.metadata.get_property('comment')
+        return comments[0].parameters['author']
 
 
     def to_text(self):

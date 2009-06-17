@@ -18,7 +18,7 @@
 from operator import itemgetter
 
 # Import from itools
-from itools.datatypes import Enumerate, String, Integer, Boolean
+from itools.datatypes import Enumerate, String, Integer, Boolean, Unicode
 from itools.web import get_context
 
 
@@ -110,34 +110,27 @@ class UsersList(Enumerate):
     def get_options(cls):
         site_root = cls.tracker.get_site_root()
         users = site_root.get_resource('/users')
-        options = [{'name': x,
-                    'value': users.get_resource(x).get_title()}
-                    for x in site_root.get_members()]
+        options = [
+            {'name': x, 'value': users.get_resource(x).get_title()}
+            for x in site_root.get_members() ]
         options.sort(key=itemgetter('value'))
         return options
 
 
-def get_issue_fields(resource_tracker):
-    return {'title': String(mandatory=True),
-            'product': TrackerList(element='product',
-                                   tracker=resource_tracker, mandatory=True),
-            'module': ProductInfoList(element='module',
-                                      tracker=resource_tracker),
-            'version': ProductInfoList(element='version',
-                                       tracker=resource_tracker),
-            'type': TrackerList(element='type', tracker=resource_tracker,
-                                mandatory=True),
-            'state': TrackerList(element='state', tracker=resource_tracker,
-                                 mandatory=True),
-            'priority': TrackerList(element='priority',
-                                    tracker=resource_tracker),
-            'assigned_to': UsersList(tracker=resource_tracker),
-            'cc_list': UsersList(tracker=resource_tracker, multiple=True),
-            'comment': String,
-            'file': String}
-
-
-
-
-
+def get_issue_fields(resource):
+    return {
+        'title': Unicode(mandatory=True),
+        'product': TrackerList(element='product', tracker=resource,
+                               mandatory=True),
+        'module': ProductInfoList(element='module', tracker=resource),
+        'version': ProductInfoList(element='version', tracker=resource),
+        'type': TrackerList(element='type', tracker=resource,
+                            mandatory=True),
+        'state': TrackerList(element='state', tracker=resource,
+                             mandatory=True),
+        'priority': TrackerList(element='priority', tracker=resource),
+        'assigned_to': UsersList(tracker=resource),
+        'cc_add': UsersList(tracker=resource, multiple=True),
+        'comment': Unicode,
+        'file': String}
 

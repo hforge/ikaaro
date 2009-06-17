@@ -97,10 +97,10 @@
           </select>
         </td>
         <td valign="top" colspan="2">
-          <label for="cc-add" class="${cc_list/class}">CC:</label><br/>
+          <label for="cc-add" class="${cc_add/class}">CC:</label><br/>
           <select name="cc_add" id="cc-add" class="tracker-select"
             multiple="multiple" size="5">
-            <option stl:repeat="item cc_list/value" value="${item/name}"
+            <option stl:repeat="item cc_add/value" value="${item/name}"
               selected="${item/selected}">${item/value}</option>
           </select>
         </td>
