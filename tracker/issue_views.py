@@ -136,7 +136,11 @@ class Issue_Edit(STLForm):
 
 
     def get_schema(self, resource, context):
-        return get_issue_fields(resource.parent)
+        tracker = resource.parent
+        schema = get_issue_fields(tracker)
+        schema['cc_list'] = UsersList(tracker=tracker, multiple=True)
+        schema['cc_remove'] = Boolean(default=False)
+        return schema
 
 
     def get_value(self, resource, context, name, datatype):
