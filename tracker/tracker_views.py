@@ -886,7 +886,7 @@ class Tracker_ChangeSeveralBugs(Tracker_View):
                 record['comment'] += u'\n\n%s\n\n%s' % (title, modifications)
 
             # Save issue
-            history = issue.handler.get_handler('.history')
+            history = issue.get_history()
             history.add_record(record)
             # Mail (create a dict with a list of issues for each user)
             info = {'href': context.uri.resolve(issue.name),
