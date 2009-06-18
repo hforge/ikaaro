@@ -19,7 +19,7 @@ from operator import itemgetter
 from urllib import quote
 
 # Import from itools
-from itools.core import freeze
+from itools.core import freeze, merge_dicts
 from itools.csv import Property
 from itools.datatypes import String, Unicode, Enumerate
 from itools.gettext import MSG
@@ -93,9 +93,7 @@ class NewInstance(AutoForm):
 
 
     def get_schema(self, resource, context):
-        schema = dict(self.schema)
-        schema['path'] = PathEnumerate(resource=resource)
-        return schema
+        return merge_dicts(self.schema, path=PathEnumerate(resource=resource))
 
 
     def get_title(self, context):
