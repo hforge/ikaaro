@@ -34,8 +34,7 @@ from ikaaro.registry import register_resource_class
 from ikaaro.resource_ import DBResource
 from ikaaro.table import Table
 from ikaaro.text import Text
-from calendar_views import Calendar_Upload, Calendar_Download
-from calendar_views import MonthlyView, TimetablesForm, WeeklyView, DailyView
+from views import TimetablesForm
 
 
 class Timetables(DataType):
@@ -100,15 +99,6 @@ class CalendarBase(DBResource):
         return [self]
 
 
-    def get_action_url(self, **kw):
-        if 'day' in kw:
-            return ';add_event?date=%s' % Date.encode(kw['day'])
-        if 'id' in kw:
-            return ';edit_event?id=%s' % kw['id']
-
-        return None
-
-
     # Test if user in context is the organizer of a given event (or is admin)
     def is_organizer_or_admin(self, context, event):
         if self.get_access_control().is_admin(context.user, self):
@@ -138,25 +128,10 @@ class CalendarBase(DBResource):
         return timetables
 
 
-    def get_events_to_display(self, start, end):
-        file = self.handler
-        events = []
-        for event in file.search_events_in_range(start, end, sortby='date'):
-            e_dtstart = event.get_property('DTSTART').value
-            events.append((self.name, e_dtstart, event))
-        events.sort(lambda x, y : cmp(x[1], y[1]))
-        return {self.name: 0}, events
-
-
     #######################################################################
     # Views
     #######################################################################
-    monthly_view = MonthlyView()
-    weekly_view = WeeklyView()
-    daily_view = DailyView()
     edit_timetables = TimetablesForm()
-    download = Calendar_Download()
-    upload = Calendar_Upload()
     download_form = File_View()
 
 

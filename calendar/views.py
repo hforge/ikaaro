@@ -32,6 +32,7 @@ from itools.ical import Time
 from itools.stl import stl
 from itools.uri import encode_query, get_reference
 from itools.web import BaseView, STLForm, STLView, get_context, INFO, ERROR
+from itools.xapian import AndQuery, PhraseQuery, RangeQuery
 
 # Import from ikaaro
 from ikaaro.file_views import File_Upload
@@ -242,9 +243,30 @@ class CalendarView(STLView):
         return week_number
 
 
+    def get_events_to_display(self, start, end):
+        # Search
+        root = get_context().root
+        query = AndQuery(
+            PhraseQuery('format', 'event'),
+            RangeQuery('dtstart', None, end),
+            RangeQuery('dtend', start, None))
+        events = root.search(query)
+
+        # Ok
+        return events.get_documents(sort_by='dtstart')
+
+
+    def get_action_url(self, **kw):
+        if 'day' in kw:
+            return ';add_event?date=%s' % Date.encode(kw['day'])
+        if 'id' in kw:
+            return ';edit_event?id=%s' % kw['id']
+
+        return None
+
+
     def add_selector_ns(self, c_date, method, namespace):
         """Set header used to navigate into time.
-
         """
         week_number = '%0d' % self.get_week_number(c_date)
         current_week = MSG(u'Week {n}').gettext(n=week_number)
@@ -323,27 +345,6 @@ class CalendarView(STLView):
     ######################################################################
     # Public API
     ######################################################################
-
-    def get_action_url(self, **kw):
-        """Action to call on form submission.
-        """
-        return None
-
-
-    def get_events_to_display(self, start, end):
-        """Get a list of events as tuples (resource_name, start, properties{})
-        and a dict with all resources from whom they belong to.
-        """
-        resources, events = {}, []
-        resource = get_context().resource
-        for index, calendar in enumerate(resource.get_calendars()):
-            res, evts = calendar.get_events_to_display(start, end)
-            events.extend(evts)
-            resources[calendar.name] = index
-        events.sort(lambda x, y : cmp(x[1], y[1]))
-        return resources, events
-
-
     def events_to_namespace(self, resource, events, day, cal_indexes,
                             grid=False, show_conflicts=False):
         """Build namespace for events occuring on current day.
@@ -352,15 +353,15 @@ class CalendarView(STLView):
         Events is a list of events where each one follows:
           (resource_name, dtstart, event)
           'event' object must have a methods:
-              - get_end
-              - get_ns_event.
+              - get_ns_event
         """
+        root = get_context().root
         ns_events = []
         index = 0
         while index < len(events):
-            resource_name, dtstart, event = events[index]
-            e_dtstart = dtstart.date()
-            e_dtend = event.get_end().date()
+            event = events[index]
+            e_dtstart = event.dtstart.date()
+            e_dtend = event.dtend.date()
             # Current event occurs on current date
             # event begins during current tt
             starts_on = e_dtstart == day
@@ -370,7 +371,7 @@ class CalendarView(STLView):
             out_on = (e_dtstart < day and e_dtend > day)
 
             if starts_on or ends_on or out_on:
-                cal_index = cal_indexes[resource_name]
+                cal_index = 0
                 if len(cal_indexes.items()) < 2:
                     resource_name = None
                 if resource_name is not None:
@@ -384,11 +385,12 @@ class CalendarView(STLView):
                     if conflicts:
                         for uids in conflicts:
                             conflicts_list.update(uids)
+                event = root.get_resource(event.abspath)
                 ns_event = event.get_ns_event(day, resource_name=resource_name,
                                               conflicts_list=conflicts_list,
                                               grid=grid, starts_on=starts_on,
                                               ends_on=ends_on, out_on=out_on)
-                ns_event['url'] = current_resource.get_action_url(**ns_event)
+                ns_event['url'] = self.get_action_url(**ns_event)
                 ns_event['cal'] = cal_index
                 if 'resource' in ns_event.keys():
                     ns_event['resource']['color'] = cal_index
@@ -447,7 +449,8 @@ class MonthlyView(CalendarView):
 
         ###################################################################
         # Get a list of events to display on view
-        cal_indexes, events = resource.get_events_to_display(start, end)
+        events = self.get_events_to_display(start, end)
+        cal_indexes = {resource.name: 0}
         if isinstance(self.monthly_template, str):
             template = resource.get_resource(self.monthly_template)
         else:
@@ -472,7 +475,7 @@ class MonthlyView(CalendarView):
                     ns_day = {}
                     ns_day['nday'] = day.day
                     ns_day['selected'] = (day == today_date)
-                    ns_day['url'] = resource.get_action_url(day=day)
+                    ns_day['url'] = self.get_action_url(day=day)
                     # Insert events
                     ns_events, events = self.events_to_namespace(resource,
                         events, day, cal_indexes)
@@ -532,7 +535,9 @@ class WeeklyView(CalendarView):
         events = []
         # Get a list of events to display on view
         end = start_date + timedelta(days=ndays)
-        cal_indexes, events = resource.get_events_to_display(start_date, end)
+        events = self.get_events_to_display(start_date, end)
+        cal_indexes = {resource.name: 0}
+
         for header in headers:
             ns_day = {}
             # Add header if given
