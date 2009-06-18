@@ -21,8 +21,9 @@ from itools.core import get_abspath
 # Import from ikaaro
 from ikaaro.registry import register_document_type
 from ikaaro.skins import register_skin
-from calendar_ import CalendarBase, CalendarTable
+from calendar_ import CalendarBase
 from calendar_views import MonthlyView, WeeklyView
+import event
 
 
 __all__ = [
@@ -36,6 +37,3 @@ __all__ = [
 # Register skin
 path = get_abspath('ui')
 register_skin('calendar', path)
-
-# Register document type
-register_document_type(CalendarTable)

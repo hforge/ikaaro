@@ -34,7 +34,7 @@ from ikaaro.resource_ import DBResource
 from ikaaro.table import Table
 from ikaaro.text import Text
 from calendar_views import Calendar_Upload, Calendar_Download
-from calendar_views import AddEventForm, EditEventForm
+from calendar_views import EditEventForm
 from calendar_views import MonthlyView, TimetablesForm, WeeklyView, DailyView
 
 
@@ -154,7 +154,6 @@ class CalendarBase(DBResource):
     monthly_view = MonthlyView()
     weekly_view = WeeklyView()
     daily_view = DailyView()
-    add_event = AddEventForm()
     edit_event = EditEventForm()
     edit_timetables = TimetablesForm()
     download = Calendar_Download()
