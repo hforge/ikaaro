@@ -36,20 +36,6 @@ from views import ContextMenu
 
 
 
-class AddResourceMenu(ContextMenu):
-
-    title = MSG(u'Add Resource')
-
-    def get_items(self, resource, context):
-        base = '%s/;new_resource' % context.get_link(resource)
-        document_types = resource.get_document_types()
-        return [
-            {'src': '/ui/' + cls.class_icon16,
-             'title': cls.class_title.gettext(),
-             'href': '%s?type=%s' % (base, quote(cls.class_id))}
-            for cls in document_types ]
-
-
 class PathEnumerate(Enumerate):
 
     @classmethod
@@ -103,7 +89,7 @@ class NewInstance(AutoForm):
         TextWidget('name', title=MSG(u'Name'), default=''),
         SelectRadio('path', title=MSG(u'Path'), has_empty_option=False)])
     submit_value = MSG(u'Add')
-    context_menus = freeze([AddResourceMenu()])
+    context_menus = freeze([])
 
 
     def get_schema(self, resource, context):

@@ -73,6 +73,10 @@ legend {
   background-image: url(../icons/16x16/action_home.png);
 }
 
+#header a#top-menu-new {
+  background-image: url(../icons/16x16/new.png);
+}
+
 #header a#top-menu-profile {
   background-image: url(../icons/16x16/action_home.png);
 }

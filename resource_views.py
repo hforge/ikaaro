@@ -143,9 +143,6 @@ class DBResource_Backlinks(Folder_BrowseContent):
     search_template = None
     search_schema = {}
 
-    # Skip AddResourceMenu
-    context_menus = []
-
     def get_table_columns(self, resource, context):
         cols = Folder_BrowseContent.get_table_columns(self, resource, context)
         return [ col for col in cols if col[0] != 'checkbox' ]
