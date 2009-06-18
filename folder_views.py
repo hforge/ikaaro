@@ -42,7 +42,6 @@ from exceptions import ConsistencyError
 import messages
 from utils import generate_name, get_base_path_query
 from views import IconsView, SearchForm, ContextMenu
-from views_new import AddResourceMenu
 from workflow import WorkflowAware, get_workflow_preview
 
 
@@ -222,7 +221,7 @@ class Folder_BrowseContent(SearchForm):
 
     access = 'is_allowed_to_view'
     title = MSG(u'Browse Content')
-    context_menus = [AddResourceMenu()]
+    context_menus = []
     query_schema = merge_dicts(SearchForm.query_schema,
         sort_by=String(default='mtime'),
         reverse=Boolean(default=True))

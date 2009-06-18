@@ -33,21 +33,6 @@ from views import ContextMenu
 
 
 
-class AddResourceMenu(ContextMenu):
-
-    title = MSG(u'Add Resource')
-
-    def get_items(self):
-        base = '%s/;new_resource' % self.context.get_link(self.resource)
-        document_types = self.resource.get_document_types()
-        return [
-            {'src': '/ui/' + cls.class_icon16,
-             'title': cls.class_title.gettext(),
-             'href': '%s?type=%s' % (base, quote(cls.class_id))}
-            for cls in document_types ]
-
-
-
 class NewInstance(AutoForm):
     """This is the base class for all ikaaro forms meant to create and
     add a new resource to the database.
@@ -65,7 +50,7 @@ class NewInstance(AutoForm):
         title_widget,
         TextWidget('name', title=MSG(u'Name'), default='')])
     submit_value = MSG(u'Add')
-    context_menus = freeze([AddResourceMenu()])
+    context_menus = freeze([])
 
 
     def get_title(self, context):

@@ -86,6 +86,10 @@ body > #header {
   background-image: url("../icons/16x16/action_logout.png");
 }
 
+#header a#links-menu-new {
+  background-image: url(../icons/16x16/new.png);
+}
+
 #header #languages a.selected {
   font-weight: bold;
 }
