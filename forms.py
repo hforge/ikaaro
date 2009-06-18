@@ -336,7 +336,6 @@ class SelectRadio(Widget):
 
 
     def get_namespace(self, datatype, value):
-        none_selected = True
         # Check whether the value is already a list of options
         # FIXME This is done to avoid a bug when using a select widget in an
         # auto-form, where the 'datatype.get_namespace' method is called
@@ -354,6 +353,7 @@ class SelectRadio(Widget):
                 break
         else:
             # Select first item if no empty option
+            none_selected = True
             if not has_empty_option and options:
                 options[0]['selected'] = True
         return {

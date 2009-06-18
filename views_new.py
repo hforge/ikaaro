@@ -15,20 +15,23 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
+from operator import itemgetter
 from urllib import quote
 
 # Import from itools
 from itools.core import freeze
 from itools.csv import Property
-from itools.datatypes import String, Unicode
+from itools.datatypes import String, Unicode, Enumerate
 from itools.gettext import MSG
 from itools.handlers import checkid
-from itools.web import FormError
+from itools.web import FormError, get_context
+from itools.xapian import AndQuery, PhraseQuery
 
 # Import from ikaaro
-from forms import AutoForm, TextWidget, title_widget
+from forms import AutoForm, TextWidget, title_widget, SelectRadio
 import messages
 from registry import get_resource_class, get_document_types
+from utils import get_base_path_query
 from views import ContextMenu
 
 
@@ -47,6 +50,40 @@ class AddResourceMenu(ContextMenu):
             for cls in document_types ]
 
 
+class PathEnumerate(Enumerate):
+
+    @classmethod
+    def get_options(cls):
+        context = get_context()
+
+        # Build the query
+        site_root = context.site_root
+        base_path = site_root.get_abspath()
+        base_path = str(base_path)
+        query = AndQuery(
+            get_base_path_query(base_path),
+            PhraseQuery('is_folder', True))
+
+        # Search
+        root = context.root
+        brains = root.search(query)
+
+        # The namespace
+        options = [
+            {'name': x.abspath, 'value': x.abspath}
+            for x in brains.get_documents() ]
+        options.sort(key=itemgetter('value'))
+
+        # Ok
+        return options
+
+
+    @classmethod
+    def get_default(cls):
+        resource = cls.resource
+        default = resource.get_abspath()
+        return str(default)
+
 
 class NewInstance(AutoForm):
     """This is the base class for all ikaaro forms meant to create and
@@ -63,9 +100,16 @@ class NewInstance(AutoForm):
         'title': Unicode})
     widgets = freeze([
         title_widget,
-        TextWidget('name', title=MSG(u'Name'), default='')])
+        TextWidget('name', title=MSG(u'Name'), default=''),
+        SelectRadio('path', title=MSG(u'Path'), has_empty_option=False)])
     submit_value = MSG(u'Add')
     context_menus = freeze([AddResourceMenu()])
+
+
+    def get_schema(self, resource, context):
+        schema = dict(self.schema)
+        schema['path'] = PathEnumerate(resource=resource)
+        return schema
 
 
     def get_title(self, context):
@@ -126,19 +170,24 @@ class NewInstance(AutoForm):
 
 
     def action(self, resource, context, form):
-        name = form['name']
-        title = form['title']
+        # Get the container
+        path = form['path']
+        container = context.root.get_resource(path)
 
         # Create the resource
+        name = form['name']
         class_id = context.query['type']
         cls = get_resource_class(class_id)
-        child = cls.make_resource(cls, resource, name)
+        child = cls.make_resource(cls, container, name)
+
         # The metadata
-        language = resource.get_content_language(context)
+        title = form['title']
+        language = container.get_content_language(context)
         title = Property(title, lang=language)
         child.metadata.set_property('title', title)
 
-        goto = './%s/' % name
+        # Ok
+        goto = '%s/%s/' % (path, name)
         return context.come_back(messages.MSG_NEW_RESOURCE, goto=goto)
 
 
