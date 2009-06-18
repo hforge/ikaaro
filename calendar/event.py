@@ -27,7 +27,7 @@ from itools.gettext import MSG
 # Import from ikaaro
 from ikaaro.file import File
 from ikaaro.folder import Folder
-from ikaaro.forms import DateWidget, SelectWidget, TextWidget
+from ikaaro.forms import AutoForm, DateWidget, SelectWidget, TextWidget
 from ikaaro.forms import description_widget, title_widget
 from ikaaro import messages
 from ikaaro.registry import register_resource_class, register_document_type
@@ -55,8 +55,9 @@ class Status(Enumerate):
 
 
 
+
 class Event_NewInstance(NewInstance):
-    
+
     query_schema = freeze({
         'type': String,
         'title': Unicode,
@@ -122,6 +123,45 @@ class Event_NewInstance(NewInstance):
         return context.come_back(messages.MSG_NEW_RESOURCE, goto=goto)
 
 
+
+class Event_Edit(AutoForm):
+
+    access = 'is_allowed_to_edit'
+    title = MSG(u'Edit event')
+
+
+    schema = freeze({
+        'title': Unicode(mandatory=True),
+        'dtstart': TodayDataType(mandatory=True),
+        'dtend': TodayDataType,
+        'description': Unicode,
+        'location': String,
+        'status': Status})
+
+    widgets = freeze([
+        title_widget,
+        DateWidget('dtstart', title=MSG(u'Start')),
+        DateWidget('dtend', title=MSG(u'End')),
+        description_widget,
+        TextWidget('location', title=MSG(u'Location')),
+        SelectWidget('status', title=MSG(u'Status'), has_empty_option=False)])
+
+
+    def get_value(self, resource, context, name, datatype):
+        return resource.get_property(name)
+
+
+    def action(self, resource, context, form):
+        # The metadata
+        language = resource.get_content_language(context)
+        for name in 'title', 'description':
+            property = Property(form[name], lang=language)
+            resource.set_property(name, property)
+        for name in 'dtstart', 'dtend', 'location', 'status':
+            resource.set_property(name, form[name])
+
+
+
 class Event(File):
 
     class_id = 'event'
@@ -129,6 +169,7 @@ class Event(File):
     class_description = MSG(u'...')
     class_icon16 = 'icons/16x16/icalendar.png'
     class_icon48 = 'icons/48x48/icalendar.png'
+    class_views = ['edit', 'backlinks', 'edit_state']
 
 
     @classmethod
@@ -143,6 +184,7 @@ class Event(File):
 
     # Views
     new_instance = Event_NewInstance()
+    edit = Event_Edit()
 
 
 
