@@ -61,7 +61,7 @@ class PathEnumerate(Enumerate):
         base_path = site_root.get_abspath()
         base_path = str(base_path)
         query = AndQuery(
-            get_base_path_query(base_path),
+            get_base_path_query(base_path, include_container=True),
             PhraseQuery('is_folder', True))
 
         # Search
