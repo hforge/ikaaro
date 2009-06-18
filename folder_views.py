@@ -43,7 +43,6 @@ from exceptions import ConsistencyError
 import messages
 from utils import generate_name, get_base_path_query
 from views import IconsView, SearchForm, ContextMenu
-from views_new import AddResourceMenu
 from workflow import WorkflowAware
 
 
@@ -233,7 +232,7 @@ class Folder_BrowseContent(SearchForm):
 
     access = 'is_allowed_to_view'
     title = MSG(u'Browse Content')
-    context_menus = [AddResourceMenu()]
+    context_menus = []
     schema = {
         'ids': String(multiple=True, mandatory=True),
     }
