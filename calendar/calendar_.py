@@ -95,10 +95,6 @@ class CalendarBase(DBResource):
                   ((19,0),(20,0)), ((20,0),(21,0))]
 
 
-    def get_calendars(self):
-        return [self]
-
-
     # Test if user in context is the organizer of a given event (or is admin)
     def is_organizer_or_admin(self, context, event):
         if self.get_access_control().is_admin(context.user, self):
@@ -111,26 +107,7 @@ class CalendarBase(DBResource):
         return ac.is_allowed_to_edit(context.user, self.parent)
 
 
-    def get_timetables(self):
-        """Build a list of timetables represented as tuples(start, end).
-        Data are taken from metadata or from class value.
-
-        Example of metadata:
-          <timetables>(8,0),(10,0);(10,30),(12,0);(13,30),(17,30)</timetables>
-        """
-        if self.has_property('timetables'):
-            return self.get_property('timetables')
-
-        # From class value
-        timetables = []
-        for index, (start, end) in enumerate(self.timetables):
-            timetables.append((time(start[0], start[1]), time(end[0], end[1])))
-        return timetables
-
-
-    #######################################################################
     # Views
-    #######################################################################
     edit_timetables = TimetablesForm()
     download_form = File_View()
 
@@ -213,31 +190,6 @@ class Calendar(CalendarBase, Text):
         schema = Text.get_metadata_schema()
         schema['timetables'] = Timetables
         return schema
-
-
-
-class CalendarContainer(CalendarBase):
-
-    @classmethod
-    def get_metadata_schema(cls):
-        return {'timetables': Timetables}
-
-
-    def get_calendars(self, types=None):
-        """List of sources from which taking events.
-        """
-        if types is None:
-            types = (Calendar, CalendarTable)
-
-        if isinstance(self, Folder):
-            calendars = self.search_resources(cls=types)
-            return list(calendars)
-        return [self]
-
-
-    # Views
-    download = None
-    upload = None
 
 
 

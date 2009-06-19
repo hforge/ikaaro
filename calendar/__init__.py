@@ -22,8 +22,8 @@ from itools.core import get_abspath
 from ikaaro.registry import register_document_type
 from ikaaro.skins import register_skin
 from calendar_ import CalendarBase
-from calendar_views import MonthlyView, WeeklyView
 import event
+from views import MonthlyView, WeeklyView
 
 
 __all__ = [

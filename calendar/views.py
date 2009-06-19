@@ -27,7 +27,6 @@ from operator import itemgetter
 from itools.csv import Property
 from itools.datatypes import Date, Enumerate, Integer, String, Unicode
 from itools.gettext import MSG
-from itools.ical import get_grid_data
 from itools.ical import Time
 from itools.stl import stl
 from itools.uri import encode_query, get_reference
@@ -36,6 +35,7 @@ from itools.xapian import AndQuery, PhraseQuery, RangeQuery
 
 # Import from ikaaro
 from ikaaro.file_views import File_Upload
+from gridlayout import get_grid_data
 
 
 resolution = timedelta.resolution
@@ -494,6 +494,12 @@ class WeeklyView(CalendarView):
     title = MSG(u'Weekly View')
     template = '/ui/calendar/weekly_view.xml'
 
+    timetables = [
+        ((7,0), (8,0)), ((8,0), (9,0)), ((9,0), (10,0)), ((10,0), (11,0)),
+        ((11,0), (12,0)), ((12,0), (13,0)), ((13,0), (14,0)), ((14,0),
+        (15,0)), ((15,0), (16,0)), ((16,0), (17,0)), ((17,0), (18,0)),
+        ((18,0), (19,0)), ((19,0), (20,0)), ((20,0), (21,0))]
+
 
     def get_weekly_templates(self):
         """Get weekly templates to display events with timetables, and full
@@ -502,17 +508,30 @@ class WeeklyView(CalendarView):
         return None, None
 
 
+    def get_timetables(self):
+        """Build a list of timetables represented as tuples(start, end).
+        Data are taken from metadata or from class value.
+
+        Example of metadata:
+          <timetables>(8,0),(10,0);(10,30),(12,0);(13,30),(17,30)</timetables>
+        """
+        # From class value
+        timetables = []
+        for index, (start, end) in enumerate(self.timetables):
+            timetables.append((time(start[0], start[1]), time(end[0], end[1])))
+        return timetables
+
+
     # Get timetables as a list of string containing time start of each one
     def get_timetables_grid_ns(self, resource, start_date):
         """Build namespace to give as grid to gridlayout factory.
         """
         ns_timetables = []
-        for calendar in resource.get_calendars():
-            for start, end in calendar.get_timetables():
-                for value in (start, end):
-                    value = Time.encode(value)
-                    if value not in ns_timetables:
-                        ns_timetables.append(value)
+        for start, end in self.get_timetables():
+            for value in (start, end):
+                value = Time.encode(value)
+                if value not in ns_timetables:
+                    ns_timetables.append(value)
         return ns_timetables
 
 
@@ -781,9 +800,7 @@ class DailyView(CalendarView):
                 ns_timetables.append(None)
 
         # For each found calendar
-        ns_calendars = [
-            self.get_ns_calendar(x, c_date, timetables)
-            for x in resource.get_calendars() ]
+        ns_calendars = [self.get_ns_calendar(resource, c_date, timetables)]
 
         # Ok
         return {

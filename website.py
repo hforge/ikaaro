@@ -31,7 +31,7 @@ from itools.xml import XMLParser
 
 # Import from ikaaro
 from access import RoleAware
-from calendar.views import MonthlyView
+from calendar.views import MonthlyView, WeeklyView
 from control_panel import ControlPanel, CPAddUser, CPBrokenLinks
 from control_panel import CPBrowseUsers, CPEditContactOptions, CPEditLanguages
 from control_panel import CPEditMembership, CPEditSecurityPolicy
@@ -187,6 +187,7 @@ class WebSite(RoleAware, Folder):
 
     # Calendar views
     monthly_view = MonthlyView()
+    weekly_view = WeeklyView()
 
 
 ###########################################################################
