@@ -425,7 +425,7 @@ def get_grid_data(data, grid, start_date=None, templates=(None, None),
             for column in table:
                 for cell in column['cells']:
                     if cell['newurl'] is not None:
-                        url = '%s&date=%s' % (cell['newurl'], str_date)
+                        url = cell['newurl'] % (str_date, str_date)
                         cell['newurl'] = url
                     if cell['new']:
                         cell['ns'] = stl(template, {'cell': cell,
