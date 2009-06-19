@@ -185,8 +185,8 @@ class Event(File):
     class_id = 'event'
     class_title = MSG(u'Event')
     class_description = MSG(u'...')
-    class_icon16 = 'icons/16x16/icalendar.png'
-    class_icon48 = 'icons/48x48/icalendar.png'
+    class_icon16 = 'icons/16x16/event.png'
+    class_icon48 = 'icons/48x48/event.png'
     class_views = ['edit', 'backlinks', 'edit_state']
 
 
