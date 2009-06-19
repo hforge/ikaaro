@@ -35,7 +35,7 @@ from itools.xapian import AndQuery, PhraseQuery, RangeQuery
 
 # Import from ikaaro
 from ikaaro.file_views import File_Upload
-from gridlayout import get_grid_data
+from grid import get_grid_data
 
 
 resolution = timedelta.resolution
