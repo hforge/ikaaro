@@ -258,9 +258,11 @@ class CalendarView(STLView):
 
     def get_action_url(self, **kw):
         if 'day' in kw:
-            return ';add_event?date=%s' % Date.encode(kw['day'])
+            url = ';new_resource?type=event&dtstart=%s&dtend=%s'
+            date = Date.encode(kw['day'])
+            return url % (date, date)
         if 'id' in kw:
-            return ';edit_event?id=%s' % kw['id']
+            return '%s/;edit' % kw['id']
 
         return None
 
@@ -372,21 +374,15 @@ class CalendarView(STLView):
 
             if starts_on or ends_on or out_on:
                 cal_index = 0
-                if len(cal_indexes.items()) < 2:
-                    resource_name = None
-                if resource_name is not None:
-                    current_resource = self.get_resource(resource_name)
-                else:
-                    current_resource = resource
                 conflicts_list = set()
                 if show_conflicts:
-                    handler = current_resource.handler
+                    handler = resource.handler
                     conflicts = handler.get_conflicts(e_dtstart, e_dtend)
                     if conflicts:
                         for uids in conflicts:
                             conflicts_list.update(uids)
                 event = root.get_resource(event.abspath)
-                ns_event = event.get_ns_event(day, resource_name=resource_name,
+                ns_event = event.get_ns_event(day,
                                               conflicts_list=conflicts_list,
                                               grid=grid, starts_on=starts_on,
                                               ends_on=ends_on, out_on=out_on)
