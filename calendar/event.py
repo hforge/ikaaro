@@ -229,8 +229,6 @@ class Event(File):
           SUMMARY: 'summary of the event'
           STATUS: 'status' (class: cal_conflict, if id in conflicts_list)
           ORGANIZER: 'organizer of the event'
-
-##          XXX url: url to access edit_event_form on current event
         """
         ns = {
             'SUMMARY': self.get_property('title'),
@@ -283,14 +281,6 @@ class Event(File):
         else:
             id = '%s/%s' % (resource_name, id)
         ns['id'] = id
-#        resource =
-        # Set url to action like edit_event_form
-#        url = resource_name.get_action_url(day=day)
-#        if url:
-#            url = '%s?id=%s' % (url, id)
-#            if timetable:
-#                url = '%s&timetable=%s' % (url, timetable)
-#        ns['url'] = url
 
         return ns
 
