@@ -82,8 +82,6 @@ class CalendarBase(DBResource):
 
     class_title = MSG(u'Calendar')
     class_description = MSG(u'Schedule your time with calendar files.')
-    class_icon16 = 'icons/16x16/icalendar.png'
-    class_icon48 = 'icons/48x48/icalendar.png'
     class_views = ['monthly_view', 'weekly_view', 'daily_view',
                    'edit_timetables', 'upload', 'download_form']
 
