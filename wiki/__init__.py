@@ -24,15 +24,10 @@ import docutils
 from itools.core import get_abspath
 
 # Import from ikaaro
-from ikaaro.registry import register_document_type
 from ikaaro.skins import register_skin
-from folder import WikiFolder
-from page import WikiPage
+import page
 
 
 # Register skin
 path = get_abspath('ui')
 register_skin('wiki', path)
-
-# Register document type
-register_document_type(WikiFolder)

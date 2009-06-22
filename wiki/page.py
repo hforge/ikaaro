@@ -35,9 +35,9 @@ from itools.web import get_context
 
 # Import from ikaaro
 from ikaaro.text import Text
-from ikaaro.resource_ import DBResource
-from page_views import WikiPage_Edit, WikiPage_Help, WikiPage_ToPDF
-from page_views import WikiPage_View
+from ikaaro.registry import register_document_type
+from page_views import WikiPage_NewInstance, WikiPage_Edit, WikiPage_Help
+from page_views import WikiPage_ToPDF, WikiPage_View
 from page_views import is_external
 
 
@@ -249,7 +249,7 @@ class WikiPage(Text):
     #######################################################################
     # User Interface
     #######################################################################
-    new_instance = DBResource.new_instance
+    new_instance = WikiPage_NewInstance()
     view = WikiPage_View()
     to_pdf = WikiPage_ToPDF()
     edit = WikiPage_Edit()
@@ -259,3 +259,9 @@ class WikiPage(Text):
     def get_context_menus(self):
         return self.parent.get_context_menus()
 
+
+
+###########################################################################
+# Register
+###########################################################################
+register_document_type(WikiPage)
