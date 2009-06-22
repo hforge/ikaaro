@@ -207,11 +207,11 @@ def check_database(target):
 
     # Check modifications to the working tree not yet in the index.
     command = ['git', 'ls-files', '-m', '-d', '-o']
-    data1 = get_pipe(command, cwd=cwd).read()
+    data1 = get_pipe(command, cwd=cwd)
 
     # Check changes in the index not yet committed.
     command = ['git', 'diff-index', 'HEAD', '--name-only']
-    data2 = get_pipe(command, cwd=cwd).read()
+    data2 = get_pipe(command, cwd=cwd)
 
     # Everything looks fine
     if len(data1) == 0 and len(data2) == 0:
