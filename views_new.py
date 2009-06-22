@@ -15,26 +15,170 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
+from datetime import date
 from operator import itemgetter
 from urllib import quote
 
 # Import from itools
 from itools.core import freeze, merge_dicts
 from itools.csv import Property
-from itools.datatypes import String, Unicode, Enumerate
+from itools.datatypes import Date, String, Unicode, Enumerate
 from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.web import FormError, get_context
 from itools.xapian import AndQuery, PhraseQuery
 
 # Import from ikaaro
-from forms import AutoForm, TextWidget, title_widget, SelectRadio
+from forms import AutoForm, DateWidget, SelectRadio, TextWidget, title_widget
 import messages
 from registry import get_resource_class, get_document_types
 from utils import get_base_path_query
 from views import ContextMenu
 
 
+
+###########################################################################
+# The default new-instance form creates the resources in the 'yyyy/mm/dd'
+# folder hierarchy, starting from the site-root.
+###########################################################################
+class TodayDataType(Date):
+
+    @classmethod
+    def get_default(cls):
+        return date.today()
+
+
+
+class NewInstanceByDate(AutoForm):
+    """This is the base class for all ikaaro forms meant to create and
+    add a new resource to the database.
+    """
+
+    access = 'is_allowed_to_add'
+    query_schema = freeze({
+        'type': String,
+        'title': Unicode,
+        'date': TodayDataType})
+    schema = freeze({
+        'title': Unicode,
+        'date': TodayDataType(mandatory=True)})
+    widgets = freeze([
+        title_widget,
+        DateWidget('date', title=MSG(u'Date'))])
+    submit_value = MSG(u'Add')
+    context_menus = freeze([])
+
+
+    def get_title(self, context):
+        if self.title is not None:
+            return self.title
+        type = context.query['type']
+        if not type:
+            return MSG(u'Add resource').gettext()
+        cls = get_resource_class(type)
+        class_title = cls.class_title.gettext()
+        title = MSG(u'Add {class_title}')
+        return title.gettext(class_title=class_title)
+
+
+    def get_value(self, resource, context, name, datatype):
+        if name in self.get_query_schema():
+            value = context.query[name]
+            if value is not None:
+                return value
+        return AutoForm.get_value(self, resource, context, name, datatype)
+
+
+    def icon(self, resource, **kw):
+        type = kw.get('type')
+        cls = get_resource_class(type)
+        if cls is not None:
+            return cls.get_class_icon()
+        # Default
+        return 'new.png'
+
+
+    def get_new_resource_name(self, form):
+        return form['title'].strip()
+
+
+    def _get_form(self, resource, context):
+        form = AutoForm._get_form(self, resource, context)
+        name = self.get_new_resource_name(form)
+
+        # Check the name
+        if not name:
+            raise FormError, messages.MSG_NAME_MISSING
+
+        name = checkid(name)
+        if name is None:
+            raise FormError, messages.MSG_BAD_NAME
+
+        # Check the name is free
+        if resource.get_resource(name, soft=True) is not None:
+            raise FormError, messages.MSG_NAME_CLASH
+
+        # Ok
+        form['name'] = name
+        return form
+
+
+    def get_date(self, context, form):
+        return form['date']
+
+
+    def get_container(self, context, form):
+        from folder import Folder
+
+        # The path of the container
+        date = self.get_date(context, form)
+        path = ['%04d' % date.year, '%02d' % date.month, '%02d' % date.day]
+
+        # Get the container, create it if needed
+        container = context.site_root
+        for name in path:
+            folder = container.get_resource(name, soft=True)
+            if folder is None:
+                folder = Folder.make_resource(Folder, container, name)
+            container = folder
+
+        return container
+
+
+    def get_resource_class(self, context, form):
+        class_id = context.query['type']
+        return get_resource_class(class_id)
+
+
+    def modify_resource(self, resource, context, form, child):
+        title = form['title']
+        language = resource.get_content_language(context)
+        title = Property(title, lang=language)
+        child.metadata.set_property('title', title)
+
+
+    def action(self, resource, context, form):
+        # 1. Get the container
+        container = self.get_container(context, form)
+
+        # 2. Make the resource
+        cls = self.get_resource_class(context, form)
+        child = cls.make_resource(cls, container, form['name'])
+
+        # 3. Edit the resource
+        self.modify_resource(resource, context, form, child)
+
+        # 4. Ok
+        goto = child.get_abspath()
+        goto = str(goto)
+        return context.come_back(messages.MSG_NEW_RESOURCE, goto=goto)
+
+
+
+###########################################################################
+# The 'NewInstance' view adds a resource to a folder explicitely selected
+# in the form.
+###########################################################################
 
 class PathEnumerate(Enumerate):
 
@@ -71,10 +215,7 @@ class PathEnumerate(Enumerate):
         return str(default)
 
 
-class NewInstance(AutoForm):
-    """This is the base class for all ikaaro forms meant to create and
-    add a new resource to the database.
-    """
+class NewInstance(NewInstanceByDate):
 
     access = 'is_allowed_to_add'
     query_schema = freeze({
@@ -96,35 +237,6 @@ class NewInstance(AutoForm):
         return merge_dicts(self.schema, path=PathEnumerate(resource=resource))
 
 
-    def get_title(self, context):
-        if self.title is not None:
-            return self.title
-        type = context.query['type']
-        if not type:
-            return MSG(u'Add resource').gettext()
-        cls = get_resource_class(type)
-        class_title = cls.class_title.gettext()
-        title = MSG(u'Add {class_title}')
-        return title.gettext(class_title=class_title)
-
-
-    def get_value(self, resource, context, name, datatype):
-        if name in self.get_query_schema():
-            value = context.query[name]
-            if value is not None:
-                return value
-        return AutoForm.get_value(self, resource, context, name, datatype)
-
-
-    def icon(self, resource, **kw):
-        type = kw.get('type')
-        cls = get_resource_class(type)
-        if cls is not None:
-            return cls.get_class_icon()
-        # Default
-        return 'new.png'
-
-
     def get_new_resource_name(self, form):
         # If the name is not explicitly given, use the title
         name = form['name']
@@ -134,50 +246,16 @@ class NewInstance(AutoForm):
         return name or title
 
 
-    def _get_form(self, resource, context):
-        form = AutoForm._get_form(self, resource, context)
-        name = self.get_new_resource_name(form)
-
-        # Check the name
-        if not name:
-            raise FormError, messages.MSG_NAME_MISSING
-
-        name = checkid(name)
-        if name is None:
-            raise FormError, messages.MSG_BAD_NAME
-
-        # Check the name is free
-        if resource.get_resource(name, soft=True) is not None:
-            raise FormError, messages.MSG_NAME_CLASH
-
-        # Ok
-        form['name'] = name
-        return form
-
-
-    def action(self, resource, context, form):
-        # Get the container
+    def get_container(self, context, form):
         path = form['path']
-        container = context.root.get_resource(path)
-
-        # Create the resource
-        name = form['name']
-        class_id = context.query['type']
-        cls = get_resource_class(class_id)
-        child = cls.make_resource(cls, container, name)
-
-        # The metadata
-        title = form['title']
-        language = container.get_content_language(context)
-        title = Property(title, lang=language)
-        child.metadata.set_property('title', title)
-
-        # Ok
-        goto = '%s/%s/' % (path, name)
-        return context.come_back(messages.MSG_NEW_RESOURCE, goto=goto)
+        return context.site_root.get_resource(path)
 
 
 
+###########################################################################
+# The 'ProxyNewInstance' is like 'NewInstance', it just adds the possibility
+# to choose the sub-type of the resource to be added.
+###########################################################################
 class ProxyNewInstance(NewInstance):
     """This particular view allows to choose the resource to add from a
     collection of resource classes, with radio buttons.

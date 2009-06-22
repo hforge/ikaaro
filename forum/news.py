@@ -1,7 +1,5 @@
 # -*- coding: UTF-8 -*-
-# Copyright (C) 2007 Hervé Cauwelier <herve@itaapy.com>
-# Copyright (C) 2007 Sylvain Taverne <sylvain@itaapy.com>
-# Copyright (C) 2007-2008 Juan David Ibáñez Palomar <jdavid@itaapy.com>
+# Copyright (C) 2009 Juan David Ibáñez Palomar <jdavid@itaapy.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,13 +15,35 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import get_abspath
+from itools.gettext import MSG
 
 # Import from ikaaro
-from ikaaro.skins import register_skin
-import news
+from ikaaro.webpage import WebPage
+from ikaaro.registry import register_resource_class, register_document_type
+from ikaaro.views_new import NewInstanceByDate
 
 
-# Register skin
-path = get_abspath('ui')
-register_skin('forum', path)
+class News_NewInstance(NewInstanceByDate):
+
+    def get_resource_class(self, context, form):
+        return News
+
+
+
+class News(WebPage):
+
+    class_id = 'news'
+    class_title = MSG(u'News')
+    class_description = MSG(u'...')
+    class_icon16 = 'icons/16x16/news.png'
+    class_icon48 = 'icons/48x48/news.png'
+
+
+    # Views
+    new_instance = News_NewInstance()
+
+
+
+# Register
+register_resource_class(News)
+register_document_type(News)
