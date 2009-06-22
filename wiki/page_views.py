@@ -33,7 +33,7 @@ from docutils.utils import SystemMessage
 from docutils import nodes
 
 # Import from itools
-from itools.core import guess_extension
+from itools.core import freeze, guess_extension
 from itools.datatypes import DateTime, String, Unicode
 from itools.gettext import MSG
 from itools.handlers import checkid, get_handler, File as FileHandler
@@ -47,8 +47,43 @@ from itools.web import BaseView, STLForm, STLView, ERROR
 from itools.xml import XMLParser, XMLError
 
 # Import from ikaaro
+from ikaaro.forms import name_widget, title_widget
 from ikaaro import messages
+from ikaaro.views_new import NewInstanceByDate
 from ikaaro.webpage import is_edit_conflict
+
+
+
+class WikiPage_NewInstance(NewInstanceByDate):
+
+    query_schema = freeze({'type': String, 'name': String, 'title': Unicode})
+    schema = freeze({'name': String, 'title': Unicode})
+    widgets = freeze([title_widget, name_widget])
+
+
+    def get_new_resource_name(self, form):
+        # If the name is not explicitly given, use the title
+        name = form['name']
+        title = form['title'].strip()
+        if name is None:
+            return title
+        return name or title
+
+
+    def get_container(self, context, form):
+        from folder import WikiFolder
+
+        root = context.site_root
+        wiki = root.get_resource('wiki', soft=True)
+        if wiki is None:
+            return WikiFolder.make_resource(WikiFolder, root, 'wiki')
+        return wiki
+
+
+    def get_resource_class(self, context, form):
+        from page import WikiPage
+        return WikiPage
+
 
 
 figure_style_converter = compile(r'\\begin\{figure\}\[.*?\]')

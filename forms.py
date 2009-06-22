@@ -566,6 +566,7 @@ class RTEWidget(Widget):
 ###########################################################################
 # Common widgets to reuse
 ###########################################################################
+name_widget = TextWidget('name', title=MSG(u'Name'), default='')
 title_widget = TextWidget('title', title=MSG(u'Title'))
 description_widget = MultilineWidget('description',
                                      title=MSG(u'Description'), rows=8)

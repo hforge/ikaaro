@@ -35,10 +35,9 @@ from itools.web import get_context
 
 # Import from ikaaro
 from ikaaro.text import Text
-from ikaaro.registry import register_resource_class
-from ikaaro.resource_ import DBResource
-from page_views import WikiPage_Edit, WikiPage_Help, WikiPage_ToPDF
-from page_views import WikiPage_View
+from ikaaro.registry import register_resource_class, register_document_type
+from page_views import WikiPage_NewInstance, WikiPage_Edit, WikiPage_Help
+from page_views import WikiPage_ToPDF, WikiPage_View
 
 
 
@@ -251,7 +250,7 @@ class WikiPage(Text):
     #######################################################################
     # User Interface
     #######################################################################
-    new_instance = DBResource.new_instance
+    new_instance = WikiPage_NewInstance()
     view = WikiPage_View()
     to_pdf = WikiPage_ToPDF()
     edit = WikiPage_Edit()
@@ -267,3 +266,4 @@ class WikiPage(Text):
 # Register
 ###########################################################################
 register_resource_class(WikiPage)
+register_document_type(WikiPage)
