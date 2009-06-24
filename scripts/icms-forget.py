@@ -17,29 +17,43 @@
 
 # Import from the Standard Library
 from datetime import date
+from glob import glob
 from optparse import OptionParser
+from tempfile import mkdtemp
 
 # Import from itools
 from itools import __version__
 from itools.core import get_pipe
+from itools import vfs
+
+
+def get_commits(target):
+    """Returns a list with one tuple for every commit:
+
+        [(<commit hash>, <days since today>), ...]
+    """
+    cwd = '%s/database' % target
+    command = ['git', 'log', '--pretty=format:%H %ct']
+    data = get_pipe(command, cwd=cwd)
+    today = date.today()
+
+    commits = []
+    for line in data.splitlines():
+        commit, seconds = line.split()
+        delta = today - date.fromtimestamp(float(seconds))
+        commits.append((commit, delta.days))
+
+    return commits
+
 
 
 def info(parser, target):
-    cwd = '%s/database' % target
     # Get a list of the dates of every commit
-    command = ['git', 'log', '--pretty=format:%ct']
-    data = get_pipe(command, cwd=cwd)
-    lines = data.splitlines()
-    dates = [ lines[x] for x in range(1, len(lines), 2) ]
-    dates = [ date.fromtimestamp(float(x)) for x in dates ]
-    total = len(dates)
+    deltas = [ y for (x, y) in get_commits(target) ]
+    total = len(deltas)
     if total == 0:
         print 'There is nothing to forget.'
         return
-
-    # Relative to today
-    today = date.today()
-    deltas = [ (today - x).days for x in dates ]
 
     # Count
     cum = []
@@ -63,7 +77,62 @@ def info(parser, target):
 
 
 def forget(parser, target, days):
-    raise NotImplementedError
+    # Find out the commit to start from
+    commits = get_commits(target)
+    if len(commits) == 0:
+        print 'There is nothing to forget.'
+        return
+
+    for commit in commits:
+        since, delta = commit
+        if delta > days:
+            break
+
+    # 1. Copy database
+    print '(1) Copying the database (may take a while)'
+    vfs.copy('%s/database' % target, '%s/database.new' % target)
+
+    # 2. Make the patches
+    print '(2) Make the pile of patches to re-apply'
+    cwd = '%s/database.new' % target
+    path = mkdtemp()
+    command = ['git', 'format-patch', '-o', path, since]
+    get_pipe(command, cwd=cwd)
+
+    # 3. Reset
+    print '(3) Reset (may take a while)'
+    command = ['git', 'reset', '--hard', since]
+    get_pipe(command, cwd=cwd)
+
+    # 4. Remove '.git'
+    print '(4) Remove Git archive'
+    vfs.remove('%s/.git' % cwd)
+
+    # 5. First commit
+    print '(5) First commit (may take a while)'
+    command = ['git', 'init']
+    get_pipe(command, cwd=cwd)
+    command = ['git', 'add', '.']
+    get_pipe(command, cwd=cwd)
+    command = ['git', 'commit', '--author=nobody <>', '-m', 'First commit']
+    get_pipe(command, cwd=cwd)
+
+    # 6. Reapply patches
+    print '(6) Apply patches'
+    command = ['git', 'am'] + glob('%s/0*' % path)
+    get_pipe(command, cwd=cwd)
+
+    # 7. Repack & prune
+    print '(7) Repack & prune'
+    command = ['git', 'repack']
+    get_pipe(command, cwd=cwd)
+    command = ['git', 'prune']
+    get_pipe(command, cwd=cwd)
+
+    # 8. Deploy new database
+    print '(8) Deploy the new database'
+    vfs.move('%s/database' % target, '%s/database.bak' % target)
+    vfs.move('%s/database.new' % target, '%s/database' % target)
 
 
 
