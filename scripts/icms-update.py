@@ -175,8 +175,7 @@ def update(parser, options, target):
         print '       : %f seconds' % (time() - t0)
         # Commit
         print 'STAGE 0: git commit'
-        command = ['git', 'commit', '--author=nobody <>',
-                   '-m', 'Initial commit.']
+        command = ['git', 'commit', '--author=nobody <>', '-m', 'First commit']
         t0 = time()
         p = Popen(command, cwd=database.path, stdout=PIPE)
         p.communicate()
