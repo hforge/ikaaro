@@ -17,9 +17,8 @@
 
 # Import from the Standard Library
 from datetime import date
-from glob import glob
 from optparse import OptionParser
-from tempfile import mkdtemp
+from subprocess import call
 
 # Import from itools
 from itools import __version__
@@ -88,49 +87,27 @@ def forget(parser, target, days):
         if delta > days:
             break
 
-    # 1. Copy database
-    print '(1) Copying the database (may take a while)'
-    vfs.copy('%s/database' % target, '%s/database.new' % target)
-
-    # 2. Make the patches
-    print '(2) Make the pile of patches to re-apply'
-    cwd = '%s/database.new' % target
-    path = mkdtemp()
-    command = ['git', 'format-patch', '-o', path, since]
-    get_pipe(command, cwd=cwd)
-
-    # 3. Reset
-    print '(3) Reset (may take a while)'
-    command = ['git', 'reset', '--hard', since]
-    get_pipe(command, cwd=cwd)
-
-    # 4. Remove '.git'
-    print '(4) Remove Git archive'
-    vfs.remove('%s/.git' % cwd)
-
-    # 5. First commit
-    print '(5) First commit (may take a while)'
+    # 1. Bootstrap new database
+    print '(1) Bootstrap new database'
+    vfs.make_folder('%s/database.new' % target)
     command = ['git', 'init']
-    get_pipe(command, cwd=cwd)
-    command = ['git', 'add', '.']
-    get_pipe(command, cwd=cwd)
-    command = ['git', 'commit', '--author=nobody <>', '-m', 'First commit']
+    cwd = '%s/database.new' % target
     get_pipe(command, cwd=cwd)
 
-    # 6. Reapply patches
-    print '(6) Apply patches'
-    command = ['git', 'am'] + glob('%s/0*' % path)
+    # 2. Export to new database
+    print '(2) Export to new database (may take a while)'
+    cwd = '%s/database' % target
+    command = 'git fast-export %s.. | (cd ../database.new && git fast-import --quiet)'
+    call(command % since, shell=True, cwd=cwd)
+
+    # 3. Checkout
+    print '(3) Checkout (may take a while)'
+    cwd = '%s/database.new' % target
+    command = ['git', 'checkout']
     get_pipe(command, cwd=cwd)
 
-    # 7. Repack & prune
-    print '(7) Repack & prune'
-    command = ['git', 'repack']
-    get_pipe(command, cwd=cwd)
-    command = ['git', 'prune']
-    get_pipe(command, cwd=cwd)
-
-    # 8. Deploy new database
-    print '(8) Deploy the new database'
+    # 4. Deploy new database
+    print '(4) Deploy the new database'
     vfs.move('%s/database' % target, '%s/database.bak' % target)
     vfs.move('%s/database.new' % target, '%s/database' % target)
 
