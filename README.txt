@@ -9,6 +9,7 @@ other feautres it provides:
 
 The scripts included are:
 
+  icms-forget.py
   icms-init.py
   icms-start.py
   icms-stop.py
