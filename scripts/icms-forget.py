@@ -24,6 +24,9 @@ from subprocess import call
 from itools import __version__
 from itools.core import get_pipe
 
+# Import from ikaaro
+from ikaaro.server import get_pid
+
 
 def get_commits(target):
     """Returns a list with one tuple for every commit:
@@ -86,8 +89,14 @@ def forget(parser, target, days):
         if delta > days:
             break
 
+    # Check the server is not running
+    pid = get_pid(target)
+    if pid is not None:
+        print 'The server is running. Stop it before running this command.'
+        return
+
     # Export to new database
-    print '* Make new branch with shorter history (make take a while)'
+    print '* Make new branch with shorter history (may take a while)'
     cwd = '%s/database' % target
     command = (
         'git fast-export --progress=1000 %s.. | '
