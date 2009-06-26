@@ -16,14 +16,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
-from datetime import date
+from datetime import date, datetime
 from optparse import OptionParser
 from subprocess import call
 
 # Import from itools
 from itools import __version__
 from itools.core import get_pipe
-from itools import vfs
 
 
 def get_commits(target):
@@ -87,29 +86,27 @@ def forget(parser, target, days):
         if delta > days:
             break
 
-    # 1. Bootstrap new database
-    print '(1) Bootstrap new database'
-    vfs.make_folder('%s/database.new' % target)
-    command = ['git', 'init']
-    cwd = '%s/database.new' % target
-    get_pipe(command, cwd=cwd)
-
-    # 2. Export to new database
-    print '(2) Export to new database (may take a while)'
+    # Export to new database
+    print '* Make new branch with shorter history (make take a while)'
     cwd = '%s/database' % target
-    command = 'git fast-export %s.. | (cd ../database.new && git fast-import --quiet)'
+    command = (
+        'git fast-export --progress=1000 %s.. | '
+        'sed "s|refs/heads/master|refs/heads/new|" | '
+        'git fast-import --quiet')
     call(command % since, shell=True, cwd=cwd)
 
-    # 3. Checkout
-    print '(3) Checkout (may take a while)'
-    cwd = '%s/database.new' % target
-    command = ['git', 'checkout']
+    # Backup old branch and deploy new one
+    print '* Deploy new branch and backup old branch'
+    now = datetime.now().strftime('%Y%m%d%H%M')
+    command = ['git', 'branch', '-m', 'master', now]
+    get_pipe(command, cwd=cwd)
+    command = ['git', 'branch', '-m', 'new', 'master']
+    get_pipe(command, cwd=cwd)
+    command = ['git', 'checkout', 'master']
     get_pipe(command, cwd=cwd)
 
-    # 4. Deploy new database
-    print '(4) Deploy the new database'
-    vfs.move('%s/database' % target, '%s/database.bak' % target)
-    vfs.move('%s/database.new' % target, '%s/database' % target)
+    # Ok
+    print 'Done. Backup branch is %s' % now
 
 
 
