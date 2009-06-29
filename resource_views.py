@@ -142,11 +142,6 @@ def get_breadcrumb(filter_types=None, root=None, start=None, icon_size=16):
     else:
         target = root.get_resource(target_path)
 
-    # Resource to link
-    item = context.get_form_value('item', default='')
-    if item == '':
-        item = '.'
-
     # The breadcrumb
     breadcrumb = []
     node = target
@@ -164,7 +159,6 @@ def get_breadcrumb(filter_types=None, root=None, start=None, icon_size=16):
 
     # Content
     items = []
-    is_submit = False
     user = context.user
     filters = (Folder,) + filter_types
     for resource in target.search_resources(cls=filters):
@@ -175,7 +169,6 @@ def get_breadcrumb(filter_types=None, root=None, start=None, icon_size=16):
         bc_target = str(root.get_pathto(resource))
         url = context.uri.replace(bc_target=bc_target)
 
-        is_submit = True
         # Calculate path
         is_image = isinstance(resource, Image)
         if is_image:
@@ -210,9 +203,7 @@ def get_breadcrumb(filter_types=None, root=None, start=None, icon_size=16):
     # Return namespace
     return {
         'target_path': str(target.get_abspath()),
-        'item': item,
         'path': breadcrumb,
-        'is_submit': is_submit,
         'items': items,
     }
 
