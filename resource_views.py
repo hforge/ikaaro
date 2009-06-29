@@ -177,17 +177,14 @@ def get_breadcrumb(context, filter_types=None, root=None, start=None,
         title = resource.get_title()
         short_title = reduce_string(title, 12, 40)
         quoted_title = short_title.replace("'", "\\'")
-        items.append({'name': resource.name,
-                      'title': title,
+        items.append({'title': title,
                       'short_title': short_title,
                       'quoted_title': quoted_title,
                       'is_folder': isinstance(resource, Folder),
                       'is_image': is_image,
-                      'is_selectable': True,
                       'path': path,
                       'url': url,
                       'icon': path_to_icon,
-                      'type': type(resource),
                       'item_type': resource.handler.get_mimetype()})
 
     items.sort(key=itemgetter('is_folder'), reverse=True)
