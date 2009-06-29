@@ -39,7 +39,7 @@ from exceptions import ConsistencyError
 from forms import AutoForm, title_widget, description_widget, subject_widget
 import messages
 from registry import get_resource_class
-from utils import get_parameters, reduce_string
+from utils import reduce_string
 from views import ContextMenu
 
 
@@ -129,10 +129,8 @@ def get_breadcrumb(context, filter_types=None, root=None, start=None,
         start = root
 
     # Get the query parameters
-    parameters = get_parameters('bc', id=None, target=None)
-    id = parameters['id']
+    target_path = context.get_form_value('target')
     # Get the target folder
-    target_path = parameters['target']
     if target_path is None:
         if isinstance(start, Folder):
             target = start
@@ -145,7 +143,7 @@ def get_breadcrumb(context, filter_types=None, root=None, start=None,
     breadcrumb = []
     node = target
     while node is not root.parent:
-        url = context.uri.replace(bc_target=str(root.get_pathto(node)))
+        url = context.uri.replace(target=str(root.get_pathto(node)))
         title = node.get_title()
         short_title = reduce_string(title, 12, 40)
         quoted_title = short_title.replace("'", "\\'")
@@ -165,8 +163,7 @@ def get_breadcrumb(context, filter_types=None, root=None, start=None,
         if not ac.is_allowed_to_view(user, resource):
             continue
         path = here.get_pathto(resource)
-        bc_target = str(root.get_pathto(resource))
-        url = context.uri.replace(bc_target=bc_target)
+        url = context.uri.replace(target=str(root.get_pathto(resource)))
 
         # Calculate path
         is_image = isinstance(resource, Image)
