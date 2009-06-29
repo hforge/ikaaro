@@ -189,16 +189,11 @@ def get_breadcrumb(context, filter_types=None, root=None, start=None,
 
     items.sort(key=itemgetter('is_folder'), reverse=True)
 
-    # Avoid general template
-    response = context.response
-    response.set_header('Content-Type', 'text/html; charset=UTF-8')
-
     # Return namespace
     return {
         'target_path': str(target.get_abspath()),
         'path': breadcrumb,
-        'items': items,
-    }
+        'items': items}
 
 
 
@@ -260,6 +255,11 @@ class DBResource_AddBase(STLForm):
             start = resource.parent
         else:
             start = resource
+
+        # Avoid general template
+        response = context.response
+        response.set_header('Content-Type', 'text/html; charset=UTF-8')
+
         # Construct namespace
         return merge_dicts(
             self.configuration,
