@@ -38,10 +38,14 @@
 
       <!-- tabs -->
       <p class="tabme">
-        <a href="#browse" onclick="tabme_show(event, this)" stl:if="show_browse">Browse</a>
-        <a href="#external" onclick="tabme_show(event, this)" stl:if="show_external">External Link</a>
-        <a href="#insert" onclick="tabme_show(event, this)" stl:if="show_insert">Insert</a>
-        <a href="#upload" onclick="tabme_show(event, this)" stl:if="show_upload">Upload</a>
+        <a href="#browse" onclick="tabme_show(event, this)"
+          stl:if="show_browse">Browse</a>
+        <a href="#external" onclick="tabme_show(event, this)"
+          stl:if="show_external">External Link</a>
+        <a href="#insert" onclick="tabme_show(event, this)"
+          stl:if="show_insert">Insert</a>
+        <a href="#upload" onclick="tabme_show(event, this)"
+          stl:if="show_upload">Upload</a>
       </p>
 
       <!-- Message -->
@@ -72,8 +76,8 @@
                 <dl stl:if="item/is_folder">
                   <dt>
                     <a href="${item/url}" title="${item/title}"><img alt=""
-                        src="${item/icon}" width="16"
-                        height="16"/>&nbsp;${item/short_title}</a>
+                      src="${item/icon}" width="16" height="16"
+                      />&nbsp;${item/short_title}</a>
                   </dt>
                 </dl>
               </stl:block>
@@ -87,8 +91,7 @@
                       src="${item/icon}" width="48" height="48" />
                   </dt>
                   <dd>
-                    <abbr
-                      title="${item/title}">${item/short_title}</abbr><br/>
+                    <abbr title="${item/title}">${item/short_title}</abbr><br/>
                     <a href="javascript:select_element('${element_to_add}', '${item/path}', '${item/quoted_title}')">
                       Select
                     </a>
@@ -119,14 +122,16 @@
           <input type="hidden" name="mode" value="${mode}" />
           <input type="text" name="title" size="40" />
           <input type="hidden" name="name" value="" />
-          <input class="button-ok" type="submit" value="OK" name=";add_resource"/>
+          <input class="button-ok" type="submit" value="OK"
+            name=";add_resource"/>
         </form>
       </div>
 
       <!-- Upload and Link -->
       <div id="upload" stl:if="show_upload">
         <h3>Upload a file to the current folder and link to it:</h3>
-        <form action=";add_link#upload" method="post" enctype="multipart/form-data">
+        <form action=";add_link#upload" method="post"
+          enctype="multipart/form-data">
           <input type="hidden" name="target_path" value="${bc/target_path}"/>
           <input type="hidden" name="target_id" value="${target_id}" />
           <input type="hidden" name="mode" value="${mode}" />
