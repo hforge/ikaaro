@@ -98,7 +98,7 @@ class DBResource_Edit(AutoForm):
 # Interface to add images from the TinyMCE editor
 ###########################################################################
 
-def get_breadcrumb(filter_types=None, root=None, start=None, icon_size=16):
+def get_breadcrumb(filter_types=None, root=None, start=None, icon_size=48):
     """Returns a namespace to be used for STL.
 
     It contains the breadcrumb, that is to say, the path from the tree root
@@ -271,7 +271,7 @@ class DBResource_AddBase(STLForm):
         namespace = self.configuration
         namespace.update({
             'additional_javascript': self.get_additional_javascript(context),
-            'bc': get_breadcrumb(filter_types, start=start, icon_size=48),
+            'bc': get_breadcrumb(filter_types, start=start),
             'element_to_add': self.element_to_add,
             'target_id': context.get_form_value('target_id'),
             'message': context.message,
