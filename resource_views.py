@@ -97,113 +97,124 @@ class DBResource_Edit(AutoForm):
 ###########################################################################
 # Interface to add images from the TinyMCE editor
 ###########################################################################
-class Breadcrumb(object):
-    """Instances of this class will be used as namespaces for STL templates.
-    The built namespace contains the breadcrumb, that is to say, the path from
-    the tree root to another tree node, and the content of that node.
+
+def get_breadcrumb(filter_types=None, root=None, start=None, icon_size=16):
+    """Returns a namespace to be used for STL.
+
+    It contains the breadcrumb, that is to say, the path from the tree root
+    to another tree node, and the content of that node.
+
+    Parameters:
+
+    - 'start', must be a handler, XXX
+
+    - 'filter_type', must be a handler class, XXX
+
+    - 'root', XXX
+
+    - 'icon_size', XXX
     """
+    from file import Image
+    from folder import Folder
+    from resource_ import DBResource
 
-    def __init__(self, filter_types=None, root=None, start=None,
-            icon_size=16):
-        """The 'start' must be a handler, 'filter_type' must be a handler
-        class.
-        """
-        from file import Image
-        from folder import Folder
-        from resource_ import DBResource
+    # Default parameter values
+    if filter_types is None:
+        filter_types = (DBResource,)
 
-        if filter_types is None:
-            filter_types = (DBResource,)
+    context = get_context()
+    here = context.resource
+    if root is None:
+        root = here.get_site_root()
+    if start is None:
+        start = root
 
-        context = get_context()
-        here = context.resource
-        if root is None:
-            root = here.get_site_root()
-        if start is None:
-            start = root
-
-        # Get the query parameters
-        parameters = get_parameters('bc', id=None, target=None)
-        id = parameters['id']
-        # Get the target folder
-        target_path = parameters['target']
-        if target_path is None:
-            if isinstance(start, Folder):
-                target = start
-            else:
-                target = start.parent
+    # Get the query parameters
+    parameters = get_parameters('bc', id=None, target=None)
+    id = parameters['id']
+    # Get the target folder
+    target_path = parameters['target']
+    if target_path is None:
+        if isinstance(start, Folder):
+            target = start
         else:
-            target = root.get_resource(target_path)
-        self.target_path = str(target.get_abspath())
+            target = start.parent
+    else:
+        target = root.get_resource(target_path)
 
-        # Resource to link
-        item = context.get_form_value('item', default='')
-        if item == '':
-            item = '.'
-        self.item = item
+    # Resource to link
+    item = context.get_form_value('item', default='')
+    if item == '':
+        item = '.'
 
-        # The breadcrumb
-        breadcrumb = []
-        node = target
-        while node is not root.parent:
-            url = context.uri.replace(bc_target=str(root.get_pathto(node)))
-            title = node.get_title()
-            short_title = reduce_string(title, 12, 40)
-            quoted_title = short_title.replace("'", "\\'")
-            breadcrumb.insert(0, {'name': node.name,
-                                  'title': title,
-                                  'short_title': short_title,
-                                  'quoted_title': quoted_title,
-                                  'url': url})
-            node = node.parent
-        self.path = breadcrumb
+    # The breadcrumb
+    breadcrumb = []
+    node = target
+    while node is not root.parent:
+        url = context.uri.replace(bc_target=str(root.get_pathto(node)))
+        title = node.get_title()
+        short_title = reduce_string(title, 12, 40)
+        quoted_title = short_title.replace("'", "\\'")
+        breadcrumb.insert(0, {'name': node.name,
+                              'title': title,
+                              'short_title': short_title,
+                              'quoted_title': quoted_title,
+                              'url': url})
+        node = node.parent
 
-        # Content
-        items = []
-        self.is_submit = False
-        user = context.user
-        filters = (Folder,) + filter_types
-        for resource in target.search_resources(cls=filters):
-            ac = resource.get_access_control()
-            if not ac.is_allowed_to_view(user, resource):
-                continue
-            path = here.get_pathto(resource)
-            bc_target = str(root.get_pathto(resource))
-            url = context.uri.replace(bc_target=bc_target)
+    # Content
+    items = []
+    is_submit = False
+    user = context.user
+    filters = (Folder,) + filter_types
+    for resource in target.search_resources(cls=filters):
+        ac = resource.get_access_control()
+        if not ac.is_allowed_to_view(user, resource):
+            continue
+        path = here.get_pathto(resource)
+        bc_target = str(root.get_pathto(resource))
+        url = context.uri.replace(bc_target=bc_target)
 
-            self.is_submit = True
-            # Calculate path
-            is_image = isinstance(resource, Image)
-            if is_image:
-                path_to_icon = ";thumb?width=%s&height=%s" % (icon_size,
-                                                              icon_size)
-            else:
-                path_to_icon = resource.get_resource_icon(icon_size)
-            if path:
-                path_to_resource = Path(str(path) + '/')
-                path_to_icon = path_to_resource.resolve(path_to_icon)
-            title = resource.get_title()
-            short_title = reduce_string(title, 12, 40)
-            quoted_title = short_title.replace("'", "\\'")
-            items.append({'name': resource.name,
-                          'title': title,
-                          'short_title': short_title,
-                          'quoted_title': quoted_title,
-                          'is_folder': isinstance(resource, Folder),
-                          'is_image': is_image,
-                          'is_selectable': True,
-                          'path': path,
-                          'url': url,
-                          'icon': path_to_icon,
-                          'type': type(resource),
-                          'item_type': resource.handler.get_mimetype()})
+        is_submit = True
+        # Calculate path
+        is_image = isinstance(resource, Image)
+        if is_image:
+            path_to_icon = ";thumb?width=%s&height=%s" % (icon_size, icon_size)
+        else:
+            path_to_icon = resource.get_resource_icon(icon_size)
+        if path:
+            path_to_resource = Path(str(path) + '/')
+            path_to_icon = path_to_resource.resolve(path_to_icon)
+        title = resource.get_title()
+        short_title = reduce_string(title, 12, 40)
+        quoted_title = short_title.replace("'", "\\'")
+        items.append({'name': resource.name,
+                      'title': title,
+                      'short_title': short_title,
+                      'quoted_title': quoted_title,
+                      'is_folder': isinstance(resource, Folder),
+                      'is_image': is_image,
+                      'is_selectable': True,
+                      'path': path,
+                      'url': url,
+                      'icon': path_to_icon,
+                      'type': type(resource),
+                      'item_type': resource.handler.get_mimetype()})
 
-        items.sort(key=itemgetter('is_folder'), reverse=True)
-        self.items = items
+    items.sort(key=itemgetter('is_folder'), reverse=True)
 
-        # Avoid general template
-        response = context.response
-        response.set_header('Content-Type', 'text/html; charset=UTF-8')
+    # Avoid general template
+    response = context.response
+    response.set_header('Content-Type', 'text/html; charset=UTF-8')
+
+    # Return namespace
+    return {
+        'target_path': str(target.get_abspath()),
+        'item': item,
+        'path': breadcrumb,
+        'is_submit': is_submit,
+        'items': items,
+    }
 
 
 
@@ -269,8 +280,7 @@ class DBResource_AddBase(STLForm):
         namespace = self.configuration
         namespace.update({
             'additional_javascript': self.get_additional_javascript(context),
-            'bc': Breadcrumb(filter_types=filter_types, start=start,
-                             icon_size=48),
+            'bc': get_breadcrumb(filter_types, start=start, icon_size=48),
             'element_to_add': self.element_to_add,
             'target_id': context.get_form_value('target_id'),
             'message': context.message,
