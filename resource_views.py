@@ -23,7 +23,7 @@
 from operator import itemgetter
 
 # Import from itools
-from itools.core import merge_dicts
+from itools.core import freeze, merge_dicts
 from itools.datatypes import String, Unicode
 from itools.gettext import MSG
 from itools.handlers import checkid
@@ -211,7 +211,7 @@ class DBResource_AddBase(STLForm):
 
     element_to_add = None
 
-    configuration = {}
+    configuration = freeze({})
 
     schema = {
         'target_path': String(mandatory=True),
@@ -261,18 +261,17 @@ class DBResource_AddBase(STLForm):
         else:
             start = resource
         # Construct namespace
-        namespace = self.configuration
-        namespace.update({
-            'additional_javascript': self.get_additional_javascript(context),
-            'bc': get_breadcrumb(context, filter_types, start=start),
-            'element_to_add': self.element_to_add,
-            'target_id': context.get_form_value('target_id'),
-            'message': context.message,
-            'mode': mode,
-            'resource_action': self.get_resource_action(context),
-            'styles': self.styles,
-            'scripts': self.get_scripts(mode)})
-        return namespace
+        return merge_dicts(
+            self.configuration,
+            additional_javascript=self.get_additional_javascript(context),
+            bc=get_breadcrumb(context, filter_types, start=start),
+            element_to_add=self.element_to_add,
+            target_id=context.get_form_value('target_id'),
+            message=context.message,
+            mode=mode,
+            resource_action=self.get_resource_action(context),
+            styles=self.styles,
+            scripts=self.get_scripts(mode))
 
 
     def get_scripts(self, mode):
@@ -357,8 +356,9 @@ class DBResource_AddImage(DBResource_AddBase):
 
     template = '/ui/html/addimage.xml'
 
-    configuration = {'show_browse': True,
-                     'show_upload': True}
+    configuration = freeze({
+        'show_browse': True,
+        'show_upload': True})
 
 
     def get_filter_types(self):
@@ -383,10 +383,11 @@ class DBResource_AddLink(DBResource_AddBase):
     action_add_resource_schema = merge_dicts(DBResource_AddImage.schema,
                                              title=String(mandatory=True))
 
-    configuration = {'show_browse': True,
-                     'show_external': True,
-                     'show_insert': True,
-                     'show_upload': True}
+    configuration = freeze({
+        'show_browse': True,
+        'show_external': True,
+        'show_insert': True,
+        'show_upload': True})
 
 
     def action_add_resource(self, resource, context, form):
