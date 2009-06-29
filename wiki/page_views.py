@@ -128,6 +128,13 @@ class WikiPage_ToPDF(BaseView):
 
 
     def GET(self, resource, context):
+        # Check if pdflatex exists
+        try:
+            call(['pdflatex', '-version'])
+        except OSError:
+            msg = ERROR(u"PDF generation failed. Please install pdflatex.")
+            return context.come_back(msg)
+
         parent = resource.parent
         pages = [resource.get_abspath()]
         images = []
