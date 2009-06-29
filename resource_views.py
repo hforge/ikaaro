@@ -31,8 +31,7 @@ from itools.http import Conflict, NotImplemented
 from itools.i18n import get_language_name
 from itools.uri import Path, get_reference, get_uri_path
 from itools.vfs import FileName
-from itools.web import get_context, BaseView, STLForm, INFO, ERROR
-from itools.web import lock_body
+from itools.web import BaseView, STLForm, INFO, ERROR, lock_body
 
 # Import from ikaaro
 from datatypes import FileDataType, CopyCookie
@@ -98,7 +97,8 @@ class DBResource_Edit(AutoForm):
 # Interface to add images from the TinyMCE editor
 ###########################################################################
 
-def get_breadcrumb(filter_types=None, root=None, start=None, icon_size=48):
+def get_breadcrumb(context, filter_types=None, root=None, start=None,
+                   icon_size=48):
     """Returns a namespace to be used for STL.
 
     It contains the breadcrumb, that is to say, the path from the tree root
@@ -122,7 +122,6 @@ def get_breadcrumb(filter_types=None, root=None, start=None, icon_size=48):
     if filter_types is None:
         filter_types = (DBResource,)
 
-    context = get_context()
     here = context.resource
     if root is None:
         root = here.get_site_root()
@@ -271,7 +270,7 @@ class DBResource_AddBase(STLForm):
         namespace = self.configuration
         namespace.update({
             'additional_javascript': self.get_additional_javascript(context),
-            'bc': get_breadcrumb(filter_types, start=start),
+            'bc': get_breadcrumb(context, filter_types, start=start),
             'element_to_add': self.element_to_add,
             'target_id': context.get_form_value('target_id'),
             'message': context.message,
