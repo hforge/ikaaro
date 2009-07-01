@@ -232,14 +232,6 @@ class DBResource_AddBase(STLForm):
                                        file=FileDataType(mandatory=True))
 
 
-    additional_javascript = """
-          function select_element(type, value, caption) {
-            window.opener.$("#%s").val(value);
-            window.close();
-          }
-          """
-
-
     def get_filter_types(self):
         from file import File
         return (File,)
@@ -282,10 +274,18 @@ class DBResource_AddBase(STLForm):
 
     def get_additional_javascript(self, context):
         mode = context.get_form_value('mode')
-        if mode!='input':
+        if mode != 'input':
             return ''
+
+        additional_javascript = """
+            function select_element(type, value, caption) {
+                window.opener.$("#%s").val(value);
+                window.close();
+            }
+            """
+
         target_id = context.get_form_value('target_id')
-        return self.additional_javascript % target_id
+        return additional_javascript % target_id
 
 
     def action_upload(self, resource, context, form):
@@ -368,7 +368,7 @@ class DBResource_AddImage(DBResource_AddBase):
 
     def get_resource_action(self, context):
         mode = context.get_form_value('mode')
-        if mode=='tiny_mce':
+        if mode == 'tiny_mce':
             return '/;download'
         return DBResource_AddBase.get_resource_action(self, context)
 
