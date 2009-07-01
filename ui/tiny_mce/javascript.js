@@ -8,18 +8,25 @@ function select_element(type, value, caption) {
 }
 
 function tiny_mce_set_uri_value(uri) {
-  //call this function only after page has loaded
-  //otherwise tinyMCEPopup.close will close the
-  //"Insert/Edit Image" or "Insert/Edit Link" window instead
+    //call this function only after page has loaded
+    //otherwise tinyMCEPopup.close will close the
+    //"Insert/Edit Image" or "Insert/Edit Link" window instead
 
-  var win = tinyMCEPopup.getWindowArg("window");
-  // insert information now
-  win.document.getElementById(tinyMCEPopup.getWindowArg("input")).value = uri;
-  // for image browsers: update image dimensions
-  if (win.getImageData) win.getImageData();
-  // close popup window
-  tinyMCEPopup.close();
-  win.focus();
+    var win = tinyMCEPopup.getWindowArg("window");
+    // insert information now
+    var input_name = tinyMCEPopup.getWindowArg("input");
+    if (input_name == 'backgroundimage') {
+        // replace semicolon by %3B
+        // <table style="background-image: url(../fond-400x500/%3Bdownload);">
+        var reg = new RegExp("(/;download)", "g");
+        uri = uri.replace(reg, '/%3Bdownload');
+    }
+    win.document.getElementById(input_name).value = uri;
+    // for image browsers: update image dimensions
+    if (win.getImageData) win.getImageData();
+    // close popup window
+    tinyMCEPopup.close();
+    win.focus();
 }
 
 /*
