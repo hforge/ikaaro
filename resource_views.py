@@ -23,7 +23,7 @@
 from operator import itemgetter
 
 # Import from itools
-from itools.core import freeze, merge_dicts
+from itools.core import merge_dicts
 from itools.datatypes import String, Unicode
 from itools.gettext import MSG
 from itools.handlers import checkid
@@ -106,31 +106,41 @@ class DBResource_AddBase(STLForm):
 
     element_to_add = None
 
-    configuration = freeze({})
-
     schema = {
         'target_path': String(mandatory=True),
         'target_id': String(default=None),
-        'mode': String(mandatory=True),
-      }
+        'mode': String(mandatory=True)}
 
-    scripts = {'wiki': ['/ui/wiki/javascript.js'],
-               'tiny_mce': ['/ui/tiny_mce/javascript.js',
-                            '/ui/tiny_mce/tiny_mce_src.js',
-                            '/ui/tiny_mce/tiny_mce_popup.js'],
-               'input': []}
+    scripts = {
+        'wiki': ['/ui/wiki/javascript.js'],
+        'tiny_mce': ['/ui/tiny_mce/javascript.js',
+                     '/ui/tiny_mce/tiny_mce_src.js',
+                     '/ui/tiny_mce/tiny_mce_popup.js'],
+        'input': []}
 
 
     action_upload_schema = merge_dicts(schema,
                                        file=FileDataType(mandatory=True))
 
 
-    def is_folder(self, cls):
+    def get_configuration(self):
+        return {}
+
+
+    def get_root(self, context):
+        return context.resource.get_site_root()
+
+
+    def is_folder(self, resource):
         from folder import Folder
-        return issubclass(cls, Folder)
+        return isinstance(resource, Folder)
 
 
-    def is_item(self, cls):
+    def is_item(self, resource):
+        return True
+
+
+    def can_upload(self, cls):
         return True
 
 
@@ -147,8 +157,7 @@ class DBResource_AddBase(STLForm):
             start = resource
 
         # Default parameter values
-        here = context.resource
-        root = here.get_site_root()
+        root = self.get_root(context)
 
         # Get the query parameters
         target_path = context.get_form_value('target')
@@ -181,15 +190,15 @@ class DBResource_AddBase(STLForm):
         items = []
         user = context.user
         for resource in target.search_resources():
-            is_folder = self.is_folder(resource.__class__)
-            is_item = self.is_item(resource.__class__)
+            is_folder = self.is_folder(resource)
+            is_item = self.is_item(resource)
             if not is_folder and not is_item:
                 continue
 
             ac = resource.get_access_control()
             if not ac.is_allowed_to_view(user, resource):
                 continue
-            path = here.get_pathto(resource)
+            path = context.resource.get_pathto(resource)
             url = context.uri.replace(target=str(root.get_pathto(resource)))
 
             # Calculate path
@@ -224,20 +233,21 @@ class DBResource_AddBase(STLForm):
         response = context.response
         response.set_header('Content-Type', 'text/html; charset=UTF-8')
 
-        # Construct namespace
-        return merge_dicts(
-            self.configuration,
-            additional_javascript=self.get_additional_javascript(context),
-            target_path=str(target.get_abspath()),
-            breadcrumb=breadcrumb,
-            folders=folders,
-            items=items,
-            element_to_add=self.element_to_add,
-            target_id=context.get_form_value('target_id'),
-            message=context.message,
-            mode=mode,
-            resource_action=self.get_resource_action(context),
-            scripts=self.get_scripts(mode))
+        # Build and return the namespace
+        namespace = self.get_configuration()
+        additional_javascript = self.get_additional_javascript(context)
+        namespace['additional_javascript'] = additional_javascript
+        namespace['target_path'] = str(target.get_abspath())
+        namespace['breadcrumb'] = breadcrumb
+        namespace['folders'] = folders
+        namespace['items'] = items
+        namespace['element_to_add'] = self.element_to_add
+        namespace['target_id'] = context.get_form_value('target_id')
+        namespace['message'] = context.message
+        namespace['mode'] = mode
+        namespace['resource_action'] = self.get_resource_action(context)
+        namespace['scripts'] = self.get_scripts(mode)
+        return namespace
 
 
     def get_scripts(self, mode):
@@ -281,12 +291,10 @@ class DBResource_AddBase(STLForm):
             return
 
         # Check it is of the expected type
-        filter_types = self.get_filter_types()
         cls = get_resource_class(mimetype)
-        if not self.is_item(cls):
-            class_ids = ', '.join([x.class_id for x in filter_types])
-            context.message = ERROR(u'The given file is none of the types '
-                                    u'{class_ids}.', class_ids=class_ids)
+        if not self.can_upload(cls):
+            error = u'The given file is not of the expected type.'
+            context.message = ERROR(error)
             return
 
         # Add the image to the resource
@@ -308,8 +316,8 @@ class DBResource_AddBase(STLForm):
     def get_javascript_return(self, context, path):
         return """
             <script type="text/javascript">
-                %s
-                select_element('%s', '%s', '');
+              %s
+              select_element('%s', '%s', '');
             </script>""" % (self.get_additional_javascript(context),
                             self.element_to_add, path)
 
@@ -321,16 +329,24 @@ class DBResource_AddBase(STLForm):
 
 class DBResource_AddImage(DBResource_AddBase):
 
+    template = '/ui/html/addimage.xml'
     element_to_add = 'image'
 
-    template = '/ui/html/addimage.xml'
 
-    configuration = freeze({
-        'show_browse': True,
-        'show_upload': True})
+    def get_configuration(self):
+        return {
+            'show_browse': True,
+            'show_external': False,
+            'show_insert': False,
+            'show_upload': True}
 
 
-    def is_item(self, cls):
+    def is_item(self, resource):
+        from file import Image
+        return isinstance(resource, Image)
+
+
+    def can_upload(self, cls):
         from file import Image
         return issubclass(cls, Image)
 
@@ -346,17 +362,17 @@ class DBResource_AddImage(DBResource_AddBase):
 class DBResource_AddLink(DBResource_AddBase):
 
     template = '/ui/html/addlink.xml'
-
     element_to_add = 'link'
 
     action_add_resource_schema = merge_dicts(DBResource_AddImage.schema,
                                              title=String(mandatory=True))
 
-    configuration = freeze({
-        'show_browse': True,
-        'show_external': True,
-        'show_insert': True,
-        'show_upload': True})
+    def get_configuration(self):
+        return {
+            'show_browse': True,
+            'show_external': True,
+            'show_insert': True,
+            'show_upload': True}
 
 
     def action_add_resource(self, resource, context, form):
