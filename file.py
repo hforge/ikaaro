@@ -58,8 +58,7 @@ class File(WorkflowAware, DBResource):
         u'Upload office documents, images, media files, etc.')
     class_icon16 = 'icons/16x16/file.png'
     class_icon48 = 'icons/48x48/file.png'
-    class_views = ['view', 'edit', 'externaledit', 'upload', 'backlinks',
-                   'edit_state']
+    class_views = ['view', 'edit', 'externaledit', 'backlinks', 'edit_state']
     class_handler = FileHandler
 
 
@@ -226,8 +225,8 @@ class Image(File):
     class_title = MSG(u'Image')
     class_icon16 = 'icons/16x16/image.png'
     class_icon48 = 'icons/48x48/image.png'
-    class_views = ['view', 'download', 'edit', 'externaledit', 'upload',
-                   'backlinks', 'edit_state']
+    class_views = ['view', 'download', 'edit', 'externaledit', 'backlinks',
+                   'edit_state']
     class_handler = ImageHandler
 
     # Views

@@ -27,7 +27,7 @@ from itools.xmlfile import XMLFile
 
 # Import from ikaaro
 from file import File
-from file_views import File_Upload
+from file_views import File_Edit
 from registry import register_resource_class
 from text_views import Text_Edit, Text_View, Text_ExternalEdit, PO_Edit
 from text_views import CSV_View, CSV_AddRow, CSV_EditRow
@@ -40,7 +40,7 @@ class Text(File):
     class_title = MSG(u'Plain Text')
     class_icon16 = 'icons/16x16/text.png'
     class_icon48 = 'icons/48x48/text.png'
-    class_views = ['view', 'edit', 'externaledit', 'upload', 'edit_state',
+    class_views = ['view', 'edit', 'externaledit', 'edit_state',
                    'last_changes']
     class_handler = TextFile
 
@@ -53,7 +53,6 @@ class Text(File):
     # Views
     view = Text_View()
     edit = Text_Edit()
-    upload = File_Upload()
     externaledit = Text_ExternalEdit()
 
 
@@ -119,8 +118,7 @@ class CSV(Text):
 
     class_id = 'text/comma-separated-values'
     class_title = MSG(u'Comma Separated Values')
-    class_views = ['view', 'add_row', 'edit', 'externaledit', 'upload',
-                   'last_changes']
+    class_views = ['view', 'add_row', 'edit', 'externaledit', 'last_changes']
     class_handler = CSVFile
 
 
@@ -152,7 +150,7 @@ class CSV(Text):
 
 
     # Views
-    edit = None
+    edit = File_Edit
     view = CSV_View()
     add_row = CSV_AddRow()
     edit_row = CSV_EditRow()

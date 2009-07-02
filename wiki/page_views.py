@@ -345,7 +345,7 @@ class WikiPage_ToPDF(BaseView):
 class WikiPage_Edit(STLForm):
 
     access = 'is_allowed_to_edit'
-    title = MSG(u'Edit Page')
+    title = MSG(u'Edit')
     template = '/ui/wiki/edit.xml'
     schema = {
         'title': Unicode,
