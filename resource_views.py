@@ -97,106 +97,6 @@ class DBResource_Edit(AutoForm):
 # Interface to add images from the TinyMCE editor
 ###########################################################################
 
-def get_breadcrumb(context, filter_types=None, root=None, start=None,
-                   icon_size=48):
-    """Returns a namespace to be used for STL.
-
-    It contains the breadcrumb, that is to say, the path from the tree root
-    to another tree node, and the content of that node.
-
-    Parameters:
-
-    - 'start', must be a handler, XXX
-
-    - 'filter_type', must be a handler class, XXX
-
-    - 'root', XXX
-
-    - 'icon_size', XXX
-    """
-    from file import Image
-    from folder import Folder
-    from resource_ import DBResource
-
-    # Default parameter values
-    if filter_types is None:
-        filter_types = (DBResource,)
-
-    here = context.resource
-    if root is None:
-        root = here.get_site_root()
-    if start is None:
-        start = root
-
-    # Get the query parameters
-    target_path = context.get_form_value('target')
-    # Get the target folder
-    if target_path is None:
-        if isinstance(start, Folder):
-            target = start
-        else:
-            target = start.parent
-    else:
-        target = root.get_resource(target_path)
-
-    # The breadcrumb
-    breadcrumb = []
-    node = target
-    while node is not root.parent:
-        url = context.uri.replace(target=str(root.get_pathto(node)))
-        title = node.get_title()
-        short_title = reduce_string(title, 12, 40)
-        quoted_title = short_title.replace("'", "\\'")
-        breadcrumb.insert(0, {'name': node.name,
-                              'title': title,
-                              'short_title': short_title,
-                              'quoted_title': quoted_title,
-                              'url': url})
-        node = node.parent
-
-    # Content
-    items = []
-    user = context.user
-    filters = (Folder,) + filter_types
-    for resource in target.search_resources(cls=filters):
-        ac = resource.get_access_control()
-        if not ac.is_allowed_to_view(user, resource):
-            continue
-        path = here.get_pathto(resource)
-        url = context.uri.replace(target=str(root.get_pathto(resource)))
-
-        # Calculate path
-        is_image = isinstance(resource, Image)
-        if is_image:
-            path_to_icon = ";thumb?width=%s&height=%s" % (icon_size, icon_size)
-        else:
-            path_to_icon = resource.get_resource_icon(icon_size)
-        if path:
-            path_to_resource = Path(str(path) + '/')
-            path_to_icon = path_to_resource.resolve(path_to_icon)
-        title = resource.get_title()
-        short_title = reduce_string(title, 12, 40)
-        quoted_title = short_title.replace("'", "\\'")
-        items.append({'title': title,
-                      'short_title': short_title,
-                      'quoted_title': quoted_title,
-                      'is_folder': isinstance(resource, Folder),
-                      'is_image': is_image,
-                      'path': path,
-                      'url': url,
-                      'icon': path_to_icon,
-                      'item_type': resource.handler.get_mimetype()})
-
-    items.sort(key=itemgetter('is_folder'), reverse=True)
-
-    # Return namespace
-    return {
-        'target_path': str(target.get_abspath()),
-        'path': breadcrumb,
-        'items': items}
-
-
-
 class DBResource_AddBase(STLForm):
     """Base class for 'DBResource_AddImage' and 'DBResource_AddLink' (used
     by the Web Page editor).
@@ -214,13 +114,6 @@ class DBResource_AddBase(STLForm):
         'mode': String(mandatory=True),
       }
 
-    styles = ['/ui/bo.css',
-              '/ui/aruni/style.css']
-
-    base_scripts = ['/ui/jquery.js',
-                    '/ui/javascript.js']
-
-
     scripts = {'wiki': ['/ui/wiki/javascript.js'],
                'tiny_mce': ['/ui/tiny_mce/javascript.js',
                             '/ui/tiny_mce/tiny_mce_src.js',
@@ -232,21 +125,100 @@ class DBResource_AddBase(STLForm):
                                        file=FileDataType(mandatory=True))
 
 
-    def get_filter_types(self):
-        from file import File
-        return (File,)
+    def is_folder(self, cls):
+        from folder import Folder
+        return issubclass(cls, Folder)
+
+
+    def is_item(self, cls):
+        return True
 
 
     def get_namespace(self, resource, context):
-        from file import File
+        from file import File, Image
+        from folder import Folder
+
         # Get some informations
         mode = context.get_form_value('mode')
         # For the breadcrumb
-        filter_types = self.get_filter_types()
         if isinstance(resource, File):
             start = resource.parent
         else:
             start = resource
+
+        # Default parameter values
+        here = context.resource
+        root = here.get_site_root()
+
+        # Get the query parameters
+        target_path = context.get_form_value('target')
+        # Get the target folder
+        if target_path is None:
+            if isinstance(start, Folder):
+                target = start
+            else:
+                target = start.parent
+        else:
+            target = root.get_resource(target_path)
+
+        # The breadcrumb
+        breadcrumb = []
+        node = target
+        while node is not root.parent:
+            url = context.uri.replace(target=str(root.get_pathto(node)))
+            title = node.get_title()
+            short_title = reduce_string(title, 12, 40)
+            quoted_title = short_title.replace("'", "\\'")
+            breadcrumb.insert(0, {'name': node.name,
+                                  'title': title,
+                                  'short_title': short_title,
+                                  'quoted_title': quoted_title,
+                                  'url': url})
+            node = node.parent
+
+        # Content
+        folders = []
+        items = []
+        user = context.user
+        for resource in target.search_resources():
+            is_folder = self.is_folder(resource.__class__)
+            is_item = self.is_item(resource.__class__)
+            if not is_folder and not is_item:
+                continue
+
+            ac = resource.get_access_control()
+            if not ac.is_allowed_to_view(user, resource):
+                continue
+            path = here.get_pathto(resource)
+            url = context.uri.replace(target=str(root.get_pathto(resource)))
+
+            # Calculate path
+            if isinstance(resource, Image):
+                path_to_icon = ";thumb?width48=&height=48"
+            else:
+                path_to_icon = resource.get_resource_icon(48)
+            if path:
+                path_to_resource = Path(str(path) + '/')
+                path_to_icon = path_to_resource.resolve(path_to_icon)
+            title = resource.get_title()
+            short_title = reduce_string(title, 12, 40)
+            quoted_title = short_title.replace("'", "\\'")
+            item = {
+                'title': title,
+                'short_title': short_title,
+                'quoted_title': quoted_title,
+                'path': path,
+                'url': url,
+                'icon': path_to_icon,
+                'item_type': resource.handler.get_mimetype()}
+            if is_folder:
+                folders.append(item)
+            if is_item:
+                items.append(item)
+
+        # Sort
+        items.sort(key=itemgetter('short_title'))
+        folders.sort(key=itemgetter('short_title'))
 
         # Avoid general template
         response = context.response
@@ -256,20 +228,22 @@ class DBResource_AddBase(STLForm):
         return merge_dicts(
             self.configuration,
             additional_javascript=self.get_additional_javascript(context),
-            bc=get_breadcrumb(context, filter_types, start=start),
+            target_path=str(target.get_abspath()),
+            breadcrumb=breadcrumb,
+            folders=folders,
+            items=items,
             element_to_add=self.element_to_add,
             target_id=context.get_form_value('target_id'),
             message=context.message,
             mode=mode,
             resource_action=self.get_resource_action(context),
-            styles=self.styles,
             scripts=self.get_scripts(mode))
 
 
     def get_scripts(self, mode):
         if mode is None:
-            return self.base_scripts
-        return self.base_scripts + self.scripts[mode]
+            return []
+        return self.scripts[mode]
 
 
     def get_additional_javascript(self, context):
@@ -309,12 +283,7 @@ class DBResource_AddBase(STLForm):
         # Check it is of the expected type
         filter_types = self.get_filter_types()
         cls = get_resource_class(mimetype)
-        is_compatible = False
-        for filter_type in filter_types:
-            if issubclass(cls, filter_type):
-                is_compatible = True
-                break
-        if is_compatible is False:
+        if not self.is_item(cls):
             class_ids = ', '.join([x.class_id for x in filter_types])
             context.message = ERROR(u'The given file is none of the types '
                                     u'{class_ids}.', class_ids=class_ids)
@@ -361,9 +330,9 @@ class DBResource_AddImage(DBResource_AddBase):
         'show_upload': True})
 
 
-    def get_filter_types(self):
+    def is_item(self, cls):
         from file import Image
-        return (Image,)
+        return issubclass(cls, Image)
 
 
     def get_resource_action(self, context):

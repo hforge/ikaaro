@@ -1,0 +1,17 @@
+
+#body {
+  border-top: 20px solid #30569D;
+  padding: 20px;
+}
+
+table.thumbs {
+  border-collapse: collapse;
+}
+
+table.thumbs th, table.thumbs td {
+  border: 2px solid #ccc;
+}
+
+dt a {
+  white-space: nowrap;
+}

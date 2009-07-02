@@ -5,22 +5,19 @@
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
   <head>
     <title>Insert image</title>
-    <link type="text/css" rel="stylesheet" stl:repeat="style styles"
-      href="${style}" />
-    <script type="text/javascript" stl:repeat="script scripts"
-      src="${script}" />
+    <link type="text/css" rel="stylesheet" href="/ui/bo.css" />
+    <link type="text/css" rel="stylesheet" href="/ui/aruni/style.css" />
+    <link type="text/css" rel="stylesheet" href="/ui/html/style.css" />
+    <script type="text/javascript" src="/ui/jquery.js" />
+    <script type="text/javascript" src="/ui/javascript.js" />
+    <script type="text/javascript" stl:repeat="script scripts" src="${script}"
+      />
     <script type="text/javascript">
       $(document).ready(function() {
         tabme();
       })
       ${additional_javascript}
     </script>
-    <style>
-      #body {
-        border-top: 20px solid #30569D;
-        padding: 20px;
-      }
-    </style>
   </head>
 
   <body>
@@ -34,62 +31,64 @@
           stl:if="show_upload">Upload</a>
       </p>
 
+      <!-- Message -->
       <div id="message" stl:if="message">${message}</div>
 
-      <!-- List of files -->
+      <!-- Browse -->
       <div id="browse" stl:if="show_browse">
         <h3>Browse and insert an Image from the workspace</h3>
-        <!-- Breadcrumbs -->
+        <!-- Breadcrumb -->
         <div id="maintitle">
           <div id="breadcrumbs">
             <label>Location:</label>
-            <span stl:repeat="x bc/path">
+            <span stl:repeat="x breadcrumb">
               <a href="${x/url}" title="${x/title}">${x/short_title}</a> /
             </span>
           </div>
         </div>
-        <!-- Content -->
-        <div style="clear: both"/>
-        <!-- Folders first -->
-        <stl:block stl:repeat="item bc/items">
-          <dl class="thumb" stl:if="item/is_folder">
-            <dt>
-              <a href="${item/url}"><img alt="" src="${item/icon}"
-                width="48" height="48"/></a>
-            </dt>
-            <dd>
-              <abbr title="${item/title}">${item/short_title}</abbr><br />
-              <a href="${item/url}" title="${item/title}">Browse</a>
-            </dd>
-          </dl>
-        </stl:block>
-        <!-- Images next -->
-        <stl:block stl:repeat="item bc/items">
-          <dl class="thumb" stl:if="item/is_image">
-            <dt>
-              <img alt="" title="${item/item_type}" src="${item/icon}"
-                width="48" height="48" />
-            </dt>
-            <dd>
-              <abbr title="${item/title}">${item/short_title}</abbr><br />
-              <a href="javascript:select_element('${element_to_add}', '${item/path}${resource_action}', '${item/quoted_title}')">
-                Select
-              </a>
-            </dd>
-          </dl>
-        </stl:block>
-        <div class="clear"></div>
+        <table border="0" cellpadding="1" cellspacing="1" width="100%"
+          class="thumbs">
+          <tr>
+            <th width="150">Browse Content</th>
+            <th>Select Image</th>
+          </tr>
+          <tr>
+            <td valign="top">
+              <!-- Browse Folders -->
+              <dl stl:repeat="item folders">
+                <dt>
+                  <a href="${item/url}" title="${item/title}">
+                    <img alt="" src="${item/icon}" width="16" height="16" />
+                    ${item/short_title}
+                  </a>
+                </dt>
+              </dl>
+            </td>
+            <td valign="top">
+              <!-- Images to select -->
+              <dl class="thumb" stl:repeat="item items">
+                <dt>
+                  <img alt="" title="${item/item_type}"
+                    src="${item/icon}" width="48" height="48" />
+                </dt>
+                <dd>
+                  <a href="javascript:select_element('${element_to_add}', '${item/path}${resource_action}', '${item/quoted_title}')" title="${item/title}">${item/short_title}</a>
+                </dd>
+              </dl>
+            </td>
+          </tr>
+        </table>
       </div>
 
-      <!-- Add an image -->
+      <!-- Upload -->
       <div id="upload" stl:if="show_upload">
         <h3>Upload an image to the current folder and insert it:</h3>
         <form action=";add_image#upload" method="post"
           enctype="multipart/form-data">
-          <input type="hidden" name="target_path" value="${bc/target_path}" />
+          <input type="hidden" name="target_path" value="${target_path}" />
           <input type="hidden" name="target_id" value="${target_id}" />
+          <input id="mode" name="mode" type="hidden" value="${mode}" />
           <input id="file" name="file" size="35" type="file" />
-          <input id="mode" name="mode" type="hidden" value="${mode}"/>
           <br/>
           <input class="button-upload" type="submit" value="Upload and Insert"
             name=";upload"/>
