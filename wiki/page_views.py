@@ -163,6 +163,13 @@ class WikiPage_ToPDF(BaseView):
 
 
     def GET(self, resource, context):
+        # Check if pdflatex exists
+        try:
+            call(['pdflatex', '-version'])
+        except OSError:
+            msg = ERROR(u"PDF generation failed. Please install pdflatex.")
+            return context.come_back(msg)
+
         parent = resource.parent
         pages = [resource.get_abspath()]
         images = []
@@ -373,7 +380,7 @@ class WikiPage_ToPDF(BaseView):
 class WikiPage_Edit(STLForm):
 
     access = 'is_allowed_to_edit'
-    title = MSG(u'Edit Page')
+    title = MSG(u'Edit')
     template = '/ui/wiki/edit.xml'
     schema = {
         'title': Unicode,

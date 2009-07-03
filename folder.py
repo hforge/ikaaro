@@ -120,8 +120,11 @@ class Folder(DBResource):
     def _on_move_resource(self, target):
         """Called by 'Folder.move_resource'.
         """
+        # Update the resources inside the folder
         for resource in self.get_resources():
             resource._on_move_resource(target.resolve_name(resource.name))
+        # Update the folder itself
+        DBResource._on_move_resource(self, target)
 
 
     def del_resource(self, name):

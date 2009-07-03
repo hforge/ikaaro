@@ -152,24 +152,26 @@ class File_View(STLView):
 
 
 
-class File_Upload(STLForm):
+class File_Edit(DBResource_Edit):
 
-    access = 'is_allowed_to_edit'
-    title = MSG(u'Replace')
-    icon = 'upload.png'
-    template = '/ui/file/upload.xml'
-    schema = {
-        'file': FileDataType(mandatory=True),
-    }
+    schema = merge_dicts(DBResource_Edit.schema, file=FileDataType)
+    widgets = [title_widget, file_widget, description_widget, subject_widget]
 
 
-    def action(self, resource, context, form, file='file'):
-        file = form[file]
-        # Added for views reusing this method but where the file is not
-        # mandatory.
+    def get_value(self, resource, context, name, datatype):
+        if name == 'file':
+            return None
+        return DBResource_Edit.get_value(self, resource, context, name,
+                                         datatype)
+
+
+    def action(self, resource, context, form):
+        DBResource_Edit.action(self, resource, context, form)
+
+        # Upload file
+        file = form['file']
         if file is None:
             return
-
         filename, mimetype, body = file
 
         # Check wether the handler is able to deal with the uploaded file
@@ -215,22 +217,6 @@ class File_Upload(STLForm):
         context.message = INFO(u'Version uploaded')
 
 
-
-class File_Edit(DBResource_Edit, File_Upload):
-    schema = merge_dicts(DBResource_Edit.schema, file=FileDataType)
-    widgets = [title_widget, file_widget, description_widget, subject_widget]
-
-
-    def get_value(self, resource, context, name, datatype):
-        if name == 'file':
-            return None
-        return DBResource_Edit.get_value(self, resource, context, name,
-                                         datatype)
-
-
-    def action(self, resource, context, form):
-        DBResource_Edit.action(self, resource, context, form)
-        File_Upload.action(self, resource, context, form)
 
 
 

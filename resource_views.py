@@ -31,8 +31,7 @@ from itools.http import Conflict, NotImplemented
 from itools.i18n import get_language_name
 from itools.uri import Path, get_reference, get_uri_path
 from itools.vfs import FileName
-from itools.web import get_context, BaseView, STLForm, INFO, ERROR
-from itools.web import lock_body
+from itools.web import BaseView, STLForm, INFO, ERROR, lock_body
 
 # Import from ikaaro
 from datatypes import FileDataType, CopyCookie
@@ -40,7 +39,7 @@ from exceptions import ConsistencyError
 from forms import AutoForm, title_widget, description_widget, subject_widget
 import messages
 from registry import get_resource_class
-from utils import get_parameters, reduce_string
+from utils import reduce_string
 from views import ContextMenu
 
 
@@ -97,115 +96,6 @@ class DBResource_Edit(AutoForm):
 ###########################################################################
 # Interface to add images from the TinyMCE editor
 ###########################################################################
-class Breadcrumb(object):
-    """Instances of this class will be used as namespaces for STL templates.
-    The built namespace contains the breadcrumb, that is to say, the path from
-    the tree root to another tree node, and the content of that node.
-    """
-
-    def __init__(self, filter_types=None, root=None, start=None,
-            icon_size=16):
-        """The 'start' must be a handler, 'filter_type' must be a handler
-        class.
-        """
-        from file import Image
-        from folder import Folder
-        from resource_ import DBResource
-
-        if filter_types is None:
-            filter_types = (DBResource,)
-
-        context = get_context()
-        here = context.resource
-        if root is None:
-            root = here.get_site_root()
-        if start is None:
-            start = root
-
-        # Get the query parameters
-        parameters = get_parameters('bc', id=None, target=None)
-        id = parameters['id']
-        # Get the target folder
-        target_path = parameters['target']
-        if target_path is None:
-            if isinstance(start, Folder):
-                target = start
-            else:
-                target = start.parent
-        else:
-            target = root.get_resource(target_path)
-        self.target_path = str(target.get_abspath())
-
-        # Resource to link
-        item = context.get_form_value('item', default='')
-        if item == '':
-            item = '.'
-        self.item = item
-
-        # The breadcrumb
-        breadcrumb = []
-        node = target
-        while node is not root.parent:
-            url = context.uri.replace(bc_target=str(root.get_pathto(node)))
-            title = node.get_title()
-            short_title = reduce_string(title, 12, 40)
-            quoted_title = short_title.replace("'", "\\'")
-            breadcrumb.insert(0, {'name': node.name,
-                                  'title': title,
-                                  'short_title': short_title,
-                                  'quoted_title': quoted_title,
-                                  'url': url})
-            node = node.parent
-        self.path = breadcrumb
-
-        # Content
-        items = []
-        self.is_submit = False
-        user = context.user
-        filters = (Folder,) + filter_types
-        for resource in target.search_resources(cls=filters):
-            ac = resource.get_access_control()
-            if not ac.is_allowed_to_view(user, resource):
-                continue
-            path = here.get_pathto(resource)
-            bc_target = str(root.get_pathto(resource))
-            url = context.uri.replace(bc_target=bc_target)
-
-            self.is_submit = True
-            # Calculate path
-            is_image = isinstance(resource, Image)
-            if is_image:
-                path_to_icon = ";thumb?width=%s&height=%s" % (icon_size,
-                                                              icon_size)
-            else:
-                path_to_icon = resource.get_resource_icon(icon_size)
-            if path:
-                path_to_resource = Path(str(path) + '/')
-                path_to_icon = path_to_resource.resolve(path_to_icon)
-            title = resource.get_title()
-            short_title = reduce_string(title, 12, 40)
-            quoted_title = short_title.replace("'", "\\'")
-            items.append({'name': resource.name,
-                          'title': title,
-                          'short_title': short_title,
-                          'quoted_title': quoted_title,
-                          'is_folder': isinstance(resource, Folder),
-                          'is_image': is_image,
-                          'is_selectable': True,
-                          'path': path,
-                          'url': url,
-                          'icon': path_to_icon,
-                          'type': type(resource),
-                          'item_type': resource.handler.get_mimetype()})
-
-        items.sort(key=itemgetter('is_folder'), reverse=True)
-        self.items = items
-
-        # Avoid general template
-        response = context.response
-        response.set_header('Content-Type', 'text/html; charset=UTF-8')
-
-
 
 class DBResource_AddBase(STLForm):
     """Base class for 'DBResource_AddImage' and 'DBResource_AddLink' (used
@@ -216,83 +106,170 @@ class DBResource_AddBase(STLForm):
 
     element_to_add = None
 
-    configuration = {}
-
     schema = {
         'target_path': String(mandatory=True),
         'target_id': String(default=None),
-        'mode': String(mandatory=True),
-      }
+        'mode': String(mandatory=True)}
 
-    styles = ['/ui/bo.css',
-              '/ui/aruni/style.css']
-
-    base_scripts = ['/ui/jquery.js',
-                    '/ui/javascript.js']
-
-
-    scripts = {'wiki': ['/ui/wiki/javascript.js'],
-               'tiny_mce': ['/ui/tiny_mce/javascript.js',
-                            '/ui/tiny_mce/tiny_mce_src.js',
-                            '/ui/tiny_mce/tiny_mce_popup.js'],
-               'input': []}
+    scripts = {
+        'wiki': ['/ui/wiki/javascript.js'],
+        'tiny_mce': ['/ui/tiny_mce/javascript.js',
+                     '/ui/tiny_mce/tiny_mce_src.js',
+                     '/ui/tiny_mce/tiny_mce_popup.js'],
+        'input': []}
 
 
     action_upload_schema = merge_dicts(schema,
                                        file=FileDataType(mandatory=True))
 
 
-    additional_javascript = """
-          function select_element(type, value, caption) {
-            window.opener.$("#%s").val(value);
-            window.close();
-          }
-          """
+    def get_configuration(self):
+        return {}
 
 
-    def get_filter_types(self):
-        from file import File
-        return (File,)
+    def get_root(self, context):
+        return context.resource.get_site_root()
+
+
+    def is_folder(self, resource):
+        from folder import Folder
+        return isinstance(resource, Folder)
+
+
+    def is_item(self, resource):
+        return True
+
+
+    def can_upload(self, cls):
+        return True
 
 
     def get_namespace(self, resource, context):
-        from file import File
+        from file import File, Image
+        from folder import Folder
+
         # Get some informations
         mode = context.get_form_value('mode')
         # For the breadcrumb
-        filter_types = self.get_filter_types()
         if isinstance(resource, File):
             start = resource.parent
         else:
             start = resource
-        # Construct namespace
-        namespace = self.configuration
-        namespace.update({
-            'additional_javascript': self.get_additional_javascript(context),
-            'bc': Breadcrumb(filter_types=filter_types, start=start,
-                             icon_size=48),
-            'element_to_add': self.element_to_add,
-            'target_id': context.get_form_value('target_id'),
-            'message': context.message,
-            'mode': mode,
-            'resource_action': self.get_resource_action(context),
-            'styles': self.styles,
-            'scripts': self.get_scripts(mode)})
+
+        # Default parameter values
+        root = self.get_root(context)
+
+        # Get the query parameters
+        target_path = context.get_form_value('target')
+        # Get the target folder
+        if target_path is None:
+            if isinstance(start, Folder):
+                target = start
+            else:
+                target = start.parent
+        else:
+            target = root.get_resource(target_path)
+
+        # The breadcrumb
+        breadcrumb = []
+        node = target
+        while node is not root.parent:
+            url = context.uri.replace(target=str(root.get_pathto(node)))
+            title = node.get_title()
+            short_title = reduce_string(title, 12, 40)
+            quoted_title = short_title.replace("'", "\\'")
+            breadcrumb.insert(0, {'name': node.name,
+                                  'title': title,
+                                  'short_title': short_title,
+                                  'quoted_title': quoted_title,
+                                  'url': url})
+            node = node.parent
+
+        # Content
+        folders = []
+        items = []
+        user = context.user
+        for resource in target.search_resources():
+            is_folder = self.is_folder(resource)
+            is_item = self.is_item(resource)
+            if not is_folder and not is_item:
+                continue
+
+            ac = resource.get_access_control()
+            if not ac.is_allowed_to_view(user, resource):
+                continue
+            path = context.resource.get_pathto(resource)
+            url = context.uri.replace(target=str(root.get_pathto(resource)))
+
+            # Calculate path
+            if isinstance(resource, Image):
+                path_to_icon = ";thumb?width48=&height=48"
+            else:
+                path_to_icon = resource.get_resource_icon(48)
+            if path:
+                path_to_resource = Path(str(path) + '/')
+                path_to_icon = path_to_resource.resolve(path_to_icon)
+            title = resource.get_title()
+            short_title = reduce_string(title, 12, 40)
+            quoted_title = short_title.replace("'", "\\'")
+            item = {
+                'title': title,
+                'short_title': short_title,
+                'quoted_title': quoted_title,
+                'path': path,
+                'url': url,
+                'icon': path_to_icon,
+                'item_type': resource.handler.get_mimetype()}
+            if is_folder:
+                folders.append(item)
+            if is_item:
+                items.append(item)
+
+        # Sort
+        items.sort(key=itemgetter('short_title'))
+        folders.sort(key=itemgetter('short_title'))
+
+        # Avoid general template
+        response = context.response
+        response.set_header('Content-Type', 'text/html; charset=UTF-8')
+
+        # Build and return the namespace
+        namespace = self.get_configuration()
+        additional_javascript = self.get_additional_javascript(context)
+        namespace['additional_javascript'] = additional_javascript
+        namespace['target_path'] = str(target.get_abspath())
+        namespace['breadcrumb'] = breadcrumb
+        namespace['folders'] = folders
+        namespace['items'] = items
+        namespace['element_to_add'] = self.element_to_add
+        namespace['target_id'] = context.get_form_value('target_id')
+        namespace['message'] = context.message
+        namespace['mode'] = mode
+        namespace['resource_action'] = self.get_resource_action(context)
+        namespace['scripts'] = self.get_scripts(mode)
         return namespace
 
 
     def get_scripts(self, mode):
         if mode is None:
-            return self.base_scripts
-        return self.base_scripts + self.scripts[mode]
+            return []
+        return self.scripts[mode]
 
 
     def get_additional_javascript(self, context):
         mode = context.get_form_value('mode')
-        if mode!='input':
+        if mode != 'input':
             return ''
+
+        additional_javascript = """
+            function select_element(type, value, caption) {
+                window.opener.$("#%s").val(value);
+                window.close();
+            }
+            """
+
         target_id = context.get_form_value('target_id')
-        return self.additional_javascript % target_id
+        return additional_javascript % target_id
 
 
     def action_upload(self, resource, context, form):
@@ -314,17 +291,10 @@ class DBResource_AddBase(STLForm):
             return
 
         # Check it is of the expected type
-        filter_types = self.get_filter_types()
         cls = get_resource_class(mimetype)
-        is_compatible = False
-        for filter_type in filter_types:
-            if issubclass(cls, filter_type):
-                is_compatible = True
-                break
-        if is_compatible is False:
-            class_ids = ', '.join([x.class_id for x in filter_types])
-            context.message = ERROR(u'The given file is none of the types '
-                                    u'{class_ids}.', class_ids=class_ids)
+        if not self.can_upload(cls):
+            error = u'The given file is not of the expected type.'
+            context.message = ERROR(error)
             return
 
         # Add the image to the resource
@@ -346,8 +316,8 @@ class DBResource_AddBase(STLForm):
     def get_javascript_return(self, context, path):
         return """
             <script type="text/javascript">
-                %s
-                select_element('%s', '%s', '');
+              %s
+              select_element('%s', '%s', '');
             </script>""" % (self.get_additional_javascript(context),
                             self.element_to_add, path)
 
@@ -359,22 +329,31 @@ class DBResource_AddBase(STLForm):
 
 class DBResource_AddImage(DBResource_AddBase):
 
+    template = '/ui/html/addimage.xml'
     element_to_add = 'image'
 
-    template = '/ui/html/addimage.xml'
 
-    configuration = {'show_browse': True,
-                     'show_upload': True}
+    def get_configuration(self):
+        return {
+            'show_browse': True,
+            'show_external': False,
+            'show_insert': False,
+            'show_upload': True}
 
 
-    def get_filter_types(self):
+    def is_item(self, resource):
         from file import Image
-        return (Image,)
+        return isinstance(resource, Image)
+
+
+    def can_upload(self, cls):
+        from file import Image
+        return issubclass(cls, Image)
 
 
     def get_resource_action(self, context):
         mode = context.get_form_value('mode')
-        if mode=='tiny_mce':
+        if mode == 'tiny_mce':
             return '/;download'
         return DBResource_AddBase.get_resource_action(self, context)
 
@@ -383,16 +362,17 @@ class DBResource_AddImage(DBResource_AddBase):
 class DBResource_AddLink(DBResource_AddBase):
 
     template = '/ui/html/addlink.xml'
-
     element_to_add = 'link'
 
     action_add_resource_schema = merge_dicts(DBResource_AddImage.schema,
                                              title=String(mandatory=True))
 
-    configuration = {'show_browse': True,
-                     'show_external': True,
-                     'show_insert': True,
-                     'show_upload': True}
+    def get_configuration(self):
+        return {
+            'show_browse': True,
+            'show_external': True,
+            'show_insert': True,
+            'show_upload': True}
 
 
     def action_add_resource(self, resource, context, form):

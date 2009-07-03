@@ -34,9 +34,9 @@ from itools.web import BaseView, STLForm, STLView, get_context, INFO, ERROR
 from itools.xapian import AndQuery, PhraseQuery, RangeQuery
 
 # Import from ikaaro
-from ikaaro.file_views import File_Upload
 from ikaaro.utils import get_base_path_query
 from grid import get_grid_data
+from ikaaro.datatypes import FileDataType
 
 
 resolution = timedelta.resolution
@@ -836,9 +836,14 @@ class DailyView(CalendarView):
 
 
 
-class Calendar_Upload(File_Upload):
+class Calendar_Upload(STLForm):
 
+    access = 'is_allowed_to_edit'
+    title = MSG(u'Replace')
     template = '/ui/calendar/upload.xml'
+    schema = {
+        'file': FileDataType(mandatory=True)}
+
 
     def action(self, resource, context, form):
         file = form['file']

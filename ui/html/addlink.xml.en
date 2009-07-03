@@ -5,32 +5,19 @@
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
   <head>
     <title>Insert link</title>
-    <link type="text/css" rel="stylesheet" stl:repeat="style styles"
-      href="${style}" />
-    <script type="text/javascript" stl:repeat="script scripts"
-      src="${script}" />
+    <link type="text/css" rel="stylesheet" href="/ui/bo.css" />
+    <link type="text/css" rel="stylesheet" href="/ui/aruni/style.css" />
+    <link type="text/css" rel="stylesheet" href="/ui/html/style.css" />
+    <script type="text/javascript" src="/ui/jquery.js" />
+    <script type="text/javascript" src="/ui/javascript.js" />
+    <script type="text/javascript" stl:repeat="script scripts" src="${script}"
+      />
     <script type="text/javascript">
       $(document).ready(function() {
         tabme();
       })
       ${additional_javascript}
     </script>
-    <style>
-      #body {
-        border-top: 20px solid #30569D;
-        padding: 20px;
-      }
-      table.thumbs {
-        border-collapse: collapse;
-      }
-      table.thumbs th,
-      table.thumbs td {
-        border: 2px solid #ccc;
-      }
-      dt a {
-        white-space: nowrap;
-      }
-    </style>
   </head>
 
   <body>
@@ -38,23 +25,27 @@
 
       <!-- tabs -->
       <p class="tabme">
-        <a href="#browse" onclick="tabme_show(event, this)" stl:if="show_browse">Browse</a>
-        <a href="#external" onclick="tabme_show(event, this)" stl:if="show_external">External Link</a>
-        <a href="#insert" onclick="tabme_show(event, this)" stl:if="show_insert">Insert</a>
-        <a href="#upload" onclick="tabme_show(event, this)" stl:if="show_upload">Upload</a>
+        <a href="#browse" onclick="tabme_show(event, this)"
+          stl:if="show_browse">Browse</a>
+        <a href="#external" onclick="tabme_show(event, this)"
+          stl:if="show_external">External Link</a>
+        <a href="#insert" onclick="tabme_show(event, this)"
+          stl:if="show_insert">Insert</a>
+        <a href="#upload" onclick="tabme_show(event, this)"
+          stl:if="show_upload">Upload</a>
       </p>
 
       <!-- Message -->
-      <div id="message" stl:if="message">Message: ${message}</div>
+      <div id="message" stl:if="message">${message}</div>
 
-      <!-- Internal Link -->
+      <!-- Browse -->
       <div id="browse" stl:if="show_browse">
         <h3>Browse and link to a File from the workspace</h3>
-        <!-- Breadcrumbs -->
+        <!-- Breadcrumb -->
         <div id="maintitle">
           <div id="breadcrumbs">
             <label>Location:</label>
-            <span stl:repeat="x bc/path">
+            <span stl:repeat="x breadcrumb">
               <a href="${x/url}" title="${x/title}">${x/short_title}</a> /
             </span>
           </div>
@@ -66,35 +57,28 @@
             <th>Select Resource</th>
           </tr>
           <tr>
+            <!-- Left column -->
             <td valign="top">
-              <!-- Browse Folders -->
-              <stl:block stl:repeat="item bc/items">
-                <dl stl:if="item/is_folder">
-                  <dt>
-                    <a href="${item/url}" title="${item/title}"><img alt=""
-                        src="${item/icon}" width="16"
-                        height="16"/>&nbsp;${item/short_title}</a>
-                  </dt>
-                </dl>
-              </stl:block>
+              <dl stl:repeat="item folders">
+                <dt>
+                  <a href="${item/url}" title="${item/title}">
+                    <img alt="" src="${item/icon}" width="16" height="16" />
+                    ${item/short_title}
+                  </a>
+                </dt>
+              </dl>
             </td>
+            <!-- Right column -->
             <td valign="top">
-              <!-- Files and Folders to select -->
-              <stl:block stl:repeat="item bc/items">
-                <dl class="thumb">
-                  <dt>
-                    <img alt="" title="${item/item_type}"
-                      src="${item/icon}" width="48" height="48" />
-                  </dt>
-                  <dd>
-                    <abbr
-                      title="${item/title}">${item/short_title}</abbr><br/>
-                    <a href="javascript:select_element('${element_to_add}', '${item/path}', '${item/quoted_title}')">
-                      Select
-                    </a>
-                  </dd>
-                </dl>
-              </stl:block>
+              <dl class="thumb" stl:repeat="item items">
+                <dt>
+                  <img alt="" title="${item/item_type}"
+                    src="${item/icon}" width="48" height="48" />
+                </dt>
+                <dd>
+                  <a href="javascript:select_element('${element_to_add}', '${item/path}', '${item/quoted_title}')" title="${item/title}">${item/short_title}</a>
+                </dd>
+              </dl>
             </td>
           </tr>
         </table>
@@ -106,7 +90,8 @@
         <form>
           <input type="text" id="uri" name="uri" size="40" value="http://"/>
           <input type="button" value="Add" class="button-ok"
-            onclick="select_element('${element_to_add}', $('#uri').val(), '');"/>
+            onclick="select_element('${element_to_add}', $('#uri').val(), '');"
+            />
         </form>
       </div>
 
@@ -114,28 +99,31 @@
       <div id="insert" stl:if="show_insert">
         <h3>Create a new page and link to it:</h3>
         <form action=";add_link#insert" method="post">
-          <input type="hidden" name="target_path" value="${bc/target_path}"/>
+          <input type="hidden" name="target_path" value="${target_path}" />
           <input type="hidden" name="target_id" value="${target_id}" />
           <input type="hidden" name="mode" value="${mode}" />
           <input type="text" name="title" size="40" />
           <input type="hidden" name="name" value="" />
-          <input class="button-ok" type="submit" value="OK" name=";add_resource"/>
+          <input class="button-ok" type="submit" value="OK"
+            name=";add_resource"/>
         </form>
       </div>
 
-      <!-- Upload and Link -->
+      <!-- Upload -->
       <div id="upload" stl:if="show_upload">
         <h3>Upload a file to the current folder and link to it:</h3>
-        <form action=";add_link#upload" method="post" enctype="multipart/form-data">
-          <input type="hidden" name="target_path" value="${bc/target_path}"/>
+        <form action=";add_link#upload" method="post"
+          enctype="multipart/form-data">
+          <input type="hidden" name="target_path" value="${target_path}" />
           <input type="hidden" name="target_id" value="${target_id}" />
-          <input type="hidden" name="mode" value="${mode}" />
-          <input id="file" name="file" size="35" type="file"/>
+          <input id="mode" name="mode" type="hidden" value="${mode}" />
+          <input id="file" name="file" size="35" type="file" />
           <br/>
-          <input class="button-upload" type="submit" value="Upload and Link"
+          <input class="button-upload" type="submit" value="Upload"
             name=";upload"/>
         </form>
       </div>
+
     </div>
   </body>
 </html>

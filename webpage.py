@@ -33,14 +33,14 @@ from itools.xml import START_ELEMENT
 
 # Import from ikaaro
 import messages
+from file_views import File_Edit
 from forms import HTMLBody
-from forms import title_widget, description_widget, subject_widget
+from forms import title_widget, description_widget, subject_widget, file_widget
 from forms import rte_widget, timestamp_widget
 from multilingual import Multilingual
 from text import Text
 from registry import register_resource_class
 from resource_ import DBResource
-from resource_views import DBResource_Edit
 
 
 def is_edit_conflict(resource, context, timestamp):
@@ -164,13 +164,13 @@ class WebPage_View(BaseView):
 
 
 
-class HTMLEditView(DBResource_Edit):
+class HTMLEditView(File_Edit):
     """WYSIWYG editor for HTML documents.
     """
-    schema = merge_dicts(DBResource_Edit.schema,
+    schema = merge_dicts(File_Edit.schema,
                          data=HTMLBody, timestamp=DateTime(readonly=True))
-    widgets = [title_widget, rte_widget, description_widget, subject_widget,
-               timestamp_widget]
+    widgets = [title_widget, rte_widget, file_widget, description_widget,
+               subject_widget, timestamp_widget]
 
 
     def get_value(self, resource, context, name, datatype):
@@ -179,8 +179,7 @@ class HTMLEditView(DBResource_Edit):
             return resource.get_html_data(language=language)
         elif name == 'timestamp':
             return datetime.now()
-        return DBResource_Edit.get_value(self, resource, context, name,
-                                         datatype)
+        return File_Edit.get_value(self, resource, context, name, datatype)
 
 
     def action(self, resource, context, form):
@@ -188,13 +187,12 @@ class HTMLEditView(DBResource_Edit):
             return
 
         # Properties
-        DBResource_Edit.action(self, resource, context, form)
-
-        # Body
-        new_body = form['data']
-        language = resource.get_content_language(context)
-        handler = resource.get_handler(language=language)
-        handler.set_body(new_body)
+        File_Edit.action(self, resource, context, form)
+        if form['file'] is None:
+            new_body = form['data']
+            language = resource.get_content_language(context)
+            handler = resource.get_handler(language=language)
+            handler.set_body(new_body)
 
         # Ok
         context.message = messages.MSG_CHANGES_SAVED
@@ -233,8 +231,8 @@ class WebPage(ResourceWithHTML, Multilingual, Text):
     class_description = MSG(u'Create and publish a Web Page.')
     class_icon16 = 'icons/16x16/html.png'
     class_icon48 = 'icons/48x48/html.png'
-    class_views = ['view', 'edit', 'externaledit', 'upload', 'backlinks',
-                   'edit_state', 'last_changes']
+    class_views = ['view', 'edit', 'externaledit', 'backlinks', 'edit_state',
+                   'last_changes']
     class_handler = XHTMLFile
 
 

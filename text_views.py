@@ -28,36 +28,38 @@ from itools.web import STLForm, STLView, INFO
 
 # Import from ikaaro
 from buttons import RemoveButton
+from file_views import File_Edit
 from forms import AutoForm, get_default_widget, MultilineWidget
-from forms import title_widget, description_widget, subject_widget
+from forms import description_widget, file_widget, subject_widget, title_widget
 import messages
-from resource_views import DBResource_Edit
 from utils import get_parameters
 from views import BrowseForm
 
 
-class Text_Edit(DBResource_Edit):
+class Text_Edit(File_Edit):
 
     title = MSG(u'Edit')
     icon = 'edit.png'
-    schema = merge_dicts(DBResource_Edit.schema, data=String)
+    schema = merge_dicts(File_Edit.schema, data=String)
     widgets = [
         title_widget,
         MultilineWidget('data', title=MSG(u"Content"), rows=19, cols=69),
-        description_widget, subject_widget]
+        file_widget,
+        description_widget,
+        subject_widget]
 
 
     def get_value(self, resource, context, name, datatype):
         if name == 'data':
             return resource.handler.to_str()
-        return DBResource_Edit.get_value(self, resource, context, name,
-                                         datatype)
+        return File_Edit.get_value(self, resource, context, name, datatype)
 
 
     def action(self, resource, context, form):
-        data = form['data']
-        resource.handler.load_state_from_string(data)
-        return DBResource_Edit.action(self, resource, context, form)
+        File_Edit.action(self, resource, context, form)
+        if form['file'] is None:
+            data = form['data']
+            resource.handler.load_state_from_string(data)
 
 
 
