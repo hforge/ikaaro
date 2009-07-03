@@ -148,7 +148,8 @@ def update(parser, options, target):
                 log.write('\n')
                 bad += 1
         # Reset the state
-        database.cache = {}
+        database.cache.clear()
+        database.cache[root.metadata.uri] = root.metadata
         # Stop if there were errors
         print
         if bad > 0:
