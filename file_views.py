@@ -37,8 +37,8 @@ from itools.xapian import PhraseQuery
 # Import from ikaaro
 from datatypes import FileDataType, ImageWidth
 from folder_views import Folder_BrowseContent
-from forms import title_widget, file_widget, description_widget
-from forms import subject_widget
+from forms import title_widget, file_widget, description_widget, subject_widget
+from forms import timestamp_widget
 from forms import FileWidget
 import messages
 from multilingual import Multilingual
@@ -153,7 +153,9 @@ class File_View(STLView):
 class File_Edit(DBResource_Edit):
 
     schema = merge_dicts(DBResource_Edit.schema, file=FileDataType)
-    widgets = [title_widget, file_widget, description_widget, subject_widget]
+    widgets = [
+        timestamp_widget, title_widget, file_widget, description_widget,
+        subject_widget]
 
 
     def get_value(self, resource, context, name, datatype):
@@ -165,6 +167,8 @@ class File_Edit(DBResource_Edit):
 
     def action(self, resource, context, form):
         DBResource_Edit.action(self, resource, context, form)
+        if context.edit_conflict:
+            return
 
         # Upload file
         file = form['file']

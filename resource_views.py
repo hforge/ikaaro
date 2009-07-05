@@ -20,11 +20,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
+from datetime import datetime
 from operator import itemgetter
 
 # Import from itools
 from itools.core import merge_dicts
-from itools.datatypes import String, Unicode
+from itools.datatypes import DateTime, String, Unicode
 from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.http import Conflict, NotImplemented
@@ -37,6 +38,7 @@ from itools.web import BaseView, STLForm, INFO, ERROR, lock_body
 from datatypes import FileDataType, CopyCookie
 from exceptions import ConsistencyError
 from forms import AutoForm, title_widget, description_widget, subject_widget
+from forms import timestamp_widget
 import messages
 from registry import get_resource_class
 from utils import reduce_string
@@ -71,16 +73,45 @@ class DBResource_Edit(AutoForm):
     schema = {
         'title': Unicode,
         'description': Unicode,
-        'subject': Unicode}
-    widgets = [title_widget, description_widget, subject_widget]
+        'subject': Unicode,
+        'timestamp': DateTime(readonly=True)}
+    widgets = [
+        timestamp_widget, title_widget, description_widget, subject_widget]
 
 
     def get_value(self, resource, context, name, datatype):
+        if name == 'timestamp':
+            return datetime.now()
         language = resource.get_content_language(context)
         return resource.get_property(name, language=language)
 
 
+    def check_edit_conflict(self, resource, context, form):
+        context.edit_conflict = False
+
+        timestamp = form['timestamp']
+        if timestamp is None:
+            context.message = messages.MSG_EDIT_CONFLICT
+            context.edit_conflict = True
+            return
+
+        mtime = resource.get_mtime()
+        if mtime is not None and timestamp < mtime:
+            # Conlicft unless we are overwriting our own work
+            last_author = resource.get_last_author()
+            if last_author != context.user.name:
+                user = context.root.get_user_title(last_author)
+                context.message = messages.MSG_EDIT_CONFLICT2(user=user)
+                context.edit_conflict = True
+
+
     def action(self, resource, context, form):
+        # Check edit conflict
+        self.check_edit_conflict(resource, context, form)
+        if context.edit_conflict:
+            return
+
+        # Save changes
         title = form['title']
         description = form['description']
         subject = form['subject']

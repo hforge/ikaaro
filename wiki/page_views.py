@@ -43,12 +43,12 @@ from itools.uri import get_reference
 from itools.uri.mailto import Mailto
 from itools import vfs
 from itools.vfs import FileName
-from itools.web import BaseView, STLForm, STLView, ERROR
+from itools.web import BaseView, STLView, ERROR
 from itools.xml import XMLParser, XMLError
 
 # Import from ikaaro
 from ikaaro import messages
-from ikaaro.webpage import is_edit_conflict
+from ikaaro.resource_views import DBResource_Edit
 
 
 figure_style_converter = compile(r'\\begin\{figure\}\[.*?\]')
@@ -342,7 +342,8 @@ class WikiPage_ToPDF(BaseView):
 
 
 
-class WikiPage_Edit(STLForm):
+# TODO Use auto-form
+class WikiPage_Edit(DBResource_Edit):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Edit')
@@ -350,8 +351,7 @@ class WikiPage_Edit(STLForm):
     schema = {
         'title': Unicode,
         'data': String,
-        'timestamp': DateTime,
-    }
+        'timestamp': DateTime}
 
 
     def get_namespace(self, resource, context):
@@ -370,7 +370,9 @@ class WikiPage_Edit(STLForm):
 
 
     def action(self, resource, context, form):
-        if is_edit_conflict(resource, context, form['timestamp']):
+        # Check edit conflict
+        self.check_edit_conflict(resource, context, form)
+        if context.edit_conflict:
             return
 
         title = form['title']

@@ -18,12 +18,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Import from the Standard Library
-from datetime import datetime
-
 # Import from itools
 from itools.core import merge_dicts
-from itools.datatypes import DateTime
 from itools.gettext import MSG
 from itools.html import xhtml_uri, XHTMLFile
 from itools.stl import set_prefix
@@ -41,21 +37,6 @@ from multilingual import Multilingual
 from text import Text
 from registry import register_resource_class
 from resource_ import DBResource
-
-
-def is_edit_conflict(resource, context, timestamp):
-    if timestamp is None:
-        context.message = messages.MSG_EDIT_CONFLICT
-        return True
-    handler = resource.handler
-    if handler.timestamp is not None and timestamp < handler.timestamp:
-        # Conlicft unless we are overwriting our own work
-        last_author = resource.get_last_author()
-        if last_author != context.user.name:
-            user = context.root.get_user_title(last_author)
-            context.message = messages.MSG_EDIT_CONFLICT2(user=user)
-            return True
-    return False
 
 
 def _get_links(base, events):
@@ -167,27 +148,25 @@ class WebPage_View(BaseView):
 class HTMLEditView(File_Edit):
     """WYSIWYG editor for HTML documents.
     """
-    schema = merge_dicts(File_Edit.schema,
-                         data=HTMLBody, timestamp=DateTime(readonly=True))
-    widgets = [title_widget, rte_widget, file_widget, description_widget,
-               subject_widget, timestamp_widget]
+    schema = merge_dicts(File_Edit.schema, data=HTMLBody)
+    widgets = [
+        timestamp_widget, title_widget, rte_widget, file_widget,
+        description_widget, subject_widget]
 
 
     def get_value(self, resource, context, name, datatype):
         language = resource.get_content_language(context)
         if name == 'data':
             return resource.get_html_data(language=language)
-        elif name == 'timestamp':
-            return datetime.now()
         return File_Edit.get_value(self, resource, context, name, datatype)
 
 
     def action(self, resource, context, form):
-        if is_edit_conflict(resource, context, form['timestamp']):
+        File_Edit.action(self, resource, context, form)
+        if context.edit_conflict:
             return
 
         # Properties
-        File_Edit.action(self, resource, context, form)
         if form['file'] is None:
             new_body = form['data']
             language = resource.get_content_language(context)
