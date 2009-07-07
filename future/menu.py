@@ -402,7 +402,7 @@ class Menu(OrderedTable):
                             subtabs = get_menu_ns_lvl(context, url, depth - 1,
                                                       use_first_child, flat)
                             # use first child
-                            if subtabs['items']:
+                            if use_first_child and subtabs['items']:
                                 sub_path = subtabs['items'][0]['real_path']
                                 # if the first child is an external link =>
                                 # skip it
