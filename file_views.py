@@ -36,11 +36,11 @@ from itools.web import BaseView, STLView, STLForm, INFO, ERROR
 from itools.xapian import PhraseQuery
 
 # Import from ikaaro
+from autoform import title_widget, description_widget, subject_widget
+from autoform import file_widget, timestamp_widget
+from autoform import FileWidget
 from datatypes import FileDataType, ImageWidth
 from folder_views import Folder_BrowseContent
-from forms import title_widget, file_widget, description_widget, subject_widget
-from forms import timestamp_widget
-from forms import FileWidget
 import messages
 from multilingual import Multilingual
 from registry import get_resource_class

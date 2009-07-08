@@ -27,10 +27,11 @@ from itools.gettext import MSG
 from itools.web import STLForm, STLView, INFO
 
 # Import from ikaaro
+from autoform import AutoForm, get_default_widget, MultilineWidget
+from autoform import description_widget, file_widget, subject_widget
+from autoform import title_widget
 from buttons import RemoveButton
 from file_views import File_Edit
-from forms import AutoForm, get_default_widget, MultilineWidget
-from forms import description_widget, file_widget, subject_widget, title_widget
 import messages
 from utils import get_parameters
 from views import BrowseForm

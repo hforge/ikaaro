@@ -29,9 +29,9 @@ from itools.i18n import format_datetime
 from itools.web import STLForm, INFO
 
 # Import from ikaaro
+from ikaaro.autoform import title_widget, rte_widget, AutoForm
 from ikaaro.folder import Folder
 from ikaaro import messages
-from ikaaro.forms import title_widget, rte_widget, AutoForm
 from ikaaro.registry import register_resource_class
 from thread import Thread
 from message import Message

@@ -48,7 +48,7 @@ summarizes these changes:
 
   Before                                 Now
   -------------------------------------  --------------------------------------
-  TODO
+  from ikaaro.forms import XXX           from ikaaro.autoform import XXX
 
 
 Programming Interface

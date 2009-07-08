@@ -35,10 +35,10 @@ from itools.vfs import FileName
 from itools.web import BaseView, STLForm, INFO, ERROR, lock_body
 
 # Import from ikaaro
+from autoform import AutoForm, title_widget, description_widget, subject_widget
+from autoform import timestamp_widget
 from datatypes import FileDataType, CopyCookie
 from exceptions import ConsistencyError
-from forms import AutoForm, title_widget, description_widget, subject_widget
-from forms import timestamp_widget
 import messages
 from registry import get_resource_class
 from utils import reduce_string
