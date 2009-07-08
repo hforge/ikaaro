@@ -105,13 +105,9 @@ class Widget(object):
         stl_namespaces))
 
 
-    def __init__(self, name, template=None, template_multiple=None, **kw):
+    def __init__(self, name, **kw):
         self.name = name
         self.id = name.replace('_', '-')
-        if template is not None:
-            self.template = template
-        if template_multiple is not None:
-            self.template_multiple = template_multiple
         for key in kw:
             setattr(self, key, kw[key])
 
@@ -258,25 +254,23 @@ class BooleanRadio(Widget):
     template = list(XMLParser("""
         <label for="${id}-yes">${labels/yes}</label>
         <input id="${id}-yes" name="${name}" type="radio" value="1"
-          checked="checked" stl:if="is_yes"/>
-        <input id="${id}-yes" name="${name}" type="radio" value="1"
-          stl:if="not is_yes"/>
+          checked="${is_true}" />
 
         <label for="${id}-no">${labels/no}</label>
         <input id="${id}-no" name="${name}" type="radio" value="0"
-          checked="checked" stl:if="not is_yes"/>
-        <input id="${id}-no" name="${name}" type="radio" value="0"
-          stl:if="is_yes"/>
+          checked="${is_false}" />
         """, stl_namespaces))
 
 
     def get_namespace(self, datatype, value):
         default_labels = {'yes': MSG(u'Yes'), 'no': MSG(u'No')}
         labels = getattr(self, 'labels', default_labels)
+        is_true = value in [True, 1, '1']
         return {
             'name': self.name,
             'id': self.id,
-            'is_yes': value in [True, 1, '1'],
+            'is_true': is_true,
+            'is_false': not is_true,
             'labels': labels}
 
 
@@ -315,18 +309,14 @@ class SelectRadio(Widget):
 
     template = list(XMLParser("""
         <stl:block stl:if="has_empty_option">
-          <input type="radio" name="${name}" value="" checked="checked"
-            stl:if="none_selected"/>
           <input type="radio" name="${name}" value=""
-            stl:if="not none_selected"/>
+            checked="${none_selected}" />
           <stl:block stl:if="not is_inline"><br/></stl:block>
         </stl:block>
         <stl:block stl:repeat="option options">
           <input type="radio" id="${id}-${option/name}" name="${name}"
-            value="${option/name}" checked="checked"
+            value="${option/name}" checked="${option/selected}"
             stl:if="option/selected"/>
-          <input type="radio" id="${id}-${option/name}" name="${name}"
-            value="${option/name}" stl:if="not option/selected"/>
           <label for="${id}-${option/name}">${option/value}</label>
           <stl:block stl:if="not is_inline"><br/></stl:block>
         </stl:block>
@@ -334,7 +324,7 @@ class SelectRadio(Widget):
 
     template_multiple = list(XMLParser("""
         <stl:block stl:repeat="option options">
-          <input type="checkbox" name="${name}" id="${id}-${option/name}"
+          <input type="checkbox" id="${id}-${option/name}" name="${name}"
             value="${option/name}" checked="${option/selected}" />
           <label for="${id}-${option/name}">${option/value}</label>
           <stl:block stl:if="not is_inline"><br/></stl:block>
@@ -477,9 +467,7 @@ class ImageSelectorWidget(PathSelectorWidget):
 
 class RTEWidget(Widget):
 
-    template = list(XMLParser("""${rte}""", stl_namespaces))
-
-    rte_template = '/ui/tiny_mce/rte.xml'
+    template = '/ui/tiny_mce/rte.xml'
     rte_css = ['/ui/aruni/style.css', '/ui/tiny_mce/content.css']
     rte_scripts = [
         '/ui/tiny_mce/tiny_mce_src.js',
@@ -519,13 +507,13 @@ class RTEWidget(Widget):
     def get_prefix(self):
         context = get_context()
         here = context.resource.get_abspath()
-        prefix = here.get_pathto(self.rte_template)
+        prefix = here.get_pathto(self.template)
         return prefix
 
 
     def get_template(self, datatype, value):
-        context = get_context()
-        handler = context.root.get_resource(self.rte_template)
+        root = get_context().root
+        handler = root.get_resource(self.template)
         return handler.events
 
 
