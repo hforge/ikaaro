@@ -32,8 +32,8 @@ from itools.web import STLView, INFO, ERROR
 from itools.xapian import PhraseQuery, OrQuery, AndQuery, split_unicode
 
 # Import from ikaaro
+from autoform import AutoForm, SelectWidget, MultilineWidget, TextWidget
 from config import get_config
-from forms import AutoForm, SelectWidget, MultilineWidget, TextWidget
 from views import SearchForm
 from utils import get_base_path_query
 

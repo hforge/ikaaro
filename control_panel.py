@@ -32,8 +32,8 @@ from itools.xapian import PhraseQuery
 # Import from ikaaro
 from access import RoleAware_BrowseUsers, RoleAware_AddUser
 from access import RoleAware_EditMembership
+from autoform import MultilineWidget, SelectWidget, TextWidget
 from folder_views import Folder_Orphans
-from forms import MultilineWidget, SelectWidget, TextWidget
 import messages
 from resource_views import DBResource_Edit
 from utils import get_base_path_query

@@ -26,8 +26,8 @@ from itools.fs import FileName
 from itools.web import STLForm, INFO
 
 # Import from ikaaro
+from ikaaro.autoform import rte_widget
 from ikaaro.folder import Folder
-from ikaaro.forms import rte_widget
 from ikaaro.messages import MSG_DELETE_SELECTION
 from message import Message, build_message
 

@@ -25,8 +25,8 @@ from itools.web import BaseView, STLView, STLForm, INFO, ERROR
 from itools.xapian import PhraseQuery, AndQuery, OrQuery, StartQuery
 
 # Import from ikaaro
+from autoform import TextWidget, PasswordWidget, AutoForm
 from folder import Folder_BrowseContent
-from forms import TextWidget, PasswordWidget, AutoForm
 import messages
 
 

@@ -26,8 +26,8 @@ from itools.gettext import MSG
 from itools.xapian import PhraseQuery, AndQuery
 
 # Import from ikaaro
-from ikaaro.forms import title_widget, BooleanCheckBox, SelectWidget
-from ikaaro.forms import ReadOnlyWidget
+from ikaaro.autoform import title_widget, BooleanCheckBox, SelectWidget
+from ikaaro.autoform import ReadOnlyWidget
 from ikaaro.table import OrderedTable, OrderedTableFile
 from ikaaro.table_views import OrderedTable_View, Table_EditRecord
 

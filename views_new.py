@@ -26,7 +26,7 @@ from itools.handlers import checkid
 from itools.web import FormError
 
 # Import from ikaaro
-from forms import AutoForm, TextWidget, title_widget
+from autoform import AutoForm, TextWidget, title_widget
 import messages
 from registry import get_resource_class, get_document_types
 from views import ContextMenu

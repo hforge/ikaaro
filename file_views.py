@@ -35,10 +35,10 @@ from itools.fs import FileName
 from itools.web import BaseView, STLView, INFO, ERROR
 
 # Import from ikaaro
+from autoform import title_widget, description_widget, subject_widget
+from autoform import file_widget, timestamp_widget
+from autoform import FileWidget, TextWidget
 from datatypes import FileDataType, ImageWidth
-from forms import title_widget, file_widget, description_widget, subject_widget
-from forms import timestamp_widget
-from forms import FileWidget, TextWidget
 import messages
 from multilingual import Multilingual
 from registry import get_resource_class

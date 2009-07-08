@@ -26,9 +26,9 @@ from itools.web import INFO, ERROR, BaseView, FormError
 from itools.xapian import PhraseQuery
 
 # Import from ikaaro
+from autoform import AutoForm
 from buttons import RemoveButton, OrderUpButton, OrderDownButton
 from buttons import OrderBottomButton, OrderTopButton
-from forms import AutoForm
 import messages
 from resource_views import EditLanguageMenu
 from views import SearchForm

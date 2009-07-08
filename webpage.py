@@ -31,11 +31,11 @@ from itools.web import BaseView, get_context
 from itools.xml import START_ELEMENT
 
 # Import from ikaaro
+from autoform import HTMLBody
+from autoform import title_widget, description_widget, subject_widget
+from autoform import file_widget, rte_widget, timestamp_widget
 import messages
 from file_views import File_Edit
-from forms import HTMLBody
-from forms import title_widget, description_widget, subject_widget, file_widget
-from forms import rte_widget, timestamp_widget
 from multilingual import Multilingual
 from text import Text
 from registry import register_resource_class

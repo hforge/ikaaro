@@ -34,8 +34,8 @@ from itools.web import BaseView, BaseForm, STLForm, FormError, INFO, ERROR
 from itools.web.views import process_form
 
 # Import from ikaaro
+from ikaaro.autoform import HiddenWidget, TextWidget
 from ikaaro.buttons import Button
-from ikaaro.forms import HiddenWidget, TextWidget
 from ikaaro import messages
 from ikaaro.views import BrowseForm, SearchForm as BaseSearchForm, ContextMenu
 from ikaaro.views_new import NewInstance

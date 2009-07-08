@@ -25,8 +25,8 @@ from itools.gettext import MSG
 from itools.web import get_context
 
 # Import from ikaaro
+from autoform import get_default_widget
 from file import File
-from forms import get_default_widget
 from resource_ import DBResource
 from table_views import Table_View, Table_AddRecord, Table_EditRecord
 from table_views import OrderedTable_View, Table_ExportCSV
