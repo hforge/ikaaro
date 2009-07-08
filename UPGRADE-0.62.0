@@ -51,8 +51,18 @@ summarizes these changes:
   from ikaaro.forms import XXX           from ikaaro.autoform import XXX
 
 
-Programming Interface
+Autoform
 =====================
 
-TODO
+The widgets have been rationalized.  The table below shows which widget to
+use now instead of the old one:
+
+  datatype                    Widget (Before)           Widget (Now)
+  -------------------------   -----------------------   ---------------------
+  Boolean                     BooleanCheckBox           CheckboxWidget
+  Boolean                     BooleanRadio              RadioWidget
+  ?                           CheckBoxWidget            CheckboxWidget
+  Enumerate(multiple=False)   SelectRadio               RadioWidget
+  Enumerate(multiple=True)    SelectRadio               CheckboxWidget
+
 

@@ -82,7 +82,7 @@ class HTMLBody(XHTMLBody):
 ###########################################################################
 def get_default_widget(datatype):
     if issubclass(datatype, Boolean):
-        return BooleanCheckBox
+        return RadioWidget
     elif issubclass(datatype, Date):
         return DateWidget
     elif issubclass(datatype, Enumerate):
@@ -216,62 +216,106 @@ class MultilineWidget(Widget):
 
 
 
-class CheckBoxWidget(Widget):
+class RadioWidget(Widget):
 
     template = list(XMLParser("""
-        <input type="checkbox" id="${id}" name="${name}" value="${value}"
-          checked="${is_selected}" />
+        <stl:block stl:repeat="option options">
+          <input type="radio" id="${id}-${option/name}" name="${name}"
+            value="${option/name}" checked="${option/selected}" />
+          <label for="${id}-${option/name}">${option/value}</label>
+          <br stl:if="not oneline" />
+        </stl:block>
         """, stl_namespaces))
+
+    oneline = False
+    has_empty_option = True # Only makes sense for enumerates
+                            # FIXME Do this other way
 
 
     def get_namespace(self, datatype, value):
+        # Case 1: Enumerate
+        if issubclass(datatype, Enumerate):
+            # Check whether the value is already a list of options
+            # FIXME This is done to avoid a bug when using a select widget in
+            # an auto-form, where the 'datatype.get_namespace' method is
+            # called twice (there may be a better way of handling this).
+            if type(value) is not list:
+                options = datatype.get_namespace(value)
+            else:
+                options = value
+
+            # Empty option
+            if self.has_empty_option:
+                options.insert(0,
+                    {'name': '', 'value': '',  'is_selected': False})
+
+            # Select first item if none selected
+            for option in options:
+                if option['selected'] is True:
+                    break
+            else:
+                if options:
+                    options[0]['selected'] = True
+        # Case 2: Boolean
+        elif issubclass(datatype, Boolean):
+            default_labels = {'yes': MSG(u'Yes'), 'no': MSG(u'No')}
+            labels = getattr(self, 'labels', default_labels)
+            options = [
+                {'name': '1', 'value': labels['yes'], 'is_selected': value},
+                {'name': '0', 'value': labels['no'], 'is_selected': not value}]
+        # Case 3: Error
+        else:
+            err = 'datatype "%s" should be enumerate or boolean'
+            raise ValueError, err % self.name
+
+        # Ok
         return {
             'name': self.name,
             'id': self.id,
-            'value': value,
-            'is_selected': getattr(self, 'is_selected', False)}
+            'oneline': self.oneline,
+            'options': options}
 
 
 
-class BooleanCheckBox(Widget):
+class CheckboxWidget(Widget):
 
     template = list(XMLParser("""
-        <input type="checkbox" id="${id}" name="${name}" value="1"
-          checked="${is_selected}" />
+        <stl:block stl:repeat="option options">
+          <input type="checkbox" id="${id}-${option/name}" name="${name}"
+            value="${option/name}" checked="${option/selected}" />
+          <label for="${id}-${option/name}">${option/value}</label>
+          <br stl:if="not oneline" />
+        </stl:block>
         """, stl_namespaces))
+
+    oneline = False
 
 
     def get_namespace(self, datatype, value):
+        # Case 1: Enumerate
+        if issubclass(datatype, Enumerate):
+            # Check whether the value is already a list of options
+            # FIXME This is done to avoid a bug when using a select widget in
+            # an auto-form, where the 'datatype.get_namespace' method is
+            # called twice (there may be a better way of handling this).
+            if type(value) is not list:
+                options = datatype.get_namespace(value)
+            else:
+                options = value
+        # Case 2: Boolean
+        elif issubclass(datatype, Boolean):
+            options = [
+                {'name': '1', 'value': '', 'is_selected': value}]
+        # Case 3: Error
+        else:
+            raise ValueError, 'expected boolean or enumerate datatype'
+
+        # Ok
         return {
             'name': self.name,
             'id': self.id,
-            'is_selected': value in [True, 1, '1']}
-
-
-
-class BooleanRadio(Widget):
-
-    template = list(XMLParser("""
-        <label for="${id}-yes">${labels/yes}</label>
-        <input id="${id}-yes" name="${name}" type="radio" value="1"
-          checked="${is_true}" />
-
-        <label for="${id}-no">${labels/no}</label>
-        <input id="${id}-no" name="${name}" type="radio" value="0"
-          checked="${is_false}" />
-        """, stl_namespaces))
-
-
-    def get_namespace(self, datatype, value):
-        default_labels = {'yes': MSG(u'Yes'), 'no': MSG(u'No')}
-        labels = getattr(self, 'labels', default_labels)
-        is_true = value in [True, 1, '1']
-        return {
-            'name': self.name,
-            'id': self.id,
-            'is_true': is_true,
-            'is_false': not is_true,
-            'labels': labels}
+            'oneline': self.oneline,
+            'options': options}
 
 
 
@@ -302,70 +346,6 @@ class SelectWidget(Widget):
             'multiple': datatype.multiple,
             'options': value,
             'size':  getattr(self, 'size', None)}
-
-
-
-class SelectRadio(Widget):
-
-    template = list(XMLParser("""
-        <stl:block stl:if="has_empty_option">
-          <input type="radio" name="${name}" value=""
-            checked="${none_selected}" />
-          <stl:block stl:if="not is_inline"><br/></stl:block>
-        </stl:block>
-        <stl:block stl:repeat="option options">
-          <input type="radio" id="${id}-${option/name}" name="${name}"
-            value="${option/name}" checked="${option/selected}"
-            stl:if="option/selected"/>
-          <label for="${id}-${option/name}">${option/value}</label>
-          <stl:block stl:if="not is_inline"><br/></stl:block>
-        </stl:block>
-        """, stl_namespaces))
-
-    template_multiple = list(XMLParser("""
-        <stl:block stl:repeat="option options">
-          <input type="checkbox" id="${id}-${option/name}" name="${name}"
-            value="${option/name}" checked="${option/selected}" />
-          <label for="${id}-${option/name}">${option/value}</label>
-          <stl:block stl:if="not is_inline"><br/></stl:block>
-        </stl:block>
-        """, stl_namespaces))
-
-
-    def get_template(self, datatype, value):
-        if datatype.multiple:
-            return self.template_multiple
-        return self.template
-
-
-    def get_namespace(self, datatype, value):
-        none_selected = True
-        # Check whether the value is already a list of options
-        # FIXME This is done to avoid a bug when using a select widget in an
-        # auto-form, where the 'datatype.get_namespace' method is called
-        # twice (there may be a better way of handling this).
-        if type(value) is not list:
-            options = datatype.get_namespace(value)
-        else:
-            options = value
-
-        is_inline = getattr(self, 'is_inline', False)
-        has_empty_option = getattr(self, 'has_empty_option', True)
-        for option in options:
-            if option['selected'] is True:
-                none_selected = False
-                break
-        else:
-            # Select first item if no empty option
-            if not has_empty_option and options:
-                options[0]['selected'] = True
-        return {
-            'name': self.name,
-            'id': self.id,
-            'is_inline': is_inline,
-            'has_empty_option': has_empty_option,
-            'none_selected': none_selected,
-            'options': options}
 
 
 
