@@ -29,7 +29,7 @@ from itools.web import FormError, get_context
 from itools.xapian import AndQuery, PhraseQuery
 
 # Import from ikaaro
-from autoform import AutoForm, DateWidget, SelectRadio, TextWidget
+from autoform import AutoForm, DateWidget, RadioWidget, TextWidget
 from autoform import name_widget, title_widget
 import messages
 from registry import get_resource_class, get_document_types
@@ -232,7 +232,7 @@ class NewInstance(NewInstanceByDate):
     widgets = freeze([
         title_widget,
         name_widget,
-        SelectRadio('path', title=MSG(u'Path'), has_empty_option=False)])
+        RadioWidget('path', title=MSG(u'Path'), has_empty_option=False)])
 
 
     def get_schema(self, resource, context):
