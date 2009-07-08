@@ -26,6 +26,8 @@ from itools.web import get_context
 from itools.xml import XMLParser
 
 # Import from ikaaro
+from ikaaro.autoform import PathSelectorWidget
+from ikaaro.autoform import TextWidget, SelectWidget, ReadOnlyWidget
 from ikaaro import messages
 from ikaaro.buttons import Button
 from ikaaro.exceptions import ConsistencyError
@@ -34,8 +36,6 @@ from ikaaro.folder_views import Folder_NewResource, Folder_BrowseContent
 from ikaaro.folder_views import Folder_Rename, Folder_PreviewContent
 from ikaaro.folder_views import Folder_Thumbnail, GoToSpecificDocument
 from ikaaro.folder_views import Folder_Orphans
-from ikaaro.forms import PathSelectorWidget
-from ikaaro.forms import TextWidget, SelectWidget, ReadOnlyWidget
 from ikaaro.revisions_views import DBResource_CommitLog
 from ikaaro.table import OrderedTableFile, OrderedTable
 from ikaaro.table_views import OrderedTable_View

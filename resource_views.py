@@ -36,15 +36,15 @@ from itools.web import BaseView, STLForm, INFO, ERROR, lock_body
 from itools.xapian import PhraseQuery
 
 # Import from ikaaro
+from autoform import AutoForm, title_widget, description_widget, subject_widget
+from autoform import timestamp_widget
 from datatypes import FileDataType, CopyCookie
 from exceptions import ConsistencyError
 from folder_views import Folder_BrowseContent
-from forms import AutoForm, title_widget, description_widget, subject_widget
-from forms import timestamp_widget
+import messages
 from registry import get_resource_class
 from utils import reduce_string
 from views import ContextMenu
-import messages
 
 
 

@@ -29,8 +29,8 @@ from itools.web import FormError, get_context
 from itools.xapian import AndQuery, PhraseQuery
 
 # Import from ikaaro
-from forms import AutoForm, DateWidget, SelectRadio, TextWidget
-from forms import name_widget, title_widget
+from autoform import AutoForm, DateWidget, SelectRadio, TextWidget
+from autoform import name_widget, title_widget
 import messages
 from registry import get_resource_class, get_document_types
 from utils import get_base_path_query

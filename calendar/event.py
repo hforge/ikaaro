@@ -23,10 +23,10 @@ from itools.datatypes import DateTime, Enumerate, String, Time, Unicode
 from itools.gettext import MSG
 
 # Import from ikaaro
+from ikaaro.autoform import AutoForm, DateWidget, SelectWidget, TextWidget
+from ikaaro.autoform import description_widget, title_widget
 from ikaaro.file import File
 from ikaaro.folder import Folder
-from ikaaro.forms import AutoForm, DateWidget, SelectWidget, TextWidget
-from ikaaro.forms import description_widget, title_widget
 from ikaaro.registry import register_resource_class, register_document_type
 from ikaaro.views_new import NewInstanceByDate, TodayDataType
 

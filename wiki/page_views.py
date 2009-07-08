@@ -46,7 +46,7 @@ from itools.web import BaseView, STLView, ERROR
 from itools.xml import XMLParser, XMLError
 
 # Import from ikaaro
-from ikaaro.forms import name_widget, title_widget
+from ikaaro.autoform import name_widget, title_widget
 from ikaaro import messages
 from ikaaro.forms import title_widget, timestamp_widget
 from ikaaro.resource_views import DBResource_Edit

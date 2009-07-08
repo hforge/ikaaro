@@ -20,7 +20,7 @@ from itools.gettext import MSG
 from itools.web import get_context
 
 # Import from ikaaro
-from ikaaro.forms import title_widget
+from ikaaro.autoform import title_widget
 from ikaaro.table import OrderedTableFile, OrderedTable
 
 
