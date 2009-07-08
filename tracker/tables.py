@@ -27,7 +27,7 @@ from itools.xapian import PhraseQuery, AndQuery
 from itools.web import ERROR, INFO
 
 # Import from ikaaro
-from ikaaro.autoform import title_widget, BooleanCheckBox, SelectWidget
+from ikaaro.autoform import title_widget, CheckboxWidget, SelectWidget
 from ikaaro.autoform import ReadOnlyWidget
 from ikaaro.registry import register_resource_class
 from ikaaro.table import OrderedTable, OrderedTableFile
@@ -258,7 +258,7 @@ class VersionsResource(Tracker_TableResource):
     form = [
         SelectWidget('product', title=MSG(u'Product')),
         title_widget,
-        BooleanCheckBox('released', title=MSG(u'Released'))]
+        CheckboxWidget('released', title=MSG(u'Released'))]
 
 
 
