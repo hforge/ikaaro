@@ -87,7 +87,7 @@ class IResource(Resource):
 
 
     def get_title(self):
-        return self.name
+        return unicode(self.name)
 
 
     def get_page_title(self):
@@ -560,10 +560,7 @@ class DBResource(CatalogAware, IResource):
         if title:
             return title
         # Fallback to the resource's name
-        title = self.name
-        if isinstance(title, MSG):
-            return title.gettext(language)
-        return title
+        return unicode(self.name)
 
 
     def get_content_language(self, context, languages=None):

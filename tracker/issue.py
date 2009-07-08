@@ -143,7 +143,7 @@ class Issue(Folder):
     # API
     #######################################################################
     def get_title(self, language=None):
-        return '#%s %s' % (self.name, self.get_value('title'))
+        return u'#%s %s' % (self.name, self.get_value('title'))
 
 
     def get_calendar(self):
