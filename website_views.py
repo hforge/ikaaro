@@ -398,11 +398,10 @@ class CreditsView(STLView):
     access = True
     title = MSG(u'Credits')
     template = '/ui/root/credits.xml'
+    styles = ['/ui/credits.css']
 
 
     def get_namespace(self, resource, context):
-        context.add_style('/ui/credits.css')
-
         # Build the namespace
         credits = get_abspath('CREDITS')
         lines = lfs.open(credits).readlines()

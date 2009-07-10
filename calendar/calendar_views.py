@@ -110,11 +110,10 @@ class TimetablesForm(STLForm):
     access = 'is_allowed_to_edit'
     title = MSG(u'Timetables')
     template = '/ui/calendar/edit_timetables.xml'
+    styles = ['/ui/calendar/style.css']
 
 
     def get_namespace(self, resource, context):
-        context.add_style('/ui/calendar/style.css')
-
         # Show current timetables only if previously set in metadata
         if resource.has_property('timetables'):
             timetables = resource.get_property('timetables')
@@ -206,6 +205,7 @@ class TimetablesForm(STLForm):
 
 class CalendarView(STLView):
 
+    styles = ['/ui/calendar/style.css']
     # default viewed fields on monthly_view
     default_viewed_fields = ('dtstart', 'dtend', 'SUMMARY', 'STATUS')
 
@@ -461,8 +461,6 @@ class EditEventForm(CalendarView, STLForm):
 
 
     def get_namespace(self, resource, context):
-        context.add_style('/ui/calendar/style.css')
-
         # Get the resource
         resource = self.get_resource(resource, context)
         if resource is None:
@@ -650,8 +648,6 @@ class AddEventForm(EditEventForm):
 
 
     def get_namespace(self, resource, context):
-        context.add_style('/ui/calendar/style.css')
-
         # Get date to add event
         selected_date = context.query['date']
         if selected_date is None:
@@ -720,9 +716,8 @@ class MonthlyView(CalendarView):
     monthly_template = '/ui/calendar/monthly_template.xml'
 
 
-    def get_namespace(self, resource, context, ndays=7):
-        context.add_style('/ui/calendar/style.css')
 
+    def get_namespace(self, resource, context, ndays=7):
         today_date = date.today()
 
         # Current date
@@ -849,8 +844,6 @@ class WeeklyView(CalendarView):
 
 
     def get_namespace(self, resource, context, ndays=7):
-        context.add_style('/ui/calendar/style.css')
-
         # Current date
         c_date = context.get_form_value('date')
         if not c_date:
@@ -1051,8 +1044,6 @@ class DailyView(CalendarView):
 
 
     def get_namespace(self, resource, context):
-        context.add_style('/ui/calendar/style.css')
-
         method = context.get_cookie('method')
         if method != 'daily_view':
             context.set_cookie('method', 'daily_view')

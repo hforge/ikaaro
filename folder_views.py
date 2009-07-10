@@ -582,6 +582,9 @@ class Folder_BrowseContent(SearchForm):
 class Folder_PreviewContent(Folder_BrowseContent):
 
     title = MSG(u'Preview Content')
+    styles = ['/ui/gallery/style.css']
+    scripts = ['/ui/gallery/javascript.js']
+
     context_menus = Folder_BrowseContent.context_menus + [ZoomMenu()]
     # Table
     table_template = '/ui/folder/browse_image.xml'
@@ -644,9 +647,6 @@ class Folder_PreviewContent(Folder_BrowseContent):
 
 
     def get_table_namespace(self, resource, context, items):
-        context.add_style('/ui/gallery/style.css')
-        context.add_script('/ui/gallery/javascript.js')
-
         # Get from the query
         query = context.query
         width = query['width']

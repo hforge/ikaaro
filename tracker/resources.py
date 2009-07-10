@@ -46,14 +46,10 @@ class TrackerMonthlyView(MonthlyView):
 
     monthly_template = '/ui/tracker/monthly_template.xml'
     query_schema = Tracker_View.tracker_schema
+    styles = ['/ui/tracker/style.css']
 
     def get_with_new_url(self):
         return False
-
-
-    def get_namespace(self, resource, context):
-        context.add_style('/ui/tracker/style.css')
-        return MonthlyView.get_namespace(self, resource, context)
 
 
 
@@ -62,6 +58,8 @@ class TrackerWeeklyView(WeeklyView):
     weekly_template_fd = '/ui/tracker/weekly_template_fd.xml'
     weekly_template = '/ui/tracker/weekly_template.xml'
     query_schema = Tracker_View.tracker_schema
+
+    styles = ['/ui/tracker/style.css']
 
 
     def get_weekly_templates(self):
@@ -86,11 +84,6 @@ class TrackerWeeklyView(WeeklyView):
                 if value not in ns_timetables:
                     ns_timetables.append(value)
         return ns_timetables
-
-
-    def get_namespace(self, resource, context):
-        context.add_style('/ui/tracker/style.css')
-        return WeeklyView.get_namespace(self, resource, context)
 
 
 

@@ -57,10 +57,10 @@ class WikiPage_View(BaseView):
     access = 'is_allowed_to_view'
     title = MSG(u'View')
     icon = 'html.png'
+    styles = ['/ui/wiki/style.css']
 
 
     def GET(self, resource, context):
-        context.add_style('/ui/wiki/style.css')
         parent = resource.parent
 
         try:
@@ -304,21 +304,18 @@ class WikiPage_Edit(DBResource_Edit):
         'data': String,
         'timestamp': DateTime}
 
+    styles = ['/ui/tiny_mce/themes/advanced/skins/default/ui.css',
+              '/ui/wiki/style.css']
+    scripts = ['/ui/tiny_mce/tiny_mce_src.js',
+               '/ui/wiki/javascript.js']
+
 
     def get_namespace(self, resource, context):
-        context.add_style(
-            '/ui/tiny_mce/themes/advanced/skins/default/ui.css',
-            '/ui/wiki/style.css')
-        context.add_script(
-            '/ui/tiny_mce/tiny_mce_src.js',
-            '/ui/wiki/javascript.js')
-
         data = context.get_form_value('data') or resource.handler.to_str()
         return {
             'title': resource.get_title(),
             'data': data,
-            'timestamp': DateTime.encode(datetime.now()),
-        }
+            'timestamp': DateTime.encode(datetime.now())}
 
 
     def action_save(self, resource, context, form):
@@ -370,11 +367,10 @@ class WikiPage_Help(STLView):
     access = 'is_allowed_to_view'
     title = MSG(u"Help")
     template = '/ui/wiki/help.xml'
+    styles = ['/ui/wiki/style.css']
 
 
     def get_namespace(self, resource, context):
-        context.add_style('/ui/wiki/style.css')
-
         source = resource.get_resource('/ui/wiki/help.txt')
         source = source.to_str()
 

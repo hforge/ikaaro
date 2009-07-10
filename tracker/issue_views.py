@@ -132,6 +132,8 @@ class Issue_Edit(STLForm):
     title = MSG(u'Edit Issue')
     icon = 'edit.png'
     template = '/ui/tracker/edit_issue.xml'
+    styles = ['/ui/tracker/style.css']
+    scripts = ['/ui/tracker/tracker.js']
 
 
     def get_schema(self, resource, context):
@@ -146,10 +148,6 @@ class Issue_Edit(STLForm):
 
     def get_namespace(self, resource, context):
         namespace = STLForm.get_namespace(self, resource, context)
-
-        # Set Style & JS
-        context.add_style('/ui/tracker/style.css')
-        context.add_script('/ui/tracker/tracker.js')
 
         # Local variables
         users = resource.get_resource('/users')
@@ -225,12 +223,10 @@ class Issue_History(STLView):
     title = MSG(u'History')
     icon = 'history.png'
     template = '/ui/tracker/issue_history.xml'
+    styles = ['/ui/tracker/style.css']
 
 
     def get_namespace(self, resource, context):
-        # Set Style
-        context.add_style('/ui/tracker/style.css')
-
         # Local variables
         users = resource.get_resource('/users')
         tracker = resource.parent

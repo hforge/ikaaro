@@ -42,13 +42,13 @@ class Thread_View(STLForm):
     title = MSG(u'View')
     icon = 'view.png'
     template = '/ui/forum/Thread_view.xml'
+    styles = ['/ui/forum/style.css']
 
     schema = {
         'ids': String(multiple=True, mandatory=True)
         }
 
     def get_namespace(self, resource, context):
-        context.add_style('/ui/forum/style.css')
         user = context.user
         users = resource.get_resource('/users')
         ac = resource.get_access_control()

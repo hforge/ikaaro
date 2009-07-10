@@ -225,6 +225,8 @@ class Tracker_AddIssue(STLForm):
     title = MSG(u'Add')
     icon = 'new.png'
     template = '/ui/tracker/add_issue.xml'
+    styles = ['/ui/tracker/style.css']
+    scripts = ['/ui/tracker/tracker.js']
 
 
     def get_schema(self, resource, context):
@@ -239,10 +241,6 @@ class Tracker_AddIssue(STLForm):
 
     def get_namespace(self, resource, context):
         namespace = STLForm.get_namespace(self, resource, context)
-
-        context.add_style('/ui/tracker/style.css')
-        context.add_script('/ui/tracker/tracker.js')
-
         namespace['list_products'] = resource.get_list_products_namespace()
         return namespace
 
@@ -266,6 +264,8 @@ class Tracker_View(BrowseForm):
     access = 'is_allowed_to_view'
     title = MSG(u'View')
     icon = 'view.png'
+    styles = ['/ui/tracker/style.css']
+
 
     schema = {
         'ids': String(multiple=True, mandatory=True)}
@@ -333,9 +333,6 @@ class Tracker_View(BrowseForm):
 
 
     def get_namespace(self, resource, context):
-        # Set Style
-        context.add_style('/ui/tracker/style.css')
-
         # Default table namespace
         namespace = BrowseForm.get_namespace(self, resource, context)
 
@@ -453,6 +450,9 @@ class Tracker_Search(BaseSearchForm, Tracker_View):
     access = 'is_allowed_to_view'
     title = MSG(u'Search')
     icon = 'search.png'
+    styles = ['/ui/tracker/style.css']
+    scripts = ['/ui/tracker/tracker.js']
+
 
     # Search Form
     search_template = '/ui/tracker/search.xml'
@@ -489,10 +489,6 @@ class Tracker_Search(BaseSearchForm, Tracker_View):
 
 
     def get_search_namespace(self, resource, context):
-        # Set Style & JS
-        context.add_style('/ui/tracker/style.css')
-        context.add_script('/ui/tracker/tracker.js')
-
         # Search Form
         get_resource = resource.get_resource
         query = context.query
@@ -797,6 +793,7 @@ class Tracker_ChangeSeveralBugs(Tracker_View):
     access = 'is_allowed_to_view'
     title = MSG(u'Change Several Issues')
     template = '/ui/tracker/change_bugs.xml'
+    scripts = ['/ui/tracker/tracker.js']
     schema = {
         'comment': Unicode,
         'ids': String(multiple=True),
@@ -816,7 +813,6 @@ class Tracker_ChangeSeveralBugs(Tracker_View):
 
 
     def get_namespace(self, resource, context):
-        context.add_script('/ui/tracker/tracker.js')
         namespace = Tracker_View.get_namespace(self, resource, context)
         # Edit several bugs at once
         get_resource = resource.get_resource

@@ -346,6 +346,9 @@ class Image_View(STLView):
     access = 'is_allowed_to_view'
     title = MSG(u'View')
     template = '/ui/binary/Image_view.xml'
+    styles = ['/ui/gallery/style.css']
+    scripts = ['/ui/gallery/javascript.js']
+
     # Image default size as a string (empty = full size)
     default_width = ''
     default_height = ''
@@ -362,8 +365,6 @@ class Image_View(STLView):
 
 
     def get_namespace(self, resource, context):
-        context.add_style('/ui/gallery/style.css')
-        context.add_script('/ui/gallery/javascript.js')
         size = context.get_form_value('size', type=Integer)
         width = context.get_form_value('width', default=self.default_width)
         height = context.get_form_value('height', default=self.default_height)
