@@ -19,6 +19,7 @@
 from datetime import date, datetime
 from optparse import OptionParser
 from subprocess import call
+from sys import exit
 
 # Import from itools
 from itools import __version__
@@ -102,7 +103,9 @@ def forget(parser, target, days):
         'git fast-export --progress=1000 %s.. | '
         'sed "s|refs/heads/master|refs/heads/new|" | '
         'git fast-import --quiet')
-    call(command % since, shell=True, cwd=cwd)
+    returncode = call(command % since, shell=True, cwd=cwd)
+    if returncode:
+        exit()
 
     # Backup old branch and deploy new one
     print '* Deploy new branch and backup old branch'
