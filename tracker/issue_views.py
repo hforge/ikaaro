@@ -145,6 +145,8 @@ class Issue_Edit(STLForm):
 
 
     def get_namespace(self, resource, context):
+        namespace = STLForm.get_namespace(self, resource, context)
+
         # Set Style & JS
         context.add_style('/ui/tracker/style.css')
         context.add_script('/ui/tracker/tracker.js')
@@ -153,9 +155,6 @@ class Issue_Edit(STLForm):
         users = resource.get_resource('/users')
         history = resource.get_history()
         record = history.get_record(-1)
-
-        # Build the namespace
-        namespace = self.build_namespace(resource, context)
 
         # Comments
         comments = []

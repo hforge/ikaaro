@@ -238,12 +238,12 @@ class Tracker_AddIssue(STLForm):
 
 
     def get_namespace(self, resource, context):
+        namespace = STLForm.get_namespace(self, resource, context)
+
         context.add_style('/ui/tracker/style.css')
         context.add_script('/ui/tracker/tracker.js')
 
-        namespace =  self.build_namespace(resource, context)
         namespace['list_products'] = resource.get_list_products_namespace()
-
         return namespace
 
 
