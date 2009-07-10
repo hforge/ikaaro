@@ -29,9 +29,6 @@ from itools.web import STLForm, get_context
 from itools.xml import XMLParser
 
 
-stl_namespaces = {
-    None: 'http://www.w3.org/1999/xhtml',
-    'stl': 'http://www.hforge.org/xml-namespaces/stl'}
 xhtml_namespaces = {None: 'http://www.w3.org/1999/xhtml'}
 
 
@@ -76,6 +73,15 @@ class HTMLBody(XHTMLBody):
 ###########################################################################
 # Widgets
 ###########################################################################
+
+stl_namespaces = {
+    None: 'http://www.w3.org/1999/xhtml',
+    'stl': 'http://www.hforge.org/xml-namespaces/stl'}
+def make_stl_template(data):
+    return list(XMLParser(data, stl_namespaces))
+
+
+
 def get_default_widget(datatype):
     if issubclass(datatype, Boolean):
         return RadioWidget
@@ -94,10 +100,8 @@ class Widget(object):
     tip = None
     type = 'text'
 
-    template = list(XMLParser(
-        """<input type="${type}" name="${name}" value="${value}" size="${size}"
-        />""",
-        stl_namespaces))
+    template = make_stl_template("""
+    <input type="${type}" name="${name}" value="${value}" size="${size}" />""")
 
 
     def __init__(self, name, **kw):
@@ -156,9 +160,8 @@ class PasswordWidget(Widget):
 
 class ReadOnlyWidget(Widget):
 
-    template = list(XMLParser(
-        """<input type="hidden" name="${name}" value="${value}" />
-           ${displayed}""", stl_namespaces))
+    template = make_stl_template("""
+    <input type="hidden" name="${name}" value="${value}" />${displayed}""")
 
 
     def get_namespace(self, datatype, value):
@@ -192,10 +195,9 @@ class MultilineWidget(Widget):
     rows = 5
     cols = 60
 
-    template = list(XMLParser(
-        """<textarea rows="${rows}" cols="${cols}" name="${name}"
-        >${value}</textarea>""",
-        stl_namespaces))
+    template = make_stl_template("""
+    <textarea rows="${rows}" cols="${cols}" name="${name}" >${value}</textarea>
+    """)
 
 
     def get_namespace(self, datatype, value):
@@ -209,14 +211,13 @@ class MultilineWidget(Widget):
 
 class RadioWidget(Widget):
 
-    template = list(XMLParser("""
-        <stl:block stl:repeat="option options">
-          <input type="radio" id="${name}-${option/name}" name="${name}"
-            value="${option/name}" checked="${option/selected}" />
-          <label for="${name}_${option/name}">${option/value}</label>
-          <br stl:if="not oneline" />
-        </stl:block>
-        """, stl_namespaces))
+    template = make_stl_template("""
+    <stl:block stl:repeat="option options">
+      <input type="radio" id="${name}-${option/name}" name="${name}"
+        value="${option/name}" checked="${option/selected}" />
+      <label for="${name}_${option/name}">${option/value}</label>
+      <br stl:if="not oneline" />
+    </stl:block>""")
 
     oneline = False
     has_empty_option = True # Only makes sense for enumerates
@@ -269,14 +270,13 @@ class RadioWidget(Widget):
 
 class CheckboxWidget(Widget):
 
-    template = list(XMLParser("""
-        <stl:block stl:repeat="option options">
-          <input type="checkbox" id="${name}-${option/name}" name="${name}"
-            value="${option/name}" checked="${option/selected}" />
-          <label for="${name}_${option/name}">${option/value}</label>
-          <br stl:if="not oneline" />
-        </stl:block>
-        """, stl_namespaces))
+    template = make_stl_template("""
+    <stl:block stl:repeat="option options">
+      <input type="checkbox" id="${name}-${option/name}" name="${name}"
+        value="${option/name}" checked="${option/selected}" />
+      <label for="${name}_${option/name}">${option/value}</label>
+      <br stl:if="not oneline" />
+    </stl:block>""")
 
     oneline = False
 
@@ -310,14 +310,13 @@ class CheckboxWidget(Widget):
 
 class SelectWidget(Widget):
 
-    template = list(XMLParser("""
-        <select name="${name}" multiple="${multiple}" size="${size}"
-            class="${css}">
-          <option value="" stl:if="has_empty_option"></option>
-          <option stl:repeat="option options" value="${option/name}"
-            selected="${option/selected}">${option/value}</option>
-        </select>
-        """, stl_namespaces))
+    template = make_stl_template("""
+    <select name="${name}" multiple="${multiple}" size="${size}"
+        class="${css}">
+      <option value="" stl:if="has_empty_option"></option>
+      <option stl:repeat="option options" value="${option/name}"
+        selected="${option/selected}">${option/value}</option>
+    </select>""")
 
 
     def get_namespace(self, datatype, value):
@@ -341,51 +340,49 @@ class DateWidget(Widget):
 
     tip = MSG(u"Format: 'yyyy-mm-dd'")
 
-    template = list(XMLParser("""
-        <input type="text" name="${name}" value="${value}" id="${name}"
-          size="${size}"/>
-        <input id="trigger-date-${name}" type="button" value="..."
-          name="trigger_date_${name}" class="${class}" />
-        <script language="javascript">
-          Calendar.setup({inputField: "${name}", ifFormat: "${format}",
-                          showsTime: ${show_time}, timeFormat: "24",
-                          button: "trigger-date-${name}"});
-        </script>
-        """, stl_namespaces))
+    template = make_stl_template("""
+    <input type="text" name="${name}" value="${value}" id="${name}"
+      size="${size}"/>
+    <input id="trigger-date-${name}" type="button" value="..."
+      name="trigger_date_${name}" class="${class}" />
+    <script language="javascript">
+      Calendar.setup({inputField: "${name}", ifFormat: "${format}",
+                      showsTime: ${show_time}, timeFormat: "24",
+                      button: "trigger-date-${name}"});
+    </script>""")
 
-    template_multiple = list(XMLParser("""
-        <table class="table-calendar">
-          <tr>
-            <td>
-              <textarea rows="5" cols="25" name="${name}" id="${name}"
-                >${value}</textarea>
-              <input type="button" value="update" id="btn-blur-${name}"
-                onclick="tableFlatOuputOnBlur(elt_${name}, cal_${name});" />
-            </td>
-            <td>
-              <div id="calendar-flat-${name}" style="float: left;"> </div>
-              <script type="text/javascript">
-                var MA_${name} = [];
-                <stl:block stl:repeat="date dates">
-                MA_${name}.push(str_to_date('${date}'));
-                </stl:block>
-                var cal_${name} = Calendar.setup({
-                    displayArea  : '${name}',
-                    flat         : 'calendar-flat-${name}',
-                    flatCallback : tableFlatCallback,
-                    multiple     : MA_${name},
-                    ifFormat     : '${format}'});
-                var elt_${name} = document.getElementById('${name}');
-                if (!browser.isIE) {
-                    $("#btn_blur_${name}").style.display = 'none';
-                    elt_${name}.setAttribute('onblur',
-                        'tableFlatOuputOnBlur(elt_${name}, cal_${name})');
-                }
-              </script>
-            </td>
-          </tr>
-        </table>
-        """, stl_namespaces))
+    template_multiple = make_stl_template("""
+    <table class="table-calendar">
+      <tr>
+        <td>
+          <textarea rows="5" cols="25" name="${name}" id="${name}"
+            >${value}</textarea>
+          <input type="button" value="update" id="btn-blur-${name}"
+            onclick="tableFlatOuputOnBlur(elt_${name}, cal_${name});" />
+        </td>
+        <td>
+          <div id="calendar-flat-${name}" style="float: left;"> </div>
+          <script type="text/javascript">
+            var MA_${name} = [];
+            <stl:block stl:repeat="date dates">
+            MA_${name}.push(str_to_date('${date}'));
+            </stl:block>
+            var cal_${name} = Calendar.setup({
+                displayArea  : '${name}',
+                flat         : 'calendar-flat-${name}',
+                flatCallback : tableFlatCallback,
+                multiple     : MA_${name},
+                ifFormat     : '${format}'});
+            var elt_${name} = document.getElementById('${name}');
+            if (!browser.isIE) {
+                $("#btn_blur_${name}").style.display = 'none';
+                elt_${name}.setAttribute('onblur',
+                    'tableFlatOuputOnBlur(elt_${name}, cal_${name})');
+            }
+          </script>
+        </td>
+      </tr>
+    </table>""")
 
 
     def get_template(self, datatype, value):
@@ -419,14 +416,12 @@ class DateWidget(Widget):
 
 class PathSelectorWidget(TextWidget):
 
-    template = list(XMLParser(
-    """
+    template = make_stl_template("""
     <input type="text" id="selector-${name}" size="${size}" name="${name}"
       value="${value}" />
     <input id="selector-button-${name}" type="button" value="..."
       name="selector_button_${name}"
-      onclick="popup(';add_link?target_id=selector-${name}&amp;mode=input', 620, 300);"/>
-    """, stl_namespaces))
+      onclick="popup(';add_link?target_id=selector-${name}&amp;mode=input', 620, 300);"/>""")
 
 
 
@@ -435,16 +430,14 @@ class ImageSelectorWidget(TextWidget):
     width = 128
     height = 128
 
-    template = list(XMLParser(
-    """
+    template = make_stl_template("""
     <input type="text" id="selector-${name}" size="${size}" name="${name}"
       value="${value}" />
     <input id="selector-button-${name}" type="button" value="..."
       name="selector_button_${name}"
       onclick="popup(';add_image?target_id=selector-${name}&amp;mode=input', 620, 300);" />
     <br/>
-    <img src="${value}/;thumb?width=${width}&amp;height=${height}" stl:if="value"/>
-    """, stl_namespaces))
+    <img src="${value}/;thumb?width=${width}&amp;height=${height}" stl:if="value"/>""")
 
 
     def get_namespace(self, datatype, value):
