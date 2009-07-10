@@ -8,11 +8,16 @@
   <fieldset>
     <legend>Log in</legend>
     <dl>
-      <dt><label for="username">E-mail Address</label></dt>
+      <dt>
+        <label for="username" class="${username/class}">E-mail Address</label>
+      </dt>
       <dd>
-        <input type="text" id="username" name="username" value="${username}" />
+        <input type="text" id="username" name="username"
+          value="${username/value}" />
       </dd>
-      <dt><label for="password">Password</label></dt>
+      <dt>
+        <label for="password" class="${password/class}">Password</label>
+      </dt>
       <dd>
         <input type="password" id="password" name="password" />
         <a href="/;forgotten_password">I forgot my password</a>

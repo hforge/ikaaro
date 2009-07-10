@@ -458,8 +458,7 @@ class LoginView(STLForm):
 
 
     def get_namespace(self, resource, context):
-        return {
-            'username': context.get_form_value('username')}
+        return self.build_namespace(resource, context)
 
 
     def action(self, resource, context, form):
