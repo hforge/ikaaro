@@ -112,11 +112,11 @@ class TimetablesForm(STLForm):
     access = 'is_allowed_to_edit'
     title = MSG(u'Timetables')
     template = '/ui/calendar/edit_timetables.xml'
+    styles = ['/ui/calendar/style.css']
+
 
 
     def get_namespace(self, resource, context):
-        context.styles.append('/ui/calendar/style.css')
-
         # Show current timetables only if previously set in metadata
         if resource.has_property('timetables'):
             timetables = resource.get_property('timetables')
@@ -208,6 +208,7 @@ class TimetablesForm(STLForm):
 
 class CalendarView(STLView):
 
+    styles = ['/ui/calendar/style.css']
     # default viewed fields on monthly_view
     default_viewed_fields = ('dtstart', 'dtend', 'SUMMARY', 'STATUS')
 
@@ -451,9 +452,8 @@ class MonthlyView(CalendarView):
     monthly_template = '/ui/calendar/monthly_template.xml'
 
 
-    def get_namespace(self, resource, context, ndays=7):
-        context.styles.append('/ui/calendar/style.css')
 
+    def get_namespace(self, resource, context, ndays=7):
         today_date = date.today()
 
         # Current date
@@ -527,6 +527,7 @@ class WeeklyView(CalendarView):
     access = 'is_allowed_to_view'
     title = MSG(u'Weekly View')
     template = '/ui/calendar/weekly_view.xml'
+
 
     timetables = [
         ((7,0), (8,0)), ((8,0), (9,0)), ((9,0), (10,0)), ((10,0), (11,0)),
@@ -602,8 +603,6 @@ class WeeklyView(CalendarView):
 
 
     def get_namespace(self, resource, context, ndays=7):
-        context.styles.append('/ui/calendar/style.css')
-
         # Current date
         c_date = context.get_form_value('date')
         if not c_date:
@@ -795,8 +794,6 @@ class DailyView(CalendarView):
 
 
     def get_namespace(self, resource, context):
-        context.styles.append('/ui/calendar/style.css')
-
         method = context.get_cookie('method')
         if method != 'daily_view':
             context.set_cookie('method', 'daily_view')

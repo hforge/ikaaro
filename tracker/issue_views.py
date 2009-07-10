@@ -132,6 +132,8 @@ class Issue_Edit(STLForm):
     title = MSG(u'Edit Issue')
     icon = 'edit.png'
     template = '/ui/tracker/edit_issue.xml'
+    styles = ['/ui/tracker/style.css']
+    scripts = ['/ui/tracker/tracker.js']
 
 
     def get_schema(self, resource, context):
@@ -152,9 +154,6 @@ class Issue_Edit(STLForm):
         namespace = STLForm.get_namespace(self, resource, context)
 
         # The first lines are very much the same of the add issue form
-        context.styles.append('/ui/tracker/style.css')
-        context.scripts.append('/ui/tracker/tracker.js')
-
         tracker = resource.parent
         namespace['list_products'] = tracker.get_list_products_namespace()
 
@@ -214,12 +213,10 @@ class Issue_History(STLView):
     title = MSG(u'History')
     icon = 'history.png'
     template = '/ui/tracker/issue_history.xml'
+    styles = ['/ui/tracker/style.css']
 
 
     def get_namespace(self, resource, context):
-        # Set Style
-        context.styles.append('/ui/tracker/style.css')
-
         # Local variables
         users = resource.get_resource('/users')
         tracker = resource.parent

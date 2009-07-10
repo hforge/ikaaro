@@ -142,14 +142,6 @@ class DBResource_AddBase(STLForm):
         'target_id': String(default=None),
         'mode': String(mandatory=True)}
 
-    scripts = {
-        'wiki': ['/ui/wiki/javascript.js'],
-        'tiny_mce': ['/ui/tiny_mce/javascript.js',
-                     '/ui/tiny_mce/tiny_mce_src.js',
-                     '/ui/tiny_mce/tiny_mce_popup.js'],
-        'input': []}
-
-
     action_upload_schema = merge_dicts(schema,
                                        file=FileDataType(mandatory=True))
 
@@ -179,8 +171,6 @@ class DBResource_AddBase(STLForm):
         from file import File, Image
         from folder import Folder
 
-        # Get some informations
-        mode = context.get_form_value('mode')
         # For the breadcrumb
         if isinstance(resource, File):
             start = resource.parent
@@ -265,6 +255,7 @@ class DBResource_AddBase(STLForm):
         response.set_header('Content-Type', 'text/html; charset=UTF-8')
 
         # Build and return the namespace
+        mode = context.get_form_value('mode')
         namespace = self.get_configuration()
         additional_javascript = self.get_additional_javascript(context)
         namespace['additional_javascript'] = additional_javascript
@@ -281,10 +272,15 @@ class DBResource_AddBase(STLForm):
         return namespace
 
 
-    def get_scripts(self, mode):
-        if mode is None:
-            return []
-        return self.scripts[mode]
+    def get_scripts(self, context):
+        mode = context.get_form_value('mode')
+        if mode == 'wiki':
+            return ['/ui/wiki/javascript.js']
+        elif mode == 'tiny_mce':
+            return ['/ui/tiny_mce/javascript.js',
+                    '/ui/tiny_mce/tiny_mce_src.js',
+                    '/ui/tiny_mce/tiny_mce_popup.js']
+        return []
 
 
     def get_additional_javascript(self, context):

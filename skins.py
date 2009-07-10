@@ -177,21 +177,25 @@ class Skin(UIFolder):
 
 
     def get_styles(self, context):
+        # Generic
         styles = [
-            # BackOffice style
             '/ui/bo.css',
-            # Calendar JS Widget (http://dynarch.com/mishoo/calendar.epl)
             '/ui/js_calendar/calendar-aruni.css',
-            # Table
             '/ui/table/style.css']
 
-        # This skin's style
+        # Skin
         if self.has_handler('style.css'):
             styles.append('%s/style.css' % self.get_canonical_path())
-        # Dynamic styles
-        for style in context.styles:
-            styles.append(style)
 
+        # View
+        get_styles = getattr(context.view, 'get_styles', None)
+        if get_styles is None:
+            extra = getattr(context.view, 'styles', [])
+        else:
+            extra = get_styles(context)
+        styles.extend(extra)
+
+        # Ok
         return styles
 
 
@@ -220,10 +224,15 @@ class Skin(UIFolder):
         if self.has_handler('javascript.js'):
             scripts.append('%s/javascript.js' % self.get_canonical_path())
 
-        # Dynamic scripts
-        for script in context.scripts:
-            scripts.append(script)
+        # View
+        get_scripts = getattr(context.view, 'get_scripts', None)
+        if get_scripts is None:
+            extra = getattr(context.view, 'scripts', [])
+        else:
+            extra = get_scripts(context)
+        scripts.extend(extra)
 
+        # Ok
         return scripts
 
 

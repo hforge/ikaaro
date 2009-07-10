@@ -43,9 +43,9 @@ class Forum_View(STLForm):
     access = 'is_allowed_to_view'
     title = MSG(u'View')
     template = '/ui/forum/Forum_view.xml'
+    styles = ['/ui/forum/style.css']
 
     def get_namespace(self, resource, context):
-        context.styles.append('/ui/forum/style.css')
         # Threads
         accept_language = context.accept_language
         users = resource.get_resource('/users')

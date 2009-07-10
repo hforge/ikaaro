@@ -87,8 +87,8 @@ class Menu_View(OrderedTable_View):
 
     access = 'is_allowed_to_edit'
     schema = {
-        'ids': Integer(multiple=True, mandatory=True),
-    }
+        'ids': Integer(multiple=True, mandatory=True)}
+    styles = ['/ui/future/style.css']
 
     table_actions = [ChildButton] + OrderedTable_View.table_actions
 
@@ -172,11 +172,6 @@ class Menu_View(OrderedTable_View):
 
         return OrderedTable_View.get_item_value(self, resource, context, item,
                                                 column)
-
-
-    def get_namespace(self, resource, context):
-        context.styles.append('/ui/future/style.css')
-        return OrderedTable_View.get_namespace(self, resource, context)
 
 
     #######################################################################
