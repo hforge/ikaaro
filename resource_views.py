@@ -162,6 +162,13 @@ class DBResource_AddBase(STLForm):
         return context.resource.get_site_root()
 
 
+    def get_start(self, resource):
+        from file import File
+        if isinstance(resource, File):
+            return resource.parent
+        return resource
+
+
     def is_folder(self, resource):
         from folder import Folder
         return isinstance(resource, Folder)
@@ -176,16 +183,13 @@ class DBResource_AddBase(STLForm):
 
 
     def get_namespace(self, resource, context):
-        from file import File, Image
+        from file import Image
         from folder import Folder
 
         # Get some informations
         mode = context.get_form_value('mode')
         # For the breadcrumb
-        if isinstance(resource, File):
-            start = resource.parent
-        else:
-            start = resource
+        start = self.get_start(resource)
 
         # Default parameter values
         root = self.get_root(context)
