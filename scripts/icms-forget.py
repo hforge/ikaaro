@@ -103,8 +103,16 @@ def forget(parser, target, days):
         'git fast-export --progress=1000 %s.. | '
         'sed "s|refs/heads/master|refs/heads/new|" | '
         'git fast-import --quiet')
+    # FIXME This does not work if the error comes from git-fast-export,
+    # because execution continues and sed returns 0. See the hack just below.
     returncode = call(command % since, shell=True, cwd=cwd)
     if returncode:
+        exit()
+
+    # Verify the step before was fine
+    try:
+        get_pipe(['git', 'log', '-n', '0', 'new'])
+    except EnvironmentError:
         exit()
 
     # Backup old branch and deploy new one
