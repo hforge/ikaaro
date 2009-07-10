@@ -127,9 +127,11 @@ class Folder(DBResource):
         DBResource._on_move_resource(self, target)
 
 
-    def del_resource(self, name):
+    def del_resource(self, name, soft=False):
         database = get_context().database
-        resource = self.get_resource(name)
+        resource = self.get_resource(name, soft=soft)
+        if soft and resource is None:
+            return
 
         # Check referencial-integrity
         catalog = database.catalog

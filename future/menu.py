@@ -337,7 +337,7 @@ class Menu(OrderedTable):
         handler = self.handler
         menu_abspath = self.get_abspath()
         here = context.resource
-        here_abspath = here.get_abspath()
+        here_abspath = here.get_canonical_path()
         site_root_abspath = here.get_site_root().get_abspath()
         items = []
         tabs = {}
@@ -360,18 +360,26 @@ class Menu(OrderedTable):
                 if not ref.scheme:
                     # FIXME We should check the ACL of the method
                     # Get the resource associated to the method
-                    _path, _method = path.split(';')
+                    _path, method_name = path.split(';')
                     if ref.path.is_absolute():
                         real_path = site_root_abspath.resolve2('.%s' % _path)
                     else:
                         real_path = _path
                     resource = self.get_resource(real_path)
-                    if here_abspath == resource.get_abspath():
-                        if context.view_name == _method:
+                    if here_abspath == resource.get_canonical_path():
+                        if context.view_name == method_name:
                             css = 'in-path'
-                    id += _method
+                    id += method_name
+                    # Build the new reference with the right path
+                    ref2 = deepcopy(ref)
+                    ref2.path = '%s/;%s' % (context.get_link(resource),
+                                            method_name)
+                else:
+                    id += str(record.id)
+                    ref2 = ref
+
                 items.append({'id': id,
-                              'path': str(ref),
+                              'path': str(ref2),
                               'real_path': None,
                               'title': title,
                               'description': None,
@@ -411,7 +419,7 @@ class Menu(OrderedTable):
 
                 # Set active, in_path
                 active = False
-                if here_abspath == resource.get_abspath():
+                if here_abspath == resource.get_canonical_path():
                     active, in_path = True, False
                 else:
                     res_abspath = menu_abspath.resolve2(resource_path)
