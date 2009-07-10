@@ -149,11 +149,12 @@ class Issue_Edit(STLForm):
 
 
     def get_namespace(self, resource, context):
+        namespace = STLForm.get_namespace(self, resource, context)
+
         # The first lines are very much the same of the add issue form
         context.styles.append('/ui/tracker/style.css')
         context.scripts.append('/ui/tracker/tracker.js')
 
-        namespace = self.build_namespace(resource, context)
         tracker = resource.parent
         namespace['list_products'] = tracker.get_list_products_namespace()
 

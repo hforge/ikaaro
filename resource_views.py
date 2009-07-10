@@ -457,10 +457,6 @@ class LoginView(STLForm):
         'password': String(mandatory=True)}
 
 
-    def get_namespace(self, resource, context):
-        return self.build_namespace(resource, context)
-
-
     def action(self, resource, context, form):
         email = form['username']
         password = form['password']
