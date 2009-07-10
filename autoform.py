@@ -33,9 +33,6 @@ from ikaaro.workflow import get_workflow_preview
 
 
 
-stl_namespaces = {
-    None: 'http://www.w3.org/1999/xhtml',
-    'stl': 'http://www.hforge.org/xml-namespaces/stl'}
 xhtml_namespaces = {None: 'http://www.w3.org/1999/xhtml'}
 
 
@@ -80,6 +77,15 @@ class HTMLBody(XHTMLBody):
 ###########################################################################
 # Widgets
 ###########################################################################
+
+stl_namespaces = {
+    None: 'http://www.w3.org/1999/xhtml',
+    'stl': 'http://www.hforge.org/xml-namespaces/stl'}
+def make_stl_template(data):
+    return list(XMLParser(data, stl_namespaces))
+
+
+
 def get_default_widget(datatype):
     if issubclass(datatype, Boolean):
         return RadioWidget
@@ -99,10 +105,9 @@ class Widget(object):
     suffix = None
     type = 'text'
 
-    template = list(XMLParser(
-        """<input type="${type}" id="${id}" name="${name}" value="${value}"
-          size="${size}" />""",
-        stl_namespaces))
+    template = make_stl_template("""
+    <input type="${type}" id="${id}" name="${name}" value="${value}"
+      size="${size}" />""")
 
 
     def __init__(self, name, **kw):
@@ -163,9 +168,9 @@ class PasswordWidget(Widget):
 
 class ReadOnlyWidget(Widget):
 
-    template = list(XMLParser(
-        """<input type="hidden" id="${id}" name="${name}" value="${value}" />
-           ${displayed}""", stl_namespaces))
+    template = make_stl_template("""
+    <input type="hidden" id="${id}" name="${name}" value="${value}" />
+    ${displayed}""")
 
 
     def get_namespace(self, datatype, value):
@@ -200,10 +205,9 @@ class MultilineWidget(Widget):
     rows = 5
     cols = 60
 
-    template = list(XMLParser(
-        """<textarea rows="${rows}" cols="${cols}" id="${id}" name="${name}"
-        >${value}</textarea>""",
-        stl_namespaces))
+    template = make_stl_template("""
+    <textarea rows="${rows}" cols="${cols}" id="${id}" name="${name}"
+    >${value}</textarea>""")
 
 
     def get_namespace(self, datatype, value):
@@ -218,14 +222,13 @@ class MultilineWidget(Widget):
 
 class RadioWidget(Widget):
 
-    template = list(XMLParser("""
-        <stl:block stl:repeat="option options">
-          <input type="radio" id="${id}-${option/name}" name="${name}"
-            value="${option/name}" checked="${option/selected}" />
-          <label for="${id}-${option/name}">${option/value}</label>
-          <br stl:if="not oneline" />
-        </stl:block>
-        """, stl_namespaces))
+    template = make_stl_template("""
+    <stl:block stl:repeat="option options">
+      <input type="radio" id="${id}-${option/name}" name="${name}"
+        value="${option/name}" checked="${option/selected}" />
+      <label for="${id}-${option/name}">${option/value}</label>
+      <br stl:if="not oneline" />
+    </stl:block>""")
 
     oneline = False
     has_empty_option = True # Only makes sense for enumerates
@@ -279,14 +282,13 @@ class RadioWidget(Widget):
 
 class CheckboxWidget(Widget):
 
-    template = list(XMLParser("""
-        <stl:block stl:repeat="option options">
-          <input type="checkbox" id="${id}-${option/name}" name="${name}"
-            value="${option/name}" checked="${option/selected}" />
-          <label for="${id}-${option/name}">${option/value}</label>
-          <br stl:if="not oneline" />
-        </stl:block>
-        """, stl_namespaces))
+    template = make_stl_template("""
+    <stl:block stl:repeat="option options">
+      <input type="checkbox" id="${id}-${option/name}" name="${name}"
+        value="${option/name}" checked="${option/selected}" />
+      <label for="${id}-${option/name}">${option/value}</label>
+      <br stl:if="not oneline" />
+    </stl:block>""")
 
     oneline = False
 
@@ -321,14 +323,13 @@ class CheckboxWidget(Widget):
 
 class SelectWidget(Widget):
 
-    template = list(XMLParser("""
-        <select id="${id}" name="${name}" multiple="${multiple}" size="${size}"
-            class="${css}">
-          <option value="" stl:if="has_empty_option"></option>
-          <option stl:repeat="option options" value="${option/name}"
-            selected="${option/selected}">${option/value}</option>
-        </select>
-        """, stl_namespaces))
+    template = make_stl_template("""
+    <select id="${id}" name="${name}" multiple="${multiple}" size="${size}"
+      class="${css}">
+      <option value="" stl:if="has_empty_option"></option>
+      <option stl:repeat="option options" value="${option/name}"
+        selected="${option/selected}">${option/value}</option>
+    </select>""")
 
 
     def get_namespace(self, datatype, value):
@@ -353,18 +354,18 @@ class DateWidget(Widget):
 
     tip = MSG(u"Format: 'yyyy-mm-dd'")
 
-    template = list(XMLParser("""
-        <input type="text" name="${name}" value="${value}" id="${id}"
-          class="dateField" size="${size}" />
-        <input type="button" value="..." class="${class}" />
-        <script language="javascript">
-          jQuery( "input.dateField" ).dynDateTime({
-            ifFormat: "${format}",
-            showsTime: ${show_time},
-            timeFormat: "24",
-            button: ".next()" });
-        </script>
-        """, stl_namespaces))
+    template = make_stl_template("""
+    <input type="text" name="${name}" value="${value}" id="${id}"
+      class="dateField" size="${size}" />
+    <input type="button" value="..." class="${class}" />
+    <script language="javascript">
+      jQuery( "input.dateField" ).dynDateTime({
+        ifFormat: "${format}",
+        showsTime: ${show_time},
+        timeFormat: "24",
+        button: ".next()" });
+    </script>""")
+
 
     def get_namespace(self, datatype, value):
         if value is None:
@@ -387,15 +388,13 @@ class PathSelectorWidget(TextWidget):
     action = 'add_link'
     display_workflow = True
 
-    template = list(XMLParser(
-    """
+    template = make_stl_template("""
     <input type="text" id="selector-${id}" size="${size}" name="${name}"
       value="${value}" />
     <input id="selector-button-${id}" type="button" value="..."
       name="selector_button_${name}"
       onclick="popup(';${action}?target_id=selector-${id}&amp;mode=input', 620, 300);"/>
-    ${workflow_state}
-    """, stl_namespaces))
+    ${workflow_state}""")
 
 
     def get_namespace(self, datatype, value):
@@ -426,8 +425,7 @@ class ImageSelectorWidget(PathSelectorWidget):
     width = 128
     height = 128
 
-    template = list(XMLParser(
-    """
+    template = make_stl_template("""
     <input type="text" id="selector-${id}" size="${size}" name="${name}"
       value="${value}" />
     <input id="selector-button-${id}" type="button" value="..."
@@ -435,8 +433,7 @@ class ImageSelectorWidget(PathSelectorWidget):
       onclick="popup(';${action}?target_id=selector-${id}&amp;mode=input', 620, 300);" />
     ${workflow_state}
     <br/>
-    <img src="${value}/;thumb?width=${width}&amp;height=${height}" stl:if="value"/>
-    """, stl_namespaces))
+    <img src="${value}/;thumb?width=${width}&amp;height=${height}" stl:if="value"/>""")
 
 
     def get_namespace(self, datatype, value):
