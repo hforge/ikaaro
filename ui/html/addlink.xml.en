@@ -53,12 +53,12 @@
         <table border="0" cellpadding="1" cellspacing="1" width="100%"
           class="thumbs">
           <tr>
-            <th width="150">Browse Content</th>
+            <th width="150" stl:if="folders">Browse Content</th>
             <th>Select Resource</th>
           </tr>
           <tr>
             <!-- Left column -->
-            <td valign="top">
+            <td valign="top" stl:if="folders">
               <dl stl:repeat="item folders">
                 <dt>
                   <a href="${item/url}" title="${item/title}">
