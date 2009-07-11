@@ -20,13 +20,13 @@
 
 # Import from the Standard Library
 from decimal import Decimal
-from types import GeneratorType
+from types import GeneratorType, FunctionType, MethodType
 
 # Import from itools
 from itools.datatypes import String, Tokens, Unicode
 from itools.gettext import MSG
 from itools.html import stream_to_str_as_html, xhtml_doctype
-from itools.web import STLView
+from itools.web import STLView, VirtualRoot
 from itools.xml import XMLParser
 
 # Import from ikaaro
@@ -47,7 +47,7 @@ from website_views import SiteSearchView, NotFoundView, ForbiddenView
 
 
 
-class WebSite(RoleAware, Folder):
+class WebSite(RoleAware, Folder, VirtualRoot):
 
     class_id = 'WebSite'
     class_title = MSG(u'Web Site')
@@ -102,8 +102,24 @@ class WebSite(RoleAware, Folder):
         return self.get_property('website_languages')[0]
 
 
-    def before_traverse(self, context, min=Decimal('0.000001'),
-                        zero=Decimal('0.0')):
+    def get_skin(self, context):
+        # Back-Office
+        hostname = context.uri.authority
+        if hostname[:3] in ['bo.', 'bo-']:
+            return self.get_resource('/ui/aruni')
+        # Fron-Office
+        return self.get_resource(self.class_skin)
+
+
+    def is_allowed_to_register(self, user, resource):
+        return self.get_property('website_is_open')
+
+
+    #######################################################################
+    # HTTP stuff
+    #######################################################################
+    def find_language(self, context, min=Decimal('0.000001'),
+                      zero=Decimal('0.0')):
         # Set the language cookie if specified by the query.
         # NOTE We do it this way, instead of through a specific action,
         # to avoid redirections.
@@ -128,37 +144,44 @@ class WebSite(RoleAware, Folder):
             accept.set(language, 2.5)
 
 
-    def get_skin(self, context):
-        # Back-Office
-        hostname = context.uri.authority
-        if hostname[:3] in ['bo.', 'bo-']:
-            return self.get_resource('/ui/aruni')
-        # Fron-Office
-        return self.get_resource(self.class_skin)
+    def http_get(self, context):
+        self.find_language(context)
+        entity = VirtualRoot.http_get(self, context)
 
-
-    def after_traverse(self, context):
-        body = context.entity
-        is_str = type(body) is str
-        is_xml = isinstance(body, (list, GeneratorType, XMLParser))
+        is_str = type(entity) is str
+        is_xml = isinstance(entity, (list, GeneratorType, XMLParser))
         if not is_str and not is_xml:
-            return
+            return entity
 
         # If there is not a content type, just serialize the content
         if context.content_type:
             if is_xml:
-                context.entity = stream_to_str_as_html(body)
-            return
+                return stream_to_str_as_html(entity)
+            return entity
 
         # Standard page, wrap the content into the general template
         if is_str:
-            body = XMLParser(body, doctype=xhtml_doctype)
-        context.entity = self.get_skin(context).template(body)
+            entity = XMLParser(entity, doctype=xhtml_doctype)
         context.content_type = 'text/html; charset=UTF-8'
+        return self.get_skin(context).template(entity)
 
 
-    def is_allowed_to_register(self, user, resource):
-        return self.get_property('website_is_open')
+    def http_post(self, context):
+        self.find_language(context)
+        entity = VirtualRoot.http_post(self, context)
+
+        # Most often a post method will render a page
+        if isinstance(entity, (FunctionType, MethodType)):
+            context.method = entity
+            return self.http_get(context)
+
+        return entity
+
+
+    # Views for error conditions
+    forbidden = ForbiddenView()
+    unauthorized = LoginView()
+    not_found = NotFoundView()
 
 
     #######################################################################
@@ -187,10 +210,6 @@ class WebSite(RoleAware, Folder):
     credits = CreditsView()
     license = STLView(access=True, title=MSG(u'License'),
                       template='/ui/root/license.xml')
-    # Special
-    forbidden = ForbiddenView()
-    unauthorized = LoginView()
-    not_found = NotFoundView()
 
     # Calendar views
     monthly_view = MonthlyView()
