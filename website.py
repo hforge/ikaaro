@@ -18,16 +18,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Import from the Standard Library
-from decimal import Decimal
-from types import GeneratorType, FunctionType, MethodType
-
 # Import from itools
 from itools.datatypes import Tokens
 from itools.gettext import MSG
 from itools.html import stream_to_str_as_html, xhtml_doctype
 from itools.web import STLView, VirtualRoot
-from itools.xml import XMLParser
 
 # Import from ikaaro
 from access import RoleAware
@@ -39,7 +34,8 @@ from control_panel import CPEditVirtualHosts, CPOrphans
 from folder import Folder
 from registry import register_resource_class, register_document_type
 from resource_views import LoginView
-from skins import UI, ui_path
+from skins import Skin
+from ui import UI, ui_path
 from views_new import ProxyNewInstance
 from website_views import AboutView, ContactForm, CreditsView
 from website_views import ForgottenPasswordForm, RegisterForm
@@ -97,15 +93,6 @@ class WebSite(RoleAware, Folder, VirtualRoot):
         return self.get_property('website_languages')[0]
 
 
-    def get_skin(self, context):
-        # Back-Office
-        hostname = context.uri.authority
-        if hostname[:3] in ['bo.', 'bo-']:
-            return self.get_resource('/ui/aruni')
-        # Fron-Office
-        return self.get_resource(self.class_skin)
-
-
     def is_allowed_to_register(self, user, resource):
         return self.get_property('website_is_open')
 
@@ -113,63 +100,7 @@ class WebSite(RoleAware, Folder, VirtualRoot):
     #######################################################################
     # HTTP stuff
     #######################################################################
-    def find_language(self, context, min=Decimal('0.000001'),
-                      zero=Decimal('0.0')):
-        # Set the language cookie if specified by the query.
-        # NOTE We do it this way, instead of through a specific action,
-        # to avoid redirections.
-        language = context.get_form_value('language')
-        if language is not None:
-            context.set_cookie('language', language)
-
-        # The default language (give a minimum weight)
-        accept = context.accept_language
-        default = self.get_default_language()
-        if accept.get(default, zero) < min:
-            accept.set(default, min)
-        # User Profile (2.0)
-        user = context.user
-        if user is not None:
-            language = user.get_property('user_language')
-            if language is not None:
-                accept.set(language, 2.0)
-        # Cookie (2.5)
-        language = context.get_cookie('language')
-        if language is not None:
-            accept.set(language, 2.5)
-
-
-    def http_get(self, context):
-        self.find_language(context)
-        entity = VirtualRoot.http_get(self, context)
-
-        is_str = type(entity) is str
-        is_xml = isinstance(entity, (list, GeneratorType, XMLParser))
-        if not is_str and not is_xml:
-            return entity
-
-        # If there is not a content type, just serialize the content
-        if context.response.has_header('Content-Type'):
-            if is_xml:
-                return stream_to_str_as_html(entity)
-            return entity
-
-        # Standard page, wrap the content into the general template
-        if is_str:
-            entity = XMLParser(entity, doctype=xhtml_doctype)
-        return self.get_skin(context).template(entity)
-
-
-    def http_post(self, context):
-        self.find_language(context)
-        entity = VirtualRoot.http_post(self, context)
-
-        # Most often a post method will render a page
-        if isinstance(entity, (FunctionType, MethodType)):
-            context.method = entity
-            return self.http_get(context)
-
-        return entity
+    http_view = Skin()
 
 
     # Views for error conditions

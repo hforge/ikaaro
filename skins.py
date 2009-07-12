@@ -20,128 +20,30 @@
 
 # Import from the Standard Library
 from copy import deepcopy
+from decimal import Decimal
+from types import GeneratorType, FunctionType, MethodType
 
 # Import from itools
-from itools.core import get_abspath
 from itools.datatypes import Unicode
 from itools.gettext import MSG
-from itools.handlers import File, Folder, Image
-from itools.http import NotFound
-from itools.i18n import has_language
 from itools.stl import stl
-from itools.uri import Path
-from itools.web import get_context, BaseView, ERROR, INFO
-from itools.xmlfile import XMLFile
+from itools.web import ERROR, INFO, STLForm
+from itools.xml import XMLParser
 
 # Import from ikaaro
-from resource_ import IResource
 from skins_views import LanguagesTemplate, LocationTemplate
+from ui import UIFile, UIFolder
 
 
 
-class FileGET(BaseView):
-
-    access = True
-
-
-    def get_mtime(self, resource):
-        return resource.get_mtime()
-
-
-    def GET(self, resource, context):
-        response = context.response
-        response.set_header('Content-Type', resource.get_mimetype())
-        return resource.to_str()
-
-
-
-class UIFile(IResource, File):
-
-    clone_exclude = File.clone_exclude | frozenset(['parent', 'name'])
-
-
-    download = FileGET()
-
-    def get_view(self, name, query=None):
-        if name is None:
-            return self.download
-        raise NotFound
-
-
-
-class UIImage(Image, UIFile):
-    pass
-
-
-
-class UITemplate(UIFile, XMLFile):
-    pass
-
-
-
-map = {
-    'application/xml': UITemplate,
-    'application/xhtml+xml': UITemplate,
-    'text/xml': UITemplate,
-    'image/png': UIImage,
-    'image/jpeg': UIImage,
-}
-
-
-
-class UIFolder(IResource, Folder):
-
-    class_title = MSG(u'UI')
-    class_icon48 = 'icons/48x48/folder.png'
-
-
-    def _get_names(self):
-        # FIXME May not be the right implementation
-        return self.get_handler_names()
-
-
-    def _get_resource(self, name):
-        if self.has_handler(name):
-            handler = self.get_handler(name)
-        else:
-            n = len(name)
-            names = [ x for x in self.get_handler_names() if x[:n] == name ]
-            languages = [ x.split('.')[-1] for x in names ]
-            languages = [ x for x in languages if has_language(x) ]
-
-            if not languages:
-                return None
-
-            # Get the best variant
-            context = get_context()
-            if context is None:
-                language = None
-            else:
-                accept = context.accept_language
-                language = accept.select_language(languages)
-
-            # By default use whatever variant
-            # (XXX we need a way to define the default)
-            if language is None:
-                language = languages[0]
-            handler = self.get_handler('%s.%s' % (name, language))
-
-        if isinstance(handler, Folder):
-            handler = UIFolder(handler.uri)
-        else:
-            format = handler.get_mimetype()
-            cls = map.get(format, UIFile)
-            handler = cls(handler.uri)
-        handler.database = self.database
-        return handler
-
-
-
-class Skin(UIFolder):
+class Skin(STLForm):
 
     class_title = MSG(u'Skin')
     class_icon16 = 'icons/16x16/skin.png'
     class_icon48 = 'icons/48x48/skin.png'
+    template = '/ui/aruni/template.xhtml'
+    styles = ['/ui/aruni/style.css']
+    scripts = []
 
     # User Interface widgets
     languages_template = LanguagesTemplate
@@ -184,8 +86,7 @@ class Skin(UIFolder):
             '/ui/table/style.css']
 
         # Skin
-        if self.has_handler('style.css'):
-            styles.append('%s/style.css' % self.get_canonical_path())
+        styles.extend(self.styles)
 
         # View
         get_styles = getattr(context.view, 'get_styles', None)
@@ -221,8 +122,7 @@ class Skin(UIFolder):
         scripts.append('/ui/table/javascript.js')
 
         # This skin's JavaScript
-        if self.has_handler('javascript.js'):
-            scripts.append('%s/javascript.js' % self.get_canonical_path())
+        scripts.extend(self.scripts)
 
         # View
         get_scripts = getattr(context.view, 'get_scripts', None)
@@ -413,17 +313,51 @@ class Skin(UIFolder):
         }
 
 
-    def get_template(self):
-        template = self.get_resource('template.xhtml', soft=True)
-        if template is not None:
-            return template
+    def find_language(self, resource, context, min=Decimal('0.000001'),
+                      zero=Decimal('0.0')):
+        # Set the language cookie if specified by the query.
+        # NOTE We do it this way, instead of through a specific action,
+        # to avoid redirections.
+        language = context.get_form_value('language')
+        if language is not None:
+            context.set_cookie('language', language)
 
-        # Default: aruni
-        return self.get_resource('/ui/aruni/template.xhtml')
+        # The default language (give a minimum weight)
+        accept = context.accept_language
+        default = resource.get_default_language()
+        if accept.get(default, zero) < min:
+            accept.set(default, min)
+        # User Profile (2.0)
+        user = context.user
+        if user is not None:
+            language = user.get_property('user_language')
+            if language is not None:
+                accept.set(language, 2.0)
+        # Cookie (2.5)
+        language = context.get_cookie('language')
+        if language is not None:
+            accept.set(language, 2.5)
 
 
-    def template(self, content):
-        context = get_context()
+    def GET(self, resource, context):
+        self.find_language(resource, context)
+        content = context.method(context.resource, context)
+
+        is_str = type(content) is str
+        is_xml = isinstance(content, (list, GeneratorType, XMLParser))
+        if not is_str and not is_xml:
+            return content
+
+        # If there is not a content type, just serialize the content
+        if context.response.has_header('Content-Type'):
+            if is_xml:
+                return stream_to_str_as_html(content)
+            return content
+
+        # Standard page, wrap the content into the general template
+        if is_str:
+            content = XMLParser(content, doctype=xhtml_doctype)
+
         # Build the namespace
         namespace = self.build_namespace(context)
         namespace['body'] = content
@@ -432,7 +366,7 @@ class Skin(UIFolder):
         context.response.set_header('Content-Type', 'text/html; charset=UTF-8')
 
         # Load the template
-        handler = self.get_template()
+        handler = self.get_template(resource, context)
 
         # Build the output
         s = ['<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"\n'
@@ -445,32 +379,14 @@ class Skin(UIFolder):
         return ''.join(s)
 
 
+    def POST(self, resource, context):
+        self.find_language(resource, context)
+        entity = context.method(context.resource, context)
 
-#############################################################################
-# The folder "/ui"
-#############################################################################
+        # Most often a post method will render a page
+        if isinstance(entity, (FunctionType, MethodType)):
+            context.method = entity
+            return self.GET(resource, context)
 
-skin_registry = {}
-def register_skin(name, skin):
-    if isinstance(skin, str):
-        skin = Skin(skin)
-    skin_registry[name] = skin
+        return entity
 
-
-# Register the built-in skins
-ui_path = get_abspath('ui')
-register_skin('aruni', '%s/aruni' % ui_path)
-
-
-class UI(UIFolder):
-
-    def _get_resource(self, name):
-        if name in skin_registry:
-            skin = skin_registry[name]
-            skin.database = self.database
-            return skin
-        return UIFolder._get_resource(self, name)
-
-
-    def get_canonical_path(self):
-        return Path('/ui')
