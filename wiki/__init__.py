@@ -24,7 +24,7 @@ import docutils
 from itools.core import get_abspath
 
 # Import from ikaaro
-from ikaaro.skins import register_skin
+from ikaaro.ui import register_skin
 import page
 
 

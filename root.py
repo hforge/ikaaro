@@ -40,7 +40,7 @@ from itools.web import BaseView, get_context
 # Import from ikaaro
 from folder import Folder
 from registry import get_resource_class
-from skins import UI, ui_path
+from ui import UI, ui_path
 from user import UserFolder
 from utils import crypt_password
 from website import WebSite

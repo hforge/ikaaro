@@ -20,7 +20,7 @@ from itools.core import get_abspath
 
 # Import from ikaaro
 from ikaaro.registry import register_document_type
-from ikaaro.skins import register_skin
+from ikaaro.ui import register_skin
 from issue import Issue
 from resources import Resources
 from tracker import Tracker
