@@ -28,9 +28,9 @@ from itools.csv import CSVFile, Property
 from itools.datatypes import Boolean, Integer, String, Unicode
 from itools.gettext import MSG
 from itools.i18n import format_datetime
+from itools.stl import stl
 from itools.uri import encode_query, Reference
-from itools.web import BaseView, BaseForm, STLForm
-from itools.web import INFO, ERROR
+from itools.web import BaseView, BaseForm, STLForm, FormError, INFO, ERROR
 from itools.web.views import process_form
 
 # Import from ikaaro
@@ -293,8 +293,14 @@ class Tracker_View(BrowseForm):
                            self.tracker_schema)
 
 
+    def on_query_error(self, resource, context):
+        query = encode_query(context.uri.query)
+        return context.come_back(None, goto=';search?%s' % query)
+
+
     def get_title(self, context):
-        search_name = context.query.get('search_name')
+        query = getattr(context, 'query', {})
+        search_name = query.get('search_name')
         if search_name:
             search = context.resource.get_resource(search_name, soft=True)
             if search:
@@ -459,6 +465,22 @@ class Tracker_Search(BaseSearchForm, Tracker_View):
 
     context_menus = []
 
+
+    def get_query(self, context):
+        try:
+            return BaseSearchForm.get_query(self, context)
+        except FormError:
+            schema = self.get_query_schema()
+            query = {}
+            for name in schema:
+                default = schema[name].get_default()
+                query[name] = context.uri.query.get(name, default)
+            return query
+
+
+    on_query_error = BaseSearchForm.on_query_error
+
+
     def get_search_namespace(self, resource, context):
         # Set Style & JS
         context.styles.append('/ui/tracker/style.css')
@@ -517,10 +539,12 @@ class Tracker_Search(BaseSearchForm, Tracker_View):
 
 
     def get_namespace(self, resource, context):
-        namespace = BaseSearchForm.get_namespace(self, resource, context)
-        namespace['batch'] = None
-        namespace['table'] = None
-        return namespace
+        search_template = resource.get_resource(self.search_template)
+        search_namespace = self.get_search_namespace(resource, context)
+        return {
+            'batch': None,
+            'table': None,
+            'search': stl(search_template, search_namespace)}
 
 
 
