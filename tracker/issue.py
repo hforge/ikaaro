@@ -270,7 +270,10 @@ class Issue(Folder):
             csv = self.parent.get_resource(name).handler
             if last_value or last_value == 0:
                 rec = csv.get_record(last_value)
-                last_title = csv.get_record_value(rec, 'title')
+                if rec is None:
+                    last_title = 'undefined'
+                else:
+                    last_title = csv.get_record_value(rec, 'title')
             if new_value or new_value == 0:
                 rec = csv.get_record(new_value)
                 new_title = csv.get_record_value(rec, 'title')
