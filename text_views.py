@@ -30,7 +30,8 @@ from itools.web import STLForm, STLView, INFO
 from buttons import RemoveButton
 from file_views import File_Edit
 from forms import AutoForm, get_default_widget, MultilineWidget
-from forms import description_widget, file_widget, subject_widget, title_widget
+from forms import timestamp_widget, description_widget, file_widget
+from forms import subject_widget, title_widget
 import messages
 from utils import get_parameters
 from views import BrowseForm
@@ -42,6 +43,7 @@ class Text_Edit(File_Edit):
     icon = 'edit.png'
     schema = merge_dicts(File_Edit.schema, data=String)
     widgets = [
+        timestamp_widget,
         title_widget,
         MultilineWidget('data', title=MSG(u"Content"), rows=19, cols=69),
         file_widget,
