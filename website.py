@@ -40,6 +40,7 @@ from views_new import ProxyNewInstance
 from website_views import AboutView, ContactForm, CreditsView
 from website_views import ForgottenPasswordForm, RegisterForm
 from website_views import SiteSearchView, NotFoundView, ForbiddenView
+from website_views import InternalServerError
 
 
 
@@ -100,13 +101,13 @@ class WebSite(RoleAware, Folder, VirtualRoot):
     #######################################################################
     # HTTP stuff
     #######################################################################
-    http_view = Skin()
-
+    http_main = Skin()
 
     # Views for error conditions
-    forbidden = ForbiddenView()
-    unauthorized = LoginView()
-    not_found = NotFoundView()
+    http_forbidden = ForbiddenView()
+    http_unauthorized = LoginView()
+    http_not_found = NotFoundView()
+    http_internal_server_error = InternalServerError()
 
 
     #######################################################################
