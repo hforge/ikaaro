@@ -26,7 +26,6 @@ from email.MIMEImage import MIMEImage
 from email.MIMEMultipart import MIMEMultipart
 from email.Utils import formatdate
 from email.header import Header
-import traceback
 
 # Import from itools
 from itools.core import get_abspath
@@ -145,16 +144,6 @@ class Root(WebSite):
         if user is None:
             return username
         return user.get_title()
-
-
-    ########################################################################
-    # Publish
-    ########################################################################
-    def internal_server_error(self, context):
-        namespace = {'traceback': traceback.format_exc()}
-
-        handler = self.get_resource('/ui/root/internal_server_error.xml')
-        return stl(handler, namespace, mode='html')
 
 
     ########################################################################

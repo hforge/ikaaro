@@ -20,6 +20,7 @@
 
 # Import from the Standard Library
 import sys
+from traceback import format_exc
 
 # Import from itools
 from itools.core import get_abspath, merge_dicts
@@ -53,6 +54,13 @@ class ForbiddenView(STLView):
         return self.GET
 
 
+class InternalServerError(STLView):
+    template = '/ui/root/internal_server_error.xml'
+
+    def get_namespace(self, resource, context):
+        return {'traceback': format_exc()}
+
+
 
 class ForgottenPasswordForm(AutoForm):
 
@@ -62,8 +70,7 @@ class ForgottenPasswordForm(AutoForm):
     meta = [('robots', 'noindex, follow', None)]
 
     widgets = [
-        TextWidget('username', title=MSG(u'Type your email address')),
-        ]
+        TextWidget('username', title=MSG(u'Type your email address'))]
 
     schema = query_schema = {'username': Email(default='')}
 
