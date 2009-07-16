@@ -43,7 +43,7 @@ def start(options, target):
         return 1
 
     # Set-up the server
-    server = Server(target)
+    server = Server(target, read_only=options.read_only)
 
     # Check instance is up to date
     context = get_fake_context()
@@ -82,12 +82,15 @@ if __name__ == '__main__':
     parser.add_option(
         '-d', '--detach', action="store_true", default=False,
         help="Detach from the console.")
+    parser.add_option(
+        '-r', '--read-only', action="store_true", default=False,
+        help="Start the server in read-only mode.")
 
     # Parse arguments
     options, args = parser.parse_args()
     n_args = len(args)
     if n_args != 1:
-        parser.error('The TARGET argument is missing.')
+        parser.error('Wrong number of arguments.')
 
     # Start server
     target = args[0]
