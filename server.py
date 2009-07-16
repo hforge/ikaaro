@@ -33,7 +33,7 @@ from itools.datatypes import Boolean
 from itools.http import Request
 from itools.uri import get_reference, get_host_from_authority
 from itools.vfs import cwd
-from itools.web import Server as BaseServer, Context, set_context
+from itools.web import WebServer, Context, set_context
 
 # Import from ikaaro
 from config import get_config
@@ -107,7 +107,7 @@ def get_fake_context():
     return context
 
 
-class Server(BaseServer):
+class Server(WebServer):
 
     def __init__(self, target, address=None, port=None, read_only=False,
                  cache_size=None):
@@ -122,10 +122,14 @@ class Server(BaseServer):
         # Find out the IP to listen to
         if address is None:
             address = config.get_value('listen-address').strip()
+            if address is None:
+                address = ''
 
         # Find out the port to listen
         if port is None:
             port = config.get_value('listen-port')
+            if port is None:
+                port = 8080
 
         # Contact Email
         self.smtp_from = config.get_value('smtp-from')
@@ -164,9 +168,9 @@ class Server(BaseServer):
         root = get_root(database, target)
 
         # Initialize
-        BaseServer.__init__(self, root, address=address, port=port,
-                            access_log=access_log, event_log=event_log,
-                            log_level=log_level, pid_file='%s/pid' % path)
+        WebServer.__init__(self, root, address=address, port=port,
+                           access_log=access_log, event_log=event_log,
+                           log_level=log_level, pid_file='%s/pid' % path)
 
         # Initialize the spool
         self.spool = Spool(target)
@@ -199,7 +203,7 @@ class Server(BaseServer):
     # API / Public
     #######################################################################
     def init_context(self, context):
-        BaseServer.init_context(self, context)
+        WebServer.init_context(self, context)
         context.database = self.database
         context.message = None
 
@@ -235,7 +239,7 @@ class Server(BaseServer):
         # Go
         if self.profile_path is not None:
             filename = self.profile_path
-            runctx("BaseServer.start(self)", globals(), locals(), filename)
+            runctx("WebServer.start(self)", globals(), locals(), filename)
         else:
-            BaseServer.start(self)
+            WebServer.start(self)
 
