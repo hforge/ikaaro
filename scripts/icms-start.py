@@ -22,8 +22,8 @@ from optparse import OptionParser
 from sys import exit
 
 # Import from itools
-from itools import __version__, vfs
-from itools.core import become_daemon, fork, start_subprocess
+from itools import __version__
+from itools.core import become_daemon, start_subprocess
 
 # Import from ikaaro
 from ikaaro.database import check_database
@@ -43,7 +43,7 @@ def start(options, target):
         return 1
 
     # Set-up the server
-    server = Server(target)
+    server = Server(target, read_only=options.read_only)
 
     # Check instance is up to date
     context = get_fake_context()
@@ -73,45 +73,27 @@ def start(options, target):
 
 if __name__ == '__main__':
     # The command line parser
-    usage = ('%prog [OPTIONS] TARGET\n'
-             '       %prog TARGET [TARGET]*')
+    usage = '%prog [OPTIONS] TARGET'
     version = 'itools %s' % __version__
-    description = ('Starts a web server that publishes the TARGET ikaaro'
-                   ' instance to the world. If several TARGETs are given, one'
-                   ' server will be started for each one (in this mode no'
-                   ' options are available).')
+    description = (
+        'Starts a web server that publishes the TARGET ikaaro instance to the '
+        'world.')
     parser = OptionParser(usage, version=version, description=description)
     parser.add_option(
         '-d', '--detach', action="store_true", default=False,
         help="Detach from the console.")
+    parser.add_option(
+        '-r', '--read-only', action="store_true", default=False,
+        help="Start the server in read-only mode.")
 
     # Parse arguments
     options, args = parser.parse_args()
     n_args = len(args)
-    if n_args == 0:
-        parser.error('The TARGET argument is missing.')
+    if n_args != 1:
+        parser.error('Wrong number of arguments.')
 
-    # Case 1: One target
-    if n_args == 1:
-        target = args[0]
-        ret = start(options, target)
-        exit(ret)
-
-    # Case 2: Multiple targets
-    if not options.detach:
-        print 'icms-start.py: wrong command line options.'
-        print
-        print 'To start more than one instance at once use the detached mode:'
-        print
-        print '    $ icms-update.py --detach %s' % ' '.join(args)
-        print
-        exit(1)
-
-    ret = 0
-    for target in args:
-        pid = fork()
-        if pid == 0:
-            continue
-        ret += start(options, target)
+    # Start server
+    target = args[0]
+    ret = start(options, target)
     exit(ret)
 

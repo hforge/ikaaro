@@ -20,11 +20,10 @@
 
 # Import from itools
 from itools.core import merge_dicts
-from itools.datatypes import Boolean, Integer, String, Unicode
+from itools.datatypes import Boolean, String, Unicode
 from itools.datatypes import Enumerate
 from itools.gettext import MSG
 from itools.xapian import PhraseQuery, AndQuery
-from itools.web import ERROR, INFO
 
 # Import from ikaaro
 from ikaaro.autoform import title_widget, CheckboxWidget, SelectWidget
@@ -121,6 +120,30 @@ class SelectTable_View(OrderedTable_View):
         return items[start:start+size]
 
 
+    def action_remove(self, resource, context, form):
+        ids = form['ids']
+        # Search all issues
+        query_terms = resource.parent.get_issues_query_terms()
+        query = AndQuery(*query_terms)
+        results = context.root.search(query)
+
+        # Remove values only if no issues have them
+        handler = resource.handler
+        filter = str(resource.name)
+        removed = []
+        for id in ids:
+            query = PhraseQuery(filter, id)
+            subresults = results.search(query)
+            if len(subresults) == 0:
+                handler.del_record(id)
+                removed.append(str(id))
+
+        # Ok
+        message = MSG(u'Resources removed: {resources}.')
+        message = message.gettext(resources=', '.join(removed)).encode('utf-8')
+        context.message = message
+
+
 
 class SelectTable_EditRecord(Table_EditRecord):
 
@@ -179,32 +202,6 @@ class Tracker_TableResource(OrderedTable):
 
     view = SelectTable_View()
     edit_record = SelectTable_EditRecord()
-
-
-    def del_record_action(self, context):
-        # Check input
-        ids = context.get_form_values('ids', type=Integer)
-        if not ids:
-            return context.come_back(ERROR(u'No resource selected.'))
-
-        # Search all issues
-        query_terms = resource.parent.get_issues_query_terms()
-        query = AndQuery(*query_terms)
-        results = context.root.search(query)
-
-        # Remove values only if no issues have them
-        filter = str(self.name)
-        removed = []
-        for id in ids:
-            query = PhraseQuery(filter, id)
-            subresults = results.search(query)
-            if len(subresults) == 0:
-                self.handler.del_record(id)
-                removed.append(str(id))
-
-        # Ok
-        message = INFO(u'Resources removed: {resources}.')
-        return context.come_back(message, resources=', '.join(removed))
 
 
 
