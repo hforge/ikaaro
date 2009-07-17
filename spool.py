@@ -25,7 +25,7 @@ from socket import gaierror
 from traceback import print_exc
 
 # Import from pygobject
-from gobject import timeout_add
+from gobject import timeout_add_seconds
 
 # Import from itools
 from itools.uri import get_reference
@@ -64,7 +64,7 @@ class Spool(object):
         self.error_log = open(self.error_log_path, 'a+')
 
         # Set up the callback function, every 10s
-        timeout_add(10000, self.send_emails)
+        timeout_add_seconds(10, self.send_emails)
 
 
     def send_emails(self):
