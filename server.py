@@ -122,14 +122,10 @@ class Server(WebServer):
         # Find out the IP to listen to
         if address is None:
             address = config.get_value('listen-address').strip()
-            if address is None:
-                address = ''
 
         # Find out the port to listen
         if port is None:
             port = config.get_value('listen-port')
-            if port is None:
-                port = 8080
 
         # Contact Email
         self.smtp_from = config.get_value('smtp-from')
