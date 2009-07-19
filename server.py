@@ -20,10 +20,18 @@
 
 # Import from the Standard Library
 from cProfile import runctx
+from datetime import datetime
+from email.parser import HeaderParser
 from logging import DEBUG, INFO, WARNING, ERROR, CRITICAL
-from os import fdopen
+from os import fdopen, fstat
+from smtplib import SMTP, SMTPRecipientsRefused, SMTPResponseException
+from socket import gaierror
 import sys
 from tempfile import mkstemp
+from traceback import print_exc
+
+# Import from pygobject
+from gobject import idle_add, timeout_add_seconds
 
 # Import from xapian
 from xapian import DatabaseOpeningError
@@ -32,6 +40,7 @@ from xapian import DatabaseOpeningError
 from itools.datatypes import Boolean
 from itools.http import Request
 from itools.uri import get_reference, get_host_from_authority
+from itools import vfs
 from itools.vfs import cwd
 from itools.web import WebServer, Context, set_context
 
@@ -40,7 +49,6 @@ from config import get_config
 from database import get_database
 from metadata import Metadata
 from registry import get_resource_class
-from spool import Spool
 from utils import is_pid_running
 from website import WebSite
 
@@ -169,16 +177,26 @@ class Server(WebServer):
                            log_level=log_level, pid_file='%s/pid' % path)
 
         # Initialize the spool
-        self.spool = Spool(target)
+        spool = self.target.resolve_name('spool')
+        spool = str(spool)
+        self.spool = vfs.open(spool)
+
+        # The SMTP host
+        get_value = get_config(self.target).get_value
+        self.smtp_host = get_value('smtp-host')
+        self.smtp_login = get_value('smtp-login', default='').strip()
+        self.smtp_password = get_value('smtp-password', default='').strip()
+
+        # The logs
+        self.smtp_activity_log_path = '%s/log/spool' % self.target.path
+        self.smtp_activity_log = open(self.smtp_activity_log_path, 'a+')
+        self.smtp_error_log_path = '%s/log/spool_error' % self.target.path
+        self.smtp_error_log = open(self.smtp_error_log_path, 'a+')
 
 
     #######################################################################
-    # API / Private
+    # Email
     #######################################################################
-    def get_pid(self):
-        return get_pid(self.target.path)
-
-
     def send_email(self, message):
         # Check the SMTP host is defined
         config = get_config(self.target)
@@ -194,10 +212,135 @@ class Server(WebServer):
         finally:
             file.close()
 
+        idle_add(self.send_emails_callback)
+
+
+    def _smtp_send(self):
+        spool = self.spool
+        smtp_host = self.smtp_host
+        log = self.smtp_log_activity
+
+        # Find out emails to send
+        locks = set()
+        names = set()
+        for name in spool.get_names():
+            if name[-5:] == '.lock':
+                locks.add(name[:-5])
+            else:
+                names.add(name)
+        names.difference_update(locks)
+        # Is there something to send?
+        if len(names) == 0:
+            return 0
+
+        # Open connection
+        try:
+            smtp = SMTP(smtp_host)
+            if self.smtp_login and self.smtp_password:
+                smtp.login(self.smtp_login, self.smtp_password)
+        except gaierror, excp:
+            log('%s: "%s"' % (excp[1], smtp_host))
+            return 1
+        except:
+            self.smtp_log_error()
+            return 1
+
+        # Send emails
+        error = 0
+        for name in names:
+            try:
+                # Send message
+                message = spool.open(name).read()
+                headers = HeaderParser().parsestr(message)
+                subject = headers['subject']
+                from_addr = headers['from']
+                to_addr = headers['to']
+                # Send message
+                smtp.sendmail(from_addr, to_addr, message)
+                # Remove
+                spool.remove(name)
+                # Log
+                log('SENT "%s" from "%s" to "%s"' % (subject, from_addr,
+                    to_addr))
+            except (SMTPRecipientsRefused, SMTPResponseException):
+                # the SMTP server returns an error code
+                # or the recipient addresses has been refused
+                # Log
+                self.smtp_log_error()
+                # Remove
+                spool.remove(name)
+                error = 1
+            except Exception:
+                # Other error ...
+                self.smtp_log_error()
+                error = 1
+
+        # Close connection
+        smtp.quit()
+
+        return error
+
+
+    def smtp_send_idle_callback(self):
+        # Error: try again later
+        if self._smtp_send() == 1:
+            timeout_add_seconds(60, self.smtp_send_time_callback)
+
+        return False
+
+
+    def smtp_send_time_callback(self):
+        # Error: keep trying
+        if self._smtp_send() == 1:
+            return True
+
+        return False
+
+
+    def smpt_log_activity(self, msg):
+        # The data to write
+        data = '%s - %s\n' % (datetime.now(), msg)
+
+        # Check the file has not been removed
+        log = self.smtp_activity_log
+        if fstat(log.fileno())[3] == 0:
+            log = open(self.smtp_activity_log_path, 'a+')
+            self.smtp_activity_log = log
+
+        # Write
+        log.write(data)
+        log.flush()
+
+
+    def smtp_log_error(self):
+        # The data to write
+        lines = [
+            '\n',
+            '%s\n' % ('*' * 78),
+            'DATE: %s\n' % datetime.now(),
+            '\n']
+        data = ''.join(lines)
+
+        # Check the file has not been removed
+        log = self.smtp_error_log
+        if fstat(log.fileno())[3] == 0:
+            log = open(self.smtp_error_log_path, 'a+')
+            self.smtp_error_log = log
+
+        # Write
+        log.write(data)
+        print_exc(file=log) # FIXME Should be done before to reduce the risk
+                            # of the log file being removed.
+        log.flush()
+
 
     #######################################################################
-    # API / Public
+    # Web
     #######################################################################
+    def get_pid(self):
+        return get_pid(self.target.path)
+
+
     def init_context(self, context):
         WebServer.init_context(self, context)
         context.database = self.database
