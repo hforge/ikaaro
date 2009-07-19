@@ -20,9 +20,17 @@
 
 # Import from the Standard Library
 from cProfile import runctx
-from os import fdopen
+from datetime import datetime
+from email.parser import HeaderParser
+from os import fdopen, fstat
+from smtplib import SMTP, SMTPRecipientsRefused, SMTPResponseException
+from socket import gaierror
 import sys
 from tempfile import mkstemp
+from traceback import print_exc
+
+# Import from pygobject
+from gobject import idle_add, timeout_add_seconds
 
 # Import from pygobject
 from glib import GError
@@ -44,7 +52,6 @@ from config import get_config
 from database import get_database
 from metadata import Metadata
 from registry import get_resource_class
-from spool import Spool
 from utils import is_pid_running
 from website import WebSite
 
@@ -168,7 +175,25 @@ class Server(WebServer):
                            access_log=access_log, pid_file='%s/pid' % target)
 
         # Initialize the spool
-        self.spool = Spool(target)
+        spool = lfs.resolve2(self.target, 'spool')
+        self.spool = lfs.open(spool)
+        # spool/failed
+        spool_failed = '%s/failed' % spool
+        spool_failed = str(spool_failed)
+        if not lfs.exists(spool_failed):
+            lfs.make_folder(spool_failed)
+
+        # The SMTP host
+        get_value = get_config(target).get_value
+        self.smtp_host = get_value('smtp-host')
+        self.smtp_login = get_value('smtp-login', default='').strip()
+        self.smtp_password = get_value('smtp-password', default='').strip()
+
+        # The logs
+        self.smtp_activity_log_path = '%s/log/spool' % target
+        self.smtp_activity_log = open(self.smtp_activity_log_path, 'a+')
+        self.smtp_error_log_path = '%s/log/spool_error' % target
+        self.smtp_error_log = open(self.smtp_error_log_path, 'a+')
 
         # Logging
         log_file = '%s/log/events' % target
@@ -184,12 +209,8 @@ class Server(WebServer):
 
 
     #######################################################################
-    # API / Private
+    # Email
     #######################################################################
-    def get_pid(self):
-        return get_pid(self.target)
-
-
     def send_email(self, message):
         # Check the SMTP host is defined
         config = get_config(self.target)
@@ -204,6 +225,127 @@ class Server(WebServer):
         finally:
             file.close()
 
+        idle_add(self.send_emails_callback)
+
+
+    def _smtp_send(self):
+        # Find out emails to send
+        locks = set()
+        names = set()
+        for name in self.spool.get_names():
+            if name == 'failed':
+                # Skip "failed" special directory
+                continue
+            if name[-5:] == '.lock':
+                locks.add(name[:-5])
+            else:
+                names.add(name)
+        names.difference_update(locks)
+        # Is there something to send?
+        if len(names) == 0:
+            return 0
+
+        # Send emails
+        for name in names:
+            # 1. Open connection
+            try:
+                smtp = SMTP(self.smtp_host)
+            except gaierror, excp:
+                self.smtp_log_activity('%s: "%s"' % (excp[1], self.smtp_host))
+                break
+            except Exception:
+                self.smtp_log_error()
+                break
+            self.smtp_log_activity('CONNECTED to %s' % self.smtp_host)
+
+            # 2. Login
+            if self.smtp_login and self.smtp_password:
+                smtp.login(self.smtp_login, self.smtp_password)
+
+            # 3. Send message
+            try:
+                message = self.spool.open(name).read()
+                headers = HeaderParser().parsestr(message)
+                subject = headers['subject']
+                from_addr = headers['from']
+                to_addr = headers['to']
+                smtp.sendmail(from_addr, to_addr, message)
+                # Remove
+                self.spool.remove(name)
+                # Log
+                self.smtp_log_activity(
+                    'SENT "%s" from "%s" to "%s"'
+                    % (subject, from_addr, to_addr))
+            except SMTPRecipientsRefused:
+                # The recipient addresses has been refused
+                self.smtp_log_error()
+                self.spool.move(name, 'failed/%s' % name)
+            except SMTPResponseException, excp:
+                # The SMTP server returns an error code
+                self.smtp_log_error()
+                error_name = '%s_%s' % (excp.smtp_code, name)
+                self.spool.move(name, 'failed/%s' % error_name)
+            except Exception:
+                self.smtp_log_error()
+
+            # 4. Close connection
+            smtp.quit()
+
+        return error
+
+
+    def smtp_send_idle_callback(self):
+        # Error: try again later
+        if self._smtp_send() == 1:
+            timeout_add_seconds(60, self.smtp_send_time_callback)
+
+        return False
+
+
+    def smtp_send_time_callback(self):
+        # Error: keep trying
+        if self._smtp_send() == 1:
+            return True
+
+        return False
+
+
+    def smpt_log_activity(self, msg):
+        # The data to write
+        data = '%s - %s\n' % (datetime.now(), msg)
+
+        # Check the file has not been removed
+        log = self.smtp_activity_log
+        if fstat(log.fileno())[3] == 0:
+            log = open(self.smtp_activity_log_path, 'a+')
+            self.smtp_activity_log = log
+
+        # Write
+        log.write(data)
+        log.flush()
+
+
+    def smtp_log_error(self):
+        # The data to write
+        lines = [
+            '\n',
+            '%s\n' % ('*' * 78),
+            'DATE: %s\n' % datetime.now(),
+            '\n']
+        data = ''.join(lines)
+
+        # Check the file has not been removed
+        log = self.smtp_error_log
+        if fstat(log.fileno())[3] == 0:
+            log = open(self.smtp_error_log_path, 'a+')
+            self.smtp_error_log = log
+
+        # Write
+        log.write(data)
+        print_exc(file=log) # FIXME Should be done before to reduce the risk
+                            # of the log file being removed.
+        log.flush()
+
 
     def is_running_in_rw_mode(self):
         url = 'http://localhost:%s/;_ctrl?name=read-only' % self.port
@@ -217,8 +359,12 @@ class Server(WebServer):
 
 
     #######################################################################
-    # API / Public
+    # Web
     #######################################################################
+    def get_pid(self):
+        return get_pid(self.target)
+
+
     def init_context(self, context):
         WebServer.init_context(self, context)
         context.database = self.database
