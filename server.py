@@ -20,9 +20,8 @@
 
 # Import from the Standard Library
 from cProfile import runctx
-from datetime import datetime
 from email.parser import HeaderParser
-from os import fdopen, fstat
+from os import fdopen
 from smtplib import SMTP, SMTPRecipientsRefused, SMTPResponseException
 from socket import gaierror
 import sys
@@ -42,7 +41,8 @@ from xapian import DatabaseOpeningError
 from itools.datatypes import Boolean
 from itools.fs import vfs, lfs
 from itools.log import Logger, register_logger
-from itools.log import DEBUG, INFO, WARNING, ERROR, FATAL, log_error
+from itools.log import DEBUG, INFO, WARNING, ERROR, FATAL
+from itools.log import log_error, log_warning, log_info
 from itools.soup import SoupMessage
 from itools.uri import get_host_from_authority
 from itools.web import WebServer, WebLogger, Context, set_context
@@ -174,24 +174,17 @@ class Server(WebServer):
         WebServer.__init__(self, root, address=address, port=port,
                            access_log=access_log, pid_file='%s/pid' % target)
 
-        # Initialize the spool
-        spool = lfs.resolve2(self.target, 'spool')
-        self.spool = lfs.open(spool)
-        # spool/failed
-        spool_failed = '%s/failed' % spool
-        spool_failed = str(spool_failed)
+        # Email service
+        self.spool = lfs.resolve2(self.target, 'spool')
+        spool_failed = '%s/failed' % self.spool
         if not lfs.exists(spool_failed):
             lfs.make_folder(spool_failed)
-
-        # The SMTP host
+        # Configuration variables
         get_value = get_config(target).get_value
         self.smtp_host = get_value('smtp-host')
         self.smtp_login = get_value('smtp-login', default='').strip()
         self.smtp_password = get_value('smtp-password', default='').strip()
-
-        # The logs
-        self.smtp_activity_log_path = '%s/log/spool' % target
-        self.smtp_activity_log = open(self.smtp_activity_log_path, 'a+')
+        # Email is sent asynchronously
         idle_add(self.smtp_send_idle_callback)
 
         # Logging
@@ -231,7 +224,7 @@ class Server(WebServer):
         # Find out emails to send
         locks = set()
         names = set()
-        for name in self.spool.get_names():
+        for name in lfs.get_names(self.spool):
             if name == 'failed':
                 # Skip "failed" special directory
                 continue
@@ -245,17 +238,18 @@ class Server(WebServer):
             return 0
 
         # Send emails
+        smtp_host = self.smtp_host
         for name in names:
             # 1. Open connection
             try:
-                smtp = SMTP(self.smtp_host)
+                smtp = SMTP(smtp_host)
             except gaierror, excp:
-                self.smtp_log_activity('%s: "%s"' % (excp[1], self.smtp_host))
+                log_warning('%s: "%s"' % (excp[1], smtp_host))
                 break
             except Exception:
                 self.smtp_log_error()
                 break
-            self.smtp_log_activity('CONNECTED to %s' % self.smtp_host)
+            log_info('CONNECTED to %s' % smtp_host)
 
             # 2. Login
             if self.smtp_login and self.smtp_password:
@@ -270,11 +264,10 @@ class Server(WebServer):
                 to_addr = headers['to']
                 smtp.sendmail(from_addr, to_addr, message)
                 # Remove
-                self.spool.remove(name)
+                spool.remove(name)
                 # Log
-                self.smtp_log_activity(
-                    'SENT "%s" from "%s" to "%s"'
-                    % (subject, from_addr, to_addr))
+                log_msg = 'Email "%s" sent from "%s" to "%s"'
+                log_info(msg % (subject, from_addr, to_addr))
             except SMTPRecipientsRefused:
                 # The recipient addresses has been refused
                 self.smtp_log_error()
@@ -307,21 +300,6 @@ class Server(WebServer):
             return True
 
         return False
-
-
-    def smtp_log_activity(self, msg):
-        # The data to write
-        data = '%s - %s\n' % (datetime.now(), msg)
-
-        # Check the file has not been removed
-        log = self.smtp_activity_log
-        if fstat(log.fileno())[3] == 0:
-            log = open(self.smtp_activity_log_path, 'a+')
-            self.smtp_activity_log = log
-
-        # Write
-        log.write(data)
-        log.flush()
 
 
     def smtp_log_error(self):
