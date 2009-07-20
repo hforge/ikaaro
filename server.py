@@ -22,7 +22,6 @@
 from cProfile import runctx
 from datetime import datetime
 from email.parser import HeaderParser
-from logging import DEBUG, INFO, WARNING, ERROR, CRITICAL
 from os import fdopen, fstat
 from smtplib import SMTP, SMTPRecipientsRefused, SMTPResponseException
 from socket import gaierror
@@ -39,6 +38,7 @@ from xapian import DatabaseOpeningError
 # Import from itools
 from itools.datatypes import Boolean
 from itools.http import Request
+from itools.log import DEBUG, INFO, WARNING, ERROR, FATAL
 from itools.uri import get_reference, get_host_from_authority
 from itools import vfs
 from itools.vfs import cwd
@@ -58,7 +58,7 @@ log_levels = {
     'info': INFO,
     'warning': WARNING,
     'error': ERROR,
-    'critical': CRITICAL}
+    'fatal': FATAL}
 
 
 def ask_confirmation(message, confirm=False):
