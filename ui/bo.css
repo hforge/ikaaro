@@ -294,7 +294,6 @@ table.new-resource-thumb {
   text-align: left;
   background-color: #d3d7cf;
   padding: 0 5px;
-  white-space: nowrap;
 }
 
 #browse-list thead th.checkbox {
