@@ -20,9 +20,8 @@
 
 # Import from the Standard Library
 from cProfile import runctx
-from datetime import datetime
 from email.parser import HeaderParser
-from os import fdopen, fstat
+from os import fdopen
 from smtplib import SMTP, SMTPRecipientsRefused, SMTPResponseException
 from socket import gaierror
 import sys
@@ -38,7 +37,8 @@ from xapian import DatabaseOpeningError
 # Import from itools
 from itools.datatypes import Boolean
 from itools.http import Request
-from itools.log import DEBUG, INFO, WARNING, ERROR, FATAL, log_error
+from itools.log import DEBUG, INFO, WARNING, ERROR, FATAL
+from itools.log import log_error, log_warning, log_info
 from itools.uri import get_reference, get_host_from_authority
 from itools import vfs
 from itools.vfs import cwd
@@ -176,20 +176,15 @@ class Server(WebServer):
                            access_log=access_log, event_log=event_log,
                            log_level=log_level, pid_file='%s/pid' % path)
 
-        # Initialize the spool
+        # Email service
         spool = self.target.resolve_name('spool')
-        spool = str(spool)
-        self.spool = vfs.open(spool)
-
-        # The SMTP host
+        self.spool = str(spool.path)
+        # Configuration variables
         get_value = get_config(self.target).get_value
         self.smtp_host = get_value('smtp-host')
         self.smtp_login = get_value('smtp-login', default='').strip()
         self.smtp_password = get_value('smtp-password', default='').strip()
-
-        # The logs
-        self.smtp_activity_log_path = '%s/log/spool' % self.target.path
-        self.smtp_activity_log = open(self.smtp_activity_log_path, 'a+')
+        # Email is sent asynchronously
         idle_add(self.smtp_send_idle_callback)
 
 
@@ -215,14 +210,12 @@ class Server(WebServer):
 
 
     def _smtp_send(self):
-        spool = self.spool
         smtp_host = self.smtp_host
-        log = self.smtp_log_activity
 
         # Find out emails to send
         locks = set()
         names = set()
-        for name in spool.get_names():
+        for name in vfs.get_names(self.spool):
             if name[-5:] == '.lock':
                 locks.add(name[:-5])
             else:
@@ -238,7 +231,7 @@ class Server(WebServer):
             if self.smtp_login and self.smtp_password:
                 smtp.login(self.smtp_login, self.smtp_password)
         except gaierror, excp:
-            log('%s: "%s"' % (excp[1], smtp_host))
+            log_warning('%s: "%s"' % (excp[1], smtp_host))
             return 1
         except:
             self.smtp_log_error()
@@ -259,8 +252,8 @@ class Server(WebServer):
                 # Remove
                 spool.remove(name)
                 # Log
-                log('SENT "%s" from "%s" to "%s"' % (subject, from_addr,
-                    to_addr))
+                log_msg = 'Email "%s" sent from "%s" to "%s"'
+                log_info(msg % (subject, from_addr, to_addr))
             except (SMTPRecipientsRefused, SMTPResponseException):
                 # the SMTP server returns an error code
                 # or the recipient addresses has been refused
@@ -294,21 +287,6 @@ class Server(WebServer):
             return True
 
         return False
-
-
-    def smtp_log_activity(self, msg):
-        # The data to write
-        data = '%s - %s\n' % (datetime.now(), msg)
-
-        # Check the file has not been removed
-        log = self.smtp_activity_log
-        if fstat(log.fileno())[3] == 0:
-            log = open(self.smtp_activity_log_path, 'a+')
-            self.smtp_activity_log = log
-
-        # Write
-        log.write(data)
-        log.flush()
 
 
     def smtp_log_error(self):
