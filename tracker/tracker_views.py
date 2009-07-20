@@ -298,7 +298,7 @@ class Tracker_View(BrowseForm):
         return context.come_back(None, goto=';search?%s' % query)
 
 
-    def get_title(self, context):
+    def get_page_title(self, resource, context):
         query = getattr(context, 'query', {})
         search_name = query.get('search_name')
         if search_name:

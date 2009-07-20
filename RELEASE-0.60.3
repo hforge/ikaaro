@@ -1,0 +1,42 @@
+
+ikaaro 0.60.3 (2009/06/17)
+==========================
+
+This is a Content Management System built on Python & itools, among
+other features ikaaro provides:
+
+ - content and document management (index&search, metadata, etc.)
+ - multilingual user interfaces and content
+ - high level modules: wiki, forum, tracker, etc.
+
+The new script icms-forget.py reduces the history depth of the database.
+This has been implemented to address scalability issues found with the
+current usage of Git.
+
+The icms-start.py script has the new option --read-only, which starts
+the database in read-only mode.  The ability to start more than one
+server at a time has been dropped from this script.
+
+There have been two improvements to the edit views of several resources:
+the upload form has been merged into the edit view, and now all edit
+views manage edit conflicts.
+
+Many bugs have been fixed, including #549, #612, #683, #701, #706, #716,
+#718 and #719.
+
+
+Resources
+---------
+
+Download
+http://download.hforge.org/ikaaro/0.60/ikaaro-0.60.3.tar.gz
+
+Home
+http://www.hforge.org/ikaaro
+
+Mailing list
+http://www.hforge.org/community/
+http://archives.hforge.org/index.cgi?list=itools
+
+Bug Tracker
+http://bugs.hforge.org/
