@@ -27,7 +27,7 @@ from smtplib import SMTP, SMTPRecipientsRefused, SMTPResponseException
 from socket import gaierror
 import sys
 from tempfile import mkstemp
-from traceback import print_exc
+from traceback import format_exc
 
 # Import from pygobject
 from gobject import idle_add, timeout_add_seconds
@@ -38,7 +38,7 @@ from xapian import DatabaseOpeningError
 # Import from itools
 from itools.datatypes import Boolean
 from itools.http import Request
-from itools.log import DEBUG, INFO, WARNING, ERROR, FATAL
+from itools.log import DEBUG, INFO, WARNING, ERROR, FATAL, log_error
 from itools.uri import get_reference, get_host_from_authority
 from itools import vfs
 from itools.vfs import cwd
@@ -190,8 +190,6 @@ class Server(WebServer):
         # The logs
         self.smtp_activity_log_path = '%s/log/spool' % self.target.path
         self.smtp_activity_log = open(self.smtp_activity_log_path, 'a+')
-        self.smtp_error_log_path = '%s/log/spool_error' % self.target.path
-        self.smtp_error_log = open(self.smtp_error_log_path, 'a+')
         idle_add(self.smtp_send_idle_callback)
 
 
@@ -314,25 +312,9 @@ class Server(WebServer):
 
 
     def smtp_log_error(self):
-        # The data to write
-        lines = [
-            '\n',
-            '%s\n' % ('*' * 78),
-            'DATE: %s\n' % datetime.now(),
-            '\n']
-        data = ''.join(lines)
-
-        # Check the file has not been removed
-        log = self.smtp_error_log
-        if fstat(log.fileno())[3] == 0:
-            log = open(self.smtp_error_log_path, 'a+')
-            self.smtp_error_log = log
-
-        # Write
-        log.write(data)
-        print_exc(file=log) # FIXME Should be done before to reduce the risk
-                            # of the log file being removed.
-        log.flush()
+        summary = 'Error sending email\n'
+        details = format_exc()
+        log_error(summary + details)
 
 
     #######################################################################
