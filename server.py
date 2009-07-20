@@ -194,6 +194,7 @@ class Server(WebServer):
         self.smtp_activity_log = open(self.smtp_activity_log_path, 'a+')
         self.smtp_error_log_path = '%s/log/spool_error' % target
         self.smtp_error_log = open(self.smtp_error_log_path, 'a+')
+        idle_add(self.smtp_send_idle_callback)
 
         # Logging
         log_file = '%s/log/events' % target
@@ -225,7 +226,7 @@ class Server(WebServer):
         finally:
             file.close()
 
-        idle_add(self.send_emails_callback)
+        idle_add(self.smtp_send_idle_callback)
 
 
     def _smtp_send(self):
@@ -310,7 +311,7 @@ class Server(WebServer):
         return False
 
 
-    def smpt_log_activity(self, msg):
+    def smtp_log_activity(self, msg):
         # The data to write
         data = '%s - %s\n' % (datetime.now(), msg)
 
