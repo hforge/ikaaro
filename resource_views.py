@@ -467,7 +467,7 @@ class LoginView(STLForm):
 
 
     def action(self, resource, context, form):
-        email = form['username']
+        email = form['username'].strip()
         password = form['password']
 
         # Check the user exists
