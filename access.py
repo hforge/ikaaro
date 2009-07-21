@@ -242,7 +242,7 @@ class RoleAware_AddUser(STLForm):
         users = root.get_resource('users')
 
         # Check whether the user already exists
-        email = form['email']
+        email = form['email'].strip()
         results = root.search(email=email)
         if len(results):
             user_id = results.get_documents()[0].name
