@@ -178,7 +178,7 @@ class ResourcesOrderedTable_Unordered(Folder_BrowseContent):
 
     def get_query(self, resource, context):
         # Only in the given root
-        parent_path = resource.get_order_root().get_abspath()
+        parent_path = resource.get_order_root().get_canonical_path()
         query_base_path = get_base_path_query(str(parent_path))
         # Only the given types
         query_formats = [PhraseQuery('format', cls.class_id)
@@ -334,7 +334,7 @@ class ResourcesOrderedTable(OrderedTable):
 
 
     def get_links(self):
-        base = self.get_abspath()
+        base = self.get_canonical_path()
         handler = self.handler
         links = []
 
