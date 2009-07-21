@@ -447,19 +447,31 @@ class DateWidget(Widget):
 
 class PathSelectorWidget(TextWidget):
 
+    action = 'add_link'
+
     template = list(XMLParser(
     """
     <input type="text" id="selector-${name}" size="${size}" name="${name}"
       value="${value}" />
     <input id="selector-button-${name}" type="button" value="..."
       name="selector_button_${name}"
-      onclick="popup(';add_link?target_id=selector-${name}&amp;mode=input', 620, 300);"/>
+      onclick="popup(';${action}?target_id=selector-${name}&amp;mode=input', 620, 300);"/>
     """, stl_namespaces))
 
 
+    def get_namespace(self, datatype, value):
+        return {
+            'type': self.type,
+            'name': self.name,
+            'value': value,
+            'size': self.size,
+            'action': self.action}
 
-class ImageSelectorWidget(TextWidget):
 
+
+class ImageSelectorWidget(PathSelectorWidget):
+
+    action = 'add_image'
     width = 128
     height = 128
 
@@ -469,14 +481,14 @@ class ImageSelectorWidget(TextWidget):
       value="${value}" />
     <input id="selector-button-${name}" type="button" value="..."
       name="selector_button_${name}"
-      onclick="popup(';add_image?target_id=selector-${name}&amp;mode=input', 620, 300);" />
+      onclick="popup(';${action}?target_id=selector-${name}&amp;mode=input', 620, 300);" />
     <br/>
     <img src="${value}/;thumb?width=${width}&amp;height=${height}" stl:if="value"/>
     """, stl_namespaces))
 
 
     def get_namespace(self, datatype, value):
-        return merge_dicts(TextWidget.get_namespace(self, datatype, value),
+        return merge_dicts(PathSelectorWidget.get_namespace(self, datatype, value),
                            width=self.width, height=self.height)
 
 

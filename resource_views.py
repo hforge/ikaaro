@@ -384,7 +384,7 @@ class DBResource_AddImage(DBResource_AddBase):
 
 
     def get_item_classes(self):
-        from binary import Image
+        from file import Image
         return self.item_classes if self.item_classes else (Image,)
 
 
