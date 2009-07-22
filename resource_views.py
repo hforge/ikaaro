@@ -28,7 +28,7 @@ from itools.core import merge_dicts
 from itools.datatypes import DateTime, String, Unicode
 from itools.gettext import MSG
 from itools.handlers import checkid
-from itools.http import Conflict, NotImplemented
+from itools.http import Conflict
 from itools.i18n import get_language_name
 from itools.uri import Path, get_reference, get_uri_path
 from itools.vfs import FileName
@@ -533,12 +533,6 @@ class Put_View(BaseView):
 
 
     def PUT(self, resource, context):
-
-        request = context.request
-        if request.has_header('content-range'):
-            raise NotImplemented
-
-        # Save the data
         body = context.get_form_value('body')
         resource.handler.load_state_from_string(body)
         context.server.change_resource(resource)
