@@ -181,6 +181,8 @@ if __name__ == '__main__':
         help='use the given SMTP_HOST to send emails')
     parser.add_option('-w', '--password',
         help='use the given PASSWORD for the admin user')
+    parser.add_option('--profile',
+        help="print profile information to the given file")
 
     options, args = parser.parse_args()
     if len(args) != 1:
@@ -189,4 +191,9 @@ if __name__ == '__main__':
     target = args[0]
 
     # Action!
-    init(parser, options, target)
+    if options.profile is not None:
+        from cProfile import runctx
+        runctx("init(parser, options, target)", globals(), locals(),
+               options.profile)
+    else:
+        init(parser, options, target)
