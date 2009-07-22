@@ -145,6 +145,19 @@ class DBResource_AddBase(STLForm):
     action_upload_schema = merge_dicts(schema,
                                        file=FileDataType(mandatory=True))
 
+    item_classes = ()
+    folder_classes = ()
+
+
+    def get_item_classes(self):
+        from resource_ import DBResource
+        return self.item_classes if self.item_classes else (DBResource,)
+
+
+    def get_folder_classes(self):
+        from folder import Folder
+        return self.folder_classes if self.folder_classes else (Folder,)
+
 
     def get_configuration(self):
         return {}
@@ -162,16 +175,18 @@ class DBResource_AddBase(STLForm):
 
 
     def is_folder(self, resource):
-        from folder import Folder
-        return isinstance(resource, Folder)
+        bases = self.get_folder_classes()
+        return isinstance(resource, bases)
 
 
     def is_item(self, resource):
-        return True
+        bases = self.get_item_classes()
+        return isinstance(resource, bases)
 
 
     def can_upload(self, cls):
-        return True
+        bases = self.get_item_classes()
+        return issubclass(cls, bases)
 
 
     def get_namespace(self, resource, context):
@@ -364,22 +379,17 @@ class DBResource_AddImage(DBResource_AddBase):
     element_to_add = 'image'
 
 
+    def get_item_classes(self):
+        from file import Image
+        return self.item_classes if self.item_classes else (Image,)
+
+
     def get_configuration(self):
         return {
             'show_browse': True,
             'show_external': False,
             'show_insert': False,
             'show_upload': True}
-
-
-    def is_item(self, resource):
-        from file import Image
-        return isinstance(resource, Image)
-
-
-    def can_upload(self, cls):
-        from file import Image
-        return issubclass(cls, Image)
 
 
     def get_resource_action(self, context):
