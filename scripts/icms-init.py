@@ -142,14 +142,15 @@ def init(parser, options, target):
     folder = database.get_handler('%s/database' % target)
     root = root_class._make_resource(root_class, folder, email, password)
     context.root = root
-    # Index and Archive
-    for resource in root.traverse_resources():
-        if isinstance(resource, DBResource):
-            path = str(resource.get_canonical_path())
-            database.resources_added[path] = resource
     # Save changes
     start_subprocess(database.path)
     database.save_changes()
+    # Index
+    catalog = database.catalog
+    for resource in root.traverse_resources():
+        if isinstance(resource, DBResource):
+            catalog.index_document(resource)
+    catalog.save_changes()
 
     # Bravo!
     print '*'
@@ -181,6 +182,8 @@ if __name__ == '__main__':
         help='use the given SMTP_HOST to send emails')
     parser.add_option('-w', '--password',
         help='use the given PASSWORD for the admin user')
+    parser.add_option('--profile',
+        help="print profile information to the given file")
 
     options, args = parser.parse_args()
     if len(args) != 1:
@@ -189,4 +192,9 @@ if __name__ == '__main__':
     target = args[0]
 
     # Action!
-    init(parser, options, target)
+    if options.profile is not None:
+        from cProfile import runctx
+        runctx("init(parser, options, target)", globals(), locals(),
+               options.profile)
+    else:
+        init(parser, options, target)
