@@ -20,6 +20,7 @@ from datetime import date, datetime
 from optparse import OptionParser
 from subprocess import call
 from sys import exit
+from traceback import print_exc
 
 # Import from itools
 from itools import __version__
@@ -111,8 +112,9 @@ def forget(parser, target, days):
 
     # Verify the step before was fine
     try:
-        get_pipe(['git', 'log', '-n', '0', 'new'])
+        get_pipe(['git', 'log', '-n', '0', 'new'], cwd=cwd)
     except EnvironmentError:
+        print_exc()
         exit()
 
     # Backup old branch and deploy new one

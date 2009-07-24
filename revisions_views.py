@@ -83,12 +83,12 @@ class DBResource_Changes(STLView):
     title = MSG(u'Changes')
     template = '/ui/revisions/changes.xml'
 
-    schema = {
+    query_schema = {
         'revision': String(mandatory=True),
         }
 
     def get_namespace(self, resource, context):
-        revision = context.get_form_value('revision')
+        revision = context.query['revision']
 
         # Get the revision data
         namespace = context.database.get_diff(revision)
