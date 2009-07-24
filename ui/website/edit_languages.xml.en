@@ -11,24 +11,21 @@
       <table summary="Language settings">
         <thead>
           <tr>
-            <th></th>
+            <th>Default</th>
             <th>Name</th>
             <th>Code</th>
-            <th>Default</th>
           </tr>
         </thead>
         <tbody>
           <tr stl:repeat="language active_languages"
             class="${repeat/language/even}">
-            <td>
+            <td stl:if="language/isdefault">Yes</td>
+            <td stl:if="not language/isdefault">
               <input class="checkbox" type="checkbox" name="codes"
                 value="${language/code}" />
             </td>
             <td>${language/name}</td>
             <td>${language/code}</td>
-            <td align="center">
-              <stl:block stl:if="language/isdefault">Yes</stl:block>
-            </td>
           </tr>
         </tbody>
       </table>
