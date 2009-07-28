@@ -31,6 +31,9 @@ from traceback import format_exc
 # Import from pygobject
 from gobject import idle_add, timeout_add_seconds
 
+# Import from pygobject
+from glib import GError
+
 # Import from xapian
 from xapian import DatabaseOpeningError
 
@@ -293,6 +296,17 @@ class Server(WebServer):
         summary = 'Error sending email\n'
         details = format_exc()
         log_error(summary + details)
+
+
+    def is_running_in_rw_mode(self):
+        url = 'http://localhost:%s/;_ctrl?name=read-only' % self.port
+        try:
+            h = vfs.open(url)
+        except GError:
+            # The server is not running
+            return False
+
+        return h.read() == 'no'
 
 
     #######################################################################

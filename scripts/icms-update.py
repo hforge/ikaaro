@@ -151,6 +151,12 @@ def update(parser, options, target):
     folder = vfs.open(target)
     confirm = options.confirm
 
+    # Check the server is not started, or started in read-only mode
+    server = Server(target)
+    if server.is_running_in_rw_mode():
+        print 'Cannot proceed, the server is running in read-write mode.'
+        return
+
     #######################################################################
     # STAGE 0: Initialize '.git'
     # XXX Specific to the migration from 0.50 to 0.60
@@ -231,13 +237,12 @@ def update(parser, options, target):
     #######################################################################
     # STAGE 2: Find out the versions to upgrade
     #######################################################################
-    # Build the server object
-    server = Server(target)
-    database = server.database
-    root = server.root
     # Build a fake context
     context = get_fake_context()
     server.init_context(context)
+    # Local variables
+    database = server.database
+    root = server.root
 
     print 'STAGE 2: Find out the versions to upgrade (may take a while).'
     versions = find_versions_to_update(root)
