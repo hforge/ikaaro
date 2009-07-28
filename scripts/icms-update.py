@@ -147,13 +147,18 @@ def update(parser, options, target):
     folder = vfs.open(target)
     confirm = options.confirm
 
-    # Build the server object
+    # Check the server is not started, or started in read-only mode
     server = Server(target)
-    database = server.database
-    root = server.root
+    if server.is_running_in_rw_mode():
+        print 'Cannot proceed, the server is running in read-write mode.'
+        return
+
     # Build a fake context
     context = get_fake_context()
     server.init_context(context)
+    # Local variables
+    database = server.database
+    root = server.root
 
     #######################################################################
     # STAGE 0: Initialize '.git'

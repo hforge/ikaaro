@@ -25,6 +25,9 @@ from os import fdopen
 import sys
 from tempfile import mkstemp
 
+# Import from pygobject
+from glib import GError
+
 # Import from xapian
 from xapian import DatabaseOpeningError
 
@@ -33,6 +36,7 @@ from itools.datatypes import Boolean
 from itools.http import Request
 from itools.uri import get_reference, get_host_from_authority
 from itools.vfs import cwd
+from itools import vfs
 from itools.web import Server as BaseServer, Context, set_context
 
 # Import from ikaaro
@@ -193,6 +197,17 @@ class Server(BaseServer):
             file.write(message.as_string())
         finally:
             file.close()
+
+
+    def is_running_in_rw_mode(self):
+        url = 'http://localhost:%s/;_ctrl?name=read-only' % self.port
+        try:
+            h = vfs.open(url)
+        except GError:
+            # The server is not running
+            return False
+
+        return h.read() == 'no'
 
 
     #######################################################################

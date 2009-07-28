@@ -25,7 +25,6 @@ from itools.core import start_subprocess
 
 
 
-
 def update_catalog(parser, options, target):
     # Imports
     import sys
@@ -35,15 +34,14 @@ def update_catalog(parser, options, target):
     from itools import vfs
     from itools.xapian import make_catalog, CatalogAware
     from ikaaro.database import check_database
-    from ikaaro.server import Server, ask_confirmation, get_pid
+    from ikaaro.server import Server, ask_confirmation
     from ikaaro.server import get_fake_context
     from ikaaro.registry import get_register_fields
 
-    # Check the server is not running
-    pid = get_pid(target)
-    if pid is not None:
-        print 'The server is running. To update the catalog first stop the'
-        print 'server.'
+    # Check the server is not started, or started in read-only mode
+    server = Server(target, read_only=True, cache_size=50)
+    if server.is_running_in_rw_mode():
+        print 'Cannot proceed, the server is running in read-write mode.'
         return
 
     # Check for database consistency
@@ -62,7 +60,6 @@ def update_catalog(parser, options, target):
     catalog = make_catalog(catalog_path, get_register_fields())
 
     # Get the root
-    server = Server(target, read_only=True, cache_size=50)
     root = server.root
 
     # Build a fake context

@@ -28,11 +28,12 @@ import traceback
 
 # Import from itools
 from itools.core import get_abspath
+from itools.datatypes import String
 from itools.gettext import MSG
-from itools.handlers import ConfigFile
+from itools.handlers import ConfigFile, RWDatabase
 from itools.stl import stl
 from itools.uri import Path
-from itools.web import get_context
+from itools.web import BaseView, get_context
 
 # Import from ikaaro
 from folder import Folder
@@ -53,6 +54,25 @@ itools_target_languages = config.get_value('target_languages')
 # Force email to send UTF-8 mails in plain text
 add_charset('utf-8', QP, None, 'utf-8')
 add_codec('utf-8', 'utf_8')
+
+
+
+class CtrlView(BaseView):
+
+    access = True
+    query_schema = {'name': String}
+
+
+    def GET(self, resource, context):
+        context.response.set_header('content-type', 'text/plain')
+        name = context.query['name']
+
+        # Read-Only
+        if name == 'read-only':
+            database = context.database
+            return 'no' if isinstance(database, RWDatabase) else 'yes'
+
+        return '?'
 
 
 
@@ -256,6 +276,12 @@ class Root(WebSite):
             message.attach(message_text)
         # Send email
         server.send_email(message)
+
+
+    #######################################################################
+    # Web services
+    #######################################################################
+    _ctrl = CtrlView()
 
 
 
