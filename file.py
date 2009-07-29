@@ -85,8 +85,6 @@ class File(WorkflowAware, DBResource):
             extensions = ['gz', 'tgz']
         elif format == 'application/x-bzip2':
             extensions = ['bz2', 'tbz2']
-        elif format == 'application/x-zip-compressed':
-            extensions = ['zip']
         else:
             cls = self.class_handler
             extensions = [ x[1:] for x in guess_all_extensions(format) ]

@@ -21,6 +21,9 @@ from operator import itemgetter
 from itools.datatypes import Enumerate, String, Integer, Boolean, Unicode
 from itools.web import get_context
 
+# Import from ikaaro
+from ikaaro.datatypes import FileDataType
+
 
 
 class TrackerList(Enumerate):
@@ -117,20 +120,19 @@ class UsersList(Enumerate):
         return options
 
 
-def get_issue_fields(resource):
+
+def get_issue_fields(tracker):
     return {
         'title': Unicode(mandatory=True),
-        'product': TrackerList(element='product', tracker=resource,
+        'product': TrackerList(element='product', tracker=tracker,
                                mandatory=True),
-        'module': ProductInfoList(element='module', tracker=resource),
-        'version': ProductInfoList(element='version', tracker=resource),
-        'type': TrackerList(element='type', tracker=resource,
-                            mandatory=True),
-        'state': TrackerList(element='state', tracker=resource,
-                             mandatory=True),
-        'priority': TrackerList(element='priority', tracker=resource),
-        'assigned_to': UsersList(tracker=resource),
-        'cc_add': UsersList(tracker=resource, multiple=True),
+        'module': ProductInfoList(element='module', tracker=tracker),
+        'version': ProductInfoList(element='version', tracker=tracker),
+        'type': TrackerList(element='type', tracker=tracker, mandatory=True),
+        'state': TrackerList(element='state', tracker=tracker, mandatory=True),
+        'priority': TrackerList(element='priority', tracker=tracker),
+        'assigned_to': UsersList(tracker=tracker),
+        'cc_list': UsersList(tracker=tracker, multiple=True),
         'comment': Unicode,
-        'file': String}
+        'file': FileDataType}
 
