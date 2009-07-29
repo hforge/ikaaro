@@ -19,6 +19,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
+from itools.gettext import get_domain
 from itools.i18n import get_language_name
 from itools.stl import STLTemplate
 from itools.uri import decode_query
@@ -65,13 +66,15 @@ class LanguagesTemplate(SkinTemplate):
         current_language = accept.select_language(ws_languages)
 
         languages = []
+        gettext = get_domain('itools').gettext
         for language in ws_languages:
             href = context.uri.replace(language=language)
             selected = (language == current_language)
             css_class = 'selected' if selected else None
+            value = get_language_name(language)
             languages.append({
                 'name': language,
-                'value': get_language_name(language),
+                'value': gettext(value, language),
                 'href': href,
                 'selected': selected,
                 'class': css_class})
