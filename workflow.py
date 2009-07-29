@@ -215,7 +215,7 @@ class WorkflowAware(BaseWorkflowAware):
         else:
             git_message = u'edit state: %s' % transition
         context = get_context()
-        context.git_message = u'edit state: %s\n\n%s' % (transition, comments)
+        context.git_message = git_message
 
 
     ########################################################################
