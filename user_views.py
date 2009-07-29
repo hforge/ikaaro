@@ -43,7 +43,6 @@ class User_ConfirmRegistration(STLForm):
 
     def get_namespace(self, resource, context):
         # Check register key
-        # FIXME This does not work
         must_confirm = resource.get_property('user_must_confirm')
         username = context.get_form_value('username', default='')
         if must_confirm is None:
