@@ -325,6 +325,12 @@ class DBResource(CatalogAware, IResource):
         for language in languages:
             title[language] = self.get_title(language=language)
 
+        # Subject (keywords)
+        subject = {}
+        for language in languages:
+            subject[language] = self.get_property('subject',
+                                                  language=language)
+
         # Full text
         context = get_context()
         text = None
@@ -380,6 +386,7 @@ class DBResource(CatalogAware, IResource):
             'abspath': abspath_str,
             'format': self.metadata.format,
             'title': title,
+            'subject': subject,
             'text': text,
             'links': self.get_links(),
             'parent_path': parent_path,
@@ -620,6 +627,7 @@ register_field(
     'abspath', String(is_key_field=True, is_stored=True, is_indexed=True))
 register_field('text', Unicode(is_indexed=True))
 register_field('title', Unicode(is_stored=True, is_indexed=True))
+register_field('subject', Unicode(is_indexed=True))
 register_field('is_role_aware', Boolean(is_indexed=True))
 register_field('is_image', Boolean(is_indexed=True))
 register_field('format', String(is_stored=True, is_indexed=True))
