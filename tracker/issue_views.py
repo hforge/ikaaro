@@ -439,7 +439,8 @@ class Issue_AddEditResource(STLForm):
         return {
             'action': action,
             'id': id,
-            'users': resource.parent.get_members_namespace(user),
+            'users': UsersList(tracker=resource,
+               excluded_roles=('guests',)).get_namespace(user),
             'd_start': d_start.strftime('%Y-%m-%d'),
             't_start': t_start,
             'd_end': d_end.strftime('%Y-%m-%d'),

@@ -151,36 +151,6 @@ class Tracker(Folder):
                 PhraseQuery('format', 'issue')]
 
 
-    def get_members_namespace(self, value, not_assigned=False):
-        """Returns a namespace (list of dictionaries) to be used for the
-        selection box of users (the 'assigned to' and 'cc' fields).
-        """
-        # Members
-        users = self.get_resource('/users')
-        members = [
-            {'id': x, 'title': users.get_resource(x).get_title()}
-            for x in self.get_site_root().get_members() ]
-        sort_cmp = lambda x, y: cmp(x['title'].lower(), y['title'].lower())
-        members.sort(cmp=sort_cmp)
-
-        # Not assigend
-        if not_assigned is True:
-            members.insert(0, {'id': 'nobody', 'title': 'NOT ASSIGNED'})
-
-        # Add 'is_selected'
-        if value is None:
-            condition = lambda x: False
-        elif type(value) is str:
-            condition = lambda x: (x == value)
-        else:
-            condition = lambda x: (x in value)
-        for member in members:
-            member['is_selected'] = condition(member['id'])
-
-        # Ok
-        return members
-
-
     def get_list_products_namespace(self):
         # Build javascript list of products/modules/versions
         products = self.get_resource('product').handler

@@ -95,8 +95,8 @@
         class="tracker-select">
         <option value="do-not-change">Do not change</option>
         <option value=""></option>
-        <option stl:repeat="item users" value="${item/id}"
-          selected="${item/is_selected}">${item/title}</option>
+        <option stl:repeat="item assigned_to" value="${item/name}"
+          selected="${item/selected}">${item/value}</option>
       </select>
     </td>
   </tr>
