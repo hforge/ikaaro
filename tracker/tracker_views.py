@@ -533,8 +533,8 @@ class Tracker_Search(BaseSearchForm, Tracker_View):
                                  tracker=resource).get_namespace(state),
            'priorities': TrackerList(element='priority',
                                  tracker=resource).get_namespace(priority),
-           'assigned_to': UsersList(tracker=resource).get_namespace(
-                                                         assigned_to),
+           'assigned_to': UsersList(tracker=resource,
+               excluded_roles=('guests',)).get_namespace( assigned_to),
            'list_products': resource.get_list_products_namespace()}
 
 
