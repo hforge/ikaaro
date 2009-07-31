@@ -325,7 +325,13 @@ class DBResource(CatalogAware, IResource):
         for language in languages:
             title[language] = self.get_title(language=language)
 
-        # Subject (keywords)
+        # Descriptions
+        description = {}
+        for language in languages:
+            description[language] = self.get_property('description',
+                                                      language=language)
+
+        # Subjects (keywords)
         subject = {}
         for language in languages:
             subject[language] = self.get_property('subject',
@@ -627,6 +633,7 @@ register_field(
     'abspath', String(is_key_field=True, is_stored=True, is_indexed=True))
 register_field('text', Unicode(is_indexed=True))
 register_field('title', Unicode(is_stored=True, is_indexed=True))
+register_field('description', Unicode(is_indexed=True))
 register_field('subject', Unicode(is_indexed=True))
 register_field('is_role_aware', Boolean(is_indexed=True))
 register_field('is_image', Boolean(is_indexed=True))
@@ -645,4 +652,3 @@ register_field('name', String(is_stored=True, is_indexed=True))
 register_field('size', Integer(is_stored=True, is_indexed=False))
 # Optimize 'Server.find_site_root'
 register_field('vhosts', String(is_indexed=True, multiple=True))
-
