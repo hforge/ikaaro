@@ -109,13 +109,28 @@ class ProductInfoList(Enumerate):
 
 
 class UsersList(Enumerate):
+
+    excluded_roles = None
+
     @classmethod
     def get_options(cls):
         site_root = cls.tracker.get_site_root()
+        # Members
+        excluded_roles = cls.excluded_roles
+        if excluded_roles:
+            members = set()
+            for rolename in site_root.get_role_names():
+                if rolename in excluded_roles:
+                    continue
+                usernames = site_root.get_property(rolename)
+                members = members.union(usernames)
+        else:
+            members = site_root.get_members()
+
         users = site_root.get_resource('/users')
         options = [
             {'name': x, 'value': users.get_resource(x).get_title()}
-            for x in site_root.get_members() ]
+            for x in members ]
         options.sort(key=itemgetter('value'))
         return options
 
@@ -131,7 +146,7 @@ def get_issue_fields(tracker):
         'type': TrackerList(element='type', tracker=tracker, mandatory=True),
         'state': TrackerList(element='state', tracker=tracker, mandatory=True),
         'priority': TrackerList(element='priority', tracker=tracker),
-        'assigned_to': UsersList(tracker=tracker),
+        'assigned_to': UsersList(tracker=tracker, excluded_roles=('guests',)),
         'cc_list': UsersList(tracker=tracker, multiple=True),
         'comment': Unicode,
         'file': FileDataType}

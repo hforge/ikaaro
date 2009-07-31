@@ -529,8 +529,8 @@ class Tracker_Search(BaseSearchForm, Tracker_View):
                                  tracker=resource).get_namespace(state),
            'priorities': TrackerList(element='priority',
                                  tracker=resource).get_namespace(priority),
-           'assigned_to': UsersList(tracker=resource).get_namespace(
-                                                         assigned_to),
+           'assigned_to': UsersList(tracker=resource,
+               excluded_roles=('guests',)).get_namespace(assigned_to),
            'list_products': resource.get_list_products_namespace()}
 
 
@@ -817,7 +817,8 @@ class Tracker_ChangeSeveralBugs(Tracker_View):
         namespace['priorities'] = get_resource('priority').get_options()
         namespace['types'] = get_resource('type').get_options()
         namespace['states'] = get_resource('state').get_options()
-        namespace['users'] = resource.get_members_namespace('')
+        namespace['assigned_to'] = UsersList(tracker=resource,
+                excluded_roles=('guests',)).get_namespace('')
         namespace['list_products'] = resource.get_list_products_namespace()
 
         # Ok

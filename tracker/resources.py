@@ -36,6 +36,7 @@ from ikaaro.table import Table
 from ikaaro.registry import register_resource_class
 
 # Import from ikaaro.tracker
+from datatypes import UsersList
 from tracker_views import Tracker_View
 
 
@@ -157,8 +158,8 @@ class ListOfUsers(Enumerate):
     @classmethod
     def get_options(cls):
         tracker = get_context().resource.parent
-        return [{'name': x['id'], 'value': x['title']}
-                for x in tracker.get_members_namespace('')]
+        return UsersList(tracker=tracker,
+                excluded_roles=('guests',)).get_namespace('')
 
 
 
