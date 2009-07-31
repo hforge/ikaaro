@@ -35,17 +35,18 @@ from itools.xapian import StartQuery
 # Import from ikaaro
 from ikaaro.folder import Folder
 from ikaaro.registry import register_resource_class
+from issue import Issue
 from resources import Resources
 from stored import StoredSearch, StoredSearchFile
-from tables import Tracker_TableResource, Tracker_TableHandler
 from tables import ModulesResource, ModulesHandler
+from tables import Tracker_TableResource, Tracker_TableHandler
 from tables import VersionsResource, VersionsHandler
 from tracker_views import GoToIssueMenu, StoredSearchesMenu
-from tracker_views import Tracker_NewInstance, Tracker_Search, Tracker_View
 from tracker_views import Tracker_AddIssue, Tracker_GoToIssue
-from tracker_views import Tracker_RememberSearch, Tracker_ForgetSearch
-from tracker_views import Tracker_ExportToText, Tracker_ChangeSeveralBugs
 from tracker_views import Tracker_ExportToCSVForm, Tracker_ExportToCSV
+from tracker_views import Tracker_ExportToText, Tracker_ChangeSeveralBugs
+from tracker_views import Tracker_NewInstance, Tracker_Search, Tracker_View
+from tracker_views import Tracker_RememberSearch, Tracker_ForgetSearch
 
 
 resolution = timedelta.resolution
@@ -77,6 +78,8 @@ class Tracker(Folder):
 
     __fixed_handlers__ = ['product', 'module', 'version', 'type', 'priority',
         'state', 'calendar']
+
+    issue_class = Issue
 
     @staticmethod
     def _make_resource(cls, folder, name):
@@ -148,7 +151,7 @@ class Tracker(Folder):
         abspath = self.get_canonical_path()
         abspath = '%s/' % abspath
         return [StartQuery('abspath', abspath),
-                PhraseQuery('format', 'issue')]
+                PhraseQuery('format', self.issue_class.class_id)]
 
 
     def get_list_products_namespace(self):
