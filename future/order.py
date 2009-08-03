@@ -346,7 +346,7 @@ class ResourcesOrderedTable(OrderedTable):
         return links
 
 
-    def change_link(self, old_path, new_path):
+    def update_links(self, old_path, new_path):
         handler = self.handler
         old_name = Path(old_path).get_name()
         new_name = Path(new_path).get_name()
