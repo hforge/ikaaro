@@ -20,7 +20,7 @@ from itools.datatypes import String, Tokens
 from itools.gettext import MSG
 from itools.uri import Path
 from itools.stl import set_prefix
-from itools.web import INFO
+from itools.web import INFO, get_context
 from itools.xapian import AndQuery, OrQuery, PhraseQuery, NotQuery
 from itools.xml import XMLParser
 
@@ -354,6 +354,8 @@ class ResourcesOrderedTable(OrderedTable):
             name = handler.get_record_value(record, 'name')
             if name == old_name:
                 handler.update_record(record.id, **{'name': new_name})
+
+        get_context().server.change_resource(self)
 
 
 
