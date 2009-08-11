@@ -462,7 +462,7 @@ class DBResource(CatalogAware, IResource):
         if catalog is None:
             return
 
-        source = self.get_abspath()
+        source = self.get_canonical_path()
 
         # Get all the resources that have a link to me
         query = PhraseQuery('links', str(source))

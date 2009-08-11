@@ -139,7 +139,7 @@ class Folder(DBResource):
         # FIXME We do not guarantee referencial-integrity when updating
         if catalog is not None:
             # FIXME Check sub-resources too
-            path = str(resource.get_abspath())
+            path = str(resource.get_canonical_path())
             results = catalog.search(links=path)
             if results.get_n_documents() > 0:
                 message = 'cannot delete, resource "%s" is referenced' % path
@@ -242,7 +242,7 @@ class Folder(DBResource):
             raise ConsistencyError, message % (source, target_parent)
 
         # Update the links to the resources that are to be moved
-        new_path = self.get_abspath().resolve2(target_path)
+        new_path = self.get_canonical_path().resolve2(target_path)
         source._on_move_resource(new_path)
         # Events, remove
         database.remove_resource(source)
