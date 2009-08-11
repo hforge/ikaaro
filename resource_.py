@@ -363,7 +363,13 @@ class DBResource(CatalogAware, IResource):
         for language in languages:
             title[language] = self.get_title(language=language)
 
-        # Subject (keywords)
+        # Descriptions
+        description = {}
+        for language in languages:
+            description[language] = self.get_property('description',
+                                                      language=language)
+
+        # Subjects (keywords)
         subject = {}
         for language in languages:
             subject[language] = self.get_property('subject',
@@ -666,6 +672,7 @@ register_field(
     'abspath', String(is_key_field=True, is_stored=True, is_indexed=True))
 register_field('text', Unicode(is_indexed=True))
 register_field('title', Unicode(is_stored=True, is_indexed=True))
+register_field('description', Unicode(is_indexed=True))
 register_field('subject', Unicode(is_indexed=True))
 register_field('is_role_aware', Boolean(is_indexed=True))
 register_field('is_folder', Boolean(is_indexed=True))
@@ -688,5 +695,4 @@ register_field('vhosts', String(is_indexed=True, multiple=True))
 # Calendaring
 register_field('dtstart', DateTime(is_indexed=True, is_stored=True))
 register_field('dtend', DateTime(is_indexed=True, is_stored=True))
-
 

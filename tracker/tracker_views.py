@@ -242,7 +242,8 @@ class Tracker_AddIssue(STLForm):
     def action(self, resource, context, form):
         # Add
         id = resource.get_new_id()
-        issue = Issue.make_resource(Issue, resource, id)
+        issue_cls = resource.issue_class
+        issue = issue_cls.make_resource(issue_cls, resource, id)
         issue._add_record(context, form, new=True)
 
         # Ok

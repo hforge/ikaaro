@@ -183,7 +183,9 @@ class Issue_Edit(STLForm):
         namespace['cc_add']= {'name': 'cc_add', 'value': [], 'class': None}
         cc_value = namespace['cc_list']['value']
         add_value = namespace['cc_add']['value']
-        for user in UsersList(tracker=resource.parent).get_options():
+
+        cc_list_userslist = self.get_schema(resource, context)['cc_list']
+        for user in cc_list_userslist.get_options():
             user['selected'] = False
             if user['name'] in cc_list:
                 cc_value.append(user)

@@ -316,7 +316,7 @@ class File_Backlinks(Folder_BrowseContent):
 
 
     def get_items(self, resource, context):
-        query = PhraseQuery('links', str(resource.get_abspath()))
+        query = PhraseQuery('links', str(resource.get_canonical_path()))
         return context.root.search(query)
 
 
