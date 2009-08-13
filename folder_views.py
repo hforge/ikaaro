@@ -98,7 +98,7 @@ class Folder_View(BaseView):
     title = MSG(u'View')
 
 
-    def GET(self, resource, context):
+    def http_get(self, resource, context):
         index = resource.get_resource('index', soft=True)
         if index is None:
             context.message = ERROR(
