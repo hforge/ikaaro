@@ -25,7 +25,8 @@ from itools.csv import Property
 from itools.datatypes import Date, String, Unicode, Enumerate
 from itools.gettext import MSG
 from itools.handlers import checkid
-from itools.web import FormError, get_context
+from itools.http import get_context
+from itools.web import FormError
 from itools.xapian import AndQuery, PhraseQuery
 
 # Import from ikaaro

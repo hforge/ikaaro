@@ -23,9 +23,9 @@ from datetime import time
 # Import from itools
 from itools.datatypes import DataType, Date
 from itools.gettext import MSG
+from itools.http import get_context
 from itools.ical import iCalendar, icalendarTable
 from itools.ical import Record
-from itools.web import get_context
 
 # Import from ikaaro
 from ikaaro.file_views import File_View

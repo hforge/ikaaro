@@ -21,8 +21,9 @@
 # Import from itools
 from itools.gettext import MSG
 from itools.handlers import Folder as FolderHandler
+from itools.http import get_context
 from itools.uri import Path
-from itools.web import get_context, BaseView
+from itools.web import BaseView
 
 # Import from ikaaro
 from exceptions import ConsistencyError

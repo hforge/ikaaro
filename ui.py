@@ -22,10 +22,10 @@
 from itools.core import get_abspath
 from itools.gettext import MSG
 from itools.handlers import File, Folder, Image, RODatabase
-from itools.http import NotFound
+from itools.http import NotFound, get_context
 from itools.i18n import has_language
 from itools.uri import Path
-from itools.web import BaseView, get_context
+from itools.web import BaseView
 from itools.xmlfile import XMLFile
 
 # Import from ikaaro

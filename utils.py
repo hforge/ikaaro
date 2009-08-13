@@ -22,7 +22,7 @@ from hashlib import sha1
 from sys import platform
 
 # Import from itools
-from itools.web import get_context
+from itools.http import get_context
 from itools.xapian import AllQuery, PhraseQuery, NotQuery, OrQuery, StartQuery
 
 if platform[:3] == 'win':

@@ -20,8 +20,8 @@ from datetime import datetime
 # Import from itools
 from itools.core import get_pipe, send_subprocess
 from itools.handlers import ROGitDatabase, GitDatabase, make_git_database
+from itools.http import get_context
 from itools.uri import Path
-from itools.web import get_context
 from itools.xapian import Catalog, make_catalog
 
 # Import from ikaaro

@@ -16,7 +16,7 @@
 
 # Import from itools
 from itools.fs import FileName
-from itools.web import get_context
+from itools.http import get_context
 
 # Import from ikaaro
 from resource_ import DBResource
