@@ -26,20 +26,18 @@ from operator import itemgetter
 # Import from itools
 from itools.core import merge_dicts
 from itools.datatypes import DateTime, String, Unicode
+from itools.fs import FileName
 from itools.gettext import MSG
 from itools.handlers import checkid
-from itools.http import Conflict
 from itools.i18n import get_language_name
 from itools.uri import Path, get_reference, get_uri_path
-from itools.fs import FileName
-from itools.web import BaseView, STLForm, INFO, ERROR, lock_body
+from itools.web import BaseView, STLForm, INFO, ERROR
 from itools.xapian import PhraseQuery
 
 # Import from ikaaro
 from autoform import AutoForm, title_widget, description_widget, subject_widget
 from autoform import timestamp_widget
 from datatypes import FileDataType, CopyCookie
-from exceptions import ConsistencyError
 from folder_views import Folder_BrowseContent
 import messages
 from registry import get_resource_class
@@ -573,64 +571,3 @@ class LogoutView(BaseView):
         message = INFO(u'You Are Now Logged out.')
         return context.come_back(message, goto='./')
 
-
-
-###########################################################################
-# Views / HTTP, WebDAV
-###########################################################################
-
-class Put_View(BaseView):
-
-    access = 'is_allowed_to_lock'
-
-
-    def PUT(self, resource, context):
-        body = context.get_form_value('body')
-        resource.handler.load_state_from_string(body)
-        context.server.change_resource(resource)
-
-
-
-class Delete_View(BaseView):
-
-    access = 'is_allowed_to_remove'
-
-
-    def DELETE(self, resource, context):
-        name = resource.name
-        parent = resource.parent
-        try:
-            parent.del_resource(name)
-        except ConsistencyError:
-            raise Conflict
-
-        # Clean the copy cookie if needed
-        cut, paths = context.get_cookie('ikaaro_cp', datatype=CopyCookie)
-        # Clean cookie
-        if str(resource.get_abspath()) in paths:
-            context.del_cookie('ikaaro_cp')
-            paths = []
-
-
-
-class Lock_View(BaseView):
-
-    access = 'is_allowed_to_lock'
-
-
-    def LOCK(self, resource, context):
-        lock = resource.lock()
-
-        # TODO move in the request handler
-        context.content_type = 'text/xml; charset="utf-8"'
-        context.set_header('Lock-Token', 'opaquelocktoken:%s' % lock)
-        return lock_body % {'owner': context.user.name, 'locktoken': lock}
-
-
-    def UNLOCK(self, resource, context):
-        lock = resource.get_lock()
-        resource.unlock()
-
-        # TODO move in the request handler
-        context.content_type = 'text/xml; charset="utf-8"'
-        context.set_header('Lock-Token', 'opaquelocktoken:%s' % lock)
