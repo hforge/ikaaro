@@ -59,11 +59,10 @@ class IResource(Resource):
         if not views:
             return None
         context = get_context()
-        user = context.user
         ac = self.get_access_control()
         for view_name in views:
             view = getattr(self, view_name, None)
-            if ac.is_access_allowed(user, self, view):
+            if ac.is_access_allowed(context, self, view):
                 return view_name
         return views[0]
 

@@ -19,11 +19,82 @@ from itools.http import Conflict
 from itools.web import WebApplication, lock_body
 
 # Import from ikaaro
+from config import get_config
+from database import get_database
 from exceptions import ConsistencyError
+from metadata import Metadata
+from registry import get_resource_class
 
 
 class CMSApplication(WebApplication):
 
+    def __init__(self, path):
+        self.root = path
+
+        # Load config file
+        config = get_config(path)
+
+        # The database
+        cache_size = config.get_value('database-size')
+        database = get_database(path, cache_size)
+        self.database = database
+
+
+    #######################################################################
+    # API
+    #######################################################################
+    def get_resource(self, path, soft=False):
+        if type(path) is not Path:
+            path = Path(path)
+
+        # Load metadata
+        path = '%s/database/%s.metadata' % (self.root, path)
+        try:
+            metadata = self.database.get_handler(path, cls=Metadata)
+        except LookupError:
+            if soft is False:
+                raise
+            return None
+        # Build resource
+        cls = get_resource_class(metadata.format)
+        resource = cls(metadata)
+        resource.path = path
+        return resource
+
+
+    #######################################################################
+    # Override WebApplication
+    #######################################################################
+    def find_host(self, context):
+        # Check we have a URI
+        uri = context.uri
+        if uri is None:
+            context.host = self.get_resource('/')
+            return
+
+        # The site root depends on the host
+        hostname = context.hostname
+        results = self.database.catalog.search(vhosts=hostname)
+        if len(results) == 0:
+            context.host = self.get_resource('/')
+            return
+
+        documents = results.get_documents()
+        path = documents[0].abspath
+        context.host = root.get_resource(path)
+
+
+    def get_user(self, credentials):
+        username, password = credentials
+        user = self.get_resource('/users/%s' % username, soft=True)
+        if user and user.authenticate(password):
+            return user
+        return None
+
+
+    #######################################################################
+    # Request methods
+    #######################################################################
     def http_put(self, context):
         # FIXME access = 'is_allowed_to_lock'
         body = context.get_form_value('body')

@@ -85,7 +85,7 @@ class Folder_View(BaseView):
     title = MSG(u'View')
 
 
-    def GET(self, resource, context):
+    def http_get(self, resource, context):
         from webpage import WebPage
 
         index = resource.get_resource('index', soft=True)

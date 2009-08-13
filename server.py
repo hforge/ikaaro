@@ -331,28 +331,6 @@ class Server(WebServer):
         context.content_type = None
 
 
-    def find_site_root(self, context):
-        # Default to root
-        root = self.root
-        context.site_root = root
-
-        # Check we have a URI
-        uri = context.uri
-        if uri is None:
-            return
-
-        # The site root depends on the host
-        hostname = get_host_from_authority(uri.authority)
-
-        results = self.database.catalog.search(vhosts=hostname)
-        if len(results) == 0:
-            return
-
-        documents = results.get_documents()
-        path = documents[0].abspath
-        context.site_root = root.get_resource(path)
-
-
     # FIXME Short-cut, to be removed
     def change_resource(self, resource):
         self.database.change_resource(resource)
