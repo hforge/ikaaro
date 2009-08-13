@@ -15,8 +15,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
+from itools.handlers import File
 from itools.http import Conflict
+from itools.uri import Path
+from itools import vfs
 from itools.web import WebApplication, lock_body
+from itools.web import Resource, BaseView
 
 # Import from ikaaro
 from config import get_config
@@ -24,6 +28,65 @@ from database import get_database
 from exceptions import ConsistencyError
 from metadata import Metadata
 from registry import get_resource_class
+
+
+class FileGET(BaseView):
+
+    access = True
+
+
+#   def get_mtime(self, resource):
+#       return resource.get_mtime()
+
+
+    def http_get(self, context):
+        handler = context.resource.handler
+        context.set_response(handler.get_mimetype(), handler.to_str())
+
+
+
+class UIFile(Resource):
+
+    def __init__(self, handler):
+        self.handler = handler
+
+    download = FileGET()
+
+    def get_view(self, name, query=None):
+        if name is None:
+            return self.download
+        return None
+
+
+
+mounts = {}
+
+def mount(point, path):
+    if type(point) is str:
+        point = Path(point)
+
+    aux = mounts
+    for name in point[:-1]:
+        target, aux = aux.setdefault(name, (None, {}))
+
+    aux[point[-1]] = (path, {})
+
+
+def get_mount(path):
+    target = None
+    aux = mounts
+
+    for i in range(len(path)):
+        name = path[i]
+        if name not in aux:
+            break
+        target, aux = aux[name]
+
+    if target is None:
+        return None
+
+    return '%s/%s' % (target, path[i:])
+
 
 
 class CMSApplication(WebApplication):
@@ -47,6 +110,15 @@ class CMSApplication(WebApplication):
         if type(path) is not Path:
             path = Path(path)
 
+        # Case 1: Static files are mounted
+        mount = get_mount(path)
+        if mount:
+            handler = self.database.get_handler(mount)
+            if not isinstance(handler, File):
+                return None
+            return UIFile(handler)
+
+        # Case 2: Database resource
         # Load metadata
         path = '%s/database/%s.metadata' % (self.root, path)
         try:
