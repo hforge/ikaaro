@@ -20,7 +20,7 @@ from itools.csv import parse_table, Property, property_to_str
 from itools.csv import deserialize_parameters
 from itools.datatypes import DateTime, String
 from itools.handlers import File, register_handler_class
-from itools.web import get_context
+from itools.http import get_context
 
 # Import from ikaaro
 from registry import get_resource_class

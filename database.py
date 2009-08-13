@@ -20,7 +20,7 @@ from subprocess import call, PIPE
 # Import from itools
 from itools.core import get_pipe
 from itools.handlers import ROGitDatabase, GitDatabase, make_git_database
-from itools.web import get_context
+from itools.http import get_context
 from itools.xapian import Catalog, make_catalog
 
 # Import from ikaaro

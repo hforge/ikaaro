@@ -24,7 +24,7 @@ from urllib import quote
 
 # Import from itools
 from itools.core import freeze
-from itools.web import get_context
+from itools.http import get_context
 from itools.xapian import AllQuery, PhraseQuery, NotQuery, OrQuery, StartQuery
 from itools.xapian import AndQuery
 

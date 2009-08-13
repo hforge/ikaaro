@@ -19,7 +19,7 @@ from operator import itemgetter
 
 # Import from itools
 from itools.datatypes import Enumerate, String, Integer, Boolean, Unicode
-from itools.web import get_context
+from itools.http import get_context
 
 # Import from ikaaro
 from ikaaro.datatypes import FileDataType

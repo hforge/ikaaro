@@ -30,8 +30,8 @@ from docutils.utils import SystemMessage
 # Import from itools
 from itools.gettext import MSG
 from itools.handlers import checkid
+from itools.http import get_context
 from itools.uri import get_reference
-from itools.web import get_context
 
 # Import from ikaaro
 from ikaaro.text import Text

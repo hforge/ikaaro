@@ -28,9 +28,9 @@ from itools.csv import Property
 from itools.datatypes import Integer, String, Unicode, Tokens
 from itools.gettext import MSG
 from itools.handlers import checkid
+from itools.http import get_context
 from itools.vfs import FileName
 from itools.uri import get_uri_path
-from itools.web import get_context
 
 # Import from ikaaro
 from ikaaro.file import File

@@ -21,9 +21,10 @@
 # Import from itools
 from itools.gettext import MSG
 from itools.handlers import Folder as FolderHandler
+from itools.http import get_context
 from itools.uri import get_uri_path, get_uri_name, resolve_uri, resolve_uri2
 from itools import vfs
-from itools.web import get_context, BaseView
+from itools.web import BaseView
 from itools.xapian import PhraseQuery
 
 # Import from ikaaro

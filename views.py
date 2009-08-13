@@ -19,7 +19,7 @@ from itools.core import merge_dicts
 from itools.datatypes import Boolean, Integer, String, Unicode
 from itools.gettext import MSG
 from itools.stl import stl
-from itools.web import get_context, BaseView, STLView, STLForm
+from itools.web import BaseView, STLView, STLForm
 from itools.xml import XMLParser
 
 

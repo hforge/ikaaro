@@ -27,8 +27,9 @@ from itools.csv import Property
 from itools.core import send_subprocess, read_subprocess
 from itools.datatypes import Unicode, String, Integer, Boolean, DateTime
 from itools.gettext import MSG
+from itools.http import get_context
 from itools.uri import resolve_uri
-from itools.web import Resource, get_context
+from itools.web import Resource
 from itools.xapian import CatalogAware, PhraseQuery
 
 # Import from ikaaro

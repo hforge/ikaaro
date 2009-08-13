@@ -30,9 +30,10 @@ from itools.core import get_abspath
 from itools.datatypes import String
 from itools.gettext import MSG
 from itools.handlers import ConfigFile, RWDatabase
+from itools.http import get_context
 from itools.stl import stl
 from itools.uri import Path
-from itools.web import BaseView, get_context
+from itools.web import BaseView
 
 # Import from ikaaro
 from folder import Folder

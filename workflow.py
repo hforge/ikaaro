@@ -23,8 +23,9 @@ from datetime import datetime
 from itools.csv import Property
 from itools.datatypes import DateTime, String, Unicode
 from itools.gettext import MSG
+from itools.http import get_context
 from itools.i18n import format_datetime
-from itools.web import STLForm, INFO, ERROR, get_context
+from itools.web import STLForm, INFO, ERROR
 from itools.workflow import Workflow, WorkflowAware as BaseWorkflowAware
 from itools.workflow import WorkflowError
 

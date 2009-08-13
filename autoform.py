@@ -24,8 +24,9 @@ from itools.datatypes import DataType, Date, Enumerate, Boolean
 from itools.gettext import MSG
 from itools.html import stream_to_str_as_xhtml, stream_to_str_as_html
 from itools.html import xhtml_doctype, sanitize_stream
+from itools.http import get_context
 from itools.stl import stl
-from itools.web import STLForm, get_context
+from itools.web import STLForm
 from itools.xml import XMLParser
 
 
