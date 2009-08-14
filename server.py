@@ -39,13 +39,13 @@ from xapian import DatabaseOpeningError
 
 # Import from itools
 from itools.datatypes import Boolean
-from itools.http import Request
+from itools.http import set_context, SoupMessage
 from itools.log import DEBUG, INFO, WARNING, ERROR, FATAL
 from itools.log import log_error, log_warning, log_info
 from itools.uri import get_reference, get_host_from_authority
 from itools import vfs
 from itools.vfs import cwd
-from itools.web import WebServer, Context, set_context
+from itools.web import WebServer, Context
 
 # Import from ikaaro
 from config import get_config
@@ -112,8 +112,8 @@ def get_root(database, target):
 
 
 def get_fake_context():
-    request = Request()
-    context = Context(request)
+    soup_message = SoupMessage()
+    context = Context(soup_message, '/')
     set_context(context)
     return context
 
@@ -175,9 +175,9 @@ class Server(WebServer):
         root = get_root(database, target)
 
         # Initialize
-        WebServer.__init__(self, root, address=address, port=port,
-                           access_log=access_log, event_log=event_log,
-                           log_level=log_level, pid_file='%s/pid' % path)
+        WebServer.__init__(self, address, port, access_log=access_log,
+                           event_log=event_log, log_level=log_level,
+                           pid_file='%s/pid' % path)
 
         # Email service
         spool = self.target.resolve_name('spool')
