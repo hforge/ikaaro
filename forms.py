@@ -314,7 +314,7 @@ class SelectRadio(Widget):
             stl:if="option/selected"/>
           <input type="radio" id="${name}-${option/name}" name="${name}"
             value="${option/name}" stl:if="not option/selected"/>
-          <label for="${name}_${option/name}">${option/value}</label>
+          <label for="${name}-${option/name}">${option/value}</label>
           <stl:block stl:if="not is_inline"><br/></stl:block>
         </stl:block>
         """, stl_namespaces))
@@ -323,7 +323,7 @@ class SelectRadio(Widget):
         <stl:block stl:repeat="option options">
           <input type="checkbox" name="${name}" id="${name}-${option/name}"
             value="${option/name}" checked="${option/selected}" />
-          <label for="${name}_${option/name}">${option/value}</label>
+          <label for="${name}-${option/name}">${option/value}</label>
           <stl:block stl:if="not is_inline"><br/></stl:block>
         </stl:block>
         """, stl_namespaces))
