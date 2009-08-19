@@ -26,9 +26,10 @@ from itools import __version__
 from itools.core import become_daemon, start_subprocess
 
 # Import from ikaaro
+from ikaaro.bootstrap import get_server
 from ikaaro.database import check_database
-from ikaaro.update import is_instance_up_to_date
-from ikaaro.server import Server, get_pid, get_fake_context
+from ikaaro.utils import is_instance_up_to_date
+from ikaaro.server import get_pid, get_fake_context
 
 
 def start(options, target):
@@ -43,12 +44,11 @@ def start(options, target):
         return 1
 
     # Set-up the server
-    server = Server(target, read_only=options.read_only)
+    server = get_server(target, read_only=options.read_only)
 
     # Check instance is up to date
     context = get_fake_context()
-    server.init_context(context)
-    if not is_instance_up_to_date(server.root):
+    if not is_instance_up_to_date(target):
         print 'The instance is not up-to-date, please type:'
         print
         print '    $ icms-update.py %s' % target
@@ -58,7 +58,6 @@ def start(options, target):
     # Listen
     address = server.address or '*'
     port = server.port
-    print '[%s] Web Server listens %s:%s' % (target, address, port)
 
     # Daemon mode
     if options.detach:

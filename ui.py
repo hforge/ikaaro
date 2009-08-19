@@ -29,7 +29,6 @@ from itools.web import BaseView
 from itools.xmlfile import XMLFile
 
 # Import from ikaaro
-from app import mount
 from resource_ import IResource
 
 
@@ -138,12 +137,10 @@ class UIFolder(IResource, Folder):
 skin_registry = {}
 def register_skin(name, skin):
     skin_registry[name] = UIFolder(skin)
-    mount('/ui/%s' % name, skin)
 
 
 # Register the built-in skins
 ui_path = get_abspath('ui')
-mount('/ui', ui_path)
 register_skin('aruni', '%s/aruni' % ui_path)
 
 
@@ -159,3 +156,4 @@ class UI(UIFolder):
 
     def get_canonical_path(self):
         return Path('/ui')
+

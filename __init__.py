@@ -58,9 +58,7 @@ else:
     import wiki
 
 
-###########################################################################
 # Check for required software
-###########################################################################
 for name, import_path in [("poppler", "itools.pdf.pdftotext"),
                           ("wv2", "itools.office.doctotext"),
                           ("xlrd", "xlrd")]:

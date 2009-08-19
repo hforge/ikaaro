@@ -25,6 +25,7 @@ from urllib import quote
 # Import from itools
 from itools.core import freeze
 from itools.http import get_context
+from itools import vfs
 from itools.xapian import AllQuery, PhraseQuery, NotQuery, OrQuery, StartQuery
 from itools.xapian import AndQuery
 
@@ -201,4 +202,10 @@ def get_base_path_query(abspath, include_container=False):
 
     container = PhraseQuery('abspath', abspath)
     return OrQuery(container, content)
+
+
+
+def is_instance_up_to_date(target):
+    # 0.60 Check the Git archive has been initalized
+    return vfs.exists('%s/database/.git' % target)
 
