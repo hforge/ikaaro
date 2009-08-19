@@ -23,84 +23,19 @@ from itools.web import WebApplication, lock_body
 from itools.web import Resource, BaseView
 
 # Import from ikaaro
-from config import get_config
 from database import get_database
 from exceptions import ConsistencyError
 from metadata import Metadata
 from registry import get_resource_class
 
 
-class FileGET(BaseView):
-
-    access = True
-
-
-#   def get_mtime(self, resource):
-#       return resource.get_mtime()
-
-
-    def http_get(self, context):
-        handler = context.resource.handler
-        context.set_response(handler.get_mimetype(), handler.to_str())
-
-
-
-class UIFile(Resource):
-
-    def __init__(self, handler):
-        self.handler = handler
-
-    download = FileGET()
-
-    def get_view(self, name, query=None):
-        if name is None:
-            return self.download
-        return None
-
-
-
-mounts = {}
-
-def mount(point, path):
-    if type(point) is str:
-        point = Path(point)
-
-    aux = mounts
-    for name in point[:-1]:
-        target, aux = aux.setdefault(name, (None, {}))
-
-    aux[point[-1]] = (path, {})
-
-
-def get_mount(path):
-    target = None
-    aux = mounts
-
-    for i in range(len(path)):
-        name = path[i]
-        if name not in aux:
-            break
-        target, aux = aux[name]
-
-    if target is None:
-        return None
-
-    return '%s/%s' % (target, path[i:])
-
-
 
 class CMSApplication(WebApplication):
 
-    def __init__(self, path):
-        self.root = path
-
-        # Load config file
-        config = get_config(path)
-
-        # The database
-        cache_size = config.get_value('database-size')
-        database = get_database(path, cache_size)
-        self.database = database
+    def __init__(self, target, size_min, size_max, read_only, index_text):
+        self.target = target
+        self.database = get_database(target, size_min, size_max, read_only)
+        self.index_text = index_text
 
 
     #######################################################################
@@ -110,17 +45,8 @@ class CMSApplication(WebApplication):
         if type(path) is not Path:
             path = Path(path)
 
-        # Case 1: Static files are mounted
-        mount = get_mount(path)
-        if mount:
-            handler = self.database.get_handler(mount)
-            if not isinstance(handler, File):
-                return None
-            return UIFile(handler)
-
-        # Case 2: Database resource
         # Load metadata
-        path = '%s/database/%s.metadata' % (self.root, path)
+        path = '%s/database/%s.metadata' % (self.target, path)
         try:
             metadata = self.database.get_handler(path, cls=Metadata)
         except LookupError:
@@ -132,6 +58,10 @@ class CMSApplication(WebApplication):
         resource = cls(metadata)
         resource.path = path
         return resource
+
+
+    def change_resource(self, resource):
+        self.database.change_resource(resource)
 
 
     #######################################################################

@@ -1,5 +1,5 @@
 # -*- coding: UTF-8 -*-
-# Copyright (C) 2007 Juan David Ibáñez Palomar <jdavid@itaapy.com>
+# Copyright (C) 2009 Juan David Ibáñez Palomar <jdavid@itaapy.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,6 +15,5 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-def is_instance_up_to_date(root):
-    # 0.60 Check the Git archive has been initalized
-    return root.metadata.database.fs.exists('.git')
+config = None
+spool = None

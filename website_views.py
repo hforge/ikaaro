@@ -34,7 +34,7 @@ from itools.xapian import PhraseQuery, OrQuery, AndQuery, split_unicode
 
 # Import from ikaaro
 from autoform import AutoForm, SelectWidget, MultilineWidget, TextWidget
-from config import get_config
+import globals
 from views import SearchForm
 from utils import get_base_path_query
 
@@ -338,7 +338,7 @@ class AboutView(STLView):
     def get_namespace(self, resource, context):
         # Python, itools & ikaaro
         packages = ['sys', 'itools', 'ikaaro']
-        config = get_config(context.server.target)
+        config = globals.config
         packages.extend(config.get_value('modules'))
         # Try packages we frequently use
         packages.extend([
