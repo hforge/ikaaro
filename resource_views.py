@@ -511,7 +511,7 @@ class LogoutView(BaseView):
     access = True
 
 
-    def GET(self, resource, context):
+    def http_get(self, resource, context):
         # Log-out
         context.del_cookie('__ac')
         context.user = None

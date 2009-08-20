@@ -79,8 +79,3 @@ class CMSServer(HTTPServer):
 
         return h.read() == 'no'
 
-
-    def init_context(self, context):
-        context.database = self.database
-        context.message = None
-

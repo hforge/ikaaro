@@ -120,7 +120,7 @@ class File_Download(BaseView):
         return resource.get_mtime()
 
 
-    def GET(self, resource, context):
+    def http_get(self, resource, context):
         response = context.response
         # Filename
         filename = resource.get_property('filename')
@@ -229,7 +229,7 @@ class File_ExternalEdit(BaseView):
     access = 'is_allowed_to_edit'
 
 
-    def GET(self, resource, context):
+    def http_get(self, resource, context):
         # Get the request and response
         request, response = context.request, context.response
 
@@ -330,7 +330,7 @@ class Image_Thumbnail(BaseView):
         return resource.get_mtime()
 
 
-    def GET(self, resource, context):
+    def http_get(self, resource, context):
         width = context.get_form_value('width', type=Integer, default=48)
         height = context.get_form_value('height', type=Integer, default=48)
 
