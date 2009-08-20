@@ -17,7 +17,7 @@
 # Import from itools
 from itools.datatypes import Boolean, Integer, String, Tokens
 from itools.handlers import ConfigFile, ro_database
-from itools.http import Static
+from itools.http import StaticMount
 from itools.log import Logger, register_logger
 from itools.log import DEBUG, INFO, WARNING, ERROR, FATAL
 from itools.mail import MailSpool
@@ -108,12 +108,12 @@ def get_server(target, read_only=False):
     server.mount('/', root)
 
     # Mount /ui
-    static = Static('/ui', ui_path)
+    static = StaticMount('/ui', ui_path)
     server.mount('/ui', static)
     for name in skin_registry:
         prefix = '/ui/%s' % name
         path = get_uri_path(skin_registry[name].uri)
-        static = Static(prefix, path)
+        static = StaticMount(prefix, path)
         server.mount(prefix, static)
 
     # The email system

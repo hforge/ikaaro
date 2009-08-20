@@ -23,6 +23,7 @@ from itools.web import WebApplication, lock_body
 from itools.web import Resource, BaseView
 
 # Import from ikaaro
+from context import CMSContext
 from database import get_database
 from exceptions import ConsistencyError
 from metadata import Metadata
@@ -32,10 +33,20 @@ from registry import get_resource_class
 
 class CMSApplication(WebApplication):
 
+    context_class = CMSContext
+
     def __init__(self, target, size_min, size_max, read_only, index_text):
         self.target = target
         self.database = get_database(target, size_min, size_max, read_only)
         self.index_text = index_text
+
+
+    def get_context(self, soup_message, path):
+        context = WebApplication.get_context(self, soup_message, path)
+        context.database = self.database
+        context.message = None
+        context.content_type = None
+        return context
 
 
     #######################################################################
@@ -67,23 +78,21 @@ class CMSApplication(WebApplication):
     #######################################################################
     # Override WebApplication
     #######################################################################
-    def find_host(self, context):
+    def get_host(self, context):
         # Check we have a URI
         uri = context.uri
         if uri is None:
-            context.host = self.get_resource('/')
-            return
+            return self.get_resource('/')
 
         # The site root depends on the host
         hostname = context.hostname
         results = self.database.catalog.search(vhosts=hostname)
         if len(results) == 0:
-            context.host = self.get_resource('/')
-            return
+            return self.get_resource('/')
 
         documents = results.get_documents()
         path = documents[0].abspath
-        context.host = root.get_resource(path)
+        return root.get_resource(path)
 
 
     def get_user(self, credentials):

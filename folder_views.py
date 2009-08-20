@@ -783,7 +783,7 @@ class Folder_Thumbnail(BaseView):
 
     default_icon = '/ui/gallery/folder.png'
 
-    def GET(self, resource, context):
+    def http_get(self, resource, context):
         from file import Image
 
         width = context.get_form_value('width', type=Integer, default=48)
@@ -833,7 +833,7 @@ class GoToSpecificDocument(BaseView):
         return self.specific_document
 
 
-    def GET(self, resource, context):
+    def http_get(self, resource, context):
         specific_document = self.get_specific_document(resource, context)
         goto = '%s/%s' % (context.get_link(resource), specific_document)
         goto = get_reference(goto)
