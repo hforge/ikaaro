@@ -18,13 +18,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Import from the Standard Library
-from datetime import datetime
-
 # Import from itools
-from itools.csv import Record, Table as TableFile, Property, is_multilingual
+from itools.csv import Record, Table as TableFile, is_multilingual
 from itools.datatypes import Tokens
 from itools.gettext import MSG
+from itools.web import get_context
 
 # Import from ikaaro
 from file import File
