@@ -522,8 +522,8 @@ class LoginView(STLForm):
         password = form['password']
 
         # Check the user exists
-        root = context.root
-        user = root.get_user_from_login(email)
+        host = context.host
+        user = host.get_user_from_login(email)
         if user is None:
             message = ERROR(u'The user "{username}" does not exist.',
                             username=email)

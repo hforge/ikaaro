@@ -555,7 +555,7 @@ class AutoForm(STLForm):
 
     widgets = []
     required_msg = None
-    template = '/ui/auto_form.xml'
+    template = 'auto_form.xml'
     submit_value = MSG(u'Save')
     submit_class = 'button-ok'
 

@@ -140,12 +140,12 @@ class IResource(Resource):
     # User interface
     ########################################################################
     def get_views(self):
-        user = get_context().user
+        context = get_context()
         ac = self.get_access_control()
         for name in self.class_views:
             view_name = name.split('?')[0]
             view = self.get_view(view_name)
-            if ac.is_access_allowed(user, self, view):
+            if ac.is_access_allowed(context, self, view):
                 yield name, view
 
 

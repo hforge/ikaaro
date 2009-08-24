@@ -21,7 +21,7 @@
 # Import from the Standard Library
 from copy import deepcopy
 from decimal import Decimal
-from types import GeneratorType, FunctionType, MethodType
+from types import FunctionType, MethodType
 
 # Import from itools
 from itools.datatypes import Unicode
@@ -29,7 +29,6 @@ from itools.fs import lfs
 from itools.gettext import MSG
 from itools.stl import stl
 from itools.web import ERROR, INFO, STLForm
-from itools.xml import XMLParser
 
 # Import from ikaaro
 from skins_views import LanguagesTemplate, LocationTemplate
@@ -40,7 +39,7 @@ class Skin(STLForm):
     class_title = MSG(u'Skin')
     class_icon16 = 'icons/16x16/skin.png'
     class_icon48 = 'icons/48x48/skin.png'
-    template = '/ui/aruni/template.xhtml'
+    template = 'aruni/template.xhtml'
     styles = ['/ui/aruni/style.css']
     scripts = []
 
@@ -193,8 +192,8 @@ class Skin(STLForm):
         user = context.user
 
         if user is None:
-            site_root = context.site_root
-            joinisopen = site_root.is_allowed_to_register(user, site_root)
+            host = context.host
+            joinisopen = host.is_allowed_to_register(user, host)
             return {'info': None, 'joinisopen': joinisopen}
 
         home = '/users/%s' % user.name
@@ -226,12 +225,12 @@ class Skin(STLForm):
         # Text
         if context.message is not None:
             messages = context.message
-        elif 'error' in context.uri.query:
+        elif 'error' in context.query:
             messages = ERROR(context.get_query_value('error', type=Unicode))
-        elif 'info' in context.uri.query:
+        elif 'info' in context.query:
             messages = INFO(context.get_query_value('info', type=Unicode))
         # XXX For backwards compatibility
-        elif 'message' in context.uri.query:
+        elif 'message' in context.query:
             messages = INFO(context.get_query_value('message', type=Unicode))
         else:
             return None
@@ -270,8 +269,8 @@ class Skin(STLForm):
         context_menus = list(context_menus)
 
         # The favicon.ico
-        site_root = context.site_root
-        resource = site_root.get_resource('favicon', soft=True)
+        host = context.host
+        resource = host.get_resource('favicon', soft=True)
         if resource:
             favicon_href = '/favicon/;download'
             favicon_type = resource.metadata.format
@@ -285,10 +284,12 @@ class Skin(STLForm):
         language = context.accept_language.select_language(languages)
 
         # The base URI
-        uri = context.uri
-        if uri.path and not context.view_name and not uri.path.endswith_slash:
-            uri = deepcopy(uri)
-            uri.path.endswith_slash = True
+        path = context.path
+        if path and not context.view_name and not path.endswith_slash:
+            path = deepcopy(path)
+            path.endswith_slash = True
+        else:
+            uri = context.uri
 
         # In case of UI objects, fallback to site root
         base_path = context.get_link(here)
@@ -326,9 +327,9 @@ class Skin(STLForm):
     def find_language(self, resource, context, min=Decimal('0.000001'),
                       zero=Decimal('0.0')):
         # Set the language cookie if specified by the query.
-        # NOTE We do it this way, instead of through a specific action,
-        # to avoid redirections.
-        language = context.get_form_value('language')
+        # NOTE We do it this way, instead of through a specific action, to
+        # avoid redirections.
+        language = context.get_query_value('language')
         if language is not None:
             context.set_cookie('language', language)
 
@@ -349,24 +350,9 @@ class Skin(STLForm):
             accept.set(language, 2.5)
 
 
-    def GET(self, resource, context):
+    def render(self, content, context):
+        resource = context.resource
         self.find_language(resource, context)
-        content = context.method(context.resource, context)
-
-        is_str = type(content) is str
-        is_xml = isinstance(content, (list, GeneratorType, XMLParser))
-        if not is_str and not is_xml:
-            return content
-
-        # If there is not a content type, just serialize the content
-        if context.content_type:
-            if is_xml:
-                return stream_to_str_as_html(content)
-            return content
-
-        # Standard page, wrap the content into the general template
-        if is_str:
-            content = XMLParser(content, doctype=xhtml_doctype)
 
         # Build the namespace
         namespace = self.build_namespace(context)
@@ -382,8 +368,8 @@ class Skin(STLForm):
         s = ['<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"\n'
              '  "http://www.w3.org/TR/html4/strict.dtd">']
         # STL
-        prefix = handler.get_abspath()
-        data = stl(handler, namespace, prefix=prefix, mode='html')
+#        prefix = handler.get_abspath()
+        data = stl(handler, namespace, mode='html')#prefix=prefix, mode='html')
         s.append(data)
 
         return ''.join(s)
