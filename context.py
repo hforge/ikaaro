@@ -23,6 +23,11 @@ from ikaaro.globals import spool
 
 class CMSContext(WebContext):
 
+    def get_template(self, path):
+        from ikaaro.boot import ui
+        return ui.get_template(path)
+
+
     def send_email(self, to_addr, subject, from_addr=None, text=None,
                    html=None, encoding='utf-8', subject_with_host=True,
                    return_receipt=False, attachment=None):

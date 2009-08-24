@@ -26,7 +26,7 @@ from itools import __version__
 from itools.core import become_daemon, start_subprocess
 
 # Import from ikaaro
-from ikaaro.bootstrap import get_server
+from ikaaro.boot import get_server
 from ikaaro.database import check_database
 from ikaaro.utils import is_instance_up_to_date
 from ikaaro.server import get_pid, get_fake_context

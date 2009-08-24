@@ -19,8 +19,8 @@
 from itools.core import get_abspath
 
 # Import from ikaaro
+from ikaaro.boot import ui
 from ikaaro.registry import register_document_type
-from ikaaro.ui import register_skin
 from issue import Issue
 from resources import Resources
 from tracker import Tracker
@@ -28,7 +28,7 @@ from tracker import Tracker
 
 # Register skin
 path = get_abspath('ui')
-register_skin('tracker', path)
+ui.register('tracker', path)
 
 # Register document type
 register_document_type(Tracker)

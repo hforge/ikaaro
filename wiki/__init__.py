@@ -24,10 +24,10 @@ import docutils
 from itools.core import get_abspath
 
 # Import from ikaaro
-from ikaaro.ui import register_skin
+from ikaaro.boot import ui
 import page
 
 
 # Register skin
 path = get_abspath('ui')
-register_skin('wiki', path)
+ui.register('wiki', path)
