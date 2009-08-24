@@ -55,7 +55,7 @@ class ForbiddenView(STLView):
 
 
 class InternalServerError(STLView):
-    template = '/ui/root/internal_server_error.xml'
+    template = 'root/internal_server_error.xml'
 
     def get_namespace(self, resource, context):
         return {'traceback': format_exc()}
