@@ -31,7 +31,7 @@ from itools.handlers import checkid
 from itools.i18n import get_language_name
 from itools.uri import Path, get_reference, get_uri_path
 from itools.vfs import FileName
-from itools.web import BaseView, STLForm, INFO, ERROR
+from itools.web import BaseView, STLForm, INFO, ERROR, FormError
 
 # Import from ikaaro
 from autoform import AutoForm, title_widget, description_widget, subject_widget
@@ -473,15 +473,12 @@ class LoginView(STLForm):
         host = context.host
         user = host.get_user_from_login(email)
         if user is None:
-            message = ERROR(u'The user "{username}" does not exist.',
-                            username=email)
-            context.message = message
-            return
+            message = u'The user "{username}" does not exist.'
+            raise FormError, ERROR(message, username=email)
 
         # Check the password is right
         if not user.authenticate(password):
-            context.message = ERROR(u'The password is wrong.')
-            return
+            raise FormError, u'The password is wrong.'
 
         # Set cookie
         user.set_auth_cookie(context, password)
