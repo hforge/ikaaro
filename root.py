@@ -38,7 +38,6 @@ from itools.web import BaseView
 # Import from ikaaro
 from folder import Folder
 from registry import register_resource_class, get_resource_class
-from ui import UI, ui_path
 from user import UserFolder
 from utils import crypt_password
 from website import WebSite
@@ -149,10 +148,6 @@ class Root(WebSite):
     # Traverse
     ########################################################################
     def _get_resource(self, name):
-        if name == 'ui':
-            ui = UI(ui_path)
-            ui.database = self.metadata.database
-            return ui
         return Folder._get_resource(self, name)
 
 

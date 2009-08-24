@@ -32,7 +32,6 @@ from itools.xml import XMLParser
 
 # Import from ikaaro
 from skins_views import LanguagesTemplate, LocationTemplate
-from ui import UIFile, UIFolder
 
 
 
@@ -278,10 +277,7 @@ class Skin(STLForm):
             uri.path.endswith_slash = True
 
         # In case of UI objects, fallback to site root
-        if isinstance(here, (UIFile, UIFolder)):
-            base_path = ''
-        else:
-            base_path = context.get_link(here)
+        base_path = context.get_link(here)
 
         # The view
         view = context.view

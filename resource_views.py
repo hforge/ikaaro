@@ -459,7 +459,7 @@ class LoginView(STLForm):
 
     access = True
     title = MSG(u'Login')
-    template = '/ui/base/login.xml'
+    template = 'base/login.xml'
     schema = {
         'username': Unicode(mandatory=True),
         'password': String(mandatory=True)}
