@@ -30,6 +30,7 @@ from itools.stl import stl
 from itools.web import ERROR, INFO, STLForm
 
 # Import from ikaaro
+from boot import ui
 from skins_views import LanguagesTemplate, LocationTemplate
 
 
@@ -232,7 +233,7 @@ class Skin(STLForm):
 
         namespace = {'messages': messages_ns}
 
-        template = context.root.get_resource('/ui/aruni/message.xml')
+        template = ui.get_template('aruni/message.xml')
         return stl(template, namespace)
 
 
