@@ -136,11 +136,8 @@ class User(AccessControl, Folder):
         username = str(self.name)
         crypted = crypt_password(password)
         cookie = Password.encode('%s:%s' % (username, crypted))
-        expires = context.request.get_parameter('iAuthExpires')
-        if expires is None:
-            context.set_cookie('__ac', cookie, path='/')
-        else:
-            context.set_cookie('__ac', cookie, path='/', expires=expires)
+        # TODO Add a reasonable expires value, for security
+        context.set_cookie('__ac', cookie, path='/')
 
 
     ########################################################################

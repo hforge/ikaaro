@@ -25,6 +25,7 @@ from itools.stl import STLTemplate
 from itools.uri import decode_query
 
 # Import from ikaaro
+from boot import ui
 from utils import reduce_string
 
 
@@ -41,7 +42,7 @@ class SkinTemplate(STLTemplate):
         if template is None:
             msg = "%s is missing the 'template' variable"
             raise NotImplementedError, msg % repr(self.__class__)
-        return self.context.root.get_resource(template)
+        return ui.get_template(template)
 
 
 
@@ -50,14 +51,14 @@ class SkinTemplate(STLTemplate):
 ###########################################################################
 class LanguagesTemplate(SkinTemplate):
 
-    template = '/ui/aruni/languages.xml'
+    template = 'aruni/languages.xml'
 
 
     def get_namespace(self):
         context = self.context
         # Website languages
-        site_root = context.site_root
-        ws_languages = site_root.get_property('website_languages')
+        host = context.host
+        ws_languages = host.get_property('website_languages')
         if len(ws_languages) == 1:
             return {'languages': []}
 
@@ -87,17 +88,17 @@ class LanguagesTemplate(SkinTemplate):
 ###########################################################################
 class LocationTemplate(SkinTemplate):
 
-    template = '/ui/aruni/location.xml'
+    template = 'aruni/location.xml'
 
 
     def get_breadcrumb(self, context):
         """Return a list of dicts [{name, url}...]
         """
-        site_root = context.site_root
+        host = context.host
 
         # Initialize the breadcrumb with the root resource
         path = '/'
-        title = site_root.get_title()
+        title = host.get_title()
         breadcrumb = [{
             'url': path,
             'name': title,
@@ -105,8 +106,8 @@ class LocationTemplate(SkinTemplate):
             }]
 
         # Complete the breadcrumb
-        resource = site_root
-        for name in context.uri.path:
+        resource = host
+        for name in context.path:
             path = path + ('%s/' % name)
             resource = resource.get_resource(name, soft=True)
             if resource is None:

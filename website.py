@@ -96,7 +96,7 @@ class WebSite(RoleAware, Folder, VirtualRoot):
     #######################################################################
     # HTTP stuff
     #######################################################################
-    http_main = Skin()
+    skin = Skin()
 
     # Views for error conditions
     http_forbidden = ForbiddenView()
