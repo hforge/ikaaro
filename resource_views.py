@@ -28,6 +28,7 @@ from itools.core import merge_dicts
 from itools.datatypes import DateTime, String, Unicode
 from itools.gettext import MSG
 from itools.handlers import checkid
+from itools.http import HTTP_OK
 from itools.i18n import get_language_name
 from itools.uri import Path, get_reference, get_uri_path
 from itools.vfs import FileName
@@ -486,18 +487,8 @@ class LoginView(STLForm):
         # Set context
         context.user = user
 
-        # Come back
-        referrer = context.get_referrer()
-        if referrer is None:
-            goto = get_reference('./')
-        else:
-            path = get_uri_path(referrer)
-            if path.endswith(';login'):
-                goto = get_reference('./')
-            else:
-                goto = referrer
-
-        return context.come_back(INFO(u"Welcome!"), goto)
+        context.message = INFO(u'Welcome!')
+        raise HTTP_OK
 
 
 
