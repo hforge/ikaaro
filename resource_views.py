@@ -29,10 +29,10 @@ from itools.datatypes import DateTime, String, Unicode
 from itools.fs import FileName
 from itools.gettext import MSG
 from itools.handlers import checkid
-from itools.http import Successful
 from itools.i18n import get_language_name
 from itools.uri import Path, get_reference, get_uri_path
-from itools.web import BaseView, STLForm, INFO, ERROR, FormError
+from itools.web import BaseView, STLForm, INFO, ERROR
+from itools.web import InternalRedirect, FormError
 from itools.xapian import PhraseQuery
 
 # Import from ikaaro
@@ -536,11 +536,10 @@ class LoginView(STLForm):
         # Set cookie
         user.set_auth_cookie(context, password)
 
-        # Set context
+        # Internal redirect
         context.user = user
-
         context.message = INFO(u'Welcome!')
-        raise Successful(200)
+        raise InternalRedirect(view=None)
 
 
 
@@ -556,6 +555,6 @@ class LogoutView(BaseView):
         context.del_cookie('__ac')
         context.user = None
 
-        message = INFO(u'You Are Now Logged out.')
-        return context.come_back(message, goto='./')
+        context.message = INFO(u'You Are Now Logged out.')
+        raise InternalRedirect(view=None)
 
