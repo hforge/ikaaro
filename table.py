@@ -22,7 +22,7 @@
 from itools.csv import Record, Table as TableFile, is_multilingual
 from itools.datatypes import Tokens
 from itools.gettext import MSG
-from itools.web import get_context
+from itools.http import get_context
 
 # Import from ikaaro
 from autoform import get_default_widget
