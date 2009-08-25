@@ -78,14 +78,12 @@ class CMSApplication(WebApplication):
     #######################################################################
     # Override WebApplication
     #######################################################################
-    def get_host(self, context):
+    def get_host(self, hostname):
         # Check we have a URI
-        uri = context.uri
-        if uri is None:
+        if hostname is None:
             return self.get_resource('/')
 
         # The site root depends on the host
-        hostname = context.hostname
         results = self.database.catalog.search(vhosts=hostname)
         if len(results) == 0:
             return self.get_resource('/')
