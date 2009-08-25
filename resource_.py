@@ -46,6 +46,26 @@ class IResource(Resource):
     context_menus = []
 
 
+    def get_parent(self):
+        # Special case: the root
+        if not self.path:
+            return None
+        path = path[:-1]
+        return context.get_resource(path)
+
+    parent = property(get_parent, None, None, '')
+
+
+    def get_name(self):
+        # Special case: the root
+        if not self.path:
+            return None
+
+        return self.path[-1]
+
+    name = property(get_name, None, None, '')
+
+
     def get_site_root(self):
         from website import WebSite
         resource = self
@@ -170,9 +190,6 @@ class DBResource(CatalogAware, IResource):
     def __init__(self, metadata):
         self.metadata = metadata
         self._handler = None
-        # The tree
-        self.name = ''
-        self.parent = None
 
 
     @staticmethod

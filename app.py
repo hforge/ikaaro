@@ -26,8 +26,6 @@ from itools.web import Resource, BaseView
 from context import CMSContext
 from database import get_database
 from exceptions import ConsistencyError
-from metadata import Metadata
-from registry import get_resource_class
 
 
 
@@ -52,53 +50,8 @@ class CMSApplication(WebApplication):
     #######################################################################
     # API
     #######################################################################
-    def get_resource(self, path, soft=False):
-        if type(path) is not Path:
-            path = Path(path)
-
-        # Load metadata
-        path = '%s/database/%s.metadata' % (self.target, path)
-        try:
-            metadata = self.database.get_handler(path, cls=Metadata)
-        except LookupError:
-            if soft is False:
-                raise
-            return None
-        # Build resource
-        cls = get_resource_class(metadata.format)
-        resource = cls(metadata)
-        resource.path = path
-        return resource
-
-
     def change_resource(self, resource):
         self.database.change_resource(resource)
-
-
-    #######################################################################
-    # Override WebApplication
-    #######################################################################
-    def get_host(self, hostname):
-        # Check we have a URI
-        if hostname is None:
-            return self.get_resource('/')
-
-        # The site root depends on the host
-        results = self.database.catalog.search(vhosts=hostname)
-        if len(results) == 0:
-            return self.get_resource('/')
-
-        documents = results.get_documents()
-        path = documents[0].abspath
-        return root.get_resource(path)
-
-
-    def get_user(self, credentials):
-        username, password = credentials
-        user = self.get_resource('/users/%s' % username, soft=True)
-        if user and user.authenticate(password):
-            return user
-        return None
 
 
     #######################################################################
