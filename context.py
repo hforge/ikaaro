@@ -15,13 +15,79 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
+from itools.uri import Path
 from itools.web import WebContext
 
 # Import from ikaaro
 from ikaaro.globals import spool
+from metadata import Metadata
+from registry import get_resource_class
 
 
 class CMSContext(WebContext):
+
+    def __init__(self, soup_message, path):
+        WebContext.__init__(self, soup_message, path)
+        self.cache = {}
+
+
+    def get_host(self, hostname):
+        # Check we have a URI
+        if hostname is None:
+            return self.get_resource('/')
+
+        # The site root depends on the host
+        mount = self.mount
+        results = mount.database.catalog.search(vhosts=hostname)
+        if len(results) == 0:
+            return self.get_resource('/')
+
+        documents = results.get_documents()
+        path = documents[0].abspath
+        return root.get_resource(path)
+
+
+    def get_resource(self, path, soft=False):
+        if type(path) is str:
+            key = path
+            path = Path(path)
+        elif type(path) is Path:
+            key = str(path)
+        else:
+            error = 'path expected to be string or path, got a "%s"'
+            raise TypeError, error % type(path)
+
+        # Cache hit
+        resource = self.cache.get(key)
+        if resource:
+            return resource
+
+        # Load metadata
+        mount = self.mount
+        metadata = '%s/database/%s.metadata' % (mount.target, key)
+        try:
+            metadata = mount.database.get_handler(metadata, cls=Metadata)
+        except LookupError:
+            if soft is False:
+                raise
+            return None
+
+        # Build resource
+        cls = get_resource_class(metadata.format)
+        resource = cls(metadata)
+        resource.context = self
+        resource.path = path
+        self.cache[key] = resource
+        return resource
+
+
+    def get_user(self, credentials):
+        username, password = credentials
+        user = self.get_resource('/users/%s' % username, soft=True)
+        if user and user.authenticate(password):
+            return user
+        return None
+
 
     def get_template(self, path):
         from ikaaro.boot import ui
