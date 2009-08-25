@@ -28,7 +28,7 @@ from itools.core import merge_dicts
 from itools.datatypes import DateTime, String, Unicode
 from itools.gettext import MSG
 from itools.handlers import checkid
-from itools.http import HTTP_OK
+from itools.http import Successful
 from itools.i18n import get_language_name
 from itools.uri import Path, get_reference, get_uri_path
 from itools.vfs import FileName
@@ -488,7 +488,7 @@ class LoginView(STLForm):
         context.user = user
 
         context.message = INFO(u'Welcome!')
-        raise HTTP_OK
+        raise Successful(200)
 
 
 
