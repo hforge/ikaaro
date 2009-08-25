@@ -16,7 +16,7 @@
 
 # Import from itools
 from itools.handlers import File
-from itools.http import Conflict
+from itools.http import ClientError
 from itools.uri import Path
 from itools import vfs
 from itools.web import WebApplication, lock_body
@@ -121,7 +121,7 @@ class CMSApplication(WebApplication):
         try:
             parent.del_resource(name)
         except ConsistencyError:
-            raise Conflict
+            raise ClientError(409)
 
         # Clean the copy cookie if needed
         cut, paths = context.get_cookie('ikaaro_cp', datatype=CopyCookie)
