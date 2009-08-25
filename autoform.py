@@ -216,7 +216,7 @@ class RadioWidget(Widget):
     <stl:block stl:repeat="option options">
       <input type="radio" id="${name}-${option/name}" name="${name}"
         value="${option/name}" checked="${option/selected}" />
-      <label for="${name}_${option/name}">${option/value}</label>
+      <label for="${name}-${option/name}">${option/value}</label>
       <br stl:if="not oneline" />
     </stl:block>""")
 
@@ -275,7 +275,7 @@ class CheckboxWidget(Widget):
     <stl:block stl:repeat="option options">
       <input type="checkbox" id="${name}-${option/name}" name="${name}"
         value="${option/name}" checked="${option/selected}" />
-      <label for="${name}_${option/name}">${option/value}</label>
+      <label for="${name}-${option/name}">${option/value}</label>
       <br stl:if="not oneline" />
     </stl:block>""")
 

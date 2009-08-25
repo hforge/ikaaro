@@ -18,13 +18,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Import from the Standard Library
-from datetime import datetime
-
 # Import from itools
-from itools.csv import Record, Table as TableFile, Property, is_multilingual
+from itools.csv import Record, Table as TableFile, is_multilingual
 from itools.datatypes import Tokens
 from itools.gettext import MSG
+from itools.web import get_context
 
 # Import from ikaaro
 from autoform import get_default_widget
@@ -57,7 +55,18 @@ class Table(File):
             for name, datatype in record_properties.items() ]
 
 
+    def add_new_record(self, record):
+        get_context().server.change_resource(self)
+        self.handler.add_record(record)
+
+
+    def update_record(self, id, **kw):
+        get_context().server.change_resource(self)
+        self.handler.update_record(id, **kw)
+
+
     def del_record(self, id):
+        get_context().server.change_resource(self)
         self.handler.del_record(id)
 
 

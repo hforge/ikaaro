@@ -197,10 +197,10 @@ class Issue(Folder):
         tracker_title = self.parent.get_property('title') or 'Tracker Issue'
         subject = '[%s #%s] %s' % (tracker_title, self.name, title)
         # Notify / Body
-        if context.resource.class_id == 'tracker':
-            uri = context.uri.resolve('%s/;edit' % self.name)
-        else:
+        if isinstance(context.resource, self.__class__):
             uri = context.uri.resolve(';edit')
+        else:
+            uri = context.uri.resolve('%s/;edit' % self.name)
         body = '#%s %s %s\n\n' % (self.name, self.get_property('title'), uri)
         message = MSG(u'The user {title} did some changes.')
         body +=  message.gettext(title=user_title)
