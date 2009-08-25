@@ -44,10 +44,14 @@ from ikaaro.workflow import WorkflowAware
 
 
 
-def get_reference_and_path(path):
+def get_reference_and_path(value):
     """Return the reference associated to the path and the path
     without query/fragment.
     """
+    # Be robust if the path is multilingual (Unicode multiple)
+    path = value
+    if isinstance(path, Unicode):
+        path = Unicode.encode(value)
     ref = get_reference(path)
     return ref, str(ref.path)
 
