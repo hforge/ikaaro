@@ -81,14 +81,6 @@ class CMSContext(WebContext):
         return resource
 
 
-    def get_user(self, credentials):
-        username, password = credentials
-        user = self.get_resource('/users/%s' % username, soft=True)
-        if user and user.authenticate(password):
-            return user
-        return None
-
-
     def get_template(self, path):
         from ikaaro.boot import ui
         return ui.get_template(path)
@@ -122,4 +114,44 @@ class CMSContext(WebContext):
         spool.send_email(to_addr, subject, from_addr=from_addr, text=text,
                         html=html, encoding=encoding,
                         return_receipt=return_receipt, attachment=attachment)
+
+
+    #######################################################################
+    # Search
+    #######################################################################
+    def search(self, query=None, **kw):
+        catalog = self.database.catalog
+        return catalog.search(query, **kw)
+
+
+    #######################################################################
+    # Users
+    #######################################################################
+    def get_user(self, credentials):
+        username, password = credentials
+        user = self.get_user_by_name(username)
+        if user and user.authenticate(password):
+            return user
+        return None
+
+
+    def get_user_by_name(self, name):
+        return self.get_resource('/users/%s' % name, soft=True)
+
+
+    def get_user_by_login(self, login):
+        """Return the user identified by its unique e-mail or username, or
+        return None.
+        """
+        # Search the user by username (login name)
+        results = self.search(username=login)
+        n = len(results)
+        if n == 0:
+            return None
+        if n > 1:
+            error = 'There are %s users in the database identified as "%s"'
+            raise ValueError, error % (n, login)
+        # Get the user
+        brain = results.get_documents()[0]
+        return self.get_user_by_name(brain.name)
 
