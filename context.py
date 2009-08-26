@@ -48,14 +48,13 @@ class CMSContext(WebContext):
 
 
     def get_resource(self, path, soft=False):
-        if type(path) is str:
-            key = path
-            path = Path(path)
-        elif type(path) is Path:
-            key = str(path)
-        else:
-            error = 'path expected to be string or path, got a "%s"'
-            raise TypeError, error % type(path)
+        if type(path) is Path:
+            path = str(path)
+
+        # Get the key
+        path = Path(path)
+        path.endswith_slash = False
+        key = str(path)
 
         # Cache hit
         resource = self.cache.get(key)
