@@ -43,15 +43,13 @@ class DBResource_LastChanges(BrowseForm):
     table_columns = [
         ('date', MSG(u'Last Change')),
         ('username', MSG(u'Author')),
-        ('message', MSG(u'Comment')),
-    ]
+        ('message', MSG(u'Comment'))]
 
 
     def get_items(self, resource, context):
-        root = context.root
         items = resource.get_revisions(content=True)
         for item in items:
-            item['username'] = root.get_user_title(item['username'])
+            item['username'] = context.get_user_title(item['username'])
         return items
 
 
@@ -93,7 +91,7 @@ class DBResource_Changes(STLView):
         # Get the revision data
         namespace = context.database.get_diff(revision)
         author_name = namespace['author_name']
-        namespace['author_name'] = context.root.get_user_title(author_name)
+        namespace['author_name'] = context.get_user_title(author_name)
 
         # Diff
         changes = []
