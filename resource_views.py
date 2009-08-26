@@ -56,9 +56,10 @@ class EditLanguageMenu(ContextMenu):
 
         site_root = resource.get_site_root()
         languages = site_root.get_property('website_languages')
+        uri = get_reference(context.uri)
         return [
             {'title': get_language_name(x),
-             'href': context.uri.replace(content_language=x),
+             'href': uri.replace(content_language=x),
              'class': 'nav-active' if (x == content_language) else None}
             for x in languages ]
 
