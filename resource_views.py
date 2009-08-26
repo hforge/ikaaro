@@ -32,7 +32,7 @@ from itools.i18n import get_language_name
 from itools.uri import Path, get_reference, get_uri_path
 from itools.vfs import FileName
 from itools.web import BaseView, STLForm, INFO, ERROR
-from itools.web import InternalRedirect, FormError
+from itools.web import FormError
 
 # Import from ikaaro
 from autoform import AutoForm, title_widget, description_widget, subject_widget
@@ -121,6 +121,7 @@ class DBResource_Edit(AutoForm):
         resource.set_property('subject', subject, language=language)
         # Ok
         context.message = messages.MSG_CHANGES_SAVED
+        context.redirect()
 
 
 
@@ -487,7 +488,7 @@ class LoginView(STLForm):
         # Internal redirect
         context.user = user
         context.message = INFO(u'Welcome!')
-        raise InternalRedirect(view=None)
+        context.redirect(view=None)
 
 
 
@@ -504,5 +505,5 @@ class LogoutView(BaseView):
         context.user = None
 
         context.message = INFO(u'You Are Now Logged out.')
-        raise InternalRedirect(view=None)
+        context.redirect(view=None)
 
