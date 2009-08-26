@@ -275,7 +275,7 @@ class DBResource(CatalogAware, IResource):
 
 
     def set_property(self, name, value, language=None):
-        get_context().server.change_resource(self)
+        get_context().database.change_resource(self)
         if language:
             value = Property(value, lang=language)
         self.metadata.set_property(name, value)
@@ -472,8 +472,8 @@ class DBResource(CatalogAware, IResource):
 
         # Ok
         revision = revisions[0]
-        root = get_context().root
-        values['last_author'] = root.get_user_title(revision['username'])
+        context = get_context()
+        values['last_author'] = context.get_user_title(revision['username'])
         values['mtime'] = revision['date']
         return values
 
