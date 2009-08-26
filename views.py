@@ -155,7 +155,7 @@ class BrowseForm(STLForm):
         # Content
         items = self.sort_and_batch(resource, context, items)
         if self.table_template is not None:
-            template = resource.get_resource(self.table_template)
+            template = ui.get_template(self.table_template)
             namespace = self.get_table_namespace(resource, context, items)
             table = stl(template, namespace)
 
@@ -212,8 +212,8 @@ class BrowseForm(STLForm):
             namespace['msg'] = self.batch_msg2.gettext(n=total)
 
         # Start & End
-        start = context.query['batch_start']
-        size = context.query['batch_size']
+        start = context.get_query_value('batch_start')
+        size = context.get_query_value('batch_size')
         # If batch_size == 0 => All
         if size == 0:
             size = total
@@ -373,13 +373,11 @@ class SearchForm(BrowseForm):
     search_template = '/ui/generic/browse_search.xml'
     search_schema = {
         'search_field': String,
-        'search_term': Unicode,
-    }
+        'search_term': Unicode}
     search_fields =  [
         ('title', MSG(u'Title')),
         ('text', MSG(u'Text')),
-        ('name', MSG(u'Name')),
-    ]
+        ('name', MSG(u'Name'))]
 
 
     def get_query_schema(self):
@@ -398,7 +396,7 @@ class SearchForm(BrowseForm):
         if self.search_template is None:
             namespace['search'] = None
         else:
-            search_template = resource.get_resource(self.search_template)
+            search_template = ui.get_template(self.search_template)
             search_namespace = self.get_search_namespace(resource, context)
             namespace['search'] = stl(search_template, search_namespace)
 
