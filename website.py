@@ -129,7 +129,7 @@ class WebSite(RoleAware, Folder, VirtualRoot):
     about = AboutView()
     credits = CreditsView()
     license = STLView(access=True, title=MSG(u'License'),
-                      template='/ui/root/license.xml')
+                      template='root/license.xml')
 
     # Calendar views
     monthly_view = MonthlyView()

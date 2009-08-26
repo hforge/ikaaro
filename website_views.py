@@ -240,8 +240,7 @@ class SiteSearchView(SearchForm):
     template = '/ui/website/search.xml'
 
     search_schema = {
-        'site_search_text': Unicode,
-    }
+        'site_search_text': Unicode}
 
 
     def get_namespace(self, resource, context):
@@ -403,7 +402,7 @@ class CreditsView(STLView):
 
     access = True
     title = MSG(u'Credits')
-    template = '/ui/root/credits.xml'
+    template = 'root/credits.xml'
     styles = ['/ui/credits.css']
 
 
