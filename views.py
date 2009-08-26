@@ -19,6 +19,7 @@ from itools.core import merge_dicts
 from itools.datatypes import Boolean, Integer, String, Unicode
 from itools.gettext import MSG
 from itools.stl import stl
+from itools.uri import get_reference
 from itools.web import STLView, STLForm
 from itools.xml import XMLParser
 
@@ -130,7 +131,7 @@ class BrowseForm(STLForm):
     batch_msg2 = MSG(u"There are {n} items.")
 
     # Content
-    table_template = '/ui/generic/browse_table.xml'
+    table_template = 'generic/browse_table.xml'
     table_css = None
     table_columns = []
     table_actions = []
@@ -247,9 +248,8 @@ class BrowseForm(STLForm):
     # Table
     def get_table_head(self, resource, context, items, actions=None):
         # Get from the query
-        query = context.query
-        sort_by = query['sort_by']
-        reverse = query['reverse']
+        sort_by = context.get_query_value('sort_by')
+        reverse = context.get_query_value('reverse')
 
         columns = self._get_table_columns(resource, context)
         columns_ns = []
@@ -267,7 +267,8 @@ class BrowseForm(STLForm):
                     'sortable': False})
             else:
                 # Type: normal
-                base_href = context.uri.replace(sort_by=name)
+                uri = get_reference(context.uri)
+                base_href = uri.replace(sort_by=name)
                 if name == sort_by:
                     sort_up_active = reverse is False
                     sort_down_active = reverse is True
@@ -277,7 +278,7 @@ class BrowseForm(STLForm):
                     'is_checkbox': False,
                     'title': title,
                     'sortable': True,
-                    'href': context.uri.path,
+                    'href': uri.path,
                     'href_up': base_href.replace(reverse=0),
                     'href_down': base_href.replace(reverse=1),
                     'sort_up_active': sort_up_active,
@@ -368,7 +369,7 @@ class BrowseForm(STLForm):
 ###########################################################################
 class SearchForm(BrowseForm):
 
-    template = '/ui/generic/search.xml'
+    template = 'generic/search.xml'
 
     search_template = '/ui/generic/browse_search.xml'
     search_schema = {
@@ -407,9 +408,8 @@ class SearchForm(BrowseForm):
     # The Search Form
     def get_search_namespace(self, resource, context):
         # Get values from the query
-        query = context.query
-        field = query['search_field']
-        term = query['search_term']
+        field = context.get_query_value('search_field')
+        term = context.get_query_value('search_term')
 
         # Build the namespace
         search_fields = [

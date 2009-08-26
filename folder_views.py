@@ -226,16 +226,14 @@ class Folder_BrowseContent(SearchForm):
         sort_by=String(default='mtime'),
         reverse=Boolean(default=True))
     schema = {
-        'ids': String(multiple=True, mandatory=True),
-    }
+        'ids': String(multiple=True, mandatory=True)}
 
     # Search Form
-    search_template = '/ui/folder/browse_search.xml'
+    search_template = 'folder/browse_search.xml'
     search_schema = {
         'search_field': String,
         'search_term': Unicode,
-        'search_subfolders': Boolean(default=False),
-    }
+        'search_subfolders': Boolean(default=False)}
 
     # Table
     table_columns = [
@@ -252,16 +250,17 @@ class Folder_BrowseContent(SearchForm):
 
     def get_search_namespace(self, resource, context):
         namespace = SearchForm.get_search_namespace(self, resource, context)
-        namespace['search_subfolders'] = context.query['search_subfolders']
+        search_subfolders = context.get_query_value('search_subfolders')
+        namespace['search_subfolders'] = search_subfolders
         return namespace
 
 
     def get_items(self, resource, context, *args):
         # Get the parameters from the query
-        query = context.query
-        search_term = query['search_term'].strip()
-        field = query['search_field']
-        search_subfolders = query['search_subfolders']
+        get_query_value = context.get_query_value
+        search_term = get_query_value('search_term').strip()
+        field = get_query_value('search_field')
+        search_subfolders = get_query_value('search_subfolders')
 
         # Build the query
         args = list(args)
@@ -278,14 +277,14 @@ class Folder_BrowseContent(SearchForm):
             query = AndQuery(*args)
 
         # Ok
-        return context.root.search(query)
+        return context.search(query)
 
 
     def sort_and_batch(self, resource, context, results):
-        start = context.query['batch_start']
-        size = context.query['batch_size']
-        sort_by = context.query['sort_by']
-        reverse = context.query['reverse']
+        start = context.get_query_value('batch_start')
+        size = context.get_query_value('batch_size')
+        sort_by = context.get_query_value('sort_by')
+        reverse = context.get_query_value('reverse')
         items = results.get_documents(sort_by=sort_by, reverse=reverse,
                                       start=start, size=size)
 
@@ -297,10 +296,9 @@ class Folder_BrowseContent(SearchForm):
 
         # Access Control (FIXME this should be done before batch)
         user = context.user
-        root = context.root
         allowed_items = []
         for item in items:
-            resource = root.get_resource(item.abspath)
+            resource = context.get_resource(item.abspath)
             ac = resource.get_access_control()
             if ac.is_allowed_to_view(user, resource):
                 allowed_items.append((item, resource))
@@ -347,7 +345,7 @@ class Folder_BrowseContent(SearchForm):
             return format_datetime(brain.mtime, accept=accept)
         elif column == 'last_author':
             # Last author
-            return context.root.get_user_title(brain.last_author)
+            return context.get_user_title(brain.last_author)
         elif column == 'size':
             # Size
             return item_resource.get_human_size()
