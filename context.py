@@ -155,3 +155,10 @@ class CMSContext(WebContext):
         brain = results.get_documents()[0]
         return self.get_user_by_name(brain.name)
 
+
+    def get_user_title(self, username):
+        if username is None:
+            return None
+        user = self.get_user_by_name(username)
+        return user.get_title() if user else None
+

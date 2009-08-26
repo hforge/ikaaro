@@ -113,19 +113,6 @@ class Root(WebSite):
 
 
     ########################################################################
-    # Override itools.web.root.Root
-    ########################################################################
-    def get_user_title(self, username):
-        if username is None:
-            return None
-        users = self.get_resource('users')
-        user = users.get_resource(username, soft=True)
-        if user is None:
-            return username
-        return user.get_title()
-
-
-    ########################################################################
     # Traverse
     ########################################################################
     def _get_resource(self, name):

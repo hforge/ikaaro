@@ -141,16 +141,14 @@ class DBResource_CommitLog(BrowseForm):
         ('checkbox', None),
         ('date', MSG(u'Last Change')),
         ('username', MSG(u'Author')),
-        ('message', MSG(u'Comment')),
-    ]
+        ('message', MSG(u'Comment'))]
     table_actions = [DiffButton]
 
 
     def get_items(self, resource, context):
-        root = context.root
         items = resource.get_revisions(content=True)
         for i, item in enumerate(items):
-            item['username'] = root.get_user_title(item['username'])
+            item['username'] = context.get_user_title(item['username'])
             # Hint to sort revisions quickly
             item['index'] = i
         return items
@@ -205,7 +203,6 @@ class DBResource_Changes(STLView):
     def get_namespace(self, resource, context):
         revision = context.query['revision']
         to = context.query['to']
-        root = context.root
         database = context.database
 
         if to is None:
@@ -217,7 +214,7 @@ class DBResource_Changes(STLView):
                 context.message = ERROR(u"Git failed: {error}", error=error)
                 return {'metadata': None, 'stat': None, 'changes': None}
             author_name = metadata['author_name']
-            metadata['author_name'] = root.get_user_title(author_name)
+            metadata['author_name'] = context.get_user_title(author_name)
             stat = database.get_stats(revision)
             diff = metadata['diff']
         else:
