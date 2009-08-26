@@ -113,27 +113,6 @@ class Root(WebSite):
     ########################################################################
     # Override itools.web.root.Root
     ########################################################################
-    def get_user(self, name):
-        return self.get_resource('users/%s' % name, soft=True)
-
-
-    def get_user_from_login(self, username):
-        """Return the user identified by its unique e-mail or username, or
-        return None.
-        """
-        # Search the user by username (login name)
-        results = self.search(username=username)
-        n = len(results)
-        if n == 0:
-            return None
-        if n > 1:
-            error = 'There are %s users in the database identified as "%s"'
-            raise ValueError, error % (n, username)
-        # Get the user
-        brain = results.get_documents()[0]
-        return self.get_user(brain.name)
-
-
     def get_user_title(self, username):
         if username is None:
             return None
@@ -183,13 +162,6 @@ class Root(WebSite):
 
         target.insert(0, source)
         return target
-
-
-    ########################################################################
-    # Search
-    def search(self, query=None, **kw):
-        catalog = get_context().database.catalog
-        return catalog.search(query, **kw)
 
 
     #######################################################################

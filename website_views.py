@@ -133,8 +133,7 @@ class RegisterForm(AutoForm):
         email = form['email'].strip()
 
         # Do we already have a user with that email?
-        root = context.root
-        user = root.get_user_from_login(email)
+        user = context.get_user_by_login(email)
         if user is not None:
             if not user.has_property('user_must_confirm'):
                 message = u'There is already an active user with that email.'
