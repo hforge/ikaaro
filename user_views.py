@@ -115,13 +115,10 @@ class User_Profile(STLView):
     title = MSG(u'Profile')
     description = MSG(u"User's profile page.")
     icon = 'action_home.png'
-    template = '/ui/user/profile.xml'
+    template = 'user/profile.xml'
 
 
     def get_namespace(self, resource, context):
-        root = context.root
-        user = context.user
-
         ac = resource.get_access_control()
 
         # The icons menu
@@ -132,7 +129,7 @@ class User_Profile(STLView):
             view = resource.get_view(name)
             if view is None:
                 continue
-            if not ac.is_access_allowed(user, resource, view):
+            if not ac.is_access_allowed(context, resource, view):
                 continue
             # Append
             items.append({
@@ -143,12 +140,13 @@ class User_Profile(STLView):
             })
 
         # Ok
+        host = context.host
+        user = context.user
         is_owner = user is not None and user.name == resource.name
         return {
             'items': items,
-            'is_owner_or_admin': is_owner or root.is_admin(user, resource),
-            'user_must_confirm': resource.has_property('user_must_confirm'),
-        }
+            'is_owner_or_admin': is_owner or host.is_admin(user, resource),
+            'user_must_confirm': resource.has_property('user_must_confirm')}
 
 
 

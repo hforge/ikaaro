@@ -311,7 +311,7 @@ class Skin(STLForm):
         }
 
 
-    def find_language(self, resource, context, min=Decimal('0.000001'),
+    def find_language(self, context, min=Decimal('0.000001'),
                       zero=Decimal('0.0')):
         # Set the language cookie if specified by the query.
         # NOTE We do it this way, instead of through a specific action, to
@@ -322,7 +322,7 @@ class Skin(STLForm):
 
         # The default language (give a minimum weight)
         accept = context.accept_language
-        default = resource.get_default_language()
+        default = context.host.get_default_language()
         if accept.get(default, zero) < min:
             accept.set(default, min)
         # User Profile (2.0)
@@ -339,7 +339,7 @@ class Skin(STLForm):
 
     def render(self, content, context):
         resource = context.resource
-        self.find_language(resource, context)
+        self.find_language(context)
 
         # Build the namespace
         namespace = self.build_namespace(context)
@@ -363,7 +363,7 @@ class Skin(STLForm):
 
 
     def POST(self, resource, context):
-        self.find_language(resource, context)
+        self.find_language(context)
         entity = context.method(context.resource, context)
 
         # Most often a post method will render a page
