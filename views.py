@@ -84,7 +84,7 @@ class CompositeForm(CompositeView, STLForm):
 
 class MessageView(STLView):
 
-    template = '/ui/generic/message_view.xml'
+    template = 'generic/message_view.xml'
 
     def get_namespace(self, resource, context):
         message = self.message

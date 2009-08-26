@@ -260,7 +260,7 @@ class ProxyNewInstance(NewInstance):
     collection of resource classes, with radio buttons.
     """
 
-    template = '/ui/base/proxy_new_instance.xml'
+    template = 'base/proxy_new_instance.xml'
     schema = {
         'name': String,
         'title': Unicode,
