@@ -22,6 +22,9 @@ from itools.stl import stl
 from itools.web import BaseView, STLView, STLForm
 from itools.xml import XMLParser
 
+# Import from ikaaro
+from globals import ui
+
 
 """This module contains some generic views used by different resources.
 """
@@ -98,7 +101,7 @@ class IconsView(STLView):
     icon (48x48 pixels), a title and a description.
     """
 
-    template = '/ui/generic/icons_view.xml'
+    template = 'generic/icons_view.xml'
 
     def get_namespace(self, resource, context):
         """TODO Write a docstring explaining the expected namespace.
@@ -122,7 +125,7 @@ class BrowseForm(STLForm):
     }
 
     # Batch
-    batch_template = '/ui/generic/browse_batch.xml'
+    batch_template = 'generic/browse_batch.xml'
     batch_msg1 = MSG(u"There is 1 item.") # FIXME Use plural forms
     batch_msg2 = MSG(u"There are {n} items.")
 
@@ -145,7 +148,7 @@ class BrowseForm(STLForm):
         # Batch
         items = self.get_items(resource, context)
         if self.batch_template is not None:
-            template = resource.get_resource(self.batch_template)
+            template = ui.get_template(self.batch_template)
             namespace = self.get_batch_namespace(resource, context, items)
             batch = stl(template, namespace)
 
@@ -425,7 +428,7 @@ class SearchForm(BrowseForm):
 ###########################################################################
 class ContextMenu(object):
 
-    template = '/ui/generic/menu.xml'
+    template = 'generic/menu.xml'
 
     def get_items(self, resource, context):
         """The input (options) is a tree:
@@ -455,6 +458,6 @@ class ContextMenu(object):
 
     def render(self, resource, context):
         namespace = self.get_namespace(resource, context)
-        template = resource.get_resource(self.template)
+        template = ui.get_template(self.template)
         return stl(template, namespace)
 
