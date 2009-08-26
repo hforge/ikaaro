@@ -28,6 +28,7 @@ from itools.datatypes import Unicode
 from itools.fs import lfs
 from itools.gettext import MSG
 from itools.stl import stl
+from itools.uri import get_reference
 from itools.web import ERROR, INFO, STLForm
 
 # Import from ikaaro
@@ -287,8 +288,8 @@ class Skin(STLForm):
         # The base URI
         path = context.path
         if path and not context.view_name and not path.endswith_slash:
-            path = deepcopy(path)
-            path.endswith_slash = True
+            uri = get_reference(context.uri)
+            uri.path.endswith_slash = True
         else:
             uri = context.uri
 
