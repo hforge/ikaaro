@@ -19,7 +19,7 @@ from itools.uri import Path
 from itools.web import WebContext
 
 # Import from ikaaro
-from ikaaro.globals import spool
+from ikaaro.globals import spool, ui
 from metadata import Metadata
 from registry import get_resource_class
 
@@ -82,7 +82,6 @@ class CMSContext(WebContext):
 
 
     def get_template(self, path):
-        from ikaaro.boot import ui
         return ui.get_template(path)
 
 

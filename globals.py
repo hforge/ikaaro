@@ -14,6 +14,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# Import from itools
+from itools.core import get_abspath
+from itools.web import UI
+
 
 config = None
 spool = None
+
+
+ui_path = get_abspath('ui')
+ui = UI('/ui', ui_path)
