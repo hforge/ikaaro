@@ -50,8 +50,8 @@ class IResource(Resource):
         # Special case: the root
         if not self.path:
             return None
-        path = path[:-1]
-        return context.get_resource(path)
+        path = self.path[:-1]
+        return self.context.get_resource(path)
 
     parent = property(get_parent, None, None, '')
 
