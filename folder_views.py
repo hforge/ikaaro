@@ -93,7 +93,7 @@ class Folder_View(BaseView):
             context.message = ERROR(
                 u'There is not an "index" web page. Could not render this '
                 u'view.')
-            return ''
+            return context.ok('text/html', '')
 
         # Rewrite the URLs
         stream = index.get_html_data()
