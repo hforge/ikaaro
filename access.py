@@ -223,7 +223,7 @@ class RoleAware_AddUser(STLForm):
     title = MSG(u'Add New Member')
     icon = 'card.png'
     description = MSG(u'Grant access to a new user.')
-    template = '/ui/access/add_user.xml'
+    template = 'access/add_user.xml'
     schema = {
         'email': Email(mandatory=True),
         'role': String(mandatory=True),
