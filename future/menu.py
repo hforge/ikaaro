@@ -44,10 +44,14 @@ from ikaaro.workflow import WorkflowAware
 
 
 
-def get_reference_and_path(path):
+def get_reference_and_path(value):
     """Return the reference associated to the path and the path
     without query/fragment.
     """
+    # Be robust if the path is multilingual (Unicode multiple)
+    path = value
+    if type(path) is unicode:
+        path = Unicode.encode(value)
     ref = get_reference(path)
     return ref, str(ref.path)
 
@@ -521,7 +525,7 @@ class Menu(OrderedTable):
         return links
 
 
-    def update_links(self, old_path, new_path):
+    def update_links(self, source, target):
         handler = self.handler
         base = self.get_abspath()
         # FIXME The context is not available when updating the catalog.
@@ -539,9 +543,9 @@ class Menu(OrderedTable):
             else:
                 uri = base.resolve2(path)
             uri = str(uri)
-            if uri == old_path:
+            if uri == source:
                 # Hit the old name
-                new_path2 = base.get_pathto(Path(new_path))
+                new_path2 = base.get_pathto(Path(target))
                 handler.update_record(record.id, **{'path': str(new_path2)})
 
         get_context().server.change_resource(self)

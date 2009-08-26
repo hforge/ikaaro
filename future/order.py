@@ -346,10 +346,10 @@ class ResourcesOrderedTable(OrderedTable):
         return links
 
 
-    def update_links(self, old_path, new_path):
+    def update_links(self, source, target):
         handler = self.handler
-        old_name = Path(old_path).get_name()
-        new_name = Path(new_path).get_name()
+        old_name = Path(source).get_name()
+        new_name = Path(target).get_name()
         for record in handler.get_records_in_order():
             name = handler.get_record_value(record, 'name')
             if name == old_name:

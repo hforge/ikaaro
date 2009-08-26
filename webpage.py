@@ -18,6 +18,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# Import from standard Library
+from copy import deepcopy
+
 # Import from itools
 from itools.core import merge_dicts
 from itools.gettext import MSG
@@ -65,7 +68,7 @@ def _get_links(base, events):
                 continue
             path = uri.path
             # Strip the view
-            if path[-1] == ';download':
+            if path[-1] in (';download', ';thumb'):
                 path = path[:-1]
         else:
             continue
@@ -115,9 +118,9 @@ def _change_link(source, target, base, stream):
             continue
 
         # Strip the view
-        if path[-1] == ';download':
+        if path[-1] in (';download', ';thumb'):
+            view = '/%s' % path[-1]
             path = path[:-1]
-            view = '/;download'
         else:
             view = ''
 
@@ -128,7 +131,11 @@ def _change_link(source, target, base, stream):
             continue
 
         # Update the link
-        attributes[attr_name] = str(base.get_pathto(target)) + view
+        # Build the new reference with the right path
+        new_reference = deepcopy(reference)
+        new_reference.path = str(base.get_pathto(target)) + view
+
+        attributes[attr_name] = str(new_reference)
         yield START_ELEMENT, (tag_uri, tag_name, attributes), line
 
 
