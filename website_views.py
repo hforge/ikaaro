@@ -238,7 +238,7 @@ class SiteSearchView(SearchForm):
 
     access = True
     title = MSG(u'Search')
-    template = '/ui/website/search.xml'
+    template = 'website/search.xml'
 
     search_schema = {
         'site_search_text': Unicode}
@@ -246,7 +246,7 @@ class SiteSearchView(SearchForm):
 
     def get_namespace(self, resource, context):
         namespace = SearchForm.get_namespace(self, resource, context)
-        namespace['text'] = context.query['site_search_text'].strip()
+        namespace['text'] = context.get_query_value('site_search_text').strip()
         return namespace
 
 
@@ -258,13 +258,13 @@ class SiteSearchView(SearchForm):
 
 
     def get_search_namespace(self, resource, context):
-        text = context.query['site_search_text']
+        text = context.get_query_value('site_search_text')
         return {'text': text}
 
 
-    search_template = '/ui/website/search_form.xml'
+    search_template = 'website/search_form.xml'
     def get_items(self, resource, context):
-        text = context.query['site_search_text'].strip()
+        text = context.get_query_value('site_search_text').strip()
         if not text:
             return []
 
@@ -304,12 +304,12 @@ class SiteSearchView(SearchForm):
 
     def sort_and_batch(self, resource, context, items):
         # Batch
-        start = context.query['batch_start']
-        size = context.query['batch_size']
+        start = context.get_query_value('batch_start')
+        size = context.get_query_value('batch_size')
         return items[start:start+size]
 
 
-    table_template = '/ui/website/search_table.xml'
+    table_template = 'website/search_table.xml'
     def get_table_namespace(self, resource, context, items):
         # Build the namespace
         site_root = resource.get_site_root()
