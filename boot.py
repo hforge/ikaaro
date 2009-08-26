@@ -15,17 +15,17 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import get_abspath
 from itools.datatypes import Boolean, Integer, String, Tokens
 from itools.handlers import ConfigFile, ro_database
 from itools.log import Logger, register_logger
 from itools.log import DEBUG, INFO, WARNING, ERROR, FATAL
 from itools.mail import MailSpool
-from itools.web import UI, WebLogger
+from itools.web import WebLogger
 
 # Import from ikaaro
 from app import CMSApplication
 from context import CMSContext
+from globals import ui
 from ikaaro import globals
 from server import CMSServer
 
@@ -53,11 +53,6 @@ class CMSConfig(ConfigFile):
         'profile-time': Boolean(default=False),
         'profile-space': Boolean(default=False),
         'index-text': Boolean(default=True)}
-
-
-
-ui_path = get_abspath('ui')
-ui = UI('/ui', ui_path)
 
 
 
