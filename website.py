@@ -60,12 +60,6 @@ class WebSite(RoleAware, Folder, VirtualRoot):
     __fixed_handlers__ = ['skin', 'index']
 
 
-    def _get_resource(self, name):
-        if name in ('users', 'users.metadata'):
-            return self.parent._get_resource(name)
-        return Folder._get_resource(self, name)
-
-
     @classmethod
     def get_metadata_schema(cls):
         schema = Folder.get_metadata_schema()
