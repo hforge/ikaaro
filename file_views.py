@@ -31,12 +31,10 @@ from itools.http.headers import Authorization
 from itools.i18n import guess_language
 from itools.uri import get_reference, get_uri_name
 from itools.vfs import FileName
-from itools.web import BaseView, STLView, STLForm, INFO, ERROR
-from itools.xapian import PhraseQuery
+from itools.web import BaseView, STLView, INFO, ERROR
 
 # Import from ikaaro
 from datatypes import FileDataType, ImageWidth
-from folder_views import Folder_BrowseContent
 from forms import title_widget, file_widget, description_widget, subject_widget
 from forms import timestamp_widget
 from forms import FileWidget
@@ -291,37 +289,6 @@ class File_ExternalEdit(BaseView):
 
         response.set_header('Content-Type', 'application/x-zope-edit')
         return data
-
-
-
-class File_Backlinks(Folder_BrowseContent):
-    """Backlinks are the list of resources pointing to this resource.  This
-    view answers the question "where is this resource used?" You'll see all
-    WebPages and WikiPages (for example) referencing it.  If the list is
-    empty, you can consider it is "orphan".
-    """
-
-    access = 'is_allowed_to_view'
-    title = MSG(u"Backlinks")
-    icon = 'rename.png'
-
-    search_template = None
-    search_schema = {}
-
-    # Skip AddResourceMenu
-    context_menus = []
-
-    def get_table_columns(self, resource, context):
-        cols = Folder_BrowseContent.get_table_columns(self, resource, context)
-        return [ col for col in cols if col[0] != 'checkbox' ]
-
-
-    def get_items(self, resource, context):
-        query = PhraseQuery('links', str(resource.get_canonical_path()))
-        return context.root.search(query)
-
-
-    table_actions = []
 
 
 

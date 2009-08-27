@@ -25,7 +25,6 @@ from datetime import datetime
 # Import from itools
 from itools.core import send_subprocess, read_subprocess
 from itools.datatypes import Unicode, String, Integer, Boolean, DateTime
-from itools.gettext import MSG
 from itools.uri import resolve_uri
 from itools.web import Resource, get_context
 from itools.xapian import CatalogAware, PhraseQuery
@@ -34,7 +33,7 @@ from itools.xapian import CatalogAware, PhraseQuery
 from lock import Lock
 from metadata import Metadata
 from registry import register_field
-from resource_views import DBResource_Edit
+from resource_views import DBResource_Edit, DBResource_Backlinks
 from resource_views import DBResource_AddImage, DBResource_AddLink
 from resource_views import LoginView, LogoutView
 from resource_views import Put_View, Delete_View, Lock_View
@@ -618,6 +617,7 @@ class DBResource(CatalogAware, IResource):
     add_link = DBResource_AddLink()
     last_changes = DBResource_LastChanges()
     changes = DBResource_Changes()
+    backlinks = DBResource_Backlinks()
     http_put = Put_View()
     http_delete = Delete_View()
     http_lock = Lock_View()
