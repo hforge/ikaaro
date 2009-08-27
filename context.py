@@ -31,55 +31,6 @@ class CMSContext(WebContext):
         self.cache = {}
 
 
-    def get_host(self, hostname):
-        # Check we have a URI
-        if hostname is None:
-            return self.get_resource('/')
-
-        # The site root depends on the host
-        mount = self.mount
-        results = mount.database.catalog.search(vhosts=hostname)
-        if len(results) == 0:
-            return self.get_resource('/')
-
-        documents = results.get_documents()
-        path = documents[0].abspath
-        return root.get_resource(path)
-
-
-    def get_resource(self, path, soft=False):
-        if type(path) is Path:
-            path = str(path)
-
-        # Get the key
-        path = Path(path)
-        path.endswith_slash = False
-        key = str(path)
-
-        # Cache hit
-        resource = self.cache.get(key)
-        if resource:
-            return resource
-
-        # Load metadata
-        mount = self.mount
-        metadata = '%s/database/%s.metadata' % (mount.target, key)
-        try:
-            metadata = mount.database.get_handler(metadata, cls=Metadata)
-        except LookupError:
-            if soft is False:
-                raise
-            return None
-
-        # Build resource
-        cls = get_resource_class(metadata.format)
-        resource = cls(metadata)
-        resource.context = self
-        resource.path = path
-        self.cache[key] = resource
-        return resource
-
-
     def get_template(self, path):
         return ui.get_template(path)
 
@@ -112,6 +63,58 @@ class CMSContext(WebContext):
         spool.send_email(to_addr, subject, from_addr=from_addr, text=text,
                         html=html, encoding=encoding,
                         return_receipt=return_receipt, attachment=attachment)
+
+
+    #######################################################################
+    # Host & Resources
+    #######################################################################
+    def get_host(self, hostname):
+        # Check we have a URI
+        if hostname is None:
+            return '/'
+
+        # The site root depends on the host
+        catalog = self.mount.database.catalog
+        results = catalog.search(vhosts=hostname)
+        n = len(results)
+        if n == 0:
+            return '/'
+
+        documents = results.get_documents()
+        return documents[0].abspath
+
+
+    def get_resource(self, path, soft=False):
+        if type(path) is Path:
+            path = str(path)
+
+        # Get the key
+        path = Path(path)
+        path.endswith_slash = False
+        key = str(path)
+
+        # Cache hit
+        resource = self.cache.get(key)
+        if resource:
+            return resource
+
+        # Load metadata
+        mount = self.mount
+        meta = '%s/database/%s/%s.metadata' % (mount.target, self.host, path)
+        try:
+            metadata = mount.database.get_handler(meta, cls=Metadata)
+        except LookupError:
+            if soft is False:
+                raise
+            return None
+
+        # Build resource
+        cls = get_resource_class(metadata.format)
+        resource = cls(metadata)
+        resource.context = self
+        resource.path = path
+        self.cache[key] = resource
+        return resource
 
 
     #######################################################################

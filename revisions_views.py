@@ -197,8 +197,7 @@ class DBResource_Changes(STLView):
 
     query_schema = {
         'revision': String(mandatory=True),
-        'to': String,
-        }
+        'to': String}
 
     def get_namespace(self, resource, context):
         revision = context.query['revision']
