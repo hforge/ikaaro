@@ -27,7 +27,6 @@ from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.http import get_context
 from itools.web import FormError
-from itools.xapian import AndQuery, PhraseQuery
 
 # Import from ikaaro
 from autoform import AutoForm, DateWidget, RadioWidget, TextWidget
