@@ -84,7 +84,7 @@ class NewInstanceByDate(AutoForm):
 
     def get_value(self, resource, context, name, datatype):
         if name in self.get_query_schema():
-            value = context.query[name]
+            value = context.get_query_value(name)
             if value is not None:
                 return value
         return AutoForm.get_value(self, resource, context, name, datatype)
