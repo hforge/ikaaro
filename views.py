@@ -116,7 +116,7 @@ class IconsView(STLView):
 ###########################################################################
 class BrowseForm(STLForm):
 
-    template = '/ui/generic/browse.xml'
+    template = 'generic/browse.xml'
 
     query_schema = {
         'batch_start': Integer(default=0),

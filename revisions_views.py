@@ -155,10 +155,10 @@ class DBResource_CommitLog(BrowseForm):
 
 
     def sort_and_batch(self, resource, context, results):
-        start = context.query['batch_start']
-        size = context.query['batch_size']
-        sort_by = context.query['sort_by']
-        reverse = context.query['reverse']
+        start = context.get_query_value('batch_start')
+        size = context.get_query_value('batch_size')
+        sort_by = context.get_query_value('sort_by')
+        reverse = context.get_query_value('reverse')
 
         # Do not give a traceback if 'sort_by' has an unexpected value
         if sort_by not in [ x[0] for x in self.table_columns ]:
@@ -193,7 +193,7 @@ class DBResource_Changes(STLView):
 
     access = 'is_admin'
     title = MSG(u'Changes')
-    template = '/ui/revisions/changes.xml'
+    template = 'revisions/changes.xml'
 
     query_schema = {
         'revision': String(mandatory=True),
