@@ -15,6 +15,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
+from itools.core import get_abspath
+from itools.handlers import ConfigFile
 from itools.uri import Path
 from itools.web import WebContext
 from itools.xapian import OrQuery, PhraseQuery, StartQuery
@@ -51,6 +53,35 @@ class CMSContext(WebContext):
         spool.send_email(to_addr, subject, from_addr=from_addr, text=text,
                         html=html, encoding=encoding,
                         return_receipt=return_receipt)
+
+
+    def load_software_languages(self):
+        # Load defaults (ikaaro)
+        setup = get_abspath('setup.conf')
+        setup = ConfigFile(setup)
+        source = setup.get_value('source_language')
+        target = setup.get_value('target_languages')
+
+        # Get the root class
+        database = self.mount.database
+        metadata = '%s/database/.metadata' % self.mount.target
+        metadata = database.get_handler(metadata, cls=Metadata)
+        if metadata.format != 'iKaaro':
+            # A package based on itools
+            cls = get_resource_class(metadata.format)
+            exec('import %s as pkg' % cls.__module__.split('.', 1)[0])
+            setup = Path(pkg.__path__[0]).resolve_name('setup.conf')
+            setup = ConfigFile(str(setup))
+            source = setup.get_value('source_language', default=source)
+            target = setup.get_value('target_languages', default=target)
+
+        # Calculate
+        target = target.split()
+        if source in target:
+            target.remove(source)
+
+        target.insert(0, source)
+        return target
 
 
     #######################################################################

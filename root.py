@@ -26,13 +26,11 @@ from email.Utils import formatdate
 from email.header import Header
 
 # Import from itools
-from itools.core import get_abspath
 from itools.datatypes import String
 from itools.gettext import MSG
-from itools.handlers import ConfigFile, RWDatabase
+from itools.handlers import RWDatabase
 from itools.http import get_context
 from itools.stl import stl
-from itools.uri import Path
 from itools.web import BaseView
 
 # Import from ikaaro
@@ -41,13 +39,6 @@ from registry import register_resource_class, get_resource_class
 from user import UserFolder
 from utils import crypt_password
 from website import WebSite
-
-
-# itools source and target languages
-config = get_abspath('setup.conf')
-config = ConfigFile(config)
-itools_source_language = config.get_value('source_language')
-itools_target_languages = config.get_value('target_languages')
 
 
 # Force email to send UTF-8 mails in plain text
@@ -111,40 +102,15 @@ class Root(WebSite):
 
 
     ########################################################################
-    # Traverse
+    # API
     ########################################################################
     def _get_names(self):
         names = [ x for x in Folder._get_names(self) if x ]
         return names + ['ui']
 
 
-    ########################################################################
-    # API
-    ########################################################################
     def get_document_types(self):
         return WebSite.get_document_types(self) + [WebSite]
-
-
-    def get_available_languages(self):
-        """Returns the language codes for the user interface.
-        """
-        source = itools_source_language
-        target = itools_target_languages
-        # A package based on itools
-        cls = self.__class__
-        if cls is not Root:
-            exec('import %s as pkg' % cls.__module__.split('.', 1)[0])
-            config = Path(pkg.__path__[0]).resolve_name('setup.conf')
-            config = ConfigFile(str(config))
-            source = config.get_value('source_language', default=source)
-            target = config.get_value('target_languages', default=target)
-
-        target = target.split()
-        if source in target:
-            target.remove(source)
-
-        target.insert(0, source)
-        return target
 
 
     #######################################################################

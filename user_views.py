@@ -227,23 +227,19 @@ class User_EditPreferences(STLForm):
     title = MSG(u'Edit Preferences')
     description = MSG(u'Set your preferred language.')
     icon = 'preferences.png'
-    template = '/ui/user/edit_preferences.xml'
+    template = 'user/edit_preferences.xml'
     schema = {
         'user_language': String,
     }
 
 
     def get_namespace(self, resource, context):
-        root = context.root
-        user = context.user
-
-        # Languages
         user_language = resource.get_property('user_language')
         languages = [
             {'code': code,
              'name': get_language_name(code),
              'is_selected': code == user_language}
-            for code in root.get_available_languages() ]
+            for code in context.software_languages ]
 
         return {'languages': languages}
 
