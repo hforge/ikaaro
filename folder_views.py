@@ -375,7 +375,7 @@ class Folder_BrowseContent(SearchForm):
         ids = form['ids']
 
         # Clean the copy cookie if needed
-        cut, paths = context.get_cookie('ikaaro_cp', type=CopyCookie)
+        cut, paths = context.get_cookie('ikaaro_cp', datatype=CopyCookie)
 
         # Remove resources
         removed = []

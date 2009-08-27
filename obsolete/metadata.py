@@ -19,7 +19,7 @@
 from itools.core import freeze
 from itools.datatypes import DataType, String, Unicode, XMLContent
 from itools.handlers import File
-from itools.web import get_context
+from itools.http import get_context
 from itools.xml import xml_uri, XMLParser, START_ELEMENT, END_ELEMENT, TEXT
 
 # Import from ikaaro
