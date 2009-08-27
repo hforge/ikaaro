@@ -18,7 +18,7 @@
 from itools.core import merge_dicts
 from itools.datatypes import String, Tokens
 from itools.gettext import MSG
-from itools.uri import Path
+from itools.uri import resolve_uri2
 from itools.stl import set_prefix
 from itools.web import INFO, get_context
 from itools.xapian import AndQuery, OrQuery, PhraseQuery, NotQuery
@@ -330,30 +330,30 @@ class ResourcesOrderedTable(OrderedTable):
     def get_ordered_names(self):
         handler = self.handler
         for record in handler.get_records_in_order():
-            yield record.name
+            yield handler.get_record_value(record, 'name')
 
 
     def get_links(self):
-        base = self.get_canonical_path()
+        base = self.get_order_root().get_canonical_path()
         handler = self.handler
         links = []
 
-        for record in handler.get_records_in_order():
-            # Target resources
-            path = handler.get_record_value(record, 'name')
-            links.append(str(base.resolve(path)))
+        for name in self.get_ordered_names():
+            links.append(str(resolve_uri2(base, name)))
 
         return links
 
 
     def update_links(self, source, target):
+        base = self.get_order_root().get_canonical_path()
         handler = self.handler
-        old_name = Path(source).get_name()
-        new_name = Path(target).get_name()
+
         for record in handler.get_records_in_order():
             name = handler.get_record_value(record, 'name')
-            if name == old_name:
-                handler.update_record(record.id, **{'name': new_name})
+            path = str(resolve_uri2(base, name))
+            if path == source:
+                new_path = str(base.get_pathto(target))
+                handler.update_record(record.id, **{'name': new_path})
 
         get_context().server.change_resource(self)
 
