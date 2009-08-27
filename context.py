@@ -85,6 +85,40 @@ class CMSContext(WebContext):
         return documents[0].name
 
 
+    def _get_resource(self, key, path, soft):
+        # Step 1. Find the physical path to the metadata
+        base = '%s/database' % self.mount.target
+        if path:
+            # Host=whatever, Path=/users[...]
+            if path[0] == 'users':
+                metadata = '%s%s.metadata' % (base, key)
+            # Host=host, Path=/...
+            elif self.host:
+                metadata = '%s/%s%s.metadata' % (base, self.host, key)
+            # Host=None, Path=/...
+            else:
+                metadata = '%s%s.metadata' % (base, key)
+        elif self.host:
+            # Host=host, Path=/
+            metadata = '%s/%s.metadata' % (base, self.host)
+        else:
+            # Host=None, Path=/
+            metadata = '%s/.metadata' % base
+
+        # Step 2. Load the metadata
+        database = self.mount.database
+        try:
+            metadata = database.get_handler(metadata, cls=Metadata)
+        except LookupError:
+            if soft is False:
+                raise
+            return None
+
+        # Step 3. Return the resource
+        cls = get_resource_class(metadata.format)
+        return cls(metadata)
+
+
     def get_resource(self, path, soft=False):
         if type(path) is Path:
             path = str(path)
@@ -99,25 +133,9 @@ class CMSContext(WebContext):
         if resource:
             return resource
 
-        # Load metadata
-        target = self.mount.target
-        if self.host is None:
-            metadata = '%s/database%s.metadata' % (target, key)
-        elif key == '/':
-            metadata = '%s/database/%s.metadata' % (target, self.host)
-        else:
-            metadata = '%s/database/%s%s.metadata' % (target, self.host, key)
-        database = self.mount.database
-        try:
-            metadata = database.get_handler(metadata, cls=Metadata)
-        except LookupError:
-            if soft is False:
-                raise
+        resource = self._get_resource(key, path, soft)
+        if resource is None:
             return None
-
-        # Build resource
-        cls = get_resource_class(metadata.format)
-        resource = cls(metadata)
         resource.context = self
         resource.path = path
         self.cache[key] = resource
@@ -127,7 +145,7 @@ class CMSContext(WebContext):
     #######################################################################
     # Search
     #######################################################################
-    def load_partial_search(self):
+    def load__search(self):
         if self.host is None:
             return None
 
@@ -141,7 +159,7 @@ class CMSContext(WebContext):
 
 
     def search(self, query=None, **kw):
-        results = self.partial_search
+        results = self._search
         if results:
             return results.search(query, **kw)
 
@@ -152,6 +170,16 @@ class CMSContext(WebContext):
     #######################################################################
     # Users
     #######################################################################
+    def load__users_search(self):
+        catalog = self.database.catalog
+        return catalog.search(format='user')
+
+
+    def search_users(self, query=None, **kw):
+        results = self._users_search
+        return results.search(query, **kw)
+
+
     def get_user(self, credentials):
         username, password = credentials
         user = self.get_user_by_name(username)
@@ -169,7 +197,7 @@ class CMSContext(WebContext):
         return None.
         """
         # Search the user by username (login name)
-        results = self.search(username=login)
+        results = self.search_users(username=login)
         n = len(results)
         if n == 0:
             return None

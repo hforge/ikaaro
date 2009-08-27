@@ -115,10 +115,6 @@ class Root(WebSite):
     ########################################################################
     # Traverse
     ########################################################################
-    def _get_resource(self, name):
-        return Folder._get_resource(self, name)
-
-
     def _get_names(self):
         names = [ x for x in Folder._get_names(self) if x ]
         return names + ['ui']
