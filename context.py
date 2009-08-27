@@ -17,6 +17,7 @@
 # Import from itools
 from itools.uri import Path
 from itools.web import WebContext
+from itools.xapian import OrQuery, PhraseQuery, StartQuery
 
 # Import from ikaaro
 from ikaaro.globals import spool, ui
@@ -71,17 +72,17 @@ class CMSContext(WebContext):
     def get_host(self, hostname):
         # Check we have a URI
         if hostname is None:
-            return '/'
+            return None
 
         # The site root depends on the host
         catalog = self.mount.database.catalog
         results = catalog.search(vhosts=hostname)
         n = len(results)
         if n == 0:
-            return '/'
+            return None
 
         documents = results.get_documents()
-        return documents[0].abspath
+        return documents[0].name
 
 
     def get_resource(self, path, soft=False):
@@ -99,10 +100,16 @@ class CMSContext(WebContext):
             return resource
 
         # Load metadata
-        mount = self.mount
-        meta = '%s/database/%s/%s.metadata' % (mount.target, self.host, path)
+        target = self.mount.target
+        if self.host is None:
+            metadata = '%s/database%s.metadata' % (target, key)
+        elif key == '/':
+            metadata = '%s/database/%s.metadata' % (target, self.host)
+        else:
+            metadata = '%s/database/%s%s.metadata' % (target, self.host, key)
+        database = self.mount.database
         try:
-            metadata = mount.database.get_handler(meta, cls=Metadata)
+            metadata = database.get_handler(metadata, cls=Metadata)
         except LookupError:
             if soft is False:
                 raise
@@ -121,12 +128,13 @@ class CMSContext(WebContext):
     # Search
     #######################################################################
     def load_partial_search(self):
-        if self.host == '/':
+        if self.host is None:
             return None
 
+        abspath = '/%s' % self.host
         query = OrQuery(
             PhraseQuery('abspath', abspath),
-            StartQuery('abspath', self.host + '/'))
+            StartQuery('abspath', '%s/' % abspath))
 
         catalog = self.database.catalog
         return catalog.search(query)
