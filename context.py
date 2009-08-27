@@ -120,7 +120,23 @@ class CMSContext(WebContext):
     #######################################################################
     # Search
     #######################################################################
+    def load_partial_search(self):
+        if self.host == '/':
+            return None
+
+        query = OrQuery(
+            PhraseQuery('abspath', abspath),
+            StartQuery('abspath', self.host + '/'))
+
+        catalog = self.database.catalog
+        return catalog.search(query)
+
+
     def search(self, query=None, **kw):
+        results = self.partial_search
+        if results:
+            return results.search(query, **kw)
+
         catalog = self.database.catalog
         return catalog.search(query, **kw)
 

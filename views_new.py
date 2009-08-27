@@ -34,7 +34,6 @@ from autoform import AutoForm, DateWidget, RadioWidget, TextWidget
 from autoform import name_widget, title_widget
 import messages
 from registry import get_resource_class, get_document_types
-from utils import get_base_path_query
 from views import ContextMenu
 
 
@@ -190,19 +189,9 @@ class PathEnumerate(Enumerate):
 
     @classmethod
     def get_options(cls):
-        context = get_context()
-
-        # Build the query
-        site_root = context.site_root
-        base_path = site_root.get_abspath()
-        base_path = str(base_path)
-        query = AndQuery(
-            get_base_path_query(base_path, include_container=True),
-            PhraseQuery('is_folder', True))
-
         # Search
-        root = context.root
-        brains = root.search(query)
+        context = get_context()
+        brains = context.search(is_folder=True)
 
         # The namespace
         options = [
