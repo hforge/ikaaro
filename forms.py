@@ -92,6 +92,7 @@ class Widget(object):
 
     size = None
     tip = None
+    suffix = None
     type = 'text'
 
     template = list(XMLParser(
@@ -646,6 +647,7 @@ class AutoForm(STLForm):
             widget_namespace['multiple'] = datatype.multiple
             widget_namespace['is_date'] = issubclass(datatype, Date)
             widget_namespace['tip'] = widget.tip
+            widget_namespace['suffix'] = widget.suffix
             widget_namespace['widget'] = widget.to_html(datatype, value)
             ns_widgets.append(widget_namespace)
 
