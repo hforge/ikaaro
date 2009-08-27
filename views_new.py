@@ -240,7 +240,7 @@ class NewInstance(NewInstanceByDate):
 
     def get_container(self, context, form):
         path = form['path']
-        return context.site_root.get_resource(path)
+        return context.get_resource(path)
 
 
 
