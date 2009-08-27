@@ -170,9 +170,9 @@ class NewInstanceByDate(AutoForm):
         self.modify_resource(resource, context, form, child)
 
         # 4. Ok
-        goto = child.get_abspath()
-        goto = str(goto)
-        return context.come_back(messages.MSG_NEW_RESOURCE, goto=goto)
+        context.message = messages.MSG_NEW_RESOURCE
+        location = str(child.path)
+        context.created(location)
 
 
 
