@@ -18,9 +18,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Import from the Standard Library
-from datetime import datetime
-
 # Import from itools
 from itools.core import guess_all_extensions, merge_dicts
 from itools.datatypes import String
@@ -40,7 +37,7 @@ from registry import register_resource_class
 from resource_ import DBResource
 from workflow import WorkflowAware
 from file_views import File_NewInstance, File_Download, File_View
-from file_views import File_Edit, File_ExternalEdit, File_Backlinks
+from file_views import File_Edit, File_ExternalEdit
 from file_views import Image_Thumbnail, Image_View, Video_View, Archive_View
 from file_views import Flash_View
 
@@ -201,7 +198,6 @@ class File(WorkflowAware, DBResource):
         icon='external.png',
         template='/ui/file/externaledit.xml')
     external_edit = File_ExternalEdit()
-    backlinks = File_Backlinks()
 
 
     #######################################################################

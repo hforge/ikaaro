@@ -33,11 +33,13 @@ from itools.uri import Path, get_reference, get_uri_path
 from itools.vfs import FileName
 from itools.web import BaseView, STLForm, INFO, ERROR
 from itools.web import FormError
+from itools.xapian import PhraseQuery
 
 # Import from ikaaro
 from autoform import AutoForm, title_widget, description_widget, subject_widget
 from autoform import timestamp_widget
 from datatypes import FileDataType, CopyCookie
+from folder_views import Folder_BrowseContent
 import messages
 from registry import get_resource_class
 from utils import reduce_string
@@ -122,6 +124,34 @@ class DBResource_Edit(AutoForm):
         # Ok
         context.message = messages.MSG_CHANGES_SAVED
         context.redirect()
+
+
+
+class DBResource_Backlinks(Folder_BrowseContent):
+    """Backlinks are the list of resources pointing to this resource.  This
+    view answers the question "where is this resource used?" You'll see all
+    WebPages and WikiPages (for example) referencing it.  If the list is
+    empty, you can consider it is "orphan".
+    """
+
+    access = 'is_allowed_to_view'
+    title = MSG(u"Backlinks")
+    icon = 'rename.png'
+
+    search_template = None
+    search_schema = {}
+
+    def get_table_columns(self, resource, context):
+        cols = Folder_BrowseContent.get_table_columns(self, resource, context)
+        return [ col for col in cols if col[0] != 'checkbox' ]
+
+
+    def get_items(self, resource, context):
+        query = PhraseQuery('links', str(resource.get_canonical_path()))
+        return context.root.search(query)
+
+
+    table_actions = []
 
 
 
