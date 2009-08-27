@@ -64,10 +64,10 @@ class ZoomMenu(ContextMenu):
     title = MSG(u'Zoom')
 
     def get_items(self, resource, context):
-        uri = context.uri
+        uri = get_reference(context.uri)
 
         # Compute previous and next sizes
-        current_size = context.query['size']
+        current_size = context.get_query_value('size')
         min_size = resource.MIN_SIZE
         max_size = resource.MAX_SIZE
         current_size = max(min_size, min(current_size, max_size))
@@ -87,8 +87,7 @@ class ZoomMenu(ContextMenu):
              'href': uri.replace(size=next_size)},
             {'title': MSG(u'Zoom Out'),
              'src': '/ui/icons/16x16/zoom_out.png',
-             'href': uri.replace(size=previous_size)}
-        ]
+             'href': uri.replace(size=previous_size)}]
 
 
 
@@ -587,7 +586,7 @@ class Folder_PreviewContent(Folder_BrowseContent):
 
     context_menus = Folder_BrowseContent.context_menus + [ZoomMenu()]
     # Table
-    table_template = '/ui/folder/browse_image.xml'
+    table_template = 'folder/browse_image.xml'
 
 
     def get_query_schema(self):
@@ -608,12 +607,12 @@ class Folder_PreviewContent(Folder_BrowseContent):
 
     def get_table_head(self, resource, context, items, actions=None):
         # Get from the query
-        query = context.query
-        sort_by = query['sort_by']
-        reverse = query['reverse']
+        sort_by = context.get_query_value('sort_by')
+        reverse = context.get_query_value('reverse')
 
         columns = self._get_table_columns(resource, context)
         columns_ns = []
+        uri = get_reference(context.uri)
         for name, title, sortable in columns:
             if name == 'checkbox':
                 # Type: checkbox
@@ -642,18 +641,16 @@ class Folder_PreviewContent(Folder_BrowseContent):
                     'is_checkbox': False,
                     'title': title,
                     'order': order,
-                    'href': context.uri.replace(**kw),
-                    })
+                    'href': uri.replace(**kw)})
 
 
     def get_table_namespace(self, resource, context, items):
         # Get from the query
-        query = context.query
-        width = query['width']
-        height = query['height']
+        width = context.get_query_value('width')
+        height = context.get_query_value('height')
 
         # (0) Zoom
-        current_size = query['size']
+        current_size = context.get_query_value('size')
         min_size = resource.MIN_SIZE
         max_size = resource.MAX_SIZE
         current_size = max(min_size, min(current_size, max_size))
