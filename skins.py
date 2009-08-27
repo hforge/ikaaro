@@ -180,8 +180,8 @@ class Skin(STLForm):
         user = context.user
 
         if user is None:
-            host = context.host
-            joinisopen = host.is_allowed_to_register(user, host)
+            root = context.get_resource('/')
+            joinisopen = root.is_allowed_to_register(user, root)
             return {'info': None, 'joinisopen': joinisopen}
 
         home = '/users/%s' % user.name

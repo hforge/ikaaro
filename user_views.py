@@ -140,12 +140,12 @@ class User_Profile(STLView):
             })
 
         # Ok
-        host = context.host
+        root = context.get_resource('/')
         user = context.user
         is_owner = user is not None and user.name == resource.name
         return {
             'items': items,
-            'is_owner_or_admin': is_owner or host.is_admin(user, resource),
+            'is_owner_or_admin': is_owner or root.is_admin(user, resource),
             'user_must_confirm': resource.has_property('user_must_confirm')}
 
 
