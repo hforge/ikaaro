@@ -338,7 +338,7 @@ class Folder_BrowseContent(SearchForm):
             view = item_resource.get_view(None)
             if view is None:
                 return id
-            href = '%s/' % context.get_link(item_resource)
+            href = '%s/' % item_resource.path
             return id, href
         elif column == 'title':
             # Title

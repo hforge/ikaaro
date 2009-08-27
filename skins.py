@@ -257,8 +257,7 @@ class Skin(STLForm):
         context_menus = list(context_menus)
 
         # The favicon.ico
-        host = context.host
-        resource = host.get_resource('favicon', soft=True)
+        resource = context.get_resource('/favicon', soft=True)
         if resource:
             favicon_href = '/favicon/;download'
             favicon_type = resource.metadata.format
@@ -279,9 +278,6 @@ class Skin(STLForm):
         else:
             uri = context.uri
 
-        # In case of UI objects, fallback to site root
-        base_path = context.get_link(here)
-
         # The view
         view = context.view
 
@@ -295,8 +291,8 @@ class Skin(STLForm):
             'scripts': self.get_scripts(context),
             'meta_tags': self.get_meta_tags(context),
             # Log in/out
-            'login': '%s/;login' % base_path,
-            'logout': '%s/;logout' % base_path,
+            'login': '%s/;login' % here.path,
+            'logout': '%s/;logout' % here.path,
             # User
             'user': self.get_user_menu(context),
             # Location & Views
@@ -323,7 +319,8 @@ class Skin(STLForm):
 
         # The default language (give a minimum weight)
         accept = context.accept_language
-        default = context.host.get_default_language()
+        root = context.get_resource('/')
+        default = root.get_default_language()
         if accept.get(default, zero) < min:
             accept.set(default, min)
         # User Profile (2.0)
