@@ -25,6 +25,8 @@
         </dt>
         <dd>
           ${widget/widget}
+          <span stl:if="widget/suffix"
+            class="field-suffix">${widget/suffix}</span>
         </dd>
       </stl:block>
     </dl>
