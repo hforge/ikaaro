@@ -19,15 +19,17 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import merge_dicts
+from itools.core import get_abspath, merge_dicts
 from itools.datatypes import DataType, Date, Enumerate, Boolean
 from itools.gettext import MSG
 from itools.html import stream_to_str_as_xhtml, stream_to_str_as_html
 from itools.html import xhtml_doctype, sanitize_stream
 from itools.http import get_context
 from itools.stl import stl
+from itools import vfs
 from itools.web import STLForm
 from itools.xml import XMLParser
+from globals import ui
 
 # Import from ikaaro
 from ikaaro.workflow import get_workflow_preview
@@ -445,7 +447,7 @@ class ImageSelectorWidget(PathSelectorWidget):
 
 class RTEWidget(Widget):
 
-    template = '/ui/tiny_mce/rte.xml'
+    template = 'tiny_mce/rte.xml'
     rte_css = ['/ui/aruni/style.css', '/ui/tiny_mce/content.css']
     rte_scripts = [
         '/ui/tiny_mce/tiny_mce_src.js',
@@ -472,12 +474,6 @@ class RTEWidget(Widget):
     table_styles = None
 
 
-    def get_available_tiny_mce_languages(self, context):
-        here = context.resource
-        dir = here.get_resource('/ui/tiny_mce/langs')
-        return [ lang[:-3] for lang in dir.get_names() ]
-
-
     def get_rte_css(self):
         return self.rte_css
 
@@ -490,38 +486,35 @@ class RTEWidget(Widget):
 
 
     def get_template(self, datatype, value):
-        root = get_context().root
-        handler = root.get_resource(self.template)
+        handler = ui.get_template(self.template)
         return handler.events
 
 
     def get_namespace(self, datatype, value):
-        context = get_context()
-        # language
-        site_root = context.site_root
-        tiny_mce_languages = self.get_available_tiny_mce_languages(context)
-        accept = context.accept_language
+        # Language
+        path = get_abspath('ui/tiny_mce/langs')
+        tiny_mce_languages = [ x[:-3] for x in vfs.get_names(path) ]
+        accept = get_context().accept_language
         current_language = accept.select_language(tiny_mce_languages)
-        # configuration
-        resizing = 'true' if self.resizing else 'false'
 
         css_names = self.get_rte_css()
-        return {'advanced_styles': self.advanced_styles,
-                'css': ','.join(css_names),
-                'extended_valid_elements': self.extended_valid_elements,
-                'form_name': self.name,
-                'id': self.id,
-                'height': self.height,
-                'language': current_language,
-                'plugins': self.plugins,
-                'resizing': resizing,
-                'scripts': self.rte_scripts,
-                'source': value,
-                'table_styles': self.table_styles,
-                'toolbar1': self.toolbar1,
-                'toolbar2': self.toolbar2,
-                'toolbar3': self.toolbar3,
-                'width': self.width}
+        return {
+            'advanced_styles': self.advanced_styles,
+            'css': ','.join(css_names),
+            'extended_valid_elements': self.extended_valid_elements,
+            'form_name': self.name,
+            'id': self.id,
+            'height': self.height,
+            'language': current_language,
+            'plugins': self.plugins,
+            'resizing': 'true' if self.resizing else 'false',
+            'scripts': self.rte_scripts,
+            'source': value,
+            'table_styles': self.table_styles,
+            'toolbar1': self.toolbar1,
+            'toolbar2': self.toolbar2,
+            'toolbar3': self.toolbar3,
+            'width': self.width}
 
 
 ###########################################################################
