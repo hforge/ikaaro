@@ -231,7 +231,7 @@ class File_Edit(DBResource_Edit):
 
 class File_ExternalEdit_View(STLView):
     access = 'is_allowed_to_edit'
-    template = '/ui/file/externaledit.xml'
+    template = 'file/externaledit.xml'
     title = MSG(u'External Editor')
     icon = 'external.png'
     encodings = None
@@ -250,7 +250,7 @@ class File_ExternalEdit(BaseView):
     def http_get(self, resource, context):
         encoding = context.get_form_value('encoding')
 
-        uri = context.uri
+        uri = get_reference(context.uri)
         handler = resource.handler
         title = resource.get_property('title')
         if title:
@@ -300,8 +300,7 @@ class File_ExternalEdit(BaseView):
         else:
             lines.append(handler.to_str(encoding))
 
-        context.content_type = 'application/x-zope-edit'
-        return '\n'.join(lines)
+        context.ok('application/x-zope-edit', '\n'.join(lines))
 
 
 
