@@ -228,14 +228,10 @@ class File_ExternalEdit(BaseView):
 
 
     def http_get(self, resource, context):
-        # Get the request and response
-        request, response = context.request, context.response
-
         encoding = context.get_form_value('encoding')
 
-        uri = context.uri
-        uri_string = '%s://%s/%s' % (uri.scheme, uri.authority, uri.path[:-1])
-        uri = get_reference(uri_string)
+        uri = get_reference(context.uri)
+        uri.path = uri.path[:-1]
         handler = resource.handler
         title = resource.get_property('title')
         if title:
@@ -243,13 +239,13 @@ class File_ExternalEdit(BaseView):
         else:
             title = resource.name
 
-        r = [
+        cookies = context.soup_message.get_header('Cookie')
+        lines = [
             'url:%s' % str(uri),
             'meta_type:toto', # FIXME Check if zopeedit really needs this
             'content_type:%s' % handler.get_mimetype(),
-            'cookie:%s' % request.get_cookies_as_str(),
-            'title:%s' % title,
-            ]
+            'cookie:%s' % cookies,
+            'title:%s' % title]
 
         if resource.is_locked():
             lock = resource.get_lock()
@@ -260,35 +256,32 @@ class File_ExternalEdit(BaseView):
             else:
                 # always borrow lock from same user
                 if lock.username == context.user.name:
-                    r.append('lock-token:%s' % lock.key)
-                    r.append('borrow_lock:1')
+                    lines.append('lock-token:%s' % lock.key)
+                    lines.append('borrow_lock:1')
                 else:
                     message = ERROR(u'This page is locked by another user')
                     return context.come_back(message, goto='.')
 
         auth = context.get_header('Authorization')
         if auth:
-            r.append('auth:%s' % auth)
+            lines.append('auth:%s' % auth)
 
-        r.append('')
+        lines.append('')
 
         # TODO known bug from ExternalEditor requires rfc1123_date()
         # Using RESPONSE.setHeader('Pragma', 'no-cache') would be better, but
         # this chokes crappy most MSIE versions when downloads happen on SSL.
         # cf. http://support.microsoft.com/support/kb/articles/q316/4/31.asp
-        #response.set_header('Last-Modified', rfc1123_date())
-        response.set_header('Pragma', 'no-cache')
+        #context.set_header('Last-Modified', rfc1123_date())
+        context.set_header('Pragma', 'no-cache')
 
         # Encoding
         if encoding is None:
-            r.append(handler.to_str())
+            lines.append(handler.to_str())
         else:
-            r.append(handler.to_str(encoding))
+            lines.append(handler.to_str(encoding))
 
-        data = '\n'.join(r)
-
-        response.set_header('Content-Type', 'application/x-zope-edit')
-        return data
+        context.ok('application/x-zope-edit', '\n'.join(lines))
 
 
 

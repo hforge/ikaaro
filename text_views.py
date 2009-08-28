@@ -83,7 +83,7 @@ class Text_ExternalEdit(STLView):
     access = 'is_allowed_to_edit'
     title = MSG(u'External Editor')
     icon = 'external.png'
-    template = '/ui/text/externaledit.xml'
+    template = 'text/externaledit.xml'
 
 
     def get_namespace(self, resource, context):
