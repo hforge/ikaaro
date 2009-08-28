@@ -150,7 +150,7 @@ class WebPage_View(BaseView):
 
     def http_get(self, resource, context):
         body = resource.get_html_data()
-        context.ok('text/html', body)
+        context.ok_wrap('text/html', body)
 
 
 
