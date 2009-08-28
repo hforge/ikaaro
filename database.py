@@ -118,44 +118,6 @@ class Database(ReadOnlyDatabase, GitDatabase):
         GitDatabase.__init__(self, path, size_min, size_max)
         self.catalog = Catalog('%s/catalog' % target, get_register_fields())
 
-        # The resources that been added, removed, changed and moved can be
-        # represented as a set of two element tuples.  But we implement this
-        # with two dictionaries (old2new/new2old), to be able to access any
-        # "tuple" by either value.  With the empty tuple we represent the
-        # absence of change.
-        #
-        #  Tuple        Description                Implementation
-        #  -----------  -------------------------  -------------------
-        #  ()           nothing has been done yet  {}/{}
-        #  (None, 'b')  resource 'b' added         {}/{'b':None}
-        #  ('b', None)  resource 'b' removed       {'b':None}/{}
-        #  ('b', 'b')   resource 'b' changed       {'b':'b'}/{'b':'b'}
-        #  ('b', 'c')   resource 'b' moved to 'c'  {'b':'c'}/{'c':'b'}
-        #
-        # In real life, every value is either None or an absolute path (as a
-        # byte stringi).  For the description that follows, we use the tuples
-        # as a compact representation.
-        #
-        # There are four operations:
-        #
-        #  A(b)   - add "b"
-        #  R(b)   - remove "b"
-        #  C(b)   - change "b"
-        #  M(b,c) - move "b" to "c"
-        #
-        # Then, the algebra is:
-        #
-        # ()        -> A(b) -> (None, 'b')
-        # (b, None) -> A(b) -> (b, b)
-        # (None, b) -> A(b) -> error
-        # (b, b)    -> A(b) -> error
-        # (b, c)    -> A(b) -> (b, b), (None, c) FIXME Is this correct?
-        #
-        # TODO Finish
-        #
-        self.resources_old2new = {}
-        self.resources_new2old = {}
-
 
     #######################################################################
     # Git API
@@ -166,132 +128,8 @@ class Database(ReadOnlyDatabase, GitDatabase):
         return revisions[0] if revisions else None
 
 
-    #######################################################################
-    # Events API
-    #######################################################################
-    def remove_resource(self, resource):
-        old2new = self.resources_old2new
-        new2old = self.resources_new2old
-
-        if isinstance(resource, Folder):
-            for x in resource.traverse_resources():
-                path = str(x.get_canonical_path())
-                old2new[path] = None
-                new2old.pop(path, None)
-        else:
-            path = str(resource.get_canonical_path())
-            old2new[path] = None
-            new2old.pop(path, None)
-
-
-    def add_resource(self, resource):
-        old2new = self.resources_old2new
-        new2old = self.resources_new2old
-
-        # Catalog
-        if isinstance(resource, Folder):
-            for x in resource.traverse_resources():
-                path = str(x.get_canonical_path())
-                new2old[path] = None
-        else:
-            path = str(resource.get_canonical_path())
-            new2old[path] = None
-
-
-    def change_resource(self, resource):
-        old2new = self.resources_old2new
-        new2old = self.resources_new2old
-
-        path = str(resource.get_canonical_path())
-        if path in old2new and not old2new[path]:
-            raise ValueError, 'cannot change a resource that has been removed'
-
-        if path not in new2old:
-            old2new[path] = path
-            new2old[path] = path
-
-
-    def move_resource(self, source, new_path):
-        old2new = self.resources_old2new
-        new2old = self.resources_new2old
-
-        def f(source_path, target_path):
-            source_path = str(source_path)
-            target_path = str(target_path)
-
-            if source_path in old2new and not old2new[source_path]:
-                raise ValueError, 'cannot move a resource that has been removed'
-
-            source_path = new2old.pop(source_path, source_path)
-            if source_path:
-                old2new[source_path] = target_path
-            new2old[target_path] = source_path
-
-
-        old_path = source.get_canonical_path()
-        if isinstance(source, Folder):
-            for x in source.traverse_resources():
-                x_old_path = x.get_canonical_path()
-                x_new_path = new_path.resolve2(old_path.get_pathto(x_old_path))
-                f(x_old_path, x_new_path)
-        else:
-            f(old_path, new_path)
-
-
-    #######################################################################
-    # Transactions API
-    #######################################################################
-    def _before_commit(self):
-        context = get_context()
-        root = context.root
-        catalog = self.catalog
-        documents_to_index = []
-
-        # Update links when resources moved
-        for source, target in self.resources_old2new.items():
-            if target and source != target:
-                target = Path(target)
-                resource = root.get_resource(target)
-                resource._on_move_resource(source)
-
-        # Get documents to unindex
-        # update_links methods call server.change_resource
-        # which update resources_old2new dictionary
-        documents_to_unindex = self.resources_old2new.keys()
-
-        # Clear resources_old2new
-        self.resources_old2new.clear()
-
-        # Index
-        for path in self.resources_new2old:
-            resource = root.get_resource(path)
-            values = resource._get_catalog_values()
-            documents_to_index.append((resource, values))
-        self.resources_new2old.clear()
-
-        # Find out commit author & message
-        git_author = 'nobody <>'
-        git_message = 'no comment'
-        if context is not None:
-            # Author
-            user = context.user
-            if user is not None:
-                email = user.get_property('email')
-                git_author = '%s <%s>' % (user.name, email)
-            # Message
-            try:
-                git_message = getattr(context, 'git_message')
-            except AttributeError:
-                git_message = "%s %s" % (context.method, context.uri)
-            else:
-                git_message = git_message.encode('utf-8')
-
-        # Ok
-        return git_author, git_message, documents_to_index, documents_to_unindex
-
-
     def _save_changes(self, data):
-        git_author, git_message, documents_to_index, documents_to_unindex = data
+        git_author, git_message, docs_to_index, docs_to_unindex = data
 
         # (1) Save filesystem changes
         GitDatabase._save_changes(self, (git_author, git_message))
@@ -299,15 +137,14 @@ class Database(ReadOnlyDatabase, GitDatabase):
         # Catalog
         # (2) UnIndex
         catalog = self.catalog
-        for path in documents_to_unindex:
+        for path in docs_to_unindex:
             catalog.unindex_document(path)
-
         # (3) Index
         mtime = datetime.now() # XXX This is an approximation, not exactly the
                                # same as returned by git
         user = get_context().user
         author = user.get_title() if user else None
-        for resource, values in documents_to_index:
+        for resource, values in docs_to_index:
             values['mtime'] = mtime
             values['last_author'] = author
             catalog.index_document(values)
@@ -316,13 +153,7 @@ class Database(ReadOnlyDatabase, GitDatabase):
 
     def _abort_changes(self):
         GitDatabase._abort_changes(self)
-
-        # Catalog
         self.catalog.abort_changes()
-
-        # Clear events
-        self.resources_old2new.clear()
-        self.resources_new2old.clear()
 
 
 

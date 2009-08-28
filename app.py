@@ -46,7 +46,3 @@ class CMSApplication(WebApplication):
         context.content_type = None
         return context
 
-
-    def change_resource(self, resource):
-        self.database.change_resource(resource)
-

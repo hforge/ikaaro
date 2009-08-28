@@ -31,7 +31,45 @@ class CMSContext(WebContext):
 
     def __init__(self, soup_message, path):
         WebContext.__init__(self, soup_message, path)
+        # Resources
         self.cache = {}
+        # The resources that been added, removed, changed and moved can be
+        # represented as a set of two element tuples.  But we implement this
+        # with two dictionaries (old2new/new2old), to be able to access any
+        # "tuple" by either value.  With the empty tuple we represent the
+        # absence of change.
+        #
+        #  Tuple        Description                Implementation
+        #  -----------  -------------------------  -------------------
+        #  ()           nothing has been done yet  {}/{}
+        #  (None, 'b')  resource 'b' added         {}/{'b':None}
+        #  ('b', None)  resource 'b' removed       {'b':None}/{}
+        #  ('b', 'b')   resource 'b' changed       {'b':'b'}/{'b':'b'}
+        #  ('b', 'c')   resource 'b' moved to 'c'  {'b':'c'}/{'c':'b'}
+        #
+        # In real life, every value is either None or an absolute path (as a
+        # byte stringi).  For the description that follows, we use the tuples
+        # as a compact representation.
+        #
+        # There are four operations:
+        #
+        #  A(b)   - add "b"
+        #  R(b)   - remove "b"
+        #  C(b)   - change "b"
+        #  M(b,c) - move "b" to "c"
+        #
+        # Then, the algebra is:
+        #
+        # ()        -> A(b) -> (None, 'b')
+        # (b, None) -> A(b) -> (b, b)
+        # (None, b) -> A(b) -> error
+        # (b, b)    -> A(b) -> error
+        # (b, c)    -> A(b) -> (b, b), (None, c) FIXME Is this correct?
+        #
+        # TODO Finish
+        #
+        self.resources_old2new = {}
+        self.resources_new2old = {}
 
 
     def get_template(self, path):
@@ -178,7 +216,7 @@ class CMSContext(WebContext):
         return documents[0].name
 
 
-    def _get_resource(self, key, path, soft):
+    def _get_resource(self, key, path):
         # Step 1. Find the physical path to the metadata
         base = '%s/database' % self.mount.target
         if path:
@@ -203,8 +241,6 @@ class CMSContext(WebContext):
         try:
             metadata = database.get_handler(metadata, cls=Metadata)
         except LookupError:
-            if soft is False:
-                raise
             return None
 
         # Step 3. Return the resource
@@ -226,13 +262,99 @@ class CMSContext(WebContext):
         if resource:
             return resource
 
-        resource = self._get_resource(key, path, soft)
+        # Lookup the resource
+        old2new = self.resources_old2new
+        if key in old2new and old2new[key] != key:
+            resource = None
+        else:
+            resource = self._get_resource(key, path)
+
+        # Miss
         if resource is None:
-            return None
+            if soft:
+                return None
+            raise LookupError, 'resource "%s" not found' % key
+
+        # Hit
         resource.context = self
         resource.path = path
         self.cache[key] = resource
         return resource
+
+
+    def remove_resource(self, resource):
+        old2new = self.resources_old2new
+        new2old = self.resources_new2old
+
+        if isinstance(resource, Folder):
+            for x in resource.traverse_resources():
+                path = str(x.path)
+                old2new[path] = None
+                new2old.pop(path, None)
+                del self.cache[path]
+        else:
+            path = str(resource.path)
+            old2new[path] = None
+            new2old.pop(path, None)
+            del self.cache[path]
+
+
+    def add_resource(self, resource):
+        old2new = self.resources_old2new
+        new2old = self.resources_new2old
+
+        # Catalog
+        if isinstance(resource, Folder):
+            for x in resource.traverse_resources():
+                path = str(x.path)
+                self.cache[path] = x
+                new2old[path] = None
+        else:
+            path = str(resource.path)
+            self.cache[path] = resource
+            new2old[path] = None
+
+
+    def change_resource(self, resource):
+        old2new = self.resources_old2new
+        new2old = self.resources_new2old
+
+        path = str(resource.path)
+        if path in old2new and not old2new[path]:
+            raise ValueError, 'cannot change a resource that has been removed'
+
+        if path not in new2old:
+            old2new[path] = path
+            new2old[path] = path
+
+
+    def move_resource(self, source, new_path):
+        old2new = self.resources_old2new
+        new2old = self.resources_new2old
+
+        def f(source_path, target_path):
+            source_path = str(source_path)
+            target_path = str(target_path)
+            if source_path in old2new and not old2new[source_path]:
+                error = 'cannot move a resource that has been removed'
+                raise ValueError, error
+
+            # Update cache
+            self.cache[target_path] = self.cache.pop(source_path)
+            # Update double dict
+            source_path = new2old.pop(source_path, source_path)
+            if source_path:
+                old2new[source_path] = target_path
+            new2old[target_path] = source_path
+
+        old_path = source.path
+        if isinstance(source, Folder):
+            for x in source.traverse_resources():
+                x_old_path = x.path
+                x_new_path = new_path.resolve2(old_path.get_pathto(x_old_path))
+                f(x_old_path, x_new_path)
+        else:
+            f(old_path, new_path)
 
 
     #######################################################################
@@ -258,6 +380,53 @@ class CMSContext(WebContext):
 
         catalog = self.database.catalog
         return catalog.search(query, **kw)
+
+
+    def abort_changes(self):
+        self.database.abort_changes()
+        self.database._cleanup()
+        self.resources_old2new.clear()
+        self.resources_new2old.clear()
+
+
+    def save_changes(self):
+        cache = self.cache
+
+        # Update links when resources moved
+        for source, target in self.resources_old2new.items():
+            if target and source != target:
+                cache[target]._on_move_resource(source)
+
+        # Index
+        docs_to_unindex = self.resources_old2new.keys()
+        for path in self.resources_new2old:
+            resource = cache[path]
+            values = resource._get_catalog_values()
+            docs_to_index.append((resource, values))
+
+        # Clear
+        self.resources_old2new.clear()
+        self.resources_new2old.clear()
+
+        # Versioning / Author
+        user = self.user
+        if user:
+            email = user.get_property('email')
+            git_author = '%s <%s>' % (user.name, email)
+        else:
+            git_author = 'nobody <>'
+        # Versioning / Message
+        try:
+            git_message = getattr(self, 'git_message')
+        except AttributeError:
+            git_message = "%s %s" % (self.method, self.uri)
+        else:
+            git_message = git_message.encode('utf-8')
+
+        # Save
+        data = git_author, git_message, docs_to_index, docs_to_unindex
+        self.database.save_changes(data)
+        self.database._cleanup()
 
 
     #######################################################################
