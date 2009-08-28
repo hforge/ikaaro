@@ -31,9 +31,6 @@ class Multilingual(DBResource):
     def __init__(self, metadata):
         self.metadata = metadata
         self.handlers = {}
-        # The tree
-        self.name = ''
-        self.parent = None
 
 
     @staticmethod
