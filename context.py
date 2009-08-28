@@ -15,10 +15,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import get_abspath
+from itools.core import get_abspath, merge_dicts
 from itools.handlers import ConfigFile, ro_database
 from itools.uri import Path
-from itools.web import WebContext
+from itools.web import WebContext, lock_body
 from itools.xapian import OrQuery, PhraseQuery, StartQuery
 
 # Import from ikaaro
@@ -101,14 +101,26 @@ class CMSContext(WebContext):
     #######################################################################
     # Handle requests
     #######################################################################
+    known_methods = merge_dicts(
+        WebContext.known_methods,
+        PUT='http_put',
+        DELETE='http_delete',
+        LOCK='http_lock',
+        UNLOCK='http_unlock')
+
+
     def http_put(self):
+        self.commit = True
         # FIXME access = 'is_allowed_to_lock'
         body = self.get_form_value('body')
+        resource = self.resource
         resource.handler.load_state_from_string(body)
-        self.server.change_resource(resource)
+        self.database.change_resource(resource)
+        self.no_content()
 
 
     def http_delete(self):
+        self.commit = True
         # FIXME access = 'is_allowed_to_remove'
         resource = self.resource
         name = resource.name
@@ -123,27 +135,28 @@ class CMSContext(WebContext):
         # Clean cookie
         if str(resource.get_abspath()) in paths:
             self.del_cookie('ikaaro_cp')
+        self.no_content()
 
 
     def http_lock(self):
+        self.commit = True
         # FIXME access = 'is_allowed_to_lock'
         resource = self.resource
         lock = resource.lock()
 
-        # TODO move in the request handler
-        context.content_type = 'text/xml; charset="utf-8"'
         self.set_header('Lock-Token', 'opaquelocktoken:%s' % lock)
-        return lock_body % {'owner': self.user.name, 'locktoken': lock}
+        body = lock_body % {'owner': self.user.name, 'locktoken': lock}
+        self.ok('text/xml; charset="utf-8"', body)
 
 
     def http_unlock(self):
+        self.commit = True
         resource = self.resource
         lock = resource.get_lock()
         resource.unlock()
 
-        # TODO move in the request handler
-        context.content_type = 'text/xml; charset="utf-8"'
         self.set_header('Lock-Token', 'opaquelocktoken:%s' % lock)
+        self.no_content()
 
 
     #######################################################################
