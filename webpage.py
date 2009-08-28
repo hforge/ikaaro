@@ -153,8 +153,9 @@ class WebPage_View(BaseView):
     icon = 'view.png'
 
 
-    def GET(self, resource, context):
-        return resource.get_html_data()
+    def http_get(self, resource, context):
+        body = resource.get_html_data()
+        context.ok('text/html', body)
 
 
 
