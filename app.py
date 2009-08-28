@@ -46,57 +46,6 @@ class CMSApplication(WebApplication):
         return context
 
 
-    #######################################################################
-    # API
-    #######################################################################
     def change_resource(self, resource):
         self.database.change_resource(resource)
-
-
-    #######################################################################
-    # Request methods
-    #######################################################################
-    def http_put(self, context):
-        # FIXME access = 'is_allowed_to_lock'
-        body = context.get_form_value('body')
-        resource.handler.load_state_from_string(body)
-        context.server.change_resource(resource)
-
-
-    def http_delete(self, context):
-        # FIXME access = 'is_allowed_to_remove'
-        resource = context.resource
-        name = resource.name
-        parent = resource.parent
-        try:
-            parent.del_resource(name)
-        except ConsistencyError:
-            raise ClientError(409)
-
-        # Clean the copy cookie if needed
-        cut, paths = context.get_cookie('ikaaro_cp', type=CopyCookie)
-        # Clean cookie
-        if str(resource.get_abspath()) in paths:
-            context.del_cookie('ikaaro_cp')
-
-
-    def http_lock(self, context):
-        # FIXME access = 'is_allowed_to_lock'
-        resource = context.resource
-        lock = resource.lock()
-
-        # TODO move in the request handler
-        context.set_header('Content-Type', 'text/xml; charset="utf-8"')
-        context.set_header('Lock-Token', 'opaquelocktoken:%s' % lock)
-        return lock_body % {'owner': context.user.name, 'locktoken': lock}
-
-
-    def http_unlock(self, context):
-        resource = context.resource
-        lock = resource.get_lock()
-        resource.unlock()
-
-        # TODO move in the request handler
-        context.set_header('Content-Type', 'text/xml; charset="utf-8"')
-        context.set_header('Lock-Token', 'opaquelocktoken:%s' % lock)
 

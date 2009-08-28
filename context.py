@@ -85,6 +85,54 @@ class CMSContext(WebContext):
 
 
     #######################################################################
+    # Handle requests
+    #######################################################################
+    def http_put(self):
+        # FIXME access = 'is_allowed_to_lock'
+        body = self.get_form_value('body')
+        resource.handler.load_state_from_string(body)
+        self.server.change_resource(resource)
+
+
+    def http_delete(self):
+        # FIXME access = 'is_allowed_to_remove'
+        resource = self.resource
+        name = resource.name
+        parent = resource.parent
+        try:
+            parent.del_resource(name)
+        except ConsistencyError:
+            raise ClientError(409)
+
+        # Clean the copy cookie if needed
+        cut, paths = self.get_cookie('ikaaro_cp', type=CopyCookie)
+        # Clean cookie
+        if str(resource.get_abspath()) in paths:
+            self.del_cookie('ikaaro_cp')
+
+
+    def http_lock(self):
+        # FIXME access = 'is_allowed_to_lock'
+        resource = self.resource
+        lock = resource.lock()
+
+        # TODO move in the request handler
+        self.set_header('Content-Type', 'text/xml; charset="utf-8"')
+        self.set_header('Lock-Token', 'opaquelocktoken:%s' % lock)
+        return lock_body % {'owner': self.user.name, 'locktoken': lock}
+
+
+    def http_unlock(self):
+        resource = self.resource
+        lock = resource.get_lock()
+        resource.unlock()
+
+        # TODO move in the request handler
+        self.set_header('Content-Type', 'text/xml; charset="utf-8"')
+        self.set_header('Lock-Token', 'opaquelocktoken:%s' % lock)
+
+
+    #######################################################################
     # Host & Resources
     #######################################################################
     def get_host(self, hostname):
