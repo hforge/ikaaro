@@ -51,115 +51,18 @@ class Database(GitDatabase):
         GitDatabase.__init__(self, path, cache_size)
         self.catalog = Catalog('%s/catalog' % target, get_register_fields())
 
-        # Events
-        self.resources_added = {}
-        self.resources_changed = {}
-        self.resources_removed = set()
-
-
-    #######################################################################
-    # Events API
-    #######################################################################
-    def remove_resource(self, resource):
-        resources_removed = self.resources_removed
-        resources_added = self.resources_added
-        resources_changed = self.resources_changed
-
-        if isinstance(resource, Folder):
-            for x in resource.traverse_resources():
-                path = str(x.get_canonical_path())
-                if path in resources_added:
-                    del resources_added[path]
-                if path in resources_changed:
-                    del resources_changed[path]
-                resources_removed.add(path)
-        else:
-            path = str(resource.get_canonical_path())
-            if path in resources_added:
-                del resources_added[path]
-            if path in resources_changed:
-                del resources_changed[path]
-            resources_removed.add(path)
-
-
-    def add_resource(self, resource):
-        resources_added = self.resources_added
-
-        # Catalog
-        if isinstance(resource, Folder):
-            for x in resource.traverse_resources():
-                path = str(x.get_canonical_path())
-                resources_added[path] = x
-        else:
-            path = str(resource.get_canonical_path())
-            resources_added[path] = resource
-
-
-    def change_resource(self, resource):
-        path = str(resource.get_canonical_path())
-        if path in self.resources_removed:
-            raise ValueError, 'XXX'
-        if path in self.resources_added:
-            return
-        self.resources_changed[path] = resource
-
-
-    #######################################################################
-    # Transactions API
-    #######################################################################
-    def _before_commit(self):
-        catalog = self.catalog
-        documents_to_index = []
-
-        # Removed
-        for path in self.resources_removed:
-            catalog.unindex_document(path)
-        self.resources_removed.clear()
-
-        # Added
-        for path, resource in self.resources_added.iteritems():
-            values = resource._get_catalog_values()
-            documents_to_index.append((resource, values))
-        self.resources_added.clear()
-
-        # Changed
-        for path, resource in self.resources_changed.iteritems():
-            catalog.unindex_document(path)
-            values = resource._get_catalog_values()
-            documents_to_index.append((resource, values))
-        self.resources_changed.clear()
-
-        # Find out commit author & message
-        git_author = 'nobody <>'
-        git_message = 'no comment'
-        context = get_context()
-        if context is not None:
-            # Author
-            user = context.user
-            if user is not None:
-                email = user.get_property('email')
-                git_author = '%s <%s>' % (user.name, email)
-            # Message
-            try:
-                git_message = getattr(context, 'git_message')
-            except AttributeError:
-                pass
-            else:
-                git_message = git_message.encode('utf-8')
-
-        # Ok
-        return git_author, git_message, documents_to_index
-
 
     def _save_changes(self, data):
-        git_author, git_message, documents_to_index = data
+        git_author, git_message, docs_to_index, docs_to_unindex = data
 
         # (1) Save filesystem changes
         GitDatabase._save_changes(self, (git_author, git_message))
 
         # (2) Catalog
         catalog = self.catalog
-        for resource, values in documents_to_index:
+        for path in docs_to_unindex:
+            catalog.unindex_document(path)
+        for resource, values in docs_to_index:
             values = resource.get_catalog_values(values)
             catalog.index_document(values)
         catalog.save_changes()
@@ -167,14 +70,7 @@ class Database(GitDatabase):
 
     def _abort_changes(self):
         GitDatabase._abort_changes(self)
-
-        # Catalog
         self.catalog.abort_changes()
-
-        # Clear events
-        self.resources_removed.clear()
-        self.resources_added.clear()
-        self.resources_changed.clear()
 
 
 

@@ -31,7 +31,11 @@ class CMSContext(WebContext):
 
     def __init__(self, soup_message, path):
         WebContext.__init__(self, soup_message, path)
+        # Resources
         self.cache = {}
+        self.cache_new = set()
+        self.cache_old = set()
+        self.cache_mod = set()
 
 
     def get_template(self, path):
@@ -164,7 +168,7 @@ class CMSContext(WebContext):
         return documents[0].name
 
 
-    def _get_resource(self, key, path, soft):
+    def _get_resource(self, key, path):
         # Step 1. Find the physical path to the metadata
         base = '%s/database' % self.mount.target
         if path:
@@ -189,8 +193,6 @@ class CMSContext(WebContext):
         try:
             metadata = database.get_handler(metadata, cls=Metadata)
         except LookupError:
-            if soft is False:
-                raise
             return None
 
         # Step 3. Return the resource
@@ -212,13 +214,58 @@ class CMSContext(WebContext):
         if resource:
             return resource
 
-        resource = self._get_resource(key, path, soft)
+        # Lookup the resource
+        resource = (
+            None if key in self.cache_old else self._get_resource(key, path))
+
+        # Miss
         if resource is None:
-            return None
+            if soft:
+                return None
+            raise LookupError, 'resource "%s" not found' % key
+
+        # Hit
         resource.context = self
         resource.path = path
         self.cache[key] = resource
         return resource
+
+
+    def remove_resource(self, resource):
+        if isinstance(resource, Folder):
+            for x in resource.traverse_resources():
+                path = str(x.path)
+                self.cache_new.discard(path)
+                self.cache_mod.discard(path)
+                self.cache_old.add(path)
+                del self.cache[path]
+        else:
+            path = str(resource.path)
+            self.cache_new.discard(path)
+            self.cache_mod.discard(path)
+            self.cache_old.add(path)
+            del self.cache[path]
+
+
+    def add_resource(self, resource):
+        if isinstance(resource, Folder):
+            for x in resource.traverse_resources():
+                path = str(x.path)
+                self.cache[path] = x
+                self.cache_new.add(path)
+        else:
+            path = str(resource.path)
+            self.cache[path] = resource
+            self.cache_new.add(path)
+
+
+    def change_resource(self, resource):
+        path = str(resource.path)
+        if path in self.cache_old:
+            raise ValueError, 'cannot change "%s" resource' % path
+        if path in self.cache_new:
+            return
+        self.cache_mod.add(path)
 
 
     #######################################################################
@@ -244,6 +291,47 @@ class CMSContext(WebContext):
 
         catalog = self.database.catalog
         return catalog.search(query, **kw)
+
+
+    def abort_changes(self):
+        self.database.abort_changes()
+        self.database._cleanup()
+        self.cache_new.clear()
+        self.cache_old.clear()
+        self.cache_mod.clear()
+
+
+    def save_changes(self):
+        cache = self.cache
+
+        # Index
+        docs_to_unindex = self.cache_old | self.cache_mod
+        docs_to_index = [
+            (cache[path], cache[path]._get_catalog_values())
+            for path in self.cache_new ]
+
+        # Versioning / Author
+        user = self.user
+        if user:
+            email = user.get_property('email')
+            git_author = '%s <%s>' % (user.name, email)
+        else:
+            git_author = 'nobody <>'
+        # Versioning / Message
+        try:
+            git_message = getattr(self, 'git_message')
+        except AttributeError:
+            git_message = 'no comment'
+        else:
+            git_message = git_message.encode('utf-8')
+
+        # Save
+        data = git_author, git_message, docs_to_index, docs_to_unindex
+        self.database.save_changes(data)
+        self.database._cleanup()
+        self.cache_new.clear()
+        self.cache_old.clear()
+        self.cache_mod.clear()
 
 
     #######################################################################

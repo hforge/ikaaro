@@ -274,7 +274,7 @@ class DBResource(CatalogAware, IResource):
 
 
     def set_property(self, name, value, language=None):
-        get_context().database.change_resource(self)
+        get_context().change_resource(self)
         if language:
             value = Property(value, lang=language)
         self.metadata.set_property(name, value)

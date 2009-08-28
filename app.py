@@ -45,7 +45,3 @@ class CMSApplication(WebApplication):
         context.message = None
         return context
 
-
-    def change_resource(self, resource):
-        self.database.change_resource(resource)
-
