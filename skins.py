@@ -27,7 +27,7 @@ from types import FunctionType, MethodType
 from itools.datatypes import Unicode
 from itools.gettext import MSG
 from itools.stl import stl
-from itools.uri import get_reference
+from itools.uri import Path, get_reference
 from itools.web import ERROR, INFO, STLForm
 
 # Import from ikaaro
@@ -291,8 +291,8 @@ class Skin(STLForm):
             'scripts': self.get_scripts(context),
             'meta_tags': self.get_meta_tags(context),
             # Log in/out
-            'login': '%s/;login' % here.path,
-            'logout': '%s/;logout' % here.path,
+            'login': Path('%s/;login' % here.path),
+            'logout': Path('%s/;logout' % here.path),
             # User
             'user': self.get_user_menu(context),
             # Location & Views
