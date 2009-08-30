@@ -101,12 +101,8 @@ class Root(WebSite):
         return cls(metadata)
 
 
-    ########################################################################
-    # API
-    ########################################################################
     def _get_names(self):
-        names = [ x for x in Folder._get_names(self) if x ]
-        return names + ['ui']
+        return [ x for x in Folder._get_names(self) if x ]
 
 
     def get_document_types(self):

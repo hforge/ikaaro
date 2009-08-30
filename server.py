@@ -25,12 +25,11 @@ import sys
 from glib import GError
 
 # Import from itools
-from itools.http import HTTPServer, set_context
-from itools.soup import SoupMessage
+from itools.http import HTTPServer
 from itools import vfs
-from itools.web import WebContext
 
 # Import from ikaaro
+from context import CMSContext
 from utils import is_pid_running
 
 
@@ -58,13 +57,6 @@ def get_pid(target):
         return pid
     return None
 
-
-
-def get_fake_context():
-    soup_message = SoupMessage()
-    context = WebContext(soup_message, '/')
-    set_context(context)
-    return context
 
 
 class CMSServer(HTTPServer):

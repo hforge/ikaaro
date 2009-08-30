@@ -75,14 +75,8 @@ class Database(GitDatabase):
 
 
 def make_database(target):
-    size = 5000
-    # GitDatabase
-    path = '%s/database' % target
-    make_git_database(path, size)
-    # The catalog
+    make_git_database('%s/database' % target, 5000)
     make_catalog('%s/catalog' % target, get_register_fields())
-    # Ok
-    return Database(target, size)
 
 
 def get_database(path, cache_size, read_only=False):

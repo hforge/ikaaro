@@ -27,11 +27,11 @@ import itools
 from itools.core import start_subprocess
 
 # Import from ikaaro
+from ikaaro.app import CMSApplication
 from ikaaro.database import make_database
 from ikaaro.resource_ import DBResource
 from ikaaro.root import Root
 from ikaaro.utils import generate_password
-from ikaaro.server import get_fake_context
 
 
 template = (
@@ -129,23 +129,24 @@ def init(parser, options, target):
     open('%s/config.conf' % target, 'w').write(config)
 
     # Create the folder structure
-    database = make_database(target)
+    make_database(target)
     mkdir('%s/log' % target)
     mkdir('%s/spool' % target)
 
     # Create a fake context
-    context = get_fake_context()
-    context.database = database
+    app = CMSApplication(target, 5000, False, True)
+    context = app.get_fake_context()
 
     # Make the root
+    database = app.database
     folder = database.get_handler('%s/database' % target)
-    root = root_class._make_resource(root_class, folder, email, password)
-    context.root = root
+    root_class._make_resource(root_class, folder, email, password)
     # Save changes
     start_subprocess(database.path)
-    database.save_changes()
+    context.save_changes()
     # Index
     catalog = database.catalog
+    root = context.get_resource('/')
     for resource in root.traverse_resources():
         if isinstance(resource, DBResource):
             catalog.index_document(resource)

@@ -16,7 +16,8 @@
 
 # Import from itools
 from itools.handlers import File
-from itools.http import ClientError
+from itools.http import ClientError, set_context
+from itools.soup import SoupMessage
 from itools.uri import Path
 from itools import vfs
 from itools.web import WebApplication, lock_body
@@ -43,5 +44,12 @@ class CMSApplication(WebApplication):
         context = WebApplication.get_context(self, soup_message, path)
         context.database = self.database
         context.message = None
+        return context
+
+
+    def get_fake_context(self):
+        soup_message = SoupMessage()
+        context = self.get_context(soup_message, '/')
+        set_context(context)
         return context
 
