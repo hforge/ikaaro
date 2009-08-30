@@ -158,14 +158,8 @@ class Database(ReadOnlyDatabase, GitDatabase):
 
 
 def make_database(target):
-    size_min, size_max = 4800, 5200
-    # GitDatabase
-    path = '%s/database' % target
-    make_git_database(path, size_min, size_max)
-    # The catalog
+    make_git_database('%s/database' % target, 4800, 5200)
     make_catalog('%s/catalog' % target, get_register_fields())
-    # Ok
-    return Database(target, size_min, size_max)
 
 
 def get_database(path, size_min, size_max, read_only=False):
