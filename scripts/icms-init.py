@@ -93,11 +93,6 @@ index-text = 1
 
 
 def init(parser, options, target):
-    try:
-        mkdir(target)
-    except OSError:
-        parser.error('can not create the instance (check permissions)')
-
     # Get the email address for the init user
     if options.email is None:
         sys.stdout.write("Type your email address: ")
@@ -120,15 +115,19 @@ def init(parser, options, target):
         exec('import %s' % modules)
         exec('root_class = %s.Root' % modules)
 
+    # Make folder
+    try:
+        mkdir(target)
+    except OSError:
+        parser.error('can not create the instance (check permissions)')
+
     # The configuration file
-    namespace = {
-        'modules': modules,
-        'listen_address': getattr(options, 'address') or '',
-        'listen_port': getattr(options, 'port') or '8080',
-        'smtp_host': getattr(options, 'smtp_host') or 'localhost',
-        'smtp_from': email,
-    }
-    config = template.format(**namespace)
+    config = template.format(
+        modules=modules,
+        listen_address=getattr(options, 'address') or '',
+        listen_port=getattr(options, 'port') or '8080',
+        smtp_host=getattr(options, 'smtp_host') or 'localhost',
+        smtp_from=email)
     open('%s/config.conf' % target, 'w').write(config)
 
     # Create the folder structure
