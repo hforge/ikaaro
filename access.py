@@ -22,8 +22,9 @@
 from itools.core import merge_dicts
 from itools.datatypes import Boolean, Email, Tokens, Unicode, String
 from itools.gettext import MSG
-from itools.web import AccessControl as BaseAccessControl, STLForm, INFO
-from itools.web import ERROR
+from itools.http import get_context
+from itools.web import AccessControl as BaseAccessControl
+from itools.web import INFO, ERROR, STLForm
 from itools.xapian import AndQuery, OrQuery, PhraseQuery, StartQuery
 
 # Import from ikaaro
@@ -44,7 +45,7 @@ def is_admin(user, resource):
     if root.has_user_role(user.name, 'admins'):
         return True
     # Global admin?
-    root = resource.get_root()
+    root = get_context().get_physical_root()
     return root.has_user_role(user.name, 'admins')
 
 

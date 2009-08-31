@@ -106,6 +106,14 @@ class CMSContext(WebContext):
                         return_receipt=return_receipt, attachment=attachment)
 
 
+    def get_physical_root(self):
+        database = self.mount.database
+        metadata = '%s/database/.metadata' % self.mount.target
+        metadata = database.get_handler(metadata, cls=Metadata)
+        cls = get_resource_class(metadata.format)
+        return cls(metadata)
+
+
     def load_software_languages(self):
         # Load defaults (ikaaro)
         setup = get_abspath('setup.conf')
