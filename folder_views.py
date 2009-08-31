@@ -297,7 +297,7 @@ class Folder_BrowseContent(SearchForm):
         user = context.user
         allowed_items = []
         for item in items:
-            resource = context.get_resource(item.abspath)
+            resource = context.get_resource(item.get_path())
             ac = resource.get_access_control()
             if ac.is_allowed_to_view(user, resource):
                 allowed_items.append((item, resource))
@@ -314,7 +314,7 @@ class Folder_BrowseContent(SearchForm):
                 return None
             if item_resource.name in parent.__fixed_handlers__:
                 return None
-            id = resource.get_canonical_path().get_pathto(brain.abspath)
+            id = resource.path.get_pathto(brain.get_path())
             id = str(id)
             return id, False
         elif column == 'icon':
@@ -325,7 +325,7 @@ class Folder_BrowseContent(SearchForm):
             return path_to_icon
         elif column == 'name':
             # Name
-            id = resource.get_canonical_path().get_pathto(brain.abspath)
+            id = resource.path.get_pathto(brain.get_path())
             id = str(id)
             view = item_resource.get_view(None)
             if view is None:

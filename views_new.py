@@ -189,13 +189,13 @@ class PathEnumerate(Enumerate):
     @classmethod
     def get_options(cls):
         # Search
-        context = get_context()
-        brains = context.search(is_folder=True)
+        brains = get_context().search(is_folder=True)
 
         # The namespace
-        options = [
-            {'name': x.abspath, 'value': x.abspath}
-            for x in brains.get_documents() ]
+        options = []
+        for doc in brains.get_documents():
+            path = doc.get_path()
+            options.append({'name': path, 'value': path})
         options.sort(key=itemgetter('value'))
 
         # Ok

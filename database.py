@@ -21,12 +21,24 @@ from datetime import datetime
 from itools.core import get_pipe, send_subprocess
 from itools.handlers import ROGitDatabase, GitDatabase, make_git_database
 from itools.http import get_context
-from itools.uri import Path
-from itools.xapian import Catalog, make_catalog
+from itools.xapian import Catalog, SearchDocument, make_catalog
 
 # Import from ikaaro
 from folder import Folder
 from registry import get_register_fields
+
+
+
+class CMSSearchDocument(SearchDocument):
+
+    def get_path(self):
+        context = get_context()
+        path = self.abspath
+        if not context.host:
+            return path
+        path = path[len(context.host)+1:]
+        return path or '/'
+
 
 
 
@@ -117,6 +129,7 @@ class Database(ReadOnlyDatabase, GitDatabase):
         path = '%s/database' % target
         GitDatabase.__init__(self, path, size_min, size_max)
         self.catalog = Catalog('%s/catalog' % target, get_register_fields())
+        self.catalog.search_document = CMSSearchDocument
 
 
     #######################################################################
