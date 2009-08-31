@@ -27,7 +27,7 @@ from itools.csv import Property
 from itools.core import send_subprocess, read_subprocess
 from itools.datatypes import Unicode, String, Integer, Boolean, DateTime
 from itools.http import get_context
-from itools.uri import resolve_uri
+from itools.uri import Path
 from itools.web import Resource
 from itools.xapian import CatalogAware, PhraseQuery
 
@@ -185,7 +185,7 @@ class DBResource(CatalogAware, IResource):
         cls._make_resource(cls, container.handler, name, *args, **kw)
         resource = container.get_resource(name)
         # Events, add
-        get_context().database.add_resource(resource)
+        get_context().add_resource(resource)
 
         return resource
 
@@ -200,10 +200,7 @@ class DBResource(CatalogAware, IResource):
         if self._handler is None:
             cls = self.class_handler
             database = self.metadata.database
-            if self.parent is None:
-                uri = resolve_uri(self.metadata.uri, '.')
-            else:
-                uri = resolve_uri(self.metadata.uri, self.name)
+            uri = self.metadata.uri[:-len('.metadata')]
             if database.has_handler(uri):
                 handler = database.get_handler(uri, cls=cls)
             else:
@@ -410,11 +407,11 @@ class DBResource(CatalogAware, IResource):
 #               server.event_log.flush()
 
         # Parent path
-        parent_path = None
-        abspath_str = str(abspath)
-        if abspath_str != '/':
-            parent_path = abspath.resolve2('..')
-            parent_path = str(parent_path)
+        if abspath == '/':
+            parent_path = None
+        else:
+            i = abspath.rfind('/') + 1
+            parent_path = abspath[:i]
 
         # Size
         if isinstance(self, File):
@@ -442,7 +439,7 @@ class DBResource(CatalogAware, IResource):
         # Ok
         return {
             'name': self.name,
-            'abspath': abspath_str,
+            'abspath': abspath,
             'format': self.metadata.format,
             'title': title,
             'subject': subject,

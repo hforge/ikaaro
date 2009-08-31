@@ -23,6 +23,7 @@ from itools.xapian import OrQuery, PhraseQuery, StartQuery
 
 # Import from ikaaro
 from ikaaro.globals import spool, ui
+from folder import Folder
 from metadata import Metadata
 from registry import get_resource_class
 
