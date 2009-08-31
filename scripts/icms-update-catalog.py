@@ -33,13 +33,16 @@ def update_catalog(parser, options, target):
     from itools.i18n.accept import AcceptLanguage
     from itools.fs import lfs
     from itools.xapian import make_catalog, CatalogAware
+    from ikaaro.app import CMSApplication
     from ikaaro.database import check_database
-    from ikaaro.server import Server, ask_confirmation
-    from ikaaro.server import get_fake_context
+    from ikaaro.server import ask_confirmation
     from ikaaro.registry import get_register_fields
 
     # Check the server is not started, or started in read-only mode
-    server = Server(target, read_only=True, cache_size=options.cache_size)
+    cache_size = options.cache_size
+    size_min, size_max = cache_size.split(':')
+    size_min, size_max = int(size_min), int(size_max)
+    app = CMSApplication(target, size_min, size_max, True, True)
     if server.is_running_in_rw_mode():
         print 'Cannot proceed, the server is running in read-write mode.'
         return
@@ -63,7 +66,7 @@ def update_catalog(parser, options, target):
     root = server.root
 
     # Build a fake context
-    context = get_fake_context()
+    context = app.get_fake_context()
     context.accept_language = AcceptLanguage()
     server.init_context(context)
 
