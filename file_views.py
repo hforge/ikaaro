@@ -114,7 +114,7 @@ class File_Download(BaseView):
 
 
     def get_mtime(self, resource):
-        return resource.get_mtime()
+        return resource.handler.get_mtime()
 
 
     def GET(self, resource, context):
@@ -297,7 +297,7 @@ class Image_Thumbnail(BaseView):
     access = 'is_allowed_to_view'
 
     def get_mtime(self, resource):
-        return resource.get_mtime()
+        return resource.handler.get_mtime()
 
 
     def GET(self, resource, context):
