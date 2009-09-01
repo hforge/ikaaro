@@ -153,6 +153,14 @@ class File(WorkflowAware, DBResource):
         return self.handler.to_text()
 
 
+    @property
+    def size(self):
+        # FIXME We add an arbitrary size so files will always be bigger
+        # than folders. This won't work when there is a folder with more
+        # than that size.
+        return 2**30 + self.get_size()
+
+
     def get_size(self):
         sizes = [ len(x.to_str()) for x in self.get_handlers() ]
         # XXX Maybe not the good algo
@@ -218,6 +226,9 @@ class Image(File):
     class_views = ['view', 'download', 'edit', 'externaledit', 'edit_state',
                    'backlinks', 'commit_log']
     class_handler = ImageHandler
+
+    # Indexing
+    is_image = True
 
     # Views
     thumb = Image_Thumbnail()

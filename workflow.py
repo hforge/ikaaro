@@ -41,8 +41,7 @@ class StateForm(STLForm):
     template = '/ui/WorkflowAware_state.xml'
     schema = {
         'transition': String(mandatory=True),
-        'comments': Unicode,
-    }
+        'comments': Unicode}
 
 
     def get_namespace(self, resource, context):
@@ -155,6 +154,14 @@ class WorkflowAware(BaseWorkflowAware):
             # XXX Backwards compatibility with 0.50
 #            'wf_transition': WFTransition,
             }
+
+
+    ########################################################################
+    # Indexing
+    ########################################################################
+    @property
+    def workflow_state(self):
+        return self.get_workflow_state()
 
 
     ########################################################################

@@ -284,73 +284,71 @@ class Folder_BrowseContent(SearchForm):
         size = context.get_query_value('batch_size')
         sort_by = context.get_query_value('sort_by')
         reverse = context.get_query_value('reverse')
-        items = results.get_documents(sort_by=sort_by, reverse=reverse,
-                                      start=start, size=size)
+        resources = results.get_documents(sort_by=sort_by, reverse=reverse,
+                                          start=start, size=size)
 
         # FIXME This must be done in the catalog.
         if sort_by == 'title':
-            items.sort(cmp=lambda x,y: cmp(x.title, y.title))
+            resources.sort(cmp=lambda x,y: cmp(x.title, y.title))
             if reverse:
-                items.reverse()
+                resources.reverse()
 
         # Access Control (FIXME this should be done before batch)
         user = context.user
         allowed_items = []
-        for item in items:
-            resource = context.get_resource(item.get_path())
+        for resource in resources:
             ac = resource.get_access_control()
             if ac.is_allowed_to_view(user, resource):
-                allowed_items.append((item, resource))
+                allowed_items.append(resource)
 
         return allowed_items
 
 
     def get_item_value(self, resource, context, item, column):
-        brain, item_resource = item
         if column == 'checkbox':
             # checkbox
-            parent = item_resource.parent
+            parent = item.parent
             if parent is None:
                 return None
-            if item_resource.name in parent.__fixed_handlers__:
+            if item.name in parent.__fixed_handlers__:
                 return None
-            id = resource.path.get_pathto(brain.get_path())
+            id = resource.path.get_pathto(item.path)
             id = str(id)
             return id, False
         elif column == 'icon':
             # icon
-            path_to_icon = item_resource.get_resource_icon(16)
+            path_to_icon = item.get_resource_icon(16)
             if path_to_icon.startswith(';'):
-                path_to_icon = Path('%s/' % brain.name).resolve(path_to_icon)
+                path_to_icon = Path('%s/' % item.name).resolve(path_to_icon)
             return path_to_icon
         elif column == 'name':
             # Name
-            id = resource.path.get_pathto(brain.get_path())
+            id = resource.path.get_pathto(item.path)
             id = str(id)
-            view = item_resource.get_view(None)
+            view = item.get_view(None)
             if view is None:
                 return id
-            href = '%s/' % item_resource.path
+            href = '%s/' % item.path
             return id, href
         elif column == 'title':
             # Title
-            return item_resource.get_property('title')
+            return item.get_property('title')
         elif column == 'format':
             # Type
-            return item_resource.class_title.gettext()
+            return item.class_title.gettext()
         elif column == 'mtime':
             # Last Modified
             accept = context.accept_language
-            return format_datetime(brain.mtime, accept=accept)
+            return format_datetime(item.mtime, accept=accept)
         elif column == 'last_author':
             # Last author
-            return context.get_user_title(brain.last_author)
+            return context.get_user_title(item.last_author)
         elif column == 'size':
             # Size
-            return item_resource.get_human_size()
+            return item.get_human_size()
         elif column == 'workflow_state':
             # The workflow state
-            return get_workflow_preview(item_resource, context)
+            return get_workflow_preview(item, context)
 
 
     table_actions = [

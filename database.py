@@ -21,24 +21,52 @@ from datetime import datetime
 from itools.core import get_pipe, send_subprocess
 from itools.handlers import ROGitDatabase, GitDatabase, make_git_database
 from itools.http import get_context
-from itools.xapian import Catalog, SearchDocument, make_catalog
+from itools.uri import Path
+from itools.xapian import Catalog, SearchResults, make_catalog
 
 # Import from ikaaro
 from folder import Folder
-from registry import get_register_fields
+from registry import get_register_fields, get_resource_class
 
 
 
-class CMSSearchDocument(SearchDocument):
+class CMSSearchResults(SearchResults):
 
-    def get_path(self):
+    def get_one_document(self):
+        brains = SearchResults.get_documents(self)
+        if len(brains) > 1:
+            err = 'We got more than one document, only one expected'
+            raise ValueError, err
+        for brain in brains:
+            cls = get_resource_class(brain.format)
+            return cls(brain=brain)
+        return None
+
+
+    def get_documents(self, sort_by=None, reverse=False, start=0, size=0):
         context = get_context()
-        path = self.abspath
-        if not context.host:
-            return path
-        path = path[len(context.host)+1:]
-        return path or '/'
+        host = context.host
+        if host:
+            host = len(host)+1
 
+        docs = SearchResults.get_documents(self, sort_by, reverse, start, size)
+        for brain in docs:
+            key = brain.abspath
+            if host:
+                key = key[host:] or '/'
+            resource = context.cache.get(key)
+
+            if resource:
+                # Cache hit
+                yield resource
+            else:
+                # Cache miss
+                cls = get_resource_class(brain.format)
+                resource = cls(brain=brain)
+                resource.context = context
+                resource.path = Path(key)
+                context.cache[key] = resource
+                yield resource
 
 
 
@@ -129,7 +157,7 @@ class Database(ReadOnlyDatabase, GitDatabase):
         path = '%s/database' % target
         GitDatabase.__init__(self, path, size_min, size_max)
         self.catalog = Catalog('%s/catalog' % target, get_register_fields())
-        self.catalog.search_document = CMSSearchDocument
+        self.catalog.search_results = CMSSearchResults
 
 
     #######################################################################

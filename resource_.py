@@ -31,7 +31,7 @@ from itools.xapian import CatalogAware, PhraseQuery
 # Import from ikaaro
 from lock import Lock
 from metadata import Metadata
-from registry import register_field, register_resource_class
+from registry import fields_registry, register_field, register_resource_class
 from resource_views import DBResource_Edit, DBResource_Backlinks
 from resource_views import DBResource_AddImage, DBResource_AddLink
 from resource_views import DBResource_AddMedia, LoginView, LogoutView
@@ -185,9 +185,31 @@ class DBResource(CatalogAware, IResource):
 
     __metaclass__ = DBResourceMetaclass
 
-    def __init__(self, metadata):
-        self.metadata = metadata
+    def __init__(self, metadata=None, brain=None):
         self._handler = None
+
+        # Case 1. The brain
+        if brain:
+            if metadata:
+                raise ValueError, 'expected brain or metadata, not both'
+            self.brain = brain
+        # Case 2. The metadata
+        else:
+            if not metadata:
+                raise ValueError, 'expected brain or metadata, got none'
+            self.brain = None
+            self.metadata = metadata
+
+
+    def __getattr__(self, name):
+        if name == 'metadata':
+            path = self.path
+            metadata = self.context._get_metadata(str(path), path)
+            self.metadata = metadata
+            return metadata
+
+        msg = "'%s' object has no attribute '%s'"
+        raise AttributeError, msg % (self.__class__.__name__, name)
 
 
     @staticmethod
@@ -331,6 +353,62 @@ class DBResource(CatalogAware, IResource):
     ########################################################################
     # Indexing
     ########################################################################
+    def get_catalog_values(self):
+        return dict([ (x, getattr(self, x, None)) for x in fields_registry ])
+
+
+    @property
+    def abspath(self):
+        abspath = self.get_canonical_path()
+        return str(abspath)
+
+
+    @property
+    def format(self):
+        return self.metadata.format
+
+
+    @property
+    def title(self):
+        languages = self.get_site_root().get_property('website_languages')
+        return dict([ (x, self.get_title(language=x)) for x in languages ])
+
+
+    @property
+    def subject(self):
+        languages = self.get_site_root().get_property('website_languages')
+        get = self.get_property
+        return dict([ (x, get('subject', language=x)) for x in languages ])
+
+
+    @property
+    def description(self):
+        languages = self.get_site_root().get_property('website_languages')
+        get = self.get_property
+        return dict([ (x, get('description', language=x)) for x in languages ])
+
+
+    @property
+    def text(self):
+        context = get_context()
+        try:
+            server = context.server
+        except AttributeError:
+            return None
+
+        if server is None or not server.index_text:
+            return None
+
+        try:
+            return self.to_text()
+        except Exception:
+            # FIXME Use a different logger
+            log_error('Indexation failed!', domain='ikaaro')
+#           log = "%s failed" % self.get_abspath()
+#           server.event_log.write(log)
+#           server.event_log.flush()
+
+
     def to_text(self):
         """This function must return:
            1) An unicode text.
@@ -339,120 +417,41 @@ class DBResource(CatalogAware, IResource):
               {'fr': u'....',
                'en': u'....' ....}
         """
-        raise NotImplementedError
+        return None
 
 
-    def _get_catalog_values(self):
-        from access import RoleAware
-        from file import File, Image
-        from folder import Folder
+    @property
+    def links(self):
+        return self.get_links()
 
-        # Values
+
+    @property
+    def parent_path(self):
         abspath = self.get_canonical_path()
-        abspath = str(abspath)
-        # Get the languages
-        site_root = self.get_site_root()
-        languages = site_root.get_property('website_languages')
-
-        # Titles
-        title = {}
-        for language in languages:
-            title[language] = self.get_title(language=language)
-
-        # Descriptions
-        description = {}
-        for language in languages:
-            description[language] = self.get_property('description',
-                                                      language=language)
-
-        # Subjects (keywords)
-        subject = {}
-        for language in languages:
-            subject[language] = self.get_property('subject',
-                                                  language=language)
-
-        # Full text
-        context = get_context()
-        text = None
-        try:
-            server = context.server
-        except AttributeError:
-            server = None
-        if server is not None and server.index_text:
-            try:
-                text = self.to_text()
-            except NotImplementedError:
-                pass
-            except Exception:
-                # FIXME Use a different logger
-                log_error('Indexation failed!', domain='ikaaro')
-#                log = "%s failed" % self.get_abspath()
-#               server.event_log.write(log)
-#               server.event_log.flush()
-
-        # Parent path
-        if abspath == '/':
-            parent_path = None
-        else:
-            i = abspath.rfind('/') + 1
-            parent_path = abspath[:i]
-
-        # Size
-        if isinstance(self, File):
-            # FIXME We add an arbitrary size so files will always be bigger
-            # than folders. This won't work when there is a folder with more
-            # than that size.
-            size = 2**30 + self.get_size()
-        else:
-            names = self.get_names()
-            size = len(names)
-
-        # Workflow state
-        if isinstance(self, WorkflowAware):
-            workflow_state = self.get_workflow_state()
-        else:
-            workflow_state = None
-
-        # Role Aware
-        is_role_aware = isinstance(self, RoleAware)
-        if is_role_aware:
-            members = self.get_members()
-        else:
-            members = None
-
-        # Ok
-        return {
-            'name': self.name,
-            'abspath': abspath,
-            'format': self.metadata.format,
-            'title': title,
-            'subject': subject,
-            'text': text,
-            'links': self.get_links(),
-            'parent_path': parent_path,
-            # This should be defined by subclasses
-            'is_folder': isinstance(self, Folder),
-            'is_image': isinstance(self, Image),
-            'is_role_aware': is_role_aware,
-            'members': members,
-            'size': size,
-            'workflow_state': workflow_state}
+        if not abspath:
+            return None
+        return str(abspath[:-1])
 
 
-    def get_catalog_values(self):
-        # This method is called only from icms-update-catalog.py
-        values = self._get_catalog_values()
+    is_folder = False
+    is_image = False
+    is_role_aware = False
 
-        # Get last revision
+
+    @property
+    def last_author(self):
         revision = self.get_last_revision()
         if not revision:
-            return values
+            return None
+        return get_context().get_user_title(revision['username'])
 
-        # Ok
-        context = get_context()
-        values['last_author'] = context.get_user_title(revision['username'])
-        values['mtime'] = revision['date']
-        return values
+
+    @property
+    def mtime(self):
+        revision = self.get_last_revision()
+        if not revision:
+            return None
+        return revision['date']
 
 
     ########################################################################

@@ -66,20 +66,56 @@ class Issue(Folder):
         return schema
 
 
-    def _get_catalog_values(self):
-        document = Folder._get_catalog_values(self)
-        document['id'] = int(self.name)
-        names = 'product', 'module', 'version', 'type', 'priority', 'state'
-        for name in names:
-            document[name] = self.get_property(name)
-        document['assigned_to'] = self.get_property('assigned_to') or 'nobody'
-        return document
-
-
     def get_document_types(self):
         return [File]
 
 
+    #######################################################################
+    # Indexing
+    #######################################################################
+    @property
+    def id(self):
+        return int(self.name)
+
+
+    @property
+    def product(self):
+        return self.get_property('product')
+
+
+    @property
+    def module(self):
+        return self.get_property('module')
+
+
+    @property
+    def version(self):
+        return self.get_property('version')
+
+
+    @property
+    def type(self):
+        return self.get_property('type')
+
+
+    @property
+    def priority(self):
+        return self.get_property('priority')
+
+
+    @property
+    def state(self):
+        return self.get_property('state')
+
+
+    @property
+    def assigned_to(self):
+        return self.get_property('assigned_to') or 'nobody'
+
+
+    #######################################################################
+    # API
+    #######################################################################
     def get_links(self):
         base = self.get_abspath()
 
@@ -116,9 +152,6 @@ class Issue(Folder):
         get_context().database.change_resource(self)
 
 
-    #######################################################################
-    # API
-    #######################################################################
     def get_title(self, language=None):
         return u'#%s %s' % (self.name, self.get_property('title'))
 
