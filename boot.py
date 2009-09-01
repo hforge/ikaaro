@@ -17,6 +17,7 @@
 # Import from itools
 from itools.datatypes import Boolean, Integer, String, Tokens
 from itools.handlers import ConfigFile, ro_database
+from itools.http import HTTPServer
 from itools.log import Logger, register_logger
 from itools.log import DEBUG, INFO, WARNING, ERROR, FATAL
 from itools.mail import MailSpool
@@ -27,7 +28,6 @@ from app import CMSApplication
 from context import CMSContext
 from globals import ui
 from ikaaro import globals
-from server import CMSServer
 
 
 log_levels = {
@@ -56,7 +56,7 @@ class CMSConfig(ConfigFile):
 
 
 
-def get_server(target, read_only=False):
+def get_server(target, cache_size=None, read_only=False):
     # Load configuration file
     config = ro_database.get_handler('%s/config.conf' % target, CMSConfig)
     globals.config = config
@@ -89,13 +89,14 @@ def get_server(target, read_only=False):
     access = '%s/log/access' % target
     pid = '%s/pid' % target
     profile = '%s/log/profile' % target if get_value('profile-time') else None
-    server = CMSServer(address, port, access, pid, profile)
+    server = HTTPServer(address, port, access, pid, profile)
 
     # Attach CMS context class
     server.context_class = CMSContext
 
     # Mount /
-    cache_size = get_value('database-size')
+    if cache_size is None:
+        cache_size = get_value('database-size')
     if ':' in cache_size:
         size_min, size_max = cache_size.split(':')
     else:

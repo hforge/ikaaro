@@ -30,20 +30,16 @@ def update_catalog(parser, options, target):
     import sys
     from time import time
     from itools.core import vmsize
-    from itools.i18n.accept import AcceptLanguage
     from itools.fs import lfs
     from itools.xapian import make_catalog, CatalogAware
-    from ikaaro.app import CMSApplication
+    from ikaaro.boot import get_server
     from ikaaro.database import check_database
-    from ikaaro.server import ask_confirmation
+    from ikaaro.server import ask_confirmation, is_running_in_rw_mode
     from ikaaro.registry import get_register_fields
 
     # Check the server is not started, or started in read-only mode
-    cache_size = options.cache_size
-    size_min, size_max = cache_size.split(':')
-    size_min, size_max = int(size_min), int(size_max)
-    app = CMSApplication(target, size_min, size_max, True, True)
-    if server.is_running_in_rw_mode():
+    server = get_server(target, options.cache_size, True)
+    if is_running_in_rw_mode():
         print 'Cannot proceed, the server is running in read-write mode.'
         return
 
@@ -62,15 +58,12 @@ def update_catalog(parser, options, target):
         lfs.remove(catalog_path)
     catalog = make_catalog(catalog_path, get_register_fields())
 
-    # Get the root
-    root = server.root
-
     # Build a fake context
+    app = server.get_mount('/')
     context = app.get_fake_context()
-    context.accept_language = AcceptLanguage()
-    server.init_context(context)
 
     # Update
+    root = context.get_resource('/')
     t0, v0 = time(), vmsize()
     doc_n = 0
     for obj in root.traverse_resources():
@@ -83,7 +76,7 @@ def update_catalog(parser, options, target):
         catalog.index_document(obj)
         # Free Memory
         del obj
-        server.database.make_room()
+        app.database.make_room()
     # Update / Report
     t1, v1 = time(), vmsize()
     v = (v1 - v0)/1024

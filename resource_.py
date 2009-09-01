@@ -351,6 +351,7 @@ class DBResource(CatalogAware, IResource):
 
         # Values
         abspath = self.get_canonical_path()
+        abspath = str(abspath)
         # Get the languages
         site_root = self.get_site_root()
         languages = site_root.get_property('website_languages')
