@@ -224,6 +224,11 @@ class Folder(DBResource):
 
 
     def move_resource(self, source_path, target_path):
+        # Cannot move a resource to a subdirectory of itself
+        if source_path == self.get_canonical_path():
+            message = 'cannot move a resource to a subdirectory of itself'
+            raise ConsistencyError, message
+
         database = get_context().database
 
         # Find out the source and target absolute URIs

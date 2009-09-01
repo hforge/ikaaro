@@ -74,7 +74,8 @@ class RoleAware_BrowseUsers(SearchForm):
         ('', MSG(u'All Fields')),
         ('username', MSG(u'Login')),
         ('lastname', MSG(u'Last Name')),
-        ('firstname', MSG(u'First Name'))]
+        ('firstname', MSG(u'First Name')),
+        ('email_domain', MSG(u'Domain'))]
 
 
     def get_items(self, resource, context):
