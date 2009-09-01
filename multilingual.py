@@ -28,8 +28,9 @@ from resource_ import DBResource
 
 class Multilingual(DBResource):
 
-    def __init__(self, metadata):
-        self.metadata = metadata
+    def __init__(self, metadata=None, brain=None):
+        DBResource.__init__(self, metadata, brain)
+        del self._handler
         self.handlers = {}
 
 

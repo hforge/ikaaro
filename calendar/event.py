@@ -149,11 +149,14 @@ class Event(File):
         return schema
 
 
-    def _get_catalog_values(self):
-        values = File._get_catalog_values(self)
-        values['dtstart'] = self.get_property('dtstart')
-        values['dtend'] = self.get_property('dtend')
-        return values
+    @property
+    def dtstart(self):
+        return self.get_property('dtstart')
+
+
+    @property
+    def dtend(self):
+        return self.get_property('dtend')
 
 
     def get_ns_event(self, day, resource_name=None, conflicts_list=freeze([]),

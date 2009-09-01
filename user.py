@@ -74,18 +74,32 @@ class User(AccessControl, Folder):
     ########################################################################
     # Indexing
     ########################################################################
-    def _get_catalog_values(self):
-        values = Folder._get_catalog_values(self)
+    @property
+    def email(self):
+        return self.get_property('email')
+
+
+    @property
+    def email_domain(self):
         email = self.get_property('email')
-        email_domain = None
-        if email and email.count('@'):
-            email_domain = email.split('@', 1)[1]
-        values['email'] = email
-        values['email_domain'] = email_domain
-        values['username'] = self.get_login_name()
-        values['firstname'] = self.get_property('firstname')
-        values['lastname'] = self.get_property('lastname')
-        return values
+        if email and '@' in email:
+            return email.split('@', 1)[1]
+        return None
+
+
+    @property
+    def username(self):
+        return self.get_login_name()
+
+
+    @property
+    def firstname(self):
+        return self.get_property('firstname')
+
+
+    @property
+    def lastname(self):
+        return self.get_property('lastname')
 
 
     ########################################################################

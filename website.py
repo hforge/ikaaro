@@ -70,10 +70,9 @@ class WebSite(RoleAware, Folder, VirtualRoot):
         return schema
 
 
-    def _get_catalog_values(self):
-        values = Folder._get_catalog_values(self)
-        values['vhosts'] = self.get_property('vhosts')
-        return values
+    @property
+    def vhosts(self):
+        return self.get_property('vhosts')
 
 
     ########################################################################

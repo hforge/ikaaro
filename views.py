@@ -122,8 +122,7 @@ class BrowseForm(STLForm):
         'batch_start': Integer(default=0),
         'batch_size': Integer(default=20),
         'sort_by': String,
-        'reverse': Boolean(default=False),
-    }
+        'reverse': Boolean(default=False)}
 
     # Batch
     batch_template = 'generic/browse_batch.xml'

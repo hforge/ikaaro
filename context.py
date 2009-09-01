@@ -25,7 +25,7 @@ from itools.xapian import OrQuery, PhraseQuery, StartQuery
 from ikaaro.globals import spool, ui
 from folder import Folder
 from metadata import Metadata
-from registry import get_resource_class
+from registry import get_resource_class, fields_registry
 
 
 class CMSContext(WebContext):
@@ -71,6 +71,7 @@ class CMSContext(WebContext):
         self.cache = {}
         self.cache_old2new = {}
         self.cache_new2old = {}
+        self._get_resource = self._get_resource_from_catalog
 
 
     def get_template(self, path):
@@ -211,36 +212,55 @@ class CMSContext(WebContext):
         return documents[0].name
 
 
-    def _get_resource(self, key, path):
-        # Step 1. Find the physical path to the metadata
-        base = '%s/database' % self.mount.target
-        if path:
-            # Host=whatever, Path=/users[...]
-            if path[0] == 'users':
-                metadata = '%s%s.metadata' % (base, key)
-            # Host=host, Path=/...
-            elif self.host:
-                metadata = '%s/%s%s.metadata' % (base, self.host, key)
-            # Host=None, Path=/...
-            else:
-                metadata = '%s%s.metadata' % (base, key)
-        elif self.host:
-            # Host=host, Path=/
-            metadata = '%s/%s.metadata' % (base, self.host)
-        else:
-            # Host=None, Path=/
-            metadata = '%s/.metadata' % base
+    def _get_abspath(self, key, path):
+        """Return the absolute path from the given path relative to the host.
 
-        # Step 2. Load the metadata
+        The arguments 'path' and 'key' are the same value, only difference is
+        the type: 'path' is a <itools.uri.Path> instance, while 'key' is a
+        byte string.
+        """
+        # Case 1. Host=None
+        if self.host is None:
+            return key
+
+        # Case 2. Path=/
+        if not path:
+            return '/%s' % self.host
+
+        # Case 3. Path=/users[...]
+        if path[0] == 'users':
+            return key
+
+        # Case 4. Path=/...
+        return '/%s%s' % (self.host, key)
+
+
+    def _get_metadata(self, key, path):
+        base = '%s/database' % self.mount.target
+        abspath = self._get_abspath(key, path)
+        if path or self.host:
+            metadata = '%s%s.metadata' % (base, abspath)
+        else:
+            metadata = '%s%s/.metadata' % (base, abspath)
+
         database = self.mount.database
+        return database.get_handler(metadata, cls=Metadata)
+
+
+    def _get_resource_from_metadata(self, key, path):
         try:
-            metadata = database.get_handler(metadata, cls=Metadata)
+            metadata = self._get_metadata(key, path)
         except LookupError:
             return None
-
-        # Step 3. Return the resource
         cls = get_resource_class(metadata.format)
-        return cls(metadata)
+        return cls(metadata=metadata)
+
+
+    def _get_resource_from_catalog(self, key, path):
+        abspath = self._get_abspath(key, path)
+        catalog = self.database.catalog
+        results = catalog.search(abspath=abspath)
+        return results.get_one_document()
 
 
     def get_resource(self, path, soft=False):
@@ -392,9 +412,14 @@ class CMSContext(WebContext):
 
         # Index
         docs_to_unindex = self.cache_old2new.keys()
-        docs_to_index = [
-            (cache[path], cache[path]._get_catalog_values())
-            for path in self.cache_new2old ]
+        docs_to_index = []
+        fields_excluded = set(['last_author', 'mtime'])
+        for path in self.cache_new2old:
+            resource = cache[path]
+            values = dict(
+                [ (x, getattr(resource, x, None))
+                for x in fields_registry if x not in fields_excluded ])
+            docs_to_index.append((resource, values))
 
         # Versioning / Author
         user = self.user
@@ -457,8 +482,8 @@ class CMSContext(WebContext):
             error = 'There are %s users in the database identified as "%s"'
             raise ValueError, error % (n, login)
         # Get the user
-        brain = results.get_documents()[0]
-        return self.get_user_by_name(brain.name)
+        resources = results.get_documents()
+        return resources.next()
 
 
     def get_user_title(self, username):
