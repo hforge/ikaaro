@@ -38,6 +38,7 @@ from ikaaro.metadata import Metadata
 from ikaaro.obsolete.metadata import Metadata as OldMetadata
 from ikaaro.resource_ import DBResource
 from ikaaro.server import Server, ask_confirmation, get_fake_context
+from ikaaro.server import is_running_in_rw_mode
 
 
 def abort():

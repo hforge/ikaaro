@@ -59,15 +59,16 @@ def get_pid(target):
 
 
 
-class CMSServer(HTTPServer):
+def is_running_in_rw_mode():
+    from globals import config
 
-    def is_running_in_rw_mode(self):
-        url = 'http://localhost:%s/;_ctrl?name=read-only' % self.port
-        try:
-            h = vfs.open(url)
-        except GError:
-            # The server is not running
-            return False
+    port = config.get_value('port')
+    url = 'http://localhost:%s/;_ctrl?name=read-only' % port
+    try:
+        h = vfs.open(url)
+    except GError:
+        # The server is not running
+        return False
 
-        return h.read() == 'no'
+    return h.read() == 'no'
 
