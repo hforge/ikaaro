@@ -52,8 +52,9 @@ class Database(GitDatabase):
         self.catalog = Catalog('%s/catalog' % target, get_register_fields())
 
         # Events
-        self.resources_added = {}
-        self.resources_changed = {}
+        self.resources_cache = {}
+        self.resources_added = set()
+        self.resources_changed = set()
         self.resources_removed = set()
 
 
@@ -61,6 +62,7 @@ class Database(GitDatabase):
     # Events API
     #######################################################################
     def remove_resource(self, resource):
+        resources_cache = self.resources_cache
         resources_removed = self.resources_removed
         resources_added = self.resources_added
         resources_changed = self.resources_changed
@@ -68,31 +70,34 @@ class Database(GitDatabase):
         if isinstance(resource, Folder):
             for x in resource.traverse_resources():
                 path = str(x.get_canonical_path())
-                if path in resources_added:
-                    del resources_added[path]
-                if path in resources_changed:
-                    del resources_changed[path]
+                resources_added.discard(path)
+                resources_changed.discard(path)
+                if path in resources_cache:
+                    del resources_cache[path]
                 resources_removed.add(path)
         else:
             path = str(resource.get_canonical_path())
-            if path in resources_added:
-                del resources_added[path]
-            if path in resources_changed:
-                del resources_changed[path]
+            resources_added.discard(path)
+            resources_changed.discard(path)
+            if path in resources_cache:
+                del resources_cache[path]
             resources_removed.add(path)
 
 
     def add_resource(self, resource):
+        resources_cache = self.resources_cache
         resources_added = self.resources_added
 
         # Catalog
         if isinstance(resource, Folder):
             for x in resource.traverse_resources():
                 path = str(x.get_canonical_path())
-                resources_added[path] = x
+                resources_cache[path] = x
+                resources_added.add(path)
         else:
             path = str(resource.get_canonical_path())
-            resources_added[path] = resource
+            resources_cache[path] = resource
+            resources_added.add(path)
 
 
     def change_resource(self, resource):
@@ -101,7 +106,8 @@ class Database(GitDatabase):
             raise ValueError, 'XXX'
         if path in self.resources_added:
             return
-        self.resources_changed[path] = resource
+        self.resources_cache[path] = resource
+        self.resources_changed.add(path)
 
 
     #######################################################################
@@ -117,17 +123,20 @@ class Database(GitDatabase):
         self.resources_removed.clear()
 
         # Added
-        for path, resource in self.resources_added.iteritems():
+        for path in self.resources_added:
+            resource = self.resources_cache[path]
             values = resource._get_catalog_values()
             documents_to_index.append((resource, values))
         self.resources_added.clear()
 
         # Changed
-        for path, resource in self.resources_changed.iteritems():
+        for path in self.resources_changed:
+            resource = self.resources_cache[path]
             catalog.unindex_document(path)
             values = resource._get_catalog_values()
             documents_to_index.append((resource, values))
         self.resources_changed.clear()
+        self.resources_cache.clear()
 
         # Find out commit author & message
         git_author = 'nobody <>'
@@ -172,6 +181,7 @@ class Database(GitDatabase):
         self.catalog.abort_changes()
 
         # Clear events
+        self.resources_cache.clear()
         self.resources_removed.clear()
         self.resources_added.clear()
         self.resources_changed.clear()
