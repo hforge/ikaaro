@@ -135,15 +135,12 @@ class Folder(DBResource):
 
         # Check referencial-integrity
         catalog = database.catalog
-        # The catalog is not available when updating (icms-update.py)
-        # FIXME We do not guarantee referencial-integrity when updating
-        if catalog is not None:
-            # FIXME Check sub-resources too
-            path = str(resource.get_canonical_path())
-            results = catalog.search(links=path)
-            if results.get_n_documents() > 0:
-                message = 'cannot delete, resource "%s" is referenced' % path
-                raise ConsistencyError, message
+        # FIXME Check sub-resources too
+        path = str(resource.get_canonical_path())
+        results = catalog.search(links=path)
+        if results.get_n_documents() > 0:
+            message = 'cannot delete, resource "%s" is referenced' % path
+            raise ConsistencyError, message
 
         # Events, remove
         database.remove_resource(resource)

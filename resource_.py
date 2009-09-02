@@ -456,11 +456,6 @@ class DBResource(CatalogAware, IResource):
         # (2) Update resources that link to me
         # Check referencial-integrity
         catalog = get_context().database.catalog
-        # The catalog is not available when updating (icms-update.py)
-        # FIXME We do not guarantee referencial-integrity when updating
-        if catalog is None:
-            return
-
         source = self.get_canonical_path()
 
         # Get all the resources that have a link to me
