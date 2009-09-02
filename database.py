@@ -20,12 +20,42 @@ from subprocess import call, PIPE
 # Import from itools
 from itools.core import get_pipe
 from itools.handlers import ROGitDatabase, GitDatabase, make_git_database
+from itools.uri import Path
 from itools.web import get_context
 from itools.xapian import Catalog, make_catalog
 
 # Import from ikaaro
 from folder import Folder
 from registry import get_register_fields
+
+
+
+class TwoWayDict(dict):
+    def __init__(self):
+        self._reverse = {}
+
+    def __setitem__(self, key, value):
+        dict.__setitem__(self, key, value)
+        self._reverse[value] = key
+
+
+    def clear(self):
+        dict.clear(self)
+        self._reverse.clear()
+
+
+    def discard_value(self, value):
+        key = self._reverse.pop(value, None)
+        if key is not None:
+            del self[key]
+
+
+    def has_value(self, value):
+        return value in self._reverse
+
+
+    def get_key(self, value):
+        return self._reverse.get(value)
 
 
 
@@ -52,51 +82,42 @@ class Database(GitDatabase):
         self.catalog = Catalog('%s/catalog' % target, get_register_fields())
 
         # Events
-        self.resources_cache = {}
         self.resources_added = set()
-        self.resources_changed = set()
         self.resources_removed = set()
+        self.resources_moved = TwoWayDict()
 
 
     #######################################################################
     # Events API
     #######################################################################
     def remove_resource(self, resource):
-        resources_cache = self.resources_cache
         resources_removed = self.resources_removed
         resources_added = self.resources_added
-        resources_changed = self.resources_changed
+        resources_moved = self.resources_moved
 
         if isinstance(resource, Folder):
             for x in resource.traverse_resources():
                 path = str(x.get_canonical_path())
                 resources_added.discard(path)
-                resources_changed.discard(path)
-                if path in resources_cache:
-                    del resources_cache[path]
+                resources_moved.discard_value(path)
                 resources_removed.add(path)
         else:
             path = str(resource.get_canonical_path())
             resources_added.discard(path)
-            resources_changed.discard(path)
-            if path in resources_cache:
-                del resources_cache[path]
+            resources_moved.discard_value(path)
             resources_removed.add(path)
 
 
     def add_resource(self, resource):
-        resources_cache = self.resources_cache
         resources_added = self.resources_added
 
         # Catalog
         if isinstance(resource, Folder):
             for x in resource.traverse_resources():
                 path = str(x.get_canonical_path())
-                resources_cache[path] = x
                 resources_added.add(path)
         else:
             path = str(resource.get_canonical_path())
-            resources_cache[path] = resource
             resources_added.add(path)
 
 
@@ -106,42 +127,76 @@ class Database(GitDatabase):
             raise ValueError, 'XXX'
         if path in self.resources_added:
             return
-        self.resources_cache[path] = resource
-        self.resources_changed.add(path)
+        self.resources_moved[path] = path
+
+
+    def move_resource(self, source, new_path):
+        resources_removed = self.resources_removed
+        resources_added = self.resources_added
+        resources_moved = self.resources_moved
+
+        def f(source_path, target_path):
+            source_path = str(source_path)
+            target_path = str(target_path)
+            if source_path in resources_added:
+                del resources_added[source_path]
+                resources_added.add(target_path)
+            elif resources_moved.has_value(source_path):
+                source_path = resources_moved.get_key(source_path)
+                resources_moved[source_path] = target_path
+            else:
+                resources_moved[source_path] = target_path
+
+
+        old_path = source.get_canonical_path()
+        if isinstance(source, Folder):
+            for x in source.traverse_resources():
+                x_old_path = x.get_canonical_path()
+                x_new_path = new_path.resolve2(old_path.get_pathto(x_old_path))
+                f(x_old_path, x_new_path)
+        else:
+            f(old_path, new_path)
 
 
     #######################################################################
     # Transactions API
     #######################################################################
     def _before_commit(self):
+        context = get_context()
+        root = context.root
         catalog = self.catalog
         documents_to_index = []
 
-        # Removed
+        # Update links when resources moved
+        for source, target in self.resources_moved.items():
+            if source != target:
+                target = Path(target)
+                resource = root.get_resource(target)
+                resource._on_move_resource(source)
+
+        # Index / Removed
         for path in self.resources_removed:
             catalog.unindex_document(path)
         self.resources_removed.clear()
 
-        # Added
+        # Index / Added
         for path in self.resources_added:
-            resource = self.resources_cache[path]
+            resource = root.get_resource(path)
             values = resource._get_catalog_values()
             documents_to_index.append((resource, values))
         self.resources_added.clear()
 
-        # Changed
-        for path in self.resources_changed:
-            resource = self.resources_cache[path]
-            catalog.unindex_document(path)
+        # Index / Moved (or changed)
+        for source, target in self.resources_moved.iteritems():
+            catalog.unindex_document(source)
+            resource = root.get_resource(target)
             values = resource._get_catalog_values()
             documents_to_index.append((resource, values))
-        self.resources_changed.clear()
-        self.resources_cache.clear()
+        self.resources_moved.clear()
 
         # Find out commit author & message
         git_author = 'nobody <>'
         git_message = 'no comment'
-        context = get_context()
         if context is not None:
             # Author
             user = context.user
@@ -181,10 +236,9 @@ class Database(GitDatabase):
         self.catalog.abort_changes()
 
         # Clear events
-        self.resources_cache.clear()
         self.resources_removed.clear()
         self.resources_added.clear()
-        self.resources_changed.clear()
+        self.resources_moved.clear()
 
 
 

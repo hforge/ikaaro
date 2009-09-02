@@ -27,7 +27,7 @@ from itools.gettext import MSG
 from itools.html import xhtml_uri, XHTMLFile
 from itools.stl import set_prefix
 from itools.uri import get_reference
-from itools.web import BaseView, get_context
+from itools.web import BaseView
 from itools.xml import START_ELEMENT
 
 # Import from ikaaro
@@ -222,6 +222,7 @@ class WebPage(ResourceWithHTML, Multilingual, Text):
     class_handler = XHTMLFile
 
 
+    # FIXME These three methods are private, add the heading underscore
     def get_links(self):
         base = self.get_abspath()
         languages = self.get_site_root().get_property('website_languages')
@@ -239,7 +240,6 @@ class WebPage(ResourceWithHTML, Multilingual, Text):
             events = list(events)
             handler.set_changed()
             handler.events = events
-        get_context().server.change_resource(self)
 
 
     def update_relative_links(self, target):
@@ -251,7 +251,6 @@ class WebPage(ResourceWithHTML, Multilingual, Text):
             events = list(events)
             handler.set_changed()
             handler.events = events
-        get_context().server.change_resource(self)
 
 
     #######################################################################
