@@ -45,6 +45,10 @@ def abort():
 
 
 def find_versions_to_update(root):
+    print 'STAGE 1: Find next version to upgrade (may take a while).'
+    version = None
+    resources = None
+
     # Find out the versions to upgrade
     versions = set()
     for resource in root.traverse_resources():
@@ -75,71 +79,68 @@ def find_versions_to_update(root):
 
         stdout.write('.')
         stdout.flush()
-        for version in next_versions:
-            versions.add(version)
+        next_version = next_versions[0]
+        if version is None or next_version < version:
+            version = next_version
+            resources = [resource]
+        elif next_version == version:
+            resources.append(resource)
 
-    versions = list(versions)
-    versions.sort()
-    return versions
+    return version, resources
 
 
 
-def update_versions(target, database, root, versions, confirm):
+def update_versions(target, database, root, version, resources):
     """Update the database to the given versions.
     """
     # Open the update log
     log = open('%s/log/update' % target, 'w')
 
     # Update
-    for version in versions:
-        message = 'STAGE 1: Upgrade to version %s (y/N)? ' % version
-        if ask_confirmation(message, confirm) is False:
-            abort()
-        # Go ahead
-        bad = 0
-        for resource in root.traverse_resources():
-            # Skip non-database resources
-            if not isinstance(resource, DBResource):
-                continue
+    bad = 0
+    for resource in resources:
+        # Skip non-database resources
+        if not isinstance(resource, DBResource):
+            continue
 
-            # Skip up-to-date resources
-            obj_version = resource.metadata.version
-            cls_version = resource.class_version
-            if obj_version == cls_version:
-                continue
+        # Skip up-to-date resources
+        obj_version = resource.metadata.version
+        cls_version = resource.class_version
+        if obj_version == cls_version:
+            continue
 
-            next_versions = resource.get_next_versions()
-            if not next_versions:
-                continue
+        next_versions = resource.get_next_versions()
+        if not next_versions:
+            continue
 
-            if next_versions[0] != version:
-                continue
+        if next_versions[0] != version:
+            continue
 
-            # Update
-            stdout.write('.')
-            stdout.flush()
-            try:
-                resource.update(version)
-            except:
-                path = resource.get_abspath()
-                log.write('%s %s\n' % (path, resource.__class__))
-                print_exc(file=log)
-                log.write('\n')
-                bad += 1
-        # Commit
-        get_context().git_message = u'Upgrade to version %s' % version
-        database.save_changes()
-        # Reset the state
-        database.cache.clear()
-        # Stop if there were errors
-        print
-        if bad > 0:
-            print '*'
-            print '* ERROR: %s resources failed to upgrade to version %s' \
-                  % (bad, version)
-            print '* Check the "%s/log/update" file.' % target
-            print '*'
-            exit(1)
+        # Update
+        stdout.write('.')
+        stdout.flush()
+        try:
+            resource.update(version)
+        except:
+            path = resource.get_abspath()
+            log.write('%s %s\n' % (path, resource.__class__))
+            print_exc(file=log)
+            log.write('\n')
+            bad += 1
+    # Commit
+    get_context().git_message = u'Upgrade to version %s' % version
+    database.save_changes()
+    # Reset the state
+    database.cache.clear()
+    # Stop if there were errors
+    print
+    if bad > 0:
+        print '*'
+        print '* ERROR: %s resources failed to upgrade to version %s' \
+              % (bad, version)
+        print '* Check the "%s/log/update" file.' % target
+        print '*'
+        exit(1)
 
 
 
@@ -189,16 +190,18 @@ def update(parser, options, target):
     #######################################################################
     # STAGE 1: Find out the versions to upgrade
     #######################################################################
-    print 'STAGE 1: Find out the versions to upgrade (may take a while).'
-    versions = find_versions_to_update(root)
+    start_subprocess('%s/database' % target)
+    version, resources = find_versions_to_update(root)
+    while version:
+        message = 'STAGE 1: Upgrade %d resources to version %s (y/N)? '
+        message = message % (len(resources), version)
+        if ask_confirmation(message, confirm) is False:
+            abort()
+        update_versions(target, database, root, version, resources)
+        print 'STAGE 1: Finish upgrading to version %s' % version
+        version, resources = find_versions_to_update(root)
 
-    if versions:
-        print
-        print 'STAGE 1: Versions to upgrade: %s.' % ', '.join(versions)
-        start_subprocess('%s/database' % target)
-        update_versions(target, database, root, versions, confirm)
-    else:
-        print 'STAGE 1: Nothing to do.'
+    print 'STAGE 1: Done.'
 
     # It is Done
     print '*'
