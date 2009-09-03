@@ -90,7 +90,7 @@ def find_versions_to_update(root):
 
 
 
-def update_versions(target, database, root, version, resources):
+def update_versions(target, database, version, resources):
     """Update the database to the given versions.
     """
     # Open the update log
@@ -121,7 +121,7 @@ def update_versions(target, database, root, version, resources):
         stdout.flush()
         try:
             resource.update(version)
-        except:
+        except Exception:
             path = resource.get_abspath()
             log.write('%s %s\n' % (path, resource.__class__))
             print_exc(file=log)
@@ -130,8 +130,6 @@ def update_versions(target, database, root, version, resources):
     # Commit
     get_context().git_message = u'Upgrade to version %s' % version
     database.save_changes()
-    # Reset the state
-    database.cache.clear()
     # Stop if there were errors
     print
     if bad > 0:
@@ -197,7 +195,10 @@ def update(parser, options, target):
         message = message % (len(resources), version)
         if ask_confirmation(message, confirm) is False:
             abort()
-        update_versions(target, database, root, version, resources)
+        update_versions(target, database, version, resources)
+        # Reset the state
+        database.cache.clear()
+        database.cache[root.metadata.uri] = root.metadata
         print 'STAGE 1: Finish upgrading to version %s' % version
         version, resources = find_versions_to_update(root)
 
