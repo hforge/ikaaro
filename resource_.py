@@ -463,7 +463,7 @@ class DBResource(CatalogAware, IResource):
         results = database.catalog.search(query).get_documents()
         for result in results:
             path = result.abspath
-            path = database.resources_moved.get(path, path)
+            path = database.resources_old2new.get(path, path)
             resource = self.get_resource(path)
             resource.update_links(source, target)
 

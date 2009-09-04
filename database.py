@@ -30,35 +30,6 @@ from registry import get_register_fields
 
 
 
-class TwoWayDict(dict):
-    def __init__(self):
-        self._reverse = {}
-
-    def __setitem__(self, key, value):
-        dict.__setitem__(self, key, value)
-        self._reverse[value] = key
-
-
-    def clear(self):
-        dict.clear(self)
-        self._reverse.clear()
-
-
-    def discard_value(self, value):
-        key = self._reverse.pop(value, None)
-        if key is not None:
-            del self[key]
-
-
-    def has_value(self, value):
-        return value in self._reverse
-
-
-    def get_key(self, value):
-        return self._reverse.get(value)
-
-
-
 class ReadOnlyDatabase(ROGitDatabase):
 
     def __init__(self, target, cache_size):
@@ -81,71 +52,84 @@ class Database(GitDatabase):
         GitDatabase.__init__(self, path, cache_size)
         self.catalog = Catalog('%s/catalog' % target, get_register_fields())
 
-        # Events
-        self.resources_added = set()
-        self.resources_removed = set()
-        self.resources_moved = TwoWayDict()
+        # Keep record of resources: added, removed, changed and moved
+        #
+        # This table summurizes the state of the dictionaries for any of the
+        # four possible operations:
+        #
+        #                      old2new    new2old
+        # (0) Nothing          {}         {}
+        # (1) Add "b"          {}         {b: None}
+        # (2) Remove "b"       {b: None}  {}
+        # (3) Change "b"       {b: b}     {b: b}
+        # (4) Move "b" to "c"  {b: c}     {c: b}
+        #
+        # TODO Document the algebra
+        #
+        self.resources_old2new = {}
+        self.resources_new2old = {}
 
 
     #######################################################################
     # Events API
     #######################################################################
     def remove_resource(self, resource):
-        resources_removed = self.resources_removed
-        resources_added = self.resources_added
-        resources_moved = self.resources_moved
+        old2new = self.resources_old2new
+        new2old = self.resources_new2old
 
         if isinstance(resource, Folder):
             for x in resource.traverse_resources():
                 path = str(x.get_canonical_path())
-                resources_added.discard(path)
-                resources_moved.discard_value(path)
-                resources_removed.add(path)
+                old2new[path] = None
+                new2old.pop(path, None)
         else:
             path = str(resource.get_canonical_path())
-            resources_added.discard(path)
-            resources_moved.discard_value(path)
-            resources_removed.add(path)
+            old2new[path] = None
+            new2old.pop(path, None)
 
 
     def add_resource(self, resource):
-        resources_added = self.resources_added
+        old2new = self.resources_old2new
+        new2old = self.resources_new2old
 
         # Catalog
         if isinstance(resource, Folder):
             for x in resource.traverse_resources():
                 path = str(x.get_canonical_path())
-                resources_added.add(path)
+                new2old[path] = None
         else:
             path = str(resource.get_canonical_path())
-            resources_added.add(path)
+            new2old[path] = None
 
 
     def change_resource(self, resource):
+        old2new = self.resources_old2new
+        new2old = self.resources_new2old
+
         path = str(resource.get_canonical_path())
-        if path in self.resources_removed:
-            raise ValueError, 'XXX'
-        if path in self.resources_added:
-            return
-        self.resources_moved[path] = path
+        if path in old2new and not old2new[path]:
+            raise ValueError, 'cannot change a resource that has been removed'
+
+        if path not in new2old:
+            old2new[path] = path
+            new2old[path] = path
 
 
     def move_resource(self, source, new_path):
-        resources_removed = self.resources_removed
-        resources_added = self.resources_added
-        resources_moved = self.resources_moved
+        old2new = self.resources_old2new
+        new2old = self.resources_new2old
 
         def f(source_path, target_path):
             source_path = str(source_path)
             target_path = str(target_path)
-            if source_path in resources_added:
-                del resources_added[source_path]
-                resources_added.add(target_path)
-            elif resources_moved.has_value(source_path):
-                source_path = resources_moved.get_key(source_path)
-                resources_moved[source_path] = target_path
-            else:
-                resources_moved[source_path] = target_path
+
+            if source_path in old2new and not old2new[source_path]:
+                raise ValueError, 'cannot move a resource that has been removed'
+
+            source_path = new2old.pop(source_path, source_path)
+            if source_path:
+                old2new[source_path] = target_path
+            new2old[target_path] = source_path
 
 
         old_path = source.get_canonical_path()
@@ -168,31 +152,23 @@ class Database(GitDatabase):
         documents_to_index = []
 
         # Update links when resources moved
-        for source, target in self.resources_moved.items():
-            if source != target:
+        for source, target in self.resources_old2new.items():
+            if target and source != target:
                 target = Path(target)
                 resource = root.get_resource(target)
                 resource._on_move_resource(source)
 
-        # Index / Removed
-        for path in self.resources_removed:
+        # UnIndex
+        for path in self.resources_old2new:
             catalog.unindex_document(path)
-        self.resources_removed.clear()
+        self.resources_old2new.clear()
 
-        # Index / Added
-        for path in self.resources_added:
+        # Index
+        for path in self.resources_new2old:
             resource = root.get_resource(path)
             values = resource._get_catalog_values()
             documents_to_index.append((resource, values))
-        self.resources_added.clear()
-
-        # Index / Moved (or changed)
-        for source, target in self.resources_moved.iteritems():
-            catalog.unindex_document(source)
-            resource = root.get_resource(target)
-            values = resource._get_catalog_values()
-            documents_to_index.append((resource, values))
-        self.resources_moved.clear()
+        self.resources_new2old.clear()
 
         # Find out commit author & message
         git_author = 'nobody <>'
@@ -236,9 +212,8 @@ class Database(GitDatabase):
         self.catalog.abort_changes()
 
         # Clear events
-        self.resources_removed.clear()
-        self.resources_added.clear()
-        self.resources_moved.clear()
+        self.resources_old2new.clear()
+        self.resources_new2old.clear()
 
 
 
