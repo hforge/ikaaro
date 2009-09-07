@@ -132,10 +132,8 @@ class Table_View(SearchForm):
                 value.sort()
             value_length = len(value)
             if value_length > 0:
-                rmultiple = value_length > 1
                 value = value[0]
             else:
-                rmultiple = False
                 value = None
 
         # Enumerate
@@ -143,8 +141,6 @@ class Table_View(SearchForm):
         if is_enumerate:
             value = datatype.get_value(value)
 
-        if is_multiple or is_tokens:
-            return value, rmultiple
         return value
 
 
