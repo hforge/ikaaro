@@ -118,16 +118,6 @@ class Folder(DBResource):
         return cls(metadata)
 
 
-    def _on_move_resource(self, target):
-        """Called by 'Folder.move_resource'.
-        """
-        # Update the resources inside the folder
-        for resource in self.get_resources():
-            resource._on_move_resource(target.resolve_name(resource.name))
-        # Update the folder itself
-        DBResource._on_move_resource(self, target)
-
-
     def del_resource(self, name, soft=False):
         database = get_context().database
         resource = self.get_resource(name, soft=soft)
@@ -136,15 +126,12 @@ class Folder(DBResource):
 
         # Check referencial-integrity
         catalog = database.catalog
-        # The catalog is not available when updating (icms-update.py)
-        # FIXME We do not guarantee referencial-integrity when updating
-        if catalog is not None:
-            # FIXME Check sub-resources too
-            path = str(resource.get_canonical_path())
-            results = catalog.search(links=path)
-            if len(results):
-                message = 'cannot delete, resource "%s" is referenced' % path
-                raise ConsistencyError, message
+        # FIXME Check sub-resources too
+        path = str(resource.get_canonical_path())
+        results = catalog.search(links=path)
+        if len(results):
+            message = 'cannot delete, resource "%s" is referenced' % path
+            raise ConsistencyError, message
 
         # Events, remove
         database.remove_resource(resource)
@@ -247,11 +234,9 @@ class Folder(DBResource):
             message = 'resource type "%r" cannot be moved into type "%r"'
             raise ConsistencyError, message % (source, target_parent)
 
-        # Update the links to the resources that are to be moved
-        new_path = self.get_canonical_path().resolve2(target_path)
-        source._on_move_resource(new_path)
         # Events, remove
-        database.remove_resource(source)
+        new_path = self.get_canonical_path().resolve2(target_path)
+        database.move_resource(source, new_path)
 
         # Move the metadata
         folder = self.handler
@@ -265,10 +250,6 @@ class Folder(DBResource):
             dst_uri = resolve_uri(target_uri, new_name)
             if folder.has_handler(src_uri):
                 folder.move_handler(src_uri, dst_uri)
-
-        # Events, add
-        resource = self.get_resource(target_path)
-        database.add_resource(resource)
 
 
     def traverse_resources(self):

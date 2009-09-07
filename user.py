@@ -78,7 +78,7 @@ class User(AccessControl, Folder):
         values = Folder._get_catalog_values(self)
         email = self.get_property('email')
         email_domain = None
-        if email.count('@'):
+        if email and email.count('@'):
             email_domain = email.split('@', 1)[1]
         values['email'] = email
         values['email_domain'] = email_domain

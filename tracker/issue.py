@@ -105,8 +105,6 @@ class Issue(Folder):
             if file == old_name:
                 value = str(base.get_pathto(new_path))
                 history.update_record(record.id, **{'file': value})
-        # Reindex
-        get_context().server.change_resource(self)
 
 
     #######################################################################
