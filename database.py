@@ -52,19 +52,40 @@ class Database(GitDatabase):
         GitDatabase.__init__(self, path, cache_size)
         self.catalog = Catalog('%s/catalog' % target, get_register_fields())
 
-        # Keep record of resources: added, removed, changed and moved
+        # The resources that been added, removed, changed and moved can be
+        # represented as a set of two element tuples.  But we implement this
+        # with two dictionaries (old2new/new2old), to be able to access any
+        # "tuple" by either value.  With the empty tuple we represent the
+        # absence of change.
         #
-        # This table summurizes the state of the dictionaries for any of the
-        # four possible operations:
+        #  Tuple        Description                Implementation
+        #  -----------  -------------------------  -------------------
+        #  ()           nothing has been done yet  {}/{}
+        #  (None, 'b')  resource 'b' added         {}/{'b':None}
+        #  ('b', None)  resource 'b' removed       {'b':None}/{}
+        #  ('b', 'b')   resource 'b' changed       {'b':'b'}/{'b':'b'}
+        #  ('b', 'c')   resource 'b' moved to 'c'  {'b':'c'}/{'c':'b'}
         #
-        #                      old2new    new2old
-        # (0) Nothing          {}         {}
-        # (1) Add "b"          {}         {b: None}
-        # (2) Remove "b"       {b: None}  {}
-        # (3) Change "b"       {b: b}     {b: b}
-        # (4) Move "b" to "c"  {b: c}     {c: b}
+        # In real life, every value is either None or an absolute path (as a
+        # byte stringi).  For the description that follows, we use the tuples
+        # as a compact representation.
         #
-        # TODO Document the algebra
+        # There are four operations:
+        #
+        #  A(b)   - add "b"
+        #  R(b)   - remove "b"
+        #  C(b)   - change "b"
+        #  M(b,c) - move "b" to "c"
+        #
+        # Then, the algebra is:
+        #
+        # ()        -> A(b) -> (None, 'b')
+        # (b, None) -> A(b) -> (b, b)
+        # (None, b) -> A(b) -> error
+        # (b, b)    -> A(b) -> error
+        # (b, c)    -> A(b) -> (b, b), (None, c) FIXME Is this correct?
+        #
+        # TODO Finish
         #
         self.resources_old2new = {}
         self.resources_new2old = {}
