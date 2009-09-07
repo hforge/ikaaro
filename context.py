@@ -69,8 +69,8 @@ class CMSContext(WebContext):
         # TODO Finish
         #
         self.cache = {}
-        self.cache_old2new = set()
-        self.cache_new2old = set()
+        self.cache_old2new = {}
+        self.cache_new2old = {}
 
 
     def get_template(self, path):
