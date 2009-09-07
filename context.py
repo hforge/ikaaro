@@ -33,7 +33,6 @@ class CMSContext(WebContext):
     def __init__(self, soup_message, path):
         WebContext.__init__(self, soup_message, path)
         # Resources
-        self.cache = {}
         # The resources that been added, removed, changed and moved can be
         # represented as a set of two element tuples.  But we implement this
         # with two dictionaries (old2new/new2old), to be able to access any
@@ -69,8 +68,9 @@ class CMSContext(WebContext):
         #
         # TODO Finish
         #
-        self.resources_old2new = {}
-        self.resources_new2old = {}
+        self.cache = {}
+        self.cache_old2new = {}
+        self.cache_new2old = {}
 
 
     def get_template(self, path):
@@ -272,7 +272,7 @@ class CMSContext(WebContext):
             return resource
 
         # Lookup the resource
-        old2new = self.resources_old2new
+        old2new = self.cache_old2new
         if key in old2new and old2new[key] != key:
             resource = None
         else:
@@ -292,8 +292,8 @@ class CMSContext(WebContext):
 
 
     def remove_resource(self, resource):
-        old2new = self.resources_old2new
-        new2old = self.resources_new2old
+        old2new = self.cache_old2new
+        new2old = self.cache_new2old
 
         if isinstance(resource, Folder):
             for x in resource.traverse_resources():
@@ -309,8 +309,8 @@ class CMSContext(WebContext):
 
 
     def add_resource(self, resource):
-        old2new = self.resources_old2new
-        new2old = self.resources_new2old
+        old2new = self.cache_old2new
+        new2old = self.cache_new2old
 
         # Catalog
         if isinstance(resource, Folder):
@@ -325,8 +325,8 @@ class CMSContext(WebContext):
 
 
     def change_resource(self, resource):
-        old2new = self.resources_old2new
-        new2old = self.resources_new2old
+        old2new = self.cache_old2new
+        new2old = self.cache_new2old
 
         path = str(resource.path)
         if path in old2new and not old2new[path]:
@@ -338,8 +338,8 @@ class CMSContext(WebContext):
 
 
     def move_resource(self, source, new_path):
-        old2new = self.resources_old2new
-        new2old = self.resources_new2old
+        old2new = self.cache_old2new
+        new2old = self.cache_new2old
 
         def f(source_path, target_path):
             source_path = str(source_path)
@@ -394,28 +394,28 @@ class CMSContext(WebContext):
     def abort_changes(self):
         self.database.abort_changes()
         self.database._cleanup()
-        self.resources_old2new.clear()
-        self.resources_new2old.clear()
+        self.cache_old2new.clear()
+        self.cache_new2old.clear()
 
 
     def save_changes(self):
         cache = self.cache
 
         # Update links when resources moved
-        for source, target in self.resources_old2new.items():
+        for source, target in self.cache_old2new.items():
             if target and source != target:
                 cache[target]._on_move_resource(source)
 
         # Index
-        docs_to_unindex = self.resources_old2new.keys()
-        for path in self.resources_new2old:
+        docs_to_unindex = self.cache_old2new.keys()
+        for path in self.cache_new2old:
             resource = cache[path]
             values = resource._get_catalog_values()
             docs_to_index.append((resource, values))
 
         # Clear
-        self.resources_old2new.clear()
-        self.resources_new2old.clear()
+        self.cache_old2new.clear()
+        self.cache_new2old.clear()
 
         # Versioning / Author
         user = self.user
