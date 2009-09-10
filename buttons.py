@@ -117,6 +117,24 @@ class PublishButton(Button):
 
 
 
+class RetireButton(Button):
+
+    access = 'is_allowed_to_retire'
+    css = 'button_retire'
+    name = 'retire'
+    title = MSG(u'Unpublish')
+
+
+    @classmethod
+    def show(cls, resource, context, items):
+        ac = resource.get_access_control()
+        for item in items:
+            if ac.is_allowed_to_trans(context.user, item, 'retire'):
+                return True
+        return False
+
+
+
 class OrderUpButton(Button):
 
     access = 'is_allowed_to_edit'

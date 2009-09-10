@@ -92,3 +92,5 @@ MSG_COPIED = INFO(u'Resources copied.')
 MSG_CUT = INFO(u'Resources cut.')
 
 MSG_PUBLISHED = INFO(u'Resources published.')
+
+MSG_RETIRED = INFO(u'Resources retired.')

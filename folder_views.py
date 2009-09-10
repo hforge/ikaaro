@@ -37,7 +37,7 @@ from itools.xml import XMLParser
 
 # Import from ikaaro
 from buttons import RemoveButton, RenameButton, CopyButton, CutButton
-from buttons import PasteButton, PublishButton
+from buttons import PasteButton, PublishButton, RetireButton
 from datatypes import CopyCookie, ImageWidth
 from exceptions import ConsistencyError
 import messages
@@ -370,7 +370,7 @@ class Folder_BrowseContent(SearchForm):
 
     table_actions = [
         RemoveButton, RenameButton, CopyButton, CutButton, PasteButton,
-        PublishButton]
+        PublishButton, RetireButton]
 
 
     #######################################################################
@@ -560,10 +560,10 @@ class Folder_BrowseContent(SearchForm):
         context.message = message
 
 
-    def action_publish(self, resource, context, form):
+    def _action_workflow(self, resource, context, form, transition, statename,
+                         message):
         resources = [ resource.get_resource(id) for id in form['ids'] ]
         user = context.user
-        transition = 'publish'
         # Check there is at least one item we can publish
         ac = resource.get_access_control()
         allowed = [ x for x in resources
@@ -574,7 +574,7 @@ class Folder_BrowseContent(SearchForm):
 
         # Publish
         for item in allowed:
-            if item.get_statename() == 'public':
+            if item.get_statename() == statename:
                 continue
             # Update workflow history
             property = {'date': datetime.now(),
@@ -585,7 +585,17 @@ class Folder_BrowseContent(SearchForm):
             item.do_trans(transition)
 
         # Ok
-        context.message = messages.MSG_PUBLISHED
+        context.message = message
+
+
+    def action_publish(self, resource, context, form):
+        self._action_workflow(resource, context, form, 'publish', 'public',
+                              messages.MSG_PUBLISHED)
+
+
+    def action_retire(self, resource, context, form):
+        self._action_workflow(resource, context, form, 'retire', 'private',
+                              messages.MSG_RETIRED)
 
 
 

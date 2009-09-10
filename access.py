@@ -356,6 +356,10 @@ class AccessControl(BaseAccessControl):
         return self.is_allowed_to_trans(user, resource, 'publish')
 
 
+    def is_allowed_to_retire(self, user, resource):
+        return self.is_allowed_to_trans(user, resource, 'retire')
+
+
     def is_allowed_to_view_folder(self, user, resource):
         try:
             index = resource.get_resource('index')
