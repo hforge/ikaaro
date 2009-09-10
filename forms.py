@@ -467,7 +467,8 @@ class PathSelectorWidget(TextWidget):
 
     def get_namespace(self, datatype, value):
         context = get_context()
-        resource = context.resource.get_resource(value, soft=True)
+        path = datatype.encode(value)
+        resource = context.resource.get_resource(path, soft=True)
         workflow_state = None
         if resource:
             workflow_state = get_workflow_preview(resource, context)
