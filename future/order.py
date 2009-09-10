@@ -30,13 +30,12 @@ from ikaaro.buttons import OrderDownButton, OrderBottomButton, OrderTopButton
 from ikaaro.file import Image
 from ikaaro.folder import Folder
 from ikaaro.folder_views import Folder_BrowseContent, GoToSpecificDocument
-from ikaaro.folder_views import get_workflow_preview
 from ikaaro.registry import register_resource_class
 from ikaaro.table import OrderedTableFile, OrderedTable
 from ikaaro.table_views import OrderedTable_View
 from ikaaro.utils import get_base_path_query
 from ikaaro.views import CompositeForm
-from ikaaro.workflow import WorkflowAware
+from ikaaro.workflow import get_workflow_preview
 
 
 class AddButton(Button):
@@ -124,8 +123,6 @@ class ResourcesOrderedTable_Ordered(OrderedTable_View):
                 label = MSG(u'Broken').gettext().encode('utf-8')
                 state = '<strong class="broken">%s</strong>' % label
                 return XMLParser(state)
-            if not isinstance(item_resource, WorkflowAware):
-                return None
             return get_workflow_preview(item_resource, context)
         elif column == 'order_preview':
             if item_resource is None:
@@ -204,8 +201,6 @@ class ResourcesOrderedTable_Unordered(Folder_BrowseContent):
             return item_brain.name
         elif column == 'workflow_state':
             # The workflow state
-            if not isinstance(item_resource, WorkflowAware):
-                return None
             return get_workflow_preview(item_resource, context)
         elif column == 'order_preview':
             return get_resource_preview(item_resource,

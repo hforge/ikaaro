@@ -138,10 +138,11 @@ if __name__ == '__main__':
     version = 'itools %s' % __version__
     description = (
         'Forgets the old history from the Git archive, reducing disk space '
-        'and improving performance.')
+        'and improving performance.  If no options are giving, it will show '
+        'some statistics.')
     parser = OptionParser(usage, version=version, description=description)
     parser.add_option('-d', '--days', type='int',
-        help="How many days to remember (default is 28).")
+        help="How many days to remember.")
 
     # Parse arguments
     options, args = parser.parse_args()
