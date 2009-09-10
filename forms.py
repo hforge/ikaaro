@@ -28,6 +28,10 @@ from itools.stl import stl
 from itools.web import STLForm, get_context
 from itools.xml import XMLParser
 
+# Import from ikaaro
+from ikaaro.workflow import get_workflow_preview
+
+
 
 stl_namespaces = {
     None: 'http://www.w3.org/1999/xhtml',
@@ -457,16 +461,24 @@ class PathSelectorWidget(TextWidget):
     <input id="selector-button-${name}" type="button" value="..."
       name="selector_button_${name}"
       onclick="popup(';${action}?target_id=selector-${name}&amp;mode=input', 620, 300);"/>
+    ${workflow_state}
     """, stl_namespaces))
 
 
     def get_namespace(self, datatype, value):
+        context = get_context()
+        resource = context.resource.get_resource(value, soft=True)
+        workflow_state = None
+        if resource:
+            workflow_state = get_workflow_preview(resource, context)
+
         return {
             'type': self.type,
             'name': self.name,
             'value': value,
             'size': self.size,
-            'action': self.action}
+            'action': self.action,
+            'workflow_state': workflow_state}
 
 
 
@@ -483,6 +495,7 @@ class ImageSelectorWidget(PathSelectorWidget):
     <input id="selector-button-${name}" type="button" value="..."
       name="selector_button_${name}"
       onclick="popup(';${action}?target_id=selector-${name}&amp;mode=input', 620, 300);" />
+    ${workflow_state}
     <br/>
     <img src="${value}/;thumb?width=${width}&amp;height=${height}" stl:if="value"/>
     """, stl_namespaces))

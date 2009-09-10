@@ -16,16 +16,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Import from the Standard Library
-from datetime import datetime
-
 # Import from itools
-from itools.datatypes import DateTime, String, Unicode
+from itools.datatypes import String, Unicode
 from itools.gettext import MSG
 from itools.i18n import format_datetime
 from itools.web import STLForm, INFO, ERROR, get_context
 from itools.workflow import Workflow, WorkflowAware as BaseWorkflowAware
 from itools.workflow import WorkflowError
+from itools.xml import XMLParser
+
 
 
 ###########################################################################
@@ -232,3 +231,17 @@ class WorkflowAware(BaseWorkflowAware):
         if metadata.has_property('wf_transition'):
             metadata.del_property('wf_transition')
 
+
+
+def get_workflow_preview(resource, context):
+    if not isinstance(resource, WorkflowAware):
+        return None
+    statename = resource.get_statename()
+    state = resource.get_state()
+    msg = state['title'].gettext().encode('utf-8')
+    path = context.get_link(resource)
+    # TODO Include the template in the base table
+    state = ('<a href="%s/;edit_state" class="workflow">'
+             '<strong class="wf-%s">%s</strong>'
+             '</a>') % (path, statename, msg)
+    return XMLParser(state)

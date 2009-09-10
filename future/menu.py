@@ -33,14 +33,14 @@ from ikaaro.folder import Folder
 from ikaaro.folder_views import Folder_NewResource, Folder_BrowseContent
 from ikaaro.folder_views import Folder_Rename, Folder_PreviewContent
 from ikaaro.folder_views import Folder_Thumbnail, GoToSpecificDocument
-from ikaaro.folder_views import get_workflow_preview, Folder_Orphans
+from ikaaro.folder_views import Folder_Orphans
 from ikaaro.forms import PathSelectorWidget
 from ikaaro.forms import TextWidget, SelectWidget, ReadOnlyWidget
 from ikaaro.registry import register_resource_class
 from ikaaro.revisions_views import DBResource_LastChanges
 from ikaaro.table import OrderedTableFile, OrderedTable
 from ikaaro.table_views import OrderedTable_View
-from ikaaro.workflow import WorkflowAware
+from ikaaro.workflow import get_workflow_preview
 
 
 
@@ -170,8 +170,7 @@ class Menu_View(OrderedTable_View):
                          'title="%s"><strong class="broken">%s</strong>'
                          '</a>') % (link, item.id, title, label)
                 return XMLParser(state)
-            if not isinstance(item_resource, WorkflowAware):
-                return None
+            # The workflow state
             return get_workflow_preview(item_resource, context)
 
         return OrderedTable_View.get_item_value(self, resource, context, item,

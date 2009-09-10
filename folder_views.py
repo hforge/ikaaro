@@ -33,7 +33,6 @@ from itools.stl import set_prefix
 from itools.uri import get_reference, Path
 from itools.web import BaseView, STLForm, ERROR
 from itools.xapian import AndQuery, OrQuery, PhraseQuery
-from itools.xml import XMLParser
 
 # Import from ikaaro
 from buttons import RemoveButton, RenameButton, CopyButton, CutButton
@@ -44,19 +43,7 @@ import messages
 from utils import generate_name, get_base_path_query
 from views import IconsView, SearchForm, ContextMenu
 from views_new import AddResourceMenu
-from workflow import WorkflowAware
-
-
-def get_workflow_preview(resource, context):
-    statename = resource.get_statename()
-    state = resource.get_state()
-    msg = state['title'].gettext().encode('utf-8')
-    path = context.get_link(resource)
-    # TODO Include the template in the base table
-    state = ('<a href="%s/;edit_state" class="workflow">'
-             '<strong class="wf-%s">%s</strong>'
-             '</a>') % (path, statename, msg)
-    return XMLParser(state)
+from workflow import WorkflowAware, get_workflow_preview
 
 
 
@@ -362,8 +349,6 @@ class Folder_BrowseContent(SearchForm):
             return item_resource.get_human_size()
         elif column == 'workflow_state':
             # The workflow state
-            if not isinstance(item_resource, WorkflowAware):
-                return None
             return get_workflow_preview(item_resource, context)
 
 
