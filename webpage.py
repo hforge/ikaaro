@@ -43,6 +43,8 @@ from resource_ import DBResource
 
 
 def _get_links(base, events):
+    map = {'a': 'href', 'img': 'src', 'iframe': 'src'}
+
     links = []
     for event, value, line in events:
         if event != START_ELEMENT:
@@ -50,29 +52,31 @@ def _get_links(base, events):
         tag_uri, tag_name, attributes = value
         if tag_uri != xhtml_uri:
             continue
-        if tag_name == 'a':
-            value = attributes.get((None, 'href'))
-            if value is None:
-                continue
-            uri = get_reference(value)
-            if uri.scheme or uri.authority or not uri.path:
-                continue
-            path = uri.path
-        elif tag_name == 'img':
-            value = attributes.get((None, 'src'))
-            if value is None:
-                continue
-            uri = get_reference(value)
-            if uri.scheme or uri.authority or not uri.path:
-                continue
-            path = uri.path
-            # Strip the view
-            if path[-1] in (';download', ';thumb'):
-                path = path[:-1]
-        else:
+
+        # Get the attribute name and value
+        attr_name = map.get(tag_name)
+        if attr_name is None:
             continue
+
+        attr_name = (None, attr_name)
+        value = attributes.get(attr_name)
         if value is None:
             continue
+
+        reference = get_reference(value)
+
+        # Skip empty links, external links and links to '/ui/'
+        if reference.scheme or reference.authority:
+            continue
+        path = reference.path
+        if not path or path.is_absolute() and path[0] == 'ui':
+            continue
+
+        # Strip the view
+        name = path.get_name()
+        if name and name[0] == ';':
+            path = path[:-1]
+
         uri = base.resolve2(path)
         uri = str(uri)
         links.append(uri)
@@ -80,7 +84,7 @@ def _get_links(base, events):
 
 
 def _change_link(source, target, base, stream):
-    map = {'a': 'href', 'img': 'src'}
+    map = {'a': 'href', 'img': 'src', 'iframe': 'src'}
 
     for event in stream:
         # Process only elements of the XHTML namespace
@@ -117,8 +121,9 @@ def _change_link(source, target, base, stream):
             continue
 
         # Strip the view
-        if path[-1] in (';download', ';thumb'):
-            view = '/%s' % path[-1]
+        name = path.get_name()
+        if name and name[0] == ';':
+            view = '/' + name
             path = path[:-1]
         else:
             view = ''
