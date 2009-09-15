@@ -79,17 +79,24 @@ def info(parser, target):
 
 
 
-def forget(parser, target, days):
+def forget(parser, target, options):
     # Find out the commit to start from
     commits = get_commits(target)
     if len(commits) == 0:
         print 'There is nothing to forget.'
         return
 
-    for commit in commits:
-        since, delta = commit
-        if delta > days:
-            break
+    if options.commits is not None:
+        if len(commits) > options.commits:
+            since = commits[options.commits][0]
+        else:
+            print 'There is nothing to forget'
+            return
+    else:
+        for commit in commits:
+            since, delta = commit
+            if delta > options.days:
+                break
 
     # Check the server is not running
     pid = get_pid(target)
@@ -143,16 +150,19 @@ if __name__ == '__main__':
     parser = OptionParser(usage, version=version, description=description)
     parser.add_option('-d', '--days', type='int',
         help="How many days to remember.")
+    parser.add_option('-c', '--commits', type='int',
+        help="How many commits to keep")
 
     # Parse arguments
     options, args = parser.parse_args()
     if len(args) != 1:
         parser.error('incorrect number of arguments')
+    if options.days is not None and options.commits is not None:
+        parser.error('--days and --commits are mutually exclusive.')
 
     # Ok
     target = args[0]
-    days = options.days
-    if days is None:
+    if options.days is None and options.commits is None:
         info(parser, target)
     else:
-        forget(parser, target, days)
+        forget(parser, target, options)
