@@ -15,10 +15,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
-from subprocess import call, PIPE
+from datetime import datetime
 
 # Import from itools
-from itools.core import get_pipe
+from itools.core import get_pipe, send_subprocess
 from itools.handlers import ROGitDatabase, GitDatabase, make_git_database
 from itools.uri import Path
 from itools.web import get_context
@@ -40,9 +40,75 @@ class ReadOnlyDatabase(ROGitDatabase):
         self.catalog = Catalog('%s/catalog' % target, get_register_fields(),
                                read_only=True)
 
+        # Git cache (lazy load)
+        self.git_cache = None
 
 
-class Database(GitDatabase):
+    def get_revisions(self, files, n=None):
+        cmd = ['git', 'rev-list', '--pretty=format:%an%n%at%n%s']
+        if n is not None:
+            cmd = cmd + ['-n', str(n)]
+        cmd = cmd + ['HEAD', '--'] + files
+        data = send_subprocess(cmd)
+
+        # Parse output
+        revisions = []
+        lines = data.splitlines()
+        for idx in range(len(lines) / 4):
+            base = idx * 4
+            ts = int(lines[base+2])
+            revisions.append(
+                {'revision': lines[base].split()[1], # commit
+                 'username': lines[base+1],          # author name
+                 'date': datetime.fromtimestamp(ts), # author date
+                 'message': lines[base+3],           # subject
+                })
+        # Ok
+        return revisions
+
+
+    def load_git_cache(self):
+        self.git_cache = {}
+        cmd = ['git', 'log', '--pretty=format:%H%n%an%n%at%n%s', '--raw']
+        data = send_subprocess(cmd)
+        lines = data.splitlines()
+        while lines:
+            date = int(lines[2])
+            commit = {
+                'revision': lines[0],                 # commit
+                'username': lines[1],                 # author name
+                'date': datetime.fromtimestamp(date), # author date
+                'message': lines[3],                  # subject
+                }
+            # Modified files
+            lines = lines[4:]
+            while lines and lines[0]:
+                file = lines[0].rsplit('\t', 1)[1]
+                self.git_cache.setdefault(file, commit)
+                lines = lines[1:]
+            lines = lines[1:]
+
+
+    def get_last_revision(self, files):
+        if self.git_cache is None:
+            self.load_git_cache()
+
+        n = len(self.path)
+        last_commit = None
+
+        for file in files:
+            file = file[n:]
+            commit = self.git_cache.get(file)
+            if not commit:
+                continue
+            if not last_commit or commit['date'] > last_commit['date']:
+                last_commit = commit
+
+        return last_commit
+
+
+
+class Database(ReadOnlyDatabase, GitDatabase):
     """Adds a Git archive to the itools database.
     """
 
@@ -89,6 +155,15 @@ class Database(GitDatabase):
         #
         self.resources_old2new = {}
         self.resources_new2old = {}
+
+
+    #######################################################################
+    # Git API
+    #######################################################################
+    def get_last_revision(self, files):
+        # The git cache only works on read-only mode
+        revisions = self.get_revisions(files, 1)
+        return revisions[0] if revisions else None
 
 
     #######################################################################
