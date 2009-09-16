@@ -234,6 +234,7 @@ class WikiPage(Text):
             new_data.append(segment)
         new_data = ''.join(new_data)
         self.handler.load_state_from_string(new_data)
+        get_context().database.change_resource(self)
 
 
     #######################################################################
