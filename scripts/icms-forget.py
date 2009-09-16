@@ -93,6 +93,9 @@ def forget(parser, target, options):
             print 'There is nothing to forget'
             return
     else:
+        if commits[len(commits) - 1][1] <= options.days:
+            print 'There is nothing to forget.'
+            return
         for commit in commits:
             since, delta = commit
             if delta > options.days:
