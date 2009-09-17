@@ -425,6 +425,7 @@ class DateWidget(Widget):
 class PathSelectorWidget(TextWidget):
 
     action = 'add_link'
+    display_workflow = True
 
     template = make_stl_template("""
     <input type="text" id="selector-${name}" size="${size}" name="${name}"
@@ -436,12 +437,14 @@ class PathSelectorWidget(TextWidget):
 
 
     def get_namespace(self, datatype, value):
-        context = get_context()
-        path = datatype.encode(value)
-        resource = context.resource.get_resource(path, soft=True)
         workflow_state = None
-        if resource:
-            workflow_state = get_workflow_preview(resource, context)
+        if self.display_workflow:
+            context = get_context()
+            path = datatype.encode(value)
+            if path:
+                resource = context.resource.get_resource(path, soft=True)
+                if resource:
+                    workflow_state = get_workflow_preview(resource, context)
 
         return {
             'type': self.type,

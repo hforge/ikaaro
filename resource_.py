@@ -19,12 +19,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Import from the Standard Library
-from datetime import datetime
-
 # Import from itools
 from itools.csv import Property
-from itools.core import send_subprocess, read_subprocess
 from itools.datatypes import Unicode, String, Integer, Boolean, DateTime
 from itools.http import get_context
 from itools.uri import Path
@@ -289,41 +285,16 @@ class DBResource(CatalogAware, IResource):
         raise NotImplementedError
 
 
-    def get_revisions(self, n=None, content=False, action=0):
-        # action
-        # 0: normal
-        # 1: call git, and come back
-        # 2: read the the data from git
+    def get_revisions(self, n=None, content=False):
+        files = self.get_files_to_archive(content)
+        database = get_context().database
+        return database.get_revisions(files, n)
 
-        if action == 0 or action == 1:
-            # Make the Git command
-            files = self.get_files_to_archive(content)
-            cmd = ['git', 'rev-list', '--pretty=format:%an%n%at%n%s']
-            if n is not None:
-                cmd = cmd + ['-n', str(n)]
-            cmd = cmd + ['HEAD', '--'] + files
-            if action == 0:
-                data = send_subprocess(cmd)
-            else:
-                send_subprocess(cmd, wait=False)
-                return
-        else:
-            data = read_subprocess()
 
-        # Parse output
-        revisions = []
-        lines = data.splitlines()
-        for idx in range(len(lines) / 4):
-            base = idx * 4
-            ts = int(lines[base+2])
-            revisions.append(
-                {'revision': lines[base].split()[1], # commit
-                 'username': lines[base+1],          # author name
-                 'date': datetime.fromtimestamp(ts), # author date
-                 'message': lines[base+3],           # subject
-                })
-        # Ok
-        return revisions
+    def get_last_revision(self):
+        files = self.get_files_to_archive()
+        database = get_context().database
+        return database.get_last_revision(files)
 
 
     def get_owner(self):
@@ -334,15 +305,13 @@ class DBResource(CatalogAware, IResource):
 
 
     def get_last_author(self):
-        revisions = self.get_revisions(1)
-        if not revisions:
-            return None
-        return revisions[0]['username']
+        revision = self.get_last_revision()
+        return revision['username'] if revision else None
 
 
     def get_mtime(self):
-        revisions = self.get_revisions(1)
-        return revisions[0]['date'] if revisions else None
+        revision = self.get_last_revision()
+        return revisions['date'] if revision else None
 
 
     ########################################################################
@@ -458,17 +427,15 @@ class DBResource(CatalogAware, IResource):
 
 
     def get_catalog_values(self, values=None):
-        revisions = self.get_revisions(1, action=1)
         if values is None:
             values = self._get_catalog_values()
 
-        # Get revisions
-        revisions = self.get_revisions(action=2)
-        if not revisions:
+        # Get last revision
+        revision = self.get_last_revision()
+        if not revision:
             return values
 
         # Ok
-        revision = revisions[0]
         context = get_context()
         values['last_author'] = context.get_user_title(revision['username'])
         values['mtime'] = revision['date']

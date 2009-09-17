@@ -31,6 +31,7 @@ from itools.handlers import checkid
 from itools.http import get_context
 from itools.vfs import FileName
 from itools.uri import get_uri_path
+from itools.web import get_context
 
 # Import from ikaaro
 from ikaaro.file import File
@@ -105,6 +106,7 @@ class Issue(Folder):
             if file == old_name:
                 value = str(base.get_pathto(new_path))
                 history.update_record(record.id, **{'file': value})
+        get_context().database.change_resource(self)
 
 
     #######################################################################

@@ -20,7 +20,7 @@ from itools.datatypes import String, Tokens
 from itools.gettext import MSG
 from itools.uri import resolve_uri2
 from itools.stl import set_prefix
-from itools.web import INFO
+from itools.web import INFO, get_context
 from itools.xapian import AndQuery, OrQuery, PhraseQuery, NotQuery
 from itools.xml import XMLParser
 
@@ -349,6 +349,7 @@ class ResourcesOrderedTable(OrderedTable):
             if path == source:
                 new_path = str(base.get_pathto(target))
                 handler.update_record(record.id, **{'name': new_path})
+        get_context().database.change_resource(self)
 
 
 
