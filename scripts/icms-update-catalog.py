@@ -45,7 +45,7 @@ def update_catalog(parser, options, target):
         return
 
     # Check for database consistency
-    if check_database(target) is False:
+    if options.quick is False and check_database(target) is False:
         return 1
 
     # Ask
@@ -119,6 +119,9 @@ if __name__ == '__main__':
         help="define the size of the database cache (default 400:600)")
     parser.add_option('-q', '--quiet', action='store_true',
         help="be quiet")
+    parser.add_option(
+        '--quick', action="store_true", default=False,
+        help="Do not check the database consistency.")
 
     options, args = parser.parse_args()
     if len(args) != 1:
