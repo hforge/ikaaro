@@ -311,7 +311,7 @@ class DBResource(CatalogAware, IResource):
 
     def get_mtime(self):
         revision = self.get_last_revision()
-        return revisions['date'] if revision else None
+        return revision['date'] if revision else None
 
 
     ########################################################################

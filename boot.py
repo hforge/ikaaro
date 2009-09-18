@@ -49,14 +49,14 @@ class CMSConfig(ConfigFile):
         'smtp-login': String(default=''),
         'smtp-password': String(default=''),
         'log-level': String(default='warning'),
-        'database-size': Integer(default=5000),
+        'database-size': String(default='4800:5200'),
         'profile-time': Boolean(default=False),
         'profile-space': Boolean(default=False),
         'index-text': Boolean(default=True)}
 
 
 
-def get_server(target, read_only=False):
+def get_server(target, cache_size=None, read_only=False):
     # Load configuration file
     config = CMSConfig('%s/config.conf' % target)
     globals.config = config
@@ -95,9 +95,15 @@ def get_server(target, read_only=False):
     server.context_class = CMSContext
 
     # Mount /
-    cache_size = get_value('database-size')
+    if cache_size is None:
+        cache_size = get_value('database-size')
+    if ':' in cache_size:
+        size_min, size_max = cache_size.split(':')
+    else:
+        size_min = size_max = cache_size
+    size_min, size_max = int(size_min), int(size_max)
     index_text =  get_value('index-text')
-    root = CMSApplication(target, cache_size, read_only, index_text)
+    root = CMSApplication(target, size_min, size_max, read_only, index_text)
     server.mount('/', root)
 
     # Mount /ui

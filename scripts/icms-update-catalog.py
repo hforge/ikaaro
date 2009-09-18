@@ -38,13 +38,13 @@ def update_catalog(parser, options, target):
     from ikaaro.registry import get_register_fields
 
     # Check the server is not started, or started in read-only mode
-    server = get_server(target, True)
+    server = get_server(target, options.cache_size, True)
     if is_running_in_rw_mode():
         print 'Cannot proceed, the server is running in read-write mode.'
         return
 
     # Check for database consistency
-    if check_database(target) is False:
+    if options.quick is False and check_database(target) is False:
         return 1
 
     # Ask
@@ -110,8 +110,13 @@ if __name__ == '__main__':
         help="start the update without asking confirmation")
     parser.add_option('--profile',
         help="print profile information to the given file")
+    parser.add_option('--cache-size', default='400:600',
+        help="define the size of the database cache (default 400:600)")
     parser.add_option('-q', '--quiet', action='store_true',
         help="be quiet")
+    parser.add_option(
+        '--quick', action="store_true", default=False,
+        help="Do not check the database consistency.")
 
     options, args = parser.parse_args()
     if len(args) != 1:

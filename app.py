@@ -34,9 +34,9 @@ class CMSApplication(WebApplication):
 
     context_class = CMSContext
 
-    def __init__(self, target, cache_size, read_only, index_text):
+    def __init__(self, target, size_min, size_max, read_only, index_text):
         self.target = target
-        self.database = get_database(target, cache_size, read_only)
+        self.database = get_database(target, size_min, size_max, read_only)
         self.index_text = index_text
 
 
