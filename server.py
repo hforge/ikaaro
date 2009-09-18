@@ -161,7 +161,12 @@ class Server(BaseServer):
         # The database
         if cache_size is None:
             cache_size = config.get_value('database-size')
-        database = get_database(path, cache_size, read_only=read_only)
+        if ':' in cache_size:
+            size_min, size_max = cache_size.split(':')
+        else:
+            size_min = size_max = cache_size
+        size_min, size_max = int(size_min), int(size_max)
+        database = get_database(path, size_min, size_max, read_only=read_only)
         self.database = database
 
         # Find out the root class

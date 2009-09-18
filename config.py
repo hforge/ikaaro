@@ -35,7 +35,7 @@ class ServerConfig(ConfigFile):
         'smtp-login': String(default=''),
         'smtp-password': String(default=''),
         'log-level': String(default='warning'),
-        'database-size': Integer(default=5000),
+        'database-size': String(default='4800:5200'),
         'profile-time': Boolean(default=False),
         'profile-space': Boolean(default=False),
         'index-text': Boolean(default=True),

@@ -32,11 +32,11 @@ from registry import get_register_fields
 
 class ReadOnlyDatabase(ROGitDatabase):
 
-    def __init__(self, target, cache_size):
+    def __init__(self, target, size_min, size_max):
         self.path = '%s/database' % target
 
         # Database/Catalog
-        ROGitDatabase.__init__(self, self.path, cache_size)
+        ROGitDatabase.__init__(self, self.path, size_min, size_max)
         self.catalog = Catalog('%s/catalog' % target, get_register_fields(),
                                read_only=True)
 
@@ -112,10 +112,10 @@ class Database(ReadOnlyDatabase, GitDatabase):
     """Adds a Git archive to the itools database.
     """
 
-    def __init__(self, target, cache_size):
+    def __init__(self, target, size_min, size_max):
         # Database/Catalog
         path = '%s/database' % target
-        GitDatabase.__init__(self, path, cache_size)
+        GitDatabase.__init__(self, path, size_min, size_max)
         self.catalog = Catalog('%s/catalog' % target, get_register_fields())
 
         # The resources that been added, removed, changed and moved can be
@@ -314,21 +314,21 @@ class Database(ReadOnlyDatabase, GitDatabase):
 
 
 def make_database(target):
-    size = 5000
+    size_min, size_max = 4800, 5200
     # GitDatabase
     path = '%s/database' % target
-    make_git_database(path, size)
+    make_git_database(path, size_min, size_max)
     # The catalog
     make_catalog('%s/catalog' % target, get_register_fields())
     # Ok
-    return Database(target, size)
+    return Database(target, size_min, size_max)
 
 
-def get_database(path, cache_size, read_only=False):
+def get_database(path, size_min, size_max, read_only=False):
     if read_only is True:
-        return ReadOnlyDatabase(path, cache_size)
+        return ReadOnlyDatabase(path, size_min, size_max)
 
-    return Database(path, cache_size)
+    return Database(path, size_min, size_max)
 
 
 def check_database(target):

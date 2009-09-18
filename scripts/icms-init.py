@@ -69,10 +69,12 @@ smtp-password =
 #
 log-level = warning
 
-# The "database-size" variable defined the maximum number of file handlers
-# to store in the database cache.
+# The "database-size" variable defines the number of file handlers to store
+# in the database cache.  It is made of two numbers, the upper limit and the
+# bottom limit: when the cache size hits the upper limit, handlers will be
+# removed from the cache until it hits the bottom limit.
 #
-database-size = 5000
+database-size = 4800:5200
 
 # If the "profile-time" variable is set to "1", profiling information will
 # be written to the 'log/profile' file.  If the "profile-space" variable is
