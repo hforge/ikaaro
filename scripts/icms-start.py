@@ -39,7 +39,7 @@ def start(options, target):
         return 1
 
     # Check for database consistency
-    if check_database(target) is False:
+    if options.quick is False and check_database(target) is False:
         return 1
 
     # Set-up the server
@@ -85,6 +85,9 @@ if __name__ == '__main__':
     parser.add_option(
         '-r', '--read-only', action="store_true", default=False,
         help="Start the server in read-only mode.")
+    parser.add_option(
+        '--quick', action="store_true", default=False,
+        help="Do not check the database consistency.")
 
     # Parse arguments
     options, args = parser.parse_args()
