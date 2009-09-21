@@ -41,7 +41,7 @@ from utils import get_base_path_query
 
 
 class NotFoundView(STLView):
-    template = '/ui/root/not_found.xml'
+    template = 'root/not_found.xml'
 
     def get_namespace(self, resource, context):
         return {'uri': str(context.uri)}
