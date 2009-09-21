@@ -18,9 +18,10 @@
 from itools.core import merge_dicts
 from itools.datatypes import String, Tokens
 from itools.gettext import MSG
+from itools.http import get_context
 from itools.uri import resolve_uri2
 from itools.stl import set_prefix
-from itools.web import INFO, get_context
+from itools.web import INFO
 from itools.xapian import AndQuery, OrQuery, PhraseQuery, NotQuery
 from itools.xml import XMLParser
 

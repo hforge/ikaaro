@@ -28,7 +28,7 @@ from itools.html import xhtml_uri, XHTMLFile
 from itools.http import get_context
 from itools.stl import set_prefix
 from itools.uri import get_reference
-from itools.web import BaseView, get_context
+from itools.web import BaseView
 from itools.xml import START_ELEMENT
 
 # Import from ikaaro

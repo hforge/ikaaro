@@ -21,8 +21,8 @@ from copy import deepcopy
 from itools.datatypes import String, Enumerate, Unicode, Integer
 from itools.gettext import MSG
 from itools.handlers import checkid
+from itools.http import get_context
 from itools.uri import Path, get_reference
-from itools.web import get_context
 from itools.xml import XMLParser
 
 # Import from ikaaro
