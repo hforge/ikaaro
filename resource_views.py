@@ -490,6 +490,24 @@ class DBResource_AddLink(DBResource_AddBase):
 
 
 
+class DBResource_AddMedia(DBResource_AddImage):
+
+    element_to_add = 'media'
+
+    def get_item_classes(self):
+        from file import Flash, Video
+        return self.item_classes if self.item_classes else (Flash, Video)
+
+
+    def get_configuration(self):
+        return {
+            'show_browse': True,
+            'show_external': True,
+            'show_insert': False,
+            'show_upload': True}
+
+
+
 ###########################################################################
 # Views / Login, Logout
 ###########################################################################
