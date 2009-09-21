@@ -29,7 +29,7 @@ import itools
 from itools.core import start_subprocess
 from itools.csv import Property
 from itools.fs import lfs
-from itools.web import get_context
+from itools.http import get_context
 
 # Import from ikaaro
 from ikaaro.metadata import Metadata

@@ -17,7 +17,7 @@
 # Import from itools
 from itools.datatypes import Unicode, Enumerate
 from itools.gettext import MSG
-from itools.web import get_context
+from itools.http import get_context
 
 # Import from ikaaro
 from ikaaro.autoform import title_widget

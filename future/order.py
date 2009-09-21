@@ -21,9 +21,10 @@ from copy import deepcopy
 from itools.csv import UniqueError
 from itools.datatypes import String
 from itools.gettext import MSG
+from itools.http import get_context
 from itools.stl import set_prefix
 from itools.uri import get_reference, resolve_uri2, Path
-from itools.web import ERROR, INFO, get_context
+from itools.web import ERROR, INFO
 from itools.xapian import AndQuery, OrQuery, PhraseQuery, NotQuery
 from itools.xml import XMLParser
 
