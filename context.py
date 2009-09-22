@@ -25,7 +25,7 @@ from itools.xapian import OrQuery, PhraseQuery, StartQuery
 from ikaaro.globals import spool, ui
 from folder import Folder
 from metadata import Metadata
-from registry import get_resource_class, fields_registry
+from registry import get_resource_class
 
 
 class CMSContext(WebContext):
@@ -428,14 +428,7 @@ class CMSContext(WebContext):
 
         # Index
         docs_to_unindex = self.cache_old2new.keys()
-        docs_to_index = []
-        fields_excluded = set(['last_author', 'mtime'])
-        for path in self.cache_new2old:
-            resource = cache[path]
-            values = dict(
-                [ (x, getattr(resource, x, None))
-                for x in fields_registry if x not in fields_excluded ])
-            docs_to_index.append((resource, values))
+        docs_to_index = [ cache[x] for x in self.cache_new2old ]
 
         # Clear
         self.cache_old2new.clear()

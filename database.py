@@ -180,15 +180,8 @@ class Database(ReadOnlyDatabase, GitDatabase):
         catalog = self.catalog
         for path in docs_to_unindex:
             catalog.unindex_document(path)
-        # (3) Index
-        mtime = datetime.now() # XXX This is an approximation, not exactly the
-                               # same as returned by git
-        user = get_context().user
-        author = user.get_title() if user else None
-        for resource, values in docs_to_index:
-            values['mtime'] = mtime
-            values['last_author'] = author
-            catalog.index_document(values)
+        for resource in docs_to_index:
+            catalog.index_document(resource)
         catalog.save_changes()
 
 
