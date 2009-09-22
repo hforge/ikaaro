@@ -222,7 +222,7 @@ class BrowseForm(STLForm):
         namespace['end'] = end
 
         # Previous
-        uri = context.uri
+        uri = get_reference(context.uri)
         if start > 0:
             previous = max(start - size, 0)
             previous = str(previous)
