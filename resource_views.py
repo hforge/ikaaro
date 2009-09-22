@@ -33,7 +33,6 @@ from itools.i18n import get_language_name
 from itools.uri import Path, get_reference, get_uri_path
 from itools.web import BaseView, STLForm, INFO, ERROR
 from itools.web import FormError
-from itools.xapian import PhraseQuery
 
 # Import from ikaaro
 from autoform import AutoForm, title_widget, description_widget, subject_widget
@@ -150,8 +149,8 @@ class DBResource_Backlinks(Folder_BrowseContent):
 
 
     def get_items(self, resource, context):
-        query = PhraseQuery('links', str(resource.get_canonical_path()))
-        return context.root.search(query)
+        links = str(resource.get_canonical_path())
+        return context.search(links=links)
 
 
     table_actions = []
