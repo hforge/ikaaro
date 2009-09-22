@@ -30,7 +30,7 @@ from itools.xapian import CatalogAware, PhraseQuery
 # Import from ikaaro
 from lock import Lock
 from metadata import Metadata
-from registry import register_field, fields_registry
+from registry import register_field
 from resource_views import DBResource_Edit, DBResource_Backlinks
 from resource_views import DBResource_AddImage, DBResource_AddLink
 from resource_views import LoginView, LogoutView
@@ -241,8 +241,7 @@ class DBResource(CatalogAware, IResource):
             'version': String,
             'title': Unicode(multilingual=True),
             'description': Unicode(multilingual=True),
-            'subject': Unicode(multilingual=True),
-            }
+            'subject': Unicode(multilingual=True)}
 
 
     @classmethod
@@ -337,10 +336,6 @@ class DBResource(CatalogAware, IResource):
     ########################################################################
     # Indexing
     ########################################################################
-    def get_catalog_values(self):
-        return dict([ (x, getattr(self, x, None)) for x in fields_registry ])
-
-
     @property
     def abspath(self):
         abspath = self.get_canonical_path()
@@ -383,14 +378,7 @@ class DBResource(CatalogAware, IResource):
         if server is None or not server.index_text:
             return None
 
-        try:
-            return self.to_text()
-        except Exception:
-            # FIXME Use a different logger
-            server.log_error(context)
-#           log = "%s failed" % self.get_abspath()
-#           server.event_log.write(log)
-#           server.event_log.flush()
+        return self.to_text()
 
 
     def to_text(self):

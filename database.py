@@ -176,10 +176,8 @@ class Database(ReadOnlyDatabase, GitDatabase):
         catalog = self.catalog
         for path in docs_to_unindex:
             catalog.unindex_document(path)
-        for resource, values in docs_to_index:
-            values['mtime'] = resource.mtime
-            values['last_author'] = resource.last_author
-            catalog.index_document(values)
+        for resource in docs_to_index:
+            catalog.index_document(resource)
         catalog.save_changes()
 
 
