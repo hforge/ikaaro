@@ -46,24 +46,22 @@ class IResource(Resource):
     context_menus = []
 
 
-    def get_parent(self):
+    @property
+    def parent(self):
         # Special case: the root
         if not self.path:
             return None
         path = self.path[:-1]
         return self.context.get_resource(path)
 
-    parent = property(get_parent, None, None, '')
 
-
-    def get_name(self):
+    @property
+    def name(self):
         # Special case: the root
         if not self.path:
             return None
 
         return self.path[-1]
-
-    name = property(get_name, None, None, '')
 
 
     def get_site_root(self):
