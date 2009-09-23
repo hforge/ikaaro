@@ -139,7 +139,6 @@ def init(parser, options, target):
     # Create a fake context
     app = CMSApplication(target, 5000, False, True)
     context = app.get_fake_context()
-    context._get_resource = context._get_resource_from_metadata
 
     # Make the root
     database = app.database

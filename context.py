@@ -71,7 +71,6 @@ class CMSContext(WebContext):
         self.cache = {}
         self.cache_old2new = {}
         self.cache_new2old = {}
-        self._get_resource = self._get_resource_from_catalog
 
 
     def get_template(self, path):
@@ -261,20 +260,13 @@ class CMSContext(WebContext):
         return database.get_handler(metadata, cls=Metadata)
 
 
-    def _get_resource_from_metadata(self, key, path):
+    def _get_resource(self, key, path):
         try:
             metadata = self._get_metadata(key, path)
         except LookupError:
             return None
         cls = get_resource_class(metadata.format)
         return cls(metadata=metadata)
-
-
-    def _get_resource_from_catalog(self, key, path):
-        abspath = self._get_abspath(key, path)
-        catalog = self.database.catalog
-        results = catalog.search(abspath=abspath)
-        return results.get_one_document()
 
 
     def get_resource(self, path, soft=False):

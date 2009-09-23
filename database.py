@@ -32,17 +32,6 @@ from registry import get_register_fields, get_resource_class
 
 class CMSSearchResults(SearchResults):
 
-    def get_one_document(self):
-        brains = SearchResults.get_documents(self)
-        if len(brains) > 1:
-            err = 'We got more than one document, only one expected'
-            raise ValueError, err
-        for brain in brains:
-            cls = get_resource_class(brain.format)
-            return cls(brain=brain)
-        return None
-
-
     def get_documents(self, sort_by=None, reverse=False, start=0, size=0):
         context = get_context()
         host = context.host

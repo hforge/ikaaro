@@ -61,7 +61,6 @@ def update_catalog(parser, options, target):
     # Build a fake context
     app = server.get_mount('/')
     context = app.get_fake_context()
-    context._get_resource = context._get_resource_from_metadata
 
     # Update
     root = context.get_resource('/')

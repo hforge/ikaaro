@@ -193,8 +193,8 @@ class PathEnumerate(Enumerate):
 
         # The namespace
         options = []
-        for doc in brains.get_documents():
-            path = doc.get_path()
+        for resource in brains.get_documents():
+            path = str(resource.path)
             options.append({'name': path, 'value': path})
         options.sort(key=itemgetter('value'))
 
