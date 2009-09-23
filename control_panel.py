@@ -153,6 +153,7 @@ class CPEditSecurityPolicy(STLForm):
         resource.set_property('website_is_open', value)
         # Ok
         context.message = messages.MSG_CHANGES_SAVED
+        context.redirect()
 
 
 
