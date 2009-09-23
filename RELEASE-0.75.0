@@ -1,0 +1,28 @@
+
+ikaaro 0.60.4 (2009/1X/XX)
+==========================
+
+This is a Content Management System built on Python & itools, among
+other features ikaaro provides:
+
+ - content and document management (index&search, metadata, etc.)
+ - multilingual user interfaces and content
+ - high level modules: wiki, forum, tracker, etc.
+
+
+
+Resources
+---------
+
+Download
+http://download.hforge.org/ikaaro/0.75/ikaaro-0.75.0.tar.gz
+
+Home
+http://www.hforge.org/ikaaro
+
+Mailing list
+http://www.hforge.org/community/
+http://archives.hforge.org/index.cgi?list=itools
+
+Bug Tracker
+http://bugs.hforge.org/
