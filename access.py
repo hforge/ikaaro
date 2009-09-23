@@ -81,8 +81,8 @@ class RoleAware_BrowseUsers(SearchForm):
     def get_items(self, resource, context):
         # Search
         search_query = PhraseQuery('format', 'user')
-        search_field = context.query['search_field']
-        search_term = context.query['search_term'].strip()
+        search_field = context.get_query_value('search_field')
+        search_term = context.get_query_value('search_term').strip()
         if not search_field and search_term:
             or_query = []
             for field, label in self.get_search_fields(resource, context):
@@ -92,7 +92,7 @@ class RoleAware_BrowseUsers(SearchForm):
         elif search_field and search_term:
             search_query = AndQuery(search_query,
                                     StartQuery(search_field, search_term))
-        results = context.root.search(search_query)
+        results = context.search(search_query)
 
         # Show only users that belong to this group (FIXME Use the catalog)
         users = []
@@ -109,8 +109,8 @@ class RoleAware_BrowseUsers(SearchForm):
 
     def sort_and_batch(self, resource, context, items):
         # Sort
-        sort_by = context.query['sort_by']
-        reverse = context.query['reverse']
+        sort_by = context.get_query_value('sort_by')
+        reverse = context.get_query_value('reverse')
         if sort_by in ('user_id', 'login_name', 'role'):
             f = lambda x: self.get_item_value(resource, context, x, sort_by)
         elif sort_by == 'account_state':
@@ -121,8 +121,8 @@ class RoleAware_BrowseUsers(SearchForm):
 
         items.sort(cmp=lambda x,y: cmp(f(x), f(y)), reverse=reverse)
         # Batch
-        start = context.query['batch_start']
-        size = context.query['batch_size']
+        start = context.get_query_value('batch_start')
+        size = context.get_query_value('batch_size')
         return items[start:start+size]
 
 
@@ -155,7 +155,7 @@ class RoleAware_BrowseUsers(SearchForm):
             role = resource.get_role_title(role)
             return role, ';edit_membership?id=%s' % item.name
         elif column == 'account_state':
-            user = context.root.get_resource(item.abspath)
+            user = context.get_resource(item.abspath)
             if user.get_property('user_must_confirm'):
                 href = '/users/%s/;resend_confirmation' % item.name
                 return MSG(u'Resend Confirmation'), href
