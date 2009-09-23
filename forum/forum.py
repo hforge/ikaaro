@@ -102,7 +102,8 @@ class AddThreadForm(AutoForm):
             return
 
         language = resource.get_content_language(context)
-        thread = Thread.make_resource(Thread, resource, name, data, language)
+        thread = resource.make_resource(name, Thread, data=data,
+                                        language=language)
         thread.set_property('title', title, language=language)
 
         # Ok

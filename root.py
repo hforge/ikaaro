@@ -86,21 +86,14 @@ class Root(WebSite):
         {'name': 'admins', 'title': MSG(u'Admin')}]
 
 
-    @staticmethod
-    def _make_resource(cls, folder, email, password, **kw):
-        # The metadata
-        metadata = cls.build_metadata(admins=('0',), **kw)
-        folder.set_handler('.metadata', metadata)
-        # User Folder
-        users = UserFolder.build_metadata(title={'en': u'Users'})
-        folder.set_handler('users.metadata', users)
+    def init_resource(self, email, password, admins=('0',)):
+        WebSite.init_resource(self, admins=admins)
+        # User folder
+        users = self.make_resource('users', UserFolder, title={'en': u'Users'})
         # Default User
         password = crypt_password(password)
         user_class = get_resource_class('user')
-        user = user_class.build_metadata(email=email, password=password)
-        folder.set_handler('users/0.metadata', user)
-        # Return
-        return cls(metadata)
+        users.make_resource('0', user_class, email=email, password=password)
 
 
     def _get_names(self):

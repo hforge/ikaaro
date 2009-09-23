@@ -30,6 +30,7 @@ from exceptions import ConsistencyError
 from folder_views import Folder_BrowseContent
 from folder_views import Folder_NewResource, Folder_Orphans, Folder_Thumbnail
 from folder_views import Folder_PreviewContent, Folder_Rename, Folder_View
+from metadata import Metadata
 from registry import register_resource_class, get_resource_class
 from registry import get_document_types
 from resource_ import DBResource
@@ -85,9 +86,21 @@ class Folder(DBResource):
         return len(names)
 
 
-    ########################################################################
-    # Cut & Paste Resources
-    ########################################################################
+    #######################################################################
+    # API
+    #######################################################################
+    def make_resource(self, name, cls, **kw):
+        # Make the metadata
+        metadata = Metadata(cls=cls)
+        self.handler.set_handler('%s.metadata' % name, metadata)
+        # Initialize
+        resource = self.get_resource(name)
+        resource.init_resource(**kw)
+        # Ok
+        get_context().add_resource(resource)
+        return resource
+
+
     def can_paste(self, source):
         """Is the source resource can be pasted into myself.
         """
@@ -95,9 +108,6 @@ class Folder(DBResource):
         return isinstance(source, allowed_types)
 
 
-    #######################################################################
-    # API
-    #######################################################################
     def _get_names(self):
         folder = self.handler
         return [ x[:-9] for x in folder.get_handler_names()
@@ -307,7 +317,6 @@ class Folder(DBResource):
         return DBResource.get_view(self, name, query)
 
 
-    #######################################################################
     # Views
     view = Folder_View()
     new_resource = Folder_NewResource()

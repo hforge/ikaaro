@@ -212,20 +212,27 @@ class DBResource(CatalogAware, IResource):
         raise AttributeError, msg % (self.__class__.__name__, name)
 
 
-    @staticmethod
-    def make_resource(cls, container, name, *args, **kw):
-        cls._make_resource(cls, container.handler, name, *args, **kw)
-        resource = container.get_resource(name)
-        # Events, add
-        get_context().add_resource(resource)
+    def init_resource(self, **kw):
+        """Return a Metadata object with sensible default values.
+        """
+        metadata = self.metadata
+        # Properties
+        for key in kw:
+            value = kw[key]
+            if type(value) is dict:
+                for lang in value:
+                    property = Property(value[lang], lang=lang)
+                    metadata._set_property(key, property)
+            else:
+                metadata._set_property(key, value)
 
-        return resource
-
-
-    @staticmethod
-    def _make_resource(cls, folder, name, **kw):
-        metadata = cls.build_metadata(**kw)
-        folder.set_handler('%s.metadata' % name, metadata)
+        # Workflow State (default)
+        if kw.get('state') is None and isinstance(self, WorkflowAware):
+            schema = self.get_metadata_schema()
+            state = schema['state'].get_default()
+            if state is None:
+                state  = self.workflow.initstate
+            metadata._set_property('state', state)
 
 
     def get_handler(self):
@@ -241,7 +248,7 @@ class DBResource(CatalogAware, IResource):
             self._handler = handler
         return self._handler
 
-    handler = property(get_handler, None, None, '')
+    handler = property(get_handler)
 
 
     def load_handlers(self):
@@ -258,33 +265,6 @@ class DBResource(CatalogAware, IResource):
             'title': Unicode(multilingual=True),
             'description': Unicode(multilingual=True),
             'subject': Unicode(multilingual=True)}
-
-
-    @classmethod
-    def build_metadata(cls, format=None, **kw):
-        """Return a Metadata object with sensible default values.
-        """
-        metadata = Metadata(cls=cls, format=format)
-        # Properties
-        for key in kw:
-            value = kw[key]
-            if type(value) is dict:
-                for lang in value:
-                    property = Property(value[lang], lang=lang)
-                    metadata._set_property(key, property)
-            else:
-                metadata._set_property(key, value)
-
-        # Workflow State (default)
-        if kw.get('state') is None and issubclass(cls, WorkflowAware):
-            schema = cls.get_metadata_schema()
-            state = schema['state'].get_default()
-            if state is None:
-                state  = cls.workflow.initstate
-            metadata._set_property('state', state)
-
-        # Ok
-        return metadata
 
 
     def has_property(self, name, language=None):

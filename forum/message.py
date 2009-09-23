@@ -52,11 +52,11 @@ class Message(WebPage):
     class_views = ['edit', 'history_form']
 
 
-    @staticmethod
-    def _make_resource(cls, folder, name, data, language):
-        WebPage._make_resource(cls, folder, name)
+    def init_resource(self, data=None, language=None, **kw):
+        WebPage.init_resource(self, **kw)
         # The message
         document = build_message(data)
+        folder = self.parent.handler
         folder.set_handler('%s.xhtml.%s' % (name, language), document)
 
 

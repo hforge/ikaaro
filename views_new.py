@@ -143,7 +143,7 @@ class NewInstanceByDate(AutoForm):
         for name in path:
             folder = container.get_resource(name, soft=True)
             if folder is None:
-                folder = Folder.make_resource(Folder, container, name)
+                folder = container.make_resource(name, Folder)
             container = folder
 
         return container
@@ -167,7 +167,7 @@ class NewInstanceByDate(AutoForm):
 
         # 2. Make the resource
         cls = self.get_resource_class(context, form)
-        child = cls.make_resource(cls, container, form['name'])
+        child = container.make_resource(form['name'], cls)
 
         # 3. Edit the resource
         self.modify_resource(resource, context, form, child)
@@ -296,7 +296,7 @@ class ProxyNewInstance(NewInstance):
             # Get it from the query
             class_id = context.query['type']
         cls = get_resource_class(class_id)
-        child = cls.make_resource(cls, resource, name)
+        child = resource.make_resource(name, cls)
         # The metadata
         language = resource.get_content_language(context)
         title = Property(title, lang=language)

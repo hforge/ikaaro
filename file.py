@@ -58,19 +58,14 @@ class File(WorkflowAware, DBResource):
     class_handler = FileHandler
 
 
-    @staticmethod
-    def _make_resource(cls, folder, name, body=None, filename=None,
-                     extension=None, **kw):
-        DBResource._make_resource(cls, folder, name, filename=filename, **kw)
-        # Add the body
-        if body is not None:
-            handler = cls.class_handler(string=body)
-            if extension:
-                extension = extension.lower()
-            else:
-                extension = handler.class_extension
+    def init_resource(self, body=None, filename=None, extension=None, **kw):
+        DBResource.init_resource(self, filename=filename, **kw)
+        if body:
+            handler = self.class_handler(string=body)
+            extension = (
+                extension.lower() if extension else handler.class_extension)
             name = FileName.encode((name, extension, None))
-            folder.set_handler(name, handler)
+            self.parent.folder.set_handler(name, handler)
 
 
     def get_all_extensions(self):
