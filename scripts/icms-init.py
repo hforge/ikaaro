@@ -28,6 +28,7 @@ from itools.core import start_subprocess
 
 # Import from ikaaro
 from ikaaro.database import make_database
+from ikaaro.metadata import Metadata
 from ikaaro.resource_ import DBResource
 from ikaaro.root import Root
 from ikaaro.utils import generate_password
@@ -141,8 +142,10 @@ def init(parser, options, target):
     context.database = database
 
     # Make the root
-    folder = database.get_handler('.')
-    root = root_class._make_resource(root_class, folder, email, password)
+    metadata = Metadata(cls=root_class)
+    database.set_handler('.metadata', metadata)
+    root = root_class(metadata)
+    root.init_resource(email, password)
     context.root = root
     # Save changes
     start_subprocess('%s/database' % target)

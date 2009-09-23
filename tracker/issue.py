@@ -169,8 +169,8 @@ class Issue(Folder):
             name = generate_name(name, self.get_names())
             # Add attachement
             cls = get_resource_class(mimetype)
-            cls.make_resource(cls, self, name, body=body, filename=filename,
-                              extension=extension, format=mimetype)
+            self.make_resource(name, cls, body=body, filename=filename,
+                               extension=extension, format=mimetype)
             # Link
             file = name
 

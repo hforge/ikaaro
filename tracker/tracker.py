@@ -77,29 +77,25 @@ class Tracker(Folder):
 
     issue_class = Issue
 
-    @staticmethod
-    def _make_resource(cls, folder, name):
-        Folder._make_resource(cls, folder, name)
+    def init_resource(self, **kw):
+        Folder.init_resource(self, **kw)
         # Products / Types / Priorities / States
+        folder = self.handler
         for table_name, values in default_tables:
-            table_path = '%s/%s' % (name, table_name)
+            self.make_resource(table_name, Tracker_TableResource)
             table = Tracker_TableHandler()
             for title in values:
                 title = Property(title, language='en')
                 table.add_record({'title': title})
-            folder.set_handler(table_path, table)
-            metadata = Tracker_TableResource.build_metadata()
-            folder.set_handler('%s.metadata' % table_path, metadata)
+            folder.set_handler(table_name, table)
         # Modules
+        self.make_resource('module', ModulesResource)
         table = ModulesHandler()
         folder.set_handler('%s/module' % name, table)
-        metadata = ModulesResource.build_metadata()
-        folder.set_handler('%s/module.metadata' % name, metadata)
         # Versions
+        self.make_resource('version', VersionsResource)
         table = VersionsHandler()
         folder.set_handler('%s/version' % name, table)
-        metadata = VersionsResource.build_metadata()
-        folder.set_handler('%s/version.metadata' % name, metadata)
         # Pre-defined stored searches
         open = StoredSearchFile(state='0')
         not_assigned = StoredSearchFile(assigned_to='nobody')
@@ -108,12 +104,11 @@ class Tracker(Folder):
         for search, title in [(open, u'Open Issues'),
                               (not_assigned, u'Not Assigned'),
                               (high_priority, u'High Priority')]:
-            folder.set_handler('%s/s%s' % (name, i), search)
-            metadata = StoredSearch.build_metadata(title={'en': title})
-            folder.set_handler('%s/s%s.metadata' % (name, i), metadata)
+            self.make_resource('s%s' % i, StoredSearch, title={'en': title})
+            folder.set_handler('s%s' % i, search)
             i += 1
-        metadata = Resources.build_metadata()
-        folder.set_handler('%s/calendar.metadata' % name, metadata)
+        # Calendar
+        self.make_resource('calendar', Resources)
 
 
     def get_document_types(self):

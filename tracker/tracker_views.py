@@ -206,7 +206,7 @@ class Tracker_NewInstance(NewInstance):
         # Create the resource
         class_id = context.query['type']
         cls = get_resource_class(class_id)
-        child = cls.make_resource(cls, resource, name)
+        child = resource.make_resource(name, cls)
         # The metadata
         language = resource.get_content_language(context)
         title = Property(title, lang=language)
@@ -252,7 +252,7 @@ class Tracker_AddIssue(STLForm):
         # Add
         id = resource.get_new_id()
         issue_cls = resource.issue_class
-        issue = issue_cls.make_resource(issue_cls, resource, id)
+        issue = resource.make_resource(id, issue_cls)
         issue._add_record(context, form, new=True)
 
         # Ok
@@ -589,8 +589,7 @@ class Tracker_RememberSearch(BaseForm):
             else:
                 # Not found => so we make a new search resource
                 search_name = resource.get_new_id('s')
-                search = StoredSearch.make_resource(StoredSearch, resource,
-                                                    search_name)
+                search = resource.make_resource(search_name, StoredSearch)
                 message = MSG(u'The search has been stored.')
         # Yes
         else:

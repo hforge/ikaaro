@@ -136,7 +136,7 @@ class NewInstance(AutoForm):
         # Create the resource
         class_id = context.query['type']
         cls = get_resource_class(class_id)
-        child = cls.make_resource(cls, resource, name)
+        child = resource.make_resource(name, cls)
         # The metadata
         language = resource.get_content_language(context)
         title = Property(title, lang=language)
@@ -196,7 +196,7 @@ class ProxyNewInstance(NewInstance):
             # Get it from the query
             class_id = context.query['type']
         cls = get_resource_class(class_id)
-        child = cls.make_resource(cls, resource, name)
+        child = resource.make_resource(name, cls)
         # The metadata
         language = resource.get_content_language(context)
         title = Property(title, lang=language)
