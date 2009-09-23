@@ -94,7 +94,7 @@ class File_NewInstance(NewInstance):
             kw['language'] = language
         else:
             kw['extension'] = type
-        child = cls.make_resource(cls, resource, name, body, **kw)
+        child = resource.make_resource(name, cls, body=body, **kw)
 
         # The title
         title = form['title'].strip()

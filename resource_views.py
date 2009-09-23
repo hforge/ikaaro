@@ -374,12 +374,10 @@ class DBResource_AddBase(STLForm):
             return
 
         # Add the image to the resource
-        cls.make_resource(cls, container, name, body, format=mimetype,
-                          filename=filename, extension=type)
-        # Get resource path
-        child = container.get_resource(name)
+        child = container.make_resource(name, cls, body=body, format=mimetype,
+                                        filename=filename, extension=type)
+        # Get the path
         path = resource.get_pathto(child)
-        # Add an action to the resource
         action = self.get_resource_action(context)
         if action:
             path = path.resolve_name('.%s' % action)
@@ -463,7 +461,7 @@ class DBResource_AddLink(DBResource_AddBase):
         # Get the type of resource to add
         cls = self.get_page_type(mode)
         # Create the resource
-        child = cls.make_resource(cls, container, name)
+        child = container.make_resource(name, cls)
         path = context.resource.get_pathto(child)
         context.scripts.extend(self.get_scripts(mode))
         return self.get_javascript_return(context, path)

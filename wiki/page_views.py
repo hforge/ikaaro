@@ -76,7 +76,7 @@ class WikiPage_NewInstance(NewInstanceByDate):
         root = context.site_root
         wiki = root.get_resource('wiki', soft=True)
         if wiki is None:
-            return WikiFolder.make_resource(WikiFolder, root, 'wiki')
+            return root.make_resource('wiki', WikiFolder)
         return wiki
 
 

@@ -30,7 +30,7 @@ from ikaaro.autoform import rte_widget
 from ikaaro.folder import Folder
 from ikaaro.messages import MSG_DELETE_SELECTION
 from ikaaro.registry import register_resource_class
-from message import Message, build_message
+from message import Message
 
 
 ###########################################################################
@@ -86,8 +86,8 @@ class Thread_View(STLForm):
         name = str(id + 1)
         data = form['data']
         language = resource.get_content_language(context)
-        thread = Message.make_resource(Message, resource, name, data,
-                                       language)
+        thread = resource.make_resource(name, Message, data=data,
+                                        language=language)
         # Ok
         return context.come_back(INFO(u'Reply posted'))
 
@@ -115,13 +115,11 @@ class Thread(Folder):
     class_description = u"A thread to discuss"
     class_views = ['view', 'edit']
 
-    @staticmethod
-    def _make_resource(cls, folder, name, data='', language='en'):
-        Folder._make_resource(cls, folder, name)
+
+    def init_resource(self, data='', language='en', **kw):
+        Folder.init_resource(self, **kw)
         # First post
-        folder.set_handler('%s/0.metadata' % name, Message.build_metadata())
-        message = build_message(data)
-        folder.set_handler('%s/0.xhtml.%s' % (name, language), message)
+        self.make_resource('0', Message, data=data, language=language)
 
 
     def to_text(self):

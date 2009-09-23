@@ -45,12 +45,9 @@ class WikiFolder(Folder):
     __fixed_handlers__ = ['FrontPage']
 
 
-    @staticmethod
-    def _make_resource(cls, folder, name):
-        Folder._make_resource(cls, folder, name)
-        # FrontPage
-        metadata = WikiPage.build_metadata(title={'en': u"Front Page"})
-        folder.set_handler('%s/FrontPage.metadata' % name, metadata)
+    def init_resource(self, **kw):
+        Folder.init_resource(self, **kw)
+        self.make_resource('FrontPage', WikiPage, title={'en': u"Front Page"})
 
 
     def get_document_types(self):

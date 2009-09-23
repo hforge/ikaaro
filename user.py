@@ -276,7 +276,7 @@ class UserFolder(Folder):
 
         # Add the user
         cls = get_resource_class('user')
-        user = cls.make_resource(cls, self, user_id)
+        user = self.make_resource(user_id, cls)
         # Set the email and paswword
         if email is not None:
             user.set_property('email', email)
