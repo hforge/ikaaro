@@ -186,7 +186,7 @@ def update(parser, options, target):
 
     #######################################################################
     # STAGE 1: Change format of the metadata
-    # XXX Specific to the migration from 0.60 to 0.65
+    # XXX Specific to the migration from 0.60 to 0.75
     #######################################################################
     metadata = Metadata('%s/.metadata' % path)
     try:
