@@ -370,7 +370,7 @@ class SearchForm(BrowseForm):
 
     template = 'generic/search.xml'
 
-    search_template = '/ui/generic/browse_search.xml'
+    search_template = 'generic/browse_search.xml'
     search_schema = {
         'search_field': String,
         'search_term': Unicode}
