@@ -33,7 +33,7 @@ from metadata import Metadata
 from registry import register_field
 from resource_views import DBResource_Edit, DBResource_Backlinks
 from resource_views import DBResource_AddImage, DBResource_AddLink
-from resource_views import LoginView, LogoutView
+from resource_views import DBResource_AddMedia, LoginView, LogoutView
 from revisions_views import DBResource_LastChanges, DBResource_Changes
 from workflow import WorkflowAware
 from views_new import NewInstance
@@ -596,6 +596,7 @@ class DBResource(CatalogAware, IResource):
     edit = DBResource_Edit()
     add_image = DBResource_AddImage()
     add_link = DBResource_AddLink()
+    add_media = DBResource_AddMedia()
     last_changes = DBResource_LastChanges()
     changes = DBResource_Changes()
     backlinks = DBResource_Backlinks()

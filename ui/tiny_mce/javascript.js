@@ -49,6 +49,8 @@ function ikaaro_filebrowser(field_name, url, type, win) {
     var cms_specific_action = ';add_link?mode=tiny_mce';
     if (type == 'image')
         cms_specific_action = ';add_image?mode=tiny_mce';
+    else if (type == 'media')
+        cms_specific_action = ';add_media?mode=tiny_mce';
     var cmsURL = cms_base + cms_specific_action;      // script URL
 
     tinyMCE.activeEditor.windowManager.open({

@@ -101,21 +101,23 @@ class ReadOnlyDatabase(ROGitDatabase):
         cmd = ['git', 'log', '--pretty=format:%H%n%an%n%at%n%s', '--raw']
         data = send_subprocess(cmd)
         lines = data.splitlines()
-        while lines:
-            date = int(lines[2])
+        i = 0
+        while i < len(lines):
+            date = int(lines[i + 2])
             commit = {
-                'revision': lines[0],                 # commit
-                'username': lines[1],                 # author name
+                'revision': lines[i],                 # commit
+                'username': lines[i + 1],             # author name
                 'date': datetime.fromtimestamp(date), # author date
-                'message': lines[3],                  # subject
+                'message': lines[i + 3],              # subject
                 }
             # Modified files
-            lines = lines[4:]
-            while lines and lines[0]:
-                file = lines[0].rsplit('\t', 1)[1]
+            i += 4
+            while i < len(lines) and lines[i]:
+                file = lines[i].rsplit('\t', 1)[1]
                 self.git_cache.setdefault(file, commit)
-                lines = lines[1:]
-            lines = lines[1:]
+                i += 1
+            # Next entry is separated by an empty line
+            i += 1
 
 
     def get_last_revision(self, files):
