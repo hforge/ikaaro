@@ -103,8 +103,9 @@ class File_NewInstance(NewInstance):
         child.metadata.set_property('title', title)
 
         # Ok
-        goto = './%s/' % name
-        return context.come_back(messages.MSG_NEW_RESOURCE, goto=goto)
+        context.message = messages.MSG_NEW_RESOURCE
+        location = str(child.path)
+        context.created(location)
 
 
 
@@ -119,15 +120,15 @@ class File_Download(BaseView):
 
 
     def http_get(self, resource, context):
-        response = context.response
         # Filename
         filename = resource.get_property('filename')
         if filename is not None:
-            response.set_header('Content-Disposition',
-                                'inline; filename="%s"' % filename)
+            context.set_header('Content-Disposition',
+                               'inline; filename="%s"' % filename)
         # Content-Type
-        response.set_header('Content-Type', resource.get_content_type())
-        return resource.handler.to_str()
+        content_type = resource.get_content_type()
+        body = resource.handler.to_str()
+        context.ok(content_type, body)
 
 
 
@@ -164,16 +165,13 @@ class File_Edit(DBResource_Edit):
                                          datatype)
 
 
-    def action(self, resource, context, form):
-        DBResource_Edit.action(self, resource, context, form)
-        if context.edit_conflict:
-            return
+    def set_value(self, resource, context, name, value):
+        if name != 'file':
+            return DBResource_Edit.set_value(self, resource, context, name,
+                                             value)
 
-        # Upload file
-        file = form['file']
-        if file is None:
-            return
-        filename, mimetype, body = file
+        # File
+        filename, mimetype, body = value
 
         # Check wether the handler is able to deal with the uploaded file
         handler = resource.handler
@@ -212,13 +210,6 @@ class File_Edit(DBResource_Edit):
             folder = resource.parent.handler
             filename = FileName.encode((old_name, new_extension, old_lang))
             folder.move_handler(handler_name, filename)
-
-        # Ok
-        context.server.change_resource(resource)
-        context.message = INFO(u'Version uploaded')
-
-
-
 
 
 

@@ -65,8 +65,8 @@ class File(WorkflowAware, DBResource):
             handler = self.class_handler(string=body)
             extension = (
                 extension.lower() if extension else handler.class_extension)
-            name = FileName.encode((name, extension, None))
-            self.parent.folder.set_handler(name, handler)
+            name = FileName.encode((self.name, extension, None))
+            self.parent.handler.set_handler(name, handler)
 
 
     def get_all_extensions(self):
