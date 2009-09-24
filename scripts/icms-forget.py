@@ -36,7 +36,7 @@ def get_commits(target):
         [(<commit hash>, <days since today>), ...]
     """
     cwd = '%s/database' % target
-    command = ['git', 'log', '--pretty=format:%H %ct']
+    command = ['git', 'log', '--pretty=format:%H %at']
     data = get_pipe(command, cwd=cwd)
     today = date.today()
 
