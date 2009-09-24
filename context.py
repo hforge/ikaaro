@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import get_abspath, merge_dicts
+from itools.core import get_abspath, lazy, merge_dicts
 from itools.handlers import ConfigFile
 from itools.uri import Path
 from itools.web import WebContext, lock_body
@@ -102,7 +102,8 @@ class CMSContext(WebContext):
         return cls(metadata)
 
 
-    def load_software_languages(self):
+    @lazy
+    def software_languages(self):
         # Load defaults (ikaaro)
         setup = get_abspath('setup.conf')
         setup = ConfigFile(setup)
@@ -364,7 +365,8 @@ class CMSContext(WebContext):
     #######################################################################
     # Search
     #######################################################################
-    def load__search(self):
+    @lazy
+    def _search(self):
         if self.host is None:
             return None
 
@@ -432,7 +434,8 @@ class CMSContext(WebContext):
     #######################################################################
     # Users
     #######################################################################
-    def load__users_search(self):
+    @lazy
+    def _users_search(self):
         catalog = self.database.catalog
         return catalog.search(format='user')
 
