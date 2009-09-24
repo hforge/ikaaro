@@ -109,6 +109,11 @@ class DBResource_Edit(AutoForm):
                 context.edit_conflict = True
 
 
+    def set_value(self, resource, context, name, value):
+        language = resource.get_content_language(context)
+        resource.set_property(name, value, language=language)
+
+
     def action(self, resource, context, form):
         # Check edit conflict
         self.check_edit_conflict(resource, context, form)
@@ -116,14 +121,19 @@ class DBResource_Edit(AutoForm):
             return
 
         # Save changes
-        title = form['title']
-        description = form['description']
-        subject = form['subject']
-        language = resource.get_content_language(context)
-        resource.set_property('title', title, language=language)
-        resource.set_property('description', description, language=language)
-        resource.set_property('subject', subject, language=language)
+        schema = self.get_schema(resource, context)
+        for widget in self.get_widgets(resource, context):
+            name = widget.name
+            datatype = schema[name]
+            if getattr(datatype, 'readonly', False):
+                continue
+            value = form[name]
+            if value is None:
+                continue
+            self.set_value(resource, context, name, value)
+
         # Ok
+        context.change_resource(resource)
         context.message = messages.MSG_CHANGES_SAVED
         context.redirect()
 
