@@ -307,8 +307,8 @@ class Image_Thumbnail(BaseView):
 
 
     def http_get(self, resource, context):
-        width = context.get_form_value('width', type=Integer, default=48)
-        height = context.get_form_value('height', type=Integer, default=48)
+        width = context.get_query_value('width', type=Integer, default=48)
+        height = context.get_query_value('height', type=Integer, default=48)
 
         # TODO generate the thumbnail in the resource format
         format = 'png' if resource.metadata.format == 'image/png' else 'jpeg'
@@ -318,14 +318,13 @@ class Image_Thumbnail(BaseView):
             data = default.to_str()
             format = 'png'
 
-        # Headers
-        context.set_content_type('image/%s' % format)
+        # Filename
         filename = resource.get_property('filename')
         if filename:
             context.set_content_disposition('inline', filename)
 
         # Ok
-        return data
+        context.ok('image/%s' % format, data)
 
 
 
@@ -333,7 +332,7 @@ class Image_View(STLView):
 
     access = 'is_allowed_to_view'
     title = MSG(u'View')
-    template = '/ui/binary/Image_view.xml'
+    template = 'binary/Image_view.xml'
     styles = ['/ui/gallery/style.css']
     scripts = ['/ui/gallery/javascript.js']
 
@@ -353,9 +352,9 @@ class Image_View(STLView):
 
 
     def get_namespace(self, resource, context):
-        size = context.get_form_value('size', type=Integer)
-        width = context.get_form_value('width', default=self.default_width)
-        height = context.get_form_value('height', default=self.default_height)
+        size = context.get_query_value('size', type=Integer)
+        width = context.get_query_value('width', default=self.default_width)
+        height = context.get_query_value('height', default=self.default_height)
         images = self.get_browse_images(resource, context)
 
         my_index = None
@@ -389,7 +388,7 @@ class Image_View(STLView):
                       + next_images + previous_images):
             if image is None:
                 continue
-            prefix = get_reference(context.get_link(image))
+            prefix = get_reference(image.path)
             # Preload with same size preferences than the current one
             if width and height:
                 # Preload a thumbnail
@@ -403,7 +402,7 @@ class Image_View(STLView):
         # Real width and height (displayed for reference)
         image_width, image_height = resource.handler.get_size()
 
-        return {'parent_link': context.get_link(resource.parent),
+        return {'parent_link': resource.parent.path,
                 'size': size,
                 'width': width,
                 'height': height,
@@ -413,7 +412,7 @@ class Image_View(STLView):
                 'widths': ImageWidth.get_namespace(width),
                 'image_width': image_width,
                 'image_height': image_height,
-                'image_link': context.get_link(resource),
+                'image_link': resource.path,
                 'index': my_index + 1,
                 'total': len(images),
                 'image_view': preload[0]}
