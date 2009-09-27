@@ -183,14 +183,14 @@ class RoleAware_BrowseUsers(SearchForm):
 class RoleAware_EditMembership(STLForm):
 
     access = 'is_admin'
-    template = '/ui/access/edit_membership_form.xml'
+    template = 'access/edit_membership_form.xml'
     schema = {
         'id': String(mandatory=True),
         'role': String(mandatory=True)}
 
 
     def get_namespace(self, resource, context):
-        user_id = context.get_form_value('id')
+        user_id = context.get_query_value('id')
         user = resource.get_resource('/users/%s' % user_id)
 
         return {
