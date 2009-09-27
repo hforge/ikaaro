@@ -21,6 +21,7 @@
 from copy import deepcopy
 
 # Import from itools
+from itools.core import freeze
 from itools.datatypes import Email, String, Unicode
 from itools.gettext import MSG
 from itools.uri import Path
@@ -55,19 +56,16 @@ class User(AccessControl, Folder):
     ########################################################################
     # Metadata
     ########################################################################
-    @classmethod
-    def get_metadata_schema(cls):
-        return {
-            'version': String,
-            'firstname': Unicode,
-            'lastname': Unicode,
-            'email': Email,
-            'password': Password,
-            'user_language': String,
-            'user_must_confirm': String,
-            # Backwards compatibility
-            'username': String,
-        }
+    metadata_schema = freeze({
+        'version': String,
+        'firstname': Unicode,
+        'lastname': Unicode,
+        'email': Email,
+        'password': Password,
+        'user_language': String,
+        'user_must_confirm': String,
+        # Backwards compatibility
+        'username': String})
 
 
     ########################################################################

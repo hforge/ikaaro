@@ -308,10 +308,9 @@ class ResourcesOrderedTable(OrderedTable):
     view = ResourcesOrderedTable_View()
 
 
-    @classmethod
-    def get_metadata_schema(cls):
-        return merge_dicts(OrderedTable.get_metadata_schema(),
-                           order=Tokens)
+    metadata_schema = merge_dicts(
+        OrderedTable.metadata_schema,
+        order=Tokens)
 
 
     def get_orderable_classes(self):

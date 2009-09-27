@@ -130,15 +130,12 @@ class File(WorkflowAware, DBResource):
     #######################################################################
     # Metadata
     #######################################################################
-    @classmethod
-    def get_metadata_schema(cls):
-        from obsolete.metadata import History
-        return merge_dicts(
-            DBResource.get_metadata_schema(),
-            WorkflowAware.get_metadata_schema(),
-            filename=String,
-            history=History, # XXX Backwards compatibility with 0.50
-            )
+    from obsolete.metadata import History
+    metadata_schema = merge_dicts(
+        DBResource.metadata_schema,
+        WorkflowAware.metadata_schema,
+        filename=String,
+        history=History) # XXX Backwards compatibility with 0.50
 
 
     #######################################################################

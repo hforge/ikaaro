@@ -19,6 +19,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
+from itools.core import merge_dicts
 from itools.datatypes import Tokens
 from itools.gettext import MSG
 from itools.html import stream_to_str_as_html, xhtml_doctype
@@ -60,14 +61,12 @@ class WebSite(RoleAware, Folder, VirtualRoot):
     __fixed_handlers__ = ['skin', 'index']
 
 
-    @classmethod
-    def get_metadata_schema(cls):
-        schema = Folder.get_metadata_schema()
-        schema.update(RoleAware.get_metadata_schema())
-        schema['vhosts'] = Tokens
-        schema['contacts'] = Tokens
-        schema['website_languages'] = Tokens(default=('en',))
-        return schema
+    metadata_schema = merge_dicts(
+        Folder.metadata_schema,
+        RoleAware.metadata_schema,
+        vhosts=Tokens,
+        contacts=Tokens,
+        website_languages=Tokens(default=('en',)))
 
 
     @property

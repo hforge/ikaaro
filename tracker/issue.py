@@ -24,6 +24,7 @@
 from datetime import datetime
 
 # Import from itools
+from itools.core import merge_dicts
 from itools.csv import Property
 from itools.datatypes import Integer, String, Unicode, Tokens
 from itools.gettext import MSG
@@ -50,20 +51,18 @@ class Issue(Folder):
     class_views = ['edit', 'edit_resources', 'browse_content', 'history']
 
 
-    @classmethod
-    def get_metadata_schema(cls):
-        schema = Folder.get_metadata_schema()
-        schema['product'] = Integer
-        schema['module'] = Integer
-        schema['version'] = Integer
-        schema['type'] = Integer
-        schema['state'] = Integer
-        schema['priority'] = Integer
-        schema['assigned_to'] = String
-        schema['cc_list'] = Tokens
+    metadata_schema = merge_dicts(
+        Folder.metadata_schema,
+        product=Integer,
+        module=Integer,
+        version=Integer,
+        type=Integer,
+        state=Integer,
+        priority=Integer,
+        assigned_to=String,
+        cc_list=Tokens,
         # parameters: date, author, file
-        schema['comment'] = Unicode(multiple=True)
-        return schema
+        comment=Unicode(multiple=True))
 
 
     def get_document_types(self):
@@ -161,7 +160,7 @@ class Issue(Folder):
         language = self.get_content_language(context)
         self.set_property('title', title, language=language)
         # Version, Priority, etc.
-        schema = self.get_metadata_schema()
+        schema = self.metadata_schema
         for name in ['product', 'module', 'version', 'type', 'state',
                      'priority', 'assigned_to']:
             value = form[name]

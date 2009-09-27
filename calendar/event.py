@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import freeze
+from itools.core import freeze, merge_dicts
 from itools.csv import Property
 from itools.datatypes import DateTime, Enumerate, String, Time, Unicode
 from itools.gettext import MSG
@@ -139,14 +139,12 @@ class Event(File):
     class_views = ['edit', 'backlinks', 'edit_state']
 
 
-    @classmethod
-    def get_metadata_schema(cls):
-        schema = File.get_metadata_schema()
-        schema['dtstart'] = DateTime
-        schema['dtend'] = DateTime
-        schema['status'] = Status
-        schema['location'] = String
-        return schema
+    metadata_schema = merge_dicts(
+        File.metadata_schema,
+        dtstart=DateTime,
+        dtend=DateTime,
+        status=Status,
+        location=String)
 
 
     @property

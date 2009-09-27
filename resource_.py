@@ -20,6 +20,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
+from itools.core import freeze
 from itools.csv import Property
 from itools.datatypes import Unicode, String, Integer, Boolean, DateTime
 from itools.http import get_context
@@ -227,7 +228,7 @@ class DBResource(CatalogAware, IResource):
 
         # Workflow State (default)
         if kw.get('state') is None and isinstance(self, WorkflowAware):
-            schema = self.get_metadata_schema()
+            schema = self.metadata_schema
             state = schema['state'].get_default()
             if state is None:
                 state  = self.workflow.initstate
@@ -257,23 +258,21 @@ class DBResource(CatalogAware, IResource):
     ########################################################################
     # Metadata
     ########################################################################
-    @classmethod
-    def get_metadata_schema(cls):
-        return {
-            'version': String,
-            'title': Unicode(multilingual=True),
-            'description': Unicode(multilingual=True),
-            'subject': Unicode(multilingual=True)}
-
-
-    def has_property(self, name, language=None):
-        return self.metadata.has_property(name, language=language)
+    metadata_schema = freeze({
+        'version': String,
+        'title': Unicode(multilingual=True),
+        'description': Unicode(multilingual=True),
+        'subject': Unicode(multilingual=True)})
 
 
     @classmethod
     def get_property_datatype(cls, name):
-         schema = cls.get_metadata_schema()
+         schema = cls.metadata_schema
          return schema.get(name, String)
+
+
+    def has_property(self, name, language=None):
+        return self.metadata.has_property(name, language=language)
 
 
     def _get_property(self, name, language=None):

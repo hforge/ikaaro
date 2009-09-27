@@ -58,7 +58,7 @@ class WFTransition(Record):
 
 def get_datatype(format, name):
     cls = get_resource_class(format)
-    schema = cls.get_metadata_schema()
+    schema = cls.metadata_schema
     if name not in schema:
         return String
     return schema[name]
@@ -106,7 +106,7 @@ class Metadata(File):
                         schema = {}
                     else:
                         cls = get_resource_class(self.format)
-                        schema = cls.get_metadata_schema()
+                        schema = cls.metadata_schema
                     stack.append((name, None, {}))
                     continue
 
@@ -170,10 +170,7 @@ class Metadata(File):
         format = self.format
         version = self.version
         cls = get_resource_class(format)
-        if cls is None:
-            schema = {}
-        else:
-            schema = cls.get_metadata_schema()
+        schema = cls.metadata_schema if cls else {}
 
         # Opening
         lines = ['<?xml version="1.0" encoding="UTF-8"?>\n',
