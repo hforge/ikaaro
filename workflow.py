@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
+from itools.core import freeze
 from itools.csv import Property
 from itools.datatypes import String, Unicode
 from itools.gettext import MSG
@@ -145,15 +146,12 @@ class WorkflowAware(BaseWorkflowAware):
     ########################################################################
     # Metadata
     ########################################################################
-    @classmethod
-    def get_metadata_schema(cls):
-        from obsolete.metadata import WFTransition
-        return {
-            'state': String,
-            'workflow': Unicode(multiple=True),
-            # XXX Backwards compatibility with 0.50
-#            'wf_transition': WFTransition,
-            }
+    from obsolete.metadata import WFTransition
+    metadata_schema = freeze({
+        'state': String,
+        'workflow': Unicode(multiple=True),
+        # XXX Backwards compatibility with 0.50
+        'wf_transition': WFTransition})
 
 
     ########################################################################
