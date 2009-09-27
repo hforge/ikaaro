@@ -26,6 +26,7 @@ from email.Utils import formatdate
 from email.header import Header
 
 # Import from itools
+from itools.core import freeze
 from itools.datatypes import String
 from itools.gettext import MSG
 from itools.handlers import RWDatabase
@@ -75,13 +76,11 @@ class Root(WebSite):
     class_control_panel = ['browse_users', 'add_user', 'edit_virtual_hosts',
                            'edit_security_policy', 'edit_languages',
                            'edit_contact_options']
+    class_roles = freeze(['admins'])
 
 
     __fixed_handlers__ = ['users', 'ui']
 
-
-    __roles__ = [
-        {'name': 'admins', 'title': MSG(u'Admin')}]
 
 
     def init_resource(self, email, password, admins=('0',), **kw):
