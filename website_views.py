@@ -147,7 +147,7 @@ class RegisterForm(AutoForm):
             user.set_property('firstname', firstname)
             user.set_property('lastname', lastname)
             # Set the role
-            default_role = resource.__roles__[0]['name']
+            default_role = resource.class_roles[0]
             resource.set_user_role(user.name, default_role)
 
         # Send confirmation email
