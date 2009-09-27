@@ -35,8 +35,7 @@ from itools.uri import get_uri_path
 # Import from ikaaro
 from ikaaro.file import File
 from ikaaro.folder import Folder
-from ikaaro.registry import register_resource_class, get_resource_class
-from ikaaro.registry import register_field
+from ikaaro.registry import get_resource_class, register_field
 from ikaaro.utils import generate_name
 from issue_views import Issue_Edit, Issue_EditResources, Issue_History
 from issue_views import IssueTrackerMenu
@@ -381,11 +380,6 @@ class Issue(Folder):
 ###########################################################################
 # Register
 ###########################################################################
-# The class
-register_resource_class(Issue)
-
-
-# The fields
 for name in ['id', 'product', 'module', 'version', 'type', 'state',
              'priority']:
     register_field(name, Integer(is_stored=True, is_indexed=True))

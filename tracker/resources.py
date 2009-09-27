@@ -33,7 +33,6 @@ from ikaaro.autoform import DateWidget, MultilineWidget, SelectWidget
 from ikaaro.autoform import TextWidget
 from ikaaro.calendar import CalendarBase, MonthlyView, WeeklyView
 from ikaaro.table import Table
-from ikaaro.registry import register_resource_class
 
 # Import from ikaaro.tracker
 from datatypes import UsersList
@@ -229,10 +228,3 @@ class Resources(Table, CalendarBase):
     monthly_view = TrackerMonthlyView()
     weekly_view = TrackerWeeklyView()
 
-
-
-
-###########################################################################
-# Register
-###########################################################################
-register_resource_class(Resources)

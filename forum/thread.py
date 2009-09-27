@@ -29,7 +29,6 @@ from itools.web import STLForm, INFO
 from ikaaro.autoform import rte_widget
 from ikaaro.folder import Folder
 from ikaaro.messages import MSG_DELETE_SELECTION
-from ikaaro.registry import register_resource_class
 from message import Message
 
 
@@ -156,8 +155,3 @@ class Thread(Folder):
     # Views
     view = Thread_View()
 
-
-###########################################################################
-# Register
-###########################################################################
-register_resource_class(Thread)

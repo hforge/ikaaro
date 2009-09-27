@@ -28,7 +28,6 @@ from itools.xapian import PhraseQuery, AndQuery
 # Import from ikaaro
 from ikaaro.autoform import title_widget, CheckboxWidget, SelectWidget
 from ikaaro.autoform import ReadOnlyWidget
-from ikaaro.registry import register_resource_class
 from ikaaro.table import OrderedTable, OrderedTableFile
 from ikaaro.table_views import OrderedTable_View, Table_EditRecord
 
@@ -257,11 +256,3 @@ class VersionsResource(Tracker_TableResource):
         title_widget,
         CheckboxWidget('released', title=MSG(u'Released'))]
 
-
-
-###########################################################################
-# Register
-###########################################################################
-register_resource_class(Tracker_TableResource)
-register_resource_class(ModulesResource)
-register_resource_class(VersionsResource)

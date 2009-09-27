@@ -36,7 +36,6 @@ from ikaaro.folder_views import Folder_NewResource, Folder_BrowseContent
 from ikaaro.folder_views import Folder_Rename, Folder_PreviewContent
 from ikaaro.folder_views import Folder_Thumbnail, GoToSpecificDocument
 from ikaaro.folder_views import Folder_Orphans
-from ikaaro.registry import register_resource_class
 from ikaaro.revisions_views import DBResource_LastChanges
 from ikaaro.table import OrderedTableFile, OrderedTable
 from ikaaro.table_views import OrderedTable_View
@@ -674,8 +673,3 @@ def get_menu_namespace(context, depth=3, show_first_child=False, flat=True,
                         break
     return tabs
 
-#
-# Register
-#
-register_resource_class(Menu)
-register_resource_class(MenuFolder)

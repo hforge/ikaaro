@@ -32,7 +32,6 @@ from itools.xml import XMLParser, START_ELEMENT
 # Import from ikaaro
 from ikaaro.file import Image
 from ikaaro.folder import Folder
-from ikaaro.registry import register_resource_class
 from ikaaro.views import CompositeForm, ContextMenu
 from ikaaro.webpage import ResourceWithHTML, WebPage
 from ikaaro.wiki import WikiPage
@@ -238,5 +237,3 @@ class Dressable(Folder, ResourceWithHTML):
                 handler.set_changed()
                 handler.events = events
 
-
-register_resource_class(Dressable)

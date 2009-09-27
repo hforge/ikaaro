@@ -23,7 +23,6 @@ from itools.gettext import MSG
 from itools.html import HTMLParser, sanitize_stream, XHTMLFile
 
 # Import from ikaaro
-from ikaaro.registry import register_resource_class
 from ikaaro.webpage import WebPage
 
 
@@ -64,6 +63,3 @@ class Message(WebPage):
     # text field was already indexed at the thread level
     text = None
 
-
-
-register_resource_class(Message)

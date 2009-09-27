@@ -30,7 +30,7 @@ from itools.xapian import CatalogAware, PhraseQuery
 # Import from ikaaro
 from lock import Lock
 from metadata import Metadata
-from registry import register_field
+from registry import register_field, register_resource_class
 from resource_views import DBResource_Edit, DBResource_Backlinks
 from resource_views import DBResource_AddImage, DBResource_AddLink
 from resource_views import DBResource_AddMedia, LoginView, LogoutView
@@ -167,7 +167,22 @@ class IResource(Resource):
 
 
 
+###########################################################################
+# Database resources
+###########################################################################
+class DBResourceMetaclass(type):
+
+    def __new__(mcs, name, bases, dict):
+        cls = type.__new__(mcs, name, bases, dict)
+        if 'class_id' in dict:
+            register_resource_class(cls)
+        return cls
+
+
+
 class DBResource(CatalogAware, IResource):
+
+    __metaclass__ = DBResourceMetaclass
 
     def __init__(self, metadata=None, brain=None):
         self._handler = None

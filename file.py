@@ -423,18 +423,4 @@ class Bzip2(File):
 ###########################################################################
 # Register
 ###########################################################################
-register_resource_class(File)
 register_resource_class(File, format="application/octet-stream")
-# Media
-for cls in Image, Video, Flash:
-    register_resource_class(cls)
-# Office
-for cls in MSWord, MSExcel, MSPowerPoint, PDF, RTF:
-    register_resource_class(cls)
-# OpenOffice 1.0 & ODF
-for cls in OOWriter, OOCalc, OOImpress, ODT, ODS, ODP:
-    register_resource_class(cls)
-# Archives
-for cls in ZipArchive, TarArchive, Gzip, Bzip2:
-    register_resource_class(cls)
-

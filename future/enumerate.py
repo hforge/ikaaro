@@ -21,7 +21,6 @@ from itools.http import get_context
 
 # Import from ikaaro
 from ikaaro.autoform import title_widget
-from ikaaro.registry import register_resource_class
 from ikaaro.table import OrderedTableFile, OrderedTable
 
 
@@ -63,9 +62,3 @@ class TableEnumerate(Enumerate):
             options.append({'name': str(record.id), 'value': title})
         return options
 
-
-
-###########################################################################
-# Register
-###########################################################################
-register_resource_class(EnumerateTable)

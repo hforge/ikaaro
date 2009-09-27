@@ -336,5 +336,4 @@ class WebPage(ResourceWithHTML, Multilingual, Text):
 ###########################################################################
 # Register
 ###########################################################################
-register_resource_class(WebPage)
 register_resource_class(WebPage, format='application/xhtml+xml')

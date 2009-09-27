@@ -32,7 +32,7 @@ from control_panel import CPBrowseUsers, CPEditContactOptions, CPEditLanguages
 from control_panel import CPEditMembership, CPEditSecurityPolicy
 from control_panel import CPEditVirtualHosts, CPOrphans
 from folder import Folder
-from registry import register_resource_class, register_document_type
+from registry import register_document_type
 from resource_views import LoginView
 from skins import Skin
 from views_new import ProxyNewInstance
@@ -133,5 +133,4 @@ class WebSite(RoleAware, Folder, VirtualRoot):
 ###########################################################################
 # Register
 ###########################################################################
-register_resource_class(WebSite)
 register_document_type(WebSite, WebSite.class_id)

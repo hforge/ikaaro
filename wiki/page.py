@@ -35,7 +35,7 @@ from itools.uri import get_reference
 
 # Import from ikaaro
 from ikaaro.text import Text
-from ikaaro.registry import register_resource_class, register_document_type
+from ikaaro.registry import register_document_type
 from page_views import WikiPage_NewInstance, WikiPage_Edit, WikiPage_Help
 from page_views import WikiPage_ToPDF, WikiPage_View
 
@@ -265,5 +265,4 @@ class WikiPage(Text):
 ###########################################################################
 # Register
 ###########################################################################
-register_resource_class(WikiPage)
 register_document_type(WikiPage)

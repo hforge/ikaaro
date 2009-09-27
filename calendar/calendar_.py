@@ -30,7 +30,6 @@ from itools.ical import Record
 # Import from ikaaro
 from ikaaro.file_views import File_View
 from ikaaro.folder import Folder
-from ikaaro.registry import register_resource_class
 from ikaaro.resource_ import DBResource
 from ikaaro.table import Table
 from ikaaro.text import Text
@@ -189,10 +188,3 @@ class Calendar(CalendarBase, Text):
         schema['timetables'] = Timetables
         return schema
 
-
-
-###########################################################################
-# Register
-###########################################################################
-register_resource_class(CalendarTable)
-register_resource_class(Calendar)
