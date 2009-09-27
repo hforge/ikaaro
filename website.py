@@ -23,6 +23,7 @@ from decimal import Decimal
 from types import GeneratorType
 
 # Import from itools
+from itools.core import merge_dicts
 from itools.datatypes import String, Tokens, Unicode
 from itools.gettext import MSG
 from itools.html import stream_to_str_as_html, xhtml_doctype
@@ -73,21 +74,19 @@ class WebSite(RoleAware, Folder):
         return Folder._get_resource(self, name)
 
 
-    @classmethod
-    def get_metadata_schema(cls):
-        schema = Folder.get_metadata_schema()
-        schema.update(RoleAware.get_metadata_schema())
-        schema['vhosts'] = Tokens
-        schema['contacts'] = Tokens
-        schema['emails_from_addr'] = String
-        schema['emails_signature'] = Unicode
-        schema['google-site-verification'] = String
-        schema['yahoo_site_verification'] = String
-        schema['bing_site_verification'] = String
-        schema['website_languages'] = Tokens(default=('en',))
-        schema['captcha_question'] = Unicode(default=u"2 + 3")
-        schema['captcha_answer'] = Unicode(default=u"5")
-        return schema
+    metadata_schema = merge_dicts(
+        Folder.metadata_schema,
+        RoleAware.metadata_schema,
+        vhosts=Tokens,
+        contacts=Tokens,
+        emails_from_addr=String,
+        emails_signature=Unicode,
+        google_site_verification=String,
+        yahoo_site_verification=String,
+        bing_site_verification=String,
+        website_languages=Tokens(default=('en',)),
+        captcha_question=Unicode(default=u"2 + 3"),
+        captcha_answer=Unicode(default=u"5"))
 
 
     def _get_catalog_values(self):

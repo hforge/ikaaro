@@ -21,6 +21,7 @@
 from datetime import time
 
 # Import from itools
+from itools.core import merge_dicts
 from itools.datatypes import DataType, Date
 from itools.gettext import MSG
 from itools.ical import iCalendar, icalendarTable
@@ -195,11 +196,9 @@ class CalendarTable(CalendarBase, Table):
         get_context().server.change_resource(self)
 
 
-    @classmethod
-    def get_metadata_schema(cls):
-        schema = Table.get_metadata_schema()
-        schema['timetables'] = Timetables
-        return schema
+    metadata_schema = merge_dicts(
+        Table.metadata_schema,
+        timetables=Timetables)
 
 
     # Use edit_event instead
@@ -235,19 +234,16 @@ class Calendar(CalendarBase, Text):
         get_context().server.change_resource(self)
 
 
-    @classmethod
-    def get_metadata_schema(cls):
-        schema = Text.get_metadata_schema()
-        schema['timetables'] = Timetables
-        return schema
+    metadata_schema = merge_dicts(
+        Text.metadata_schema,
+        timetables=Timetables)
 
 
 
 class CalendarContainer(CalendarBase):
 
-    @classmethod
-    def get_metadata_schema(cls):
-        return {'timetables': Timetables}
+    metadata_schema = freeze({
+        'timetables': Timetables})
 
 
     def get_calendars(self, types=None):

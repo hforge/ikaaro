@@ -43,7 +43,7 @@ metadata_parameters = {
 
 def get_schema(format):
     cls = get_resource_class(format)
-    return cls.get_metadata_schema()
+    return cls.metadata_schema
 
 
 def is_multiple(datatype):

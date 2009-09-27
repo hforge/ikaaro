@@ -380,15 +380,13 @@ class RoleAware(AccessControl):
 
     class_roles = freeze(['guests', 'members', 'reviewers', 'admins'])
 
-    @classmethod
-    def get_metadata_schema(cls):
-        return {
-            'website_is_open': Boolean,
-            # Roles
-            'guests': Tokens(title=MSG(u"Guest")),
-            'members': Tokens(title=MSG(u"Member")),
-            'reviewers': Tokens(title=MSG(u"Reviewer")),
-            'admins': Tokens(title=MSG(u'Admin'))}
+    metadata_schema = freeze({
+        'website_is_open': Boolean,
+        # Roles
+        'guests': Tokens(title=MSG(u"Guest")),
+        'members': Tokens(title=MSG(u"Member")),
+        'reviewers': Tokens(title=MSG(u"Reviewer")),
+        'admins': Tokens(title=MSG(u'Admin'))})
 
 
     def get_links(self):
@@ -495,7 +493,7 @@ class RoleAware(AccessControl):
     #########################################################################
     @classmethod
     def get_role_title(cls, name):
-        schema = cls.get_metadata_schema()
+        schema = cls.metadata_schema
         return schema[name].title
 
 
@@ -581,7 +579,7 @@ class RoleAware(AccessControl):
     # User Interface
     #######################################################################
     def get_roles_namespace(self, username=None):
-        schema = self.get_metadata_schema()
+        schema = self.metadata_schema
         user_role = self.get_user_role(username) if username else None
 
         return [
