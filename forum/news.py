@@ -19,7 +19,7 @@ from itools.gettext import MSG
 
 # Import from ikaaro
 from ikaaro.webpage import WebPage
-from ikaaro.registry import register_resource_class, register_document_type
+from ikaaro.registry import register_document_type
 from ikaaro.views_new import NewInstanceByDate
 
 
@@ -44,6 +44,7 @@ class News(WebPage):
 
 
 
+###########################################################################
 # Register
-register_resource_class(News)
+###########################################################################
 register_document_type(News)
