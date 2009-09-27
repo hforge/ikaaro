@@ -19,7 +19,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import merge_dicts
+from itools.core import freeze, merge_dicts
 from itools.datatypes import Boolean, Email, Tokens, Unicode, String
 from itools.gettext import MSG
 from itools.web import AccessControl as BaseAccessControl, STLForm, INFO
@@ -378,22 +378,17 @@ class RoleAware(AccessControl):
     roles.  Includes a user interface.
     """
 
-    # To override
-    __roles__ = [
-        {'name': 'guests', 'title': MSG(u"Guest")},
-        {'name': 'members', 'title': MSG(u"Member")},
-        {'name': 'reviewers', 'title': MSG(u"Reviewer")},
-        {'name': 'admins', 'title': MSG(u'Admin')},
-    ]
-
+    class_roles = freeze(['guests', 'members', 'reviewers', 'admins'])
 
     @classmethod
     def get_metadata_schema(cls):
-        schema = {}
-        for rolename in cls.get_role_names():
-            schema[rolename] = Tokens
-        schema['website_is_open'] = Boolean
-        return schema
+        return {
+            'website_is_open': Boolean,
+            # Roles
+            'guests': Tokens(title=MSG(u"Guest")),
+            'members': Tokens(title=MSG(u"Member")),
+            'reviewers': Tokens(title=MSG(u"Reviewer")),
+            'admins': Tokens(title=MSG(u'Admin'))}
 
 
     def get_links(self):
@@ -500,17 +495,15 @@ class RoleAware(AccessControl):
     #########################################################################
     @classmethod
     def get_role_title(cls, name):
-        for role in cls.__roles__:
-            if role['name'] == name:
-                return role['title']
-        return None
+        schema = cls.get_metadata_schema()
+        return schema[name].title
 
 
     @classmethod
     def get_role_names(cls):
         """Return the names of the roles available.
         """
-        return [ r['name'] for r in cls.__roles__ ]
+        return cls.class_roles
 
 
     def get_user_role(self, user_id):
@@ -519,7 +512,7 @@ class RoleAware(AccessControl):
         """
         for role in self.get_role_names():
             value = self.get_property(role)
-            if (value is not None) and (user_id in value):
+            if value and user_id in value:
                 return role
         return None
 
@@ -549,9 +542,7 @@ class RoleAware(AccessControl):
         user_ids = set(user_ids)
 
         # Build the list of roles from where the users will be removed
-        roles = self.get_role_names()
-        if role is not None:
-            roles.remove(role)
+        roles = [ x for x in self.get_role_names() if x != role ]
 
         # Add the users to the given role
         if role is not None:
@@ -590,19 +581,12 @@ class RoleAware(AccessControl):
     # User Interface
     #######################################################################
     def get_roles_namespace(self, username=None):
-        # Build a list with the role name and title
-        namespace = [ x.copy() for x in self.__roles__ ]
+        schema = self.get_metadata_schema()
+        user_role = self.get_user_role(username) if username else None
 
-        # If a username was not given, we are done
-        if username is None:
-            return namespace
-
-        # Add the selected field
-        user_role = self.get_user_role(username)
-        for role in namespace:
-            role['selected'] = (user_role == role['name'])
-
-        return namespace
+        return [
+            {'name': x, 'title': schema[x].title, 'selected': x == user_role}
+            for x in self.class_roles ]
 
 
     #######################################################################

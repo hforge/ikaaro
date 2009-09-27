@@ -29,7 +29,7 @@ from email.header import Header
 import traceback
 
 # Import from itools
-from itools.core import get_abspath
+from itools.core import freeze, get_abspath
 from itools.datatypes import String
 from itools.gettext import MSG
 from itools.handlers import ConfigFile, RWDatabase, ro_database
@@ -87,13 +87,11 @@ class Root(WebSite):
     class_control_panel = ['browse_users', 'add_user', 'edit_virtual_hosts',
                            'edit_security_policy', 'edit_languages',
                            'edit_contact_options', 'edit_seo']
+    class_roles = freeze(['admins'])
 
 
     __fixed_handlers__ = ['users', 'ui']
 
-
-    __roles__ = [
-        {'name': 'admins', 'title': MSG(u'Admin')}]
 
 
     def init_resource(self, email, password, admins=('0',)):
