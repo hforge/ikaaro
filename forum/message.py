@@ -23,7 +23,6 @@ from itools.gettext import MSG
 from itools.html import HTMLParser, sanitize_stream, XHTMLFile
 
 # Import from ikaaro
-from ikaaro.registry import register_resource_class
 from ikaaro.webpage import WebPage
 
 
@@ -67,6 +66,3 @@ class Message(WebPage):
         del result['text']
         return result
 
-
-
-register_resource_class(Message)

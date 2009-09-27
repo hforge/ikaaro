@@ -37,7 +37,7 @@ from control_panel import CPEditMembership, CPEditSecurityPolicy
 from control_panel import CPEditVirtualHosts, CPOrphans
 from control_panel import CPEditSearchEngineOptimizations
 from folder import Folder
-from registry import register_resource_class, register_document_type
+from registry import register_document_type
 from resource_views import LoginView
 from skins import UI, ui_path
 from views_new import ProxyNewInstance
@@ -196,5 +196,4 @@ class WebSite(RoleAware, Folder):
 ###########################################################################
 # Register
 ###########################################################################
-register_resource_class(WebSite)
 register_document_type(WebSite, WebSite.class_id)

@@ -322,5 +322,4 @@ class Folder(DBResource):
 ###########################################################################
 # Register
 ###########################################################################
-register_resource_class(Folder)
 register_resource_class(Folder, format="application/x-not-regular-file")

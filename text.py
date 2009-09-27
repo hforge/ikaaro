@@ -314,18 +314,11 @@ class CSV(Text):
 ###########################################################################
 # Register
 ###########################################################################
-register_resource_class(Text)
-register_resource_class(Python)
 for js_mime in ['application/x-javascript', 'text/javascript',
                 'application/javascript']:
     register_resource_class(JS, js_mime)
     add_type(js_mime, '.js')
-register_resource_class(PO)
-register_resource_class(CSS)
-register_resource_class(XML)
 register_resource_class(XML, format='application/xml')
-register_resource_class(HTML)
-register_resource_class(CSV)
 register_resource_class(CSV, 'text/x-comma-separated-values')
 register_resource_class(CSV, 'text/csv')
 

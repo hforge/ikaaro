@@ -34,7 +34,6 @@ from itools.xapian import StartQuery
 
 # Import from ikaaro
 from ikaaro.folder import Folder
-from ikaaro.registry import register_resource_class
 from issue import Issue
 from resources import Resources
 from stored import StoredSearch, StoredSearchFile
@@ -324,9 +323,3 @@ class Tracker(Folder):
         self.move_resource('states', 'state')
         self.move_resource('priorities', 'priority')
 
-
-
-###########################################################################
-# Register
-###########################################################################
-register_resource_class(Tracker)

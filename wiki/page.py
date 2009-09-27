@@ -35,7 +35,6 @@ from itools.web import get_context
 
 # Import from ikaaro
 from ikaaro.text import Text
-from ikaaro.registry import register_resource_class
 from ikaaro.resource_ import DBResource
 from page_views import WikiPage_Edit, WikiPage_Help, WikiPage_ToPDF
 from page_views import WikiPage_View
@@ -261,9 +260,3 @@ class WikiPage(Text):
     def get_context_menus(self):
         return self.parent.get_context_menus()
 
-
-
-###########################################################################
-# Register
-###########################################################################
-register_resource_class(WikiPage)

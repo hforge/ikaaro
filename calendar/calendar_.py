@@ -30,7 +30,6 @@ from itools.web import get_context
 # Import from ikaaro
 from ikaaro.file_views import File_View
 from ikaaro.folder import Folder
-from ikaaro.registry import register_resource_class
 from ikaaro.resource_ import DBResource
 from ikaaro.table import Table
 from ikaaro.text import Text
@@ -267,10 +266,3 @@ class CalendarContainer(CalendarBase):
     download = None
     upload = None
 
-
-
-###########################################################################
-# Register
-###########################################################################
-register_resource_class(CalendarTable)
-register_resource_class(Calendar)

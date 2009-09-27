@@ -30,8 +30,7 @@ from itools.web import INFO
 from access import AccessControl
 from datatypes import Password
 from folder import Folder
-from registry import register_resource_class, get_resource_class
-from registry import register_field
+from registry import get_resource_class, register_field
 from resource_views import DBResource_Edit
 from user_views import User_ConfirmRegistration, User_EditAccount
 from user_views import User_EditPassword, User_EditPreferences, User_Profile
@@ -305,11 +304,6 @@ class UserFolder(Folder):
 ###########################################################################
 # Register
 ###########################################################################
-# The classes
-register_resource_class(UserFolder)
-register_resource_class(User)
-
-# The fields
 for name in ['email', 'email_domain', 'username']:
     register_field(name, String(is_stored=True, is_indexed=True))
 for name in ['lastname', 'firstname']:

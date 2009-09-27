@@ -32,7 +32,6 @@ from itools.web import STLForm, INFO
 from ikaaro.folder import Folder
 from ikaaro import messages
 from ikaaro.forms import title_widget, rte_widget, AutoForm
-from ikaaro.registry import register_resource_class
 from thread import Thread
 from message import Message
 
@@ -128,10 +127,3 @@ class Forum(Folder):
     view = Forum_View()
     add_thread = AddThreadForm()
 
-
-
-
-###########################################################################
-# Register
-###########################################################################
-register_resource_class(Forum)

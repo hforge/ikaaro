@@ -32,7 +32,6 @@ from ikaaro.buttons import OrderDownButton, OrderBottomButton, OrderTopButton
 from ikaaro.file import Image
 from ikaaro.folder import Folder
 from ikaaro.folder_views import Folder_BrowseContent, GoToSpecificDocument
-from ikaaro.registry import register_resource_class
 from ikaaro.table import OrderedTableFile, OrderedTable
 from ikaaro.table_views import OrderedTable_View
 from ikaaro.utils import get_base_path_query
@@ -420,7 +419,3 @@ class ChildrenOrderedTable(ResourcesOrderedTable):
 
     class_id = 'children-ordered-table'
 
-
-
-register_resource_class(ResourcesOrderedTable)
-register_resource_class(ChildrenOrderedTable)

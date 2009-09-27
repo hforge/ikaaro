@@ -39,7 +39,7 @@ from itools.web import BaseView, get_context
 
 # Import from ikaaro
 from folder import Folder
-from registry import register_resource_class, get_resource_class
+from registry import get_resource_class
 from skins import UI, ui_path
 from user import UserFolder
 from utils import crypt_password
@@ -301,10 +301,3 @@ class Root(WebSite):
     #######################################################################
     _ctrl = CtrlView()
 
-
-
-
-###########################################################################
-# Register
-###########################################################################
-register_resource_class(Root)
