@@ -73,7 +73,7 @@ class SelectTable_View(OrderedTable_View):
             query = AndQuery(*query_terms)
 
             # Search
-            results = context.root.search(query)
+            results = context.search(query)
             count = len(results)
             if count == 0:
                 return 0, None
@@ -142,7 +142,7 @@ class SelectTable_View(OrderedTable_View):
         # Search all issues
         query_terms = parent.get_issues_query_terms()
         query = AndQuery(*query_terms)
-        results = context.root.search(query)
+        results = context.search(query)
 
         # Associated modules and versions
         check_associated = (resource.name == 'product')

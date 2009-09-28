@@ -39,6 +39,7 @@ from buttons import RemoveButton, RenameButton, CopyButton, CutButton
 from buttons import PasteButton, PublishButton, RetireButton
 from datatypes import CopyCookie, ImageWidth
 from exceptions import ConsistencyError
+from globals import ui
 import messages
 from utils import generate_name, get_base_path_query
 from views import IconsView, SearchForm, ContextMenu
@@ -287,9 +288,9 @@ class Folder_BrowseContent(SearchForm):
         resources = results.get_documents(sort_by=sort_by, reverse=reverse,
                                           start=start, size=size)
 
-        # FIXME This must be done in the catalog.
+        # FIXME This must be done in the catalog
         if sort_by == 'title':
-            resources.sort(cmp=lambda x,y: cmp(x.title, y.title))
+            resources = sorted(resources, key=lambda x: x.get_value('title'))
             if reverse:
                 resources.reverse()
 
@@ -307,10 +308,10 @@ class Folder_BrowseContent(SearchForm):
     def get_item_value(self, resource, context, item, column):
         if column == 'checkbox':
             # checkbox
-            parent = item.parent
+            parent = item.get_parent()
             if parent is None:
                 return None
-            if item.name in parent.__fixed_handlers__:
+            if item.get_name() in parent.__fixed_handlers__:
                 return None
             id = resource.path.get_pathto(item.path)
             id = str(id)
@@ -319,7 +320,8 @@ class Folder_BrowseContent(SearchForm):
             # icon
             path_to_icon = item.get_resource_icon(16)
             if path_to_icon.startswith(';'):
-                path_to_icon = Path('%s/' % item.name).resolve(path_to_icon)
+                name = item.get_name()
+                path_to_icon = Path('%s/' % name).resolve(path_to_icon)
             return path_to_icon
         elif column == 'name':
             # Name
@@ -332,17 +334,17 @@ class Folder_BrowseContent(SearchForm):
             return id, href
         elif column == 'title':
             # Title
-            return item.get_property('title')
+            return item.get_value('title')
         elif column == 'format':
             # Type
             return item.class_title.gettext()
         elif column == 'mtime':
             # Last Modified
             accept = context.accept_language
-            return format_datetime(item.mtime, accept=accept)
+            return format_datetime(item.get_value('mtime'), accept=accept)
         elif column == 'last_author':
             # Last author
-            return context.get_user_title(item.last_author)
+            return context.get_user_title(item.get_value('last_author'))
         elif column == 'size':
             # Size
             return item.get_human_size()
@@ -370,7 +372,6 @@ class Folder_BrowseContent(SearchForm):
         referenced = []
         not_removed = []
         user = context.user
-        abspath = resource.get_abspath()
 
         # We sort and reverse ids in order to
         # remove the childs then their parents
@@ -388,7 +389,7 @@ class Folder_BrowseContent(SearchForm):
                     continue
                 removed.append(name)
                 # Clean cookie
-                if str(abspath.resolve2(name)) in paths:
+                if str(resource.path.resolve2(name)) in paths:
                     context.del_cookie('ikaaro_cp')
                     paths = []
             else:
@@ -410,6 +411,7 @@ class Folder_BrowseContent(SearchForm):
         if not removed and not referenced and not not_removed:
             message.append(messages.MSG_NONE_REMOVED)
         context.message = message
+        context.redirect()
 
 
     def action_rename(self, resource, context, form):
@@ -677,15 +679,14 @@ class Folder_PreviewContent(Folder_BrowseContent):
         columns = self._get_table_columns(resource, context)
         rows = []
         for item in items:
-            item_brain, item_resource = item
             row = {'checkbox': False,
                    # These are required for internal use
-                   'title_or_name': item_resource.get_title(),
+                   'title_or_name': item.get_value('title'),
                    'workflow_statename': None}
             # XXX Already hard-coded in the catalog search
-            row['is_folder'] = (item_brain.format == 'folder')
-            if isinstance(item_resource, WorkflowAware):
-                row['workflow_statename'] = item_resource.get_statename()
+            row['is_folder'] = (item.class_id == 'folder')
+            if isinstance(item, WorkflowAware):
+                row['workflow_statename'] = item.get_statename()
             for name, title, sortable in columns:
                 value = self.get_item_value(resource, context, item, name)
                 if value is None:
@@ -717,7 +718,7 @@ class Folder_PreviewContent(Folder_BrowseContent):
                             if o['name'].strip()])
 
         return {
-            'root': resource.parent is None,
+            'root': resource.get_parent() is None,
             'size': current_size,
             'width': width,
             'height': height,
@@ -750,11 +751,10 @@ class Folder_Orphans(Folder_BrowseContent):
         items = Folder_BrowseContent.get_items(self, resource, context)
 
         # Find out the orphans
-        root = context.root
         orphans = []
         for item in items.get_documents():
             query = PhraseQuery('links', item.abspath)
-            results = root.search(query)
+            results = context.search(query)
             if len(results) == 0:
                 orphans.append(item)
 
@@ -763,7 +763,7 @@ class Folder_Orphans(Folder_BrowseContent):
         # for better performance.
         args = [ PhraseQuery('abspath', x.abspath) for x in orphans ]
         query = OrQuery(*args)
-        items = root.search(query)
+        items = context.search(query)
 
         # Ok
         return items
@@ -774,21 +774,18 @@ class Folder_Thumbnail(BaseView):
 
     access = True
 
-    default_icon = '/ui/gallery/folder.png'
+    default_icon = 'gallery/folder.png'
 
     def http_get(self, resource, context):
         from file import Image
 
-        width = context.get_form_value('width', type=Integer, default=48)
-        height = context.get_form_value('height', type=Integer, default=48)
-        size = (width, height)
-        data = None
-        format = "jpeg"
+        width = context.get_query_value('width', type=Integer, default=48)
+        height = context.get_query_value('height', type=Integer, default=48)
 
         # Choose an image to illustrate
-        default_icon = resource.get_resource(self.default_icon)
         if PILImage is None:
             # Full size but better than nothing
+            default_icon = ui.get_template(self.default_icon)
             data = default_icon.to_str()
             format = 'png'
         else:
@@ -802,15 +799,14 @@ class Folder_Thumbnail(BaseView):
                     break
             else:
                 # Default icon for empty or inaccessible folders
+                default_icon = ui.get_template(self.default_icon)
                 data, format = default_icon.get_thumbnail(width, height)
 
-        # XXX Don't cache nothing here
+        # XXX Cache nothing here
         # The image thumbnail was cached in the image handler
         # The folder thumbnail was cached in the folder handler
         # Accessible images depend on too many parameters
-
-        context.content_type = 'image/%s' % format
-        return data
+        context.ok('image/%s' % format, data)
 
 
 

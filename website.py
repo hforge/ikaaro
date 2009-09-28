@@ -66,7 +66,7 @@ class WebSite(RoleAware, Folder, VirtualRoot):
         Folder.class_schema,
         RoleAware.class_schema,
         # Metadata
-        vhosts=Tokens(source='metadata', multiple=True, indexed=True),
+        vhosts=String(source='metadata', multiple=True, indexed=True),
         contacts=Tokens(source='metadata'),
         emails_from_addr=String(source='metadata'),
         emails_signature=Unicode(source='metadata'),
@@ -76,16 +76,11 @@ class WebSite(RoleAware, Folder, VirtualRoot):
         website_languages=Tokens(source='metadata', default=('en',)))
 
 
-    @property
-    def vhosts(self):
-        return self.get_property('vhosts')
-
-
     ########################################################################
     # API
     ########################################################################
     def get_default_language(self):
-        return self.get_property('website_languages')[0]
+        return self.get_value('website_languages')[0]
 
 
     def is_allowed_to_register(self, user, resource):

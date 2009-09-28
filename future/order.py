@@ -67,7 +67,7 @@ def get_resource_preview(resource, image_width, image_height, text_length,
             context.get_link(resource), image_width, image_height))
     # Or textual representation
     try:
-        text = resource.to_text()
+        text = resource.get_text()
     except NotImplementedError:
         text = u""
     if isinstance(text, dict):
@@ -191,7 +191,7 @@ class ResourcesOrderedTable_Unordered(Folder_BrowseContent):
 
     def get_items(self, resource, context):
         query = self.get_query(resource, context)
-        return context.root.search(query)
+        return context.search(query)
 
 
     def get_item_value(self, resource, context, item, column):

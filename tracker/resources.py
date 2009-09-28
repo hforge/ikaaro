@@ -63,9 +63,8 @@ class TrackerWeeklyView(WeeklyView):
 
 
     def get_weekly_templates(self):
-        root = get_context().root
-        template = root.get_resource(self.weekly_template)
-        template_fd = root.get_resource(self.weekly_template_fd)
+        template = context.get_resource(self.weekly_template)
+        template_fd = context.get_resource(self.weekly_template_fd)
         return template, template_fd
 
 
@@ -101,7 +100,7 @@ class Resource(Record):
         issue = tracker.get_resource(self.get_value('issue'))
         comment = self.get_value('comment')
 
-        users = context.root.get_resource('/users')
+        users = context.get_resource('/users')
         user = self.get_value('resource')
         user_title = users.get_resource(user).get_title()
 

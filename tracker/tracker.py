@@ -232,7 +232,7 @@ class Tracker(Folder):
 
         # Compute the query and return the result
         query = self.get_search_query(get_value)
-        return context.root.search(query)
+        return context.search(query)
 
 
 

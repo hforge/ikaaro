@@ -232,7 +232,7 @@ class WebPage(ResourceWithHTML, Multilingual, Text):
     # FIXME These three methods are private, add the heading underscore
     def get_links(self):
         base = self.get_abspath()
-        languages = self.get_site_root().get_property('website_languages')
+        languages = self.get_site_root().get_value('website_languages')
         links = []
         for language in languages:
             handler = self.get_handler(language=language)
@@ -300,13 +300,9 @@ class WebPage(ResourceWithHTML, Multilingual, Text):
     #######################################################################
     # API
     #######################################################################
-    def to_text(self):
-        result = {}
-        languages = self.get_site_root().get_property('website_languages')
-        for language in languages:
-            handler = self.get_handler(language=language)
-            result[language] = handler.to_text()
-        return result
+    def get_text(self, language=None):
+        handler = self.get_handler(language=language)
+        return handler.to_text()
 
 
     def get_content_type(self):
@@ -360,7 +356,7 @@ class WebPage(ResourceWithHTML, Multilingual, Text):
                 attributes[(None, 'src')] = str(uri)
                 yield START_ELEMENT, (tag_uri, tag_name, attributes), line
 
-        languages = self.get_site_root().get_property('website_languages')
+        languages = self.get_site_root().get_value('website_languages')
         for language in languages:
             handler = self.get_handler(language=language)
             events = list(fix_links(handler.events))

@@ -21,7 +21,7 @@
 from copy import deepcopy
 
 # Import from itools
-from itools.core import freeze
+from itools.core import merge_dicts
 from itools.datatypes import Email, String, Unicode
 from itools.gettext import MSG
 from itools.uri import Path
@@ -54,53 +54,37 @@ class User(AccessControl, Folder):
 
 
     ########################################################################
-    # Metadata
+    # Schema
     ########################################################################
-    class_schema = freeze({
+    class_schema = merge_dicts(
+        Folder.class_schema,
         # Metadata
-        'version': String(source='metadata'),
-        'firstname': Unicode(source='metadata', indexed=True, stored=True),
-        'lastname': Unicode(source='metadata', indexed=True, stored=True),
-        'email': Email(source='metadata', indexed=True, stored=True),
-        'password': Password(source='metadata'),
-        'user_language': String(source='metadata'),
-        'user_must_confirm': String(source='metadata'),
+        firstname=Unicode(source='metadata', indexed=True, stored=True),
+        lastname=Unicode(source='metadata', indexed=True, stored=True),
+        email=Email(source='metadata', indexed=True, stored=True),
+        password=Password(source='metadata'),
+        user_language=String(source='metadata'),
+        user_must_confirm=String(source='metadata'),
         # Metadata (backwards compatibility)
-        'username': String(source='metadata', indexed=True, stored=True),
+        username=String(source='metadata', indexed=True, stored=True),
         # Other
-        'email_domain': String(indexed=True, stored=True),
-        })
+        email_domain=String(indexed=True, stored=True))
 
 
-    ########################################################################
-    # Indexing
-    ########################################################################
-    @property
-    def email(self):
-        return self.get_property('email')
-
-
-    @property
-    def email_domain(self):
-        email = self.get_property('email')
-        if email and '@' in email:
-            return email.split('@', 1)[1]
+    def get_email_domain(self):
+        email = self.metadata.get_property('email')
+        if email and '@' in email.value:
+            return email.value.split('@', 1)[1]
         return None
 
 
-    @property
-    def username(self):
-        return self.get_login_name()
+    def get_username(self):
+        # FIXME Check first the username (for compatibility with 0.14)
+        username = self.metadata.get_property('username')
+        if username:
+            return username.value
 
-
-    @property
-    def firstname(self):
-        return self.get_property('firstname')
-
-
-    @property
-    def lastname(self):
-        return self.get_property('lastname')
+        return self.metadata.get_property('email').value
 
 
     ########################################################################
@@ -115,15 +99,7 @@ class User(AccessControl, Folder):
             return firstname
         if lastname:
             return lastname
-        return self.get_login_name()
-
-
-    def get_login_name(self):
-        # FIXME Check first the username (for compatibility with 0.14)
-        username = self.get_property('username')
-        if username:
-            return username
-        return self.get_property('email')
+        return self.get_value('username')
 
 
     def set_password(self, password):
@@ -133,27 +109,24 @@ class User(AccessControl, Folder):
 
     def authenticate(self, password):
         # Is password crypted?
-        if password == self.get_property('password'):
+        user_password = self.get_value('password')
+        if password == user_password:
             return True
         # Is password clear?
         crypted = crypt_password(password)
-        return crypted == self.get_property('password')
+        return crypted == user_password
 
 
     def get_groups(self):
         """Returns all the role aware handlers where this user is a member.
         """
-        root = self.get_root()
-        if root is None:
-            return ()
-
-        results = root.search(is_role_aware=True, members=self.name)
+        results = self.context.search(is_role_aware=True, users=self.name)
         groups = [ x.abspath for x in results.get_documents() ]
         return tuple(groups)
 
 
     def set_auth_cookie(self, context, password):
-        username = str(self.name)
+        username = self.get_name()
         crypted = crypt_password(password)
         cookie = Password.encode('%s:%s' % (username, crypted))
         # TODO Add a reasonable expires value, for security
@@ -194,10 +167,13 @@ class User(AccessControl, Folder):
         confirm_url = deepcopy(context.uri)
         path = '/users/%s/%s' % (self.name, view)
         confirm_url.path = Path(path)
-        confirm_url.query = {'key': key, 'username': self.get_login_name()}
+        confirm_url.query = {
+            'key': key,
+            'username': self.get_value('username')}
         confirm_url = str(confirm_url)
         text = text.gettext(uri=confirm_url)
-        context.root.send_email(email, subject.gettext(), text=text)
+        context.send_email(email, subject.gettext(), text=text)
+
 
     ########################################################################
     # Access control
@@ -207,7 +183,7 @@ class User(AccessControl, Folder):
             return False
 
         # In my home I am the king
-        if self.name == user.name:
+        if self.path == user.path:
             return True
 
         # The all-powerfull

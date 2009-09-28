@@ -268,7 +268,7 @@ class File_ExternalEdit(BaseView):
                 context.commit = True
             else:
                 # always borrow lock from same user
-                if lock.username == context.user.name:
+                if lock.username == context.user.get_name():
                     lines.append('lock-token:%s' % lock.lock_key)
                     lines.append('borrow_lock:1')
                 else:
@@ -344,11 +344,11 @@ class Image_View(STLView):
     def get_browse_images(self, resource, context):
         from file import Image
         user = context.user
-        parent = resource.parent
+        parent = resource.get_parent()
         ac = parent.get_access_control()
 
-        return [ image for image in parent.search_resources(cls=Image)
-                 if ac.is_allowed_to_view(user, image) ]
+        return [ x for x in parent.search_resources(cls=Image)
+                 if ac.is_allowed_to_view(user, x) ]
 
 
     def get_namespace(self, resource, context):
@@ -402,7 +402,7 @@ class Image_View(STLView):
         # Real width and height (displayed for reference)
         image_width, image_height = resource.handler.get_size()
 
-        return {'parent_link': resource.parent.path,
+        return {'parent_link': resource.get_parent().path,
                 'size': size,
                 'width': width,
                 'height': height,

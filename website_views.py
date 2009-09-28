@@ -82,27 +82,21 @@ class ForgottenPasswordForm(AutoForm):
 
 
     def action(self, resource, context, form):
-        username = form['username']
-        # TODO Don't generate the password, send instead a link to a form
-        # where the user will be able to type his new password.
-        root = context.root
-
         # Get the email address
-        username = username.strip()
+        username = form['username'].strip()
 
         # Get the user with the given login name
-        results = root.search(username=username)
+        results = context.search(username=username)
         if len(results) == 0:
             message = ERROR(u'There is not a user identified as "{username}"',
-                      username=username)
+                            username=username)
             context.message = message
             return
 
-        user = results.get_documents()[0]
-        user = resource.get_resource('/users/%s' % user.name)
 
         # Send email of confirmation
-        email = user.get_property('email')
+        user = results.get_documents()[0]
+        email = user.get_value('email')
         user.send_forgotten_password(context, email)
 
         handler = resource.get_resource('/ui/website/forgotten_password.xml')
@@ -148,7 +142,7 @@ class RegisterForm(AutoForm):
             user.set_property('lastname', lastname)
             # Set the role
             default_role = resource.class_roles[0]
-            resource.set_user_role(user.name, default_role)
+            resource.set_user_role(user.get_name(), default_role)
 
         # Send confirmation email
         user.send_confirmation(context, email)
@@ -170,7 +164,7 @@ class ContactOptions(Enumerate):
 
         return [
             {'name': x, 'value': users.get_resource(x).get_title()}
-            for x in resource.get_property('contacts') ]
+            for x in resource.get_value('contacts') ]
 
 
 
@@ -269,7 +263,7 @@ class SiteSearchView(SearchForm):
             return []
 
         # The Search Query
-        languages = resource.get_property('website_languages')
+        languages = resource.get_value('website_languages')
         queries = []
         for language in languages:
             query = [ OrQuery(PhraseQuery('title', word),
@@ -286,18 +280,15 @@ class SiteSearchView(SearchForm):
         abspath = resource.get_canonical_path()
         q1= get_base_path_query(str(abspath))
         query = AndQuery(q1, query)
-        root = context.root
-        results = root.search(query=query)
-        documents = results.get_documents()
+        results = context.search(query=query)
 
         # Check access rights
         user = context.user
         items = []
-        for document in documents:
-            child = root.get_resource(document.abspath)
-            ac = child.get_access_control()
-            if ac.is_allowed_to_view(user, child):
-                items.append(child)
+        for resource in results.get_documents():
+            ac = resource.get_access_control()
+            if ac.is_allowed_to_view(user, resource):
+                items.append(resource)
 
         return items
 

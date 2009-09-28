@@ -54,7 +54,7 @@ class EditLanguageMenu(ContextMenu):
         content_language = resource.get_content_language(context)
 
         site_root = resource.get_site_root()
-        languages = site_root.get_property('website_languages')
+        languages = site_root.get_value('website_languages')
         uri = get_reference(context.uri)
         return [
             {'title': get_language_name(x),
@@ -84,7 +84,7 @@ class DBResource_Edit(AutoForm):
         if name == 'timestamp':
             return datetime.now()
         language = resource.get_content_language(context)
-        return resource.get_property(name, language=language)
+        return resource.get_value(name, language=language)
 
 
     def check_edit_conflict(self, resource, context, form):
@@ -103,8 +103,8 @@ class DBResource_Edit(AutoForm):
         if mtime is not None and timestamp < mtime:
             # Conlicft unless we are overwriting our own work
             last_author = resource.get_last_author()
-            if last_author != context.user.name:
-                user = root.get_user_title(last_author)
+            if last_author != context.user.get_name():
+                user = context.get_user_title(last_author)
                 context.message = messages.MSG_EDIT_CONFLICT2(user=user)
                 context.edit_conflict = True
 
@@ -370,7 +370,7 @@ class DBResource_AddBase(STLForm):
             return
 
         # Get the container
-        container = context.root.get_resource(form['target_path'])
+        container = context.get_resource(form['target_path'])
 
         # Check the name is free
         if container.get_resource(name, soft=True) is not None:
@@ -463,8 +463,7 @@ class DBResource_AddLink(DBResource_AddBase):
             context.message = MSG(u"Invalid title.")
             return
         # Get the container
-        root = context.root
-        container = root.get_resource(context.get_form_value('target_path'))
+        container = context.get_resource(context.get_form_value('target_path'))
         # Check the name is free
         if container.get_resource(name, soft=True) is not None:
             context.message = messages.MSG_NAME_CLASH

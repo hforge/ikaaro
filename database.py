@@ -34,15 +34,18 @@ class CMSSearchResults(SearchResults):
 
     def get_documents(self, sort_by=None, reverse=False, start=0, size=0):
         context = get_context()
+        # Define the function 'f', which returns the logical path from the
+        # absolute path (this is opposite to 'context._get_abspath').
         host = context.host
         if host:
-            host = len(host)+1
+            n = len(host)+1
+            f = lambda x, n=n: x if x.startswith('/users') else x[n:] or '/'
+        else:
+            f = lambda x: x
 
         docs = SearchResults.get_documents(self, sort_by, reverse, start, size)
         for brain in docs:
-            key = brain.abspath
-            if host:
-                key = key[host:] or '/'
+            key = f(brain.abspath)
             resource = context.cache.get(key)
 
             if resource:

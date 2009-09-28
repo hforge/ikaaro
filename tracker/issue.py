@@ -76,44 +76,13 @@ class Issue(Folder):
     #######################################################################
     # Indexing
     #######################################################################
-    @property
-    def id(self):
+    def get_id(self):
         return int(self.name)
 
 
-    @property
-    def product(self):
-        return self.get_property('product')
-
-
-    @property
-    def module(self):
-        return self.get_property('module')
-
-
-    @property
-    def version(self):
-        return self.get_property('version')
-
-
-    @property
-    def type(self):
-        return self.get_property('type')
-
-
-    @property
-    def priority(self):
-        return self.get_property('priority')
-
-
-    @property
-    def state(self):
-        return self.get_property('state')
-
-
-    @property
-    def assigned_to(self):
-        return self.get_property('assigned_to') or 'nobody'
+    def get_assigned_to(self):
+        assigned_to = self.get_property('assigned_to')
+        return assigned_to.value if assigned_to else 'nobody'
 
 
     #######################################################################
@@ -212,7 +181,7 @@ class Issue(Folder):
         # Comment
         now = datetime.now()
         user = context.user
-        author = user.name if user else None
+        author = user.get_name() if user else None
         comment = form['comment']
         comment = Property(comment, date=now, author=author, file=file)
         self.set_property('comment', comment)
@@ -233,8 +202,8 @@ class Issue(Folder):
         assigned_to = self.get_property('assigned_to')
         if assigned_to:
             to_addrs.add(assigned_to)
-        if user.name in to_addrs:
-            to_addrs.remove(user.name)
+        if author in to_addrs:
+            to_addrs.remove(author)
         # Notify / Subject
         tracker_title = self.parent.get_property('title') or 'Tracker Issue'
         subject = '[%s #%s] %s' % (tracker_title, self.name, title)
@@ -269,19 +238,17 @@ class Issue(Folder):
             body += template.format(title=title, separator=separator,
                                     comment=comment)
         # Notify / Send
-        root = context.root
         for to_addr in to_addrs:
-            user = root.get_user(to_addr)
+            user = context.get_user(to_addr)
             if not user:
                 continue
             to_addr = user.get_property('email')
-            root.send_email(to_addr, subject, text=body)
+            context.send_email(to_addr, subject, text=body)
 
 
     def get_diff_with(self, record, context, new=False):
         """Return a text with the diff between the last and new issue state.
         """
-        root = context.root
         modifications = []
         if new:
             # New issue
@@ -333,9 +300,9 @@ class Issue(Folder):
         new_user = record['assigned_to']
         if last_user != new_user:
             if last_user:
-                last_user = root.get_user(last_user).get_property('email')
+                last_user = context.get_user(last_user).get_property('email')
             if new_user:
-                new_user = root.get_user(new_user).get_property('email')
+                new_user = context.get_user(new_user).get_property('email')
             field = MSG(u'Assigned To').gettext()
             text = template.gettext(field=field, old_value=last_user or empty,
                                     new_value=new_user or empty)
@@ -348,11 +315,11 @@ class Issue(Folder):
         if last_cc != new_cc:
             last_values = []
             for cc in last_cc:
-                value = root.get_user(cc).get_property('email')
+                value = context.get_user(cc).get_property('email')
                 last_values.append(value)
             new_values = []
             for cc in new_cc:
-                value = root.get_user(cc).get_property('email')
+                value = context.get_user(cc).get_property('email')
                 new_values.append(value)
             field = MSG(u'CC').gettext()
             last_values = ', '.join(last_values) or empty
@@ -369,7 +336,7 @@ class Issue(Folder):
         return comments[0].parameters['author']
 
 
-    def to_text(self):
+    def get_text(self):
         comments = self.get_property('comment')
         return u'\n'.join(comments)
 

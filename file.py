@@ -99,7 +99,7 @@ class File(WorkflowAware, DBResource):
         # Check the handler exists
         extensions = self.get_all_extensions()
         for extension in extensions:
-            name = FileName.encode((self.name, extension, None))
+            name = FileName.encode((self.get_name(), extension, None))
             key = fs.resolve(base, name)
             # Found
             if database.has_handler(key):
@@ -143,22 +143,18 @@ class File(WorkflowAware, DBResource):
     #######################################################################
     # Versioning & Indexing
     #######################################################################
-    def to_text(self):
+    def get_text(self):
         return self.handler.to_text()
 
 
-    @property
-    def size(self):
+    def get_size(self):
+        # FIXME Maybe not the good algo
+        sizes = [ len(x.to_str()) for x in self.get_handlers() ]
+        size = max(sizes)
         # FIXME We add an arbitrary size so files will always be bigger
         # than folders. This won't work when there is a folder with more
         # than that size.
-        return 2**30 + self.get_size()
-
-
-    def get_size(self):
-        sizes = [ len(x.to_str()) for x in self.get_handlers() ]
-        # XXX Maybe not the good algo
-        return max(sizes)
+        return 2**30 + size
 
 
     def get_files_to_archive(self, content=False):
@@ -221,8 +217,9 @@ class Image(File):
                    'backlinks', 'commit_log']
     class_handler = ImageHandler
 
-    # Indexing
-    is_image = True
+
+    def get_is_image(self):
+        return True
 
     # Views
     thumb = Image_Thumbnail()

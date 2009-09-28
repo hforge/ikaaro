@@ -24,7 +24,7 @@ from itools.core import freeze, lazy
 from itools.csv import Property
 from itools.datatypes import Unicode, String, Integer, Boolean, DateTime
 from itools.http import get_context
-from itools.log import log_error
+from itools.log import log_warning
 from itools.uri import Path
 from itools.web import Resource
 from itools.xapian import CatalogAware, PhraseQuery
@@ -47,8 +47,7 @@ class IResource(Resource):
     context_menus = []
 
 
-    @property
-    def parent(self):
+    def get_parent(self):
         # Special case: the root
         if not self.path:
             return None
@@ -56,8 +55,7 @@ class IResource(Resource):
         return self.context.get_resource(path)
 
 
-    @property
-    def name(self):
+    def get_name(self):
         # Special case: the root
         if not self.path:
             return None
@@ -69,7 +67,7 @@ class IResource(Resource):
         from website import WebSite
         resource = self
         while not isinstance(resource, WebSite):
-            resource = resource.parent
+            resource = resource.get_parent()
         return resource
 
 
@@ -93,32 +91,6 @@ class IResource(Resource):
     ########################################################################
     # Properties
     ########################################################################
-    @classmethod
-    def get_property_datatype(cls, name, default=None):
-        return default
-
-
-    def _get_property(self, name, language=None):
-        return None
-
-
-    def get_property(self, name, language=None):
-        """Return the property value for the given property name.
-        """
-        property = self._get_property(name, language=language)
-        # Default
-        if not property:
-            datatype = self.get_property_datatype(name)
-            return datatype.get_default()
-
-        # Multiple
-        if type(property) is list:
-            return [ x.value for x in property ]
-
-        # Simple
-        return property.value
-
-
     def get_title(self):
         return unicode(self.name)
 
@@ -269,7 +241,7 @@ class DBResource(CatalogAware, IResource):
         'format': String(indexed=True, stored=True),
         # Versioning
         'mtime': DateTime(indexed=True, stored=True),
-        'last_author': String(indexed=True, stored=False),
+        'last_author': String(indexed=False, stored=True),
         # Folder's view
         'parent_path': String(indexed=True),
         'name': String(stored=True, indexed=True),
@@ -297,7 +269,7 @@ class DBResource(CatalogAware, IResource):
         return self.metadata.has_property(name, language=language)
 
 
-    def _get_property(self, name, language=None):
+    def get_property(self, name, language=None):
         return self.metadata.get_property(name, language=language)
 
 
@@ -339,65 +311,55 @@ class DBResource(CatalogAware, IResource):
         return revisions[-1]['username']
 
 
-    def get_last_author(self):
-        revision = self.get_last_revision()
-        return revision['username'] if revision else None
-
-
-    def get_mtime(self):
-        revision = self.get_last_revision()
-        return revision['date'] if revision else None
-
-
     ########################################################################
-    # Indexing
+    # Values
     ########################################################################
-    @property
-    def abspath(self):
+    def get_value(self, name, language=None):
+        datatype = self.class_schema.get(name)
+        if not datatype:
+            err = "field '%s' not defined by '%s' schema"
+            raise ValueError, err % (name, self.__class__.__name__)
+
+        # Case 1: Get it from the brain
+        if getattr(datatype, 'stored', False) and self.brain:
+            if language:
+                name = '%s_%s' % (name, language)
+            return getattr(self.brain, name)
+
+        # Case 2: Explicit getter method is required
+        getter = getattr(self, 'get_%s' % name, None)
+        if getter:
+            if language:
+                return getter(language=language)
+            return getter()
+
+        # Case 3: Metadata
+        if getattr(datatype, 'source', None) == 'metadata':
+            return self.metadata.get_value(name, language=language)
+
+        # Error
+        err = "unable to get '%s' field from '%s'"
+        raise ValueError, err % (name, self.__class__.__name__)
+
+
+    def get_abspath(self):
         abspath = self.get_canonical_path()
         return str(abspath)
 
 
-    @property
-    def format(self):
+    def get_format(self):
         return self.metadata.format
 
 
-    @property
-    def title(self):
-        languages = self.get_site_root().get_property('website_languages')
-        return dict([ (x, self.get_title(language=x)) for x in languages ])
+    def get_title(self, language=None):
+        title = self.metadata.get_property('title', language=language)
+        if title:
+            return title.value
+        # Fallback to the resource's name
+        return unicode(self.get_name())
 
 
-    @property
-    def subject(self):
-        languages = self.get_site_root().get_property('website_languages')
-        get = self.get_property
-        return dict([ (x, get('subject', language=x)) for x in languages ])
-
-
-    @property
-    def description(self):
-        languages = self.get_site_root().get_property('website_languages')
-        get = self.get_property
-        return dict([ (x, get('description', language=x)) for x in languages ])
-
-
-    @property
-    def text(self):
-        context = get_context()
-        try:
-            server = context.server
-        except AttributeError:
-            return None
-
-        if server is None or not server.index_text:
-            return None
-
-        return self.to_text()
-
-
-    def to_text(self):
+    def get_text(self):
         """This function must return:
            1) An unicode text.
             or
@@ -408,34 +370,87 @@ class DBResource(CatalogAware, IResource):
         return None
 
 
-    @property
-    def links(self):
-        return self.get_links()
+    ########################################################################
+    # Indexing
+    ########################################################################
+    def get_catalog_values(self):
+        # Local variables
+        site_root = self.get_site_root()
+        languages = site_root.metadata.get_value('website_languages')
+        get_property = self.metadata.get_property
+
+        server = getattr(self.context, 'server', None)
+        index_text = server.index_text if server else False
+
+        # Build dictionary
+        values = {}
+        for name, datatype in self.class_schema.iteritems():
+            indexed = getattr(datatype, 'indexed', False)
+            stored = getattr(datatype, 'stored', False)
+            if not indexed and not stored:
+                continue
+
+            # Special case: text
+            if name == 'text' and not index_text:
+                continue
+
+            # Case 1: Monolingual
+            if not getattr(datatype, 'multilingual', False):
+                try:
+                    value = self.get_value(name)
+                except Exception:
+                    msg = 'Error indexing "%s" field' % name
+                    log_warning(msg, domain='ikaaro')
+                    continue
+                if value is not None:
+                    values[name] = value
+                continue
+
+            # Case 2: Multilingual
+            values[name] = {}
+            for language in languages:
+                try:
+                    value = self.get_value(name, language=language)
+                except Exception:
+                    msg = 'Error indexing "%s" field' % name
+                    log_warning(msg, domain='ikaaro')
+                    continue
+                if value is not None:
+                    values[name][language] = value
+
+        # Ok
+        return values
 
 
-    @property
-    def parent_path(self):
+    def get_links(self):
+        return []
+
+
+    def get_parent_path(self):
         abspath = self.get_canonical_path()
         if not abspath:
             return None
         return str(abspath[:-1])
 
 
-    is_folder = False
-    is_image = False
-    is_role_aware = False
+    def get_is_folder(self):
+        return False
 
 
-    @property
-    def last_author(self):
+    def get_is_image(self):
+        return False
+
+
+    def get_is_role_aware(self):
+        return False
+
+
+    def get_last_author(self):
         revision = self.get_last_revision()
-        if not revision:
-            return None
-        return get_context().get_user_title(revision['username'])
+        return revision['username'] if revision else None
 
 
-    @property
-    def mtime(self):
+    def get_mtime(self):
         revision = self.get_last_revision()
         return revision['date'] if revision else None
 
@@ -475,8 +490,8 @@ class DBResource(CatalogAware, IResource):
         target = self.get_canonical_path()
         query = PhraseQuery('links', source)
         results = database.catalog.search(query).get_documents()
-        for result in results:
-            path = result.abspath
+        for resource in results:
+            path = resource.abspath
             path = database.resources_old2new.get(path, path)
             resource = self.get_resource(path)
             resource.update_links(source, target)
@@ -494,10 +509,6 @@ class DBResource(CatalogAware, IResource):
         """Update the relative links coming out from this resource, so they
         are not broken when this resource moves to 'target'.
         """
-
-
-    def get_links(self):
-        return []
 
 
     ########################################################################
@@ -542,7 +553,7 @@ class DBResource(CatalogAware, IResource):
     # Lock/Unlock/Put
     ########################################################################
     def lock(self):
-        lock = Lock(username=get_context().user.name)
+        lock = Lock(username=get_context().user.get_name())
 
         self = self.get_real_resource()
         if self.parent is None:
@@ -578,18 +589,10 @@ class DBResource(CatalogAware, IResource):
     ########################################################################
     # User interface
     ########################################################################
-    def get_title(self, language=None):
-        title = self.get_property('title', language=language)
-        if title:
-            return title
-        # Fallback to the resource's name
-        return unicode(self.name)
-
-
     def get_content_language(self, context, languages=None):
         if languages is None:
             site_root = self.get_site_root()
-            languages = site_root.get_property('website_languages')
+            languages = site_root.get_value('website_languages')
 
         # The 'content_language' query parameter has preference
         language = context.get_query_value('content_language')

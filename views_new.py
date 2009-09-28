@@ -302,6 +302,7 @@ class ProxyNewInstance(NewInstance):
         title = Property(title, lang=language)
         child.metadata.set_property('title', title)
 
-        goto = './%s/' % name
-        return context.come_back(messages.MSG_NEW_RESOURCE, goto=goto)
+        context.message = messages.MSG_NEW_RESOURCE
+        location = str(child.path)
+        context.created(location)
 

@@ -58,7 +58,7 @@ class LanguagesTemplate(SkinTemplate):
         context = self.context
         # Website languages
         root = context.get_resource('/')
-        ws_languages = root.get_property('website_languages')
+        ws_languages = root.get_value('website_languages')
         if len(ws_languages) == 1:
             return {'languages': []}
 
