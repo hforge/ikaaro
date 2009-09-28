@@ -139,12 +139,13 @@ class Event(File):
     class_views = ['edit', 'backlinks', 'edit_state']
 
 
-    metadata_schema = merge_dicts(
-        File.metadata_schema,
-        dtstart=DateTime,
-        dtend=DateTime,
-        status=Status,
-        location=String)
+    class_schema = merge_dicts(
+        File.class_schema,
+        # Metadata
+        dtstart=DateTime(source='metadata', indexed=True, stored=True),
+        dtend=DateTime(source='metadata', indexed=True, stored=True),
+        status=Status(source='metadata'),
+        location=String(source='metadata'))
 
 
     @property

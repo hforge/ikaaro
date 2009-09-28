@@ -288,7 +288,7 @@ class GoToFirstOrderedResource(GoToSpecificDocument):
 class ResourcesOrderedTableFile(OrderedTableFile):
 
     record_properties = {
-        'name': String(mandatory=True, unique=True, is_indexed=True)}
+        'name': String(mandatory=True, unique=True, indexed=True)}
 
 
 
@@ -308,9 +308,9 @@ class ResourcesOrderedTable(OrderedTable):
     view = ResourcesOrderedTable_View()
 
 
-    metadata_schema = merge_dicts(
-        OrderedTable.metadata_schema,
-        order=Tokens)
+    class_schema = merge_dicts(
+        OrderedTable.class_schema,
+        order=Tokens(source='metadata'))
 
 
     def get_orderable_classes(self):

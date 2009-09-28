@@ -93,8 +93,8 @@ class IResource(Resource):
     # Properties
     ########################################################################
     @classmethod
-    def get_property_datatype(cls, name):
-        return String
+    def get_property_datatype(cls, name, default=None):
+        return default
 
 
     def _get_property(self, name, language=None):
@@ -177,6 +177,9 @@ class DBResourceMetaclass(type):
         cls = type.__new__(mcs, name, bases, dict)
         if 'class_id' in dict:
             register_resource_class(cls)
+        for name, dt in cls.class_schema.iteritems():
+            if getattr(dt, 'indexed', False) or getattr(dt, 'stored', False):
+                register_field(name, dt)
         return cls
 
 
@@ -228,8 +231,8 @@ class DBResource(CatalogAware, IResource):
 
         # Workflow State (default)
         if kw.get('state') is None and isinstance(self, WorkflowAware):
-            schema = self.metadata_schema
-            state = schema['state'].get_default()
+            datatype = self.get_property_datatype('state')
+            state = datatype.get_default()
             if state is None:
                 state  = self.workflow.initstate
             metadata._set_property('state', state)
@@ -258,17 +261,40 @@ class DBResource(CatalogAware, IResource):
     ########################################################################
     # Metadata
     ########################################################################
-    metadata_schema = freeze({
-        'version': String,
-        'title': Unicode(multilingual=True),
-        'description': Unicode(multilingual=True),
-        'subject': Unicode(multilingual=True)})
+    Multilingual = Unicode(multilingual=True)
+    class_schema = freeze({
+        # Metadata
+        'version': String(source='metadata'),
+        'title': Multilingual(source='metadata', indexed=True, stored=True),
+        'description': Multilingual(source='metadata', indexed=True),
+        'subject': Multilingual(source='metadata', indexed=True),
+        # Key & class id
+        'abspath': String(key_field=True, indexed=True, stored=True),
+        'format': String(indexed=True, stored=True),
+        # Versioning
+        'mtime': DateTime(indexed=True, stored=True),
+        'last_author': String(indexed=True, stored=False),
+        # Folder's view
+        'parent_path': String(indexed=True),
+        'name': String(stored=True, indexed=True),
+        'size': Integer(stored=True, indexed=False),
+        # Referential integrity
+        'links': String(multiple=True, indexed=True),
+        # Full text search
+        'text': Unicode(indexed=True),
+        # Various classifications
+        'is_role_aware': Boolean(indexed=True),
+        'is_folder': Boolean(indexed=True),
+        'is_image': Boolean(indexed=True),
+        })
 
 
     @classmethod
-    def get_property_datatype(cls, name):
-         schema = cls.metadata_schema
-         return schema.get(name, String)
+    def get_property_datatype(cls, name, default=None):
+        datatype = cls.class_schema.get(name)
+        if datatype and getattr(datatype, 'source', None) == 'metadata':
+            return datatype
+        return default
 
 
     def has_property(self, name, language=None):
@@ -612,38 +638,4 @@ class DBResource(CatalogAware, IResource):
     last_changes = DBResource_LastChanges()
     changes = DBResource_Changes()
     backlinks = DBResource_Backlinks()
-
-
-
-###################################
-# Register the new catalog fields #
-###################################
-
-register_field(
-    'abspath', String(is_key_field=True, is_stored=True, is_indexed=True))
-register_field('text', Unicode(is_indexed=True))
-register_field('title', Unicode(is_stored=True, is_indexed=True))
-register_field('description', Unicode(is_indexed=True))
-register_field('subject', Unicode(is_indexed=True))
-register_field('is_role_aware', Boolean(is_indexed=True))
-register_field('is_folder', Boolean(is_indexed=True))
-register_field('is_image', Boolean(is_indexed=True))
-register_field('format', String(is_stored=True, is_indexed=True))
-register_field('workflow_state', String(is_stored=True, is_indexed=True))
-register_field('members', String(is_indexed=True, multiple=True))
-# Versioning
-register_field('mtime', DateTime(is_stored=True, is_indexed=True))
-register_field('last_author', String(is_stored=True, is_indexed=False))
-# For referencial-integrity, keep links between resources, where a link is the
-# physical path.
-register_field('links', String(is_indexed=True, multiple=True))
-# Folder's view
-register_field('parent_path', String(is_indexed=True))
-register_field('name', String(is_stored=True, is_indexed=True))
-register_field('size', Integer(is_stored=True, is_indexed=False))
-# Optimize 'Server.find_site_root'
-register_field('vhosts', String(is_indexed=True, multiple=True))
-# Calendaring
-register_field('dtstart', DateTime(is_indexed=True, is_stored=True))
-register_field('dtend', DateTime(is_indexed=True, is_stored=True))
 

@@ -36,7 +36,7 @@ from itools.uri import get_uri_path
 # Import from ikaaro
 from ikaaro.file import File
 from ikaaro.folder import Folder
-from ikaaro.registry import get_resource_class, register_field
+from ikaaro.registry import get_resource_class
 from ikaaro.utils import generate_name
 from issue_views import Issue_Edit, Issue_EditResources, Issue_History
 from issue_views import IssueTrackerMenu
@@ -51,18 +51,22 @@ class Issue(Folder):
     class_views = ['edit', 'edit_resources', 'browse_content', 'history']
 
 
-    metadata_schema = merge_dicts(
-        Folder.metadata_schema,
-        product=Integer,
-        module=Integer,
-        version=Integer,
-        type=Integer,
-        state=Integer,
-        priority=Integer,
-        assigned_to=String,
-        cc_list=Tokens,
+    class_schema = merge_dicts(
+        Folder.class_schema,
+        # Metadata
+        product=Integer(source='metadata', indexed=True, stored=True),
+        module=Integer(source='metadata', indexed=True, stored=True),
+        version=Integer(source='metadata', indexed=True, stored=True),
+        type=Integer(source='metadata', indexed=True, stored=True),
+        state=Integer(source='metadata', indexed=True, stored=True),
+        priority=Integer(source='metadata', indexed=True, stored=True),
+        assigned_to=String(source='metadata', indexed=True, stored=True),
+        cc_list=Tokens(source='metadata'),
         # parameters: date, author, file
-        comment=Unicode(multiple=True))
+        comment=Unicode(source='metadata', multiple=True),
+        # Other
+        id=Integer(indexed=True, stored=True),
+        )
 
 
     def get_document_types(self):
@@ -160,7 +164,6 @@ class Issue(Folder):
         language = self.get_content_language(context)
         self.set_property('title', title, language=language)
         # Version, Priority, etc.
-        schema = self.metadata_schema
         for name in ['product', 'module', 'version', 'type', 'state',
                      'priority', 'assigned_to']:
             value = form[name]
@@ -372,15 +375,4 @@ class Issue(Folder):
     edit = Issue_Edit()
     edit_resources = Issue_EditResources()
     history = Issue_History()
-
-
-
-
-###########################################################################
-# Register
-###########################################################################
-for name in ['id', 'product', 'module', 'version', 'type', 'state',
-             'priority']:
-    register_field(name, Integer(is_stored=True, is_indexed=True))
-register_field('assigned_to', String(is_stored=True, is_indexed=True))
 
