@@ -164,10 +164,10 @@ class ListOfUsers(Enumerate):
 class BaseResources(BaseTable):
 
     record_properties = {
-        'dtstart': DateTime(mandatory=True, is_stored=True, is_indexed=True),
-        'dtend': DateTime(mandatory=True, is_stored=True, is_indexed=True),
-        'issue': String(mandatory=True, is_indexed=True),
-        'resource': ListOfUsers(mandatory=True, is_indexed=True),
+        'dtstart': DateTime(mandatory=True, stored=True, indexed=True),
+        'dtend': DateTime(mandatory=True, stored=True, indexed=True),
+        'issue': String(mandatory=True, indexed=True),
+        'resource': ListOfUsers(mandatory=True, indexed=True),
         'comment': Unicode}
 
     form = [

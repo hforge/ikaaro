@@ -40,12 +40,6 @@ metadata_parameters = {
 
 
 
-
-def get_schema(format):
-    cls = get_resource_class(format)
-    return cls.metadata_schema
-
-
 def is_multiple(datatype):
     return getattr(datatype, 'multiple', False)
 
@@ -90,7 +84,7 @@ class Metadata(File):
             raise ValueError, 'unexpected parameters for the format property'
         self.format = value
         # Get the schema
-        schema = get_schema(value)
+        get_datatype = get_resource_class(value).get_property_datatype
 
         # Parse
         for name, value, parameters in parser:
@@ -101,7 +95,7 @@ class Metadata(File):
             deserialize_parameters(parameters, metadata_parameters)
 
             # 2. Get the datatype
-            datatype = schema.get(name)
+            datatype = get_datatype(name)
             if not datatype:
                 # Guess the datatype for properties not defined by the schema
                 if 'lang' in parameters:
@@ -136,7 +130,7 @@ class Metadata(File):
 
 
     def to_str(self):
-        schema = get_schema(self.format)
+        get_datatype = get_resource_class(self.format).get_property_datatype
         p_schema = metadata_parameters
 
         if self.version is None:
@@ -151,7 +145,7 @@ class Metadata(File):
         # Properties
         for name in names:
             property = properties[name]
-            datatype = schema[name]
+            datatype = get_datatype(name, default=String)
             p_type = type(property)
             if p_type is dict:
                 languages = property.keys()
@@ -247,8 +241,8 @@ class Metadata(File):
             value = Property(value)
 
         # Case 3: Simple
-        schema = get_schema(self.format)
-        datatype = schema.get(name)
+        get_datatype = get_resource_class(value).get_property_datatype
+        datatype = get_datatype(name)
         if datatype is None or getattr(datatype, 'multiple', False) is False:
             properties[name] = value
             return

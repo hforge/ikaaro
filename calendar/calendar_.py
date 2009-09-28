@@ -196,9 +196,9 @@ class CalendarTable(CalendarBase, Table):
         get_context().server.change_resource(self)
 
 
-    metadata_schema = merge_dicts(
-        Table.metadata_schema,
-        timetables=Timetables)
+    class_schema = merge_dicts(
+        Table.class_schema,
+        timetables=Timetables(source='metadata'))
 
 
     # Use edit_event instead
@@ -234,16 +234,16 @@ class Calendar(CalendarBase, Text):
         get_context().server.change_resource(self)
 
 
-    metadata_schema = merge_dicts(
-        Text.metadata_schema,
-        timetables=Timetables)
+    class_schema = merge_dicts(
+        Text.class_schema,
+        timetables=Timetables(source='metadata'))
 
 
 
 class CalendarContainer(CalendarBase):
 
-    metadata_schema = freeze({
-        'timetables': Timetables})
+    class_schema = freeze({
+        'timetables': Timetables(source='metadata')})
 
 
     def get_calendars(self, types=None):

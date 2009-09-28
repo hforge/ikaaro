@@ -74,19 +74,20 @@ class WebSite(RoleAware, Folder):
         return Folder._get_resource(self, name)
 
 
-    metadata_schema = merge_dicts(
-        Folder.metadata_schema,
-        RoleAware.metadata_schema,
-        vhosts=Tokens,
-        contacts=Tokens,
-        emails_from_addr=String,
-        emails_signature=Unicode,
-        google_site_verification=String,
-        yahoo_site_verification=String,
-        bing_site_verification=String,
-        website_languages=Tokens(default=('en',)),
-        captcha_question=Unicode(default=u"2 + 3"),
-        captcha_answer=Unicode(default=u"5"))
+    class_schema = merge_dicts(
+        Folder.class_schema,
+        RoleAware.class_schema,
+        # Metadata
+        vhosts=Tokens(source='metadata', multiple=True, indexed=True),
+        contacts=Tokens(source='metadata'),
+        emails_from_addr=String(source='metadata'),
+        emails_signature=Unicode(source='metadata'),
+        google_site_verification=String(source='metadata'),
+        yahoo_site_verification=String(source='metadata'),
+        bing_site_verification=String(source='metadata'),
+        website_languages=Tokens(source='metadata', default=('en',)),
+        captcha_question=Unicode(source='metadata', default=u"2 + 3"),
+        captcha_answer=Unicode(source='metadata', default=u"5"))
 
 
     def _get_catalog_values(self):
