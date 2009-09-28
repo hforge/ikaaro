@@ -20,7 +20,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import freeze
+from itools.core import freeze, lazy
 from itools.csv import Property
 from itools.datatypes import Unicode, String, Integer, Boolean, DateTime
 from itools.http import get_context
@@ -204,15 +204,10 @@ class DBResource(CatalogAware, IResource):
             self.metadata = metadata
 
 
-    def __getattr__(self, name):
-        if name == 'metadata':
-            path = self.path
-            metadata = self.context._get_metadata(str(path), path)
-            self.metadata = metadata
-            return metadata
-
-        msg = "'%s' object has no attribute '%s'"
-        raise AttributeError, msg % (self.__class__.__name__, name)
+    @lazy
+    def metadata(self):
+        path = self.path
+        return self.context._get_metadata(str(path), path)
 
 
     def init_resource(self, **kw):
