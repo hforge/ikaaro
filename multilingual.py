@@ -46,7 +46,7 @@ class Multilingual(DBResource):
         # Content language
         if language is None:
             site_root = self.get_site_root()
-            ws_languages = site_root.get_property('website_languages')
+            ws_languages = site_root.get_value('website_languages')
             handlers = [
                 (x, self.get_handler(language=x)) for x in ws_languages ]
             languages = [ x for (x, y) in handlers if not y.is_empty() ]
@@ -60,7 +60,8 @@ class Multilingual(DBResource):
         # Miss
         cls = self.class_handler
         database = self.metadata.database
-        name = FileName.encode((self.name, cls.class_extension, language))
+        name = FileName.encode(
+            (self.get_name(), cls.class_extension, language))
         uri = resolve_uri(self.metadata.uri, name)
         if database.has_handler(uri):
             handler = database.get_handler(uri, cls=cls)
@@ -75,14 +76,14 @@ class Multilingual(DBResource):
 
 
     def get_handlers(self):
-        languages = self.get_site_root().get_property('website_languages')
+        languages = self.get_site_root().get_value('website_languages')
         return [ self.get_handler(language=x) for x in languages ]
 
 
     def rename_handlers(self, new_name):
         old_name = self.name
         extension = self.class_handler.class_extension
-        langs = self.get_site_root().get_property('website_languages')
+        langs = self.get_site_root().get_value('website_languages')
 
         return [ (FileName.encode((old_name, extension, x)),
                   FileName.encode((new_name, extension, x)))

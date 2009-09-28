@@ -132,7 +132,6 @@ class StoredSearchesMenu(ContextMenu):
 
     def get_items(self, resource, context):
         language = resource.get_content_language(context)
-        root = context.root
 
         # If called from a child
         if isinstance(resource, Issue):
@@ -146,7 +145,7 @@ class StoredSearchesMenu(ContextMenu):
             # Make the title
             get_value = item.handler.get_value
             query = resource.get_search_query(get_value)
-            issues_nb = len(root.search(query))
+            issues_nb = len(context.search(query))
             kw = {'search_title': item.get_property('title'),
                   'issues_nb': issues_nb}
             title = MSG(u'{search_title} ({issues_nb})')
@@ -845,7 +844,7 @@ class Tracker_ChangeSeveralBugs(Tracker_View):
         names = ['product', 'module', 'version', 'type', 'priority', 'state']
         comment = form['comment']
         user = context.user
-        username = user and user.name or ''
+        username = user.get_name() if user else ''
         users_issues = {}
         for issue in issues:
             issue = resource.get_resource(issue.name)
@@ -894,7 +893,6 @@ class Tracker_ChangeSeveralBugs(Tracker_View):
             context.server.change_resource(issue)
 
         # Send mails
-        root = context.root
         if user is None:
             user_title = MSG(u'ANONYMOUS').gettext()
         else:
@@ -911,8 +909,8 @@ class Tracker_ChangeSeveralBugs(Tracker_View):
             user_issues = '\n'.join(user_issues)
             body = template.gettext(user=user_title, comment=comment,
                                     issues=user_issues)
-            to_addr = root.get_user(user_id).get_property('email')
-            root.send_email(to_addr, subject, text=body)
+            to_addr = context.get_user(user_id).get_property('email')
+            context.send_email(to_addr, subject, text=body)
 
         context.message = messages.MSG_CHANGES_SAVED
 

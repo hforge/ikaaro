@@ -20,7 +20,7 @@
 
 # Import from itools
 from itools.core import merge_dicts
-from itools.datatypes import Tokens
+from itools.datatypes import String, Tokens
 from itools.gettext import MSG
 from itools.html import stream_to_str_as_html, xhtml_doctype
 from itools.web import STLView, VirtualRoot
@@ -65,21 +65,16 @@ class WebSite(RoleAware, Folder, VirtualRoot):
         Folder.class_schema,
         RoleAware.class_schema,
         # Metadata
-        vhosts=Tokens(source='metadata', multiple=True, indexed=True),
+        vhosts=String(source='metadata', multiple=True, indexed=True),
         contacts=Tokens(source='metadata'),
         website_languages=Tokens(source='metadata', default=('en',)))
-
-
-    @property
-    def vhosts(self):
-        return self.get_property('vhosts')
 
 
     ########################################################################
     # API
     ########################################################################
     def get_default_language(self):
-        return self.get_property('website_languages')[0]
+        return self.get_value('website_languages')[0]
 
 
     def is_allowed_to_register(self, user, resource):

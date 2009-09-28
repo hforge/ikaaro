@@ -40,13 +40,16 @@ from workflow import WorkflowAware
 def is_admin(user, resource):
     if user is None or resource is None:
         return False
+
     # WebSite admin?
+    username = user.get_name()
     root = resource.get_site_root()
-    if root.has_user_role(user.name, 'admins'):
+    if root.has_user_role(username, 'admins'):
         return True
+
     # Global admin?
     root = get_context().get_physical_root()
-    return root.has_user_role(user.name, 'admins')
+    return root.has_user_role(username, 'admins')
 
 
 ###########################################################################
@@ -98,8 +101,9 @@ class RoleAware_BrowseUsers(SearchForm):
         users = []
         roles = resource.get_members_classified_by_role()
         for user in results.get_documents():
+            username = user.get_name()
             for role in roles:
-                if user.name in roles[role]:
+                if username in roles[role]:
                     users.append(user)
                     break
 
@@ -141,23 +145,24 @@ class RoleAware_BrowseUsers(SearchForm):
 
     def get_item_value(self, resource, context, item, column):
         if column == 'checkbox':
-            return item.name, False
+            return item.get_name(), False
         elif column == 'user_id':
-            return item.name, '/users/%s' % item.name
+            name = item.get_name()
+            return name, '/users/%s' % name
         elif column == 'login_name':
-            return item.username
+            return item.get_value('username')
         elif column == 'firstname':
-            return item.firstname
+            return item.get_value('firstname')
         elif column == 'lastname':
-            return item.lastname
+            return item.get_value('lastname')
         elif column == 'role':
-            role = resource.get_user_role(item.name)
+            name = item.get_name()
+            role = resource.get_user_role(name)
             role = resource.get_role_title(role)
-            return role, ';edit_membership?id=%s' % item.name
+            return role, ';edit_membership?id=%s' % name
         elif column == 'account_state':
-            user = context.get_resource(item.abspath)
-            if user.get_property('user_must_confirm'):
-                href = '/users/%s/;resend_confirmation' % item.name
+            if item.get_value('user_must_confirm'):
+                href = '/users/%s/;resend_confirmation' % item.get_name()
                 return MSG(u'Resend Confirmation'), href
             return MSG(u'Active'), None
 
@@ -167,7 +172,7 @@ class RoleAware_BrowseUsers(SearchForm):
 
         # Verify if after this operation, all is ok
         user = context.user
-        if str(user.name) in usernames:
+        if str(user.get_name()) in usernames:
             if not is_admin(user, resource.parent):
                 context.message = ERROR(u'You cannot remove yourself.')
                 return
@@ -205,7 +210,7 @@ class RoleAware_EditMembership(STLForm):
 
         # Verify if after this operation, all is ok
         user = context.user
-        if str(user.name) == user_id and role != 'admins':
+        if str(user.get_name()) == user_id and role != 'admins':
             if not is_admin(user, resource.parent):
                 context.message = ERROR(u'You cannot degrade your own role.')
                 return
@@ -239,22 +244,26 @@ class RoleAware_AddUser(STLForm):
 
 
     def action(self, resource, context, form):
-        root = context.root
-        user = context.user
-        users = root.get_resource('users')
+        users = context.get_resource('users')
 
         # Check whether the user already exists
         email = form['email'].strip()
-        results = root.search(email=email)
+        results = context.search(email=email)
         if len(results):
-            user_id = results.get_documents()[0].name
+            user = results.get_documents()[0]
         else:
-            user_id = None
+            user = None
 
         # Get the user (create it if needed)
-        if user_id is None:
+        if user:
+            username = user.get_name()
+            # Check the user is not yet in the group
+            if username in resource.get_users():
+                context.message = ERROR(u'The user is already here.')
+                return
+        else:
             # New user
-            is_admin = resource.is_admin(user, resource)
+            is_admin = resource.is_admin(context.user, resource)
             if is_admin:
                 password = form['newpass']
                 password2 = form['newpass2']
@@ -270,27 +279,20 @@ class RoleAware_AddUser(STLForm):
                 password = None
             # Add the user
             user = users.set_user(email, password)
-            user_id = user.name
+            username = user.get_name()
             if password is None:
                 # Send confirmation email to activate the account
                 user.send_confirmation(context, email)
-        else:
-            user = users.get_resource(user_id)
-            # Check the user is not yet in the group
-            members = resource.get_members()
-            if user_id in members:
-                context.message = ERROR(u'The user is already here.')
-                return
 
         # Set the role
         role = form['role']
-        resource.set_user_role(user_id, role)
+        resource.set_user_role(username, role)
 
         # Come back
         if context.has_form_value('add_and_return'):
             return
 
-        goto = '/users/%s/' % user.name
+        goto = '/users/%s/' % username
         message = INFO(u'User added.')
         return context.come_back(message, goto=goto)
 
@@ -386,20 +388,23 @@ class RoleAware(AccessControl):
         'reviewers': Tokens(source='metadata', title=MSG(u"Reviewer")),
         'admins': Tokens(source='metadata', title=MSG(u'Admin')),
         # Other
-        'members': String(multiple=True, indexed=True),
-        })
+        'users': String(multiple=True, indexed=True)})
 
 
     def get_links(self):
-        return [ '/users/%s' % x for x in self.get_members() ]
+        return [ '/users/%s' % x for x in self.get_users() ]
 
 
-    is_role_aware = True
+    def get_is_role_aware(self):
+        return True
 
 
-    @property
-    def members(self):
-        return self.get_members()
+    def get_users(self):
+        users = set()
+        for rolename in self.get_role_names():
+            usernames = self.get_value(rolename)
+            users = users.union(usernames)
+        return users
 
 
     #########################################################################
@@ -408,17 +413,17 @@ class RoleAware(AccessControl):
     def is_allowed_to_view(self, user, resource):
         # Get the variables to resolve the formula
         # Intranet or Extranet
-        is_open = self.get_property('website_is_open')
+        is_open = self.get_value('website_is_open')
         # The role of the user
         if user is None:
             role = None
         elif self.is_admin(user, resource):
             role = 'admins'
         else:
-            role = self.get_user_role(user.name)
+            role = self.get_user_role(user.get_name())
         # The state of the resource
         if isinstance(resource, WorkflowAware):
-            state = resource.workflow_state
+            state = resource.get_value('workflow_state')
         else:
             state = 'public'
 
@@ -446,11 +451,12 @@ class RoleAware(AccessControl):
             return True
 
         # Reviewers too
-        if self.has_user_role(user.name, 'reviewers'):
+        username = user.get_name()
+        if self.has_user_role(username, 'reviewers'):
             return True
 
         # Members only can touch not-yet-published documents
-        if self.has_user_role(user.name, 'members'):
+        if self.has_user_role(username, 'members'):
             if isinstance(resource, WorkflowAware):
                 state = resource.workflow_state
                 # Public resources are frozen for members
@@ -470,7 +476,7 @@ class RoleAware(AccessControl):
             return True
 
         # Reviewers too
-        return self.has_user_role(user.name, 'reviewers', 'members')
+        return self.has_user_role(user.get_name(), 'reviewers', 'members')
 
 
     def is_allowed_to_trans(self, user, resource, name):
@@ -486,7 +492,7 @@ class RoleAware(AccessControl):
             return True
 
         # Reviewers can do everything
-        username = user.name
+        username = user.get_name()
         if self.has_user_role(username, 'reviewers'):
             return True
 
@@ -517,7 +523,7 @@ class RoleAware(AccessControl):
         any role.
         """
         for role in self.get_role_names():
-            value = self.get_property(role)
+            value = self.get_value(role)
             if value and user_id in value:
                 return role
         return None
@@ -528,7 +534,7 @@ class RoleAware(AccessControl):
         False otherwise.
         """
         for role_name in roles:
-            role = self.get_property(role_name)
+            role = self.get_value(role_name)
             if role and user_id in role:
                 return True
         return False
@@ -567,18 +573,10 @@ class RoleAware(AccessControl):
                 self.set_property(role, users)
 
 
-    def get_members(self):
-        members = set()
-        for rolename in self.get_role_names():
-            usernames = self.get_property(rolename)
-            members = members.union(usernames)
-        return members
-
-
     def get_members_classified_by_role(self):
         roles = {}
         for rolename in self.get_role_names():
-            usernames = self.get_property(rolename)
+            usernames = self.get_value(rolename)
             roles[rolename] = set(usernames)
         return roles
 

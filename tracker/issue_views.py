@@ -158,7 +158,6 @@ class Issue_Edit(STLForm):
         namespace['list_products'] = tracker.get_list_products_namespace()
 
         # Local variables
-        root = context.root
         history = resource.get_history()
         record = history.get_record(-1)
 
@@ -169,7 +168,7 @@ class Issue_Edit(STLForm):
         else:
             comments = [
                 {'number': i,
-                 'user': root.get_user_title(x.parameters['author']),
+                 'user': context.get_user_title(x.parameters['author']),
                  'datetime': format_datetime(x.parameters['date']),
                  'comment': indent(x.value),
                  'file': x.parameters.get('file')}
@@ -195,7 +194,7 @@ class Issue_Edit(STLForm):
 
         # Reported by
         reported_by = resource.get_reported_by()
-        namespace['reported_by'] = root.get_user_title(reported_by)
+        namespace['reported_by'] = context.get_user_title(reported_by)
 
         return namespace
 
@@ -324,11 +323,10 @@ class Issue_History(STLView):
                     if assigned_to_user is not None:
                         row_ns['assigned_to'] = assigned_to_user.get_title()
             if cc_list != previous_cc_list:
-                root = context.root
                 previous_cc_list = cc_list
                 new_values = []
                 for cc in cc_list:
-                    user = root.get_user(cc)
+                    user = context.get_user(cc)
                     if user:
                         new_values.append(user.get_property('email'))
                 if new_values:

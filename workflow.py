@@ -45,7 +45,6 @@ class StateForm(STLForm):
 
 
     def get_namespace(self, resource, context):
-        root = context.root
         user = context.user
         # State
         state = resource.get_state()
@@ -66,7 +65,7 @@ class StateForm(STLForm):
                 history.append(
                     {'title': wf.parameters['transition'][0],
                      'date': format_datetime(wf.parameters['date']),
-                     'user': root.get_user_title(wf.parameters['author']),
+                     'user': context.get_user_title(wf.parameters['author']),
                      'comments': wf.value})
             history.reverse()
 
@@ -75,8 +74,7 @@ class StateForm(STLForm):
             'statename': resource.get_statename(),
             'state': state['title'],
             'transitions': transitions,
-            'history': history,
-        }
+            'history': history}
 
 
     def action(self, resource, context, form):
@@ -154,14 +152,19 @@ class WorkflowAware(BaseWorkflowAware):
         })
 
 
-    @property
-    def workflow_state(self):
-        return self.get_property('state') or self.workflow.initstate
+    def get_workflow_state(self):
+        state = self.get_property('state')
+        if state:
+            return state.value
+        return self.workflow.initstate
 
 
-    @workflow_state.setter
-    def workflow_state(self, value):
+    def set_workflow_state(self, value):
         self.set_property('state', value)
+
+
+    # XXX itools.workflow API
+    workflow_state = property(get_workflow_state)
 
 
     ########################################################################
@@ -186,7 +189,7 @@ class WorkflowAware(BaseWorkflowAware):
 
         # Keep comment
         user = get_context().user
-        username = user and user.name or None
+        username = user and user.get_name() or None
         now = datetime.now()
         workflow = Property(comments, date=now, author=username,
                             transition=[transition])

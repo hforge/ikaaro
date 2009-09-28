@@ -108,19 +108,18 @@ class CPEditVirtualHosts(CPBaseView, STLForm):
 
 
     def get_namespace(self, resource, context):
-        vhosts = resource.get_property('vhosts')
+        vhosts = resource.get_value('vhosts')
         return {
             'vhosts': '\n'.join(vhosts)}
 
 
     def action(self, resource, context, form):
-        vhosts = form['vhosts']
-        vhosts = [ x.strip() for x in vhosts.splitlines() ]
+        vhosts = [ x.strip() for x in form['vhosts'].splitlines() ]
         vhosts = [ x for x in vhosts if x ]
-        vhosts = tuple(vhosts)
         resource.set_property('vhosts', vhosts)
         # Ok
         context.message = messages.MSG_CHANGES_SAVED
+        context.redirect()
 
 
 
@@ -164,14 +163,14 @@ class CPEditContactOptions(CPBaseView, STLForm):
 
     def get_namespace(self, resource, context):
         # Find out the contacts
-        contacts = resource.get_property('contacts')
+        contacts = resource.get_value('contacts')
 
         # Only members of the website are showed
         namespace = {}
         namespace['contacts'] = []
-        for username in resource.get_members():
+        for username in resource.get_users():
             user = context.get_user_by_name(username)
-            email = user.get_property('email')
+            email = user.get_value('email')
             if not email:
                 continue
             namespace['contacts'].append(
@@ -215,10 +214,9 @@ class CPBrokenLinks(CPBaseView, STLView):
         results = catalog.search(query)
 
         # Find out the broken links
-        root = context.root
         broken = {}
         for link in catalog.get_unique_values('links'):
-            if root.get_resource(link, soft=True) is not None:
+            if context.get_resource(link, soft=True):
                 continue
             sub_results = results.search(PhraseQuery('links', link))
             link = str(base.get_pathto(Path(link)))
@@ -255,7 +253,7 @@ class CPEditLanguages(CPBaseView, STLForm):
 
 
     def get_namespace(self, resource, context):
-        ws_languages = resource.get_property('website_languages')
+        ws_languages = resource.get_value('website_languages')
 
         # Active languages
         default = ws_languages[0]
@@ -291,7 +289,7 @@ class CPEditLanguages(CPBaseView, STLForm):
         default = codes[0]
 
         # Change the default language
-        languages = resource.get_property('website_languages')
+        languages = resource.get_value('website_languages')
         languages = [ x for x in languages if x != default ]
         languages.insert(0, default)
         resource.set_property('website_languages', tuple(languages))
@@ -303,7 +301,7 @@ class CPEditLanguages(CPBaseView, STLForm):
         codes = form['codes']
 
         # Check the default language is not to be removed
-        languages = resource.get_property('website_languages')
+        languages = resource.get_value('website_languages')
         default = languages[0]
         if default in codes:
             message = ERROR(u'You can not remove the default language.')
@@ -325,7 +323,7 @@ class CPEditLanguages(CPBaseView, STLForm):
     def action_add_language(self, resource, context, form):
         code = form['code']
 
-        ws_languages = resource.get_property('website_languages')
+        ws_languages = resource.get_value('website_languages')
         resource.set_property('website_languages', ws_languages + (code,))
         # Ok
         context.message = INFO(u'Language added.')

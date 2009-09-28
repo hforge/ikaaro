@@ -19,7 +19,7 @@ from itools.core import get_abspath, lazy, merge_dicts
 from itools.handlers import ConfigFile
 from itools.uri import Path
 from itools.web import WebContext, lock_body
-from itools.xapian import OrQuery, PhraseQuery, StartQuery
+from itools.xapian import OrQuery, PhraseQuery, StartQuery, SearchResults
 
 # Import from ikaaro
 from ikaaro.globals import spool, ui
@@ -179,7 +179,7 @@ class CMSContext(WebContext):
         lock = resource.lock()
 
         self.set_header('Lock-Token', 'opaquelocktoken:%s' % lock)
-        body = lock_body % {'owner': self.user.name, 'locktoken': lock}
+        body = lock_body % {'owner': self.user.get_name(), 'locktoken': lock}
         self.ok('text/xml; charset="utf-8"', body)
 
 
@@ -208,7 +208,7 @@ class CMSContext(WebContext):
         if n == 0:
             return None
 
-        documents = results.get_documents()
+        documents = SearchResults.get_documents(results)
         return documents[0].name
 
 
@@ -411,8 +411,8 @@ class CMSContext(WebContext):
         # Versioning / Author
         user = self.user
         if user:
-            email = user.get_property('email')
-            git_author = '%s <%s>' % (user.name, email)
+            email = user.get_value('email')
+            git_author = '%s <%s>' % (user.get_name(), email)
         else:
             git_author = 'nobody <>'
         # Versioning / Message

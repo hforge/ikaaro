@@ -265,8 +265,7 @@ class CalendarView(STLView):
 
         # Search
         query = AndQuery(*query)
-        root = context.root
-        return root.search(query)
+        return context.search(query)
 
 
     def search_events_in_range(self, start, end, **kw):

@@ -229,7 +229,7 @@ class Dressable(Folder, ResourceWithHTML):
                 attributes[(None, attr_name)] = str(uri)
                 yield START_ELEMENT, (tag_uri, tag_name, attributes), line
 
-        languages = self.get_site_root().get_property('website_languages')
+        languages = self.get_site_root().get_value('website_languages')
         for wp in self.search_resources(cls=WebPage):
             for language in languages:
                 handler = wp.get_handler(language=language)

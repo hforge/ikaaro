@@ -148,16 +148,6 @@ class Event(File):
         location=String(source='metadata'))
 
 
-    @property
-    def dtstart(self):
-        return self.get_property('dtstart')
-
-
-    @property
-    def dtend(self):
-        return self.get_property('dtend')
-
-
     def get_ns_event(self, day, resource_name=None, conflicts_list=freeze([]),
                      timetable=None, grid=False, starts_on=True, ends_on=True,
                      out_on=True):

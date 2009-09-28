@@ -55,7 +55,7 @@ class User_ConfirmRegistration(STLForm):
         # Ok
         return {
             'key': must_confirm,
-            'username': resource.get_login_name(),
+            'username': resource.get_value('username'),
             'confirmation_msg': self.msg.gettext()}
 
 
@@ -142,7 +142,7 @@ class User_Profile(STLView):
         # Ok
         root = context.get_resource('/')
         user = context.user
-        is_owner = user is not None and user.name == resource.name
+        is_owner = user and user.path == resource.path
         return {
             'items': items,
             'is_owner_or_admin': is_owner or root.is_admin(user, resource),
@@ -161,8 +161,7 @@ class User_EditAccount(AutoForm):
         'firstname': Unicode,
         'lastname': Unicode,
         'email': Email,
-        'password': String,
-    }
+        'password': String}
     widgets = [TextWidget('firstname', title=MSG(u"First Name")),
                TextWidget('lastname', title=MSG(u"Last Name")),
                TextWidget('email', title=MSG(u"E-mail Address"))]
@@ -172,7 +171,7 @@ class User_EditAccount(AutoForm):
         widgets = list(self.widgets)
 
         # User must confirm?
-        if resource.name == context.user.name:
+        if resource.path == context.user.path:
             widgets.append(PasswordWidget('password',
                 mandatory=True,
                 title=MSG(u"To confirm these changes, "
@@ -184,7 +183,7 @@ class User_EditAccount(AutoForm):
     def get_value(self, resource, context, name, datatype):
         if name == 'password':
             return None
-        return resource.get_property(name)
+        return resource.get_value(name)
 
 
     def action(self, resource, context, form):
@@ -193,7 +192,7 @@ class User_EditAccount(AutoForm):
         email = form['email']
 
         # Check password to confirm changes
-        is_same_user = (resource.name == context.user.name)
+        is_same_user = (resource.name == context.user.get_name())
         if is_same_user:
             password = form['password']
             if not resource.authenticate(password):
@@ -205,7 +204,7 @@ class User_EditAccount(AutoForm):
         # If the user changes his email, check there is not already other
         # user with the same email in the database.
         if email != resource.get_property('email'):
-            results = context.root.search(email=email)
+            results = context.search(email=email)
             if len(results):
                 context.message = ERROR(
                     u'There is another user with the email "{email}", please'
@@ -261,19 +260,17 @@ class User_EditPassword(STLForm):
     title = MSG(u'Edit Password')
     description = MSG(u'Change your password.')
     icon = 'lock.png'
-    template = '/ui/user/edit_password.xml'
+    template = 'user/edit_password.xml'
     schema = {
         'newpass': String(mandatory=True),
         'newpass2': String(mandatory=True),
-        'password': String,
-    }
+        'password': String}
 
 
     def get_namespace(self, resource, context):
         user = context.user
         return {
-            'must_confirm': (resource.name == user.name)
-        }
+            'must_confirm': (resource.path == user.path)}
 
 
     def action(self, resource, context, form):
@@ -281,7 +278,7 @@ class User_EditPassword(STLForm):
         newpass2 = form['newpass2']
 
         # Check password to confirm changes
-        is_same_user = (resource.name == context.user.name)
+        is_same_user = (resource.name == context.user.get_name())
         if is_same_user:
             password = form['password']
             if not resource.authenticate(password):
@@ -318,11 +315,10 @@ class User_Tasks(STLView):
     title = MSG(u'Tasks')
     description = MSG(u'See your pending tasks.')
     icon = 'tasks.png'
-    template = '/ui/user/tasks.xml'
+    template = 'user/tasks.xml'
 
 
     def get_namespace(self, resource, context):
-        root = context.root
         user = context.user
 
         # Build the query
@@ -335,8 +331,7 @@ class User_Tasks(STLView):
 
         # Build the list of documents
         documents = []
-        for brain in root.search(query).get_documents():
-            document = root.get_resource(brain.abspath)
+        for document in context.search(query).get_documents():
             # Check security
             ac = document.get_access_control()
             if not ac.is_allowed_to_view(user, document):
