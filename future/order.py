@@ -302,7 +302,7 @@ class GoToFirstOrderedResource(GoToSpecificDocument):
 class ResourcesOrderedTableFile(OrderedTableFile):
 
     record_properties = {
-        'name': String(mandatory=True, unique=True, is_indexed=True)}
+        'name': String(mandatory=True, unique=True, indexed=True)}
 
 
 

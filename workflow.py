@@ -143,40 +143,31 @@ class WorkflowAware(BaseWorkflowAware):
     workflow = workflow
 
 
-    ########################################################################
-    # Metadata
-    ########################################################################
     from obsolete.metadata import WFTransition
-    metadata_schema = freeze({
-        'state': String,
-        'workflow': Unicode(multiple=True),
-        # XXX Backwards compatibility with 0.50
-        'wf_transition': WFTransition})
+    class_schema = freeze({
+        # Metadata
+        'state': String(source='metadata'),
+        'workflow': Unicode(source='metadata', multiple=True),
+        # Metadata (XXX backwards compatibility with 0.50)
+        'wf_transition': WFTransition(source='metadata'),
+        # Other
+        'workflow_state': String(stored=True, indexed=True),
+        })
 
 
-    ########################################################################
-    # Indexing
-    ########################################################################
     @property
     def workflow_state(self):
-        return self.get_workflow_state()
+        return self.get_property('state') or self.workflow.initstate
+
+
+    @workflow_state.setter
+    def workflow_state(self, value):
+        self.set_property('state', value)
 
 
     ########################################################################
     # API
     ########################################################################
-    def get_workflow_state(self):
-        state = self.get_property('state')
-        if state:
-            return state
-        return self.workflow.initstate
-
-    def set_workflow_state(self, value):
-        self.set_property('state', value)
-
-    workflow_state = property(get_workflow_state, set_workflow_state, None, '')
-
-
     def get_publication_date(self):
         # FIXME This method only has sense if the workflow has a 'public'
         # state with the intended meaning.

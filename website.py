@@ -62,17 +62,18 @@ class WebSite(RoleAware, Folder, VirtualRoot):
     __fixed_handlers__ = ['skin', 'index']
 
 
-    metadata_schema = merge_dicts(
-        Folder.metadata_schema,
-        RoleAware.metadata_schema,
-        vhosts=Tokens,
-        contacts=Tokens,
-        emails_from_addr=String,
-        emails_signature=Unicode,
-        google-site-verification=String,
-        yahoo_site_verification=String,
-        bing_site_verification=String,
-        website_languages=Tokens(default=('en',)))
+    class_schema = merge_dicts(
+        Folder.class_schema,
+        RoleAware.class_schema,
+        # Metadata
+        vhosts=Tokens(source='metadata', multiple=True, indexed=True),
+        contacts=Tokens(source='metadata'),
+        emails_from_addr=String(source='metadata'),
+        emails_signature=Unicode(source='metadata'),
+        google-site-verification=String(source='metadata'),
+        yahoo_site_verification=String(source='metadata'),
+        bing_site_verification=String(source='metadata'),
+        website_languages=Tokens(source='metadata', default=('en',)))
 
 
     @property

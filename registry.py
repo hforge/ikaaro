@@ -58,8 +58,10 @@ fields_registry = {}
 
 def register_field(name, field_cls):
     if name in fields_registry:
-        raise ValueError, ('You have already register a field with this name '
-                           '"%s"') % name
+        if fields_registry[name] is field_cls:
+            return
+        raise ValueError, 'register conflict over the "%s" field' % name
+
     fields_registry[name] = field_cls
 
 

@@ -31,7 +31,7 @@ from itools.web import INFO
 from access import AccessControl
 from datatypes import Password
 from folder import Folder
-from registry import get_resource_class, register_field
+from registry import get_resource_class
 from resource_views import DBResource_Edit
 from user_views import User_ConfirmRegistration, User_EditAccount
 from user_views import User_EditPassword, User_EditPreferences, User_Profile
@@ -56,16 +56,20 @@ class User(AccessControl, Folder):
     ########################################################################
     # Metadata
     ########################################################################
-    metadata_schema = freeze({
-        'version': String,
-        'firstname': Unicode,
-        'lastname': Unicode,
-        'email': Email,
-        'password': Password,
-        'user_language': String,
-        'user_must_confirm': String,
-        # Backwards compatibility
-        'username': String})
+    class_schema = freeze({
+        # Metadata
+        'version': String(source='metadata'),
+        'firstname': Unicode(source='metadata', indexed=True, stored=True),
+        'lastname': Unicode(source='metadata', indexed=True, stored=True),
+        'email': Email(source='metadata', indexed=True, stored=True),
+        'password': Password(source='metadata'),
+        'user_language': String(source='metadata'),
+        'user_must_confirm': String(source='metadata'),
+        # Metadata (backwards compatibility)
+        'username': String(source='metadata', indexed=True, stored=True),
+        # Other
+        'email_domain': String(indexed=True, stored=True),
+        })
 
 
     ########################################################################
@@ -308,15 +312,4 @@ class UserFolder(Folder):
         icon='view.png',
         message=INFO(u'To manage the users please go '
                      u'<a href="/;browse_users">here</a>.'))
-
-
-
-###########################################################################
-# Register
-###########################################################################
-for name in ['email', 'email_domain', 'username']:
-    register_field(name, String(is_stored=True, is_indexed=True))
-for name in ['lastname', 'firstname']:
-    register_field(name, Unicode(is_stored=True, is_indexed=True))
-
 
