@@ -779,14 +779,13 @@ msgid "<g id='1'> ${event/SUMMARY}</g>  <g id='2'>${event/TIME}</g>"
 msgstr "<g id='1'> ${event/SUMMARY}</g>  <g id='2'>${event/TIME}</g>"
 
 #: ../ui/auto_form.xml.en:16
-#, fuzzy
 msgctxt "label"
 msgid ""
 "<g id='1'> ${widget/title} </g>  <g id='2'>(mandatory)</g>  <g id='3'>"
 "(multiple)</g>  <g id='4'>${widget/tip}</g>"
 msgstr ""
 "<g id='1'> ${widget/title} </g>  <g id='2'>(obligatoire)</g>  <g id='3'>"
-"(multiple)</g>  <g id='4'>Format: 'yyyy-mm-dd'</g>"
+"(multiple)</g>  <g id='4'>${widget/tip}</g>"
 
 #: ../ui/binary/Image_view.xml.en:15
 msgctxt "paragraph"
