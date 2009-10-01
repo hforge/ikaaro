@@ -91,7 +91,9 @@ class Table_View(SearchForm):
         # Batch
         start = context.query['batch_start']
         size = context.query['batch_size']
-        return items[start:start+size]
+        if size > 0:
+            return items[start:start+size]
+        return items[start:]
 
 
     def get_table_columns(self, resource, context):
