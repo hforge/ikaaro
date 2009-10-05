@@ -261,14 +261,14 @@ class File_ExternalEdit(BaseView):
             'title:%s' % title]
 
         if resource.is_locked():
-            lock = resource.get_lock()
+            username, timestamp, key = resource.get_lock()
             # locks expire after 1 hour
-            if lock.lock_timestamp + timedelta(hours=1) < datetime.now():
+            if timestamp + timedelta(hours=1) < datetime.now():
                 resource.unlock()
                 context.commit = True
             else:
                 # always borrow lock from same user
-                if lock.username == context.user.get_name():
+                if username == context.user.get_name():
                     lines.append('lock-token:%s' % lock.lock_key)
                     lines.append('borrow_lock:1')
                 else:

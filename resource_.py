@@ -19,6 +19,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# Import from the Standard Library
+from datetime import datetime
+from random import random
+from time import time
+
 # Import from itools
 from itools.core import freeze, lazy
 from itools.csv import Property
@@ -30,7 +35,6 @@ from itools.web import Resource
 from itools.xapian import CatalogAware, PhraseQuery
 
 # Import from ikaaro
-from lock import Lock
 from metadata import Metadata
 from registry import register_field, register_resource_class
 from resource_views import DBResource_Edit, DBResource_Backlinks
@@ -236,6 +240,7 @@ class DBResource(CatalogAware, IResource):
         'title': Multilingual(source='metadata', indexed=True, stored=True),
         'description': Multilingual(source='metadata', indexed=True),
         'subject': Multilingual(source='metadata', indexed=True),
+        'lock': String,
         # Key & class id
         'abspath': String(key_field=True, indexed=True, stored=True),
         'format': String(indexed=True, stored=True),
@@ -553,37 +558,32 @@ class DBResource(CatalogAware, IResource):
     # Lock/Unlock/Put
     ########################################################################
     def lock(self):
-        lock = Lock(username=get_context().user.get_name())
-
-        self = self.get_real_resource()
-        if self.parent is None:
-            self.handler.set_handler('.lock', lock)
-        else:
-            self.parent.handler.set_handler('%s.lock' % self.name, lock)
-
-        return lock.lock_key
+        # key
+        key = '%s-%s-00105A989226:%.03f' % (random(), random(), time())
+        # lock
+        username = get_context().user.get_name()
+        timestamp = datetime.now()
+        timestamp = DateTime.encode(timestamp)
+        lock = '%s#%s#%s' % (username, timestamp, key)
+        self.set_property('lock', lock)
+        # Ok
+        return key
 
 
     def unlock(self):
-        self = self.get_real_resource()
-        if self.parent is None:
-            self.handler.del_handler('.lock')
-        else:
-            self.parent.handler.del_handler('%s.lock' % self.name)
+        self.del_property('lock')
 
 
     def is_locked(self):
-        self = self.get_real_resource()
-        if self.parent is None:
-            return self.handler.has_handler('.lock')
-        return self.parent.handler.has_handler('%s.lock' % self.name)
+        return self.has_property('lock')
 
 
     def get_lock(self):
-        self = self.get_real_resource()
-        if self.parent is None:
-            return self.handler.get_handler('.lock')
-        return self.parent.handler.get_handler('%s.lock' % self.name)
+        lock = self.get_value('lock')
+        username, timestamp, key = lock.split('#')
+        timestamp = timestamp.split('.')[0]
+        timestamp = DateTime.decode(timestamp)
+        return username, timestamp, key
 
 
     ########################################################################
