@@ -292,7 +292,7 @@ class Issue_History(STLView):
             if version != previous_version:
                 previous_version = version
                 row_ns['version'] = ' '
-                if module is not None:
+                if version is not None:
                     version = versions.get_record(int(version))
                     if version:
                         value = versions.get_record_value(version, 'title')
