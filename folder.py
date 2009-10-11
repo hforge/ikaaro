@@ -196,8 +196,6 @@ class Folder(DBResource):
 
 
     def copy_resource(self, source_path, target_path):
-        database = get_context().database
-
         # Find out the source and target absolute URIs
         source_uri, target_uri = self._resolve_source_target(source_path,
                                                              target_path)
@@ -229,7 +227,7 @@ class Folder(DBResource):
 
         # Events, add
         resource = self.get_resource(target_path)
-        database.add_resource(resource)
+        get_context().add_resource(resource)
 
 
     def move_resource(self, source_path, target_path):

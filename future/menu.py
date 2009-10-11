@@ -212,7 +212,7 @@ class Menu_View(OrderedTable_View):
         context.message = message
 
         # Reindex the resource
-        context.server.change_resource(resource)
+        context.change_resource(resource)
 
 
     def action_add_child(self, resource, context, form):
@@ -545,7 +545,7 @@ class Menu(OrderedTable):
                 # Hit the old name
                 new_path2 = base.get_pathto(Path(target))
                 handler.update_record(record.id, **{'path': str(new_path2)})
-        get_context().database.change_resource(self)
+        get_context().change_resource(self)
 
 
 
