@@ -860,8 +860,7 @@ class Tracker_ChangeSeveralBugs(Tracker_View):
                 'title': issue.get_property('title'),
                 'product': issue.get_property('product'),
                 'cc_list': issue.get_property('cc_list'),
-                'file': '',
-            }
+                'file': ''}
             # Assign-To
             assigned_to = issue.get_property('assigned_to')
             new_assigned_to = form['change_assigned_to']
@@ -895,7 +894,7 @@ class Tracker_ChangeSeveralBugs(Tracker_View):
             if assigned_to and assigned_to != new_assigned_to:
                 users_issues.setdefault(assigned_to, []).append(info)
             # Change
-            context.server.change_resource(issue)
+            context.change_resource(issue)
 
         # Send mails
         if user is None:

@@ -129,7 +129,7 @@ class PO_Edit(STLForm):
         msgstr = form['msgstr'].replace('\r', '')
         resource.handler.set_message(msgid, msgstr)
         # Events, change
-        context.server.change_resource(resource)
+        context.change_resource(resource)
 
         # Ok
         context.message = messages.MSG_CHANGES_SAVED

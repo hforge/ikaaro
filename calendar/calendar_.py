@@ -126,7 +126,7 @@ class CalendarTable(CalendarBase, Table):
     def add_record(self, type, properties):
         properties['type'] = type
         # Reindex the resource
-        get_context().server.change_resource(self)
+        get_context().change_resource(self)
         return self.handler.add_record(properties)
 
 
@@ -134,13 +134,13 @@ class CalendarTable(CalendarBase, Table):
         id = int(id)
         self.handler.update_record(id, **properties)
         # Reindex the resource
-        get_context().server.change_resource(self)
+        get_context().change_resource(self)
 
 
     def _remove_event(self, uid):
         self.handler.del_record(int(uid))
         # Reindex the resource
-        get_context().server.change_resource(self)
+        get_context().change_resource(self)
 
 
     class_schema = merge_dicts(
@@ -165,20 +165,20 @@ class Calendar(CalendarBase, Text):
 
     def add_record(self, type, properties):
         # Reindex the resource
-        get_context().server.change_resource(self)
+        get_context().change_resource(self)
         return self.handler.add_component(type, **properties)
 
 
     def update_record(self, id, properties):
         self.handler.update_component(id, **properties)
         # Reindex the resource
-        get_context().server.change_resource(self)
+        get_context().change_resource(self)
 
 
     def _remove_event(self, uid):
         self.handler.remove(uid)
         # Reindex the resource
-        get_context().server.change_resource(self)
+        get_context().change_resource(self)
 
 
     class_schema = merge_dicts(

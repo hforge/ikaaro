@@ -121,7 +121,7 @@ class Issue(Folder):
                 value = str(new_base.get_pathto(target))
                 history.update_record(record.id, **{'file': value})
 
-        get_context().database.change_resource(self)
+        get_context().change_resource(self)
 
 
     def get_title(self, language=None):

@@ -254,7 +254,7 @@ class WebPage(ResourceWithHTML, Multilingual, Text):
             events = list(events)
             handler.set_changed()
             handler.events = events
-        get_context().database.change_resource(self)
+        get_context().change_resource(self)
 
 
     def update_relative_links(self, source):

@@ -357,7 +357,7 @@ class ResourcesOrderedTable(OrderedTable):
             if path == source:
                 new_path = str(base.get_pathto(target))
                 handler.update_record(record.id, **{'name': new_path})
-        get_context().database.change_resource(self)
+        get_context().change_resource(self)
 
 
     def update_relative_links(self, source):

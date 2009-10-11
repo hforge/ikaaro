@@ -56,17 +56,17 @@ class Table(File):
 
 
     def add_new_record(self, record):
-        get_context().server.change_resource(self)
+        get_context().change_resource(self)
         return self.handler.add_record(record)
 
 
     def update_record(self, id, **kw):
-        get_context().server.change_resource(self)
+        get_context().change_resource(self)
         self.handler.update_record(id, **kw)
 
 
     def del_record(self, id):
-        get_context().server.change_resource(self)
+        get_context().change_resource(self)
         self.handler.del_record(id)
 
 

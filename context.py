@@ -163,7 +163,7 @@ class CMSContext(WebContext):
         body = self.get_form_value('body')
         resource = self.resource
         resource.handler.load_state_from_string(body)
-        self.database.change_resource(resource)
+        self.change_resource(resource)
         self.no_content()
 
 
@@ -181,7 +181,7 @@ class CMSContext(WebContext):
         # Clean the copy cookie if needed
         cut, paths = self.get_cookie('ikaaro_cp', datatype=CopyCookie)
         # Clean cookie
-        if str(resource.get_abspath()) in paths:
+        if str(resource.path) in paths:
             self.del_cookie('ikaaro_cp')
         self.no_content()
 

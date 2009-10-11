@@ -221,7 +221,7 @@ class Folder(DBResource):
 
         # Events, add
         resource = self.get_resource(target_path)
-        database.add_resource(resource)
+        get_context().add_resource(resource)
 
 
     def move_resource(self, source_path, target_path):
