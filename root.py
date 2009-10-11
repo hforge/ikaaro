@@ -18,15 +18,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Import from the Standard Library
-from email.charset import add_charset, add_codec, QP
-from email.mime.application import MIMEApplication
-from email.MIMEText import MIMEText
-from email.MIMEImage import MIMEImage
-from email.MIMEMultipart import MIMEMultipart
-from email.Utils import formatdate
-from email.header import Header
-
 # Import from itools
 from itools.core import freeze
 from itools.datatypes import String
@@ -42,11 +33,6 @@ from registry import get_resource_class
 from user import UserFolder
 from utils import crypt_password
 from website import WebSite
-
-
-# Force email to send UTF-8 mails in plain text
-add_charset('utf-8', QP, None, 'utf-8')
-add_codec('utf-8', 'utf_8')
 
 
 
