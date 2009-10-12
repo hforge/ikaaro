@@ -36,7 +36,6 @@ from ikaaro.folder import Folder
 from ikaaro.folder_views import Folder_BrowseContent, GoToSpecificDocument
 from ikaaro.table import OrderedTableFile, OrderedTable
 from ikaaro.table_views import OrderedTable_View
-from ikaaro.utils import get_base_path_query
 from ikaaro.views import CompositeForm
 from ikaaro.workflow import get_workflow_preview
 
@@ -178,15 +177,16 @@ class ResourcesOrderedTable_Unordered(Folder_BrowseContent):
 
     def get_query(self, resource, context):
         # Only in the given root
-        parent_path = resource.get_order_root().get_canonical_path()
-        query_base_path = get_base_path_query(str(parent_path))
+        parent_path = resource.get_order_root().path
+        results = context.get_root_search(parent_path, False)
         # Only the given types
-        query_formats = [PhraseQuery('format', cls.class_id)
-                         for cls in resource.get_orderable_classes()]
+        query_formats = [ PhraseQuery('format', cls.class_id)
+                          for cls in resource.get_orderable_classes() ]
         query_formats = OrQuery(*query_formats)
-        query_excluded = [NotQuery(PhraseQuery('name', name))
-                          for name in resource.get_ordered_names()]
-        return AndQuery(query_base_path, query_formats, *query_excluded)
+        query_excluded = [ NotQuery(PhraseQuery('name', name))
+                           for name in resource.get_ordered_names() ]
+        query = AndQuery(query_formats, *query_excluded)
+        return results.search(query)
 
 
     def get_items(self, resource, context):

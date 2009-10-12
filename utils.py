@@ -24,7 +24,6 @@ from sys import platform
 # Import from itools
 from itools.http import get_context
 from itools import vfs
-from itools.xapian import AllQuery, PhraseQuery, NotQuery, OrQuery, StartQuery
 
 if platform[:3] == 'win':
     from utils_win import is_pid_running, kill
@@ -155,34 +154,6 @@ def generate_name(name, used, suffix='_'):
         name = ''.join([basename, suffix, str(index), extent])
 
     return str(name)
-
-
-
-###########################################################################
-# Index and Search
-###########################################################################
-def get_base_path_query(abspath, include_container=False):
-    """Builds a query that will return all the objects within the given
-    absolute path, like it is returned by 'resource.get_abspath()'.
-
-    If 'include_container' is true the resource at the given path will be
-    returned too.
-    """
-    # Case 1: everything
-    if abspath == '/' and include_container is True:
-        return AllQuery()
-
-    # Case 2: everything but the root
-    if abspath == '/':
-        return NotQuery(PhraseQuery('abspath', '/'))
-
-    # Case 3: some subfolder
-    content = StartQuery('abspath', abspath + '/')
-    if include_container is False:
-        return content
-
-    container = PhraseQuery('abspath', abspath)
-    return OrQuery(container, content)
 
 
 

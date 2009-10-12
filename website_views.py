@@ -36,7 +36,6 @@ from itools.xapian import PhraseQuery, OrQuery, AndQuery, split_unicode
 from autoform import AutoForm, SelectWidget, MultilineWidget, TextWidget
 import globals
 from views import SearchForm
-from utils import get_base_path_query
 
 
 
@@ -266,9 +265,9 @@ class SiteSearchView(SearchForm):
         languages = resource.get_value('website_languages')
         queries = []
         for language in languages:
-            query = [ OrQuery(PhraseQuery('title', word),
-                              PhraseQuery('text', word))
-                      for word in split_unicode(text, language) ]
+            query = [
+                OrQuery(PhraseQuery('title', word), PhraseQuery('text', word))
+                for word in split_unicode(text, language) ]
             if query:
                 queries.append(AndQuery(*query))
 
@@ -277,10 +276,7 @@ class SiteSearchView(SearchForm):
         query = OrQuery(*queries)
 
         # Search
-        abspath = resource.get_canonical_path()
-        q1= get_base_path_query(str(abspath))
-        query = AndQuery(q1, query)
-        results = context.search(query=query)
+        results = context.search(query)
 
         # Check access rights
         user = context.user

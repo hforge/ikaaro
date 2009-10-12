@@ -19,7 +19,8 @@ from itools.core import get_abspath, lazy, merge_dicts
 from itools.handlers import ConfigFile, ro_database
 from itools.uri import Path
 from itools.web import WebContext, lock_body
-from itools.xapian import OrQuery, PhraseQuery, StartQuery, SearchResults
+from itools.xapian import AllQuery, NotQuery, PhraseQuery, OrQuery, StartQuery
+from itools.xapian import SearchResults
 
 # Import from ikaaro
 from ikaaro.globals import spool, ui
@@ -32,7 +33,10 @@ class CMSContext(WebContext):
 
     def __init__(self, soup_message, path):
         WebContext.__init__(self, soup_message, path)
-        # Resources
+
+        # Cache for searches
+        self._search_cache = {}
+
         # The resources that been added, removed, changed and moved can be
         # represented as a set of two element tuples.  But we implement this
         # with two dictionaries (old2new/new2old), to be able to access any
@@ -382,27 +386,37 @@ class CMSContext(WebContext):
     #######################################################################
     # Search
     #######################################################################
-    @lazy
-    def _search(self):
-        if self.host is None:
-            return None
+    def get_root_search(self, root='/', included=True):
+        # Hit
+        cache = self._search_cache
+        key = (root, included)
+        if key in cache:
+            return cache[key]
 
-        abspath = '/%s' % self.host
-        query = OrQuery(
-            PhraseQuery('abspath', abspath),
-            StartQuery('abspath', '%s/' % abspath))
+        # Miss
+        phypath = '/%s%s' % (self.host, root) if self.host else root
+        if phypath == '/':
+            if included:
+                # Case 1: everything
+                query = AllQuery()
+            else:
+                # Case 2: everything but the root
+                query = NotQuery(PhraseQuery('abspath', '/'))
+        else:
+            # Case 3: some sub-folder
+            query = StartQuery('abspath', phypath + '/')
+            if included:
+                container = PhraseQuery('abspath', phypath)
+                query = OrQuery(container, query)
 
-        catalog = self.database.catalog
-        return catalog.search(query)
+        search = self.database.catalog.search(query)
+        cache[key] = search
+        return search
 
 
     def search(self, query=None, **kw):
-        results = self._search
-        if results:
-            return results.search(query, **kw)
-
-        catalog = self.database.catalog
-        return catalog.search(query, **kw)
+        results = self.get_root_search()
+        return results.search(query, **kw)
 
 
     def abort_changes(self):
