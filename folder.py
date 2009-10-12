@@ -148,7 +148,7 @@ class Folder(DBResource):
         # Check referencial-integrity
         catalog = context.database.catalog
         # FIXME Check sub-resources too
-        path = str(resource.get_canonical_path())
+        path = str(resource.get_physical_path())
         results = catalog.search(links=path)
         if len(results):
             message = 'cannot delete, resource "%s" is referenced' % path

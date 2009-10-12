@@ -159,8 +159,9 @@ class DBResource_Backlinks(Folder_BrowseContent):
 
 
     def get_items(self, resource, context):
-        links = str(resource.get_canonical_path())
-        return context.search(links=links)
+        path = resource.get_physical_path()
+        path = str(path)
+        return context.search(links=path)
 
 
     table_actions = []
