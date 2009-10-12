@@ -31,7 +31,6 @@ from access import RoleAware_BrowseUsers, RoleAware_AddUser
 from access import RoleAware_EditMembership
 from folder_views import Folder_Orphans
 import messages
-from utils import get_base_path_query
 from views import IconsView, ContextMenu
 
 
@@ -204,33 +203,32 @@ class CPBrokenLinks(CPBaseView, STLView):
 
 
     def get_namespace(self, resource, context):
-        # Find out broken links
-        catalog = context.database.catalog
-        base = resource.get_abspath()
+        # These are all the physical links we have in the database
+        links = context.database.catalog.get_unique_values('links')
 
-        # Search only within the given resource
-        base_str = str(base)
-        query = get_base_path_query(base_str, include_container=True)
-        results = catalog.search(query)
+        # Make a partial search within the website
+        root = str(resource.path)
+        results = context.get_root_search(root)
 
-        # Find out the broken links
+        # Find out the broken links within scope and classify them by the
+        # origin paths
         broken = {}
-        for link in catalog.get_unique_values('links'):
-            if context.get_resource(link, soft=True):
+        for link in links:
+            # Filter links out of scope and not broken links
+            link_logical = context.get_logical_path(link)
+            if link_logical is None:
                 continue
-            sub_results = results.search(PhraseQuery('links', link))
-            link = str(base.get_pathto(Path(link)))
-            for brain in sub_results.get_documents():
-                broken.setdefault(brain.abspath, []).append(link)
+            if context.get_resource(link_logical, soft=True):
+                continue
+            # Keep in the mapping
+            link_logical = str(link_logical)
+            for brain in results.search(links=link).get_documents():
+                broken.setdefault(brain.abspath, []).append(link_logical)
 
         # Build the namespace
         items = []
         total = 0
-        keys = broken.keys()
-        keys.sort()
-        for path in keys:
-            links = broken[path]
-            path = str(base.get_pathto(Path(path)))
+        for path, links in sorted(broken.iteritems()):
             n = len(links)
             items.append({'path': path, 'links': links, 'n': n})
             total += n

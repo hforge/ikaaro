@@ -35,7 +35,6 @@ from itools.web import BaseView, STLForm, STLView, INFO, ERROR
 from itools.xapian import AndQuery, PhraseQuery, RangeQuery
 
 # Import from ikaaro
-from ikaaro.utils import get_base_path_query
 from grid import get_grid_data
 from ikaaro.datatypes import FileDataType
 
@@ -255,17 +254,10 @@ class CalendarView(STLView):
 
         # Search only events
         query.append(PhraseQuery('format', 'event'))
-
-        # Search only in the site root
-        context = get_context()
-        site_root = context.site_root
-        site_root_path = site_root.get_abspath()
-        if site_root_path != '/':
-            query.append(get_base_path_query(site_root_path))
+        query = AndQuery(*query)
 
         # Search
-        query = AndQuery(*query)
-        return context.search(query)
+        return get_context().search(query)
 
 
     def search_events_in_range(self, start, end, **kw):

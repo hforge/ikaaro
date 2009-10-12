@@ -41,7 +41,7 @@ from datatypes import CopyCookie, ImageWidth
 from exceptions import ConsistencyError
 from globals import ui
 import messages
-from utils import generate_name, get_base_path_query
+from utils import generate_name
 from views import IconsView, SearchForm, ContextMenu
 from workflow import WorkflowAware, get_workflow_preview
 
@@ -251,27 +251,32 @@ class Folder_BrowseContent(SearchForm):
 
 
     def get_items(self, resource, context, *args):
-        # Get the parameters from the query
         get_query_value = context.get_query_value
-        search_term = get_query_value('search_term').strip()
-        field = get_query_value('search_field')
-        search_subfolders = get_query_value('search_subfolders')
 
-        # Build the query
+        # The query
         args = list(args)
-        abspath = str(resource.get_canonical_path())
-        if search_subfolders is True:
-            args.append(get_base_path_query(abspath))
-        else:
-            args.append(PhraseQuery('parent_path', abspath))
+        search_term = get_query_value('search_term').strip()
         if search_term:
+            field = get_query_value('search_field')
             args.append(PhraseQuery(field, search_term))
-        if len(args) == 1:
-            query = args[0]
-        else:
-            query = AndQuery(*args)
 
-        # Ok
+        # Case 1: search subfolders
+        search_subfolders = get_query_value('search_subfolders')
+        if search_subfolders is True:
+            results = context.get_root_search(resource.path, False)
+            if len(args) == 0:
+                query = None
+            elif len(args) == 1:
+                query = args[0]
+            else:
+                query = AndQuery(*args)
+            return results.search(query)
+
+        # Case 2: do not search subfolders
+        path = resource.get_physical_path()
+        path = str(path)
+        parent_query = PhraseQuery('parent_path', path)
+        query = AndQuery(parent_query, *args) if args else parent_query
         return context.search(query)
 
 
