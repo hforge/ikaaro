@@ -89,7 +89,7 @@ class Issue(Folder):
     # API
     #######################################################################
     def get_links(self):
-        base = self.get_abspath()
+        base = self.get_physical_path()
 
         comments = self.metadata.get_property('comment')
         if comments is None:
