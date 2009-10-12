@@ -347,11 +347,6 @@ class DBResource(CatalogAware, IResource):
         raise ValueError, err % (name, self.__class__.__name__)
 
 
-    def get_abspath(self):
-        abspath = self.get_canonical_path()
-        return str(abspath)
-
-
     def get_format(self):
         return self.metadata.format
 
