@@ -490,8 +490,8 @@ class Menu(OrderedTable):
 
 
     def get_links(self):
-        base = self.get_abspath()
-        site_root_abspath = self.get_site_root().get_abspath()
+        base = self.get_physical_path()
+        site_root_path = self.get_site_root().get_physical_path()
         handler = self.handler
         record_properties = handler.record_properties
         links = []
@@ -505,7 +505,7 @@ class Menu(OrderedTable):
             if path.count(';'):
                 path, method = path.split(';')
             if ref.path.is_absolute():
-                uri = site_root_abspath.resolve2('.%s' % path)
+                uri = site_root_path.resolve2('.%s' % path)
             else:
                 uri = base.resolve2(path)
             try:
@@ -526,7 +526,7 @@ class Menu(OrderedTable):
                 if child is not None:
                     # take into account the submenu if it is not empty
                     if child.handler.get_n_records():
-                        uri = site_root_abspath.resolve(path)
+                        uri = site_root_path.resolve(path)
                         links.append(str(uri))
 
         return links

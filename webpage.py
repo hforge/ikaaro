@@ -231,7 +231,7 @@ class WebPage(ResourceWithHTML, Multilingual, Text):
 
     # FIXME These three methods are private, add the heading underscore
     def get_links(self):
-        base = self.get_abspath()
+        base = self.get_physical_path()
         languages = self.get_site_root().get_value('website_languages')
         links = []
         for language in languages:

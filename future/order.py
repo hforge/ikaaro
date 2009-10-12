@@ -337,14 +337,8 @@ class ResourcesOrderedTable(OrderedTable):
 
 
     def get_links(self):
-        base = self.get_order_root().get_canonical_path()
-        handler = self.handler
-        links = []
-
-        for name in self.get_ordered_names():
-            links.append(str(resolve_uri2(base, name)))
-
-        return links
+        base = self.get_order_root().get_physical_path()
+        return [ str(base.resolve2(x)) for x in self.get_ordered_names() ]
 
 
     def update_links(self, source, target):

@@ -154,7 +154,7 @@ class WikiPage(Text):
 
 
     def get_links(self):
-        base = self.get_abspath()
+        base = self.get_physical_path()
 
         links = []
         try:
