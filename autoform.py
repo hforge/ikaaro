@@ -118,10 +118,6 @@ class Widget(object):
             setattr(self, key, kw[key])
 
 
-    def get_prefix(self):
-        return None
-
-
     def get_template(self, datatype, value):
         return self.template
 
@@ -137,8 +133,7 @@ class Widget(object):
     def to_html(self, datatype, value):
         template = self.get_template(datatype, value)
         namespace = self.get_namespace(datatype, value)
-        prefix = self.get_prefix()
-        return stl(events=template, namespace=namespace, prefix=prefix)
+        return stl(events=template, namespace=namespace)
 
 
 
@@ -510,13 +505,6 @@ class RTEWidget(Widget):
 
     def get_rte_css(self):
         return self.rte_css
-
-
-    def get_prefix(self):
-        context = get_context()
-        here = context.resource.get_abspath()
-        prefix = here.get_pathto(self.template)
-        return prefix
 
 
     def get_template(self, datatype, value):
