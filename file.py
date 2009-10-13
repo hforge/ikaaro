@@ -65,8 +65,8 @@ class File(WorkflowAware, DBResource):
             handler = self.class_handler(string=body)
             extension = (
                 extension.lower() if extension else handler.class_extension)
-            name = FileName.encode((self.name, extension, None))
-            self.parent.handler.set_handler(name, handler)
+            name = FileName.encode((self.get_name(), extension, None))
+            self.get_parent().handler.set_handler(name, handler)
 
 
     def get_all_extensions(self):
@@ -107,7 +107,7 @@ class File(WorkflowAware, DBResource):
                 return self._handler
 
         # Not found, build a dummy one
-        name = FileName.encode((self.name, cls.class_extension, None))
+        name = FileName.encode((self.get_name(), cls.class_extension, None))
         uri = resolve_uri(base, name)
         handler = cls()
         database.push_handler(uri, handler)
@@ -118,8 +118,8 @@ class File(WorkflowAware, DBResource):
 
 
     def rename_handlers(self, new_name):
-        folder = self.parent.handler
-        old_name = self.name
+        folder = self.get_parent().handler
+        old_name = self.get_name()
         for extension in self.get_all_extensions():
             old = FileName.encode((old_name, extension, None))
             if folder.has_handler(old):

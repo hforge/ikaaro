@@ -35,7 +35,7 @@ class WikiMenu(ContextMenu):
     def get_items(self, resource, context):
         # If called from a child
         if isinstance(resource, WikiPage):
-            resource = resource.parent
+            resource = resource.get_parent()
         # Namespace
         base = context.get_link(resource)
         return [

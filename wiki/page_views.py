@@ -97,7 +97,7 @@ class WikiPage_View(BaseView):
 
 
     def GET(self, resource, context):
-        parent = resource.parent
+        parent = resource.get_parent()
 
         try:
             document = resource.get_document()
@@ -170,7 +170,7 @@ class WikiPage_ToPDF(BaseView):
             msg = ERROR(u"PDF generation failed. Please install pdflatex.")
             return context.come_back(msg)
 
-        parent = resource.parent
+        parent = resource.get_parent()
         pages = [resource.get_abspath()]
         images = []
 

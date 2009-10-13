@@ -145,7 +145,7 @@ class File_View(STLView):
         if not filename:
             filename = resource.get_title()
         return {
-            'url': '../' + resource.name,
+            'url': '../' + resource.get_name(),
             'filename': filename}
 
 
@@ -207,7 +207,7 @@ class File_Edit(DBResource_Edit):
         new_extension = new_extension.lower()
         if old_extension != new_extension:
             # "handler.png" -> "handler.jpg"
-            folder = resource.parent.handler
+            folder = resource.get_parent().handler
             filename = FileName.encode((old_name, new_extension, old_lang))
             folder.move_handler(handler_name, filename)
 
@@ -228,7 +228,7 @@ class File_ExternalEdit(BaseView):
         if title:
             title = title.encode(encoding or 'UTF-8')
         else:
-            title = resource.name
+            title = resource.get_name()
 
         cookies = context.soup_message.get_header('Cookie')
         lines = [

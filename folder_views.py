@@ -501,7 +501,7 @@ class Folder_BrowseContent(SearchForm):
             # If cut&paste in the same place, do nothing
             name = source.get_name()
             if cut is True:
-                if target == source.parent:
+                if target == source.get_parent():
                     pasted.append(name)
                     continue
 
@@ -511,7 +511,7 @@ class Folder_BrowseContent(SearchForm):
                 try:
                     target.move_resource(path, name)
                 except ConsistencyError:
-                    not_allowed.append(source.name)
+                    not_allowed.append(source.get_name())
                     continue
                 else:
                     pasted.append(name)
@@ -520,7 +520,7 @@ class Folder_BrowseContent(SearchForm):
                 try:
                     target.copy_resource(path, name)
                 except ConsistencyError:
-                    not_allowed.append(source.name)
+                    not_allowed.append(source.get_name())
                     continue
                 else:
                     pasted.append(name)

@@ -59,12 +59,13 @@ class SelectTable_View(OrderedTable_View):
 
 
     def get_item_value(self, resource, context, item, column):
+        tracker = resource.get_parent()
         # Append a column with the number of issues
         if column == 'issues':
             filter = str(resource.name)
 
             # Build the search query
-            query_terms = resource.parent.get_issues_query_terms()
+            query_terms = tracker.get_issues_query_terms()
             query_terms.append(PhraseQuery(filter, item.id))
             query = AndQuery(*query_terms)
 
@@ -95,7 +96,7 @@ class SelectTable_View(OrderedTable_View):
         # 'modules' tables.
         if column == 'product':
             value = int(value)
-            handler = resource.parent.get_resource('product').handler
+            handler = tracker.get_resource('product').handler
             record = handler.get_record(value)
             return handler.get_record_value(record, 'title')
 
@@ -122,7 +123,7 @@ class SelectTable_View(OrderedTable_View):
     def action_remove(self, resource, context, form):
         ids = form['ids']
         # Search all issues
-        query_terms = resource.parent.get_issues_query_terms()
+        query_terms = resource.get_parent().get_issues_query_terms()
         query = AndQuery(*query_terms)
         results = context.search(query)
 
@@ -218,7 +219,7 @@ class ModulesResource(Tracker_TableResource):
     class_handler = ModulesHandler
 
     def get_schema(self):
-        products = self.parent.get_resource('product')
+        products = self.get_resource('../product')
         return merge_dicts(
             ModulesHandler.record_properties,
             product=ProductsEnumerate(products=products, mandatory=True))
@@ -245,7 +246,7 @@ class VersionsResource(Tracker_TableResource):
     class_handler = VersionsHandler
 
     def get_schema(self):
-        products = self.parent.get_resource('product')
+        products = self.get_resource('../product')
         return merge_dicts(
             VersionsHandler.record_properties,
             product=ProductsEnumerate(products=products, mandatory=True))

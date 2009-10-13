@@ -173,7 +173,7 @@ class RoleAware_BrowseUsers(SearchForm):
         # Verify if after this operation, all is ok
         user = context.user
         if str(user.get_name()) in usernames:
-            if not is_admin(user, resource.parent):
+            if not is_admin(user, resource.get_parent()):
                 context.message = ERROR(u'You cannot remove yourself.')
                 return
 
@@ -211,7 +211,7 @@ class RoleAware_EditMembership(STLForm):
         # Verify if after this operation, all is ok
         user = context.user
         if str(user.get_name()) == user_id and role != 'admins':
-            if not is_admin(user, resource.parent):
+            if not is_admin(user, resource.get_parent()):
                 context.message = ERROR(u'You cannot degrade your own role.')
                 return
 

@@ -56,7 +56,7 @@ class Message(WebPage):
         WebPage.init_resource(self, **kw)
         # The message
         document = build_message(data)
-        folder = self.parent.handler
+        folder = self.get_parent().handler
         folder.set_handler('%s.xhtml.%s' % (name, language), document)
 
 

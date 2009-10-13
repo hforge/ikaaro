@@ -101,8 +101,9 @@ class CalendarBase(DBResource):
             organizer = event.get_property('ORGANIZER')
             user_path = str(context.user.get_abspath())
             return organizer and user_path == organizer.value
-        ac = self.parent.get_access_control()
-        return ac.is_allowed_to_edit(context.user, self.parent)
+        parent = self.get_parent()
+        ac = parent.get_access_control()
+        return ac.is_allowed_to_edit(context.user, parent)
 
 
     # Views

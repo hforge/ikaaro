@@ -420,7 +420,7 @@ class Table_ExportCSV(BaseView):
 
         response = context.response
         # Filename
-        filename = "%s.csv" % resource.name
+        filename = "%s.csv" % resource.get_name()
         response.set_header('Content-Disposition',
                             'inline; filename="%s"' % filename)
         # Content-Type
