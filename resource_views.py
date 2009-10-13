@@ -30,6 +30,7 @@ from itools.fs import FileName
 from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.i18n import get_language_name
+from itools.stl import stl
 from itools.uri import Path, get_reference, get_uri_path
 from itools.web import BaseView, STLForm, INFO, ERROR
 from itools.web import FormError
@@ -193,6 +194,17 @@ class DBResource_AddBase(STLForm):
     folder_classes = ()
 
 
+    def http_get(self, resource, context):
+        # FIXME Override STLForm.http_get to use 'ok' instead of 'ok_wrap'
+        context.add_query_schema(self.get_query_schema())
+        # STL
+        namespace = self.get_namespace(resource, context)
+        template = self.get_template(resource, context)
+        body = stl(template, namespace, mode='html')
+        # Ok
+        context.ok('text/html', body)
+
+
     def get_item_classes(self):
         from resource_ import DBResource
         return self.item_classes if self.item_classes else (DBResource,)
@@ -329,14 +341,13 @@ class DBResource_AddBase(STLForm):
         namespace['element_to_add'] = self.element_to_add
         namespace['target_id'] = context.get_form_value('target_id')
         namespace['message'] = context.message
-        namespace['mode'] = context.get_form_value('mode')
+        namespace['mode'] = context.get_query_value('mode')
         namespace['resource_action'] = self.get_resource_action(context)
         namespace['scripts'] = self.get_scripts(context)
         return namespace
 
 
-    def get_scripts(self, context):
-        mode = context.get_form_value('mode')
+    def get_scripts(self, mode):
         if mode == 'wiki':
             return ['/ui/wiki/javascript.js']
         elif mode == 'tiny_mce':
@@ -347,7 +358,7 @@ class DBResource_AddBase(STLForm):
 
 
     def get_additional_javascript(self, context):
-        mode = context.get_form_value('mode')
+        mode = context.get_query_value('mode')
         if mode != 'input':
             return ''
 
@@ -417,7 +428,7 @@ class DBResource_AddBase(STLForm):
 
 class DBResource_AddImage(DBResource_AddBase):
 
-    template = '/ui/html/addimage.xml'
+    template = 'html/addimage.xml'
     element_to_add = 'image'
 
 
@@ -444,7 +455,7 @@ class DBResource_AddImage(DBResource_AddBase):
 
 class DBResource_AddLink(DBResource_AddBase):
 
-    template = '/ui/html/addlink.xml'
+    template = 'html/addlink.xml'
     element_to_add = 'link'
 
     action_add_resource_schema = merge_dicts(DBResource_AddImage.schema,
