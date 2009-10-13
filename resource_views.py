@@ -214,7 +214,7 @@ class DBResource_AddBase(STLForm):
     def get_start(self, resource):
         from file import File
         if isinstance(resource, File):
-            return resource.parent
+            return resource.get_parent()
         return resource
 
 
@@ -242,6 +242,7 @@ class DBResource_AddBase(STLForm):
 
         # Default parameter values
         root = self.get_root(context)
+        root_parent = root.get_parent()
 
         # Get the query parameters
         target_path = context.get_form_value('target')
@@ -250,24 +251,25 @@ class DBResource_AddBase(STLForm):
             if isinstance(start, Folder):
                 target = start
             else:
-                target = start.parent
+                target = start.get_parent()
         else:
             target = root.get_resource(target_path)
 
         # The breadcrumb
         breadcrumb = []
         node = target
-        while node is not root.parent:
-            url = context.uri.replace(target=str(root.get_pathto(node)))
+        uri = get_reference(context.uri)
+        while node is not root_parent:
+            url = uri.replace(target=str(root.get_pathto(node)))
             title = node.get_title()
             short_title = reduce_string(title, 12, 40)
             quoted_title = short_title.replace("'", "\\'")
-            breadcrumb.insert(0, {'name': node.name,
+            breadcrumb.insert(0, {'name': node.get_name(),
                                   'title': title,
                                   'short_title': short_title,
                                   'quoted_title': quoted_title,
                                   'url': url})
-            node = node.parent
+            node = node.get_parent()
 
         # Content
         folders = []
@@ -283,7 +285,7 @@ class DBResource_AddBase(STLForm):
             if not ac.is_allowed_to_view(user, resource):
                 continue
             path = context.resource.get_pathto(resource)
-            url = context.uri.replace(target=str(root.get_pathto(resource)))
+            url = uri.replace(target=str(root.get_pathto(resource)))
 
             # Calculate path
             if isinstance(resource, Image):
