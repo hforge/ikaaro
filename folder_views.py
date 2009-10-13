@@ -127,7 +127,7 @@ class Folder_Rename(STLForm):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Rename resources')
-    template = '/ui/folder/rename.xml'
+    template = 'folder/rename.xml'
     query_schema = {
         'ids': String(multiple=True)}
     schema = {
@@ -136,16 +136,18 @@ class Folder_Rename(STLForm):
 
 
     def get_namespace(self, resource, context):
-        ids = context.query['ids']
+        ids = context.get_query_value('ids')
         # Filter names which the authenticated user is not allowed to move
         ac = resource.get_access_control()
         user = context.user
-        paths = [ x for x in ids
-                  if ac.is_allowed_to_move(user, resource.get_resource(x)) ]
+        paths = []
+        for name in ids:
+            r = resource.get_resource(name, soft=True)
+            if r and ac.is_allowed_to_move(user, r):
+                paths.append(name)
 
         # Build the namespace
-        paths.sort()
-        paths.reverse()
+        paths.sort(reverse=True)
         items = []
         for path in paths:
             if '/' in path:
@@ -436,9 +438,8 @@ class Folder_BrowseContent(SearchForm):
         # the rename_form to be called as a form action, hence with the POST
         # method, but it should be a GET method. Maybe it will be solved after
         # the needed folder browse overhaul.
-        ids_list = '&'.join([ 'ids=%s' % x for x in paths ])
-        uri = '%s/;rename?%s' % (context.get_link(resource), ids_list)
-        return get_reference(uri)
+        context.query['ids'] = paths
+        context.redirect(view='rename')
 
 
     def action_copy(self, resource, context, form):
