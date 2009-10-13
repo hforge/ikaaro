@@ -218,8 +218,7 @@ class ContactForm(AutoForm):
         if contact_title != contact:
             contact = (contact_title, contact)
         # Send the email
-        root = resource.get_root()
-        root.send_email(contact, subject, from_addr=from_addr, text=body)
+        context.send_email(contact, subject, from_addr=from_addr, text=body)
         # Ok
         context.message = INFO(u'Message sent.')
 
