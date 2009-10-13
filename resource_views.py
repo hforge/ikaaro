@@ -444,7 +444,7 @@ class DBResource_AddImage(DBResource_AddBase):
 
 
     def get_resource_action(self, context):
-        mode = context.get_form_value('mode')
+        mode = context.get_query_value('mode')
         if mode == 'tiny_mce':
             return '/;download'
         return DBResource_AddBase.get_resource_action(self, context)
