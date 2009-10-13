@@ -192,7 +192,7 @@ class User_EditAccount(AutoForm):
         email = form['email']
 
         # Check password to confirm changes
-        is_same_user = (resource.name == context.user.get_name())
+        is_same_user = (resource.get_name() == context.user.get_name())
         if is_same_user:
             password = form['password']
             if not resource.authenticate(password):
@@ -278,7 +278,7 @@ class User_EditPassword(STLForm):
         newpass2 = form['newpass2']
 
         # Check password to confirm changes
-        is_same_user = (resource.name == context.user.get_name())
+        is_same_user = (resource.get_name() == context.user.get_name())
         if is_same_user:
             password = form['password']
             if not resource.authenticate(password):

@@ -46,7 +46,7 @@ class Dressable_Menu(ContextMenu):
         items = []
         base_path = ''
         if not isinstance(resource, Dressable):
-            resource = resource.parent
+            resource = resource.get_parent()
             base_path = '../'
             if not isinstance(resource, Dressable):
                 return []

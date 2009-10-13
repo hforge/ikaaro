@@ -175,8 +175,8 @@ class CMSContext(WebContext):
         self.commit = True
         # FIXME access = 'is_allowed_to_remove'
         resource = self.resource
-        name = resource.name
-        parent = resource.parent
+        name = resource.get_name()
+        parent = resource.get_parent()
         try:
             parent.del_resource(name)
         except ConsistencyError:

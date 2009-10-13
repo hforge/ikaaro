@@ -141,7 +141,7 @@ class Menu_View(OrderedTable_View):
         elif column == 'child':
             if not value:
                 return None
-            child = resource.parent.get_resource(value, soft=True)
+            child = resource.get_parent().get_resource(value, soft=True)
             if child is None:
                 return None
             return 'edit', context.get_link(child)
@@ -217,7 +217,7 @@ class Menu_View(OrderedTable_View):
 
     def action_add_child(self, resource, context, form):
         handler = resource.handler
-        parent = resource.parent
+        parent = resource.get_parent()
         for parent_id in form['ids']:
             # generate the name of the new table
             parent_record = handler.get_record(parent_id)
@@ -235,7 +235,7 @@ class Menu_View(OrderedTable_View):
                 index = index + 1
                 name = checkid('%s%03d' % (base, index))
 
-            cls = resource.parent.class_menu
+            cls = parent.class_menu
             object = cls.make_resource(cls, parent, name)
 
             # update the parent record
@@ -271,7 +271,7 @@ class Menu(OrderedTable):
         if 'child' in record_properties:
             child_path = handler.get_record_value(record, 'child')
             if child_path:
-                container = self.parent
+                container = self.get_parent()
                 child = container.get_resource(child_path, soft=True)
                 if child is not None:
                     ac = child.get_access_control()
@@ -330,7 +330,7 @@ class Menu(OrderedTable):
 
     def get_menu_namespace_level(self, context, url, depth=2,
                                  use_first_child=False, flat=False):
-        parent = self.parent
+        parent = self.get_parent()
         handler = self.handler
         menu_abspath = self.get_abspath()
         here = context.resource
@@ -521,7 +521,7 @@ class Menu(OrderedTable):
                 continue
             path = handler.get_record_value(record, 'child')
             if path:
-                container = self.parent
+                container = self.get_parent()
                 child = container.get_resource(path, soft=True)
                 if child is not None:
                     # take into account the submenu if it is not empty
@@ -536,7 +536,7 @@ class Menu(OrderedTable):
         handler = self.handler
         base = self.get_abspath()
         # FIXME The context is not available when updating the catalog.
-        site_root_abspath = self.parent.parent.get_abspath()
+        site_root_abspath = self.get_parent().get_parent().get_abspath()
 
         for record in handler.get_records_in_order():
             path = handler.get_record_value(record, 'path')

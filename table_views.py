@@ -420,6 +420,7 @@ class Table_ExportCSV(BaseView):
 
         # Ok
         context.set_content_type('text/comma-separated-values')
-        context.set_content_disposition('inline', '%s.csv' % resource.name)
+        name = resource.get_name()
+        context.set_content_disposition('inline', '%s.csv' % name)
         return csv.to_str(separator=self.csv_separator)
 

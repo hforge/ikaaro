@@ -129,7 +129,7 @@ class Issue(Folder):
 
 
     def get_calendar(self):
-        return self.parent.get_resource('calendar')
+        return self.get_resource('../calendar')
 
 
     def get_history(self):
@@ -205,7 +205,8 @@ class Issue(Folder):
         if author in to_addrs:
             to_addrs.remove(author)
         # Notify / Subject
-        tracker_title = self.parent.get_property('title') or 'Tracker Issue'
+        tracker = self.get_parent()
+        tracker_title = tracker.get_property('title') or 'Tracker Issue'
         subject = '[%s #%s] %s' % (tracker_title, self.name, title)
         # Notify / Body
         if isinstance(context.resource, self.__class__):
@@ -281,7 +282,7 @@ class Issue(Folder):
             if last_value == new_value:
                 continue
             new_title = last_title = empty
-            csv = self.parent.get_resource(name).handler
+            csv = self.get_resource('../%s' % name).handler
             if last_value or last_value == 0:
                 rec = csv.get_record(last_value)
                 if rec is None:
@@ -350,7 +351,7 @@ class Issue(Folder):
     # User Interface
     #######################################################################
     def get_context_menus(self):
-        return self.parent.get_context_menus() + [IssueTrackerMenu()]
+        return self.get_parent().get_context_menus() + [IssueTrackerMenu()]
 
 
     edit = Issue_Edit()

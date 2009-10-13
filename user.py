@@ -120,7 +120,8 @@ class User(AccessControl, Folder):
     def get_groups(self):
         """Returns all the role aware handlers where this user is a member.
         """
-        results = self.context.search(is_role_aware=True, users=self.name)
+        context = self.context
+        results = context.search(is_role_aware=True, users=self.get_name())
         groups = [ x.abspath for x in results.get_documents() ]
         return tuple(groups)
 
@@ -165,7 +166,7 @@ class User(AccessControl, Folder):
 
         # Build the confirmation link
         confirm_url = deepcopy(context.uri)
-        path = '/users/%s/%s' % (self.name, view)
+        path = '/users/%s/%s' % (self.get_name(), view)
         confirm_url.path = Path(path)
         confirm_url.query = {
             'key': key,

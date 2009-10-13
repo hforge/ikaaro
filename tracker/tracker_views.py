@@ -135,7 +135,7 @@ class StoredSearchesMenu(ContextMenu):
 
         # If called from a child
         if isinstance(resource, Issue):
-            resource = resource.parent
+            resource = resource.get_parent()
 
         # Namespace
         search_name = context.get_query_value('search_name')
@@ -574,7 +574,7 @@ class Tracker_RememberSearch(BaseForm):
         if search_name is None:
             # Search for a search with the same title
             if isinstance(resource, Issue):
-                resource = resource.parent
+                resource = resource.get_parent()
             searches = resource.search_resources(cls=StoredSearch)
             for search in searches:
                 # Found !

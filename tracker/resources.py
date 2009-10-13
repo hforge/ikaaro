@@ -96,7 +96,7 @@ class Resource(Record):
                      timetable=None, grid=False, starts_on=True, ends_on=True,
                      out_on=True):
         context = get_context()
-        tracker = context.resource.parent
+        tracker = context.resource.get_parent()
         issue = tracker.get_resource(self.get_value('issue'))
         comment = self.get_value('comment')
 
@@ -155,7 +155,7 @@ class ListOfUsers(Enumerate):
 
     @classmethod
     def get_options(cls):
-        tracker = get_context().resource.parent
+        tracker = get_context().resource.get_parent()
         return UsersList(tracker=tracker,
                 excluded_roles=('guests',)).get_namespace('')
 
@@ -208,7 +208,7 @@ class Resources(Table, CalendarBase):
                                  RangeQuery('dtend', end, None)))
 
         # Define the set of concerned issues
-        tracker = self.parent
+        tracker = self.get_parent()
         issues = tracker.get_search_results(get_context())
         issues = [ x.name for x in issues.get_documents() ]
 

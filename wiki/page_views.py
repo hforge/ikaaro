@@ -153,7 +153,7 @@ class WikiPage_View(BaseView):
 
 
     def GET(self, resource, context):
-        parent = resource.parent
+        parent = resource.get_parent()
 
         try:
             doctree = resource.get_doctree()

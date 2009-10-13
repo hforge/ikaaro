@@ -35,7 +35,7 @@ class Multilingual(DBResource):
         if body:
             handler = self.handler_class(string=body)
             name = FileName.encode((name, handler.class_extension, language))
-            self.parent.folder.set_handler(name, handler)
+            self.get_parent().folder.set_handler(name, handler)
 
 
     def get_handler(self, language=None):

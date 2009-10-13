@@ -69,7 +69,7 @@ class WikiPage(Text):
     # API
     #######################################################################
     def resolve_link(self, title):
-        parent = self.parent
+        parent = self.get_parent()
 
         # Try regular resource name or path
         try:
@@ -89,7 +89,7 @@ class WikiPage(Text):
 
 
     def get_doctree(self):
-        parent = self.parent
+        parent = self.get_parent()
 
         # Override dandling links handling
         class WikiReader(StandaloneReader):
@@ -204,7 +204,7 @@ class WikiPage(Text):
         new_data = []
 
         not_uri = 0
-        base = self.parent.get_abspath()
+        base = self.get_parent().get_abspath()
         for segment in links_re.split(old_data):
             not_uri = (not_uri + 1) % 3
             if not not_uri:
@@ -257,7 +257,7 @@ class WikiPage(Text):
 
 
     def get_context_menus(self):
-        return self.parent.get_context_menus()
+        return self.get_parent().get_context_menus()
 
 
 
