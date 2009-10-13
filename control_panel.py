@@ -325,7 +325,7 @@ class CPEditLanguages(CPBaseView, STLForm):
         resource.set_property('website_languages', ws_languages + (code,))
         # Ok
         context.message = INFO(u'Language added.')
-
+        context.redirect()
 
 
 

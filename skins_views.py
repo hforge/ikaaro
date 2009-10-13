@@ -22,7 +22,7 @@
 from itools.gettext import get_domain
 from itools.i18n import get_language_name
 from itools.stl import STLTemplate
-from itools.uri import decode_query
+from itools.uri import decode_query, get_reference
 
 # Import from ikaaro
 from boot import ui
@@ -68,15 +68,15 @@ class LanguagesTemplate(SkinTemplate):
 
         languages = []
         gettext = get_domain('itools').gettext
+        uri = get_reference(context.uri)
         for language in ws_languages:
-            href = context.uri.replace(language=language)
             selected = (language == current_language)
             css_class = 'selected' if selected else None
             value = get_language_name(language)
             languages.append({
                 'name': language,
                 'value': gettext(value, language),
-                'href': href,
+                'href': uri.replace(language=language),
                 'selected': selected,
                 'class': css_class})
 
