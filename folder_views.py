@@ -169,7 +169,7 @@ class Folder_Rename(STLForm):
         paths.sort()
         paths.reverse()
         # Clean the copy cookie if needed
-        cut, cp_paths = context.get_cookie('ikaaro_cp', type=CopyCookie)
+        cut, cp_paths = context.get_cookie('ikaaro_cp', datatype=CopyCookie)
 
         renamed = []
         referenced = []
@@ -450,12 +450,13 @@ class Folder_BrowseContent(SearchForm):
             message = messages.MSG_NONE_SELECTED
             return
 
-        abspath = resource.get_abspath()
-        cp = (False, [ str(abspath.resolve2(x)) for x in names ])
+        path = resource.path
+        cp = (False, [ str(path.resolve2(x)) for x in names ])
         cp = CopyCookie.encode(cp)
         context.set_cookie('ikaaro_cp', cp, path='/')
         # Ok
         context.message = messages.MSG_COPIED
+        context.redirect()
 
 
     def action_cut(self, resource, context, form):
@@ -482,7 +483,7 @@ class Folder_BrowseContent(SearchForm):
     action_paste_schema = {}
     def action_paste(self, resource, context, form):
         # Check there is something to paste
-        cut, paths = context.get_cookie('ikaaro_cp', type=CopyCookie)
+        cut, paths = context.get_cookie('ikaaro_cp', datatype=CopyCookie)
         if len(paths) == 0:
             context.message = messages.MSG_NO_PASTE
             return
@@ -498,12 +499,13 @@ class Folder_BrowseContent(SearchForm):
                 continue
 
             # If cut&paste in the same place, do nothing
+            name = source.get_name()
             if cut is True:
                 if target == source.parent:
-                    pasted.append(source.name)
+                    pasted.append(name)
                     continue
 
-            name = generate_name(source.name, target.get_names(), '_copy_')
+            name = generate_name(name, target.get_names(), '_copy_')
             if cut is True:
                 # Cut&Paste
                 try:
@@ -543,6 +545,7 @@ class Folder_BrowseContent(SearchForm):
             message.append(msg)
 
         context.message = message
+        context.redirect()
 
 
     def _action_workflow(self, resource, context, form, transition, statename,

@@ -81,7 +81,7 @@ class Multilingual(DBResource):
 
 
     def rename_handlers(self, new_name):
-        old_name = self.name
+        old_name = self.get_name()
         extension = self.class_handler.class_extension
         langs = self.get_site_root().get_value('website_languages')
 

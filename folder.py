@@ -169,7 +169,7 @@ class Folder(DBResource):
 
     def _resolve_source_target(self, source_path, target_path):
         # Find out the source and target absolute URIs
-        root_uri = self.get_root().handler.uri
+        root_uri = self.context.get_resource('/').handler.uri
         folder_uri = self.handler.uri
         if source_path[0] == '/':
             source_uri = resolve_uri2(root_uri, source_path[1:])
@@ -203,7 +203,7 @@ class Folder(DBResource):
 
         # Get the source and target resources
         source = self.get_resource(source_path)
-        parent_path = self.get_abspath().resolve2(target_path)[:-1]
+        parent_path = self.path.resolve2(target_path)[:-1]
         target_parent = self.get_resource(parent_path)
 
         # Check compatibility

@@ -95,7 +95,7 @@ class PasteButton(Button):
         if len(paths) == 0:
             return False
         ac = resource.get_access_control()
-        return ac.is_access_allowed(context.user, resource, cls)
+        return ac.is_access_allowed(context, resource, cls)
 
 
 
