@@ -455,12 +455,13 @@ class Folder_BrowseContent(SearchForm):
             message = messages.MSG_NONE_SELECTED
             return
 
-        abspath = resource.get_abspath()
-        cp = (False, [ str(abspath.resolve2(x)) for x in names ])
+        path = resource.path
+        cp = (False, [ str(path.resolve2(x)) for x in names ])
         cp = CopyCookie.encode(cp)
         context.set_cookie('ikaaro_cp', cp, path='/')
         # Ok
         context.message = messages.MSG_COPIED
+        context.redirect()
 
 
     def action_cut(self, resource, context, form):
@@ -503,12 +504,13 @@ class Folder_BrowseContent(SearchForm):
                 continue
 
             # If cut&paste in the same place, do nothing
+            name = source.get_name()
             if cut is True:
                 if target == source.parent:
-                    pasted.append(source.name)
+                    pasted.append(name)
                     continue
 
-            name = generate_name(source.name, target.get_names(), '_copy_')
+            name = generate_name(name, target.get_names(), '_copy_')
             if cut is True:
                 # Cut&Paste
                 try:
@@ -548,6 +550,7 @@ class Folder_BrowseContent(SearchForm):
             message.append(msg)
 
         context.message = message
+        context.redirect()
 
 
     def _action_workflow(self, resource, context, form, transition, statename,
