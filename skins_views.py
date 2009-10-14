@@ -19,7 +19,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import lazy
+from itools.core import lazy_classmethod
 from itools.gettext import get_domain
 from itools.i18n import get_language_name
 from itools.stl import STLTemplate
@@ -34,15 +34,12 @@ from utils import reduce_string
 class SkinTemplate(STLTemplate):
     template = None
 
-    def __init__(self, context):
-        self.context = context
-
-
+    @classmethod
     def get_template(self):
         template = self.template
         if template is None:
             msg = "%s is missing the 'template' variable"
-            raise NotImplementedError, msg % repr(self.__class__)
+            raise NotImplementedError, msg % repr(self)
         return ui.get_template(template)
 
 
@@ -55,7 +52,7 @@ class LanguagesTemplate(SkinTemplate):
     template = 'aruni/languages.xml'
 
 
-    @lazy
+    @lazy_classmethod
     def languages(self):
         context = self.context
         # Website languages
@@ -93,7 +90,7 @@ class LocationTemplate(SkinTemplate):
     template = 'aruni/location.xml'
 
 
-    @lazy
+    @lazy_classmethod
     def breadcrumb(self):
         """Return a list of dicts [{name, url}...]
         """
@@ -126,7 +123,7 @@ class LocationTemplate(SkinTemplate):
         return breadcrumb
 
 
-    @lazy
+    @lazy_classmethod
     def tabs(self):
         """Return tabs and subtabs as a dict {tabs, subtabs} of list of dicts
         [{name, label, active, style}...].
