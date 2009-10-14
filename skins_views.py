@@ -19,6 +19,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
+from itools.core import lazy
 from itools.gettext import get_domain
 from itools.i18n import get_language_name
 from itools.stl import STLTemplate
@@ -54,13 +55,14 @@ class LanguagesTemplate(SkinTemplate):
     template = 'aruni/languages.xml'
 
 
-    def get_namespace(self):
+    @lazy
+    def languages(self):
         context = self.context
         # Website languages
         root = context.get_resource('/')
         ws_languages = root.get_value('website_languages')
         if len(ws_languages) == 1:
-            return {'languages': []}
+            return []
 
         # Select language
         accept = context.accept_language
@@ -80,7 +82,7 @@ class LanguagesTemplate(SkinTemplate):
                 'selected': selected,
                 'class': css_class})
 
-        return {'languages': languages}
+        return languages
 
 
 ###########################################################################
@@ -91,9 +93,11 @@ class LocationTemplate(SkinTemplate):
     template = 'aruni/location.xml'
 
 
-    def get_breadcrumb(self, context):
+    @lazy
+    def breadcrumb(self):
         """Return a list of dicts [{name, url}...]
         """
+        context = self.context
         root = context.get_resource('/')
 
         # Initialize the breadcrumb with the root resource
@@ -122,15 +126,14 @@ class LocationTemplate(SkinTemplate):
         return breadcrumb
 
 
-    def get_tabs(self, context):
+    @lazy
+    def tabs(self):
         """Return tabs and subtabs as a dict {tabs, subtabs} of list of dicts
         [{name, label, active, style}...].
         """
-        # Get request, path, etc...
+        # Get resource & access control
+        context = self.context
         here = context.resource
-
-        # Get access control
-        user = context.user
         ac = here.get_access_control()
 
         # Tabs
@@ -160,9 +163,3 @@ class LocationTemplate(SkinTemplate):
 
         return tabs
 
-
-    def get_namespace(self):
-        context = self.context
-        return {
-            'breadcrumb': self.get_breadcrumb(context),
-            'tabs': self.get_tabs(context)}
