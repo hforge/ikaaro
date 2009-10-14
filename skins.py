@@ -423,8 +423,8 @@ class Skin(UIFolder):
             # User
             'user': self.get_user_menu(context),
             # Location & Views
-            'location': self.location_template(context),
-            'languages': self.languages_template(context),
+            'location': self.location_template(context=context),
+            'languages': self.languages_template(context=context),
             # Body
             'page_title': self._get_page_title(context),
             'message': self.get_messages(context),

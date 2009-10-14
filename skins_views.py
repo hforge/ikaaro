@@ -19,6 +19,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
+from itools.core import thingy_lazy_property
 from itools.gettext import get_domain
 from itools.i18n import get_language_name
 from itools.stl import STLTemplate
@@ -32,15 +33,11 @@ from utils import reduce_string
 class SkinTemplate(STLTemplate):
     template = None
 
-    def __init__(self, context):
-        self.context = context
-
-
     def get_template(self):
         template = self.template
         if template is None:
             msg = "%s is missing the 'template' variable"
-            raise NotImplementedError, msg % repr(self.__class__)
+            raise NotImplementedError, msg % repr(self)
         return self.context.root.get_resource(template)
 
 
@@ -53,13 +50,14 @@ class LanguagesTemplate(SkinTemplate):
     template = '/ui/aruni/languages.xml'
 
 
-    def get_namespace(self):
+    @thingy_lazy_property
+    def languages(self):
         context = self.context
         # Website languages
         site_root = context.site_root
         ws_languages = site_root.get_property('website_languages')
         if len(ws_languages) == 1:
-            return {'languages': []}
+            return []
 
         # Select language
         accept = context.accept_language
@@ -79,7 +77,7 @@ class LanguagesTemplate(SkinTemplate):
                 'selected': selected,
                 'class': css_class})
 
-        return {'languages': languages}
+        return languages
 
 
 ###########################################################################
@@ -89,10 +87,11 @@ class LocationTemplate(SkinTemplate):
 
     template = '/ui/aruni/location.xml'
 
-
-    def get_breadcrumb(self, context):
+    @thingy_lazy_property
+    def breadcrumb(self):
         """Return a list of dicts [{name, url}...]
         """
+        context = self.context
         site_root = context.site_root
 
         # Initialize the breadcrumb with the root resource
@@ -122,15 +121,14 @@ class LocationTemplate(SkinTemplate):
         return breadcrumb
 
 
-    def get_tabs(self, context):
+    @thingy_lazy_property
+    def tabs(self):
         """Return tabs and subtabs as a dict {tabs, subtabs} of list of dicts
         [{name, label, active, style}...].
         """
-        # Get request, path, etc...
+        # Get resource & access control
+        context = self.context
         here = context.resource
-
-        # Get access control
-        user = context.user
         ac = here.get_access_control()
 
         # Tabs
@@ -160,9 +158,3 @@ class LocationTemplate(SkinTemplate):
 
         return tabs
 
-
-    def get_namespace(self):
-        context = self.context
-        return {
-            'breadcrumb': self.get_breadcrumb(context),
-            'tabs': self.get_tabs(context)}
