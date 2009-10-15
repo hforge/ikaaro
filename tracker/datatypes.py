@@ -42,7 +42,6 @@ class TrackerList(Enumerate):
         return str(value)
 
 
-    @classmethod
     def get_options(cls):
         elements = cls.tracker.get_resource(cls.element).handler
         return [{'name': record.id,
@@ -67,7 +66,6 @@ class ProductInfoList(Enumerate):
         return str(value)
 
 
-    @classmethod
     def get_options(cls):
         tracker = cls.tracker
         products = tracker.get_resource('product').handler
@@ -90,7 +88,6 @@ class ProductInfoList(Enumerate):
         return options
 
 
-    @classmethod
     def is_valid(cls, name):
         # Get the product number
         product =  get_context().get_form_value('product')
@@ -112,7 +109,6 @@ class UsersList(Enumerate):
 
     excluded_roles = None
 
-    @classmethod
     def get_options(cls):
         site_root = cls.tracker.get_site_root()
         # Members

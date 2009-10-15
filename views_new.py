@@ -43,7 +43,6 @@ from views import ContextMenu
 ###########################################################################
 class TodayDataType(Date):
 
-    @classmethod
     def get_default(cls):
         return date.today()
 
@@ -186,7 +185,6 @@ class NewInstanceByDate(AutoForm):
 
 class PathEnumerate(Enumerate):
 
-    @classmethod
     def get_options(cls):
         # Search
         brains = get_context().search(is_folder=True)
@@ -202,7 +200,6 @@ class PathEnumerate(Enumerate):
         return options
 
 
-    @classmethod
     def get_default(cls):
         resource = cls.resource
         default = resource.get_abspath()

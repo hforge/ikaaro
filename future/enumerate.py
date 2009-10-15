@@ -47,7 +47,6 @@ class TableEnumerate(Enumerate):
     table_path = 'path/relative/to/site_root'
 
 
-    @classmethod
     def get_options(cls):
         context = get_context()
         here = context.resource
