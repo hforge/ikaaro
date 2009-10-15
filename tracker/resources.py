@@ -154,7 +154,6 @@ class Resource(Record):
 
 class ListOfUsers(Enumerate):
 
-    @classmethod
     def get_options(cls):
         tracker = get_context().resource.parent
         return UsersList(tracker=tracker,

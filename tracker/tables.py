@@ -35,7 +35,6 @@ from ikaaro.table_views import OrderedTable_View, Table_EditRecord
 
 class ProductsEnumerate(Enumerate):
 
-    @classmethod
     def get_options(cls):
         products = cls.products.handler
         return [
