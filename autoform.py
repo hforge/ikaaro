@@ -48,14 +48,13 @@ class XHTMLBody(DataType):
     """
     sanitize_html = True
 
-
-    @classmethod
     def decode(cls, data):
         events = XMLParser(data, namespaces=xhtml_namespaces,
                            doctype=xhtml_doctype)
         if cls.sanitize_html is True:
             events = sanitize_stream(events)
         return list(events)
+
 
     @staticmethod
     def encode(value):

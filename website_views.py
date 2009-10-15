@@ -155,7 +155,6 @@ class RegisterForm(AutoForm):
 
 class ContactOptions(Enumerate):
 
-    @classmethod
     def get_options(cls):
         resource = cls.resource
         users = resource.get_resource('/users')
