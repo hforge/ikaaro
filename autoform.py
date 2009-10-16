@@ -24,7 +24,7 @@ from itools.datatypes import DataType, Date, Enumerate, Boolean
 from itools.gettext import MSG
 from itools.html import stream_to_str_as_xhtml, stream_to_str_as_html
 from itools.html import xhtml_doctype, sanitize_stream
-from itools.stl import stl
+from itools.stl import stl, STLTemplate
 from itools.web import STLForm, get_context
 from itools.xml import XMLParser
 
@@ -97,7 +97,7 @@ def get_default_widget(datatype):
 
 
 
-class Widget(object):
+class Widget(STLTemplate):
 
     size = None
     tip = None
@@ -109,9 +109,10 @@ class Widget(object):
       size="${size}" />""")
 
 
-    def __init__(self, name, **kw):
-        self.name = name
-        self.id = name.replace('_', '-')
+    def __init__(self, name=None, **kw):
+        if name:
+            self.name = name
+        self.id = self.name.replace('_', '-')
         for key in kw:
             setattr(self, key, kw[key])
 
@@ -120,24 +121,14 @@ class Widget(object):
         return None
 
 
-    def get_template(self, datatype, value):
+    def get_template(self):
         return self.template
 
 
-    def get_namespace(self, datatype, value):
-        return {
-            'type': self.type,
-            'name': self.name,
-            'id': self.id,
-            'value': value,
-            'size': self.size}
-
-
-    def to_html(self, datatype, value):
-        template = self.get_template(datatype, value)
-        namespace = self.get_namespace(datatype, value)
+    def render(self):
+        template = self.get_template()
         prefix = self.get_prefix()
-        return stl(events=template, namespace=namespace, prefix=prefix)
+        return stl(events=template, namespace=self, prefix=prefix)
 
 
 
@@ -487,7 +478,7 @@ class RTEWidget(Widget):
         return prefix
 
 
-    def get_template(self, datatype, value):
+    def get_template(self):
         root = get_context().root
         handler = root.get_resource(self.template)
         return handler.events
@@ -595,7 +586,8 @@ class AutoForm(STLForm):
             widget_namespace['is_date'] = issubclass(datatype, Date)
             widget_namespace['tip'] = widget.tip
             widget_namespace['suffix'] = widget.suffix
-            widget_namespace['widget'] = widget.to_html(datatype, value)
+            widget = widget(datatype=datatype, value=value)
+            widget_namespace['widget'] = widget.render()
             ns_widgets.append(widget_namespace)
 
         # Build namespace
