@@ -29,7 +29,7 @@ from itools.http import get_context
 from itools.web import FormError
 
 # Import from ikaaro
-from autoform import AutoForm, DateWidget, RadioWidget, TextWidget
+from autoform import AutoForm, DateWidget, RadioWidget
 from autoform import name_widget, title_widget
 import messages
 from registry import get_resource_class, get_document_types
