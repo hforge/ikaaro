@@ -24,7 +24,7 @@ except ImportError:
     PILImage = None
 
 # Import from itools
-from itools.core import merge_dicts
+from itools.core import merge_dicts, thingy_lazy_property
 from itools.datatypes import Boolean, Integer, String, Unicode
 from itools.gettext import MSG
 from itools.handlers import checkid
@@ -85,11 +85,12 @@ class Folder_View(BaseView):
     title = MSG(u'View')
 
 
-    def http_get(self, resource, context):
+    def http_get(self):
         from webpage import WebPage
 
-        index = resource.get_resource('index', soft=True)
+        index = self.resource.get_resource('index', soft=True)
         if not isinstance(index, WebPage):
+            context = self.context
             context.message = ERROR(
                 u'There is not an "index" web page. Could not render this '
                 u'view.')
@@ -233,9 +234,6 @@ class Folder_BrowseContent(SearchForm):
     ids.datatype = String(multiple=True)
     sort_by = SearchForm.sort_by(default='mtime')
     reverse = SearchForm.reverse(default=True)
-
-    search_field = ViewField(source='query', datatype=String)
-    search_term = ViewField(source='query', datatype=Unicode)
     search_subfolders = ViewField(source='query')
     search_subfolders.datatype = Boolean(default=False)
 
@@ -252,25 +250,20 @@ class Folder_BrowseContent(SearchForm):
         ('workflow_state', MSG(u'State'))]
 
 
-    def get_search_namespace(self, resource, context):
-        namespace = SearchForm.get_search_namespace(self, resource, context)
-        search_subfolders = context.get_query_value('search_subfolders')
-        namespace['search_subfolders'] = search_subfolders
-        return namespace
-
-
-    def get_items(self, resource, context, *args):
-        get_input_value = context.get_input_value
+    @thingy_lazy_property
+    def items(self):
+        resource = self.resource
+        context = self.context
 
         # The query
-        args = list(args)
-        search_term = get_input_value('search_term').strip()
+        args = []
+        search_term = self.search_term.value
         if search_term:
-            field = get_input_value('search_field')
+            field = self.search_field.value
             args.append(PhraseQuery(field, search_term))
 
         # Case 1: search subfolders
-        search_subfolders = get_input_value('search_subfolders')
+        search_subfolders = self.search_subfolders.value
         if search_subfolders is True:
             results = context.get_root_search(resource.path, False)
             if len(args) == 0:
@@ -286,16 +279,18 @@ class Folder_BrowseContent(SearchForm):
         path = str(path)
         parent_query = PhraseQuery('parent_path', path)
         query = AndQuery(parent_query, *args) if args else parent_query
-        return context.search(query)
+        items = context.search(query)
+        items = items.get_documents()
+        return list(items)
 
 
-    def sort_and_batch(self, resource, context, results):
-        start = context.get_input_value('batch_start')
-        size = context.get_input_value('batch_size')
-        sort_by = context.get_input_value('sort_by')
-        reverse = context.get_input_value('reverse')
-        resources = results.get_documents(sort_by=sort_by, reverse=reverse,
-                                          start=start, size=size)
+    def sort_and_batch(self):
+        start = self.batch_start.value
+        size = self.batch_size.value
+        sort_by = self.sort_by.value
+        reverse = self.reverse.value
+        resources = self.items.get_documents(sort_by=sort_by, reverse=reverse,
+                                             start=start, size=size)
 
         # FIXME This must be done in the catalog
         if sort_by == 'title':
@@ -304,7 +299,7 @@ class Folder_BrowseContent(SearchForm):
                 resources.reverse()
 
         # Access Control (FIXME this should be done before batch)
-        user = context.user
+        user = self.context.user
         allowed_items = []
         for resource in resources:
             ac = resource.get_access_control()
@@ -314,7 +309,7 @@ class Folder_BrowseContent(SearchForm):
         return allowed_items
 
 
-    def get_item_value(self, resource, context, item, column):
+    def get_item_value(self, item, column):
         if column == 'checkbox':
             # checkbox
             parent = item.get_parent()
@@ -322,7 +317,7 @@ class Folder_BrowseContent(SearchForm):
                 return None
             if item.get_name() in parent.__fixed_handlers__:
                 return None
-            id = resource.path.get_pathto(item.path)
+            id = self.resource.path.get_pathto(item.path)
             id = str(id)
             return id, False
         elif column == 'icon':
@@ -334,7 +329,7 @@ class Folder_BrowseContent(SearchForm):
             return path_to_icon
         elif column == 'name':
             # Name
-            id = resource.path.get_pathto(item.path)
+            id = self.resource.path.get_pathto(item.path)
             id = str(id)
             view = item.get_view(None)
             if view is None:
@@ -349,17 +344,17 @@ class Folder_BrowseContent(SearchForm):
             return item.class_title.gettext()
         elif column == 'mtime':
             # Last Modified
-            accept = context.accept_language
+            accept = self.context.accept_language
             return format_datetime(item.get_value('mtime'), accept=accept)
         elif column == 'last_author':
             # Last author
-            return context.get_user_title(item.get_value('last_author'))
+            return self.context.get_user_title(item.get_value('last_author'))
         elif column == 'size':
             # Size
             return item.get_human_size()
         elif column == 'workflow_state':
             # The workflow state
-            return get_workflow_preview(item, context)
+            return get_workflow_preview(item, self.context)
 
 
     table_actions = [
@@ -609,19 +604,20 @@ class Folder_PreviewContent(Folder_BrowseContent):
                            height=String)
 
 
-    def get_items(self, resource, context):
+    @thingy_lazy_property
+    def items(self):
         # Show only images
         query = OrQuery(PhraseQuery('is_image', True),
                         PhraseQuery('format', 'folder'))
         return Folder_BrowseContent.get_items(self, resource, context, query)
 
 
-    def get_table_head(self, resource, context, items, actions=None):
+    def get_table_head(self, items, actions=None):
         # Get from the query
         sort_by = context.get_query_value('sort_by')
         reverse = context.get_query_value('reverse')
 
-        columns = self._get_table_columns(resource, context)
+        columns = self._get_table_columns()
         columns_ns = []
         uri = get_reference(context.uri)
         for name, title, sortable in columns:
@@ -687,7 +683,7 @@ class Folder_PreviewContent(Folder_BrowseContent):
         table_head = self.get_table_head(resource, context, items, actions)
 
         # (3) Table Body: rows
-        columns = self._get_table_columns(resource, context)
+        columns = self._get_table_columns()
         rows = []
         for item in items:
             row = {'checkbox': False,
@@ -757,7 +753,8 @@ class Folder_Orphans(Folder_BrowseContent):
     description = MSG(u"Show resources not linked from anywhere.")
 
 
-    def get_items(self, resource, context):
+    @thingy_lazy_property
+    def items(self):
         # Make the base search
         items = Folder_BrowseContent.get_items(self, resource, context)
 
@@ -787,7 +784,7 @@ class Folder_Thumbnail(BaseView):
 
     default_icon = 'gallery/folder.png'
 
-    def http_get(self, resource, context):
+    def http_get(self):
         from file import Image
 
         width = context.get_query_value('width', type=Integer, default=48)
@@ -833,7 +830,7 @@ class GoToSpecificDocument(BaseView):
         return self.specific_document
 
 
-    def http_get(self, resource, context):
+    def http_get(self):
         specific_document = self.get_specific_document(resource, context)
         goto = '%s/%s' % (context.get_link(resource), specific_document)
         goto = get_reference(goto)

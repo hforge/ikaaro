@@ -24,7 +24,7 @@ from itools.datatypes import Boolean, Email, Tokens, Unicode, String
 from itools.gettext import MSG
 from itools.http import get_context
 from itools.web import AccessControl as BaseAccessControl
-from itools.web import INFO, ERROR, STLForm
+from itools.web import INFO, ERROR, STLForm, ViewField
 from itools.xapian import AndQuery, OrQuery, PhraseQuery, StartQuery
 
 # Import from ikaaro
@@ -62,16 +62,11 @@ class RoleAware_BrowseUsers(SearchForm):
     icon = 'userfolder.png'
     description = MSG(u'See the users and their roles.')
 
-    schema = {'ids': String(multiple=True, mandatory=True)}
+    ids = ViewField(required=True)
+    ids.datatype = String(multiple=True)
 
-    def get_query_schema(self):
-        return merge_dicts(SearchForm.get_query_schema(self),
-                           sort_by=String(default='login_name'))
-
-
-    search_schema = {
-        'search_field': String,
-        'search_term': Unicode}
+    sort_by = SearchForm.sort_by()
+    sort_by.datatype = String(default='login_name')
 
     search_fields = [
         ('', MSG(u'All Fields')),

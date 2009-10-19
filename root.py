@@ -42,7 +42,7 @@ class CtrlView(BaseView):
     query_schema = {'name': String}
 
 
-    def http_get(self, resource, context):
+    def http_get(self):
         context.content_type = 'text/plain'
         name = context.query['name']
 

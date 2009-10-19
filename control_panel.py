@@ -190,17 +190,17 @@ class CPEditContactOptions(DBResource_Edit):
     emails_signature.widget = Textarea
 
 
-    def get_field(self, name, resource, context):
+    def get_field(self, name):
         if name == 'emails_from_addr':
-            datatype = ContactsOptions(resource=resource)
+            datatype = ContactsOptions(resource=self.resource)
             title = MSG(u'Emails from addr')
             return SelectField(name, datatype=datatype, title=title)
         elif name == 'contacts':
-            datatype = ContactsOptions(multiple=True, resource=resource)
+            datatype = ContactsOptions(multiple=True, resource=self.resource)
             title = MSG(u'Select the contact accounts')
             return SelectField(name, datatype=datatype, title=title)
         else:
-            return DBResource_Edit.get_field(self, name, resource, context)
+            return DBResource_Edit.get_field.im_func(self, name)
 
 
     field_names = ['emails_from_addr', 'emails_signature', 'contacts']

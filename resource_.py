@@ -623,14 +623,14 @@ class DBResource(CatalogAware, IResource):
 
 
     # Views
-    new_instance = NewInstance()
-    login = LoginView()
-    logout = LogoutView()
-    edit = DBResource_Edit()
-    add_image = DBResource_AddImage()
-    add_link = DBResource_AddLink()
-    add_media = DBResource_AddMedia()
-    commit_log = DBResource_CommitLog()
-    changes = DBResource_Changes()
-    backlinks = DBResource_Backlinks()
+    new_instance = NewInstance
+    login = LoginView
+    logout = LogoutView
+    edit = DBResource_Edit
+    add_image = DBResource_AddImage
+    add_link = DBResource_AddLink
+    add_media = DBResource_AddMedia
+    commit_log = DBResource_CommitLog
+    changes = DBResource_Changes
+    backlinks = DBResource_Backlinks
 

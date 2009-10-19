@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import merge_dicts
+from itools.core import thingy_lazy_property
 from itools.datatypes import Boolean, Integer, String, Unicode
 from itools.gettext import MSG
 from itools.stl import stl
@@ -148,36 +148,32 @@ class BrowseForm(STLForm):
                                   + ['batch_start'])
 
 
-    def get_namespace(self, resource, context):
-        batch = None
-        table = None
-        # Batch
-        items = self.get_items(resource, context)
-        if self.batch_template is not None:
-            template = ui.get_template(self.batch_template)
-            namespace = self.get_batch_namespace(resource, context, items)
-            batch = stl(template, namespace)
+    def batch(self):
+        if self.batch_template is None:
+            return None
 
-        # Content
-        items = self.sort_and_batch(resource, context, items)
-        if self.table_template is not None:
-            template = ui.get_template(self.table_template)
-            namespace = self.get_table_namespace(resource, context, items)
-            table = stl(template, namespace)
+        template = ui.get_template(self.batch_template)
+        return stl(template, self)
 
-        return {'batch': batch, 'table': table}
+
+    def table(self):
+        if self.table_template is None:
+            return None
+
+        template = ui.get_template(self.table_template)
+        return stl(template, self)
 
 
     #######################################################################
     # Private API (to override)
-    def get_table_columns(self, resource, context):
+    def get_table_columns(self):
         return self.table_columns
 
 
-    def _get_table_columns(self, resource, context):
+    def _get_table_columns(self):
         """ Always return a tuple of 3 elements. """
         table_columns = []
-        for column in self.get_table_columns(resource, context):
+        for column in self.get_table_columns():
             if len(column) == 2:
                 name, title = column
                 column = (name, title, True)
@@ -185,83 +181,87 @@ class BrowseForm(STLForm):
         return table_columns
 
 
-    def get_items(self, resource, context):
+    @thingy_lazy_property
+    def items(self):
         name = 'get_items'
         raise NotImplementedError, "the '%s' method is not defined" % name
 
 
-    def sort_and_batch(self, resource, context, items):
+    def sort_and_batch(self):
         name = 'sort_and_batch'
         raise NotImplementedError, "the '%s' method is not defined" % name
 
 
-    def get_item_value(self, resource, context, item, column):
+    def get_item_value(self, item, column):
         name = 'get_item_value'
         raise NotImplementedError, "the '%s' method is not defined" % name
 
 
-    def get_table_actions(self, resource, context):
+    def get_table_actions(self):
         return self.table_actions
 
 
     #######################################################################
     # Batch
-    def get_batch_namespace(self, resource, context, items):
-        namespace = {}
-        namespace['control'] = False
+    def batch(self):
+        control = False
 
         # Message (singular or plural)
-        total = len(items)
+        total = len(self.items)
         if total == 1:
-            namespace['msg'] = self.batch_msg1.gettext()
+            msg = self.batch_msg1.gettext()
         else:
-            namespace['msg'] = self.batch_msg2.gettext(n=total)
+            msg = self.batch_msg2.gettext(n=total)
 
         # Start & End
-        start = context.get_input_value('batch_start')
-        size = context.get_input_value('batch_size')
+        start = self.batch_start.value
+        size = self.batch_size.value
         # If batch_size == 0 => All
         if size == 0:
             size = total
         end = min(start + size, total)
-        namespace['start'] = start + 1
-        namespace['end'] = end
 
         # Previous
-        uri = get_reference(context.uri)
+        uri = get_reference(self.context.uri)
         if start > 0:
             previous = max(start - size, 0)
             previous = str(previous)
-            namespace['previous'] = uri.replace(batch_start=previous)
-            namespace['control'] = True
+            previous = uri.replace(batch_start=previous)
+            control = True
         else:
-            namespace['previous'] = None
+            previous = None
 
         # Next
         if end < total:
             next = str(end)
-            namespace['next'] = uri.replace(batch_start=next)
-            namespace['control'] = True
+            next = uri.replace(batch_start=next)
+            control = True
         else:
-            namespace['next'] = None
+            next = None
 
         # Ok
-        return namespace
+        return {
+            'msg': msg,
+            'control': control,
+            'start': start + 1,
+            'end': end,
+            'previous': previous,
+            'next': next}
 
 
     #######################################################################
     # Table
-    def get_table_head(self, resource, context, items, actions=None):
+    def columns(self):
         # Get from the query
-        sort_by = context.get_input_value('sort_by')
-        reverse = context.get_input_value('reverse')
+        sort_by = self.sort_by.value
+        reverse = self.reverse.value
 
-        columns = self._get_table_columns(resource, context)
+        columns = self._get_table_columns()
         columns_ns = []
         for name, title, sortable in columns:
             if name == 'checkbox':
                 # Type: checkbox
-                if self.external_form or actions:
+                if self.external_form or self.actions:
                     columns_ns.append({'is_checkbox': True})
             elif title is None or not sortable:
                 # Type: nothing or not sortable
@@ -272,7 +272,7 @@ class BrowseForm(STLForm):
                     'sortable': False})
             else:
                 # Type: normal
-                uri = get_reference(context.uri)
+                uri = get_reference(self.context.uri)
                 base_href = uri.replace(sort_by=name)
                 if name == sort_by:
                     sort_up_active = reverse is False
@@ -292,13 +292,11 @@ class BrowseForm(STLForm):
         return columns_ns
 
 
-    def get_table_namespace(self, resource, context, items):
-        ac = resource.get_access_control()
-
-        # (1) Actions (submit buttons)
+    @thingy_lazy_property
+    def actions(self):
         actions = []
-        for button in self.get_table_actions(resource, context):
-            if button.show(resource, context, items) is False:
+        for button in self.get_table_actions():
+            if button.show(self.resource, self.context, self.items) is False:
                 continue
             if button.confirm:
                 confirm = button.confirm.gettext().encode('utf_8')
@@ -310,12 +308,15 @@ class BrowseForm(STLForm):
                  'title': button.title,
                  'class': button.css,
                  'onclick': onclick})
+        return actions
 
-        # (2) Table Head: columns
-        table_head = self.get_table_head(resource, context, items, actions)
+
+    def rows(self):
+        items = self.sort_and_batch()
+        ac = resource.get_access_control()
 
         # (3) Table Body: rows
-        columns = self.get_table_columns(resource, context)
+        columns = self.get_table_columns()
         rows = []
         for item in items:
             row_columns = []
@@ -326,7 +327,7 @@ class BrowseForm(STLForm):
                     if not self.external_form and not actions:
                         continue
 
-                value = self.get_item_value(resource, context, item, column)
+                value = self.get_item_value(item, column)
                 column_ns = {
                     'is_checkbox': False,
                     'is_icon': False,
@@ -360,12 +361,7 @@ class BrowseForm(STLForm):
             rows.append({'columns': row_columns})
 
         # Ok
-        return {
-            'css': self.table_css,
-            'columns': table_head,
-            'rows': rows,
-            'actions': actions,
-        }
+        return rows
 
 
 
@@ -377,53 +373,30 @@ class SearchForm(BrowseForm):
     template = 'generic/search.xml'
 
     search_template = 'generic/browse_search.xml'
-    search_schema = {
-        'search_field': String,
-        'search_term': Unicode}
-    search_fields =  [
-        ('title', MSG(u'Title')),
-        ('text', MSG(u'Text')),
-        ('name', MSG(u'Name'))]
+
+    search_field = ViewField(source='query', datatype=String)
+    search_term = ViewField(source='query', datatype=Unicode)
+
+    def get_search_fields(self):
+        return  [
+            ('title', MSG(u'Title')),
+            ('text', MSG(u'Text')),
+            ('name', MSG(u'Name'))]
 
 
-    def get_query_schema(self):
-        return merge_dicts(BrowseForm.get_query_schema(self),
-                           self.search_schema)
-
-
-    def get_search_fields(self, resource, context):
-        return self.search_fields
-
-
-    def get_namespace(self, resource, context):
-        namespace = BrowseForm.get_namespace(self, resource, context)
-
-        # The Search Form
+    def search(self):
         if self.search_template is None:
-            namespace['search'] = None
-        else:
-            search_template = ui.get_template(self.search_template)
-            search_namespace = self.get_search_namespace(resource, context)
-            namespace['search'] = stl(search_template, search_namespace)
+            return None
 
-        return namespace
+        search_template = ui.get_template(self.search_template)
+        return stl(search_template, self)
 
 
-    #######################################################################
-    # The Search Form
-    def get_search_namespace(self, resource, context):
-        # Get values from the query
-        field = context.get_query_value('search_field')
-        term = context.get_query_value('search_term')
-
-        # Build the namespace
-        search_fields = [
+    def search_fields(self):
+        field = self.context.get_query_value('search_field')
+        return [
             {'name': name, 'title': title, 'selected': name == field}
-            for name, title in self.get_search_fields(resource, context) ]
-
-        return {
-            'search_term': term,
-            'search_fields': search_fields}
+            for name, title in self.get_search_fields() ]
 
 
 ###########################################################################

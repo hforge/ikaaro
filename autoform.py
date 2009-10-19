@@ -179,29 +179,35 @@ class AutoForm(STLForm):
     submit_value = MSG(u'Save')
     submit_class = 'button-ok'
     description = None
-    fields_order = []
 
 
-    def get_namespace(self, resource, context):
+    def title(self):
+        return self.get_view_title(self.context)
+
+
+    def fields(self):
+        resource = self.resource
+        context = self.context
+
         # Local Variables
-        field_names = self.get_field_names(resource, context)
+        field_names = self.get_field_names()
 
         # Build widgets namespace
         fields = []
         for name in field_names:
             field = context.input.get(name)
             if field is None:
-                field = self.get_field(name, resource, context)
+                field = self.get_field(name)
             field = field(resource=resource, context=context)
             fields.append(field.render())
 
-        # Build namespace
-        return {
-            'title': self.get_view_title(context),
-            'description': self.description,
-            'first_field': field_names[0],
-            'action': context.uri,
-            'submit_value': self.submit_value,
-            'submit_class': self.submit_class,
-            'fields': fields}
+        return fields
+
+
+    def first_field(self):
+        return self.field_names[0]
+
+
+    def form_action(self):
+        return self.context.uri
 

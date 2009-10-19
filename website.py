@@ -90,7 +90,8 @@ class WebSite(RoleAware, Folder, VirtualRoot):
     #######################################################################
     # HTTP stuff
     #######################################################################
-    skin = Skin()
+    def get_skin(self, body, context):
+        return Skin(body=body, context=context)
 
     # Views for error conditions
     http_forbidden = ForbiddenView()

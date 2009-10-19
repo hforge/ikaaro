@@ -6,7 +6,7 @@
 
 <form action="" method="post" name="browse_list" id="form-table"
   stl:omit-tag="not actions">
-<table id="browse-list" class="${css}">
+<table id="browse-list" class="${table_css}">
   <thead stl:if="columns">
     <tr>
       <stl:block stl:repeat="column columns">

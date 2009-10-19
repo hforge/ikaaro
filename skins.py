@@ -42,8 +42,8 @@ class Skin(STLForm):
     class_icon16 = 'icons/16x16/skin.png'
     class_icon48 = 'icons/48x48/skin.png'
     template = 'aruni/template.xhtml'
-    styles = ['/ui/aruni/style.css']
-    scripts = []
+    _styles = ['/ui/aruni/style.css']
+    _scripts = []
 
     # User Interface widgets
     languages_template = LanguagesTemplate
@@ -59,9 +59,10 @@ class Skin(STLForm):
     #######################################################################
     # HTML head
     #######################################################################
-    def get_template_title(self, context):
+    def title(self):
         """Return the title to give to the template document.
         """
+        context = self.context
         here = context.resource
         root = here.get_site_root()
         root_title = root.get_title()
@@ -84,15 +85,16 @@ class Skin(STLForm):
                                 view_title=view_title)
 
 
-    def get_styles(self, context):
+    def styles(self):
         # Generic
+        context = self.context
         styles = [
             '/ui/bo.css',
             '/ui/js_calendar/calendar-aruni.css',
             '/ui/table/style.css']
 
         # Skin
-        styles.extend(self.styles)
+        styles.extend(self._styles)
 
         # View
         get_styles = getattr(context.view, 'get_styles', None)
@@ -106,7 +108,8 @@ class Skin(STLForm):
         return styles
 
 
-    def get_scripts(self, context):
+    def scripts(self):
+        context = self.context
         scripts = [
             '/ui/jquery.js',
             '/ui/javascript.js']
@@ -124,7 +127,7 @@ class Skin(STLForm):
         scripts.append('/ui/js_calendar/lang/calendar-%s.js' % language)
 
         # This skin's JavaScript
-        scripts.extend(self.scripts)
+        scripts.extend(self._scripts)
 
         # View
         get_scripts = getattr(context.view, 'get_scripts', None)
@@ -138,11 +141,33 @@ class Skin(STLForm):
         return scripts
 
 
-    def get_meta_tags(self, context):
+    #######################################################################
+    # Main
+    #######################################################################
+    def page_language(self):
+        context = self.context
+        here = context.resource
+        languages = here.get_site_root().get_value('website_languages')
+        return context.accept_language.select_language(languages)
+
+
+    def base_uri(self):
+        context = self.context
+        # The base URI
+        path = context.path
+        if path and not context.view_name and not path.endswith_slash:
+            uri = get_reference(context.uri)
+            uri.path.endswith_slash = True
+            return str(uri)
+
+        return context.uri
+
+
+    def meta_tags(self):
         """Return a list of dict with meta tags to give to the template
         document.
         """
-        here = context.resource
+        here = self.context.resource
         root = here.get_site_root()
 
         meta = []
@@ -191,12 +216,28 @@ class Skin(STLForm):
         return meta
 
 
-    #######################################################################
-    # Authenticated user
-    #######################################################################
-    def get_user_menu(self, context):
+    def canonical_uri(self):
+        context = self.context
+        return context.view.get_canonical_uri(context)
+
+
+    def favicon(self):
+        # The favicon.ico
+        resource = self.context.get_resource('/favicon', soft=True)
+        if not resource:
+            return {'href': '/ui/favicon.ico', 'type': 'image/x-icon'}
+
+        return {'href': '/favicon/;download', 'type': resource.metadata.format}
+
+
+    def languages(self):
+        return self.languages_template(context=self.context)
+
+
+    def user(self):
         """Return a dict {user_icon, user, joinisopen}.
         """
+        context = self.context
         user = context.user
 
         if user is None:
@@ -210,10 +251,20 @@ class Skin(STLForm):
         return {'info': info, 'joinisopen': False}
 
 
-    #######################################################################
-    # Body
-    #######################################################################
-    def _get_page_title(self, context):
+    def login(self):
+        return Path('%s/;login' % self.context.resource.path)
+
+
+    def logout(self):
+        return Path('%s/;logout' % self.context.resource.path)
+
+
+    def location(self):
+        return self.location_template(context=self.context)
+
+
+    def page_title(self):
+        context = self.context
         resource = context.resource
         view = context.view
 
@@ -226,10 +277,11 @@ class Skin(STLForm):
         return get_page_title(resource, context)
 
 
-    def get_messages(self, context):
+    def message(self):
         """Return the message string of the last action.
         A list of messages is supported.
         """
+        context = self.context
         # Text
         if context.message is not None:
             messages = context.message
@@ -258,75 +310,20 @@ class Skin(STLForm):
         return stl(template, namespace)
 
 
-    def _get_context_menus(self, context):
+    def context_menus(self):
+        context = self.context
         resource = context.resource
+
         # Resource
-        for menu in resource.get_context_menus():
-            yield menu.render(resource, context)
+        menus = [
+            x.render(resource, context)
+            for x in resource.get_context_menus() ]
         # View
-        menus = getattr(context.view, 'context_menus', [])
-        for menu in menus:
+        for menu in getattr(context.view, 'context_menus', []):
             menu = menu(resource=resource, context=context)
-            yield menu.render()
+            menus.append(menu.render())
 
-
-    #######################################################################
-    # Main
-    #######################################################################
-    def build_namespace(self, context):
-        context_menus = self._get_context_menus(context)
-        context_menus = list(context_menus)
-
-        # The favicon.ico
-        resource = context.get_resource('/favicon', soft=True)
-        if resource:
-            favicon_href = '/favicon/;download'
-            favicon_type = resource.metadata.format
-        else:
-            favicon_href = '/ui/favicon.ico'
-            favicon_type = 'image/x-icon'
-
-        # The document language
-        here = context.resource
-        languages = here.get_site_root().get_value('website_languages')
-        language = context.accept_language.select_language(languages)
-
-        # The base URI
-        path = context.path
-        if path and not context.view_name and not path.endswith_slash:
-            uri = get_reference(context.uri)
-            uri.path.endswith_slash = True
-        else:
-            uri = context.uri
-
-        # The view
-        view = context.view
-
-        return {
-            # HTML head
-            'language': language,
-            'title': self.get_template_title(context),
-            'base_uri': str(uri),
-            'canonical_uri': view.get_canonical_uri(context),
-            'styles': self.get_styles(context),
-            'scripts': self.get_scripts(context),
-            'meta_tags': self.get_meta_tags(context),
-            # Log in/out
-            'login': Path('%s/;login' % here.path),
-            'logout': Path('%s/;logout' % here.path),
-            # User
-            'user': self.get_user_menu(context),
-            # Location & Views
-            'location': self.location_template(context=context),
-            'languages': self.languages_template(context=context),
-            # Body
-            'page_title': self._get_page_title(context),
-            'message': self.get_messages(context),
-            'context_menus': context_menus,
-            # favicon
-            'favicon_href': favicon_href,
-            'favicon_type': favicon_type,
-        }
+        return menus
 
 
     def find_language(self, context, min=Decimal('0.000001'),
@@ -334,7 +331,7 @@ class Skin(STLForm):
         # Set the language cookie if specified by the query.
         # NOTE We do it this way, instead of through a specific action, to
         # avoid redirections.
-        language = context.input['language']
+        language = self.language.value
         if language is not None:
             context.set_cookie('language', language)
 
@@ -356,26 +353,23 @@ class Skin(STLForm):
             accept.set(language, 2.5)
 
 
-    def render(self, content, context):
-        resource = context.resource
-        self.find_language(context)
-
-        # Build the namespace
-        namespace = self.build_namespace(context)
-        namespace['body'] = content
-
-        # Set the encoding to UTF-8
+    def render(self):
+        # Set Content-Type
+        context = self.context
         context.content_type = 'text/html; charset=UTF-8'
 
+        # XXX
+        self.find_language(context)
+
         # Load the template
-        handler = self.get_template(resource, context)
+        handler = self.get_template()
 
         # Build the output
         s = ['<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"\n'
              '  "http://www.w3.org/TR/html4/strict.dtd">']
         # STL
 #        prefix = handler.get_abspath()
-        data = stl(handler, namespace, mode='html')#prefix=prefix, mode='html')
+        data = stl(handler, self, mode='html')#prefix=prefix, mode='html')
         s.append(data)
 
         return ''.join(s)
