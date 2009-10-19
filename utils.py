@@ -23,12 +23,42 @@ from sys import platform
 
 # Import from itools
 from itools.http import get_context
+from itools.stl import STLTemplate
 from itools import vfs
 
 if platform[:3] == 'win':
     from utils_win import is_pid_running, kill
 else:
     from utils_unix import is_pid_running, kill
+
+
+###########################################################################
+# CMS Template
+###########################################################################
+
+class CMSTemplate(STLTemplate):
+
+    template = None
+
+    def get_template(self):
+        from boot import ui
+
+        # Get the template
+        template = self.template
+        if template is None:
+            msg = "%s is missing the 'template' variable"
+            raise NotImplementedError, msg % repr(self)
+
+        # Case 1: a ready made list of events
+        if type(template) is list:
+            return template
+
+        # Case 2: a path to a template in the filesystem (ui)
+        if type(template) is str:
+            return ui.get_template(template)
+
+        raise ValueError, 'bad value for the template attribute'
+
 
 
 ###########################################################################
