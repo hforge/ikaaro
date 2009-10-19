@@ -345,7 +345,9 @@ class UserFolder_BrowseContent(Folder_BrowseContent):
 
     access = 'is_admin'
 
-    search_fields = (Folder_BrowseContent.search_fields
-                     + [('username', MSG(u'Login')),
-                        ('lastname', MSG(u'Last Name')),
-                        ('firstname', MSG(u'First Name'))])
+    def get_search_fields(self):
+        return Folder_BrowseContent.get_search_fields() \
+            + [('username', MSG(u'Login')),
+               ('lastname', MSG(u'Last Name')),
+               ('firstname', MSG(u'First Name'))]
+

@@ -96,7 +96,7 @@ class Table_View(SearchForm):
         return items[start:]
 
 
-    def get_table_columns(self, resource, context):
+    def get_table_columns(self):
         columns = [
             ('checkbox', None),
             ('id', MSG(u'id'))]
@@ -322,10 +322,9 @@ class OrderedTable_View(Table_View):
         return Table_View.sort_and_batch(self, resource, context, items)
 
 
-    def get_table_columns(self, resource, context):
-        columns = Table_View.get_table_columns(self, resource, context)
+    def get_table_columns(self):
+        columns = Table_View.get_table_columns(self)
         columns.append(('order', MSG(u'Order')))
-
         return columns
 
 

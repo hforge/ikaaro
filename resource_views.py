@@ -32,8 +32,7 @@ from itools.i18n import get_language_name
 from itools.stl import stl
 from itools.uri import Path, get_reference, get_uri_path
 from itools.vfs import FileName
-from itools.web import BaseView, STLForm, INFO, ERROR
-from itools.web import FormError
+from itools.web import BaseView, STLForm, INFO, ERROR, FormError
 
 # Import from ikaaro
 from autoform import AutoForm
@@ -148,10 +147,9 @@ class DBResource_Backlinks(Folder_BrowseContent):
     icon = 'rename.png'
 
     search_template = None
-    search_schema = {}
 
-    def get_table_columns(self, resource, context):
-        cols = Folder_BrowseContent.get_table_columns(self, resource, context)
+    def get_table_columns(self):
+        cols = Folder_BrowseContent.get_table_columns(self)
         return [ col for col in cols if col[0] != 'checkbox' ]
 
 
@@ -190,7 +188,7 @@ class DBResource_AddBase(STLForm):
     folder_classes = ()
 
 
-    def http_get(self, resource, context):
+    def http_get(self):
         # FIXME Override STLForm.http_get to use 'ok' instead of 'ok_wrap'
         context.add_query_schema(self.get_query_schema())
         # STL
@@ -536,7 +534,7 @@ class LoginView(STLForm):
 
 
     def cook(self, resource, context, method):
-        STLForm.cook(self, resource, context, method)
+        STLForm.cook.im_func(self, resource, context, method)
 
         if method == 'get':
             return
@@ -544,27 +542,27 @@ class LoginView(STLForm):
         # Check the user exists
         user = self.get_user(context)
         if user is None:
-            field = context.input['username']
+            field = self.username
             error = MSG(u'The user "{username}" does not exist.')
             field.error = error.gettext(username=field.value)
             raise FormError
 
         # Check the password is right
-        field = context.input['password']
+        field = self.password
         if not user.authenticate(field.value):
             field.error = MSG(u'The password is wrong.')
             raise FormError
 
 
     def get_user(self, context):
-        username = context.input['username'].value
+        username = self.username.value
         return context.get_user_by_login(username)
 
 
     def action(self, resource, context):
         # Set cookie
         user = self.get_user(context)
-        password = context.get_input_value('password')
+        password = self.password.value
         user.set_auth_cookie(context, password)
 
         # Internal redirect
@@ -581,8 +579,9 @@ class LogoutView(BaseView):
     access = True
 
 
-    def http_get(self, resource, context):
+    def http_get(self):
         # Log-out
+        context = self.context
         context.del_cookie('__ac')
         context.user = None
 
