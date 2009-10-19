@@ -24,12 +24,13 @@ from itools.datatypes import DataType, Date, Enumerate, Boolean
 from itools.gettext import MSG
 from itools.html import stream_to_str_as_xhtml, stream_to_str_as_html
 from itools.html import xhtml_doctype, sanitize_stream
-from itools.stl import stl, STLTemplate
+from itools.stl import stl
 from itools.web import STLForm, get_context
 from itools.xml import XMLParser
 
 # Import from ikaaro
 from ikaaro.workflow import get_workflow_preview
+from utils import CMSTemplate
 
 
 
@@ -97,7 +98,7 @@ def get_default_widget(datatype):
 
 
 
-class Widget(STLTemplate):
+class Widget(CMSTemplate):
 
     size = None
     tip = None
@@ -115,20 +116,6 @@ class Widget(STLTemplate):
         self.id = self.name.replace('_', '-')
         for key in kw:
             setattr(self, key, kw[key])
-
-
-    def get_prefix(self):
-        return None
-
-
-    def get_template(self):
-        return self.template
-
-
-    def render(self):
-        template = self.get_template()
-        prefix = self.get_prefix()
-        return stl(events=template, namespace=self, prefix=prefix)
 
 
 
@@ -478,10 +465,10 @@ class RTEWidget(Widget):
         return prefix
 
 
-    def get_template(self):
-        root = get_context().root
-        handler = root.get_resource(self.template)
-        return handler.events
+    def render(self):
+        prefix = self.get_prefix()
+        template = self.get_template()
+        return stl(events=template, namespace=self, prefix=prefix)
 
 
     def get_namespace(self, datatype, value):

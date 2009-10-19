@@ -22,6 +22,7 @@ from hashlib import sha1
 from sys import platform
 
 # Import from itools
+from itools.stl import STLTemplate
 from itools.web import get_context
 from itools.xapian import AllQuery, PhraseQuery, NotQuery, OrQuery, StartQuery
 
@@ -29,6 +30,35 @@ if platform[:3] == 'win':
     from utils_win import is_pid_running, kill
 else:
     from utils_unix import is_pid_running, kill
+
+
+###########################################################################
+# CMS Template
+###########################################################################
+
+class CMSTemplate(STLTemplate):
+
+    template = None
+
+    def get_template(self):
+        # Get the template
+        template = self.template
+        if template is None:
+            msg = "%s is missing the 'template' variable"
+            raise NotImplementedError, msg % repr(self)
+
+        # Case 1: a ready made list of events
+        if type(template) is list:
+            return template
+
+        # Case 2: a path to a template in the filesystem (ui)
+        if type(template) is str:
+            root = get_context().root
+            handler = root.get_resource(template)
+            return handler.events
+
+        raise ValueError, 'bad value for the template attribute'
+
 
 
 ###########################################################################

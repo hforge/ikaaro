@@ -22,30 +22,17 @@
 from itools.core import thingy_lazy_property
 from itools.gettext import get_domain
 from itools.i18n import get_language_name
-from itools.stl import STLTemplate
 from itools.uri import decode_query
 
 # Import from ikaaro
-from utils import reduce_string
-
-
-
-class SkinTemplate(STLTemplate):
-    template = None
-
-    def get_template(self):
-        template = self.template
-        if template is None:
-            msg = "%s is missing the 'template' variable"
-            raise NotImplementedError, msg % repr(self)
-        return self.context.root.get_resource(template)
+from utils import CMSTemplate, reduce_string
 
 
 
 ###########################################################################
 # Global language selector
 ###########################################################################
-class LanguagesTemplate(SkinTemplate):
+class LanguagesTemplate(CMSTemplate):
 
     template = '/ui/aruni/languages.xml'
 
@@ -83,7 +70,7 @@ class LanguagesTemplate(SkinTemplate):
 ###########################################################################
 # Resource location & menu
 ###########################################################################
-class LocationTemplate(SkinTemplate):
+class LocationTemplate(CMSTemplate):
 
     template = '/ui/aruni/location.xml'
 
