@@ -114,6 +114,7 @@ class Thread(Folder):
     class_title = MSG(u'Thread')
     class_description = u"A thread to discuss"
     class_views = ['view', 'edit']
+    message_class = Message
 
     @staticmethod
     def _make_resource(cls, folder, name, data='', language='en'):
