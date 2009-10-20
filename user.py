@@ -237,8 +237,7 @@ class UserFolder(Folder):
     #######################################################################
     # API
     #######################################################################
-    def set_user(self, email=None, password=None):
-        # Calculate the user id
+    def get_next_user_id(self):
         ids = []
         for key in self.get_names():
             try:
@@ -247,11 +246,15 @@ class UserFolder(Folder):
                 continue
             ids.append(key)
         if ids:
-            ids.sort()
-            user_id = str(ids[-1] + 1)
+            user_id = str(max(ids) + 1)
         else:
             user_id = '0'
+        return user_id
 
+
+    def set_user(self, email=None, password=None):
+        # Calculate the user id
+        user_id = self.get_next_user_id()
         # Add the user
         cls = get_resource_class('user')
         user = self.make_resource(user_id, cls)

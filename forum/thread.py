@@ -113,6 +113,7 @@ class Thread(Folder):
     class_title = MSG(u'Thread')
     class_description = u"A thread to discuss"
     class_views = ['view', 'edit']
+    message_class = Message
 
 
     def init_resource(self, data='', language='en', **kw):
