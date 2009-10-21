@@ -19,7 +19,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import get_abspath, merge_dicts
+from itools.core import get_abspath, merge_dicts, thingy_lazy_property
 from itools.datatypes import DataType, Date, Enumerate, Boolean
 from itools.gettext import MSG
 from itools.html import stream_to_str_as_xhtml, stream_to_str_as_html
@@ -145,51 +145,42 @@ class PasswordWidget(Widget):
 class ReadOnlyWidget(Widget):
 
     template = make_stl_template("""
-    <input type="hidden" name="${name}" value="${value}" />${displayed}""")
+    <input type="hidden" name="${name}" value="${value_}" />${displayed_}""")
+
+    displayed = None
 
 
-    def get_namespace(self, datatype, value):
-        displayed = getattr(self, 'displayed', None)
-
-        if issubclass(datatype, Enumerate) and isinstance(value, list):
+    @thingy_lazy_classmethod
+    def value_(self):
+        value = self.value
+        if issubclass(self.datatype, Enumerate) and isinstance(value, list):
             for option in value:
-                if not option['selected']:
-                    continue
-                value = option['name']
-                if displayed is None:
-                    displayed = option['value']
-                break
-            else:
-                value = datatype.default
-                if displayed is None:
-                    displayed = datatype.get_value(value)
+                if option['selected']:
+                    return option['name']
+            return self.datatype.default
+        return value
 
-        if displayed is None:
-            displayed = value
 
-        return {
-            'name': self.name,
-            'value': value,
-            'displayed': displayed}
+    def displayed_(self):
+        if self.displayed is not None:
+            return self.displayed
+
+        value = self.value_
+        if issubclass(self.datatype, Enumerate):
+            return self.datatype.get_value(value)
+
+        return value
 
 
 
 class MultilineWidget(Widget):
 
-    rows = 5
-    cols = 60
-
     template = make_stl_template("""
     <textarea rows="${rows}" cols="${cols}" name="${name}" >${value}</textarea>
     """)
 
-
-    def get_namespace(self, datatype, value):
-        return {
-            'name': self.name,
-            'value': value,
-            'rows': self.rows,
-            'cols': self.cols}
+    rows = 5
+    cols = 60
 
 
 
@@ -208,7 +199,10 @@ class RadioWidget(Widget):
                             # FIXME Do this other way
 
 
-    def get_namespace(self, datatype, value):
+    def options(self):
+        datatype = self.datatype
+        value = self.value
+
         # Case 1: Enumerate
         if issubclass(datatype, Enumerate):
             # Check whether the value is already a list of options
@@ -228,27 +222,23 @@ class RadioWidget(Widget):
             # Select first item if none selected
             for option in options:
                 if option['selected'] is True:
-                    break
-            else:
-                if options:
-                    options[0]['selected'] = True
+                    return options
+
+            if options:
+                options[0]['selected'] = True
+            return options
+
         # Case 2: Boolean
-        elif issubclass(datatype, Boolean):
+        if issubclass(datatype, Boolean):
             default_labels = {'yes': MSG(u'Yes'), 'no': MSG(u'No')}
             labels = getattr(self, 'labels', default_labels)
-            options = [
+            return [
                 {'name': '1', 'value': labels['yes'], 'is_selected': value},
                 {'name': '0', 'value': labels['no'], 'is_selected': not value}]
-        # Case 3: Error
-        else:
-            err = 'datatype "%s" should be enumerate or boolean'
-            raise ValueError, err % self.name
 
-        # Ok
-        return {
-            'name': self.name,
-            'oneline': self.oneline,
-            'options': options}
+        # Case 3: Error
+        err = 'datatype "%s" should be enumerate or boolean'
+        raise ValueError, err % self.name
 
 
 
@@ -265,7 +255,10 @@ class CheckboxWidget(Widget):
     oneline = False
 
 
-    def get_namespace(self, datatype, value):
+    def options(self):
+        datatype = self.datatype
+        value = self.value
+
         # Case 1: Enumerate
         if issubclass(datatype, Enumerate):
             # Check whether the value is already a list of options
@@ -273,22 +266,15 @@ class CheckboxWidget(Widget):
             # an auto-form, where the 'datatype.get_namespace' method is
             # called twice (there may be a better way of handling this).
             if type(value) is not list:
-                options = datatype.get_namespace(value)
-            else:
-                options = value
-        # Case 2: Boolean
-        elif issubclass(datatype, Boolean):
-            options = [
-                {'name': '1', 'value': '', 'is_selected': value}]
-        # Case 3: Error
-        else:
-            raise ValueError, 'expected boolean or enumerate datatype'
+                return datatype.get_namespace(value)
+            return value
 
-        # Ok
-        return {
-            'name': self.name,
-            'oneline': self.oneline,
-            'options': options}
+        # Case 2: Boolean
+        if issubclass(datatype, Boolean):
+            return [{'name': '1', 'value': '', 'is_selected': value}]
+
+        # Case 3: Error
+        raise ValueError, 'expected boolean or enumerate datatype'
 
 
 
@@ -303,20 +289,24 @@ class SelectWidget(Widget):
     </select>""")
 
 
-    def get_namespace(self, datatype, value):
+    css = None
+    has_empty_option = True
+    size = None
+
+
+    def multiple(self):
+        return self.datatype.multiple
+
+
+    def options(self):
+        value = self.value
         # Check whether the value is already a list of options
         # FIXME This is done to avoid a bug when using a select widget in an
         # auto-form, where the 'datatype.get_namespace' method is called
         # twice (there may be a better way of handling this).
         if type(value) is not list:
-            value = datatype.get_namespace(value)
-        return {
-            'css': getattr(self, 'css', None),
-            'has_empty_option': getattr(self, 'has_empty_option', True),
-            'name': self.name,
-            'multiple': datatype.multiple,
-            'options': value,
-            'size':  getattr(self, 'size', None)}
+            return self.datatype.get_namespace(value)
+        return value
 
 
 
@@ -325,13 +315,13 @@ class DateWidget(Widget):
     tip = MSG(u"Format: 'yyyy-mm-dd'")
 
     template = make_stl_template("""
-    <input type="text" name="${name}" value="${value}" id="${name}"
+    <input type="text" name="${name}" value="${value_}" id="${name}"
       size="${size}"/>
     <input id="trigger-date-${name}" type="button" value="..."
-      name="trigger_date_${name}" class="${class}" />
+      name="trigger_date_${name}" class="${css}" />
     <script language="javascript">
       Calendar.setup({inputField: "${name}", ifFormat: "${format}",
-                      showsTime: ${show_time}, timeFormat: "24",
+                      showsTime: ${show_time_js}, timeFormat: "24",
                       button: "trigger-date-${name}"});
     </script>""")
 
@@ -340,7 +330,7 @@ class DateWidget(Widget):
       <tr>
         <td>
           <textarea rows="5" cols="25" name="${name}" id="${name}"
-            >${value}</textarea>
+            >${value_}</textarea>
           <input type="button" value="update" id="btn-blur-${name}"
             onclick="tableFlatOuputOnBlur(elt_${name}, cal_${name});" />
         </td>
@@ -375,26 +365,31 @@ class DateWidget(Widget):
         return self.template
 
 
-    def get_namespace(self, datatype, value):
-        if value is None:
-            value = ''
-        format = getattr(self, 'format', '%Y-%m-%d')
-        show_time = getattr(self, 'show_time', False)
+    css = None
+    format = '%Y-%m-%d'
+    size = None
+    show_time = False
+
+    def show_time_js(self):
         # True -> true for Javascript
-        show_time = str(show_time).lower()
-        css = getattr(self, 'css', None)
-        size = getattr(self, 'size', None)
+        return 'true' if self.show_time else 'false'
 
-        if datatype.multiple:
-            if isinstance(value, list): # ['2007-08-01\r\n2007-08-02']
-                value = value[0]
-            return {'name': self.name, 'format': format,
-                    'show_time': show_time, 'class': css,
-                    'value': value, 'dates': value.splitlines()}
 
-        return {'name': self.name, 'format': format,
-                'show_time': show_time, 'class': css,
-                'size': size, 'value': value}
+    @thingy_lazy_property
+    def value_(self):
+        value = self.value
+        if value is None:
+            return ''
+
+        # ['2007-08-01\r\n2007-08-02']
+        if self.datatype.multiple and isinstance(value, list):
+            return value[0]
+
+        return value
+
+
+    def dates(self):
+        return self.value_.splitlines()
 
 
 
@@ -412,23 +407,16 @@ class PathSelectorWidget(TextWidget):
     ${workflow_state}""")
 
 
-    def get_namespace(self, datatype, value):
-        workflow_state = None
+    def workflow_state(self):
         if self.display_workflow:
-            context = get_context()
-            path = datatype.encode(value)
+            path = self.datatype.encode(self.value)
             if path:
+                context = get_context()
                 resource = context.resource.get_resource(path, soft=True)
                 if resource:
-                    workflow_state = get_workflow_preview(resource, context)
+                    return get_workflow_preview(resource, context)
 
-        return {
-            'type': self.type,
-            'name': self.name,
-            'value': value,
-            'size': self.size,
-            'action': self.action,
-            'workflow_state': workflow_state}
+        return None
 
 
 
@@ -449,17 +437,12 @@ class ImageSelectorWidget(PathSelectorWidget):
     <img src="${value}/;thumb?width=${width}&amp;height=${height}" stl:if="value"/>""")
 
 
-    def get_namespace(self, datatype, value):
-        return merge_dicts(PathSelectorWidget.get_namespace(self, datatype, value),
-                           width=self.width, height=self.height)
-
-
 
 class RTEWidget(Widget):
 
     template = 'tiny_mce/rte.xml'
     rte_css = ['/ui/aruni/style.css', '/ui/tiny_mce/content.css']
-    rte_scripts = [
+    scripts = [
         '/ui/tiny_mce/tiny_mce_src.js',
         '/ui/tiny_mce/javascript.js']
 
@@ -484,34 +467,19 @@ class RTEWidget(Widget):
     table_styles = None
 
 
-    def get_rte_css(self):
-        return self.rte_css
-
-
-    def get_namespace(self, datatype, value):
-        # Language
+    def language(self):
         path = get_abspath('ui/tiny_mce/langs')
         tiny_mce_languages = [ x[:-3] for x in vfs.get_names(path) ]
         accept = get_context().accept_language
-        current_language = accept.select_language(tiny_mce_languages)
+        return accept.select_language(tiny_mce_languages)
 
-        css_names = self.get_rte_css()
-        return {
-            'advanced_styles': self.advanced_styles,
-            'css': ','.join(css_names),
-            'extended_valid_elements': self.extended_valid_elements,
-            'form_name': self.name,
-            'height': self.height,
-            'language': current_language,
-            'plugins': self.plugins,
-            'resizing': 'true' if self.resizing else 'false',
-            'scripts': self.rte_scripts,
-            'source': value,
-            'table_styles': self.table_styles,
-            'toolbar1': self.toolbar1,
-            'toolbar2': self.toolbar2,
-            'toolbar3': self.toolbar3,
-            'width': self.width}
+
+    def css(self):
+        return ','.join(self.rte_css)
+
+
+    def resizing_js(self, datatype, value):
+        return 'true' if self.resizing else 'false'
 
 
 ###########################################################################
