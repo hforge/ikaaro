@@ -46,6 +46,11 @@ input, button {
   color: #ff0000;
 }
 
+span.field-error {
+  color: #f22;
+  font-weight: bold;
+}
+
 
 /**************************************************************************
  * Buttons
@@ -224,9 +229,9 @@ input, button {
 }
 
 #message .error {
- border-color: #e75252;
- background-color: #ffe7e7;
- background-image: url(icons/16x16/error.png);
+  border-color: #e75252;
+  background-color: #ffe7e7;
+  background-image: url(icons/16x16/error.png);
 }
 
 

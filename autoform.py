@@ -491,10 +491,10 @@ class AutoForm(STLForm):
     """
 
     widgets = []
-    required_msg = None
     template = '/ui/auto_form.xml'
     submit_value = MSG(u'Save')
     submit_class = 'button-ok'
+    description = None
 
 
     def get_widgets(self, resource, context):
@@ -509,27 +509,14 @@ class AutoForm(STLForm):
         fields = self.get_schema(resource, context)
         widgets = self.get_widgets(resource, context)
 
-        # Set and translate the required_msg
-        required_msg = self.required_msg
-        if required_msg is None:
-            required_msg = MSG(
-                u'The <span class="field-is-required">emphasized</span> fields'
-                u' are required.')
-        required_msg = required_msg.gettext()
-        required_msg = required_msg.encode('utf-8')
-        required_msg = XMLParser(required_msg)
-
         # Build widgets namespace
-        has_required_widget = False
         ns_widgets = []
         for widget in widgets:
             datatype = fields[widget.name]
-            is_mandatory = getattr(datatype, 'mandatory', False)
-            if is_mandatory:
-                has_required_widget = True
             widget_namespace = widgets_namespace[widget.name]
             value = widget_namespace['value']
             widget_namespace['title'] = getattr(widget, 'title', None)
+            is_mandatory = getattr(datatype, 'mandatory', False)
             widget_namespace['mandatory'] = is_mandatory
             widget_namespace['is_date'] = issubclass(datatype, Date)
             widget_namespace['tip'] = widget.tip
@@ -540,11 +527,10 @@ class AutoForm(STLForm):
         # Build namespace
         return {
             'title': self.get_title(context),
-            'required_msg': required_msg,
+            'description': self.description,
             'first_widget': widgets[0].name,
             'action': context.uri,
             'submit_value': self.submit_value,
             'submit_class': self.submit_class,
-            'widgets': ns_widgets,
-            'has_required_widget': has_required_widget,
-            }
+            'widgets': ns_widgets}
+
