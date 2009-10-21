@@ -197,7 +197,7 @@ class ContactForm(AutoForm):
         if name == 'from':
             user = context.user
             if user is not None:
-                return user.get_property('email')
+                return user.get_value('email')
         else:
             query = context.query
             if name in query:
