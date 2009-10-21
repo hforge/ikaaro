@@ -153,7 +153,7 @@ class ReadOnlyWidget(Widget):
     displayed = None
 
 
-    @thingy_lazy_classmethod
+    @thingy_lazy_property
     def value_(self):
         value = self.value
         if issubclass(self.datatype, Enumerate) and isinstance(value, list):
