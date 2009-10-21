@@ -16,12 +16,9 @@
           </label>
           <span stl:if="widget/mandatory" class="field-mandatory">(mandatory)
           </span>
-          <span stl:if="widget/multiple" class="field-multiple">(multiple)
-          </span>
           <span stl:if="widget/tip" class="field-format">${widget/tip}</span>
           <br/>
           ${widget/widget}
-          ${widget/suffix}
         </td>
       </tr>
     </table>

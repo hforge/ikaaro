@@ -531,10 +531,8 @@ class AutoForm(STLForm):
             value = widget_namespace['value']
             widget_namespace['title'] = getattr(widget, 'title', None)
             widget_namespace['mandatory'] = is_mandatory
-            widget_namespace['multiple'] = datatype.multiple
             widget_namespace['is_date'] = issubclass(datatype, Date)
             widget_namespace['tip'] = widget.tip
-            widget_namespace['suffix'] = widget.suffix
             widget = widget(datatype=datatype, value=value)
             widget_namespace['widget'] = widget.render()
             ns_widgets.append(widget_namespace)
