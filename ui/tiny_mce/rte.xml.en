@@ -39,7 +39,7 @@
       theme_advanced_toolbar_location : "top",
       theme_advanced_toolbar_align : "left",
       theme_advanced_statusbar_location : "bottom",
-      theme_advanced_resizing : ${resizing},
+      theme_advanced_resizing : ${resizing_js},
       theme_advanced_styles : "${advanced_styles}"
   });
   </script>
@@ -50,7 +50,7 @@
 	<!--
   Gets replaced with TinyMCE, remember HTML in a textarea should be quoted
   -->
-  <textarea id="${id}" name="${form_name}" rows="15" cols="80"
-    style="width: 80%">${source}</textarea>
+  <textarea id="${id}" name="${name}" rows="15" cols="80"
+    style="width: 80%">${value}</textarea>
 
 </stl:block>
