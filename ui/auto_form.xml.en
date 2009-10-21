@@ -8,28 +8,23 @@
   enctype="multipart/form-data" stl:omit-tag="not submit_value">
   <fieldset>
     <legend>${title}</legend>
-    <p stl:if="has_required_widget"
-      class="field-required">${required_msg}</p>
-    <dl>
-      <stl:block stl:repeat="widget widgets">
-        <dt class="${widget/class}">
-          <label for="${widget/name}" class="${widget/class}">
-            ${widget/title}
+    <p stl:if="has_required_widget" class="field-required">${required_msg}</p>
+    <table>
+      <tr stl:repeat="widget widgets">
+        <td>
+          <label for="${widget/name}" class="${widget/class}">${widget/title}
           </label>
-          <span stl:if="widget/mandatory"
-            class="field-mandatory">(mandatory)</span>
-          <span stl:if="widget/multiple"
-            class="field-multiple">(multiple)</span>
-          <span stl:if="widget/tip"
-            class="field-format">${widget/tip}</span>
-        </dt>
-        <dd>
+          <span stl:if="widget/mandatory" class="field-mandatory">(mandatory)
+          </span>
+          <span stl:if="widget/multiple" class="field-multiple">(multiple)
+          </span>
+          <span stl:if="widget/tip" class="field-format">${widget/tip}</span>
+          <br/>
           ${widget/widget}
-          <span stl:if="widget/suffix"
-            class="field-suffix">${widget/suffix}</span>
-        </dd>
-      </stl:block>
-    </dl>
+          ${widget/suffix}
+        </td>
+      </tr>
+    </table>
     <p stl:if="submit_value">
       <button type="submit" class="${submit_class}">${submit_value}</button>
     </p>
