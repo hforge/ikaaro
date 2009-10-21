@@ -296,9 +296,14 @@ class Database(ReadOnlyDatabase, GitDatabase):
         GitDatabase._save_changes(self, (git_author, git_message))
 
         # (2) Catalog
+        mtime = datetime.now() # XXX This is an approximation, not exactly the
+                               # same as returned by git
+        user = get_context().user
+        author = user.get_title() if user else None
         catalog = self.catalog
         for resource, values in documents_to_index:
-            values = resource.get_catalog_values(values)
+            values['mtime'] = mtime
+            values['last_author'] = author
             catalog.index_document(values)
         catalog.save_changes()
 

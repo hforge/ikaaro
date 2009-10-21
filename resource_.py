@@ -369,13 +369,12 @@ class DBResource(CatalogAware, IResource):
             'is_role_aware': is_role_aware,
             'members': members,
             'size': size,
-            'workflow_state': workflow_state,
-        }
+            'workflow_state': workflow_state}
 
 
-    def get_catalog_values(self, values=None):
-        if values is None:
-            values = self._get_catalog_values()
+    def get_catalog_values(self):
+        # This method is called only from icms-update-catalog.py
+        values = self._get_catalog_values()
 
         # Get last revision
         revision = self.get_last_revision()
