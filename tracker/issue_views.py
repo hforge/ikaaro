@@ -112,13 +112,11 @@ class IssueTrackerMenu(ContextMenu):
 
     title = MSG(u'Tracker')
 
-    def get_items(self, resource, context):
-        items = [
-            {'title': MSG(u'Search for issues'),
-             'href': '%s/;search' % context.get_link(resource.parent)},
-            {'title': MSG(u'Add a new issue'),
-             'href': '%s/;add_issue' % context.get_link(resource.parent)}]
-        return items
+    def get_items(self):
+        path = self.context.get_link(resource.parent)
+        return [
+            {'title': MSG(u'Search for issues'), 'href': '%s/;search' % path},
+            {'title': MSG(u'Add a new issue'), 'href': '%s/;add_issue' % path}]
 
 
 

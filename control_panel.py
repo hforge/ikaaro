@@ -48,13 +48,16 @@ class ControlPanelMenu(ContextMenu):
 
     title = MSG(u'Control Panel')
 
-    def get_items(self, resource, context):
+    def get_items(self):
+        resource = self.resource
+        user = self.context.user
+
         items = []
         for name in resource.class_control_panel:
             view = resource.get_view(name)
             if view is None:
                 continue
-            if not resource.is_access_allowed(context.user, resource, view):
+            if not resource.is_access_allowed(user, resource, view):
                 continue
             items.append({
                 'title': view.title,

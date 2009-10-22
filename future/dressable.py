@@ -42,7 +42,9 @@ class Dressable_Menu(ContextMenu):
 
     title = MSG(u'Edit')
 
-    def get_items(self, resource, context):
+    def get_items(self):
+        resource = self.resource
+
         items = []
         base_path = ''
         if not isinstance(resource, Dressable):
