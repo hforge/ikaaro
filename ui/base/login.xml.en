@@ -7,22 +7,32 @@
 <form id="loginform" name="loginform" method="post" action=";login">
   <fieldset>
     <legend>Log in</legend>
-    <dl>
-      <dt>
-        <label for="username" class="${username/class}">E-mail Address</label>
-      </dt>
-      <dd>
-        <input type="text" id="username" name="username"
-          value="${username/value}" />
-      </dd>
-      <dt>
-        <label for="password" class="${password/class}">Password</label>
-      </dt>
-      <dd>
-        <input type="password" id="password" name="password" />
-        <a href="/;forgotten_password">I forgot my password</a>
-      </dd>
-    </dl>
+    <table>
+      <tr>
+        <td>
+          <label for="username">E-mail Address</label>
+          <span class="field-is-missing" title="This field is required">*
+          </span>
+          <br/>
+          <span stl:if="username/error" class="field-error">${username/error}
+            <br/></span>
+          <input type="text" id="username" name="username"
+            value="${username/value}" />
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label for="password">Password</label>
+          <span class="field-is-missing" title="This field is required">*
+          </span>
+          <br/>
+          <span stl:if="password/error" class="field-error">${password/error}
+            <br/></span>
+          <input type="password" id="password" name="password" />
+          <a href="/;forgotten_password">I forgot my password</a>
+        </td>
+      </tr>
+    </table>
     <input type="submit" value="Log in" class="button-ok"/>
   </fieldset>
 
