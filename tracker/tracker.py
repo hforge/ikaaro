@@ -35,7 +35,6 @@ from itools.xapian import StartQuery
 # Import from ikaaro
 from ikaaro.folder import Folder
 from issue import Issue
-from resources import Resources
 from stored import StoredSearch, StoredSearchFile
 from tables import ModulesResource, ModulesHandler
 from tables import Tracker_TableResource, Tracker_TableHandler
@@ -110,8 +109,6 @@ class Tracker(Folder):
             self.make_resource('s%s' % i, StoredSearch, title={'en': title})
             folder.set_handler('s%s' % i, search)
             i += 1
-        # Calendar
-        self.make_resource('calendar', Resources)
 
 
     def get_document_types(self):

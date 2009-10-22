@@ -49,7 +49,7 @@ register_document_type(File)
 # register after)
 import calendar
 import forum
-import tracker
+#import tracker # FIXME
 try:
     import docutils
 except ImportError:

@@ -47,7 +47,7 @@ from itools.web import BaseView, STLView, ERROR
 from itools.xml import XMLParser, XMLError
 
 # Import from ikaaro
-from ikaaro.autoform import name_widget, title_widget
+from ikaaro.forms import NameField, TitleField
 from ikaaro import messages
 from ikaaro.views_new import NewInstanceByDate
 from ikaaro.resource_views import DBResource_Edit
@@ -57,8 +57,10 @@ from ikaaro.resource_views import DBResource_Edit
 class WikiPage_NewInstance(NewInstanceByDate):
 
     query_schema = freeze({'type': String, 'name': String, 'title': Unicode})
-    schema = freeze({'name': String, 'title': Unicode})
-    widgets = freeze([title_widget, name_widget])
+
+    schema = freeze({
+        'name': NameField,
+        'title': TitleField})
 
 
     def get_new_resource_name(self, form):

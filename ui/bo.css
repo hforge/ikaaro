@@ -39,10 +39,6 @@ input {
  *************************************************************************/
 
 .field-is-required {
-  font-style: italic;
-}
-
-.field-is-missing {
   color: #ff0000;
 }
 

@@ -35,9 +35,11 @@ class DBResource_LastChanges(BrowseForm):
     access = 'is_allowed_to_view'
     title = MSG(u"Last Changes")
 
-    query_schema = merge_dicts(BrowseForm.query_schema,
-                               sort_by=String(default='date'),
-                               reverse=Boolean(default=True))
+    sort_by = BrowseForm.sort_by()
+    sort_by.datatype = String(default='date')
+
+    reverse = BrowseForm.reverse()
+    reverse.datatype = Boolean(default=True)
 
 
     table_columns = [

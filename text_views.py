@@ -27,11 +27,10 @@ from itools.gettext import MSG
 from itools.web import STLForm, STLView, INFO
 
 # Import from ikaaro
-from autoform import AutoForm, get_default_widget, MultilineWidget
-from autoform import timestamp_widget, description_widget, file_widget
-from autoform import subject_widget, title_widget
+from autoform import AutoForm, get_default_widget
 from buttons import RemoveButton
 from file_views import File_Edit
+from forms import Textarea, TextField
 import messages
 from utils import get_parameters
 from views import BrowseForm
@@ -41,14 +40,11 @@ class Text_Edit(File_Edit):
 
     title = MSG(u'Edit')
     icon = 'edit.png'
-    schema = merge_dicts(File_Edit.schema, data=String)
-    widgets = [
-        timestamp_widget,
-        title_widget,
-        MultilineWidget('data', title=MSG(u"Content"), rows=19, cols=69),
-        file_widget,
-        description_widget,
-        subject_widget]
+
+    schema = merge_dicts(File_Edit.schema,
+        data=TextField('data', datatype=String,
+                       widget=Textarea(rows=19, cols=69),
+                       title=MSG(u'Content')))
 
 
     def get_value(self, resource, context, name, datatype):
@@ -252,8 +248,7 @@ class RowForm(AutoForm):
         schema = self.get_schema(resource, context)
         return [
             get_default_widget(schema[name])(name, title=title)
-            for name, title in resource.get_columns()
-        ]
+            for name, title in resource.get_columns() ]
 
 
 

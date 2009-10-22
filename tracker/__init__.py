@@ -22,7 +22,6 @@ from itools.core import get_abspath
 from ikaaro.boot import ui
 from ikaaro.registry import register_document_type
 from issue import Issue
-from resources import Resources
 from tracker import Tracker
 
 

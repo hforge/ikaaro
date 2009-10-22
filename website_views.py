@@ -23,7 +23,7 @@ import sys
 from traceback import format_exc
 
 # Import from itools
-from itools.core import get_abspath, merge_dicts
+from itools.core import freeze, get_abspath, merge_dicts
 from itools.datatypes import Email, String, Unicode
 from itools.datatypes import Enumerate
 from itools.gettext import MSG
@@ -33,7 +33,8 @@ from itools.web import STLView, INFO, ERROR
 from itools.xapian import PhraseQuery, OrQuery, AndQuery, split_unicode
 
 # Import from ikaaro
-from autoform import AutoForm, SelectWidget, MultilineWidget, TextWidget
+from autoform import AutoForm
+from forms import EmailField, SelectField, TextField, Textarea
 import globals
 from views import SearchForm
 
@@ -67,10 +68,11 @@ class ForgottenPasswordForm(AutoForm):
     title = MSG(u'Forgotten password')
     submit_value = MSG(u'Ok')
 
-    widgets = [
-        TextWidget('username', title=MSG(u'Type your email address'))]
+    query_schema = {'username': Email(default='')}
 
-    schema = query_schema = {'username': Email(default='')}
+    schema = freeze({
+        'username': EmailField('username',
+                               title=MSG(u'Type your email address'))})
 
 
     def get_value(self, resource, context, name, datatype):
@@ -109,14 +111,12 @@ class RegisterForm(AutoForm):
     submit_value = MSG(u'Register')
 
     schema = {
-        'firstname': Unicode(mandatory=True),
-        'lastname': Unicode(mandatory=True),
-        'email': Email(mandatory=True)}
-
-    widgets = [
-        TextWidget('firstname', title=MSG(u'First Name')),
-        TextWidget('lastname', title=MSG(u'Last Name')),
-        TextWidget('email', title=MSG(u'E-mail Address'))]
+        'firstname': TextField('firstname', required=True,
+                               title=MSG(u'First Name')),
+        'lastname': TextField('lastname', required=True,
+                              title=MSG(u'Last Name')),
+        'email': EmailField('email', required=True,
+                            title=MSG(u'E-mail Address'))}
 
 
     def action(self, resource, context, form):
@@ -174,24 +174,29 @@ class ContactForm(AutoForm):
                     'subject': Unicode,
                     'body': Unicode}
 
-    def get_schema(self, resource, context):
-        return {
-            'to': ContactOptions(resource=resource, mandatory=True),
-            'from': Email(mandatory=True),
-            'subject': Unicode(mandatory=True),
-            'body': Unicode(mandatory=True),
-        }
+
+    subject = TextField(required=True, title=MSG(u'Message subject'))
+    body = TextField(required=True, title=MSG(u'Message body'))
+    body.widget = Textarea(rows=8, cols=50)
 
 
-    widgets = [
-        SelectWidget('to', title=MSG(u'Recipient')),
-        TextWidget('from', title=MSG(u'Your email address'), size=40),
-        TextWidget('subject', title=MSG(u'Message subject'), size=40),
-        MultilineWidget('body', title=MSG(u'Message body'), rows=8, cols=50),
-    ]
+    field_names = ['to', 'from', 'subject', 'body']
+    def get_field(self, name, resource, context):
+        # 'to' is dynamic
+        if name == 'to':
+            contact_options = ContactOptions(resource=resource)
+            return SelectField('to', datatype=contact_options, required=True,
+                               title=MSG(u'Recipient'))
+
+        # 'from' is a Python reserved word
+        if name == 'from':
+            return EmailField('from', required=True,
+                              title=MSG(u'Your email address'))
+
+        return AutoForm.get_field(self, name, resource, context)
 
 
-    def get_value(self, resource, context, name, datatype):
+    def get_value(self, resource, context, name, field):
         if name == 'from':
             user = context.user
             if user is not None:
@@ -200,7 +205,7 @@ class ContactForm(AutoForm):
             query = context.query
             if name in query:
                 return query[name]
-        return datatype.get_default()
+        return field.datatype.get_default()
 
 
     def action(self, resource, context, form):

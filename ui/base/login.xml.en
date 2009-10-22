@@ -11,7 +11,7 @@
       <tr>
         <td>
           <label for="username">E-mail Address</label>
-          <span class="field-is-missing" title="This field is required">*
+          <span class="field-is-required" title="This field is required">*
           </span>
           <br/>
           <span stl:if="username/error" class="field-error">${username/error}
@@ -23,7 +23,7 @@
       <tr>
         <td>
           <label for="password">Password</label>
-          <span class="field-is-missing" title="This field is required">*
+          <span class="field-is-required" title="This field is required">*
           </span>
           <br/>
           <span stl:if="password/error" class="field-error">${password/error}
