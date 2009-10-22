@@ -70,8 +70,8 @@ class GoToIssueMenu(ContextMenu):
     title = MSG(u'Go To Issue')
     template = '/ui/tracker/menu_goto.xml'
 
-    def get_namespace(self, resource, context):
-        path_to_tracker = '..' if isinstance(resource, Issue) else '.'
+    def get_namespace(self):
+        path_to_tracker = '..' if isinstance(self.resource, Issue) else '.'
         return {
             'path_to_tracker': path_to_tracker,
             'title': self.title}
@@ -88,11 +88,11 @@ class StoreSearchMenu(ContextMenu):
                                search_name=String,
                                search_title=Unicode)
 
-    def get_namespace(self, resource, context):
+    def get_namespace(self):
         # This search exists ?
-        search_name = context.get_query_value('search_name')
+        search_name = self.context.get_query_value('search_name')
         if search_name:
-            search = resource.get_resource(search_name, soft=True)
+            search = self.resource.get_resource(search_name, soft=True)
         else:
             search = None
 
@@ -102,7 +102,7 @@ class StoreSearchMenu(ContextMenu):
             search_title = search.get_title()
         else:
             # Warning, a menu is not the default view!
-            query = process_form(context.get_query_value, self.query_schema)
+            query = process_form(self.context.get_query_value, self.query_schema)
             get = query.get
             search_title = None
 
@@ -130,7 +130,10 @@ class StoredSearchesMenu(ContextMenu):
 
     title = MSG(u'Stored Searches')
 
-    def get_items(self, resource, context):
+    def get_items(self):
+        context = self.context
+        resource = self.resource
+
         language = resource.get_content_language(context)
 
         # If called from a child
