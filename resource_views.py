@@ -51,12 +51,12 @@ class EditLanguageMenu(ContextMenu):
 
     title = MSG(u'Edit Language')
 
-    def get_items(self, resource, context):
-        content_language = resource.get_content_language(context)
+    def get_items(self):
+        content_language = self.resource.get_content_language(self.context)
 
-        site_root = resource.get_site_root()
+        site_root = self.resource.get_site_root()
         languages = site_root.get_value('website_languages')
-        uri = get_reference(context.uri)
+        uri = get_reference(self.context.uri)
         return [
             {'title': get_language_name(x),
              'href': uri.replace(content_language=x),

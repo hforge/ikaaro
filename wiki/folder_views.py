@@ -32,12 +32,14 @@ class WikiMenu(ContextMenu):
 
     title = MSG(u'Wiki')
 
-    def get_items(self, resource, context):
+    def get_items(self):
+        resource = self.resource
+
         # If called from a child
         if isinstance(resource, WikiPage):
             resource = resource.get_parent()
         # Namespace
-        base = context.get_link(resource)
+        base = self.context.get_link(resource)
         return [
             {'title': resource.get_view(view).title,
              'href': '%s/;%s' % (base, view)}

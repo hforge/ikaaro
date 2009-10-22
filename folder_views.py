@@ -51,17 +51,17 @@ class ZoomMenu(ContextMenu):
 
     title = MSG(u'Zoom')
 
-    def get_items(self, resource, context):
-        uri = get_reference(context.uri)
+    def get_items(self):
+        uri = get_reference(self.context.uri)
 
         # Compute previous and next sizes
-        current_size = context.get_query_value('size')
-        min_size = resource.MIN_SIZE
-        max_size = resource.MAX_SIZE
+        current_size = self.context.get_query_value('size')
+        min_size = self.resource.MIN_SIZE
+        max_size = self.resource.MAX_SIZE
         current_size = max(min_size, min(current_size, max_size))
         previous_size = min_size
         next_size = max_size
-        for step in resource.SIZE_STEPS:
+        for step in self.resource.SIZE_STEPS:
             if step < current_size:
                 previous_size = step
             if next_size is max_size and step > current_size:

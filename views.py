@@ -25,6 +25,7 @@ from itools.xml import XMLParser
 
 # Import from ikaaro
 from globals import ui
+from utils import CMSTemplate
 
 
 """This module contains some generic views used by different resources.
@@ -423,11 +424,11 @@ class SearchForm(BrowseForm):
 ###########################################################################
 # Menu
 ###########################################################################
-class ContextMenu(object):
+class ContextMenu(CMSTemplate):
 
     template = 'generic/menu.xml'
 
-    def get_items(self, resource, context):
+    def get_items(self):
         """The input (options) is a tree:
 
           [{'href': ...,
@@ -441,20 +442,12 @@ class ContextMenu(object):
         raise NotImplementedError
 
 
-    def get_namespace(self, resource, context):
-        items = self.get_items(resource, context)
+    def items(self):
+        items = self.get_items()
         # Defaults
         for item in items:
             for name in ['class', 'src', 'items']:
                 item.setdefault(name, None)
 
-        return {
-            'title': self.title,
-            'items': items}
-
-
-    def render(self, resource, context):
-        namespace = self.get_namespace(resource, context)
-        template = ui.get_template(self.template)
-        return stl(template, namespace)
+        return items
 

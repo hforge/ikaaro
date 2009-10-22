@@ -246,7 +246,8 @@ class Skin(STLForm):
         # View
         menus = getattr(context.view, 'context_menus', [])
         for menu in menus:
-            yield menu.render(resource, context)
+            menu = menu(resource=resource, context=context)
+            yield menu.render()
 
 
     #######################################################################
