@@ -445,7 +445,7 @@ class RTEWidget(Widget):
         return ','.join(self.rte_css)
 
 
-    def resizing_js(self, datatype, value):
+    def resizing_js(self):
         return 'true' if self.resizing else 'false'
 
 
