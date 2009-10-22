@@ -36,10 +36,11 @@ from itools.web import BaseView, STLForm, INFO, ERROR
 from itools.web import FormError
 
 # Import from ikaaro
-from autoform import AutoForm, title_widget, description_widget, subject_widget
-from autoform import timestamp_widget
+from autoform import AutoForm
 from datatypes import FileDataType, CopyCookie
 from folder_views import Folder_BrowseContent
+from forms import PasswordField, TextField
+from forms import DescriptionField, SubjectField, TimestampField, TitleField
 import messages
 from registry import get_resource_class
 from utils import reduce_string
@@ -73,12 +74,10 @@ class DBResource_Edit(AutoForm):
     context_menus = [EditLanguageMenu()]
 
     schema = {
-        'title': Unicode,
-        'description': Unicode,
-        'subject': Unicode,
-        'timestamp': DateTime(readonly=True)}
-    widgets = [
-        timestamp_widget, title_widget, description_widget, subject_widget]
+        'title': TitleField,
+        'description': DescriptionField,
+        'subject': SubjectField,
+        'timestamp': TimestampField}
 
 
     def get_value(self, resource, context, name, datatype):
@@ -534,27 +533,43 @@ class LoginView(STLForm):
     access = True
     title = MSG(u'Login')
     template = 'base/login.xml'
-    schema = {
-        'username': Unicode(mandatory=True),
-        'password': String(mandatory=True)}
     meta = [('robots', 'noindex, follow', None)]
 
 
-    def action(self, resource, context, form):
-        email = form['username'].strip()
-        password = form['password']
+    username = TextField(required=True)
+    password = PasswordField(required=True)
+
+
+    def cook(self, resource, context, method):
+        STLForm.cook(self, resource, context, method)
+
+        if method == 'get':
+            return
 
         # Check the user exists
-        user = context.get_user_by_login(email)
+        user = self.get_user(context)
         if user is None:
-            message = u'The user "{username}" does not exist.'
-            raise FormError, ERROR(message, username=email)
+            field = context.input['username']
+            error = MSG(u'The user "{username}" does not exist.')
+            field.error = error.gettext(username=field.value)
+            raise FormError
 
         # Check the password is right
-        if not user.authenticate(password):
-            raise FormError, u'The password is wrong.'
+        field = context.input['password']
+        if not user.authenticate(field.value):
+            field.error = MSG(u'The password is wrong.')
+            raise FormError
 
+
+    def get_user(self, context):
+        username = context.input['username'].value
+        return context.get_user_by_login(username)
+
+
+    def action(self, resource, context):
         # Set cookie
+        user = self.get_user(context)
+        password = context.get_input_value('password')
         user.set_auth_cookie(context, password)
 
         # Internal redirect

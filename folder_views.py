@@ -31,7 +31,7 @@ from itools.handlers import checkid
 from itools.i18n import format_datetime
 from itools.stl import set_prefix
 from itools.uri import get_reference, Path
-from itools.web import BaseView, STLForm, ERROR
+from itools.web import BaseView, STLForm, ERROR, ViewField
 from itools.xapian import AndQuery, OrQuery, PhraseQuery
 
 # Import from ikaaro
@@ -224,18 +224,20 @@ class Folder_BrowseContent(SearchForm):
     access = 'is_allowed_to_view'
     title = MSG(u'Browse Content')
     context_menus = []
-    query_schema = merge_dicts(SearchForm.query_schema,
-        sort_by=String(default='mtime'),
-        reverse=Boolean(default=True))
-    schema = {
-        'ids': String(multiple=True, mandatory=True)}
 
     # Search Form
     search_template = 'folder/browse_search.xml'
-    search_schema = {
-        'search_field': String,
-        'search_term': Unicode,
-        'search_subfolders': Boolean(default=False)}
+
+    # Schema
+    ids = ViewField(required=True)
+    ids.datatype = String(multiple=True)
+    sort_by = SearchForm.sort_by(default='mtime')
+    reverse = SearchForm.reverse(default=True)
+
+    search_field = ViewField(source='query', datatype=String)
+    search_term = ViewField(source='query', datatype=Unicode)
+    search_subfolders = ViewField(source='query')
+    search_subfolders.datatype = Boolean(default=False)
 
     # Table
     table_columns = [
@@ -258,17 +260,17 @@ class Folder_BrowseContent(SearchForm):
 
 
     def get_items(self, resource, context, *args):
-        get_query_value = context.get_query_value
+        get_input_value = context.get_input_value
 
         # The query
         args = list(args)
-        search_term = get_query_value('search_term').strip()
+        search_term = get_input_value('search_term').strip()
         if search_term:
-            field = get_query_value('search_field')
+            field = get_input_value('search_field')
             args.append(PhraseQuery(field, search_term))
 
         # Case 1: search subfolders
-        search_subfolders = get_query_value('search_subfolders')
+        search_subfolders = get_input_value('search_subfolders')
         if search_subfolders is True:
             results = context.get_root_search(resource.path, False)
             if len(args) == 0:
@@ -288,10 +290,10 @@ class Folder_BrowseContent(SearchForm):
 
 
     def sort_and_batch(self, resource, context, results):
-        start = context.get_query_value('batch_start')
-        size = context.get_query_value('batch_size')
-        sort_by = context.get_query_value('sort_by')
-        reverse = context.get_query_value('reverse')
+        start = context.get_input_value('batch_start')
+        size = context.get_input_value('batch_size')
+        sort_by = context.get_input_value('sort_by')
+        reverse = context.get_input_value('reverse')
         resources = results.get_documents(sort_by=sort_by, reverse=reverse,
                                           start=start, size=size)
 

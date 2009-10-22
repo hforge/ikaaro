@@ -24,8 +24,7 @@ from decimal import Decimal
 from types import FunctionType, MethodType
 
 # Import from itools
-from itools.datatypes import Unicode
-from itools.fs import lfs
+from itools.datatypes import String, Unicode
 from itools.gettext import MSG
 from itools.stl import stl
 from itools.uri import Path, get_reference
@@ -33,6 +32,7 @@ from itools.web import ERROR, INFO, STLForm
 
 # Import from ikaaro
 from boot import ui
+from forms import TextField
 from skins_views import LanguagesTemplate, LocationTemplate
 
 
@@ -48,6 +48,12 @@ class Skin(STLForm):
     # User Interface widgets
     languages_template = LanguagesTemplate
     location_template = LocationTemplate
+
+
+    #######################################################################
+    # Schema
+    #######################################################################
+    language = TextField(source='query', datatype=String)
 
 
     #######################################################################
@@ -69,7 +75,7 @@ class Skin(STLForm):
             here_title = here.get_title()
 
         # The view
-        view_title = context.view.get_title(context)
+        view_title = context.view.get_view_title(context)
         if type(view_title) is MSG:
             view_title = view_title.gettext()
 
@@ -328,7 +334,7 @@ class Skin(STLForm):
         # Set the language cookie if specified by the query.
         # NOTE We do it this way, instead of through a specific action, to
         # avoid redirections.
-        language = context.get_query_value('language')
+        language = context.input['language']
         if language is not None:
             context.set_cookie('language', language)
 

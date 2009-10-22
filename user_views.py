@@ -18,15 +18,16 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.datatypes import Email, String, Unicode
+from itools.datatypes import String
 from itools.gettext import MSG
 from itools.i18n import get_language_name
 from itools.web import BaseView, STLView, STLForm, INFO, ERROR
 from itools.xapian import PhraseQuery, AndQuery, OrQuery, StartQuery
 
 # Import from ikaaro
-from autoform import TextWidget, PasswordWidget, AutoForm
+from autoform import AutoForm
 from folder import Folder_BrowseContent
+from forms import EmailField, PasswordField, TextField
 import messages
 
 
@@ -158,26 +159,21 @@ class User_EditAccount(AutoForm):
     description = MSG(u'Edit your name and email address.')
     icon = 'card.png'
     schema = {
-        'firstname': Unicode,
-        'lastname': Unicode,
-        'email': Email,
-        'password': String}
-    widgets = [TextWidget('firstname', title=MSG(u"First Name")),
-               TextWidget('lastname', title=MSG(u"Last Name")),
-               TextWidget('email', title=MSG(u"E-mail Address"))]
+        'firstname': TextField('firstname', title=MSG(u'First Name')),
+        'lastname': TextField('lastname', title=MSG(u'Last Name')),
+        'email': EmailField('email', title=MSG(u"E-mail Address")),
+        'password': PasswordField('password', required=True,
+                                  title=MSG(u"To confirm these changes, you "
+                                            u"must type your password"))}
 
 
     def get_widgets(self, resource, context):
-        widgets = list(self.widgets)
-
+        # FIXME
         # User must confirm?
         if resource.path == context.user.path:
-            widgets.append(PasswordWidget('password',
-                mandatory=True,
-                title=MSG(u"To confirm these changes, "
-                          u"you must type your password")))
+            return ['firstname', 'lastname', 'email', 'password']
 
-        return widgets
+        return ['firstname', 'lastname', 'email']
 
 
     def get_value(self, resource, context, name, datatype):

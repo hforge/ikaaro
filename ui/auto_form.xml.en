@@ -10,16 +10,8 @@
     <legend>${title}</legend>
     <p stl:if="description">${description}</p>
     <table>
-      <tr stl:repeat="widget widgets">
-        <td>
-          <label for="${widget/name}">${widget/title}</label>
-          <span stl:if="widget/mandatory" class="field-is-missing"
-            title="This field is required">*</span>
-          <span stl:if="widget/tip" title="${widget/tip}">(?)</span>
-          <br/>
-          <span stl:if="widget/error" class="field-error">${widget/error}<br/></span>
-          ${widget/widget}
-        </td>
+      <tr stl:repeat="field fields">
+        <td>${field}</td>
       </tr>
     </table>
     <p stl:if="submit_value">
@@ -27,7 +19,7 @@
     </p>
   </fieldset>
   <script language="javascript">
-    $("#${first_widget}").focus();
+    $("#${first_field}").focus();
   </script>
 </form>
 

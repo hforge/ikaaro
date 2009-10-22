@@ -42,9 +42,9 @@ class Table_View(SearchForm):
     title = MSG(u'View')
     icon = 'view.png'
 
+
     schema = {
-        'ids': Integer(multiple=True, mandatory=True),
-    }
+        'ids': Integer(multiple=True, mandatory=True)}
 
     def get_widgets(self, resource, context):
         return resource.get_form()

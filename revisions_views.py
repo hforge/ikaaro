@@ -24,7 +24,7 @@ from itools.core import merge_dicts
 from itools.datatypes import Boolean, String
 from itools.gettext import MSG
 from itools.uri import encode_query, get_reference
-from itools.web import STLView, ERROR
+from itools.web import STLView, ViewField, ERROR
 
 # Import from ikaaro
 from buttons import Button
@@ -130,12 +130,13 @@ class DBResource_CommitLog(BrowseForm):
     access = 'is_allowed_to_edit'
     title = MSG(u"Commit Log")
 
-    schema = {
-        'ids': IndexRevision(multiple=True, mandatory=True),
-    }
-    query_schema = merge_dicts(BrowseForm.query_schema,
-                               sort_by=String(default='date'),
-                               reverse=Boolean(default=True))
+    ids = ViewField(datatype=IndexRevision, required=True)
+
+    sort_by = BrowseForm.sort_by()
+    sort_by.datatype = String(default='date')
+
+    reverse = BrowseForm.reverse()
+    reverse.datatype = Boolean(default=True)
 
     table_columns = [
         ('checkbox', None),

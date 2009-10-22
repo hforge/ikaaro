@@ -20,7 +20,7 @@ from itools.datatypes import Boolean, Integer, String, Unicode
 from itools.gettext import MSG
 from itools.stl import stl
 from itools.uri import get_reference
-from itools.web import STLView, STLForm
+from itools.web import STLView, STLForm, ViewField
 from itools.xml import XMLParser
 
 # Import from ikaaro
@@ -119,11 +119,16 @@ class BrowseForm(STLForm):
 
     template = 'generic/browse.xml'
 
-    query_schema = {
-        'batch_start': Integer(default=0),
-        'batch_size': Integer(default=20),
-        'sort_by': String,
-        'reverse': Boolean(default=False)}
+    batch_start = ViewField(source='query')
+    batch_start.datatype = Integer(default=0)
+
+    batch_size = ViewField(source='query')
+    batch_size.datatype = Integer(default=20)
+
+    sort_by = ViewField(source='query', datatype=String)
+
+    reverse = ViewField(source='query')
+    reverse.datatype = Boolean(default=False)
 
     # Batch
     batch_template = 'generic/browse_batch.xml'
@@ -213,8 +218,8 @@ class BrowseForm(STLForm):
             namespace['msg'] = self.batch_msg2.gettext(n=total)
 
         # Start & End
-        start = context.get_query_value('batch_start')
-        size = context.get_query_value('batch_size')
+        start = context.get_input_value('batch_start')
+        size = context.get_input_value('batch_size')
         # If batch_size == 0 => All
         if size == 0:
             size = total
@@ -248,8 +253,8 @@ class BrowseForm(STLForm):
     # Table
     def get_table_head(self, resource, context, items, actions=None):
         # Get from the query
-        sort_by = context.get_query_value('sort_by')
-        reverse = context.get_query_value('reverse')
+        sort_by = context.get_input_value('sort_by')
+        reverse = context.get_input_value('reverse')
 
         columns = self._get_table_columns(resource, context)
         columns_ns = []

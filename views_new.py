@@ -29,8 +29,9 @@ from itools.http import get_context
 from itools.web import FormError
 
 # Import from ikaaro
-from autoform import AutoForm, DateWidget, RadioWidget
-from autoform import name_widget, title_widget
+from autoform import AutoForm
+from forms import DateField, NameField, RadioInput, RadioField, TitleField
+from forms import TextField
 import messages
 from registry import get_resource_class, get_document_types
 from views import ContextMenu
@@ -54,23 +55,18 @@ class NewInstanceByDate(AutoForm):
     """
 
     access = 'is_allowed_to_add'
-    query_schema = freeze({
-        'type': String,
-        'title': Unicode,
-        'date': TodayDataType})
-    schema = freeze({
-        'title': Unicode,
-        'date': TodayDataType(mandatory=True)})
-    widgets = freeze([
-        title_widget,
-        DateWidget('date', title=MSG(u'Date'))])
     submit_value = MSG(u'Add')
     context_menus = freeze([])
 
+    # Schema
+    type = TextField(source='query', datatype=String)
+    title = TitleField()
+    date = DateField(datatype=TodayDataType, required=True, title=MSG(u'Date'))
 
-    def get_title(self, context):
-        if self.title is not None:
-            return self.title
+
+    def get_view_title(self, context):
+        if self.view_title is not None:
+            return self.view_title
         type = context.query['type']
         if not type:
             return MSG(u'Add resource').gettext()
@@ -212,17 +208,16 @@ class NewInstance(NewInstanceByDate):
         'type': String,
         'name': String,
         'title': Unicode})
-    schema = freeze({
-        'name': String,
-        'title': Unicode})
-    widgets = freeze([
-        title_widget,
-        name_widget,
-        RadioWidget('path', title=MSG(u'Path'), has_empty_option=False)])
 
 
     def get_schema(self, resource, context):
-        return merge_dicts(self.schema, path=PathEnumerate(resource=resource))
+        path_datatype = PathEnumerate(resource=resource)
+        path_widget = RadioInput(has_empty_option=False)
+        return {
+            'name': NameField,
+            'title': TitleField,
+            'path': RadioField(datatype=path_datatype, widget=path_widget,
+                               title=MSG(u'Path'))}
 
 
     def get_new_resource_name(self, form):

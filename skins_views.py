@@ -138,7 +138,7 @@ class LocationTemplate(CMSTemplate):
             # Add the menu
             tabs.append({
                 'name': ';%s' % link,
-                'label': view.get_title(context),
+                'label': view.get_view_title(context),
                 'active': active,
                 'class': active and 'active' or None})
 

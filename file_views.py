@@ -35,10 +35,8 @@ from itools.fs import FileName
 from itools.web import BaseView, STLView, INFO, ERROR
 
 # Import from ikaaro
-from autoform import title_widget, description_widget, subject_widget
-from autoform import file_widget, timestamp_widget
-from autoform import FileWidget, TextWidget
-from datatypes import FileDataType, ImageWidth
+from datatypes import ImageWidth
+from forms import FileField, FileInput, ReplaceFileField, TitleField
 import messages
 from multilingual import Multilingual
 from registry import get_resource_class
@@ -48,15 +46,13 @@ from views_new import NewInstance
 
 class File_NewInstance(NewInstance):
 
-    title = MSG(u'Upload File')
+    view_title = MSG(u'Upload File')
     schema = {
-        'title': Unicode,
-        'name': String,
-        'file': FileDataType(mandatory=True)}
-    widgets = [
-        title_widget,
-        TextWidget('name', title=MSG(u'Name'), default=''),
-        FileWidget('file', title=MSG(u'File'), size=35)]
+        'title': TitleField,
+        'name': TextField('name', datatype=String, title=MSG(u'Name')),
+        'file': FileField('file', widget=FileInput(size=35), required=True,
+                          title=MSG(u'File'))}
+
     submit_value = MSG(u'Upload')
 
 
@@ -162,10 +158,7 @@ class File_View(STLView):
 
 class File_Edit(DBResource_Edit):
 
-    schema = merge_dicts(DBResource_Edit.schema, file=FileDataType)
-    widgets = [
-        timestamp_widget, title_widget, file_widget, description_widget,
-        subject_widget]
+    schema = merge_dicts(DBResource_Edit.schema, file=ReplaceFileField)
 
 
     def get_value(self, resource, context, name, datatype):

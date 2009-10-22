@@ -34,7 +34,8 @@ from itools.xapian import PhraseQuery
 from access import RoleAware_BrowseUsers, RoleAware_AddUser
 from access import RoleAware_EditMembership
 from folder_views import Folder_Orphans
-from forms import MultilineWidget, SelectWidget, TextWidget
+from forms import TextWidget
+from forms import SelectField, TextField, Textarea
 import messages
 from resource_views import DBResource_Edit
 from views import IconsView, ContextMenu
@@ -159,18 +160,18 @@ class CPEditSecurityPolicy(STLForm):
 
 class ContactsOptions(Enumerate):
 
-    @classmethod
     def get_options(cls):
         options = []
         resource = cls.resource
-        for user_name in resource.get_users():
-            user = get_context().get_user_by_name(user_name)
-            if user.get_title() != user.get_value('email'):
-                user_title = '%s <%s>' % (user.get_title(),
-                                          user.get_value('email'))
+        for username in resource.get_users():
+            user = get_context().get_user_by_name(username)
+            title = user.get_title()
+            email = user.get_value('email')
+            if title != email:
+                user_title = '%s <%s>' % (title, email)
             else:
-                user_title = user.get_value('email')
-            options.append({'name': user_name, 'value': user_title})
+                user_title = email
+            options.append({'name': username, 'value': user_title})
         options.sort(key=itemgetter('value'))
         return options
 
@@ -185,18 +186,25 @@ class CPEditContactOptions(DBResource_Edit):
     context_menus = context_menus
 
 
-    widgets = [
-        SelectWidget('emails_from_addr', title=MSG(u'Emails from addr')),
-        MultilineWidget('emails_signature', title=MSG(u'Emails signature')),
-        SelectWidget('contacts', title=MSG(u'Select the contact accounts')),
-        ]
+    emails_signature = TextField(title=MSG(u'Emails signature'))
+    emails_signature.widget = Textarea
 
 
-    def get_schema(self, resource, context):
-        return {
-          'emails_from_addr': ContactsOptions(resource=resource),
-          'emails_signature': Unicode,
-          'contacts': ContactsOptions(multiple=True, resource=resource)}
+    def get_field(self, name, resource, context):
+        if name == 'emails_from_addr':
+            datatype = ContactsOptions(resource=resource)
+            title = MSG(u'Emails from addr')
+            return SelectField(name, datatype=datatype, title=title)
+        elif name == 'contacts':
+            datatype = ContactsOptions(multiple=True, resource=resource)
+            title = MSG(u'Select the contact accounts')
+            return SelectField(name, datatype=datatype, title=title)
+        else:
+            return DBResource_Edit.get_field(self, name, resource, context)
+
+
+    field_names = ['emails_from_addr', 'emails_signature', 'contacts']
+
 
 
     def get_value(self, resource, context, name, datatype):
