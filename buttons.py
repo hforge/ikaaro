@@ -122,7 +122,7 @@ class PublishButton(Button):
 class RetireButton(Button):
 
     access = 'is_allowed_to_retire'
-    css = 'button_retire'
+    css = 'button-retire'
     name = 'retire'
     title = MSG(u'Unpublish')
 
