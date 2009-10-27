@@ -18,8 +18,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# Import from operator
+from operator import itemgetter
+
 # Import from itools
-from itools.datatypes import Boolean, String
+from itools.datatypes import Boolean, Enumerate, String, Unicode
 from itools.gettext import MSG
 from itools.i18n import get_language_name, get_languages
 from itools.uri import Path
@@ -30,7 +33,9 @@ from itools.xapian import PhraseQuery
 from access import RoleAware_BrowseUsers, RoleAware_AddUser
 from access import RoleAware_EditMembership
 from folder_views import Folder_Orphans
+from forms import MultilineWidget, SelectWidget
 import messages
+from resource_views import DBResource_Edit
 from utils import get_base_path_query
 from views import IconsView, ContextMenu
 
@@ -150,47 +155,59 @@ class CPEditSecurityPolicy(CPBaseView, STLForm):
 
 
 
-class CPEditContactOptions(CPBaseView, STLForm):
+class ContactsOptions(Enumerate):
+
+    @classmethod
+    def get_options(cls):
+        options = []
+        resource = cls.resource
+        users = resource.get_resource('/users')
+        for user_name in resource.get_members():
+            user = users.get_resource(user_name)
+            if user.get_title() != user.get_property('email'):
+                user_title = '%s <%s>' % (user.get_title(),
+                                          user.get_property('email'))
+            else:
+                user_title = user.get_property('email')
+            options.append({'name': user_name, 'value': user_title})
+        options.sort(key=itemgetter('value'))
+        return options
+
+
+
+class CPEditContactOptions(CPBaseView, DBResource_Edit):
 
     access = 'is_allowed_to_edit'
-    title = MSG(u'Contact Options')
+    title = MSG(u'Email options')
     icon = 'mail.png'
-    description = MSG(u'Configure the Contact form.')
-    template = '/ui/website/contact_options.xml'
-    schema = {
-        'contacts': String(multiple=True)}
+    description = MSG(u'Configure the website email options')
 
 
-    def get_namespace(self, resource, context):
-        # Find out the contacts
-        contacts = resource.get_property('contacts')
+    widgets = [
+        SelectWidget('emails_from_addr', title=MSG(u'Emails from addr')),
+        MultilineWidget('emails_signature', title=MSG(u'Emails signature')),
+        SelectWidget('contacts', title=MSG(u'Select the contact accounts')),
+        ]
 
-        # Build the namespace
-        users = resource.get_resource('/users')
-        # Only members of the website are showed
-        namespace = {}
-        namespace['contacts'] = []
-        for username in resource.get_members():
-            user = users.get_resource(username)
-            email = user.get_property('email')
-            if not email:
-                continue
-            namespace['contacts'].append(
-                {'name': username,
-                 'email': email,
-                 'title': user.get_title(),
-                 'is_selected': username in contacts})
 
-        # Sort
-        namespace['contacts'].sort(key=lambda x: x['email'])
+    def get_schema(self, resource, context):
+        return {
+          'emails_from_addr': ContactsOptions(resource=resource),
+          'emails_signature': Unicode,
+          'contacts': ContactsOptions(multiple=True, resource=resource)}
 
-        return namespace
+
+    def get_value(self, resource, context, name, datatype):
+        if name == 'contacts':
+            return list(resource.get_property('contacts'))
+        return DBResource_Edit.get_value(self, resource, context, name,
+                  datatype)
 
 
     def action(self, resource, context, form):
-        contacts = form['contacts']
-        contacts = tuple(contacts)
-        resource.set_property('contacts', contacts)
+        resource.set_property('emails_from_addr', form['emails_from_addr'])
+        resource.set_property('emails_signature', form['emails_signature'])
+        resource.set_property('contacts', tuple(form['contacts']))
         # Ok
         context.message = messages.MSG_CHANGES_SAVED
 

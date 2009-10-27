@@ -23,7 +23,7 @@ from decimal import Decimal
 from types import GeneratorType
 
 # Import from itools
-from itools.datatypes import Tokens
+from itools.datatypes import String, Tokens, Unicode
 from itools.gettext import MSG
 from itools.html import stream_to_str_as_html, xhtml_doctype
 from itools.web import STLView
@@ -79,6 +79,8 @@ class WebSite(RoleAware, Folder):
         schema.update(RoleAware.get_metadata_schema())
         schema['vhosts'] = Tokens
         schema['contacts'] = Tokens
+        schema['emails_from_addr'] = String
+        schema['emails_signature'] = Unicode
         schema['website_languages'] = Tokens(default=('en',))
         return schema
 

@@ -233,17 +233,25 @@ class Root(WebSite):
         # Figure out the from address
         context = get_context()
         server = context.server
+        site_root = context.site_root
         if from_addr is None:
             user = context.user
             if user is not None:
-                from_addr = user.get_property('email')
-            if not from_addr:
+                from_addr = user.get_title(), user.get_property('email')
+            elif site_root.get_property('emails_from_addr'):
+                user_name = site_root.get_property('emails_from_addr')
+                user = self.get_resource('/users/%s' % user_name)
+                from_addr = user.get_title(), user.get_property('email')
+            else:
                 from_addr = server.smtp_from
 
         # Set the subject
         subject = subject.encode(encoding)
         if subject_with_host is True:
             subject = '[%s] %s' % (context.uri.authority, subject)
+        # Add signature
+        if site_root.get_property('emails_signature'):
+            text += '\n\n-- \n%s' % site_root.get_property('emails_signature')
         # Build the message
         message = MIMEMultipart('related')
         message['Subject'] = Header(subject, encoding)
