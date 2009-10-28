@@ -35,6 +35,7 @@ from control_panel import ControlPanel, CPAddUser, CPBrokenLinks
 from control_panel import CPBrowseUsers, CPEditContactOptions, CPEditLanguages
 from control_panel import CPEditMembership, CPEditSecurityPolicy
 from control_panel import CPEditVirtualHosts, CPOrphans
+from control_panel import CPEditSearchEngineOptimizations
 from folder import Folder
 from registry import register_resource_class, register_document_type
 from resource_views import LoginView
@@ -57,7 +58,8 @@ class WebSite(RoleAware, Folder):
     class_views = Folder.class_views + ['control_panel']
     class_control_panel = ['browse_users', 'add_user', 'edit_virtual_hosts',
                            'edit_security_policy', 'edit_languages',
-                           'edit_contact_options', 'broken_links', 'orphans']
+                           'edit_contact_options', 'broken_links', 'orphans',
+                           'edit_search_engine_optimizations']
 
 
     __fixed_handlers__ = ['skin', 'index']
@@ -81,6 +83,7 @@ class WebSite(RoleAware, Folder):
         schema['contacts'] = Tokens
         schema['emails_from_addr'] = String
         schema['emails_signature'] = Unicode
+        schema['google-site-verification'] = String
         schema['website_languages'] = Tokens(default=('en',))
         return schema
 
@@ -167,6 +170,7 @@ class WebSite(RoleAware, Folder):
     edit_membership = CPEditMembership()
     edit_virtual_hosts = CPEditVirtualHosts()
     edit_security_policy = CPEditSecurityPolicy()
+    edit_search_engine_optimizations = CPEditSearchEngineOptimizations()
     edit_contact_options = CPEditContactOptions()
     edit_languages = CPEditLanguages()
     broken_links = CPBrokenLinks()

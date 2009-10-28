@@ -33,7 +33,7 @@ from itools.xapian import PhraseQuery
 from access import RoleAware_BrowseUsers, RoleAware_AddUser
 from access import RoleAware_EditMembership
 from folder_views import Folder_Orphans
-from forms import MultilineWidget, SelectWidget
+from forms import MultilineWidget, SelectWidget, TextWidget
 import messages
 from resource_views import DBResource_Edit
 from utils import get_base_path_query
@@ -348,6 +348,30 @@ class CPEditLanguages(CPBaseView, STLForm):
         # Ok
         context.message = INFO(u'Language added.')
 
+
+
+class CPEditSearchEngineOptimizations(CPBaseView, DBResource_Edit):
+
+    access = 'is_allowed_to_edit'
+    title = MSG(u'Search engine optimization')
+    icon = 'search.png'
+    description = MSG(u"""
+      Optimize your website for better ranking in search engine results.""")
+
+
+    schema = {'google-site-verification': String}
+
+    widgets = [
+        TextWidget('google-site-verification',
+            title=MSG(u'Google site verification key')),
+        ]
+
+
+    def action(self, resource, context, form):
+        resource.set_property('google-site-verification',
+            form['google-site-verification'])
+        # Ok
+        context.message = messages.MSG_CHANGES_SAVED
 
 
 
