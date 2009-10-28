@@ -86,8 +86,16 @@ class CMSContext(WebContext):
                    return_receipt=False):
 
         # From address
-        if from_addr is None and self.user:
-            from_addr = user.get_property('email')
+        if from_addr is None:
+            if self.user:
+                from_addr = user.get_property('email')
+            else:
+                root = self.get_resource('/')
+                username = root.get_property('emails_from_addr')
+                if username:
+                    user = self.get_user_by_name(username)
+                    if user:
+                        from_addr = user.get_property('email')
 
         # Subject
         if subject_with_host:
