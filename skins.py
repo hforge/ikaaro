@@ -76,7 +76,7 @@ class Skin(STLForm):
             here_title = here.get_title()
 
         # The view
-        view_title = context.view.get_view_title(context)
+        view_title = context.view.view_title
         if type(view_title) is MSG:
             view_title = view_title.gettext()
 

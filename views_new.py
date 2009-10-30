@@ -64,10 +64,8 @@ class NewInstanceByDate(AutoForm):
     date = DateField(datatype=TodayDataType, required=True, title=MSG(u'Date'))
 
 
-    def get_view_title(self, context):
-        if self.view_title is not None:
-            return self.view_title
-        type = context.query['type']
+    def view_title(self):
+        type = self.title.value
         if not type:
             return MSG(u'Add resource').gettext()
         cls = get_resource_class(type)

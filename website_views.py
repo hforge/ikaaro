@@ -65,7 +65,7 @@ class InternalServerError(STLView):
 class ForgottenPasswordForm(AutoForm):
 
     access = True
-    title = MSG(u'Forgotten password')
+    view_title = MSG(u'Forgotten password')
     submit_value = MSG(u'Ok')
     meta = [('robots', 'noindex, follow', None)]
 
@@ -108,7 +108,7 @@ class ForgottenPasswordForm(AutoForm):
 class RegisterForm(AutoForm):
 
     access = 'is_allowed_to_register'
-    title = MSG(u'Register')
+    view_title = MSG(u'Register')
     submit_value = MSG(u'Register')
 
     schema = {
@@ -169,7 +169,7 @@ class ContactOptions(Enumerate):
 class ContactForm(AutoForm):
 
     access = True
-    title = MSG(u'Contact')
+    view_title = MSG(u'Contact')
     submit_value = MSG(u'Send')
     query_schema = {'to': String,
                     'subject': Unicode,
@@ -232,7 +232,7 @@ class ContactForm(AutoForm):
 class SiteSearchView(SearchForm):
 
     access = True
-    title = MSG(u'Search')
+    view_title = MSG(u'Search')
     template = 'website/search.xml'
 
     site_search_text = ViewField(source='query', datatype=Unicode)
@@ -306,7 +306,7 @@ class SiteSearchView(SearchForm):
 class AboutView(STLView):
 
     access = True
-    title = MSG(u'About')
+    view_title = MSG(u'About')
     template = 'root/about.xml'
 
 
@@ -378,7 +378,7 @@ class AboutView(STLView):
 class CreditsView(STLView):
 
     access = True
-    title = MSG(u'Credits')
+    view_title = MSG(u'Credits')
     template = 'root/credits.xml'
     styles = ['/ui/credits.css']
 

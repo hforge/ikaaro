@@ -76,7 +76,7 @@ context_menus = [ControlPanelMenu()]
 class ControlPanel(IconsView):
 
     access = 'is_allowed_to_edit'
-    title = MSG(u'Control Panel')
+    view_title = MSG(u'Control Panel')
     icon = 'settings.png'
     context_menus = context_menus
 

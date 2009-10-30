@@ -128,7 +128,7 @@ class DiffButton(Button):
 class DBResource_CommitLog(BrowseForm):
 
     access = 'is_allowed_to_edit'
-    title = MSG(u"Commit Log")
+    view_title = MSG(u"Commit Log")
 
     ids = ViewField(datatype=IndexRevision, required=True)
 
@@ -193,7 +193,7 @@ class DBResource_CommitLog(BrowseForm):
 class DBResource_Changes(STLView):
 
     access = 'is_admin'
-    title = MSG(u'Changes')
+    view_title = MSG(u'Changes')
     template = 'revisions/changes.xml'
 
     query_schema = {

@@ -68,7 +68,7 @@ class EditLanguageMenu(ContextMenu):
 class DBResource_Edit(AutoForm):
 
     access = 'is_allowed_to_edit'
-    title = MSG(u'Edit')
+    view_title = MSG(u'Edit')
     icon = 'metadata.png'
     context_menus = [EditLanguageMenu()]
 
@@ -146,7 +146,7 @@ class DBResource_Backlinks(Folder_BrowseContent):
     """
 
     access = 'is_allowed_to_view'
-    title = MSG(u"Backlinks")
+    view_title = MSG(u"Backlinks")
     icon = 'rename.png'
 
     search_template = None
@@ -529,7 +529,7 @@ class DBResource_AddMedia(DBResource_AddImage):
 class LoginView(STLForm):
 
     access = True
-    title = MSG(u'Login')
+    view_title = MSG(u'Login')
     template = 'base/login.xml'
     meta = [('robots', 'noindex, follow', None)]
 
