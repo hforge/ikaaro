@@ -538,14 +538,14 @@ class LoginView(STLForm):
     password = PasswordField(required=True)
 
 
-    def cook(self, resource, context, method):
-        STLForm.cook.im_func(self, resource, context, method)
+    def cook(self, method):
+        super(LoginView, self).cook(method)
 
         if method == 'get':
             return
 
         # Check the user exists
-        user = self.get_user(context)
+        user = self.get_user()
         if user is None:
             field = self.username
             error = MSG(u'The user "{username}" does not exist.')
@@ -559,14 +559,14 @@ class LoginView(STLForm):
             raise FormError
 
 
-    def get_user(self, context):
+    def get_user(self):
         username = self.username.value
-        return context.get_user_by_login(username)
+        return self.context.get_user_by_login(username)
 
 
     def action(self, resource, context):
         # Set cookie
-        user = self.get_user(context)
+        user = self.get_user()
         password = self.password.value
         user.set_auth_cookie(context, password)
 

@@ -90,8 +90,8 @@ class WebSite(RoleAware, Folder, VirtualRoot):
     #######################################################################
     # HTTP stuff
     #######################################################################
-    def get_skin(self, body, context):
-        return Skin(body=body, context=context)
+    def get_skin(self):
+        return Skin
 
     # Views for error conditions
     http_forbidden = ForbiddenView()
@@ -124,7 +124,7 @@ class WebSite(RoleAware, Folder, VirtualRoot):
     contact = ContactForm()
     about = AboutView()
     credits = CreditsView()
-    license = STLView(access=True, title=MSG(u'License'),
+    license = STLView(access=True, view_title=MSG(u'License'),
                       template='root/license.xml')
 
     # Calendar views

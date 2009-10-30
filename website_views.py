@@ -23,7 +23,7 @@ import sys
 from traceback import format_exc
 
 # Import from itools
-from itools.core import freeze, get_abspath, merge_dicts
+from itools.core import freeze, get_abspath, merge_dicts, thingy_property
 from itools.datatypes import Email, String, Unicode
 from itools.datatypes import Enumerate
 from itools.fs import lfs
@@ -182,19 +182,22 @@ class ContactForm(AutoForm):
 
 
     field_names = ['to', 'from', 'subject', 'message_body']
-    def get_field(self, name):
-        # 'to' is dynamic
-        if name == 'to':
-            contact_options = ContactOptions(resource=self.resource)
-            return SelectField('to', datatype=contact_options, required=True,
-                               title=MSG(u'Recipient'))
 
+    @thingy_property
+    def to(self):
+        field = SelectField('to', required=True)
+        field.datatype = ContactOptions(resource=self.resource)
+        field.title = MSG(u'Recipient')
+        return field
+
+
+    def get_field(self, name):
         # 'from' is a Python reserved word
         if name == 'from':
             return EmailField('from', required=True,
                               title=MSG(u'Your email address'))
 
-        return AutoForm.get_field.im_func(self, name)
+        return super(ContactForm, self).get_field(name)
 
 
     def get_value(self, resource, context, name, field):

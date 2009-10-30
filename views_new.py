@@ -20,7 +20,7 @@ from operator import itemgetter
 from urllib import quote
 
 # Import from itools
-from itools.core import freeze, merge_dicts
+from itools.core import freeze, merge_dicts, thingy_property
 from itools.csv import Property
 from itools.datatypes import Date, String, Unicode, Enumerate
 from itools.gettext import MSG
@@ -91,13 +91,14 @@ class NewInstanceByDate(AutoForm):
         return 'new.png'
 
 
-    def get_new_resource_name(self, form):
-        return form['title'].strip()
+    def get_new_resource_name(self):
+        return self.title.value.strip()
 
 
-    def _get_form(self, resource, context):
-        form = AutoForm._get_form(self, resource, context)
-        name = self.get_new_resource_name(form)
+    def cook(self, method):
+        super(NewInstanceByDate, self).cook(method)
+
+        name = self.get_new_resource_name()
 
         # Check the name
         if not name:
@@ -120,19 +121,19 @@ class NewInstanceByDate(AutoForm):
         return form
 
 
-    def get_date(self, context, form):
-        return form['date']
+    def get_date(self):
+        return self.date.value
 
 
-    def get_container(self, context, form):
+    def get_container(self):
         from folder import Folder
 
         # The path of the container
-        date = self.get_date(context, form)
+        date = self.get_date()
         path = ['%04d' % date.year, '%02d' % date.month, '%02d' % date.day]
 
         # Get the container, create it if needed
-        container = context.site_root
+        container = self.context.site_root
         for name in path:
             folder = container.get_resource(name, soft=True)
             if folder is None:
@@ -142,28 +143,27 @@ class NewInstanceByDate(AutoForm):
         return container
 
 
-    def get_resource_class(self, context, form):
-        class_id = context.query['type']
-        return get_resource_class(class_id)
+    def get_resource_class(self):
+        return get_resource_class(self.type.value)
 
 
-    def modify_resource(self, resource, context, form, child):
-        title = form['title']
-        language = resource.get_content_language(context)
+    def modify_resource(self, child):
+        title = self.title.value
+        language = self.resource.get_content_language(self.context)
         title = Property(title, lang=language)
         child.metadata.set_property('title', title)
 
 
     def action(self, resource, context, form):
         # 1. Get the container
-        container = self.get_container(context, form)
+        container = self.get_container()
 
         # 2. Make the resource
-        cls = self.get_resource_class(context, form)
+        cls = self.get_resource_class()
         child = container.make_resource(form['name'], cls)
 
         # 3. Edit the resource
-        self.modify_resource(resource, context, form, child)
+        self.modify_resource(child)
 
         # 4. Ok
         context.message = messages.MSG_NEW_RESOURCE
@@ -202,34 +202,29 @@ class PathEnumerate(Enumerate):
 
 class NewInstance(NewInstanceByDate):
 
-    query_schema = freeze({
-        'type': String,
-        'name': String,
-        'title': Unicode})
+    name = NameField
+    date = None
 
 
-    def get_schema(self, resource, context):
-        path_datatype = PathEnumerate(resource=resource)
-        path_widget = RadioInput(has_empty_option=False)
-        return {
-            'name': NameField,
-            'title': TitleField,
-            'path': RadioField(datatype=path_datatype, widget=path_widget,
-                               title=MSG(u'Path'))}
+    @thingy_property
+    def path(self):
+        field = RadioField()
+        field.datatype = PathEnumerate(resource=self.resource)
+        field.widget = RadioInput(has_empty_option=False)
+        field.title = title=MSG(u'Path')
+        return field
 
 
-    def get_new_resource_name(self, form):
+    def get_new_resource_name(self):
         # If the name is not explicitly given, use the title
-        name = form['name']
-        title = form['title'].strip()
-        if name is None:
-            return title
+        name = self.name.value
+        title = self.title.value.strip()
         return name or title
 
 
-    def get_container(self, context, form):
-        path = form['path']
-        return context.get_resource(path)
+    def get_container(self):
+        path = self.path.value
+        return self.context.get_resource(path)
 
 
 
@@ -243,10 +238,10 @@ class ProxyNewInstance(NewInstance):
     """
 
     template = 'base/proxy_new_instance.xml'
-    schema = {
-        'name': String,
-        'title': Unicode,
-        'class_id': String}
+
+    name = NameField
+    title = TitleField
+    class_id = TextField(datatype=String)
 
 
     def get_namespace(self, resource, context):

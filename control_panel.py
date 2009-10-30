@@ -22,6 +22,7 @@
 from operator import itemgetter
 
 # Import from itools
+from itools.core import thingy_property
 from itools.datatypes import Boolean, Enumerate, String, Unicode
 from itools.gettext import MSG
 from itools.http import get_context
@@ -190,21 +191,21 @@ class CPEditContactOptions(DBResource_Edit):
     emails_signature.widget = Textarea
 
 
-    def get_field(self, name):
-        if name == 'emails_from_addr':
-            datatype = ContactsOptions(resource=self.resource)
-            title = MSG(u'Emails from addr')
-            return SelectField(name, datatype=datatype, title=title)
-        elif name == 'contacts':
-            datatype = ContactsOptions(multiple=True, resource=self.resource)
-            title = MSG(u'Select the contact accounts')
-            return SelectField(name, datatype=datatype, title=title)
-        else:
-            return DBResource_Edit.get_field.im_func(self, name)
+    @thingy_property
+    def emails_from_addr(self):
+        datatype = ContactsOptions(resource=self.resource)
+        title = MSG(u'Emails from addr')
+        return SelectField(name, datatype=datatype, title=title)
+
+
+    @thingy_property
+    def contacts(self):
+        datatype = ContactsOptions(multiple=True, resource=self.resource)
+        title = MSG(u'Select the contact accounts')
+        return SelectField(name, datatype=datatype, title=title)
 
 
     field_names = ['emails_from_addr', 'emails_signature', 'contacts']
-
 
 
     def get_value(self, resource, context, name, datatype):
