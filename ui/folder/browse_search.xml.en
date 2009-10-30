@@ -13,7 +13,8 @@
         stl:repeat="field search_fields">${field/title}</option>
     </select>
     <!-- Term -->
-    <input type="text" name="search_term" size="35" value="${search_term}" />
+    <input type="text" name="search_term" size="35"
+      value="${search_term/value}" />
     <!-- SubFolders -->
     &nbsp;
     <input type="checkbox" name="search_subfolders" id="search-subfolders"

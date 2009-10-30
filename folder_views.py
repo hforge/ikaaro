@@ -247,7 +247,7 @@ class Folder_BrowseContent(SearchForm):
 
 
     @thingy_lazy_property
-    def items(self):
+    def all_items(self):
         resource = self.resource
         context = self.context
 
@@ -275,18 +275,18 @@ class Folder_BrowseContent(SearchForm):
         path = str(path)
         parent_query = PhraseQuery('parent_path', path)
         query = AndQuery(parent_query, *args) if args else parent_query
-        items = context.search(query)
-        items = items.get_documents()
-        return list(items)
+        return context.search(query)
 
 
-    def sort_and_batch(self):
+    @thingy_lazy_property
+    def items(self):
         start = self.batch_start.value
         size = self.batch_size.value
         sort_by = self.sort_by.value
         reverse = self.reverse.value
-        resources = self.items.get_documents(sort_by=sort_by, reverse=reverse,
-                                             start=start, size=size)
+        items = self.all_items
+        resources = items.get_documents(sort_by=sort_by, reverse=reverse,
+                                        start=start, size=size)
 
         # FIXME This must be done in the catalog
         if sort_by == 'title':
@@ -601,7 +601,7 @@ class Folder_PreviewContent(Folder_BrowseContent):
 
 
     @thingy_lazy_property
-    def items(self):
+    def all_items(self):
         # Show only images
         query = OrQuery(PhraseQuery('is_image', True),
                         PhraseQuery('format', 'folder'))
@@ -661,7 +661,7 @@ class Folder_PreviewContent(Folder_BrowseContent):
         # (1) Actions (submit buttons)
         ac = resource.get_access_control()
         actions = []
-        for button in self.get_table_actions(resource, context):
+        for button in self.table_actions:
             if button.show(resource, context, items) is False:
                 continue
             if button.confirm:
@@ -750,7 +750,7 @@ class Folder_Orphans(Folder_BrowseContent):
 
 
     @thingy_lazy_property
-    def items(self):
+    def all_items(self):
         # Make the base search
         items = Folder_BrowseContent.get_items(self, resource, context)
 
