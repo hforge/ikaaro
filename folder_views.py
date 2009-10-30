@@ -82,7 +82,7 @@ class ZoomMenu(ContextMenu):
 class Folder_View(BaseView):
 
     access = 'is_allowed_to_view_folder'
-    title = MSG(u'View')
+    view_title = MSG(u'View')
 
 
     def http_get(self):
@@ -103,7 +103,7 @@ class Folder_View(BaseView):
 class Folder_NewResource(IconsView):
 
     access = 'is_allowed_to_add'
-    title = MSG(u'Add resource')
+    view_title = MSG(u'Add resource')
     icon = 'new.png'
 
 
@@ -125,7 +125,7 @@ class Folder_NewResource(IconsView):
 class Folder_Rename(STLForm):
 
     access = 'is_allowed_to_edit'
-    title = MSG(u'Rename resources')
+    view_title = MSG(u'Rename resources')
     template = 'folder/rename.xml'
     query_schema = {
         'ids': String(multiple=True)}
@@ -221,7 +221,7 @@ class Folder_Rename(STLForm):
 class Folder_BrowseContent(SearchForm):
 
     access = 'is_allowed_to_view'
-    title = MSG(u'Browse Content')
+    view_title = MSG(u'Browse Content')
     context_menus = []
 
     # Search Form
@@ -582,7 +582,7 @@ class Folder_BrowseContent(SearchForm):
 
 class Folder_PreviewContent(Folder_BrowseContent):
 
-    title = MSG(u'Preview Content')
+    view_title = MSG(u'Preview Content')
     styles = ['/ui/gallery/style.css']
     scripts = ['/ui/gallery/javascript.js']
 
@@ -744,7 +744,7 @@ class Folder_Orphans(Folder_BrowseContent):
     """
 
     access = 'is_allowed_to_view'
-    title = MSG(u"Orphans")
+    view_title = MSG(u"Orphans")
     icon = 'orphans.png'
     description = MSG(u"Show resources not linked from anywhere.")
 
@@ -821,7 +821,7 @@ class Folder_Thumbnail(BaseView):
 class GoToSpecificDocument(BaseView):
 
     access = 'is_allowed_to_view'
-    title = MSG(u'Front Page')
+    view_title = MSG(u'Front Page')
     icon = 'view.png'
     specific_document = 'FrontPage'
 

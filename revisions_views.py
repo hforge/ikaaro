@@ -33,7 +33,7 @@ class DBResource_LastChanges(BrowseForm):
 
 
     access = 'is_allowed_to_view'
-    title = MSG(u"Last Changes")
+    view_title = MSG(u"Last Changes")
 
     sort_by = BrowseForm.sort_by()
     sort_by.datatype = String(default='date')
@@ -80,7 +80,7 @@ class DBResource_LastChanges(BrowseForm):
 class DBResource_Changes(STLView):
 
     access = 'is_admin'
-    title = MSG(u'Changes')
+    view_title = MSG(u'Changes')
     template = 'revisions/changes.xml'
 
     query_schema = {

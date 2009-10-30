@@ -7,7 +7,7 @@
 <form id="autoform" name="autoform" action="${form_action}" method="post"
   enctype="multipart/form-data" stl:omit-tag="not submit_value">
   <fieldset>
-    <legend>${title}</legend>
+    <legend>${view_title}</legend>
     <p stl:if="description">${description}</p>
     <table>
       <tr stl:repeat="field fields">

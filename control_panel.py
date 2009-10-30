@@ -77,7 +77,7 @@ class CPBaseView(object):
 class ControlPanel(CPBaseView, IconsView):
 
     access = 'is_allowed_to_edit'
-    title = MSG(u'Control Panel')
+    view_title = MSG(u'Control Panel')
     icon = 'settings.png'
 
 

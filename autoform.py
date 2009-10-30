@@ -179,10 +179,6 @@ class AutoForm(STLForm):
     description = None
 
 
-    def title(self):
-        return self.get_view_title(self.context)
-
-
     def fields(self):
         resource = self.resource
         context = self.context
