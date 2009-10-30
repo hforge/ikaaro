@@ -74,21 +74,23 @@ class Event_NewInstance(NewInstanceByDate):
         'title', 'dtstart', 'dtend', 'description', 'location', 'status']
 
 
-    def get_date(self, context, form):
-        return form['dtstart']
+    def get_date(self):
+        return self.dtstart.value
 
 
-    def get_resource_class(self, context, form):
+    def get_resource_class(self):
         return Event
 
 
-    def modify_resource(self, resource, context, form, child):
-        language = resource.get_content_language(context)
+    def modify_resource(self, child):
+        language = self.resource.get_content_language(self.context)
         for name in 'title', 'description':
-            property = Property(form[name], lang=language)
+            field = self.get_field(name)
+            property = Property(field.value, lang=language)
             child.metadata.set_property(name, property)
         for name in 'dtstart', 'dtend', 'location', 'status':
-            child.metadata.set_property(name, form[name])
+            field = self.get_field(name)
+            child.metadata.set_property(name, field.value)
 
 
 

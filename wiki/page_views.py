@@ -56,33 +56,27 @@ from ikaaro.resource_views import DBResource_Edit
 
 class WikiPage_NewInstance(NewInstanceByDate):
 
-    query_schema = freeze({'type': String, 'name': String, 'title': Unicode})
-
-    schema = freeze({
-        'name': NameField,
-        'title': TitleField})
+    name = NameField
 
 
-    def get_new_resource_name(self, form):
+    def get_new_resource_name(self):
         # If the name is not explicitly given, use the title
-        name = form['name']
-        title = form['title'].strip()
-        if name is None:
-            return title
+        name = self.name.value
+        title = self.title.value.strip()
         return name or title
 
 
-    def get_container(self, context, form):
+    def get_container(self):
         from folder import WikiFolder
 
-        root = context.site_root
+        root = self.context.site_root
         wiki = root.get_resource('wiki', soft=True)
         if wiki is None:
             return root.make_resource('wiki', WikiFolder)
         return wiki
 
 
-    def get_resource_class(self, context, form):
+    def get_resource_class(self):
         from page import WikiPage
         return WikiPage
 

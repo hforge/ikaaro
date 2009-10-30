@@ -46,19 +46,21 @@ from views_new import NewInstance
 class File_NewInstance(NewInstance):
 
     view_title = MSG(u'Upload File')
-    schema = {
-        'title': TitleField,
-        'file': FileField('file', widget=FileInput(size=35), required=True,
-                          title=MSG(u'File'))}
+
+    file = FileField(required=True, title=MSG(u'File'))
+    file.widget = FileInput(size=35)
 
     submit_value = MSG(u'Upload')
 
 
-    def get_new_resource_name(self, form):
-        filename, mimetype, body = form['file']
-        name, type, language = FileName.decode(filename)
+    def get_new_resource_name(self):
+        title = self.title.value.strip()
+        if title:
+            return title
 
-        return form['title'].strip() or name
+        filename, mimetype, body = self.file.value
+        name, type, language = FileName.decode(filename)
+        return name
 
 
     def action(self, resource, context, form):

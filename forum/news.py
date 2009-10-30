@@ -25,7 +25,7 @@ from ikaaro.views_new import NewInstanceByDate
 
 class News_NewInstance(NewInstanceByDate):
 
-    def get_resource_class(self, context, form):
+    def get_resource_class(self):
         return News
 
 
