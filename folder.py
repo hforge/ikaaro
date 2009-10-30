@@ -308,9 +308,9 @@ class Folder(DBResource):
     def get_view(self, name, query=None):
         # Add resource form
         if name == 'new_resource':
-            if query is not None and 'type' in query:
+            if query and 'type' in query:
                 view = get_resource_class(query['type']).new_instance
-                if isinstance(view, BaseView):
+                if issubclass(view, BaseView):
                     return view
 
         # Default
@@ -318,13 +318,13 @@ class Folder(DBResource):
 
 
     # Views
-    view = Folder_View()
-    new_resource = Folder_NewResource()
-    browse_content = Folder_BrowseContent()
-    rename = Folder_Rename()
-    preview_content = Folder_PreviewContent()
-    orphans = Folder_Orphans()
-    thumb = Folder_Thumbnail()
+    view = Folder_View
+    new_resource = Folder_NewResource
+    browse_content = Folder_BrowseContent
+    rename = Folder_Rename
+    preview_content = Folder_PreviewContent
+    orphans = Folder_Orphans
+    thumb = Folder_Thumbnail
 
 
 
