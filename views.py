@@ -182,13 +182,14 @@ class BrowseForm(STLForm):
 
 
     @thingy_lazy_property
-    def items(self):
-        name = 'get_items'
+    def all_items(self):
+        name = 'all_items'
         raise NotImplementedError, "the '%s' method is not defined" % name
 
 
-    def sort_and_batch(self):
-        name = 'sort_and_batch'
+    @thingy_lazy_property
+    def items(self):
+        name = 'items'
         raise NotImplementedError, "the '%s' method is not defined" % name
 
 
@@ -197,56 +198,64 @@ class BrowseForm(STLForm):
         raise NotImplementedError, "the '%s' method is not defined" % name
 
 
-    def get_table_actions(self):
-        return self.table_actions
-
-
     #######################################################################
     # Batch
-    def batch(self):
-        control = False
+    @thingy_lazy_property
+    def total(self):
+        return len(self.all_items)
 
-        # Message (singular or plural)
-        total = len(self.items)
-        if total == 1:
-            msg = self.batch_msg1.gettext()
-        else:
-            msg = self.batch_msg2.gettext(n=total)
 
-        # Start & End
-        start = self.batch_start.value
-        size = self.batch_size.value
+    @thingy_lazy_property
+    def start(self):
+        return self.batch_start.value + 1
+
+
+    @thingy_lazy_property
+    def size(self):
         # If batch_size == 0 => All
-        if size == 0:
-            size = total
-        end = min(start + size, total)
+        size = self.batch_size.value
+        return self.total if size == 0 else size
 
-        # Previous
-        uri = get_reference(self.context.uri)
+
+    @thingy_lazy_property
+    def end(self):
+        start = self.batch_start.value
+        return min(start + self.size, self.total)
+
+
+    def batch_msg(self):
+        total = self.total
+        if total == 1:
+            return self.batch_msg1.gettext()
+        return self.batch_msg2.gettext(n=total)
+
+
+    def batch_control(self):
+        start = self.batch_start.value
+        return (start > 0) or (self.end < self.total)
+
+
+    @thingy_lazy_property
+    def batch_previous(self):
+        start = self.batch_start.value
         if start > 0:
-            previous = max(start - size, 0)
+            uri = get_reference(self.context.uri)
+            previous = max(start - self.size, 0)
             previous = str(previous)
-            previous = uri.replace(batch_start=previous)
-            control = True
-        else:
-            previous = None
+            return uri.replace(batch_start=previous)
 
-        # Next
-        if end < total:
+        return None
+
+
+    @thingy_lazy_property
+    def batch_next(self):
+        end = self.end
+        if end < self.total:
+            uri = get_reference(self.context.uri)
             next = str(end)
-            next = uri.replace(batch_start=next)
-            control = True
-        else:
-            next = None
+            return uri.replace(batch_start=next)
 
-        # Ok
-        return {
-            'msg': msg,
-            'control': control,
-            'start': start + 1,
-            'end': end,
-            'previous': previous,
-            'next': next}
+        return None
 
 
     #######################################################################
@@ -295,7 +304,7 @@ class BrowseForm(STLForm):
     @thingy_lazy_property
     def actions(self):
         actions = []
-        for button in self.get_table_actions():
+        for button in self.table_actions:
             if button.show(self.resource, self.context, self.items) is False:
                 continue
             if button.confirm:
@@ -312,19 +321,18 @@ class BrowseForm(STLForm):
 
 
     def rows(self):
-        items = self.sort_and_batch()
-        ac = resource.get_access_control()
+        ac = self.resource.get_access_control()
 
         # (3) Table Body: rows
         columns = self.get_table_columns()
         rows = []
-        for item in items:
+        for item in self.items:
             row_columns = []
             for column in columns:
                 column = column[0]
                 # Skip the checkbox column if there are not any actions
                 if column == 'checkbox':
-                    if not self.external_form and not actions:
+                    if not self.external_form and not self.actions:
                         continue
 
                 value = self.get_item_value(item, column)
@@ -393,7 +401,7 @@ class SearchForm(BrowseForm):
 
 
     def search_fields(self):
-        field = self.context.get_query_value('search_field')
+        field = self.search_field.value
         return [
             {'name': name, 'title': title, 'selected': name == field}
             for name, title in self.get_search_fields() ]
