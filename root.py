@@ -98,9 +98,9 @@ class Root(WebSite):
 
 
     @staticmethod
-    def _make_resource(cls, folder, email, password):
+    def _make_resource(cls, folder, email, password, **kw):
         # The metadata
-        metadata = cls.build_metadata(admins=('0',))
+        metadata = cls.build_metadata(admins=('0',), **kw)
         folder.set_handler('.metadata', metadata)
         # User Folder
         users = UserFolder.build_metadata(title={'en': u'Users'})
