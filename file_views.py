@@ -219,15 +219,12 @@ class File_Edit(DBResource_Edit):
 
 
 class File_ExternalEdit_View(STLView):
+
     access = 'is_allowed_to_edit'
     template = 'file/externaledit.xml'
-    title = MSG(u'External Editor')
+    view_title = MSG(u'External Editor')
     icon = 'external.png'
     encodings = None
-
-
-    def get_namespace(self, resource, context):
-        return {'encodings': self.encodings}
 
 
 

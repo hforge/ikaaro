@@ -147,13 +147,13 @@ def _change_link(source, target, old_base, new_base, stream):
 ###########################################################################
 class WebPage_View(BaseView):
     access = 'is_allowed_to_view'
-    title = MSG(u'View')
+    view_title = MSG(u'View')
     icon = 'view.png'
 
 
     def http_get(self):
-        body = resource.get_html_data()
-        context.ok_wrap('text/html', body)
+        body = self.resource.get_html_data()
+        self.context.ok_wrap('text/html', body)
 
 
 

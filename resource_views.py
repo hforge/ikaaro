@@ -152,7 +152,7 @@ class DBResource_Backlinks(Folder_BrowseContent):
     search_template = None
 
     def get_table_columns(self):
-        cols = Folder_BrowseContent.get_table_columns(self)
+        cols = super(DBResource_Backlinks, self).get_table_columns()
         return [ col for col in cols if col[0] != 'checkbox' ]
 
 

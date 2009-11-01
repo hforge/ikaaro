@@ -20,7 +20,7 @@ from re import compile, sub
 from subprocess import CalledProcessError
 
 # Import from itools
-from itools.core import merge_dicts
+from itools.core import merge_dicts, thingy_lazy_property
 from itools.datatypes import Boolean, String
 from itools.gettext import MSG
 from itools.uri import encode_query, get_reference
@@ -28,6 +28,7 @@ from itools.web import STLView, ViewField, ERROR
 
 # Import from ikaaro
 from buttons import Button
+from forms import TextField
 from views import BrowseForm
 
 
@@ -146,31 +147,33 @@ class DBResource_CommitLog(BrowseForm):
     table_actions = [DiffButton]
 
 
-    def get_items(self, resource, context):
-        items = resource.get_revisions(content=True)
+    @thingy_lazy_property
+    def all_items(self):
+        items = self.resource.get_revisions(content=True)
         for i, item in enumerate(items):
-            item['username'] = context.get_user_title(item['username'])
+            item['username'] = self.context.get_user_title(item['username'])
             # Hint to sort revisions quickly
             item['index'] = i
         return items
 
 
-    def sort_and_batch(self, resource, context, results):
-        start = context.get_query_value('batch_start')
-        size = context.get_query_value('batch_size')
-        sort_by = context.get_query_value('sort_by')
-        reverse = context.get_query_value('reverse')
+    @thingy_lazy_property
+    def items(self):
+        start = self.batch_start.value
+        size = self.batch_size.value
+        sort_by = self.sort_by.value
+        reverse = self.reverse.value
 
         # Do not give a traceback if 'sort_by' has an unexpected value
         if sort_by not in [ x[0] for x in self.table_columns ]:
             sort_by = self.query_schema['sort_by'].default
 
         # Sort & batch
-        results.sort(key=itemgetter(sort_by), reverse=reverse)
-        return results[start:start+size]
+        items = sorted(self.all_items, key=itemgetter(sort_by), reverse=reverse)
+        return items[start:start+size]
 
 
-    def get_item_value(self, resource, context, item, column):
+    def get_item_value(self, item, column):
         if column == 'checkbox':
             return ('%s_%s' % (item['index'], item['revision']), False)
         elif column == 'date':
@@ -196,62 +199,85 @@ class DBResource_Changes(STLView):
     view_title = MSG(u'Changes')
     template = 'revisions/changes.xml'
 
-    query_schema = {
-        'revision': String(mandatory=True),
-        'to': String}
+    revision = TextField(source='query', datatype=String, required=True)
+    to = TextField(source='query', datatype=String)
 
-    def get_namespace(self, resource, context):
-        revision = context.query['revision']
-        to = context.query['to']
-        database = context.database
 
-        if to is None:
-            # Case 1: show one commit
-            try:
-                metadata = database.get_diff(revision)
-            except CalledProcessError, e:
-                error = unicode(str(e), 'utf_8')
-                context.message = ERROR(u"Git failed: {error}", error=error)
-                return {'metadata': None, 'stat': None, 'changes': None}
-            author_name = metadata['author_name']
-            metadata['author_name'] = context.get_user_title(author_name)
-            stat = database.get_stats(revision)
-            diff = metadata['diff']
-        else:
-            # Case 2: show a set of commits
-            metadata = None
-            # Get the list of commits affecting the resource
-            revisions = [
-                x['revision'] for x in resource.get_revisions(content=True) ]
-            # Filter revisions in our range
-            # Below
-            while revisions and revisions[-1] != revision:
-                revisions.pop()
+    @thingy_lazy_property
+    def metadata(self):
+        if self.to.value:
+            return None
+
+        context = self.context
+        try:
+            metadata = context.database.get_diff(self.revision.value)
+        except CalledProcessError, e:
+            error = unicode(str(e), 'utf_8')
+            context.message = ERROR(u"Git failed: {error}", error=error)
+            return {'metadata': None, 'stat': None, 'changes': None}
+
+        author_name = metadata['author_name']
+        metadata['author_name'] = context.get_user_title(author_name)
+        return metadata
+
+
+    @thingy_lazy_property
+    def files(self):
+        # Get the list of commits affecting the resource
+        revisions = [
+            x['revision'] for x in self.resource.get_revisions(content=True) ]
+        # Filter revisions in our range
+        # Below
+        while revisions and revisions[-1] != self.revision.value:
+            revisions.pop()
+        context = self.context
+        if not revisions:
+            error = ERROR(u'Commit {commit} not found', commit=revision)
+            context.message = error
+            return None
+        # Above
+        to = self.to.value
+        if to != 'HEAD':
+            while revisions and revisions[0] != to:
+                revisions.pop(0)
             if not revisions:
-                error = ERROR(u'Commit {commit} not found', commit=revision)
+                error = ERROR(u'Commit {commit} not found', commit=to)
                 context.message = error
-                return {'metadata': None, 'stat': None, 'changes': None}
-            # Above
-            if to != 'HEAD':
-                while revisions and revisions[0] != to:
-                    revisions.pop(0)
-                if not revisions:
-                    error = ERROR(u'Commit {commit} not found', commit=to)
-                    context.message = error
-                    return {'metadata': None, 'stat': None, 'changes': None}
-            # Get the list of files affected in this series
-            files = database.get_files_affected(revisions)
-            # Get the statistic for these files
-            # Starting revision is included in the diff
+                return None
+        # Get the list of files affected in this series
+        return context.database.get_files_affected(revisions)
+
+
+    @thingy_lazy_property
+    def changes(self):
+        to = self.to.value
+        if to:
+            files = self.files
+            if files is None:
+                return None
+
+            get_diff_between = self.context.database.get_diff_between
+            revision = "%s^" % self.revision.value
+            diff = get_diff_between(revision, to, paths=files)
+            return get_colored_diff(diff)
+
+        return get_colored_diff(self.metadata['diff'])
+
+
+    @thingy_lazy_property
+    def stat(self):
+        database = self.context.database
+        revision = self.revision.value
+        to = self.to.value
+        if to:
+            files = self.files
+            if files is None:
+                return None
+
             revision = "%s^" % revision
             stat = database.get_stats(revision, to, paths=files)
+            return get_colored_stat(stat)
 
-            # Reuse the list of files to limit diff produced
-            diff = database.get_diff_between(revision, to, paths=files)
-
-        # Ok
-        return {
-            'metadata': metadata,
-            'stat': get_colored_stat(stat),
-            'changes': get_colored_diff(diff)}
+        stat = database.get_stats(revision)
+        return get_colored_stat(stat)
 

@@ -39,6 +39,7 @@ from buttons import RemoveButton, RenameButton, CopyButton, CutButton
 from buttons import PasteButton, PublishButton, RetireButton
 from datatypes import CopyCookie, ImageWidth
 from exceptions import ConsistencyError
+from forms import FormField
 from globals import ui
 import messages
 from utils import generate_name
@@ -591,14 +592,15 @@ class Folder_PreviewContent(Folder_BrowseContent):
     # Table
     table_template = 'folder/browse_image.xml'
 
+    # no batch
+    batch_size = Folder_BrowseContent.batch_size()
+    batch_size.datatype = Integer(default=0)
 
-    def get_query_schema(self):
-        # Define a huge batch limit, and the image size parameter
-        return merge_dicts(Folder_BrowseContent.get_query_schema(self),
-                           batch_size=Integer(default=0),
-                           size=Integer(default=128),
-                           width=String,
-                           height=String)
+    size = FormField(source='query')
+    size.datatype = Integer(default=128)
+
+    width = FormField(source='query', datatype=String)
+    height = FormField(source='query', datatype=String)
 
 
     @thingy_lazy_property
