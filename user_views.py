@@ -119,7 +119,24 @@ class User_Profile(STLView):
     template = 'user/profile.xml'
 
 
-    def get_namespace(self, resource, context):
+    def user_must_confirm(self):
+        return self.resource.has_property('user_must_confirm')
+
+
+    def is_owner_or_admin(self):
+        context = self.context
+        resource = self.resource
+
+        root = context.get_resource('/')
+        user = context.user
+        is_owner = user and user.path == resource.path
+        return is_owner or root.is_admin(user, resource)
+
+
+    def items(self):
+        context = self.context
+        resource = self.resource
+
         ac = resource.get_access_control()
 
         # The icons menu
@@ -137,18 +154,9 @@ class User_Profile(STLView):
                 'url': ';%s' % name,
                 'title': view.title,
                 'description': getattr(view, 'description', None),
-                'icon': resource.get_method_icon(view, size='48x48'),
-            })
+                'icon': resource.get_method_icon(view, size='48x48')})
 
-        # Ok
-        root = context.get_resource('/')
-        user = context.user
-        is_owner = user and user.path == resource.path
-        return {
-            'items': items,
-            'is_owner_or_admin': is_owner or root.is_admin(user, resource),
-            'user_must_confirm': resource.has_property('user_must_confirm')}
-
+        return items
 
 
 

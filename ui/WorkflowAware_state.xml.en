@@ -5,7 +5,7 @@
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
   <p>
-  Current state: <strong class="wf-${statename}">${state}</strong>
+  Current state: <strong class="wf-${statename}">${state_title}</strong>
   </p>
 
   <form action=";edit_state" method="post">

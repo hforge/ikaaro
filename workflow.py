@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import freeze
+from itools.core import freeze, thingy_lazy_property
 from itools.csv import Property
 from itools.datatypes import String, Unicode
 from itools.gettext import MSG
@@ -28,6 +28,9 @@ from itools.workflow import Workflow, WorkflowAware as BaseWorkflowAware
 from itools.workflow import WorkflowError
 from itools.xml import XMLParser
 
+# Import from ikaaro
+from forms import TextField
+
 
 
 ###########################################################################
@@ -36,30 +39,49 @@ from itools.xml import XMLParser
 class StateForm(STLForm):
 
     access = 'is_allowed_to_edit'
-    title = MSG(u'Publication')
+    view_title = MSG(u'Publication')
     icon = 'state.png'
-    template = '/ui/WorkflowAware_state.xml'
-    schema = {
-        'transition': String(mandatory=True),
-        'comments': Unicode}
+    template = 'WorkflowAware_state.xml'
+
+    transition = TextField(datatype=String, required=True)
+    comments = TextField()
 
 
-    def get_namespace(self, resource, context):
-        user = context.user
-        # State
-        state = resource.get_state()
-        # Posible transitions
+    def statename(self):
+        return self.resource.get_statename()
+
+
+    @thingy_lazy_property
+    def state(self):
+        return self.resource.get_state()
+
+
+    def state_title(self):
+        return self.state['title']
+
+
+    def transitions(self):
+        resource = self.resource
+        user = self.context.user
+
         ac = resource.get_access_control()
         transitions = []
-        for name, trans in state.transitions.items():
+        for name, trans in self.state.transitions.items():
             view = resource.get_view(name)
             if ac.is_allowed_to_trans(user, resource, view) is False:
                 continue
             description = trans['description'].gettext()
             transitions.append({'name': name, 'description': description})
-        # Workflow history
+
+        return transitions
+
+
+    def history(self):
+        context = self.context
+        user = context.user
+        workflow = self.resource.metadata.get_property('workflow')
+
         history = []
-        workflow = resource.metadata.get_property('workflow')
         if workflow is not None:
             for wf in workflow:
                 history.append(
@@ -69,12 +91,7 @@ class StateForm(STLForm):
                      'comments': wf.value})
             history.reverse()
 
-        # Ok
-        return {
-            'statename': resource.get_statename(),
-            'state': state['title'],
-            'transitions': transitions,
-            'history': history}
+        return history
 
 
     def action(self, resource, context, form):
