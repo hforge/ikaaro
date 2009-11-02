@@ -180,20 +180,11 @@ class AutoForm(STLForm):
 
 
     def fields(self):
-        resource = self.resource
-        context = self.context
-
-        # Local Variables
-        field_names = self.get_field_names()
-
-        # Build widgets namespace
+#        return [ x.render() for x in self.get_fields() ]
         fields = []
-        for name in field_names:
-            field = context.input.get(name)
-            if field is None:
-                field = self.get_field(name)
-            field = field(resource=resource, context=context)
-            fields.append(field.render())
+        for field in self.get_fields():
+            field = field.render()
+            fields.append(field)
 
         return fields
 

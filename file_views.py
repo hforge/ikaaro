@@ -151,7 +151,7 @@ class File_View(STLView):
 
 class File_Edit(DBResource_Edit):
 
-    schema = merge_dicts(DBResource_Edit.schema, file=ReplaceFileField)
+    file = ReplaceFileField()
 
 
     def get_value(self, resource, context, name, datatype):

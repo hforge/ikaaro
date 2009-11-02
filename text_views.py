@@ -38,13 +38,11 @@ from views import BrowseForm
 
 class Text_Edit(File_Edit):
 
-    title = MSG(u'Edit')
     icon = 'edit.png'
 
-    schema = merge_dicts(File_Edit.schema,
-        data=TextField('data', datatype=String,
-                       widget=Textarea(rows=19, cols=69),
-                       title=MSG(u'Content')))
+    data = TextField('data', datatype=String)
+    data.widget = Textarea(rows=19, cols=69)
+    data.title = MSG(u'Content')
 
 
     def get_value(self, resource, context, name, datatype):

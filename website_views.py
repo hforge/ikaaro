@@ -23,7 +23,8 @@ import sys
 from traceback import format_exc
 
 # Import from itools
-from itools.core import freeze, get_abspath, merge_dicts, thingy_property
+from itools.core import freeze, get_abspath
+from itools.core import thingy_property, thingy_lazy_property
 from itools.datatypes import Email, String, Unicode
 from itools.datatypes import Enumerate
 from itools.gettext import MSG
@@ -244,16 +245,20 @@ class SiteSearchView(SearchForm):
 
 
     def text(self):
-        return self.context.get_query_value('site_search_text').strip()
+        return self.site_search_text.value.strip()
 
 
     search_template = 'website/search_form.xml'
-    def get_items(self, resource, context):
-        text = context.get_query_value('site_search_text').strip()
+
+
+    @thingy_lazy_property
+    def all_items(self):
+        text = self.site_search_text.value.strip()
         if not text:
             return []
 
         # The Search Query
+        resource = self.resource
         languages = resource.get_value('website_languages')
         queries = []
         for language in languages:
@@ -268,6 +273,7 @@ class SiteSearchView(SearchForm):
         query = OrQuery(*queries)
 
         # Search
+        context = self.context
         results = context.search(query)
 
         # Check access rights
@@ -281,11 +287,12 @@ class SiteSearchView(SearchForm):
         return items
 
 
-    def sort_and_batch(self, resource, context, items):
+    @thingy_property
+    def items(self):
         # Batch
-        start = context.get_query_value('batch_start')
-        size = context.get_query_value('batch_size')
-        return items[start:start+size]
+        start = self.batch_start.value
+        size = self.batch_size.value
+        return self.all_items[start:start+size]
 
 
     table_template = 'website/search_table.xml'
