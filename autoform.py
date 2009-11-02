@@ -27,7 +27,7 @@ from itools import vfs
 from itools.web import STLForm
 
 # Import from ikaaro
-from forms import DateField, RadioField, SelectField, TextField
+from forms import DateField, FormField, RadioField, SelectField, TextField
 from forms import make_stl_template
 from ikaaro.workflow import get_workflow_preview
 
@@ -183,8 +183,9 @@ class AutoForm(STLForm):
 #        return [ x.render() for x in self.get_fields() ]
         fields = []
         for field in self.get_fields():
-            field = field.render()
-            fields.append(field)
+            if issubclass(field, FormField):
+                field = field.render()
+                fields.append(field)
 
         return fields
 

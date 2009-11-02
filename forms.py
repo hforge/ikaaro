@@ -216,10 +216,6 @@ class SelectField(FormField):
     size = None
 
 
-    def multiple(self):
-        return self.datatype.multiple
-
-
     def options(self):
         value = self.value
         # Check whether the value is already a list of options

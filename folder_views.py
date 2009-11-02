@@ -244,13 +244,17 @@ class Folder_BrowseContent(SearchForm):
         ('workflow_state', MSG(u'State'))]
 
 
+    def get_base_query(self):
+        return []
+
+
     @thingy_lazy_property
     def all_items(self):
         resource = self.resource
         context = self.context
 
         # The query
-        args = []
+        args = self.get_base_query()
         search_term = self.search_term.value
         if search_term:
             field = self.search_field.value
@@ -359,10 +363,9 @@ class Folder_BrowseContent(SearchForm):
     #######################################################################
     # Form Actions
     #######################################################################
-    def action_remove(self, resource, context, form):
-        ids = form['ids']
-
+    def action_remove(self):
         # Clean the copy cookie if needed
+        context = self.context
         cut, paths = context.get_cookie('ikaaro_cp', datatype=CopyCookie)
 
         # Remove resources
@@ -373,8 +376,8 @@ class Folder_BrowseContent(SearchForm):
 
         # We sort and reverse ids in order to
         # remove the childs then their parents
-        ids.sort()
-        ids.reverse()
+        resource = self.resource
+        ids = sorted(self.ids.value, reverse=True)
         for name in ids:
             child = resource.get_resource(name)
             ac = child.get_access_control()
@@ -592,33 +595,32 @@ class Folder_PreviewContent(Folder_BrowseContent):
     batch_size = Folder_BrowseContent.batch_size()
     batch_size.datatype = Integer(default=0)
 
-    size = FormField(source='query')
-    size.datatype = Integer(default=128)
+    zoom = FormField(source='query')
+    zoom.datatype = Integer(default=128)
 
     width = FormField(source='query', datatype=String)
     height = FormField(source='query', datatype=String)
 
 
-    @thingy_lazy_property
-    def all_items(self):
+    def get_base_query(self):
         # Show only images
         query = OrQuery(PhraseQuery('is_image', True),
                         PhraseQuery('format', 'folder'))
-        return Folder_BrowseContent.get_items(self, resource, context, query)
+        return [query]
 
 
-    def get_table_head(self, items, actions=None):
+    def columns(self):
         # Get from the query
-        sort_by = context.get_query_value('sort_by')
-        reverse = context.get_query_value('reverse')
+        sort_by = self.sort_by.value
+        reverse = self.reverse.value
 
         columns = self._get_table_columns()
         columns_ns = []
-        uri = get_reference(context.uri)
+        uri = get_reference(self.context.uri)
         for name, title, sortable in columns:
             if name == 'checkbox':
                 # Type: checkbox
-                if  actions:
+                if self.external_form or self.actions:
                     columns_ns.append({'is_checkbox': True})
             elif title is None:
                 # Type: nothing
@@ -644,6 +646,7 @@ class Folder_PreviewContent(Folder_BrowseContent):
                     'title': title,
                     'order': order,
                     'href': uri.replace(**kw)})
+        return columns_ns
 
 
     def get_table_namespace(self, resource, context, items):
@@ -652,7 +655,7 @@ class Folder_PreviewContent(Folder_BrowseContent):
         height = context.get_query_value('height')
 
         # (0) Zoom
-        current_size = context.get_query_value('size')
+        current_size = self.zoom.value
         min_size = resource.MIN_SIZE
         max_size = resource.MAX_SIZE
         current_size = max(min_size, min(current_size, max_size))
@@ -705,8 +708,8 @@ class Folder_PreviewContent(Folder_BrowseContent):
                         href = get_reference(href)
                         if row['is_folder']:
                             href = href.resolve_name(';preview_content')
-                        href = href.replace(size=current_size, width=width,
-                                height=height)
+                        href = href.replace(zoom=current_size, width=width,
+                                            height=height)
                         href = str(href)
                     else:
                         href = None
@@ -716,20 +719,24 @@ class Folder_PreviewContent(Folder_BrowseContent):
                     row[name] = value
             rows.append(row)
 
-        widths = ", ".join([repr(o['name']) for o in ImageWidth.get_options()
-                            if o['name'].strip()])
-
         return {
-            'root': resource.get_parent() is None,
-            'size': current_size,
+            'zoom': current_size,
             'width': width,
             'height': height,
-            'widths': widths,
-            'css': self.table_css,
             'columns': table_head,
             'rows': rows,
             'actions': actions}
 
+
+    def root(self):
+        return self.resource.path == '/'
+
+
+    def widths(self):
+        widths = [
+            repr(x['name']) for x in ImageWidth.get_options()
+            if x['name'].strip() ]
+        return ", ".join(widths)
 
 
 

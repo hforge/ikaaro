@@ -90,42 +90,42 @@ class WebSite(RoleAware, Folder, VirtualRoot):
         return Skin
 
     # Views for error conditions
-    http_forbidden = ForbiddenView()
-    http_unauthorized = LoginView()
-    http_not_found = NotFoundView()
-    http_internal_server_error = InternalServerError()
+    http_forbidden = ForbiddenView
+    http_unauthorized = LoginView
+    http_not_found = NotFoundView
+    http_internal_server_error = InternalServerError
 
 
     #######################################################################
     # UI
     #######################################################################
-    new_instance = ProxyNewInstance()
+    new_instance = ProxyNewInstance
     # Control Panel
-    control_panel = ControlPanel()
-    browse_users = CPBrowseUsers()
-    add_user = CPAddUser()
-    edit_membership = CPEditMembership()
-    edit_virtual_hosts = CPEditVirtualHosts()
-    edit_security_policy = CPEditSecurityPolicy()
-    edit_contact_options = CPEditContactOptions()
-    edit_languages = CPEditLanguages()
-    broken_links = CPBrokenLinks()
-    orphans = CPOrphans()
+    control_panel = ControlPanel
+    browse_users = CPBrowseUsers
+    add_user = CPAddUser
+    edit_membership = CPEditMembership
+    edit_virtual_hosts = CPEditVirtualHosts
+    edit_security_policy = CPEditSecurityPolicy
+    edit_contact_options = CPEditContactOptions
+    edit_languages = CPEditLanguages
+    broken_links = CPBrokenLinks
+    orphans = CPOrphans
     # Register / Login
-    register = RegisterForm()
-    forgotten_password = ForgottenPasswordForm()
+    register = RegisterForm
+    forgotten_password = ForgottenPasswordForm
     # Public views
-    site_search = SiteSearchView()
-    contact = ContactForm()
-    about = AboutView()
-    credits = CreditsView()
+    site_search = SiteSearchView
+    contact = ContactForm
+    about = AboutView
+    credits = CreditsView
     license = STLView(access=True, view_title=MSG(u'License'),
                       template='root/license.xml')
 
     # Calendar views
-    monthly_view = MonthlyView()
-    weekly_view = WeeklyView()
-    daily_view = DailyView()
+    monthly_view = MonthlyView
+    weekly_view = WeeklyView
+    daily_view = DailyView
 
 
 ###########################################################################

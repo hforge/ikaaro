@@ -267,6 +267,7 @@ class BrowseForm(STLForm):
 
         columns = self._get_table_columns()
         columns_ns = []
+        uri = get_reference(self.context.uri)
         for name, title, sortable in columns:
             if name == 'checkbox':
                 # Type: checkbox
@@ -281,7 +282,6 @@ class BrowseForm(STLForm):
                     'sortable': False})
             else:
                 # Type: normal
-                uri = get_reference(self.context.uri)
                 base_href = uri.replace(sort_by=name)
                 if name == sort_by:
                     sort_up_active = reverse is False
