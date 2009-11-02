@@ -27,25 +27,25 @@ from itools import vfs
 from itools.web import STLForm
 
 # Import from ikaaro
-from forms import Widget, DateWidget, RadioInput, Select, TextInput
+from forms import DateField, RadioField, SelectField, TextField
 from forms import make_stl_template
 from ikaaro.workflow import get_workflow_preview
 
 
 
-def get_default_widget(datatype):
+def get_default_field(datatype):
     if issubclass(datatype, Boolean):
-        return RadioInput
+        return RadioField
     elif issubclass(datatype, Date):
-        return DateWidget
+        return DateField
     elif issubclass(datatype, Enumerate):
-        return Select
+        return SelectField
 
-    return TextInput
+    return TextField
 
 
 
-class ReadOnlyWidget(Widget):
+class ReadOnlyWidget(object):
 
     template = make_stl_template("""
     <input type="hidden" name="${name}" value="${value_}" />${displayed_}""")
@@ -77,7 +77,7 @@ class ReadOnlyWidget(Widget):
 
 
 
-class CheckboxWidget(Widget):
+class CheckboxWidget(object):
 
     template = make_stl_template("""
     <stl:block stl:repeat="option options">
@@ -113,7 +113,7 @@ class CheckboxWidget(Widget):
 
 
 
-class PathSelectorWidget(TextInput):
+class PathSelectorWidget(object):
 
     action = 'add_link'
     display_workflow = True

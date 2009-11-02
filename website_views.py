@@ -35,7 +35,7 @@ from itools.xapian import PhraseQuery, OrQuery, AndQuery, split_unicode
 
 # Import from ikaaro
 from autoform import AutoForm
-from forms import EmailField, SelectField, TextField, Textarea
+from forms import EmailField, SelectField, TextField, TextareaField
 import globals
 from views import SearchForm
 
@@ -177,8 +177,8 @@ class ContactForm(AutoForm):
 
 
     subject = TextField(required=True, title=MSG(u'Message subject'))
-    body = TextField(required=True, title=MSG(u'Message body'))
-    body.widget = Textarea(rows=8, cols=50)
+    body = TextareaField(required=True, rows=8, cols=50)
+    body.title = MSG(u'Message body')
 
 
     field_names = ['to', 'from', 'subject', 'body']

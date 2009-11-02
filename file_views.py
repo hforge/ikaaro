@@ -35,7 +35,7 @@ from itools.web import BaseView, STLView, INFO, ERROR
 
 # Import from ikaaro
 from datatypes import ImageWidth
-from forms import FileField, FileInput, ReplaceFileField, TitleField
+from forms import FileField, ReplaceFileField, TitleField
 import messages
 from multilingual import Multilingual
 from registry import get_resource_class
@@ -46,11 +46,10 @@ from views_new import NewInstance
 class File_NewInstance(NewInstance):
 
     view_title = MSG(u'Upload File')
-
-    file = FileField(required=True, title=MSG(u'File'))
-    file.widget = FileInput(size=35)
-
     submit_value = MSG(u'Upload')
+
+
+    file = FileField(required=True, size=35, title=MSG(u'File'))
 
 
     def get_new_resource_name(self):

@@ -29,7 +29,7 @@ from itools.gettext import MSG
 from ikaaro.autoform import AutoForm
 from ikaaro.file import File
 from ikaaro.folder import Folder
-from ikaaro.forms import DateTimeField, DescriptionField, Select, SelectField
+from ikaaro.forms import DateTimeField, DescriptionField, SelectField
 from ikaaro.forms import TextField, TitleField
 from ikaaro.registry import register_document_type
 from ikaaro.views_new import NewInstanceByDate, TodayDataType
@@ -67,8 +67,8 @@ class Event_NewInstance(NewInstanceByDate):
     description = DescriptionField()
     location = TextField(datatype=String, title=MSG(u'Location'))
 
-    status = SelectField(datatype=Status, title=MSG(u'Status'))
-    status.widget = Select(has_empty_option=False)
+    status = SelectField(datatype=Status, has_empty_option=False)
+    status.title = MSG(u'Status')
 
     field_names = [
         'title', 'dtstart', 'dtend', 'description', 'location', 'status']
@@ -100,17 +100,15 @@ class Event_Edit(AutoForm):
     title = MSG(u'Edit event')
 
 
-    schema = freeze({
-        'title': TitleField('title', required=True),
-        'dtstart': DateTimeField('dtstart', datatype=NowDataType,
-                                 required=True, title=MSG(u'Start')),
-        'dtend': DateTimeField('dtend', datatype=NowDataType,
-                               title=MSG(u'End')),
-        'description': DescriptionField,
-        'location': TextField('location', title=MSG(u'Location')),
-        'status': SelectField('status', datatype=Status,
-                              widget=Select(has_empty_option=False),
-                              title=MSG(u'Status'))})
+    title = TitleField(required=True)
+    dtstart = DateTimeField(datatype=NowDataType, required=True,
+                            title=MSG(u'Start'))
+    dtend = DateTimeField(datatype=NowDataType, title=MSG(u'End'))
+    description = DescriptionField()
+    location = TextField(title=MSG(u'Location'))
+
+    status = SelectField(datatype=Status, has_empty_option=False)
+    status.title = MSG(u'Status')
 
 
     def get_value(self, resource, context, name, datatype):

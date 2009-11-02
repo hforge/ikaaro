@@ -34,7 +34,7 @@ from itools.xapian import PhraseQuery
 from access import RoleAware_BrowseUsers, RoleAware_AddUser
 from access import RoleAware_EditMembership
 from folder_views import Folder_Orphans
-from forms import SelectField, TextField, Textarea
+from forms import SelectField, TextareaField
 import messages
 from resource_views import DBResource_Edit
 from views import IconsView, ContextMenu
@@ -185,8 +185,7 @@ class CPEditContactOptions(CPBaseView, DBResource_Edit):
     description = MSG(u'Configure the website email options')
 
 
-    emails_signature = TextField(title=MSG(u'Emails signature'))
-    emails_signature.widget = Textarea
+    emails_signature = TextareaField(title=MSG(u'Emails signature'))
 
 
     @thingy_property
