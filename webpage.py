@@ -161,8 +161,7 @@ class HTMLEditView(File_Edit):
     """WYSIWYG editor for HTML documents.
     """
 
-    schema = merge_dicts(File_Edit.schema,
-        data=RTEField('data', title=MSG(u'Body')))
+    data = RTEField('data', title=MSG(u'Body'))
 
 
     def get_value(self, resource, context, name, datatype):

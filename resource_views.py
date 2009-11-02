@@ -72,11 +72,10 @@ class DBResource_Edit(AutoForm):
     icon = 'metadata.png'
     context_menus = [EditLanguageMenu()]
 
-    schema = {
-        'title': TitleField,
-        'description': DescriptionField,
-        'subject': SubjectField,
-        'timestamp': TimestampField}
+    title = TitleField()
+    description = DescriptionField()
+    subject = SubjectField()
+    timestamp = TimestampField()
 
 
     def get_value(self, resource, context, name, datatype):
