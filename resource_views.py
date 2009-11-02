@@ -38,7 +38,7 @@ from itools.web import BaseView, STLForm, INFO, ERROR, FormError
 from autoform import AutoForm
 from datatypes import FileDataType, CopyCookie
 from folder_views import Folder_BrowseContent
-from forms import PasswordField, TextField
+from forms import PasswordField, FormField
 from forms import DescriptionField, SubjectField, TimestampField, TitleField
 import messages
 from registry import get_resource_class
@@ -533,8 +533,8 @@ class LoginView(STLForm):
     meta = [('robots', 'noindex, follow', None)]
 
 
-    username = TextField(required=True)
-    password = PasswordField(required=True)
+    username = FormField(required=True, title=MSG(u'E-mail Address'))
+    password = PasswordField(required=True, title=MSG(u'Password'))
 
 
     def cook(self, method):

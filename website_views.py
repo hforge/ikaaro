@@ -172,10 +172,6 @@ class ContactForm(AutoForm):
     access = True
     view_title = MSG(u'Contact')
     submit_value = MSG(u'Send')
-    query_schema = {'to': String,
-                    'subject': Unicode,
-                    'message_body': Unicode}
-
 
     subject = TextField(required=True, title=MSG(u'Message subject'))
     message_body = TextareaField(required=True, rows=8, cols=50)
@@ -195,10 +191,9 @@ class ContactForm(AutoForm):
     def get_field(self, name):
         # 'from' is a Python reserved word
         if name == 'from':
-            return EmailField('from', required=True,
-                              title=MSG(u'Your email address'))
-
-        return super(ContactForm, self).get_field(name)
+            field = EmailField('from', required=True)
+            field.title = MSG(u'Your email address')
+            return field
 
 
     def get_value(self, resource, context, name, field):

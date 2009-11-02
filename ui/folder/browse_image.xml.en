@@ -11,7 +11,7 @@
     });
   </script>
 
-  <table id="browse-list" class="${css}">
+  <table id="browse-list" class="${table_css}">
     <thead stl:if="columns">
       <tr>
         <stl:block stl:repeat="column columns">
@@ -36,12 +36,12 @@
     stl:omit-tag="not actions">
     <div id="browse-image">
       <a stl:if="not root"
-        href="../;preview_content?size=${size}&amp;width=${width}&amp;height=${height}"
+        href="../;preview_content?zoom=${zoom}&amp;width=${width}&amp;height=${height}"
         title="Back"><img src="/ui/icons/16x16/up.png" /></a>
-      <div class="thumbnail size${size}" stl:repeat="row rows">
+      <div class="thumbnail size${zoom}" stl:repeat="row rows">
         <div class="folder" stl:omit-tag="not row/is_folder">
           <a href="${row/href}" stl:omit-tag="not row/href">
-            <img src="${row/name}/;thumb?width=${size}&amp;height=${size}" />
+            <img src="${row/name}/;thumb?width=${zoom}&amp;height=${zoom}" />
           </a>
         </div>
         <p>

@@ -20,13 +20,14 @@ from operator import itemgetter
 from urllib import quote
 
 # Import from itools
-from itools.core import freeze, merge_dicts, thingy_property
+from itools.core import freeze, merge_dicts
+from itools.core import thingy_property, thingy_lazy_property
 from itools.csv import Property
 from itools.datatypes import Date, String, Unicode, Enumerate
 from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.http import get_context
-from itools.web import FormError
+from itools.web import FormError, ViewField
 
 # Import from ikaaro
 from autoform import AutoForm
@@ -58,7 +59,7 @@ class NewInstanceByDate(AutoForm):
     context_menus = freeze([])
 
     # Schema
-    type = TextField(source='query', datatype=String)
+    type = ViewField(source='query')
     title = TitleField()
     date = DateField(datatype=TodayDataType, required=True, title=MSG(u'Date'))
 
@@ -90,16 +91,18 @@ class NewInstanceByDate(AutoForm):
         return 'new.png'
 
 
-    def get_new_resource_name(self):
+    @thingy_lazy_property
+    def new_resource_name(self):
         return self.title.value.strip()
 
 
     def cook(self, method):
         super(NewInstanceByDate, self).cook(method)
-
-        name = self.get_new_resource_name()
+        if method == 'get':
+            return
 
         # Check the name
+        name = self.new_resource_name
         if not name:
             raise FormError, messages.MSG_NAME_MISSING
 
@@ -112,12 +115,8 @@ class NewInstanceByDate(AutoForm):
             raise FormError, messages.MSG_BAD_NAME
 
         # Check the name is free
-        if resource.get_resource(name, soft=True) is not None:
+        if self.resource.get_resource(name, soft=True) is not None:
             raise FormError, messages.MSG_NAME_CLASH
-
-        # Ok
-        form['name'] = name
-        return form
 
 
     def get_date(self):
@@ -212,8 +211,8 @@ class NewInstance(NewInstanceByDate):
         field.title = title=MSG(u'Path')
         return field
 
-
-    def get_new_resource_name(self):
+    @thingy_lazy_property
+    def new_resource_name(self):
         # If the name is not explicitly given, use the title
         name = self.name.value
         title = self.title.value.strip()
