@@ -14,10 +14,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# Import from the Standard Library
+from itertools import chain
+
 # Import from itools
 from itools.core import thingy_lazy_property
 from itools.datatypes import Date, DateTime, Email, String, Unicode
 from itools.gettext import MSG
+from itools.stl import stl
 from itools.web import ViewField
 from itools.xml import XMLParser
 
@@ -40,117 +44,107 @@ def make_stl_template(data):
 
 
 
-
 ###########################################################################
-# Widgets
+# Base class
 ###########################################################################
 
-class Widget(CMSTemplate):
+class FormField(ViewField):
 
-    def __init__(self, name=None, **kw):
-        if name:
-            self.name = name
-        for key in kw:
-            setattr(self, key, kw[key])
-
-
-
-class DateWidget(Widget):
-
-    template = make_stl_template("""
-    <input type="text" name="${name}" value="${value_}" id="${id}"
-      class="dateField" size="${size}" />
-    <input type="button" value="..." class="${class}" />
-    <script language="javascript">
-      jQuery( "input.dateField" ).dynDateTime({
-        ifFormat: "${format}",
-        showsTime: ${show_time_js},
-        timeFormat: "24",
-        button: ".next()" });
-    </script>""")
-
-    css = None
-    description = MSG(u"Format: 'yyyy-mm-dd'")
-    format = '%Y-%m-%d'
-    show_time = False
-    size = None
-
-
-    def show_time_js(self):
-        # True -> true for Javascript
-        return 'true' if self.show_time else 'false'
-
-
-    @thingy_lazy_property
-    def value_(self):
-        value = self.value
-        if value is None:
-            return ''
-
-        # ['2007-08-01\r\n2007-08-02']
-        if self.datatype.multiple and isinstance(value, list):
-            return value[0]
-
-        return value
-
-
-
-class DateTimeWidget(Widget):
-
-    template = make_stl_template("""
-    <input type="text" name="${name}" value="${value_date}" id="${name}"
-      size="${size}"/>
-    <input type="button" value="..." class="${class}" />
-    <input type="text" name="${name}_time" value="${value_time}" size="6" />
-    <script language="javascript">
-      jQuery( "input.dateField" ).dynDateTime({
-        ifFormat: "${format}",
-        showsTime: ${show_time_js},
-        timeFormat: "24",
-        button: ".next()" });
-    </script>
+    # First block: the field header
+    header = make_stl_template("""
+    <label for="${name}">${title}</label>
+    <span stl:if="required" class="field-is-required"
+      title="This field is required">*</span>
+    <span stl:if="description" title="${description}">(?)</span>
+    <br/>
+    <span stl:if="error" class="field-error">${error}<br/></span>
     """)
 
+    description = None
+    error = None
+    title = None
 
-    css = None
-    format = '%Y-%m-%d'
-    size = None
-    show_time = False
-
-    def show_time_js(self):
-        # True -> true for Javascript
-        return 'true' if self.show_time else 'false'
-
-
-    def value_date(self):
-        return self.value.date()
-
-
-    def value_time(self):
-        return self.value.strftime('%H:%M')
-
-
-
-class Input(Widget):
-
-    template = make_stl_template("""
+    # Second block: the form widget (by default an input element)
+    widget = make_stl_template("""
     <input type="${type}" name="${name}" value="${value}" size="${size}" />""")
 
     size = None
     type = None
 
 
+    def render(self):
+        args = []
 
-FileInput = Input(type='file')
-HiddenInput = Input(type='hidden')
-PasswordInput = Input(type='password')
-TextInput = Input(type='text', size=40)
+        # (1) The header
+        if self.header:
+            args.append(self.header)
+
+        # (2) The widget
+        widget = self.widget
+        if widget is None:
+            pass
+        elif type(widget) is list:
+            args.append(widget)
+        elif type(widget) is str:
+            widget = self.context.get_template(widget)
+            widget = widget.events
+            args.append(widget)
+        else:
+            raise TypeError, 'unexepected value of type "%s"' % type(widget)
+
+        # Render
+        events = chain(*args)
+        events = list(events)
+        return stl(events=events, namespace=self)
 
 
 
-class RadioInput(Widget):
+###########################################################################
+# Simple fields
+###########################################################################
 
-    template = make_stl_template("""
+class EmailField(FormField):
+    datatype = Email
+    size = 40
+
+
+
+class FileField(FormField):
+    datatype = FileDataType
+    type = 'file'
+
+
+
+class PasswordField(FormField):
+    type = 'password'
+
+
+
+class TextField(FormField):
+    datatype = Unicode
+    size = 40
+
+
+
+class TextareaField(FormField):
+    datatype = Unicode
+
+    widget = make_stl_template("""
+    <textarea rows="${rows}" cols="${cols}" name="${name}" >${value}</textarea>
+    """)
+
+    rows = 5
+    cols = 60
+
+
+
+###########################################################################
+# Selection fields (radio buttons, checkboxes, selects)
+###########################################################################
+
+class RadioField(FormField):
+
+    widget = make_stl_template("""
     <stl:block stl:repeat="option options">
       <input type="radio" id="${name}-${option/name}" name="${name}"
         value="${option/name}" checked="${option/selected}" />
@@ -206,9 +200,130 @@ class RadioInput(Widget):
 
 
 
-class RTEWidget(Widget):
+class SelectField(FormField):
 
-    template = 'tiny_mce/rte.xml'
+    widget = make_stl_template("""
+    <select name="${name}" multiple="${multiple}" size="${size}"
+        class="${css}">
+      <option value="" stl:if="has_empty_option"></option>
+      <option stl:repeat="option options" value="${option/name}"
+        selected="${option/selected}">${option/value}</option>
+    </select>""")
+
+
+    css = None
+    has_empty_option = True
+    size = None
+
+
+    def multiple(self):
+        return self.datatype.multiple
+
+
+    def options(self):
+        value = self.value
+        # Check whether the value is already a list of options
+        # FIXME This is done to avoid a bug when using a select widget in an
+        # auto-form, where the 'datatype.get_namespace' method is called
+        # twice (there may be a better way of handling this).
+        if type(value) is not list:
+            return self.datatype.get_namespace(value)
+        return value
+
+
+###########################################################################
+# Date & Time fields
+###########################################################################
+
+class DateField(FormField):
+
+    datatype = Date
+
+    widget = make_stl_template("""
+    <input type="text" name="${name}" value="${value_}" id="${id}"
+      class="dateField" size="${size}" />
+    <input type="button" value="..." class="${class}" />
+    <script language="javascript">
+      jQuery( "input.dateField" ).dynDateTime({
+        ifFormat: "${format}",
+        showsTime: ${show_time_js},
+        timeFormat: "24",
+        button: ".next()" });
+    </script>""")
+
+    css = None
+    description = MSG(u"Format: 'yyyy-mm-dd'")
+    format = '%Y-%m-%d'
+    show_time = False
+    size = None
+
+
+    def show_time_js(self):
+        # True -> true for Javascript
+        return 'true' if self.show_time else 'false'
+
+
+    @thingy_lazy_property
+    def value_(self):
+        value = self.value
+        if value is None:
+            return ''
+
+        # ['2007-08-01\r\n2007-08-02']
+        if self.datatype.multiple and isinstance(value, list):
+            return value[0]
+
+        return value
+
+
+
+class DateTimeField(FormField):
+
+    datatype = DateTime
+
+    widget = make_stl_template("""
+    <input type="text" name="${name}" value="${value_date}" id="${id}"
+      class="dateField" size="${size}" />
+    <input type="button" value="..." class="${class}" />
+    <input type="text" name="${name}_time" value="${value_time}" size="6" />
+    <script language="javascript">
+      jQuery( "input.dateField" ).dynDateTime({
+        ifFormat: "${format}",
+        showsTime: ${show_time_js},
+        timeFormat: "24",
+        button: ".next()" });
+    </script>
+    """)
+
+
+    css = None
+    format = '%Y-%m-%d'
+    size = None
+    show_time = False
+
+    def show_time_js(self):
+        # True -> true for Javascript
+        return 'true' if self.show_time else 'false'
+
+
+    def value_date(self):
+        return self.value.date()
+
+
+    def value_time(self):
+        return self.value.strftime('%H:%M')
+
+
+
+###########################################################################
+# Advanced fields
+###########################################################################
+
+class RTEField(FormField):
+
+    datatype = HTMLBody
+
+    widget = 'tiny_mce/rte.xml'
     rte_css = ['/ui/aruni/style.css', '/ui/tiny_mce/content.css']
     scripts = [
         '/ui/tiny_mce/tiny_mce_src.js',
@@ -251,150 +366,45 @@ class RTEWidget(Widget):
 
 
 
-class Select(Widget):
-
-    template = make_stl_template("""
-    <select name="${name}" multiple="${multiple}" size="${size}"
-        class="${css}">
-      <option value="" stl:if="has_empty_option"></option>
-      <option stl:repeat="option options" value="${option/name}"
-        selected="${option/selected}">${option/value}</option>
-    </select>""")
-
-
-    css = None
-    has_empty_option = True
-    size = None
-
-
-    def multiple(self):
-        return self.datatype.multiple
-
-
-    def options(self):
-        value = self.value
-        # Check whether the value is already a list of options
-        # FIXME This is done to avoid a bug when using a select widget in an
-        # auto-form, where the 'datatype.get_namespace' method is called
-        # twice (there may be a better way of handling this).
-        if type(value) is not list:
-            return self.datatype.get_namespace(value)
-        return value
-
-
-
-class Textarea(Widget):
-
-    template = make_stl_template("""
-    <textarea rows="${rows}" cols="${cols}" name="${name}" >${value}</textarea>
-    """)
-
-    rows = 5
-    cols = 60
-
-
-
 ###########################################################################
-# Fields (basic)
+# Ready to use fields
 ###########################################################################
-class FormField(ViewField, CMSTemplate):
 
-    template = make_stl_template("""
-    <label for="${name}">${title}</label>
-    <span stl:if="required" class="field-is-required"
-      title="This field is required">*</span>
-    <span stl:if="description" title="${description}">(?)</span>
-    <br/>
-    <span stl:if="error" class="field-error">${error}<br/></span>
-    ${widget_}""")
-
-
-    description = None
-    error = None
-    title = None
-    widget = None
-
-
-    def widget_(self):
-        return self.widget(name=self.name, datatype=self.datatype,
-                           value=self.value)
-
-
-
-class DateField(FormField):
-    datatype = Date
-    widget = DateWidget
-
-
-class DateTimeField(FormField):
-    datatype = DateTime
-    widget = DateTimeWidget
-
-
-class FileField(FormField):
-    datatype = FileDataType
-    widget = FileInput
-
-
-class EmailField(FormField):
-    datatype = Email
-    widget = TextInput
-
-
-class PasswordField(FormField):
-    widget = PasswordInput
-
-
-class RadioField(FormField):
-    widget = RadioInput
-
-
-class RTEField(FormField):
-    datatype = HTMLBody
-    widget = RTEWidget
-
-
-class SelectField(FormField):
-    widget = Select
-
-
-class TextField(FormField):
-    datatype = Unicode
-    widget = TextInput
-
-
-
-###########################################################################
-# Fields (ready-to-use)
-###########################################################################
 class TimestampField(FormField):
     """This ready-to-use field is used to handle edit conflicts.
     """
 
-    template = make_stl_template("""${widget}""")
+    template = None
 
-    name = 'timestamp'
     datatype = DateTime
+    name = 'timestamp'
     readonly = True
-    widget = HiddenInput
+    type = 'hidden'
 
 
-
-class DescriptionField(TextField):
-
+class DescriptionField(TextareaField):
     name = 'description'
+    rows = 8
     title = MSG(u'Description')
-    widget = Textarea(rows=8)
 
 
+class ReplaceFileField(FileField):
+    name = 'file'
+    title = MSG(u'Replace file')
 
-# file (replace)
-ReplaceFileField = FileField('file', title=MSG(u'Replace file'))
-# name
-NameField = TextField('name', datatype=String(default=''), title=MSG(u'Name'))
-# subject
-SubjectField = TextField(name='subject')
-SubjectField.title = MSG(u'Keywords (Separated by comma)')
-# title
-TitleField = TextField('title', title=MSG(u'Title'))
+
+class NameField(FormField):
+    datatype = String(default='')
+    name = 'name'
+    title = MSG(u'Name')
+
+
+class SubjectField(TextField):
+    name = 'subject'
+    title = MSG(u'Keywords (Separated by comma)')
+
+
+class TitleField(TextField):
+    name = 'title'
+    title = MSG(u'Title')
 

@@ -26,10 +26,10 @@ from itools.gettext import MSG
 from itools.web import STLForm, STLView, INFO
 
 # Import from ikaaro
-from autoform import AutoForm, get_default_widget
+from autoform import AutoForm, get_default_field
 from buttons import RemoveButton
 from file_views import File_Edit
-from forms import Textarea, TextField
+from forms import TextareaField
 import messages
 from views import BrowseForm
 
@@ -38,8 +38,7 @@ class Text_Edit(File_Edit):
 
     icon = 'edit.png'
 
-    data = TextField('data', datatype=String)
-    data.widget = Textarea(rows=19, cols=69)
+    data = TextareaField('data', datatype=String, rows=19, cols=69)
     data.title = MSG(u'Content')
 
 
@@ -216,7 +215,7 @@ class RowForm(AutoForm):
     def get_widgets(self, resource, context):
         schema = self.get_schema(resource, context)
         return [
-            get_default_widget(schema[name])(name, title=title)
+            get_default_field(schema[name])(name, title=title)
             for name, title in resource.get_columns() ]
 
 

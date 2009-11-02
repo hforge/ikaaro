@@ -25,7 +25,7 @@ from itools.gettext import MSG
 from itools.http import get_context
 
 # Import from ikaaro
-from autoform import get_default_widget
+from autoform import get_default_field
 from file import File
 from resource_ import DBResource
 from table_views import Table_View, Table_AddRecord, Table_EditRecord
@@ -51,7 +51,7 @@ class Table(File):
             return cls.form
         record_properties = cls.class_handler.record_properties
         return [
-            get_default_widget(datatype)(name)
+            get_default_field(datatype)(name)
             for name, datatype in record_properties.items() ]
 
 

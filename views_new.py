@@ -30,8 +30,7 @@ from itools.web import FormError
 
 # Import from ikaaro
 from autoform import AutoForm
-from forms import DateField, NameField, RadioInput, RadioField, TitleField
-from forms import TextField
+from forms import DateField, NameField, RadioField, TitleField, TextField
 import messages
 from registry import get_resource_class, get_document_types
 from views import ContextMenu
@@ -208,9 +207,8 @@ class NewInstance(NewInstanceByDate):
 
     @thingy_property
     def path(self):
-        field = RadioField()
+        field = RadioField(has_empty_option=False)
         field.datatype = PathEnumerate(resource=self.resource)
-        field.widget = RadioInput(has_empty_option=False)
         field.title = title=MSG(u'Path')
         return field
 
