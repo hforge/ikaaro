@@ -22,12 +22,12 @@
 from operator import itemgetter
 
 # Import from itools
-from itools.core import thingy_property
+from itools.core import thingy_property, thingy_lazy_property
 from itools.datatypes import Boolean, Enumerate, String, Unicode
 from itools.gettext import MSG
 from itools.i18n import get_language_name, get_languages
 from itools.uri import Path
-from itools.web import STLView, STLForm, INFO, ERROR
+from itools.web import STLView, STLForm, INFO, ERROR, ViewField
 from itools.xapian import PhraseQuery
 
 # Import from ikaaro
@@ -109,14 +109,16 @@ class CPEditVirtualHosts(CPBaseView, STLForm):
     icon = 'website.png'
     description = MSG(u'Define the domain names for this Web Site.')
     template = 'website/virtual_hosts.xml'
-    schema = {
-        'vhosts': String}
+
+    vhosts = TextareaField(datatype=String)
 
 
-    def get_namespace(self, resource, context):
-        vhosts = resource.get_value('vhosts')
-        return {
-            'vhosts': '\n'.join(vhosts)}
+    def get_value(self, name):
+        if name == 'vhosts':
+            vhosts = self.resource.get_value('vhosts')
+            return '\n'.join(vhosts)
+
+        return super(CPEditVirtualHosts, self).get_value(name)
 
 
     def action(self, resource, context, form):
@@ -136,15 +138,13 @@ class CPEditSecurityPolicy(CPBaseView, STLForm):
     icon = 'lock.png'
     description = MSG(u'Choose the security policy.')
     template = 'website/security_policy.xml'
-    schema = {
-        'website_is_open': Boolean(default=False)}
+
+    website_is_open = ViewField()
+    website_is_open.datatype = Boolean(default=False)
 
 
-    def get_namespace(self, resource, context):
-        is_open = resource.get_property('website_is_open')
-        return {
-            'is_open': is_open,
-            'is_closed': not is_open}
+    def is_open(self):
+        return self.resource.get_value('website_is_open')
 
 
     def action(self, resource, context, form):
@@ -191,24 +191,24 @@ class CPEditContactOptions(CPBaseView, DBResource_Edit):
     def emails_from_addr(self):
         datatype = ContactsOptions(resource=self.resource)
         title = MSG(u'Emails from addr')
-        return SelectField(name, datatype=datatype, title=title)
+        return SelectField(self.name, datatype=datatype, title=title)
 
 
     @thingy_property
     def contacts(self):
         datatype = ContactsOptions(multiple=True, resource=self.resource)
         title = MSG(u'Select the contact accounts')
-        return SelectField(name, datatype=datatype, title=title)
+        return SelectField(self.name, datatype=datatype, title=title)
 
 
     field_names = ['emails_from_addr', 'emails_signature', 'contacts']
 
 
-    def get_value(self, resource, context, name, datatype):
+    def get_value(self, name):
         if name == 'contacts':
-            return list(resource.get_property('contacts'))
-        return DBResource_Edit.get_value(self, resource, context, name,
-                  datatype)
+            return list(self.resource.get_property('value'))
+
+        return super(CPEditContactOptions, self).get_value(name)
 
 
     def action(self, resource, context, form):
@@ -273,32 +273,31 @@ class CPEditLanguages(CPBaseView, STLForm):
     description = MSG(u'Define the Web Site languages.')
     icon = 'languages.png'
     template = 'website/edit_languages.xml'
-    schema = {
-        'codes': String(multiple=True, mandatory=True)}
+
+    codes = ViewField(multiple=True, required=True)
 
 
-    def get_namespace(self, resource, context):
-        ws_languages = resource.get_value('website_languages')
+    @thingy_lazy_property
+    def languages(self):
+        return self.resource.get_value('website_languages')
 
-        # Active languages
-        default = ws_languages[0]
-        active = []
-        for code in ws_languages:
-            language_name = get_language_name(code)
-            active.append({
-                'code': code,
-                'name': language_name,
-                'isdefault': code == default})
 
-        # Not active languages
+    def active_languages(self):
+        languages = self.languages
+        default = languages[0]
+
+        return [
+            {'code': x, 'name': get_language_name(x),
+             'isdefault': x == default}
+            for x in languages ]
+
+
+    def not_active_languages(self):
+        languages = set(self.languages)
         not_active = [
-            x for x in get_languages() if x['code'] not in ws_languages ]
-        not_active.sort(lambda x, y: cmp(x['name'], y['name']))
+            x for x in get_languages() if x['code'] not in languages ]
 
-        # Ok
-        return {
-            'active_languages': active,
-            'not_active_languages': not_active}
+        return sorted(not_active, key=itemgetter('name'))
 
 
     #######################################################################

@@ -161,11 +161,10 @@ class File_Edit(DBResource_Edit):
     file = ReplaceFileField()
 
 
-    def get_value(self, resource, context, name, datatype):
+    def get_value(self, name):
         if name == 'file':
             return None
-        return DBResource_Edit.get_value(self, resource, context, name,
-                                         datatype)
+        return super(File_Edit, self).get_value(name)
 
 
     def set_value(self, resource, context, name, value):

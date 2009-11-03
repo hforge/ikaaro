@@ -9,7 +9,7 @@
     <legend>Edit Virtual Hosts</legend>
     <p>Type the hostnames this website will apply to, each one in a different
     line.</p>
-    <textarea name="vhosts" cols="62" rows="7">${vhosts}</textarea>
+    <textarea name="vhosts" cols="62" rows="7">${vhosts/value}</textarea>
     <p>
       <input type="submit" value="Save Changes" />
     </p>

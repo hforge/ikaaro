@@ -9,7 +9,7 @@
     <legend>Edit Security Policy</legend>
     <p>
       <input type="radio" name="website_is_open" value="0" id="intranet"
-        checked="${is_closed}" />
+        checked="${not is_open}" />
       <label for="intranet">Intranet</label>
       <br/>
       Authentication will be required for any level of access. Only
