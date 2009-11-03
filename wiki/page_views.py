@@ -400,8 +400,7 @@ class WikiPage_Edit(DBResource_Edit):
 
     def action(self, resource, context, form):
         # Check edit conflict
-        self.check_edit_conflict(resource, context, form)
-        if context.edit_conflict:
+        if self.edit_conflict:
             return
 
         title = form['title']
