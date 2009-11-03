@@ -8,7 +8,7 @@
     <!-- Field -->
     <select name="search_field">
       <option value="${field/name}" selected="${field/selected}"
-        stl:repeat="field search_fields">${field/title}</option>
+        stl:repeat="field search_fields_">${field/title}</option>
     </select>
     <!-- Term -->
     <input type="text" name="search_term" size="35"

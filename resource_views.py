@@ -78,6 +78,9 @@ class DBResource_Edit(AutoForm):
     timestamp = TimestampField()
 
 
+    field_names = ['timestamp', 'title', 'description', 'subject']
+
+
     def get_value(self, resource, context, name, datatype):
         if name == 'timestamp':
             return datetime.now()

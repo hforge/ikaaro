@@ -115,6 +115,11 @@ class FileField(FormField):
 
 
 
+class HiddenField(FormField):
+    header = None
+    type = 'hidden'
+
+
 class PasswordField(FormField):
     type = 'password'
 
@@ -364,16 +369,13 @@ class RTEField(FormField):
 # Ready to use fields
 ###########################################################################
 
-class TimestampField(FormField):
+class TimestampField(HiddenField):
     """This ready-to-use field is used to handle edit conflicts.
     """
-
-    template = None
 
     datatype = DateTime
     name = 'timestamp'
     readonly = True
-    type = 'hidden'
 
 
 class DescriptionField(TextareaField):

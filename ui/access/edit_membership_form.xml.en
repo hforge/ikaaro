@@ -8,7 +8,7 @@
   <legend>Change Role of ${name}</legend>
 
   <form action=";edit_membership" method="post">
-    <input type="hidden" name="id" value="${id}" />
+    <input type="hidden" name="id" value="${id/value}" />
     <p stl:repeat="role roles">
       <input type="radio" name="role" id="${role/name}" value="${role/name}"
         checked="${role/selected}" />
