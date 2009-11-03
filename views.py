@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import thingy_lazy_property
+from itools.core import freeze, thingy_lazy_property
 from itools.datatypes import Boolean, Integer, String, Unicode
 from itools.gettext import MSG
 from itools.stl import stl
@@ -105,10 +105,9 @@ class IconsView(STLView):
 
     template = 'generic/icons_view.xml'
 
-    def get_namespace(self, resource, context):
-        """TODO Write a docstring explaining the expected namespace.
-        """
-        raise NotImplementedError
+    # Namespace
+    batch = None
+    items = freeze([])
 
 
 

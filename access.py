@@ -19,7 +19,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import freeze, merge_dicts
+from itools.core import freeze, merge_dicts, thingy_lazy_property
 from itools.datatypes import Boolean, Email, Tokens, Unicode, String
 from itools.gettext import MSG
 from itools.http import get_context
@@ -76,11 +76,15 @@ class RoleAware_BrowseUsers(SearchForm):
         ('email_domain', MSG(u'Domain'))]
 
 
-    def get_items(self, resource, context):
+    @thingy_lazy_property
+    def all_items(self):
+        resource = self.resource
+        context = self.context
+
         # Search
         search_query = PhraseQuery('format', 'user')
-        search_field = context.get_query_value('search_field')
-        search_term = context.get_query_value('search_term').strip()
+        search_field = self.search_field.value
+        search_term = self.search_term.value
         if not search_field and search_term:
             or_query = []
             for field, label in self.get_search_fields(resource, context):
@@ -106,22 +110,24 @@ class RoleAware_BrowseUsers(SearchForm):
         return users
 
 
-    def sort_and_batch(self, resource, context, items):
+    def items(self):
+        resource = self.resource
+        context = self.context
+
         # Sort
-        sort_by = context.get_query_value('sort_by')
-        reverse = context.get_query_value('reverse')
+        sort_by = self.sort_by.value
+        reverse = self.reverse.value
         if sort_by in ('user_id', 'login_name', 'role'):
-            f = lambda x: self.get_item_value(resource, context, x, sort_by)
+            f = lambda x: self.get_item_value(x, sort_by)
         elif sort_by == 'account_state':
-            f = lambda x: self.get_item_value(resource, context, x,
-                                              sort_by)[0].gettext()
+            f = lambda x: self.get_item_value(x, sort_by)[0].gettext()
         else:
             f = lambda x: getattr(x, sort_by)
 
-        items.sort(cmp=lambda x,y: cmp(f(x), f(y)), reverse=reverse)
+        self.all_items.sort(cmp=lambda x,y: cmp(f(x), f(y)), reverse=reverse)
         # Batch
-        start = context.get_query_value('batch_start')
-        size = context.get_query_value('batch_size')
+        start = self.batch_start.value
+        size = self.batch_size.value
         return items[start:start+size]
 
 
@@ -138,7 +144,7 @@ class RoleAware_BrowseUsers(SearchForm):
     table_actions = [RemoveButton]
 
 
-    def get_item_value(self, resource, context, item, column):
+    def get_item_value(self, item, column):
         if column == 'checkbox':
             return item.get_name(), False
         elif column == 'user_id':
@@ -152,8 +158,8 @@ class RoleAware_BrowseUsers(SearchForm):
             return item.get_value('lastname')
         elif column == 'role':
             name = item.get_name()
-            role = resource.get_user_role(name)
-            role = resource.get_role_title(role)
+            role = self.resource.get_user_role(name)
+            role = self.resource.get_role_title(role)
             return role, ';edit_membership?id=%s' % name
         elif column == 'account_state':
             if item.get_value('user_must_confirm'):
@@ -162,8 +168,11 @@ class RoleAware_BrowseUsers(SearchForm):
             return MSG(u'Active'), None
 
 
-    def action_remove(self, resource, context, form):
-        usernames = form['ids']
+    def action_remove(self):
+        context = self.context
+        resource = self.resource
+
+        usernames = self.ids.value
 
         # Verify if after this operation, all is ok
         user = context.user
@@ -595,6 +604,7 @@ class RoleAware(AccessControl):
     #######################################################################
     # UI / Views
     #######################################################################
-    browse_users = RoleAware_BrowseUsers()
-    edit_membership = RoleAware_EditMembership()
-    add_user = RoleAware_AddUser()
+    browse_users = RoleAware_BrowseUsers
+    edit_membership = RoleAware_EditMembership
+    add_user = RoleAware_AddUser
+
