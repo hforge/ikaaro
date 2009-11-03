@@ -74,12 +74,12 @@ class NewInstanceByDate(AutoForm):
         return title.gettext(class_title=class_title)
 
 
-    def get_value(self, resource, context, name, datatype):
+    def get_value(self, name):
         if name in self.get_query_schema():
-            value = context.get_query_value(name)
+            value = self.context.get_query_value(name)
             if value is not None:
                 return value
-        return AutoForm.get_value(self, resource, context, name, datatype)
+        return super(NewInstanceByDate, self).get_value(name)
 
 
     def icon(self, resource, **kw):
@@ -198,9 +198,10 @@ class PathEnumerate(Enumerate):
         return str(default)
 
 
+
 class NewInstance(NewInstanceByDate):
 
-    name = NameField
+    name = NameField()
     date = None
 
 
@@ -236,8 +237,6 @@ class ProxyNewInstance(NewInstance):
 
     template = 'base/proxy_new_instance.xml'
 
-    name = NameField
-    title = TitleField
     class_id = TextField(datatype=String)
 
 

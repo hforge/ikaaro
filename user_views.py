@@ -184,10 +184,10 @@ class User_EditAccount(AutoForm):
         return [ getattr(self, x) for x in field_names ]
 
 
-    def get_value(self, resource, context, name, datatype):
+    def get_value(self, name):
         if name == 'password':
             return None
-        return resource.get_value(name)
+        return self.resource.get_value(name)
 
 
     def action(self, resource, context, form):

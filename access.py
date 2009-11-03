@@ -29,7 +29,7 @@ from itools.xapian import AndQuery, OrQuery, PhraseQuery, StartQuery
 
 # Import from ikaaro
 from buttons import RemoveButton
-from forms import HiddenField, SelectField
+from forms import EmailField, HiddenField, PasswordField, SelectField
 import messages
 from views import SearchForm
 from workflow import WorkflowAware
@@ -238,17 +238,20 @@ class RoleAware_AddUser(STLForm):
     icon = 'card.png'
     description = MSG(u'Grant access to a new user.')
     template = 'access/add_user.xml'
-    schema = {
-        'email': Email(mandatory=True),
-        'role': String(mandatory=True),
-        'newpass': String,
-        'newpass2': String}
+
+    email = EmailField(required=True)
+    role = SelectField(required=True)
+    newpass = PasswordField()
+    newpass2 = PasswordField()
 
 
-    def get_namespace(self, resource, context):
-        return {
-            'is_admin': resource.is_admin(context.user, resource),
-            'roles': resource.get_roles_namespace()}
+    def is_admin(self):
+        resource = self.resource
+        return resource.is_admin(self.context.user, resource)
+
+
+    def roles(self):
+        return self.resource.get_roles_namespace()
 
 
     def _add(self, resource, context, form):

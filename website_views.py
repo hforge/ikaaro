@@ -70,17 +70,16 @@ class ForgottenPasswordForm(AutoForm):
     submit_value = MSG(u'Ok')
     meta = [('robots', 'noindex, follow', None)]
 
-    query_schema = {'username': Email(default='')}
-
-    schema = freeze({
-        'username': EmailField('username',
-                               title=MSG(u'Type your email address'))})
+    username = EmailField()
+    username.datatype = Email(default='')
+    username.title = MSG(u'Type your email address')
 
 
-    def get_value(self, resource, context, name, datatype):
+    def get_value(self, name):
         if name == 'username':
-            return context.get_query_value('username')
-        return AutoForm.get_value(self, resource, context, name, datatype)
+            return self.context.get_query_value('username')
+
+        return super(ForgottenPasswordForm, self).get_value(name)
 
 
     def action(self, resource, context, form):
@@ -196,16 +195,17 @@ class ContactForm(AutoForm):
             return field
 
 
-    def get_value(self, resource, context, name, field):
+    def get_value(self, name):
         if name == 'from':
-            user = context.user
-            if user is not None:
+            user = self.context.user
+            if user:
                 return user.get_value('email')
         else:
-            query = context.query
+            query = self.context.query
             if name in query:
                 return query[name]
-        return field.datatype.get_default()
+
+        return getattr(self, name).get_default()
 
 
     def action(self, resource, context, form):

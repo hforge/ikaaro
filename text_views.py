@@ -23,7 +23,7 @@ from operator import itemgetter
 from itools.core import merge_dicts
 from itools.datatypes import Integer, String
 from itools.gettext import MSG
-from itools.web import STLForm, STLView, INFO
+from itools.web import STLForm, STLView, INFO, ViewField
 
 # Import from ikaaro
 from autoform import AutoForm, get_default_field
@@ -42,10 +42,10 @@ class Text_Edit(File_Edit):
     data.title = MSG(u'Content')
 
 
-    def get_value(self, resource, context, name, datatype):
+    def get_value(self, name):
         if name == 'data':
-            return resource.handler.to_str()
-        return File_Edit.get_value(self, resource, context, name, datatype)
+            return self.resource.handler.to_str()
+        return super(Text_Edit, self).get_value(name)
 
 
     def action(self, resource, context, form):
@@ -240,9 +240,8 @@ class CSV_AddRow(RowForm):
 class CSV_EditRow(RowForm):
 
     title = MSG(u'Edit row #{id}')
-    query_schema = {
-        'index': Integer,
-    }
+
+    index = ViewField(source='query', datatype=Integer)
 
 
     def get_title(self, context):
@@ -250,9 +249,8 @@ class CSV_EditRow(RowForm):
         return self.title.gettext(id=id)
 
 
-    def get_value(self, resource, context, name, datatype):
-        id = context.query['index']
-        row = resource.handler.get_row(id)
+    def get_value(self, name):
+        row = self.resource.handler.get_row(self.index.value)
         return row.get_value(name)
 
 
