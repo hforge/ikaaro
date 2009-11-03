@@ -4,67 +4,75 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
-  <script type="text/javascript">
-    $(document).ready(function() {
-      var resolutions = new Array(${widths});
-      apply_best_resolution(resolutions);
-    });
-  </script>
+<script type="text/javascript">
+  $(document).ready(function() {
+    var resolutions = new Array(${widths});
+    apply_best_resolution(resolutions);
+  });
+</script>
 
-  <table id="browse-list" class="${table_css}">
-    <thead stl:if="columns">
-      <tr>
-        <stl:block stl:repeat="column columns">
-          <!-- checkbox -->
-          <th stl:if="column/is_checkbox" class="checkbox">
-            <label for="browse-list-select-all">Select All</label>
-            <input type="checkbox" id="browse-list-select-all"
-              title="Click to select/unselect all rows"
-              onclick="select_checkboxes('form-table', this.checked);" />
-          </th>
-          <!-- checkbox -->
-          <th stl:if="not column/is_checkbox">
-            <a stl:if="column/href" href="${column/href}"
-              class="sort-${column/order}">${column/title}</a>
-          </th>
-        </stl:block>
-      </tr>
-    </thead>
-  </table>
-
-  <form action="" method="post" name="browse_list" id="form-table"
-    stl:omit-tag="not actions">
-    <div id="browse-image">
-      <a stl:if="not root"
-        href="../;preview_content?zoom=${zoom}&amp;width=${width}&amp;height=${height}"
-        title="Back"><img src="/ui/icons/16x16/up.png" /></a>
-      <div class="thumbnail size${zoom}" stl:repeat="row rows">
-        <div class="folder" stl:omit-tag="not row/is_folder">
-          <a href="${row/href}" stl:omit-tag="not row/href">
-            <img src="${row/name}/;thumb?width=${zoom}&amp;height=${zoom}" />
-          </a>
-        </div>
-        <p>
-          <!-- checkbox -->
-          <stl:block stl:if="row/checkbox">
-            <input type="checkbox" id="id-${row/id}" name="ids"
-              value="${row/id}" checked="${row/checked}" class="checkbox" />
-            <label class="wf-${row/workflow_statename}"
-              for="id-${row/id}">${row/title_or_name}</label>
+<table id="browse-list" class="${table_css}">
+  <thead stl:if="columns">
+    <tr>
+      <stl:block stl:repeat="column columns">
+        <!-- checkbox -->
+        <th stl:if="column/is_checkbox" class="checkbox">
+          <input type="checkbox" title="Click to select/unselect all rows"
+            onclick="select_checkboxes('form-table', this.checked);" />
+        </th>
+        <!-- checkbox -->
+        <th stl:if="not column/is_checkbox">
+          ${column/title}
+          <stl:block stl:if="column/sortable">
+            <br/>
+            <a stl:if="not column/sort_up_active" href="${column/href_up}"
+              class="sort sort-up"/>
+            <a stl:if="column/sort_up_active" href="${column/href}"
+              class="sort sort-up-active"/>
+            <a stl:if="not column/sort_down_active" href="${column/href_down}"
+              class="sort sort-down"/>
+            <a stl:if="column/sort_down_active" href="${column/href}"
+              class="sort sort-down-active"/>
           </stl:block>
-          <stl:block stl:if="not row/checkbox">
-            <label>${row/title_or_name}</label>
-          </stl:block>
-        </p>
-      </div>
-    </div>
-    <p stl:if="actions">
-      <stl:block stl:repeat="action actions">
-        <button type="submit" name="action" value="${action/value}"
-          class="${action/class}" onclick="${action/onclick}"
-          >${action/title}</button>
+        </th>
       </stl:block>
-    </p>
-  </form>
+    </tr>
+  </thead>
+</table>
+
+<form action="" method="post" name="browse_list" id="form-table"
+  stl:omit-tag="not actions">
+  <div id="browse-image">
+    <a stl:if="not root"
+      href="../;preview_content?zoom=${current_size}&amp;width=${width/value}&amp;height=${height/value}"
+      title="Back"><img src="/ui/icons/16x16/up.png" /></a>
+    <div class="thumbnail size${current_size}" stl:repeat="row rows">
+      <div class="folder" stl:omit-tag="not row/is_folder">
+        <a href="${row/href}" stl:omit-tag="not row/href">
+          <img src="${row/name}/;thumb?width=${current_size}&amp;height=${current_size}" />
+        </a>
+      </div>
+      <p>
+        <!-- checkbox -->
+        <stl:block stl:if="row/checkbox">
+          <input type="checkbox" id="id-${row/id}" name="ids"
+            value="${row/id}" checked="${row/checked}" class="checkbox" />
+          <label class="wf-${row/workflow_statename}"
+            for="id-${row/id}">${row/title_or_name}</label>
+        </stl:block>
+        <stl:block stl:if="not row/checkbox">
+          <label>${row/title_or_name}</label>
+        </stl:block>
+      </p>
+    </div>
+  </div>
+  <p stl:if="actions">
+    <stl:block stl:repeat="action actions">
+      <button type="submit" name="action" value="${action/value}"
+        class="${action/class}" onclick="${action/onclick}"
+        >${action/title}</button>
+    </stl:block>
+  </p>
+</form>
 
 </stl:block>

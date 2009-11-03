@@ -26,13 +26,13 @@ from os.path import basename
 from itools.core import merge_dicts, thingy_lazy_property
 from itools.csv import Property
 from itools.datatypes import Integer, Unicode, String
+from itools.fs import FileName
 from itools.gettext import MSG
 from itools.handlers import get_handler_class_by_mimetype, guess_encoding
 from itools.html import HTMLParser, stream_to_str_as_xhtml
 from itools.i18n import guess_language
 from itools.uri import get_reference
-from itools.fs import FileName
-from itools.web import BaseView, STLView, INFO, ERROR
+from itools.web import BaseView, STLView, INFO, ERROR, ViewField
 
 # Import from ikaaro
 from datatypes import ImageWidth
@@ -301,24 +301,31 @@ class Image_Thumbnail(BaseView):
 
     access = 'is_allowed_to_view'
 
+    width = ViewField(source='query', datatype=Integer(default=48))
+    height = ViewField(source='query', datatype=Integer(default=48))
+
+
     def get_mtime(self, resource):
         return resource.handler.get_mtime()
 
 
     def http_get(self):
-        width = context.get_query_value('width', type=Integer, default=48)
-        height = context.get_query_value('height', type=Integer, default=48)
+        context = self.context
+        resource = self.resource
+
+        width = self.width.value
+        height = self.height.value
 
         # TODO generate the thumbnail in the resource format
         format = 'png' if resource.metadata.format == 'image/png' else 'jpeg'
         data, format = resource.handler.get_thumbnail(width, height, format)
         if data is None:
-            default = resource.get_resource('/ui/icons/48x48/image.png')
+            default = context.get_template('icons/48x48/image.png')
             data = default.to_str()
             format = 'png'
 
         # Filename
-        filename = resource.get_property('filename')
+        filename = resource.get_value('filename')
         if filename:
             context.set_content_disposition('inline', filename)
 
