@@ -24,7 +24,7 @@ from datetime import datetime
 from operator import itemgetter
 
 # Import from itools
-from itools.core import merge_dicts
+from itools.core import merge_dicts, thingy_lazy_property
 from itools.datatypes import DateTime, String, Unicode
 from itools.fs import FileName
 from itools.gettext import MSG
@@ -81,60 +81,54 @@ class DBResource_Edit(AutoForm):
     field_names = ['timestamp', 'title', 'description', 'subject']
 
 
-    def get_value(self, resource, context, name, datatype):
-        if name == 'timestamp':
-            return datetime.now()
-        language = resource.get_content_language(context)
-        return resource.get_value(name, language=language)
+    def get_value(self, name):
+        return self.resource.get_value(name, language=self.language)
 
 
-    def check_edit_conflict(self, resource, context, form):
-        context.edit_conflict = False
+    @thingy_lazy_property
+    def edit_conflict(self):
+        context = self.context
 
-        timestamp = form['timestamp']
+        timestamp = self.timestamp.value
         if timestamp is None:
             context.message = messages.MSG_EDIT_CONFLICT
-            context.edit_conflict = True
-            return
+            return True
 
-        root = context.root
-        results = root.search(abspath=str(resource.get_canonical_path()))
-        brain = results.get_documents()[0]
-        mtime = brain.mtime
+        mtime = self.resource.brain.mtime
         if mtime is not None and timestamp < mtime:
             # Conlicft unless we are overwriting our own work
-            last_author = resource.get_last_author()
+            last_author = self.resource.get_last_author()
             if last_author != context.user.get_name():
                 user = context.get_user_title(last_author)
                 context.message = messages.MSG_EDIT_CONFLICT2(user=user)
-                context.edit_conflict = True
+                return True
+
+        return False
 
 
-    def set_value(self, resource, context, name, value):
-        language = resource.get_content_language(context)
-        resource.set_property(name, value, language=language)
+    @thingy_lazy_property
+    def language(self):
+        return self.resource.get_content_language(self.context)
 
 
-    def action(self, resource, context, form):
+    def set_value(self, name, value):
+        self.resource.set_property(name, value, language=self.language)
+
+
+    def action(self):
+        context = self.context
+
         # Check edit conflict
-        self.check_edit_conflict(resource, context, form)
-        if context.edit_conflict:
-            return
+        if self.edit_conflict:
+            return context.redirect()
 
         # Save changes
-        schema = self.get_schema(resource, context)
-        for widget in self.get_widgets(resource, context):
-            name = widget.name
-            datatype = schema[name]
-            if getattr(datatype, 'readonly', False):
-                continue
-            value = form[name]
-            if value is None:
-                continue
-            self.set_value(resource, context, name, value)
+        for field in self.get_fields():
+            if not field.readonly and field.value is not None:
+                self.set_value(field.name, field.value)
 
         # Ok
-        context.change_resource(resource)
+        context.change_resource(self.resource)
         context.message = messages.MSG_CHANGES_SAVED
         context.redirect()
 

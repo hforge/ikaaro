@@ -364,7 +364,7 @@ class WikiPage_Edit(DBResource_Edit):
 
     def action_save(self, resource, context, form):
         DBResource_Edit.action(self, resource, context, form)
-        if isinstance(context.message, ERROR):
+        if self.edit_conflict:
             return
         # Data is assumed to be encoded in UTF-8
         data = form['data']

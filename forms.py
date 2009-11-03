@@ -15,6 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
+from datetime import datetime
 from itertools import chain
 
 # Import from itools
@@ -66,10 +67,15 @@ class FormField(ViewField):
 
     # Second block: the form widget (by default an input element)
     widget = make_stl_template("""
-    <input type="${type}" name="${name}" value="${value}" size="${size}" />""")
+    <input type="${type}" name="${name}" value="${encoded_value}"
+      size="${size}" />""")
 
     size = None
     type = None
+
+
+    def encoded_value(self):
+        return self.datatype.encode(self.value)
 
 
     def render(self):
@@ -117,6 +123,7 @@ class FileField(FormField):
 
 class HiddenField(FormField):
     header = None
+    readonly = True
     type = 'hidden'
 
 
@@ -241,7 +248,7 @@ class DateField(FormField):
     datatype = Date
 
     widget = make_stl_template("""
-    <input type="text" name="${name}" value="${value_}" id="${id}"
+    <input type="text" name="${name}" value="${encoded_value}" id="${id}"
       class="dateField" size="${size}" />
     <input type="button" value="..." class="${class}" />
     <script language="javascript">
@@ -264,8 +271,7 @@ class DateField(FormField):
         return 'true' if self.show_time else 'false'
 
 
-    @thingy_lazy_property
-    def value_(self):
+    def encoded_value(self):
         value = self.value
         if value is None:
             return ''
@@ -377,7 +383,9 @@ class TimestampField(HiddenField):
 
     datatype = DateTime
     name = 'timestamp'
-    readonly = True
+
+    def get_default(self):
+        return datetime.now()
 
 
 class DescriptionField(TextareaField):
