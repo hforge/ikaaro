@@ -18,7 +18,7 @@
     <!-- SubFolders -->
     &nbsp;
     <input type="checkbox" name="search_subfolders" id="search-subfolders"
-      checked="${search_subfolders}" value="1" /><label
+      checked="${search_subfolders/value}" value="1" /><label
       for="search-subfolders">Search subfolders</label>
     <!-- OK -->
     &nbsp; &nbsp;

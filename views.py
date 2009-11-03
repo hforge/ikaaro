@@ -296,8 +296,7 @@ class BrowseForm(STLForm):
                     'href_up': base_href.replace(reverse=0),
                     'href_down': base_href.replace(reverse=1),
                     'sort_up_active': sort_up_active,
-                    'sort_down_active': sort_down_active
-                    })
+                    'sort_down_active': sort_down_active})
         return columns_ns
 
 
@@ -321,9 +320,6 @@ class BrowseForm(STLForm):
 
 
     def rows(self):
-        ac = self.resource.get_access_control()
-
-        # (3) Table Body: rows
         columns = self.get_table_columns()
         rows = []
         for item in self.items:
@@ -339,8 +335,7 @@ class BrowseForm(STLForm):
                 column_ns = {
                     'is_checkbox': False,
                     'is_icon': False,
-                    'is_link': False,
-                }
+                    'is_link': False}
                 # Type: empty
                 if value is None:
                     pass

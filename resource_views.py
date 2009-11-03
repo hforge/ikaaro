@@ -558,7 +558,9 @@ class LoginView(STLForm):
         return self.context.get_user_by_login(username)
 
 
-    def action(self, resource, context):
+    def action(self):
+        context = self.context
+
         # Set cookie
         user = self.get_user()
         password = self.password.value

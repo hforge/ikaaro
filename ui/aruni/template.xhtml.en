@@ -33,7 +33,7 @@
             stl:if="user/joinisopen">Register</a>
         </stl:block>
         <stl:block stl:if="user/info">
-          <a href="${base_uri/../;new_resource" id="top-menu-new">Add
+          <a href="${base_uri}/../;new_resource" id="top-menu-new">Add
             content</a>
           <a href="${user/info/home}" id="top-menu-profile">My profile</a>
           <a href="${logout}" id="top-menu-logout">Log out</a>
