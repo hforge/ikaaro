@@ -200,6 +200,13 @@ class Skin(STLForm):
             if value:
                 meta.append({'name': 'keywords', 'lang': language,
                              'content': value})
+
+        # Search engine optimization
+        google_verification_key = root.get_property('google-site-verification')
+        if google_verification_key:
+            meta.append({'name': 'google-site-verification', 'lang': None,
+                         'content': google_verification_key})
+
         return meta
 
 

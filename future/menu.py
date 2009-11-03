@@ -394,8 +394,10 @@ class Menu(OrderedTable):
                     continue
                 name = resource.name
 
-                # use first child by default we use the resource itself
+                # Use first child by default we use the resource itself
                 resource_path = path
+                # Keep the real path to avoid highlight problems
+                resource_original_path = path
                 if depth > 1:
                     # Check the child
                     child_path = get_value(record, 'child')
@@ -419,7 +421,8 @@ class Menu(OrderedTable):
                 if here_abspath == resource.get_canonical_path():
                     active, in_path = True, False
                 else:
-                    res_abspath = menu_abspath.resolve2(resource_path)
+                    # Use the original path for the highlight
+                    res_abspath = menu_abspath.resolve2(resource_original_path)
                     common_prefix = here_abspath.get_prefix(res_abspath)
                     in_path = (common_prefix == res_abspath)
 
