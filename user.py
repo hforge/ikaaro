@@ -197,14 +197,14 @@ class User(AccessControl, Folder):
     #######################################################################
     # Views
     #######################################################################
-    resend_confirmation = User_ResendConfirmation()
-    confirm_registration = User_ConfirmRegistration()
-    change_password_forgotten = User_ChangePasswordForgotten()
-    profile = User_Profile()
-    edit_account = User_EditAccount()
-    edit_preferences = User_EditPreferences()
-    edit_password = User_EditPassword()
-    tasks = User_Tasks()
+    resend_confirmation = User_ResendConfirmation
+    confirm_registration = User_ConfirmRegistration
+    change_password_forgotten = User_ChangePasswordForgotten
+    profile = User_Profile
+    edit_account = User_EditAccount
+    edit_preferences = User_EditPreferences
+    edit_password = User_EditPassword
+    tasks = User_Tasks
 
 
     def update_20081217(self):

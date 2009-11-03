@@ -27,7 +27,7 @@ from itools.xapian import PhraseQuery, AndQuery, OrQuery, StartQuery
 # Import from ikaaro
 from autoform import AutoForm
 from folder import Folder_BrowseContent
-from forms import EmailField, PasswordField, TextField
+from forms import EmailField, PasswordField, SelectField, TextField
 import messages
 
 
@@ -113,7 +113,7 @@ class User_ResendConfirmation(BaseView):
 class User_Profile(STLView):
 
     access = 'is_allowed_to_view'
-    title = MSG(u'Profile')
+    view_title = MSG(u'Profile')
     description = MSG(u"User's profile page.")
     icon = 'action_home.png'
     template = 'user/profile.xml'
@@ -152,7 +152,7 @@ class User_Profile(STLView):
             # Append
             items.append({
                 'url': ';%s' % name,
-                'title': view.title,
+                'title': view.view_title,
                 'description': getattr(view, 'description', None),
                 'icon': resource.get_method_icon(view, size='48x48')})
 
@@ -163,25 +163,25 @@ class User_Profile(STLView):
 class User_EditAccount(AutoForm):
 
     access = 'is_allowed_to_edit'
-    title = MSG(u'Edit Account')
+    view_title = MSG(u'Edit Account')
     description = MSG(u'Edit your name and email address.')
     icon = 'card.png'
-    schema = {
-        'firstname': TextField('firstname', title=MSG(u'First Name')),
-        'lastname': TextField('lastname', title=MSG(u'Last Name')),
-        'email': EmailField('email', title=MSG(u"E-mail Address")),
-        'password': PasswordField('password', required=True,
-                                  title=MSG(u"To confirm these changes, you "
-                                            u"must type your password"))}
+
+    firstname = TextField(title=MSG(u'First Name'))
+    lastname = TextField(title=MSG(u'Last Name'))
+    email = EmailField(title=MSG(u"E-mail Address"))
+    password = PasswordField(required=True)
+    password.title = MSG(u"To confirm these changes, you must type your "
+                         u"password")
 
 
-    def get_widgets(self, resource, context):
-        # FIXME
-        # User must confirm?
-        if resource.path == context.user.path:
-            return ['firstname', 'lastname', 'email', 'password']
+    def fields(self):
+        if self.resource.path == self.context.user.path:
+            field_names = ['firstname', 'lastname', 'email', 'password']
+        else:
+            field_names = ['firstname', 'lastname', 'email']
 
-        return ['firstname', 'lastname', 'email']
+        return [ getattr(self, x) for x in field_names ]
 
 
     def get_value(self, resource, context, name, datatype):
@@ -227,41 +227,40 @@ class User_EditAccount(AutoForm):
 class User_EditPreferences(STLForm):
 
     access = 'is_allowed_to_edit'
-    title = MSG(u'Edit Preferences')
+    view_title = MSG(u'Edit Preferences')
     description = MSG(u'Set your preferred language.')
     icon = 'preferences.png'
     template = 'user/edit_preferences.xml'
-    schema = {
-        'user_language': String,
-    }
+
+    user_language = SelectField()
 
 
-    def get_namespace(self, resource, context):
-        user_language = resource.get_property('user_language')
-        languages = [
+    def languages(self):
+        user_language = self.resource.get_value('user_language')
+        return [
             {'code': code,
              'name': get_language_name(code),
              'is_selected': code == user_language}
-            for code in context.software_languages ]
-
-        return {'languages': languages}
+            for code in self.context.software_languages ]
 
 
-    def action(self, resource, context, form):
-        value = form['user_language']
+    def action(self):
+        value = self.user_language.value
         if value == '':
-            resource.del_property('user_language')
+            self.resource.del_property('user_language')
         else:
-            resource.set_property('user_language', value)
+            self.resource.set_property('user_language', value)
         # Ok
+        context = self.context
         context.message = INFO(u'Application preferences changed.')
+        context.redirect()
 
 
 
 class User_EditPassword(STLForm):
 
     access = 'is_allowed_to_edit'
-    title = MSG(u'Edit Password')
+    view_title = MSG(u'Edit Password')
     description = MSG(u'Change your password.')
     icon = 'lock.png'
     template = 'user/edit_password.xml'
@@ -316,7 +315,7 @@ class User_EditPassword(STLForm):
 class User_Tasks(STLView):
 
     access = 'is_allowed_to_edit'
-    title = MSG(u'Tasks')
+    view_title = MSG(u'Tasks')
     description = MSG(u'See your pending tasks.')
     icon = 'tasks.png'
     template = 'user/tasks.xml'
