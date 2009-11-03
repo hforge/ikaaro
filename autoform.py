@@ -180,14 +180,7 @@ class AutoForm(STLForm):
 
 
     def fields(self):
-#        return [ x.render() for x in self.get_fields() ]
-        fields = []
-        for field in self.get_fields():
-            if issubclass(field, FormField):
-                field = field.render()
-                fields.append(field)
-
-        return fields
+        return [ x for x in self.get_fields() if issubclass(x, FormField) ]
 
 
     def first_field(self):
