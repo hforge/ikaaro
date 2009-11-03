@@ -8,7 +8,7 @@
   enctype="multipart/form-data" stl:omit-tag="not submit_value">
   <fieldset>
     <legend>${view_title}</legend>
-    <p stl:if="description">${description}</p>
+    <p stl:if="view_description">${view_description}</p>
     <table>
       <tr stl:repeat="field fields">
         <td>${field}</td>

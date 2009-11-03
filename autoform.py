@@ -178,7 +178,7 @@ class AutoForm(STLForm):
     template = 'auto_form.xml'
     submit_value = MSG(u'Save')
     submit_class = 'button-ok'
-    description = None
+    view_description = None
 
 
     def fields(self):

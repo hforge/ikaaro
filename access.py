@@ -29,6 +29,7 @@ from itools.xapian import AndQuery, OrQuery, PhraseQuery, StartQuery
 
 # Import from ikaaro
 from buttons import RemoveButton
+from forms import HiddenField, SelectField
 import messages
 from views import SearchForm
 from workflow import WorkflowAware
@@ -87,7 +88,7 @@ class RoleAware_BrowseUsers(SearchForm):
         search_term = self.search_term.value
         if not search_field and search_term:
             or_query = []
-            for field, label in self.get_search_fields(resource, context):
+            for field, label in self.search_fields:
                 if field:
                     or_query.append(StartQuery(field, search_term))
             search_query = AndQuery(search_query, OrQuery(*or_query))
@@ -110,6 +111,7 @@ class RoleAware_BrowseUsers(SearchForm):
         return users
 
 
+    @thingy_lazy_property
     def items(self):
         resource = self.resource
         context = self.context
@@ -118,13 +120,14 @@ class RoleAware_BrowseUsers(SearchForm):
         sort_by = self.sort_by.value
         reverse = self.reverse.value
         if sort_by in ('user_id', 'login_name', 'role'):
-            f = lambda x: self.get_item_value(x, sort_by)
+            key = lambda x: self.get_item_value(x, sort_by)
         elif sort_by == 'account_state':
-            f = lambda x: self.get_item_value(x, sort_by)[0].gettext()
+            key = lambda x: self.get_item_value(x, sort_by)[0].gettext()
         else:
-            f = lambda x: getattr(x, sort_by)
+            key = lambda x: getattr(x, sort_by)
 
-        self.all_items.sort(cmp=lambda x,y: cmp(f(x), f(y)), reverse=reverse)
+        items = sorted(self.all_items, key=key, reverse=reverse)
+
         # Batch
         start = self.batch_start.value
         size = self.batch_size.value
@@ -193,37 +196,38 @@ class RoleAware_EditMembership(STLForm):
 
     access = 'is_admin'
     template = 'access/edit_membership_form.xml'
-    schema = {
-        'id': String(mandatory=True),
-        'role': String(mandatory=True)}
+
+    id = HiddenField(required=True)
+    role = SelectField(required=True)
 
 
-    def get_namespace(self, resource, context):
-        user_id = context.get_query_value('id')
-        user = resource.get_resource('/users/%s' % user_id)
-
-        return {
-            'id': user_id,
-            'name': user.get_title(),
-            'roles': resource.get_roles_namespace(user_id)}
+    def name(self):
+        return self.context.get_user_title(self.id.value)
 
 
-    def action(self, resource, context, form):
-        user_id = form['id']
-        role = form['role']
+    def roles(self):
+        return self.resource.get_roles_namespace(self.id.value)
+
+
+    def action(self):
+        context = self.context
+
+        user_id = self.id.value
+        role = self.role.value
 
         # Verify if after this operation, all is ok
         user = context.user
         if str(user.get_name()) == user_id and role != 'admins':
-            if not is_admin(user, resource.get_parent()):
+            if not is_admin(user, self.resource.get_parent()):
                 context.message = ERROR(u'You cannot degrade your own role.')
                 return
 
         # Make the operation
-        resource.set_user_role(user_id, role)
+        self.resource.set_user_role(user_id, role)
 
         # Ok
         context.message = u"Role updated."
+        context.redirect()
 
 
 
@@ -566,7 +570,7 @@ class RoleAware(AccessControl):
 
         # Add the users to the given role
         if role is not None:
-            users = self.get_property(role)
+            users = self.get_value(role)
             users = set(users)
             if user_ids - users:
                 users = tuple(users | user_ids)

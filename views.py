@@ -379,11 +379,17 @@ class SearchForm(BrowseForm):
     search_field = ViewField(source='query', datatype=String)
     search_term = ViewField(source='query', datatype=Unicode)
 
-    def get_search_fields(self):
-        return  [
-            ('title', MSG(u'Title')),
-            ('text', MSG(u'Text')),
-            ('name', MSG(u'Name'))]
+    search_fields = freeze([
+        ('title', MSG(u'Title')),
+        ('text', MSG(u'Text')),
+        ('name', MSG(u'Name'))])
+
+
+    def search_fields_(self):
+        field = self.search_field.value
+        return [
+            {'name': name, 'title': title, 'selected': name == field}
+            for name, title in self.search_fields ]
 
 
     def search(self):
@@ -392,13 +398,6 @@ class SearchForm(BrowseForm):
 
         search_template = ui.get_template(self.search_template)
         return stl(search_template, self)
-
-
-    def search_fields(self):
-        field = self.search_field.value
-        return [
-            {'name': name, 'title': title, 'selected': name == field}
-            for name, title in self.get_search_fields() ]
 
 
 ###########################################################################
