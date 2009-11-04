@@ -73,11 +73,12 @@ class IResource(Resource):
         return resource
 
 
-    def get_default_view_name(self):
+    @property
+    def default_view_name(self):
         views = self.class_views
         if not views:
             return None
-        context = get_context()
+        context = self.context
         ac = self.get_access_control()
         for view_name in views:
             view = getattr(self, view_name, None)
