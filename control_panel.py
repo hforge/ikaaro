@@ -23,13 +23,11 @@ from operator import itemgetter
 
 # Import from itools
 from itools.core import thingy_property, thingy_lazy_property
-from itools.datatypes import Boolean, Enumerate, String, Unicode
+from itools.datatypes import Boolean, Enumerate, String
 from itools.gettext import MSG
 from itools.http import get_context
 from itools.i18n import get_language_name, get_languages
-from itools.uri import Path
 from itools.web import STLView, STLForm, INFO, ERROR, ViewField
-from itools.xapian import PhraseQuery
 
 # Import from ikaaro
 from access import RoleAware_BrowseUsers, RoleAware_AddUser

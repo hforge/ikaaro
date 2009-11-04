@@ -23,8 +23,6 @@ from itools.core import freeze
 from itools.datatypes import String
 from itools.gettext import MSG
 from itools.handlers import RWDatabase
-from itools.http import get_context
-from itools.stl import stl
 from itools.web import BaseView
 
 # Import from ikaaro

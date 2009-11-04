@@ -24,8 +24,8 @@ except ImportError:
     PILImage = None
 
 # Import from itools
-from itools.core import merge_dicts, thingy_lazy_property
-from itools.datatypes import Boolean, Integer, String, Unicode
+from itools.core import thingy_lazy_property
+from itools.datatypes import Boolean, Integer, String
 from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.i18n import format_datetime

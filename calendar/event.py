@@ -22,17 +22,16 @@ from datetime import datetime
 # Import from itools
 from itools.core import freeze, merge_dicts
 from itools.csv import Property
-from itools.datatypes import DateTime, Enumerate, String, Time, Unicode
+from itools.datatypes import DateTime, Enumerate, String, Time
 from itools.gettext import MSG
 
 # Import from ikaaro
 from ikaaro.autoform import AutoForm
 from ikaaro.file import File
-from ikaaro.folder import Folder
 from ikaaro.forms import DateTimeField, DescriptionField, SelectField
 from ikaaro.forms import TextField, TitleField
 from ikaaro.registry import register_document_type
-from ikaaro.views_new import NewInstanceByDate, TodayDataType
+from ikaaro.views_new import NewInstanceByDate
 
 
 

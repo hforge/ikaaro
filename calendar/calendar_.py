@@ -22,7 +22,7 @@ from datetime import time
 
 # Import from itools
 from itools.core import merge_dicts
-from itools.datatypes import DataType, Date
+from itools.datatypes import DataType
 from itools.gettext import MSG
 from itools.http import get_context
 from itools.ical import iCalendar, icalendarTable
@@ -30,7 +30,6 @@ from itools.ical import Record
 
 # Import from ikaaro
 from ikaaro.file_views import File_View
-from ikaaro.folder import Folder
 from ikaaro.resource_ import DBResource
 from ikaaro.table import Table
 from ikaaro.text import Text

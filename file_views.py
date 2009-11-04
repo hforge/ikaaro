@@ -23,20 +23,20 @@ from datetime import datetime, timedelta
 from os.path import basename
 
 # Import from itools
-from itools.core import merge_dicts, thingy_lazy_property
+from itools.core import thingy_lazy_property
 from itools.csv import Property
-from itools.datatypes import Integer, Unicode, String
+from itools.datatypes import Integer
 from itools.fs import FileName
 from itools.gettext import MSG
 from itools.handlers import get_handler_class_by_mimetype, guess_encoding
 from itools.html import HTMLParser, stream_to_str_as_xhtml
 from itools.i18n import guess_language
 from itools.uri import get_reference
-from itools.web import BaseView, STLView, INFO, ERROR, ViewField
+from itools.web import BaseView, STLView, ERROR, ViewField
 
 # Import from ikaaro
 from datatypes import ImageWidth
-from forms import FileField, ReplaceFileField, TitleField
+from forms import FileField, ReplaceFileField
 import messages
 from multilingual import Multilingual
 from registry import get_resource_class

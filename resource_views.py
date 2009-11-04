@@ -20,23 +20,22 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
-from datetime import datetime
 from operator import itemgetter
 
 # Import from itools
 from itools.core import merge_dicts, thingy_lazy_property
-from itools.datatypes import DateTime, String, Unicode
+from itools.datatypes import String
 from itools.fs import FileName
 from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.i18n import get_language_name
 from itools.stl import stl
-from itools.uri import Path, get_reference, get_uri_path
+from itools.uri import Path, get_reference
 from itools.web import BaseView, STLForm, INFO, ERROR, FormError
 
 # Import from ikaaro
 from autoform import AutoForm
-from datatypes import FileDataType, CopyCookie
+from datatypes import FileDataType
 from folder_views import Folder_BrowseContent
 from forms import PasswordField, FormField
 from forms import DescriptionField, SubjectField, TimestampField, TitleField

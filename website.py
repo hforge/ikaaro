@@ -22,7 +22,6 @@
 from itools.core import merge_dicts
 from itools.datatypes import String, Tokens, Unicode
 from itools.gettext import MSG
-from itools.html import stream_to_str_as_html, xhtml_doctype
 from itools.web import STLView, VirtualRoot
 
 # Import from ikaaro

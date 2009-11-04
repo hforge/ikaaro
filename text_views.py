@@ -20,7 +20,6 @@
 from operator import itemgetter
 
 # Import from itools
-from itools.core import merge_dicts
 from itools.datatypes import Integer, String
 from itools.gettext import MSG
 from itools.web import STLForm, STLView, INFO, ViewField

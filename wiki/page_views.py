@@ -33,7 +33,7 @@ from docutils.utils import SystemMessage
 from docutils import nodes
 
 # Import from itools
-from itools.core import freeze, merge_dicts
+from itools.core import merge_dicts
 from itools.datatypes import String, Unicode
 from itools.gettext import MSG
 from itools.handlers import checkid, ro_database
@@ -46,7 +46,7 @@ from itools.web import BaseView, STLView, ERROR
 from itools.xml import XMLParser, XMLError
 
 # Import from ikaaro
-from ikaaro.forms import NameField, TitleField
+from ikaaro.forms import NameField
 from ikaaro import messages
 from ikaaro.forms import title_widget, timestamp_widget
 from ikaaro.resource_views import DBResource_Edit

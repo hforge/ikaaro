@@ -20,7 +20,7 @@ from re import compile, sub
 from subprocess import CalledProcessError
 
 # Import from itools
-from itools.core import merge_dicts, thingy_lazy_property
+from itools.core import thingy_lazy_property
 from itools.datatypes import Boolean, String
 from itools.gettext import MSG
 from itools.uri import encode_query, get_reference

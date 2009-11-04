@@ -30,12 +30,10 @@ from itools.csv import Property
 from itools.datatypes import Unicode, String, Integer, Boolean, DateTime
 from itools.http import get_context
 from itools.log import log_warning
-from itools.uri import Path
 from itools.web import Resource
 from itools.xapian import CatalogAware, PhraseQuery
 
 # Import from ikaaro
-from metadata import Metadata
 from registry import register_field, register_resource_class
 from resource_views import DBResource_Edit, DBResource_Backlinks
 from resource_views import DBResource_AddImage, DBResource_AddLink

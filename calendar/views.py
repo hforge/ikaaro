@@ -24,13 +24,12 @@ from datetime import date, datetime, time, timedelta
 from operator import itemgetter
 
 # Import from itools
-from itools.csv import Property
-from itools.datatypes import Date, Enumerate, Integer, String, Unicode
+from itools.datatypes import Date, Enumerate, Integer
 from itools.gettext import MSG
 from itools.http import get_context
 from itools.ical import Time
 from itools.stl import stl
-from itools.uri import encode_query, get_reference
+from itools.uri import get_reference
 from itools.web import BaseView, STLForm, STLView, INFO, ERROR
 from itools.xapian import AndQuery, PhraseQuery, RangeQuery
 
