@@ -640,8 +640,7 @@ def get_menu_namespace(context, depth=3, show_first_child=False, flat=True,
     resource = context.resource
     url = list(context.uri.path)
     if not url or url[-1][0] != ';':
-        method = resource.get_default_view_name()
-        url.append(';%s' % method)
+        url.append(';%s' % resource.default_view_name)
 
     # Get the menu
     tabs = {'items': []}
