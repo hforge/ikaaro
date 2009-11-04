@@ -192,17 +192,13 @@ class ContactForm(AutoForm):
             return field
 
 
-    def get_value(self, name):
-        if name == 'from':
+    def get_value(self, field):
+        if field.name == 'from':
             user = self.context.user
             if user:
                 return user.get_value('email')
-        else:
-            query = self.context.query
-            if name in query:
-                return query[name]
 
-        return getattr(self, name).get_default()
+        return super(ContactForm, self).get_value(field)
 
 
     def action(self, resource, context, form):
