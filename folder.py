@@ -314,7 +314,7 @@ class Folder(DBResource):
                     return view
 
         # Default
-        return DBResource.get_view(self, name, query)
+        return super(Folder, self).get_view(name, query)
 
 
     # Views

@@ -80,8 +80,17 @@ class DBResource_Edit(AutoForm):
     field_names = ['timestamp', 'title', 'description', 'subject']
 
 
-    def get_value(self, name):
-        return self.resource.get_value(name, language=self.language)
+    @thingy_lazy_property
+    def language(self):
+        return self.resource.get_content_language(self.context)
+
+
+    def get_value(self, field):
+        name = field.name
+        if name in ('title', 'description', 'subject'):
+            return self.resource.get_value(name, language=self.language)
+
+        return super(DBResource_Edit, self).get_value(field)
 
 
     @thingy_lazy_property
@@ -103,11 +112,6 @@ class DBResource_Edit(AutoForm):
                 return True
 
         return False
-
-
-    @thingy_lazy_property
-    def language(self):
-        return self.resource.get_content_language(self.context)
 
 
     def set_value(self, name, value):

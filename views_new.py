@@ -71,14 +71,6 @@ class NewInstanceByDate(AutoForm):
         return title.gettext(class_title=class_title)
 
 
-    def get_value(self, name):
-        if name in self.get_query_schema():
-            value = self.context.get_query_value(name)
-            if value is not None:
-                return value
-        return super(NewInstanceByDate, self).get_value(name)
-
-
     def icon(self, resource, **kw):
         type = kw.get('type')
         cls = get_resource_class(type)
