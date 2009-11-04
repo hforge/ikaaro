@@ -20,8 +20,6 @@
 
 # Import from itools
 from itools.gettext import MSG
-from itools.uri import get_reference
-from itools.web import BaseView
 
 # Import from ikaaro
 from ikaaro.views import ContextMenu

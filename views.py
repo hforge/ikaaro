@@ -20,7 +20,7 @@ from itools.datatypes import Boolean, Integer, String, Unicode
 from itools.gettext import MSG
 from itools.stl import stl
 from itools.uri import get_reference
-from itools.web import BaseView, STLView, STLForm, ViewField
+from itools.web import STLView, STLForm, ViewField
 from itools.xml import XMLParser
 
 # Import from ikaaro

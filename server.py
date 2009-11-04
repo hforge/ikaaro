@@ -25,11 +25,9 @@ import sys
 from glib import GError
 
 # Import from itools
-from itools.http import HTTPServer
 from itools import vfs
 
 # Import from ikaaro
-from context import CMSContext
 from utils import is_pid_running
 
 

@@ -19,9 +19,8 @@ from operator import itemgetter
 from re import compile, sub
 
 # Import from itools
-from itools.core import merge_dicts, thingy_lazy_property
+from itools.core import thingy_lazy_property
 from itools.datatypes import Boolean, String
-from itools import git
 from itools.gettext import MSG
 from itools.web import STLView
 

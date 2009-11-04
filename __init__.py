@@ -17,9 +17,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Import from the Standard Library
-from os import getenv, listdir
-
 # Import from itools
 from itools.core import get_abspath, get_version
 from itools.gettext import register_domain

@@ -15,18 +15,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.handlers import File
-from itools.http import ClientError, set_context
+from itools.http import set_context
 from itools.soup import SoupMessage
-from itools.uri import Path
-from itools import vfs
-from itools.web import WebApplication, lock_body
-from itools.web import Resource, BaseView
+from itools.web import WebApplication
 
 # Import from ikaaro
 from context import CMSContext
 from database import get_database
-from exceptions import ConsistencyError
 
 
 

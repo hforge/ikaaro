@@ -19,7 +19,6 @@
 # Import from the Standard Library
 from cProfile import runctx
 from optparse import OptionParser
-from os import devnull
 from subprocess import Popen, call, PIPE
 from sys import exit, stdout
 from time import time
@@ -29,7 +28,6 @@ from traceback import print_exc
 import itools
 from itools.core import start_subprocess
 from itools.csv import Property
-from itools.handlers import get_handler
 from itools.http import get_context
 from itools import vfs
 
@@ -38,7 +36,6 @@ from ikaaro.metadata import Metadata
 from ikaaro.obsolete.metadata import Metadata as OldMetadata
 from ikaaro.resource_ import DBResource
 from ikaaro.server import Server, ask_confirmation, get_fake_context
-from ikaaro.server import is_running_in_rw_mode
 
 
 def abort():

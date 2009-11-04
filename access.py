@@ -19,8 +19,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import freeze, merge_dicts, thingy_lazy_property
-from itools.datatypes import Boolean, Email, Tokens, Unicode, String
+from itools.core import freeze, thingy_lazy_property
+from itools.datatypes import Boolean, Tokens, String
 from itools.gettext import MSG
 from itools.http import get_context
 from itools.web import AccessControl as BaseAccessControl

@@ -19,7 +19,6 @@ from datetime import datetime
 from itertools import chain
 
 # Import from itools
-from itools.core import thingy_lazy_property
 from itools.datatypes import Date, DateTime, Email, String, Unicode
 from itools.gettext import MSG
 from itools.stl import stl
@@ -28,7 +27,6 @@ from itools.xml import XMLParser
 
 # Import from ikaaro
 from datatypes import FileDataType, HTMLBody
-from utils import CMSTemplate
 
 
 

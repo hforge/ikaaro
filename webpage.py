@@ -22,7 +22,6 @@
 from copy import deepcopy
 
 # Import from itools
-from itools.core import merge_dicts
 from itools.gettext import MSG
 from itools.html import xhtml_uri, XHTMLFile
 from itools.http import get_context

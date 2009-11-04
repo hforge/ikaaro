@@ -17,13 +17,11 @@
 # Import from the Standard Library
 from datetime import date
 from operator import itemgetter
-from urllib import quote
 
 # Import from itools
-from itools.core import freeze, merge_dicts
-from itools.core import thingy_property, thingy_lazy_property
+from itools.core import freeze, thingy_property, thingy_lazy_property
 from itools.csv import Property
-from itools.datatypes import Date, String, Unicode, Enumerate
+from itools.datatypes import Date, String, Enumerate
 from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.http import get_context
@@ -34,7 +32,6 @@ from autoform import AutoForm
 from forms import DateField, NameField, RadioField, TitleField, TextField
 import messages
 from registry import get_resource_class, get_document_types
-from views import ContextMenu
 
 
 

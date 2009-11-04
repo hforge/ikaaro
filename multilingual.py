@@ -14,9 +14,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Import from the Standard Library
-from datetime import datetime
-
 # Import from itools
 from itools.http import get_context
 from itools.uri import resolve_uri

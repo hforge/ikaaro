@@ -19,7 +19,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
-from copy import deepcopy
 from decimal import Decimal
 from types import FunctionType, MethodType
 

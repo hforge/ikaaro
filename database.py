@@ -25,7 +25,6 @@ from itools.uri import Path
 from itools.xapian import Catalog, SearchResults, make_catalog
 
 # Import from ikaaro
-from folder import Folder
 from registry import get_register_fields, get_resource_class
 
 
