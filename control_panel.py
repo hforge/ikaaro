@@ -57,7 +57,7 @@ class ControlPanelMenu(ContextMenu):
             if not resource.is_access_allowed(self.context, resource, view):
                 continue
             items.append({
-                'title': view.title,
+                'title': view.view_title,
                 'src': resource.get_method_icon(view, size='16x16'),
                 'href': ';%s' % name})
 
@@ -92,7 +92,7 @@ class ControlPanel(CPBaseView, IconsView):
                 continue
             items.append({
                 'icon': resource.get_method_icon(view, size='48x48'),
-                'title': view.title,
+                'title': view.view_title,
                 'description': view.description,
                 'url': ';%s' % name})
 
@@ -103,7 +103,7 @@ class ControlPanel(CPBaseView, IconsView):
 class CPEditVirtualHosts(CPBaseView, STLForm):
 
     access = 'is_admin'
-    title = MSG(u'Virtual Hosts')
+    view_title = MSG(u'Virtual Hosts')
     icon = 'website.png'
     description = MSG(u'Define the domain names for this Web Site.')
     template = 'website/virtual_hosts.xml'
@@ -132,7 +132,7 @@ class CPEditVirtualHosts(CPBaseView, STLForm):
 class CPEditSecurityPolicy(CPBaseView, STLForm):
 
     access = 'is_allowed_to_edit'
-    title = MSG(u'Security Policy')
+    view_title = MSG(u'Security Policy')
     icon = 'lock.png'
     description = MSG(u'Choose the security policy.')
     template = 'website/security_policy.xml'
@@ -177,7 +177,7 @@ class ContactsOptions(Enumerate):
 class CPEditContactOptions(CPBaseView, DBResource_Edit):
 
     access = 'is_allowed_to_edit'
-    title = MSG(u'Email options')
+    view_title = MSG(u'Email options')
     icon = 'mail.png'
     description = MSG(u'Configure the website email options')
 
@@ -223,7 +223,7 @@ class CPEditContactOptions(CPBaseView, DBResource_Edit):
 class CPBrokenLinks(CPBaseView, STLView):
 
     access = 'is_admin'
-    title = MSG(u'Broken Links')
+    view_title = MSG(u'Broken Links')
     icon = 'clear.png'
     description = MSG(u'Check the referential integrity.')
     template = '/ui/website/broken_links.xml'
@@ -269,12 +269,13 @@ class CPBrokenLinks(CPBaseView, STLView):
 class CPEditLanguages(CPBaseView, STLForm):
 
     access = 'is_admin'
-    title = MSG(u'Languages')
+    view_title = MSG(u'Languages')
     description = MSG(u'Define the Web Site languages.')
     icon = 'languages.png'
     template = 'website/edit_languages.xml'
 
     codes = ViewField(multiple=True, required=True)
+    code = SelectField(required=True)
 
 
     @thingy_lazy_property
@@ -341,9 +342,7 @@ class CPEditLanguages(CPBaseView, STLForm):
 
     #######################################################################
     # Actions / Add
-    action_add_language_schema = {
-        'code': String(mandatory=True)}
-
+    action_add_language_fields = ['code']
     def action_add_language(self, resource, context, form):
         code = form['code']
 
@@ -354,10 +353,11 @@ class CPEditLanguages(CPBaseView, STLForm):
         context.redirect()
 
 
+
 class CPEditSearchEngineOptimizations(CPBaseView, DBResource_Edit):
 
     access = 'is_allowed_to_edit'
-    title = MSG(u'Search engine optimization')
+    view_title = MSG(u'Search engine optimization')
     icon = 'search.png'
     description = MSG(u"""
       Optimize your website for better ranking in search engine results.""")
