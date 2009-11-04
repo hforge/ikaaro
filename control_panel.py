@@ -191,16 +191,18 @@ class CPEditContactOptions(DBResource_Edit):
 
     @thingy_property
     def emails_from_addr(self):
-        datatype = ContactsOptions(resource=self.resource)
-        title = MSG(u'Emails from addr')
-        return SelectField(self.name, datatype=datatype, title=title)
+        field = SelectField('emails_from_addr')
+        field.datatype = ContactsOptions(resource=self.resource)
+        field.title = MSG(u'Emails from addr')
+        return field
 
 
     @thingy_property
     def contacts(self):
-        datatype = ContactsOptions(multiple=True, resource=self.resource)
-        title = MSG(u'Select the contact accounts')
-        return SelectField(self.name, datatype=datatype, title=title)
+        field = SelectField('contacts')
+        field.datatype = ContactsOptions(multiple=True, resource=self.resource)
+        field.title = MSG(u'Select the contact accounts')
+        return field
 
 
     field_names = ['emails_from_addr', 'emails_signature', 'contacts']
