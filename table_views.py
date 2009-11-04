@@ -140,8 +140,7 @@ class Table_View(SearchForm):
                 value = None
 
         # Enumerate
-        is_enumerate = getattr(datatype, 'is_enumerate', False)
-        if is_enumerate:
+        if issubclass(datatype, Enumerate):
             value = datatype.get_value(value)
 
         return value

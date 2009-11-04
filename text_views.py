@@ -20,7 +20,7 @@
 from operator import itemgetter
 
 # Import from itools
-from itools.datatypes import Integer, String
+from itools.datatypes import Enumerate, Integer, String
 from itools.gettext import MSG
 from itools.web import STLForm, STLView, INFO, ViewField
 
@@ -179,8 +179,7 @@ class CSV_View(BrowseForm):
             value = item.get_value(column)
 
         # Columns
-        is_enumerate = getattr(datatype, 'is_enumerate', False)
-        if is_enumerate:
+        if issubclass(datatype, Enumerate):
             return datatype.get_value(value)
         return value
 
