@@ -4,41 +4,38 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
-  <form name="addform" action=";add_user" method="post">
-    <fieldset>
-      <legend>Add New Member</legend>
-      <dl>
-        <dt>Email</dt>
-        <dd>
-          <input id="email" type="text" name="email" size="40" />
-        </dd>
-        <stl:block stl:if="is_admin">
-          <dt>Password</dt>
-          <dd>
-            <input id="newpass" type="password" name="newpass" />
-          </dd>
-          <dt>Repeat Password</dt>
-          <dd>
-            <input id="newpass2" type="password" name="newpass2" />
-          </dd>
-        </stl:block>
-        <dt>Choose the role for the new member</dt>
-        <dd>
+<form name="addform" action=";add_user" method="post">
+  <fieldset>
+    <legend>Add New Member</legend>
+    <table>
+      <tr>
+        <td>${email}</td>
+      </tr>
+      <tr>
+        <td>
+          Choose the role for the new member<br/>
           <select name="role">
             <option stl:repeat="role roles" value="${role/name}"
               >${role/title}</option>
           </select>
-        </dd>
-      </dl>
-      <button type="submit" name="action" value="add_and_view"
-        class="button-ok">Add and view</button>
-      <button type="submit" name="action" value="add_and_return">Add and
-        return</button>
-    </fieldset>
-  </form>
+        </td>
+      </tr>
+      <tr stl:if="is_admin">
+        <td>${newpass}</td>
+      </tr>
+      <tr stl:if="is_admin">
+        <td>${newpass2}</td>
+      </tr>
+    </table>
+    <button type="submit" name="action" value="add_and_view" class="button-ok"
+      >Add and view</button>
+    <button type="submit" name="action" value="add_and_return">Add and
+      return</button>
+  </fieldset>
+</form>
 
-  <script language="javascript">
-    $("#email").focus();
-  </script>
+<script language="javascript">
+  $("#email").focus();
+</script>
 
 </stl:block>

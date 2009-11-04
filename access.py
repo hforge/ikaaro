@@ -59,7 +59,7 @@ def is_admin(user, resource):
 class RoleAware_BrowseUsers(SearchForm):
 
     access = 'is_admin'
-    title = MSG(u'Browse Members')
+    view_title = MSG(u'Browse Members')
     icon = 'userfolder.png'
     description = MSG(u'See the users and their roles.')
 
@@ -234,15 +234,19 @@ class RoleAware_EditMembership(STLForm):
 class RoleAware_AddUser(STLForm):
 
     access = 'is_admin'
-    title = MSG(u'Add New Member')
+    view_title = MSG(u'Add New Member')
     icon = 'card.png'
     description = MSG(u'Grant access to a new user.')
     template = 'access/add_user.xml'
 
     email = EmailField(required=True)
+    email.title = MSG(u'Email')
     role = SelectField(required=True)
+    role.title = MSG(u'Choose the role for the new member')
     newpass = PasswordField()
+    newpass.title = MSG(u'Password')
     newpass2 = PasswordField()
+    newpass2.title = MSG(u'Repeat Password')
 
 
     def is_admin(self):
