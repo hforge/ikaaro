@@ -19,7 +19,7 @@ from datetime import datetime
 from itertools import chain
 
 # Import from itools
-from itools.datatypes import Date, DateTime, Email, String, Unicode
+from itools.datatypes import Date, DateTime, Email, Enumerate, String, Unicode
 from itools.gettext import MSG
 from itools.stl import stl
 from itools.web import ViewField
@@ -224,6 +224,7 @@ class SelectField(FormField):
 
 
     css = None
+    datatype = Enumerate
     has_empty_option = True
     size = None
 
