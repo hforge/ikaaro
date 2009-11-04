@@ -121,7 +121,7 @@ class File_NewInstance(NewInstance):
 class File_Download(BaseView):
 
     access = 'is_allowed_to_view'
-    title = MSG(u"Download")
+    view_title = MSG(u"Download")
 
 
     def get_mtime(self, resource):
@@ -149,7 +149,7 @@ class File_Download(BaseView):
 class File_View(STLView):
 
     access = 'is_allowed_to_view'
-    title = MSG(u'Download')
+    view_title = MSG(u'Download')
     icon = 'view.png'
     template = 'file/download_form.xml'
 
@@ -336,51 +336,83 @@ class Image_Thumbnail(BaseView):
 class Image_View(STLView):
 
     access = 'is_allowed_to_view'
-    title = MSG(u'View')
+    view_title = MSG(u'View')
     template = 'binary/Image_view.xml'
     styles = ['/ui/gallery/style.css']
     scripts = ['/ui/gallery/javascript.js']
 
-    # Image default size as a string (empty = full size)
-    default_width = ''
-    default_height = ''
+    width = ViewField(source='query', datatype=Integer(default=800))
+    height = ViewField(source='query', datatype=Integer(default=600))
 
 
-    def get_browse_images(self, resource, context):
+    @thingy_lazy_property
+    def images(self):
         from file import Image
-        user = context.user
-        parent = resource.get_parent()
+
+        user = self.context.user
+        parent = self.resource.get_parent()
         ac = parent.get_access_control()
 
         return [ x for x in parent.search_resources(cls=Image)
                  if ac.is_allowed_to_view(user, x) ]
 
 
-    def get_namespace(self, resource, context):
-        size = context.get_query_value('size', type=Integer)
-        width = context.get_query_value('width', default=self.default_width)
-        height = context.get_query_value('height', default=self.default_height)
-        images = self.get_browse_images(resource, context)
+    @thingy_lazy_property
+    def my_index(self):
+        for index, image in enumerate(self.images):
+            if image is self.resource:
+                return index
+        return None
 
-        my_index = None
-        for index, image in enumerate(images):
-            if image == resource:
-                my_index = index
-                break
 
-        # Navigate to next image
-        next_image = None
-        next_link = None
-        if my_index + 1 < len(images):
-            next_image = images[my_index + 1]
-            next_link = context.get_link(next_image)
+    @thingy_lazy_property
+    def image(self):
+        width, height = self.resource.handler.get_size()
+        return {'width': width, 'height': height}
 
-        # Navigate to previous image
-        prev_image = None
-        prev_link = None
-        if my_index > 0:
-            prev_image = images[my_index - 1]
-            prev_link = context.get_link(prev_image)
+
+    def image_link(self):
+        return self.resource.path
+
+
+    def image_view(self):
+        return self.preload[0]
+
+
+    def widths(self):
+        return ImageWidth.get_namespace(self.width.value)
+
+
+    @thingy_lazy_property
+    def prev_image(self):
+        my_index = self.my_index
+        return self.images[my_index - 1] if (my_index > 0) else None
+
+
+    def prev_link(self):
+        prev_image = self.prev_image
+        return prev_image.path if prev_image else None
+
+
+    @thingy_lazy_property
+    def next_image(self):
+        images = self.images
+        my_index = self.my_index
+        return images[my_index + 1] if my_index + 1 < len(images) else None
+
+
+    def next_link(self):
+        next_image = self.next_image
+        return next_image.path if next_image else None
+
+
+    @thingy_lazy_property
+    def preload(self):
+        width = self.width.value
+        height = self.height.value
+
+        images = self.images
+        my_index = self.my_index
 
         # List of 5 next and previous images to preload
         next_images = images[my_index + 2:my_index + 6]
@@ -389,7 +421,7 @@ class Image_View(STLView):
         previous_images = images[min_index:max_index]
         previous_images.reverse()
         preload = []
-        for image in ([resource, next_image, prev_image]
+        for image in ([self.resource, self.next_image, self.prev_image]
                       + next_images + previous_images):
             if image is None:
                 continue
@@ -404,23 +436,12 @@ class Image_View(STLView):
                 uri = prefix.resolve_name(';download')
             preload.append(str(uri))
 
-        # Real width and height (displayed for reference)
-        image_width, image_height = resource.handler.get_size()
+        return preload
 
-        return {'parent_link': resource.get_parent().path,
-                'size': size,
-                'width': width,
-                'height': height,
-                'preload': '"' + '", "'.join(preload) + '"',
-                'prev_link': prev_link,
-                'next_link': next_link,
-                'widths': ImageWidth.get_namespace(width),
-                'image_width': image_width,
-                'image_height': image_height,
-                'image_link': resource.path,
-                'index': my_index + 1,
-                'total': len(images),
-                'image_view': preload[0]}
+
+    def preload_array(self):
+        array = [ ('"%s"' % x) for x in self.preload ]
+        return ', '.join(array)
 
 
 
@@ -428,7 +449,7 @@ class Image_View(STLView):
 class Video_View(STLView):
 
     access = 'is_allowed_to_view'
-    title = MSG(u'View')
+    view_title = MSG(u'View')
     template = '/ui/binary/Video_view.xml'
 
 
@@ -440,7 +461,7 @@ class Video_View(STLView):
 class Archive_View(File_View):
 
     access = 'is_allowed_to_view'
-    title = MSG(u'View')
+    view_title = MSG(u'View')
     template = '/ui/binary/Archive_view.xml'
 
     def get_namespace(self, resource, context):
@@ -454,6 +475,6 @@ class Archive_View(File_View):
 class Flash_View(File_View):
 
     access = 'is_allowed_to_view'
-    title = MSG(u'View')
+    view_title = MSG(u'View')
     template = '/ui/binary/Flash_view.xml'
 
