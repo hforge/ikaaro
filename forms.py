@@ -73,6 +73,8 @@ class FormField(ViewField):
 
 
     def encoded_value(self):
+        if self.value is None:
+            return None
         return self.datatype.encode(self.value)
 
 
@@ -90,7 +92,7 @@ class FormField(ViewField):
         elif type(widget) is list:
             args.append(widget)
         elif type(widget) is str:
-            widget = self.context.get_template(widget)
+            widget = self.view.context.get_template(widget)
             widget = widget.events
             args.append(widget)
         else:
@@ -358,7 +360,7 @@ class RTEField(FormField):
     def language(self):
         path = get_abspath('ui/tiny_mce/langs')
         tiny_mce_languages = [ x[:-3] for x in vfs.get_names(path) ]
-        accept = get_context().accept_language
+        accept = self.view.context.accept_language
         return accept.select_language(tiny_mce_languages)
 
 
