@@ -141,18 +141,20 @@ class NewInstanceByDate(AutoForm):
         child.metadata.set_property('title', title)
 
 
-    def action(self, resource, context, form):
+    def action(self):
         # 1. Get the container
         container = self.get_container()
 
         # 2. Make the resource
         cls = self.get_resource_class()
-        child = container.make_resource(form['name'], cls)
+        name = self.new_resource_name
+        child = container.make_resource(name, cls)
 
         # 3. Edit the resource
         self.modify_resource(child)
 
         # 4. Ok
+        context = self.context
         context.message = messages.MSG_NEW_RESOURCE
         location = str(child.path)
         context.created(location)
@@ -226,50 +228,55 @@ class ProxyNewInstance(NewInstance):
 
     template = 'base/proxy_new_instance.xml'
 
-    class_id = TextField(datatype=String)
+    type = TextField(source='query', datatype=String)
 
 
-    def get_namespace(self, resource, context):
-        type = context.query['type']
-        cls = get_resource_class(type)
+    @thingy_lazy_property
+    def resource_class(self):
+        type = self.type.value
+        return get_resource_class(type)
 
-        document_types = get_document_types(type)
+
+    @thingy_lazy_property
+    def class_title(self):
+        cls = self.resource_class
+        return cls.class_title.gettext()
+
+
+    def items(self):
+        document_types = get_document_types(self.type.value)
+        if not document_types:
+            return None
+
+        # Multiple types
+        if len(document_types) == 1:
+            return None
+
         items = []
-        if document_types:
-            # Multiple types
-            if len(document_types) == 1:
-                items = None
-            else:
-                selected = context.get_form_value('class_id')
-                items = [
-                    {'title': x.class_title.gettext(),
-                     'class_id': x.class_id,
-                     'selected': x.class_id == selected,
-                     'icon': '/ui/' + x.class_icon16}
-                    for x in document_types ]
-                if selected is None:
-                    items[0]['selected'] = True
-        # Ok
-        return {
-            'class_id': cls.class_id,
-            'class_title': cls.class_title.gettext(),
-            'items': items}
+        selected = self.type.value
+        items = [
+            {'title': x.class_title.gettext(),
+             'class_id': x.class_id,
+             'selected': x.class_id == selected,
+             'icon': '/ui/' + x.class_icon16}
+            for x in document_types ]
+        if selected is None:
+            items[0]['selected'] = True
+
+        return items
 
 
-    def action(self, resource, context, form):
-        name = form['name']
-        title = form['title']
+    def action(self):
+        resource = self.resource
+        context = self.context
 
         # Create the resource
-        class_id = form['class_id']
-        if class_id is None:
-            # Get it from the query
-            class_id = context.query['type']
-        cls = get_resource_class(class_id)
+        cls = get_resource_class(self.type.value)
+        name = self.new_resource_name
         child = resource.make_resource(name, cls)
         # The metadata
         language = resource.get_content_language(context)
-        title = Property(title, lang=language)
+        title = Property(self.title.value, lang=language)
         child.metadata.set_property('title', title)
 
         context.message = messages.MSG_NEW_RESOURCE

@@ -4,7 +4,7 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
-<form action=";new_resource?type=${class_id}" method="post">
+<form action=";new_resource?type=${type/value}" method="post">
   <fieldset>
     <legend>Add a new ${class_title}</legend>
     <dl>
