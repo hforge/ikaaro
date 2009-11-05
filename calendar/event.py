@@ -110,18 +110,28 @@ class Event_Edit(AutoForm):
     status.title = MSG(u'Status')
 
 
-    def get_value(self, resource, context, name, datatype):
-        return resource.get_property(name)
+    field_names = [
+        'title', 'dtstart', 'dtend', 'description', 'location', 'status']
 
 
-    def action(self, resource, context, form):
+    def get_value(self, field):
+        return self.resource.get_value(field.name)
+
+
+    def action(self):
+        resource = self.resource
+
         # The metadata
-        language = resource.get_content_language(context)
+        language = resource.get_content_language(self.context)
         for name in 'title', 'description':
-            property = Property(form[name], lang=language)
+            field = getattr(self, name)
+            property = Property(field.value, lang=language)
             resource.set_property(name, property)
         for name in 'dtstart', 'dtend', 'location', 'status':
-            resource.set_property(name, form[name])
+            field = getattr(self, name)
+            resource.set_property(name, field.value)
+
+        self.context.redirect()
 
 
 
