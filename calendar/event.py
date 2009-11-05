@@ -178,14 +178,14 @@ class Event(File):
           ORGANIZER: 'organizer of the event'
         """
         ns = {
-            'SUMMARY': self.get_property('title'),
+            'SUMMARY': self.get_value('title'),
             'ORGANIZER': self.get_owner()}
 
         ###############################################################
         # Set dtstart and dtend values using '...' for events which
         # appear into more than one cell
-        dtstart = self.get_property('dtstart')
-        dtend = self.get_property('dtend')
+        dtstart = self.get_value('dtstart')
+        dtend = self.get_value('dtend')
         start_value_type = 'DATE-TIME' # FIXME
 
         ns['start'] = Time.encode(dtstart.time())

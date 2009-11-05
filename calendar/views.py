@@ -24,13 +24,14 @@ from datetime import date, datetime, time, timedelta
 from operator import itemgetter
 
 # Import from itools
+from itools.core import thingy_property, thingy_lazy_property
 from itools.datatypes import Date, Enumerate, Integer
 from itools.gettext import MSG
 from itools.http import get_context
 from itools.ical import Time
 from itools.stl import stl
 from itools.uri import get_reference
-from itools.web import BaseView, STLForm, STLView, INFO, ERROR
+from itools.web import BaseView, STLForm, STLView, INFO, ERROR, ViewField
 from itools.xapian import AndQuery, PhraseQuery, RangeQuery
 
 # Import from ikaaro
@@ -85,19 +86,6 @@ def build_timetables(start_time, end_time, interval):
 
 
 
-def get_current_date(value):
-    """Get date as a date object from string value.
-    By default, get today's date as a date object.
-    """
-    if value is None:
-        return date.today()
-    try:
-        return Date.decode(value)
-    except ValueError:
-        return date.today()
-
-
-
 class Status(Enumerate):
 
     options = [{'name': 'TENTATIVE', 'value': MSG(u'Tentative')},
@@ -112,7 +100,6 @@ class TimetablesForm(STLForm):
     title = MSG(u'Timetables')
     template = '/ui/calendar/edit_timetables.xml'
     styles = ['/ui/calendar/style.css']
-
 
 
     def get_namespace(self, resource, context):
@@ -211,6 +198,10 @@ class CalendarView(STLView):
     # default viewed fields on monthly_view
     default_viewed_fields = ('dtstart', 'dtend', 'SUMMARY', 'STATUS')
 
+    date = ViewField(source='query', datatype=Date)
+
+    ndays = 7
+
 
     def get_first_day(self):
         """Returns 0 if Sunday is the first day of the week, else 1.
@@ -223,7 +214,8 @@ class CalendarView(STLView):
         return True
 
 
-    def get_week_number(self, c_date):
+    @thingy_property
+    def week_number(self):
         """datetime.strftime('%U') gives week number, starting week by sunday
            datetime.strftime('%W') gives week number, starting week by monday
            This week number is calculated as "Week 1" begins on the first
@@ -232,6 +224,7 @@ class CalendarView(STLView):
         We adjust week numbers to fit rules which are used by French people.
         XXX Check for other countries.
         """
+        c_date = self.c_date
         if self.get_first_day() == 1:
             format = '%W'
         else:
@@ -242,7 +235,6 @@ class CalendarView(STLView):
         if day in (1, 2, 3):
             week_number = week_number + 1
         return week_number
-
 
 
     def search(self, query=None, **kw):
@@ -293,68 +285,94 @@ class CalendarView(STLView):
         return None
 
 
-    def add_selector_ns(self, c_date, method, namespace):
-        """Set header used to navigate into time.
-        """
-        week_number = '%0d' % self.get_week_number(c_date)
-        current_week = MSG(u'Week {n}').gettext(n=week_number)
-        tmp_date = c_date - timedelta(7)
-        previous_week = ";%s?date=%s" % (method, Date.encode(tmp_date))
-        tmp_date = c_date + timedelta(7)
-        next_week = ";%s?date=%s" % (method, Date.encode(tmp_date))
-        # Month
-        current_month = months[c_date.month].gettext()
-        delta = 31
-        if c_date.month != 1:
-            kk, delta = monthrange(c_date.year, c_date.month - 1)
-        tmp_date = c_date - timedelta(delta)
-        previous_month = ";%s?date=%s" % (method, Date.encode(tmp_date))
+    def next_year(self):
+        c_date = self.c_date
+        year, month, day = c_date.year, c_date.month, c_date.day
+        if month == 2 and day == 29:
+            day = 28
+
+        tmp_date = date(year + 1, month, day)
+        return ";%s?date=%s" % (self.method, Date.encode(tmp_date))
+
+
+    def current_year(self):
+        return self.c_date.year
+
+
+    def previous_year(self):
+        c_date = self.c_date
+        year, month, day = c_date.year, c_date.month, c_date.day
+        if month == 2 and day == 29:
+            day = 28
+
+        tmp_date = date(year - 1, month, day)
+        return ";%s?date=%s" % (self.method, Date.encode(tmp_date))
+
+
+    def next_month(self):
+        c_date = self.c_date
         kk, delta = monthrange(c_date.year, c_date.month)
         tmp_date = c_date + timedelta(delta)
-        next_month = ";%s?date=%s" % (method, Date.encode(tmp_date))
-        # Year
-        date_before = date(c_date.year, 2, 28)
-        date_after = date(c_date.year, 3, 1)
-        delta = 365
-        if (isleap(c_date.year - 1) and c_date <= date_before) \
-          or (isleap(c_date.year) and c_date > date_before):
-            delta = 366
+        return ";%s?date=%s" % (self.method, Date.encode(tmp_date))
+
+
+    def current_month(self):
+        return months[self.c_date.month].gettext()
+
+
+    def previous_month(self):
+        c_date = self.c_date
+        if c_date.month != 1:
+            kk, delta = monthrange(c_date.year, c_date.month - 1)
+        else:
+            delta = 31
         tmp_date = c_date - timedelta(delta)
-        previous_year = ";%s?date=%s" % (method, Date.encode(tmp_date))
-        delta = 365
-        if (isleap(c_date.year) and c_date <= date_before) \
-          or (isleap(c_date.year +1) and c_date >= date_after):
-            delta = 366
-        tmp_date = c_date + timedelta(delta)
-        next_year = ";%s?date=%s" % (method, Date.encode(tmp_date))
-        # Set value into namespace
-        namespace['current_week'] = current_week
-        namespace['previous_week'] = previous_week
-        namespace['next_week'] = next_week
-        namespace['current_month'] = current_month
-        namespace['previous_month'] = previous_month
-        namespace['next_month'] = next_month
-        namespace['current_year'] = c_date.year
-        namespace['previous_year'] = previous_year
-        namespace['next_year'] = next_year
-        # Add today link
-        tmp_date = date.today()
-        namespace['today'] = ";%s?date=%s" % (method, Date.encode(tmp_date))
-        return namespace
+        return ";%s?date=%s" % (self.method, Date.encode(tmp_date))
+
+
+    def next_week(self):
+        tmp_date = self.c_date + timedelta(7)
+        return ";%s?date=%s" % (self.method, Date.encode(tmp_date))
+
+
+    def current_week(self):
+        return MSG(u'Week {n}').gettext(n=self.week_number)
+
+
+    def previous_week(self):
+        tmp_date = self.c_date - timedelta(7)
+        return ";%s?date=%s" % (self.method, Date.encode(tmp_date))
+
+
+    def today(self):
+        today = date.today()
+        return ";%s?date=%s" % (self.method, Date.encode(today))
+
+
+    @thingy_lazy_property
+    def start(self):
+        """Calculate start of previous week
+        """
+        # 0 = Monday, ..., 6 = Sunday
+        c_date = self.c_date
+        weekday = c_date.weekday()
+        start = c_date - timedelta(7 + weekday)
+        if self.get_first_day() == 0:
+            return start - timedelta(1)
+        return start
 
 
     # Get days of week based on get_first_day's result for start
-    def days_of_week_ns(self, start, num=None, ndays=7, selected=None):
+    def days_of_week(self, num=None, selected=None):
         """
           start : start date of the week
           num : True if we want to get number of the day too
-          ndays : number of days we want
           selected : selected date
         """
         resource = get_context().resource
-        current_date = start
+        current_date = self.start
         ns_days = []
-        for index in range(ndays):
+        for index in range(self.ndays):
             ns =  {}
             ns['name'] = days[current_date.weekday()].gettext()
             if num:
@@ -373,8 +391,8 @@ class CalendarView(STLView):
     ######################################################################
     # Public API
     ######################################################################
-    def events_to_namespace(self, resource, events, day, cal_indexes,
-                            grid=False, show_conflicts=False):
+    def events_to_namespace(self, events, day, grid=False,
+                            show_conflicts=False):
         """Build namespace for events occuring on current day.
         Update events, removing past ones.
 
@@ -383,13 +401,15 @@ class CalendarView(STLView):
           'event' object must have a methods:
               - get_ns_event
         """
-        root = get_context().root
+        handler = self.resource.handler
+        context = self.context
+
         ns_events = []
         index = 0
         while index < len(events):
             event = events[index]
-            e_dtstart = event.dtstart.date()
-            e_dtend = event.dtend.date()
+            e_dtstart = event.get_value('dtstart').date()
+            e_dtend = event.get_value('dtend').date()
             # Current event occurs on current date
             # event begins during current tt
             starts_on = e_dtstart == day
@@ -402,12 +422,10 @@ class CalendarView(STLView):
                 cal_index = 0
                 conflicts_list = set()
                 if show_conflicts:
-                    handler = resource.handler
                     conflicts = handler.get_conflicts(e_dtstart, e_dtend)
                     if conflicts:
                         for uids in conflicts:
                             conflicts_list.update(uids)
-                event = root.get_resource(event.abspath)
                 ns_event = event.get_ns_event(day,
                                               conflicts_list=conflicts_list,
                                               grid=grid, starts_on=starts_on,
@@ -439,17 +457,19 @@ class MonthlyView(CalendarView):
 
     access = 'is_allowed_to_view'
     title = MSG(u'Monthly View')
-    template = '/ui/calendar/monthly_view.xml'
-    monthly_template = '/ui/calendar/monthly_template.xml'
+    template = 'calendar/monthly_view.xml'
+    monthly_template = 'calendar/monthly_template.xml'
 
+    method = 'monthly_view'
+
+
+    @thingy_lazy_property
+    def c_date(self):
+        value = self.date.value
+        return value if value else date.today()
 
 
     def get_namespace(self, resource, context, ndays=7):
-        today_date = date.today()
-
-        # Current date
-        c_date = context.get_form_value('date')
-        c_date = get_current_date(c_date)
         # Save selected date
         context.set_cookie('selected_date', c_date)
 
@@ -459,32 +479,32 @@ class MonthlyView(CalendarView):
             context.set_cookie('method', 'monthly_view')
 
         ###################################################################
-        # Calculate start of previous week
-        # 0 = Monday, ..., 6 = Sunday
-        weekday = c_date.weekday()
-        start = c_date - timedelta(7 + weekday)
-        if self.get_first_day() == 0:
-            start = start - timedelta(1)
-        # Calculate last date to take in account as we display  5*7 = 35 days
-        end = start + timedelta(35)
+        # Add header to navigate into time
+        namespace = self.add_selector_ns(c_date, 'monthly_view', namespace)
+
+        return namespace
+
+
+    add_icon = '/ui/icons/16x16/add.png'
+
+
+    def weeks(self):
+        today_date = date.today()
 
         ###################################################################
         # Get a list of events to display on view
-        events = self.get_events_to_display(start, end)
-        cal_indexes = {resource.name: 0}
-        if isinstance(self.monthly_template, str):
-            template = resource.get_resource(self.monthly_template)
+        if type(self.monthly_template) is str:
+            template = self.context.get_template(self.monthly_template)
         else:
             template = self.monthly_template
 
-        ###################################################################
-        namespace = {}
-        # Add header to navigate into time
-        namespace = self.add_selector_ns(c_date, 'monthly_view', namespace)
-        # Get header line with days of the week
-        namespace['days_of_week'] = self.days_of_week_ns(start, ndays=ndays)
+        # Calculate last date to take in account as we display  5*7 = 35 days
+        start = self.start
+        end = start + timedelta(35)
+        events = self.get_events_to_display(start, end)
+        events = list(events)
 
-        namespace['weeks'] = []
+        weeks = []
         day = start
         # 5 weeks
         for w in range(5):
@@ -492,24 +512,20 @@ class MonthlyView(CalendarView):
             # 7 days a week
             for d in range(7):
                 # day in timetable
-                if d < ndays:
-                    ns_day = {}
-                    ns_day['nday'] = day.day
-                    ns_day['selected'] = (day == today_date)
-                    ns_day['url'] = self.get_action_url(day=day)
+                if d < self.ndays:
                     # Insert events
-                    ns_events, events = self.events_to_namespace(resource,
-                        events, day, cal_indexes)
-                    ns_day['events'] = stl(template, {'events': ns_events})
-                    ns_week['days'].append(ns_day)
+                    ns_events, events = self.events_to_namespace(events, day)
+                    ns_week['days'].append(
+                        {'nday': day.day,
+                         'selected': (day == today_date),
+                         'url': self.get_action_url(day=day),
+                         'events': stl(template, {'events': ns_events})})
                     if day.day == 1:
                         month = months[day.month].gettext()
                         ns_week['month'] = month
                 day = day + timedelta(1)
-            namespace['weeks'].append(ns_week)
-
-        namespace['add_icon'] = '/ui/icons/16x16/add.png'
-        return namespace
+            weeks.append(ns_week)
+        return weeks
 
 
 
@@ -573,19 +589,17 @@ class WeeklyView(CalendarView):
             headers = [None] * ndays
 
         # For each found calendar (or self), get events
-        events = []
         # Get a list of events to display on view
         end = start_date + timedelta(days=ndays)
         events = self.get_events_to_display(start_date, end)
-        cal_indexes = {resource.name: 0}
 
         for header in headers:
             ns_day = {}
             # Add header if given
             ns_day['header'] = header
             # Insert events
-            ns_events, events = self.events_to_namespace(resource, events,
-                                current_date, cal_indexes, grid=True)
+            ns_events, events = self.events_to_namespace(events, current_date,
+                                                         grid=True)
             ns_day['events'] = ns_events
             ns_days.append(ns_day)
             current_date = current_date + step
@@ -647,8 +661,6 @@ class DailyView(CalendarView):
     access = 'is_allowed_to_view'
     title = MSG(u'Daily View')
     template = '/ui/calendar/daily_view.xml'
-    query_schema = {
-        'date': Date}
 
 
     # Start 07:00, End 21:00, Interval 30min
