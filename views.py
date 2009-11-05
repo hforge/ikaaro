@@ -88,12 +88,11 @@ class MessageView(STLView):
 
     template = 'generic/message_view.xml'
 
-    def get_namespace(self, resource, context):
+    def message_as_xml(self):
         message = self.message
         message = message.gettext()
         message = message.encode('utf-8')
-        message = XMLParser(message)
-        return {'message': message}
+        return XMLParser(message)
 
 
 

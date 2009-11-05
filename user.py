@@ -25,7 +25,6 @@ from itools.core import merge_dicts
 from itools.datatypes import Email, String, Unicode
 from itools.gettext import MSG
 from itools.uri import Path
-from itools.web import INFO
 
 # Import from ikaaro
 from access import AccessControl
@@ -285,8 +284,8 @@ class UserFolder(Folder):
     # View
     view = MessageView(
         access='is_admin',
-        title=MSG(u'View'),
+        view_title=MSG(u'View'),
         icon='view.png',
-        message=INFO(u'To manage the users please go '
-                     u'<a href="/;browse_users">here</a>.'))
+        message=MSG(u'To manage the users please go '
+                    u'<a href="/;browse_users">here</a>.'))
 
