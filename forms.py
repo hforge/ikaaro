@@ -470,9 +470,10 @@ class PathSelectorWidget(TextWidget):
         workflow_state = None
         if self.display_workflow:
             context = get_context()
-            path = datatype.encode(value)
-            if path:
-                resource = context.resource.get_resource(path, soft=True)
+            if type(value) is not str:
+                value = datatype.encode(value)
+            if value:
+                resource = context.resource.get_resource(value, soft=True)
                 if resource:
                     workflow_state = get_workflow_preview(resource, context)
 
