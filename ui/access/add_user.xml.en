@@ -13,11 +13,7 @@
       </tr>
       <tr>
         <td>
-          Choose the role for the new member<br/>
-          <select name="role">
-            <option stl:repeat="role roles" value="${role/name}"
-              >${role/title}</option>
-          </select>
+          ${role}
         </td>
       </tr>
       <tr stl:if="is_admin">

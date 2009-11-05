@@ -19,6 +19,7 @@ from datetime import datetime
 from itertools import chain
 
 # Import from itools
+from itools.core import thingy_property
 from itools.datatypes import Date, DateTime, Email, Enumerate, String, Unicode
 from itools.gettext import MSG
 from itools.stl import stl
@@ -175,14 +176,7 @@ class RadioField(FormField):
 
         # Case 1: Enumerate
         if issubclass(datatype, Enumerate):
-            # Check whether the value is already a list of options
-            # FIXME This is done to avoid a bug when using a select widget in
-            # an auto-form, where the 'datatype.get_namespace' method is
-            # called twice (there may be a better way of handling this).
-            if type(value) is not list:
-                options = datatype.get_namespace(value)
-            else:
-                options = value
+            options = value
 
             # Empty option
             if self.has_empty_option:
@@ -218,8 +212,8 @@ class SelectField(FormField):
     <select name="${name}" multiple="${multiple}" size="${size}"
         class="${css}">
       <option value="" stl:if="has_empty_option"></option>
-      <option stl:repeat="option options" value="${option/name}"
-        selected="${option/selected}">${option/value}</option>
+      <option stl:repeat="option options" value="${option/value}"
+        selected="${option/selected}">${option/title}</option>
     </select>""")
 
 
@@ -231,12 +225,22 @@ class SelectField(FormField):
 
     def options(self):
         value = self.value
-        # Check whether the value is already a list of options
-        # FIXME This is done to avoid a bug when using a select widget in an
-        # auto-form, where the 'datatype.get_namespace' method is called
-        # twice (there may be a better way of handling this).
-        if type(value) is not list:
-            return self.datatype.get_namespace(value)
+        if self.multiple:
+            f = lambda x, value=value: (x in value)
+        else:
+            f = lambda x, value=value: (x == value)
+
+        return [
+            {'value': x, 'title': self.get_value_title(x), 'selected': f(x) }
+            for x in self.values ]
+
+
+    @thingy_property
+    def values(self):
+        return self.datatype.values
+
+
+    def get_value_title(self, value):
         return value
 
 
