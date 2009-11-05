@@ -326,6 +326,15 @@ class DateTimeField(FormField):
         return self.value.strftime('%H:%M')
 
 
+    def get_value(self, source):
+        date = source.get(self.name)
+        if date is None:
+            return None
+
+        time = source.get('%s_time' % self.name)
+        return '%sT%s' % (date, time)
+
+
 
 ###########################################################################
 # Advanced fields
