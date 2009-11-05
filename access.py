@@ -19,7 +19,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import freeze, thingy_lazy_property
+from itools.core import freeze, thingy_property, thingy_lazy_property
 from itools.datatypes import Boolean, Tokens, String
 from itools.gettext import MSG
 from itools.http import get_context
@@ -192,21 +192,51 @@ class RoleAware_BrowseUsers(SearchForm):
 
 
 
+class RoleField(SelectField):
+
+    has_empty_option = False
+    required = True
+    title = MSG(u'Role')
+
+    def get_value_title(self, value):
+        resource = self.view.resource
+        return resource.class_schema[value].title
+
+
+    @thingy_property
+    def values(self):
+        return self.view.resource.class_roles
+
+
+    def is_valid(self, value):
+        return value in self.values
+
+
+    @thingy_property
+    def default(self):
+        view = self.view
+        id = getattr(view, 'id', None)
+        if id is None:
+            return None
+        return view.resource.get_user_role(id.value)
+
+
+
 class RoleAware_EditMembership(STLForm):
 
     access = 'is_admin'
     template = 'access/edit_membership_form.xml'
 
     id = HiddenField(required=True)
-    role = SelectField(required=True)
+    role = RoleField()
+
+
+    # the 'id' field must be cooked before the 'role' field
+    field_names = ['id', 'role']
 
 
     def name(self):
         return self.context.get_user_title(self.id.value)
-
-
-    def roles(self):
-        return self.resource.get_roles_namespace(self.id.value)
 
 
     def action(self):
@@ -241,8 +271,7 @@ class RoleAware_AddUser(STLForm):
 
     email = EmailField(required=True)
     email.title = MSG(u'Email')
-    role = SelectField(required=True)
-    role.title = MSG(u'Choose the role for the new member')
+    role = RoleField()
     newpass = PasswordField()
     newpass.title = MSG(u'Password')
     newpass2 = PasswordField()
@@ -252,10 +281,6 @@ class RoleAware_AddUser(STLForm):
     def is_admin(self):
         resource = self.resource
         return resource.is_admin(self.context.user, resource)
-
-
-    def roles(self):
-        return self.resource.get_roles_namespace()
 
 
     def _add(self, resource, context, form):
@@ -598,18 +623,6 @@ class RoleAware(AccessControl):
             usernames = self.get_value(rolename)
             roles[rolename] = set(usernames)
         return roles
-
-
-    #######################################################################
-    # User Interface
-    #######################################################################
-    def get_roles_namespace(self, username=None):
-        schema = self.class_schema
-        user_role = self.get_user_role(username) if username else None
-
-        return [
-            {'name': x, 'title': schema[x].title, 'selected': x == user_role}
-            for x in self.class_roles ]
 
 
     #######################################################################

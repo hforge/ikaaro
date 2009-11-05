@@ -9,10 +9,10 @@
 
   <form action=";edit_membership" method="post">
     <input type="hidden" name="id" value="${id/value}" />
-    <p stl:repeat="role roles">
-      <input type="radio" name="role" id="${role/name}" value="${role/name}"
+    <p stl:repeat="role role/options">
+      <input type="radio" name="role" id="${role/value}" value="${role/value}"
         checked="${role/selected}" />
-      <label for="${role/name}">${role/title}</label>
+      <label for="${role/value}">${role/title}</label>
     </p>
     <p>
       <button type="submit" class="button-rename">Update</button>
