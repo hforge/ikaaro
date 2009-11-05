@@ -185,7 +185,7 @@ class AutoForm(STLForm):
 
 
     def first_field(self):
-        return self.field_names[0]
+        return self.get_field_names()[0]
 
 
     def form_action(self):
