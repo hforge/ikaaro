@@ -64,20 +64,18 @@ class ControlPanelMenu(ContextMenu):
         return items
 
 
-
-class CPBaseView(object):
-    context_menus = [ControlPanelMenu()]
-
+context_menus = [ControlPanelMenu()]
 
 
 ###########################################################################
 # Views
 ###########################################################################
-class ControlPanel(CPBaseView, IconsView):
+class ControlPanel(IconsView):
 
     access = 'is_allowed_to_edit'
     view_title = MSG(u'Control Panel')
     icon = 'settings.png'
+    context_menus = context_menus
 
     def items(self):
         resource = self.resource
@@ -100,13 +98,14 @@ class ControlPanel(CPBaseView, IconsView):
 
 
 
-class CPEditVirtualHosts(CPBaseView, STLForm):
+class CPEditVirtualHosts(STLForm):
 
     access = 'is_admin'
     view_title = MSG(u'Virtual Hosts')
     icon = 'website.png'
     description = MSG(u'Define the domain names for this Web Site.')
     template = 'website/virtual_hosts.xml'
+    context_menus = context_menus
 
     vhosts = TextareaField(datatype=String)
 
@@ -129,13 +128,14 @@ class CPEditVirtualHosts(CPBaseView, STLForm):
 
 
 
-class CPEditSecurityPolicy(CPBaseView, STLForm):
+class CPEditSecurityPolicy(STLForm):
 
     access = 'is_allowed_to_edit'
     view_title = MSG(u'Security Policy')
     icon = 'lock.png'
     description = MSG(u'Choose the security policy.')
     template = 'website/security_policy.xml'
+    context_menus = context_menus
 
     website_is_open = ViewField()
     website_is_open.datatype = Boolean(default=False)
@@ -174,12 +174,13 @@ class ContactsOptions(Enumerate):
 
 
 
-class CPEditContactOptions(CPBaseView, DBResource_Edit):
+class CPEditContactOptions(DBResource_Edit):
 
     access = 'is_allowed_to_edit'
     view_title = MSG(u'Email options')
     icon = 'mail.png'
     description = MSG(u'Configure the website email options')
+    context_menus = context_menus
 
 
     emails_signature = TextareaField(title=MSG(u'Emails signature'))
@@ -220,13 +221,14 @@ class CPEditContactOptions(CPBaseView, DBResource_Edit):
 
 
 
-class CPBrokenLinks(CPBaseView, STLView):
+class CPBrokenLinks(STLView):
 
     access = 'is_admin'
     view_title = MSG(u'Broken Links')
     icon = 'clear.png'
     description = MSG(u'Check the referential integrity.')
     template = '/ui/website/broken_links.xml'
+    context_menus = context_menus
 
 
     def get_namespace(self, resource, context):
@@ -266,13 +268,14 @@ class CPBrokenLinks(CPBaseView, STLView):
 
 
 
-class CPEditLanguages(CPBaseView, STLForm):
+class CPEditLanguages(STLForm):
 
     access = 'is_admin'
     view_title = MSG(u'Languages')
     description = MSG(u'Define the Web Site languages.')
     icon = 'languages.png'
     template = 'website/edit_languages.xml'
+    context_menus = context_menus
 
     codes = ViewField(multiple=True, required=True)
     code = SelectField(required=True)
@@ -354,13 +357,14 @@ class CPEditLanguages(CPBaseView, STLForm):
 
 
 
-class CPEditSearchEngineOptimizations(CPBaseView, DBResource_Edit):
+class CPEditSearchEngineOptimizations(DBResource_Edit):
 
     access = 'is_allowed_to_edit'
     view_title = MSG(u'Search engine optimization')
     icon = 'search.png'
     description = MSG(u"""
       Optimize your website for better ranking in search engine results.""")
+    context_menus = context_menus
 
 
     google_site_verification = FormField()
@@ -378,18 +382,18 @@ class CPEditSearchEngineOptimizations(CPBaseView, DBResource_Edit):
 ###########################################################################
 # Add the control panel menu to views defined somewhere else
 ###########################################################################
-class CPBrowseUsers(CPBaseView, RoleAware_BrowseUsers):
-    pass
+class CPBrowseUsers(RoleAware_BrowseUsers):
+    context_menus = context_menus
 
 
-class CPAddUser(CPBaseView, RoleAware_AddUser):
-    pass
+class CPAddUser(RoleAware_AddUser):
+    context_menus = context_menus
 
 
-class CPEditMembership(CPBaseView, RoleAware_EditMembership):
-    pass
+class CPEditMembership(RoleAware_EditMembership):
+    context_menus = context_menus
 
 
-class CPOrphans(CPBaseView, Folder_Orphans):
-    pass
+class CPOrphans(Folder_Orphans):
+    context_menus = context_menus
 
