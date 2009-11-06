@@ -86,8 +86,7 @@ class Root(WebSite):
     class_icon48 = 'icons/48x48/root.png'
     class_control_panel = ['browse_users', 'add_user', 'edit_virtual_hosts',
                            'edit_security_policy', 'edit_languages',
-                           'edit_contact_options',
-                           'edit_search_engine_optimizations']
+                           'edit_contact_options', 'edit_seo']
 
 
     __fixed_handlers__ = ['users', 'ui']

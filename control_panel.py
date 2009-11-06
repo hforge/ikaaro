@@ -353,7 +353,7 @@ class CPEditLanguages(STLForm):
 
 
 
-class CPEditSearchEngineOptimizations(DBResource_Edit):
+class CPEditSEO(DBResource_Edit):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Search engine optimization')
