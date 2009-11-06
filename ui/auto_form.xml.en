@@ -6,17 +6,20 @@
 
 <form id="autoform" name="autoform" action="${form_action}" method="post"
   enctype="multipart/form-data" stl:omit-tag="not submit_value">
+  <stl:block stl:repeat="field hidden_fields">${field}</stl:block>
   <fieldset>
     <legend>${view_title}</legend>
     <p stl:if="view_description">${view_description}</p>
     <table>
-      <tr stl:repeat="field fields">
-        <td>${field}</td>
+      <tr stl:repeat="field visible_fields">
+        <td class="field">${field}</td>
+      </tr>
+      <tr stl:if="submit_value">
+        <td>
+          <button type="submit" class="${submit_class}">${submit_value}</button>
+        </td>
       </tr>
     </table>
-    <p stl:if="submit_value">
-      <button type="submit" class="${submit_class}">${submit_value}</button>
-    </p>
   </fieldset>
   <script language="javascript">
     $("#${first_field}").focus();
