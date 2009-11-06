@@ -26,7 +26,8 @@ from itools.http import get_context
 from itools.web import STLForm
 
 # Import from ikaaro
-from forms import DateField, FormField, RadioField, SelectField, TextField
+from forms import DateField, FormField, HiddenField, RadioField, SelectField
+from forms import TextField
 from forms import make_stl_template
 from ikaaro.workflow import get_workflow_preview
 
@@ -183,8 +184,17 @@ class AutoForm(STLForm):
         return self.resource.get_content_language()
 
 
+    @thingy_lazy_property
     def fields(self):
         return [ x for x in self.get_fields() if issubclass(x, FormField) ]
+
+
+    def hidden_fields(self):
+        return [ x for x in self.fields if issubclass(x, HiddenField) ]
+
+
+    def visible_fields(self):
+        return [ x for x in self.fields if not issubclass(x, HiddenField) ]
 
 
     def first_field(self):
