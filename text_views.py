@@ -42,17 +42,17 @@ class Text_Edit(File_Edit):
     data.title = MSG(u'Content')
 
 
-    def get_value(self, name):
-        if name == 'data':
+    def get_value(self, field):
+        if field.name == 'data':
             return self.resource.handler.to_str()
-        return super(Text_Edit, self).get_value(name)
+        return super(Text_Edit, self).get_value(field)
 
 
-    def action(self, resource, context, form):
-        File_Edit.action(self, resource, context, form)
-        if form['file'] is None:
-            data = form['data']
-            resource.handler.load_state_from_string(data)
+    def action(self):
+        super(Text_Edit, self).action()
+        if self.file.value is None:
+            data = self.data.value
+            self.resource.handler.load_state_from_string(data)
 
 
 
@@ -61,11 +61,11 @@ class Text_View(STLView):
     access = 'is_allowed_to_view'
     view_title = MSG(u'View')
     icon = 'view.png'
-    template = '/ui/text/view.xml'
+    template = 'text/view.xml'
 
 
-    def get_namespace(self, resource, context):
-        return {'data': resource.handler.to_str()}
+    def data(self):
+        return self.resource.handler.to_str()
 
 
 
