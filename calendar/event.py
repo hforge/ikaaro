@@ -82,7 +82,7 @@ class Event_NewInstance(NewInstanceByDate):
 
 
     def modify_resource(self, child):
-        language = self.resource.get_content_language(self.context)
+        language = self.content_language
         for name in 'title', 'description':
             field = self.get_field(name)
             property = Property(field.value, lang=language)
@@ -139,7 +139,7 @@ class Event_Edit(AutoForm):
         resource = self.resource
 
         # The metadata
-        language = resource.get_content_language(self.context)
+        language = self.content_language
         for name in 'title', 'description':
             field = getattr(self, name)
             property = Property(field.value, lang=language)

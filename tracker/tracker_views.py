@@ -134,13 +134,12 @@ class StoredSearchesMenu(ContextMenu):
         context = self.context
         resource = self.resource
 
-        language = resource.get_content_language(context)
-
         # If called from a child
         if isinstance(resource, Issue):
             resource = resource.get_parent()
 
         # Namespace
+        language = self.content_language
         search_name = context.get_query_value('search_name')
         base = '%s/;view' % context.get_link(resource)
         items = []
@@ -207,7 +206,7 @@ class Tracker_NewInstance(NewInstance):
         cls = get_resource_class(class_id)
         child = resource.make_resource(name, cls)
         # The metadata
-        language = resource.get_content_language(context)
+        language = self.content_language
         title = Property(title, lang=language)
         child.metadata.set_property('title', title)
         # Add the initial product

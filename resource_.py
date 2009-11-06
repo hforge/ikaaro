@@ -588,18 +588,18 @@ class DBResource(CatalogAware, IResource):
     ########################################################################
     # User interface
     ########################################################################
-    def get_content_language(self, context, languages=None):
+    def get_content_language(self, languages=None):
         if languages is None:
             site_root = self.get_site_root()
             languages = site_root.get_value('website_languages')
 
         # The 'content_language' query parameter has preference
-        language = context.get_query_value('content_language')
+        language = self.context.get_query_value('content_language')
         if language in languages:
             return language
 
         # Language negotiation
-        return context.accept_language.select_language(languages)
+        return self.context.accept_language.select_language(languages)
 
 
     ########################################################################

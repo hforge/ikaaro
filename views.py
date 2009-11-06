@@ -420,6 +420,11 @@ class ContextMenu(CMSTemplate):
         raise NotImplementedError
 
 
+    @thingy_lazy_property
+    def content_language(self):
+        return self.resource.get_content_language()
+
+
     def items(self):
         items = self.get_items()
         # Defaults
