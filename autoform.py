@@ -189,16 +189,18 @@ class AutoForm(STLForm):
         return [ x for x in self.get_fields() if issubclass(x, FormField) ]
 
 
+    @thingy_lazy_property
     def hidden_fields(self):
         return [ x for x in self.fields if issubclass(x, HiddenField) ]
 
 
+    @thingy_lazy_property
     def visible_fields(self):
         return [ x for x in self.fields if not issubclass(x, HiddenField) ]
 
 
     def first_field(self):
-        return self.get_field_names()[0]
+        return self.visible_fields[0].name
 
 
     def form_action(self):
