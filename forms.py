@@ -19,10 +19,11 @@ from datetime import datetime
 from itertools import chain
 
 # Import from itools
-from itools.core import thingy_property
+from itools.core import get_abspath, thingy_property
 from itools.datatypes import Date, DateTime, Email, Enumerate, String, Unicode
 from itools.gettext import MSG
 from itools.stl import stl
+from itools import vfs
 from itools.web import ViewField
 from itools.xml import XMLParser
 
@@ -398,7 +399,8 @@ class TimestampField(HiddenField):
     datatype = DateTime
     name = 'timestamp'
 
-    def get_default(self):
+    @thingy_property
+    def default(self):
         return datetime.now()
 
 

@@ -165,24 +165,26 @@ class HTMLEditView(File_Edit):
 
     def get_value(self, field):
         if field.name == 'data':
-            return resource.get_html_data(language=self.content_language)
+            return self.resource.get_html_data(language=self.content_language)
 
         return super(HTMLEditView, self).get_value(field)
 
 
-    def action(self, resource, context, form):
-        File_Edit.action(self, resource, context, form)
+    def action(self):
+        context = self.context
+
+        super(HTMLEditView, self).action()
         if context.edit_conflict:
             return
 
         # Properties
-        if form['file'] is None:
-            new_body = form['data']
-            handler = resource.get_handler(language=self.content_language)
-            handler.set_body(new_body)
+        if self.file.value is None:
+            handler = self.resource.get_handler(language=self.content_language)
+            handler.set_body(self.data.value)
 
         # Ok
         context.message = messages.MSG_CHANGES_SAVED
+        context.redirect()
 
 
 
