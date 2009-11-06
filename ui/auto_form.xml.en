@@ -21,9 +21,10 @@
       </tr>
     </table>
   </fieldset>
-  <script language="javascript">
-    $("#${first_field}").focus();
-  </script>
 </form>
+
+<script language="javascript">
+$("#${first_field}").focus();
+</script>
 
 </stl:block>

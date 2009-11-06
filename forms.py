@@ -67,7 +67,7 @@ class FormField(ViewField):
 
     # Second block: the form widget (by default an input element)
     widget = make_stl_template("""
-    <input type="${type}" name="${name}" value="${encoded_value}"
+    <input type="${type}" name="${name}" id="${name}" value="${encoded_value}"
       size="${size}" />""")
 
     size = None
@@ -144,7 +144,8 @@ class TextareaField(FormField):
     datatype = Unicode
 
     widget = make_stl_template("""
-    <textarea rows="${rows}" cols="${cols}" name="${name}" >${value}</textarea>
+    <textarea name="${name}" id="${name}" rows="${rows}" cols="${cols}"
+    >${value}</textarea>
     """)
 
     rows = 5
@@ -210,7 +211,7 @@ class RadioField(FormField):
 class SelectField(FormField):
 
     widget = make_stl_template("""
-    <select name="${name}" multiple="${multiple}" size="${size}"
+    <select name="${name}" id="${name}" multiple="${multiple}" size="${size}"
         class="${css}">
       <option value="" stl:if="has_empty_option"></option>
       <option stl:repeat="option options" value="${option/value}"
