@@ -30,8 +30,7 @@ from calendar.views import MonthlyView, WeeklyView, DailyView
 from control_panel import ControlPanel, CPAddUser, CPBrokenLinks
 from control_panel import CPBrowseUsers, CPEditContactOptions, CPEditLanguages
 from control_panel import CPEditMembership, CPEditSecurityPolicy
-from control_panel import CPEditVirtualHosts, CPOrphans
-from control_panel import CPEditSearchEngineOptimizations
+from control_panel import CPEditVirtualHosts, CPOrphans, CPEditSEO
 from folder import Folder
 from registry import register_document_type
 from resource_views import LoginView
@@ -56,7 +55,7 @@ class WebSite(RoleAware, Folder, VirtualRoot):
     class_control_panel = ['browse_users', 'add_user', 'edit_virtual_hosts',
                            'edit_security_policy', 'edit_languages',
                            'edit_contact_options', 'broken_links', 'orphans',
-                           'edit_search_engine_optimizations']
+                           'edit_seo']
 
 
     __fixed_handlers__ = ['skin', 'index']
@@ -109,7 +108,7 @@ class WebSite(RoleAware, Folder, VirtualRoot):
     edit_membership = CPEditMembership
     edit_virtual_hosts = CPEditVirtualHosts
     edit_security_policy = CPEditSecurityPolicy
-    edit_search_engine_optimizations = CPEditSearchEngineOptimizations
+    edit_seo = CPEditSEO
     edit_contact_options = CPEditContactOptions
     edit_languages = CPEditLanguages
     broken_links = CPBrokenLinks
