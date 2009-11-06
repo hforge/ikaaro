@@ -166,15 +166,16 @@ class File_Edit(DBResource_Edit):
         return super(File_Edit, self).get_value(name)
 
 
-    def set_value(self, resource, context, name, value):
+    def set_value(self, name, value):
         if name != 'file':
-            return DBResource_Edit.set_value(self, resource, context, name,
-                                             value)
+            return super(File_Edit, self).set_value(name, value)
 
         # File
         filename, mimetype, body = value
 
         # Check wether the handler is able to deal with the uploaded file
+        resource = self.resource
+        context = self.context
         handler = resource.handler
         handler_class = get_handler_class_by_mimetype(mimetype)
         if not isinstance(handler, handler_class):
