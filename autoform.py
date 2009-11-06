@@ -178,6 +178,11 @@ class AutoForm(STLForm):
     view_description = None
 
 
+    @thingy_lazy_property
+    def content_language(self):
+        return self.resource.get_content_language()
+
+
     def fields(self):
         return [ x for x in self.get_fields() if issubclass(x, FormField) ]
 

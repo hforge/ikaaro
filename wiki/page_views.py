@@ -404,8 +404,7 @@ class WikiPage_Edit(DBResource_Edit):
             return
 
         title = form['title']
-        language = resource.get_content_language(context)
-        resource.set_property('title', title, language=language)
+        resource.set_property('title', title, language=self.content_language)
 
         # Data is assumed to be encoded in UTF-8
         data = form['data']

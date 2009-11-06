@@ -19,6 +19,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
+from itools.core import thingy_lazy_property
 from itools.csv import UniqueError, Property, is_multilingual
 from itools.datatypes import Integer, Enumerate, Tokens
 from itools.gettext import MSG
@@ -193,7 +194,7 @@ class Table_AddEditRecord(AutoForm):
         from the form.
         """
         schema = self.get_schema(resource, context)
-        language = resource.get_content_language(context)
+        language = self.content_language
 
         # Builds a new record from the form.
         record = {}
@@ -271,7 +272,7 @@ class Table_EditRecord(Table_AddEditRecord):
         record = handler.get_record(id)
         # Is mulitilingual
         if is_multilingual(datatype):
-            language = resource.get_content_language(context)
+            language = self.content_language
             return handler.get_record_value(record, name, language=language)
 
         return handler.get_record_value(record, name)
@@ -398,7 +399,7 @@ class OrderedTable_View(Table_View):
 class Table_ExportCSV(BaseView):
 
     access = 'is_admin'
-    title = MSG(u"Export to CSV")
+    view_title = MSG(u"Export to CSV")
     # String to join multiple values (or they will raise an error)
     multiple_separator = None
     # CSV columns separator
@@ -409,12 +410,16 @@ class Table_ExportCSV(BaseView):
         return resource.get_mtime()
 
 
+    @thingy_lazy_property
+    def content_language(self):
+        return self.resource.get_content_language()
+
+
     def GET(self, resource, context):
         handler = resource.handler
         columns = ['id'] + [widget.name for widget in self.get_form()]
-        language = resource.get_content_language(context)
         csv = handler.to_csv(columns, separator=self.multiple_separator,
-                             language=language)
+                             language=self.content_language)
 
         response = context.response
         # Filename

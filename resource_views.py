@@ -51,7 +51,7 @@ class EditLanguageMenu(ContextMenu):
     title = MSG(u'Edit Language')
 
     def get_items(self):
-        content_language = self.resource.get_content_language(self.context)
+        content_language = self.content_language
 
         site_root = self.resource.get_site_root()
         languages = site_root.get_value('website_languages')
@@ -80,15 +80,11 @@ class DBResource_Edit(AutoForm):
     field_names = ['timestamp', 'title', 'description', 'subject']
 
 
-    @thingy_lazy_property
-    def language(self):
-        return self.resource.get_content_language(self.context)
-
-
     def get_value(self, field):
         name = field.name
         if name in ('title', 'description', 'subject'):
-            return self.resource.get_value(name, language=self.language)
+            language = self.content_language
+            return self.resource.get_value(name, language=language)
 
         return super(DBResource_Edit, self).get_value(field)
 
@@ -115,7 +111,8 @@ class DBResource_Edit(AutoForm):
 
 
     def set_value(self, name, value):
-        self.resource.set_property(name, value, language=self.language)
+        language = self.content_language
+        self.resource.set_property(name, value, language=language)
 
 
     def action(self):

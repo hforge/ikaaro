@@ -129,7 +129,7 @@ class Issue(Folder):
     def _add_record(self, context, form, new=False):
         # Title
         title = form['title'].strip()
-        language = self.get_content_language(context)
+        language = self.get_content_language()
         self.set_property('title', title, language=language)
         # Version, Priority, etc.
         for name in ['product', 'module', 'version', 'type', 'state',

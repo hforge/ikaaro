@@ -101,7 +101,7 @@ class AddThreadForm(AutoForm):
             context.message = messages.MSG_NAME_CLASH
             return
 
-        language = resource.get_content_language(context)
+        language = self.content_language
         thread = resource.make_resource(name, Thread, data=data,
                                         language=language)
         thread.set_property('title', title, language=language)

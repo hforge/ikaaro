@@ -87,7 +87,7 @@ class File_NewInstance(NewInstance):
                 text = cls.class_handler(string=body).to_text()
                 language = guess_language(text)
                 if language is None:
-                    language = resource.get_content_language(context)
+                    language = self.content_language
 
         # Build the resource
         name = self.new_resource_name
@@ -100,8 +100,7 @@ class File_NewInstance(NewInstance):
 
         # The title
         title = self.title.value.strip()
-        language = resource.get_content_language(context)
-        title = Property(title, lang=language)
+        title = Property(title, lang=self.content_language)
         child.metadata.set_property('title', title)
 
         # Ok
