@@ -7,7 +7,7 @@
 <div id="cal-daily-view">
   <form id="attributes" action=";daily_view" method="get">
     Date:
-    <input type="text" name="date" id="date" size="11" value="${date}" />
+    <input type="text" name="date" id="date" size="11" value="${c_date}" />
     <input type="button" id="trigger-date" value="..." />
     <input type="submit" value="OK" class="button-ok" />
   </form>
@@ -52,7 +52,7 @@
   Calendar.setup({
     inputField: "date",
     ifFormat: "%Y-%m-%d",
-    firstDay: ${firstday},
+    firstDay: ${first_day},
     button: "trigger-date"});
 </script>
 
