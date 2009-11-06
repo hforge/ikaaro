@@ -195,12 +195,14 @@ class TimetablesForm(STLForm):
 class CalendarView(STLView):
 
     styles = ['/ui/calendar/style.css']
+    add_icon = '/ui/icons/16x16/add.png'
+    ndays = 7
+    with_new_url = True
+
     # default viewed fields on monthly_view
     default_viewed_fields = ('dtstart', 'dtend', 'SUMMARY', 'STATUS')
 
     date = ViewField(source='query', datatype=Date)
-
-    ndays = 7
 
 
     def get_first_day(self):
@@ -210,8 +212,35 @@ class CalendarView(STLView):
         return 1
 
 
-    def get_with_new_url(self):
-        return True
+    @thingy_lazy_property
+    def method(self):
+        method = self._method
+
+        # Set cookie
+        context = self.context
+        if context.get_cookie('method') != method:
+            context.set_cookie('method', method)
+
+        # Ok
+        return method
+
+
+    @thingy_lazy_property
+    def c_date(self):
+        context = self.context
+
+        # Current date
+        c_date = self.date.value
+        if not c_date:
+            c_date = context.get_cookie('selected_date')
+            if c_date:
+                c_date = Date.decode(c_date)
+            else:
+                c_date = date.today()
+
+        # Save selected date
+        context.set_cookie('selected_date', c_date)
+        return c_date
 
 
     @thingy_property
@@ -363,7 +392,7 @@ class CalendarView(STLView):
 
 
     # Get days of week based on get_first_day's result for start
-    def days_of_week(self, num=None, selected=None):
+    def days_of_week(self, num=False, selected=None):
         """
           start : start date of the week
           num : True if we want to get number of the day too
@@ -460,32 +489,7 @@ class MonthlyView(CalendarView):
     template = 'calendar/monthly_view.xml'
     monthly_template = 'calendar/monthly_template.xml'
 
-    method = 'monthly_view'
-
-
-    @thingy_lazy_property
-    def c_date(self):
-        value = self.date.value
-        return value if value else date.today()
-
-
-    def get_namespace(self, resource, context, ndays=7):
-        # Save selected date
-        context.set_cookie('selected_date', c_date)
-
-        # Method
-        method = context.get_cookie('method')
-        if method != 'monthly_view':
-            context.set_cookie('method', 'monthly_view')
-
-        ###################################################################
-        # Add header to navigate into time
-        namespace = self.add_selector_ns(c_date, 'monthly_view', namespace)
-
-        return namespace
-
-
-    add_icon = '/ui/icons/16x16/add.png'
+    _method = 'monthly_view'
 
 
     def weeks(self):
@@ -533,7 +537,8 @@ class WeeklyView(CalendarView):
 
     access = 'is_allowed_to_view'
     title = MSG(u'Weekly View')
-    template = '/ui/calendar/weekly_view.xml'
+    template = 'calendar/weekly_view.xml'
+    _method = 'weekly_view'
 
     timetables = [
         ((7,0), (8,0)), ((8,0), (9,0)), ((9,0), (10,0)), ((10,0), (11,0)),
@@ -564,7 +569,7 @@ class WeeklyView(CalendarView):
 
 
     # Get timetables as a list of string containing time start of each one
-    def get_timetables_grid_ns(self, resource, start_date):
+    def get_timetables_grid_ns(self):
         """Build namespace to give as grid to gridlayout factory.
         """
         ns_timetables = []
@@ -576,10 +581,12 @@ class WeeklyView(CalendarView):
         return ns_timetables
 
 
-    def get_grid_events(self, resource, start_date, ndays=7, headers=None,
-                        step=timedelta(1)):
+    def get_grid_events(self, headers=None, step=timedelta(1)):
         """Build namespace to give as data to gridlayout factory.
         """
+        start_date = self.start
+        ndays = self.ndays
+
         # Get events by day
         ns_days = []
         current_date = start_date
@@ -591,6 +598,7 @@ class WeeklyView(CalendarView):
         # Get a list of events to display on view
         end = start_date + timedelta(days=ndays)
         events = self.get_events_to_display(start_date, end)
+        events = list(events)
 
         for header in headers:
             ns_day = {}
@@ -606,53 +614,32 @@ class WeeklyView(CalendarView):
         return ns_days
 
 
-    def get_namespace(self, resource, context, ndays=7):
-        # Current date
-        c_date = context.get_form_value('date')
-        if not c_date:
-            c_date = context.get_cookie('selected_date')
-        c_date = get_current_date(c_date)
-        # Save selected date
-        context.set_cookie('selected_date', c_date)
-
-        # Method
-        method = context.get_cookie('method')
-        if method != 'weekly_view':
-            context.set_cookie('method', 'weekly_view')
-
-        # Calculate start of current week: 0 = Monday, ..., 6 = Sunday
+    @thingy_lazy_property
+    def start(self):
+        """Calculate start of current week
+        """
+        # 0 = Monday, ..., 6 = Sunday
+        c_date = self.c_date
         weekday = c_date.weekday()
         start = c_date - timedelta(weekday)
         if self.get_first_day() == 0:
-            start = start - timedelta(1)
+            return start - timedelta(1)
+        return start
 
-        # Add header to navigate into time
-        namespace = self.add_selector_ns(c_date, 'weekly_view', {})
 
-        # Get icon to appear to add a new event
-        add_icon = '/ui/icons/16x16/add.png'
-        namespace['add_icon'] = add_icon
+    def timetable_data(self):
+        # Get the events
+        days_of_week = self.days_of_week(True, self.c_date)
+        ns_headers = [ '%s %s' % (x['name'], x['nday']) for x in days_of_week ]
+        events = self.get_grid_events(headers=ns_headers)
 
-        # Get header line with days of the week
-        days_of_week_ns = self.days_of_week_ns(start, True, ndays, c_date)
-        ns_headers = []
-        for day in days_of_week_ns:
-            ns_header = '%s %s' % (day['name'], day['nday'])
-            # Tip: Use 'selected' for css class to highlight selected date
-            ns_headers.append(ns_header)
         # Calculate timetables and events occurring for current week
-        timetables = self.get_timetables_grid_ns(resource, start)
-
-        events = self.get_grid_events(resource, start, headers=ns_headers)
+        timetables = self.get_timetables_grid_ns()
 
         # Fill data with grid (timetables) and data (events for each day)
         templates = self.get_weekly_templates()
-        with_new_url = self.get_with_new_url()
-        timetable = get_grid_data(events, timetables, start, templates,
-                                  with_new_url, add_icon)
-        namespace['timetable_data'] = timetable
-
-        return namespace
+        return get_grid_data(events, timetables, self.start, templates,
+                             self.with_new_url, self.add_icon)
 
 
 
