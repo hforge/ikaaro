@@ -8,7 +8,7 @@
   <form id="attributes" action=";daily_view" method="get">
     Date:
     <input type="text" name="date" id="date" class="dateField" size="11"
-      value="${date}" />
+      value="${c_date}" />
     <input type="button" value="..." />
     <button type="submit" class="button-ok">OK</button>
   </form>
@@ -52,7 +52,7 @@
   $("#date").focus();
   jQuery( "input.dateField" ).dynDateTime({
     ifFormat: "%Y-%m-%d",
-    firstDay: ${firstday},
+    firstDay: ${first_day},
     button: ".next()" });
 </script>
 

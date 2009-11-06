@@ -66,26 +66,6 @@ days = {
 
 
 
-def build_timetables(start_time, end_time, interval):
-    """Build a list of timetables represented as tuples(start, end).
-    Interval is given by minutes.
-    """
-    start =  datetime(2000, 1, 1)
-    if start_time:
-        start = datetime.combine(start.date(), start_time)
-    end =  datetime(2000, 1, 1, 23, 59)
-    if end_time:
-        end = datetime.combine(start.date(), end_time)
-
-    timetables, tt_start = [], start
-    while tt_start < end:
-        tt_end = tt_start + timedelta(minutes=interval)
-        timetables.append((tt_start.time(), tt_end.time()))
-        tt_start = tt_end
-    return timetables
-
-
-
 class Status(Enumerate):
 
     options = [{'name': 'TENTATIVE', 'value': MSG(u'Tentative')},
@@ -205,11 +185,9 @@ class CalendarView(STLView):
     date = ViewField(source='query', datatype=Date)
 
 
-    def get_first_day(self):
-        """Returns 0 if Sunday is the first day of the week, else 1.
-        For now it has to be overridden to return anything else than 1.
-        """
-        return 1
+    # Returns 0 if Sunday is the first day of the week, else 1.
+    # For now it has to be overridden to return anything else than 1.
+    first_day = 1
 
 
     @thingy_lazy_property
@@ -254,7 +232,7 @@ class CalendarView(STLView):
         XXX Check for other countries.
         """
         c_date = self.c_date
-        if self.get_first_day() == 1:
+        if self.first_day == 1:
             format = '%W'
         else:
             format = '%U'
@@ -386,7 +364,7 @@ class CalendarView(STLView):
         c_date = self.c_date
         weekday = c_date.weekday()
         start = c_date - timedelta(7 + weekday)
-        if self.get_first_day() == 0:
+        if self.first_day == 0:
             return start - timedelta(1)
         return start
 
@@ -622,7 +600,7 @@ class WeeklyView(CalendarView):
         c_date = self.c_date
         weekday = c_date.weekday()
         start = c_date - timedelta(weekday)
-        if self.get_first_day() == 0:
+        if self.first_day == 0:
             return start - timedelta(1)
         return start
 
@@ -647,7 +625,8 @@ class DailyView(CalendarView):
 
     access = 'is_allowed_to_view'
     title = MSG(u'Daily View')
-    template = '/ui/calendar/daily_view.xml'
+    template = 'calendar/daily_view.xml'
+    _method = 'daily_view'
 
 
     # Start 07:00, End 21:00, Interval 30min
@@ -660,13 +639,13 @@ class DailyView(CalendarView):
 
 
     # Get namespace for a resource's lines into daily_view
-    def get_ns_calendar(self, calendar, c_date, timetables,
-                        show_conflicts=False):
+    def get_ns_calendar(self, c_date, timetables, show_conflicts=False):
         cal_fields = self.class_cal_fields
-        calendar_name = str(calendar.name)
+        resource = self.resource
+        calendar_name = str(resource.get_name())
 
         # Get a dict for each event, compute colspan
-        handler = calendar.handler
+        handler = resource.handler
         events_by_index = {}
         for event in self.search_events_in_date(c_date).get_documents():
             event_start = event.dtstart
@@ -775,27 +754,42 @@ class DailyView(CalendarView):
 
         # Return namespace
         return {
-            'name': calendar.get_title(),
+            'name': resource.get_title(),
             'rows': rows_namespace,
             'header_columns': header_columns,
             'url': ';monthly_view?date=%s' % c_date,
-            'rowspan': len(rows) + 1,
-        }
+            'rowspan': len(rows) + 1}
 
 
-    def get_namespace(self, resource, context):
-        method = context.get_cookie('method')
-        if method != 'daily_view':
-            context.set_cookie('method', 'daily_view')
+    @thingy_lazy_property
+    def timetables(self):
+        """Build a list of timetables represented as tuples(start, end).
+        Interval is given by minutes.
+        """
+        start_time, end_time, interval = self.get_cal_range()
 
-        # Current date
-        c_date = context.query['date']
-        if c_date is None:
-            c_date = date.today()
+        start =  datetime(2000, 1, 1)
+        if start_time:
+            start = datetime.combine(start.date(), start_time)
+        end =  datetime(2000, 1, 1, 23, 59)
+        if end_time:
+            end = datetime.combine(start.date(), end_time)
 
-        # Add a header line with start time of each timetable
-        start, end, interval = self.get_cal_range()
-        timetables = build_timetables(start, end, interval)
+        timetables, tt_start = [], start
+        while tt_start < end:
+            tt_end = tt_start + timedelta(minutes=interval)
+            timetables.append((tt_start.time(), tt_end.time()))
+            tt_start = tt_end
+        return timetables
+
+
+    def calendars(self):
+        return [self.get_ns_calendar(self.c_date, self.timetables)]
+
+
+    def header_timetables(self):
+        timetables = self.timetables
+        c_date = self.c_date
 
         # Table heading and footer with the time ranges
         delta = timedelta(minutes=45)
@@ -811,15 +805,7 @@ class DailyView(CalendarView):
             else:
                 ns_timetables.append(None)
 
-        # For each found calendar
-        ns_calendars = [self.get_ns_calendar(resource, c_date, timetables)]
-
-        # Ok
-        return {
-            'date': Date.encode(c_date),
-            'firstday': self.get_first_day(),
-            'header_timetables': ns_timetables,
-            'calendars': ns_calendars}
+        return ns_timetables
 
 
 
