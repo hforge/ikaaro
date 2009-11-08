@@ -24,11 +24,10 @@ from itools.core import thingy_lazy_property
 from itools.datatypes import Boolean, String
 from itools.gettext import MSG
 from itools.uri import encode_query, get_reference
-from itools.web import STLView, ViewField, ERROR
+from itools.web import STLView, ERROR, hidden_field, multiple_choice_field
 
 # Import from ikaaro
 from buttons import Button
-from forms import TextField
 from views import BrowseForm
 
 
@@ -131,7 +130,7 @@ class DBResource_CommitLog(BrowseForm):
     access = 'is_allowed_to_edit'
     view_title = MSG(u"Commit Log")
 
-    ids = ViewField(datatype=IndexRevision, required=True)
+    ids = multiple_choice_field(datatype=IndexRevision, required=True)
 
     sort_by = BrowseForm.sort_by()
     sort_by.datatype = String(default='date')
@@ -199,8 +198,8 @@ class DBResource_Changes(STLView):
     view_title = MSG(u'Changes')
     template = 'revisions/changes.xml'
 
-    revision = TextField(source='query', datatype=String, required=True)
-    to = TextField(source='query', datatype=String)
+    revision = hidden_field(source='query', required=True)
+    to = hidden_field(source='query')
 
 
     @thingy_lazy_property

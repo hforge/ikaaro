@@ -20,16 +20,17 @@
 from datetime import datetime
 
 # Import from itools
-from itools.core import freeze, merge_dicts
+from itools.core import freeze, merge_dicts, OrderedDict
 from itools.csv import Property
 from itools.datatypes import DateTime, Enumerate, String, Time
 from itools.gettext import MSG
+from itools.web import choice_field, input_field
 
 # Import from ikaaro
 from ikaaro.autoform import AutoForm
 from ikaaro.file import File
-from ikaaro.forms import DateTimeField, DescriptionField, SelectField
-from ikaaro.forms import TextField, TitleField
+from ikaaro.forms import DateTimeField, DescriptionField
+from ikaaro.forms import TitleField
 from ikaaro.registry import register_document_type
 from ikaaro.views_new import NewInstanceByDate
 
@@ -42,12 +43,21 @@ class NowDataType(DateTime):
 
 
 
-class Status(Enumerate):
+class StatusDatatype(Enumerate):
 
-    options = [
-        {'name': 'TENTATIVE', 'value': MSG(u'Tentative')},
-        {'name': 'CONFIRMED', 'value': MSG(u'Confirmed')},
-        {'name': 'CANCELLED', 'value': MSG(u'Cancelled')}]
+    values = frozenset(['TENTATIVE', 'CONFIRMED', 'CANCELLED'])
+
+
+
+class status_field(choice_field):
+
+    title = MSG(u'Status')
+
+    values = OrderedDict([
+        ('TENTATIVE', {'title': MSG(u'Tentative')}),
+        ('CONFIRMED', {'title': MSG(u'Confirmed')}),
+        ('CANCELLED', {'title': MSG(u'Cancelled')}),
+        ])
 
 
 
@@ -64,10 +74,9 @@ class Event_NewInstance(NewInstanceByDate):
     dtend.title = MSG(u'End')
 
     description = DescriptionField()
-    location = TextField(datatype=String, title=MSG(u'Location'))
+    location = input_field(title=MSG(u'Location'))
 
-    status = SelectField(datatype=Status, has_empty_option=False)
-    status.title = MSG(u'Status')
+    status = status_field()
 
     field_names = [
         'title', 'dtstart', 'dtend', 'description', 'location', 'status']
@@ -104,10 +113,9 @@ class Event_Edit(AutoForm):
                             title=MSG(u'Start'))
     dtend = DateTimeField(datatype=NowDataType, title=MSG(u'End'))
     description = DescriptionField()
-    location = TextField(title=MSG(u'Location'))
+    location = input_field(title=MSG(u'Location'))
 
-    status = SelectField(datatype=Status, has_empty_option=False)
-    status.title = MSG(u'Status')
+    status = status_field()
 
 
     field_names = [
@@ -167,7 +175,7 @@ class Event(File):
         # Metadata
         dtstart=DateTime(source='metadata', indexed=True, stored=True),
         dtend=DateTime(source='metadata', indexed=True, stored=True),
-        status=Status(source='metadata'),
+        status=StatusDatatype(source='metadata'),
         location=String(source='metadata'))
 
 

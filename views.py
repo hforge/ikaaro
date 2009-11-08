@@ -20,7 +20,9 @@ from itools.datatypes import Boolean, Integer, String, Unicode
 from itools.gettext import MSG
 from itools.stl import stl
 from itools.uri import get_reference
-from itools.web import STLView, STLForm, ViewField
+from itools.web import STLView, STLForm
+from itools.web import boolean_field, choice_field, hidden_field, integer_field
+from itools.web import text_field
 from itools.xml import XMLParser
 
 # Import from ikaaro
@@ -117,16 +119,10 @@ class BrowseForm(STLForm):
 
     template = 'generic/browse.xml'
 
-    batch_start = ViewField(source='query')
-    batch_start.datatype = Integer(default=0)
-
-    batch_size = ViewField(source='query')
-    batch_size.datatype = Integer(default=20)
-
-    sort_by = ViewField(source='query', datatype=String)
-
-    reverse = ViewField(source='query')
-    reverse.datatype = Boolean(default=False)
+    batch_start = integer_field(source='query', default=0)
+    batch_size = integer_field(source='query', default=20)
+    sort_by = hidden_field(source='query')
+    reverse = boolean_field(source='query')
 
     # Batch
     batch_template = 'generic/browse_batch.xml'
@@ -375,8 +371,8 @@ class SearchForm(BrowseForm):
 
     search_template = 'generic/browse_search.xml'
 
-    search_field = ViewField(source='query', datatype=String)
-    search_term = ViewField(source='query', datatype=Unicode)
+    search_field = choice_field(source='query')
+    search_term = text_field(source='query')
 
     search_fields = freeze([
         ('title', MSG(u'Title')),

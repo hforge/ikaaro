@@ -16,16 +16,14 @@
 
 # Import from the Standard Library
 from datetime import datetime
-from itertools import chain
 
 # Import from itools
 from itools.core import get_abspath, thingy_property
 from itools.datatypes import Date, DateTime, Email, Enumerate, String, Unicode
 from itools.gettext import MSG
-from itools.stl import stl
 from itools import vfs
-from itools.web import ViewField
-from itools.xml import XMLParser
+from itools.web import hidden_field, input_field, text_field, textarea_field
+from itools.web import make_stl_template
 
 # Import from ikaaro
 from datatypes import FileDataType, HTMLBody
@@ -33,123 +31,26 @@ from datatypes import FileDataType, HTMLBody
 
 
 ###########################################################################
-# Utilities
-###########################################################################
-
-stl_namespaces = {
-    None: 'http://www.w3.org/1999/xhtml',
-    'stl': 'http://www.hforge.org/xml-namespaces/stl'}
-
-def make_stl_template(data):
-    return list(XMLParser(data, stl_namespaces))
-
-
-
-###########################################################################
-# Base class
-###########################################################################
-
-class FormField(ViewField):
-
-    # First block: the field header
-    header = make_stl_template("""
-    <label for="${name}">${title}</label>
-    <span stl:if="required" class="field-is-required"
-      title="This field is required">*</span>
-    <span stl:if="description" title="${description}">(?)</span>
-    <br/>
-    <span stl:if="error" class="field-error">${error}<br/></span>
-    """)
-
-    description = None
-    error = None
-    title = None
-
-    # Second block: the form widget (by default an input element)
-    widget = make_stl_template("""
-    <input type="${type}" name="${name}" id="${name}" value="${encoded_value}"
-      size="${size}" />""")
-
-    size = None
-    type = None
-
-
-    def encoded_value(self):
-        if self.value is None:
-            return None
-        return self.datatype.encode(self.value)
-
-
-    def render(self):
-        args = []
-
-        # (1) The header
-        if self.header:
-            args.append(self.header)
-
-        # (2) The widget
-        widget = self.widget
-        if widget is None:
-            pass
-        elif type(widget) is list:
-            args.append(widget)
-        elif type(widget) is str:
-            widget = self.view.context.get_template(widget)
-            widget = widget.events
-            args.append(widget)
-        else:
-            raise TypeError, 'unexepected value of type "%s"' % type(widget)
-
-        # Render
-        events = chain(*args)
-        events = list(events)
-        return stl(events=events, namespace=self)
-
-
-
-###########################################################################
 # Simple fields
 ###########################################################################
 
-class EmailField(FormField):
+class EmailField(input_field):
     datatype = Email
     size = 40
 
 
 
-class FileField(FormField):
+class FileField(input_field):
     datatype = FileDataType
     type = 'file'
 
 
 
-class HiddenField(FormField):
-    header = None
-    readonly = True
-    type = 'hidden'
-
-
-class PasswordField(FormField):
+class PasswordField(input_field):
     type = 'password'
 
-
-
-class TextField(FormField):
-    datatype = Unicode
-    size = 40
-
-
-
-class TextareaField(FormField):
-    datatype = Unicode
-
-    widget = make_stl_template("""
-    <textarea name="${name}" id="${name}" rows="${rows}" cols="${cols}"
-    >${value}</textarea>
-    """)
-
-    rows = 5
-    cols = 60
+    def encoded_value(self):
+        return self.view.resource.context.query.get(self.name)
 
 
 
@@ -157,7 +58,7 @@ class TextareaField(FormField):
 # Selection fields (radio buttons, checkboxes, selects)
 ###########################################################################
 
-class RadioField(FormField):
+class RadioField(input_field):
 
     widget = make_stl_template("""
     <stl:block stl:repeat="option options">
@@ -208,49 +109,11 @@ class RadioField(FormField):
 
 
 
-class SelectField(FormField):
-
-    widget = make_stl_template("""
-    <select name="${name}" id="${name}" multiple="${multiple}" size="${size}"
-        class="${css}">
-      <option value="" stl:if="has_empty_option"></option>
-      <option stl:repeat="option options" value="${option/value}"
-        selected="${option/selected}">${option/title}</option>
-    </select>""")
-
-
-    css = None
-    datatype = Enumerate
-    has_empty_option = True
-    size = None
-
-
-    def options(self):
-        value = self.value
-        if self.multiple:
-            f = lambda x, value=value: (x in value)
-        else:
-            f = lambda x, value=value: (x == value)
-
-        return [
-            {'value': x, 'title': self.get_value_title(x), 'selected': f(x) }
-            for x in self.values ]
-
-
-    @thingy_property
-    def values(self):
-        return self.datatype.values
-
-
-    def get_value_title(self, value):
-        return value
-
-
 ###########################################################################
 # Date & Time fields
 ###########################################################################
 
-class DateField(FormField):
+class DateField(input_field):
 
     datatype = Date
 
@@ -291,7 +154,7 @@ class DateField(FormField):
 
 
 
-class DateTimeField(FormField):
+class DateTimeField(input_field):
 
     datatype = DateTime
 
@@ -342,7 +205,7 @@ class DateTimeField(FormField):
 # Advanced fields
 ###########################################################################
 
-class RTEField(FormField):
+class RTEField(input_field):
 
     datatype = HTMLBody
 
@@ -393,7 +256,7 @@ class RTEField(FormField):
 # Ready to use fields
 ###########################################################################
 
-class TimestampField(HiddenField):
+class TimestampField(hidden_field):
     """This ready-to-use field is used to handle edit conflicts.
     """
 
@@ -405,7 +268,7 @@ class TimestampField(HiddenField):
         return datetime.now()
 
 
-class DescriptionField(TextareaField):
+class DescriptionField(textarea_field):
     name = 'description'
     rows = 8
     title = MSG(u'Description')
@@ -416,18 +279,18 @@ class ReplaceFileField(FileField):
     title = MSG(u'Replace file')
 
 
-class NameField(FormField):
-    datatype = String(default='')
+class NameField(input_field):
+    default = ''
     name = 'name'
     title = MSG(u'Name')
 
 
-class SubjectField(TextField):
+class SubjectField(text_field):
     name = 'subject'
     title = MSG(u'Keywords (Separated by comma)')
 
 
-class TitleField(TextField):
+class TitleField(text_field):
     name = 'title'
     title = MSG(u'Title')
 

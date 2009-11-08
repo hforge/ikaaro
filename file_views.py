@@ -25,14 +25,13 @@ from os.path import basename
 # Import from itools
 from itools.core import thingy_lazy_property
 from itools.csv import Property
-from itools.datatypes import Integer
 from itools.fs import FileName
 from itools.gettext import MSG
 from itools.handlers import get_handler_class_by_mimetype, guess_encoding
 from itools.html import HTMLParser, stream_to_str_as_xhtml
 from itools.i18n import guess_language
 from itools.uri import get_reference
-from itools.web import BaseView, STLView, ERROR, ViewField
+from itools.web import BaseView, STLView, ERROR, integer_field
 
 # Import from ikaaro
 from datatypes import ImageWidth
@@ -300,8 +299,8 @@ class Image_Thumbnail(BaseView):
 
     access = 'is_allowed_to_view'
 
-    width = ViewField(source='query', datatype=Integer(default=48))
-    height = ViewField(source='query', datatype=Integer(default=48))
+    width = integer_field(source='query', default=48)
+    height = integer_field(source='query', default=48)
 
 
     def get_mtime(self, resource):
@@ -341,8 +340,8 @@ class Image_View(STLView):
     styles = ['/ui/gallery/style.css']
     scripts = ['/ui/gallery/javascript.js']
 
-    width = ViewField(source='query', datatype=Integer(default=800))
-    height = ViewField(source='query', datatype=Integer(default=600))
+    width = integer_field(source='query', default=800)
+    height = integer_field(source='query', default=600)
 
 
     @thingy_lazy_property

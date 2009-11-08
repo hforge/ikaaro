@@ -25,11 +25,11 @@ from itools.datatypes import Date, String, Enumerate
 from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.http import get_context
-from itools.web import FormError, ViewField
+from itools.web import FormError, hidden_field
 
 # Import from ikaaro
 from autoform import AutoForm
-from forms import DateField, NameField, RadioField, TitleField, TextField
+from forms import DateField, NameField, RadioField, TitleField
 import messages
 from registry import get_resource_class, get_document_types
 
@@ -56,7 +56,7 @@ class NewInstanceByDate(AutoForm):
     context_menus = freeze([])
 
     # Schema
-    type = ViewField(source='query')
+    type = hidden_field(source='query')
     title = TitleField()
     date = DateField(datatype=TodayDataType, required=True, title=MSG(u'Date'))
 
@@ -228,7 +228,7 @@ class ProxyNewInstance(NewInstance):
 
     template = 'base/proxy_new_instance.xml'
 
-    type = TextField(source='query', datatype=String)
+    type = hidden_field(source='query')
 
 
     @thingy_lazy_property

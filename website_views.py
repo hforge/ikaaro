@@ -24,16 +24,19 @@ from traceback import format_exc
 
 # Import from itools
 from itools.core import get_abspath, thingy_property, thingy_lazy_property
+from itools.core import OrderedDict
 from itools.datatypes import Email, Enumerate, Unicode
 from itools.fs import lfs
 from itools.gettext import MSG
 from itools.stl import stl
-from itools.web import STLView, INFO, ERROR, ViewField
+from itools import vfs
+from itools.web import STLView, INFO, ERROR
+from itools.web import choice_field, text_field, textarea_field
 from itools.xapian import PhraseQuery, OrQuery, AndQuery, split_unicode
 
 # Import from ikaaro
 from autoform import AutoForm
-from forms import EmailField, SelectField, TextField, TextareaField
+from forms import EmailField
 import globals
 from views import SearchForm
 
@@ -110,10 +113,10 @@ class RegisterForm(AutoForm):
     submit_value = MSG(u'Register')
 
     schema = {
-        'firstname': TextField('firstname', required=True,
-                               title=MSG(u'First Name')),
-        'lastname': TextField('lastname', required=True,
-                              title=MSG(u'Last Name')),
+        'firstname': text_field('firstname', required=True,
+                                title=MSG(u'First Name')),
+        'lastname': text_field('lastname', required=True,
+                               title=MSG(u'Last Name')),
         'email': EmailField('email', required=True,
                             title=MSG(u'E-mail Address'))}
 
@@ -152,15 +155,18 @@ class RegisterForm(AutoForm):
 
 
 
-class ContactOptions(Enumerate):
+class to_field(choice_field):
 
-    def get_options(cls):
-        resource = cls.resource
+    @thingy_lazy_property
+    def values(self):
+        resource = self.view.resource
         users = resource.get_resource('/users')
 
-        return [
-            {'name': x, 'value': users.get_resource(x).get_title()}
-            for x in resource.get_value('contacts') ]
+        values = OrderedDict()
+        for username in resource.get_value('contacts'):
+            values[username] = users.get_resource(username).get_title()
+
+        return values
 
 
 
@@ -170,19 +176,15 @@ class ContactForm(AutoForm):
     view_title = MSG(u'Contact')
     submit_value = MSG(u'Send')
 
-    subject = TextField(required=True, title=MSG(u'Message subject'))
-    message_body = TextareaField(required=True, rows=8, cols=50)
+    # Fields
+    to = to_field(required=True, title = MSG(u'Recipient'))
+    subject = text_field(required=True, title=MSG(u'Message subject'))
+
+    message_body = textarea_field(required=True, rows=8, cols=50)
     message_body.title = MSG(u'Message body')
 
 
     field_names = ['to', 'from', 'subject', 'message_body']
-
-    @thingy_property
-    def to(self):
-        field = SelectField('to', required=True)
-        field.datatype = ContactOptions(resource=self.resource)
-        field.title = MSG(u'Recipient')
-        return field
 
 
     def get_field(self, name):
@@ -228,7 +230,7 @@ class SiteSearchView(SearchForm):
     view_title = MSG(u'Search')
     template = 'website/search.xml'
 
-    site_search_text = ViewField(source='query', datatype=Unicode)
+    site_search_text = text_field(source='query')
 
     sort_by = None
     reverse = None

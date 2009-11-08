@@ -31,7 +31,9 @@ from itools.handlers import checkid
 from itools.i18n import format_datetime
 from itools.stl import set_prefix
 from itools.uri import get_reference, Path
-from itools.web import BaseView, STLForm, ERROR, ViewField
+from itools.web import BaseView, STLForm, ERROR
+from itools.web import boolean_field, input_field, integer_field
+from itools.web import multiple_choice_field
 from itools.xapian import AndQuery, OrQuery, PhraseQuery
 
 # Import from ikaaro
@@ -39,7 +41,6 @@ from buttons import RemoveButton, RenameButton, CopyButton, CutButton
 from buttons import PasteButton, PublishButton, RetireButton
 from datatypes import CopyCookie, ImageWidth
 from exceptions import ConsistencyError
-from forms import FormField
 from globals import ui
 import messages
 from utils import generate_name
@@ -228,12 +229,10 @@ class Folder_BrowseContent(SearchForm):
     search_template = 'folder/browse_search.xml'
 
     # Schema
-    ids = ViewField(required=True)
-    ids.datatype = String(multiple=True)
+    ids = multiple_choice_field(required=True)
     sort_by = SearchForm.sort_by(default='mtime')
     reverse = SearchForm.reverse(default=True)
-    search_subfolders = ViewField(source='query')
-    search_subfolders.datatype = Boolean(default=False)
+    search_subfolders = boolean_field(source='query')
 
     # Table
     table_columns = [
@@ -599,11 +598,9 @@ class Folder_PreviewContent(Folder_BrowseContent):
     batch_size = Folder_BrowseContent.batch_size()
     batch_size.datatype = Integer(default=0)
 
-    zoom = FormField(source='query')
-    zoom.datatype = Integer(default=128)
-
-    width = FormField(source='query', datatype=String)
-    height = FormField(source='query', datatype=String)
+    zoom = integer_field(source='query', default=128)
+    width = input_field(source='query')
+    height = input_field(source='query')
 
 
     def get_base_query(self):

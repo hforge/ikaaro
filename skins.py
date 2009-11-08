@@ -27,11 +27,10 @@ from itools.datatypes import String, Unicode
 from itools.gettext import MSG
 from itools.stl import stl
 from itools.uri import Path, get_reference
-from itools.web import ERROR, INFO, STLForm
+from itools.web import ERROR, INFO, STLForm, input_field
 
 # Import from ikaaro
 from boot import ui
-from forms import TextField
 from skins_views import LanguagesTemplate, LocationTemplate
 
 
@@ -52,7 +51,7 @@ class Skin(STLForm):
     #######################################################################
     # Schema
     #######################################################################
-    language = TextField(source='query', datatype=String)
+    language = input_field(source='query')
 
 
     #######################################################################
