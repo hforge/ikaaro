@@ -24,13 +24,14 @@ from operator import itemgetter
 from itools.core import thingy_property, thingy_lazy_property
 from itools.datatypes import Enumerate, Integer, String
 from itools.gettext import MSG
-from itools.web import STLForm, STLView, INFO, ViewField
+from itools.web import STLForm, STLView, INFO
+from itools.web import input_field, integer_field, multiple_choice_field
+from itools.web import textarea_field
 
 # Import from ikaaro
 from autoform import AutoForm, get_default_field
 from buttons import RemoveButton
 from file_views import File_Edit
-from forms import TextField, TextareaField
 import messages
 from utils import get_parameters
 from views import BrowseForm
@@ -40,7 +41,7 @@ class Text_Edit(File_Edit):
 
     icon = 'edit.png'
 
-    data = TextareaField('data', datatype=String, rows=19, cols=69)
+    data = textarea_field('data', datatype=String, rows=19, cols=69)
     data.title = MSG(u'Content')
 
 
@@ -161,7 +162,7 @@ class CSV_View(BrowseForm):
     access = 'is_allowed_to_edit'
     view_title = MSG(u'View')
 
-    ids = ViewField(datatype=Integer, required=True, multiple=True)
+    ids = multiple_choice_field(datatype=Integer, required=True)
 
 
     @thingy_lazy_property
@@ -245,7 +246,7 @@ class RowForm(AutoForm):
 
         schema = resource.handler.schema
         if schema is None:
-            return TextField(name, datatype=String)
+            return input_field(name)
 
         # The title comes from the columns
         for column_name, column_title in resource.get_columns():
@@ -281,7 +282,7 @@ class CSV_AddRow(RowForm):
 
 class CSV_EditRow(RowForm):
 
-    index = ViewField(source='query', datatype=Integer)
+    index = integer_field(source='query')
 
 
     def get_field_names(self):

@@ -23,11 +23,11 @@ from itools.core import thingy_lazy_property
 from itools.datatypes import Date, Enumerate, Boolean
 from itools.gettext import MSG
 from itools.http import get_context
-from itools.web import STLForm
+from itools.web import STLForm, boolean_field, hidden_field, input_field
+from itools.web import choice_field, text_field
 
 # Import from ikaaro
-from forms import DateField, FormField, HiddenField, RadioField, SelectField
-from forms import TextField
+from forms import DateField
 from forms import make_stl_template
 from ikaaro.workflow import get_workflow_preview
 
@@ -35,13 +35,13 @@ from ikaaro.workflow import get_workflow_preview
 
 def get_default_field(datatype):
     if issubclass(datatype, Boolean):
-        return RadioField
+        return boolean_field
     elif issubclass(datatype, Date):
         return DateField
     elif issubclass(datatype, Enumerate):
-        return SelectField
+        return choice_field
 
-    return TextField
+    return text_field
 
 
 
@@ -186,17 +186,18 @@ class AutoForm(STLForm):
 
     @thingy_lazy_property
     def fields(self):
-        return [ x for x in self.get_fields() if issubclass(x, FormField) ]
+        return [ x for x in self.get_fields() if issubclass(x, hidden_field) ]
 
 
     @thingy_lazy_property
     def hidden_fields(self):
-        return [ x for x in self.fields if issubclass(x, HiddenField) ]
+        x = [ x for x in self.fields if not issubclass(x, input_field) ]
+        return x
 
 
     @thingy_lazy_property
     def visible_fields(self):
-        return [ x for x in self.fields if not issubclass(x, HiddenField) ]
+        return [ x for x in self.fields if issubclass(x, input_field) ]
 
 
     def first_field(self):

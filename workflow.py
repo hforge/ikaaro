@@ -23,13 +23,10 @@ from itools.datatypes import String, Unicode
 from itools.gettext import MSG
 from itools.http import get_context
 from itools.i18n import format_datetime
-from itools.web import STLForm, INFO, ERROR
+from itools.web import STLForm, INFO, ERROR, choice_field, textarea_field
 from itools.workflow import Workflow, WorkflowAware as BaseWorkflowAware
 from itools.workflow import WorkflowError
 from itools.xml import XMLParser
-
-# Import from ikaaro
-from forms import TextField
 
 
 
@@ -43,8 +40,8 @@ class StateForm(STLForm):
     icon = 'state.png'
     template = 'WorkflowAware_state.xml'
 
-    transition = TextField(datatype=String, required=True)
-    comments = TextField()
+    transition = choice_field(required=True)
+    comments = textarea_field()
 
 
     def statename(self):

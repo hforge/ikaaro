@@ -32,12 +32,13 @@ from itools.stl import stl
 from itools.uri import Path, get_reference
 from itools.vfs import FileName
 from itools.web import BaseView, STLForm, INFO, ERROR, FormError
+from itools.web import input_field
 
 # Import from ikaaro
 from autoform import AutoForm
 from datatypes import FileDataType
 from folder_views import Folder_BrowseContent
-from forms import PasswordField, FormField
+from forms import PasswordField
 from forms import DescriptionField, SubjectField, TimestampField, TitleField
 import messages
 from registry import get_resource_class
@@ -528,7 +529,7 @@ class LoginView(STLForm):
     template = 'base/login.xml'
 
 
-    username = FormField(required=True, title=MSG(u'E-mail Address'))
+    username = input_field(required=True, title=MSG(u'E-mail Address'))
     password = PasswordField(required=True, title=MSG(u'Password'))
 
 

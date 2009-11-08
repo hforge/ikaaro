@@ -22,12 +22,13 @@ from itools.datatypes import String
 from itools.gettext import MSG
 from itools.i18n import get_language_name
 from itools.web import BaseView, STLView, STLForm, INFO, ERROR
+from itools.web import choice_field, text_field
 from itools.xapian import PhraseQuery, AndQuery, OrQuery, StartQuery
 
 # Import from ikaaro
 from autoform import AutoForm
 from folder import Folder_BrowseContent
-from forms import EmailField, PasswordField, SelectField, TextField
+from forms import EmailField, PasswordField
 import messages
 
 
@@ -167,8 +168,8 @@ class User_EditAccount(AutoForm):
     description = MSG(u'Edit your name and email address.')
     icon = 'card.png'
 
-    firstname = TextField(title=MSG(u'First Name'))
-    lastname = TextField(title=MSG(u'Last Name'))
+    firstname = text_field(title=MSG(u'First Name'))
+    lastname = text_field(title=MSG(u'Last Name'))
     email = EmailField(title=MSG(u"E-mail Address"))
     password = PasswordField(required=True)
     password.title = MSG(u"To confirm these changes, you must type your "
@@ -232,7 +233,7 @@ class User_EditPreferences(STLForm):
     icon = 'preferences.png'
     template = 'user/edit_preferences.xml'
 
-    user_language = SelectField()
+    user_language = choice_field()
 
 
     def languages(self):

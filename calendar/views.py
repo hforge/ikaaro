@@ -31,12 +31,13 @@ from itools.http import get_context
 from itools.ical import Time
 from itools.stl import stl
 from itools.uri import get_reference
-from itools.web import BaseView, STLForm, STLView, INFO, ERROR, ViewField
+from itools.web import BaseView, STLForm, STLView, INFO, ERROR
 from itools.xapian import AndQuery, PhraseQuery, RangeQuery
 
 # Import from ikaaro
 from grid import get_grid_data
 from ikaaro.datatypes import FileDataType
+from ikaaro.forms import DateField
 
 
 resolution = timedelta.resolution
@@ -182,7 +183,7 @@ class CalendarView(STLView):
     # default viewed fields on monthly_view
     default_viewed_fields = ('dtstart', 'dtend', 'SUMMARY', 'STATUS')
 
-    date = ViewField(source='query', datatype=Date)
+    date = DateField(source='query')
 
 
     # Returns 0 if Sunday is the first day of the week, else 1.

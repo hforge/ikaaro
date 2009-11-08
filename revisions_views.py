@@ -22,10 +22,9 @@ from re import compile, sub
 from itools.core import thingy_lazy_property
 from itools.datatypes import Boolean, String
 from itools.gettext import MSG
-from itools.web import STLView
+from itools.web import STLView, hidden_field
 
 # Import from ikaaro
-from forms import TextField
 from views import BrowseForm
 
 
@@ -85,7 +84,7 @@ class DBResource_Changes(STLView):
     template = 'revisions/changes.xml'
 
 
-    revision = TextField(source='query', datatype=String, required=True)
+    revision = hidden_field(source='query', required=True)
 
 
     @thingy_lazy_property

@@ -24,12 +24,13 @@ from itools.datatypes import Boolean, Tokens, String
 from itools.gettext import MSG
 from itools.http import get_context
 from itools.web import AccessControl as BaseAccessControl
-from itools.web import INFO, ERROR, STLForm, ViewField
+from itools.web import INFO, ERROR, STLForm
+from itools.web import choice_field, hidden_field, multiple_choice_field
 from itools.xapian import AndQuery, OrQuery, PhraseQuery, StartQuery
 
 # Import from ikaaro
 from buttons import RemoveButton
-from forms import EmailField, HiddenField, PasswordField, SelectField
+from forms import EmailField, PasswordField
 import messages
 from views import SearchForm
 from workflow import WorkflowAware
@@ -63,8 +64,7 @@ class RoleAware_BrowseUsers(SearchForm):
     icon = 'userfolder.png'
     description = MSG(u'See the users and their roles.')
 
-    ids = ViewField(required=True)
-    ids.datatype = String(multiple=True)
+    ids = multiple_choice_field(required=True)
 
     sort_by = SearchForm.sort_by()
     sort_by.datatype = String(default='login_name')
@@ -192,7 +192,7 @@ class RoleAware_BrowseUsers(SearchForm):
 
 
 
-class RoleField(SelectField):
+class RoleField(choice_field):
 
     has_empty_option = False
     required = True
@@ -227,7 +227,7 @@ class RoleAware_EditMembership(STLForm):
     access = 'is_admin'
     template = 'access/edit_membership_form.xml'
 
-    id = HiddenField(required=True)
+    id = hidden_field(required=True)
     role = RoleField()
 
 
