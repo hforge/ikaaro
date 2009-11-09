@@ -29,7 +29,7 @@ from itools.web import FormError, hidden_field
 
 # Import from ikaaro
 from autoform import AutoForm
-from forms import DateField, NameField, RadioField, TitleField
+from fields import DateField, NameField, RadioField, TitleField
 import messages
 from registry import get_resource_class, get_document_types
 

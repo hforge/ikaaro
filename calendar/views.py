@@ -32,11 +32,11 @@ from itools.ical import Time
 from itools.stl import stl
 from itools.uri import get_reference
 from itools.web import BaseView, STLForm, STLView, INFO, ERROR
+from itools.web import file_field
 from itools.xapian import AndQuery, PhraseQuery, RangeQuery
 
 # Import from ikaaro
-from ikaaro.datatypes import FileDataType
-from ikaaro.forms import DateField
+from ikaaro.fields import DateField
 from grid import get_grid_data
 
 
@@ -815,8 +815,7 @@ class Calendar_Upload(STLForm):
     access = 'is_allowed_to_edit'
     title = MSG(u'Replace')
     template = '/ui/calendar/upload.xml'
-    schema = {
-        'file': FileDataType(mandatory=True)}
+    file = file_field(required=True)
 
 
     def action(self, resource, context, form):

@@ -32,14 +32,12 @@ from itools.i18n import get_language_name
 from itools.stl import stl
 from itools.uri import Path, get_reference
 from itools.web import BaseView, STLForm, INFO, ERROR, FormError
-from itools.web import input_field
+from itools.web import file_field, input_field, password_field
 
 # Import from ikaaro
 from autoform import AutoForm
-from datatypes import FileDataType
+from fields import DescriptionField, SubjectField, TimestampField, TitleField
 from folder_views import Folder_BrowseContent
-from forms import PasswordField
-from forms import DescriptionField, SubjectField, TimestampField, TitleField
 import messages
 from registry import get_resource_class
 from utils import reduce_string
@@ -175,17 +173,14 @@ class DBResource_AddBase(STLForm):
     access = 'is_allowed_to_edit'
 
     element_to_add = None
-
-    schema = {
-        'target_path': String(mandatory=True),
-        'target_id': String(default=None),
-        'mode': String(mandatory=True)}
-
-    action_upload_schema = merge_dicts(schema,
-                                       file=FileDataType(mandatory=True))
-
     item_classes = ()
     folder_classes = ()
+
+    # Fields
+    target_path = input_field(required=True)
+    target_id = input_field()
+    mode = input_field(required=True)
+    file = file_field(required=True)
 
 
     def http_get(self):
@@ -452,8 +447,7 @@ class DBResource_AddLink(DBResource_AddBase):
     template = 'html/addlink.xml'
     element_to_add = 'link'
 
-    action_add_resource_schema = merge_dicts(DBResource_AddImage.schema,
-                                             title=String(mandatory=True))
+    title = input_field(required=True)
 
     def get_configuration(self):
         return {
@@ -532,7 +526,7 @@ class LoginView(STLForm):
 
 
     username = input_field(required=True, title=MSG(u'E-mail Address'))
-    password = PasswordField(required=True, title=MSG(u'Password'))
+    password = password_field(required=True, title=MSG(u'Password'))
 
 
     def cook(self, method):

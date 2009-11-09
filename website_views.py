@@ -31,12 +31,11 @@ from itools.gettext import MSG
 from itools.stl import stl
 from itools import vfs
 from itools.web import STLView, INFO, ERROR
-from itools.web import choice_field, text_field, textarea_field
+from itools.web import choice_field, email_field, text_field, textarea_field
 from itools.xapian import PhraseQuery, OrQuery, AndQuery, split_unicode
 
 # Import from ikaaro
 from autoform import AutoForm
-from forms import EmailField
 import globals
 from views import SearchForm
 
@@ -71,9 +70,7 @@ class ForgottenPasswordForm(AutoForm):
     submit_value = MSG(u'Ok')
     meta = [('robots', 'noindex, follow', None)]
 
-    username = EmailField()
-    username.datatype = Email(default='')
-    username.title = MSG(u'Type your email address')
+    username = email_field(default='', title=MSG(u'Type your email address'))
 
 
     def get_value(self, name):
@@ -112,13 +109,9 @@ class RegisterForm(AutoForm):
     view_title = MSG(u'Register')
     submit_value = MSG(u'Register')
 
-    schema = {
-        'firstname': text_field('firstname', required=True,
-                                title=MSG(u'First Name')),
-        'lastname': text_field('lastname', required=True,
-                               title=MSG(u'Last Name')),
-        'email': EmailField('email', required=True,
-                            title=MSG(u'E-mail Address'))}
+    firstname = text_field(required=True, title=MSG(u'First Name'))
+    lastname = text_field(required=True, title=MSG(u'Last Name'))
+    email = email_field(required=True, title=MSG(u'E-mail Address'))
 
 
     def action(self, resource, context, form):
@@ -183,20 +176,13 @@ class ContactForm(AutoForm):
     message_body = textarea_field(required=True, rows=8, cols=50)
     message_body.title = MSG(u'Message body')
 
+    from_ = email_field(required=True, title=MSG(u'Your email address'))
 
-    field_names = ['to', 'from', 'subject', 'message_body']
-
-
-    def get_field(self, name):
-        # 'from' is a Python reserved word
-        if name == 'from':
-            field = EmailField('from', required=True)
-            field.title = MSG(u'Your email address')
-            return field
+    field_names = ['to', 'from_', 'subject', 'message_body']
 
 
     def get_value(self, field):
-        if field.name == 'from':
+        if field.name == 'from_':
             user = self.context.user
             if user:
                 return user.get_value('email')
@@ -207,7 +193,7 @@ class ContactForm(AutoForm):
     def action(self, resource, context, form):
         # Get form values
         contact = form['to']
-        from_addr = form['from'].strip()
+        from_addr = form['from_'].strip()
         subject = form['subject'].strip()
         body = form['message_body'].strip()
 

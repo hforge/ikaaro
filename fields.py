@@ -19,44 +19,16 @@ from datetime import datetime
 
 # Import from itools
 from itools.core import get_abspath, thingy_property
-from itools.datatypes import Date, DateTime, Email, Enumerate, String, Unicode
+from itools.datatypes import Date, DateTime, Enumerate, String, Unicode
 from itools.gettext import MSG
 from itools import vfs
 from itools.web import hidden_field, input_field, text_field, textarea_field
 from itools.web import make_stl_template
 
 # Import from ikaaro
-from datatypes import FileDataType, HTMLBody
+from datatypes import HTMLBody
 
 
-
-###########################################################################
-# Simple fields
-###########################################################################
-
-class EmailField(input_field):
-    datatype = Email
-    size = 40
-
-
-
-class FileField(input_field):
-    datatype = FileDataType
-    type = 'file'
-
-
-
-class PasswordField(input_field):
-    type = 'password'
-
-    def encoded_value(self):
-        return self.view.resource.context.query.get(self.name)
-
-
-
-###########################################################################
-# Selection fields (radio buttons, checkboxes, selects)
-###########################################################################
 
 class RadioField(input_field):
 
@@ -272,11 +244,6 @@ class DescriptionField(textarea_field):
     name = 'description'
     rows = 8
     title = MSG(u'Description')
-
-
-class ReplaceFileField(FileField):
-    name = 'file'
-    title = MSG(u'Replace file')
 
 
 class NameField(input_field):

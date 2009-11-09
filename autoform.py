@@ -23,12 +23,12 @@ from itools.core import thingy_lazy_property
 from itools.datatypes import Date, Enumerate, Boolean
 from itools.gettext import MSG
 from itools.http import get_context
-from itools.web import STLForm, boolean_field, hidden_field, input_field
-from itools.web import choice_field, text_field
+from itools.web import STLForm, make_stl_template
+from itools.web import boolean_field, choice_field, hidden_field, input_field
+from itools.web import text_field
 
 # Import from ikaaro
-from forms import DateField
-from forms import make_stl_template
+from fields import DateField
 from ikaaro.workflow import get_workflow_preview
 
 
