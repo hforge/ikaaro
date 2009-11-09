@@ -28,9 +28,8 @@ from itools.web import choice_field, input_field
 
 # Import from ikaaro
 from ikaaro.autoform import AutoForm
+from ikaaro.fields import DateTimeField, DescriptionField, TitleField
 from ikaaro.file import File
-from ikaaro.forms import DateTimeField, DescriptionField
-from ikaaro.forms import TitleField
 from ikaaro.registry import register_document_type
 from ikaaro.views_new import NewInstanceByDate
 

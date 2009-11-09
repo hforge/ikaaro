@@ -30,11 +30,11 @@ from itools.html import HTMLParser, stream_to_str_as_xhtml
 from itools.i18n import guess_language
 from itools.uri import get_reference, get_uri_name
 from itools.vfs import FileName
-from itools.web import BaseView, STLView, ERROR, integer_field
+from itools.web import BaseView, STLView, ERROR
+from itools.web import file_field, integer_field
 
 # Import from ikaaro
 from datatypes import ImageWidth
-from forms import FileField, ReplaceFileField
 import messages
 from multilingual import Multilingual
 from registry import get_resource_class
@@ -49,7 +49,7 @@ class File_NewInstance(NewInstance):
 
 
     name = None
-    file = FileField(required=True, size=35, title=MSG(u'File'))
+    file = file_field(required=True, size=35, title=MSG(u'File'))
 
 
     @thingy_lazy_property
@@ -156,7 +156,7 @@ class File_View(STLView):
 
 class File_Edit(DBResource_Edit):
 
-    file = ReplaceFileField()
+    file = file_field(title=MSG(u'Replace file'))
 
 
     def get_value(self, name):

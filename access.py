@@ -25,12 +25,12 @@ from itools.gettext import MSG
 from itools.http import get_context
 from itools.web import AccessControl as BaseAccessControl
 from itools.web import INFO, ERROR, STLForm
-from itools.web import choice_field, hidden_field, multiple_choice_field
+from itools.web import choice_field, email_field, hidden_field, password_field
+from itools.web import multiple_choice_field
 from itools.xapian import AndQuery, OrQuery, PhraseQuery, StartQuery
 
 # Import from ikaaro
 from buttons import RemoveButton
-from forms import EmailField, PasswordField
 import messages
 from views import SearchForm
 from workflow import WorkflowAware
@@ -269,13 +269,11 @@ class RoleAware_AddUser(STLForm):
     description = MSG(u'Grant access to a new user.')
     template = 'access/add_user.xml'
 
-    email = EmailField(required=True)
+    email = email_field(required=True)
     email.title = MSG(u'Email')
     role = RoleField()
-    newpass = PasswordField()
-    newpass.title = MSG(u'Password')
-    newpass2 = PasswordField()
-    newpass2.title = MSG(u'Repeat Password')
+    newpass = password_field(title=MSG(u'Password'))
+    newpass2 =  password_field(title=MSG(u'Repeat Password'))
 
 
     def is_admin(self):

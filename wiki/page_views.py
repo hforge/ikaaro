@@ -47,7 +47,7 @@ from itools.web import BaseView, STLView, ERROR
 from itools.xml import XMLParser, XMLError
 
 # Import from ikaaro
-from ikaaro.forms import NameField
+from ikaaro.fields import NameField
 from ikaaro import messages
 from ikaaro.views_new import NewInstanceByDate
 from ikaaro.resource_views import DBResource_Edit
