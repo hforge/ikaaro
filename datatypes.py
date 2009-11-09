@@ -22,7 +22,7 @@ from zlib import compress, decompress
 
 # Import from itools
 from itools.core import freeze, guess_type
-from itools.datatypes import DataType, Enumerate
+from itools.datatypes import DataType
 from itools.html import xhtml_doctype, sanitize_stream
 from itools.html import stream_to_str_as_xhtml, stream_to_str_as_html
 from itools.xml import XMLParser
@@ -58,17 +58,6 @@ class CopyCookie(DataType):
     @staticmethod
     def decode(str):
         return loads(decompress(unquote(str)))
-
-
-
-class ImageWidth(Enumerate):
-
-    options = [
-        {'name': '640', 'value': u"small"},
-        {'name': '800', 'value': u"medium"},
-        {'name': '1024', 'value': u"large"},
-        {'name': '1280', 'value': u"huge"},
-        {'name': '0', 'value': u"original"}]
 
 
 

@@ -18,7 +18,8 @@
 from datetime import datetime
 
 # Import from itools
-from itools.core import get_abspath, thingy_property
+from itools.core import get_abspath, thingy_property, thingy_lazy_property
+from itools.core import OrderedDict
 from itools.datatypes import Date, DateTime, Enumerate, String, Unicode
 from itools.gettext import MSG
 from itools import vfs
@@ -27,6 +28,37 @@ from itools.web import make_stl_template
 
 # Import from ikaaro
 from datatypes import HTMLBody
+
+
+
+class image_size_field(input_field):
+
+    # Default values
+    width = 0
+    height = 0
+
+
+    def decode(self, raw_value):
+        try:
+            self.width = self.height = int(raw_value)
+        except ValueError:
+            width, height = raw_value.split('x')
+            self.width, self.height = int(width), int(height)
+
+
+    def is_empty(self):
+        return False
+
+
+    def is_valid(self):
+        return True
+
+
+    @thingy_lazy_property
+    def encoded_value(self):
+        if self.raw_value:
+            return self.raw_value
+        return '%sx%s' % (self.width, self.height)
 
 
 

@@ -35,7 +35,7 @@ from itools.web import BaseView, STLView, ERROR
 from itools.web import file_field, integer_field
 
 # Import from ikaaro
-from datatypes import ImageWidth
+from fields import image_size_field
 import messages
 from multilingual import Multilingual
 from registry import get_resource_class
@@ -340,8 +340,32 @@ class Image_View(STLView):
     styles = ['/ui/gallery/style.css']
     scripts = ['/ui/gallery/javascript.js']
 
-    width = integer_field(source='query', default=800)
-    height = integer_field(source='query', default=600)
+
+    size = image_size_field(source='query', width=800, height=600)
+
+
+    image_sizes = [
+        ('640x480', MSG(u'small')),
+        ('800x600', MSG(u'medium')),
+        ('1024x768', MSG(u'large')),
+        ('1280x1024', MSG(u'huge'))]
+
+
+    @thingy_lazy_property
+    def image_size_options(self):
+        current = self.size.encoded_value
+        options = [
+            {'value': value, 'title': title, 'size': value,
+             'class': 'nav-active' if value == current else None}
+            for value, title in self.image_sizes ]
+
+        # Original size
+        size = '%sx%s' % self.resource.handler.get_size()
+        options.append(
+            {'value': '0', 'title': MSG(u'original'), 'size': size,
+             'class': 'nav-active' if '0' == current else None})
+
+        return options
 
 
     @thingy_lazy_property
@@ -364,22 +388,12 @@ class Image_View(STLView):
         return None
 
 
-    @thingy_lazy_property
-    def image(self):
-        width, height = self.resource.handler.get_size()
-        return {'width': width, 'height': height}
-
-
     def image_link(self):
         return self.resource.path
 
 
     def image_view(self):
         return self.preload[0]
-
-
-    def widths(self):
-        return ImageWidth.get_namespace(self.width.value)
 
 
     @thingy_lazy_property
@@ -407,8 +421,8 @@ class Image_View(STLView):
 
     @thingy_lazy_property
     def preload(self):
-        width = self.width.value
-        height = self.height.value
+        width = self.size.width
+        height = self.size.height
 
         images = self.images
         my_index = self.my_index
@@ -428,8 +442,8 @@ class Image_View(STLView):
             # Preload with same size preferences than the current one
             if width and height:
                 # Preload a thumbnail
-                uri = prefix.resolve_name(';thumb').replace(width=width,
-                                                            height=height)
+                uri = prefix.resolve_name(';thumb')
+                uri = uri.replace(width=width, height=height)
             else:
                 # Preload the full size
                 uri = prefix.resolve_name(';download')

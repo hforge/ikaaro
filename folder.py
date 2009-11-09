@@ -54,14 +54,6 @@ class Folder(DBResource):
     __fixed_handlers__ = []
 
 
-    #########################################################################
-    # Gallery properties
-    DEFAULT_SIZE = 128
-    MIN_SIZE = 32
-    MAX_SIZE = 512
-    SIZE_STEPS = (32, 48, 64, 128, 256, 512)
-
-
     def get_document_types(self):
         return get_document_types()
 

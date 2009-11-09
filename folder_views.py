@@ -39,8 +39,9 @@ from itools.xapian import AndQuery, OrQuery, PhraseQuery
 # Import from ikaaro
 from buttons import RemoveButton, RenameButton, CopyButton, CutButton
 from buttons import PasteButton, PublishButton, RetireButton
-from datatypes import CopyCookie, ImageWidth
+from datatypes import CopyCookie
 from exceptions import ConsistencyError
+from fields import image_size_field
 from globals import ui
 import messages
 from utils import generate_name
@@ -52,32 +53,17 @@ from workflow import WorkflowAware, get_workflow_preview
 class ZoomMenu(ContextMenu):
 
     title = MSG(u'Zoom')
+    size_steps = ('64x64', '128x128', '256x256', '512x512')
+
 
     def get_items(self):
+        current_size = self.context.query.get('image_size')
+
         uri = get_reference(self.context.uri)
-
-        # Compute previous and next sizes
-        current_size = self.context.get_query_value('size')
-        min_size = self.resource.MIN_SIZE
-        max_size = self.resource.MAX_SIZE
-        current_size = max(min_size, min(current_size, max_size))
-        previous_size = min_size
-        next_size = max_size
-        for step in self.resource.SIZE_STEPS:
-            if step < current_size:
-                previous_size = step
-            if next_size is max_size and step > current_size:
-                next_size = step
-
-        next_size = str(next_size)
-        previous_size = str(previous_size)
-        return [
-            {'title': MSG(u'Zoom In'),
-             'src': '/ui/icons/16x16/zoom_in.png',
-             'href': uri.replace(size=next_size)},
-            {'title': MSG(u'Zoom Out'),
-             'src': '/ui/icons/16x16/zoom_out.png',
-             'href': uri.replace(size=previous_size)}]
+        return  [
+            {'href': uri.replace(image_size=x), 'title': x,
+             'class': 'nav-active' if x == current_size else None}
+            for x in self.size_steps ]
 
 
 
@@ -598,9 +584,7 @@ class Folder_PreviewContent(Folder_BrowseContent):
     batch_size = Folder_BrowseContent.batch_size()
     batch_size.datatype = Integer(default=0)
 
-    zoom = integer_field(source='query', default=128)
-    width = input_field(source='query')
-    height = input_field(source='query')
+    image_size = image_size_field(source='query', width=128, height=128)
 
 
     def get_base_query(self):
@@ -652,18 +636,8 @@ class Folder_PreviewContent(Folder_BrowseContent):
         return columns_ns
 
 
-    @thingy_lazy_property
-    def current_size(self):
-        resource = self.resource
-        min_size = resource.MIN_SIZE
-        max_size = resource.MAX_SIZE
-        return max(min_size, min(self.zoom.value, max_size))
-
-
     def rows(self):
-        current_size = self.current_size
-        width = self.width.value
-        height = self.height.value
+        image_size = self.image_size.encoded_value
 
         columns = self._get_table_columns()
         rows = []
@@ -692,8 +666,7 @@ class Folder_PreviewContent(Folder_BrowseContent):
                         href = get_reference(href)
                         if row['is_folder']:
                             href = href.resolve_name(';preview_content')
-                        href = href.replace(zoom=current_size, width=width,
-                                            height=height)
+                        href = href.replace(image_size=image_size)
                         href = str(href)
                     else:
                         href = None
@@ -711,10 +684,9 @@ class Folder_PreviewContent(Folder_BrowseContent):
 
 
     def widths(self):
-        widths = [
-            repr(x['name']) for x in ImageWidth.get_options()
-            if x['name'].strip() ]
-        return ", ".join(widths)
+        # FIXME hardcoded
+        sizes = ['640x480', '800x600', '1024x768', '1280x1024']
+        return ", ".join(sizes)
 
 
 
@@ -764,11 +736,16 @@ class Folder_Thumbnail(BaseView):
 
     default_icon = 'gallery/folder.png'
 
+    width = integer_field(source='query', default=48)
+    height = integer_field(source='query', default=48)
+
+
     def http_get(self):
         from file import Image
 
-        width = context.get_query_value('width', type=Integer, default=48)
-        height = context.get_query_value('height', type=Integer, default=48)
+        context = self.context
+        width = self.width.value
+        height = self.height.value
 
         # Choose an image to illustrate
         if PILImage is None:
@@ -779,6 +756,7 @@ class Folder_Thumbnail(BaseView):
         else:
             # Find the first accessible image
             user = context.user
+            resource = self.resource
             ac = resource.get_access_control()
             for image in resource.search_resources(cls=Image):
                 # Search public image safe for all
