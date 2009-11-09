@@ -43,13 +43,12 @@
 <form action="" method="post" name="browse_list" id="form-table"
   stl:omit-tag="not actions">
   <div id="browse-image">
-    <a stl:if="not root"
-      href="../;preview_content?zoom=${current_size}&amp;width=${width/value}&amp;height=${height/value}"
+    <a stl:if="not root" href="../;preview_content?image_size=${image_size/encoded_value}"
       title="Back"><img src="/ui/icons/16x16/up.png" /></a>
-    <div class="thumbnail size${current_size}" stl:repeat="row rows">
+    <div class="thumbnail size${image_size/encoded_value}" stl:repeat="row rows">
       <div class="folder" stl:omit-tag="not row/is_folder">
         <a href="${row/href}" stl:omit-tag="not row/href">
-          <img src="${row/name}/;thumb?width=${current_size}&amp;height=${current_size}" />
+          <img src="${row/name}/;thumb?width=${image_size/width}&amp;height=${image_size/height}" />
         </a>
       </div>
       <p>
