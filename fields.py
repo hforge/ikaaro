@@ -62,57 +62,6 @@ class image_size_field(input_field):
 
 
 
-class RadioField(input_field):
-
-    widget = make_stl_template("""
-    <stl:block stl:repeat="option options">
-      <input type="radio" id="${name}-${option/name}" name="${name}"
-        value="${option/name}" checked="${option/selected}" />
-      <label for="${name}-${option/name}">${option/value}</label>
-      <br stl:if="not oneline" />
-    </stl:block>""")
-
-    oneline = False
-    has_empty_option = True # Only makes sense for enumerates
-                            # FIXME Do this other way
-
-
-    def options(self):
-        datatype = self.datatype
-        value = self.value
-
-        # Case 1: Enumerate
-        if issubclass(datatype, Enumerate):
-            options = value
-
-            # Empty option
-            if self.has_empty_option:
-                options.insert(0,
-                    {'name': '', 'value': '',  'is_selected': False})
-
-            # Select first item if none selected
-            for option in options:
-                if option['selected'] is True:
-                    return options
-
-            if options:
-                options[0]['selected'] = True
-            return options
-
-        # Case 2: Boolean
-        if issubclass(datatype, Boolean):
-            default_labels = {'yes': MSG(u'Yes'), 'no': MSG(u'No')}
-            labels = getattr(self, 'labels', default_labels)
-            return [
-                {'name': '1', 'value': labels['yes'], 'is_selected': value},
-                {'name': '0', 'value': labels['no'], 'is_selected': not value}]
-
-        # Case 3: Error
-        err = 'datatype "%s" should be enumerate or boolean'
-        raise ValueError, err % self.name
-
-
-
 ###########################################################################
 # Date & Time fields
 ###########################################################################
