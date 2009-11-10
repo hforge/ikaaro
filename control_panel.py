@@ -94,7 +94,7 @@ class ControlPanel(IconsView):
             items.append({
                 'icon': resource.get_method_icon(view, size='48x48'),
                 'title': view.view_title,
-                'description': view.description,
+                'description': view.view_description,
                 'url': ';%s' % name})
 
         return items
@@ -105,8 +105,8 @@ class CPEditVirtualHosts(STLForm):
 
     access = 'is_admin'
     view_title = MSG(u'Virtual Hosts')
+    view_description = MSG(u'Define the domain names for this Web Site.')
     icon = 'website.png'
-    description = MSG(u'Define the domain names for this Web Site.')
     template = 'website/virtual_hosts.xml'
     context_menus = context_menus
 
@@ -136,7 +136,7 @@ class CPEditSecurityPolicy(STLForm):
     access = 'is_allowed_to_edit'
     view_title = MSG(u'Security Policy')
     icon = 'lock.png'
-    description = MSG(u'Choose the security policy.')
+    view_description = MSG(u'Choose the security policy.')
     template = 'website/security_policy.xml'
     context_menus = context_menus
 
@@ -177,7 +177,7 @@ class CPEditContactOptions(DBResource_Edit):
     access = 'is_allowed_to_edit'
     view_title = MSG(u'Email options')
     icon = 'mail.png'
-    description = MSG(u'Configure the website email options')
+    view_description = MSG(u'Configure the website email options')
     context_menus = context_menus
 
     # Fields
@@ -193,11 +193,11 @@ class CPEditContactOptions(DBResource_Edit):
     field_names = ['emails_from_addr', 'emails_signature', 'contacts']
 
 
-    def get_value(self, name):
-        if name == 'contacts':
-            return list(self.resource.get_property('value'))
+#   def get_value(self, name):
+#       if name == 'contacts':
+#           return list(self.resource.get_property('value'))
 
-        return super(CPEditContactOptions, self).get_value(name)
+#       return super(CPEditContactOptions, self).get_value(name)
 
 
     def action(self, resource, context, form):
@@ -214,7 +214,7 @@ class CPBrokenLinks(STLView):
     access = 'is_admin'
     view_title = MSG(u'Broken Links')
     icon = 'clear.png'
-    description = MSG(u'Check the referential integrity.')
+    view_description = MSG(u'Check the referential integrity.')
     template = '/ui/website/broken_links.xml'
     context_menus = context_menus
 
@@ -260,7 +260,7 @@ class CPEditLanguages(STLForm):
 
     access = 'is_admin'
     view_title = MSG(u'Languages')
-    description = MSG(u'Define the Web Site languages.')
+    view_description = MSG(u'Define the Web Site languages.')
     icon = 'languages.png'
     template = 'website/edit_languages.xml'
     context_menus = context_menus
@@ -349,13 +349,17 @@ class CPEditSEO(DBResource_Edit):
     access = 'is_allowed_to_edit'
     view_title = MSG(u'Search engine optimization')
     icon = 'search.png'
-    description = MSG(u"""
+    view_description = MSG(u"""
       Optimize your website for better ranking in search engine results.""")
     context_menus = context_menus
 
 
+    # Fields
     google_site_verification = input_field()
     google_site_verification.title = MSG(u'Google site verification key')
+    title = None
+    description = None
+    subject = None
 
     yahoo_site_verification = input_field()
     yahoo_site_verification.title = MSG(u'Yahoo site verification key')
