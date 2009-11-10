@@ -149,7 +149,7 @@ class File_View(STLView):
 
     def filename(self):
         resource = self.resource
-        filename = resource.get_property('filename')
+        filename = resource.get_value('filename')
         return filename if filename else resource.get_title()
 
 

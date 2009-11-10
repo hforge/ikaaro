@@ -192,9 +192,9 @@ class File(WorkflowAware, DBResource):
     edit = File_Edit()
     externaledit = STLView(
         access='is_allowed_to_edit',
-        title=MSG(u'External Editor'),
+        view_title=MSG(u'External Editor'),
         icon='external.png',
-        template='/ui/file/externaledit.xml')
+        template='file/externaledit.xml')
     external_edit = File_ExternalEdit()
 
 
