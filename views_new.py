@@ -20,16 +20,17 @@ from operator import itemgetter
 
 # Import from itools
 from itools.core import freeze, thingy_property, thingy_lazy_property
+from itools.core import OrderedDict
 from itools.csv import Property
 from itools.datatypes import Date, String, Enumerate
 from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.http import get_context
-from itools.web import FormError, hidden_field
+from itools.web import FormError, hidden_field, choice_field
 
 # Import from ikaaro
 from autoform import AutoForm
-from fields import DateField, NameField, RadioField, TitleField
+from fields import DateField, NameField, TitleField
 import messages
 from registry import get_resource_class, get_document_types
 
@@ -166,27 +167,31 @@ class NewInstanceByDate(AutoForm):
 # in the form.
 ###########################################################################
 
-class PathEnumerate(Enumerate):
+class path_field(choice_field):
 
-    def get_options(cls):
+    mode = 'radio'
+    title = MSG(u'Path')
+
+    @thingy_lazy_property
+    def values(self):
         # Search
-        brains = get_context().search(is_folder=True)
+        results = self.view.context.search(is_folder=True)
 
         # The namespace
-        options = []
-        for resource in brains.get_documents():
+        values = []
+        for resource in results.get_documents():
             path = str(resource.path)
-            options.append({'name': path, 'value': path})
-        options.sort(key=itemgetter('value'))
+            values.append((path, {'title': path}))
+        values.sort(key=lambda x: x[1]['title'])
 
         # Ok
-        return options
+        return OrderedDict(values)
 
 
-    def get_default(cls):
-        resource = cls.resource
-        default = resource.get_abspath()
-        return str(default)
+    @thingy_lazy_property
+    def default(self):
+        path = self.view.resource.path
+        return str(path)
 
 
 
@@ -194,14 +199,10 @@ class NewInstance(NewInstanceByDate):
 
     name = NameField()
     date = None
+    path = path_field()
 
+    field_names = ['title', 'name', 'path']
 
-    @thingy_property
-    def path(self):
-        field = RadioField(has_empty_option=False)
-        field.datatype = PathEnumerate(resource=self.resource)
-        field.title = title=MSG(u'Path')
-        return field
 
     @thingy_lazy_property
     def new_resource_name(self):
