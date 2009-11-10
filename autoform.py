@@ -45,42 +45,6 @@ def get_default_field(datatype):
 
 
 
-class CheckboxWidget(object):
-
-    template = make_stl_template("""
-    <stl:block stl:repeat="option options">
-      <input type="checkbox" id="${id}-${option/name}" name="${name}"
-        value="${option/name}" checked="${option/selected}" />
-      <label for="${id}-${option/name}">${option/value}</label>
-      <br stl:if="not oneline" />
-    </stl:block>""")
-
-    oneline = False
-
-
-    def options(self):
-        datatype = self.datatype
-        value = self.value
-
-        # Case 1: Enumerate
-        if issubclass(datatype, Enumerate):
-            # Check whether the value is already a list of options
-            # FIXME This is done to avoid a bug when using a select widget in
-            # an auto-form, where the 'datatype.get_namespace' method is
-            # called twice (there may be a better way of handling this).
-            if type(value) is not list:
-                return datatype.get_namespace(value)
-            return value
-
-        # Case 2: Boolean
-        if issubclass(datatype, Boolean):
-            return [{'name': '1', 'value': '', 'is_selected': value}]
-
-        # Case 3: Error
-        raise ValueError, 'expected boolean or enumerate datatype'
-
-
-
 class PathSelectorWidget(object):
 
     action = 'add_link'
