@@ -26,11 +26,12 @@ from itools.gettext import MSG
 from itools.http import get_context
 from itools.web import AccessControl as BaseAccessControl
 from itools.web import INFO, ERROR, STLForm
-from itools.web import choice_field, email_field, hidden_field, password_field
-from itools.web import multiple_choice_field
+from itools.web import choice_field, email_field, multiple_choice_field
+from itools.web import password_field, readonly_field
 from itools.xapian import AndQuery, OrQuery, PhraseQuery, StartQuery
 
 # Import from ikaaro
+from autoform import AutoForm
 from buttons import RemoveButton
 import messages
 from views import SearchForm
@@ -219,21 +220,25 @@ class role_field(choice_field):
 
 
 
-class RoleAware_EditMembership(STLForm):
+class user_field(readonly_field):
+
+    @thingy_lazy_property
+    def displayed(self):
+        return self.view.context.get_user_title(self.value)
+
+
+
+class RoleAware_EditMembership(AutoForm):
 
     access = 'is_admin'
-    template = 'access/edit_membership_form.xml'
+    view_title = MSG(u'Change role')
 
-    id = hidden_field(required=True)
+    id = user_field(required=True, title=MSG(u'User'))
     role = role_field(mode='radio')
 
 
     # the 'id' field must be cooked before the 'role' field
     field_names = ['id', 'role']
-
-
-    def name(self):
-        return self.context.get_user_title(self.id.value)
 
 
     def action(self):

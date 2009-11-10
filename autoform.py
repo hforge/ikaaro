@@ -24,8 +24,8 @@ from itools.datatypes import Date, Enumerate, Boolean
 from itools.gettext import MSG
 from itools.http import get_context
 from itools.web import STLForm, make_stl_template
-from itools.web import boolean_field, choice_field, hidden_field, input_field
-from itools.web import text_field
+from itools.web import boolean_field, choice_field, hidden_field
+from itools.web import readonly_field, text_field
 
 # Import from ikaaro
 from fields import DateField
@@ -42,38 +42,6 @@ def get_default_field(datatype):
         return choice_field
 
     return text_field
-
-
-
-class ReadOnlyWidget(object):
-
-    template = make_stl_template("""
-    <input type="hidden" name="${name}" value="${value_}" />${displayed_}""")
-
-    displayed = None
-
-
-    @thingy_lazy_property
-    def value_(self):
-        value = self.value
-        if issubclass(self.datatype, Enumerate) and isinstance(value, list):
-            for option in value:
-                if option['selected']:
-                    return option['name']
-            return self.datatype.default
-        return value
-
-
-    def displayed_(self):
-        if self.displayed is not None:
-            return self.displayed
-
-        value = self.value_
-        if issubclass(self.datatype, Enumerate):
-            return self.datatype.get_value(value)
-
-        return value
-
 
 
 
@@ -191,13 +159,12 @@ class AutoForm(STLForm):
 
     @thingy_lazy_property
     def hidden_fields(self):
-        x = [ x for x in self.fields if not issubclass(x, input_field) ]
-        return x
+        return [ x for x in self.fields if not issubclass(x, readonly_field) ]
 
 
     @thingy_lazy_property
     def visible_fields(self):
-        return [ x for x in self.fields if issubclass(x, input_field) ]
+        return [ x for x in self.fields if issubclass(x, readonly_field) ]
 
 
     def first_field(self):
