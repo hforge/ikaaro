@@ -24,10 +24,27 @@ from itools.datatypes import Date, DateTime, Enumerate, String, Unicode
 from itools.gettext import MSG
 from itools import vfs
 from itools.web import hidden_field, input_field, text_field, textarea_field
+from itools.web import file_field
 from itools.web import make_stl_template
 
 # Import from ikaaro
 from datatypes import HTMLBody
+
+
+class file_preview_field(file_field):
+
+    image_size = 128
+
+    @thingy_lazy_property
+    def preview(self):
+        resource = self.view.resource
+        try:
+            resource.thumb
+        except AttributeError:
+            return None
+
+        size = self.image_size
+        return '%s/;thumb?width=%s&height=%s' % (resource.path, size, size)
 
 
 
