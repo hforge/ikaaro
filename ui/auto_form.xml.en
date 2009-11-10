@@ -10,17 +10,10 @@
   <fieldset>
     <legend>${view_title}</legend>
     <p stl:if="view_description">${view_description}</p>
-    <table>
-      <tr stl:repeat="field visible_fields">
-        <td class="field">${field}</td>
-      </tr>
-      <tr stl:if="submit_value">
-        <td>
-          <input type="submit" value="${submit_value}" class="${submit_class}"
-            />
-        </td>
-      </tr>
-    </table>
+    <div class="field" stl:repeat="field visible_fields">${field}</div>
+    <p stl:if="submit_value">
+      <input type="submit" value="${submit_value}" class="${submit_class}" />
+    </p>
   </fieldset>
 </form>
 
