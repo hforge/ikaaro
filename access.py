@@ -20,6 +20,7 @@
 
 # Import from itools
 from itools.core import freeze, thingy_property, thingy_lazy_property
+from itools.core import OrderedDict
 from itools.datatypes import Boolean, Tokens, String
 from itools.gettext import MSG
 from itools.http import get_context
@@ -192,24 +193,20 @@ class RoleAware_BrowseUsers(SearchForm):
 
 
 
-class RoleField(choice_field):
+class role_field(choice_field):
 
-    has_empty_option = False
     required = True
     title = MSG(u'Role')
 
-    def get_value_title(self, value):
-        resource = self.view.resource
-        return resource.class_schema[value].title
 
-
-    @thingy_property
+    @thingy_lazy_property
     def values(self):
-        return self.view.resource.class_roles
+        resource = self.view.resource
 
-
-    def is_valid(self, value):
-        return value in self.values
+        values = OrderedDict()
+        for role in resource.class_roles:
+            values[role] = {'title': resource.class_schema[role].title}
+        return values
 
 
     @thingy_property
@@ -228,7 +225,7 @@ class RoleAware_EditMembership(STLForm):
     template = 'access/edit_membership_form.xml'
 
     id = hidden_field(required=True)
-    role = RoleField()
+    role = role_field(mode='radio')
 
 
     # the 'id' field must be cooked before the 'role' field
@@ -271,7 +268,7 @@ class RoleAware_AddUser(STLForm):
 
     email = email_field(required=True)
     email.title = MSG(u'Email')
-    role = RoleField()
+    role = role_field()
     newpass = password_field(title=MSG(u'Password'))
     newpass2 =  password_field(title=MSG(u'Repeat Password'))
 
