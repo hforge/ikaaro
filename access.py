@@ -63,8 +63,8 @@ class RoleAware_BrowseUsers(SearchForm):
 
     access = 'is_admin'
     view_title = MSG(u'Browse Members')
+    view_description = MSG(u'See the users and their roles.')
     icon = 'userfolder.png'
-    description = MSG(u'See the users and their roles.')
 
     ids = multiple_choice_field(required=True)
 
@@ -267,8 +267,8 @@ class RoleAware_AddUser(STLForm):
 
     access = 'is_admin'
     view_title = MSG(u'Add New Member')
+    view_description = MSG(u'Grant access to a new user.')
     icon = 'card.png'
-    description = MSG(u'Grant access to a new user.')
     template = 'access/add_user.xml'
 
     email = email_field(required=True)
