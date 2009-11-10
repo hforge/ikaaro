@@ -161,6 +161,7 @@ class HTMLEditView(File_Edit):
     """
 
     data = RTEField('data', title=MSG(u'Body'))
+    field_names = ['title', 'data', 'file', 'description', 'subject']
 
 
     def get_value(self, field):

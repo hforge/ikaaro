@@ -179,7 +179,7 @@ class RTEField(input_field):
 
     datatype = HTMLBody
 
-    widget = 'tiny_mce/rte.xml'
+    input_template = 'tiny_mce/rte.xml'
     rte_css = ['/ui/aruni/style.css', '/ui/tiny_mce/content.css']
     scripts = [
         '/ui/tiny_mce/tiny_mce_src.js',
@@ -240,7 +240,6 @@ class TimestampField(hidden_field):
 
 class DescriptionField(textarea_field):
     name = 'description'
-    rows = 8
     title = MSG(u'Description')
 
 
