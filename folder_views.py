@@ -236,13 +236,12 @@ class Folder_Table(SearchForm):
 
     # Schema
     ids = multiple_choice_field(required=True)
-    search_subfolders = boolean_field(source='query')
 
     # Table
     table_columns = [
         ('checkbox', None),
         ('icon', None),
-        ('name', MSG(u'Name')),
+        ('name', MSG(u'Path')),
         ('title', MSG(u'Title')),
         ('format', MSG(u'Type')),
         ('mtime', MSG(u'Last Modified')),
@@ -267,24 +266,15 @@ class Folder_Table(SearchForm):
             field = self.search_field.value
             args.append(PhraseQuery(field, search_term))
 
-        # Case 1: search subfolders
-        search_subfolders = self.search_subfolders.value
-        if search_subfolders is True:
-            results = context.get_root_search(resource.path, False)
-            if len(args) == 0:
-                query = None
-            elif len(args) == 1:
-                query = args[0]
-            else:
-                query = AndQuery(*args)
-            return results.search(query)
+        results = context.get_root_search(resource.path, False)
+        if len(args) == 0:
+            return results
 
-        # Case 2: do not search subfolders
-        path = resource.get_physical_path()
-        path = str(path)
-        parent_query = PhraseQuery('parent_path', path)
-        query = AndQuery(parent_query, *args) if args else parent_query
-        return context.search(query)
+        if len(args) == 1:
+            query = args[0]
+        else:
+            query = AndQuery(*args)
+        return results.search(query)
 
 
     @thingy_lazy_property
