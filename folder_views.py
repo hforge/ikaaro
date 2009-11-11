@@ -31,7 +31,7 @@ from itools.handlers import checkid
 from itools.i18n import format_datetime
 from itools.stl import set_prefix
 from itools.uri import get_reference, Path
-from itools.web import BaseView, STLForm, ERROR
+from itools.web import BaseView, STLView, STLForm, ERROR
 from itools.web import boolean_field, input_field, integer_field
 from itools.web import multiple_choice_field
 from itools.xapian import AndQuery, OrQuery, PhraseQuery
@@ -85,6 +85,28 @@ class Folder_View(BaseView):
         # Rewrite the URLs
         stream = index.get_html_data()
         return set_prefix(stream, 'index/')
+
+
+
+class Folder_List(STLView):
+
+    access = 'is_allowed_to_view'
+    view_title = MSG(u'List View')
+    template = 'folder/list.xml'
+
+
+    def items(self):
+        context = self.context
+        search = context.get_root_search(self.resource.path)
+        items = []
+        for resource in search.get_documents(sort_by='mtime', reverse=True):
+            mtime = resource.get_value('mtime')
+            items.append({
+                'href': resource.path,
+                'title': resource.get_title(),
+                'date': format_datetime(mtime),
+                'description': resource.get_value('description')})
+        return items
 
 
 
@@ -206,7 +228,7 @@ class Folder_Rename(STLForm):
 class Folder_Table(SearchForm):
 
     access = 'is_allowed_to_view'
-    view_title = MSG(u'Browse Content')
+    view_title = MSG(u'Table View')
     context_menus = []
 
     # Search Form
@@ -568,7 +590,7 @@ class Folder_Table(SearchForm):
 
 class Folder_Preview(Folder_Table):
 
-    view_title = MSG(u'Preview Content')
+    view_title = MSG(u'Preview')
     styles = ['/ui/gallery/style.css']
     scripts = ['/ui/gallery/javascript.js']
 
