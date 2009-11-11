@@ -37,7 +37,7 @@ from itools.web import file_field, input_field, password_field
 # Import from ikaaro
 from autoform import AutoForm
 from fields import DescriptionField, SubjectField, TimestampField, TitleField
-from folder_views import Folder_BrowseContent
+from folder_views import Folder_Table
 import messages
 from registry import get_resource_class
 from utils import reduce_string
@@ -133,7 +133,7 @@ class DBResource_Edit(AutoForm):
 
 
 
-class DBResource_Backlinks(Folder_BrowseContent):
+class DBResource_Backlinks(Folder_Table):
     """Backlinks are the list of resources pointing to this resource.  This
     view answers the question "where is this resource used?" You'll see all
     WebPages and WikiPages (for example) referencing it.  If the list is

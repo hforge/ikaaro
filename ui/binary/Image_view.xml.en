@@ -12,7 +12,7 @@
   </script>
 
   <p id="image-toolbar">
-    <a href="../;preview_content" title="Back"
+    <a href="../;preview" title="Back"
       ><img src="/ui/icons/16x16/up.png" /></a>
     <a stl:if="prev_link" href="${prev_link}/;view?size=${size/encoded_value}"
       title="Previous"><img src="/ui/icons/16x16/previous.png"

@@ -43,7 +43,7 @@
 <form action="" method="post" name="browse_list" id="form-table"
   stl:omit-tag="not actions">
   <div id="browse-image">
-    <a stl:if="not root" href="../;preview_content?image_size=${image_size/encoded_value}"
+    <a stl:if="not root" href="../;preview?image_size=${image_size/encoded_value}"
       title="Back"><img src="/ui/icons/16x16/up.png" /></a>
     <div class="thumbnail size${image_size/encoded_value}" stl:repeat="row rows">
       <div class="folder" stl:omit-tag="not row/is_folder">

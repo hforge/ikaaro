@@ -146,7 +146,7 @@ class Dressable(Folder, ResourceWithHTML):
     class_version = '20081118'
     class_title = MSG(u'Dressable')
     class_description = MSG(u'A dressable folder')
-    class_views = ['view', 'browse_content', 'preview_content']
+    class_views = ['view', 'table', 'preview']
     __fixed_handlers__ = ['index']
     layout = {'content': ('index', WebPage),
               'image1': ('image1', Image)}

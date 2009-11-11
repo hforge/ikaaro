@@ -27,7 +27,7 @@ from itools.xapian import PhraseQuery, AndQuery, OrQuery, StartQuery
 
 # Import from ikaaro
 from autoform import AutoForm
-from folder import Folder_BrowseContent
+from folder import Folder_Table
 import messages
 
 
@@ -348,11 +348,11 @@ class User_Tasks(STLView):
 
 
 
-class UserFolder_BrowseContent(Folder_BrowseContent):
+class UserFolder_Table(Folder_Table):
 
     access = 'is_admin'
 
-    search_fields = Folder_BrowseContent.search_fields \
+    search_fields = Folder_Table.search_fields \
         + [('username', MSG(u'Login')),
            ('lastname', MSG(u'Last Name')),
            ('firstname', MSG(u'First Name'))]

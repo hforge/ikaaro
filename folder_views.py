@@ -201,11 +201,11 @@ class Folder_Rename(STLForm):
             message = messages.MSG_RESOURCES_REFERENCED(resources=resources)
         else:
             message = messages.MSG_RENAMED
-        return context.come_back(message, goto=';browse_content')
+        return context.come_back(message, goto=';table')
 
 
 
-class Folder_BrowseContent(SearchForm):
+class Folder_Table(SearchForm):
 
     access = 'is_allowed_to_view'
     view_title = MSG(u'Browse Content')
@@ -570,18 +570,18 @@ class Folder_BrowseContent(SearchForm):
 
 
 
-class Folder_PreviewContent(Folder_BrowseContent):
+class Folder_Preview(Folder_Table):
 
     view_title = MSG(u'Preview Content')
     styles = ['/ui/gallery/style.css']
     scripts = ['/ui/gallery/javascript.js']
 
-    context_menus = Folder_BrowseContent.context_menus + [ZoomMenu()]
+    context_menus = Folder_Table.context_menus + [ZoomMenu()]
     # Table
     table_template = 'folder/browse_image.xml'
 
     # no batch
-    batch_size = Folder_BrowseContent.batch_size()
+    batch_size = Folder_Table.batch_size()
     batch_size.datatype = Integer(default=0)
 
     image_size = image_size_field(source='query', width=128, height=128)
@@ -665,7 +665,7 @@ class Folder_PreviewContent(Folder_BrowseContent):
                         value, href = value
                         href = get_reference(href)
                         if row['is_folder']:
-                            href = href.resolve_name(';preview_content')
+                            href = href.resolve_name(';preview')
                         href = href.replace(image_size=image_size)
                         href = str(href)
                     else:
@@ -690,7 +690,7 @@ class Folder_PreviewContent(Folder_BrowseContent):
 
 
 
-class Folder_Orphans(Folder_BrowseContent):
+class Folder_Orphans(Folder_Table):
     """Orphans are files not referenced in another resource of the database.
     It extends the concept of "orphans pages" from the wiki to all file-like
     resources.
@@ -708,7 +708,7 @@ class Folder_Orphans(Folder_BrowseContent):
     @thingy_lazy_property
     def all_items(self):
         # Make the base search
-        items = Folder_BrowseContent.get_items(self, resource, context)
+        items = Folder_Table.get_items(self, resource, context)
 
         # Find out the orphans
         orphans = []
