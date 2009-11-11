@@ -234,15 +234,13 @@ class Folder_BrowseContent(SearchForm):
     search_template = '/ui/folder/browse_search.xml'
     search_schema = {
         'search_field': String,
-        'search_term': Unicode,
-        'search_subfolders': Boolean(default=False),
-    }
+        'search_term': Unicode}
 
     # Table
     table_columns = [
         ('checkbox', None),
         ('icon', None),
-        ('name', MSG(u'Name')),
+        ('name', MSG(u'Path')),
         ('title', MSG(u'Title')),
         ('format', MSG(u'Type')),
         ('mtime', MSG(u'Last Modified')),
@@ -251,26 +249,16 @@ class Folder_BrowseContent(SearchForm):
         ('workflow_state', MSG(u'State'))]
 
 
-    def get_search_namespace(self, resource, context):
-        namespace = SearchForm.get_search_namespace(self, resource, context)
-        namespace['search_subfolders'] = context.query['search_subfolders']
-        return namespace
-
-
     def get_items(self, resource, context, *args):
         # Get the parameters from the query
         query = context.query
         search_term = query['search_term'].strip()
         field = query['search_field']
-        search_subfolders = query['search_subfolders']
 
         # Build the query
         args = list(args)
         abspath = str(resource.get_canonical_path())
-        if search_subfolders is True:
-            args.append(get_base_path_query(abspath))
-        else:
-            args.append(PhraseQuery('parent_path', abspath))
+        args.append(get_base_path_query(abspath))
         if search_term:
             language = resource.get_content_language(context)
             terms_query = [ PhraseQuery(field, term)
