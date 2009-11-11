@@ -233,6 +233,8 @@ class Folder_Table(SearchForm):
 
     # Schema
     ids = multiple_choice_field(required=True)
+    sort_by = SearchForm.sort_by(default='mtime')
+    reverse = SearchForm.reverse(default=True)
 
     # Table
     table_columns = [
