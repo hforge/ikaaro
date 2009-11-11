@@ -287,7 +287,6 @@ class Tracker_View(BrowseForm):
         # Specific fields
         'search_field': String,
         'search_term': Unicode,
-        'search_subfolders': Boolean(default=False),
         # BrowseForm fields
         'sort_by': String,
         'reverse': Boolean(default=None),

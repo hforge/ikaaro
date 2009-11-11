@@ -15,11 +15,6 @@
     <!-- Term -->
     <input type="text" name="search_term" size="35"
       value="${search_term/value}" />
-    <!-- SubFolders -->
-    &nbsp;
-    <input type="checkbox" name="search_subfolders" id="search-subfolders"
-      checked="${search_subfolders/value}" value="1" /><label
-      for="search-subfolders">Search subfolders</label>
     <!-- OK -->
     &nbsp; &nbsp;
     <button type="submit" class="button-search">OK</button>
