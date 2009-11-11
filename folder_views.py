@@ -233,9 +233,6 @@ class Folder_Table(SearchForm):
     view_title = MSG(u'Table View')
     context_menus = []
 
-    # Search Form
-    search_template = 'folder/browse_search.xml'
-
     # Schema
     ids = multiple_choice_field(required=True)
     sort_by = SearchForm.sort_by(default='mtime')
