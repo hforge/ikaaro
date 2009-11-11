@@ -32,10 +32,9 @@ from ikaaro import messages
 from ikaaro.buttons import Button
 from ikaaro.exceptions import ConsistencyError
 from ikaaro.folder import Folder
-from ikaaro.folder_views import Folder_NewResource, Folder_BrowseContent
-from ikaaro.folder_views import Folder_Rename, Folder_PreviewContent
+from ikaaro.folder_views import Folder_Table, Folder_Rename, Folder_Preview
+from ikaaro.folder_views import Folder_NewResource, Folder_Orphans
 from ikaaro.folder_views import Folder_Thumbnail, GoToSpecificDocument
-from ikaaro.folder_views import Folder_Orphans
 from ikaaro.revisions_views import DBResource_LastChanges
 from ikaaro.table import OrderedTableFile, OrderedTable
 from ikaaro.table_views import OrderedTable_View
@@ -567,9 +566,9 @@ class MenuFolder(Folder):
                                 access='is_allowed_to_edit')
     # Disable all default views
     new_resource = Folder_NewResource(access='is_admin')
-    browse_content = Folder_BrowseContent(access='is_admin')
+    table = Folder_Table(access='is_admin')
+    preview = Folder_Preview(access='is_admin')
     rename = Folder_Rename(access='is_admin')
-    preview_content = Folder_PreviewContent(access='is_admin')
     last_changes = DBResource_LastChanges(access='is_admin')
     orphans = Folder_Orphans(access='is_admin')
     thumb = Folder_Thumbnail(access='is_admin')

@@ -47,7 +47,7 @@ class Issue(Folder):
     class_version = '20071216'
     class_title = MSG(u'Issue')
     class_description = MSG(u'Issue')
-    class_views = ['edit', 'edit_resources', 'browse_content', 'history']
+    class_views = ['edit', 'edit_resources', 'table', 'history']
 
 
     class_schema = merge_dicts(

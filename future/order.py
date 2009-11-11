@@ -30,7 +30,7 @@ from ikaaro.buttons import Button, RemoveButton, OrderUpButton
 from ikaaro.buttons import OrderDownButton, OrderBottomButton, OrderTopButton
 from ikaaro.file import Image
 from ikaaro.folder import Folder
-from ikaaro.folder_views import Folder_BrowseContent, GoToSpecificDocument
+from ikaaro.folder_views import Folder_Table, GoToSpecificDocument
 from ikaaro.table import OrderedTableFile, OrderedTable
 from ikaaro.table_views import OrderedTable_View
 from ikaaro.views import CompositeForm
@@ -140,7 +140,7 @@ class ResourcesOrderedTable_Ordered(OrderedTable_View):
 
 
 
-class ResourcesOrderedTable_Unordered(Folder_BrowseContent):
+class ResourcesOrderedTable_Unordered(Folder_Table):
 
     access = 'is_allowed_to_edit'
     title = MSG('Unordered items')
@@ -206,8 +206,8 @@ class ResourcesOrderedTable_Unordered(Folder_BrowseContent):
             return get_resource_preview(item_resource,
                 self.preview_image_width, self.preview_image_height,
                 self.preview_text_length, context)
-        return Folder_BrowseContent.get_item_value(self, resource, context,
-                                                   item, column)
+        return Folder_Table.get_item_value(self, resource, context, item,
+                                           column)
 
 
     def action_add(self, resource, context, form):

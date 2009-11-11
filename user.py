@@ -35,7 +35,7 @@ from resource_views import DBResource_Edit
 from user_views import User_ConfirmRegistration, User_EditAccount
 from user_views import User_EditPassword, User_EditPreferences, User_Profile
 from user_views import User_ResendConfirmation, User_Tasks
-from user_views import User_ChangePasswordForgotten, UserFolder_BrowseContent
+from user_views import User_ChangePasswordForgotten, UserFolder_Table
 from utils import crypt_password, generate_password
 from views import MessageView
 
@@ -222,7 +222,7 @@ class UserFolder(Folder):
     class_title = MSG(u'User Folder')
     class_icon16 = 'icons/16x16/userfolder.png'
     class_icon48 = 'icons/48x48/userfolder.png'
-    class_views = ['view', 'browse_content', 'edit']
+    class_views = ['view', 'table', 'edit']
 
 
     def get_document_types(self):
@@ -276,7 +276,7 @@ class UserFolder(Folder):
     #######################################################################
     # Back-Office
     #######################################################################
-    browse_content = UserFolder_BrowseContent()
+    table = UserFolder_Table
     edit = DBResource_Edit(access='is_admin')
 
 
