@@ -86,8 +86,8 @@ class Table_View(SearchForm):
         reverse = context.query['reverse']
         if sort_by:
             get_record_value = resource.handler.get_record_value
-            items.sort(cmp=lambda x,y: cmp(get_record_value(x, sort_by),
-                       get_record_value(y, sort_by)), reverse=reverse)
+            items.sort(key=lambda x: get_record_value(x, sort_by),
+                       reverse=reverse)
 
         # Batch
         start = context.query['batch_start']
