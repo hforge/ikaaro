@@ -222,6 +222,7 @@ class SiteSearchView(SearchForm):
     reverse = None
 
 
+    @thingy_lazy_property
     def text(self):
         return self.site_search_text.value.strip()
 
@@ -231,7 +232,7 @@ class SiteSearchView(SearchForm):
 
     @thingy_lazy_property
     def all_items(self):
-        text = self.site_search_text.value.strip()
+        text = self.text
         if not text:
             return []
 
@@ -265,28 +266,24 @@ class SiteSearchView(SearchForm):
         return items
 
 
-    @thingy_property
+    @thingy_lazy_property
     def items(self):
         # Batch
         start = self.batch_start.value
         size = self.batch_size.value
-        return self.all_items[start:start+size]
+        items = self.all_items[start:start+size]
+
+        # Namspace
+        return  [
+            {'path': str(item.path),
+             'title': item.get_title(),
+             'type': item.class_title.gettext(),
+             'size': item.get_human_size(),
+             'icon': item.get_class_icon()}
+            for item in items ]
 
 
     table_template = 'website/search_table.xml'
-    def get_table_namespace(self, resource, context, items):
-        # Build the namespace
-        site_root = resource.get_site_root()
-        items_ns = [{
-            'abspath': '/%s' % site_root.get_pathto(item),
-            'title': item.get_title(),
-            'type': item.class_title.gettext(),
-            'size': item.get_human_size(),
-            'url': '%s/' % resource.get_pathto(item),
-            'icon': item.get_class_icon(),
-        } for item in items ]
-
-        return {'items': items_ns}
 
 
 
