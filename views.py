@@ -65,7 +65,7 @@ class CompositeForm(CompositeView, STLForm):
 
     def get_schema(self, resource, context):
         # Check for specific schema
-        action = context.form_action
+        action = self.action_name
         for view in self.subviews:
             method = getattr(view, action, None)
             if method is None:
@@ -79,7 +79,7 @@ class CompositeForm(CompositeView, STLForm):
 
     def get_action_method(self, resource, context):
         for view in self.subviews:
-            method = getattr(view, context.form_action, None)
+            method = getattr(view, self.action_name, None)
             if method is not None:
                 return method
         return None
