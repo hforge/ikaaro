@@ -44,11 +44,7 @@
   <fieldset>
     <legend>Add another language</legend>
     <form action="" method="post">
-      <select name="code" id="new-language">
-        <option value="">Choose a language</option>
-        <option stl:repeat="language not_active_languages"
-          value="${language/code}">${language/name}</option>
-      </select>
+      ${code}
       <input type="submit" name=";add_language" value="Add" class="button-ok"/>
     </form>
   </fieldset>

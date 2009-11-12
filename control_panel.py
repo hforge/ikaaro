@@ -255,6 +255,22 @@ class CPBrokenLinks(STLView):
 
 
 
+
+class language_field(choice_field):
+
+    @thingy_lazy_property
+    def values(self):
+        view = self.view
+        languages = set(view.languages)
+        values = [
+            (x['code'], {'title': x['name']})
+            for x in get_languages() if x['code'] not in languages ]
+        values = sorted(values, key=lambda x: x[1]['title'])
+        values.insert(0, ('', {'title': MSG(u'Choose a language')}))
+        return OrderedDict(values)
+
+
+
 class CPEditLanguages(STLForm):
 
     access = 'is_admin'
@@ -265,7 +281,7 @@ class CPEditLanguages(STLForm):
     context_menus = context_menus
 
     codes = multiple_choice_field(required=True)
-    code = choice_field(required=True)
+    code = language_field(required=True)
 
 
     @thingy_lazy_property
@@ -281,14 +297,6 @@ class CPEditLanguages(STLForm):
             {'code': x, 'name': get_language_name(x),
              'isdefault': x == default}
             for x in languages ]
-
-
-    def not_active_languages(self):
-        languages = set(self.languages)
-        not_active = [
-            x for x in get_languages() if x['code'] not in languages ]
-
-        return sorted(not_active, key=itemgetter('name'))
 
 
     #######################################################################
@@ -333,12 +341,16 @@ class CPEditLanguages(STLForm):
     #######################################################################
     # Actions / Add
     action_add_language_fields = ['code']
-    def action_add_language(self, resource, context, form):
-        code = form['code']
+    def action_add_language(self):
+        code = self.code.value
 
+        # Change
+        resource = self.resource
         ws_languages = resource.get_value('website_languages')
         resource.set_property('website_languages', ws_languages + (code,))
+
         # Ok
+        context = self.context
         context.message = INFO(u'Language added.')
         context.redirect()
 
