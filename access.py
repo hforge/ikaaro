@@ -69,7 +69,7 @@ class RoleAware_BrowseUsers(SearchForm):
     ids = multiple_choice_field(required=True)
 
     sort_by = SearchForm.sort_by()
-    sort_by.datatype = String(default='login_name')
+    sort_by.datatype = String(value='login_name')
 
     search_fields = [
         ('', MSG(u'All Fields')),

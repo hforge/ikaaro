@@ -28,7 +28,8 @@ from itools.web import choice_field, input_field
 
 # Import from ikaaro
 from ikaaro.autoform import AutoForm
-from ikaaro.fields import DateTimeField, DescriptionField, TitleField
+from ikaaro.fields import description_field, title_field
+from ikaaro.fields import DateTimeField
 from ikaaro.file import File
 from ikaaro.registry import register_document_type
 from ikaaro.views_new import NewInstanceByDate
@@ -55,14 +56,13 @@ class status_field(choice_field):
     values = OrderedDict([
         ('TENTATIVE', {'title': MSG(u'Tentative')}),
         ('CONFIRMED', {'title': MSG(u'Confirmed')}),
-        ('CANCELLED', {'title': MSG(u'Cancelled')}),
-        ])
+        ('CANCELLED', {'title': MSG(u'Cancelled')})])
 
 
 
 class Event_NewInstance(NewInstanceByDate):
 
-    title = TitleField(required=True)
+    title = title_field(required=True, value=None)
 
     date = None
 
@@ -72,7 +72,7 @@ class Event_NewInstance(NewInstanceByDate):
     dtend = DateTimeField(datatype=NowDataType, required=True)
     dtend.title = MSG(u'End')
 
-    description = DescriptionField()
+    description = description_field(value=None)
     location = input_field(title=MSG(u'Location'))
 
     status = status_field()
@@ -107,11 +107,11 @@ class Event_Edit(AutoForm):
     title = MSG(u'Edit event')
 
 
-    title = TitleField(required=True)
+    title = title_field(required=True)
     dtstart = DateTimeField(datatype=NowDataType, required=True,
                             title=MSG(u'Start'))
     dtend = DateTimeField(datatype=NowDataType, title=MSG(u'End'))
-    description = DescriptionField()
+    description = description_field()
     location = input_field(title=MSG(u'Location'))
 
     status = status_field()

@@ -36,7 +36,8 @@ from itools.web import file_field, input_field, password_field
 
 # Import from ikaaro
 from autoform import AutoForm
-from fields import DescriptionField, SubjectField, TimestampField, TitleField
+from fields import description_field, subject_field, title_field
+from fields import TimestampField
 from folder_views import Folder_Table
 import messages
 from registry import get_resource_class
@@ -70,22 +71,13 @@ class DBResource_Edit(AutoForm):
     icon = 'metadata.png'
     context_menus = [EditLanguageMenu()]
 
-    title = TitleField()
-    description = DescriptionField()
-    subject = SubjectField()
+    title = title_field()
+    description = description_field()
+    subject = subject_field()
     timestamp = TimestampField()
 
 
     field_names = ['timestamp', 'title', 'description', 'subject']
-
-
-    def get_value(self, field):
-        name = field.name
-        if name in ('title', 'description', 'subject'):
-            language = self.content_language
-            return self.resource.get_value(name, language=language)
-
-        return super(DBResource_Edit, self).get_value(field)
 
 
     @thingy_lazy_property

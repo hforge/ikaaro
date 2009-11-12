@@ -68,7 +68,7 @@ class ForgottenPasswordForm(AutoForm):
     view_title = MSG(u'Forgotten password')
     submit_value = MSG(u'Ok')
 
-    username = email_field(default='', title=MSG(u'Type your email address'))
+    username = email_field(value='', title=MSG(u'Type your email address'))
 
 
     def get_value(self, name):

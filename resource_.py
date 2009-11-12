@@ -30,6 +30,7 @@ from itools.csv import Property
 from itools.datatypes import Unicode, String, Integer, Boolean, DateTime
 from itools.http import get_context
 from itools.log import log_warning
+from itools.uri import decode_query
 from itools.web import Resource
 from itools.xapian import CatalogAware, PhraseQuery
 
@@ -134,13 +135,16 @@ class IResource(Resource):
     # User interface
     ########################################################################
     def get_views(self):
-        context = get_context()
         ac = self.get_access_control()
-        for name in self.class_views:
-            view_name = name.split('?')[0]
-            view = self.get_view(view_name)
-            if ac.is_access_allowed(context, self, view):
-                yield name, view
+        for link in self.class_views:
+            if '?' in link:
+                name, args = link.split('?')
+                args = decode_query(args)
+            else:
+                name, args = link, {}
+            view = self.get_view(name, args)
+            if ac.is_access_allowed(self.context, self, view):
+                yield link, view
 
 
 

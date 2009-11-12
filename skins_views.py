@@ -118,29 +118,13 @@ class LocationTemplate(CMSTemplate):
         ac = here.get_access_control()
 
         # Tabs
-        tabs = []
+        items = []
         for link, view in here.get_views():
-            active = False
-
-            # From method?param1=value1&param2=value2&...
-            # we separate method and arguments, then we get a dict with
-            # the arguments and the subview active state
-            if '?' in link:
-                name, args = link.split('?')
-                args = decode_query(args)
-            else:
-                name, args = link, {}
-
-            # Active
-            if context.view == here.get_view(name, args):
-                active = True
-
-            # Add the menu
-            tabs.append({
+            active = issubclass(context.view, view)
+            items.append({
                 'name': ';%s' % link,
                 'label': view.view_title,
                 'active': active,
                 'class': active and 'active' or None})
-
-        return tabs
+        return items
 

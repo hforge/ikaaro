@@ -37,18 +37,27 @@ from utils import get_parameters
 from views import BrowseForm
 
 
+class data_field(textarea_field):
+
+    datatype = String
+    title = MSG(u'Content')
+    rows = 15
+    cols = 75
+
+    @thingy_lazy_property
+    def value(self):
+        return self.view.resource.handler.to_str()
+
+
+
 class Text_Edit(File_Edit):
 
     icon = 'edit.png'
 
-    data = textarea_field('data', datatype=String, rows=19, cols=69)
-    data.title = MSG(u'Content')
+    data = data_field()
 
-
-    def get_value(self, field):
-        if field.name == 'data':
-            return self.resource.handler.to_str()
-        return super(Text_Edit, self).get_value(field)
+    field_names = [
+        'timestamp', 'title', 'data', 'file', 'description', 'subject']
 
 
     def action(self):
