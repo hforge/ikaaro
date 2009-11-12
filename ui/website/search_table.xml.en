@@ -7,9 +7,9 @@
   <ol class="results" stl:if="items">
     <li stl:repeat="item items">
       <img src="${item/icon}" width="16" height="16" />
-      <a class="result-title" href="${item/url}">${item/title}</a>
+      <a class="result-title" href="${item/path}">${item/title}</a>
       <br />
-      <span class="result-url">${item/abspath}</span>&nbsp;-
+      <span class="result-url">${item/path}</span>&nbsp;-
       <span class="result-type">${item/type}</span>&nbsp;-
       <span class="result-size">${item/size}</span>
     </li>
