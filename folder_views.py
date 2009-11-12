@@ -286,11 +286,10 @@ class Folder_Table(SearchForm):
         resources = items.get_documents(sort_by=sort_by, reverse=reverse,
                                         start=start, size=size)
 
-        # FIXME This must be done in the catalog
+        # Sort the title by lower case (FIXME should be done by the catalog)
         if sort_by == 'title':
-            resources = sorted(resources, key=lambda x: x.get_value('title'))
-            if reverse:
-                resources.reverse()
+            key = lambda x: x.get_value('title').lower()
+            resources = sorted(resources, key=key, reverse=reverse)
 
         # Access Control (FIXME this should be done before batch)
         user = self.context.user

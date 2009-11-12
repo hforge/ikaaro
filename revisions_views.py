@@ -33,12 +33,8 @@ class DBResource_LastChanges(BrowseForm):
     access = 'is_allowed_to_view'
     view_title = MSG(u"Last Changes")
 
-    sort_by = BrowseForm.sort_by()
-    sort_by.datatype = String(value='date')
-
-    reverse = BrowseForm.reverse()
-    reverse.datatype = Boolean(value=True)
-
+    sort_by = BrowseForm.sort_by(value='date')
+    reverse = BrowseForm.reverse(value=True)
 
     table_columns = [
         ('date', MSG(u'Last Change')),
@@ -61,12 +57,13 @@ class DBResource_LastChanges(BrowseForm):
         sort_by = self.sort_by.value
         reverse = self.reverse.value
 
-        # Do not give a traceback if 'sort_by' has an unexpected value
+        # (FIXME) Do not give a traceback if 'sort_by' has an unexpected value
         if sort_by not in [ x[0] for x in self.table_columns ]:
             sort_by = self.query_schema['sort_by'].default
 
         # Sort & batch
-        items = sorted(self.all_items, key=itemgetter(sort_by), reverse=reverse)
+        key = itemgetter(sort_by)
+        items = sorted(self.all_items, key=key, reverse=reverse)
         return items[start:start+size]
 
 
