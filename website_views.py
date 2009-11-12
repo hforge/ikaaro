@@ -70,7 +70,7 @@ class ForgottenPasswordForm(AutoForm):
     submit_value = MSG(u'Ok')
     meta = [('robots', 'noindex, follow', None)]
 
-    username = email_field(default='', title=MSG(u'Type your email address'))
+    username = email_field(value='', title=MSG(u'Type your email address'))
 
 
     def get_value(self, name):

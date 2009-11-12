@@ -133,10 +133,10 @@ class DBResource_CommitLog(BrowseForm):
     ids = multiple_choice_field(datatype=IndexRevision, required=True)
 
     sort_by = BrowseForm.sort_by()
-    sort_by.datatype = String(default='date')
+    sort_by.datatype = String(value='date')
 
     reverse = BrowseForm.reverse()
-    reverse.datatype = Boolean(default=True)
+    reverse.datatype = Boolean(value=True)
 
     table_columns = [
         ('checkbox', None),

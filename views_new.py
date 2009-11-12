@@ -30,7 +30,8 @@ from itools.web import FormError, hidden_field, choice_field
 
 # Import from ikaaro
 from autoform import AutoForm
-from fields import DateField, NameField, TitleField
+from fields import title_field
+from fields import DateField, NameField
 import messages
 from registry import get_resource_class, get_document_types
 
@@ -58,7 +59,7 @@ class NewInstanceByDate(AutoForm):
 
     # Schema
     type = hidden_field(source='query')
-    title = TitleField()
+    title = title_field(value=None)
     date = DateField(datatype=TodayDataType, required=True, title=MSG(u'Date'))
 
 

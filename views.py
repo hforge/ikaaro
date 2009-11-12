@@ -119,8 +119,8 @@ class BrowseForm(STLForm):
 
     template = 'generic/browse.xml'
 
-    batch_start = integer_field(source='query', default=0)
-    batch_size = integer_field(source='query', default=20)
+    batch_start = integer_field(source='query', value=0)
+    batch_size = integer_field(source='query', value=20)
     sort_by = hidden_field(source='query')
     reverse = boolean_field(source='query')
 

@@ -168,12 +168,6 @@ class File_Edit(DBResource_Edit):
     file = file_preview_field(title=MSG(u'Replace file'))
 
 
-    def get_value(self, name):
-        if name == 'file':
-            return None
-        return super(File_Edit, self).get_value(name)
-
-
     def set_value(self, name, value):
         if name != 'file':
             return super(File_Edit, self).set_value(name, value)
@@ -299,8 +293,8 @@ class Image_Thumbnail(BaseView):
 
     access = 'is_allowed_to_view'
 
-    width = integer_field(source='query', default=48)
-    height = integer_field(source='query', default=48)
+    width = integer_field(source='query', value=48)
+    height = integer_field(source='query', value=48)
 
 
     def get_mtime(self, resource):

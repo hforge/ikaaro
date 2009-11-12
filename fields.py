@@ -234,27 +234,36 @@ class TimestampField(hidden_field):
     name = 'timestamp'
 
     @thingy_property
-    def default(self):
+    def value(self):
         return datetime.now()
 
 
-class DescriptionField(textarea_field):
-    name = 'description'
-    title = MSG(u'Description')
-
-
 class NameField(input_field):
-    default = ''
+    value = ''
     name = 'name'
     title = MSG(u'Name')
 
 
-class SubjectField(text_field):
+
+def value(self):
+    view = self.view
+    return view.resource.get_value(self.name, language=view.content_language)
+
+
+class description_field(textarea_field):
+    name = 'description'
+    title = MSG(u'Description')
+    value = thingy_lazy_property(value)
+
+
+class subject_field(text_field):
     name = 'subject'
     title = MSG(u'Keywords (Separated by comma)')
+    value = thingy_lazy_property(value)
 
 
-class TitleField(text_field):
+class title_field(text_field):
     name = 'title'
     title = MSG(u'Title')
+    value = thingy_lazy_property(value)
 

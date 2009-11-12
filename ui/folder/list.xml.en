@@ -3,7 +3,9 @@
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
   <div class="list-view" stl:repeat="item items">
     <h4>${item/title} (${item/date})</h4>
-    ${item/description}
+    <stl:block stl:if="item/description">
+    ${item/description}<br/>
+    </stl:block>
     <a href="${item/href}">Read more...</a>
   </div>
 </stl:block>

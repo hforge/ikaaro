@@ -235,8 +235,8 @@ class Folder_Table(SearchForm):
 
     # Schema
     ids = multiple_choice_field(required=True)
-    sort_by = SearchForm.sort_by(default='mtime')
-    reverse = SearchForm.reverse(default=True)
+    sort_by = SearchForm.sort_by(value='mtime')
+    reverse = SearchForm.reverse(value=True)
 
     # Table
     table_columns = [
@@ -591,7 +591,7 @@ class Folder_Gallery(Folder_Table):
 
     # no batch
     batch_size = Folder_Table.batch_size()
-    batch_size.datatype = Integer(default=0)
+    batch_size.datatype = Integer(value=0)
 
     image_size = image_size_field(source='query', width=128, height=128)
 
@@ -745,8 +745,8 @@ class Folder_Thumbnail(BaseView):
 
     default_icon = 'gallery/folder.png'
 
-    width = integer_field(source='query', default=48)
-    height = integer_field(source='query', default=48)
+    width = integer_field(source='query', value=48)
+    height = integer_field(source='query', value=48)
 
 
     def http_get(self):
