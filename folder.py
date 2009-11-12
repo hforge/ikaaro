@@ -28,7 +28,7 @@ from itools.web import BaseView
 
 # Import from ikaaro
 from exceptions import ConsistencyError
-from folder_views import Folder_View, Folder_List, Folder_Table, Folder_Preview
+from folder_views import Folder_View, Folder_List, Folder_Table, Folder_Gallery
 from folder_views import Folder_NewResource, Folder_Orphans, Folder_Thumbnail
 from folder_views import Folder_Rename
 from metadata import Metadata
@@ -46,7 +46,7 @@ class Folder(DBResource):
     class_description = MSG(u'Organize your files and documents with folders.')
     class_icon16 = 'icons/16x16/folder.png'
     class_icon48 = 'icons/48x48/folder.png'
-    class_views = ['view', 'list', 'table', 'preview', 'edit', 'backlinks',
+    class_views = ['view', 'list', 'table', 'gallery', 'edit', 'backlinks',
                    'last_changes']
     class_handler = FolderHandler
 
@@ -319,7 +319,7 @@ class Folder(DBResource):
     new_resource = Folder_NewResource
     list = Folder_List
     table = Folder_Table
-    preview = Folder_Preview
+    gallery = Folder_Gallery
     rename = Folder_Rename
     orphans = Folder_Orphans
     thumb = Folder_Thumbnail

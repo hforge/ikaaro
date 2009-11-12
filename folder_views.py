@@ -577,9 +577,9 @@ class Folder_Table(SearchForm):
 
 
 
-class Folder_Preview(Folder_Table):
+class Folder_Gallery(Folder_Table):
 
-    view_title = MSG(u'Preview')
+    view_title = MSG(u'Gallery')
     styles = ['/ui/gallery/style.css']
     scripts = ['/ui/gallery/javascript.js']
 
@@ -672,7 +672,7 @@ class Folder_Preview(Folder_Table):
                         value, href = value
                         href = get_reference(href)
                         if row['is_folder']:
-                            href = href.resolve_name(';preview')
+                            href = href.resolve_name(';gallery')
                         href = href.replace(image_size=image_size)
                         href = str(href)
                     else:

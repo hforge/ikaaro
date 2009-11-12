@@ -32,7 +32,7 @@ from ikaaro import messages
 from ikaaro.buttons import Button
 from ikaaro.exceptions import ConsistencyError
 from ikaaro.folder import Folder
-from ikaaro.folder_views import Folder_Table, Folder_Rename, Folder_Preview
+from ikaaro.folder_views import Folder_Table, Folder_Rename, Folder_Gallery
 from ikaaro.folder_views import Folder_NewResource, Folder_Orphans
 from ikaaro.folder_views import Folder_Thumbnail, GoToSpecificDocument
 from ikaaro.revisions_views import DBResource_LastChanges
@@ -567,7 +567,7 @@ class MenuFolder(Folder):
     # Disable all default views
     new_resource = Folder_NewResource(access='is_admin')
     table = Folder_Table(access='is_admin')
-    preview = Folder_Preview(access='is_admin')
+    gallery = Folder_Gallery(access='is_admin')
     rename = Folder_Rename(access='is_admin')
     last_changes = DBResource_LastChanges(access='is_admin')
     orphans = Folder_Orphans(access='is_admin')
