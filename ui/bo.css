@@ -479,8 +479,11 @@ p.tabme a.selected {
 .number { text-align: right; }
 
 
-tr.odd th, tr.odd td,
-tr.odd td input {
+tr.odd, tr.odd input {
   background-color: #eeeeec;
+}
+
+tr.odd:hover, tr.even:hover {
+  background-color: #faa;
 }
 
