@@ -51,7 +51,8 @@ class WebSite(RoleAware, Folder, VirtualRoot):
     class_icon16 = 'icons/16x16/website.png'
     class_icon48 = 'icons/48x48/website.png'
     class_skin = 'ui/aruni'
-    class_views = Folder.class_views + ['control_panel']
+    class_views = ['view', 'list', 'table', 'gallery', 'month', 'week',
+                   'edit', 'backlinks', 'last_changes', 'control_panel']
     class_control_panel = ['browse_users', 'add_user', 'edit_virtual_hosts',
                            'edit_security_policy', 'edit_languages',
                            'edit_contact_options', 'broken_links', 'orphans',
@@ -125,9 +126,9 @@ class WebSite(RoleAware, Folder, VirtualRoot):
                       template='root/license.xml')
 
     # Calendar views
-    monthly_view = MonthlyView
-    weekly_view = WeeklyView
-    daily_view = DailyView
+    month = MonthlyView
+    week = WeeklyView
+    day = DailyView
 
 
 ###########################################################################
