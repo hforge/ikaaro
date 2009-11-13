@@ -36,7 +36,6 @@ from itools.xapian import PhraseQuery, OrQuery, AndQuery, split_unicode
 # Import from ikaaro
 from autoform import AutoForm
 import globals
-from views import SearchForm
 
 
 

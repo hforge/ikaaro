@@ -34,7 +34,8 @@ from itools.xapian import AndQuery, OrQuery, PhraseQuery, StartQuery
 from autoform import AutoForm
 from buttons import RemoveButton
 import messages
-from views import BrowseForm, SearchForm
+from views import Container_Search, Container_Sort, Container_Batch
+from views import Container_Table
 from workflow import WorkflowAware
 
 
@@ -59,17 +60,24 @@ def is_admin(user, resource):
 ###########################################################################
 # Views
 ###########################################################################
-class RoleAware_BrowseUsers(BrowseForm):
+class RoleAware_BrowseUsers(STLForm):
 
     access = 'is_admin'
     view_title = MSG(u'Browse Members')
     view_description = MSG(u'See the users and their roles.')
     icon = 'userfolder.png'
 
-    ids = multiple_choice_field(required=True)
-    sort_by = BrowseForm.sort_by(value='login_name')
+    search = Container_Search()
 
-    search = SearchForm()
+    sort = Container_Sort()
+    sort.sort_by = sort.sort_by(value='login_name')
+
+    batch = Container_Batch()
+
+    table = Container_Table()
+
+    ids = multiple_choice_field(required=True)
+
 
     @thingy_lazy_property
     def all_items(self):

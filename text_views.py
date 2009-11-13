@@ -34,7 +34,6 @@ from buttons import RemoveButton
 from file_views import File_Edit
 import messages
 from utils import get_parameters
-from views import BrowseForm
 
 
 class data_field(textarea_field):
@@ -165,7 +164,7 @@ class PO_Edit(STLForm):
 
 
 
-class CSV_View(BrowseForm):
+class CSV_View(STLForm):
 
     # FIXME We need different permissions for GET and POST
     access = 'is_allowed_to_edit'

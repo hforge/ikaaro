@@ -32,11 +32,11 @@ from buttons import RemoveButton, OrderUpButton, OrderDownButton
 from buttons import OrderBottomButton, OrderTopButton
 import messages
 from resource_views import EditLanguageMenu
-from views import SearchForm
+from views import Container_Search
 
 
 
-class Table_View(SearchForm):
+class Table_View(Container_Search):
 
     access = 'is_allowed_to_view'
     access_POST = 'is_allowed_to_edit'

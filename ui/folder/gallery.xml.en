@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<stl:block xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    var resolutions = new Array(${widths});
+    apply_best_resolution(resolutions);
+  });
+</script>
+
+<div id="browse-image">
+  <a stl:if="not root" title="Back"
+    href="../;preview?image_size=${image_size/encoded_value}"><img
+    src="/ui/icons/16x16/up.png" /></a>
+  <div class="thumbnail size${image_size/encoded_value}" stl:repeat="row rows">
+    <div class="folder" stl:omit-tag="not row/is_folder">
+      <a href="${row/href}" stl:omit-tag="not row/href">
+        <img src="${row/name}/;thumb?width=${image_size/width}&amp;height=${image_size/height}" />
+      </a>
+    </div>
+    <!-- checkbox -->
+    <p>
+      <stl:block stl:if="row/checkbox">
+        <input type="checkbox" id="id-${row/id}" name="ids" value="${row/id}"
+          checked="${row/checked}" class="checkbox" />
+        <label class="wf-${row/workflow_statename}"
+          for="id-${row/id}">${row/title}</label>
+      </stl:block>
+      <stl:block stl:if="not row/checkbox">
+        <label>${row/title}</label>
+      </stl:block>
+    </p>
+  </div>
+</div>
+
+</stl:block>

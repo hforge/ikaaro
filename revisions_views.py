@@ -25,18 +25,22 @@ from itools.gettext import MSG
 from itools.web import STLView, hidden_field
 
 # Import from ikaaro
-from views import BrowseForm
+from views import Container_Sort, Container_Batch, Container_Table
 
 
-class DBResource_LastChanges(BrowseForm):
+class DBResource_LastChanges(STLView):
 
     access = 'is_allowed_to_view'
     view_title = MSG(u"Last Changes")
 
-    sort_by = BrowseForm.sort_by(value='date')
-    reverse = BrowseForm.reverse(value=True)
+    sort = Container_Sort()
+    sort.sort_by = sort.sort_by(value='date')
+    sort.reverse = sort.reverse(value=True)
 
-    table_columns = [
+    batch = Container_Batch()
+
+    table = Container_Table()
+    table.columns = [
         ('date', MSG(u'Last Change')),
         ('username', MSG(u'Author')),
         ('message', MSG(u'Comment'))]
