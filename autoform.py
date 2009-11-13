@@ -22,7 +22,6 @@
 from itools.core import thingy_lazy_property
 from itools.datatypes import Date, Enumerate, Boolean
 from itools.gettext import MSG
-from itools.http import get_context
 from itools.web import STLForm, make_stl_template
 from itools.web import boolean_field, choice_field, hidden_field
 from itools.web import readonly_field, text_field
@@ -61,12 +60,13 @@ class PathSelectorWidget(object):
 
     def workflow_state(self):
         if self.display_workflow:
-            path = self.datatype.encode(self.value)
-            if path:
-                context = get_context()
-                resource = context.resource.get_resource(path, soft=True)
+            value = self.value
+            if type(value) is not str:
+                value = self.datatype.encode(value)
+            if value:
+                resource = self.resource.get_resource(value, soft=True)
                 if resource:
-                    return get_workflow_preview(resource, context)
+                    return get_workflow_preview(resource, self.context)
 
         return None
 
