@@ -5,8 +5,8 @@
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
 <p class="batchcontrol">
-  ${batch_msg}
-  <stl:block stl:if="batch_control">
+  ${msg}
+  <stl:block stl:if="control">
     View from ${start} to ${end}
     (<a stl:if="batch_previous" href="${batch_previous}" title="Previous"><img
       src="/ui/icons/16x16/previous.png" style="vertical-align: bottom"/></a>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<stl:block xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
+
+<form action="" method="post" name="browse_list" id="form-table"
+  stl:omit-tag="not actions_ns">
+  ${content}
+  <!-- Buttons -->
+  <p>
+    <stl:block stl:repeat="action actions_ns">
+      <input type="submit" name=";${action/name}" value="${action/value}"
+        class="${action/class}" onclick="${action/onclick}" />
+    </stl:block>
+  </p>
+</form>
+
+</stl:block>

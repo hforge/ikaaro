@@ -37,7 +37,7 @@ from itools.web.views import process_form
 from ikaaro.autoform import HiddenWidget, TextWidget
 from ikaaro.buttons import Button
 from ikaaro import messages
-from ikaaro.views import BrowseForm, SearchForm as BaseSearchForm, ContextMenu
+from ikaaro.views import BrowseForm, Container_Search, ContextMenu
 from ikaaro.views_new import NewInstance
 from ikaaro.registry import get_resource_class
 
@@ -446,7 +446,7 @@ class Tracker_View(BrowseForm):
 
 
 
-class Tracker_Search(BaseSearchForm, Tracker_View):
+class Tracker_Search(Container_Search, Tracker_View):
 
     access = 'is_allowed_to_view'
     title = MSG(u'Search')
@@ -476,7 +476,7 @@ class Tracker_Search(BaseSearchForm, Tracker_View):
 
     def get_query(self, context):
         try:
-            return BaseSearchForm.get_query(self, context)
+            return Container_Search.get_query(self, context)
         except FormError:
             schema = self.get_query_schema()
             query = {}
@@ -486,7 +486,7 @@ class Tracker_Search(BaseSearchForm, Tracker_View):
             return query
 
 
-    on_query_error = BaseSearchForm.on_query_error
+    on_query_error = Container_Search.on_query_error
 
 
     def get_search_namespace(self, resource, context):

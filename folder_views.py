@@ -25,6 +25,7 @@ except ImportError:
 
 # Import from itools
 from itools.core import thingy_property, thingy_lazy_property
+from itools.core import OrderedDict
 from itools.datatypes import Boolean, Integer, String
 from itools.gettext import MSG
 from itools.handlers import checkid
@@ -34,6 +35,7 @@ from itools.uri import get_reference, Path
 from itools.web import BaseView, STLView, STLForm, ERROR
 from itools.web import boolean_field, input_field, integer_field
 from itools.web import multiple_choice_field
+from itools.web import make_stl_template
 from itools.xapian import AndQuery, OrQuery, PhraseQuery
 
 # Import from ikaaro
@@ -45,7 +47,9 @@ from fields import image_size_field
 from globals import ui
 import messages
 from utils import generate_name
-from views import IconsView, BrowseForm, SearchForm, ContextMenu
+from views import IconsView, ContextMenu
+from views import Container_Search, Container_Sort, Container_Batch
+from views import Container_Form, Container_Table
 from workflow import WorkflowAware, get_workflow_preview
 
 
@@ -89,7 +93,7 @@ class Folder_View(BaseView):
         return set_prefix(stream, 'index/')
 
 
-class Folder_Search(SearchForm):
+class Folder_Search(Container_Search):
 
     base_query = None
 
@@ -110,6 +114,52 @@ class Folder_Search(SearchForm):
         query = [ PhraseQuery(x, search_term) for x in search_fields ]
         query = OrQuery(*query)
         return results.search(query)
+
+
+class Folder_Sort(Container_Sort):
+
+    sort_by = Container_Sort.sort_by()
+    sort_by.value = 'mtime'
+    sort_by.values = OrderedDict([
+        ('name', {'title': MSG(u'Path')}),
+        ('title', {'title': MSG(u'Title')}),
+        ('format', {'title': MSG(u'Type')}),
+        ('mtime', {'title': MSG(u'Last Modified')}),
+        ('last_author', {'title': MSG(u'Last Author')}),
+        ('size', {'title': MSG(u'Size')}),
+        ('workflow_state', {'title': MSG(u'State')})])
+
+
+    reverse = Container_Sort.reverse(value=True)
+
+
+
+class Folder_Batch(Container_Batch):
+
+    @thingy_lazy_property
+    def items(self):
+        start = self.batch_start.value
+        size = self.batch_size.value
+        sort_by = self.view.sort.sort_by.value
+        reverse = self.view.sort.reverse.value
+        items = self.view.search.items
+        resources = items.get_documents(sort_by=sort_by, reverse=reverse,
+                                        start=start, size=size)
+
+        # Sort the title by lower case (FIXME should be done by the catalog)
+        if sort_by == 'title':
+            key = lambda x: x.get_value('title').lower()
+            resources = sorted(resources, key=key, reverse=reverse)
+
+        # Access Control (FIXME this should be done before batch)
+        user = self.context.user
+        allowed_items = []
+        for resource in resources:
+            ac = resource.get_access_control()
+            if ac.is_allowed_to_view(user, resource):
+                allowed_items.append(resource)
+
+        return allowed_items
 
 
 
@@ -253,61 +303,47 @@ class Folder_Rename(STLForm):
 
 
 
-class Folder_Table(BrowseForm):
+class Folder_Table(STLForm):
 
     access = 'is_allowed_to_view'
     view_title = MSG(u'Table View')
     context_menus = []
 
+    template = make_stl_template("""${search}${batch}${form}""")
+
+    # Search, Sort, Batch
     search = Folder_Search()
+    sort = Folder_Sort()
+    batch = Folder_Batch()
+
+    # Form
+    form = Container_Form()
+
+    # Table
+    form.content = Container_Table()
+    form.content.header = [
+        ('checkbox', None, False),
+        ('icon', None, False),
+        ('name', MSG(u'Path'), True),
+        ('title', MSG(u'Title'), True),
+        ('format', MSG(u'Type'), True),
+        ('mtime', MSG(u'Last Modified'), True),
+        ('last_author', MSG(u'Last Author'), True),
+        ('size', MSG(u'Size'), True),
+        ('workflow_state', MSG(u'State'), True)]
+
+    form.actions = [
+        RemoveButton, RenameButton, CopyButton, CutButton, PasteButton,
+        PublishButton, RetireButton]
+
 
     # Schema
     ids = multiple_choice_field(required=True)
-    sort_by = BrowseForm.sort_by(value='mtime')
-    reverse = BrowseForm.reverse(value=True)
-
-    # Table
-    table_columns = [
-        ('checkbox', None),
-        ('icon', None),
-        ('name', MSG(u'Path')),
-        ('title', MSG(u'Title')),
-        ('format', MSG(u'Type')),
-        ('mtime', MSG(u'Last Modified')),
-        ('last_author', MSG(u'Last Author')),
-        ('size', MSG(u'Size')),
-        ('workflow_state', MSG(u'State'))]
 
 
-    @thingy_property
-    def all_items(self):
-        return self.search.items
-
-
-    @thingy_lazy_property
-    def items(self):
-        start = self.batch_start.value
-        size = self.batch_size.value
-        sort_by = self.sort_by.value
-        reverse = self.reverse.value
-        items = self.all_items
-        resources = items.get_documents(sort_by=sort_by, reverse=reverse,
-                                        start=start, size=size)
-
-        # Sort the title by lower case (FIXME should be done by the catalog)
-        if sort_by == 'title':
-            key = lambda x: x.get_value('title').lower()
-            resources = sorted(resources, key=key, reverse=reverse)
-
-        # Access Control (FIXME this should be done before batch)
-        user = self.context.user
-        allowed_items = []
-        for resource in resources:
-            ac = resource.get_access_control()
-            if ac.is_allowed_to_view(user, resource):
-                allowed_items.append(resource)
-
-        return allowed_items
+    # Keep the batch in the canonical URL
+    canonical_query_parameters = (
+        STLForm.canonical_query_parameters + ['batch_start'])
 
 
     def get_item_value(self, item, column):
@@ -356,11 +392,6 @@ class Folder_Table(BrowseForm):
         elif column == 'workflow_state':
             # The workflow state
             return get_workflow_preview(item, self.context)
-
-
-    table_actions = [
-        RemoveButton, RenameButton, CopyButton, CutButton, PasteButton,
-        PublishButton, RetireButton]
 
 
     #######################################################################
@@ -584,6 +615,68 @@ class Folder_Table(BrowseForm):
 
 
 
+class Folder_Gallery_Content(STLView):
+
+    template = 'folder/gallery.xml'
+    image_size = image_size_field(source='query', width=128, height=128)
+
+
+    @thingy_property
+    def rows(self):
+        root_view = self.view.view
+        image_size = self.image_size.encoded_value
+
+        has_actions = bool(root_view.form.actions)
+
+        rows = []
+        for item in root_view.batch.items:
+            is_folder = (item.class_id == 'folder')
+            row = {
+                'title': item.get_value('title'),
+                'checkbox': has_actions,
+                'is_folder': is_folder}
+
+            # Checkbox
+            if has_actions:
+                id, checked = root_view.get_item_value(item, 'checkbox')
+                row['id'] = id
+                row['checked'] = checked
+                if isinstance(item, WorkflowAware):
+                    row['workflow_statename'] = item.get_statename()
+                else:
+                    row['workflow_statename'] = None
+
+            # XXX Already hard-coded in the catalog search
+            value = root_view.get_item_value(item, 'name')
+            if type(value) is tuple:
+                value, href = value
+                href = get_reference(href)
+                if is_folder:
+                    href = href.resolve_name(';gallery')
+                href = href.replace(image_size=image_size)
+                href = str(href)
+            else:
+                href = None
+            row['name'] = value
+            row['href'] = href
+            rows.append(row)
+
+        return rows
+
+
+    @thingy_property
+    def root(self):
+        return self.resource.path == '/'
+
+
+    @thingy_property
+    def widths(self):
+        # FIXME hardcoded
+        sizes = ['640x480', '800x600', '1024x768', '1280x1024']
+        return ", ".join(sizes)
+
+
+
 class Folder_Gallery(Folder_Table):
 
     access = 'is_allowed_to_view'
@@ -591,113 +684,20 @@ class Folder_Gallery(Folder_Table):
     styles = ['/ui/gallery/style.css']
     scripts = ['/ui/gallery/javascript.js']
 
+    template = make_stl_template("${search}${sort}${batch}${form}")
+
     context_menus = [ZoomMenu()]
     search = Folder_Search()
     search.base_query = OrQuery(PhraseQuery('is_image', True),
                                 PhraseQuery('format', 'folder'))
 
-    # Table
-    table_template = 'folder/browse_image.xml'
-
     # Fields
-    batch_size = Folder_Table.batch_size(value=0)
-    image_size = image_size_field(source='query', width=128, height=128)
+    batch = Folder_Batch()
+    batch.batch_size = batch.batch_size(value=0)
 
-
-    def columns(self):
-        # Get from the query
-        sort_by = self.sort_by.value
-        reverse = self.reverse.value
-
-        columns = self._get_table_columns()
-        columns_ns = []
-        uri = get_reference(self.context.uri)
-        for name, title, sortable in columns:
-            if name == 'checkbox':
-                # Type: checkbox
-                if self.external_form or self.actions:
-                    columns_ns.append({'is_checkbox': True})
-            elif title is None:
-                continue
-            elif not sortable:
-                # Type: nothing or not sortable
-                columns_ns.append({
-                    'is_checkbox': False,
-                    'title': title,
-                    'href': None,
-                    'sortable': False})
-            else:
-                # Type: normal
-                base_href = uri.replace(sort_by=name)
-                if name == sort_by:
-                    sort_up_active = reverse is False
-                    sort_down_active = reverse is True
-                else:
-                    sort_up_active = sort_down_active = False
-                columns_ns.append({
-                    'is_checkbox': False,
-                    'title': title,
-                    'sortable': True,
-                    'href': uri.path,
-                    'href_up': base_href.replace(reverse=0),
-                    'href_down': base_href.replace(reverse=1),
-                    'sort_up_active': sort_up_active,
-                    'sort_down_active': sort_down_active})
-        return columns_ns
-
-
-    def rows(self):
-        image_size = self.image_size.encoded_value
-
-        columns = self._get_table_columns()
-        rows = []
-        for item in self.items:
-            row = {'checkbox': False,
-                   # These are required for internal use
-                   'title_or_name': item.get_value('title'),
-                   'workflow_statename': None}
-            # XXX Already hard-coded in the catalog search
-            row['is_folder'] = (item.class_id == 'folder')
-            if isinstance(item, WorkflowAware):
-                row['workflow_statename'] = item.get_statename()
-            for name, title, sortable in columns:
-                value = self.get_item_value(item, name)
-                if value is None:
-                    continue
-                elif name == 'checkbox':
-                    if self.actions:
-                        value, checked = value
-                        row['checkbox'] = True
-                        row['id'] = value
-                        row['checked'] = checked
-                elif name == 'name':
-                    if type(value) is tuple:
-                        value, href = value
-                        href = get_reference(href)
-                        if row['is_folder']:
-                            href = href.resolve_name(';gallery')
-                        href = href.replace(image_size=image_size)
-                        href = str(href)
-                    else:
-                        href = None
-                    row['name'] = value
-                    row['href'] = href
-                else:
-                    row[name] = value
-            rows.append(row)
-
-        return rows
-
-
-    def root(self):
-        return self.resource.path == '/'
-
-
-    def widths(self):
-        # FIXME hardcoded
-        sizes = ['640x480', '800x600', '1024x768', '1280x1024']
-        return ", ".join(sizes)
-
+    # Form
+    form = Folder_Table.form()
+    form.content = Folder_Gallery_Content
 
 
 class Folder_Orphans(Folder_Table):

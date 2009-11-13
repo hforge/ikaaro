@@ -360,14 +360,13 @@ class Skin(STLForm):
         self.find_language(context)
 
         # Load the template
-        handler = self.get_template()
+        events = self.get_template()
 
         # Build the output
         s = ['<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"\n'
              '  "http://www.w3.org/TR/html4/strict.dtd">']
         # STL
-#        prefix = handler.get_abspath()
-        data = stl(handler, self, mode='html')#prefix=prefix, mode='html')
+        data = stl(events=events, namespace=self, mode='html')
         s.append(data)
 
         return ''.join(s)

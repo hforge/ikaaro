@@ -28,7 +28,7 @@ from itools.web import STLView, ERROR, hidden_field, multiple_choice_field
 
 # Import from ikaaro
 from buttons import Button
-from views import BrowseForm
+from views import Container_Sort, Container_Batch, Container_Table
 
 
 
@@ -125,22 +125,28 @@ class DiffButton(Button):
 
 
 
-class DBResource_CommitLog(BrowseForm):
+class DBResource_CommitLog(STLView):
 
     access = 'is_allowed_to_edit'
     view_title = MSG(u"Commit Log")
 
-    ids = multiple_choice_field(datatype=IndexRevision, required=True)
+    sort = Container_Sort()
+    sort.sort_by = sort.sort_by(value='date')
+    sort.reverse = sort.reverse(value=True)
 
-    sort_by = BrowseForm.sort_by(value='date')
-    reverse = BrowseForm.reverse(value=True)
+    batch = Container_Batch()
 
-    table_columns = [
+    table = Container_Table()
+    table.columns = [
         ('checkbox', None),
         ('date', MSG(u'Last Change')),
         ('username', MSG(u'Author')),
         ('message', MSG(u'Comment'))]
     table_actions = [DiffButton]
+
+
+    # Schema
+    ids = multiple_choice_field(datatype=IndexRevision, required=True)
 
 
     @thingy_lazy_property

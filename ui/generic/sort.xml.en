@@ -4,9 +4,11 @@
 
 <form action="" method="get">
   <fieldset>
-    <legend>Search</legend>
-    <input type="text" name="term" size="35" value="${term/value}" />
+    <legend>Sort</legend>
+    ${sort_by}
     <button type="submit" class="button-search">OK</button>
+    <br/>
+    Reverse: ${reverse}
   </fieldset>
 </form>
 
