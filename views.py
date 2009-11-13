@@ -374,11 +374,7 @@ class SearchForm(BrowseForm):
     search_field = choice_field(source='query')
     search_term = text_field(source='query')
 
-    search_fields = freeze([
-        ('title', MSG(u'Title')),
-        ('text', MSG(u'Text')),
-        ('name', MSG(u'Name'))])
-
+    search_fields = freeze([])
 
     def search_fields_(self):
         field = self.search_field.value

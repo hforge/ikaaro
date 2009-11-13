@@ -69,37 +69,21 @@ class RoleAware_BrowseUsers(SearchForm):
     ids = multiple_choice_field(required=True)
     sort_by = SearchForm.sort_by(value='login_name')
 
-    search_fields = [
-        ('', MSG(u'All Fields')),
-        ('username', MSG(u'Login')),
-        ('lastname', MSG(u'Last Name')),
-        ('firstname', MSG(u'First Name')),
-        ('email_domain', MSG(u'Domain'))]
-
-
     @thingy_lazy_property
     def all_items(self):
-        resource = self.resource
-        context = self.context
-
         # Search
-        search_query = PhraseQuery('format', 'user')
-        search_field = self.search_field.value
         search_term = self.search_term.value
-        if not search_field and search_term:
-            or_query = []
-            for field, label in self.search_fields:
-                if field:
-                    or_query.append(StartQuery(field, search_term))
-            search_query = AndQuery(search_query, OrQuery(*or_query))
-        elif search_field and search_term:
-            search_query = AndQuery(search_query,
-                                    StartQuery(search_field, search_term))
-        results = context.search(search_query)
+        search_fields = ['username', 'lastname', 'firstname', 'email_domain']
+        if search_term:
+            query = [ StartQuery(x, search_term) for x in search_fields ]
+            query = OrQuery(*query)
+        else:
+            query = None
+        results = self.context.search_users(query)
 
         # Show only users that belong to this group (FIXME Use the catalog)
         users = []
-        roles = resource.get_members_classified_by_role()
+        roles = self.resource.get_members_classified_by_role()
         for user in results.get_documents():
             username = user.get_name()
             for role in roles:
