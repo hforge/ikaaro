@@ -18,10 +18,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
+from itools.core import thingy_lazy_property
 from itools.datatypes import String
 from itools.gettext import MSG
 from itools.i18n import get_language_name
-from itools.web import BaseView, STLView, STLForm, INFO, ERROR
+from itools.web import BaseView, STLView, STLForm, INFO, ERROR, FormError
 from itools.web import choice_field, email_field, password_field, text_field
 from itools.xapian import PhraseQuery, AndQuery, OrQuery, StartQuery
 
@@ -159,6 +160,11 @@ class User_Profile(STLView):
         return items
 
 
+@thingy_lazy_property
+def value(self):
+    return self.view.resource.get_value(self.name)
+
+
 
 class User_EditAccount(AutoForm):
 
@@ -167,60 +173,56 @@ class User_EditAccount(AutoForm):
     description = MSG(u'Edit your name and email address.')
     icon = 'card.png'
 
-    firstname = text_field(title=MSG(u'First Name'))
-    lastname = text_field(title=MSG(u'Last Name'))
-    email = email_field(title=MSG(u"E-mail Address"))
+    firstname = text_field(value=value, title=MSG(u'First Name'))
+    lastname = text_field(value=value, title=MSG(u'Last Name'))
+    email = email_field(value=value, title=MSG(u"E-mail Address"))
     password = password_field(required=True)
     password.title = MSG(u"To confirm these changes, you must type your "
                          u"password")
 
 
-    def fields(self):
-        if self.resource.path == self.context.user.path:
-            field_names = ['firstname', 'lastname', 'email', 'password']
-        else:
-            field_names = ['firstname', 'lastname', 'email']
-
-        return [ getattr(self, x) for x in field_names ]
+    def get_field_names(self):
+        if self.resource is self.context.user:
+            return ['firstname', 'lastname', 'email', 'password']
+        return ['firstname', 'lastname', 'email']
 
 
-    def get_value(self, name):
-        if name == 'password':
-            return None
-        return self.resource.get_value(name)
+    def cook(self, method):
+        super(User_EditAccount, self).cook(method)
+        if method == 'get':
+            return
 
-
-    def action(self, resource, context, form):
-        firstname = form['firstname']
-        lastname = form['lastname']
-        email = form['email']
+        resource = self.resource
+        context = self.context
 
         # Check password to confirm changes
-        is_same_user = (resource.get_name() == context.user.get_name())
-        if is_same_user:
-            password = form['password']
+        if resource is context.user:
+            password = self.password.value
             if not resource.authenticate(password):
-                context.message = ERROR(
-                    u"You mistyped your actual password, your account is"
-                    u" not changed.")
-                return
+                self.password.error = MSG(u"Wrong password")
+                raise FormError
 
         # If the user changes his email, check there is not already other
         # user with the same email in the database.
-        if email != resource.get_property('email'):
-            results = context.search(email=email)
+        email = self.email.value
+        if email != resource.get_value('email'):
+            results = context.search_users(email=email)
             if len(results):
-                context.message = ERROR(
-                    u'There is another user with the email "{email}", please'
-                    u' try again.', email=email).gettext()
-                return
+                msg = u"There's another user with the {email} email address"
+                self.email.error = MSG(msg).gettext(email=email)
+                raise FormError
 
+
+    def action(self):
         # Save changes
-        resource.set_property('firstname', firstname)
-        resource.set_property('lastname', lastname)
-        resource.set_property('email', email)
+        resource = self.resource
+        resource.set_property('firstname', self.firstname.value)
+        resource.set_property('lastname', self.lastname.value)
+        resource.set_property('email', self.email.value)
         # Ok
+        context = self.context
         context.message = INFO(u'Account changed.')
+        context.redirect()
 
 
 

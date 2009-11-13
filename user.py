@@ -90,8 +90,8 @@ class User(AccessControl, Folder):
     # API
     ########################################################################
     def get_title(self, language=None):
-        firstname = self.get_property('firstname')
-        lastname = self.get_property('lastname')
+        firstname = self.get_value('firstname')
+        lastname = self.get_value('lastname')
         if firstname:
             if lastname:
                 return '%s %s' % (firstname, lastname)
