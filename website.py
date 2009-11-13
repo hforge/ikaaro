@@ -45,7 +45,7 @@ from skins import UI, ui_path
 from theme import Theme
 from website_views import AboutView, ContactForm, CreditsView
 from website_views import ForgottenPasswordForm, RegisterForm
-from website_views import SiteSearchView, NotFoundView, ForbiddenView
+from website_views import NotFoundView, ForbiddenView
 from website_views import WebSite_NewInstance
 
 
@@ -201,7 +201,6 @@ class WebSite(RoleAware, Folder):
     register = RegisterForm()
     forgotten_password = ForgottenPasswordForm()
     # Public views
-    site_search = SiteSearchView()
     contact = ContactForm()
     about = AboutView()
     credits = CreditsView()
