@@ -85,10 +85,6 @@ legend {
   background-image: url(../icons/16x16/action_logout.png);
 }
 
-#header a#top-menu-search {
-  background-image: url(../icons/16x16/search.png);
-}
-
 #header a#top-menu-contact {
   background-image: url(../icons/16x16/mail.png);
 }

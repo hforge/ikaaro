@@ -38,8 +38,7 @@ from skins import Skin
 from views_new import ProxyNewInstance
 from website_views import AboutView, ContactForm, CreditsView
 from website_views import ForgottenPasswordForm, RegisterForm
-from website_views import SiteSearchView, NotFoundView, ForbiddenView
-from website_views import InternalServerError
+from website_views import NotFoundView, ForbiddenView, InternalServerError
 
 
 
@@ -118,7 +117,6 @@ class WebSite(RoleAware, Folder, VirtualRoot):
     register = RegisterForm
     forgotten_password = ForgottenPasswordForm
     # Public views
-    site_search = SiteSearchView
     contact = ContactForm
     about = AboutView
     credits = CreditsView
