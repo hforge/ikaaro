@@ -464,7 +464,7 @@ class CalendarView(STLView):
 class MonthlyView(CalendarView):
 
     access = 'is_allowed_to_view'
-    title = MSG(u'Monthly View')
+    view_title = MSG(u'Month View')
     template = 'calendar/monthly_view.xml'
     monthly_template = 'calendar/monthly_template.xml'
 
@@ -515,7 +515,7 @@ class MonthlyView(CalendarView):
 class WeeklyView(CalendarView):
 
     access = 'is_allowed_to_view'
-    title = MSG(u'Weekly View')
+    view_title = MSG(u'Week View')
     template = 'calendar/weekly_view.xml'
     _method = 'weekly_view'
 
@@ -625,7 +625,7 @@ class WeeklyView(CalendarView):
 class DailyView(CalendarView):
 
     access = 'is_allowed_to_view'
-    title = MSG(u'Daily View')
+    view_title = MSG(u'Day View')
     template = 'calendar/daily_view.xml'
     _method = 'daily_view'
 
