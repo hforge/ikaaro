@@ -354,8 +354,15 @@ class UserFolder_Table(Folder_Table):
 
     access = 'is_admin'
 
-    search_fields = Folder_Table.search_fields \
-        + [('username', MSG(u'Login')),
-           ('lastname', MSG(u'Last Name')),
-           ('firstname', MSG(u'First Name'))]
+    @thingy_lazy_property
+    def all_items(self):
+        # Search
+        search_term = self.search_term.value
+        search_fields = ['username', 'lastname', 'firstname', 'email_domain']
+        if search_term:
+            query = [ StartQuery(x, search_term) for x in search_fields ]
+            query = OrQuery(*query)
+        else:
+            query = None
+        return self.context.search_users(query)
 

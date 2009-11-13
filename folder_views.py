@@ -262,8 +262,10 @@ class Folder_Table(SearchForm):
         args = self.get_base_query()
         search_term = self.search_term.value
         if search_term:
-            field = self.search_field.value
-            args.append(PhraseQuery(field, search_term))
+            search_fields = ['title', 'text', 'name']
+            query = [ PhraseQuery(x, search_term) for x in search_fields ]
+            query = OrQuery(*query)
+            args.append(query)
 
         results = context.get_root_search(resource.path, False)
         if len(args) == 0:

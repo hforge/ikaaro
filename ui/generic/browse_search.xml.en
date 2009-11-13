@@ -2,11 +2,11 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
-<form action="" method="get" stl:if="search_fields">
+<form action="" method="get">
   <fieldset>
     <legend>Search</legend>
     <!-- Field -->
-    <select name="search_field">
+    <select name="search_field" stl:if="search_fields">
       <option value="${field/name}" selected="${field/selected}"
         stl:repeat="field search_fields_">${field/title}</option>
     </select>

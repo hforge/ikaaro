@@ -378,6 +378,9 @@ class CMSContext(WebContext):
     # Search
     #######################################################################
     def get_root_search(self, root='/', included=True):
+        if type(root) is Path:
+            root = str(root)
+
         # Hit
         cache = self._search_cache
         key = (root, included)
