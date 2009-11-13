@@ -38,7 +38,6 @@
           <a href="${user/info/home}" id="top-menu-profile">My profile</a>
           <a href="${logout}" id="top-menu-logout">Log out</a>
         </stl:block>
-        <a href="/;site_search" id="top-menu-search">Search</a>
         <a href="/;contact" id="top-menu-contact">Contact</a>
       </div>
     </div>
