@@ -98,7 +98,6 @@ class MessageView(STLView):
 
 
 
-
 class IconsView(STLView):
     """This view draws a menu where each menu item is made up of a big
     icon (48x48 pixels), a title and a description.
@@ -117,12 +116,15 @@ class IconsView(STLView):
 ###########################################################################
 class BrowseForm(STLForm):
 
-    template = 'generic/browse.xml'
+    template = 'generic/search.xml'
 
     batch_start = integer_field(source='query', value=0)
     batch_size = integer_field(source='query', value=20)
     sort_by = hidden_field(source='query')
     reverse = boolean_field(source='query')
+
+    # Search
+    search = None
 
     # Batch
     batch_template = 'generic/browse_batch.xml'
@@ -365,30 +367,12 @@ class BrowseForm(STLForm):
 ###########################################################################
 # Search View (search + batch + table)
 ###########################################################################
-class SearchForm(BrowseForm):
 
-    template = 'generic/search.xml'
+class SearchForm(STLView):
 
-    search_template = 'generic/browse_search.xml'
+    template = 'generic/browse_search.xml'
+    term = text_field(source='query')
 
-    search_field = choice_field(source='query')
-    search_term = text_field(source='query')
-
-    search_fields = freeze([])
-
-    def search_fields_(self):
-        field = self.search_field.value
-        return [
-            {'name': name, 'title': title, 'selected': name == field}
-            for name, title in self.search_fields ]
-
-
-    def search(self):
-        if self.search_template is None:
-            return None
-
-        search_template = ui.get_template(self.search_template)
-        return stl(search_template, self)
 
 
 ###########################################################################

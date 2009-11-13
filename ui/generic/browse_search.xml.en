@@ -5,15 +5,8 @@
 <form action="" method="get">
   <fieldset>
     <legend>Search</legend>
-    <!-- Field -->
-    <select name="search_field" stl:if="search_fields">
-      <option value="${field/name}" selected="${field/selected}"
-        stl:repeat="field search_fields_">${field/title}</option>
-    </select>
-    <!-- Term -->
-    <input type="text" name="search_term" size="35"
-      value="${search_term/value}" />
-    <!-- OK -->
+    <input type="text" name="term" size="35"
+      value="${term/value}" />
     <input type="submit" value="OK" class="button-search"/>
   </fieldset>
 </form>
