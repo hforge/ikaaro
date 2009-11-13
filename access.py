@@ -34,7 +34,7 @@ from itools.xapian import AndQuery, OrQuery, PhraseQuery, StartQuery
 from autoform import AutoForm
 from buttons import RemoveButton
 import messages
-from views import SearchForm
+from views import BrowseForm, SearchForm
 from workflow import WorkflowAware
 
 
@@ -59,7 +59,7 @@ def is_admin(user, resource):
 ###########################################################################
 # Views
 ###########################################################################
-class RoleAware_BrowseUsers(SearchForm):
+class RoleAware_BrowseUsers(BrowseForm):
 
     access = 'is_admin'
     view_title = MSG(u'Browse Members')
@@ -67,12 +67,14 @@ class RoleAware_BrowseUsers(SearchForm):
     icon = 'userfolder.png'
 
     ids = multiple_choice_field(required=True)
-    sort_by = SearchForm.sort_by(value='login_name')
+    sort_by = BrowseForm.sort_by(value='login_name')
+
+    search = SearchForm()
 
     @thingy_lazy_property
     def all_items(self):
         # Search
-        search_term = self.search_term.value
+        search_term = self.search.term.value
         search_fields = ['username', 'lastname', 'firstname', 'email_domain']
         if search_term:
             query = [ StartQuery(x, search_term) for x in search_fields ]

@@ -24,7 +24,7 @@ except ImportError:
     PILImage = None
 
 # Import from itools
-from itools.core import thingy_lazy_property
+from itools.core import thingy_property, thingy_lazy_property
 from itools.datatypes import Boolean, Integer, String
 from itools.gettext import MSG
 from itools.handlers import checkid
@@ -45,7 +45,7 @@ from fields import image_size_field
 from globals import ui
 import messages
 from utils import generate_name
-from views import IconsView, SearchForm, ContextMenu
+from views import IconsView, BrowseForm, SearchForm, ContextMenu
 from workflow import WorkflowAware, get_workflow_preview
 
 
@@ -89,6 +89,29 @@ class Folder_View(BaseView):
         return set_prefix(stream, 'index/')
 
 
+class Folder_Search(SearchForm):
+
+    base_query = None
+
+    @thingy_lazy_property
+    def items(self):
+        # Base search
+        results = self.context.get_root_search(self.resource.path, False)
+        if self.base_query:
+            results = results.search(self.base_query)
+
+        # Case 1: no query
+        search_term = self.term.value
+        if not search_term:
+            return results
+
+        # Case 2: query
+        search_fields = ['title', 'text', 'name']
+        query = [ PhraseQuery(x, search_term) for x in search_fields ]
+        query = OrQuery(*query)
+        return results.search(query)
+
+
 
 class Folder_List(STLView):
 
@@ -96,12 +119,15 @@ class Folder_List(STLView):
     view_title = MSG(u'List View')
     template = 'folder/list.xml'
 
+    search = Folder_Search()
 
     def items(self):
+        all_items = self.search.items
+
         context = self.context
         search = context.get_root_search(self.resource.path)
         items = []
-        for resource in search.get_documents(sort_by='mtime', reverse=True):
+        for resource in all_items.get_documents(sort_by='mtime', reverse=True):
             mtime = resource.get_value('mtime')
             items.append({
                 'href': resource.path,
@@ -227,16 +253,18 @@ class Folder_Rename(STLForm):
 
 
 
-class Folder_Table(SearchForm):
+class Folder_Table(BrowseForm):
 
     access = 'is_allowed_to_view'
     view_title = MSG(u'Table View')
     context_menus = []
 
+    search = Folder_Search()
+
     # Schema
     ids = multiple_choice_field(required=True)
-    sort_by = SearchForm.sort_by(value='mtime')
-    reverse = SearchForm.reverse(value=True)
+    sort_by = BrowseForm.sort_by(value='mtime')
+    reverse = BrowseForm.reverse(value=True)
 
     # Table
     table_columns = [
@@ -251,33 +279,9 @@ class Folder_Table(SearchForm):
         ('workflow_state', MSG(u'State'))]
 
 
-    def get_base_query(self):
-        return []
-
-
-    @thingy_lazy_property
+    @thingy_property
     def all_items(self):
-        resource = self.resource
-        context = self.context
-
-        # The query
-        args = self.get_base_query()
-        search_term = self.search_term.value
-        if search_term:
-            search_fields = ['title', 'text', 'name']
-            query = [ PhraseQuery(x, search_term) for x in search_fields ]
-            query = OrQuery(*query)
-            args.append(query)
-
-        results = context.get_root_search(resource.path, False)
-        if len(args) == 0:
-            return results
-
-        if len(args) == 1:
-            query = args[0]
-        else:
-            query = AndQuery(*args)
-        return results.search(query)
+        return self.search.items
 
 
     @thingy_lazy_property
@@ -582,26 +586,22 @@ class Folder_Table(SearchForm):
 
 class Folder_Gallery(Folder_Table):
 
+    access = 'is_allowed_to_view'
     view_title = MSG(u'Gallery')
     styles = ['/ui/gallery/style.css']
     scripts = ['/ui/gallery/javascript.js']
 
-    context_menus = Folder_Table.context_menus + [ZoomMenu()]
+    context_menus = [ZoomMenu()]
+    search = Folder_Search()
+    search.base_query = OrQuery(PhraseQuery('is_image', True),
+                                PhraseQuery('format', 'folder'))
+
     # Table
     table_template = 'folder/browse_image.xml'
 
-    # no batch
-    batch_size = Folder_Table.batch_size()
-    batch_size.datatype = Integer(value=0)
-
+    # Fields
+    batch_size = Folder_Table.batch_size(value=0)
     image_size = image_size_field(source='query', width=128, height=128)
-
-
-    def get_base_query(self):
-        # Show only images
-        query = OrQuery(PhraseQuery('is_image', True),
-                        PhraseQuery('format', 'folder'))
-        return [query]
 
 
     def columns(self):
