@@ -248,9 +248,9 @@ class WebPage(ResourceWithHTML, Multilingual, Text):
         get_context().database.change_resource(self)
 
 
-    def update_relative_links(self, target):
-        source = self.get_abspath()
-        prefix = target.get_pathto(source)
+    def update_relative_links(self, source):
+        target = self.get_abspath()
+        prefix = source.get_pathto(target)
 
         for handler in self.get_handlers():
             events = set_prefix(handler.events, prefix)
