@@ -250,7 +250,10 @@ class WebPage(ResourceWithHTML, Multilingual, Text):
 
     def update_relative_links(self, source):
         target = self.get_abspath()
-        prefix = source.get_pathto(target)
+        prefix = target.get_pathto(source)
+        # Append slash, because 'get_pathto' is the inverse of 'resolve2',
+        # while 'set_prefix' uses 'resolve'
+        prefix.endswith_slash = True
 
         for handler in self.get_handlers():
             events = set_prefix(handler.events, prefix)
