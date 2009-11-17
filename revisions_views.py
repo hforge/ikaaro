@@ -20,15 +20,18 @@ from re import compile, sub
 from subprocess import CalledProcessError
 
 # Import from itools
-from itools.core import thingy_lazy_property
+from itools.core import thingy_property, thingy_lazy_property
+from itools.core import OrderedDict
 from itools.datatypes import Boolean, String
 from itools.gettext import MSG
 from itools.uri import encode_query, get_reference
-from itools.web import STLView, ERROR, hidden_field, multiple_choice_field
+from itools.web import ERROR, STLView, STLForm, make_stl_template
+from itools.web import hidden_field, multiple_choice_field
 
 # Import from ikaaro
 from buttons import Button
-from views import Container_Sort, Container_Batch, Container_Table
+from views import Container_Search, Container_Sort, Container_Batch
+from views import Container_Form, Container_Table
 
 
 
@@ -125,56 +128,67 @@ class DiffButton(Button):
 
 
 
-class DBResource_CommitLog(STLView):
+class DBResource_CommitLog(STLForm):
 
     access = 'is_allowed_to_edit'
     view_title = MSG(u"Commit Log")
 
-    sort = Container_Sort()
-    sort.sort_by = sort.sort_by(value='date')
-    sort.reverse = sort.reverse(value=True)
+    template = make_stl_template("${batch}${form}")
 
-    batch = Container_Batch()
-
-    table = Container_Table()
-    table.columns = [
-        ('checkbox', None),
-        ('date', MSG(u'Last Change')),
-        ('username', MSG(u'Author')),
-        ('message', MSG(u'Comment'))]
-    table_actions = [DiffButton]
-
-
-    # Schema
-    ids = multiple_choice_field(datatype=IndexRevision, required=True)
-
-
+    # Search
     @thingy_lazy_property
-    def all_items(self):
-        items = self.resource.get_revisions(content=True)
+    def items(self):
+        view = self.view
+        items = view.resource.get_revisions(content=True)
         for i, item in enumerate(items):
-            item['username'] = self.context.get_user_title(item['username'])
+            item['username'] = view.context.get_user_title(item['username'])
             # Hint to sort revisions quickly
             item['index'] = i
         return items
 
+    search = Container_Search()
+    search.items = items
 
+    # Sort
     @thingy_lazy_property
     def items(self):
-        start = self.batch_start.value
-        size = self.batch_size.value
         sort_by = self.sort_by.value
         reverse = self.reverse.value
 
         # (FIXME) Do not give a traceback if 'sort_by' has an unexpected value
-        if sort_by not in [ x[0] for x in self.table_columns ]:
-            sort_by = self.query_schema['sort_by'].default
+        if sort_by not in self.sort_by.values:
+            sort_by = self.sort_by.default
 
         # Sort & batch
         key = itemgetter(sort_by)
-        items = sorted(self.all_items, key=key, reverse=reverse)
-        return items[start:start+size]
+        return sorted(self.view.search.items, key=key, reverse=reverse)
 
+    sort = Container_Sort()
+    sort.sort_by = sort.sort_by(value='date')
+    sort.sort_by.values = OrderedDict([
+        ('checkbox', None),
+        ('date', {'title': MSG(u'Last Change')}),
+        ('username', {'title': MSG(u'Author')}),
+        ('message', {'title': MSG(u'Comment')})])
+    sort.reverse = sort.reverse(value=True)
+    sort.items = items
+
+    # Batch
+    @thingy_lazy_property
+    def items(self):
+        start = self.batch_start.value
+        size = self.batch_size.value
+        return self.view.sort.items[start:start+size]
+
+    batch = Container_Batch()
+    batch.items = items
+
+    # Form
+    @thingy_property
+    def header(self):
+        return [
+            (k, v['title'], True)
+            for k, v in self.root_view.sort.sort_by.values.items() ]
 
     def get_item_value(self, item, column):
         if column == 'checkbox':
@@ -182,6 +196,15 @@ class DBResource_CommitLog(STLView):
         elif column == 'date':
             return (item['date'], './;changes?revision=%s' % item['revision'])
         return item[column]
+
+    form = Container_Form()
+    form.actions = [DiffButton]
+    form.content = Container_Table()
+    form.content.header = header
+
+
+    # Schema
+    ids = multiple_choice_field(datatype=IndexRevision, required=True)
 
 
     def action_diff(self, resource, context, form):

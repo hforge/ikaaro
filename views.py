@@ -297,8 +297,8 @@ class Container_Table(STLForm):
 
     def columns(self):
         # Get from the query
-        sort_by = self.view.view.sort.sort_by.value
-        reverse = self.view.view.sort.reverse.value
+        sort_by = self.root_view.sort.sort_by.value
+        reverse = self.root_view.sort.reverse.value
 
         columns = self.get_table_columns()
         columns_ns = []
@@ -338,7 +338,7 @@ class Container_Table(STLForm):
     def rows(self):
         columns = self.get_table_columns()
         rows = []
-        for item in self.view.view.batch.items:
+        for item in self.root_view.batch.items:
             row_columns = []
             for column in columns:
                 column = column[0]
@@ -347,7 +347,7 @@ class Container_Table(STLForm):
                     if not self.external_form and not self.actions:
                         continue
 
-                value = self.view.view.get_item_value(item, column)
+                value = self.root_view.get_item_value(item, column)
                 column_ns = {
                     'is_checkbox': False,
                     'is_icon': False,
