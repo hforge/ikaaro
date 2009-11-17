@@ -304,7 +304,9 @@ class Image_Thumbnail(BaseView):
         width = context.get_form_value('width', type=Integer, default=48)
         height = context.get_form_value('height', type=Integer, default=48)
 
-        data, format = resource.handler.get_thumbnail(width, height)
+        # TODO generate the thumbnail in the resource format
+        format = 'png' if resource.metadata.format == 'image/png' else 'jpeg'
+        data, format = resource.handler.get_thumbnail(width, height, format)
         if data is None:
             default = resource.get_resource('/ui/icons/48x48/image.png')
             data = default.to_str()
