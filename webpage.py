@@ -256,6 +256,8 @@ class WebPage(ResourceWithHTML, Multilingual, Text):
         prefix.endswith_slash = True
 
         for handler in self.get_handlers():
+            if handler.database.is_phantom(handler):
+                continue
             events = set_prefix(handler.events, prefix)
             events = list(events)
             handler.set_changed()
