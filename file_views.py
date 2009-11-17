@@ -290,7 +290,9 @@ class Image_Thumbnail(BaseView):
         width = self.width.value
         height = self.height.value
 
-        data, format = resource.handler.get_thumbnail(width, height)
+        # TODO generate the thumbnail in the resource format
+        format = 'png' if resource.metadata.format == 'image/png' else 'jpeg'
+        data, format = resource.handler.get_thumbnail(width, height, format)
         if data is None:
             default = context.get_template('icons/48x48/image.png')
             data = default.to_str()

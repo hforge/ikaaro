@@ -30,8 +30,8 @@ from itools.csv import Property
 from itools.datatypes import Unicode, String, Integer, Boolean, DateTime
 from itools.http import get_context
 from itools.log import log_warning
-from itools.uri import decode_query
 from itools.web import Resource
+from itools.uri import Path, decode_query, resolve_uri
 from itools.xapian import CatalogAware, PhraseQuery
 
 # Import from ikaaro
@@ -484,23 +484,19 @@ class DBResource(CatalogAware, IResource):
 
 
     def _on_move_resource(self, source):
-        """This method is to be called when moving the resource somewhere
-        else, before it has been moved.  The 'target' parameter is the
-        place it will be moved to.
+        """This method updates the links from/to other resources.  It is
+        called when the resource has been moved and/or renamed.
 
-        Called by 'Folder.move_resource'.  It is used to update the resources
-        that link to this one.
+        This method is called by 'Database._before_commit', the 'source'
+        parameter is the place the resource has been moved from.
         """
         # (1) Update links to other resources
-        target = self.get_canonical_path()
-        self.update_relative_links(target)
+        self.update_relative_links(Path(source))
 
         # (2) Update resources that link to me
-        # Check referencial-integrity
         database = get_context().database
-
-        # Get all the resources that have a link to me
-        query = PhraseQuery('links', str(source))
+        target = self.get_canonical_path()
+        query = PhraseQuery('links', source)
         results = database.catalog.search(query).get_documents()
         for resource in results:
             path = resource.abspath

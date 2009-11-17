@@ -247,11 +247,16 @@ class WebPage(ResourceWithHTML, Multilingual, Text):
         get_context().change_resource(self)
 
 
-    def update_relative_links(self, target):
-        source = self.get_abspath()
+    def update_relative_links(self, source):
+        target = self.get_abspath()
         prefix = target.get_pathto(source)
+        # Append slash, because 'get_pathto' is the inverse of 'resolve2',
+        # while 'set_prefix' uses 'resolve'
+        prefix.endswith_slash = True
 
         for handler in self.get_handlers():
+            if handler.database.is_phantom(handler):
+                continue
             events = set_prefix(handler.events, prefix)
             events = list(events)
             handler.set_changed()
