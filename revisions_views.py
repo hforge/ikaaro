@@ -19,13 +19,15 @@ from operator import itemgetter
 from re import compile, sub
 
 # Import from itools
-from itools.core import thingy_lazy_property
+from itools.core import thingy_property, thingy_lazy_property
+from itools.core import OrderedDict
 from itools.datatypes import Boolean, String
 from itools.gettext import MSG
-from itools.web import STLView, hidden_field
+from itools.web import STLView, hidden_field, make_stl_template
 
 # Import from ikaaro
-from views import Container_Sort, Container_Batch, Container_Table
+from views import Container_Search, Container_Sort, Container_Batch
+from views import Container_Table
 
 
 class DBResource_LastChanges(STLView):
@@ -33,42 +35,63 @@ class DBResource_LastChanges(STLView):
     access = 'is_allowed_to_view'
     view_title = MSG(u"Last Changes")
 
-    sort = Container_Sort()
-    sort.sort_by = sort.sort_by(value='date')
-    sort.reverse = sort.reverse(value=True)
-
-    batch = Container_Batch()
-
-    table = Container_Table()
-    table.columns = [
-        ('date', MSG(u'Last Change')),
-        ('username', MSG(u'Author')),
-        ('message', MSG(u'Comment'))]
+    template = make_stl_template("${batch}${table}")
 
 
-    @thingy_lazy_property
-    def all_items(self):
-        items = self.resource.get_revisions(content=True)
-        for item in items:
-            item['username'] = self.context.get_user_title(item['username'])
-        return items
-
-
+    # Search
     @thingy_lazy_property
     def items(self):
-        start = self.batch_start.value
-        size = self.batch_size.value
+        view = self.view
+        items = view.resource.get_revisions(content=True)
+        for item in items:
+            item['username'] = view.context.get_user_title(item['username'])
+        return items
+
+    search = Container_Search()
+    search.items = items
+
+    # Sort
+    @thingy_lazy_property
+    def items(self):
         sort_by = self.sort_by.value
         reverse = self.reverse.value
 
         # (FIXME) Do not give a traceback if 'sort_by' has an unexpected value
-        if sort_by not in [ x[0] for x in self.table_columns ]:
-            sort_by = self.query_schema['sort_by'].default
+        if sort_by not in self.sort_by.values:
+            sort_by = self.sort_by.default
 
         # Sort & batch
         key = itemgetter(sort_by)
-        items = sorted(self.all_items, key=key, reverse=reverse)
-        return items[start:start+size]
+        return sorted(self.view.search.items, key=key, reverse=reverse)
+
+    sort = Container_Sort()
+    sort.sort_by = sort.sort_by(value='date')
+    sort.sort_by.values = OrderedDict([
+        ('date', {'title': MSG(u'Last Change')}),
+        ('username', {'title': MSG(u'Author')}),
+        ('message', {'title': MSG(u'Comment')})])
+    sort.reverse = sort.reverse(value=True)
+    sort.items = items
+
+    # Batch
+    @thingy_lazy_property
+    def items(self):
+        start = self.batch_start.value
+        size = self.batch_size.value
+        return self.view.sort.items[start:start+size]
+
+    batch = Container_Batch()
+    batch.items = items
+
+    # Table
+    @thingy_property
+    def header(self):
+        return [
+            (k, v['title'], True)
+            for k, v in self.root_view.sort.sort_by.values.items() ]
+
+    table = Container_Table()
+    table.header = header
 
 
     def get_item_value(self, item, column):
