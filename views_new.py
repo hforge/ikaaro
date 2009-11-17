@@ -59,7 +59,7 @@ class NewInstanceByDate(AutoForm):
 
     # Schema
     type = hidden_field(source='query')
-    title = title_field(value=None)
+    title = title_field(value=u'')
     date = DateField(datatype=TodayDataType, required=True, title=MSG(u'Date'))
 
 
