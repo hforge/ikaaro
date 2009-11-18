@@ -50,7 +50,6 @@ from utils import generate_name
 from views import IconsView, ContextMenu
 from views import Container_Search, Container_Sort, Container_Batch
 from views import Container_Form, Container_Table
-from workflow import WorkflowAware, get_workflow_preview
 
 
 
@@ -153,7 +152,7 @@ class Folder_Batch(Container_Batch):
         user = self.context.user
         allowed_items = []
         for resource in resources:
-            ac = resource.get_access_control()
+            ac = resource.access_control
             if ac.is_allowed_to_view(user, resource):
                 allowed_items.append(resource)
 
@@ -220,7 +219,7 @@ class Folder_Rename(STLForm):
     def get_namespace(self, resource, context):
         ids = context.get_query_value('ids')
         # Filter names which the authenticated user is not allowed to move
-        ac = resource.get_access_control()
+        ac = resource.access_control
         user = context.user
         paths = []
         for name in ids:
@@ -389,7 +388,7 @@ class Folder_Table(STLForm):
             return item.get_human_size()
         elif column == 'workflow_state':
             # The workflow state
-            return get_workflow_preview(item, self.context)
+            return item.get_workflow_preview()
 
 
     #######################################################################
@@ -412,7 +411,7 @@ class Folder_Table(STLForm):
         ids = sorted(self.ids.value, reverse=True)
         for name in ids:
             child = resource.get_resource(name)
-            ac = child.get_access_control()
+            ac = child.access_control
             if ac.is_allowed_to_remove(user, child):
                 # Remove resource
                 try:
@@ -450,7 +449,7 @@ class Folder_Table(STLForm):
     def action_rename(self, resource, context, form):
         ids = form['ids']
         # Filter names which the authenticated user is not allowed to move
-        ac = resource.get_access_control()
+        ac = resource.access_control
         user = context.user
         paths = [ x for x in ids
                   if ac.is_allowed_to_move(user, resource.get_resource(x)) ]
@@ -471,7 +470,7 @@ class Folder_Table(STLForm):
     def action_copy(self, resource, context, form):
         ids = form['ids']
         # Filter names which the authenticated user is not allowed to copy
-        ac = resource.get_access_control()
+        ac = resource.access_control
         user = context.user
         names = [ x for x in ids
                   if ac.is_allowed_to_copy(user, resource.get_resource(x)) ]
@@ -493,7 +492,7 @@ class Folder_Table(STLForm):
     def action_cut(self, resource, context, form):
         ids = form['ids']
         # Filter names which the authenticated user is not allowed to move
-        ac = resource.get_access_control()
+        ac = resource.access_control
         user = context.user
         names = [ x for x in ids
                   if ac.is_allowed_to_move(user, resource.get_resource(x)) ]
@@ -513,6 +512,8 @@ class Folder_Table(STLForm):
 
     action_paste_schema = {}
     def action_paste(self, resource, context, form):
+        from workflow import WorkflowAware
+
         # Check there is something to paste
         cut, paths = context.get_cookie('ikaaro_cp', datatype=CopyCookie)
         if len(paths) == 0:
@@ -557,7 +558,7 @@ class Folder_Table(STLForm):
                     pasted.append(name)
                     # Fix state
                     copy = target.get_resource(name)
-                    if isinstance(copy, WorkflowAware):
+                    if issubclass(copy, WorkflowAware):
                         metadata = copy.metadata
                         metadata.set_property('state',
                                               copy.workflow.initstate)
@@ -584,7 +585,7 @@ class Folder_Table(STLForm):
         resources = [ resource.get_resource(id) for id in form['ids'] ]
         user = context.user
         # Check there is at least one item we can publish
-        ac = resource.get_access_control()
+        ac = resource.access_control
         allowed = [ x for x in resources
                     if ac.is_allowed_to_trans(user, x, transition) ]
         if not allowed:
@@ -593,7 +594,7 @@ class Folder_Table(STLForm):
 
         # Publish
         for item in allowed:
-            if item.get_statename() == statename:
+            if item.get_workflow_state() == statename:
                 continue
             # Update workflow history
             item.make_transition(transition)
@@ -621,6 +622,8 @@ class Folder_Gallery_Content(STLView):
 
     @thingy_property
     def rows(self):
+        from workflow import WorkflowAware
+
         root_view = self.view.view
         image_size = self.image_size.encoded_value
 
@@ -639,8 +642,8 @@ class Folder_Gallery_Content(STLView):
                 id, checked = root_view.get_item_value(item, 'checkbox')
                 row['id'] = id
                 row['checked'] = checked
-                if isinstance(item, WorkflowAware):
-                    row['workflow_statename'] = item.get_statename()
+                if issubclass(item, WorkflowAware):
+                    row['workflow_statename'] = item.get_workflow_state()
                 else:
                     row['workflow_statename'] = None
 
@@ -769,7 +772,7 @@ class Folder_Thumbnail(BaseView):
             # Find the first accessible image
             user = context.user
             resource = self.resource
-            ac = resource.get_access_control()
+            ac = resource.access_control
             for image in resource.search_resources(cls=Image):
                 # Search public image safe for all
                 if ac.is_allowed_to_view(user, image):

@@ -28,7 +28,6 @@ from itools.web import readonly_field, text_field
 
 # Import from ikaaro
 from fields import DateField
-from ikaaro.workflow import get_workflow_preview
 
 
 
@@ -66,7 +65,7 @@ class PathSelectorWidget(object):
             if value:
                 resource = self.resource.get_resource(value, soft=True)
                 if resource:
-                    return get_workflow_preview(resource, self.context)
+                    return resource.get_workflow_preview()
 
         return None
 

@@ -15,6 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
+from itools.core import thingy_property
 from itools.http import get_context
 from itools.uri import resolve_uri
 from itools.vfs import FileName
@@ -26,7 +27,7 @@ from resource_ import DBResource
 class Multilingual(DBResource):
 
     def __init__(self, metadata=None, brain=None):
-        DBResource.__init__(self, metadata, brain)
+        super(Multilingual, self).__init__(metadata, brain)
         del self._handler
         self.handlers = {}
 
@@ -69,7 +70,7 @@ class Multilingual(DBResource):
         self.handlers[language] = handler
         return handler
 
-    handler = property(get_handler, None, None, '')
+    handler = thingy_property(get_handler)
 
 
     def get_handlers(self):

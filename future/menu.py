@@ -38,7 +38,6 @@ from ikaaro.folder_views import Folder_Thumbnail, GoToSpecificDocument
 from ikaaro.revisions_views import DBResource_LastChanges
 from ikaaro.table import OrderedTableFile, OrderedTable
 from ikaaro.table_views import OrderedTable_View
-from ikaaro.workflow import get_workflow_preview
 
 
 
@@ -169,7 +168,7 @@ class Menu_View(OrderedTable_View):
                          '</a>') % (link, item.id, title, label)
                 return XMLParser(state)
             # The workflow state
-            return get_workflow_preview(item_resource, context)
+            return item_resource.get_workflow_preview()
 
         return OrderedTable_View.get_item_value(self, resource, context, item,
                                                 column)
@@ -273,7 +272,7 @@ class Menu(OrderedTable):
                 container = self.get_parent()
                 child = container.get_resource(child_path, soft=True)
                 if child is not None:
-                    ac = child.get_access_control()
+                    ac = child.access_control
                     user = get_context().user
                     if ac.is_allowed_to_remove(user, child):
                         if child.handler.get_n_records():
@@ -308,7 +307,7 @@ class Menu(OrderedTable):
             if resource is None:
                 return False
             # Check ACL
-            ac = resource.get_access_control()
+            ac = resource.access_control
             view = resource.get_view(method, ref.query)
             if view:
                 return ac.is_access_allowed(user, resource, view)
@@ -323,7 +322,7 @@ class Menu(OrderedTable):
 
             # FIXME We should take into account the show_first_child
             # parameter
-            ac = resource.get_access_control()
+            ac = resource.access_control
             return ac.is_allowed_to_view(user, resource)
 
 

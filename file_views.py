@@ -350,7 +350,7 @@ class Image_View(STLView):
 
         user = self.context.user
         parent = self.resource.get_parent()
-        ac = parent.get_access_control()
+        ac = parent.access_control
 
         return [ x for x in parent.search_resources(cls=Image)
                  if ac.is_allowed_to_view(user, x) ]

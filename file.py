@@ -19,7 +19,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import guess_all_extensions, merge_dicts
+from itools.core import guess_all_extensions, merge_dicts, thingy_property
 from itools.datatypes import String
 from itools.gettext import MSG
 from itools.handlers import File as FileHandler, Image as ImageHandler
@@ -34,7 +34,6 @@ from itools.office import MSWord as MSWordFile, MSExcel as MSExcelFile
 
 # Import from ikaaro
 from registry import register_resource_class
-from resource_ import DBResource
 from workflow import WorkflowAware
 from file_views import File_NewInstance, File_Download, File_View
 from file_views import File_Edit, File_ExternalEdit
@@ -46,7 +45,7 @@ from file_views import Flash_View
 ###########################################################################
 # Base File
 ###########################################################################
-class File(WorkflowAware, DBResource):
+class File(WorkflowAware):
 
     class_id = 'file'
     class_version = '20090122'
@@ -60,7 +59,7 @@ class File(WorkflowAware, DBResource):
 
 
     def init_resource(self, body=None, filename=None, extension=None, **kw):
-        DBResource.init_resource(self, filename=filename, **kw)
+        super(File, self).init_resource(self, filename=filename, **kw)
         if body:
             handler = self.class_handler(string=body)
             extension = (
@@ -114,7 +113,7 @@ class File(WorkflowAware, DBResource):
         self._handler = handler
         return self._handler
 
-    handler = property(get_handler, None, None, '')
+    handler = thingy_property(get_handler)
 
 
     def rename_handlers(self, new_name):
@@ -132,7 +131,6 @@ class File(WorkflowAware, DBResource):
     #######################################################################
     from obsolete.metadata import History
     class_schema = merge_dicts(
-        DBResource.class_schema,
         WorkflowAware.class_schema,
         # Metadata
         filename=String(source='metadata'),
@@ -207,6 +205,7 @@ class File(WorkflowAware, DBResource):
         metadata = self.metadata
         if metadata.has_property('history'):
             metadata.del_property('history')
+
 
 
 ###########################################################################

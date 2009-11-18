@@ -274,7 +274,7 @@ class DBResource_AddBase(STLForm):
             if not is_folder and not is_item:
                 continue
 
-            ac = resource.get_access_control()
+            ac = resource.access_control
             if not ac.is_allowed_to_view(user, resource):
                 continue
             path = context.resource.get_pathto(resource)

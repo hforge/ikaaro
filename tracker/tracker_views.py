@@ -508,7 +508,7 @@ class Tracker_Search(Container_Search, Tracker_View):
         assigned_to = get_values('assigned_to')
 
         # is_admin
-        ac = resource.get_access_control()
+        ac = resource.access_control
         pathto_website = resource.get_pathto(resource.get_site_root())
 
         return  {

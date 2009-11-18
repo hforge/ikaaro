@@ -115,7 +115,7 @@ class LocationTemplate(CMSTemplate):
         # Get resource & access control
         context = self.context
         here = context.resource
-        ac = here.get_access_control()
+        ac = here.access_control
 
         # Tabs
         items = []
