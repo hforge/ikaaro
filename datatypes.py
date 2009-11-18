@@ -21,7 +21,7 @@ from urllib import quote, unquote
 from zlib import compress, decompress
 
 # Import from itools
-from itools.core import freeze, guess_type
+from itools.core import freeze
 from itools.datatypes import DataType
 from itools.html import xhtml_doctype, sanitize_stream
 from itools.html import stream_to_str_as_xhtml, stream_to_str_as_html
