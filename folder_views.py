@@ -756,37 +756,21 @@ class Folder_Thumbnail(BaseView):
 
 
     def http_get(self):
-        from file import Image
-
-        context = self.context
-        width = self.width.value
-        height = self.height.value
-
-        # Choose an image to illustrate
+        default_icon = ui.get_template(self.default_icon)
         if PILImage is None:
             # Full size but better than nothing
-            default_icon = ui.get_template(self.default_icon)
             data = default_icon.to_str()
             format = 'png'
         else:
-            # Find the first accessible image
-            user = context.user
-            resource = self.resource
-            ac = resource.access_control
-            for image in resource.search_resources(cls=Image):
-                # Search public image safe for all
-                if ac.is_allowed_to_view(user, image):
-                    data, format = image.handler.get_thumbnail(width, height)
-                    break
-            else:
-                # Default icon for empty or inaccessible folders
-                default_icon = ui.get_template(self.default_icon)
-                data, format = default_icon.get_thumbnail(width, height)
+            width = self.width.value
+            height = self.height.value
+            data, format = default_icon.get_thumbnail(width, height)
 
         # XXX Cache nothing here
         # The image thumbnail was cached in the image handler
         # The folder thumbnail was cached in the folder handler
         # Accessible images depend on too many parameters
+        context = self.context
         context.ok('image/%s' % format, data)
 
 
