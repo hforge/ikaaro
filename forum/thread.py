@@ -50,7 +50,7 @@ class Thread_View(STLForm):
     def get_namespace(self, resource, context):
         user = context.user
         users = resource.get_resource('/users')
-        ac = resource.get_access_control()
+        ac = resource.access_control
         accept = context.accept_language
 
         messages = []
@@ -94,7 +94,7 @@ class Thread_View(STLForm):
         user = context.user
         for name in form['ids']:
             child = resource.get_resource(name)
-            ac = child.get_access_control()
+            ac = child.access_control
             if ac.is_allowed_to_remove(user, child):
                 resource.del_resource(name)
         message = INFO(u"Message(s) deleted !")

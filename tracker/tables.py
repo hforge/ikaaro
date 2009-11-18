@@ -80,7 +80,7 @@ class SelectTable_View(OrderedTable_View):
             return count, '../;view?%s=%s' % (filter, item.id)
         # Don't show the "edit" link when i am not an admin.
         elif column == 'id':
-            ac = resource.get_access_control()
+            ac = resource.access_control
             is_admin =  ac.is_admin(context.user, resource)
 
             id = item.id

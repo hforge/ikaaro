@@ -25,7 +25,8 @@ from random import random
 from time import time
 
 # Import from itools
-from itools.core import freeze, lazy
+from itools.core import freeze
+from itools.core import thingy_type, thingy_property, thingy_lazy_property
 from itools.csv import Property
 from itools.datatypes import Unicode, String, Integer, Boolean, DateTime
 from itools.http import get_context
@@ -40,7 +41,6 @@ from resource_views import DBResource_Edit, DBResource_Backlinks
 from resource_views import DBResource_AddImage, DBResource_AddLink
 from resource_views import DBResource_AddMedia, LoginView, LogoutView
 from revisions_views import DBResource_CommitLog, DBResource_Changes
-from workflow import WorkflowAware
 from views_new import NewInstance
 
 
@@ -69,18 +69,18 @@ class IResource(Resource):
     def get_site_root(self):
         from website import WebSite
         resource = self
-        while not isinstance(resource, WebSite):
+        while not issubclass(resource, WebSite):
             resource = resource.get_parent()
         return resource
 
 
-    @property
+    @thingy_lazy_property
     def default_view_name(self):
         views = self.class_views
         if not views:
             return None
         context = self.context
-        ac = self.get_access_control()
+        ac = self.access_control
         for view_name in views:
             view = getattr(self, view_name, None)
             if ac.is_access_allowed(context, self, view):
@@ -135,7 +135,7 @@ class IResource(Resource):
     # User interface
     ########################################################################
     def get_views(self):
-        ac = self.get_access_control()
+        ac = self.access_control
         for link in self.class_views:
             if '?' in link:
                 name, args = link.split('?')
@@ -151,10 +151,10 @@ class IResource(Resource):
 ###########################################################################
 # Database resources
 ###########################################################################
-class DBResourceMetaclass(type):
+class DBResourceMetaclass(thingy_type):
 
     def __new__(mcs, name, bases, dict):
-        cls = type.__new__(mcs, name, bases, dict)
+        cls = thingy_type.__new__(mcs, name, bases, dict)
         if 'class_id' in dict:
             register_resource_class(cls)
         for name, dt in cls.class_schema.iteritems():
@@ -184,7 +184,7 @@ class DBResource(CatalogAware, IResource):
             self.metadata = metadata
 
 
-    @lazy
+    @thingy_lazy_property
     def metadata(self):
         path = self.path
         return self.context._get_metadata(str(path), path)
@@ -204,14 +204,6 @@ class DBResource(CatalogAware, IResource):
             else:
                 metadata._set_property(key, value)
 
-        # Workflow State (default)
-        if kw.get('state') is None and isinstance(self, WorkflowAware):
-            datatype = self.get_property_datatype('state')
-            state = datatype.get_default()
-            if state is None:
-                state  = self.workflow.initstate
-            metadata._set_property('state', state)
-
 
     def get_handler(self):
         if self._handler is None:
@@ -226,7 +218,7 @@ class DBResource(CatalogAware, IResource):
             self._handler = handler
         return self._handler
 
-    handler = property(get_handler)
+    handler = thingy_property(get_handler)
 
 
     def load_handlers(self):
@@ -592,6 +584,10 @@ class DBResource(CatalogAware, IResource):
     ########################################################################
     # User interface
     ########################################################################
+    def get_workflow_preview(self):
+        return None
+
+
     def get_content_language(self, languages=None):
         if languages is None:
             site_root = self.get_site_root()

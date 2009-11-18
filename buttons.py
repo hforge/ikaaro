@@ -39,7 +39,7 @@ class Button(object):
     def show(cls, resource, context, items):
         if len(items) == 0:
             return False
-        ac = resource.get_access_control()
+        ac = resource.access_control
         return ac.is_access_allowed(context, resource, cls)
 
 
@@ -94,7 +94,7 @@ class PasteButton(Button):
         cut, paths = context.get_cookie('ikaaro_cp', datatype=CopyCookie)
         if len(paths) == 0:
             return False
-        ac = resource.get_access_control()
+        ac = resource.access_control
         return ac.is_access_allowed(context, resource, cls)
 
 
@@ -109,7 +109,7 @@ class PublishButton(Button):
 
     @classmethod
     def show(cls, resource, context, items):
-        ac = resource.get_access_control()
+        ac = resource.access_control
         for item in items:
             if ac.is_allowed_to_trans(context.user, item, 'publish'):
                 return True
@@ -127,7 +127,7 @@ class RetireButton(Button):
 
     @classmethod
     def show(cls, resource, context, items):
-        ac = resource.get_access_control()
+        ac = resource.access_control
         for item in items:
             if type(item) is tuple:
                 item = item[1]

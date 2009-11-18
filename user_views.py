@@ -138,7 +138,7 @@ class User_Profile(STLView):
         context = self.context
         resource = self.resource
 
-        ac = resource.get_access_control()
+        ac = resource.access_control
 
         # The icons menu
         items = []
@@ -338,7 +338,7 @@ class User_Tasks(STLView):
         documents = []
         for document in context.search(query).get_documents():
             # Check security
-            ac = document.get_access_control()
+            ac = document.access_control
             if not ac.is_allowed_to_view(user, document):
                 continue
             # Append

@@ -17,7 +17,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import freeze, thingy_lazy_property
+from itools.core import freeze, merge_dicts
+from itools.core import thingy_property, thingy_lazy_property
 from itools.csv import Property
 from itools.datatypes import String, Unicode
 from itools.gettext import MSG
@@ -28,6 +29,9 @@ from itools.web import STLForm, INFO, ERROR, choice_field, textarea_field
 from itools.workflow import Workflow, WorkflowAware as BaseWorkflowAware
 from itools.workflow import WorkflowError
 from itools.xml import XMLParser
+
+# Import from ikaaro
+from resource_ import DBResource
 
 
 
@@ -46,7 +50,7 @@ class StateForm(STLForm):
 
 
     def statename(self):
-        return self.resource.get_statename()
+        return self.resource.get_workflow_state()
 
 
     @thingy_lazy_property
@@ -62,7 +66,7 @@ class StateForm(STLForm):
         resource = self.resource
         user = self.context.user
 
-        ac = resource.get_access_control()
+        ac = resource.access_control
         transitions = []
         for name, trans in self.state.transitions.items():
             view = resource.get_view(name)
@@ -149,22 +153,22 @@ workflow.set_initstate('private')
 
 
 
-class WorkflowAware(BaseWorkflowAware):
+class WorkflowAware(DBResource, BaseWorkflowAware):
 
     class_version = '20090122'
     workflow = workflow
 
 
     from obsolete.metadata import WFTransition
-    class_schema = freeze({
+    class_schema = merge_dicts(
+        DBResource.class_schema,
         # Metadata
-        'state': String(source='metadata'),
-        'workflow': Unicode(source='metadata', multiple=True),
+        state=String(source='metadata'),
+        workflow=Unicode(source='metadata', multiple=True),
         # Metadata (XXX backwards compatibility with 0.50)
-        'wf_transition': WFTransition(source='metadata'),
+        wf_transition=WFTransition(source='metadata'),
         # Other
-        'workflow_state': String(stored=True, indexed=True),
-        })
+        workflow_state=String(stored=True, indexed=True))
 
 
     def get_workflow_state(self):
@@ -178,8 +182,23 @@ class WorkflowAware(BaseWorkflowAware):
         self.set_property('state', value)
 
 
-    # XXX itools.workflow API
-    workflow_state = property(get_workflow_state)
+    # FIXME We redefine the itools.workflow.WorkflowAware API because that
+    # class is not thingy
+    def get_state(self):
+        statename = self.get_workflow_state()
+        return self.workflow.states.get(statename)
+
+
+    def init_resource(self, **kw):
+        super(WorkflowAware, self).init_resource(**kw)
+
+        # Workflow State (default)
+        if kw.get('state') is None:
+            datatype = self.get_property_datatype('state')
+            state = datatype.get_default()
+            if state is None:
+                state  = self.workflow.initstate
+            self.metadata._set_property('state', state)
 
 
     ########################################################################
@@ -203,7 +222,7 @@ class WorkflowAware(BaseWorkflowAware):
         self.do_trans(transition)
 
         # Keep comment
-        user = get_context().user
+        user = self.context.user
         username = user and user.get_name() or None
         now = datetime.now()
         workflow = Property(comments, date=now, author=username,
@@ -214,6 +233,18 @@ class WorkflowAware(BaseWorkflowAware):
     ########################################################################
     # User Interface
     ########################################################################
+    def get_workflow_preview(self):
+        statename = self.get_workflow_state()
+        state = self.get_state()
+        msg = state['title'].gettext().encode('utf-8')
+        path = self.path
+        # TODO Include the template in the base table
+        state = (
+            '<a href="%s/;edit_state" class="workflow">'
+            '<strong class="wf-%s">%s</strong></a>') % (path, statename, msg)
+        return XMLParser(state)
+
+
     edit_state = StateForm()
 
 
@@ -225,17 +256,3 @@ class WorkflowAware(BaseWorkflowAware):
         if metadata.has_property('wf_transition'):
             metadata.del_property('wf_transition')
 
-
-
-def get_workflow_preview(resource, context):
-    if not isinstance(resource, WorkflowAware):
-        return None
-    statename = resource.get_statename()
-    state = resource.get_state()
-    msg = state['title'].gettext().encode('utf-8')
-    path = resource.path
-    # TODO Include the template in the base table
-    state = (
-        '<a href="%s/;edit_state" class="workflow">'
-        '<strong class="wf-%s">%s</strong></a>') % (path, statename, msg)
-    return XMLParser(state)

@@ -37,7 +37,6 @@ from ikaaro.folder_views import Folder_Table, GoToSpecificDocument
 from ikaaro.table import OrderedTableFile, OrderedTable
 from ikaaro.table_views import OrderedTable_View
 from ikaaro.views import CompositeForm
-from ikaaro.workflow import get_workflow_preview
 
 
 class AddButton(Button):
@@ -125,7 +124,7 @@ class ResourcesOrderedTable_Ordered(OrderedTable_View):
                 label = MSG(u'Broken').gettext().encode('utf-8')
                 state = '<strong class="broken">%s</strong>' % label
                 return XMLParser(state)
-            return get_workflow_preview(item_resource, context)
+            return item_resource.get_workflow_preview()
         elif column == 'order_preview':
             if item_resource is None:
                 return None
@@ -204,7 +203,7 @@ class ResourcesOrderedTable_Unordered(Folder_Table):
             return item_brain.name
         elif column == 'workflow_state':
             # The workflow state
-            return get_workflow_preview(item_resource, context)
+            return item_resource.get_workflow_preview()
         elif column == 'order_preview':
             return get_resource_preview(item_resource,
                 self.preview_image_width, self.preview_image_height,
@@ -421,7 +420,7 @@ class ResourcesOrderedContainer(Folder):
         order_root = order_table.get_order_root()
         for name in order_table.get_ordered_names():
             resource = order_root.get_resource(name)
-            ac = resource.get_access_control()
+            ac = resource.access_control
             if ac.is_allowed_to_view(context.user, resource):
                 yield name
 
