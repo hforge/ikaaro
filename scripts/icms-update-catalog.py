@@ -67,7 +67,7 @@ def update_catalog(parser, options, target):
     t0, v0 = time(), vmsize()
     doc_n = 0
     for obj in root.traverse_resources():
-        if not isinstance(obj, CatalogAware):
+        if not issubclass(obj, CatalogAware):
             continue
         if not options.quiet:
             print doc_n, obj.get_abspath()

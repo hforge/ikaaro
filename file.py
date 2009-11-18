@@ -59,7 +59,7 @@ class File(WorkflowAware):
 
 
     def init_resource(self, body=None, filename=None, extension=None, **kw):
-        super(File, self).init_resource(self, filename=filename, **kw)
+        super(File, self).init_resource(filename=filename, **kw)
         if body:
             handler = self.class_handler(string=body)
             extension = (
