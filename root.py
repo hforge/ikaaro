@@ -80,11 +80,11 @@ class Root(WebSite):
 
 
     def _get_names(self):
-        return [ x for x in Folder._get_names(self) if x ]
+        return [ x for x in super(Root, self)._get_names() if x ]
 
 
     def get_document_types(self):
-        return WebSite.get_document_types(self) + [WebSite]
+        return super(Root, self).get_document_types() + [WebSite]
 
 
     #######################################################################
