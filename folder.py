@@ -98,7 +98,7 @@ class Folder(DBResource):
         """Is the source resource can be pasted into myself.
         """
         allowed_types = tuple(self.get_document_types())
-        return isinstance(source, allowed_types)
+        return issubclass(source, allowed_types)
 
 
     def _get_names(self):
@@ -152,7 +152,7 @@ class Folder(DBResource):
         folder = self.handler
         for handler in resource.get_handlers():
             # Skip empty folders
-            if isinstance(resource, Folder) and not vfs.exists(handler.uri):
+            if issubclass(resource, Folder) and not vfs.exists(handler.uri):
                 continue
             folder.del_handler(handler.uri)
         folder.del_handler('%s.metadata' % name)
@@ -177,7 +177,7 @@ class Folder(DBResource):
         # TODO this is a work-around, there should be another way to define
         # explicitly the handler class.
         source = self.get_resource(source_path)
-        if isinstance(source, Folder):
+        if issubclass(source, Folder):
             for resource in source.traverse_resources():
                 resource.load_handlers()
         else:
@@ -267,7 +267,7 @@ class Folder(DBResource):
         yield self
         for name in self._get_names():
             resource = self.get_resource(name)
-            if isinstance(resource, Folder):
+            if issubclass(resource, Folder):
                 for x in resource.traverse_resources():
                     yield x
             else:
@@ -280,7 +280,7 @@ class Folder(DBResource):
 
         for resource in self.get_resources():
             # Filter by base class
-            if not isinstance(resource, cls):
+            if not issubclass(resource, cls):
                 continue
             # Filter by class_id
             if format is not None and resource.metadata.format != format:

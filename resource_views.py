@@ -206,19 +206,19 @@ class DBResource_AddBase(STLForm):
 
     def get_start(self, resource):
         from file import File
-        if isinstance(resource, File):
+        if issubclass(resource, File):
             return resource.get_parent()
         return resource
 
 
     def is_folder(self, resource):
         bases = self.get_folder_classes()
-        return isinstance(resource, bases)
+        return issubclass(resource, bases)
 
 
     def is_item(self, resource):
         bases = self.get_item_classes()
-        return isinstance(resource, bases)
+        return issubclass(resource, bases)
 
 
     def can_upload(self, cls):
@@ -241,7 +241,7 @@ class DBResource_AddBase(STLForm):
         target_path = context.get_form_value('target')
         # Get the target folder
         if target_path is None:
-            if isinstance(start, Folder):
+            if issubclass(start, Folder):
                 target = start
             else:
                 target = start.get_parent()
@@ -281,7 +281,7 @@ class DBResource_AddBase(STLForm):
             url = uri.replace(target=str(root.get_pathto(resource)))
 
             # Calculate path
-            if isinstance(resource, Image):
+            if issubclass(resource, Image):
                 path_to_icon = ";thumb?width48=&height=48"
             else:
                 path_to_icon = resource.get_resource_icon(48)
