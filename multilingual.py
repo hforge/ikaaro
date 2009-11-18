@@ -33,7 +33,7 @@ class Multilingual(DBResource):
 
 
     def init_resource(self, body=None, filename=None, language=None, **kw):
-        DBResource.init_resource(self, filename=filename, **kw)
+        super(Multilingual, self).init_resource(filename=filename, **kw)
         if body:
             handler = self.handler_class(string=body)
             name = FileName.encode((name, handler.class_extension, language))

@@ -70,7 +70,7 @@ class Root(WebSite):
 
 
     def init_resource(self, email, password, admins=('0',), **kw):
-        WebSite.init_resource(self, admins=admins, **kw)
+        super(Root, self).init_resource(admins=admins, **kw)
         # User folder
         users = self.make_resource('users', UserFolder, title={'en': u'Users'})
         # Default User
