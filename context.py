@@ -312,7 +312,7 @@ class CMSContext(WebContext):
         old2new = self.cache_old2new
         new2old = self.cache_new2old
 
-        if isinstance(resource, Folder):
+        if issubclass(resource, Folder):
             for x in resource.traverse_resources():
                 path = str(x.path)
                 old2new[path] = None
@@ -329,8 +329,7 @@ class CMSContext(WebContext):
         old2new = self.cache_old2new
         new2old = self.cache_new2old
 
-        # Catalog
-        if isinstance(resource, Folder):
+        if issubclass(resource, Folder):
             for x in resource.traverse_resources():
                 path = str(x.path)
                 self.cache[path] = x
@@ -374,7 +373,7 @@ class CMSContext(WebContext):
             new2old[target_path] = source_path
 
         old_path = source.path
-        if isinstance(source, Folder):
+        if issubclass(source, Folder):
             for x in source.traverse_resources():
                 x_old_path = x.path
                 x_new_path = new_path.resolve2(old_path.get_pathto(x_old_path))

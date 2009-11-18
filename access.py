@@ -345,7 +345,7 @@ class AccessControl(BaseAccessControl):
 
     def is_allowed_to_view(self, user, resource):
         # Resources with workflow
-        if isinstance(resource, WorkflowAware):
+        if issubclass(resource, WorkflowAware):
             state = resource.workflow_state
             # Anybody can see public resources
             if state == 'public':
@@ -386,7 +386,7 @@ class AccessControl(BaseAccessControl):
 
 
     def is_allowed_to_trans(self, user, resource, name):
-        if not isinstance(resource, WorkflowAware):
+        if not issubclass(resource, WorkflowAware):
             return False
 
         return self.is_allowed_to_edit(user, resource)
@@ -458,7 +458,7 @@ class RoleAware(AccessControl):
         else:
             role = self.get_user_role(user.get_name())
         # The state of the resource
-        if isinstance(resource, WorkflowAware):
+        if issubclass(resource, WorkflowAware):
             state = resource.get_value('workflow_state')
         else:
             state = 'public'
@@ -493,7 +493,7 @@ class RoleAware(AccessControl):
 
         # Members only can touch not-yet-published documents
         if self.has_user_role(username, 'members'):
-            if isinstance(resource, WorkflowAware):
+            if issubclass(resource, WorkflowAware):
                 state = resource.workflow_state
                 # Public resources are frozen for members
                 if state != 'public':
@@ -516,7 +516,7 @@ class RoleAware(AccessControl):
 
 
     def is_allowed_to_trans(self, user, resource, name):
-        if not isinstance(resource, WorkflowAware):
+        if not issubclass(resource, WorkflowAware):
             return False
 
         # Anonymous can touch nothing
