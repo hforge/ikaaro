@@ -26,7 +26,7 @@ from itools.core import merge_dicts
 from itools.gettext import MSG
 from itools.html import xhtml_uri, XHTMLFile
 from itools.stl import rewrite_uris
-from itools.uri import Reference, get_reference
+from itools.uri import Path, Reference, get_reference
 from itools.web import BaseView, get_context
 from itools.xml import START_ELEMENT
 
@@ -240,6 +240,11 @@ class WebPage(ResourceWithHTML, Multilingual, Text):
 
     def update_links(self,  source, target):
         base = self.get_abspath()
+        resources_new2old = get_context().database.resources_old2new
+        base = str(base)
+        base = resources_new2old.get(base, base)
+        base = Path(base)
+
         for handler in self.get_handlers():
             events = _change_link(source, target, base, handler.events)
             events = list(events)
