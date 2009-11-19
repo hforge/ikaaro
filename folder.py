@@ -23,7 +23,7 @@ from itools.gettext import MSG
 from itools.handlers import Folder as FolderHandler
 from itools.http import get_context
 from itools.uri import Path
-from itools.web import BaseView
+from itools.web import view
 
 # Import from ikaaro
 from exceptions import ConsistencyError
@@ -301,9 +301,9 @@ class Folder(DBResource):
         # Add resource form
         if name == 'new_resource':
             if query and 'type' in query:
-                view = get_resource_class(query['type']).new_instance
-                if issubclass(view, BaseView):
-                    return view
+                new_instance = get_resource_class(query['type']).new_instance
+                if issubclass(new_instance, view):
+                    return new_instance
 
         # Default
         return super(Folder, self).get_view(name, query)

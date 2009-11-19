@@ -42,7 +42,7 @@ from itools.i18n import format_datetime
 from itools.uri import get_reference
 from itools.uri.mailto import Mailto
 from itools.fs import lfs, FileName
-from itools.web import BaseView, STLView, ERROR
+from itools.web import view, stl_view, ERROR
 from itools.xml import XMLParser, XMLError
 
 # Import from ikaaro
@@ -140,7 +140,7 @@ def resolve_images(doctree, resource, context):
 
 
 
-class WikiPage_View(BaseView):
+class WikiPage_View(view):
 
     access = 'is_allowed_to_view'
     title = MSG(u'View')
@@ -225,7 +225,7 @@ class WikiPage_View(BaseView):
 
 
 
-class WikiPage_ToPDF(BaseView):
+class WikiPage_ToPDF(view):
 
     access = 'is_allowed_to_view'
     title = MSG(u"To PDF")
@@ -401,7 +401,7 @@ class WikiPage_Edit(DBResource_Edit):
 
 
 
-class WikiPage_Help(STLView):
+class WikiPage_Help(stl_view):
 
     access = 'is_allowed_to_view'
     title = MSG(u"Help")

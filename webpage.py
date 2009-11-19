@@ -27,7 +27,7 @@ from itools.html import xhtml_uri, XHTMLFile
 from itools.http import get_context
 from itools.stl import rewrite_uris
 from itools.uri import Path, Reference, get_reference
-from itools.web import BaseView
+from itools.web import view
 from itools.xml import START_ELEMENT
 
 # Import from ikaaro
@@ -144,7 +144,7 @@ def _change_link(source, target, old_base, new_base, stream):
 ###########################################################################
 # Views
 ###########################################################################
-class WebPage_View(BaseView):
+class WebPage_View(view):
     access = 'is_allowed_to_view'
     view_title = MSG(u'View')
     icon = 'view.png'

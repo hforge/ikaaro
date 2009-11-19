@@ -25,7 +25,7 @@ from itools.gettext import MSG
 from itools.http import get_context
 from itools.i18n import format_datetime
 from itools.log import log_error
-from itools.web import STLForm, INFO, ERROR, choice_field, textarea_field
+from itools.web import stl_view, INFO, ERROR, choice_field, textarea_field
 from itools.workflow import Workflow, WorkflowAware as BaseWorkflowAware
 from itools.workflow import WorkflowError
 from itools.xml import XMLParser
@@ -38,7 +38,7 @@ from resource_ import DBResource
 ###########################################################################
 # Views
 ###########################################################################
-class StateForm(STLForm):
+class StateForm(stl_view):
 
     access = 'is_allowed_to_edit'
     view_title = MSG(u'Publication')

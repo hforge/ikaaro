@@ -32,7 +32,7 @@ from itools.xml import XMLParser, START_ELEMENT
 # Import from ikaaro
 from ikaaro.file import Image
 from ikaaro.folder import Folder
-from ikaaro.views import CompositeForm, ContextMenu
+from ikaaro.views import composite_view, ContextMenu
 from ikaaro.webpage import ResourceWithHTML, WebPage
 from ikaaro.wiki import WikiPage
 from ikaaro.workflow import WorkflowAware
@@ -90,7 +90,7 @@ class Dressable_Menu(ContextMenu):
 
 
 
-class Dressable_View(CompositeForm):
+class Dressable_View(composite_view):
 
     access = 'is_allowed_to_view'
     title = MSG(u'View')
@@ -99,7 +99,7 @@ class Dressable_View(CompositeForm):
 
 
     def GET(self, resource, context):
-        stream = CompositeForm.GET(self, resource, context)
+        stream = super(Dressable_View, self).GET(resource, context)
         prefix = '%s/' % resource.name
         return set_prefix(stream, prefix)
 

@@ -36,7 +36,7 @@ from ikaaro.folder import Folder
 from ikaaro.folder_views import Folder_Table, GoToSpecificDocument
 from ikaaro.table import OrderedTableFile, OrderedTable
 from ikaaro.table_views import OrderedTable_View
-from ikaaro.views import CompositeForm
+from ikaaro.views import composite_view
 
 
 class AddButton(Button):
@@ -241,7 +241,7 @@ class ResourcesOrderedTable_Unordered(Folder_Table):
 
 
 
-class ResourcesOrderedTable_View(CompositeForm):
+class ResourcesOrderedTable_View(composite_view):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'View')

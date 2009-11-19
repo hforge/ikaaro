@@ -23,7 +23,7 @@ from itools.core import thingy_lazy_property
 from itools.csv import UniqueError, Property, is_multilingual
 from itools.datatypes import Integer, Enumerate, Tokens
 from itools.gettext import MSG
-from itools.web import INFO, ERROR, BaseView, FormError
+from itools.web import INFO, ERROR, view, FormError
 from itools.xapian import PhraseQuery
 
 # Import from ikaaro
@@ -396,7 +396,7 @@ class OrderedTable_View(Table_View):
 
 
 
-class Table_ExportCSV(BaseView):
+class Table_ExportCSV(view):
 
     access = 'is_admin'
     view_title = MSG(u"Export to CSV")

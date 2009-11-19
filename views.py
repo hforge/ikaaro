@@ -20,7 +20,7 @@ from itools.datatypes import Boolean, Integer, String, Unicode
 from itools.gettext import MSG
 from itools.stl import stl
 from itools.uri import get_reference
-from itools.web import BaseView, STLView, STLForm
+from itools.web import view, stl_view
 from itools.web import boolean_field, choice_field, hidden_field, integer_field
 from itools.web import text_field
 from itools.xml import XMLParser
@@ -34,7 +34,7 @@ from utils import CMSTemplate
 """
 
 
-class CompositeView(STLView):
+class composite_view(stl_view):
 
     template = '/ui/generic/cascade.xml'
     subviews = []
@@ -56,12 +56,6 @@ class CompositeView(STLView):
         views = [ view.GET(resource, context) for view in self.subviews ]
         return {'views': views}
 
-
-
-class CompositeForm(CompositeView, STLForm):
-    """This view renders the sub-views defined by the class variable
-    'subviews' one after the other.
-    """
 
     def get_schema(self, resource, context):
         # Check for specific schema
@@ -86,7 +80,7 @@ class CompositeForm(CompositeView, STLForm):
 
 
 
-class MessageView(BaseView):
+class MessageView(view):
 
     def render(self):
         message = self.message
@@ -96,7 +90,7 @@ class MessageView(BaseView):
 
 
 
-class IconsView(STLView):
+class IconsView(stl_view):
     """This view draws a menu where each menu item is made up of a big
     icon (48x48 pixels), a title and a description.
     """
@@ -150,7 +144,7 @@ class ContextMenu(CMSTemplate):
 # Search, batch, table
 ###########################################################################
 
-class Container_Search(STLView):
+class Container_Search(stl_view):
 
     template = 'generic/search.xml'
     term = text_field(source='query')
@@ -166,7 +160,7 @@ class Container_Search(STLView):
 
 
 
-class Container_Sort(STLView):
+class Container_Sort(stl_view):
 
     template = 'generic/sort.xml'
 
@@ -175,7 +169,7 @@ class Container_Sort(STLView):
 
 
 
-class Container_Batch(STLView):
+class Container_Batch(stl_view):
 
     template = 'generic/batch.xml'
 
@@ -252,7 +246,7 @@ class Container_Batch(STLView):
 
 
 
-class Container_Form(STLForm):
+class Container_Form(stl_view):
 
     template = 'generic/form.xml'
 
@@ -281,7 +275,7 @@ class Container_Form(STLForm):
 
 
 
-class Container_Table(STLForm):
+class Container_Table(stl_view):
 
     template = 'generic/table.xml'
     css = None

@@ -27,14 +27,14 @@ from itools.datatypes import String, Unicode
 from itools.gettext import MSG
 from itools.stl import stl
 from itools.uri import Path, get_reference
-from itools.web import ERROR, INFO, STLForm, input_field
+from itools.web import ERROR, INFO, stl_view, input_field
 
 # Import from ikaaro
 from boot import ui
 from skins_views import LanguagesTemplate, LocationTemplate
 
 
-class Skin(STLForm):
+class Skin(stl_view):
 
     class_title = MSG(u'Skin')
     class_icon16 = 'icons/16x16/skin.png'

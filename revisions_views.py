@@ -25,7 +25,7 @@ from itools.core import OrderedDict
 from itools.datatypes import Boolean, String
 from itools.gettext import MSG
 from itools.uri import encode_query, get_reference
-from itools.web import ERROR, STLView, STLForm, make_stl_template
+from itools.web import ERROR, stl_view, make_stl_template
 from itools.web import hidden_field, multiple_choice_field
 
 # Import from ikaaro
@@ -128,12 +128,13 @@ class DiffButton(Button):
 
 
 
-class DBResource_CommitLog(STLForm):
+class DBResource_CommitLog(stl_view):
 
     access = 'is_allowed_to_edit'
     view_title = MSG(u"Commit Log")
 
     template = make_stl_template("${batch}${form}")
+
 
     # Search
     @thingy_lazy_property
@@ -219,7 +220,7 @@ class DBResource_CommitLog(STLForm):
 
 
 
-class DBResource_Changes(STLView):
+class DBResource_Changes(stl_view):
 
     access = 'is_admin'
     view_title = MSG(u'Changes')

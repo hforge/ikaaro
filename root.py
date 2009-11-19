@@ -23,7 +23,7 @@ from itools.core import freeze
 from itools.datatypes import String
 from itools.gettext import MSG
 from itools.handlers import RWDatabase
-from itools.web import BaseView
+from itools.web import view
 
 # Import from ikaaro
 from folder import Folder
@@ -34,7 +34,7 @@ from website import WebSite
 
 
 
-class CtrlView(BaseView):
+class CtrlView(view):
 
     access = True
     query_schema = {'name': String}

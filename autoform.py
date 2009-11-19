@@ -23,7 +23,7 @@ from itools.core import thingy_lazy_property
 from itools.datatypes import Date, Enumerate, Boolean
 from itools.gettext import MSG
 from itools.http import get_context
-from itools.web import STLForm, make_stl_template
+from itools.web import stl_view, make_stl_template
 from itools.web import boolean_field, choice_field, hidden_field
 from itools.web import readonly_field, text_field
 
@@ -94,7 +94,7 @@ class ImageSelectorWidget(PathSelectorWidget):
 ###########################################################################
 # Generate Form
 ###########################################################################
-class AutoForm(STLForm):
+class AutoForm(stl_view):
     """Fields is a dictionnary:
 
       {'firstname': Unicode(mandatory=True),

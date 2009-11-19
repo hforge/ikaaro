@@ -25,7 +25,7 @@ from itools.datatypes import Boolean, Tokens, String
 from itools.gettext import MSG
 from itools.http import get_context
 from itools.web import AccessControl as BaseAccessControl
-from itools.web import INFO, ERROR, STLForm
+from itools.web import INFO, ERROR, stl_view
 from itools.web import choice_field, email_field, multiple_choice_field
 from itools.web import password_field, readonly_field
 from itools.xapian import AndQuery, OrQuery, PhraseQuery, StartQuery
@@ -60,7 +60,7 @@ def is_admin(user, resource):
 ###########################################################################
 # Views
 ###########################################################################
-class RoleAware_BrowseUsers(STLForm):
+class RoleAware_BrowseUsers(stl_view):
 
     access = 'is_admin'
     view_title = MSG(u'Browse Members')
@@ -255,7 +255,7 @@ class RoleAware_EditMembership(AutoForm):
 
 
 
-class RoleAware_AddUser(STLForm):
+class RoleAware_AddUser(stl_view):
 
     access = 'is_admin'
     view_title = MSG(u'Add New Member')
