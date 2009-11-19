@@ -57,7 +57,7 @@ class Table(File):
 
     def add_new_record(self, record):
         get_context().server.change_resource(self)
-        self.handler.add_record(record)
+        return self.handler.add_record(record)
 
 
     def update_record(self, id, **kw):
