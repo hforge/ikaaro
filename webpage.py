@@ -240,7 +240,7 @@ class WebPage(ResourceWithHTML, Multilingual, Text):
 
     def update_links(self,  source, target):
         base = self.get_abspath()
-        resources_new2old = get_context().database.resources_old2new
+        resources_new2old = get_context().database.resources_new2old
         base = str(base)
         base = resources_new2old.get(base, base)
         base = Path(base)
