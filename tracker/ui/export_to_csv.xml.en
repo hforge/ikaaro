@@ -23,7 +23,7 @@
       For Excel (Encoding: CP1252, Separator: ";")
     </label>
     <br/><br/>
-    <input type="submit" class="button-ok" value="Export" />
+    <button type="submit" class="button-ok">Export</button>
   </fieldset>
 </form>
 

@@ -17,7 +17,7 @@
         </td>
       </tr>
     </table>
-    <p><input type="submit" value="Rename" class="button-rename" /></p>
+    <p><button type="submit" class="button-rename">Rename</button></p>
   </form>
 
 </stl:block>

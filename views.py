@@ -272,8 +272,8 @@ class Container_Form(STLForm):
             else:
                 onclick = None
             actions.append(
-                {'name': button.name,
-                 'value': button.title,
+                {'value': button.name,
+                 'title': button.title,
                  'class': button.css,
                  'onclick': onclick})
         return actions

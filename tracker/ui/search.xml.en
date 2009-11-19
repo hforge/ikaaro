@@ -122,7 +122,8 @@
         </tr>
       </table>
       <br/>
-      <input type="submit" name=";view" class="button-search" value="Search" />
+      <button type="submit" name="action" value="view" class="button-search"
+        >Search</button>
     </form>
   </fieldset>
 

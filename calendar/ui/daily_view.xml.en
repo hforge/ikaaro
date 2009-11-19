@@ -9,7 +9,7 @@
     Date:
     <input type="text" name="date" id="date" size="11" value="${c_date}" />
     <input type="button" id="trigger-date" value="..." />
-    <input type="submit" value="OK" class="button-ok" />
+    <button type="submit" class="button-ok">OK</button>
   </form>
 
   <table cellspacing="0" cellpadding="0">

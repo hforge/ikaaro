@@ -24,7 +24,7 @@ textarea {
 }
 
 
-input {
+input, button {
   background-position: left center;
   background-repeat: no-repeat;
 }

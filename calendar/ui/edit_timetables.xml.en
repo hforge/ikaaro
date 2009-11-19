@@ -34,14 +34,17 @@
         <td style="padding-left: 10px;">
           to <input type="text" name="new_end" value="--:--" size="5"
             maxlength="5" />
-          <input type="submit" name=";add" value="Add" class="button-add" />
+          <button type="submit" name="action" value="add" class="button-add"
+            >Add</button>
         </td>
       </tr>
     </table>
 
     <br/>
-    <input type="submit" name=";remove" value="Remove" class="button-delete" />
-    <input type="submit" name=";update" value="Update" class="button-ok" />
+    <button type="submit" name="action" value="remove" class="button-delete"
+      >Remove</button>
+    <button type="submit" name="action" value="update" class="button-ok"
+      >Update</button>
   </fieldset>
 </form>
 

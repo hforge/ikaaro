@@ -24,7 +24,7 @@
       </dd>
     </dl>
     <p>
-      <input type="submit" value="Change" class="button-ok" />
+      <button type="submit" class="button-ok">Change</button>
     </p>
   </form>
 

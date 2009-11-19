@@ -6,7 +6,7 @@
   <fieldset>
     <legend>Sort</legend>
     ${sort_by}
-    <input type="submit" value="OK" class="button-search"/>
+    <button type="submit" class="button-ok">OK</button>
     <br/>
     Reverse: ${reverse}
   </fieldset>

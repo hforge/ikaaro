@@ -109,7 +109,7 @@
   </tr>
   <tr>
     <td colspan="6">
-      <input type="submit" class="button-ok" value="Edit Issues" />
+      <button type="submit" class="button-ok">Edit Issues</button>
     </td>
   </tr>
 </table>

@@ -398,7 +398,7 @@ class WikiPage_Edit(DBResource_Edit):
             'timestamp': DateTime.encode(datetime.now())}
 
 
-    def action(self, resource, context, form):
+    def action_save(self, resource, context, form):
         # Check edit conflict
         if self.edit_conflict:
             return
@@ -427,15 +427,16 @@ class WikiPage_Edit(DBResource_Edit):
             time = format_datetime(datetime.now(), accept=accept)
             message = messages.MSG_CHANGES_SAVED2(time=time)
 
-        # Come back to the desired view
-        if context.has_form_value('view'):
-            goto = context.come_back(message)
-            query = goto.query
-            goto = goto.resolve(';view')
-            goto.query = query
-            return goto
-
         context.message = message
+
+
+    def action_save_and_view(self, resource, context, form):
+        self.action_save(resource, context, form)
+        goto = context.come_back(message)
+        query = goto.query
+        goto = goto.resolve(';view')
+        goto.query = query
+        return goto
 
 
 

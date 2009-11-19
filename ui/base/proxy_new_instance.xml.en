@@ -28,7 +28,7 @@
         </dd>
       </stl:block>
     </dl>
-    <input type="submit" value="Add" class="button-ok" />
+    <button type="submit" class="button-ok">Add</button>
   </fieldset>
 </form>
 

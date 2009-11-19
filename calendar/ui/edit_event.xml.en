@@ -127,11 +127,12 @@
   </table>
 
   <p stl:if="allowed">
-     <input type="submit" name=";edit_event" value="OK" class="button-ok"/>
-     <input stl:if="remove" type="submit" name=";remove_event"
-       value="Definitely remove" class="button-delete" />
-     <input stl:if="not remove" type="submit" name=";cancel"
-       value="Cancel" class="button-cancel" />
+    <button type="submit" name="action" value="edit_event" class="button-ok"
+      >OK</button>
+    <button type="submit" name="action" value="remove_event" stl:if="remove"
+      class="button-delete">Definitely remove</button>
+    <button type="submit" name="action" value="cancel" class="button-cancel"
+      stl:if="not remove">Cancel</button>
   </p>
 
   <script language="javascript">
