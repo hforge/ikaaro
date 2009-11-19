@@ -30,8 +30,8 @@
       </tbody>
     </table>
     <p stl:if="editable">
-      <input type="submit" name=";remove" value="Remove" class="button-delete"
-        onclick="return confirm('${remove_message}');" />
+      <button type="submit" name="action" value="remove" class="button-delete"
+        onclick="return confirm('${remove_message}');">Remove</button>
     </p>
   </form>
 
@@ -41,7 +41,8 @@
     <h3>Post a Reply</h3>
     ${rte}
     <p>
-    <input type="submit" name=";new_reply" value="Reply" class="button-ok"/>
+      <button type="submit" name="action" value="new_reply" class="button-ok"
+        >Reply</button>
     </p>
   </form>
 

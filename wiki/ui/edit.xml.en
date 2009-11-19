@@ -171,8 +171,10 @@
     <p>
       <a name="bottom" style="float: right" id="bottom"></a>
       <input type="hidden" name="timestamp" value="${timestamp}" />
-      <input type="submit" name="save" value="Save" class="button-ok" />
-      <input type="submit" name="view" value="Save &amp; View" class="button-ok" />
+      <button type="submit" name="action" value="save" class="button-ok"
+        >Save</button>
+      <button type="submit" name="action" value="save_and_view"
+        class="button-ok">Save &amp; View</button>
     </p>
   </form>
   <div id="data-formatselect-menu"

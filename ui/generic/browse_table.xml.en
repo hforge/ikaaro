@@ -51,8 +51,9 @@
 </table>
 <p stl:if="actions">
   <stl:block stl:repeat="action actions">
-    <input type="submit" name=";${action/name}" value="${action/value}"
-      class="${action/class}" onclick="${action/onclick}" />
+    <button type="submit" name="action" value="${action/value}"
+      class="${action/class}" onclick="${action/onclick}"
+      >${action/title}</button>
   </stl:block>
 </p>
 </form>

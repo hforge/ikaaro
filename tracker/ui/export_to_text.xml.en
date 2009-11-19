@@ -18,7 +18,7 @@
         <label for="${column/name}">${column/title}</label>
       &nbsp;
     </stl:block>
-    <input type="submit" class="button-ok" value="Update text export" />
+    <button type="submit" class="button-ok">Update text export</button>
   </fieldset>
   <br/>
   <div style="height: 200px; border: 1px solid #9FB7D4; overflow: auto">

@@ -670,8 +670,8 @@ class Folder_PreviewContent(Folder_BrowseContent):
             else:
                 onclick = None
             actions.append(
-                {'name': button.name,
-                 'value': button.title,
+                {'value': button.name,
+                 'title': button.title,
                  'class': button.css,
                  'onclick': onclick})
 

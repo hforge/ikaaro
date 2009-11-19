@@ -51,10 +51,10 @@
         </td>
       </tr>
     </table>
-    <input type="submit" name=";add" class="button-ok" value="Assign"
-      stl:if="not id" />
-    <input type="submit" name=";edit" class="button-ok" value="Save Changes"
-      stl:if="id" />
+    <button type="submit" name="action" value="add" class="button-ok"
+      stl:if="not id">Assign</button>
+    <button type="submit" name="action" value="edit" class="button-ok"
+      stl:if="id">Save Changes</button>
   </fieldset>
 </form>
 <br/>

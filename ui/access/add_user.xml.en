@@ -30,9 +30,10 @@
           </select>
         </dd>
       </dl>
-      <input type="submit" name="add_and_view" value="Add and view"
-        class="button-ok" />
-      <input type="submit" name="add_and_return" value="Add and return" />
+      <button type="submit" name="action" value="add_and_view"
+        class="button-ok">Add and view</button>
+      <button type="submit" name="action" value="add_and_return">Add and
+        return</button>
     </fieldset>
   </form>
 

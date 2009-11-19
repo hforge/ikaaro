@@ -35,7 +35,7 @@
     </dl>
     <p>
       <input type="hidden" name="key" value="${key}" />
-      <input type="submit" value="Next" class="button-ok"/>
+      <button type="submit" class="button-ok">Next</button>
     </p>
   </form>
 

@@ -10,7 +10,7 @@
     <input type="text" name="date" id="date" class="dateField" size="11"
       value="${date}" />
     <input type="button" value="..." />
-    <input type="submit" value="OK" class="button-ok" />
+    <button type="submit" class="button-ok">OK</button>
   </form>
 
   <table cellspacing="0" cellpadding="0">

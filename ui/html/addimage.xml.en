@@ -94,8 +94,8 @@
           <input id="mode" name="mode" type="hidden" value="${mode}" />
           <input id="file" name="file" size="35" type="file" />
           <br/>
-          <input class="button-upload" type="submit" value="Upload"
-            name=";upload"/>
+          <button type="submit" name="action" value="upload"
+            class="button-upload">Upload</button>
         </form>
       </div>
 

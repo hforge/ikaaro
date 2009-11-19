@@ -21,7 +21,7 @@
       for="search-subfolders">Search subfolders</label>
     <!-- OK -->
     &nbsp; &nbsp;
-    <input type="submit" value="OK" class="button-search"/>
+    <button type="submit" class="button-search">OK</button>
   </fieldset>
 </form>
 

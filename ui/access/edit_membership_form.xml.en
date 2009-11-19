@@ -15,7 +15,7 @@
       <label for="${role/name}">${role/title}</label>
     </p>
     <p>
-      <input type="submit" value="Update" class="button-rename" />
+      <button type="submit" class="button-rename">Update</button>
     </p>
   </form>
   </fieldset>

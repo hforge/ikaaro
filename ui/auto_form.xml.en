@@ -31,7 +31,7 @@
       </stl:block>
     </dl>
     <p stl:if="submit_value">
-    <input type="submit" value="${submit_value}" class="${submit_class}" />
+      <button type="submit" class="${submit_class}">${submit_value}</button>
     </p>
   </fieldset>
   <script language="javascript">

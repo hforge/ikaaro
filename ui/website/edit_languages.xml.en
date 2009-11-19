@@ -30,10 +30,10 @@
         </tbody>
       </table>
       <p>
-        <input type="submit" name=";change_default_language"
-          value="Change default" class="button-ok"/>
-        <input type="submit" name=";remove_languages" class="button-delete"
-          value="Remove" />
+        <button type="submit" name="action" value="change_default_language"
+          class="button-ok">Change default</button>
+        <button type="submit" name="action" value="remove_languages"
+          class="button-delete">Remove</button>
       </p>
     </form>
   </fieldset>
@@ -49,7 +49,8 @@
         <option stl:repeat="language not_active_languages"
           value="${language/code}">${language/name}</option>
       </select>
-      <input type="submit" name=";add_language" value="Add" class="button-ok"/>
+      <button type="submit" name="action" value="add_language"
+        class="button-ok">Add</button>
     </form>
   </fieldset>
 

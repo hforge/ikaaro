@@ -23,7 +23,7 @@
         <a href="/;forgotten_password">I forgot my password</a>
       </dd>
     </dl>
-    <input type="submit" value="Log in" class="button-ok"/>
+    <button type="submit" class="button-ok">Log in</button>
   </fieldset>
 
   <script language="javascript">
