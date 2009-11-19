@@ -31,7 +31,7 @@ from itools.i18n import get_language_name
 from itools.stl import stl
 from itools.uri import Path, get_reference
 from itools.vfs import FileName
-from itools.web import BaseView, STLForm, INFO, ERROR, FormError
+from itools.web import view, stl_view, INFO, ERROR, FormError
 from itools.web import file_field, input_field, password_field
 
 # Import from ikaaro
@@ -157,7 +157,7 @@ class DBResource_Backlinks(Folder_Table):
 # Interface to add images from the TinyMCE editor
 ###########################################################################
 
-class DBResource_AddBase(STLForm):
+class DBResource_AddBase(stl_view):
     """Base class for 'DBResource_AddImage' and 'DBResource_AddLink' (used
     by the Web Page editor).
     """
@@ -176,7 +176,7 @@ class DBResource_AddBase(STLForm):
 
 
     def http_get(self):
-        # FIXME Override STLForm.http_get to use 'ok' instead of 'ok_wrap'
+        # FIXME Override stl_view.http_get to use 'ok' instead of 'ok_wrap'
         context.add_query_schema(self.get_query_schema())
         # STL
         namespace = self.get_namespace(resource, context)
@@ -508,7 +508,7 @@ class DBResource_AddMedia(DBResource_AddImage):
 # Views / Login, Logout
 ###########################################################################
 
-class LoginView(STLForm):
+class LoginView(stl_view):
 
     access = True
     view_title = MSG(u'Login')
@@ -560,7 +560,7 @@ class LoginView(STLForm):
 
 
 
-class LogoutView(BaseView):
+class LogoutView(view):
     """Logs out of the application.
     """
 

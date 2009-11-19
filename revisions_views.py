@@ -23,14 +23,14 @@ from itools.core import thingy_property, thingy_lazy_property
 from itools.core import OrderedDict
 from itools.datatypes import Boolean, String
 from itools.gettext import MSG
-from itools.web import STLView, hidden_field, make_stl_template
+from itools.web import stl_view, hidden_field, make_stl_template
 
 # Import from ikaaro
 from views import Container_Search, Container_Sort, Container_Batch
 from views import Container_Table
 
 
-class DBResource_LastChanges(STLView):
+class DBResource_LastChanges(stl_view):
 
     access = 'is_allowed_to_view'
     view_title = MSG(u"Last Changes")
@@ -101,7 +101,7 @@ class DBResource_LastChanges(STLView):
 
 
 
-class DBResource_Changes(STLView):
+class DBResource_Changes(stl_view):
 
     access = 'is_admin'
     view_title = MSG(u'Changes')

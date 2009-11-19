@@ -22,7 +22,7 @@ from itools.core import thingy_lazy_property
 from itools.datatypes import String
 from itools.gettext import MSG
 from itools.i18n import get_language_name
-from itools.web import BaseView, STLView, STLForm, INFO, ERROR, FormError
+from itools.web import view, stl_view, INFO, ERROR, FormError
 from itools.web import choice_field, email_field, password_field, text_field
 from itools.xapian import PhraseQuery, AndQuery, OrQuery, StartQuery
 
@@ -32,7 +32,7 @@ from folder import Folder_Table
 import messages
 
 
-class User_ConfirmRegistration(STLForm):
+class User_ConfirmRegistration(stl_view):
 
     access = True
     template = '/ui/user/confirm_registration.xml'
@@ -93,7 +93,7 @@ class User_ChangePasswordForgotten(User_ConfirmRegistration):
 
 
 
-class User_ResendConfirmation(BaseView):
+class User_ResendConfirmation(view):
 
     access = 'is_admin'
 
@@ -111,7 +111,7 @@ class User_ResendConfirmation(BaseView):
 
 
 
-class User_Profile(STLView):
+class User_Profile(stl_view):
 
     access = 'is_allowed_to_view'
     view_title = MSG(u'Profile')
@@ -226,7 +226,7 @@ class User_EditAccount(AutoForm):
 
 
 
-class User_EditPreferences(STLForm):
+class User_EditPreferences(stl_view):
 
     access = 'is_allowed_to_edit'
     view_title = MSG(u'Edit Preferences')
@@ -259,7 +259,7 @@ class User_EditPreferences(STLForm):
 
 
 
-class User_EditPassword(STLForm):
+class User_EditPassword(stl_view):
 
     access = 'is_allowed_to_edit'
     view_title = MSG(u'Edit Password')
@@ -314,7 +314,7 @@ class User_EditPassword(STLForm):
 
 
 
-class User_Tasks(STLView):
+class User_Tasks(stl_view):
 
     access = 'is_allowed_to_edit'
     view_title = MSG(u'Tasks')

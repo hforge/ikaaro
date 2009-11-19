@@ -23,7 +23,7 @@ from itools.datatypes import String
 from itools.gettext import MSG
 from itools.i18n import format_datetime
 from itools.vfs import FileName
-from itools.web import STLForm, INFO
+from itools.web import stl_view, INFO
 
 # Import from ikaaro
 from ikaaro.autoform import rte_widget
@@ -35,7 +35,7 @@ from message import Message
 ###########################################################################
 # Views
 ###########################################################################
-class Thread_View(STLForm):
+class Thread_View(stl_view):
 
     access = 'is_allowed_to_view'
     title = MSG(u'View')

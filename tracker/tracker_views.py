@@ -30,7 +30,7 @@ from itools.gettext import MSG
 from itools.i18n import format_datetime
 from itools.stl import stl
 from itools.uri import encode_query, Reference
-from itools.web import BaseView, BaseForm, STLForm, FormError, INFO, ERROR
+from itools.web import view, stl_view, FormError, INFO, ERROR
 from itools.web.views import process_form
 
 # Import from ikaaro
@@ -220,7 +220,7 @@ class Tracker_NewInstance(NewInstance):
 
 
 
-class Tracker_AddIssue(STLForm):
+class Tracker_AddIssue(stl_view):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Add')
@@ -235,7 +235,7 @@ class Tracker_AddIssue(STLForm):
 
 
     def get_namespace(self, resource, context):
-        namespace = STLForm.get_namespace(self, resource, context)
+        namespace = super(Tracker_AddIssue, self).get_namespace(resource, context)
         namespace['list_products'] = resource.get_list_products_namespace()
         return namespace
 
@@ -545,7 +545,7 @@ class Tracker_Search(Container_Search, Tracker_View):
 
 
 
-class Tracker_RememberSearch(BaseForm):
+class Tracker_RememberSearch(view):
 
     access = 'is_allowed_to_edit'
     schema = merge_dicts(StoredSearchFile.schema,
@@ -605,7 +605,7 @@ class Tracker_RememberSearch(BaseForm):
 
 
 
-class Tracker_ForgetSearch(BaseForm):
+class Tracker_ForgetSearch(view):
 
     access = 'is_allowed_to_edit'
     schema = {
@@ -621,7 +621,7 @@ class Tracker_ForgetSearch(BaseForm):
 
 
 
-class Tracker_GoToIssue(BaseView):
+class Tracker_GoToIssue(view):
 
     access = 'is_allowed_to_view'
 
@@ -673,14 +673,13 @@ class Tracker_ExportToCSVForm(Tracker_View):
 
 
 
-class Tracker_ExportToCSV(BaseView):
+class Tracker_ExportToCSV(view):
 
     access = 'is_allowed_to_view'
     title = MSG(u'Export to CSV')
     query_schema = {
         'editor': String(default='excel'),
-        'ids': String(multiple=True),
-    }
+        'ids': String(multiple=True)}
 
 
     def GET(self, resource, context):

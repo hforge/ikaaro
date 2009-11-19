@@ -32,14 +32,13 @@ from itools.gettext import MSG
 from itools.ical import Time
 from itools.html import xhtml_uri
 from itools.i18n import format_datetime
-from itools.web import STLForm, STLView
+from itools.web import stl_view
 from itools.xml import XMLParser, START_ELEMENT, END_ELEMENT, TEXT
 
 # Import from ikaaro
 from ikaaro.messages import MSG_CHANGES_SAVED
 from ikaaro.table_views import Table_View
-from ikaaro.views import CompositeForm
-from ikaaro.views import ContextMenu
+from ikaaro.views import composite_view, ContextMenu
 
 # Local import
 from datatypes import get_issue_fields, UsersList
@@ -125,7 +124,7 @@ class IssueTrackerMenu(ContextMenu):
 ###########################################################################
 # Views
 ###########################################################################
-class Issue_Edit(STLForm):
+class Issue_Edit(stl_view):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Edit Issue')
@@ -150,7 +149,7 @@ class Issue_Edit(STLForm):
 
 
     def get_namespace(self, resource, context):
-        namespace = STLForm.get_namespace(self, resource, context)
+        namespace = super(Issue_Edit, self).get_namespace(resource, context)
 
         # The first lines are very much the same of the add issue form
         tracker = resource.get_parent()
@@ -207,7 +206,7 @@ class Issue_Edit(STLForm):
 
 
 
-class Issue_History(STLView):
+class Issue_History(stl_view):
 
     access = 'is_allowed_to_view'
     title = MSG(u'History')
@@ -369,7 +368,7 @@ class Issue_ViewResources(Table_View):
 
 
 
-class Issue_AddEditResource(STLForm):
+class Issue_AddEditResource(stl_view):
 
     access = 'is_allowed_to_edit'
     template = '/ui/tracker/edit_resource.xml'
@@ -473,7 +472,7 @@ class Issue_AddEditResource(STLForm):
 
 
 
-class Issue_EditResources(CompositeForm):
+class Issue_EditResources(composite_view):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Edit resources')
@@ -481,8 +480,7 @@ class Issue_EditResources(CompositeForm):
 
     subviews = [
         Issue_AddEditResource(),
-        Issue_ViewResources(),
-    ]
+        Issue_ViewResources()]
 
     def get_namespace(self, resource, context):
         # Override so we can pass a different resource to Issue_ViewResources

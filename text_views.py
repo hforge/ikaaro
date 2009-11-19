@@ -24,7 +24,7 @@ from operator import itemgetter
 from itools.core import thingy_property, thingy_lazy_property
 from itools.datatypes import Enumerate, Integer, String
 from itools.gettext import MSG
-from itools.web import STLForm, STLView, INFO
+from itools.web import stl_view, INFO
 from itools.web import input_field, integer_field, multiple_choice_field
 from itools.web import textarea_field
 
@@ -67,7 +67,7 @@ class Text_Edit(File_Edit):
 
 
 
-class Text_View(STLView):
+class Text_View(stl_view):
 
     access = 'is_allowed_to_view'
     view_title = MSG(u'View')
@@ -80,7 +80,7 @@ class Text_View(STLView):
 
 
 
-class Text_ExternalEdit(STLView):
+class Text_ExternalEdit(stl_view):
 
     access = 'is_allowed_to_edit'
     view_title = MSG(u'External Editor')
@@ -99,7 +99,7 @@ class Text_ExternalEdit(STLView):
 
 
 
-class PO_Edit(STLForm):
+class PO_Edit(stl_view):
 
     access = 'is_allowed_to_edit'
     view_title = MSG(u'Edit')
@@ -164,7 +164,7 @@ class PO_Edit(STLForm):
 
 
 
-class CSV_View(STLForm):
+class CSV_View(stl_view):
 
     # FIXME We need different permissions for GET and POST
     access = 'is_allowed_to_edit'

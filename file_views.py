@@ -30,7 +30,7 @@ from itools.html import HTMLParser, stream_to_str_as_xhtml
 from itools.i18n import guess_language
 from itools.uri import get_reference, get_uri_name
 from itools.vfs import FileName
-from itools.web import BaseView, STLView, ERROR
+from itools.web import view, stl_view, ERROR
 from itools.web import file_field, integer_field
 
 # Import from ikaaro
@@ -113,7 +113,7 @@ class File_NewInstance(NewInstance):
 
 
 
-class File_Download(BaseView):
+class File_Download(view):
 
     access = 'is_allowed_to_view'
     view_title = MSG(u"Download")
@@ -139,7 +139,7 @@ class File_Download(BaseView):
 
 
 
-class File_View(STLView):
+class File_View(stl_view):
 
     access = 'is_allowed_to_view'
     view_title = MSG(u'Download')
@@ -212,7 +212,7 @@ class File_Edit(DBResource_Edit):
 
 
 
-class File_ExternalEdit(BaseView):
+class File_ExternalEdit(view):
 
     access = 'is_allowed_to_edit'
 
@@ -275,7 +275,7 @@ class File_ExternalEdit(BaseView):
 
 
 
-class Image_Thumbnail(BaseView):
+class Image_Thumbnail(view):
 
     access = 'is_allowed_to_view'
 
@@ -312,7 +312,7 @@ class Image_Thumbnail(BaseView):
 
 
 
-class Image_View(STLView):
+class Image_View(stl_view):
 
     access = 'is_allowed_to_view'
     view_title = MSG(u'View')
@@ -439,7 +439,7 @@ class Image_View(STLView):
 
 
 # FIXME This is broken, check http://alistapart.com/articles/byebyeembed
-class Video_View(STLView):
+class Video_View(stl_view):
 
     access = 'is_allowed_to_view'
     view_title = MSG(u'View')

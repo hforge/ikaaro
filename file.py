@@ -28,7 +28,7 @@ from itools.odf import SXWFile, SXCFile, SXIFile, ODTFile, ODSFile, ODPFile
 from itools.pdf import PDFFile
 from itools.uri import get_uri_path, resolve_uri
 from itools.vfs import FileName
-from itools.web import STLView
+from itools.web import stl_view
 from itools.office import MSPowerPoint as MSPowerPointFile, RTF as RTFFile
 from itools.office import MSWord as MSWordFile, MSExcel as MSExcelFile
 
@@ -188,7 +188,7 @@ class File(WorkflowAware):
     download = File_Download()
     view = File_View()
     edit = File_Edit()
-    externaledit = STLView(
+    externaledit = stl_view(
         access='is_allowed_to_edit',
         view_title=MSG(u'External Editor'),
         icon='external.png',

@@ -26,7 +26,7 @@ from itools.datatypes import Unicode, String
 from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.i18n import format_datetime
-from itools.web import STLForm, INFO
+from itools.web import stl_view, INFO
 
 # Import from ikaaro
 from ikaaro.autoform import title_widget, rte_widget, AutoForm
@@ -37,7 +37,7 @@ from message import Message
 
 
 
-class Forum_View(STLForm):
+class Forum_View(stl_view):
 
     access = 'is_allowed_to_view'
     title = MSG(u'View')

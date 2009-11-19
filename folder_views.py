@@ -32,7 +32,7 @@ from itools.handlers import checkid
 from itools.i18n import format_datetime
 from itools.stl import set_prefix
 from itools.uri import get_reference, Path
-from itools.web import BaseView, STLView, STLForm, ERROR
+from itools.web import view, stl_view, ERROR
 from itools.web import boolean_field, input_field, integer_field
 from itools.web import multiple_choice_field
 from itools.web import make_stl_template
@@ -70,7 +70,7 @@ class ZoomMenu(ContextMenu):
 
 
 
-class Folder_View(BaseView):
+class Folder_View(view):
 
     access = 'is_allowed_to_view_folder'
     view_title = MSG(u'View')
@@ -160,7 +160,7 @@ class Folder_Batch(Container_Batch):
 
 
 
-class Folder_List(STLView):
+class Folder_List(stl_view):
 
     access = 'is_allowed_to_view'
     view_title = MSG(u'List View')
@@ -204,7 +204,7 @@ class Folder_NewResource(IconsView):
 
 
 
-class Folder_Rename(STLForm):
+class Folder_Rename(stl_view):
 
     access = 'is_allowed_to_edit'
     view_title = MSG(u'Rename resources')
@@ -300,7 +300,7 @@ class Folder_Rename(STLForm):
 
 
 
-class Folder_Table(STLForm):
+class Folder_Table(stl_view):
 
     access = 'is_allowed_to_view'
     view_title = MSG(u'Table View')
@@ -340,7 +340,7 @@ class Folder_Table(STLForm):
 
     # Keep the batch in the canonical URL
     canonical_query_parameters = (
-        STLForm.canonical_query_parameters + ['batch_start'])
+        stl_view.canonical_query_parameters + ['batch_start'])
 
 
     def get_item_value(self, item, column):
@@ -614,7 +614,7 @@ class Folder_Table(STLForm):
 
 
 
-class Folder_Gallery_Content(STLView):
+class Folder_Gallery_Content(stl_view):
 
     template = 'folder/gallery.xml'
     image_size = image_size_field(source='query', width=128, height=128)
@@ -741,7 +741,7 @@ class Folder_Orphans(Folder_Table):
 
 
 
-class Folder_Thumbnail(BaseView):
+class Folder_Thumbnail(view):
 
     access = True
 
@@ -775,7 +775,7 @@ class Folder_Thumbnail(BaseView):
 
 
 
-class GoToSpecificDocument(BaseView):
+class GoToSpecificDocument(view):
 
     access = 'is_allowed_to_view'
     view_title = MSG(u'Front Page')

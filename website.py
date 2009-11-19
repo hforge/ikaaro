@@ -22,7 +22,7 @@
 from itools.core import merge_dicts
 from itools.datatypes import String, Tokens, Unicode
 from itools.gettext import MSG
-from itools.web import STLView, VirtualRoot
+from itools.web import stl_view, VirtualRoot
 
 # Import from ikaaro
 from access import RoleAware
@@ -120,8 +120,8 @@ class WebSite(RoleAware, Folder, VirtualRoot):
     contact = ContactForm
     about = AboutView
     credits = CreditsView
-    license = STLView(access=True, view_title=MSG(u'License'),
-                      template='root/license.xml')
+    license = stl_view(access=True, view_title=MSG(u'License'),
+                       template='root/license.xml')
 
     # Calendar views
     month = MonthlyView

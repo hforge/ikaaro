@@ -29,7 +29,7 @@ from itools.datatypes import Email, Enumerate, Unicode
 from itools.gettext import MSG
 from itools.stl import stl
 from itools import vfs
-from itools.web import STLView, INFO, ERROR
+from itools.web import stl_view, INFO, ERROR
 from itools.web import choice_field, email_field, text_field, textarea_field
 from itools.xapian import PhraseQuery, OrQuery, AndQuery, split_unicode
 
@@ -39,21 +39,21 @@ import globals
 
 
 
-class NotFoundView(STLView):
+class NotFoundView(stl_view):
     template = 'root/not_found.xml'
 
     def uri(self):
         return str(self.context.uri)
 
 
-class ForbiddenView(STLView):
+class ForbiddenView(stl_view):
     template = 'root/forbidden.xml'
 
     def POST(self, resource, context):
         return self.GET
 
 
-class InternalServerError(STLView):
+class InternalServerError(stl_view):
     template = 'root/internal_server_error.xml'
 
     def traceback(self):
@@ -207,7 +207,7 @@ class ContactForm(AutoForm):
 
 
 
-class AboutView(STLView):
+class AboutView(stl_view):
 
     access = True
     view_title = MSG(u'About')
@@ -279,7 +279,7 @@ class AboutView(STLView):
 
 
 
-class CreditsView(STLView):
+class CreditsView(stl_view):
 
     access = True
     view_title = MSG(u'Credits')
