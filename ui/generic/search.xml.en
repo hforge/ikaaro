@@ -6,7 +6,7 @@
   <fieldset>
     <legend>Search</legend>
     <input type="text" name="term" size="35" value="${term/encoded_value}" />
-    <input type="submit" value="OK" class="button-search"/>
+    <button type="submit" class="button-search">OK</button>
   </fieldset>
 </form>
 
