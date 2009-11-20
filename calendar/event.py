@@ -78,7 +78,8 @@ class Event_NewInstance(NewInstanceByDate):
     status = status_field()
 
     field_names = [
-        'title', 'dtstart', 'dtend', 'description', 'location', 'status']
+        'title', 'dtstart', 'dtend', 'description', 'location', 'status',
+        'type']
 
 
     def get_date(self):
@@ -257,8 +258,8 @@ class Event(File):
 
 
     # Views
-    new_instance = Event_NewInstance()
-    edit = Event_Edit()
+    new_instance = Event_NewInstance
+    edit = Event_Edit
 
 
 ###########################################################################

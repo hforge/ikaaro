@@ -87,7 +87,7 @@ class DateField(input_field):
 
     datatype = Date
 
-    widget = make_stl_template("""
+    input_template = make_stl_template("""
     <input type="text" name="${name}" value="${encoded_value}" id="${id}"
       class="dateField" size="${size}" />
     <input type="button" value="..." class="${class}" />
@@ -128,7 +128,7 @@ class DateTimeField(input_field):
 
     datatype = DateTime
 
-    widget = make_stl_template("""
+    input_template = make_stl_template("""
     <input type="text" name="${name}" value="${value_date}" id="${id}"
       class="dateField" size="${size}" />
     <input type="button" value="..." class="${class}" />
