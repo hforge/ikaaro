@@ -280,7 +280,6 @@ class Container_Table(stl_view):
     template = 'generic/table.xml'
     css = None
     header = []
-    actions = []
 
     # Actions are external to current form
     external_form = False
@@ -290,6 +289,8 @@ class Container_Table(stl_view):
 
 
     def columns(self):
+        checkbox = self.external_form or self.root_view.form.actions
+
         # Get from the query
         sort_by = self.root_view.sort.sort_by.value
         reverse = self.root_view.sort.reverse.value
@@ -300,7 +301,7 @@ class Container_Table(stl_view):
         for name, title, sortable in columns:
             if name == 'checkbox':
                 # Type: checkbox
-                if self.external_form or self.actions:
+                if checkbox:
                     columns_ns.append({'is_checkbox': True})
             elif title is None or not sortable:
                 # Type: nothing or not sortable
@@ -330,6 +331,8 @@ class Container_Table(stl_view):
 
 
     def rows(self):
+        checkbox = self.external_form or self.root_view.form.actions
+
         columns = self.get_table_columns()
         rows = []
         for item in self.root_view.batch.items:
@@ -338,7 +341,7 @@ class Container_Table(stl_view):
                 column = column[0]
                 # Skip the checkbox column if there are not any actions
                 if column == 'checkbox':
-                    if not self.external_form and not self.actions:
+                    if not checkbox:
                         continue
 
                 value = self.root_view.get_item_value(item, column)
