@@ -22,6 +22,7 @@
 from copy import deepcopy
 
 # Import from itools
+from itools.core import thingy
 from itools.gettext import MSG
 from itools.html import xhtml_uri, XHTMLFile
 from itools.http import get_context
@@ -192,7 +193,7 @@ class HTMLEditView(File_Edit):
 ###########################################################################
 # Model
 ###########################################################################
-class ResourceWithHTML(object):
+class ResourceWithHTML(thingy):
     """A mixin class for handlers implementing HTML editing.
     """
 
