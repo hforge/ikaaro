@@ -15,6 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
+from itools.core import thingy
 from itools.gettext import MSG
 
 # Import from ikaaro
@@ -22,7 +23,7 @@ from datatypes import CopyCookie
 import messages
 
 
-class Button(object):
+class Button(thingy):
 
     access = False
     confirm = None
@@ -35,12 +36,11 @@ class Button(object):
             setattr(self, key, kw[key])
 
 
-    @classmethod
-    def show(cls, resource, context, items):
+    def show(self, resource, context, items):
         if len(items) == 0:
             return False
         ac = resource.get_access_control()
-        return ac.is_access_allowed(context.user, resource, cls)
+        return ac.is_access_allowed(context.user, resource, self)
 
 
 
@@ -89,13 +89,12 @@ class PasteButton(Button):
     title = MSG(u'Paste')
 
 
-    @classmethod
-    def show(cls, resource, context, items):
+    def show(self, resource, context, items):
         cut, paths = context.get_cookie('ikaaro_cp', datatype=CopyCookie)
         if len(paths) == 0:
             return False
         ac = resource.get_access_control()
-        return ac.is_access_allowed(context.user, resource, cls)
+        return ac.is_access_allowed(context.user, resource, self)
 
 
 
@@ -107,8 +106,7 @@ class PublishButton(Button):
     title = MSG(u'Publish')
 
 
-    @classmethod
-    def show(cls, resource, context, items):
+    def show(self, resource, context, items):
         ac = resource.get_access_control()
         for item in items:
             if type(item) is tuple:
@@ -127,8 +125,7 @@ class RetireButton(Button):
     title = MSG(u'Unpublish')
 
 
-    @classmethod
-    def show(cls, resource, context, items):
+    def show(self, resource, context, items):
         ac = resource.get_access_control()
         for item in items:
             if type(item) is tuple:
