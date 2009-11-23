@@ -111,7 +111,7 @@ def forget(parser, target, options):
     print '* Make new branch with shorter history (may take a while)'
     cwd = '%s/database' % target
     command = (
-        'git fast-export --progress=1000 %s.. | '
+        'git fast-export --no-data --progress=1000 %s.. | '
         'sed "s|refs/heads/master|refs/heads/new|" | '
         'git fast-import --quiet')
     # FIXME This does not work if the error comes from git-fast-export,
