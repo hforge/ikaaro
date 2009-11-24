@@ -203,7 +203,7 @@ class NewInstance(NewInstanceByDate):
     date = None
     path = path_field()
 
-    field_names = ['title', 'name', 'path']
+    field_names = ['title', 'name', 'path', 'type']
 
 
     @thingy_lazy_property

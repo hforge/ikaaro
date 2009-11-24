@@ -119,7 +119,8 @@ class AutoForm(stl_view):
 
     @thingy_lazy_property
     def fields(self):
-        return [ x for x in self.get_fields() if issubclass(x, hidden_field) ]
+        return [ x for x in self.get_fields()
+                 if issubclass(x, hidden_field) and x.source == 'form']
 
 
     @thingy_lazy_property
