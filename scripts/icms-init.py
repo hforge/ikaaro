@@ -149,11 +149,9 @@ def init(parser, options, target):
     # Save changes
     start_subprocess(database.path)
     context.save_changes()
-    # Index
+    # Index the root
     catalog = database.catalog
-    for resource in root.traverse_resources():
-        if isinstance(resource, DBResource):
-            catalog.index_document(resource)
+    catalog.index_document(root)
     catalog.save_changes()
 
     # Bravo!
