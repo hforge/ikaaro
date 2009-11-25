@@ -278,7 +278,7 @@ class ProxyNewInstance(NewInstance):
         name = self.new_resource_name
         child = resource.make_resource(name, cls)
         # The metadata
-        language = resource.get_content_language(context)
+        language = resource.get_content_language()
         title = Property(self.title.value, lang=language)
         child.metadata.set_property('title', title)
 

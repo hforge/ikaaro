@@ -594,7 +594,7 @@ class DBResource(CatalogAware, IResource):
             languages = site_root.get_value('website_languages')
 
         # The 'content_language' query parameter has preference
-        language = self.context.get_query_value('content_language')
+        language = self.context.query.get('content_language')
         if language in languages:
             return language
 
