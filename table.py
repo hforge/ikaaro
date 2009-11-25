@@ -19,7 +19,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.csv import Record, Table as TableFile, is_multilingual
+from itools.csv import Record, Table, is_multilingual
 from itools.datatypes import Tokens
 from itools.gettext import MSG
 from itools.http import get_context
@@ -28,31 +28,29 @@ from itools.http import get_context
 from autoform import get_default_field
 from file import File
 from resource_ import DBResource
-from table_views import Table_View, Table_AddRecord, Table_EditRecord
-from table_views import OrderedTable_View, Table_ExportCSV
+from table_views import TableResource_AddRecord, TableResource_EditRecord
+from table_views import TableResource_View, OrderedTableResource_View
+from table_views import TableResource_ExportCSV
 
 
 
-class Table(File):
+
+class TableResource(File):
 
     class_views = ['view', 'add_record', 'edit', 'last_changes']
-    class_handler = TableFile
+    class_handler = Table
     record_class = Record
-    form = []
 
 
     def get_schema(self):
         return self.handler.record_properties
 
 
-    @classmethod
-    def get_form(cls):
-        if cls.form:
-            return cls.form
-        record_properties = cls.class_handler.record_properties
-        return [
-            get_default_field(datatype)(name)
-            for name, datatype in record_properties.items() ]
+#   def get_form(self):
+#       record_properties = self.class_handler.record_properties
+#       return [
+#           get_default_field(datatype)(name)
+#           for name, datatype in record_properties.items() ]
 
 
     def add_new_record(self, record):
@@ -72,10 +70,10 @@ class Table(File):
 
     # Views
     new_instance = DBResource.new_instance
-    view = Table_View()
-    add_record = Table_AddRecord()
-    edit_record = Table_EditRecord()
-    export_csv = Table_ExportCSV()
+    view = TableResource_View
+    add_record = TableResource_AddRecord
+    edit_record = TableResource_EditRecord
+    export_csv = TableResource_ExportCSV
 
 
     def update_20081113(self):
@@ -107,7 +105,7 @@ class Table(File):
 ###########################################################################
 # Ordered Table
 ###########################################################################
-class OrderedTableFile(TableFile):
+class OrderedTable(Table):
 
     schema = {'order': Tokens}
 
@@ -176,11 +174,11 @@ class OrderedTableFile(TableFile):
 
 
 
-class OrderedTable(Table):
+class OrderedTableResource(TableResource):
 
     class_title = MSG(u'Ordered Table')
-    class_handler = OrderedTableFile
+    class_handler = OrderedTable
 
     # Views
-    view = OrderedTable_View()
+    view = OrderedTableResource_View
 

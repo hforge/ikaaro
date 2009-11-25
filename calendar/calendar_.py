@@ -31,7 +31,7 @@ from itools.ical import Record
 # Import from ikaaro
 from ikaaro.file_views import File_View
 from ikaaro.resource_ import DBResource
-from ikaaro.table import Table
+from ikaaro.table import TableResource
 from ikaaro.text import Text
 from views import TimetablesForm
 
@@ -111,7 +111,7 @@ class CalendarBase(DBResource):
 
 
 
-class CalendarTable(CalendarBase, Table):
+class CalendarTable(CalendarBase, TableResource):
 
     class_id = 'calendarTable'
     class_handler = icalendarTable
@@ -144,7 +144,7 @@ class CalendarTable(CalendarBase, Table):
 
 
     class_schema = merge_dicts(
-        Table.class_schema,
+        TableResource.class_schema,
         timetables=Timetables(source='metadata'))
 
 
