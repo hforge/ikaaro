@@ -713,7 +713,7 @@ class Folder_Orphans(Folder_Table):
     access = 'is_allowed_to_view'
     view_title = MSG(u"Orphans")
     icon = 'orphans.png'
-    description = MSG(u"Show resources not linked from anywhere.")
+    view_description = MSG(u"Show resources not linked from anywhere.")
 
 
     @thingy_lazy_property
