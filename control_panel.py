@@ -113,19 +113,18 @@ class CPEditVirtualHosts(stl_view):
     vhosts = textarea_field(datatype=String)
 
 
-    def get_value(self, name):
-        if name == 'vhosts':
-            vhosts = self.resource.get_value('vhosts')
-            return '\n'.join(vhosts)
-
-        return super(CPEditVirtualHosts, self).get_value(name)
+    @thingy_lazy_property
+    def vhosts__value(self):
+        vhosts = self.view.resource.get_value('vhosts')
+        return '\n'.join(vhosts)
 
 
-    def action(self, resource, context, form):
-        vhosts = [ x.strip() for x in form['vhosts'].splitlines() ]
+    def action(self):
+        vhosts = [ x.strip() for x in self.vhosts.value.splitlines() ]
         vhosts = [ x for x in vhosts if x ]
-        resource.set_property('vhosts', vhosts)
+        self.resource.set_property('vhosts', vhosts)
         # Ok
+        context = self.context
         context.message = messages.MSG_CHANGES_SAVED
         context.redirect()
 
