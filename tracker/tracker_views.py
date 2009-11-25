@@ -590,7 +590,7 @@ class Tracker_RememberSearch(view):
         search.handler.load_state_from_string('')
 
         # Set title
-        language = resource.get_content_language(context)
+        language = resource.get_content_language()
         search.set_property('title', title, language=language)
 
         # Save the value
