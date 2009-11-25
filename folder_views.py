@@ -308,7 +308,7 @@ class Folder_Table(stl_view):
     view_title = MSG(u'Table View')
     context_menus = []
 
-    template = make_stl_template("""${search}${batch}${form}""")
+    template = make_stl_template("${search}${batch}${form}")
 
     # Search, Sort, Batch
     search = Folder_Search()

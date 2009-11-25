@@ -139,7 +139,7 @@ class NewInstanceByDate(AutoForm):
 
     def modify_resource(self, child):
         title = self.title.value
-        language = self.resource.get_content_language(self.context)
+        language = self.resource.get_content_language()
         title = Property(title, lang=language)
         child.metadata.set_property('title', title)
 

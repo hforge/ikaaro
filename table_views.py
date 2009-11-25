@@ -23,103 +23,116 @@ from itools.core import thingy_lazy_property
 from itools.csv import UniqueError, Property, is_multilingual
 from itools.datatypes import Integer, Enumerate, Tokens
 from itools.gettext import MSG
-from itools.web import INFO, ERROR, view, FormError
+from itools.web import INFO, ERROR, FormError
+from itools.web import view, stl_view, make_stl_template
+from itools.web import readonly_field, multiple_choice_field
 from itools.xapian import PhraseQuery
 
 # Import from ikaaro
-from autoform import AutoForm
+from autoform import AutoForm, get_default_field
 from buttons import RemoveButton, OrderUpButton, OrderDownButton
 from buttons import OrderBottomButton, OrderTopButton
-import messages
+from messages import MSG_CHANGES_SAVED
 from resource_views import EditLanguageMenu
-from views import Container_Search
+from views import Container_Batch, Container_Sort, Container_Search
+from views import Container_Form, Container_Table
 
 
+class TableResource_Search(Container_Search):
 
-class Table_View(Container_Search):
-
-    access = 'is_allowed_to_view'
-    access_POST = 'is_allowed_to_edit'
-    title = MSG(u'View')
-    icon = 'view.png'
-
-
-    schema = {
-        'ids': Integer(multiple=True, mandatory=True)}
-
-    def get_widgets(self, resource, context):
-        return resource.get_form()
-
-
-    def get_search_schema(self, resource, context):
-        return resource.handler.record_properties
-
-
-    def get_items(self, resource, context):
-        search_query = None
-
-        # Build the search query
-        if self.search_template is not None:
-            query = context.query
-            search_term = query['search_term'].strip()
-            if search_term:
-                search_field = query['search_field']
-                search_query = PhraseQuery(search_field, search_term)
-
-        # Ok
-        items = resource.handler.search(search_query)
+    @thingy_lazy_property
+    def items(self):
+        items = self.resource.handler.get_records()
         return list(items)
 
 
-    def get_search_fields(self, resource, context):
-        search_fields = []
-        schema = self.get_search_schema(resource, context)
-        for widget in self.get_widgets(resource, context):
-            if hasattr(schema[widget.name], 'index'):
-                title = getattr(widget, 'title', widget.name)
-                search_fields.append((widget.name, title))
-        return search_fields
 
+class TableResource_Sort(Container_Sort):
 
-    def sort_and_batch(self, resource, context, items):
-        # Sort
-        sort_by = context.query['sort_by']
-        reverse = context.query['reverse']
+    @thingy_lazy_property
+    def items(self):
+        items = self.view.search.items
+
+        sort_by = self.sort_by.value
         if sort_by:
-            get_record_value = resource.handler.get_record_value
-            items.sort(key=lambda x: get_record_value(x, sort_by),
-                       reverse=reverse)
+            reverse = self.reverse.value
+            get_value = self.resource.handler.get_record_value
+            items.sort(key=lambda x: get_value(x, sort_by), reverse=reverse)
+
+        return items
+
+
+
+class TableResource_Batch(Container_Batch):
+
+    @thingy_lazy_property
+    def items(self):
+        items = self.view.sort.items
 
         # Batch
-        start = context.query['batch_start']
-        size = context.query['batch_size']
+        start = self.batch_start.value
+        size = self.batch_size.value
         if size > 0:
             return items[start:start+size]
         return items[start:]
 
 
+
+class ids_field(multiple_choice_field):
+
+    datatype = Integer
+    required = True
+
+    @thingy_lazy_property
+    def values(self):
+        values = self.view.resource.handler.get_record_ids()
+        return set(values)
+
+
+
+class TableResource_Table(Container_Table):
+
+    ids = ids_field()
+
     def get_table_columns(self):
         columns = [
-            ('checkbox', None),
-            ('id', MSG(u'id'))]
+            ('checkbox', None, False),
+            ('id', MSG(u'id'), True)]
+
         # From the schema
-        for widget in self.get_widgets(resource, context):
-            column = (widget.name, getattr(widget, 'title', widget.name))
-            columns.append(column)
-
-        return columns
+        return columns + [
+            (name, name, True)
+            for name, datatype in self.resource.get_schema().iteritems() ]
 
 
-    def get_item_value(self, resource, context, item, column):
+
+class TableResource_View(stl_view):
+
+    access = 'is_allowed_to_view'
+    access_POST = 'is_allowed_to_edit'
+    view_title = MSG(u'View')
+    icon = 'view.png'
+
+    template = make_stl_template("${batch}${form}")
+
+    search = TableResource_Search
+    sort = TableResource_Sort
+    batch = TableResource_Batch
+
+    form = Container_Form()
+    form.content = TableResource_Table()
+    form.actions = [RemoveButton]
+
+
+    def get_item_value(self, item, column):
         if column == 'checkbox':
             return item.id, False
         elif column == 'id':
             id = item.id
-            link = context.get_link(resource)
-            return id, '%s/;edit_record?id=%s' % (link, id)
+            return id, '%s/;edit_record?id=%s' % (self.resource.path, id)
 
         # Columns
-        handler = resource.handler
+        handler = self.resource.handler
         value = handler.get_record_value(item, column)
         datatype = handler.get_record_datatype(column)
 
@@ -147,63 +160,68 @@ class Table_View(Container_Search):
         return value
 
 
-    table_actions = [RemoveButton]
-
-
     #######################################################################
     # Form Actions
     #######################################################################
-    def action_remove(self, resource, context, form):
-        ids = form['ids']
+    def action_remove(self):
+        resource = self.resource
+        ids = self.form.content.ids.value
         for id in ids:
             resource.handler.del_record(id)
-        # Reindex the resource
+        # Reindex
+        context = self.context
         context.change_resource(resource)
+        # Ok
         context.message = INFO(u'Record deleted.')
+        context.redirect()
 
 
 
 ###########################################################################
 # Add/Edit records
 ###########################################################################
-class Table_AddEditRecord(AutoForm):
+class TableResource_AddEditRecord(AutoForm):
 
     access = 'is_allowed_to_edit'
     context_menus = [EditLanguageMenu()]
 
 
-    def get_schema(self, resource, context):
-        return resource.get_schema()
+    @thingy_lazy_property
+    def schema(self):
+        return self.resource.get_schema()
 
 
-    def get_widgets(self, resource, context):
-        return resource.get_form()
+    def get_field_names(self):
+        return self.schema.keys()
 
 
-    def get_field_title(self, resource, name):
-        for widget in resource.get_form():
-            if widget.name == name:
-                title = getattr(widget, 'title', None)
-                if title:
-                    return title.gettext()
-                return name
-        return name
+    def get_field(self, name):
+        datatype = self.schema[name]
+        field = get_default_field(datatype)
+        return field(name, title=name)
 
 
-    def action(self, resource, context, form):
+#   def get_field_title(self, resource, name):
+#       for widget in resource.get_form():
+#           if widget.name == name:
+#               title = getattr(widget, 'title', None)
+#               if title:
+#                   return title.gettext()
+#               return name
+#       return name
+
+
+    def action(self):
         """Code shared by the add & edit actions.  It builds a new record
         from the form.
         """
-        schema = self.get_schema(resource, context)
         language = self.content_language
 
         # Builds a new record from the form.
         record = {}
-        for name in schema:
-            datatype = schema[name]
-            value = form[name]
+        for name, datatype in self.schema.iteritems():
+            value = getattr(self, name).value
             if is_multilingual(datatype):
-                value = value[0]
                 value = Property(value, language=language)
             elif datatype.multiple:
                 # textarea -> string
@@ -213,190 +231,209 @@ class Table_AddEditRecord(AutoForm):
             record[name] = value
 
         # Change
+        context = self.context
         try:
-            self.action_add_or_edit(resource, context, record)
+            self.action_add_or_edit(record)
         except UniqueError, error:
-            title = self.get_field_title(resource, error.name)
+            title = self.get_field_title(self.resource, error.name)
             context.message = ERROR(str(error), field=title, value=error.value)
         except ValueError, error:
             message = ERROR(u'Error: {msg}', msg=str(error))
             context.message = message
         else:
-            return self.action_on_success(resource, context)
+            return self.action_on_success()
 
 
 
-class Table_AddRecord(Table_AddEditRecord):
+class TableResource_AddRecord(TableResource_AddEditRecord):
 
-    title = MSG(u'Add Record')
+    view_title = MSG(u'Add Record')
     icon = 'new.png'
     submit_value = MSG(u'Add')
 
 
-    def action_add_or_edit(self, resource, context, record):
-        resource.handler.add_record(record)
+    def action_add_or_edit(self, record):
+        self.resource.handler.add_record(record)
         # Reindex the resource
-        context.change_resource(resource)
+        self.context.change_resource(self.resource)
 
 
-    def action_on_success(self, resource, context):
+    def action_on_success(self):
+        resource = self.resource
+        context = self.context
+
         n = len(resource.handler.records) - 1
-        goto = ';edit_record?id=%s' % n
-        return context.come_back(MSG(u'New record added.'), goto=goto)
+        context.message = MSG(u'New record added.')
+        location = '%s/;edit_record?id=%s' % (resource.path, n)
+        context.created(location)
 
 
 
-class Table_EditRecord(Table_AddEditRecord):
+class id_field(readonly_field):
 
-    title = MSG(u'Edit record {id}')
-    query_schema = {'id': Integer(mandatory=True)}
+    source = 'query'
+    datatype = Integer
+    required = True
+    title = MSG(u'Id')
+
+    @thingy_lazy_property
+    def displayed(self):
+        return self.value
 
 
-    def get_query(self, context):
-        query = Table_AddEditRecord.get_query(self, context)
-        # Test the id is valid
-        id = query['id']
-        resource = context.resource
-        handler = resource.get_handler()
+
+class TableResource_EditRecord(TableResource_AddEditRecord):
+
+    view_title = MSG(u'Edit record')
+    id = id_field()
+
+
+    def get_field_names(self):
+        field_names = super(TableResource_EditRecord, self).get_field_names()
+        field_names.insert(0, 'id')
+        return field_names
+
+
+    def get_field(self, name):
+        field = super(TableResource_EditRecord, self).get_field(name)
+        # The value
+        id = self.id.value
+        handler = self.resource.get_handler()
         record = handler.get_record(id)
-        if record is None:
-            context.query = query
-            raise FormError, MSG(u'The {id} record is missing.', id=id)
+        field.value = handler.get_record_value(record, name)
         # Ok
-        return query
+        return field
 
 
-    def get_value(self, resource, context, name, datatype):
-        handler = resource.get_handler()
-        # Get the record
-        id = context.query['id']
-        record = handler.get_record(id)
-        # Is mulitilingual
-        if is_multilingual(datatype):
-            language = self.content_language
-            return handler.get_record_value(record, name, language=language)
+    def cook(self, method):
+        super(TableResource_EditRecord, self).cook(method)
+        id = self.id.value
+        if id is None:
+            msg = MSG(u'The "{id}" record is missing.')
+            raise FormError, msg.gettext(id=self.id.raw_value)
 
-        return handler.get_record_value(record, name)
+        record = self.resource.get_handler().get_record(id)
+        if record is None:
+            msg = MSG(u'The "{id}" record is missing.')
+            raise FormError, msg.gettext(id=id)
 
 
     def get_title(self, context):
-        id = context.query['id']
+        id = self.id.value
         return self.title.gettext(id=id)
 
 
-    def action_add_or_edit(self, resource, context, record):
-        id = context.query['id']
-        resource.handler.update_record(id, **record)
+    def action_add_or_edit(self, record):
+        id = self.id.value
+        self.resource.handler.update_record(id, **record)
         # Reindex the resource
-        context.change_resource(resource)
+        self.context.change_resource(self.resource)
 
 
-    def action_on_success(self, resource, context):
-        context.message = messages.MSG_CHANGES_SAVED
+    def action_on_success(self):
+        context = self.context
+        context.message = MSG_CHANGES_SAVED
+        context.redirect()
 
 
 
 ##########################################################################
 # Ordered Views
 ##########################################################################
-class OrderedTable_View(Table_View):
 
-    def get_items(self, resource, context):
-        items = resource.handler.get_records_in_order()
-        return list(items)
+class OrderedTableResource_Sort(TableResource_Sort):
 
-
-    def sort_and_batch(self, resource, context, items):
-        # Sort
-        sort_by = context.query['sort_by']
+    @thingy_lazy_property
+    def items(self):
+        sort_by = self.sort_by.value
         if sort_by == 'order':
-            reverse = context.query['reverse']
-            ordered_ids = list(resource.handler.get_record_ids_in_order())
-            f = lambda x: ordered_ids.index(x.id)
-            items.sort(cmp=lambda x,y: cmp(f(x), f(y)), reverse=reverse)
+            reverse = self.reverse.value
+            ordered_ids = self.resource.handler.get_record_ids_in_order()
+            ordered_ids = list(ordered_ids)
+            key = lambda x: ordered_ids.index(x.id)
+            return sorted(self.view.search.items, key=key, reverse=reverse)
 
-            # Batch
-            start = context.query['batch_start']
-            size = context.query['batch_size']
-            return items[start:start+size]
+        return super(OrderedTableResource_Sort, self).items
 
-        return Table_View.sort_and_batch(self, resource, context, items)
 
+
+class OrderedTableResource_Table(TableResource_Table):
 
     def get_table_columns(self):
-        columns = Table_View.get_table_columns(self)
-        columns.append(('order', MSG(u'Order')))
+        columns = super(OrderedTableResource_Table, self).get_table_columns()
+        columns.append(('order', MSG(u'Order'), True))
         return columns
 
 
-    def get_item_value(self, resource, context, item, column):
+
+class OrderedTableResource_View(TableResource_View):
+
+    search = TableResource_View.search()
+
+    @thingy_lazy_property
+    def search__items(self):
+        items = self.resource.handler.get_records_in_order()
+        return list(items)
+
+
+    sort = OrderedTableResource_Sort()
+
+    form = TableResource_View.form()
+    form.content = OrderedTableResource_Table()
+    form.actions = [RemoveButton, OrderUpButton, OrderDownButton,
+                    OrderTopButton, OrderBottomButton]
+
+
+    def get_item_value(self, item, column):
         if column == 'order':
-            ordered_ids = list(resource.handler.get_record_ids_in_order())
+            ordered_ids = list(self.resource.handler.get_record_ids_in_order())
             return ordered_ids.index(item.id) + 1
 
-        return Table_View.get_item_value(self, resource, context, item, column)
+        parent = super(OrderedTableResource_View, self)
+        return parent.get_item_value(item, column)
 
-
-    table_actions = [RemoveButton, OrderUpButton, OrderDownButton,
-                     OrderTopButton, OrderBottomButton]
 
     ######################################################################
     # Form Actions
     ######################################################################
-    def action_remove(self, resource, context, form):
-        ids = form['ids']
-        for id in ids:
-            resource.del_record(id)
-
-        context.message = INFO(u'Record deleted.')
-
-
-    def action_order_up(self, resource, context, form):
-        ids = form['ids']
-        if not ids:
-            message = ERROR(u'Please select the resources to order up.')
-            context.message = message
-            return
-
-        resource.handler.order_up(ids)
+    def action_order_up(self):
+        ids = self.form.content.ids.value
+        self.resource.handler.order_up(ids)
+        # Ok
+        context = self.context
         context.message = INFO(u'Resources ordered up.')
+        context.redirect()
 
 
-    def action_order_down(self, resource, context, form):
-        ids = form['ids']
-        if not ids:
-            message = ERROR(u'Please select the resources to order down.')
-            context.message = message
-            return
-
-        resource.handler.order_down(ids)
+    def action_order_down(self):
+        ids = self.form.content.ids.value
+        self.resource.handler.order_down(ids)
+        # Ok
+        context = self.context
         context.message = INFO(u'Resources ordered down.')
+        context.redirect()
 
 
-    def action_order_top(self, resource, context, form):
-        ids = form['ids']
-        if not ids:
-            message = ERROR(u'Please select the resources to order on top.')
-            context.message = message
-            return
-
-        resource.handler.order_top(ids)
+    def action_order_top(self):
+        ids = self.form.content.ids.value
+        self.resource.handler.order_top(ids)
+        # Ok
+        context = self.context
         context.message = INFO(u'Resources ordered on top.')
+        context.redirect()
 
 
-    def action_order_bottom(self, resource, context, form):
-        ids = form['ids']
-        if not ids:
-            message = ERROR(u'Please select the resources to order on bottom.')
-            context.message = message
-            return
-
-        resource.handler.order_bottom(ids)
+    def action_order_bottom(self):
+        ids = self.form.content.ids.value
+        self.resource.handler.order_bottom(ids)
+        # Ok
+        context = self.context
         context.message = INFO(u'Resources ordered on bottom.')
+        context.redirect()
 
 
 
-class Table_ExportCSV(view):
+class TableResource_ExportCSV(view):
 
     access = 'is_admin'
     view_title = MSG(u"Export to CSV")
