@@ -54,6 +54,10 @@ except ImportError:
 else:
     import wiki
 
+# Models
+from model import Model
+register_document_type(Model)
+
 
 # Check for required software
 for name, import_path in [("poppler", "itools.pdf.pdftotext"),
