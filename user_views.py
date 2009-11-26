@@ -18,7 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import thingy_lazy_property
+from itools.core import freeze, thingy_lazy_property
 from itools.datatypes import String
 from itools.gettext import MSG
 from itools.i18n import get_language_name
@@ -28,8 +28,21 @@ from itools.xapian import PhraseQuery, AndQuery, OrQuery, StartQuery
 
 # Import from ikaaro
 from autoform import AutoForm
+from buttons import RemoveButton
 from folder import Folder_Table
 import messages
+
+
+class role_field(choice_field):
+
+    required = True
+    title = MSG(u'Role')
+
+
+    @thingy_lazy_property
+    def values(self):
+        return self.view.workspace.roles
+
 
 
 class User_ConfirmRegistration(stl_view):
@@ -206,8 +219,8 @@ class User_EditAccount(AutoForm):
         # user with the same email in the database.
         email = self.email.value
         if email != resource.get_value('email'):
-            results = context.search_users(email=email)
-            if len(results):
+            shared_user = context.get_shared_user_by_email(email)
+            if shared_user:
                 msg = u"There's another user with the {email} email address"
                 self.email.error = MSG(msg).gettext(email=email)
                 raise FormError
@@ -314,6 +327,25 @@ class User_EditPassword(stl_view):
 
 
 
+class User_EditRole(AutoForm):
+
+    access = 'is_admin'
+    view_title = MSG(u'Edit role')
+
+    role = role_field(mode='radio')
+
+
+    @thingy_lazy_property
+    def workspace(self):
+        return self.resource.get_parent().get_parent()
+
+
+    @thingy_lazy_property
+    def role__value(self):
+        return self.view.resource.get_value('role')
+
+
+
 class User_Tasks(stl_view):
 
     access = 'is_allowed_to_edit'
@@ -353,16 +385,127 @@ class User_Tasks(stl_view):
 class UserFolder_Table(Folder_Table):
 
     access = 'is_admin'
+    view_title = MSG(u'Users')
+
+    search = Folder_Table.search()
+    search.search_fields = freeze(
+        ['username', 'lastname', 'firstname', 'email_domain'])
+
+    form = Folder_Table.form()
+    form.content = form.content()
+    form.content.header = [
+        ('checkbox', None, False),
+        ('user_id', MSG(u'User ID'), True),
+        ('login_name', MSG(u'Login'), True),
+        ('firstname', MSG(u'First Name'), True),
+        ('lastname', MSG(u'Last Name'), True),
+        ('role', MSG(u'Role'), True),
+        ('account_state', MSG(u'State'), True)]
+
+    form.actions = [RemoveButton]
+
+
+    def get_item_value(self, item, column):
+        if column == 'checkbox':
+            return str(item.path), False
+        elif column == 'user_id':
+            name = item.get_name()
+            return name, name
+        elif column == 'login_name':
+            return item.get_value('username')
+        elif column == 'firstname':
+            return item.get_value('firstname')
+        elif column == 'lastname':
+            return item.get_value('lastname')
+        elif column == 'role':
+            name = item.get_name()
+            role = item.get_role_title()
+            return role, '%s/;edit_role' % name
+        elif column == 'account_state':
+            if item.get_value('user_must_confirm'):
+                href = '/users/%s/;resend_confirmation' % item.get_name()
+                return MSG(u'Resend Confirmation'), href
+            return MSG(u'Active'), None
+
+
+    def cook(self, method):
+        super(UserFolder_Table, self).cook(method)
+
+        if self.context.user.path in self.ids.value:
+            raise FormError, ERROR(u'You cannot remove yourself.')
+
+
+class UserFolder_AddUser(stl_view):
+
+    access = 'is_admin'
+    view_title = MSG(u'Add user')
+    view_description = MSG(u'Grant access to a new user.')
+    icon = 'card.png'
+    template = 'access/add_user.xml'
+
+    email = email_field(required=True)
+    email.title = MSG(u'Email')
+    role = role_field()
+    newpass = password_field(title=MSG(u'Password'))
+    newpass2 =  password_field(title=MSG(u'Repeat Password'))
+
 
     @thingy_lazy_property
-    def all_items(self):
-        # Search
-        search_term = self.search_term.value
-        search_fields = ['username', 'lastname', 'firstname', 'email_domain']
-        if search_term:
-            query = [ StartQuery(x, search_term) for x in search_fields ]
-            query = OrQuery(*query)
-        else:
-            query = None
-        return self.context.search_users(query)
+    def workspace(self):
+        return self.resource.get_parent()
+
+
+    def is_admin(self):
+        return self.workspace.is_admin(self.context.user, self.resource)
+
+
+    def cook(self, method):
+        super(UserFolder_AddUser, self).cook(method)
+        if method == 'get':
+            return
+
+        # Check the user is not yet in the group
+        email = self.email.value.strip()
+        results = self.context.search(format='user', email=email)
+        if len(results):
+            self.email.error = ERROR(u'The user is already here.')
+            raise FormError
+
+        # Check passwords match
+        if self.newpass.value != self.newpass2.value:
+            self.newpass2.error = messages.MSG_PASSWORD_MISMATCH
+            raise FormError
+
+
+    def action(self):
+        context = self.context
+
+        # (1) Get the master user, make it if needed
+        email = self.email.value.strip()
+        shared_user = context.get_shared_user_by_email(email)
+        if not shared_user:
+            user = context.make_shared_user()
+            user.set_property('email', email)
+            # Password
+            password = self.newpass.value
+            if password:
+                user.set_password(password)
+            else:
+                user.send_confirmation(context, email)
+
+        # (2) Add user to this website
+        username = user.get_name()
+        users = context.get_resource('/users')
+        user = users.get_resource(username, soft=True)
+        if user is None:
+            cls = get_resource_class('user')
+            user = users.make_resource(username, cls)
+
+        # (3) Set role
+        role = self.role.value
+        user.set_property('role', role)
+
+        # Ok
+        context.message = INFO(u'User added.')
+        context.created('/users/%s' % username)
 

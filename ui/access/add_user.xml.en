@@ -23,10 +23,7 @@
         <td>${newpass2}</td>
       </tr>
     </table>
-    <button type="submit" name="action" value="add_and_view" class="button-ok"
-      >Add and view</button>
-    <button type="submit" name="action" value="add_and_return">Add and
-      return</button>
+    <button type="submit" class="button-ok">Add</button>
   </fieldset>
 </form>
 

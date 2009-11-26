@@ -30,7 +30,7 @@ from itools.fs import lfs
 from itools.gettext import MSG
 from itools.stl import stl
 from itools import vfs
-from itools.web import stl_view, INFO, ERROR
+from itools.web import stl_view, INFO, ERROR, FormError
 from itools.web import choice_field, email_field, text_field, textarea_field
 from itools.xapian import PhraseQuery, OrQuery, AndQuery, split_unicode
 
@@ -113,6 +113,20 @@ class RegisterForm(AutoForm):
     email = email_field(required=True, title=MSG(u'E-mail Address'))
 
 
+    def cook(self, method):
+        super(RegisterForm, self).cook(method)
+        if method == 'get':
+            return
+
+        # Check the user is not yet in the group
+        email = self.email.value.strip()
+        user = self.context.get_user_by_login(email)
+        if user and not user.has_property('user_must_confirm'):
+            error = ERROR(u"There's already an active user with that email.")
+            self.email.error = error
+            raise FormError
+
+
     def action(self, resource, context, form):
         # Get input data
         firstname = form['firstname'].strip()
@@ -121,15 +135,10 @@ class RegisterForm(AutoForm):
 
         # Do we already have a user with that email?
         user = context.get_user_by_login(email)
-        if user is not None:
-            if not user.has_property('user_must_confirm'):
-                message = u'There is already an active user with that email.'
-                context.message = ERROR(message)
-                return
-        else:
+        if user is None:
             # Add the user
             users = resource.get_resource('users')
-            user = users.set_user(email, None)
+            user = users.set_user(email)
             user.set_property('firstname', firstname)
             user.set_property('lastname', lastname)
             # Set the role

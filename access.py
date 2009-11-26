@@ -19,21 +19,16 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import freeze, thingy_property, thingy_lazy_property
-from itools.core import OrderedDict
-from itools.datatypes import Boolean, Tokens, String
+from itools.core import freeze, thingy_lazy_property
+from itools.datatypes import Tokens, String
 from itools.gettext import MSG
-from itools.http import get_context
 from itools.web import AccessControl as BaseAccessControl
-from itools.web import INFO, ERROR, stl_view
-from itools.web import choice_field, email_field, multiple_choice_field
-from itools.web import password_field, readonly_field
-from itools.xapian import AndQuery, OrQuery, PhraseQuery, StartQuery
+from itools.web import ERROR, stl_view
+from itools.web import multiple_choice_field
+from itools.web import readonly_field
 
 # Import from ikaaro
 from autoform import AutoForm
-from buttons import RemoveButton
-import messages
 from views import Container_Search, Container_Sort, Container_Batch
 from views import Container_Table
 from workflow import WorkflowAware
@@ -42,19 +37,8 @@ from workflow import WorkflowAware
 ###########################################################################
 # Utility
 ###########################################################################
-def is_admin(user, resource):
-    if user is None or resource is None:
-        return False
-
-    # WebSite admin?
-    username = user.get_name()
-    root = resource.get_site_root()
-    if root.has_user_role(username, 'admins'):
-        return True
-
-    # Global admin?
-    root = get_context().get_physical_root()
-    return root.has_user_role(username, 'admins')
+def is_admin(user):
+    return user and user.get_value('role') == 'admin'
 
 
 ###########################################################################
@@ -80,32 +64,6 @@ class RoleAware_BrowseUsers(stl_view):
 
 
     @thingy_lazy_property
-    def all_items(self):
-        # Search
-        search_term = self.search.term.value
-        search_fields = ['username', 'lastname', 'firstname', 'email_domain']
-        if search_term:
-            query = [ StartQuery(x, search_term) for x in search_fields ]
-            query = OrQuery(*query)
-        else:
-            query = None
-        results = self.context.search_users(query)
-
-        # Show only users that belong to this group (FIXME Use the catalog)
-        users = []
-        roles = self.resource.get_members_classified_by_role()
-        for user in results.get_documents():
-            username = user.get_name()
-            for role in roles:
-                if username in roles[role]:
-                    users.append(user)
-                    break
-
-        # Ok
-        return users
-
-
-    @thingy_lazy_property
     def items(self):
         resource = self.resource
         context = self.context
@@ -128,89 +86,6 @@ class RoleAware_BrowseUsers(stl_view):
         return items[start:start+size]
 
 
-    table_columns = [
-        ('checkbox', None),
-        ('user_id', MSG(u'User ID')),
-        ('login_name', MSG(u'Login')),
-        ('firstname', MSG(u'First Name')),
-        ('lastname', MSG(u'Last Name')),
-        ('role', MSG(u'Role')),
-        ('account_state', MSG(u'State'))]
-
-
-    table_actions = [RemoveButton]
-
-
-    def get_item_value(self, item, column):
-        if column == 'checkbox':
-            return item.get_name(), False
-        elif column == 'user_id':
-            name = item.get_name()
-            return name, '/users/%s' % name
-        elif column == 'login_name':
-            return item.get_value('username')
-        elif column == 'firstname':
-            return item.get_value('firstname')
-        elif column == 'lastname':
-            return item.get_value('lastname')
-        elif column == 'role':
-            name = item.get_name()
-            role = self.resource.get_user_role(name)
-            role = self.resource.get_role_title(role)
-            return role, ';edit_membership?id=%s' % name
-        elif column == 'account_state':
-            if item.get_value('user_must_confirm'):
-                href = '/users/%s/;resend_confirmation' % item.get_name()
-                return MSG(u'Resend Confirmation'), href
-            return MSG(u'Active'), None
-
-
-    def action_remove(self):
-        context = self.context
-        resource = self.resource
-
-        usernames = self.ids.value
-
-        # Verify if after this operation, all is ok
-        user = context.user
-        if str(user.get_name()) in usernames:
-            if not is_admin(user, resource.get_parent()):
-                context.message = ERROR(u'You cannot remove yourself.')
-                return
-
-        # Make the operation
-        resource.set_user_role(usernames, None)
-
-        # Ok
-        context.message = u"Members deleted."
-
-
-
-class role_field(choice_field):
-
-    required = True
-    title = MSG(u'Role')
-
-
-    @thingy_lazy_property
-    def values(self):
-        resource = self.view.resource
-
-        values = OrderedDict()
-        for role in resource.class_roles:
-            values[role] = {'title': resource.class_schema[role].title}
-        return values
-
-
-    @thingy_property
-    def default(self):
-        view = self.view
-        id = getattr(view, 'id', None)
-        if id is None:
-            return None
-        return view.resource.get_user_role(id.value)
-
-
 
 class user_field(readonly_field):
 
@@ -226,7 +101,6 @@ class RoleAware_EditMembership(AutoForm):
     view_title = MSG(u'Change role')
 
     id = user_field(required=True, title=MSG(u'User'))
-    role = role_field(mode='radio')
 
 
     # the 'id' field must be cooked before the 'role' field
@@ -242,7 +116,7 @@ class RoleAware_EditMembership(AutoForm):
         # Verify if after this operation, all is ok
         user = context.user
         if str(user.get_name()) == user_id and role != 'admins':
-            if not is_admin(user, self.resource.get_parent()):
+            if not is_admin(user):
                 context.message = ERROR(u'You cannot degrade your own role.')
                 return
 
@@ -255,92 +129,13 @@ class RoleAware_EditMembership(AutoForm):
 
 
 
-class RoleAware_AddUser(stl_view):
-
-    access = 'is_admin'
-    view_title = MSG(u'Add New Member')
-    view_description = MSG(u'Grant access to a new user.')
-    icon = 'card.png'
-    template = 'access/add_user.xml'
-
-    email = email_field(required=True)
-    email.title = MSG(u'Email')
-    role = role_field()
-    newpass = password_field(title=MSG(u'Password'))
-    newpass2 =  password_field(title=MSG(u'Repeat Password'))
-
-
-    def is_admin(self):
-        resource = self.resource
-        return resource.is_admin(self.context.user, resource)
-
-
-    def _add(self, resource, context, form):
-        users = context.get_resource('users')
-
-        # Check whether the user already exists
-        email = form['email'].strip()
-        results = context.search(email=email)
-        if len(results):
-            user = results.get_documents()[0]
-        else:
-            user = None
-
-        # Get the user (create it if needed)
-        if user:
-            username = user.get_name()
-            # Check the user is not yet in the group
-            if username in resource.get_users():
-                context.message = ERROR(u'The user is already here.')
-                return None
-        else:
-            # New user
-            is_admin = resource.is_admin(context.user, resource)
-            if is_admin:
-                password = form['newpass']
-                password2 = form['newpass2']
-                # Check the password is right
-                if password != password2:
-                    context.message = messages.MSG_PASSWORD_MISMATCH
-                    return None
-                if not password:
-                    # Admin can set no password
-                    # so the user must activate its account
-                    password = None
-            else:
-                password = None
-            # Add the user
-            user = users.set_user(email, password)
-            username = user.get_name()
-            if password is None:
-                # Send confirmation email to activate the account
-                user.send_confirmation(context, email)
-
-        # Set the role
-        role = form['role']
-        resource.set_user_role(username, role)
-        return username
-
-
-    def action_add_and_return(self, resource, context, form):
-        self._add(resource, context, form)
-
-
-    def action_add_and_view(self, resource, context, form):
-        username = self._add(resource, context, form)
-        if username is not None:
-            goto = '/users/%s/' % username
-            message = INFO(u'User added.')
-            return context.come_back(message, goto=goto)
-
-
 ###########################################################################
 # Model
 ###########################################################################
 class AccessControl(BaseAccessControl):
 
     def is_admin(self, user, resource):
-        return is_admin(user, resource)
+        return is_admin(user)
 
 
     def is_allowed_to_view(self, user, resource):
@@ -416,8 +211,6 @@ class RoleAware(AccessControl):
     class_roles = freeze(['guests', 'members', 'reviewers', 'admins'])
 
     class_schema = freeze({
-        # Metadata
-        'website_is_open': Boolean(source='metadata'),
         # Metadata (roles)
         'guests': Tokens(source='metadata', title=MSG(u"Guest")),
         'members': Tokens(source='metadata', title=MSG(u"Member")),
@@ -429,10 +222,6 @@ class RoleAware(AccessControl):
 
     def get_links(self):
         return [ '/users/%s' % x for x in self.get_users() ]
-
-
-    def get_is_role_aware(self):
-        return True
 
 
     def get_users(self):
@@ -543,11 +332,6 @@ class RoleAware(AccessControl):
     # API / Public
     #########################################################################
     @classmethod
-    def get_role_title(cls, name):
-        return cls.class_schema[name].title
-
-
-    @classmethod
     def get_role_names(cls):
         """Return the names of the roles available.
         """
@@ -622,5 +406,4 @@ class RoleAware(AccessControl):
     #######################################################################
     browse_users = RoleAware_BrowseUsers
     edit_membership = RoleAware_EditMembership
-    add_user = RoleAware_AddUser
 

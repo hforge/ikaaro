@@ -33,11 +33,11 @@ from folder import Folder
 from registry import get_resource_class
 from resource_views import DBResource_Edit
 from user_views import User_ConfirmRegistration, User_EditAccount
-from user_views import User_EditPassword, User_EditPreferences, User_Profile
-from user_views import User_ResendConfirmation, User_Tasks
-from user_views import User_ChangePasswordForgotten, UserFolder_Table
+from user_views import User_EditPassword, User_EditPreferences, User_EditRole
+from user_views import User_Profile, User_ResendConfirmation, User_Tasks
+from user_views import User_ChangePasswordForgotten
+from user_views import UserFolder_Table, UserFolder_AddUser
 from utils import crypt_password, generate_password
-from views import MessageView
 
 
 
@@ -48,8 +48,9 @@ class User(AccessControl, Folder):
     class_title = MSG(u'User')
     class_icon16 = 'icons/16x16/user.png'
     class_icon48 = 'icons/48x48/user.png'
-    class_views = ['profile', 'edit_account', 'edit_preferences',
-                   'edit_password', 'tasks']
+    class_views = [
+        'profile', 'edit_account', 'edit_preferences', 'edit_password',
+        'edit_role', 'tasks']
 
 
     ########################################################################
@@ -62,6 +63,7 @@ class User(AccessControl, Folder):
         lastname=Unicode(source='metadata', indexed=True, stored=True),
         email=Email(source='metadata', indexed=True, stored=True),
         password=Password(source='metadata'),
+        role=String(source='metadata'),
         user_language=String(source='metadata'),
         user_must_confirm=String(source='metadata'),
         # Metadata (backwards compatibility)
@@ -84,6 +86,11 @@ class User(AccessControl, Folder):
             return username.value
 
         return self.metadata.get_property('email').value
+
+
+    def get_role_title(self):
+        role = self.get_value('role')
+        return self.get_parent().get_parent().roles[role]['title']
 
 
     ########################################################################
@@ -114,15 +121,6 @@ class User(AccessControl, Folder):
         # Is password clear?
         crypted = crypt_password(password)
         return crypted == user_password
-
-
-    def get_groups(self):
-        """Returns all the role aware handlers where this user is a member.
-        """
-        context = self.context
-        results = context.search(is_role_aware=True, users=self.get_name())
-        groups = [ x.abspath for x in results.get_documents() ]
-        return tuple(groups)
 
 
     def set_auth_cookie(self, context, password):
@@ -203,6 +201,7 @@ class User(AccessControl, Folder):
     edit_account = User_EditAccount
     edit_preferences = User_EditPreferences
     edit_password = User_EditPassword
+    edit_role = User_EditRole
     tasks = User_Tasks
 
 
@@ -222,7 +221,7 @@ class UserFolder(Folder):
     class_title = MSG(u'User Folder')
     class_icon16 = 'icons/16x16/userfolder.png'
     class_icon48 = 'icons/48x48/userfolder.png'
-    class_views = ['view', 'table', 'edit']
+    class_views = ['table', 'add_user', 'edit']
 
 
     def get_document_types(self):
@@ -233,42 +232,9 @@ class UserFolder(Folder):
         return Path('/users')
 
 
-    #######################################################################
-    # API
-    #######################################################################
-    def get_next_user_id(self):
-        ids = []
-        for key in self.get_names():
-            try:
-                key = int(key)
-            except ValueError:
-                continue
-            ids.append(key)
-        if ids:
-            user_id = str(max(ids) + 1)
-        else:
-            user_id = '0'
-        return user_id
-
-
-    def set_user(self, email=None, password=None):
-        # Calculate the user id
-        user_id = self.get_next_user_id()
-        # Add the user
-        cls = get_resource_class('user')
-        user = self.make_resource(user_id, cls)
-        # Set the email and paswword
-        if email is not None:
-            user.set_property('email', email)
-        if password is not None:
-            user.set_password(password)
-
-        # Return the user
-        return user
-
-
     def get_usernames(self):
-        """Return all user names."""
+        """Return all user names.
+        """
         names = self._get_names()
         return frozenset(names)
 
@@ -277,15 +243,6 @@ class UserFolder(Folder):
     # Back-Office
     #######################################################################
     table = UserFolder_Table
+    add_user = UserFolder_AddUser
     edit = DBResource_Edit(access='is_admin')
-
-
-    #######################################################################
-    # View
-    view = MessageView(
-        access='is_admin',
-        view_title=MSG(u'View'),
-        icon='view.png',
-        message=MSG(u'To manage the users please go '
-                    u'<a href="/;browse_users">here</a>.'))
 

@@ -351,6 +351,11 @@ class Skin(stl_view):
             accept.set(language, 2.5)
 
 
+    def is_admin(self):
+        user = self.context.user
+        return user and user.get_value('role') == 'admin'
+
+
     def render(self):
         # Set Content-Type
         context = self.context

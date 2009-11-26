@@ -28,7 +28,6 @@ from itools.web import view
 # Import from ikaaro
 from folder import Folder
 from registry import get_resource_class
-from user import UserFolder
 from utils import crypt_password
 from website import WebSite
 
@@ -65,18 +64,14 @@ class Root(WebSite):
     class_roles = freeze(['admins'])
 
 
-    __fixed_handlers__ = ['users', 'ui']
-
-
-
-    def init_resource(self, email, password, admins=('0',)):
-        super(Root, self).init_resource(admins=admins)
-        # User folder
-        users = self.make_resource('users', UserFolder, title={'en': u'Users'})
+    def init_resource(self, email, password):
+        super(Root, self).init_resource()
         # Default User
         password = crypt_password(password)
         user_class = get_resource_class('user')
-        users.make_resource('0', user_class, email=email, password=password)
+        users = self.get_resource('users')
+        users.make_resource('0', user_class, email=email, password=password,
+                            role='admin')
 
 
     def _get_names(self):

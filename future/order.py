@@ -336,7 +336,7 @@ class ResourcesOrderedTable(OrderedTable):
 
 
     def get_links(self):
-        base = self.get_order_root().get_physical_path()
+        base = self.get_order_root().physical_path
         return [ str(base.resolve2(x)) for x in self.get_ordered_names() ]
 
 

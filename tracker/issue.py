@@ -89,12 +89,11 @@ class Issue(Folder):
     # API
     #######################################################################
     def get_links(self):
-        base = self.get_physical_path()
-
         comments = self.metadata.get_property('comment')
         if comments is None:
             return []
 
+        base = self.physical_path
         links = []
         for comment in comments:
             filename = comment.parameters.get('file')

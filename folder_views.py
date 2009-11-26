@@ -24,7 +24,7 @@ except ImportError:
     PILImage = None
 
 # Import from itools
-from itools.core import thingy_property, thingy_lazy_property
+from itools.core import freeze, thingy_property, thingy_lazy_property
 from itools.core import OrderedDict
 from itools.datatypes import Boolean, Integer, String
 from itools.gettext import MSG
@@ -96,6 +96,8 @@ class Folder_Search(Container_Search):
 
     base_query = None
 
+    search_fields = freeze(['title', 'text', 'name'])
+
     @thingy_lazy_property
     def items(self):
         # Base search
@@ -109,8 +111,7 @@ class Folder_Search(Container_Search):
             return results
 
         # Case 2: query
-        search_fields = ['title', 'text', 'name']
-        query = [ PhraseQuery(x, search_term) for x in search_fields ]
+        query = [ PhraseQuery(x, search_term) for x in self.search_fields ]
         query = OrQuery(*query)
         return results.search(query)
 
