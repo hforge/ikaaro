@@ -18,6 +18,7 @@
 from itools.core import get_abspath, lazy, merge_dicts
 from itools.handlers import ConfigFile
 from itools.uri import Path
+from itools import vfs
 from itools.web import WebContext, lock_body
 from itools.xapian import AllQuery, NotQuery, PhraseQuery, OrQuery, StartQuery
 from itools.xapian import SearchResults
