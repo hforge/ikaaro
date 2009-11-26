@@ -308,10 +308,24 @@ class CMSContext(WebContext):
         return resource
 
 
-    def remove_resource(self, resource):
+    def del_resource(self, path, soft=False):
+        # (1) Get the resource to remove
+        resource = self.get_resource(path, soft=soft)
+        if soft and resource is None:
+            return
+
+        # (2) Check referencial-integrity
+        database = self.database
+        # FIXME Check sub-resources too
+        physical_path = str(resource.get_physical_path())
+        results = database.catalog.search(links=physical_path)
+        if len(results):
+            message = 'cannot delete, resource "%s" is referenced' % path
+            raise ConsistencyError, message
+
+        # (3) Update cache
         old2new = self.cache_old2new
         new2old = self.cache_new2old
-
         if issubclass(resource, Folder):
             for x in resource.traverse_resources():
                 path = str(x.path)
@@ -323,6 +337,14 @@ class CMSContext(WebContext):
             old2new[path] = None
             new2old.pop(path, None)
             del self.cache[path]
+
+        # (4) Remove
+        fs = database.fs
+        for handler in resource.get_handlers():
+            # Skip empty folders and phantoms
+            if fs.exists(handler.key):
+                database.del_handler(handler.key)
+        database.del_handler(resource.metadata.key)
 
 
     def add_resource(self, resource):

@@ -339,6 +339,9 @@ class Folder_Table(stl_view):
     # Schema
     ids = multiple_choice_field(required=True)
 
+    def ids__is_valid(self):
+        return True
+
 
     # Keep the batch in the canonical URL
     canonical_query_parameters = (
@@ -353,8 +356,7 @@ class Folder_Table(stl_view):
                 return None
             if item.get_name() in parent.__fixed_handlers__:
                 return None
-            id = self.resource.path.get_pathto(item.path)
-            id = str(id)
+            id = str(item.path)
             return id, False
         elif column == 'icon':
             # icon
@@ -409,25 +411,25 @@ class Folder_Table(stl_view):
 
         # We sort and reverse ids in order to
         # remove the childs then their parents
-        resource = self.resource
+        context = self.context
         ids = sorted(self.ids.value, reverse=True)
-        for name in ids:
-            child = resource.get_resource(name)
+        for path in ids:
+            child = context.get_resource(path)
             ac = child.access_control
             if ac.is_allowed_to_remove(user, child):
                 # Remove resource
                 try:
-                    resource.del_resource(name)
+                    context.del_resource(path)
                 except ConsistencyError:
-                    referenced.append(name)
+                    referenced.append(path)
                     continue
-                removed.append(name)
+                removed.append(path)
                 # Clean cookie
-                if str(resource.path.resolve2(name)) in paths:
+                if path in paths:
                     context.del_cookie('ikaaro_cp')
                     paths = []
             else:
-                not_removed.append(name)
+                not_removed.append(path)
 
         message = []
         if removed:
