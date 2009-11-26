@@ -131,33 +131,6 @@ class Folder(DBResource):
         return cls(metadata)
 
 
-    def del_resource(self, name, soft=False):
-        context = get_context()
-        resource = self.get_resource(name, soft=soft)
-        if soft and resource is None:
-            return
-
-        # Check referencial-integrity
-        catalog = context.database.catalog
-        # FIXME Check sub-resources too
-        path = str(resource.get_physical_path())
-        results = catalog.search(links=path)
-        if len(results):
-            message = 'cannot delete, resource "%s" is referenced' % path
-            raise ConsistencyError, message
-
-        # Events, remove
-        context.remove_resource(resource)
-        # Remove
-        folder = self.handler
-        for handler in resource.get_handlers():
-            # Skip empty folders
-            if issubclass(resource, Folder) and not vfs.exists(handler.uri):
-                continue
-            folder.del_handler(handler.uri)
-        folder.del_handler('%s.metadata' % name)
-
-
     def _resolve_source_target(self, source_path, target_path):
         # Find out the source and target absolute URIs
         root_uri = self.context.get_resource('/').handler.uri
