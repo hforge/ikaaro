@@ -251,7 +251,6 @@ class DBResource(CatalogAware, IResource):
         # Full text search
         'text': Unicode(indexed=True),
         # Various classifications
-        'is_role_aware': Boolean(indexed=True),
         'is_folder': Boolean(indexed=True),
         'is_image': Boolean(indexed=True),
         })
@@ -343,8 +342,9 @@ class DBResource(CatalogAware, IResource):
 
 
     def get_abspath(self):
-        path = self.get_physical_path()
-        return str(path)
+        """For indexing purposes only.
+        """
+        return str(self.physical_path)
 
 
     def get_format(self):
@@ -427,10 +427,8 @@ class DBResource(CatalogAware, IResource):
 
 
     def get_parent_path(self):
-        abspath = self.get_physical_path()
-        if not abspath:
-            return None
-        return str(abspath[:-1])
+        physical_path = self.physical_path
+        return str(physical_path[:-1]) if physical_path else None
 
 
     def get_is_folder(self):
@@ -438,10 +436,6 @@ class DBResource(CatalogAware, IResource):
 
 
     def get_is_image(self):
-        return False
-
-
-    def get_is_role_aware(self):
         return False
 
 

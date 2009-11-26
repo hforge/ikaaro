@@ -32,58 +32,31 @@ from itools.web import boolean_field, choice_field, input_field
 from itools.web import multiple_choice_field, textarea_field
 
 # Import from ikaaro
-from access import RoleAware_BrowseUsers, RoleAware_AddUser
-from access import RoleAware_EditMembership
-from folder_views import Folder_Orphans
 import messages
 from resource_views import DBResource_Edit
-from views import IconsView, ContextMenu
+from views import IconsView
 
 
 
-###########################################################################
-# The menu
-###########################################################################
-class ControlPanelMenu(ContextMenu):
-
-    title = MSG(u'Control Panel')
-
-    def get_items(self):
-        resource = self.resource
-
-        items = []
-        for name in resource.class_control_panel:
-            view = resource.get_view(name)
-            if view is None:
-                continue
-            if not resource.is_access_allowed(self.context, resource, view):
-                continue
-            items.append({
-                'title': view.view_title,
-                'src': resource.get_method_icon(view, size='16x16'),
-                'href': ';%s' % name})
-
-        return items
-
-
-context_menus = [ControlPanelMenu()]
-
-
-###########################################################################
-# Views
-###########################################################################
 class ControlPanel(IconsView):
 
     access = 'is_allowed_to_edit'
     view_title = MSG(u'Control Panel')
     icon = 'settings.png'
-    context_menus = context_menus
 
     def items(self):
+        items = []
+        # Hardcode direct link to the users folder
+        description = MSG(u'View and edit current users, register new users.')
+        items.append({
+            'icon': '/ui/icons/48x48/userfolder.png',
+            'title': MSG(u'Users'),
+            'description': description,
+            'url': '/users/'})
+
+        # Add dynamic views
         resource = self.resource
         context = self.context
-
-        items = []
         for name in resource.class_control_panel:
             view = resource.get_view(name)
             if view is None:
@@ -107,7 +80,6 @@ class CPEditVirtualHosts(stl_view):
     view_description = MSG(u'Define the domain names for this Web Site.')
     icon = 'website.png'
     template = 'website/virtual_hosts.xml'
-    context_menus = context_menus
 
     vhosts = textarea_field(datatype=String)
 
@@ -136,7 +108,6 @@ class CPEditSecurityPolicy(stl_view):
     icon = 'lock.png'
     view_description = MSG(u'Choose the security policy.')
     template = 'website/security_policy.xml'
-    context_menus = context_menus
 
     website_is_open = boolean_field()
 
@@ -176,7 +147,6 @@ class CPEditContactOptions(DBResource_Edit):
     view_title = MSG(u'Email options')
     icon = 'mail.png'
     view_description = MSG(u'Configure the website email options')
-    context_menus = context_menus
 
     # Fields
     emails_signature = textarea_field(title=MSG(u'Emails signature'))
@@ -214,7 +184,6 @@ class CPBrokenLinks(stl_view):
     icon = 'clear.png'
     view_description = MSG(u'Check the referential integrity.')
     template = '/ui/website/broken_links.xml'
-    context_menus = context_menus
 
 
     def get_namespace(self, resource, context):
@@ -277,7 +246,6 @@ class CPEditLanguages(stl_view):
     view_description = MSG(u'Define the Web Site languages.')
     icon = 'languages.png'
     template = 'website/edit_languages.xml'
-    context_menus = context_menus
 
     codes = multiple_choice_field(required=True)
     code = language_field(required=True)
@@ -362,7 +330,6 @@ class CPEditSEO(DBResource_Edit):
     icon = 'search.png'
     view_description = MSG(u"""
       Optimize your website for better ranking in search engine results.""")
-    context_menus = context_menus
 
 
     # Fields
@@ -378,24 +345,4 @@ class CPEditSEO(DBResource_Edit):
             form['google-site-verification'])
         # Ok
         context.message = messages.MSG_CHANGES_SAVED
-
-
-
-###########################################################################
-# Add the control panel menu to views defined somewhere else
-###########################################################################
-class CPBrowseUsers(RoleAware_BrowseUsers):
-    context_menus = context_menus
-
-
-class CPAddUser(RoleAware_AddUser):
-    context_menus = context_menus
-
-
-class CPEditMembership(RoleAware_EditMembership):
-    context_menus = context_menus
-
-
-class CPOrphans(Folder_Orphans):
-    context_menus = context_menus
 

@@ -21,9 +21,7 @@
 # Import from itools
 from itools.gettext import MSG
 from itools.handlers import Folder as FolderHandler
-from itools.http import get_context
 from itools.uri import get_uri_path, get_uri_name, resolve_uri, resolve_uri2
-from itools import vfs
 from itools.web import view
 
 # Import from ikaaro
@@ -90,7 +88,7 @@ class Folder(DBResource):
         resource = self.get_resource(name)
         resource.init_resource(**kw)
         # Ok
-        get_context().add_resource(resource)
+        self.context.add_resource(resource)
         return resource
 
 
@@ -105,30 +103,6 @@ class Folder(DBResource):
         folder = self.handler
         return [ x[:-9] for x in folder.get_handler_names()
                  if x[-9:] == '.metadata' ]
-
-
-    def _get_resource(self, name):
-        # Look for the resource
-        folder = self.handler
-        try:
-            metadata = folder.get_handler('%s.metadata' % name)
-        except LookupError:
-            return None
-
-        # Format (class id)
-        format = metadata.format
-
-        # File or folder
-        uri = resolve_uri2(folder.uri, name)
-        if vfs.exists(uri):
-            is_file = vfs.is_file(uri)
-        else:
-            # FIXME This is just a guess, it may fail.
-            is_file = '/' in format
-
-        # Ok
-        cls = get_resource_class(format, is_file=is_file)
-        return cls(metadata)
 
 
     def _resolve_source_target(self, source_path, target_path):
@@ -191,7 +165,7 @@ class Folder(DBResource):
 
         # Events, add
         resource = self.get_resource(target_path)
-        get_context().add_resource(resource)
+        self.context.add_resource(resource)
 
 
     def move_resource(self, source_path, target_path):
@@ -199,8 +173,6 @@ class Folder(DBResource):
         if source_path == self.get_canonical_path():
             message = 'cannot move a resource to a subdirectory of itself'
             raise ConsistencyError, message
-
-        database = get_context().database
 
         # Find out the source and target absolute URIs
         source_uri, target_uri = self._resolve_source_target(source_path,
@@ -220,7 +192,7 @@ class Folder(DBResource):
 
         # Events, remove
         new_path = self.get_canonical_path().resolve2(target_path)
-        database.move_resource(source, new_path)
+        self.context.database.move_resource(source, new_path)
 
         # Move the metadata
         folder = self.handler

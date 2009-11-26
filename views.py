@@ -23,7 +23,6 @@ from itools.uri import get_reference
 from itools.web import view, stl_view
 from itools.web import boolean_field, choice_field, hidden_field, integer_field
 from itools.web import text_field
-from itools.xml import XMLParser
 
 # Import from ikaaro
 from globals import ui
@@ -77,16 +76,6 @@ class composite_view(stl_view):
             if method is not None:
                 return method
         return None
-
-
-
-class MessageView(view):
-
-    def render(self):
-        message = self.message
-        message = message.gettext()
-        message = message.encode('utf-8')
-        return XMLParser(message)
 
 
 

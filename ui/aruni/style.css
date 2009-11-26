@@ -61,16 +61,24 @@ legend {
   padding: 4px 0px 4px 19px;
 }
 
-#header a#top-menu-login {
-  background-image: url(../icons/16x16/lock.png);
+#header a#top-menu-contact {
+  background-image: url(../icons/16x16/mail.png);
 }
 
-#header a#top-menu-register {
-  background-image: url(../icons/16x16/card.png);
+#header a#top-menu-cp {
+  background-image: url(../icons/16x16/settings.png);
 }
 
 #header a#top-menu-home {
   background-image: url(../icons/16x16/action_home.png);
+}
+
+#header a#top-menu-login {
+  background-image: url(../icons/16x16/lock.png);
+}
+
+#header a#top-menu-logout {
+  background-image: url(../icons/16x16/action_logout.png);
 }
 
 #header a#top-menu-new {
@@ -81,12 +89,8 @@ legend {
   background-image: url(../icons/16x16/action_home.png);
 }
 
-#header a#top-menu-logout {
-  background-image: url(../icons/16x16/action_logout.png);
-}
-
-#header a#top-menu-contact {
-  background-image: url(../icons/16x16/mail.png);
+#header a#top-menu-register {
+  background-image: url(../icons/16x16/card.png);
 }
 
 #content {

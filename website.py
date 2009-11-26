@@ -20,18 +20,16 @@
 
 # Import from itools
 from itools.core import merge_dicts
-from itools.datatypes import String, Tokens, Unicode
+from itools.datatypes import Boolean, String, Tokens, Unicode
 from itools.gettext import MSG
 from itools.web import stl_view, VirtualRoot
 
 # Import from ikaaro
-from access import RoleAware
 from calendar.views import MonthlyView, WeeklyView, DailyView
-from control_panel import ControlPanel, CPAddUser, CPBrokenLinks
-from control_panel import CPBrowseUsers, CPEditContactOptions, CPEditLanguages
-from control_panel import CPEditMembership, CPEditSecurityPolicy
-from control_panel import CPEditVirtualHosts, CPOrphans, CPEditSEO
-from folder import Folder
+from control_panel import ControlPanel, CPBrokenLinks, CPEditContactOptions
+from control_panel import CPEditLanguages, CPEditSecurityPolicy
+from control_panel import CPEditVirtualHosts, CPEditSEO
+from folder_views import Folder_Orphans
 from registry import register_document_type
 from resource_views import LoginView
 from skins import Skin
@@ -39,10 +37,11 @@ from views_new import ProxyNewInstance
 from website_views import AboutView, ContactForm, CreditsView
 from website_views import ForgottenPasswordForm, RegisterForm
 from website_views import NotFoundView, ForbiddenView, InternalServerError
+from workspace import Workspace
 
 
 
-class WebSite(RoleAware, Folder, VirtualRoot):
+class WebSite(VirtualRoot, Workspace):
 
     class_id = 'WebSite'
     class_title = MSG(u'Web Site')
@@ -52,25 +51,24 @@ class WebSite(RoleAware, Folder, VirtualRoot):
     class_skin = 'ui/aruni'
     class_views = ['view', 'list', 'table', 'gallery', 'month', 'week',
                    'edit', 'backlinks', 'last_changes', 'control_panel']
-    class_control_panel = ['browse_users', 'add_user', 'edit_virtual_hosts',
-                           'edit_security_policy', 'edit_languages',
-                           'edit_contact_options', 'broken_links', 'orphans',
-                           'edit_seo']
+    class_control_panel = [
+        'edit_virtual_hosts', 'edit_security_policy', 'edit_languages',
+        'edit_contact_options', 'broken_links', 'orphans', 'edit_seo']
 
 
-    __fixed_handlers__ = ['skin', 'index']
+    __fixed_handlers__ = ['index', 'skin', 'users']
 
 
     class_schema = merge_dicts(
-        Folder.class_schema,
-        RoleAware.class_schema,
+        Workspace.class_schema,
         # Metadata
         vhosts=String(source='metadata', multiple=True, indexed=True),
         contacts=Tokens(source='metadata'),
         website_languages=Tokens(source='metadata', default=('en',)),
         emails_from_addr=String(source='metadata'),
         emails_signature=Unicode(source='metadata'),
-        google_site_verification=String(source='metadata'))
+        google_site_verification=String(source='metadata'),
+        website_is_open=Boolean(source='metadata'))
 
 
     ########################################################################
@@ -103,16 +101,13 @@ class WebSite(RoleAware, Folder, VirtualRoot):
     new_instance = ProxyNewInstance
     # Control Panel
     control_panel = ControlPanel
-    browse_users = CPBrowseUsers
-    add_user = CPAddUser
-    edit_membership = CPEditMembership
     edit_virtual_hosts = CPEditVirtualHosts
     edit_security_policy = CPEditSecurityPolicy
     edit_seo = CPEditSEO
     edit_contact_options = CPEditContactOptions
     edit_languages = CPEditLanguages
     broken_links = CPBrokenLinks
-    orphans = CPOrphans
+    orphans = Folder_Orphans
     # Register / Login
     register = RegisterForm
     forgotten_password = ForgottenPasswordForm

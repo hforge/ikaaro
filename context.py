@@ -20,7 +20,8 @@ from itools.handlers import ConfigFile
 from itools.uri import Path
 from itools import vfs
 from itools.web import WebContext, lock_body
-from itools.xapian import AllQuery, NotQuery, PhraseQuery, OrQuery, StartQuery
+from itools.xapian import AllQuery, AndQuery, NotQuery, PhraseQuery, OrQuery
+from itools.xapian import StartQuery
 from itools.xapian import SearchResults
 
 # Import from ikaaro
@@ -33,7 +34,7 @@ from registry import get_resource_class
 class CMSContext(WebContext):
 
     def __init__(self, soup_message, path):
-        WebContext.__init__(self, soup_message, path)
+        super(CMSContext, self).__init__(soup_message, path)
 
         # Cache for searches
         self._search_cache = {}
@@ -225,39 +226,17 @@ class CMSContext(WebContext):
         return documents[0].name
 
 
-    def _get_abspath(self, key, path):
-        """Return the absolute path from the given path relative to the host.
-
-        The arguments 'path' and 'key' are the same value, only difference is
-        the type: 'path' is a <itools.uri.Path> instance, while 'key' is a
-        byte string.
-        """
-        # Case 1. Host=None
-        if self.host is None:
-            return key
-
-        # Case 2. Path=/
-        if not path:
-            return '/%s' % self.host
-
-        # Case 3. Path=/users[...]
-        if path[0] == 'users':
-            return key
-
-        # Case 4. Path=/...
-        return '/%s%s' % (self.host, key)
-
-
     def _get_metadata(self, key, path):
-        base = '%s/database' % self.mount.target
-        abspath = self._get_abspath(key, path)
-        if path or self.host:
-            metadata = '%s%s.metadata' % (base, abspath)
+        target = self.mount.target
+        host = self.host
+        if not host:
+            physical_path = '%s/database%s.metadata' % (target, key)
+        elif path:
+            physical_path = '%s/database/%s%s.metadata' % (target, host, key)
         else:
-            metadata = '%s%s/.metadata' % (base, abspath)
+            physical_path = '%s/database/%s.metadata' % (target, host)
 
-        database = self.mount.database
-        return database.get_handler(metadata, cls=Metadata)
+        return self.mount.database.get_handler(physical_path, cls=Metadata)
 
 
     def _get_resource(self, key, path):
@@ -311,7 +290,7 @@ class CMSContext(WebContext):
         # (2) Check referencial-integrity
         database = self.database
         # FIXME Check sub-resources too
-        physical_path = str(resource.get_physical_path())
+        physical_path = str(resource.physical_path)
         results = database.catalog.search(links=physical_path)
         if len(results):
             message = 'cannot delete, resource "%s" is referenced' % path
@@ -421,9 +400,11 @@ class CMSContext(WebContext):
                 query = NotQuery(PhraseQuery('abspath', '/'))
         else:
             # Case 3: some sub-folder
-            query = StartQuery('abspath', phypath + '/')
+            if phypath[-1] != '/':
+                phypath += '/'
+            query = StartQuery('abspath', phypath)
             if included:
-                container = PhraseQuery('abspath', phypath)
+                container = PhraseQuery('abspath', phypath[:-1])
                 query = OrQuery(container, query)
 
         search = self.database.catalog.search(query)
@@ -480,19 +461,68 @@ class CMSContext(WebContext):
 
 
     #######################################################################
-    # Users
+    # Shared Users database
     #######################################################################
-    @lazy
-    def _users_search(self):
-        catalog = self.database.catalog
-        return catalog.search(format='user')
+    def get_shared_user_by_email(self, email):
+        query = AndQuery(
+            StartQuery('abspath', '/users/'),
+            PhraseQuery('format', 'user'),
+            PhraseQuery('email', email))
+        results = self.database.catalog.search(query)
+        n = len(results)
+        if n == 0:
+            return None
+        if n > 1:
+            error = (
+                u'There are %s users in the shared database with the "%s" '
+                u'email address')
+            raise ValueError, error % (n, login)
+        brains = SearchResults.get_documents(results)
+        return brain[0]
 
 
-    def search_users(self, query=None, **kw):
-        results = self._users_search
-        return results.search(query, **kw)
+    def make_shared_user(self):
+        # (1) Find out user name
+        database = self.mount.database
+        path = '%s/database/users' % self.mount.target
+        new_name = 0
+        for name in database.get_handler_names(path):
+            if name.endswith('.metadata'):
+                name = name[:-9]
+                if name.isdigit():
+                    name = int(name)
+                    if name >= new_name:
+                        new_name = name + 1
+        name = str(new_name)
+
+        # (2) Make the metadata
+        path = '%s/%s.metadata' % (path, name)
+        cls = get_resource_class('user')
+        metadata = Metadata(cls=cls)
+        database.set_handler(path, metadata)
+
+        # (3) Get the resource
+        resource = cls(metadata=metadata)
+
+        path = Path('/users/%s' % name)
+        key = str(path)
+        if self.host:
+            resource.physical_path = path
+            key = '..%s' % key # FIXME Hack
+        else:
+            resource.path = path
+
+        resource.context = self
+        self.cache_new2old[key] = None
+        self.cache[key] = resource
+
+        # Ok
+        return resource
 
 
+    #######################################################################
+    # Shared Users database
+    #######################################################################
     def get_user(self, credentials):
         username, password = credentials
         user = self.get_user_by_name(username)
@@ -510,7 +540,7 @@ class CMSContext(WebContext):
         return None.
         """
         # Search the user by username (login name)
-        results = self.search_users(username=login)
+        results = self.search(format='user', username=login)
         n = len(results)
         if n == 0:
             return None

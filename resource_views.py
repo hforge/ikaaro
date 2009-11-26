@@ -144,8 +144,7 @@ class DBResource_Backlinks(Folder_Table):
 
 
     def get_items(self, resource, context):
-        path = resource.get_physical_path()
-        path = str(path)
+        path = str(resource.physical_path)
         return context.search(links=path)
 
 
@@ -526,7 +525,7 @@ class LoginView(stl_view):
             return
 
         # Check the user exists
-        user = self.get_user()
+        user = self.user
         if user is None:
             field = self.username
             error = MSG(u'The user "{username}" does not exist.')
@@ -540,7 +539,8 @@ class LoginView(stl_view):
             raise FormError
 
 
-    def get_user(self):
+    @thingy_lazy_property
+    def user(self):
         username = self.username.value
         return self.context.get_user_by_login(username)
 
@@ -549,7 +549,7 @@ class LoginView(stl_view):
         context = self.context
 
         # Set cookie
-        user = self.get_user()
+        user = self.user
         password = self.password.value
         user.set_auth_cookie(context, password)
 

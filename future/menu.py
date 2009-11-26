@@ -482,8 +482,8 @@ class Menu(OrderedTable):
 
 
     def get_links(self):
-        base = self.get_physical_path()
-        site_root_path = self.get_site_root().get_physical_path()
+        base = self.physical_path
+        site_root_path = self.get_site_root().physical_path
         handler = self.handler
         record_properties = handler.record_properties
         links = []
