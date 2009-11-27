@@ -83,7 +83,7 @@ def _get_links(base, events):
     return links
 
 
-def _change_link(source, target, base, stream):
+def _change_link(source, target, old_base, new_base, stream):
     map = {'a': 'href', 'img': 'src', 'iframe': 'src'}
 
     for event in stream:
@@ -129,7 +129,7 @@ def _change_link(source, target, base, stream):
             view = ''
 
         # Check the link points to the resource that is moving
-        path = base.resolve2(path)
+        path = old_base.resolve2(path)
         if path != source:
             yield event
             continue
@@ -137,7 +137,7 @@ def _change_link(source, target, base, stream):
         # Update the link
         # Build the new reference with the right path
         new_reference = deepcopy(reference)
-        new_reference.path = str(base.get_pathto(target)) + view
+        new_reference.path = str(new_base.get_pathto(target)) + view
 
         attributes[attr_name] = str(new_reference)
         yield START_ELEMENT, (tag_uri, tag_name, attributes), line
@@ -242,11 +242,13 @@ class WebPage(ResourceWithHTML, Multilingual, Text):
         base = self.get_abspath()
         resources_new2old = get_context().database.resources_new2old
         base = str(base)
-        base = resources_new2old.get(base, base)
-        base = Path(base)
+        old_base = resources_new2old.get(base, base)
+        old_base = Path(old_base)
+        new_base = Path(base)
 
         for handler in self.get_handlers():
-            events = _change_link(source, target, base, handler.events)
+            events = _change_link(source, target, old_base, new_base,
+                                  handler.events)
             events = list(events)
             handler.set_changed()
             handler.events = events
