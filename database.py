@@ -100,7 +100,8 @@ class ReadOnlyDatabase(ROGitDatabase):
 
     def load_git_cache(self):
         self.git_cache = {}
-        cmd = ['git', 'log', '--pretty=format:%H%n%an%n%at%n%s', '--raw']
+        cmd = ['git', 'log', '--pretty=format:%H%n%an%n%at%n%s', '--raw',
+               '--name-only']
         data = send_subprocess(cmd)
         lines = data.splitlines()
         i = 0
@@ -115,8 +116,7 @@ class ReadOnlyDatabase(ROGitDatabase):
             # Modified files
             i += 4
             while i < len(lines) and lines[i]:
-                file = lines[i].rsplit('\t', 1)[1]
-                self.git_cache.setdefault(file, commit)
+                self.git_cache.setdefault(lines[i], commit)
                 i += 1
             # Next entry is separated by an empty line
             i += 1

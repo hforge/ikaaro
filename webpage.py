@@ -26,8 +26,8 @@ from itools.core import thingy
 from itools.gettext import MSG
 from itools.html import xhtml_uri, XHTMLFile
 from itools.http import get_context
-from itools.stl import set_prefix
-from itools.uri import get_reference
+from itools.stl import rewrite_uris
+from itools.uri import Path, Reference, get_reference
 from itools.web import view
 from itools.xml import START_ELEMENT
 
@@ -240,6 +240,11 @@ class WebPage(ResourceWithHTML, Multilingual, Text):
 
     def update_links(self,  source, target):
         base = self.get_abspath()
+        resources_new2old = get_context().database.resources_new2old
+        base = str(base)
+        base = resources_new2old.get(base, base)
+        base = Path(base)
+
         for handler in self.get_handlers():
             events = _change_link(source, target, base, handler.events)
             events = list(events)
@@ -250,15 +255,28 @@ class WebPage(ResourceWithHTML, Multilingual, Text):
 
     def update_relative_links(self, source):
         target = self.get_abspath()
-        prefix = target.get_pathto(source)
-        # Append slash, because 'get_pathto' is the inverse of 'resolve2',
-        # while 'set_prefix' uses 'resolve'
-        prefix.endswith_slash = True
+        resources_old2new = get_context().database.resources_old2new
+
+        def my_func(value):
+            # Absolute URI or path
+            uri = get_reference(value)
+            if uri.scheme or uri.authority or uri.path.is_absolute():
+                return value
+
+            # Resolve Path
+            # Calcul the old absolute path
+            old_abs_path = source.resolve2(value)
+            # Get the 'new' absolute parth
+            new_abs_path = resources_old2new.get(old_abs_path, old_abs_path)
+
+            path = target.get_pathto(new_abs_path)
+            value = Reference('', '', path, uri.query.copy(), uri.fragment)
+            return str(value)
 
         for handler in self.get_handlers():
             if handler.database.is_phantom(handler):
                 continue
-            events = set_prefix(handler.events, prefix)
+            events = rewrite_uris(handler.events, my_func)
             events = list(events)
             handler.set_changed()
             handler.events = events
