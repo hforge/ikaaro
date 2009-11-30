@@ -4,28 +4,16 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
-  <p>
-  Current state: <strong class="wf-${statename}">${state_title}</strong>
-  </p>
-
   <form action=";edit_state" method="post">
-    <dl>
-      <dt>You can do the following actions:</dt>
-      <dd stl:repeat="transition transitions">
-        <input type="radio" name="transition" id="${transition/name}"
-          value="${transition/name}" />
-        <label for="${transition/name}">${transition/description}</label>
-      </dd>
-    </dl>
-    <dl>
-      <dt><label for="comments">Comments (optional):</label></dt>
-      <dd>
-        <textarea id="comments" name="comments" cols="52" rows="7" />
-      </dd>
-    </dl>
-    <p>
+    <fieldset>
+      <legend>Change state</legend>
+      <p>
+      Current state: <strong class="wf-${statename}">${state_title}</strong>
+      </p>
+      <div class="field">${transition}</div>
+      <div class="field">${comment}</div>
       <button type="submit" class="button-ok">Change</button>
-    </p>
+    </fieldset>
   </form>
 
   <h4>State History</h4>

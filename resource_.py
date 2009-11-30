@@ -29,7 +29,6 @@ from itools.core import freeze
 from itools.core import thingy_type, thingy_property, thingy_lazy_property
 from itools.csv import Property
 from itools.datatypes import Unicode, String, Integer, Boolean, DateTime
-from itools.http import get_context
 from itools.log import log_warning
 from itools.web import Resource
 from itools.uri import Path, decode_query, resolve_uri
@@ -273,14 +272,14 @@ class DBResource(CatalogAware, IResource):
 
 
     def set_property(self, name, value, language=None):
-        get_context().change_resource(self)
+        self.context.change_resource(self)
         if language:
             value = Property(value, lang=language)
         self.metadata.set_property(name, value)
 
 
     def del_property(self, name):
-        get_context().change_resource(self)
+        self.context.change_resource(self)
         self.metadata.del_property(name)
 
 
@@ -293,13 +292,13 @@ class DBResource(CatalogAware, IResource):
 
     def get_revisions(self, n=None, content=False):
         files = self.get_files_to_archive(content)
-        database = get_context().database
+        database = self.context.database
         return database.get_revisions(files, n)
 
 
     def get_last_revision(self):
         files = self.get_files_to_archive()
-        database = get_context().database
+        database = self.context.database
         return database.get_last_revision(files)
 
 
@@ -480,7 +479,7 @@ class DBResource(CatalogAware, IResource):
         self.update_relative_links(Path(source))
 
         # (2) Update resources that link to me
-        database = get_context().database
+        database = self.context.database
         target = self.get_canonical_path()
         query = PhraseQuery('links', source)
         results = database.catalog.search(query).get_documents()
@@ -550,7 +549,7 @@ class DBResource(CatalogAware, IResource):
         # key
         key = '%s-%s-00105A989226:%.03f' % (random(), random(), time())
         # lock
-        username = get_context().user.get_name()
+        username = self.context.user.get_name()
         timestamp = datetime.now()
         timestamp = DateTime.encode(timestamp)
         lock = '%s#%s#%s' % (username, timestamp, key)

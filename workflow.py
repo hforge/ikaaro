@@ -16,9 +16,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# Import from the Standard Library
+from datetime import datetime
+
 # Import from itools
 from itools.core import freeze, merge_dicts
 from itools.core import thingy_property, thingy_lazy_property
+from itools.core import OrderedDict
 from itools.csv import Property
 from itools.datatypes import String, Unicode
 from itools.gettext import MSG
@@ -44,8 +48,9 @@ class StateForm(stl_view):
     icon = 'state.png'
     template = 'WorkflowAware_state.xml'
 
-    transition = choice_field(required=True)
-    comments = textarea_field()
+    transition = choice_field(required=True, mode='radio')
+    transition.title = MSG(u'Choose the action to do')
+    comment = textarea_field(title=MSG(u'Comment'))
 
 
     def statename(self):
@@ -61,20 +66,21 @@ class StateForm(stl_view):
         return self.state['title']
 
 
-    def transitions(self):
-        resource = self.resource
-        user = self.context.user
+    @thingy_lazy_property
+    def transition__values(self):
+        view = self.view
+        resource = view.resource
+        user = view.context.user
 
         ac = resource.access_control
-        transitions = []
-        for name, trans in self.state.transitions.items():
+        values = OrderedDict()
+        for name, trans in view.state.transitions.items():
             view = resource.get_view(name)
-            if ac.is_allowed_to_trans(user, resource, view) is False:
-                continue
-            description = trans['description'].gettext()
-            transitions.append({'name': name, 'description': description})
+            if ac.is_allowed_to_trans(user, resource, view):
+                title = trans['description'].gettext()
+                values[name] = {'title': title}
 
-        return transitions
+        return values
 
 
     def history(self):
@@ -95,16 +101,20 @@ class StateForm(stl_view):
         return history
 
 
-    def action(self, resource, context, form):
+    def action(self):
+        context = self.context
+
+        transition = self.transition.value
+        comment = self.comment.value
         try:
-            resource.make_transition(form['transition'], form['comments'])
+            self.resource.make_transition(transition, comment)
         except WorkflowError, excp:
             context.server.log_error(context)
             context.message = ERROR(unicode(excp.message, 'utf-8'))
-            return
+        else:
+            context.message = INFO(u'Transition done.')
 
-        # Ok
-        context.message = INFO(u'Transition done.')
+        context.redirect()
 
 
 
@@ -179,13 +189,6 @@ class WorkflowAware(DBResource, BaseWorkflowAware):
 
     def set_workflow_state(self, value):
         self.set_property('state', value)
-
-
-    # FIXME We redefine the itools.workflow.WorkflowAware API because that
-    # class is not thingy
-    def get_state(self):
-        statename = self.get_workflow_state()
-        return self.workflow.states.get(statename)
 
 
     def init_resource(self, **kw):
