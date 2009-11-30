@@ -26,10 +26,9 @@ from itools.gettext import MSG
 from itools.xapian import PhraseQuery, AndQuery
 
 # Import from ikaaro
-from ikaaro.autoform import title_widget, CheckboxWidget, SelectWidget
-from ikaaro.autoform import ReadOnlyWidget
-from ikaaro.table import OrderedTable, OrderedTableFile
-from ikaaro.table_views import OrderedTable_View, Table_EditRecord
+from ikaaro.table import OrderedTable, OrderedTableResource
+from ikaaro.table_views import OrderedTableResource_View
+from ikaaro.table_views import TableResource_EditRecord
 
 
 
@@ -46,14 +45,13 @@ class ProductsEnumerate(Enumerate):
 ###########################################################################
 # Views
 ###########################################################################
-class SelectTable_View(OrderedTable_View):
+class SelectTable_View(OrderedTableResource_View):
 
     access = 'is_allowed_to_view'
 
-    def get_table_columns(self, resource, context):
-        cls = OrderedTable_View
-        columns = cls.get_table_columns(self, resource, context)
-        columns.append(('issues', MSG(u'Issues')))
+    def get_table_columns(self):
+        columns = super(SelectTable_View, self).get_table_columns()
+        columns.append(('issues', MSG(u'Issues'), True))
         return columns
 
 
@@ -87,8 +85,7 @@ class SelectTable_View(OrderedTable_View):
                 return id
 
         # Default
-        cls = OrderedTable_View
-        value = cls.get_item_value(self, resource, context, item, column)
+        value = super(SelectTable_View, self).get_item_value(item, column)
 
         # NOTE The field 'product' is reserved to make a reference to the
         # 'products' table.  Currently it is used by the 'versions' and
@@ -106,8 +103,7 @@ class SelectTable_View(OrderedTable_View):
         # Sort
         sort_by = context.query['sort_by']
         if sort_by != 'issues':
-            cls = OrderedTable_View
-            return cls.sort_and_batch(self, resource, context, items)
+            return super(SelectTable_View, self).sort_and_batch(items)
 
         reverse = context.query['reverse']
         f = lambda x: self.get_item_value(resource, context, x, 'issues')[0]
@@ -144,10 +140,10 @@ class SelectTable_View(OrderedTable_View):
 
 
 
-class SelectTable_EditRecord(Table_EditRecord):
+class SelectTable_EditRecord(TableResource_EditRecord):
 
-    def get_widgets(self, resource, context):
-        widgets = Table_EditRecord.get_widgets(self, resource, context)
+    def get_widgets(self):
+        widgets = super(SelectTable_EditRecord, self).get_widgets()
         return [ widget if widget.name != 'product' else
                  ReadOnlyWidget('product', title=MSG(u'Product'))
                  for widget in widgets ]
@@ -157,19 +153,19 @@ class SelectTable_EditRecord(Table_EditRecord):
 ###########################################################################
 # Resources
 ###########################################################################
-class Tracker_TableHandler(OrderedTableFile):
+class Tracker_TableHandler(OrderedTable):
 
     record_properties = {'title': Unicode(multiple=True)}
 
 
 
-class Tracker_TableResource(OrderedTable):
+class Tracker_TableResource(OrderedTableResource):
 
     class_id = 'tracker_select_table'
     class_title = MSG(u'Select Table')
     class_handler = Tracker_TableHandler
 
-    form = [title_widget]
+#   form = [title_widget]
 
 
     def get_options(self, value=None, sort=None):
@@ -224,9 +220,9 @@ class ModulesResource(Tracker_TableResource):
             product=ProductsEnumerate(products=products, mandatory=True))
 
 
-    form = [
-        SelectWidget('product', title=MSG(u'Product')),
-        title_widget]
+#   form = [
+#       SelectWidget('product', title=MSG(u'Product')),
+#       title_widget]
 
 
 
@@ -251,8 +247,8 @@ class VersionsResource(Tracker_TableResource):
             product=ProductsEnumerate(products=products, mandatory=True))
 
 
-    form = [
-        SelectWidget('product', title=MSG(u'Product')),
-        title_widget,
-        CheckboxWidget('released', title=MSG(u'Released'))]
+#   form = [
+#       SelectWidget('product', title=MSG(u'Product')),
+#       title_widget,
+#       CheckboxWidget('released', title=MSG(u'Released'))]
 

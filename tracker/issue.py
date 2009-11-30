@@ -37,7 +37,7 @@ from ikaaro.file import File
 from ikaaro.folder import Folder
 from ikaaro.registry import get_resource_class
 from ikaaro.utils import generate_name
-from issue_views import Issue_Edit, Issue_EditResources, Issue_History
+from issue_views import Issue_Edit, Issue_History
 from issue_views import IssueTrackerMenu
 
 
@@ -47,7 +47,7 @@ class Issue(Folder):
     class_version = '20071216'
     class_title = MSG(u'Issue')
     class_description = MSG(u'Issue')
-    class_views = ['edit', 'edit_resources', 'table', 'history']
+    class_views = ['edit', 'table', 'history']
 
 
     class_schema = merge_dicts(
@@ -339,6 +339,5 @@ class Issue(Folder):
 
 
     edit = Issue_Edit()
-    edit_resources = Issue_EditResources()
     history = Issue_History()
 
