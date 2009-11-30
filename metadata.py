@@ -239,13 +239,15 @@ class Metadata(File):
             return
 
         # Case 3: Multilingual
-        if p_type is Property and 'lang' in value.parameters:
-            language = value.parameters['lang']
-            properties.setdefault(name, {})[language] = value
-            return
+        if p_type is Property:
+            if 'lang' in value.parameters:
+                language = value.parameters['lang']
+                properties.setdefault(name, {})[language] = value
+                return
+        else:
+            value = Property(value)
 
         # Case 4: Simple
-        value = Property(value)
         cls = get_resource_class(self.format)
         datatype = cls.get_property_datatype(name)
         if datatype is None or getattr(datatype, 'multiple', False) is False:
