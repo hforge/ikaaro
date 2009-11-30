@@ -161,12 +161,13 @@ class DateTimeField(input_field):
         return self.value.strftime('%H:%M')
 
 
-    def get_value(self, source):
-        date = source.get(self.name)
+    @thingy_lazy_property
+    def raw_value(self):
+        date = self.getter(self.name)
         if date is None:
             return None
 
-        time = source.get('%s_time' % self.name)
+        time = self.getter('%s_time' % self.name)
         return '%sT%s' % (date, time)
 
 
