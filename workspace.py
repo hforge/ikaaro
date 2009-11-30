@@ -41,3 +41,8 @@ class Workspace(AccessControl, Folder):
         ('reviewer', {'title': MSG(u"Reviewer")}),
         ('admin', {'title': MSG(u'Admin')})])
 
+
+
+    def get_usernames(self):
+        return self.get_resource('users').get_names()
+

@@ -224,14 +224,6 @@ class RoleAware(AccessControl):
         return [ '/users/%s' % x for x in self.get_users() ]
 
 
-    def get_users(self):
-        users = set()
-        for rolename in self.get_role_names():
-            usernames = self.get_value(rolename)
-            users = users.union(usernames)
-        return users
-
-
     #########################################################################
     # Access Control
     #########################################################################

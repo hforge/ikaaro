@@ -121,7 +121,7 @@ class UsersList(Enumerate):
                 usernames = site_root.get_property(rolename)
                 members = members.union(usernames)
         else:
-            members = site_root.get_users()
+            members = site_root.get_usernames()
 
         users = site_root.get_resource('/users')
         options = [

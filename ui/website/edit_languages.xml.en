@@ -7,8 +7,8 @@
   <!-- Edit Languages -->
   <fieldset>
     <legend>Edit the active languages</legend>
-    <form action="" method="post" id="browse-list">
-      <table summary="Language settings">
+    <form action="" method="post">
+      <table summary="Language settings" id="browse-list">
         <thead>
           <tr>
             <th>Default</th>

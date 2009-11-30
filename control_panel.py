@@ -127,14 +127,11 @@ class CPEditSecurityPolicy(stl_view):
 
 def values(self):
     values = []
-    resource = self.view.resource
-    users = resource.get_resource('/users')
-    for username in resource.get_users():
-        user = users.get_resource(username)
+    for user in self.view.resource.get_resources('/users'):
         email = user.get_value('email')
         title = user.get_title()
         title = email if title == email else '%s <%s>' % (title, email)
-        values.append((username, {'title': title}))
+        values.append((user.get_name(), {'title': title}))
     values.sort(key=lambda x: x[1]['title'])
 
     return OrderedDict(values)
