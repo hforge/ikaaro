@@ -31,10 +31,8 @@ from itools.i18n import format_datetime
 from itools.stl import stl
 from itools.uri import encode_query, Reference
 from itools.web import view, stl_view, FormError, INFO, ERROR
-from itools.web.views import process_form
 
 # Import from ikaaro
-from ikaaro.autoform import HiddenWidget, TextWidget
 from ikaaro.buttons import Button
 from ikaaro import messages
 from ikaaro.views import BrowseForm, Container_Search, ContextMenu
@@ -43,8 +41,8 @@ from ikaaro.registry import get_resource_class
 
 # Import from ikaaro.tracker
 from issue import Issue
-from datatypes import get_issue_fields, TrackerList, ProductInfoList
-from datatypes import UsersList
+from datatypes import product_choice_field, tracker_choice_field
+from datatypes import users_choice_field
 from stored import StoredSearchFile, StoredSearch
 
 
@@ -84,27 +82,35 @@ class StoreSearchMenu(ContextMenu):
 
     title = MSG(u'Remember this search')
     template = '/ui/tracker/menu_remember.xml'
-    query_schema = merge_dicts(StoredSearchFile.schema,
-                               search_name=String,
-                               search_title=Unicode)
 
-    def get_namespace(self):
-        # This search exists ?
-        search_name = self.context.get_query_value('search_name')
+#    query_schema = merge_dicts(StoredSearchFile.schema,
+    search_name = hidden_field(source='query')
+    search_title = text_field(source='query')
+
+
+    @thingy_lazy_property
+    def search(self):
+        search_name = self.search_name.value
         if search_name:
-            search = self.resource.get_resource(search_name, soft=True)
-        else:
-            search = None
+            return self.resource.get_resource(search_name, soft=True)
+        return None
 
-        # Set the get function and the title
+
+    def search_title(self):
+        search = self.search
+        return search.get_title() if search else None
+
+
+    def search_fields(self):
+        search = self.search
         if search:
             get = search.get_values
-            search_title = search.get_title()
         else:
             # Warning, a menu is not the default view!
-            query = process_form(self.context.get_query_value, self.query_schema)
+            from itools.web.views import process_form
+            query = process_form(self.context.get_query_value,
+                                 self.query_schema)
             get = query.get
-            search_title = None
 
         # Fill the fields
         fields = []
@@ -117,10 +123,7 @@ class StoreSearchMenu(ContextMenu):
                 fields.append({'name': name, 'value': type.encode(value)})
 
         # Ok
-        return {'title': self.title,
-                'search_title': search_title,
-                'search_name': search_name,
-                'search_fields': fields }
+        return fields
 
 
 
@@ -192,9 +195,8 @@ class TrackerViewMenu(ContextMenu):
 ###########################################################################
 class Tracker_NewInstance(NewInstance):
 
-    schema = merge_dicts(NewInstance.schema, product=Unicode(mandatory=True))
-    widgets = NewInstance.widgets + [
-        TextWidget('product', title=MSG(u'Give the title of one Product'))]
+    product = text_field(required=True)
+    product.title = MSG(u'Give the title of one Product')
 
 
     def action(self, resource, context, form):
@@ -230,8 +232,17 @@ class Tracker_AddIssue(stl_view):
     scripts = ['/ui/tracker/tracker.js']
 
 
-    def get_schema(self, resource, context):
-        return get_issue_fields(resource)
+    title = title_field(required=True)
+    comment = textarea_field()
+    file = file_field()
+    product = tracker_choice_field(required=True)
+    module = product_choice_field()
+    version = product_choice_field()
+    type = tracker_choice_field(required=True)
+    state = tracker_choice_field(required=True)
+    priority = tracker_choice_field()
+    assigned_to = users_choice_field(excluded_roles=('guests',))
+    cc_list = users_choice_field(multiple=True)
 
 
     def get_value(self, resource, context, name, datatype):
@@ -268,36 +279,37 @@ class Tracker_View(BrowseForm):
     styles = ['/ui/tracker/style.css']
 
 
-    schema = {
-        'ids': String(multiple=True, mandatory=True)}
+    ids = multiple_choice_field(required=True)
 
-    tracker_schema = {
-        # Do not batch
-        'batch_size': Integer(default=0),
-        # search_fields
-        'search_name': String(),
-        'mtime': Integer(default=0),
-        'product': Integer(multiple=True),
-        'module': Integer(multiple=True),
-        'version': Integer(multiple=True),
-        'type': Integer(multiple=True),
-        'state': Integer(multiple=True),
-        'priority': Integer(multiple=True),
-        'assigned_to': String(multiple=True),
-        # Specific fields
-        'search_field': String,
-        'search_term': Unicode,
-        # BrowseForm fields
-        'sort_by': String,
-        'reverse': Boolean(default=None),
-    }
+    # Do not batch
+    batch_size = Integer(source='query', default=0)
+    # search_fields
+    search_name = String(source='query')
+    mtime = Integer(source='query', default=0)
+    product = Integer(source='query', multiple=True)
+    module = Integer(source='query', multiple=True)
+    version = Integer(source='query', multiple=True)
+    type = Integer(source='query', multiple=True)
+    state = Integer(source='query', multiple=True)
+    priority = Integer(source='query', multiple=True)
+    assigned_to = String(source='query', multiple=True)
+    # Specific fields
+    search_field = String(source='query')
+    search_term = Unicode(source='query')
+    # BrowseForm fields
+    sort_by = String(source='query')
+    reverse = Boolean(source='query', default=None)
 
     context_menus = [StoreSearchMenu(), TrackerViewMenu()]
 
 
-    def get_query_schema(self):
-        return merge_dicts(BrowseForm.get_query_schema(self),
-                           self.tracker_schema)
+    @thingy_lazy_property
+    def stored_search(self):
+        search_name = self.search_name.value
+        if search_name:
+            tracker = self.resource.get_site_root().get_resource('tracker')
+            return tracker.get_resource(search_name, soft=True)
+        return None
 
 
     def on_query_error(self, resource, context):
@@ -305,31 +317,15 @@ class Tracker_View(BrowseForm):
         return context.come_back(None, goto=';search?%s' % query)
 
 
-    def get_page_title(self, resource, context):
-        query = getattr(context, 'query', {})
-        search_name = query.get('search_name')
-        if search_name:
-            search = context.resource.get_resource(search_name, soft=True)
-            if search:
-                search = search.get_title()
-                template = MSG(u'{title} - {search}')
-                title = self.title.gettext()
-                return template.gettext(title=title, search=search)
+    def get_page_title(self):
+        search = self.stored_search
+        if search:
+            search = search.get_title()
+            template = MSG(u'{title} - {search}')
+            title = self.title.gettext()
+            return template.gettext(title=title, search=search)
 
         return self.title
-
-
-    def GET(self, resource, context):
-        # Check stored search
-        search_name = context.query['search_name']
-        if search_name:
-            search = resource.get_resource(search_name, soft=True)
-            if search is None:
-                msg = MSG(u'Unknown stored search "{sname}".')
-                goto = ';search'
-                return context.come_back(msg, goto=goto, sname=search_name)
-        # Ok
-        return BrowseForm.GET(self, resource, context)
 
 
     def get_namespace(self, resource, context):
@@ -650,33 +646,11 @@ class Tracker_ExportToCSVForm(Tracker_View):
     template = '/ui/tracker/export_to_csv.xml'
     external_form = True
 
-    def get_query_schema(self):
-        schema = Tracker_View.get_query_schema(self)
-        schema['ids'] = String(multiple=True, default=[])
-        return schema
+    ids = multiple_choice_field(source='query')
 
 
-    def get_namespace(self, resource, context):
-        namespace = Tracker_View.get_namespace(self, resource, context)
-        query = context.query
-
-        # Insert query parameters as hidden input fields
-        parameters = []
-        schema = Tracker_View.get_query_schema(self)
-        for name in schema:
-            if name in namespace:
-                continue
-            value = query[name]
-            datatype = schema[name]
-            widget = HiddenWidget(name)
-            if datatype.multiple is True:
-                for value in value:
-                    parameters.append(widget.to_html(datatype, value))
-            elif value:
-                parameters.append(widget.to_html(datatype, value))
-        namespace['search_parameters'] = parameters
-
-        return namespace
+    def search_parameters(self):
+        return [ x for x in self.get_fields() if x.source == 'query' ]
 
 
 

@@ -35,7 +35,6 @@ from ikaaro.calendar import CalendarBase, MonthlyView, WeeklyView
 from ikaaro.table import Table
 
 # Import from ikaaro.tracker
-from datatypes import UsersList
 from tracker_views import Tracker_View
 
 

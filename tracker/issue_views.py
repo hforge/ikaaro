@@ -31,16 +31,17 @@ from itools.gettext import MSG
 from itools.ical import Time
 from itools.html import xhtml_uri
 from itools.i18n import format_datetime
-from itools.web import stl_view
+from itools.web import stl_view, boolean_field, file_field, textarea_field
 from itools.xml import XMLParser, START_ELEMENT, END_ELEMENT, TEXT
 
 # Import from ikaaro
+from ikaaro.fields import title_field
 from ikaaro.messages import MSG_CHANGES_SAVED
-from ikaaro.table_views import Table_View
 from ikaaro.views import composite_view, ContextMenu
 
 # Local import
-from datatypes import get_issue_fields, UsersList
+from datatypes import product_choice_field, tracker_choice_field
+from datatypes import users_choice_field
 
 
 ###########################################################################
@@ -133,12 +134,23 @@ class Issue_Edit(stl_view):
     scripts = ['/ui/tracker/tracker.js']
 
 
-    def get_schema(self, resource, context):
-        tracker = resource.get_parent()
-        schema = get_issue_fields(tracker)
-        schema['cc_list'] = UsersList(tracker=tracker, multiple=True)
-        schema['cc_remove'] = Boolean(default=False)
-        return schema
+    title = title_field(required=True)
+    comment = textarea_field()
+    file = file_field()
+    product = tracker_choice_field(required=True)
+    module = product_choice_field()
+    version = product_choice_field()
+    type = tracker_choice_field(required=True)
+    state = tracker_choice_field(required=True)
+    priority = tracker_choice_field()
+    assigned_to = users_choice_field(excluded_roles=('guests',))
+    cc_list = users_choice_field(multiple=True)
+    cc_remove = boolean_field()
+
+
+    field_names = [
+        'title', 'comment', 'file', 'product', 'module', 'version', 'type',
+        'state', 'priority', 'assigned_to', 'cc_list', 'cc_rmove']
 
 
     def get_value(self, resource, context, name, datatype):
@@ -338,154 +350,3 @@ class Issue_History(stl_view):
         # Ok
         return {'number': resource.name, 'rows': rows}
 
-
-
-class Issue_ViewResources(Table_View):
-
-    search_template = None
-
-    batch_msg1 = MSG(u"There is 1 assignment.")
-    batch_msg2 = MSG(u"There are {n} assignments.")
-
-
-    def get_items(self, resource, context):
-        issue = context.resource
-        return resource.handler.search(issue=issue.name)
-
-
-    def get_item_value(self, resource, context, item, column):
-        if column == 'id':
-            id = item.id
-            return id, ';edit_resources?id=%s' % id
-        return Table_View.get_item_value(self, resource, context, item,
-                                         column)
-
-
-    def action_remove(self, resource, context, form):
-        calendar = resource.get_calendar()
-        Table_View.action_remove(self, calendar, context, form)
-
-
-
-class Issue_AddEditResource(stl_view):
-
-    access = 'is_allowed_to_edit'
-    template = '/ui/tracker/edit_resource.xml'
-
-    query_schema = {
-        'id': Integer}
-
-    schema = {
-        'resource': String,
-        'dtstart': Date(mandatory=True),
-        'dtend': Date(mandatory=True),
-        'tstart': Time(default=time(0, 0)),
-        'tend': Time(default=time(0, 0)),
-        'comment': Unicode}
-
-
-    def get_namespace(self, resource, context):
-        calendar = resource.get_calendar()
-
-        # Add or Edit
-        id = context.query['id']
-        if id is None:
-            # Add a new resource-issue
-            action = ';edit_resources'
-            user = None
-            d_start = d_end = date.today()
-            t_start = t_end = ''
-            comment = u''
-        else:
-            # Edit a resource-issue
-            action = ';edit_resources?id=%s' % id
-            record = calendar.handler.get_record(id)
-            get_value = calendar.handler.get_record_value
-            user = get_value(record, 'resource')
-            dtstart = get_value(record, 'dtstart')
-            dtend = get_value(record, 'dtend')
-            comment = get_value(record, 'comment')
-            d_start, t_start = dtstart.date(), dtstart.time()
-            d_end, t_end = dtend.date(), dtend.time()
-            t_start = t_start.strftime('%H:%M')
-            t_end = t_end.strftime('%H:%M')
-            id = str(id)
-
-        # Time select
-        timetables = calendar.get_timetables()
-        time_select = [
-            {'name': index,
-             'start': start.strftime('%H:%M'),
-             'end': end.strftime('%H:%M')}
-            for index, (start, end) in enumerate(timetables) ]
-
-        # Ok
-        return {
-            'action': action,
-            'id': id,
-            'users': UsersList(tracker=resource,
-               excluded_roles=('guests',)).get_namespace(user),
-            'd_start': d_start.strftime('%Y-%m-%d'),
-            't_start': t_start,
-            'd_end': d_end.strftime('%Y-%m-%d'),
-            't_end': t_end,
-            'time_select': time_select,
-            'comment': comment}
-
-
-    def action_add(self, resource, context, form):
-        dtstart = datetime.combine(form['dtstart'], form['tstart'])
-        dtend = datetime.combine(form['dtend'], form['tend'])
-        record = {
-            'issue': resource.name,
-            'resource': form['resource'],
-            'dtstart': dtstart,
-            'dtend': dtend,
-            'comment': form['comment']}
-
-        # Change
-        calendar = resource.get_calendar()
-        calendar.handler.add_record(record)
-        # Ok
-        context.message = MSG_CHANGES_SAVED
-
-
-    def action_edit(self, resource, context, form):
-        id = context.query['id']
-
-        # New record
-        dtstart = datetime.combine(form['dtstart'], form['tstart'])
-        dtend = datetime.combine(form['dtend'], form['tend'])
-        record = {
-            'issue': resource.name,
-            'resource': form['resource'],
-            'dtstart': dtstart,
-            'dtend': dtend,
-            'comment': form['comment']}
-
-        # Change
-        calendar = resource.get_calendar()
-        calendar.handler.update_record(id, **record)
-        # Ok
-        context.message = MSG_CHANGES_SAVED
-
-
-
-class Issue_EditResources(composite_view):
-
-    access = 'is_allowed_to_edit'
-    title = MSG(u'Edit resources')
-    icon = 'edit.png'
-
-    subviews = [
-        Issue_AddEditResource(),
-        Issue_ViewResources()]
-
-    def get_namespace(self, resource, context):
-        # Override so we can pass a different resource to Issue_ViewResources
-        calendar = resource.get_calendar()
-        views = [
-            self.subviews[0].GET(resource, context),
-            self.subviews[1].GET(calendar, context) ]
-
-        return {'views': views}

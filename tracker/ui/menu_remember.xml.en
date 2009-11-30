@@ -8,8 +8,7 @@
   <label>${title}</label>
   <form action=";remember_search" method="post"
     style="margin: 4px 0px 0px 5px;">
-    <input type="hidden" name="search_name" value="${search_name}"
-      stl:if="search_name" />
+    ${search_name}
     <input type="hidden" stl:repeat="item search_fields" name="${item/name}"
       value="${item/value}" />
     <input type="text" name="search_title" value="${search_title}" size="18"
@@ -17,8 +16,8 @@
     <button type="submit" class="button-ok">OK</button>
   </form>
 
-  <form action=";forget_search" method="post" stl:if="search_name">
-    <input type="hidden" name="search_name" value="${search_name}" />
+  <form action=";forget_search" method="post" stl:if="search_name/value">
+    ${search_name}
     <button type="submit" class="button-delete"
       onclick="return confirm('Are you sure you want to forget this search?');"
       >Forget this Search</button>
