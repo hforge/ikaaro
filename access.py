@@ -141,7 +141,7 @@ class AccessControl(BaseAccessControl):
     def is_allowed_to_view(self, user, resource):
         # Resources with workflow
         if issubclass(resource, WorkflowAware):
-            state = resource.workflow_state
+            state = resource.get_value('workflow_state')
             # Anybody can see public resources
             if state == 'public':
                 return True
@@ -283,7 +283,7 @@ class RoleAware(AccessControl):
         # Members only can touch not-yet-published documents
         if self.has_user_role(username, 'members'):
             if issubclass(resource, WorkflowAware):
-                state = resource.workflow_state
+                state = resource.get_value('workflow_state')
                 # Public resources are frozen for members
                 if state != 'public':
                     return True

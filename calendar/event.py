@@ -107,10 +107,11 @@ class Event_Edit(AutoForm):
     access = 'is_allowed_to_edit'
     view_title = MSG(u'Edit event')
 
-
+    # Fields
     title = title_field(required=True)
-    dtstart = DateTimeField(datatype=NowDataType, required=True,
-                            title=MSG(u'Start'))
+    dtstart = DateTimeField(datatype=NowDataType, required=True)
+    dtstart.title = MSG(u'Start')
+
     dtend = DateTimeField(datatype=NowDataType, title=MSG(u'End'))
     description = description_field()
     location = input_field(title=MSG(u'Location'))

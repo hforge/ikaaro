@@ -101,6 +101,7 @@ class NewInstanceByDate(AutoForm):
         name = checkid(name)
         if name is None:
             raise FormError, messages.MSG_BAD_NAME
+        self.new_resource_name = name
 
         # Check the name is free
         if self.resource.get_resource(name, soft=True) is not None:
@@ -119,7 +120,7 @@ class NewInstanceByDate(AutoForm):
         path = ['%04d' % date.year, '%02d' % date.month, '%02d' % date.day]
 
         # Get the container, create it if needed
-        container = self.context.site_root
+        container = self.resource.get_site_root()
         for name in path:
             folder = container.get_resource(name, soft=True)
             if folder is None:
