@@ -84,6 +84,8 @@ class WebSite(RoleAware, Folder):
         schema['emails_from_addr'] = String
         schema['emails_signature'] = Unicode
         schema['google-site-verification'] = String
+        schema['yahoo_site_verification'] = String
+        schema['bing_site_verification'] = String
         schema['website_languages'] = Tokens(default=('en',))
         return schema
 

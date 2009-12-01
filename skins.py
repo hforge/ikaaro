@@ -259,10 +259,15 @@ class Skin(UIFolder):
                              'content': value})
 
         # Search engine optimization
-        google_verification_key = root.get_property('google-site-verification')
-        if google_verification_key:
-            meta.append({'name': 'google-site-verification', 'lang': None,
-                         'content': google_verification_key})
+        for key, meta_name in [
+            ('google-site-verification', 'google-site-verification'),
+            ('yahoo_site_verification', 'y_key'),
+            ('bing_site_verification', 'msvalidate.01')]:
+            verification_key = root.get_property(key)
+            if verification_key:
+                meta.append({'name': meta_name,
+                             'lang': None,
+                             'content': verification_key})
 
         return meta
 

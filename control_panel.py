@@ -359,17 +359,23 @@ class CPEditSearchEngineOptimizations(CPBaseView, DBResource_Edit):
       Optimize your website for better ranking in search engine results.""")
 
 
-    schema = {'google-site-verification': String}
+    schema = {'google-site-verification': String,
+              'yahoo_site_verification': String,
+              'bing_site_verification': String}
 
     widgets = [
         TextWidget('google-site-verification',
             title=MSG(u'Google site verification key')),
+        TextWidget('yahoo_site_verification',
+            title=MSG(u'Yahoo site verification key')),
+        TextWidget('bing_site_verification',
+            title=MSG(u'Bing site verification key')),
         ]
 
 
     def action(self, resource, context, form):
-        resource.set_property('google-site-verification',
-            form['google-site-verification'])
+        for key in self.schema:
+            resource.set_property(key, form[key])
         # Ok
         context.message = messages.MSG_CHANGES_SAVED
 
