@@ -352,7 +352,7 @@ def check_database(target):
     data1 = get_pipe(command, cwd=cwd)
 
     # Check changes in the index not yet committed.
-    command = ['git', 'diff-index', 'HEAD', '--name-only']
+    command = ['git', 'diff-index', '--cached', '--name-only', 'HEAD']
     data2 = get_pipe(command, cwd=cwd)
 
     # Everything looks fine
