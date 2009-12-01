@@ -74,16 +74,14 @@ class ControlPanel(IconsView):
 
 
 
-class CPEditVirtualHosts(stl_view):
+class CPEditVirtualHosts(AutoForm):
 
     access = 'is_admin'
     view_title = MSG(u'Virtual Hosts')
     view_description = MSG(u'Define the domain names for this Web Site.')
     icon = 'website.png'
-    template = 'website/virtual_hosts.xml'
 
     vhosts = textarea_field(datatype=String, cols=50)
-
 
     @thingy_lazy_property
     def vhosts__value(self):
