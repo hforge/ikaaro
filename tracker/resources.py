@@ -52,7 +52,7 @@ class TrackerMonthlyView(MonthlyView):
 
 
     def get_namespace(self, resource, context):
-        context.styles.append('/ui/tracker/style.css')
+        context.add_style('/ui/tracker/style.css')
         return MonthlyView.get_namespace(self, resource, context)
 
 
@@ -89,7 +89,7 @@ class TrackerWeeklyView(WeeklyView):
 
 
     def get_namespace(self, resource, context):
-        context.styles.append('/ui/tracker/style.css')
+        context.add_style('/ui/tracker/style.css')
         return WeeklyView.get_namespace(self, resource, context)
 
 

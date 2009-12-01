@@ -178,7 +178,7 @@ class Menu_View(OrderedTable_View):
 
 
     def get_namespace(self, resource, context):
-        context.styles.append('/ui/future/style.css')
+        context.add_style('/ui/future/style.css')
         return OrderedTable_View.get_namespace(self, resource, context)
 
 

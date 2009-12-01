@@ -345,8 +345,8 @@ class Image_View(STLView):
 
 
     def get_namespace(self, resource, context):
-        context.styles.append('/ui/gallery/style.css')
-        context.scripts.append('/ui/gallery/javascript.js')
+        context.add_style('/ui/gallery/style.css')
+        context.add_script('/ui/gallery/javascript.js')
         size = context.get_form_value('size', type=Integer)
         width = context.get_form_value('width', default=self.default_width)
         height = context.get_form_value('height', default=self.default_height)

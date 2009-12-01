@@ -392,7 +392,8 @@ class DBResource_AddBase(STLForm):
             path = path.resolve_name('.%s' % action)
         # Return javascript
         mode = form['mode']
-        context.scripts.extend(self.get_scripts(mode))
+        scripts = self.get_scripts(mode)
+        context.add_script(*scripts)
         return self.get_javascript_return(context, path)
 
 
@@ -472,7 +473,8 @@ class DBResource_AddLink(DBResource_AddBase):
         # Create the resource
         child = cls.make_resource(cls, container, name)
         path = context.resource.get_pathto(child)
-        context.scripts.extend(self.get_scripts(mode))
+        scripts = self.get_scripts(mode)
+        context.add_script(*scripts)
         return self.get_javascript_return(context, path)
 
 

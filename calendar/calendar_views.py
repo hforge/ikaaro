@@ -113,7 +113,7 @@ class TimetablesForm(STLForm):
 
 
     def get_namespace(self, resource, context):
-        context.styles.append('/ui/calendar/style.css')
+        context.add_style('/ui/calendar/style.css')
 
         # Show current timetables only if previously set in metadata
         if resource.has_property('timetables'):
@@ -461,7 +461,7 @@ class EditEventForm(CalendarView, STLForm):
 
 
     def get_namespace(self, resource, context):
-        context.styles.append('/ui/calendar/style.css')
+        context.add_style('/ui/calendar/style.css')
 
         # Get the resource
         resource = self.get_resource(resource, context)
@@ -650,7 +650,7 @@ class AddEventForm(EditEventForm):
 
 
     def get_namespace(self, resource, context):
-        context.styles.append('/ui/calendar/style.css')
+        context.add_style('/ui/calendar/style.css')
 
         # Get date to add event
         selected_date = context.query['date']
@@ -724,7 +724,7 @@ class MonthlyView(CalendarView):
 
 
     def get_namespace(self, resource, context, ndays=7):
-        context.styles.append('/ui/calendar/style.css')
+        context.add_style('/ui/calendar/style.css')
 
         today_date = date.today()
 
@@ -852,7 +852,7 @@ class WeeklyView(CalendarView):
 
 
     def get_namespace(self, resource, context, ndays=7):
-        context.styles.append('/ui/calendar/style.css')
+        context.add_style('/ui/calendar/style.css')
 
         # Current date
         c_date = context.get_form_value('date')
@@ -1054,7 +1054,7 @@ class DailyView(CalendarView):
 
 
     def get_namespace(self, resource, context):
-        context.styles.append('/ui/calendar/style.css')
+        context.add_style('/ui/calendar/style.css')
 
         method = context.get_cookie('method')
         if method != 'daily_view':

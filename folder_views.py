@@ -642,8 +642,8 @@ class Folder_PreviewContent(Folder_BrowseContent):
 
 
     def get_table_namespace(self, resource, context, items):
-        context.styles.append('/ui/gallery/style.css')
-        context.scripts.append('/ui/gallery/javascript.js')
+        context.add_style('/ui/gallery/style.css')
+        context.add_script('/ui/gallery/javascript.js')
 
         # Get from the query
         query = context.query

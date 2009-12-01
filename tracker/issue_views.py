@@ -146,8 +146,8 @@ class Issue_Edit(STLForm):
 
     def get_namespace(self, resource, context):
         # Set Style & JS
-        context.styles.append('/ui/tracker/style.css')
-        context.scripts.append('/ui/tracker/tracker.js')
+        context.add_style('/ui/tracker/style.css')
+        context.add_script('/ui/tracker/tracker.js')
 
         # Local variables
         users = resource.get_resource('/users')
@@ -230,7 +230,7 @@ class Issue_History(STLView):
 
     def get_namespace(self, resource, context):
         # Set Style
-        context.styles.append('/ui/tracker/style.css')
+        context.add_style('/ui/tracker/style.css')
 
         # Local variables
         users = resource.get_resource('/users')

@@ -61,7 +61,7 @@ class WikiPage_View(BaseView):
 
 
     def GET(self, resource, context):
-        context.styles.append('/ui/wiki/style.css')
+        context.add_style('/ui/wiki/style.css')
         parent = resource.parent
 
         try:
@@ -355,11 +355,12 @@ class WikiPage_Edit(DBResource_Edit):
 
 
     def get_namespace(self, resource, context):
-        context.styles.append(
-                '/ui/tiny_mce/themes/advanced/skins/default/ui.css')
-        context.styles.append('/ui/wiki/style.css')
-        context.scripts.append('/ui/tiny_mce/tiny_mce_src.js')
-        context.scripts.append('/ui/wiki/javascript.js')
+        context.add_style(
+            '/ui/tiny_mce/themes/advanced/skins/default/ui.css',
+            '/ui/wiki/style.css')
+        context.add_script(
+            '/ui/tiny_mce/tiny_mce_src.js',
+            '/ui/wiki/javascript.js')
 
         data = context.get_form_value('data') or resource.handler.to_str()
         return {
@@ -420,7 +421,7 @@ class WikiPage_Help(STLView):
 
 
     def get_namespace(self, resource, context):
-        context.styles.append('/ui/wiki/style.css')
+        context.add_style('/ui/wiki/style.css')
 
         source = resource.get_resource('/ui/wiki/help.txt')
         source = source.to_str()

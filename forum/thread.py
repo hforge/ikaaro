@@ -48,7 +48,7 @@ class Thread_View(STLForm):
         }
 
     def get_namespace(self, resource, context):
-        context.styles.append('/ui/forum/style.css')
+        context.add_style('/ui/forum/style.css')
         user = context.user
         users = resource.get_resource('/users')
         ac = resource.get_access_control()

@@ -400,7 +400,7 @@ class CreditsView(STLView):
 
 
     def get_namespace(self, resource, context):
-        context.styles.append('/ui/credits.css')
+        context.add_style('/ui/credits.css')
 
         # Build the namespace
         credits = get_abspath('CREDITS')
