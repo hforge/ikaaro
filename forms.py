@@ -386,47 +386,6 @@ class DateWidget(Widget):
         </script>
         """, stl_namespaces))
 
-    template_multiple = list(XMLParser("""
-        <table class="table-calendar">
-          <tr>
-            <td>
-              <textarea rows="5" cols="25" name="${name}" id="${name}"
-                >${value}</textarea>
-              <input type="button" value="update" id="btn-blur-${name}"
-                onclick="tableFlatOuputOnBlur(elt_${name}, cal_${name});" />
-            </td>
-            <td>
-              <div id="calendar-flat-${name}" style="float: left;"> </div>
-              <script type="text/javascript">
-                var MA_${name} = [];
-                <stl:block stl:repeat="date dates">
-                MA_${name}.push(str_to_date('${date}'));
-                </stl:block>
-                var cal_${name} = Calendar.setup({
-                    displayArea  : '${name}',
-                    flat         : 'calendar-flat-${name}',
-                    flatCallback : tableFlatCallback,
-                    multiple     : MA_${name},
-                    ifFormat     : '${format}'});
-                var elt_${name} = document.getElementById('${name}');
-                if (!browser.isIE) {
-                    $("#btn_blur_${name}").style.display = 'none';
-                    elt_${name}.setAttribute('onblur',
-                        'tableFlatOuputOnBlur(elt_${name}, cal_${name})');
-                }
-              </script>
-            </td>
-          </tr>
-        </table>
-        """, stl_namespaces))
-
-
-    def get_template(self, datatype, value):
-        if datatype.multiple:
-            return self.template_multiple
-        return self.template
-
-
     def get_namespace(self, datatype, value):
         if value is None:
             value = ''
@@ -436,13 +395,6 @@ class DateWidget(Widget):
         show_time = str(show_time).lower()
         css = getattr(self, 'css', None)
         size = getattr(self, 'size', None)
-
-        if datatype.multiple:
-            if isinstance(value, list): # ['2007-08-01\r\n2007-08-02']
-                value = value[0]
-            return {'name': self.name, 'format': format,
-                    'show_time': show_time, 'class': css,
-                    'value': value, 'dates': value.splitlines()}
 
         return {'name': self.name, 'format': format,
                 'show_time': show_time, 'class': css,

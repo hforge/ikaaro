@@ -213,9 +213,6 @@ class Skin(UIFolder):
         scripts.append('/ui/js_calendar/lang/calendar-%s.js' % language)
         scripts.append('/ui/js_calendar/calendar-setup.js')
 
-        # Table
-        scripts.append('/ui/table/javascript.js')
-
         # This skin's JavaScript
         if self.has_handler('javascript.js'):
             scripts.append('%s/javascript.js' % self.get_canonical_path())
