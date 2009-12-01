@@ -126,9 +126,6 @@ class Skin(stl_view):
         scripts.append('/ui/js_calendar/lang/calendar-%s.js' % language)
         scripts.append('/ui/js_calendar/calendar-setup.js')
 
-        # Table
-        scripts.append('/ui/table/javascript.js')
-
         # This skin's JavaScript
         scripts.extend(self._scripts)
 
@@ -200,10 +197,15 @@ class Skin(stl_view):
                              'content': value})
 
         # Search engine optimization
-        google_verification_key = root.get_value('google_site_verification')
-        if google_verification_key:
-            meta.append({'name': 'google-site-verification', 'lang': None,
-                         'content': google_verification_key})
+        for key, meta_name in [
+            ('google_site_verification', 'google-site-verification'),
+            ('yahoo_site_verification', 'y_key'),
+            ('bing_site_verification', 'msvalidate.01')]:
+            verification_key = root.get_value(key)
+            if verification_key:
+                meta.append({'name': meta_name,
+                             'lang': None,
+                             'content': verification_key})
 
         return meta
 

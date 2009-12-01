@@ -68,6 +68,8 @@ class WebSite(VirtualRoot, Workspace):
         emails_from_addr=String(source='metadata'),
         emails_signature=Unicode(source='metadata'),
         google_site_verification=String(source='metadata'),
+        yahoo_site_verification=String(source='metadata'),
+        bing_site_verification=String(source='metadata'),
         website_is_open=Boolean(source='metadata'))
 
 
