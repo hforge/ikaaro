@@ -199,7 +199,7 @@ class Skin(stl_view):
             ('google-site-verification', 'google-site-verification'),
             ('yahoo_site_verification', 'y_key'),
             ('bing_site_verification', 'msvalidate.01')]:
-            verification_key = root.get_property(key)
+            verification_key = root.get_value(key)
             if verification_key:
                 meta.append({'name': meta_name,
                              'lang': None,

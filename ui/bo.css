@@ -293,8 +293,8 @@ div#location {
 
 table.new-resource-thumb {
   float: left;
-  margin-bottom: 10px;
-  width: 18em;
+  margin: 0px 3px 10px 0px;
+  width: 19em;
 }
 
 /**************************************************************************

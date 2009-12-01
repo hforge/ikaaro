@@ -52,8 +52,8 @@ class WebSite(VirtualRoot, Workspace):
     class_views = ['view', 'list', 'table', 'gallery', 'month', 'week',
                    'edit', 'backlinks', 'last_changes', 'control_panel']
     class_control_panel = [
-        'edit_virtual_hosts', 'edit_security_policy', 'edit_languages',
-        'edit_contact_options', 'broken_links', 'orphans', 'edit_seo']
+        'edit_security_policy', 'edit_virtual_hosts', 'edit_seo',
+        'edit_languages', 'edit_contact_options', 'broken_links', 'orphans']
 
 
     __fixed_handlers__ = ['index', 'skin', 'users']
