@@ -32,6 +32,7 @@ from itools.web import boolean_field, choice_field, input_field
 from itools.web import multiple_choice_field, textarea_field
 
 # Import from ikaaro
+from autoform import AutoForm
 import messages
 from resource_views import DBResource_Edit
 from views import IconsView
@@ -81,7 +82,7 @@ class CPEditVirtualHosts(stl_view):
     icon = 'website.png'
     template = 'website/virtual_hosts.xml'
 
-    vhosts = textarea_field(datatype=String)
+    vhosts = textarea_field(datatype=String, cols=50)
 
 
     @thingy_lazy_property
@@ -94,6 +95,34 @@ class CPEditVirtualHosts(stl_view):
         vhosts = [ x.strip() for x in self.vhosts.value.splitlines() ]
         vhosts = [ x for x in vhosts if x ]
         self.resource.set_property('vhosts', vhosts)
+        # Ok
+        context = self.context
+        context.message = messages.MSG_CHANGES_SAVED
+        context.redirect()
+
+
+
+class CPEditSEO(AutoForm):
+
+    access = 'is_allowed_to_edit'
+    view_title = MSG(u'Search engine optimization')
+    icon = 'search.png'
+    view_description = MSG(u"""
+      Optimize your website for better ranking in search engine results.""")
+
+
+    # Fields
+    google_site_verification = input_field()
+    google_site_verification.title = MSG(u'Google site verification key')
+
+    @thingy_property
+    def google_site_verification__value(self):
+        return self.view.resource.get_value('google_site_verification')
+
+
+    def action(self):
+        value = self.google_site_verification.value
+        self.resource.set_property('google_site_verification', value)
         # Ok
         context = self.context
         context.message = messages.MSG_CHANGES_SAVED
@@ -180,16 +209,17 @@ class CPBrokenLinks(stl_view):
     view_title = MSG(u'Broken Links')
     icon = 'clear.png'
     view_description = MSG(u'Check the referential integrity.')
-    template = '/ui/website/broken_links.xml'
+    template = 'website/broken_links.xml'
 
 
-    def get_namespace(self, resource, context):
+    @thingy_lazy_property
+    def items(self):
         # These are all the physical links we have in the database
+        context = self.context
         links = context.database.catalog.get_unique_values('links')
 
         # Make a partial search within the website
-        root = str(resource.path)
-        results = context.get_root_search(root)
+        results = context.get_root_search()
 
         # Find out the broken links within scope and classify them by the
         # origin paths
@@ -206,18 +236,14 @@ class CPBrokenLinks(stl_view):
             for brain in results.search(links=link).get_documents():
                 broken.setdefault(brain.abspath, []).append(link_logical)
 
-        # Build the namespace
-        items = []
-        total = 0
-        for path, links in sorted(broken.iteritems()):
-            n = len(links)
-            items.append({'path': path, 'links': links, 'n': n})
-            total += n
+        # Ok
+        return [
+            {'path': path, 'links': links, 'n': len(links)}
+            for path, links in sorted(broken.iteritems()) ]
 
-        return {
-            'items': items,
-            'total': total}
 
+    def total(self):
+        return sum( x['n'] for x in self.items )
 
 
 
@@ -317,29 +343,4 @@ class CPEditLanguages(stl_view):
         context = self.context
         context.message = INFO(u'Language added.')
         context.redirect()
-
-
-
-class CPEditSEO(DBResource_Edit):
-
-    access = 'is_allowed_to_edit'
-    view_title = MSG(u'Search engine optimization')
-    icon = 'search.png'
-    view_description = MSG(u"""
-      Optimize your website for better ranking in search engine results.""")
-
-
-    # Fields
-    google_site_verification = input_field()
-    google_site_verification.title = MSG(u'Google site verification key')
-    title = None
-    description = None
-    subject = None
-
-
-    def action(self, resource, context, form):
-        resource.set_property('google-site-verification',
-            form['google-site-verification'])
-        # Ok
-        context.message = messages.MSG_CHANGES_SAVED
 

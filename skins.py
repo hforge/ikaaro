@@ -200,7 +200,7 @@ class Skin(stl_view):
                              'content': value})
 
         # Search engine optimization
-        google_verification_key = root.get_property('google-site-verification')
+        google_verification_key = root.get_value('google_site_verification')
         if google_verification_key:
             meta.append({'name': 'google-site-verification', 'lang': None,
                          'content': google_verification_key})
