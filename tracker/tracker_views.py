@@ -23,7 +23,7 @@
 from datetime import datetime
 
 # Import from itools
-from itools.core import merge_dicts
+from itools.core import merge_dicts, thingy_lazy_property
 from itools.csv import CSVFile, Property
 from itools.datatypes import Boolean, Integer, String, Unicode
 from itools.gettext import MSG
@@ -31,11 +31,15 @@ from itools.i18n import format_datetime
 from itools.stl import stl
 from itools.uri import encode_query, Reference
 from itools.web import view, stl_view, FormError, INFO, ERROR
+from itools.web import file_field, hidden_field, multiple_choice_field
+from itools.web import text_field, textarea_field
 
 # Import from ikaaro
 from ikaaro.buttons import Button
+from ikaaro.fields import title_field
+from ikaaro.folder_views import Folder_Table
 from ikaaro import messages
-from ikaaro.views import BrowseForm, Container_Search, ContextMenu
+from ikaaro.views import Container_Search, ContextMenu
 from ikaaro.views_new import NewInstance
 from ikaaro.registry import get_resource_class
 
@@ -271,7 +275,7 @@ class Tracker_AddIssue(stl_view):
 
 
 
-class Tracker_View(BrowseForm):
+class Tracker_View(Folder_Table):
 
     access = 'is_allowed_to_view'
     title = MSG(u'View')
@@ -328,10 +332,7 @@ class Tracker_View(BrowseForm):
         return self.title
 
 
-    def get_namespace(self, resource, context):
-        # Default table namespace
-        namespace = BrowseForm.get_namespace(self, resource, context)
-
+    def search_parameters(self):
         # Number of results
         query = context.query
         search_name = query['search_name']
@@ -340,9 +341,7 @@ class Tracker_View(BrowseForm):
 
         # Keep the search_parameters, clean different actions
         schema = self.get_query_schema()
-        namespace['search_parameters'] = encode_query(query, schema)
-
-        return namespace
+        return encode_query(query, schema)
 
 
     def get_items(self, resource, context):
@@ -480,9 +479,6 @@ class Tracker_Search(Container_Search, Tracker_View):
                 default = schema[name].get_default()
                 query[name] = context.uri.query.get(name, default)
             return query
-
-
-    on_query_error = Container_Search.on_query_error
 
 
     def get_search_namespace(self, resource, context):
