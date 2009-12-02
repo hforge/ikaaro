@@ -200,8 +200,8 @@ class Skin(UIFolder):
             '/ui/jquery.js',
             '/ui/javascript.js']
 
-        # Calendar (http://dynarch.com/mishoo/calendar.epl)
-        scripts.append('/ui/js_calendar/calendar.js')
+        # Calendar (http://code.google.com/p/dyndatetime/)
+        scripts.append('/ui/js_calendar/jquery.dynDateTime.pack.js')
         languages = [
             'af', 'al', 'bg', 'br', 'ca', 'da', 'de', 'du', 'el', 'en', 'es',
             'fi', 'fr', 'hr', 'hu', 'it', 'jp', 'ko', 'lt', 'lv', 'nl', 'no',
@@ -211,7 +211,6 @@ class Skin(UIFolder):
         if language is None:
             language = 'en'
         scripts.append('/ui/js_calendar/lang/calendar-%s.js' % language)
-        scripts.append('/ui/js_calendar/calendar-setup.js')
 
         # This skin's JavaScript
         if self.has_handler('javascript.js'):

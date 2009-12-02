@@ -376,13 +376,14 @@ class DateWidget(Widget):
 
     template = list(XMLParser("""
         <input type="text" name="${name}" value="${value}" id="${name}"
-          size="${size}"/>
-        <input id="trigger-date-${name}" type="button" value="..."
-          name="trigger_date_${name}" class="${class}" />
+          class="dateField" size="${size}" />
+        <input type="button" value="..." class="${class}" />
         <script language="javascript">
-          Calendar.setup({inputField: "${name}", ifFormat: "${format}",
-                          showsTime: ${show_time}, timeFormat: "24",
-                          button: "trigger-date-${name}"});
+          jQuery( "input.dateField" ).dynDateTime({
+            ifFormat: "${format}",
+            showsTime: ${show_time},
+            timeFormat: "24",
+            button: ".next()" });
         </script>
         """, stl_namespaces))
 

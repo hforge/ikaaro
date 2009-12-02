@@ -32,9 +32,9 @@
     <tr>
       <td>Start</td>
       <td>
-        <input type="text" name="dtstart" id="dtstart" size="10"
-          maxlength="10" value="${dtstart}" />
-        <input type="button" id="trigger-dtstart" value="..." />
+        <input type="text" name="dtstart" id="dtstart" class="dateField"
+          size="10" maxlength="10" value="${dtstart}" />
+        <input type="button" value="..." />
         &nbsp;
         <input type="text" name="dtstart_time" id="dtstart-time" size="5"
           maxlength="5" value="${dtstart_time}" />
@@ -43,9 +43,9 @@
     <tr>
       <td>End</td>
       <td>
-        <input type="text" name="dtend" id="dtend" size="10"
-          maxlength="10" value="${dtend}" />
-        <input type="button" id="trigger-dtend" value="..." />
+        <input type="text" name="dtend" id="dtend" class="dateField"
+          size="10" maxlength="10" value="${dtend}" />
+        <input type="button" value="..." />
         &nbsp;
         <input type="text" name="dtend_time" id="dtend-time" size="5"
           maxlength="5" value="${dtend_time}" />
@@ -137,10 +137,8 @@
   <script language="javascript">
   $("#SUMMARY").focus();
 
-  Calendar.setup({inputField: "dtstart", ifFormat: "%Y-%m-%d",
-    button: "trigger-dtstart"});
-  Calendar.setup({inputField: "dtend", ifFormat: "%Y-%m-%d",
-    button: "trigger-dtend"});
+  jQuery( "input.dateField" ).dynDateTime({ifFormat: "%Y-%m-%d",
+    button: ".next()" })
   </script>
 </form>
 

@@ -20,9 +20,8 @@
         <td valign="top">
           <label for="dtstart">Start:</label><br/>
           <input type="text" name="dtstart" value="${d_start}" id="dtstart"
-            size="10" />
-          <input id="trigger-dtstart" type="button" value="..."
-            name="trigger_dtstart"/>
+            class="dateField" size="10" />
+          <input type="button" value="..." />
           <br />
           <input type="text" name="tstart" value="${t_start}" id="tstart"
             size="5" /> (HH:MM)
@@ -30,9 +29,8 @@
         <td valign="top">
           <label for="dtend">End:</label><br/>
           <input type="text" name="dtend" value="${d_end}" id="dtend"
-            size="10" />
-          <input id="trigger-dtend" type="button" value="..."
-            name="trigger_dtend"/>
+            class="dateField" size="10" />
+          <input type="button" value="..." />
           &nbsp;&nbsp;
           <select name="time_select" id="time-select"
             onchange="update_time('time-select')">
@@ -62,10 +60,9 @@
 <br/>
 
 <script language="javascript">
-Calendar.setup({inputField: "dtstart", ifFormat: "%Y-%m-%d",
-  button: "trigger-dtstart"});
-Calendar.setup({inputField: "dtend", ifFormat: "%Y-%m-%d",
-  button: "trigger-dtend"});
+jQuery( "input.dateField" ).dynDateTime({
+  ifFormat: "%Y-%m-%d",
+  button: ".next()" })
 
 function update_time(name){
   var elt = document.getElementById(name);

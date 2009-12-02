@@ -7,8 +7,9 @@
 <div id="cal-daily-view">
   <form id="attributes" action=";daily_view" method="get">
     Date:
-    <input type="text" name="date" id="date" size="11" value="${date}" />
-    <input type="button" id="trigger-date" value="..." />
+    <input type="text" name="date" id="date" class="dateField" size="11"
+      value="${date}" />
+    <input type="button" value="..." />
     <input type="submit" value="OK" class="button-ok" />
   </form>
 
@@ -49,11 +50,10 @@
 
 <script language="javascript">
   $("#date").focus();
-  Calendar.setup({
-    inputField: "date",
+  jQuery( "input.dateField" ).dynDateTime({
     ifFormat: "%Y-%m-%d",
     firstDay: ${firstday},
-    button: "trigger-date"});
+    button: ".next()" });
 </script>
 
 </stl:block>
