@@ -260,18 +260,29 @@ class WebPage(ResourceWithHTML, Multilingual, Text):
         resources_old2new = get_context().database.resources_old2new
 
         def my_func(value):
-            # Absolute URI or path
+            # Skip empty links, external links and links to '/ui/'
             uri = get_reference(value)
             if uri.scheme or uri.authority or uri.path.is_absolute():
                 return value
+            path = uri.path
+            if not path or path.is_absolute() and path[0] == 'ui':
+                return value
+
+            # Strip the view
+            name = path.get_name()
+            if name and name[0] == ';':
+                view = '/' + name
+                path = path[:-1]
+            else:
+                view = ''
 
             # Resolve Path
             # Calcul the old absolute path
-            old_abs_path = source.resolve2(value)
+            old_abs_path = source.resolve2(path)
             # Get the 'new' absolute parth
             new_abs_path = resources_old2new.get(old_abs_path, old_abs_path)
 
-            path = target.get_pathto(new_abs_path)
+            path = str(target.get_pathto(new_abs_path)) + view
             value = Reference('', '', path, uri.query.copy(), uri.fragment)
             return str(value)
 
