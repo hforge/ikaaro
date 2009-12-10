@@ -15,11 +15,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import merge_dicts
-from itools.datatypes import String, Tokens
+from itools.datatypes import String
 from itools.gettext import MSG
-from itools.uri import resolve_uri2
 from itools.stl import set_prefix
+from itools.uri import resolve_uri2
 from itools.web import INFO, get_context
 from itools.xapian import AndQuery, OrQuery, PhraseQuery, NotQuery
 from itools.xml import XMLParser
@@ -212,18 +211,9 @@ class ResourcesOrderedTable_Unordered(Folder_BrowseContent):
 
     def action_add(self, resource, context, form):
         handler = resource.handler
-
-        order = resource.get_property('order') or []
-        if not isinstance(order, list):
-            order = list(order)
-
-        index = handler.get_n_records()
         for name in form['ids']:
             handler.add_record({'name': name})
-            order.append(str(index))
-            index += 1
 
-        resource.set_property('order', order)
         context.message = INFO(u'Resources added to ordered list.')
 
 
@@ -306,12 +296,6 @@ class ResourcesOrderedTable(OrderedTable):
 
     # Views
     view = ResourcesOrderedTable_View()
-
-
-    @classmethod
-    def get_metadata_schema(cls):
-        return merge_dicts(OrderedTable.get_metadata_schema(),
-                           order=Tokens)
 
 
     def get_orderable_classes(self):
