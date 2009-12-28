@@ -104,10 +104,14 @@ class UIFolder(IResource, Folder):
         if self.has_handler(name):
             handler = self.get_handler(name)
         else:
+            name = '%s.' % name
             n = len(name)
-            names = [ x for x in self.get_handler_names() if x[:n] == name ]
-            languages = [ x.split('.')[-1] for x in names ]
-            languages = [ x for x in languages if has_language(x) ]
+            languages = []
+            for x in self.get_handler_names():
+                if x[:n] == name:
+                    language = x[n:]
+                    if has_language(language):
+                        languages.append(language)
 
             if not languages:
                 return None
@@ -124,7 +128,7 @@ class UIFolder(IResource, Folder):
             # (XXX we need a way to define the default)
             if language is None:
                 language = languages[0]
-            handler = self.get_handler('%s.%s' % (name, language))
+            handler = self.get_handler('%s%s' % (name, language))
 
         if isinstance(handler, Folder):
             handler = UIFolder(handler.uri)
