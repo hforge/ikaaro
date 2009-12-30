@@ -97,12 +97,15 @@ class DBResource_Edit(AutoForm):
             context.edit_conflict = True
             return
 
-        mtime = resource.get_mtime()
+        root = context.root
+        results = root.search(abspath=str(resource.get_abspath()))
+        brain = results.get_documents()[0]
+        mtime = brain.mtime
         if mtime is not None and timestamp < mtime:
             # Conlicft unless we are overwriting our own work
             last_author = resource.get_last_author()
             if last_author != context.user.name:
-                user = context.root.get_user_title(last_author)
+                user = root.get_user_title(last_author)
                 context.message = messages.MSG_EDIT_CONFLICT2(user=user)
                 context.edit_conflict = True
 
