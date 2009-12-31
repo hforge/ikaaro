@@ -1,3 +1,198 @@
+/*
+	dynDateTime 0.2
+	
+	A jQuery date time picker.
+	
+	Author: Toolman
+	Version: 0.2
+	Website: http://code.google.com/p/dyndatetime/
+
+*/
+
+
+(function($) {
+
+	$.fn.dynDateTime = function(options) {
+	  
+		  // plugin defaults
+		  $.fn.dynDateTime.defaults = {
+			displayArea:  null,
+			button:       null,
+			eventName:    "click",
+			ifFormat:     "%Y/%m/%d",
+			daFormat:     "%Y/%m/%d",
+			singleClick:  true,
+			dateStatusFunc: null,
+			dateText:     null,
+			firstDay:     null,
+			align:        "Br",
+			range:        [1900, 2999],
+			weekNumbers:  true,
+			flat:         null,
+			flatCallback: null,
+			onSelect:     null,
+			onClose:      null,
+			onUpdate:     null,
+			date:         null,
+			showsTime:    false,
+			timeFormat:   "24",
+			electric:     true,
+			step:         2,
+			position:     null,
+			cache:        false,
+			showOthers:   false,
+			multiple:     null,
+			debug:        false
+		  };		
+		
+		var opts = $.extend({}, $.fn.dynDateTime.defaults, options);
+	
+		return this.each(function() {
+		
+			//opts are shared per jQuery call; create per inputField closures of non-shared values for each instance
+			var this_inputField = this;
+			var this_displayArea = null;
+			var this_button = null;
+			var this_flat = null;
+			if(opts.displayArea) {
+				try {
+					this_displayArea = eval("jQuery(this)" + opts.displayArea + ".get(0);");
+				} catch (err) {
+					opts.displayArea = null;
+				}
+			}
+			if(opts.button) {
+				try {
+					this_button = eval("jQuery(this)" + opts.button + ".get(0);");
+				} catch (err) {
+					opts.button = null;
+				}
+			}
+			if(opts.flat) {
+				try {
+					this_flat = eval("jQuery(this)" + opts.flat + ".get(0);");
+				} catch (err) {
+					opts.flat = null;
+				}
+			}
+
+			
+		
+			if (!(this_flat || opts.multiple || this_inputField || this_displayArea || this_button)) {
+				log("opts");
+				//nothing to do
+				return;
+			}
+			
+			//default onSelect
+			function onSelect(cal) {
+				var p = cal.opts;
+				var update = (cal.dateClicked || p.electric);
+				if (update && this_inputField) {
+					this_inputField.value = cal.date.print(p.ifFormat);
+					if (typeof this_inputField.onchange == "function")
+						this_inputField.onchange();
+				}
+				if (update && this_displayArea)
+					this_displayArea.innerHTML = cal.date.print(p.daFormat);
+				if (update && typeof p.onUpdate == "function")
+					p.onUpdate(cal);
+				if (update && p.flat) {
+					if (typeof p.flatCallback == "function")
+						p.flatCallback(cal);
+				}
+				if (update && p.singleClick && cal.dateClicked)
+					cal.callCloseHandler();
+			};
+		
+			//flat setup
+			if (this_flat != null) {
+
+				var cal = new Calendar(opts.firstDay, opts.date, opts.onSelect || onSelect);
+				cal.showsOtherMonths = opts.showOthers;
+				cal.showsTime = opts.showsTime;
+				cal.time24 = (opts.timeFormat == "24");
+				cal.opts = opts;
+				cal.weekNumbers = opts.weekNumbers;
+				cal.setRange(opts.range[0], opts.range[1]);
+				cal.setDateStatusHandler(opts.dateStatusFunc);
+				cal.getDateText = opts.dateText;
+				if (opts.ifFormat) {
+					cal.setDateFormat(opts.ifFormat);
+				}
+				if (this_inputField && typeof this_inputField.value == "string") {
+					//cal.parseDate(this_inputField.value);
+					log("rar");
+				}
+				cal.create(this_flat);
+				cal.show();
+				return;
+			}
+		
+			//find the element to mount show/hide event 
+			var triggerEl = this_button || this_displayArea || this_inputField  ;
+
+			//bolt on event
+			triggerEl["on" + opts.eventName] = function() {
+				log("clicked");
+				var dateEl = this_inputField || this_displayArea;
+				var dateFmt = this_inputField ? opts.ifFormat : opts.daFormat;
+				var mustCreate = false;
+				var cal = window.calendar;
+				if (dateEl)
+					opts.date = Date.parseDate(dateEl.value || dateEl.innerHTML, dateFmt);
+				if (!(cal && opts.cache)) {
+					window.calendar = cal = new Calendar(opts.firstDay,
+									     opts.date,
+									     opts.onSelect || onSelect,
+									     opts.onClose || function(cal) { cal.hide(); });
+					cal.showsTime = opts.showsTime;
+					cal.time24 = (opts.timeFormat == "24");
+					cal.weekNumbers = opts.weekNumbers;
+					mustCreate = true;
+				} else {
+					if (opts.date)
+						cal.setDate(opts.date);
+					cal.hide();
+				}
+				if (opts.multiple) {
+					cal.multiple = {};
+					for (var i = opts.multiple.length; --i >= 0;) {
+						var d = opts.multiple[i];
+						var ds = d.print("%Y%m%d");
+						cal.multiple[ds] = d;
+					}
+				}
+				cal.showsOtherMonths = opts.showOthers;
+				cal.yearStep = opts.step;
+				cal.setRange(opts.range[0], opts.range[1]);
+				cal.opts = opts;
+				cal.setDateStatusHandler(opts.dateStatusFunc);
+				cal.getDateText = opts.dateText;
+				cal.setDateFormat(dateFmt);
+				if (mustCreate)
+					cal.create();
+				cal.refresh();
+				if (!opts.position)
+					cal.showAtElement(this_button || this_displayArea || this_inputField, opts.align);
+				else
+					cal.showAt(opts.position[0], opts.position[1]);
+				return false;
+			};
+		});
+		
+		// private function for debugging
+		function log(msg) {
+			if(opts.debug) {
+				window.loadFirebugConsole(); // file:// based access seems to disable this for me!
+				if (window.console && window.console.log ) window.console.log("dynDateTime: " + msg);
+			}
+		};
+	};
+})(jQuery);
+
+// Begin old dynarch code
+
 /*  Copyright Mihai Bazon, 2002-2005  |  www.bazon.net/mishoo
  * -----------------------------------------------------------
  *
@@ -102,6 +297,7 @@ Calendar.getAbsolutePos = function(el) {
 	var SL = 0, ST = 0;
 	var is_div = /^div$/i.test(el.tagName);
 	if (is_div && el.scrollLeft)
+		
 		SL = el.scrollLeft;
 	if (is_div && el.scrollTop)
 		ST = el.scrollTop;
@@ -592,11 +788,8 @@ Calendar.cellClick = function(el, ev) {
 		cal.date.setDateOnly(el.caldate);
 		date = cal.date;
 		var other_month = !(cal.dateClicked = !el.otherMonth);
-		if (!other_month && !cal.currentDateEl) {
+		if (!other_month && !cal.currentDateEl)
 			cal._toggleMultipleDate(new Date(date));
-			if (cal.params.flat)
-				newdate = !el.disabled;
-		}
 		else
 			newdate = !el.disabled;
 		// a date was clicked
@@ -1572,37 +1765,6 @@ Calendar.prototype._dragStart = function (ev) {
 	}
 };
 
-Calendar.prototype.clear = function() {
-    if (this.multiple) {
-        for (var i in this.multiple) {
-            var d = this.multiple[i];
-            this._toggleMultipleDate(d);
-        }
-        this.multiple = {};
-    }
-};
-
-Calendar.prototype.update = function(data) {
-    if (this.params.multiple) {
-        this.params.multiple = data;
-        params = this.params;
-        this.multiple = {};
-        for (var i = params.multiple.length; --i >= 0;) {
-            var d = params.multiple[i];
-            var ds = d.print("%Y%m%d");
-            this.multiple[ds] = d;
-        }
-        var d = new Date();
-        if (data.length)
-            d = data[0];
-        var parent = this.params.flat;
-        parent.innerHTML = ''; // remove All childs
-        params.date = d;
-        this.create(this.params.flat);
-        this.show();
-    }
-};
-
 // BEGIN: DATE OBJECT PATCHES
 
 /** Adds the number of days array to the Date object. */
@@ -1620,7 +1782,7 @@ Date.parseDate = function(str, fmt) {
 	var y = 0;
 	var m = -1;
 	var d = 0;
-	var a = str.split(/[\W|T]+/);
+	var a = str.split(/\W+/);
 	var b = fmt.match(/%./g);
 	var i = 0, j = 0;
 	var hr = 0;
@@ -1833,10 +1995,9 @@ Date.prototype.setFullYear = function(y) {
 	this.__msh_oldSetFullYear(y);
 };
 
-
-
 // END: DATE OBJECT PATCHES
 
 
 // global object that remembers the calendar
 window._dynarch_popupCalendar = null;
+

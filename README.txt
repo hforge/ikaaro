@@ -84,7 +84,7 @@ Software        License  Home
 --------------  -------  -----------------------------------------
 jquery          GPL      http://jquery.com
 TinyMCE         LGPL     http://tinymce.moxiecode.com
-DHTML Calendar  LGPL     http://www.dynarch.com/projects/calendar/
+DHTML Calendar  LGPL     http://code.google.com/p/dyndatetime/
 
 Most icons used are copyrighted by the Tango Desktop Project, and licensed
 under the Creative Commons Attribution Share-Alike license, including the

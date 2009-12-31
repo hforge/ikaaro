@@ -89,13 +89,14 @@ class DateField(input_field):
 
     input_template = make_stl_template("""
     <input type="text" name="${name}" value="${encoded_value}" id="${name}"
-      size="${size}" />
-    <input id="trigger-date-${name}" type="button" value="..."
-      name="trigger_date_${name}" class="${css}" />
+      class="dateField" size="${size}" />
+    <input type="button" value="..." class="${css}" />
     <script language="javascript">
-      Calendar.setup({inputField: "${name}", ifFormat: "${format}",
-                      showsTime: ${show_time_js}, timeFormat: "24",
-                      button: "trigger-date-${name}"});
+      jQuery( "input.dateField" ).dynDateTime({
+        ifFormat: "${format}",
+        showsTime: ${show_time_js},
+        timeFormat: "24",
+        button: ".next()" });
     </script>""")
 
     css = None
@@ -129,14 +130,15 @@ class DateTimeField(input_field):
 
     input_template = make_stl_template("""
     <input type="text" name="${name}" value="${value_date}" id="${name}"
-      size="${size}"/>
-    <input id="trigger-date-${name}" type="button" value="..."
-      name="trigger_date_${name}" class="${css}" />
+      class="dateField" size="${size}" />
+    <input type="button" value="..." class="${css}" />
     <input type="text" name="${name}_time" value="${value_time}" size="6" />
     <script language="javascript">
-      Calendar.setup({inputField: "${name}", ifFormat: "${format}",
-                      showsTime: ${show_time_js}, timeFormat: "24",
-                      button: "trigger-date-${name}"});
+      jQuery( "input.dateField" ).dynDateTime({
+        ifFormat: "${format}",
+        showsTime: ${show_time_js},
+        timeFormat: "24",
+        button: ".next()" });
     </script>
     """)
 
