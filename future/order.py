@@ -14,11 +14,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# Import from the Standard Library
+from copy import deepcopy
+
 # Import from itools
 from itools.datatypes import String
 from itools.gettext import MSG
 from itools.stl import set_prefix
-from itools.uri import resolve_uri2
+from itools.uri import get_reference, resolve_uri2, Path
 from itools.web import INFO, get_context
 from itools.xapian import AndQuery, OrQuery, PhraseQuery, NotQuery
 from itools.xml import XMLParser
@@ -334,6 +337,38 @@ class ResourcesOrderedTable(OrderedTable):
                 new_path = str(base.get_pathto(target))
                 handler.update_record(record.id, **{'name': new_path})
         get_context().database.change_resource(self)
+
+
+    def update_relative_links(self, source):
+        """Links are relative to order root"""
+        order_root_source = resolve_uri2(source, self.order_root_path)
+        order_root_source = Path(order_root_source)
+        order_root_target = self.get_order_root().get_canonical_path()
+        resources_old2new = get_context().database.resources_old2new
+        new_order_root_target = resources_old2new.get(order_root_target,
+                                                      order_root_target)
+
+        handler = self.handler
+        get_value = handler.get_record_value
+        for record in handler.get_records():
+            path = get_value(record, 'name')
+            if not path:
+                continue
+            ref = get_reference(str(path))
+            if ref.scheme:
+                continue
+            path = ref.path
+            # Calcul the old absolute path
+            old_abs_path = order_root_source.resolve2(path)
+            # Check if the target path has not been moved
+            new_abs_path = resources_old2new.get(old_abs_path,
+                                                 old_abs_path)
+            # Build the new reference with the right path
+            # Absolute path allow to call get_pathto with the target
+            new_ref = deepcopy(ref)
+            new_ref.path = str(new_order_root_target.get_pathto(new_abs_path))
+            # Update the record
+            handler.update_record(record.id, **{'name': str(new_ref)})
 
 
 
