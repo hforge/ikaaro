@@ -126,7 +126,6 @@ class Folder_Sort(Container_Sort):
         ('format', {'title': MSG(u'Type')}),
         ('mtime', {'title': MSG(u'Last Modified')}),
         ('last_author', {'title': MSG(u'Last Author')}),
-        ('size', {'title': MSG(u'Size')}),
         ('workflow_state', {'title': MSG(u'State')})])
 
 
@@ -329,7 +328,6 @@ class Folder_Table(stl_view):
         ('format', MSG(u'Type'), True),
         ('mtime', MSG(u'Last Modified'), True),
         ('last_author', MSG(u'Last Author'), True),
-        ('size', MSG(u'Size'), True),
         ('workflow_state', MSG(u'State'), True)]
 
     form.actions = [
@@ -388,9 +386,6 @@ class Folder_Table(stl_view):
         elif column == 'last_author':
             # Last author
             return self.context.get_user_title(item.get_value('last_author'))
-        elif column == 'size':
-            # Size
-            return item.get_human_size()
         elif column == 'workflow_state':
             # The workflow state
             return item.get_workflow_preview()
