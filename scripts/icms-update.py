@@ -49,7 +49,7 @@ def abort():
 def find_versions_to_update(root):
     print 'STAGE 1: Find next version to upgrade (may take a while).'
     version = None
-    resources = None
+    paths = None
 
     # Find out the versions to upgrade
     versions = set()
@@ -84,15 +84,15 @@ def find_versions_to_update(root):
         next_version = next_versions[0]
         if version is None or next_version < version:
             version = next_version
-            resources = [resource]
+            paths = [resource.get_abspath()]
         elif next_version == version:
-            resources.append(resource)
+            paths.append(resource.get_abspath())
 
-    return version, resources
+    return version, paths
 
 
 
-def update_versions(target, database, version, resources):
+def update_versions(target, database, version, paths, root):
     """Update the database to the given versions.
     """
     # Open the update log
@@ -100,12 +100,15 @@ def update_versions(target, database, version, resources):
 
     # Update
     bad = 0
-    for resource in resources:
-        # Skip non-database resources
-        if not isinstance(resource, DBResource):
+    resources_old2new = database.resources_old2new
+    for path in paths:
+        abspath = resources_old2new.get(path, path)
+        if abspath is None:
+            # resource deleted
             continue
 
         # Skip up-to-date resources
+        resource = root.get_resource(abspath)
         obj_version = resource.metadata.get_property('version').value
         cls_version = resource.class_version
         if obj_version == cls_version:
@@ -242,18 +245,18 @@ def update(parser, options, target):
     root = server.root
 
     start_subprocess('%s/database' % target)
-    version, resources = find_versions_to_update(root)
+    version, paths = find_versions_to_update(root)
     while version:
         message = 'STAGE 2: Upgrade %d resources to version %s (y/N)? '
-        message = message % (len(resources), version)
+        message = message % (len(paths), version)
         if ask_confirmation(message, confirm) is False:
             abort()
-        update_versions(target, database, version, resources)
+        update_versions(target, database, version, paths, root)
         # Reset the state
         database.cache.clear()
         database.cache[root.metadata.uri] = root.metadata
         print 'STAGE 2: Finish upgrading to version %s' % version
-        version, resources = find_versions_to_update(root)
+        version, paths = find_versions_to_update(root)
 
     print 'STAGE 2: Done.'
 
