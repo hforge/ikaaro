@@ -98,7 +98,7 @@ class DBResource_Edit(AutoForm):
             return
 
         root = context.root
-        results = root.search(abspath=str(resource.get_abspath()))
+        results = root.search(abspath=str(resource.get_canonical_path()))
         brain = results.get_documents()[0]
         mtime = brain.mtime
         if mtime is not None and timestamp < mtime:
