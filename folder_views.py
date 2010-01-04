@@ -87,8 +87,10 @@ class Folder_View(BaseView):
 
 
     def GET(self, resource, context):
+        from webpage import WebPage
+
         index = resource.get_resource('index', soft=True)
-        if index is None:
+        if not isinstance(index, WebPage):
             context.message = ERROR(
                 u'There is not an "index" web page. Could not render this '
                 u'view.')
