@@ -52,6 +52,7 @@ class Spool(object):
         self.smtp_host = get_value('smtp-host')
         self.smtp_login = get_value('smtp-login', default='').strip()
         self.smtp_password = get_value('smtp-password', default='').strip()
+        self.smtp = SMTP()
 
         # The logs
         self.activity_log_path = '%s/log/spool' % target.path
@@ -63,15 +64,32 @@ class Spool(object):
         timeout_add(10000, self.send_emails)
 
 
-    def send_emails(self):
-        spool = self.spool
-        smtp_host = self.smtp_host
-        log = self.log_activity
+    def connect(self):
+        self.log_activity('CONNECT to %s' % self.smtp_host)
 
+        # Connect
+        try:
+            self.smtp.connect(self.smtp_host)
+        except gaierror, excp:
+            self.log_activity('%s: "%s"' % (excp[1], self.smtp_host))
+            return 1
+        except Exception:
+            self.log_error()
+            return 1
+
+        # Login
+        if self.smtp_login and self.smtp_password:
+            self.smtp.login(self.smtp_login, self.smtp_password)
+
+        # Ok
+        return 0
+
+
+    def send_emails(self):
         # Find out emails to send
         locks = set()
         names = set()
-        for name in spool.get_names():
+        for name in self.spool.get_names():
             if name[-5:] == '.lock':
                 locks.add(name[:-5])
             else:
@@ -82,22 +100,15 @@ class Spool(object):
             return True
 
         # Open connection
-        try:
-            smtp = SMTP(smtp_host)
-            if self.smtp_login and self.smtp_password:
-                smtp.login(self.smtp_login, self.smtp_password)
-        except gaierror, excp:
-            log('%s: "%s"' % (excp[1], smtp_host))
-            return True
-        except:
-            self.log_error()
+        if self.connect():
             return True
 
         # Send emails
+        smtp = self.smtp
         for name in names:
             try:
                 # Send message
-                message = spool.open(name).read()
+                message = self.spool.open(name).read()
                 headers = HeaderParser().parsestr(message)
                 subject = headers['subject']
                 from_addr = headers['from']
@@ -105,19 +116,20 @@ class Spool(object):
                 # Send message
                 smtp.sendmail(from_addr, to_addr, message)
                 # Remove
-                spool.remove(name)
+                self.spool.remove(name)
                 # Log
-                log('SENT "%s" from "%s" to "%s"' % (subject, from_addr,
-                    to_addr))
+                self.log_activity(
+                    'SENT "%s" from "%s" to "%s"'
+                    % (subject, from_addr, to_addr))
             except (SMTPRecipientsRefused, SMTPResponseException):
-                    # the SMTP server returns an error code
-                    # or the recipient addresses has been refused
-                    # Log
-                    self.log_error()
-                    # Remove
-                    spool.remove(name)
-                # Other error ...
-            except:
+                # The SMTP server returns an error code or the recipient
+                # addresses has been refused
+                self.log_error()
+                # Remove
+                self.spool.remove(name)
+            except SMTPServerDisconnected:
+                self.connect()
+            except Exception:
                 self.log_error()
 
         # Close connection
