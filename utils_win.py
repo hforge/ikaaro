@@ -29,6 +29,7 @@ def is_pid_running(pid):
 
 
 
-def kill(pid):
+def kill(pid, force=False):
+    # FIXME parameter force is not used
     handle = OpenProcess(1, 0, pid)
     TerminateProcess(handle, 0)

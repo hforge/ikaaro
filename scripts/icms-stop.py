@@ -36,8 +36,11 @@ def stop(parser, options, target):
     if pid is None:
         print '[%s] Web Server not running.' % target
     else:
-        kill(pid)
-        print '[%s] Web Server shutting down (gracefully)...' % target
+        kill(pid, force=options.force)
+        if options.force:
+            print '[%s] Web Server shutting down...' % target
+        else:
+            print '[%s] Web Server shutting down (gracefully)...' % target
 
 
 if __name__ == '__main__':
@@ -48,6 +51,9 @@ if __name__ == '__main__':
                    ' ikaaro instance (if it is running). Accepts'
                    ' several TARGETs at once, to stop several servers.')
     parser = OptionParser(usage, version=version, description=description)
+    parser.add_option(
+        '--force', action="store_true", default=False,
+        help="Emits SIGTERM instead of SIGINT signal.")
 
     options, args = parser.parse_args()
     if len(args) == 0:
