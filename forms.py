@@ -100,8 +100,8 @@ class Widget(object):
     type = 'text'
 
     template = list(XMLParser(
-        """<input type="${type}" name="${name}" value="${value}" size="${size}"
-        />""",
+        """<input type="${type}" id="${name}" name="${name}" value="${value}"
+          size="${size}" />""",
         stl_namespaces))
 
 
@@ -166,7 +166,7 @@ class PasswordWidget(Widget):
 class ReadOnlyWidget(Widget):
 
     template = list(XMLParser(
-        """<input type="hidden" name="${name}" value="${value}" />
+        """<input type="hidden" id="${name}" name="${name}" value="${value}" />
            ${displayed}""", stl_namespaces))
 
 
@@ -202,7 +202,7 @@ class MultilineWidget(Widget):
     cols = 60
 
     template = list(XMLParser(
-        """<textarea rows="${rows}" cols="${cols}" name="${name}"
+        """<textarea rows="${rows}" cols="${cols}" id="${name}" name="${name}"
         >${value}</textarea>""",
         stl_namespaces))
 
@@ -219,7 +219,7 @@ class MultilineWidget(Widget):
 class CheckBoxWidget(Widget):
 
     template = list(XMLParser("""
-        <input type="checkbox" name="${name}" value="${value}"
+        <input type="checkbox" id="${name}" name="${name}" value="${value}"
           checked="${is_selected}" />
         """, stl_namespaces))
 
@@ -235,7 +235,7 @@ class CheckBoxWidget(Widget):
 class BooleanCheckBox(Widget):
 
     template = list(XMLParser("""
-        <input type="checkbox" name="${name}" value="1"
+        <input type="checkbox" id="${name}" name="${name}" value="1"
           checked="${is_selected}" />
         """, stl_namespaces))
 
@@ -277,7 +277,7 @@ class BooleanRadio(Widget):
 class SelectWidget(Widget):
 
     template = list(XMLParser("""
-        <select name="${name}" multiple="${multiple}" size="${size}"
+        <select id="${name}" name="${name}" multiple="${multiple}" size="${size}"
             class="${css}">
           <option value="" stl:if="has_empty_option"></option>
           <option stl:repeat="option options" value="${option/name}"
