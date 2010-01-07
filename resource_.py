@@ -317,7 +317,7 @@ class DBResource(CatalogAware, IResource):
                 text = self.to_text()
             except NotImplementedError:
                 pass
-            except:
+            except Exception:
                 # FIXME Use a different logger
                 server.log_error(context)
 #                log = "%s failed" % self.get_abspath()
