@@ -79,30 +79,28 @@ class Spool(object):
 
         # Send emails
         for name in names:
-            smtp = SMTP()
-            # Open connection
-            self.log_activity('CONNECT to %s' % self.smtp_host)
+            # 1. Open connection
             try:
-                smtp.connect(self.smtp_host)
+                smtp = SMTP(self.smtp_host)
             except gaierror, excp:
                 self.log_activity('%s: "%s"' % (excp[1], self.smtp_host))
                 break
             except Exception:
                 self.log_error()
                 break
+            self.log_activity('CONNECTED to %s' % self.smtp_host)
 
-            # Login
+            # 2. Login
             if self.smtp_login and self.smtp_password:
                 smtp.login(self.smtp_login, self.smtp_password)
 
+            # 3. Send message
             try:
-                # Send message
                 message = self.spool.open(name).read()
                 headers = HeaderParser().parsestr(message)
                 subject = headers['subject']
                 from_addr = headers['from']
                 to_addr = headers['to']
-                # Send message
                 smtp.sendmail(from_addr, to_addr, message)
                 # Remove
                 self.spool.remove(name)
@@ -119,7 +117,7 @@ class Spool(object):
             except Exception:
                 self.log_error()
 
-            # Close connection
+            # 4. Close connection
             smtp.quit()
 
         return True
