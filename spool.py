@@ -52,7 +52,6 @@ class Spool(object):
         self.smtp_host = get_value('smtp-host')
         self.smtp_login = get_value('smtp-login', default='').strip()
         self.smtp_password = get_value('smtp-password', default='').strip()
-        self.smtp = SMTP()
 
         # The logs
         self.activity_log_path = '%s/log/spool' % target.path
@@ -62,27 +61,6 @@ class Spool(object):
 
         # Set up the callback function, every 10s
         timeout_add(10000, self.send_emails)
-
-
-    def connect(self):
-        self.log_activity('CONNECT to %s' % self.smtp_host)
-
-        # Connect
-        try:
-            self.smtp.connect(self.smtp_host)
-        except gaierror, excp:
-            self.log_activity('%s: "%s"' % (excp[1], self.smtp_host))
-            return 1
-        except Exception:
-            self.log_error()
-            return 1
-
-        # Login
-        if self.smtp_login and self.smtp_password:
-            self.smtp.login(self.smtp_login, self.smtp_password)
-
-        # Ok
-        return 0
 
 
     def send_emails(self):
@@ -99,13 +77,24 @@ class Spool(object):
         if len(names) == 0:
             return True
 
-        # Open connection
-        if self.connect():
-            return True
-
         # Send emails
-        smtp = self.smtp
         for name in names:
+            smtp = SMTP()
+            # Open connection
+            self.log_activity('CONNECT to %s' % self.smtp_host)
+            try:
+                smtp.connect(self.smtp_host)
+            except gaierror, excp:
+                self.log_activity('%s: "%s"' % (excp[1], self.smtp_host))
+                break
+            except Exception:
+                self.log_error()
+                break
+
+            # Login
+            if self.smtp_login and self.smtp_password:
+                smtp.login(self.smtp_login, self.smtp_password)
+
             try:
                 # Send message
                 message = self.spool.open(name).read()
@@ -127,13 +116,11 @@ class Spool(object):
                 self.log_error()
                 # Remove
                 self.spool.remove(name)
-            except SMTPServerDisconnected:
-                self.connect()
             except Exception:
                 self.log_error()
 
-        # Close connection
-        smtp.quit()
+            # Close connection
+            smtp.quit()
 
         return True
 
