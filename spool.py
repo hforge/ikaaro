@@ -43,9 +43,14 @@ class Spool(object):
         target = cwd.get_uri(target)
         target = get_reference(target)
         self.target = target
+        # spool
         spool = target.resolve_name('spool')
-        spool = str(spool)
-        self.spool = vfs.open(spool)
+        self.spool = vfs.open(str(spool))
+        # spool/failed
+        spool_failed = spool.resolve_name('failed')
+        spool_failed = str(spool_failed)
+        if not vfs.exists(spool_failed):
+            vfs.make_folder(spool_failed)
 
         # The SMTP host
         get_value = get_config(target).get_value
@@ -68,6 +73,9 @@ class Spool(object):
         locks = set()
         names = set()
         for name in self.spool.get_names():
+            if name == 'failed':
+                # Skip "failed" special directory
+                continue
             if name[-5:] == '.lock':
                 locks.add(name[:-5])
             else:
@@ -108,12 +116,15 @@ class Spool(object):
                 self.log_activity(
                     'SENT "%s" from "%s" to "%s"'
                     % (subject, from_addr, to_addr))
-            except (SMTPRecipientsRefused, SMTPResponseException):
-                # The SMTP server returns an error code or the recipient
-                # addresses has been refused
+            except SMTPRecipientsRefused:
+                # The recipient addresses has been refused
                 self.log_error()
-                # Remove
-                self.spool.remove(name)
+                self.spool.move(name, 'failed/%s' % name)
+            except SMTPResponseException, excp:
+                # The SMTP server returns an error code
+                self.log_error()
+                error_name = '%s_%s' % (excp.smtp_code, name)
+                self.spool.move(name, 'failed/%s' % error_name)
             except Exception:
                 self.log_error()
 
