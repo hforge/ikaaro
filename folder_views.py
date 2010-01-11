@@ -77,8 +77,10 @@ class Folder_View(view):
 
 
     def http_get(self):
+        from webpage import WebPage
+
         index = self.resource.get_resource('index', soft=True)
-        if index is None:
+        if not isinstance(index, WebPage):
             context = self.context
             context.message = ERROR(
                 u'There is not an "index" web page. Could not render this '

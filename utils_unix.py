@@ -17,7 +17,7 @@
 # Import from the Standard Library
 from os import getpgid
 import os
-from signal import SIGINT
+from signal import SIGINT, SIGTERM
 
 
 def is_pid_running(pid):
@@ -31,5 +31,8 @@ def is_pid_running(pid):
 
 
 
-def kill(pid):
-    os.kill(pid, SIGINT)
+def kill(pid, force=False):
+    if force:
+        os.kill(pid, SIGTERM)
+    else:
+        os.kill(pid, SIGINT)

@@ -16,6 +16,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# Import from the Standard Library
+from re import compile
+
 # Import from itools
 from itools.core import add_type
 from itools.csv import CSVFile
@@ -23,6 +26,8 @@ from itools.gettext import POFile, MSG
 from itools.handlers import TextFile
 from itools.html import HTMLFile
 from itools.python import Python as PythonFile
+from itools.uri import get_reference, Path, Reference
+from itools.web import get_context
 from itools.xmlfile import XMLFile
 
 # Import from ikaaro
@@ -33,6 +38,9 @@ from text_views import Text_Edit, Text_View, Text_ExternalEdit, PO_Edit
 from text_views import CSV_View, CSV_AddRow, CSV_EditRow
 
 
+# FIXME Add support for thumb
+css_uri_expr = compile(
+        r"url\(['\"]{0,1}([a-zA-Z0-9\./\-\_]*/;download)['\"]{0,1}\);")
 
 class Text(File):
 
@@ -76,6 +84,116 @@ class CSS(Text):
     class_title = MSG(u'CSS')
     class_icon16 = 'icons/16x16/css.png'
     class_icon48 = 'icons/48x48/css.png'
+
+
+    def get_links(self):
+        links = Text.get_links(self)
+        base = self.get_abspath()
+        data = self.to_text().encode('utf-8')
+
+        segments = css_uri_expr.findall(data)
+        for segment in segments:
+            reference = get_reference(segment)
+
+            # Skip empty links, external links and links to '/ui/'
+            if reference.scheme or reference.authority:
+                continue
+            path = reference.path
+            if not path or path.is_absolute() and path[0] == 'ui':
+                continue
+
+            # Strip the view
+            name = path.get_name()
+            if name and name[0] == ';':
+                path = path[:-1]
+
+            uri = base.resolve2(path)
+            links.append(str(uri))
+
+        return links
+
+
+    def update_links(self,  source, target):
+        Text.update_links(self,  source, target)
+        base = self.get_abspath()
+        resources_new2old = get_context().database.resources_new2old
+        base = str(base)
+        old_base = resources_new2old.get(base, base)
+        old_base = Path(old_base)
+        new_base = Path(base)
+
+        def my_func(matchobj):
+            uri = matchobj.group(1)
+            reference = get_reference(uri)
+
+            # Skip empty links, external links and links to '/ui/'
+            if reference.scheme or reference.authority:
+                return matchobj.group(0)
+            path = reference.path
+            if not path or path.is_absolute() and path[0] == 'ui':
+                return matchobj.group(0)
+
+            # Strip the view
+            name = path.get_name()
+            if name and name[0] == ';':
+                view = '/' + name
+                path = path[:-1]
+            else:
+                view = ''
+
+            # Resolve the path
+            path = old_base.resolve2(path)
+
+            # Match ?
+            if path == source:
+                new_path = str(new_base.get_pathto(target)) + view
+                return "url('%s');" % new_path
+
+            return matchobj.group(0)
+
+        data = self.to_text().encode('utf-8')
+        new_data = css_uri_expr.sub(my_func, data)
+        self.handler.load_state_from_string(new_data)
+
+        get_context().database.change_resource(self)
+
+
+    def update_relative_links(self, source):
+        target = self.get_abspath()
+        resources_old2new = get_context().database.resources_old2new
+
+        def my_func(matchobj):
+            uri = matchobj.group(1)
+            reference = get_reference(uri)
+
+            # Skip empty links, external links and links to '/ui/'
+            if reference.scheme or reference.authority:
+                return matchobj.group(0)
+            path = reference.path
+            if not path or path.is_absolute() and path[0] == 'ui':
+                return matchobj.group(0)
+
+            # Strip the view
+            name = path.get_name()
+            if name and name[0] == ';':
+                view = '/' + name
+                path = path[:-1]
+            else:
+                view = ''
+
+            # Calcul the old absolute path
+            old_abs_path = source.resolve2(path)
+            # Get the 'new' absolute parth
+            new_abs_path = resources_old2new.get(old_abs_path, old_abs_path)
+
+            path = str(target.get_pathto(new_abs_path)) + view
+            new_value = Reference('', '', path, reference.query.copy(),
+                                  reference.fragment)
+            return "url('%s');" % path
+
+        data = self.to_text().encode('utf-8')
+        new_data = css_uri_expr.sub(my_func, data)
+        self.handler.load_state_from_string(new_data)
 
 
 
