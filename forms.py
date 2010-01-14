@@ -100,13 +100,14 @@ class Widget(object):
     type = 'text'
 
     template = list(XMLParser(
-        """<input type="${type}" id="${name}" name="${name}" value="${value}"
+        """<input type="${type}" id="${id}" name="${name}" value="${value}"
           size="${size}" />""",
         stl_namespaces))
 
 
     def __init__(self, name, template=None, template_multiple=None, **kw):
         self.name = name
+        self.id = name.replace('_', '-')
         if template is not None:
             self.template = template
         if template_multiple is not None:
@@ -127,6 +128,7 @@ class Widget(object):
         return {
             'type': self.type,
             'name': self.name,
+            'id': self.id,
             'value': value,
             'size': self.size}
 
@@ -166,7 +168,7 @@ class PasswordWidget(Widget):
 class ReadOnlyWidget(Widget):
 
     template = list(XMLParser(
-        """<input type="hidden" id="${name}" name="${name}" value="${value}" />
+        """<input type="hidden" id="${id}" name="${name}" value="${value}" />
            ${displayed}""", stl_namespaces))
 
 
@@ -191,6 +193,7 @@ class ReadOnlyWidget(Widget):
 
         return {
             'name': self.name,
+            'id': self.id,
             'value': value,
             'displayed': displayed}
 
@@ -202,7 +205,7 @@ class MultilineWidget(Widget):
     cols = 60
 
     template = list(XMLParser(
-        """<textarea rows="${rows}" cols="${cols}" id="${name}" name="${name}"
+        """<textarea rows="${rows}" cols="${cols}" id="${id}" name="${name}"
         >${value}</textarea>""",
         stl_namespaces))
 
@@ -210,6 +213,7 @@ class MultilineWidget(Widget):
     def get_namespace(self, datatype, value):
         return {
             'name': self.name,
+            'id': self.id,
             'value': value,
             'rows': self.rows,
             'cols': self.cols}
@@ -219,7 +223,7 @@ class MultilineWidget(Widget):
 class CheckBoxWidget(Widget):
 
     template = list(XMLParser("""
-        <input type="checkbox" id="${name}" name="${name}" value="${value}"
+        <input type="checkbox" id="${id}" name="${name}" value="${value}"
           checked="${is_selected}" />
         """, stl_namespaces))
 
@@ -227,6 +231,7 @@ class CheckBoxWidget(Widget):
     def get_namespace(self, datatype, value):
         return {
             'name': self.name,
+            'id': self.id,
             'value': value,
             'is_selected': getattr(self, 'is_selected', False)}
 
@@ -235,7 +240,7 @@ class CheckBoxWidget(Widget):
 class BooleanCheckBox(Widget):
 
     template = list(XMLParser("""
-        <input type="checkbox" id="${name}" name="${name}" value="1"
+        <input type="checkbox" id="${id}" name="${name}" value="1"
           checked="${is_selected}" />
         """, stl_namespaces))
 
@@ -243,6 +248,7 @@ class BooleanCheckBox(Widget):
     def get_namespace(self, datatype, value):
         return {
             'name': self.name,
+            'id': self.id,
             'is_selected': value in [True, 1, '1']}
 
 
@@ -250,16 +256,16 @@ class BooleanCheckBox(Widget):
 class BooleanRadio(Widget):
 
     template = list(XMLParser("""
-        <label for="${name}-yes">${labels/yes}</label>
-        <input id="${name}-yes" name="${name}" type="radio" value="1"
+        <label for="${id}-yes">${labels/yes}</label>
+        <input id="${id}-yes" name="${name}" type="radio" value="1"
           checked="checked" stl:if="is_yes"/>
-        <input id="${name}-yes" name="${name}" type="radio" value="1"
+        <input id="${id}-yes" name="${name}" type="radio" value="1"
           stl:if="not is_yes"/>
 
-        <label for="${name}-no">${labels/no}</label>
-        <input id="${name}-no" name="${name}" type="radio" value="0"
+        <label for="${id}-no">${labels/no}</label>
+        <input id="${id}-no" name="${name}" type="radio" value="0"
           checked="checked" stl:if="not is_yes"/>
-        <input id="${name}-no" name="${name}" type="radio" value="0"
+        <input id="${id}-no" name="${name}" type="radio" value="0"
           stl:if="is_yes"/>
         """, stl_namespaces))
 
@@ -269,6 +275,7 @@ class BooleanRadio(Widget):
         labels = getattr(self, 'labels', default_labels)
         return {
             'name': self.name,
+            'id': self.id,
             'is_yes': value in [True, 1, '1'],
             'labels': labels}
 
@@ -277,7 +284,7 @@ class BooleanRadio(Widget):
 class SelectWidget(Widget):
 
     template = list(XMLParser("""
-        <select id="${name}" name="${name}" multiple="${multiple}" size="${size}"
+        <select id="${id}" name="${name}" multiple="${multiple}" size="${size}"
             class="${css}">
           <option value="" stl:if="has_empty_option"></option>
           <option stl:repeat="option options" value="${option/name}"
@@ -297,6 +304,7 @@ class SelectWidget(Widget):
             'css': getattr(self, 'css', None),
             'has_empty_option': getattr(self, 'has_empty_option', True),
             'name': self.name,
+            'id': self.id,
             'multiple': datatype.multiple,
             'options': value,
             'size':  getattr(self, 'size', None)}
@@ -314,21 +322,21 @@ class SelectRadio(Widget):
           <stl:block stl:if="not is_inline"><br/></stl:block>
         </stl:block>
         <stl:block stl:repeat="option options">
-          <input type="radio" id="${name}-${option/name}" name="${name}"
+          <input type="radio" id="${id}-${option/name}" name="${name}"
             value="${option/name}" checked="checked"
             stl:if="option/selected"/>
-          <input type="radio" id="${name}-${option/name}" name="${name}"
+          <input type="radio" id="${id}-${option/name}" name="${name}"
             value="${option/name}" stl:if="not option/selected"/>
-          <label for="${name}-${option/name}">${option/value}</label>
+          <label for="${id}-${option/name}">${option/value}</label>
           <stl:block stl:if="not is_inline"><br/></stl:block>
         </stl:block>
         """, stl_namespaces))
 
     template_multiple = list(XMLParser("""
         <stl:block stl:repeat="option options">
-          <input type="checkbox" name="${name}" id="${name}-${option/name}"
+          <input type="checkbox" name="${name}" id="${id}-${option/name}"
             value="${option/name}" checked="${option/selected}" />
-          <label for="${name}-${option/name}">${option/value}</label>
+          <label for="${id}-${option/name}">${option/value}</label>
           <stl:block stl:if="not is_inline"><br/></stl:block>
         </stl:block>
         """, stl_namespaces))
@@ -363,6 +371,7 @@ class SelectRadio(Widget):
                 options[0]['selected'] = True
         return {
             'name': self.name,
+            'id': self.id,
             'is_inline': is_inline,
             'has_empty_option': has_empty_option,
             'none_selected': none_selected,
@@ -375,7 +384,7 @@ class DateWidget(Widget):
     tip = MSG(u"Format: 'yyyy-mm-dd'")
 
     template = list(XMLParser("""
-        <input type="text" name="${name}" value="${value}" id="${name}"
+        <input type="text" name="${name}" value="${value}" id="${id}"
           class="dateField" size="${size}" />
         <input type="button" value="..." class="${class}" />
         <script language="javascript">
@@ -397,9 +406,9 @@ class DateWidget(Widget):
         css = getattr(self, 'css', None)
         size = getattr(self, 'size', None)
 
-        return {'name': self.name, 'format': format,
-                'show_time': show_time, 'class': css,
-                'size': size, 'value': value}
+        return {'name': self.name, 'id': self.id,
+                'format': format, 'show_time': show_time,
+                'class': css, 'size': size, 'value': value}
 
 
 
@@ -410,11 +419,11 @@ class PathSelectorWidget(TextWidget):
 
     template = list(XMLParser(
     """
-    <input type="text" id="selector-${name}" size="${size}" name="${name}"
+    <input type="text" id="selector-${id}" size="${size}" name="${name}"
       value="${value}" />
-    <input id="selector-button-${name}" type="button" value="..."
+    <input id="selector-button-${id}" type="button" value="..."
       name="selector_button_${name}"
-      onclick="popup(';${action}?target_id=selector-${name}&amp;mode=input', 620, 300);"/>
+      onclick="popup(';${action}?target_id=selector-${id}&amp;mode=input', 620, 300);"/>
     ${workflow_state}
     """, stl_namespaces))
 
@@ -433,6 +442,7 @@ class PathSelectorWidget(TextWidget):
         return {
             'type': self.type,
             'name': self.name,
+            'id': self.id,
             'value': value,
             'size': self.size,
             'action': self.action,
@@ -448,11 +458,11 @@ class ImageSelectorWidget(PathSelectorWidget):
 
     template = list(XMLParser(
     """
-    <input type="text" id="selector-${name}" size="${size}" name="${name}"
+    <input type="text" id="selector-${id}" size="${size}" name="${name}"
       value="${value}" />
-    <input id="selector-button-${name}" type="button" value="..."
+    <input id="selector-button-${id}" type="button" value="..."
       name="selector_button_${name}"
-      onclick="popup(';${action}?target_id=selector-${name}&amp;mode=input', 620, 300);" />
+      onclick="popup(';${action}?target_id=selector-${id}&amp;mode=input', 620, 300);" />
     ${workflow_state}
     <br/>
     <img src="${value}/;thumb?width=${width}&amp;height=${height}" stl:if="value"/>
@@ -534,6 +544,7 @@ class RTEWidget(Widget):
                 'css': ','.join(css_names),
                 'extended_valid_elements': self.extended_valid_elements,
                 'form_name': self.name,
+                'id': self.id,
                 'height': self.height,
                 'language': current_language,
                 'plugins': self.plugins,

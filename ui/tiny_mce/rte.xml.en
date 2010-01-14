@@ -9,7 +9,7 @@
   <script type="text/javascript">
   tinyMCE.init({
       mode : "exact",
-      elements : "${form_name}",
+      elements : "${id}",
 
       theme : "advanced",
       plugins : "${plugins}",
@@ -50,7 +50,7 @@
 	<!--
   Gets replaced with TinyMCE, remember HTML in a textarea should be quoted
   -->
-  <textarea id="${form_name}" name="${form_name}" rows="15" cols="80"
+  <textarea id="${id}" name="${form_name}" rows="15" cols="80"
     style="width: 80%">${source}</textarea>
 
 </stl:block>
