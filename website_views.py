@@ -174,14 +174,14 @@ class ContactForm(AutoForm):
     submit_value = MSG(u'Send')
     query_schema = {'to': String,
                     'subject': Unicode,
-                    'body': Unicode}
+                    'message_body': Unicode}
 
     def get_schema(self, resource, context):
         return {
             'to': ContactOptions(resource=resource, mandatory=True),
             'from': Email(mandatory=True),
             'subject': Unicode(mandatory=True),
-            'body': Unicode(mandatory=True),
+            'message_body': Unicode(mandatory=True),
         }
 
 
@@ -189,7 +189,8 @@ class ContactForm(AutoForm):
         SelectWidget('to', title=MSG(u'Recipient')),
         TextWidget('from', title=MSG(u'Your email address'), size=40),
         TextWidget('subject', title=MSG(u'Message subject'), size=40),
-        MultilineWidget('body', title=MSG(u'Message body'), rows=8, cols=50),
+        MultilineWidget('message_body', title=MSG(u'Message body'),
+                        rows=8, cols=50),
     ]
 
 
@@ -210,7 +211,7 @@ class ContactForm(AutoForm):
         contact = form['to']
         from_addr = form['from'].strip()
         subject = form['subject'].strip()
-        body = form['body'].strip()
+        body = form['message_body'].strip()
 
         # Find out the "to" address
         contact = resource.get_resource('/users/%s' % contact)
