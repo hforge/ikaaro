@@ -179,12 +179,12 @@ class ContactForm(AutoForm):
     to = to_field(required=True, title = MSG(u'Recipient'))
     subject = text_field(required=True, title=MSG(u'Message subject'))
 
-    body = textarea_field(required=True, rows=8, cols=50)
-    body.title = MSG(u'Message body')
+    message_body = textarea_field(required=True, rows=8, cols=50)
+    message_body.title = MSG(u'Message body')
 
     from_ = email_field(required=True, title=MSG(u'Your email address'))
 
-    field_names = ['to', 'from_', 'subject', 'body']
+    field_names = ['to', 'from_', 'subject', 'message_body']
 
 
     def get_value(self, field):
@@ -201,7 +201,7 @@ class ContactForm(AutoForm):
         contact = form['to']
         from_addr = form['from_'].strip()
         subject = form['subject'].strip()
-        body = form['body'].strip()
+        body = form['message_body'].strip()
 
         # Find out the "to" address
         contact = resource.get_resource('/users/%s' % contact)

@@ -88,7 +88,7 @@ class DateField(input_field):
     datatype = Date
 
     input_template = make_stl_template("""
-    <input type="text" name="${name}" value="${encoded_value}" id="${name}"
+    <input type="text" name="${name}" value="${encoded_value}" id="${id}"
       class="dateField" size="${size}" />
     <input type="button" value="..." class="${css}" />
     <script language="javascript">
@@ -129,7 +129,7 @@ class DateTimeField(input_field):
     datatype = DateTime
 
     input_template = make_stl_template("""
-    <input type="text" name="${name}" value="${value_date}" id="${name}"
+    <input type="text" name="${name}" value="${value_date}" id="${id}"
       class="dateField" size="${size}" />
     <input type="button" value="..." class="${css}" />
     <input type="text" name="${name}_time" value="${value_time}" size="6" />

@@ -89,6 +89,8 @@ class CSS(Text):
     def get_links(self):
         links = Text.get_links(self)
         base = self.get_abspath()
+        site_root = self.get_site_root()
+        site_root_base = site_root.get_abspath()
         data = self.to_text().encode('utf-8')
 
         segments = css_uri_expr.findall(data)
@@ -99,7 +101,7 @@ class CSS(Text):
             if reference.scheme or reference.authority:
                 continue
             path = reference.path
-            if not path or path.is_absolute() and path[0] == 'ui':
+            if not path and path[0] == 'ui':
                 continue
 
             # Strip the view
@@ -107,7 +109,14 @@ class CSS(Text):
             if name and name[0] == ';':
                 path = path[:-1]
 
-            uri = base.resolve2(path)
+            # Absolute path are relative to site root
+            if path.is_absolute():
+                # /images/xx -> images/xx
+                path.startswith_slash = False
+                uri = site_root_base.resolve2(path)
+            else:
+                uri = base.resolve2(path)
+
             links.append(str(uri))
 
         return links
@@ -116,10 +125,15 @@ class CSS(Text):
     def update_links(self,  source, target):
         Text.update_links(self,  source, target)
         base = self.get_abspath()
+        site_root = self.get_site_root()
+        site_root_base = site_root.get_abspath()
         resources_new2old = get_context().database.resources_new2old
         base = str(base)
         old_base = resources_new2old.get(base, base)
         old_base = Path(old_base)
+        old_site_root_base = resources_new2old.get(site_root_base,
+                                                   site_root_base)
+        old_site_root_base = Path(old_site_root_base)
         new_base = Path(base)
 
         def my_func(matchobj):
@@ -130,7 +144,7 @@ class CSS(Text):
             if reference.scheme or reference.authority:
                 return matchobj.group(0)
             path = reference.path
-            if not path or path.is_absolute() and path[0] == 'ui':
+            if not path and path[0] == 'ui':
                 return matchobj.group(0)
 
             # Strip the view
@@ -142,7 +156,13 @@ class CSS(Text):
                 view = ''
 
             # Resolve the path
-            path = old_base.resolve2(path)
+            # Absolute path are relative to site root
+            if path.is_absolute():
+                # /images/xx -> images/xx
+                path.startswith_slash = False
+                path = old_site_root_base.resolve2(path)
+            else:
+                path = old_base.resolve2(path)
 
             # Match ?
             if path == source:
@@ -160,6 +180,8 @@ class CSS(Text):
 
     def update_relative_links(self, source):
         target = self.get_abspath()
+        site_root = self.get_site_root()
+        site_root_base = site_root.get_abspath()
         resources_old2new = get_context().database.resources_old2new
 
         def my_func(matchobj):
@@ -170,7 +192,7 @@ class CSS(Text):
             if reference.scheme or reference.authority:
                 return matchobj.group(0)
             path = reference.path
-            if not path or path.is_absolute() and path[0] == 'ui':
+            if not path and path[0] == 'ui':
                 return matchobj.group(0)
 
             # Strip the view
@@ -182,7 +204,13 @@ class CSS(Text):
                 view = ''
 
             # Calcul the old absolute path
-            old_abs_path = source.resolve2(path)
+            # Absolute path are relative to site root
+            if path.is_absolute():
+                # /images/xx -> images/xx
+                path.startswith_slash = False
+                old_abs_path = site_root_base.resolve2(path)
+            else:
+                old_abs_path = source.resolve2(path)
             # Get the 'new' absolute parth
             new_abs_path = resources_old2new.get(old_abs_path, old_abs_path)
 

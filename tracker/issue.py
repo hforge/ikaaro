@@ -31,6 +31,7 @@ from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.http import get_context
 from itools.vfs import FileName
+from itools.uri import Path
 
 # Import from ikaaro
 from ikaaro.file import File
@@ -101,15 +102,24 @@ class Issue(Folder):
         return links
 
 
-    def update_links(self, old_path, new_path):
+    def update_links(self, source, target):
         base = self.get_abspath()
-        old_name = base.get_pathto(old_path)
+        resources_new2old = get_context().database.resources_new2old
+        base = str(base)
+        old_base = resources_new2old.get(base, base)
+        old_base = Path(old_base)
+        new_base = Path(base)
+
         history = self.get_history()
         for record in history.get_records():
-            file = history.get_record_value(record, 'file')
-            if file == old_name:
-                value = str(base.get_pathto(new_path))
+            filename = history.get_record_value(record, 'file')
+            if not filename:
+                continue
+            path = old_base.resolve2(filename)
+            if path == source:
+                value = str(new_base.get_pathto(target))
                 history.update_record(record.id, **{'file': value})
+
         get_context().change_resource(self)
 
 

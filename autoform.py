@@ -49,11 +49,11 @@ class PathSelectorWidget(object):
     display_workflow = True
 
     template = make_stl_template("""
-    <input type="text" id="selector-${name}" size="${size}" name="${name}"
+    <input type="text" id="selector-${id}" size="${size}" name="${name}"
       value="${value}" />
-    <input id="selector-button-${name}" type="button" value="..."
+    <input id="selector-button-${id}" type="button" value="..."
       name="selector_button_${name}"
-      onclick="popup(';${action}?target_id=selector-${name}&amp;mode=input', 620, 300);"/>
+      onclick="popup(';${action}?target_id=selector-${id}&amp;mode=input', 620, 300);"/>
     ${workflow_state}""")
 
 
@@ -78,11 +78,11 @@ class ImageSelectorWidget(PathSelectorWidget):
     height = 128
 
     template = make_stl_template("""
-    <input type="text" id="selector-${name}" size="${size}" name="${name}"
+    <input type="text" id="selector-${id}" size="${size}" name="${name}"
       value="${value}" />
-    <input id="selector-button-${name}" type="button" value="..."
+    <input id="selector-button-${id}" type="button" value="..."
       name="selector_button_${name}"
-      onclick="popup(';${action}?target_id=selector-${name}&amp;mode=input', 620, 300);" />
+      onclick="popup(';${action}?target_id=selector-${id}&amp;mode=input', 620, 300);" />
     ${workflow_state}
     <br/>
     <img src="${value}/;thumb?width=${width}&amp;height=${height}" stl:if="value"/>""")

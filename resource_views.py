@@ -387,7 +387,7 @@ class DBResource_AddBase(stl_view):
         path = resource.get_pathto(child)
         action = self.get_resource_action(context)
         if action:
-            path = path.resolve_name('.%s' % action)
+            path = '%s%s' % (path, action)
         # Return javascript
         mode = form['mode']
         scripts = self.get_scripts(mode)
@@ -490,6 +490,7 @@ class DBResource_AddLink(DBResource_AddBase):
 
 class DBResource_AddMedia(DBResource_AddImage):
 
+    template = '/ui/html/addmedia.xml'
     element_to_add = 'media'
 
     def get_item_classes(self):

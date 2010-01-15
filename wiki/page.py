@@ -199,7 +199,7 @@ class WikiPage(Text):
         return links
 
 
-    def update_links(self, old_path, new_path,
+    def update_links(self, source, target,
                      links_re = compile(r'(\.\. .*?: )(\S*)')):
         old_data = self.handler.to_str()
         new_data = []
@@ -228,8 +228,8 @@ class WikiPage(Text):
                 path = base.resolve(path)
 
                 # Match ?
-                if path == old_path:
-                    segment = str(base.get_pathto(new_path)) + view
+                if path == source:
+                    segment = str(base.get_pathto(target)) + view
             new_data.append(segment)
         new_data = ''.join(new_data)
         self.handler.load_state_from_string(new_data)
