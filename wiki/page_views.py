@@ -33,8 +33,8 @@ from docutils.utils import SystemMessage
 from docutils import nodes
 
 # Import from itools
-from itools.core import guess_extension
-from itools.datatypes import DateTime, String, Unicode
+from itools.core import guess_extension, merge_dicts
+from itools.datatypes import String
 from itools.gettext import MSG
 from itools.handlers import checkid, File as FileHandler, ro_database
 from itools.html import XHTMLFile
@@ -47,6 +47,7 @@ from itools.xml import XMLParser, XMLError
 
 # Import from ikaaro
 from ikaaro import messages
+from ikaaro.forms import title_widget, timestamp_widget
 from ikaaro.resource_views import DBResource_Edit
 
 
@@ -299,10 +300,11 @@ class WikiPage_ToPDF(BaseView):
 class WikiPage_Edit(DBResource_Edit):
 
     template = '/ui/wiki/edit.xml'
-    schema = {
-        'title': Unicode,
-        'data': String,
-        'timestamp': DateTime}
+    schema = merge_dicts(DBResource_Edit.schema, data=String)
+    widgets = [timestamp_widget, title_widget]
+
+    # No Multilingual
+    context_menus = []
 
     styles = ['/ui/tiny_mce/themes/advanced/skins/default/ui.css',
               '/ui/wiki/style.css']
@@ -311,23 +313,16 @@ class WikiPage_Edit(DBResource_Edit):
 
 
     def get_namespace(self, resource, context):
-        data = context.get_form_value('data') or resource.handler.to_str()
-        return {
-            'title': resource.get_title(),
-            'data': data,
-            'timestamp': DateTime.encode(datetime.now())}
+        namespace = DBResource_Edit.get_namespace(self, resource, context)
+        namespace['data'] = (context.get_form_value('data') or
+                resource.handler.to_str())
+        return namespace
 
 
     def action_save(self, resource, context, form):
-        # Check edit conflict
-        self.check_edit_conflict(resource, context, form)
-        if context.edit_conflict:
+        DBResource_Edit.action(self, resource, context, form)
+        if isinstance(context.message, ERROR):
             return
-
-        title = form['title']
-        language = resource.get_content_language(context)
-        resource.set_property('title', title, language=language)
-
         # Data is assumed to be encoded in UTF-8
         data = form['data']
         # Save even if broken
