@@ -248,6 +248,7 @@ class Database(ReadOnlyDatabase, GitDatabase):
         root = context.root
         catalog = self.catalog
         documents_to_index = []
+        documents_to_unindex = self.resources_old2new.keys()
 
         # Update links when resources moved
         for source, target in self.resources_old2new.items():
@@ -256,9 +257,7 @@ class Database(ReadOnlyDatabase, GitDatabase):
                 resource = root.get_resource(target)
                 resource._on_move_resource(source)
 
-        # UnIndex
-        for path in self.resources_old2new:
-            catalog.unindex_document(path)
+        # Clear resources_old2new
         self.resources_old2new.clear()
 
         # Index
@@ -286,21 +285,26 @@ class Database(ReadOnlyDatabase, GitDatabase):
                 git_message = git_message.encode('utf-8')
 
         # Ok
-        return git_author, git_message, documents_to_index
+        return git_author, git_message, documents_to_index, documents_to_unindex
 
 
     def _save_changes(self, data):
-        git_author, git_message, documents_to_index = data
+        git_author, git_message, documents_to_index, documents_to_unindex = data
 
         # (1) Save filesystem changes
         GitDatabase._save_changes(self, (git_author, git_message))
 
-        # (2) Catalog
+        # Catalog
+        # (2) UnIndex
+        catalog = self.catalog
+        for path in documents_to_unindex:
+            catalog.unindex_document(path)
+
+        # (3) Index
         mtime = datetime.now() # XXX This is an approximation, not exactly the
                                # same as returned by git
         user = get_context().user
         author = user.get_title() if user else None
-        catalog = self.catalog
         for resource, values in documents_to_index:
             values['mtime'] = mtime
             values['last_author'] = author
