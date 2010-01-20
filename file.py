@@ -115,7 +115,7 @@ class File(WorkflowAware, DBResource):
         name = FileName.encode((self.name, cls.class_extension, None))
         uri = resolve_uri(base, name)
         handler = cls()
-        database.push_handler(uri, handler)
+        database.push_phantom(uri, handler)
         self._handler = handler
         return self._handler
 

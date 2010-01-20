@@ -186,7 +186,7 @@ class DBResource(CatalogAware, IResource):
                 handler = database.get_handler(uri, cls=cls)
             else:
                 handler = cls()
-                database.push_handler(uri, handler)
+                database.push_phantom(uri, handler)
             self._handler = handler
         return self._handler
 
