@@ -4379,6 +4379,10 @@ msgctxt "table cell"
 msgid "⇒ ${item/parent_path}"
 msgstr "⇒ ${item/parent_path}"
 
+#: ../wiki/page_views.py:482
+msgid "Table of Contents"
+msgstr "Table des matières"
+
 #~ msgid "$label (External)"
 #~ msgstr "$label (externe)"
 

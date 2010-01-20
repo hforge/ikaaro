@@ -73,7 +73,7 @@ def default_reference_resolver(resource, reference, context):
 
 
 def resolve_references(doctree, resource, context,
-        reference_resolver=default_reference_resolver):
+        reference_resolver=default_reference_resolver, **kw):
     """Translate resource path to accessible path in the output document.
     """
     for node in doctree.traverse(condition=nodes.reference):
@@ -84,7 +84,8 @@ def resolve_references(doctree, resource, context,
         elif wiki_name:
             # Wiki link
             reference = get_reference(wiki_name)
-            node['refuri'] = reference_resolver(resource, reference, context)
+            node['refuri'] = reference_resolver(resource, reference, context,
+                    **kw)
         elif wiki_name is None:
             # Regular link: point back to the site
             refuri = node.get('refuri')
@@ -94,7 +95,8 @@ def resolve_references(doctree, resource, context,
             if is_external(reference):
                 # Keep the unicode version
                 continue
-            node['refuri'] = reference_resolver(resource, reference, context)
+            node['refuri'] = reference_resolver(resource, reference, context,
+                    **kw)
 
 
 
@@ -127,6 +129,67 @@ class BacklinksMenu(ContextMenu):
                 'href': context.get_link(resource),
                 'src': resource.get_class_icon()})
         return items
+
+
+
+#
+# To ODT Tools
+#
+
+def odt_reference_resolver(resource, reference, context, known_links=[]):
+    path = reference.path
+    if not path.startswith_slash:
+        # Was not resolved
+        raise ValueError, 'page "%s": the link "%s" is broken' % (
+                resource.name, reference)
+    if path not in known_links:
+        return default_reference_resolver(resource, reference, context)
+    destination = resource.get_resource(path)
+    if not isinstance(destination, resource.__class__):
+        return default_reference_resolver(resource, reference, context)
+    doctree = destination.get_doctree()
+    title = None
+    if reference.fragment:
+        for node in doctree.traverse(condition=nodes.title):
+            if checkid(node.astext()) == reference.fragment:
+                title = node.astext()
+                break
+    if not reference.fragment or title is None:
+        # First title
+        for node in doctree.traverse(condition=nodes.title):
+            title = node.astext()
+            break
+    # No title at all
+    if title is None:
+        return default_reference_resolver(resource, reference, context)
+    return u"#1.%s|outline" % title
+
+
+
+class PageVisitor(nodes.SparseNodeVisitor):
+
+    def __init__(self, doctree, container):
+        nodes.NodeVisitor.__init__(self, doctree)
+        self.container = container
+        self.pages = []
+        self.level = 0
+
+
+    def visit_enumerated_list(self, node):
+        self.level += 1
+
+
+    def depart_enumerated_list(self, node):
+        self.level -= 1
+
+
+    def visit_list_item(self, node):
+        reference = node.next_node(condition=nodes.reference)
+        path = reference.get('wiki_name')
+        if path is False:
+            raise LookupError, node.astext()
+        page = self.container.get_resource(path)
+        self.pages.append((page, self.level))
 
 
 
@@ -408,8 +471,10 @@ class WikiPage_ToODT(AutoForm):
 
 
     def action(self, resource, context, form):
-        from lpod.rst2odt import rst2odt
         from lpod.document import odf_get_document
+        from lpod.document import odf_new_document_from_type
+        from lpod.rst2odt import rst2odt, convert
+        from lpod.toc import odf_create_toc
 
         template = form['template']
         if template is not None:
@@ -421,17 +486,59 @@ class WikiPage_ToODT(AutoForm):
             template = odf_get_document(StringIO(body))
 
         doctree = resource.get_doctree()
-        resolve_references(doctree, resource, context)
-        resolve_images(doctree, resource, context)
-
-        document = rst2odt(doctree, template=template)
-        output = StringIO()
-        document.save(output)
+        book = doctree.next_node(condition=nodes.book)
+        if book is not None:
+            # Prepare document
+            if template is None:
+                document = odf_new_document_from_type('text')
+            else:
+                document = template.clone()
+                document.get_body().clear()
+            # Global TOC
+            title = MSG(u"Table of Contents").gettext()
+            outline_level = book.get('toc-depth', 10)
+            toc = odf_create_toc(title=title, outline_level=outline_level)
+            document.get_body().append_element(toc)
+            # List of pages and their starting title level
+            visitor = PageVisitor(doctree, resource)
+            try:
+                book.walkabout(visitor)
+            except LookupError, uri:
+                context.message = ERROR(u'Page "{uri}" not found.', uri=uri)
+                return
+            pages = visitor.pages
+            if not pages:
+                context.message = ERROR(u"No page found to export.")
+                return
+            # List of links between pages
+            known_links = [page.get_canonical_path() for page, _ in pages]
+            # Compile pages
+            for page, level in pages:
+                doctree = page.get_doctree()
+                try:
+                    resolve_references(doctree, page, context,
+                            reference_resolver=odt_reference_resolver,
+                            known_links=known_links)
+                except ValueError, e:
+                    context.message = ERROR(unicode(str(e), 'utf_8'))
+                    return
+                resolve_images(doctree, resource, context)
+                convert(document, doctree, heading_level=level,
+                        skip_toc=True)
+            # Fill TOC
+            toc.toc_fill()
+        else:
+            # Just convert the page as is to ODT
+            resolve_references(doctree, resource, context)
+            resolve_images(doctree, resource, context)
+            document = rst2odt(doctree, template=template)
 
         context.set_content_type('application/vnd.oasis.opendocument.text')
         context.set_content_disposition('attachment',
                 filename='%s.odt' % resource.name)
 
+        output = StringIO()
+        document.save(output)
         return output.getvalue()
 
 

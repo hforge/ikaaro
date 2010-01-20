@@ -25,7 +25,10 @@ from urllib import urlencode
 # Import from docutils
 from docutils import nodes
 from docutils.core import publish_doctree
+from docutils.languages.en import labels
 from docutils.readers import get_reader_class
+from docutils.parsers.rst import directives, Directive
+from docutils.parsers.rst.directives import register_directive
 from docutils.utils import SystemMessage
 
 # Import from itools
@@ -46,8 +49,22 @@ from page_views import is_external, BacklinksMenu
 StandaloneReader = get_reader_class('standalone')
 
 
-class WikiPage(Text):
 
+# Class name gives the DOM element name
+class book(nodes.Admonition, nodes.Element):
+    pass
+
+
+
+class Book(Directive):
+    required_arguments = 0
+    optional_arguments = 0
+    option_spec = {'toc-depth': directives.positive_int}
+    has_content = True
+
+
+
+class WikiPage(Text):
     class_id = 'WikiPage'
     class_title = MSG(u"Wiki Page")
     class_description = MSG(u"Wiki contents")
@@ -276,3 +293,10 @@ class WikiPage(Text):
     def get_context_menus(self):
         return [BacklinksMenu()] + self.parent.get_context_menus()
 
+
+
+# Register dummy book directive for ODT export
+nodes._add_node_class_names(['book'])
+nodes.book = book
+register_directive('book', Book)
+labels['book'] = ''
