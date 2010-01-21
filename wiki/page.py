@@ -40,8 +40,8 @@ from itools.web import get_context
 # Import from ikaaro
 from ikaaro.text import Text
 from ikaaro.resource_ import DBResource
-from page_views import WikiPage_Edit, WikiPage_Help, WikiPage_ToPDF
-from page_views import WikiPage_View, WikiPage_ToODT
+from page_views import WikiPage_View, WikiPage_Edit, WikiPage_Help
+from page_views import WikiPage_ToPDF, WikiPage_ToODT, WikiPage_HelpODT
 from page_views import is_external, BacklinksMenu
 
 
@@ -97,7 +97,7 @@ class WikiPage(Text):
     class_icon16 = 'wiki/WikiPage16.png'
     class_icon48 = 'wiki/WikiPage48.png'
     class_views = ['view', 'to_pdf', 'to_odt', 'edit', 'externaledit',
-            'edit_state', 'backlinks', 'commit_log', 'help']
+            'edit_state', 'backlinks', 'commit_log', 'help', 'help_odt']
 
     overrides = {
         # Security
@@ -314,6 +314,7 @@ class WikiPage(Text):
     edit = WikiPage_Edit()
     to_odt = WikiPage_ToODT()
     help = WikiPage_Help()
+    help_odt = WikiPage_HelpODT()
 
 
     def get_context_menus(self):

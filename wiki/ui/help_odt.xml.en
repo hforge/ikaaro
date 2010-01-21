@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<stl:block xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
+  <h2>Help on ODT Export</h2>
+
+  <ol>
+    <li><a href="#prerequisites">Prerequisites</a></li>
+    <li><a href="#usage">Usage</a></li>
+    <li><a href="#template">Template</a></li>
+    <li><a href="#links">Links</a></li>
+    <li><a href="#dl">Definition Lists</a></li>
+    <li><a href="#book">Generating a book</a></li>
+  </ol>
+
+  <h3 id="prerequisites">Prerequisites</h3>
+  <ul>
+    <li>Install <a href="http://www.lpod-project.org/">lpOD</a> on the
+    server.</li>
+  </ul>
+
+  <h3 id="usage">Usage</h3>
+  <p>On any page, click on the <a href=";to_odt">To ODT</a> tab to acccess
+    this feature.</p>
+
+  <h3 id="template">Template</h3>
+  <p>You can choose a template to write the exported document in.</p>
+
+  <p>A template is simply an ODT file that is emptied from its previous
+  content and filled with the new content. Styles, headers and footers are
+  preserved. <strong>The original document is not modified in any
+    way.</strong></p>
+
+  <p>You can choose an ODT file on your disk or select an ODT previously
+  uploaded into the wiki. Click here to <a
+    href="../;new_resource?type=file">upload an ODT</a>.</p>
+
+  <h3 id="links">Links</h3>
+  <p>Links will be expanded to a URL and point to this website. Existing URLs
+  remain untouched.</p>
+
+  <h3 id="dl">Definition Lists</h3>
+  <p>Definition lists are converted to styles paragraphs. The term style is
+  named "Definition List Term" and the definition style is named "Definition
+  List Definition". Default styles are created if they don't exist.</p>
+
+  <h3 id="book">Generating a book</h3>
+  <p>You can export several wiki pages into a single ODT. You need to create
+  a new page with a structure like this:</p>
+
+  <pre>
+.. book:: `cover-page`_
+   :toc-depth: 3
+   :title: Title...
+   :comments: Comments...
+              On multiple lines...
+   :subject: Subject...
+   :language: fr-FR
+   :keywords: Keyword1, Keyword2...
+
+   - `a-page`_
+   - `another-page`_
+      - `a-subpage`_
+      - `another-subpage`_
+   - `a-last-page`_
+   </pre>
+
+  <p>The book has some nice behaviour:</p>
+  <ul>
+    <li>Optional book title is a link to the cover page.</li>
+    <li>Cover titles are treated as main title and subtitle.</li>
+    <li>Pages listed as a subitem will see their title level incremented.</li>
+    <li>Links to included pages will be turned into internal anchors.</li>
+    <li>Any other content in this page will be ignored.</li>
+  </ul>
+</stl:block>

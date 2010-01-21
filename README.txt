@@ -25,6 +25,7 @@ Software    Version  Used by           Home
 Python          2.6  ikaaro            http://www.python.org/
 itools       0.60.0  ikaaro            http://www.hforge.org/itools
 docutils        0.5  Wiki              http://docutils.sourceforge.net/
+lpOD            0.8  Wiki ODT export   http://www.lpod-project.org/
 guppy         0.1.8  Memory profiling  http://guppy-pe.sourceforge.net/
 
 Check the itools requirements.

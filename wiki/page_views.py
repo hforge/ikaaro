@@ -656,3 +656,10 @@ class WikiPage_Help(STLView):
             'help_source': source,
             'help_html': events,
         }
+
+
+
+class WikiPage_HelpODT(STLView):
+    access = 'is_allowed_to_view'
+    title = MSG(u"ODT Help")
+    template = '/ui/wiki/help_odt.xml'
