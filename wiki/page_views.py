@@ -34,7 +34,7 @@ from docutils import nodes
 
 # Import from itools
 from itools.core import merge_dicts
-from itools.datatypes import String
+from itools.datatypes import String, Enumerate
 from itools.gettext import MSG
 from itools.handlers import checkid, ro_database
 from itools.html import XHTMLFile
@@ -42,19 +42,22 @@ from itools.i18n import format_datetime
 from itools.uri import get_reference
 from itools.uri.mailto import Mailto
 from itools.fs import lfs, FileName
-from itools.web import BaseView, STLView, ERROR
+from itools.web import BaseView, STLView, ERROR, get_context
 from itools.xapian import PhraseQuery
 from itools.xml import XMLParser, XMLError
 
 # Import from ikaaro
 from ikaaro import messages
 from ikaaro.datatypes import FileDataType
-from ikaaro.forms import AutoForm, FileWidget, title_widget, timestamp_widget
+from ikaaro.forms import AutoForm, FileWidget, SelectRadio
+from ikaaro.forms import title_widget, timestamp_widget
 from ikaaro.resource_views import DBResource_Edit
 from ikaaro.views import ContextMenu
 
 
 figure_style_converter = compile(r'\\begin\{figure\}\[.*?\]')
+ALLOWED_FORMATS = ('application/vnd.oasis.opendocument.text',
+        'application/vnd.oasis.opendocument.text-template')
 
 
 def is_external(reference):
@@ -190,6 +193,25 @@ class PageVisitor(nodes.SparseNodeVisitor):
             raise LookupError, node.astext()
         page = self.container.get_resource(path)
         self.pages.append((page, self.level))
+
+
+
+class TemplateList(Enumerate):
+
+    @classmethod
+    def get_options(cls):
+        context = get_context()
+        container = context.resource.parent
+
+        options = [{'name': '', 'value': MSG(u"lpoD default template")}]
+        for resource in container.get_resources():
+            if not resource.class_id in ALLOWED_FORMATS:
+                continue
+            msg = MSG(u'{title} (<a href="{link}">view</a>)')
+            msg = msg.gettext(title=resource.get_title(),
+                    link=context.get_link(resource)).encode('utf_8')
+            options.append({'name': resource.name, 'value': XMLParser(msg)})
+        return options
 
 
 
@@ -451,10 +473,11 @@ class WikiPage_Edit(DBResource_Edit):
 class WikiPage_ToODT(AutoForm):
     access = 'is_allowed_to_view'
     title = MSG(u"To ODT")
-    schema = {'template': FileDataType}
-    widgets = [FileWidget('template',
-        title=MSG(u"Use the given ODT as a template "
-            u"(defaults to lpOD template)"))]
+    schema = {'template': TemplateList, 'template_upload': FileDataType}
+    widgets = [SelectRadio('template', title=MSG(u"Choose a template:"),
+            has_empty_option=False),
+        FileWidget('template_upload',
+            title=MSG(u"Or provide another ODT as a template:"))]
     submit_value = MSG(u"Convert")
 
 
@@ -476,14 +499,21 @@ class WikiPage_ToODT(AutoForm):
         from lpod.rst2odt import rst2odt, convert
         from lpod.toc import odf_create_toc
 
-        template = form['template']
-        if template is not None:
-            filename, mimetype, body = template
-            if mimetype not in ('application/vnd.oasis.opendocument.text',
-                    'application/vnd.oasis.opendocument.text-template'):
+        template = None
+        template_upload = form['template_upload']
+        if template_upload is not None:
+            filename, mimetype, body = template_upload
+            if mimetype not in ALLOWED_FORMATS:
                 context.message = ERROR(u"$filename is not an OpenDocument "
                         u"Text.", filename=filename)
             template = odf_get_document(StringIO(body))
+        else:
+            template_name = form['template']
+            if template_name:
+                parent = resource.parent
+                template_resource = parent.get_resource(template_name)
+                body = template_resource.handler.to_str()
+                template = odf_get_document(StringIO(body))
 
         doctree = resource.get_doctree()
         book = doctree.next_node(condition=nodes.book)
