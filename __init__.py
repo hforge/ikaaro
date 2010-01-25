@@ -61,10 +61,12 @@ else:
 ###########################################################################
 # Check for required software
 ###########################################################################
-for name, import_path in [("poppler", "itools.pdf.pdftotext"),
-                          ("wv2", "itools.office.doctotext"),
-                          ("xlrd", "xlrd")]:
+for name, import_path, reason in [
+        ("poppler", "itools.pdf.pdftotext", "PDF indexation"),
+        ("wv2", "itools.office.doctotext", "DOC indexation"),
+        ("xlrd", "xlrd", "XLS indexation")]:
     try:
         __import__(import_path)
     except ImportError:
-        print 'You need to install "%s".' % name
+        print '%s: You need to install "%s" and reinstall itools.' % (reason,
+                name)
