@@ -781,10 +781,6 @@ class Folder_Thumbnail(BaseView):
 
     default_icon = '/ui/gallery/folder.png'
 
-    def get_mtime(self, resource):
-        return resource.get_mtime()
-
-
     def GET(self, resource, context):
         from file import Image
 
