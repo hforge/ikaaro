@@ -411,7 +411,7 @@ class Table_ExportCSV(BaseView):
 
 
     def get_mtime(self, resource):
-        return resource.get_mtime()
+        return resource.handler.get_mtime()
 
 
     def GET(self, resource, context):
@@ -421,11 +421,11 @@ class Table_ExportCSV(BaseView):
         csv = handler.to_csv(columns, separator=self.multiple_separator,
                              language=language)
 
+        # Headers
         response = context.response
-        # Filename
-        filename = "%s.csv" % resource.name
-        response.set_header('Content-Disposition',
-                            'inline; filename="%s"' % filename)
-        # Content-Type
+        response.set_header(
+            'Content-Disposition', 'inline; filename="%s.csv"' % resource.name)
         response.set_header('Content-Type', 'text/comma-separated-values')
+        # Ok
         return csv.to_str(separator=self.csv_separator)
+
