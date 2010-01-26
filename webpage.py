@@ -222,7 +222,7 @@ class WebPage(ResourceWithHTML, Multilingual, Text):
     class_description = MSG(u'Create and publish a Web Page.')
     class_icon16 = 'icons/16x16/html.png'
     class_icon48 = 'icons/48x48/html.png'
-    class_views = ['view', 'edit', 'externaledit', 'backlinks', 'edit_state',
+    class_views = ['view', 'edit', 'externaledit', 'edit_state', 'backlinks',
                    'last_changes']
     class_handler = XHTMLFile
 
