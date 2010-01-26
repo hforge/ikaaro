@@ -444,7 +444,7 @@ class TableResource_ExportCSV(view):
 
 
     def get_mtime(self, resource):
-        return resource.get_mtime()
+        return resource.handler.get_mtime()
 
 
     @thingy_lazy_property
@@ -458,11 +458,12 @@ class TableResource_ExportCSV(view):
         csv = handler.to_csv(columns, separator=self.multiple_separator,
                              language=self.content_language)
 
+        # Headers
         response = context.response
-        # Filename
         filename = "%s.csv" % resource.get_name()
-        response.set_header('Content-Disposition',
-                            'inline; filename="%s"' % filename)
-        # Content-Type
+        response.set_header(
+            'Content-Disposition', 'inline; filename="%s"' % filename)
         response.set_header('Content-Type', 'text/comma-separated-values')
+        # Ok
         return csv.to_str(separator=self.csv_separator)
+

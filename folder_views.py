@@ -751,10 +751,6 @@ class Folder_Thumbnail(view):
     height = integer_field(source='query', value=48)
 
 
-    def get_mtime(self, resource):
-        return resource.get_mtime()
-
-
     def http_get(self):
         default_icon = ui.get_template(self.default_icon)
         if PILImage is None:

@@ -54,7 +54,8 @@ class File(WorkflowAware):
         u'Upload office documents, images, media files, etc.')
     class_icon16 = 'icons/16x16/file.png'
     class_icon48 = 'icons/48x48/file.png'
-    class_views = ['view', 'edit', 'externaledit', 'backlinks', 'edit_state']
+    class_views = ['view', 'edit', 'externaledit', 'edit_state', 'backlinks',
+                   'last_changes']
     class_handler = FileHandler
 
 
@@ -109,7 +110,7 @@ class File(WorkflowAware):
         name = FileName.encode((self.get_name(), cls.class_extension, None))
         uri = resolve_uri(base, name)
         handler = cls()
-        database.push_handler(uri, handler)
+        database.push_phantom(uri, handler)
         self._handler = handler
         return self._handler
 
@@ -216,8 +217,8 @@ class Image(File):
     class_title = MSG(u'Image')
     class_icon16 = 'icons/16x16/image.png'
     class_icon48 = 'icons/48x48/image.png'
-    class_views = [
-        'view', 'download', 'edit', 'externaledit', 'backlinks', 'edit_state']
+    class_views = ['view', 'download', 'edit', 'externaledit', 'edit_state',
+                   'backlinks', 'last_changes']
     class_handler = ImageHandler
 
 

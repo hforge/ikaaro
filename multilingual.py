@@ -65,7 +65,7 @@ class Multilingual(DBResource):
             handler = database.get_handler(uri, cls=cls)
         else:
             handler = cls()
-            database.push_handler(uri, handler)
+            database.push_phantom(uri, handler)
 
         self.handlers[language] = handler
         return handler
