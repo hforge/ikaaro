@@ -231,6 +231,13 @@ class Tracker_AddIssue(STLForm):
         return get_issue_fields(resource)
 
 
+    def get_value(self, resource, context, name, datatype):
+        value = context.get_query_value(name)
+        if value:
+            return datatype.decode(value)
+        return datatype.get_default()
+
+
     def get_namespace(self, resource, context):
         context.add_style('/ui/tracker/style.css')
         context.add_script('/ui/tracker/tracker.js')
