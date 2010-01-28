@@ -29,6 +29,28 @@ from itools.web import STLView
 from views import BrowseForm
 
 
+def get_changes(diff):
+    """Turn a diff source into a list of changes for HTML display"""
+    changes = []
+    password_re = compile('<password>(.*)</password>')
+    for line in diff.splitlines():
+        if line[:5] == 'index' or line[:3] in ('---', '+++', '@@ '):
+            continue
+        css = None
+        is_header = (line[:4] == 'diff')
+        if not is_header:
+            # For security, hide password the of metadata files
+            line = sub(password_re, '<password>***</password>', line)
+            if line[0] == '-':
+                css = 'rem'
+            elif line[0] == '+':
+                css = 'add'
+        # Add the line
+        changes.append({'css': css, 'value': line, 'is_header': is_header})
+    return changes
+
+
+
 class DBResource_CommitLog(BrowseForm):
 
     access = 'is_allowed_to_edit'
@@ -95,26 +117,11 @@ class DBResource_Changes(STLView):
         namespace['author_name'] = context.root.get_user_title(author_name)
 
         # Diff
-        changes = []
-        password_re = compile('<password>(.*)</password>')
-        for line in namespace['diff'].splitlines():
-            if line[:5] == 'index' or line[:3] in ('---', '+++', '@@ '):
-                continue
-            css = None
-            is_header = (line[:4] == 'diff')
-            if not is_header:
-                # For security, hide password the of metadata files
-                line = sub(password_re, '<password>***</password>', line)
-                if line[0] == '-':
-                    css = 'rem'
-                elif line[0] == '+':
-                    css = 'add'
-            # Add the line
-            changes.append({'css': css, 'value': line, 'is_header': is_header})
-        namespace['changes'] = changes
+        namespace['changes'] = get_changes(namespace['diff'])
 
         # Ok
         return namespace
+
 
 
 # FIXME For backwards compatibility with 0.60.0 to 0.60.7
