@@ -4,23 +4,26 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
-  <fieldset>
+  <fieldset stl:if="metadata">
     <legend>Change metadata</legend>
     <table>
       <tr>
         <td><b>Author</b></td>
-        <td>: ${author_name}</td>
+        <td>: ${metadata/author_name}</td>
       </tr>
       <tr>
         <td><b>Date</b></td>
-        <td>: ${author_date}</td>
+        <td>: ${metadata/author_date}</td>
       </tr>
       <tr>
         <td><b>Message</b></td>
-        <td>: ${subject}</td>
+        <td>: ${metadata/subject}</td>
       </tr>
     </table>
   </fieldset>
+
+  <h3>Stat</h3>
+  <pre id="git-stat">${stat}</pre>
 
   <h3>Details</h3>
   <div id="differ">
@@ -31,4 +34,5 @@
       </stl:block>
     </stl:block>
   </div>
+
 </stl:block>

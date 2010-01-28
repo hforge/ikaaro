@@ -23,9 +23,11 @@ from itools.core import merge_dicts
 from itools.datatypes import Boolean, String
 from itools import git
 from itools.gettext import MSG
+from itools.uri import encode_query, get_reference
 from itools.web import STLView
 
 # Import from ikaaro
+from buttons import Button
 from views import BrowseForm
 
 
@@ -51,28 +53,56 @@ def get_changes(diff):
 
 
 
+class IndexRevision(String):
+
+    @staticmethod
+    def decode(data):
+        index, revision = data.split('_')
+        return int(index), revision
+
+
+    @staticmethod
+    def encode(value):
+        raise NotImplementedError
+
+
+
+class DiffButton(Button):
+    access = 'is_allowed_to_edit'
+    name = 'diff'
+    title = MSG(u"Diff between selected revisions")
+    css = 'button-compare'
+
+
+
 class DBResource_CommitLog(BrowseForm):
 
     access = 'is_allowed_to_edit'
     title = MSG(u"Commit Log")
 
+    schema = {
+        'ids': IndexRevision(multiple=True, mandatory=True),
+    }
     query_schema = merge_dicts(BrowseForm.query_schema,
                                sort_by=String(default='date'),
                                reverse=Boolean(default=True))
 
-
     table_columns = [
+        ('checkbox', None),
         ('date', MSG(u'Last Change')),
         ('username', MSG(u'Author')),
         ('message', MSG(u'Comment')),
     ]
+    table_actions = [DiffButton]
 
 
     def get_items(self, resource, context):
         root = context.root
         items = resource.get_revisions(content=True)
-        for item in items:
+        for i, item in enumerate(items):
             item['username'] = root.get_user_title(item['username'])
+            # Hint to sort revisions quickly
+            item['index'] = i
         return items
 
 
@@ -92,9 +122,22 @@ class DBResource_CommitLog(BrowseForm):
 
 
     def get_item_value(self, resource, context, item, column):
-        if column=='date':
+        if column == 'checkbox':
+            return ('%s_%s' % (item['index'], item['revision']), False)
+        elif column == 'date':
             return (item['date'], './;changes?revision=%s' % item['revision'])
         return item[column]
+
+
+    def action_diff(self, resource, context, form):
+        # Take newer and older revisions, even if many selected
+        ids = sorted(form['ids'])
+        revision = ids.pop()[1]
+        to = ids and ids.pop(0)[1] or 'HEAD'
+        # FIXME same hack than rename to call a GET from a POST
+        query = encode_query({'revision': revision, 'to': to})
+        uri = '%s/;changes?%s' % (context.get_link(resource), query)
+        return get_reference(uri)
 
 
 
@@ -106,18 +149,32 @@ class DBResource_Changes(STLView):
 
     query_schema = {
         'revision': String(mandatory=True),
+        'to': String,
         }
 
     def get_namespace(self, resource, context):
         revision = context.query['revision']
+        to = context.query['to']
+        root = context.root
+        database = context.database
 
-        # Get the revision data
-        namespace = context.database.get_diff(revision)
-        author_name = namespace['author_name']
-        namespace['author_name'] = context.root.get_user_title(author_name)
-
-        # Diff
-        namespace['changes'] = get_changes(namespace['diff'])
+        namespace = {}
+        if to is None:
+            # Get commit namespace
+            metadata = database.get_diff(revision)
+            author_name = metadata['author_name']
+            metadata['author_name'] = root.get_user_title(author_name)
+            namespace['metadata'] = metadata
+            namespace['stat'] = database.get_diff_between(revision,
+                    to='%s^' % revision, stat=True)
+            namespace['changes'] = get_changes(metadata['diff'])
+        else:
+            # Get diff namespace
+            namespace['metadata'] = None
+            namespace['stat'] = database.get_diff_between(revision,
+                    to, stat=True)
+            diff = database.get_diff_between(revision, to)
+            namespace['changes'] = get_changes(diff)
 
         # Ok
         return namespace
