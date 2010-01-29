@@ -232,10 +232,9 @@ class Tracker_AddIssue(STLForm):
 
 
     def get_value(self, resource, context, name, datatype):
-        value = context.get_query_value(name)
-        if value:
-            return datatype.decode(value)
-        return datatype.get_default()
+        if getattr(datatype, 'mandatory', False):
+            datatype = datatype(mandatory=False)
+        return context.get_query_value(name, type=datatype)
 
 
     def get_namespace(self, resource, context):
