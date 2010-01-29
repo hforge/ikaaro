@@ -20,10 +20,10 @@
 
 # Import from the Standard Library
 from datetime import datetime
-from tempfile import mkdtemp
-from subprocess import call
-from urllib import urlencode
 from re import compile
+from subprocess import call
+from tempfile import mkdtemp
+from urllib import urlencode
 
 # Import from docutils
 from docutils.core import Publisher, publish_from_doctree, publish_string
@@ -376,8 +376,6 @@ class WikiPage_ToPDF(view):
 # TODO Use auto-form
 class WikiPage_Edit(DBResource_Edit):
 
-    access = 'is_allowed_to_edit'
-    title = MSG(u'Edit')
     template = '/ui/wiki/edit.xml'
     schema = {
         'title': Unicode,

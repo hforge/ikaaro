@@ -249,6 +249,12 @@ class Tracker_AddIssue(stl_view):
     cc_list = users_choice_field(multiple=True)
 
 
+    def get_value(self, resource, context, name, datatype):
+        if getattr(datatype, 'mandatory', False):
+            datatype = datatype(mandatory=False)
+        return context.get_query_value(name, type=datatype)
+
+
     def get_namespace(self, resource, context):
         namespace = super(Tracker_AddIssue, self).get_namespace(resource, context)
         namespace['list_products'] = resource.get_list_products_namespace()
