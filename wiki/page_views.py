@@ -345,8 +345,6 @@ class WikiPage_ToPDF(BaseView):
 # TODO Use auto-form
 class WikiPage_Edit(DBResource_Edit):
 
-    access = 'is_allowed_to_edit'
-    title = MSG(u'Edit')
     template = '/ui/wiki/edit.xml'
     schema = {
         'title': Unicode,
