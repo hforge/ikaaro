@@ -20,10 +20,10 @@
 
 # Import from the Standard Library
 from datetime import datetime
-from tempfile import mkdtemp
-from subprocess import call
-from urllib import urlencode
 from re import compile
+from subprocess import call
+from tempfile import mkdtemp
+from urllib import urlencode
 
 # Import from docutils
 from docutils.core import Publisher, publish_from_doctree, publish_string
