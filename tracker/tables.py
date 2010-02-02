@@ -56,6 +56,10 @@ class SelectTable_View(OrderedTable_View):
         cls = OrderedTable_View
         columns = cls.get_table_columns(self, resource, context)
         columns.append(('issues', MSG(u'Issues')))
+        if resource.name == 'product':
+            # Add specific columns for the product table
+            columns.append(('modules', MSG(u'Modules')))
+            columns.append(('versions', MSG(u'Versions')))
         return columns
 
 
@@ -91,14 +95,27 @@ class SelectTable_View(OrderedTable_View):
         cls = OrderedTable_View
         value = cls.get_item_value(self, resource, context, item, column)
 
-        # NOTE The field 'product' is reserved to make a reference to the
+        # FIXME The field 'product' is reserved to make a reference to the
         # 'products' table.  Currently it is used by the 'versions' and
         # 'modules' tables.
+        # The fields 'modules' and 'versions' is reserved to make reference to
+        # the 'modules' and 'versions' tables. Currently it is used by the
+        # 'product' table
         if column == 'product':
             value = int(value)
             handler = resource.parent.get_resource('product').handler
             record = handler.get_record(value)
             return handler.get_record_value(record, 'title')
+        elif column in ('modules', 'versions'):
+            # Strip 's' modules -> module
+            associated_table = resource.get_resource('../%s' % column[:-1])
+            handler = associated_table.handler
+            # Search
+            results = handler.search(PhraseQuery('product', str(item.id)))
+            count = len(results)
+            if count == 0:
+                return 0, None
+            return count, '%s/;view' % context.get_link(associated_table)
 
         return value
 
@@ -122,10 +139,18 @@ class SelectTable_View(OrderedTable_View):
 
     def action_remove(self, resource, context, form):
         ids = form['ids']
+        parent = resource.parent
         # Search all issues
-        query_terms = resource.parent.get_issues_query_terms()
+        query_terms = parent.get_issues_query_terms()
         query = AndQuery(*query_terms)
         results = context.root.search(query)
+
+        # Associated modules and versions
+        check_associated = (resource.name == 'product')
+        module = parent.get_resource('module')
+        version = parent.get_resource('version')
+        module_handler = module.handler
+        version_handler = version.handler
 
         # Remove values only if no issues have them
         handler = resource.handler
@@ -134,6 +159,11 @@ class SelectTable_View(OrderedTable_View):
         for id in ids:
             query = PhraseQuery(filter, id)
             count = results.search(query).get_n_documents()
+            if check_associated:
+                product_query = PhraseQuery('product', str(id))
+                module_count = len(module_handler.search(product_query))
+                version_count = len(version_handler.search(product_query))
+                count = count + module_count + version_count
             if count == 0:
                 handler.del_record(id)
                 removed.append(str(id))
@@ -208,7 +238,7 @@ class Tracker_TableResource(OrderedTable):
 class ModulesHandler(Tracker_TableHandler):
 
     record_schema = {
-        'product': String(mandatory=True),
+        'product': String(mandatory=True, is_indexed=True),
         'title': Unicode(multiple=True, mandatory=True)}
 
 
@@ -234,7 +264,7 @@ class ModulesResource(Tracker_TableResource):
 class VersionsHandler(Tracker_TableHandler):
 
     record_schema = {
-        'product': String(mandatory=True),
+        'product': String(mandatory=True, is_indexed=True),
         'title': Unicode(multiple=True, mandatory=True),
         'released': Boolean}
 
