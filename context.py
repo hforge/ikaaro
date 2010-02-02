@@ -313,10 +313,9 @@ class CMSContext(WebContext):
 
         # (4) Remove
         for handler in resource.get_handlers():
-            # Skip empty folders
-            if issubclass(resource, Folder) and not vfs.exists(handler.uri):
-                continue
-            database.del_handler(handler.uri)
+            # Skip empty folders and phantoms
+            if vfs.exists(handler.uri):
+                database.del_handler(handler.uri)
         database.del_handler(resource.metadata.uri)
 
 
