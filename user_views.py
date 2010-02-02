@@ -369,20 +369,21 @@ class User_Tasks(stl_view):
     template = 'user/tasks.xml'
 
 
-    def get_namespace(self, resource, context):
-        user = context.user
+    @thingy_lazy_property
+    def documents(self):
+        user = self.context.user
 
         # Build the query
+        resource = self.resource
         site_root = resource.get_site_root()
         q1 = PhraseQuery('workflow_state', 'pending')
         q2 = OrQuery(StartQuery('abspath', str(site_root.get_abspath())),
-                     StartQuery('abspath',
-                                     str(resource.get_canonical_path())))
+                     StartQuery('abspath', resource.get_abspath()))
         query = AndQuery(q1, q2)
 
         # Build the list of documents
         documents = []
-        for document in context.search(query).get_documents():
+        for document in self.context.search(query).get_documents():
             # Check security
             ac = document.access_control
             if not ac.is_allowed_to_view(user, document):
@@ -392,7 +393,7 @@ class User_Tasks(stl_view):
                 {'url': '%s/' % resource.get_pathto(document),
                  'title': document.get_title()})
 
-        return {'documents': documents}
+        return documents
 
 
 
