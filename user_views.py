@@ -289,51 +289,55 @@ class User_EditPassword(stl_view):
     description = MSG(u'Change your password.')
     icon = 'lock.png'
     template = 'user/edit_password.xml'
-    schema = {
-        'newpass': String(mandatory=True),
-        'newpass2': String(mandatory=True),
-        'password': String}
 
 
-    def get_namespace(self, resource, context):
-        user = context.user
-        return {
-            'must_confirm': (resource.path == user.path)}
+    newpass = password_field(required=True, title=MSG(u'New Password'))
+    newpass2 = password_field(required=True, title=MSG(u'Confirm'))
+    password = password_field(title=MSG(
+        u'To confirm these changes, you must type your current password '))
 
 
-    def action(self, resource, context, form):
-        newpass = form['newpass'].strip()
-        newpass2 = form['newpass2']
+    @thingy_lazy_property
+    def is_same_user(self):
+        return self.resource == self.context.user
 
-        # Check password to confirm changes
-        is_same_user = (resource.get_name() == context.user.get_name())
-        if is_same_user:
-            password = form['password']
-            if not resource.authenticate(password):
-                context.message = ERROR(
-                    u"You mistyped your actual password, your account is"
-                    u" not changed.")
-                return
 
-        # Check the new password matches
-        if newpass != newpass2:
-            context.message = ERROR(
-                    u"Passwords mismatch, please try again.")
+    def cook(self, method):
+        super(User_EditPassword, self).cook(method)
+        if method == 'get':
             return
 
+        # Check the new password matches
+        if self.newpass.value != self.newpass2.value:
+            self.newpass2.error = MSG(u'Password mismatch.')
+            raise FormError
+
+        # Check password to confirm changes
+        if self.is_same_user:
+            if not self.resource.authenticate(self.password.value):
+                self.password.error = MSG(
+                    u"You mistyped your actual password, your account is"
+                    u" not changed.")
+                raise FormError
+
+
+    def action(self):
         # Clear confirmation key
+        resource = self.resource
         if resource.has_property('user_must_confirm'):
             resource.del_property('user_must_confirm')
 
         # Set password
-        resource.set_password(newpass)
+        resource.set_password(self.newpass.value)
 
         # Update the cookie if we updated our own password
-        if is_same_user:
-            resource.set_auth_cookie(context, newpass)
+        context = self.context
+        if self.is_same_user:
+            resource.set_auth_cookie(context, self.newpass.value)
 
         # Ok
         context.message = INFO(u'Password changed.')
+        context.redirect()
 
 
 
