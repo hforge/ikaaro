@@ -19,6 +19,7 @@
 
 # Import from itools
 from itools.core import freeze, thingy_lazy_property
+from itools.core import OrderedDict
 from itools.datatypes import String
 from itools.gettext import MSG
 from itools.i18n import get_language_name
@@ -239,24 +240,33 @@ class User_EditAccount(AutoForm):
 
 
 
-class User_EditPreferences(stl_view):
+class user_language_field(choice_field):
+
+    title = MSG(u'Preferred language')
+
+    @thingy_lazy_property
+    def values(self):
+        values = OrderedDict()
+        values[''] = {'title': MSG(u'-- not defined --')}
+        for code in self.view.context.software_languages:
+            values[code] = {'title': get_language_name(code)}
+        return values
+
+
+    @thingy_lazy_property
+    def value(self):
+        return self.view.resource.get_value('user_language')
+
+
+
+class User_EditPreferences(AutoForm):
 
     access = 'is_allowed_to_edit'
     view_title = MSG(u'Edit Preferences')
     description = MSG(u'Set your preferred language.')
     icon = 'preferences.png'
-    template = 'user/edit_preferences.xml'
 
-    user_language = choice_field()
-
-
-    def languages(self):
-        user_language = self.resource.get_value('user_language')
-        return [
-            {'code': code,
-             'name': get_language_name(code),
-             'is_selected': code == user_language}
-            for code in self.context.software_languages ]
+    user_language = user_language_field()
 
 
     def action(self):
