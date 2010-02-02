@@ -137,10 +137,9 @@ class Folder(DBResource):
         # Remove
         folder = self.handler
         for handler in resource.get_handlers():
-            # Skip empty folders
-            if isinstance(resource, Folder) and not vfs.exists(handler.uri):
-                continue
-            folder.del_handler(handler.uri)
+            # Skip empty folders and phantoms
+            if vfs.exists(handler.uri):
+                folder.del_handler(handler.uri)
         folder.del_handler('%s.metadata' % name)
 
 
