@@ -25,9 +25,9 @@ from itools.csv import CSVFile
 from itools.gettext import POFile, MSG
 from itools.handlers import TextFile
 from itools.html import HTMLFile
+from itools.http import get_context
 from itools.python import Python as PythonFile
 from itools.uri import get_reference, Path, Reference
-from itools.web import get_context
 from itools.xmlfile import XMLFile
 
 # Import from ikaaro
