@@ -77,6 +77,7 @@ def update_catalog(parser, options, target):
         if not options.quiet:
             print doc_n, obj.get_abspath()
         doc_n += 1
+        context.resource = obj
         catalog.index_document(obj)
         # Free Memory
         del obj
