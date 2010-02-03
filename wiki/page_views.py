@@ -169,6 +169,22 @@ def odt_reference_resolver(resource, reference, context, known_links=[]):
 
 
 
+def startswith_section(doctree):
+    """Return if the doctree starts with a section or directly a title, used
+    to fix heading levels.
+    """
+    if not doctree.children:
+        return False
+    for node in doctree.traverse():
+        # Don't use "type()" with docutils 0.5
+        if isinstance(node, nodes.section):
+            return True
+        elif isinstance(node, nodes.title):
+            return False
+    return False
+
+
+
 class PageVisitor(nodes.SparseNodeVisitor):
 
     def __init__(self, doctree, container):
@@ -553,6 +569,9 @@ class WikiPage_ToODT(AutoForm):
                     context.message = ERROR(unicode(str(e), 'utf_8'))
                     return
                 resolve_images(doctree, resource, context)
+                if startswith_section(doctree):
+                    # convert_section will increment it
+                    level -= 1
                 convert(document, doctree, heading_level=level,
                         skip_toc=True)
             # Fill TOC
@@ -561,7 +580,10 @@ class WikiPage_ToODT(AutoForm):
             # Just convert the page as is to ODT
             resolve_references(doctree, resource, context)
             resolve_images(doctree, resource, context)
-            document = rst2odt(doctree, template=template)
+            # convert_section will increment it
+            heading_level = 0 if startswith_section(doctree) else 1
+            document = rst2odt(doctree, template=template,
+                    heading_level=heading_level)
 
         context.set_content_type('application/vnd.oasis.opendocument.text')
         context.set_content_disposition('attachment',
