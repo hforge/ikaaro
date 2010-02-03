@@ -5,14 +5,12 @@
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
 <form action="" method="post" name="browse_list" id="form-table"
-  stl:omit-tag="not actions_ns">
+  stl:omit-tag="not actions">
   ${content}
   <!-- Buttons -->
   <p>
-    <stl:block stl:repeat="action actions_ns">
-      <button type="submit" name="action" value="${action/value}"
-        class="${action/class}" onclick="${action/onclick}"
-        >${action/title}</button>
+    <stl:block stl:repeat="action actions">
+      ${action}
     </stl:block>
   </p>
 </form>

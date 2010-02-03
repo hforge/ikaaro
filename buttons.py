@@ -15,15 +15,16 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import thingy
 from itools.gettext import MSG
+from itools.web import make_stl_template
 
 # Import from ikaaro
 from datatypes import CopyCookie
 import messages
+from utils import CMSTemplate
 
 
-class Button(thingy):
+class Button(CMSTemplate):
 
     access = False
     confirm = None
@@ -31,9 +32,16 @@ class Button(thingy):
     name = None
     title = None
 
-    def __init__(self, **kw):
-        for key in kw:
-            setattr(self, key, kw[key])
+    template = make_stl_template("""
+        <button type="submit" name="action" value="${name}" class="${css}"
+          onclick="${onclick}">${title}</button>""")
+
+
+    def onclick(self):
+        if self.confirm:
+            confirm = self.confirm.gettext().encode('utf-8')
+            return 'return confirm("%s");' % confirm
+        return None
 
 
     def show(self, resource, context, items):
