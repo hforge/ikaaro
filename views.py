@@ -240,26 +240,7 @@ class Container_Form(stl_view):
     template = 'generic/form.xml'
 
     subviews = ['content']
-
-    @thingy_lazy_property
-    def actions_ns(self):
-        items = self.view.batch.items
-
-        actions = []
-        for button in self.actions:
-            if button.show(self.resource, self.context, items) is False:
-                continue
-            if button.confirm:
-                confirm = button.confirm.gettext().encode('utf_8')
-                onclick = 'return confirm("%s");' % confirm
-            else:
-                onclick = None
-            actions.append(
-                {'value': button.name,
-                 'title': button.title,
-                 'class': button.css,
-                 'onclick': onclick})
-        return actions
+    actions = []
 
 
 
