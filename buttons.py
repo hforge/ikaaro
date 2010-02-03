@@ -16,7 +16,7 @@
 
 # Import from itools
 from itools.gettext import MSG
-from itools.web import make_stl_template
+from itools.stl import make_stl_template
 
 # Import from ikaaro
 from datatypes import CopyCookie

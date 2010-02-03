@@ -41,23 +41,11 @@ class CMSTemplate(STLTemplate):
     template = None
 
     def get_template(self):
-        from boot import ui
+        if type(self.template) is str:
+            from boot import ui
+            return ui.get_template(self.template)
 
-        # Get the template
-        template = self.template
-        if template is None:
-            msg = "%s is missing the 'template' variable"
-            raise NotImplementedError, msg % repr(self)
-
-        # Case 1: a ready made list of events
-        if type(template) is list:
-            return template
-
-        # Case 2: a path to a template in the filesystem (ui)
-        if type(template) is str:
-            return ui.get_template(template)
-
-        raise ValueError, 'bad value for the template attribute'
+        return super(CMSTemplate, self).get_template()
 
 
 

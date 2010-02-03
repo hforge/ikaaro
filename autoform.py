@@ -23,7 +23,8 @@ from itools.core import thingy_lazy_property
 from itools.datatypes import Date, Enumerate, Boolean
 from itools.gettext import MSG
 from itools.http import get_context
-from itools.web import stl_view, make_stl_template
+from itools.stl import make_stl_template
+from itools.web import stl_view
 from itools.web import boolean_field, choice_field, hidden_field
 from itools.web import readonly_field, text_field
 

@@ -24,9 +24,9 @@ from itools.core import thingy_property, thingy_lazy_property
 from itools.core import OrderedDict
 from itools.datatypes import Boolean, String
 from itools.gettext import MSG
+from itools.stl import make_stl_template
 from itools.uri import encode_query, get_reference
-from itools.web import ERROR, stl_view, make_stl_template
-from itools.web import hidden_field, multiple_choice_field
+from itools.web import ERROR, stl_view, hidden_field, multiple_choice_field
 
 # Import from ikaaro
 from buttons import Button

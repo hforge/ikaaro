@@ -30,12 +30,11 @@ from itools.datatypes import Boolean, Integer, String
 from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.i18n import format_datetime
-from itools.stl import set_prefix
+from itools.stl import make_stl_template, set_prefix
 from itools.uri import get_reference, Path
 from itools.web import view, stl_view, ERROR
 from itools.web import boolean_field, input_field, integer_field
 from itools.web import multiple_choice_field
-from itools.web import make_stl_template
 from itools.xapian import AndQuery, OrQuery, PhraseQuery
 
 # Import from ikaaro
