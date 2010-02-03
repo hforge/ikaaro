@@ -23,7 +23,8 @@ from itools.core import thingy_property, thingy_lazy_property
 from itools.core import OrderedDict
 from itools.datatypes import Boolean, String
 from itools.gettext import MSG
-from itools.web import stl_view, hidden_field, make_stl_template
+from itools.stl import make_stl_template
+from itools.web import stl_view, hidden_field
 
 # Import from ikaaro
 from views import Container_Search, Container_Sort, Container_Batch

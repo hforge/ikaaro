@@ -23,8 +23,9 @@ from itools.core import thingy_lazy_property
 from itools.csv import UniqueError, Property, is_multilingual
 from itools.datatypes import Integer, Enumerate, Tokens
 from itools.gettext import MSG
+from itools.stl import make_stl_template
 from itools.web import INFO, ERROR, FormError
-from itools.web import view, stl_view, make_stl_template
+from itools.web import view, stl_view
 from itools.web import readonly_field, multiple_choice_field
 from itools.xapian import PhraseQuery
 
