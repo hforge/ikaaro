@@ -29,11 +29,10 @@ from itools.web import STLView
 from views import BrowseForm
 
 
-class DBResource_LastChanges(BrowseForm):
+class DBResource_CommitLog(BrowseForm):
 
-
-    access = 'is_allowed_to_view'
-    title = MSG(u"Last Changes")
+    access = 'is_allowed_to_edit'
+    title = MSG(u"Commit Log")
 
     query_schema = merge_dicts(BrowseForm.query_schema,
                                sort_by=String(default='date'),
@@ -116,3 +115,7 @@ class DBResource_Changes(STLView):
 
         # Ok
         return namespace
+
+
+# FIXME For backwards compatibility with 0.60.0 to 0.60.7
+DBResource_LastChanges = DBResource_CommitLog

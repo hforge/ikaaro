@@ -37,7 +37,7 @@ from ikaaro.folder_views import Folder_Orphans
 from ikaaro.forms import PathSelectorWidget
 from ikaaro.forms import TextWidget, SelectWidget, ReadOnlyWidget
 from ikaaro.registry import register_resource_class
-from ikaaro.revisions_views import DBResource_LastChanges
+from ikaaro.revisions_views import DBResource_CommitLog
 from ikaaro.table import OrderedTableFile, OrderedTable
 from ikaaro.table_views import OrderedTable_View
 from ikaaro.workflow import get_workflow_preview
@@ -576,7 +576,7 @@ class MenuFolder(Folder):
     browse_content = Folder_BrowseContent(access='is_admin')
     rename = Folder_Rename(access='is_admin')
     preview_content = Folder_PreviewContent(access='is_admin')
-    last_changes = DBResource_LastChanges(access='is_admin')
+    last_changes = DBResource_CommitLog(access='is_admin')
     orphans = Folder_Orphans(access='is_admin')
     thumb = Folder_Thumbnail(access='is_admin')
 
