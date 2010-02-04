@@ -31,10 +31,10 @@ from views import Container_Search, Container_Sort, Container_Batch
 from views import Container_Table
 
 
-class DBResource_LastChanges(stl_view):
+class DBResource_CommitLog(stl_view):
 
-    access = 'is_allowed_to_view'
-    view_title = MSG(u"Last Changes")
+    access = 'is_allowed_to_edit'
+    view_title = MSG(u"Commit Log")
 
     template = make_stl_template("${batch}${table}")
 
@@ -150,3 +150,7 @@ class DBResource_Changes(stl_view):
             # Add the line
             changes.append({'css': css, 'value': line, 'is_header': is_header})
         return changes
+
+
+# FIXME For backwards compatibility with 0.60.0 to 0.60.7
+DBResource_LastChanges = DBResource_CommitLog

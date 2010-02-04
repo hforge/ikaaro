@@ -35,7 +35,7 @@ from ikaaro.folder import Folder
 from ikaaro.folder_views import Folder_Table, Folder_Rename, Folder_Gallery
 from ikaaro.folder_views import Folder_NewResource, Folder_Orphans
 from ikaaro.folder_views import Folder_Thumbnail, GoToSpecificDocument
-from ikaaro.revisions_views import DBResource_LastChanges
+from ikaaro.revisions_views import DBResource_CommitLog
 from ikaaro.table import OrderedTableFile, OrderedTable
 from ikaaro.table_views import OrderedTable_View
 
@@ -568,7 +568,7 @@ class MenuFolder(Folder):
     table = Folder_Table(access='is_admin')
     gallery = Folder_Gallery(access='is_admin')
     rename = Folder_Rename(access='is_admin')
-    last_changes = DBResource_LastChanges(access='is_admin')
+    last_changes = DBResource_CommitLog(access='is_admin')
     orphans = Folder_Orphans(access='is_admin')
     thumb = Folder_Thumbnail(access='is_admin')
 

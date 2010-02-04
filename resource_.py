@@ -39,7 +39,7 @@ from registry import register_field, register_resource_class
 from resource_views import DBResource_Edit, DBResource_Backlinks
 from resource_views import DBResource_AddImage, DBResource_AddLink
 from resource_views import DBResource_AddMedia, LoginView, LogoutView
-from revisions_views import DBResource_LastChanges, DBResource_Changes
+from revisions_views import DBResource_CommitLog, DBResource_Changes
 from views_new import NewInstance
 
 
@@ -622,7 +622,7 @@ class DBResource(CatalogAware, IResource):
     add_image = DBResource_AddImage
     add_link = DBResource_AddLink
     add_media = DBResource_AddMedia
-    last_changes = DBResource_LastChanges
+    last_changes = DBResource_CommitLog
     changes = DBResource_Changes
     backlinks = DBResource_Backlinks
 
