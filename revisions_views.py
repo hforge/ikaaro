@@ -250,7 +250,3 @@ class DBResource_Changes(STLView):
         # Ok
         return namespace
 
-
-
-# FIXME For backwards compatibility with 0.60.0 to 0.60.7
-DBResource_LastChanges = DBResource_CommitLog

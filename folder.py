@@ -46,7 +46,7 @@ class Folder(DBResource):
     class_icon16 = 'icons/16x16/folder.png'
     class_icon48 = 'icons/48x48/folder.png'
     class_views = ['view', 'browse_content', 'preview_content', 'edit',
-                   'backlinks', 'last_changes']
+                   'backlinks', 'commit_log']
     class_handler = FolderHandler
 
 

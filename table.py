@@ -35,7 +35,7 @@ from table_views import OrderedTable_View, Table_ExportCSV
 
 class Table(File):
 
-    class_views = ['view', 'add_record', 'edit', 'last_changes']
+    class_views = ['view', 'add_record', 'edit', 'commit_log']
     class_handler = TableFile
     record_class = Record
     form = []

@@ -53,7 +53,7 @@ class WikiPage(Text):
     class_icon16 = 'wiki/WikiPage16.png'
     class_icon48 = 'wiki/WikiPage48.png'
     class_views = ['view', 'to_pdf', 'edit', 'externaledit', 'edit_state',
-                   'backlinks', 'last_changes', 'help']
+                   'backlinks', 'commit_log', 'help']
 
     overrides = {
         # Security

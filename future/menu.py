@@ -576,7 +576,7 @@ class MenuFolder(Folder):
     browse_content = Folder_BrowseContent(access='is_admin')
     rename = Folder_Rename(access='is_admin')
     preview_content = Folder_PreviewContent(access='is_admin')
-    last_changes = DBResource_CommitLog(access='is_admin')
+    commit_log = DBResource_CommitLog(access='is_admin')
     orphans = Folder_Orphans(access='is_admin')
     thumb = Folder_Thumbnail(access='is_admin')
 
