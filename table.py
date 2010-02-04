@@ -38,7 +38,7 @@ from table_views import TableResource_ExportCSV
 class TableResource(File):
 
     class_views = ['view', 'add_record', 'edit', 'commit_log']
-    class_handler = TableFile
+    class_handler = Table
     record_class = Record
 
 

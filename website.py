@@ -50,7 +50,7 @@ class WebSite(VirtualRoot, Workspace):
     class_icon48 = 'icons/48x48/website.png'
     class_skin = 'ui/aruni'
     class_views = ['view', 'list', 'table', 'gallery', 'month', 'week',
-                   'edit', 'backlinks', 'last_changes', 'control_panel']
+                   'edit', 'backlinks', 'control_panel', 'commit_log']
     class_control_panel = [
         'edit_security_policy', 'edit_virtual_hosts', 'edit_seo',
         'edit_languages', 'edit_contact_options', 'broken_links', 'orphans']
