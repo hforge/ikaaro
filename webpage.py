@@ -223,7 +223,7 @@ class WebPage(ResourceWithHTML, Multilingual, Text):
     class_icon16 = 'icons/16x16/html.png'
     class_icon48 = 'icons/48x48/html.png'
     class_views = ['view', 'edit', 'externaledit', 'edit_state', 'backlinks',
-                   'last_changes']
+                   'commit_log']
     class_handler = XHTMLFile
 
 

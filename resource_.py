@@ -622,7 +622,7 @@ class DBResource(CatalogAware, IResource):
     add_image = DBResource_AddImage
     add_link = DBResource_AddLink
     add_media = DBResource_AddMedia
-    last_changes = DBResource_CommitLog
+    commit_log = DBResource_CommitLog
     changes = DBResource_Changes
     backlinks = DBResource_Backlinks
 

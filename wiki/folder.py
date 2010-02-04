@@ -39,7 +39,7 @@ class WikiFolder(Folder):
     class_icon16 = 'wiki/WikiFolder16.png'
     class_icon48 = 'wiki/WikiFolder48.png'
     class_views = ['view', 'table', 'gallery', 'edit', 'new_resource',
-                   'orphans', 'last_changes']
+                   'orphans', 'commit_log']
 
     __fixed_handlers__ = ['FrontPage']
 

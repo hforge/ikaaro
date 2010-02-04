@@ -150,7 +150,3 @@ class DBResource_Changes(stl_view):
             # Add the line
             changes.append({'css': css, 'value': line, 'is_header': is_header})
         return changes
-
-
-# FIXME For backwards compatibility with 0.60.0 to 0.60.7
-DBResource_LastChanges = DBResource_CommitLog

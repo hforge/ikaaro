@@ -289,7 +289,7 @@ class ResourcesOrderedTable(OrderedTable):
     class_id = 'resources-ordered-table'
     class_title = MSG(u'Resources Ordered Table')
     class_handler = ResourcesOrderedTableFile
-    class_views = ['view', 'last_changes']
+    class_views = ['view', 'commit_log']
 
     # All types by default
     orderable_classes = ()
