@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 0.3.0\n"
-"POT-Creation-Date: 2009-10-08 15:10+CET\n"
+"POT-Creation-Date: 2010-02-04 15:02+CET\n"
 "PO-Revision-Date: 2001-07-08 17:07+CET\n"
 "Last-Translator: jdavid\n"
 "Language-Team: ??\n"
@@ -9,7 +9,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8-bit\n"
 
-#: ../tracker/tracker_views.py:885
+#: ../tracker/tracker_views.py:891
 msgid ""
 "\n"
 "\n"
@@ -18,19 +18,25 @@ msgid ""
 "%s"
 msgstr ""
 
+#: ../control_panel.py:359
+msgid ""
+"\n"
+"      Optimize your website for better ranking in search engine results."
+msgstr ""
+
 #: ../future/dressable.py:58
 msgid "\"%s\" is incorrect"
 msgstr ""
 
-#: ../tracker/tracker_views.py:772
+#: ../tracker/tracker_views.py:778
 msgid "#%s"
 msgstr ""
 
-#: ../tracker/issue.py:145
+#: ../tracker/issue.py:155
 msgid "#%s %s"
 msgstr ""
 
-#: ../tracker/tracker_views.py:913
+#: ../tracker/tracker_views.py:919
 msgid "#%s - %s - %s"
 msgstr ""
 
@@ -77,7 +83,7 @@ msgctxt "table cell"
 msgid "${body}"
 msgstr ""
 
-#: ../calendar/ui/daily_view.xml.en:25
+#: ../calendar/ui/daily_view.xml.en:26
 msgctxt "link"
 msgid "${calendar/name}"
 msgstr ""
@@ -142,7 +148,7 @@ msgctxt "textarea"
 msgid "${comment/value}"
 msgstr ""
 
-#: ../tracker/ui/edit_resource.xml.en:52
+#: ../tracker/ui/edit_resource.xml.en:50
 msgctxt "textarea"
 msgid "${comment}"
 msgstr ""
@@ -150,11 +156,6 @@ msgstr ""
 #: ../ui/user/confirm_registration.xml.en:8
 msgctxt "paragraph"
 msgid "${confirmation_msg}"
-msgstr ""
-
-#: ../ui/website/contact_options.xml.en:16
-msgctxt "option"
-msgid "${contact/title} (${contact/email})"
 msgstr ""
 
 #: ../ui/binary/Archive_view.xml.en:10
@@ -229,6 +230,7 @@ msgid "${item/content}"
 msgstr ""
 
 #: ../ui/html/addimage.xml.en:75 ../ui/html/addlink.xml.en:75
+#: ../ui/html/addmedia.xml.en:75
 msgctxt "title attribute"
 msgid "${item/item_type}"
 msgstr ""
@@ -245,6 +247,7 @@ msgstr ""
 
 #: ../ui/html/addimage.xml.en:66 ../ui/html/addimage.xml.en:79
 #: ../ui/html/addlink.xml.en:66 ../ui/html/addlink.xml.en:79
+#: ../ui/html/addmedia.xml.en:66 ../ui/html/addmedia.xml.en:79
 msgctxt "link"
 msgid "${item/short_title}"
 msgstr ""
@@ -268,6 +271,7 @@ msgstr ""
 
 #: ../ui/html/addimage.xml.en:64 ../ui/html/addimage.xml.en:79
 #: ../ui/html/addlink.xml.en:64 ../ui/html/addlink.xml.en:79
+#: ../ui/html/addmedia.xml.en:64 ../ui/html/addmedia.xml.en:79
 msgctxt "title attribute"
 msgid "${item/title}"
 msgstr ""
@@ -355,7 +359,7 @@ msgid "${message}"
 msgstr ""
 
 #: ../ui/html/addimage.xml.en:39 ../ui/html/addlink.xml.en:39
-#: ../ui/aruni/template.xhtml.en:50
+#: ../ui/aruni/template.xhtml.en:50 ../ui/html/addmedia.xml.en:39
 msgctxt "div"
 msgid "${message}"
 msgstr ""
@@ -380,7 +384,7 @@ msgctxt "li"
 msgid "${name}"
 msgstr ""
 
-#: ../tracker/ui/edit_resource.xml.en:41
+#: ../tracker/ui/edit_resource.xml.en:39
 msgctxt "option"
 msgid "${option/start} - ${option/end}"
 msgstr ""
@@ -599,7 +603,7 @@ msgctxt "table cell"
 msgid "${transition/user}"
 msgstr ""
 
-#: ../calendar/ui/daily_view.xml.en:19 ../calendar/ui/daily_view.xml.en:44
+#: ../calendar/ui/daily_view.xml.en:20 ../calendar/ui/daily_view.xml.en:45
 msgctxt "span"
 msgid "${tt}"
 msgstr ""
@@ -638,15 +642,16 @@ msgid "${widget/widget} <g id='5'>${widget/suffix}</g>"
 msgstr ""
 
 #: ../ui/html/addimage.xml.en:49 ../ui/html/addlink.xml.en:49
+#: ../ui/html/addmedia.xml.en:49
 msgctxt "title attribute"
 msgid "${x/title}"
 msgstr ""
 
-#: ../file.py:182
+#: ../file.py:183
 msgid "%.01f KB"
 msgstr ""
 
-#: ../file.py:180
+#: ../file.py:181
 msgid "%.01f MB"
 msgstr ""
 
@@ -694,7 +699,7 @@ msgctxt "label"
 msgid "(<g id='8'>more ...</g>)"
 msgstr ""
 
-#: ../tracker/ui/edit_resource.xml.en:28 ../tracker/ui/edit_resource.xml.en:45
+#: ../tracker/ui/edit_resource.xml.en:27 ../tracker/ui/edit_resource.xml.en:43
 msgctxt "table cell"
 msgid "(HH:MM)"
 msgstr ""
@@ -709,7 +714,7 @@ msgctxt "paragraph"
 msgid "(To add an event lasting all day long, leave time fields empty.)"
 msgstr ""
 
-#: ../calendar/ui/daily_view.xml.en:28
+#: ../calendar/ui/daily_view.xml.en:29
 msgctxt "link"
 msgid "+"
 msgstr ""
@@ -718,7 +723,7 @@ msgstr ""
 msgid ", "
 msgstr ""
 
-#: ../tracker/issue.py:273
+#: ../tracker/issue.py:283
 msgid "-"
 msgstr ""
 
@@ -727,7 +732,7 @@ msgctxt "option"
 msgid "-- not defined --"
 msgstr ""
 
-#: ../tracker/tracker_views.py:908
+#: ../tracker/tracker_views.py:914
 msgid ""
 "--- Comment from: {user} ---\n"
 "\n"
@@ -795,6 +800,7 @@ msgid ""
 msgstr ""
 
 #: ../ui/html/addimage.xml.en:49 ../ui/html/addlink.xml.en:49
+#: ../ui/html/addmedia.xml.en:49
 msgctxt "link"
 msgid "<g id='10'>${x/short_title}</g> /"
 msgstr ""
@@ -866,6 +872,7 @@ msgid "<g id='3'>${item/title}</g>  <x id='4'/> ${item/description}"
 msgstr ""
 
 #: ../ui/html/addimage.xml.en:28 ../ui/html/addlink.xml.en:28
+#: ../ui/html/addmedia.xml.en:28
 msgctxt "link"
 msgid ""
 "<g id='4'>Browse</g>  <g id='5'>External Link</g>  <g id='6'>Insert</g>  <g "
@@ -902,7 +909,7 @@ msgctxt "link"
 msgid "<g id='6'>«</g> ${current_year} <g id='7'>»</g>"
 msgstr ""
 
-#: ../calendar/ui/daily_view.xml.en:34
+#: ../calendar/ui/daily_view.xml.en:35
 msgctxt "link"
 msgid ""
 "<g id='7'>${col/SUMMARY}</g>  <g id='8'>${col/DTSTART}</g>  <g id='9'>${col/"
@@ -949,11 +956,11 @@ msgstr ""
 msgid "A thread to discuss"
 msgstr ""
 
-#: ../tracker/tracker_views.py:904 ../tracker/issue.py:233
+#: ../tracker/tracker_views.py:910 ../tracker/issue.py:243
 msgid "ANONYMOUS"
 msgstr ""
 
-#: ../website_views.py:325
+#: ../website_views.py:326
 msgid "About"
 msgstr ""
 
@@ -983,7 +990,7 @@ msgstr ""
 msgid "Active"
 msgstr ""
 
-#: ../views_new.py:66 ../text_views.py:264 ../table_views.py:233
+#: ../views_new.py:66 ../text_views.py:264 ../table_views.py:234
 #: ../tracker/tracker_views.py:225
 msgid "Add"
 msgstr ""
@@ -1018,7 +1025,7 @@ msgctxt "legend"
 msgid "Add New Member"
 msgstr ""
 
-#: ../table_views.py:231
+#: ../table_views.py:232
 msgid "Add Record"
 msgstr ""
 
@@ -1062,11 +1069,11 @@ msgstr ""
 msgid "Add new %s"
 msgstr ""
 
-#: ../views_new.py:75 ../folder_views.py:106
+#: ../views_new.py:75 ../folder_views.py:108
 msgid "Add resource"
 msgstr ""
 
-#: ../future/order.py:45
+#: ../future/order.py:47
 msgid "Add to ordered list"
 msgstr ""
 
@@ -1074,7 +1081,7 @@ msgstr ""
 msgid "Add {class_title}"
 msgstr ""
 
-#: ../root.py:96 ../access.py:382
+#: ../root.py:97 ../access.py:382
 msgid "Admin"
 msgstr ""
 
@@ -1123,7 +1130,7 @@ msgstr ""
 msgid "Are you sure you want to delete this resource?"
 msgstr ""
 
-#: ../tracker/ui/edit_resource.xml.en:56
+#: ../tracker/ui/edit_resource.xml.en:54
 msgctxt "button"
 msgid "Assign"
 msgstr ""
@@ -1144,7 +1151,7 @@ msgctxt "legend"
 msgid "Assign a resource"
 msgstr ""
 
-#: ../tracker/tracker_views.py:60 ../tracker/issue.py:345
+#: ../tracker/tracker_views.py:60 ../tracker/issue.py:355
 msgid "Assigned To"
 msgstr ""
 
@@ -1172,7 +1179,7 @@ msgstr ""
 msgid "August"
 msgstr ""
 
-#: ../revisions_views.py:45
+#: ../revisions_views.py:44
 msgid "Author"
 msgstr ""
 
@@ -1186,7 +1193,7 @@ msgctxt "title attribute"
 msgid "Back"
 msgstr ""
 
-#: ../resource_views.py:137
+#: ../resource_views.py:140
 msgid "Backlinks"
 msgstr ""
 
@@ -1199,7 +1206,11 @@ msgctxt "paragraph"
 msgid "Be sure your have the external editor plug-in installed."
 msgstr ""
 
-#: ../forms.py:604
+#: ../control_panel.py:372
+msgid "Bing site verification key"
+msgstr ""
+
+#: ../forms.py:569
 msgid "Body"
 msgstr ""
 
@@ -1208,25 +1219,31 @@ msgctxt "title attribute"
 msgid "Bold"
 msgstr ""
 
-#: ../future/order.py:123 ../future/menu.py:167
+#: ../future/order.py:125 ../future/menu.py:167
 msgid "Broken"
 msgstr ""
 
-#: ../control_panel.py:202
+#: ../control_panel.py:219
 msgid "Broken Links"
 msgstr ""
 
-#: ../folder_views.py:222
+#: ../folder_views.py:224
 msgid "Browse Content"
 msgstr ""
 
 #: ../ui/html/addimage.xml.en:56 ../ui/html/addlink.xml.en:56
+#: ../ui/html/addmedia.xml.en:56
 msgctxt "table cell"
 msgid "Browse Content"
 msgstr ""
 
 #: ../access.py:57
 msgid "Browse Members"
+msgstr ""
+
+#: ../ui/html/addmedia.xml.en:43
+msgctxt "heading"
+msgid "Browse and insert a Media from the workspace"
 msgstr ""
 
 #: ../ui/html/addimage.xml.en:43
@@ -1248,15 +1265,15 @@ msgctxt "table cell"
 msgid "By"
 msgstr ""
 
-#: ../file.py:410
+#: ../file.py:411
 msgid "Bzip2"
 msgstr ""
 
-#: ../file.py:411
+#: ../file.py:412
 msgid "Bzip2 Compressed"
 msgstr ""
 
-#: ../tracker/issue.py:362
+#: ../tracker/issue.py:372
 msgid "CC"
 msgstr ""
 
@@ -1270,7 +1287,7 @@ msgctxt "label"
 msgid "CC:"
 msgstr ""
 
-#: ../text.py:76
+#: ../text.py:84
 msgid "CSS"
 msgstr ""
 
@@ -1296,7 +1313,6 @@ msgid "Catalan"
 msgstr ""
 
 #: ../ui/WorkflowAware_state.xml.en:27 ../ui/PO_edit.xml.en:37
-#: ../ui/website/contact_options.xml.en:21
 msgctxt "button"
 msgid "Change"
 msgstr ""
@@ -1306,7 +1322,7 @@ msgctxt "legend"
 msgid "Change Role of ${name}"
 msgstr ""
 
-#: ../tracker/tracker_views.py:177 ../tracker/tracker_views.py:794
+#: ../tracker/tracker_views.py:177 ../tracker/tracker_views.py:800
 msgid "Change Several Issues"
 msgstr ""
 
@@ -1329,7 +1345,7 @@ msgstr ""
 msgid "Change your password."
 msgstr ""
 
-#: ../revisions_views.py:83
+#: ../revisions_views.py:82
 msgid "Changes"
 msgstr ""
 
@@ -1338,7 +1354,7 @@ msgctxt "label"
 msgid "Character encoding"
 msgstr ""
 
-#: ../control_panel.py:204
+#: ../control_panel.py:221
 msgid "Check the referential integrity."
 msgstr ""
 
@@ -1361,7 +1377,7 @@ msgctxt "dt"
 msgid "Choose the role for the new member"
 msgstr ""
 
-#: ../control_panel.py:132
+#: ../control_panel.py:137
 msgid "Choose the security policy."
 msgstr ""
 
@@ -1394,12 +1410,12 @@ msgctxt "link"
 msgid "Come back to today"
 msgstr ""
 
-#: ../text.py:120
+#: ../text.py:266
 msgid "Comma Separated Values"
 msgstr ""
 
-#: ../tracker/resources.py:185 ../revisions_views.py:46
-#: ../tracker/issue.py:272
+#: ../tracker/resources.py:185 ../revisions_views.py:45
+#: ../tracker/issue.py:282
 msgid "Comment"
 msgstr ""
 
@@ -1413,7 +1429,7 @@ msgctxt "emphasis"
 msgid "Comment:"
 msgstr ""
 
-#: ../tracker/ui/change_bugs.xml.en:105 ../tracker/ui/edit_resource.xml.en:50
+#: ../tracker/ui/change_bugs.xml.en:105 ../tracker/ui/edit_resource.xml.en:48
 msgctxt "label"
 msgid "Comment:"
 msgstr ""
@@ -1428,8 +1444,12 @@ msgctxt "label"
 msgid "Comments (optional):"
 msgstr ""
 
-#: ../control_panel.py:158
-msgid "Configure the Contact form."
+#: ../revisions_views.py:35
+msgid "Commit Log"
+msgstr ""
+
+#: ../control_panel.py:183
+msgid "Configure the website email options"
 msgstr ""
 
 #: ../ui/user/edit_password.xml.en:15
@@ -1453,10 +1473,6 @@ msgstr ""
 msgid "Contact"
 msgstr ""
 
-#: ../control_panel.py:156
-msgid "Contact Options"
-msgstr ""
-
 #: ../wiki/folder.py:39
 msgid "Container for a wiki"
 msgstr ""
@@ -1470,7 +1486,7 @@ msgctxt "li"
 msgid "Content &amp;"
 msgstr ""
 
-#: ../control_panel.py:44 ../control_panel.py:74 ../control_panel.py:93
+#: ../control_panel.py:49 ../control_panel.py:79 ../control_panel.py:98
 msgid "Control Panel"
 msgstr ""
 
@@ -1478,7 +1494,7 @@ msgstr ""
 msgid "Copy"
 msgstr ""
 
-#: ../website.py:53
+#: ../website.py:54
 msgid "Create a new Web Site or Work Place."
 msgstr ""
 
@@ -1491,7 +1507,7 @@ msgstr ""
 msgid "Create and publish a Web Page."
 msgstr ""
 
-#: ../website_views.py:398
+#: ../website_views.py:399
 msgid "Credits"
 msgstr ""
 
@@ -1548,11 +1564,11 @@ msgctxt "table cell"
 msgid "Default"
 msgstr ""
 
-#: ../control_panel.py:251
+#: ../control_panel.py:268
 msgid "Define the Web Site languages."
 msgstr ""
 
-#: ../control_panel.py:104
+#: ../control_panel.py:109
 msgid "Define the domain names for this Web Site."
 msgstr ""
 
@@ -1561,7 +1577,7 @@ msgctxt "button"
 msgid "Definitely remove"
 msgstr ""
 
-#: ../forms.py:601
+#: ../forms.py:566
 msgid "Description"
 msgstr ""
 
@@ -1615,7 +1631,7 @@ msgid "E-mail Address"
 msgstr ""
 
 #: ../resource_views.py:71 ../text_views.py:42 ../text_views.py:105
-#: ../wiki/page_views.py:349 ../future/dressable.py:44
+#: ../future/dressable.py:44
 msgid "Edit"
 msgstr ""
 
@@ -1631,11 +1647,6 @@ msgstr ""
 
 #: ../user_views.py:159
 msgid "Edit Account"
-msgstr ""
-
-#: ../ui/website/contact_options.xml.en:9
-msgctxt "legend"
-msgid "Edit Contact Options"
 msgstr ""
 
 #: ../calendar/calendar_views.py:417
@@ -1692,11 +1703,11 @@ msgstr ""
 msgid "Edit Wiki"
 msgstr ""
 
-#: ../tracker/tracker_views.py:811
+#: ../tracker/tracker_views.py:817
 msgid "Edit issues"
 msgstr ""
 
-#: ../table_views.py:251
+#: ../table_views.py:252
 msgid "Edit record {id}"
 msgstr ""
 
@@ -1736,6 +1747,18 @@ msgctxt "dt"
 msgid "Email"
 msgstr ""
 
+#: ../control_panel.py:181
+msgid "Email options"
+msgstr ""
+
+#: ../control_panel.py:187
+msgid "Emails from addr"
+msgstr ""
+
+#: ../control_panel.py:188
+msgid "Emails signature"
+msgstr ""
+
 #: ../tracker/resources.py:184
 msgid "End"
 msgstr ""
@@ -1745,7 +1768,7 @@ msgctxt "table cell"
 msgid "End"
 msgstr ""
 
-#: ../tracker/ui/edit_resource.xml.en:31
+#: ../tracker/ui/edit_resource.xml.en:30
 msgctxt "label"
 msgid "End:"
 msgstr ""
@@ -1758,7 +1781,7 @@ msgstr ""
 msgid "Enumerate"
 msgstr ""
 
-#: ../table_views.py:222
+#: ../table_views.py:223
 msgid "Error: {msg}"
 msgstr ""
 
@@ -1771,11 +1794,11 @@ msgstr ""
 msgid "Event not found"
 msgstr ""
 
-#: ../file.py:271
+#: ../file.py:272
 msgid "Excel"
 msgstr ""
 
-#: ../file.py:272
+#: ../file.py:273
 msgid "Excel Spreadsheet"
 msgstr ""
 
@@ -1788,8 +1811,8 @@ msgctxt "button"
 msgid "Export"
 msgstr ""
 
-#: ../tracker/tracker_views.py:181 ../tracker/tracker_views.py:684
-#: ../table_views.py:405
+#: ../tracker/tracker_views.py:181 ../tracker/tracker_views.py:690
+#: ../table_views.py:406
 msgid "Export to CSV"
 msgstr ""
 
@@ -1807,7 +1830,7 @@ msgctxt "legend"
 msgid "Export to Text:"
 msgstr ""
 
-#: ../file.py:197 ../text_views.py:84
+#: ../file.py:198 ../text_views.py:84
 msgid "External Editor"
 msgstr ""
 
@@ -1841,11 +1864,11 @@ msgstr ""
 msgid "Fixed"
 msgstr ""
 
-#: ../file.py:246
+#: ../file.py:247
 msgid "Flash"
 msgstr ""
 
-#: ../file.py:247
+#: ../file.py:248
 msgid "Flash Document"
 msgstr ""
 
@@ -1877,7 +1900,7 @@ msgctxt "title attribute"
 msgid "Format"
 msgstr ""
 
-#: ../forms.py:375
+#: ../forms.py:384
 msgid "Format: 'yyyy-mm-dd'"
 msgstr ""
 
@@ -1904,7 +1927,7 @@ msgctxt "table cell"
 msgid "From"
 msgstr ""
 
-#: ../wiki/folder.py:52 ../folder_views.py:828
+#: ../wiki/folder.py:52 ../folder_views.py:826
 msgid "Front Page"
 msgstr ""
 
@@ -1950,6 +1973,10 @@ msgctxt "title attribute"
 msgid "Go to previous message"
 msgstr ""
 
+#: ../control_panel.py:368
+msgid "Google site verification key"
+msgstr ""
+
 #: ../access.py:225
 msgid "Grant access to a new user."
 msgstr ""
@@ -1958,15 +1985,15 @@ msgstr ""
 msgid "Guest"
 msgstr ""
 
-#: ../file.py:400
+#: ../file.py:401
 msgid "Gzip"
 msgstr ""
 
-#: ../file.py:401
+#: ../file.py:402
 msgid "Gzip Compressed"
 msgstr ""
 
-#: ../text.py:112
+#: ../text.py:258
 msgid "HTML File"
 msgstr ""
 
@@ -2005,7 +2032,7 @@ msgctxt "title attribute"
 msgid "Heading 3"
 msgstr ""
 
-#: ../wiki/page_views.py:418
+#: ../wiki/page_views.py:417
 msgid "Help"
 msgstr ""
 
@@ -2059,7 +2086,7 @@ msgctxt "paragraph"
 msgid "If you don't, you can download it from a link below."
 msgstr ""
 
-#: ../file.py:219
+#: ../file.py:220
 msgid "Image"
 msgstr ""
 
@@ -2083,6 +2110,11 @@ msgctxt "title attribute"
 msgid "Insert link"
 msgstr ""
 
+#: ../ui/html/addmedia.xml.en:7
+msgctxt "title"
+msgid "Insert media"
+msgstr ""
+
 #: ../wiki/ui/edit.xml.en:79
 msgctxt "title attribute"
 msgid "Insert table"
@@ -2098,7 +2130,7 @@ msgctxt "legend"
 msgid "Internal Server Error"
 msgstr ""
 
-#: ../resource_views.py:461 ../forum/forum.py:92
+#: ../resource_views.py:465 ../forum/forum.py:92
 msgid "Invalid title."
 msgstr ""
 
@@ -2115,7 +2147,7 @@ msgstr ""
 msgid "Issue Tracker"
 msgstr ""
 
-#: ../tracker/tracker_views.py:640
+#: ../tracker/tracker_views.py:646
 msgid "Issue not found."
 msgstr ""
 
@@ -2140,7 +2172,7 @@ msgstr ""
 msgid "Japanese"
 msgstr ""
 
-#: ../text.py:95
+#: ../text.py:241
 msgid "Javascript"
 msgstr ""
 
@@ -2162,11 +2194,11 @@ msgctxt "paragraph"
 msgid "Key features of iKaaro include:"
 msgstr ""
 
-#: ../forms.py:603
+#: ../forms.py:568
 msgid "Keywords (Separated by comma)"
 msgstr ""
 
-#: ../control_panel.py:332
+#: ../control_panel.py:349
 msgid "Language added."
 msgstr ""
 
@@ -2175,11 +2207,11 @@ msgctxt "table[summary]"
 msgid "Language settings"
 msgstr ""
 
-#: ../control_panel.py:250
+#: ../control_panel.py:267
 msgid "Languages"
 msgstr ""
 
-#: ../control_panel.py:318
+#: ../control_panel.py:335
 msgid "Languages removed."
 msgstr ""
 
@@ -2188,19 +2220,15 @@ msgctxt "title attribute"
 msgid "Large Edit Text"
 msgstr ""
 
-#: ../folder_views.py:244
+#: ../folder_views.py:246
 msgid "Last Author"
 msgstr ""
 
-#: ../revisions_views.py:44
+#: ../revisions_views.py:43
 msgid "Last Change"
 msgstr ""
 
-#: ../revisions_views.py:36
-msgid "Last Changes"
-msgstr ""
-
-#: ../folder_views.py:243
+#: ../folder_views.py:245
 msgid "Last Modified"
 msgstr ""
 
@@ -2213,7 +2241,7 @@ msgstr ""
 msgid "Layout items MUST be 2 values tuples: "
 msgstr ""
 
-#: ../website.py:180
+#: ../website.py:188
 msgid "License"
 msgstr ""
 
@@ -2223,6 +2251,7 @@ msgid "Location"
 msgstr ""
 
 #: ../ui/html/addimage.xml.en:47 ../ui/html/addlink.xml.en:47
+#: ../ui/html/addmedia.xml.en:47
 msgctxt "label"
 msgid "Location:"
 msgstr ""
@@ -2237,7 +2266,7 @@ msgctxt "legend"
 msgid "Log in"
 msgstr ""
 
-#: ../user_views.py:364 ../resource_views.py:518 ../access.py:74
+#: ../user_views.py:364 ../resource_views.py:524 ../access.py:74
 #: ../access.py:131
 msgid "Login"
 msgstr ""
@@ -2287,7 +2316,7 @@ msgid ""
 "</g>"
 msgstr ""
 
-#: ../text.py:63
+#: ../text.py:71
 msgid "Message Catalog"
 msgstr ""
 
@@ -2299,7 +2328,7 @@ msgstr ""
 msgid "Message in a thread"
 msgstr ""
 
-#: ../website_views.py:225
+#: ../website_views.py:226
 msgid "Message sent."
 msgstr ""
 
@@ -2315,7 +2344,7 @@ msgstr ""
 msgid "Metadata"
 msgstr ""
 
-#: ../tracker/tracker_views.py:884
+#: ../tracker/tracker_views.py:890
 msgid "Modifications:"
 msgstr ""
 
@@ -2328,7 +2357,7 @@ msgctxt "label"
 msgid "Modified since:"
 msgstr ""
 
-#: ../tracker/tracker_views.py:55 ../tracker/issue.py:310
+#: ../tracker/tracker_views.py:55 ../tracker/issue.py:320
 msgid "Module"
 msgstr ""
 
@@ -2341,6 +2370,10 @@ msgstr ""
 #: ../tracker/ui/change_bugs.xml.en:46 ../tracker/ui/edit_issue.xml.en:52
 msgctxt "label"
 msgid "Module:"
+msgstr ""
+
+#: ../tracker/tables.py:61
+msgid "Modules"
 msgstr ""
 
 #: ../calendar/calendar_views.py:57
@@ -2361,7 +2394,7 @@ msgctxt "li"
 msgid "Multiple web sites in one instance, with separate access rights."
 msgstr ""
 
-#: ../views_new.py:65 ../views.py:378 ../folder_views.py:240
+#: ../views_new.py:65 ../views.py:378 ../folder_views.py:242
 msgid "Name"
 msgstr ""
 
@@ -2380,7 +2413,7 @@ msgctxt "label"
 msgid "New Attachement:"
 msgstr ""
 
-#: ../tracker/issue.py:264
+#: ../tracker/issue.py:274
 msgid "New Attachment: {filename}"
 msgstr ""
 
@@ -2398,7 +2431,7 @@ msgctxt "label"
 msgid "New Password"
 msgstr ""
 
-#: ../tracker/tracker_views.py:252
+#: ../tracker/tracker_views.py:258
 msgid "New issue added."
 msgstr ""
 
@@ -2406,7 +2439,7 @@ msgstr ""
 msgid "New page"
 msgstr ""
 
-#: ../table_views.py:245
+#: ../table_views.py:246
 msgid "New record added."
 msgstr ""
 
@@ -2429,11 +2462,11 @@ msgctxt "li"
 msgid "Nicolas Deram (French)"
 msgstr ""
 
-#: ../forms.py:268
+#: ../forms.py:274
 msgid "No"
 msgstr ""
 
-#: ../tracker/tracker_views.py:704 ../tracker/tracker_views.py:846
+#: ../tracker/tracker_views.py:710 ../tracker/tracker_views.py:852
 msgid "No data to export."
 msgstr ""
 
@@ -2489,35 +2522,35 @@ msgstr ""
 msgid "November"
 msgstr ""
 
-#: ../file.py:361
+#: ../file.py:362
 msgid "ODP"
 msgstr ""
 
-#: ../file.py:351
+#: ../file.py:352
 msgid "ODS"
 msgstr ""
 
-#: ../file.py:341
+#: ../file.py:342
 msgid "ODT"
 msgstr ""
 
 #: ../ui/html/addlink.xml.en:107 ../tracker/ui/menu_remember.xml.en:17
 #: ../ui/folder/browse_search.xml.en:24 ../ui/generic/browse_search.xml.en:16
-#: ../calendar/ui/daily_view.xml.en:12 ../ui/website/search_form.xml.en:11
+#: ../calendar/ui/daily_view.xml.en:13 ../ui/website/search_form.xml.en:11
 #: ../calendar/ui/edit_event.xml.en:130
 msgctxt "button"
 msgid "OK"
 msgstr ""
 
-#: ../file.py:301
+#: ../file.py:302
 msgid "OOo Calc"
 msgstr ""
 
-#: ../file.py:311
+#: ../file.py:312
 msgid "OOo Impress"
 msgstr ""
 
-#: ../file.py:291
+#: ../file.py:292
 msgid "OOo Writer"
 msgstr ""
 
@@ -2542,31 +2575,31 @@ msgstr ""
 msgid "Open Issues"
 msgstr ""
 
-#: ../file.py:362
+#: ../file.py:363
 msgid "OpenDocument Presentation"
 msgstr ""
 
-#: ../file.py:352
+#: ../file.py:353
 msgid "OpenDocument Spreadsheet"
 msgstr ""
 
-#: ../file.py:342
+#: ../file.py:343
 msgid "OpenDocument Text"
 msgstr ""
 
-#: ../file.py:312
+#: ../file.py:313
 msgid "OpenOffice.org Presentation"
 msgstr ""
 
-#: ../file.py:302
+#: ../file.py:303
 msgid "OpenOffice.org Spreadsheet"
 msgstr ""
 
-#: ../file.py:292
+#: ../file.py:293
 msgid "OpenOffice.org Text"
 msgstr ""
 
-#: ../website_views.py:388
+#: ../website_views.py:389
 msgid "Operating System"
 msgstr ""
 
@@ -2574,7 +2607,7 @@ msgstr ""
 msgid "Operation successful! Welcome."
 msgstr ""
 
-#: ../table_views.py:328
+#: ../table_views.py:329
 msgid "Order"
 msgstr ""
 
@@ -2586,7 +2619,7 @@ msgstr ""
 msgid "Order down"
 msgstr ""
 
-#: ../future/order.py:253
+#: ../future/order.py:246
 msgid "Order resources"
 msgstr ""
 
@@ -2611,15 +2644,15 @@ msgstr ""
 msgid "Organize your files and documents with folders."
 msgstr ""
 
-#: ../folder_views.py:746
+#: ../folder_views.py:748
 msgid "Orphans"
 msgstr ""
 
-#: ../file.py:321
+#: ../file.py:322
 msgid "PDF"
 msgstr ""
 
-#: ../file.py:322
+#: ../file.py:323
 msgid "PDF Document"
 msgstr ""
 
@@ -2658,7 +2691,7 @@ msgstr ""
 msgid "Paste"
 msgstr ""
 
-#: ../future/order.py:169 ../future/menu.py:266
+#: ../future/order.py:171 ../future/menu.py:266
 msgid "Path"
 msgstr ""
 
@@ -2670,7 +2703,7 @@ msgstr ""
 msgid "Performance Improvement"
 msgstr ""
 
-#: ../text.py:40
+#: ../text.py:48
 msgid "Plain Text"
 msgstr ""
 
@@ -2683,19 +2716,19 @@ msgctxt "fieldset"
 msgid "Please select encoding:"
 msgstr ""
 
-#: ../table_views.py:371
+#: ../table_views.py:372
 msgid "Please select the resources to order down."
 msgstr ""
 
-#: ../table_views.py:393
+#: ../table_views.py:394
 msgid "Please select the resources to order on bottom."
 msgstr ""
 
-#: ../table_views.py:382
+#: ../table_views.py:383
 msgid "Please select the resources to order on top."
 msgstr ""
 
-#: ../table_views.py:360
+#: ../table_views.py:361
 msgid "Please select the resources to order up."
 msgstr ""
 
@@ -2708,11 +2741,11 @@ msgctxt "heading"
 msgid "Post a Reply"
 msgstr ""
 
-#: ../file.py:281
+#: ../file.py:282
 msgid "PowerPoint"
 msgstr ""
 
-#: ../file.py:282
+#: ../file.py:283
 msgid "PowerPoint Presentation"
 msgstr ""
 
@@ -2731,11 +2764,11 @@ msgctxt "title attribute"
 msgid "Preformatted"
 msgstr ""
 
-#: ../future/order.py:102 ../future/order.py:172 ../future/dressable.py:85
+#: ../future/order.py:104 ../future/order.py:174 ../future/dressable.py:85
 msgid "Preview"
 msgstr ""
 
-#: ../folder_views.py:582
+#: ../folder_views.py:584
 msgid "Preview Content"
 msgstr ""
 
@@ -2744,7 +2777,7 @@ msgctxt "title attribute"
 msgid "Previous"
 msgstr ""
 
-#: ../tracker/tracker_views.py:59 ../tracker/issue.py:313
+#: ../tracker/tracker_views.py:59 ../tracker/issue.py:323
 msgid "Priority"
 msgstr ""
 
@@ -2763,8 +2796,8 @@ msgstr ""
 msgid "Private"
 msgstr ""
 
-#: ../tracker/tracker_views.py:54 ../tracker/tables.py:153
-#: ../tracker/tables.py:229 ../tracker/tables.py:256
+#: ../tracker/tracker_views.py:54 ../tracker/tables.py:183
+#: ../tracker/tables.py:259 ../tracker/tables.py:286
 msgid "Product"
 msgstr ""
 
@@ -2798,15 +2831,15 @@ msgstr ""
 msgid "Publish the document."
 msgstr ""
 
-#: ../text.py:85
+#: ../text.py:231
 msgid "Python"
 msgstr ""
 
-#: ../file.py:331
+#: ../file.py:332
 msgid "RTF"
 msgstr ""
 
-#: ../file.py:332
+#: ../file.py:333
 msgid "RTF Document"
 msgstr ""
 
@@ -2814,7 +2847,7 @@ msgstr ""
 msgid "Recipient"
 msgstr ""
 
-#: ../table_views.py:162 ../table_views.py:354
+#: ../table_views.py:163 ../table_views.py:355
 msgid "Record deleted."
 msgstr ""
 
@@ -2826,7 +2859,7 @@ msgstr ""
 msgid "Reject the document."
 msgstr ""
 
-#: ../tracker/tables.py:258
+#: ../tracker/tables.py:288
 msgid "Released"
 msgstr ""
 
@@ -2844,7 +2877,7 @@ msgctxt "button"
 msgid "Remove"
 msgstr ""
 
-#: ../future/order.py:87
+#: ../future/order.py:89
 msgid "Remove from ordered list"
 msgstr ""
 
@@ -2862,7 +2895,7 @@ msgctxt "button"
 msgid "Rename"
 msgstr ""
 
-#: ../folder_views.py:128
+#: ../folder_views.py:130
 msgid "Rename resources"
 msgstr ""
 
@@ -2885,7 +2918,7 @@ msgctxt "button"
 msgid "Replace"
 msgstr ""
 
-#: ../forms.py:606
+#: ../forms.py:571
 msgid "Replace file"
 msgstr ""
 
@@ -2933,11 +2966,11 @@ msgstr ""
 msgid "Resources"
 msgstr ""
 
-#: ../future/order.py:298
+#: ../future/order.py:291
 msgid "Resources Ordered Table"
 msgstr ""
 
-#: ../future/order.py:227
+#: ../future/order.py:220
 msgid "Resources added to ordered list."
 msgstr ""
 
@@ -2961,19 +2994,19 @@ msgstr ""
 msgid "Resources not allowed to remove: {resources}."
 msgstr ""
 
-#: ../table_views.py:376
+#: ../table_views.py:377
 msgid "Resources ordered down."
 msgstr ""
 
-#: ../table_views.py:398
+#: ../table_views.py:399
 msgid "Resources ordered on bottom."
 msgstr ""
 
-#: ../table_views.py:387
+#: ../table_views.py:388
 msgid "Resources ordered on top."
 msgstr ""
 
-#: ../table_views.py:365
+#: ../table_views.py:366
 msgid "Resources ordered up."
 msgstr ""
 
@@ -2985,7 +3018,7 @@ msgstr ""
 msgid "Resources published."
 msgstr ""
 
-#: ../messages.py:63 ../tracker/tables.py:142
+#: ../messages.py:63 ../tracker/tables.py:172
 msgid "Resources removed: {resources}."
 msgstr ""
 
@@ -3030,7 +3063,7 @@ msgstr ""
 msgid "Saturday"
 msgstr ""
 
-#: ../forms.py:627
+#: ../forms.py:592
 msgid "Save"
 msgstr ""
 
@@ -3046,7 +3079,7 @@ msgstr ""
 
 #: ../ui/website/virtual_hosts.xml.en:14 ../ui/user/edit_password.xml.en:30
 #: ../ui/website/security_policy.xml.en:26
-#: ../tracker/ui/edit_resource.xml.en:58 ../ui/user/edit_preferences.xml.en:20
+#: ../tracker/ui/edit_resource.xml.en:56 ../ui/user/edit_preferences.xml.en:20
 msgctxt "button"
 msgid "Save Changes"
 msgstr ""
@@ -3055,7 +3088,7 @@ msgstr ""
 msgid "Schedule your time with calendar files."
 msgstr ""
 
-#: ../tracker/tracker_views.py:448 ../website_views.py:232
+#: ../tracker/tracker_views.py:454 ../website_views.py:233
 msgid "Search"
 msgstr ""
 
@@ -3070,6 +3103,10 @@ msgctxt "legend"
 msgid "Search"
 msgstr ""
 
+#: ../control_panel.py:356
+msgid "Search engine optimization"
+msgstr ""
+
 #: ../tracker/issue_views.py:118
 msgid "Search for issues"
 msgstr ""
@@ -3078,7 +3115,7 @@ msgstr ""
 msgid "Security Issue"
 msgstr ""
 
-#: ../control_panel.py:130
+#: ../control_panel.py:135
 msgid "Security Policy"
 msgstr ""
 
@@ -3105,17 +3142,21 @@ msgctxt "table cell"
 msgid "Select Image"
 msgstr ""
 
+#: ../ui/html/addmedia.xml.en:57
+msgctxt "table cell"
+msgid "Select Media"
+msgstr ""
+
 #: ../ui/html/addlink.xml.en:57
 msgctxt "table cell"
 msgid "Select Resource"
 msgstr ""
 
-#: ../tracker/tables.py:170
+#: ../tracker/tables.py:200
 msgid "Select Table"
 msgstr ""
 
-#: ../ui/website/contact_options.xml.en:11
-msgctxt "label"
+#: ../control_panel.py:189
 msgid "Select the contact accounts"
 msgstr ""
 
@@ -3131,15 +3172,15 @@ msgstr ""
 msgid "Set your preferred language."
 msgstr ""
 
-#: ../folder_views.py:748
+#: ../folder_views.py:750
 msgid "Show resources not linked from anywhere."
 msgstr ""
 
-#: ../folder_views.py:245
+#: ../folder_views.py:247
 msgid "Size"
 msgstr ""
 
-#: ../skins.py:142
+#: ../skins.py:146
 msgid "Skin"
 msgstr ""
 
@@ -3183,9 +3224,9 @@ msgctxt "label"
 msgid "Start:"
 msgstr ""
 
-#: ../future/order.py:100 ../future/order.py:170 ../access.py:135
-#: ../folder_views.py:246 ../tracker/tracker_views.py:58
-#: ../tracker/issue.py:314
+#: ../future/order.py:102 ../future/order.py:172 ../access.py:135
+#: ../folder_views.py:248 ../tracker/tracker_views.py:58
+#: ../tracker/issue.py:324
 msgid "State"
 msgstr ""
 
@@ -3236,19 +3277,19 @@ msgctxt "li"
 msgid "Sylvain Taverne (French)"
 msgstr ""
 
-#: ../wiki/page_views.py:393
+#: ../wiki/page_views.py:392
 msgid "Syntax error, please check the view for details."
 msgstr ""
 
-#: ../wiki/page_views.py:71 ../wiki/page_views.py:397
+#: ../wiki/page_views.py:71 ../wiki/page_views.py:396
 msgid "Syntax error: {error}"
 msgstr ""
 
-#: ../file.py:390
+#: ../file.py:391
 msgid "Tar"
 msgstr ""
 
-#: ../file.py:391
+#: ../file.py:392
 msgid "Tar Archive"
 msgstr ""
 
@@ -3277,7 +3318,7 @@ msgctxt "label"
 msgid "Text (search within the title and all comments)"
 msgstr ""
 
-#: ../forms.py:645
+#: ../forms.py:610
 msgid ""
 "The <span class=\"field-is-required\">emphasized</span> fields are required."
 msgstr ""
@@ -3290,7 +3331,7 @@ msgstr ""
 msgid "The changes have been saved."
 msgstr ""
 
-#: ../control_panel.py:300
+#: ../control_panel.py:317
 msgid "The default language has been changed."
 msgstr ""
 
@@ -3311,7 +3352,7 @@ msgstr ""
 msgid "The file must be entered."
 msgstr ""
 
-#: ../resource_views.py:379
+#: ../resource_views.py:382
 msgid "The given file is not of the expected type."
 msgstr ""
 
@@ -3323,7 +3364,7 @@ msgstr ""
 msgid "The name is missing."
 msgstr ""
 
-#: ../resource_views.py:545
+#: ../resource_views.py:551
 msgid "The password is wrong."
 msgstr ""
 
@@ -3340,23 +3381,23 @@ msgstr ""
 msgid "The resource does not exist anymore."
 msgstr ""
 
-#: ../tracker/tracker_views.py:581
+#: ../tracker/tracker_views.py:587
 msgid "The search has been modified."
 msgstr ""
 
-#: ../tracker/tracker_views.py:624
+#: ../tracker/tracker_views.py:630
 msgid "The search has been removed."
 msgstr ""
 
-#: ../tracker/tracker_views.py:588
+#: ../tracker/tracker_views.py:594
 msgid "The search has been stored."
 msgstr ""
 
-#: ../tracker/tracker_views.py:592
+#: ../tracker/tracker_views.py:598
 msgid "The search title has been changed."
 msgstr ""
 
-#: ../resource_views.py:538
+#: ../resource_views.py:544
 msgid "The user \"{username}\" does not exist."
 msgstr ""
 
@@ -3369,11 +3410,11 @@ msgctxt "paragraph"
 msgid "The user is not active, (s)he has not confirmed registration."
 msgstr ""
 
-#: ../tracker/issue.py:259
+#: ../tracker/issue.py:269
 msgid "The user {title} did some changes."
 msgstr ""
 
-#: ../table_views.py:264
+#: ../table_views.py:265
 msgid "The {id} record is missing."
 msgstr ""
 
@@ -3419,7 +3460,7 @@ msgstr ""
 msgid "There is not a user identified as \"{username}\""
 msgstr ""
 
-#: ../folder_views.py:93
+#: ../folder_views.py:95
 msgid "There is not an \"index\" web page. Could not render this view."
 msgstr ""
 
@@ -3471,9 +3512,9 @@ msgstr ""
 msgid "Timetables updated successfully."
 msgstr ""
 
-#: ../tracker/tracker_views.py:53 ../tracker/issue.py:304 ../views.py:376
-#: ../future/order.py:99 ../future/order.py:168 ../forms.py:599
-#: ../folder_views.py:241 ../future/menu.py:265
+#: ../tracker/tracker_views.py:53 ../tracker/issue.py:314 ../views.py:376
+#: ../future/order.py:101 ../future/order.py:170 ../forms.py:564
+#: ../folder_views.py:243 ../future/menu.py:265
 msgid "Title"
 msgstr ""
 
@@ -3542,7 +3583,7 @@ msgstr ""
 msgid "To manage bugs and tasks"
 msgstr ""
 
-#: ../user.py:297
+#: ../user.py:300
 msgid "To manage the users please go <a href=\"/;browse_users\">here</a>."
 msgstr ""
 
@@ -3568,8 +3609,8 @@ msgstr ""
 msgid "Tuesday"
 msgstr ""
 
-#: ../tracker/tracker_views.py:57 ../folder_views.py:242
-#: ../tracker/issue.py:312
+#: ../tracker/tracker_views.py:57 ../folder_views.py:244
+#: ../tracker/issue.py:322
 msgid "Type"
 msgstr ""
 
@@ -3615,7 +3656,7 @@ msgstr ""
 msgid "Unexpected file of mimetype {type}"
 msgstr ""
 
-#: ../tracker/tracker_views.py:322
+#: ../tracker/tracker_views.py:328
 msgid "Unknown stored search \"{sname}\"."
 msgstr ""
 
@@ -3639,7 +3680,7 @@ msgctxt "button"
 msgid "Update text export"
 msgstr ""
 
-#: ../scripts/icms-update.py:131
+#: ../scripts/icms-update.py:134
 msgid "Upgrade to version %s"
 msgstr ""
 
@@ -3648,6 +3689,7 @@ msgid "Upload"
 msgstr ""
 
 #: ../ui/html/addimage.xml.en:97 ../ui/html/addlink.xml.en:122
+#: ../ui/html/addmedia.xml.en:97
 msgctxt "button"
 msgid "Upload"
 msgstr ""
@@ -3664,6 +3706,11 @@ msgstr ""
 #: ../ui/html/addlink.xml.en:114
 msgctxt "heading"
 msgid "Upload a file to the current folder and link to it:"
+msgstr ""
+
+#: ../ui/html/addmedia.xml.en:89
+msgctxt "heading"
+msgid "Upload a media to the current folder and insert it:"
 msgstr ""
 
 #: ../ui/html/addimage.xml.en:89
@@ -3713,7 +3760,7 @@ msgctxt "label"
 msgid "Username"
 msgstr ""
 
-#: ../root.py:105
+#: ../root.py:106
 msgid "Users"
 msgstr ""
 
@@ -3721,7 +3768,7 @@ msgstr ""
 msgid "Verified"
 msgstr ""
 
-#: ../tracker/tracker_views.py:56 ../tracker/issue.py:311
+#: ../tracker/tracker_views.py:56 ../tracker/issue.py:321
 msgid "Version"
 msgstr ""
 
@@ -3745,16 +3792,20 @@ msgctxt "label"
 msgid "Version:"
 msgstr ""
 
-#: ../file.py:234 ../file.py:235
+#: ../tracker/tables.py:62
+msgid "Versions"
+msgstr ""
+
+#: ../file.py:235 ../file.py:236
 msgid "Video"
 msgstr ""
 
-#: ../file_views.py:328 ../file_views.py:419 ../file_views.py:431
-#: ../file_views.py:445 ../text_views.py:71 ../text_views.py:172
-#: ../tracker/tracker_views.py:261 ../user.py:295 ../table_views.py:42
-#: ../wiki/page_views.py:59 ../future/order.py:234 ../future/order.py:264
+#: ../file_views.py:330 ../file_views.py:421 ../file_views.py:433
+#: ../file_views.py:447 ../text_views.py:71 ../text_views.py:172
+#: ../tracker/tracker_views.py:267 ../user.py:298 ../table_views.py:42
+#: ../wiki/page_views.py:59 ../future/order.py:227 ../future/order.py:257
 #: ../forum/forum.py:44 ../webpage.py:151 ../forum/thread.py:42
-#: ../folder_views.py:86 ../future/menu.py:569 ../future/dressable.py:95
+#: ../folder_views.py:86 ../future/menu.py:572 ../future/dressable.py:95
 msgid "View"
 msgstr ""
 
@@ -3765,7 +3816,7 @@ msgid ""
 "></g>)"
 msgstr ""
 
-#: ../control_panel.py:102
+#: ../control_panel.py:107
 msgid "Virtual Hosts"
 msgstr ""
 
@@ -3773,7 +3824,7 @@ msgstr ""
 msgid "Web Page"
 msgstr ""
 
-#: ../website.py:52
+#: ../website.py:53
 msgid "Web Site"
 msgstr ""
 
@@ -3789,11 +3840,11 @@ msgstr ""
 msgid "Weekly View"
 msgstr ""
 
-#: ../resource_views.py:565
+#: ../resource_views.py:571
 msgid "Welcome!"
 msgstr ""
 
-#: ../wiki/folder.py:38 ../wiki/folder_views.py:33
+#: ../wiki/folder.py:38 ../wiki/folder_views.py:31
 msgid "Wiki"
 msgstr ""
 
@@ -3805,11 +3856,11 @@ msgstr ""
 msgid "Wiki contents"
 msgstr ""
 
-#: ../file.py:261
+#: ../file.py:262
 msgid "Word"
 msgstr ""
 
-#: ../file.py:262
+#: ../file.py:263
 msgid "Word Text"
 msgstr ""
 
@@ -3821,11 +3872,15 @@ msgstr ""
 msgid "Wrong time selection (HH:MM)."
 msgstr ""
 
-#: ../text.py:104
+#: ../text.py:250
 msgid "XML File"
 msgstr ""
 
-#: ../forms.py:268
+#: ../control_panel.py:370
+msgid "Yahoo site verification key"
+msgstr ""
+
+#: ../forms.py:274
 msgid "Yes"
 msgstr ""
 
@@ -3834,7 +3889,7 @@ msgctxt "table cell"
 msgid "Yes"
 msgstr ""
 
-#: ../resource_views.py:581
+#: ../resource_views.py:587
 msgid "You Are Now Logged out."
 msgstr ""
 
@@ -3859,7 +3914,7 @@ msgid ""
 "Office or OpenOffice.org."
 msgstr ""
 
-#: ../control_panel.py:310
+#: ../control_panel.py:327
 msgid "You can not remove the default language."
 msgstr ""
 
@@ -3904,7 +3959,7 @@ msgstr ""
 msgid "You mistyped your actual password, your account is not changed."
 msgstr ""
 
-#: ../control_panel.py:289
+#: ../control_panel.py:306
 msgid "You must select one and only one language."
 msgstr ""
 
@@ -3928,11 +3983,11 @@ msgctxt "li"
 msgid "Zhou Li (Chinese)"
 msgstr ""
 
-#: ../file.py:380
+#: ../file.py:381
 msgid "Zip"
 msgstr ""
 
-#: ../file.py:381
+#: ../file.py:382
 msgid "Zip Archive"
 msgstr ""
 
@@ -3953,11 +4008,11 @@ msgctxt "div"
 msgid "[ <g id='4'>  <g id='5'>${menu/label}</g>  <g id='6'>|</g>  </g> ]"
 msgstr ""
 
-#: ../tracker/tracker_views.py:910
+#: ../tracker/tracker_views.py:916
 msgid "[%s]"
 msgstr ""
 
-#: ../tracker/issue.py:295
+#: ../tracker/issue.py:305
 msgid "[empty]"
 msgstr ""
 
@@ -3985,7 +4040,7 @@ msgstr ""
 msgid "iKaaro"
 msgstr ""
 
-#: ../future/menu.py:257 ../future/menu.py:561
+#: ../future/menu.py:257 ../future/menu.py:564
 msgid "iKaaro Menu"
 msgstr ""
 
@@ -3996,7 +4051,7 @@ msgid ""
 "programming language, and based on the <g id='2'>itools</g> library."
 msgstr ""
 
-#: ../table_views.py:102 ../future/menu.py:108
+#: ../table_views.py:103 ../future/menu.py:108
 msgid "id"
 msgstr ""
 
@@ -4008,7 +4063,7 @@ msgstr ""
 msgid "medium"
 msgstr ""
 
-#: ../website_views.py:372
+#: ../website_views.py:373
 msgid "no version found"
 msgstr ""
 
@@ -4051,23 +4106,23 @@ msgid ""
 "3 of the License, or (at your option) any later version."
 msgstr ""
 
-#: ../tracker/issue.py:294
+#: ../tracker/issue.py:304
 msgid "{field}: {old_value} to {new_value}"
 msgstr ""
 
-#: ../tracker/issue.py:298
+#: ../tracker/issue.py:308
 msgid "{field}: {old_value}{new_value}"
 msgstr ""
 
-#: ../folder.py:287
+#: ../folder.py:286
 msgid "{n} obs"
 msgstr ""
 
-#: ../skins.py:166
+#: ../skins.py:170
 msgid "{root_title} - {here_title} - {view_title}"
 msgstr ""
 
-#: ../skins.py:163
+#: ../skins.py:167
 msgid "{root_title} - {view_title}"
 msgstr ""
 
@@ -4075,7 +4130,7 @@ msgstr ""
 msgid "{search_title} ({issues_nb})"
 msgstr ""
 
-#: ../tracker/issue.py:274
+#: ../tracker/issue.py:284
 msgid ""
 "{title}\n"
 "{separator}\n"
@@ -4083,7 +4138,7 @@ msgid ""
 "{comment}\n"
 msgstr ""
 
-#: ../tracker/tracker_views.py:309
+#: ../tracker/tracker_views.py:315
 msgid "{title} - {search}"
 msgstr ""
 
@@ -4107,12 +4162,12 @@ msgctxt "table cell"
 msgid " [ <g id='36'> Reply </g>] "
 msgstr ""
 
-#: ../tracker/ui/edit_resource.xml.en:36
+#: ../tracker/ui/edit_resource.xml.en:34
 msgctxt "table cell"
 msgid "  "
 msgstr ""
 
-#: ../future/order.py:73 ../utils.py:113
+#: ../future/order.py:75 ../utils.py:113
 msgid "…"
 msgstr ""
 
