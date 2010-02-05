@@ -453,11 +453,11 @@ p.tabme a.selected {
   white-space: pre;
 }
 
-#differ .rem {
+#differ .rem, #git-stat .rem {
   color: red;
 }
 
-#differ .add {
+#differ .add, #git-stat .add {
   color: green;
 }
 

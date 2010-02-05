@@ -17,6 +17,7 @@
 # Import from standard library
 from operator import itemgetter
 from re import compile, sub
+from subprocess import CalledProcessError
 
 # Import from itools
 from itools.core import merge_dicts
@@ -31,26 +32,75 @@ from buttons import Button
 from views import BrowseForm
 
 
-def get_changes(diff):
-    """Turn a diff source into a list of changes for HTML display"""
+def get_colored_diff(diff):
+    """Turn a diff source into a namespace for HTML display"""
     changes = []
     password_re = compile('<password>(.*)</password>')
+    # The anchor index to link from the diff stat
+    link_index = -1
     for line in diff.splitlines():
         if line[:5] == 'index' or line[:3] in ('---', '+++', '@@ '):
             continue
         css = None
         is_header = (line[:4] == 'diff')
-        if not is_header:
-            if line:
-                # For security, hide password the of metadata files
-                line = sub(password_re, '<password>***</password>', line)
-                if line[0] == '-':
-                    css = 'rem'
-                elif line[0] == '+':
-                    css = 'add'
+        if is_header:
+            link_index += 1
+        elif line:
+            # For security, hide password the of metadata files
+            line = sub(password_re, '<password>***</password>', line)
+            if line[0] == '-':
+                css = 'rem'
+            elif line[0] == '+':
+                css = 'add'
         # Add the line
-        changes.append({'css': css, 'value': line, 'is_header': is_header})
+        changes.append({'css': css, 'value': line, 'is_header': is_header,
+            'index': link_index})
     return changes
+
+
+
+def get_colored_stat(stat):
+    """Turn a diff stat into a namespace for HTML display"""
+    table = []
+    for line in stat.splitlines():
+        if '|' in line:
+            # File change
+            filename, change = [x.strip() for x in line.split('|')]
+            nlines, change = change.split(' ', 1)
+            if '->' in change:
+                # Binary change
+                before, after = change.split('->')
+            else:
+                # Text change
+                before = change.strip('+')
+                after = change.strip('-')
+            table.append({'value': filename, 'nlines': nlines,
+                'before': before, 'after': after})
+        else:
+            # Last line of summary
+            summary = line
+    namespace = {}
+    namespace['table'] = table
+    namespace['summary'] = summary
+    return namespace
+
+
+
+def get_older_state(resource, revision, context):
+    """All-in-one to get an older metadata and handler state."""
+    # Heuristic to remove the database prefix
+    prefix = len(str(context.server.target)) + len('/database/')
+    # Metadata
+    path = str(resource.metadata.uri)[prefix:]
+    metadata = context.database.get_blob(revision, path)
+    # Handler
+    path = str(resource.handler.uri)[prefix:]
+    try:
+        handler = context.database.get_blob(revision, path)
+    except CalledProcessError:
+        # Phantom handler or renamed file
+        handler = ''
+    return metadata, handler
 
 
 
@@ -166,16 +216,17 @@ class DBResource_Changes(STLView):
             author_name = metadata['author_name']
             metadata['author_name'] = root.get_user_title(author_name)
             namespace['metadata'] = metadata
-            namespace['stat'] = database.get_diff_between(revision,
-                    to='%s^' % revision, stat=True)
-            namespace['changes'] = get_changes(metadata['diff'])
+            stat = database.get_diff_between(revision, to='%s^' % revision,
+                    stat=True)
+            namespace['stat'] = get_colored_stat(stat)
+            namespace['changes'] = get_colored_diff(metadata['diff'])
         else:
             # Get diff namespace
             namespace['metadata'] = None
-            namespace['stat'] = database.get_diff_between(revision,
-                    to, stat=True)
+            stat = database.get_diff_between(revision, to, stat=True)
+            namespace['stat'] = get_colored_stat(stat)
             diff = database.get_diff_between(revision, to)
-            namespace['changes'] = get_changes(diff)
+            namespace['changes'] = get_colored_diff(diff)
 
         # Ok
         return namespace

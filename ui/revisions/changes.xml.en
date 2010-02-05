@@ -23,12 +23,34 @@
   </fieldset>
 
   <h3>Stat</h3>
-  <pre id="git-stat">${stat}</pre>
+  <div id="git-stat">
+    <p>${stat/summary}</p>
+    <table id="browse-list">
+      <thead>
+        <tr>
+          <th>Filename</th>
+          <th>Lines Changed</th>
+          <th>Before</th>
+          <th>After</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr stl:repeat="row stat/table" class="${repeat/row/even}">
+          <td><a href="#diff_${repeat/row/index}">${row/value}</a></td>
+          <td>${row/nlines}</td>
+          <td class="rem">${row/before}</td>
+          <td class="add">${row/after}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
 
   <h3>Details</h3>
   <div id="differ">
     <stl:block stl:repeat="change changes">
-      <div stl:if="change/is_header">${change/value}</div>
+      <div stl:if="change/is_header"><a
+          name="diff_${change/index}"/>${change/value}</div>
       <stl:block stl:if="not change/is_header">
         <span class="${change/css}">${change/value}</span><br/>
       </stl:block>
