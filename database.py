@@ -248,7 +248,6 @@ class Database(ReadOnlyDatabase, GitDatabase):
         root = context.root
         catalog = self.catalog
         documents_to_index = []
-        documents_to_unindex = self.resources_old2new.keys()
 
         # Update links when resources moved
         for source, target in self.resources_old2new.items():
@@ -256,6 +255,11 @@ class Database(ReadOnlyDatabase, GitDatabase):
                 target = Path(target)
                 resource = root.get_resource(target)
                 resource._on_move_resource(source)
+
+        # Get documents to unindex
+        # update_links methods call server.change_resource
+        # which update resources_old2new dictionary
+        documents_to_unindex = self.resources_old2new.keys()
 
         # Clear resources_old2new
         self.resources_old2new.clear()
