@@ -284,7 +284,7 @@ class Database(ReadOnlyDatabase, GitDatabase):
             try:
                 git_message = getattr(context, 'git_message')
             except AttributeError:
-                git_message = str(context.uri)
+                git_message = "%s %s" % (context.request.method, context.uri)
             else:
                 git_message = git_message.encode('utf-8')
 
