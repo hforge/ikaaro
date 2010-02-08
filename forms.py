@@ -498,7 +498,7 @@ class RTEWidget(Widget):
                 'formatselect')
     toolbar3 = None
     resizing = True
-    plugins = 'safari,table,media'
+    plugins = 'safari,table,media,advimage,advlink'
     # Extending the existing rule set.
     extended_valid_elements = None
     # css

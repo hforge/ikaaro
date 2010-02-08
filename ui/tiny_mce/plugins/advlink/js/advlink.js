@@ -41,6 +41,12 @@ function init() {
 	else
 		document.getElementById("linklisthrefcontainer").innerHTML = html;
 
+	// Anchor list
+	var anchorlist = document.getElementById("anchorlist");
+	if (anchorlist && anchorlist.length == 1) {
+		document.getElementById("tr-anchorlistcontainer").style.display = "none";
+	}
+
 	// Resize some elements
 	if (isVisible('hrefbrowser'))
 		document.getElementById('href').style.width = '260px';
