@@ -459,7 +459,7 @@ class CMSContext(WebContext):
         try:
             git_message = getattr(self, 'git_message')
         except AttributeError:
-            git_message = "%s %s" % (self.method, self.uri)
+            git_message = "%s %s" % (self.soup_message.get_method(), self.uri)
         else:
             git_message = git_message.encode('utf-8')
 
