@@ -41,12 +41,13 @@ def get_changes(diff):
         css = None
         is_header = (line[:4] == 'diff')
         if not is_header:
-            # For security, hide password the of metadata files
-            line = sub(password_re, '<password>***</password>', line)
-            if line[0] == '-':
-                css = 'rem'
-            elif line[0] == '+':
-                css = 'add'
+            if line:
+                # For security, hide password the of metadata files
+                line = sub(password_re, '<password>***</password>', line)
+                if line[0] == '-':
+                    css = 'rem'
+                elif line[0] == '+':
+                    css = 'add'
         # Add the line
         changes.append({'css': css, 'value': line, 'is_header': is_header})
     return changes
