@@ -132,12 +132,11 @@ class WikiPage_ToPDF(BaseView):
         try:
             call(['pdflatex', '-version'])
         except OSError:
-            msg = ERROR(u"PDF generation failed. Please install pdflatex.")
+            msg = ERROR(u"PDF generation failed. Please install pdflatex on "
+                    u"the server.")
             return context.come_back(msg)
 
         parent = resource.parent
-        pages = [resource.get_abspath()]
-        images = []
 
         document = resource.get_document()
         # We hack a bit the document tree to enhance the PDF produced
@@ -162,67 +161,21 @@ class WikiPage_ToPDF(BaseView):
             # The journey ends here for broken links
             if refname is False:
                 continue
-            # We extend the main page with the first level of subpages
+            # We extend the page with links to files
             destination = resource.get_resource(refname)
-            abspath = destination.get_abspath()
-            if abspath not in pages:
-                from page import WikiPage
-                if not isinstance(destination, WikiPage):
-                    # Link to a file, set the URI to download it
-                    prefix = context.resource.get_pathto(destination)
-                    node['refuri'] = str(context.uri.resolve(prefix))
-                    continue
-                # Adding the page to this one
-                subdoc = destination.get_document()
-                # We point the second level of links to the website
-                for node in subdoc.traverse(condition=nodes.reference):
-                    refname = node.get('wiki_name')
-                    if refname is None:
-                        # Regular link: point back to the site
-                        refuri = node.get('refuri')
-                        if refuri is not None:
-                            reference = get_reference(refuri.encode('utf_8'))
-                            if isinstance(reference, Mailto):
-                                # mailto:
-                                node['refuri'] = str(reference)
-                            else:
-                                refuri = context.uri.resolve(reference)
-                                node['refuri'] = str(refuri)
-                        continue
-                    # Now consider the link is valid
-                    title = node['name']
-                    refid = title.lower()
-                    if refid not in document.nameids:
-                        document.nameids[refid] = checkid(title)
-                    # The journey ends here for broken links
-                    if refname is False:
-                        continue
-                    destination = resource.get_resource(refname)
-                    prefix = context.resource.get_pathto(destination)
-                    node['refuri'] = str(context.uri.resolve(prefix))
-                # Now include the page
-                # A page may begin with a section or a list of sections
-                if len(subdoc) and isinstance(subdoc[0], nodes.section):
-                    for node in subdoc.children:
-                        if isinstance(node, nodes.section):
-                            document.append(node)
-                else:
-                    subtitle = subdoc.get('title', u'')
-                    section = nodes.section(*subdoc.children,
-                                            **subdoc.attributes)
-                    section.insert(0, nodes.title(text=subtitle))
-                    document.append(section)
-                pages.append(abspath)
+            # Set the URI to download it
+            prefix = context.resource.get_pathto(destination)
+            node['refuri'] = str(context.uri.resolve(prefix))
+            continue
 
         # Find the list of images to append
+        images = []
         for node in document.traverse(condition=nodes.image):
             uri = node['uri'].encode('utf_8')
-
             # Hack to handle local images
             reference = get_reference(uri)
             if not reference.scheme and uri.endswith('/;download'):
                 reference = get_reference(uri[:-len('/;download')])
-
             if reference.scheme or reference.authority:
                 # Fetch external image
                 try:
@@ -281,6 +234,7 @@ class WikiPage_ToPDF(BaseView):
             stylesheet.save_state_to_file(file)
         finally:
             file.close()
+
         # The 'powered' image...
         image = resource.get_resource('/ui/aruni/images/ikaaro_powered.png')
         file = tempdir.make_file('ikaaro.png')
@@ -288,6 +242,7 @@ class WikiPage_ToPDF(BaseView):
             image.save_state_to_file(file)
         finally:
             file.close()
+
         # And referenced images
         for image, filename in images:
             if tempdir.exists(filename):
@@ -306,7 +261,7 @@ class WikiPage_ToPDF(BaseView):
             finally:
                 file.close()
 
-        # From latex to PDF
+        # From LaTeX to PDF
         command = ['pdflatex', '-8bit', '-no-file-line-error',
                    '-interaction=batchmode', resource.name]
         try:
@@ -314,14 +269,15 @@ class WikiPage_ToPDF(BaseView):
             # Twice for correct page numbering
             call(command, cwd=dirname)
         except OSError:
-            msg = ERROR(u"PDF generation failed. Please install pdflatex.")
+            msg = ERROR(u'PDF generation failed. See "{dirname}" on the '
+                    u'server for debug.', dirname=dirname)
             return context.come_back(msg)
 
         pdfname = '%s.pdf' % resource.name
         if not tempdir.exists(pdfname):
-            # TODO Print an error message somewhere with the 'dirname' for
-            # inspection of the problem.
-            return context.come_back(MSG(u"PDF generation failed."))
+            msg = ERROR(u'PDF generated not found. See "{dirname}" on the '
+                    u'server for debug.', dirname=dirname)
+            return context.come_back(msg)
 
         # Read the file's data
         file = tempdir.open(pdfname)
@@ -337,7 +293,7 @@ class WikiPage_ToPDF(BaseView):
         response = context.response
         response.set_header('Content-Type', 'application/pdf')
         response.set_header('Content-Disposition',
-                            'attachment; filename=%s' % pdfname)
+                            'inline; filename=%s' % pdfname)
         return data
 
 
