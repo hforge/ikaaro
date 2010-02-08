@@ -80,25 +80,6 @@ class Text_View(stl_view):
 
 
 
-class Text_ExternalEdit(stl_view):
-
-    access = 'is_allowed_to_edit'
-    view_title = MSG(u'External Editor')
-    icon = 'external.png'
-    template = 'text/externaledit.xml'
-
-
-    def encodings(self):
-        # FIXME This list should be built from a txt file with all the
-        # encodings, or better, from a Python module that tells us which
-        # encodings Python supports.
-        return [
-            {'value': 'utf-8', 'title': 'UTF-8', 'is_selected': True},
-            {'value': 'iso-8859-1', 'title': 'ISO-8859-1',
-             'is_selected': False}]
-
-
-
 class PO_Edit(stl_view):
 
     access = 'is_allowed_to_edit'

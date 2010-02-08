@@ -31,6 +31,28 @@ from views import Container_Search, Container_Sort, Container_Batch
 from views import Container_Table
 
 
+def get_changes(diff):
+    """Turn a diff source into a list of changes for HTML display"""
+    changes = []
+    password_re = compile('<password>(.*)</password>')
+    for line in diff.splitlines():
+        if line[:5] == 'index' or line[:3] in ('---', '+++', '@@ '):
+            continue
+        css = None
+        is_header = (line[:4] == 'diff')
+        if not is_header:
+            # For security, hide password the of metadata files
+            line = sub(password_re, '<password>***</password>', line)
+            if line[0] == '-':
+                css = 'rem'
+            elif line[0] == '+':
+                css = 'add'
+        # Add the line
+        changes.append({'css': css, 'value': line, 'is_header': is_header})
+    return changes
+
+
+
 class DBResource_CommitLog(stl_view):
 
     access = 'is_allowed_to_edit'
@@ -132,21 +154,4 @@ class DBResource_Changes(stl_view):
 
 
     def changes(self):
-        # Diff
-        changes = []
-        password_re = compile('<password>(.*)</password>')
-        for line in self.diff['diff'].splitlines():
-            if line[:5] == 'index' or line[:3] in ('---', '+++', '@@ '):
-                continue
-            css = None
-            is_header = (line[:4] == 'diff')
-            if not is_header:
-                # For security, hide password the of metadata files
-                line = sub(password_re, '<password>***</password>', line)
-                if line[0] == '-':
-                    css = 'rem'
-                elif line[0] == '+':
-                    css = 'add'
-            # Add the line
-            changes.append({'css': css, 'value': line, 'is_header': is_header})
-        return changes
+        return get_changes(self.diff['diff'])

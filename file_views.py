@@ -130,8 +130,13 @@ class File_Download(view):
         # Filename
         filename = resource.get_property('filename')
         if filename is not None:
+            mimetype = resource.handler.get_mimetype()
+            disposition = 'inline'
+            # Special case:  the OOo plugin is unusable
+            if mimetype.startswith('application/vnd.oasis.opendocument.'):
+                disposition = 'attachment'
             context.set_header('Content-Disposition',
-                               'inline; filename="%s"' % filename)
+                               '%s; filename="%s"' % (disposition, filename))
         # Content-Type
         content_type = resource.get_content_type()
         body = resource.handler.to_str()
@@ -209,6 +214,16 @@ class File_Edit(DBResource_Edit):
             folder = resource.get_parent().handler
             filename = FileName.encode((old_name, new_extension, old_lang))
             folder.move_handler(handler_name, filename)
+
+
+
+class File_ExternalEdit_View(stl_view):
+
+    access = 'is_allowed_to_edit'
+    template = 'file/externaledit.xml'
+    view_title = MSG(u'External Editor')
+    icon = 'external.png'
+    encodings = None
 
 
 

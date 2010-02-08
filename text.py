@@ -32,15 +32,24 @@ from itools.xmlfile import XMLFile
 
 # Import from ikaaro
 from file import File
-from file_views import File_Edit
+from file_views import File_Edit, File_ExternalEdit_View
 from registry import register_resource_class
-from text_views import Text_Edit, Text_View, Text_ExternalEdit, PO_Edit
+from text_views import Text_Edit, Text_View, PO_Edit
 from text_views import CSV_View, CSV_AddRow, CSV_EditRow
 
 
 # FIXME Add support for thumb
 css_uri_expr = compile(
         r"url\(['\"]{0,1}([a-zA-Z0-9\./\-\_]*/;download)['\"]{0,1}\);")
+
+# FIXME This list should be built from a txt file with all the
+# encodings, or better, from a Python module that tells us which
+# encodings Python supports.
+encodings = [
+    {'value': 'utf-8', 'title': 'UTF-8', 'is_selected': True},
+    {'value': 'iso-8859-1', 'title': 'ISO-8859-1', 'is_selected': False}
+]
+
 
 class Text(File):
 
@@ -60,7 +69,7 @@ class Text(File):
     # Views
     view = Text_View()
     edit = Text_Edit()
-    externaledit = Text_ExternalEdit()
+    externaledit = File_ExternalEdit_View(encodings=encodings)
 
 
 

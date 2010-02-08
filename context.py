@@ -447,7 +447,7 @@ class CMSContext(WebContext):
         try:
             git_message = getattr(self, 'git_message')
         except AttributeError:
-            git_message = 'no comment'
+            git_message = "%s %s" % (self.request.method, self.uri)
         else:
             git_message = git_message.encode('utf-8')
 

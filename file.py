@@ -28,7 +28,6 @@ from itools.odf import SXWFile, SXCFile, SXIFile, ODTFile, ODSFile, ODPFile
 from itools.pdf import PDFFile
 from itools.uri import get_uri_path, resolve_uri
 from itools.vfs import FileName
-from itools.web import stl_view
 from itools.office import MSPowerPoint as MSPowerPointFile, RTF as RTFFile
 from itools.office import MSWord as MSWordFile, MSExcel as MSExcelFile
 
@@ -36,7 +35,7 @@ from itools.office import MSWord as MSWordFile, MSExcel as MSExcelFile
 from registry import register_resource_class
 from workflow import WorkflowAware
 from file_views import File_NewInstance, File_Download, File_View
-from file_views import File_Edit, File_ExternalEdit
+from file_views import File_Edit, File_ExternalEdit, File_ExternalEdit_View
 from file_views import Image_Thumbnail, Image_View, Video_View, Archive_View
 from file_views import Flash_View
 
@@ -189,11 +188,7 @@ class File(WorkflowAware):
     download = File_Download()
     view = File_View()
     edit = File_Edit()
-    externaledit = stl_view(
-        access='is_allowed_to_edit',
-        view_title=MSG(u'External Editor'),
-        icon='external.png',
-        template='file/externaledit.xml')
+    externaledit = File_ExternalEdit_View()
     external_edit = File_ExternalEdit()
 
 
