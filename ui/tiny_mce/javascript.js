@@ -60,12 +60,12 @@ function ikaaro_filebrowser(field_name, url, type, win) {
         resizable : "yes",
         inline : "no",  // This parameter only has an effect if you use the inlinepopups plugin!
         close_previous : "yes",
-        scrollbars : "yes"
+        scrollbars : "yes",
+        popup_css : "false"
     }, {
         window : win,
         input : field_name,
-        theme_url : 'none',
-        use_css : 'no'
+        theme_url : 'none'
     });
     return false;
 }
