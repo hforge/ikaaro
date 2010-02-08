@@ -122,8 +122,13 @@ class File_Download(BaseView):
         # Filename
         filename = resource.get_property('filename')
         if filename is not None:
+            mimetype = resource.handler.get_mimetype()
+            disposition = 'inline'
+            # Special case:  the OOo plugin is unusable
+            if mimetype.startswith('application/vnd.oasis.opendocument.'):
+                disposition = 'attachment'
             response.set_header('Content-Disposition',
-                                'inline; filename="%s"' % filename)
+                                '%s; filename="%s"' % (disposition, filename))
         # Content-Type
         response.set_header('Content-Type', resource.get_content_type())
         return resource.handler.to_str()
