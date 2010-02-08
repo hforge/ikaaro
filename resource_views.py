@@ -89,7 +89,7 @@ class DBResource_Edit(AutoForm):
             context.message = messages.MSG_EDIT_CONFLICT
             return True
 
-        resource = seld.resource
+        resource = self.resource
         mtime = resource.brain.mtime
         if mtime is not None and timestamp < mtime:
             # Conlicft unless we are overwriting our own work
