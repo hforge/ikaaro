@@ -111,7 +111,11 @@ class NewInstance(AutoForm):
         if not name:
             raise FormError, messages.MSG_NAME_MISSING
 
-        name = checkid(name)
+        try:
+            name = checkid(name)
+        except UnicodeEncodeError:
+            name = None
+
         if name is None:
             raise FormError, messages.MSG_BAD_NAME
 
