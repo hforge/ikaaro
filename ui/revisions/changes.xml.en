@@ -4,31 +4,57 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
-  <fieldset>
+  <fieldset stl:if="metadata">
     <legend>Change metadata</legend>
     <table>
       <tr>
         <td><b>Author</b></td>
-        <td>: ${author_name}</td>
+        <td>: ${metadata/author_name}</td>
       </tr>
       <tr>
         <td><b>Date</b></td>
-        <td>: ${author_date}</td>
+        <td>: ${metadata/author_date}</td>
       </tr>
       <tr>
         <td><b>Message</b></td>
-        <td>: ${subject}</td>
+        <td>: ${metadata/subject}</td>
       </tr>
     </table>
   </fieldset>
 
+  <h3>Stat</h3>
+  <div id="git-stat">
+    <p>${stat/summary}</p>
+    <table id="browse-list">
+      <thead>
+        <tr>
+          <th>Filename</th>
+          <th>Lines Changed</th>
+          <th>Before</th>
+          <th>After</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr stl:repeat="row stat/table" class="${repeat/row/even}">
+          <td><a href="#diff_${repeat/row/index}">${row/value}</a></td>
+          <td>${row/nlines}</td>
+          <td class="rem">${row/before}</td>
+          <td class="add">${row/after}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+
   <h3>Details</h3>
   <div id="differ">
     <stl:block stl:repeat="change changes">
-      <div stl:if="change/is_header">${change/value}</div>
+      <div stl:if="change/is_header"><a
+          name="diff_${change/index}"/>${change/value}</div>
       <stl:block stl:if="not change/is_header">
         <span class="${change/css}">${change/value}</span><br/>
       </stl:block>
     </stl:block>
   </div>
+
 </stl:block>

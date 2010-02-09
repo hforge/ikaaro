@@ -17,6 +17,7 @@
 # Import from standard library
 from operator import itemgetter
 from re import compile, sub
+from subprocess import CalledProcessError
 
 # Import from itools
 from itools.core import thingy_property, thingy_lazy_property
@@ -24,23 +25,29 @@ from itools.core import OrderedDict
 from itools.datatypes import Boolean, String
 from itools.gettext import MSG
 from itools.stl import make_stl_template
+from itools.uri import encode_query, get_reference
 from itools.web import stl_view, hidden_field
 
 # Import from ikaaro
+from buttons import Button
 from views import Container_Search, Container_Sort, Container_Batch
-from views import Container_Table
+from views import Container_Form, Container_Table
 
 
-def get_changes(diff):
-    """Turn a diff source into a list of changes for HTML display"""
+def get_colored_diff(diff):
+    """Turn a diff source into a namespace for HTML display"""
     changes = []
     password_re = compile('<password>(.*)</password>')
+    # The anchor index to link from the diff stat
+    link_index = -1
     for line in diff.splitlines():
         if line[:5] == 'index' or line[:3] in ('---', '+++', '@@ '):
             continue
         css = None
         is_header = (line[:4] == 'diff')
-        if not is_header:
+        if is_header:
+            link_index += 1
+        elif line:
             # For security, hide password the of metadata files
             line = sub(password_re, '<password>***</password>', line)
             if line[0] == '-':
@@ -48,8 +55,76 @@ def get_changes(diff):
             elif line[0] == '+':
                 css = 'add'
         # Add the line
-        changes.append({'css': css, 'value': line, 'is_header': is_header})
+        changes.append({'css': css, 'value': line, 'is_header': is_header,
+            'index': link_index})
     return changes
+
+
+
+def get_colored_stat(stat):
+    """Turn a diff stat into a namespace for HTML display"""
+    table = []
+    for line in stat.splitlines():
+        if '|' in line:
+            # File change
+            filename, change = [x.strip() for x in line.split('|')]
+            nlines, change = change.split(' ', 1)
+            if '->' in change:
+                # Binary change
+                before, after = change.split('->')
+            else:
+                # Text change
+                before = change.strip('+')
+                after = change.strip('-')
+            table.append({'value': filename, 'nlines': nlines,
+                'before': before, 'after': after})
+        else:
+            # Last line of summary
+            summary = line
+    namespace = {}
+    namespace['table'] = table
+    namespace['summary'] = summary
+    return namespace
+
+
+
+def get_older_state(resource, revision, context):
+    """All-in-one to get an older metadata and handler state."""
+    # Heuristic to remove the database prefix
+    prefix = len(str(context.server.target)) + len('/database/')
+    # Metadata
+    path = str(resource.metadata.uri)[prefix:]
+    metadata = context.database.get_blob(revision, path)
+    # Handler
+    path = str(resource.handler.uri)[prefix:]
+    try:
+        handler = context.database.get_blob(revision, path)
+    except CalledProcessError:
+        # Phantom handler or renamed file
+        handler = ''
+    return metadata, handler
+
+
+
+class IndexRevision(String):
+
+    @staticmethod
+    def decode(data):
+        index, revision = data.split('_')
+        return int(index), revision
+
+
+    @staticmethod
+    def encode(value):
+        raise NotImplementedError
+
+
+
+class DiffButton(Button):
+    access = 'is_allowed_to_edit'
+    name = 'diff'
+    title = MSG(u"Diff between selected revisions")
+    css = 'button-compare'
 
 
 
@@ -58,7 +133,10 @@ class DBResource_CommitLog(stl_view):
     access = 'is_allowed_to_edit'
     view_title = MSG(u"Commit Log")
 
-    template = make_stl_template("${batch}${table}")
+    template = make_stl_template("${batch}${form}")
+
+    ids = hidden_field(source='query', multiple=True, required=True)
+    ids.datatype = IndexRevision
 
 
     # Search
@@ -66,8 +144,10 @@ class DBResource_CommitLog(stl_view):
     def items(self):
         view = self.view
         items = view.resource.get_revisions(content=True)
-        for item in items:
+        for i, item in enumerate(items):
             item['username'] = view.context.get_user_title(item['username'])
+            # Hint to sort revisions quickly
+            item['index'] = i
         return items
 
     search = Container_Search()
@@ -106,21 +186,39 @@ class DBResource_CommitLog(stl_view):
     batch = Container_Batch()
     batch.items = items
 
-    # Table
+    # Form
+    form = Container_Form()
+    form.actions = [DiffButton]
+
+    # Form content
     @thingy_property
     def header(self):
-        return [
-            (k, v['title'], True)
-            for k, v in self.root_view.sort.sort_by.values.items() ]
+        columns = [('checkbox', None, False)]
+        for name, value in self.root_view.sort.sort_by.values.items():
+            columns.append((name, value['title'], True))
+        return columns
 
-    table = Container_Table()
-    table.header = header
+    form.content = Container_Table()
+    form.content.header = header
 
 
     def get_item_value(self, item, column):
-        if column == 'date':
+        if column == 'checkbox':
+            return ('%s_%s' % (item['index'], item['revision']), False)
+        elif column == 'date':
             return (item['date'], './;changes?revision=%s' % item['revision'])
         return item[column]
+
+
+    def action_diff(self):
+        # Take newer and older revisions, even if many selected
+        ids = sorted(self.ids.value)
+        revision = ids.pop()[1]
+        to = ids and ids.pop(0)[1] or 'HEAD'
+        # FIXME same hack than rename to call a GET from a POST
+        query = encode_query({'revision': revision, 'to': to})
+        uri = '%s/;changes?%s' % (context.get_link(resource), query)
+        return get_reference(uri)
 
 
 
@@ -132,6 +230,7 @@ class DBResource_Changes(stl_view):
 
 
     revision = hidden_field(source='query', required=True)
+    to = hidden_field(source='query')
 
 
     @thingy_lazy_property
@@ -140,18 +239,32 @@ class DBResource_Changes(stl_view):
         return self.context.database.get_diff(revision)
 
 
-    def author_name(self):
-        author_name = self.diff['author_name']
-        return self.context.get_user_title(author_name)
+    def metadata(self):
+        if self.to.value is None:
+            metadata = self.diff
+            author_name = metadata['author_name']
+            metadata['author_name'] = self.context.get_user_title(author_name)
+            return metadata
+
+        return None
 
 
-    def author_date(self):
-        return self.diff['author_date']
-
-
-    def subject(self):
-        return self.diff['subject']
+    def stat(self):
+        revision = self.revision.value
+        to = self.to.value
+        if to is None:
+            to = '%s^' % revision
+        stat = self.context.database.get_diff_between(revision, to, stat=True)
+        return get_colored_stat(stat)
 
 
     def changes(self):
-        return get_changes(self.diff['diff'])
+        to = self.to.value
+        if to is None:
+            diff = self.diff['diff']
+        else:
+            revision = self.revision.value
+            diff = self.context.database.get_diff_between(revision, to)
+
+        return get_colored_diff(diff)
+
