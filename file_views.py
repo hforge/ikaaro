@@ -23,7 +23,7 @@ from datetime import datetime, timedelta
 
 # Import from itools
 from itools.core import merge_dicts
-from itools.datatypes import Integer, Unicode
+from itools.datatypes import Integer, Unicode, String
 from itools.gettext import MSG
 from itools.handlers import get_handler_class_by_mimetype, guess_encoding
 from itools.html import HTMLParser, stream_to_str_as_xhtml
@@ -37,7 +37,7 @@ from itools.web import BaseView, STLView, INFO, ERROR
 from datatypes import FileDataType, ImageWidth
 from forms import title_widget, file_widget, description_widget, subject_widget
 from forms import timestamp_widget
-from forms import FileWidget
+from forms import FileWidget, TextWidget
 import messages
 from multilingual import Multilingual
 from registry import get_resource_class
@@ -50,14 +50,21 @@ class File_NewInstance(NewInstance):
     title = MSG(u'Upload File')
     schema = {
         'title': Unicode,
+        'name': String,
         'file': FileDataType(mandatory=True)}
     widgets = [
         title_widget,
+        TextWidget('name', title=MSG(u'Name'), default=''),
         FileWidget('file', title=MSG(u'File'), size=35)]
     submit_value = MSG(u'Upload')
 
 
     def get_new_resource_name(self, form):
+        # If the name is not explicitly given, use the title
+        # or get it from the file
+        name = form['name']
+        if name:
+            return name
         filename, mimetype, body = form['file']
         name, type, language = FileName.decode(filename)
 
