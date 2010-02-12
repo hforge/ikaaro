@@ -35,8 +35,7 @@ from xapian import DatabaseOpeningError
 from itools.datatypes import Boolean
 from itools.http import Request
 from itools.uri import get_reference, get_host_from_authority
-from itools.vfs import cwd
-from itools import vfs
+from itools.fs import vfs, lfs
 from itools.web import Server as BaseServer, Context, set_context
 
 # Import from ikaaro
@@ -115,7 +114,7 @@ class Server(BaseServer):
 
     def __init__(self, target, address=None, port=None, read_only=False,
                  cache_size=None):
-        target = cwd.get_uri(target)
+        target = lfs.get_absolute_path(target)
         self.target = get_reference(target)
         path = self.target.path
 

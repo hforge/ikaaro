@@ -28,7 +28,7 @@ from itools.csv import Table
 from itools.datatypes import DateTime, Integer, String, Unicode, Tokens
 from itools.gettext import MSG
 from itools.handlers import checkid
-from itools.vfs import FileName
+from itools.fs import FileName
 from itools.uri import get_uri_path, Path
 from itools.web import get_context
 

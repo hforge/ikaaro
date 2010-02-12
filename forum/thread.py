@@ -22,7 +22,7 @@
 from itools.datatypes import String
 from itools.gettext import MSG
 from itools.i18n import format_datetime
-from itools.vfs import FileName
+from itools.fs import FileName
 from itools.web import STLForm, INFO
 
 # Import from ikaaro

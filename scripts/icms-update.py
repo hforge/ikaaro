@@ -28,7 +28,7 @@ from traceback import print_exc
 # Import from itools
 import itools
 from itools.core import start_subprocess
-from itools import vfs
+from itools.fs import lfs
 from itools.web import get_context
 
 # Import from ikaaro
@@ -146,7 +146,7 @@ def update_versions(target, database, version, paths, root):
 
 
 def update(parser, options, target):
-    folder = vfs.open(target)
+    folder = lfs.open(target)
     confirm = options.confirm
 
     # Check the server is not started, or started in read-only mode
@@ -166,7 +166,7 @@ def update(parser, options, target):
     # STAGE 0: Initialize '.git'
     # XXX Specific to the migration from 0.50 to 0.60
     #######################################################################
-    if not vfs.exists('%s/.git' % database.path):
+    if not lfs.exists('%s/.git' % database.path):
         message = 'STAGE 0: Add the Git archive (y/N)? '
         if ask_confirmation(message, confirm) is False:
             abort()

@@ -19,7 +19,7 @@ from datetime import datetime
 
 # Import from itools
 from itools.uri import resolve_uri
-from itools.vfs import FileName
+from itools.fs import FileName
 from itools.web import get_context
 
 # Import from ikaaro
