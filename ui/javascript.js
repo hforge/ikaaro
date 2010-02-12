@@ -1,8 +1,10 @@
 
 /* Browse: select all/none */
-function select_checkboxes(form_id, checked) {
-  $("#" + form_id + " INPUT[type='checkbox']").each( function() {
-    $(this).attr('checked', checked); });
+function select_checkboxes(elt, checked) {
+  var form = $(elt).parents('form');
+  form.find('table input:checkbox').each(function() {
+    $(this).attr('checked', checked);
+  });
 }
 
 

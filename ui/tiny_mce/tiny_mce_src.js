@@ -1,3 +1,9 @@
+// FIXME
+// Do not defined tinymce twice
+// This case occurs when several editors are defined
+// inside a same page
+// We add one <script="../tinymce/xx" for each editor
+if (tinymce == undefined) {
 var tinymce = {
 	majorVersion : '3',
 	minorVersion : '2.7',
@@ -12439,3 +12445,4 @@ var tinyMCE = window.tinyMCE = tinymce.EditorManager;
 		return false; // Run browser command
 	});
 })();
+}

@@ -48,18 +48,20 @@ class File_NewInstance(NewInstance):
     submit_value = MSG(u'Upload')
 
 
-    name = None
     file = file_field(required=True, size=35, title=MSG(u'File'))
-
-    field_names = ['file', 'title', 'path']
+    field_names = ['file', 'title', 'name', 'path']
 
 
     @thingy_lazy_property
     def new_resource_name(self):
+        # If the name is not explicitly given, use the title
+        name = self.name.value
         title = self.title.value.strip()
-        if title:
-            return title
+        name = name or title
+        if name:
+            return name
 
+        # Use filename
         filename = self.file.filename
         name, type, language = FileName.decode(filename)
         return name
