@@ -25,7 +25,7 @@ import sys
 from glib import GError
 
 # Import from itools
-from itools import vfs
+from itools.vfs import vfs
 
 # Import from ikaaro
 from utils import is_pid_running

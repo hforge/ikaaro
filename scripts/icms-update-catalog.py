@@ -30,7 +30,7 @@ def update_catalog(parser, options, target):
     import sys
     from time import time
     from itools.core import vmsize
-    from itools import vfs
+    from itools.vfs import vfs
     from itools.xapian import make_catalog, CatalogAware
     from ikaaro.boot import get_server
     from ikaaro.database import check_database
