@@ -24,7 +24,7 @@ from sys import platform
 # Import from itools
 from itools.http import get_context
 from itools.stl import STLTemplate
-from itools import vfs
+from itools.vfs import vfs
 
 if platform[:3] == 'win':
     from utils_win import is_pid_running, kill
