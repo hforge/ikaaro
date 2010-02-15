@@ -23,7 +23,7 @@ from itools.core import OrderedDict
 from itools.datatypes import Date, DateTime, Enumerate, String, Unicode
 from itools.gettext import MSG
 from itools.stl import make_stl_template
-from itools.vfs import vfs
+from itools.fs import vfs
 from itools.web import hidden_field, input_field, text_field, textarea_field
 from itools.web import file_field
 
