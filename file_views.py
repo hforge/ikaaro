@@ -29,7 +29,7 @@ from itools.handlers import get_handler_class_by_mimetype, guess_encoding
 from itools.html import HTMLParser, stream_to_str_as_xhtml
 from itools.i18n import guess_language
 from itools.uri import get_reference, get_uri_name
-from itools.vfs import FileName
+from itools.fs import FileName
 from itools.web import view, stl_view, ERROR
 from itools.web import file_field, integer_field
 

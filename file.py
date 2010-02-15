@@ -27,7 +27,7 @@ from itools.handlers import TARFile, ZIPFile, GzipFile, Bzip2File
 from itools.odf import SXWFile, SXCFile, SXIFile, ODTFile, ODSFile, ODPFile
 from itools.pdf import PDFFile
 from itools.uri import get_uri_path, resolve_uri
-from itools.vfs import FileName
+from itools.fs import FileName
 from itools.office import MSPowerPoint as MSPowerPointFile, RTF as RTFFile
 from itools.office import MSWord as MSWordFile, MSExcel as MSExcelFile
 

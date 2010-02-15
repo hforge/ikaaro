@@ -18,7 +18,7 @@
 from itools.core import thingy_property
 from itools.http import get_context
 from itools.uri import resolve_uri
-from itools.vfs import FileName
+from itools.fs import FileName
 
 # Import from ikaaro
 from resource_ import DBResource

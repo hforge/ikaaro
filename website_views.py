@@ -28,7 +28,7 @@ from itools.core import OrderedDict
 from itools.datatypes import Email, Enumerate, Unicode
 from itools.gettext import MSG
 from itools.stl import stl
-from itools.vfs import vfs
+from itools.fs import vfs
 from itools.web import stl_view, INFO, ERROR, FormError
 from itools.web import choice_field, email_field, text_field, textarea_field
 from itools.xapian import PhraseQuery, OrQuery, AndQuery, split_unicode

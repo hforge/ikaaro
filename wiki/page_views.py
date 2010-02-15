@@ -41,8 +41,8 @@ from itools.html import XHTMLFile
 from itools.i18n import format_datetime
 from itools.uri import get_reference
 from itools.uri.mailto import Mailto
-from itools.vfs import vfs
-from itools.vfs import FileName
+from itools.fs import vfs
+from itools.fs import FileName
 from itools.web import view, stl_view, ERROR
 from itools.xml import XMLParser, XMLError
 

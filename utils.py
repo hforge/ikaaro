@@ -26,7 +26,7 @@ from urllib import quote
 from itools.core import freeze
 from itools.http import get_context
 from itools.stl import STLTemplate
-from itools.vfs import vfs
+from itools.fs import vfs
 
 if platform[:3] == 'win':
     from utils_win import is_pid_running, kill

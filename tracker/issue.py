@@ -30,7 +30,7 @@ from itools.datatypes import Integer, String, Unicode, Tokens
 from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.http import get_context
-from itools.vfs import FileName
+from itools.fs import FileName
 from itools.uri import Path
 
 # Import from ikaaro

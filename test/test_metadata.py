@@ -20,7 +20,7 @@ from unittest import TestCase, main
 
 # Import from itools
 from itools.csv import Property
-from itools.vfs import vfs
+from itools.fs import vfs
 
 # Import from ikaaro
 from ikaaro.metadata import Metadata

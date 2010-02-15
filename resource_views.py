@@ -30,7 +30,7 @@ from itools.handlers import checkid
 from itools.i18n import get_language_name
 from itools.stl import stl
 from itools.uri import Path, get_reference
-from itools.vfs import FileName
+from itools.fs import FileName
 from itools.web import view, stl_view, INFO, ERROR, FormError
 from itools.web import file_field, input_field, password_field
 
