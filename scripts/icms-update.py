@@ -29,7 +29,7 @@ import itools
 from itools.core import start_subprocess
 from itools.csv import Property
 from itools.http import get_context
-from itools.fs import vfs
+from itools.fs import lfs
 
 # Import from ikaaro
 from ikaaro.metadata import Metadata
@@ -148,7 +148,7 @@ def update_versions(target, database, version, paths, root):
 
 
 def update(parser, options, target):
-    folder = vfs.open(target)
+    folder = lfs.open(target)
     confirm = options.confirm
 
     # Check the server is not started, or started in read-only mode
@@ -162,7 +162,7 @@ def update(parser, options, target):
     # XXX Specific to the migration from 0.50 to 0.60
     #######################################################################
     path = '%s/database' % target
-    if not vfs.exists('%s/.git' % path):
+    if not lfs.exists('%s/.git' % path):
         message = 'STAGE 0: Add the Git archive (y/N)? '
         if ask_confirmation(message, confirm) is False:
             abort()
@@ -197,7 +197,7 @@ def update(parser, options, target):
             abort()
         print 'STAGE 1: Updating metadata (may take a while)'
         t0 = time()
-        for filename in vfs.traverse(path):
+        for filename in lfs.traverse(path):
             if not filename.endswith('.metadata'):
                 continue
             # Load the old metadata
@@ -222,7 +222,7 @@ def update(parser, options, target):
                     new_metadata.set_property(name, property)
             # Save
             del old_metadata
-            vfs.remove(filename)
+            lfs.remove(filename)
             new_metadata.save_state_to(filename)
         print '       : %f seconds' % (time() - t0)
         # Commit

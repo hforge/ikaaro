@@ -23,7 +23,7 @@ from itools.core import OrderedDict
 from itools.datatypes import Date, DateTime, Enumerate, String, Unicode
 from itools.gettext import MSG
 from itools.stl import make_stl_template
-from itools.fs import vfs
+from itools.fs import lfs
 from itools.web import hidden_field, input_field, text_field, textarea_field
 from itools.web import file_field
 
@@ -209,7 +209,7 @@ class RTEField(input_field):
 
     def language(self):
         path = get_abspath('ui/tiny_mce/langs')
-        tiny_mce_languages = [ x[:-3] for x in vfs.get_names(path) ]
+        tiny_mce_languages = [ x[:-3] for x in lfs.get_names(path) ]
         accept = self.view.context.accept_language
         return accept.select_language(tiny_mce_languages)
 

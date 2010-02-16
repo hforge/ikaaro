@@ -28,7 +28,7 @@ from itools.core import OrderedDict
 from itools.datatypes import Email, Enumerate, Unicode
 from itools.gettext import MSG
 from itools.stl import stl
-from itools.fs import vfs
+from itools.fs import lfs
 from itools.web import stl_view, INFO, ERROR, FormError
 from itools.web import choice_field, email_field, text_field, textarea_field
 from itools.xapian import PhraseQuery, OrQuery, AndQuery, split_unicode
@@ -298,6 +298,6 @@ class CreditsView(stl_view):
 
     def hackers(self):
         credits = get_abspath('CREDITS')
-        lines = vfs.open(credits).readlines()
+        lines = lfs.open(credits).readlines()
         return [ x[3:].strip() for x in lines if x.startswith('N: ') ]
 

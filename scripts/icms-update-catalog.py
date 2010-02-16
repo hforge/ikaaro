@@ -30,7 +30,7 @@ def update_catalog(parser, options, target):
     import sys
     from time import time
     from itools.core import vmsize
-    from itools.fs import vfs
+    from itools.fs import lfs
     from itools.xapian import make_catalog, CatalogAware
     from ikaaro.boot import get_server
     from ikaaro.database import check_database
@@ -54,8 +54,8 @@ def update_catalog(parser, options, target):
 
     # Create a temporary new catalog
     catalog_path = '%s/catalog.new' % target
-    if vfs.exists(catalog_path):
-        vfs.remove(catalog_path)
+    if lfs.exists(catalog_path):
+        lfs.remove(catalog_path)
     catalog = make_catalog(catalog_path, get_register_fields())
 
     # Build a fake context
@@ -88,9 +88,9 @@ def update_catalog(parser, options, target):
     catalog.save_changes()
     # Commit / Replace
     old_catalog_path = '%s/catalog' % target
-    if vfs.exists(old_catalog_path):
-        vfs.remove(old_catalog_path)
-    vfs.move(catalog_path, old_catalog_path)
+    if lfs.exists(old_catalog_path):
+        lfs.remove(old_catalog_path)
+    lfs.move(catalog_path, old_catalog_path)
     # Commit / Report
     t2, v2 = time(), vmsize()
     v = (v2 - v1)/1024

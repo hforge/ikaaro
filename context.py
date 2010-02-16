@@ -18,7 +18,7 @@
 from itools.core import get_abspath, lazy, merge_dicts
 from itools.handlers import ConfigFile
 from itools.uri import Path
-from itools.fs import vfs
+from itools.fs import lfs
 from itools.web import WebContext, lock_body
 from itools.xapian import AllQuery, AndQuery, NotQuery, PhraseQuery, OrQuery
 from itools.xapian import StartQuery
@@ -314,7 +314,7 @@ class CMSContext(WebContext):
         # (4) Remove
         for handler in resource.get_handlers():
             # Skip empty folders and phantoms
-            if vfs.exists(handler.uri):
+            if lfs.exists(handler.uri):
                 database.del_handler(handler.uri)
         database.del_handler(resource.metadata.uri)
 
