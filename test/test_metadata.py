@@ -15,12 +15,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
-from datetime import datetime
 from unittest import TestCase, main
 
 # Import from itools
 from itools.csv import Property
-from itools.fs import vfs
+from itools.fs import lfs
 
 # Import from ikaaro
 from ikaaro.metadata import Metadata
@@ -77,12 +76,12 @@ class NewTestCase(TestCase):
         metadata.set_property('title', title)
         self.metadata = metadata
         # Sandbox
-        vfs.make_folder('sandbox')
+        lfs.make_folder('sandbox')
 
 
     def tearDown(self):
-        if vfs.exists('sandbox'):
-            vfs.remove('sandbox')
+        if lfs.exists('sandbox'):
+            lfs.remove('sandbox')
 
 
     def test_format(self):

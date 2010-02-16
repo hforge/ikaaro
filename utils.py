@@ -24,7 +24,7 @@ from sys import platform
 # Import from itools
 from itools.http import get_context
 from itools.stl import STLTemplate
-from itools.fs import vfs
+from itools.fs import lfs
 
 if platform[:3] == 'win':
     from utils_win import is_pid_running, kill
@@ -177,5 +177,5 @@ def generate_name(name, used, suffix='_'):
 
 def is_instance_up_to_date(target):
     # 0.60 Check the Git archive has been initalized
-    return vfs.exists('%s/database/.git' % target)
+    return lfs.exists('%s/database/.git' % target)
 
