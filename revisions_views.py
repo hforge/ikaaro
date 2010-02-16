@@ -216,7 +216,7 @@ class DBResource_Changes(STLView):
             author_name = metadata['author_name']
             metadata['author_name'] = root.get_user_title(author_name)
             namespace['metadata'] = metadata
-            stat = database.get_diff_between(revision, to='%s^' % revision,
+            stat = database.get_diff_between('%s^' % revision, to=revision,
                     stat=True)
             namespace['stat'] = get_colored_stat(stat)
             namespace['changes'] = get_colored_diff(metadata['diff'])
