@@ -349,8 +349,6 @@ class OrderedTable_View(Table_View):
         ids = form['ids']
         for id in ids:
             resource.del_record(id)
-        # Reindex the resource
-        context.server.change_resource(resource)
 
         context.message = INFO(u'Record deleted.')
 
