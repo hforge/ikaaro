@@ -140,7 +140,7 @@ class User(AccessControl, Folder):
         username = str(self.name)
         crypted = crypt_password(password)
         cookie = Password.encode('%s:%s' % (username, crypted))
-        expires = context.request.get_parameter('iAuthExpires')
+        expires = context.get_form_value('iAuthExpires')
         if expires is None:
             context.set_cookie('__ac', cookie, path='/')
         else:

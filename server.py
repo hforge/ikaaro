@@ -20,7 +20,6 @@
 
 # Import from the Standard Library
 from cProfile import runctx
-from logging import DEBUG, INFO, WARNING, ERROR, CRITICAL
 from os import fdopen
 import sys
 from tempfile import mkstemp
@@ -33,11 +32,13 @@ from xapian import DatabaseOpeningError
 
 # Import from itools
 from itools.datatypes import Boolean
-from itools.http import Request
+from itools.log import Logger, register_logger
+from itools.log import DEBUG, INFO, WARNING, ERROR, FATAL
+from itools.soup import SoupMessage
 from itools.uri import get_reference, get_host_from_authority
 from itools.vfs import cwd
 from itools import vfs
-from itools.web import Server as BaseServer, Context, set_context
+from itools.web import WebServer, WebLogger, Context, set_context
 
 # Import from ikaaro
 from config import get_config
@@ -54,7 +55,7 @@ log_levels = {
     'info': INFO,
     'warning': WARNING,
     'error': ERROR,
-    'critical': CRITICAL}
+    'fatal': FATAL}
 
 
 def ask_confirmation(message, confirm=False):
@@ -105,13 +106,13 @@ def get_root(database, target):
 
 
 def get_fake_context():
-    request = Request()
-    context = Context(request)
+    soup_message = SoupMessage()
+    context = Context(soup_message, '/')
     set_context(context)
     return context
 
 
-class Server(BaseServer):
+class Server(WebServer):
 
     def __init__(self, target, address=None, port=None, read_only=False,
                  cache_size=None):
@@ -138,16 +139,6 @@ class Server(BaseServer):
         self.index_text =  config.get_value('index-text', type=Boolean,
                                             default=True)
 
-        # Logs
-        event_log = '%s/log/events' % path
-        access_log = '%s/log/access' % path
-        log_level = config.get_value('log-level')
-        try:
-            log_level = log_levels[log_level]
-        except KeyError:
-            msg = 'configuraion error, unexpected "%s" value for log-level'
-            raise ValueError, msg % log_level
-
         # Profile CPU
         profile = config.get_value('profile-time')
         if profile is True:
@@ -173,12 +164,24 @@ class Server(BaseServer):
         root = get_root(database, target)
 
         # Initialize
-        BaseServer.__init__(self, root, address=address, port=port,
-                            access_log=access_log, event_log=event_log,
-                            log_level=log_level, pid_file='%s/pid' % path)
+        access_log = '%s/log/access' % path
+        WebServer.__init__(self, root, address=address, port=port,
+                           access_log=access_log, pid_file='%s/pid' % path)
 
         # Initialize the spool
         self.spool = Spool(target)
+
+        # Logging
+        log_file = '%s/log/events' % path
+        log_level = config.get_value('log-level')
+        if log_level not in log_levels:
+            msg = 'configuraion error, unexpected "%s" value for log-level'
+            raise ValueError, msg % log_level
+        log_level = log_levels[log_level]
+        logger = Logger(log_file, log_level)
+        register_logger(logger, None)
+        logger = WebLogger(log_file, log_level)
+        register_logger(logger, 'itools.http', 'itools.web')
 
 
     #######################################################################
@@ -219,9 +222,10 @@ class Server(BaseServer):
     # API / Public
     #######################################################################
     def init_context(self, context):
-        BaseServer.init_context(self, context)
+        WebServer.init_context(self, context)
         context.database = self.database
         context.message = None
+        context.content_type = None
 
 
     def find_site_root(self, context):
@@ -255,7 +259,7 @@ class Server(BaseServer):
         # Go
         if self.profile_path is not None:
             filename = self.profile_path
-            runctx("BaseServer.start(self)", globals(), locals(), filename)
+            runctx("WebServer.start(self)", globals(), locals(), filename)
         else:
-            BaseServer.start(self)
+            WebServer.start(self)
 

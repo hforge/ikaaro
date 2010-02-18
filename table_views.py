@@ -419,11 +419,8 @@ class Table_ExportCSV(BaseView):
         csv = handler.to_csv(columns, separator=self.multiple_separator,
                              language=language)
 
-        # Headers
-        response = context.response
-        response.set_header(
-            'Content-Disposition', 'inline; filename="%s.csv"' % resource.name)
-        response.set_header('Content-Type', 'text/comma-separated-values')
         # Ok
+        context.set_content_type('text/comma-separated-values')
+        context.set_content_disposition('inline', '%s.csv' % resource.name)
         return csv.to_str(separator=self.csv_separator)
 

@@ -290,10 +290,8 @@ class WikiPage_ToPDF(BaseView):
         vfs.remove(dirname)
 
         # Ok
-        response = context.response
-        response.set_header('Content-Type', 'application/pdf')
-        response.set_header('Content-Disposition',
-                            'inline; filename=%s' % pdfname)
+        context.set_content_type('application/pdf')
+        context.set_content_disposition('inline', pdfname)
         return data
 
 

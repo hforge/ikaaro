@@ -146,7 +146,7 @@ class WebSite(RoleAware, Folder):
             return
 
         # If there is not a content type, just serialize the content
-        if context.response.has_header('Content-Type'):
+        if context.content_type:
             if is_xml:
                 context.entity = stream_to_str_as_html(body)
             return
@@ -155,6 +155,7 @@ class WebSite(RoleAware, Folder):
         if is_str:
             body = XMLParser(body, doctype=xhtml_doctype)
         context.entity = self.get_skin(context).template(body)
+        context.content_type = 'text/html; charset=UTF-8'
 
 
     def is_allowed_to_register(self, user, resource):

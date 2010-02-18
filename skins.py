@@ -49,8 +49,7 @@ class FileGET(BaseView):
 
 
     def GET(self, resource, context):
-        response = context.response
-        response.set_header('Content-Type', resource.get_mimetype())
+        context.content_type = resource.get_mimetype()
         return resource.to_str()
 
 
@@ -430,7 +429,7 @@ class Skin(UIFolder):
         namespace['body'] = content
 
         # Set the encoding to UTF-8
-        context.response.set_header('Content-Type', 'text/html; charset=UTF-8')
+        context.content_type = 'text/html; charset=UTF-8'
 
         # Load the template
         handler = self.get_template()

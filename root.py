@@ -66,7 +66,7 @@ class CtrlView(BaseView):
 
 
     def GET(self, resource, context):
-        context.response.set_header('content-type', 'text/plain')
+        context.content_type = 'text/plain'
         name = context.query['name']
 
         # Read-Only

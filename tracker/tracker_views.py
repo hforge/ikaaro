@@ -733,11 +733,9 @@ class Tracker_ExportToCSV(BaseView):
                 row.append(value)
             csv.add_row(row)
 
-        # Set response type
-        response = context.response
-        response.set_header('Content-Type', 'text/comma-separated-values')
-        response.set_header('Content-Disposition',
-                            'attachment; filename=export.csv')
+        # Ok
+        context.set_content_type('text/comma-separated-values')
+        context.set_content_disposition('attachment', 'export.csv')
         return csv.to_str(separator=separator)
 
 

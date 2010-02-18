@@ -62,27 +62,6 @@ def get_parameters(prefix, **kw):
     return parameters
 
 
-def preserve_parameters(preserve=freeze([])):
-    """Returns an HTML snippet with hidden input html elements, there will
-    be one element for each request parameter that starts with any of
-    the prefixes contained in the preserve parameter.
-
-    This lets to pass url request parameters through form actions, so we
-    don't lose important navigation information.
-    """
-    snippet = []
-
-    form = get_context().request.get_form()
-    for k, v in form.items():
-        for prefix in preserve:
-            if k.startswith(prefix):
-                snippet.append('<input type="hidden" name="%s" value="%s">'
-                               % (k, quote(v)))
-                break
-
-    return '\n'.join(snippet)
-
-
 
 ###########################################################################
 # Languages

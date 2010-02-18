@@ -316,8 +316,7 @@ class DBResource_AddBase(STLForm):
         folders.sort(key=itemgetter('short_title'))
 
         # Avoid general template
-        response = context.response
-        response.set_header('Content-Type', 'text/html; charset=UTF-8')
+        context.content_type = 'text/html; charset=UTF-8'
 
         # Build and return the namespace
         namespace = self.get_configuration()
@@ -558,7 +557,7 @@ class LoginView(STLForm):
         context.user = user
 
         # Come back
-        referrer = context.request.referrer
+        referrer = context.get_referrer()
         if referrer is None:
             goto = get_reference('./')
         else:
@@ -625,7 +624,7 @@ class Delete_View(BaseView):
             raise Conflict
 
         # Clean the copy cookie if needed
-        cut, paths = context.get_cookie('ikaaro_cp', type=CopyCookie)
+        cut, paths = context.get_cookie('ikaaro_cp', datatype=CopyCookie)
         # Clean cookie
         if str(resource.get_abspath()) in paths:
             context.del_cookie('ikaaro_cp')
@@ -642,9 +641,8 @@ class Lock_View(BaseView):
         lock = resource.lock()
 
         # TODO move in the request handler
-        response = context.response
-        response.set_header('Content-Type', 'text/xml; charset="utf-8"')
-        response.set_header('Lock-Token', 'opaquelocktoken:%s' % lock)
+        context.content_type = 'text/xml; charset="utf-8"'
+        context.set_header('Lock-Token', 'opaquelocktoken:%s' % lock)
         return lock_body % {'owner': context.user.name, 'locktoken': lock}
 
 
@@ -653,6 +651,5 @@ class Lock_View(BaseView):
         resource.unlock()
 
         # TODO move in the request handler
-        response = context.response
-        response.set_header('Content-Type', 'text/xml; charset="utf-8"')
-        response.set_header('Lock-Token', 'opaquelocktoken:%s' % lock)
+        context.content_type = 'text/xml; charset="utf-8"'
+        context.set_header('Lock-Token', 'opaquelocktoken:%s' % lock)

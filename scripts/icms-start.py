@@ -55,11 +55,6 @@ def start(options, target):
         print
         return 1
 
-    # Listen
-    address = server.address or '*'
-    port = server.port
-    print '[%s] Web Server listens %s:%s' % (target, address, port)
-
     # Daemon mode
     if options.detach:
         become_daemon()

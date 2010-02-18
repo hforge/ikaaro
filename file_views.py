@@ -125,19 +125,16 @@ class File_Download(BaseView):
 
 
     def GET(self, resource, context):
-        response = context.response
-        # Filename
-        filename = resource.get_property('filename')
-        if filename is not None:
-            mimetype = resource.handler.get_mimetype()
-            disposition = 'inline'
-            # Special case:  the OOo plugin is unusable
-            if mimetype.startswith('application/vnd.oasis.opendocument.'):
-                disposition = 'attachment'
-            response.set_header('Content-Disposition',
-                                '%s; filename="%s"' % (disposition, filename))
         # Content-Type
-        response.set_header('Content-Type', resource.get_content_type())
+        content_type = resource.get_content_type()
+        context.set_content_type(content_type)
+        # Content-Disposition
+        disposition = 'inline'
+        if content_type.startswith('application/vnd.oasis.opendocument.'):
+            disposition = 'attachment'
+        filename = resource.get_property('filename')
+        context.set_content_disposition(disposition, filename)
+        # Ok
         return resource.handler.to_str()
 
 
@@ -249,9 +246,6 @@ class File_ExternalEdit(BaseView):
 
 
     def GET(self, resource, context):
-        # Get the request and response
-        request, response = context.request, context.response
-
         encoding = context.get_form_value('encoding')
 
         uri = context.uri
@@ -264,6 +258,7 @@ class File_ExternalEdit(BaseView):
         else:
             title = resource.name
 
+        request = context.request
         r = [
             'url:%s' % str(uri),
             'meta_type:toto', # FIXME Check if zopeedit really needs this
@@ -298,8 +293,8 @@ class File_ExternalEdit(BaseView):
         # Using RESPONSE.setHeader('Pragma', 'no-cache') would be better, but
         # this chokes crappy most MSIE versions when downloads happen on SSL.
         # cf. http://support.microsoft.com/support/kb/articles/q316/4/31.asp
-        #response.set_header('Last-Modified', rfc1123_date())
-        response.set_header('Pragma', 'no-cache')
+        #context.set_header('Last-Modified', rfc1123_date())
+        context.set_header('Pragma', 'no-cache')
 
         # Encoding
         if encoding is None:
@@ -309,7 +304,7 @@ class File_ExternalEdit(BaseView):
 
         data = '\n'.join(r)
 
-        response.set_header('Content-Type', 'application/x-zope-edit')
+        context.content_type = 'application/x-zope-edit'
         return data
 
 
@@ -334,14 +329,13 @@ class Image_Thumbnail(BaseView):
             data = default.to_str()
             format = 'png'
 
-        response = context.response
-        # Filename
+        # Headers
+        context.set_content_type('image/%s' % format)
         filename = resource.get_property('filename')
-        if filename is not None:
-            response.set_header('Content-Disposition',
-                                'inline; filename="%s"' % filename)
-        # Content-Type
-        response.set_header('Content-Type', 'image/%s' % format)
+        if filename:
+            context.set_content_disposition('inline', filename)
+
+        # Ok
         return data
 
 

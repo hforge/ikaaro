@@ -170,7 +170,7 @@ class Folder_Rename(STLForm):
         paths.sort()
         paths.reverse()
         # Clean the copy cookie if needed
-        cut, cp_paths = context.get_cookie('ikaaro_cp', type=CopyCookie)
+        cut, cp_paths = context.get_cookie('ikaaro_cp', datatype=CopyCookie)
 
         renamed = []
         referenced = []
@@ -366,7 +366,7 @@ class Folder_BrowseContent(SearchForm):
         ids = form['ids']
 
         # Clean the copy cookie if needed
-        cut, paths = context.get_cookie('ikaaro_cp', type=CopyCookie)
+        cut, paths = context.get_cookie('ikaaro_cp', datatype=CopyCookie)
 
         # Remove resources
         removed = []
@@ -482,7 +482,7 @@ class Folder_BrowseContent(SearchForm):
     action_paste_schema = {}
     def action_paste(self, resource, context, form):
         # Check there is something to paste
-        cut, paths = context.get_cookie('ikaaro_cp', type=CopyCookie)
+        cut, paths = context.get_cookie('ikaaro_cp', datatype=CopyCookie)
         if len(paths) == 0:
             context.message = messages.MSG_NO_PASTE
             return
@@ -814,8 +814,7 @@ class Folder_Thumbnail(BaseView):
         # The folder thumbnail was cached in the folder handler
         # Accessible images depend on too many parameters
 
-        response = context.response
-        response.set_header('Content-Type', 'image/%s' % format)
+        context.content_type = 'image/%s' % format
         return data
 
 
