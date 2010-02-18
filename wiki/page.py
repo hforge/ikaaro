@@ -63,6 +63,14 @@ class Book(Directive):
     has_content = True
 
 
+    def run(self):
+        (book_node,) = Directive.run(self)
+        for bullet_list in book_node.traverse(condition=nodes.bullet_list):
+            bullet_list.__class__ = nodes.enumerated_list
+            bullet_list.tagname = 'enumerated_list'
+        return [book_node]
+
+
 
 class WikiPage(Text):
     class_id = 'WikiPage'
