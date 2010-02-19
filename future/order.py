@@ -214,7 +214,7 @@ class ResourcesOrderedTable_Unordered(Folder_BrowseContent):
 
     def action_add(self, resource, context, form):
         for name in form['ids']:
-            resource.add_record({'name': name})
+            resource.add_new_record({'name': name})
 
         context.message = INFO(u'Resources added to ordered list.')
 
