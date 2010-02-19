@@ -34,7 +34,7 @@ from xapian import DatabaseOpeningError
 # Import from itools
 from itools.datatypes import Boolean
 from itools.http import Request
-from itools.uri import get_reference, get_host_from_authority
+from itools.uri import get_host_from_authority
 from itools.fs import vfs, lfs
 from itools.web import Server as BaseServer, Context, set_context
 
@@ -115,8 +115,7 @@ class Server(BaseServer):
     def __init__(self, target, address=None, port=None, read_only=False,
                  cache_size=None):
         target = lfs.get_absolute_path(target)
-        self.target = get_reference(target)
-        path = self.target.path
+        self.target = target
 
         # Load the config
         config = get_config(target)
@@ -138,8 +137,8 @@ class Server(BaseServer):
                                             default=True)
 
         # Logs
-        event_log = '%s/log/events' % path
-        access_log = '%s/log/access' % path
+        event_log = '%s/log/events' % target
+        access_log = '%s/log/access' % target
         log_level = config.get_value('log-level')
         try:
             log_level = log_levels[log_level]
@@ -150,7 +149,7 @@ class Server(BaseServer):
         # Profile CPU
         profile = config.get_value('profile-time')
         if profile is True:
-            self.profile_path = '%s/log/profile' % path
+            self.profile_path = '%s/log/profile' % target
         else:
             self.profile_path = None
         # Profile Memory
@@ -165,7 +164,8 @@ class Server(BaseServer):
         else:
             size_min = size_max = cache_size
         size_min, size_max = int(size_min), int(size_max)
-        database = get_database(path, size_min, size_max, read_only=read_only)
+        database = get_database(target, size_min, size_max,
+                read_only=read_only)
         self.database = database
 
         # Find out the root class
@@ -174,7 +174,7 @@ class Server(BaseServer):
         # Initialize
         BaseServer.__init__(self, root, address=address, port=port,
                             access_log=access_log, event_log=event_log,
-                            log_level=log_level, pid_file='%s/pid' % path)
+                            log_level=log_level, pid_file='%s/pid' % target)
 
         # Initialize the spool
         self.spool = Spool(target)
@@ -184,7 +184,7 @@ class Server(BaseServer):
     # API / Private
     #######################################################################
     def get_pid(self):
-        return get_pid(self.target.path)
+        return get_pid(self.target)
 
 
     def send_email(self, message):
@@ -193,8 +193,7 @@ class Server(BaseServer):
         if not config.get_value('smtp-host'):
             raise ValueError, '"smtp-host" is not set in config.conf'
 
-        spool = self.target.resolve_name('spool')
-        spool = str(spool.path)
+        spool = lfs.resolve2(self.target, 'spool')
         tmp_file, tmp_path = mkstemp(dir=spool)
         file = fdopen(tmp_file, 'w')
         try:

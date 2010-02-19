@@ -170,7 +170,6 @@ class Root(WebSite):
     def _get_resource(self, name):
         if name == 'ui':
             ui = UI(ui_path)
-            ui.database = self.metadata.database
             return ui
         return Folder._get_resource(self, name)
 

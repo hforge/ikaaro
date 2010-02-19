@@ -58,9 +58,9 @@ class Spool(object):
         self.smtp_password = get_value('smtp-password', default='').strip()
 
         # The logs
-        self.activity_log_path = '%s/log/spool' % target.path
+        self.activity_log_path = '%s/log/spool' % target
         self.activity_log = open(self.activity_log_path, 'a+')
-        self.error_log_path = '%s/log/spool_error' % target.path
+        self.error_log_path = '%s/log/spool_error' % target
         self.error_log = open(self.error_log_path, 'a+')
 
         # Set up the callback function, every 10s

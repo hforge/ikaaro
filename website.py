@@ -68,7 +68,6 @@ class WebSite(RoleAware, Folder):
     def _get_resource(self, name):
         if name == 'ui':
             ui = UI(ui_path)
-            ui.database = self.metadata.database
             return ui
         if name in ('users', 'users.metadata'):
             return self.parent._get_resource(name)
