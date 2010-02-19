@@ -119,7 +119,12 @@ def reduce_string(title='', word_treshold=15, phrase_treshold=40):
             words.insert(i, word)
     title = ' '.join(words)
     if len(title) > phrase_treshold:
-        title = title[:phrase_treshold] + ellipsis
+        # Remove right trailling whitespaces
+        title = title[:phrase_treshold].rstrip()
+        # Only add ellipsis if the last word does not already
+        # end with one
+        if not title.endswith(ellipsis):
+            title += ellipsis
     return title
 
 
