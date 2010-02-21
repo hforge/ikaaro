@@ -29,8 +29,7 @@ from gobject import timeout_add
 
 # Import from itools
 from itools.uri import get_reference
-from itools import vfs
-from itools.vfs import cwd
+from itools.fs import lfs
 
 # Import from ikaaro
 from config import get_config
@@ -40,17 +39,17 @@ from config import get_config
 class Spool(object):
 
     def __init__(self, target):
-        target = cwd.get_uri(target)
+        target = lfs.get_absolute_path(target)
         target = get_reference(target)
         self.target = target
         # spool
         spool = target.resolve_name('spool')
-        self.spool = vfs.open(str(spool))
+        self.spool = lfs.open(str(spool))
         # spool/failed
         spool_failed = spool.resolve_name('failed')
         spool_failed = str(spool_failed)
-        if not vfs.exists(spool_failed):
-            vfs.make_folder(spool_failed)
+        if not lfs.exists(spool_failed):
+            lfs.make_folder(spool_failed)
 
         # The SMTP host
         get_value = get_config(target).get_value
@@ -59,9 +58,9 @@ class Spool(object):
         self.smtp_password = get_value('smtp-password', default='').strip()
 
         # The logs
-        self.activity_log_path = '%s/log/spool' % target.path
+        self.activity_log_path = '%s/log/spool' % target
         self.activity_log = open(self.activity_log_path, 'a+')
-        self.error_log_path = '%s/log/spool_error' % target.path
+        self.error_log_path = '%s/log/spool_error' % target
         self.error_log = open(self.error_log_path, 'a+')
 
         # Set up the callback function, every 10s

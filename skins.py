@@ -24,8 +24,9 @@ from copy import deepcopy
 # Import from itools
 from itools.core import get_abspath
 from itools.datatypes import Unicode
+from itools.fs import lfs
 from itools.gettext import MSG
-from itools.handlers import File, Folder, Image
+from itools.handlers import File, Folder, Image, RODatabase
 from itools.http import NotFound
 from itools.i18n import has_language
 from itools.stl import stl
@@ -36,6 +37,9 @@ from itools.xmlfile import XMLFile
 # Import from ikaaro
 from resource_ import IResource
 from skins_views import LanguagesTemplate, LocationTemplate
+
+
+ui_database = RODatabase(fs=lfs)
 
 
 
@@ -56,6 +60,7 @@ class FileGET(BaseView):
 
 class UIFile(IResource, File):
 
+    database = ui_database
     clone_exclude = File.clone_exclude | frozenset(['parent', 'name'])
 
 
@@ -90,6 +95,7 @@ map = {
 
 class UIFolder(IResource, Folder):
 
+    database = ui_database
     class_title = MSG(u'UI')
     class_icon48 = 'icons/48x48/folder.png'
 
@@ -135,7 +141,6 @@ class UIFolder(IResource, Folder):
             format = handler.get_mimetype()
             cls = map.get(format, UIFile)
             handler = cls(handler.uri)
-        handler.database = self.database
         return handler
 
 
@@ -467,7 +472,6 @@ class UI(UIFolder):
     def _get_resource(self, name):
         if name in skin_registry:
             skin = skin_registry[name]
-            skin.database = self.database
             return skin
         return UIFolder._get_resource(self, name)
 

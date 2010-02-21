@@ -27,7 +27,7 @@ from itools.datatypes import Email, String, Unicode
 from itools.datatypes import Enumerate
 from itools.gettext import MSG
 from itools.stl import stl
-from itools import vfs
+from itools.fs import lfs
 from itools.web import STLView, INFO, ERROR
 from itools.xapian import PhraseQuery, OrQuery, AndQuery, split_unicode
 
@@ -405,7 +405,7 @@ class CreditsView(STLView):
 
         # Build the namespace
         credits = get_abspath('CREDITS')
-        lines = vfs.open(credits).readlines()
+        lines = lfs.open(credits).readlines()
         names = [ x[3:].strip() for x in lines if x.startswith('N: ') ]
 
         return {'hackers': names}

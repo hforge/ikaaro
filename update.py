@@ -15,9 +15,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools import vfs
+from itools.fs import lfs
 
 
 def is_instance_up_to_date(root):
     # 0.60 Check the Git archive has been initalized
-    return vfs.exists('%s/.git' % root.handler.uri)
+    return lfs.exists('%s/.git' % root.handler.uri)

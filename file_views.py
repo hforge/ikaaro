@@ -30,7 +30,7 @@ from itools.html import HTMLParser, stream_to_str_as_xhtml
 from itools.http.headers import Authorization
 from itools.i18n import guess_language
 from itools.uri import get_reference, get_uri_name
-from itools.vfs import FileName
+from itools.fs import FileName
 from itools.web import BaseView, STLView, INFO, ERROR
 
 # Import from ikaaro

@@ -19,10 +19,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
+from itools.fs import vfs
 from itools.gettext import MSG
 from itools.handlers import Folder as FolderHandler
 from itools.uri import get_uri_path, get_uri_name, resolve_uri, resolve_uri2
-from itools import vfs
 from itools.web import get_context, BaseView
 from itools.xapian import PhraseQuery
 

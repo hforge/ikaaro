@@ -31,7 +31,7 @@ from itools.handlers import checkid
 from itools.http import Conflict, NotImplemented
 from itools.i18n import get_language_name
 from itools.uri import Path, get_reference, get_uri_path
-from itools.vfs import FileName
+from itools.fs import FileName
 from itools.web import BaseView, STLForm, INFO, ERROR, lock_body
 from itools.xapian import PhraseQuery
 

@@ -41,8 +41,7 @@ from itools.html import XHTMLFile
 from itools.i18n import format_datetime
 from itools.uri import get_reference
 from itools.uri.mailto import Mailto
-from itools import vfs
-from itools.vfs import FileName
+from itools.fs import vfs, lfs, FileName
 from itools.web import BaseView, STLView, ERROR
 from itools.xml import XMLParser, XMLError
 
@@ -219,7 +218,7 @@ class WikiPage_ToPDF(BaseView):
         output = figure_style_converter.sub(r'\\begin{figure}[H]', output)
 
         dirname = mkdtemp('wiki', 'itools')
-        tempdir = vfs.open(dirname)
+        tempdir = lfs.open(dirname)
 
         # Save the document...
         file = tempdir.make_file(resource.name)
@@ -287,7 +286,7 @@ class WikiPage_ToPDF(BaseView):
             file.close()
 
         # Clean the temporary folder
-        vfs.remove(dirname)
+        lfs.remove(dirname)
 
         # Ok
         context.set_content_type('application/pdf')

@@ -32,12 +32,11 @@ from xapian import DatabaseOpeningError
 
 # Import from itools
 from itools.datatypes import Boolean
+from itools.fs import vfs, lfs
 from itools.log import Logger, register_logger
 from itools.log import DEBUG, INFO, WARNING, ERROR, FATAL
 from itools.soup import SoupMessage
-from itools.uri import get_reference, get_host_from_authority
-from itools.vfs import cwd
-from itools import vfs
+from itools.uri import get_host_from_authority
 from itools.web import WebServer, WebLogger, Context, set_context
 
 # Import from ikaaro
@@ -116,9 +115,8 @@ class Server(WebServer):
 
     def __init__(self, target, address=None, port=None, read_only=False,
                  cache_size=None):
-        target = cwd.get_uri(target)
-        self.target = get_reference(target)
-        path = self.target.path
+        target = lfs.get_absolute_path(target)
+        self.target = target
 
         # Load the config
         config = get_config(target)
@@ -142,7 +140,7 @@ class Server(WebServer):
         # Profile CPU
         profile = config.get_value('profile-time')
         if profile is True:
-            self.profile_path = '%s/log/profile' % path
+            self.profile_path = '%s/log/profile' % target
         else:
             self.profile_path = None
         # Profile Memory
@@ -157,22 +155,23 @@ class Server(WebServer):
         else:
             size_min = size_max = cache_size
         size_min, size_max = int(size_min), int(size_max)
-        database = get_database(path, size_min, size_max, read_only=read_only)
+        database = get_database(target, size_min, size_max,
+                read_only=read_only)
         self.database = database
 
         # Find out the root class
         root = get_root(database, target)
 
         # Initialize
-        access_log = '%s/log/access' % path
+        access_log = '%s/log/access' % target
         WebServer.__init__(self, root, address=address, port=port,
-                           access_log=access_log, pid_file='%s/pid' % path)
+                           access_log=access_log, pid_file='%s/pid' % target)
 
         # Initialize the spool
         self.spool = Spool(target)
 
         # Logging
-        log_file = '%s/log/events' % path
+        log_file = '%s/log/events' % target
         log_level = config.get_value('log-level')
         if log_level not in log_levels:
             msg = 'configuraion error, unexpected "%s" value for log-level'
@@ -188,7 +187,7 @@ class Server(WebServer):
     # API / Private
     #######################################################################
     def get_pid(self):
-        return get_pid(self.target.path)
+        return get_pid(self.target)
 
 
     def send_email(self, message):
@@ -197,8 +196,7 @@ class Server(WebServer):
         if not config.get_value('smtp-host'):
             raise ValueError, '"smtp-host" is not set in config.conf'
 
-        spool = self.target.resolve_name('spool')
-        spool = str(spool.path)
+        spool = lfs.resolve2(self.target, 'spool')
         tmp_file, tmp_path = mkstemp(dir=spool)
         file = fdopen(tmp_file, 'w')
         try:
