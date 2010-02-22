@@ -353,7 +353,7 @@ class WikiPage_Edit(DBResource_Edit):
             message = messages.MSG_CHANGES_SAVED2(time=time)
 
         # Come back to the desired view
-        if context.has_form_value('view'):
+        if context.get_form_value('view') is not None:
             goto = context.come_back(message)
             query = goto.query
             goto = goto.resolve(';view')

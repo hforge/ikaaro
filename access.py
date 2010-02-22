@@ -286,7 +286,7 @@ class RoleAware_AddUser(STLForm):
         resource.set_user_role(user_id, role)
 
         # Come back
-        if context.has_form_value('add_and_return'):
+        if context.get_form_value('add_and_return') is not None:
             return
 
         goto = '/users/%s/' % user.name

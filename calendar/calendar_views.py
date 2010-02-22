@@ -689,10 +689,7 @@ class AddEventForm(EditEventForm):
         for key in self.schema:
             if key in namespace:
                 continue
-            if context.has_form_value(key):
-                namespace[key] = context.get_form_value(key)
-            else:
-                namespace[key] = None
+            namespace[key] = context.get_form_value(key)
 
         return namespace
 

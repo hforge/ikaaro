@@ -837,8 +837,8 @@ class GoToSpecificDocument(BaseView):
         goto = get_reference(goto)
 
         # Keep the message
-        if context.has_form_value('message'):
-            message = context.get_form_value('message')
+        message = context.get_form_value('message')
+        if message:
             goto = goto.replace(message=message)
 
         return goto
