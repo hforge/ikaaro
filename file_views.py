@@ -211,7 +211,7 @@ class File_Edit(DBResource_Edit):
                 metadata.format = mimetype
 
         # Update handler name
-        handler_name = basename(handler.uri)
+        handler_name = basename(handler.key)
         old_name, old_extension, old_lang = FileName.decode(handler_name)
         new_name, new_extension, new_lang = FileName.decode(filename)
         # FIXME Should 'FileName.decode' return lowercase extensions?

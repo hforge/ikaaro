@@ -180,14 +180,14 @@ class DBResource(CatalogAware, IResource):
             database = self.metadata.database
             fs = database.fs
             if self.parent is None:
-                uri = fs.resolve(self.metadata.uri, '.')
+                key = fs.resolve(self.metadata.key, '.')
             else:
-                uri = fs.resolve(self.metadata.uri, self.name)
-            if database.has_handler(uri):
-                handler = database.get_handler(uri, cls=cls)
+                key = fs.resolve(self.metadata.key, self.name)
+            if database.has_handler(key):
+                handler = database.get_handler(key, cls=cls)
             else:
                 handler = cls()
-                database.push_phantom(uri, handler)
+                database.push_phantom(key, handler)
             self._handler = handler
         return self._handler
 

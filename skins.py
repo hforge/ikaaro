@@ -136,11 +136,11 @@ class UIFolder(IResource, Folder):
             handler = self.get_handler('%s%s' % (name, language))
 
         if isinstance(handler, Folder):
-            handler = UIFolder(handler.uri)
+            handler = UIFolder(handler.key)
         else:
             format = handler.get_mimetype()
             cls = map.get(format, UIFile)
-            handler = cls(handler.uri)
+            handler = cls(handler.key)
         return handler
 
 

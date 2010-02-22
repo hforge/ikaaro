@@ -98,24 +98,24 @@ class File(WorkflowAware, DBResource):
         # Not yet loaded
         database = self.metadata.database
         fs = database.fs
-        base = self.metadata.uri
+        base = self.metadata.key
         cls = self.class_handler
 
         # Check the handler exists
         extensions = self.get_all_extensions()
         for extension in extensions:
             name = FileName.encode((self.name, extension, None))
-            uri = fs.resolve(base, name)
+            key = fs.resolve(base, name)
             # Found
-            if database.has_handler(uri):
-                self._handler = database.get_handler(uri, cls=cls)
+            if database.has_handler(key):
+                self._handler = database.get_handler(key, cls=cls)
                 return self._handler
 
         # Not found, build a dummy one
         name = FileName.encode((self.name, cls.class_extension, None))
-        uri = fs.resolve(base, name)
+        key = fs.resolve(base, name)
         handler = cls()
-        database.push_phantom(uri, handler)
+        database.push_phantom(key, handler)
         self._handler = handler
         return self._handler
 
@@ -161,9 +161,9 @@ class File(WorkflowAware, DBResource):
 
     def get_files_to_archive(self, content=False):
         # Handlers
-        files = [ x.uri for x in self.get_handlers() ]
+        files = [ x.key for x in self.get_handlers() ]
         # Metadata
-        metadata = self.metadata.uri
+        metadata = self.metadata.key
         files.append(metadata)
         return files
 

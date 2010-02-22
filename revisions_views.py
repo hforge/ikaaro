@@ -91,10 +91,10 @@ def get_older_state(resource, revision, context):
     # Heuristic to remove the database prefix
     prefix = len(str(context.server.target)) + len('/database/')
     # Metadata
-    path = resource.metadata.uri[prefix:]
+    path = resource.metadata.key[prefix:]
     metadata = context.database.get_blob(revision, path)
     # Handler
-    path = resource.handler.uri[prefix:]
+    path = resource.handler.key[prefix:]
     try:
         handler = context.database.get_blob(revision, path)
     except CalledProcessError:

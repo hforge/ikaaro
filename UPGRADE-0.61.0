@@ -16,7 +16,7 @@ is now an absolute path:
   path = str(get_reference(metadata.uri).path)
 
   # Now
-  path = metadata.uri
+  path = metadata.key
 
 (2) As a consequence, you should avoid using itools.uri for manipulating
 paths and better ask the ikaaro database for the fs.
@@ -26,7 +26,7 @@ paths and better ask the ikaaro database for the fs.
 
   # Now
   fs = database.fs
-  handler_uri = fs.resolve(metadata.uri, name)
+  handler_uri = fs.resolve(metadata.key, name)
 
 (3) Using os.path for simple tasks is an option:
 
@@ -35,7 +35,7 @@ paths and better ask the ikaaro database for the fs.
 
   # Now
   from os.path import basename
-  handler_name = basename(handler.uri)
+  handler_name = basename(handler.key)
 
 
 Skins

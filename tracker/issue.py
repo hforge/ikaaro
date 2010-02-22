@@ -100,7 +100,7 @@ class Issue(Folder):
 
     def get_files_to_archive(self, content=False):
         files = Folder.get_files_to_archive(self, content)
-        history = self.get_history().uri
+        history = self.get_history().key
         files.append(history)
         return files
 

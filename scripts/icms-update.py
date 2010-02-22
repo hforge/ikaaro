@@ -201,7 +201,7 @@ def update(parser, options, target):
         update_versions(target, database, version, paths, root)
         # Reset the state
         database.cache.clear()
-        database.cache[root.metadata.uri] = root.metadata
+        database.cache[root.metadata.key] = root.metadata
         print 'STAGE 1: Finish upgrading to version %s' % version
         version, paths = find_versions_to_update(root)
 

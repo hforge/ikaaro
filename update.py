@@ -20,4 +20,4 @@ from itools.fs import lfs
 
 def is_instance_up_to_date(root):
     # 0.60 Check the Git archive has been initalized
-    return lfs.exists('%s/.git' % root.handler.uri)
+    return lfs.exists('%s/.git' % root.handler.key)
