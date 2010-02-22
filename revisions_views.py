@@ -211,7 +211,7 @@ class DBResource_Changes(STLView):
 
         namespace = {}
         if to is None:
-            # Get commit namespace
+            # Commit namespace
             metadata = database.get_diff(revision)
             author_name = metadata['author_name']
             metadata['author_name'] = root.get_user_title(author_name)
@@ -221,12 +221,31 @@ class DBResource_Changes(STLView):
             namespace['stat'] = get_colored_stat(stat)
             namespace['changes'] = get_colored_diff(metadata['diff'])
         else:
-            # Get diff namespace
-            namespace['metadata'] = None
-            stat = database.get_diff_between(revision, to, stat=True)
+            # Diff namespace
+            # Get the list of commits affecting the resource
+            revisions = [x['revision'] for x in
+                    resource.get_revisions(content=True)]
+            # Filter revisions in our range
+            # Below
+            while revisions[-1] != revision:
+                revisions.pop()
+            # Above
+            if to and to != 'HEAD':
+                while revisions[0] != to:
+                    revisions.pop(0)
+            # Get the list of files affected in this series
+            files = database.get_files_affected(revisions)
+            # Get the statistic for these files
+            # Starting revision is included in the diff
+            revision = "%s^" % revision
+            stat = database.get_diff_between(revision, to, paths=files,
+                    stat=True)
             namespace['stat'] = get_colored_stat(stat)
-            diff = database.get_diff_between(revision, to)
+            # Reuse the list of files to limit diff produced
+            diff = database.get_diff_between(revision, to, paths=files)
             namespace['changes'] = get_colored_diff(diff)
+            # No commit metadata
+            namespace['metadata'] = None
 
         # Ok
         return namespace
