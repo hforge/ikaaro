@@ -1,0 +1,47 @@
+*************************************************************************
+ikaaro 0.61.0
+*************************************************************************
+
+These upgrade notes may not be complete. Thanks to report any problem you
+find.
+
+
+Handlers
+========
+
+(1) Ikaaro handlers always use the lfs module. This means the "uri" attribute
+is now an absolute path:
+
+  # Before
+  path = str(get_reference(metadata.uri).path)
+
+  # Now
+  path = metadata.uri
+
+(2) As a consequence, you should avoid using itools.uri for manipulating
+paths and better ask the ikaaro database for the fs.
+
+  # Before
+  handler_uri = resolve_uri(metadata.uri, name)
+
+  # Now
+  fs = database.fs
+  handler_uri = fs.resolve(metadata.uri, name)
+
+(3) Using os.path for simple tasks is an option:
+
+  # Before
+  handler_name = get_uri_name(handler.uri)
+
+  # Now
+  from os.path import basename
+  handler_name = basename(handler.uri)
+
+
+Skins
+=====
+
+Skins use a separate read-only database. It's all automatic but if you want
+to introspect it:
+
+  from skins import ui_database

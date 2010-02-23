@@ -26,7 +26,6 @@ from itools.handlers import File as FileHandler, Image as ImageHandler
 from itools.handlers import TARFile, ZIPFile, GzipFile, Bzip2File
 from itools.odf import SXWFile, SXCFile, SXIFile, ODTFile, ODSFile, ODPFile
 from itools.pdf import PDFFile
-from itools.uri import get_uri_path, resolve_uri
 from itools.fs import FileName
 from itools.office import MSPowerPoint as MSPowerPointFile, RTF as RTFFile
 from itools.office import MSWord as MSWordFile, MSExcel as MSExcelFile
@@ -98,6 +97,7 @@ class File(WorkflowAware, DBResource):
 
         # Not yet loaded
         database = self.metadata.database
+        fs = database.fs
         base = self.metadata.uri
         cls = self.class_handler
 
@@ -105,7 +105,7 @@ class File(WorkflowAware, DBResource):
         extensions = self.get_all_extensions()
         for extension in extensions:
             name = FileName.encode((self.name, extension, None))
-            uri = resolve_uri(base, name)
+            uri = fs.resolve(base, name)
             # Found
             if database.has_handler(uri):
                 self._handler = database.get_handler(uri, cls=cls)
@@ -113,7 +113,7 @@ class File(WorkflowAware, DBResource):
 
         # Not found, build a dummy one
         name = FileName.encode((self.name, cls.class_extension, None))
-        uri = resolve_uri(base, name)
+        uri = fs.resolve(base, name)
         handler = cls()
         database.push_phantom(uri, handler)
         self._handler = handler
@@ -161,9 +161,9 @@ class File(WorkflowAware, DBResource):
 
     def get_files_to_archive(self, content=False):
         # Handlers
-        files = [ get_uri_path(x.uri) for x in self.get_handlers() ]
+        files = [ x.uri for x in self.get_handlers() ]
         # Metadata
-        metadata = get_uri_path(self.metadata.uri)
+        metadata = self.metadata.uri
         files.append(metadata)
         return files
 

@@ -29,7 +29,7 @@ from itools.datatypes import DateTime, Integer, String, Unicode, Tokens
 from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.fs import FileName
-from itools.uri import get_uri_path, Path
+from itools.uri import Path
 from itools.web import get_context
 
 # Import from ikaaro
@@ -100,7 +100,7 @@ class Issue(Folder):
 
     def get_files_to_archive(self, content=False):
         files = Folder.get_files_to_archive(self, content)
-        history = get_uri_path(self.get_history().uri)
+        history = self.get_history().uri
         files.append(history)
         return files
 

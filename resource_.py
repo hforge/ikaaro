@@ -21,7 +21,7 @@
 
 # Import from itools
 from itools.datatypes import Unicode, String, Integer, Boolean, DateTime
-from itools.uri import Path, resolve_uri
+from itools.uri import Path
 from itools.web import Resource, get_context
 from itools.xapian import CatalogAware, PhraseQuery
 
@@ -178,10 +178,11 @@ class DBResource(CatalogAware, IResource):
         if self._handler is None:
             cls = self.class_handler
             database = self.metadata.database
+            fs = database.fs
             if self.parent is None:
-                uri = resolve_uri(self.metadata.uri, '.')
+                uri = fs.resolve(self.metadata.uri, '.')
             else:
-                uri = resolve_uri(self.metadata.uri, self.name)
+                uri = fs.resolve(self.metadata.uri, self.name)
             if database.has_handler(uri):
                 handler = database.get_handler(uri, cls=cls)
             else:

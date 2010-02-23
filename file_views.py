@@ -20,6 +20,7 @@
 
 # Import from the Standard Library
 from datetime import datetime, timedelta
+from os.path import basename
 
 # Import from itools
 from itools.core import merge_dicts
@@ -29,7 +30,7 @@ from itools.handlers import get_handler_class_by_mimetype, guess_encoding
 from itools.html import HTMLParser, stream_to_str_as_xhtml
 from itools.http.headers import Authorization
 from itools.i18n import guess_language
-from itools.uri import get_reference, get_uri_name
+from itools.uri import get_reference
 from itools.fs import FileName
 from itools.web import BaseView, STLView, INFO, ERROR
 
@@ -210,7 +211,7 @@ class File_Edit(DBResource_Edit):
                 metadata.format = mimetype
 
         # Update handler name
-        handler_name = get_uri_name(handler.uri)
+        handler_name = basename(handler.uri)
         old_name, old_extension, old_lang = FileName.decode(handler_name)
         new_name, new_extension, new_lang = FileName.decode(filename)
         # FIXME Should 'FileName.decode' return lowercase extensions?
