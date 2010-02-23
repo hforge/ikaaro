@@ -65,7 +65,6 @@ def update_catalog(parser, options, target):
     # Build a fake context
     context = get_fake_context()
     context.accept_language = AcceptLanguage()
-    context.uri = None
     server.init_context(context)
 
     # Update
