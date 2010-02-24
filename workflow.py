@@ -20,6 +20,7 @@
 from itools.datatypes import String, Unicode
 from itools.gettext import MSG
 from itools.i18n import format_datetime
+from itools.log import log_error
 from itools.web import STLForm, INFO, ERROR, get_context
 from itools.workflow import Workflow, WorkflowAware as BaseWorkflowAware
 from itools.workflow import WorkflowError
@@ -81,7 +82,7 @@ class StateForm(STLForm):
         try:
             resource.make_transition(form['transition'], form['comments'])
         except WorkflowError, excp:
-            context.server.log_error(context)
+            log_error('Transition failed', domain='ikaaro')
             context.message = ERROR(unicode(excp.message, 'utf-8'))
             return
 

@@ -38,6 +38,23 @@ paths and better ask the ikaaro database for the fs.
   handler_name = basename(handler.key)
 
 
+Logging
+=======
+
+Logging is not a method of the server anymore but a function from the new
+"itools.log" module:
+
+  # Before
+  server.log_error(context)
+
+  # Now
+  from itools.log import log_error
+  log_error('Failed!', domain='ikaaro')
+
+The traceback remains automatically written so the first argument is yours. The
+"domain" argument would be your project name or functionality in your own code.
+
+
 Skins
 =====
 
