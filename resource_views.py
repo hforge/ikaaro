@@ -589,9 +589,8 @@ class Put_View(BaseView):
 
 
     def PUT(self, resource, context):
-
-        request = context.request
-        if request.has_header('content-range'):
+        range = context.get_header('content-range')
+        if range:
             raise NotImplemented
 
         # Save the data
