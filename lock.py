@@ -34,7 +34,8 @@ class Lock(TextFile):
     def new(self, username=None, **kw):
         self.username = username
         self.lock_timestamp = datetime.now()
-        self.key = '%s-%s-00105A989226:%.03f' % (random(), random(), time())
+        self.lock_key = '%s-%s-00105A989226:%.03f' % (random(), random(),
+                                                      time())
 
 
     def _load_state_from_file(self, file):
@@ -43,12 +44,12 @@ class Lock(TextFile):
         # FIXME Backwards compatibility: remove microseconds first
         timestamp = timestamp.split('.')[0]
         self.lock_timestamp = DateTime.decode(timestamp)
-        self.key = key
+        self.lock_key = key
 
 
     def to_str(self):
         timestamp = DateTime.encode(self.lock_timestamp)
-        return '%s\n%s\n%s' % (self.username, timestamp, self.key)
+        return '%s\n%s\n%s' % (self.username, timestamp, self.lock_key)
 
 
 

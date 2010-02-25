@@ -273,7 +273,7 @@ class File_ExternalEdit(BaseView):
             else:
                 # always borrow lock from same user
                 if lock.username == context.user.name:
-                    lines.append('lock-token:%s' % lock.key)
+                    lines.append('lock-token:%s' % lock.lock_key)
                     lines.append('borrow_lock:1')
                 else:
                     message = ERROR(u'This page is locked by another user')

@@ -515,7 +515,7 @@ class DBResource(CatalogAware, IResource):
         else:
             self.parent.handler.set_handler('%s.lock' % self.name, lock)
 
-        return lock.key
+        return lock.lock_key
 
 
     def unlock(self):
