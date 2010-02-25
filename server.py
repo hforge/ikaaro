@@ -221,10 +221,12 @@ class Server(WebServer):
 
 
     def _smtp_send(self):
+        spool = lfs.open(self.spool)
+
         # Find out emails to send
         locks = set()
         names = set()
-        for name in lfs.get_names(self.spool):
+        for name in spool.get_names():
             if name == 'failed':
                 # Skip "failed" special directory
                 continue
@@ -235,9 +237,10 @@ class Server(WebServer):
         names.difference_update(locks)
         # Is there something to send?
         if len(names) == 0:
-            return 0
+            return False
 
         # Send emails
+        try_again = False
         smtp_host = self.smtp_host
         for name in names:
             # 1. Open connection
@@ -245,10 +248,10 @@ class Server(WebServer):
                 smtp = SMTP(smtp_host)
             except gaierror, excp:
                 log_warning('%s: "%s"' % (excp[1], smtp_host))
-                break
+                return True
             except Exception:
                 self.smtp_log_error()
-                break
+                return True
             log_info('CONNECTED to %s' % smtp_host)
 
             # 2. Login
@@ -257,7 +260,7 @@ class Server(WebServer):
 
             # 3. Send message
             try:
-                message = self.spool.open(name).read()
+                message = spool.open(name).read()
                 headers = HeaderParser().parsestr(message)
                 subject = headers['subject']
                 from_addr = headers['from']
@@ -267,28 +270,28 @@ class Server(WebServer):
                 spool.remove(name)
                 # Log
                 log_msg = 'Email "%s" sent from "%s" to "%s"'
-                log_info(msg % (subject, from_addr, to_addr))
+                log_info(log_msg % (subject, from_addr, to_addr))
             except SMTPRecipientsRefused:
                 # The recipient addresses has been refused
                 self.smtp_log_error()
-                self.spool.move(name, 'failed/%s' % name)
+                spool.move(name, 'failed/%s' % name)
             except SMTPResponseException, excp:
                 # The SMTP server returns an error code
                 self.smtp_log_error()
-                error_name = '%s_%s' % (excp.smtp_code, name)
-                self.spool.move(name, 'failed/%s' % error_name)
+                spool.move(name, 'failed/%s_%s' % (excp.smtp_code, name))
             except Exception:
                 self.smtp_log_error()
+                try_again = True
 
             # 4. Close connection
             smtp.quit()
 
-        return error
+        return try_again
 
 
     def smtp_send_idle_callback(self):
         # Error: try again later
-        if self._smtp_send() == 1:
+        if self._smtp_send() is True:
             timeout_add_seconds(60, self.smtp_send_time_callback)
 
         return False
@@ -296,7 +299,7 @@ class Server(WebServer):
 
     def smtp_send_time_callback(self):
         # Error: keep trying
-        if self._smtp_send() == 1:
+        if self._smtp_send() is True:
             return True
 
         return False
