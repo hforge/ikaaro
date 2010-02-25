@@ -28,7 +28,6 @@ from itools.datatypes import Integer, Unicode, String
 from itools.gettext import MSG
 from itools.handlers import get_handler_class_by_mimetype, guess_encoding
 from itools.html import HTMLParser, stream_to_str_as_xhtml
-from itools.http.headers import Authorization
 from itools.i18n import guess_language
 from itools.uri import get_reference
 from itools.fs import FileName
@@ -250,8 +249,6 @@ class File_ExternalEdit(BaseView):
         encoding = context.get_form_value('encoding')
 
         uri = context.uri
-        uri_string = '%s://%s/%s' % (uri.scheme, uri.authority, uri.path[:-1])
-        uri = get_reference(uri_string)
         handler = resource.handler
         title = resource.get_property('title')
         if title:
@@ -259,14 +256,13 @@ class File_ExternalEdit(BaseView):
         else:
             title = resource.name
 
-        request = context.request
-        r = [
-            'url:%s' % str(uri),
+        soup_message = context.soup_message
+        lines = [
+            'url:%s://%s%s' % (uri.scheme, uri.authority, uri.path[:-1]),
             'meta_type:toto', # FIXME Check if zopeedit really needs this
             'content_type:%s' % handler.get_mimetype(),
-            'cookie:%s' % request.get_cookies_as_str(),
-            'title:%s' % title,
-            ]
+            'cookie:%s' % soup_message.get_header('Cookie'),
+            'title:%s' % title]
 
         if resource.is_locked():
             lock = resource.get_lock()
@@ -277,18 +273,17 @@ class File_ExternalEdit(BaseView):
             else:
                 # always borrow lock from same user
                 if lock.username == context.user.name:
-                    r.append('lock-token:%s' % lock.key)
-                    r.append('borrow_lock:1')
+                    lines.append('lock-token:%s' % lock.key)
+                    lines.append('borrow_lock:1')
                 else:
                     message = ERROR(u'This page is locked by another user')
                     return context.come_back(message, goto='.')
 
-        if request.has_header('Authorization'):
-            auth = request.get_header('Authorization')
-            auth = Authorization.encode(auth)
-            r.append('auth:%s' % auth)
+        auth = context.get_header('Authorization')
+        if auth:
+            lines.append('auth:%s' % auth)
 
-        r.append('')
+        lines.append('')
 
         # TODO known bug from ExternalEditor requires rfc1123_date()
         # Using RESPONSE.setHeader('Pragma', 'no-cache') would be better, but
@@ -299,14 +294,12 @@ class File_ExternalEdit(BaseView):
 
         # Encoding
         if encoding is None:
-            r.append(handler.to_str())
+            lines.append(handler.to_str())
         else:
-            r.append(handler.to_str(encoding))
-
-        data = '\n'.join(r)
+            lines.append(handler.to_str(encoding))
 
         context.content_type = 'application/x-zope-edit'
-        return data
+        return '\n'.join(lines)
 
 
 
