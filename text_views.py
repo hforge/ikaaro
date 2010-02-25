@@ -33,7 +33,6 @@ from forms import AutoForm, get_default_widget, MultilineWidget
 from forms import timestamp_widget, description_widget, file_widget
 from forms import subject_widget, title_widget
 import messages
-from utils import get_parameters
 from views import BrowseForm
 
 
@@ -90,46 +89,40 @@ class PO_Edit(STLForm):
 
 
     def get_namespace(self, resource, context):
-        # Get the messages, all but the header
+        # Get the translation units (all but the header)
         handler = resource.handler
-        msgids = [ x for x in handler.get_msgids() if x.strip() ]
+        units = handler.get_units()
+        units.sort(key=lambda x: x.source)
+        if units and ''.join(units[0].source) == '':
+            units = units[1:]
 
-        # Set total
-        total = len(msgids)
-        namespace = {}
-        namespace['messages_total'] = str(total)
-
-        # Set the index
-        parameters = get_parameters('messages', index='1')
-        index = parameters['index']
-        namespace['messages_index'] = index
+        # Total, index, etc.
+        total = len(units)
+        index = context.get_form_value('messages_index', default='1')
         index = int(index)
-
-        # Set first, last, previous and next
-        uri = context.uri
-        messages_first = uri.replace(messages_index='1')
-        namespace['messages_first'] = messages_first
-        messages_last = uri.replace(messages_index=str(total))
-        namespace['messages_last'] = messages_last
         previous = max(index - 1, 1)
-        messages_previous = uri.replace(messages_index=str(previous))
-        namespace['messages_previous'] = messages_previous
         next = min(index + 1, total)
-        messages_next = uri.replace(messages_index=str(next))
-        namespace['messages_next'] = messages_next
 
-        # Set msgid and msgstr
-        if msgids:
-            msgids.sort()
-            msgid = msgids[index-1]
-            namespace['msgid'] = escape(msgid)
-            msgstr = handler.get_msgstr(msgid)
-            msgstr = escape(msgstr)
-            namespace['msgstr'] = msgstr
+        # Msgid and msgstr
+        if units:
+            unit = units[index-1]
+            msgid = ''.join(unit.source)
+            msgstr = ''.join(unit.target)
         else:
-            namespace['msgid'] = None
+            msgid = None
+            msgstr = None
 
-        return namespace
+        # Ok
+        uri = context.uri
+        return {
+            'messages_total': total,
+            'messages_index': index,
+            'messages_first': uri.replace(messages_index='1'),
+            'messages_last': uri.replace(messages_index=str(total)),
+            'messages_previous': uri.replace(messages_index=str(previous)),
+            'messages_next': uri.replace(messages_index=str(next)),
+            'msgid': msgid,
+            'msgstr': msgstr}
 
 
     def action(self, resource, context, form):
