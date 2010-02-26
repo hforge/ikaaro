@@ -223,6 +223,9 @@ class Folder_BrowseContent(SearchForm):
     access = 'is_allowed_to_view'
     title = MSG(u'Browse Content')
     context_menus = [AddResourceMenu()]
+    query_schema = merge_dicts(SearchForm.query_schema,
+        sort_by=String(default='mtime'),
+        reverse=Boolean(default=True))
     schema = {
         'ids': String(multiple=True, mandatory=True),
     }
