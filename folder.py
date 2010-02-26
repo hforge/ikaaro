@@ -152,13 +152,13 @@ class Folder(DBResource):
         folder_path = self.handler.key
         fs = self.metadata.database.fs
         if source_path[0] == '/':
-            source_path = fs.resolve2(root_path, source_path[1:])
+            source_key = fs.resolve2(root_path, source_path[1:])
         else:
-            source_path = fs.resolve2(folder_path, source_path)
+            source_key = fs.resolve2(folder_path, source_path)
         if target_path[0] == '/':
-            target_path = fs.resolve2(root_path, target_path[1:])
+            target_key = fs.resolve2(root_path, target_path[1:])
         else:
-            target_path = fs.resolve2(folder_path, target_path)
+            target_key = fs.resolve2(folder_path, target_path)
 
         # Load the handlers so they are of the right class, for resources
         # like that define explicitly the handler class.  This fixes for
@@ -203,10 +203,10 @@ class Folder(DBResource):
         for old_name, new_name in source.rename_handlers(new_name):
             if old_name is None:
                 continue
-            src_path = fs.resolve(source_path, old_name)
-            dst_path = fs.resolve(target_path, new_name)
-            if folder.has_handler(src_path):
-                folder.copy_handler(src_path, dst_path)
+            src_key = fs.resolve(source_key, old_name)
+            dst_key = fs.resolve(target_key, new_name)
+            if folder.has_handler(src_key):
+                folder.copy_handler(src_key, dst_key)
 
         # Events, add
         resource = self.get_resource(target_path)
@@ -250,10 +250,10 @@ class Folder(DBResource):
         for old_name, new_name in source.rename_handlers(new_name):
             if old_name is None:
                 continue
-            src_path = fs.resolve(source_path, old_name)
-            dst_path = fs.resolve(target_path, new_name)
-            if folder.has_handler(src_path):
-                folder.move_handler(src_path, dst_path)
+            src_key = fs.resolve(source_key, old_name)
+            dst_key = fs.resolve(target_key, new_name)
+            if folder.has_handler(src_key):
+                folder.move_handler(src_key, dst_key)
 
 
     def traverse_resources(self):
