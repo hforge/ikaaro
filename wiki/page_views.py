@@ -354,7 +354,7 @@ class WikiPage_Edit(DBResource_Edit):
 
     def action_save_and_view(self, resource, context, form):
         self.action_save(resource, context, form)
-        goto = context.come_back(message)
+        goto = context.come_back(context.message)
         query = goto.query
         goto = goto.resolve(';view')
         goto.query = query
