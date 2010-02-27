@@ -207,10 +207,11 @@ class Issue(Folder):
         # CCs
         cc_list = set(self.get_value('cc_list') or ())
         cc_remove = context.get_form_value('cc_remove')
+        datatype = String(multiple=True)
         if cc_remove:
-            cc_remove = context.get_form_values('cc_list')
+            cc_remove = context.get_form_value('cc_list', type=datatype)
             cc_list = cc_list.difference(cc_remove)
-        cc_add = context.get_form_values('cc_add')
+        cc_add = context.get_form_value('cc_add', type=datatype)
         if cc_add:
             cc_list = cc_list.union(cc_add)
         record['cc_list'] = list(cc_list)

@@ -405,7 +405,8 @@ class Tracker_View(BrowseForm):
 
     def get_item_value(self, resource, context, item, column):
         if column == 'checkbox':
-            selected_issues = context.get_form_values('ids') or []
+            datatype = String(multiple=True)
+            selected_issues = context.get_form_value('ids', type=datatype)
             return item.name, item.name in selected_issues
         if column == 'id':
             id = item.name
