@@ -36,7 +36,7 @@ from docutils import nodes
 from itools.core import guess_extension
 from itools.datatypes import DateTime, String, Unicode
 from itools.gettext import MSG
-from itools.handlers import checkid, get_handler, File as FileHandler
+from itools.handlers import checkid, File as FileHandler, ro_database
 from itools.html import XHTMLFile
 from itools.i18n import format_datetime
 from itools.uri import get_reference
@@ -178,7 +178,7 @@ class WikiPage_ToPDF(BaseView):
             if reference.scheme or reference.authority:
                 # Fetch external image
                 try:
-                    image = get_handler(reference)
+                    image = ro_database.get_handler(reference)
                 except LookupError:
                     image = None
                 else:

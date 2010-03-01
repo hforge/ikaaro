@@ -20,7 +20,7 @@
 
 
 # Import from itools
-from itools.handlers import ConfigFile, get_handler
+from itools.handlers import ConfigFile, ro_database
 from itools.datatypes import Boolean, Integer, String, Tokens
 
 
@@ -43,5 +43,5 @@ class ServerConfig(ConfigFile):
 
 
 def get_config(target):
-    return get_handler('%s/config.conf' % target, cls=ServerConfig)
+    return ro_database.get_handler('%s/config.conf' % target, ServerConfig)
 

@@ -32,7 +32,7 @@ import traceback
 from itools.core import get_abspath
 from itools.datatypes import String
 from itools.gettext import MSG
-from itools.handlers import get_handler, ConfigFile, RWDatabase
+from itools.handlers import ConfigFile, RWDatabase, ro_database
 from itools.stl import stl
 from itools.uri import Path
 from itools.web import BaseView, get_context
@@ -48,7 +48,7 @@ from website import WebSite
 
 # itools source and target languages
 config = get_abspath('setup.conf')
-config = get_handler(config,  ConfigFile)
+config = ro_database.get_handler(config,  ConfigFile)
 itools_source_language = config.get_value('source_language')
 itools_target_languages = config.get_value('target_languages')
 
