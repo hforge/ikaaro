@@ -22,7 +22,6 @@ from subprocess import CalledProcessError
 # Import from itools
 from itools.core import merge_dicts
 from itools.datatypes import Boolean, String
-from itools import git
 from itools.gettext import MSG
 from itools.uri import encode_query, get_reference
 from itools.web import STLView

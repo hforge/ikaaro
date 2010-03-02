@@ -19,7 +19,6 @@
 # Import from the Standard Library
 from cProfile import runctx
 from optparse import OptionParser
-from os import devnull
 from subprocess import Popen, call, PIPE
 from sys import exit, stdout
 from time import time

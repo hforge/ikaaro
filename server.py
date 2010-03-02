@@ -34,9 +34,6 @@ from gobject import idle_add, timeout_add_seconds
 # Import from pygobject
 from glib import GError
 
-# Import from xapian
-from xapian import DatabaseOpeningError
-
 # Import from itools
 from itools.datatypes import Boolean
 from itools.fs import vfs, lfs
@@ -53,7 +50,6 @@ from database import get_database
 from metadata import Metadata
 from registry import get_resource_class
 from utils import is_pid_running
-from website import WebSite
 
 
 log_levels = {

@@ -26,8 +26,7 @@ from re import compile
 from textwrap import TextWrapper
 
 # Import from itools
-from itools.datatypes import Boolean, Date, Integer, String, Unicode
-from itools.datatypes import XMLContent
+from itools.datatypes import Date, Integer, String, Unicode, XMLContent
 from itools.gettext import MSG
 from itools.ical import Time
 from itools.html import xhtml_uri

@@ -18,7 +18,7 @@
 from operator import itemgetter
 
 # Import from itools
-from itools.datatypes import Enumerate, String, Integer, Boolean
+from itools.datatypes import Enumerate, String
 from itools.web import get_context
 
 # Import from ikaaro

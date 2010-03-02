@@ -21,14 +21,11 @@
 
 # Import from the Standard Library
 from datetime import datetime, timedelta
-from operator import itemgetter
 
 # Import from itools
 from itools.csv import Property
 from itools.datatypes import Integer, String, Unicode
 from itools.gettext import MSG
-from itools.uri import Reference
-from itools.web import ERROR
 from itools.xapian import RangeQuery, AndQuery, OrQuery, PhraseQuery
 from itools.xapian import StartQuery
 

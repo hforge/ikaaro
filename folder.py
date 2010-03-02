@@ -25,7 +25,6 @@ from os.path import basename
 from itools.gettext import MSG
 from itools.handlers import Folder as FolderHandler
 from itools.web import get_context, BaseView
-from itools.xapian import PhraseQuery
 
 # Import from ikaaro
 from exceptions import ConsistencyError
