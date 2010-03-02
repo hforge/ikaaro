@@ -1,16 +1,87 @@
-*************************************************************************
-ikaaro 0.61.0
-*************************************************************************
 
-These upgrade notes may not be complete. Thanks to report any problem you
-find.
+**********************************************************************
+Upgrade to ikaaro 0.61.0
+System Administrators
+**********************************************************************
+
+Logging
+====================
+
+The specific log files for the mail spool (log/spool and log/spool_error)
+have been removed.  Now the mail spool writes messages to the general log
+(log/events).
+
+Scripts
+====================
+
+The icms-stop.py does not support graceful stop anymore.  However the
+prototype has not changed, so calling the script with or without the
+--force option is just the same.  This issue will be fixed in a future
+release, and the old behavior restored.
+
+Update the database
+====================
+
+The database structure has not changed in this release.  Neither it is
+required to update the catalog.
+
+
+**********************************************************************
+Upgrade to ikaaro 0.61.0
+Developers
+**********************************************************************
+
+Note that the documentation below may not be complete.  Thanks to report
+any problem you find.
+
+
+Imports & renames
+====================
+
+See the table below for the imports to update.
+
+Before (alphabetical order)             Now
+-------------------------------------   ------------------------------------
+obsolete.*                              obsolete.metadata.*
+revisions_views.DBResource_LastChange   revisions_views.DBResource_CommitLog
+
+(1) The rename of the "last changes" view to "commit log" has been completed:
+
+  # Before
+  from ikaaro.revisions_views import DBResource_LastChange
+  class MyResource(...):
+      class_views = [..., 'last_changes', ...]
+      last_changes = DBResource_LastChanges(access='is_admin')
+
+  # Now
+  from ikaaro.revisions_views import DBResource_CommitLog
+  class MyResource(...):
+      class_views = [..., 'commit_log', ...]
+      commit_log = DBResource_CommitLog(access='is_admin')
+
+(2) The obsolete module has become a package (see above).
+
+
+Resource's Registry
+====================
+
+Now resources are registered automatically (using metaclasses).  Remove
+simple calls to 'register_resource_class':
+
+  # Before
+  register_resource_class(File)
+  register_resource_class(File, format="application/octet-stream")
+
+  # Now
+  register_resource_class(File, format="application/octet-stream")
 
 
 Handlers
 ========
 
-(1) Ikaaro handlers always use the lfs module. This means the "uri" attribute
-is now an absolute path:
+Now all ikaaro handlers (database and ui) always use the lfs module.
+This means the "key" attribute (before called "uri) is now an absolute
+path:
 
   # Before
   path = str(get_reference(metadata.uri).path)
@@ -18,31 +89,28 @@ is now an absolute path:
   # Now
   path = metadata.key
 
-(2) As a consequence, you should avoid using itools.uri for manipulating
-paths and better ask the ikaaro database for the fs.
+To work with the key, it is recommended to use the 'handler.database.fs'
+layer when possible:
 
   # Before
   handler_uri = resolve_uri(metadata.uri, name)
 
   # Now
-  fs = database.fs
-  handler_uri = fs.resolve(metadata.key, name)
+  handler_uri = metadata.database.fs.resolve(metadata.key, name)
 
-(3) Using os.path for simple tasks is an option:
+If further manipulation of the key is required, it is advised to use the
+'Path' class from itools.uri
 
-  # Before
-  handler_name = get_uri_name(handler.uri)
-
-  # Now
-  from os.path import basename
-  handler_name = basename(handler.key)
+  from itools.uri import Path
+  path = Path(metadata.key)
+  ...
 
 
 Logging
 =======
 
-Logging is not a method of the server anymore but a function from the new
-"itools.log" module:
+The 'server.log_error' method has been removed.  Use instead the itools.log
+package:
 
   # Before
   server.log_error(context)
@@ -51,14 +119,7 @@ Logging is not a method of the server anymore but a function from the new
   from itools.log import log_error
   log_error('Failed!', domain='ikaaro')
 
-The traceback remains automatically written so the first argument is yours. The
-"domain" argument would be your project name or functionality in your own code.
+The traceback remains automatically written so the first argument is yours.
+The "domain" argument would be your project name or functionality in your
+own code.
 
-
-Skins
-=====
-
-Skins use a separate read-only database. It's all automatic but if you want
-to introspect it:
-
-  from skins import ui_database
