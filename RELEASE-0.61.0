@@ -1,0 +1,40 @@
+
+ikaaro 0.61.0 (2010/03/XX)
+==========================
+
+This is a Content Management System built on Python & itools, among
+other features ikaaro provides:
+
+ - content and document management (index&search, metadata, etc.)
+ - multilingual user interfaces and content
+ - high level modules: wiki, forum, tracker, etc.
+
+This is the companion release of itools 0.61; most important changes in
+this development cycle have gone to itools, and so this ikaaro release
+is relatively small:
+
+- The bundled jquery has been upgraded from 1.3.2 to 1.4.2
+
+- Minor user interface improvements here and there
+
+- Sensible speed-up, mostly due to the optimizations to the database
+  layer in itools.handlers
+
+For further details check the UPGRADE file.
+
+
+Resources
+---------
+
+Download
+http://download.hforge.org/ikaaro/0.61/ikaaro-0.61.0.tar.gz
+
+Home
+http://www.hforge.org/ikaaro
+
+Mailing list
+http://www.hforge.org/community/
+http://archives.hforge.org/index.cgi?list=itools
+
+Bug Tracker
+http://bugs.hforge.org/
