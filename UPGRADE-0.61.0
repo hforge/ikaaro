@@ -77,7 +77,7 @@ simple calls to 'register_resource_class':
 
 
 Handlers
-========
+====================
 
 Now all ikaaro handlers (database and ui) always use the lfs module.
 This means the "key" attribute (before called "uri) is now an absolute
@@ -107,7 +107,7 @@ If further manipulation of the key is required, it is advised to use the
 
 
 Logging
-=======
+====================
 
 The 'server.log_error' method has been removed.  Use instead the itools.log
 package:
@@ -122,4 +122,23 @@ package:
 The traceback remains automatically written so the first argument is yours.
 The "domain" argument would be your project name or functionality in your
 own code.
+
+
+Styles & Scripts
+====================
+
+While the 'context.add_style' and 'context.add_script' methods are still
+available, now the preferred way to include new styles and scripts in a
+view is to use the class variables 'styles' and 'scripts':
+
+  # Before
+  class MyView(...):
+      def get_namespace(self, resource, context):
+          context.add_style('/ui/myskin/mystyle.css')
+          context.add_script('/ui/myskin/myscript.css')
+
+  # Now
+  class MyView(...):
+      styles = ['/ui/myskin/mystyle.css']
+      scripts = ['/ui/myskin/myscript.css']
 
