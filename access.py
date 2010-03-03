@@ -237,7 +237,7 @@ class RoleAware_AddUser(STLForm):
             'roles': resource.get_roles_namespace()}
 
 
-    def action(self, resource, context, form):
+    def _add(self, resource, context, form):
         root = context.root
         user = context.user
         users = root.get_resource('users')
@@ -260,7 +260,7 @@ class RoleAware_AddUser(STLForm):
                 # Check the password is right
                 if password != password2:
                     context.message = messages.MSG_PASSWORD_MISMATCH
-                    return
+                    return None
                 if not password:
                     # Admin can set no password
                     # so the user must activate its account
@@ -279,20 +279,24 @@ class RoleAware_AddUser(STLForm):
             members = resource.get_members()
             if user_id in members:
                 context.message = ERROR(u'The user is already here.')
-                return
+                return None
 
         # Set the role
         role = form['role']
         resource.set_user_role(user_id, role)
+        return user_id
 
-        # Come back
-        if context.get_form_value('add_and_return') is not None:
-            return
 
-        goto = '/users/%s/' % user.name
-        message = INFO(u'User added.')
-        return context.come_back(message, goto=goto)
+    def action_add_and_return(self, resource, context, form):
+        self._add(resource, context, form)
 
+
+    def action_add_and_view(self, resource, context, form):
+        user_id = self._add(resource, context, form)
+        if user_id is not None:
+            goto = '/users/%s/' % user_id
+            message = INFO(u'User added.')
+            return context.come_back(message, goto=goto)
 
 
 ###########################################################################
