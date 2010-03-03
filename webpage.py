@@ -321,51 +321,6 @@ class WebPage(ResourceWithHTML, Multilingual, Text):
         return self.get_handler(language=language)
 
 
-    #######################################################################
-    # Update
-    #######################################################################
-    def update_20080902(self):
-        def fix_links(stream):
-            for event in stream:
-                type, value, line = event
-                if type != START_ELEMENT:
-                    yield event
-                    continue
-                tag_uri, tag_name, attributes = value
-                if tag_uri != xhtml_uri:
-                    yield event
-                    continue
-                if tag_name != 'img':
-                    yield event
-                    continue
-                value = attributes.get((None, 'src'))
-                if value is None:
-                    yield event
-                    continue
-                uri = get_reference(value)
-                if uri.scheme or uri.authority or not uri.path:
-                    yield event
-                    continue
-                if value.startswith('/ui/'):
-                    yield event
-                    continue
-                if str(uri.path[-1]).startswith(';'):
-                    yield event
-                    continue
-                # Fix link
-                uri = uri.resolve_name(';download')
-                attributes = attributes.copy()
-                attributes[(None, 'src')] = str(uri)
-                yield START_ELEMENT, (tag_uri, tag_name, attributes), line
-
-        languages = self.get_site_root().get_property('website_languages')
-        for language in languages:
-            handler = self.get_handler(language=language)
-            events = list(fix_links(handler.events))
-            handler.set_changed()
-            handler.events = events
-
-
 
 ###########################################################################
 # Register

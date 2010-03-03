@@ -216,15 +216,6 @@ class User(AccessControl, Folder):
     tasks = User_Tasks()
 
 
-    def update_20081217(self):
-        # Some users were registered with multilingual names
-        for key in ('firstname', 'lastname'):
-            value, language = self.get_property_and_language(key)
-            if language is not None:
-                self.del_property(key)
-                self.set_property(key, value)
-
-
 
 class UserFolder(Folder):
 

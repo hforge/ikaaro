@@ -196,16 +196,6 @@ class File(WorkflowAware, DBResource):
     external_edit = File_ExternalEdit()
 
 
-    #######################################################################
-    # Update
-    #######################################################################
-    def update_20090122(self):
-        WorkflowAware.update_20090122(self)
-
-        metadata = self.metadata
-        if metadata.has_property('history'):
-            metadata.del_property('history')
-
 
 ###########################################################################
 # Media

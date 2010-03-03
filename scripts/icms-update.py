@@ -19,9 +19,7 @@
 # Import from the Standard Library
 from cProfile import runctx
 from optparse import OptionParser
-from subprocess import Popen, call, PIPE
 from sys import exit, stdout
-from time import time
 from traceback import print_exc
 
 # Import from itools
@@ -160,32 +158,6 @@ def update(parser, options, target):
     # Local variables
     database = server.database
     root = server.root
-
-    #######################################################################
-    # STAGE 0: Initialize '.git'
-    # XXX Specific to the migration from 0.50 to 0.60
-    #######################################################################
-    if not lfs.exists('%s/.git' % database.path):
-        message = 'STAGE 0: Add the Git archive (y/N)? '
-        if ask_confirmation(message, confirm) is False:
-            abort()
-        # Init
-        print 'STAGE 0: git init'
-        command = ['git', 'init']
-        call(command, cwd=database.path, stdout=PIPE)
-        # Add
-        print 'STAGE 0: git add (may take a while)'
-        command = ['git', 'add', '.']
-        t0 = time()
-        call(command, cwd=database.path, stdout=PIPE)
-        print '       : %f seconds' % (time() - t0)
-        # Commit
-        print 'STAGE 0: git commit'
-        command = ['git', 'commit', '--author=nobody <>', '-m', 'First commit']
-        t0 = time()
-        p = Popen(command, cwd=database.path, stdout=PIPE)
-        p.communicate()
-        print '       : %f seconds' % (time() - t0)
 
     #######################################################################
     # STAGE 1: Find out the versions to upgrade

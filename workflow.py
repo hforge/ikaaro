@@ -224,15 +224,6 @@ class WorkflowAware(BaseWorkflowAware):
     edit_state = StateForm()
 
 
-    ########################################################################
-    # Update
-    ########################################################################
-    def update_20090122(self):
-        metadata = self.metadata
-        if metadata.has_property('wf_transition'):
-            metadata.del_property('wf_transition')
-
-
 
 def get_workflow_preview(resource, context):
     if not isinstance(resource, WorkflowAware):

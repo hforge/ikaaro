@@ -237,17 +237,6 @@ class WikiPage(Text):
 
 
     #######################################################################
-    # Update service
-    #######################################################################
-    def update_20081114(self,
-            links_migration_re = compile(r'\.\. figure:: ([^;]*?)(?!;)(\s)'),
-            links_migration_sub = r'.. figure:: \1/;download\2'):
-        data = self.handler.to_str()
-        data = links_migration_re.sub(links_migration_sub, data)
-        self.handler.load_state_from_string(data)
-
-
-    #######################################################################
     # User Interface
     #######################################################################
     new_instance = DBResource.new_instance

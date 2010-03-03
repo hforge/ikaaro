@@ -78,31 +78,6 @@ class Table(File):
     export_csv = Table_ExportCSV()
 
 
-    def update_20081113(self):
-        # XXX Hardcoded because too hard to get right.  Maybe changed
-        # for specific tables.
-        language = 'en'
-
-        handler = self.get_handler()
-        schema = handler.record_properties
-
-        handler.set_changed()
-        handler.incremental_save = False
-        for record in handler.records:
-            # XXX Not that versions of deleted records won't be updated.
-            # This may be fixed by compacting a table.
-            if record is None:
-                continue
-            for version in record:
-                for name in version:
-                    if name not in schema:
-                        continue
-                    datatype = schema[name]
-                    if is_multilingual(datatype):
-                        for property in version[name]:
-                            property.parameters['language'] = language
-
-
 
 ###########################################################################
 # Ordered Table
