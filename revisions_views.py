@@ -24,11 +24,14 @@ from itools.core import merge_dicts
 from itools.datatypes import Boolean, String
 from itools.gettext import MSG
 from itools.uri import encode_query, get_reference
-from itools.web import STLView
+from itools.web import STLView, ERROR
 
 # Import from ikaaro
 from buttons import Button
 from views import BrowseForm
+
+
+MSG_GIT_FAILED = ERROR(u"Git failed: {error}")
 
 
 def get_colored_diff(diff):
@@ -211,7 +214,12 @@ class DBResource_Changes(STLView):
         namespace = {}
         if to is None:
             # Commit namespace
-            metadata = database.get_diff(revision)
+            try:
+                metadata = database.get_diff(revision)
+            except CalledProcessError, e:
+                error = unicode(str(e), 'utf_8')
+                return context.come_back(MSG_GIT_FAILED(error=error,
+                    goto=';commit_log'))
             author_name = metadata['author_name']
             metadata['author_name'] = root.get_user_title(author_name)
             namespace['metadata'] = metadata
