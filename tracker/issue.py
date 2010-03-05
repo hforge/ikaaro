@@ -264,8 +264,11 @@ class Issue(Folder):
         else:
             uri = context.uri.resolve('%s/;edit' % self.name)
 
-        body = '#%s %s %s\n\n' % (self.name, self.get_value('title'),
-                                  str(uri))
+        message = MSG(u'DO NOT REPLY TO THIS EMAIL. To comment on this '
+                u'issue, please visit:\n{issue_uri}')
+        body = message.gettext(issue_uri=uri)
+        body += '\n\n'
+        body += '#%s %s\n\n' % (self.name, self.get_value('title'))
         message = MSG(u'The user {title} did some changes.')
         body +=  message.gettext(title=user_title)
         body += '\n\n'
