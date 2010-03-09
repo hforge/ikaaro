@@ -867,7 +867,8 @@ class WeeklyView(CalendarView):
         namespace = self.add_selector_ns(c_date, 'weekly_view', {})
 
         # Get icon to appear to add a new event
-        namespace['add_icon'] = '/ui/icons/16x16/add.png'
+        add_icon = '/ui/icons/16x16/add.png'
+        namespace['add_icon'] = add_icon
 
         # Get header line with days of the week
         days_of_week_ns = self.days_of_week_ns(start, True, ndays, c_date)
@@ -885,7 +886,7 @@ class WeeklyView(CalendarView):
         templates = self.get_weekly_templates()
         with_new_url = self.get_with_new_url()
         timetable = get_grid_data(events, timetables, start, templates,
-                                  with_new_url)
+                                  with_new_url, add_icon)
         namespace['timetable_data'] = timetable
 
         return namespace
