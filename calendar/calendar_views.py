@@ -32,6 +32,7 @@ from itools.ical import Time
 from itools.stl import stl
 from itools.uri import encode_query, get_reference
 from itools.web import BaseView, STLForm, STLView, get_context, INFO, ERROR
+from itools.web import FormError
 
 # Import from ikaaro
 from ikaaro.datatypes import FileDataType
@@ -458,6 +459,23 @@ class EditEventForm(CalendarView, STLForm):
         message = ERROR(u'Expected query parameter "id" is missing.')
         context.message = message
         return None
+
+
+    def _get_form(self, resource, context):
+        """ Check start is before end.
+        """
+        form = STLForm._get_form(self, resource, context)
+        start_date = form['dtstart']
+        start_time = form.get('dtstart_time', None) or time(0,0)
+        end_date = form['dtend']
+        end_time = form.get('dtend_time', None) or time(23,59)
+        start = datetime.combine(start_date, start_time)
+        end = datetime.combine(end_date, end_time)
+
+        if start > end:
+            msg = ERROR(u'Invalid dates.')
+            raise FormError(msg)
+        return form
 
 
     def get_namespace(self, resource, context):
