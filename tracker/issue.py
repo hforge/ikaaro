@@ -143,10 +143,11 @@ class Issue(Folder):
             value = form[name]
             self.set_property(name, value)
         # CCs
+        cc_add = form['cc_add']
         if new:
-            cc_add = form['cc_add']
-            if cc_add:
-                self.set_property('cc_list', tuple(cc_add))
+            cc_list = cc_add
+            if cc_list:
+                self.set_property('cc_list', tuple(cc_list))
         else:
             cc_list = self.get_property('cc_list')
             cc_list = set(cc_list)
@@ -154,7 +155,6 @@ class Issue(Folder):
             if cc_remove:
                 cc_remove = form['cc_list']
                 cc_list = cc_list.difference(cc_remove)
-            cc_add = form['cc_add']
             cc_list = cc_list.union(cc_add)
             self.set_property('cc_list', tuple(cc_list))
 
