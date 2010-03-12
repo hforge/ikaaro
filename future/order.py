@@ -18,11 +18,12 @@
 from copy import deepcopy
 
 # Import from itools
+from itools.csv import UniqueError
 from itools.datatypes import String
 from itools.gettext import MSG
 from itools.stl import set_prefix
 from itools.uri import get_reference, resolve_uri2, Path
-from itools.web import INFO, get_context
+from itools.web import ERROR, INFO, get_context
 from itools.xapian import AndQuery, OrQuery, PhraseQuery, NotQuery
 from itools.xml import XMLParser
 
@@ -212,10 +213,31 @@ class ResourcesOrderedTable_Unordered(Folder_BrowseContent):
 
 
     def action_add(self, resource, context, form):
+        handler = resource.handler
+        added = []
+        not_added = []
         for name in form['ids']:
-            resource.add_new_record({'name': name})
+            try:
+                handler.add_record({'name': name})
+                added.append(name)
+            except UniqueError:
+                not_added.append(name)
 
-        context.message = INFO(u'Resources added to ordered list.')
+        message = []
+        if added:
+            resources = ', '.join(added)
+            msg = INFO(u'Resources added to ordered list: {resources}.')
+            msg = msg(resources=resources)
+            message.append(msg)
+            # Reindex
+            context.server.change_resource(resource)
+        if not_added:
+            resources = ', '.join(not_added)
+            msg = ERROR(u'Resources already in the ordered list: {resources}.')
+            msg = msg(resources=resources)
+            message.append(msg)
+
+        context.message = message
 
 
 
