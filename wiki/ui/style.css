@@ -61,55 +61,65 @@
   padding-left: 20px;
 }
 
-.topic-title.first {
+.document .topic-title.first {
   font-size: 1.1em;
   font-weight: bold;
 }
 
-.figure {
+.document .figure {
   display: table;
   padding: 1em;
   border: 1px solid #999;
   background: #ffe;
 }
 
-.reference.external:link,
-.reference.external:visited {
+.document .reference.external:link,
+.document .reference.external:visited {
   padding-left: 18px;
   color: blue;
   background: url(../icons/16x16/website.png) top left no-repeat;
 }
 
-.reference.internal:link,
-.reference.internal:visited {
+.document .reference.internal:link,
+.document .reference.internal:visited {
   color: blue;
 }
 
-.reference.wiki:link,
-.reference.wiki:visited {
+.document .reference.wiki:link,
+.document .reference.wiki:visited {
   color: green;
 }
 
-.reference.nowiki:link,
-.reference.nowiki:visited {
+.document .reference.nowiki:link,
+.document .reference.nowiki:visited {
   color: red;
 }
 
-.literal-block {
+.document .literal-block {
   padding: 1em;
   border: 1px dashed #729fcf;
   background: #fafafa;
 }
 
-.problematic {
+.document .problematic {
   background-color: red;
 }
 
-.system-message {
+.document .system-message {
   background-color: #fdd;
 }
 
-.system-message-title {
+.document .system-message-title {
+  font-weight: bold;
+}
+
+.document .note {
+  padding: 1em;
+  border: 1px dashed #9fcf72;
+  background: #fefefe;
+}
+
+.document .note .admonition-title {
   font-weight: bold;
 }
 
