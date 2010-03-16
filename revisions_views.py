@@ -79,10 +79,9 @@ def get_colored_stat(stat):
         else:
             # Last line of summary
             summary = line
-    namespace = {}
-    namespace['table'] = table
-    namespace['summary'] = summary
-    return namespace
+    return {
+        'table': table,
+        'summary': summary}
 
 
 
@@ -219,8 +218,7 @@ class DBResource_Changes(STLView):
                 return {'metadata': None, 'stat': None, 'changes': None}
             author_name = metadata['author_name']
             metadata['author_name'] = root.get_user_title(author_name)
-            stat = database.get_diff_between('%s^' % revision, to=revision,
-                    stat=True)
+            stat = database.get_stats(revision)
             diff = metadata['diff']
         else:
             # Case 2: show a set of commits
@@ -249,8 +247,7 @@ class DBResource_Changes(STLView):
             # Get the statistic for these files
             # Starting revision is included in the diff
             revision = "%s^" % revision
-            stat = database.get_diff_between(revision, to, paths=files,
-                    stat=True)
+            stat = database.get_stats(revision, to, paths=files)
 
             # Reuse the list of files to limit diff produced
             diff = database.get_diff_between(revision, to, paths=files)
