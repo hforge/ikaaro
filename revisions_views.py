@@ -31,8 +31,6 @@ from buttons import Button
 from views import BrowseForm
 
 
-MSG_GIT_FAILED = ERROR(u"Git failed: {error}")
-
 
 def get_colored_diff(diff):
     """Turn a diff source into a namespace for HTML display"""
@@ -211,33 +209,31 @@ class DBResource_Changes(STLView):
         root = context.root
         database = context.database
 
-        namespace = {}
         if to is None:
-            # Commit namespace
+            # Case 1: show one commit
             try:
                 metadata = database.get_diff(revision)
             except CalledProcessError, e:
                 error = unicode(str(e), 'utf_8')
-                return context.come_back(MSG_GIT_FAILED(error=error),
-                    goto=';commit_log')
+                error = ERROR(u"Git failed: {error}", error=error)
+                return context.come_back(error, goto=';commit_log')
             author_name = metadata['author_name']
             metadata['author_name'] = root.get_user_title(author_name)
-            namespace['metadata'] = metadata
             stat = database.get_diff_between('%s^' % revision, to=revision,
                     stat=True)
-            namespace['stat'] = get_colored_stat(stat)
-            namespace['changes'] = get_colored_diff(metadata['diff'])
+            diff = metadata['diff']
         else:
-            # Diff namespace
+            # Case 2: show a set of commits
+            metadata = None
             # Get the list of commits affecting the resource
-            revisions = [x['revision'] for x in
-                    resource.get_revisions(content=True)]
+            revisions = [
+                x['revision'] for x in resource.get_revisions(content=True) ]
             # Filter revisions in our range
             # Below
-            while revisions[-1] != revision:
+            while revisions and revisions[-1] != revision:
                 revisions.pop()
             # Above
-            if to and to != 'HEAD':
+            if to != 'HEAD':
                 while revisions[0] != to:
                     revisions.pop(0)
             # Get the list of files affected in this series
@@ -247,13 +243,13 @@ class DBResource_Changes(STLView):
             revision = "%s^" % revision
             stat = database.get_diff_between(revision, to, paths=files,
                     stat=True)
-            namespace['stat'] = get_colored_stat(stat)
+
             # Reuse the list of files to limit diff produced
             diff = database.get_diff_between(revision, to, paths=files)
-            namespace['changes'] = get_colored_diff(diff)
-            # No commit metadata
-            namespace['metadata'] = None
 
         # Ok
-        return namespace
+        return {
+            'metadata': metadata,
+            'stat': get_colored_stat(stat),
+            'changes': get_colored_diff(diff)}
 
