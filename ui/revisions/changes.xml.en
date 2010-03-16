@@ -22,8 +22,8 @@
     </table>
   </fieldset>
 
-  <h3>Stat</h3>
-  <div id="git-stat">
+  <div id="git-stat" stl:if="stat">
+    <h3>Stat</h3>
     <p>${stat/summary}</p>
     <table id="browse-list">
       <thead>
@@ -45,9 +45,8 @@
     </table>
   </div>
 
-
-  <h3>Details</h3>
-  <div id="differ">
+  <div id="differ" stl:if="changes">
+    <h3>Details</h3>
     <stl:block stl:repeat="change changes">
       <div stl:if="change/is_header"><a
           name="diff_${change/index}"/>${change/value}</div>

@@ -24,11 +24,12 @@ from itools.core import merge_dicts
 from itools.datatypes import Boolean, String
 from itools.gettext import MSG
 from itools.uri import encode_query, get_reference
-from itools.web import STLView
+from itools.web import STLView, ERROR
 
 # Import from ikaaro
 from buttons import Button
 from views import BrowseForm
+
 
 
 def get_colored_diff(diff):
@@ -78,10 +79,9 @@ def get_colored_stat(stat):
         else:
             # Last line of summary
             summary = line
-    namespace = {}
-    namespace['table'] = table
-    namespace['summary'] = summary
-    return namespace
+    return {
+        'table': table,
+        'summary': summary}
 
 
 
@@ -208,44 +208,53 @@ class DBResource_Changes(STLView):
         root = context.root
         database = context.database
 
-        namespace = {}
         if to is None:
-            # Commit namespace
-            metadata = database.get_diff(revision)
+            # Case 1: show one commit
+            try:
+                metadata = database.get_diff(revision)
+            except CalledProcessError, e:
+                error = unicode(str(e), 'utf_8')
+                context.message = ERROR(u"Git failed: {error}", error=error)
+                return {'metadata': None, 'stat': None, 'changes': None}
             author_name = metadata['author_name']
             metadata['author_name'] = root.get_user_title(author_name)
-            namespace['metadata'] = metadata
-            stat = database.get_diff_between('%s^' % revision, to=revision,
-                    stat=True)
-            namespace['stat'] = get_colored_stat(stat)
-            namespace['changes'] = get_colored_diff(metadata['diff'])
+            stat = database.get_stats(revision)
+            diff = metadata['diff']
         else:
-            # Diff namespace
+            # Case 2: show a set of commits
+            metadata = None
             # Get the list of commits affecting the resource
-            revisions = [x['revision'] for x in
-                    resource.get_revisions(content=True)]
+            revisions = [
+                x['revision'] for x in resource.get_revisions(content=True) ]
             # Filter revisions in our range
             # Below
-            while revisions[-1] != revision:
+            while revisions and revisions[-1] != revision:
                 revisions.pop()
+            if not revisions:
+                error = ERROR(u'Commit {commit} not found', commit=revision)
+                context.message = error
+                return {'metadata': None, 'stat': None, 'changes': None}
             # Above
-            if to and to != 'HEAD':
-                while revisions[0] != to:
+            if to != 'HEAD':
+                while revisions and revisions[0] != to:
                     revisions.pop(0)
+                if not revisions:
+                    error = ERROR(u'Commit {commit} not found', commit=to)
+                    context.message = error
+                    return {'metadata': None, 'stat': None, 'changes': None}
             # Get the list of files affected in this series
             files = database.get_files_affected(revisions)
             # Get the statistic for these files
             # Starting revision is included in the diff
             revision = "%s^" % revision
-            stat = database.get_diff_between(revision, to, paths=files,
-                    stat=True)
-            namespace['stat'] = get_colored_stat(stat)
+            stat = database.get_stats(revision, to, paths=files)
+
             # Reuse the list of files to limit diff produced
             diff = database.get_diff_between(revision, to, paths=files)
-            namespace['changes'] = get_colored_diff(diff)
-            # No commit metadata
-            namespace['metadata'] = None
 
         # Ok
-        return namespace
+        return {
+            'metadata': metadata,
+            'stat': get_colored_stat(stat),
+            'changes': get_colored_diff(diff)}
 
