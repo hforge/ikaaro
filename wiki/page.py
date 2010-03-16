@@ -38,7 +38,7 @@ from itools.web import get_context
 from ikaaro.text import Text
 from ikaaro.resource_ import DBResource
 from page_views import WikiPage_Edit, WikiPage_Help, WikiPage_ToPDF
-from page_views import WikiPage_View
+from page_views import WikiPage_View, WikiPage_ToODT
 from page_views import is_external, BacklinksMenu
 
 
@@ -53,8 +53,8 @@ class WikiPage(Text):
     class_description = MSG(u"Wiki contents")
     class_icon16 = 'wiki/WikiPage16.png'
     class_icon48 = 'wiki/WikiPage48.png'
-    class_views = ['view', 'to_pdf', 'edit', 'externaledit', 'edit_state',
-                   'backlinks', 'commit_log', 'help']
+    class_views = ['view', 'to_pdf', 'to_odt', 'edit', 'externaledit',
+            'edit_state', 'backlinks', 'commit_log', 'help']
 
     overrides = {
         # Security
@@ -269,6 +269,7 @@ class WikiPage(Text):
     view = WikiPage_View()
     to_pdf = WikiPage_ToPDF()
     edit = WikiPage_Edit()
+    to_odt = WikiPage_ToODT()
     help = WikiPage_Help()
 
 

@@ -19,6 +19,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
+from cStringIO import StringIO
 from datetime import datetime
 from re import compile
 from subprocess import call
@@ -47,7 +48,8 @@ from itools.xml import XMLParser, XMLError
 
 # Import from ikaaro
 from ikaaro import messages
-from ikaaro.forms import title_widget, timestamp_widget
+from ikaaro.datatypes import FileDataType
+from ikaaro.forms import AutoForm, FileWidget, title_widget, timestamp_widget
 from ikaaro.resource_views import DBResource_Edit
 from ikaaro.views import ContextMenu
 
@@ -72,7 +74,7 @@ def default_reference_resolver(resource, reference, context):
 
 def resolve_references(doctree, resource, context,
         reference_resolver=default_reference_resolver):
-    """Translate resource path to handler uri.
+    """Translate resource path to accessible path in the output document.
     """
     for node in doctree.traverse(condition=nodes.reference):
         wiki_name = node.get('wiki_name')
@@ -97,7 +99,7 @@ def resolve_references(doctree, resource, context,
 
 
 def resolve_images(doctree, resource, context):
-    """Translate image path to handler uri.
+    """Translate image path to handler key to load them from filesystem.
     """
     fs = resource.metadata.database.fs
     for node in doctree.traverse(condition=nodes.image):
@@ -380,6 +382,57 @@ class WikiPage_Edit(DBResource_Edit):
         goto = goto.resolve(';view')
         goto.query = query
         return goto
+
+
+
+class WikiPage_ToODT(AutoForm):
+    access = 'is_allowed_to_view'
+    title = MSG(u"To ODT")
+    schema = {'template': FileDataType}
+    widgets = [FileWidget('template',
+        title=MSG(u"Use the given ODT as a template "
+            u"(defaults to lpOD template)"))]
+    submit_value = MSG(u"Convert")
+
+
+    def GET(self, resource, context):
+        try:
+            from lpod.rst2odt import rst2odt
+        except ImportError:
+            return XMLParser('<p>Please install <a '
+                    'href="http://lpod-project.org/">lpOD</a> for Python on '
+                    'the server.</p>')
+        # Just to ignore pyflakes warning
+        rst2odt
+        return AutoForm.GET(self, resource, context)
+
+
+    def action(self, resource, context, form):
+        from lpod.rst2odt import rst2odt
+        from lpod.document import odf_get_document
+
+        template = form['template']
+        if template is not None:
+            filename, mimetype, body = template
+            if mimetype not in ('application/vnd.oasis.opendocument.text',
+                    'application/vnd.oasis.opendocument.text-template'):
+                context.message = ERROR(u"$filename is not an OpenDocument "
+                        u"Text.", filename=filename)
+            template = odf_get_document(StringIO(body))
+
+        doctree = resource.get_doctree()
+        resolve_references(doctree, resource, context)
+        resolve_images(doctree, resource, context)
+
+        document = rst2odt(doctree, template=template)
+        output = StringIO()
+        document.save(output)
+
+        context.set_content_type('application/vnd.oasis.opendocument.text')
+        context.set_content_disposition('attachment',
+                filename='%s.odt' % resource.name)
+
+        return output.getvalue()
 
 
 
