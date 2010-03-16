@@ -218,8 +218,8 @@ class DBResource_Changes(STLView):
                 metadata = database.get_diff(revision)
             except CalledProcessError, e:
                 error = unicode(str(e), 'utf_8')
-                return context.come_back(MSG_GIT_FAILED(error=error,
-                    goto=';commit_log'))
+                return context.come_back(MSG_GIT_FAILED(error=error),
+                    goto=';commit_log')
             author_name = metadata['author_name']
             metadata['author_name'] = root.get_user_title(author_name)
             namespace['metadata'] = metadata
