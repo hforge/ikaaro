@@ -215,8 +215,8 @@ class DBResource_Changes(STLView):
                 metadata = database.get_diff(revision)
             except CalledProcessError, e:
                 error = unicode(str(e), 'utf_8')
-                error = ERROR(u"Git failed: {error}", error=error)
-                return context.come_back(error, goto=';commit_log')
+                context.message = ERROR(u"Git failed: {error}", error=error)
+                return {'metadata': None, 'stat': None, 'changes': None}
             author_name = metadata['author_name']
             metadata['author_name'] = root.get_user_title(author_name)
             stat = database.get_diff_between('%s^' % revision, to=revision,
@@ -232,10 +232,18 @@ class DBResource_Changes(STLView):
             # Below
             while revisions and revisions[-1] != revision:
                 revisions.pop()
+            if not revisions:
+                error = ERROR(u'Commit {commit} not found', commit=revision)
+                context.message = error
+                return {'metadata': None, 'stat': None, 'changes': None}
             # Above
             if to != 'HEAD':
-                while revisions[0] != to:
+                while revisions and revisions[0] != to:
                     revisions.pop(0)
+                if not revisions:
+                    error = ERROR(u'Commit {commit} not found', commit=to)
+                    context.message = error
+                    return {'metadata': None, 'stat': None, 'changes': None}
             # Get the list of files affected in this series
             files = database.get_files_affected(revisions)
             # Get the statistic for these files
