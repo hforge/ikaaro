@@ -185,6 +185,21 @@ def startswith_section(doctree):
 
 
 
+def convert_cover_title(node, context):
+    from lpod.rst2odt import convert_paragraph
+
+    level = context['heading-level'] or 1
+    if node.tagname == 'subtitle':
+        style = 'Subtitle'
+        context['heading-level'] += 1
+    else:
+        style = ('sub' * (level - 1) + 'title').capitalize()
+    context['styles']['paragraph'] = style
+    convert_paragraph(node, context)
+    del context['styles']['paragraph']
+
+
+
 class PageVisitor(nodes.SparseNodeVisitor):
 
     def __init__(self, doctree, container):
@@ -513,8 +528,10 @@ class WikiPage_ToODT(AutoForm):
         from lpod.document import odf_get_document
         from lpod.document import odf_new_document_from_type
         from lpod.rst2odt import rst2odt, convert
+        from lpod.rst2odt import convert_title, convert_methods
         from lpod.toc import odf_create_toc
 
+        parent = resource.parent
         template = None
         template_upload = form['template_upload']
         if template_upload is not None:
@@ -526,7 +543,6 @@ class WikiPage_ToODT(AutoForm):
         else:
             template_name = form['template']
             if template_name:
-                parent = resource.parent
                 template_resource = parent.get_resource(template_name)
                 body = template_resource.handler.to_str()
                 template = odf_get_document(StringIO(body))
@@ -540,6 +556,25 @@ class WikiPage_ToODT(AutoForm):
             else:
                 document = template.clone()
                 document.get_body().clear()
+            # Cover page
+            cover_uri = book.get('cover')
+            if cover_uri:
+                cover = parent.get_resource(cover_uri, soft=True)
+                if cover is None:
+                    context.message = ERROR(u'Page "{uri}" not found.',
+                            uri=cover_uri)
+                    return
+                doctree = cover.get_doctree()
+                resolve_references(doctree, resource, context)
+                resolve_images(doctree, resource, context)
+                heading_level = 0 if startswith_section(doctree) else 1
+                # Override temporarly convert_title
+                convert_methods['title'] = convert_cover_title
+                convert_methods['subtitle'] = convert_cover_title
+                convert(document, doctree, heading_level=heading_level,
+                        skip_toc=True)
+                convert_methods['title'] = convert_title
+                del convert_methods['subtitle']
             # Global TOC
             title = MSG(u"Table of Contents").gettext()
             outline_level = book.get('toc-depth', 10)

@@ -58,13 +58,31 @@ class book(nodes.Admonition, nodes.Element):
 
 class Book(Directive):
     required_arguments = 0
-    optional_arguments = 0
-    option_spec = {'toc-depth': directives.positive_int}
+    optional_arguments = 1
+    final_argument_whitespace = True
+    option_spec = {'cover': directives.uri,
+                   'toc-depth': directives.positive_int}
     has_content = True
 
 
     def run(self):
-        (book_node,) = Directive.run(self)
+        self.assert_has_content()
+        # Cover page
+        if self.arguments:
+            # Push cover as an option
+            cover_uri = checkid(self.arguments[0][1:-2])
+            self.options['cover'] = directives.uri(cover_uri)
+        book_node = book(self.block_text, **self.options)
+        if self.arguments:
+            # Display the cover
+            cover_text = self.arguments.pop(0)
+            textnodes, messages = self.state.inline_text(cover_text,
+                    self.lineno)
+            book_node += nodes.title(cover_text, '', *textnodes)
+            book_node += messages
+        # Parse inner list
+        self.state.nested_parse(self.content, self.content_offset, book_node)
+        # Automatically number pages
         for bullet_list in book_node.traverse(condition=nodes.bullet_list):
             bullet_list.__class__ = nodes.enumerated_list
             bullet_list.tagname = 'enumerated_list'
