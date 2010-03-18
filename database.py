@@ -151,9 +151,6 @@ class Database(ReadOnlyDatabase, GitDatabase):
         self.catalog.search_results = CMSSearchResults
 
 
-    #######################################################################
-    # Git API
-    #######################################################################
     def get_last_revision(self, files):
         # The git cache only works on read-only mode
         revisions = self.get_revisions(files, 1)
@@ -166,8 +163,7 @@ class Database(ReadOnlyDatabase, GitDatabase):
         # (1) Save filesystem changes
         GitDatabase._save_changes(self, (git_author, git_message))
 
-        # Catalog
-        # (2) UnIndex
+        # (2) Catalog
         catalog = self.catalog
         for path in docs_to_unindex:
             catalog.unindex_document(path)

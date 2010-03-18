@@ -82,6 +82,16 @@ class Event_NewInstance(NewInstanceByDate):
         'type']
 
 
+    def cook(self, method):
+        super(Event_Edit, self).cook(method)
+        if method == 'get':
+            return
+
+        # Check start is before end
+        if self.dtstart.value > self.dtend.value:
+            raise FormError, ERROR(u'Invalid dates.')
+
+
     def get_date(self):
         return self.dtstart.value
 
@@ -123,25 +133,18 @@ class Event_Edit(AutoForm):
         'title', 'dtstart', 'dtend', 'description', 'location', 'status']
 
 
+    def cook(self, method):
+        super(Event_Edit, self).cook(method)
+        if method == 'get':
+            return
+
+        # Check start is before end
+        if self.dtstart.value > self.dtend.value:
+            raise FormError, ERROR(u'Invalid dates.')
+
+
     def get_value(self, field):
         return self.resource.get_value(field.name)
-
-
-    def _get_form(self, resource, context):
-        """ Check start is before end.
-        """
-        form = AutoForm._get_form(self, resource, context)
-        start_date = form['dtstart']
-        start_time = form.get('dtstart_time', None) or time(0,0)
-        end_date = form['dtend']
-        end_time = form.get('dtend_time', None) or time(23,59)
-        start = datetime.combine(start_date, start_time)
-        end = datetime.combine(end_date, end_time)
-
-        if start > end:
-            msg = ERROR(u'Invalid dates.')
-            raise FormError(msg)
-        return form
 
 
     def action(self):

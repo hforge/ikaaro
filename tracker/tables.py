@@ -54,8 +54,8 @@ class SelectTable_View(OrderedTableResource_View):
         columns.append(('issues', MSG(u'Issues'), True))
         if resource.name == 'product':
             # Add specific columns for the product table
-            columns.append(('modules', MSG(u'Modules')), True)
-            columns.append(('versions', MSG(u'Versions')), True)
+            columns.append(('modules', MSG(u'Modules'), True))
+            columns.append(('versions', MSG(u'Versions'), True))
         return columns
 
 

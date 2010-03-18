@@ -33,8 +33,6 @@ from docutils.utils import SystemMessage
 from docutils import nodes
 
 # Import from itools
-from itools.core import merge_dicts
-from itools.datatypes import String, Unicode
 from itools.fs import lfs, FileName
 from itools.gettext import MSG
 from itools.handlers import checkid, ro_database
@@ -42,13 +40,12 @@ from itools.html import XHTMLFile
 from itools.i18n import format_datetime
 from itools.uri import get_reference
 from itools.uri.mailto import Mailto
-from itools.web import view, stl_view, ERROR
+from itools.web import ERROR, view, stl_view, textarea_field
 from itools.xml import XMLParser, XMLError
 
 # Import from ikaaro
 from ikaaro.fields import NameField
 from ikaaro import messages
-from ikaaro.forms import title_widget, timestamp_widget
 from ikaaro.resource_views import DBResource_Edit
 from ikaaro.views_new import NewInstanceByDate
 
@@ -343,8 +340,7 @@ class WikiPage_ToPDF(view):
 class WikiPage_Edit(DBResource_Edit):
 
     template = '/ui/wiki/edit.xml'
-    schema = merge_dicts(DBResource_Edit.schema, data=String)
-    widgets = [timestamp_widget, title_widget]
+    data = textarea_field()
 
     # No Multilingual
     context_menus = []

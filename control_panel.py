@@ -26,7 +26,6 @@ from itools.core import thingy_property, thingy_lazy_property
 from itools.core import OrderedDict
 from itools.datatypes import Boolean, Enumerate, String
 from itools.gettext import MSG
-from itools.http import get_context
 from itools.i18n import get_language_name, get_languages
 from itools.web import stl_view, INFO, ERROR
 from itools.web import boolean_field, choice_field, input_field
@@ -101,6 +100,11 @@ class CPEditVirtualHosts(AutoForm):
 
 
 
+@thingy_property
+def value(self):
+    return self.view.resource.get_value(self.name)
+
+
 class CPEditSEO(AutoForm):
 
     access = 'is_allowed_to_edit'
@@ -109,38 +113,27 @@ class CPEditSEO(AutoForm):
     view_description = MSG(u"""
       Optimize your website for better ranking in search engine results.""")
 
+
     # Fields
     google_site_verification = input_field()
     google_site_verification.title = MSG(u'Google site verification key')
+    google_site_verification.value = value
 
     yahoo_site_verification = input_field()
     yahoo_site_verification.title = MSG(u'Yahoo site verification key')
+    yahoo_site_verification.value = value
 
     bing_site_verification = input_field()
     bing_site_verification.title = MSG(u'Bing site verification key')
-
-    @thingy_property
-    def google_site_verification__value(self):
-        return self.view.resource.get_value('google_site_verification')
-
-
-    @thingy_property
-    def yahoo_site_verification__value(self):
-        return self.view.resource.get_value('yahoo_site_verification')
-
-
-    @thingy_property
-    def bing_site_verification__value(self):
-        return self.view.resource.get_value('bing_site_verification')
+    bing_site_verification.value = value
 
 
     def action(self):
-        value = self.google_site_verification.value
-        self.resource.set_property('google_site_verification', value)
-        value = self.yahoo_site_verification.value
-        self.resource.set_property('yahoo_site_verification', value)
-        value = self.bing_site_verification.value
-        self.resource.set_property('bing_site_verification', value)
+        for name in ['google', 'yahoo', 'bing']:
+            name = '%s_site_verification' % name
+            value = getattr(self, name).value
+            self.resource.set_property(name, value)
+
         # Ok
         context = self.context
         context.message = messages.MSG_CHANGES_SAVED

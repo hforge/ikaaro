@@ -311,6 +311,7 @@ class DBResource_AddBase(stl_view):
         context.content_type = 'text/html; charset=UTF-8'
 
         # Build and return the namespace
+        mode = context.get_query_value('mode')
         namespace = self.get_configuration()
         additional_javascript = self.get_additional_javascript(context)
         namespace['additional_javascript'] = additional_javascript
@@ -321,9 +322,9 @@ class DBResource_AddBase(stl_view):
         namespace['element_to_add'] = self.element_to_add
         namespace['target_id'] = context.get_form_value('target_id')
         namespace['message'] = context.message
-        namespace['mode'] = context.get_query_value('mode')
+        namespace['mode'] = mode
         namespace['resource_action'] = self.get_resource_action(context)
-        namespace['scripts'] = self.get_scripts(context)
+        namespace['scripts'] = self.get_scripts(mode)
         return namespace
 
 
@@ -387,7 +388,8 @@ class DBResource_AddBase(stl_view):
         if action:
             path = '%s%s' % (path, action)
         # Return javascript
-        scripts = self.get_scripts(context)
+        mode = form['mode']
+        scripts = self.get_scripts(mode)
         context.add_script(*scripts)
         return self.get_javascript_return(context, path)
 
@@ -466,7 +468,7 @@ class DBResource_AddLink(DBResource_AddBase):
         # Create the resource
         child = container.make_resource(name, cls)
         path = context.resource.get_pathto(child)
-        scripts = self.get_scripts(context)
+        scripts = self.get_scripts(mode)
         context.add_script(*scripts)
         return self.get_javascript_return(context, path)
 

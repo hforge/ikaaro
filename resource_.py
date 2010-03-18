@@ -30,7 +30,7 @@ from itools.core import thingy_type, thingy_property, thingy_lazy_property
 from itools.csv import Property
 from itools.datatypes import Unicode, String, Integer, Boolean, DateTime
 from itools.log import log_warning
-from itools.uri import decode_query
+from itools.uri import Path, decode_query
 from itools.web import Resource
 from itools.xapian import CatalogAware, PhraseQuery
 

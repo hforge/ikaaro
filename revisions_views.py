@@ -167,7 +167,6 @@ class DBResource_CommitLog(stl_view):
     sort = Container_Sort()
     sort.sort_by = sort.sort_by(value='date')
     sort.sort_by.values = OrderedDict([
-        ('checkbox', None),
         ('date', {'title': MSG(u'Last Change')}),
         ('username', {'title': MSG(u'Author')}),
         ('message', {'title': MSG(u'Comment')})])
@@ -187,9 +186,10 @@ class DBResource_CommitLog(stl_view):
     # Form
     @thingy_property
     def header(self):
-        return [
-            (k, v['title'], True)
-            for k, v in self.root_view.sort.sort_by.values.items() ]
+        columns = [('checkbox', None, False)]
+        for name, value in self.root_view.sort.sort_by.values.items():
+            columns.append((name, value['title'], True))
+        return columns
 
     def get_item_value(self, item, column):
         if column == 'checkbox':
@@ -208,9 +208,9 @@ class DBResource_CommitLog(stl_view):
     ids = multiple_choice_field(datatype=IndexRevision, required=True)
 
 
-    def action_diff(self, resource, context, form):
+    def action_diff(self):
         # Take newer and older revisions, even if many selected
-        ids = sorted(form['ids'])
+        ids = sorted(self.ids.value)
         revision = ids.pop()[1]
         to = ids and ids.pop(0)[1] or 'HEAD'
         # FIXME same hack than rename to call a GET from a POST
@@ -241,7 +241,7 @@ class DBResource_Changes(stl_view):
         except CalledProcessError, e:
             error = unicode(str(e), 'utf_8')
             context.message = ERROR(u"Git failed: {error}", error=error)
-            return {'metadata': None, 'stat': None, 'changes': None}
+            return None
 
         author_name = metadata['author_name']
         metadata['author_name'] = context.get_user_title(author_name)

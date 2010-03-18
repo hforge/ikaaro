@@ -31,7 +31,6 @@ from itools.fs import FileName
 from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.http import get_context
-from itools.fs import FileName
 from itools.uri import Path
 
 # Import from ikaaro

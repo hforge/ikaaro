@@ -90,7 +90,7 @@ class DateField(input_field):
     input_template = make_stl_template("""
     <input type="text" name="${name}" value="${encoded_value}" id="${id}"
       class="dateField" size="${size}" />
-    <input type="button" value="..." class="${class}" />
+    <input type="button" value="..." class="${css}" />
     <script language="javascript">
       jQuery( "input.dateField" ).dynDateTime({
         ifFormat: "${format}",
@@ -131,7 +131,7 @@ class DateTimeField(input_field):
     input_template = make_stl_template("""
     <input type="text" name="${name}" value="${value_date}" id="${id}"
       class="dateField" size="${size}" />
-    <input type="button" value="..." class="${class}" />
+    <input type="button" value="..." class="${css}" />
     <input type="text" name="${name}_time" value="${value_time}" size="6" />
     <script language="javascript">
       jQuery( "input.dateField" ).dynDateTime({

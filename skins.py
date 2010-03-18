@@ -196,7 +196,7 @@ class Skin(stl_view):
 
         # Search engine optimization
         for key, meta_name in [
-            ('google-site-verification', 'google-site-verification'),
+            ('google_site_verification', 'google-site-verification'),
             ('yahoo_site_verification', 'y_key'),
             ('bing_site_verification', 'msvalidate.01')]:
             verification_key = root.get_value(key)

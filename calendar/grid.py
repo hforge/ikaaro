@@ -46,8 +46,6 @@ default_template = XHTMLFile(string=
       </a>
     </td>""")
 
-icon_path = '/ui/images/button_add.png'
-
 
 def mcm(l):
     """Calculates the minimum common multiple of a list of integers.
@@ -344,7 +342,7 @@ def render_namespace(items, times, with_new_url):
 
 
 def get_grid_data(data, grid, start_date=None, templates=(None, None),
-                  with_new_url=True):
+                  with_new_url=True, add_icon=None):
     """Build final namespace from data and grid to be used in gridlayout
     templates.
     """
@@ -426,7 +424,7 @@ def get_grid_data(data, grid, start_date=None, templates=(None, None),
                         cell['newurl'] = url
                     if cell['new']:
                         cell['ns'] = stl(template, {'cell': cell,
-                                                    'add_icon': icon_path})
+                                                    'add_icon': add_icon})
             current_date = current_date + timedelta(1)
         cols.append(table)
 

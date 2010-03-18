@@ -135,9 +135,10 @@ def init(parser, options, target):
     make_database(target)
     mkdir('%s/log' % target)
     mkdir('%s/spool' % target)
+    mkdir('%s/spool/failed' % target)
 
     # Create a fake context
-    app = CMSApplication(target, 5000, False, True)
+    app = CMSApplication(target, 4800, 5200, False, True)
     context = app.get_fake_context()
 
     # Make the root

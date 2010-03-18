@@ -49,10 +49,8 @@ class File_NewInstance(NewInstance):
     submit_value = MSG(u'Upload')
 
 
-    name = None
     file = file_field(required=True, size=35, title=MSG(u'File'))
-
-    field_names = ['file', 'title', 'path']
+    field_names = ['file', 'title', 'name', 'path']
 
 
     @thingy_lazy_property
@@ -264,7 +262,7 @@ class File_ExternalEdit(view):
             else:
                 # always borrow lock from same user
                 if username == context.user.get_name():
-                    lines.append('lock-token:%s' % lock.lock_key)
+                    lines.append('lock-token:%s' % key)
                     lines.append('borrow_lock:1')
                 else:
                     message = ERROR(u'This page is locked by another user')
