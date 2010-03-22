@@ -145,7 +145,7 @@ def init(parser, options, target):
     root = root_class._make_resource(root_class, folder, email, password)
     context.root = root
     # Save changes
-    start_subprocess(database.path)
+    start_subprocess('%s/database' % target)
     database.save_changes()
     # Index
     catalog = database.catalog

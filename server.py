@@ -96,9 +96,8 @@ def get_pid(target):
 
 
 
-def get_root(database, target):
-    path = '%s/database/.metadata' % target
-    metadata = database.get_handler(path, cls=Metadata)
+def get_root(database):
+    metadata = database.get_handler('.metadata', cls=Metadata)
     cls = get_resource_class(metadata.format)
     # Build the root resource
     root = cls(metadata)
@@ -163,7 +162,7 @@ class Server(WebServer):
         self.database = database
 
         # Find out the root class
-        root = get_root(database, target)
+        root = get_root(database)
 
         # Initialize
         access_log = '%s/log/access' % target

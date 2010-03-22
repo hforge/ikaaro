@@ -145,7 +145,6 @@ def update_versions(target, database, version, paths, root):
 
 
 def update(parser, options, target):
-    folder = lfs.open(target)
     confirm = options.confirm
 
     # Check the server is not started, or started in read-only mode
@@ -165,32 +164,33 @@ def update(parser, options, target):
     # STAGE 0: Initialize '.git'
     # XXX Specific to the migration from 0.50 to 0.60
     #######################################################################
-    if not lfs.exists('%s/.git' % database.path):
+    path = '%s/database' % target
+    if not database.fs.exists('.git'):
         message = 'STAGE 0: Add the Git archive (y/N)? '
         if ask_confirmation(message, confirm) is False:
             abort()
         # Init
         print 'STAGE 0: git init'
         command = ['git', 'init']
-        call(command, cwd=database.path, stdout=PIPE)
+        call(command, cwd=path, stdout=PIPE)
         # Add
         print 'STAGE 0: git add (may take a while)'
         command = ['git', 'add', '.']
         t0 = time()
-        call(command, cwd=database.path, stdout=PIPE)
+        call(command, cwd=path, stdout=PIPE)
         print '       : %f seconds' % (time() - t0)
         # Commit
         print 'STAGE 0: git commit'
         command = ['git', 'commit', '--author=nobody <>', '-m', 'First commit']
         t0 = time()
-        p = Popen(command, cwd=database.path, stdout=PIPE)
+        p = Popen(command, cwd=path, stdout=PIPE)
         p.communicate()
         print '       : %f seconds' % (time() - t0)
 
     #######################################################################
     # STAGE 1: Find out the versions to upgrade
     #######################################################################
-    start_subprocess('%s/database' % target)
+    start_subprocess(path)
     version, paths = find_versions_to_update(root)
     while version:
         message = 'STAGE 1: Upgrade %d resources to version %s (y/N)? '
