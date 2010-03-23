@@ -146,7 +146,6 @@ def update_versions(target, database, version, paths, root):
 
 
 def update(parser, options, target):
-    folder = lfs.open(target)
     confirm = options.confirm
 
     # Check the server is not started, or started in read-only mode
@@ -159,6 +158,7 @@ def update(parser, options, target):
     # STAGE 0: Change format of the metadata
     # XXX Specific to the migration from 0.61 to 0.62
     #######################################################################
+    path = '%s/database' % target
     metadata = Metadata('%s/.metadata' % path)
     try:
         metadata.load_state()
@@ -218,7 +218,7 @@ def update(parser, options, target):
     print 'STAGE 1: Find out the versions to upgrade (may take a while).'
     versions = find_versions_to_update(root)
 
-    start_subprocess('%s/database' % target)
+    start_subprocess(path)
     version, paths = find_versions_to_update(root)
     while version:
         message = 'STAGE 1: Upgrade %d resources to version %s (y/N)? '

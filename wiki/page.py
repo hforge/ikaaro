@@ -38,6 +38,7 @@ from ikaaro.text import Text
 from ikaaro.resource_ import DBResource
 from page_views import WikiPage_Edit, WikiPage_Help, WikiPage_ToPDF
 from page_views import WikiPage_View
+from page_views import is_external
 
 
 
@@ -87,7 +88,7 @@ class WikiPage(Text):
         return parent.get_resource(name, soft=True)
 
 
-    def get_document(self):
+    def get_doctree(self):
         parent = self.parent
 
         # Override dandling links handling
@@ -102,7 +103,7 @@ class WikiPage(Text):
                     target['wiki_name'] = False
                 else:
                     # Found
-                    target['wiki_name'] = str(self.get_pathto(resource))
+                    target['wiki_name'] = str(resource.get_canonical_path())
 
                 return True
 
@@ -111,42 +112,45 @@ class WikiPage(Text):
 
         # Publish!
         reader = WikiReader(parser_name='restructuredtext')
-        document = publish_doctree(self.handler.to_str(), reader=reader,
-                                   settings_overrides=self.overrides)
+        doctree = publish_doctree(self.handler.to_str(), reader=reader,
+                settings_overrides=self.overrides)
 
-        context = get_context()
         # Assume internal paths are relative to the container
-        for node in document.traverse(condition=nodes.reference):
+        for node in doctree.traverse(condition=nodes.reference):
             refuri = node.get('refuri')
             # Skip wiki or fragment link
             if node.get('wiki_name') or not refuri:
                 continue
             reference = get_reference(refuri.encode('utf_8'))
             # Skip external
-            if reference.scheme or reference.authority:
+            if is_external(reference):
                 continue
-            # Note: absolute paths will be rewritten as relative paths
+            # Resolve absolute path
             resource = parent.get_resource(reference.path, soft=True)
-            if resource is not None:
-                node['refuri'] = context.get_link(resource)
+            if resource is None:
+                continue
+            refuri = str(resource.get_canonical_path())
+            # Restore fragment
+            if reference.fragment:
+                refuri = "%s#%s" % (refuri, reference.fragment)
+            node['refuri'] = refuri
 
         # Assume image paths are relative to the container
-        for node in document.traverse(condition=nodes.image):
-            uri  = node['uri'].encode('utf_8')
-            reference = get_reference(uri)
+        for node in doctree.traverse(condition=nodes.image):
+            reference = get_reference(node['uri'].encode('utf_8'))
             # Skip external
-            if reference.scheme or reference.authority:
+            if is_external(reference):
                 continue
             # Strip the view
             path = reference.path
-            if reference.path[-1] == ';download':
+            if path[-1][0] == ';':
                 path = path[:-1]
-            # Get the resource
+            # Resolve absolute path
             resource = parent.get_resource(path, soft=True)
             if resource is not None:
-                node['uri'] = '%s/;download' % context.get_link(resource)
+                node['uri'] = str(resource.get_canonical_path())
 
-        return document
+        return doctree
 
 
     def get_links(self):
@@ -154,11 +158,11 @@ class WikiPage(Text):
 
         links = []
         try:
-            document = self.get_document()
+            doctree = self.get_doctree()
         except SystemMessage:
-            # The document is in a incoherent state
+            # The doctree is in a incoherent state
             return None
-        for node in document.traverse(condition=nodes.reference):
+        for node in doctree.traverse(condition=nodes.reference):
             refname = node.get('wiki_name')
             if refname is False:
                 # Wiki link not found
@@ -175,24 +179,19 @@ class WikiPage(Text):
                     continue
                 reference = get_reference(refuri.encode('utf_8'))
                 # Skip external
-                if reference.scheme or reference.authority:
+                if is_external(reference):
                     continue
                 path = base.resolve2(reference.path)
             path = str(path)
             links.append(path)
 
-        for node in document.traverse(condition=nodes.image):
-            uri = node['uri'].encode('utf_8')
-            reference = get_reference(uri)
+        for node in doctree.traverse(condition=nodes.image):
+            reference = get_reference(node['uri'].encode('utf_8'))
             # Skip external image
-            if reference.scheme or reference.authority:
+            if is_external(reference):
                 continue
-            # Strip the view
-            path = reference.path
-            if path[-1] == ';download':
-                path = path[:-1]
             # Resolve the path
-            path = base.resolve(path)
+            path = base.resolve(reference.path)
             path = str(path)
             links.append(path)
 
@@ -212,7 +211,7 @@ class WikiPage(Text):
                 reference = get_reference(segment)
 
                 # Skip external link
-                if reference.scheme or reference.authority:
+                if is_external(reference):
                     new_data.append(segment)
                     continue
 

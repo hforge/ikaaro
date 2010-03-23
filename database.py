@@ -95,11 +95,9 @@ class ReadOnlyDatabase(ROGitDatabase):
         if self.git_cache is None:
             self.load_git_cache()
 
-        n = len(self.path)
         last_commit = None
 
         for file in files:
-            file = file[n:]
             commit = self.git_cache.get(file)
             if not commit:
                 continue

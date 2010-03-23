@@ -2,181 +2,199 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
-  <script type="text/javascript">
-    $(document).ready(function() {
-      setup_size();
-      setup_resize();
-      $('#data').focus();
-    });
-  </script>
-  <form id="wiki-form" action=";edit" method="post">
-    <input type="text" id="title" name="title" value="${title}" size="70" />
-    <div class="mceEditor defaultSkin">
-      <table cellspacing="0" cellpadding="0" id="data-table"
-        class="mceLayout">
-        <tbody>
-          <tr class="mceFirst">
-            <td class="mceToolbar mceLeft mceFirst mceLast">
-              <table id="data-toolbar1" cellspacing="0" cellpadding="0"
-                align="" class="mceToolbar mceToolbarRow1 Enabled">
-                <tbody>
-                  <tr>
-                    <td class="mceToolbarStart mceToolbarStartButton mceFirst">
-                      <span><!-- IE --></span>
-                    </td>
-                    <td>
-                      <a id="data-bold" title="Bold"
-                        class="mceButton mceButtonEnabled mce_bold"
-                        onclick="return wiki_bold();" href="javascript:;">
-                        <span class="mceIcon mce_bold"></span>
-                      </a>
-                    </td>
-                    <td>
-                      <a id="data-italic" title="Italic"
-                        class="mceButton mceButtonEnabled mce_italic"
-                        onclick="return wiki_italic();" href="javascript:;">
-                        <span class="mceIcon mce_italic"></span>
-                      </a>
-                    </td>
-                    <td>
-                      <span class="mceSeparator"></span>
-                    </td>
-                    <td>
-                      <a id="data-bullist" title="Unordered list"
-                        class="mceButton mceButtonEnabled mce_bullist"
-                        onclick="return wiki_bullist();" href="javascript:;">
-                        <span class="mceIcon mce_bullist"></span>
-                      </a>
-                    </td>
-                    <td>
-                      <a id="data-numlist" title="Ordered list"
-                        class="mceButton mceButtonEnabled mce_numlist"
-                        onclick="return wiki_numlist();" href="javascript:;">
-                        <span class="mceIcon mce_numlist"></span>
-                      </a>
-                    </td>
-                    <td>
-                      <span class="mceSeparator"></span>
-                    </td>
-                    <td>
-                      <a id="data-link" title="Insert link"
-                        class="mceButton mce_link mceButtonEnabled"
-                        onclick="return wiki_link();" href="javascript:;">
-                        <span class="mceIcon mce_link"></span>
-                      </a>
-                    </td>
-                    <td>
-                      <a id="data-image" title="Insert image"
-                        class="mceButton mceButtonEnabled mce_image"
-                        onclick="return wiki_image();" href="javascript:;">
-                        <span class="mceIcon mce_image"></span>
-                      </a>
-                    </td>
-                    <td>
-                      <span class="mceSeparator"></span>
-                    </td>
-                    <td>
-                      <a id="data-table" title="Insert table"
-                        class="mceButton mceButtonEnabled mce_table"
-                        onclick="return wiki_table();" href="javascript:;">
-                        <span class="mceIcon mce_table"></span>
-                      </a>
-                    </td>
-                    <td>
-                      <span class="mceSeparator"></span>
-                    </td>
-                    <td>
-                      <table cellspacing="0" cellpadding="0"
-                        class="mceListBox mceListBoxEnabled mce_formatselect"
-                        id="data-formatselect">
-                        <tbody>
-                          <tr>
-                            <td class="mceFirst">
-                              <a id="data-formatselect-text" class="mceText"
-                                onclick="return wiki_format();"
-                                href="javascript:;">Format</a>
-                            </td>
-                            <td class="mceLast">
-                              <a id="data-formatselect-open" class="mceOpen"
-                                onclick="return wiki_format();"
-                                href="javascript:;" tabindex="-1">
-                                <span><!-- IE --></span>
-                              </a>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </td>
-                    <td>
-                      <span class="mceSeparator"></span>
-                    </td>
-                    <td>
-                      <a id="data-small" title="Small Edit Text"
-                        class="mceButton mceButtonEnabled"
-                        onclick="return text_small();"
-                        href="javascript:;">
-                        <img src="/ui/wiki/text_small.png" />
-                      </a>
-                    </td>
-                    <td>
-                      <a id="data-medium" title="Medium Edit Text"
-                        class="mceButton mceButtonEnabled"
-                        onclick="return text_medium();"
-                        href="javascript:;">
-                        <img src="/ui/wiki/text_medium.png" />
-                      </a>
-                    </td>
-                    <td>
-                      <a id="data-large" title="Large Edit Text"
-                        class="mceButton mceButtonEnabled"
-                        onclick="return text_large();"
-                        href="javascript:;">
-                        <img src="/ui/wiki/text_large.png" />
-                      </a>
-                    </td>
-                    <td>
-                      <a id="data-help" title="Help"
-                        class="mceButton mceButtonEnabled"
-                        onclick="return wiki_help();"
-                        href="javascript:;">
-                        <img src="/ui/wiki/help.png" />
-                      </a>
-                    </td>
-                    <td class="mceToolbarEnd mceToolbarEndListBox mceLast">
-                      <span><!-- IE --></span>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </td>
-          </tr>
-          <tr>
-            <td class="mceIframeContainer mceFirst mceLast">
-              <div id="tinymce" class="mceContentBody" dir="ltr">
-                <textarea name="data" id="data" cols="80" rows="19"
-                  wrap="physical">${data}</textarea>
-              </div>
-            </td>
-          </tr>
-          <tr class="mceLast">
-            <td class="mceStatusbar mceFirst mceLast">
-              <a id="data-resize" href="javascript:;" class="mceResize"></a>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <div id="mcePlaceHolder" class="mcePlaceHolder"
-        style="width: 0px; height: 0px; display: none;" />
-    </div>
-    <p>
-      <a name="bottom" style="float: right" id="bottom"></a>
-      <input type="hidden" name="timestamp" value="${timestamp}" />
-      <button type="submit" name="action" value="save" class="button-ok"
-        >Save</button>
-      <button type="submit" name="action" value="save_and_view"
-        class="button-ok">Save &amp; View</button>
-    </p>
+  <form id="wiki-form" action="${action}" method="post">
+    <fieldset>
+      <legend>${title}</legend>
+      <p stl:if="has_required_widget"
+        class="field-required">${required_msg}</p>
+      <dl>
+        <stl:block stl:repeat="widget widgets">
+          <dt class="${widget/class}">
+            <label for="${widget/name}" class="${widget/class}">
+              ${widget/title}
+            </label>
+            <span stl:if="widget/mandatory"
+              class="field-mandatory">(mandatory)</span>
+            <span stl:if="widget/multiple"
+              class="field-multiple">(multiple)</span>
+            <span stl:if="widget/tip"
+              class="field-format">${widget/tip}</span>
+          </dt>
+          <dd>
+            ${widget/widget}
+            <span stl:if="widget/suffix"
+              class="field-suffix">${widget/suffix}</span>
+          </dd>
+        </stl:block>
+        <div class="mceEditor defaultSkin">
+          <table cellspacing="0" cellpadding="0" id="data-table"
+            class="mceLayout">
+            <tbody>
+              <tr class="mceFirst">
+                <td class="mceToolbar mceLeft mceFirst mceLast">
+                  <table id="data-toolbar1" cellspacing="0" cellpadding="0"
+                    align="" class="mceToolbar mceToolbarRow1 Enabled">
+                    <tbody>
+                      <tr>
+                        <td class="mceToolbarStart mceToolbarStartButton mceFirst">
+                          <span><!-- IE --></span>
+                        </td>
+                        <td>
+                          <a id="data-bold" title="Bold"
+                            class="mceButton mceButtonEnabled mce_bold"
+                            onclick="return wiki_bold();" href="javascript:;">
+                            <span class="mceIcon mce_bold"></span>
+                          </a>
+                        </td>
+                        <td>
+                          <a id="data-italic" title="Italic"
+                            class="mceButton mceButtonEnabled mce_italic"
+                            onclick="return wiki_italic();" href="javascript:;">
+                            <span class="mceIcon mce_italic"></span>
+                          </a>
+                        </td>
+                        <td>
+                          <span class="mceSeparator"></span>
+                        </td>
+                        <td>
+                          <a id="data-bullist" title="Unordered list"
+                            class="mceButton mceButtonEnabled mce_bullist"
+                            onclick="return wiki_bullist();" href="javascript:;">
+                            <span class="mceIcon mce_bullist"></span>
+                          </a>
+                        </td>
+                        <td>
+                          <a id="data-numlist" title="Ordered list"
+                            class="mceButton mceButtonEnabled mce_numlist"
+                            onclick="return wiki_numlist();" href="javascript:;">
+                            <span class="mceIcon mce_numlist"></span>
+                          </a>
+                        </td>
+                        <td>
+                          <span class="mceSeparator"></span>
+                        </td>
+                        <td>
+                          <a id="data-link" title="Insert link"
+                            class="mceButton mce_link mceButtonEnabled"
+                            onclick="return wiki_link();" href="javascript:;">
+                            <span class="mceIcon mce_link"></span>
+                          </a>
+                        </td>
+                        <td>
+                          <a id="data-image" title="Insert image"
+                            class="mceButton mceButtonEnabled mce_image"
+                            onclick="return wiki_image();" href="javascript:;">
+                            <span class="mceIcon mce_image"></span>
+                          </a>
+                        </td>
+                        <td>
+                          <span class="mceSeparator"></span>
+                        </td>
+                        <td>
+                          <a id="data-table" title="Insert table"
+                            class="mceButton mceButtonEnabled mce_table"
+                            onclick="return wiki_table();" href="javascript:;">
+                            <span class="mceIcon mce_table"></span>
+                          </a>
+                        </td>
+                        <td>
+                          <span class="mceSeparator"></span>
+                        </td>
+                        <td>
+                          <table cellspacing="0" cellpadding="0"
+                            class="mceListBox mceListBoxEnabled mce_formatselect"
+                            id="data-formatselect">
+                            <tbody>
+                              <tr>
+                                <td class="mceFirst">
+                                  <a id="data-formatselect-text" class="mceText"
+                                    onclick="return wiki_format();"
+                                    href="javascript:;">Format</a>
+                                </td>
+                                <td class="mceLast">
+                                  <a id="data-formatselect-open" class="mceOpen"
+                                    onclick="return wiki_format();"
+                                    href="javascript:;" tabindex="-1">
+                                    <span><!-- IE --></span>
+                                  </a>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </td>
+                        <td>
+                          <span class="mceSeparator"></span>
+                        </td>
+                        <td>
+                          <a id="data-small" title="Small Edit Text"
+                            class="mceButton mceButtonEnabled"
+                            onclick="return text_small();"
+                            href="javascript:;">
+                            <img src="/ui/wiki/text_small.png" />
+                          </a>
+                        </td>
+                        <td>
+                          <a id="data-medium" title="Medium Edit Text"
+                            class="mceButton mceButtonEnabled"
+                            onclick="return text_medium();"
+                            href="javascript:;">
+                            <img src="/ui/wiki/text_medium.png" />
+                          </a>
+                        </td>
+                        <td>
+                          <a id="data-large" title="Large Edit Text"
+                            class="mceButton mceButtonEnabled"
+                            onclick="return text_large();"
+                            href="javascript:;">
+                            <img src="/ui/wiki/text_large.png" />
+                          </a>
+                        </td>
+                        <td>
+                          <a id="data-help" title="Help"
+                            class="mceButton mceButtonEnabled"
+                            onclick="return wiki_help();"
+                            href="javascript:;">
+                            <img src="/ui/wiki/help.png" />
+                          </a>
+                        </td>
+                        <td class="mceToolbarEnd mceToolbarEndListBox mceLast">
+                          <span><!-- IE --></span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td class="mceIframeContainer mceFirst mceLast">
+                  <div id="tinymce" class="mceContentBody" dir="ltr">
+                    <textarea name="data" id="data" cols="80" rows="19"
+                      wrap="physical">${data}</textarea>
+                  </div>
+                </td>
+              </tr>
+              <tr class="mceLast">
+                <td class="mceStatusbar mceFirst mceLast">
+                  <a id="data-resize" href="javascript:;" class="mceResize"></a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div id="mcePlaceHolder" class="mcePlaceHolder"
+            style="width: 0px; height: 0px; display: none;" />
+        </div>
+      </dl>
+      <p>
+        <a name="bottom" id="bottom"></a>
+        <button type="submit" name="action" value="save" class="button-ok"
+          >Save</button>
+        <button type="submit" name="action" value="save_and_view"
+          class="button-ok">Save &amp; View</button>
+      </p>
+    </fieldset>
   </form>
+
+  <!-- Format Select Dropdown Menu -->
   <div id="data-formatselect-menu"
     class="mceListBoxMenu mceNoIcons defaultSkin"
     style="position: absolute; left: 625px; top: 199px;
@@ -233,4 +251,12 @@
       </table>
     </div>
   </div>
+
+  <script type="text/javascript">
+    $(document).ready(function() {
+      setup_size();
+      setup_resize();
+      $('#data').focus();
+    });
+  </script>
 </stl:block>
