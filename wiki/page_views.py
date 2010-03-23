@@ -42,12 +42,14 @@ from itools.uri import get_reference
 from itools.uri.mailto import Mailto
 from itools.fs import lfs, FileName
 from itools.web import BaseView, STLView, ERROR
+from itools.xapian import PhraseQuery
 from itools.xml import XMLParser, XMLError
 
 # Import from ikaaro
 from ikaaro import messages
 from ikaaro.forms import title_widget, timestamp_widget
 from ikaaro.resource_views import DBResource_Edit
+from ikaaro.views import ContextMenu
 
 
 figure_style_converter = compile(r'\\begin\{figure\}\[.*?\]')
@@ -106,6 +108,23 @@ def resolve_images(doctree, resource, context):
         image = resource.get_resource(name, soft=True)
         if image is not None:
             node['uri'] = fs.get_absolute_path(image.handler.key)
+
+
+
+class BacklinksMenu(ContextMenu):
+    title = MSG(u"Backlinks")
+
+    def get_items(self, resource, context):
+        root = context.root
+        query = PhraseQuery('links', str(resource.get_canonical_path()))
+        results = context.root.search(query)
+        items = []
+        for brain in results.get_documents(sort_by='mtime'):
+            resource = root.get_resource(brain.abspath)
+            items.append({'title': resource.get_title(),
+                'href': context.get_link(resource),
+                'src': resource.get_class_icon()})
+        return items
 
 
 

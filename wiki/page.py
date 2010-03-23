@@ -39,7 +39,7 @@ from ikaaro.text import Text
 from ikaaro.resource_ import DBResource
 from page_views import WikiPage_Edit, WikiPage_Help, WikiPage_ToPDF
 from page_views import WikiPage_View
-from page_views import is_external
+from page_views import is_external, BacklinksMenu
 
 
 
@@ -273,5 +273,5 @@ class WikiPage(Text):
 
 
     def get_context_menus(self):
-        return self.parent.get_context_menus()
+        return [BacklinksMenu()] + self.parent.get_context_menus()
 
