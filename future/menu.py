@@ -424,7 +424,13 @@ class Menu(OrderedTable):
                     # Use the original path for the highlight
                     res_abspath = menu_abspath.resolve2(resource_original_path)
                     common_prefix = here_abspath.get_prefix(res_abspath)
-                    in_path = (common_prefix == res_abspath)
+                    in_path = False
+                    # Avoid to always set the site_root entree 'in_path'
+                    # If common prefix equals site root abspath
+                    # set in_path to False otherwise compare
+                    # common_prefix and res_abspath
+                    if common_prefix != site_root_abspath:
+                        in_path = (common_prefix == res_abspath)
 
                 # Set css class to 'active', 'in-path' or None
                 css = 'in-path' if (active or in_path) else None
