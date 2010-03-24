@@ -282,6 +282,12 @@ class Skin(UIFolder):
                              'lang': None,
                              'content': verification_key})
 
+        # View
+        # meta are defined as a tuple (name, content, language)
+        extra_meta = getattr(context.view, 'meta', [])
+        for (name, content, lang) in extra_meta:
+            meta.append({'name': name, 'content': content, 'lang': lang})
+
         return meta
 
 
