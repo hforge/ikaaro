@@ -98,6 +98,7 @@ def resolve_references(doctree, resource, context,
 def resolve_images(doctree, resource, context):
     """Translate image path to handler uri.
     """
+    fs = resource.metadata.database.fs
     for node in doctree.traverse(condition=nodes.image):
         reference = get_reference(node['uri'].encode('utf8'))
         if is_external(reference):
@@ -105,7 +106,7 @@ def resolve_images(doctree, resource, context):
         name = str(reference.path)
         image = resource.get_resource(name, soft=True)
         if image is not None:
-            node['uri'] = image.handler.key
+            node['uri'] = fs.get_absolute_path(image.handler.key)
 
 
 
