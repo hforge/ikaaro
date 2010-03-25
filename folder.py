@@ -18,12 +18,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Import from the Standard Library
-from os.path import basename
-
 # Import from itools
 from itools.gettext import MSG
 from itools.handlers import Folder as FolderHandler
+from itools.uri import Path
 from itools.web import get_context, BaseView
 
 # Import from ikaaro
@@ -146,18 +144,10 @@ class Folder(DBResource):
 
 
     def _resolve_source_target(self, source_path, target_path):
-        # Find out the source and target absolute URIs
-        root_path = self.get_root().handler.key
-        folder_path = self.handler.key
-        fs = self.metadata.database.fs
-        if source_path[0] == '/':
-            source_key = fs.resolve2(root_path, source_path[1:])
-        else:
-            source_key = fs.resolve2(folder_path, source_path)
-        if target_path[0] == '/':
-            target_key = fs.resolve2(root_path, target_path[1:])
-        else:
-            target_key = fs.resolve2(folder_path, target_path)
+        if type(source_path) is not Path:
+            source_path = Path(source_path)
+        if type(target_path) is not Path:
+            target_path = Path(target_path)
 
         # Load the handlers so they are of the right class, for resources
         # like that define explicitly the handler class.  This fixes for
@@ -171,20 +161,17 @@ class Folder(DBResource):
         else:
             source.load_handlers()
 
-        return source_key, target_key
+        return source_path, target_path
 
 
     def copy_resource(self, source_path, target_path):
-        database = get_context().database
-
         # Find out the source and target absolute URIs
-        source_key, target_key = self._resolve_source_target(source_path,
-                                                             target_path)
-        new_name = basename(target_path)
+        source_path, target_path = self._resolve_source_target(source_path,
+                                                               target_path)
 
         # Get the source and target resources
         source = self.get_resource(source_path)
-        parent_path = self.get_abspath().resolve2(target_path)[:-1]
+        parent_path = target_path.resolve2('..')
         target_parent = self.get_resource(parent_path)
 
         # Check compatibility
@@ -195,15 +182,18 @@ class Folder(DBResource):
 
         # Copy the metadata
         folder = self.handler
-        folder.copy_handler('%s.metadata' % source_key,
-                            '%s.metadata' % target_key)
+        folder.copy_handler('%s.metadata' % source_path,
+                            '%s.metadata' % target_path)
+
         # Copy the content
+        database = self.metadata.database
         fs =  database.fs
+        new_name = target_path.get_name()
         for old_name, new_name in source.rename_handlers(new_name):
             if old_name is None:
                 continue
-            src_key = fs.resolve(source_key, old_name)
-            dst_key = fs.resolve(target_key, new_name)
+            src_key = fs.resolve(source_path, old_name)
+            dst_key = fs.resolve(target_path, new_name)
             if folder.has_handler(src_key):
                 folder.copy_handler(src_key, dst_key)
 
@@ -218,16 +208,13 @@ class Folder(DBResource):
             message = 'cannot move a resource to a subdirectory of itself'
             raise ConsistencyError, message
 
-        database = get_context().database
-
         # Find out the source and target absolute URIs
-        source_key, target_key = self._resolve_source_target(source_path,
-                                                             target_path)
-        new_name = basename(target_path)
+        source_path, target_path = self._resolve_source_target(source_path,
+                                                               target_path)
 
         # Get the source and target resources
         source = self.get_resource(source_path)
-        parent_path = self.get_abspath().resolve2(target_path)[:-1]
+        parent_path = target_path.resolve2('..')
         target_parent = self.get_resource(parent_path)
 
         # Check compatibility
@@ -237,20 +224,22 @@ class Folder(DBResource):
             raise ConsistencyError, message % (source, target_parent)
 
         # Events, remove
+        database = self.metadata.database
         new_path = self.get_canonical_path().resolve2(target_path)
         database.move_resource(source, new_path)
 
         # Move the metadata
         folder = self.handler
-        folder.move_handler('%s.metadata' % source_key,
-                            '%s.metadata' % target_key)
+        folder.move_handler('%s.metadata' % source_path,
+                            '%s.metadata' % target_path)
         # Move the content
         fs = database.fs
+        new_name = target_path.get_name()
         for old_name, new_name in source.rename_handlers(new_name):
             if old_name is None:
                 continue
-            src_key = fs.resolve(source_key, old_name)
-            dst_key = fs.resolve(target_key, new_name)
+            src_key = fs.resolve(source_path, old_name)
+            dst_key = fs.resolve(target_path, new_name)
             if folder.has_handler(src_key):
                 folder.move_handler(src_key, dst_key)
 
