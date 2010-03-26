@@ -23,7 +23,6 @@ from datetime import datetime
 from re import compile
 from subprocess import call
 from tempfile import mkdtemp
-from urllib import urlencode
 
 # Import from docutils
 from docutils.core import Publisher, publish_from_doctree, publish_string
@@ -147,6 +146,10 @@ class WikiPage_View(BaseView):
                 destination = resource.get_resource(reference.path,
                         soft=True)
                 if destination is None:
+                    destination = parent.get_resource(reference.path,
+                            soft=True)
+                if destination is None:
+                    resource.set_new_resource_link(node)
                     continue
                 refuri = context.get_link(destination)
                 if reference.fragment:
@@ -154,16 +157,7 @@ class WikiPage_View(BaseView):
                 node['refuri'] = refuri
             elif refname is False:
                 # Wiki link not found
-                node['classes'].append('nowiki')
-                prefix = resource.get_pathto(parent)
-                title = node['name']
-                title_encoded = title.encode('utf_8')
-                params = {'type': resource.__class__.__name__,
-                          'title': title_encoded,
-                          'name': checkid(title) or title_encoded}
-                refuri = "%s/;new_resource?%s" % (prefix,
-                                                  urlencode(params))
-                node['refuri'] = refuri
+                resource.set_new_resource_link(node)
             else:
                 # Wiki link found, "refname" is the path
                 node['classes'].append('wiki')
