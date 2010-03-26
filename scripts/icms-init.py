@@ -141,7 +141,7 @@ def init(parser, options, target):
     context.database = database
 
     # Make the root
-    folder = database.get_handler('%s/database' % target)
+    folder = database.get_handler('.')
     root = root_class._make_resource(root_class, folder, email, password)
     context.root = root
     # Save changes

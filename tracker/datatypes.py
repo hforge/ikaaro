@@ -128,9 +128,13 @@ class UsersList(Enumerate):
             members = site_root.get_members()
 
         users = site_root.get_resource('/users')
-        options = [
-            {'name': x, 'value': users.get_resource(x).get_title()}
-            for x in members ]
+        options = []
+        for name in members:
+            user = users.get_resource(name, soft=True)
+            if user is None:
+                continue
+            value = user.get_title()
+            options.append({'name': name, 'value': value})
         options.sort(key=itemgetter('value'))
         return options
 

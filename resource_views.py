@@ -519,6 +519,7 @@ class LoginView(STLForm):
     schema = {
         'username': Unicode(mandatory=True),
         'password': String(mandatory=True)}
+    meta = [('robots', 'noindex, follow', None)]
 
 
     def action(self, resource, context, form):

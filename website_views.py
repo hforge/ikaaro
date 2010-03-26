@@ -59,6 +59,7 @@ class ForgottenPasswordForm(AutoForm):
     access = True
     title = MSG(u'Forgotten password')
     submit_value = MSG(u'Ok')
+    meta = [('robots', 'noindex, follow', None)]
 
     widgets = [
         TextWidget('username', title=MSG(u'Type your email address')),
