@@ -134,13 +134,12 @@ class Folder(DBResource):
         # Events, remove
         database.remove_resource(resource)
         # Remove
-        folder = self.handler
         fs = database.fs
         for handler in resource.get_handlers():
             # Skip empty folders and phantoms
             if fs.exists(handler.key):
-                folder.del_handler(handler.key)
-        folder.del_handler('%s.metadata' % name)
+                database.del_handler(handler.key)
+        self.handler.del_handler('%s.metadata' % name)
 
 
     def _resolve_source_target(self, source_path, target_path):
