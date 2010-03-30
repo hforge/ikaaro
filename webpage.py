@@ -43,8 +43,10 @@ from resource_ import DBResource
 
 
 def _get_links(base, events):
-    map = {'a': 'href', 'img': 'src', 'iframe': 'src'}
-
+    map = {'a': 'href', 'img': 'src', 'iframe': 'src',
+           # Object
+           # FIXME param tag can have both src and data attributes
+           'object': 'data', 'param': 'src'}
     links = []
     for event, value, line in events:
         if event != START_ELEMENT:
@@ -84,7 +86,10 @@ def _get_links(base, events):
 
 
 def _change_link(source, target, old_base, new_base, stream):
-    map = {'a': 'href', 'img': 'src', 'iframe': 'src'}
+    map = {'a': 'href', 'img': 'src', 'iframe': 'src',
+           # Object
+           # FIXME param tag can have both src and data attributes
+           'object': 'data', 'param': 'src'}
 
     for event in stream:
         # Process only elements of the XHTML namespace
