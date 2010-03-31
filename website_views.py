@@ -19,6 +19,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
+from operator import itemgetter
 import sys
 
 # Import from itools
@@ -161,10 +162,13 @@ class ContactOptions(Enumerate):
     def get_options(cls):
         resource = cls.resource
         users = resource.get_resource('/users')
-
-        return [
-            {'name': x, 'value': users.get_resource(x).get_title()}
-            for x in resource.get_property('contacts') ]
+        options = []
+        for name in resource.get_property('contacts'):
+            user = users.get_resource(name, soft=True)
+            if user is None:
+                continue
+        options.append({'name': name, 'value': user.get_title()})
+        return options
 
 
 

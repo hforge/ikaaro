@@ -163,14 +163,18 @@ class ContactsOptions(Enumerate):
         resource = cls.resource
         users = resource.get_resource('/users')
         for user_name in resource.get_members():
-            user = users.get_resource(user_name)
-            if user.get_title() != user.get_property('email'):
-                user_title = '%s <%s>' % (user.get_title(),
-                                          user.get_property('email'))
+            user = users.get_resource(user_name, soft=True)
+            if user is None:
+                continue
+            user_title = user.get_title()
+            user_email = user.get_property('email')
+            if user_title != user_email:
+                user_title = '%s <%s>' % (user_title, user_email)
             else:
-                user_title = user.get_property('email')
-            options.append({'name': user_name, 'value': user_title})
-        options.sort(key=itemgetter('value'))
+                user_title = user_email
+            options.append({'name': user_name, 'value': user_title,
+                            'sort_value': user_title.lower()})
+        options.sort(key=itemgetter('sort_value'))
         return options
 
 
