@@ -192,6 +192,8 @@ class CPEditContactOptions(DBResource_Edit):
         SelectWidget('emails_from_addr', title=MSG(u'Emails from addr')),
         MultilineWidget('emails_signature', title=MSG(u'Emails signature')),
         SelectWidget('contacts', title=MSG(u'Select the contact accounts')),
+        TextWidget('captcha_question', title=MSG(u"Captcha question")),
+        TextWidget('captcha_answer', title=MSG(u"Captcha answer")),
         ]
 
 
@@ -199,7 +201,9 @@ class CPEditContactOptions(DBResource_Edit):
         return {
           'emails_from_addr': ContactsOptions(resource=resource),
           'emails_signature': Unicode,
-          'contacts': ContactsOptions(multiple=True, resource=resource)}
+          'contacts': ContactsOptions(multiple=True, resource=resource),
+          'captcha_question': Unicode(mandatory=True),
+          'captcha_answer': Unicode(mandatory=True)}
 
 
     def get_value(self, resource, context, name, datatype):
@@ -213,6 +217,8 @@ class CPEditContactOptions(DBResource_Edit):
         resource.set_property('emails_from_addr', form['emails_from_addr'])
         resource.set_property('emails_signature', form['emails_signature'])
         resource.set_property('contacts', tuple(form['contacts']))
+        resource.set_property('captcha_question', form['captcha_question'])
+        resource.set_property('captcha_answer', form['captcha_answer'])
         # Ok
         context.message = messages.MSG_CHANGES_SAVED
 
