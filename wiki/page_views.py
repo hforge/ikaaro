@@ -20,7 +20,7 @@
 
 # Import from the Standard Library
 from cStringIO import StringIO
-from datetime import datetime
+from datetime import datetime, timedelta
 from re import compile
 from subprocess import call
 from tempfile import mkdtemp
@@ -556,6 +556,17 @@ class WikiPage_ToODT(AutoForm):
             else:
                 document = template.clone()
                 document.get_body().clear()
+            # Metadata
+            meta = document.get_meta()
+            now = datetime.now()
+            meta.set_creation_date(now)
+            meta.set_modification_date(now)
+            meta.set_editing_duration(timedelta(0))
+            meta.set_editing_cycles(1)
+            meta.set_generator(u"ikaaro.wiki to ODT")
+            for metadata in ('title', 'comments', 'subject', 'language',
+                    'keywords'):
+                getattr(meta, 'set_' + metadata)(book.get(metadata))
             # Cover page
             cover_uri = book.get('cover')
             if cover_uri:

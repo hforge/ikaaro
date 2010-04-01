@@ -50,6 +50,14 @@ StandaloneReader = get_reader_class('standalone')
 
 
 
+def language(argument):
+    try:
+        return argument.encode()
+    except UnicodeEncodeError:
+        raise ValueError('expected "xx-YY" language-COUNTRY code')
+
+
+
 # Class name gives the DOM element name
 class book(nodes.Admonition, nodes.Element):
     pass
@@ -61,18 +69,35 @@ class Book(Directive):
     optional_arguments = 1
     final_argument_whitespace = True
     option_spec = {'cover': directives.uri,
-                   'toc-depth': directives.positive_int}
+                   'toc-depth': directives.positive_int,
+                   'title': directives.unchanged,
+                   'comments': directives.unchanged,
+                   'subject': directives.unchanged,
+                   'language': language,
+                   'keywords': directives.unchanged}
     has_content = True
 
 
     def run(self):
         self.assert_has_content()
+        # Default values
+        options = self.options
+        for option in ('title', 'comments', 'subject', 'keywords'):
+            if options.get(option) is None:
+                options[option] = u""
+        if options.get('language') is None:
+            # The website language, not the content language
+            # because the wiki is not multilingual anyway
+            context = get_context()
+            languages =  context.site_root.get_property('website_languages')
+            language = context.accept_language.select_language(languages)
+            options['language'] = language
         # Cover page
         if self.arguments:
             # Push cover as an option
             cover_uri = checkid(self.arguments[0][1:-2])
-            self.options['cover'] = directives.uri(cover_uri)
-        book_node = book(self.block_text, **self.options)
+            options['cover'] = directives.uri(cover_uri)
+        book_node = book(self.block_text, **options)
         if self.arguments:
             # Display the cover
             cover_text = self.arguments.pop(0)
