@@ -23,7 +23,6 @@ from datetime import datetime
 from re import compile
 from subprocess import call
 from tempfile import mkdtemp
-from urllib import urlencode
 
 # Import from docutils
 from docutils.core import Publisher, publish_from_doctree, publish_string
@@ -43,12 +42,14 @@ from itools.uri import get_reference
 from itools.uri.mailto import Mailto
 from itools.fs import lfs, FileName
 from itools.web import BaseView, STLView, ERROR
+from itools.xapian import PhraseQuery
 from itools.xml import XMLParser, XMLError
 
 # Import from ikaaro
 from ikaaro.autoform import title_widget, timestamp_widget
 from ikaaro import messages
 from ikaaro.resource_views import DBResource_Edit
+from ikaaro.views import ContextMenu
 
 
 figure_style_converter = compile(r'\\begin\{figure\}\[.*?\]')
@@ -98,6 +99,7 @@ def resolve_references(doctree, resource, context,
 def resolve_images(doctree, resource, context):
     """Translate image path to handler uri.
     """
+    fs = resource.metadata.database.fs
     for node in doctree.traverse(condition=nodes.image):
         reference = get_reference(node['uri'].encode('utf8'))
         if is_external(reference):
@@ -105,7 +107,24 @@ def resolve_images(doctree, resource, context):
         name = str(reference.path)
         image = resource.get_resource(name, soft=True)
         if image is not None:
-            node['uri'] = image.handler.key
+            node['uri'] = fs.get_absolute_path(image.handler.key)
+
+
+
+class BacklinksMenu(ContextMenu):
+    title = MSG(u"Backlinks")
+
+    def get_items(self, resource, context):
+        root = context.root
+        query = PhraseQuery('links', str(resource.get_canonical_path()))
+        results = context.root.search(query)
+        items = []
+        for brain in results.get_documents(sort_by='mtime'):
+            resource = root.get_resource(brain.abspath)
+            items.append({'title': resource.get_title(),
+                'href': context.get_link(resource),
+                'src': resource.get_class_icon()})
+        return items
 
 
 
@@ -146,6 +165,10 @@ class WikiPage_View(BaseView):
                 destination = resource.get_resource(reference.path,
                         soft=True)
                 if destination is None:
+                    destination = parent.get_resource(reference.path,
+                            soft=True)
+                if destination is None:
+                    resource.set_new_resource_link(node)
                     continue
                 refuri = context.get_link(destination)
                 if reference.fragment:
@@ -153,16 +176,7 @@ class WikiPage_View(BaseView):
                 node['refuri'] = refuri
             elif refname is False:
                 # Wiki link not found
-                node['classes'].append('nowiki')
-                prefix = resource.get_pathto(parent)
-                title = node['name']
-                title_encoded = title.encode('utf_8')
-                params = {'type': resource.__class__.__name__,
-                          'title': title_encoded,
-                          'name': checkid(title) or title_encoded}
-                refuri = "%s/;new_resource?%s" % (prefix,
-                                                  urlencode(params))
-                node['refuri'] = refuri
+                resource.set_new_resource_link(node)
             else:
                 # Wiki link found, "refname" is the path
                 node['classes'].append('wiki')

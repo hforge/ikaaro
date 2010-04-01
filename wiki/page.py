@@ -20,6 +20,7 @@
 
 # Import from the Standard Library
 from re import compile
+from urllib import urlencode
 
 # Import from docutils
 from docutils import nodes
@@ -38,7 +39,7 @@ from ikaaro.text import Text
 from ikaaro.resource_ import DBResource
 from page_views import WikiPage_Edit, WikiPage_Help, WikiPage_ToPDF
 from page_views import WikiPage_View
-from page_views import is_external
+from page_views import is_external, BacklinksMenu
 
 
 
@@ -88,6 +89,19 @@ class WikiPage(Text):
         return parent.get_resource(name, soft=True)
 
 
+    def set_new_resource_link(self, node):
+        node['classes'].append('nowiki')
+        prefix = self.get_pathto(self.parent)
+        title = node['name']
+        title_encoded = title.encode('utf_8')
+        params = {'type': self.__class__.__name__,
+                  'title': title_encoded,
+                  'name': checkid(title) or title_encoded}
+        refuri = "%s/;new_resource?%s" % (prefix,
+                                          urlencode(params))
+        node['refuri'] = refuri
+
+
     def get_doctree(self):
         parent = self.parent
 
@@ -126,7 +140,9 @@ class WikiPage(Text):
             if is_external(reference):
                 continue
             # Resolve absolute path
-            resource = parent.get_resource(reference.path, soft=True)
+            resource = self.get_resource(reference.path, soft=True)
+            if resource is None:
+                resource = parent.get_resource(reference.path, soft=True)
             if resource is None:
                 continue
             refuri = str(resource.get_canonical_path())
@@ -246,5 +262,5 @@ class WikiPage(Text):
 
 
     def get_context_menus(self):
-        return self.parent.get_context_menus()
+        return [BacklinksMenu()] + self.parent.get_context_menus()
 

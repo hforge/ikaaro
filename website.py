@@ -85,6 +85,8 @@ class WebSite(RoleAware, Folder):
         schema['yahoo_site_verification'] = String
         schema['bing_site_verification'] = String
         schema['website_languages'] = Tokens(default=('en',))
+        schema['captcha_question'] = Unicode(default=u"2 + 3")
+        schema['captcha_answer'] = Unicode(default=u"5")
         return schema
 
 

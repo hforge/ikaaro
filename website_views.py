@@ -19,6 +19,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
+from operator import itemgetter
 import sys
 
 # Import from itools
@@ -160,10 +161,13 @@ class ContactOptions(Enumerate):
     def get_options(cls):
         resource = cls.resource
         users = resource.get_resource('/users')
-
-        return [
-            {'name': x, 'value': users.get_resource(x).get_title()}
-            for x in resource.get_property('contacts') ]
+        options = []
+        for name in resource.get_property('contacts'):
+            user = users.get_resource(name, soft=True)
+            if user is None:
+                continue
+            options.append({'name': name, 'value': user.get_title()})
+        return options
 
 
 
@@ -182,16 +186,23 @@ class ContactForm(AutoForm):
             'from': Email(mandatory=True),
             'subject': Unicode(mandatory=True),
             'message_body': Unicode(mandatory=True),
+            'captcha_answer': Unicode(mandatory=True),
         }
 
 
-    widgets = [
-        SelectWidget('to', title=MSG(u'Recipient')),
-        TextWidget('from', title=MSG(u'Your email address'), size=40),
-        TextWidget('subject', title=MSG(u'Message subject'), size=40),
-        MultilineWidget('message_body', title=MSG(u'Message body'),
-                        rows=8, cols=50),
-    ]
+    def get_widgets(self, resource, context):
+        captcha_question = resource.get_property('captcha_question')
+        captcha_title = MSG(u"Please answer this: {captcha_question}")
+        captcha_title = captcha_title.gettext(
+                captcha_question=captcha_question)
+        return [
+            SelectWidget('to', title=MSG(u'Recipient')),
+            TextWidget('from', title=MSG(u'Your email address'), size=40),
+            TextWidget('subject', title=MSG(u'Message subject'), size=40),
+            MultilineWidget('message_body', title=MSG(u'Message body'),
+                            rows=8, cols=50),
+            TextWidget('captcha_answer', title=captcha_title),
+        ]
 
 
     def get_value(self, resource, context, name, datatype):
@@ -207,6 +218,12 @@ class ContactForm(AutoForm):
 
 
     def action(self, resource, context, form):
+        # Check captcha first
+        captcha_answer = form['captcha_answer'].strip()
+        expected = resource.get_property('captcha_answer')
+        if captcha_answer != expected:
+            context.message = ERROR(u"Wrong answer to the question.")
+            return
         # Get form values
         contact = form['to']
         from_addr = form['from'].strip()
