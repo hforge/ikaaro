@@ -132,6 +132,7 @@ def init(parser, options, target):
     open('%s/config.conf' % target, 'w').write(config)
 
     # Create the folder structure
+    start_subprocess('%s/database' % target)
     database = make_database(target)
     mkdir('%s/log' % target)
     mkdir('%s/spool' % target)
@@ -145,7 +146,6 @@ def init(parser, options, target):
     root = root_class._make_resource(root_class, folder, email, password)
     context.root = root
     # Save changes
-    start_subprocess('%s/database' % target)
     database.save_changes()
     # Index
     catalog = database.catalog
