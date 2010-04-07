@@ -21,7 +21,7 @@
 from datetime import time
 
 # Import from itools
-from itools.core import merge_dicts
+from itools.core import freeze, merge_dicts
 from itools.datatypes import DataType, Date
 from itools.gettext import MSG
 from itools.ical import iCalendar, icalendarTable
