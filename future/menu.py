@@ -36,6 +36,7 @@ from ikaaro.folder_views import Folder_NewResource, Folder_BrowseContent
 from ikaaro.folder_views import Folder_Rename, Folder_PreviewContent
 from ikaaro.folder_views import Folder_Thumbnail, GoToSpecificDocument
 from ikaaro.folder_views import Folder_Orphans
+from ikaaro.resource_views import DBResource_AddLink
 from ikaaro.revisions_views import DBResource_CommitLog
 from ikaaro.table import OrderedTableFile, OrderedTable
 from ikaaro.table_views import OrderedTable_View
@@ -245,6 +246,13 @@ class Menu_View(OrderedTable_View):
 
 
 
+class Menu_AddLink(DBResource_AddLink):
+
+    def get_start(self, resource):
+        return resource.get_site_root()
+
+
+
 class Menu(OrderedTable):
 
     class_id = 'ikaaro-menu'
@@ -253,6 +261,7 @@ class Menu(OrderedTable):
     class_views = ['view', 'add_record']
 
     # Views
+    add_link = Menu_AddLink()
     view = Menu_View()
 
 
