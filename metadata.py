@@ -231,23 +231,30 @@ class Metadata(File):
                 del properties[name]
             return
 
-        # Case 2: Multilingual
-        if type(value) is Property:
-            language = value.parameters.get('lang')
-            if language:
+        # Case 2: Multiple (replace)
+        p_type = type(value)
+        if p_type is list:
+            properties[name] = [
+                x if type(x) is Property else Property(x) for x in value ]
+            return
+
+        # Case 3: Multilingual
+        if p_type is Property:
+            if 'lang' in value.parameters:
+                language = value.parameters['lang']
                 properties.setdefault(name, {})[language] = value
                 return
         else:
             value = Property(value)
 
-        # Case 3: Simple
-        get_datatype = get_resource_class(value).get_property_datatype
-        datatype = get_datatype(name)
+        # Case 4: Simple
+        cls = get_resource_class(self.format)
+        datatype = cls.get_property_datatype(name)
         if datatype is None or getattr(datatype, 'multiple', False) is False:
             properties[name] = value
             return
 
-        # Case 4: Multiple
+        # Case 5: Multiple (append)
         properties.setdefault(name, []).append(value)
 
 
