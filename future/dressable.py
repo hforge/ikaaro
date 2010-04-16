@@ -34,7 +34,6 @@ from ikaaro.file import Image
 from ikaaro.folder import Folder
 from ikaaro.views import CompositeForm, ContextMenu
 from ikaaro.webpage import ResourceWithHTML, WebPage
-from ikaaro.wiki import WikiPage
 from ikaaro.workflow import WorkflowAware
 
 
@@ -109,9 +108,6 @@ class Dressable_View(CompositeForm):
             return item.view.GET
         if isinstance(item, Image):
             return resource._get_image
-        # TODO We should implement a specific view to display wiki page as HTML
-        if isinstance(item, WikiPage):
-            return item.view.GET
         return getattr(self, item, None)
 
 

@@ -50,16 +50,6 @@ register_document_type(File)
 import calendar
 import forum
 import tracker
-try:
-    import docutils
-except ImportError:
-    print "docutils is not installed, wiki deactivated."
-else:
-    import wiki
-    try:
-        import lpod
-    except ImportError:
-        print "lpod is not installed, wiki ODT export deactivated."
 
 
 ###########################################################################

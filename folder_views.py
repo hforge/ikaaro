@@ -740,8 +740,6 @@ class Folder_PreviewContent(Folder_BrowseContent):
 
 class Folder_Orphans(Folder_BrowseContent):
     """Orphans are files not referenced in another resource of the database.
-    It extends the concept of "orphans pages" from the wiki to all file-like
-    resources.
 
     Orphans folders generally don't make sense because they serve as
     containers. TODO or list empty folders?

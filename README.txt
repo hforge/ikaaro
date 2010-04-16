@@ -3,7 +3,7 @@ ikaaro is a Content Management System built on Python & itools, among
 other feautres it provides:
 
  - Content & Document Management.
- - Collaboration with the Wiki module, the issue tracker, etc.
+ - Collaboration with the calendar, issue tracker, etc.
  - Multiple web sites in one instance, with separate access rights.
  - Mulitilingual interfaces and content.
 
@@ -24,8 +24,6 @@ Software    Version  Used by           Home
 ----------  -------  ----------------  --------------------------------------
 Python          2.6  ikaaro            http://www.python.org/
 itools       0.60.0  ikaaro            http://www.hforge.org/itools
-docutils        0.5  Wiki              http://docutils.sourceforge.net/
-lpOD            0.8  Wiki ODT export   http://www.lpod-project.org/
 guppy         0.1.8  Memory profiling  http://guppy-pe.sourceforge.net/
 
 Check the itools requirements.

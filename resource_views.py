@@ -133,8 +133,8 @@ class DBResource_Edit(AutoForm):
 class DBResource_Backlinks(Folder_BrowseContent):
     """Backlinks are the list of resources pointing to this resource.  This
     view answers the question "where is this resource used?" You'll see all
-    WebPages and WikiPages (for example) referencing it.  If the list is
-    empty, you can consider it is "orphan".
+    WebPages (for example) referencing it.  If the list is empty, you can
+    consider it is "orphan".
     """
 
     access = 'is_allowed_to_view'
@@ -328,9 +328,7 @@ class DBResource_AddBase(STLForm):
 
     def get_scripts(self, context):
         mode = context.get_form_value('mode')
-        if mode == 'wiki':
-            return ['/ui/wiki/javascript.js']
-        elif mode == 'tiny_mce':
+        if mode == 'tiny_mce':
             return ['/ui/tiny_mce/javascript.js',
                     '/ui/tiny_mce/tiny_mce_src.js',
                     '/ui/tiny_mce/tiny_mce_popup.js']
@@ -479,11 +477,7 @@ class DBResource_AddLink(DBResource_AddBase):
         if mode == 'tiny_mce':
             from webpage import WebPage
             return WebPage
-        elif mode == 'wiki':
-            from wiki import WikiPage
-            return WikiPage
-        else:
-            raise ValueError, 'Incorrect mode %s' % mode
+        raise ValueError, 'Incorrect mode %s' % mode
 
 
 
