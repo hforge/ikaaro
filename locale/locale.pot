@@ -4301,3 +4301,7 @@ msgstr ""
 msgctxt "tr"
 msgid "${event/ns}"
 msgstr ""
+
+#: ../wiki/page_views.py:482
+msgid "Table of Contents"
+msgstr ""

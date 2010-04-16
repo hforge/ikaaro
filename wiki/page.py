@@ -25,7 +25,10 @@ from urllib import urlencode
 # Import from docutils
 from docutils import nodes
 from docutils.core import publish_doctree
+from docutils.languages.en import labels
 from docutils.readers import get_reader_class
+from docutils.parsers.rst import directives, Directive
+from docutils.parsers.rst.directives import register_directive
 from docutils.utils import SystemMessage
 
 # Import from itools
@@ -37,8 +40,8 @@ from itools.web import get_context
 # Import from ikaaro
 from ikaaro.text import Text
 from ikaaro.resource_ import DBResource
-from page_views import WikiPage_Edit, WikiPage_Help, WikiPage_ToPDF
-from page_views import WikiPage_View
+from page_views import WikiPage_View, WikiPage_Edit, WikiPage_Help
+from page_views import WikiPage_ToPDF, WikiPage_ToODT, WikiPage_HelpODT
 from page_views import is_external, BacklinksMenu
 
 
@@ -46,15 +49,80 @@ from page_views import is_external, BacklinksMenu
 StandaloneReader = get_reader_class('standalone')
 
 
-class WikiPage(Text):
 
+def language(argument):
+    try:
+        return argument.encode()
+    except UnicodeEncodeError:
+        raise ValueError('expected "xx-YY" language-COUNTRY code')
+
+
+
+# Class name gives the DOM element name
+class book(nodes.Admonition, nodes.Element):
+    pass
+
+
+
+class Book(Directive):
+    required_arguments = 0
+    optional_arguments = 1
+    final_argument_whitespace = True
+    option_spec = {'cover': directives.uri,
+                   'toc-depth': directives.positive_int,
+                   'title': directives.unchanged,
+                   'comments': directives.unchanged,
+                   'subject': directives.unchanged,
+                   'language': language,
+                   'keywords': directives.unchanged}
+    has_content = True
+
+
+    def run(self):
+        self.assert_has_content()
+        # Default values
+        options = self.options
+        for option in ('title', 'comments', 'subject', 'keywords'):
+            if options.get(option) is None:
+                options[option] = u""
+        if options.get('language') is None:
+            # The website language, not the content language
+            # because the wiki is not multilingual anyway
+            context = get_context()
+            languages =  context.site_root.get_property('website_languages')
+            language = context.accept_language.select_language(languages)
+            options['language'] = language
+        # Cover page
+        if self.arguments:
+            # Push cover as an option
+            cover_uri = checkid(self.arguments[0][1:-2])
+            options['cover'] = directives.uri(cover_uri)
+        book_node = book(self.block_text, **options)
+        if self.arguments:
+            # Display the cover
+            cover_text = self.arguments.pop(0)
+            textnodes, messages = self.state.inline_text(cover_text,
+                    self.lineno)
+            book_node += nodes.title(cover_text, '', *textnodes)
+            book_node += messages
+        # Parse inner list
+        self.state.nested_parse(self.content, self.content_offset, book_node)
+        # Automatically number pages
+        for bullet_list in book_node.traverse(condition=nodes.bullet_list):
+            bullet_list.__class__ = nodes.enumerated_list
+            bullet_list.tagname = 'enumerated_list'
+        return [book_node]
+
+
+
+class WikiPage(Text):
     class_id = 'WikiPage'
     class_title = MSG(u"Wiki Page")
     class_description = MSG(u"Wiki contents")
     class_icon16 = 'wiki/WikiPage16.png'
     class_icon48 = 'wiki/WikiPage48.png'
-    class_views = ['view', 'to_pdf', 'edit', 'externaledit', 'edit_state',
-                   'backlinks', 'commit_log', 'help']
+    class_views = ['view', 'to_pdf', 'to_odt', 'edit', 'externaledit',
+            'edit_state', 'backlinks', 'commit_log', 'help', 'help_odt']
 
     overrides = {
         # Security
@@ -258,9 +326,18 @@ class WikiPage(Text):
     view = WikiPage_View()
     to_pdf = WikiPage_ToPDF()
     edit = WikiPage_Edit()
+    to_odt = WikiPage_ToODT()
     help = WikiPage_Help()
+    help_odt = WikiPage_HelpODT()
 
 
     def get_context_menus(self):
         return [BacklinksMenu()] + self.parent.get_context_menus()
 
+
+
+# Register dummy book directive for ODT export
+nodes._add_node_class_names(['book'])
+nodes.book = book
+register_directive('book', Book)
+labels['book'] = ''
