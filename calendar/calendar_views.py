@@ -496,23 +496,15 @@ class EditEventForm(CalendarView, STLForm):
         # Ok
         properties = event.get_property()
         # Date start
-        value = properties['DTSTART']
-        value, params = value.value, value.parameters
-        dtstart = Date.encode(value)
-        param = params.get('VALUE', '')
-        if not param or param != ['DATE']:
-            dtstart_time = Time.encode(value)
-        else:
-            dtstart_time = None
+        start = properties['DTSTART']
+        param = start.get_parameter('VALUE', '')
+        start_date = Date.encode(start.value)
+        start_time = Time.encode(start.value) if param != ['DATE'] else None
         # Date end
-        value = properties['DTEND']
-        value, params = value.value, value.parameters
-        dtend = Date.encode(value)
-        param = params.get('VALUE', '')
-        if not param or param != ['DATE']:
-            dtend_time = Time.encode(value)
-        else:
-            dtend_time = None
+        end = properties['DTEND']
+        param = end.get_parameter('VALUE', '')
+        end_date = Date.encode(end.value)
+        end_time = Time.encode(end.value) if param != ['DATE'] else None
 
         # STATUS is an enumerate
         get_value = resource.handler.get_record_value
@@ -528,10 +520,10 @@ class EditEventForm(CalendarView, STLForm):
         # The namespace
         namespace = {
             'action': ';edit_event?id=%s' % id,
-            'dtstart': dtstart,
-            'dtstart_time': dtstart_time,
-            'dtend': dtend,
-            'dtend_time': dtend_time,
+            'dtstart': start_date,
+            'dtstart_time': start_time,
+            'dtend': end_date,
+            'dtend_time': end_time,
             'resources': None,
             'resource': None,
             'remove': True,

@@ -100,7 +100,7 @@ class Table(File):
                     datatype = schema[name]
                     if is_multilingual(datatype):
                         for property in version[name]:
-                            property.parameters['language'] = language
+                            property.set_parameter('language', language)
 
 
 
