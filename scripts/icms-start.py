@@ -24,8 +24,10 @@ from sys import exit
 # Import from itools
 from itools import __version__
 from itools.core import become_daemon, start_subprocess
+from itools.loop import Loop
 
 # Import from ikaaro
+from ikaaro.config import get_config
 from ikaaro.database import check_database
 from ikaaro.update import is_instance_up_to_date
 from ikaaro.server import Server, get_pid, get_fake_context
@@ -61,7 +63,15 @@ def start(options, target):
 
     # Start
     start_subprocess('%s/database' % target)
-    server.start()
+    server.listen()
+
+    # Run
+    config = get_config(target)
+    profile = config.get_value('profile-time')
+    profile = ('%s/log/profile' % target) if profile else None
+    loop = Loop(pid_file='%s/pid' % target, profile=profile)
+    loop.run()
+
     # Ok
     return 0
 

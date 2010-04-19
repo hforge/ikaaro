@@ -139,12 +139,6 @@ class Server(WebServer):
         self.index_text =  config.get_value('index-text', type=Boolean,
                                             default=True)
 
-        # Profile CPU
-        profile = config.get_value('profile-time')
-        if profile is True:
-            self.profile_path = '%s/log/profile' % target
-        else:
-            self.profile_path = None
         # Profile Memory
         if config.get_value('profile-space') is True:
             import guppy.heapy.RM
@@ -167,7 +161,7 @@ class Server(WebServer):
         # Initialize
         access_log = '%s/log/access' % target
         WebServer.__init__(self, root, address=address, port=port,
-                           access_log=access_log, pid_file='%s/pid' % target)
+                           access_log=access_log)
 
         # Email service
         self.spool = lfs.resolve2(self.target, 'spool')
@@ -356,13 +350,3 @@ class Server(WebServer):
     # FIXME Short-cut, to be removed
     def change_resource(self, resource):
         self.database.change_resource(resource)
-
-
-    def start(self):
-        # Go
-        if self.profile_path is not None:
-            filename = self.profile_path
-            runctx("WebServer.start(self)", globals(), locals(), filename)
-        else:
-            WebServer.start(self)
-
