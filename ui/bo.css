@@ -322,33 +322,38 @@ table.new-resource-thumb {
   vertical-align: top;
 }
 
+#browse-list tr.odd:hover, #browse-list tr.even:hover {
+  background-color: #e0e0f0;
+}
 
-/**************************************************************************
- * ui/generic/browse_table.xml.en
- *************************************************************************/
-th a.sort{
+
+#browse-list tr.odd, #browse-list tr.odd input {
+  background-color: #f9f9f9;
+}
+
+#browse-list th a.sort{
   float: left;
   width: 9px;
   height: 9px;
 }
 
-th a.sort-up {
+#browse-list th a.sort-up {
   background: transparent url(/ui/aruni/images/sort_up.png) no-repeat;
 }
 
-th a.sort-down {
+#browse-list th a.sort-down {
   background: transparent url(/ui/aruni/images/sort_down.png) no-repeat;
 }
 
-th a.sort-up-active {
+#browse-list th a.sort-up-active {
   background: transparent url(/ui/aruni/images/sort_up2.png) no-repeat;
 }
 
-th a.sort-down-active {
+#browse-list th a.sort-down-active {
   background: transparent url(/ui/aruni/images/sort_down2.png) no-repeat;
 }
 
-th a.sort-none {
+#browse-list th a.sort-none {
   background: transparent url(icons/16x16/none.png) right top no-repeat;
   padding-right: 20px;
   text-decoration: none;
@@ -486,13 +491,3 @@ p.tabme a.selected {
  *************************************************************************/
 
 .number { text-align: right; }
-
-
-tr.odd, tr.odd input {
-  background-color: #f9f9f9;
-}
-
-tr.odd:hover, tr.even:hover {
-  background-color: #e0e0f0;
-}
-
