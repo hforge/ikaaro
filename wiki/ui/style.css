@@ -141,3 +141,7 @@ table.docutils.field-list {
 table.docutils.field-list td {
   border: none;
 }
+
+.defaultSkin td .odt_icon {
+  background: url("/ui/icons/16x16/odt.png") no-repeat scroll 3px 3px transparent
+}
