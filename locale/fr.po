@@ -3354,7 +3354,7 @@ msgstr "Tableau ordonné de ressources"
 
 #: ../future/order.py:229
 msgid "Resources added to ordered list: {resources}."
-msgstr "Ressources ajoutées aux éléments ordonnés&nbsp;: {ressources}."
+msgstr "Ressources ajoutées aux éléments ordonnés&nbsp;: {resources}."
 
 #: ../future/order.py:236
 msgid "Resources already in the ordered list: {resources}."
