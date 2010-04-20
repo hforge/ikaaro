@@ -516,9 +516,10 @@ class WikiPage_ToODT(AutoForm):
         try:
             from lpod.rst2odt import rst2odt
         except ImportError:
-            return XMLParser('<p>Please install <a '
-                    'href="http://lpod-project.org/">lpOD</a> for Python on '
-                    'the server.</p>')
+            msg = MSG(u'<p>Please install <a href="{href}">{name}</a> '
+                      u'for Python on the server.</p>')
+            msg = msg.gettext(href='http://lpod-project.org/', name='LpOD')
+            return XMLParser(msg.encode('utf_8'))
         # Just to ignore pyflakes warning
         rst2odt
         return AutoForm.GET(self, resource, context)

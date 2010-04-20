@@ -154,7 +154,7 @@ class TimetablesForm(STLForm):
         timetables.sort()
         resource.set_property('timetables', tuple(timetables))
         # Ok
-        context.message = INFO(u'Timetables updated successfully.')
+        context.message = messages.MSG_CHANGES_SAVED
 
 
     action_remove_schema = {'ids': Integer(multiple=True)}
@@ -200,7 +200,7 @@ class TimetablesForm(STLForm):
         new_timetables.sort()
         resource.set_property('timetables', tuple(new_timetables))
         # Ok
-        context.message = INFO(u'Timetables updated successfully.')
+        context.message = messages.MSG_CHANGES_SAVED
 
 
 
@@ -609,7 +609,7 @@ class EditEventForm(CalendarView, STLForm):
         properties = self.get_properties(form)
         resource.update_record(id, properties)
         # Ok
-        context.message = INFO(u'Data updated')
+        context.message = messages.MSG_CHANGES_SAVED
 
 
     def action_remove_event(self, resource, context, form):
@@ -712,7 +712,7 @@ class AddEventForm(EditEventForm):
         properties['ORGANIZER'] = Property(organizer)
         resource.add_record('VEVENT', properties)
         # Ok
-        message = INFO(u'Data updated')
+        message = messages.MSG_CHANGES_SAVED
         goto = ';%s' % context.get_cookie('method') or 'monthly_view'
         return context.come_back(message, goto=goto)
 

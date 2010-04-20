@@ -6,7 +6,7 @@
 
 <form action=";new_resource?type=${class_id}" method="post">
   <fieldset>
-    <legend>Add a new ${class_title}</legend>
+    <legend>Add ${class_title}</legend>
     <dl>
       <dt><label for="title">Title</label></dt>
       <dd>

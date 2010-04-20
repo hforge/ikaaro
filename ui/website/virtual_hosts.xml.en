@@ -11,7 +11,7 @@
     line.</p>
     <textarea name="vhosts" cols="62" rows="7">${vhosts}</textarea>
     <p>
-      <button type="submit" class="button-ok">Save Changes</button>
+      <button type="submit" class="button-ok">Save</button>
     </p>
   </fieldset>
 </form>

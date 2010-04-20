@@ -327,7 +327,7 @@ class CPEditLanguages(STLForm):
         languages.insert(0, default)
         resource.set_property('website_languages', tuple(languages))
         # Ok
-        context.message = INFO(u'The default language has been changed.')
+        context.message = messages.MSG_CHANGES_SAVED
 
 
     def action_remove_languages(self, resource, context, form):

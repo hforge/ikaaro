@@ -257,7 +257,7 @@ class User_EditPreferences(STLForm):
         else:
             resource.set_property('user_language', value)
         # Ok
-        context.message = INFO(u'Application preferences changed.')
+        context.message = messages.MSG_CHANGES_SAVED
 
 
 
@@ -314,7 +314,7 @@ class User_EditPassword(STLForm):
             resource.set_auth_cookie(context, newpass)
 
         # Ok
-        context.message = INFO(u'Password changed.')
+        context.message = messages.MSG_CHANGES_SAVED
 
 
 

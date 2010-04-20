@@ -54,7 +54,7 @@
     <button type="submit" name="action" value="add" class="button-ok"
       stl:if="not id">Assign</button>
     <button type="submit" name="action" value="edit" class="button-ok"
-      stl:if="id">Save Changes</button>
+      stl:if="id">Save</button>
   </fieldset>
 </form>
 <br/>
