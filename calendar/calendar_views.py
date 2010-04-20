@@ -36,6 +36,7 @@ from itools.web import FormError
 
 # Import from ikaaro
 from ikaaro.datatypes import FileDataType
+from ikaaro import messages
 
 
 resolution = timedelta.resolution
@@ -1112,8 +1113,8 @@ class Calendar_Upload(STLForm):
         # Check wether the handler is able to deal with the uploaded file
         handler = resource.handler
         if mimetype != 'text/calendar':
-            message = u'Unexpected file of mimetype {mimetype}.'
-            context.message = ERROR(message, mimetype=mimetype)
+            message = messages.MSG_UNEXPECTED_MIMETYPE(mimetype=mimetype)
+            context.message = message
             return
 
         # Replace

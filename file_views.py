@@ -187,8 +187,7 @@ class File_Edit(DBResource_Edit):
         handler = resource.handler
         handler_class = get_handler_class_by_mimetype(mimetype)
         if not isinstance(handler, handler_class):
-            message = ERROR(u'Unexpected file of mimetype {mimetype}',
-                            mimetype=mimetype)
+            message = messages.MSG_UNEXPECTED_MIMETYPE(mimetype=mimetype)
             context.message = message
             return
 
