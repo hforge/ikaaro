@@ -23,7 +23,7 @@
       Non authenticated users will be able to access published content,
       and to register by themselves.
     </p>
-    <button type="submit" class="button-ok">Save Changes</button>
+    <button type="submit" class="button-ok">Save</button>
   </fieldset>
 </form>
 

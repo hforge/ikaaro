@@ -94,3 +94,5 @@ MSG_CUT = INFO(u'Resources cut.')
 MSG_PUBLISHED = INFO(u'Resources published.')
 
 MSG_RETIRED = INFO(u'Resources retired.')
+
+MSG_UNEXPECTED_MIMETYPE = ERROR(u'Unexpected file of mimetype {mimetype}.')
