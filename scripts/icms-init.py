@@ -44,10 +44,10 @@ modules = {modules}
 # internet address and the port number the web server listens to for HTTP
 # connections.
 #
-# By default connections are accepted from any internet address.  And the
-# server listens the 8080 port number.
+# These variables are required (i.e. there are not default values).  To
+# listen from any address write the value '*'.
 #
-listen-address = {listen_address}
+listen-address = 127.0.0.1
 listen-port = {listen_port}
 
 # The "smtp-host" variable defines the name or IP address of the SMTP relay.
@@ -123,7 +123,6 @@ def init(parser, options, target):
     # The configuration file
     namespace = {
         'modules': modules,
-        'listen_address': getattr(options, 'address') or '',
         'listen_port': getattr(options, 'port') or '8080',
         'smtp_host': getattr(options, 'smtp_host') or 'localhost',
         'smtp_from': email,
@@ -173,7 +172,6 @@ if __name__ == '__main__':
     version = 'itools %s' % itools.__version__
     description = 'Creates a new instance of ikaaro with the name TARGET.'
     parser = OptionParser(usage, version=version, description=description)
-    parser.add_option('-a', '--address', help='listen to IP ADDRESS')
     parser.add_option('-e', '--email',
                       help='e-mail address of the admin user')
     parser.add_option('-p', '--port', type='int',
