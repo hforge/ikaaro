@@ -127,6 +127,7 @@ class Server(WebServer):
         # Find out the IP to listen to
         if address is None:
             address = config.get_value('listen-address').strip()
+            address = address if address else None
 
         # Find out the port to listen
         if port is None:

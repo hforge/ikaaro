@@ -28,7 +28,7 @@ class ServerConfig(ConfigFile):
 
     schema = {
         'modules': Tokens,
-        'listen-address': String(default=''),
+        'listen-address': String(default=None),
         'listen-port': Integer(default=8080),
         'smtp-host': String(default=''),
         'smtp-from': String(default=''),
