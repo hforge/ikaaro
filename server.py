@@ -115,8 +115,7 @@ def get_fake_context():
 
 class Server(WebServer):
 
-    def __init__(self, target, address=None, port=None, read_only=False,
-                 cache_size=None):
+    def __init__(self, target, read_only=False, cache_size=None):
         target = lfs.get_absolute_path(target)
         self.target = target
 
@@ -125,12 +124,16 @@ class Server(WebServer):
         load_modules(config)
 
         # Find out the IP to listen to
-        if address is None:
-            address = config.get_value('listen-address').strip()
+        address = config.get_value('listen-address').strip()
+        if not address:
+            raise ValueError, 'listen-address is missing from config.conf'
+        if address == '*':
+            address = None
 
         # Find out the port to listen
+        port = config.get_value('listen-port')
         if port is None:
-            port = config.get_value('listen-port')
+            raise ValueError, 'listen-port is missing from config.conf'
 
         # Contact Email
         self.smtp_from = config.get_value('smtp-from')

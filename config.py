@@ -29,7 +29,7 @@ class ServerConfig(ConfigFile):
     schema = {
         'modules': Tokens,
         'listen-address': String(default=''),
-        'listen-port': Integer(default=8080),
+        'listen-port': Integer(default=None),
         'smtp-host': String(default=''),
         'smtp-from': String(default=''),
         'smtp-login': String(default=''),

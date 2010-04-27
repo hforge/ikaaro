@@ -106,9 +106,8 @@ class UIFolder(IResource, Folder):
 
 
     def _get_resource(self, name):
-        if self.has_handler(name):
-            handler = self.get_handler(name)
-        else:
+        # Not an exact match: trigger language negotiation
+        if not self.has_handler(name):
             name = '%s.' % name
             n = len(name)
             languages = []
@@ -133,15 +132,18 @@ class UIFolder(IResource, Folder):
             # (XXX we need a way to define the default)
             if language is None:
                 language = languages[0]
-            handler = self.get_handler('%s%s' % (name, language))
+            name = '%s%s' % (name, language)
 
-        if isinstance(handler, Folder):
-            handler = UIFolder(handler.key)
+        # Find out the class to use
+        key = lfs.resolve2(self.key, name)
+        if lfs.is_folder(key):
+            cls = UIFolder
         else:
-            format = handler.get_mimetype()
+            format = lfs.get_mimetype(key)
             cls = map.get(format, UIFile)
-            handler = cls(handler.key)
-        return handler
+
+        # Ok
+        return self.database.get_handler(key, cls)
 
 
 
