@@ -157,7 +157,9 @@ class Metadata(File):
                 lines += [
                     property_to_str(name, x, datatype, p_schema)
                     for x in property if x.value ]
-            elif property.value:
+            elif property.value is None:
+                pass
+            elif not datatype.is_empty(property.value):
                 lines.append(
                     property_to_str(name, property, datatype, p_schema))
 

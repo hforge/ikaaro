@@ -3,7 +3,7 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
-    <!-- Javascript -->
+  <!-- Javascript -->
   <script language="javascript">
   var list_products = {<stl:inline stl:repeat="product list_products">
                        "${product/id}":
@@ -34,14 +34,24 @@
     <table>
       <tr>
         <td colspan="2">
-          <label for="title" class="${title/class}">Title (mandatory):</label><br/>
+          <label for="title">Title</label>
+          <span class="field-is-missing" title="This field is required">*
+          </span>
+          <br/>
+          <span stl:if="title/error" class="field-error">${title/error}
+            <br/></span>
           <input type="text" name="title" id="title" value="${title/value}"
             size="48" />
         </td>
       </tr>
       <tr>
         <td valign="top">
-          <label for="product" class="${product/class}">Product (mandatory):</label><br/>
+          <label for="product">Product</label>
+          <span class="field-is-missing" title="This field is required">*
+          </span>
+          <br/>
+          <span stl:if="product/error" class="field-error">${product/error}
+            <br/></span>
           <select name="product" id="product" class="tracker-select">
             <option value="-1"></option>
             <option stl:repeat="item product/value" value="${item/name}"
@@ -49,7 +59,9 @@
           </select>
         </td>
         <td valign="top">
-          <label for="module" class="${module/class}">Module:</label><br/>
+          <label for="module">Module</label><br/>
+          <span stl:if="module/error" class="field-error">${module/error}
+            <br/></span>
           <select name="module" id="module" class="tracker-select">
             <option value=""></option>
             <option stl:repeat="item module/value" value="${item/name}"
@@ -57,7 +69,9 @@
           </select>
         </td>
         <td valign="top">
-          <label for="version" class="${version/class}">Version:</label><br/>
+          <label for="version">Version</label><br/>
+          <span stl:if="version/error" class="field-error">${version/error}
+            <br/></span>
           <select name="version" id="version" class="tracker-select">
             <option value=""></option>
             <option stl:repeat="item version/value" value="${item/name}"
@@ -67,7 +81,12 @@
       </tr>
       <tr>
         <td valign="top">
-          <label for="type" class="${type/class}">Type (mandatory):</label><br/>
+          <label for="type">Type</label>
+          <span class="field-is-missing" title="This field is required">*
+          </span>
+          <br/>
+          <span stl:if="type/error" class="field-error">${type/error}
+            <br/></span>
           <select name="type" id="type" class="tracker-select">
             <option value=""></option>
             <option stl:repeat="item type/value" value="${item/name}"
@@ -75,7 +94,12 @@
           </select>
         </td>
         <td valign="top">
-          <label for="state" class="${state/class}">Status (mandatory):</label><br/>
+          <label for="state">Status</label>
+          <span class="field-is-missing" title="This field is required">*
+          </span>
+          <br/>
+          <span stl:if="state/error" class="field-error">${state/error}
+            <br/></span>
           <select name="state" id="state" class="tracker-select">
             <option value=""></option>
             <option stl:repeat="item state/value" value="${item/name}"
@@ -83,7 +107,9 @@
           </select>
         </td>
         <td valign="top">
-          <label for="priority" class="${priority/class}">Priority:</label><br/>
+          <label for="priority">Priority</label><br/>
+          <span stl:if="priority/error" class="field-error">${priority/error}
+            <br/></span>
           <select name="priority" id="priority" class="tracker-select">
             <option value=""></option>
             <option stl:repeat="item priority/value" value="${item/name}"
@@ -93,7 +119,9 @@
       </tr>
       <tr>
         <td valign="top">
-          <label for="assigned-to" class="${assigned_to/class}">Assign To:</label><br/>
+          <label for="assigned-to">Assign To</label><br/>
+          <span stl:if="assigned_to/error" class="field-error">${assigned_to/error}
+            <br/></span>
           <select name="assigned_to" id="assigned-to" class="tracker-select">
             <option value=""></option>
             <option stl:repeat="item assigned_to/value" value="${item/name}"
@@ -101,7 +129,7 @@
           </select>
         </td>
         <td valign="top">
-          <label for="cc-add" class="${cc_add/class}">Add CC:</label><br/>
+          <label for="cc-add">Add CC</label><br/>
           <select name="cc_add" id="cc-add" class="tracker-select"
             multiple="multiple" size="5">
             <option stl:repeat="item cc_add/value" value="${item/name}"
@@ -109,7 +137,7 @@
           </select>
         </td>
         <td valign="top">
-          <label for="cc-list" class="${cc_list/class}">CC:</label><br/>
+          <label for="cc-list">CC</label><br/>
           <select name="cc_list" id="cc-list" class="tracker-select"
             multiple="multiple" size="4">
             <option stl:repeat="item cc_list/value" value="${item/name}"
@@ -123,14 +151,16 @@
       <tr>
         <td valign="top" colspan="3">
           <a name="new_comment"></a>
-          <label for="comment" class="${comment/class}">New Comment:</label><br/>
+          <label for="comment">New Comment</label><br/>
+          <span stl:if="comment/error" class="field-error">${comment/error}
+            <br/></span>
           <textarea name="comment" id="comment" cols="80" rows="10"
             ></textarea>
         </td>
       </tr>
       <tr>
         <td valign="top" colspan="2">
-          <label for="attachement">New Attachement:</label><br/>
+          <label for="attachement">New Attachement</label><br/>
           <input type="file" name="file" id="attachement" size="36" />
         </td>
       </tr>

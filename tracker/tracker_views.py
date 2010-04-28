@@ -23,7 +23,7 @@
 from datetime import datetime
 
 # Import from itools
-from itools.core import merge_dicts
+from itools.core import merge_dicts, thingy_lazy_property
 from itools.csv import CSVFile, Property
 from itools.datatypes import Boolean, Integer, String, Unicode
 from itools.gettext import MSG
@@ -70,11 +70,9 @@ class GoToIssueMenu(ContextMenu):
     title = MSG(u'Go To Issue')
     template = '/ui/tracker/menu_goto.xml'
 
-    def get_namespace(self):
-        path_to_tracker = '..' if isinstance(self.resource, Issue) else '.'
-        return {
-            'path_to_tracker': path_to_tracker,
-            'title': self.title}
+
+    def path_to_tracker(self):
+        return '..' if isinstance(self.resource, Issue) else '.'
 
 
 
@@ -88,23 +86,34 @@ class StoreSearchMenu(ContextMenu):
                                search_name=String,
                                search_title=Unicode)
 
-    def get_namespace(self):
-        # This search exists ?
-        search_name = self.context.get_query_value('search_name')
-        if search_name:
-            search = self.resource.get_resource(search_name, soft=True)
-        else:
-            search = None
 
-        # Set the get function and the title
+    @thingy_lazy_property
+    def search_name(self):
+        return self.context.get_query_value('search_name')
+
+
+    @thingy_lazy_property
+    def search(self):
+        search_name = self.search_name
+        if search_name:
+            return self.resource.get_resource(search_name, soft=True)
+        return None
+
+
+    def search_title(self):
+        search = self.search
+        return search.get_title() if search else None
+
+
+    def search_fields(self):
+        search = self.search
         if search:
             get = search.get_values
-            search_title = search.get_title()
         else:
             # Warning, a menu is not the default view!
-            query = process_form(self.context.get_query_value, self.query_schema)
+            query = process_form(self.context.get_query_value,
+                                 self.query_schema)
             get = query.get
-            search_title = None
 
         # Fill the fields
         fields = []
@@ -117,10 +126,7 @@ class StoreSearchMenu(ContextMenu):
                 fields.append({'name': name, 'value': type.encode(value)})
 
         # Ok
-        return {'title': self.title,
-                'search_title': search_title,
-                'search_name': search_name,
-                'search_fields': fields }
+        return fields
 
 
 
@@ -170,10 +176,10 @@ class TrackerViewMenu(ContextMenu):
 
     title = MSG(u'Advanced')
 
-    def get_items(self, resource, context):
+    def get_items(self):
         # Keep the query parameters
-        schema = context.view.get_query_schema()
-        params = encode_query(context.query, schema)
+        schema = self.context.view.get_query_schema()
+        params = encode_query(self.context.query, schema)
         return [
             {'title': MSG(u'Edit this search'),
              'href': ';search?%s' % params},

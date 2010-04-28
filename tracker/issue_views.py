@@ -26,7 +26,7 @@ from re import compile
 from textwrap import TextWrapper
 
 # Import from itools
-from itools.datatypes import Date, Integer, String, Unicode, XMLContent
+from itools.datatypes import Boolean, Unicode, XMLContent
 from itools.gettext import MSG
 from itools.ical import Time
 from itools.html import xhtml_uri
@@ -113,7 +113,7 @@ class IssueTrackerMenu(ContextMenu):
     title = MSG(u'Tracker')
 
     def get_items(self):
-        path = self.context.get_link(resource.parent)
+        path = self.context.get_link(self.resource.parent)
         return [
             {'title': MSG(u'Search for issues'), 'href': '%s/;search' % path},
             {'title': MSG(u'Add a new issue'), 'href': '%s/;add_issue' % path}]
@@ -142,9 +142,9 @@ class Issue_Edit(STLForm):
 
 
     def get_value(self, resource, context, name, datatype):
-        history = resource.get_history()
-        record = history.get_record(-1)
-        return  record.get_value(name)
+        if name in ('comment', 'cc_remove'):
+            return datatype.get_default()
+        return resource.get_property(name)
 
 
     def get_namespace(self, resource, context):
@@ -155,8 +155,6 @@ class Issue_Edit(STLForm):
 
         # Local variables
         root = context.root
-        history = resource.get_history()
-        record = history.get_record(-1)
 
         # Comments
         comments = resource.metadata.get_property('comment')
@@ -174,7 +172,7 @@ class Issue_Edit(STLForm):
         namespace['comments'] = comments
 
         # cc_list / cc_add / cc_remove
-        cc_list = record.get_value('cc_list') or ()
+        cc_list = resource.get_property('cc_list')
         namespace['cc_list']= {'name': 'cc_list', 'value': [], 'class': None}
         namespace['cc_add']= {'name': 'cc_add', 'value': [], 'class': None}
         cc_value = namespace['cc_list']['value']
