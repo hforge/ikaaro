@@ -174,7 +174,7 @@ class TrackerViewMenu(ContextMenu):
         # Keep the query parameters
         schema = context.view.get_query_schema()
         params = encode_query(context.query, schema)
-        items = [
+        return [
             {'title': MSG(u'Edit this search'),
              'href': ';search?%s' % params},
             {'title': MSG(u'Change Several Issues'),
@@ -182,10 +182,7 @@ class TrackerViewMenu(ContextMenu):
             {'title': MSG(u'Export to Text'),
              'href': ';export_to_text?%s' % params},
             {'title': MSG(u'Export to CSV'),
-             'href': ';export_to_csv_form?%s' % params},
-            {'title': MSG(u'Resources'),
-             'href': 'calendar/;monthly_view?%s' % params}]
-        return items
+             'href': ';export_to_csv_form?%s' % params}]
 
 
 

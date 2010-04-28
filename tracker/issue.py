@@ -38,7 +38,7 @@ from ikaaro.file import File
 from ikaaro.folder import Folder
 from ikaaro.registry import get_resource_class
 from ikaaro.utils import generate_name
-from issue_views import Issue_Edit, Issue_EditResources, Issue_History
+from issue_views import Issue_Edit, Issue_History
 from issue_views import IssueTrackerMenu
 
 
@@ -124,10 +124,6 @@ class Issue(Folder):
     #######################################################################
     def get_title(self, language=None):
         return u'#%s %s' % (self.name, self.get_property('title'))
-
-
-    def get_calendar(self):
-        return self.parent.get_resource('calendar')
 
 
     def get_history(self):
@@ -354,6 +350,5 @@ class Issue(Folder):
 
 
     edit = Issue_Edit()
-    edit_resources = Issue_EditResources()
     history = Issue_History()
 
