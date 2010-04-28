@@ -90,11 +90,11 @@ class Tracker(Folder):
         # Modules
         self.make_resource('module', ModulesResource)
         table = ModulesHandler()
-        folder.set_handler('%s/module' % name, table)
+        folder.set_handler('module', table)
         # Versions
         self.make_resource('version', VersionsResource)
         table = VersionsHandler()
-        folder.set_handler('%s/version' % name, table)
+        folder.set_handler('version', table)
         # Pre-defined stored searches
         open = StoredSearchFile(state='0')
         not_assigned = StoredSearchFile(assigned_to='nobody')
