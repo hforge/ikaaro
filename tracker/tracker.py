@@ -64,7 +64,7 @@ default_tables = [
 class Tracker(Folder):
 
     class_id = 'tracker'
-    class_version = '20081214'
+    class_version = '20100429'
     class_title = MSG(u'Issue Tracker')
     class_description = MSG(u'To manage bugs and tasks')
     class_icon16 = 'tracker/tracker16.png'
@@ -232,7 +232,6 @@ class Tracker(Folder):
         return context.root.search(query)
 
 
-
     #######################################################################
     # User Interface
     #######################################################################
@@ -251,3 +250,9 @@ class Tracker(Folder):
     export_to_csv = Tracker_ExportToCSV()
     change_several_bugs = Tracker_ChangeSeveralBugs()
 
+
+    #######################################################################
+    # User Interface
+    #######################################################################
+    def update_20100429(self):
+        self.del_resource('calendar', soft=True)

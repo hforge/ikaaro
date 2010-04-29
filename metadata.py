@@ -242,7 +242,7 @@ class Metadata(File):
 
         # Case 3: Multilingual
         if p_type is Property:
-            if 'lang' in value.parameters:
+            if value.parameters and 'lang' in value.parameters:
                 language = value.parameters['lang']
                 properties.setdefault(name, {})[language] = value
                 return

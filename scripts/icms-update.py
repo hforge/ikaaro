@@ -19,7 +19,9 @@
 # Import from the Standard Library
 from cProfile import runctx
 from optparse import OptionParser
+from subprocess import Popen, PIPE
 from sys import exit, stdout
+from time import time
 from traceback import print_exc
 
 # Import from itools
@@ -27,13 +29,14 @@ import itools
 from itools.core import start_subprocess
 from itools.csv import Property
 from itools.fs import lfs
+from itools.handlers import ro_database
 from itools.web import get_context
 
 # Import from ikaaro
 from ikaaro.metadata import Metadata
 from ikaaro.obsolete.metadata import Metadata as OldMetadata
 from ikaaro.resource_ import DBResource
-from ikaaro.server import Server, ask_confirmation, get_fake_context
+from ikaaro.server import Server, ask_confirmation, get_fake_context, get_pid
 
 
 def abort():
@@ -57,7 +60,7 @@ def find_versions_to_update(root):
             continue
 
         # Skip up-to-date resources
-        obj_version = resource.metadata.get_property('version').value
+        obj_version = resource.metadata.version
         cls_version = resource.class_version
         if obj_version == cls_version:
             continue
@@ -107,7 +110,7 @@ def update_versions(target, database, version, paths, root):
 
         # Skip up-to-date resources
         resource = root.get_resource(abspath)
-        obj_version = resource.metadata.get_property('version').value
+        obj_version = resource.metadata.version
         cls_version = resource.class_version
         if obj_version == cls_version:
             continue
@@ -149,8 +152,8 @@ def update(parser, options, target):
     confirm = options.confirm
 
     # Check the server is not started, or started in read-only mode
-    server = Server(target)
-    if server.is_running_in_rw_mode():
+    pid = get_pid(target)
+    if pid is not None:
         print 'Cannot proceed, the server is running in read-write mode.'
         return
 
@@ -159,10 +162,11 @@ def update(parser, options, target):
     # XXX Specific to the migration from 0.61 to 0.62
     #######################################################################
     path = '%s/database' % target
-    metadata = Metadata('%s/.metadata' % path)
+    metadata = ro_database.get_handler('%s/.metadata' % path, Metadata)
     try:
         metadata.load_state()
     except SyntaxError:
+        ro_database.cache.clear()
         message = 'STAGE 0: Update metadata to the new format (y/N)? '
         if ask_confirmation(message, confirm) is False:
             abort()
@@ -172,7 +176,7 @@ def update(parser, options, target):
             if not filename.endswith('.metadata'):
                 continue
             # Load the old metadata
-            old_metadata = OldMetadata(filename)
+            old_metadata = ro_database.get_handler(filename, OldMetadata)
             old_metadata.load_state()
             # Make the new metadata
             format = old_metadata.format
@@ -186,8 +190,8 @@ def update(parser, options, target):
                         property = Property(value[lang], lang=lang)
                         new_metadata.set_property(name, property)
                 elif type(value) is list:
-                    error = 'unexpected "%s" property in "%s"'
-                    raise NotImplementedError, error % (name, filename)
+                    property = [ Property(x) for x in value ]
+                    new_metadata.set_property(name, property)
                 else:
                     property = Property(value)
                     new_metadata.set_property(name, property)
@@ -208,6 +212,7 @@ def update(parser, options, target):
     #######################################################################
     # STAGE 1: Find out the versions to upgrade
     #######################################################################
+    server = Server(target)
     # Build a fake context
     context = get_fake_context()
     server.init_context(context)
