@@ -242,7 +242,7 @@ class DBResource(CatalogAware, IResource):
         'format': String(indexed=True, stored=True),
         # Versioning
         'mtime': DateTime(indexed=True, stored=True),
-        'last_author': String(indexed=True, stored=False),
+        'last_author': String(indexed=False, stored=True),
         # Folder's view
         'parent_path': String(indexed=True),
         'name': String(stored=True, indexed=True),
