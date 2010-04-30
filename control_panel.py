@@ -124,7 +124,6 @@ class CPEditVirtualHosts(STLForm):
         vhosts = form['vhosts']
         vhosts = [ x.strip() for x in vhosts.splitlines() ]
         vhosts = [ x for x in vhosts if x ]
-        vhosts = tuple(vhosts)
         resource.set_property('vhosts', vhosts)
         # Ok
         context.message = messages.MSG_CHANGES_SAVED

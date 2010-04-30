@@ -50,6 +50,7 @@ from website_views import SiteSearchView, NotFoundView, ForbiddenView
 class WebSite(RoleAware, Folder):
 
     class_id = 'WebSite'
+    class_version = '20100430'
     class_title = MSG(u'Web Site')
     class_description = MSG(u'Create a new Web Site or Work Place.')
     class_icon16 = 'icons/16x16/website.png'
@@ -78,7 +79,7 @@ class WebSite(RoleAware, Folder):
         Folder.class_schema,
         RoleAware.class_schema,
         # Metadata
-        vhosts=Tokens(source='metadata', multiple=True, indexed=True),
+        vhosts=String(source='metadata', multiple=True, indexed=True),
         contacts=Tokens(source='metadata'),
         emails_from_addr=String(source='metadata'),
         emails_signature=Unicode(source='metadata'),
@@ -192,6 +193,18 @@ class WebSite(RoleAware, Folder):
     forbidden = ForbiddenView()
     unauthorized = LoginView()
     not_found = NotFoundView()
+
+
+    #######################################################################
+    # Upgrade
+    #######################################################################
+    def update_20100430(self):
+        vhosts = self.get_property('vhosts')
+        if len(vhosts) == 1:
+            vhosts = vhosts[0].split()
+            if len(vhosts) > 1:
+                self.set_property('vhosts', vhosts)
+
 
 
 ###########################################################################
