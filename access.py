@@ -566,7 +566,8 @@ class RoleAware(AccessControl):
         members = set()
         for rolename in self.get_role_names():
             usernames = self.get_property(rolename)
-            members = members.union(usernames)
+            if usernames:
+                members.update(usernames)
         return members
 
 

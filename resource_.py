@@ -540,7 +540,7 @@ class DBResource(CatalogAware, IResource):
         getattr(self, 'update_%s' % version)()
         metadata = self.metadata
         metadata.set_changed()
-        metadata.set_property('version', version)
+        metadata.version = version
 
 
     ########################################################################
