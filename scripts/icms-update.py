@@ -47,7 +47,7 @@ def abort():
 
 
 
-def find_versions_to_update(root):
+def find_versions_to_update(root, force=False):
     print 'STAGE 1: Find next version to upgrade (may take a while).'
     version = None
     paths = None
@@ -68,13 +68,12 @@ def find_versions_to_update(root):
         # Check for code that is older than the instance
         if obj_version > cls_version:
             print
-            print '*'
-            print '* ERROR: resource is newer than its class'
             print '* %s <%s>' % (resource.get_abspath(),
-                                 resource.__class__.__name__)
-            print '* %s > %s' % (obj_version, cls_version)
-            print '*'
-            exit(1)
+                resource.__class__.__name__)
+            print '* the resource is newer than its class: %s > %s' % (
+                obj_version, cls_version)
+            if force is False:
+                exit()
 
         next_versions = resource.get_next_versions()
         if not next_versions:
@@ -93,7 +92,7 @@ def find_versions_to_update(root):
 
 
 
-def update_versions(target, database, version, paths, root):
+def update_versions(target, database, version, paths, root, force=False):
     """Update the database to the given versions.
     """
     # Open the update log
@@ -128,11 +127,15 @@ def update_versions(target, database, version, paths, root):
         try:
             resource.update(version)
         except Exception:
-            path = resource.get_abspath()
-            log.write('%s %s\n' % (path, resource.__class__))
-            print_exc(file=log)
-            log.write('\n')
-            bad += 1
+            line = '%s %s\n' % (resource.get_abspath(), resource.__class__)
+            if force:
+                log.write(line)
+                print_exc(file=log)
+                log.write('\n')
+                bad += 1
+            else:
+                print line
+                raise
     # Commit
     get_context().git_message = u'Upgrade to version %s' % version
     database.save_changes()
@@ -221,21 +224,19 @@ def update(parser, options, target):
     root = server.root
 
     print 'STAGE 1: Find out the versions to upgrade (may take a while).'
-    versions = find_versions_to_update(root)
-
     start_subprocess(path)
-    version, paths = find_versions_to_update(root)
+    version, paths = find_versions_to_update(root, options.force)
     while version:
         message = 'STAGE 1: Upgrade %d resources to version %s (y/N)? '
         message = message % (len(paths), version)
         if ask_confirmation(message, confirm) is False:
             abort()
-        update_versions(target, database, version, paths, root)
+        update_versions(target, database, version, paths, root, options.force)
         # Reset the state
         database.cache.clear()
         database.cache[root.metadata.key] = root.metadata
         print 'STAGE 1: Finish upgrading to version %s' % version
-        version, paths = find_versions_to_update(root)
+        version, paths = find_versions_to_update(root, options.force)
 
     print 'STAGE 1: Done.'
 
@@ -255,9 +256,10 @@ if __name__ == '__main__':
     description = ('Updates the TARGET ikaaro instance (if needed). Use'
                    ' this command when upgrading to a new version of itools.')
     parser = OptionParser(usage, version=version, description=description)
-    parser.add_option(
-        '-y', '--yes', action='store_true', dest='confirm',
+    parser.add_option('-y', '--yes', action='store_true', dest='confirm',
         help="start the update without asking confirmation")
+    parser.add_option('--force', action='store_true', default=False,
+        help="continue the upgrade process in spit of errors")
     parser.add_option('--profile',
         help="print profile information to the given file")
 
