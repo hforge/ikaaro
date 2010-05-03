@@ -9,14 +9,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-04-19 17:04+CET\n"
+"POT-Creation-Date: 2010-05-03 15:05+CET\n"
 "PO-Revision-Date: 2010-04-20 11:30+0200\n"
 "Last-Translator: Hervé Cauwelier <herve@itaapy.com>\n"
 "Language-Team: Itaapy\n"
-"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Virtaal 0.5.2\n"
 
@@ -40,8 +40,7 @@ msgid ""
 "      Optimize your website for better ranking in search engine results."
 msgstr ""
 "\n"
-"      Optimiser le référencement du site web dans les moteurs de "
-"recherche."
+"      Optimiser le référencement du site web dans les moteurs de recherche."
 
 #: ../future/dressable.py:57
 msgid "\"%s\" is incorrect"
@@ -67,20 +66,6 @@ msgstr "#1.%s|outline"
 msgid "$filename is not an OpenDocument Text."
 msgstr "$filename n'est pas un texte OpenDocument"
 
-#: ../calendar/ui/edit_event.xml.en:57
-msgctxt "textarea"
-msgid "${DESCRIPTION}"
-msgstr "${DESCRIPTION}"
-
-#: ../ui/folder/browse_image.xml.en:65 ../ui/generic/browse_table.xml.en:56
-msgctxt "button"
-msgid "${action/title}"
-msgstr "${action/title}"
-
-#: ../ui/generic/icons_view.xml.en:8
-msgid "${batch}"
-msgstr "${batch}"
-
 #: ../ui/table/view.xml.en:5
 msgid "${batch} ${table}"
 msgstr "${batch} ${table}"
@@ -100,246 +85,15 @@ msgctxt "table cell"
 msgid "${body}"
 msgstr "${body}"
 
-#: ../calendar/ui/daily_view.xml.en:26
-msgctxt "link"
-msgid "${calendar/name}"
-msgstr "${calendar/name}"
-
-#: ../tracker/ui/weekly_template.xml.en:9
-msgctxt "title attribute"
-msgid "${cell/content/issue/comment}"
-msgstr "${cell/content/issue/comment}"
-
-#: ../calendar/ui/weekly_view.xml.en:46
-msgctxt "div"
-msgid "${cell/ns}"
-msgstr "${cell/ns}"
-
-#: ../ui/revisions/changes.xml.en:52
-msgctxt "div"
-msgid "${change/value}"
-msgstr "${change/value}"
-
-#: ../ui/revisions/changes.xml.en:54
-msgctxt "span"
-msgid "${change/value}"
-msgstr "${change/value}"
-
-#: ../ui/folder/browse_image.xml.en:28
-msgctxt "link"
-msgid "${column/title}"
-msgstr "${column/title}"
-
-#: ../ui/generic/browse_table.xml.en:20
-msgctxt "table cell"
-msgid "${column/title}"
-msgstr "${column/title}"
-
-#: ../ui/generic/browse_table.xml.en:47
-msgctxt "link"
-msgid "${column/value}"
-msgstr "${column/value}"
-
-#: ../tracker/ui/edit_issue.xml.en:169
-msgctxt "pre"
-msgid "${comment/comment}"
-msgstr "${comment/comment}"
-
-#: ../tracker/ui/edit_issue.xml.en:153
-msgctxt "table cell"
-msgid "${comment/datetime}"
-msgstr "${comment/datetime}"
-
-#: ../tracker/ui/edit_issue.xml.en:164
-msgctxt "link"
-msgid "${comment/file}"
-msgstr "${comment/file}"
-
-#: ../tracker/ui/edit_issue.xml.en:152
-msgctxt "table cell"
-msgid "${comment/user}"
-msgstr "${comment/user}"
-
-#: ../tracker/ui/add_issue.xml.en:112
-msgctxt "textarea"
-msgid "${comment/value}"
-msgstr "${comment/value}"
-
-#: ../tracker/ui/edit_resource.xml.en:50
-msgctxt "textarea"
-msgid "${comment}"
-msgstr "${comment}"
-
-#: ../ui/user/confirm_registration.xml.en:8
-msgctxt "paragraph"
-msgid "${confirmation_msg}"
-msgstr "${confirmation_msg}"
-
-#: ../ui/binary/Archive_view.xml.en:10
-msgctxt "pre"
-msgid "${contents}"
-msgstr "${contents}"
-
-#: ../ui/text/view.xml.en:7
-msgctxt "pre"
-msgid "${data}"
-msgstr "${data}"
-
-#: ../wiki/ui/edit.xml.en:172
-msgctxt "textarea"
-msgid "${data}"
-msgstr "${data}"
-
-#: ../calendar/ui/monthly_view.xml.en:37
-msgctxt "span"
-msgid "${day/name}"
-msgstr "${day/name}"
-
-#: ../forum/ui/Forum_view.xml.en:7
-msgctxt "emphasis"
-msgid "${description}"
-msgstr "${description}"
-
-#: ../ui/user/tasks.xml.en:17
-msgctxt "link"
-msgid "${doc/title}"
-msgstr "${doc/title}"
-
-#: ../ui/file/externaledit.xml.en:28
-msgctxt "option"
-msgid "${encoding/title}"
-msgstr "${encoding/title}"
-
-#: ../tracker/ui/weekly_template_fd.xml.en:8
-#: ../tracker/ui/monthly_template.xml.en:10
-msgctxt "title attribute"
-msgid "${event/issue/comment}"
-msgstr "${event/issue/comment}"
-
-#: ../calendar/ui/weekly_view.xml.en:67
-msgctxt "tr"
-msgid "${event/ns}"
-msgstr "${event/ns}"
-
-#: ../ui/folder/browse_search.xml.en:13 ../ui/generic/browse_search.xml.en:11
-msgctxt "option"
-msgid "${field/title}"
-msgstr "${field/title}"
-
-#: ../calendar/ui/weekly_view.xml.en:36
-msgctxt "table cell"
-msgid "${header/header}"
-msgstr "${header/header}"
-
-#: ../wiki/ui/help.xml.en:8
-msgctxt "table cell"
-msgid "${help_html}"
-msgstr "${help_html}"
-
-#: ../wiki/ui/help.xml.en:11
-msgctxt "pre"
-msgid "${help_source}"
-msgstr "${help_source}"
-
-#: ../future/ui/dressable_view.xml.en:8
-msgctxt "div"
-msgid "${item/content}"
-msgstr "${item/content}"
-
-#: ../ui/html/addimage.xml.en:75 ../ui/html/addlink.xml.en:75
-#: ../ui/html/addmedia.xml.en:75
-msgctxt "title attribute"
-msgid "${item/item_type}"
-msgstr "${item/item_type}"
-
-#: ../ui/aruni/location.xml.en:10
-msgctxt "title attribute"
-msgid "${item/name}"
-msgstr "${item/name}"
-
-#: ../ui/folder/rename.xml.en:12
-msgctxt "table cell"
-msgid "${item/path}"
-msgstr "${item/path}"
-
-#: ../ui/html/addimage.xml.en:66 ../ui/html/addimage.xml.en:79
-#: ../ui/html/addlink.xml.en:66 ../ui/html/addlink.xml.en:79
-#: ../ui/html/addmedia.xml.en:66 ../ui/html/addmedia.xml.en:79
-msgctxt "link"
-msgid "${item/short_title}"
-msgstr "${item/short_title}"
-
-#: ../ui/base/proxy_new_instance.xml.en:26
-msgctxt "label"
-msgid "${item/title}"
-msgstr "${item/title}"
-
-#: ../ui/generic/menu.xml.en:12
-msgctxt "link"
-msgid "${item/title}"
-msgstr "${item/title}"
-
-#: ../tracker/ui/change_bugs.xml.en:42 ../tracker/ui/change_bugs.xml.en:51
-#: ../tracker/ui/change_bugs.xml.en:60 ../tracker/ui/change_bugs.xml.en:70
-#: ../tracker/ui/change_bugs.xml.en:78 ../tracker/ui/change_bugs.xml.en:87
-msgctxt "option"
-msgid "${item/title}"
-msgstr "${item/title}"
-
-#: ../ui/html/addimage.xml.en:64 ../ui/html/addimage.xml.en:79
-#: ../ui/html/addlink.xml.en:64 ../ui/html/addlink.xml.en:79
-#: ../ui/html/addmedia.xml.en:64 ../ui/html/addmedia.xml.en:79
-msgctxt "title attribute"
-msgid "${item/title}"
-msgstr "${item/title}"
-
-#: ../tracker/ui/add_issue.xml.en:44 ../tracker/ui/add_issue.xml.en:52
-#: ../tracker/ui/add_issue.xml.en:60 ../tracker/ui/add_issue.xml.en:70
-#: ../tracker/ui/add_issue.xml.en:78 ../tracker/ui/add_issue.xml.en:86
-#: ../tracker/ui/add_issue.xml.en:96 ../tracker/ui/add_issue.xml.en:104
-#: ../tracker/ui/search.xml.en:55 ../tracker/ui/search.xml.en:65
-#: ../tracker/ui/search.xml.en:75 ../tracker/ui/search.xml.en:87
-#: ../tracker/ui/search.xml.en:97 ../tracker/ui/search.xml.en:107
-#: ../tracker/ui/search.xml.en:119 ../tracker/ui/change_bugs.xml.en:99
-#: ../tracker/ui/edit_issue.xml.en:48 ../tracker/ui/edit_issue.xml.en:56
-#: ../tracker/ui/edit_issue.xml.en:64 ../tracker/ui/edit_issue.xml.en:74
-#: ../tracker/ui/edit_issue.xml.en:82 ../tracker/ui/edit_issue.xml.en:90
-#: ../tracker/ui/edit_issue.xml.en:100 ../tracker/ui/edit_issue.xml.en:108
-#: ../tracker/ui/edit_issue.xml.en:116 ../tracker/ui/edit_resource.xml.en:17
-msgctxt "option"
-msgid "${item/value}"
-msgstr "${item/value}"
-
 #: ../calendar/ui/edit_event.xml.en:16
 msgctxt "option"
 msgid "${item/value} "
 msgstr "${item/value} "
 
-#: ../ui/website/edit_languages.xml.en:28
-msgctxt "table cell"
-msgid "${language/code}"
-msgstr "${language/code}"
-
-#: ../ui/website/edit_languages.xml.en:50
-#: ../ui/user/edit_preferences.xml.en:16
-msgctxt "option"
-msgid "${language/name}"
-msgstr "${language/name}"
-
-#: ../ui/website/edit_languages.xml.en:27
-msgctxt "table cell"
-msgid "${language/name}"
-msgstr "${language/name}"
-
 #: ../ui/aruni/template.xhtml.en:28
 msgctxt "div"
 msgid "${languages}"
 msgstr "${languages}"
-
-#: ../ui/website/broken_links.xml.en:13
-msgctxt "li"
-msgid "${link}"
-msgstr "${link}"
 
 #: ../ui/aruni/template.xhtml.en:45
 msgctxt "body"
@@ -351,353 +105,44 @@ msgctxt "table cell"
 msgid "${menu}"
 msgstr "${menu}"
 
-#: ../forum/ui/Thread_view.xml.en:16
-msgctxt "paragraph"
-msgid "${message/author}"
-msgstr "${message/author}"
-
-#: ../forum/ui/Thread_view.xml.en:27
-msgctxt "paragraph"
-msgid "${message/body}"
-msgstr "${message/body}"
-
-#: ../ui/aruni/message.xml.en:8
-msgctxt "div"
-msgid "${message/message}"
-msgstr "${message/message}"
-
-#: ../forum/ui/Thread_view.xml.en:17
-msgctxt "paragraph"
-msgid "${message/mtime}"
-msgstr "${message/mtime}"
-
-#: ../ui/generic/message_view.xml.en:7
-msgid "${message}"
-msgstr "${message}"
-
-#: ../ui/html/addimage.xml.en:39 ../ui/html/addlink.xml.en:39
-#: ../ui/aruni/template.xhtml.en:50 ../ui/html/addmedia.xml.en:39
+#: ../ui/aruni/template.xhtml.en:50
 msgctxt "div"
 msgid "${message}"
 msgstr "${message}"
-
-#: ../ui/revisions/changes.xml.en:16
-msgctxt "table cell"
-msgid "${metadata/author_date}"
-msgstr "${metadata/author_date}"
-
-#: ../ui/revisions/changes.xml.en:12
-msgctxt "table cell"
-msgid "${metadata/author_name}"
-msgstr "${metadata/author_name}"
-
-#: ../ui/revisions/changes.xml.en:20
-msgctxt "table cell"
-msgid "${metadata/subject}"
-msgstr "${metadata/subject}"
-
-#: ../ui/PO_edit.xml.en:23
-msgctxt "textarea"
-msgid "${msgid}"
-msgstr "${msgid}"
-
-#: ../ui/PO_edit.xml.en:31
-msgctxt "textarea"
-msgid "${msgstr}"
-msgstr "${msgstr}"
-
-#: ../ui/generic/browse_batch.xml.en:8
-msgctxt "paragraph"
-msgid "${msg}"
-msgstr "${msg}"
-
-#: ../ui/root/credits.xml.en:12
-msgctxt "li"
-msgid "${name}"
-msgstr "${name}"
 
 #: ../tracker/ui/edit_resource.xml.en:39
 msgctxt "option"
 msgid "${option/start} - ${option/end}"
 msgstr "${option/start} - ${option/end}"
 
-#: ../ui/root/about.xml.en:18
-msgctxt "table cell"
-msgid "${package/name}"
-msgstr "${package/name}"
-
-#: ../ui/root/about.xml.en:19
-msgctxt "table cell"
-msgid "${package/version}"
-msgstr "${package/version}"
-
 #: ../ui/aruni/template.xhtml.en:49
 msgctxt "heading"
 msgid "${page_title}"
 msgstr "${page_title}"
-
-#: ../tracker/ui/export_to_csv.xml.en:8 ../tracker/ui/export_to_text.xml.en:8
-msgctxt "form"
-msgid "${param}"
-msgstr "${param}"
-
-#: ../ui/auto_form.xml.en:11 ../wiki/ui/edit.xml.en:9
-msgctxt "paragraph"
-msgid "${required_msg}"
-msgstr "${required_msg}"
-
-#: ../ui/file/history.xml.en:18
-msgctxt "table cell"
-msgid "${revision/date}"
-msgstr "${revision/date}"
-
-#: ../ui/file/history.xml.en:17
-msgctxt "table cell"
-msgid "${revision/username}"
-msgstr "${revision/username}"
-
-#: ../ui/access/edit_membership_form.xml.en:15
-msgctxt "label"
-msgid "${role/title}"
-msgstr "${role/title}"
-
-#: ../ui/access/add_user.xml.en:29
-msgctxt "option"
-msgid "${role/title}"
-msgstr "${role/title}"
-
-#: ../ui/revisions/changes.xml.en:42
-msgctxt "table cell"
-msgid "${row/after}"
-msgstr "${row/after}"
-
-#: ../tracker/ui/issue_history.xml.en:36
-msgctxt "table cell"
-msgid "${row/assigned_to}"
-msgstr "${row/assigned_to}"
-
-#: ../ui/revisions/changes.xml.en:41
-msgctxt "table cell"
-msgid "${row/before}"
-msgstr "${row/before}"
-
-#: ../tracker/ui/issue_history.xml.en:39
-msgctxt "table cell"
-msgid "${row/cc_list}"
-msgstr "${row/cc_list}"
-
-#: ../tracker/ui/issue_history.xml.en:46
-msgctxt "table cell"
-msgid "${row/comment}"
-msgstr "${row/comment}"
-
-#: ../tracker/ui/issue_history.xml.en:12
-msgctxt "link"
-msgid "${row/datetime}"
-msgstr "${row/datetime}"
-
-#: ../tracker/ui/issue_history.xml.en:42
-msgctxt "link"
-msgid "${row/file}"
-msgstr "${row/file}"
-
-#: ../tracker/ui/issue_history.xml.en:30
-msgctxt "table cell"
-msgid "${row/module}"
-msgstr "${row/module}"
-
-#: ../ui/revisions/changes.xml.en:40
-msgctxt "table cell"
-msgid "${row/nlines}"
-msgstr "${row/nlines}"
-
-#: ../tracker/ui/issue_history.xml.en:33
-msgctxt "table cell"
-msgid "${row/priority}"
-msgstr "${row/priority}"
 
 #: ../calendar/ui/weekly_view.xml.en:42
 msgctxt "table cell"
 msgid "${row/start}-${row/end}"
 msgstr "${row/start}-${row/end}"
 
-#: ../tracker/ui/issue_history.xml.en:27
-msgctxt "table cell"
-msgid "${row/state}"
-msgstr "${row/state}"
-
-#: ../ui/folder/browse_image.xml.en:53 ../ui/folder/browse_image.xml.en:56
-msgctxt "label"
-msgid "${row/title_or_name}"
-msgstr "${row/title_or_name}"
-
-#: ../tracker/ui/issue_history.xml.en:18
-msgctxt "table cell"
-msgid "${row/title}"
-msgstr "${row/title}"
-
-#: ../tracker/ui/issue_history.xml.en:24
-msgctxt "table cell"
-msgid "${row/type}"
-msgstr "${row/type}"
-
-#: ../tracker/ui/issue_history.xml.en:13
-msgctxt "table cell"
-msgid "${row/user}"
-msgstr "${row/user}"
-
-#: ../ui/revisions/changes.xml.en:39
-msgctxt "link"
-msgid "${row/value}"
-msgstr "${row/value}"
-
-#: ../tracker/ui/issue_history.xml.en:21
-msgctxt "table cell"
-msgid "${row/version}"
-msgstr "${row/version}"
-
-#: ../forum/ui/Thread_view.xml.en:42
-msgctxt "form"
-msgid "${rte}"
-msgstr "${rte}"
-
-#: ../calendar/ui/edit_event.xml.en:67
-msgctxt "option"
-msgid "${s/value}"
-msgstr "${s/value}"
-
-#: ../tracker/ui/search.xml.en:29
-msgctxt "legend"
-msgid "${search_title}"
-msgstr "${search_title}"
-
-#: ../ui/website/search.xml.en:8
-msgid "${search}"
-msgstr "${search}"
-
 #: ../ui/generic/search.xml.en:8
 msgid "${search} <x id='1'/> ${batch} <x id='2'/> ${table}"
 msgstr "${search} <x id='1'/> ${batch} <x id='2'/> ${table}"
-
-#: ../ui/tiny_mce/rte.xml.en:54
-msgctxt "textarea"
-msgid "${source}"
-msgstr "${source}"
-
-#: ../ui/revisions/changes.xml.en:27
-msgctxt "paragraph"
-msgid "${stat/summary}"
-msgstr "${stat/summary}"
-
-#: ../ui/WorkflowAware_state.xml.en:8
-msgctxt "emphasis"
-msgid "${state}"
-msgstr "${state}"
-
-#: ../ui/auto_form.xml.en:29
-msgctxt "button"
-msgid "${submit_value}"
-msgstr "${submit_value}"
-
-#: ../tracker/ui/export_to_text.xml.en:25
-msgctxt "pre"
-msgid "${text}"
-msgstr "${text}"
 
 #: ../forum/ui/Forum_view.xml.en:15
 msgctxt "paragraph"
 msgid "${thread/comments} comments."
 msgstr "${thread/comments} commentaires."
 
-#: ../tracker/ui/menu_goto.xml.en:8 ../tracker/ui/menu_remember.xml.en:8
-#: ../ui/generic/menu.xml.en:8
-msgctxt "label"
-msgid "${title}"
-msgstr "${title}"
-
-#: ../ui/auto_form.xml.en:10 ../wiki/ui/edit.xml.en:7
-msgctxt "legend"
-msgid "${title}"
-msgstr "${title}"
-
 #: ../ui/aruni/template.xhtml.en:7
 msgctxt "title"
 msgid "${title}"
 msgstr "${title}"
 
-#: ../ui/root/internal_server_error.xml.en:17
-msgctxt "pre"
-msgid "${traceback}"
-msgstr "${traceback}"
-
-#: ../ui/WorkflowAware_state.xml.en:51
-msgctxt "table cell"
-msgid "${transition/comments}"
-msgstr "${transition/comments}"
-
-#: ../ui/WorkflowAware_state.xml.en:48
-msgctxt "table cell"
-msgid "${transition/date}"
-msgstr "${transition/date}"
-
-#: ../ui/WorkflowAware_state.xml.en:17
-msgctxt "label"
-msgid "${transition/description}"
-msgstr "${transition/description}"
-
-#: ../ui/WorkflowAware_state.xml.en:49
-msgctxt "table cell"
-msgid "${transition/title}"
-msgstr "${transition/title}"
-
-#: ../ui/WorkflowAware_state.xml.en:50
-msgctxt "table cell"
-msgid "${transition/user}"
-msgstr "${transition/user}"
-
-#: ../calendar/ui/daily_view.xml.en:20 ../calendar/ui/daily_view.xml.en:45
-msgctxt "span"
-msgid "${tt}"
-msgstr "${tt}"
-
-#: ../ui/user/confirm_registration.xml.en:21
-msgctxt "emphasis"
-msgid "${username}"
-msgstr "${username}"
-
-#: ../ui/website/virtual_hosts.xml.en:12
-msgctxt "textarea"
-msgid "${vhosts}"
-msgstr "${vhosts}"
-
-#: ../future/ui/order_view.xml.en:8
-msgctxt "heading"
-msgid "${view/title}"
-msgstr "${view/title}"
-
-#: ../future/ui/order_view.xml.en:9
-msgid "${view/view}"
-msgstr "${view/view}"
-
-#: ../ui/generic/cascade.xml.en:7
-msgid "${view}"
-msgstr "${view}"
-
-#: ../calendar/ui/monthly_view.xml.en:42
-msgctxt "table cell"
-msgid "${week/month}"
-msgstr "${week/month}"
-
 #: ../wiki/ui/edit.xml.en:24
 msgctxt "dd"
 msgid "${widget/widget} <g id='5'>${widget/suffix}</g>"
 msgstr "${widget/widget} <g id='5'>${widget/suffix}</g>"
-
-#: ../ui/html/addimage.xml.en:49 ../ui/html/addlink.xml.en:49
-#: ../ui/html/addmedia.xml.en:49
-msgctxt "title attribute"
-msgid "${x/title}"
-msgstr "${x/title}"
 
 #: ../file.py:182
 msgid "%.01f KB"
@@ -1188,7 +633,8 @@ msgstr "Action"
 #: ../messages.py:66
 msgid "Action impossible (the resources are in use): {resources}."
 msgstr ""
-"Action impossible (les ressources sont en cours d'utilisation)&nbsp;: {resources}."
+"Action impossible (les ressources sont en cours d'utilisation)&nbsp;: "
+"{resources}."
 
 #: ../access.py:161
 msgid "Active"
@@ -1321,7 +767,7 @@ msgctxt "paragraph"
 msgid "Apologies for the inconvenience."
 msgstr "Veuillez nous excuser pour la gêne occasionnée."
 
-#: ../calendar/calendar_views.py:47
+#: ../calendar/calendar_views.py:48
 msgid "April"
 msgstr "Avril"
 
@@ -1373,7 +819,7 @@ msgctxt "table cell"
 msgid "Attachement:"
 msgstr "Pièce jointe&nbsp;:"
 
-#: ../calendar/calendar_views.py:51
+#: ../calendar/calendar_views.py:52
 msgid "August"
 msgstr "Août"
 
@@ -1499,7 +945,7 @@ msgstr "Feuille de style CSS"
 msgid "Calendar"
 msgstr "Calendrier"
 
-#: ../calendar/calendar_views.py:105
+#: ../calendar/calendar_views.py:106
 msgid "Cancelled"
 msgstr "Annulé"
 
@@ -1685,7 +1131,7 @@ msgstr "Confirmation requise"
 msgid "Confirmation sent!"
 msgstr "Confirmation envoyée !"
 
-#: ../calendar/calendar_views.py:104
+#: ../calendar/calendar_views.py:105
 msgid "Confirmed"
 msgstr "Confirmé"
 
@@ -1763,7 +1209,7 @@ msgstr ""
 "NE PAS RÉPONDRE À CE MESSAGE. Pour commenter cette fiche, allez sur&nbsp;:\n"
 "${issue_uri}"
 
-#: ../calendar/calendar_views.py:909
+#: ../calendar/calendar_views.py:910
 msgid "Daily View"
 msgstr "Journalier"
 
@@ -1786,7 +1232,7 @@ msgctxt "form"
 msgid "Date:"
 msgstr "Date&nbsp;:"
 
-#: ../calendar/calendar_views.py:55
+#: ../calendar/calendar_views.py:56
 msgid "December"
 msgstr "Décembre"
 
@@ -1903,7 +1349,7 @@ msgstr "Modifier"
 msgid "Edit Account"
 msgstr "Compte"
 
-#: ../calendar/calendar_views.py:418
+#: ../calendar/calendar_views.py:419
 msgid "Edit Event"
 msgstr "Modifier l'événement"
 
@@ -2039,12 +1485,12 @@ msgstr "Énumération"
 msgid "Error: {msg}"
 msgstr "Erreur&nbsp;: {msg}"
 
-#: ../calendar/calendar_views.py:640
+#: ../calendar/calendar_views.py:641
 msgid "Event definitely deleted."
 msgstr "Événement définitivement supprimé."
 
-#: ../calendar/calendar_views.py:493 ../calendar/calendar_views.py:599
-#: ../calendar/calendar_views.py:627
+#: ../calendar/calendar_views.py:494 ../calendar/calendar_views.py:600
+#: ../calendar/calendar_views.py:628
 msgid "Event not found"
 msgstr "Événement non trouvé"
 
@@ -2061,7 +1507,7 @@ msgctxt "paragraph"
 msgid "Existing URLs remain untouched."
 msgstr "Les URL existantes ne sont pas modifiées."
 
-#: ../calendar/calendar_views.py:459
+#: ../calendar/calendar_views.py:460
 msgid "Expected query parameter \"id\" is missing."
 msgstr "Le paramètre «&nbsp;id&nbsp;» est manquant."
 
@@ -2084,7 +1530,7 @@ msgctxt "legend"
 msgid "Export to Text:"
 msgstr "Exporter en texte&nbsp;:"
 
-#: ../file_views.py:233
+#: ../file_views.py:232
 msgid "External Editor"
 msgstr "Éditeur externe"
 
@@ -2093,15 +1539,15 @@ msgctxt "button"
 msgid "External Editor..."
 msgstr "Éditeur externe..."
 
-#: ../calendar/calendar_views.py:1123
+#: ../calendar/calendar_views.py:1124
 msgid "Failed to load the file, may contain errors."
 msgstr "Échec lors du chargement du fichier, il doit contenir des erreurs."
 
-#: ../file_views.py:200
+#: ../file_views.py:199
 msgid "Failed to load the file: {error}"
 msgstr "Échec lors du chargement du fichier&nbsp;: {error}"
 
-#: ../calendar/calendar_views.py:45
+#: ../calendar/calendar_views.py:46
 msgid "February"
 msgstr "Février"
 
@@ -2176,7 +1622,7 @@ msgstr "<g id='1'>${total}</g> liens cassés ont été trouvés."
 msgid "French"
 msgstr "Français"
 
-#: ../calendar/calendar_views.py:62
+#: ../calendar/calendar_views.py:63
 msgid "Friday"
 msgstr "Vendredi"
 
@@ -2413,7 +1859,7 @@ msgctxt "legend"
 msgid "Internal Server Error"
 msgstr "Erreur interne du serveur"
 
-#: ../calendar/calendar_views.py:476
+#: ../calendar/calendar_views.py:477
 msgid "Invalid dates."
 msgstr "Dates invalides."
 
@@ -2451,7 +1897,7 @@ msgctxt "title attribute"
 msgid "Italic"
 msgstr "Italique"
 
-#: ../calendar/calendar_views.py:44
+#: ../calendar/calendar_views.py:45
 msgid "January"
 msgstr "Janvier"
 
@@ -2468,11 +1914,11 @@ msgctxt "li"
 msgid "Juan David Ibáñez Palomar (Spanish)"
 msgstr "Juan David Ibáñez Palomar (espagnol)"
 
-#: ../calendar/calendar_views.py:50
+#: ../calendar/calendar_views.py:51
 msgid "July"
 msgstr "Juillet"
 
-#: ../calendar/calendar_views.py:49
+#: ../calendar/calendar_views.py:50
 msgid "June"
 msgstr "Juin"
 
@@ -2593,11 +2039,11 @@ msgstr "Connexion"
 msgid "Low"
 msgstr "Basse"
 
-#: ../calendar/calendar_views.py:46
+#: ../calendar/calendar_views.py:47
 msgid "March"
 msgstr "Mars"
 
-#: ../calendar/calendar_views.py:48
+#: ../calendar/calendar_views.py:49
 msgid "May"
 msgstr "Mai"
 
@@ -2696,11 +2142,11 @@ msgstr "Module&nbsp;:"
 msgid "Modules"
 msgstr "Modules"
 
-#: ../calendar/calendar_views.py:58
+#: ../calendar/calendar_views.py:59
 msgid "Monday"
 msgstr "Lundi"
 
-#: ../calendar/calendar_views.py:724
+#: ../calendar/calendar_views.py:725
 msgid "Monthly View"
 msgstr "Mensuel"
 
@@ -2833,7 +2279,7 @@ msgctxt "paragraph"
 msgid "Note the name and title won't change."
 msgstr "Notez que ni le nom ni le titre ne changeront."
 
-#: ../calendar/calendar_views.py:180
+#: ../calendar/calendar_views.py:181
 msgid "Nothing to change."
 msgstr "Rien à changer."
 
@@ -2841,11 +2287,11 @@ msgstr "Rien à changer."
 msgid "Nothing to paste."
 msgstr "Rien à coller."
 
-#: ../calendar/calendar_views.py:164
+#: ../calendar/calendar_views.py:165
 msgid "Nothing to remove."
 msgstr "Rien à supprimer."
 
-#: ../calendar/calendar_views.py:54
+#: ../calendar/calendar_views.py:55
 msgid "November"
 msgstr "Novembre"
 
@@ -2884,7 +2330,7 @@ msgstr "Présentation OpenOffice.org"
 msgid "OOo Writer"
 msgstr "Texte OpenOffice.org"
 
-#: ../calendar/calendar_views.py:53
+#: ../calendar/calendar_views.py:54
 msgid "October"
 msgstr "Octobre"
 
@@ -2897,8 +2343,8 @@ msgctxt "paragraph"
 msgid ""
 "On any page, click on the <g id='8'>To ODT</g> tab to acccess this feature."
 msgstr ""
-"Depuis une page, cliquez sur l'onglet <g id='8'>Export ODT</g> pour accéder à "
-"cette fonctionnalité."
+"Depuis une page, cliquez sur l'onglet <g id='8'>Export ODT</g> pour accéder "
+"à cette fonctionnalité."
 
 #: ../wiki/ui/help_odt.xml.en:56
 msgctxt "pre"
@@ -3291,7 +2737,7 @@ msgctxt "label"
 msgid "Repeat Password"
 msgstr "Confirmer le mot de passe"
 
-#: ../calendar/calendar_views.py:1102
+#: ../calendar/calendar_views.py:1103
 msgid "Replace"
 msgstr "Remplacer"
 
@@ -3335,7 +2781,7 @@ msgctxt "table cell"
 msgid "Resource"
 msgstr "Ressource"
 
-#: ../calendar/calendar_views.py:448
+#: ../calendar/calendar_views.py:449
 msgid "Resource \"{name}\" not found."
 msgstr "Ressource «&nbsp;{name}&nbsp;» non trouvée."
 
@@ -3445,7 +2891,7 @@ msgstr "Rôle mis à jour."
 msgid "Row deleted."
 msgstr "Ligne supprimée."
 
-#: ../calendar/calendar_views.py:63
+#: ../calendar/calendar_views.py:64
 msgid "Saturday"
 msgstr "Samedi"
 
@@ -3540,7 +2986,7 @@ msgstr "Sélectionner les comptes des contacts"
 msgid "Send"
 msgstr "Envoyer"
 
-#: ../calendar/calendar_views.py:52
+#: ../calendar/calendar_views.py:53
 msgid "September"
 msgstr "Septembre"
 
@@ -3556,7 +3002,7 @@ msgstr "Montrer les ressources qui ne sont liées à rien."
 msgid "Size"
 msgstr "Taille"
 
-#: ../skins.py:150
+#: ../skins.py:152
 msgid "Skin"
 msgstr "Habillage"
 
@@ -3593,7 +3039,7 @@ msgstr "Début"
 msgid "Start YYYY-MM-DD HH:MM"
 msgstr "Commence le AAAA-MM-JJ HH:MM"
 
-#: ../calendar/calendar_views.py:141 ../calendar/calendar_views.py:194
+#: ../calendar/calendar_views.py:142 ../calendar/calendar_views.py:195
 msgid "Start time must be earlier than end time."
 msgstr "L'heure de début doit être antérieure à l'heure de fin."
 
@@ -3661,7 +3107,7 @@ msgctxt "table cell"
 msgid "Summary"
 msgstr "Résumé"
 
-#: ../calendar/calendar_views.py:64
+#: ../calendar/calendar_views.py:65
 msgid "Sunday"
 msgstr "Dimanche"
 
@@ -3712,7 +3158,7 @@ msgctxt "link"
 msgid "Template"
 msgstr "Modèle"
 
-#: ../calendar/calendar_views.py:103
+#: ../calendar/calendar_views.py:104
 msgid "Tentative"
 msgstr "Provisoire"
 
@@ -3768,7 +3214,7 @@ msgstr "Le fichier doit être saisi."
 msgid "The given file is not of the expected type."
 msgstr "Ce fichier n'est pas du type attendu."
 
-#: ../calendar/calendar_views.py:148
+#: ../calendar/calendar_views.py:149
 msgid "The given range is already defined."
 msgstr "Cet intervalle est déjà défini."
 
@@ -3892,7 +3338,7 @@ msgstr "Il n'existe pas d'utilisateur « {username} »."
 msgid "There is not an \"index\" web page. Could not render this view."
 msgstr "Impossible d'affiche une page «&nbsp;index&nbsp;» inexistante."
 
-#: ../file_views.py:279
+#: ../file_views.py:278
 msgid "This page is locked by another user"
 msgstr "Cette page est verrouillée par un autre utilisateur"
 
@@ -3926,15 +3372,15 @@ msgstr "Fil de discussion créé."
 msgid "Thread can't be None."
 msgstr "Un fil de discussion ne peut être vide."
 
-#: ../calendar/calendar_views.py:61
+#: ../calendar/calendar_views.py:62
 msgid "Thursday"
 msgstr "Jeudi"
 
-#: ../calendar/calendar_views.py:174
+#: ../calendar/calendar_views.py:175
 msgid "Timetable(s) removed successfully."
 msgstr "Horaire(s) supprimé(s)."
 
-#: ../calendar/calendar_views.py:112
+#: ../calendar/calendar_views.py:113
 msgid "Timetables"
 msgstr "Horaires"
 
@@ -3976,7 +3422,7 @@ msgstr "Export PDF"
 msgid "To activate your account, please type a password."
 msgstr "Pour activer votre compte, vous devez saisir un mot de passe."
 
-#: ../calendar/calendar_views.py:664
+#: ../calendar/calendar_views.py:665
 msgid "To add an event, click on + symbol from the views."
 msgstr "Pour ajouter un événement, cliquez sur le symbole + dans les vues."
 
@@ -4050,7 +3496,7 @@ msgctxt "heading"
 msgid "Translators"
 msgstr "Traducteurs"
 
-#: ../calendar/calendar_views.py:59
+#: ../calendar/calendar_views.py:60
 msgid "Tuesday"
 msgstr "Mardi"
 
@@ -4095,7 +3541,7 @@ msgstr "Type&nbsp;:"
 msgid "UI"
 msgstr "UI"
 
-#: ../calendar/calendar_views.py:1115
+#: ../messages.py:98
 msgid "Unexpected file of mimetype {mimetype}."
 msgstr "Fichier de type mime «&nbsp;{mimetype}&nbsp;» inattendu."
 
@@ -4236,7 +3682,7 @@ msgctxt "table cell"
 msgid "Version"
 msgstr "Version"
 
-#: ../calendar/calendar_views.py:1127 ../file_views.py:226
+#: ../calendar/calendar_views.py:1128 ../file_views.py:225
 msgid "Version uploaded"
 msgstr "Version chargée"
 
@@ -4259,8 +3705,8 @@ msgstr "Versions"
 msgid "Video"
 msgstr "Vidéo"
 
-#: ../file_views.py:340 ../file_views.py:432 ../file_views.py:444
-#: ../file_views.py:458 ../text_views.py:69 ../text_views.py:143
+#: ../file_views.py:339 ../file_views.py:431 ../file_views.py:443
+#: ../file_views.py:457 ../text_views.py:69 ../text_views.py:143
 #: ../tracker/tracker_views.py:265 ../user.py:297 ../table_views.py:42
 #: ../wiki/page_views.py:252 ../future/order.py:247 ../future/order.py:277
 #: ../forum/forum.py:43 ../webpage.py:156 ../forum/thread.py:41
@@ -4289,15 +3735,15 @@ msgstr "Page web"
 msgid "Web Site"
 msgstr "Site web"
 
-#: ../calendar/calendar_views.py:60
+#: ../calendar/calendar_views.py:61
 msgid "Wednesday"
 msgstr "Mercredi"
 
-#: ../calendar/calendar_views.py:251
+#: ../calendar/calendar_views.py:252
 msgid "Week {n}"
 msgstr "Semaine {n}"
 
-#: ../calendar/calendar_views.py:801
+#: ../calendar/calendar_views.py:802
 msgid "Weekly View"
 msgstr "Hebdomadaire"
 
@@ -4333,7 +3779,7 @@ msgstr "État de workflow"
 msgid "Wrong answer to the question."
 msgstr "Réponse incorrecte au captcha."
 
-#: ../calendar/calendar_views.py:190
+#: ../calendar/calendar_views.py:191
 msgid "Wrong time selection (HH:MM)."
 msgstr "Horaire incorrect (HH:MM)."
 
@@ -4363,7 +3809,7 @@ msgctxt "fieldset"
 msgid "You are not authorized to access this resource."
 msgstr "Vous n'êtes pas autorisé à accéder à cette ressource."
 
-#: ../calendar/calendar_views.py:604
+#: ../calendar/calendar_views.py:605
 msgid "You are not authorized to modify this event."
 msgstr "Vous n'êtes pas autorisé à modifier cet événement."
 
@@ -4378,8 +3824,8 @@ msgid ""
 "You can choose an ODT file on your disk or select an ODT previously uploaded "
 "into the wiki."
 msgstr ""
-"Vous pouvez choisir un fichier ODT de votre ordinateur ou sélectionner un ODT "
-"précédemment importé dans le wiki."
+"Vous pouvez choisir un fichier ODT de votre ordinateur ou sélectionner un "
+"ODT précédemment importé dans le wiki."
 
 #: ../ui/WorkflowAware_state.xml.en:13
 msgctxt "dt"
@@ -4667,11 +4113,11 @@ msgstr "{field}: {old_value}{new_value}"
 msgid "{n} obs"
 msgstr "{n} res."
 
-#: ../skins.py:174
+#: ../skins.py:176
 msgid "{root_title} - {here_title} - {view_title}"
 msgstr "{root_title} - {here_title} - {view_title}"
 
-#: ../skins.py:171
+#: ../skins.py:173
 msgid "{root_title} - {view_title}"
 msgstr "{root_title} - {view_title}"
 
@@ -4740,28 +4186,254 @@ msgstr "⇒ ${item/parent_path}"
 #~ msgid "$label (External)"
 #~ msgstr "$label (externe)"
 
+#~ msgctxt "textarea"
+#~ msgid "${DESCRIPTION}"
+#~ msgstr "${DESCRIPTION}"
+
+#~ msgctxt "button"
+#~ msgid "${action/title}"
+#~ msgstr "${action/title}"
+
 #~ msgctxt "button"
 #~ msgid "${action/value}"
 #~ msgstr "${action/value}"
 
+#~ msgid "${batch}"
+#~ msgstr "${batch}"
+
+#~ msgctxt "link"
+#~ msgid "${calendar/name}"
+#~ msgstr "${calendar/name}"
+
+#~ msgctxt "title attribute"
+#~ msgid "${cell/content/issue/comment}"
+#~ msgstr "${cell/content/issue/comment}"
+
+#~ msgctxt "div"
+#~ msgid "${cell/ns}"
+#~ msgstr "${cell/ns}"
+
+#~ msgctxt "div"
+#~ msgid "${change/value}"
+#~ msgstr "${change/value}"
+
+#~ msgctxt "span"
+#~ msgid "${change/value}"
+#~ msgstr "${change/value}"
+
 #~ msgid "${col/SUMMARY}"
 #~ msgstr "${col/SUMMARY}"
+
+#~ msgctxt "link"
+#~ msgid "${column/title}"
+#~ msgstr "${column/title}"
+
+#~ msgctxt "table cell"
+#~ msgid "${column/title}"
+#~ msgstr "${column/title}"
+
+#~ msgctxt "link"
+#~ msgid "${column/value}"
+#~ msgstr "${column/value}"
+
+#~ msgctxt "pre"
+#~ msgid "${comment/comment}"
+#~ msgstr "${comment/comment}"
+
+#~ msgctxt "table cell"
+#~ msgid "${comment/datetime}"
+#~ msgstr "${comment/datetime}"
+
+#~ msgctxt "link"
+#~ msgid "${comment/file}"
+#~ msgstr "${comment/file}"
+
+#~ msgctxt "table cell"
+#~ msgid "${comment/user}"
+#~ msgstr "${comment/user}"
+
+#~ msgctxt "textarea"
+#~ msgid "${comment/value}"
+#~ msgstr "${comment/value}"
+
+#~ msgctxt "textarea"
+#~ msgid "${comment}"
+#~ msgstr "${comment}"
+
+#~ msgctxt "paragraph"
+#~ msgid "${confirmation_msg}"
+#~ msgstr "${confirmation_msg}"
 
 #~ msgctxt "option"
 #~ msgid "${contact/title} (${contact/email})"
 #~ msgstr "${contact/title} (${contact/email})"
 
+#~ msgctxt "pre"
+#~ msgid "${contents}"
+#~ msgstr "${contents}"
+
+#~ msgctxt "pre"
+#~ msgid "${data}"
+#~ msgstr "${data}"
+
+#~ msgctxt "textarea"
+#~ msgid "${data}"
+#~ msgstr "${data}"
+
+#~ msgctxt "span"
+#~ msgid "${day/name}"
+#~ msgstr "${day/name}"
+
+#~ msgctxt "emphasis"
+#~ msgid "${description}"
+#~ msgstr "${description}"
+
 #~ msgid "${description}<br/> Price:"
 #~ msgstr "${description}<br/> Prix:"
+
+#~ msgctxt "link"
+#~ msgid "${doc/title}"
+#~ msgstr "${doc/title}"
+
+#~ msgctxt "option"
+#~ msgid "${encoding/title}"
+#~ msgstr "${encoding/title}"
+
+#~ msgctxt "title attribute"
+#~ msgid "${event/issue/comment}"
+#~ msgstr "${event/issue/comment}"
+
+#~ msgctxt "tr"
+#~ msgid "${event/ns}"
+#~ msgstr "${event/ns}"
+
+#~ msgctxt "option"
+#~ msgid "${field/title}"
+#~ msgstr "${field/title}"
 
 #~ msgid "${firstname}<br/>  <b>Lastname:</b>"
 #~ msgstr "${firstname}<br/>  <b>Nom&nbsp;:</b>"
 
+#~ msgctxt "table cell"
+#~ msgid "${header/header}"
+#~ msgstr "${header/header}"
+
+#~ msgctxt "table cell"
+#~ msgid "${help_html}"
+#~ msgstr "${help_html}"
+
+#~ msgctxt "pre"
+#~ msgid "${help_source}"
+#~ msgstr "${help_source}"
+
+#~ msgctxt "div"
+#~ msgid "${item/content}"
+#~ msgstr "${item/content}"
+
+#~ msgctxt "title attribute"
+#~ msgid "${item/item_type}"
+#~ msgstr "${item/item_type}"
+
+#~ msgctxt "title attribute"
+#~ msgid "${item/name}"
+#~ msgstr "${item/name}"
+
+#~ msgctxt "table cell"
+#~ msgid "${item/path}"
+#~ msgstr "${item/path}"
+
+#~ msgctxt "link"
+#~ msgid "${item/short_title}"
+#~ msgstr "${item/short_title}"
+
+#~ msgctxt "label"
+#~ msgid "${item/title}"
+#~ msgstr "${item/title}"
+
+#~ msgctxt "link"
+#~ msgid "${item/title}"
+#~ msgstr "${item/title}"
+
+#~ msgctxt "option"
+#~ msgid "${item/title}"
+#~ msgstr "${item/title}"
+
+#~ msgctxt "title attribute"
+#~ msgid "${item/title}"
+#~ msgstr "${item/title}"
+
+#~ msgctxt "option"
+#~ msgid "${item/value}"
+#~ msgstr "${item/value}"
+
+#~ msgctxt "table cell"
+#~ msgid "${language/code}"
+#~ msgstr "${language/code}"
+
+#~ msgctxt "option"
+#~ msgid "${language/name}"
+#~ msgstr "${language/name}"
+
+#~ msgctxt "table cell"
+#~ msgid "${language/name}"
+#~ msgstr "${language/name}"
+
 #~ msgid "${lastname}<br/>  <b>E-mail:</b>"
 #~ msgstr "${lastname}<br/>  <b>E-mail&nbsp;:</b>"
 
+#~ msgctxt "li"
+#~ msgid "${link}"
+#~ msgstr "${link}"
+
+#~ msgctxt "paragraph"
+#~ msgid "${message/author}"
+#~ msgstr "${message/author}"
+
+#~ msgctxt "paragraph"
+#~ msgid "${message/body}"
+#~ msgstr "${message/body}"
+
+#~ msgctxt "div"
+#~ msgid "${message/message}"
+#~ msgstr "${message/message}"
+
+#~ msgctxt "paragraph"
+#~ msgid "${message/mtime}"
+#~ msgstr "${message/mtime}"
+
+#~ msgid "${message}"
+#~ msgstr "${message}"
+
+#~ msgctxt "table cell"
+#~ msgid "${metadata/author_date}"
+#~ msgstr "${metadata/author_date}"
+
+#~ msgctxt "table cell"
+#~ msgid "${metadata/author_name}"
+#~ msgstr "${metadata/author_name}"
+
+#~ msgctxt "table cell"
+#~ msgid "${metadata/subject}"
+#~ msgstr "${metadata/subject}"
+
+#~ msgctxt "textarea"
+#~ msgid "${msgid}"
+#~ msgstr "${msgid}"
+
+#~ msgctxt "textarea"
+#~ msgid "${msgstr}"
+#~ msgstr "${msgstr}"
+
+#~ msgctxt "paragraph"
+#~ msgid "${msg}"
+#~ msgstr "${msg}"
+
 #~ msgid "${mtime}<br/> State:"
 #~ msgstr "${mtime}<br/> Pays :"
+
+#~ msgctxt "li"
+#~ msgid "${name}"
+#~ msgstr "${name}"
 
 #~ msgid "${name}<br/> Date:"
 #~ msgstr "${name}<br/> Date:"
@@ -4778,18 +4450,161 @@ msgstr "⇒ ${item/parent_path}"
 #~ msgid "${option/label}"
 #~ msgstr "${option/label}"
 
+#~ msgctxt "table cell"
+#~ msgid "${package/name}"
+#~ msgstr "${package/name}"
+
+#~ msgctxt "table cell"
+#~ msgid "${package/version}"
+#~ msgstr "${package/version}"
+
+#~ msgctxt "form"
+#~ msgid "${param}"
+#~ msgstr "${param}"
+
 #~ msgid "${price}<br/> VAT:"
 #~ msgstr "${price}<br/> TVA :"
+
+#~ msgctxt "paragraph"
+#~ msgid "${required_msg}"
+#~ msgstr "${required_msg}"
+
+#~ msgctxt "table cell"
+#~ msgid "${revision/date}"
+#~ msgstr "${revision/date}"
 
 #~ msgctxt "table cell"
 #~ msgid "${revision/size}"
 #~ msgstr "${revision/size}"
 
+#~ msgctxt "table cell"
+#~ msgid "${revision/username}"
+#~ msgstr "${revision/username}"
+
+#~ msgctxt "label"
+#~ msgid "${role/title}"
+#~ msgstr "${role/title}"
+
+#~ msgctxt "option"
+#~ msgid "${role/title}"
+#~ msgstr "${role/title}"
+
+#~ msgctxt "table cell"
+#~ msgid "${row/after}"
+#~ msgstr "${row/after}"
+
+#~ msgctxt "table cell"
+#~ msgid "${row/assigned_to}"
+#~ msgstr "${row/assigned_to}"
+
+#~ msgctxt "table cell"
+#~ msgid "${row/before}"
+#~ msgstr "${row/before}"
+
+#~ msgctxt "table cell"
+#~ msgid "${row/cc_list}"
+#~ msgstr "${row/cc_list}"
+
+#~ msgctxt "table cell"
+#~ msgid "${row/comment}"
+#~ msgstr "${row/comment}"
+
+#~ msgctxt "link"
+#~ msgid "${row/datetime}"
+#~ msgstr "${row/datetime}"
+
+#~ msgctxt "link"
+#~ msgid "${row/file}"
+#~ msgstr "${row/file}"
+
+#~ msgctxt "table cell"
+#~ msgid "${row/module}"
+#~ msgstr "${row/module}"
+
+#~ msgctxt "table cell"
+#~ msgid "${row/nlines}"
+#~ msgstr "${row/nlines}"
+
+#~ msgctxt "table cell"
+#~ msgid "${row/priority}"
+#~ msgstr "${row/priority}"
+
+#~ msgctxt "table cell"
+#~ msgid "${row/state}"
+#~ msgstr "${row/state}"
+
+#~ msgctxt "label"
+#~ msgid "${row/title_or_name}"
+#~ msgstr "${row/title_or_name}"
+
+#~ msgctxt "table cell"
+#~ msgid "${row/title}"
+#~ msgstr "${row/title}"
+
+#~ msgctxt "table cell"
+#~ msgid "${row/type}"
+#~ msgstr "${row/type}"
+
+#~ msgctxt "table cell"
+#~ msgid "${row/user}"
+#~ msgstr "${row/user}"
+
+#~ msgctxt "link"
+#~ msgid "${row/value}"
+#~ msgstr "${row/value}"
+
+#~ msgctxt "table cell"
+#~ msgid "${row/version}"
+#~ msgstr "${row/version}"
+
+#~ msgctxt "form"
+#~ msgid "${rte}"
+#~ msgstr "${rte}"
+
+#~ msgctxt "option"
+#~ msgid "${s/value}"
+#~ msgstr "${s/value}"
+
 #~ msgid "${search/title}"
 #~ msgstr "${search/title}"
 
+#~ msgctxt "legend"
+#~ msgid "${search_title}"
+#~ msgstr "${search_title}"
+
+#~ msgid "${search}"
+#~ msgstr "${search}"
+
+#~ msgctxt "textarea"
+#~ msgid "${source}"
+#~ msgstr "${source}"
+
+#~ msgctxt "paragraph"
+#~ msgid "${stat/summary}"
+#~ msgstr "${stat/summary}"
+
+#~ msgctxt "emphasis"
+#~ msgid "${state}"
+#~ msgstr "${state}"
+
 #~ msgid "${state}<br/> Download PDF:"
 #~ msgstr "${state}<br/> Télécharger le PDF :"
+
+#~ msgctxt "button"
+#~ msgid "${submit_value}"
+#~ msgstr "${submit_value}"
+
+#~ msgctxt "pre"
+#~ msgid "${text}"
+#~ msgstr "${text}"
+
+#~ msgctxt "label"
+#~ msgid "${title}"
+#~ msgstr "${title}"
+
+#~ msgctxt "legend"
+#~ msgid "${title}"
+#~ msgstr "${title}"
 
 #~ msgid "${title} <a href=\";search?${search_parameters}\">(Edit search)</a>"
 #~ msgstr ""
@@ -4802,16 +4617,70 @@ msgstr "⇒ ${item/parent_path}"
 #~ msgid "${title}<br/> Description:"
 #~ msgstr "${title}<br/> Description :"
 
+#~ msgctxt "pre"
+#~ msgid "${traceback}"
+#~ msgstr "${traceback}"
+
+#~ msgctxt "table cell"
+#~ msgid "${transition/comments}"
+#~ msgstr "${transition/comments}"
+
+#~ msgctxt "table cell"
+#~ msgid "${transition/date}"
+#~ msgstr "${transition/date}"
+
+#~ msgctxt "label"
+#~ msgid "${transition/description}"
+#~ msgstr "${transition/description}"
+
+#~ msgctxt "table cell"
+#~ msgid "${transition/title}"
+#~ msgstr "${transition/title}"
+
+#~ msgctxt "table cell"
+#~ msgid "${transition/user}"
+#~ msgstr "${transition/user}"
+
+#~ msgctxt "span"
+#~ msgid "${tt}"
+#~ msgstr "${tt}"
+
+#~ msgctxt "emphasis"
+#~ msgid "${username}"
+#~ msgstr "${username}"
+
 #~ msgid "${vat}<br/>  <a href=\";add_to_cart\">Add to cart</a>"
 #~ msgstr "${vat}<br/>  <a href=\";add_to_cart\">Ajouter au panier</a>"
+
+#~ msgctxt "textarea"
+#~ msgid "${vhosts}"
+#~ msgstr "${vhosts}"
+
+#~ msgctxt "heading"
+#~ msgid "${view/title}"
+#~ msgstr "${view/title}"
+
+#~ msgid "${view/view}"
+#~ msgstr "${view/view}"
+
+#~ msgid "${view}"
+#~ msgstr "${view}"
 
 #~ msgctxt "label"
 #~ msgid "${website/title}"
 #~ msgstr "${website/title}"
 
+#~ msgctxt "table cell"
+#~ msgid "${week/month}"
+#~ msgstr "${week/month}"
+
 #~ msgctxt "dd"
 #~ msgid "${widget/widget}"
 #~ msgstr "${widget/widget}"
+
+#~ msgctxt "title attribute"
+#~ msgid "${x/title}"
+#~ msgstr "${x/title}"
 
 #~ msgid "${zip}<br/>  <b>City:</b>"
 #~ msgstr "${zip}<br/>  <b>Ville :</b>"

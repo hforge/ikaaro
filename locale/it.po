@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: it\n"
-"POT-Creation-Date: 2010-04-20 12:04+CET\n"
+"POT-Creation-Date: 2010-05-03 15:05+CET\n"
 "PO-Revision-Date: 2004-11-26 14:39+0100\n"
 "Last-Translator: Paolo Dina <paolo@php3.it>\n"
 "Language-Team: Italian <paolo@php3.it>\n"
@@ -56,22 +56,6 @@ msgstr ""
 msgid "$filename is not an OpenDocument Text."
 msgstr "Documento modificato."
 
-#: ../calendar/ui/edit_event.xml.en:57
-msgctxt "textarea"
-msgid "${DESCRIPTION}"
-msgstr ""
-
-#: ../ui/folder/browse_image.xml.en:65 ../ui/generic/browse_table.xml.en:56
-#, fuzzy
-msgctxt "button"
-msgid "${action/title}"
-msgstr "Transizione effettuata."
-
-#: ../ui/generic/icons_view.xml.en:8
-#, fuzzy
-msgid "${batch}"
-msgstr "Titolo"
-
 #: ../ui/table/view.xml.en:5
 #, fuzzy
 msgid "${batch} ${table}"
@@ -95,289 +79,17 @@ msgctxt "table cell"
 msgid "${body}"
 msgstr "Commenti:"
 
-#: ../calendar/ui/daily_view.xml.en:26
-#, fuzzy
-msgctxt "link"
-msgid "${calendar/name}"
-msgstr "Oggetti rinominati."
-
-#: ../tracker/ui/weekly_template.xml.en:9
-#, fuzzy
-msgctxt "title attribute"
-msgid "${cell/content/issue/comment}"
-msgstr "Contenuti"
-
-#: ../calendar/ui/weekly_view.xml.en:46
-#, fuzzy
-msgctxt "div"
-msgid "${cell/ns}"
-msgstr "Contenuti"
-
-#: ../ui/revisions/changes.xml.en:52
-#, fuzzy
-msgctxt "div"
-msgid "${change/value}"
-msgstr "Commenti:"
-
-#: ../ui/revisions/changes.xml.en:54
-#, fuzzy
-msgctxt "span"
-msgid "${change/value}"
-msgstr "Commenti:"
-
-#: ../ui/folder/browse_image.xml.en:28
-#, fuzzy
-msgctxt "link"
-msgid "${column/title}"
-msgstr "Titolo"
-
-#: ../ui/generic/browse_table.xml.en:20
-#, fuzzy
-msgctxt "table cell"
-msgid "${column/title}"
-msgstr "Titolo"
-
-#: ../ui/generic/browse_table.xml.en:47
-#, fuzzy
-msgctxt "link"
-msgid "${column/value}"
-msgstr "Titolo"
-
-#: ../tracker/ui/edit_issue.xml.en:169
-#, fuzzy
-msgctxt "pre"
-msgid "${comment/comment}"
-msgstr "Contenuti"
-
-#: ../tracker/ui/edit_issue.xml.en:153
-#, fuzzy
-msgctxt "table cell"
-msgid "${comment/datetime}"
-msgstr "Elenco metadati"
-
-#: ../tracker/ui/edit_issue.xml.en:164
-#, fuzzy
-msgctxt "link"
-msgid "${comment/file}"
-msgstr "Contenuti"
-
-#: ../tracker/ui/edit_issue.xml.en:152
-#, fuzzy
-msgctxt "table cell"
-msgid "${comment/user}"
-msgstr "Contenuti"
-
-#: ../tracker/ui/add_issue.xml.en:112
-#, fuzzy
-msgctxt "textarea"
-msgid "${comment/value}"
-msgstr "Titolo"
-
-#: ../tracker/ui/edit_resource.xml.en:50
-#, fuzzy
-msgctxt "textarea"
-msgid "${comment}"
-msgstr "Contenuti"
-
-#: ../ui/user/confirm_registration.xml.en:8
-#, fuzzy
-msgctxt "paragraph"
-msgid "${confirmation_msg}"
-msgstr "Anteprima"
-
-#: ../ui/binary/Archive_view.xml.en:10
-#, fuzzy
-msgctxt "pre"
-msgid "${contents}"
-msgstr "Contenuti"
-
-#: ../ui/text/view.xml.en:7
-#, fuzzy
-msgctxt "pre"
-msgid "${data}"
-msgstr "Titolo"
-
-#: ../wiki/ui/edit.xml.en:172
-#, fuzzy
-msgctxt "textarea"
-msgid "${data}"
-msgstr "Titolo"
-
-#: ../calendar/ui/monthly_view.xml.en:37
-#, fuzzy
-msgctxt "span"
-msgid "${day/name}"
-msgstr "Oggetti rinominati."
-
-#: ../forum/ui/Forum_view.xml.en:7
-#, fuzzy
-msgctxt "emphasis"
-msgid "${description}"
-msgstr "Descrizione"
-
-#: ../ui/user/tasks.xml.en:17
-#, fuzzy
-msgctxt "link"
-msgid "${doc/title}"
-msgstr "Titolo"
-
-#: ../ui/file/externaledit.xml.en:28
-#, fuzzy
-msgctxt "option"
-msgid "${encoding/title}"
-msgstr "Titolo"
-
-#: ../tracker/ui/weekly_template_fd.xml.en:8
-#: ../tracker/ui/monthly_template.xml.en:10
-#, fuzzy
-msgctxt "title attribute"
-msgid "${event/issue/comment}"
-msgstr "Contenuti"
-
-#: ../calendar/ui/weekly_view.xml.en:67
-#, fuzzy
-msgctxt "tr"
-msgid "${event/ns}"
-msgstr "Contenuti"
-
-#: ../ui/folder/browse_search.xml.en:13 ../ui/generic/browse_search.xml.en:11
-#, fuzzy
-msgctxt "option"
-msgid "${field/title}"
-msgstr "Titolo"
-
-#: ../calendar/ui/weekly_view.xml.en:36
-#, fuzzy
-msgctxt "table cell"
-msgid "${header/header}"
-msgstr "Transizione effettuata."
-
-#: ../wiki/ui/help.xml.en:8
-#, fuzzy
-msgctxt "table cell"
-msgid "${help_html}"
-msgstr "Nuova risorsa"
-
-#: ../wiki/ui/help.xml.en:11
-#, fuzzy
-msgctxt "pre"
-msgid "${help_source}"
-msgstr "Nuova risorsa"
-
-#: ../future/ui/dressable_view.xml.en:8
-#, fuzzy
-msgctxt "div"
-msgid "${item/content}"
-msgstr "Contenuti"
-
-#: ../ui/html/addimage.xml.en:75 ../ui/html/addlink.xml.en:75
-#: ../ui/html/addmedia.xml.en:75
-#, fuzzy
-msgctxt "title attribute"
-msgid "${item/item_type}"
-msgstr "Titolo"
-
-#: ../ui/aruni/location.xml.en:10
-#, fuzzy
-msgctxt "title attribute"
-msgid "${item/name}"
-msgstr "Titolo"
-
-#: ../ui/folder/rename.xml.en:12
-#, fuzzy
-msgctxt "table cell"
-msgid "${item/path}"
-msgstr "Titolo"
-
-#: ../ui/html/addimage.xml.en:66 ../ui/html/addimage.xml.en:79
-#: ../ui/html/addlink.xml.en:66 ../ui/html/addlink.xml.en:79
-#: ../ui/html/addmedia.xml.en:66 ../ui/html/addmedia.xml.en:79
-#, fuzzy
-msgctxt "link"
-msgid "${item/short_title}"
-msgstr "Titolo"
-
-#: ../ui/base/proxy_new_instance.xml.en:26
-#, fuzzy
-msgctxt "label"
-msgid "${item/title}"
-msgstr "Titolo"
-
-#: ../ui/generic/menu.xml.en:12
-#, fuzzy
-msgctxt "link"
-msgid "${item/title}"
-msgstr "Titolo"
-
-#: ../tracker/ui/change_bugs.xml.en:42 ../tracker/ui/change_bugs.xml.en:51
-#: ../tracker/ui/change_bugs.xml.en:60 ../tracker/ui/change_bugs.xml.en:70
-#: ../tracker/ui/change_bugs.xml.en:78 ../tracker/ui/change_bugs.xml.en:87
-#, fuzzy
-msgctxt "option"
-msgid "${item/title}"
-msgstr "Titolo"
-
-#: ../ui/html/addimage.xml.en:64 ../ui/html/addimage.xml.en:79
-#: ../ui/html/addlink.xml.en:64 ../ui/html/addlink.xml.en:79
-#: ../ui/html/addmedia.xml.en:64 ../ui/html/addmedia.xml.en:79
-#, fuzzy
-msgctxt "title attribute"
-msgid "${item/title}"
-msgstr "Titolo"
-
-#: ../tracker/ui/add_issue.xml.en:44 ../tracker/ui/add_issue.xml.en:52
-#: ../tracker/ui/add_issue.xml.en:60 ../tracker/ui/add_issue.xml.en:70
-#: ../tracker/ui/add_issue.xml.en:78 ../tracker/ui/add_issue.xml.en:86
-#: ../tracker/ui/add_issue.xml.en:96 ../tracker/ui/add_issue.xml.en:104
-#: ../tracker/ui/search.xml.en:55 ../tracker/ui/search.xml.en:65
-#: ../tracker/ui/search.xml.en:75 ../tracker/ui/search.xml.en:87
-#: ../tracker/ui/search.xml.en:97 ../tracker/ui/search.xml.en:107
-#: ../tracker/ui/search.xml.en:119 ../tracker/ui/change_bugs.xml.en:99
-#: ../tracker/ui/edit_issue.xml.en:48 ../tracker/ui/edit_issue.xml.en:56
-#: ../tracker/ui/edit_issue.xml.en:64 ../tracker/ui/edit_issue.xml.en:74
-#: ../tracker/ui/edit_issue.xml.en:82 ../tracker/ui/edit_issue.xml.en:90
-#: ../tracker/ui/edit_issue.xml.en:100 ../tracker/ui/edit_issue.xml.en:108
-#: ../tracker/ui/edit_issue.xml.en:116 ../tracker/ui/edit_resource.xml.en:17
-#, fuzzy
-msgctxt "option"
-msgid "${item/value}"
-msgstr "Titolo"
-
 #: ../calendar/ui/edit_event.xml.en:16
 #, fuzzy
 msgctxt "option"
 msgid "${item/value} "
 msgstr "Titolo"
 
-#: ../ui/website/edit_languages.xml.en:28
-#, fuzzy
-msgctxt "table cell"
-msgid "${language/code}"
-msgstr "Linguaggio"
-
-#: ../ui/website/edit_languages.xml.en:50
-#: ../ui/user/edit_preferences.xml.en:16
-#, fuzzy
-msgctxt "option"
-msgid "${language/name}"
-msgstr "Linguaggio"
-
-#: ../ui/website/edit_languages.xml.en:27
-#, fuzzy
-msgctxt "table cell"
-msgid "${language/name}"
-msgstr "Linguaggio"
-
 #: ../ui/aruni/template.xhtml.en:28
 #, fuzzy
 msgctxt "div"
 msgid "${languages}"
 msgstr "Linguaggio"
-
-#: ../ui/website/broken_links.xml.en:13
-msgctxt "li"
-msgid "${link}"
-msgstr ""
 
 #: ../ui/aruni/template.xhtml.en:45
 #, fuzzy
@@ -391,100 +103,16 @@ msgctxt "table cell"
 msgid "${menu}"
 msgstr "Oggetti rinominati."
 
-#: ../forum/ui/Thread_view.xml.en:16
-#, fuzzy
-msgctxt "paragraph"
-msgid "${message/author}"
-msgstr "Messaggio"
-
-#: ../forum/ui/Thread_view.xml.en:27
-#, fuzzy
-msgctxt "paragraph"
-msgid "${message/body}"
-msgstr "Messaggio"
-
-#: ../ui/aruni/message.xml.en:8
-#, fuzzy
-msgctxt "div"
-msgid "${message/message}"
-msgstr "Messaggio"
-
-#: ../forum/ui/Thread_view.xml.en:17
-#, fuzzy
-msgctxt "paragraph"
-msgid "${message/mtime}"
-msgstr "Messaggio"
-
-#: ../ui/generic/message_view.xml.en:7
-#, fuzzy
-msgid "${message}"
-msgstr "Messaggio"
-
-#: ../ui/html/addimage.xml.en:39 ../ui/html/addlink.xml.en:39
-#: ../ui/aruni/template.xhtml.en:50 ../ui/html/addmedia.xml.en:39
+#: ../ui/aruni/template.xhtml.en:50
 #, fuzzy
 msgctxt "div"
 msgid "${message}"
 msgstr "Messaggio"
-
-#: ../ui/revisions/changes.xml.en:16
-#, fuzzy
-msgctxt "table cell"
-msgid "${metadata/author_date}"
-msgstr "Transizione effettuata."
-
-#: ../ui/revisions/changes.xml.en:12
-#, fuzzy
-msgctxt "table cell"
-msgid "${metadata/author_name}"
-msgstr "Oggetti rinominati."
-
-#: ../ui/revisions/changes.xml.en:20
-#, fuzzy
-msgctxt "table cell"
-msgid "${metadata/subject}"
-msgstr "Elenco metadati"
-
-#: ../ui/PO_edit.xml.en:23
-#, fuzzy
-msgctxt "textarea"
-msgid "${msgid}"
-msgstr "Messaggio"
-
-#: ../ui/PO_edit.xml.en:31
-#, fuzzy
-msgctxt "textarea"
-msgid "${msgstr}"
-msgstr "Messaggio"
-
-#: ../ui/generic/browse_batch.xml.en:8
-#, fuzzy
-msgctxt "paragraph"
-msgid "${msg}"
-msgstr "Messaggio"
-
-#: ../ui/root/credits.xml.en:12
-#, fuzzy
-msgctxt "li"
-msgid "${name}"
-msgstr "Oggetti rinominati."
 
 #: ../tracker/ui/edit_resource.xml.en:39
 #, fuzzy
 msgctxt "option"
 msgid "${option/start} - ${option/end}"
-msgstr "traduzione"
-
-#: ../ui/root/about.xml.en:18
-#, fuzzy
-msgctxt "table cell"
-msgid "${package/name}"
-msgstr "Linguaggio"
-
-#: ../ui/root/about.xml.en:19
-#, fuzzy
-msgctxt "table cell"
-msgid "${package/version}"
 msgstr "traduzione"
 
 #: ../ui/aruni/template.xhtml.en:49
@@ -493,205 +121,15 @@ msgctxt "heading"
 msgid "${page_title}"
 msgstr "Titolo"
 
-#: ../tracker/ui/export_to_csv.xml.en:8 ../tracker/ui/export_to_text.xml.en:8
-#, fuzzy
-msgctxt "form"
-msgid "${param}"
-msgstr "Titolo"
-
-#: ../ui/auto_form.xml.en:11 ../wiki/ui/edit.xml.en:9
-msgctxt "paragraph"
-msgid "${required_msg}"
-msgstr ""
-
-#: ../ui/file/history.xml.en:18
-#, fuzzy
-msgctxt "table cell"
-msgid "${revision/date}"
-msgstr "Transizione effettuata."
-
-#: ../ui/file/history.xml.en:17
-#, fuzzy
-msgctxt "table cell"
-msgid "${revision/username}"
-msgstr "Oggetti rinominati."
-
-#: ../ui/access/edit_membership_form.xml.en:15
-#, fuzzy
-msgctxt "label"
-msgid "${role/title}"
-msgstr "Titolo"
-
-#: ../ui/access/add_user.xml.en:29
-#, fuzzy
-msgctxt "option"
-msgid "${role/title}"
-msgstr "Titolo"
-
-#: ../ui/revisions/changes.xml.en:42
-#, fuzzy
-msgctxt "table cell"
-msgid "${row/after}"
-msgstr "traduzione"
-
-#: ../tracker/ui/issue_history.xml.en:36
-#, fuzzy
-msgctxt "table cell"
-msgid "${row/assigned_to}"
-msgstr "traduzione"
-
-#: ../ui/revisions/changes.xml.en:41
-#, fuzzy
-msgctxt "table cell"
-msgid "${row/before}"
-msgstr "traduzione"
-
-#: ../tracker/ui/issue_history.xml.en:39
-#, fuzzy
-msgctxt "table cell"
-msgid "${row/cc_list}"
-msgstr "traduzione"
-
-#: ../tracker/ui/issue_history.xml.en:46
-#, fuzzy
-msgctxt "table cell"
-msgid "${row/comment}"
-msgstr "Contenuti"
-
-#: ../tracker/ui/issue_history.xml.en:12
-#, fuzzy
-msgctxt "link"
-msgid "${row/datetime}"
-msgstr "Transizione effettuata."
-
-#: ../tracker/ui/issue_history.xml.en:42
-#, fuzzy
-msgctxt "link"
-msgid "${row/file}"
-msgstr "traduzione"
-
-#: ../tracker/ui/issue_history.xml.en:30
-#, fuzzy
-msgctxt "table cell"
-msgid "${row/module}"
-msgstr "traduzione"
-
-#: ../ui/revisions/changes.xml.en:40
-#, fuzzy
-msgctxt "table cell"
-msgid "${row/nlines}"
-msgstr "traduzione"
-
-#: ../tracker/ui/issue_history.xml.en:33
-#, fuzzy
-msgctxt "table cell"
-msgid "${row/priority}"
-msgstr "traduzione"
-
 #: ../calendar/ui/weekly_view.xml.en:42
 #, fuzzy
 msgctxt "table cell"
 msgid "${row/start}-${row/end}"
 msgstr "traduzione"
 
-#: ../tracker/ui/issue_history.xml.en:27
-#, fuzzy
-msgctxt "table cell"
-msgid "${row/state}"
-msgstr "traduzione"
-
-#: ../ui/folder/browse_image.xml.en:53 ../ui/folder/browse_image.xml.en:56
-#, fuzzy
-msgctxt "label"
-msgid "${row/title_or_name}"
-msgstr "Titolo"
-
-#: ../tracker/ui/issue_history.xml.en:18
-#, fuzzy
-msgctxt "table cell"
-msgid "${row/title}"
-msgstr "Titolo"
-
-#: ../tracker/ui/issue_history.xml.en:24
-#, fuzzy
-msgctxt "table cell"
-msgid "${row/type}"
-msgstr "traduzione"
-
-#: ../tracker/ui/issue_history.xml.en:13
-#, fuzzy
-msgctxt "table cell"
-msgid "${row/user}"
-msgstr "traduzione"
-
-#: ../ui/revisions/changes.xml.en:39
-#, fuzzy
-msgctxt "link"
-msgid "${row/value}"
-msgstr "Titolo"
-
-#: ../tracker/ui/issue_history.xml.en:21
-#, fuzzy
-msgctxt "table cell"
-msgid "${row/version}"
-msgstr "traduzione"
-
-#: ../forum/ui/Thread_view.xml.en:42
-#, fuzzy
-msgctxt "form"
-msgid "${rte}"
-msgstr "Titolo"
-
-#: ../calendar/ui/edit_event.xml.en:67
-#, fuzzy
-msgctxt "option"
-msgid "${s/value}"
-msgstr "Titolo"
-
-#: ../tracker/ui/search.xml.en:29
-#, fuzzy
-msgctxt "legend"
-msgid "${search_title}"
-msgstr "Titolo"
-
-#: ../ui/website/search.xml.en:8
-#, fuzzy
-msgid "${search}"
-msgstr "Cerca"
-
 #: ../ui/generic/search.xml.en:8
 msgid "${search} <x id='1'/> ${batch} <x id='2'/> ${table}"
 msgstr ""
-
-#: ../ui/tiny_mce/rte.xml.en:54
-#, fuzzy
-msgctxt "textarea"
-msgid "${source}"
-msgstr "Nuova risorsa"
-
-#: ../ui/revisions/changes.xml.en:27
-#, fuzzy
-msgctxt "paragraph"
-msgid "${stat/summary}"
-msgstr "Titolo"
-
-#: ../ui/WorkflowAware_state.xml.en:8
-#, fuzzy
-msgctxt "emphasis"
-msgid "${state}"
-msgstr "Titolo"
-
-#: ../ui/auto_form.xml.en:29
-#, fuzzy
-msgctxt "button"
-msgid "${submit_value}"
-msgstr "Titolo"
-
-#: ../tracker/ui/export_to_text.xml.en:25
-#, fuzzy
-msgctxt "pre"
-msgid "${text}"
-msgstr "Titolo"
 
 #: ../forum/ui/Forum_view.xml.en:15
 #, fuzzy
@@ -699,111 +137,16 @@ msgctxt "paragraph"
 msgid "${thread/comments} comments."
 msgstr "Contenuti"
 
-#: ../tracker/ui/menu_goto.xml.en:8 ../tracker/ui/menu_remember.xml.en:8
-#: ../ui/generic/menu.xml.en:8
-#, fuzzy
-msgctxt "label"
-msgid "${title}"
-msgstr "Titolo"
-
-#: ../ui/auto_form.xml.en:10 ../wiki/ui/edit.xml.en:7
-#, fuzzy
-msgctxt "legend"
-msgid "${title}"
-msgstr "Titolo"
-
 #: ../ui/aruni/template.xhtml.en:7
 #, fuzzy
 msgctxt "title"
 msgid "${title}"
 msgstr "Titolo"
 
-#: ../ui/root/internal_server_error.xml.en:17
-#, fuzzy
-msgctxt "pre"
-msgid "${traceback}"
-msgstr "Titolo"
-
-#: ../ui/WorkflowAware_state.xml.en:51
-#, fuzzy
-msgctxt "table cell"
-msgid "${transition/comments}"
-msgstr "Transizione effettuata."
-
-#: ../ui/WorkflowAware_state.xml.en:48
-#, fuzzy
-msgctxt "table cell"
-msgid "${transition/date}"
-msgstr "Transizione effettuata."
-
-#: ../ui/WorkflowAware_state.xml.en:17
-#, fuzzy
-msgctxt "label"
-msgid "${transition/description}"
-msgstr "Transizione effettuata."
-
-#: ../ui/WorkflowAware_state.xml.en:49
-#, fuzzy
-msgctxt "table cell"
-msgid "${transition/title}"
-msgstr "Transizione effettuata."
-
-#: ../ui/WorkflowAware_state.xml.en:50
-#, fuzzy
-msgctxt "table cell"
-msgid "${transition/user}"
-msgstr "traduzione"
-
-#: ../calendar/ui/daily_view.xml.en:20 ../calendar/ui/daily_view.xml.en:45
-#, fuzzy
-msgctxt "span"
-msgid "${tt}"
-msgstr "Titolo"
-
-#: ../ui/user/confirm_registration.xml.en:21
-#, fuzzy
-msgctxt "emphasis"
-msgid "${username}"
-msgstr "Oggetti rinominati."
-
-#: ../ui/website/virtual_hosts.xml.en:12
-#, fuzzy
-msgctxt "textarea"
-msgid "${vhosts}"
-msgstr "Contenuti"
-
-#: ../future/ui/order_view.xml.en:8
-#, fuzzy
-msgctxt "heading"
-msgid "${view/title}"
-msgstr "Titolo"
-
-#: ../future/ui/order_view.xml.en:9
-#, fuzzy
-msgid "${view/view}"
-msgstr "Titolo"
-
-#: ../ui/generic/cascade.xml.en:7
-#, fuzzy
-msgid "${view}"
-msgstr "Titolo"
-
-#: ../calendar/ui/monthly_view.xml.en:42
-msgctxt "table cell"
-msgid "${week/month}"
-msgstr ""
-
 #: ../wiki/ui/edit.xml.en:24
 msgctxt "dd"
 msgid "${widget/widget} <g id='5'>${widget/suffix}</g>"
 msgstr ""
-
-#: ../ui/html/addimage.xml.en:49 ../ui/html/addlink.xml.en:49
-#: ../ui/html/addmedia.xml.en:49
-#, fuzzy
-msgctxt "title attribute"
-msgid "${x/title}"
-msgstr "Titolo"
 
 #: ../file.py:182
 msgid "%.01f KB"
@@ -1400,7 +743,7 @@ msgctxt "paragraph"
 msgid "Apologies for the inconvenience."
 msgstr "Siamo spiacenti dell'inconveniente."
 
-#: ../calendar/calendar_views.py:47
+#: ../calendar/calendar_views.py:48
 msgid "April"
 msgstr ""
 
@@ -1458,7 +801,7 @@ msgctxt "table cell"
 msgid "Attachement:"
 msgstr "Commenti:"
 
-#: ../calendar/calendar_views.py:51
+#: ../calendar/calendar_views.py:52
 msgid "August"
 msgstr ""
 
@@ -1599,7 +942,7 @@ msgstr ""
 msgid "Calendar"
 msgstr ""
 
-#: ../calendar/calendar_views.py:105
+#: ../calendar/calendar_views.py:106
 #, fuzzy
 msgid "Cancelled"
 msgstr "OK"
@@ -1809,7 +1152,7 @@ msgstr ""
 msgid "Confirmation sent!"
 msgstr "Anteprima"
 
-#: ../calendar/calendar_views.py:104
+#: ../calendar/calendar_views.py:105
 msgid "Confirmed"
 msgstr ""
 
@@ -1889,7 +1232,7 @@ msgid ""
 "{issue_uri}"
 msgstr ""
 
-#: ../calendar/calendar_views.py:909
+#: ../calendar/calendar_views.py:910
 #, fuzzy
 msgid "Daily View"
 msgstr "Il titolo"
@@ -1916,7 +1259,7 @@ msgctxt "form"
 msgid "Date:"
 msgstr "Data"
 
-#: ../calendar/calendar_views.py:55
+#: ../calendar/calendar_views.py:56
 msgid "December"
 msgstr ""
 
@@ -2050,7 +1393,7 @@ msgstr "Modifica"
 msgid "Edit Account"
 msgstr "A proposito di"
 
-#: ../calendar/calendar_views.py:418
+#: ../calendar/calendar_views.py:419
 #, fuzzy
 msgid "Edit Event"
 msgstr "Testo integrale"
@@ -2207,12 +1550,12 @@ msgstr ""
 msgid "Error: {msg}"
 msgstr "Messaggio"
 
-#: ../calendar/calendar_views.py:640
+#: ../calendar/calendar_views.py:641
 msgid "Event definitely deleted."
 msgstr ""
 
-#: ../calendar/calendar_views.py:493 ../calendar/calendar_views.py:599
-#: ../calendar/calendar_views.py:627
+#: ../calendar/calendar_views.py:494 ../calendar/calendar_views.py:600
+#: ../calendar/calendar_views.py:628
 msgid "Event not found"
 msgstr ""
 
@@ -2230,7 +1573,7 @@ msgctxt "paragraph"
 msgid "Existing URLs remain untouched."
 msgstr ""
 
-#: ../calendar/calendar_views.py:459
+#: ../calendar/calendar_views.py:460
 msgid "Expected query parameter \"id\" is missing."
 msgstr ""
 
@@ -2256,7 +1599,7 @@ msgctxt "legend"
 msgid "Export to Text:"
 msgstr "Testo integrale"
 
-#: ../file_views.py:233
+#: ../file_views.py:232
 #, fuzzy
 msgid "External Editor"
 msgstr "Editor esterno"
@@ -2267,15 +1610,15 @@ msgctxt "button"
 msgid "External Editor..."
 msgstr "Editor esterno"
 
-#: ../calendar/calendar_views.py:1123
+#: ../calendar/calendar_views.py:1124
 msgid "Failed to load the file, may contain errors."
 msgstr ""
 
-#: ../file_views.py:200
+#: ../file_views.py:199
 msgid "Failed to load the file: {error}"
 msgstr ""
 
-#: ../calendar/calendar_views.py:45
+#: ../calendar/calendar_views.py:46
 msgid "February"
 msgstr ""
 
@@ -2361,7 +1704,7 @@ msgstr ""
 msgid "French"
 msgstr "Francese"
 
-#: ../calendar/calendar_views.py:62
+#: ../calendar/calendar_views.py:63
 msgid "Friday"
 msgstr ""
 
@@ -2624,7 +1967,7 @@ msgctxt "legend"
 msgid "Internal Server Error"
 msgstr ""
 
-#: ../calendar/calendar_views.py:476
+#: ../calendar/calendar_views.py:477
 msgid "Invalid dates."
 msgstr ""
 
@@ -2665,7 +2008,7 @@ msgctxt "title attribute"
 msgid "Italic"
 msgstr "Italiano"
 
-#: ../calendar/calendar_views.py:44
+#: ../calendar/calendar_views.py:45
 msgid "January"
 msgstr ""
 
@@ -2684,11 +2027,11 @@ msgctxt "li"
 msgid "Juan David Ibáñez Palomar (Spanish)"
 msgstr "J. David Ibáñez, sviluppatore principale"
 
-#: ../calendar/calendar_views.py:50
+#: ../calendar/calendar_views.py:51
 msgid "July"
 msgstr ""
 
-#: ../calendar/calendar_views.py:49
+#: ../calendar/calendar_views.py:50
 msgid "June"
 msgstr ""
 
@@ -2820,12 +2163,12 @@ msgstr "Entra"
 msgid "Low"
 msgstr ""
 
-#: ../calendar/calendar_views.py:46
+#: ../calendar/calendar_views.py:47
 #, fuzzy
 msgid "March"
 msgstr "Cerca"
 
-#: ../calendar/calendar_views.py:48
+#: ../calendar/calendar_views.py:49
 msgid "May"
 msgstr ""
 
@@ -2938,11 +2281,11 @@ msgstr "Codice"
 msgid "Modules"
 msgstr "Codice"
 
-#: ../calendar/calendar_views.py:58
+#: ../calendar/calendar_views.py:59
 msgid "Monday"
 msgstr ""
 
-#: ../calendar/calendar_views.py:724
+#: ../calendar/calendar_views.py:725
 msgid "Monthly View"
 msgstr ""
 
@@ -3092,7 +2435,7 @@ msgctxt "paragraph"
 msgid "Note the name and title won't change."
 msgstr ""
 
-#: ../calendar/calendar_views.py:180
+#: ../calendar/calendar_views.py:181
 #, fuzzy
 msgid "Nothing to change."
 msgstr "Metadati modificati"
@@ -3102,11 +2445,11 @@ msgstr "Metadati modificati"
 msgid "Nothing to paste."
 msgstr "Metadati modificati"
 
-#: ../calendar/calendar_views.py:164
+#: ../calendar/calendar_views.py:165
 msgid "Nothing to remove."
 msgstr ""
 
-#: ../calendar/calendar_views.py:54
+#: ../calendar/calendar_views.py:55
 msgid "November"
 msgstr ""
 
@@ -3149,7 +2492,7 @@ msgstr "Documento modificato."
 msgid "OOo Writer"
 msgstr "scrivi"
 
-#: ../calendar/calendar_views.py:53
+#: ../calendar/calendar_views.py:54
 msgid "October"
 msgstr ""
 
@@ -3596,7 +2939,7 @@ msgctxt "label"
 msgid "Repeat Password"
 msgstr "Ripeti la parola d'accesso"
 
-#: ../calendar/calendar_views.py:1102
+#: ../calendar/calendar_views.py:1103
 #, fuzzy
 msgid "Replace"
 msgstr "Anteprima"
@@ -3648,7 +2991,7 @@ msgctxt "table cell"
 msgid "Resource"
 msgstr "Nuova risorsa"
 
-#: ../calendar/calendar_views.py:448
+#: ../calendar/calendar_views.py:449
 #, fuzzy
 msgid "Resource \"{name}\" not found."
 msgstr "Oggetti rinominati."
@@ -3783,7 +3126,7 @@ msgstr "File aggiornato."
 msgid "Row deleted."
 msgstr "Nessun oggetto selezionato."
 
-#: ../calendar/calendar_views.py:63
+#: ../calendar/calendar_views.py:64
 msgid "Saturday"
 msgstr ""
 
@@ -3894,7 +3237,7 @@ msgstr "Devi scegliere un collaboratore da rimuovere."
 msgid "Send"
 msgstr ""
 
-#: ../calendar/calendar_views.py:52
+#: ../calendar/calendar_views.py:53
 msgid "September"
 msgstr ""
 
@@ -3911,7 +3254,7 @@ msgstr ""
 msgid "Size"
 msgstr "Dimensione"
 
-#: ../skins.py:150
+#: ../skins.py:152
 msgid "Skin"
 msgstr ""
 
@@ -3950,7 +3293,7 @@ msgstr "Stato"
 msgid "Start YYYY-MM-DD HH:MM"
 msgstr ""
 
-#: ../calendar/calendar_views.py:141 ../calendar/calendar_views.py:194
+#: ../calendar/calendar_views.py:142 ../calendar/calendar_views.py:195
 msgid "Start time must be earlier than end time."
 msgstr ""
 
@@ -4026,7 +3369,7 @@ msgctxt "table cell"
 msgid "Summary"
 msgstr ""
 
-#: ../calendar/calendar_views.py:64
+#: ../calendar/calendar_views.py:65
 msgid "Sunday"
 msgstr ""
 
@@ -4081,7 +3424,7 @@ msgctxt "link"
 msgid "Template"
 msgstr "Anteprima"
 
-#: ../calendar/calendar_views.py:103
+#: ../calendar/calendar_views.py:104
 #, fuzzy
 msgid "Tentative"
 msgstr "Il titolo"
@@ -4139,7 +3482,7 @@ msgstr "Deve essere inserito un file"
 msgid "The given file is not of the expected type."
 msgstr ""
 
-#: ../calendar/calendar_views.py:148
+#: ../calendar/calendar_views.py:149
 #, fuzzy
 msgid "The given range is already defined."
 msgstr "Tutti gli utenti sono stati aggiunti."
@@ -4283,7 +3626,7 @@ msgstr ""
 msgid "There is not an \"index\" web page. Could not render this view."
 msgstr ""
 
-#: ../file_views.py:279
+#: ../file_views.py:278
 msgid "This page is locked by another user"
 msgstr ""
 
@@ -4317,15 +3660,15 @@ msgstr ""
 msgid "Thread can't be None."
 msgstr "Non sono presenti messaggi."
 
-#: ../calendar/calendar_views.py:61
+#: ../calendar/calendar_views.py:62
 msgid "Thursday"
 msgstr ""
 
-#: ../calendar/calendar_views.py:174
+#: ../calendar/calendar_views.py:175
 msgid "Timetable(s) removed successfully."
 msgstr ""
 
-#: ../calendar/calendar_views.py:112
+#: ../calendar/calendar_views.py:113
 #, fuzzy
 msgid "Timetables"
 msgstr "Titolo"
@@ -4372,7 +3715,7 @@ msgstr ""
 msgid "To activate your account, please type a password."
 msgstr ""
 
-#: ../calendar/calendar_views.py:664
+#: ../calendar/calendar_views.py:665
 msgid "To add an event, click on + symbol from the views."
 msgstr ""
 
@@ -4441,7 +3784,7 @@ msgctxt "heading"
 msgid "Translators"
 msgstr "Traduzione memorizzata."
 
-#: ../calendar/calendar_views.py:59
+#: ../calendar/calendar_views.py:60
 msgid "Tuesday"
 msgstr ""
 
@@ -4489,11 +3832,7 @@ msgstr "Tipo"
 msgid "UI"
 msgstr ""
 
-#: ../file_views.py:190
-msgid "Unexpected file of mimetype {mimetype}"
-msgstr ""
-
-#: ../calendar/calendar_views.py:1115
+#: ../messages.py:98
 msgid "Unexpected file of mimetype {mimetype}."
 msgstr ""
 
@@ -4648,7 +3987,7 @@ msgctxt "table cell"
 msgid "Version"
 msgstr "Personale"
 
-#: ../calendar/calendar_views.py:1127 ../file_views.py:226
+#: ../calendar/calendar_views.py:1128 ../file_views.py:225
 #, fuzzy
 msgid "Version uploaded"
 msgstr "Versione caricata."
@@ -4676,8 +4015,8 @@ msgstr "Personale"
 msgid "Video"
 msgstr "Vedi"
 
-#: ../file_views.py:340 ../file_views.py:432 ../file_views.py:444
-#: ../file_views.py:458 ../text_views.py:69 ../text_views.py:143
+#: ../file_views.py:339 ../file_views.py:431 ../file_views.py:443
+#: ../file_views.py:457 ../text_views.py:69 ../text_views.py:143
 #: ../tracker/tracker_views.py:265 ../user.py:297 ../table_views.py:42
 #: ../wiki/page_views.py:252 ../future/order.py:247 ../future/order.py:277
 #: ../forum/forum.py:43 ../webpage.py:156 ../forum/thread.py:41
@@ -4704,15 +4043,15 @@ msgstr ""
 msgid "Web Site"
 msgstr ""
 
-#: ../calendar/calendar_views.py:60
+#: ../calendar/calendar_views.py:61
 msgid "Wednesday"
 msgstr ""
 
-#: ../calendar/calendar_views.py:251
+#: ../calendar/calendar_views.py:252
 msgid "Week {n}"
 msgstr ""
 
-#: ../calendar/calendar_views.py:801
+#: ../calendar/calendar_views.py:802
 msgid "Weekly View"
 msgstr ""
 
@@ -4750,7 +4089,7 @@ msgstr ""
 msgid "Wrong answer to the question."
 msgstr ""
 
-#: ../calendar/calendar_views.py:190
+#: ../calendar/calendar_views.py:191
 msgid "Wrong time selection (HH:MM)."
 msgstr ""
 
@@ -4781,7 +4120,7 @@ msgctxt "fieldset"
 msgid "You are not authorized to access this resource."
 msgstr ""
 
-#: ../calendar/calendar_views.py:604
+#: ../calendar/calendar_views.py:605
 msgid "You are not authorized to modify this event."
 msgstr ""
 
@@ -5074,11 +4413,11 @@ msgstr ""
 msgid "{n} obs"
 msgstr "%d bytes"
 
-#: ../skins.py:174
+#: ../skins.py:176
 msgid "{root_title} - {here_title} - {view_title}"
 msgstr ""
 
-#: ../skins.py:171
+#: ../skins.py:173
 msgid "{root_title} - {view_title}"
 msgstr ""
 
@@ -5156,6 +4495,11 @@ msgstr "Titolo"
 
 #, fuzzy
 #~ msgctxt "button"
+#~ msgid "${action/title}"
+#~ msgstr "Transizione effettuata."
+
+#, fuzzy
+#~ msgctxt "button"
 #~ msgid "${action/value}"
 #~ msgstr "Commenti:"
 
@@ -5178,6 +4522,10 @@ msgstr "Titolo"
 #~ "a>"
 
 #, fuzzy
+#~ msgid "${batch}"
+#~ msgstr "Titolo"
+
+#, fuzzy
 #~ msgctxt "td"
 #~ msgid "${browse_file}"
 #~ msgstr "traduzione"
@@ -5188,13 +4536,88 @@ msgstr "Titolo"
 #~ msgstr "traduzione"
 
 #, fuzzy
+#~ msgctxt "link"
+#~ msgid "${calendar/name}"
+#~ msgstr "Oggetti rinominati."
+
+#, fuzzy
+#~ msgctxt "title attribute"
+#~ msgid "${cell/content/issue/comment}"
+#~ msgstr "Contenuti"
+
+#, fuzzy
+#~ msgctxt "div"
+#~ msgid "${cell/ns}"
+#~ msgstr "Contenuti"
+
+#, fuzzy
+#~ msgctxt "div"
+#~ msgid "${change/value}"
+#~ msgstr "Commenti:"
+
+#, fuzzy
+#~ msgctxt "span"
+#~ msgid "${change/value}"
+#~ msgstr "Commenti:"
+
+#, fuzzy
 #~ msgid "${city}<br/>"
 #~ msgstr "traduzione"
+
+#, fuzzy
+#~ msgctxt "link"
+#~ msgid "${column/title}"
+#~ msgstr "Titolo"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${column/title}"
+#~ msgstr "Titolo"
 
 #, fuzzy
 #~ msgctxt "link to"
 #~ msgid "${column/title}"
 #~ msgstr "Titolo"
+
+#, fuzzy
+#~ msgctxt "link"
+#~ msgid "${column/value}"
+#~ msgstr "Titolo"
+
+#, fuzzy
+#~ msgctxt "pre"
+#~ msgid "${comment/comment}"
+#~ msgstr "Contenuti"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${comment/datetime}"
+#~ msgstr "Elenco metadati"
+
+#, fuzzy
+#~ msgctxt "link"
+#~ msgid "${comment/file}"
+#~ msgstr "Contenuti"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${comment/user}"
+#~ msgstr "Contenuti"
+
+#, fuzzy
+#~ msgctxt "textarea"
+#~ msgid "${comment/value}"
+#~ msgstr "Titolo"
+
+#, fuzzy
+#~ msgctxt "textarea"
+#~ msgid "${comment}"
+#~ msgstr "Contenuti"
+
+#, fuzzy
+#~ msgctxt "paragraph"
+#~ msgid "${confirmation_msg}"
+#~ msgstr "Anteprima"
 
 #, fuzzy
 #~ msgid "${contact/title}"
@@ -5206,6 +4629,26 @@ msgstr "Titolo"
 #~ msgstr "Elenco metadati"
 
 #, fuzzy
+#~ msgctxt "pre"
+#~ msgid "${contents}"
+#~ msgstr "Contenuti"
+
+#, fuzzy
+#~ msgctxt "pre"
+#~ msgid "${data}"
+#~ msgstr "Titolo"
+
+#, fuzzy
+#~ msgctxt "textarea"
+#~ msgid "${data}"
+#~ msgstr "Titolo"
+
+#, fuzzy
+#~ msgctxt "span"
+#~ msgid "${day/name}"
+#~ msgstr "Oggetti rinominati."
+
+#, fuzzy
 #~ msgid "${dc:description}"
 #~ msgstr "Descrizione"
 
@@ -5214,15 +4657,105 @@ msgstr "Titolo"
 #~ msgstr "Descrizione"
 
 #, fuzzy
+#~ msgctxt "emphasis"
+#~ msgid "${description}"
+#~ msgstr "Descrizione"
+
+#, fuzzy
 #~ msgid "${description}<br/> Price:"
 #~ msgstr "Descrizione"
+
+#, fuzzy
+#~ msgctxt "link"
+#~ msgid "${doc/title}"
+#~ msgstr "Titolo"
 
 #, fuzzy
 #~ msgid "${email}<br/>"
 #~ msgstr "Titolo"
 
 #, fuzzy
+#~ msgctxt "option"
+#~ msgid "${encoding/title}"
+#~ msgstr "Titolo"
+
+#, fuzzy
+#~ msgctxt "title attribute"
+#~ msgid "${event/issue/comment}"
+#~ msgstr "Contenuti"
+
+#, fuzzy
+#~ msgctxt "tr"
+#~ msgid "${event/ns}"
+#~ msgstr "Contenuti"
+
+#, fuzzy
+#~ msgctxt "option"
+#~ msgid "${field/title}"
+#~ msgstr "Titolo"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${header/header}"
+#~ msgstr "Transizione effettuata."
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${help_html}"
+#~ msgstr "Nuova risorsa"
+
+#, fuzzy
+#~ msgctxt "pre"
+#~ msgid "${help_source}"
+#~ msgstr "Nuova risorsa"
+
+#, fuzzy
 #~ msgid "${issue/title}"
+#~ msgstr "Titolo"
+
+#, fuzzy
+#~ msgctxt "div"
+#~ msgid "${item/content}"
+#~ msgstr "Contenuti"
+
+#, fuzzy
+#~ msgctxt "title attribute"
+#~ msgid "${item/item_type}"
+#~ msgstr "Titolo"
+
+#, fuzzy
+#~ msgctxt "title attribute"
+#~ msgid "${item/name}"
+#~ msgstr "Titolo"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${item/path}"
+#~ msgstr "Titolo"
+
+#, fuzzy
+#~ msgctxt "link"
+#~ msgid "${item/short_title}"
+#~ msgstr "Titolo"
+
+#, fuzzy
+#~ msgctxt "label"
+#~ msgid "${item/title}"
+#~ msgstr "Titolo"
+
+#, fuzzy
+#~ msgctxt "link"
+#~ msgid "${item/title}"
+#~ msgstr "Titolo"
+
+#, fuzzy
+#~ msgctxt "option"
+#~ msgid "${item/title}"
+#~ msgstr "Titolo"
+
+#, fuzzy
+#~ msgctxt "title attribute"
+#~ msgid "${item/title}"
 #~ msgstr "Titolo"
 
 #, fuzzy
@@ -5236,6 +4769,26 @@ msgstr "Titolo"
 #~ msgstr "Titolo"
 
 #, fuzzy
+#~ msgctxt "option"
+#~ msgid "${item/value}"
+#~ msgstr "Titolo"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${language/code}"
+#~ msgstr "Linguaggio"
+
+#, fuzzy
+#~ msgctxt "option"
+#~ msgid "${language/name}"
+#~ msgstr "Linguaggio"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${language/name}"
+#~ msgstr "Linguaggio"
+
+#, fuzzy
 #~ msgctxt "td"
 #~ msgid "${language/name}"
 #~ msgstr "Linguaggio"
@@ -5247,6 +4800,65 @@ msgstr "Titolo"
 #, fuzzy
 #~ msgid "${menu/title}"
 #~ msgstr "Titolo"
+
+#, fuzzy
+#~ msgctxt "paragraph"
+#~ msgid "${message/author}"
+#~ msgstr "Messaggio"
+
+#, fuzzy
+#~ msgctxt "paragraph"
+#~ msgid "${message/body}"
+#~ msgstr "Messaggio"
+
+#, fuzzy
+#~ msgctxt "div"
+#~ msgid "${message/message}"
+#~ msgstr "Messaggio"
+
+#, fuzzy
+#~ msgctxt "paragraph"
+#~ msgid "${message/mtime}"
+#~ msgstr "Messaggio"
+
+#, fuzzy
+#~ msgid "${message}"
+#~ msgstr "Messaggio"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${metadata/author_date}"
+#~ msgstr "Transizione effettuata."
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${metadata/author_name}"
+#~ msgstr "Oggetti rinominati."
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${metadata/subject}"
+#~ msgstr "Elenco metadati"
+
+#, fuzzy
+#~ msgctxt "textarea"
+#~ msgid "${msgid}"
+#~ msgstr "Messaggio"
+
+#, fuzzy
+#~ msgctxt "textarea"
+#~ msgid "${msgstr}"
+#~ msgstr "Messaggio"
+
+#, fuzzy
+#~ msgctxt "paragraph"
+#~ msgid "${msg}"
+#~ msgstr "Messaggio"
+
+#, fuzzy
+#~ msgctxt "li"
+#~ msgid "${name}"
+#~ msgstr "Oggetti rinominati."
 
 #, fuzzy
 #~ msgid "${object/name}"
@@ -5269,6 +4881,21 @@ msgstr "Titolo"
 #~ msgstr "Titolo"
 
 #, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${package/name}"
+#~ msgstr "Linguaggio"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${package/version}"
+#~ msgstr "traduzione"
+
+#, fuzzy
+#~ msgctxt "form"
+#~ msgid "${param}"
+#~ msgstr "Titolo"
+
+#, fuzzy
 #~ msgid "${price}<br/> VAT:"
 #~ msgstr "Titolo"
 
@@ -5278,15 +4905,174 @@ msgstr "Titolo"
 
 #, fuzzy
 #~ msgctxt "table cell"
+#~ msgid "${revision/date}"
+#~ msgstr "Transizione effettuata."
+
+#, fuzzy
+#~ msgctxt "table cell"
 #~ msgid "${revision/size}"
 #~ msgstr "traduzione"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${revision/username}"
+#~ msgstr "Oggetti rinominati."
+
+#, fuzzy
+#~ msgctxt "label"
+#~ msgid "${role/title}"
+#~ msgstr "Titolo"
+
+#, fuzzy
+#~ msgctxt "option"
+#~ msgid "${role/title}"
+#~ msgstr "Titolo"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${row/after}"
+#~ msgstr "traduzione"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${row/assigned_to}"
+#~ msgstr "traduzione"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${row/before}"
+#~ msgstr "traduzione"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${row/cc_list}"
+#~ msgstr "traduzione"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${row/comment}"
+#~ msgstr "Contenuti"
+
+#, fuzzy
+#~ msgctxt "link"
+#~ msgid "${row/datetime}"
+#~ msgstr "Transizione effettuata."
+
+#, fuzzy
+#~ msgctxt "link"
+#~ msgid "${row/file}"
+#~ msgstr "traduzione"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${row/module}"
+#~ msgstr "traduzione"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${row/nlines}"
+#~ msgstr "traduzione"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${row/priority}"
+#~ msgstr "traduzione"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${row/state}"
+#~ msgstr "traduzione"
+
+#, fuzzy
+#~ msgctxt "label"
+#~ msgid "${row/title_or_name}"
+#~ msgstr "Titolo"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${row/title}"
+#~ msgstr "Titolo"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${row/type}"
+#~ msgstr "traduzione"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${row/user}"
+#~ msgstr "traduzione"
+
+#, fuzzy
+#~ msgctxt "link"
+#~ msgid "${row/value}"
+#~ msgstr "Titolo"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${row/version}"
+#~ msgstr "traduzione"
+
+#, fuzzy
+#~ msgctxt "form"
+#~ msgid "${rte}"
+#~ msgstr "Titolo"
+
+#, fuzzy
+#~ msgctxt "option"
+#~ msgid "${s/value}"
+#~ msgstr "Titolo"
 
 #, fuzzy
 #~ msgid "${search/title}"
 #~ msgstr "Titolo"
 
 #, fuzzy
+#~ msgctxt "legend"
+#~ msgid "${search_title}"
+#~ msgstr "Titolo"
+
+#, fuzzy
+#~ msgid "${search}"
+#~ msgstr "Cerca"
+
+#, fuzzy
+#~ msgctxt "textarea"
+#~ msgid "${source}"
+#~ msgstr "Nuova risorsa"
+
+#, fuzzy
+#~ msgctxt "paragraph"
+#~ msgid "${stat/summary}"
+#~ msgstr "Titolo"
+
+#, fuzzy
+#~ msgctxt "emphasis"
+#~ msgid "${state}"
+#~ msgstr "Titolo"
+
+#, fuzzy
+#~ msgctxt "button"
+#~ msgid "${submit_value}"
+#~ msgstr "Titolo"
+
+#, fuzzy
 #~ msgid "${table}"
+#~ msgstr "Titolo"
+
+#, fuzzy
+#~ msgctxt "pre"
+#~ msgid "${text}"
+#~ msgstr "Titolo"
+
+#, fuzzy
+#~ msgctxt "label"
+#~ msgid "${title}"
+#~ msgstr "Titolo"
+
+#, fuzzy
+#~ msgctxt "legend"
+#~ msgid "${title}"
 #~ msgstr "Titolo"
 
 #, fuzzy
@@ -5298,8 +5084,66 @@ msgstr "Titolo"
 #~ msgstr "Titolo"
 
 #, fuzzy
+#~ msgctxt "pre"
+#~ msgid "${traceback}"
+#~ msgstr "Titolo"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${transition/comments}"
+#~ msgstr "Transizione effettuata."
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${transition/date}"
+#~ msgstr "Transizione effettuata."
+
+#, fuzzy
+#~ msgctxt "label"
+#~ msgid "${transition/description}"
+#~ msgstr "Transizione effettuata."
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${transition/title}"
+#~ msgstr "Transizione effettuata."
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${transition/user}"
+#~ msgstr "traduzione"
+
+#, fuzzy
+#~ msgctxt "span"
+#~ msgid "${tt}"
+#~ msgstr "Titolo"
+
+#, fuzzy
+#~ msgctxt "emphasis"
+#~ msgid "${username}"
+#~ msgstr "Oggetti rinominati."
+
+#, fuzzy
+#~ msgctxt "textarea"
+#~ msgid "${vhosts}"
+#~ msgstr "Contenuti"
+
+#, fuzzy
+#~ msgctxt "heading"
+#~ msgid "${view/title}"
+#~ msgstr "Titolo"
+
+#, fuzzy
+#~ msgid "${view/view}"
+#~ msgstr "Titolo"
+
+#, fuzzy
 #~ msgid "${view_description}"
 #~ msgstr "Descrizione"
+
+#, fuzzy
+#~ msgid "${view}"
+#~ msgstr "Titolo"
 
 #, fuzzy
 #~ msgctxt "label"
@@ -5309,6 +5153,11 @@ msgstr "Titolo"
 #, fuzzy
 #~ msgctxt "dd"
 #~ msgid "${widget/widget}"
+#~ msgstr "Titolo"
+
+#, fuzzy
+#~ msgctxt "title attribute"
+#~ msgid "${x/title}"
 #~ msgstr "Titolo"
 
 #~ msgid "%(start)s-%(end)s of %(total)s"
