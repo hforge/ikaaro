@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-03 15:05+CET\n"
+"POT-Creation-Date: 2010-05-03 17:05+CET\n"
 "PO-Revision-Date: 2010-04-20 11:30+0200\n"
 "Last-Translator: Hervé Cauwelier <herve@itaapy.com>\n"
 "Language-Team: Itaapy\n"
@@ -80,45 +80,15 @@ msgstr "${batch} ${table}"
 msgid "${batch} <x id='1'/> ${table}"
 msgstr "${batch} <x id='1'/> ${table}"
 
-#: ../ui/aruni/template.xhtml.en:54
-msgctxt "table cell"
-msgid "${body}"
-msgstr "${body}"
-
 #: ../calendar/ui/edit_event.xml.en:16
 msgctxt "option"
 msgid "${item/value} "
 msgstr "${item/value} "
 
-#: ../ui/aruni/template.xhtml.en:28
-msgctxt "div"
-msgid "${languages}"
-msgstr "${languages}"
-
-#: ../ui/aruni/template.xhtml.en:45
-msgctxt "body"
-msgid "${location}"
-msgstr "${location}"
-
-#: ../ui/aruni/template.xhtml.en:57
-msgctxt "table cell"
-msgid "${menu}"
-msgstr "${menu}"
-
-#: ../ui/aruni/template.xhtml.en:50
-msgctxt "div"
-msgid "${message}"
-msgstr "${message}"
-
 #: ../tracker/ui/edit_resource.xml.en:39
 msgctxt "option"
 msgid "${option/start} - ${option/end}"
 msgstr "${option/start} - ${option/end}"
-
-#: ../ui/aruni/template.xhtml.en:49
-msgctxt "heading"
-msgid "${page_title}"
-msgstr "${page_title}"
 
 #: ../calendar/ui/weekly_view.xml.en:42
 msgctxt "table cell"
@@ -133,11 +103,6 @@ msgstr "${search} <x id='1'/> ${batch} <x id='2'/> ${table}"
 msgctxt "paragraph"
 msgid "${thread/comments} comments."
 msgstr "${thread/comments} commentaires."
-
-#: ../ui/aruni/template.xhtml.en:7
-msgctxt "title"
-msgid "${title}"
-msgstr "${title}"
 
 #: ../wiki/ui/edit.xml.en:24
 msgctxt "dd"
@@ -608,7 +573,7 @@ msgstr "Un fil de discussion"
 msgid "ANONYMOUS"
 msgstr "Anonyme"
 
-#: ../website_views.py:344
+#: ../website_views.py:346
 msgid "About"
 msgstr "À propos de"
 
@@ -646,12 +611,12 @@ msgid "Add"
 msgstr "Ajouter"
 
 #: ../tracker/ui/add_issue.xml.en:123 ../ui/base/proxy_new_instance.xml.en:31
-#: ../ui/website/edit_languages.xml.en:53
+#: ../ui/website/new_instance.xml.en:37 ../ui/website/edit_languages.xml.en:53
 msgctxt "button"
 msgid "Add"
 msgstr "Ajouter"
 
-#: ../ui/base/proxy_new_instance.xml.en:9
+#: ../ui/base/proxy_new_instance.xml.en:9 ../ui/website/new_instance.xml.en:9
 msgctxt "legend"
 msgid "Add ${class_title}"
 msgstr "Ajouter {class_title}"
@@ -745,7 +710,7 @@ msgstr ""
 "Un courriel vous a été envoyé, contenant les instructions pour changer votre "
 "mot de passe."
 
-#: ../website_views.py:153
+#: ../website_views.py:155
 msgid ""
 "An email has been sent to you, to finish the registration process follow the "
 "instructions detailed in it."
@@ -1020,6 +985,7 @@ msgid "Choose a template:"
 msgstr "Choisissez un modèle&nbsp;:"
 
 #: ../ui/base/proxy_new_instance.xml.en:20
+#: ../ui/website/new_instance.xml.en:20
 msgctxt "dt"
 msgid "Choose the ${class_title} type"
 msgstr "Choisissez le type ${class_title}"
@@ -1135,7 +1101,7 @@ msgstr "Confirmation envoyée !"
 msgid "Confirmed"
 msgstr "Confirmé"
 
-#: ../website_views.py:178
+#: ../website_views.py:180
 msgid "Contact"
 msgstr "Contact"
 
@@ -1184,7 +1150,7 @@ msgstr "Créer une nouvelle page et la lier"
 msgid "Create and publish a Web Page."
 msgstr "Créer et publier une page web."
 
-#: ../website_views.py:417
+#: ../website_views.py:419
 msgid "Credits"
 msgstr "Crédits"
 
@@ -1321,7 +1287,7 @@ msgstr "Télécharger"
 msgid "Dressable"
 msgstr "Habillable"
 
-#: ../user_views.py:170 ../website_views.py:121
+#: ../user_views.py:170 ../website_views.py:123
 msgid "E-mail Address"
 msgstr "Adresse de courriel"
 
@@ -1560,7 +1526,7 @@ msgctxt "table cell"
 msgid "Filename"
 msgstr "Nom de fichier"
 
-#: ../user_views.py:168 ../user_views.py:366 ../website_views.py:119
+#: ../user_views.py:168 ../user_views.py:366 ../website_views.py:121
 #: ../access.py:76 ../access.py:132
 msgid "First Name"
 msgstr "Prénom"
@@ -1586,7 +1552,7 @@ msgctxt "button"
 msgid "Forget this Search"
 msgstr "Oublier cette recherche"
 
-#: ../website_views.py:61
+#: ../website_views.py:63
 msgid "Forgotten password"
 msgstr "Mot de passe oublié"
 
@@ -1970,7 +1936,7 @@ msgstr "Dernier changement"
 msgid "Last Modified"
 msgstr "Dernière modification"
 
-#: ../user_views.py:169 ../user_views.py:365 ../website_views.py:120
+#: ../user_views.py:169 ../user_views.py:365 ../website_views.py:122
 #: ../access.py:75 ../access.py:133
 msgid "Last Name"
 msgstr "Nom"
@@ -2086,7 +2052,7 @@ msgstr ""
 msgid "Message Catalog"
 msgstr "Catalogue de messages"
 
-#: ../website_views.py:203
+#: ../website_views.py:205
 msgid "Message body"
 msgstr "Corps du message"
 
@@ -2094,11 +2060,11 @@ msgstr "Corps du message"
 msgid "Message in a thread"
 msgstr "Message d'un fil de discussion"
 
-#: ../website_views.py:244
+#: ../website_views.py:246
 msgid "Message sent."
 msgstr "Message envoyé."
 
-#: ../website_views.py:202
+#: ../website_views.py:204
 msgid "Message subject"
 msgstr "Sujet du message"
 
@@ -2168,6 +2134,7 @@ msgid "Name"
 msgstr "Nom"
 
 #: ../ui/base/proxy_new_instance.xml.en:15
+#: ../ui/website/new_instance.xml.en:15
 msgctxt "label"
 msgid "Name"
 msgstr "Nom"
@@ -2334,7 +2301,7 @@ msgstr "Texte OpenOffice.org"
 msgid "October"
 msgstr "Octobre"
 
-#: ../website_views.py:62
+#: ../website_views.py:64
 msgid "Ok"
 msgstr "Ok"
 
@@ -2389,7 +2356,7 @@ msgstr "Classeur au format OpenOffice.org"
 msgid "OpenOffice.org Text"
 msgstr "Texte au format OpenOffice.org"
 
-#: ../website_views.py:407
+#: ../website_views.py:409
 msgid "Operating System"
 msgstr "Système d'exploitation"
 
@@ -2522,7 +2489,7 @@ msgstr "Amélioration des performances"
 msgid "Plain Text"
 msgstr "Texte brut"
 
-#: ../website_views.py:196
+#: ../website_views.py:198
 msgid "Please answer this: {captcha_question}"
 msgstr "Veuillez répondre à : {captcha_question}"
 
@@ -2672,7 +2639,7 @@ msgstr "Texte RTF"
 msgid "RTF Document"
 msgstr "Texte au format RTF"
 
-#: ../website_views.py:200
+#: ../website_views.py:202
 msgid "Recipient"
 msgstr "Destinataire"
 
@@ -2680,7 +2647,7 @@ msgstr "Destinataire"
 msgid "Record deleted."
 msgstr "Enregistrement supprimé."
 
-#: ../website_views.py:110 ../website_views.py:111
+#: ../website_views.py:112 ../website_views.py:113
 msgid "Register"
 msgstr "Inscription"
 
@@ -2910,7 +2877,7 @@ msgstr "Sauvegarder"
 msgid "Schedule your time with calendar files."
 msgstr "Organisez votre temps à l'aide d'agendas."
 
-#: ../tracker/tracker_views.py:452 ../website_views.py:251
+#: ../tracker/tracker_views.py:452 ../website_views.py:253
 msgid "Search"
 msgstr "Rechercher"
 
@@ -2982,7 +2949,7 @@ msgstr "Sélectionner le tableau"
 msgid "Select the contact accounts"
 msgstr "Sélectionner les comptes des contacts"
 
-#: ../website_views.py:179
+#: ../website_views.py:181
 msgid "Send"
 msgstr "Envoyer"
 
@@ -3316,7 +3283,7 @@ msgstr "Il y a 1 affectation."
 msgid "There is 1 item."
 msgstr "Il y a 1 élément."
 
-#: ../website_views.py:135
+#: ../website_views.py:137
 msgid "There is already an active user with that email."
 msgstr "Il existe déjà un utilisateur avec cette adresse de courriel."
 
@@ -3330,7 +3297,7 @@ msgstr ""
 "Il existe déjà un utilisateur avec le courriel «&nbsp;{email}&nbsp;», "
 "veuillez en changer."
 
-#: ../website_views.py:90
+#: ../website_views.py:92
 msgid "There is not a user identified as \"{username}\""
 msgstr "Il n'existe pas d'utilisateur « {username} »."
 
@@ -3391,6 +3358,7 @@ msgid "Title"
 msgstr "Titre"
 
 #: ../ui/base/proxy_new_instance.xml.en:11
+#: ../ui/website/new_instance.xml.en:11
 msgctxt "label"
 msgid "Title"
 msgstr "Titre"
@@ -3515,7 +3483,7 @@ msgctxt "heading"
 msgid "Type the URL of an external resource"
 msgstr "Saisissez l'adresse URL d'une ressource"
 
-#: ../ui/website/virtual_hosts.xml.en:10
+#: ../ui/website/new_instance.xml.en:32 ../ui/website/virtual_hosts.xml.en:10
 msgctxt "paragraph"
 msgid ""
 "Type the hostnames this website will apply to, each one in a different line."
@@ -3523,7 +3491,7 @@ msgstr ""
 "Saisissez les noms de domaine auxquels ce site web doit répondre (un par "
 "ligne)."
 
-#: ../website_views.py:66
+#: ../website_views.py:68
 msgid "Type your email address"
 msgstr "Veuillez taper votre adresse de courriel."
 
@@ -3701,6 +3669,12 @@ msgstr "Version&nbsp;:"
 msgid "Versions"
 msgstr "Versions"
 
+#: ../ui/website/new_instance.xml.en:30
+#, fuzzy
+msgctxt "label"
+msgid "Vhosts"
+msgstr "${vhosts}"
+
 #: ../file.py:230 ../file.py:231
 msgid "Video"
 msgstr "Vidéo"
@@ -3775,7 +3749,7 @@ msgstr "Texte au format MS Word"
 msgid "Workflow State"
 msgstr "État de workflow"
 
-#: ../website_views.py:226
+#: ../website_views.py:228
 msgid "Wrong answer to the question."
 msgstr "Réponse incorrecte au captcha."
 
@@ -3923,7 +3897,7 @@ msgstr ""
 msgid "Your confirmation key is invalid."
 msgstr "Votre clé de confirmation est invalide."
 
-#: ../website_views.py:201
+#: ../website_views.py:203
 msgid "Your email address"
 msgstr "Votre adresse de courriel"
 
@@ -4049,7 +4023,7 @@ msgstr "Gabarit par défaut de LpOD"
 msgid "medium"
 msgstr "moyenne"
 
-#: ../website_views.py:391
+#: ../website_views.py:393
 msgid "no version found"
 msgstr "pas de version trouvée"
 
@@ -4200,6 +4174,10 @@ msgstr "⇒ ${item/parent_path}"
 
 #~ msgid "${batch}"
 #~ msgstr "${batch}"
+
+#~ msgctxt "table cell"
+#~ msgid "${body}"
+#~ msgstr "${body}"
 
 #~ msgctxt "link"
 #~ msgid "${calendar/name}"
@@ -4378,12 +4356,24 @@ msgstr "⇒ ${item/parent_path}"
 #~ msgid "${language/name}"
 #~ msgstr "${language/name}"
 
+#~ msgctxt "div"
+#~ msgid "${languages}"
+#~ msgstr "${languages}"
+
 #~ msgid "${lastname}<br/>  <b>E-mail:</b>"
 #~ msgstr "${lastname}<br/>  <b>E-mail&nbsp;:</b>"
 
 #~ msgctxt "li"
 #~ msgid "${link}"
 #~ msgstr "${link}"
+
+#~ msgctxt "body"
+#~ msgid "${location}"
+#~ msgstr "${location}"
+
+#~ msgctxt "table cell"
+#~ msgid "${menu}"
+#~ msgstr "${menu}"
 
 #~ msgctxt "paragraph"
 #~ msgid "${message/author}"
@@ -4400,6 +4390,10 @@ msgstr "⇒ ${item/parent_path}"
 #~ msgctxt "paragraph"
 #~ msgid "${message/mtime}"
 #~ msgstr "${message/mtime}"
+
+#~ msgctxt "div"
+#~ msgid "${message}"
+#~ msgstr "${message}"
 
 #~ msgid "${message}"
 #~ msgstr "${message}"
@@ -4457,6 +4451,10 @@ msgstr "⇒ ${item/parent_path}"
 #~ msgctxt "table cell"
 #~ msgid "${package/version}"
 #~ msgstr "${package/version}"
+
+#~ msgctxt "heading"
+#~ msgid "${page_title}"
+#~ msgstr "${page_title}"
 
 #~ msgctxt "form"
 #~ msgid "${param}"
@@ -4598,6 +4596,10 @@ msgstr "⇒ ${item/parent_path}"
 #~ msgid "${text}"
 #~ msgstr "${text}"
 
+#~ msgctxt "title"
+#~ msgid "${title}"
+#~ msgstr "${title}"
+
 #~ msgctxt "label"
 #~ msgid "${title}"
 #~ msgstr "${title}"
@@ -4651,10 +4653,6 @@ msgstr "⇒ ${item/parent_path}"
 
 #~ msgid "${vat}<br/>  <a href=\";add_to_cart\">Add to cart</a>"
 #~ msgstr "${vat}<br/>  <a href=\";add_to_cart\">Ajouter au panier</a>"
-
-#~ msgctxt "textarea"
-#~ msgid "${vhosts}"
-#~ msgstr "${vhosts}"
 
 #~ msgctxt "heading"
 #~ msgid "${view/title}"

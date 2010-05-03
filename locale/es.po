@@ -3,7 +3,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: es\n"
-"POT-Creation-Date: 2010-05-03 15:05+CET\n"
+"POT-Creation-Date: 2010-05-03 17:05+CET\n"
 "PO-Revision-Date: 2006-12-06 16:23+0100\n"
 "Last-Translator: J. David Ibáñez <jdavid@itaapy.com>\n"
 "Language-Team: Spanish\n"
@@ -66,44 +66,14 @@ msgstr ""
 msgid "${batch} <x id='1'/> ${table}"
 msgstr ""
 
-#: ../ui/aruni/template.xhtml.en:54
-msgctxt "table cell"
-msgid "${body}"
-msgstr ""
-
 #: ../calendar/ui/edit_event.xml.en:16
 msgctxt "option"
 msgid "${item/value} "
 msgstr ""
 
-#: ../ui/aruni/template.xhtml.en:28
-msgctxt "div"
-msgid "${languages}"
-msgstr ""
-
-#: ../ui/aruni/template.xhtml.en:45
-msgctxt "body"
-msgid "${location}"
-msgstr ""
-
-#: ../ui/aruni/template.xhtml.en:57
-msgctxt "table cell"
-msgid "${menu}"
-msgstr ""
-
-#: ../ui/aruni/template.xhtml.en:50
-msgctxt "div"
-msgid "${message}"
-msgstr ""
-
 #: ../tracker/ui/edit_resource.xml.en:39
 msgctxt "option"
 msgid "${option/start} - ${option/end}"
-msgstr ""
-
-#: ../ui/aruni/template.xhtml.en:49
-msgctxt "heading"
-msgid "${page_title}"
 msgstr ""
 
 #: ../calendar/ui/weekly_view.xml.en:42
@@ -118,11 +88,6 @@ msgstr ""
 #: ../forum/ui/Forum_view.xml.en:15
 msgctxt "paragraph"
 msgid "${thread/comments} comments."
-msgstr ""
-
-#: ../ui/aruni/template.xhtml.en:7
-msgctxt "title"
-msgid "${title}"
 msgstr ""
 
 #: ../wiki/ui/edit.xml.en:24
@@ -568,7 +533,7 @@ msgstr ""
 msgid "ANONYMOUS"
 msgstr "ANÓNIMO"
 
-#: ../website_views.py:344
+#: ../website_views.py:346
 msgid "About"
 msgstr "Acerca de"
 
@@ -605,12 +570,12 @@ msgid "Add"
 msgstr "Agregar"
 
 #: ../tracker/ui/add_issue.xml.en:123 ../ui/base/proxy_new_instance.xml.en:31
-#: ../ui/website/edit_languages.xml.en:53
+#: ../ui/website/new_instance.xml.en:37 ../ui/website/edit_languages.xml.en:53
 msgctxt "button"
 msgid "Add"
 msgstr "Agregar"
 
-#: ../ui/base/proxy_new_instance.xml.en:9
+#: ../ui/base/proxy_new_instance.xml.en:9 ../ui/website/new_instance.xml.en:9
 #, fuzzy
 msgctxt "legend"
 msgid "Add ${class_title}"
@@ -707,7 +672,7 @@ msgid ""
 "An email has been sent to you with the procedure to change your password."
 msgstr ""
 
-#: ../website_views.py:153
+#: ../website_views.py:155
 msgid ""
 "An email has been sent to you, to finish the registration process follow the "
 "instructions detailed in it."
@@ -990,6 +955,7 @@ msgid "Choose a template:"
 msgstr "Elije un idioma"
 
 #: ../ui/base/proxy_new_instance.xml.en:20
+#: ../ui/website/new_instance.xml.en:20
 #, fuzzy
 msgctxt "dt"
 msgid "Choose the ${class_title} type"
@@ -1109,7 +1075,7 @@ msgstr "¡Confirmación enviada!"
 msgid "Confirmed"
 msgstr ""
 
-#: ../website_views.py:178
+#: ../website_views.py:180
 msgid "Contact"
 msgstr "Contacto"
 
@@ -1158,7 +1124,7 @@ msgstr ""
 msgid "Create and publish a Web Page."
 msgstr ""
 
-#: ../website_views.py:417
+#: ../website_views.py:419
 msgid "Credits"
 msgstr ""
 
@@ -1296,7 +1262,7 @@ msgstr ""
 msgid "Dressable"
 msgstr ""
 
-#: ../user_views.py:170 ../website_views.py:121
+#: ../user_views.py:170 ../website_views.py:123
 msgid "E-mail Address"
 msgstr "Dirección de correo electrónico"
 
@@ -1547,7 +1513,7 @@ msgctxt "table cell"
 msgid "Filename"
 msgstr "Renombrar"
 
-#: ../user_views.py:168 ../user_views.py:366 ../website_views.py:119
+#: ../user_views.py:168 ../user_views.py:366 ../website_views.py:121
 #: ../access.py:76 ../access.py:132
 msgid "First Name"
 msgstr "Nombre"
@@ -1573,7 +1539,7 @@ msgctxt "button"
 msgid "Forget this Search"
 msgstr "Olvidar esta Búsqueda"
 
-#: ../website_views.py:61
+#: ../website_views.py:63
 msgid "Forgotten password"
 msgstr "Clave de acceso olvidada"
 
@@ -1964,7 +1930,7 @@ msgstr "Últimas Modificaciones"
 msgid "Last Modified"
 msgstr "Última Modificación"
 
-#: ../user_views.py:169 ../user_views.py:365 ../website_views.py:120
+#: ../user_views.py:169 ../user_views.py:365 ../website_views.py:122
 #: ../access.py:75 ../access.py:133
 msgid "Last Name"
 msgstr "Apellidos"
@@ -2082,7 +2048,7 @@ msgstr ""
 msgid "Message Catalog"
 msgstr "Catalogo de Mensajes"
 
-#: ../website_views.py:203
+#: ../website_views.py:205
 msgid "Message body"
 msgstr "Cuerpo del mensaje"
 
@@ -2091,12 +2057,12 @@ msgstr "Cuerpo del mensaje"
 msgid "Message in a thread"
 msgstr "Catalogo de Mensajes"
 
-#: ../website_views.py:244
+#: ../website_views.py:246
 #, fuzzy
 msgid "Message sent."
 msgstr "Mensaje"
 
-#: ../website_views.py:202
+#: ../website_views.py:204
 msgid "Message subject"
 msgstr "Tema del mensaje"
 
@@ -2166,6 +2132,7 @@ msgid "Name"
 msgstr "Nombre"
 
 #: ../ui/base/proxy_new_instance.xml.en:15
+#: ../ui/website/new_instance.xml.en:15
 msgctxt "label"
 msgid "Name"
 msgstr "Nombre"
@@ -2347,7 +2314,7 @@ msgstr ""
 msgid "October"
 msgstr ""
 
-#: ../website_views.py:62
+#: ../website_views.py:64
 msgid "Ok"
 msgstr ""
 
@@ -2402,7 +2369,7 @@ msgstr ""
 msgid "OpenOffice.org Text"
 msgstr ""
 
-#: ../website_views.py:407
+#: ../website_views.py:409
 msgid "Operating System"
 msgstr ""
 
@@ -2539,7 +2506,7 @@ msgstr ""
 msgid "Plain Text"
 msgstr ""
 
-#: ../website_views.py:196
+#: ../website_views.py:198
 msgid "Please answer this: {captcha_question}"
 msgstr ""
 
@@ -2695,7 +2662,7 @@ msgstr ""
 msgid "RTF Document"
 msgstr "Añadir Documento"
 
-#: ../website_views.py:200
+#: ../website_views.py:202
 msgid "Recipient"
 msgstr "Destinatario"
 
@@ -2704,7 +2671,7 @@ msgstr "Destinatario"
 msgid "Record deleted."
 msgstr "Roles actualizados."
 
-#: ../website_views.py:110 ../website_views.py:111
+#: ../website_views.py:112 ../website_views.py:113
 msgid "Register"
 msgstr "Registrarse"
 
@@ -2966,7 +2933,7 @@ msgstr "Estado"
 msgid "Schedule your time with calendar files."
 msgstr ""
 
-#: ../tracker/tracker_views.py:452 ../website_views.py:251
+#: ../tracker/tracker_views.py:452 ../website_views.py:253
 msgid "Search"
 msgstr "Buscar"
 
@@ -3048,7 +3015,7 @@ msgstr "Insertar Tabla"
 msgid "Select the contact accounts"
 msgstr "selecciona las columnas a exportar"
 
-#: ../website_views.py:179
+#: ../website_views.py:181
 msgid "Send"
 msgstr "Enviar"
 
@@ -3406,7 +3373,7 @@ msgstr "No hay mensajes."
 msgid "There is 1 item."
 msgstr "No hay mensajes."
 
-#: ../website_views.py:135
+#: ../website_views.py:137
 msgid "There is already an active user with that email."
 msgstr ""
 
@@ -3418,7 +3385,7 @@ msgstr ""
 msgid "There is another user with the email \"{email}\", please try again."
 msgstr ""
 
-#: ../website_views.py:90
+#: ../website_views.py:92
 msgid "There is not a user identified as \"{username}\""
 msgstr ""
 
@@ -3478,6 +3445,7 @@ msgid "Title"
 msgstr "Título"
 
 #: ../ui/base/proxy_new_instance.xml.en:11
+#: ../ui/website/new_instance.xml.en:11
 #, fuzzy
 msgctxt "label"
 msgid "Title"
@@ -3597,13 +3565,13 @@ msgctxt "heading"
 msgid "Type the URL of an external resource"
 msgstr ""
 
-#: ../ui/website/virtual_hosts.xml.en:10
+#: ../ui/website/new_instance.xml.en:32 ../ui/website/virtual_hosts.xml.en:10
 msgctxt "paragraph"
 msgid ""
 "Type the hostnames this website will apply to, each one in a different line."
 msgstr ""
 
-#: ../website_views.py:66
+#: ../website_views.py:68
 #, fuzzy
 msgid "Type your email address"
 msgstr "Escribe tu dirección de correo electrónico"
@@ -3794,6 +3762,11 @@ msgstr "Permisos"
 msgid "Versions"
 msgstr "Permisos"
 
+#: ../ui/website/new_instance.xml.en:30
+msgctxt "label"
+msgid "Vhosts"
+msgstr ""
+
 #: ../file.py:230 ../file.py:231
 msgid "Video"
 msgstr ""
@@ -3868,7 +3841,7 @@ msgstr "Editar Texto"
 msgid "Workflow State"
 msgstr ""
 
-#: ../website_views.py:226
+#: ../website_views.py:228
 msgid "Wrong answer to the question."
 msgstr ""
 
@@ -4001,7 +3974,7 @@ msgstr ""
 msgid "Your confirmation key is invalid."
 msgstr ""
 
-#: ../website_views.py:201
+#: ../website_views.py:203
 msgid "Your email address"
 msgstr "Tu dirección de correo electrónico"
 
@@ -4121,7 +4094,7 @@ msgstr ""
 msgid "medium"
 msgstr "mediano"
 
-#: ../website_views.py:391
+#: ../website_views.py:393
 msgid "no version found"
 msgstr ""
 

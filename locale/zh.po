@@ -3,7 +3,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: zh\n"
-"POT-Creation-Date: 2010-05-03 15:05+CET\n"
+"POT-Creation-Date: 2010-05-03 17:05+CET\n"
 "PO-Revision-Date: 2007-10-30 17:58+0100\n"
 "Last-Translator: Zhouli <zhouli@in-girum.net>\n"
 "Language-Team:  <zh@li.org>\n"
@@ -68,52 +68,16 @@ msgstr "名称"
 msgid "${batch} <x id='1'/> ${table}"
 msgstr "名称"
 
-#: ../ui/aruni/template.xhtml.en:54
-#, fuzzy
-msgctxt "table cell"
-msgid "${body}"
-msgstr "名称"
-
 #: ../calendar/ui/edit_event.xml.en:16
 #, fuzzy
 msgctxt "option"
 msgid "${item/value} "
 msgstr "名称"
 
-#: ../ui/aruni/template.xhtml.en:28
-#, fuzzy
-msgctxt "div"
-msgid "${languages}"
-msgstr "语言"
-
-#: ../ui/aruni/template.xhtml.en:45
-#, fuzzy
-msgctxt "body"
-msgid "${location}"
-msgstr "登录"
-
-#: ../ui/aruni/template.xhtml.en:57
-#, fuzzy
-msgctxt "table cell"
-msgid "${menu}"
-msgstr "物件被更名"
-
-#: ../ui/aruni/template.xhtml.en:50
-#, fuzzy
-msgctxt "div"
-msgid "${message}"
-msgstr "信息"
-
 #: ../tracker/ui/edit_resource.xml.en:39
 msgctxt "option"
 msgid "${option/start} - ${option/end}"
 msgstr ""
-
-#: ../ui/aruni/template.xhtml.en:49
-#, fuzzy
-msgctxt "heading"
-msgid "${page_title}"
-msgstr "名称"
 
 #: ../calendar/ui/weekly_view.xml.en:42
 #, fuzzy
@@ -129,12 +93,6 @@ msgstr ""
 msgctxt "paragraph"
 msgid "${thread/comments} comments."
 msgstr ""
-
-#: ../ui/aruni/template.xhtml.en:7
-#, fuzzy
-msgctxt "title"
-msgid "${title}"
-msgstr "名称"
 
 #: ../wiki/ui/edit.xml.en:24
 msgctxt "dd"
@@ -558,7 +516,7 @@ msgstr ""
 msgid "ANONYMOUS"
 msgstr ""
 
-#: ../website_views.py:344
+#: ../website_views.py:346
 msgid "About"
 msgstr "关于IKAARO"
 
@@ -598,13 +556,13 @@ msgid "Add"
 msgstr "加入"
 
 #: ../tracker/ui/add_issue.xml.en:123 ../ui/base/proxy_new_instance.xml.en:31
-#: ../ui/website/edit_languages.xml.en:53
+#: ../ui/website/new_instance.xml.en:37 ../ui/website/edit_languages.xml.en:53
 #, fuzzy
 msgctxt "button"
 msgid "Add"
 msgstr "加入"
 
-#: ../ui/base/proxy_new_instance.xml.en:9
+#: ../ui/base/proxy_new_instance.xml.en:9 ../ui/website/new_instance.xml.en:9
 #, fuzzy
 msgctxt "legend"
 msgid "Add ${class_title}"
@@ -711,7 +669,7 @@ msgid ""
 "An email has been sent to you with the procedure to change your password."
 msgstr ""
 
-#: ../website_views.py:153
+#: ../website_views.py:155
 msgid ""
 "An email has been sent to you, to finish the registration process follow the "
 "instructions detailed in it."
@@ -1011,6 +969,7 @@ msgid "Choose a template:"
 msgstr "选择语言"
 
 #: ../ui/base/proxy_new_instance.xml.en:20
+#: ../ui/website/new_instance.xml.en:20
 #, fuzzy
 msgctxt "dt"
 msgid "Choose the ${class_title} type"
@@ -1137,7 +1096,7 @@ msgstr "查阅"
 msgid "Confirmed"
 msgstr ""
 
-#: ../website_views.py:178
+#: ../website_views.py:180
 msgid "Contact"
 msgstr "联系我们"
 
@@ -1188,7 +1147,7 @@ msgstr ""
 msgid "Create and publish a Web Page."
 msgstr "列出文档"
 
-#: ../website_views.py:417
+#: ../website_views.py:419
 msgid "Credits"
 msgstr ""
 
@@ -1337,7 +1296,7 @@ msgstr ""
 msgid "Dressable"
 msgstr "信息"
 
-#: ../user_views.py:170 ../website_views.py:121
+#: ../user_views.py:170 ../website_views.py:123
 #, fuzzy
 msgid "E-mail Address"
 msgstr "用户"
@@ -1607,7 +1566,7 @@ msgctxt "table cell"
 msgid "Filename"
 msgstr "重命名"
 
-#: ../user_views.py:168 ../user_views.py:366 ../website_views.py:119
+#: ../user_views.py:168 ../user_views.py:366 ../website_views.py:121
 #: ../access.py:76 ../access.py:132
 #, fuzzy
 msgid "First Name"
@@ -1636,7 +1595,7 @@ msgctxt "button"
 msgid "Forget this Search"
 msgstr "搜索"
 
-#: ../website_views.py:61
+#: ../website_views.py:63
 #, fuzzy
 msgid "Forgotten password"
 msgstr "改变内设"
@@ -2047,7 +2006,7 @@ msgstr "改换"
 msgid "Last Modified"
 msgstr ""
 
-#: ../user_views.py:169 ../user_views.py:365 ../website_views.py:120
+#: ../user_views.py:169 ../user_views.py:365 ../website_views.py:122
 #: ../access.py:75 ../access.py:133
 #, fuzzy
 msgid "Last Name"
@@ -2173,7 +2132,7 @@ msgstr ""
 msgid "Message Catalog"
 msgstr "信息"
 
-#: ../website_views.py:203
+#: ../website_views.py:205
 #, fuzzy
 msgid "Message body"
 msgstr "信息"
@@ -2183,12 +2142,12 @@ msgstr "信息"
 msgid "Message in a thread"
 msgstr "信息被修正."
 
-#: ../website_views.py:244
+#: ../website_views.py:246
 #, fuzzy
 msgid "Message sent."
 msgstr "信息被修正."
 
-#: ../website_views.py:202
+#: ../website_views.py:204
 msgid "Message subject"
 msgstr "信息目的"
 
@@ -2264,6 +2223,7 @@ msgid "Name"
 msgstr "姓名"
 
 #: ../ui/base/proxy_new_instance.xml.en:15
+#: ../ui/website/new_instance.xml.en:15
 #, fuzzy
 msgctxt "label"
 msgid "Name"
@@ -2452,7 +2412,7 @@ msgstr "写入"
 msgid "October"
 msgstr ""
 
-#: ../website_views.py:62
+#: ../website_views.py:64
 msgid "Ok"
 msgstr ""
 
@@ -2507,7 +2467,7 @@ msgstr ""
 msgid "OpenOffice.org Text"
 msgstr ""
 
-#: ../website_views.py:407
+#: ../website_views.py:409
 msgid "Operating System"
 msgstr ""
 
@@ -2649,7 +2609,7 @@ msgstr ""
 msgid "Plain Text"
 msgstr "简易文件"
 
-#: ../website_views.py:196
+#: ../website_views.py:198
 msgid "Please answer this: {captcha_question}"
 msgstr ""
 
@@ -2818,7 +2778,7 @@ msgstr ""
 msgid "RTF Document"
 msgstr "新文件"
 
-#: ../website_views.py:200
+#: ../website_views.py:202
 msgid "Recipient"
 msgstr "收件人"
 
@@ -2827,7 +2787,7 @@ msgstr "收件人"
 msgid "Record deleted."
 msgstr "记录被修正."
 
-#: ../website_views.py:110 ../website_views.py:111
+#: ../website_views.py:112 ../website_views.py:113
 #, fuzzy
 msgid "Register"
 msgstr "查阅"
@@ -3102,7 +3062,7 @@ msgstr "保存"
 msgid "Schedule your time with calendar files."
 msgstr ""
 
-#: ../tracker/tracker_views.py:452 ../website_views.py:251
+#: ../tracker/tracker_views.py:452 ../website_views.py:253
 msgid "Search"
 msgstr "搜索"
 
@@ -3184,7 +3144,7 @@ msgstr ""
 msgid "Select the contact accounts"
 msgstr "你必须选择删除成员."
 
-#: ../website_views.py:179
+#: ../website_views.py:181
 msgid "Send"
 msgstr "发送"
 
@@ -3547,7 +3507,7 @@ msgstr "名称"
 msgid "There is 1 item."
 msgstr "名称"
 
-#: ../website_views.py:135
+#: ../website_views.py:137
 #, fuzzy
 msgid "There is already an active user with that email."
 msgstr "此文件名已被另外资源占有."
@@ -3561,7 +3521,7 @@ msgstr "此文件名已被另外资源占有."
 msgid "There is another user with the email \"{email}\", please try again."
 msgstr "此用户名已登记\"%s\", 请输入另一用户名."
 
-#: ../website_views.py:90
+#: ../website_views.py:92
 #, fuzzy
 msgid "There is not a user identified as \"{username}\""
 msgstr "此用户名已登记\"%s\", 请输入另一用户名."
@@ -3624,6 +3584,7 @@ msgid "Title"
 msgstr "名称"
 
 #: ../ui/base/proxy_new_instance.xml.en:11
+#: ../ui/website/new_instance.xml.en:11
 #, fuzzy
 msgctxt "label"
 msgid "Title"
@@ -3747,13 +3708,13 @@ msgctxt "heading"
 msgid "Type the URL of an external resource"
 msgstr ""
 
-#: ../ui/website/virtual_hosts.xml.en:10
+#: ../ui/website/new_instance.xml.en:32 ../ui/website/virtual_hosts.xml.en:10
 msgctxt "paragraph"
 msgid ""
 "Type the hostnames this website will apply to, each one in a different line."
 msgstr ""
 
-#: ../website_views.py:66
+#: ../website_views.py:68
 #, fuzzy
 msgid "Type your email address"
 msgstr "用户"
@@ -3952,6 +3913,12 @@ msgstr "个人"
 msgid "Versions"
 msgstr "个人"
 
+#: ../ui/website/new_instance.xml.en:30
+#, fuzzy
+msgctxt "label"
+msgid "Vhosts"
+msgstr "名称"
+
 #: ../file.py:230 ../file.py:231
 #, fuzzy
 msgid "Video"
@@ -4026,7 +3993,7 @@ msgstr "简易文件"
 msgid "Workflow State"
 msgstr ""
 
-#: ../website_views.py:226
+#: ../website_views.py:228
 msgid "Wrong answer to the question."
 msgstr ""
 
@@ -4163,7 +4130,7 @@ msgstr ""
 msgid "Your confirmation key is invalid."
 msgstr ""
 
-#: ../website_views.py:201
+#: ../website_views.py:203
 #, fuzzy
 msgid "Your email address"
 msgstr "用户"
@@ -4285,7 +4252,7 @@ msgstr "选择语言"
 msgid "medium"
 msgstr ""
 
-#: ../website_views.py:391
+#: ../website_views.py:393
 msgid "no version found"
 msgstr ""
 
@@ -4441,6 +4408,11 @@ msgstr "名称"
 
 #, fuzzy
 #~ msgid "${batch}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${body}"
 #~ msgstr "名称"
 
 #, fuzzy
@@ -4704,8 +4676,23 @@ msgstr "名称"
 #~ msgstr "语言"
 
 #, fuzzy
+#~ msgctxt "div"
+#~ msgid "${languages}"
+#~ msgstr "语言"
+
+#, fuzzy
+#~ msgctxt "body"
+#~ msgid "${location}"
+#~ msgstr "登录"
+
+#, fuzzy
 #~ msgid "${menu/title}"
 #~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${menu}"
+#~ msgstr "物件被更名"
 
 #, fuzzy
 #~ msgctxt "paragraph"
@@ -4725,6 +4712,11 @@ msgstr "名称"
 #, fuzzy
 #~ msgctxt "paragraph"
 #~ msgid "${message/mtime}"
+#~ msgstr "信息"
+
+#, fuzzy
+#~ msgctxt "div"
+#~ msgid "${message}"
 #~ msgstr "信息"
 
 #, fuzzy
@@ -4794,6 +4786,11 @@ msgstr "名称"
 #, fuzzy
 #~ msgctxt "table cell"
 #~ msgid "${package/version}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "heading"
+#~ msgid "${page_title}"
 #~ msgstr "名称"
 
 #, fuzzy
@@ -4972,6 +4969,11 @@ msgstr "名称"
 #~ msgstr "名称"
 
 #, fuzzy
+#~ msgctxt "title"
+#~ msgid "${title}"
+#~ msgstr "名称"
+
+#, fuzzy
 #~ msgctxt "label"
 #~ msgid "${title}"
 #~ msgstr "名称"
@@ -5028,11 +5030,6 @@ msgstr "名称"
 #~ msgctxt "emphasis"
 #~ msgid "${username}"
 #~ msgstr "物件被更名"
-
-#, fuzzy
-#~ msgctxt "textarea"
-#~ msgid "${vhosts}"
-#~ msgstr "名称"
 
 #, fuzzy
 #~ msgctxt "heading"

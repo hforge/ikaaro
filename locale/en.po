@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 0.3.0\n"
-"POT-Creation-Date: 2010-05-03 15:05+CET\n"
+"POT-Creation-Date: 2010-05-03 17:05+CET\n"
 "PO-Revision-Date: 2001-07-08 17:07+CET\n"
 "Last-Translator: jdavid\n"
 "Language-Team: ??\n"
@@ -62,44 +62,14 @@ msgstr ""
 msgid "${batch} <x id='1'/> ${table}"
 msgstr ""
 
-#: ../ui/aruni/template.xhtml.en:54
-msgctxt "table cell"
-msgid "${body}"
-msgstr ""
-
 #: ../calendar/ui/edit_event.xml.en:16
 msgctxt "option"
 msgid "${item/value} "
 msgstr ""
 
-#: ../ui/aruni/template.xhtml.en:28
-msgctxt "div"
-msgid "${languages}"
-msgstr ""
-
-#: ../ui/aruni/template.xhtml.en:45
-msgctxt "body"
-msgid "${location}"
-msgstr ""
-
-#: ../ui/aruni/template.xhtml.en:57
-msgctxt "table cell"
-msgid "${menu}"
-msgstr ""
-
-#: ../ui/aruni/template.xhtml.en:50
-msgctxt "div"
-msgid "${message}"
-msgstr ""
-
 #: ../tracker/ui/edit_resource.xml.en:39
 msgctxt "option"
 msgid "${option/start} - ${option/end}"
-msgstr ""
-
-#: ../ui/aruni/template.xhtml.en:49
-msgctxt "heading"
-msgid "${page_title}"
 msgstr ""
 
 #: ../calendar/ui/weekly_view.xml.en:42
@@ -114,11 +84,6 @@ msgstr ""
 #: ../forum/ui/Forum_view.xml.en:15
 msgctxt "paragraph"
 msgid "${thread/comments} comments."
-msgstr ""
-
-#: ../ui/aruni/template.xhtml.en:7
-msgctxt "title"
-msgid "${title}"
 msgstr ""
 
 #: ../wiki/ui/edit.xml.en:24
@@ -535,7 +500,7 @@ msgstr ""
 msgid "ANONYMOUS"
 msgstr ""
 
-#: ../website_views.py:344
+#: ../website_views.py:346
 msgid "About"
 msgstr ""
 
@@ -571,12 +536,12 @@ msgid "Add"
 msgstr ""
 
 #: ../tracker/ui/add_issue.xml.en:123 ../ui/base/proxy_new_instance.xml.en:31
-#: ../ui/website/edit_languages.xml.en:53
+#: ../ui/website/new_instance.xml.en:37 ../ui/website/edit_languages.xml.en:53
 msgctxt "button"
 msgid "Add"
 msgstr ""
 
-#: ../ui/base/proxy_new_instance.xml.en:9
+#: ../ui/base/proxy_new_instance.xml.en:9 ../ui/website/new_instance.xml.en:9
 msgctxt "legend"
 msgid "Add ${class_title}"
 msgstr ""
@@ -668,7 +633,7 @@ msgid ""
 "An email has been sent to you with the procedure to change your password."
 msgstr ""
 
-#: ../website_views.py:153
+#: ../website_views.py:155
 msgid ""
 "An email has been sent to you, to finish the registration process follow the "
 "instructions detailed in it."
@@ -940,6 +905,7 @@ msgid "Choose a template:"
 msgstr ""
 
 #: ../ui/base/proxy_new_instance.xml.en:20
+#: ../ui/website/new_instance.xml.en:20
 msgctxt "dt"
 msgid "Choose the ${class_title} type"
 msgstr ""
@@ -1055,7 +1021,7 @@ msgstr ""
 msgid "Confirmed"
 msgstr ""
 
-#: ../website_views.py:178
+#: ../website_views.py:180
 msgid "Contact"
 msgstr ""
 
@@ -1102,7 +1068,7 @@ msgstr ""
 msgid "Create and publish a Web Page."
 msgstr ""
 
-#: ../website_views.py:417
+#: ../website_views.py:419
 msgid "Credits"
 msgstr ""
 
@@ -1237,7 +1203,7 @@ msgstr ""
 msgid "Dressable"
 msgstr ""
 
-#: ../user_views.py:170 ../website_views.py:121
+#: ../user_views.py:170 ../website_views.py:123
 msgid "E-mail Address"
 msgstr ""
 
@@ -1476,7 +1442,7 @@ msgctxt "table cell"
 msgid "Filename"
 msgstr ""
 
-#: ../user_views.py:168 ../user_views.py:366 ../website_views.py:119
+#: ../user_views.py:168 ../user_views.py:366 ../website_views.py:121
 #: ../access.py:76 ../access.py:132
 msgid "First Name"
 msgstr ""
@@ -1502,7 +1468,7 @@ msgctxt "button"
 msgid "Forget this Search"
 msgstr ""
 
-#: ../website_views.py:61
+#: ../website_views.py:63
 msgid "Forgotten password"
 msgstr ""
 
@@ -1886,7 +1852,7 @@ msgstr ""
 msgid "Last Modified"
 msgstr ""
 
-#: ../user_views.py:169 ../user_views.py:365 ../website_views.py:120
+#: ../user_views.py:169 ../user_views.py:365 ../website_views.py:122
 #: ../access.py:75 ../access.py:133
 msgid "Last Name"
 msgstr ""
@@ -1999,7 +1965,7 @@ msgstr ""
 msgid "Message Catalog"
 msgstr ""
 
-#: ../website_views.py:203
+#: ../website_views.py:205
 msgid "Message body"
 msgstr ""
 
@@ -2007,11 +1973,11 @@ msgstr ""
 msgid "Message in a thread"
 msgstr ""
 
-#: ../website_views.py:244
+#: ../website_views.py:246
 msgid "Message sent."
 msgstr ""
 
-#: ../website_views.py:202
+#: ../website_views.py:204
 msgid "Message subject"
 msgstr ""
 
@@ -2079,6 +2045,7 @@ msgid "Name"
 msgstr ""
 
 #: ../ui/base/proxy_new_instance.xml.en:15
+#: ../ui/website/new_instance.xml.en:15
 msgctxt "label"
 msgid "Name"
 msgstr ""
@@ -2245,7 +2212,7 @@ msgstr ""
 msgid "October"
 msgstr ""
 
-#: ../website_views.py:62
+#: ../website_views.py:64
 msgid "Ok"
 msgstr ""
 
@@ -2297,7 +2264,7 @@ msgstr ""
 msgid "OpenOffice.org Text"
 msgstr ""
 
-#: ../website_views.py:407
+#: ../website_views.py:409
 msgid "Operating System"
 msgstr ""
 
@@ -2427,7 +2394,7 @@ msgstr ""
 msgid "Plain Text"
 msgstr ""
 
-#: ../website_views.py:196
+#: ../website_views.py:198
 msgid "Please answer this: {captcha_question}"
 msgstr ""
 
@@ -2577,7 +2544,7 @@ msgstr ""
 msgid "RTF Document"
 msgstr ""
 
-#: ../website_views.py:200
+#: ../website_views.py:202
 msgid "Recipient"
 msgstr ""
 
@@ -2585,7 +2552,7 @@ msgstr ""
 msgid "Record deleted."
 msgstr ""
 
-#: ../website_views.py:110 ../website_views.py:111
+#: ../website_views.py:112 ../website_views.py:113
 msgid "Register"
 msgstr ""
 
@@ -2815,7 +2782,7 @@ msgstr ""
 msgid "Schedule your time with calendar files."
 msgstr ""
 
-#: ../tracker/tracker_views.py:452 ../website_views.py:251
+#: ../tracker/tracker_views.py:452 ../website_views.py:253
 msgid "Search"
 msgstr ""
 
@@ -2887,7 +2854,7 @@ msgstr ""
 msgid "Select the contact accounts"
 msgstr ""
 
-#: ../website_views.py:179
+#: ../website_views.py:181
 msgid "Send"
 msgstr ""
 
@@ -3213,7 +3180,7 @@ msgstr ""
 msgid "There is 1 item."
 msgstr ""
 
-#: ../website_views.py:135
+#: ../website_views.py:137
 msgid "There is already an active user with that email."
 msgstr ""
 
@@ -3225,7 +3192,7 @@ msgstr ""
 msgid "There is another user with the email \"{email}\", please try again."
 msgstr ""
 
-#: ../website_views.py:90
+#: ../website_views.py:92
 msgid "There is not a user identified as \"{username}\""
 msgstr ""
 
@@ -3284,6 +3251,7 @@ msgid "Title"
 msgstr ""
 
 #: ../ui/base/proxy_new_instance.xml.en:11
+#: ../ui/website/new_instance.xml.en:11
 msgctxt "label"
 msgid "Title"
 msgstr ""
@@ -3398,13 +3366,13 @@ msgctxt "heading"
 msgid "Type the URL of an external resource"
 msgstr ""
 
-#: ../ui/website/virtual_hosts.xml.en:10
+#: ../ui/website/new_instance.xml.en:32 ../ui/website/virtual_hosts.xml.en:10
 msgctxt "paragraph"
 msgid ""
 "Type the hostnames this website will apply to, each one in a different line."
 msgstr ""
 
-#: ../website_views.py:66
+#: ../website_views.py:68
 msgid "Type your email address"
 msgstr ""
 
@@ -3579,6 +3547,11 @@ msgstr ""
 msgid "Versions"
 msgstr ""
 
+#: ../ui/website/new_instance.xml.en:30
+msgctxt "label"
+msgid "Vhosts"
+msgstr ""
+
 #: ../file.py:230 ../file.py:231
 msgid "Video"
 msgstr ""
@@ -3651,7 +3624,7 @@ msgstr ""
 msgid "Workflow State"
 msgstr ""
 
-#: ../website_views.py:226
+#: ../website_views.py:228
 msgid "Wrong answer to the question."
 msgstr ""
 
@@ -3783,7 +3756,7 @@ msgstr ""
 msgid "Your confirmation key is invalid."
 msgstr ""
 
-#: ../website_views.py:201
+#: ../website_views.py:203
 msgid "Your email address"
 msgstr ""
 
@@ -3899,7 +3872,7 @@ msgstr ""
 msgid "medium"
 msgstr ""
 
-#: ../website_views.py:391
+#: ../website_views.py:393
 msgid "no version found"
 msgstr ""
 
