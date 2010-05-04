@@ -190,8 +190,7 @@ class Skin(UIFolder):
         # Generic
         styles = [
             '/ui/bo.css',
-            '/ui/js_calendar/calendar-aruni.css',
-            '/ui/table/style.css']
+            '/ui/js_calendar/calendar-aruni.css']
 
         # Skin
         if self.has_handler('style.css'):
