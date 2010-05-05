@@ -234,15 +234,14 @@ class DBResource(CatalogAware, IResource):
     class_schema = freeze({
         # Metadata
         'version': String(source='metadata'),
+        'mtime': DateTime(source='metadata', indexed=True, stored=True),
+        'last_author': String(source='metadata', indexed=False, stored=True),
         'title': Multilingual(source='metadata', indexed=True, stored=True),
         'description': Multilingual(source='metadata', indexed=True),
         'subject': Multilingual(source='metadata', indexed=True),
         # Key & class id
         'abspath': String(key_field=True, indexed=True, stored=True),
         'format': String(indexed=True, stored=True),
-        # Versioning
-        'mtime': DateTime(indexed=True, stored=True),
-        'last_author': String(indexed=False, stored=True),
         # Folder's view
         'parent_path': String(indexed=True),
         'name': String(stored=True, indexed=True),
@@ -335,7 +334,7 @@ class DBResource(CatalogAware, IResource):
         raise NotImplementedError
 
 
-    def _get_catalog_values(self):
+    def get_catalog_values(self):
         from access import RoleAware
         from file import File, Image
 
@@ -416,6 +415,8 @@ class DBResource(CatalogAware, IResource):
             'name': self.name,
             'abspath': abspath_str,
             'format': self.metadata.format,
+            'mtime': self.get_property('mtime'),
+            'last_author': self.get_property('last_author'),
             'title': title,
             'subject': subject,
             'text': text,
@@ -427,22 +428,6 @@ class DBResource(CatalogAware, IResource):
             'members': members,
             'size': size,
             'workflow_state': workflow_state}
-
-
-    def get_catalog_values(self):
-        # This method is called only from icms-update-catalog.py
-        values = self._get_catalog_values()
-
-        # Get last revision
-        revision = self.get_last_revision()
-        if not revision:
-            return values
-
-        # Ok
-        root = get_context().root
-        values['last_author'] = root.get_user_title(revision['username'])
-        values['mtime'] = revision['date']
-        return values
 
 
     ########################################################################

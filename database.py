@@ -244,8 +244,6 @@ class Database(ReadOnlyDatabase, GitDatabase):
     def _before_commit(self):
         context = get_context()
         root = context.root
-        catalog = self.catalog
-        docs_to_index = []
 
         # Update links when resources moved
         for source, target in self.resources_old2new.items():
@@ -263,52 +261,49 @@ class Database(ReadOnlyDatabase, GitDatabase):
         self.resources_old2new.clear()
 
         # Index
+        git_date = context.timestamp
+        user = context.user
+        userid = user.name if user else None
+        docs_to_index = []
         for path in self.resources_new2old:
             resource = root.get_resource(path)
-            values = resource._get_catalog_values()
+            resource.metadata.set_property('mtime', git_date)
+            resource.metadata.set_property('last_author', userid)
+            values = resource.get_catalog_values()
             docs_to_index.append((resource, values))
         self.resources_new2old.clear()
 
         # Find out commit author & message
-        git_author = 'nobody <>'
-        git_message = 'no comment'
-        if context is not None:
-            # Author
-            user = context.user
-            if user is not None:
-                email = user.get_property('email')
-                git_author = '%s <%s>' % (user.name, email)
-            # Message
-            try:
-                git_message = getattr(context, 'git_message')
-            except AttributeError:
-                git_message = "%s %s" % (context.method, context.uri)
-            else:
-                git_message = git_message.encode('utf-8')
+        git_msg = 'no comment'
+        # Author
+        if user:
+            email = user.get_property('email')
+            git_author = '%s <%s>' % (userid, email)
+        else:
+            git_author = 'nobody <>'
+        # Message
+        try:
+            git_msg = getattr(context, 'git_message')
+        except AttributeError:
+            git_msg = "%s %s" % (context.method, context.uri)
+        else:
+            git_msg = git_msg.encode('utf-8')
 
         # Ok
-        return git_author, git_message, docs_to_index, docs_to_unindex
+        return git_author, git_date, git_msg, docs_to_index, docs_to_unindex
 
 
     def _save_changes(self, data):
-        git_author, git_message, docs_to_index, docs_to_unindex = data
-        context = get_context()
-        git_date = context.timestamp
+        git_author, git_date, git_msg, docs_to_index, docs_to_unindex = data
 
-        # (1) Save filesystem changes
-        GitDatabase._save_changes(self, (git_author, git_date, git_message))
+        # 1. Save filesystem changes
+        GitDatabase._save_changes(self, (git_author, git_date, git_msg))
 
-        # Catalog
-        # (2) UnIndex
+        # 2. Catalog
         catalog = self.catalog
         for path in docs_to_unindex:
             catalog.unindex_document(path)
-
-        # (3) Index
-        author = context.user.get_title() if context.user else None
         for resource, values in docs_to_index:
-            values['mtime'] = git_date
-            values['last_author'] = author
             catalog.index_document(values)
         catalog.save_changes()
 

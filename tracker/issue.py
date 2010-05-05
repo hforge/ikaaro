@@ -69,8 +69,8 @@ class Issue(Folder):
         )
 
 
-    def _get_catalog_values(self):
-        document = Folder._get_catalog_values(self)
+    def get_catalog_values(self):
+        document = Folder.get_catalog_values(self)
         document['id'] = int(self.name)
         names = 'product', 'module', 'version', 'type', 'priority', 'state'
         for name in names:

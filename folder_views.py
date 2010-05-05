@@ -348,7 +348,8 @@ class Folder_BrowseContent(SearchForm):
             return format_datetime(brain.mtime, accept=accept)
         elif column == 'last_author':
             # Last author
-            return context.root.get_user_title(brain.last_author)
+            author =  brain.last_author
+            return context.root.get_user_title(author) if author else None
         elif column == 'size':
             # Size
             return item_resource.get_human_size()

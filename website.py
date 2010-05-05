@@ -91,8 +91,8 @@ class WebSite(RoleAware, Folder):
         captcha_answer=Unicode(source='metadata', default=u"5"))
 
 
-    def _get_catalog_values(self):
-        values = Folder._get_catalog_values(self)
+    def get_catalog_values(self):
+        values = Folder.get_catalog_values(self)
         values['vhosts'] = self.get_property('vhosts')
         return values
 

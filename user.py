@@ -59,6 +59,8 @@ class User(AccessControl, Folder):
     class_schema = freeze({
         # Metadata
         'version': String(source='metadata'),
+        'mtime': Folder.class_schema['mtime'],
+        'last_author': Folder.class_schema['last_author'],
         'firstname': Unicode(source='metadata', indexed=True, stored=True),
         'lastname': Unicode(source='metadata', indexed=True, stored=True),
         'email': Email(source='metadata', indexed=True, stored=True),
@@ -75,8 +77,8 @@ class User(AccessControl, Folder):
     ########################################################################
     # Indexing
     ########################################################################
-    def _get_catalog_values(self):
-        values = Folder._get_catalog_values(self)
+    def get_catalog_values(self):
+        values = Folder.get_catalog_values(self)
         email = self.get_property('email')
         email_domain = None
         if email and email.count('@'):
