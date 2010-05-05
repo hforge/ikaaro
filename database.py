@@ -245,7 +245,7 @@ class Database(ReadOnlyDatabase, GitDatabase):
         context = get_context()
         root = context.root
         catalog = self.catalog
-        documents_to_index = []
+        docs_to_index = []
 
         # Update links when resources moved
         for source, target in self.resources_old2new.items():
@@ -257,7 +257,7 @@ class Database(ReadOnlyDatabase, GitDatabase):
         # Get documents to unindex
         # update_links methods call server.change_resource
         # which update resources_old2new dictionary
-        documents_to_unindex = self.resources_old2new.keys()
+        docs_to_unindex = self.resources_old2new.keys()
 
         # Clear resources_old2new
         self.resources_old2new.clear()
@@ -266,7 +266,7 @@ class Database(ReadOnlyDatabase, GitDatabase):
         for path in self.resources_new2old:
             resource = root.get_resource(path)
             values = resource._get_catalog_values()
-            documents_to_index.append((resource, values))
+            docs_to_index.append((resource, values))
         self.resources_new2old.clear()
 
         # Find out commit author & message
@@ -287,28 +287,27 @@ class Database(ReadOnlyDatabase, GitDatabase):
                 git_message = git_message.encode('utf-8')
 
         # Ok
-        return git_author, git_message, documents_to_index, documents_to_unindex
+        return git_author, git_message, docs_to_index, docs_to_unindex
 
 
     def _save_changes(self, data):
-        git_author, git_message, documents_to_index, documents_to_unindex = data
+        git_author, git_message, docs_to_index, docs_to_unindex = data
+        context = get_context()
+        git_date = context.timestamp
 
         # (1) Save filesystem changes
-        GitDatabase._save_changes(self, (git_author, git_message))
+        GitDatabase._save_changes(self, (git_author, git_date, git_message))
 
         # Catalog
         # (2) UnIndex
         catalog = self.catalog
-        for path in documents_to_unindex:
+        for path in docs_to_unindex:
             catalog.unindex_document(path)
 
         # (3) Index
-        mtime = datetime.now() # XXX This is an approximation, not exactly the
-                               # same as returned by git
-        user = get_context().user
-        author = user.get_title() if user else None
-        for resource, values in documents_to_index:
-            values['mtime'] = mtime
+        author = context.user.get_title() if context.user else None
+        for resource, values in docs_to_index:
+            values['mtime'] = git_date
             values['last_author'] = author
             catalog.index_document(values)
         catalog.save_changes()
