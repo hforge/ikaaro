@@ -37,10 +37,10 @@ from glib import GError
 # Import from itools
 from itools.datatypes import Boolean
 from itools.fs import vfs, lfs
+from itools.http import SoupMessage
 from itools.log import Logger, register_logger
 from itools.log import DEBUG, INFO, WARNING, ERROR, FATAL
 from itools.log import log_error, log_warning, log_info
-from itools.soup import SoupMessage
 from itools.uri import get_host_from_authority
 from itools.web import WebServer, WebLogger, Context, set_context
 
