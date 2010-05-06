@@ -245,49 +245,42 @@ class Database(ReadOnlyDatabase, GitDatabase):
         context = get_context()
         root = context.root
 
-        # Update links when resources moved
+        # 1. Update links when resources moved
         for source, target in self.resources_old2new.items():
             if target and source != target:
                 target = Path(target)
                 resource = root.get_resource(target)
                 resource._on_move_resource(source)
 
-        # Get documents to unindex
-        # update_links methods call server.change_resource
-        # which update resources_old2new dictionary
+        # 2. Documents to unindex (the update_links methods calls
+        # server.change_resource which may modify the resources_old2new
+        # dictionary)
         docs_to_unindex = self.resources_old2new.keys()
-
-        # Clear resources_old2new
         self.resources_old2new.clear()
 
-        # Index
+        # 3. Index
         git_date = context.timestamp
         user = context.user
         userid = user.name if user else None
         docs_to_index = []
         for path in self.resources_new2old:
             resource = root.get_resource(path)
-            resource.metadata.set_property('mtime', git_date)
-            resource.metadata.set_property('last_author', userid)
+            if git_date:
+                resource.metadata.set_property('mtime', git_date)
+                resource.metadata.set_property('last_author', userid)
             values = resource.get_catalog_values()
             docs_to_index.append((resource, values))
         self.resources_new2old.clear()
 
-        # Find out commit author & message
+        # 4. Find out commit author & message
         git_msg = 'no comment'
-        # Author
-        if user:
-            email = user.get_property('email')
-            git_author = '%s <%s>' % (userid, email)
-        else:
-            git_author = 'nobody <>'
-        # Message
-        try:
-            git_msg = getattr(context, 'git_message')
-        except AttributeError:
-            git_msg = "%s %s" % (context.method, context.uri)
-        else:
-            git_msg = git_msg.encode('utf-8')
+        git_author = (
+            '%s <%s>' % (userid, user.get_property('email'))
+            if user else 'nobody <>')
+        git_msg = getattr(context, 'git_message', None)
+        git_msg = (
+            git_msg.encode('utf-8') if git_msg else
+            git_msg = "%s %s" % (context.method, context.uri))
 
         # Ok
         return git_author, git_date, git_msg, docs_to_index, docs_to_unindex

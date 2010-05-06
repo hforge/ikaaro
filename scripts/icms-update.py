@@ -137,7 +137,9 @@ def update_versions(target, database, version, paths, root, force=False):
                 print line
                 raise
     # Commit
-    get_context().git_message = u'Upgrade to version %s' % version
+    context = get_context()
+    context.git_message = u'Upgrade to version %s' % version
+    context.timestamp = None # Do not override the mtime/author
     database.save_changes()
     # Stop if there were errors
     print
