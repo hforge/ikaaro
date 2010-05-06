@@ -18,6 +18,7 @@
 
 # Import from the Standard Library
 from cProfile import runctx
+from datetime import datetime
 from optparse import OptionParser
 from subprocess import Popen, PIPE
 from sys import exit, stdout
@@ -26,7 +27,7 @@ from traceback import print_exc
 
 # Import from itools
 import itools
-from itools.core import start_subprocess
+from itools.core import start_subprocess, send_subprocess
 from itools.csv import Property
 from itools.fs import lfs
 from itools.handlers import ro_database
@@ -162,11 +163,14 @@ def update(parser, options, target):
         print 'Cannot proceed, the server is running in read-write mode.'
         return
 
+    # Start subprocess
+    path = '%s/database' % target
+    start_subprocess(path)
+
     #######################################################################
     # STAGE 0: Change format of the metadata
     # XXX Specific to the migration from 0.61 to 0.62
     #######################################################################
-    path = '%s/database' % target
     metadata = ro_database.get_handler('%s/.metadata' % path, Metadata)
     try:
         metadata.load_state()
@@ -215,7 +219,8 @@ def update(parser, options, target):
         print '       : %f seconds' % (time() - t0)
 
     #######################################################################
-    # STAGE 1: Find out the versions to upgrade
+    # STAGE 0 (follow-up): Set mtime/author
+    # XXX Specific to the migration from 0.61 to 0.62
     #######################################################################
     server = Server(target)
     # Build a fake context
@@ -225,8 +230,62 @@ def update(parser, options, target):
     database = server.database
     root = server.root
 
+    mtime = root.get_property('mtime')
+    if mtime is None:
+        message = 'STAGE 0: Set mtime and author in the metadata (y/N)? '
+        if ask_confirmation(message, confirm) is False:
+            abort()
+        print 'STAGE 0: Initializing mtime/author'
+        # Load cache
+        git_cache = {}
+        cmd = ['git', 'log', '--pretty=format:%H%n%an%n%at%n%s', '--raw',
+               '--name-only', 'HEAD~1']
+        data = send_subprocess(cmd)
+        lines = data.splitlines()
+        i = 0
+        while i < len(lines):
+            date = int(lines[i + 2])
+            commit = {
+                'revision': lines[i],                 # commit
+                'username': lines[i + 1],             # author name
+                'date': datetime.fromtimestamp(date), # author date
+                'message': lines[i + 3],              # subject
+                }
+            # Modified files
+            i += 4
+            while i < len(lines) and lines[i]:
+                git_cache.setdefault(lines[i], commit)
+                i += 1
+            # Next entry is separated by an empty line
+            i += 1
+
+        # Set mtime/author
+        for resource in root.traverse_resources():
+            if not isinstance(resource, DBResource):
+                continue
+
+            files = resource.get_files_to_archive()
+            last_commit = None
+            for file in files:
+                commit = git_cache.get(file)
+                if not commit:
+                    continue
+                if not last_commit or commit['date'] > last_commit['date']:
+                    last_commit = commit
+            metadata = resource.metadata
+            metadata.set_property('mtime', last_commit['date'])
+            metadata.set_property('last_author', last_commit['username'])
+
+        # Commit
+        context.git_message = u'Upgrade: set mtime/author'
+        context.timestamp = None # Do not override the mtime/author
+        database.save_changes()
+
+
+    #######################################################################
+    # STAGE 1: Find out the versions to upgrade
+    #######################################################################
     print 'STAGE 1: Find out the versions to upgrade (may take a while).'
-    start_subprocess(path)
     version, paths = find_versions_to_update(root, options.force)
     while version:
         message = 'STAGE 1: Upgrade %d resources to version %s (y/N)? '
