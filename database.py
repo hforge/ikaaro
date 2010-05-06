@@ -279,8 +279,8 @@ class Database(ReadOnlyDatabase, GitDatabase):
             if user else 'nobody <>')
         git_msg = getattr(context, 'git_message', None)
         git_msg = (
-            git_msg.encode('utf-8') if git_msg else
-            git_msg = "%s %s" % (context.method, context.uri))
+            git_msg.encode('utf-8')
+            if git_msg else "%s %s" % (context.method, context.uri))
 
         # Ok
         return git_author, git_date, git_msg, docs_to_index, docs_to_unindex
