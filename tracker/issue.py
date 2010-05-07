@@ -45,7 +45,7 @@ from issue_views import IssueTrackerMenu
 class Issue(Folder):
 
     class_id = 'issue'
-    class_version = '20071216'
+    class_version = '20100507'
     class_title = MSG(u'Issue')
     class_description = MSG(u'Issue')
     class_views = ['edit', 'edit_resources', 'browse_content', 'history']
@@ -352,3 +352,42 @@ class Issue(Folder):
     edit = Issue_Edit()
     history = Issue_History()
 
+
+    #######################################################################
+    # Update
+    #######################################################################
+    def update_20100507(self):
+        from obsolete import History
+
+        metadata = self.metadata
+        history = self.handler.get_handler('.history', History)
+
+        record = history.records[-1]
+        # Title
+        lang = self.get_site_root().get_default_language()
+        title = history.get_record_value(record, 'title')
+        title = Property(title, lang=lang)
+        metadata.set_property('title', title)
+        # Product, module, etc.
+        names = 'product', 'module', 'version', 'type', 'state', 'priority'
+        for name in names:
+            value = history.get_record_value(record, name)
+            if value is not None:
+                metadata.set_property(name, value)
+        # Assigned to, cc
+        for name in 'assigned_to', 'cc_list':
+            value = history.get_record_value(record, name)
+            if value:
+                metadata.set_property(name, value)
+
+        # Comments / Files
+        for record in history.records:
+            comment = history.get_record_value(record, 'comment')
+            date = history.get_record_value(record, 'datetime')
+            author = history.get_record_value(record, 'username')
+            comment = Property(comment, date=date, author=author)
+            metadata.set_property('comment', comment)
+#            file = history.get_record_value(record, 'file')
+
+        # Remove .history
+        self.handler.del_handler('.history')
