@@ -172,8 +172,8 @@ class HTMLEditView(File_Edit):
 
 
     def get_value(self, resource, context, name, datatype):
-        language = resource.get_content_language(context)
         if name == 'data':
+            language = resource.get_content_language(context)
             return resource.get_html_data(language=language)
         return File_Edit.get_value(self, resource, context, name, datatype)
 
