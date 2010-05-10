@@ -327,6 +327,10 @@ table.new-resource-thumb {
   vertical-align: top;
 }
 
+#browse-list tr.even{
+  background-color: #FFF;
+}
+
 #browse-list tr.odd:hover, #browse-list tr.even:hover {
   background-color: #e0e0f0;
 }

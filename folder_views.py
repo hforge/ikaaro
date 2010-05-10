@@ -827,15 +827,23 @@ class GoToSpecificDocument(BaseView):
     title = MSG(u'Front Page')
     icon = 'view.png'
     specific_document = 'FrontPage'
+    specific_view = None
 
 
     def get_specific_document(self, resource, context):
         return self.specific_document
 
 
+    def get_specific_view(self, resource, context):
+        return self.specific_view
+
+
     def GET(self, resource, context):
         specific_document = self.get_specific_document(resource, context)
+        specific_view = self.get_specific_view(resource, context)
         goto = '%s/%s' % (context.get_link(resource), specific_document)
+        if specific_view:
+            goto = '%s/;%s' % (goto, specific_view)
         goto = get_reference(goto)
 
         # Keep the message

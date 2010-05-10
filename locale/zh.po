@@ -3,7 +3,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: zh\n"
-"POT-Creation-Date: 2010-04-20 12:04+CET\n"
+"POT-Creation-Date: 2010-05-03 17:05+CET\n"
 "PO-Revision-Date: 2007-10-30 17:58+0100\n"
 "Last-Translator: Zhouli <zhouli@in-girum.net>\n"
 "Language-Team:  <zh@li.org>\n"
@@ -51,22 +51,6 @@ msgstr ""
 msgid "$filename is not an OpenDocument Text."
 msgstr "编辑文档"
 
-#: ../calendar/ui/edit_event.xml.en:57
-msgctxt "textarea"
-msgid "${DESCRIPTION}"
-msgstr ""
-
-#: ../ui/folder/browse_image.xml.en:65 ../ui/generic/browse_table.xml.en:56
-#, fuzzy
-msgctxt "button"
-msgid "${action/title}"
-msgstr "用户资料列单"
-
-#: ../ui/generic/icons_view.xml.en:8
-#, fuzzy
-msgid "${batch}"
-msgstr "名称"
-
 #: ../ui/table/view.xml.en:5
 #, fuzzy
 msgid "${batch} ${table}"
@@ -84,503 +68,16 @@ msgstr "名称"
 msgid "${batch} <x id='1'/> ${table}"
 msgstr "名称"
 
-#: ../ui/aruni/template.xhtml.en:54
-#, fuzzy
-msgctxt "table cell"
-msgid "${body}"
-msgstr "名称"
-
-#: ../calendar/ui/daily_view.xml.en:26
-#, fuzzy
-msgctxt "link"
-msgid "${calendar/name}"
-msgstr "物件被更名"
-
-#: ../tracker/ui/weekly_template.xml.en:9
-#, fuzzy
-msgctxt "title attribute"
-msgid "${cell/content/issue/comment}"
-msgstr "名称"
-
-#: ../calendar/ui/weekly_view.xml.en:46
-#, fuzzy
-msgctxt "div"
-msgid "${cell/ns}"
-msgstr "名称"
-
-#: ../ui/revisions/changes.xml.en:52
-#, fuzzy
-msgctxt "div"
-msgid "${change/value}"
-msgstr "名称"
-
-#: ../ui/revisions/changes.xml.en:54
-#, fuzzy
-msgctxt "span"
-msgid "${change/value}"
-msgstr "名称"
-
-#: ../ui/folder/browse_image.xml.en:28
-#, fuzzy
-msgctxt "link"
-msgid "${column/title}"
-msgstr "名称"
-
-#: ../ui/generic/browse_table.xml.en:20
-#, fuzzy
-msgctxt "table cell"
-msgid "${column/title}"
-msgstr "名称"
-
-#: ../ui/generic/browse_table.xml.en:47
-#, fuzzy
-msgctxt "link"
-msgid "${column/value}"
-msgstr "名称"
-
-#: ../tracker/ui/edit_issue.xml.en:169
-#, fuzzy
-msgctxt "pre"
-msgid "${comment/comment}"
-msgstr "名称"
-
-#: ../tracker/ui/edit_issue.xml.en:153
-#, fuzzy
-msgctxt "table cell"
-msgid "${comment/datetime}"
-msgstr "用户资料列单"
-
-#: ../tracker/ui/edit_issue.xml.en:164
-#, fuzzy
-msgctxt "link"
-msgid "${comment/file}"
-msgstr "名称"
-
-#: ../tracker/ui/edit_issue.xml.en:152
-#, fuzzy
-msgctxt "table cell"
-msgid "${comment/user}"
-msgstr "名称"
-
-#: ../tracker/ui/add_issue.xml.en:112
-#, fuzzy
-msgctxt "textarea"
-msgid "${comment/value}"
-msgstr "名称"
-
-#: ../tracker/ui/edit_resource.xml.en:50
-#, fuzzy
-msgctxt "textarea"
-msgid "${comment}"
-msgstr "名称"
-
-#: ../ui/user/confirm_registration.xml.en:8
-#, fuzzy
-msgctxt "paragraph"
-msgid "${confirmation_msg}"
-msgstr "查阅"
-
-#: ../ui/binary/Archive_view.xml.en:10
-#, fuzzy
-msgctxt "pre"
-msgid "${contents}"
-msgstr "名称"
-
-#: ../ui/text/view.xml.en:7
-#, fuzzy
-msgctxt "pre"
-msgid "${data}"
-msgstr "名称"
-
-#: ../wiki/ui/edit.xml.en:172
-#, fuzzy
-msgctxt "textarea"
-msgid "${data}"
-msgstr "名称"
-
-#: ../calendar/ui/monthly_view.xml.en:37
-#, fuzzy
-msgctxt "span"
-msgid "${day/name}"
-msgstr "物件被更名"
-
-#: ../forum/ui/Forum_view.xml.en:7
-#, fuzzy
-msgctxt "emphasis"
-msgid "${description}"
-msgstr "名称"
-
-#: ../ui/user/tasks.xml.en:17
-#, fuzzy
-msgctxt "link"
-msgid "${doc/title}"
-msgstr "名称"
-
-#: ../ui/file/externaledit.xml.en:28
-#, fuzzy
-msgctxt "option"
-msgid "${encoding/title}"
-msgstr "名称"
-
-#: ../tracker/ui/weekly_template_fd.xml.en:8
-#: ../tracker/ui/monthly_template.xml.en:10
-#, fuzzy
-msgctxt "title attribute"
-msgid "${event/issue/comment}"
-msgstr "名称"
-
-#: ../calendar/ui/weekly_view.xml.en:67
-#, fuzzy
-msgctxt "tr"
-msgid "${event/ns}"
-msgstr "名称"
-
-#: ../ui/folder/browse_search.xml.en:13 ../ui/generic/browse_search.xml.en:11
-#, fuzzy
-msgctxt "option"
-msgid "${field/title}"
-msgstr "名称"
-
-#: ../calendar/ui/weekly_view.xml.en:36
-#, fuzzy
-msgctxt "table cell"
-msgid "${header/header}"
-msgstr "用户资料列单"
-
-#: ../wiki/ui/help.xml.en:8
-#, fuzzy
-msgctxt "table cell"
-msgid "${help_html}"
-msgstr "新文件夹"
-
-#: ../wiki/ui/help.xml.en:11
-#, fuzzy
-msgctxt "pre"
-msgid "${help_source}"
-msgstr "新文件夹"
-
-#: ../future/ui/dressable_view.xml.en:8
-#, fuzzy
-msgctxt "div"
-msgid "${item/content}"
-msgstr "名称"
-
-#: ../ui/html/addimage.xml.en:75 ../ui/html/addlink.xml.en:75
-#: ../ui/html/addmedia.xml.en:75
-#, fuzzy
-msgctxt "title attribute"
-msgid "${item/item_type}"
-msgstr "名称"
-
-#: ../ui/aruni/location.xml.en:10
-#, fuzzy
-msgctxt "title attribute"
-msgid "${item/name}"
-msgstr "名称"
-
-#: ../ui/folder/rename.xml.en:12
-#, fuzzy
-msgctxt "table cell"
-msgid "${item/path}"
-msgstr "名称"
-
-#: ../ui/html/addimage.xml.en:66 ../ui/html/addimage.xml.en:79
-#: ../ui/html/addlink.xml.en:66 ../ui/html/addlink.xml.en:79
-#: ../ui/html/addmedia.xml.en:66 ../ui/html/addmedia.xml.en:79
-#, fuzzy
-msgctxt "link"
-msgid "${item/short_title}"
-msgstr "名称"
-
-#: ../ui/base/proxy_new_instance.xml.en:26
-#, fuzzy
-msgctxt "label"
-msgid "${item/title}"
-msgstr "名称"
-
-#: ../ui/generic/menu.xml.en:12
-#, fuzzy
-msgctxt "link"
-msgid "${item/title}"
-msgstr "名称"
-
-#: ../tracker/ui/change_bugs.xml.en:42 ../tracker/ui/change_bugs.xml.en:51
-#: ../tracker/ui/change_bugs.xml.en:60 ../tracker/ui/change_bugs.xml.en:70
-#: ../tracker/ui/change_bugs.xml.en:78 ../tracker/ui/change_bugs.xml.en:87
-#, fuzzy
-msgctxt "option"
-msgid "${item/title}"
-msgstr "名称"
-
-#: ../ui/html/addimage.xml.en:64 ../ui/html/addimage.xml.en:79
-#: ../ui/html/addlink.xml.en:64 ../ui/html/addlink.xml.en:79
-#: ../ui/html/addmedia.xml.en:64 ../ui/html/addmedia.xml.en:79
-#, fuzzy
-msgctxt "title attribute"
-msgid "${item/title}"
-msgstr "名称"
-
-#: ../tracker/ui/add_issue.xml.en:44 ../tracker/ui/add_issue.xml.en:52
-#: ../tracker/ui/add_issue.xml.en:60 ../tracker/ui/add_issue.xml.en:70
-#: ../tracker/ui/add_issue.xml.en:78 ../tracker/ui/add_issue.xml.en:86
-#: ../tracker/ui/add_issue.xml.en:96 ../tracker/ui/add_issue.xml.en:104
-#: ../tracker/ui/search.xml.en:55 ../tracker/ui/search.xml.en:65
-#: ../tracker/ui/search.xml.en:75 ../tracker/ui/search.xml.en:87
-#: ../tracker/ui/search.xml.en:97 ../tracker/ui/search.xml.en:107
-#: ../tracker/ui/search.xml.en:119 ../tracker/ui/change_bugs.xml.en:99
-#: ../tracker/ui/edit_issue.xml.en:48 ../tracker/ui/edit_issue.xml.en:56
-#: ../tracker/ui/edit_issue.xml.en:64 ../tracker/ui/edit_issue.xml.en:74
-#: ../tracker/ui/edit_issue.xml.en:82 ../tracker/ui/edit_issue.xml.en:90
-#: ../tracker/ui/edit_issue.xml.en:100 ../tracker/ui/edit_issue.xml.en:108
-#: ../tracker/ui/edit_issue.xml.en:116 ../tracker/ui/edit_resource.xml.en:17
-#, fuzzy
-msgctxt "option"
-msgid "${item/value}"
-msgstr "名称"
-
 #: ../calendar/ui/edit_event.xml.en:16
 #, fuzzy
 msgctxt "option"
 msgid "${item/value} "
 msgstr "名称"
 
-#: ../ui/website/edit_languages.xml.en:28
-#, fuzzy
-msgctxt "table cell"
-msgid "${language/code}"
-msgstr "语言"
-
-#: ../ui/website/edit_languages.xml.en:50
-#: ../ui/user/edit_preferences.xml.en:16
-#, fuzzy
-msgctxt "option"
-msgid "${language/name}"
-msgstr "语言"
-
-#: ../ui/website/edit_languages.xml.en:27
-#, fuzzy
-msgctxt "table cell"
-msgid "${language/name}"
-msgstr "语言"
-
-#: ../ui/aruni/template.xhtml.en:28
-#, fuzzy
-msgctxt "div"
-msgid "${languages}"
-msgstr "语言"
-
-#: ../ui/website/broken_links.xml.en:13
-msgctxt "li"
-msgid "${link}"
-msgstr ""
-
-#: ../ui/aruni/template.xhtml.en:45
-#, fuzzy
-msgctxt "body"
-msgid "${location}"
-msgstr "登录"
-
-#: ../ui/aruni/template.xhtml.en:57
-#, fuzzy
-msgctxt "table cell"
-msgid "${menu}"
-msgstr "物件被更名"
-
-#: ../forum/ui/Thread_view.xml.en:16
-#, fuzzy
-msgctxt "paragraph"
-msgid "${message/author}"
-msgstr "信息"
-
-#: ../forum/ui/Thread_view.xml.en:27
-#, fuzzy
-msgctxt "paragraph"
-msgid "${message/body}"
-msgstr "信息"
-
-#: ../ui/aruni/message.xml.en:8
-#, fuzzy
-msgctxt "div"
-msgid "${message/message}"
-msgstr "信息"
-
-#: ../forum/ui/Thread_view.xml.en:17
-#, fuzzy
-msgctxt "paragraph"
-msgid "${message/mtime}"
-msgstr "信息"
-
-#: ../ui/generic/message_view.xml.en:7
-#, fuzzy
-msgid "${message}"
-msgstr "信息"
-
-#: ../ui/html/addimage.xml.en:39 ../ui/html/addlink.xml.en:39
-#: ../ui/aruni/template.xhtml.en:50 ../ui/html/addmedia.xml.en:39
-#, fuzzy
-msgctxt "div"
-msgid "${message}"
-msgstr "信息"
-
-#: ../ui/revisions/changes.xml.en:16
-#, fuzzy
-msgctxt "table cell"
-msgid "${metadata/author_date}"
-msgstr "用户资料列单"
-
-#: ../ui/revisions/changes.xml.en:12
-#, fuzzy
-msgctxt "table cell"
-msgid "${metadata/author_name}"
-msgstr "物件被更名"
-
-#: ../ui/revisions/changes.xml.en:20
-#, fuzzy
-msgctxt "table cell"
-msgid "${metadata/subject}"
-msgstr "用户资料列单"
-
-#: ../ui/PO_edit.xml.en:23
-#, fuzzy
-msgctxt "textarea"
-msgid "${msgid}"
-msgstr "信息"
-
-#: ../ui/PO_edit.xml.en:31
-#, fuzzy
-msgctxt "textarea"
-msgid "${msgstr}"
-msgstr "信息"
-
-#: ../ui/generic/browse_batch.xml.en:8
-#, fuzzy
-msgctxt "paragraph"
-msgid "${msg}"
-msgstr "信息"
-
-#: ../ui/root/credits.xml.en:12
-#, fuzzy
-msgctxt "li"
-msgid "${name}"
-msgstr "物件被更名"
-
 #: ../tracker/ui/edit_resource.xml.en:39
 msgctxt "option"
 msgid "${option/start} - ${option/end}"
 msgstr ""
-
-#: ../ui/root/about.xml.en:18
-#, fuzzy
-msgctxt "table cell"
-msgid "${package/name}"
-msgstr "语言"
-
-#: ../ui/root/about.xml.en:19
-#, fuzzy
-msgctxt "table cell"
-msgid "${package/version}"
-msgstr "名称"
-
-#: ../ui/aruni/template.xhtml.en:49
-#, fuzzy
-msgctxt "heading"
-msgid "${page_title}"
-msgstr "名称"
-
-#: ../tracker/ui/export_to_csv.xml.en:8 ../tracker/ui/export_to_text.xml.en:8
-#, fuzzy
-msgctxt "form"
-msgid "${param}"
-msgstr "名称"
-
-#: ../ui/auto_form.xml.en:11 ../wiki/ui/edit.xml.en:9
-msgctxt "paragraph"
-msgid "${required_msg}"
-msgstr ""
-
-#: ../ui/file/history.xml.en:18
-#, fuzzy
-msgctxt "table cell"
-msgid "${revision/date}"
-msgstr "用户资料列单"
-
-#: ../ui/file/history.xml.en:17
-#, fuzzy
-msgctxt "table cell"
-msgid "${revision/username}"
-msgstr "物件被更名"
-
-#: ../ui/access/edit_membership_form.xml.en:15
-#, fuzzy
-msgctxt "label"
-msgid "${role/title}"
-msgstr "名称"
-
-#: ../ui/access/add_user.xml.en:29
-#, fuzzy
-msgctxt "option"
-msgid "${role/title}"
-msgstr "名称"
-
-#: ../ui/revisions/changes.xml.en:42
-#, fuzzy
-msgctxt "table cell"
-msgid "${row/after}"
-msgstr "名称"
-
-#: ../tracker/ui/issue_history.xml.en:36
-#, fuzzy
-msgctxt "table cell"
-msgid "${row/assigned_to}"
-msgstr "名称"
-
-#: ../ui/revisions/changes.xml.en:41
-#, fuzzy
-msgctxt "table cell"
-msgid "${row/before}"
-msgstr "名称"
-
-#: ../tracker/ui/issue_history.xml.en:39
-#, fuzzy
-msgctxt "table cell"
-msgid "${row/cc_list}"
-msgstr "名称"
-
-#: ../tracker/ui/issue_history.xml.en:46
-#, fuzzy
-msgctxt "table cell"
-msgid "${row/comment}"
-msgstr "名称"
-
-#: ../tracker/ui/issue_history.xml.en:12
-#, fuzzy
-msgctxt "link"
-msgid "${row/datetime}"
-msgstr "用户资料列单"
-
-#: ../tracker/ui/issue_history.xml.en:42
-#, fuzzy
-msgctxt "link"
-msgid "${row/file}"
-msgstr "名称"
-
-#: ../tracker/ui/issue_history.xml.en:30
-#, fuzzy
-msgctxt "table cell"
-msgid "${row/module}"
-msgstr "物件被更名"
-
-#: ../ui/revisions/changes.xml.en:40
-#, fuzzy
-msgctxt "table cell"
-msgid "${row/nlines}"
-msgstr "名称"
-
-#: ../tracker/ui/issue_history.xml.en:33
-#, fuzzy
-msgctxt "table cell"
-msgid "${row/priority}"
-msgstr "名称"
 
 #: ../calendar/ui/weekly_view.xml.en:42
 #, fuzzy
@@ -588,215 +85,19 @@ msgctxt "table cell"
 msgid "${row/start}-${row/end}"
 msgstr "名称"
 
-#: ../tracker/ui/issue_history.xml.en:27
-#, fuzzy
-msgctxt "table cell"
-msgid "${row/state}"
-msgstr "名称"
-
-#: ../ui/folder/browse_image.xml.en:53 ../ui/folder/browse_image.xml.en:56
-#, fuzzy
-msgctxt "label"
-msgid "${row/title_or_name}"
-msgstr "名称"
-
-#: ../tracker/ui/issue_history.xml.en:18
-#, fuzzy
-msgctxt "table cell"
-msgid "${row/title}"
-msgstr "名称"
-
-#: ../tracker/ui/issue_history.xml.en:24
-#, fuzzy
-msgctxt "table cell"
-msgid "${row/type}"
-msgstr "名称"
-
-#: ../tracker/ui/issue_history.xml.en:13
-#, fuzzy
-msgctxt "table cell"
-msgid "${row/user}"
-msgstr "名称"
-
-#: ../ui/revisions/changes.xml.en:39
-#, fuzzy
-msgctxt "link"
-msgid "${row/value}"
-msgstr "名称"
-
-#: ../tracker/ui/issue_history.xml.en:21
-#, fuzzy
-msgctxt "table cell"
-msgid "${row/version}"
-msgstr "名称"
-
-#: ../forum/ui/Thread_view.xml.en:42
-#, fuzzy
-msgctxt "form"
-msgid "${rte}"
-msgstr "名称"
-
-#: ../calendar/ui/edit_event.xml.en:67
-#, fuzzy
-msgctxt "option"
-msgid "${s/value}"
-msgstr "名称"
-
-#: ../tracker/ui/search.xml.en:29
-#, fuzzy
-msgctxt "legend"
-msgid "${search_title}"
-msgstr "名称"
-
-#: ../ui/website/search.xml.en:8
-#, fuzzy
-msgid "${search}"
-msgstr "搜索"
-
 #: ../ui/generic/search.xml.en:8
 msgid "${search} <x id='1'/> ${batch} <x id='2'/> ${table}"
 msgstr ""
-
-#: ../ui/tiny_mce/rte.xml.en:54
-#, fuzzy
-msgctxt "textarea"
-msgid "${source}"
-msgstr "新文件夹"
-
-#: ../ui/revisions/changes.xml.en:27
-#, fuzzy
-msgctxt "paragraph"
-msgid "${stat/summary}"
-msgstr "名称"
-
-#: ../ui/WorkflowAware_state.xml.en:8
-#, fuzzy
-msgctxt "emphasis"
-msgid "${state}"
-msgstr "名称"
-
-#: ../ui/auto_form.xml.en:29
-#, fuzzy
-msgctxt "button"
-msgid "${submit_value}"
-msgstr "名称"
-
-#: ../tracker/ui/export_to_text.xml.en:25
-#, fuzzy
-msgctxt "pre"
-msgid "${text}"
-msgstr "名称"
 
 #: ../forum/ui/Forum_view.xml.en:15
 msgctxt "paragraph"
 msgid "${thread/comments} comments."
 msgstr ""
 
-#: ../tracker/ui/menu_goto.xml.en:8 ../tracker/ui/menu_remember.xml.en:8
-#: ../ui/generic/menu.xml.en:8
-#, fuzzy
-msgctxt "label"
-msgid "${title}"
-msgstr "名称"
-
-#: ../ui/auto_form.xml.en:10 ../wiki/ui/edit.xml.en:7
-#, fuzzy
-msgctxt "legend"
-msgid "${title}"
-msgstr "名称"
-
-#: ../ui/aruni/template.xhtml.en:7
-#, fuzzy
-msgctxt "title"
-msgid "${title}"
-msgstr "名称"
-
-#: ../ui/root/internal_server_error.xml.en:17
-#, fuzzy
-msgctxt "pre"
-msgid "${traceback}"
-msgstr "名称"
-
-#: ../ui/WorkflowAware_state.xml.en:51
-#, fuzzy
-msgctxt "table cell"
-msgid "${transition/comments}"
-msgstr "用户资料列单"
-
-#: ../ui/WorkflowAware_state.xml.en:48
-#, fuzzy
-msgctxt "table cell"
-msgid "${transition/date}"
-msgstr "用户资料列单"
-
-#: ../ui/WorkflowAware_state.xml.en:17
-#, fuzzy
-msgctxt "label"
-msgid "${transition/description}"
-msgstr "用户资料列单"
-
-#: ../ui/WorkflowAware_state.xml.en:49
-#, fuzzy
-msgctxt "table cell"
-msgid "${transition/title}"
-msgstr "用户资料列单"
-
-#: ../ui/WorkflowAware_state.xml.en:50
-#, fuzzy
-msgctxt "table cell"
-msgid "${transition/user}"
-msgstr "用户资料列单"
-
-#: ../calendar/ui/daily_view.xml.en:20 ../calendar/ui/daily_view.xml.en:45
-#, fuzzy
-msgctxt "span"
-msgid "${tt}"
-msgstr "名称"
-
-#: ../ui/user/confirm_registration.xml.en:21
-#, fuzzy
-msgctxt "emphasis"
-msgid "${username}"
-msgstr "物件被更名"
-
-#: ../ui/website/virtual_hosts.xml.en:12
-#, fuzzy
-msgctxt "textarea"
-msgid "${vhosts}"
-msgstr "名称"
-
-#: ../future/ui/order_view.xml.en:8
-#, fuzzy
-msgctxt "heading"
-msgid "${view/title}"
-msgstr "名称"
-
-#: ../future/ui/order_view.xml.en:9
-#, fuzzy
-msgid "${view/view}"
-msgstr "名称"
-
-#: ../ui/generic/cascade.xml.en:7
-#, fuzzy
-msgid "${view}"
-msgstr "名称"
-
-#: ../calendar/ui/monthly_view.xml.en:42
-msgctxt "table cell"
-msgid "${week/month}"
-msgstr ""
-
 #: ../wiki/ui/edit.xml.en:24
 msgctxt "dd"
 msgid "${widget/widget} <g id='5'>${widget/suffix}</g>"
 msgstr ""
-
-#: ../ui/html/addimage.xml.en:49 ../ui/html/addlink.xml.en:49
-#: ../ui/html/addmedia.xml.en:49
-#, fuzzy
-msgctxt "title attribute"
-msgid "${x/title}"
-msgstr "名称"
 
 #: ../file.py:182
 msgid "%.01f KB"
@@ -1215,7 +516,7 @@ msgstr ""
 msgid "ANONYMOUS"
 msgstr ""
 
-#: ../website_views.py:344
+#: ../website_views.py:346
 msgid "About"
 msgstr "关于IKAARO"
 
@@ -1255,13 +556,13 @@ msgid "Add"
 msgstr "加入"
 
 #: ../tracker/ui/add_issue.xml.en:123 ../ui/base/proxy_new_instance.xml.en:31
-#: ../ui/website/edit_languages.xml.en:53
+#: ../ui/website/new_instance.xml.en:37 ../ui/website/edit_languages.xml.en:53
 #, fuzzy
 msgctxt "button"
 msgid "Add"
 msgstr "加入"
 
-#: ../ui/base/proxy_new_instance.xml.en:9
+#: ../ui/base/proxy_new_instance.xml.en:9 ../ui/website/new_instance.xml.en:9
 #, fuzzy
 msgctxt "legend"
 msgid "Add ${class_title}"
@@ -1368,7 +669,7 @@ msgid ""
 "An email has been sent to you with the procedure to change your password."
 msgstr ""
 
-#: ../website_views.py:153
+#: ../website_views.py:155
 msgid ""
 "An email has been sent to you, to finish the registration process follow the "
 "instructions detailed in it."
@@ -1388,7 +689,7 @@ msgctxt "paragraph"
 msgid "Apologies for the inconvenience."
 msgstr ""
 
-#: ../calendar/calendar_views.py:47
+#: ../calendar/calendar_views.py:48
 msgid "April"
 msgstr ""
 
@@ -1443,7 +744,7 @@ msgctxt "table cell"
 msgid "Attachement:"
 msgstr "新文件"
 
-#: ../calendar/calendar_views.py:51
+#: ../calendar/calendar_views.py:52
 msgid "August"
 msgstr ""
 
@@ -1581,7 +882,7 @@ msgstr ""
 msgid "Calendar"
 msgstr ""
 
-#: ../calendar/calendar_views.py:105
+#: ../calendar/calendar_views.py:106
 #, fuzzy
 msgid "Cancelled"
 msgstr "改换"
@@ -1668,6 +969,7 @@ msgid "Choose a template:"
 msgstr "选择语言"
 
 #: ../ui/base/proxy_new_instance.xml.en:20
+#: ../ui/website/new_instance.xml.en:20
 #, fuzzy
 msgctxt "dt"
 msgid "Choose the ${class_title} type"
@@ -1790,11 +1092,11 @@ msgstr ""
 msgid "Confirmation sent!"
 msgstr "查阅"
 
-#: ../calendar/calendar_views.py:104
+#: ../calendar/calendar_views.py:105
 msgid "Confirmed"
 msgstr ""
 
-#: ../website_views.py:178
+#: ../website_views.py:180
 msgid "Contact"
 msgstr "联系我们"
 
@@ -1845,7 +1147,7 @@ msgstr ""
 msgid "Create and publish a Web Page."
 msgstr "列出文档"
 
-#: ../website_views.py:417
+#: ../website_views.py:419
 msgid "Credits"
 msgstr ""
 
@@ -1869,7 +1171,7 @@ msgid ""
 "{issue_uri}"
 msgstr ""
 
-#: ../calendar/calendar_views.py:909
+#: ../calendar/calendar_views.py:910
 #, fuzzy
 msgid "Daily View"
 msgstr "名称"
@@ -1896,7 +1198,7 @@ msgctxt "form"
 msgid "Date:"
 msgstr "日期"
 
-#: ../calendar/calendar_views.py:55
+#: ../calendar/calendar_views.py:56
 msgid "December"
 msgstr ""
 
@@ -1994,7 +1296,7 @@ msgstr ""
 msgid "Dressable"
 msgstr "信息"
 
-#: ../user_views.py:170 ../website_views.py:121
+#: ../user_views.py:170 ../website_views.py:123
 #, fuzzy
 msgid "E-mail Address"
 msgstr "用户"
@@ -2027,7 +1329,7 @@ msgstr "编辑"
 msgid "Edit Account"
 msgstr "关于IKAARO"
 
-#: ../calendar/calendar_views.py:418
+#: ../calendar/calendar_views.py:419
 #, fuzzy
 msgid "Edit Event"
 msgstr "简易文件"
@@ -2182,12 +1484,12 @@ msgstr ""
 msgid "Error: {msg}"
 msgstr "信息"
 
-#: ../calendar/calendar_views.py:640
+#: ../calendar/calendar_views.py:641
 msgid "Event definitely deleted."
 msgstr ""
 
-#: ../calendar/calendar_views.py:493 ../calendar/calendar_views.py:599
-#: ../calendar/calendar_views.py:627
+#: ../calendar/calendar_views.py:494 ../calendar/calendar_views.py:600
+#: ../calendar/calendar_views.py:628
 msgid "Event not found"
 msgstr ""
 
@@ -2205,7 +1507,7 @@ msgctxt "paragraph"
 msgid "Existing URLs remain untouched."
 msgstr ""
 
-#: ../calendar/calendar_views.py:459
+#: ../calendar/calendar_views.py:460
 msgid "Expected query parameter \"id\" is missing."
 msgstr ""
 
@@ -2231,7 +1533,7 @@ msgctxt "legend"
 msgid "Export to Text:"
 msgstr "简易文件"
 
-#: ../file_views.py:233
+#: ../file_views.py:232
 #, fuzzy
 msgid "External Editor"
 msgstr "外部"
@@ -2242,15 +1544,15 @@ msgctxt "button"
 msgid "External Editor..."
 msgstr "外部"
 
-#: ../calendar/calendar_views.py:1123
+#: ../calendar/calendar_views.py:1124
 msgid "Failed to load the file, may contain errors."
 msgstr ""
 
-#: ../file_views.py:200
+#: ../file_views.py:199
 msgid "Failed to load the file: {error}"
 msgstr ""
 
-#: ../calendar/calendar_views.py:45
+#: ../calendar/calendar_views.py:46
 msgid "February"
 msgstr ""
 
@@ -2264,7 +1566,7 @@ msgctxt "table cell"
 msgid "Filename"
 msgstr "重命名"
 
-#: ../user_views.py:168 ../user_views.py:366 ../website_views.py:119
+#: ../user_views.py:168 ../user_views.py:366 ../website_views.py:121
 #: ../access.py:76 ../access.py:132
 #, fuzzy
 msgid "First Name"
@@ -2293,7 +1595,7 @@ msgctxt "button"
 msgid "Forget this Search"
 msgstr "搜索"
 
-#: ../website_views.py:61
+#: ../website_views.py:63
 #, fuzzy
 msgid "Forgotten password"
 msgstr "改变内设"
@@ -2335,7 +1637,7 @@ msgstr ""
 msgid "French"
 msgstr "法语"
 
-#: ../calendar/calendar_views.py:62
+#: ../calendar/calendar_views.py:63
 msgid "Friday"
 msgstr ""
 
@@ -2587,7 +1889,7 @@ msgctxt "legend"
 msgid "Internal Server Error"
 msgstr ""
 
-#: ../calendar/calendar_views.py:476
+#: ../calendar/calendar_views.py:477
 msgid "Invalid dates."
 msgstr ""
 
@@ -2628,7 +1930,7 @@ msgctxt "title attribute"
 msgid "Italic"
 msgstr "意在利语"
 
-#: ../calendar/calendar_views.py:44
+#: ../calendar/calendar_views.py:45
 msgid "January"
 msgstr ""
 
@@ -2645,11 +1947,11 @@ msgctxt "li"
 msgid "Juan David Ibáñez Palomar (Spanish)"
 msgstr ""
 
-#: ../calendar/calendar_views.py:50
+#: ../calendar/calendar_views.py:51
 msgid "July"
 msgstr ""
 
-#: ../calendar/calendar_views.py:49
+#: ../calendar/calendar_views.py:50
 msgid "June"
 msgstr ""
 
@@ -2704,7 +2006,7 @@ msgstr "改换"
 msgid "Last Modified"
 msgstr ""
 
-#: ../user_views.py:169 ../user_views.py:365 ../website_views.py:120
+#: ../user_views.py:169 ../user_views.py:365 ../website_views.py:122
 #: ../access.py:75 ../access.py:133
 #, fuzzy
 msgid "Last Name"
@@ -2780,12 +2082,12 @@ msgstr "登录"
 msgid "Low"
 msgstr ""
 
-#: ../calendar/calendar_views.py:46
+#: ../calendar/calendar_views.py:47
 #, fuzzy
 msgid "March"
 msgstr "搜索"
 
-#: ../calendar/calendar_views.py:48
+#: ../calendar/calendar_views.py:49
 msgid "May"
 msgstr ""
 
@@ -2830,7 +2132,7 @@ msgstr ""
 msgid "Message Catalog"
 msgstr "信息"
 
-#: ../website_views.py:203
+#: ../website_views.py:205
 #, fuzzy
 msgid "Message body"
 msgstr "信息"
@@ -2840,12 +2142,12 @@ msgstr "信息"
 msgid "Message in a thread"
 msgstr "信息被修正."
 
-#: ../website_views.py:244
+#: ../website_views.py:246
 #, fuzzy
 msgid "Message sent."
 msgstr "信息被修正."
 
-#: ../website_views.py:202
+#: ../website_views.py:204
 msgid "Message subject"
 msgstr "信息目的"
 
@@ -2897,11 +2199,11 @@ msgstr "编码"
 msgid "Modules"
 msgstr "编码"
 
-#: ../calendar/calendar_views.py:58
+#: ../calendar/calendar_views.py:59
 msgid "Monday"
 msgstr ""
 
-#: ../calendar/calendar_views.py:724
+#: ../calendar/calendar_views.py:725
 msgid "Monthly View"
 msgstr ""
 
@@ -2921,6 +2223,7 @@ msgid "Name"
 msgstr "姓名"
 
 #: ../ui/base/proxy_new_instance.xml.en:15
+#: ../ui/website/new_instance.xml.en:15
 #, fuzzy
 msgctxt "label"
 msgid "Name"
@@ -3049,7 +2352,7 @@ msgctxt "paragraph"
 msgid "Note the name and title won't change."
 msgstr ""
 
-#: ../calendar/calendar_views.py:180
+#: ../calendar/calendar_views.py:181
 #, fuzzy
 msgid "Nothing to change."
 msgstr "用户资料被变更."
@@ -3059,11 +2362,11 @@ msgstr "用户资料被变更."
 msgid "Nothing to paste."
 msgstr "用户资料被变更."
 
-#: ../calendar/calendar_views.py:164
+#: ../calendar/calendar_views.py:165
 msgid "Nothing to remove."
 msgstr ""
 
-#: ../calendar/calendar_views.py:54
+#: ../calendar/calendar_views.py:55
 msgid "November"
 msgstr ""
 
@@ -3105,11 +2408,11 @@ msgstr "编辑文档"
 msgid "OOo Writer"
 msgstr "写入"
 
-#: ../calendar/calendar_views.py:53
+#: ../calendar/calendar_views.py:54
 msgid "October"
 msgstr ""
 
-#: ../website_views.py:62
+#: ../website_views.py:64
 msgid "Ok"
 msgstr ""
 
@@ -3164,7 +2467,7 @@ msgstr ""
 msgid "OpenOffice.org Text"
 msgstr ""
 
-#: ../website_views.py:407
+#: ../website_views.py:409
 msgid "Operating System"
 msgstr ""
 
@@ -3306,7 +2609,7 @@ msgstr ""
 msgid "Plain Text"
 msgstr "简易文件"
 
-#: ../website_views.py:196
+#: ../website_views.py:198
 msgid "Please answer this: {captcha_question}"
 msgstr ""
 
@@ -3475,7 +2778,7 @@ msgstr ""
 msgid "RTF Document"
 msgstr "新文件"
 
-#: ../website_views.py:200
+#: ../website_views.py:202
 msgid "Recipient"
 msgstr "收件人"
 
@@ -3484,7 +2787,7 @@ msgstr "收件人"
 msgid "Record deleted."
 msgstr "记录被修正."
 
-#: ../website_views.py:110 ../website_views.py:111
+#: ../website_views.py:112 ../website_views.py:113
 #, fuzzy
 msgid "Register"
 msgstr "查阅"
@@ -3551,7 +2854,7 @@ msgctxt "label"
 msgid "Repeat Password"
 msgstr "重复密码"
 
-#: ../calendar/calendar_views.py:1102
+#: ../calendar/calendar_views.py:1103
 #, fuzzy
 msgid "Replace"
 msgstr "查阅"
@@ -3603,7 +2906,7 @@ msgctxt "table cell"
 msgid "Resource"
 msgstr "新文件夹"
 
-#: ../calendar/calendar_views.py:448
+#: ../calendar/calendar_views.py:449
 #, fuzzy
 msgid "Resource \"{name}\" not found."
 msgstr "物件被更名"
@@ -3738,7 +3041,7 @@ msgstr "文件被上载."
 msgid "Row deleted."
 msgstr "没有物件被选中"
 
-#: ../calendar/calendar_views.py:63
+#: ../calendar/calendar_views.py:64
 msgid "Saturday"
 msgstr ""
 
@@ -3759,7 +3062,7 @@ msgstr "保存"
 msgid "Schedule your time with calendar files."
 msgstr ""
 
-#: ../tracker/tracker_views.py:452 ../website_views.py:251
+#: ../tracker/tracker_views.py:452 ../website_views.py:253
 msgid "Search"
 msgstr "搜索"
 
@@ -3841,11 +3144,11 @@ msgstr ""
 msgid "Select the contact accounts"
 msgstr "你必须选择删除成员."
 
-#: ../website_views.py:179
+#: ../website_views.py:181
 msgid "Send"
 msgstr "发送"
 
-#: ../calendar/calendar_views.py:52
+#: ../calendar/calendar_views.py:53
 msgid "September"
 msgstr ""
 
@@ -3862,7 +3165,7 @@ msgstr ""
 msgid "Size"
 msgstr "尺寸"
 
-#: ../skins.py:150
+#: ../skins.py:152
 msgid "Skin"
 msgstr ""
 
@@ -3901,7 +3204,7 @@ msgstr "状态"
 msgid "Start YYYY-MM-DD HH:MM"
 msgstr ""
 
-#: ../calendar/calendar_views.py:141 ../calendar/calendar_views.py:194
+#: ../calendar/calendar_views.py:142 ../calendar/calendar_views.py:195
 msgid "Start time must be earlier than end time."
 msgstr ""
 
@@ -3977,7 +3280,7 @@ msgctxt "table cell"
 msgid "Summary"
 msgstr ""
 
-#: ../calendar/calendar_views.py:64
+#: ../calendar/calendar_views.py:65
 msgid "Sunday"
 msgstr ""
 
@@ -4032,7 +3335,7 @@ msgctxt "link"
 msgid "Template"
 msgstr "查阅"
 
-#: ../calendar/calendar_views.py:103
+#: ../calendar/calendar_views.py:104
 #, fuzzy
 msgid "Tentative"
 msgstr "名称"
@@ -4089,7 +3392,7 @@ msgstr "必须写入文件."
 msgid "The given file is not of the expected type."
 msgstr ""
 
-#: ../calendar/calendar_views.py:148
+#: ../calendar/calendar_views.py:149
 #, fuzzy
 msgid "The given range is already defined."
 msgstr "用户被加入."
@@ -4204,7 +3507,7 @@ msgstr "名称"
 msgid "There is 1 item."
 msgstr "名称"
 
-#: ../website_views.py:135
+#: ../website_views.py:137
 #, fuzzy
 msgid "There is already an active user with that email."
 msgstr "此文件名已被另外资源占有."
@@ -4218,7 +3521,7 @@ msgstr "此文件名已被另外资源占有."
 msgid "There is another user with the email \"{email}\", please try again."
 msgstr "此用户名已登记\"%s\", 请输入另一用户名."
 
-#: ../website_views.py:90
+#: ../website_views.py:92
 #, fuzzy
 msgid "There is not a user identified as \"{username}\""
 msgstr "此用户名已登记\"%s\", 请输入另一用户名."
@@ -4227,7 +3530,7 @@ msgstr "此用户名已登记\"%s\", 请输入另一用户名."
 msgid "There is not an \"index\" web page. Could not render this view."
 msgstr ""
 
-#: ../file_views.py:279
+#: ../file_views.py:278
 msgid "This page is locked by another user"
 msgstr ""
 
@@ -4261,15 +3564,15 @@ msgstr ""
 msgid "Thread can't be None."
 msgstr "此处无内容."
 
-#: ../calendar/calendar_views.py:61
+#: ../calendar/calendar_views.py:62
 msgid "Thursday"
 msgstr ""
 
-#: ../calendar/calendar_views.py:174
+#: ../calendar/calendar_views.py:175
 msgid "Timetable(s) removed successfully."
 msgstr ""
 
-#: ../calendar/calendar_views.py:112
+#: ../calendar/calendar_views.py:113
 #, fuzzy
 msgid "Timetables"
 msgstr "名称"
@@ -4281,6 +3584,7 @@ msgid "Title"
 msgstr "名称"
 
 #: ../ui/base/proxy_new_instance.xml.en:11
+#: ../ui/website/new_instance.xml.en:11
 #, fuzzy
 msgctxt "label"
 msgid "Title"
@@ -4316,7 +3620,7 @@ msgstr ""
 msgid "To activate your account, please type a password."
 msgstr ""
 
-#: ../calendar/calendar_views.py:664
+#: ../calendar/calendar_views.py:665
 msgid "To add an event, click on + symbol from the views."
 msgstr ""
 
@@ -4383,7 +3687,7 @@ msgctxt "heading"
 msgid "Translators"
 msgstr "保存翻译件"
 
-#: ../calendar/calendar_views.py:59
+#: ../calendar/calendar_views.py:60
 msgid "Tuesday"
 msgstr ""
 
@@ -4404,13 +3708,13 @@ msgctxt "heading"
 msgid "Type the URL of an external resource"
 msgstr ""
 
-#: ../ui/website/virtual_hosts.xml.en:10
+#: ../ui/website/new_instance.xml.en:32 ../ui/website/virtual_hosts.xml.en:10
 msgctxt "paragraph"
 msgid ""
 "Type the hostnames this website will apply to, each one in a different line."
 msgstr ""
 
-#: ../website_views.py:66
+#: ../website_views.py:68
 #, fuzzy
 msgid "Type your email address"
 msgstr "用户"
@@ -4431,11 +3735,7 @@ msgstr "种类"
 msgid "UI"
 msgstr ""
 
-#: ../file_views.py:190
-msgid "Unexpected file of mimetype {mimetype}"
-msgstr ""
-
-#: ../calendar/calendar_views.py:1115
+#: ../messages.py:98
 msgid "Unexpected file of mimetype {mimetype}."
 msgstr ""
 
@@ -4590,7 +3890,7 @@ msgctxt "table cell"
 msgid "Version"
 msgstr "个人"
 
-#: ../calendar/calendar_views.py:1127 ../file_views.py:226
+#: ../calendar/calendar_views.py:1128 ../file_views.py:225
 #, fuzzy
 msgid "Version uploaded"
 msgstr "版本上载."
@@ -4613,13 +3913,19 @@ msgstr "个人"
 msgid "Versions"
 msgstr "个人"
 
+#: ../ui/website/new_instance.xml.en:30
+#, fuzzy
+msgctxt "label"
+msgid "Vhosts"
+msgstr "名称"
+
 #: ../file.py:230 ../file.py:231
 #, fuzzy
 msgid "Video"
 msgstr "浏览"
 
-#: ../file_views.py:340 ../file_views.py:432 ../file_views.py:444
-#: ../file_views.py:458 ../text_views.py:69 ../text_views.py:143
+#: ../file_views.py:339 ../file_views.py:431 ../file_views.py:443
+#: ../file_views.py:457 ../text_views.py:69 ../text_views.py:143
 #: ../tracker/tracker_views.py:265 ../user.py:297 ../table_views.py:42
 #: ../wiki/page_views.py:252 ../future/order.py:247 ../future/order.py:277
 #: ../forum/forum.py:43 ../webpage.py:156 ../forum/thread.py:41
@@ -4646,15 +3952,15 @@ msgstr ""
 msgid "Web Site"
 msgstr ""
 
-#: ../calendar/calendar_views.py:60
+#: ../calendar/calendar_views.py:61
 msgid "Wednesday"
 msgstr ""
 
-#: ../calendar/calendar_views.py:251
+#: ../calendar/calendar_views.py:252
 msgid "Week {n}"
 msgstr ""
 
-#: ../calendar/calendar_views.py:801
+#: ../calendar/calendar_views.py:802
 msgid "Weekly View"
 msgstr ""
 
@@ -4687,11 +3993,11 @@ msgstr "简易文件"
 msgid "Workflow State"
 msgstr ""
 
-#: ../website_views.py:226
+#: ../website_views.py:228
 msgid "Wrong answer to the question."
 msgstr ""
 
-#: ../calendar/calendar_views.py:190
+#: ../calendar/calendar_views.py:191
 msgid "Wrong time selection (HH:MM)."
 msgstr ""
 
@@ -4721,7 +4027,7 @@ msgctxt "fieldset"
 msgid "You are not authorized to access this resource."
 msgstr ""
 
-#: ../calendar/calendar_views.py:604
+#: ../calendar/calendar_views.py:605
 msgid "You are not authorized to modify this event."
 msgstr ""
 
@@ -4824,7 +4130,7 @@ msgstr ""
 msgid "Your confirmation key is invalid."
 msgstr ""
 
-#: ../website_views.py:201
+#: ../website_views.py:203
 #, fuzzy
 msgid "Your email address"
 msgstr "用户"
@@ -4946,7 +4252,7 @@ msgstr "选择语言"
 msgid "medium"
 msgstr ""
 
-#: ../website_views.py:391
+#: ../website_views.py:393
 msgid "no version found"
 msgstr ""
 
@@ -5008,11 +4314,11 @@ msgstr ""
 msgid "{n} obs"
 msgstr "%d 字节"
 
-#: ../skins.py:174
+#: ../skins.py:176
 msgid "{root_title} - {here_title} - {view_title}"
 msgstr ""
 
-#: ../skins.py:171
+#: ../skins.py:173
 msgid "{root_title} - {view_title}"
 msgstr ""
 
@@ -5084,6 +4390,11 @@ msgstr "名称"
 
 #, fuzzy
 #~ msgctxt "button"
+#~ msgid "${action/title}"
+#~ msgstr "用户资料列单"
+
+#, fuzzy
+#~ msgctxt "button"
 #~ msgid "${action/value}"
 #~ msgstr "名称"
 
@@ -5093,6 +4404,15 @@ msgstr "名称"
 
 #, fuzzy
 #~ msgid "${address2}<br/>"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgid "${batch}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${body}"
 #~ msgstr "名称"
 
 #, fuzzy
@@ -5106,13 +4426,88 @@ msgstr "名称"
 #~ msgstr "物件被更名"
 
 #, fuzzy
+#~ msgctxt "link"
+#~ msgid "${calendar/name}"
+#~ msgstr "物件被更名"
+
+#, fuzzy
+#~ msgctxt "title attribute"
+#~ msgid "${cell/content/issue/comment}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "div"
+#~ msgid "${cell/ns}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "div"
+#~ msgid "${change/value}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "span"
+#~ msgid "${change/value}"
+#~ msgstr "名称"
+
+#, fuzzy
 #~ msgid "${city}<br/>"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "link"
+#~ msgid "${column/title}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${column/title}"
 #~ msgstr "名称"
 
 #, fuzzy
 #~ msgctxt "link to"
 #~ msgid "${column/title}"
 #~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "link"
+#~ msgid "${column/value}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "pre"
+#~ msgid "${comment/comment}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${comment/datetime}"
+#~ msgstr "用户资料列单"
+
+#, fuzzy
+#~ msgctxt "link"
+#~ msgid "${comment/file}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${comment/user}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "textarea"
+#~ msgid "${comment/value}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "textarea"
+#~ msgid "${comment}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "paragraph"
+#~ msgid "${confirmation_msg}"
+#~ msgstr "查阅"
 
 #, fuzzy
 #~ msgid "${contact/title}"
@@ -5124,7 +4519,37 @@ msgstr "名称"
 #~ msgstr "用户资料列单"
 
 #, fuzzy
+#~ msgctxt "pre"
+#~ msgid "${contents}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "pre"
+#~ msgid "${data}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "textarea"
+#~ msgid "${data}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "span"
+#~ msgid "${day/name}"
+#~ msgstr "物件被更名"
+
+#, fuzzy
 #~ msgid "${description/value}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "emphasis"
+#~ msgid "${description}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "link"
+#~ msgid "${doc/title}"
 #~ msgstr "名称"
 
 #, fuzzy
@@ -5132,7 +4557,87 @@ msgstr "名称"
 #~ msgstr "名称"
 
 #, fuzzy
+#~ msgctxt "option"
+#~ msgid "${encoding/title}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "title attribute"
+#~ msgid "${event/issue/comment}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "tr"
+#~ msgid "${event/ns}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "option"
+#~ msgid "${field/title}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${header/header}"
+#~ msgstr "用户资料列单"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${help_html}"
+#~ msgstr "新文件夹"
+
+#, fuzzy
+#~ msgctxt "pre"
+#~ msgid "${help_source}"
+#~ msgstr "新文件夹"
+
+#, fuzzy
 #~ msgid "${issue/title}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "div"
+#~ msgid "${item/content}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "title attribute"
+#~ msgid "${item/item_type}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "title attribute"
+#~ msgid "${item/name}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${item/path}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "link"
+#~ msgid "${item/short_title}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "label"
+#~ msgid "${item/title}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "link"
+#~ msgid "${item/title}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "option"
+#~ msgid "${item/title}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "title attribute"
+#~ msgid "${item/title}"
 #~ msgstr "名称"
 
 #, fuzzy
@@ -5146,13 +4651,112 @@ msgstr "名称"
 #~ msgstr "名称"
 
 #, fuzzy
+#~ msgctxt "option"
+#~ msgid "${item/value}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${language/code}"
+#~ msgstr "语言"
+
+#, fuzzy
+#~ msgctxt "option"
+#~ msgid "${language/name}"
+#~ msgstr "语言"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${language/name}"
+#~ msgstr "语言"
+
+#, fuzzy
 #~ msgctxt "td"
 #~ msgid "${language/name}"
 #~ msgstr "语言"
 
 #, fuzzy
+#~ msgctxt "div"
+#~ msgid "${languages}"
+#~ msgstr "语言"
+
+#, fuzzy
+#~ msgctxt "body"
+#~ msgid "${location}"
+#~ msgstr "登录"
+
+#, fuzzy
 #~ msgid "${menu/title}"
 #~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${menu}"
+#~ msgstr "物件被更名"
+
+#, fuzzy
+#~ msgctxt "paragraph"
+#~ msgid "${message/author}"
+#~ msgstr "信息"
+
+#, fuzzy
+#~ msgctxt "paragraph"
+#~ msgid "${message/body}"
+#~ msgstr "信息"
+
+#, fuzzy
+#~ msgctxt "div"
+#~ msgid "${message/message}"
+#~ msgstr "信息"
+
+#, fuzzy
+#~ msgctxt "paragraph"
+#~ msgid "${message/mtime}"
+#~ msgstr "信息"
+
+#, fuzzy
+#~ msgctxt "div"
+#~ msgid "${message}"
+#~ msgstr "信息"
+
+#, fuzzy
+#~ msgid "${message}"
+#~ msgstr "信息"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${metadata/author_date}"
+#~ msgstr "用户资料列单"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${metadata/author_name}"
+#~ msgstr "物件被更名"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${metadata/subject}"
+#~ msgstr "用户资料列单"
+
+#, fuzzy
+#~ msgctxt "textarea"
+#~ msgid "${msgid}"
+#~ msgstr "信息"
+
+#, fuzzy
+#~ msgctxt "textarea"
+#~ msgid "${msgstr}"
+#~ msgstr "信息"
+
+#, fuzzy
+#~ msgctxt "paragraph"
+#~ msgid "${msg}"
+#~ msgstr "信息"
+
+#, fuzzy
+#~ msgctxt "li"
+#~ msgid "${name}"
+#~ msgstr "物件被更名"
 
 #, fuzzy
 #~ msgid "${object/name}"
@@ -5175,6 +4779,26 @@ msgstr "名称"
 #~ msgstr "名称"
 
 #, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${package/name}"
+#~ msgstr "语言"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${package/version}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "heading"
+#~ msgid "${page_title}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "form"
+#~ msgid "${param}"
+#~ msgstr "名称"
+
+#, fuzzy
 #~ msgid "${price}<br/> VAT:"
 #~ msgstr "名称"
 
@@ -5184,15 +4808,179 @@ msgstr "名称"
 
 #, fuzzy
 #~ msgctxt "table cell"
+#~ msgid "${revision/date}"
+#~ msgstr "用户资料列单"
+
+#, fuzzy
+#~ msgctxt "table cell"
 #~ msgid "${revision/size}"
 #~ msgstr "用户资料列单"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${revision/username}"
+#~ msgstr "物件被更名"
+
+#, fuzzy
+#~ msgctxt "label"
+#~ msgid "${role/title}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "option"
+#~ msgid "${role/title}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${row/after}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${row/assigned_to}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${row/before}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${row/cc_list}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${row/comment}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "link"
+#~ msgid "${row/datetime}"
+#~ msgstr "用户资料列单"
+
+#, fuzzy
+#~ msgctxt "link"
+#~ msgid "${row/file}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${row/module}"
+#~ msgstr "物件被更名"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${row/nlines}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${row/priority}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${row/state}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "label"
+#~ msgid "${row/title_or_name}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${row/title}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${row/type}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${row/user}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "link"
+#~ msgid "${row/value}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${row/version}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "form"
+#~ msgid "${rte}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "option"
+#~ msgid "${s/value}"
+#~ msgstr "名称"
 
 #, fuzzy
 #~ msgid "${search/title}"
 #~ msgstr "名称"
 
 #, fuzzy
+#~ msgctxt "legend"
+#~ msgid "${search_title}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgid "${search}"
+#~ msgstr "搜索"
+
+#, fuzzy
+#~ msgctxt "textarea"
+#~ msgid "${source}"
+#~ msgstr "新文件夹"
+
+#, fuzzy
+#~ msgctxt "paragraph"
+#~ msgid "${stat/summary}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "emphasis"
+#~ msgid "${state}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "button"
+#~ msgid "${submit_value}"
+#~ msgstr "名称"
+
+#, fuzzy
 #~ msgid "${table}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "pre"
+#~ msgid "${text}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "title"
+#~ msgid "${title}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "label"
+#~ msgid "${title}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "legend"
+#~ msgid "${title}"
 #~ msgstr "名称"
 
 #, fuzzy
@@ -5204,6 +4992,59 @@ msgstr "名称"
 #~ msgstr "名称"
 
 #, fuzzy
+#~ msgctxt "pre"
+#~ msgid "${traceback}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${transition/comments}"
+#~ msgstr "用户资料列单"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${transition/date}"
+#~ msgstr "用户资料列单"
+
+#, fuzzy
+#~ msgctxt "label"
+#~ msgid "${transition/description}"
+#~ msgstr "用户资料列单"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${transition/title}"
+#~ msgstr "用户资料列单"
+
+#, fuzzy
+#~ msgctxt "table cell"
+#~ msgid "${transition/user}"
+#~ msgstr "用户资料列单"
+
+#, fuzzy
+#~ msgctxt "span"
+#~ msgid "${tt}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "emphasis"
+#~ msgid "${username}"
+#~ msgstr "物件被更名"
+
+#, fuzzy
+#~ msgctxt "heading"
+#~ msgid "${view/title}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgid "${view/view}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgid "${view}"
+#~ msgstr "名称"
+
+#, fuzzy
 #~ msgctxt "label"
 #~ msgid "${website/title}"
 #~ msgstr "名称"
@@ -5211,6 +5052,11 @@ msgstr "名称"
 #, fuzzy
 #~ msgctxt "dd"
 #~ msgid "${widget/widget}"
+#~ msgstr "名称"
+
+#, fuzzy
+#~ msgctxt "title attribute"
+#~ msgid "${x/title}"
 #~ msgstr "名称"
 
 #~ msgid "-- Choose a language --"

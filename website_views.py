@@ -19,7 +19,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
-from operator import itemgetter
 import sys
 
 # Import from itools
@@ -35,8 +34,11 @@ from itools.xapian import PhraseQuery, OrQuery, AndQuery, split_unicode
 # Import from ikaaro
 from autoform import AutoForm, SelectWidget, MultilineWidget, TextWidget
 from config import get_config
-from views import SearchForm
+from messages import MSG_NEW_RESOURCE
+from registry import get_resource_class
 from utils import get_base_path_query
+from views import SearchForm
+from views_new import ProxyNewInstance
 
 
 
@@ -425,4 +427,45 @@ class CreditsView(STLView):
         names = [ x[3:].strip() for x in lines if x.startswith('N: ') ]
 
         return {'hackers': names}
+
+
+
+class WebSite_NewInstance(ProxyNewInstance):
+
+    template = '/ui/website/new_instance.xml.en'
+
+    schema = merge_dicts(ProxyNewInstance.schema, vhosts=String)
+
+    def get_namespace(self, resource, context):
+        namespace = ProxyNewInstance.get_namespace(self, resource, context)
+        # Add vhosts
+        vhosts = context.get_form_value('vhosts')
+        namespace['vhosts'] = vhosts
+
+        return namespace
+
+
+    def action(self, resource, context, form):
+        name = form['name']
+        title = form['title']
+        vhosts = form['vhosts']
+        vhosts = [ x.strip() for x in vhosts.splitlines() ]
+        vhosts = [ x for x in vhosts if x ]
+        vhosts = tuple(vhosts)
+
+        # Create the resource
+        class_id = form['class_id']
+        if class_id is None:
+            # Get it from the query
+            class_id = context.query['type']
+        cls = get_resource_class(class_id)
+        child = cls.make_resource(cls, resource, name)
+        # The metadata
+        metadata = child.metadata
+        language = resource.get_content_language(context)
+        metadata.set_property('title', title, language=language)
+        metadata.set_property('vhosts', vhosts)
+
+        goto = './%s/' % name
+        return context.come_back(MSG_NEW_RESOURCE, goto=goto)
 
