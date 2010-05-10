@@ -20,89 +20,20 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Import from the Standard Library
-from datetime import date, datetime, time
-from re import compile
-from textwrap import TextWrapper
-
 # Import from itools
 from itools.datatypes import Boolean, Unicode, XMLContent
 from itools.gettext import MSG
-from itools.ical import Time
-from itools.html import xhtml_uri
 from itools.i18n import format_datetime
 from itools.web import STLForm, STLView
-from itools.xml import XMLParser, START_ELEMENT, END_ELEMENT, TEXT
+from itools.xml import XMLParser
 
 # Import from ikaaro
+from ikaaro.comments import CommentsView
 from ikaaro.messages import MSG_CHANGES_SAVED
-from ikaaro.table_views import Table_View
-from ikaaro.views import CompositeForm
 from ikaaro.views import ContextMenu
 
 # Local import
 from datatypes import get_issue_fields, UsersList
-
-
-###########################################################################
-# Utilities
-###########################################################################
-url_expr = compile('([fh]t?tps?://[\w;/?:@&=+$,.#\-%]*)')
-class OurWrapper(TextWrapper):
-
-    def _split(self, text):
-        # Override default's '_split' method to define URLs as unbreakable,
-        # and reduce URLs if needed.
-        # XXX This is fragile, since it uses TextWrapper private API.
-
-        # Keep a mapping from reduced URL to full URL
-        self.urls_map = {}
-
-        # Get the chunks
-        chunks = []
-        for segment in url_expr.split(text):
-            starts = segment.startswith
-            if starts('http://') or starts('https://') or starts('ftp://'):
-                if len(segment) > 95:
-                    # Reduce URL
-                    url = segment
-                    segment = segment[:46] + '...' + segment[-46:]
-                    self.urls_map[segment] = url
-                else:
-                    self.urls_map[segment] = segment
-                chunks.append(segment)
-            else:
-                chunks.extend(TextWrapper._split(self, segment))
-        return chunks
-
-
-
-def indent(text):
-    """Replace URLs by HTML links.  Wrap lines (with spaces) to 95 chars.
-    """
-    text = text.encode('utf-8')
-    # Wrap
-    buffer = []
-    text_wrapper = OurWrapper(width=95)
-    for line in text.splitlines():
-        line = text_wrapper.fill(line) + '\n'
-        for segment in url_expr.split(line):
-            url = text_wrapper.urls_map.get(segment)
-            if url is None:
-                buffer.append(segment)
-            else:
-                if buffer:
-                    yield TEXT, ''.join(buffer), 1
-                    buffer = []
-                # <a>...</a>
-                attributes = {(None, 'href'): url}
-                yield START_ELEMENT, (xhtml_uri, 'a', attributes), 1
-                yield TEXT, segment, 1
-                yield END_ELEMENT, (xhtml_uri, 'a'), 1
-    if buffer:
-        yield TEXT, ''.join(buffer), 1
-        buffer = []
-
 
 
 ###########################################################################
@@ -157,19 +88,7 @@ class Issue_Edit(STLForm):
         root = context.root
 
         # Comments
-        comments = resource.metadata.get_property('comment')
-        if comments is None:
-            comments = []
-        else:
-            comments = [
-                {'number': i,
-                 'user': root.get_user_title(x.parameters['author']),
-                 'datetime': format_datetime(x.parameters['date']),
-                 'comment': indent(x.value),
-                 'file': x.parameters.get('file')}
-                for i, x in enumerate(comments) ]
-            comments.reverse()
-        namespace['comments'] = comments
+        namespace['comments'] = CommentsView().GET(resource, context)
 
         # cc_list / cc_add / cc_remove
         cc_list = resource.get_property('cc_list')

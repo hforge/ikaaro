@@ -146,3 +146,17 @@ legend {
 
 #content form dd { padding-bottom: 5px; }
 #content form p { clear: both; }
+
+
+/**************************************************************************
+ * ui/commnets.xml.en
+ *************************************************************************/
+
+.comment-header {
+  background-color: #ddddff;
+  font-weight: bold;
+}
+
+.comment-body {
+  font-family: "Arial", "DejaVu Sans", sans-serif;
+}
