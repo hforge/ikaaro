@@ -23,12 +23,13 @@ from itools.csv import Property
 from itools.datatypes import Date, DateTime, String, Unicode
 from itools.handlers import checkid
 from itools.gettext import MSG
-from itools.web import STLView
+from itools.web import STLForm
 from itools.xml import XMLError, XMLParser
 
 # Import from ikaaro
 from ikaaro.autoform import DateWidget, RTEWidget
 from ikaaro.autoform import timestamp_widget, title_widget
+from ikaaro.comments import CommentsView
 from ikaaro.folder import Folder
 from ikaaro.messages import *
 from ikaaro.resource_views import DBResource_Edit
@@ -89,18 +90,33 @@ class Post_NewInstance(NewInstance):
 
 
 
-class Post_View(STLView):
+class Post_View(STLForm):
 
     access = 'is_allowed_to_view'
     title = MSG(u'View')
     template = '/ui/blog/Post_view.xml'
+
+    schema = {
+        'comment': Unicode(required=True)}
+
 
     def get_namespace(self, resource, context):
         language = resource.get_content_language(context)
         return {
             'title': resource.get_property('title', language=language),
             'html': resource.handler.events,
-            'date': resource.get_property('date')}
+            'date': resource.get_property('date'),
+            'comments': CommentsView().GET(resource, context)}
+
+
+    def action(self, resource, context, form):
+        date = context.timestamp
+        author = context.user.name if context.user else None
+        comment = Property(form['comment'], date=date, author=author)
+        resource.set_property('comment', comment)
+        # Change
+        context.server.change_resource(resource)
+        context.message = MSG_CHANGES_SAVED
 
 
 
@@ -162,7 +178,8 @@ class Post(WebPage):
 
     class_schema = merge_dicts(
         WebPage.class_schema,
-        date=Date(source='metadata', stored=True))
+        date=Date(source='metadata', stored=True),
+        comment=Unicode(source='metadata', multiple=True))
 
 
     def _get_catalog_values(self):

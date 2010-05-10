@@ -20,9 +20,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Import from the Standard Library
-from datetime import datetime
-
 # Import from itools
 from itools.core import merge_dicts
 from itools.csv import Property
@@ -173,11 +170,11 @@ class Issue(Folder):
             file = name
 
         # Comment
-        now = datetime.now()
+        date = context.timestamp
         user = context.user
         author = user.name if user else None
         comment = form['comment']
-        comment = Property(comment, date=now, author=author, file=file)
+        comment = Property(comment, date=date, author=author, file=file)
         self.set_property('comment', comment)
 
         # Send a Notification Email
