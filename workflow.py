@@ -137,7 +137,6 @@ class WorkflowAware(BaseWorkflowAware):
     class_schema = freeze({
         # Metadata
         'state': String(source='metadata'),
-        'workflow': Unicode(source='metadata', multiple=True),
         # Metadata (XXX backwards compatibility with 0.50)
         'wf_transition': WFTransition(source='metadata'),
         # Other
@@ -155,19 +154,6 @@ class WorkflowAware(BaseWorkflowAware):
         self.set_property('state', value)
 
     workflow_state = property(get_workflow_state, set_workflow_state, None, '')
-
-
-    def get_publication_date(self):
-        # FIXME This method only has sense if the workflow has a 'public'
-        # state with the intended meaning.
-        state = self.get_property('state')
-        if state != 'public':
-            return None
-
-        workflow = self.get_property('workflow')
-        if not workflow:
-            return None
-        return workflow[-1].parameters['date']
 
 
     # Views
