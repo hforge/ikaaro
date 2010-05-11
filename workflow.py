@@ -16,75 +16,63 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Import from the Standard Library
-from datetime import datetime
-
 # Import from itools
 from itools.core import freeze
-from itools.csv import Property
-from itools.datatypes import String, Unicode
+from itools.datatypes import Enumerate, String, Unicode
 from itools.gettext import MSG
-from itools.i18n import format_datetime
 from itools.log import log_error
-from itools.web import STLForm, INFO, ERROR, get_context
+from itools.web import INFO, ERROR
 from itools.workflow import Workflow, WorkflowAware as BaseWorkflowAware
 from itools.workflow import WorkflowError
 from itools.xml import XMLParser
 
+# Import from ikaaro
+from autoform import AutoForm, SelectWidget
 
 
-###########################################################################
-# Views
-###########################################################################
-class StateForm(STLForm):
+
+class StateEnumerate(Enumerate):
+
+    default = ''
+
+    def get_options(self):
+        resource = self.resource
+        states = resource.workflow.states
+        state = resource.get_state()
+
+        ac = resource.get_access_control()
+        user = self.context.user
+        options = [
+            {'name': name, 'value': states[trans.state_to].metadata['title']}
+            for name, trans in state.transitions.items()
+            if ac.is_allowed_to_trans(user, resource, name) ]
+        options.append({'name': '', 'value': state.metadata['title']})
+        options.sort(key=lambda x: x['value'])
+        return options
+
+
+
+class StateForm(AutoForm):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Publication')
     icon = 'state.png'
-    template = '/ui/WorkflowAware_state.xml'
-    schema = {
-        'transition': String(mandatory=True),
-        'comments': Unicode,
-    }
 
+    def get_schema(self, resource, context):
+        return {'state': StateEnumerate(resource=resource, context=context)}
 
-    def get_namespace(self, resource, context):
-        root = context.root
-        user = context.user
-        # State
-        state = resource.get_state()
-        # Posible transitions
-        ac = resource.get_access_control()
-        transitions = []
-        for name, trans in state.transitions.items():
-            if ac.is_allowed_to_trans(user, resource, name) is False:
-                continue
-            description = trans['description'].gettext()
-            transitions.append({'name': name, 'description': description})
-        # Workflow history
-        history = []
-        workflow = resource.metadata.get_property('workflow')
-        if workflow is not None:
-            for wf in workflow:
-                history.append(
-                    {'title': wf.parameters['transition'][0],
-                     'date': format_datetime(wf.parameters['date']),
-                     'user': root.get_user_title(wf.parameters['author']),
-                     'comments': wf.value})
-            history.reverse()
-
-        # Ok
-        return {
-            'statename': resource.get_statename(),
-            'state': state['title'],
-            'transitions': transitions,
-            'history': history,
-        }
+    widgets = [
+        SelectWidget('state', title=MSG(u'State'), has_empty_option=False)]
 
 
     def action(self, resource, context, form):
+        transition = form['state']
+        if transition == '':
+            context.message = INFO(u'Nothing to do.')
+            return
+
         try:
-            resource.make_transition(form['transition'], form['comments'])
+            resource.do_trans(transition)
         except WorkflowError, excp:
             log_error('Transition failed', domain='ikaaro')
             context.message = ERROR(unicode(excp.message, 'utf-8'))
@@ -157,9 +145,6 @@ class WorkflowAware(BaseWorkflowAware):
         })
 
 
-    ########################################################################
-    # API
-    ########################################################################
     def get_workflow_state(self):
         state = self.get_property('state')
         if state:
@@ -185,22 +170,7 @@ class WorkflowAware(BaseWorkflowAware):
         return workflow[-1].parameters['date']
 
 
-    def make_transition(self, transition, comments=u''):
-        # Change the state, with the itools.workflow API
-        self.do_trans(transition)
-
-        # Keep comment
-        user = get_context().user
-        username = user and user.name or None
-        now = datetime.now()
-        workflow = Property(comments, date=now, author=username,
-                            transition=[transition])
-        self.set_property('workflow', workflow)
-
-
-    ########################################################################
-    # User Interface
-    ########################################################################
+    # Views
     edit_state = StateForm()
 
 

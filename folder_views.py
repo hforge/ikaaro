@@ -566,7 +566,7 @@ class Folder_BrowseContent(SearchForm):
             if item.get_statename() == statename:
                 continue
             # Update workflow history
-            item.make_transition(transition)
+            item.do_trans(transition)
 
         # Ok
         context.message = message

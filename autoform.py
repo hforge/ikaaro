@@ -30,7 +30,6 @@ from itools.web import STLForm, get_context
 from itools.xml import XMLParser
 
 # Import from ikaaro
-from ikaaro.workflow import get_workflow_preview
 from utils import CMSTemplate
 
 
@@ -373,6 +372,8 @@ class PathSelectorWidget(TextWidget):
 
 
     def workflow_state(self):
+        from ikaaro.workflow import get_workflow_preview
+
         if self.display_workflow:
             value = self.value
             if type(value) is not str:
