@@ -23,6 +23,7 @@ import sys
 
 # Import from itools
 from itools.core import get_abspath, merge_dicts
+from itools.csv import Property
 from itools.datatypes import Email, String, Unicode
 from itools.datatypes import Enumerate
 from itools.gettext import MSG
@@ -459,11 +460,11 @@ class WebSite_NewInstance(ProxyNewInstance):
             # Get it from the query
             class_id = context.query['type']
         cls = get_resource_class(class_id)
-        child = cls.make_resource(cls, resource, name)
+        child = resource.make_resource(name, cls)
         # The metadata
         metadata = child.metadata
         language = resource.get_content_language(context)
-        metadata.set_property('title', title, language=language)
+        metadata.set_property('title', Property(title, lang=language))
         metadata.set_property('vhosts', vhosts)
 
         goto = './%s/' % name
