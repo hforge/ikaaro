@@ -27,12 +27,14 @@ from itools.core import merge_dicts
 from itools.csv import Property
 from itools.datatypes import Integer, Unicode, String
 from itools.gettext import MSG
+from itools.log import log_error
 from itools.handlers import get_handler_class_by_mimetype, guess_encoding
 from itools.html import HTMLParser, stream_to_str_as_xhtml
 from itools.i18n import guess_language
 from itools.uri import get_reference
 from itools.fs import FileName
 from itools.web import BaseView, STLView, INFO, ERROR
+from itools.workflow import WorkflowError
 
 # Import from ikaaro
 from autoform import title_widget, description_widget, subject_widget
@@ -44,6 +46,7 @@ from multilingual import Multilingual
 from registry import get_resource_class
 from resource_views import DBResource_Edit
 from views_new import NewInstance
+from workflow import StateEnumerate, state_widget
 
 
 class File_NewInstance(NewInstance):
@@ -161,10 +164,16 @@ class File_View(STLView):
 
 class File_Edit(DBResource_Edit):
 
-    schema = merge_dicts(DBResource_Edit.schema, file=FileDataType)
+    def get_schema(self, resource, context):
+        return merge_dicts(
+            DBResource_Edit.schema,
+            state=StateEnumerate(resource=resource, context=context),
+            file=FileDataType)
+
+
     widgets = [
-        timestamp_widget, title_widget, file_widget, description_widget,
-        subject_widget]
+        timestamp_widget, title_widget, state_widget, file_widget,
+        description_widget, subject_widget]
 
 
     def get_value(self, resource, context, name, datatype):
@@ -178,6 +187,16 @@ class File_Edit(DBResource_Edit):
         DBResource_Edit.action(self, resource, context, form)
         if context.edit_conflict:
             return
+
+        # State
+        transition = form['state']
+        if transition:
+            try:
+                resource.do_trans(transition)
+            except WorkflowError, excp:
+                log_error('Transition failed', domain='ikaaro')
+                context.message = ERROR(unicode(excp.message, 'utf-8'))
+                return
 
         # Upload file
         file = form['file']

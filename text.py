@@ -57,7 +57,7 @@ class Text(File):
     class_title = MSG(u'Plain Text')
     class_icon16 = 'icons/16x16/text.png'
     class_icon48 = 'icons/48x48/text.png'
-    class_views = ['view', 'edit', 'externaledit', 'edit_state', 'commit_log']
+    class_views = ['view', 'edit', 'externaledit', 'commit_log']
     class_handler = TextFile
 
 

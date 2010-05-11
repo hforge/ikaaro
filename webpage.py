@@ -40,6 +40,7 @@ from multilingual import Multilingual
 from text import Text
 from registry import register_resource_class
 from resource_ import DBResource
+from workflow import state_widget
 
 
 def _get_links(base, events):
@@ -165,9 +166,14 @@ class WebPage_View(BaseView):
 class HTMLEditView(File_Edit):
     """WYSIWYG editor for HTML documents.
     """
-    schema = merge_dicts(File_Edit.schema, data=HTMLBody)
+
+    def get_schema(self, resource, context):
+        schema = File_Edit.get_schema(self, resource, context)
+        return merge_dicts(schema, data=HTMLBody)
+
+
     widgets = [
-        timestamp_widget, title_widget, rte_widget, file_widget,
+        timestamp_widget, title_widget, state_widget, rte_widget, file_widget,
         description_widget, subject_widget]
 
 
@@ -227,8 +233,7 @@ class WebPage(ResourceWithHTML, Multilingual, Text):
     class_description = MSG(u'Create and publish a Web Page.')
     class_icon16 = 'icons/16x16/html.png'
     class_icon48 = 'icons/48x48/html.png'
-    class_views = ['view', 'edit', 'externaledit', 'edit_state', 'backlinks',
-                   'commit_log']
+    class_views = ['view', 'edit', 'externaledit', 'backlinks', 'commit_log']
     class_handler = XHTMLFile
 
 

@@ -35,6 +35,7 @@ from ikaaro.messages import *
 from ikaaro.resource_views import DBResource_Edit
 from ikaaro.views_new import NewInstance
 from ikaaro.webpage import WebPage
+from ikaaro.workflow import StateEnumerate, state_widget
 
 
 ###########################################################################
@@ -122,16 +123,19 @@ class Post_View(STLForm):
 
 class Post_Edit(DBResource_Edit):
 
-    schema = {
-        'title': Unicode(mandatory=True),
-        'date': Date,
-        'html': String,
-        'timestamp': DateTime}
+    def get_schema(self, resource, context):
+        return {
+            'title': Unicode(mandatory=True),
+            'date': Date,
+            'state': StateEnumerate(resource=resource, context=context),
+            'html': String,
+            'timestamp': DateTime}
 
     widgets = freeze([
         timestamp_widget,
         title_widget,
         DateWidget('date', title=MSG(u'Date')),
+        state_widget,
         rte])
 
 
@@ -173,7 +177,7 @@ class Post(WebPage):
     class_id = 'blog-post'
     class_title = MSG(u'Post')
     class_description = MSG(u'Create and publish Post')
-    class_views = ['view', 'edit', 'edit_state', 'history']
+    class_views = ['view', 'edit', 'history']
 
 
     class_schema = merge_dicts(

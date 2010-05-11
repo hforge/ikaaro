@@ -33,16 +33,23 @@ from buttons import RemoveButton
 from file_views import File_Edit
 import messages
 from views import BrowseForm
+from workflow import state_widget
 
 
 class Text_Edit(File_Edit):
 
     title = MSG(u'Edit')
     icon = 'edit.png'
-    schema = merge_dicts(File_Edit.schema, data=String)
+
+    def get_schema(self, resource, context):
+        schema = File_Edit.get_schema(self, resource, context)
+        return merge_dicts(schema, data=String)
+
+
     widgets = [
         timestamp_widget,
         title_widget,
+        state_widget,
         MultilineWidget('data', title=MSG(u"Content"), rows=19, cols=69),
         file_widget,
         description_widget,

@@ -18,16 +18,13 @@
 
 # Import from itools
 from itools.core import freeze
-from itools.datatypes import Enumerate, String, Unicode
+from itools.datatypes import Enumerate, String
 from itools.gettext import MSG
-from itools.log import log_error
-from itools.web import INFO, ERROR
 from itools.workflow import Workflow, WorkflowAware as BaseWorkflowAware
-from itools.workflow import WorkflowError
 from itools.xml import XMLParser
 
 # Import from ikaaro
-from autoform import AutoForm, SelectWidget
+from autoform import SelectWidget
 
 
 
@@ -51,36 +48,8 @@ class StateEnumerate(Enumerate):
         return options
 
 
-
-class StateForm(AutoForm):
-
-    access = 'is_allowed_to_edit'
-    title = MSG(u'Publication')
-    icon = 'state.png'
-
-    def get_schema(self, resource, context):
-        return {'state': StateEnumerate(resource=resource, context=context)}
-
-    widgets = [
-        SelectWidget('state', title=MSG(u'State'), has_empty_option=False)]
-
-
-    def action(self, resource, context, form):
-        transition = form['state']
-        if transition == '':
-            context.message = INFO(u'Nothing to do.')
-            return
-
-        try:
-            resource.do_trans(transition)
-        except WorkflowError, excp:
-            log_error('Transition failed', domain='ikaaro')
-            context.message = ERROR(unicode(excp.message, 'utf-8'))
-            return
-
-        # Ok
-        context.message = INFO(u'Transition done.')
-
+state_widget = SelectWidget('state', title=MSG(u'State'),
+                            has_empty_option=False)
 
 
 ###########################################################################
@@ -153,10 +122,6 @@ class WorkflowAware(BaseWorkflowAware):
     workflow_state = property(get_workflow_state, set_workflow_state, None, '')
 
 
-    # Views
-    edit_state = StateForm()
-
-
 
 def get_workflow_preview(resource, context):
     if not isinstance(resource, WorkflowAware):
@@ -164,9 +129,6 @@ def get_workflow_preview(resource, context):
     statename = resource.get_statename()
     state = resource.get_state()
     msg = state['title'].gettext().encode('utf-8')
-    path = context.get_link(resource)
     # TODO Include the template in the base table
-    state = ('<a href="%s/;edit_state" class="workflow">'
-             '<strong class="wf-%s">%s</strong>'
-             '</a>') % (path, statename, msg)
+    state = '<span class="wf-%s">%s</span>' % (statename, msg)
     return XMLParser(state)
