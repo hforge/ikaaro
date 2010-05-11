@@ -57,8 +57,7 @@ class StateForm(STLForm):
         ac = resource.get_access_control()
         transitions = []
         for name, trans in state.transitions.items():
-            view = resource.get_view(name)
-            if ac.is_allowed_to_trans(user, resource, view) is False:
+            if ac.is_allowed_to_trans(user, resource, name) is False:
                 continue
             description = trans['description'].gettext()
             transitions.append({'name': name, 'description': description})
