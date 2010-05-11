@@ -276,8 +276,7 @@ class RoleAware_AddUser(STLForm):
         else:
             user = users.get_resource(user_id)
             # Check the user is not yet in the group
-            members = resource.get_members()
-            if user_id in members:
+            if user_id in resource.get_members():
                 context.message = ERROR(u'The user is already here.')
                 return None
 
@@ -389,7 +388,7 @@ class RoleAware(AccessControl):
         'reviewers': Tokens(source='metadata', title=MSG(u"Reviewer")),
         'admins': Tokens(source='metadata', title=MSG(u'Admin')),
         # Other
-        'members': String(multiple=True, indexed=True),
+        'users': String(multiple=True, indexed=True),
         })
 
 
@@ -563,12 +562,12 @@ class RoleAware(AccessControl):
 
 
     def get_members(self):
-        members = set()
+        users = set()
         for rolename in self.get_role_names():
             usernames = self.get_property(rolename)
             if usernames:
-                members.update(usernames)
-        return members
+                users.update(usernames)
+        return users
 
 
     def get_members_classified_by_role(self):

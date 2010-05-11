@@ -405,10 +405,6 @@ class DBResource(CatalogAware, IResource):
 
         # Role Aware
         is_role_aware = isinstance(self, RoleAware)
-        if is_role_aware:
-            members = self.get_members()
-        else:
-            members = None
 
         # Ok
         return {
@@ -425,7 +421,7 @@ class DBResource(CatalogAware, IResource):
             # This should be defined by subclasses
             'is_image': isinstance(self, Image),
             'is_role_aware': is_role_aware,
-            'members': members,
+            'users': self.get_members() if is_role_aware else None,
             'size': size,
             'workflow_state': workflow_state}
 
