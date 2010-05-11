@@ -78,7 +78,8 @@ class Folder(DBResource):
     #######################################################################
     def make_resource(self, name, cls, **kw):
         # Make the metadata
-        metadata = Metadata(cls=cls)
+        format = kw.pop('format', None)
+        metadata = Metadata(cls=cls, format=format)
         self.handler.set_handler('%s.metadata' % name, metadata)
         # Initialize
         resource = self.get_resource(name)
