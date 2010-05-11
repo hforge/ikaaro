@@ -133,12 +133,9 @@ class WorkflowAware(BaseWorkflowAware):
     workflow = workflow
 
 
-    from obsolete.metadata import WFTransition
     class_schema = freeze({
         # Metadata
         'state': String(source='metadata'),
-        # Metadata (XXX backwards compatibility with 0.50)
-        'wf_transition': WFTransition(source='metadata'),
         # Other
         'workflow_state': String(stored=True, indexed=True),
         })

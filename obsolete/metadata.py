@@ -40,22 +40,6 @@ class Record(DataType):
 
 
 
-class History(Record):
-    schema = {
-        'date': String,
-        'user': String,
-        'size': String}
-
-
-class WFTransition(Record):
-    schema = {
-        'date': String,
-        'name': String,
-        'user': String,
-        'comments': String}
-
-
-
 def get_datatype(format, name):
     cls = get_resource_class(format)
     return cls.get_property_metadata(name, default=String)
