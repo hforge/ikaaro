@@ -452,7 +452,6 @@ class WebSite_NewInstance(ProxyNewInstance):
         vhosts = form['vhosts']
         vhosts = [ x.strip() for x in vhosts.splitlines() ]
         vhosts = [ x for x in vhosts if x ]
-        vhosts = tuple(vhosts)
 
         # Create the resource
         class_id = form['class_id']
