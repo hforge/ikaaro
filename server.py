@@ -123,18 +123,6 @@ class Server(WebServer):
         config = get_config(target)
         load_modules(config)
 
-        # Find out the IP to listen to
-        address = config.get_value('listen-address').strip()
-        if not address:
-            raise ValueError, 'listen-address is missing from config.conf'
-        if address == '*':
-            address = None
-
-        # Find out the port to listen
-        port = config.get_value('listen-port')
-        if port is None:
-            raise ValueError, 'listen-port is missing from config.conf'
-
         # Contact Email
         self.smtp_from = config.get_value('smtp-from')
 
@@ -163,8 +151,7 @@ class Server(WebServer):
 
         # Initialize
         access_log = '%s/log/access' % target
-        WebServer.__init__(self, root, address=address, port=port,
-                           access_log=access_log)
+        WebServer.__init__(self, root, access_log=access_log)
 
         # Email service
         self.spool = lfs.resolve2(self.target, 'spool')
@@ -304,7 +291,13 @@ class Server(WebServer):
 
 
     def is_running_in_rw_mode(self):
-        url = 'http://localhost:%s/;_ctrl?name=read-only' % self.port
+        config = get_config(self.target)
+        address = config.get_value('listen-address').strip()
+        if address == '*':
+            address = '127.0.0.1'
+        port = config.get_value('listen-port')
+
+        url = 'http://%s:%s/;_ctrl?name=read-only' % (address, port)
         try:
             h = vfs.open(url)
         except GError:

@@ -63,10 +63,22 @@ def start(options, target):
 
     # Start
     start_subprocess('%s/database' % target)
-    server.listen()
+    config = get_config(target)
+    # Find out the IP to listen to
+    address = config.get_value('listen-address').strip()
+    if not address:
+        raise ValueError, 'listen-address is missing from config.conf'
+    if address == '*':
+        address = None
+
+    # Find out the port to listen
+    port = config.get_value('listen-port')
+    if port is None:
+        raise ValueError, 'listen-port is missing from config.conf'
+
+    server.listen(address, port)
 
     # Run
-    config = get_config(target)
     profile = config.get_value('profile-time')
     profile = ('%s/log/profile' % target) if profile else None
     loop = Loop(pid_file='%s/pid' % target, profile=profile)
