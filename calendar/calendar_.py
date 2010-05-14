@@ -158,7 +158,7 @@ class CalendarBase(DBResource):
 
 
 
-class CalendarTable(CalendarBase, Table):
+class Calendar(CalendarBase, Table):
 
     class_id = 'calendarTable'
     class_handler = icalendarTable
