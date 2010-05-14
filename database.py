@@ -18,7 +18,7 @@
 from datetime import datetime
 
 # Import from itools
-from itools.core import get_pipe, send_subprocess
+from itools.core import get_pipe, lazy, send_subprocess
 from itools.handlers import ROGitDatabase, GitDatabase, make_git_database
 from itools.uri import Path
 from itools.web import get_context
@@ -33,15 +33,19 @@ from registry import get_register_fields
 class ReadOnlyDatabase(ROGitDatabase):
 
     def __init__(self, target, size_min, size_max):
-        self.path = '%s/database' % target
-
-        # Database/Catalog
-        ROGitDatabase.__init__(self, self.path, size_min, size_max)
-        self.catalog = Catalog('%s/catalog' % target, get_register_fields(),
-                               read_only=True)
+        self.target = target
+        # Call parent class
+        path = '%s/database' % target
+        ROGitDatabase.__init__(self, path, size_min, size_max)
 
         # Git cache (lazy load)
         self.git_cache = None
+
+
+    @lazy
+    def catalog(self):
+        path = '%s/catalog' % self.target
+        return Catalog(path, get_register_fields(), read_only=True)
 
 
     def get_revisions(self, files, n=None):
@@ -113,10 +117,10 @@ class Database(ReadOnlyDatabase, GitDatabase):
     """
 
     def __init__(self, target, size_min, size_max):
-        # Database/Catalog
+        self.target = target
+        # Call parent class
         path = '%s/database' % target
         GitDatabase.__init__(self, path, size_min, size_max)
-        self.catalog = Catalog('%s/catalog' % target, get_register_fields())
 
         # The resources that been added, removed, changed and moved can be
         # represented as a set of two element tuples.  But we implement this
@@ -155,6 +159,12 @@ class Database(ReadOnlyDatabase, GitDatabase):
         #
         self.resources_old2new = {}
         self.resources_new2old = {}
+
+
+    @lazy
+    def catalog(self):
+        path = '%s/catalog' % self.target
+        return Catalog(path, get_register_fields())
 
 
     #######################################################################
