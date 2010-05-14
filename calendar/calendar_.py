@@ -24,7 +24,7 @@ from datetime import time
 from itools.core import merge_dicts
 from itools.datatypes import DataType, Date
 from itools.gettext import MSG
-from itools.ical import iCalendar, icalendarTable
+from itools.ical import icalendarTable
 from itools.ical import Record
 from itools.web import get_context
 
@@ -32,7 +32,6 @@ from itools.web import get_context
 from ikaaro.file_views import File_View
 from ikaaro.resource_ import DBResource
 from ikaaro.table import Table
-from ikaaro.text import Text
 from calendar_views import Calendar_Upload, Calendar_Download
 from calendar_views import AddEventForm, EditEventForm
 from calendar_views import MonthlyView, TimetablesForm, WeeklyView, DailyView
@@ -198,37 +197,3 @@ class CalendarTable(CalendarBase, Table):
 
     # Use edit_event instead
     edit_record = None
-
-
-
-class Calendar(CalendarBase, Text):
-
-    class_id = 'text/calendar'
-    class_handler = iCalendar
-
-
-    def get_record(self, id):
-        return self.handler.get_record(id)
-
-
-    def add_record(self, type, properties):
-        # Reindex the resource
-        get_context().server.change_resource(self)
-        return self.handler.add_component(type, **properties)
-
-
-    def update_record(self, id, properties):
-        self.handler.update_component(id, **properties)
-        # Reindex the resource
-        get_context().server.change_resource(self)
-
-
-    def _remove_event(self, uid):
-        self.handler.remove(uid)
-        # Reindex the resource
-        get_context().server.change_resource(self)
-
-
-    class_schema = merge_dicts(
-        Text.class_schema,
-        timetables=Timetables(source='metadata'))
