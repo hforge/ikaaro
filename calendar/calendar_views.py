@@ -336,14 +336,10 @@ class CalendarView(STLView):
         """Get a list of events as tuples (resource_name, start, properties{})
         and a dict with all resources from whom they belong to.
         """
-        resources, events = {}, []
         resource = get_context().resource
-        for index, calendar in enumerate(resource.get_calendars()):
-            res, evts = calendar.get_events_to_display(start, end)
-            events.extend(evts)
-            resources[calendar.name] = index
+        res, events = resource.get_events_to_display(start, end)
         events.sort(lambda x, y : cmp(x[1], y[1]))
-        return resources, events
+        return {resource.name: 0}, events
 
 
     def events_to_namespace(self, resource, events, day, cal_indexes,
@@ -676,8 +672,9 @@ class AddEventForm(EditEventForm):
 
         # The namespace
         resources = [
-            {'name': x.name, 'value': x.get_title(), 'selected': False}
-            for x in resource.get_calendars() ]
+            {'name': resource.name,
+             'value': resource.get_title(),
+             'selected': False}]
         namespace = {
             'action': ';add_event?date=%s' % selected_date,
             'dtstart': selected_date,
@@ -689,8 +686,7 @@ class AddEventForm(EditEventForm):
             'remove': False,
             'firstday': self.get_first_day(),
             'STATUS': Status().get_namespace(None),
-            'allowed': True,
-        }
+            'allowed': True}
 
         # Get values
         for key in self.schema:
@@ -815,12 +811,11 @@ class WeeklyView(CalendarView):
         """Build namespace to give as grid to gridlayout factory.
         """
         ns_timetables = []
-        for calendar in resource.get_calendars():
-            for start, end in calendar.get_timetables():
-                for value in (start, end):
-                    value = Time.encode(value)
-                    if value not in ns_timetables:
-                        ns_timetables.append(value)
+        for start, end in resource.get_timetables():
+            for value in (start, end):
+                value = Time.encode(value)
+                if value not in ns_timetables:
+                    ns_timetables.append(value)
         return ns_timetables
 
 
@@ -1083,12 +1078,8 @@ class DailyView(CalendarView):
             else:
                 ns_timetables.append(None)
 
-        # For each found calendar
-        ns_calendars = [
-            self.get_ns_calendar(x, c_date, timetables)
-            for x in resource.get_calendars() ]
-
         # Ok
+        ns_calendars = [self.get_ns_calendar(resource, c_date, timetables)]
         return {
             'date': Date.encode(c_date),
             'firstday': self.get_first_day(),

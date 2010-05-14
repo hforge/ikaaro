@@ -21,7 +21,7 @@
 from datetime import time
 
 # Import from itools
-from itools.core import freeze, merge_dicts
+from itools.core import merge_dicts
 from itools.datatypes import DataType, Date
 from itools.gettext import MSG
 from itools.ical import iCalendar, icalendarTable
@@ -30,7 +30,6 @@ from itools.web import get_context
 
 # Import from ikaaro
 from ikaaro.file_views import File_View
-from ikaaro.folder import Folder
 from ikaaro.resource_ import DBResource
 from ikaaro.table import Table
 from ikaaro.text import Text
@@ -95,10 +94,6 @@ class CalendarBase(DBResource):
                   ((13,0),(14,0)), ((14,0),(15,0)), ((15,0),(16,0)),
                   ((16,0),(17,0)), ((17,0),(18,0)), ((18,0),(19,0)),
                   ((19,0),(20,0)), ((20,0),(21,0))]
-
-
-    def get_calendars(self):
-        return [self]
 
 
     def get_action_url(self, **kw):
@@ -237,28 +232,3 @@ class Calendar(CalendarBase, Text):
     class_schema = merge_dicts(
         Text.class_schema,
         timetables=Timetables(source='metadata'))
-
-
-
-class CalendarContainer(CalendarBase):
-
-    class_schema = freeze({
-        'timetables': Timetables(source='metadata')})
-
-
-    def get_calendars(self, types=None):
-        """List of sources from which taking events.
-        """
-        if types is None:
-            types = (Calendar, CalendarTable)
-
-        if isinstance(self, Folder):
-            calendars = self.search_resources(cls=types)
-            return list(calendars)
-        return [self]
-
-
-    # Views
-    download = None
-    upload = None
-
