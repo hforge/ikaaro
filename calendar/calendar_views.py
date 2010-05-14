@@ -303,7 +303,6 @@ class CalendarView(STLView):
           ndays : number of days we want
           selected : selected date
         """
-        resource = get_context().resource
         current_date = start
         ns_days = []
         for index in range(ndays):
