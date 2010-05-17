@@ -5,33 +5,25 @@
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
 <form id="edit_event" action="${action}" method="post" stl:if="action">
+  <fieldset>
+    <legend>Add Event</legend>
   <p>(To add an event lasting all day long, leave time fields empty.)</p>
-  <input stl:if="resource" type="hidden" name="resource" value="${resource}" />
   <table class="form">
-    <tr stl:if="resources">
-      <td>Resource</td>
+    <tr>
       <td>
-        <select name="resource">
-          <option stl:repeat="item resources" selected="{item/selected}"
-            value="${item/name}">${item/value}&nbsp;</option>
-        </select>
+        Title<br/>
+        <input type="text" id="title" name="title" value="${title}" />
       </td>
     </tr>
     <tr>
-      <td>Summary</td>
       <td>
-        <input type="text" id="SUMMARY" name="SUMMARY" value="${SUMMARY}" />
-      </td>
-    </tr>
-    <tr>
-      <td>Location</td>
-      <td>
+        Location<br/>
         <input type="text" name="LOCATION" value="${LOCATION}" />
       </td>
     </tr>
     <tr>
-      <td>Start</td>
       <td>
+        Start<br/>
         <input type="text" name="dtstart" id="dtstart" class="dateField"
           size="10" maxlength="10" value="${dtstart}" />
         <input type="button" value="..." />
@@ -41,8 +33,8 @@
       </td>
     </tr>
     <tr>
-      <td>End</td>
       <td>
+        End<br/>
         <input type="text" name="dtend" id="dtend" class="dateField"
           size="10" maxlength="10" value="${dtend}" />
         <input type="button" value="..." />
@@ -52,16 +44,16 @@
       </td>
     </tr>
     <tr>
-      <td valign="top">Description</td>
-      <td>
+      <td valign="top">
+        Description<br/>
         <textarea name="DESCRIPTION" cols="65">${DESCRIPTION}</textarea>
       </td>
     </tr>
 
     <!-- STATUS -->
     <tr stl:if="STATUS">
-      <td>Status</td>
       <td>
+        Status<br/>
         <select name="STATUS">
           <option stl:repeat="s STATUS" selected="${s/selected}"
             value="${s/name}">${s/value}</option>
@@ -72,8 +64,8 @@
     <!-- ATTENDEES -->
     <!--
     <tr stl:if="ATTENDEE">
-      <td>Attendees</td>
       <td>
+        Attendees<br/>
         <table stl:repeat="att ATTENDEE">
           <tr>
             <td>E-mail Address</td>
@@ -118,8 +110,8 @@
     <!-- COMMENTS -->
     <!--
     <tr stl:repeat="comment COMMENT">
-      <td>Comment</td>
       <td>
+        Comment<br/>
         <textarea name="${comment/name}" cols="65">${comment/value}</textarea>
       </td>
     </tr>
@@ -134,9 +126,10 @@
     <button type="submit" name="action" value="cancel" class="button-cancel"
       stl:if="not remove">Cancel</button>
   </p>
+  </fieldset>
 
   <script language="javascript">
-  $("#SUMMARY").focus();
+  $("#title").focus();
 
   jQuery( "input.dateField" ).dynDateTime({ifFormat: "%Y-%m-%d",
     button: ".next()" })

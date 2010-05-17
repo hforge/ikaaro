@@ -24,15 +24,14 @@ from datetime import date, datetime, time, timedelta
 from operator import itemgetter
 
 # Import from itools
-from itools.csv import Property
-from itools.datatypes import Date, Enumerate, Integer, String, Unicode
+from itools.datatypes import Date, Integer
 from itools.gettext import MSG
 from itools.ical import get_grid_data
 from itools.ical import Time
 from itools.stl import stl
 from itools.uri import encode_query, get_reference
 from itools.web import BaseView, STLForm, STLView, get_context, INFO, ERROR
-from itools.web import FormError
+from itools.xapian import AndQuery, PhraseQuery, RangeQuery
 
 # Import from ikaaro
 from ikaaro.datatypes import FileDataType
@@ -40,6 +39,7 @@ from ikaaro import messages
 
 
 resolution = timedelta.resolution
+
 
 months = {
     1: MSG(u'January'),
@@ -96,14 +96,6 @@ def get_current_date(value):
         return Date.decode(value)
     except ValueError:
         return date.today()
-
-
-
-class Status(Enumerate):
-
-    options = [{'name': 'TENTATIVE', 'value': MSG(u'Tentative')},
-               {'name': 'CONFIRMED', 'value': MSG(u'Confirmed')},
-               {'name': 'CANCELLED', 'value': MSG(u'Cancelled')}]
 
 
 
@@ -209,7 +201,7 @@ class CalendarView(STLView):
 
     styles = ['/ui/calendar/style.css']
     # default viewed fields on monthly_view
-    default_viewed_fields = ('dtstart', 'dtend', 'SUMMARY', 'STATUS')
+    default_viewed_fields = ('dtstart', 'dtend', 'title', 'STATUS')
 
 
     def get_first_day(self):
@@ -324,25 +316,51 @@ class CalendarView(STLView):
     ######################################################################
     # Public API
     ######################################################################
-
     def get_action_url(self, **kw):
         """Action to call on form submission.
         """
         return None
 
 
-    def get_events_to_display(self, start, end):
-        """Get a list of events as tuples (resource_name, start, properties{})
-        and a dict with all resources from whom they belong to.
+    def search(self, query=None, **kw):
+        if query is None:
+            query = [ PhraseQuery(name, value) for name, value in kw.items() ]
+        else:
+            query = [query]
+
+        # Search only events
+        query.append(PhraseQuery('format', 'event'))
+        query = AndQuery(*query)
+
+        # Search
+        return get_context().root.search(query)
+
+
+    def search_events_in_range(self, start, end, **kw):
+        query = [ PhraseQuery(name, value) for name, value in kw.items() ]
+        query = AndQuery(
+            RangeQuery('dtstart', None, end),
+            RangeQuery('dtend', start, None),
+            *query)
+        return self.search(query)
+
+
+    def search_events_in_date(self, date, **kw):
+        """Return a list of Component objects of type 'VEVENT' matching the
+        given date and sorted if requested.
         """
-        resource = get_context().resource
-        res, events = resource.get_events_to_display(start, end)
-        events.sort(lambda x, y : cmp(x[1], y[1]))
-        return {resource.name: 0}, events
+        dtstart = datetime(date.year, date.month, date.day)
+        dtend = dtstart + timedelta(days=1) - resolution
+        return self.search_events_in_range(dtstart, dtend, **kw)
 
 
-    def events_to_namespace(self, resource, events, day, cal_indexes,
-                            grid=False, show_conflicts=False):
+    def get_events_to_display(self, start, end):
+        events = self.search_events_in_range(start, end)
+        return events.get_documents(sort_by='dtstart')
+
+
+    def events_to_namespace(self, resource, events, day, grid=False,
+                            show_conflicts=False):
         """Build namespace for events occuring on current day.
         Update events, removing past ones.
 
@@ -355,9 +373,10 @@ class CalendarView(STLView):
         ns_events = []
         index = 0
         while index < len(events):
-            resource_name, dtstart, event = events[index]
-            e_dtstart = dtstart.date()
-            e_dtend = event.get_end().date()
+            event = events[index]
+            event = resource.get_resource(event.name)
+            e_dtstart = event.get_property('dtstart').date()
+            e_dtend = event.get_property('dtend').date()
             # Current event occurs on current date
             # event begins during current tt
             starts_on = e_dtstart == day
@@ -367,13 +386,7 @@ class CalendarView(STLView):
             out_on = (e_dtstart < day and e_dtend > day)
 
             if starts_on or ends_on or out_on:
-                cal_index = cal_indexes[resource_name]
-                if len(cal_indexes.items()) < 2:
-                    resource_name = None
-                if resource_name is not None:
-                    current_resource = self.get_resource(resource_name)
-                else:
-                    current_resource = resource
+                current_resource = resource
                 conflicts_list = set()
                 if show_conflicts:
                     handler = current_resource.handler
@@ -381,16 +394,16 @@ class CalendarView(STLView):
                     if conflicts:
                         for uids in conflicts:
                             conflicts_list.update(uids)
-                ns_event = event.get_ns_event(day, resource_name=resource_name,
+                ns_event = event.get_ns_event(day,
                                               conflicts_list=conflicts_list,
                                               grid=grid, starts_on=starts_on,
                                               ends_on=ends_on, out_on=out_on)
                 ns_event['url'] = current_resource.get_action_url(**ns_event)
-                ns_event['cal'] = cal_index
+                ns_event['cal'] = 0
                 if 'resource' in ns_event.keys():
-                    ns_event['resource']['color'] = cal_index
+                    ns_event['resource']['color'] = 0
                 else:
-                    ns_event['resource'] = {'color': cal_index}
+                    ns_event['resource'] = {'color': 0}
                 ns_events.append(ns_event)
                 # Current event end on current date
                 if e_dtend == day:
@@ -405,311 +418,6 @@ class CalendarView(STLView):
             else:
                 index = index + 1
         return ns_events, events
-
-
-
-class EditEventForm(CalendarView, STLForm):
-
-    access = 'is_allowed_to_edit'
-    title = MSG(u'Edit Event')
-    template = '/ui/calendar/edit_event.xml'
-    query_schema = {
-        'resource': String,
-        'id': String,
-    }
-    schema = {
-        'SUMMARY': Unicode(mandatory=True),
-        'LOCATION': Unicode,
-        'dtstart': Date(mandatory=True),
-        'dtstart_time': Time,
-        'dtend': Date(mandatory=True),
-        'dtend_time': Time,
-        'DESCRIPTION': Unicode(),
-        'STATUS': Status(mandatory=True),
-        }
-
-
-    def get_resource(self, resource, context):
-        resource_id = context.query['resource']
-        if resource_id is None:
-            return resource
-
-        aux = resource.get_resource(resource_id, soft=True)
-        if aux is not None:
-            return aux
-        elif resource_id == resource.name:
-            return resource
-
-        # Error
-        message = MSG(u'Resource "{name}" not found.')
-        context.message = message.gettext(name=resource_id)
-        return None
-
-
-    def get_event_id(self, resource, context):
-        id = context.query['id']
-        if id is not None:
-            return id
-
-        # Error
-        message = ERROR(u'Expected query parameter "id" is missing.')
-        context.message = message
-        return None
-
-
-    def _get_form(self, resource, context):
-        """ Check start is before end.
-        """
-        form = STLForm._get_form(self, resource, context)
-        start_date = form['dtstart']
-        start_time = form.get('dtstart_time', None) or time(0,0)
-        end_date = form['dtend']
-        end_time = form.get('dtend_time', None) or time(23,59)
-        start = datetime.combine(start_date, start_time)
-        end = datetime.combine(end_date, end_time)
-
-        if start > end:
-            msg = ERROR(u'Invalid dates.')
-            raise FormError(msg)
-        return form
-
-
-    def get_namespace(self, resource, context):
-        # Get the resource
-        resource = self.get_resource(resource, context)
-        if resource is None:
-            return {'action': None}
-        # Get the event id
-        id = self.get_event_id(resource, context)
-        if id is None:
-            return {'action': None}
-        # Get the event
-        event = resource.get_record(id)
-        if event is None:
-            context.message = ERROR(u'Event not found')
-            return {'action': None}
-
-        # Ok
-        # Date start
-        start = event.get_property('DTSTART')
-        param = start.get_parameter('VALUE', '')
-        start_date = Date.encode(start.value)
-        start_time = Time.encode(start.value) if param != ['DATE'] else None
-        # Date end
-        end = event.get_property('DTEND')
-        param = end.get_parameter('VALUE', '')
-        end_date = Date.encode(end.value)
-        end_time = Time.encode(end.value) if param != ['DATE'] else None
-
-        # STATUS is an enumerate
-        get_value = resource.handler.get_record_value
-        status = get_value(event, 'STATUS')
-        status = Status().get_namespace(status)
-
-        # Show action buttons only if current user is authorized
-        if resource is None:
-            allowed = True
-        else:
-            allowed = resource.is_organizer_or_admin(context, event)
-
-        # The namespace
-        namespace = {
-            'action': ';edit_event?id=%s' % id,
-            'dtstart': start_date,
-            'dtstart_time': start_time,
-            'dtend': end_date,
-            'dtend_time': end_time,
-            'resources': None,
-            'resource': None,
-            'remove': True,
-            'firstday': self.get_first_day(),
-            'STATUS': status,
-            'allowed': allowed,
-        }
-
-        # Get values
-        for key in self.schema:
-            if key in namespace:
-                continue
-            value = event.get_property(key)
-            if value is None:
-                namespace[key] = value
-            elif isinstance(value, list):
-                namespace[key] = value
-            else:
-                namespace[key] = value.value
-
-        return namespace
-
-
-    def get_properties(self, form):
-        """Return the properties dict, ready to be used by the add or update
-        actions.
-        """
-        # Start
-        dtstart = form['dtstart']
-        dtstart_time = form['dtstart_time']
-        if dtstart_time is None:
-            dtstart = datetime.combine(dtstart, time(0, 0))
-            dtstart = Property(dtstart, VALUE=['DATE'])
-        else:
-            dtstart = datetime.combine(dtstart, dtstart_time)
-            dtstart = Property(dtstart)
-        # End
-        dtend = form['dtend']
-        dtend_time = form['dtend_time']
-        if dtend_time is None:
-            dtend = datetime.combine(dtend, time(0, 0))
-            dtend = dtend + timedelta(days=1) - resolution
-            dtend = Property(dtend, VALUE=['DATE'])
-        else:
-            dtend = datetime.combine(dtend, dtend_time)
-            dtend = Property(dtend)
-
-        # Get id and Record object
-        properties = {
-            'DTSTART': dtstart,
-            'DTEND': dtend}
-
-        for key in self.schema:
-            if key.startswith('dtstart') or key.startswith('dtend'):
-                continue
-            properties[key] = Property(form[key])
-
-        return properties
-
-
-    def action_edit_event(self, resource, context, form):
-        # Get the resource
-        resource = self.get_resource(resource, context)
-        if resource is None:
-            return {'action': None}
-        # Get the event id
-        id = self.get_event_id(resource, context)
-        if id is None:
-            return {'action': None}
-        # Get the event
-        event = resource.get_record(id)
-        if event is None:
-            context.message = ERROR(u'Event not found')
-            return {'action': None}
-
-        # Test if current user is admin or organizer of this event
-        if not resource.is_organizer_or_admin(context, event):
-            message = ERROR(u'You are not authorized to modify this event.')
-            context.message = message
-            return
-
-        # Update
-        properties = self.get_properties(form)
-        resource.update_record(id, properties)
-        # Ok
-        context.message = messages.MSG_CHANGES_SAVED
-
-
-    def action_remove_event(self, resource, context, form):
-        # Get the resource
-        resource = self.get_resource(resource, context)
-        if resource is None:
-            return {'action': None}
-        # Get the event id
-        id = self.get_event_id(resource, context)
-        if id is None:
-            return {'action': None}
-        # Get the event
-        event = resource.get_record(id)
-        if event is None:
-            context.message = MSG(u'Event not found')
-            return {'action': None}
-
-        # Remove
-        resource._remove_event(id)
-
-        # Back
-        method = context.get_cookie('method') or 'monthly_view'
-        if method in dir(resource):
-            goto = ';%s?%s' % (method, date.today())
-        else:
-            goto = '../;%s?%s' % (method, date.today())
-
-        message = ERROR(u'Event definitely deleted.')
-        return context.come_back(message, goto=goto)
-
-
-    def action_cancel(self, resource, context, form):
-        goto = ';%s' % context.get_cookie('method') or 'monthly_view'
-        return context.come_back(None, goto)
-
-
-
-class AddEventForm(EditEventForm):
-
-    query_schema = {
-        'resource': String,
-        'date': Date,
-        'start_time': Time,
-        'end_time': Time,
-    }
-
-
-    def get_namespace(self, resource, context):
-        # Get date to add event
-        selected_date = context.query['date']
-        if selected_date is None:
-            message = u'To add an event, click on + symbol from the views.'
-            context.message = ERROR(message)
-            return {}
-
-        # Timetables
-        start_time = context.query['start_time']
-        if start_time:
-            start_time = Time.encode(start_time)
-        end_time = context.query['end_time']
-        if end_time:
-            end_time = Time.encode(end_time)
-
-        # The namespace
-        resources = [
-            {'name': resource.name,
-             'value': resource.get_title(),
-             'selected': False}]
-        namespace = {
-            'action': ';add_event?date=%s' % selected_date,
-            'dtstart': selected_date,
-            'dtstart_time': start_time,
-            'dtend': selected_date,
-            'dtend_time': end_time,
-            'resources': resources,
-            'resource': None,
-            'remove': False,
-            'firstday': self.get_first_day(),
-            'STATUS': Status().get_namespace(None),
-            'allowed': True}
-
-        # Get values
-        for key in self.schema:
-            if key in namespace:
-                continue
-            namespace[key] = context.get_form_value(key)
-
-        return namespace
-
-
-    def action_edit_event(self, resource, context, form):
-        # Get the resource
-        resource = self.get_resource(resource, context)
-        if resource is None:
-            return {'action': None}
-
-        # Add
-        properties = self.get_properties(form)
-        organizer = str(context.user.get_abspath())
-        properties['ORGANIZER'] = Property(organizer)
-        resource.add_record('VEVENT', properties)
-        # Ok
-        message = messages.MSG_CHANGES_SAVED
-        goto = ';%s' % context.get_cookie('method') or 'monthly_view'
-        return context.come_back(message, goto=goto)
 
 
 
@@ -748,7 +456,7 @@ class MonthlyView(CalendarView):
 
         ###################################################################
         # Get a list of events to display on view
-        cal_indexes, events = resource.get_events_to_display(start, end)
+        events = self.get_events_to_display(start, end)
         if isinstance(self.monthly_template, str):
             template = resource.get_resource(self.monthly_template)
         else:
@@ -776,7 +484,7 @@ class MonthlyView(CalendarView):
                     ns_day['url'] = resource.get_action_url(day=day)
                     # Insert events
                     ns_events, events = self.events_to_namespace(resource,
-                        events, day, cal_indexes)
+                        events, day)
                     ns_day['events'] = stl(template, {'events': ns_events})
                     ns_week['days'].append(ns_day)
                     if day.day == 1:
@@ -832,14 +540,14 @@ class WeeklyView(CalendarView):
         events = []
         # Get a list of events to display on view
         end = start_date + timedelta(days=ndays)
-        cal_indexes, events = resource.get_events_to_display(start_date, end)
+        events = self.get_events_to_display(start_date, end)
         for header in headers:
             ns_day = {}
             # Add header if given
             ns_day['header'] = header
             # Insert events
             ns_events, events = self.events_to_namespace(resource, events,
-                                current_date, cal_indexes, grid=True)
+                                current_date, grid=True)
             ns_day['events'] = ns_events
             ns_days.append(ns_day)
             current_date = current_date + step
@@ -908,7 +616,7 @@ class DailyView(CalendarView):
 
     # Start 07:00, End 21:00, Interval 30min
     class_cal_range = (time(7,0), time(21,0), 30)
-    class_cal_fields = ('SUMMARY', 'DTSTART', 'DTEND')
+    class_cal_fields = ('title', 'DTSTART', 'DTEND')
 
 
     def get_cal_range(self):
@@ -925,9 +633,10 @@ class DailyView(CalendarView):
         # Get a dict for each event, compute colspan
         handler = calendar.handler
         events_by_index = {}
-        for event in handler.search_events_in_date(c_date):
-            event_start = event.get_property('DTSTART').value
-            event_end = event.get_property('DTEND').value
+        for event in self.search_events_in_date(c_date).get_documents():
+            event = calendar.get_resource(event.name)
+            event_start = event.get_property('dtstart')
+            event_end = event.get_property('dtend')
             # Compute start and end indexes
             tt_start = 0
             tt_end = len(timetables) - 1
@@ -942,7 +651,7 @@ class DailyView(CalendarView):
             uid = getattr(event, 'id', getattr(event, 'uid', None))
             events_by_index.setdefault(tt_start, [])
             events_by_index[tt_start].append({
-                'SUMMARY': event.get_property('SUMMARY').value,
+                'title': event.get_property('title'),
                 'tt_start': tt_start,
                 'tt_end': tt_end,
                 'resource_id': calendar_name,
@@ -1015,7 +724,7 @@ class DailyView(CalendarView):
                     column['class'] = css_class
                     column['colspan'] = event['colspan']
                     column['evt_url'] = go_url
-                    column['SUMMARY'] = event['SUMMARY']
+                    column['title'] = event['title']
                     # Set colspan
                     colspan = event['colspan'] - 1
                     # Delete added event
@@ -1032,7 +741,7 @@ class DailyView(CalendarView):
 
         # Header columns (one line with header and empty cases with only
         # '+' for daily_view)
-        url = ';add_event?%s' % encode_query(args)
+        url = ';new_resource?type=event&%s' % encode_query(args)
         url = get_reference(url).replace(resource=calendar_name)
         header_columns = [
             url.replace(start_time=Time.encode(x), end_time=Time.encode(y))

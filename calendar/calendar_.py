@@ -25,15 +25,13 @@ from itools.core import merge_dicts
 from itools.datatypes import DataType, Date
 from itools.gettext import MSG
 from itools.ical import icalendarTable
-from itools.ical import Record
-from itools.web import get_context
 
 # Import from ikaaro
 from ikaaro.file_views import File_View
-from ikaaro.table import Table
+from ikaaro.folder import Folder
 from calendar_views import Calendar_Upload, Calendar_Download
-from calendar_views import AddEventForm, EditEventForm
 from calendar_views import MonthlyView, TimetablesForm, WeeklyView, DailyView
+from event import Event
 
 
 class Timetables(DataType):
@@ -77,7 +75,7 @@ class Timetables(DataType):
 
 
 
-class Calendar(Table):
+class Calendar(Folder):
 
     class_id = 'calendarTable'
     class_title = MSG(u'Calendar')
@@ -87,9 +85,6 @@ class Calendar(Table):
     class_views = ['monthly_view', 'weekly_view', 'daily_view',
                    'edit_timetables', 'upload', 'download_form']
 
-    class_handler = icalendarTable
-    record_class = Record
-
     timetables = [((7,0),(8,0)), ((8,0),(9,0)), ((9,0),(10,0)),
                   ((10,0),(11,0)), ((11,0),(12,0)), ((12,0),(13,0)),
                   ((13,0),(14,0)), ((14,0),(15,0)), ((15,0),(16,0)),
@@ -97,34 +92,18 @@ class Calendar(Table):
                   ((19,0),(20,0)), ((20,0),(21,0))]
 
 
-    def get_record(self, id):
-        id = int(id)
-        return self.handler.get_record(id)
-
-
-    def add_record(self, type, properties):
-        properties['type'] = type
-        # Reindex the resource
-        get_context().server.change_resource(self)
-        return self.handler.add_record(properties)
-
-
-    def update_record(self, id, properties):
-        id = int(id)
-        self.handler.update_record(id, **properties)
-        # Reindex the resource
-        get_context().server.change_resource(self)
-
-
-    def _remove_event(self, uid):
-        self.handler.del_record(int(uid))
-        # Reindex the resource
-        get_context().server.change_resource(self)
+    def get_new_id(self):
+        ids = [ int(x) for x in self.get_names() if x[:-9] == '.metadata' ]
+        return str(max(ids) + 1) if ids else '0'
 
 
     class_schema = merge_dicts(
-        Table.class_schema,
+        Folder.class_schema,
         timetables=Timetables(source='metadata'))
+
+
+    def get_document_types(self):
+        return [Event]
 
 
     #######################################################################
@@ -132,9 +111,9 @@ class Calendar(Table):
     #######################################################################
     def get_action_url(self, **kw):
         if 'day' in kw:
-            return ';add_event?date=%s' % Date.encode(kw['day'])
+            return ';new_resource?type=event&date=%s' % Date.encode(kw['day'])
         if 'id' in kw:
-            return ';edit_event?id=%s' % kw['id']
+            return '%s/;edit' % kw['id']
 
         return None
 
@@ -168,23 +147,10 @@ class Calendar(Table):
         return timetables
 
 
-    def get_events_to_display(self, start, end):
-        file = self.handler
-        events = []
-        for event in file.search_events_in_range(start, end, sortby='date'):
-            e_dtstart = event.get_property('DTSTART').value
-            events.append((self.name, e_dtstart, event))
-        events.sort(lambda x, y : cmp(x[1], y[1]))
-        return {self.name: 0}, events
-
-
     # Views
     monthly_view = MonthlyView()
     weekly_view = WeeklyView()
     daily_view = DailyView()
-    add_event = AddEventForm()
-    edit_record = None # Use edit_event instead
-    edit_event = EditEventForm()
     edit_timetables = TimetablesForm()
     download = Calendar_Download()
     upload = Calendar_Upload()

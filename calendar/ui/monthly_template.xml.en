@@ -8,7 +8,7 @@
   <tr stl:repeat="event events" class="color${event/resource/color}">
     <td class="${event/STATUS}">
       <a href="${event/url}">
-        ${event/SUMMARY}</a>
+        ${event/title}</a>
         <span stl:if="event/TIME" class="time">${event/TIME}</span>
     </td>
   </tr>
