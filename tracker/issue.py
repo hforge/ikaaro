@@ -128,6 +128,8 @@ class Issue(Folder):
 
 
     def _add_record(self, context, form, new=False):
+        # Keep a copy of the current metadata
+        old_metadata = self.metadata.clone()
         # Title
         title = form['title'].strip()
         language = self.get_content_language(context)
@@ -218,7 +220,7 @@ class Issue(Folder):
             message = message.gettext(filename=filename)
             body += message + '\n'
         comment = context.get_form_value('comment', type=Unicode)
-        modifications = self.get_diff_with(record, context, new=new)
+        modifications = self.get_diff_with(old_metadata, context, new=new)
         if modifications:
             body += modifications
             body += '\n\n'
@@ -238,8 +240,8 @@ class Issue(Folder):
             root.send_email(to_addr, subject, text=body)
 
 
-    def get_diff_with(self, record, context, new=False):
-        """Return a text with the diff between the last and new issue state.
+    def get_diff_with(self, old_metadata, context, new=False):
+        """Return a text with the diff between the given Metadata and new issue state.
         """
         root = context.root
         modifications = []
@@ -252,8 +254,9 @@ class Issue(Folder):
             template = MSG(u'{field}: {old_value} to {new_value}')
             empty = MSG(u'[empty]').gettext()
         # Modification of title
-        last_title = self.get_property('title') or empty
-        new_title = record['title']
+        last_prop = old_metadata.get_property('title')
+        last_title = last_prop.value if last_prop else None
+        new_title = self.get_property('title') or empty
         if last_title != new_title:
             field = MSG(u'Title').gettext()
             text = template.gettext(field=field, old_value=last_title,
@@ -268,8 +271,9 @@ class Issue(Folder):
             ('state', MSG(u'State'))]
         for name, field in fields:
             field = field.gettext()
-            new_value = record[name]
-            last_value = self.get_property(name)
+            last_prop = old_metadata.get_property(name)
+            last_value = last_prop.value if last_prop else None
+            new_value = self.get_property(name)
             # Detect if modifications
             if last_value == new_value:
                 continue
@@ -289,8 +293,9 @@ class Issue(Folder):
             modifications.append(text)
 
         # Modifications of assigned_to
-        last_user = self.get_property('assigned_to') or ''
-        new_user = record['assigned_to']
+        new_user = self.get_property('assigned_to') or ''
+        last_prop = old_metadata.get_property('assigned_to')
+        last_user = last_prop.value if last_prop else None
         if last_user != new_user:
             if last_user:
                 last_user = root.get_user(last_user).get_property('email')
@@ -302,9 +307,10 @@ class Issue(Folder):
             modifications.append(text)
 
         # Modifications of cc_list
-        last_cc = self.get_property('cc_list')
-        last_cc = list(last_cc) if last_cc else []
-        new_cc = list(record['cc_list'] or ())
+        last_prop = old_metadata.get_property('cc_list')
+        last_cc = list(last_prop.value) if last_prop else ()
+        new_cc = self.get_property('cc_list')
+        new_cc = list(new_cc) if new_cc else []
         if last_cc != new_cc:
             last_values = []
             for cc in last_cc:
