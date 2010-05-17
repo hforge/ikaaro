@@ -30,7 +30,6 @@ from itools.web import get_context
 
 # Import from ikaaro
 from ikaaro.file_views import File_View
-from ikaaro.resource_ import DBResource
 from ikaaro.table import Table
 from calendar_views import Calendar_Upload, Calendar_Download
 from calendar_views import AddEventForm, EditEventForm
@@ -78,8 +77,9 @@ class Timetables(DataType):
 
 
 
-class CalendarBase(DBResource):
+class Calendar(Table):
 
+    class_id = 'calendarTable'
     class_title = MSG(u'Calendar')
     class_description = MSG(u'Schedule your time with calendar files.')
     class_icon16 = 'icons/16x16/icalendar.png'
@@ -87,6 +87,8 @@ class CalendarBase(DBResource):
     class_views = ['monthly_view', 'weekly_view', 'daily_view',
                    'edit_timetables', 'upload', 'download_form']
 
+    class_handler = icalendarTable
+    record_class = Record
 
     timetables = [((7,0),(8,0)), ((8,0),(9,0)), ((9,0),(10,0)),
                   ((10,0),(11,0)), ((11,0),(12,0)), ((12,0),(13,0)),
@@ -95,6 +97,39 @@ class CalendarBase(DBResource):
                   ((19,0),(20,0)), ((20,0),(21,0))]
 
 
+    def get_record(self, id):
+        id = int(id)
+        return self.handler.get_record(id)
+
+
+    def add_record(self, type, properties):
+        properties['type'] = type
+        # Reindex the resource
+        get_context().server.change_resource(self)
+        return self.handler.add_record(properties)
+
+
+    def update_record(self, id, properties):
+        id = int(id)
+        self.handler.update_record(id, **properties)
+        # Reindex the resource
+        get_context().server.change_resource(self)
+
+
+    def _remove_event(self, uid):
+        self.handler.del_record(int(uid))
+        # Reindex the resource
+        get_context().server.change_resource(self)
+
+
+    class_schema = merge_dicts(
+        Table.class_schema,
+        timetables=Timetables(source='metadata'))
+
+
+    #######################################################################
+    # User Interface
+    #######################################################################
     def get_action_url(self, **kw):
         if 'day' in kw:
             return ';add_event?date=%s' % Date.encode(kw['day'])
@@ -143,57 +178,14 @@ class CalendarBase(DBResource):
         return {self.name: 0}, events
 
 
-    #######################################################################
     # Views
-    #######################################################################
     monthly_view = MonthlyView()
     weekly_view = WeeklyView()
     daily_view = DailyView()
     add_event = AddEventForm()
+    edit_record = None # Use edit_event instead
     edit_event = EditEventForm()
     edit_timetables = TimetablesForm()
     download = Calendar_Download()
     upload = Calendar_Upload()
     download_form = File_View()
-
-
-
-class Calendar(CalendarBase, Table):
-
-    class_id = 'calendarTable'
-    class_handler = icalendarTable
-    record_class = Record
-
-
-    def get_record(self, id):
-        id = int(id)
-        return self.handler.get_record(id)
-
-
-    def add_record(self, type, properties):
-        properties['type'] = type
-        # Reindex the resource
-        get_context().server.change_resource(self)
-        return self.handler.add_record(properties)
-
-
-    def update_record(self, id, properties):
-        id = int(id)
-        self.handler.update_record(id, **properties)
-        # Reindex the resource
-        get_context().server.change_resource(self)
-
-
-    def _remove_event(self, uid):
-        self.handler.del_record(int(uid))
-        # Reindex the resource
-        get_context().server.change_resource(self)
-
-
-    class_schema = merge_dicts(
-        Table.class_schema,
-        timetables=Timetables(source='metadata'))
-
-
-    # Use edit_event instead
-    edit_record = None

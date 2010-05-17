@@ -21,15 +21,13 @@ from itools.core import get_abspath
 # Import from ikaaro
 from ikaaro.registry import register_document_type
 from ikaaro.skins import register_skin
-from calendar_ import CalendarBase, Calendar
+from calendar_ import Calendar
 from calendar_views import MonthlyView, WeeklyView
 
 
 __all__ = [
-    'CalendarBase',
     'MonthlyView',
-    'WeeklyView',
-    ]
+    'WeeklyView']
 
 
 
