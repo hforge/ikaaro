@@ -490,14 +490,13 @@ class EditEventForm(CalendarView, STLForm):
             return {'action': None}
 
         # Ok
-        properties = event.get_property()
         # Date start
-        start = properties['DTSTART']
+        start = event.get_property('DTSTART')
         param = start.get_parameter('VALUE', '')
         start_date = Date.encode(start.value)
         start_time = Time.encode(start.value) if param != ['DATE'] else None
         # Date end
-        end = properties['DTEND']
+        end = event.get_property('DTEND')
         param = end.get_parameter('VALUE', '')
         end_date = Date.encode(end.value)
         end_time = Time.encode(end.value) if param != ['DATE'] else None
@@ -532,7 +531,7 @@ class EditEventForm(CalendarView, STLForm):
         for key in self.schema:
             if key in namespace:
                 continue
-            value = properties.get(key)
+            value = event.get_property(key)
             if value is None:
                 namespace[key] = value
             elif isinstance(value, list):
