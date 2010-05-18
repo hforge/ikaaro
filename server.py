@@ -334,7 +334,13 @@ class Server(WebServer):
         # The site root depends on the host
         hostname = get_host_from_authority(uri.authority)
 
-        results = self.database.catalog.search(vhosts=hostname)
+        catalog = self.database.catalog
+        # This may happen with a broken or missing catalog in
+        # icms-update-catalog.py
+        if not catalog:
+            return
+
+        results = catalog.search(vhosts=hostname)
         if len(results) == 0:
             return
 

@@ -19,13 +19,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
-from datetime import datetime, timedelta
 from os.path import basename
 
 # Import from itools
 from itools.core import merge_dicts
 from itools.csv import Property
-from itools.datatypes import Integer, Unicode, String
+from itools.datatypes import Integer, Unicode, String, HTTPDate
 from itools.gettext import MSG
 from itools.log import log_error
 from itools.handlers import get_handler_class_by_mimetype, guess_encoding
@@ -266,6 +265,16 @@ class File_ExternalEdit(BaseView):
 
 
     def GET(self, resource, context):
+        """Protocol used (with restedit.py):
+        1- we add a header to the content of the file.
+        2- the header is separated from the rest of the file by a "\n\n".
+        3- an entry in the header is:
+
+           header-name:header-body\n
+
+           The header-name does not contain ":" and the header-body does not
+           contain "\n"
+        """
         encoding = context.get_form_value('encoding')
 
         uri = context.uri
@@ -277,33 +286,21 @@ class File_ExternalEdit(BaseView):
             title = resource.name
 
         soup_message = context.soup_message
-        lines = [
+        header = [
             'url:%s://%s%s' % (uri.scheme, uri.authority, uri.path[:-1]),
+            'last-modified:%s' % HTTPDate.encode(resource.get_mtime()),
             'meta_type:toto', # FIXME Check if zopeedit really needs this
             'content_type:%s' % handler.get_mimetype(),
             'cookie:%s' % soup_message.get_header('Cookie'),
             'title:%s' % title]
 
-        if resource.is_locked():
-            lock = resource.get_lock()
-            # locks expire after 1 hour
-            if lock.lock_timestamp + timedelta(hours=1) < datetime.now():
-                resource.unlock()
-                context.commit = True
-            else:
-                # always borrow lock from same user
-                if lock.username == context.user.name:
-                    lines.append('lock-token:%s' % lock.lock_key)
-                    lines.append('borrow_lock:1')
-                else:
-                    message = ERROR(u'This page is locked by another user')
-                    return context.come_back(message, goto='.')
-
         auth = context.get_header('Authorization')
         if auth:
-            lines.append('auth:%s' % auth)
+            header.append('auth:%s' % auth)
 
-        lines.append('')
+        # Add the "\n\n" and make the header
+        header.append('\n')
+        header = '\n'.join(header)
 
         # TODO known bug from ExternalEditor requires rfc1123_date()
         # Using RESPONSE.setHeader('Pragma', 'no-cache') would be better, but
@@ -314,12 +311,12 @@ class File_ExternalEdit(BaseView):
 
         # Encoding
         if encoding is None:
-            lines.append(handler.to_str())
+            data = handler.to_str()
         else:
-            lines.append(handler.to_str(encoding))
+            data = handler.to_str(encoding)
 
-        context.content_type = 'application/x-zope-edit'
-        return '\n'.join(lines)
+        context.content_type = 'application/x-restedit'
+        return header + data
 
 
 
