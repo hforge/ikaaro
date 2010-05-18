@@ -71,8 +71,6 @@ MSG_RESOURCES_NOT_PASTED = ERROR(u'Resources not allowed to paste here: '
 MSG_RESOURCES_NOT_REMOVED = ERROR(u'Resources not allowed to remove: '
                                   u'{resources}.')
 
-MSG_PAGE_LOCK = ERROR(u'This page is locked by {user}')
-
 MSG_PASSWORD_MISMATCH = ERROR(u'The provided passwords do not match.')
 
 MSG_REGISTERED = ERROR(

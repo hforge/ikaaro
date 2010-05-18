@@ -330,7 +330,7 @@ class AccessControl(BaseAccessControl):
 
     # By default all other change operations (add, remove, copy, etc.)
     # are equivalent to "edit".
-    def is_allowed_to_lock(self, user, resource):
+    def is_allowed_to_put(self, user, resource):
         return self.is_allowed_to_edit(user, resource)
 
 

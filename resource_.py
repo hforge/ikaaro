@@ -27,13 +27,12 @@ from itools.web import Resource, get_context
 from itools.xapian import CatalogAware, PhraseQuery
 
 # Import from ikaaro
-from lock import Lock
 from metadata import Metadata
 from registry import register_field, register_resource_class
 from resource_views import DBResource_Edit, DBResource_Backlinks
 from resource_views import DBResource_AddImage, DBResource_AddLink
 from resource_views import DBResource_AddMedia, LoginView, LogoutView
-from resource_views import Put_View, Delete_View, Lock_View
+from resource_views import Put_View, Delete_View
 from revisions_views import DBResource_CommitLog, DBResource_Changes
 from workflow import WorkflowAware
 from views_new import NewInstance
@@ -504,43 +503,6 @@ class DBResource(CatalogAware, IResource):
 
 
     ########################################################################
-    # Lock/Unlock/Put
-    ########################################################################
-    def lock(self):
-        lock = Lock(username=get_context().user.name)
-
-        self = self.get_real_resource()
-        if self.parent is None:
-            self.handler.set_handler('.lock', lock)
-        else:
-            self.parent.handler.set_handler('%s.lock' % self.name, lock)
-
-        return lock.lock_key
-
-
-    def unlock(self):
-        self = self.get_real_resource()
-        if self.parent is None:
-            self.handler.del_handler('.lock')
-        else:
-            self.parent.handler.del_handler('%s.lock' % self.name)
-
-
-    def is_locked(self):
-        self = self.get_real_resource()
-        if self.parent is None:
-            return self.handler.has_handler('.lock')
-        return self.parent.handler.has_handler('%s.lock' % self.name)
-
-
-    def get_lock(self):
-        self = self.get_real_resource()
-        if self.parent is None:
-            return self.handler.get_handler('.lock')
-        return self.parent.handler.get_handler('%s.lock' % self.name)
-
-
-    ########################################################################
     # User interface
     ########################################################################
     def get_title(self, language=None):
@@ -597,8 +559,6 @@ class DBResource(CatalogAware, IResource):
     backlinks = DBResource_Backlinks()
     http_put = Put_View()
     http_delete = Delete_View()
-    http_lock = Lock_View()
-    http_unlock = Lock_View()
 
 
 

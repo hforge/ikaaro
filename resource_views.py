@@ -32,7 +32,7 @@ from itools.http import Conflict, NotImplemented
 from itools.i18n import get_language_name
 from itools.uri import Path, get_reference, get_uri_path
 from itools.fs import FileName
-from itools.web import BaseView, STLForm, INFO, ERROR, lock_body
+from itools.web import BaseView, STLForm, INFO, ERROR
 from itools.xapian import PhraseQuery
 
 # Import from ikaaro
@@ -584,7 +584,7 @@ class LogoutView(BaseView):
 
 class Put_View(BaseView):
 
-    access = 'is_allowed_to_lock'
+    access = 'is_allowed_to_put'
 
 
     def PUT(self, resource, context):
@@ -620,25 +620,3 @@ class Delete_View(BaseView):
             paths = []
 
 
-
-class Lock_View(BaseView):
-
-    access = 'is_allowed_to_lock'
-
-
-    def LOCK(self, resource, context):
-        lock = resource.lock()
-
-        # TODO move in the request handler
-        context.content_type = 'text/xml; charset="utf-8"'
-        context.set_header('Lock-Token', 'opaquelocktoken:%s' % lock)
-        return lock_body % {'owner': context.user.name, 'locktoken': lock}
-
-
-    def UNLOCK(self, resource, context):
-        lock = resource.get_lock()
-        resource.unlock()
-
-        # TODO move in the request handler
-        context.content_type = 'text/xml; charset="utf-8"'
-        context.set_header('Lock-Token', 'opaquelocktoken:%s' % lock)
