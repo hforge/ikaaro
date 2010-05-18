@@ -46,7 +46,7 @@
     <tr>
       <td valign="top">
         Description<br/>
-        <textarea name="DESCRIPTION" cols="65">${DESCRIPTION}</textarea>
+        <textarea name="description" cols="65">${description}</textarea>
       </td>
     </tr>
 

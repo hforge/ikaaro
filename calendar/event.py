@@ -53,7 +53,7 @@ class Event_Edit(CalendarView, STLForm):
         'dtstart_time': Time,
         'dtend': Date(mandatory=True),
         'dtend_time': Time,
-        'DESCRIPTION': Unicode(),
+        'description': Unicode,
         'STATUS': Status(mandatory=True)}
 
 
@@ -258,6 +258,7 @@ class Event(File):
         """
         ns = {
             'title': self.get_title(),
+            'description': self.get_property('description'),
             'ORGANIZER': self.get_owner()}
 
         ###############################################################
@@ -267,8 +268,8 @@ class Event(File):
         dtend = self.get_property('dtend')
         start_value_type = 'DATE-TIME' # FIXME
 
-        ns['start'] = Time.encode(dtstart.time())
-        ns['end'] = Time.encode(dtend.time())
+        ns['start'] = Time.encode(dtstart.time())[:5]
+        ns['end'] = Time.encode(dtend.time())[:5]
         ns['TIME'] = None
         if grid:
             # Neither a full day event nor a multiple days event
