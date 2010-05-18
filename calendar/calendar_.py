@@ -93,7 +93,7 @@ class Calendar(Folder):
 
 
     def get_new_id(self):
-        ids = [ int(x) for x in self.get_names() if x[:-9] == '.metadata' ]
+        ids = [ int(x) for x in self.get_names()]
         return str(max(ids) + 1) if ids else '0'
 
 
