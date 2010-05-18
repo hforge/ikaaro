@@ -102,7 +102,7 @@ class DBResource_Edit(AutoForm):
         brain = results.get_documents()[0]
         mtime = brain.mtime
         if mtime is not None and timestamp < mtime:
-            # Conlicft unless we are overwriting our own work
+            # Conflict unless we are overwriting our own work
             last_author = resource.get_last_author()
             if last_author != context.user.name:
                 user = root.get_user_title(last_author)
