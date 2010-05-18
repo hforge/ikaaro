@@ -845,11 +845,10 @@ class Tracker_ChangeSeveralBugs(Tracker_View):
         # Selected issues
         issues = results.get_documents()
         selected_issues = form['ids']
-        if selected_issues:
-            issues = [ x for x in issues if x.name in selected_issues ]
+        issues = [ x for x in issues if x.name in selected_issues ]
 
         if len(issues) == 0:
-            context.message = ERROR(u"No data to export.")
+            context.message = ERROR(u"No issue selected.")
             return
 
         # Modify all issues selected
@@ -860,39 +859,29 @@ class Tracker_ChangeSeveralBugs(Tracker_View):
         users_issues = {}
         for issue in issues:
             issue = resource.get_resource(issue.name)
-            # Create a new record
-            record = {
-                'datetime': datetime.now(),
-                'username': username,
-                'title': issue.get_property('title'),
-                'product': issue.get_property('product'),
-                'cc_list': issue.get_property('cc_list'),
-                'file': '',
-            }
+            old_metadata = issue.metadata.clone()
             # Assign-To
             assigned_to = issue.get_property('assigned_to')
             new_assigned_to = form['change_assigned_to']
             if new_assigned_to == 'do-not-change':
-                record['assigned_to'] = assigned_to
+                issue.set_property('assigned_to', assigned_to)
             else:
-                record['assigned_to'] = new_assigned_to
+                issue.set_property('assigned_to', new_assigned_to)
             # Integer Fields
             for name in names:
                 new_value = form['change_%s' % name]
                 if new_value == -1:
-                    record[name] = issue.get_property(name)
+                    issue.set_property(name, issue.get_property(name))
                 else:
-                    record[name] = new_value
+                    issue.set_property(name, new_value)
             # Comment
-            record['comment'] = comment
-            modifications = issue.get_diff_with(record, context)
+            p_comment = Property(comment, author=username, date=context.timestamp)
+            modifications = issue.get_diff_with(old_metadata, context)
             if modifications:
                 title = MSG(u'Modifications:').gettext()
-                record['comment'] += u'\n\n%s\n\n%s' % (title, modifications)
+                p_comment.value += u'\n\n%s\n\n%s' % (title, modifications)
+            issue.metadata.set_property('comment', p_comment)
 
-            # Save issue
-            history = issue.get_history()
-            history.add_record(record)
             # Mail (create a dict with a list of issues for each user)
             info = {'href': context.uri.resolve(issue.name),
                     'name': issue.name,
