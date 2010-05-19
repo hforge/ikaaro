@@ -834,4 +834,4 @@ class Calendar_Download(BaseView):
     def GET(self, resource, context):
         context.set_content_type('text/calendar')
         context.set_content_disposition('inline', '%s.ics' % resource.name)
-        return resource.handler.to_ical()
+        return resource.to_ical()

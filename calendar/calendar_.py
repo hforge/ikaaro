@@ -3,6 +3,7 @@
 # Copyright (C) 2006-2008 Nicolas Deram <nicolas@itaapy.com>
 # Copyright (C) 2007-2008 Juan David Ibáñez Palomar <jdavid@itaapy.com>
 # Copyright (C) 2007-2008 Sylvain Taverne <sylvain@itaapy.com>
+# Copyright (C) 2010 Alexis Huet <alexis@itaapy.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,7 +23,8 @@ from datetime import time
 
 # Import from itools
 from itools.core import merge_dicts
-from itools.datatypes import DataType, Date
+from itools.csv import Property, property_to_str
+from itools.datatypes import DataType, Date, Unicode
 from itools.gettext import MSG
 from itools.ical import icalendarTable
 
@@ -145,6 +147,56 @@ class Calendar(Folder):
         for index, (start, end) in enumerate(self.timetables):
             timetables.append((time(start[0], start[1]), time(end[0], end[1])))
         return timetables
+
+
+    @staticmethod
+    def encode_ics(event, ikaaro_name, ics_name, encoding='utf-8'):
+        # XXX Improve this to have parameters
+        datatype = event.get_property_datatype(ikaaro_name)
+        value = event.get_property(ikaaro_name)
+        value = datatype.encode(value)
+        return '%s:%s\n' % (ics_name, value)
+
+
+    def to_ical(self):
+        """Serialize as an ical file, generally named .ics
+        """
+        ikaaro_to_ics = {
+            'dtstart': 'DTSTART',
+            'dtend': 'DTEND',
+            'status': 'STATUS',
+            'title': 'SUMMARY',
+            'description': 'DESCRIPTION',
+            'location': 'LOCATION',
+            'mtime': 'UID'}
+
+        lines = []
+
+        line = 'BEGIN:VCALENDAR\n'
+        lines.append(Unicode.encode(line))
+
+        # Calendar properties
+        properties = (
+            ('VERSION', u'2.0'),
+            ('PRODID', u'-//itaapy.com/NONSGML ikaaro icalendar V1.0//EN'))
+        for name, value in properties:
+            lines.append('%s:%s\n' % (name, value))
+
+        # Calendar components
+        for event in self._get_names():
+            event = self._get_resource(event)
+            if event is not None:
+                if not isinstance(event, Event):
+                    raise TypeError('%s instead of %s' % (type(event), Event))
+                lines.append('BEGIN:VEVENT\n')
+                ics_dic = {}
+                for ikaaro_name, ics_name in ikaaro_to_ics.iteritems():
+                    lines.append(self.encode_ics(event, ikaaro_name, ics_name))
+                lines.append('END:VEVENT\n')
+        line = 'END:VCALENDAR\n'
+        lines.append(Unicode.encode(line))
+
+        return ''.join(lines)
 
 
     # Views
