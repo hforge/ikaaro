@@ -6,7 +6,7 @@
 
 <table class="event">
   <tr stl:repeat="event events" class="color${event/resource/color}">
-    <td class="${event/STATUS}">
+    <td class="${event/status}">
       <a href="${event/url}">
         ${event/title}</a>
         <span stl:if="event/TIME" class="time">${event/TIME}</span>

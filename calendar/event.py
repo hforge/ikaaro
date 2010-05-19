@@ -48,13 +48,13 @@ class Event_Edit(CalendarView, STLForm):
     template = '/ui/calendar/edit_event.xml'
     schema = {
         'title': Unicode(mandatory=True),
-        'LOCATION': Unicode,
+        'location': Unicode,
         'dtstart': Date(mandatory=True),
         'dtstart_time': Time,
         'dtend': Date(mandatory=True),
         'dtend_time': Time,
         'description': Unicode,
-        'STATUS': Status(mandatory=True)}
+        'status': Status(mandatory=True)}
 
 
     def _get_form(self, resource, context):
@@ -79,15 +79,15 @@ class Event_Edit(CalendarView, STLForm):
         start = resource.metadata.get_property('dtstart')
         param = start.get_parameter('VALUE', '')
         start_date = Date.encode(start.value)
-        start_time = Time.encode(start.value) if param != ['DATE'] else None
+        start_time = Time.encode(start.value)[:5] if param != ['DATE'] else None
         # Date end
         end = resource.metadata.get_property('dtend')
         param = end.get_parameter('VALUE', '')
         end_date = Date.encode(end.value)
-        end_time = Time.encode(end.value) if param != ['DATE'] else None
+        end_time = Time.encode(end.value)[:5] if param != ['DATE'] else None
 
-        # STATUS is an enumerate
-        status = resource.get_property('STATUS')
+        # status is an enumerate
+        status = resource.get_property('status')
         status = Status().get_namespace(status)
 
         # Show action buttons only if current user is authorized
@@ -102,7 +102,7 @@ class Event_Edit(CalendarView, STLForm):
             'dtend_time': end_time,
             'remove': True,
             'firstday': self.get_first_day(),
-            'STATUS': status,
+            'status': status,
             'allowed': allowed}
 
         # Get values
@@ -181,7 +181,7 @@ class Event_NewInstance(Event_Edit):
             'dtend_time': end_time,
             'remove': False,
             'firstday': self.get_first_day(),
-            'STATUS': Status().get_namespace(None),
+            'status': Status().get_namespace(None),
             'allowed': True}
 
         # Get values
@@ -252,8 +252,8 @@ class Event(File):
           or
           start: None,  end: None, TIME: None
 
-          SUMMARY: 'summary of the event'
-          STATUS: 'status' (class: cal_conflict, if id in conflicts_list)
+          summary: 'summary of the event'
+          status: 'status' (class: cal_conflict, if id in conflicts_list)
           ORGANIZER: 'organizer of the event'
         """
         ns = {
@@ -296,12 +296,12 @@ class Event(File):
         # Set class for conflicting events or just from status value
         id = self.get_abspath()
         if id in conflicts_list:
-            ns['STATUS'] = 'cal_conflict'
+            ns['status'] = 'cal_conflict'
         else:
-            ns['STATUS'] = 'cal_busy'
-            status = self.get_property('STATUS')
+            ns['status'] = 'cal_busy'
+            status = self.get_property('status')
             if status:
-                ns['STATUS'] = status.value
+                ns['status'] = status
 
         if not resource_name:
             id = str(id)

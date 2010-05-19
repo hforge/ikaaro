@@ -201,7 +201,7 @@ class CalendarView(STLView):
 
     styles = ['/ui/calendar/style.css']
     # default viewed fields on monthly_view
-    default_viewed_fields = ('dtstart', 'dtend', 'title', 'STATUS')
+    default_viewed_fields = ('dtstart', 'dtend', 'title', 'status')
 
 
     def get_first_day(self):

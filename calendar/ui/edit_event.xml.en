@@ -18,7 +18,7 @@
     <tr>
       <td>
         Location<br/>
-        <input type="text" name="LOCATION" value="${LOCATION}" />
+        <input type="text" name="location" value="${location}" />
       </td>
     </tr>
     <tr>
@@ -51,11 +51,11 @@
     </tr>
 
     <!-- STATUS -->
-    <tr stl:if="STATUS">
+    <tr stl:if="status">
       <td>
         Status<br/>
-        <select name="STATUS">
-          <option stl:repeat="s STATUS" selected="${s/selected}"
+        <select name="status">
+          <option stl:repeat="s status" selected="${s/selected}"
             value="${s/name}">${s/value}</option>
         </select>
       </td>
