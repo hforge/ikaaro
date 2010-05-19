@@ -236,7 +236,9 @@ class Tracker_AddIssue(STLForm):
 
 
     def get_schema(self, resource, context):
-        return get_issue_fields(resource)
+        schema = get_issue_fields(resource)
+        schema['comment'] = Unicode(mandatory=True)
+        return schema
 
 
     def get_value(self, resource, context, name, datatype):

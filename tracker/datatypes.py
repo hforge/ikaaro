@@ -114,7 +114,7 @@ def get_issue_fields(tracker):
         'state': TrackerList(element='state', tracker=tracker, mandatory=True),
         'priority': TrackerList(element='priority', tracker=tracker),
         'assigned_to': UsersList(resource=tracker, excluded_roles=('guests',)),
-        'cc_add': UsersList(resource=tracker, multiple=True),
+        'cc_list': UsersList(resource=tracker, multiple=True),
         'comment': Unicode,
         'file': FileDataType}
 

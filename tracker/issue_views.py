@@ -67,14 +67,11 @@ class Issue_Edit(STLForm):
 
     def get_schema(self, resource, context):
         tracker = resource.parent
-        schema = get_issue_fields(tracker)
-        schema['cc_list'] = UsersList(resource=tracker, multiple=True)
-        schema['cc_remove'] = Boolean(default=False)
-        return schema
+        return get_issue_fields(tracker)
 
 
     def get_value(self, resource, context, name, datatype):
-        if name in ('comment', 'cc_remove'):
+        if name in ('comment'):
             return datatype.get_default()
         return resource.get_property(name)
 
@@ -91,21 +88,20 @@ class Issue_Edit(STLForm):
         # Comments
         namespace['comments'] = CommentsView().GET(resource, context)
 
-        # cc_list / cc_add / cc_remove
+        # cc_list
         cc_list = resource.get_property('cc_list')
         namespace['cc_list']= {'name': 'cc_list', 'value': [], 'class': None}
-        namespace['cc_add']= {'name': 'cc_add', 'value': [], 'class': None}
-        cc_value = namespace['cc_list']['value']
-        add_value = namespace['cc_add']['value']
-
         cc_list_userslist = self.get_schema(resource, context)['cc_list']
+        cc_value = []
+        add_value = []
         for user in cc_list_userslist.get_options():
-            user['selected'] = False
             if user['name'] in cc_list:
+                user['selected'] = True
                 cc_value.append(user)
             else:
+                user['selected'] = False
                 add_value.append(user)
-        namespace['cc_remove'] = None
+        namespace['cc_list']['value'] = cc_value + add_value
 
         # Reported by
         reported_by = resource.get_reported_by()

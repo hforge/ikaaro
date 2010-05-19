@@ -43,9 +43,19 @@
           <input type="text" name="title" id="title" value="${title/value}"
             size="48" />
         </td>
+        <td valign="top">
+          <label for="assigned-to">Assign To</label><br/>
+          <span stl:if="assigned_to/error" class="field-error">${assigned_to/error}
+            <br/></span>
+          <select name="assigned_to" id="assigned-to" class="tracker-select">
+            <option value=""></option>
+            <option stl:repeat="item assigned_to/value" value="${item/name}"
+              selected="${item/selected}">${item/value}</option>
+          </select>
+        </td>
       </tr>
       <tr>
-        <td valign="top">
+        <td valign="top" width="30%">
           <label for="product">Product</label>
           <span class="field-is-missing" title="This field is required">*
           </span>
@@ -58,29 +68,7 @@
               selected="${item/selected}">${item/value}</option>
           </select>
         </td>
-        <td valign="top">
-          <label for="module">Module</label><br/>
-          <span stl:if="module/error" class="field-error">${module/error}
-            <br/></span>
-          <select name="module" id="module" class="tracker-select">
-            <option value=""></option>
-            <option stl:repeat="item module/value" value="${item/name}"
-              selected="${item/selected}">${item/value}</option>
-          </select>
-        </td>
-        <td valign="top">
-          <label for="version">Version</label><br/>
-          <span stl:if="version/error" class="field-error">${version/error}
-            <br/></span>
-          <select name="version" id="version" class="tracker-select">
-            <option value=""></option>
-            <option stl:repeat="item version/value" value="${item/name}"
-              selected="${item/selected}">${item/value}</option>
-          </select>
-        </td>
-      </tr>
-      <tr>
-        <td valign="top">
+        <td valign="top" width="30%">
           <label for="type">Type</label>
           <span class="field-is-missing" title="This field is required">*
           </span>
@@ -90,6 +78,26 @@
           <select name="type" id="type" class="tracker-select">
             <option value=""></option>
             <option stl:repeat="item type/value" value="${item/name}"
+              selected="${item/selected}">${item/value}</option>
+          </select>
+        </td>
+        <td valign="top" width="40%" rowspan="3">
+          <label for="cc-list">CC</label><br/>
+          <select name="cc_list" id="cc-list" class="tracker-select"
+            multiple="multiple" size="6">
+            <option stl:repeat="item cc_list/value" value="${item/name}"
+              selected="${item/selected}">${item/value}</option>
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <td valign="top">
+          <label for="module">Module</label><br/>
+          <span stl:if="module/error" class="field-error">${module/error}
+            <br/></span>
+          <select name="module" id="module" class="tracker-select">
+            <option value=""></option>
+            <option stl:repeat="item module/value" value="${item/name}"
               selected="${item/selected}">${item/value}</option>
           </select>
         </td>
@@ -106,6 +114,18 @@
               selected="${item/selected}">${item/value}</option>
           </select>
         </td>
+      </tr>
+      <tr>
+        <td valign="top">
+          <label for="version">Version</label><br/>
+          <span stl:if="version/error" class="field-error">${version/error}
+            <br/></span>
+          <select name="version" id="version" class="tracker-select">
+            <option value=""></option>
+            <option stl:repeat="item version/value" value="${item/name}"
+              selected="${item/selected}">${item/value}</option>
+          </select>
+        </td>
         <td valign="top">
           <label for="priority">Priority</label><br/>
           <span stl:if="priority/error" class="field-error">${priority/error}
@@ -115,37 +135,6 @@
             <option stl:repeat="item priority/value" value="${item/name}"
               selected="${item/selected}">${item/value}</option>
           </select>
-        </td>
-      </tr>
-      <tr>
-        <td valign="top">
-          <label for="assigned-to">Assign To</label><br/>
-          <span stl:if="assigned_to/error" class="field-error">${assigned_to/error}
-            <br/></span>
-          <select name="assigned_to" id="assigned-to" class="tracker-select">
-            <option value=""></option>
-            <option stl:repeat="item assigned_to/value" value="${item/name}"
-              selected="${item/selected}">${item/value}</option>
-          </select>
-        </td>
-        <td valign="top">
-          <label for="cc-add">Add CC</label><br/>
-          <select name="cc_add" id="cc-add" class="tracker-select"
-            multiple="multiple" size="5">
-            <option stl:repeat="item cc_add/value" value="${item/name}"
-              selected="${item/selected}">${item/value}</option>
-          </select>
-        </td>
-        <td valign="top">
-          <label for="cc-list">CC</label><br/>
-          <select name="cc_list" id="cc-list" class="tracker-select"
-            multiple="multiple" size="4">
-            <option stl:repeat="item cc_list/value" value="${item/name}"
-              selected="${item/selected}">${item/value}</option>
-          </select>
-          <input type="checkbox" name="cc_remove" value="1"
-            checked="${cc_remove}" />
-          <label for="cc-remove">Remove selected CCs</label>
         </td>
       </tr>
       <tr>
