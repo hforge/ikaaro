@@ -42,9 +42,9 @@ from ikaaro.views_new import NewInstance
 from ikaaro.registry import get_resource_class
 
 # Import from ikaaro.tracker
+from ikaaro.cc import UsersList
 from issue import Issue
 from datatypes import get_issue_fields, TrackerList, ProductInfoList
-from datatypes import UsersList
 from stored import StoredSearchFile, StoredSearch
 
 
@@ -543,7 +543,7 @@ class Tracker_Search(BaseSearchForm, Tracker_View):
                                  tracker=resource).get_namespace(state),
            'priorities': TrackerList(element='priority',
                                  tracker=resource).get_namespace(priority),
-           'assigned_to': UsersList(tracker=resource,
+           'assigned_to': UsersList(resource=resource,
                excluded_roles=('guests',)).get_namespace(assigned_to),
            'list_products': resource.get_list_products_namespace()}
 
@@ -828,7 +828,7 @@ class Tracker_ChangeSeveralBugs(Tracker_View):
         namespace['priorities'] = get_resource('priority').get_options()
         namespace['types'] = get_resource('type').get_options()
         namespace['states'] = get_resource('state').get_options()
-        namespace['assigned_to'] = UsersList(tracker=resource,
+        namespace['assigned_to'] = UsersList(resource=resource,
                 excluded_roles=('guests',)).get_namespace('')
         namespace['list_products'] = resource.get_list_products_namespace()
 

@@ -33,7 +33,8 @@ from ikaaro.messages import MSG_CHANGES_SAVED
 from ikaaro.views import ContextMenu
 
 # Local import
-from datatypes import get_issue_fields, UsersList
+from ikaaro.cc import UsersList
+from datatypes import get_issue_fields
 
 
 ###########################################################################
@@ -67,7 +68,7 @@ class Issue_Edit(STLForm):
     def get_schema(self, resource, context):
         tracker = resource.parent
         schema = get_issue_fields(tracker)
-        schema['cc_list'] = UsersList(tracker=tracker, multiple=True)
+        schema['cc_list'] = UsersList(resource=tracker, multiple=True)
         schema['cc_remove'] = Boolean(default=False)
         return schema
 

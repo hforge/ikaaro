@@ -23,6 +23,7 @@ from copy import deepcopy
 
 # Import from itools
 from itools.core import merge_dicts
+from itools.datatypes import Tokens
 from itools.gettext import MSG
 from itools.html import xhtml_uri, XHTMLFile
 from itools.stl import rewrite_uris
@@ -34,6 +35,7 @@ from itools.xml import START_ELEMENT
 from autoform import HTMLBody
 from autoform import title_widget, description_widget, subject_widget
 from autoform import file_widget, rte_widget, timestamp_widget
+from cc import SubscribeForm
 import messages
 from file_views import File_Edit
 from multilingual import Multilingual
@@ -233,8 +235,14 @@ class WebPage(ResourceWithHTML, Multilingual, Text):
     class_description = MSG(u'Create and publish a Web Page.')
     class_icon16 = 'icons/16x16/html.png'
     class_icon48 = 'icons/48x48/html.png'
-    class_views = ['view', 'edit', 'externaledit', 'backlinks', 'commit_log']
+    class_views = ['view', 'edit', 'externaledit', 'subscribe', 'backlinks',
+                   'commit_log']
     class_handler = XHTMLFile
+
+    class_schema = merge_dicts(
+        Text.class_schema,
+        cc_list=Tokens(source='metadata'))
+
 
 
     # FIXME These three methods are private, add the heading underscore
@@ -326,6 +334,7 @@ class WebPage(ResourceWithHTML, Multilingual, Text):
     #######################################################################
     new_instance = DBResource.new_instance
     view = WebPage_View()
+    subscribe = SubscribeForm()
 
     def get_html_document(self, language=None):
         return self.get_handler(language=language)

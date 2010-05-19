@@ -14,14 +14,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Import from the Standard Library
-from operator import itemgetter
-
 # Import from itools
 from itools.datatypes import Enumerate, String, Unicode
 from itools.web import get_context
 
 # Import from ikaaro
+from ikaaro.cc import UsersList
 from ikaaro.datatypes import FileDataType
 
 
@@ -105,37 +103,6 @@ class ProductInfoList(Enumerate):
 
 
 
-class UsersList(Enumerate):
-
-    excluded_roles = None
-
-    def get_options(cls):
-        site_root = cls.tracker.get_site_root()
-        # Members
-        excluded_roles = cls.excluded_roles
-        if excluded_roles:
-            members = set()
-            for rolename in site_root.get_role_names():
-                if rolename in excluded_roles:
-                    continue
-                usernames = site_root.get_property(rolename)
-                members = members.union(usernames)
-        else:
-            members = site_root.get_members()
-
-        users = site_root.get_resource('/users')
-        options = []
-        for name in members:
-            user = users.get_resource(name, soft=True)
-            if user is None:
-                continue
-            value = user.get_title()
-            options.append({'name': name, 'value': value})
-        options.sort(key=itemgetter('value'))
-        return options
-
-
-
 def get_issue_fields(tracker):
     return {
         'title': Unicode(mandatory=True),
@@ -146,8 +113,8 @@ def get_issue_fields(tracker):
         'type': TrackerList(element='type', tracker=tracker, mandatory=True),
         'state': TrackerList(element='state', tracker=tracker, mandatory=True),
         'priority': TrackerList(element='priority', tracker=tracker),
-        'assigned_to': UsersList(tracker=tracker, excluded_roles=('guests',)),
-        'cc_add': UsersList(tracker=tracker, multiple=True),
+        'assigned_to': UsersList(resource=tracker, excluded_roles=('guests',)),
+        'cc_add': UsersList(resource=tracker, multiple=True),
         'comment': Unicode,
         'file': FileDataType}
 
