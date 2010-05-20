@@ -151,11 +151,9 @@ class Calendar(Folder):
 
     @staticmethod
     def encode_ics(event, ikaaro_name, ics_name, encoding='utf-8'):
-        # XXX Improve this to have parameters
         datatype = event.get_property_datatype(ikaaro_name)
         value = event.get_property(ikaaro_name)
-        value = datatype.encode(value)
-        return '%s:%s\n' % (ics_name, value)
+        return property_to_str(ics_name, Property(value), datatype, {})
 
 
     def to_ical(self):
