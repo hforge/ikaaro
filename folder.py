@@ -23,6 +23,7 @@ from itools.gettext import MSG
 from itools.handlers import Folder as FolderHandler
 from itools.uri import Path
 from itools.web import get_context, BaseView
+from itools.xapian import AndQuery, NotQuery, PhraseQuery
 
 # Import from ikaaro
 from exceptions import ConsistencyError
@@ -33,6 +34,7 @@ from metadata import Metadata
 from registry import register_resource_class, get_resource_class
 from registry import get_document_types
 from resource_ import DBResource
+from utils import get_base_path_query
 
 
 
@@ -137,7 +139,10 @@ class Folder(DBResource):
         catalog = database.catalog
         # FIXME Check sub-resources too
         path = str(resource.get_canonical_path())
-        results = catalog.search(links=path)
+        query_base_path = get_base_path_query(path)
+        query = AndQuery(PhraseQuery('links', path),
+                         NotQuery(query_base_path))
+        results = catalog.search(query)
         if len(results):
             message = 'cannot delete, resource "%s" is referenced' % path
             raise ConsistencyError, message

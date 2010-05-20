@@ -893,7 +893,7 @@ class Tracker_ChangeSeveralBugs(Tracker_View):
             if assigned_to and assigned_to != new_assigned_to:
                 users_issues.setdefault(assigned_to, []).append(info)
             # Change
-            context.server.change_resource(issue)
+            context.database.change_resource(issue)
 
         # Send mails
         root = context.root

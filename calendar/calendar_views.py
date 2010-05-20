@@ -822,7 +822,7 @@ class Calendar_Import(STLForm):
             message = ERROR(u'Failed to load the file, may contain errors.')
             context.message = message
         else:
-            context.server.change_resource(resource)
+            context.database.change_resource(resource)
             context.message = INFO(u'Version uploaded')
 
 

@@ -159,7 +159,7 @@ class Server(WebServer):
         if not lfs.exists(spool_failed):
             lfs.make_folder(spool_failed)
         # Configuration variables
-        get_value = get_config(target).get_value
+        get_value = config.get_value
         self.smtp_host = get_value('smtp-host')
         self.smtp_login = get_value('smtp-login', default='').strip()
         self.smtp_password = get_value('smtp-password', default='').strip()
@@ -184,8 +184,7 @@ class Server(WebServer):
     #######################################################################
     def send_email(self, message):
         # Check the SMTP host is defined
-        config = get_config(self.target)
-        if not config.get_value('smtp-host'):
+        if not self.smtp_host:
             raise ValueError, '"smtp-host" is not set in config.conf'
 
         spool = lfs.resolve2(self.target, 'spool')
@@ -349,6 +348,6 @@ class Server(WebServer):
         context.site_root = root.get_resource(path)
 
 
-    # FIXME Short-cut, to be removed
+    # FIXME To be removed in 0.62
     def change_resource(self, resource):
         self.database.change_resource(resource)

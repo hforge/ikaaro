@@ -241,7 +241,7 @@ class File_Edit(DBResource_Edit):
             folder.move_handler(handler_name, filename)
 
         # Ok
-        context.server.change_resource(resource)
+        context.database.change_resource(resource)
         context.message = INFO(u'Version uploaded')
 
 
