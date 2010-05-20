@@ -224,7 +224,8 @@ class Issue(Folder):
 
 
     def get_diff_with(self, old_metadata, context, new=False):
-        """Return a text with the diff between the given Metadata and new issue state.
+        """Return a text with the diff between the given Metadata and new
+        issue state.
         """
         root = context.root
         modifications = []
@@ -360,11 +361,10 @@ class Issue(Folder):
             value = history.get_record_value(record, name)
             if value is not None:
                 metadata.set_property(name, value)
-        # Assigned to, cc
-        for name in 'assigned_to', 'cc_list':
-            value = history.get_record_value(record, name)
-            if value:
-                metadata.set_property(name, value)
+        # Assigned
+        value = history.get_record_value(record, 'assigned_to')
+        if value:
+            metadata.set_property('assigned_to', value)
 
         # Comments / Files
         for record in history.records:
@@ -374,6 +374,13 @@ class Issue(Folder):
             comment = Property(comment, date=date, author=author)
             metadata.set_property('comment', comment)
 #            file = history.get_record_value(record, 'file')
+
+        # CC
+        reporter = self.get_reported_by()
+        value = history.get_record_value(record, 'cc_list')
+        if reporter not in value:
+            value.append(reporter)
+        metadata.set_property('cc_list', value)
 
         # Remove .history
         self.handler.del_handler('.history')
