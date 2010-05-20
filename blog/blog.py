@@ -116,7 +116,7 @@ class Post_View(STLForm):
         comment = Property(form['comment'], date=date, author=author)
         resource.set_property('comment', comment)
         # Change
-        context.server.change_resource(resource)
+        context.database.change_resource(resource)
         context.message = MSG_CHANGES_SAVED
 
 

@@ -346,8 +346,3 @@ class Server(WebServer):
         documents = results.get_documents()
         path = documents[0].abspath
         context.site_root = root.get_resource(path)
-
-
-    # FIXME To be removed in 0.62
-    def change_resource(self, resource):
-        self.database.change_resource(resource)
