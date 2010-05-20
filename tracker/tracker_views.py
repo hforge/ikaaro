@@ -244,7 +244,11 @@ class Tracker_AddIssue(STLForm):
     def get_value(self, resource, context, name, datatype):
         if getattr(datatype, 'mandatory', False):
             datatype = datatype(mandatory=False)
-        return context.get_query_value(name, type=datatype)
+        value = context.get_query_value(name, type=datatype)
+        # By default, set cc_list to the current user
+        if name == 'cc_list' and not value:
+            return [context.user.name]
+        return value
 
 
     def get_namespace(self, resource, context):
