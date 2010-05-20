@@ -149,13 +149,6 @@ class Calendar(Folder):
         return timetables
 
 
-    @staticmethod
-    def encode_ics(event, ikaaro_name, ics_name, encoding='utf-8'):
-        datatype = event.get_property_datatype(ikaaro_name)
-        value = event.get_property(ikaaro_name)
-        return property_to_str(ics_name, Property(value), datatype, {})
-
-
     def to_ical(self):
         """Serialize as an ical file, generally named .ics
         """
@@ -180,7 +173,10 @@ class Calendar(Folder):
                     raise TypeError('%s instead of %s' % (type(event), Event))
                 lines.append('BEGIN:VEVENT\n')
                 for ikaaro_name, ics_name in ikaaro_to_ics:
-                    lines.append(self.encode_ics(event, ikaaro_name, ics_name))
+                    datatype = event.get_property_datatype(ikaaro_name)
+                    value = event.get_property(ikaaro_name)
+                    line = property_to_str(ics_name, Property(value), datatype, {})
+                    lines.append(line)
                 lines.append('END:VEVENT\n')
         lines.append('END:VCALENDAR\n')
 
