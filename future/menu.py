@@ -213,7 +213,7 @@ class Menu_View(OrderedTable_View):
         context.message = message
 
         # Reindex the resource
-        context.server.change_resource(resource)
+        context.database.change_resource(resource)
 
 
     def action_add_child(self, resource, context, form):

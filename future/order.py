@@ -230,7 +230,7 @@ class ResourcesOrderedTable_Unordered(Folder_BrowseContent):
             msg = msg(resources=resources)
             message.append(msg)
             # Reindex
-            context.server.change_resource(resource)
+            context.database.change_resource(resource)
         if not_added:
             resources = ', '.join(not_added)
             msg = ERROR(u'Resources already in the ordered list: {resources}.')

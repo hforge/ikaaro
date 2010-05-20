@@ -211,7 +211,7 @@ class Issue_Edit(STLForm):
         # Edit
         resource._add_record(context, form)
         # Change
-        context.server.change_resource(resource)
+        context.database.change_resource(resource)
         context.message = MSG_CHANGES_SAVED
 
 

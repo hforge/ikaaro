@@ -362,7 +362,7 @@ class Server(WebServer):
         context.site_root = root.get_resource(path)
 
 
-    # FIXME Short-cut, to be removed
+    # FIXME To be removed in 0.62
     def change_resource(self, resource):
         self.database.change_resource(resource)
 

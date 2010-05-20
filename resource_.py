@@ -235,12 +235,12 @@ class DBResource(CatalogAware, IResource):
 
 
     def set_property(self, name, value, language=None):
-        get_context().server.change_resource(self)
+        get_context().database.change_resource(self)
         self.metadata.set_property(name, value, language=language)
 
 
     def del_property(self, name, language=None):
-        get_context().server.change_resource(self)
+        get_context().database.change_resource(self)
         self.metadata.del_property(name, language=language)
 
 
