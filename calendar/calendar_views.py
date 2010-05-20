@@ -795,10 +795,10 @@ class DailyView(CalendarView):
 
 
 
-class Calendar_Upload(STLForm):
+class Calendar_Import(STLForm):
 
     access = 'is_allowed_to_edit'
-    title = MSG(u'Replace')
+    title = MSG(u'Import')
     template = '/ui/calendar/upload.xml'
     schema = {
         'file': FileDataType(mandatory=True)}
@@ -827,7 +827,7 @@ class Calendar_Upload(STLForm):
 
 
 
-class Calendar_Download(BaseView):
+class Calendar_Export(BaseView):
 
     access = 'is_allowed_to_view'
 

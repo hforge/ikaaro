@@ -31,7 +31,7 @@ from itools.ical import icalendarTable
 # Import from ikaaro
 from ikaaro.file_views import File_View
 from ikaaro.folder import Folder
-from calendar_views import Calendar_Upload, Calendar_Download
+from calendar_views import Calendar_Import, Calendar_Export
 from calendar_views import MonthlyView, TimetablesForm, WeeklyView, DailyView
 from event import Event
 
@@ -159,26 +159,18 @@ class Calendar(Folder):
     def to_ical(self):
         """Serialize as an ical file, generally named .ics
         """
-        ikaaro_to_ics = {
-            'dtstart': 'DTSTART',
-            'dtend': 'DTEND',
-            'status': 'STATUS',
-            'title': 'SUMMARY',
-            'description': 'DESCRIPTION',
-            'location': 'LOCATION',
-            'mtime': 'UID'}
+        ikaaro_to_ics = [
+            ('dtstart', 'DTSTART'),
+            ('dtend', 'DTEND'),
+            ('status', 'STATUS'),
+            ('title', 'SUMMARY'),
+            ('description', 'DESCRIPTION'),
+            ('location', 'LOCATION'),
+            ('mtime', 'UID')]
 
-        lines = []
-
-        line = 'BEGIN:VCALENDAR\n'
-        lines.append(Unicode.encode(line))
-
-        # Calendar properties
-        properties = (
-            ('VERSION', u'2.0'),
-            ('PRODID', u'-//itaapy.com/NONSGML ikaaro icalendar V1.0//EN'))
-        for name, value in properties:
-            lines.append('%s:%s\n' % (name, value))
+        lines = ['BEGIN:VCALENDAR\n',
+                'VERSION:2.0\n',
+                'PRODID:-//itaapy.com/NONSGML ikaaro icalendar V1.0//EN\n']
 
         # Calendar components
         for event in self._get_names():
@@ -187,12 +179,10 @@ class Calendar(Folder):
                 if not isinstance(event, Event):
                     raise TypeError('%s instead of %s' % (type(event), Event))
                 lines.append('BEGIN:VEVENT\n')
-                ics_dic = {}
-                for ikaaro_name, ics_name in ikaaro_to_ics.iteritems():
+                for ikaaro_name, ics_name in ikaaro_to_ics:
                     lines.append(self.encode_ics(event, ikaaro_name, ics_name))
                 lines.append('END:VEVENT\n')
-        line = 'END:VCALENDAR\n'
-        lines.append(Unicode.encode(line))
+        lines.append('END:VCALENDAR\n')
 
         return ''.join(lines)
 
@@ -202,6 +192,6 @@ class Calendar(Folder):
     weekly_view = WeeklyView()
     daily_view = DailyView()
     edit_timetables = TimetablesForm()
-    download = Calendar_Download()
-    upload = Calendar_Upload()
-    download_form = File_View()
+    download = Calendar_Export()
+    upload = Calendar_Import()
+    download_form = File_View(title=MSG(u'Export'))
