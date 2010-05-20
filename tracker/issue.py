@@ -174,12 +174,7 @@ class Issue(Folder):
         else:
             user_title = user.get_title()
         # Notify / To
-        to_addrs = set()
-        reported_by = self.get_reported_by()
-        if reported_by:
-            to_addrs.add(reported_by)
-        for cc in cc_list:
-            to_addrs.add(cc)
+        to_addrs = set(cc_list)
         assigned_to = self.get_property('assigned_to')
         if assigned_to:
             to_addrs.add(assigned_to)
