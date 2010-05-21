@@ -26,8 +26,6 @@ from operator import itemgetter
 # Import from itools
 from itools.datatypes import Date, Integer
 from itools.gettext import MSG
-from itools.ical import get_grid_data
-from itools.ical import Time
 from itools.stl import stl
 from itools.uri import encode_query, get_reference
 from itools.web import BaseView, STLForm, STLView, get_context, INFO, ERROR
@@ -36,6 +34,8 @@ from itools.xapian import AndQuery, PhraseQuery, RangeQuery
 # Import from ikaaro
 from ikaaro.datatypes import FileDataType
 from ikaaro import messages
+from grid import get_grid_data
+from grid import Time
 
 
 resolution = timedelta.resolution

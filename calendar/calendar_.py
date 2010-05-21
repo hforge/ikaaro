@@ -26,7 +26,6 @@ from itools.core import merge_dicts
 from itools.csv import Property, property_to_str
 from itools.datatypes import DataType, Date, String, Unicode
 from itools.gettext import MSG
-from itools.ical import icalendarTable
 
 # Import from ikaaro
 from ikaaro.file_views import File_View
@@ -145,7 +144,7 @@ class Calendar(Folder):
         # From class value
         timetables = []
         for index, (start, end) in enumerate(self.timetables):
-            timetables.append((time(start[0], start[1]), time(end[0], end[1])))
+            timetables.append(((start[0], start[1]), (end[0], end[1])))
         return timetables
 
 
