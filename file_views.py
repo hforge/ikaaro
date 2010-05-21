@@ -268,7 +268,6 @@ class File_ExternalEdit(BaseView):
         header = [
             'url:%s://%s%s' % (uri.scheme, uri.authority, uri.path[:-1]),
             'last-modified:%s' % HTTPDate.encode(resource.get_mtime()),
-            'meta_type:toto', # FIXME Check if zopeedit really needs this
             'content_type:%s' % handler.get_mimetype(),
             'cookie:%s' % soup_message.get_header('Cookie'),
             'title:%s' % title]
