@@ -32,7 +32,7 @@ from itools.i18n import format_datetime
 from itools.stl import set_prefix
 from itools.uri import get_reference, Path
 from itools.web import BaseView, STLForm, ERROR
-from itools.xapian import AndQuery, OrQuery, PhraseQuery
+from itools.xapian import AndQuery, OrQuery, PhraseQuery, split_unicode
 
 # Import from ikaaro
 from buttons import RemoveButton, RenameButton, CopyButton, CutButton
@@ -272,7 +272,10 @@ class Folder_BrowseContent(SearchForm):
         else:
             args.append(PhraseQuery('parent_path', abspath))
         if search_term:
-            args.append(PhraseQuery(field, search_term))
+            language = resource.get_content_language(context)
+            terms_query = [ PhraseQuery(field, term)
+                            for term in split_unicode(search_term, language) ]
+            args.append(AndQuery(*terms_query))
         if len(args) == 1:
             query = args[0]
         else:
