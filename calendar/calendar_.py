@@ -24,7 +24,7 @@ from datetime import time
 # Import from itools
 from itools.core import merge_dicts
 from itools.csv import Property, property_to_str
-from itools.datatypes import DataType, Date, Unicode
+from itools.datatypes import DataType, Date, String, Unicode
 from itools.gettext import MSG
 from itools.ical import icalendarTable
 
@@ -85,7 +85,7 @@ class Calendar(Folder):
     class_icon16 = 'icons/16x16/icalendar.png'
     class_icon48 = 'icons/48x48/icalendar.png'
     class_views = ['monthly_view', 'weekly_view', 'daily_view',
-                   'edit_timetables', 'upload', 'download_form']
+                   'edit_timetables', 'import_', 'export_form']
 
     timetables = [((7,0),(8,0)), ((8,0),(9,0)), ((9,0),(10,0)),
                   ((10,0),(11,0)), ((11,0),(12,0)), ((12,0),(13,0)),
@@ -174,9 +174,15 @@ class Calendar(Folder):
                 lines.append('BEGIN:VEVENT\n')
                 for ikaaro_name, ics_name in ikaaro_to_ics:
                     datatype = event.get_property_datatype(ikaaro_name)
-                    value = event.get_property(ikaaro_name)
-                    line = property_to_str(ics_name, Property(value), datatype, {})
-                    lines.append(line)
+                    property = event.metadata.get_property(ikaaro_name)
+                    if property:
+                        lang = property.get_parameter('lang')
+                        if lang:
+                            property = Property(property.value, LANGUAGE=lang)
+                        p_schema = {'LANGUAGE': String(multiple=False)}
+                        line = property_to_str(ics_name, property, datatype,
+                                p_schema)
+                        lines.append(line)
                 lines.append('END:VEVENT\n')
         lines.append('END:VCALENDAR\n')
 
@@ -188,6 +194,7 @@ class Calendar(Folder):
     weekly_view = WeeklyView()
     daily_view = DailyView()
     edit_timetables = TimetablesForm()
-    download = Calendar_Export()
-    upload = Calendar_Import()
-    download_form = File_View(title=MSG(u'Export'))
+    export = Calendar_Export()
+    import_ = Calendar_Import()
+    export_form = File_View(title=MSG(u'Export'),
+                            template='/ui/calendar/export_form.xml')
