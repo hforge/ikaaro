@@ -41,9 +41,6 @@ class ReadOnlyDatabase(ROGitDatabase):
         path = '%s/database' % target
         ROGitDatabase.__init__(self, path, size_min, size_max)
 
-        # Git cache (lazy load)
-        self.git_cache = None
-
 
     @lazy
     def catalog(self):
@@ -76,46 +73,6 @@ class ReadOnlyDatabase(ROGitDatabase):
                 })
         # Ok
         return revisions
-
-
-    def load_git_cache(self):
-        self.git_cache = {}
-        cmd = ['git', 'log', '--pretty=format:%H%n%an%n%at%n%s', '--raw',
-               '--name-only']
-        data = send_subprocess(cmd)
-        lines = data.splitlines()
-        i = 0
-        while i < len(lines):
-            date = int(lines[i + 2])
-            commit = {
-                'revision': lines[i],                 # commit
-                'username': lines[i + 1],             # author name
-                'date': datetime.fromtimestamp(date), # author date
-                'message': lines[i + 3],              # subject
-                }
-            # Modified files
-            i += 4
-            while i < len(lines) and lines[i]:
-                self.git_cache.setdefault(lines[i], commit)
-                i += 1
-            # Next entry is separated by an empty line
-            i += 1
-
-
-    def get_last_revision(self, files):
-        if self.git_cache is None:
-            self.load_git_cache()
-
-        last_commit = None
-
-        for file in files:
-            commit = self.git_cache.get(file)
-            if not commit:
-                continue
-            if not last_commit or commit['date'] > last_commit['date']:
-                last_commit = commit
-
-        return last_commit
 
 
 
