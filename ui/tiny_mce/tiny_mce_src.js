@@ -9595,8 +9595,21 @@ tinymce.create('tinymce.ui.Toolbar:tinymce.ui.Container', {
 				return u;
 
 			// Convert to relative
-			if (s.relative_urls)
-				return t.documentBaseURI.toRelative(u);
+			//if (s.relative_urls)
+			//	return t.documentBaseURI.toRelative(u);
+			if (s.relative_urls) {
+				// iKaaro Fixes
+				var relative_u = t.documentBaseURI.toRelative(u);
+				if (relative_u == '' && u) {
+					// href = '.' -> href is removed
+					// Keep the url
+					return u;
+				} else if (relative_u.indexOf('undefined/')) {
+					// error
+					return u;
+				}
+				return relative_u;
+			}
 
 			// Convert to absolute
 			u = t.documentBaseURI.toAbsolute(u, s.remove_script_host);
