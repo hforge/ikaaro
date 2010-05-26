@@ -78,7 +78,7 @@ class Timetables(DataType):
 
 class Calendar(Folder):
 
-    class_id = 'calendarTable'
+    class_id = 'calendar'
     class_title = MSG(u'Calendar')
     class_description = MSG(u'Schedule your time with calendar files.')
     class_icon16 = 'icons/16x16/icalendar.png'
