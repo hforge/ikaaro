@@ -119,13 +119,11 @@ class User(AccessControl, Folder):
         self.set_property('password', crypted)
 
 
-    def authenticate(self, password):
-        # Is password crypted?
-        if password == self.get_property('password'):
-            return True
-        # Is password clear?
-        crypted = crypt_password(password)
-        return crypted == self.get_property('password')
+    def authenticate(self, password, clear=False):
+        if clear:
+            password = crypt_password(password)
+
+        return password == self.get_property('password')
 
 
     def get_groups(self):

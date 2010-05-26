@@ -529,7 +529,7 @@ class LoginView(STLForm):
             return
 
         # Check the password is right
-        if not user.authenticate(password):
+        if not user.authenticate(password, clear=True):
             context.message = ERROR(u'The password is wrong.')
             return
 
