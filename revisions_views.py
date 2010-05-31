@@ -28,6 +28,7 @@ from itools.web import STLView, ERROR
 
 # Import from ikaaro
 from buttons import Button
+from metadata import Metadata
 from views import BrowseForm
 
 
@@ -89,16 +90,21 @@ def get_older_state(resource, revision, context):
     """All-in-one to get an older metadata and handler state."""
     # Heuristic to remove the database prefix
     prefix = len(str(context.server.target)) + len('/database/')
+
     # Metadata
+    database = context.database
     path = resource.metadata.key[prefix:]
-    metadata = context.database.get_blob(revision, path)
+    metadata = database.get_blob_by_revision_and_path(revision, path, Metadata)
+
     # Handler
     path = resource.handler.key[prefix:]
+    cls = resource.handler.__class__
     try:
-        handler = context.database.get_blob(revision, path)
+        handler = database.get_blob_by_revision_and_path(revision, path, cls)
     except CalledProcessError:
         # Phantom handler or renamed file
-        handler = ''
+        handler = None
+
     return metadata, handler
 
 
