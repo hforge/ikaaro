@@ -129,12 +129,9 @@ class Issue(Folder):
         database = context.database
         filename = '%s.metadata' % self.get_abspath()
         filename = filename[1:]
-        revisions = database.get_commit_hashs(filename)
-        history = []
-        for revision in revisions:
-            m = database.get_blob_by_revision_and_path(revision, filename)
-            history.append(Metadata(string=m))
-        return history
+        return [
+            database.get_blob_by_revision_and_path(x, filename, Metadata)
+            for x in database.get_commit_hashs(filename) ]
 
 
     def _add_record(self, context, form, new=False):
