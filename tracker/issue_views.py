@@ -37,6 +37,14 @@ from ikaaro.cc import UsersList
 from datatypes import get_issue_fields
 
 
+def check_properties_differencies(prop1, prop2):
+    "Check for differences of properties values"
+    if prop1 and prop2:
+        return prop1.value != prop2.value
+    else:
+        return prop1 != prop2
+
+
 ###########################################################################
 # Menu
 ###########################################################################
@@ -135,6 +143,7 @@ class Issue_History(STLView):
         versions = tracker.get_resource('version').handler
         types = tracker.get_resource('type').handler
         states = tracker.get_resource('state').handler
+        products = tracker.get_resource('product').handler
         modules = tracker.get_resource('module').handler
         priorities = tracker.get_resource('priority').handler
         # Initial values
@@ -146,32 +155,49 @@ class Issue_History(STLView):
         previous_priority = None
         previous_assigned_to = None
         previous_cc_list = None
+        previons_product = None
 
         # Build the namespace
         rows = []
         i = 0
-        for record in resource.get_history().get_records():
-            rdatetime = record.get_value('datetime')
-            username = record.get_value('username')
-            title = record.get_value('title')
-            module = record.get_value('module')
-            version = record.get_value('version')
-            type = record.get_value('type')
-            priority = record.get_value('priority')
-            assigned_to = record.get_value('assigned_to')
-            state = record.get_value('state')
-            comment = record.get_value('comment')
-            cc_list = record.get_value('cc_list') or ()
-            file = record.get_value('file')
+        for metadata in resource.get_history():
+            mtime = metadata.get_property('mtime')
+            username = metadata.get_property('last_author')
+            title = metadata.get_property('title')
+            module = metadata.get_property('module')
+            version = metadata.get_property('version')
+            type_prop = metadata.get_property('type')
+            priority = metadata.get_property('priority')
+            assigned_to = metadata.get_property('assigned_to')
+            state = metadata.get_property('state')
+            comment = metadata.get_property('comment')
+            cc_list = metadata.get_property('cc_list') or ()
+            product = metadata.get_property('product')
+
             # Solid in case the user has been removed
-            user = users.get_resource(username, soft=True)
+            user = users.get_resource(username.value, soft=True)
             usertitle = user and user.get_title() or username
-            comment = XMLContent.encode(Unicode.encode(comment))
-            comment = XMLParser(comment.replace('\n', '<br />'))
+
+            if type(comment) is list:
+                last_comment = comment[-1]
+            else:
+                last_comment = comment
+            if last_comment.get_parameter('date') == mtime.value:
+                comment = last_comment.value
+                file = last_comment.parameters.get('file')
+                if file:
+                    # XXX This is probably not clean
+                    file = ''.join(file)
+            else:
+                comment = None
+                file = None
+            if comment:
+                comment = XMLContent.encode(Unicode.encode(comment))
+                comment = XMLParser(comment.replace('\n', '<br />'))
             i += 1
             row_ns = {'number': i,
                       'user': usertitle,
-                      'datetime': format_datetime(rdatetime),
+                      'datetime': format_datetime(mtime.value),
                       'title': None,
                       'version': None,
                       'type': None,
@@ -181,63 +207,63 @@ class Issue_History(STLView):
                       'assigned_to': None,
                       'comment': comment,
                       'cc_list': None,
+                      'product': None,
                       'file': file}
-
-            if title != previous_title:
+            if check_properties_differencies(title, previous_title):
                 previous_title = title
-                row_ns['title'] = title
-            if version != previous_version:
+                row_ns['title'] = title.value
+            if check_properties_differencies(version, previous_version):
                 previous_version = version
                 row_ns['version'] = ' '
                 if version is not None:
-                    version = versions.get_record(int(version))
+                    version = versions.get_record(int(version.value))
                     if version:
                         value = versions.get_record_value(version, 'title')
                         row_ns['version'] = value
-            if type != previous_type:
-                previous_type = type
+            if check_properties_differencies(type_prop, previous_type):
+                previous_type = type_prop
                 row_ns['type'] = ' '
-                if type is not None:
-                    type = types.get_record(int(type))
-                    if type is not None:
-                        value = types.get_record_value(type, 'title')
+                if type_prop is not None:
+                    type_prop = types.get_record(int(type_prop.value))
+                    if type_prop is not None:
+                        value = types.get_record_value(type_prop, 'title')
                         row_ns['type'] = value
-            if state != previous_state:
+            if check_properties_differencies(state, previous_state):
                 previous_state = state
                 row_ns['state'] = ' '
                 if state is not None:
-                    state = states.get_record(int(state))
+                    state = states.get_record(int(state.value))
                     if state is not None:
                         value = states.get_record_value(state, 'title')
                         row_ns['state'] = value
-            if module != previous_module:
+            if check_properties_differencies(module, previous_module):
                 previous_module = module
                 row_ns['module'] = ' '
                 if module is not None:
-                    module = modules.get_record(int(module))
+                    module = modules.get_record(int(module.value))
                     if module is not None:
                         value = modules.get_record_value(module, 'title')
                         row_ns['module'] = value
-            if priority != previous_priority:
+            if check_properties_differencies(priority, previous_priority):
                 previous_priority = priority
                 row_ns['priority'] = ' '
                 if priority is not None:
-                    priority = priorities.get_record(int(priority))
+                    priority = priorities.get_record(int(priority.value))
                     if priority is not None:
                         value = priorities.get_record_value(priority, 'title')
                         row_ns['priority'] = value
-            if assigned_to != previous_assigned_to:
+            if check_properties_differencies(assigned_to, previous_assigned_to):
                 previous_assigned_to = assigned_to
                 row_ns['assigned_to'] = ' '
-                if assigned_to:
-                    assigned_to_user = users.get_resource(assigned_to, soft=True)
+                if assigned_to and len(assigned_to.value):
+                    assigned_to_user = users.get_resource(assigned_to.value, soft=True)
                     if assigned_to_user is not None:
                         row_ns['assigned_to'] = assigned_to_user.get_title()
-            if cc_list != previous_cc_list:
+            if check_properties_differencies(cc_list, previous_cc_list):
                 root = context.root
                 previous_cc_list = cc_list
                 new_values = []
-                for cc in cc_list:
+                for cc in cc_list.value:
                     user = root.get_user(cc)
                     if user:
                         new_values.append(user.get_property('email'))
@@ -245,6 +271,14 @@ class Issue_History(STLView):
                     row_ns['cc_list'] = u', '.join(new_values)
                 else:
                     row_ns['cc_list'] = ' '
+            if check_properties_differencies(product, previons_product):
+                previons_product = product
+                row_ns['product'] = ' '
+                if product is not None:
+                    product = products.get_record(int(product.value))
+                    if product is not None:
+                        value = products.get_record_value(product, 'title')
+                        row_ns['product'] = value
 
             rows.append(row_ns)
 

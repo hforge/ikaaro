@@ -17,6 +17,9 @@
           <stl:block stl:if="row/title">
             <strong>Title:</strong> ${row/title}<br/>
           </stl:block>
+          <stl:block stl:if="row/product">
+            <strong>Product:</strong> ${row/product}<br/>
+          </stl:block>
           <stl:block stl:if="row/version">
             <strong>Version:</strong> ${row/version}<br/>
           </stl:block>

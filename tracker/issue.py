@@ -33,6 +33,7 @@ from itools.web import get_context
 # Import from ikaaro
 from ikaaro.file import File
 from ikaaro.folder import Folder
+from ikaaro.metadata import Metadata
 from ikaaro.registry import get_resource_class
 from ikaaro.utils import generate_name
 from issue_views import Issue_Edit, Issue_History
@@ -124,7 +125,16 @@ class Issue(Folder):
 
 
     def get_history(self):
-        raise NotImplementedError, 'this method is to be removed'
+        context = get_context()
+        database = context.database
+        filename = '%s.metadata' % self.get_abspath()
+        filename = filename[1:]
+        revisions = database.get_commit_hashs(filename)
+        history = []
+        for revision in revisions:
+            m = database.get_blob_by_revision_and_path(revision, filename)
+            history.append(Metadata(string=m))
+        return history
 
 
     def _add_record(self, context, form, new=False):
