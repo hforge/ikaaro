@@ -121,7 +121,7 @@ class SubscribeForm(STLForm):
         ac = resource.get_access_control()
         is_admin = ac.is_admin(context.user, resource)
         if is_admin:
-            resource.set_property('cc_list', new_cc)
+            resource.set_property('cc_list', tuple(new_cc))
             context.message = MSG_CHANGES_SAVED
             return
 
@@ -134,5 +134,5 @@ class SubscribeForm(STLForm):
             new_cc = list(old_cc)
             new_cc.remove(user.name)
 
-        resource.set_property('cc_list', new_cc)
+        resource.set_property('cc_list', tuple(new_cc))
         context.message = MSG_CHANGES_SAVED
