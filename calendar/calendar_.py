@@ -197,3 +197,28 @@ class Calendar(Folder):
     import_ = Calendar_Import()
     export_form = File_View(title=MSG(u'Export'),
                             template='/ui/calendar/export_form.xml')
+
+
+
+###########################################################################
+# XXX Upgrade code, to remove in 0.71
+###########################################################################
+from ikaaro.table import Table
+
+
+class CalendarTable(Table):
+
+    class_id = 'calendarTable'
+    class_version = '20100602'
+
+
+    def update_20100602(self):
+        parent = self.parent
+
+        # Remove myself
+        handler = self.handler.clone()
+        parent.del_resource(self.name)
+
+        # New calendar
+        parent.make_resource(self.name, Calendar)
+        # TODO Import the old data from 'handler'

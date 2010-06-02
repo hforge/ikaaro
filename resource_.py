@@ -516,9 +516,15 @@ class DBResource(CatalogAware, IResource):
 
 
     def update(self, version):
-        # We don't check the version is good
+        # Action
         getattr(self, 'update_%s' % version)()
+
+        # If the action removes the resource, we are done
         metadata = self.metadata
+        if metadata.key is None:
+            return
+
+        # Update version
         metadata.set_changed()
         metadata.version = version
 
