@@ -94,7 +94,13 @@ class Menu_View(OrderedTable_View):
         'ids': Integer(multiple=True, mandatory=True)}
     styles = ['/ui/future/style.css']
 
-    table_actions = [ChildButton] + OrderedTable_View.table_actions
+    def get_table_actions(self, resource, context):
+        table_actions = OrderedTable_View.get_table_actions(self, resource,
+                                                            context)
+        # Add submenu column if needed
+        if resource.parent.allow_submenu:
+            return [ChildButton] + table_actions
+        return table_actions
 
 
     def get_items(self, resource, context):
@@ -107,8 +113,11 @@ class Menu_View(OrderedTable_View):
             ('checkbox', None),
             ('id', MSG(u'id'))]
         # From the schema
+        allow_submenu = resource.parent.allow_submenu
         for widget in self.get_widgets(resource, context):
             if widget.name == 'path':
+                continue
+            if widget.name == 'child' and not allow_submenu:
                 continue
             column = (widget.name, getattr(widget, 'title', widget.name))
             columns.append(column)
@@ -219,6 +228,8 @@ class Menu_View(OrderedTable_View):
     def action_add_child(self, resource, context, form):
         handler = resource.handler
         parent = resource.parent
+        menu_cls = parent.class_menu
+
         for parent_id in form['ids']:
             # generate the name of the new table
             parent_record = handler.get_record(parent_id)
@@ -236,11 +247,10 @@ class Menu_View(OrderedTable_View):
                 index = index + 1
                 name = checkid('%s%03d' % (base, index))
 
-            cls = resource.parent.class_menu
-            object = cls.make_resource(cls, parent, name)
+            child = parent.make_resource(name, menu_cls)
 
             # update the parent record
-            handler.update_record(parent_id, **{'child': name})
+            resource.update_record(parent_id, **{'child': name})
 
         context.message = messages.MSG_NEW_RESOURCE
 
@@ -296,6 +306,7 @@ class Menu(OrderedTable):
 
         # Delete the record
         handler.del_record(id)
+        get_context().database.change_resource(self)
 
 
     def _is_allowed_to_access(self, context, uri):
@@ -509,22 +520,22 @@ class Menu(OrderedTable):
             # Target resources
             path = handler.get_record_value(record, 'path')
             ref, path = get_reference_and_path(path)
-            if ref.scheme:
-                continue
-            if path.count(';'):
-                path, method = path.split(';')
-            if ref.path.is_absolute():
-                uri = site_root_abspath.resolve2('.%s' % path)
-            else:
-                uri = base.resolve2(path)
-            try:
-                # Use the canonical path instead of the uri stocked
-                resource = self.get_resource(uri)
-                link = str(resource.get_canonical_path())
-            except LookupError:
-                # If the resource does not exist, simply use the uri
-                link = str(uri)
-            links.append(link)
+            if not ref.scheme:
+                if path.count(';'):
+                    path, method = path.split(';')
+                if ref.path.is_absolute():
+                    uri = site_root_abspath.resolve2('.%s' % path)
+                else:
+                    uri = base.resolve2(path)
+                try:
+                    # Use the canonical path instead of the uri stocked
+                    resource = self.get_resource(uri)
+                    link = str(resource.get_canonical_path())
+                except LookupError:
+                    # If the resource does not exist, simply use the uri
+                    link = str(uri)
+                links.append(link)
+
             # Submenu resources
             if not 'child' in record_properties:
                 continue
@@ -533,10 +544,8 @@ class Menu(OrderedTable):
                 container = self.parent
                 child = container.get_resource(path, soft=True)
                 if child is not None:
-                    # take into account the submenu if it is not empty
-                    if child.handler.get_n_records():
-                        uri = site_root_abspath.resolve(path)
-                        links.append(str(uri))
+                    uri = site_root_abspath.resolve(path)
+                    links.append(str(uri))
 
         return links
 
@@ -575,6 +584,7 @@ class MenuFolder(Folder):
     __fixed_handlers__ = Folder.__fixed_handlers__ + ['menu']
     # Your menu ressource (for overriding the record_properties and form)
     class_menu = Menu
+    allow_submenu = False
 
     # Views
     view = GoToSpecificDocument(specific_document='menu',
@@ -590,12 +600,10 @@ class MenuFolder(Folder):
     thumb = Folder_Thumbnail(access='is_admin')
 
 
-    @staticmethod
-    def _make_resource(cls, folder, name, **kw):
-        Folder._make_resource(cls, folder, name, **kw)
+    def init_resource(self, **kw):
+        Folder.init_resource(self, **kw)
         # Menu root
-        cls_menu = cls.class_menu
-        cls_menu._make_resource(cls_menu, folder, '%s/menu' % name)
+        self.make_resource('menu', self.class_menu)
 
 
     def get_document_types(self):
