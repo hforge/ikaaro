@@ -136,3 +136,41 @@ class SubscribeForm(STLForm):
 
         resource.set_property('cc_list', tuple(new_cc))
         context.message = MSG_CHANGES_SAVED
+
+
+
+class Observable(object):
+
+
+    def notify_subcribers(self, context):
+        # Title
+        title = self.metadata.get_property('title') or 'Ressource modified'
+        # Subject
+        subject = MSG(u'[{name} - {title}] has been modified')
+        subject = subject.gettext(name=self.name, title=title.value)
+        # Body
+        message = MSG(u'DO NOT REPLY TO THIS EMAIL. To view modifications '
+                u'please visit:\n{resource_uri}')
+        uri = str(context.uri)
+        uri = uri.split(';')[0] + ';commit_log'
+        body = message.gettext(resource_uri=uri)
+
+        # get list of registered users
+        users = self.metadata.get_property('cc_list')
+        # cc_list is empty
+        if not users:
+            return
+        # Notify registered users
+        for user in users.value:
+            user = context.root.get_user(user)
+            if not user:
+                continue
+            mail = user.get_property('email')
+            context.root.send_email(mail, subject, text=body)
+
+
+    #######################################################################
+    # UI
+    #######################################################################
+
+    subscribe = SubscribeForm()

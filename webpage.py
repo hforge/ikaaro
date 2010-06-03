@@ -35,7 +35,7 @@ from itools.xml import START_ELEMENT
 from autoform import HTMLBody
 from autoform import title_widget, description_widget, subject_widget
 from autoform import file_widget, rte_widget, timestamp_widget
-from cc import SubscribeForm
+from cc import Observable, SubscribeForm
 import messages
 from file_views import File_Edit
 from multilingual import Multilingual
@@ -198,6 +198,9 @@ class HTMLEditView(File_Edit):
             handler = resource.get_handler(language=language)
             handler.set_body(new_body)
 
+        # Send notifications
+        resource.notify_subcribers(context)
+
         # Ok
         context.message = messages.MSG_CHANGES_SAVED
 
@@ -206,7 +209,7 @@ class HTMLEditView(File_Edit):
 ###########################################################################
 # Model
 ###########################################################################
-class ResourceWithHTML(object):
+class ResourceWithHTML(Observable):
     """A mixin class for handlers implementing HTML editing.
     """
 
@@ -334,7 +337,6 @@ class WebPage(ResourceWithHTML, Multilingual, Text):
     #######################################################################
     new_instance = DBResource.new_instance
     view = WebPage_View()
-    subscribe = SubscribeForm()
 
     def get_html_document(self, language=None):
         return self.get_handler(language=language)
