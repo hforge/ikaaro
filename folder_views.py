@@ -52,7 +52,7 @@ class ZoomMenu(ContextMenu):
     title = MSG(u'Zoom')
 
     def get_items(self):
-        uri = context.uri
+        uri = self.context.uri
 
         # Compute previous and next sizes
         current_size = self.context.get_query_value('size')
