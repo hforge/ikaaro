@@ -166,3 +166,11 @@ class OrderBottomButton(Button):
     name = 'order_bottom'
     title = MSG(u'Order bottom')
 
+
+
+class AddButton(Button):
+
+    access = 'is_allowed_to_edit'
+    name = 'add'
+    title = MSG(u'Add')
+    css = 'button-add'

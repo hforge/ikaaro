@@ -286,10 +286,7 @@ class BrowseForm(STLForm):
         return columns_ns
 
 
-    def get_table_namespace(self, resource, context, items):
-        ac = resource.get_access_control()
-
-        # (1) Actions (submit buttons)
+    def get_actions_namespace(self, resource, context, items):
         actions = []
         for button in self.get_table_actions(resource, context):
             if button.show(resource, context, items) is False:
@@ -304,7 +301,12 @@ class BrowseForm(STLForm):
                  'title': button.title,
                  'class': button.css,
                  'onclick': onclick})
+        return actions
 
+
+    def get_table_namespace(self, resource, context, items):
+        # (1) Actions (submit buttons)
+        actions = self.get_actions_namespace(resource, context, items)
         # (2) Table Head: columns
         table_head = self.get_table_head(resource, context, items, actions)
 

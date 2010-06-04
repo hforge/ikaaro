@@ -30,10 +30,11 @@ from itools.xapian import CatalogAware, PhraseQuery
 
 # Import from ikaaro
 from metadata import Metadata
+from popup import DBResource_AddImage, DBResource_AddLink
+from popup import DBResource_AddMedia
 from registry import register_field, register_resource_class
 from resource_views import DBResource_Edit, DBResource_Backlinks
-from resource_views import DBResource_AddImage, DBResource_AddLink
-from resource_views import DBResource_AddMedia, LoginView, LogoutView
+from resource_views import LoginView, LogoutView
 from resource_views import Put_View, Delete_View
 from revisions_views import DBResource_CommitLog, DBResource_Changes
 from workflow import WorkflowAware
@@ -252,6 +253,7 @@ class DBResource(CatalogAware, IResource):
         # Various classifications
         'is_role_aware': Boolean(indexed=True),
         'is_image': Boolean(indexed=True),
+        'is_folder': Boolean(indexed=True),
         })
 
 
@@ -336,6 +338,7 @@ class DBResource(CatalogAware, IResource):
     def get_catalog_values(self):
         from access import RoleAware
         from file import File, Image
+        from folder import Folder
 
         # Values
         abspath = self.get_canonical_path()
@@ -419,6 +422,7 @@ class DBResource(CatalogAware, IResource):
             'parent_path': parent_path,
             # This should be defined by subclasses
             'is_image': isinstance(self, Image),
+            'is_folder': isinstance(self, Folder),
             'is_role_aware': is_role_aware,
             'users': self.get_members() if is_role_aware else None,
             'size': size,
