@@ -24,6 +24,7 @@ from types import GeneratorType
 
 # Import from itools
 from itools.core import merge_dicts
+from itools.csv import Property
 from itools.datatypes import String, Tokens, Unicode
 from itools.gettext import MSG
 from itools.html import stream_to_str_as_html, xhtml_doctype
@@ -32,14 +33,16 @@ from itools.xml import XMLParser
 
 # Import from ikaaro
 from access import RoleAware
-from control_panel import ControlPanel, CPAddUser, CPBrokenLinks
 from control_panel import CPBrowseUsers, CPEditContactOptions, CPEditLanguages
 from control_panel import CPEditMembership, CPEditSecurityPolicy
 from control_panel import CPEditVirtualHosts, CPOrphans, CPEditSEO
+from control_panel import ControlPanel, CPAddUser, CPBrokenLinks
+from control_panel import CPEditTheme
 from folder import Folder
 from registry import register_document_type
 from resource_views import LoginView
 from skins import UI, ui_path
+from theme import Theme
 from website_views import AboutView, ContactForm, CreditsView
 from website_views import ForgottenPasswordForm, RegisterForm
 from website_views import SiteSearchView, NotFoundView, ForbiddenView
@@ -60,10 +63,10 @@ class WebSite(RoleAware, Folder):
     class_control_panel = ['browse_users', 'add_user', 'edit_virtual_hosts',
                            'edit_security_policy', 'edit_languages',
                            'edit_contact_options', 'broken_links', 'orphans',
-                           'edit_seo']
+                           'edit_seo', 'edit_theme']
 
 
-    __fixed_handlers__ = ['skin', 'index']
+    __fixed_handlers__ = ['skin', 'index', 'theme']
 
 
     def _get_resource(self, name):
@@ -95,6 +98,20 @@ class WebSite(RoleAware, Folder):
         values = Folder.get_catalog_values(self)
         values['vhosts'] = self.get_property('vhosts')
         return values
+
+
+    def init_resource(self, **kw):
+        Folder.init_resource(self, **kw)
+        # Theme folder
+        theme = self.make_resource('theme', Theme, title={'en': u'Theme'})
+        # Add home/contact links
+        menu = theme.get_resource('menu/menu')
+        menu.add_new_record({'path': '../../..',
+                             'title': Property(u'Home', language='en'),
+                             'target': '_top'})
+        menu.add_new_record({'path': '../../../;contact',
+                             'title': Property(u'Contact', language='en'),
+                             'target': '_top'})
 
 
     ########################################################################
@@ -175,6 +192,7 @@ class WebSite(RoleAware, Folder):
     edit_virtual_hosts = CPEditVirtualHosts()
     edit_security_policy = CPEditSecurityPolicy()
     edit_seo = CPEditSEO()
+    edit_theme = CPEditTheme()
     edit_contact_options = CPEditContactOptions()
     edit_languages = CPEditLanguages()
     broken_links = CPBrokenLinks()

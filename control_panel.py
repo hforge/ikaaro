@@ -33,7 +33,7 @@ from itools.xapian import PhraseQuery
 from access import RoleAware_BrowseUsers, RoleAware_AddUser
 from access import RoleAware_EditMembership
 from autoform import MultilineWidget, SelectWidget, TextWidget
-from folder_views import Folder_Orphans
+from folder_views import Folder_Orphans, GoToSpecificDocument
 import messages
 from resource_views import DBResource_Edit
 from utils import get_base_path_query
@@ -394,6 +394,20 @@ class CPEditSEO(DBResource_Edit):
             resource.set_property(key, form[key])
         # Ok
         context.message = messages.MSG_CHANGES_SAVED
+
+
+
+class CPEditTheme(GoToSpecificDocument):
+
+    access = 'is_allowed_to_edit'
+    title = MSG(u'Theme')
+    icon = 'theme.png'
+    description = MSG(u"""Customize the theme and configure the menu""")
+
+    def get_specific_document(self, resource, context):
+        site_root = resource.get_site_root()
+        theme = site_root.get_resource('theme')
+        return context.resource.get_pathto(theme)
 
 
 
