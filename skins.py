@@ -35,6 +35,7 @@ from itools.web import get_context, BaseView, ERROR, INFO
 from itools.xmlfile import XMLFile
 
 # Import from ikaaro
+from menu import get_menu_namespace
 from resource_ import IResource
 from skins_views import LanguagesTemplate, LocationTemplate
 
@@ -203,6 +204,12 @@ class Skin(UIFolder):
         else:
             extra = get_styles(context)
         styles.extend(extra)
+
+        # Database style
+        db_style = context.site_root.get_resource('theme/style')
+        ac = db_style.get_access_control()
+        if ac.is_allowed_to_view(context.user, db_style):
+            styles.append('%s/;download' % context.get_link(db_style))
 
         # Ok
         return styles
@@ -383,13 +390,35 @@ class Skin(UIFolder):
 
         # The favicon.ico
         site_root = context.site_root
-        resource = site_root.get_resource('favicon', soft=True)
-        if resource:
-            favicon_href = '/favicon/;download'
-            favicon_type = resource.metadata.format
-        else:
+        theme = site_root.get_resource('theme')
+        path = theme.get_property('favicon')
+        favicon_href = favicon_type = None
+        if path:
+            resource = theme.get_resource(path, soft=True)
+            if resource:
+                ac = resource.get_access_control()
+                if ac.is_allowed_to_view(context.user, resource):
+                    favicon_href = '%s/;download' % context.get_link(resource)
+                    favicon_type = resource.metadata.format
+        if favicon_href is None:
+            # Fallback to default favicon
             favicon_href = '/ui/favicon.ico'
             favicon_type = 'image/x-icon'
+
+        # Logo
+        path = theme.get_property('logo')
+        logo_href = None
+        if path:
+            resource = theme.get_resource(path, soft=True)
+            if resource:
+                ac = resource.get_access_control()
+                if ac.is_allowed_to_view(context.user, resource):
+                    logo_href = '%s/;download' % context.get_link(resource)
+
+        # Menu
+        menu = theme.get_resource('menu')
+        # Get the menu namespace
+        menu_ns = get_menu_namespace(context, 1, menu=menu)
 
         # The document language
         here = context.resource
@@ -435,6 +464,10 @@ class Skin(UIFolder):
             # favicon
             'favicon_href': favicon_href,
             'favicon_type': favicon_type,
+            # logo
+            'logo_href': logo_href,
+            # menu
+            'menu': menu_ns,
         }
 
 

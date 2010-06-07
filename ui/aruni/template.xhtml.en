@@ -25,20 +25,47 @@
 
     <!-- Header -->
     <div id="header">
-      ${languages}
-      <div id="top-menu">
+      <div id="links">
         <stl:block stl:if="not user/info">
-          <a href="${login}" id="top-menu-login">Log in</a>
-          <a href="/;register" id="top-menu-register"
-            stl:if="user/joinisopen">Register</a>
+          <a href="${login}" title="Log in" id="links-menu-login">Log in</a>
+          <stl:block stl:if="user/joinisopen">
+            <a href="/;register" id="links-menu-register"
+              stl:if="user/joinisopen">Register</a>
+          </stl:block>
         </stl:block>
         <stl:block stl:if="user/info">
-          <a href="${user/info/home}" id="top-menu-profile">My Profile</a>
-          <a href="${logout}" id="top-menu-logout">Log out</a>
+          <a href="${user/info/home}" title="${user/info/title}"
+             id="links-menu-profile">${user/info/title}</a>
+          <a href="${logout}" title="Log out"
+             id="links-menu-logout">Log out</a>
         </stl:block>
-        <a href="/;site_search" id="top-menu-search">Search</a>
-        <a href="/;contact" id="top-menu-contact">Contact</a>
       </div>
+      <!-- Languages & Searchbar -->
+      <table cellpadding="0" cellspacing="0" class="header-toolbar">
+        <tr>
+          <td class="languages">${languages}</td>
+          <td class="search">
+            <form action="/;site_search" method="get">
+              <input name="site_search_text" type="text" value="" size="15"/>
+              <button class="button-search" type="submit">
+                <span>Search</span>
+              </button>
+            </form>
+          </td>
+        </tr>
+      </table>
+      <!-- Menu -->
+      <ul stl:if="menu/items" id="menu">
+        <li stl:repeat="menu menu/items" class="${menu/class}">
+          <a href="${menu/path}" id="${menu/id}" target="${menu/target}"
+             title="${menu/title}">${menu/title}</a>
+        </li>
+      </ul>
+      <!-- Logo -->
+      <a href="/" stl:if="logo_href" id="logo">
+          <img src="${logo_href}"/>
+      </a>
+      <div class="clear" />
     </div>
 
     <!-- Location & Views-->
