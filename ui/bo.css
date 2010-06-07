@@ -499,4 +499,5 @@ p.tabme a.selected {
  * NOT YET CLASSIFIED
  *************************************************************************/
 
+.broken { color: red; }
 .number { text-align: right; }

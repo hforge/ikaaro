@@ -26,21 +26,21 @@ from itools.web import get_context
 from itools.xml import XMLParser
 
 # Import from ikaaro
-from ikaaro.autoform import PathSelectorWidget
-from ikaaro.autoform import TextWidget, SelectWidget, ReadOnlyWidget
-from ikaaro import messages
-from ikaaro.buttons import Button
-from ikaaro.exceptions import ConsistencyError
-from ikaaro.folder import Folder
-from ikaaro.folder_views import Folder_NewResource, Folder_BrowseContent
-from ikaaro.folder_views import Folder_Rename, Folder_PreviewContent
-from ikaaro.folder_views import Folder_Thumbnail, GoToSpecificDocument
-from ikaaro.folder_views import Folder_Orphans
-from ikaaro.popup import DBResource_AddLink
-from ikaaro.revisions_views import DBResource_CommitLog
-from ikaaro.table import OrderedTableFile, OrderedTable
-from ikaaro.table_views import OrderedTable_View
-from ikaaro.workflow import get_workflow_preview
+from autoform import PathSelectorWidget, ReadOnlyWidget, SelectWidget
+from autoform import TextWidget
+from buttons import Button
+from exceptions import ConsistencyError
+from folder import Folder
+from folder_views import Folder_BrowseContent, Folder_PreviewContent
+from folder_views import Folder_Orphans, Folder_NewResource
+from folder_views import Folder_Rename, GoToSpecificDocument
+from folder_views import Folder_Thumbnail
+from popup import DBResource_AddLink
+from revisions_views import DBResource_CommitLog
+from table import OrderedTableFile, OrderedTable
+from table_views import OrderedTable_View
+from workflow import get_workflow_preview
+import messages
 
 
 
@@ -92,7 +92,6 @@ class Menu_View(OrderedTable_View):
     access = 'is_allowed_to_edit'
     schema = {
         'ids': Integer(multiple=True, mandatory=True)}
-    styles = ['/ui/future/style.css']
 
     def get_table_actions(self, resource, context):
         table_actions = OrderedTable_View.get_table_actions(self, resource,
@@ -624,7 +623,7 @@ class MenuFolder(Folder):
 
 
 def get_menu_namespace(context, depth=3, show_first_child=False, flat=True,
-                       src=None):
+                       src=None, menu=None):
     """Return dict with the following structure:
 
     {'items': [item_dic01, ..., item_dic0N]}
@@ -668,34 +667,33 @@ def get_menu_namespace(context, depth=3, show_first_child=False, flat=True,
 
     # Get the menu
     tabs = {'items': []}
-    if src is None:
-        src = 'menu'
-    site_root = resource.get_site_root()
-    menu = site_root.get_resource(src, soft=True)
+    if src:
+        site_root = resource.get_site_root()
+        menu = site_root.get_resource(src, soft=True)
     if menu is not None:
         tabs = menu.get_menu_namespace_level(context, url, depth,
                                              show_first_child)
 
-    if flat:
-        tabs['flat'] = {}
-        items = tabs['flat']['lvl0'] = tabs.get('items', None)
-        # initialize the levels
-        for i in range(1, depth):
-            tabs['flat']['lvl%s' % i] = None
-        exist_items = True
-        lvl = 1
-        while (items is not None) and exist_items:
-            exist_items = False
-            for item in items:
-                if item['class'] in ['active', 'in-path']:
-                    if item['items']:
-                        items = exist_items = item['items']
-                        if items:
-                            tabs['flat']['lvl%s' % lvl] = items
-                            lvl += 1
-                        break
-                    else:
-                        items = None
-                        break
+        if flat:
+            tabs['flat'] = {}
+            items = tabs['flat']['lvl0'] = tabs.get('items', None)
+            # initialize the levels
+            for i in range(1, depth):
+                tabs['flat']['lvl%s' % i] = None
+            exist_items = True
+            lvl = 1
+            while (items is not None) and exist_items:
+                exist_items = False
+                for item in items:
+                    if item['class'] in ['active', 'in-path']:
+                        if item['items']:
+                            items = exist_items = item['items']
+                            if items:
+                                tabs['flat']['lvl%s' % lvl] = items
+                                lvl += 1
+                            break
+                        else:
+                            items = None
+                            break
     return tabs
 
