@@ -355,7 +355,14 @@ class ResourcesOrderedTable(OrderedTable):
             path = str(resolve_uri2(base, name))
             if path == source:
                 new_path = str(base.get_pathto(target))
-                handler.update_record(record.id, **{'name': new_path})
+                # Check if the new path is inside the order root
+                # otherwise delete the record
+                new_abs_path = base.resolve2(new_path)
+                if base.get_prefix(new_abs_path) != base:
+                    # delete the record
+                    handler.del_record(record.id)
+                else:
+                    handler.update_record(record.id, **{'name': new_path})
         get_context().database.change_resource(self)
 
 

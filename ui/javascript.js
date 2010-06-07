@@ -46,3 +46,36 @@ function tabme() {
     tabs.click(tabme_show); // Hook the onclick event
   }
 }
+
+
+/* IE6-7 Fix button */
+$(document).ready(function() {
+    if ($.browser.msie && $.browser.version.substr(0,1) < 8) {
+        var elements, element = null;
+
+        for (i=0; i<document.forms.length; i++) {
+            elements = document.forms[i].elements;
+            var buttons = new Array();
+            for (j=0; j<elements.length; j++) {
+                element = elements[j];
+                if (element.tagName == 'BUTTON' && element.getAttribute("name") == "action") {
+                    buttons.push(element);
+                }
+            }
+            // Do not hack form if there is only one button
+            if (buttons.length > 1) {
+                for (k=0; k<buttons.length; k++) {
+                    // FIXME Remove already set click functions
+                    buttons[k].onclick = function () {
+                        for(l=0; l<this.form.elements.length; l++) {
+                            if( this.form.elements[l].tagName == 'BUTTON' )
+                                this.form.elements[l].disabled = true;
+                        }
+                        this.disabled = false;
+                        this.value = this.attributes.getNamedItem("value").nodeValue ;
+                    }
+                }
+            }
+        }
+    }
+});
