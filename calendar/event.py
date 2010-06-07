@@ -35,6 +35,8 @@ from calendar_views import CalendarView, resolution
 
 class Status(Enumerate):
 
+    default = 'TENTATIVE'
+
     options = [{'name': 'TENTATIVE', 'value': MSG(u'Tentative')},
                {'name': 'CONFIRMED', 'value': MSG(u'Confirmed')},
                {'name': 'CANCELLED', 'value': MSG(u'Cancelled')}]

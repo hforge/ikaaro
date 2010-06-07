@@ -179,9 +179,14 @@ class Calendar(Folder):
                     if lang:
                         property = Property(property.value, LANGUAGE=lang)
                     p_schema = {'LANGUAGE': String(multiple=False)}
-                    line = property_to_str(ics_name, property, datatype,
-                            p_schema)
-                    lines.append(line)
+                # Assume default value
+                else:
+                    value = datatype.get_default()
+                    property = Property(value)
+                    p_schema = None
+                line = property_to_str(ics_name, property, datatype,
+                        p_schema)
+                lines.append(line)
 
             path =  event.get_abspath()
             auth = context.uri.authority
