@@ -43,7 +43,7 @@ ikaaro_to_ics = [
     ('title', 'SUMMARY'),
     ('description', 'DESCRIPTION'),
     ('location', 'LOCATION'),
-    ('mtime', 'UID')]
+    ('mtime', 'LAST-MODIFIED')]
 
 handled_ics_properties = tuple([y for x, y in ikaaro_to_ics])
 
@@ -160,7 +160,7 @@ class Calendar(Folder):
         return timetables
 
 
-    def to_ical(self):
+    def to_ical(self, context):
         """Serialize as an ical file, generally named .ics
         """
 
@@ -169,24 +169,25 @@ class Calendar(Folder):
                 'PRODID:-//itaapy.com/NONSGML ikaaro icalendar V1.0//EN\n']
 
         # Calendar components
-        for event in self._get_names():
-            event = self._get_resource(event)
-            if event is not None:
-                if not isinstance(event, Event):
-                    raise TypeError('%s instead of %s' % (type(event), Event))
-                lines.append('BEGIN:VEVENT\n')
-                for ikaaro_name, ics_name in ikaaro_to_ics:
-                    datatype = event.get_property_datatype(ikaaro_name)
-                    property = event.metadata.get_property(ikaaro_name)
-                    if property:
-                        lang = property.get_parameter('lang')
-                        if lang:
-                            property = Property(property.value, LANGUAGE=lang)
-                        p_schema = {'LANGUAGE': String(multiple=False)}
-                        line = property_to_str(ics_name, property, datatype,
-                                p_schema)
-                        lines.append(line)
-                lines.append('END:VEVENT\n')
+        for event in self.search_resources(cls=Event):
+            lines.append('BEGIN:VEVENT\n')
+            for ikaaro_name, ics_name in ikaaro_to_ics:
+                datatype = event.get_property_datatype(ikaaro_name)
+                property = event.metadata.get_property(ikaaro_name)
+                if property:
+                    lang = property.get_parameter('lang')
+                    if lang:
+                        property = Property(property.value, LANGUAGE=lang)
+                    p_schema = {'LANGUAGE': String(multiple=False)}
+                    line = property_to_str(ics_name, property, datatype,
+                            p_schema)
+                    lines.append(line)
+
+            path =  event.get_abspath()
+            auth = context.uri.authority
+            uid = 'UID:%s@%s\n' % (path, auth)
+            lines.append(uid)
+            lines.append('END:VEVENT\n')
         lines.append('END:VCALENDAR\n')
 
         return ''.join(lines)

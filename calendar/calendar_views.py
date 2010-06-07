@@ -817,12 +817,12 @@ class Calendar_Import(STLForm):
         # Replace
         try:
             resource.load_state_from_ical_file(StringIO(body))
-        except BaseException as e:
+        except BaseException:
             message = ERROR(u'Failed to load the file, may contain errors.')
             context.message = message
         else:
-        context.database.change_resource(resource)
-        context.message = INFO(u'Version uploaded')
+            context.database.change_resource(resource)
+            context.message = INFO(u'Version uploaded')
 
 
 
@@ -831,6 +831,7 @@ class Calendar_Export(BaseView):
     access = 'is_allowed_to_view'
 
     def GET(self, resource, context):
+        ical = resource.to_ical(context)
         context.set_content_type('text/calendar')
         context.set_content_disposition('inline', '%s.ics' % resource.name)
-        return resource.to_ical()
+        return ical
