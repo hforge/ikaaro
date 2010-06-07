@@ -809,7 +809,6 @@ class Calendar_Import(STLForm):
         filename, mimetype, body = file
 
         # Check wether the handler is able to deal with the uploaded file
-        handler = resource.handler
         if mimetype != 'text/calendar':
             message = messages.MSG_UNEXPECTED_MIMETYPE(mimetype=mimetype)
             context.message = message
@@ -817,13 +816,13 @@ class Calendar_Import(STLForm):
 
         # Replace
         try:
-            handler.load_state_from_ical_file(StringIO(body))
-        except:
+            resource.load_state_from_ical_file(StringIO(body))
+        except BaseException as e:
             message = ERROR(u'Failed to load the file, may contain errors.')
             context.message = message
         else:
-            context.database.change_resource(resource)
-            context.message = INFO(u'Version uploaded')
+        context.database.change_resource(resource)
+        context.message = INFO(u'Version uploaded')
 
 
 

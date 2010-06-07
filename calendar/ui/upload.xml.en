@@ -3,7 +3,7 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
-  <form action=";upload" method="post" enctype="multipart/form-data">
+  <form action=";import_" method="post" enctype="multipart/form-data">
     <fieldset>
       <legend>Upload</legend>
       <p>You can upload a new ical file (.ics extension) to replace the current
@@ -12,7 +12,7 @@
         <dt></dt>
         <dd><input type="file" id="file" name="file" size="35" /></dd>
       </dl>
-      <button type="submit" class="button-upload">Replace</button>
+      <button type="submit" class="button-import">Replace</button>
     </fieldset>
   </form>
 </stl:block>
