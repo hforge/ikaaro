@@ -233,7 +233,6 @@ class Folder_BrowseContent(SearchForm):
     # Search Form
     search_template = '/ui/folder/browse_search.xml'
     search_schema = {
-        'search_field': String,
         'search_term': Unicode}
 
     # Table
@@ -249,21 +248,33 @@ class Folder_BrowseContent(SearchForm):
         ('workflow_state', MSG(u'State'))]
 
 
+    def get_search_namespace(self, resource, context):
+        return {'search_term': context.query['search_term']}
+
+
     def get_items(self, resource, context, *args):
         # Get the parameters from the query
-        query = context.query
-        search_term = query['search_term'].strip()
-        field = query['search_field']
+        search_term = context.query['search_term'].strip()
 
         # Build the query
         args = list(args)
         abspath = str(resource.get_canonical_path())
         args.append(get_base_path_query(abspath))
         if search_term:
-            language = resource.get_content_language(context)
-            terms_query = [ PhraseQuery(field, term)
-                            for term in split_unicode(search_term, language) ]
-            args.append(AndQuery(*terms_query))
+            site_root = resource.get_site_root()
+            languages = site_root.get_property('website_languages')
+            terms_query = []
+            for language in languages:
+                query = [
+                    OrQuery(PhraseQuery('title', x), PhraseQuery('text', x))
+                    for x in split_unicode(search_term, language) ]
+                if query:
+                    terms_query.append(AndQuery(*query))
+
+            if terms_query:
+                terms_query = OrQuery(*terms_query)
+                args.append(terms_query)
+
         if len(args) == 1:
             query = args[0]
         else:
