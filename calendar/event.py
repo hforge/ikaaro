@@ -228,6 +228,16 @@ class Event(File):
         location=String(source='metadata'))
 
 
+    def init_resource(self, body=None, filename=None, extension=None, **kw):
+        if 'uid' not in kw:
+            path =  self.get_abspath()
+            context = get_context()
+            authority = context.uri.authority
+            uid = str(path) + '@%s' % authority
+            kw['uid'] = uid
+        File.init_resource(self, body=body, filename=filename,
+                    extension=extension, **kw)
+
     def get_catalog_values(self):
         values = File.get_catalog_values(self)
         values['dtstart'] = self.get_property('dtstart')

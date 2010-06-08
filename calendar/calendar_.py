@@ -27,6 +27,7 @@ from itools.csv import Property, property_to_str
 from itools.csv.table import get_tokens, read_name, unfold_lines
 from itools.datatypes import DataType, Date, DateTime, Integer, String
 from itools.gettext import MSG
+from itools.web import get_context
 
 # Import from ikaaro
 from ikaaro.file_views import File_View
@@ -43,6 +44,7 @@ ikaaro_to_ics = [
     ('title', 'SUMMARY'),
     ('description', 'DESCRIPTION'),
     ('location', 'LOCATION'),
+    ('uid', 'UID'),
     ('mtime', 'LAST-MODIFIED')]
 
 handled_ics_properties = tuple([y for x, y in ikaaro_to_ics])
@@ -188,10 +190,6 @@ class Calendar(Folder):
                         p_schema)
                 lines.append(line)
 
-            path =  event.get_abspath()
-            auth = context.uri.authority
-            uid = 'UID:%s@%s\n' % (path, auth)
-            lines.append(uid)
             lines.append('END:VEVENT\n')
         lines.append('END:VCALENDAR\n')
 
