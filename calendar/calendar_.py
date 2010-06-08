@@ -409,13 +409,27 @@ class Calendar(Folder):
 ###########################################################################
 # XXX Upgrade code, to remove in 0.71
 ###########################################################################
+from itools.csv import Table as TableFile
+from itools.ical.types import record_properties
 from ikaaro.table import Table
+
+
+class icalendarTable(TableFile):
+    """The old handler class for table base calendars.
+    """
+
+    record_properties = merge_dicts(
+        record_properties,
+        type=String(indexed=True),
+        inner=Integer(multiple=True))
+
 
 
 class CalendarTable(Table):
 
     class_id = 'calendarTable'
     class_version = '20100602'
+    class_handler = icalendarTable
 
 
     def update_20100602(self):
