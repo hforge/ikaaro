@@ -331,11 +331,6 @@ class Issue(Folder):
         return u'\n'.join(comments)
 
 
-    def get_size(self):
-        # FIXME Used by the browse list view (size is indexed)
-        return 0
-
-
     #######################################################################
     # User Interface
     #######################################################################

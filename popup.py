@@ -64,7 +64,6 @@ class AddBase_BrowseContent(Folder_BrowseContent):
         ('name', MSG(u'Name')),
         ('mtime', MSG(u'Last Modified')),
         ('last_author', MSG(u'Last Author')),
-        ('size', MSG(u'Size')),
         ('workflow_state', MSG(u'State'))]
 
 

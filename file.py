@@ -143,12 +143,6 @@ class File(WorkflowAware, DBResource):
         return self.handler.to_text()
 
 
-    def get_size(self):
-        sizes = [ len(x.to_str()) for x in self.get_handlers() ]
-        # XXX Maybe not the good algo
-        return max(sizes)
-
-
     def get_files_to_archive(self, content=False):
         # Handlers
         files = [ x.key for x in self.get_handlers() ]
@@ -161,19 +155,6 @@ class File(WorkflowAware, DBResource):
     #######################################################################
     # User Interface
     #######################################################################
-    def get_human_size(self):
-        file = self.handler
-        bytes = len(file.to_str())
-        size = bytes / 1024.0
-        if size >= 1024:
-            size = size / 1024.0
-            str = MSG(u'%.01f MB')
-        else:
-            str = MSG(u'%.01f KB')
-
-        return str.gettext() % size
-
-
     def get_content_type(self):
         return self.handler.get_mimetype()
 

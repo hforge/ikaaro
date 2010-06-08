@@ -289,13 +289,6 @@ class Folder(DBResource):
             yield resource
 
 
-    def get_human_size(self):
-        names = self.get_names()
-        size = len(names)
-
-        return MSG(u'{n} obs').gettext(n=size)
-
-
     #######################################################################
     # User interface
     #######################################################################

@@ -244,7 +244,6 @@ class Folder_BrowseContent(SearchForm):
         ('format', MSG(u'Type')),
         ('mtime', MSG(u'Last Modified')),
         ('last_author', MSG(u'Last Author')),
-        ('size', MSG(u'Size')),
         ('workflow_state', MSG(u'State'))]
 
 
@@ -352,9 +351,6 @@ class Folder_BrowseContent(SearchForm):
             # Last author
             author =  brain.last_author
             return context.root.get_user_title(author) if author else None
-        elif column == 'size':
-            # Size
-            return item_resource.get_human_size()
         elif column == 'workflow_state':
             # The workflow state
             return get_workflow_preview(item_resource, context)

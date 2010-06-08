@@ -245,7 +245,6 @@ class DBResource(CatalogAware, IResource):
         # Folder's view
         'parent_path': String(indexed=True),
         'name': String(stored=True, indexed=True),
-        'size': Integer(stored=True, indexed=False),
         # Referential integrity
         'links': String(multiple=True, indexed=True),
         # Full text search
@@ -389,16 +388,6 @@ class DBResource(CatalogAware, IResource):
             parent_path = abspath.resolve2('..')
             parent_path = str(parent_path)
 
-        # Size
-        if isinstance(self, File):
-            # FIXME We add an arbitrary size so files will always be bigger
-            # than folders. This won't work when there is a folder with more
-            # than that size.
-            size = 2**30 + self.get_size()
-        else:
-            names = self.get_names()
-            size = len(names)
-
         # Workflow state
         if isinstance(self, WorkflowAware):
             workflow_state = self.get_workflow_state()
@@ -425,7 +414,6 @@ class DBResource(CatalogAware, IResource):
             'is_folder': isinstance(self, Folder),
             'is_role_aware': is_role_aware,
             'users': self.get_members() if is_role_aware else None,
-            'size': size,
             'workflow_state': workflow_state}
 
 
