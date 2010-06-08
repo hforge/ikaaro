@@ -143,11 +143,9 @@ class Observable(object):
 
 
     def notify_subcribers(self, context):
-        # Title
-        title = self.metadata.get_property('title') or 'Ressource modified'
         # Subject
-        subject = MSG(u'[{name} - {title}] has been modified')
-        subject = subject.gettext(name=self.name, title=title.value)
+        subject = MSG(u'[{title}] has been modified')
+        subject = subject.gettext(title=self.get_title())
         # Body
         message = MSG(u'DO NOT REPLY TO THIS EMAIL. To view modifications '
                 u'please visit:\n{resource_uri}')
