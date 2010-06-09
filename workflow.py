@@ -240,9 +240,13 @@ def get_workflow_preview(resource, context):
     statename = resource.get_statename()
     state = resource.get_state()
     msg = state['title'].gettext().encode('utf-8')
-    path = context.get_link(resource)
-    # TODO Include the template in the base table
-    state = ('<a href="%s/;edit_state" class="workflow">'
-             '<strong class="wf-%s">%s</strong>'
-             '</a>') % (path, statename, msg)
+    # Apply ACL
+    ac = resource.get_access_control()
+    if ac.is_allowed_to_edit(context.user, resource):
+        path = context.get_link(resource)
+        state = ('<a href="%s/;edit_state" class="workflow">'
+                 '<strong class="wf-%s">%s</strong>'
+                 '</a>') % (path, statename, msg)
+    else:
+        state = '<strong class="wf-%s">%s</strong>' % (statename, msg)
     return XMLParser(state)
