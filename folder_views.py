@@ -40,6 +40,7 @@ from buttons import PasteButton, PublishButton, RetireButton
 from datatypes import CopyCookie, ImageWidth
 from exceptions import ConsistencyError
 import messages
+from registry import get_resource_class
 from utils import generate_name, get_base_path_query
 from views import IconsView, SearchForm, ContextMenu
 from workflow import WorkflowAware, get_workflow_preview
@@ -226,13 +227,13 @@ class Folder_BrowseContent(SearchForm):
         sort_by=String(default='mtime'),
         reverse=Boolean(default=True))
     schema = {
-        'ids': String(multiple=True, mandatory=True),
-    }
+        'ids': String(multiple=True, mandatory=True)}
 
     # Search Form
     search_template = '/ui/folder/browse_search.xml'
     search_schema = {
-        'search_term': Unicode}
+        'search_text': Unicode,
+        'search_type': String}
 
     # Table
     table_columns = [
@@ -247,25 +248,44 @@ class Folder_BrowseContent(SearchForm):
 
 
     def get_search_namespace(self, resource, context):
-        return {'search_term': context.query['search_term']}
+        search_type = context.query['search_type']
+        types = []
+        for type in context.database.catalog.get_unique_values('format'):
+            cls = get_resource_class(type)
+            types.append({
+                'name': type,
+                'title': cls.class_title.gettext(),
+                'selected': type == search_type})
+        types.sort(key=lambda x: x['title'].lower())
+
+        return {
+            'search_text': context.query['search_text'],
+            'search_type': types}
 
 
     def get_items(self, resource, context, *args):
-        # Get the parameters from the query
-        search_term = context.query['search_term'].strip()
-
-        # Build the query
+        # Query
         args = list(args)
+
+        # Search in subtree
         abspath = str(resource.get_canonical_path())
         args.append(get_base_path_query(abspath))
-        if search_term:
+
+        # Filter by type
+        search_type = context.query['search_type']
+        if search_type:
+            args.append(PhraseQuery('format', search_type))
+
+        # Text search
+        search_text = context.query['search_text'].strip()
+        if search_text:
             site_root = resource.get_site_root()
             languages = site_root.get_property('website_languages')
             terms_query = []
             for language in languages:
                 query = [
                     OrQuery(PhraseQuery('title', x), PhraseQuery('text', x))
-                    for x in split_unicode(search_term, language) ]
+                    for x in split_unicode(search_text, language) ]
                 if query:
                     terms_query.append(AndQuery(*query))
 
@@ -273,12 +293,12 @@ class Folder_BrowseContent(SearchForm):
                 terms_query = OrQuery(*terms_query)
                 args.append(terms_query)
 
+        # Ok
         if len(args) == 1:
             query = args[0]
         else:
             query = AndQuery(*args)
 
-        # Ok
         return context.root.search(query)
 
 

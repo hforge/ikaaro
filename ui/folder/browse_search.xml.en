@@ -7,9 +7,29 @@
 <form action="" method="get">
   <fieldset>
     <legend>Search</legend>
-    <input type="text" name="search_term" size="35" value="${search_term}" />
-    &nbsp;
-    <button type="submit" class="button-search">Search</button>
+    <table>
+      <tr>
+        <td>Text</td>
+        <td>Type</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>
+          <input type="text" name="search_text" size="35"
+            value="${search_text}" />
+        </td>
+        <td>
+          <select name="search_type">
+            <option value=""></option>
+            <option stl:repeat="type search_type" value="${type/name}"
+              selected="${type/selected}">${type/title}</option>
+          </select>
+        </td>
+        <td>
+          <button type="submit" class="button-search">Search</button>
+        </td>
+      </tr>
+    </table>
   </fieldset>
 </form>
 
