@@ -265,7 +265,7 @@ class Menu_AddLink(DBResource_AddLink):
 class Menu(OrderedTable):
 
     class_id = 'ikaaro-menu'
-    class_title = MSG(u'iKaaro Menu')
+    class_title = MSG(u'Menu item')
     class_handler = MenuFile
     class_views = ['view', 'add_record']
 
@@ -578,7 +578,7 @@ class Menu(OrderedTable):
 class MenuFolder(Folder):
 
     class_id = 'menu-folder'
-    class_title = MSG(u'iKaaro Menu')
+    class_title = MSG(u'Menu')
     class_views = ['view']
     __fixed_handlers__ = Folder.__fixed_handlers__ + ['menu']
     # Your menu ressource (for overriding the record_properties and form)
