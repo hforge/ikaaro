@@ -239,7 +239,7 @@ class Folder_BrowseContent(SearchForm):
     table_columns = [
         ('checkbox', None),
         ('icon', None),
-        ('name', MSG(u'Path')),
+        ('abspath', MSG(u'Path')),
         ('title', MSG(u'Title')),
         ('format', MSG(u'Type')),
         ('mtime', MSG(u'Last Modified')),
@@ -347,7 +347,7 @@ class Folder_BrowseContent(SearchForm):
             if path_to_icon.startswith(';'):
                 path_to_icon = Path('%s/' % brain.name).resolve(path_to_icon)
             return path_to_icon
-        elif column == 'name':
+        elif column == 'abspath':
             # Name
             id = resource.get_canonical_path().get_pathto(brain.abspath)
             id = str(id)
@@ -722,7 +722,7 @@ class Folder_PreviewContent(Folder_BrowseContent):
                         row['checkbox'] = True
                         row['id'] = value
                         row['checked'] = checked
-                elif name == 'name':
+                elif name == 'abspath':
                     if type(value) is tuple:
                         value, href = value
                         href = get_reference(href)
