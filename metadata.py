@@ -35,7 +35,7 @@ multilingual_datatype = String(multiple=False, multilingual=True)
 # FIXME This list is hardcoded, we should have a way to extend or change it
 metadata_parameters = {
     'lang': String(multiple=False),
-    'date': DateTime(multitple=False),
+    'date': DateTime(multiple=False),
     'author': String(multiple=False)}
 
 
