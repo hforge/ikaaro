@@ -371,6 +371,7 @@ class Issue(Folder):
         # Comments / Files
         for record in history.records:
             comment = history.get_record_value(record, 'comment')
+            # FIXME Translate date to UTC
             date = history.get_record_value(record, 'datetime')
             author = history.get_record_value(record, 'username')
             comment = Property(comment, date=date, author=author)
