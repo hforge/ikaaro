@@ -3,7 +3,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: es\n"
-"POT-Creation-Date: 2010-05-03 17:05+CET\n"
+"POT-Creation-Date: 2010-06-10 13:06+CET\n"
 "PO-Revision-Date: 2006-12-06 16:23+0100\n"
 "Last-Translator: J. David Ibáñez <jdavid@itaapy.com>\n"
 "Language-Team: Spanish\n"
@@ -280,11 +280,6 @@ msgid ""
 "g>  <g id='7'>${option/value}</g> (${image_width}x${image_height})"
 msgstr ""
 
-#: ../ui/file/externaledit.xml.en:13
-msgctxt "link"
-msgid "<g id='1'>Download External Editor for Windows</g>."
-msgstr ""
-
 #: ../tracker/ui/weekly_template.xml.en:9
 msgctxt "link"
 msgid ""
@@ -381,11 +376,6 @@ msgstr ""
 msgctxt "button"
 msgid "<g id='2'>Change default</g>  <g id='3'>Remove</g>"
 msgstr "<g id='6'>Identificarse</g>  <g id='7'>Registrarse</g>"
-
-#: ../ui/file/externaledit.xml.en:16
-msgctxt "link"
-msgid "<g id='2'>Download External Editor for Unix and MacOSX</g>."
-msgstr ""
 
 #: ../ui/website/security_policy.xml.en:13
 msgctxt "label"
@@ -773,11 +763,6 @@ msgstr ""
 msgid "Basque"
 msgstr ""
 
-#: ../ui/file/externaledit.xml.en:9
-msgctxt "paragraph"
-msgid "Be sure your have the external editor plug-in installed."
-msgstr ""
-
 #: ../ui/revisions/changes.xml.en:33
 msgctxt "table cell"
 msgid "Before"
@@ -930,7 +915,7 @@ msgstr "Modificar clave de acceso."
 msgid "Changes"
 msgstr "Modificar"
 
-#: ../ui/file/externaledit.xml.en:24
+#: ../ui/file/externaledit.xml.en:32
 msgctxt "label"
 msgid "Character encoding"
 msgstr ""
@@ -944,7 +929,7 @@ msgctxt "option"
 msgid "Choose a language"
 msgstr "Elije un idioma"
 
-#: ../user.py:162
+#: ../user.py:160
 #, fuzzy
 msgid "Choose a new password"
 msgstr "Modificar clave de acceso"
@@ -1058,12 +1043,19 @@ msgstr ""
 msgid "Configure the website email options"
 msgstr ""
 
+#: ../ui/file/externaledit.xml.en:23
+msgctxt "li"
+msgid ""
+"Configure your browser so it uses the <g id='5'>restedit.py</g> script to "
+"open web pages with the <g id='6'>application/x-restedit</g> mimetype"
+msgstr ""
+
 #: ../ui/user/edit_password.xml.en:15
 msgctxt "label"
 msgid "Confirm"
 msgstr ""
 
-#: ../user.py:153
+#: ../user.py:151
 msgid "Confirmation required"
 msgstr ""
 
@@ -1105,6 +1097,11 @@ msgstr "Contenido"
 #: ../buttons.py:71
 msgid "Copy"
 msgstr "Copiar"
+
+#: ../ui/file/externaledit.xml.en:20
+msgctxt "li"
+msgid "Copy the <g id='4'>restedit.py</g> script somewhere"
+msgstr ""
 
 #: ../wiki/ui/help_odt.xml.en:71
 msgctxt "li"
@@ -1254,8 +1251,13 @@ msgstr ""
 msgid "Domain"
 msgstr ""
 
-#: ../file_views.py:120 ../file_views.py:145
+#: ../file_views.py:119 ../file_views.py:144
 msgid "Download"
+msgstr ""
+
+#: ../ui/file/externaledit.xml.en:13
+msgctxt "li"
+msgid "Download <g id='2'>restedit</g>"
 msgstr ""
 
 #: ../future/dressable.py:145
@@ -1482,11 +1484,11 @@ msgctxt "legend"
 msgid "Export to Text:"
 msgstr "Exportar a texto:"
 
-#: ../file_views.py:232
+#: ../file_views.py:231
 msgid "External Editor"
 msgstr "Editor Externo"
 
-#: ../ui/file/externaledit.xml.en:32
+#: ../ui/file/externaledit.xml.en:39
 msgctxt "button"
 msgid "External Editor..."
 msgstr "Editor externo..."
@@ -1495,7 +1497,7 @@ msgstr "Editor externo..."
 msgid "Failed to load the file, may contain errors."
 msgstr ""
 
-#: ../file_views.py:199
+#: ../file_views.py:198
 msgid "Failed to load the file: {error}"
 msgstr ""
 
@@ -1503,7 +1505,7 @@ msgstr ""
 msgid "February"
 msgstr ""
 
-#: ../file_views.py:58 ../file.py:51
+#: ../file_views.py:57 ../file.py:51
 msgid "File"
 msgstr "Fichero"
 
@@ -1530,7 +1532,7 @@ msgstr ""
 msgid "Flash Document"
 msgstr "Documento Flash"
 
-#: ../folder.py:42
+#: ../folder.py:44
 msgid "Folder"
 msgstr "Carpeta"
 
@@ -1586,7 +1588,7 @@ msgctxt "table cell"
 msgid "From"
 msgstr "Formato:"
 
-#: ../wiki/folder.py:51 ../folder_views.py:828
+#: ../wiki/folder.py:51 ../folder_views.py:831
 msgid "Front Page"
 msgstr ""
 
@@ -1757,11 +1759,6 @@ msgstr ""
 #: ../ui/root/internal_server_error.xml.en:11
 msgctxt "paragraph"
 msgid "If the error persists contact with the system administrator."
-msgstr ""
-
-#: ../ui/file/externaledit.xml.en:9
-msgctxt "paragraph"
-msgid "If you don't, you can download it from a link below."
 msgstr ""
 
 #: ../file.py:215
@@ -2126,7 +2123,7 @@ msgctxt "li"
 msgid "Multiple web sites in one instance, with separate access rights."
 msgstr ""
 
-#: ../views_new.py:65 ../file_views.py:57 ../folder_views.py:245
+#: ../views_new.py:65 ../file_views.py:56 ../folder_views.py:245
 #: ../views.py:378
 msgid "Name"
 msgstr "Nombre"
@@ -2230,7 +2227,7 @@ msgstr ""
 msgid "No page found to export."
 msgstr "selecciona las columnas a exportar"
 
-#: ../messages.py:84
+#: ../messages.py:82
 msgid "No resource allowed."
 msgstr ""
 
@@ -2239,7 +2236,7 @@ msgstr ""
 msgid "No resource removed."
 msgstr "Objetos renombrados."
 
-#: ../messages.py:82
+#: ../messages.py:80
 #, fuzzy
 msgid "No resource selected."
 msgstr "No se ha seleccionado ningún objeto."
@@ -2262,7 +2259,7 @@ msgstr ""
 msgid "Nothing to change."
 msgstr "Nada para cambiar."
 
-#: ../messages.py:86
+#: ../messages.py:84
 #, fuzzy
 msgid "Nothing to paste."
 msgstr "Nada para cambiar."
@@ -2327,6 +2324,11 @@ msgstr ""
 #: ../wiki/ui/help_odt.xml.en:56
 msgctxt "pre"
 msgid "On multiple lines..."
+msgstr ""
+
+#: ../ui/file/externaledit.xml.en:28
+msgctxt "paragraph"
+msgid "Once <g id='7'>restedit</g> is installed, just click the button below:"
 msgstr ""
 
 #: ../ui/website/security_policy.xml.en:15
@@ -2427,11 +2429,11 @@ msgctxt "title attribute"
 msgid "Ordered list"
 msgstr "Lista Ordenada"
 
-#: ../folder.py:43
+#: ../folder.py:45
 msgid "Organize your files and documents with folders."
 msgstr ""
 
-#: ../folder_views.py:751
+#: ../folder_views.py:754
 msgid "Orphans"
 msgstr ""
 
@@ -2585,7 +2587,7 @@ msgstr ""
 msgid "Preview"
 msgstr "Revisor"
 
-#: ../folder_views.py:587
+#: ../folder_views.py:590
 msgid "Preview Content"
 msgstr "Previsualizar el Contenido"
 
@@ -2816,12 +2818,12 @@ msgstr "Objetos suprimidos: $objects"
 msgid "Resources assigned to issues"
 msgstr ""
 
-#: ../messages.py:90
+#: ../messages.py:88
 #, fuzzy
 msgid "Resources copied."
 msgstr "Nuevo Recurso"
 
-#: ../messages.py:92
+#: ../messages.py:90
 #, fuzzy
 msgid "Resources cut."
 msgstr "Nuevo Recurso"
@@ -2861,7 +2863,7 @@ msgstr "Objetos renombrados."
 msgid "Resources pasted: {resources}."
 msgstr "Objetos suprimidos: $objects"
 
-#: ../messages.py:94
+#: ../messages.py:92
 #, fuzzy
 msgid "Resources published."
 msgstr "Nuevo Recurso"
@@ -2871,12 +2873,12 @@ msgstr "Nuevo Recurso"
 msgid "Resources removed: {resources}."
 msgstr "Objetos suprimidos: $objects"
 
-#: ../messages.py:88
+#: ../messages.py:86
 #, fuzzy
 msgid "Resources renamed."
 msgstr "Objetos renombrados."
 
-#: ../messages.py:96
+#: ../messages.py:94
 #, fuzzy
 msgid "Resources retired."
 msgstr "Objetos renombrados."
@@ -3027,7 +3029,7 @@ msgstr ""
 msgid "Set your preferred language."
 msgstr ""
 
-#: ../folder_views.py:753
+#: ../folder_views.py:756
 msgid "Show resources not linked from anywhere."
 msgstr ""
 
@@ -3278,7 +3280,7 @@ msgstr ""
 msgid "The password is wrong."
 msgstr ""
 
-#: ../messages.py:76
+#: ../messages.py:74
 #, fuzzy
 msgid "The provided passwords do not match."
 msgstr "Las claves de acceso no concuerdan."
@@ -3393,14 +3395,6 @@ msgstr ""
 msgid "There is not an \"index\" web page. Could not render this view."
 msgstr ""
 
-#: ../file_views.py:278
-msgid "This page is locked by another user"
-msgstr ""
-
-#: ../messages.py:74
-msgid "This page is locked by {user}"
-msgstr ""
-
 #: ../ui/root/license.xml.en:15
 msgctxt "paragraph"
 msgid ""
@@ -3486,7 +3480,7 @@ msgstr ""
 msgid "To add an event, click on + symbol from the views."
 msgstr ""
 
-#: ../user.py:163
+#: ../user.py:161
 msgid ""
 "To choose a new password, click the link:\n"
 "\n"
@@ -3502,7 +3496,7 @@ msgstr ""
 msgid "To confirm these changes, you must type your password"
 msgstr ""
 
-#: ../user.py:154
+#: ../user.py:152
 msgid ""
 "To confirm your identity, click the link:\n"
 "\n"
@@ -3515,6 +3509,13 @@ msgctxt "paragraph"
 msgid "To download this file, click on <g id='1'>${filename}</g>"
 msgstr ""
 
+#: ../ui/file/externaledit.xml.en:8
+msgctxt "paragraph"
+msgid ""
+"To edit this file with your preferred desktop application, first you need to "
+"install <g id='1'>restedit</g>:"
+msgstr ""
+
 #: ../ui/root/about.xml.en:43
 msgctxt "paragraph"
 msgid "To learn more visit the project's <g id='3'>Web Site</g>."
@@ -3524,7 +3525,7 @@ msgstr ""
 msgid "To manage bugs and tasks"
 msgstr ""
 
-#: ../user.py:299
+#: ../user.py:297
 msgid "To manage the users please go <a href=\"/;browse_users\">here</a>."
 msgstr ""
 
@@ -3590,7 +3591,7 @@ msgstr "Tipo:"
 msgid "UI"
 msgstr ""
 
-#: ../messages.py:98
+#: ../messages.py:96
 msgid "Unexpected file of mimetype {mimetype}."
 msgstr ""
 
@@ -3608,6 +3609,11 @@ msgstr "Lista Ordenada"
 msgctxt "title attribute"
 msgid "Unordered list"
 msgstr "Lista Ordenada"
+
+#: ../ui/file/externaledit.xml.en:17
+msgctxt "li"
+msgid "Unpack the tarball <g id='3'>restedit-1.0.0.tar.gz</g>"
+msgstr ""
 
 #: ../buttons.py:127
 #, fuzzy
@@ -3629,7 +3635,7 @@ msgstr ""
 msgid "Upgrade to version %s"
 msgstr ""
 
-#: ../file_views.py:59
+#: ../file_views.py:58
 msgid "Upload"
 msgstr ""
 
@@ -3644,7 +3650,7 @@ msgctxt "legend"
 msgid "Upload"
 msgstr ""
 
-#: ../file_views.py:50
+#: ../file_views.py:49
 msgid "Upload File"
 msgstr ""
 
@@ -3688,7 +3694,7 @@ msgctxt "table cell"
 msgid "User"
 msgstr "Usuario"
 
-#: ../user.py:232
+#: ../user.py:230
 #, fuzzy
 msgid "User Folder"
 msgstr "Carpeta"
@@ -3739,7 +3745,7 @@ msgctxt "table cell"
 msgid "Version"
 msgstr "Permisos"
 
-#: ../calendar/calendar_views.py:1128 ../file_views.py:225
+#: ../calendar/calendar_views.py:1128 ../file_views.py:224
 #, fuzzy
 msgid "Version uploaded"
 msgstr "Versión editada."
@@ -3771,9 +3777,9 @@ msgstr ""
 msgid "Video"
 msgstr ""
 
-#: ../file_views.py:339 ../file_views.py:431 ../file_views.py:443
-#: ../file_views.py:457 ../text_views.py:69 ../text_views.py:143
-#: ../tracker/tracker_views.py:265 ../user.py:297 ../table_views.py:42
+#: ../file_views.py:335 ../file_views.py:427 ../file_views.py:439
+#: ../file_views.py:453 ../text_views.py:69 ../text_views.py:143
+#: ../tracker/tracker_views.py:265 ../user.py:295 ../table_views.py:42
 #: ../wiki/page_views.py:252 ../future/order.py:247 ../future/order.py:277
 #: ../forum/forum.py:43 ../webpage.py:156 ../forum/thread.py:41
 #: ../folder_views.py:86 ../future/menu.py:581 ../future/dressable.py:94
@@ -3897,13 +3903,6 @@ msgctxt "dt"
 msgid "You can do the following actions:"
 msgstr "Usted puede realizar las siguientes acciones:"
 
-#: ../ui/file/externaledit.xml.en:7
-msgctxt "paragraph"
-msgid ""
-"You can edit this document using an application from your desktop, like MS "
-"Office or OpenOffice.org."
-msgstr ""
-
 #: ../wiki/ui/help_odt.xml.en:48
 msgctxt "paragraph"
 msgid "You can export several wiki pages into a single ODT."
@@ -3937,17 +3936,10 @@ msgstr ""
 msgid "You cannot remove yourself."
 msgstr ""
 
-#: ../messages.py:79
+#: ../messages.py:77
 msgid ""
 "You have already confirmed your registration. Try to log in or ask for a new "
 "password."
-msgstr ""
-
-#: ../ui/file/externaledit.xml.en:20
-msgctxt "paragraph"
-msgid ""
-"You may need to change the character encoding if your application doesn't "
-"support UTF-8 (not recommended)."
 msgstr ""
 
 #: ../user_views.py:203 ../user_views.py:295
@@ -4150,7 +4142,7 @@ msgstr ""
 msgid "{field}: {old_value}{new_value}"
 msgstr ""
 
-#: ../folder.py:280
+#: ../folder.py:285
 msgid "{n} obs"
 msgstr ""
 

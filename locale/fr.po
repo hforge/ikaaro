@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-03 17:05+CET\n"
+"POT-Creation-Date: 2010-06-10 13:06+CET\n"
 "PO-Revision-Date: 2010-04-20 11:30+0200\n"
 "Last-Translator: Hervé Cauwelier <herve@itaapy.com>\n"
 "Language-Team: Itaapy\n"
@@ -307,11 +307,6 @@ msgstr ""
 "<g id='1'><x id='2'/></g>  <g id='3'><x id='4'/></g>  <g id='5'><x id='6'/></"
 "g>  <g id='7'>${option/value}</g> (${image_width}x${image_height})"
 
-#: ../ui/file/externaledit.xml.en:13
-msgctxt "link"
-msgid "<g id='1'>Download External Editor for Windows</g>."
-msgstr "<g id='1'>Télécharger l'éditeur externe pour Windows</g>."
-
 #: ../tracker/ui/weekly_template.xml.en:9
 msgctxt "link"
 msgid ""
@@ -410,11 +405,6 @@ msgstr ""
 msgctxt "button"
 msgid "<g id='2'>Change default</g>  <g id='3'>Remove</g>"
 msgstr "<g id='2'>Changer la valeur par défaut</g>  <g id='3'>Supprimer</g>"
-
-#: ../ui/file/externaledit.xml.en:16
-msgctxt "link"
-msgid "<g id='2'>Download External Editor for Unix and MacOSX</g>."
-msgstr "<g id='2'>Télécharger l'éditeur externe pour Unix et MacOSX</g>."
 
 #: ../ui/website/security_policy.xml.en:13
 msgctxt "label"
@@ -810,12 +800,6 @@ msgstr "Rétroliens"
 msgid "Basque"
 msgstr "Basque"
 
-#: ../ui/file/externaledit.xml.en:9
-msgctxt "paragraph"
-msgid "Be sure your have the external editor plug-in installed."
-msgstr ""
-"Assurez-vous d'avoir l'extension «&nbsp;éditeur externe&nbsp;» installée."
-
 #: ../ui/revisions/changes.xml.en:33
 msgctxt "table cell"
 msgid "Before"
@@ -962,7 +946,7 @@ msgstr "Modifiez votre mot de passe."
 msgid "Changes"
 msgstr "Modifications"
 
-#: ../ui/file/externaledit.xml.en:24
+#: ../ui/file/externaledit.xml.en:32
 msgctxt "label"
 msgid "Character encoding"
 msgstr "Codage des caractères"
@@ -976,7 +960,7 @@ msgctxt "option"
 msgid "Choose a language"
 msgstr "Choisissez une langue"
 
-#: ../user.py:162
+#: ../user.py:160
 msgid "Choose a new password"
 msgstr "Choisissez un nouveau mot de passe"
 
@@ -1084,12 +1068,19 @@ msgstr "Commit {commit} non trouvé"
 msgid "Configure the website email options"
 msgstr "Configurer les options de courriel du site web"
 
+#: ../ui/file/externaledit.xml.en:23
+msgctxt "li"
+msgid ""
+"Configure your browser so it uses the <g id='5'>restedit.py</g> script to "
+"open web pages with the <g id='6'>application/x-restedit</g> mimetype"
+msgstr ""
+
 #: ../ui/user/edit_password.xml.en:15
 msgctxt "label"
 msgid "Confirm"
 msgstr "Confirmation"
 
-#: ../user.py:153
+#: ../user.py:151
 msgid "Confirmation required"
 msgstr "Confirmation requise"
 
@@ -1129,6 +1120,11 @@ msgstr "Convertir"
 #: ../buttons.py:71
 msgid "Copy"
 msgstr "Copier"
+
+#: ../ui/file/externaledit.xml.en:20
+msgctxt "li"
+msgid "Copy the <g id='4'>restedit.py</g> script somewhere"
+msgstr ""
 
 #: ../wiki/ui/help_odt.xml.en:71
 msgctxt "li"
@@ -1279,9 +1275,15 @@ msgstr "Gestion de documents."
 msgid "Domain"
 msgstr "Domaine"
 
-#: ../file_views.py:120 ../file_views.py:145
+#: ../file_views.py:119 ../file_views.py:144
 msgid "Download"
 msgstr "Télécharger"
+
+#: ../ui/file/externaledit.xml.en:13
+#, fuzzy
+msgctxt "li"
+msgid "Download <g id='2'>restedit</g>"
+msgstr "Consultez les <g id='9'>crédits</g>&nbsp;;"
 
 #: ../future/dressable.py:145
 msgid "Dressable"
@@ -1496,11 +1498,11 @@ msgctxt "legend"
 msgid "Export to Text:"
 msgstr "Exporter en texte&nbsp;:"
 
-#: ../file_views.py:232
+#: ../file_views.py:231
 msgid "External Editor"
 msgstr "Éditeur externe"
 
-#: ../ui/file/externaledit.xml.en:32
+#: ../ui/file/externaledit.xml.en:39
 msgctxt "button"
 msgid "External Editor..."
 msgstr "Éditeur externe..."
@@ -1509,7 +1511,7 @@ msgstr "Éditeur externe..."
 msgid "Failed to load the file, may contain errors."
 msgstr "Échec lors du chargement du fichier, il doit contenir des erreurs."
 
-#: ../file_views.py:199
+#: ../file_views.py:198
 msgid "Failed to load the file: {error}"
 msgstr "Échec lors du chargement du fichier&nbsp;: {error}"
 
@@ -1517,7 +1519,7 @@ msgstr "Échec lors du chargement du fichier&nbsp;: {error}"
 msgid "February"
 msgstr "Février"
 
-#: ../file_views.py:58 ../file.py:51
+#: ../file_views.py:57 ../file.py:51
 msgid "File"
 msgstr "Fichier"
 
@@ -1543,7 +1545,7 @@ msgstr "Animation Flash"
 msgid "Flash Document"
 msgstr "Animation au format Flash"
 
-#: ../folder.py:42
+#: ../folder.py:44
 msgid "Folder"
 msgstr "Dossier"
 
@@ -1598,7 +1600,7 @@ msgctxt "table cell"
 msgid "From"
 msgstr "À partir de"
 
-#: ../wiki/folder.py:51 ../folder_views.py:828
+#: ../wiki/folder.py:51 ../folder_views.py:831
 msgid "Front Page"
 msgstr "Accueil"
 
@@ -1770,11 +1772,6 @@ msgstr "Sinon, cf. <g id='1'>http://www.gnu.org/licenses/</g>."
 msgctxt "paragraph"
 msgid "If the error persists contact with the system administrator."
 msgstr "Si l'erreur persiste, contactez l'administrateur du site."
-
-#: ../ui/file/externaledit.xml.en:9
-msgctxt "paragraph"
-msgid "If you don't, you can download it from a link below."
-msgstr "Sinon, vous pouvez le télécharger ci-dessous."
 
 #: ../file.py:215
 msgid "Image"
@@ -2128,7 +2125,7 @@ msgstr ""
 "Plusieurs sites web dans une seule instance, avec des droits d'accès "
 "cloisonnés"
 
-#: ../views_new.py:65 ../file_views.py:57 ../folder_views.py:245
+#: ../views_new.py:65 ../file_views.py:56 ../folder_views.py:245
 #: ../views.py:378
 msgid "Name"
 msgstr "Nom"
@@ -2220,7 +2217,7 @@ msgstr "Rien dans l'historique."
 msgid "No page found to export."
 msgstr "Aucune page à exporter."
 
-#: ../messages.py:84
+#: ../messages.py:82
 msgid "No resource allowed."
 msgstr "Aucune ressource n'a de permission."
 
@@ -2228,7 +2225,7 @@ msgstr "Aucune ressource n'a de permission."
 msgid "No resource removed."
 msgstr "Aucune ressource supprimée."
 
-#: ../messages.py:82
+#: ../messages.py:80
 msgid "No resource selected."
 msgstr "Aucune ressource sélectionnée."
 
@@ -2250,7 +2247,7 @@ msgstr "Notez que ni le nom ni le titre ne changeront."
 msgid "Nothing to change."
 msgstr "Rien à changer."
 
-#: ../messages.py:86
+#: ../messages.py:84
 msgid "Nothing to paste."
 msgstr "Rien à coller."
 
@@ -2317,6 +2314,11 @@ msgstr ""
 msgctxt "pre"
 msgid "On multiple lines..."
 msgstr "Sur plusieurs lignes..."
+
+#: ../ui/file/externaledit.xml.en:28
+msgctxt "paragraph"
+msgid "Once <g id='7'>restedit</g> is installed, just click the button below:"
+msgstr ""
 
 #: ../ui/website/security_policy.xml.en:15
 msgctxt "paragraph"
@@ -2410,11 +2412,11 @@ msgctxt "title attribute"
 msgid "Ordered list"
 msgstr "Liste ordonnée"
 
-#: ../folder.py:43
+#: ../folder.py:45
 msgid "Organize your files and documents with folders."
 msgstr "Organisez vos fichiers et documents dans des dossiers."
 
-#: ../folder_views.py:751
+#: ../folder_views.py:754
 msgid "Orphans"
 msgstr "Orphelins"
 
@@ -2564,7 +2566,7 @@ msgstr "Pré-requis"
 msgid "Preview"
 msgstr "Aperçu"
 
-#: ../folder_views.py:587
+#: ../folder_views.py:590
 msgid "Preview Content"
 msgstr "Aperçu"
 
@@ -2777,11 +2779,11 @@ msgstr "Ressources déjà dans les éléments ordonnés&nbsp;: {resources}."
 msgid "Resources assigned to issues"
 msgstr "Ressources assignées aux fiches"
 
-#: ../messages.py:90
+#: ../messages.py:88
 msgid "Resources copied."
 msgstr "Ressources copiée."
 
-#: ../messages.py:92
+#: ../messages.py:90
 msgid "Resources cut."
 msgstr "Ressources coupées."
 
@@ -2813,7 +2815,7 @@ msgstr "Ressources montées."
 msgid "Resources pasted: {resources}."
 msgstr "Ressources collées&nbsp;: {resources}."
 
-#: ../messages.py:94
+#: ../messages.py:92
 msgid "Resources published."
 msgstr "Ressources publiées."
 
@@ -2821,11 +2823,11 @@ msgstr "Ressources publiées."
 msgid "Resources removed: {resources}."
 msgstr "Ressources supprimées&nbsp;: {resources}."
 
-#: ../messages.py:88
+#: ../messages.py:86
 msgid "Resources renamed."
 msgstr "Ressources renommés."
 
-#: ../messages.py:96
+#: ../messages.py:94
 msgid "Resources retired."
 msgstr "Ressources dépubliées."
 
@@ -2961,7 +2963,7 @@ msgstr "Septembre"
 msgid "Set your preferred language."
 msgstr "Choisissez votre langue"
 
-#: ../folder_views.py:753
+#: ../folder_views.py:756
 msgid "Show resources not linked from anywhere."
 msgstr "Montrer les ressources qui ne sont liées à rien."
 
@@ -3198,7 +3200,7 @@ msgstr "Le document original ne sera modifié en aucune façon."
 msgid "The password is wrong."
 msgstr "Le mot de passe est incorrect."
 
-#: ../messages.py:76
+#: ../messages.py:74
 msgid "The provided passwords do not match."
 msgstr "Les mots de passe ne correspondent pas."
 
@@ -3305,14 +3307,6 @@ msgstr "Il n'existe pas d'utilisateur « {username} »."
 msgid "There is not an \"index\" web page. Could not render this view."
 msgstr "Impossible d'affiche une page «&nbsp;index&nbsp;» inexistante."
 
-#: ../file_views.py:278
-msgid "This page is locked by another user"
-msgstr "Cette page est verrouillée par un autre utilisateur"
-
-#: ../messages.py:74
-msgid "This page is locked by {user}"
-msgstr "Cette page est verrouillée par {user}"
-
 #: ../ui/root/license.xml.en:15
 msgctxt "paragraph"
 msgid ""
@@ -3394,7 +3388,7 @@ msgstr "Pour activer votre compte, vous devez saisir un mot de passe."
 msgid "To add an event, click on + symbol from the views."
 msgstr "Pour ajouter un événement, cliquez sur le symbole + dans les vues."
 
-#: ../user.py:163
+#: ../user.py:161
 msgid ""
 "To choose a new password, click the link:\n"
 "\n"
@@ -3414,7 +3408,7 @@ msgstr ""
 msgid "To confirm these changes, you must type your password"
 msgstr "Pour confirmez vos changements, vous devez saisir votre mot de passe"
 
-#: ../user.py:154
+#: ../user.py:152
 msgid ""
 "To confirm your identity, click the link:\n"
 "\n"
@@ -3430,6 +3424,13 @@ msgctxt "paragraph"
 msgid "To download this file, click on <g id='1'>${filename}</g>"
 msgstr "Pour télécharger ce fichier, cliquez sur <g id='1'>${filename}</g>"
 
+#: ../ui/file/externaledit.xml.en:8
+msgctxt "paragraph"
+msgid ""
+"To edit this file with your preferred desktop application, first you need to "
+"install <g id='1'>restedit</g>:"
+msgstr ""
+
 #: ../ui/root/about.xml.en:43
 msgctxt "paragraph"
 msgid "To learn more visit the project's <g id='3'>Web Site</g>."
@@ -3440,7 +3441,7 @@ msgstr ""
 msgid "To manage bugs and tasks"
 msgstr "Pour gérer les bugs et les tâches"
 
-#: ../user.py:299
+#: ../user.py:297
 msgid "To manage the users please go <a href=\"/;browse_users\">here</a>."
 msgstr ""
 "Pour gérer les utilisateurs, merci d'aller <a href=\"/;browse_users\">ici</"
@@ -3509,7 +3510,7 @@ msgstr "Type&nbsp;:"
 msgid "UI"
 msgstr "UI"
 
-#: ../messages.py:98
+#: ../messages.py:96
 msgid "Unexpected file of mimetype {mimetype}."
 msgstr "Fichier de type mime «&nbsp;{mimetype}&nbsp;» inattendu."
 
@@ -3525,6 +3526,11 @@ msgstr "Ressources non-ordonnées"
 msgctxt "title attribute"
 msgid "Unordered list"
 msgstr "Liste à puces"
+
+#: ../ui/file/externaledit.xml.en:17
+msgctxt "li"
+msgid "Unpack the tarball <g id='3'>restedit-1.0.0.tar.gz</g>"
+msgstr ""
 
 #: ../buttons.py:127
 msgid "Unpublish"
@@ -3544,7 +3550,7 @@ msgstr "Mettre à jour l'export texte"
 msgid "Upgrade to version %s"
 msgstr "Mise à jour vers la version %s"
 
-#: ../file_views.py:59
+#: ../file_views.py:58
 msgid "Upload"
 msgstr "Importer"
 
@@ -3559,7 +3565,7 @@ msgctxt "legend"
 msgid "Upload"
 msgstr "Importer"
 
-#: ../file_views.py:50
+#: ../file_views.py:49
 msgid "Upload File"
 msgstr "Importer un fichier"
 
@@ -3602,7 +3608,7 @@ msgctxt "table cell"
 msgid "User"
 msgstr "Utilisateur"
 
-#: ../user.py:232
+#: ../user.py:230
 msgid "User Folder"
 msgstr "Dossier utilisateur"
 
@@ -3650,7 +3656,7 @@ msgctxt "table cell"
 msgid "Version"
 msgstr "Version"
 
-#: ../calendar/calendar_views.py:1128 ../file_views.py:225
+#: ../calendar/calendar_views.py:1128 ../file_views.py:224
 msgid "Version uploaded"
 msgstr "Version chargée"
 
@@ -3679,9 +3685,9 @@ msgstr "${vhosts}"
 msgid "Video"
 msgstr "Vidéo"
 
-#: ../file_views.py:339 ../file_views.py:431 ../file_views.py:443
-#: ../file_views.py:457 ../text_views.py:69 ../text_views.py:143
-#: ../tracker/tracker_views.py:265 ../user.py:297 ../table_views.py:42
+#: ../file_views.py:335 ../file_views.py:427 ../file_views.py:439
+#: ../file_views.py:453 ../text_views.py:69 ../text_views.py:143
+#: ../tracker/tracker_views.py:265 ../user.py:295 ../table_views.py:42
 #: ../wiki/page_views.py:252 ../future/order.py:247 ../future/order.py:277
 #: ../forum/forum.py:43 ../webpage.py:156 ../forum/thread.py:41
 #: ../folder_views.py:86 ../future/menu.py:581 ../future/dressable.py:94
@@ -3806,15 +3812,6 @@ msgctxt "dt"
 msgid "You can do the following actions:"
 msgstr "Vous pouvez réaliser les actions suivantes&nbsp;:"
 
-#: ../ui/file/externaledit.xml.en:7
-msgctxt "paragraph"
-msgid ""
-"You can edit this document using an application from your desktop, like MS "
-"Office or OpenOffice.org."
-msgstr ""
-"Vous pouvez modifier ce document à l'aide d'une application de votre "
-"ordinateur, comme MS Office ou OpenOffice.org."
-
 #: ../wiki/ui/help_odt.xml.en:48
 msgctxt "paragraph"
 msgid "You can export several wiki pages into a single ODT."
@@ -3852,22 +3849,13 @@ msgstr "Vous ne pouvez dégrader vos propres droits."
 msgid "You cannot remove yourself."
 msgstr "Vous ne pouvez pas vous supprimer vous-même."
 
-#: ../messages.py:79
+#: ../messages.py:77
 msgid ""
 "You have already confirmed your registration. Try to log in or ask for a new "
 "password."
 msgstr ""
 "Vous avez déjà confirmé votre inscription. Essayez de vous connecter ou bien "
 "demandez un nouveau mot de passe."
-
-#: ../ui/file/externaledit.xml.en:20
-msgctxt "paragraph"
-msgid ""
-"You may need to change the character encoding if your application doesn't "
-"support UTF-8 (not recommended)."
-msgstr ""
-"Vous pourriez avoir besoin de changer le codage des caractères si votre "
-"application ne prend pas en charge UTF-8 (non recommandé)."
 
 #: ../user_views.py:203 ../user_views.py:295
 msgid "You mistyped your actual password, your account is not changed."
@@ -4083,7 +4071,7 @@ msgstr "{field}: {old_value} vers {new_value}"
 msgid "{field}: {old_value}{new_value}"
 msgstr "{field}: {old_value}{new_value}"
 
-#: ../folder.py:280
+#: ../folder.py:285
 msgid "{n} obs"
 msgstr "{n} res."
 
@@ -4855,6 +4843,10 @@ msgstr "⇒ ${item/parent_path}"
 #~ "<g id='1'> itools <g id='2'>${itools_version}</g>  </g>  <x id='3'/>  <g "
 #~ "id='4'> iKaaro <g id='5'>${ikaaro_version}</g>  </g>"
 
+#~ msgctxt "link"
+#~ msgid "<g id='1'>Download External Editor for Windows</g>."
+#~ msgstr "<g id='1'>Télécharger l'éditeur externe pour Windows</g>."
+
 #~ msgctxt "abbr"
 #~ msgid ""
 #~ "<g id='12'>${item/short_title}</g><x id='13'/>  <g id='14'> Select </g>"
@@ -4879,6 +4871,10 @@ msgstr "⇒ ${item/parent_path}"
 #~ msgstr ""
 #~ "<g id='2'>Parcourir</g>  <g id='3'>Lien Externe</g>  <g id='4'>Importer</"
 #~ "g>"
+
+#~ msgctxt "link"
+#~ msgid "<g id='2'>Download External Editor for Unix and MacOSX</g>."
+#~ msgstr "<g id='2'>Télécharger l'éditeur externe pour Unix et MacOSX</g>."
 
 #~ msgctxt "link to"
 #~ msgid ""
@@ -5143,6 +5139,11 @@ msgstr "⇒ ${item/parent_path}"
 #~ msgid "BP:"
 #~ msgstr "BP :"
 
+#~ msgctxt "paragraph"
+#~ msgid "Be sure your have the external editor plug-in installed."
+#~ msgstr ""
+#~ "Assurez-vous d'avoir l'extension «&nbsp;éditeur externe&nbsp;» installée."
+
 #~ msgctxt "th"
 #~ msgid "Browse Content"
 #~ msgstr "Parcourir"
@@ -5188,10 +5189,6 @@ msgstr "⇒ ${item/parent_path}"
 #~ msgctxt "li"
 #~ msgid "Check the <g id='8'>License</g>;"
 #~ msgstr "Consultez la <g id='8'>licence</g>&nbsp;;"
-
-#~ msgctxt "li"
-#~ msgid "Check the <g id='9'>Credits</g>;"
-#~ msgstr "Consultez les <g id='9'>crédits</g>&nbsp;;"
 
 #~ msgid "Child"
 #~ msgstr "Enfant"
@@ -5353,6 +5350,10 @@ msgstr "⇒ ${item/parent_path}"
 #~ msgctxt "a[title]"
 #~ msgid "Help"
 #~ msgstr "Aide"
+
+#~ msgctxt "paragraph"
+#~ msgid "If you don't, you can download it from a link below."
+#~ msgstr "Sinon, vous pouvez le télécharger ci-dessous."
 
 #~ msgctxt "li"
 #~ msgid ""
@@ -5742,6 +5743,12 @@ msgstr "⇒ ${item/parent_path}"
 #~ "Ceci est votre espace personnel où vous pouvez gérer vos propres "
 #~ "documents et les faire publier."
 
+#~ msgid "This page is locked by another user"
+#~ msgstr "Cette page est verrouillée par un autre utilisateur"
+
+#~ msgid "This page is locked by {user}"
+#~ msgstr "Cette page est verrouillée par {user}"
+
 #~ msgid "This thread already exists."
 #~ msgstr "Ce fil de discussion existe déjà."
 
@@ -5865,8 +5872,24 @@ msgstr "⇒ ${item/parent_path}"
 #~ "Vous pouvez télécharger cette image en cliquant dessus avec le bouton "
 #~ "droit et en choisissant « Enregistrer l'image sous... »."
 
+#~ msgctxt "paragraph"
+#~ msgid ""
+#~ "You can edit this document using an application from your desktop, like "
+#~ "MS Office or OpenOffice.org."
+#~ msgstr ""
+#~ "Vous pouvez modifier ce document à l'aide d'une application de votre "
+#~ "ordinateur, comme MS Office ou OpenOffice.org."
+
 #~ msgid "You have no orders yet."
 #~ msgstr "Vous n'avez pas encore de commandes."
+
+#~ msgctxt "paragraph"
+#~ msgid ""
+#~ "You may need to change the character encoding if your application doesn't "
+#~ "support UTF-8 (not recommended)."
+#~ msgstr ""
+#~ "Vous pourriez avoir besoin de changer le codage des caractères si votre "
+#~ "application ne prend pas en charge UTF-8 (non recommandé)."
 
 #~ msgid "You must choose a language"
 #~ msgstr "Vous devez choisir une langue."

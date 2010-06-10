@@ -3,7 +3,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: zh\n"
-"POT-Creation-Date: 2010-05-03 17:05+CET\n"
+"POT-Creation-Date: 2010-06-10 13:06+CET\n"
 "PO-Revision-Date: 2007-10-30 17:58+0100\n"
 "Last-Translator: Zhouli <zhouli@in-girum.net>\n"
 "Language-Team:  <zh@li.org>\n"
@@ -280,11 +280,6 @@ msgid ""
 "g>  <g id='7'>${option/value}</g> (${image_width}x${image_height})"
 msgstr ""
 
-#: ../ui/file/externaledit.xml.en:13
-msgctxt "link"
-msgid "<g id='1'>Download External Editor for Windows</g>."
-msgstr ""
-
 #: ../tracker/ui/weekly_template.xml.en:9
 msgctxt "link"
 msgid ""
@@ -368,11 +363,6 @@ msgstr ""
 #: ../ui/website/edit_languages.xml.en:33
 msgctxt "button"
 msgid "<g id='2'>Change default</g>  <g id='3'>Remove</g>"
-msgstr ""
-
-#: ../ui/file/externaledit.xml.en:16
-msgctxt "link"
-msgid "<g id='2'>Download External Editor for Unix and MacOSX</g>."
 msgstr ""
 
 #: ../ui/website/security_policy.xml.en:13
@@ -772,11 +762,6 @@ msgstr ""
 msgid "Basque"
 msgstr "巴斯克语"
 
-#: ../ui/file/externaledit.xml.en:9
-msgctxt "paragraph"
-msgid "Be sure your have the external editor plug-in installed."
-msgstr ""
-
 #: ../ui/revisions/changes.xml.en:33
 msgctxt "table cell"
 msgid "Before"
@@ -943,7 +928,7 @@ msgstr "改变内设"
 msgid "Changes"
 msgstr "改换"
 
-#: ../ui/file/externaledit.xml.en:24
+#: ../ui/file/externaledit.xml.en:32
 msgctxt "label"
 msgid "Character encoding"
 msgstr ""
@@ -958,7 +943,7 @@ msgctxt "option"
 msgid "Choose a language"
 msgstr "选择语言"
 
-#: ../user.py:162
+#: ../user.py:160
 #, fuzzy
 msgid "Choose a new password"
 msgstr "改变内设"
@@ -1078,12 +1063,19 @@ msgstr ""
 msgid "Configure the website email options"
 msgstr ""
 
+#: ../ui/file/externaledit.xml.en:23
+msgctxt "li"
+msgid ""
+"Configure your browser so it uses the <g id='5'>restedit.py</g> script to "
+"open web pages with the <g id='6'>application/x-restedit</g> mimetype"
+msgstr ""
+
 #: ../ui/user/edit_password.xml.en:15
 msgctxt "label"
 msgid "Confirm"
 msgstr ""
 
-#: ../user.py:153
+#: ../user.py:151
 msgid "Confirmation required"
 msgstr ""
 
@@ -1127,6 +1119,11 @@ msgstr "浏览"
 #: ../buttons.py:71
 msgid "Copy"
 msgstr "复制"
+
+#: ../ui/file/externaledit.xml.en:20
+msgctxt "li"
+msgid "Copy the <g id='4'>restedit.py</g> script somewhere"
+msgstr ""
 
 #: ../wiki/ui/help_odt.xml.en:71
 msgctxt "li"
@@ -1287,8 +1284,13 @@ msgstr "编辑文档"
 msgid "Domain"
 msgstr "新文件"
 
-#: ../file_views.py:120 ../file_views.py:145
+#: ../file_views.py:119 ../file_views.py:144
 msgid "Download"
+msgstr ""
+
+#: ../ui/file/externaledit.xml.en:13
+msgctxt "li"
+msgid "Download <g id='2'>restedit</g>"
 msgstr ""
 
 #: ../future/dressable.py:145
@@ -1533,12 +1535,12 @@ msgctxt "legend"
 msgid "Export to Text:"
 msgstr "简易文件"
 
-#: ../file_views.py:232
+#: ../file_views.py:231
 #, fuzzy
 msgid "External Editor"
 msgstr "外部"
 
-#: ../ui/file/externaledit.xml.en:32
+#: ../ui/file/externaledit.xml.en:39
 #, fuzzy
 msgctxt "button"
 msgid "External Editor..."
@@ -1548,7 +1550,7 @@ msgstr "外部"
 msgid "Failed to load the file, may contain errors."
 msgstr ""
 
-#: ../file_views.py:199
+#: ../file_views.py:198
 msgid "Failed to load the file: {error}"
 msgstr ""
 
@@ -1556,7 +1558,7 @@ msgstr ""
 msgid "February"
 msgstr ""
 
-#: ../file_views.py:58 ../file.py:51
+#: ../file_views.py:57 ../file.py:51
 msgid "File"
 msgstr ""
 
@@ -1585,7 +1587,7 @@ msgstr ""
 msgid "Flash Document"
 msgstr "新文件"
 
-#: ../folder.py:42
+#: ../folder.py:44
 msgid "Folder"
 msgstr "文件夹"
 
@@ -1648,7 +1650,7 @@ msgctxt "table cell"
 msgid "From"
 msgstr "格式"
 
-#: ../wiki/folder.py:51 ../folder_views.py:828
+#: ../wiki/folder.py:51 ../folder_views.py:831
 msgid "Front Page"
 msgstr ""
 
@@ -1827,11 +1829,6 @@ msgstr ""
 #: ../ui/root/internal_server_error.xml.en:11
 msgctxt "paragraph"
 msgid "If the error persists contact with the system administrator."
-msgstr ""
-
-#: ../ui/file/externaledit.xml.en:9
-msgctxt "paragraph"
-msgid "If you don't, you can download it from a link below."
 msgstr ""
 
 #: ../file.py:215
@@ -2217,7 +2214,7 @@ msgctxt "li"
 msgid "Multiple web sites in one instance, with separate access rights."
 msgstr ""
 
-#: ../views_new.py:65 ../file_views.py:57 ../folder_views.py:245
+#: ../views_new.py:65 ../file_views.py:56 ../folder_views.py:245
 #: ../views.py:378
 msgid "Name"
 msgstr "姓名"
@@ -2322,7 +2319,7 @@ msgstr "记录"
 msgid "No page found to export."
 msgstr "你必须选择删除成员."
 
-#: ../messages.py:84
+#: ../messages.py:82
 #, fuzzy
 msgid "No resource allowed."
 msgstr "名称"
@@ -2332,7 +2329,7 @@ msgstr "名称"
 msgid "No resource removed."
 msgstr "物件被更名"
 
-#: ../messages.py:82
+#: ../messages.py:80
 #, fuzzy
 msgid "No resource selected."
 msgstr "没有物件被选中"
@@ -2357,7 +2354,7 @@ msgstr ""
 msgid "Nothing to change."
 msgstr "用户资料被变更."
 
-#: ../messages.py:86
+#: ../messages.py:84
 #, fuzzy
 msgid "Nothing to paste."
 msgstr "用户资料被变更."
@@ -2426,6 +2423,12 @@ msgstr ""
 msgctxt "pre"
 msgid "On multiple lines..."
 msgstr ""
+
+#: ../ui/file/externaledit.xml.en:28
+#, fuzzy
+msgctxt "paragraph"
+msgid "Once <g id='7'>restedit</g> is installed, just click the button below:"
+msgstr "你可以通过击打如下键浏览全网站"
 
 #: ../ui/website/security_policy.xml.en:15
 msgctxt "paragraph"
@@ -2527,11 +2530,11 @@ msgctxt "title attribute"
 msgid "Ordered list"
 msgstr "文件夹"
 
-#: ../folder.py:43
+#: ../folder.py:45
 msgid "Organize your files and documents with folders."
 msgstr ""
 
-#: ../folder_views.py:751
+#: ../folder_views.py:754
 msgid "Orphans"
 msgstr ""
 
@@ -2693,7 +2696,7 @@ msgstr ""
 msgid "Preview"
 msgstr "查阅"
 
-#: ../folder_views.py:587
+#: ../folder_views.py:590
 #, fuzzy
 msgid "Preview Content"
 msgstr "浏览"
@@ -2941,12 +2944,12 @@ msgstr "Objects removed: %s."
 msgid "Resources assigned to issues"
 msgstr ""
 
-#: ../messages.py:90
+#: ../messages.py:88
 #, fuzzy
 msgid "Resources copied."
 msgstr "新文件夹"
 
-#: ../messages.py:92
+#: ../messages.py:90
 #, fuzzy
 msgid "Resources cut."
 msgstr "新文件夹"
@@ -2986,7 +2989,7 @@ msgstr "物件被更名"
 msgid "Resources pasted: {resources}."
 msgstr "Objects removed: %s."
 
-#: ../messages.py:94
+#: ../messages.py:92
 #, fuzzy
 msgid "Resources published."
 msgstr "新文件夹"
@@ -2996,12 +2999,12 @@ msgstr "新文件夹"
 msgid "Resources removed: {resources}."
 msgstr "Objects removed: %s."
 
-#: ../messages.py:88
+#: ../messages.py:86
 #, fuzzy
 msgid "Resources renamed."
 msgstr "物件被更名"
 
-#: ../messages.py:96
+#: ../messages.py:94
 #, fuzzy
 msgid "Resources retired."
 msgstr "物件被更名"
@@ -3157,7 +3160,7 @@ msgstr ""
 msgid "Set your preferred language."
 msgstr "选择你的语言"
 
-#: ../folder_views.py:753
+#: ../folder_views.py:756
 msgid "Show resources not linked from anywhere."
 msgstr ""
 
@@ -3411,7 +3414,7 @@ msgstr ""
 msgid "The password is wrong."
 msgstr "密码错误,请再输入."
 
-#: ../messages.py:76
+#: ../messages.py:74
 #, fuzzy
 msgid "The provided passwords do not match."
 msgstr "密码错误,请再输入."
@@ -3530,14 +3533,6 @@ msgstr "此用户名已登记\"%s\", 请输入另一用户名."
 msgid "There is not an \"index\" web page. Could not render this view."
 msgstr ""
 
-#: ../file_views.py:278
-msgid "This page is locked by another user"
-msgstr ""
-
-#: ../messages.py:74
-msgid "This page is locked by {user}"
-msgstr ""
-
 #: ../ui/root/license.xml.en:15
 msgctxt "paragraph"
 msgid ""
@@ -3624,7 +3619,7 @@ msgstr ""
 msgid "To add an event, click on + symbol from the views."
 msgstr ""
 
-#: ../user.py:163
+#: ../user.py:161
 msgid ""
 "To choose a new password, click the link:\n"
 "\n"
@@ -3640,7 +3635,7 @@ msgstr ""
 msgid "To confirm these changes, you must type your password"
 msgstr ""
 
-#: ../user.py:154
+#: ../user.py:152
 msgid ""
 "To confirm your identity, click the link:\n"
 "\n"
@@ -3653,6 +3648,13 @@ msgctxt "paragraph"
 msgid "To download this file, click on <g id='1'>${filename}</g>"
 msgstr ""
 
+#: ../ui/file/externaledit.xml.en:8
+msgctxt "paragraph"
+msgid ""
+"To edit this file with your preferred desktop application, first you need to "
+"install <g id='1'>restedit</g>:"
+msgstr ""
+
 #: ../ui/root/about.xml.en:43
 msgctxt "paragraph"
 msgid "To learn more visit the project's <g id='3'>Web Site</g>."
@@ -3662,7 +3664,7 @@ msgstr ""
 msgid "To manage bugs and tasks"
 msgstr ""
 
-#: ../user.py:299
+#: ../user.py:297
 msgid "To manage the users please go <a href=\"/;browse_users\">here</a>."
 msgstr ""
 
@@ -3735,7 +3737,7 @@ msgstr "种类"
 msgid "UI"
 msgstr ""
 
-#: ../messages.py:98
+#: ../messages.py:96
 msgid "Unexpected file of mimetype {mimetype}."
 msgstr ""
 
@@ -3753,6 +3755,11 @@ msgstr "目录"
 msgctxt "title attribute"
 msgid "Unordered list"
 msgstr "目录"
+
+#: ../ui/file/externaledit.xml.en:17
+msgctxt "li"
+msgid "Unpack the tarball <g id='3'>restedit-1.0.0.tar.gz</g>"
+msgstr ""
 
 #: ../buttons.py:127
 #, fuzzy
@@ -3774,7 +3781,7 @@ msgstr ""
 msgid "Upgrade to version %s"
 msgstr ""
 
-#: ../file_views.py:59
+#: ../file_views.py:58
 #, fuzzy
 msgid "Upload"
 msgstr "上载"
@@ -3792,7 +3799,7 @@ msgctxt "legend"
 msgid "Upload"
 msgstr "上载"
 
-#: ../file_views.py:50
+#: ../file_views.py:49
 msgid "Upload File"
 msgstr "上载文件"
 
@@ -3837,7 +3844,7 @@ msgctxt "table cell"
 msgid "User"
 msgstr "用户"
 
-#: ../user.py:232
+#: ../user.py:230
 #, fuzzy
 msgid "User Folder"
 msgstr "文件夹"
@@ -3890,7 +3897,7 @@ msgctxt "table cell"
 msgid "Version"
 msgstr "个人"
 
-#: ../calendar/calendar_views.py:1128 ../file_views.py:225
+#: ../calendar/calendar_views.py:1128 ../file_views.py:224
 #, fuzzy
 msgid "Version uploaded"
 msgstr "版本上载."
@@ -3924,9 +3931,9 @@ msgstr "名称"
 msgid "Video"
 msgstr "浏览"
 
-#: ../file_views.py:339 ../file_views.py:431 ../file_views.py:443
-#: ../file_views.py:457 ../text_views.py:69 ../text_views.py:143
-#: ../tracker/tracker_views.py:265 ../user.py:297 ../table_views.py:42
+#: ../file_views.py:335 ../file_views.py:427 ../file_views.py:439
+#: ../file_views.py:453 ../text_views.py:69 ../text_views.py:143
+#: ../tracker/tracker_views.py:265 ../user.py:295 ../table_views.py:42
 #: ../wiki/page_views.py:252 ../future/order.py:247 ../future/order.py:277
 #: ../forum/forum.py:43 ../webpage.py:156 ../forum/thread.py:41
 #: ../folder_views.py:86 ../future/menu.py:581 ../future/dressable.py:94
@@ -4050,13 +4057,6 @@ msgctxt "dt"
 msgid "You can do the following actions:"
 msgstr "你是以下组件中的一成员"
 
-#: ../ui/file/externaledit.xml.en:7
-msgctxt "paragraph"
-msgid ""
-"You can edit this document using an application from your desktop, like MS "
-"Office or OpenOffice.org."
-msgstr ""
-
 #: ../wiki/ui/help_odt.xml.en:48
 msgctxt "paragraph"
 msgid "You can export several wiki pages into a single ODT."
@@ -4093,17 +4093,10 @@ msgstr ""
 msgid "You cannot remove yourself."
 msgstr "你不能改变预设语言."
 
-#: ../messages.py:79
+#: ../messages.py:77
 msgid ""
 "You have already confirmed your registration. Try to log in or ask for a new "
 "password."
-msgstr ""
-
-#: ../ui/file/externaledit.xml.en:20
-msgctxt "paragraph"
-msgid ""
-"You may need to change the character encoding if your application doesn't "
-"support UTF-8 (not recommended)."
 msgstr ""
 
 #: ../user_views.py:203 ../user_views.py:295
@@ -4309,7 +4302,7 @@ msgstr ""
 msgid "{field}: {old_value}{new_value}"
 msgstr ""
 
-#: ../folder.py:280
+#: ../folder.py:285
 #, fuzzy
 msgid "{n} obs"
 msgstr "%d 字节"
@@ -5447,10 +5440,6 @@ msgstr "名称"
 
 #~ msgid "Home"
 #~ msgstr "主页"
-
-#, fuzzy
-#~ msgid "If you already installed the client just click the button below:"
-#~ msgstr "你可以通过击打如下键浏览全网站"
 
 #, fuzzy
 #~ msgctxt "legend"
