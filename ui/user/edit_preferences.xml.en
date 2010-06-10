@@ -11,9 +11,17 @@
       <dt><label for="user-language">Preferred Language</label></dt>
       <dd>
         <select id="user-language" name="user_language">
-          <option>-- not defined --</option>
+          <option value="">-- not defined --</option>
           <option stl:repeat="language languages" value="${language/code}"
             selected="${language/is_selected}">${language/name}</option>
+        </select>
+      </dd>
+      <dt><label for="user-language">Preferred Language</label></dt>
+      <dd>
+        <select id="user-timezone" name="user_timezone">
+          <option value="">-- not defined (UTC) --</option>
+          <option stl:repeat="timezone timezones" value="${timezone/name}"
+            selected="${timezone/is_selected}">${timezone/name}</option>
         </select>
       </dd>
     </dl>

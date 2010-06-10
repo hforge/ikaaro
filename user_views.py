@@ -24,6 +24,9 @@ from itools.i18n import get_language_name
 from itools.web import BaseView, STLView, STLForm, INFO, ERROR
 from itools.xapian import PhraseQuery, AndQuery, OrQuery, StartQuery
 
+# Import from pytz
+from pytz import common_timezones
+
 # Import from ikaaro
 from autoform import TextWidget, PasswordWidget, AutoForm
 from folder import Folder_BrowseContent
@@ -227,11 +230,12 @@ class User_EditPreferences(STLForm):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Edit Preferences')
-    description = MSG(u'Set your preferred language.')
+    description = MSG(u'Set your preferred language and timezone.')
     icon = 'preferences.png'
     template = '/ui/user/edit_preferences.xml'
     schema = {
         'user_language': String,
+        'user_timezone': String,
     }
 
 
@@ -247,7 +251,15 @@ class User_EditPreferences(STLForm):
              'is_selected': code == user_language}
             for code in root.get_available_languages() ]
 
-        return {'languages': languages}
+        # Timezone
+        user_timezone = resource.get_property('user_timezone')
+        timezones = [
+            {'name': name,
+             'is_selected': name == user_timezone}
+            for name in common_timezones ]
+
+        return {'languages': languages,
+                'timezones': timezones}
 
 
     def action(self, resource, context, form):
@@ -256,6 +268,11 @@ class User_EditPreferences(STLForm):
             resource.del_property('user_language')
         else:
             resource.set_property('user_language', value)
+        value = form['user_timezone']
+        if value == '':
+            resource.del_property('user_timezone')
+        else:
+            resource.set_property('user_timezone', value)
         # Ok
         context.message = messages.MSG_CHANGES_SAVED
 
