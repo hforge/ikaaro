@@ -4,32 +4,41 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
-  <p>You can edit this document using an application from your desktop, like
-  MS Office or OpenOffice.org.</p>
-  <p>Be sure your have the external editor plug-in installed. If you don't,
-  you can download it from a link below.</p>
-  <ul>
+  <p>
+  To edit this file with your preferred desktop application, first you need
+  to install <a href="http://www.hforge.org/restedit">restedit</a>:
+  </p>
+  <ol>
     <li>
-      <a href="http://plone.org/products/zope-externaleditor-client/releases/0.9.11/zopeedit-win32-0.9.11.exe">Download External Editor for Windows</a>.
+      Download
+      <a href="http://download.hforge.org/restedit/1.0/restedit-1.0.0.tar.gz">restedit</a>
     </li>
     <li>
-      <a href="http://plone.org/products/zope-externaleditor-client/releases/0.9.11/zopeedit.py">Download External Editor for Unix and MacOSX</a>.
+      Unpack the tarball <tt>restedit-1.0.0.tar.gz</tt>
     </li>
-  </ul>
+    <li>
+      Copy the <tt>restedit.py</tt> script somewhere
+    </li>
+    <li>
+      Configure your browser so it uses the <tt>restedit.py</tt> script to open
+      web pages with the <em>application/x-restedit</em> mimetype
+    </li>
+  </ol>
 
-  <p stl:if="encodings">You may need to change the character encoding if your
-  application doesn't support UTF-8 (not recommended).</p>
+  <p>Once <em>restedit</em> is installed, just click the button below:</p>
+  <blockquote>
   <form action=";external_edit" method="get">
-    <dl stl:if="encodings">
-      <dt><label for="encoding">Character encoding</label></dt>
-      <dd>
-        <select id="encoding" name="encoding">
-          <option stl:repeat="encoding encodings" value="${encoding/value}"
-            selected="${encoding/is_selected}">${encoding/title}</option>
-        </select>
-      </dd>
-    </dl>
+    <stl:block stl:if="encodings">
+      <label for="encoding">Character encoding</label><br/>
+      <select id="encoding" name="encoding">
+        <option stl:repeat="encoding encodings" value="${encoding/value}"
+          selected="${encoding/is_selected}">${encoding/title}</option>
+      </select>
+    </stl:block>
+    <p>
     <button type="submit" class="button-external">External Editor...</button>
+    </p>
   </form>
+  </blockquote>
 
 </stl:block>

@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2010-05-03 17:05+CET\n"
+"POT-Creation-Date: 2010-06-10 13:06+CET\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -342,7 +342,7 @@ msgstr ""
 msgid "Check the referential integrity."
 msgstr ""
 
-#: ../user.py:162
+#: ../user.py:160
 msgid "Choose a new password"
 msgstr ""
 
@@ -381,7 +381,7 @@ msgstr ""
 msgid "Configure the website email options"
 msgstr ""
 
-#: ../user.py:153
+#: ../user.py:151
 msgid "Confirmation required"
 msgstr ""
 
@@ -479,8 +479,8 @@ msgstr ""
 msgid "Domain"
 msgstr ""
 
-#: ../file_views.py:120
-#: ../file_views.py:145
+#: ../file_views.py:119
+#: ../file_views.py:144
 msgid "Download"
 msgstr ""
 
@@ -612,7 +612,7 @@ msgstr ""
 msgid "Export to Text"
 msgstr ""
 
-#: ../file_views.py:232
+#: ../file_views.py:231
 msgid "External Editor"
 msgstr ""
 
@@ -620,7 +620,7 @@ msgstr ""
 msgid "Failed to load the file, may contain errors."
 msgstr ""
 
-#: ../file_views.py:199
+#: ../file_views.py:198
 msgid "Failed to load the file: {error}"
 msgstr ""
 
@@ -628,7 +628,7 @@ msgstr ""
 msgid "February"
 msgstr ""
 
-#: ../file_views.py:58
+#: ../file_views.py:57
 #: ../file.py:51
 msgid "File"
 msgstr ""
@@ -653,7 +653,7 @@ msgstr ""
 msgid "Flash Document"
 msgstr ""
 
-#: ../folder.py:42
+#: ../folder.py:44
 msgid "Folder"
 msgstr ""
 
@@ -678,7 +678,7 @@ msgid "Friday"
 msgstr ""
 
 #: ../wiki/folder.py:51
-#: ../folder_views.py:828
+#: ../folder_views.py:831
 msgid "Front Page"
 msgstr ""
 
@@ -934,7 +934,7 @@ msgid "Monthly View"
 msgstr ""
 
 #: ../views_new.py:65
-#: ../file_views.py:57
+#: ../file_views.py:56
 #: ../folder_views.py:245
 #: ../views.py:378
 msgid "Name"
@@ -977,7 +977,7 @@ msgstr ""
 msgid "No page found to export."
 msgstr ""
 
-#: ../messages.py:84
+#: ../messages.py:82
 msgid "No resource allowed."
 msgstr ""
 
@@ -985,7 +985,7 @@ msgstr ""
 msgid "No resource removed."
 msgstr ""
 
-#: ../messages.py:82
+#: ../messages.py:80
 msgid "No resource selected."
 msgstr ""
 
@@ -997,7 +997,7 @@ msgstr ""
 msgid "Nothing to change."
 msgstr ""
 
-#: ../messages.py:86
+#: ../messages.py:84
 msgid "Nothing to paste."
 msgstr ""
 
@@ -1121,11 +1121,11 @@ msgstr ""
 msgid "Ordered items"
 msgstr ""
 
-#: ../folder.py:43
+#: ../folder.py:45
 msgid "Organize your files and documents with folders."
 msgstr ""
 
-#: ../folder_views.py:751
+#: ../folder_views.py:754
 msgid "Orphans"
 msgstr ""
 
@@ -1221,7 +1221,7 @@ msgstr ""
 msgid "Preview"
 msgstr ""
 
-#: ../folder_views.py:587
+#: ../folder_views.py:590
 msgid "Preview Content"
 msgstr ""
 
@@ -1364,11 +1364,11 @@ msgstr ""
 msgid "Resources assigned to issues"
 msgstr ""
 
-#: ../messages.py:90
+#: ../messages.py:88
 msgid "Resources copied."
 msgstr ""
 
-#: ../messages.py:92
+#: ../messages.py:90
 msgid "Resources cut."
 msgstr ""
 
@@ -1400,7 +1400,7 @@ msgstr ""
 msgid "Resources pasted: {resources}."
 msgstr ""
 
-#: ../messages.py:94
+#: ../messages.py:92
 msgid "Resources published."
 msgstr ""
 
@@ -1409,11 +1409,11 @@ msgstr ""
 msgid "Resources removed: {resources}."
 msgstr ""
 
-#: ../messages.py:88
+#: ../messages.py:86
 msgid "Resources renamed."
 msgstr ""
 
-#: ../messages.py:96
+#: ../messages.py:94
 msgid "Resources retired."
 msgstr ""
 
@@ -1502,7 +1502,7 @@ msgstr ""
 msgid "Set your preferred language."
 msgstr ""
 
-#: ../folder_views.py:753
+#: ../folder_views.py:756
 msgid "Show resources not linked from anywhere."
 msgstr ""
 
@@ -1637,7 +1637,7 @@ msgstr ""
 msgid "The password is wrong."
 msgstr ""
 
-#: ../messages.py:76
+#: ../messages.py:74
 msgid "The provided passwords do not match."
 msgstr ""
 
@@ -1713,14 +1713,6 @@ msgstr ""
 msgid "There is not an \"index\" web page. Could not render this view."
 msgstr ""
 
-#: ../file_views.py:278
-msgid "This page is locked by another user"
-msgstr ""
-
-#: ../messages.py:74
-msgid "This page is locked by {user}"
-msgstr ""
-
 #: ../forum/thread.py:113
 msgid "Thread"
 msgstr ""
@@ -1772,7 +1764,7 @@ msgstr ""
 msgid "To add an event, click on + symbol from the views."
 msgstr ""
 
-#: ../user.py:163
+#: ../user.py:161
 msgid "To choose a new password, click the link:\n\n {uri}"
 msgstr ""
 
@@ -1780,7 +1772,7 @@ msgstr ""
 msgid "To confirm these changes, you must type your password"
 msgstr ""
 
-#: ../user.py:154
+#: ../user.py:152
 msgid "To confirm your identity, click the link:\n\n {uri}"
 msgstr ""
 
@@ -1788,7 +1780,7 @@ msgstr ""
 msgid "To manage bugs and tasks"
 msgstr ""
 
-#: ../user.py:299
+#: ../user.py:297
 msgid "To manage the users please go <a href=\"/;browse_users\">here</a>."
 msgstr ""
 
@@ -1818,7 +1810,7 @@ msgstr ""
 msgid "UI"
 msgstr ""
 
-#: ../messages.py:98
+#: ../messages.py:96
 msgid "Unexpected file of mimetype {mimetype}."
 msgstr ""
 
@@ -1838,11 +1830,11 @@ msgstr ""
 msgid "Upgrade to version %s"
 msgstr ""
 
-#: ../file_views.py:59
+#: ../file_views.py:58
 msgid "Upload"
 msgstr ""
 
-#: ../file_views.py:50
+#: ../file_views.py:49
 msgid "Upload File"
 msgstr ""
 
@@ -1854,7 +1846,7 @@ msgstr ""
 msgid "User"
 msgstr ""
 
-#: ../user.py:232
+#: ../user.py:230
 msgid "User Folder"
 msgstr ""
 
@@ -1892,7 +1884,7 @@ msgid "Version"
 msgstr ""
 
 #: ../calendar/calendar_views.py:1128
-#: ../file_views.py:225
+#: ../file_views.py:224
 msgid "Version uploaded"
 msgstr ""
 
@@ -1905,14 +1897,14 @@ msgstr ""
 msgid "Video"
 msgstr ""
 
-#: ../file_views.py:339
-#: ../file_views.py:431
-#: ../file_views.py:443
-#: ../file_views.py:457
+#: ../file_views.py:335
+#: ../file_views.py:427
+#: ../file_views.py:439
+#: ../file_views.py:453
 #: ../text_views.py:69
 #: ../text_views.py:143
 #: ../tracker/tracker_views.py:265
-#: ../user.py:297
+#: ../user.py:295
 #: ../table_views.py:42
 #: ../wiki/page_views.py:252
 #: ../future/order.py:247
@@ -2019,7 +2011,7 @@ msgstr ""
 msgid "You cannot remove yourself."
 msgstr ""
 
-#: ../messages.py:79
+#: ../messages.py:77
 msgid "You have already confirmed your registration. Try to log in or ask for a new password."
 msgstr ""
 
@@ -2130,7 +2122,7 @@ msgstr ""
 msgid "{field}: {old_value}{new_value}"
 msgstr ""
 
-#: ../folder.py:280
+#: ../folder.py:285
 msgid "{n} obs"
 msgstr ""
 
@@ -2232,7 +2224,7 @@ msgctxt "button"
 msgid "Edit Issues"
 msgstr ""
 
-#: ../ui/file/externaledit.xml.en:32
+#: ../ui/file/externaledit.xml.en:39
 msgctxt "button"
 msgid "External Editor..."
 msgstr ""
@@ -2649,7 +2641,7 @@ msgctxt "label"
 msgid "CC:"
 msgstr ""
 
-#: ../ui/file/externaledit.xml.en:24
+#: ../ui/file/externaledit.xml.en:32
 msgctxt "label"
 msgid "Character encoding"
 msgstr ""
@@ -3001,9 +2993,19 @@ msgctxt "li"
 msgid "Collaboration with the Wiki module, the issue tracker, etc."
 msgstr ""
 
+#: ../ui/file/externaledit.xml.en:23
+msgctxt "li"
+msgid "Configure your browser so it uses the <g id='5'>restedit.py</g> script to open web pages with the <g id='6'>application/x-restedit</g> mimetype"
+msgstr ""
+
 #: ../ui/root/about.xml.en:36
 msgctxt "li"
 msgid "Content &amp;"
+msgstr ""
+
+#: ../ui/file/externaledit.xml.en:20
+msgctxt "li"
+msgid "Copy the <g id='4'>restedit.py</g> script somewhere"
 msgstr ""
 
 #: ../wiki/ui/help_odt.xml.en:71
@@ -3014,6 +3016,11 @@ msgstr ""
 #: ../ui/root/about.xml.en:36
 msgctxt "li"
 msgid "Document Management."
+msgstr ""
+
+#: ../ui/file/externaledit.xml.en:13
+msgctxt "li"
+msgid "Download <g id='2'>restedit</g>"
 msgstr ""
 
 #: ../ui/root/credits.xml.en:18
@@ -3071,6 +3078,11 @@ msgctxt "li"
 msgid "Sylvain Taverne (French)"
 msgstr ""
 
+#: ../ui/file/externaledit.xml.en:17
+msgctxt "li"
+msgid "Unpack the tarball <g id='3'>restedit-1.0.0.tar.gz</g>"
+msgstr ""
+
 #: ../ui/root/credits.xml.en:22
 msgctxt "li"
 msgid "Zhou Li (Chinese)"
@@ -3094,11 +3106,6 @@ msgstr ""
 #: ../calendar/ui/monthly_template.xml.en:10
 msgctxt "link"
 msgid "<g id='1'> ${event/SUMMARY}</g>  <g id='2'>${event/TIME}</g>"
-msgstr ""
-
-#: ../ui/file/externaledit.xml.en:13
-msgctxt "link"
-msgid "<g id='1'>Download External Editor for Windows</g>."
 msgstr ""
 
 #: ../tracker/ui/weekly_template.xml.en:9
@@ -3156,11 +3163,6 @@ msgstr ""
 #: ../forum/ui/Forum_view.xml.en:10
 msgctxt "link"
 msgid "<g id='2'>${thread/title}</g>  <x id='3'/> Posted by <g id='4'>${thread/author}</g>, the <g id='5'>${thread/date}</g>."
-msgstr ""
-
-#: ../ui/file/externaledit.xml.en:16
-msgctxt "link"
-msgid "<g id='2'>Download External Editor for Unix and MacOSX</g>."
 msgstr ""
 
 #: ../calendar/ui/weekly_view.xml.en:13
@@ -3331,11 +3333,6 @@ msgctxt "paragraph"
 msgid "Apologies for the inconvenience."
 msgstr ""
 
-#: ../ui/file/externaledit.xml.en:9
-msgctxt "paragraph"
-msgid "Be sure your have the external editor plug-in installed."
-msgstr ""
-
 #: ../wiki/ui/help_odt.xml.en:35
 msgctxt "paragraph"
 msgid "Click here to <g id='10'>upload an ODT</g>."
@@ -3376,11 +3373,6 @@ msgctxt "paragraph"
 msgid "If the error persists contact with the system administrator."
 msgstr ""
 
-#: ../ui/file/externaledit.xml.en:9
-msgctxt "paragraph"
-msgid "If you don't, you can download it from a link below."
-msgstr ""
-
 #: ../ui/root/about.xml.en:33
 msgctxt "paragraph"
 msgid "Key features of iKaaro include:"
@@ -3410,6 +3402,11 @@ msgstr ""
 #: ../wiki/ui/help_odt.xml.en:23
 msgctxt "paragraph"
 msgid "On any page, click on the <g id='8'>To ODT</g> tab to acccess this feature."
+msgstr ""
+
+#: ../ui/file/externaledit.xml.en:28
+msgctxt "paragraph"
+msgid "Once <g id='7'>restedit</g> is installed, just click the button below:"
 msgstr ""
 
 #: ../ui/website/security_policy.xml.en:15
@@ -3484,6 +3481,11 @@ msgctxt "paragraph"
 msgid "To download this file, click on <g id='1'>${filename}</g>"
 msgstr ""
 
+#: ../ui/file/externaledit.xml.en:8
+msgctxt "paragraph"
+msgid "To edit this file with your preferred desktop application, first you need to install <g id='1'>restedit</g>:"
+msgstr ""
+
 #: ../ui/root/about.xml.en:43
 msgctxt "paragraph"
 msgid "To learn more visit the project's <g id='3'>Web Site</g>."
@@ -3510,11 +3512,6 @@ msgctxt "paragraph"
 msgid "You can choose an ODT file on your disk or select an ODT previously uploaded into the wiki."
 msgstr ""
 
-#: ../ui/file/externaledit.xml.en:7
-msgctxt "paragraph"
-msgid "You can edit this document using an application from your desktop, like MS Office or OpenOffice.org."
-msgstr ""
-
 #: ../wiki/ui/help_odt.xml.en:48
 msgctxt "paragraph"
 msgid "You can export several wiki pages into a single ODT."
@@ -3533,11 +3530,6 @@ msgstr ""
 #: ../calendar/ui/upload.xml.en:9
 msgctxt "paragraph"
 msgid "You can upload a new ical file (.ics extension) to replace the current one."
-msgstr ""
-
-#: ../ui/file/externaledit.xml.en:20
-msgctxt "paragraph"
-msgid "You may need to change the character encoding if your application doesn't support UTF-8 (not recommended)."
 msgstr ""
 
 #: ../wiki/ui/help_odt.xml.en:48
