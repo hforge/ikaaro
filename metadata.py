@@ -200,6 +200,9 @@ class Metadata(File):
             # Simple properties
             elif value != default:
                 value = datatype.encode(value)
+                if type(value) is not str:
+                    message = 'in "%s", property "%s" not encoded'
+                    raise TypeError, message % (self.key, name)
                 value = XMLContent.encode(value)
                 lines.append('  <%s>%s</%s>\n' % (name, value, name))
 
