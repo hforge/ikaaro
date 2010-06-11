@@ -53,6 +53,20 @@ $(document).ready(function() {
     if ($.browser.msie && $.browser.version.substr(0,1) < 8) {
         var elements, element = null;
 
+        function _fix_button(button) {
+            // FIXME Remove already set click functions
+            button.onclick = function () {
+                for(l=0; l<this.form.elements.length; l++) {
+                    if( this.form.elements[l].tagName == 'BUTTON' )
+                        this.form.elements[l].disabled = true;
+                }
+                this.disabled = false;
+                var attr_value = this.attributes.getNamedItem("value").nodeValue;
+                // action value should be equal to 'action' or to value attr
+                this.value = attr_value || 'action';
+            }
+        }
+
         for (i=0; i<document.forms.length; i++) {
             elements = document.forms[i].elements;
             var buttons = new Array();
@@ -62,18 +76,17 @@ $(document).ready(function() {
                     buttons.push(element);
                 }
             }
-            // Do not hack form if there is only one button
+            // Do not hack form if there is only one button and if the button
+            // has a right action attribute
             if (buttons.length > 1) {
                 for (k=0; k<buttons.length; k++) {
-                    // FIXME Remove already set click functions
-                    buttons[k].onclick = function () {
-                        for(l=0; l<this.form.elements.length; l++) {
-                            if( this.form.elements[l].tagName == 'BUTTON' )
-                                this.form.elements[l].disabled = true;
-                        }
-                        this.disabled = false;
-                        this.value = this.attributes.getNamedItem("value").nodeValue ;
-                    }
+                    _fix_button(buttons[k]);
+                }
+            } else if (buttons.length == 1) {
+                var button = buttons[0];
+                var action = button.attributes.getNamedItem("value").nodeValue;
+                if (action != 'action') {
+                    _fix_button(button);
                 }
             }
         }
