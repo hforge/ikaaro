@@ -78,7 +78,7 @@ class DBResource_Edit(AutoForm):
 
     def get_value(self, resource, context, name, datatype):
         if name == 'timestamp':
-            return datetime.now()
+            return context.timestamp
         language = resource.get_content_language(context)
         return resource.get_property(name, language=language)
 
