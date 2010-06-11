@@ -39,11 +39,20 @@ class StateEnumerate(Enumerate):
 
         ac = resource.get_access_control()
         user = self.context.user
+
+        # Possible states
         options = [
-            {'name': name, 'value': states[trans.state_to].metadata['title']}
+            trans.state_to
             for name, trans in state.transitions.items()
             if ac.is_allowed_to_trans(user, resource, name) ]
-        options.append({'name': '', 'value': state.metadata['title']})
+        options = set(options)
+        options.add(resource.get_statename())
+
+        # Options
+        options = [
+           {'name': x, 'value': states[x].metadata['title'].gettext()}
+           for x in options ]
+
         options.sort(key=lambda x: x['value'])
         return options
 

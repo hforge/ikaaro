@@ -187,15 +187,8 @@ class File_Edit(DBResource_Edit):
         if context.edit_conflict:
             return
 
-        # State
-        transition = form['state']
-        if transition:
-            try:
-                resource.do_trans(transition)
-            except WorkflowError, excp:
-                log_error('Transition failed', domain='ikaaro')
-                context.message = ERROR(unicode(excp.message, 'utf-8'))
-                return
+        # State (FIXME Check the state is valid)
+        resource.set_property('state', form['state'])
 
         # Upload file
         file = form['file']
