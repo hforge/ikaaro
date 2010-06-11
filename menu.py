@@ -354,6 +354,8 @@ class Menu(OrderedTable):
         menu_abspath = self.get_abspath()
         here = context.resource
         here_abspath = here.get_canonical_path()
+        here_view_name = url[-1]
+        here_abspath_and_view = '%s/%s' % (here_abspath, here_view_name)
         site_root_abspath = here.get_site_root().get_abspath()
         items = []
         tabs = {}
@@ -382,9 +384,14 @@ class Menu(OrderedTable):
                     else:
                         real_path = _path
                     resource = self.get_resource(real_path)
-                    if here_abspath == resource.get_canonical_path():
-                        if context.view_name == method_name:
-                            css = 'in-path'
+                    resource_abspath = resource.get_canonical_path()
+                    # add default view or view set in the menu
+                    default_view_name = resource.get_default_view_name()
+                    resource_method = method_name or default_view_name
+                    resource_abspath_and_view = '%s/;%s' % (resource_abspath,
+                                                            resource_method)
+                    if here_abspath_and_view == resource_abspath_and_view:
+                        css = 'in-path'
                     id += method_name
                     # Build the new reference with the right path
                     ref2 = deepcopy(ref)
@@ -437,7 +444,12 @@ class Menu(OrderedTable):
 
                 # Set active, in_path
                 active = False
-                if here_abspath == resource.get_canonical_path():
+                resource_abspath = resource.get_canonical_path()
+                # add default view
+                default_view_name = resource.get_default_view_name()
+                resource_abspath_and_view = '%s/;%s' % (resource_abspath,
+                                                        default_view_name)
+                if here_abspath_and_view == resource_abspath_and_view:
                     active, in_path = True, False
                 else:
                     # Use the original path for the highlight
