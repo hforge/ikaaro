@@ -239,7 +239,7 @@ class Database(ReadOnlyDatabase, GitDatabase):
         docs_to_index = []
         for path in self.resources_new2old:
             resource = root.get_resource(path)
-            if git_date:
+            if context.set_mtime:
                 resource.metadata.set_property('mtime', git_date)
                 resource.metadata.set_property('last_author', userid)
             values = resource.get_catalog_values()

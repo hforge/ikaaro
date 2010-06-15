@@ -316,6 +316,7 @@ class Server(WebServer):
     def init_context(self, context):
         WebServer.init_context(self, context)
         context.database = self.database
+        context.set_mtime = True
         context.message = None
         context.content_type = None
 

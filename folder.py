@@ -79,15 +79,17 @@ class Folder(DBResource):
     # API
     #######################################################################
     def make_resource(self, name, cls, **kw):
+        context = get_context()
         # Make the metadata
         format = kw.pop('format', None)
         metadata = Metadata(cls=cls, format=format)
+        metadata.set_property('mtime', context.timestamp)
         self.handler.set_handler('%s.metadata' % name, metadata)
         # Initialize
         resource = self.get_resource(name)
         resource.init_resource(**kw)
         # Ok
-        get_context().database.add_resource(resource)
+        context.database.add_resource(resource)
         return resource
 
 
