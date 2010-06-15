@@ -128,6 +128,7 @@ class LocationTemplate(SkinTemplate):
         """
         # Get request, path, etc...
         here = context.resource
+        here_link = context.get_link(here)
 
         # Get access control
         user = context.user
@@ -153,7 +154,7 @@ class LocationTemplate(SkinTemplate):
 
             # Add the menu
             tabs.append({
-                'name': ';%s' % link,
+                'name': '%s/;%s' % (here_link, link),
                 'label': view.get_title(context),
                 'active': active,
                 'class': active and 'active' or None})
