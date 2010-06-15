@@ -36,7 +36,8 @@ from views import BrowseForm
 def get_colored_diff(diff):
     """Turn a diff source into a namespace for HTML display"""
     changes = []
-    password_re = compile('<password>(.*)</password>')
+    password_re = compile('password:(.*)')
+    password_old_re = compile('<password>(.*)</password>')
     # The anchor index to link from the diff stat
     link_index = -1
     for line in diff.splitlines():
@@ -48,7 +49,8 @@ def get_colored_diff(diff):
             link_index += 1
         elif line:
             # For security, hide password the of metadata files
-            line = sub(password_re, '<password>***</password>', line)
+            line = sub(password_re, 'password:***', line)
+            line = sub(password_old_re, '<password>***</password>', line)
             if line[0] == '-':
                 css = 'rem'
             elif line[0] == '+':
