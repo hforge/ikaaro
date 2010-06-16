@@ -180,6 +180,9 @@ def startswith_section(doctree):
         if isinstance(node, nodes.section):
             return True
         elif isinstance(node, nodes.title):
+            # Ignore <tile> inside <topic>
+            if isinstance(node.parent, nodes.topic):
+                continue
             return False
     return False
 
