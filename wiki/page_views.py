@@ -34,7 +34,7 @@ from docutils import nodes
 
 # Import from itools
 from itools.core import merge_dicts
-from itools.datatypes import String, Enumerate
+from itools.datatypes import String, Enumerate, Boolean
 from itools.gettext import MSG
 from itools.handlers import checkid, ro_database
 from itools.html import XHTMLFile
@@ -49,7 +49,7 @@ from itools.xml import XMLParser, XMLError
 # Import from ikaaro
 from ikaaro import messages
 from ikaaro.datatypes import FileDataType
-from ikaaro.forms import AutoForm, FileWidget, SelectRadio
+from ikaaro.forms import AutoForm, FileWidget, SelectRadio, BooleanRadio
 from ikaaro.forms import title_widget, timestamp_widget
 from ikaaro.resource_views import DBResource_Edit
 from ikaaro.views import ContextMenu
@@ -202,9 +202,10 @@ def convert_cover_title(node, context):
 
 class PageVisitor(nodes.SparseNodeVisitor):
 
-    def __init__(self, doctree, container):
+    def __init__(self, doctree, container, ignore_missing_pages=False):
         nodes.NodeVisitor.__init__(self, doctree)
         self.container = container
+        self.ignore_missing_pages = ignore_missing_pages
         self.pages = []
         self.level = 0
 
@@ -223,6 +224,8 @@ class PageVisitor(nodes.SparseNodeVisitor):
             return
         path = reference.get('wiki_name')
         if path is False:
+            if self.ignore_missing_pages is True:
+                return
             raise LookupError, node.astext()
         page = self.container.get_resource(path)
         self.pages.append((page, self.level))
@@ -512,11 +515,15 @@ class WikiPage_Edit(DBResource_Edit):
 class WikiPage_ToODT(AutoForm):
     access = 'is_allowed_to_view'
     title = MSG(u"To ODT")
-    schema = {'template': TemplateList, 'template_upload': FileDataType}
+    schema = {'template': TemplateList,
+            'template_upload': FileDataType,
+            'ignore_missing_pages': Boolean}
     widgets = [SelectRadio('template', title=MSG(u"Choose a template:"),
             has_empty_option=False),
         FileWidget('template_upload',
-            title=MSG(u"Or provide another ODT as a template:"))]
+            title=MSG(u"Or provide another ODT as a template:")),
+        BooleanRadio('ignore_missing_pages',
+            title=MSG(u"Ignore missing pages"))]
     submit_value = MSG(u"Convert")
 
 
@@ -527,6 +534,11 @@ class WikiPage_ToODT(AutoForm):
                 template = book.get('template')
                 if template is not None:
                     return template
+        elif name == 'ignore_missing_pages':
+            book = resource.get_book()
+            if book is not None:
+                ignore_missing_pages = book.get('ignore-missing-pages')
+                return ignore_missing_pages == 'yes'
         return AutoForm.get_value(self, resource, context, name, datatype)
 
 
@@ -590,20 +602,22 @@ class WikiPage_ToODT(AutoForm):
             if cover_uri:
                 cover = parent.get_resource(cover_uri, soft=True)
                 if cover is None:
-                    context.message = ERROR(u'Page "{uri}" not found.',
-                            uri=cover_uri)
-                    return
-                doctree = cover.get_doctree()
-                resolve_references(doctree, resource, context)
-                resolve_images(doctree, resource, context)
-                heading_level = 0 if startswith_section(doctree) else 1
-                # Override temporarly convert_title
-                convert_methods['title'] = convert_cover_title
-                convert_methods['subtitle'] = convert_cover_title
-                convert(document, doctree, heading_level=heading_level,
-                        skip_toc=True)
-                convert_methods['title'] = convert_title
-                del convert_methods['subtitle']
+                    if not form['ignore_missing_pages']:
+                        context.message = ERROR(u'Page "{uri}" not found.',
+                                uri=cover_uri)
+                        return
+                else:
+                    doctree = cover.get_doctree()
+                    resolve_references(doctree, resource, context)
+                    resolve_images(doctree, resource, context)
+                    heading_level = 0 if startswith_section(doctree) else 1
+                    # Override temporarly convert_title
+                    convert_methods['title'] = convert_cover_title
+                    convert_methods['subtitle'] = convert_cover_title
+                    convert(document, doctree, heading_level=heading_level,
+                            skip_toc=True)
+                    convert_methods['title'] = convert_title
+                    del convert_methods['subtitle']
             # Global TOC
             language = book.get('language').split('-')[0]
             title = MSG(u"Table of Contents").gettext(language=language)
@@ -612,7 +626,8 @@ class WikiPage_ToODT(AutoForm):
             document.get_body().append(toc)
             # List of pages and their starting title level
             doctree = resource.get_doctree()
-            visitor = PageVisitor(doctree, resource)
+            visitor = PageVisitor(doctree, resource,
+                    ignore_missing_pages=form['ignore_missing_pages'])
             try:
                 book.walkabout(visitor)
             except LookupError, uri:

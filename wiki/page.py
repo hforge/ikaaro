@@ -57,6 +57,10 @@ def language(argument):
         raise ValueError('expected "xx-YY" language-COUNTRY code')
 
 
+def yesno(argument):
+    return directives.choice(argument, ('yes', 'no'))
+
+
 
 # Class name gives the DOM element name
 class book(nodes.Admonition, nodes.Element):
@@ -70,6 +74,7 @@ class Book(Directive):
     final_argument_whitespace = True
     option_spec = {'cover': directives.uri,
                    'template': directives.unchanged,
+                   'ignore-missing-pages': yesno,
                    'toc-depth': directives.positive_int,
                    'title': directives.unchanged,
                    'comments': directives.unchanged,
