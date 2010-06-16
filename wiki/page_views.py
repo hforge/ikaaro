@@ -603,6 +603,7 @@ class WikiPage_ToODT(AutoForm):
             toc = odf_create_toc(title=title, outline_level=outline_level)
             document.get_body().append(toc)
             # List of pages and their starting title level
+            doctree = resource.get_doctree()
             visitor = PageVisitor(doctree, resource)
             try:
                 book.walkabout(visitor)
