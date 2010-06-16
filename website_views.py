@@ -355,7 +355,7 @@ class AboutView(STLView):
         # Try packages we frequently use
         packages.extend([
             'gio', 'xapian', 'pywin32', 'PIL.Image', 'docutils', 'reportlab',
-            'xlrd'])
+            'xlrd', 'lpod'])
         # Mapping from package to version attribute
         package2version = {
             'gio': 'pygio_version',
@@ -365,8 +365,9 @@ class AboutView(STLView):
             'sys': 'version_info',
             'xlrd': '__VERSION__'}
         package2title = {
-            'gio': 'pygobject',
-            'sys': 'Python',
+            'gio': u'pygobject',
+            'lpod': u'lpOD',
+            'sys': u'Python',
             }
 
         # Namespace
@@ -402,9 +403,9 @@ class AboutView(STLView):
 
         # Insert first the platform
         platform = {
-            'linux2': 'GNU/Linux',
-            'darwin': 'Mac OS X',
-            'win32': 'Windows'}.get(sys.platform, sys.platform)
+            'linux2': u'GNU/Linux',
+            'darwin': u'Mac OS X',
+            'win32': u'Windows'}.get(sys.platform, sys.platform)
         packages_ns.insert(0,
             {'name': MSG(u'Operating System'), 'version': platform})
 
