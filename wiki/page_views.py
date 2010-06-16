@@ -351,8 +351,14 @@ class WikiPage_ToPDF(BaseView):
         # Make some modifications
         overrides = dict(resource.overrides)
         overrides['stylesheet'] = 'style.tex'
-        output = publish_from_doctree(doctree, writer_name='latex',
-                                      settings_overrides=overrides)
+        try:
+            output = publish_from_doctree(doctree, writer_name='latex',
+                    settings_overrides=overrides)
+        except NotImplementedError, e:
+            if str(e).endswith('visiting unknown node type: book'):
+                message = ERROR(u"Books are not exportable to PDF.")
+                return context.come_back(message)
+            raise
         output = figure_style_converter.sub(r'\\begin{figure}[H]', output)
 
         dirname = mkdtemp('wiki', 'itools')
