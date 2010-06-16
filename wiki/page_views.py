@@ -591,7 +591,7 @@ class WikiPage_ToODT(AutoForm):
             title = MSG(u"Table of Contents").gettext()
             outline_level = book.get('toc-depth', 10)
             toc = odf_create_toc(title=title, outline_level=outline_level)
-            document.get_body().append_element(toc)
+            document.get_body().append(toc)
             # List of pages and their starting title level
             visitor = PageVisitor(doctree, resource)
             try:
