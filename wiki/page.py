@@ -69,6 +69,7 @@ class Book(Directive):
     optional_arguments = 1
     final_argument_whitespace = True
     option_spec = {'cover': directives.uri,
+                   'template': directives.unchanged,
                    'toc-depth': directives.positive_int,
                    'title': directives.unchanged,
                    'comments': directives.unchanged,
@@ -235,6 +236,11 @@ class WikiPage(Text):
                 node['uri'] = str(resource.get_canonical_path())
 
         return doctree
+
+
+    def get_book(self):
+        doctree = self.get_doctree()
+        return doctree.next_node(condition=nodes.book)
 
 
     def get_links(self):

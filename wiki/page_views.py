@@ -512,6 +512,16 @@ class WikiPage_ToODT(AutoForm):
     submit_value = MSG(u"Convert")
 
 
+    def get_value(self, resource, context, name, datatype):
+        if name == 'template':
+            book = resource.get_book()
+            if book is not None:
+                template = book.get('template')
+                if template is not None:
+                    return template
+        return AutoForm.get_value(self, resource, context, name, datatype)
+
+
     def GET(self, resource, context):
         try:
             from lpod.rst2odt import rst2odt
@@ -548,8 +558,7 @@ class WikiPage_ToODT(AutoForm):
                 body = template_resource.handler.to_str()
                 template = odf_get_document(StringIO(body))
 
-        doctree = resource.get_doctree()
-        book = doctree.next_node(condition=nodes.book)
+        book = resource.get_book()
         if book is not None:
             # Prepare document
             if template is None:
@@ -626,6 +635,7 @@ class WikiPage_ToODT(AutoForm):
             toc.toc_fill()
         else:
             # Just convert the page as is to ODT
+            doctree = resource.get_doctree()
             resolve_references(doctree, resource, context)
             resolve_images(doctree, resource, context)
             # convert_section will increment it
