@@ -219,6 +219,8 @@ class PageVisitor(nodes.SparseNodeVisitor):
 
     def visit_list_item(self, node):
         reference = node.next_node(condition=nodes.reference)
+        if reference is None:
+            return
         path = reference.get('wiki_name')
         if path is False:
             raise LookupError, node.astext()
