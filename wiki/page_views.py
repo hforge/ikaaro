@@ -588,7 +588,8 @@ class WikiPage_ToODT(AutoForm):
                 convert_methods['title'] = convert_title
                 del convert_methods['subtitle']
             # Global TOC
-            title = MSG(u"Table of Contents").gettext()
+            language = book.get('language').split('-')[0]
+            title = MSG(u"Table of Contents").gettext(language=language)
             outline_level = book.get('toc-depth', 10)
             toc = odf_create_toc(title=title, outline_level=outline_level)
             document.get_body().append(toc)
