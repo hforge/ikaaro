@@ -22,7 +22,7 @@ from xapian import DatabaseOpeningError
 
 # Import from itools
 from itools.core import get_pipe, lazy, send_subprocess
-from itools.handlers import ROGitDatabase, GitDatabase, make_git_database
+from itools.database import ROGitDatabase, GitDatabase, make_git_database
 from itools.uri import Path
 from itools.web import get_context
 from itools.xapian import Catalog, make_catalog
