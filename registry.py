@@ -52,19 +52,3 @@ def register_document_type(resource_class, type=None):
 def get_document_types(type=None, default=None):
     return documents_registry.get(type, default)
 
-
-
-fields_registry = {}
-
-def register_field(name, field_cls):
-    if name in fields_registry:
-        if fields_registry[name] is field_cls:
-            return
-        raise ValueError, 'register conflict over the "%s" field' % name
-
-    fields_registry[name] = field_cls
-
-
-def get_register_fields():
-    return fields_registry
-

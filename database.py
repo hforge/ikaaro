@@ -14,77 +14,23 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Import from the Standard Library
-from datetime import datetime
-
-# Import from xapian
-from xapian import DatabaseOpeningError
-
 # Import from itools
-from itools.core import get_pipe, lazy, send_subprocess
+from itools.core import get_pipe
 from itools.database import ROGitDatabase, GitDatabase, make_git_database
 from itools.uri import Path
 from itools.web import get_context
-from itools.xapian import Catalog, make_catalog
 
 # Import from ikaaro
 from folder import Folder
-from registry import get_register_fields
 
 
 
-class ReadOnlyDatabase(ROGitDatabase):
-
-    def __init__(self, target, size_min, size_max):
-        self.target = target
-        # Call parent class
-        path = '%s/database' % target
-        ROGitDatabase.__init__(self, path, size_min, size_max)
-
-
-    @lazy
-    def catalog(self):
-        path = '%s/catalog' % self.target
-        fields = get_register_fields()
-        try:
-            return Catalog(path, fields, read_only=True)
-        except DatabaseOpeningError:
-            return None
-
-
-    def get_revisions(self, files, n=None):
-        cmd = ['git', 'rev-list', '--pretty=format:%an%n%at%n%s']
-        if n is not None:
-            cmd = cmd + ['-n', str(n)]
-        cmd = cmd + ['HEAD', '--'] + files
-        data = send_subprocess(cmd)
-
-        # Parse output
-        revisions = []
-        lines = data.splitlines()
-        for idx in range(len(lines) / 4):
-            base = idx * 4
-            ts = int(lines[base+2])
-            revisions.append(
-                {'revision': lines[base].split()[1], # commit
-                 'username': lines[base+1],          # author name
-                 'date': datetime.fromtimestamp(ts), # author date
-                 'message': lines[base+3],           # subject
-                })
-        # Ok
-        return revisions
-
-
-
-class Database(ReadOnlyDatabase, GitDatabase):
+class Database(GitDatabase):
     """Adds a Git archive to the itools database.
     """
 
-    def __init__(self, target, size_min, size_max):
-        self.target = target
-        # Call parent class
-        path = '%s/database' % target
-        GitDatabase.__init__(self, path, size_min, size_max)
+    def __init__(self, path, size_min, size_max):
+        super(Database, self).__init__(path, size_min, size_max)
 
         # The resources that been added, removed, changed and moved can be
         # represented as a set of two element tuples.  But we implement this
@@ -123,21 +69,6 @@ class Database(ReadOnlyDatabase, GitDatabase):
         #
         self.resources_old2new = {}
         self.resources_new2old = {}
-
-
-    @lazy
-    def catalog(self):
-        path = '%s/catalog' % self.target
-        return Catalog(path, get_register_fields())
-
-
-    #######################################################################
-    # Git API
-    #######################################################################
-    def get_last_revision(self, files):
-        # The git cache only works on read-only mode
-        revisions = self.get_revisions(files, 1)
-        return revisions[0] if revisions else None
 
 
     #######################################################################
@@ -287,20 +218,15 @@ class Database(ReadOnlyDatabase, GitDatabase):
 
 
 
-def make_database(target):
+def make_database(path):
     size_min, size_max = 4800, 5200
-    # GitDatabase
-    path = '%s/database' % target
     make_git_database(path, size_min, size_max)
-    # The catalog
-    make_catalog('%s/catalog' % target, get_register_fields())
-    # Ok
-    return Database(target, size_min, size_max)
+    return Database(path, size_min, size_max)
 
 
 def get_database(path, size_min, size_max, read_only=False):
     if read_only is True:
-        return ReadOnlyDatabase(path, size_min, size_max)
+        return ROGitDatabase(path, size_min, size_max)
 
     return Database(path, size_min, size_max)
 
