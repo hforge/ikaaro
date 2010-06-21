@@ -139,6 +139,7 @@ def init(parser, options, target):
     # Create a fake context
     context = get_fake_context()
     context.database = database
+    context.set_mtime = True
 
     # Make the root
     metadata = Metadata(cls=root_class)
