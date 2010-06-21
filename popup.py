@@ -28,7 +28,7 @@ from itools.handlers import checkid
 from itools.fs import FileName
 from itools.uri import Path
 from itools.web import STLForm, ERROR
-from itools.xapian import AndQuery, OrQuery, PhraseQuery
+from itools.xapian import AndQuery, OrQuery, PhraseQuery, StartQuery
 
 # Import from ikaaro
 from buttons import AddButton
@@ -56,6 +56,7 @@ class AddBase_BrowseContent(Folder_BrowseContent):
 
     folder_classes = ()
     item_classes = ()
+    show_type_form = True
 
     # Table
     table_columns = [
@@ -101,14 +102,13 @@ class AddBase_BrowseContent(Folder_BrowseContent):
                 path_to_item = site_root.get_pathto(item_resource)
                 url_dic = {'target': str(path_to_item),
                            # Avoid search conservation
-                           'search_term': None,
-                           'search_field': None,
-                           'search_subfolders': None}
+                           'search_text': None,
+                           'search_type': None,}
                 url = context.uri.replace(**url_dic)
             else:
                 url = None
-            title = item_resource.get_title()
-            return title, url
+            title = item_resource.get_abspath()
+            return unicode(title), url
         else:
             return Folder_BrowseContent.get_item_value(self, resource, context,
                        item, column)
@@ -136,8 +136,11 @@ class AddBase_BrowseContent(Folder_BrowseContent):
         if target:
             namespace['target'] = target
         else:
+            if not self.is_folder(resource):
+                resource = resource.parent
             namespace['target'] = resource.get_abspath()
         namespace['mode'] = context.get_form_value('mode')
+        namespace['show_type_form'] = self.show_type_form
         return namespace
 
 
@@ -160,6 +163,8 @@ class AddBase_BrowseContent(Folder_BrowseContent):
 
 class AddImage_BrowseContent(AddBase_BrowseContent):
 
+    show_type_form = False
+
     @classmethod
     def get_item_classes(cls):
         if cls.item_classes:
@@ -170,48 +175,9 @@ class AddImage_BrowseContent(AddBase_BrowseContent):
 
 
     def get_items(self, resource, context, *args):
-        query = []
-        # search query
-        c_query = context.query
-        search_term = c_query['search_term'].strip()
-        field = c_query['search_field']
-        search_subfolders = c_query['search_subfolders']
-
-        # FIXME
-        # Should use get_item_classes
-
-        target = context.get_form_value('target')
-        if target:
-            site_root_abspath = resource.get_site_root().get_abspath()
-            if target.startswith('/'):
-                target = target.lstrip('/')
-            target = site_root_abspath.resolve2(target)
-            container = resource.get_resource(target)
-        else:
-            container = resource
-
-        if not self.is_folder(container):
-            container = container.parent
-
-        if search_subfolders is True:
-            abspath = str(container.get_canonical_path())
-            query.append(get_base_path_query(abspath))
-        else:
-            parent_path = str(container.get_abspath())
-            query.append(PhraseQuery('parent_path', parent_path))
-        if search_term:
-            query.append(PhraseQuery(field, search_term))
-
-        # Images
-        image_query = PhraseQuery('is_image', True)
-
-        # Folders
-        folder_query = PhraseQuery('is_folder', True)
-        query.append(OrQuery(image_query, folder_query))
-
-        query = AndQuery(*query)
-        return context.root.search(query)
-
+        query = [PhraseQuery('is_folder', True), PhraseQuery('is_image', True)]
+        args += OrQuery(*query) ,
+        return AddBase_BrowseContent.get_items(self, resource, context, *args)
 
 
     def get_item_value(self, resource, context, item, column):
@@ -230,14 +196,13 @@ class AddImage_BrowseContent(AddBase_BrowseContent):
                 path_to_item = site_root.get_pathto(item_resource)
                 url_dic = {'target': str(path_to_item),
                            # Avoid search conservation
-                           'search_term': None,
-                           'search_field': None,
-                           'search_subfolders': None}
+                           'search_text': None,
+                           'search_type': None,}
                 url = context.uri.replace(**url_dic)
             else:
                 url = None
-            title = item_resource.get_title()
-            return title, url
+            title = item_resource.get_abspath()
+            return unicode(title), url
         elif column == 'icon':
             if self.is_folder(item_resource):
                 # icon
@@ -259,6 +224,8 @@ class AddImage_BrowseContent(AddBase_BrowseContent):
 
 class AddMedia_BrowseContent(AddBase_BrowseContent):
 
+    show_type_form = False
+
     @classmethod
     def get_item_classes(cls):
         if cls.item_classes:
@@ -266,6 +233,13 @@ class AddMedia_BrowseContent(AddBase_BrowseContent):
         from file import Flash, Video
         return (Flash, Video)
 
+
+    def get_items(self, resource, context, *args):
+        classes = self.get_item_classes()
+        query = [ StartQuery('format', x.class_id) for x in classes ]
+        query.append(PhraseQuery('is_folder', True))
+        args += OrQuery(*query) ,
+        return AddBase_BrowseContent.get_items(self, resource, context, *args)
 
 ###########################################################################
 # Interface to add images from the TinyMCE editor
@@ -289,9 +263,8 @@ class DBResource_AddBase(STLForm):
         'mode': String(default='')}
 
     search_schema = {
-        'search_field': String,
-        'search_term': Unicode,
-        'search_subfolders': Boolean(default=False),
+        'search_type': String,
+        'search_text': Unicode,
     }
 
     # This value must be set in subclass
@@ -349,7 +322,6 @@ class DBResource_AddBase(STLForm):
                 target_path = target_path.lstrip('/')
             target_path = site_root_abspath.resolve2(target_path)
             target = resource.get_resource(target_path)
-
         # The breadcrumb
         breadcrumb = []
         node = target
@@ -357,9 +329,8 @@ class DBResource_AddBase(STLForm):
             path_to_node = site_root_abspath.get_pathto(node.get_abspath())
             url_dic = {'target': str(path_to_node),
                        # Avoid search conservation
-                       'search_term': None,
-                       'search_field': None,
-                       'search_subfolders': None}
+                       'search_text': None,
+                       'search_type': None,}
             url = context.uri.replace(**url_dic)
             title = node.get_title()
             short_title = reduce_string(title, 12, 40)

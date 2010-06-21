@@ -4,28 +4,38 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
-<form action="" method="get" stl:if="search_fields">
+<form action="" method="get">
   <fieldset>
     <legend>Search</legend>
-    <!-- Field -->
-    <select name="search_field">
-      <option value="${field/name}" selected="${field/selected}"
-        stl:repeat="field search_fields">${field/title}</option>
-    </select>
-    <!-- Term -->
-    <input type="text" name="search_term" size="35" value="${search_term}" />
-    <!-- Search Path -->
-    <input type="hidden" name="target" value="${target}" />
-    <!-- Mode -->
-    <input type="hidden" name="mode" value="${mode}" />
-    <!-- SubFolders -->
-    &nbsp;
-    <input type="checkbox" name="search_subfolders" id="search-subfolders"
-      checked="${search_subfolders}" value="1" /><label
-      for="search-subfolders">Search subfolders</label>
-    <!-- OK -->
-    &nbsp; &nbsp;
-    <button type="submit" class="button-search">OK</button>
+    <table>
+      <tr>
+        <td>Text</td>
+        <td stl:if="show_type_form">Type</td>
+        <td></td>
+      </tr>
+      <tr>
+        <!-- Search Text -->
+        <td>
+          <input type="text" name="search_text" size="35"
+            value="${search_text}" />
+        </td>
+        <!-- Search Type -->
+        <td stl:if="show_type_form">
+          <select name="search_type">
+            <option value=""></option>
+            <option stl:repeat="type search_type" value="${type/name}"
+              selected="${type/selected}">${type/title}</option>
+          </select>
+        </td>
+        <td>
+          <button type="submit" class="button-search">Search</button>
+        </td>
+      </tr>
+      <!-- Search Path -->
+      <input type="hidden" name="target" value="${target}" />
+      <!-- Mode -->
+      <input type="hidden" name="mode" value="${mode}" />
+    </table>
   </fieldset>
 </form>
 
