@@ -47,7 +47,7 @@ class TrackerMonthlyView(MonthlyView):
     query_schema = Tracker_View.tracker_schema
     styles = ['/ui/tracker/style.css']
 
-    def get_with_new_url(self):
+    def get_with_new_url(self, resource, context):
         return False
 
 
@@ -68,7 +68,7 @@ class TrackerWeeklyView(WeeklyView):
         return template, template_fd
 
 
-    def get_with_new_url(self):
+    def get_with_new_url(self, resource, context):
         return False
 
 
