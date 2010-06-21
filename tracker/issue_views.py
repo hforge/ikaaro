@@ -6,6 +6,7 @@
 # Copyright (C) 2007-2008 Nicolas Deram <nicolas@itaapy.com>
 # Copyright (C) 2007-2008 Sylvain Taverne <sylvain@itaapy.com>
 # Copyright (C) 2008 Gautier Hayoun <gautier.hayoun@itaapy.com>
+# Copyright (C) 2010 Alexis Huet <alexis@itaapy.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,6 +22,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
+from itools.csv import Property
 from itools.datatypes import Boolean, Unicode, XMLContent
 from itools.gettext import MSG
 from itools.i18n import format_datetime
@@ -39,11 +41,12 @@ from datatypes import get_issue_fields
 
 def check_properties_differencies(prop1, prop2):
     "Check for differences of properties values"
-    if prop1 and prop2:
-        return prop1.value != prop2.value
-    else:
+    if type(prop1) in (Property, list):
         return prop1 != prop2
-
+    elif prop1 is None:
+        return prop2 is not None
+    else:
+        raise TypeError('This method wait for Property, or list of Property')
 
 ###########################################################################
 # Menu
@@ -115,12 +118,25 @@ class Issue_Edit(STLForm):
         reported_by = resource.get_reported_by()
         namespace['reported_by'] = root.get_user_title(reported_by)
 
+        # Attachments
+        attachments = resource.get_property('attachment')
+        links = []
+        get_user = root.get_user_title
+        if attachments:
+            for attachment in attachments:
+                attachment = resource.get_resource(str(attachment))
+                links.append({
+                    'name': attachment.name,
+                    'author': get_user(attachment.get_property('last_author')),
+                    'mtime': attachment.get_property('mtime')})
+        namespace['attachment'] = links
+
         return namespace
 
 
     def action(self, resource, context, form):
         # Edit
-        resource._add_record(context, form)
+        resource.add_comment(context, form)
         # Change
         context.database.change_resource(resource)
         context.message = MSG_CHANGES_SAVED
@@ -155,7 +171,8 @@ class Issue_History(STLView):
         previous_priority = None
         previous_assigned_to = None
         previous_cc_list = None
-        previons_product = None
+        previous_product = None
+        previous_attachment = None
 
         # Build the namespace
         rows = []
@@ -173,6 +190,7 @@ class Issue_History(STLView):
             comment = metadata.get_property('comment')
             cc_list = metadata.get_property('cc_list') or ()
             product = metadata.get_property('product')
+            attachment = metadata.get_property('attachment')
 
             # Solid in case the user has been removed
             user = users.get_resource(username.value, soft=True)
@@ -184,13 +202,8 @@ class Issue_History(STLView):
                 last_comment = comment
             if last_comment.get_parameter('date') == mtime.value:
                 comment = last_comment.value
-                file = last_comment.parameters.get('file')
-                if file:
-                    # XXX This is probably not clean
-                    file = ''.join(file)
             else:
                 comment = None
-                file = None
             if comment:
                 comment = XMLContent.encode(Unicode.encode(comment))
                 comment = XMLParser(comment.replace('\n', '<br />'))
@@ -208,7 +221,7 @@ class Issue_History(STLView):
                       'comment': comment,
                       'cc_list': None,
                       'product': None,
-                      'file': file}
+                      'attachment': None}
             if check_properties_differencies(title, previous_title):
                 previous_title = title
                 row_ns['title'] = title.value
@@ -271,16 +284,21 @@ class Issue_History(STLView):
                     row_ns['cc_list'] = u', '.join(new_values)
                 else:
                     row_ns['cc_list'] = ' '
-            if check_properties_differencies(product, previons_product):
-                previons_product = product
+            if check_properties_differencies(product, previous_product):
+                previous_product = product
                 row_ns['product'] = ' '
                 if product is not None:
                     product = products.get_record(int(product.value))
                     if product is not None:
                         value = products.get_record_value(product, 'title')
                         row_ns['product'] = value
+            if check_properties_differencies(attachment, previous_attachment):
+                previous_attachment= attachment
+                row_ns['attachment'] = attachment[-1].value
 
             rows.append(row_ns)
+            # Avoid attachment repetition for next comment
+            attachment = None
 
         rows.reverse()
 

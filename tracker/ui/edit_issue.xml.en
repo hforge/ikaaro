@@ -149,8 +149,22 @@
       </tr>
       <tr>
         <td valign="top" colspan="2">
-          <label for="attachement">New Attachement</label><br/>
-          <input type="file" name="file" id="attachement" size="36" />
+          <label for="attachment">New Attachement</label><br/>
+          <input type="file" name="attachment" id="attachement" size="36" />
+        </td>
+      </tr>
+      <tr>
+        <td>
+        <p>Attachment :</p>
+        </td>
+      </tr>
+      <tr stl:repeat="file attachment">
+        <td valign="top" colspan="1">
+          <a href="${file/name}/;download">${file/name}</a>
+        </td>
+        <td valign="top" colspan="2">
+          ${file/author} :
+          ${file/mtime}
         </td>
       </tr>
       <tr>

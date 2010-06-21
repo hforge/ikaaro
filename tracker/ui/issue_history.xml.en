@@ -41,8 +41,8 @@
           <stl:block stl:if="row/cc_list">
             <strong>CC:</strong> ${row/cc_list}<br/>
           </stl:block>
-          <stl:block stl:if="row/file">
-            <strong>Attachement:</strong> <a href="${row/file}">${row/file}</a>
+          <stl:block stl:if="row/attachment">
+            <strong>Attachement:</strong> <a href="${row/attachment}">${row/attachment}</a>
             <br/>
           </stl:block>
           <stl:block stl:if="row/comment">

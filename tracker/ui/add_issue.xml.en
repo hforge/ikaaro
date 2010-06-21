@@ -149,8 +149,8 @@
       </tr>
       <tr>
         <td valign="top" colspan="3">
-          <label for="attachement">Attachement</label><br/>
-          <input type="file" name="file" id="attachement" size="36" />
+          <label for="attachment">Attachment</label><br/>
+          <input type="file" name="attachment" id="attachment" size="36" />
         </td>
       </tr>
       <tr>

@@ -19,11 +19,6 @@
       </a>]&nbsp;
       </td>
     </tr>
-    <tr stl:if="comment/file">
-      <td colspan="5">
-        Attachement: <a href="${comment/file}/;download">${comment/file}</a>
-      </td>
-    </tr>
     <tr class="comment-body">
       <td colspan="5">
       <pre id="comment${comment/number}" >${comment/comment}</pre>

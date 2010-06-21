@@ -99,8 +99,7 @@ class CommentsView(STLView):
                 {'number': i,
                  'user': root.get_user_title(x.parameters['author']),
                  'datetime': format_datetime(x.parameters['date']),
-                 'comment': indent(x.value),
-                 'file': x.parameters.get('file')}
+                 'comment': indent(x.value)}
                 for i, x in enumerate(comments) ]
             comments.reverse()
 

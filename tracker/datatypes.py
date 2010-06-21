@@ -116,5 +116,5 @@ def get_issue_fields(tracker):
         'assigned_to': UsersList(resource=tracker, excluded_roles=('guests',)),
         'cc_list': UsersList(resource=tracker, multiple=True),
         'comment': Unicode,
-        'file': FileDataType}
+        'attachment': FileDataType}
 

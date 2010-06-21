@@ -262,7 +262,7 @@ class Tracker_AddIssue(STLForm):
         id = resource.get_new_id()
         issue_cls = resource.issue_class
         issue = resource.make_resource(id, issue_cls)
-        issue._add_record(context, form, new=True)
+        issue.add_comment(context, form, new=True)
 
         # Ok
         message = INFO(u'New issue added.')

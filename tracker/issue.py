@@ -60,10 +60,11 @@ class Issue(Folder):
         priority=Integer(source='metadata', indexed=True, stored=True),
         assigned_to=String(source='metadata', indexed=True, stored=True),
         cc_list=Tokens(source='metadata'),
-        # parameters: date, author, file
+        # parameters: date, author
         comment=Unicode(source='metadata', multiple=True),
         # Other
         id=Integer(indexed=True, stored=True),
+        attachment=Unicode(source='metadata', multiple=True),
         )
 
 
@@ -134,7 +135,7 @@ class Issue(Folder):
             for x in database.get_commit_hashs(filename) ]
 
 
-    def _add_record(self, context, form, new=False):
+    def add_comment(self, context, form, new=False):
         # Keep a copy of the current metadata
         old_metadata = self.metadata.clone()
         # Title
@@ -150,11 +151,11 @@ class Issue(Folder):
         cc_list = form['cc_list']
         self.set_property('cc_list', tuple(cc_list))
 
-        # Files XXX
-        file = form['file']
-        if file is not None:
+        # Attachment
+        attachment = form['attachment']
+        if attachment is not None:
             # Upload
-            filename, mimetype, body = form['file']
+            filename, mimetype, body = form['attachment']
             # Find a non used name
             name = checkid(filename)
             name, extension, language = FileName.decode(name)
@@ -164,14 +165,15 @@ class Issue(Folder):
             self.make_resource(name, cls, body=body, filename=filename,
                                extension=extension, format=mimetype)
             # Link
-            file = name
+            attachment = name
+            self.set_property('attachment', attachment)
 
         # Comment
         date = context.timestamp
         user = context.user
         author = user.name if user else None
         comment = form['comment']
-        comment = Property(comment, date=date, author=author, file=file)
+        comment = Property(comment, date=date, author=author)
         self.set_property('comment', comment)
 
         # Send a Notification Email
@@ -204,7 +206,7 @@ class Issue(Folder):
         message = MSG(u'The user {title} did some changes.')
         body +=  message.gettext(title=user_title)
         body += '\n\n'
-        if file:
+        if attachment:
             filename = unicode(filename, 'utf-8')
             message = MSG(u'New Attachment: {filename}')
             message = message.gettext(filename=filename)
