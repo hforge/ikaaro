@@ -97,8 +97,8 @@ class AddBase_BrowseContent(Folder_BrowseContent):
             return id, False
         elif column == 'name':
             id = str(resource.get_canonical_path().get_pathto(brain.abspath))
+            site_root = resource.get_site_root()
             if self.is_folder(item_resource):
-                site_root = resource.get_site_root()
                 path_to_item = site_root.get_pathto(item_resource)
                 url_dic = {'target': str(path_to_item),
                            # Avoid search conservation
@@ -108,6 +108,7 @@ class AddBase_BrowseContent(Folder_BrowseContent):
             else:
                 url = None
             title = item_resource.get_abspath()
+            title = site_root.get_abspath().get_pathto(title)
             return unicode(title), url
         else:
             return Folder_BrowseContent.get_item_value(self, resource, context,
@@ -121,6 +122,9 @@ class AddBase_BrowseContent(Folder_BrowseContent):
             if target.startswith('/'):
                 target = target.lstrip('/')
             target = site_root_abspath.resolve2(target)
+            root_abspath = context.resource.get_site_root().get_abspath()
+            if root_abspath.get_prefix(target) != root_abspath:
+                target = root_abspath
             resource = resource.get_resource(target)
         else:
             if not self.is_folder(resource):
@@ -191,8 +195,8 @@ class AddImage_BrowseContent(AddBase_BrowseContent):
             return id, False
         elif column == 'name':
             id = str(resource.get_canonical_path().get_pathto(brain.abspath))
+            site_root = resource.get_site_root()
             if self.is_folder(item_resource):
-                site_root = resource.get_site_root()
                 path_to_item = site_root.get_pathto(item_resource)
                 url_dic = {'target': str(path_to_item),
                            # Avoid search conservation
@@ -202,6 +206,7 @@ class AddImage_BrowseContent(AddBase_BrowseContent):
             else:
                 url = None
             title = item_resource.get_abspath()
+            title = site_root.get_abspath().get_pathto(title)
             return unicode(title), url
         elif column == 'icon':
             if self.is_folder(item_resource):
@@ -309,7 +314,7 @@ class DBResource_AddBase(STLForm):
         # Get the query parameters
         target_path = context.get_form_value('target')
         # Get the target folder
-        site_root = resource.get_site_root()
+        site_root = self.get_root(context)
         site_root_abspath = site_root.get_abspath()
         if target_path is None:
             if isinstance(start, Folder):
@@ -322,10 +327,14 @@ class DBResource_AddBase(STLForm):
                 target_path = target_path.lstrip('/')
             target_path = site_root_abspath.resolve2(target_path)
             target = resource.get_resource(target_path)
+            prefix = site_root_abspath.get_prefix(target_path)
+            if prefix != site_root_abspath:
+                target = site_root
         # The breadcrumb
         breadcrumb = []
         node = target
-        while node:
+        get_prefix = site_root_abspath.get_prefix
+        while node and get_prefix(node.get_abspath()) == site_root_abspath:
             path_to_node = site_root_abspath.get_pathto(node.get_abspath())
             url_dic = {'target': str(path_to_node),
                        # Avoid search conservation
