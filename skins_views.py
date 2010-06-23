@@ -116,6 +116,7 @@ class LocationTemplate(CMSTemplate):
         # Get resource & access control
         context = self.context
         here = context.resource
+        here_link = context.get_link(here)
         ac = here.get_access_control()
 
         # Tabs
@@ -138,7 +139,7 @@ class LocationTemplate(CMSTemplate):
 
             # Add the menu
             tabs.append({
-                'name': ';%s' % link,
+                'name': '%s/;%s' % (here_link, link),
                 'label': view.get_title(context),
                 'active': active,
                 'class': active and 'active' or None})

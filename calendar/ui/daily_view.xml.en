@@ -26,7 +26,7 @@
           <a href="${calendar/url}">${calendar/name}</a>
         </th>
         <td align="center" stl:repeat="col calendar/header_columns">
-          <a href="${col}" class="add-event">+</a>
+          <a stl:if="col" href="${col}" class="add-event">+</a>
         </td>
       </tr>
       <tr stl:repeat="row calendar/rows">

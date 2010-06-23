@@ -47,6 +47,8 @@ from workflow import state_widget
 
 def _get_links(base, events):
     map = {'a': 'href', 'img': 'src', 'iframe': 'src',
+           # Map
+           'area': 'href',
            # Object
            # FIXME param tag can have both src and data attributes
            'object': 'data', 'param': 'src'}
@@ -90,6 +92,8 @@ def _get_links(base, events):
 
 def _change_link(source, target, old_base, new_base, stream):
     map = {'a': 'href', 'img': 'src', 'iframe': 'src',
+           # Map
+           'area': 'href',
            # Object
            # FIXME param tag can have both src and data attributes
            'object': 'data', 'param': 'src'}

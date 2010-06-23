@@ -128,18 +128,30 @@ class File_Download(BaseView):
         return resource.handler.get_mtime()
 
 
+    def get_content_type(self, resource, context):
+        return resource.get_content_type()
+
+
+    def get_filename(self, resource, context):
+        return resource.get_property('filename')
+
+
+    def get_bytes(self, resource, context):
+        return resource.handler.to_str()
+
+
     def GET(self, resource, context):
         # Content-Type
-        content_type = resource.get_content_type()
+        content_type = self.get_content_type(resource, context)
         context.set_content_type(content_type)
         # Content-Disposition
         disposition = 'inline'
         if content_type.startswith('application/vnd.oasis.opendocument.'):
             disposition = 'attachment'
-        filename = resource.get_property('filename')
+        filename = self.get_filename(resource, context)
         context.set_content_disposition(disposition, filename)
         # Ok
-        return resource.handler.to_str()
+        return self.get_bytes(resource, context)
 
 
 
