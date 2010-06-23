@@ -129,7 +129,7 @@ class Issue_Edit(STLForm):
                     'name': attachment.name,
                     'author': get_user(attachment.get_property('last_author')),
                     'mtime': attachment.get_property('mtime')})
-        namespace['attachment'] = links
+        namespace['attachments'] = links
 
         return namespace
 

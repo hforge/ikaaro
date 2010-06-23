@@ -148,31 +148,24 @@
         </td>
       </tr>
       <tr>
-        <td valign="top" colspan="2">
-          <label for="attachment">New Attachement</label><br/>
-          <input type="file" name="attachment" id="attachement" size="36" />
-        </td>
-      </tr>
-      <tr>
-        <td>
-        <p>Attachment :</p>
-        </td>
-      </tr>
-      <tr stl:repeat="file attachment">
-        <td valign="top" colspan="1">
-          <a href="${file/name}/;download">${file/name}</a>
-        </td>
-        <td valign="top" colspan="2">
-          ${file/author} :
-          ${file/mtime}
-        </td>
-      </tr>
-      <tr>
-        <td colspan="2">
-          <button type="submit" class="button-ok">Edit</button>
+        <td valign="top" colspan="3">
+          <fieldset>
+            <legend>Attachments</legend>
+            <ul stl:if="attachments">
+              <li stl:repeat="file attachments">
+                <a href="${file/name}/;download">${file/name}</a>
+                (${file/mtime}, ${file/author})
+              </li>
+            </ul>
+            <label for="attachment">New Attachement</label><br/>
+            <input type="file" name="attachment" id="attachement" size="36" />
+          </fieldset>
         </td>
       </tr>
     </table>
+    <p>
+      <button type="submit" class="button-ok">Edit</button>
+    </p>
   </fieldset>
 </form>
 
