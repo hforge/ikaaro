@@ -33,9 +33,10 @@ from itools.web import BaseView, STLForm, STLView, get_context, INFO, ERROR
 from itools.xapian import AndQuery, PhraseQuery, RangeQuery
 
 # Import from ikaaro
-from ikaaro.datatypes import FileDataType
-from ikaaro import messages
 from grid import get_grid_data
+from ikaaro import messages
+from ikaaro.datatypes import FileDataType
+from ikaaro.utils import get_base_path_query
 
 
 resolution = timedelta.resolution
@@ -327,7 +328,7 @@ class CalendarView(STLView):
         return None
 
 
-    def search(self, query=None, **kw):
+    def search(self, calendar, query=None, **kw):
         if query is None:
             query = [ PhraseQuery(name, value) for name, value in kw.items() ]
         else:
@@ -335,13 +336,16 @@ class CalendarView(STLView):
 
         # Search only events
         query.append(PhraseQuery('format', 'event'))
+        # Only in the current calendar
+        abspath = str(calendar.get_canonical_path())
+        query.append(get_base_path_query(abspath))
         query = AndQuery(*query)
 
         # Search
         return get_context().root.search(query)
 
 
-    def search_events_in_range(self, start, end, **kw):
+    def search_events_in_range(self, calendar, start, end, **kw):
         query = [ PhraseQuery(name, value) for name, value in kw.items() ]
         if type(start) is date:
             start = datetime.combine(start, time())
@@ -351,20 +355,20 @@ class CalendarView(STLView):
             RangeQuery('dtstart', None, end),
             RangeQuery('dtend', start, None),
             *query)
-        return self.search(query)
+        return self.search(calendar, query)
 
 
-    def search_events_in_date(self, date, **kw):
+    def search_events_in_date(self, calendar, date, **kw):
         """Return a list of Component objects of type 'VEVENT' matching the
         given date and sorted if requested.
         """
         dtstart = datetime(date.year, date.month, date.day)
         dtend = dtstart + timedelta(days=1) - resolution
-        return self.search_events_in_range(dtstart, dtend, **kw)
+        return self.search_events_in_range(calendar, dtstart, dtend, **kw)
 
 
-    def get_events_to_display(self, start, end):
-        events = self.search_events_in_range(start, end)
+    def get_events_to_display(self, calendar, start, end):
+        events = self.search_events_in_range(calendar, start, end)
         return events.get_documents(sort_by='dtstart')
 
 
@@ -471,7 +475,7 @@ class MonthlyView(CalendarView):
 
         ###################################################################
         # Get a list of events to display on view
-        events = self.get_events_to_display(start, end)
+        events = self.get_events_to_display(resource, start, end)
         if isinstance(self.monthly_template, str):
             template = resource.get_resource(self.monthly_template)
         else:
@@ -556,7 +560,7 @@ class WeeklyView(CalendarView):
         events = []
         # Get a list of events to display on view
         end = start_date + timedelta(days=ndays)
-        events = self.get_events_to_display(start_date, end)
+        events = self.get_events_to_display(resource, start_date, end)
         for header in headers:
             ns_day = {}
             # Add header if given
@@ -650,7 +654,8 @@ class DailyView(CalendarView):
         # Get a dict for each event, compute colspan
         handler = calendar.handler
         events_by_index = {}
-        for event in self.search_events_in_date(c_date).get_documents():
+        results = self.search_events_in_date(calendar, c_date)
+        for event in results.get_documents():
             event = calendar.get_resource(event.name)
             event_start = event.get_property('dtstart')
             event_end = event.get_property('dtend')
