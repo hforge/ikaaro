@@ -343,8 +343,10 @@ class CalendarView(STLView):
 
     def search_events_in_range(self, start, end, **kw):
         query = [ PhraseQuery(name, value) for name, value in kw.items() ]
-        start = datetime.combine(start, time())
-        end = datetime.combine(end, time())
+        if type(start) is date:
+            start = datetime.combine(start, time())
+        if type(end) is date:
+            end = datetime.combine(end, time())
         query = AndQuery(
             RangeQuery('dtstart', None, end),
             RangeQuery('dtend', start, None),
