@@ -711,7 +711,7 @@ class DailyView(CalendarView):
                     uids = ['%s/%s' % (calendar_name, uid) for uid in uids]
                     conflicts_list.update(uids)
 
-        with_edit_url = self.get_with_edit_url(resource, context)
+        with_edit_url = self.get_with_edit_url(calendar, context)
         # Organize columns
         rows_namespace = []
         for row in rows:
@@ -767,7 +767,7 @@ class DailyView(CalendarView):
 
         # Header columns (one line with header and empty cases with only
         # '+' for daily_view)
-        with_new_url = self.get_with_new_url(resource, context)
+        with_new_url = self.get_with_new_url(calendar, context)
         if with_new_url:
             url = ';new_resource?type=event&%s' % encode_query(args)
             url = get_reference(url).replace(resource=calendar_name)
