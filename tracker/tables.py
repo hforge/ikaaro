@@ -109,7 +109,7 @@ class SelectTable_View(OrderedTable_View):
             associated_table = resource.get_resource('../%s' % column[:-1])
             handler = associated_table.handler
             # Search
-            results = handler.search(PhraseQuery('product', str(item.id)))
+            results = handler.search('product', str(item.id))
             count = len(results)
             if count == 0:
                 return 0, None
@@ -158,9 +158,8 @@ class SelectTable_View(OrderedTable_View):
             query = PhraseQuery(filter, id)
             count = len(results.search(query))
             if check_associated:
-                product_query = PhraseQuery('product', str(id))
-                module_count = len(module_handler.search(product_query))
-                version_count = len(version_handler.search(product_query))
+                module_count = len(module_handler.search('product', str(id)))
+                version_count = len(version_handler.search('product', str(id)))
                 count = count + module_count + version_count
             if count == 0:
                 handler.del_record(id)

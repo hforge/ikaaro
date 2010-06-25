@@ -23,7 +23,6 @@ from itools.csv import UniqueError, Property, is_multilingual
 from itools.datatypes import Integer, Enumerate, Tokens
 from itools.gettext import MSG
 from itools.web import INFO, ERROR, BaseView, FormError
-from itools.xapian import PhraseQuery
 
 # Import from ikaaro
 from autoform import AutoForm
@@ -55,18 +54,16 @@ class Table_View(SearchForm):
 
 
     def get_items(self, resource, context):
-        search_query = None
-
         # Build the search query
         if self.search_template is not None:
             query = context.query
             search_term = query['search_term'].strip()
             if search_term:
                 search_field = query['search_field']
-                search_query = PhraseQuery(search_field, search_term)
+                return resource.handler.search(search_field, search_term)
 
         # Ok
-        items = resource.handler.search(search_query)
+        items = resource.handler.get_records()
         return list(items)
 
 
