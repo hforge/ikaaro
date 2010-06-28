@@ -30,11 +30,10 @@ def update_catalog(parser, options, target):
     import sys
     from time import time
     from itools.core import vmsize
-    from itools.database import get_register_fields
+    from itools.database import check_database, get_register_fields
     from itools.i18n.accept import AcceptLanguage
     from itools.fs import lfs
     from itools.xapian import make_catalog, CatalogAware
-    from ikaaro.database import check_database
     from ikaaro.server import Server, ask_confirmation
     from ikaaro.server import get_fake_context
 

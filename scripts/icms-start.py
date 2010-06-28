@@ -24,11 +24,11 @@ from sys import exit
 # Import from itools
 from itools import __version__
 from itools.core import become_daemon, start_subprocess
+from itools.database import check_database
 from itools.loop import Loop
 
 # Import from ikaaro
 from ikaaro.config import get_config
-from ikaaro.database import check_database
 from ikaaro.update import is_instance_up_to_date
 from ikaaro.server import Server, get_pid, get_fake_context
 
