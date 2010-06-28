@@ -228,6 +228,10 @@ class DBResource(CatalogAware, IResource):
         self.get_handlers()
 
 
+    def traverse_resources(self):
+        yield self
+
+
     ########################################################################
     # Metadata
     ########################################################################

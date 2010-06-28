@@ -20,9 +20,6 @@ from itools.database import ROGitDatabase, GitDatabase, make_git_database
 from itools.uri import Path
 from itools.web import get_context
 
-# Import from ikaaro
-from folder import Folder
-
 
 
 class Database(GitDatabase):
@@ -78,13 +75,8 @@ class Database(GitDatabase):
         old2new = self.resources_old2new
         new2old = self.resources_new2old
 
-        if isinstance(resource, Folder):
-            for x in resource.traverse_resources():
-                path = str(x.get_canonical_path())
-                old2new[path] = None
-                new2old.pop(path, None)
-        else:
-            path = str(resource.get_canonical_path())
+        for x in resource.traverse_resources():
+            path = str(x.get_canonical_path())
             old2new[path] = None
             new2old.pop(path, None)
 
@@ -94,12 +86,8 @@ class Database(GitDatabase):
         new2old = self.resources_new2old
 
         # Catalog
-        if isinstance(resource, Folder):
-            for x in resource.traverse_resources():
-                path = str(x.get_canonical_path())
-                new2old[path] = None
-        else:
-            path = str(resource.get_canonical_path())
+        for x in resource.traverse_resources():
+            path = str(x.get_canonical_path())
             new2old[path] = None
 
 
@@ -120,27 +108,21 @@ class Database(GitDatabase):
         old2new = self.resources_old2new
         new2old = self.resources_new2old
 
-        def f(source_path, target_path):
+        old_path = source.get_canonical_path()
+        for x in source.traverse_resources():
+            source_path = x.get_canonical_path()
+            target_path = new_path.resolve2(old_path.get_pathto(source_path))
+
             source_path = str(source_path)
             target_path = str(target_path)
-
             if source_path in old2new and not old2new[source_path]:
-                raise ValueError, 'cannot move a resource that has been removed'
+                err = 'cannot move a resource that has been removed'
+                raise ValueError, err
 
             source_path = new2old.pop(source_path, source_path)
             if source_path:
                 old2new[source_path] = target_path
             new2old[target_path] = source_path
-
-
-        old_path = source.get_canonical_path()
-        if isinstance(source, Folder):
-            for x in source.traverse_resources():
-                x_old_path = x.get_canonical_path()
-                x_new_path = new_path.resolve2(old_path.get_pathto(x_old_path))
-                f(x_old_path, x_new_path)
-        else:
-            f(old_path, new_path)
 
 
     #######################################################################

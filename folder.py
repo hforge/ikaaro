@@ -172,11 +172,8 @@ class Folder(DBResource):
         # TODO this is a work-around, there should be another way to define
         # explicitly the handler class.
         source = self.get_resource(source_path)
-        if isinstance(source, Folder):
-            for resource in source.traverse_resources():
-                resource.load_handlers()
-        else:
-            source.load_handlers()
+        for resource in source.traverse_resources():
+            resource.load_handlers()
 
         return source_path, target_path
 
@@ -266,11 +263,8 @@ class Folder(DBResource):
         yield self
         for name in self._get_names():
             resource = self.get_resource(name)
-            if isinstance(resource, Folder):
-                for x in resource.traverse_resources():
-                    yield x
-            else:
-                yield resource
+            for x in resource.traverse_resources():
+                yield x
 
 
     def search_resources(self, cls=None, format=None, state=None):
