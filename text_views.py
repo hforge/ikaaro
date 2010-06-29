@@ -65,8 +65,13 @@ class Text_Edit(File_Edit):
     def action(self, resource, context, form):
         File_Edit.action(self, resource, context, form)
         if form['file'] is None:
+            handler = resource.handler
+            old_value = handler.to_text()
             data = form['data']
-            resource.handler.load_state_from_string(data)
+            if old_value == data:
+                return
+            handler.load_state_from_string(data)
+            context.database.change_resource(resource)
 
 
 
