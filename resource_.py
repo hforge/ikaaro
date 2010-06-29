@@ -21,7 +21,7 @@
 
 # Import from itools
 from itools.datatypes import Unicode, String, Integer, Boolean, DateTime
-from itools.log import log_error
+from itools.log import log_warning
 from itools.uri import Path
 from itools.web import Resource, get_context
 from itools.xapian import CatalogAware, PhraseQuery
@@ -334,11 +334,8 @@ class DBResource(CatalogAware, IResource):
             except NotImplementedError:
                 pass
             except Exception:
-                # FIXME Use a different logger
-                log_error('Indexation failed!', domain='ikaaro')
-#                log = "%s failed" % self.get_abspath()
-#               server.event_log.write(log)
-#               server.event_log.flush()
+                log = 'Indexation failed: %s' % abspath
+                log_warning(log, domain='ikaaro')
 
         # Parent path
         parent_path = None
