@@ -7,7 +7,7 @@ update:"Mettre \u00E0 jour",
 cancel:"Annuler",
 close:"Fermer",
 browse:"parcourir",
-class_name:"Class",
+class_name:"Classe",
 not_set:"-- non d\u00E9fini --",
 clipboard_msg:"Les fonctions Copier/Couper/Coller ne sont pas valables sur Mozilla et Firefox.\nSouhaitez-vous avoir plus d'informations sur ce sujet ?",
 clipboard_no_support:"Actuellement non support\u00E9 par votre navigateur.\n Veuillez utiliser les raccourcis clavier \u00E0 la place.",
@@ -91,8 +91,8 @@ paste:{
 paste_text_desc:"Coller comme texte brut",
 paste_word_desc:"Coller un texte cr\u00E9\u00E9 sous Word",
 selectall_desc:"Tout s\u00E9lectionner",
-plaintext_mode_sticky:"Paste is now in plain text mode. Click again to toggle back to regular paste mode. After you paste something you will be returned to regular paste mode.",
-plaintext_mode:"Paste is now in plain text mode. Click again to toggle back to regular paste mode."
+plaintext_mode_sticky:"Le collage est actuellement en mode texte non format\u00E9. Cliquez \u00E0 nouveau pour revenir en mode de collage ordinaire. Apr\u00E8s avoir coll\u00E9 quelque chose, vous retournerez en mode de collage ordinaire.",
+plaintext_mode:"Le collage est actuellement en mode texte non format\u00E9. Cliquez \u00E0 nouveau pour revenir en mode de collage ordinaire."
 },
 paste_dlg:{
 text_title:"Utilisez CTRL+V sur votre clavier pour coller le texte dans la fen\u00EAtre.",

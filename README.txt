@@ -23,7 +23,7 @@ Requirements
 Software    Version  Used by           Home
 ----------  -------  ----------------  --------------------------------------
 Python          2.6  ikaaro            http://www.python.org/
-itools       0.60.0  ikaaro            http://www.hforge.org/itools
+itools       0.61.3  ikaaro            http://www.hforge.org/itools
 guppy         0.1.8  Memory profiling  http://guppy-pe.sourceforge.net/
 
 Check the itools requirements.

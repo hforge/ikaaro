@@ -134,6 +134,7 @@ class Folder_Rename(STLForm):
     schema = {
         'paths': String(multiple=True, mandatory=True),
         'new_names': String(multiple=True, mandatory=True)}
+    goto_after = ';browse_content'
 
 
     def get_namespace(self, resource, context):
@@ -214,7 +215,7 @@ class Folder_Rename(STLForm):
             message = messages.MSG_RESOURCES_REFERENCED(resources=resources)
         else:
             message = messages.MSG_RENAMED
-        return context.come_back(message, goto=';browse_content')
+        return context.come_back(message, goto=self.goto_after)
 
 
 
