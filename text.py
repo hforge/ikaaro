@@ -40,7 +40,7 @@ from text_views import CSV_View, CSV_AddRow, CSV_EditRow
 
 # FIXME Add support for thumb
 css_uri_expr = compile(
-        r"url\(['\"]{0,1}([a-zA-Z0-9\./\-\_]*/;download)['\"]{0,1}\);")
+        r"url\(['\"]{0,1}([a-zA-Z0-9\./\-\_]*/;download)['\"]{0,1}\)")
 
 # FIXME This list should be built from a txt file with all the
 # encodings, or better, from a Python module that tells us which
@@ -175,7 +175,7 @@ class CSS(Text):
             # Match ?
             if path == source:
                 new_path = str(new_base.get_pathto(target)) + view
-                return "url('%s');" % new_path
+                return "url('%s')" % new_path
 
             return matchobj.group(0)
 
@@ -225,7 +225,7 @@ class CSS(Text):
             path = str(target.get_pathto(new_abs_path)) + view
             new_value = Reference('', '', path, reference.query.copy(),
                                   reference.fragment)
-            return "url('%s');" % path
+            return "url('%s')" % path
 
         data = self.to_text().encode('utf-8')
         new_data = css_uri_expr.sub(my_func, data)
