@@ -53,7 +53,7 @@ from website_views import WebSite_NewInstance
 class WebSite(RoleAware, Folder):
 
     class_id = 'WebSite'
-    class_version = '20100430'
+    class_version = '20100630'
     class_title = MSG(u'Web Site')
     class_description = MSG(u'Create a new Web Site or Work Place.')
     class_icon16 = 'icons/16x16/website.png'
@@ -86,9 +86,9 @@ class WebSite(RoleAware, Folder):
         contacts=Tokens(source='metadata'),
         emails_from_addr=String(source='metadata'),
         emails_signature=Unicode(source='metadata'),
-        google_site_verification=String(source='metadata'),
-        yahoo_site_verification=String(source='metadata'),
-        bing_site_verification=String(source='metadata'),
+        google_site_verification=String(source='metadata', default=''),
+        yahoo_site_verification=String(source='metadata', default=''),
+        bing_site_verification=String(source='metadata', default=''),
         website_languages=Tokens(source='metadata', default=('en',)),
         captcha_question=Unicode(source='metadata', default=u"2 + 3"),
         captcha_answer=Unicode(source='metadata', default=u"5"))
@@ -221,6 +221,12 @@ class WebSite(RoleAware, Folder):
             vhosts = vhosts[0].split()
             if len(vhosts) > 1:
                 self.set_property('vhosts', vhosts)
+
+
+    def update_20100630(self):
+        value = self.get_property('google-site-verification')
+        self.set_property('google_site_verification', value)
+        self.del_property('google-site-verification')
 
 
 

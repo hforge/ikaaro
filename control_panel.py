@@ -375,12 +375,12 @@ class CPEditSEO(DBResource_Edit):
     context_menus = context_menus
 
 
-    schema = {'google-site-verification': String,
+    schema = {'google_site_verification': String,
               'yahoo_site_verification': String,
               'bing_site_verification': String}
 
     widgets = [
-        TextWidget('google-site-verification',
+        TextWidget('google_site_verification',
             title=MSG(u'Google site verification key')),
         TextWidget('yahoo_site_verification',
             title=MSG(u'Yahoo site verification key')),
