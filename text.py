@@ -38,9 +38,20 @@ from text_views import Text_Edit, Text_View, PO_Edit
 from text_views import CSV_View, CSV_AddRow, CSV_EditRow
 
 
-# FIXME Add support for thumb
-css_uri_expr = compile(
-        r"url\(['\"]{0,1}([a-zA-Z0-9\./\-\_]*/;download)['\"]{0,1}\)")
+css_uri_expr = compile(r"url\((.*)\)")
+def css_get_reference(uri):
+    # FIXME Not compliant with
+    # http://www.w3.org/TR/CSS2/syndata.html#value-def-uri
+    value = uri.strip()
+    # remove optional " or '
+    if value and value[0] in ("'", '"'):
+        value = value[1:]
+    # remove optional " or '
+    if value and value[-1] in ("'", '"'):
+        value = value[:-1]
+
+    return get_reference(value)
+
 
 # FIXME This list should be built from a txt file with all the
 # encodings, or better, from a Python module that tells us which
@@ -103,7 +114,7 @@ class CSS(Text):
 
         segments = css_uri_expr.findall(data)
         for segment in segments:
-            reference = get_reference(segment)
+            reference = css_get_reference(segment)
 
             # Skip empty links, external links and links to '/ui/'
             if reference.scheme or reference.authority:
@@ -146,7 +157,7 @@ class CSS(Text):
 
         def my_func(matchobj):
             uri = matchobj.group(1)
-            reference = get_reference(uri)
+            reference = css_get_reference(uri)
 
             # Skip empty links, external links and links to '/ui/'
             if reference.scheme or reference.authority:
@@ -174,7 +185,9 @@ class CSS(Text):
 
             # Match ?
             if path == source:
-                new_path = str(new_base.get_pathto(target)) + view
+                path = str(new_base.get_pathto(target)) + view
+                new_path = Reference('', '', path, reference.query.copy(),
+                                     reference.fragment)
                 return "url('%s')" % new_path
 
             return matchobj.group(0)
@@ -194,7 +207,7 @@ class CSS(Text):
 
         def my_func(matchobj):
             uri = matchobj.group(1)
-            reference = get_reference(uri)
+            reference = css_get_reference(uri)
 
             # Skip empty links, external links and links to '/ui/'
             if reference.scheme or reference.authority:
