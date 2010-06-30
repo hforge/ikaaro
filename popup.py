@@ -22,13 +22,13 @@
 
 # Import from itools
 from itools.core import merge_dicts
-from itools.datatypes import String, Unicode, Boolean
+from itools.datatypes import String, Unicode
 from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.fs import FileName
 from itools.uri import Path
 from itools.web import STLForm, ERROR
-from itools.xapian import AndQuery, OrQuery, PhraseQuery, StartQuery
+from itools.xapian import OrQuery, PhraseQuery, StartQuery
 
 # Import from ikaaro
 from buttons import AddButton
@@ -36,7 +36,7 @@ from datatypes import FileDataType
 from folder_views import Folder_BrowseContent
 import messages
 from registry import get_resource_class
-from utils import get_base_path_query, reduce_string
+from utils import reduce_string
 
 
 ###########################################################################

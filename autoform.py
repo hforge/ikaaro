@@ -19,7 +19,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import get_abspath, merge_dicts, thingy_lazy_property
+from itools.core import get_abspath, thingy_lazy_property
 from itools.datatypes import DataType, Date, Enumerate, Boolean
 from itools.fs import lfs
 from itools.gettext import MSG

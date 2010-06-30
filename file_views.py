@@ -26,14 +26,12 @@ from itools.core import merge_dicts
 from itools.csv import Property
 from itools.datatypes import Integer, Unicode, String, HTTPDate
 from itools.gettext import MSG
-from itools.log import log_error
 from itools.handlers import get_handler_class_by_mimetype, guess_encoding
 from itools.html import HTMLParser, stream_to_str_as_xhtml
 from itools.i18n import guess_language
 from itools.uri import get_reference
 from itools.fs import FileName
 from itools.web import BaseView, STLView, INFO, ERROR
-from itools.workflow import WorkflowError
 
 # Import from ikaaro
 from autoform import title_widget, description_widget, subject_widget

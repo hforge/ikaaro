@@ -23,14 +23,13 @@
 from itools.core import freeze
 from itools.csv import Property
 from itools.database import register_field
-from itools.datatypes import Unicode, String, Integer, Boolean, DateTime
+from itools.datatypes import Unicode, String, Boolean, DateTime
 from itools.log import log_error
 from itools.uri import Path
 from itools.web import Resource, get_context
 from itools.xapian import CatalogAware, PhraseQuery
 
 # Import from ikaaro
-from metadata import Metadata
 from popup import DBResource_AddImage, DBResource_AddLink
 from popup import DBResource_AddMedia
 from registry import register_resource_class
@@ -353,7 +352,7 @@ class DBResource(CatalogAware, IResource):
 
     def get_catalog_values(self):
         from access import RoleAware
-        from file import File, Image
+        from file import Image
         from folder import Folder
 
         # Values

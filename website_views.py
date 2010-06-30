@@ -30,15 +30,12 @@ from itools.gettext import MSG
 from itools.stl import stl
 from itools.fs import lfs
 from itools.web import STLView, INFO, ERROR
-from itools.xapian import PhraseQuery, OrQuery, AndQuery, split_unicode
 
 # Import from ikaaro
 from autoform import AutoForm, SelectWidget, MultilineWidget, TextWidget
 from config import get_config
 from messages import MSG_NEW_RESOURCE
 from registry import get_resource_class
-from utils import get_base_path_query
-from views import SearchForm
 from views_new import ProxyNewInstance
 
 

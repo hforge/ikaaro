@@ -19,7 +19,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
-from cProfile import runctx
 from email.parser import HeaderParser
 from os import fdopen
 from smtplib import SMTP, SMTPRecipientsRefused, SMTPResponseException

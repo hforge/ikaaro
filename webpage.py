@@ -35,7 +35,7 @@ from itools.xml import START_ELEMENT
 from autoform import HTMLBody
 from autoform import title_widget, description_widget, subject_widget
 from autoform import file_widget, rte_widget, timestamp_widget
-from cc import Observable, SubscribeForm
+from cc import Observable
 import messages
 from file_views import File_Edit
 from multilingual import Multilingual

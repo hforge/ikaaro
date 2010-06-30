@@ -19,7 +19,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.csv import Record, Table as TableFile, is_multilingual
+from itools.csv import Record, Table as TableFile
 from itools.datatypes import Tokens
 from itools.gettext import MSG
 from itools.web import get_context

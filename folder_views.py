@@ -469,7 +469,7 @@ class Folder_BrowseContent(SearchForm):
 
         # Check input data
         if not names:
-            message = messages.MSG_NONE_SELECTED
+            context.message = messages.MSG_NONE_SELECTED
             return
 
         abspath = resource.get_abspath()
@@ -681,7 +681,6 @@ class Folder_PreviewContent(Folder_BrowseContent):
         current_size = max(min_size, min(current_size, max_size))
 
         # (1) Actions (submit buttons)
-        ac = resource.get_access_control()
         actions = []
         for button in self.get_table_actions(resource, context):
             if button.show(resource, context, items) is False:
@@ -753,7 +752,6 @@ class Folder_PreviewContent(Folder_BrowseContent):
             'columns': table_head,
             'rows': rows,
             'actions': actions}
-
 
 
 

@@ -241,7 +241,6 @@ class User_EditPreferences(STLForm):
 
     def get_namespace(self, resource, context):
         root = context.root
-        user = context.user
 
         # Languages
         user_language = resource.get_property('user_language')

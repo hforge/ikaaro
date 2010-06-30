@@ -14,9 +14,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Import from the Standard Library
-from urllib import quote
-
 # Import from itools
 from itools.core import freeze
 from itools.csv import Property
@@ -29,7 +26,6 @@ from itools.web import FormError
 from autoform import AutoForm, TextWidget, title_widget
 import messages
 from registry import get_resource_class, get_document_types
-from views import ContextMenu
 
 
 

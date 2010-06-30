@@ -196,7 +196,7 @@ class Menu_View(OrderedTable_View):
         for id in ids:
             try:
                 resource.del_record(id)
-            except ConsistencyError, e:
+            except ConsistencyError:
                 referenced.append(str(id))
             except NotAllowedError:
                 not_removed.append(str(id))
@@ -490,7 +490,6 @@ class Menu(OrderedTable):
         handler = self.handler
         site_root = context.resource.get_site_root()
         site_root_abspath = site_root.get_abspath()
-        user = context.user
         get_value = handler.get_record_value
         uris = []
         for record in handler.get_records_in_order():

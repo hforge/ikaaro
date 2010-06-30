@@ -117,7 +117,6 @@ class LocationTemplate(CMSTemplate):
         context = self.context
         here = context.resource
         here_link = context.get_link(here)
-        ac = here.get_access_control()
 
         # Tabs
         tabs = []
