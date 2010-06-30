@@ -147,6 +147,10 @@ class UIFolder(IResource, Folder):
         return self.database.get_handler(key, cls)
 
 
+    def traverse_resources(self):
+        yield self
+
+
 
 class Skin(UIFolder):
 
