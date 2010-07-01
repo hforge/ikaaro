@@ -17,6 +17,7 @@
 # Import from the Standard Library
 from re import compile
 from textwrap import TextWrapper
+import unicodedata
 
 # Import from itools
 from itools.html import xhtml_uri
@@ -52,6 +53,32 @@ class OurWrapper(TextWrapper):
             else:
                 chunks.extend(TextWrapper._split(self, segment))
         return chunks
+
+
+    # These two methods have been originaly wrote by
+    # Matt Mackall <mpm@selenic.com> for mercurial/utils.py file.
+    # http://hg.kublai.com/mercurial/main/diff/45aabc523c86/mercurial/util.py
+    def _cutdown(self, string, space_left):
+        l = 0
+        ucstring = unicode(string, 'utf8')
+        w = unicodedata.east_asian_width
+        for i in xrange(len(ucstring)):
+            l += w(ucstring[i]) in 'WFA' and 2 or 1
+            if space_left < l:
+                return (ucstring[:i].encode('utf8'),
+                        ucstring[i:].encode('utf8'))
+        return string, ''
+
+
+    def _handle_long_word(self, reversed_chunks, cur_line, cur_len, width):
+        space_left = max(width - cur_len, 1)
+
+        if self.break_long_words:
+            cut, res = self._cutdown(reversed_chunks[-1], space_left)
+            cur_line.append(cut)
+            reversed_chunks[-1] = res
+        elif not cur_line:
+            cur_line.append(reversed_chunks.pop())
 
 
 
