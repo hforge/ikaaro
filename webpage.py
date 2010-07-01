@@ -200,7 +200,9 @@ class HTMLEditView(File_Edit):
             new_body = form['data']
             language = resource.get_content_language(context)
             handler = resource.get_handler(language=language)
-            handler.set_body(new_body)
+            changed = handler.set_body(new_body)
+            if changed:
+                context.database.change_resource(resource)
 
         # Send notifications
         resource.notify_subcribers(context)
