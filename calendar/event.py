@@ -22,7 +22,7 @@ from datetime import date, datetime, time, timedelta
 # Import from itools
 from itools.core import freeze, merge_dicts
 from itools.csv import Property
-from itools.datatypes import Date, DateTime, Enumerate, String, Time, Unicode
+from itools.datatypes import Date, DateTime, Enumerate, Time, Unicode
 from itools.gettext import MSG
 from itools.web import ERROR, FormError, STLForm, get_context
 

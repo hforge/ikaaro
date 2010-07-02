@@ -508,7 +508,6 @@ class AutoForm(STLForm):
     def get_namespace(self, resource, context):
         widgets_namespace = STLForm.get_namespace(self, resource, context)
 
-        here = context.resource
         # Local Variables
         fields = self.get_schema(resource, context)
         widgets = self.get_widgets(resource, context)

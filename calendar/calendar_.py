@@ -27,7 +27,6 @@ from itools.csv import Property, property_to_str
 from itools.csv.table import get_tokens, read_name, unfold_lines
 from itools.datatypes import DataType, Date, DateTime, Integer, String
 from itools.gettext import MSG
-from itools.web import get_context
 
 # Import from ikaaro
 from ikaaro.file_views import File_View
