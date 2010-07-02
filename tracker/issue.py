@@ -371,6 +371,7 @@ class Issue(Folder):
             metadata.set_property('assigned_to', value)
 
         # Comments / Files
+        attachements = []
         for record in history.records:
             comment = history.get_record_value(record, 'comment')
             # FIXME Translate date to UTC
@@ -378,13 +379,17 @@ class Issue(Folder):
             author = history.get_record_value(record, 'username')
             comment = Property(comment, date=date, author=author)
             metadata.set_property('comment', comment)
-#            file = history.get_record_value(record, 'file')
+            file = history.get_record_value(record, 'file')
+            if file:
+                attachements.append(file)
+        if attachements:
+            metadata.set_property('attachment', attachements)
 
         # CC
         reporter = self.get_reported_by()
         value = history.get_record_value(record, 'cc_list')
         if reporter not in value:
-            value.append(reporter)
+            value = value + (reporter,)
         metadata.set_property('cc_list', value)
 
         # Remove .history
