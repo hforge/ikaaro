@@ -28,7 +28,7 @@ from itools.handlers import checkid
 from itools.fs import FileName
 from itools.uri import Path
 from itools.web import STLForm, ERROR
-from itools.xapian import OrQuery, PhraseQuery, StartQuery
+from itools.database import OrQuery, PhraseQuery, StartQuery
 
 # Import from ikaaro
 from buttons import AddButton
@@ -213,7 +213,8 @@ class AddImage_BrowseContent(AddBase_BrowseContent):
                 # icon
                 path_to_icon = item_resource.get_resource_icon(48)
                 if path_to_icon.startswith(';'):
-                    path_to_icon = Path('%s/' % brain.name).resolve(path_to_icon)
+                    path_to_icon = Path('%s/' % brain.name).resolve(
+                                                            path_to_icon)
             else:
                 path = resource.get_pathto(item_resource)
                 path_to_icon = ";thumb?width48=&height=48"

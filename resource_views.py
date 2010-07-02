@@ -26,7 +26,7 @@ from itools.http import Conflict, NotImplemented
 from itools.i18n import get_language_name
 from itools.uri import get_reference, get_uri_path
 from itools.web import BaseView, STLForm, INFO, ERROR
-from itools.xapian import PhraseQuery
+from itools.database import PhraseQuery
 
 # Import from ikaaro
 from autoform import AutoForm, title_widget, description_widget, subject_widget

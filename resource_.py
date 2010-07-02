@@ -27,7 +27,7 @@ from itools.datatypes import Unicode, String, Boolean, DateTime
 from itools.log import log_error
 from itools.uri import Path
 from itools.web import Resource, get_context
-from itools.xapian import CatalogAware, PhraseQuery
+from itools.database import CatalogAware, PhraseQuery
 
 # Import from ikaaro
 from popup import DBResource_AddImage, DBResource_AddLink

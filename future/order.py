@@ -24,7 +24,7 @@ from itools.gettext import MSG
 from itools.stl import set_prefix
 from itools.uri import get_reference, resolve_uri2, Path
 from itools.web import ERROR, INFO, get_context
-from itools.xapian import AndQuery, OrQuery, PhraseQuery, NotQuery
+from itools.database import AndQuery, OrQuery, PhraseQuery, NotQuery
 from itools.xml import XMLParser
 
 # Import from ikaaro

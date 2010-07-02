@@ -22,7 +22,7 @@ from itools.datatypes import Email, String, Unicode
 from itools.gettext import MSG
 from itools.i18n import get_language_name
 from itools.web import BaseView, STLView, STLForm, INFO, ERROR
-from itools.xapian import PhraseQuery, AndQuery, OrQuery, StartQuery
+from itools.database import PhraseQuery, AndQuery, OrQuery, StartQuery
 
 # Import from pytz
 from pytz import common_timezones

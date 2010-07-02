@@ -26,8 +26,8 @@ from datetime import datetime, timedelta
 from itools.csv import Property
 from itools.datatypes import Integer, String, Unicode
 from itools.gettext import MSG
-from itools.xapian import RangeQuery, AndQuery, OrQuery, PhraseQuery
-from itools.xapian import StartQuery
+from itools.database import RangeQuery, AndQuery, OrQuery, PhraseQuery
+from itools.database import StartQuery
 
 # Import from ikaaro
 from ikaaro.folder import Folder

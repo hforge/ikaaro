@@ -23,7 +23,7 @@ from itools.core import merge_dicts
 from itools.datatypes import Boolean, String, Unicode
 from itools.datatypes import Enumerate
 from itools.gettext import MSG
-from itools.xapian import PhraseQuery, AndQuery
+from itools.database import PhraseQuery, AndQuery
 
 # Import from ikaaro
 from ikaaro.autoform import title_widget, CheckboxWidget, SelectWidget

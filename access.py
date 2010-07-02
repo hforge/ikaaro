@@ -24,7 +24,7 @@ from itools.datatypes import Boolean, Email, Tokens, Unicode, String
 from itools.gettext import MSG
 from itools.web import AccessControl as BaseAccessControl, STLForm, INFO
 from itools.web import ERROR
-from itools.xapian import AndQuery, OrQuery, PhraseQuery, StartQuery
+from itools.database import AndQuery, OrQuery, PhraseQuery, StartQuery
 
 # Import from ikaaro
 from buttons import RemoveButton

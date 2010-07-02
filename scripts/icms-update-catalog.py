@@ -33,7 +33,7 @@ def update_catalog(parser, options, target):
     from itools.database import check_database, get_register_fields
     from itools.i18n.accept import AcceptLanguage
     from itools.fs import lfs
-    from itools.xapian import make_catalog, CatalogAware
+    from itools.database import make_catalog, CatalogAware
     from ikaaro.server import Server, ask_confirmation
     from ikaaro.server import get_fake_context
 

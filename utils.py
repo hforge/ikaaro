@@ -24,7 +24,8 @@ from sys import platform
 # Import from itools
 from itools.stl import STLTemplate
 from itools.web import get_context
-from itools.xapian import AllQuery, PhraseQuery, NotQuery, OrQuery, StartQuery
+from itools.database import AllQuery, PhraseQuery, NotQuery, OrQuery
+from itools.database import StartQuery
 
 if platform[:3] == 'win':
     from utils_win import is_pid_running, kill

@@ -32,7 +32,7 @@ from itools.i18n import format_datetime
 from itools.stl import set_prefix
 from itools.uri import get_reference, Path
 from itools.web import BaseView, STLForm, ERROR
-from itools.xapian import AndQuery, OrQuery, PhraseQuery, TextQuery
+from itools.database import AndQuery, OrQuery, PhraseQuery, TextQuery
 
 # Import from ikaaro
 from buttons import RemoveButton, RenameButton, CopyButton, CutButton

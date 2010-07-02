@@ -23,7 +23,7 @@ from itools.gettext import MSG
 from itools.handlers import Folder as FolderHandler
 from itools.uri import Path
 from itools.web import get_context, BaseView
-from itools.xapian import AndQuery, NotQuery, PhraseQuery
+from itools.database import AndQuery, NotQuery, PhraseQuery
 
 # Import from ikaaro
 from exceptions import ConsistencyError

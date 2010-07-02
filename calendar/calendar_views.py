@@ -30,7 +30,7 @@ from itools.ical import Time
 from itools.stl import stl
 from itools.uri import encode_query, get_reference
 from itools.web import BaseView, STLForm, STLView, get_context, INFO, ERROR
-from itools.xapian import AndQuery, PhraseQuery, RangeQuery
+from itools.database import AndQuery, PhraseQuery, RangeQuery
 
 # Import from ikaaro
 from grid import get_grid_data
