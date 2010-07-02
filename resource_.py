@@ -244,7 +244,7 @@ class DBResource(CatalogAware, IResource):
         'description': Multilingual(source='metadata', indexed=True),
         'subject': Multilingual(source='metadata', indexed=True),
         # Key & class id
-        'abspath': String(key_field=True, indexed=True, stored=True),
+        'abspath': String(indexed=True, stored=True),
         'format': String(indexed=True, stored=True),
         # Folder's view
         'parent_path': String(indexed=True),
