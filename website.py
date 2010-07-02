@@ -53,7 +53,7 @@ from website_views import WebSite_NewInstance
 class WebSite(RoleAware, Folder):
 
     class_id = 'WebSite'
-    class_version = '20100630'
+    class_version = '20100702'
     class_title = MSG(u'Web Site')
     class_description = MSG(u'Create a new Web Site or Work Place.')
     class_icon16 = 'icons/16x16/website.png'
@@ -227,6 +227,23 @@ class WebSite(RoleAware, Folder):
         value = self.get_property('google-site-verification')
         self.set_property('google_site_verification', value)
         self.del_property('google-site-verification')
+
+
+    def update_20100702(self):
+        theme = self.get_resource('theme', soft=True)
+        if theme and isinstance(theme, Theme) is False:
+            raise RuntimeError, 'A resource named theme already exists'
+
+        # Theme folder
+        theme = self.make_resource('theme', Theme, title={'en': u'Theme'})
+        # Add home/contact links
+        menu = theme.get_resource('menu/menu')
+        menu.add_new_record({'path': '../../..',
+                             'title': Property(u'Home', language='en'),
+                             'target': '_top'})
+        menu.add_new_record({'path': '../../../;contact',
+                             'title': Property(u'Contact', language='en'),
+                             'target': '_top'})
 
 
 
