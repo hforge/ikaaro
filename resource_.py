@@ -451,9 +451,10 @@ class DBResource(CatalogAware, IResource):
         """
 
 
-    def update_relative_links(self, target):
-        """Update the relative links coming out from this resource, so they
-        are not broken when this resource moves to 'target'.
+    def update_relative_links(self, source):
+        """Update the relative links coming out from this resource after it
+        was moved, so they are not broken. The old path is in parameter. The
+        new path is "self.get_canonical_path()".
         """
 
 
