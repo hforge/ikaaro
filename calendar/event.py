@@ -216,7 +216,7 @@ class Event(File):
     class_description = MSG(u'Calendar event')
     class_icon16 = 'icons/16x16/event.png'
     class_icon48 = 'icons/48x48/event.png'
-    class_views = ['edit', 'backlinks', 'edit_state']
+    class_views = ['edit', 'links', 'backlinks', 'edit_state']
 
 
     class_schema = merge_dicts(

@@ -51,7 +51,7 @@ class StoredSearch(Text):
     class_id = 'stored_search'
     class_title = MSG(u'Stored Search')
     class_handler = StoredSearchFile
-    class_views = ['view', 'backlinks', 'commit_log']
+    class_views = ['view', 'links', 'backlinks', 'commit_log']
 
     # Disable edit view
     edit = None

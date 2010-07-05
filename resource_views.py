@@ -20,13 +20,14 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.datatypes import DateTime, String, Unicode
+from itools.core import merge_dicts
+from itools.datatypes import DateTime, Integer, String, Unicode
 from itools.gettext import MSG
 from itools.http import Conflict, NotImplemented
 from itools.i18n import get_language_name
 from itools.uri import get_reference, get_uri_path
 from itools.web import BaseView, STLForm, INFO, ERROR
-from itools.database import PhraseQuery
+from itools.database import OrQuery, PhraseQuery
 
 # Import from ikaaro
 from autoform import AutoForm, title_widget, description_widget, subject_widget
@@ -34,8 +35,8 @@ from autoform import timestamp_widget
 from datatypes import CopyCookie
 from exceptions import ConsistencyError
 from folder_views import Folder_BrowseContent
-import messages
 from views import ContextMenu
+import messages
 
 
 
@@ -121,16 +122,15 @@ class DBResource_Edit(AutoForm):
 
 
 
-class DBResource_Backlinks(Folder_BrowseContent):
-    """Backlinks are the list of resources pointing to this resource.  This
-    view answers the question "where is this resource used?" You'll see all
-    WebPages (for example) referencing it.  If the list is empty, you can
-    consider it is "orphan".
-    """
+class DBResource_Links(Folder_BrowseContent):
+    """Links are the list of resources used by this resource."""
 
     access = 'is_allowed_to_view'
-    title = MSG(u"Backlinks")
+    title = MSG(u"Links")
     icon = 'rename.png'
+
+    query_schema = merge_dicts(Folder_BrowseContent.query_schema,
+                               batch_size=Integer(default=0))
 
     search_template = None
     search_schema = {}
@@ -141,11 +141,29 @@ class DBResource_Backlinks(Folder_BrowseContent):
 
 
     def get_items(self, resource, context):
-        query = PhraseQuery('links', str(resource.get_canonical_path()))
+        links = resource.get_links()
+        links = list(set(links))
+        query = OrQuery(*[ PhraseQuery('abspath', link)
+                           for link in links ])
         return context.root.search(query)
 
 
     table_actions = []
+
+
+
+class DBResource_Backlinks(DBResource_Links):
+    """Backlinks are the list of resources pointing to this resource. This
+    view answers the question "where is this resource used?" You'll see all
+    WebPages (for example) referencing it. If the list is empty, you can
+    consider it is "orphan".
+    """
+
+    title = MSG(u"Backlinks")
+
+    def get_items(self, resource, context):
+        query = PhraseQuery('links', str(resource.get_canonical_path()))
+        return context.root.search(query)
 
 
 

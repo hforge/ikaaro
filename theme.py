@@ -42,7 +42,7 @@ class Theme(Folder):
     class_icon16 = 'icons/16x16/theme.png'
     class_icon48 = 'icons/48x48/theme.png'
     class_views = ['edit', 'edit_css', 'edit_menu', 'browse_content',
-                   'preview_content', 'backlinks', 'commit_log',
+                   'preview_content', 'links', 'backlinks', 'commit_log',
                    'control_panel']
     __fixed_handlers__ = ['style', 'menu']
 

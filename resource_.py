@@ -34,7 +34,7 @@ from popup import DBResource_AddImage, DBResource_AddLink
 from popup import DBResource_AddMedia
 from registry import register_resource_class
 from resource_views import DBResource_Edit, DBResource_Backlinks
-from resource_views import LoginView, LogoutView
+from resource_views import DBResource_Links, LoginView, LogoutView
 from resource_views import Put_View, Delete_View
 from revisions_views import DBResource_CommitLog, DBResource_Changes
 from workflow import WorkflowAware
@@ -592,6 +592,7 @@ class DBResource(CatalogAware, IResource):
     commit_log = DBResource_CommitLog()
     changes = DBResource_Changes()
     backlinks = DBResource_Backlinks()
+    links = DBResource_Links()
     http_put = Put_View()
     http_delete = Delete_View()
 
