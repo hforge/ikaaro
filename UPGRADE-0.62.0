@@ -48,7 +48,8 @@ summarizes these changes:
 
   Before                                 Now
   -------------------------------------  --------------------------------------
-  from ikaaro.forms import XXX           from ikaaro.autoform import XXX
+  ikaaro.forms.XXX                       ikaaro.autoform.XXX
+  ikaaro.registry.register_field         itools.database.register_field
 
 
 Autoform
@@ -66,3 +67,32 @@ use now instead of the old one:
   Enumerate(multiple=True)    SelectRadio               CheckboxWidget
 
 
+Resources
+=====================
+
+The definition of the metadata and the definition of the fields to be
+indexed or stored by the catalog have been merged.
+
+You don't need to register the fields in the catalog anymore, this is
+done automatically in the new version.
+
+Now multilingual fields are explicitely defined as such.
+
+  # Before
+  class MyResource(BaseClass):
+      @classmethod
+      def get_metadata_schema(cls):
+          schema = BaseClass.get_metadata_schema()
+          schema['my_title'] = Unicode
+          return schema
+
+  register_field('my_title', Unicode(is_stored=True, is_indexed=True))
+  register_field('foobar', Integer(is_indexed=True))
+
+  # Now
+  class MyResource(BaseClass):
+      class_schema = merge_dicts(
+          BaseClass.class_schema,
+          my_title=Unicode(source='metadata', multilingual=True,
+                           indexed=True, stored=True),
+          foobar=Integer(indexed=True))
