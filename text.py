@@ -304,7 +304,7 @@ class CSV(Text):
 
 
     # Views
-    edit = File_Edit
+    edit = File_Edit()
     view = CSV_View()
     add_row = CSV_AddRow()
     edit_row = CSV_EditRow()
