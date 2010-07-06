@@ -146,20 +146,21 @@ class Metadata(File):
         for name in names:
             property = properties[name]
             datatype = get_datatype(name, default=String)
+            is_empty = datatype.is_empty
             p_type = type(property)
             if p_type is dict:
                 languages = property.keys()
                 languages.sort()
                 lines += [
                     property_to_str(name, property[x], datatype, p_schema)
-                    for x in languages if property[x].value ]
+                    for x in languages if not is_empty(property[x].value) ]
             elif p_type is list:
                 lines += [
                     property_to_str(name, x, datatype, p_schema)
-                    for x in property if x.value ]
+                    for x in property if not is_empty(x.value) ]
             elif property.value is None:
                 pass
-            elif not datatype.is_empty(property.value):
+            elif not is_empty(property.value):
                 lines.append(
                     property_to_str(name, property, datatype, p_schema))
 
@@ -257,7 +258,10 @@ class Metadata(File):
             return
 
         # Case 5: Multiple (append)
-        properties.setdefault(name, []).append(value)
+        cls = get_resource_class(self.format)
+        datatype = cls.get_property_datatype(name)
+        if not datatype.is_empty(value.value):
+            properties.setdefault(name, []).append(value)
 
 
     def set_property(self, name, value):
