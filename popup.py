@@ -145,6 +145,7 @@ class AddBase_BrowseContent(Folder_BrowseContent):
             if not self.is_folder(resource):
                 resource = resource.parent
             namespace['target'] = resource.get_abspath()
+        namespace['target_id'] = context.get_form_value('target_id')
         namespace['mode'] = context.get_form_value('mode')
         namespace['show_type_form'] = self.show_type_form
         return namespace

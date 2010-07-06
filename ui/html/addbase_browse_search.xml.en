@@ -35,6 +35,8 @@
       <input type="hidden" name="target" value="${target}" />
       <!-- Mode -->
       <input type="hidden" name="mode" value="${mode}" />
+      <!-- Target ID -->
+      <input type="hidden" name="target_id" value="${target_id}" />
     </table>
   </fieldset>
 </form>
