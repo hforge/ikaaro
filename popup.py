@@ -103,7 +103,9 @@ class AddBase_BrowseContent(Folder_BrowseContent):
                 url_dic = {'target': str(path_to_item),
                            # Avoid search conservation
                            'search_text': None,
-                           'search_type': None,}
+                           'search_type': None,
+                           # Reset batch
+                           'batch_start': None}
                 url = context.uri.replace(**url_dic)
             else:
                 url = None
@@ -201,7 +203,9 @@ class AddImage_BrowseContent(AddBase_BrowseContent):
                 url_dic = {'target': str(path_to_item),
                            # Avoid search conservation
                            'search_text': None,
-                           'search_type': None,}
+                           'search_type': None,
+                           # Reset batch
+                           'batch_start': None}
                 url = context.uri.replace(**url_dic)
             else:
                 url = None
