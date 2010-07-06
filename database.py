@@ -37,8 +37,7 @@ class Database(GitDatabase):
                 resource._on_move_resource(source)
 
         # 2. Documents to unindex (the update_links methods calls
-        # server.change_resource which may modify the resources_old2new
-        # dictionary)
+        # 'change_resource' which may modify the resources_old2new dictionary)
         docs_to_unindex = self.resources_old2new.keys()
         self.resources_old2new.clear()
 

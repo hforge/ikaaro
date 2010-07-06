@@ -109,7 +109,7 @@ class Theme(Folder):
                 # Build the new reference with the right path
                 self.set_property(key, new_base.get_pathto(target))
 
-        get_context().server.change_resource(self)
+        get_context().database.change_resource(self)
 
 
     def update_relative_links(self, source):
