@@ -24,7 +24,7 @@ from itools.core import freeze
 from itools.csv import Property
 from itools.database import register_field
 from itools.datatypes import Unicode, String, Boolean, DateTime
-from itools.log import log_error
+from itools.log import log_warning
 from itools.uri import Path
 from itools.web import Resource, get_context
 from itools.database import CatalogAware, PhraseQuery
@@ -391,11 +391,8 @@ class DBResource(CatalogAware, IResource):
             except NotImplementedError:
                 pass
             except Exception:
-                # FIXME Use a different logger
-                log_error('Indexation failed!', domain='ikaaro')
-#                log = "%s failed" % self.get_abspath()
-#               server.event_log.write(log)
-#               server.event_log.flush()
+                log = 'Indexation failed: %s' % abspath
+                log_warning(log, domain='ikaaro')
 
         # Parent path
         parent_path = None
@@ -483,9 +480,10 @@ class DBResource(CatalogAware, IResource):
         """
 
 
-    def update_relative_links(self, target):
-        """Update the relative links coming out from this resource, so they
-        are not broken when this resource moves to 'target'.
+    def update_relative_links(self, source):
+        """Update the relative links coming out from this resource after it
+        was moved, so they are not broken. The old path is in parameter. The
+        new path is "self.get_canonical_path()".
         """
 
 
