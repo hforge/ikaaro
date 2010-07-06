@@ -16,12 +16,13 @@
     <link type="text/css" rel="stylesheet" stl:repeat="style styles"
       href="${style}" />
     <!-- JavaScript -->
-    <script type="text/javascript" stl:repeat="script scripts"
-        src="${script}" />
+    <script type="text/javascript" stl:repeat="script scripts" src="${script}"
+      />
     <!-- Icon -->
     <link rel="shortcut icon" href="${favicon_href}" type="${favicon_type}" />
   </head>
   <body>
+  <div id="page">
 
     <!-- Header -->
     <div id="header">
@@ -63,7 +64,7 @@
       </ul>
       <!-- Logo -->
       <a href="/" stl:if="logo_href" id="logo">
-          <img src="${logo_href}"/>
+        <img src="${logo_href}"/>
       </a>
       <div class="clear" />
     </div>
@@ -80,7 +81,7 @@
           <td id="content" valign="top">
             ${body}
           </td>
-          <td id="right" valign="top">
+          <td id="right" valign="top" stl:if="context_menus">
             <stl:block stl:repeat="menu context_menus">${menu}<br/></stl:block>
           </td>
         </tr>
@@ -93,5 +94,6 @@
       <a href="/;credits">Credits</a>
       <a href="/;license">License</a>
     </div>
+  </div>
   </body>
 </html>

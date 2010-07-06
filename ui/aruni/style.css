@@ -17,12 +17,29 @@ legend {
  * ui/aruni/template.xhtml.en
  *************************************************************************/
 
+body {
+  background: #aaa;
+}
+
+div#page {
+  background: #fff;
+  border-radius: 0 0 10px 10px;
+  -moz-border-radius: 0 0 10px 10px;
+  -webkit-border-radius: 0 0 10px 10px;
+  box-shadow: 1px 1px 3px #444;
+  -moz-box-shadow: 1px 1px 3px #444;
+  -webkit-box-shadow: 1px 1px 3px #444;
+  margin: 0 auto 30px auto;
+  max-width: 960px;
+}
+
 #header {
   text-align: right;
   background: #729fcf;
   color: #fff;
   font-size: 1.2em;
   margin-bottom: 10px;
+  min-height: 70px;
   padding: 6px 10px 3px 10px;
   position: relative;
 }
@@ -137,16 +154,15 @@ body > #header {
 }
 
 #header #menu li a {
+  background: #777;
+  border-radius: 5px 5px 0 0;
   -moz-border-radius: 5px 5px 0 0;
   -webkit-border-radius: 5px 5px 0 0;
-  border-radius: 5px 5px 0 0;
-
+  color: #fff;
   display: block;
   font-size: 1em;
   padding: 5px 15px;
   text-decoration: none;
-  background: #888A85;
-  color: #fff;
 }
 
 #header #menu li a:hover,
@@ -164,15 +180,18 @@ body > #header {
 }
 
 #footer {
-  text-align: center;
-  border-top: 1px solid #729fcf;
-  font-size: 1.0em;
+  background: #777;
+  border-radius: 0 0 10px 10px;
+  -moz-border-radius: 0 0 10px 10px;
+  -webkit-border-radius: 0 0 10px 10px;
+  color: #fff;
   margin: 35px auto 0 auto;
-  padding: 3px;
-  width: 500px;
+  padding: 5px;
+  text-align: center;
 }
 
 #footer a {
+  color: #fff;
   margin-left: 20px;
   margin-right: 20px;
   text-decoration: none;
@@ -192,7 +211,7 @@ body > #header {
 #body {
   padding: 10px;
   font-size: 1.4em;
-  min-height: 280px;
+  min-height: 450px;
 }
 
 #content h1, #content h2, #content h3, #content h4, #content h5, #content h6 {
