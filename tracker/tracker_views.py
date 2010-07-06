@@ -679,12 +679,14 @@ class Tracker_ExportToCSVForm(Tracker_View):
                 continue
             value = query[name]
             datatype = schema[name]
-            widget = HiddenWidget(name)
             if datatype.multiple is True:
                 for value in value:
-                    parameters.append(widget.to_html(datatype, value))
+                    print name, datatype, value
+                    widget = HiddenWidget(name, datatype=datatype, value=value)
+                    parameters.append(widget.render())
             elif value:
-                parameters.append(widget.to_html(datatype, value))
+                widget = HiddenWidget(name, datatype=datatype, value=value)
+                parameters.append(widget.render())
         namespace['search_parameters'] = parameters
 
         return namespace
