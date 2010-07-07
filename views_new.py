@@ -23,7 +23,7 @@ from itools.handlers import checkid
 from itools.web import FormError
 
 # Import from ikaaro
-from autoform import AutoForm, TextWidget, title_widget
+from autoform import AutoForm, ReadOnlyWidget, TextWidget, title_widget
 import messages
 from registry import get_resource_class, get_document_types
 
@@ -40,9 +40,11 @@ class NewInstance(AutoForm):
         'name': String,
         'title': Unicode})
     schema = freeze({
+        'cls_description': Unicode,
         'name': String,
         'title': Unicode})
     widgets = freeze([
+        ReadOnlyWidget('cls_description'),
         title_widget,
         TextWidget('name', title=MSG(u'Name'), default='')])
     submit_value = MSG(u'Add')
@@ -64,6 +66,12 @@ class NewInstance(AutoForm):
     def get_value(self, resource, context, name, datatype):
         if name in self.get_query_schema():
             return context.query[name]
+        elif name == 'cls_description':
+            type = context.query['type']
+            if not type:
+                return ''
+            cls = get_resource_class(type)
+            return cls.class_description.gettext()
         return AutoForm.get_value(self, resource, context, name, datatype)
 
 
