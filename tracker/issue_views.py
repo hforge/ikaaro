@@ -25,7 +25,6 @@
 from itools.csv import Property
 from itools.datatypes import Boolean, Unicode, XMLContent
 from itools.gettext import MSG
-from itools.i18n import format_datetime
 from itools.web import STLForm, STLView
 from itools.xml import XMLParser
 
@@ -119,16 +118,15 @@ class Issue_Edit(STLForm):
         namespace['reported_by'] = root.get_user_title(reported_by)
 
         # Attachments
-        attachments = resource.get_property('attachment')
         links = []
         get_user = root.get_user_title
-        if attachments:
-            for attachment in attachments:
-                attachment = resource.get_resource(str(attachment))
-                links.append({
-                    'name': attachment.name,
-                    'author': get_user(attachment.get_property('last_author')),
-                    'mtime': attachment.get_property('mtime')})
+        for attachment in resource.get_property('attachment'):
+            attachment = resource.get_resource(attachment)
+            mtime = attachment.get_property('mtime')
+            links.append({
+                'name': attachment.name,
+                'author': get_user(attachment.get_property('last_author')),
+                'mtime': context.format_datetime(mtime)})
         namespace['attachments'] = links
 
         return namespace
@@ -210,7 +208,7 @@ class Issue_History(STLView):
             i += 1
             row_ns = {'number': i,
                       'user': usertitle,
-                      'datetime': format_datetime(mtime.value),
+                      'datetime': context.format_datetime(mtime.value),
                       'title': None,
                       'version': None,
                       'type': None,

@@ -21,7 +21,6 @@ import unicodedata
 
 # Import from itools
 from itools.html import xhtml_uri
-from itools.i18n import format_datetime
 from itools.web import STLView
 from itools.xml import START_ELEMENT, END_ELEMENT, TEXT
 
@@ -125,7 +124,7 @@ class CommentsView(STLView):
             comments = [
                 {'number': i,
                  'user': root.get_user_title(x.parameters['author']),
-                 'datetime': format_datetime(x.parameters['date']),
+                 'datetime': context.format_datetime(x.parameters['date']),
                  'comment': indent(x.value)}
                 for i, x in enumerate(comments) ]
             comments.reverse()

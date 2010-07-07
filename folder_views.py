@@ -28,7 +28,6 @@ from itools.core import merge_dicts
 from itools.datatypes import Boolean, Integer, String, Unicode
 from itools.gettext import MSG
 from itools.handlers import checkid
-from itools.i18n import format_datetime
 from itools.stl import set_prefix
 from itools.uri import get_reference, Path
 from itools.web import BaseView, STLForm, ERROR
@@ -354,8 +353,7 @@ class Folder_BrowseContent(SearchForm):
             return item_resource.class_title.gettext()
         elif column == 'mtime':
             # Last Modified
-            accept = context.accept_language
-            return format_datetime(brain.mtime, accept=accept)
+            return context.format_datetime(brain.mtime)
         elif column == 'last_author':
             # Last author
             author =  brain.last_author

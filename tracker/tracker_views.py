@@ -27,7 +27,6 @@ from itools.core import merge_dicts, thingy_lazy_property
 from itools.csv import CSVFile, Property
 from itools.datatypes import Boolean, Integer, String, Unicode
 from itools.gettext import MSG
-from itools.i18n import format_datetime
 from itools.stl import stl
 from itools.uri import encode_query, Reference
 from itools.web import BaseView, BaseForm, STLForm, FormError, INFO, ERROR
@@ -437,7 +436,7 @@ class Tracker_View(BrowseForm):
             return user.get_title()
         # Mtime
         if column == 'mtime':
-            return format_datetime(value)
+            return context.format_datetime(value)
 
         # Tables
         table = resource.get_resource(column).handler
@@ -731,7 +730,7 @@ class Tracker_ExportToCSV(BaseView):
         # Create the CSV
         csv = CSVFile()
         for issue in issues:
-            issue = get_issue_informations(resource, issue)
+            issue = get_issue_informations(resource, issue, context)
             row = []
             for name, label in columns:
                 value = issue[name]
@@ -777,7 +776,7 @@ class Tracker_ExportToText(Tracker_ExportToCSVForm):
         selected_items = query['ids']
         if selected_items:
             items = [ x for x in items if x.name in selected_items ]
-        items = [ get_issue_informations(resource, x) for x in items ]
+        items = [ get_issue_informations(resource, x, context) for x in items ]
         # Create the text
         lines = []
         for item in items:
@@ -925,7 +924,7 @@ class Tracker_ChangeSeveralBugs(Tracker_View):
 
 
 
-def get_issue_informations(resource, item):
+def get_issue_informations(resource, item, context):
     """Construct a dict with issue informations.  This dict is used to
     construct a line for a table.
     """
@@ -933,8 +932,7 @@ def get_issue_informations(resource, item):
     infos = {
         'name': item.name,
         'id': item.id,
-        'title': item.title,
-    }
+        'title': item.title}
 
     # Select Tables
     get_resource = resource.get_resource
@@ -960,7 +958,7 @@ def get_issue_informations(resource, item):
             infos['assigned_to'] = user.get_title()
 
     # Modification Time
-    infos['mtime'] = format_datetime(item.mtime)
+    infos['mtime'] = context.format_datetime(item.mtime)
 
     return infos
 

@@ -66,6 +66,7 @@ class User(AccessControl, Folder):
         'email': Email(source='metadata', indexed=True, stored=True),
         'password': Password(source='metadata'),
         'user_language': String(source='metadata'),
+        'user_timezone': String(source='metadata'),
         'user_must_confirm': String(source='metadata'),
         # Metadata (backwards compatibility)
         'username': String(source='metadata', indexed=True, stored=True),
@@ -147,6 +148,10 @@ class User(AccessControl, Folder):
             context.set_cookie('__ac', cookie, path='/')
         else:
             context.set_cookie('__ac', cookie, path='/', expires=expires)
+
+
+    def get_timezone(self):
+        return self.get_property('user_timezone')
 
 
     ########################################################################

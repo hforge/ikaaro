@@ -64,8 +64,7 @@ class Issue(Folder):
         comment=Unicode(source='metadata', multiple=True),
         # Other
         id=Integer(indexed=True, stored=True),
-        attachment=Unicode(source='metadata', multiple=True),
-        )
+        attachment=String(source='metadata', multiple=True))
 
 
     def get_catalog_values(self):
