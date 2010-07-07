@@ -82,38 +82,35 @@ class Issue(Folder):
 
 
     def get_links(self):
-        base = self.get_abspath()
-
-        comments = self.metadata.get_property('comment')
-        if comments is None:
-            return []
+        base = self.get_canonical_path()
 
         links = []
-        for comment in comments:
-            filename = comment.parameters.get('file')
-            if filename:
-                links.append(str(base.resolve2(filename)))
+        attachments = self.metadata.get_property('attachment')
+        for attachment in attachments:
+            # attachment.value is an unicode
+            links.append(str(base.resolve2(str(attachment.value))))
         return links
 
 
     def update_links(self, source, target):
-        base = self.get_abspath()
+        base = self.get_canonical_path()
         resources_new2old = get_context().database.resources_new2old
         base = str(base)
         old_base = resources_new2old.get(base, base)
         old_base = Path(old_base)
         new_base = Path(base)
 
-        history = self.get_history()
-        for record in history.get_records():
-            filename = history.get_record_value(record, 'file')
-            if not filename:
-                continue
-            path = old_base.resolve2(filename)
+        attachments = self.metadata.get_property('attachment')
+        new_attachments = []
+        for attachment in attachments:
+            path = old_base.resolve2(str(attachment.value))
             if path == source:
                 value = str(new_base.get_pathto(target))
-                history.update_record(record.id, **{'file': value})
+                new_attachments.append(value)
+            else:
+                new_attachments.append(attachment)
 
+        self.set_property('attachment', new_attachments)
         get_context().database.change_resource(self)
 
 
