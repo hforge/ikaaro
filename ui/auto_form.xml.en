@@ -12,11 +12,13 @@
     <table>
       <tr stl:repeat="widget widgets">
         <td>
-          <label for="${widget/name}">${widget/title}</label>
-          <span stl:if="widget/mandatory" class="field-is-missing"
-            title="This field is required">*</span>
-          <span stl:if="widget/tip" title="${widget/tip}">(?)</span>
-          <br/>
+          <stl:block stl:if="widget/title">
+            <label for="${widget/name}">${widget/title}</label>
+            <span stl:if="widget/mandatory" class="field-is-missing"
+              title="This field is required">*</span>
+            <span stl:if="widget/tip" title="${widget/tip}">(?)</span>
+            <br/>
+          </stl:block>
           <span stl:if="widget/error" class="field-error">${widget/error}<br/></span>
           ${widget/widget}
         </td>
