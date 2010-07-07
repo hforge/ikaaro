@@ -409,7 +409,7 @@ class Calendar(Folder):
 # XXX Upgrade code, to remove in 0.71
 ###########################################################################
 from itools.csv import Table as TableFile
-from itools.ical.types import record_properties
+from itools.ical.datatypes import record_properties
 from ikaaro.table import Table
 
 
