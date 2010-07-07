@@ -70,8 +70,19 @@ use now instead of the old one:
 Resources
 =====================
 
-The definition of the metadata and the definition of the fields to be
-indexed or stored by the catalog have been merged.
+(1) The API to create new resources has been remade and simplified:
+
+  # Before
+  DBResource.make_resource(cls, container, name, *args, **kw)
+  DBResource._make_resource(cls, folder, name, *args, **kw)
+  DBResource.build_metadata(cls, format=None, **kw)
+
+  # Now
+  Folder.make_resource(self, name, cls, **kw)
+  DBResource.init_resource(self, **kw)
+
+(2) The definition of the metadata and the definition of the fields to
+be indexed or stored by the catalog have been merged.
 
 You don't need to register the fields in the catalog anymore, this is
 done automatically in the new version.
