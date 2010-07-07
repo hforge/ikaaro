@@ -527,11 +527,18 @@ class AutoForm(STLForm):
             widget_namespace['widget'] = widget.render()
             ns_widgets.append(widget_namespace)
 
+        for widget in widgets:
+            if not issubclass(widget, ReadOnlyWidget):
+                first_widget = widget.name
+                break
+        else:
+            first_widget = None
+
         # Build namespace
         return {
             'title': self.get_title(context),
             'description': self.description,
-            'first_widget': widgets[0].name,
+            'first_widget': first_widget,
             'action': context.uri,
             'submit_value': self.submit_value,
             'submit_class': self.submit_class,
