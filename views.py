@@ -101,7 +101,10 @@ class IconsView(STLView):
     template = '/ui/generic/icons_view.xml'
 
     def get_namespace(self, resource, context):
-        """TODO Write a docstring explaining the expected namespace.
+        """Example:
+        return {'batch': None,
+                'items': [{'icon': '/ui/..', 'title': ...,
+                           'description': ..., 'url': ...'}, ...]}
         """
         raise NotImplementedError
 
