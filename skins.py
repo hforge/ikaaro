@@ -35,6 +35,7 @@ from itools.web import get_context, BaseView, ERROR, INFO
 from itools.xmlfile import XMLFile
 
 # Import from ikaaro
+from folder import Folder as iFolder
 from menu import get_menu_namespace
 from resource_ import IResource
 from skins_views import LanguagesTemplate, LocationTemplate
@@ -435,6 +436,12 @@ class Skin(UIFolder):
             uri = deepcopy(uri)
             uri.path.endswith_slash = True
 
+        # The container URI
+        first_container = here
+        if isinstance(here, iFolder) is False:
+            first_container = here.parent
+        container_uri = context.get_link(first_container)
+
         # In case of UI objects, fallback to site root
         if isinstance(here, (UIFile, UIFolder)):
             base_path = ''
@@ -450,6 +457,7 @@ class Skin(UIFolder):
             'title': self.get_template_title(context),
             'base_uri': str(uri),
             'canonical_uri': view.get_canonical_uri(context),
+            'container_uri': container_uri,
             'styles': self.get_styles(context),
             'scripts': self.get_scripts(context),
             'meta_tags': self.get_meta_tags(context),
