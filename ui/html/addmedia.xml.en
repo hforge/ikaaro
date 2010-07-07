@@ -84,6 +84,17 @@
         </table>
       </div>
 
+      <!-- External Link -->
+      <div id="external" stl:if="show_external">
+        <h3>Type the URL of an external media</h3>
+        <form>
+          <input type="text" id="uri" name="uri" size="40" value="http://"/>
+          <input type="button" value="Add" class="button-ok"
+            onclick="select_element('${element_to_add}', $('#uri').val(), '');"
+            />
+        </form>
+      </div>
+
       <!-- Upload -->
       <div id="upload" stl:if="show_upload">
         <h3>Upload a media to the current folder and insert it:</h3>
