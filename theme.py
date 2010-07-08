@@ -74,7 +74,8 @@ class Theme(Folder):
         path = get_abspath('ui/aruni/images/logo.png')
         image = ro_database.get_handler(path, FileHandler)
         self.make_resource('logo', Image, body=image.to_str(),
-                           filename='logo.png', state='public')
+                           extension='png', filename='logo.png',
+                           format='image/png', state='public')
         self.set_property('logo', 'logo')
 
 
