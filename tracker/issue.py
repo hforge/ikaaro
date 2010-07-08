@@ -82,14 +82,12 @@ class Issue(Folder):
 
 
     def get_links(self):
-        base = self.get_canonical_path()
-
-        links = []
         attachments = self.metadata.get_property('attachment')
-        for attachment in attachments:
-            # attachment.value is an unicode
-            links.append(str(base.resolve2(str(attachment.value))))
-        return links
+        if not attachments:
+            return []
+
+        base = self.get_canonical_path()
+        return [ str(base.resolve2(x.value)) for x in attachments ]
 
 
     def update_links(self, source, target):
