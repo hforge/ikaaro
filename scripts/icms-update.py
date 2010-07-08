@@ -27,7 +27,7 @@ from traceback import print_exc
 
 # Import from itools
 import itools
-from itools.core import start_subprocess, send_subprocess
+from itools.core import start_subprocess, send_subprocess, utc
 from itools.csv import Property
 from itools.fs import lfs
 from itools.handlers import ro_database
@@ -246,10 +246,10 @@ def update(parser, options, target):
         while i < len(lines):
             date = int(lines[i + 2])
             commit = {
-                'revision': lines[i],                 # commit
-                'username': lines[i + 1],             # author name
-                'date': datetime.fromtimestamp(date), # author date
-                'message': lines[i + 3],              # subject
+                'revision': lines[i],                      # commit
+                'username': lines[i + 1],                  # author name
+                'date': datetime.fromtimestamp(date, utc), # author date
+                'message': lines[i + 3],                   # subject
                 }
             # Modified files
             i += 4
