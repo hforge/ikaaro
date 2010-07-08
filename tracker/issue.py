@@ -382,7 +382,7 @@ class Issue(Folder):
             metadata.set_property('attachment', attachements)
 
         # CC
-        reporter = self.get_reported_by()
+        reporter = history.records[0].username
         value = history.get_record_value(record, 'cc_list')
         if reporter not in value:
             value = value + (reporter,)
