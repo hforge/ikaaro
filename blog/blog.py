@@ -186,8 +186,8 @@ class Post(WebPage):
         comment=Unicode(source='metadata', multiple=True))
 
 
-    def _get_catalog_values(self):
-        indexes = WebPage._get_catalog_values(self)
+    def get_catalog_values(self):
+        indexes = WebPage.get_catalog_values(self)
         indexes['date'] = self.get_property('date')
         return indexes
 

@@ -107,3 +107,17 @@ Now multilingual fields are explicitely defined as such.
           my_title=Unicode(source='metadata', multilingual=True,
                            indexed=True, stored=True),
           foobar=Integer(indexed=True))
+
+
+Index & Search
+=====================
+
+Rename the method '_get_catalog_values' to 'get_catalog_values':
+
+  # Before
+  def _get_catalog_values(self):
+      ...
+
+  # Now
+  def get_catalog_values(self):
+      ...
