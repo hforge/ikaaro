@@ -167,7 +167,11 @@ class CSV_View(BrowseForm):
         sort_by = context.query['sort_by']
         reverse = context.query['reverse']
         if sort_by:
-            sort_by = int(sort_by)
+            handler = resource.handler
+            if handler.schema is None:
+                sort_by = int(sort_by)
+            else:
+                sort_by = handler.columns.index(sort_by)
             items.sort(key=itemgetter(sort_by), reverse=reverse)
 
         # Batch
