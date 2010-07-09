@@ -43,7 +43,7 @@ div#page {
   color: #fff;
   font-size: 1.2em;
   margin-bottom: 10px;
-  min-height: 70px;
+  min-height: 80px;
   height: auto;
   padding: 6px 10px 3px 10px;
   position: relative;
@@ -66,10 +66,7 @@ div#page {
 }
 
 #header #links {
-  padding: 4px;
-  position: absolute;
-  left: 10px;
-  top: 0;
+  float: left;
 }
 
 #header #links a {
@@ -105,16 +102,14 @@ div#page {
 }
 
 #header #logo {
-  padding-top: 35px;
-  float: left;
+  position: absolute;
+  bottom: 0px;
+  left: 8px;
 }
 
 /* header toolbar */
 #header .header-toolbar {
-  position: absolute;
-  right: 0;
-  top: 0;
-  margin-top: 4px; /* same as links */
+  float: right;
 }
 
 #header .header-toolbar td {
