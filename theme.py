@@ -66,17 +66,26 @@ class Theme(Folder):
 
     def init_resource(self, **kw):
         Folder.init_resource(self, **kw)
-        # CSS file
-        self.make_resource('style', CSS, extension='css', body="/* CSS */")
         # Menu
         self.make_resource('menu', MenuFolder)
-        # Add the logo
-        path = get_abspath('ui/aruni/images/logo.png')
+        # CSS file
+        path = get_abspath('ui/themes/style.css')
+        body = open(path).read()
+        self.make_resource('style', CSS, extension='css', body=body,
+                           state='public')
+        # Logo
+        path = get_abspath('ui/themes/logo.png')
         image = ro_database.get_handler(path, FileHandler)
         self.make_resource('logo', Image, body=image.to_str(),
                            extension='png', filename='logo.png',
                            format='image/png', state='public')
         self.set_property('logo', 'logo')
+        # Banner
+        path = get_abspath('ui/themes/banner.jpg')
+        image = ro_database.get_handler(path, FileHandler)
+        self.make_resource('banner', Image, body=image.to_str(),
+                           extension='jpg', filename='banner.jpg',
+                           format='image/jpeg', state='public')
 
 
     def get_links(self):

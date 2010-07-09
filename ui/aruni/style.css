@@ -39,11 +39,11 @@ div#page {
 
 #header {
   text-align: right;
-  background: #0369a8;
+  background-color: #0467BA;
   color: #fff;
   font-size: 1.2em;
   margin-bottom: 10px;
-  min-height: 80px;
+  min-height: 90px;
   height: auto;
   padding: 6px 10px 3px 10px;
   position: relative;
