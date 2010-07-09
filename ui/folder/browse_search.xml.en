@@ -9,23 +9,18 @@
     <legend>Search</legend>
     <table>
       <tr>
-        <td>Text</td>
-        <td>Type</td>
-        <td></td>
-      </tr>
-      <tr>
         <td>
-          <input type="text" name="search_text" size="35"
+          <label for="search_text">Text</label><br/>
+          <input type="text" name="search_text" id="search_text" size="35"
             value="${search_text}" />
         </td>
         <td>
-          <select name="search_type">
+          <label for="search_type">Type</label><br/>
+          <select name="search_type" id="search_type">
             <option value=""></option>
             <option stl:repeat="type search_type" value="${type/name}"
               selected="${type/selected}">${type/title}</option>
           </select>
-        </td>
-        <td>
           <button type="submit" class="button-search">Search</button>
         </td>
       </tr>
