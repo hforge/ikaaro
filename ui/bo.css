@@ -505,3 +505,7 @@ p.tabme a.selected {
 
 .broken { color: red; }
 .number { text-align: right; }
+
+#autoform input, #autoform textarea {
+  width: 100%;
+}
