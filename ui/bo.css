@@ -11,22 +11,26 @@ body {
 
 a img { border: 0; }
 
-select, input, button {
-  color: #000;
+button, input, select, textarea {
   background-color: #fff;
+  border: 1px solid #999;
+  color: #000;
   font-size: 1.0em;
 }
 
+button:focus, input:focus, select:focus, textarea:focus {
+  border-color: black;
+}
+
 textarea {
-  color: #000;
-  background-color: #fff;
   font-size: 1.2em;
 }
 
-
-input, button {
-  background-position: left center;
+button {
+  background-position: 3px center;
   background-repeat: no-repeat;
+  margin: 2px;
+  padding: 0px 3px;
 }
 
 .clear {
@@ -57,92 +61,92 @@ span.field-error {
  *************************************************************************/
 .button-ok {
   background-image: url(icons/16x16/ok.png);
-  padding-left: 16px;
+  padding-left: 19px;
 }
 
 .button-cancel {
   background-image: url(icons/16x16/cancel.png);
-  padding-left: 16px;
+  padding-left: 19px;
 }
 
 .button-search {
   background-image: url(icons/16x16/search.png);
-  padding-left: 16px;
+  padding-left: 19px;
 }
 
 .button-calendar {
   background-image: url(icons/16x16/calendar.png);
-  padding-left: 16px;
+  padding-left: 19px;
 }
 
 .button-upload {
   background-image: url(icons/16x16/upload.png);
-  padding-left: 16px;
+  padding-left: 19px;
 }
 
 .button-external {
   background-image: url(icons/16x16/external.png);
-  padding-left: 16px;
+  padding-left: 19px;
 }
 
 .button-rename {
   background-image: url(icons/16x16/rename.png);
-  padding-left: 16px;
+  padding-left: 19px;
 }
 
 .button-delete {
   background-image: url(icons/16x16/delete.png);
-  padding-left: 16px;
+  padding-left: 19px;
 }
 
 .button-copy {
   background-image: url(icons/16x16/copy.png);
-  padding-left: 16px;
+  padding-left: 19px;
 }
 
 .button-cut {
   background-image: url(icons/16x16/cut.png);
-  padding-left: 16px;
+  padding-left: 19px;
 }
 
 .button-paste {
   background-image: url(icons/16x16/paste.png);
-  padding-left: 16px;
+  padding-left: 19px;
 }
 
 .button-translate {
   background-image: url(icons/16x16/languages.png);
-  padding-left: 16px;
+  padding-left: 19px;
 }
 
 .button-compare {
   background-image: url(icons/16x16/compare.png);
-  padding-left: 16px;
+  padding-left: 19px;
 }
 
 .button-add {
   background-image: url(icons/16x16/add.png);
-  padding-left: 16px;
+  padding-left: 19px;
 }
 
 .button-select-all {
   background-image: url(icons/16x16/select_all.png);
-  padding-left: 16px;
+  padding-left: 19px;
 }
 
 .button-select-none {
   background-image: url(icons/16x16/select_none.png);
-  padding-left: 16px;
+  padding-left: 19px;
 }
 
 .button-publish {
   background-image: url(icons/16x16/public.png);
-  padding-left: 16px;
+  padding-left: 19px;
 }
 
 .button-retire {
   background-image: url(icons/16x16/private.png);
-  padding-left: 16px;
+  padding-left: 19px;
 }
 
 /**************************************************************************
