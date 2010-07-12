@@ -322,7 +322,7 @@ class DateWidget(Widget):
     template = make_stl_template("""
     <input type="text" name="${name}" value="${value_}" id="${id}"
       class="dateField" size="${size}" />
-    <input type="button" value="..." class="${css}" />
+    <button class="${css}">...</button>
     <script language="javascript">
       jQuery( "input.dateField" ).dynDateTime({
         ifFormat: "${format}",
@@ -368,9 +368,8 @@ class PathSelectorWidget(TextWidget):
     template = make_stl_template("""
     <input type="text" id="selector-${id}" size="${size}" name="${name}"
       value="${value}" />
-    <input id="selector-button-${id}" type="button" value="..."
-      name="selector_button_${name}"
-      onclick="popup(';${action}?target_id=selector-${id}&amp;mode=input', 620, 300);"/>
+    <button id="selector-button-${id}" name="selector_button_${name}"
+      onclick="popup(';${action}?target_id=selector-${id}&amp;mode=input', 620, 300);">...</button>
     ${workflow_state}""")
 
 
@@ -400,9 +399,8 @@ class ImageSelectorWidget(PathSelectorWidget):
     template = make_stl_template("""
     <input type="text" id="selector-${id}" size="${size}" name="${name}"
       value="${value}" />
-    <input id="selector-button-${id}" type="button" value="..."
-      name="selector_button_${name}"
-      onclick="popup(';${action}?target_id=selector-${id}&amp;mode=input', 620, 300);" />
+    <button id="selector-button-${id}" name="selector_button_${name}"
+      onclick="popup(';${action}?target_id=selector-${id}&amp;mode=input', 620, 300);">...</button>
     ${workflow_state}
     <br/>
     <img src="${value}/;thumb?width=${width}&amp;height=${height}" stl:if="value"/>""")
