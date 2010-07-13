@@ -225,7 +225,12 @@ class Event(File):
         dtstart=DateTime(source='metadata', indexed=True, stored=True),
         dtend=DateTime(source='metadata', indexed=True, stored=True),
         status=Status(source='metadata'),
-        location=Unicode(source='metadata'))
+        location=Unicode(source='metadata'),
+        title=Unicode(source='metadata'),
+        description=Unicode(source='metadata'),
+        uid=Unicode(source='metadata'),
+        mtime= DateTime(source='metadata'))
+
 
 
     def init_resource(self, body=None, filename=None, extension=None, **kw):
