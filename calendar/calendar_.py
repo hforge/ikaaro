@@ -250,7 +250,7 @@ class Calendar(Folder):
                 if name in ics_to_ikaaro:
                     name = ics_to_ikaaro[name]
                     properties[name] = value.value
-            properties.update({'uid': event.uid})
+            properties['uid'] = event.uid
             self.make_resource(filename, Event, **properties)
             i += 1
 
@@ -293,12 +293,26 @@ class CalendarTable(Table):
 
 
     def update_20100602(self):
-        parent = self.parent
+        from ikaaro.metadata import is_multilingual
 
         # Remove myself
         handler = self.handler.clone()
+        parent = self.parent
         parent.del_resource(self.name)
 
         # New calendar
-        parent.make_resource(self.name, Calendar)
-        # TODO Import the old data from 'handler'
+        self = parent.make_resource(self.name, Calendar)
+        # Import old data
+        lang = parent.get_site_root().get_default_language()
+        for i, event in enumerate(handler.records):
+            filename = str(i)
+            properties = {}
+            for name, property in event.items():
+                if name in ics_to_ikaaro:
+                    name = ics_to_ikaaro[name]
+                    datatype = self.get_property_datatype(name)
+                    if is_multilingual(datatype):
+                        property = Property(property.value, lang=lang)
+                    properties[name] = property
+            properties['uid'] = event['UID']
+            self.make_resource(filename, Event, **properties)
