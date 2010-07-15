@@ -3,7 +3,7 @@
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
 <form action="" method="get" stl:if="search_fields">
-  <fieldset>
+  <fieldset class="search">
     <legend>Search</legend>
     <!-- Field -->
     <select name="search_field">

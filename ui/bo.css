@@ -378,6 +378,19 @@ table.new-resource-thumb {
   text-decoration: none;
 }
 
+/**************************************************************************
+ * ui/folder/browse_search.xml.en
+ * ui/generic/browse_search.xml.en
+ * ui/html/addbase_browse_search.xml.en
+ *************************************************************************/
+
+fieldset.search table td {
+  vertical-align: bottom;
+}
+
+fieldset.search button {
+  margin-bottom: 0;
+}
 
 /**************************************************************************
  * folder_views.Folder_BrowseContent

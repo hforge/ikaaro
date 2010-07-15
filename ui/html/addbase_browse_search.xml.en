@@ -5,7 +5,7 @@
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
 <form action="" method="get">
-  <fieldset>
+  <fieldset class="search">
     <legend>Search</legend>
     <table>
       <tr>
