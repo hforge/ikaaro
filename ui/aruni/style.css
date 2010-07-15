@@ -21,6 +21,7 @@ body {
   background: #aaa;
 }
 
+body.popup,
 body.mceContentBody {
   background: #fff;
 }
