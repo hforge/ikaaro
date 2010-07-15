@@ -18,6 +18,12 @@ button, input, select, textarea {
   font-size: 1.0em;
 }
 
+/* IE7 fix */
+input[type=radio],
+input[type=checkbox] {
+  border: none;
+}
+
 button:focus, input:focus, select:focus, textarea:focus {
   border-color: black;
 }
