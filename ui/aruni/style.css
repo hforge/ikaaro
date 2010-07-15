@@ -133,12 +133,15 @@ div#page {
   padding-right: 10px;
 }
 
-#header #menu div {
+#header #menu li {
   float: left;
+  list-style-image: none;
+  list-style-position: outside;
+  list-style-type: none;
   margin-right: 4px;
 }
 
-#header #menu div a {
+#header #menu li a {
   background: #777;
   border-radius: 5px 5px 0 0;
   -moz-border-radius: 5px 5px 0 0;
@@ -150,8 +153,8 @@ div#page {
   text-decoration: none;
 }
 
-#header #menu div a:hover,
-#header #menu div.in-path a {
+#header #menu li a:hover,
+#header #menu li.in-path a {
   background: #fff;
   color: #333;
 }

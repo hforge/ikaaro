@@ -56,12 +56,12 @@
         </tr>
       </table>
       <!-- Menu -->
-      <div stl:if="menu/items" id="menu">
-        <div stl:repeat="menu menu/items" class="${menu/class}">
+      <ul stl:if="menu/items" id="menu">
+        <li stl:repeat="menu menu/items" class="${menu/class}">
           <a href="${menu/path}" id="${menu/id}" target="${menu/target}"
-            title="${menu/title}">${menu/title}</a>
-        </div>
-      </div>
+             title="${menu/title}">${menu/title}</a>
+        </li>
+      </ul>
       <!-- Logo -->
       <a href="/" stl:if="logo_href" id="logo">
         <img src="${logo_href}"/>
