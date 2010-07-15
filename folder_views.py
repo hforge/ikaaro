@@ -249,13 +249,20 @@ class Folder_BrowseContent(SearchForm):
 
     def get_search_namespace(self, resource, context):
         search_type = context.query['search_type']
-        types = []
+
+        # Do not show two options with the same title
+        formats = {}
         for type in context.database.catalog.get_unique_values('format'):
             cls = get_resource_class(type)
-            types.append({
-                'name': type,
-                'title': cls.class_title.gettext(),
-                'selected': type == search_type})
+            title = cls.class_title.gettext()
+            formats.setdefault(title, []).append(type)
+
+        # Build the namespace
+        types = []
+        for title, type in formats.items():
+            type = ','.join(type)
+            types.append({'name': type, 'title': title,
+                          'selected': type == search_type})
         types.sort(key=lambda x: x['title'].lower())
 
         return {
@@ -274,13 +281,19 @@ class Folder_BrowseContent(SearchForm):
         # Filter by type
         search_type = context.query['search_type']
         if search_type:
-            args.append(PhraseQuery('format', search_type))
+            if ',' in search_type:
+                search_type = search_type.split(',')
+                search_type = [ PhraseQuery('format', x) for x in search_type ]
+                search_type = OrQuery(*search_type)
+            else:
+                search_type = PhraseQuery('format', search_type)
+            args.append(search_type)
 
         # Text search
         search_text = context.query['search_text'].strip()
         if search_text:
-            args.append( OrQuery(TextQuery('title', search_text),
-                                 TextQuery('text', search_text)) )
+            args.append(OrQuery(TextQuery('title', search_text),
+                                TextQuery('text', search_text)))
 
         # Ok
         if len(args) == 1:
