@@ -21,7 +21,10 @@
 
       <!-- tabs -->
       <p class="tabme">
-        <a onclick="tabme_show(event, this)" href="#browse" stl:if="show_browse">Browse</a>  <a onclick="tabme_show(event, this)" href="#external" stl:if="show_external">External Link</a>  <a onclick="tabme_show(event, this)" href="#insert" stl:if="show_insert">Insert</a>  <a onclick="tabme_show(event, this)" href="#upload" stl:if="show_upload">Upload</a>
+        <a onclick="tabme_show(event, this)" href="#browse" stl:if="show_browse">Browse</a>
+        <a onclick="tabme_show(event, this)" href="#external" stl:if="show_external">External Link</a>
+        <a onclick="tabme_show(event, this)" href="#insert" stl:if="show_insert">Insert</a>
+        <a onclick="tabme_show(event, this)" href="#upload" stl:if="show_upload">Upload</a>
       </p>
 
       <!-- Message -->
@@ -45,29 +48,75 @@
 
       <!-- External Link -->
       <div id="external" stl:if="show_external">
-        <h3>${text/extern}</h3>
-        <form>
-          <input id="uri" type="text" name="uri" size="40" value="http://"></input>
-          <input value="Add" type="button" class="button-ok" onclick="select_element('${element_to_add}', $('#uri').val(), '');"></input>
-        </form>
+        <fieldset>
+          <legend>${text/extern}</legend>
+          <form>
+            <table cellpadding="0" cellspacing="0">
+              <tr>
+                <td>
+                  <label for="uri">URI</label><br/>
+                  <input id="uri" type="text" name="uri" size="40" value="http://" />
+                </td>
+              </tr>
+            </table>
+            <br/>
+            <button value="" type="button" class="button-ok"
+              onclick="select_element('${element_to_add}', $('#uri').val(), '');">
+              Add
+            </button>
+          </form>
+        </fieldset>
       </div>
 
       <!-- New Web or Wiki Page -->
       <div id="insert" stl:if="show_insert">
-        <h3>${text/insert}</h3>
-        <form action="${text/method}#insert" method="post">
-          <input value="${target_path}" name="target_path" type="hidden"></input>
-          <input value="${target_id}" name="target_id" type="hidden"></input>  <input value="${mode}" name="mode" type="hidden"></input>  <input name="title" size="40" type="text"></input>  <input value="" name="name" type="hidden"></input>  <button value="add_resource" name="action" class="button-ok" type="submit">OK</button>
-        </form>
+        <fieldset>
+          <legend>${text/insert}</legend>
+          <form action="${text/method}#insert" method="post">
+            <input value="${target_path}" name="target_path" type="hidden" />
+            <input value="${target_id}" name="target_id" type="hidden" />
+            <input value="${mode}" name="mode" type="hidden" />
+            <input value="" name="name" type="hidden" />
+            <table cellpadding="0" cellspacing="0">
+              <tr>
+                <td>
+                  <label for="title">Title</label><br/>
+                  <input type="text" size="40" id="title" name="title" />
+                </td>
+              </tr>
+            </table>
+            <br/>
+            <button value="add_resource" name="action" class="button-ok" type="submit">OK</button>
+          </form>
+        </fieldset>
       </div>
 
       <!-- Upload -->
       <div id="upload" stl:if="show_upload">
-        <h3>${text/upload}</h3>
-        <form action="${text/method}#upload" method="post" enctype="multipart/form-data">
-          <input value="${target_path}" name="target_path" type="hidden"></input>
-          <input value="${target_id}" name="target_id" type="hidden"></input>  <input id="mode" type="hidden" name="mode" value="${mode}"></input>  <input id="file" name="file" size="35" type="file"></input>  <br></br>  <button value="upload" name="action" class="button-upload" type="submit">Upload</button>
-        </form>
+        <fieldset>
+          <legend>${text/upload}</legend>
+          <form action="${text/method}#upload" method="post" enctype="multipart/form-data">
+            <input value="${target_path}" name="target_path" type="hidden" />
+            <input value="${target_id}" name="target_id" type="hidden" />
+            <input id="mode" type="hidden" name="mode" value="${mode}" />
+            <table cellpadding="0" cellspacing="0">
+              <tr>
+                <td>
+                  <label for="title">Title</label><br/>
+                  <input type="text" size="40" id="title" name="title" />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <label for="file">File</label><br/>
+                  <input id="file" name="file" size="35" type="file" />
+                </td>
+              </tr>
+            </table>
+            <br/>
+            <button value="upload" name="action" class="button-upload" type="submit">Upload</button>
+          </form>
+        </fieldset>
       </div>
 
     </div>

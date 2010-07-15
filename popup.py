@@ -22,6 +22,7 @@
 
 # Import from itools
 from itools.core import merge_dicts
+from itools.csv import Property
 from itools.datatypes import String, Unicode
 from itools.gettext import MSG
 from itools.handlers import checkid
@@ -39,12 +40,10 @@ from registry import get_resource_class
 from utils import reduce_string
 
 
+
 ###########################################################################
 # Browse class
 ###########################################################################
-
-
-
 class AddBase_BrowseContent(Folder_BrowseContent):
     access = 'is_allowed_to_edit'
     context_menus = []
@@ -240,12 +239,11 @@ class AddMedia_BrowseContent(AddBase_BrowseContent):
         args += OrQuery(*query) ,
         return AddBase_BrowseContent.get_items(self, resource, context, *args)
 
+
+
 ###########################################################################
 # Interface to add images from the TinyMCE editor
 ###########################################################################
-
-
-
 class DBResource_AddBase(STLForm):
     """Base class for 'DBResource_AddImage' and 'DBResource_AddLink' (used
     by the Web Page editor).
@@ -270,7 +268,7 @@ class DBResource_AddBase(STLForm):
     browse_content_class = None
     query_schema = merge_dicts(Folder_BrowseContent.query_schema,
                                search_schema, target=String)
-    action_upload_schema = merge_dicts(schema,
+    action_upload_schema = merge_dicts(schema, title=Unicode,
                                        file=FileDataType(mandatory=True))
 
 
@@ -296,7 +294,6 @@ class DBResource_AddBase(STLForm):
 
     def get_item_classes(self):
         return self.browse_content_class.get_item_classes()
-
 
 
     def get_namespace(self, resource, context):
@@ -400,7 +397,8 @@ class DBResource_AddBase(STLForm):
         name, type, language = FileName.decode(filename)
 
         # Check the filename is good
-        name = checkid(name)
+        title = form['title'].strip()
+        name = checkid(title) or checkid(name)
         if name is None:
             context.message = messages.MSG_BAD_NAME
             return
@@ -423,6 +421,10 @@ class DBResource_AddBase(STLForm):
         # Add the image to the resource
         child = container.make_resource(name, cls, body=body, format=mimetype,
                                         filename=filename, extension=type)
+        # The title
+        language = resource.get_content_language(context)
+        title = Property(title, lang=language)
+        child.metadata.set_property('title', title)
         # Get the path
         path = resource.get_pathto(child)
         action = self.get_resource_action(context)
@@ -454,7 +456,7 @@ class DBResource_AddLink(DBResource_AddBase):
     browse_content_class = AddBase_BrowseContent
 
     action_add_resource_schema = merge_dicts(DBResource_AddBase.schema,
-                                             title=String(mandatory=True))
+                                             title=Unicode(mandatory=True))
 
     text_values = {'title': MSG(u'Insert link'),
        'browse': MSG(u'Browse and link to a File from the workspace'),
@@ -554,7 +556,4 @@ class DBResource_AddMedia(DBResource_AddImage):
             'show_external': True,
             'show_insert': False,
             'show_upload': True}
-
-
-
 
