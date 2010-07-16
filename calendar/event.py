@@ -226,8 +226,8 @@ class Event(File):
         dtend=DateTime(source='metadata', indexed=True, stored=True),
         status=Status(source='metadata'),
         location=Unicode(source='metadata'),
-        title=Unicode(source='metadata'),
-        description=Unicode(source='metadata'),
+        title=Unicode(source='metadata', multilingual=True),
+        description=Unicode(source='metadata', multilingual=True),
         uid=Unicode(source='metadata'),
         mtime= DateTime(source='metadata'))
 
