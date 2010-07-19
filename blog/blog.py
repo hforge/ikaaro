@@ -160,6 +160,9 @@ class Post_Edit(DBResource_Edit):
             context.message = MSG(u'Invalid HTML code.')
             return
 
+        # State (FIXME Check the state is valid)
+        resource.set_property('state', form['state'])
+
         # Save changes
         language = resource.get_content_language(context)
         resource.set_property('title', form['title'], language=language)
