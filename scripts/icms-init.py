@@ -109,11 +109,16 @@ def init(parser, options, target):
     # Load the root class
     if options.root is None:
         root_class = Root
-        modules = ''
+        modules = []
     else:
-        modules = options.root
-        exec('import %s' % modules)
-        exec('root_class = %s.Root' % modules)
+        modules = [options.root]
+        exec('import %s' % options.root)
+        exec('root_class = %s.Root' % options.root)
+
+    # Load the modules
+    for module in options.modules.split():
+        modules.append(module)
+        exec('import %s' % module)
 
     # Make folder
     try:
@@ -123,7 +128,7 @@ def init(parser, options, target):
 
     # The configuration file
     config = template.format(
-        modules=modules,
+        modules=" ".join(modules),
         listen_port=getattr(options, 'port') or '8080',
         smtp_host=getattr(options, 'smtp_host') or 'localhost',
         smtp_from=email)
@@ -182,6 +187,8 @@ if __name__ == '__main__':
         help='use the given SMTP_HOST to send emails')
     parser.add_option('-w', '--password',
         help='use the given PASSWORD for the admin user')
+    parser.add_option('-m', '--modules',
+        help='add the given MODULES to load at start')
     parser.add_option('--profile',
         help="print profile information to the given file")
 
