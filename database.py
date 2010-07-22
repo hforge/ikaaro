@@ -60,7 +60,7 @@ class ReadOnlyDatabase(ROGitDatabase):
         if n is not None:
             cmd = cmd + ['-n', str(n)]
         cmd = cmd + ['HEAD', '--'] + files
-        data = send_subprocess(cmd)
+        data = send_subprocess(cmd, path=self.path)
 
         # Parse output
         revisions = []
@@ -82,7 +82,7 @@ class ReadOnlyDatabase(ROGitDatabase):
         self.git_cache = {}
         cmd = ['git', 'log', '--pretty=format:%H%n%an%n%at%n%s', '--raw',
                '--name-only']
-        data = send_subprocess(cmd)
+        data = send_subprocess(cmd, path=self.path)
         lines = data.splitlines()
         i = 0
         while i < len(lines):

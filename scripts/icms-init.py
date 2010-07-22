@@ -131,7 +131,7 @@ def init(parser, options, target):
     open('%s/config.conf' % target, 'w').write(config)
 
     # Create the folder structure
-    start_subprocess('%s/database' % target)
+    start_subprocess('.')
     database = make_database(target)
     mkdir('%s/log' % target)
     mkdir('%s/spool' % target)
