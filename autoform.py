@@ -521,6 +521,7 @@ class AutoForm(STLForm):
             is_mandatory = getattr(datatype, 'mandatory', False)
             widget_namespace['mandatory'] = is_mandatory
             widget_namespace['is_date'] = issubclass(datatype, Date)
+            widget_namespace['suffix'] = widget.suffix
             widget_namespace['tip'] = widget.tip
             widget = widget(datatype=datatype, value=value)
             widget_namespace['widget'] = widget.render()
