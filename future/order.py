@@ -414,13 +414,8 @@ class ResourcesOrderedContainer(Folder):
     order = GoToOrderedTable()
 
 
-    @staticmethod
-    def _make_resource(cls, folder, name, **kw):
-        Folder._make_resource(cls, folder, name, **kw)
-        # Make the table
-        order_class = cls.order_class
-        order_class._make_resource(order_class, folder,
-                                   '%s/%s' % (name, cls.order_path))
+    def init_resource(self, **kw):
+        self.make_resource(self.order_path, self.order_class)
 
 
     def get_ordered_names(self, context=None):
