@@ -100,14 +100,15 @@ def get_default_widget(datatype):
 
 class Widget(CMSTemplate):
 
+    maxlength = None
     size = None
-    tip = None
     suffix = None
+    tip = None
     type = 'text'
 
     template = make_stl_template("""
     <input type="${type}" id="${id}" name="${name}" value="${value}"
-      size="${size}" />""")
+      maxlength="${maxlength}" size="${size}" />""")
 
 
     def __init__(self, name=None, **kw):
