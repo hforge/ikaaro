@@ -58,6 +58,7 @@ class AddBase_BrowseContent(Folder_BrowseContent):
     show_type_form = True
     # Parameter for get_items
     target = None
+    popup_root = None
 
     # Table
     table_columns = [
@@ -67,6 +68,8 @@ class AddBase_BrowseContent(Folder_BrowseContent):
         ('mtime', MSG(u'Last Modified')),
         ('last_author', MSG(u'Last Author')),
         ('workflow_state', MSG(u'State'))]
+
+    table_actions = [AddButton]
 
 
     def get_folder_classes(self):
@@ -109,9 +112,9 @@ class AddBase_BrowseContent(Folder_BrowseContent):
                 url = context.uri.replace(**url_dic)
             else:
                 url = None
-            title = item_resource.get_abspath()
-            title = target.get_abspath().get_pathto(title)
-            return unicode(title), url
+            abspath = item_resource.get_abspath()
+            path = target.get_abspath().get_pathto(abspath)
+            return unicode(path), url
         else:
             return Folder_BrowseContent.get_item_value(self, resource, context,
                        item, column)
@@ -126,20 +129,13 @@ class AddBase_BrowseContent(Folder_BrowseContent):
     def get_search_namespace(self, resource, context):
         namespace = Folder_BrowseContent.get_search_namespace(self, resource,
                         context)
-        target = context.get_form_value('target')
-        if target:
-            namespace['target'] = target
-        else:
-            if not self.is_folder(resource):
-                resource = resource.parent
-            namespace['target'] = resource.get_abspath()
+        popup_root_abspath = self.popup_root.get_abspath()
+        target = popup_root_abspath.get_pathto(self.target.get_abspath())
+        namespace['target'] = target
         namespace['target_id'] = context.get_form_value('target_id')
         namespace['mode'] = context.get_form_value('mode')
         namespace['show_type_form'] = self.show_type_form
         return namespace
-
-
-    table_actions = [AddButton]
 
 
     def get_actions_namespace(self, resource, context, items):
@@ -180,26 +176,8 @@ class AddImage_BrowseContent(AddBase_BrowseContent):
         if column == 'checkbox':
             if self.is_folder(item_resource):
                 return None
-            # radiobox
-            id = str(resource.get_canonical_path().get_pathto(brain.abspath))
-            id += self.resource_action
-            return id, False
-        elif column == 'name':
-            target = self.target
-            if self.is_folder(item_resource):
-                path_to_item = target.get_pathto(item_resource)
-                url_dic = {'target': str(path_to_item),
-                           # Avoid search conservation
-                           'search_text': None,
-                           'search_type': None,
-                           # Reset batch
-                           'batch_start': None}
-                url = context.uri.replace(**url_dic)
-            else:
-                url = None
-            title = item_resource.get_abspath()
-            title = target.get_abspath().get_pathto(title)
-            return unicode(title), url
+            return AddBase_BrowseContent.get_item_value(self, resource,
+                    context, item, column)
         elif column == 'icon':
             if self.is_folder(item_resource):
                 # icon
@@ -215,8 +193,8 @@ class AddImage_BrowseContent(AddBase_BrowseContent):
                     path_to_icon = path_to_resource.resolve(path_to_icon)
             return path_to_icon
         else:
-            return Folder_BrowseContent.get_item_value(self, resource, context,
-                    item, column)
+            return AddBase_BrowseContent.get_item_value(self, resource,
+                    context, item, column)
 
 
 
@@ -319,6 +297,7 @@ class DBResource_AddBase(STLForm):
             target_path = popup_root_abspath.resolve2(target_path)
             target = resource.get_resource(target_path)
             prefix = popup_root_abspath.get_prefix(target_path)
+            # Check popup chroot
             if prefix != popup_root_abspath:
                 target = popup_root
         # The breadcrumb
@@ -362,7 +341,7 @@ class DBResource_AddBase(STLForm):
         browse_content = self.browse_content_class(\
                            element_to_add=self.element_to_add,
                            resource_action=self.get_resource_action(context),
-                           target=target)
+                           target=target, popup_root=popup_root)
         namespace['browse_table'] = browse_content.GET(resource, context)
         return namespace
 
