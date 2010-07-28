@@ -64,6 +64,7 @@ class WebSite(RoleAware, Folder):
                            'edit_security_policy', 'edit_languages',
                            'edit_contact_options', 'broken_links', 'orphans',
                            'edit_seo', 'edit_theme']
+    class_theme = Theme
 
 
     __fixed_handlers__ = ['skin', 'index', 'theme']
@@ -103,7 +104,8 @@ class WebSite(RoleAware, Folder):
     def init_resource(self, **kw):
         Folder.init_resource(self, **kw)
         # Theme folder
-        theme = self.make_resource('theme', Theme, title={'en': u'Theme'})
+        theme = self.make_resource('theme', self.class_theme,
+                                   title={'en': u'Theme'})
         # Add home/contact links
         menu = theme.get_resource('menu/menu')
         menu.add_new_record({'path': '../../..',
