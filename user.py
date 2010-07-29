@@ -24,7 +24,7 @@ from copy import deepcopy
 from itools.core import freeze
 from itools.datatypes import Email, String, Unicode
 from itools.gettext import MSG
-from itools.uri import Path
+from itools.uri import Path, Reference
 from itools.web import INFO
 
 # Import from ikaaro
@@ -165,6 +165,20 @@ class User(AccessControl, Folder):
     def send_confirmation(self, context, email):
         self.send_confirm_url(context, email, self.confirmation_subject,
             self.confirmation_txt, ';confirm_registration')
+
+
+    registration_subject = MSG(u"Registration confirmed")
+    registration_txt = MSG(u"You are now registered as users of: {site_name}.\n"
+                           u"You can follow this link {site_uri} to access "
+                           u"to the site.")
+    def send_registration(self, context, email):
+        site_name = context.site_root.get_title()
+        uri = context.uri
+        site_uri = Reference(uri.scheme, uri.authority, '/', {}, None)
+        text = self.registration_txt.gettext(site_name=site_name,
+                                             site_uri=site_uri)
+        context.root.send_email(email, self.registration_subject.gettext(),
+                                text=text)
 
 
     forgotten_subject = MSG(u"Choose a new password")

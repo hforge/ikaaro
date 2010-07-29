@@ -273,12 +273,15 @@ class RoleAware_AddUser(STLForm):
             if password is None:
                 # Send confirmation email to activate the account
                 user.send_confirmation(context, email)
+            else:
+                user.send_registration(context, email)
         else:
             user = users.get_resource(user_id)
             # Check the user is not yet in the group
             if user_id in resource.get_members():
                 context.message = ERROR(u'The user is already here.')
                 return None
+            user.send_registration(context, email)
 
         # Set the role
         role = form['role']
