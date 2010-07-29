@@ -291,8 +291,12 @@ class Root(WebSite):
         if subject_with_host is True:
             subject = '[%s] %s' % (context.uri.authority, subject)
         # Add signature
-        if site_root.get_property('emails_signature'):
-            text += '\n\n-- \n%s' % site_root.get_property('emails_signature')
+        signature = site_root.get_property('emails_signature')
+        if signature:
+            signature = signature.strip()
+            if not signature.startswith('--'):
+                signature = '-- \n%s' % signature
+            text += '\n\n%s' % signature
         # Build the message
         message = MIMEMultipart('related')
         message['Subject'] = Header(subject, encoding)
