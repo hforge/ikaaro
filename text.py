@@ -109,7 +109,7 @@ class CSS(Text):
             if reference.scheme or reference.authority:
                 continue
             path = reference.path
-            if not path and path[0] == 'ui':
+            if not path or path[0] == 'ui':
                 continue
 
             # Strip the view
@@ -152,7 +152,7 @@ class CSS(Text):
             if reference.scheme or reference.authority:
                 return matchobj.group(0)
             path = reference.path
-            if not path and path[0] == 'ui':
+            if not path or path[0] == 'ui':
                 return matchobj.group(0)
 
             # Strip the view
@@ -200,7 +200,7 @@ class CSS(Text):
             if reference.scheme or reference.authority:
                 return matchobj.group(0)
             path = reference.path
-            if not path and path[0] == 'ui':
+            if not path or path[0] == 'ui':
                 return matchobj.group(0)
 
             # Strip the view
