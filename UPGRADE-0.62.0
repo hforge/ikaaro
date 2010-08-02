@@ -46,11 +46,13 @@ Imports
 Some things have changed names, or moved somewhere else.  The table below
 summarizes these changes:
 
-  Before                                 Now
-  -------------------------------------  --------------------------------------
-  ikaaro.forms.XXX                       ikaaro.autoform.XXX
-  ikaaro.registry.register_field         itools.database.register_field
-
+  Before                                      Now
+  -----------------------------------------   --------------------------------------
+  ikaaro.forms.XXX                            ikaaro.autoform.XXX
+  ikaaro.registry.register_field              itools.database.register_field
+  ikaaro.views_new.AddResourceMenu            **DELETED**
+  ikaaro.resource_views.DBResource_Add*       ikaaro.popup.DBResource_Add*
+  ikaaro.database.ReadOnlyDatabase            itools.database.ro.ROGitDatabase
 
 Autoform
 =====================
@@ -65,6 +67,27 @@ use now instead of the old one:
   ?                           CheckBoxWidget            CheckboxWidget
   Enumerate(multiple=False)   SelectRadio               RadioWidget
   Enumerate(multiple=True)    SelectRadio               CheckboxWidget
+
+
+Skin
+=====================
+
+Breadcrumb and tabs namespaces have been replace by lazy property.
+
+  # Before
+  def get_breadcrumb(self, context):
+  def get_tabs(self, context)
+
+  # Now
+  from itools.core import thingy_lazy_property
+
+  @thingy_lazy_property
+  def breadcrumb(self):
+      context = self.context
+
+  @thingy_lazy_property
+  def tabs(self):
+      context = self.context
 
 
 Resources
@@ -107,6 +130,22 @@ Now multilingual fields are explicitely defined as such.
           my_title=Unicode(source='metadata', multilingual=True,
                            indexed=True, stored=True),
           foobar=Integer(indexed=True))
+
+
+(3) Set property
+
+  # Before
+  metadata = resource.metadata
+  language = resource.get_content_language(context)
+  metadata.set_property('title', title, language=language)
+
+  # Now
+  from itools.csv import Property
+
+  metadata = resource.metadata
+  language = resource.get_content_language(context)
+  title = Property(title, lang=language)
+  metadata.set_property('title', title)
 
 
 Index & Search
