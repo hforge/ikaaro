@@ -195,14 +195,20 @@ class ContactForm(AutoForm):
         captcha_title = MSG(u"Please answer this: {captcha_question}")
         captcha_title = captcha_title.gettext(
                 captcha_question=captcha_question)
+
+        if len(ContactOptions(resource=resource).get_options()) == 1:
+            to = SelectWidget('to', title=MSG(u'Recipient'),
+                              has_empty_option=False)
+        else:
+            to = SelectWidget('to', title=MSG(u'Recipient'))
+
         return [
-            SelectWidget('to', title=MSG(u'Recipient')),
+            to,
             TextWidget('from', title=MSG(u'Your email address'), size=40),
             TextWidget('subject', title=MSG(u'Message subject'), size=40),
             MultilineWidget('message_body', title=MSG(u'Message body'),
                             rows=8, cols=50),
-            TextWidget('captcha_answer', title=captcha_title),
-        ]
+            TextWidget('captcha_answer', title=captcha_title)]
 
 
     def get_value(self, resource, context, name, datatype):
