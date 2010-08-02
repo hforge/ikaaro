@@ -77,6 +77,24 @@ use now instead of the old one:
   widget = SelectWidget(name, datatype=datatype, value=value)
   widget.render()
 
+  # Before
+  xxx = merge_dicts(HTMLEditView.schema,
+                    ...)
+
+  # Now
+  def get_schema(self, resource, context):
+      return merge_dicts(HTMLEditView.get_schema(self, resource, context),
+                         ...)
+
+  # Before
+  from itools.xml import XMLParser
+  from ikaaro.forms iport stl_namespaces
+  template = list(XMLParser("""...""", stl_namespaces))
+
+  # Now
+  from ikaaro.forms
+  template = make_stl_namespace("""...""")
+
 
 Skin
 =====================
