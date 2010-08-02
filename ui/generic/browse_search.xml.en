@@ -6,10 +6,7 @@
   <fieldset class="search">
     <legend>Search</legend>
     <!-- Field -->
-    <select name="search_field">
-      <option value="${field/name}" selected="${field/selected}"
-        stl:repeat="field search_fields">${field/title}</option>
-    </select>
+    ${search_fields_widget}
     <!-- Term -->
     <input type="text" name="search_term" size="35" value="${search_term}" />
     <!-- OK -->

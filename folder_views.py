@@ -25,24 +25,25 @@ except ImportError:
 
 # Import from itools
 from itools.core import merge_dicts
-from itools.datatypes import Boolean, Integer, String, Unicode
+from itools.database import AndQuery, OrQuery, PhraseQuery, TextQuery
+from itools.datatypes import Boolean, Enumerate, Integer, String, Unicode
 from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.stl import set_prefix
 from itools.uri import get_reference, Path
 from itools.web import BaseView, STLForm, ERROR
-from itools.database import AndQuery, OrQuery, PhraseQuery, TextQuery
 
 # Import from ikaaro
-from buttons import RemoveButton, RenameButton, CopyButton, CutButton
+from autoform import SelectWidget
 from buttons import PasteButton, PublishButton, RetireButton
+from buttons import RemoveButton, RenameButton, CopyButton, CutButton
 from datatypes import CopyCookie, ImageWidth
 from exceptions import ConsistencyError
-import messages
 from registry import get_resource_class
 from utils import generate_name, get_base_path_query
 from views import IconsView, SearchForm, ContextMenu
 from workflow import WorkflowAware, get_workflow_preview
+import messages
 
 
 
@@ -247,9 +248,7 @@ class Folder_BrowseContent(SearchForm):
         ('workflow_state', MSG(u'State'))]
 
 
-    def get_search_namespace(self, resource, context):
-        search_type = context.query['search_type']
-
+    def get_search_types(self, resource, context):
         # Do not show two options with the same title
         formats = {}
         for type in context.database.catalog.get_unique_values('format'):
@@ -261,13 +260,24 @@ class Folder_BrowseContent(SearchForm):
         types = []
         for title, type in formats.items():
             type = ','.join(type)
-            types.append({'name': type, 'title': title,
-                          'selected': type == search_type})
-        types.sort(key=lambda x: x['title'].lower())
+            types.append({'name': type, 'value': title})
+        types.sort(key=lambda x: x['value'].lower())
+
+        return types
+
+
+    def get_search_namespace(self, resource, context):
+        types = self.get_search_types(resource, context)
+
+        # Build dynamic datatype and widget
+        search_type = context.query['search_type']
+        datatype = Enumerate(options=types)
+        widget = SelectWidget(name='search_type', datatype=datatype,
+                              value=search_type)
 
         return {
             'search_text': context.query['search_text'],
-            'search_type': types}
+            'search_types_widget': widget.render()}
 
 
     def get_items(self, resource, context, *args):

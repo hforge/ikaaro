@@ -16,13 +16,14 @@
 
 # Import from itools
 from itools.core import merge_dicts
-from itools.datatypes import Boolean, Integer, String, Unicode
+from itools.datatypes import Boolean, Enumerate, Integer, String, Unicode
 from itools.gettext import MSG
 from itools.stl import stl
 from itools.web import STLView, STLForm
 from itools.xml import XMLParser
 
 # Import from ikaaro
+from autoform import SelectWidget
 from utils import CMSTemplate
 
 
@@ -420,12 +421,17 @@ class SearchForm(BrowseForm):
 
         # Build the namespace
         search_fields = [
-            {'name': name, 'title': title, 'selected': name == field}
+            {'name': name, 'value': title}
             for name, title in self.get_search_fields(resource, context) ]
 
+        # Build dynamic datatype and widget
+        datatype = Enumerate(options=search_fields)
+        widget = SelectWidget(name='search_fields', datatype=datatype,
+                              value=field)
         return {
             'search_term': term,
-            'search_fields': search_fields}
+            'search_fields': search_fields,
+            'search_fields_widget': widget.render()}
 
 
 ###########################################################################

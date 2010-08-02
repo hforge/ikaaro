@@ -21,11 +21,7 @@
         </td>
         <!-- Search Type -->
         <td stl:if="show_type_form">
-          <select name="search_type">
-            <option value=""></option>
-            <option stl:repeat="type search_type" value="${type/name}"
-              selected="${type/selected}">${type/title}</option>
-          </select>
+          ${search_types_widget}
         </td>
         <td>
           <button type="submit" class="button-search">Search</button>
