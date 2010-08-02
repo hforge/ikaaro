@@ -160,3 +160,21 @@ Rename the method '_get_catalog_values' to 'get_catalog_values':
   # Now
   def get_catalog_values(self):
       ...
+
+
+Rename "search_text" field into "search_term" in
+Folder_BrowseContent.query_schema.
+Remove "search_subfolders" and "search_field" fields and add new field
+"search_type".
+
+  # Before
+  search_schema = {
+        'search_field': String,
+        'search_term': Unicode,
+        'search_subfolders': Boolean(default=False),
+    }
+
+  # After
+  search_schema = {
+        'search_text': Unicode,
+        'search_type': String}
