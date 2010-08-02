@@ -367,6 +367,9 @@ class Issue(Folder):
         # Comments / Files
         attachements = []
         for record in history.records:
+            if record is None:
+                # deleted record
+                continue
             comment = history.get_record_value(record, 'comment')
             # FIXME Translate date to UTC
             date = history.get_record_value(record, 'datetime')
