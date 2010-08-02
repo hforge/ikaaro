@@ -69,6 +69,15 @@ use now instead of the old one:
   Enumerate(multiple=True)    SelectRadio               CheckboxWidget
 
 
+  # Before
+  widget = SelectWidget(name)
+  widget.to_html(datatype, value)
+
+  # Now
+  widget = SelectWidget(name, datatype=datatype, value=value)
+  widget.render()
+
+
 Skin
 =====================
 
