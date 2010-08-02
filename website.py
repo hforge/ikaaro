@@ -233,11 +233,12 @@ class WebSite(RoleAware, Folder):
 
     def update_20100702(self):
         theme = self.get_resource('theme', soft=True)
-        if theme and isinstance(theme, Theme) is False:
+        class_theme = self.class_theme
+        if theme and isinstance(theme, class_theme) is False:
             raise RuntimeError, 'A resource named theme already exists'
 
         # Theme folder
-        theme = self.make_resource('theme', Theme, title={'en': u'Theme'})
+        theme = self.make_resource('theme', class_theme, title={'en': u'Theme'})
         # Add home/contact links
         menu = theme.get_resource('menu/menu')
         menu.add_new_record({'path': '../../..',
