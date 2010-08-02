@@ -201,7 +201,24 @@ Remove "search_subfolders" and "search_field" fields and add new field
         'search_subfolders': Boolean(default=False),
     }
 
-  # After
+  # Now
   search_schema = {
         'search_text': Unicode,
         'search_type': String}
+
+
+Access Control
+==============
+
+The RoleAware class has changed in structure. It now contains the WebSite
+default roles and the list of roles is now split in two parts.
+
+  # Before
+  class MyClass(RoleAware):
+      __roles__ = [{'name': 'myrole', 'title': MSG(u"My Role")}]
+
+  # Now
+  class MyClass(RoleAware):
+      class_roles = freeze(['myrole'])
+      class_schema = freeze({'myrole': Tokens(source='metadata',
+          title=MSG(u"My Role"))})
