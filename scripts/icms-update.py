@@ -34,10 +34,12 @@ from itools.handlers import ro_database
 from itools.web import get_context
 
 # Import from ikaaro
+from ikaaro.config import get_config
 from ikaaro.metadata import Metadata
 from ikaaro.obsolete.metadata import Metadata as OldMetadata
 from ikaaro.resource_ import DBResource
 from ikaaro.server import Server, ask_confirmation, get_fake_context, get_pid
+from ikaaro.server import load_modules
 
 
 def abort():
@@ -181,6 +183,11 @@ def update(parser, options, target):
             abort()
         print 'STAGE 0: Updating metadata (may take a while)'
         t0 = time()
+
+        # Load the config
+        config = get_config(target)
+        load_modules(config)
+
         for filename in lfs.traverse(path):
             if not filename.endswith('.metadata'):
                 continue
