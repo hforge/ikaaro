@@ -561,28 +561,67 @@ class Menu(OrderedTable):
 
 
     def update_links(self, source, target):
+        site_root_abspath = self.get_site_root().get_abspath()
+        base = self.get_canonical_path()
+        resources_new2old = get_context().database.resources_new2old
+        base = str(base)
+        old_base = resources_new2old.get(base, base)
+        old_base = Path(old_base)
+        new_base = Path(base)
         handler = self.handler
-        base = self.get_abspath()
-        # FIXME The context is not available when updating the catalog.
-        site_root_abspath = self.parent.parent.get_abspath()
 
         for record in handler.get_records_in_order():
             path = handler.get_record_value(record, 'path')
             ref, path = get_reference_and_path(path)
             if ref.scheme:
                 continue
+            view = ''
             if path.count(';'):
-                path, method = path.split(';')
+                path, view = path.split(';')
             if ref.path.is_absolute():
+                # Absolute links are resolved as links relative to the site
+                # root
                 uri = site_root_abspath.resolve2('.%s' % path)
             else:
-                uri = base.resolve2(path)
-            uri = str(uri)
-            if uri == source:
+                uri = old_base.resolve2(path)
+            if str(uri) == source:
                 # Hit the old name
-                new_path2 = base.get_pathto(Path(target))
-                handler.update_record(record.id, **{'path': str(new_path2)})
+                # Build the new reference with the right path
+                new_ref = deepcopy(ref)
+                new_ref.path = str(new_base.get_pathto(target)) + view
+                handler.update_record(record.id, **{'path': str(new_ref)})
+
         get_context().database.change_resource(self)
+
+
+    def update_relative_links(self, source):
+        site_root_abspath = self.get_site_root().get_abspath()
+        target = self.get_canonical_path()
+        resources_old2new = get_context().database.resources_old2new
+        handler = self.handler
+
+        for record in handler.get_records_in_order():
+            path = handler.get_record_value(record, 'path')
+            ref, path = get_reference_and_path(path)
+            if ref.scheme:
+                continue
+            view = ''
+            if path.count(';'):
+                path, view = path.split(';')
+            # Calcul the old absolute path
+            if ref.path.is_absolute():
+                # Absolute links are resolved as links relative to the site
+                # root
+                old_abs_path = site_root_abspath.resolve2('.%s' % path)
+            else:
+                old_abs_path = source.resolve2(path)
+            # Check if the target path has not been moved
+            new_abs_path = resources_old2new.get(old_abs_path, old_abs_path)
+            # Build the new reference with the right path
+            # Absolute path allow to call get_pathto with the target
+            new_ref = deepcopy(ref)
+            new_ref.path = str(target.get_pathto(new_abs_path)) + view
+            handler.update_record(record.id, **{'path': str(new_ref)})
 
 
 
