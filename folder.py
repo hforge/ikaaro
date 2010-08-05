@@ -131,23 +131,35 @@ class Folder(DBResource):
         return cls(metadata)
 
 
-    def del_resource(self, name, soft=False):
+    def del_resource(self, name, soft=False, ref_action='restrict'):
+        """ref_action allows to specify which action is done before deleting the
+        resource.
+        ref_action can take 2 values:
+        - 'restrict' (default value): do an integrity check
+        - 'force': do nothing
+        """
+
         database = get_context().database
         resource = self.get_resource(name, soft=soft)
         if soft and resource is None:
             return
 
-        # Check referencial-integrity
-        catalog = database.catalog
-        # FIXME Check sub-resources too
-        path = str(resource.get_canonical_path())
-        query_base_path = get_base_path_query(path)
-        query = AndQuery(PhraseQuery('links', path),
-                         NotQuery(query_base_path))
-        results = catalog.search(query)
-        if len(results):
-            message = 'cannot delete, resource "%s" is referenced' % path
-            raise ConsistencyError, message
+        # Referential action
+        if ref_action == 'restrict':
+            # Check referencial-integrity
+            catalog = database.catalog
+            # FIXME Check sub-resources too
+            path = str(resource.get_canonical_path())
+            query_base_path = get_base_path_query(path)
+            query = AndQuery(PhraseQuery('links', path),
+                             NotQuery(query_base_path))
+            results = catalog.search(query)
+            if len(results):
+                message = 'cannot delete, resource "%s" is referenced' % path
+                raise ConsistencyError, message
+        elif ref_action == 'force':
+            # Do not check referencial-integrity
+            pass
 
         # Events, remove
         database.remove_resource(resource)
