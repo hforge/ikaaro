@@ -160,6 +160,8 @@ class Folder(DBResource):
         elif ref_action == 'force':
             # Do not check referencial-integrity
             pass
+        else:
+            raise ValueError, 'Incorrect ref_action "%s"' % ref_action
 
         # Events, remove
         database.remove_resource(resource)
