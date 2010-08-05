@@ -19,6 +19,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
+from datetime import timedelta
 from email.parser import HeaderParser
 from os import fdopen
 from smtplib import SMTP, SMTPRecipientsRefused, SMTPResponseException
@@ -26,9 +27,6 @@ from socket import gaierror
 import sys
 from tempfile import mkstemp
 from traceback import format_exc
-
-# Import from pygobject
-from gobject import idle_add, timeout_add_seconds
 
 # Import from pygobject
 from glib import GError
@@ -40,6 +38,7 @@ from itools.http import SoupMessage
 from itools.log import Logger, register_logger
 from itools.log import DEBUG, INFO, WARNING, ERROR, FATAL
 from itools.log import log_error, log_warning, log_info
+from itools.loop import cron
 from itools.uri import get_host_from_authority
 from itools.web import WebServer, WebLogger, Context, set_context
 
@@ -163,7 +162,7 @@ class Server(WebServer):
         self.smtp_login = get_value('smtp-login', default='').strip()
         self.smtp_password = get_value('smtp-password', default='').strip()
         # Email is sent asynchronously
-        idle_add(self.smtp_send_idle_callback)
+        self._smtp_asynchro_send()
 
         # Logging
         log_file = '%s/log/events' % target
@@ -193,8 +192,11 @@ class Server(WebServer):
             file.write(message.as_string())
         finally:
             file.close()
+        self._smtp_asynchro_send()
 
-        idle_add(self.smtp_send_idle_callback)
+
+    def _smtp_asynchro_send(self):
+        cron(self._smtp_send, timedelta(minutes=1))
 
 
     def _smtp_send(self):
@@ -264,22 +266,6 @@ class Server(WebServer):
             smtp.quit()
 
         return try_again
-
-
-    def smtp_send_idle_callback(self):
-        # Error: try again later
-        if self._smtp_send() is True:
-            timeout_add_seconds(60, self.smtp_send_time_callback)
-
-        return False
-
-
-    def smtp_send_time_callback(self):
-        # Error: keep trying
-        if self._smtp_send() is True:
-            return True
-
-        return False
 
 
     def smtp_log_error(self):
