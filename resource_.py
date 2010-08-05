@@ -212,11 +212,12 @@ class DBResource(CatalogAware, IResource):
                 key = fs.resolve(self.metadata.key, '.')
             else:
                 key = fs.resolve(self.metadata.key, self.name)
-            if database.has_handler(key):
-                handler = database.get_handler(key, cls=cls)
-            else:
+
+            handler = database.get_handler(key, cls=cls, soft=True)
+            if handler is None:
                 handler = cls()
                 database.push_phantom(key, handler)
+
             self._handler = handler
         return self._handler
 
