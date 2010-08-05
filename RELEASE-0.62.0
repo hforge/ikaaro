@@ -1,0 +1,60 @@
+
+ikaaro 0.62.0 (2010/08/XX)
+==========================
+
+This is a Content Management System built on Python & itools, among
+other features ikaaro provides:
+
+ - content and document management (index&search, metadata, etc.)
+ - multilingual user interfaces and content
+ - high level modules: wiki, forum, tracker, etc.
+
+Changes
+-------
+
+Maybe most important in this release is the new metadata: with a new
+file format, new features and a somewhat different API.
+
+Though the most visible change are the deep modifications to the main
+template.  Which now can be customized through the control panel: to
+change the logo, edit the CSS, etc.
+
+Users can now define their timezone in the preferences form; information
+that is used through ikaaro to properly display times.
+
+Every existing submodule has seen major changes:
+
+- The new Blog module replaces the Forum.
+
+- Calendar: a completely new internal structure (now every event is
+  stored as a separate resource), and better import/export logic.
+
+- Tracker: the internals have been much simplified.
+
+- The Wiki is not anymore included in ikaaro, it will be distributed as
+  a separate package.
+
+An important bug has been fixed, now the icms-update.py script does not
+override anymore the modification time & last author of the upgraded
+resources.
+
+There are many other small feautures and user interface improvements
+through ikaaro.  As well as some programming interface changes, like
+the simpler API to make new resources (check the UPGRADE file).
+
+
+Resources
+---------
+
+Download
+http://download.hforge.org/ikaaro/0.62/ikaaro-0.62.0.tar.gz
+
+Home
+http://www.hforge.org/ikaaro
+
+Mailing list
+http://www.hforge.org/community/
+http://archives.hforge.org/index.cgi?list=itools
+
+Bug Tracker
+http://bugs.hforge.org/
