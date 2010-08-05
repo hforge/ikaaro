@@ -298,13 +298,19 @@ class CalendarTable(Table):
         # Remove myself
         handler = self.handler.clone()
         parent = self.parent
-        parent.del_resource(self.name)
+        parent.del_resource(self.name, ref_action='force')
 
         # New calendar
         self = parent.make_resource(self.name, Calendar)
         # Import old data
         lang = parent.get_site_root().get_default_language()
         for i, event in enumerate(handler.records):
+            if event is None:
+                # deleted record
+                continue
+            if event['type'] != 'VEVENT':
+                # FIXME not an event
+                continue
             filename = str(i)
             properties = {}
             for name, property in event.items():
