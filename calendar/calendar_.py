@@ -308,7 +308,7 @@ class CalendarTable(Table):
             if event is None:
                 # deleted record
                 continue
-            if event['type'] != 'VEVENT':
+            if event['type'].value != 'VEVENT':
                 # FIXME not an event
                 continue
             filename = str(i)
