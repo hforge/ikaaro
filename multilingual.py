@@ -60,12 +60,10 @@ class Multilingual(DBResource):
         cls = self.class_handler
         metadata = self.metadata
         database = metadata.database
-        fs = database.fs
         name = FileName.encode((self.name, cls.class_extension, language))
-        key = fs.resolve(metadata.key, name)
-        if database.has_handler(key):
-            handler = database.get_handler(key, cls=cls)
-        else:
+        key = database.fs.resolve(metadata.key, name)
+        handler = database.get_handler(key, cls=cls, soft=True)
+        if handler is None:
             handler = cls()
             database.push_phantom(key, handler)
 

@@ -207,12 +207,7 @@ class DBResource(CatalogAware, IResource):
         if self._handler is None:
             cls = self.class_handler
             database = self.metadata.database
-            fs = database.fs
-            if self.parent is None:
-                key = fs.resolve(self.metadata.key, '.')
-            else:
-                key = fs.resolve(self.metadata.key, self.name)
-
+            key = self.metadata.key[:-9]
             handler = database.get_handler(key, cls=cls, soft=True)
             if handler is None:
                 handler = cls()
