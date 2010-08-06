@@ -32,6 +32,7 @@ from folder_views import Folder_NewResource, Folder_Orphans, Folder_Thumbnail
 from folder_views import Folder_PreviewContent, Folder_Rename, Folder_View
 from metadata import Metadata
 from registry import register_resource_class, get_resource_class
+from registry import _lookup_class_id, resources_registry
 from registry import get_document_types
 from resource_ import DBResource
 from utils import get_base_path_query
@@ -107,27 +108,32 @@ class Folder(DBResource):
 
 
     def _get_resource(self, name):
-        # Look for the resource
+        # (1) Metadata
         folder = self.handler
         try:
             metadata = folder.get_handler('%s.metadata' % name)
         except LookupError:
             return None
 
-        # Format (class id)
+        # (2) Class id
         format = metadata.format
+        class_id = _lookup_class_id(format)
+        if class_id is None:
+            fs = metadata.database.fs
+            key = fs.resolve2(folder.key, name)
+            if fs.exists(key):
+                is_file = fs.is_file(key)
+            else:
+                # FIXME This is just a guess, it may fail.
+                is_file = '/' in format
 
-        # File or folder
-        fs = metadata.database.fs
-        key = fs.resolve2(folder.key, name)
-        if fs.exists(key):
-            is_file = fs.is_file(key)
-        else:
-            # FIXME This is just a guess, it may fail.
-            is_file = '/' in format
+            if is_file:
+                class_id = 'application/octet-stream'
+            else:
+                class_id = 'application/x-not-regular-file'
 
         # Ok
-        cls = get_resource_class(format, is_file=is_file)
+        cls = resources_registry[class_id]
         return cls(metadata)
 
 

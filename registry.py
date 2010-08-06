@@ -24,20 +24,24 @@ def register_resource_class(resource_class, format=None):
     resources_registry[format] = resource_class
 
 
-def get_resource_class(class_id, is_file=True):
+def _lookup_class_id(class_id):
     if class_id in resources_registry:
-        return resources_registry[class_id]
+        return class_id
 
     if '/' in class_id:
         class_id = class_id.split('/')[0]
         if class_id in resources_registry:
-            return resources_registry[class_id]
+            return class_id
 
-    # Default
-    if is_file:
-        return resources_registry['application/octet-stream']
+    return None
 
-    return resources_registry['application/x-not-regular-file']
+
+def get_resource_class(class_id):
+    class_id = _lookup_class_id(class_id)
+    if class_id is None:
+        class_id = 'application/octet-stream'
+
+    return resources_registry[class_id]
 
 
 
