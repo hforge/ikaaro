@@ -392,6 +392,7 @@ class Skin(UIFolder):
     def build_namespace(self, context):
         context_menus = self._get_context_menus(context)
         context_menus = list(context_menus)
+        user = context.user
 
         # The favicon.ico
         site_root = context.site_root
@@ -402,7 +403,7 @@ class Skin(UIFolder):
             resource = theme.get_resource(path, soft=True)
             if resource:
                 ac = resource.get_access_control()
-                if ac.is_allowed_to_view(context.user, resource):
+                if ac.is_allowed_to_view(user, resource):
                     favicon_href = '%s/;download' % context.get_link(resource)
                     favicon_type = resource.metadata.format
         if favicon_href is None:
@@ -417,7 +418,7 @@ class Skin(UIFolder):
             resource = theme.get_resource(path, soft=True)
             if resource:
                 ac = resource.get_access_control()
-                if ac.is_allowed_to_view(context.user, resource):
+                if ac.is_allowed_to_view(user, resource):
                     logo_href = '%s/;download' % context.get_link(resource)
 
         # Menu
@@ -441,6 +442,10 @@ class Skin(UIFolder):
         if isinstance(here, iFolder) is False:
             first_container = here.parent
         container_uri = context.get_link(first_container)
+        # new resource ACL
+        view = first_container.get_view('new_resource')
+        new_resource_allowed = ac.is_access_allowed(user, first_container,
+                                                    view)
 
         # In case of UI objects, fallback to site root
         if isinstance(here, (UIFile, UIFolder)):
@@ -458,6 +463,7 @@ class Skin(UIFolder):
             'base_uri': str(uri),
             'canonical_uri': view.get_canonical_uri(context),
             'container_uri': container_uri,
+            'new_resource_allowed': new_resource_allowed,
             'styles': self.get_styles(context),
             'scripts': self.get_scripts(context),
             'meta_tags': self.get_meta_tags(context),

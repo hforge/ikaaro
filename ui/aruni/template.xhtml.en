@@ -39,8 +39,8 @@
              id="links-menu-profile">${user/info/title}</a>
           <a href="${logout}" title="Log out" id="links-menu-logout"
             >Log out</a>
-          <a href="${container_uri}/;new_resource" id="links-menu-new"
-            >Add content</a>
+          <a stl:if="new_resource_allowed" href="${container_uri}/;new_resource"
+             id="links-menu-new">Add content</a>
         </stl:block>
       </div>
       <!-- Languages & Searchbar -->
