@@ -342,6 +342,7 @@ class Issue(Folder):
     # Update
     #######################################################################
     def update_20100507(self):
+        from itools.core import utc
         from obsolete import History
 
         metadata = self.metadata
@@ -373,6 +374,7 @@ class Issue(Folder):
             comment = history.get_record_value(record, 'comment')
             # FIXME Translate date to UTC
             date = history.get_record_value(record, 'datetime')
+            date = date.replace(tzinfo=utc)
             author = history.get_record_value(record, 'username')
             comment = Property(comment, date=date, author=author)
             metadata.set_property('comment', comment)
