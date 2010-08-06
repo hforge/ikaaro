@@ -27,7 +27,6 @@ from itools.csv import Property
 from itools.datatypes import Email, String, Unicode
 from itools.datatypes import Enumerate
 from itools.gettext import MSG
-from itools.stl import stl
 from itools.fs import lfs
 from itools.web import STLView, INFO, ERROR
 
@@ -52,55 +51,6 @@ class ForbiddenView(STLView):
 
     def POST(self, resource, context):
         return self.GET
-
-
-
-class ForgottenPasswordForm(AutoForm):
-
-    access = True
-    title = MSG(u'Forgotten password')
-    submit_value = MSG(u'Ok')
-    meta = [('robots', 'noindex, follow', None)]
-
-    widgets = [
-        TextWidget('username', title=MSG(u'Type your email address')),
-        ]
-
-    schema = query_schema = {'username': Email(default='')}
-
-
-    def get_value(self, resource, context, name, datatype):
-        if name == 'username':
-            return context.get_query_value('username')
-        return AutoForm.get_value(self, resource, context, name, datatype)
-
-
-    def action(self, resource, context, form):
-        username = form['username']
-        # TODO Don't generate the password, send instead a link to a form
-        # where the user will be able to type his new password.
-        root = context.root
-
-        # Get the email address
-        username = username.strip()
-
-        # Get the user with the given login name
-        results = root.search(username=username)
-        if len(results) == 0:
-            message = ERROR(u'There is not a user identified as "{username}"',
-                      username=username)
-            context.message = message
-            return
-
-        user = results.get_documents()[0]
-        user = resource.get_resource('/users/%s' % user.name)
-
-        # Send email of confirmation
-        email = user.get_property('email')
-        user.send_forgotten_password(context, email)
-
-        handler = resource.get_resource('/ui/website/forgotten_password.xml')
-        return stl(handler)
 
 
 

@@ -17,23 +17,30 @@
           <span stl:if="username/error" class="field-error">${username/error}
             <br/></span>
           <input type="text" id="username" name="username"
-            value="${username/value}" />
+            value="${username/value}" style="width: 100%" />
         </td>
       </tr>
       <tr>
         <td>
           <label for="password">Password</label>
-          <span class="field-is-missing" title="This field is required">*
-          </span>
           <br/>
           <span stl:if="password/error" class="field-error">${password/error}
             <br/></span>
-          <input type="password" id="password" name="password" />
-          <a href="/;forgotten_password">I forgot my password</a>
+          <input type="password" id="password" name="password"
+            style="width: 100%" />
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <input type="checkbox" id="no_password" name="no_password" value="1"
+            />
+          <label for="no_password">Check if you forgot your password</label>
         </td>
       </tr>
     </table>
-    <button type="submit" class="button-ok">Log in</button>
+    <p>
+      <button type="submit" class="button-ok">Log in</button>
+    </p>
   </fieldset>
 
   <script language="javascript">

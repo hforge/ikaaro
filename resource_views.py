@@ -21,10 +21,11 @@
 
 # Import from itools
 from itools.core import merge_dicts
-from itools.datatypes import DateTime, Integer, String, Unicode
+from itools.datatypes import Boolean, DateTime, Integer, String, Unicode
 from itools.gettext import MSG
 from itools.http import Conflict, NotImplemented
 from itools.i18n import get_language_name
+from itools.stl import stl
 from itools.uri import get_reference, get_uri_path
 from itools.web import BaseView, STLForm, INFO, ERROR
 from itools.database import OrQuery, PhraseQuery
@@ -178,32 +179,36 @@ class LoginView(STLForm):
     template = '/ui/base/login.xml'
     schema = {
         'username': Unicode(mandatory=True),
-        'password': String(mandatory=True)}
+        'password': String,
+        'no_password': Boolean}
     meta = [('robots', 'noindex, follow', None)]
 
 
     def action(self, resource, context, form):
-        email = form['username'].strip()
-        password = form['password']
-
         # Check the user exists
-        root = context.root
-        user = root.get_user_from_login(email)
+        email = form['username'].strip()
+        user = context.root.get_user_from_login(email)
         if user is None:
-            message = ERROR(u'The user "{username}" does not exist.',
-                            username=email)
-            context.message = message
+            message = u'The user "{username}" does not exist.'
+            context.message = ERROR(message, username=email)
             return
 
-        # Check the password is right
+        # Case 1: Forgotten password
+        if form['no_password']:
+            email = user.get_property('email')
+            user.send_forgotten_password(context, email)
+            path = '/ui/website/forgotten_password.xml'
+            handler = resource.get_resource(path)
+            return stl(handler)
+
+        # Case 2: Login
+        password = form['password']
         if not user.authenticate(password, clear=True):
             context.message = ERROR(u'The password is wrong.')
             return
 
-        # Set cookie
+        # Set cookie & context
         user.set_auth_cookie(context, password)
-
-        # Set context
         context.user = user
 
         # Come back
