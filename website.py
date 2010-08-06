@@ -44,7 +44,6 @@ from resource_views import LoginView
 from skins import UI, ui_path
 from theme import Theme
 from website_views import AboutView, ContactForm, CreditsView
-from website_views import RegisterForm
 from website_views import NotFoundView, ForbiddenView
 from website_views import WebSite_NewInstance
 
@@ -199,8 +198,6 @@ class WebSite(RoleAware, Folder):
     edit_languages = CPEditLanguages()
     broken_links = CPBrokenLinks()
     orphans = CPOrphans()
-    # Register / Login
-    register = RegisterForm()
     # Public views
     contact = ContactForm()
     about = AboutView()

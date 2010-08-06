@@ -17,7 +17,7 @@
           <span stl:if="username/error" class="field-error">${username/error}
             <br/></span>
           <input type="text" id="username" name="username"
-            value="${username/value}" style="width: 100%" />
+            value="${username/value}" size="40" />
         </td>
       </tr>
       <tr>
@@ -26,15 +26,16 @@
           <br/>
           <span stl:if="password/error" class="field-error">${password/error}
             <br/></span>
-          <input type="password" id="password" name="password"
-            style="width: 100%" />
+          <input type="password" id="password" name="password" size="40" />
         </td>
       </tr>
       <tr>
         <td>
           <input type="checkbox" id="no_password" name="no_password" value="1"
             />
-          <label for="no_password">Check if you forgot your password</label>
+          <!-- TODO Change the label if registration is not open -->
+          <label for="no_password">Check this if you don't have a password or
+          you forgot it</label>
         </td>
       </tr>
     </table>

@@ -54,58 +54,6 @@ class ForbiddenView(STLView):
 
 
 
-class RegisterForm(AutoForm):
-
-    access = 'is_allowed_to_register'
-    title = MSG(u'Register')
-    submit_value = MSG(u'Register')
-
-    schema = {
-        'firstname': Unicode(mandatory=True),
-        'lastname': Unicode(mandatory=True),
-        'email': Email(mandatory=True)}
-
-    widgets = [
-        TextWidget('firstname', title=MSG(u'First Name')),
-        TextWidget('lastname', title=MSG(u'Last Name')),
-        TextWidget('email', title=MSG(u'E-mail Address'))]
-
-
-    def action(self, resource, context, form):
-        # Get input data
-        firstname = form['firstname'].strip()
-        lastname = form['lastname'].strip()
-        email = form['email'].strip()
-
-        # Do we already have a user with that email?
-        root = context.root
-        user = root.get_user_from_login(email)
-        if user is not None:
-            if not user.has_property('user_must_confirm'):
-                message = u'There is already an active user with that email.'
-                context.message = ERROR(message)
-                return
-        else:
-            # Add the user
-            users = resource.get_resource('users')
-            user = users.set_user(email, None)
-            user.set_property('firstname', firstname)
-            user.set_property('lastname', lastname)
-            # Set the role
-            default_role = resource.class_roles[0]
-            resource.set_user_role(user.name, default_role)
-
-        # Send confirmation email
-        user.send_confirmation(context, email)
-
-        # Bring the user to the login form
-        message = MSG(
-            u"An email has been sent to you, to finish the registration "
-            u"process follow the instructions detailed in it.")
-        return message.gettext().encode('utf-8')
-
-
-
 class ContactOptions(Enumerate):
 
     def get_options(cls):

@@ -310,19 +310,16 @@ class Skin(UIFolder):
     # Authenticated user
     #######################################################################
     def get_user_menu(self, context):
-        """Return a dict {user_icon, user, joinisopen}.
+        """Return a dict {'name': ..., 'title': ..., 'home': ...}
         """
         user = context.user
-
         if user is None:
-            site_root = context.site_root
-            joinisopen = site_root.is_allowed_to_register(user, site_root)
-            return {'info': None, 'joinisopen': joinisopen}
+            return None
 
-        home = '/users/%s' % user.name
-        info = {'name': user.name, 'title': user.get_title(),
-                'home': home}
-        return {'info': info, 'joinisopen': False}
+        return {
+            'name': user.name,
+            'title': user.get_title(),
+            'home': '/users/%s' % user.name}
 
 
     #######################################################################

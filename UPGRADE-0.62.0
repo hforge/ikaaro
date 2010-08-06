@@ -99,7 +99,7 @@ use now instead of the old one:
 Skin
 =====================
 
-Breadcrumb and tabs namespaces have been replace by lazy property.
+(1) Breadcrumb and tabs namespaces have been replaced by lazy property.
 
   # Before
   def get_breadcrumb(self, context):
@@ -115,6 +115,14 @@ Breadcrumb and tabs namespaces have been replace by lazy property.
   @thingy_lazy_property
   def tabs(self):
       context = self.context
+
+(2) The namespace has changed a little, so main templates need to be updated:
+
+  # Before
+  <a href="${user/info/home}" title="${user/info/title}" ...
+
+  # Now
+  <a href="${user/home}" title="${user/title}" ...
 
 
 Resources

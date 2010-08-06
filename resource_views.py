@@ -21,7 +21,7 @@
 
 # Import from itools
 from itools.core import merge_dicts
-from itools.datatypes import Boolean, DateTime, Integer, String, Unicode
+from itools.datatypes import Boolean, DateTime, Email, Integer, String, Unicode
 from itools.gettext import MSG
 from itools.http import Conflict, NotImplemented
 from itools.i18n import get_language_name
@@ -178,33 +178,57 @@ class LoginView(STLForm):
     title = MSG(u'Login')
     template = '/ui/base/login.xml'
     schema = {
-        'username': Unicode(mandatory=True),
+        'username': String(mandatory=True),
         'password': String,
         'no_password': Boolean}
     meta = [('robots', 'noindex, follow', None)]
 
 
+    def _register(self, resource, context, email):
+        site_root = context.site_root
+        # Add the user
+        users = site_root.get_resource('users')
+        user = users.set_user(email, None)
+        # Set the role
+        default_role = site_root.class_roles[0]
+        site_root.set_user_role(user.name, default_role)
+
+        # Send confirmation email
+        user.send_confirmation(context, email)
+
+        # Bring the user to the login form
+        message = MSG(
+            u"An email has been sent to you, to finish the registration "
+            u"process follow the instructions detailed in it.")
+        return message.gettext().encode('utf-8')
+
+
     def action(self, resource, context, form):
-        # Check the user exists
+        # Get the user
         email = form['username'].strip()
         user = context.root.get_user_from_login(email)
-        if user is None:
-            message = u'The user "{username}" does not exist.'
-            context.message = ERROR(message, username=email)
-            return
 
-        # Case 1: Forgotten password
         if form['no_password']:
+            if not Email.is_valid(email):
+                message = u'The given username is not an email address.'
+                context.message = ERROR(message)
+                return
+
+            # Case 1: Register
+            if user is None:
+                return self._register(resource, context, email)
+
+            # Case 2: Forgotten password
             email = user.get_property('email')
             user.send_forgotten_password(context, email)
             path = '/ui/website/forgotten_password.xml'
             handler = resource.get_resource(path)
             return stl(handler)
 
-        # Case 2: Login
+        # Case 3: Login
         password = form['password']
-        if not user.authenticate(password, clear=True):
-            context.message = ERROR(u'The password is wrong.')
+        if user is None or not user.authenticate(password, clear=True):
+            context.message = ERROR(u'The email or the password is incorrect.')
             return
 
         # Set cookie & context

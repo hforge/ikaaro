@@ -86,10 +86,6 @@ div#page {
   background-image: url("../icons/16x16/action_home.png");
 }
 
-#header #links-menu-register {
-  background-image: url("../icons/16x16/card.png");
-}
-
 #header #links-menu-logout {
   background-image: url("../icons/16x16/action_logout.png");
 }
