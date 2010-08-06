@@ -28,7 +28,7 @@
     <div id="header">
       <div id="links">
         <stl:block stl:if="not user">
-          <a href="${login}" title="Log in" id="links-menu-login">Log in</a>
+          <a href="${login}" title="Sign in" id="links-menu-login">Sign in</a>
         </stl:block>
         <stl:block stl:if="user">
           <a href="${user/home}" title="${user/title}"

@@ -6,7 +6,7 @@
 
 <form id="loginform" name="loginform" method="post" action=";login">
   <fieldset>
-    <legend>Log in</legend>
+    <legend>Sign in</legend>
     <table>
       <tr>
         <td>
@@ -40,7 +40,7 @@
       </tr>
     </table>
     <p>
-      <button type="submit" class="button-ok">Log in</button>
+      <button type="submit" class="button-ok">Ok</button>
     </p>
   </fieldset>
 
