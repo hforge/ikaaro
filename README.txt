@@ -85,9 +85,16 @@ jquery          GPL      http://jquery.com
 TinyMCE         LGPL     http://tinymce.moxiecode.com
 DHTML Calendar  LGPL     http://code.google.com/p/dyndatetime/
 
-Most icons used are copyrighted by the Tango Desktop Project, and licensed
-under the Creative Commons Attribution Share-Alike license, including the
-modifications to them. (http://creativecommons.org/licenses/by-sa/2.5/)
+And media content:
+
+- Most icons come from the Tango Desktop Project:
+  http://tango.freedesktop.org/Tango_Desktop_Project
+
+- The banner comes from the "Personas for Firefox" project:
+  http://www.getpersonas.com/en-US/persona/94524
+
+  And is available under the "by-nc-sa" license:
+  http://creativecommons.org/licenses/by-nc-sa/3.0/
 
 
 License
