@@ -20,7 +20,7 @@
 
 # Import from itools
 from itools.core import freeze, merge_dicts
-from itools.datatypes import Boolean, Email, Tokens, Unicode, String
+from itools.datatypes import Email, Tokens, Unicode, String
 from itools.gettext import MSG
 from itools.web import AccessControl as BaseAccessControl, STLForm, INFO
 from itools.web import ERROR
@@ -384,7 +384,8 @@ class RoleAware(AccessControl):
 
     class_schema = freeze({
         # Metadata
-        'website_is_open': Boolean(source='metadata'),
+        # FIXME Rename 'website_is_open' to 'security_policy'
+        'website_is_open': String(source='metadata', default='intranet'),
         # Metadata (roles)
         'guests': Tokens(source='metadata', title=MSG(u"Guest")),
         'members': Tokens(source='metadata', title=MSG(u"Member")),
@@ -399,13 +400,22 @@ class RoleAware(AccessControl):
         return [ '/users/%s' % x for x in self.get_members() ]
 
 
+    # FIXME This method belongs to WebSite
+    def get_security_policy(self):
+        security_policy = self.get_property('website_is_open')
+        if security_policy == '1':
+            return 'community'
+        elif security_policy == '0':
+            return 'intranet'
+        return security_policy
+
+
     #########################################################################
     # Access Control
     #########################################################################
     def is_allowed_to_view(self, user, resource):
         # Get the variables to resolve the formula
-        # Intranet or Extranet
-        is_open = self.get_property('website_is_open')
+        security_policy = self.get_security_policy()
         # The role of the user
         if user is None:
             role = None
@@ -419,13 +429,13 @@ class RoleAware(AccessControl):
         else:
             state = 'public'
 
-        # The formula
-        # Extranet
-        if is_open:
+        # Case 1: Extranet or Community
+        if security_policy in ('extranet', 'community'):
             if state == 'public':
                 return True
             return role is not None
-        # Intranet
+
+        # Case 2: Intranet
         if role in ('admins', 'reviewers', 'members'):
             return True
         elif role == 'guests':

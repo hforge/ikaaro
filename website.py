@@ -178,7 +178,8 @@ class WebSite(RoleAware, Folder):
 
 
     def is_allowed_to_register(self, user, resource):
-        return self.get_property('website_is_open')
+        security_policy = self.get_security_policy()
+        return security_policy == 'community'
 
 
     #######################################################################

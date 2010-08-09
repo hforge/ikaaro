@@ -22,7 +22,7 @@
 from operator import itemgetter
 
 # Import from itools
-from itools.datatypes import Boolean, Enumerate, String, Unicode
+from itools.datatypes import Enumerate, String, Unicode
 from itools.gettext import MSG
 from itools.i18n import get_language_name, get_languages
 from itools.uri import Path
@@ -139,18 +139,19 @@ class CPEditSecurityPolicy(STLForm):
     template = '/ui/website/security_policy.xml'
     context_menus = context_menus
     schema = {
-        'website_is_open': Boolean(default=False)}
+        'security_policy': String(default='intranet')}
 
 
     def get_namespace(self, resource, context):
-        is_open = resource.get_property('website_is_open')
+        security_policy = resource.get_security_policy()
         return {
-            'is_open': is_open,
-            'is_closed': not is_open}
+            'intranet': security_policy == 'intranet',
+            'extranet': security_policy == 'extranet',
+            'community': security_policy == 'community'}
 
 
     def action(self, resource, context, form):
-        value = form['website_is_open']
+        value = form['security_policy']
         resource.set_property('website_is_open', value)
         # Ok
         context.message = messages.MSG_CHANGES_SAVED
