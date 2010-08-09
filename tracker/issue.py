@@ -319,7 +319,7 @@ class Issue(Folder):
 
     def get_reported_by(self):
         comments = self.metadata.get_property('comment')
-        return comments[0].parameters['author']
+        return comments[0].get_parameter('author')
 
 
     def to_text(self):

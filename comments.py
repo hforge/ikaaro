@@ -123,8 +123,8 @@ class CommentsView(STLView):
         else:
             comments = [
                 {'number': i,
-                 'user': root.get_user_title(x.parameters['author']),
-                 'datetime': context.format_datetime(x.parameters['date']),
+                 'user': root.get_user_title(x.get_parameter('author')),
+                 'datetime': context.format_datetime(x.get_parameter('date')),
                  'comment': indent(x.value)}
                 for i, x in enumerate(comments) ]
             comments.reverse()
