@@ -372,7 +372,6 @@ class Issue(Folder):
                 # deleted record
                 continue
             comment = history.get_record_value(record, 'comment')
-            # FIXME Translate date to UTC
             date = history.get_record_value(record, 'datetime')
             date = date.replace(tzinfo=utc)
             author = history.get_record_value(record, 'username')
