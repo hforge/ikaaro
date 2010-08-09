@@ -7,6 +7,16 @@ function select_checkboxes(elt, checked) {
   });
 }
 
+/* Enable/Disable field */
+function disable_field(checkbox, field_id) {
+  var field = $(field_id);
+  if ($(checkbox).is(':checked')) {
+    field.attr('disabled', true);
+  } else {
+    field.removeAttr('disabled');
+  }
+}
+
 
 /* Popup */
 var popup_window;

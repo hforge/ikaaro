@@ -32,7 +32,7 @@
       <tr>
         <td>
           <input type="checkbox" id="no_password" name="no_password" value="1"
-            />
+            onclick="disable_field(this, password)" />
           <label for="no_password">
           <stl:block stl:if="register">
           Check this box if you don't have a password or you forgot it.

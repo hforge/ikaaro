@@ -18,6 +18,11 @@ button, input, select, textarea {
   font-size: 1.0em;
 }
 
+input[disabled] {
+  background-color: #eee;
+  color: #eee;
+}
+
 /* IE7 fix */
 input[type=radio],
 input[type=checkbox] {
