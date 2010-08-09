@@ -37,6 +37,30 @@ class CompositeView(STLView):
     subviews = []
 
 
+    def get_styles(self, context):
+        styles = getattr(self, 'styles', [])
+        for view in self.subviews:
+            _get_styles = getattr(view, 'get_styles', None)
+            if _get_styles is None:
+                extra = getattr(view, 'styles', [])
+            else:
+                extra = _get_styles(context)
+            styles.extend(extra)
+        return styles
+
+
+    def get_scripts(self, context):
+        scripts = getattr(self, 'scripts', [])
+        for view in self.subviews:
+            _get_scripts = getattr(view, 'get_scripts', None)
+            if _get_scripts is None:
+                extra = getattr(view, 'scripts', [])
+            else:
+                extra = _get_scripts(context)
+            scripts.extend(extra)
+        return scripts
+
+
     def get_query_schema(self):
         schema = {}
         for view in self.subviews:
