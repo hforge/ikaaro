@@ -184,6 +184,12 @@ class LoginView(STLForm):
     meta = [('robots', 'noindex, follow', None)]
 
 
+    def get_namespace(self, resource, context):
+        namespace = super(LoginView, self).get_namespace(resource, context)
+        namespace['register'] = context.site_root.is_allowed_to_register()
+        return namespace
+
+
     def _register(self, resource, context, email):
         site_root = context.site_root
         # Add the user
@@ -216,7 +222,12 @@ class LoginView(STLForm):
 
             # Case 1: Register
             if user is None:
-                return self._register(resource, context, email)
+                if context.site_root.is_allowed_to_register():
+                    return self._register(resource, context, email)
+                # FIXME This message does not protect privacy
+                error = u"You don't have an account, contact the site admin."
+                context.message = ERROR(error)
+                return
 
             # Case 2: Forgotten password
             email = user.get_property('email')

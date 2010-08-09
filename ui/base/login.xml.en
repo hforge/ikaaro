@@ -33,9 +33,14 @@
         <td>
           <input type="checkbox" id="no_password" name="no_password" value="1"
             />
-          <!-- TODO Change the label if registration is not open -->
-          <label for="no_password">Check this if you don't have a password or
-          you forgot it</label>
+          <label for="no_password">
+          <stl:block stl:if="register">
+          Check this box if you don't have a password or you forgot it.
+          </stl:block>
+          <stl:block stl:if="not register">
+          Check this box if you forgot your password.
+          </stl:block>
+          </label>
         </td>
       </tr>
     </table>

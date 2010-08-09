@@ -177,9 +177,8 @@ class WebSite(RoleAware, Folder):
         context.content_type = 'text/html; charset=UTF-8'
 
 
-    def is_allowed_to_register(self, user, resource):
-        security_policy = self.get_security_policy()
-        return security_policy == 'community'
+    def is_allowed_to_register(self):
+        return self.get_security_policy() == 'community'
 
 
     #######################################################################
