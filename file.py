@@ -102,9 +102,10 @@ class File(WorkflowAware, DBResource):
             name = FileName.encode((self.name, extension, None))
             key = fs.resolve(base, name)
             # Found
-            if database.has_handler(key):
-                self._handler = database.get_handler(key, cls=cls)
-                return self._handler
+            handler = database.get_handler(key, cls=cls, soft=True)
+            if handler is not None:
+                self._handler = handler
+                return handler
 
         # Not found, build a dummy one
         name = FileName.encode((self.name, cls.class_extension, None))
@@ -112,7 +113,7 @@ class File(WorkflowAware, DBResource):
         handler = cls()
         database.push_phantom(key, handler)
         self._handler = handler
-        return self._handler
+        return handler
 
     handler = property(get_handler, None, None, '')
 
@@ -122,7 +123,8 @@ class File(WorkflowAware, DBResource):
         old_name = self.name
         for extension in self.get_all_extensions():
             old = FileName.encode((old_name, extension, None))
-            if folder.has_handler(old):
+            if folder.get_handler(old, cls=self.class_handler,
+                                  soft=True) is not None:
                 return [(old, FileName.encode((new_name, extension, None)))]
         return [(None, None)]
 

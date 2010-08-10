@@ -108,8 +108,10 @@ class UIFolder(IResource, Folder):
 
 
     def _get_resource(self, name):
+        cls = self.get_resource_cls(name)
+
         # Not an exact match: trigger language negotiation
-        if not self.has_handler(name):
+        if self.get_handler(name, cls=cls, soft=True) is None:
             name = '%s.' % name
             n = len(name)
             languages = []
@@ -136,16 +138,21 @@ class UIFolder(IResource, Folder):
                 language = languages[0]
             name = '%s%s' % (name, language)
 
-        # Find out the class to use
-        key = lfs.resolve2(self.key, name)
-        if lfs.is_folder(key):
-            cls = UIFolder
-        else:
-            format = lfs.get_mimetype(key)
-            cls = map.get(format, UIFile)
+            # Is the class the same ?
+            cls = self.get_resource_cls(name)
 
         # Ok
+        key = lfs.resolve2(self.key, name)
         return self.database.get_handler(key, cls)
+
+
+    def get_resource_cls(self, name):
+        key = lfs.resolve2(self.key, name)
+        if lfs.is_folder(key):
+            return UIFolder
+        else:
+            format = lfs.get_mimetype(key)
+            return map.get(format, UIFile)
 
 
     def traverse_resources(self):
@@ -199,7 +206,9 @@ class Skin(UIFolder):
             '/ui/js_calendar/calendar-aruni.css']
 
         # Skin
-        if self.has_handler('style.css'):
+        if self.get_handler('style.css',
+                            cls=self.get_resource_cls('style.css'),
+                            soft=True) is not None:
             styles.append('%s/style.css' % self.get_canonical_path())
 
         # View
@@ -238,7 +247,9 @@ class Skin(UIFolder):
         scripts.append('/ui/js_calendar/lang/calendar-%s.js' % language)
 
         # This skin's JavaScript
-        if self.has_handler('javascript.js'):
+        if self.get_handler('javascript.js',
+                            cls=self.get_resource_cls('javascript'),
+                            soft=True) is not None:
             scripts.append('%s/javascript.js' % self.get_canonical_path())
 
         # View
