@@ -23,7 +23,7 @@ Requirements
 Software    Version  Used by           Home
 ----------  -------  ----------------  --------------------------------------
 Python          2.6  ikaaro            http://www.python.org/
-itools       0.61.3  ikaaro            http://www.hforge.org/itools
+itools       0.62.1  ikaaro            http://www.hforge.org/itools
 guppy         0.1.8  Memory profiling  http://guppy-pe.sourceforge.net/
 
 Check the itools requirements.
@@ -70,10 +70,10 @@ http://bugs.hforge.org
 Copyright
 =============
 
-Copyright (C) 2003-2009 Juan David Ibáñez Palomar <jdavid@itaapy.com>
-Copyright (C) 2005-2009 Luis Arturo Belmar-Letelier <luis@itaapy.com>
-Copyright (C) 2005-2009 Hervé Cauwelier <herve@itaapy.com>
-Copyright (C) 2005-2009 Nicolas Deram <nicolas@itaapy.com>
+Copyright (C) 2003-2010 Juan David Ibáñez Palomar <jdavid@itaapy.com>
+Copyright (C) 2005-2010 Luis Arturo Belmar-Letelier <luis@itaapy.com>
+Copyright (C) 2005-2010 Hervé Cauwelier <herve@itaapy.com>
+Copyright (C) 2005-2010 Nicolas Deram <nicolas@itaapy.com>
 
 And others. Check the CREDITS file for complete list.
 
