@@ -452,6 +452,7 @@ class Skin(UIFolder):
         container_uri = context.get_link(first_container)
         # new resource ACL
         view = first_container.get_view('new_resource')
+        ac = first_container.get_access_control()
         new_resource_allowed = ac.is_access_allowed(user, first_container,
                                                     view)
 
