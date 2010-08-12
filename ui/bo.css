@@ -512,6 +512,10 @@ p.tabme a.selected {
   color: green;
 }
 
+pre.rem, pre.add {
+  margin: 0;
+}
+
 #differ div {
   background-color: #EDECE6;
   border-color: #D9D8D1;
