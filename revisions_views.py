@@ -40,11 +40,11 @@ def get_colored_diff(diff):
     link_index = -1
     for line in diff.splitlines():
         if line[:5] == 'index' or line[:3] in ('---', '+++', '@@ '):
-            continue
-        css = None
-        is_header = (line[:4] == 'diff')
-        if is_header:
+            pass
+        elif line[:4] == 'diff':
             link_index += 1
+            changes.append(
+                {'is_header': True, 'index': link_index, 'value': line})
         elif line:
             # For security, hide password the of metadata files
             line = sub(password_re, '<password>***</password>', line)
@@ -52,9 +52,15 @@ def get_colored_diff(diff):
                 css = 'rem'
             elif line[0] == '+':
                 css = 'add'
-        # Add the line
-        changes.append({'css': css, 'value': line, 'is_header': is_header,
-            'index': link_index})
+            else:
+                css = None
+            # Add the line
+            if changes and not changes[-1]['is_header'] and changes[-1]['css'] == css:
+                changes[-1]['value'] += '\n'
+                changes[-1]['value'] += line
+            else:
+                changes.append({'is_header': False, 'css': css, 'value': line})
+
     return changes
 
 

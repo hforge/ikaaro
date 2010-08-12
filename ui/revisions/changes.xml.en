@@ -48,11 +48,9 @@
   <div id="differ" stl:if="changes">
     <h3>Details</h3>
     <stl:block stl:repeat="change changes">
-      <div stl:if="change/is_header"><a
-          name="diff_${change/index}"/>${change/value}</div>
-      <stl:block stl:if="not change/is_header">
-        <span class="${change/css}">${change/value}</span><br/>
-      </stl:block>
+      <div stl:if="change/is_header"><a name="diff_${change/index}"
+        />${change/value}</div>
+      <pre stl:if="not change/is_header" class="${change/css}">${change/value}</pre>
     </stl:block>
   </div>
 
