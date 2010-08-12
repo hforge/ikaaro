@@ -16,7 +16,7 @@
 
 # Import from standard library
 from operator import itemgetter
-from re import compile, sub
+from re import compile
 from subprocess import CalledProcessError
 
 # Import from itools
@@ -62,8 +62,8 @@ def get_colored_diff(diff):
 
         # 3. The diff
         # For security, hide password the of metadata files
-        line = sub(password_re, 'password:***', line)
-        line = sub(password_old_re, '<password>***</password>', line)
+        line = password_re.sub('password:***', line)
+        line = password_old_re.sub('<password>***</password>', line)
         # Add the line
         css = {'-': 'rem', '+': 'add'}.get(line[0], None)
         blocks = changes[-1]['blocks']
@@ -280,4 +280,3 @@ class DBResource_Changes(STLView):
             'metadata': metadata,
             'stat': get_colored_stat(stat),
             'changes': get_colored_diff(diff)}
-
