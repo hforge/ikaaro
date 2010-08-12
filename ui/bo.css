@@ -504,16 +504,16 @@ p.tabme a.selected {
   white-space: pre;
 }
 
+#differ pre {
+  margin: 0;
+}
+
 #differ .rem, #git-stat .rem {
   color: red;
 }
 
 #differ .add, #git-stat .add {
   color: green;
-}
-
-pre.rem, pre.add {
-  margin: 0;
 }
 
 #differ div {
