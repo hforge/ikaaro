@@ -34,35 +34,44 @@ from views import BrowseForm
 
 
 def get_colored_diff(diff):
-    """Turn a diff source into a namespace for HTML display"""
-    changes = []
+    """Turn a diff source into a namespace for HTML display.
+    """
+    # Constants
     password_re = compile('password:(.*)')
     password_old_re = compile('<password>(.*)</password>')
-    # The anchor index to link from the diff stat
-    link_index = -1
-    for line in diff.splitlines():
-        if line[:5] == 'index' or line[:3] in ('---', '+++', '@@ '):
-            pass
-        elif line[:4] == 'diff':
-            link_index += 1
-            changes.append(
-                {'is_header': True, 'index': link_index, 'value': line})
-        elif line:
-            # For security, hide password the of metadata files
-            line = sub(password_re, 'password:***', line)
-            line = sub(password_old_re, '<password>***</password>', line)
-            if line[0] == '-':
-                css = 'rem'
-            elif line[0] == '+':
-                css = 'add'
-            else:
-                css = None
-            # Add the line
-            if changes and not changes[-1]['is_header'] and changes[-1]['css'] == css:
-                changes[-1]['value'] += '\n'
-                changes[-1]['value'] += line
-            else:
-                changes.append({'is_header': False, 'css': css, 'value': line})
+
+    # Pre-process input: skip until the first diff block
+    if diff[:5] != 'diff':
+        i = diff.find('\ndiff ')
+        diff = diff[i+1:]
+    lines = diff.splitlines()
+
+    # Build and return the namespace
+    changes = []
+    index = -1 # The anchor index to link from the diff stat
+    for line in lines:
+        # 1. The header
+        if line[:5] == 'diff ':
+            index += 1
+            changes.append({'header': line, 'index': index, 'blocks': []})
+            continue
+
+        # 2. Skip some unwanted info
+        if line[:6] == 'index ' or line[:3] in ('---', '+++', '@@ '):
+            continue
+
+        # 3. The diff
+        # For security, hide password the of metadata files
+        line = sub(password_re, 'password:***', line)
+        line = sub(password_old_re, '<password>***</password>', line)
+        # Add the line
+        css = {'-': 'rem', '+': 'add'}.get(line[0], None)
+        blocks = changes[-1]['blocks']
+        if blocks and blocks[-1]['css'] == css:
+            blocks[-1]['value'] += '\n'
+            blocks[-1]['value'] += line
+        else:
+            blocks.append({'css': css, 'value': line})
 
     return changes
 
