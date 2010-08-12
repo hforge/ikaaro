@@ -37,7 +37,7 @@
       <tbody>
         <tr stl:repeat="row stat/table" class="${repeat/row/even}">
           <td><a href="#diff_${repeat/row/index}">${row/value}</a></td>
-          <td>${row/nlines}</td>
+          <td align="right">${row/nlines}</td>
           <td class="rem">${row/before}</td>
           <td class="add">${row/after}</td>
         </tr>
