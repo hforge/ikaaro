@@ -7,25 +7,33 @@
 <form action=";edit_preferences" method="post">
   <fieldset>
     <legend>Edit Preferences</legend>
-    <dl>
-      <dt><label for="user-language">Preferred Language</label></dt>
-      <dd>
-        <select id="user-language" name="user_language">
-          <option value="">-- not defined --</option>
-          <option stl:repeat="language languages" value="${language/code}"
-            selected="${language/is_selected}">${language/name}</option>
-        </select>
-      </dd>
-      <dt><label for="user-language">Preferred Language</label></dt>
-      <dd>
-        <select id="user-timezone" name="user_timezone">
-          <option value="">-- not defined (UTC) --</option>
-          <option stl:repeat="timezone timezones" value="${timezone/name}"
-            selected="${timezone/is_selected}">${timezone/name}</option>
-        </select>
-      </dd>
-    </dl>
+    <table>
+      <tr>
+        <td>
+          <label for="user-language">Preferred Language</label>
+          <br/>
+          <select id="user-language" name="user_language">
+            <option value="">-- not defined --</option>
+            <option stl:repeat="language languages" value="${language/code}"
+              selected="${language/is_selected}">${language/name}</option>
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label for="user-language">Timezone</label>
+          <br/>
+          <select id="user-timezone" name="user_timezone">
+            <option value="">-- not defined (use server's local time) --</option>
+            <option stl:repeat="timezone timezones" value="${timezone/name}"
+              selected="${timezone/is_selected}">${timezone/name}</option>
+          </select>
+        </td>
+      </tr>
+    </table>
+    <p>
     <button type="submit" class="button-ok">Save</button>
+    </p>
   </fieldset>
 </form>
 
