@@ -34,7 +34,7 @@ from itools.xml import START_ELEMENT
 # Import from ikaaro
 from autoform import HTMLBody
 from autoform import title_widget, description_widget, subject_widget
-from autoform import file_widget, rte_widget, timestamp_widget
+from autoform import rte_widget, timestamp_widget
 from cc import Observable
 import messages
 from file_views import File_Edit
@@ -179,7 +179,7 @@ class HTMLEditView(File_Edit):
 
 
     widgets = [
-        timestamp_widget, title_widget, state_widget, rte_widget, file_widget,
+        timestamp_widget, title_widget, state_widget, rte_widget,
         description_widget, subject_widget]
 
 
@@ -196,13 +196,12 @@ class HTMLEditView(File_Edit):
             return
 
         # Properties
-        if form['file'] is None:
-            new_body = form['data']
-            language = resource.get_content_language(context)
-            handler = resource.get_handler(language=language)
-            changed = handler.set_body(new_body)
-            if changed:
-                context.database.change_resource(resource)
+        new_body = form['data']
+        language = resource.get_content_language(context)
+        handler = resource.get_handler(language=language)
+        changed = handler.set_body(new_body)
+        if changed:
+            context.database.change_resource(resource)
 
         # Send notifications
         resource.notify_subcribers(context)
