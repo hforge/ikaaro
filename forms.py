@@ -98,10 +98,11 @@ class Widget(object):
     tip = None
     suffix = None
     type = 'text'
+    maxlength = None
 
     template = list(XMLParser(
         """<input type="${type}" id="${id}" name="${name}" value="${value}"
-          size="${size}" />""",
+          size="${size}" maxlength="${maxlength}"/>""",
         stl_namespaces))
 
 
@@ -130,7 +131,8 @@ class Widget(object):
             'name': self.name,
             'id': self.id,
             'value': value,
-            'size': self.size}
+            'size': self.size,
+            'maxlength': self.maxlength}
 
 
     def to_html(self, datatype, value):
