@@ -401,6 +401,8 @@ class DateWidget(Widget):
             value = ''
         format = getattr(self, 'format', '%Y-%m-%d')
         show_time = getattr(self, 'show_time', False)
+        if show_time and format.count('%H:%M') == 0:
+            format += '-%H:%M'
         # True -> true for Javascript
         show_time = str(show_time).lower()
         css = getattr(self, 'css', None)
