@@ -80,9 +80,9 @@ class AddBase_BrowseContent(Folder_BrowseContent):
 
 
     @classmethod
-    def get_item_classes(self):
-        if self.item_classes:
-            return self.item_classes
+    def get_item_classes(cls):
+        if cls.item_classes:
+            return cls.item_classes
         from resource_ import DBResource
         return (DBResource,)
 
