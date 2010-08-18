@@ -62,16 +62,21 @@ class Text_Edit(File_Edit):
         return File_Edit.get_value(self, resource, context, name, datatype)
 
 
-    def action(self, resource, context, form):
-        File_Edit.action(self, resource, context, form)
-        if form['file'] is None:
+    def set_value(self, resource, context, name, form, language=None):
+        if name == 'data':
+            if form['file']:
+                return False
             handler = resource.handler
             old_value = handler.to_text()
             data = form['data']
             if old_value == data:
-                return
+                return False
             handler.load_state_from_string(data)
             context.database.change_resource(resource)
+            return False
+
+        return File_Edit.set_value(self, resource, context, name,
+                                   form, language)
 
 
 

@@ -22,7 +22,7 @@ from itools.web import ERROR, FormError
 # Import from ikaaro
 from autoform import timestamp_widget, ImageSelectorWidget
 from file import Image
-from messages import MSG_UNEXPECTED_MIMETYPE, MSG_CHANGES_SAVED
+from messages import MSG_UNEXPECTED_MIMETYPE
 from popup import DBResource_AddImage
 from resource_views import DBResource_Edit
 
@@ -124,17 +124,3 @@ class Theme_Edit(DBResource_Edit):
                 return FormError, message
 
         return form
-
-
-    def action(self, resource, context, form):
-        # Check edit conflict
-        self.check_edit_conflict(resource, context, form)
-        if context.edit_conflict:
-            return
-
-        # Save changes
-        resource.set_property('favicon', form['favicon'])
-        resource.set_property('logo', form['logo'])
-        # Ok
-        context.message = MSG_CHANGES_SAVED
-

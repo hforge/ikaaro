@@ -28,7 +28,7 @@ from itools.gettext import MSG
 from itools.html import xhtml_uri, XHTMLFile
 from itools.stl import rewrite_uris
 from itools.uri import Path, Reference, get_reference
-from itools.web import BaseView, get_context
+from itools.web import BaseView, ERROR, get_context
 from itools.xml import START_ELEMENT
 
 # Import from ikaaro
@@ -36,7 +36,6 @@ from autoform import HTMLBody
 from autoform import title_widget, description_widget, subject_widget
 from autoform import rte_widget, timestamp_widget
 from cc import Observable
-import messages
 from file_views import File_Edit
 from multilingual import Multilingual
 from text import Text
@@ -192,23 +191,24 @@ class HTMLEditView(File_Edit):
 
     def action(self, resource, context, form):
         File_Edit.action(self, resource, context, form)
-        if context.edit_conflict:
+        if context.edit_conflict or isinstance(context.message, ERROR):
             return
-
-        # Properties
-        new_body = form['data']
-        language = resource.get_content_language(context)
-        handler = resource.get_handler(language=language)
-        changed = handler.set_body(new_body)
-        if changed:
-            context.database.change_resource(resource)
 
         # Send notifications
         resource.notify_subcribers(context)
 
-        # Ok
-        context.message = messages.MSG_CHANGES_SAVED
 
+    def set_value(self, resource, context, name, form, language=None):
+        if name == 'data':
+            new_body = form['data']
+            handler = resource.get_handler(language=language)
+            changed = handler.set_body(new_body)
+            if changed:
+                context.database.change_resource(resource)
+            return False
+
+        return File_Edit.set_value(self, resource, context, name,
+                                   form, language)
 
 
 ###########################################################################

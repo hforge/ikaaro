@@ -67,9 +67,9 @@ class DBResource_Edit(AutoForm):
     context_menus = [EditLanguageMenu()]
 
     schema = {
-        'title': Unicode,
-        'description': Unicode,
-        'subject': Unicode,
+        'title': Unicode(multilingual=True),
+        'description': Unicode(multilingual=True),
+        'subject': Unicode(multilingual=True),
         'timestamp': DateTime(readonly=True)}
     widgets = [
         timestamp_widget, title_widget, description_widget, subject_widget]
@@ -111,15 +111,28 @@ class DBResource_Edit(AutoForm):
             return
 
         # Save changes
-        title = form['title']
-        description = form['description']
-        subject = form['subject']
+        schema = self.get_schema(resource, context)
         language = resource.get_content_language(context)
-        resource.set_property('title', title, language=language)
-        resource.set_property('description', description, language=language)
-        resource.set_property('subject', subject, language=language)
+        for key in form.keys():
+            datatype = schema[key]
+            if getattr(datatype, 'readonly', False):
+                continue
+            lang = None
+            if getattr(datatype, 'multilingual', False):
+                lang = language
+            if self.set_value(resource, context, key, form, lang):
+                return
         # Ok
         context.message = messages.MSG_CHANGES_SAVED
+
+
+    def set_value(self, resource, context, name, form, language=None):
+        """Return True if an error occurs otherwise False
+
+           If an error occurs, the context.message must be an ERROR instance.
+        """
+        resource.set_property(name, form[name], language=language)
+        return False
 
 
 

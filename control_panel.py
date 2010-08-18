@@ -216,14 +216,12 @@ class CPEditContactOptions(DBResource_Edit):
                   datatype)
 
 
-    def action(self, resource, context, form):
-        resource.set_property('emails_from_addr', form['emails_from_addr'])
-        resource.set_property('emails_signature', form['emails_signature'])
-        resource.set_property('contacts', tuple(form['contacts']))
-        resource.set_property('captcha_question', form['captcha_question'])
-        resource.set_property('captcha_answer', form['captcha_answer'])
-        # Ok
-        context.message = messages.MSG_CHANGES_SAVED
+    def set_value(self, resource, context, name, form, language=None):
+        if name == 'contacts':
+            resource.set_property(name, tuple(form['contacts']))
+            return False
+        return DBResource_Edit.set_value(self, resource, context, name,
+                                         form, language)
 
 
 
@@ -388,13 +386,6 @@ class CPEditSEO(DBResource_Edit):
         TextWidget('bing_site_verification',
             title=MSG(u'Bing site verification key')),
         ]
-
-
-    def action(self, resource, context, form):
-        for key in self.schema:
-            resource.set_property(key, form[key])
-        # Ok
-        context.message = messages.MSG_CHANGES_SAVED
 
 
 

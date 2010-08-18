@@ -194,58 +194,63 @@ class File_Edit(DBResource_Edit):
 
     def action(self, resource, context, form):
         DBResource_Edit.action(self, resource, context, form)
-        if context.edit_conflict:
+        if context.edit_conflict or isinstance(context.message, ERROR):
             return
-
-        # State (FIXME Check the state is valid)
-        resource.set_property('state', form['state'])
-
-        # Upload file
-        file = form['file']
-        if file is None:
-            return
-        filename, mimetype, body = file
-
-        # Check wether the handler is able to deal with the uploaded file
-        handler = resource.handler
-        handler_class = get_handler_class_by_mimetype(mimetype)
-        if not isinstance(handler, handler_class):
-            message = messages.MSG_UNEXPECTED_MIMETYPE(mimetype=mimetype)
-            context.message = message
-            return
-
-        # Replace
-        try:
-            handler.load_state_from_string(body)
-        except Exception, e:
-            handler.load_state()
-            message = ERROR(u'Failed to load the file: {error}', error=str(e))
-            context.message = message
-            return
-
-        # Update "filename" property
-        resource.set_property("filename", filename)
-        # Update metadata format
-        metadata = resource.metadata
-        if '/' in metadata.format:
-            if mimetype != metadata.format:
-                metadata.format = mimetype
-
-        # Update handler name
-        handler_name = basename(handler.key)
-        old_name, old_extension, old_lang = FileName.decode(handler_name)
-        new_name, new_extension, new_lang = FileName.decode(filename)
-        # FIXME Should 'FileName.decode' return lowercase extensions?
-        new_extension = new_extension.lower()
-        if old_extension != new_extension:
-            # "handler.png" -> "handler.jpg"
-            folder = resource.parent.handler
-            filename = FileName.encode((old_name, new_extension, old_lang))
-            folder.move_handler(handler_name, filename)
 
         # Ok
         context.database.change_resource(resource)
         context.message = INFO(u'Version uploaded')
+
+
+    def set_value(self, resource, context, name, form, language=None):
+        if name == 'file':
+            # Upload file
+            file = form['file']
+            if file is None:
+                return False
+
+            filename, mimetype, body = file
+            # Check wether the handler is able to deal with the uploaded file
+            handler = resource.handler
+            handler_class = get_handler_class_by_mimetype(mimetype)
+            if not isinstance(handler, handler_class):
+                message = messages.MSG_UNEXPECTED_MIMETYPE(mimetype=mimetype)
+                context.message = message
+                return True
+
+            # Replace
+            try:
+                handler.load_state_from_string(body)
+            except Exception, e:
+                handler.load_state()
+                message = ERROR(u'Failed to load the file: {error}',
+                                error=str(e))
+                context.message = message
+                return True
+
+            # Update "filename" property
+            resource.set_property("filename", filename)
+            # Update metadata format
+            metadata = resource.metadata
+            if '/' in metadata.format:
+                if mimetype != metadata.format:
+                    metadata.format = mimetype
+
+            # Update handler name
+            handler_name = basename(handler.key)
+            old_name, old_extension, old_lang = FileName.decode(handler_name)
+            new_name, new_extension, new_lang = FileName.decode(filename)
+            # FIXME Should 'FileName.decode' return lowercase extensions?
+            new_extension = new_extension.lower()
+            if old_extension != new_extension:
+                # "handler.png" -> "handler.jpg"
+                folder = resource.parent.handler
+                filename = FileName.encode((old_name, new_extension, old_lang))
+                folder.move_handler(handler_name, filename)
+
+            return False
+        return DBResource_Edit.set_value(self, resource, context, name,
+                                         form, language)
 
 
 
