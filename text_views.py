@@ -67,7 +67,7 @@ class Text_Edit(File_Edit):
             if form['file']:
                 return False
             handler = resource.handler
-            old_value = handler.to_text()
+            old_value = handler.to_str()
             data = form['data']
             if old_value == data:
                 return False
