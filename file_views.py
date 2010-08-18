@@ -31,7 +31,7 @@ from itools.html import HTMLParser, stream_to_str_as_xhtml
 from itools.i18n import guess_language
 from itools.uri import get_reference
 from itools.fs import FileName
-from itools.web import BaseView, STLView, INFO, ERROR
+from itools.web import BaseView, STLView, ERROR
 
 # Import from ikaaro
 from autoform import title_widget, description_widget, subject_widget
@@ -190,16 +190,6 @@ class File_Edit(DBResource_Edit):
             return None
         return DBResource_Edit.get_value(self, resource, context, name,
                                          datatype)
-
-
-    def action(self, resource, context, form):
-        DBResource_Edit.action(self, resource, context, form)
-        if context.edit_conflict or isinstance(context.message, ERROR):
-            return
-
-        # Ok
-        context.database.change_resource(resource)
-        context.message = INFO(u'Version uploaded')
 
 
     def set_value(self, resource, context, name, form, language=None):
