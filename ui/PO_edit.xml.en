@@ -6,6 +6,7 @@
 
   <form action=";edit" method="post" stl:if="msgid">
     <input type="hidden" name="messages_index" value="${messages_index}" />
+    <input type="hidden" name="msgctxt" value="${msgctxt}" />
     <table>
       <tr>
         <th>

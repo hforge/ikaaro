@@ -21,7 +21,7 @@ from operator import itemgetter
 
 # Import from itools
 from itools.core import merge_dicts
-from itools.datatypes import Integer, String
+from itools.datatypes import Integer, String, Unicode
 from itools.gettext import MSG
 from itools.web import STLForm, STLView, INFO
 
@@ -94,8 +94,9 @@ class PO_Edit(STLForm):
     title = MSG(u'Edit')
     template = '/ui/PO_edit.xml'
     schema = {
-        'msgid': String(mandatory=True),
-        'msgstr': String(mandatory=True),
+        'msgctxt': Unicode,
+        'msgid': Unicode(mandatory=True),
+        'msgstr': Unicode(mandatory=True),
     }
 
 
@@ -117,9 +118,11 @@ class PO_Edit(STLForm):
         # Msgid and msgstr
         if units:
             unit = units[index-1]
-            msgid = ''.join(unit.source)
-            msgstr = ''.join(unit.target)
+            msgctxt = u'' if unit.context is None else ''.join(unit.context)
+            msgid = u''.join(unit.source)
+            msgstr = u''.join(unit.target)
         else:
+            msgctxt = None
             msgid = None
             msgstr = None
 
@@ -132,14 +135,16 @@ class PO_Edit(STLForm):
             'messages_last': uri.replace(messages_index=str(total)),
             'messages_previous': uri.replace(messages_index=str(previous)),
             'messages_next': uri.replace(messages_index=str(next)),
+            'msgctxt': msgctxt,
             'msgid': msgid,
             'msgstr': msgstr}
 
 
     def action(self, resource, context, form):
+        msgctxt = None if not form['msgctxt'] else form['msgctxt']
         msgid = form['msgid'].replace('\r', '')
         msgstr = form['msgstr'].replace('\r', '')
-        resource.handler.set_message(msgid, msgstr)
+        resource.handler.set_msgstr(msgid, msgstr, msgctxt)
         # Events, change
         context.database.change_resource(resource)
 
