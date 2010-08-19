@@ -154,7 +154,7 @@ class Issue(Folder):
             name = checkid(filename)
             name, extension, language = FileName.decode(name)
             name = generate_name(name, self.get_names())
-            # Add attachement
+            # Add attachment
             cls = get_resource_class(mimetype)
             self.make_resource(name, cls, body=body, filename=filename,
                                extension=extension, format=mimetype)
@@ -366,7 +366,7 @@ class Issue(Folder):
             metadata.set_property('assigned_to', value)
 
         # Comments / Files
-        attachements = []
+        attachments = []
         for record in history.records:
             if record is None:
                 # deleted record
@@ -379,9 +379,9 @@ class Issue(Folder):
             metadata.set_property('comment', comment)
             file = history.get_record_value(record, 'file')
             if file:
-                attachements.append(file)
-        if attachements:
-            metadata.set_property('attachment', attachements)
+                attachments.append(file)
+        if attachments:
+            metadata.set_property('attachment', attachments)
 
         # CC
         reporter = history.records[0].username

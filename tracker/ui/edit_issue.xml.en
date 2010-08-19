@@ -157,8 +157,8 @@
                 (${file/mtime}, ${file/author})
               </li>
             </ul>
-            <label for="attachment">New Attachement</label><br/>
-            <input type="file" name="attachment" id="attachement" size="36" />
+            <label for="attachment">New attachment</label><br/>
+            <input type="file" name="attachment" id="attachment" size="36" />
           </fieldset>
         </td>
       </tr>
