@@ -75,6 +75,10 @@ class DBResource_Edit(AutoForm):
         timestamp_widget, title_widget, description_widget, subject_widget]
 
 
+    def get_context_menus(self):
+        return self.context_menus
+
+
     def get_value(self, resource, context, name, datatype):
         if name == 'timestamp':
             return context.timestamp

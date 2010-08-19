@@ -387,8 +387,14 @@ class Skin(UIFolder):
         for menu in resource.get_context_menus():
             menu = menu(resource=resource, context=context)
             yield menu.render()
+
         # View
-        menus = getattr(context.view, 'context_menus', [])
+        get_context_menus = getattr(context.view, 'get_context_menus', None)
+        if get_context_menus is None:
+            menus = getattr(context.view, 'context_menus', [])
+        else:
+            menus = get_context_menus()
+
         for menu in menus:
             menu = menu(resource=resource, context=context)
             yield menu.render()
