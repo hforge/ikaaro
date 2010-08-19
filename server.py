@@ -172,6 +172,7 @@ class Server(WebServer):
             raise ValueError, msg % log_level
         log_level = log_levels[log_level]
         logger = Logger(log_file, log_level)
+        logger.launch_rotate(timedelta(weeks=3))
         register_logger(logger, None)
         logger = WebLogger(log_file, log_level)
         register_logger(logger, 'itools.http', 'itools.web')
