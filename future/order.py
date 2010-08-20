@@ -28,7 +28,7 @@ from itools.database import AndQuery, OrQuery, PhraseQuery, NotQuery
 from itools.xml import XMLParser
 
 # Import from ikaaro
-from ikaaro.buttons import Button, RemoveButton, OrderUpButton
+from ikaaro.buttons import BrowseButton, RemoveButton, OrderUpButton
 from ikaaro.buttons import OrderDownButton, OrderBottomButton, OrderTopButton
 from ikaaro.file import Image
 from ikaaro.folder import Folder
@@ -40,7 +40,7 @@ from ikaaro.views import CompositeForm
 from ikaaro.workflow import get_workflow_preview
 
 
-class AddButton(Button):
+class AddButton(BrowseButton):
 
     access = 'is_allowed_to_edit'
     name = 'add'

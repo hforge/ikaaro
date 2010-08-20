@@ -34,7 +34,7 @@ from itools.web.views import process_form
 
 # Import from ikaaro
 from ikaaro.autoform import HiddenWidget, TextWidget
-from ikaaro.buttons import Button
+from ikaaro.buttons import BrowseButton
 from ikaaro import messages
 from ikaaro.views import BrowseForm, SearchForm as BaseSearchForm, ContextMenu
 from ikaaro.views_new import NewInstance
@@ -821,7 +821,7 @@ class Tracker_ChangeSeveralBugs(Tracker_View):
     external_form = True
 
     table_actions = [
-        Button(name='change_several_bugs', title=MSG(u'Edit issues'))]
+        BrowseButton(name='change_several_bugs', title=MSG(u'Edit issues'))]
 
 
     def get_namespace(self, resource, context):

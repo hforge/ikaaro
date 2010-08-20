@@ -27,7 +27,7 @@ from itools.uri import encode_query, get_reference
 from itools.web import STLView, ERROR
 
 # Import from ikaaro
-from buttons import Button
+from buttons import BrowseButton
 from metadata import Metadata
 from views import BrowseForm
 
@@ -140,7 +140,7 @@ class IndexRevision(String):
 
 
 
-class DiffButton(Button):
+class DiffButton(BrowseButton):
     access = 'is_allowed_to_edit'
     name = 'diff'
     title = MSG(u"Diff between selected revisions")

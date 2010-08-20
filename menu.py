@@ -28,7 +28,7 @@ from itools.xml import XMLParser
 # Import from ikaaro
 from autoform import PathSelectorWidget, ReadOnlyWidget, SelectWidget
 from autoform import TextWidget
-from buttons import Button
+from buttons import BrowseButton
 from exceptions import ConsistencyError
 from folder import Folder
 from folder_views import Folder_BrowseContent, Folder_PreviewContent
@@ -78,7 +78,7 @@ class MenuFile(OrderedTableFile):
 
 
 
-class ChildButton(Button):
+class ChildButton(BrowseButton):
 
     access = 'is_allowed_to_edit'
     name = 'add_child'
