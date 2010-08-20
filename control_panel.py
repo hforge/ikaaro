@@ -200,7 +200,7 @@ class CPEditContactOptions(DBResource_Edit):
         ]
 
 
-    def get_schema(self, resource, context):
+    def _get_schema(self, resource, context):
         return {
           'emails_from_addr': ContactsOptions(resource=resource),
           'emails_signature': Unicode,

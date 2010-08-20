@@ -26,7 +26,7 @@ from itools.gettext import MSG
 from itools.http import Conflict, NotImplemented
 from itools.i18n import get_language_name
 from itools.stl import stl
-from itools.uri import get_reference, get_uri_path
+from itools.uri import get_reference, get_uri_path, Reference
 from itools.web import BaseView, STLForm, INFO, ERROR
 from itools.database import OrQuery, PhraseQuery
 
@@ -59,6 +59,36 @@ class EditLanguageMenu(ContextMenu):
 
 
 
+class SelectFieldsMenu(ContextMenu):
+
+    title = MSG(u'Select Fields')
+    template = '/ui/generic/select_fields_menu.xml'
+    view = None
+    submit_value = MSG(u'Update')
+    submit_class = 'button-ok'
+
+
+    def action(self):
+        uri = self.context.uri
+        return Reference(uri.scheme, uri.authority, uri.path, {}, None)
+
+
+    def get_items(self):
+        context = self.context
+        resource = self.resource
+        view = self.view
+
+        widgets = view._get_widgets(resource, context)
+        # Build widgets list
+        fields, to_keep = view._get_query_fields(resource, context)
+
+        return [ {'name': widget.name,
+                  'title': getattr(widget, 'title', 'name'),
+                  'selected': widget.name in fields}
+                 for widget in widgets if widget.name not in to_keep ]
+
+
+
 class DBResource_Edit(AutoForm):
 
     access = 'is_allowed_to_edit'
@@ -68,15 +98,79 @@ class DBResource_Edit(AutoForm):
 
     schema = {
         'title': Unicode(multilingual=True),
-        'description': Unicode(multilingual=True),
-        'subject': Unicode(multilingual=True),
+        'description': Unicode(multilingual=True, hidden_by_default=True),
+        'subject': Unicode(multilingual=True, hidden_by_default=True),
         'timestamp': DateTime(readonly=True)}
     widgets = [
         timestamp_widget, title_widget, description_widget, subject_widget]
 
 
     def get_context_menus(self):
-        return self.context_menus
+        context_menus = self.context_menus[:] # copy
+        # Append SelectFieldsMenu context menu
+        show_widget = SelectFieldsMenu(view=self)
+        context_menus.append(show_widget)
+        return context_menus
+
+
+    def _get_query_fields(self, resource, context):
+        """Return query fields and readonly or mandatory fields
+        """
+        schema = self._get_schema(resource, context)
+        default = set()
+        to_keep = set()
+
+        for key, datatype in schema.iteritems():
+            if getattr(datatype, 'hidden_by_default', False):
+                continue
+            # Keep readonly and mandatory widgets
+            if getattr(datatype, 'mandatory', False):
+                to_keep.add(key)
+            if getattr(datatype, 'readonly', False):
+                to_keep.add(key)
+            default.add(key)
+        fields = context.get_query_value('fields', type=String(multiple=True),
+                                         default=default)
+        return set(fields), to_keep
+
+
+    def _get_schema(self, resource, context):
+        """Return schema witout any modification
+           Method to be overriden by sub-classes.
+        """
+        return self.schema
+
+
+    def get_schema(self, resource, context):
+        """Return reduced schema
+           i.e. schema without 'hidden by default' datatypes.
+        """
+        base_schema = self._get_schema(resource, context)
+        fields, to_keep = self._get_query_fields(resource, context)
+        schema = {}
+        for key in fields | to_keep:
+            schema[key] = base_schema[key]
+
+        return schema
+
+
+    def _get_widgets(self, resource, context):
+        """Return widgets witout any modification
+           Method to be overriden by sub-classes.
+        """
+        return self.widgets
+
+
+    def get_widgets(self, resource, context):
+        """Return reduced widgets
+           i.e. skip hide by default widgets.
+        """
+        base_widgets = self._get_widgets(resource, context)
+        fields, to_keep = self._get_query_fields(resource, context)
+
+        # Reduce widgets
+        return [ widget for widget in base_widgets
+                 if widget.name in fields or widget.name in to_keep ]
 
 
     def get_value(self, resource, context, name, datatype):
@@ -114,10 +208,13 @@ class DBResource_Edit(AutoForm):
         if context.edit_conflict:
             return
 
+        # Get submit field names
+        schema = self._get_schema(resource, context)
+        fields, to_keep = self._get_query_fields(resource, context)
+
         # Save changes
-        schema = self.get_schema(resource, context)
         language = resource.get_content_language(context)
-        for key in form.keys():
+        for key in fields | to_keep:
             datatype = schema[key]
             if getattr(datatype, 'readonly', False):
                 continue

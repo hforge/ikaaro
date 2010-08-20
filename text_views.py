@@ -41,8 +41,8 @@ class Text_Edit(File_Edit):
     title = MSG(u'Edit')
     icon = 'edit.png'
 
-    def get_schema(self, resource, context):
-        schema = File_Edit.get_schema(self, resource, context)
+    def _get_schema(self, resource, context):
+        schema = File_Edit._get_schema(self, resource, context)
         return merge_dicts(schema, data=String)
 
 
@@ -64,7 +64,7 @@ class Text_Edit(File_Edit):
 
     def set_value(self, resource, context, name, form, language=None):
         if name == 'data':
-            if form['file']:
+            if form.get('file'):
                 return False
             handler = resource.handler
             old_value = handler.to_str()

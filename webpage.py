@@ -172,8 +172,8 @@ class HTMLEditView(File_Edit):
     """WYSIWYG editor for HTML documents.
     """
 
-    def get_schema(self, resource, context):
-        schema = File_Edit.get_schema(self, resource, context)
+    def _get_schema(self, resource, context):
+        schema = File_Edit._get_schema(self, resource, context)
         return merge_dicts(schema, data=HTMLBody)
 
 

@@ -252,6 +252,7 @@ span.field-error {
 
 /**************************************************************************
  * ui/generic/menu.xml.en
+ * ui/generic/select_fields_menu.xml.en
  *************************************************************************/
 
 .context-menu {
@@ -296,6 +297,12 @@ span.field-error {
   border-bottom: 1px solid #d3d7cf;
 }
 
+.context-menu li label {
+  background: none;
+  color: black;
+  display: inline;
+  padding: 3px 0;
+}
 
 /**************************************************************************
  * ui/generic/icons_view.xml.en

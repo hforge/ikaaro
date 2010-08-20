@@ -123,7 +123,7 @@ class Post_View(STLForm):
 
 class Post_Edit(DBResource_Edit):
 
-    def get_schema(self, resource, context):
+    def _get_schema(self, resource, context):
         return {
             'title': Unicode(mandatory=True),
             'date': Date,
