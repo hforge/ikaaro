@@ -473,8 +473,8 @@ class RTEWidget(Widget):
 title_widget = TextWidget('title', title=MSG(u'Title'))
 description_widget = MultilineWidget('description',
                                      title=MSG(u'Description'), rows=8)
-subject_widget = TextWidget('subject',
-                            title=MSG(u'Keywords (Separated by comma)'))
+subject_widget = TextWidget('subject', title=MSG(u'Keywords'),
+                            tip=MSG(u'Separated by comma'))
 rte_widget = RTEWidget('data', title=MSG(u'Body'))
 timestamp_widget = HiddenWidget('timestamp')
 file_widget = FileWidget('file', title=MSG(u'Replace file'))
