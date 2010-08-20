@@ -22,7 +22,7 @@
 from operator import itemgetter
 
 # Import from itools
-from itools.datatypes import Enumerate, String, Unicode
+from itools.datatypes import DateTime, Enumerate, String, Unicode
 from itools.gettext import MSG
 from itools.i18n import get_language_name, get_languages
 from itools.uri import Path
@@ -33,6 +33,7 @@ from itools.database import PhraseQuery
 from access import RoleAware_BrowseUsers, RoleAware_AddUser
 from access import RoleAware_EditMembership
 from autoform import MultilineWidget, SelectWidget, TextWidget
+from autoform import timestamp_widget
 from folder_views import Folder_Orphans, GoToSpecificDocument
 import messages
 from resource_views import DBResource_Edit
@@ -192,6 +193,7 @@ class CPEditContactOptions(DBResource_Edit):
 
 
     widgets = [
+        timestamp_widget,
         SelectWidget('emails_from_addr', title=MSG(u'Emails from addr')),
         MultilineWidget('emails_signature', title=MSG(u'Emails signature')),
         SelectWidget('contacts', title=MSG(u'Select the contact accounts')),
@@ -202,6 +204,7 @@ class CPEditContactOptions(DBResource_Edit):
 
     def _get_schema(self, resource, context):
         return {
+          'timestamp': DateTime(readonly=True),
           'emails_from_addr': ContactsOptions(resource=resource),
           'emails_signature': Unicode,
           'contacts': ContactsOptions(multiple=True, resource=resource),
@@ -374,11 +377,13 @@ class CPEditSEO(DBResource_Edit):
     context_menus = context_menus
 
 
-    schema = {'google_site_verification': String,
+    schema = {'timestamp': DateTime(readonly=True),
+              'google_site_verification': String,
               'yahoo_site_verification': String,
               'bing_site_verification': String}
 
     widgets = [
+        timestamp_widget,
         TextWidget('google_site_verification',
             title=MSG(u'Google site verification key')),
         TextWidget('yahoo_site_verification',
