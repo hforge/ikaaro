@@ -104,7 +104,7 @@ class User(AccessControl, Folder):
             return firstname
         if lastname:
             return lastname
-        return self.get_login_name()
+        return self.get_login_name().decode('utf-8')
 
 
     def get_login_name(self):
