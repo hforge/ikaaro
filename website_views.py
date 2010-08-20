@@ -32,6 +32,7 @@ from itools.web import STLView, INFO, ERROR
 
 # Import from ikaaro
 from autoform import AutoForm, SelectWidget, MultilineWidget, TextWidget
+from buttons import Button
 from config import get_config
 from messages import MSG_NEW_RESOURCE
 from registry import get_resource_class
@@ -73,7 +74,7 @@ class ContactForm(AutoForm):
 
     access = True
     title = MSG(u'Contact')
-    submit_value = MSG(u'Send')
+    actions = [Button(access=True, css='button-ok', title=MSG(u'Send'))]
     query_schema = {'to': String,
                     'subject': Unicode,
                     'message_body': Unicode}

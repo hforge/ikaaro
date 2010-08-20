@@ -24,8 +24,9 @@ from itools.web import FormError
 
 # Import from ikaaro
 from autoform import AutoForm, ReadOnlyWidget, TextWidget, title_widget
-import messages
+from buttons import Button
 from registry import get_resource_class, get_document_types
+import messages
 
 
 
@@ -47,7 +48,7 @@ class NewInstance(AutoForm):
         ReadOnlyWidget('cls_description'),
         title_widget,
         TextWidget('name', title=MSG(u'Name'), default='')])
-    submit_value = MSG(u'Add')
+    actions = [Button(access=True, css='button-ok', title=MSG(u'Add'))]
     context_menus = freeze([])
 
 

@@ -36,6 +36,14 @@ class Button(thingy):
             setattr(self, key, kw[key])
 
 
+    def show(self, resource, context):
+        ac = resource.get_access_control()
+        return ac.is_access_allowed(context.user, resource, self)
+
+
+
+class BrowseButton(Button):
+
     def show(self, resource, context, items):
         if len(items) == 0:
             return False
@@ -44,7 +52,7 @@ class Button(thingy):
 
 
 
-class RemoveButton(Button):
+class RemoveButton(BrowseButton):
 
     access = 'is_allowed_to_remove'
     confirm = messages.MSG_DELETE_SELECTION
@@ -54,7 +62,7 @@ class RemoveButton(Button):
 
 
 
-class RenameButton(Button):
+class RenameButton(BrowseButton):
 
     access = 'is_allowed_to_move'
     css = 'button-rename'
@@ -63,7 +71,7 @@ class RenameButton(Button):
 
 
 
-class CopyButton(Button):
+class CopyButton(BrowseButton):
 
     access = 'is_allowed_to_copy'
     css = 'button-copy'
@@ -72,7 +80,7 @@ class CopyButton(Button):
 
 
 
-class CutButton(Button):
+class CutButton(BrowseButton):
 
     access = 'is_allowed_to_move'
     css = 'button-cut'
@@ -81,7 +89,7 @@ class CutButton(Button):
 
 
 
-class PasteButton(Button):
+class PasteButton(BrowseButton):
 
     access = 'is_allowed_to_move'
     css = 'button-paste'
@@ -98,7 +106,7 @@ class PasteButton(Button):
 
 
 
-class PublishButton(Button):
+class PublishButton(BrowseButton):
 
     access = 'is_allowed_to_publish'
     css = 'button-publish'
@@ -117,7 +125,7 @@ class PublishButton(Button):
 
 
 
-class RetireButton(Button):
+class RetireButton(BrowseButton):
 
     access = 'is_allowed_to_retire'
     css = 'button-retire'
@@ -136,7 +144,7 @@ class RetireButton(Button):
 
 
 
-class OrderUpButton(Button):
+class OrderUpButton(BrowseButton):
 
     access = 'is_allowed_to_edit'
     name = 'order_up'
@@ -144,7 +152,7 @@ class OrderUpButton(Button):
 
 
 
-class OrderDownButton(Button):
+class OrderDownButton(BrowseButton):
 
     access = 'is_allowed_to_edit'
     name = 'order_down'
@@ -152,7 +160,7 @@ class OrderDownButton(Button):
 
 
 
-class OrderTopButton(Button):
+class OrderTopButton(BrowseButton):
 
     access = 'is_allowed_to_edit'
     name = 'order_top'
@@ -160,7 +168,7 @@ class OrderTopButton(Button):
 
 
 
-class OrderBottomButton(Button):
+class OrderBottomButton(BrowseButton):
 
     access = 'is_allowed_to_edit'
     name = 'order_bottom'
@@ -168,7 +176,7 @@ class OrderBottomButton(Button):
 
 
 
-class AddButton(Button):
+class AddButton(BrowseButton):
 
     access = 'is_allowed_to_edit'
     name = 'add'

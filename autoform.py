@@ -30,6 +30,7 @@ from itools.web import STLForm, get_context
 from itools.xml import XMLParser
 
 # Import from ikaaro
+from buttons import Button
 from utils import CMSTemplate
 
 
@@ -497,13 +498,35 @@ class AutoForm(STLForm):
 
     widgets = []
     template = '/ui/auto_form.xml'
-    submit_value = MSG(u'Save')
-    submit_class = 'button-ok'
     description = None
-
+    actions = [Button(access=True, css='button-ok', title=MSG(u'Save'))]
 
     def get_widgets(self, resource, context):
         return self.widgets
+
+
+    def get_actions(self, resource, context):
+        return self.actions
+
+
+    def _get_action_namespace(self, resource, context):
+        # (1) Actions (submit buttons)
+        actions = []
+        for button in self.get_actions(resource, context):
+            if button.show(resource, context) is False:
+                continue
+            if button.confirm:
+                confirm = button.confirm.gettext().encode('utf_8')
+                onclick = 'return confirm("%s");' % confirm
+            else:
+                onclick = None
+            actions.append(
+                {'value': button.name,
+                 'title': button.title,
+                 'class': button.css,
+                 'onclick': onclick})
+
+        return actions
 
 
     def get_namespace(self, resource, context):
@@ -536,13 +559,21 @@ class AutoForm(STLForm):
         else:
             first_widget = None
 
+        # Get the actions
+        actions = self._get_action_namespace(resource, context)
+        action = None
+        if len(actions) == 1:
+            # If one action, remove the value parameter
+            # to simulate old functionment
+            action = context.uri
+            actions[0]['value'] = None
+
         # Build namespace
         return {
+            'actions': actions,
+            'action': action,
             'title': self.get_title(context),
             'description': self.description,
             'first_widget': first_widget,
-            'action': context.uri,
-            'submit_value': self.submit_value,
-            'submit_class': self.submit_class,
             'widgets': ns_widgets}
 
