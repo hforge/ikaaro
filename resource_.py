@@ -360,7 +360,7 @@ class DBResource(CatalogAware, IResource):
         # Titles
         title = {}
         for language in languages:
-            title[language] = self.get_title(language=language)
+            title[language] = self.get_property('title', language=language)
 
         # Descriptions
         description = {}

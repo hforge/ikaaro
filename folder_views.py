@@ -322,12 +322,6 @@ class Folder_BrowseContent(SearchForm):
         items = results.get_documents(sort_by=sort_by, reverse=reverse,
                                       start=start, size=size)
 
-        # FIXME This must be done in the catalog.
-        if sort_by == 'title':
-            items.sort(cmp=lambda x,y: cmp(x.title, y.title))
-            if reverse:
-                items.reverse()
-
         # Access Control (FIXME this should be done before batch)
         user = context.user
         root = context.root
@@ -370,7 +364,7 @@ class Folder_BrowseContent(SearchForm):
             return id, href
         elif column == 'title':
             # Title
-            return item_resource.get_property('title')
+            return brain.title
         elif column == 'format':
             # Type
             return item_resource.class_title.gettext()
