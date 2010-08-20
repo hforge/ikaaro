@@ -20,17 +20,20 @@
 
 # Import from itools
 from itools.core import freeze, merge_dicts
-from itools.datatypes import Email, Tokens, Unicode, String
+from itools.database import AndQuery, OrQuery, PhraseQuery, StartQuery
+from itools.datatypes import Email, Enumerate, String, Tokens, Unicode
 from itools.gettext import MSG
 from itools.web import AccessControl as BaseAccessControl, STLForm, INFO
 from itools.web import ERROR
-from itools.database import AndQuery, OrQuery, PhraseQuery, StartQuery
 
 # Import from ikaaro
+from autoform import AutoForm, TextWidget, PasswordWidget, SelectWidget
+from buttons import Button
 from buttons import RemoveButton
-import messages
 from views import SearchForm
 from workflow import WorkflowAware
+import messages
+
 
 
 ###########################################################################
@@ -217,24 +220,50 @@ class RoleAware_EditMembership(STLForm):
 
 
 
-class RoleAware_AddUser(STLForm):
+class RoleAware_AddUser(AutoForm):
 
     access = 'is_admin'
     title = MSG(u'Add New Member')
     icon = 'card.png'
     description = MSG(u'Grant access to a new user.')
-    template = '/ui/access/add_user.xml'
-    schema = {
-        'email': Email(mandatory=True),
-        'role': String(mandatory=True),
-        'newpass': String,
-        'newpass2': String}
+
+    actions = [Button(access='is_admin', css='button-ok',
+                      name='add_and_view', title=MSG(u'Add and view')),
+               Button(access='is_admin', css='button-ok',
+                      name='add_and_return', title=MSG(u'Add and return'))]
 
 
-    def get_namespace(self, resource, context):
-        return {
-            'is_admin': resource.is_admin(context.user, resource),
-            'roles': resource.get_roles_namespace()}
+    def get_schema(self, resource, context):
+        schema = {'email': Email(mandatory=True)}
+
+        # Build role datatype
+        options = [ {'name': x['name'], 'value': x['title']}
+                    for x in resource.get_roles_namespace() ]
+        role_datatype = Enumerate(options=options)
+        schema['role'] = role_datatype(mandatory=True)
+
+        # Admin can set user password
+        if resource.is_admin(context.user, resource):
+            schema['newpass'] = String
+            schema['newpass2'] = String
+
+        return schema
+
+
+    def get_widgets(self, resource, context):
+        widgets = [TextWidget('email', title=MSG(u'Email'))]
+
+        # Admin can set user password
+        if resource.is_admin(context.user, resource):
+            widgets.append(PasswordWidget('newpass', title=MSG(u'Password')))
+            widgets.append(PasswordWidget('newpass2',
+                                          title=MSG(u'Repeat Password')))
+        # Role widget
+        select = SelectWidget('role', has_empty_option=False,
+                              title=MSG(u'Choose the role for the new member'))
+        widgets.append(select)
+
+        return widgets
 
 
     def _add(self, resource, context, form):
