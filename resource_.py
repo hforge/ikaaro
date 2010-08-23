@@ -322,11 +322,6 @@ class DBResource(CatalogAware, IResource):
         return revisions[-1]['username']
 
 
-    def get_last_author(self):
-        revision = self.get_last_revision()
-        return revision['username'] if revision else None
-
-
     def get_mtime(self):
         revision = self.get_last_revision()
         return revision['date'] if revision else None
