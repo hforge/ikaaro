@@ -29,38 +29,51 @@ from itools.database import PhraseQuery, AndQuery, OrQuery, StartQuery
 from pytz import common_timezones
 
 # Import from ikaaro
-from autoform import TextWidget, PasswordWidget, AutoForm
+from autoform import AutoForm
+from autoform import HiddenWidget, PasswordWidget, ReadOnlyWidget, TextWidget
 from folder import Folder_BrowseContent
 import messages
 
 
-class User_ConfirmRegistration(STLForm):
+class User_ConfirmRegistration(AutoForm):
 
     access = True
-    template = '/ui/user/confirm_registration.xml'
-    schema = {
-        'key': String(mandatory=True),
-        'newpass': String(mandatory=True),
-        'newpass2': String(mandatory=True)}
+    title = MSG(u'Choose your password')
+    description = MSG(u'To activate your account, please type a password.')
 
-    msg = MSG(u'To activate your account, please type a password.')
+    schema = freeze({
+        'key': String(mandatory=True),
+        'username': String,
+        'newpass': String(mandatory=True),
+        'newpass2': String(mandatory=True)})
+    widgets = freeze([
+        HiddenWidget('key'),
+        ReadOnlyWidget('username', title=MSG(u'Username')),
+        PasswordWidget('newpass', title=MSG(u'Password')),
+        PasswordWidget('newpass2', title=MSG(u'Repeat password'))])
+
+
+    def get_value(self, resource, context, name, datatype):
+        if name == 'key':
+            return resource.get_property('user_must_confirm')
+        if name == 'username':
+            return resource.get_login_name()
+
+        return AutoForm.get_value(self, resource, context, name, datatype)
+
 
     def get_namespace(self, resource, context):
         # Check register key
         must_confirm = resource.get_property('user_must_confirm')
         username = context.get_form_value('username', default='')
         if must_confirm is None:
-            return context.come_back(messages.MSG_REGISTERED,
-                    goto='/;login?username=%s' % username)
+            goto = '/;login?username=%s' % username
+            return context.come_back(messages.MSG_REGISTERED, goto=goto)
         elif context.get_form_value('key') != must_confirm:
-            return context.come_back(messages.MSG_BAD_KEY,
-                    goto='/;login?username=%s' % username)
+            goto ='/;login?username=%s' % username
+            return context.come_back(messages.MSG_BAD_KEY, goto=goto)
 
-        # Ok
-        return {
-            'key': must_confirm,
-            'username': resource.get_login_name(),
-            'confirmation_msg': self.msg.gettext()}
+        return AutoForm.get_namespace(self, resource, context)
 
 
     def action(self, resource, context, form):
@@ -91,7 +104,7 @@ class User_ConfirmRegistration(STLForm):
 
 class User_ChangePasswordForgotten(User_ConfirmRegistration):
 
-    msg = MSG(u'Please choose a new password for your account')
+    description = MSG(u'Please choose a new password for your account')
 
 
 
