@@ -171,6 +171,16 @@ Now multilingual fields are explicitely defined as such.
   metadata.set_property('title', title)
 
 
+(4) Remove get_last_author method since 'last_author' is stored in the
+metadata.
+
+  # Before
+  resource.get_last_author()
+
+  # Now
+  resource.get_property('last_author')
+
+
 Index & Search
 =====================
 
