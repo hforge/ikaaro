@@ -423,6 +423,7 @@ class RTEWidget(Widget):
     # See http://wiki.moxiecode.com/index.php/TinyMCE:Configuration
     width = None
     height = '340px'
+    readonly = False
     # toolbar
     toolbar1 = ('newdocument,code,|,bold,italic,underline,strikethrough,|,'
                 'justifyleft,justifycenter,justifyright, justifyfull,|,'
@@ -452,6 +453,11 @@ class RTEWidget(Widget):
 
     def resizing_js(self):
         return 'true' if self.resizing else 'false'
+
+
+    def is_readonly(self):
+        # True -> true for Javascript
+        return 'true' if self.readonly else 'false'
 
 
     def get_prefix(self):

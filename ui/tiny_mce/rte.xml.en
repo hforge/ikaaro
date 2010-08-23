@@ -9,6 +9,7 @@
   <script type="text/javascript">
   tinyMCE.init({
       mode : "exact",
+      readonly: ${is_readonly},
       elements : "${id}",
 
       theme : "advanced",
