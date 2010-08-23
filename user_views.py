@@ -18,6 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
+from itools.core import freeze, merge_dicts
 from itools.datatypes import Email, String, Unicode
 from itools.gettext import MSG
 from itools.i18n import get_language_name
@@ -150,8 +151,7 @@ class User_Profile(STLView):
         return {
             'items': items,
             'is_owner_or_admin': is_owner or root.is_admin(user, resource),
-            'user_must_confirm': resource.has_property('user_must_confirm'),
-        }
+            'user_must_confirm': resource.has_property('user_must_confirm')}
 
 
 
@@ -166,8 +166,7 @@ class User_EditAccount(AutoForm):
         'firstname': Unicode,
         'lastname': Unicode,
         'email': Email,
-        'password': String,
-    }
+        'password': String}
     widgets = [TextWidget('firstname', title=MSG(u"First Name")),
                TextWidget('lastname', title=MSG(u"Last Name")),
                TextWidget('email', title=MSG(u"E-mail Address"))]
@@ -235,8 +234,7 @@ class User_EditPreferences(STLForm):
     template = '/ui/user/edit_preferences.xml'
     schema = {
         'user_language': String,
-        'user_timezone': String,
-    }
+        'user_timezone': String}
 
 
     def get_namespace(self, resource, context):
@@ -277,31 +275,35 @@ class User_EditPreferences(STLForm):
 
 
 
-class User_EditPassword(STLForm):
+class User_EditPassword(AutoForm):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Edit Password')
     description = MSG(u'Change your password.')
     icon = 'lock.png'
-    template = '/ui/user/edit_password.xml'
-    schema = {
+
+    schema = freeze({
         'newpass': String(mandatory=True),
-        'newpass2': String(mandatory=True),
-        'password': String,
-    }
+        'newpass2': String(mandatory=True)})
+    widgets = [
+        PasswordWidget('newpass', title=MSG(u'New password')),
+        PasswordWidget('newpass2', title=MSG(u'Confirm'))]
 
 
-    def get_namespace(self, resource, context):
-        user = context.user
-        return {
-            'must_confirm': (resource.name == user.name)
-        }
+    def get_schema(self, resource, context):
+        if resource.name != context.user.name:
+            return self.schema
+        return merge_dicts(self.schema, password=String(mandatory=True))
+
+
+    def get_widgets(self, resource, context):
+        if resource.name != context.user.name:
+            return self.widgets
+        title = MSG(u'Type your current password')
+        return self.widgets + [PasswordWidget('password', title=title)]
 
 
     def action(self, resource, context, form):
-        newpass = form['newpass'].strip()
-        newpass2 = form['newpass2']
-
         # Check password to confirm changes
         is_same_user = (resource.name == context.user.name)
         if is_same_user:
@@ -313,9 +315,10 @@ class User_EditPassword(STLForm):
                 return
 
         # Check the new password matches
+        newpass = form['newpass'].strip()
+        newpass2 = form['newpass2']
         if newpass != newpass2:
-            context.message = ERROR(
-                    u"Passwords mismatch, please try again.")
+            context.message = ERROR(u"Passwords mismatch, please try again.")
             return
 
         # Clear confirmation key
