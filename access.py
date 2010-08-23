@@ -23,11 +23,11 @@ from itools.core import freeze, merge_dicts
 from itools.database import AndQuery, OrQuery, PhraseQuery, StartQuery
 from itools.datatypes import Email, Enumerate, String, Tokens, Unicode
 from itools.gettext import MSG
-from itools.web import AccessControl as BaseAccessControl, STLForm, INFO
-from itools.web import ERROR
+from itools.web import AccessControl as BaseAccessControl, ERROR, INFO
 
 # Import from ikaaro
-from autoform import AutoForm, TextWidget, PasswordWidget, SelectWidget
+from autoform import AutoForm, HiddenWidget, TextWidget, PasswordWidget
+from autoform import RadioWidget, SelectWidget
 from buttons import Button
 from buttons import RemoveButton
 from views import SearchForm
@@ -182,23 +182,42 @@ class RoleAware_BrowseUsers(SearchForm):
 
 
 
-class RoleAware_EditMembership(STLForm):
+class RoleAware_EditMembership(AutoForm):
 
     access = 'is_admin'
-    template = '/ui/access/edit_membership_form.xml'
-    schema = {
-        'id': String(mandatory=True),
-        'role': String(mandatory=True)}
+
+    widgets = [HiddenWidget('id'),
+               RadioWidget('role', title=MSG(u'Roles available'),
+                           has_empty_option=False)]
+
+    actions = [Button(access='is_admin', css='button-rename',
+                      title=MSG(u'Update'))]
 
 
-    def get_namespace(self, resource, context):
+    def get_title(self, context):
         user_id = context.get_form_value('id')
-        user = resource.get_resource('/users/%s' % user_id)
+        user = context.resource.get_resource('/users/%s' % user_id)
+        return MSG(u'Change Role of {name}').gettext(name=user.get_title())
 
-        return {
-            'id': user_id,
-            'name': user.get_title(),
-            'roles': resource.get_roles_namespace(user_id)}
+
+    def get_schema(self, resource, context):
+        schema = {'id': String(mandatory=True)}
+
+        # Build role datatype
+        options = [ {'name': x['name'], 'value': x['title']}
+                    for x in resource.get_roles_namespace() ]
+        role_datatype = Enumerate(options=options)
+        schema['role'] = role_datatype(mandatory=True)
+
+        return schema
+
+
+    def get_value(self, resource, context, name, datatype):
+        user_id = context.get_form_value('id')
+        if name == 'id':
+            return user_id
+        elif name == 'role':
+            return resource.get_user_role(user_id)
 
 
     def action(self, resource, context, form):
@@ -239,8 +258,7 @@ class RoleAware_AddUser(AutoForm):
         # Build role datatype
         options = [ {'name': x['name'], 'value': x['title']}
                     for x in resource.get_roles_namespace() ]
-        role_datatype = Enumerate(options=options)
-        schema['role'] = role_datatype(mandatory=True)
+        schema['role'] = Enumerate(options=options, mandatory=True)
 
         # Admin can set user password
         if resource.is_admin(context.user, resource):
