@@ -319,8 +319,16 @@ class Folder_BrowseContent(SearchForm):
         size = context.query['batch_size']
         sort_by = context.query['sort_by']
         reverse = context.query['reverse']
-        items = results.get_documents(sort_by=sort_by, reverse=reverse,
-                                      start=start, size=size)
+
+        # "title" is multilingual
+        if sort_by == 'title':
+            items = results.get_documents()
+            items = [ (item.title.lower(), item) for item in items ]
+            items.sort(reverse=reverse)
+            items = [ item[1] for item in items][start: start + size]
+        else:
+            items = results.get_documents(sort_by=sort_by, reverse=reverse,
+                                          start=start, size=size)
 
         # Access Control (FIXME this should be done before batch)
         user = context.user
