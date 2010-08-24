@@ -174,7 +174,7 @@ class HTMLEditView(File_Edit):
 
     def _get_schema(self, resource, context):
         schema = File_Edit._get_schema(self, resource, context)
-        return merge_dicts(schema, data=HTMLBody)
+        return merge_dicts(schema, data=HTMLBody(multilingual=True))
 
 
     widgets = [
