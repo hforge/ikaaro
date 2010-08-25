@@ -20,29 +20,26 @@ from datetime import date
 # Import from itools
 from itools.core import freeze, merge_dicts
 from itools.csv import Property
-from itools.datatypes import Date, DateTime, String, Unicode
-from itools.handlers import checkid
+from itools.datatypes import Date, Unicode
 from itools.gettext import MSG
 from itools.web import STLForm
-from itools.xml import XMLError, XMLParser
 
 # Import from ikaaro
-from ikaaro.autoform import DateWidget, RTEWidget
+from ikaaro.autoform import DateWidget, HTMLBody, RTEWidget
 from ikaaro.autoform import timestamp_widget, title_widget
 from ikaaro.comments import CommentsView
 from ikaaro.folder import Folder
 from ikaaro.messages import *
-from ikaaro.resource_views import DBResource_Edit
 from ikaaro.views_new import NewInstance
-from ikaaro.webpage import WebPage
-from ikaaro.workflow import StateEnumerate, state_widget
+from ikaaro.webpage import HTMLEditView, WebPage
+from ikaaro.workflow import state_widget
 
 
 ###########################################################################
 # Views
 ###########################################################################
 rte = RTEWidget(
-    'html', title=MSG(u'Description'),
+    'data', title=MSG(u'Description'),
     toolbar1="newdocument,code,|,bold,italic,underline,strikethrough"
              ",|,undo,redo,|,link,unlink,|,removeformat",
     toolbar2="", toolbar3="",
@@ -60,29 +57,21 @@ class Post_NewInstance(NewInstance):
         return merge_dicts(
             NewInstance.schema,
             title=Unicode(mandatory=True),
-            html=String,
+            data=HTMLBody,
             date=Date(default=date.today()))
 
 
     def action(self, resource, context, form):
         name = form['name']
         title = form['title']
-        html = form['html']
+        html = form['data']
         release_date = form['date']
-
-        name = checkid(name)
-        if name is None:
-            context.message = MSG_BAD_NAME
-            return
-
-        # Check the name is free
-        if resource.get_resource(name, soft=True):
-            context.message = MSG_NAME_CLASH
-            return
 
         # Make Object
         language = resource.get_content_language(context)
-        post = resource.make_resource(name, Post, body=html, language=language)
+        post = resource.make_resource(name, Post, language=language)
+        handler = post.get_handler(language=language)
+        handler.set_body(html)
         post.metadata.set_property('title', Property(title, lang=language))
         post.metadata.set_property('date', release_date)
 
@@ -105,7 +94,7 @@ class Post_View(STLForm):
         language = resource.get_content_language(context)
         return {
             'title': resource.get_property('title', language=language),
-            'html': resource.handler.events,
+            'data': resource.get_html_data(),
             'date': resource.get_property('date'),
             'comments': CommentsView().GET(resource, context)}
 
@@ -121,15 +110,11 @@ class Post_View(STLForm):
 
 
 
-class Post_Edit(DBResource_Edit):
+class Post_Edit(HTMLEditView):
 
     def _get_schema(self, resource, context):
-        return {
-            'title': Unicode(mandatory=True),
-            'date': Date,
-            'state': StateEnumerate(resource=resource, context=context),
-            'html': String,
-            'timestamp': DateTime}
+        return merge_dicts(HTMLEditView._get_schema(self, resource, context),
+                           date=Date)
 
     widgets = freeze([
         timestamp_widget,
@@ -139,37 +124,12 @@ class Post_Edit(DBResource_Edit):
         rte])
 
 
-    def get_value(self, resource, context, name, datatype):
-        if name == 'html':
-            return resource.handler.events
-        return DBResource_Edit.get_value(self, resource, context, name,
-                                         datatype)
-
-
-    def action(self, resource, context, form):
-        # Check edit conflict
-        self.check_edit_conflict(resource, context, form)
-        if context.edit_conflict:
-            return
-
-        # Check the html is good
-        html = form['html']
-        try:
-            html = list(XMLParser(html))
-        except XMLError:
-            context.message = MSG(u'Invalid HTML code.')
-            return
-
-        # State (FIXME Check the state is valid)
-        resource.set_property('state', form['state'])
-
-        # Save changes
-        language = resource.get_content_language(context)
-        resource.set_property('title', form['title'], language=language)
-        resource.set_property('date', form['date'])
-        resource.handler.set_events(html)
-        # Ok
-        context.message = MSG_CHANGES_SAVED
+    def set_value(self, resource, context, name, form, language=None):
+        if name == 'date':
+            resource.set_property('date', form['date'])
+            return False
+        return HTMLEditView.set_value(self, resource, context, name,
+                                      form, language)
 
 
 ###########################################################################
@@ -180,7 +140,7 @@ class Post(WebPage):
     class_id = 'blog-post'
     class_title = MSG(u'Post')
     class_description = MSG(u'Create and publish Post')
-    class_views = ['view', 'edit', 'history']
+    class_views = ['view', 'edit', 'commit_log']
 
 
     class_schema = merge_dicts(

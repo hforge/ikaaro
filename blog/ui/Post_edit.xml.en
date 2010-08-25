@@ -18,9 +18,9 @@
         ${date}
       </dd>
     </dl>
-    <label for="html">Description</label>
+    <label for="data">Description</label>
     <p>
-      ${html}
+      ${data}
     </p>
     <p>
       <input type="hidden" name="timestamp" value="${timestamp}" />
