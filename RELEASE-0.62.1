@@ -1,0 +1,46 @@
+
+ikaaro 0.62.1 (2010/08/XX)
+==========================
+
+This is a Content Management System built on Python & itools, among
+other features ikaaro provides:
+
+ - content and document management (index&search, metadata, etc.)
+ - multilingual user interfaces and content
+ - high level modules: wiki, forum, tracker, etc.
+
+Changes
+-------
+
+The edit view has been improved; most visible: now it is possible to
+select what fields are to be edited with a form in the right column.
+
+The "commit_log" and "changes" views have been much optimized, they
+run at least twice faster than before.  These views allow to see the
+contents of the database transactions (Git commits).
+
+Now the access log rotates automatically, once every three weeks.
+
+Several bugs have been fixed, including:
+
+ #578 The div "location" break the layout under IEx
+ #777 Language negotiation does not work properly with title field...
+ #855 Bug in translation of PO resource
+ #947 Fix spelling of the word "attachment"
+
+
+Resources
+---------
+
+Download
+http://download.hforge.org/ikaaro/0.62/ikaaro-0.62.1.tar.gz
+
+Home
+http://www.hforge.org/ikaaro
+
+Mailing list
+http://www.hforge.org/community/
+http://archives.hforge.org/index.cgi?list=itools
+
+Bug Tracker
+http://bugs.hforge.org/
