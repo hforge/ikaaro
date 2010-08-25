@@ -172,8 +172,14 @@ class DBResource_CommitLog(BrowseForm):
     def get_items(self, resource, context):
         root = context.root
         items = resource.get_revisions(content=True)
+        users_cache = {}
+
         for i, item in enumerate(items):
-            item['username'] = root.get_user_title(item['username'])
+            username = users_cache.get(item['username'])
+            if username is None:
+                username = root.get_user_title(item['username'])
+                users_cache[item['username']] = username
+            item['username'] = username
             # Hint to sort revisions quickly
             item['index'] = i
         return items
