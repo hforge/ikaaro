@@ -80,7 +80,8 @@ class Book(Directive):
                    'comments': directives.unchanged,
                    'subject': directives.unchanged,
                    'language': language,
-                   'keywords': directives.unchanged}
+                   'keywords': directives.unchanged,
+                   'filename': directives.unchanged}
     has_content = True
 
 

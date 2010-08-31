@@ -59,6 +59,7 @@
    :subject: Subject...
    :language: fr-FR
    :keywords: Keyword1, Keyword2...
+   :filename: output.odt
 
    - `a-page`_
    - `another-page`_

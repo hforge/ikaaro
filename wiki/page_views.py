@@ -671,8 +671,10 @@ class WikiPage_ToODT(AutoForm):
                     heading_level=heading_level)
 
         context.set_content_type('application/vnd.oasis.opendocument.text')
-        context.set_content_disposition('attachment',
-                filename='%s.odt' % resource.name)
+        filename = book.get('filename') if book else None
+        if not filename:
+            filename = '%s.odt' % resource.name
+        context.set_content_disposition('attachment', filename=filename)
 
         output = StringIO()
         document.save(output)
