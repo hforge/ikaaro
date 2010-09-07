@@ -19,7 +19,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
-from os.path import basename
+from os.path import basename, splitext
 
 # Import from itools
 from itools.core import merge_dicts
@@ -284,6 +284,16 @@ class File_ExternalEdit(BaseView):
             'cookie:%s' % soup_message.get_header('Cookie'),
             'title:%s' % title]
 
+        # Try to guess the extension (optional)
+        filename = resource.get_property('filename')
+        _, extension = splitext(filename)
+        if extension:
+            extension = extension[1:]
+            if extension in resource.get_all_extensions():
+                # All OK
+                header.append('extension:.%s' % extension)
+
+        # Authorization part
         auth = context.get_header('Authorization')
         if auth:
             header.append('auth:%s' % auth)
