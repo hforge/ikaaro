@@ -295,7 +295,7 @@ class BrowseForm(STLForm):
                     'sortable': False})
             else:
                 # Type: normal
-                base_href = context.uri.replace(sort_by=name)
+                base_href = context.uri.replace(sort_by=name, batch_start=None)
                 if name == sort_by:
                     sort_up_active = reverse is False
                     sort_down_active = reverse is True
