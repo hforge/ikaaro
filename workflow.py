@@ -91,11 +91,11 @@ add_trans('request', 'private', 'pending',
 # Transition: Unrequest
 add_trans('unrequest', 'pending', 'private',
     description=MSG(u'Retract the document.'))
-# Transition: Reject
-add_trans('reject', 'pending', 'private',
+# Transition: Reject -> Retire
+add_trans('retire', 'pending', 'private',
     description=MSG(u'Reject the document.'))
-# Transition: Accept
-add_trans('accept', 'pending', 'public',
+# Transition: Accept -> Publish
+add_trans('publish', 'pending', 'public',
     description=MSG(u'Accept the document.'))
 # Transition: Retire
 add_trans('retire', 'public', 'private',
