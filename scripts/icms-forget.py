@@ -102,7 +102,7 @@ def forget(parser, target, options):
                 break
 
     # Check the server is not running
-    pid = get_pid(target)
+    pid = get_pid('%s/pid' % target)
     if pid is not None:
         print 'The server is running. Stop it before running this command.'
         return

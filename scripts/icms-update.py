@@ -160,7 +160,7 @@ def update(parser, options, target):
     confirm = options.confirm
 
     # Check the server is not started, or started in read-only mode
-    pid = get_pid(target)
+    pid = get_pid('%s/pid' % target)
     if pid is not None:
         print 'Cannot proceed, the server is running in read-write mode.'
         return

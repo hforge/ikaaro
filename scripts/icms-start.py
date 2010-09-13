@@ -35,7 +35,7 @@ from ikaaro.server import Server, get_pid, get_fake_context
 
 def start(options, target):
     # Check the server is not running
-    pid = get_pid(target)
+    pid = get_pid('%s/pid' % target)
     if pid is not None:
         print '[%s] The Web Server is already running.' % target
         return 1
@@ -45,7 +45,7 @@ def start(options, target):
         return 1
 
     # Start the subprocess
-    start_subprocess('%s/database' % target)
+    start_subprocess(path='%s/database' % target)
 
     # Set-up the server
     server = Server(target, read_only=options.read_only)

@@ -83,7 +83,7 @@ def load_modules(config):
 
 def get_pid(target):
     try:
-        pid = open('%s/pid' % target).read()
+        pid = open(target).read()
     except IOError:
         return None
 
@@ -296,7 +296,7 @@ class Server(WebServer):
     # Web
     #######################################################################
     def get_pid(self):
-        return get_pid(self.target)
+        return get_pid('%s/pid' % self.target)
 
 
     def init_context(self, context):
