@@ -24,17 +24,22 @@ from optparse import OptionParser
 import itools
 
 # Import from ikaaro
-from ikaaro.server import Server
+from ikaaro.server import get_pid
 from ikaaro.utils import kill
 
 
 
 def stop(parser, options, target):
     # Stop the Web Server
-    server = Server(target, read_only=True)
-    pid = server.get_pid()
+    pid = get_pid('%s/pid' % target)
     if pid is None:
         print '[%s] Web Server not running.' % target
+
+        # Eventually stop the subprocess
+        sub_pid = get_pid('%s/pid-subprocess' % target)
+        if sub_pid is not None:
+            kill(sub_pid, force=True)
+            print '[%s] Web Server subprocess is running, i kill it' % target
     else:
         kill(pid, force=options.force)
         if options.force:

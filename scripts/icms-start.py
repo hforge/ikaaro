@@ -39,13 +39,19 @@ def start(options, target):
     if pid is not None:
         print '[%s] The Web Server is already running.' % target
         return 1
+    sub_pid = get_pid('%s/pid-subprocess' % target)
+    if sub_pid is not None:
+        print ('[%s] The Web Server subprocess is running, please use '
+               'icms-stop.py to stop it.') % target
+        return 1
 
     # Check for database consistency
     if options.quick is False and check_database(target) is False:
         return 1
 
     # Start the subprocess
-    start_subprocess(path='%s/database' % target)
+    start_subprocess(path='%s/database' % target,
+                     pid_file='%s/pid-subprocess' % target)
 
     # Set-up the server
     server = Server(target, read_only=options.read_only)
