@@ -236,7 +236,7 @@ class ModulesHandler(Tracker_TableHandler):
 
     record_properties = {
         'product': String(mandatory=True, is_indexed=True),
-        'title': Unicode(multiple=True, mandatory=True)}
+        'title': Unicode(mandatory=True)}
 
 
 
@@ -262,7 +262,7 @@ class VersionsHandler(Tracker_TableHandler):
 
     record_properties = {
         'product': String(mandatory=True, is_indexed=True),
-        'title': Unicode(multiple=True, mandatory=True),
+        'title': Unicode(mandatory=True),
         'released': Boolean}
 
 
