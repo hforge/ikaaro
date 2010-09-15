@@ -187,7 +187,7 @@ class SelectTable_EditRecord(Table_EditRecord):
 ###########################################################################
 class Tracker_TableHandler(OrderedTableFile):
 
-    record_properties = {'title': Unicode(multiple=True)}
+    record_properties = {'title': Unicode(mandatory=True)}
 
 
 
