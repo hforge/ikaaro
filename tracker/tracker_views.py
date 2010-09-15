@@ -19,9 +19,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Import from the Standard Library
-from datetime import datetime
-
 # Import from itools
 from itools.core import merge_dicts, thingy_lazy_property
 from itools.csv import CSVFile, Property
@@ -881,7 +878,8 @@ class Tracker_ChangeSeveralBugs(Tracker_View):
                 else:
                     issue.set_property(name, new_value)
             # Comment
-            p_comment = Property(comment, author=username, date=context.timestamp)
+            p_comment = Property(comment, author=username,
+                                 date=context.timestamp)
             modifications = issue.get_diff_with(old_metadata, context)
             if modifications:
                 title = MSG(u'Modifications:').gettext()
