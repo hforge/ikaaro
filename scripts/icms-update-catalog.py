@@ -27,8 +27,11 @@ from itools.core import start_subprocess
 
 def update_catalog(parser, options, target):
     # Imports
+    from os import remove
+    from os.path import join
     import sys
     from time import time
+    from traceback import format_exc
     from itools.core import vmsize
     from itools.database import check_database, get_register_fields
     from itools.i18n.accept import AcceptLanguage
@@ -69,6 +72,9 @@ def update_catalog(parser, options, target):
     # Update
     t0, v0 = time(), vmsize()
     doc_n = 0
+    error_detected = False
+    if options.test:
+        log = open('%s/log/update-catalog' % target, 'w').write
     for obj in root.traverse_resources():
         if not isinstance(obj, CatalogAware):
             continue
@@ -76,28 +82,51 @@ def update_catalog(parser, options, target):
             print doc_n, obj.get_abspath()
         doc_n += 1
         context.resource = obj
-        catalog.index_document(obj)
+
+        # Index the document
+        try:
+            catalog.index_document(obj)
+        except Exception:
+            if options.test:
+                error_detected = True
+                log('*** Error detected ***\n')
+                log('Abspath of the resource: %r\n\n' % str(obj.get_abspath()))
+                log(format_exc())
+                log('\n')
+            else:
+                raise
+
         # Free Memory
         del obj
         server.database.make_room()
-    # Update / Report
-    t1, v1 = time(), vmsize()
-    v = (v1 - v0)/1024
-    print '[Update] Time: %.02f seconds. Memory: %s Kb' % (t1 - t0, v)
 
-    # Commit
-    print '[Commit]',
-    sys.stdout.flush()
-    catalog.save_changes()
-    # Commit / Replace
-    old_catalog_path = '%s/catalog' % target
-    if lfs.exists(old_catalog_path):
-        lfs.remove(old_catalog_path)
-    lfs.move(catalog_path, old_catalog_path)
-    # Commit / Report
-    t2, v2 = time(), vmsize()
-    v = (v2 - v1)/1024
-    print 'Time: %.02f seconds. Memory: %s Kb' % (t2 - t1, v)
+    if not error_detected:
+        if options.test:
+            # Delete the empty log file
+            remove('%s/log/update-catalog' % target)
+
+        # Update / Report
+        t1, v1 = time(), vmsize()
+        v = (v1 - v0)/1024
+        print '[Update] Time: %.02f seconds. Memory: %s Kb' % (t1 - t0, v)
+
+        # Commit
+        print '[Commit]',
+        sys.stdout.flush()
+        catalog.save_changes()
+        # Commit / Replace
+        old_catalog_path = '%s/catalog' % target
+        if lfs.exists(old_catalog_path):
+            lfs.remove(old_catalog_path)
+        lfs.move(catalog_path, old_catalog_path)
+        # Commit / Report
+        t2, v2 = time(), vmsize()
+        v = (v2 - v1)/1024
+        print 'Time: %.02f seconds. Memory: %s Kb' % (t2 - t1, v)
+    else:
+        print '[Update] Error(s) detected, the new catalog was NOT saved'
+        print ('[Update] You can find more infos in %r' %
+               join(target, 'log/update-catalog'))
 
 
 
@@ -120,7 +149,9 @@ if __name__ == '__main__':
         help="be quiet")
     parser.add_option(
         '--quick', action="store_true", default=False,
-        help="Do not check the database consistency.")
+        help="do not check the database consistency.")
+    parser.add_option('-t', '--test', action='store_true', default=False,
+        help="a test mode, don't stop the indexation when an error occurs")
 
     options, args = parser.parse_args()
     if len(args) != 1:
