@@ -187,7 +187,7 @@ class SelectTable_EditRecord(Table_EditRecord):
 ###########################################################################
 class Tracker_TableHandler(OrderedTableFile):
 
-    record_properties = {'title': Unicode(mandatory=True)}
+    record_properties = {'title': Unicode(multilingual=True, mandatory=True)}
 
 
 
@@ -234,9 +234,9 @@ class Tracker_TableResource(OrderedTable):
 
 class ModulesHandler(Tracker_TableHandler):
 
-    record_properties = {
-        'product': String(mandatory=True, is_indexed=True),
-        'title': Unicode(mandatory=True)}
+    record_properties = merge_dicts(
+        Tracker_TableHandler.record_properties,
+        product=String(mandatory=True))
 
 
 
@@ -258,12 +258,11 @@ class ModulesResource(Tracker_TableResource):
 
 
 
-class VersionsHandler(Tracker_TableHandler):
+class VersionsHandler(ModulesHandler):
 
-    record_properties = {
-        'product': String(mandatory=True, is_indexed=True),
-        'title': Unicode(mandatory=True),
-        'released': Boolean}
+    record_properties = merge_dicts(
+        ModulesHandler.record_properties,
+        released=Boolean)
 
 
 

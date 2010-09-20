@@ -71,7 +71,7 @@ class Target(Enumerate):
 class MenuFile(OrderedTableFile):
 
     record_properties = {
-        'title': Unicode(multiple=True),
+        'title': Unicode(multilingual=True),
         'path': String,
         'target': Target(mandatory=True, default='_top'),
         'child': String}

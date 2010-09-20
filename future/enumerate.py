@@ -28,7 +28,7 @@ from ikaaro.table import OrderedTableFile, OrderedTable
 class EnumerateTableFile(OrderedTableFile):
 
     record_properties = {
-        'title': Unicode(mandatory=True, multiple=True)}
+        'title': Unicode(multilingual=True, mandatory=True)}
 
 
 

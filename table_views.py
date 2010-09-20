@@ -201,7 +201,6 @@ class Table_AddEditRecord(AutoForm):
             datatype = schema[name]
             value = form[name]
             if is_multilingual(datatype):
-                value = value[0]
                 value = Property(value, language=language)
             elif datatype.multiple:
                 # textarea -> string
