@@ -91,9 +91,8 @@ class Post_View(STLForm):
 
 
     def get_namespace(self, resource, context):
-        language = resource.get_content_language(context)
         return {
-            'title': resource.get_property('title', language=language),
+            'title': resource.get_property('title'),
             'data': resource.get_html_data(),
             'date': resource.get_property('date'),
             'comments': CommentsView().GET(resource, context)}

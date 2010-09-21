@@ -52,10 +52,9 @@ class TableEnumerate(Enumerate):
         here = context.resource
         table = here.get_site_root().get_resource(cls.table_path)
         handler = table.handler
-        language = here.get_content_language(context)
         options = []
         for record in handler.get_records_in_order():
-            title = handler.get_record_value(record, 'title', language)
+            title = handler.get_record_value(record, 'title')
             if not title:
                 title = handler.get_record_value(record, 'title')
             options.append({'name': str(record.id), 'value': title})

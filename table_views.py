@@ -411,9 +411,7 @@ class Table_ExportCSV(BaseView):
     def GET(self, resource, context):
         handler = resource.handler
         columns = ['id'] + [widget.name for widget in self.get_form()]
-        language = resource.get_content_language(context)
-        csv = handler.to_csv(columns, separator=self.multiple_separator,
-                             language=language)
+        csv = handler.to_csv(columns, separator=self.multiple_separator)
 
         # Ok
         context.set_content_type('text/comma-separated-values')

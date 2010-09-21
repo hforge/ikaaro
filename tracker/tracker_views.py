@@ -135,8 +135,6 @@ class StoredSearchesMenu(ContextMenu):
     def get_items(self):
         context = self.context
         resource = self.resource
-
-        language = resource.get_content_language(context)
         root = context.root
 
         # If called from a child
@@ -155,7 +153,7 @@ class StoredSearchesMenu(ContextMenu):
             kw = {'search_title': item.get_property('title'),
                   'issues_nb': issues_nb}
             title = MSG(u'{search_title} ({issues_nb})')
-            title = title.gettext(language=language, **kw)
+            title = title.gettext(**kw)
 
             # Namespace
             items.append({'title': title,
