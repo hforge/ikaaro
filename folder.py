@@ -58,9 +58,6 @@ class Folder(DBResource):
 
     #########################################################################
     # Gallery properties
-    DEFAULT_SIZE = 128
-    MIN_SIZE = 32
-    MAX_SIZE = 512
     SIZE_STEPS = (32, 48, 64, 128, 256, 512)
 
 

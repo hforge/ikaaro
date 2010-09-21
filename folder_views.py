@@ -55,13 +55,14 @@ class ZoomMenu(ContextMenu):
         uri = self.context.uri
 
         # Compute previous and next sizes
-        current_size = self.context.get_query_value('size')
-        min_size = self.resource.MIN_SIZE
-        max_size = self.resource.MAX_SIZE
+        current_size = self.context.query['size']
+        size_steps = self.resource.SIZE_STEPS
+        min_size = size_steps[0]
+        max_size = size_steps[-1]
         current_size = max(min_size, min(current_size, max_size))
         previous_size = min_size
         next_size = max_size
-        for step in self.resource.SIZE_STEPS:
+        for step in size_steps:
             if step < current_size:
                 previous_size = step
             if next_size is max_size and step > current_size:
@@ -688,8 +689,8 @@ class Folder_PreviewContent(Folder_BrowseContent):
 
         # (0) Zoom
         current_size = query['size']
-        min_size = resource.MIN_SIZE
-        max_size = resource.MAX_SIZE
+        min_size = resource.SIZE_STEPS[0]
+        max_size = resource.SIZE_STEPS[-1]
         current_size = max(min_size, min(current_size, max_size))
 
         # (1) Actions (submit buttons)
