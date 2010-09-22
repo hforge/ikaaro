@@ -19,7 +19,7 @@
         </li>
       </ul>
     </fieldset>
-    <fieldset>
+    <fieldset stl:if="fields">
       <legend>Fields</legend>
       <ul>
         <li class="${field/class}" stl:repeat="field fields">
@@ -29,6 +29,8 @@
         </li>
       </ul>
     </fieldset>
+    <input stl:repeat="field hidden_fields" type="hidden"
+           name="${field/name}" value="${field/value}" />
     <p stl:if="submit_value">
       <button type="submit" class="${submit_class}">${submit_value}</button>
     </p>

@@ -92,6 +92,15 @@ class EditLanguageMenu(ContextMenu):
 
 
 
+    def get_hidden_fields(self):
+        return self.view._get_query_to_keep(self.resource, self.context)
+
+
+    def hidden_fields(self):
+        return self.get_hidden_fields()
+
+
+
 class DBResource_Edit(AutoForm):
 
     access = 'is_allowed_to_edit'
@@ -112,6 +121,12 @@ class DBResource_Edit(AutoForm):
         context_menus = self.context_menus[:] # copy
         context_menus.append(EditLanguageMenu(view=self))
         return context_menus
+
+
+    # XXX method name sucks
+    def _get_query_to_keep(self, resource, context):
+        """Return a list of dict {'name': name, 'value': value}"""
+        return []
 
 
     def _get_query_fields(self, resource, context):
