@@ -360,29 +360,26 @@ class User_Tasks(STLView):
 
 
     def get_namespace(self, resource, context):
+        # 1. Build the query
+        query = PhraseQuery('workflow_state', 'pending')
+        site_root = context.site_root
+        if site_root.parent is not None:
+            q2 = OrQuery(
+                StartQuery('abspath', '%s/' % site_root.get_abspath()),
+                StartQuery('abspath', '%s/' % resource.get_canonical_path()))
+            query = AndQuery(query, q2)
+
+        # 2. Build the list of documents
         root = context.root
-        user = context.user
-
-        # Build the query
-        site_root = resource.get_site_root()
-        q1 = PhraseQuery('workflow_state', 'pending')
-        q2 = OrQuery(StartQuery('abspath', str(site_root.get_abspath())),
-                     StartQuery('abspath',
-                                     str(resource.get_canonical_path())))
-        query = AndQuery(q1, q2)
-
-        # Build the list of documents
         documents = []
         for brain in root.search(query).get_documents():
             document = root.get_resource(brain.abspath)
             # Check security
             ac = document.get_access_control()
-            if not ac.is_allowed_to_view(user, document):
-                continue
-            # Append
-            documents.append(
-                {'url': '%s/' % resource.get_pathto(document),
-                 'title': document.get_title()})
+            if ac.is_allowed_to_view(context.user, document):
+                documents.append(
+                    {'url': '%s/' % resource.get_pathto(document),
+                     'title': document.get_title()})
 
         return {'documents': documents}
 
