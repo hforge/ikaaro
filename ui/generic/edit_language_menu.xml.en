@@ -8,13 +8,27 @@
   <label>${title}</label>
   <form id="edit-language" name="edit-languages" action="${action}"
         method="get" stl:omit-tag="not submit_value">
-    <ul>
-      <li class="${item/class}" stl:repeat="item items">
-        <input type="checkbox" id="edit-language-${item/name}" name="edit_language"
-          value="${item/name}" checked="${item/selected}" />
-        <label for="edit-language-${item/name}">${item/title}</label>
-      </li>
-    </ul>
+    <fieldset>
+      <legend>Languages</legend>
+      <ul>
+        <li class="${item/class}" stl:repeat="item items">
+          <input type="checkbox" id="edit-language-${item/name}"
+            name="edit_language" value="${item/name}"
+            checked="${item/selected}" />
+          <label for="edit-language-${item/name}">${item/title}</label>
+        </li>
+      </ul>
+    </fieldset>
+    <fieldset>
+      <legend>Fields</legend>
+      <ul>
+        <li class="${field/class}" stl:repeat="field fields">
+          <input type="checkbox" id="field-${field/name}" name="fields"
+            value="${field/name}" checked="${field/selected}" />
+          <label for="field-${field/name}">${field/title}</label>
+        </li>
+      </ul>
+    </fieldset>
     <p stl:if="submit_value">
       <button type="submit" class="${submit_class}">${submit_value}</button>
     </p>

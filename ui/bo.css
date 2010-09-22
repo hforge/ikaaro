@@ -260,6 +260,10 @@ span.field-error {
   padding-left: 8px;
 }
 
+.context-menu form {
+  margin: 0; /* IEx */
+}
+
 .context-menu a,
 .context-menu a:link,
 .context-menu a:visited,
@@ -279,6 +283,14 @@ span.field-error {
   font-weight: bold;
 }
 
+.context-menu fieldset {
+  margin-bottom: 5px;
+}
+
+.context-menu fieldset ul {
+  margin: 0;
+}
+
 .context-menu ul {
   margin: 3px 6px 10px 3px;
   list-style: none;
@@ -290,11 +302,10 @@ span.field-error {
   padding: 0;
   background-repeat: no-repeat;
   background-position: top left;
+  border-bottom: 1px solid #d3d7cf;
   line-height: 1.4em;
   list-style: none;
   overflow: hidden;
-  line-height: 1.4em;
-  border-bottom: 1px solid #d3d7cf;
 }
 
 .context-menu li label {
@@ -302,6 +313,10 @@ span.field-error {
   color: black;
   display: inline;
   padding: 3px 0;
+}
+
+.context-menu p {
+  margin: 0;
 }
 
 /**************************************************************************

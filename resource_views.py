@@ -43,7 +43,7 @@ import messages
 
 class EditLanguageMenu(ContextMenu):
 
-    title = MSG(u'Edit Language')
+    title = MSG(u'Configuration')
     template = '/ui/generic/edit_language_menu.xml'
     view = None
     submit_value = MSG(u'Update')
@@ -52,6 +52,31 @@ class EditLanguageMenu(ContextMenu):
     def action(self):
         uri = self.context.uri
         return Reference(uri.scheme, uri.authority, uri.path, {}, None)
+
+
+    def get_fields(self):
+        context = self.context
+        resource = self.resource
+        view = self.view
+
+        widgets = view._get_widgets(resource, context)
+        # Build widgets list
+        fields, to_keep = view._get_query_fields(resource, context)
+
+        return [ {'name': widget.name,
+                  'title': getattr(widget, 'title', 'name'),
+                  'selected': widget.name in fields}
+                 for widget in widgets if widget.name not in to_keep ]
+
+
+    def fields(self):
+        items = self.get_fields()
+        # Defaults
+        for item in items:
+            for name in ['class', 'src', 'items']:
+                item.setdefault(name, None)
+
+        return items
 
 
     def get_items(self):
@@ -67,42 +92,12 @@ class EditLanguageMenu(ContextMenu):
 
 
 
-class SelectFieldsMenu(ContextMenu):
-
-    title = MSG(u'Select Fields')
-    template = '/ui/generic/select_fields_menu.xml'
-    view = None
-    submit_value = MSG(u'Update')
-    submit_class = 'button-ok'
-
-
-    def action(self):
-        uri = self.context.uri
-        return Reference(uri.scheme, uri.authority, uri.path, {}, None)
-
-
-    def get_items(self):
-        context = self.context
-        resource = self.resource
-        view = self.view
-
-        widgets = view._get_widgets(resource, context)
-        # Build widgets list
-        fields, to_keep = view._get_query_fields(resource, context)
-
-        return [ {'name': widget.name,
-                  'title': getattr(widget, 'title', 'name'),
-                  'selected': widget.name in fields}
-                 for widget in widgets if widget.name not in to_keep ]
-
-
-
 class DBResource_Edit(AutoForm):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Edit')
     icon = 'metadata.png'
-    context_menus = [EditLanguageMenu()]
+    context_menus = []
 
     schema = {
         'title': Unicode(multilingual=True),
@@ -115,9 +110,7 @@ class DBResource_Edit(AutoForm):
 
     def get_context_menus(self):
         context_menus = self.context_menus[:] # copy
-        # Append SelectFieldsMenu context menu
-        show_widget = SelectFieldsMenu(view=self)
-        context_menus.append(show_widget)
+        context_menus.append(EditLanguageMenu(view=self))
         return context_menus
 
 
