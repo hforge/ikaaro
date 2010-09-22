@@ -29,7 +29,7 @@ from autoform import AutoForm
 from buttons import RemoveButton, OrderUpButton, OrderDownButton
 from buttons import OrderBottomButton, OrderTopButton
 import messages
-from resource_views import EditLanguageMenu
+from resource_views import DBResource_Edit
 from views import SearchForm
 
 
@@ -164,17 +164,16 @@ class Table_View(SearchForm):
 ###########################################################################
 # Add/Edit records
 ###########################################################################
-class Table_AddEditRecord(AutoForm):
+class Table_AddEditRecord(DBResource_Edit):
 
     access = 'is_allowed_to_edit'
-    context_menus = [EditLanguageMenu()]
 
 
-    def get_schema(self, resource, context):
+    def _get_schema(self, resource, context):
         return resource.get_schema()
 
 
-    def get_widgets(self, resource, context):
+    def _get_widgets(self, resource, context):
         return resource.get_form()
 
 
@@ -192,8 +191,10 @@ class Table_AddEditRecord(AutoForm):
         """Code shared by the add & edit actions.  It builds a new record
         from the form.
         """
-        schema = self.get_schema(resource, context)
-        language = resource.get_edit_languages(context)[0]
+
+        # Get submit field names
+        schema = self._get_schema(resource, context)
+        fields, to_keep = self._get_query_fields(resource, context)
 
         # Builds a new record from the form.
         record = {}
@@ -201,7 +202,8 @@ class Table_AddEditRecord(AutoForm):
             datatype = schema[name]
             value = form[name]
             if is_multilingual(datatype):
-                value = Property(value, language=language)
+                value = [ Property(data, language=language)
+                          for language, data in value.iteritems() ]
             elif datatype.multiple:
                 # textarea -> string
                 if not issubclass(datatype, Enumerate):
@@ -247,6 +249,12 @@ class Table_EditRecord(Table_AddEditRecord):
 
     title = MSG(u'Edit record {id}')
     query_schema = {'id': Integer(mandatory=True)}
+
+
+    def _get_query_to_keep(self, resource, context):
+        """Keep id"""
+        id = context.query['id']
+        return [{'name': 'id', 'value': id}]
 
 
     def get_query(self, context):
