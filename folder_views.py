@@ -304,7 +304,8 @@ class Folder_BrowseContent(SearchForm):
         search_text = context.query['search_text'].strip()
         if search_text:
             args.append(OrQuery(TextQuery('title', search_text),
-                                TextQuery('text', search_text)))
+                                TextQuery('text', search_text),
+                                PhraseQuery('name', search_text)))
 
         # Ok
         if len(args) == 1:
