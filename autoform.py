@@ -22,7 +22,7 @@
 from itools.core import get_abspath, thingy_lazy_property
 from itools.datatypes import DataType, Date, Enumerate, Boolean
 from itools.fs import lfs
-from itools.gettext import MSG
+from itools.gettext import MSG, get_language_msg
 from itools.html import stream_to_str_as_xhtml, stream_to_str_as_html
 from itools.html import xhtml_doctype, sanitize_stream
 from itools.stl import stl
@@ -109,7 +109,7 @@ class Widget(CMSTemplate):
 
     template = make_stl_template("""
     <input type="${type}" id="${id}" name="${name}" value="${value}"
-      maxlength="${maxlength}" size="${size}" />""")
+      maxlength="${maxlength}" size="${size}" /> ${language}""")
 
 
     def __init__(self, name=None, **kw):
@@ -441,7 +441,7 @@ class RTEWidget(Widget):
     table_styles = None
 
 
-    def language(self):
+    def rte_language(self):
         path = get_abspath('ui/tiny_mce/langs')
         languages = [ x[:-3] for x in lfs.get_names(path) ]
         return get_context().accept_language.select_language(languages)
@@ -542,6 +542,9 @@ class AutoForm(STLForm):
         fields = self.get_schema(resource, context)
         widgets = self.get_widgets(resource, context)
 
+        language = resource.get_content_language(context)
+        language = get_language_msg(language)
+
         # Build widgets namespace
         ns_widgets = []
         for widget in widgets:
@@ -554,7 +557,11 @@ class AutoForm(STLForm):
             widget_namespace['is_date'] = issubclass(datatype, Date)
             widget_namespace['suffix'] = widget.suffix
             widget_namespace['tip'] = widget.tip
-            widget = widget(datatype=datatype, value=value)
+
+            multilingual = getattr(datatype, 'multilingual', False)
+            lang = language if multilingual else None
+            widget = widget(datatype=datatype, value=value, language=lang)
+
             widget_namespace['widget'] = widget.render()
             ns_widgets.append(widget_namespace)
 

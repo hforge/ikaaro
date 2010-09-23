@@ -16,7 +16,7 @@
       plugins : "${plugins}",
 
       /* language */
-      language : "${language}",
+      language : "${rte_language}",
       /* css */
       content_css : "${css}",
       table_styles : "${table_styles}",
@@ -51,6 +51,7 @@
 	<!--
   Gets replaced with TinyMCE, remember HTML in a textarea should be quoted
   -->
+  ${language}
   <textarea id="${id}" name="${name}" rows="15" cols="80"
     style="width: 80%">${value}</textarea>
 
