@@ -183,6 +183,8 @@ class ReadOnlyWidget(Widget):
 class MultilineWidget(Widget):
 
     template = make_stl_template("""
+    <label class="language block" for="${id}" stl:if="language"
+      >${language}</label>
     <textarea rows="${rows}" cols="${cols}" id="${id}" name="${name}"
     >${value}</textarea>""")
 

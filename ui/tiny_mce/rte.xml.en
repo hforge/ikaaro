@@ -51,7 +51,7 @@
 	<!--
   Gets replaced with TinyMCE, remember HTML in a textarea should be quoted
   -->
-  <label class="language" for="${id}" stl:if="language">${language}</label>
+  <label class="language block" for="${id}" stl:if="language">${language}</label>
   <textarea id="${id}" name="${name}" rows="15" cols="80"
     style="width: 80%">${value}</textarea>
 

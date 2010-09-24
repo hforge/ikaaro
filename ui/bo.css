@@ -555,6 +555,13 @@ p.tabme a.selected {
   font-size: 0.8em;
   margin-left: 5px;
 }
+#autoform .language.block {
+  margin: 0;
+  display: block;
+}
+#autoform .widget {
+  margin: 2px 0;
+}
 
 #autoform input, #autoform textarea {
   width: 92%;

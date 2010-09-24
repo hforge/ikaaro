@@ -18,7 +18,7 @@
         <br/>
       </stl:block>
       <span stl:if="widget/error" class="field-error">${widget/error}<br/></span>
-      <stl:block stl:repeat="widget widget/widgets">${widget}</stl:block>
+      <p class="widget" stl:repeat="widget widget/widgets">${widget}</p>
     </div>
     <p stl:if="actions">
       <stl:block stl:repeat="action actions">
