@@ -565,14 +565,13 @@ class AutoForm(STLForm):
                 widgets_html = []
                 for language in languages:
                     language_title = get_language_msg(language)
-                    widgets_html.append(
-                        widget(
-                            name='%s:%s' % (widget.name, language),
-                            datatype=datatype,
-                            value=value[language],
-                            language=language_title))
+                    widget_name = '%s:%s' % (widget.name, language)
+                    widgets_html.append(widget(name=widget_name,
+                                               datatype=datatype,
+                                               value=value[language],
+                                               language=language_title))
                     if focus and not first_widget:
-                        first_widget = widget.name
+                        first_widget = widget_name
                 # fix label
                 if widgets_html:
                     ns_widget['name'] = widgets_html[0].name
@@ -593,6 +592,7 @@ class AutoForm(STLForm):
             # to simulate old functionment
             action = context.uri
             actions[0]['value'] = None
+
 
         # Build namespace
         return {
