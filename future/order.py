@@ -70,7 +70,7 @@ def get_resource_preview(resource, image_width, image_height, text_length,
     except NotImplementedError:
         text = u""
     if isinstance(text, dict):
-        language = resource.get_content_language(context)
+        language = resource.get_edit_languages(context)[0]
         text = text.get(language, text.keys()[0])
     return text[:text_length] + u"…"
 

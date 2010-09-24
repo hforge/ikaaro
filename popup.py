@@ -401,7 +401,7 @@ class DBResource_AddBase(STLForm):
         child = container.make_resource(name, cls, body=body, format=mimetype,
                                         filename=filename, extension=type)
         # The title
-        language = resource.get_content_language(context)
+        language = resource.get_edit_languages(context)[0]
         title = Property(title, lang=language)
         child.metadata.set_property('title', title)
         # Get the path

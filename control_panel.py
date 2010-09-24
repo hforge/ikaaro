@@ -219,12 +219,11 @@ class CPEditContactOptions(DBResource_Edit):
                   datatype)
 
 
-    def set_value(self, resource, context, name, form, language=None):
+    def set_value(self, resource, context, name, form):
         if name == 'contacts':
             resource.set_property(name, tuple(form['contacts']))
             return False
-        return DBResource_Edit.set_value(self, resource, context, name,
-                                         form, language)
+        return DBResource_Edit.set_value(self, resource, context, name, form)
 
 
 

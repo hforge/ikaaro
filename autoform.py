@@ -101,6 +101,7 @@ def get_default_widget(datatype):
 
 class Widget(CMSTemplate):
 
+    language = None
     maxlength = None
     size = None
     suffix = None
@@ -109,7 +110,9 @@ class Widget(CMSTemplate):
 
     template = make_stl_template("""
     <input type="${type}" id="${id}" name="${name}" value="${value}"
-      maxlength="${maxlength}" size="${size}" /> ${language}""")
+      maxlength="${maxlength}" size="${size}" />
+      <label class="language" for="${id}" stl:if="language"
+      >${language}</label>""")
 
 
     def __init__(self, name=None, **kw):
@@ -541,36 +544,46 @@ class AutoForm(STLForm):
         # Local Variables
         fields = self.get_schema(resource, context)
         widgets = self.get_widgets(resource, context)
-
-        language = resource.get_content_language(context)
-        language = get_language_msg(language)
+        languages = resource.get_edit_languages(context)
 
         # Build widgets namespace
+        first_widget = None
         ns_widgets = []
         for widget in widgets:
+            focus = not issubclass(widget, (ReadOnlyWidget, HiddenWidget))
             datatype = fields[widget.name]
-            widget_namespace = widgets_namespace[widget.name]
-            value = widget_namespace['value']
-            widget_namespace['title'] = getattr(widget, 'title', None)
-            is_mandatory = getattr(datatype, 'mandatory', False)
-            widget_namespace['mandatory'] = is_mandatory
-            widget_namespace['is_date'] = issubclass(datatype, Date)
-            widget_namespace['suffix'] = widget.suffix
-            widget_namespace['tip'] = widget.tip
+            ns_widget = widgets_namespace[widget.name]
+            ns_widget['title'] = getattr(widget, 'title', None)
+            ns_widget['mandatory'] = getattr(datatype, 'mandatory', False)
+            ns_widget['is_date'] = issubclass(datatype, Date)
+            ns_widget['suffix'] = widget.suffix
+            ns_widget['tip'] = widget.tip
 
-            multilingual = getattr(datatype, 'multilingual', False)
-            lang = language if multilingual else None
-            widget = widget(datatype=datatype, value=value, language=lang)
+            # multilingual or monolingual
+            value = ns_widget['value']
+            if getattr(datatype, 'multilingual', False):
+                widgets_html = []
+                for language in languages:
+                    language_title = get_language_msg(language)
+                    widgets_html.append(
+                        widget(
+                            name='%s:%s' % (widget.name, language),
+                            datatype=datatype,
+                            value=value[language],
+                            language=language_title))
+                    if focus and not first_widget:
+                        first_widget = widget.name
+                # fix label
+                if widgets_html:
+                    ns_widget['name'] = widgets_html[0].name
+            else:
+                widget = widget(datatype=datatype, value=value)
+                widgets_html = [widget]
+                if focus and not first_widget:
+                    first_widget = widget.name
 
-            widget_namespace['widget'] = widget.render()
-            ns_widgets.append(widget_namespace)
-
-        for widget in widgets:
-            if not issubclass(widget, ReadOnlyWidget):
-                first_widget = widget.name
-                break
-        else:
-            first_widget = None
+            ns_widget['widgets'] = widgets_html
+            ns_widgets.append(ns_widget)
 
         # Get the actions
         actions = self._get_action_namespace(resource, context)

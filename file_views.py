@@ -93,7 +93,7 @@ class File_NewInstance(NewInstance):
                 text = cls.class_handler(string=body).to_text()
                 language = guess_language(text)
                 if language is None:
-                    language = resource.get_content_language(context)
+                    language = resource.get_edit_languages(context)[0]
 
         # Build the resource
         name = form['name']
@@ -106,7 +106,7 @@ class File_NewInstance(NewInstance):
 
         # The title
         title = form['title'].strip()
-        language = resource.get_content_language(context)
+        language = resource.get_edit_languages(context)[0]
         title = Property(title, lang=language)
         child.metadata.set_property('title', title)
 
@@ -192,7 +192,7 @@ class File_Edit(DBResource_Edit):
                                          datatype)
 
 
-    def set_value(self, resource, context, name, form, language=None):
+    def set_value(self, resource, context, name, form):
         if name == 'file':
             # Upload file
             file = form['file']
@@ -239,8 +239,7 @@ class File_Edit(DBResource_Edit):
                 folder.move_handler(handler_name, filename)
 
             return False
-        return DBResource_Edit.set_value(self, resource, context, name,
-                                         form, language)
+        return DBResource_Edit.set_value(self, resource, context, name, form)
 
 
 

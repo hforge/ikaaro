@@ -205,7 +205,7 @@ class Tracker_NewInstance(NewInstance):
         cls = get_resource_class(class_id)
         child = resource.make_resource(name, cls)
         # The metadata
-        language = resource.get_content_language(context)
+        language = resource.get_edit_languages(context)[0]
         title = Property(title, lang=language)
         child.metadata.set_property('title', title)
         # Add the initial product
@@ -602,7 +602,7 @@ class Tracker_RememberSearch(BaseForm):
         search.handler.load_state_from_string('')
 
         # Set title
-        language = resource.get_content_language(context)
+        language = resource.get_edit_languages(context)[0]
         search.set_property('title', title, language=language)
 
         # Save the value

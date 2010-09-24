@@ -272,7 +272,7 @@ class WebSite_NewInstance(ProxyNewInstance):
         child = resource.make_resource(name, cls)
         # The metadata
         metadata = child.metadata
-        language = resource.get_content_language(context)
+        language = resource.get_edit_languages(context)[0]
         metadata.set_property('title', Property(title, lang=language))
         metadata.set_property('vhosts', vhosts)
 

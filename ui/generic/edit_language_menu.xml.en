@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<stl:block xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
+
+<div class="context-menu" stl:if="items">
+  <label>${title}</label>
+  <form id="edit-language" name="edit-languages" action="${action}"
+        method="get" stl:omit-tag="not submit_value">
+    <ul>
+      <li class="${item/class}" stl:repeat="item items">
+        <input type="checkbox" id="edit-language-${item/name}" name="edit_language"
+          value="${item/name}" checked="${item/selected}" />
+        <label for="edit-language-${item/name}">${item/title}</label>
+      </li>
+    </ul>
+    <p stl:if="submit_value">
+      <button type="submit" class="${submit_class}">${submit_value}</button>
+    </p>
+  </form>
+</div>
+
+</stl:block>

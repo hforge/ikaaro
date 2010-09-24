@@ -184,8 +184,11 @@ class HTMLEditView(File_Edit):
 
     def get_value(self, resource, context, name, datatype):
         if name == 'data':
-            language = resource.get_content_language(context)
-            return resource.get_html_data(language=language)
+            value = {}
+            for language in resource.get_edit_languages(context):
+                value[language] = resource.get_html_data(language=language)
+            return value
+
         return File_Edit.get_value(self, resource, context, name, datatype)
 
 
@@ -198,17 +201,18 @@ class HTMLEditView(File_Edit):
         resource.notify_subcribers(context)
 
 
-    def set_value(self, resource, context, name, form, language=None):
+    def set_value(self, resource, context, name, form):
         if name == 'data':
-            new_body = form['data']
-            handler = resource.get_handler(language=language)
-            changed = handler.set_body(new_body)
+            changed = False
+            for language, data in form['data'].iteritems():
+                handler = resource.get_handler(language=language)
+                if handler.set_body(data):
+                    changed = True
             if changed:
                 context.database.change_resource(resource)
             return False
 
-        return File_Edit.set_value(self, resource, context, name,
-                                   form, language)
+        return File_Edit.set_value(self, resource, context, name, form)
 
 
 ###########################################################################

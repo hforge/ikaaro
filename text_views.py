@@ -62,7 +62,7 @@ class Text_Edit(File_Edit):
         return File_Edit.get_value(self, resource, context, name, datatype)
 
 
-    def set_value(self, resource, context, name, form, language=None):
+    def set_value(self, resource, context, name, form):
         if name == 'data':
             if form.get('file'):
                 return False
@@ -75,8 +75,7 @@ class Text_Edit(File_Edit):
             context.database.change_resource(resource)
             return False
 
-        return File_Edit.set_value(self, resource, context, name,
-                                   form, language)
+        return File_Edit.set_value(self, resource, context, name, form)
 
 
 

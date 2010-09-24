@@ -134,7 +134,7 @@ class Issue(Folder):
         old_metadata = self.metadata.clone()
         # Title
         title = form['title'].strip()
-        language = self.get_content_language(context)
+        language = self.get_edit_languages(context)[0]
         self.set_property('title', title, language=language)
         # Version, Priority, etc.
         for name in ['product', 'module', 'version', 'type', 'state',

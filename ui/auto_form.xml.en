@@ -18,7 +18,7 @@
         <br/>
       </stl:block>
       <span stl:if="widget/error" class="field-error">${widget/error}<br/></span>
-      ${widget/widget}
+      <stl:block stl:repeat="widget widget/widgets">${widget}</stl:block>
     </div>
     <p stl:if="actions">
       <stl:block stl:repeat="action actions">
@@ -32,7 +32,7 @@
     </p>
   </fieldset>
   <script language="javascript">
-    $("#${first_widget}").focus();
+    document.getElementById("${first_widget}").focus();
   </script>
 </form>
 

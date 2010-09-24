@@ -193,7 +193,7 @@ class Table_AddEditRecord(AutoForm):
         from the form.
         """
         schema = self.get_schema(resource, context)
-        language = resource.get_content_language(context)
+        language = resource.get_edit_languages(context)[0]
 
         # Builds a new record from the form.
         record = {}
@@ -268,12 +268,17 @@ class Table_EditRecord(Table_AddEditRecord):
         # Get the record
         id = context.query['id']
         record = handler.get_record(id)
-        # Is mulitilingual
-        if is_multilingual(datatype):
-            language = resource.get_content_language(context)
-            return handler.get_record_value(record, name, language=language)
+        get_record_value = handler.get_record_value
 
-        return handler.get_record_value(record, name)
+        # Monolingual
+        if not is_multilingual(datatype):
+            return get_record_value(record, name)
+
+        # Multilingual
+        value = {}
+        for language in resource.get_edit_languages(context):
+            value[language] = get_record_value(record, name, language=language)
+        return value
 
 
     def get_title(self, context):

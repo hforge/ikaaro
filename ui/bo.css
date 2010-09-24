@@ -541,6 +541,11 @@ p.tabme a.selected {
 .broken { color: red; }
 .number { text-align: right; }
 
+#autoform .language {
+  font-size: 0.8em;
+  margin-left: 5px;
+}
+
 #autoform input, #autoform textarea {
   width: 92%;
 }

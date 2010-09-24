@@ -16,7 +16,6 @@
 
 # Import from itools
 from itools.fs import FileName
-from itools.web import get_context
 
 # Import from ikaaro
 from resource_ import DBResource
@@ -49,7 +48,7 @@ class Multilingual(DBResource):
             handlers = [
                 (x, self.get_handler(language=x)) for x in ws_languages ]
             languages = [ x for (x, y) in handlers if not y.is_empty() ]
-            language = self.get_content_language(get_context(), languages)
+            language = select_language(languages)
             # Default
             if language is None:
                 language = ws_languages[0]

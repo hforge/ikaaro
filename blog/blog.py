@@ -68,7 +68,7 @@ class Post_NewInstance(NewInstance):
         release_date = form['date']
 
         # Make Object
-        language = resource.get_content_language(context)
+        language = resource.get_edit_languages(context)[0]
         post = resource.make_resource(name, Post, language=language)
         handler = post.get_handler(language=language)
         handler.set_body(html)
@@ -123,12 +123,11 @@ class Post_Edit(HTMLEditView):
         rte])
 
 
-    def set_value(self, resource, context, name, form, language=None):
+    def set_value(self, resource, context, name, form):
         if name == 'date':
             resource.set_property('date', form['date'])
             return False
-        return HTMLEditView.set_value(self, resource, context, name,
-                                      form, language)
+        return HTMLEditView.set_value(self, resource, context, name, form)
 
 
 ###########################################################################

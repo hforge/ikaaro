@@ -44,17 +44,25 @@ import messages
 class EditLanguageMenu(ContextMenu):
 
     title = MSG(u'Edit Language')
+    template = '/ui/generic/edit_language_menu.xml'
+    view = None
+    submit_value = MSG(u'Update')
+    submit_class = 'button-ok'
+
+    def action(self):
+        uri = self.context.uri
+        return Reference(uri.scheme, uri.authority, uri.path, {}, None)
+
 
     def get_items(self):
-        content_language = self.resource.get_content_language(self.context)
-
         site_root = self.resource.get_site_root()
         languages = site_root.get_property('website_languages')
+        edit_languages = self.resource.get_edit_languages(self.context)
         uri = self.context.uri
         return [
             {'title': get_language_name(x),
-             'href': uri.replace(content_language=x),
-             'class': 'nav-active' if (x == content_language) else None}
+             'name': x,
+             'selected': x in edit_languages}
             for x in languages ]
 
 
@@ -176,8 +184,14 @@ class DBResource_Edit(AutoForm):
     def get_value(self, resource, context, name, datatype):
         if name == 'timestamp':
             return context.timestamp
-        language = resource.get_content_language(context)
-        return resource.get_property(name, language=language)
+
+        if not getattr(datatype, 'multilingual', False):
+            return resource.get_property(name)
+
+        value = {}
+        for language in resource.get_edit_languages(context):
+            value[language] = resource.get_property(name, language=language)
+        return value
 
 
     def check_edit_conflict(self, resource, context, form):
@@ -213,26 +227,28 @@ class DBResource_Edit(AutoForm):
         fields, to_keep = self._get_query_fields(resource, context)
 
         # Save changes
-        language = resource.get_content_language(context)
+        language = resource.get_edit_languages(context)[0]
         for key in fields | to_keep:
             datatype = schema[key]
             if getattr(datatype, 'readonly', False):
                 continue
-            lang = None
-            if getattr(datatype, 'multilingual', False):
-                lang = language
-            if self.set_value(resource, context, key, form, lang):
+            if self.set_value(resource, context, key, form):
                 return
         # Ok
         context.message = messages.MSG_CHANGES_SAVED
 
 
-    def set_value(self, resource, context, name, form, language=None):
+    def set_value(self, resource, context, name, form):
         """Return True if an error occurs otherwise False
 
            If an error occurs, the context.message must be an ERROR instance.
         """
-        resource.set_property(name, form[name], language=language)
+        value = form[name]
+        if type(value) is dict:
+            for language, data in value.iteritems():
+                resource.set_property(name, data, language=language)
+        else:
+            resource.set_property(name, value)
         return False
 
 

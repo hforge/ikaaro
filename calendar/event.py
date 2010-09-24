@@ -358,7 +358,7 @@ class Event(File):
 
         # Other
         context = get_context()
-        language = self.get_content_language(context)
+        language = self.get_edit_languages(context)[0]
         for key in self.class_schema:
             if key == 'dtstart' or key == 'dtend':
                 continue

@@ -537,18 +537,21 @@ class DBResource(CatalogAware, IResource):
         return unicode(self.name)
 
 
-    def get_content_language(self, context, languages=None):
+    def get_edit_languages(self, context, languages=None):
         if languages is None:
             site_root = self.get_site_root()
             languages = site_root.get_property('website_languages')
 
-        # The 'content_language' query parameter has preference
-        language = context.get_query_value('content_language')
-        if language in languages:
-            return language
+        # Can not use context.query[] because, edit_language is not
+        # necessary defined
+        edit_languages = context.get_query_value('edit_language',
+                type=String(multiple=True), default=['en'])
+        edit_languages = [ x for x in edit_languages if x in languages ]
 
-        # Language negotiation
-        return context.accept_language.select_language(languages)
+        if len(edit_languages) == 0:
+            return [ languages[0] ]
+
+        return edit_languages
 
 
     ########################################################################

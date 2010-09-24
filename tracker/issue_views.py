@@ -23,7 +23,7 @@
 
 # Import from itools
 from itools.csv import Property
-from itools.datatypes import Boolean, Unicode, XMLContent
+from itools.datatypes import Unicode, XMLContent
 from itools.gettext import MSG
 from itools.web import STLForm, STLView
 from itools.xml import XMLParser
@@ -34,7 +34,6 @@ from ikaaro.messages import MSG_CHANGES_SAVED
 from ikaaro.views import ContextMenu
 
 # Local import
-from ikaaro.cc import UsersList
 from datatypes import get_issue_fields
 
 
