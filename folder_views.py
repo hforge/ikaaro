@@ -26,6 +26,7 @@ except ImportError:
 # Import from itools
 from itools.core import merge_dicts
 from itools.database import AndQuery, OrQuery, PhraseQuery, TextQuery
+from itools.database import StartQuery
 from itools.datatypes import Boolean, Enumerate, Integer, String, Unicode
 from itools.gettext import MSG
 from itools.handlers import checkid
@@ -250,9 +251,21 @@ class Folder_BrowseContent(SearchForm):
 
 
     def get_search_types(self, resource, context):
+        # Compute children_formats
+        abspath = resource.get_abspath()
+        if abspath != '/':
+            query = StartQuery('abspath', '%s/' % abspath)
+            children = context.root.search(query).get_documents()
+            children_formats = set()
+            for child in children:
+                children_formats.add(child.format)
+        else:
+            children_formats =  context.database.catalog.get_unique_values(
+                                                                  'format')
+
         # Do not show two options with the same title
         formats = {}
-        for type in context.database.catalog.get_unique_values('format'):
+        for type in children_formats:
             cls = get_resource_class(type)
             title = cls.class_title.gettext()
             formats.setdefault(title, []).append(type)
