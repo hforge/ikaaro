@@ -5,7 +5,7 @@
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
 <div class="context-menu" stl:if="items">
-  <label>${title}</label>
+  <div class="context-menu-title">${title}</div>
   <form id="edit-language" name="edit-languages" action="${action}"
         method="get" stl:omit-tag="not submit_value">
     <fieldset>

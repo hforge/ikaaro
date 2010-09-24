@@ -78,7 +78,7 @@
             ${body}
           </td>
           <td id="right" valign="top" stl:if="context_menus">
-            <stl:block stl:repeat="menu context_menus">${menu}<br/></stl:block>
+            <stl:block stl:repeat="menu context_menus">${menu}</stl:block>
           </td>
         </tr>
       </table>

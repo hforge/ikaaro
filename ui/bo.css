@@ -258,6 +258,7 @@ span.field-error {
 .context-menu {
   font-size: 0.8em;
   padding-left: 8px;
+  margin-bottom: 2em;
 }
 
 .context-menu form {
@@ -273,8 +274,7 @@ span.field-error {
   color: #3465a4;
 }
 
-.context-menu label {
-  display: block;
+.context-menu-title {
   width: 205px;
   margin: 3px;
   padding: 3px 6px;
@@ -299,20 +299,15 @@ span.field-error {
 
 .context-menu li {
   margin: 3px;
-  padding: 0;
+  padding: 0 0 1px 0;
   background-repeat: no-repeat;
   background-position: top left;
   border-bottom: 1px solid #d3d7cf;
-  line-height: 1.4em;
   list-style: none;
   overflow: hidden;
 }
 
 .context-menu li label {
-  background: none;
-  color: black;
-  display: inline;
-  padding: 3px 0;
 }
 
 .context-menu p {
