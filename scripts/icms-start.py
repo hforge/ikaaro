@@ -49,10 +49,6 @@ def start(options, target):
     if options.quick is False and check_database(target) is False:
         return 1
 
-    # Start the subprocess
-    start_subprocess(path='%s/database' % target,
-                     pid_file='%s/pid-subprocess' % target)
-
     # Set-up the server
     server = Server(target, read_only=options.read_only)
 
@@ -71,6 +67,8 @@ def start(options, target):
         become_daemon()
 
     # Start
+    start_subprocess('%s/database' % target,
+                     pid_file='%s/pid-subprocess' % target)
     config = get_config(target)
     # Find out the IP to listen to
     address = config.get_value('listen-address').strip()
