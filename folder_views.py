@@ -347,13 +347,24 @@ class Folder_BrowseContent(SearchForm):
             items.sort(reverse=reverse)
             items = [ item[1] for item in items][start: start + size]
         elif sort_by == 'format':
-            items = []
-            for item in results.get_documents():
-                item_resource = root.get_resource(item.abspath)
-                value = item_resource.class_title.gettext().lower()
-                items.append( (value, item) )
-            items.sort(reverse=reverse)
-            items = [ item[1] for item in items][start: start + size]
+            items = results.get_documents()
+            # Make a dict {class_id: class_title}
+            formats = {}
+            for item in items:
+                format = item.format
+                if format not in formats:
+                    cls = get_resource_class(format)
+                    formats[format] = cls.class_title.gettext().lower()
+            # Make a list [(class_id, class_title), ...] sorted by class_title
+            formats = formats.items()
+            formats.sort(key=lambda x: x[1], reverse=reverse)
+            # Make a dict {class_id: sort-order}
+            table = {}
+            for idx, format in enumerate(formats):
+                table[format[0]] = idx
+            # Sort the items & batch
+            items.sort(key=lambda x: table[x.format])
+            items = items[start:start+size]
         else:
             items = results.get_documents(sort_by=sort_by, reverse=reverse,
                                           start=start, size=size)
