@@ -332,15 +332,26 @@ class Folder_BrowseContent(SearchForm):
 
 
     def sort_and_batch(self, resource, context, results):
+        user = context.user
+        root = context.root
+
         start = context.query['batch_start']
         size = context.query['batch_size']
         sort_by = context.query['sort_by']
         reverse = context.query['reverse']
 
-        # "title" is multilingual
+        # "title" and "format" are multilingual
         if sort_by == 'title':
             items = results.get_documents()
             items = [ (item.title.lower(), item) for item in items ]
+            items.sort(reverse=reverse)
+            items = [ item[1] for item in items][start: start + size]
+        elif sort_by == 'format':
+            items = []
+            for item in results.get_documents():
+                item_resource = root.get_resource(item.abspath)
+                value = item_resource.class_title.gettext().lower()
+                items.append( (value, item) )
             items.sort(reverse=reverse)
             items = [ item[1] for item in items][start: start + size]
         else:
@@ -348,8 +359,6 @@ class Folder_BrowseContent(SearchForm):
                                           start=start, size=size)
 
         # Access Control (FIXME this should be done before batch)
-        user = context.user
-        root = context.root
         allowed_items = []
         for item in items:
             resource = root.get_resource(item.abspath)
