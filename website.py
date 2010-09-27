@@ -66,7 +66,7 @@ class WebSite(RoleAware, Folder):
     class_theme = Theme
 
 
-    __fixed_handlers__ = ['skin', 'index', 'theme']
+    __fixed_handlers__ = ['skin', 'theme']
 
 
     def _get_resource(self, name):
