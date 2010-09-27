@@ -57,11 +57,6 @@ def start(options, target):
         print
         return 1
 
-    # Set-up the server
-    server = Server(target, read_only=options.read_only)
-    context = get_fake_context()
-    server.init_context(context)
-
     # Daemon mode
     if options.detach:
         become_daemon()
@@ -69,8 +64,14 @@ def start(options, target):
     # Start
     start_subprocess('%s/database' % target,
                      pid_file='%s/pid-subprocess' % target)
-    config = get_config(target)
+
+    # Set-up the server
+    server = Server(target, read_only=options.read_only)
+    context = get_fake_context()
+    server.init_context(context)
+
     # Find out the IP to listen to
+    config = get_config(target)
     address = config.get_value('listen-address').strip()
     if not address:
         raise ValueError, 'listen-address is missing from config.conf'
