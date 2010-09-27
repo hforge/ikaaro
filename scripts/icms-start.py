@@ -49,18 +49,18 @@ def start(options, target):
     if options.quick is False and check_database(target) is False:
         return 1
 
-    # Set-up the server
-    server = Server(target, read_only=options.read_only)
-
     # Check instance is up to date
-    context = get_fake_context()
-    server.init_context(context)
-    if not is_instance_up_to_date(server.root):
+    if not is_instance_up_to_date(target):
         print 'The instance is not up-to-date, please type:'
         print
         print '    $ icms-update.py %s' % target
         print
         return 1
+
+    # Set-up the server
+    server = Server(target, read_only=options.read_only)
+    context = get_fake_context()
+    server.init_context(context)
 
     # Daemon mode
     if options.detach:

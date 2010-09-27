@@ -14,7 +14,16 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# Import from ikaaro
+from metadata import Metadata
 
-def is_instance_up_to_date(root):
-    # 0.60 Check the Git archive has been initalized
-    return root.metadata.database.fs.exists('.git')
+
+def is_instance_up_to_date(target):
+    # 0.62 Check for the new metadata
+    metadata = open('%s/database/.metadata' % target).read()
+    try:
+        metadata = Metadata(string=metadata)
+    except SyntaxError:
+        return False
+
+    return True
