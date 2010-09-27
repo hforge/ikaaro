@@ -377,7 +377,7 @@ class PathSelectorWidget(TextWidget):
       value="${value}" />
     <button id="selector-button-${id}" class="button-selector"
       name="selector_button_${name}"
-      onclick="return popup(';${action}?target_id=selector-${id}&amp;mode=input', 620, 300);">...</button>
+      onclick="return popup(';${action}?target_id=selector-${id}&amp;mode=input', 640, 480);">...</button>
     ${workflow_state}""")
 
 
@@ -409,7 +409,7 @@ class ImageSelectorWidget(PathSelectorWidget):
       value="${value}" />
     <button id="selector-button-${id}" class="button-selector"
       name="selector_button_${name}"
-      onclick="return popup(';${action}?target_id=selector-${id}&amp;mode=input', 620, 300);">...</button>
+      onclick="return popup(';${action}?target_id=selector-${id}&amp;mode=input', 640, 480);">...</button>
     ${workflow_state}
     <br/>
     <img src="${value}/;thumb?width=${width}&amp;height=${height}" stl:if="value"/>""")
