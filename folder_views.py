@@ -262,6 +262,8 @@ class Folder_BrowseContent(SearchForm):
         else:
             children_formats =  context.database.catalog.get_unique_values(
                                                                   'format')
+            # Don't show the root's format
+            children_formats.remove(context.root.class_id)
 
         # Do not show two options with the same title
         formats = {}
