@@ -11,7 +11,7 @@
     <p stl:if="description">${description}</p>
     <div stl:repeat="widget widgets">
       <stl:block stl:if="widget/title">
-        <label for="${widget/name}">${widget/title}</label>
+        <label class="title" for="${widget/name}">${widget/title}</label>
         <span stl:if="widget/mandatory" class="field-is-missing"
           title="This field is required">*</span>
         <span stl:if="widget/tip" title="${widget/tip}">(?)</span>
