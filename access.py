@@ -246,10 +246,11 @@ class RoleAware_AddUser(AutoForm):
     icon = 'card.png'
     description = MSG(u'Grant access to a new user.')
 
-    actions = [Button(access='is_admin', css='button-ok',
-                      name='add_and_view', title=MSG(u'Add and view')),
-               Button(access='is_admin', css='button-ok',
-                      name='add_and_return', title=MSG(u'Add and return'))]
+    actions = [
+        Button(access='is_admin', css='button-ok', name='add_and_view',
+               title=MSG(u'Add and view')),
+        Button(access='is_admin', css='button-ok', name='add_and_return',
+               title=MSG(u'Add and return'))]
 
 
     def get_schema(self, resource, context):
@@ -273,13 +274,18 @@ class RoleAware_AddUser(AutoForm):
 
         # Admin can set user password
         if resource.is_admin(context.user, resource):
-            widgets.append(PasswordWidget('newpass', title=MSG(u'Password')))
-            widgets.append(PasswordWidget('newpass2',
-                                          title=MSG(u'Repeat Password')))
+            tip = MSG(
+                u'If no password is given an email will be sent to the user,'
+                u' asking him to choose his password.')
+            widgets.append(
+                PasswordWidget('newpass', title=MSG(u'Password'), tip=tip))
+            widgets.append(
+                PasswordWidget('newpass2', title=MSG(u'Repeat Password')))
+
         # Role widget
-        select = SelectWidget('role', has_empty_option=False,
-                              title=MSG(u'Choose the role for the new member'))
-        widgets.append(select)
+        title = MSG(u'Choose the role for the new member')
+        widgets.append(
+            SelectWidget('role', has_empty_option=False, title=title))
 
         return widgets
 
