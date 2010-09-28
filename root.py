@@ -30,9 +30,10 @@ import traceback
 
 # Import from itools
 from itools.core import freeze, get_abspath
+from itools.database import GitDatabase
 from itools.datatypes import String
 from itools.gettext import MSG
-from itools.handlers import ConfigFile, RWDatabase, ro_database
+from itools.handlers import ConfigFile, ro_database
 from itools.stl import stl
 from itools.uri import Path
 from itools.web import BaseView, get_context
@@ -72,7 +73,7 @@ class CtrlView(BaseView):
         # Read-Only
         if name == 'read-only':
             database = context.database
-            return 'no' if isinstance(database, RWDatabase) else 'yes'
+            return 'no' if isinstance(database, GitDatabase) else 'yes'
 
         return '?'
 
