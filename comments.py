@@ -20,9 +20,15 @@ from textwrap import TextWrapper
 import unicodedata
 
 # Import from itools
+from itools.datatypes import Unicode, String, DateTime
 from itools.html import xhtml_uri
 from itools.web import STLView
 from itools.xml import START_ELEMENT, END_ELEMENT, TEXT
+
+
+comment_datatype = Unicode(source='metadata', multiple=True,
+        property_schema={'date': DateTime,
+                         'author': String})
 
 
 url_expr = compile('([fh]t?tps?://[\w;/?:@&=+$,.#\-%]*)')
@@ -117,16 +123,13 @@ class CommentsView(STLView):
         root = context.root
 
 
-        comments = resource.metadata.get_property('comment')
-        if comments is None:
-            comments = []
-        else:
-            comments = [
-                {'number': i,
-                 'user': root.get_user_title(x.get_parameter('author')),
-                 'datetime': context.format_datetime(x.get_parameter('date')),
-                 'comment': indent(x.value)}
-                for i, x in enumerate(comments) ]
-            comments.reverse()
+        comments = resource.metadata.get_property('comment') or []
+        comments = [
+            {'number': i,
+             'user': root.get_user_title(x.get_parameter('author')),
+             'datetime': context.format_datetime(x.get_parameter('date')),
+             'comment': indent(x.value)}
+            for i, x in enumerate(comments) ]
+        comments.reverse()
 
         return {'comments': comments}

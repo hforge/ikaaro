@@ -31,6 +31,7 @@ from itools.uri import Path
 from itools.web import get_context
 
 # Import from ikaaro
+from ikaaro.comments import comment_datatype
 from ikaaro.file import File
 from ikaaro.folder import Folder
 from ikaaro.metadata import Metadata
@@ -60,8 +61,7 @@ class Issue(Folder):
         priority=Integer(source='metadata', indexed=True, stored=True),
         assigned_to=String(source='metadata', indexed=True, stored=True),
         cc_list=Tokens(source='metadata'),
-        # parameters: date, author
-        comment=Unicode(source='metadata', multiple=True),
+        comment=comment_datatype,
         # Other
         id=Integer(indexed=True, stored=True),
         attachment=String(source='metadata', multiple=True))

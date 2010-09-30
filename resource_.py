@@ -30,6 +30,7 @@ from itools.web import Resource, get_context
 from itools.database import CatalogAware, PhraseQuery
 
 # Import from ikaaro
+from datatypes import Multilingual
 from popup import DBResource_AddImage, DBResource_AddLink
 from popup import DBResource_AddMedia
 from registry import register_resource_class
@@ -230,7 +231,6 @@ class DBResource(CatalogAware, IResource):
     ########################################################################
     # Metadata
     ########################################################################
-    Multilingual = Unicode(multilingual=True)
     class_schema = freeze({
         # Metadata
         'version': String(source='metadata'),

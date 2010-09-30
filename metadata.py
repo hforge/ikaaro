@@ -18,7 +18,7 @@
 from itools.core import add_type
 from itools.csv import parse_table, Property, property_to_str
 from itools.csv import deserialize_parameters
-from itools.datatypes import DateTime, String
+from itools.datatypes import String
 from itools.handlers import File, register_handler_class
 from itools.web import get_context
 
@@ -28,16 +28,8 @@ from registry import get_resource_class
 
 # This is the datatype used for properties not defined in the schema
 multiple_datatype = String(multiple=True, multilingual=False)
-multilingual_datatype = String(multiple=False, multilingual=True)
-
-
-# Possible parameters that can be used in a metadata
-# FIXME This list is hardcoded, we should have a way to extend or change it
-metadata_parameters = {
-    'lang': String(multiple=False),
-    'date': DateTime(multiple=False),
-    'author': String(multiple=False)}
-
+multilingual_datatype = String(multiple=False, multilingual=True,
+        property_schema={'lang': String})
 
 
 def is_multiple(datatype):
@@ -46,6 +38,10 @@ def is_multiple(datatype):
 
 def is_multilingual(datatype):
     return getattr(datatype, 'multilingual', False)
+
+
+def get_property_schema(datatype):
+    return getattr(datatype, 'property_schema', {})
 
 
 
@@ -84,17 +80,15 @@ class Metadata(File):
             raise ValueError, 'unexpected parameters for the format property'
         self.format = value
         # Get the schema
-        get_datatype = get_resource_class(value).get_property_datatype
+        resource_class = get_resource_class(value)
+        get_datatype = resource_class.get_property_datatype
 
         # Parse
         for name, value, parameters in parser:
             if name == 'format':
                 raise ValueError, 'unexpected "format" property'
 
-            # 1. Deserialize the parameters
-            deserialize_parameters(parameters, metadata_parameters)
-
-            # 2. Get the datatype
+            # 1. Get the datatype
             datatype = get_datatype(name)
             if not datatype:
                 # Guess the datatype for properties not defined by the schema
@@ -102,6 +96,10 @@ class Metadata(File):
                     datatype = multilingual_datatype
                 else:
                     datatype = multiple_datatype
+
+            # 2. Deserialize the parameters
+            property_schema = get_property_schema(datatype)
+            deserialize_parameters(parameters, property_schema)
 
             # 3. Get the datatype properties
             multiple = is_multiple(datatype)
@@ -130,8 +128,8 @@ class Metadata(File):
 
 
     def to_str(self):
-        get_datatype = get_resource_class(self.format).get_property_datatype
-        p_schema = metadata_parameters
+        resource_class = get_resource_class(self.format)
+        get_datatype = resource_class.get_property_datatype
 
         if self.version is None:
             lines = ['format:%s\n' % self.format]
@@ -146,23 +144,26 @@ class Metadata(File):
         for name in names:
             property = properties[name]
             datatype = get_datatype(name, default=String)
+            property_schema = get_property_schema(datatype)
             is_empty = datatype.is_empty
             p_type = type(property)
             if p_type is dict:
                 languages = property.keys()
                 languages.sort()
                 lines += [
-                    property_to_str(name, property[x], datatype, p_schema)
+                    property_to_str(name, property[x], datatype,
+                        property_schema)
                     for x in languages if not is_empty(property[x].value) ]
             elif p_type is list:
                 lines += [
-                    property_to_str(name, x, datatype, p_schema)
+                    property_to_str(name, x, datatype, property_schema)
                     for x in property if not is_empty(x.value) ]
             elif property.value is None:
                 pass
             elif not is_empty(property.value):
                 lines.append(
-                    property_to_str(name, property, datatype, p_schema))
+                    property_to_str(name, property, datatype,
+                        property_schema))
 
         return ''.join(lines)
 

@@ -151,7 +151,17 @@ Now multilingual fields are explicitely defined as such.
       class_schema = merge_dicts(
           BaseClass.class_schema,
           my_title=Unicode(source='metadata', multilingual=True,
+                           property_schema={'lang': String},
                            indexed=True, stored=True),
+          foobar=Integer(indexed=True))
+
+  # Or simpler
+  from ikaaro.datatypes import Multilingual
+  class MyResource(BaseClass):
+      class_schema = merge_dicts(
+          BaseClass.class_schema,
+          my_title=Multilingual(source='metadata',
+                                indexed=True, stored=True),
           foobar=Integer(indexed=True))
 
 

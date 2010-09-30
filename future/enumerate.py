@@ -15,12 +15,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.datatypes import Unicode, Enumerate
+from itools.datatypes import Enumerate
 from itools.gettext import MSG
 from itools.web import get_context
 
 # Import from ikaaro
 from ikaaro.autoform import title_widget
+from ikaaro.datatypes import Multilingual
 from ikaaro.table import OrderedTableFile, OrderedTable
 
 
@@ -28,7 +29,7 @@ from ikaaro.table import OrderedTableFile, OrderedTable
 class EnumerateTableFile(OrderedTableFile):
 
     record_properties = {
-        'title': Unicode(multilingual=True, mandatory=True)}
+        'title': Multilingual(mandatory=True)}
 
 
 

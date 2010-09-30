@@ -29,6 +29,7 @@ from itools.xml import XMLParser
 from autoform import PathSelectorWidget, ReadOnlyWidget, SelectWidget
 from autoform import TextWidget
 from buttons import BrowseButton
+from datatypes import Multilingual
 from exceptions import ConsistencyError
 from folder import Folder
 from folder_views import Folder_BrowseContent, Folder_PreviewContent
@@ -48,7 +49,7 @@ def get_reference_and_path(value):
     """Return the reference associated to the path and the path
     without query/fragment.
     """
-    # Be robust if the path is multilingual (Unicode multiple)
+    # Be robust if the path is multilingual
     path = value
     if type(path) is unicode:
         path = Unicode.encode(value)
@@ -71,7 +72,7 @@ class Target(Enumerate):
 class MenuFile(OrderedTableFile):
 
     record_properties = {
-        'title': Unicode(multilingual=True),
+        'title': Multilingual,
         'path': String,
         'target': Target(mandatory=True, default='_top'),
         'child': String}

@@ -33,7 +33,7 @@ from itools.database import OrQuery, PhraseQuery
 # Import from ikaaro
 from autoform import AutoForm, title_widget, description_widget, subject_widget
 from autoform import timestamp_widget
-from datatypes import CopyCookie
+from datatypes import CopyCookie, Multilingual
 from exceptions import ConsistencyError
 from folder_views import Folder_BrowseContent
 from views import ContextMenu
@@ -109,9 +109,9 @@ class DBResource_Edit(AutoForm):
     context_menus = []
 
     schema = {
-        'title': Unicode(multilingual=True),
-        'description': Unicode(multilingual=True, hidden_by_default=True),
-        'subject': Unicode(multilingual=True, hidden_by_default=True),
+        'title': Multilingual,
+        'description': Multilingual(hidden_by_default=True),
+        'subject': Multilingual(hidden_by_default=True),
         'timestamp': DateTime(readonly=True)}
     widgets = [
         timestamp_widget, title_widget, description_widget, subject_widget]

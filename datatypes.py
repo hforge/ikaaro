@@ -22,7 +22,7 @@ from zlib import compress, decompress
 
 # Import from itools
 from itools.core import freeze, guess_type
-from itools.datatypes import DataType, Enumerate
+from itools.datatypes import DataType, Enumerate, Unicode, String
 
 
 """This module defines some datatypes used in ikaaro, whose inclusion in
@@ -96,3 +96,9 @@ class ImageWidth(Enumerate):
                {'name': '1024', 'value': u"large"},
                {'name': '1280', 'value': u"huge"},
                {'name': '', 'value': u"original"}]
+
+
+
+class Multilingual(Unicode):
+    multilingual = True
+    property_schema = {'lang': String}

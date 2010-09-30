@@ -20,7 +20,7 @@
 
 # Import from itools
 from itools.core import merge_dicts
-from itools.datatypes import Boolean, String, Unicode
+from itools.datatypes import Boolean, String
 from itools.datatypes import Enumerate
 from itools.gettext import MSG
 from itools.database import PhraseQuery, AndQuery
@@ -28,6 +28,7 @@ from itools.database import PhraseQuery, AndQuery
 # Import from ikaaro
 from ikaaro.autoform import title_widget, CheckboxWidget, SelectWidget
 from ikaaro.autoform import ReadOnlyWidget
+from ikaaro.datatypes import Multilingual
 from ikaaro.table import OrderedTable, OrderedTableFile
 from ikaaro.table_views import OrderedTable_View, Table_EditRecord
 
@@ -187,7 +188,7 @@ class SelectTable_EditRecord(Table_EditRecord):
 ###########################################################################
 class Tracker_TableHandler(OrderedTableFile):
 
-    record_properties = {'title': Unicode(multilingual=True, mandatory=True)}
+    record_properties = {'title': Multilingual(mandatory=True)}
 
 
 

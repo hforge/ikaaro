@@ -23,7 +23,7 @@ from copy import deepcopy
 
 # Import from itools
 from itools.core import merge_dicts
-from itools.datatypes import Tokens
+from itools.datatypes import Tokens, String
 from itools.gettext import MSG
 from itools.html import xhtml_uri, XHTMLFile
 from itools.stl import rewrite_uris
@@ -174,7 +174,9 @@ class HTMLEditView(File_Edit):
 
     def _get_schema(self, resource, context):
         schema = File_Edit._get_schema(self, resource, context)
-        return merge_dicts(schema, data=HTMLBody(multilingual=True))
+        return merge_dicts(schema,
+                           data=HTMLBody(multilingual=True,
+                                         property_schema={'lang': String}))
 
 
     widgets = [
