@@ -286,12 +286,13 @@ class File_ExternalEdit(BaseView):
 
         # Try to guess the extension (optional)
         filename = resource.get_property('filename')
-        _, extension = splitext(filename)
-        if extension:
-            extension = extension[1:]
-            if extension in resource.get_all_extensions():
-                # All OK
-                header.append('extension:.%s' % extension)
+        if filename:
+            extension = splitext(filename)[1]
+            if extension:
+                extension = extension[1:]
+                if extension in resource.get_all_extensions():
+                    # All OK
+                    header.append('extension:.%s' % extension)
 
         # Authorization part
         auth = context.get_header('Authorization')
