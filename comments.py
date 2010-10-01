@@ -27,8 +27,8 @@ from itools.xml import START_ELEMENT, END_ELEMENT, TEXT
 
 
 comment_datatype = Unicode(source='metadata', multiple=True,
-        property_schema={'date': DateTime,
-                         'author': String})
+                           parameters_schema={'date': DateTime,
+                                              'author': String})
 
 
 url_expr = compile('([fh]t?tps?://[\w;/?:@&=+$,.#\-%]*)')

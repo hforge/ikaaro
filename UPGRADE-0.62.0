@@ -151,7 +151,7 @@ Now multilingual fields are explicitely defined as such.
       class_schema = merge_dicts(
           BaseClass.class_schema,
           my_title=Unicode(source='metadata', multilingual=True,
-                           property_schema={'lang': String},
+                           parameters_schema={'lang': String},
                            indexed=True, stored=True),
           foobar=Integer(indexed=True))
 

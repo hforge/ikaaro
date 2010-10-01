@@ -29,7 +29,7 @@ from registry import get_resource_class
 # This is the datatype used for properties not defined in the schema
 multiple_datatype = String(multiple=True, multilingual=False)
 multilingual_datatype = String(multiple=False, multilingual=True,
-        property_schema={'lang': String})
+                               parameters_schema={'lang': String})
 
 
 def is_multiple(datatype):
@@ -40,8 +40,8 @@ def is_multilingual(datatype):
     return getattr(datatype, 'multilingual', False)
 
 
-def get_property_schema(datatype):
-    return getattr(datatype, 'property_schema', {})
+def get_parameters_schema(datatype):
+    return getattr(datatype, 'parameters_schema', {})
 
 
 
@@ -98,8 +98,8 @@ class Metadata(File):
                     datatype = multiple_datatype
 
             # 2. Deserialize the parameters
-            property_schema = get_property_schema(datatype)
-            deserialize_parameters(parameters, property_schema)
+            parameters_schema = get_parameters_schema(datatype)
+            deserialize_parameters(parameters, parameters_schema)
 
             # 3. Get the datatype properties
             multiple = is_multiple(datatype)
@@ -144,26 +144,24 @@ class Metadata(File):
         for name in names:
             property = properties[name]
             datatype = get_datatype(name, default=String)
-            property_schema = get_property_schema(datatype)
+            params_schema = get_parameters_schema(datatype)
             is_empty = datatype.is_empty
             p_type = type(property)
             if p_type is dict:
                 languages = property.keys()
                 languages.sort()
                 lines += [
-                    property_to_str(name, property[x], datatype,
-                        property_schema)
+                    property_to_str(name, property[x], datatype, params_schema)
                     for x in languages if not is_empty(property[x].value) ]
             elif p_type is list:
                 lines += [
-                    property_to_str(name, x, datatype, property_schema)
+                    property_to_str(name, x, datatype, params_schema)
                     for x in property if not is_empty(x.value) ]
             elif property.value is None:
                 pass
             elif not is_empty(property.value):
                 lines.append(
-                    property_to_str(name, property, datatype,
-                        property_schema))
+                    property_to_str(name, property, datatype, params_schema))
 
         return ''.join(lines)
 
