@@ -101,4 +101,5 @@ class ImageWidth(Enumerate):
 
 class Multilingual(Unicode):
     multilingual = True
+    # Used only for the metadata
     property_schema = {'lang': String}
