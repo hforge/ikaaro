@@ -26,6 +26,8 @@ from email.MIMEImage import MIMEImage
 from email.MIMEMultipart import MIMEMultipart
 from email.Utils import formatdate
 from email.header import Header
+from json import dumps
+import sys
 import traceback
 
 # Import from itools
@@ -38,6 +40,7 @@ from itools.uri import Path
 from itools.web import BaseView, get_context
 
 # Import from ikaaro
+from config import get_config
 from folder import Folder
 from registry import get_resource_class
 from skins import UI, ui_path
@@ -64,17 +67,12 @@ class CtrlView(BaseView):
     access = True
     query_schema = {'name': String}
 
-
     def GET(self, resource, context):
         context.content_type = 'text/plain'
-        name = context.query['name']
-
-        # Read-Only
-        if name == 'read-only':
-            database = context.database
-            return 'no' if isinstance(database, RWDatabase) else 'yes'
-
-        return '?'
+        database = context.database
+        return dumps(
+            {'packages': resource.get_version_of_packages(context),
+             'read-only': not isinstance(database, RWDatabase)})
 
 
 
@@ -200,6 +198,63 @@ class Root(WebSite):
         target.insert(0, source)
         return target
 
+
+    def get_version_of_packages(self, context):
+        versions = {}
+        # Python, itools & ikaaro
+        packages = ['sys', 'itools', 'ikaaro']
+        config = get_config(context.server.target)
+        packages.extend(config.get_value('modules'))
+        # Try packages we frequently use
+        packages.extend([
+            'gio', 'xapian', 'pywin32', 'PIL.Image', 'docutils', 'reportlab',
+            'xlrd', 'lpod'])
+        # Mapping from package to version attribute
+        package2version = {
+            'gio': 'pygio_version',
+            'xapian': 'version_string',
+            'PIL.Image': 'VERSION',
+            'reportlab': 'Version',
+            'sys': 'version_info',
+            'xlrd': '__VERSION__'}
+
+        # Namespace
+        packages_ns = []
+        for name in packages:
+            attribute = package2version.get(name, '__version__')
+            # Import
+            if '.' in name:
+                name, subname = name.split('.')
+                try:
+                    package = __import__(subname, fromlist=[name])
+                except ImportError:
+                    continue
+            else:
+                try:
+                    package = __import__(name)
+                except ImportError:
+                    continue
+
+            # Version
+            try:
+                version = getattr(package, attribute)
+            except AttributeError:
+                version = None
+                MSG(u'no version found').gettext()
+            else:
+                if hasattr(version, '__call__'):
+                    version = version()
+                if isinstance(version, tuple):
+                    version = '.'.join([str(v) for v in version])
+            # Ok
+            versions[name] = version
+
+        # Insert first the platform
+        versions['os'] = {
+            'linux2': u'GNU/Linux',
+            'darwin': u'Mac OS X',
+            'win32': u'Windows'}.get(sys.platform, sys.platform)
+        return versions
 
     ########################################################################
     # Search

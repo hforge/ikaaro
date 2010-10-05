@@ -21,6 +21,7 @@
 # Import from the Standard Library
 from cProfile import runctx
 from email.parser import HeaderParser
+from json import loads
 from os import fdopen
 from smtplib import SMTP, SMTPRecipientsRefused, SMTPResponseException
 from socket import gaierror
@@ -309,14 +310,15 @@ class Server(WebServer):
 
 
     def is_running_in_rw_mode(self):
-        url = 'http://localhost:%s/;_ctrl?name=read-only' % self.port
+        url = 'http://localhost:%s/;_ctrl' % self.port
         try:
             h = vfs.open(url)
         except GError:
             # The server is not running
             return False
 
-        return h.read() == 'no'
+        data = h.read()
+        return loads(data)['read-only'] is False
 
 
     #######################################################################

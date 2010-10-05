@@ -18,9 +18,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Import from the Standard Library
-import sys
-
 # Import from itools
 from itools.core import get_abspath, merge_dicts
 from itools.datatypes import Email, String, Unicode
@@ -32,7 +29,6 @@ from itools.web import STLView, INFO, ERROR
 from itools.xapian import PhraseQuery, OrQuery, AndQuery, split_unicode
 
 # Import from ikaaro
-from config import get_config
 from forms import AutoForm, SelectWidget, MultilineWidget, TextWidget
 from messages import MSG_NEW_RESOURCE
 from registry import get_resource_class
@@ -346,72 +342,20 @@ class AboutView(STLView):
     title = MSG(u'About')
     template = '/ui/root/about.xml'
 
-
     def get_namespace(self, resource, context):
-        # Python, itools & ikaaro
-        packages = ['sys', 'itools', 'ikaaro']
-        config = get_config(context.server.target)
-        packages.extend(config.get_value('modules'))
-        # Try packages we frequently use
-        packages.extend([
-            'gio', 'xapian', 'pywin32', 'PIL.Image', 'docutils', 'reportlab',
-            'xlrd', 'lpod'])
-        # Mapping from package to version attribute
-        package2version = {
-            'gio': 'pygio_version',
-            'xapian': 'version_string',
-            'PIL.Image': 'VERSION',
-            'reportlab': 'Version',
-            'sys': 'version_info',
-            'xlrd': '__VERSION__'}
+        root = context.root
+        # Get packages
         package2title = {
             'gio': u'pygobject',
             'lpod': u'lpOD',
             'sys': u'Python',
+            'os': MSG(u'Operating System'),
             }
-
-        # Namespace
-        packages_ns = []
-        for name in packages:
-            attribute = package2version.get(name, '__version__')
-            # Import
-            if '.' in name:
-                name, subname = name.split('.')
-                try:
-                    package = __import__(subname, fromlist=[name])
-                except ImportError:
-                    continue
-            else:
-                try:
-                    package = __import__(name)
-                except ImportError:
-                    continue
-
-            # Version
-            try:
-                version = getattr(package, attribute)
-            except AttributeError:
-                version = MSG(u'no version found')
-            else:
-                if hasattr(version, '__call__'):
-                    version = version()
-                if isinstance(version, tuple):
-                    version = '.'.join([str(v) for v in version])
-            # Ok
-            title = package2title.get(name, name)
-            packages_ns.append({'name': title, 'version': version})
-
-        # Insert first the platform
-        platform = {
-            'linux2': u'GNU/Linux',
-            'darwin': u'Mac OS X',
-            'win32': u'Windows'}.get(sys.platform, sys.platform)
-        packages_ns.insert(0,
-            {'name': MSG(u'Operating System'), 'version': platform})
-
-        namespace = {'packages': packages_ns}
-        return namespace
-
+        packages = [
+            {'name': package2title.get(x, x),
+             'version': y or MSG('no version found')}
+                 for x, y in root.get_version_of_packages(context).items()]
+        return {'packages': packages}
 
 
 class CreditsView(STLView):
