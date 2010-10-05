@@ -21,6 +21,7 @@
 # Import from the Standard Library
 from datetime import timedelta
 from email.parser import HeaderParser
+from json import loads
 from os import fdopen
 from smtplib import SMTP, SMTPRecipientsRefused, SMTPResponseException
 from socket import gaierror
@@ -282,14 +283,15 @@ class Server(WebServer):
             address = '127.0.0.1'
         port = config.get_value('listen-port')
 
-        url = 'http://%s:%s/;_ctrl?name=read-only' % (address, port)
+        url = 'http://%s:%s/;_ctrl' % (address, port)
         try:
             h = vfs.open(url)
         except GError:
             # The server is not running
             return False
 
-        return h.read() == 'no'
+        data = h.read()
+        return loads(data)['read-only'] is False
 
 
     #######################################################################
