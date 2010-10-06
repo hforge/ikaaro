@@ -29,7 +29,6 @@ from itools.core import start_subprocess
 # Import from ikaaro
 from ikaaro.database import make_database
 from ikaaro.metadata import Metadata
-from ikaaro.resource_ import DBResource
 from ikaaro.root import Root
 from ikaaro.utils import generate_password
 from ikaaro.server import get_fake_context
