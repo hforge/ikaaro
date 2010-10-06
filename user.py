@@ -134,7 +134,7 @@ class User(AccessControl, Folder):
         if root is None:
             return ()
 
-        results = root.search(is_role_aware=True, members=self.name)
+        results = root.search(is_role_aware=True, users=self.name)
         groups = [ x.abspath for x in results.get_documents() ]
         return tuple(groups)
 
