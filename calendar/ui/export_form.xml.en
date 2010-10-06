@@ -5,8 +5,7 @@
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
   <p>
-  To download the ICS file, click on
-  <a href="${url}/;export">${filename}</a>
+  To download the ICS file, click on <a href=";export">${filename}</a>
   </p>
 
 </stl:block>

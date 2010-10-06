@@ -5,8 +5,7 @@
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
   <p>
-  To download this file, click on
-  <a href="${url}/;download">${filename}</a>
+  To download this file, click on <a href=";download">${filename}</a>
   </p>
 
 </stl:block>
