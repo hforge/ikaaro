@@ -9,7 +9,7 @@
   </p>
   <stl:block stl:if="control">
     <p class="batchcontrol">
-      ${msg} (View from ${start} to ${end})
+      ${msg}
     </p>
     <ul class="batch-numerotation">
 

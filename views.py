@@ -237,7 +237,6 @@ class BrowseForm(STLForm):
 
         # Calcul nb_pages and current_page
         total = len(items)
-        end = min(batch_start + size, total)
         nb_pages = total / size
         if total % size > 0:
             nb_pages += 1
@@ -251,10 +250,6 @@ class BrowseForm(STLForm):
             namespace['msg'] = self.batch_msg1.gettext()
         else:
             namespace['msg'] = self.batch_msg2.gettext(n=total)
-
-        # Add start & end value in namespace
-        namespace['start'] = batch_start + 1
-        namespace['end'] = end
 
         # See previous button ?
         if current_page != 1:
