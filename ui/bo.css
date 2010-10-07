@@ -401,6 +401,41 @@ table.new-resource-thumb {
 }
 
 /**************************************************************************
+ * NUMERIC BATCH
+ **************************************************************************/
+.batch-numerotation {
+  margin: 10px 0;
+  padding: 0;
+}
+
+.batch-numerotation ul {
+  list-style-type: none;
+}
+
+.batch-numerotation li {
+  display: inline;
+}
+
+.batch-numerotation a {
+  width: 7px;
+  height: 7px;
+  color: #000;
+  text-decoration: none;
+  padding: 5px 5px 5px 7px;
+  margin: 2px;
+  border: 1px solid #DDDDDD;
+}
+
+.batch-numerotation a:hover {
+  background-color: #EEEEEC;
+}
+
+.batch-numerotation a.current {
+  background-color: #EEEEEC;
+  font-weight: bold;
+}
+
+/**************************************************************************
  * ui/folder/browse_search.xml.en
  * ui/generic/browse_search.xml.en
  * ui/html/addbase_browse_search.xml.en

@@ -156,6 +156,7 @@ class BrowseForm(STLForm):
     batch_template = '/ui/generic/browse_batch.xml'
     batch_msg1 = MSG(u"There is 1 item.") # FIXME Use plural forms
     batch_msg2 = MSG(u"There are {n} items.")
+    batch_max_middle_pages = None
 
     # Content
     table_template = '/ui/generic/browse_table.xml'
@@ -230,7 +231,19 @@ class BrowseForm(STLForm):
     # Batch
     def get_batch_namespace(self, resource, context, items):
         namespace = {}
-        namespace['control'] = False
+        batch_start = context.query['batch_start']
+        size = context.query['batch_size']
+        uri = context.uri
+
+        # Calcul nb_pages and current_page
+        total = len(items)
+        end = min(batch_start + size, total)
+        nb_pages = total / size
+        if total % size > 0:
+            nb_pages += 1
+        current_page = (batch_start / size) + 1
+
+        namespace['control'] = nb_pages > 1
 
         # Message (singular or plural)
         total = len(items)
@@ -239,35 +252,59 @@ class BrowseForm(STLForm):
         else:
             namespace['msg'] = self.batch_msg2.gettext(n=total)
 
-        # Start & End
-        start = context.query['batch_start']
-        size = context.query['batch_size']
-        # If batch_size == 0 => All
-        if size == 0:
-            size = total
-        end = min(start + size, total)
-        namespace['start'] = start + 1
+        # Add start & end value in namespace
+        namespace['start'] = batch_start + 1
         namespace['end'] = end
 
-        # Previous
-        uri = context.uri
-        if start > 0:
-            previous = max(start - size, 0)
-            previous = str(previous)
+        # See previous button ?
+        if current_page != 1:
+            previous = max(batch_start - size, 0)
             namespace['previous'] = uri.replace(batch_start=previous)
-            namespace['control'] = True
         else:
             namespace['previous'] = None
 
-        # Next
-        if end < total:
-            next = str(end)
-            namespace['next'] = uri.replace(batch_start=next)
-            namespace['control'] = True
+        # See next button ?
+        if current_page < nb_pages:
+            namespace['next'] = uri.replace(batch_start=batch_start+size)
         else:
             namespace['next'] = None
 
-        # Ok
+        # Add middle pages
+        middle_pages = range(max(current_page - 3, 2),
+                             min(current_page + 3, nb_pages-1) + 1)
+
+        # Truncate middle pages if nedded
+        if self.batch_max_middle_pages:
+            middle_pages_len = len(middle_pages)
+            if middle_pages_len > self.batch_max_middle_pages:
+                delta = middle_pages_len - self.batch_max_middle_pages
+                delta_start = delta_end = delta / 2
+                if delta % 2 == 1:
+                    delta_end = delta_end +1
+                middle_pages = middle_pages[delta_start:-delta_end]
+
+        pages = [1] + middle_pages
+        if nb_pages > 1:
+            pages.append(nb_pages)
+
+        namespace['pages'] = []
+        for i in pages:
+            namespace['pages'].append(
+                {'number': i,
+                 'css': 'current' if i == current_page else None,
+                 'uri': uri.replace(batch_start=((i-1) * size))})
+
+        # Add ellipsis if needed
+        if nb_pages > 5:
+            ellipsis = {'number': u'…',
+                        'css': 'ellipsis',
+                        'uri': None}
+            if 2 not in middle_pages:
+                namespace['pages'].insert(1, ellipsis)
+            if (nb_pages - 1) not in middle_pages:
+                namespace['pages'].insert(len(namespace['pages']) - 1,
+                                          ellipsis)
+
         return namespace
 
 

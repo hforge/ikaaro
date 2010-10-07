@@ -4,15 +4,29 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
-<p class="batchcontrol">
-  ${msg}
+  <p class="batchcontrol" stl:if="not control">
+    ${msg}
+  </p>
   <stl:block stl:if="control">
-    View from ${start} to ${end}
-    (<a stl:if="previous" href="${previous}" title="Previous"><img
-        src="/ui/icons/16x16/previous.png" style="vertical-align: bottom" /></a>
-    <a stl:if="next" href="${next}" title="Next"><img
-        src="/ui/icons/16x16/next.png" style="vertical-align: bottom" /></a>)
+    <p class="batchcontrol">
+      ${msg} (View from ${start} to ${end})
+    </p>
+    <ul class="batch-numerotation">
+
+      <li stl:if="previous">
+        <a class="previous" href="${previous}" title="« Previous">« Previous</a>
+      </li>
+
+      <li stl:repeat="page pages">
+        <a href="${page/uri}" class="${page/css}">
+          ${page/number}
+        </a>
+      </li>
+
+      <li stl:if="next">
+        <a class="next" href="${next}" title="Next »">Next »</a>
+      </li>
+    </ul>
   </stl:block>
-</p>
 
 </stl:block>
