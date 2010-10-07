@@ -18,9 +18,7 @@
       </li>
 
       <li stl:repeat="page pages">
-        <a href="${page/uri}" class="${page/css}">
-          ${page/number}
-        </a>
+        <a href="${page/uri}" class="${page/css}">${page/number}</a>
       </li>
 
       <li stl:if="next">

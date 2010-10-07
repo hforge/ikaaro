@@ -403,13 +403,14 @@ table.new-resource-thumb {
 /**************************************************************************
  * NUMERIC BATCH
  **************************************************************************/
-.batch-numerotation {
-  margin: 10px 0;
-  padding: 0;
+
+p.batchcontrol {
+  margin-bottom: 5px;
 }
 
-.batch-numerotation ul {
-  list-style-type: none;
+.batch-numerotation {
+  margin: 5px 0 10px 0;
+  padding: 0;
 }
 
 .batch-numerotation li {
@@ -418,12 +419,13 @@ table.new-resource-thumb {
 
 .batch-numerotation a {
   width: 7px;
-  height: 7px;
+  height: 5px;
+  margin: 0px;
+  padding: 3px 6px;
+  border: 1px solid #DDDDDD;
   color: #000;
   text-decoration: none;
-  padding: 5px 5px 5px 7px;
-  margin: 2px;
-  border: 1px solid #DDDDDD;
+  font-size: 0.8em;
 }
 
 .batch-numerotation a:hover {
