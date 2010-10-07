@@ -274,7 +274,8 @@ class DBResource(CatalogAware, IResource):
             return datatype
         if cls.class_schema_extensible:
             return FreeDatatype
-        raise ValueError, 'unexpected property "%s"' % name
+        msg = 'in class "{0}" unexpected property "{1}"'
+        raise ValueError, msg.format(cls, name)
 
 
     def has_property(self, name, language=None):

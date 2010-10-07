@@ -87,7 +87,12 @@ class Metadata(File):
 
             # 2. Deserialize the parameters
             params_schema, params_default = get_parameters_schema(datatype)
-            deserialize_parameters(parameters, params_schema, params_default)
+            try:
+                deserialize_parameters(parameters, params_schema,
+                        params_default)
+            except ValueError, e:
+                msg = 'in class "{0}" property "{1}": {2}'
+                raise ValueError, msg.format(resource_class, name, e)
 
             # 3. Get the datatype properties
             multiple = is_multiple(datatype)
