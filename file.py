@@ -22,7 +22,8 @@
 from itools.core import guess_all_extensions, merge_dicts
 from itools.datatypes import String
 from itools.gettext import MSG
-from itools.handlers import File as FileHandler, Image as ImageHandler
+from itools.handlers import File as FileHandler
+from itools.handlers import Image as ImageHandler, SVGFile
 from itools.handlers import TARFile, ZIPFile, GzipFile, Bzip2File
 from itools.odf import SXWFile, SXCFile, SXIFile, ODTFile, ODSFile, ODPFile
 from itools.pdf import PDFFile
@@ -186,6 +187,13 @@ class Image(File):
     # Views
     thumb = Image_Thumbnail()
     view = Image_View()
+
+
+
+class SVG(Image):
+
+    class_id = 'image/svg+xml'
+    class_handler = SVGFile
 
 
 
