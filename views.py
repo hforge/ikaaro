@@ -238,13 +238,13 @@ class BrowseForm(STLForm):
         size = context.query['batch_size']
         total = len(items)
         if size == 0:
-            size = total
-
-        # Calcul nb_pages and current_page
-        nb_pages = total / size
-        if total % size > 0:
-            nb_pages += 1
-        current_page = (batch_start / size) + 1
+            nb_pages = 1
+            current_page = 1
+        else:
+            nb_pages = total / size
+            if total % size > 0:
+                nb_pages += 1
+            current_page = (batch_start / size) + 1
 
         namespace['control'] = nb_pages > 1
 
