@@ -232,11 +232,15 @@ class BrowseForm(STLForm):
     def get_batch_namespace(self, resource, context, items):
         namespace = {}
         batch_start = context.query['batch_start']
-        size = context.query['batch_size']
         uri = context.uri
 
-        # Calcul nb_pages and current_page
+        # Total & Size
+        size = context.query['batch_size']
         total = len(items)
+        if size == 0:
+            size = total
+
+        # Calcul nb_pages and current_page
         nb_pages = total / size
         if total % size > 0:
             nb_pages += 1
