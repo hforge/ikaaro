@@ -38,7 +38,7 @@ from autoform import title_widget, description_widget, subject_widget
 from autoform import file_widget, timestamp_widget
 from autoform import FileWidget, TextWidget
 from datatypes import FileDataType, ImageWidth
-import messages
+from messages import MSG_NEW_RESOURCE, MSG_UNEXPECTED_MIMETYPE
 from multilingual import Multilingual
 from registry import get_resource_class
 from resource_views import DBResource_Edit
@@ -112,7 +112,7 @@ class File_NewInstance(NewInstance):
 
         # Ok
         goto = './%s/' % name
-        return context.come_back(messages.MSG_NEW_RESOURCE, goto=goto)
+        return context.come_back(MSG_NEW_RESOURCE, goto=goto)
 
 
 
@@ -200,8 +200,7 @@ class File_Edit(DBResource_Edit):
             handler = resource.handler
             handler_class = get_handler_class_by_mimetype(mimetype)
             if not isinstance(handler, handler_class):
-                message = messages.MSG_UNEXPECTED_MIMETYPE(mimetype=mimetype)
-                context.message = message
+                context.message = MSG_UNEXPECTED_MIMETYPE(mimetype=mimetype)
                 return True
 
             # Replace
@@ -327,13 +326,18 @@ class Image_Thumbnail(BaseView):
 
     access = 'is_allowed_to_view'
 
+    query_schema = {
+        'width': Integer,
+        'height': Integer}
+
     def get_mtime(self, resource):
         return resource.handler.get_mtime()
 
 
     def GET(self, resource, context):
-        width = context.get_form_value('width', type=Integer, default=48)
-        height = context.get_form_value('height', type=Integer, default=48)
+        image_width, image_height = resource.handler.get_size()
+        width = context.query['width'] or image_width
+        height = context.query['height'] or image_height
 
         # TODO generate the thumbnail in the resource format
         format = 'png' if resource.metadata.format == 'image/png' else 'jpeg'
@@ -363,8 +367,9 @@ class Image_View(STLView):
     scripts = ['/ui/gallery/javascript.js']
 
     # Image default size as a string (empty = full size)
-    default_width = ''
-    default_height = ''
+    query_schema = {
+        'width': String(default='800'),
+        'height': String(default='600')}
 
 
     def get_browse_images(self, resource, context):
@@ -379,8 +384,8 @@ class Image_View(STLView):
 
     def get_namespace(self, resource, context):
         size = context.get_form_value('size', type=Integer)
-        width = context.get_form_value('width', default=self.default_width)
-        height = context.get_form_value('height', default=self.default_height)
+        width = context.query['width']
+        height = context.query['height']
         images = self.get_browse_images(resource, context)
 
         my_index = None
@@ -412,18 +417,10 @@ class Image_View(STLView):
         preload = []
         for image in ([resource, next_image, prev_image]
                       + next_images + previous_images):
-            if image is None:
-                continue
-            prefix = get_reference(context.get_link(image))
-            # Preload with same size preferences than the current one
-            if width and height:
-                # Preload a thumbnail
-                uri = prefix.resolve_name(';thumb').replace(width=width,
-                                                            height=height)
-            else:
-                # Preload the full size
-                uri = prefix.resolve_name(';download')
-            preload.append(str(uri))
+            if image:
+                uri = '%s/;thumb?width=%s&height=%s'
+                uri = uri % (context.get_link(image), width, height)
+                preload.append(uri)
 
         # Real width and height (displayed for reference)
         image_width, image_height = resource.handler.get_size()
