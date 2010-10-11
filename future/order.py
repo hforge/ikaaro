@@ -175,7 +175,7 @@ class ResourcesOrderedTable_Unordered(Folder_BrowseContent):
         return columns
 
 
-    def get_query(self, resource, context):
+    def get_items_query(self, resource, context):
         # Only in the given root
         parent_path = resource.get_order_root().get_canonical_path()
         query_base_path = get_base_path_query(str(parent_path))
@@ -189,7 +189,7 @@ class ResourcesOrderedTable_Unordered(Folder_BrowseContent):
 
 
     def get_items(self, resource, context):
-        query = self.get_query(resource, context)
+        query = self.get_items_query(resource, context)
         return context.root.search(query)
 
 
