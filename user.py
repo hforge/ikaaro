@@ -58,7 +58,6 @@ class User(AccessControl, Folder):
     ########################################################################
     class_schema = freeze({
         # Metadata
-        'version': String(source='metadata'),
         'mtime': Folder.class_schema['mtime'],
         'last_author': Folder.class_schema['last_author'],
         'firstname': Unicode(source='metadata', indexed=True, stored=True),

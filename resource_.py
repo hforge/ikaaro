@@ -233,7 +233,6 @@ class DBResource(CatalogAware, IResource):
     ########################################################################
     class_schema = freeze({
         # Metadata
-        'version': String(source='metadata'),
         'mtime': DateTime(source='metadata', indexed=True, stored=True),
         'last_author': String(source='metadata', indexed=False, stored=True),
         'title': Multilingual(source='metadata', indexed=True, stored=True),
