@@ -187,7 +187,7 @@ if __name__ == '__main__':
         help='use the given SMTP_HOST to send emails')
     parser.add_option('-w', '--password',
         help='use the given PASSWORD for the admin user')
-    parser.add_option('-m', '--modules',
+    parser.add_option('-m', '--modules', default='',
         help='add the given MODULES to load at start')
     parser.add_option('--profile',
         help="print profile information to the given file")
