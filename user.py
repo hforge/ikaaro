@@ -80,15 +80,15 @@ class User(AccessControl, Folder):
     ########################################################################
     def get_catalog_values(self):
         values = Folder.get_catalog_values(self)
+
+        # email domain
         email = self.get_property('email')
-        email_domain = None
         if email and email.count('@'):
-            email_domain = email.split('@', 1)[1]
-        values['email'] = email
-        values['email_domain'] = email_domain
+            values['email_domain'] = email.split('@', 1)[1]
+
+        # username (overrides default)
         values['username'] = self.get_login_name()
-        values['firstname'] = self.get_property('firstname')
-        values['lastname'] = self.get_property('lastname')
+
         return values
 
 

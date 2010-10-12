@@ -147,12 +147,6 @@ class Post(WebPage):
         comment=comment_datatype)
 
 
-    def get_catalog_values(self):
-        indexes = WebPage.get_catalog_values(self)
-        indexes['date'] = self.get_property('date')
-        return indexes
-
-
     # Views
     new_instance = Post_NewInstance()
     view = Post_View()

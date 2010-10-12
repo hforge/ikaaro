@@ -244,12 +244,6 @@ class Event(File):
         File.init_resource(self, body=body, filename=filename,
                     extension=extension, **kw)
 
-    def get_catalog_values(self):
-        values = File.get_catalog_values(self)
-        values['dtstart'] = self.get_property('dtstart')
-        values['dtend'] = self.get_property('dtend')
-        return values
-
 
     def get_ns_event(self, day, resource_name=None, conflicts_list=freeze([]),
                      timetable=None, grid=False, starts_on=True, ends_on=True,

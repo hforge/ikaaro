@@ -70,9 +70,7 @@ class Issue(Folder):
     def get_catalog_values(self):
         document = Folder.get_catalog_values(self)
         document['id'] = int(self.name)
-        names = 'product', 'module', 'version', 'type', 'priority', 'state'
-        for name in names:
-            document[name] = self.get_property(name)
+        # Override default (FIXME should set default to 'nobody' instead?)
         document['assigned_to'] = self.get_property('assigned_to') or 'nobody'
         return document
 

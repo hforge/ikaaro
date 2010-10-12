@@ -342,83 +342,82 @@ class DBResource(CatalogAware, IResource):
 
 
     def get_catalog_values(self):
-        from access import RoleAware
-        from file import Image
-        from folder import Folder
+        values = {}
 
-        # Values
+        # Step 1. Automatically index metadata properties
+        languages = self.get_site_root().get_property('website_languages')
+        schema = self.class_schema
+        for name in schema:
+            datatype = schema[name]
+            indexed = getattr(datatype, 'indexed', False)
+            stored = getattr(datatype, 'stored', False)
+            if not indexed and not stored:
+                continue
+
+            # Skip non-metadata sources
+            source = getattr(datatype, 'source', None)
+            if source != 'metadata':
+                # TODO We should have a hook here (to avoid Step 2)
+                continue
+
+            # Metadata properties
+            multilingual = getattr(datatype, 'multilingual', False)
+            if multilingual:
+                value = {}
+                for language in languages:
+                    value[language] = self.get_property(name, language)
+                values[name] = value
+            else:
+                values[name] = self.get_property(name)
+
+        # Step 2. Index non-metadata properties
+        values['name'] = self.name
+        values['format'] = self.metadata.format
+        values['links'] = self.get_links()
+
+        # Parent path
         abspath = self.get_canonical_path()
-        # Get the languages
-        site_root = self.get_site_root()
-        languages = site_root.get_property('website_languages')
-
-        # Titles
-        title = {}
-        for language in languages:
-            title[language] = self.get_property('title', language=language)
-
-        # Descriptions
-        description = {}
-        for language in languages:
-            description[language] = self.get_property('description',
-                                                      language=language)
-
-        # Subjects (keywords)
-        subject = {}
-        for language in languages:
-            subject[language] = self.get_property('subject',
-                                                  language=language)
+        abspath_str = str(abspath)
+        if abspath_str != '/':
+            parent_path = abspath.resolve2('..')
+            values['parent_path'] = str(parent_path)
+        values['abspath'] = abspath_str
 
         # Full text
         context = get_context()
-        text = None
         try:
             server = context.server
         except AttributeError:
             server = None
         if server is not None and server.index_text:
             try:
-                text = self.to_text()
+                values['text'] = self.to_text()
             except NotImplementedError:
                 pass
             except Exception:
                 log = 'Indexation failed: %s' % abspath
                 log_warning(log, domain='ikaaro')
 
-        # Parent path
-        parent_path = None
-        abspath_str = str(abspath)
-        if abspath_str != '/':
-            parent_path = abspath.resolve2('..')
-            parent_path = str(parent_path)
-
         # Workflow state
         if isinstance(self, WorkflowAware):
-            workflow_state = self.get_workflow_state()
-        else:
-            workflow_state = None
+            values['workflow_state'] = self.get_workflow_state()
 
         # Role Aware
+        from access import RoleAware
         is_role_aware = isinstance(self, RoleAware)
+        values['is_role_aware'] = is_role_aware
+        values['users'] = self.get_members() if is_role_aware else None
+
+        # Image
+        from file import Image
+        values['is_image'] = isinstance(self, Image)
+
+        # Folder
+        from folder import Folder
+        values['is_folder'] = isinstance(self, Folder)
 
         # Ok
-        return {
-            'name': self.name,
-            'abspath': abspath_str,
-            'format': self.metadata.format,
-            'mtime': self.get_property('mtime'),
-            'last_author': self.get_property('last_author'),
-            'title': title,
-            'subject': subject,
-            'text': text,
-            'links': self.get_links(),
-            'parent_path': parent_path,
-            # This should be defined by subclasses
-            'is_image': isinstance(self, Image),
-            'is_folder': isinstance(self, Folder),
-            'is_role_aware': is_role_aware,
-            'users': self.get_members() if is_role_aware else None,
-            'workflow_state': workflow_state}
+        return values
 
 
     ########################################################################
