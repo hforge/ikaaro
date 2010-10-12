@@ -21,7 +21,7 @@
 from copy import deepcopy
 
 # Import from itools
-from itools.core import freeze
+from itools.core import freeze, merge_dicts
 from itools.datatypes import Email, String, Unicode
 from itools.gettext import MSG
 from itools.uri import Path, Reference
@@ -56,22 +56,24 @@ class User(AccessControl, Folder):
     ########################################################################
     # Metadata
     ########################################################################
-    class_schema = freeze({
-        # Metadata
-        'mtime': Folder.class_schema['mtime'],
-        'last_author': Folder.class_schema['last_author'],
-        'firstname': Unicode(source='metadata', indexed=True, stored=True),
-        'lastname': Unicode(source='metadata', indexed=True, stored=True),
-        'email': Email(source='metadata', indexed=True, stored=True),
-        'password': Password(source='metadata'),
-        'user_language': String(source='metadata'),
-        'user_timezone': String(source='metadata'),
-        'user_must_confirm': String(source='metadata'),
+    class_schema = merge_dicts(
+        Folder.class_schema,
+        firstname=Unicode(source='metadata', indexed=True, stored=True),
+        lastname=Unicode(source='metadata', indexed=True, stored=True),
+        email=Email(source='metadata', indexed=True, stored=True),
+        password=Password(source='metadata'),
+        user_language=String(source='metadata'),
+        user_timezone=String(source='metadata'),
+        user_must_confirm=String(source='metadata'),
         # Metadata (backwards compatibility)
-        'username': String(source='metadata', indexed=True, stored=True),
+        username=String(source='metadata', indexed=True, stored=True),
         # Other
-        'email_domain': String(indexed=True, stored=True),
-        })
+        email_domain=String(indexed=True, stored=True))
+    del class_schema['title']
+    del class_schema['description']
+    del class_schema['subject']
+    del class_schema['text']
+    class_schema = freeze(class_schema)
 
 
     ########################################################################
