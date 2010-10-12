@@ -28,7 +28,8 @@ from itools.fs import lfs
 from itools.web import STLView, INFO, ERROR
 
 # Import from ikaaro
-from autoform import AutoForm, SelectWidget, MultilineWidget, TextWidget
+from autoform import AutoForm
+from autoform import HiddenWidget, SelectWidget, MultilineWidget, TextWidget
 from buttons import Button
 from messages import MSG_NEW_RESOURCE
 from registry import get_resource_class
@@ -76,13 +77,16 @@ class ContactForm(AutoForm):
                     'message_body': Unicode}
 
     def get_schema(self, resource, context):
+        to = ContactOptions(resource=resource, mandatory=True)
+        if len(to.get_options()) == 1:
+            to = String(mandatory=True)
+
         return {
-            'to': ContactOptions(resource=resource, mandatory=True),
+            'to': to,
             'from': Email(mandatory=True),
             'subject': Unicode(mandatory=True),
             'message_body': Unicode(mandatory=True),
-            'captcha_answer': Unicode(mandatory=True),
-        }
+            'captcha_answer': Unicode(mandatory=True)}
 
 
     def get_widgets(self, resource, context):
@@ -92,8 +96,7 @@ class ContactForm(AutoForm):
                 captcha_question=captcha_question)
 
         if len(ContactOptions(resource=resource).get_options()) == 1:
-            to = SelectWidget('to', title=MSG(u'Recipient'),
-                              has_empty_option=False)
+            to = HiddenWidget('to')
         else:
             to = SelectWidget('to', title=MSG(u'Recipient'))
 
@@ -107,14 +110,21 @@ class ContactForm(AutoForm):
 
 
     def get_value(self, resource, context, name, datatype):
+        if name == 'to':
+            options = ContactOptions(resource=resource).get_options()
+            if len(options) == 1:
+                return options[0]['name']
+
         if name == 'from':
             user = context.user
             if user is not None:
                 return user.get_property('email')
-        else:
-            query = context.query
-            if name in query:
-                return query[name]
+            return datatype.get_default()
+
+        query = context.query
+        if name in query:
+            return query[name]
+
         return datatype.get_default()
 
 
