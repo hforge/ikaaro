@@ -196,10 +196,10 @@ class CPEditContactOptions(DBResource_Edit):
         timestamp_widget,
         SelectWidget('emails_from_addr', title=MSG(u'Emails from addr')),
         MultilineWidget('emails_signature', title=MSG(u'Emails signature')),
-        SelectWidget('contacts', title=MSG(u'Select the contact accounts')),
+        SelectWidget('contacts', title=MSG(u'Select the contact accounts'),
+                     has_empty_option=False),
         TextWidget('captcha_question', title=MSG(u"Captcha question")),
-        TextWidget('captcha_answer', title=MSG(u"Captcha answer")),
-        ]
+        TextWidget('captcha_answer', title=MSG(u"Captcha answer"))]
 
 
     def _get_schema(self, resource, context):
