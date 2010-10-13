@@ -21,6 +21,7 @@
 # Import from itools
 from itools.core import freeze, merge_dicts
 from itools.database import AndQuery, OrQuery, PhraseQuery, StartQuery
+from itools.database import TextQuery
 from itools.datatypes import Email, Enumerate, String, Tokens, Unicode
 from itools.gettext import MSG
 from itools.web import AccessControl as BaseAccessControl, ERROR, INFO
@@ -72,28 +73,20 @@ class RoleAware_BrowseUsers(SearchForm):
         'search_field': String,
         'search_term': Unicode}
 
-    search_fields = [
-        ('', MSG(u'All Fields')),
-        ('username', MSG(u'Login')),
-        ('lastname', MSG(u'Last Name')),
-        ('firstname', MSG(u'First Name')),
-        ('email_domain', MSG(u'Domain'))]
+    search_fields = []
 
 
     def get_items(self, resource, context):
         # Search
         search_query = PhraseQuery('format', 'user')
-        search_field = context.query['search_field']
         search_term = context.query['search_term'].strip()
-        if not search_field and search_term:
-            or_query = []
-            for field, label in self.get_search_fields(resource, context):
-                if field:
-                    or_query.append(StartQuery(field, search_term))
-            search_query = AndQuery(search_query, OrQuery(*or_query))
-        elif search_field and search_term:
-            search_query = AndQuery(search_query,
-                                    StartQuery(search_field, search_term))
+        if search_term:
+            or_query = OrQuery(
+                TextQuery('lastname', search_term),
+                TextQuery('firstname', search_term),
+                StartQuery('username', search_term),
+                StartQuery('email_domain', search_term))
+            search_query = AndQuery(search_query, or_query)
         results = context.root.search(search_query)
 
         # Show only users that belong to this group (FIXME Use the catalog)

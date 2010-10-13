@@ -439,13 +439,11 @@ class SearchForm(BrowseForm):
     search_template = '/ui/generic/browse_search.xml'
     search_schema = {
         'search_field': String,
-        'search_term': Unicode,
-    }
+        'search_term': Unicode}
     search_fields =  [
         ('title', MSG(u'Title')),
         ('text', MSG(u'Text')),
-        ('name', MSG(u'Name')),
-    ]
+        ('name', MSG(u'Name'))]
 
 
     def get_query_schema(self):
@@ -474,24 +472,24 @@ class SearchForm(BrowseForm):
     #######################################################################
     # The Search Form
     def get_search_namespace(self, resource, context):
-        # Get values from the query
-        query = context.query
-        field = query['search_field']
-        term = query['search_term']
-
         # Build the namespace
-        search_fields = [
-            {'name': name, 'value': title}
-            for name, title in self.get_search_fields(resource, context) ]
+        search_fields = self.get_search_fields(resource, context)
+        if search_fields:
+            field = context.query['search_field']
+            search_fields = [
+                {'name': name, 'value': title}
+                for name, title in search_fields ]
 
-        # Build dynamic datatype and widget
-        datatype = Enumerate(options=search_fields)
-        widget = SelectWidget(name='search_fields', datatype=datatype,
-                              value=field)
+            # Build dynamic datatype and widget
+            datatype = Enumerate(options=search_fields)
+            widget = SelectWidget(name='search_fields', datatype=datatype,
+                                  value=field)
+        else:
+            widget = None
+
         return {
-            'search_term': term,
-            'search_fields': search_fields,
-            'search_fields_widget': widget.render()}
+            'search_term': context.query['search_term'],
+            'search_fields_widget': widget}
 
 
 ###########################################################################

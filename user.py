@@ -84,7 +84,7 @@ class User(AccessControl, Folder):
 
         # email domain
         email = self.get_property('email')
-        if email and email.count('@'):
+        if email and '@' in email:
             values['email_domain'] = email.split('@', 1)[1]
 
         # username (overrides default)
