@@ -15,12 +15,18 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.datatypes import Enumerate, String, Unicode
+from itools.datatypes import Enumerate, Unicode
 from itools.web import get_context
 
 # Import from ikaaro
 from ikaaro.cc import UsersList
 from ikaaro.datatypes import FileDataType
+
+
+class Tracker_UsersList(UsersList):
+
+    def _get_included_roles(self):
+        return self.resource.get_property('included_roles')
 
 
 
@@ -113,8 +119,8 @@ def get_issue_fields(tracker):
         'type': TrackerList(element='type', tracker=tracker, mandatory=True),
         'state': TrackerList(element='state', tracker=tracker, mandatory=True),
         'priority': TrackerList(element='priority', tracker=tracker),
-        'assigned_to': UsersList(resource=tracker, excluded_roles=('guests',)),
-        'cc_list': UsersList(resource=tracker, multiple=True),
+        'assigned_to': Tracker_UsersList(resource=tracker),
+        'cc_list': Tracker_UsersList(resource=tracker, multiple=True),
         'comment': Unicode,
         'attachment': FileDataType}
 

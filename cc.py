@@ -28,16 +28,20 @@ from messages import MSG_CHANGES_SAVED
 
 class UsersList(Enumerate):
 
-    excluded_roles = None
+    included_roles = None
+
+    def _get_included_roles(self):
+        return self.included_roles
+
 
     def get_options(self):
         site_root = self.resource.get_site_root()
         # Members
-        excluded_roles = self.excluded_roles
-        if excluded_roles:
+        included_roles = self._get_included_roles()
+        if included_roles:
             members = set()
             for rolename in site_root.get_role_names():
-                if rolename not in excluded_roles:
+                if rolename in included_roles:
                     usernames = site_root.get_property(rolename)
                     members.update(usernames)
         else:

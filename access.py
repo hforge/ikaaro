@@ -52,6 +52,17 @@ def is_admin(user, resource):
     return root.has_user_role(user.name, 'admins')
 
 
+
+class Roles_Datatype(Enumerate):
+
+    resource = None
+
+    @classmethod
+    def get_options(cls):
+        site_root = cls.resource.get_site_root()
+        return [{'name': x['name'], 'value': x['title']}
+                 for x in site_root.get_roles_namespace()]
+
 ###########################################################################
 # Views
 ###########################################################################
@@ -194,15 +205,8 @@ class RoleAware_EditMembership(AutoForm):
 
 
     def get_schema(self, resource, context):
-        schema = {'id': String(mandatory=True)}
-
-        # Build role datatype
-        options = [ {'name': x['name'], 'value': x['title']}
-                    for x in resource.get_roles_namespace() ]
-        role_datatype = Enumerate(options=options)
-        schema['role'] = role_datatype(mandatory=True)
-
-        return schema
+        return {'id': String(mandatory=True),
+                'role': Roles_Datatype(resource=resource, mandatory=True)}
 
 
     def get_value(self, resource, context, name, datatype):

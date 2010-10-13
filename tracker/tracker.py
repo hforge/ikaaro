@@ -23,8 +23,9 @@
 from datetime import datetime, timedelta
 
 # Import from itools
+from itools.core import merge_dicts
 from itools.csv import Property
-from itools.datatypes import Integer, String, Unicode
+from itools.datatypes import Integer, String, Tokens, Unicode
 from itools.gettext import MSG
 from itools.database import RangeQuery, AndQuery, OrQuery, PhraseQuery
 from itools.database import StartQuery
@@ -37,7 +38,7 @@ from tables import ModulesResource, ModulesHandler
 from tables import Tracker_TableResource, Tracker_TableHandler
 from tables import VersionsResource, VersionsHandler
 from tracker_views import GoToIssueMenu, StoredSearchesMenu
-from tracker_views import Tracker_AddIssue, Tracker_GoToIssue
+from tracker_views import Tracker_AddIssue, Tracker_Edit, Tracker_GoToIssue
 from tracker_views import Tracker_ExportToCSVForm, Tracker_ExportToCSV
 from tracker_views import Tracker_ExportToText, Tracker_ChangeSeveralBugs
 from tracker_views import Tracker_NewInstance, Tracker_Search, Tracker_View
@@ -73,6 +74,11 @@ class Tracker(Folder):
 
     __fixed_handlers__ = ['product', 'module', 'version', 'type', 'priority',
         'state']
+
+    class_schema = merge_dicts(Folder.class_schema,
+         included_roles=Tokens(source='metadata',
+                               default=('members', 'reviewers', 'admins')))
+
 
     issue_class = Issue
 
@@ -245,6 +251,7 @@ class Tracker(Folder):
     remember_search = Tracker_RememberSearch()
     forget_search = Tracker_ForgetSearch()
     go_to_issue = Tracker_GoToIssue()
+    edit = Tracker_Edit()
     export_to_text = Tracker_ExportToText()
     export_to_csv_form = Tracker_ExportToCSVForm()
     export_to_csv = Tracker_ExportToCSV()

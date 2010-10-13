@@ -30,17 +30,19 @@ from itools.web import BaseView, BaseForm, STLForm, FormError, INFO, ERROR
 from itools.web.views import process_form
 
 # Import from ikaaro
-from ikaaro.autoform import HiddenWidget, TextWidget
+from ikaaro.access import Roles_Datatype
+from ikaaro.autoform import HiddenWidget, SelectWidget, TextWidget
 from ikaaro.buttons import BrowseButton
 from ikaaro import messages
 from ikaaro.views import BrowseForm, SearchForm as BaseSearchForm, ContextMenu
 from ikaaro.views_new import NewInstance
 from ikaaro.registry import get_resource_class
+from ikaaro.resource_views import DBResource_Edit
 
 # Import from ikaaro.tracker
-from ikaaro.cc import UsersList
 from issue import Issue
 from datatypes import get_issue_fields, TrackerList, ProductInfoList
+from datatypes import Tracker_UsersList
 from stored import StoredSearchFile, StoredSearch
 
 
@@ -216,6 +218,39 @@ class Tracker_NewInstance(NewInstance):
 
         goto = './%s/' % name
         return context.come_back(messages.MSG_NEW_RESOURCE, goto=goto)
+
+
+
+class Tracker_Edit(DBResource_Edit):
+
+    widgets = (DBResource_Edit.widgets + [
+        SelectWidget('included_roles',
+            title=MSG(u"Authorized roles for 'Assigned to' and 'CC' fields"),
+            has_empty_option=False)])
+
+
+    def _get_schema(self, resource, context):
+        roles = Roles_Datatype(resource=resource, multiple=True,
+                               mandatory=True)
+        return merge_dicts(DBResource_Edit.schema, included_roles=roles)
+
+
+    def get_value(self, resource, context, name, datatype):
+        if name == 'included_roles':
+            return list(resource.get_property('included_roles'))
+
+        proxy = super(Tracker_Edit, self)
+        return proxy.get_value(resource, context, name, datatype)
+
+
+    def set_value(self, resource, context, name, form):
+        if name == 'included_roles':
+            value = form['included_roles']
+            resource.set_property('included_roles', tuple(value))
+            return False
+
+        proxy = super(Tracker_Edit, self)
+        return proxy.set_value(resource, context, name, form)
 
 
 
@@ -542,8 +577,8 @@ class Tracker_Search(BaseSearchForm, Tracker_View):
                                  tracker=resource).get_namespace(state),
            'priorities': TrackerList(element='priority',
                                  tracker=resource).get_namespace(priority),
-           'assigned_to': UsersList(resource=resource,
-               excluded_roles=('guests',)).get_namespace(assigned_to),
+           'assigned_to': Tracker_UsersList(
+                              resource=resource).get_namespace(assigned_to),
            'list_products': resource.get_list_products_namespace()}
 
 
@@ -675,7 +710,6 @@ class Tracker_ExportToCSVForm(Tracker_View):
             datatype = schema[name]
             if datatype.multiple is True:
                 for value in value:
-                    print name, datatype, value
                     widget = HiddenWidget(name, datatype=datatype, value=value)
                     parameters.append(widget.render())
             elif value:
@@ -829,8 +863,8 @@ class Tracker_ChangeSeveralBugs(Tracker_View):
         namespace['priorities'] = get_resource('priority').get_options()
         namespace['types'] = get_resource('type').get_options()
         namespace['states'] = get_resource('state').get_options()
-        namespace['assigned_to'] = UsersList(resource=resource,
-                excluded_roles=('guests',)).get_namespace('')
+        namespace['assigned_to'] = Tracker_UsersList(
+                                      resource=resource).get_namespace('')
         namespace['list_products'] = resource.get_list_products_namespace()
 
         # Ok
@@ -957,5 +991,3 @@ def get_issue_informations(resource, item, context):
     infos['mtime'] = context.format_datetime(item.mtime)
 
     return infos
-
-
