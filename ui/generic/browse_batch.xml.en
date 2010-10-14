@@ -12,15 +12,15 @@
       ${msg}
     </p>
     <ul class="batch-numerotation">
-
       <li stl:if="previous">
-        <a class="previous" href="${previous}" title="« Previous">« Previous</a>
+        <a class="previous" href="${previous}" title="« Previous"
+          >« Previous</a>
       </li>
-
       <li stl:repeat="page pages">
-        <a href="${page/uri}" class="${page/css}">${page/number}</a>
+        <a stl:if="page/uri" href="${page/uri}" class="${page/css}"
+          >${page/number}</a>
+        <span stl:if="not page/uri" class="ellipsis">…</span>
       </li>
-
       <li stl:if="next">
         <a class="next" href="${next}" title="Next »">Next »</a>
       </li>

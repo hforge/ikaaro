@@ -293,9 +293,7 @@ class BrowseForm(STLForm):
 
         # Add ellipsis if needed
         if nb_pages > 5:
-            ellipsis = {'number': u'…',
-                        'css': 'ellipsis',
-                        'uri': None}
+            ellipsis = {'uri': None}
             if 2 not in middle_pages:
                 namespace['pages'].insert(1, ellipsis)
             if (nb_pages - 1) not in middle_pages:
