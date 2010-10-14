@@ -249,7 +249,6 @@ class BrowseForm(STLForm):
         namespace['control'] = nb_pages > 1
 
         # Message (singular or plural)
-        total = len(items)
         if total == 1:
             namespace['msg'] = self.batch_msg1.gettext()
         else:
@@ -286,12 +285,11 @@ class BrowseForm(STLForm):
         if nb_pages > 1:
             pages.append(nb_pages)
 
-        namespace['pages'] = []
-        for i in pages:
-            namespace['pages'].append(
-                {'number': i,
-                 'css': 'current' if i == current_page else None,
-                 'uri': uri.replace(batch_start=((i-1) * size))})
+        namespace['pages'] = [
+            {'number': i,
+             'css': 'current' if i == current_page else None,
+             'uri': uri.replace(batch_start=((i-1) * size))}
+             for i in pages ]
 
         # Add ellipsis if needed
         if nb_pages > 5:
