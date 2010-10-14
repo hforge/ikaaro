@@ -376,15 +376,9 @@ class Tracker_View(BrowseForm):
         # Default table namespace
         namespace = BrowseForm.get_namespace(self, resource, context)
 
-        # Number of results
-        query = context.query
-        search_name = query['search_name']
-        if search_name:
-            search = resource.get_resource(search_name)
-
         # Keep the search_parameters, clean different actions
         schema = self.get_query_schema()
-        namespace['search_parameters'] = encode_query(query, schema)
+        namespace['search_parameters'] = encode_query(context.query, schema)
 
         return namespace
 

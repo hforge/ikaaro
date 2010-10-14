@@ -83,10 +83,8 @@ class EditLanguageMenu(ContextMenu):
         site_root = self.resource.get_site_root()
         languages = site_root.get_property('website_languages')
         edit_languages = self.resource.get_edit_languages(self.context)
-        uri = self.context.uri
         return [
-            {'title': get_language_name(x),
-             'name': x,
+            {'title': get_language_name(x), 'name': x,
              'selected': x in edit_languages}
             for x in languages ]
 
@@ -235,7 +233,6 @@ class DBResource_Edit(AutoForm):
         fields, to_keep = self._get_query_fields(resource, context)
 
         # Save changes
-        language = resource.get_edit_languages(context)[0]
         for key in fields | to_keep:
             datatype = schema[key]
             if getattr(datatype, 'readonly', False):

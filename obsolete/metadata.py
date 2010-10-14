@@ -274,7 +274,6 @@ class Metadata(File):
             datatype = get_datatype(self.format, name)
             is_multiple = getattr(datatype, 'multiple', False)
 
-            default = datatype.get_default()
             if is_multiple:
                 if isinstance(value, list):
                     self.properties[name] = value

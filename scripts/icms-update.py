@@ -56,7 +56,6 @@ def find_versions_to_update(root, force=False):
     paths = None
 
     # Find out the versions to upgrade
-    versions = set()
     for resource in root.traverse_resources():
         # Skip non-database resources
         if not isinstance(resource, DBResource):

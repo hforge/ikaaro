@@ -224,7 +224,6 @@ class Tracker(Folder):
     def get_search_results(self, context):
         """Method that return a list of issues that correspond to the search.
         """
-        users = self.get_resource('/users')
         # Choose stored Search or personalized search
         search_name = context.query.get('search_name')
         if search_name:

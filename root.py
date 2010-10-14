@@ -191,7 +191,6 @@ class Root(WebSite):
 
 
     def get_version_of_packages(self, context):
-        versions = {}
         # Python, itools & ikaaro
         packages = ['sys', 'itools', 'ikaaro']
         config = get_config(context.server.target)
@@ -210,7 +209,7 @@ class Root(WebSite):
             'xlrd': '__VERSION__'}
 
         # Namespace
-        packages_ns = []
+        versions = {}
         for name in packages:
             attribute = package2version.get(name, '__version__')
             # Import
@@ -246,6 +245,7 @@ class Root(WebSite):
             'darwin': u'Mac OS X',
             'win32': u'Windows'}.get(sys.platform, sys.platform)
         return versions
+
 
     ########################################################################
     # Search
