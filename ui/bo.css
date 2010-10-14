@@ -408,16 +408,16 @@ p.batchcontrol {
   margin-bottom: 5px;
 }
 
-.batch-numerotation {
+.batch-pages {
   margin: 5px 0 10px 0;
   padding: 0;
 }
 
-.batch-numerotation li {
+.batch-pages li {
   display: inline;
 }
 
-.batch-numerotation a {
+.batch-pages a {
   width: 7px;
   height: 5px;
   margin: 0px;
@@ -428,11 +428,11 @@ p.batchcontrol {
   font-size: 0.8em;
 }
 
-.batch-numerotation a:hover {
+.batch-pages a:hover {
   background-color: #EEEEEC;
 }
 
-.batch-numerotation a.current {
+.batch-pages a.current {
   background-color: #EEEEEC;
   font-weight: bold;
 }

@@ -11,7 +11,7 @@
     <p class="batchcontrol">
       ${msg}
     </p>
-    <ul class="batch-numerotation">
+    <ul class="batch-pages">
       <li stl:if="previous">
         <a class="previous" href="${previous}" title="« Previous"
           >« Previous</a>
