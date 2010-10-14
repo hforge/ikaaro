@@ -15,6 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
+from itools.core import thingy_property
 from itools.datatypes import Enumerate, Unicode
 from itools.web import get_context
 
@@ -25,7 +26,8 @@ from ikaaro.datatypes import FileDataType
 
 class Tracker_UsersList(UsersList):
 
-    def _get_included_roles(self):
+    @thingy_property
+    def included_roles(self):
         return self.resource.get_property('included_roles')
 
 

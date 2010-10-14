@@ -30,14 +30,10 @@ class UsersList(Enumerate):
 
     included_roles = None
 
-    def _get_included_roles(self):
-        return self.included_roles
-
-
     def get_options(self):
         site_root = self.resource.get_site_root()
         # Members
-        included_roles = self._get_included_roles()
+        included_roles = self.included_roles
         if included_roles:
             members = set()
             for rolename in site_root.get_role_names():
