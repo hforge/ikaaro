@@ -25,12 +25,11 @@ from os.path import basename, splitext
 from itools.core import merge_dicts
 from itools.csv import Property
 from itools.datatypes import Integer, Unicode, String, HTTPDate
+from itools.fs import FileName
 from itools.gettext import MSG
 from itools.handlers import get_handler_class_by_mimetype, guess_encoding
 from itools.html import HTMLParser, stream_to_str_as_xhtml
 from itools.i18n import guess_language
-from itools.uri import get_reference
-from itools.fs import FileName
 from itools.web import BaseView, STLView, ERROR
 
 # Import from ikaaro

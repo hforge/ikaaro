@@ -25,7 +25,6 @@ from itools.gettext import MSG
 from itools.web import INFO, ERROR, BaseView, FormError
 
 # Import from ikaaro
-from autoform import AutoForm
 from buttons import RemoveButton, OrderUpButton, OrderDownButton
 from buttons import OrderBottomButton, OrderTopButton
 import messages
