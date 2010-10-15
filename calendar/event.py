@@ -22,7 +22,7 @@ from datetime import date, datetime, time, timedelta
 # Import from itools
 from itools.core import freeze, merge_dicts
 from itools.csv import Property
-from itools.datatypes import Date, DateTime, Enumerate, Time, Unicode
+from itools.datatypes import Date, DateTime, Enumerate, String, Time, Unicode
 from itools.gettext import MSG
 from itools.web import ERROR, FormError, STLForm, get_context
 
@@ -81,12 +81,12 @@ class Event_Edit(CalendarView, STLForm):
         start = resource.metadata.get_property('dtstart')
         param = start.get_parameter('VALUE', '')
         start_date = Date.encode(start.value)
-        start_time = Time.encode(start.value)[:5] if param != ['DATE'] else None
+        start_time = Time.encode(start.value)[:5] if param != 'DATE' else None
         # Date end
         end = resource.metadata.get_property('dtend')
         param = end.get_parameter('VALUE', '')
         end_date = Date.encode(end.value)
-        end_time = Time.encode(end.value)[:5] if param != ['DATE'] else None
+        end_time = Time.encode(end.value)[:5] if param != 'DATE' else None
 
         # status is an enumerate
         status = resource.get_property('status')
@@ -209,6 +209,13 @@ class Event_NewInstance(Event_Edit):
 
 
 
+class EventDateTime(DateTime):
+
+    # TODO This comes from the iCal age, use something better
+    parameters_schema = {'VALUE': String(multiple=False)}
+
+
+
 class Event(File):
 
     class_id = 'event'
@@ -222,12 +229,11 @@ class Event(File):
     class_schema = merge_dicts(
         File.class_schema,
         # Metadata
-        dtstart=DateTime(source='metadata', indexed=True, stored=True),
-        dtend=DateTime(source='metadata', indexed=True, stored=True),
+        dtstart=EventDateTime(source='metadata', indexed=True, stored=True),
+        dtend=EventDateTime(source='metadata', indexed=True, stored=True),
         status=Status(source='metadata'),
         location=Unicode(source='metadata'),
         uid=Unicode(source='metadata'))
-
 
 
     def init_resource(self, body=None, filename=None, extension=None, **kw):
@@ -329,7 +335,7 @@ class Event(File):
         dtstart_time = form['dtstart_time']
         if dtstart_time is None:
             dtstart = datetime.combine(dtstart, time(0, 0))
-            dtstart = Property(dtstart, VALUE=['DATE'])
+            dtstart = Property(dtstart, VALUE='DATE')
         else:
             dtstart = datetime.combine(dtstart, dtstart_time)
             dtstart = Property(dtstart)
@@ -341,7 +347,7 @@ class Event(File):
         if dtend_time is None:
             dtend = datetime.combine(dtend, time(0, 0))
             dtend = dtend + timedelta(days=1) - resolution
-            dtend = Property(dtend, VALUE=['DATE'])
+            dtend = Property(dtend, VALUE='DATE')
         else:
             dtend = datetime.combine(dtend, dtend_time)
             dtend = Property(dtend)
