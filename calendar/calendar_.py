@@ -25,7 +25,7 @@ from datetime import time
 from itools.core import merge_dicts
 from itools.csv import Property, property_to_str
 from itools.csv.table import get_tokens, read_name, unfold_lines
-from itools.datatypes import DataType, Date, DateTime, Integer, String
+from itools.datatypes import DataType, Date, Integer, String
 from itools.gettext import MSG
 from itools.ical import iCalendar
 
@@ -49,7 +49,6 @@ ikaaro_to_ics = [
 
 ics_to_ikaaro = dict([(y, x) for x, y in ikaaro_to_ics])
 
-handled_ics_properties = tuple([y for x, y in ikaaro_to_ics])
 
 class Timetables(DataType):
     """Timetables are tuples of time objects (start, end) used by cms.ical.
@@ -188,22 +187,13 @@ class Calendar(Folder):
                     value = datatype.get_default()
                     property = Property(value)
                     p_schema = None
-                line = property_to_str(ics_name, property, datatype,
-                        p_schema)
+                line = property_to_str(ics_name, property, datatype, p_schema)
                 lines.append(line)
 
             lines.append('END:VEVENT\n')
         lines.append('END:VCALENDAR\n')
 
         return ''.join(lines)
-
-    @classmethod
-    def get_property_datatype(cls, name, default=String):
-        if name.lower() in ('dtstart', 'dtend', 'ts'):
-            return DateTime(multiple=False)
-        if name in ('SEQUENCE', ):
-            return Integer
-        return Folder.get_property_datatype(name, default=default)
 
 
     def parse_ical(self, data):
@@ -305,18 +295,15 @@ class CalendarTable(Table):
         # Import old data
         lang = parent.get_site_root().get_default_language()
         for i, event in enumerate(handler.records):
-            if event is None:
-                # deleted record
-                continue
-            if event['type'].value != 'VEVENT':
-                # FIXME not an event
+            # deleted record or not an event
+            if event is None or event['type'].value != 'VEVENT':
                 continue
             filename = str(i)
             properties = {}
             for name, property in event.items():
                 if name in ics_to_ikaaro:
                     name = ics_to_ikaaro[name]
-                    datatype = self.get_property_datatype(name)
+                    datatype = Event.get_property_datatype(name)
                     if is_multilingual(datatype):
                         property = Property(property.value, lang=lang)
                     properties[name] = property

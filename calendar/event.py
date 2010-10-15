@@ -27,7 +27,6 @@ from itools.gettext import MSG
 from itools.web import ERROR, FormError, STLForm, get_context
 
 # Import from ikaaro
-from ikaaro.datatypes import Multilingual
 from ikaaro.file import File
 from ikaaro import messages
 from calendar_views import CalendarView, resolution
@@ -227,10 +226,7 @@ class Event(File):
         dtend=DateTime(source='metadata', indexed=True, stored=True),
         status=Status(source='metadata'),
         location=Unicode(source='metadata'),
-        title=Multilingual(source='metadata'),
-        description=Multilingual(source='metadata'),
-        uid=Unicode(source='metadata'),
-        mtime= DateTime(source='metadata'))
+        uid=Unicode(source='metadata'))
 
 
 
