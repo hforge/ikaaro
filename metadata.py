@@ -18,18 +18,11 @@
 from itools.core import add_type
 from itools.csv import parse_table, Property, property_to_str
 from itools.csv import deserialize_parameters
-from itools.datatypes import String
 from itools.handlers import File, register_handler_class
 from itools.web import get_context
 
 # Import from ikaaro
 from registry import get_resource_class
-
-
-# This is the datatype used for properties not defined in the schema
-multiple_datatype = String(multiple=True, multilingual=False)
-multilingual_datatype = String(multiple=False, multilingual=True,
-                               parameters_schema={'lang': String})
 
 
 def is_multiple(datatype):
@@ -41,7 +34,9 @@ def is_multilingual(datatype):
 
 
 def get_parameters_schema(datatype):
-    return getattr(datatype, 'parameters_schema', {})
+    schema = getattr(datatype, 'parameters_schema', {})
+    default = getattr(datatype, 'parameters_schema_default', None)
+    return schema, default
 
 
 
@@ -89,16 +84,10 @@ class Metadata(File):
 
             # 1. Get the datatype
             datatype = resource_class.get_property_datatype(name)
-            if not datatype:
-                # Guess the datatype for properties not defined by the schema
-                if 'lang' in parameters:
-                    datatype = multilingual_datatype
-                else:
-                    datatype = multiple_datatype
 
             # 2. Deserialize the parameters
-            parameters_schema = get_parameters_schema(datatype)
-            deserialize_parameters(parameters, parameters_schema)
+            params_schema, params_default = get_parameters_schema(datatype)
+            deserialize_parameters(parameters, params_schema, params_default)
 
             # 3. Get the datatype properties
             multiple = is_multiple(datatype)
@@ -141,8 +130,8 @@ class Metadata(File):
         # Properties
         for name in names:
             property = properties[name]
-            datatype = resource_class.get_property_datatype(name, String)
-            params_schema = get_parameters_schema(datatype)
+            datatype = resource_class.get_property_datatype(name)
+            params_schema, params_default = get_parameters_schema(datatype)
             is_empty = datatype.is_empty
             p_type = type(property)
             if p_type is dict:

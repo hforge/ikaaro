@@ -78,8 +78,8 @@ class IResource(Resource):
     # Properties
     ########################################################################
     @classmethod
-    def get_property_datatype(cls, name, default=String):
-        return default
+    def get_property_datatype(cls, name):
+        return String
 
 
     def _get_property(self, name, language=None):
@@ -156,6 +156,17 @@ class IResource(Resource):
 ###########################################################################
 # Database resources
 ###########################################################################
+class FreeDatatype(String):
+    """This datatype is used for properties not defined in the resource
+    schema, when the schema is defined as extensible.
+    """
+
+    multiple = True
+    parameters_schema = freeze({})
+    parameters_schema_default = String(multiple=True)
+
+
+
 class DBResourceMetaclass(type):
 
     def __new__(mcs, name, bases, dict):
@@ -231,6 +242,7 @@ class DBResource(CatalogAware, IResource):
     ########################################################################
     # Metadata
     ########################################################################
+    class_schema_extensible = True
     class_schema = freeze({
         # Metadata
         'mtime': DateTime(source='metadata', indexed=True, stored=True),
@@ -256,11 +268,13 @@ class DBResource(CatalogAware, IResource):
 
 
     @classmethod
-    def get_property_datatype(cls, name, default=String):
+    def get_property_datatype(cls, name):
         datatype = cls.class_schema.get(name)
         if datatype and getattr(datatype, 'source', None) == 'metadata':
             return datatype
-        return default
+        if cls.class_schema_extensible:
+            return FreeDatatype
+        raise ValueError, 'unexpected property "%s"' % name
 
 
     def has_property(self, name, language=None):
@@ -585,4 +599,3 @@ class DBResource(CatalogAware, IResource):
     links = DBResource_Links()
     http_put = Put_View()
     http_delete = Delete_View()
-

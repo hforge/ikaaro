@@ -48,7 +48,7 @@ def get_datatype(format, name):
     if cls is None:
         return String
 
-    return cls.get_property_datatype(name, default=String)
+    return cls.get_property_datatype(name)
 
 
 
@@ -151,7 +151,6 @@ class Metadata(File):
         # format, version, schema
         format = self.format
         version = self.version
-        cls = get_resource_class(format)
 
         # Opening
         lines = ['<?xml version="1.0" encoding="UTF-8"?>\n',

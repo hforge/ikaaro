@@ -31,12 +31,7 @@ format;version=20090122:webpage
 title;lang=en:hello
 title;lang=fr:bonjur
 title;lang=fr:bonjour
-free_title;lang=en:bye
-free_title;lang=fr:aurevoir
-free_title;lang=fr:au revoir
 """
-
-
 
 
 class LoadTestCase(TestCase):
@@ -59,12 +54,6 @@ class LoadTestCase(TestCase):
         value = self.metadata.get_property('title', language='fr').value
         self.assertEqual(type(value), unicode)
         self.assertEqual(value, u'bonjour')
-
-
-    def test_free_title(self):
-        value = self.metadata.get_property('free_title', language='fr').value
-        self.assertEqual(type(value), str)
-        self.assertEqual(value, 'au revoir')
 
 
 
@@ -104,6 +93,52 @@ class NewTestCase(TestCase):
         self.metadata.save_state_to('sandbox/metadata')
         # TODO
 
+
+
+###########################################################################
+# Test extensible schema
+###########################################################################
+class OpenWebPage(WebPage):
+
+    class_id = 'open-webpage'
+    class_schema_extensible = True
+
+
+
+good_metadata = """
+format;version=20090122:open-webpage
+title;lang=en:hello
+title;lang=fr:bonjur
+title;lang=fr:bonjour
+free_title;lang=en:bye
+free_title;lang=fr:au revoir
+"""
+
+bad_metadata = """
+format;version=20090122:webpage
+title;lang=en:hello
+title;lang=fr:bonjur
+title;lang=fr:bonjour
+free_title;lang=en:bye
+free_title;lang=fr:au revoir
+"""
+
+
+
+class FreeTestCase(TestCase):
+
+    def test_good(self):
+        metadata = Metadata(string=good_metadata)
+        value = metadata.get_property('free_title')
+        self.assertEqual(type(value), list)
+        expected = {'en': 'bye', 'fr': 'au revoir'}
+        for property in value:
+            language = property.get_parameter('lang')[0]
+            self.assertEqual(property.value, expected[language])
+
+
+    def test_bad(self):
+        self.assertRaises(ValueError, Metadata, string=bad_metadata)
 
 
 
