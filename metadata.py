@@ -81,7 +81,6 @@ class Metadata(File):
         self.format = value
         # Get the schema
         resource_class = get_resource_class(value)
-        get_datatype = resource_class.get_property_datatype
 
         # Parse
         for name, value, parameters in parser:
@@ -89,7 +88,7 @@ class Metadata(File):
                 raise ValueError, 'unexpected "format" property'
 
             # 1. Get the datatype
-            datatype = get_datatype(name)
+            datatype = resource_class.get_property_datatype(name)
             if not datatype:
                 # Guess the datatype for properties not defined by the schema
                 if 'lang' in parameters:
@@ -129,7 +128,6 @@ class Metadata(File):
 
     def to_str(self):
         resource_class = get_resource_class(self.format)
-        get_datatype = resource_class.get_property_datatype
 
         if self.version is None:
             lines = ['format:%s\n' % self.format]
@@ -143,7 +141,7 @@ class Metadata(File):
         # Properties
         for name in names:
             property = properties[name]
-            datatype = get_datatype(name, default=String)
+            datatype = resource_class.get_property_datatype(name, String)
             params_schema = get_parameters_schema(datatype)
             is_empty = datatype.is_empty
             p_type = type(property)
