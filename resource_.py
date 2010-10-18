@@ -242,7 +242,7 @@ class DBResource(CatalogAware, IResource):
     ########################################################################
     # Metadata
     ########################################################################
-    class_schema_extensible = True
+    class_schema_extensible = False
     class_schema = freeze({
         # Metadata
         'mtime': DateTime(source='metadata', indexed=True, stored=True),
