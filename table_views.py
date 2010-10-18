@@ -175,6 +175,17 @@ class Table_AddEditRecord(DBResource_Edit):
         return resource.get_form()
 
 
+    def get_value(self, resource, context, name, datatype):
+        default = datatype.get_default()
+        if not is_multilingual(datatype):
+            return default
+
+        value = {}
+        for language in resource.get_edit_languages(context):
+            value[language] = default
+        return value
+
+
     def get_field_title(self, resource, name):
         for widget in resource.get_form():
             if widget.name == name:
