@@ -312,11 +312,19 @@ class LoginView(STLForm):
     access = True
     title = MSG(u'Login')
     template = '/ui/base/login.xml'
+    query_schema = {'username': String}
     schema = {
         'username': String(mandatory=True),
         'password': String,
         'no_password': Boolean}
     meta = [('robots', 'noindex, follow', None)]
+
+
+    def get_value(self, resource, context, name, datatype):
+        if name == 'username':
+            return context.query['username']
+        return super(LoginView, self).get_value(resource, context, name,
+                datatype)
 
 
     def get_namespace(self, resource, context):
