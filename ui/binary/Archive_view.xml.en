@@ -6,5 +6,12 @@
   <p>
   To download this file, click on <a href=";download">${filename}</a>
   </p>
+  <form action="." method="post" stl:if="extract">
+    <fieldset>
+      <legend>Extract contents</legend>
+      ${widget}
+      <button type="submit" class="button-ok">Ok</button>
+    </fieldset>
+  </form>
   <pre>${contents}</pre>
 </stl:block>

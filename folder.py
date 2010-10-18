@@ -19,11 +19,14 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
+from itools.database import AndQuery, NotQuery, PhraseQuery
+from itools.fs import FileName
 from itools.gettext import MSG
 from itools.handlers import Folder as FolderHandler
+from itools.html import HTMLParser, stream_to_str_as_xhtml
+from itools.i18n import guess_language
 from itools.uri import Path
 from itools.web import get_context, BaseView
-from itools.database import AndQuery, NotQuery, PhraseQuery
 
 # Import from ikaaro
 from exceptions import ConsistencyError
@@ -31,6 +34,7 @@ from folder_views import Folder_BrowseContent
 from folder_views import Folder_NewResource, Folder_Orphans, Folder_Thumbnail
 from folder_views import Folder_PreviewContent, Folder_Rename, Folder_View
 from metadata import Metadata
+from multilingual import Multilingual
 from registry import register_resource_class, get_resource_class
 from registry import _lookup_class_id, resources_registry
 from registry import get_document_types
@@ -89,6 +93,32 @@ class Folder(DBResource):
         # Ok
         context.database.add_resource(resource)
         return resource
+
+
+    def _make_file(self, name, filename, mimetype, body, default_language):
+        kk, extension, language = FileName.decode(filename)
+        name = name or kk
+        # Web Pages are first class citizens
+        if mimetype == 'text/html':
+            body = stream_to_str_as_xhtml(HTMLParser(body))
+            class_id = 'webpage'
+        elif mimetype == 'application/xhtml+xml':
+            class_id = 'webpage'
+        else:
+            class_id = mimetype
+        cls = get_resource_class(class_id)
+
+        # Multilingual resources, find out the language
+        kw = {'format': class_id, 'filename': filename}
+        if issubclass(cls, Multilingual):
+            if language is None:
+                text = cls.class_handler(string=body).to_text()
+                language = guess_language(text) or default_language
+            kw['language'] = language
+        else:
+            kw['extension'] = extension
+
+        return self.make_resource(name, cls, body=body, **kw)
 
 
     def can_paste(self, source):

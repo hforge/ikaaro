@@ -30,6 +30,17 @@ itools is not yet clear.
 """
 
 
+encoding_map = {
+    'gzip': 'application/x-gzip',
+    'bzip2': 'application/x-bzip2'}
+def guess_mimetype(filename, default):
+    """Override itools function 'guess_type' to intercept the encoding.
+    """
+    mimetype, encoding = guess_type(filename)
+    return encoding_map.get(encoding, mimetype or default)
+
+
+
 class FileDataType(DataType):
     """FIXME This datatype is special in that it does not deserializes from
     a byte string, but from a tuple.  Some day we should find a correct
@@ -48,16 +59,7 @@ class FileDataType(DataType):
         minimalistic).
         """
         filename, mimetype, body = data
-        # Find out the mimetype
-        guessed, encoding = guess_type(filename)
-        if encoding is not None:
-            encoding_map = {'gzip': 'application/x-gzip',
-                            'bzip2': 'application/x-bzip2'}
-            if encoding in encoding_map:
-                mimetype = encoding_map[encoding]
-        elif guessed is not None:
-            mimetype = guessed
-
+        mimetype = guess_mimetype(filename, mimetype)
         return filename, mimetype, body
 
 

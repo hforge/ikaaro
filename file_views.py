@@ -24,22 +24,19 @@ from os.path import basename, splitext
 # Import from itools
 from itools.core import merge_dicts
 from itools.csv import Property
-from itools.datatypes import Integer, Unicode, String, HTTPDate
+from itools.datatypes import Integer, Unicode, String, HTTPDate, PathDataType
 from itools.fs import FileName
 from itools.gettext import MSG
-from itools.handlers import get_handler_class_by_mimetype, guess_encoding
-from itools.html import HTMLParser, stream_to_str_as_xhtml
-from itools.i18n import guess_language
-from itools.web import BaseView, STLView, ERROR
+from itools.handlers import get_handler_class_by_mimetype
+from itools.uri import Path
+from itools.web import BaseView, STLView, STLForm, ERROR
 
 # Import from ikaaro
 from autoform import title_widget, description_widget, subject_widget
 from autoform import file_widget, timestamp_widget
-from autoform import FileWidget, TextWidget
-from datatypes import FileDataType, ImageWidth
+from autoform import FileWidget, PathSelectorWidget, TextWidget
+from datatypes import FileDataType, ImageWidth, guess_mimetype
 from messages import MSG_NEW_RESOURCE, MSG_UNEXPECTED_MIMETYPE
-from multilingual import Multilingual
-from registry import get_resource_class
 from resource_views import DBResource_Edit
 from views_new import NewInstance
 from workflow import StateEnumerate, state_widget
@@ -72,40 +69,14 @@ class File_NewInstance(NewInstance):
 
 
     def action(self, resource, context, form):
-        filename, mimetype, body = form['file']
-        kk, type, language = FileName.decode(filename)
-
-        # Web Pages are first class citizens
-        if mimetype == 'text/html':
-            body = stream_to_str_as_xhtml(HTMLParser(body))
-            class_id = 'webpage'
-        elif mimetype == 'application/xhtml+xml':
-            class_id = 'webpage'
-        else:
-            class_id = mimetype
-        cls = get_resource_class(class_id)
-
-        # Multilingual resources, find out the language
-        if issubclass(cls, Multilingual):
-            if language is None:
-                encoding = guess_encoding(body)
-                text = cls.class_handler(string=body).to_text()
-                language = guess_language(text)
-                if language is None:
-                    language = resource.get_edit_languages(context)[0]
-
-        # Build the resource
+        # Make the resource
         name = form['name']
-        kw = {'format': class_id, 'filename': filename}
-        if issubclass(cls, Multilingual):
-            kw['language'] = language
-        else:
-            kw['extension'] = type
-        child = resource.make_resource(name, cls, body=body, **kw)
-
-        # The title
-        title = form['title'].strip()
+        filename, mimetype, body = form['file']
         language = resource.get_edit_languages(context)[0]
+        child = resource._make_file(name, filename, mimetype, body, language)
+
+        # Set the title
+        title = form['title'].strip()
         title = Property(title, lang=language)
         child.metadata.set_property('title', title)
 
@@ -454,18 +425,78 @@ class Video_View(STLView):
 
 
 
-class Archive_View(File_View):
+class Archive_View(STLForm):
 
     access = 'is_allowed_to_view'
     title = MSG(u'View')
     template = '/ui/binary/Archive_view.xml'
 
-    def get_namespace(self, resource, context):
-        namespace = File_View.get_namespace(self, resource, context)
-        contents = resource.handler.get_contents()
-        namespace['contents'] = '\n'.join(contents)
-        return namespace
+    schema = {'target': PathDataType}
 
+    def get_namespace(self, resource, context):
+        filename = resource.get_property('filename') or resource.get_title()
+        contents = resource.handler.get_contents()
+        contents = '\n'.join(contents)
+        # Extract archive
+        ac = resource.get_access_control()
+        extract = ac.is_allowed_to_edit(context.user, resource)
+        if extract:
+            widget = PathSelectorWidget('target', value='..').render()
+        else:
+            widget = None
+        # Ok
+        return {'filename': filename, 'contents': contents,
+                'extract': extract, 'widget': widget}
+
+
+    def action(self, resource, context, form):
+        from file import TarArchive
+        from folder import Folder
+
+        # Get the list of paths to extract
+        handler = resource.handler
+        paths = handler.get_contents()
+        paths.sort()
+        # Tar does not add trailing slash to directory
+        if isinstance(resource, TarArchive):
+            tar = handler._open_tarfile()
+            paths = [
+                ('%s/' % x) if tar.getmember(x).isdir() else x for x in paths ]
+            tar.close()
+
+        # Get the target resource
+        target = form['target']
+        target = resource.get_resource(target)
+
+        # Make the resources
+        language = resource.get_edit_languages(context)[0]
+        for path_str in paths:
+            path = Path(path_str)
+
+            # Create parent folders if needed
+            folder = target
+            for name in path[:-1]:
+                subfolder = folder.get_resource(name, soft=True)
+                if subfolder is None:
+                    folder = folder.make_resource(name, Folder)
+                else:
+                    folder = subfolder
+
+            # Case 1: folder
+            filename = path[-1]
+            if path.endswith_slash:
+                folder.make_resource(filename, Folder)
+                continue
+
+            # Case 2: file
+            body = handler.get_file(path_str)
+            mimetype = guess_mimetype(filename, 'application/octet-stream')
+            folder._make_file(None, filename, mimetype, body, language)
+
+        # Ok
+        message = MSG(u'Files extracted')
+        goto = context.get_link(target)
+        return context.come_back(message, goto=goto)
 
 
 class Flash_View(File_View):
@@ -473,4 +504,3 @@ class Flash_View(File_View):
     access = 'is_allowed_to_view'
     title = MSG(u'View')
     template = '/ui/binary/Flash_view.xml'
-
