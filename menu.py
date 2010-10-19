@@ -64,8 +64,8 @@ class NotAllowedError(Exception):
 
 class Target(Enumerate):
 
-    options = [{'name': '_blank', 'value': MSG(u'New page')},
-               {'name': '_top', 'value': MSG(u'Current page')}]
+    options = [{'name': '_top', 'value': MSG(u'Current page')},
+               {'name': '_blank', 'value': MSG(u'New page')}]
 
 
 
@@ -73,7 +73,7 @@ class MenuFile(OrderedTableFile):
 
     record_properties = {
         'title': Multilingual,
-        'path': String,
+        'path': String(mandatory=True),
         'target': Target(mandatory=True, default='_top'),
         'child': String}
 
@@ -277,7 +277,8 @@ class Menu(OrderedTable):
 
     form = [TextWidget('title', title=MSG(u'Title')),
             PathSelectorWidget('path', title=MSG(u'Path')),
-            SelectWidget('target', title=MSG(u'Target')),
+            SelectWidget('target', title=MSG(u'Target'),
+                         has_empty_option=False),
             ReadOnlyWidget('child')]
 
 
