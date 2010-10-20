@@ -99,18 +99,16 @@ class Issue_Edit(STLForm):
 
         # cc_list
         cc_list = resource.get_property('cc_list')
-        namespace['cc_list']= {'name': 'cc_list', 'value': [], 'class': None}
         cc_list_userslist = self.get_schema(resource, context)['cc_list']
-        cc_value = []
-        add_value = []
+        cc = []
+        nocc = []
         for user in cc_list_userslist.get_options():
             if user['name'] in cc_list:
-                user['selected'] = True
-                cc_value.append(user)
+                cc.append(user)
             else:
-                user['selected'] = False
-                add_value.append(user)
-        namespace['cc_list']['value'] = cc_value + add_value
+                nocc.append(user)
+        namespace['cc'] = cc
+        namespace['nocc'] = nocc
 
         # Reported by
         reported_by = resource.get_reported_by()

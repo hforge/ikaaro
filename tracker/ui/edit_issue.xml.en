@@ -85,8 +85,11 @@
           <label for="cc-list">CC</label><br/>
           <select name="cc_list" id="cc-list" class="tracker-select"
             multiple="multiple" size="6">
-            <option stl:repeat="item cc_list/value" value="${item/name}"
-              selected="${item/selected}">${item/value}</option>
+            <option stl:repeat="item cc" value="${item/name}"
+              selected="selected">${item/value}</option>
+            <option disabled="disabled">---</option>
+            <option stl:repeat="item nocc" value="${item/name}"
+              >${item/value}</option>
           </select>
         </td>
       </tr>
