@@ -400,6 +400,14 @@ table.new-resource-thumb {
   text-decoration: none;
 }
 
+#browse-list td a {
+  text-decoration: none;
+}
+
+#browse-list td a:hover {
+  text-decoration: underline;
+}
+
 /**************************************************************************
  * NUMERIC BATCH
  **************************************************************************/
