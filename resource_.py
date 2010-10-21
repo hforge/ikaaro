@@ -287,14 +287,15 @@ class DBResource(CatalogAware, IResource):
 
 
     def set_property(self, name, value, language=None):
+        """If value == old value then return False
+           else make the change and return True
+        """
+
         # Check the new value is different from the old value
-        if language:
-            old_value = self.get_property(name, language=language)
-        else:
-            old_value = self.get_property(name)
+        old_value = self.get_property(name, language=language)
 
         if value == old_value:
-            return
+            return False
 
         # Set property
         if language:
@@ -302,6 +303,8 @@ class DBResource(CatalogAware, IResource):
 
         get_context().database.change_resource(self)
         self.metadata.set_property(name, value)
+
+        return True
 
 
     def del_property(self, name):
