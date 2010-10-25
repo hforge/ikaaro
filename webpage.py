@@ -199,7 +199,7 @@ class HTMLEditView(File_Edit):
             return
 
         # Send notifications
-        resource.notify_subcribers(context)
+        resource.notify_subscribers(context)
 
 
     def set_value(self, resource, context, name, form):

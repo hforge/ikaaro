@@ -142,7 +142,7 @@ class SubscribeForm(STLForm):
 class Observable(object):
 
 
-    def notify_subcribers(self, context):
+    def notify_subscribers(self, context):
         # Subject
         subject = MSG(u'[{title}] has been modified')
         subject = subject.gettext(title=self.get_title())
