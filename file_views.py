@@ -317,6 +317,8 @@ class File_ExternalEdit(BaseView):
             data = handler.to_str(encoding)
 
         context.content_type = 'application/x-restedit'
+        context.set_content_disposition('inline', '%s.restedit' %
+                                        resource.name)
         return header + data
 
 
