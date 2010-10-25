@@ -30,9 +30,9 @@ from itools.gettext import MSG
 from itools.ical import iCalendar
 
 # Import from ikaaro
-from ikaaro.file_views import File_View
 from ikaaro.folder import Folder
-from calendar_views import Calendar_Import, Calendar_Export
+from calendar_views import Calendar_Export, Calendar_ExportForm
+from calendar_views import Calendar_Import
 from calendar_views import MonthlyView, TimetablesForm, WeeklyView, DailyView
 from event import Event
 
@@ -139,7 +139,7 @@ class Calendar(Folder):
         if self.get_access_control().is_admin(context.user, self):
             return True
         if event:
-            organizer = event.get_property('ORGANIZER')
+            organizer = event.get_owner()
             user_path = str(context.user.get_abspath())
             return organizer and user_path == organizer.value
         ac = self.parent.get_access_control()
@@ -251,8 +251,7 @@ class Calendar(Folder):
     edit_timetables = TimetablesForm()
     export = Calendar_Export()
     import_ = Calendar_Import()
-    export_form = File_View(title=MSG(u'Export'),
-                            template='/ui/calendar/export_form.xml')
+    export_form = Calendar_ExportForm()
 
 
 

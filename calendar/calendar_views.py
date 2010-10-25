@@ -857,6 +857,17 @@ class Calendar_Import(STLForm):
 
 
 
+class Calendar_ExportForm(STLView):
+
+    access = 'is_allowed_to_view'
+    title = MSG(u'Export')
+    template = '/ui/calendar/export_form.xml'
+
+    def get_namespace(self, resource, context):
+        return {'filename': '%s.ics' % resource.name}
+
+
+
 class Calendar_Export(BaseView):
 
     access = 'is_allowed_to_view'

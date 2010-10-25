@@ -201,7 +201,6 @@ class Event_NewInstance(Event_Edit):
         event = resource.make_resource(id, Event)
         # Set properties
         event.update(form)
-        event.set_property('ORGANIZER', context.user.name)
         # Ok
         message = messages.MSG_CHANGES_SAVED
         goto = ';%s' % context.get_cookie('method') or 'monthly_view'
