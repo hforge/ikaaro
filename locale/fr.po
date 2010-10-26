@@ -1143,15 +1143,15 @@ msgid ""
 "{issue_uri}"
 msgstr ""
 "NE PAS RÉPONDRE À CE MESSAGE. Pour commenter cette fiche, allez sur&nbsp;:\n"
-"${issue_uri}"
+"{issue_uri}"
 
 #: ../cc.py:150
 msgid ""
 "DO NOT REPLY TO THIS EMAIL. To view modifications please visit:\n"
 "{resource_uri}"
 msgstr ""
-"NE PAS RÉPONDRE À CE MESSAGE. Pour commenter cette fiche, allez sur&nbsp;:\n"
-"${issue_uri}"
+"NE PAS RÉPONDRE À CE MESSAGE. Pour voir les modifications, allez sur&nbsp;:\n"
+"{resource_uri}"
 
 #: ../calendar/calendar_views.py:634
 msgid "Daily View"
