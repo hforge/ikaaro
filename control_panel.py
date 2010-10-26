@@ -47,7 +47,7 @@ from views import IconsView, ContextMenu
 ###########################################################################
 class ControlPanelMenu(ContextMenu):
 
-    title = MSG(u'Control Panel')
+    title = MSG(u'Configuration')
 
     def get_items(self):
         resource = self.resource
@@ -77,7 +77,7 @@ context_menus = [ControlPanelMenu()]
 class ControlPanel(IconsView):
 
     access = 'is_allowed_to_edit'
-    title = MSG(u'Control Panel')
+    title = MSG(u'Configuration')
     icon = 'settings.png'
     context_menus = context_menus
 
@@ -97,7 +97,7 @@ class ControlPanel(IconsView):
                 'url': ';%s' % name})
 
         return {
-            'title': MSG(u'Control Panel'),
+            'title': MSG(u'Configuration'),
             'batch': None,
             'items': items}
 
