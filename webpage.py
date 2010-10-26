@@ -199,7 +199,8 @@ class HTMLEditView(File_Edit):
             return
 
         # Send notifications
-        resource.notify_subscribers(context)
+        if context.database.is_changed(resource):
+            resource.notify_subscribers(context)
 
 
     def set_value(self, resource, context, name, form):
