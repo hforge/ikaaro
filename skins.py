@@ -451,42 +451,42 @@ class Skin(UIFolder):
             uri = deepcopy(uri)
             uri.path.endswith_slash = True
 
-        # The container URI
-        first_container = here
-        if isinstance(here, iFolder) is False:
-            first_container = here.parent
-        container_uri = context.get_link(first_container)
-        # new resource ACL
-        view = first_container.get_view('new_resource')
-        ac = first_container.get_access_control()
-        new_resource_allowed = ac.is_access_allowed(user, first_container,
-                                                    view)
-
-        # In case of UI objects, fallback to site root
+        # Top links
+        # (TODO refactor to a method 'get_top_links', move from the template)
+        # Login/Logout
         if isinstance(here, (UIFile, UIFolder)):
+            # In case of UI objects, fallback to site root
             base_path = ''
         else:
             base_path = context.get_link(here)
+        # Add content
+        container = here
+        if isinstance(here, iFolder) is False:
+            container = here.parent
+        view = container.get_view('new_resource')
+        ac = container.get_access_control()
+        new_resource_allowed = ac.is_access_allowed(user, container, view)
+        # Configuration
+        view = site_root.get_view('control_panel')
+        configuration = site_root.is_access_allowed(user, site_root, view)
 
-        # The view
-        view = context.view
-
+        # Ok
         return {
             # HTML head
             'language': language,
             'title': self.get_template_title(context),
             'base_uri': str(uri),
-            'canonical_uri': view.get_canonical_uri(context),
-            'container_uri': container_uri,
-            'new_resource_allowed': new_resource_allowed,
+            'canonical_uri': context.view.get_canonical_uri(context),
             'styles': self.get_styles(context),
             'scripts': self.get_scripts(context),
             'meta_tags': self.get_meta_tags(context),
-            # Log in/out
+            # Top links
             'login': '%s/;login' % base_path,
             'logout': '%s/;logout' % base_path,
-            # User
             'user': self.get_user_menu(context),
+            'new_resource_allowed': new_resource_allowed,
+            'container_uri': context.get_link(container),
+            'configuration': configuration,
             # Location & Views
             'location': self.location_template(context=context),
             'languages': self.languages_template(context=context),

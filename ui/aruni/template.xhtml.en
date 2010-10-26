@@ -35,8 +35,10 @@
              id="links-menu-profile">${user/title}</a>
           <a href="${logout}" title="Log out" id="links-menu-logout"
             >Log out</a>
-          <a stl:if="new_resource_allowed" href="${container_uri}/;new_resource"
-             id="links-menu-new">Add content</a>
+          <a stl:if="new_resource_allowed" id="links-menu-new"
+             href="${container_uri}/;new_resource">Add content</a>
+          <a stl:if="configuration" id="links-menu-configuration"
+             href="/;control_panel" title="Configuration">Configuration</a>
         </stl:block>
       </div>
       <!-- Languages & Searchbar -->

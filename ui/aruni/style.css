@@ -94,6 +94,10 @@ div#page {
   background-image: url(../icons/16x16/new.png);
 }
 
+#header a#links-menu-configuration {
+  background-image: url(../icons/16x16/config.png);
+}
+
 #header #languages a.selected {
   font-weight: bold;
 }
