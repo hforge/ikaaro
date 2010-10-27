@@ -20,7 +20,7 @@
 
 # Import from itools
 from itools.core import get_abspath, thingy_lazy_property
-from itools.datatypes import DataType, Date, Enumerate, Boolean
+from itools.datatypes import DataType, Date, Enumerate, Boolean, Unicode
 from itools.fs import lfs
 from itools.gettext import MSG, get_language_msg
 from itools.html import stream_to_str_as_xhtml, stream_to_str_as_html
@@ -476,6 +476,34 @@ class RTEWidget(Widget):
         prefix = self.get_prefix()
         template = self.get_template()
         return stl(events=template, namespace=self, prefix=prefix)
+
+
+
+class CaptchaDatatype(Unicode):
+    mandatory = True
+
+
+    @staticmethod
+    def is_valid(value):
+        context = get_context()
+        site_root = context.site_root
+        answer = site_root.get_property('captcha_answer')
+        return answer == value
+
+
+
+class CaptchaWidget(TextWidget):
+    title = MSG(u"Please answer the question below:")
+    template = make_stl_template("""
+    ${question}
+    <input type="text" id="${id}" name="${name}" value="${value}"
+      maxlength="${maxlength}" size="${size}" />""")
+
+
+    def question(self):
+        context = get_context()
+        site_root = context.site_root
+        return site_root.get_property('captcha_question')
 
 
 
