@@ -143,6 +143,16 @@ class Observable(object):
 
 
     def notify_subscribers(self, context):
+        # 1. Check the resource has been modified
+        if not context.database.is_changed(self):
+            return
+
+        # 2. Get list of subscribed users
+        users = self.metadata.get_property('cc_list')
+        if not users:
+            return
+
+        # 3. Build the message
         # Subject
         subject = MSG(u'[{title}] has been modified')
         subject = subject.gettext(title=self.get_title())
@@ -153,18 +163,12 @@ class Observable(object):
         uri = uri.split(';')[0] + ';commit_log'
         body = message.gettext(resource_uri=uri)
 
-        # get list of registered users
-        users = self.metadata.get_property('cc_list')
-        # cc_list is empty
-        if not users:
-            return
-        # Notify registered users
+        # 4. Send the message
         for user in users.value:
             user = context.root.get_user(user)
-            if not user:
-                continue
-            mail = user.get_property('email')
-            context.root.send_email(mail, subject, text=body)
+            if user:
+                mail = user.get_property('email')
+                context.root.send_email(mail, subject, text=body)
 
 
     #######################################################################
