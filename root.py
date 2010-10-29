@@ -34,13 +34,14 @@ import traceback
 from itools.core import get_abspath
 from itools.datatypes import String
 from itools.gettext import MSG
-from itools.handlers import ConfigFile, RWDatabase, ro_database
+from itools.handlers import ConfigFile, ro_database
 from itools.stl import stl
 from itools.uri import Path
 from itools.web import BaseView, get_context
 
 # Import from ikaaro
 from config import get_config
+from database import ReadOnlyDatabase
 from folder import Folder
 from registry import get_resource_class
 from skins import UI, ui_path
@@ -72,7 +73,7 @@ class CtrlView(BaseView):
         database = context.database
         return dumps(
             {'packages': resource.get_version_of_packages(context),
-             'read-only': not isinstance(database, RWDatabase)})
+             'read-only': type(database) is ReadOnlyDatabase})
 
 
 
@@ -215,7 +216,7 @@ class Root(WebSite):
             'xapian': 'version_string',
             'PIL.Image': 'VERSION',
             'reportlab': 'Version',
-            'sys': 'version_info',
+            'sys': 'version',
             'xlrd': '__VERSION__'}
 
         # Namespace
