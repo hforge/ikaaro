@@ -168,6 +168,10 @@ def update(parser, options, target):
     path = '%s/database' % target
     start_subprocess(path)
 
+    # Load the modules
+    config = get_config(target)
+    load_modules(config)
+
     #######################################################################
     # STAGE 0: Change format of the metadata
     # XXX Specific to the migration from 0.61 to 0.62
@@ -182,10 +186,6 @@ def update(parser, options, target):
             abort()
         print 'STAGE 0: Updating metadata (may take a while)'
         t0 = time()
-
-        # Load the config
-        config = get_config(target)
-        load_modules(config)
 
         for filename in lfs.traverse(path):
             if not filename.endswith('.metadata'):
