@@ -27,9 +27,9 @@ from itools.html import XHTMLFile
 # Template to display full day events
 default_template_fd = XHTMLFile(string=
     """
-    <td class="color${event/cal}" xmlns="http://www.w3.org/1999/xhtml">
-      <a href="${event/url}" class="${event/status}">${event/title}</a>
-      <p>${cell/content/description}</p>
+    <td class="color${cal}" xmlns="http://www.w3.org/1999/xhtml">
+      <a href="${url}" class="${status}">${title}</a>
+      <p>${description}</p>
     </td>""")
 
 # Template to display events with timetables
@@ -377,7 +377,7 @@ def get_grid_data(data, grid, start_date=None, templates=(None, None),
             start, end = event['start'], event['end']
             # Put the event in the right place
             if not event['TIME']:
-                event['ns'] = stl(template_fd, {'event': event})
+                event['ns'] = stl(template_fd, event)
                 full_day.append(event)
             else:
                 start, end = Time.decode(start), Time.decode(end)
