@@ -93,6 +93,10 @@ class WebSite(RoleAware, Folder):
         captcha_question=Unicode(source='metadata', default=u"2 + 3"),
         captcha_answer=Unicode(source='metadata', default=u"5"))
 
+    # XXX Usefull for the update method (i.e update_20100630)
+    # To remove in ikaaro 0.70
+    class_schema_extensible = True
+
 
     def init_resource(self, **kw):
         Folder.init_resource(self, **kw)
