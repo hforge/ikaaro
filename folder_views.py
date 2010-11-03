@@ -25,8 +25,7 @@ except ImportError:
 
 # Import from itools
 from itools.core import merge_dicts
-from itools.database import AndQuery, OrQuery, PhraseQuery, TextQuery
-from itools.database import StartQuery
+from itools.database import AndQuery, NotQuery, OrQuery, PhraseQuery, TextQuery
 from itools.datatypes import Boolean, Enumerate, Integer, String, Unicode
 from itools.gettext import MSG
 from itools.handlers import checkid
@@ -251,28 +250,27 @@ class Folder_BrowseContent(SearchForm):
 
 
     def get_search_types(self, resource, context):
-        # Compute children_formats
-        abspath = resource.get_abspath()
-        if abspath != '/':
-            query = StartQuery('abspath', '%s/' % abspath)
-            children = context.root.search(query).get_documents()
-            children_formats = set()
-            for child in children:
-                children_formats.add(child.format)
-        else:
-            children_formats =  context.database.catalog.get_unique_values(
-                                                                  'format')
-            # Don't show the root's format
-            children_formats.remove(context.root.class_id)
+        # 1. Build the query of all objects to search
+        path = resource.get_canonical_path()
+        query = get_base_path_query(str(path))
+        if resource.get_abspath() == '/':
+            theme_path = path.resolve_name('theme')
+            theme = get_base_path_query(str(theme_path), True)
+            query = AndQuery(query, NotQuery(theme))
 
-        # Do not show two options with the same title
+        # 2. Compute children_formats
+        children_formats = set()
+        for child in context.root.search(query).get_documents():
+            children_formats.add(child.format)
+
+        # 3. Do not show two options with the same title
         formats = {}
         for type in children_formats:
             cls = get_resource_class(type)
             title = cls.class_title.gettext()
             formats.setdefault(title, []).append(type)
 
-        # Build the namespace
+        # 4. Build the namespace
         types = []
         for title, type in formats.items():
             type = ','.join(type)
@@ -301,8 +299,14 @@ class Folder_BrowseContent(SearchForm):
         args = list(args)
 
         # Search in subtree
-        abspath = str(resource.get_canonical_path())
-        args.append(get_base_path_query(abspath))
+        path = resource.get_canonical_path()
+        query = get_base_path_query(str(path))
+        args.append(query)
+        # Exclude '/theme/'
+        if resource.get_abspath() == '/':
+            theme_path = path.resolve_name('theme')
+            theme = get_base_path_query(str(theme_path), True)
+            args.append(NotQuery(theme))
 
         # Filter by type
         search_type = context.query['search_type']
