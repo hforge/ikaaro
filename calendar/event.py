@@ -135,10 +135,7 @@ class Event_Edit(CalendarView, STLForm):
 
         # Ok
         method = context.get_cookie('method') or 'monthly_view'
-        if method in dir(calendar):
-            goto = ';%s?%s' % (method, date.today())
-        else:
-            goto = '../;%s?%s' % (method, date.today())
+        goto = '../;%s?%s' % (method, date.today())
 
         message = ERROR(u'Event definitely deleted.')
         return context.come_back(message, goto=goto)
