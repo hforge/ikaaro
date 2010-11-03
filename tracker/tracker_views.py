@@ -704,12 +704,14 @@ class Tracker_ExportToCSVForm(Tracker_View):
             datatype = schema[name]
             if datatype.multiple is True:
                 for value in value:
-                    widget = HiddenWidget(name, datatype=datatype, value=value)
-                    parameters.append(widget.render())
-            elif value:
-                widget = HiddenWidget(name, datatype=datatype, value=value)
-                parameters.append(widget.render())
-        namespace['search_parameters'] = parameters
+                    value = datatype.encode(value)
+                    parameters.append({'name': name, 'value': value})
+            else:
+                default = datatype.get_default()
+                if value != default:
+                    value = datatype.encode(value)
+                    parameters.append({'name': name, 'value': value})
+        namespace['hidden_fields'] = parameters
 
         return namespace
 

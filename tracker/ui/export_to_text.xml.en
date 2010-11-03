@@ -5,7 +5,8 @@
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
 <form action=";export_to_text" method="GET" id="form-table">
-  <stl:block stl:repeat="param search_parameters">${param}</stl:block>
+  <input type="hidden" name="${option/name}" value="${option/value}"
+    stl:repeat="option hidden_fields" />
 
   ${batch}
   ${table}
