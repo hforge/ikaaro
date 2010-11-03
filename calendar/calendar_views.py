@@ -664,11 +664,10 @@ class DailyView(CalendarView):
             uid = getattr(event, 'id', getattr(event, 'uid', None))
             events_by_index.setdefault(tt_start, [])
             events_by_index[tt_start].append({
+                'name': event.name,
                 'title': event.get_property('title'),
                 'tt_start': tt_start,
                 'tt_end': tt_end,
-                'resource_id': calendar_name,
-                'event_id': str(uid),
                 'colspan': tt_end - tt_start + 1})
 
         # Organize events in rows
@@ -725,13 +724,9 @@ class DailyView(CalendarView):
                            'evt_url': None}
                 # Add event
                 if event and tt_index == event['tt_start']:
-                    resource_id = event['resource_id']
-                    event_id = event['event_id']
-                    tmp_args = args.copy()
-                    tmp_args['resource'] = resource_id
-                    tmp_args['id'] = event_id
                     if with_edit_url:
-                        go_url = ';edit_event?%s' % encode_query(tmp_args)
+                        go_url = '%s/;edit?%s'
+                        go_url = go_url % (event['name'], encode_query(args))
                     else:
                         go_url = None
                     if show_conflicts and uid in conflicts_list:
@@ -774,8 +769,7 @@ class DailyView(CalendarView):
             'rows': rows_namespace,
             'header_columns': header_columns,
             'url': ';monthly_view?%s' % encode_query(args),
-            'rowspan': len(rows) + 1,
-        }
+            'rowspan': len(rows) + 1}
 
 
     def get_namespace(self, resource, context):
