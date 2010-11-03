@@ -322,12 +322,6 @@ class CalendarView(STLView):
     ######################################################################
     # Public API
     ######################################################################
-    def get_action_url(self, **kw):
-        """Action to call on form submission.
-        """
-        return None
-
-
     def search(self, calendar, query=None, **kw):
         if query is None:
             query = [ PhraseQuery(name, value) for name, value in kw.items() ]
@@ -399,10 +393,9 @@ class CalendarView(STLView):
             out_on = (e_dtstart < day and e_dtend > day)
 
             if starts_on or ends_on or out_on:
-                current_resource = resource
                 conflicts_list = set()
                 if show_conflicts:
-                    handler = current_resource.handler
+                    handler = resource.handler
                     conflicts = handler.get_conflicts(e_dtstart, e_dtend)
                     if conflicts:
                         for uids in conflicts:
@@ -411,10 +404,7 @@ class CalendarView(STLView):
                                               conflicts_list=conflicts_list,
                                               grid=grid, starts_on=starts_on,
                                               ends_on=ends_on, out_on=out_on)
-                if with_edit_url:
-                    url = current_resource.get_action_url(**ns_event)
-                else:
-                    url = None
+                url = ('%s/;edit' % event.name) if with_edit_url else None
                 ns_event['url'] = url
                 ns_event['cal'] = 0
                 if 'resource' in ns_event.keys():
@@ -501,7 +491,8 @@ class MonthlyView(CalendarView):
                     ns_day['nday'] = day.day
                     ns_day['selected'] = (day == today_date)
                     if with_new_url:
-                        ns_day['url'] = resource.get_action_url(day=day)
+                        url = ';new_resource?type=event&date=%s'
+                        ns_day['url'] = url % Date.encode(day)
                     # Insert events
                     ns_events, events = self.events_to_namespace(resource,
                         events, day, with_edit_url=with_edit_url)
