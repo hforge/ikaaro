@@ -35,6 +35,7 @@ from ikaaro.datatypes import FileDataType
 from ikaaro.messages import MSG_BAD_NAME, MSG_NAME_CLASH
 from ikaaro.registry import get_resource_class
 from ikaaro.resource_views import DBResource_AddBase
+from ikaaro.utils import generate_name
 from ikaaro.views import ContextMenu
 from page import WikiPage
 from page_views import ALLOWED_FORMATS
@@ -57,6 +58,7 @@ class WikiMenu(ContextMenu):
 
 
 class DBResource_ImportODT(DBResource_AddBase):
+
     template = '/ui/wiki/importodt.xml'
     element_to_add = 'odt'
 
@@ -132,8 +134,11 @@ class DBResource_ImportODT(DBResource_AddBase):
             level = heading.get_outline_level()
             max_level = max(level, max_level)
             lines = heading.get_formatted_text(lpod_context).splitlines()
+
             # Search for a free WikiPage name
             name = checkid(lines[1]) or 'invalid-name'
+            names = resource.get_names()
+            name = generate_name(name, names)
 
             # Build the link
             line = u'   ' * level + u'- `' + name + u'`_\n'
@@ -194,12 +199,12 @@ class DBResource_ImportODT(DBResource_AddBase):
             return self.get_site_root().get_default_language()
 
 
-    def do_import(self, resource, uri, form, template_name):
+    def do_import(self, resource, data, form, template_name):
         """Format the content of a rst book and create related resources.
         """
         from lpod.document import odf_get_document
         toc_depth = 0
-        document = odf_get_document(uri)
+        document = odf_get_document(StringIO(data))
         body = document.get_body()
         lpod_context = {'document': document,
                         'footnotes': [],
@@ -210,7 +215,7 @@ class DBResource_ImportODT(DBResource_AddBase):
         language = self.get_language(form['language'])
         links, toc_depth = self.format_content(resource, body, lpod_context)
         meta = self.format_meta(document, form, template_name, toc_depth,
-                language)
+                                language)
         cover = self.format_cover(resource, body, lpod_context)
         book = u' `%s`_\n%s\n%s' % (cover, meta, links)
 
@@ -251,22 +256,23 @@ class DBResource_ImportODT(DBResource_AddBase):
         """Insert a wikibook directly. The uploaded document is saved.
         """
         # Check the mimetype
-        file = form['file']
-        filename, mimetype, body = file
+        a_file = form['file']
+        filename, mimetype, body = a_file
         if mimetype not in ALLOWED_FORMATS:
             context.message = ERROR(u'"%s" is not an OpenDocument Text' %
                     filename)
             return
+
         # Save the file
         target_path = form['target_path']
-        template_name = self.save_template(context, file, target_path)
+        template_name = self.save_template(context, a_file, target_path)
         if template_name is None:
             return
+
         # Return javascript
         scripts = self.get_scripts(context)
         context.add_script(*scripts)
 
         # Build RST Book
-        buffer = StringIO(body)
-        wiki_book = self.do_import(resource, buffer, form, template_name)
+        wiki_book = self.do_import(resource, body, form, template_name)
         return self.get_javascript_return(context, wiki_book)
