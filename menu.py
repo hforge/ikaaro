@@ -526,8 +526,8 @@ class Menu(OrderedTable):
         site_root_abspath = self.get_site_root().get_abspath()
         handler = self.handler
         record_properties = handler.record_properties
-        links = []
 
+        links = set()
         for record in handler.get_records_in_order():
             # Target resources
             path = handler.get_record_value(record, 'path')
@@ -546,7 +546,7 @@ class Menu(OrderedTable):
                 except LookupError:
                     # If the resource does not exist, simply use the uri
                     link = str(uri)
-                links.append(link)
+                links.add(link)
 
             # Submenu resources
             if not 'child' in record_properties:
@@ -557,7 +557,7 @@ class Menu(OrderedTable):
                 child = container.get_resource(path, soft=True)
                 if child is not None:
                     uri = site_root_abspath.resolve(path)
-                    links.append(str(uri))
+                    links.add(str(uri))
 
         return links
 

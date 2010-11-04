@@ -390,7 +390,10 @@ class DBResource(CatalogAware, IResource):
         # Step 2. Index non-metadata properties
         values['name'] = self.name
         values['format'] = self.metadata.format
-        values['links'] = self.get_links()
+        links = self.get_links()
+        if type(links) is list: # TODO 'get_links' must return <set>
+            links = set(links)
+        values['links'] = list(links)
 
         # Parent path
         abspath = self.get_canonical_path()

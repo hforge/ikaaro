@@ -278,9 +278,9 @@ class DBResource_Links(Folder_BrowseContent):
 
     def get_items(self, resource, context):
         links = resource.get_links()
-        links = list(set(links))
-        query = OrQuery(*[ PhraseQuery('abspath', link)
-                           for link in links ])
+        if type(links) is list: # TODO 'get_links' must return <set>
+            links = set(links)
+        query = OrQuery(*[ PhraseQuery('abspath', link) for link in links ])
         return context.root.search(query)
 
 
