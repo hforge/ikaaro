@@ -32,7 +32,7 @@ from itools.handlers import checkid
 from itools.handlers.utils import transmap
 from itools.stl import set_prefix
 from itools.uri import get_reference, Path
-from itools.web import BaseView, STLForm, ERROR
+from itools.web import BaseView, STLForm, ERROR, get_context
 
 # Import from ikaaro
 from autoform import SelectWidget
@@ -336,6 +336,62 @@ class Folder_BrowseContent(SearchForm):
         return context.root.search(query)
 
 
+    def get_key_sorted_by_title(self):
+        def key(item):
+            return item.title.lower().translate(transmap)
+        return key
+
+
+    def get_key_sorted_by_format(self):
+        def key(item, cache={}):
+            format = item.format
+            if format in cache:
+                return cache[format]
+            cls = get_resource_class(format)
+            value = cls.class_title.gettext().lower().translate(transmap)
+            cache[format] = value
+            return value
+        return key
+
+
+    def get_key_sorted_by_last_author(self):
+        context = get_context()
+        def key(item, cache={}):
+            author = item.last_author
+            if author in cache:
+                return cache[author]
+            if author:
+                title = context.root.get_user_title(author)
+                value = title.lower().translate(transmap)
+            else:
+                value = None
+            cache[author] = value
+            return value
+        return key
+
+
+    def get_key_sorted_by_workflow_state(self):
+        def key(item, cache={}):
+            # Don't cache by state name because the same name could be
+            # translated differently in two workflows
+            format = item.format
+            workflow_state = item.workflow_state
+            cache_key = (format, workflow_state)
+            if cache_key in cache:
+                return cache[cache_key]
+            cls = get_resource_class(format)
+            if issubclass(cls, WorkflowAware):
+                state = cls.workflow.states[workflow_state]
+                value = state['title'].gettext().lower().translate(transmap)
+            else:
+                value = None
+            # Group by format
+            value = (value, format)
+            cache[cache_key] = value
+            return value
+        return key
+
+
     def sort_and_batch(self, resource, context, results):
         user = context.user
         root = context.root
@@ -345,32 +401,17 @@ class Folder_BrowseContent(SearchForm):
         sort_by = context.query['sort_by']
         reverse = context.query['reverse']
 
-        # "title" and "format" are multilingual
-        if sort_by == 'title':
+        get_key = getattr(self, 'get_key_sorted_by_' + sort_by, None)
+        if get_key:
+            # Custom but slower sort algorithm
             items = results.get_documents()
-            key = lambda x: x.title.lower().translate(transmap)
-            items.sort(key=key, reverse=reverse)
-            items = items[start: start + size]
-        elif sort_by == 'format':
-            items = results.get_documents()
-            # Make a dict {class_id: class_title}
-            formats = {}
-            for item in items:
-                format = item.format
-                if format not in formats:
-                    cls = get_resource_class(format)
-                    formats[format] = cls.class_title.gettext().lower()
-            # Make a list [(class_id, class_title), ...] sorted by class_title
-            formats = formats.items()
-            formats.sort(key=lambda x: x[1], reverse=reverse)
-            # Make a dict {class_id: sort-order}
-            table = {}
-            for idx, format in enumerate(formats):
-                table[format[0]] = idx
-            # Sort the items & batch
-            items.sort(key=lambda x: table[x.format])
-            items = items[start:start+size]
+            items.sort(key=get_key(), reverse=reverse)
+            if size:
+                items = items[start:start+size]
+            elif start:
+                items = items[start:]
         else:
+            # Faster Xapian sort algorithm
             items = results.get_documents(sort_by=sort_by, reverse=reverse,
                                           start=start, size=size)
 
