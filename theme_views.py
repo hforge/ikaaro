@@ -90,8 +90,9 @@ class Theme_Edit(DBResource_Edit):
 
     def _get_form(self, resource, context):
         form = DBResource_Edit._get_form(self, resource, context)
+        # Use form.get(xxx) because favicon and logo can be not defined
         # Check favicon
-        path = form['favicon']
+        path = form.get('favicon')
         if path:
             favicon = resource.get_resource(path, soft=True)
             if favicon is None:
@@ -111,7 +112,7 @@ class Theme_Edit(DBResource_Edit):
                 raise FormError, message(width=width, height=height)
 
         # Check logo
-        path = form['logo']
+        path = form.get('logo')
         if path:
             image = resource.get_resource(path, soft=True)
             if image is None:
