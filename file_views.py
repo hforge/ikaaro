@@ -53,7 +53,6 @@ class File_NewInstance(NewInstance):
         title_widget,
         TextWidget('name', title=MSG(u'Name'), default=''),
         FileWidget('file', title=MSG(u'File'), size=35)]
-    submit_value = MSG(u'Upload')
 
 
     def get_new_resource_name(self, form):

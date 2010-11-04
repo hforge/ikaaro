@@ -25,7 +25,7 @@ from itools.gettext import MSG
 from itools.web import INFO, ERROR, BaseView, FormError
 
 # Import from ikaaro
-from buttons import RemoveButton, OrderUpButton, OrderDownButton
+from buttons import Button, RemoveButton, OrderUpButton, OrderDownButton
 from buttons import OrderBottomButton, OrderTopButton
 import messages
 from resource_views import DBResource_Edit
@@ -238,7 +238,7 @@ class Table_AddRecord(Table_AddEditRecord):
 
     title = MSG(u'Add Record')
     icon = 'new.png'
-    submit_value = MSG(u'Add')
+    actions = [Button(access=True, css='button-ok', title=MSG(u'Add'))]
 
 
     def action_add_or_edit(self, resource, context, record):

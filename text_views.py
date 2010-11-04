@@ -29,7 +29,7 @@ from itools.web import STLForm, STLView, INFO
 from autoform import AutoForm, get_default_widget, MultilineWidget
 from autoform import timestamp_widget, description_widget, file_widget
 from autoform import subject_widget, title_widget
-from buttons import RemoveButton
+from buttons import Button, RemoveButton
 from file_views import File_Edit
 import messages
 from views import BrowseForm
@@ -257,7 +257,7 @@ class CSV_AddRow(RowForm):
 
     title = MSG(u'Add Row')
     icon = 'new.png'
-    submit_value = MSG(u'Add')
+    actions = [Button(access=True, css='button-ok', title=MSG(u'Add'))]
 
 
     def action(self, resource, context, form):

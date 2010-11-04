@@ -46,8 +46,6 @@ class EditLanguageMenu(ContextMenu):
     title = MSG(u'Configuration')
     template = '/ui/generic/edit_language_menu.xml'
     view = None
-    submit_value = MSG(u'Update')
-    submit_class = 'button-ok'
 
     def action(self):
         uri = self.context.uri
