@@ -105,62 +105,73 @@ class DBResource_ImportODT(DBResource_AddBase):
                 title={'en': title}, body=content)
 
 
-    def format_paragraph(self, paragraph, lpod_context):
-        """Format a paragraph with blank lines.
-        """
-        paragraph = paragraph.get_formatted_text(lpod_context)
-        return [u'', paragraph, u'']
-
-
-    def format_list(self, lpod_list, lpod_context):
-        """Format a list with indentation from an odf_list object.
-        """
-        lines = lpod_list.get_formatted_text(lpod_context).splitlines()
-        result = [u'']
-        for line in lines[1:-1]:
-           result.extend([u'   ', line, u''])
-        return result
-
-
     def format_content(self, resource, body, lpod_context):
         """Format the content of a rst book from a lpod document body.
         """
-        from lpod.list import odf_list
-        from lpod.paragraph import odf_paragraph
         links = u''
-        heading_list = body.get_heading_list()
         max_level = 0
-        for heading in heading_list:
+        for heading in body.get_heading_list():
+
+            # Compute level and update max_level
             level = heading.get_outline_level()
             max_level = max(level, max_level)
-            lines = heading.get_formatted_text(lpod_context).splitlines()
+
+            # Get the title
+            fake_context = dict(lpod_context)
+            fake_context['rst_mode'] = False
+            title = heading.get_formatted_text(fake_context)
+
+            # Start content with the title, but without the first '\n'
+            content = [heading.get_formatted_text(lpod_context)[1:]]
 
             # Search for a free WikiPage name
-            name = checkid(lines[1]) or 'invalid-name'
+            name = checkid(title) or 'invalid-name'
             names = resource.get_names()
             name = generate_name(name, names)
 
-            # Build the link
-            line = u'   ' * level + u'- `' + name + u'`_\n'
-            links = links + line
+            # Update links
+            links += u'   ' * level + u'- `' + name + u'`_\n'
 
             # Build the wiki page content from the odf
-            content = []
-            paragraph = heading.get_next_sibling()
-            # Write the note
-            while type(paragraph) in [odf_paragraph, odf_list]:
-                if type(paragraph) is odf_list:
-                    content += self.format_list(paragraph, lpod_context)
+            element = heading.get_next_sibling()
+            while element and element.get_tag() != 'text:h':
+                if element.get_tag() == 'table:table':
+                    content.append(element.get_formatted_text(lpod_context))
                 else:
-                    content += self.format_paragraph(paragraph, lpod_context)
-                paragraph = paragraph.get_next_sibling()
-            if content:
-                content = ['.. note::', ''] + content + ['']
-            # Write the title
-            content = lines[1:] + content
-            # Create the page
-            content = u'\n'.join(content).encode('utf-8')
-            self.add_wiki_page(resource, name, lines[1], content)
+                    content.append(element.get_formatted_text(lpod_context))
+                    # Insert the notes
+                    footnotes = lpod_context['footnotes']
+                    # Separate text from notes
+                    if footnotes:
+                        content.append(u'\n')
+                        for citation, body in footnotes:
+                            content.append(u'.. [#] %s\n' % body)
+                        # Append a \n after the notes
+                        content.append(u'\n')
+                        # Reset for the next paragraph
+                        lpod_context['footnotes'] = []
+                    # Insert the annotations
+                    annotations = lpod_context['annotations']
+                    # With a separation
+                    if annotations:
+                        content.append(u'\n')
+                        for annotation in annotations:
+                            content.append('.. [#] %s\n' % annotation)
+                        lpod_context['annotations'] = []
+
+                element = element.get_next_sibling()
+
+            # Append the end notes
+            endnotes = lpod_context['endnotes']
+            if endnotes:
+                content.append(u'\n\n')
+                for citation, body in endnotes:
+                    content.append(u'.. [*] %s\n' % body)
+
+            # Make content
+            content = u''.join(content).encode('utf-8').replace('\n', '\r\n')
+
+            self.add_wiki_page(resource, name, title, content)
 
         return links, max_level
 
