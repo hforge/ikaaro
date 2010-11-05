@@ -191,6 +191,21 @@ metadata.
   resource.get_property('last_author')
 
 
+(5) get_links method returns a set
+
+  # Before
+  links = []
+  links.append(simple_value)
+  links.extend(multiple_values)
+  return links
+
+  # Now
+  links = set()
+  links.add(simple_value)
+  links.update(multiple_values)
+  return links
+
+
 Index & Search
 =====================
 
