@@ -51,7 +51,7 @@ def _get_links(base, events):
            # Object
            # FIXME param tag can have both src and data attributes
            'object': 'data', 'param': 'src'}
-    links = []
+    links = set()
     for event, value, line in events:
         if event != START_ELEMENT:
             continue
@@ -85,7 +85,7 @@ def _get_links(base, events):
 
         uri = base.resolve2(path)
         uri = str(uri)
-        links.append(uri)
+        links.add(uri)
     return links
 
 
@@ -262,10 +262,10 @@ class WebPage(ResourceWithHTML, Multilingual, Text):
     def get_links(self):
         base = self.get_abspath()
         languages = self.get_site_root().get_property('website_languages')
-        links = []
+        links = set()
         for language in languages:
             handler = self.get_handler(language=language)
-            links.extend(_get_links(base, handler.events))
+            links.update(_get_links(base, handler.events))
         return links
 
 

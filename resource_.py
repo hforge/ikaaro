@@ -498,7 +498,7 @@ class DBResource(CatalogAware, IResource):
 
 
     def get_links(self):
-        return []
+        return set()
 
 
     ########################################################################

@@ -95,7 +95,7 @@ class Theme(Folder):
         for key in ('favicon', 'logo'):
             value = self.get_property(key)
             if value:
-                links.append(str(base.resolve2(value)))
+                links.add(str(base.resolve2(value)))
 
         return links
 

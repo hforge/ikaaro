@@ -136,7 +136,7 @@ class CSS(Text):
             else:
                 uri = base.resolve2(path)
 
-            links.append(str(uri))
+            links.add(str(uri))
 
         return links
 

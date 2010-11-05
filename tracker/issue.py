@@ -82,10 +82,10 @@ class Issue(Folder):
     def get_links(self):
         attachments = self.metadata.get_property('attachment')
         if not attachments:
-            return []
+            return set()
 
         base = self.get_canonical_path()
-        return [ str(base.resolve2(x.value)) for x in attachments ]
+        return set([ str(base.resolve2(x.value)) for x in attachments ])
 
 
     def update_links(self, source, target):

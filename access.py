@@ -447,7 +447,7 @@ class RoleAware(AccessControl):
 
 
     def get_links(self):
-        return [ '/users/%s' % x for x in self.get_members() ]
+        return set([ '/users/%s' % x for x in self.get_members() ])
 
 
     # FIXME This method belongs to WebSite
