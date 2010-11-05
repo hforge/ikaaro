@@ -122,7 +122,7 @@ class Folder(DBResource):
         return self.make_resource(name, cls, body=body, **kw)
 
 
-    def extract_archive(self, handler, language, filter=None):
+    def extract_archive(self, handler, language, filter=None, postproc=None):
         # Get the list of paths to extract
         paths = handler.get_contents()
         paths.sort()
@@ -154,7 +154,9 @@ class Folder(DBResource):
                 if body is None:
                     continue
 
-            folder._make_file(None, filename, mimetype, body, language)
+            file = folder._make_file(None, filename, mimetype, body, language)
+            if postproc:
+                postproc(file)
 
 
     def can_paste(self, source):
