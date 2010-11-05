@@ -29,6 +29,7 @@ from itools.uri import Path
 from itools.web import get_context, BaseView
 
 # Import from ikaaro
+from datatypes import guess_mimetype
 from exceptions import ConsistencyError
 from folder_views import Folder_BrowseContent
 from folder_views import Folder_NewResource, Folder_Orphans, Folder_Thumbnail
@@ -119,6 +120,36 @@ class Folder(DBResource):
             kw['extension'] = extension
 
         return self.make_resource(name, cls, body=body, **kw)
+
+
+    def extract_archive(self, handler, language):
+        # Get the list of paths to extract
+        paths = handler.get_contents()
+        paths.sort()
+
+        # Extract
+        for path_str in paths:
+            path = Path(path_str)
+
+            # Create parent folders if needed
+            folder = self
+            for name in path[:-1]:
+                subfolder = folder.get_resource(name, soft=True)
+                if subfolder is None:
+                    folder = folder.make_resource(name, Folder)
+                else:
+                    folder = subfolder
+
+            # Case 1: folder
+            filename = path[-1]
+            if path.endswith_slash:
+                folder.make_resource(filename, Folder)
+                continue
+
+            # Case 2: file
+            body = handler.get_file(path_str)
+            mimetype = guess_mimetype(filename, 'application/octet-stream')
+            folder._make_file(None, filename, mimetype, body, language)
 
 
     def can_paste(self, source):

@@ -28,14 +28,13 @@ from itools.datatypes import Integer, Unicode, String, HTTPDate, PathDataType
 from itools.fs import FileName
 from itools.gettext import MSG
 from itools.handlers import get_handler_class_by_mimetype
-from itools.uri import Path
 from itools.web import BaseView, STLView, STLForm, ERROR
 
 # Import from ikaaro
 from autoform import title_widget, description_widget, subject_widget
 from autoform import file_widget, timestamp_widget
 from autoform import FileWidget, PathSelectorWidget, TextWidget
-from datatypes import FileDataType, ImageWidth, guess_mimetype
+from datatypes import FileDataType, ImageWidth
 from messages import MSG_NEW_RESOURCE, MSG_UNEXPECTED_MIMETYPE
 from resource_views import DBResource_Edit
 from views_new import NewInstance
@@ -451,8 +450,6 @@ class Archive_View(STLForm):
 
 
     def action(self, resource, context, form):
-        from folder import Folder
-
         # Get the list of paths to extract
         handler = resource.handler
         paths = handler.get_contents()
@@ -464,28 +461,7 @@ class Archive_View(STLForm):
 
         # Make the resources
         language = resource.get_edit_languages(context)[0]
-        for path_str in paths:
-            path = Path(path_str)
-
-            # Create parent folders if needed
-            folder = target
-            for name in path[:-1]:
-                subfolder = folder.get_resource(name, soft=True)
-                if subfolder is None:
-                    folder = folder.make_resource(name, Folder)
-                else:
-                    folder = subfolder
-
-            # Case 1: folder
-            filename = path[-1]
-            if path.endswith_slash:
-                folder.make_resource(filename, Folder)
-                continue
-
-            # Case 2: file
-            body = handler.get_file(path_str)
-            mimetype = guess_mimetype(filename, 'application/octet-stream')
-            folder._make_file(None, filename, mimetype, body, language)
+        target.extract_archive(handler, language)
 
         # Ok
         message = MSG(u'Files extracted')
