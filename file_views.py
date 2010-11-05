@@ -451,19 +451,12 @@ class Archive_View(STLForm):
 
 
     def action(self, resource, context, form):
-        from file import TarArchive
         from folder import Folder
 
         # Get the list of paths to extract
         handler = resource.handler
         paths = handler.get_contents()
         paths.sort()
-        # Tar does not add trailing slash to directory
-        if isinstance(resource, TarArchive):
-            tar = handler._open_tarfile()
-            paths = [
-                ('%s/' % x) if tar.getmember(x).isdir() else x for x in paths ]
-            tar.close()
 
         # Get the target resource
         target = form['target']
