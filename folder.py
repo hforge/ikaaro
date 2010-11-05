@@ -122,7 +122,7 @@ class Folder(DBResource):
         return self.make_resource(name, cls, body=body, **kw)
 
 
-    def extract_archive(self, handler, language):
+    def extract_archive(self, handler, language, filter=None):
         # Get the list of paths to extract
         paths = handler.get_contents()
         paths.sort()
@@ -149,6 +149,11 @@ class Folder(DBResource):
             # Case 2: file
             body = handler.get_file(path_str)
             mimetype = guess_mimetype(filename, 'application/octet-stream')
+            if filter:
+                body = filter(path_str, mimetype, body)
+                if body is None:
+                    continue
+
             folder._make_file(None, filename, mimetype, body, language)
 
 
