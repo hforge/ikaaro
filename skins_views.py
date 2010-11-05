@@ -148,4 +148,4 @@ class LocationTemplate(CMSTemplate):
 
     @thingy_lazy_property
     def location(self):
-        return bool(self.breadcrumb) and bool(self.tabs)
+        return bool(self.breadcrumb) or bool(self.tabs)
