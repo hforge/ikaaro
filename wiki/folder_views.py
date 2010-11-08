@@ -25,6 +25,7 @@ from cStringIO import StringIO
 from itools.core import merge_dicts
 from itools.datatypes import Unicode, LanguageTag
 from itools.fs import FileName
+from itools.fs.common import get_mimetype
 from itools.gettext import MSG
 from itools.handlers import checkid
 from itools.i18n import get_language_name
@@ -105,7 +106,45 @@ class DBResource_ImportODT(DBResource_AddBase):
                 title={'en': title}, body=content)
 
 
-    def format_content(self, resource, body, lpod_context):
+    def convert_images(self, content, document, resource):
+        result = []
+        template = '.. image:: Pictures/'
+        for line in content.splitlines():
+            if line.startswith(template):
+
+                filename = line[len(template):]
+                data = document.get_part('Pictures/%s' % filename)
+                name, a_type, language = FileName.decode(filename)
+
+                # Check the filename is good
+                name = checkid(name)
+                if name is None:
+                    continue
+
+                # Check the name is free
+                if resource.get_resource(name, soft=True) is not None:
+                    continue
+
+                # Get mimetype / class
+                mimetype = get_mimetype(filename)
+                cls = get_resource_class(mimetype)
+
+                # Add the image
+                cls.make_resource(cls, resource, name, data, format=mimetype,
+                                  filename=filename, extension=a_type)
+
+                # And modify the page
+                result.append('.. figure:: %s' % name)
+                result.append('   :width: 350px')
+
+            else:
+                result.append(line)
+
+        return '\r\n'.join(result)
+
+
+
+    def format_content(self, resource, document, body, lpod_context):
         """Format the content of a rst book from a lpod document body.
         """
         links = u''
@@ -169,7 +208,8 @@ class DBResource_ImportODT(DBResource_AddBase):
                     content.append(u'.. [*] %s\n' % body)
 
             # Make content
-            content = u''.join(content).encode('utf-8').replace('\n', '\r\n')
+            content =  u''.join(content).encode('utf-8')
+            content = self.convert_images(content, document, resource)
 
             self.add_wiki_page(resource, name, title, content)
 
@@ -224,7 +264,8 @@ class DBResource_ImportODT(DBResource_AddBase):
                         'rst_mode': True}
 
         language = self.get_language(form['language'])
-        links, toc_depth = self.format_content(resource, body, lpod_context)
+        links, toc_depth = self.format_content(resource, document, body,
+                                               lpod_context)
         meta = self.format_meta(document, form, template_name, toc_depth,
                                 language)
         cover = self.format_cover(resource, body, lpod_context)
