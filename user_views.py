@@ -19,7 +19,7 @@
 
 # Import from itools
 from itools.core import freeze, merge_dicts
-from itools.datatypes import Email, String, Unicode
+from itools.datatypes import Email, String, Unicode, DateTime
 from itools.gettext import MSG
 from itools.i18n import get_language_name
 from itools.web import BaseView, STLView, STLForm, INFO, ERROR
@@ -29,10 +29,11 @@ from itools.database import PhraseQuery, AndQuery, OrQuery, StartQuery
 from pytz import common_timezones
 
 # Import from ikaaro
-from autoform import AutoForm
+from autoform import AutoForm, timestamp_widget
 from autoform import HiddenWidget, PasswordWidget, ReadOnlyWidget, TextWidget
 from folder import Folder_BrowseContent
 import messages
+from resource_views import DBResource_Edit
 
 
 class User_ConfirmRegistration(AutoForm):
@@ -169,18 +170,20 @@ class User_Profile(STLView):
 
 
 
-class User_EditAccount(AutoForm):
+class User_EditAccount(DBResource_Edit):
 
     access = 'is_allowed_to_edit'
     title = MSG(u'Edit Account')
     description = MSG(u'Edit your name and email address.')
     icon = 'card.png'
     schema = {
+        'timestamp': DateTime(readonly=True),
         'firstname': Unicode,
         'lastname': Unicode,
         'email': Email,
         'password': String}
-    widgets = [TextWidget('firstname', title=MSG(u"First Name")),
+    widgets = [timestamp_widget,
+               TextWidget('firstname', title=MSG(u"First Name")),
                TextWidget('lastname', title=MSG(u"Last Name")),
                TextWidget('email', title=MSG(u"E-mail Address"))]
 
@@ -201,14 +204,11 @@ class User_EditAccount(AutoForm):
     def get_value(self, resource, context, name, datatype):
         if name == 'password':
             return None
-        return resource.get_property(name)
+        return super(User_EditAccount, self).get_value(resource, context,
+                name, datatype)
 
 
     def action(self, resource, context, form):
-        firstname = form['firstname']
-        lastname = form['lastname']
-        email = form['email']
-
         # Check password to confirm changes
         is_same_user = (resource.name == context.user.name)
         if is_same_user:
@@ -221,6 +221,7 @@ class User_EditAccount(AutoForm):
 
         # If the user changes his email, check there is not already other
         # user with the same email in the database.
+        email = form['email']
         if email != resource.get_property('email'):
             results = context.root.search(email=email)
             if len(results):
@@ -229,12 +230,10 @@ class User_EditAccount(AutoForm):
                     u' try again.', email=email).gettext()
                 return
 
-        # Save changes
-        resource.set_property('firstname', firstname)
-        resource.set_property('lastname', lastname)
-        resource.set_property('email', email)
-        # Ok
-        context.message = INFO(u'Account changed.')
+        goto = super(User_EditAccount, self).action(resource, context, form)
+        if type(context.message) is INFO:
+            context.message = INFO(u'Account changed.')
+        return goto
 
 
 
