@@ -494,11 +494,11 @@ class RTEWidget(Widget):
                 'justifyleft,justifycenter,justifyright, justifyfull,|,'
                 'bullist,numlist,|, outdent, indent,|,undo,redo,|,link,'
                 'unlink,image,media')
-    toolbar2 = ('tablecontrols,|,removeformat,forecolor,backcolor,|,'
-                'formatselect')
+    toolbar2 = ('tablecontrols,|,nonbreaking,|,removeformat,forecolor,'
+                'backcolor,|,formatselect')
     toolbar3 = None
     resizing = True
-    plugins = 'safari,table,media,advimage,advlink'
+    plugins = 'safari,table,media,advimage,advlink,nonbreaking'
     # Extending the existing rule set.
     extended_valid_elements = None
     # css
