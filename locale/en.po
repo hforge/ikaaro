@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 0.3.0\n"
-"POT-Creation-Date: 2010-11-04 17:11+CET\n"
+"POT-Creation-Date: 2010-11-09 18:11+CET\n"
 "PO-Revision-Date: 2001-07-08 17:07+CET\n"
 "Last-Translator: jdavid\n"
 "Language-Team: ??\n"
@@ -534,7 +534,7 @@ msgctxt "legend"
 msgid "Access Forbidden"
 msgstr ""
 
-#: ../user_views.py:237
+#: ../user_views.py:235
 msgid "Account changed."
 msgstr ""
 
@@ -863,7 +863,7 @@ msgctxt "legend"
 msgid "Change metadata"
 msgstr ""
 
-#: ../user_views.py:295
+#: ../user_views.py:294
 msgid "Change your password."
 msgstr ""
 
@@ -908,7 +908,7 @@ msgstr ""
 msgid "Choose the security policy."
 msgstr ""
 
-#: ../user_views.py:41
+#: ../user_views.py:42
 msgid "Choose your password"
 msgstr ""
 
@@ -988,7 +988,7 @@ msgid ""
 "open web pages with the <g id='6'>application/x-restedit</g> mimetype"
 msgstr ""
 
-#: ../user_views.py:303
+#: ../user_views.py:302
 msgid "Confirm"
 msgstr ""
 
@@ -996,7 +996,7 @@ msgstr ""
 msgid "Confirmation required"
 msgstr ""
 
-#: ../user_views.py:124
+#: ../user_views.py:125
 msgid "Confirmation sent!"
 msgstr ""
 
@@ -1155,7 +1155,7 @@ msgctxt "li"
 msgid "Document Management."
 msgstr ""
 
-#: ../file_views.py:91 ../file_views.py:128
+#: ../file_views.py:90 ../file_views.py:127
 msgid "Download"
 msgstr ""
 
@@ -1164,7 +1164,7 @@ msgctxt "li"
 msgid "Download <g id='2'>restedit</g>"
 msgstr ""
 
-#: ../user_views.py:185
+#: ../user_views.py:188
 msgid "E-mail Address"
 msgstr ""
 
@@ -1177,7 +1177,7 @@ msgctxt "button"
 msgid "Edit"
 msgstr ""
 
-#: ../user_views.py:175
+#: ../user_views.py:176
 msgid "Edit Account"
 msgstr ""
 
@@ -1203,11 +1203,11 @@ msgctxt "button"
 msgid "Edit Issues"
 msgstr ""
 
-#: ../user_views.py:294
+#: ../user_views.py:293
 msgid "Edit Password"
 msgstr ""
 
-#: ../user_views.py:244
+#: ../user_views.py:243
 msgid "Edit Preferences"
 msgstr ""
 
@@ -1256,7 +1256,7 @@ msgstr ""
 msgid "Edit this search"
 msgstr ""
 
-#: ../user_views.py:176
+#: ../user_views.py:177
 msgid "Edit your name and email address."
 msgstr ""
 
@@ -1332,7 +1332,7 @@ msgctxt "legend"
 msgid "Export to Text:"
 msgstr ""
 
-#: ../file_views.py:213
+#: ../file_views.py:212
 msgid "External Editor"
 msgstr ""
 
@@ -1350,7 +1350,7 @@ msgstr ""
 msgid "Failed to load the file, may contain errors."
 msgstr ""
 
-#: ../file_views.py:180
+#: ../file_views.py:179
 msgid "Failed to load the file: {error}"
 msgstr ""
 
@@ -1363,7 +1363,7 @@ msgctxt "legend"
 msgid "Fields"
 msgstr ""
 
-#: ../file_views.py:55 ../file.py:52
+#: ../file_views.py:54 ../file.py:52
 msgid "File"
 msgstr ""
 
@@ -1377,11 +1377,11 @@ msgctxt "table cell"
 msgid "Filename"
 msgstr ""
 
-#: ../file_views.py:498
+#: ../file_views.py:467
 msgid "Files extracted"
 msgstr ""
 
-#: ../user_views.py:183 ../user_views.py:395 ../access.py:139
+#: ../user_views.py:186 ../user_views.py:394 ../access.py:139
 msgid "First Name"
 msgstr ""
 
@@ -1397,7 +1397,7 @@ msgstr ""
 msgid "Flash Document"
 msgstr ""
 
-#: ../folder.py:50
+#: ../folder.py:51
 msgid "Folder"
 msgstr ""
 
@@ -1688,7 +1688,7 @@ msgstr ""
 msgid "Last Modified"
 msgstr ""
 
-#: ../user_views.py:184 ../user_views.py:394 ../access.py:140
+#: ../user_views.py:187 ../user_views.py:393 ../access.py:140
 msgid "Last Name"
 msgstr ""
 
@@ -1720,7 +1720,7 @@ msgctxt "title attribute"
 msgid "Log out"
 msgstr ""
 
-#: ../user_views.py:393 ../resource_views.py:311 ../access.py:138
+#: ../user_views.py:392 ../resource_views.py:311 ../access.py:138
 msgid "Login"
 msgstr ""
 
@@ -1842,7 +1842,7 @@ msgctxt "li"
 msgid "Multiple web sites in one instance, with separate access rights."
 msgstr ""
 
-#: ../views_new.py:50 ../file_views.py:54 ../popup.py:67 ../views.py:442
+#: ../views_new.py:50 ../file_views.py:53 ../popup.py:67 ../views.py:442
 msgid "Name"
 msgstr ""
 
@@ -1878,7 +1878,7 @@ msgstr ""
 msgid "New page"
 msgstr ""
 
-#: ../user_views.py:302
+#: ../user_views.py:301
 msgid "New password"
 msgstr ""
 
@@ -2060,7 +2060,7 @@ msgstr ""
 msgid "Operating System"
 msgstr ""
 
-#: ../user_views.py:100
+#: ../user_views.py:101
 msgid "Operation successful! Welcome."
 msgstr ""
 
@@ -2096,7 +2096,7 @@ msgstr ""
 msgid "Ordered items"
 msgstr ""
 
-#: ../folder.py:51
+#: ../folder.py:52
 msgid "Organize your files and documents with folders."
 msgstr ""
 
@@ -2117,11 +2117,11 @@ msgctxt "li"
 msgid "Paolo Dina (Italian)"
 msgstr ""
 
-#: ../user_views.py:52 ../access.py:278
+#: ../user_views.py:53 ../access.py:278
 msgid "Password"
 msgstr ""
 
-#: ../user_views.py:334
+#: ../user_views.py:333
 msgid "Passwords mismatch, please try again."
 msgstr ""
 
@@ -2149,7 +2149,7 @@ msgstr ""
 msgid "Please answer the question below:"
 msgstr ""
 
-#: ../user_views.py:107
+#: ../user_views.py:108
 msgid "Please choose a new password for your account"
 msgstr ""
 
@@ -2241,7 +2241,7 @@ msgctxt "label"
 msgid "Product:"
 msgstr ""
 
-#: ../user_views.py:132
+#: ../user_views.py:133
 msgid "Profile"
 msgstr ""
 
@@ -2318,7 +2318,7 @@ msgstr ""
 msgid "Repeat Password"
 msgstr ""
 
-#: ../user_views.py:53
+#: ../user_views.py:54
 msgid "Repeat password"
 msgstr ""
 
@@ -2509,7 +2509,7 @@ msgstr ""
 msgid "See the users and their roles."
 msgstr ""
 
-#: ../user_views.py:357
+#: ../user_views.py:356
 msgid "See your pending tasks."
 msgstr ""
 
@@ -2538,7 +2538,7 @@ msgstr ""
 msgid "September"
 msgstr ""
 
-#: ../user_views.py:245
+#: ../user_views.py:244
 msgid "Set your preferred language and timezone."
 msgstr ""
 
@@ -2662,7 +2662,7 @@ msgstr ""
 msgid "Target"
 msgstr ""
 
-#: ../user_views.py:356
+#: ../user_views.py:355
 msgid "Tasks"
 msgstr ""
 
@@ -2718,7 +2718,7 @@ msgstr ""
 msgid "The email or the password is incorrect."
 msgstr ""
 
-#: ../theme_views.py:98 ../theme_views.py:118
+#: ../theme_views.py:99 ../theme_views.py:119
 msgid "The file \"{filename}\" doesn't exists."
 msgstr ""
 
@@ -2814,7 +2814,7 @@ msgstr ""
 msgid "There is already another resource with this name."
 msgstr ""
 
-#: ../user_views.py:228
+#: ../user_views.py:229
 msgid "There is another user with the email \"{email}\", please try again."
 msgstr ""
 
@@ -2884,7 +2884,7 @@ msgctxt "emphasis"
 msgid "Title:"
 msgstr ""
 
-#: ../user_views.py:42
+#: ../user_views.py:43
 msgid "To activate your account, please type a password."
 msgstr ""
 
@@ -2899,7 +2899,7 @@ msgid ""
 " {uri}"
 msgstr ""
 
-#: ../user_views.py:195
+#: ../user_views.py:198
 msgid "To confirm these changes, you must type your password"
 msgstr ""
 
@@ -2983,7 +2983,7 @@ msgid ""
 "Type the hostnames this website will apply to, each one in a different line."
 msgstr ""
 
-#: ../user_views.py:315
+#: ../user_views.py:314
 msgid "Type your current password"
 msgstr ""
 
@@ -3010,7 +3010,7 @@ msgstr ""
 msgid "Unexpected file of mimetype {mimetype}."
 msgstr ""
 
-#: ../theme_views.py:110
+#: ../theme_views.py:111
 msgid "Unexpected file of size {width}x{height}."
 msgstr ""
 
@@ -3063,7 +3063,7 @@ msgctxt "legend"
 msgid "Upload"
 msgstr ""
 
-#: ../file_views.py:47
+#: ../file_views.py:46
 msgid "Upload File"
 msgstr ""
 
@@ -3104,7 +3104,7 @@ msgstr ""
 msgid "User added."
 msgstr ""
 
-#: ../user_views.py:118
+#: ../user_views.py:119
 msgid "User has already confirmed his registration!"
 msgstr ""
 
@@ -3112,11 +3112,11 @@ msgstr ""
 msgid "User {user} already saved this document, click \"Save\" again to force."
 msgstr ""
 
-#: ../user_views.py:133
+#: ../user_views.py:134
 msgid "User's profile page."
 msgstr ""
 
-#: ../user_views.py:51
+#: ../user_views.py:52
 msgid "Username"
 msgstr ""
 
@@ -3164,8 +3164,8 @@ msgstr ""
 msgid "Video"
 msgstr ""
 
-#: ../file_views.py:335 ../file_views.py:420 ../file_views.py:432
-#: ../file_views.py:506 ../text_views.py:85 ../text_views.py:164
+#: ../file_views.py:334 ../file_views.py:419 ../file_views.py:431
+#: ../file_views.py:475 ../text_views.py:85 ../text_views.py:164
 #: ../blog/blog.py:86 ../tracker/tracker_views.py:306 ../user.py:311
 #: ../table_views.py:40 ../menu.py:642 ../future/order.py:247
 #: ../future/order.py:277 ../webpage.py:162 ../folder_views.py:87
@@ -3303,7 +3303,7 @@ msgid ""
 "password."
 msgstr ""
 
-#: ../user_views.py:218 ../user_views.py:326
+#: ../user_views.py:218 ../user_views.py:325
 msgid "You mistyped your actual password, your account is not changed."
 msgstr ""
 
