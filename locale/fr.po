@@ -1560,7 +1560,7 @@ msgstr "Allemand"
 
 #: ../revisions_views.py:246
 msgid "Git failed: {error}"
-msgstr "Échec de Git&nbpsp;: {error}"
+msgstr "Échec de Git&nbsp;: {error}"
 
 #: ../tracker/tracker_views.py:198
 msgid "Give the title of one Product"

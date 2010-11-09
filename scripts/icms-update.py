@@ -326,7 +326,7 @@ if __name__ == '__main__':
     parser.add_option('-y', '--yes', action='store_true', dest='confirm',
         help="start the update without asking confirmation")
     parser.add_option('--force', action='store_true', default=False,
-        help="continue the upgrade process in spit of errors")
+        help="continue the upgrade process in spite of errors")
     parser.add_option('--profile',
         help="print profile information to the given file")
 
