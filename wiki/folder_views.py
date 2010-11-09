@@ -229,11 +229,22 @@ class DBResource_ImportODT(DBResource_AddBase):
         return u"\n".join(content).encode('utf_8')
 
 
-    def format_cover(self, resource, body, lpod_context):
+    def format_cover(self, resource, document):
         """Format the cover and return his name.
         """
-        self.add_wiki_page(resource, 'cover', u'Cover', '')
-        return 'cover'
+        # Compute an explicit name
+        title = document.get_meta().get_title()
+        if title:
+            name = 'cover_%s' % checkid(title)
+        else:
+            name = 'cover'
+        name = generate_name(name, resource.get_names())
+
+        # Add the wiki page
+        # XXX FINISH ME, the wiki page is empty !!
+        self.add_wiki_page(resource, name, u'Cover', '')
+
+        return name
 
 
     def get_language(self, language):
@@ -268,7 +279,7 @@ class DBResource_ImportODT(DBResource_AddBase):
                                                lpod_context)
         meta = self.format_meta(document, form, template_name, toc_depth,
                                 language)
-        cover = self.format_cover(resource, body, lpod_context)
+        cover = self.format_cover(resource, document)
         book = u' `%s`_\n%s\n%s' % (cover, meta, links)
 
         # Escape \n for javascript
