@@ -39,7 +39,7 @@ from itools.gettext import MSG
 from itools.handlers import ConfigFile, ro_database
 from itools.stl import stl
 from itools.uri import Path
-from itools.web import BaseView, get_context
+from itools.web import BaseView, get_context, crypt_password
 
 # Import from ikaaro
 from config import get_config
@@ -47,7 +47,6 @@ from folder import Folder
 from registry import get_resource_class
 from skins import UI, ui_path
 from user import UserFolder
-from utils import crypt_password
 from website import WebSite
 
 

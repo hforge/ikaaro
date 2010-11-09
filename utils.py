@@ -17,8 +17,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
-from random import sample
-from hashlib import sha1
 from sys import platform
 
 # Import from itools
@@ -134,18 +132,6 @@ def reduce_string(title='', word_treshold=15, phrase_treshold=40):
             title += ellipsis
     return title
 
-
-###########################################################################
-# User and Authentication
-###########################################################################
-# ASCII letters and digits, except the characters: 0, O, 1, l
-tokens = 'abcdefghijkmnopqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ23456789'
-def generate_password(length=6):
-    return ''.join(sample(tokens, length))
-
-
-def crypt_password(password):
-    return sha1(password).digest()
 
 
 ###########################################################################

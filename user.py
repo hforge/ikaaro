@@ -25,11 +25,10 @@ from itools.core import freeze, merge_dicts
 from itools.datatypes import Email, String, Unicode
 from itools.gettext import MSG
 from itools.uri import Path, Reference
-from itools.web import INFO
+from itools.web import INFO, crypt_password, generate_password, Password
 
 # Import from ikaaro
 from access import AccessControl
-from datatypes import Password
 from folder import Folder
 from registry import get_resource_class
 from resource_views import DBResource_Edit
@@ -37,7 +36,6 @@ from user_views import User_ConfirmRegistration, User_EditAccount
 from user_views import User_EditPassword, User_EditPreferences, User_Profile
 from user_views import User_ResendConfirmation, User_Tasks
 from user_views import User_ChangePasswordForgotten, UserFolder_BrowseContent
-from utils import crypt_password, generate_password
 from views import MessageView
 
 
@@ -143,12 +141,7 @@ class User(AccessControl, Folder):
     def set_auth_cookie(self, context, password):
         username = str(self.name)
         crypted = crypt_password(password)
-        cookie = Password.encode('%s:%s' % (username, crypted))
-        expires = context.get_form_value('iAuthExpires')
-        if expires is None:
-            context.set_cookie('__ac', cookie, path='/')
-        else:
-            context.set_cookie('__ac', cookie, path='/', expires=expires)
+        context.set_auth_cookie(username, crypted)
 
 
     def get_timezone(self):
