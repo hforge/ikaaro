@@ -29,6 +29,7 @@ from itools.database import AndQuery, NotQuery, OrQuery, PhraseQuery, TextQuery
 from itools.datatypes import Boolean, Enumerate, Integer, String, Unicode
 from itools.gettext import MSG
 from itools.handlers import checkid
+from itools.handlers.utils import transmap
 from itools.stl import set_prefix
 from itools.uri import get_reference, Path
 from itools.web import BaseView, STLForm, ERROR
@@ -347,7 +348,8 @@ class Folder_BrowseContent(SearchForm):
         # "title" and "format" are multilingual
         if sort_by == 'title':
             items = results.get_documents()
-            items.sort(key=lambda x: x.title.lower(), reverse=reverse)
+            key = lambda x: x.title.lower().translate(transmap)
+            items.sort(key=key, reverse=reverse)
             items = items[start: start + size]
         elif sort_by == 'format':
             items = results.get_documents()
