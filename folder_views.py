@@ -347,9 +347,8 @@ class Folder_BrowseContent(SearchForm):
         # "title" and "format" are multilingual
         if sort_by == 'title':
             items = results.get_documents()
-            items = [ (item.title.lower(), item) for item in items ]
-            items.sort(reverse=reverse)
-            items = [ item[1] for item in items][start: start + size]
+            items.sort(key=lambda x: x.title.lower(), reverse=reverse)
+            items = items[start: start + size]
         elif sort_by == 'format':
             items = results.get_documents()
             # Make a dict {class_id: class_title}
