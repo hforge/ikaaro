@@ -28,39 +28,6 @@ from autoform import SelectWidget
 
 
 
-class StateEnumerate(Enumerate):
-
-    default = ''
-
-    def get_options(self):
-        resource = self.resource
-        states = resource.workflow.states
-        state = resource.get_state()
-
-        ac = resource.get_access_control()
-        user = self.context.user
-
-        # Possible states
-        options = [
-            trans.state_to
-            for name, trans in state.transitions.items()
-            if ac.is_allowed_to_trans(user, resource, name) ]
-        options = set(options)
-        options.add(resource.get_statename())
-
-        # Options
-        options = [
-           {'name': x, 'value': states[x].metadata['title'].gettext()}
-           for x in options ]
-
-        options.sort(key=lambda x: x['value'])
-        return options
-
-
-state_widget = SelectWidget('state', title=MSG(u'State'),
-                            has_empty_option=False)
-
-
 ###########################################################################
 # Model
 ###########################################################################
@@ -141,3 +108,58 @@ def get_workflow_preview(resource, context):
     # TODO Include the template in the base table
     state = '<span class="wf-%s">%s</span>' % (statename, msg)
     return XMLParser(state)
+
+
+###########################################################################
+# Datatypes and widgets
+###########################################################################
+
+class StateEnumerate(Enumerate):
+
+    default = ''
+
+    def get_options(self):
+        resource = self.resource
+        states = resource.workflow.states
+        state = resource.get_state()
+
+        ac = resource.get_access_control()
+        user = self.context.user
+
+        # Possible states
+        options = [
+            trans.state_to
+            for name, trans in state.transitions.items()
+            if ac.is_allowed_to_trans(user, resource, name) ]
+        options = set(options)
+        options.add(resource.get_statename())
+
+        # Options
+        options = [
+           {'name': x, 'value': states[x].metadata['title'].gettext()}
+           for x in options ]
+
+        options.sort(key=lambda x: x['value'])
+        return options
+
+
+
+class StaticStateEnumerate(Enumerate):
+
+    workflow = WorkflowAware.workflow
+
+    def get_options(cls):
+        states = cls.workflow.states
+
+        # Options
+        options = [
+           {'name': x, 'value': states[x].metadata['title'].gettext()}
+           for x in states.keys() ]
+
+        options.sort(key=lambda x: x['value'])
+        return options
+
+
+
+state_widget = SelectWidget('state', title=MSG(u'State'),
+                            has_empty_option=False)

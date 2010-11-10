@@ -38,6 +38,7 @@ from folder_views import Folder_BrowseContent
 import messages
 from registry import get_resource_class
 from utils import reduce_string
+from workflow import state_widget, StaticStateEnumerate, WorkflowAware
 
 
 
@@ -247,7 +248,8 @@ class DBResource_AddBase(STLForm):
     query_schema = merge_dicts(Folder_BrowseContent.query_schema,
                                search_schema, target=String)
     action_upload_schema = merge_dicts(schema, title=Unicode,
-                                       file=FileDataType(mandatory=True))
+                                       file=FileDataType(mandatory=True),
+                                       state=String(mandatory=True))
 
 
     def get_configuration(self):
@@ -336,6 +338,10 @@ class DBResource_AddBase(STLForm):
         namespace['target_id'] = context.get_form_value('target_id')
         namespace['message'] = context.message
         namespace['mode'] = context.get_form_value('mode')
+        # add state widget
+        # FIXME default state
+        widget = state_widget(datatype=StaticStateEnumerate, value='private')
+        namespace['state_widget'] = widget
         namespace['scripts'] = self.get_scripts(context)
         namespace['styles'] = site_root.get_skin(context).get_styles(context)
         browse_content = self.browse_content_class(\
@@ -397,9 +403,16 @@ class DBResource_AddBase(STLForm):
             context.message = ERROR(error)
             return
 
+        kw = {'body': body,
+              'format': mimetype,
+              'filename': filename,
+              'extension': type}
+        # WorkflowAware class
+        if issubclass(cls, WorkflowAware):
+            kw['state'] = form['state']
+
         # Add the image to the resource
-        child = container.make_resource(name, cls, body=body, format=mimetype,
-                                        filename=filename, extension=type)
+        child = container.make_resource(name, cls, **kw)
         # The title
         language = resource.get_edit_languages(context)[0]
         title = Property(title, lang=language)
@@ -435,7 +448,8 @@ class DBResource_AddLink(DBResource_AddBase):
     browse_content_class = AddBase_BrowseContent
 
     action_add_resource_schema = merge_dicts(DBResource_AddBase.schema,
-                                             title=Unicode(mandatory=True))
+                                             title=Unicode(mandatory=True),
+                                             state=String(mandatory=True))
 
     text_values = {'title': MSG(u'Insert link'),
        'browse': MSG(u'Browse and link to a File from the workspace'),
@@ -471,6 +485,9 @@ class DBResource_AddLink(DBResource_AddBase):
         cls = self.get_page_type(mode)
         # Create the resource
         child = container.make_resource(name, cls)
+        # WorkflowAware resource
+        if isinstance(child, WorkflowAware):
+            child.set_property('state', form['state'])
         path = context.resource.get_pathto(child)
         scripts = self.get_scripts(context)
         context.add_script(*scripts)
