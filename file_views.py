@@ -265,6 +265,8 @@ class File_ExternalEdit(BaseView):
 
            The header-name does not contain ":" and the header-body does not
            contain "\n"
+        4- the header-name and the header-body are both in UTF-8 encoded.
+           The rest of the file can use an other encoding.
         """
         encoding = context.get_form_value('encoding')
 
@@ -272,7 +274,7 @@ class File_ExternalEdit(BaseView):
         handler = resource.handler
         title = resource.get_property('title')
         if title:
-            title = title.encode(encoding or 'UTF-8')
+            title = title.encode('UTF-8')
         else:
             title = resource.name
 
