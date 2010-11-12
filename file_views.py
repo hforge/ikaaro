@@ -211,11 +211,7 @@ class File_ExternalEdit_View(STLView):
     template = '/ui/file/externaledit.xml'
     title = MSG(u'External Editor')
     icon = 'external.png'
-    encodings = None
 
-
-    def get_namespace(self, resource, context):
-        return {'encodings': self.encodings}
 
 
 
@@ -226,34 +222,24 @@ class File_ExternalEdit(BaseView):
 
     def GET(self, resource, context):
         """Protocol used (with restedit.py):
-        1- we add a header to the content of the file.
-        2- the header is separated from the rest of the file by a "\n\n".
-        3- an entry in the header is:
+        1- We add a header to the content of the file
+        2- The header is separated from the rest of the file by a "\n\n".
+        3- An entry in the header is:
 
            header-name:header-body\n
 
            The header-name does not contain ":" and the header-body does not
            contain "\n"
-        4- the header-name and the header-body are both in UTF-8 encoded.
-           The rest of the file can use an other encoding.
+        4- Everything is sent in utf-8
         """
-        encoding = context.get_form_value('encoding')
-
         uri = context.uri
         handler = resource.handler
-        title = resource.get_property('title')
-        if title:
-            title = title.encode('UTF-8')
-        else:
-            title = resource.name
-
-        soup_message = context.soup_message
         header = [
             'url:%s://%s%s' % (uri.scheme, uri.authority, uri.path[:-1]),
             'last-modified:%s' % HTTPDate.encode(resource.get_mtime()),
             'content_type:%s' % handler.get_mimetype(),
-            'cookie:%s' % soup_message.get_header('Cookie'),
-            'title:%s' % title]
+            'cookie:%s' % context.soup_message.get_header('Cookie'),
+            'title:%s' % resource.get_title().encode('utf-8')]
 
         # Try to guess the extension (optional)
         filename = resource.get_property('filename')
@@ -273,6 +259,7 @@ class File_ExternalEdit(BaseView):
         # Add the "\n\n" and make the header
         header.append('\n')
         header = '\n'.join(header)
+        data = handler.to_str()
 
         # TODO known bug from ExternalEditor requires rfc1123_date()
         # Using RESPONSE.setHeader('Pragma', 'no-cache') would be better, but
@@ -280,13 +267,6 @@ class File_ExternalEdit(BaseView):
         # cf. http://support.microsoft.com/support/kb/articles/q316/4/31.asp
         #context.set_header('Last-Modified', rfc1123_date())
         context.set_header('Pragma', 'no-cache')
-
-        # Encoding
-        if encoding is None:
-            data = handler.to_str()
-        else:
-            data = handler.to_str(encoding)
-
         context.content_type = 'application/x-restedit'
         context.set_content_disposition('inline', '%s.restedit' %
                                         resource.name)

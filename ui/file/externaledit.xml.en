@@ -28,13 +28,6 @@
   <p>Once <em>restedit</em> is installed, just click the button below:</p>
   <blockquote>
   <form action=";external_edit" method="get">
-    <stl:block stl:if="encodings">
-      <label for="encoding">Character encoding</label><br/>
-      <select id="encoding" name="encoding">
-        <option stl:repeat="encoding encodings" value="${encoding/value}"
-          selected="${encoding/is_selected}">${encoding/title}</option>
-      </select>
-    </stl:block>
     <p>
     <button type="submit" class="button-external">External Editor...</button>
     </p>
