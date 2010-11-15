@@ -419,27 +419,19 @@ class Tracker_View(BrowseForm):
             table_handler = resource.get_resource(sort_by).handler
             sorted_ids = list(table_handler.get_record_ids_in_order())
 
-            def cmp_xy(x, y):
+            def key(x):
                 x_value = getattr(x, sort_by)
                 try:
-                    x_idx = sorted_ids.index(x_value)
+                    return sorted_ids.index(x_value)
                 except ValueError:
-                    x_idx = None
+                    return None
 
-                y_value = getattr(y, sort_by)
-                try:
-                    y_idx = sorted_ids.index(y_value)
-                except ValueError:
-                    y_idx = None
-
-                return cmp(x_idx, y_idx)
-
-            # Sort issues
-            issues = results.get_documents()
-            issues.sort(cmp_xy, reverse=reverse)
+            # Sort
+            items = results.get_documents()
+            items.sort(key=key, reverse=reverse)
 
             # Return the result
-            return issues
+            return items
 
         # Case 3: something else
         return results.get_documents(sort_by=sort_by, reverse=reverse)
