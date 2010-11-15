@@ -24,6 +24,7 @@ from itools.core import merge_dicts, thingy_lazy_property
 from itools.csv import CSVFile, Property
 from itools.datatypes import Boolean, Integer, String, Unicode
 from itools.gettext import MSG
+from itools.handlers.utils import transmap
 from itools.stl import stl
 from itools.uri import encode_query, Reference
 from itools.web import BaseView, BaseForm, STLForm, FormError, INFO, ERROR
@@ -404,7 +405,14 @@ class Tracker_View(BrowseForm):
         if query['reverse'] is not None:
             reverse = query['reverse']
 
-        # If an ordered table => sort the result with its natural order
+        # Case 1: title
+        if sort_by == 'title':
+            items = results.get_documents()
+            key = lambda x: x.title.lower().translate(transmap)
+            items.sort(key=key, reverse=reverse)
+            return items
+
+        # Case 2: ordered table
         if sort_by in ('product', 'module', 'version', 'type', 'state',
                        'priority'):
             # Make the key function
@@ -433,7 +441,7 @@ class Tracker_View(BrowseForm):
             # Return the result
             return issues
 
-        # Else, ...
+        # Case 3: something else
         return results.get_documents(sort_by=sort_by, reverse=reverse)
 
 
