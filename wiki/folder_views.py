@@ -42,6 +42,250 @@ from page import WikiPage
 from page_views import ALLOWED_FORMATS
 
 
+
+#################################################################
+# Private API
+#################################################################
+def _convert_images(content, document, resource):
+    result = []
+    template = '.. image:: Pictures/'
+    for line in content.splitlines():
+        if line.startswith(template):
+
+            filename = line[len(template):]
+            data = document.get_part('Pictures/%s' % filename)
+            name, a_type, language = FileName.decode(filename)
+
+            # Check the filename is good
+            name = checkid(name)
+            if name is None:
+                continue
+
+            # Check the name is free
+            if resource.get_resource(name, soft=True) is not None:
+                continue
+
+            # Get mimetype / class
+            mimetype = get_mimetype(filename)
+            cls = get_resource_class(mimetype)
+
+            # Add the image
+            cls.make_resource(cls, resource, name, data, format=mimetype,
+                              filename=filename, extension=a_type)
+
+            # And modify the page
+            result.append('.. figure:: %s' % name)
+            result.append('   :width: 350px')
+
+        else:
+            result.append(line)
+
+    return '\r\n'.join(result)
+
+
+
+def _insert_notes_and_annotations(lpod_context, content):
+
+    # Insert the notes
+    footnotes = lpod_context['footnotes']
+    if footnotes:
+        content.append(u'\n')
+        for citation, body in footnotes:
+            content.append(u'.. [#] %s\n' % body)
+        # Append a \n after the notes
+        content.append(u'\n')
+        # Reset
+        lpod_context['footnotes'] = []
+
+    # Insert the annotations
+    annotations = lpod_context['annotations']
+    if annotations:
+        content.append(u'\n')
+        for annotation in annotations:
+            content.append('.. [#] %s\n' % annotation)
+        # Reset
+        lpod_context['annotations'] = []
+
+
+
+def _insert_endnotes(lpod_context, content):
+
+    # Insert the end notes
+    endnotes = lpod_context['endnotes']
+    if endnotes:
+        content.append(u'\n\n')
+        for citation, body in endnotes:
+            content.append(u'.. [*] %s\n' % body)
+        # Reset
+        lpod_context['endnotes'] = []
+
+
+
+def _format_meta(form, template_name, toc_depth, language):
+    """Format the metadata of a rst book from a lpod document.
+    """
+    content = []
+    content.append(u'   :template: %s' % template_name)
+    content.append(u'   :toc-depth: %s' % toc_depth)
+    for key in ['title', 'subject', 'comments', 'keywords']:
+        content.append(u'   :%s: %s' % (key,  form[key]))
+    content.append(u'   :language: %s' % language)
+    content.append(u'')
+    return u"\n".join(content).encode('utf_8')
+
+
+
+def _get_cover_name(resource, document, template_name):
+
+    # Compute an explicit name
+    name = document.get_meta().get_title()
+    if not name:
+        name = template_name
+    if name:
+        name = 'cover_%s' % checkid(name)
+    else:
+        name = 'cover'
+    return generate_name(name, resource.get_names())
+
+
+
+def _add_wiki_page(resource, name, title, content):
+    """Add a WikiPage in resource, with title and content set.
+    """
+    WikiPage.make_resource(WikiPage, resource, name,
+            title={'en': title}, body=content)
+
+
+
+def _format_content(resource, data, template_name):
+    """Format the content of a rst book from a lpod document.
+    """
+
+    # Get the body
+    from lpod.document import odf_get_document
+    document = odf_get_document(StringIO(data))
+    body = document.get_body()
+
+    # Create a context for the lpod functions
+    lpod_context = {'document': document,
+                    'footnotes': [],
+                    'endnotes': [],
+                    'annotations': [],
+                    'rst_mode': True}
+
+    # Main loop
+    name = None
+    title = 'Cover'
+    links = u''
+    max_level = 0
+    last_level = 1
+    content = []
+    for element in body.get_children():
+
+        # The headings are used to split the document
+        if element.get_tag() == 'text:h':
+
+            # 1- Save this page
+
+            # Generate the content
+            _insert_endnotes(lpod_context, content)
+            content =  u''.join(content).encode('utf-8')
+            content = _convert_images(content, document, resource)
+
+            # In the cover ?
+            if name is None:
+                name = cover = _get_cover_name(resource, document,
+                                               template_name)
+
+            # Add the page
+            _add_wiki_page(resource, name, title, content)
+
+            # 2- Prepare the next page
+
+            # Compute level and update max_level
+            level = element.get_outline_level()
+            max_level = max(level, max_level)
+
+            # Get the title
+            fake_context = dict(lpod_context)
+            fake_context['rst_mode'] = False
+            title = element.get_formatted_text(fake_context)
+
+            # Start a new content with the title, but without the first
+            # '\n'
+            content = [element.get_formatted_text(lpod_context)[1:]]
+
+            # Search for a free WikiPage name
+            name = checkid(title) or 'invalid-name'
+            names = resource.get_names()
+            name = generate_name(name, names)
+
+            # Update links (add eventually blank levels to avoid a problem
+            # with an inconsistency use of levels in the ODT file)
+            for x in range(last_level + 1, level):
+                links += u'   ' * x + u'-\n'
+            last_level = level
+            links += u'   ' * level + u'- `' + name + u'`_\n'
+
+        # The tables
+        elif element.get_tag() == 'table:table':
+            content.append(element.get_formatted_text(lpod_context))
+
+        # An other element
+        else:
+            content.append(element.get_formatted_text(lpod_context))
+            _insert_notes_and_annotations(lpod_context, content)
+
+
+    # 3- Save the last page
+
+    # Generate the content
+    _insert_endnotes(lpod_context, content)
+    content =  u''.join(content).encode('utf-8')
+    content = _convert_images(content, document, resource)
+
+    # In the cover ?
+    if name is None:
+        name = cover = _get_cover_name(resource, document, template_name)
+
+    # Add the page
+    _add_wiki_page(resource, name, title, content)
+
+    return cover, links, max_level
+
+
+
+def _save_template(context, a_file, target_path):
+    """Save the imported template.
+    """
+    filename, mimetype, body = a_file
+    name, type, language = FileName.decode(filename)
+    # Check the filename is good
+    name = checkid(name)
+    if name is None:
+        context.message = MSG_BAD_NAME
+        return
+
+    # Get the container
+    container = context.root.get_resource(target_path)
+
+    # Check the name is free
+    if container.get_resource(name, soft=True) is not None:
+        context.message = MSG_NAME_CLASH
+        return
+
+    # Add the image to the resource
+    cls = get_resource_class(mimetype)
+    cls.make_resource(cls, container, name, body, format=mimetype,
+                      filename=filename, extension=type)
+    return name
+
+
+
+#################################################################
+# Public API
+#################################################################
+
 class WikiMenu(ContextMenu):
     title = MSG(u'Wiki')
 
@@ -99,209 +343,6 @@ class DBResource_ImportODT(DBResource_AddBase):
         return ns
 
 
-    def add_wiki_page(self, resource, name, title, content):
-        """Add a WikiPage in resource, with title and content set.
-        """
-        WikiPage.make_resource(WikiPage, resource, name,
-                title={'en': title}, body=content)
-
-
-    def convert_images(self, content, document, resource):
-        result = []
-        template = '.. image:: Pictures/'
-        for line in content.splitlines():
-            if line.startswith(template):
-
-                filename = line[len(template):]
-                data = document.get_part('Pictures/%s' % filename)
-                name, a_type, language = FileName.decode(filename)
-
-                # Check the filename is good
-                name = checkid(name)
-                if name is None:
-                    continue
-
-                # Check the name is free
-                if resource.get_resource(name, soft=True) is not None:
-                    continue
-
-                # Get mimetype / class
-                mimetype = get_mimetype(filename)
-                cls = get_resource_class(mimetype)
-
-                # Add the image
-                cls.make_resource(cls, resource, name, data, format=mimetype,
-                                  filename=filename, extension=a_type)
-
-                # And modify the page
-                result.append('.. figure:: %s' % name)
-                result.append('   :width: 350px')
-
-            else:
-                result.append(line)
-
-        return '\r\n'.join(result)
-
-
-    def format_meta(self, form, template_name, toc_depth, language):
-        """Format the metadata of a rst book from a lpod document.
-        """
-        content = []
-        content.append(u'   :template: %s' % template_name)
-        content.append(u'   :toc-depth: %s' % toc_depth)
-        for key in ['title', 'subject', 'comments', 'keywords']:
-            content.append(u'   :%s: %s' % (key,  form[key]))
-        content.append(u'   :language: %s' % language)
-        content.append(u'')
-        return u"\n".join(content).encode('utf_8')
-
-
-    def get_cover_name(self, resource, document, template_name):
-
-        # Compute an explicit name
-        name = document.get_meta().get_title()
-        if not name:
-            name = template_name
-        if name:
-            name = 'cover_%s' % checkid(name)
-        else:
-            name = 'cover'
-        return generate_name(name, resource.get_names())
-
-
-    def insert_notes_and_annotations(self, lpod_context, content):
-
-        # Insert the notes
-        footnotes = lpod_context['footnotes']
-        if footnotes:
-            content.append(u'\n')
-            for citation, body in footnotes:
-                content.append(u'.. [#] %s\n' % body)
-            # Append a \n after the notes
-            content.append(u'\n')
-            # Reset
-            lpod_context['footnotes'] = []
-
-        # Insert the annotations
-        annotations = lpod_context['annotations']
-        if annotations:
-            content.append(u'\n')
-            for annotation in annotations:
-                content.append('.. [#] %s\n' % annotation)
-            # Reset
-            lpod_context['annotations'] = []
-
-
-    def insert_endnotes(self, lpod_context, content):
-
-        # Insert the end notes
-        endnotes = lpod_context['endnotes']
-        if endnotes:
-            content.append(u'\n\n')
-            for citation, body in endnotes:
-                content.append(u'.. [*] %s\n' % body)
-            # Reset
-            lpod_context['endnotes'] = []
-
-
-    def format_content(self, resource, data, template_name):
-        """Format the content of a rst book from a lpod document body.
-        """
-
-        # Get the body
-        from lpod.document import odf_get_document
-        document = odf_get_document(StringIO(data))
-        body = document.get_body()
-
-        # Create a context for the lpod functions
-        lpod_context = {'document': document,
-                        'footnotes': [],
-                        'endnotes': [],
-                        'annotations': [],
-                        'rst_mode': True}
-
-        # Main loop
-        name = None
-        title = 'Cover'
-        links = u''
-        max_level = 0
-        last_level = 1
-        content = []
-        for element in body.get_children():
-
-            # The headings are used to split the document
-            if element.get_tag() == 'text:h':
-
-                # 1- Save this page
-
-                # Generate the content
-                self.insert_endnotes(lpod_context, content)
-                content =  u''.join(content).encode('utf-8')
-                content = self.convert_images(content, document, resource)
-
-                # In the cover ?
-                if name is None:
-                    name = cover = self.get_cover_name(resource, document,
-                                                       template_name)
-
-                # Add the page
-                self.add_wiki_page(resource, name, title, content)
-
-                # 2- Prepare the next page
-
-                # Compute level and update max_level
-                level = element.get_outline_level()
-                max_level = max(level, max_level)
-
-                # Get the title
-                fake_context = dict(lpod_context)
-                fake_context['rst_mode'] = False
-                title = element.get_formatted_text(fake_context)
-
-                # Start a new content with the title, but without the first
-                # '\n'
-                content = [element.get_formatted_text(lpod_context)[1:]]
-
-                # Search for a free WikiPage name
-                name = checkid(title) or 'invalid-name'
-                names = resource.get_names()
-                name = generate_name(name, names)
-
-                # Update links (add eventually blank levels to avoid a problem
-                # with an inconsistency use of levels in the ODT file)
-                for x in range(last_level + 1, level):
-                    links += u'   ' * x + u'-\n'
-                last_level = level
-                links += u'   ' * level + u'- `' + name + u'`_\n'
-
-            # The tables
-            elif element.get_tag() == 'table:table':
-                content.append(element.get_formatted_text(lpod_context))
-
-            # An other element
-            else:
-                content.append(element.get_formatted_text(lpod_context))
-                self.insert_notes_and_annotations(lpod_context, content)
-
-
-        # 3- Save the last page
-
-        # Generate the content
-        self.insert_endnotes(lpod_context, content)
-        content =  u''.join(content).encode('utf-8')
-        content = self.convert_images(content, document, resource)
-
-        # In the cover ?
-        if name is None:
-            name = cover = self.get_cover_name(resource, document,
-                                               template_name)
-
-        # Add the page
-        self.add_wiki_page(resource, name, title, content)
-
-        return cover, links, max_level
-
-
     def get_language(self, language):
         """Format appropriate language code.
         """
@@ -320,42 +361,16 @@ class DBResource_ImportODT(DBResource_AddBase):
         """Format the content of a rst book and create related resources.
         """
 
-        cover, links, toc_depth = self.format_content(resource, data,
-                                                      template_name)
+        cover, links, toc_depth = _format_content(resource, data,
+                                                  template_name)
         language = self.get_language(form['language'])
-        meta = self.format_meta(form, template_name, toc_depth, language)
+        meta = _format_meta(form, template_name, toc_depth, language)
         book = u' `%s`_\n%s\n%s' % (cover, meta, links)
 
         # Escape \n for javascript
         book = book.replace(u'\n', u'\\n').encode('utf-8')
 
         return book
-
-
-    def save_template(self, context, file, target_path):
-        """Save the imported template.
-        """
-        filename, mimetype, body = file
-        name, type, language = FileName.decode(filename)
-        # Check the filename is good
-        name = checkid(name)
-        if name is None:
-            context.message = MSG_BAD_NAME
-            return
-
-        # Get the container
-        container = context.root.get_resource(target_path)
-
-        # Check the name is free
-        if container.get_resource(name, soft=True) is not None:
-            context.message = MSG_NAME_CLASH
-            return
-
-        # Add the image to the resource
-        cls = get_resource_class(mimetype)
-        cls.make_resource(cls, container, name, body, format=mimetype,
-                          filename=filename, extension=type)
-        return name
 
 
     def action_upload(self, resource, context, form):
@@ -371,7 +386,7 @@ class DBResource_ImportODT(DBResource_AddBase):
 
         # Save the file
         target_path = form['target_path']
-        template_name = self.save_template(context, a_file, target_path)
+        template_name = _save_template(context, a_file, target_path)
         if template_name is None:
             return
 
