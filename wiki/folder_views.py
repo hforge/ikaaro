@@ -149,6 +149,7 @@ class DBResource_ImportODT(DBResource_AddBase):
         """
         links = u''
         max_level = 0
+        last_level = 1
         for heading in body.get_heading_list():
 
             # Compute level and update max_level
@@ -168,7 +169,11 @@ class DBResource_ImportODT(DBResource_AddBase):
             names = resource.get_names()
             name = generate_name(name, names)
 
-            # Update links
+            # Update links (add eventually blank levels to avoid a problem with
+            #               an inconsistency use of levels in the ODT file)
+            for x in range(last_level + 1, level):
+                links += u'   ' * x + u'-\n'
+            last_level = level
             links += u'   ' * level + u'- `' + name + u'`_\n'
 
             # Build the wiki page content from the odf
@@ -212,7 +217,6 @@ class DBResource_ImportODT(DBResource_AddBase):
             content = self.convert_images(content, document, resource)
 
             self.add_wiki_page(resource, name, title, content)
-
         return links, max_level
 
 
