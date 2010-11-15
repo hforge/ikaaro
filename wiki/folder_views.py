@@ -229,13 +229,15 @@ class DBResource_ImportODT(DBResource_AddBase):
         return u"\n".join(content).encode('utf_8')
 
 
-    def format_cover(self, resource, document):
+    def format_cover(self, resource, document, template_name):
         """Format the cover and return his name.
         """
         # Compute an explicit name
-        title = document.get_meta().get_title()
-        if title:
-            name = 'cover_%s' % checkid(title)
+        name = document.get_meta().get_title()
+        if not name:
+            name = template_name
+        if name:
+            name = 'cover_%s' % checkid(name)
         else:
             name = 'cover'
         name = generate_name(name, resource.get_names())
@@ -279,7 +281,7 @@ class DBResource_ImportODT(DBResource_AddBase):
                                                lpod_context)
         meta = self.format_meta(document, form, template_name, toc_depth,
                                 language)
-        cover = self.format_cover(resource, document)
+        cover = self.format_cover(resource, document, template_name)
         book = u' `%s`_\n%s\n%s' % (cover, meta, links)
 
         # Escape \n for javascript
@@ -292,8 +294,7 @@ class DBResource_ImportODT(DBResource_AddBase):
         """Save the imported template.
         """
         filename, mimetype, body = file
-        decode = FileName.decode(filename)
-        name, type, language = decode
+        name, type, language = FileName.decode(filename)
         # Check the filename is good
         name = checkid(name)
         if name is None:
