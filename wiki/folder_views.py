@@ -143,84 +143,7 @@ class DBResource_ImportODT(DBResource_AddBase):
         return '\r\n'.join(result)
 
 
-
-    def format_content(self, resource, document, body, lpod_context):
-        """Format the content of a rst book from a lpod document body.
-        """
-        links = u''
-        max_level = 0
-        last_level = 1
-        for heading in body.get_heading_list():
-
-            # Compute level and update max_level
-            level = heading.get_outline_level()
-            max_level = max(level, max_level)
-
-            # Get the title
-            fake_context = dict(lpod_context)
-            fake_context['rst_mode'] = False
-            title = heading.get_formatted_text(fake_context)
-
-            # Start content with the title, but without the first '\n'
-            content = [heading.get_formatted_text(lpod_context)[1:]]
-
-            # Search for a free WikiPage name
-            name = checkid(title) or 'invalid-name'
-            names = resource.get_names()
-            name = generate_name(name, names)
-
-            # Update links (add eventually blank levels to avoid a problem with
-            #               an inconsistency use of levels in the ODT file)
-            for x in range(last_level + 1, level):
-                links += u'   ' * x + u'-\n'
-            last_level = level
-            links += u'   ' * level + u'- `' + name + u'`_\n'
-
-            # Build the wiki page content from the odf
-            element = heading.get_next_sibling()
-            while element and element.get_tag() != 'text:h':
-                if element.get_tag() == 'table:table':
-                    content.append(element.get_formatted_text(lpod_context))
-                else:
-                    content.append(element.get_formatted_text(lpod_context))
-                    # Insert the notes
-                    footnotes = lpod_context['footnotes']
-                    # Separate text from notes
-                    if footnotes:
-                        content.append(u'\n')
-                        for citation, body in footnotes:
-                            content.append(u'.. [#] %s\n' % body)
-                        # Append a \n after the notes
-                        content.append(u'\n')
-                        # Reset for the next paragraph
-                        lpod_context['footnotes'] = []
-                    # Insert the annotations
-                    annotations = lpod_context['annotations']
-                    # With a separation
-                    if annotations:
-                        content.append(u'\n')
-                        for annotation in annotations:
-                            content.append('.. [#] %s\n' % annotation)
-                        lpod_context['annotations'] = []
-
-                element = element.get_next_sibling()
-
-            # Append the end notes
-            endnotes = lpod_context['endnotes']
-            if endnotes:
-                content.append(u'\n\n')
-                for citation, body in endnotes:
-                    content.append(u'.. [*] %s\n' % body)
-
-            # Make content
-            content =  u''.join(content).encode('utf-8')
-            content = self.convert_images(content, document, resource)
-
-            self.add_wiki_page(resource, name, title, content)
-        return links, max_level
-
-
-    def format_meta(self, document, form, template_name, toc_depth, language):
+    def format_meta(self, form, template_name, toc_depth, language):
         """Format the metadata of a rst book from a lpod document.
         """
         content = []
@@ -233,9 +156,8 @@ class DBResource_ImportODT(DBResource_AddBase):
         return u"\n".join(content).encode('utf_8')
 
 
-    def format_cover(self, resource, document, template_name):
-        """Format the cover and return his name.
-        """
+    def get_cover_name(self, resource, document, template_name):
+
         # Compute an explicit name
         name = document.get_meta().get_title()
         if not name:
@@ -244,13 +166,140 @@ class DBResource_ImportODT(DBResource_AddBase):
             name = 'cover_%s' % checkid(name)
         else:
             name = 'cover'
-        name = generate_name(name, resource.get_names())
+        return generate_name(name, resource.get_names())
 
-        # Add the wiki page
-        # XXX FINISH ME, the wiki page is empty !!
-        self.add_wiki_page(resource, name, u'Cover', '')
 
-        return name
+    def insert_notes_and_annotations(self, lpod_context, content):
+
+        # Insert the notes
+        footnotes = lpod_context['footnotes']
+        if footnotes:
+            content.append(u'\n')
+            for citation, body in footnotes:
+                content.append(u'.. [#] %s\n' % body)
+            # Append a \n after the notes
+            content.append(u'\n')
+            # Reset
+            lpod_context['footnotes'] = []
+
+        # Insert the annotations
+        annotations = lpod_context['annotations']
+        if annotations:
+            content.append(u'\n')
+            for annotation in annotations:
+                content.append('.. [#] %s\n' % annotation)
+            # Reset
+            lpod_context['annotations'] = []
+
+
+    def insert_endnotes(self, lpod_context, content):
+
+        # Insert the end notes
+        endnotes = lpod_context['endnotes']
+        if endnotes:
+            content.append(u'\n\n')
+            for citation, body in endnotes:
+                content.append(u'.. [*] %s\n' % body)
+            # Reset
+            lpod_context['endnotes'] = []
+
+
+    def format_content(self, resource, data, template_name):
+        """Format the content of a rst book from a lpod document body.
+        """
+
+        # Get the body
+        from lpod.document import odf_get_document
+        document = odf_get_document(StringIO(data))
+        body = document.get_body()
+
+        # Create a context for the lpod functions
+        lpod_context = {'document': document,
+                        'footnotes': [],
+                        'endnotes': [],
+                        'annotations': [],
+                        'rst_mode': True}
+
+        # Main loop
+        name = None
+        title = 'Cover'
+        links = u''
+        max_level = 0
+        last_level = 1
+        content = []
+        for element in body.get_children():
+
+            # The headings are used to split the document
+            if element.get_tag() == 'text:h':
+
+                # 1- Save this page
+
+                # Generate the content
+                self.insert_endnotes(lpod_context, content)
+                content =  u''.join(content).encode('utf-8')
+                content = self.convert_images(content, document, resource)
+
+                # In the cover ?
+                if name is None:
+                    name = cover = self.get_cover_name(resource, document,
+                                                       template_name)
+
+                # Add the page
+                self.add_wiki_page(resource, name, title, content)
+
+                # 2- Prepare the next page
+
+                # Compute level and update max_level
+                level = element.get_outline_level()
+                max_level = max(level, max_level)
+
+                # Get the title
+                fake_context = dict(lpod_context)
+                fake_context['rst_mode'] = False
+                title = element.get_formatted_text(fake_context)
+
+                # Start a new content with the title, but without the first
+                # '\n'
+                content = [element.get_formatted_text(lpod_context)[1:]]
+
+                # Search for a free WikiPage name
+                name = checkid(title) or 'invalid-name'
+                names = resource.get_names()
+                name = generate_name(name, names)
+
+                # Update links (add eventually blank levels to avoid a problem
+                # with an inconsistency use of levels in the ODT file)
+                for x in range(last_level + 1, level):
+                    links += u'   ' * x + u'-\n'
+                last_level = level
+                links += u'   ' * level + u'- `' + name + u'`_\n'
+
+            # The tables
+            elif element.get_tag() == 'table:table':
+                content.append(element.get_formatted_text(lpod_context))
+
+            # An other element
+            else:
+                content.append(element.get_formatted_text(lpod_context))
+                self.insert_notes_and_annotations(lpod_context, content)
+
+
+        # 3- Save the last page
+
+        # Generate the content
+        self.insert_endnotes(lpod_context, content)
+        content =  u''.join(content).encode('utf-8')
+        content = self.convert_images(content, document, resource)
+
+        # In the cover ?
+        if name is None:
+            name = cover = self.get_cover_name(resource, document,
+                                               template_name)
+
+        # Add the page
+        self.add_wiki_page(resource, name, title, content)
+
+        return cover, links, max_level
 
 
     def get_language(self, language):
@@ -270,22 +319,11 @@ class DBResource_ImportODT(DBResource_AddBase):
     def do_import(self, resource, data, form, template_name):
         """Format the content of a rst book and create related resources.
         """
-        from lpod.document import odf_get_document
-        toc_depth = 0
-        document = odf_get_document(StringIO(data))
-        body = document.get_body()
-        lpod_context = {'document': document,
-                        'footnotes': [],
-                        'endnotes': [],
-                        'annotations': [],
-                        'rst_mode': True}
 
+        cover, links, toc_depth = self.format_content(resource, data,
+                                                      template_name)
         language = self.get_language(form['language'])
-        links, toc_depth = self.format_content(resource, document, body,
-                                               lpod_context)
-        meta = self.format_meta(document, form, template_name, toc_depth,
-                                language)
-        cover = self.format_cover(resource, document, template_name)
+        meta = self.format_meta(form, template_name, toc_depth, language)
         book = u' `%s`_\n%s\n%s' % (cover, meta, links)
 
         # Escape \n for javascript
@@ -325,7 +363,7 @@ class DBResource_ImportODT(DBResource_AddBase):
         """
         # Check the mimetype
         a_file = form['file']
-        filename, mimetype, body = a_file
+        filename, mimetype, data = a_file
         if mimetype not in ALLOWED_FORMATS:
             context.message = ERROR(u'"%s" is not an OpenDocument Text' %
                     filename)
@@ -342,5 +380,5 @@ class DBResource_ImportODT(DBResource_AddBase):
         context.add_script(*scripts)
 
         # Build RST Book
-        wiki_book = self.do_import(resource, body, form, template_name)
+        wiki_book = self.do_import(resource, data, form, template_name)
         return self.get_javascript_return(context, wiki_book)
