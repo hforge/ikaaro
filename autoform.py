@@ -24,7 +24,7 @@ from itools.datatypes import DataType, Date, Enumerate, Boolean, Unicode
 from itools.fs import lfs
 from itools.gettext import MSG, get_language_msg
 from itools.html import stream_to_str_as_xhtml, stream_to_str_as_html
-from itools.html import xhtml_doctype, sanitize_stream
+from itools.html import xhtml_doctype, sanitize_stream, stream_is_empty
 from itools.stl import stl
 from itools.web import STLForm, get_context
 from itools.xml import XMLParser
@@ -60,6 +60,11 @@ class XHTMLBody(DataType):
         if value is None:
             return ''
         return stream_to_str_as_xhtml(value)
+
+
+    @staticmethod
+    def is_empty(value):
+        return stream_is_empty(value)
 
 
 
