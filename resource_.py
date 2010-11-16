@@ -556,21 +556,17 @@ class DBResource(CatalogAware, IResource):
         return unicode(self.name)
 
 
-    def get_edit_languages(self, context, languages=None):
+    def get_edit_languages(self, context):
         site_languages = self.get_site_root().get_property('website_languages')
-        if languages is None:
-            languages = site_languages
+        default = [site_languages[0]]
 
-        # Can not use context.query[] because, edit_language is not
-        # necessary defined
-        datatype = String(multiple=True, default=[site_languages[0]])
+        # Can not use context.query[] because edit_language is not necessarily
+        # defined
+        datatype = String(multiple=True, default=default)
         edit_languages = context.get_query_value('edit_language', datatype)
-        edit_languages = [ x for x in edit_languages if x in languages ]
+        edit_languages = [ x for x in edit_languages if x in site_languages ]
 
-        if len(edit_languages) == 0:
-            return [ languages[0] ]
-
-        return edit_languages
+        return edit_languages if edit_languages else default
 
 
     ########################################################################
