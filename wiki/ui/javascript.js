@@ -142,6 +142,10 @@ function wiki_image() {
   return popup('../;add_image?mode=wiki', 700, 480);
 }
 
+function wiki_import_odt() {
+  return popup('../;import_odt?mode=wiki', 700, 480);
+}
+
 function wiki_table() {
   return insertTags('\n\n===== =====\n', '\n===== =====\n\n',
                     'Cell1 Cell2');
@@ -190,7 +194,10 @@ function select_element(type, value, caption) {
   if (type == 'image') {
       window.opener.insertTags('\n\n.. figure:: ' + value + '\n   :width: 350px\n\n   ',
                                '\n\n', 'Description of `' + value + '`_');
-  } else {
+  } else if (type == 'odt') {
+      window.opener.insertTags('.. book::' + value, '', '\n');
+  }
+  else {
       window.opener.insertTags('`', '`_', value, true);
   }
   window.close();

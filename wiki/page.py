@@ -80,7 +80,8 @@ class Book(Directive):
                    'comments': directives.unchanged,
                    'subject': directives.unchanged,
                    'language': language,
-                   'keywords': directives.unchanged}
+                   'keywords': directives.unchanged,
+                   'filename': directives.unchanged}
     has_content = True
 
 
@@ -103,6 +104,14 @@ class Book(Directive):
             # Push cover as an option
             cover_uri = checkid(self.arguments[0][1:-2])
             options['cover'] = directives.uri(cover_uri)
+        # Metadata
+        metadata = ['Book:']
+        for key in ('title', 'comments', 'subject', 'keywords'):
+            value = options.get(key)
+            if not value:
+                continue
+            metadata.append('  %s: %s' % (key, value))
+        meta_node = nodes.literal_block('Book Metadata', '\n'.join(metadata))
         book_node = book(self.block_text, **options)
         if self.arguments:
             # Display the cover
@@ -117,7 +126,7 @@ class Book(Directive):
         for bullet_list in book_node.traverse(condition=nodes.bullet_list):
             bullet_list.__class__ = nodes.enumerated_list
             bullet_list.tagname = 'enumerated_list'
-        return [book_node]
+        return [meta_node, book_node]
 
 
 

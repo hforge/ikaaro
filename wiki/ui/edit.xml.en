@@ -157,6 +157,16 @@
                             <img src="/ui/wiki/help.png" />
                           </a>
                         </td>
+                        <td>
+                          <span class="mceSeparator"></span>
+                        </td>
+                        <td>
+                          <a id="data-from-odt" title="Import ODT"
+                            class="mceButton mceButtonEnabled odt_icon"
+                            onclick="return wiki_import_odt();" href="javascript:;">
+                            <span class="odt_icon"></span>
+                          </a>
+                        </td>
                         <td class="mceToolbarEnd mceToolbarEndListBox mceLast">
                           <span><!-- IE --></span>
                         </td>

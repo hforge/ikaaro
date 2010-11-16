@@ -4,6 +4,7 @@
 # Copyright (C) 2007 Sylvain Taverne <sylvain@itaapy.com>
 # Copyright (C) 2007-2008 Juan David Ibáñez Palomar <jdavid@itaapy.com>
 # Copyright (C) 2008 Gautier Hayoun <gautier.hayoun@itaapy.com>
+# Copyright (C) 2010 Alexis Huet <alexis@itaapy.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -26,12 +27,13 @@ from ikaaro.file import File
 from ikaaro.folder import Folder
 from ikaaro.folder_views import GoToSpecificDocument
 from ikaaro.resource_views import DBResource_Edit
-from folder_views import WikiMenu
+
+# Import from wiki
+from folder_views import WikiMenu, DBResource_ImportODT
 from page import WikiPage
 
 
 class WikiFolder(Folder):
-
     class_id = 'WikiFolder'
     class_version = '20071215'
     class_title = MSG(u"Wiki")
@@ -42,6 +44,14 @@ class WikiFolder(Folder):
                    'new_resource', 'orphans', 'commit_log']
 
     __fixed_handlers__ = ['FrontPage']
+
+    # User Interface
+    context_menus = [WikiMenu()]
+
+    # Views
+    view = GoToSpecificDocument(specific_document='FrontPage')
+    edit = DBResource_Edit(title=MSG(u"Edit Wiki"))
+    import_odt = DBResource_ImportODT()
 
 
     @staticmethod
@@ -54,11 +64,3 @@ class WikiFolder(Folder):
 
     def get_document_types(self):
         return [WikiPage, File]
-
-
-    # User Interface
-    context_menus = [WikiMenu()]
-
-    view = GoToSpecificDocument(specific_document='FrontPage')
-    edit = DBResource_Edit(title=MSG(u"Edit Wiki"))
-
