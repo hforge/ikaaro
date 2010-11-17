@@ -223,7 +223,7 @@ def _format_content(resource, data, template_name):
             # Update links (add eventually blank levels to avoid a problem
             # with an inconsistency use of levels in the ODT file)
             for x in range(last_level + 1, level):
-                links += u'   ' * x + u'-\n'
+                links += u'   ' * x + u'- [unknown title]\n'
             last_level = level
             links += u'   ' * level + u'- `' + name + u'`_\n'
 
