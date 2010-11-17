@@ -33,7 +33,7 @@ from itools.web import ERROR
 
 # Import from ikaaro
 from ikaaro.datatypes import FileDataType
-from ikaaro.messages import MSG_BAD_NAME, MSG_NAME_CLASH
+from ikaaro.messages import MSG_BAD_NAME
 from ikaaro.registry import get_resource_class
 from ikaaro.resource_views import DBResource_AddBase
 from ikaaro.utils import generate_name
@@ -269,10 +269,9 @@ def _save_template(context, a_file, target_path):
     # Get the container
     container = context.root.get_resource(target_path)
 
-    # Check the name is free
-    if container.get_resource(name, soft=True) is not None:
-        context.message = MSG_NAME_CLASH
-        return
+    # Search for a free name
+    names = container.get_names()
+    name = generate_name(name, names)
 
     # Add the image to the resource
     cls = get_resource_class(mimetype)
