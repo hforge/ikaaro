@@ -46,37 +46,49 @@ from page_views import ALLOWED_FORMATS
 #################################################################
 # Private API
 #################################################################
+def _add_image(filename, document, resource):
+    if type(filename) is unicode:
+        filename = filename.encode('UTF-8')
+    data = document.get_part('Pictures/%s' % filename)
+    name, a_type, language = FileName.decode(filename)
+
+    # Check the filename is good
+    name = checkid(name)
+    if name is None:
+        return None
+
+    # Check the name is free
+    if resource.get_resource(name, soft=True) is not None:
+        return None
+
+    # Get mimetype / class
+    mimetype = get_mimetype(filename)
+    cls = get_resource_class(mimetype)
+
+    # Add the image
+    cls.make_resource(cls, resource, name, data, format=mimetype,
+                      filename=filename, extension=a_type)
+
+    return name
+
+
+
 def _convert_images(content, document, resource):
     result = []
     template = '.. image:: Pictures/'
     for line in content.splitlines():
         if line.startswith(template):
+            # Compute the filename (suppress the template)
+            filename = line[20:]
 
-            filename = line[len(template):]
-            data = document.get_part('Pictures/%s' % filename)
-            name, a_type, language = FileName.decode(filename)
-
-            # Check the filename is good
-            name = checkid(name)
+            # Add the image and compute its name
+            name = _add_image(filename, document, resource)
             if name is None:
                 continue
-
-            # Check the name is free
-            if resource.get_resource(name, soft=True) is not None:
-                continue
-
-            # Get mimetype / class
-            mimetype = get_mimetype(filename)
-            cls = get_resource_class(mimetype)
-
-            # Add the image
-            cls.make_resource(cls, resource, name, data, format=mimetype,
-                              filename=filename, extension=a_type)
 
             # And modify the page
             result.append('.. figure:: %s' % name)
             result.append('   :width: 350px')
-
         else:
             result.append(line)
 
@@ -84,7 +96,7 @@ def _convert_images(content, document, resource):
 
 
 
-def _insert_notes_and_annotations(lpod_context, content):
+def _insert_notes_and_co(lpod_context, content, document, resource):
 
     # Insert the notes
     footnotes = lpod_context['footnotes']
@@ -105,6 +117,19 @@ def _insert_notes_and_annotations(lpod_context, content):
             content.append('.. [#] %s\n' % annotation)
         # Reset
         lpod_context['annotations'] = []
+
+    # Insert the images ref after a table
+    images = lpod_context['images']
+    if images:
+        content.append(u'\n')
+        for ref, filename in images:
+            # Delete 'Pictures/'
+            filename = filename[9:]
+            name = _add_image(filename, document, resource)
+            if name is None:
+                continue
+            content.append(u'.. %s image:: %s\n\n' % (ref, name))
+        lpod_context['images'] = []
 
 
 
@@ -171,7 +196,10 @@ def _format_content(resource, data, template_name):
                     'footnotes': [],
                     'endnotes': [],
                     'annotations': [],
-                    'rst_mode': True}
+                    'rst_mode': True,
+                    'img_counter': 0,
+                    'images': [],
+                    'table_level': 0}
 
     # Main loop
     name = None
@@ -227,14 +255,10 @@ def _format_content(resource, data, template_name):
             last_level = level
             links += u'   ' * level + u'- `' + name + u'`_\n'
 
-        # The tables
-        elif element.get_tag() == 'table:table':
-            content.append(element.get_formatted_text(lpod_context))
-
         # An other element
         else:
             content.append(element.get_formatted_text(lpod_context))
-            _insert_notes_and_annotations(lpod_context, content)
+            _insert_notes_and_co(lpod_context, content, document, resource)
 
 
     # 3- Save the last page
