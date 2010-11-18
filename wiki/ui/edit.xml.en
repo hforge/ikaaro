@@ -257,6 +257,22 @@
               </a>
             </td>
           </tr>
+          <tr id="mce_5" class="mceMenuItem mceMenuItemEnabled">
+            <td class="mce_formatPreview mce_h4">
+              <a onclick="return wiki_heading4();" href="javascript:;">
+                <span class="mceIcon"/>
+                <span class="mceText" title="Heading 4">Heading 4</span>
+              </a>
+            </td>
+          </tr>
+          <tr id="mce_6" class="mceMenuItem mceMenuItemEnabled">
+            <td class="mce_formatPreview mce_h5">
+              <a onclick="return wiki_heading5();" href="javascript:;">
+                <span class="mceIcon"/>
+                <span class="mceText" title="Heading 5">Heading 5</span>
+              </a>
+            </td>
+          </tr>
         </tbody>
       </table>
     </div>
