@@ -668,7 +668,17 @@ class WikiPage_ToODT(AutoForm):
             # convert_section will increment it
             heading_level = 0 if startswith_section(doctree) else 1
             document = rst2odt(doctree, template=template,
-                    heading_level=heading_level)
+                               heading_level=heading_level)
+            title = resource.get_rst_title()
+            if title is None:
+                title = resource.get_title()
+            meta = document.get_meta()
+            now = datetime.now()
+            meta.set_creation_date(now)
+            meta.set_modification_date(now)
+            meta.set_editing_duration(timedelta(0))
+            meta.set_editing_cycles(1)
+            meta.set_title(title)
 
         context.set_content_type('application/vnd.oasis.opendocument.text')
         filename = book.get('filename') if book else None

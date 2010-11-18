@@ -257,6 +257,14 @@ class WikiPage(Text):
         return doctree.next_node(condition=nodes.book)
 
 
+    def get_rst_title(self):
+        doctree = self.get_doctree()
+        title = doctree.next_node(condition=nodes.title)
+        if title is None:
+            return None
+        return title.astext()
+
+
     def get_links(self):
         base = self.get_abspath()
 
