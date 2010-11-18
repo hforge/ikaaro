@@ -23,7 +23,7 @@ from cStringIO import StringIO
 
 # Import from itools
 from itools.core import merge_dicts
-from itools.datatypes import Unicode, LanguageTag
+from itools.datatypes import Unicode, LanguageTag, Integer
 from itools.fs import FileName
 from itools.fs.common import get_mimetype
 from itools.gettext import MSG
@@ -57,9 +57,9 @@ def _add_image(filename, document, resource):
     if name is None:
         return None
 
-    # Check the name is free
+    # XXX If the resource exists, we assume it's the good resource
     if resource.get_resource(name, soft=True) is not None:
-        return None
+        return name
 
     # Get mimetype / class
     mimetype = get_mimetype(filename)
@@ -182,7 +182,7 @@ def _add_wiki_page(resource, name, title, content):
 
 
 
-def _format_content(resource, data, template_name):
+def _format_content(resource, data, template_name, max_allowed_level):
     """Format the content of a rst book from a lpod document.
     """
 
@@ -212,10 +212,20 @@ def _format_content(resource, data, template_name):
 
         # The headings are used to split the document
         if element.get_tag() == 'text:h':
+            # 0- Is this heading good ?
+
+            # Get the level
+            level = element.get_outline_level()
+
+            # If the level is too small, we don't make a new page
+            if max_allowed_level and level > max_allowed_level:
+                content.append(element.get_formatted_text(lpod_context))
+                continue
 
             # 1- Save this page
 
             # Generate the content
+            _insert_notes_and_co(lpod_context, content, document, resource)
             _insert_endnotes(lpod_context, content)
             content =  u''.join(content).encode('utf-8')
             content = _convert_images(content, document, resource)
@@ -230,8 +240,7 @@ def _format_content(resource, data, template_name):
 
             # 2- Prepare the next page
 
-            # Compute level and update max_level
-            level = element.get_outline_level()
+            # Update max_level
             max_level = max(level, max_level)
 
             # Get the title
@@ -264,6 +273,7 @@ def _format_content(resource, data, template_name):
     # 3- Save the last page
 
     # Generate the content
+    _insert_notes_and_co(lpod_context, content, document, resource)
     _insert_endnotes(lpod_context, content)
     content =  u''.join(content).encode('utf-8')
     content = _convert_images(content, document, resource)
@@ -335,7 +345,8 @@ class DBResource_ImportODT(DBResource_AddBase):
                          subject=Unicode(),
                          keywords=Unicode(),
                          comments=Unicode(),
-                         language=LanguageTag(default=('en', 'EN')))
+                         language=LanguageTag(default=('en', 'EN')),
+                         max_level=Integer())
 
     action_upload_schema = merge_dicts(schema,
                                        file=FileDataType(mandatory=True))
@@ -385,7 +396,8 @@ class DBResource_ImportODT(DBResource_AddBase):
         """
 
         cover, links, toc_depth = _format_content(resource, data,
-                                                  template_name)
+                                                  template_name,
+                                                  form['max_level'])
         language = self.get_language(form['language'])
         meta = _format_meta(form, template_name, toc_depth, language)
         book = u' `%s`_\n%s\n%s' % (cover, meta, links)

@@ -95,32 +95,44 @@
           <input id="file" name="file" size="35" type="file" /><br />
           <h4>Document metadata:</h4>
           <table cellpadding="0" cellspacing="0">
-
-                <tr>
-                  <td><label>Title:</label><br />
-                  <input id="title" name="title" size="35" type="text" /></td>
-                </tr>
-                <tr>
-                  <td><label>Subject:</label><br />
-                  <input id="subject" name="subject" size="35" type="text" /></td>
-                </tr>
-                <tr>
-                  <td><label>Comments:</label><br />
-                  <input id="comments" name="comments" size="35" type="text" /></td>
-                </tr>
-                <tr>
-                  <td><label>Keywords:</label><br />
-                  <input id="keywords" name="keywords" size="35" type="text" /></td>
-                </tr>
-                <tr>
-                  <td><label>Language:</label><br />
-                    <select name="language" >
-                      <option stl:repeat="lang meta-lang" id="lang" value="${lang/value}" >
-                        ${lang/name}
-                      </option>
-                    </select>
-                  </td>
-                </tr>
+            <tr>
+              <td><label>Title:</label><br />
+                <input id="title" name="title" size="35" type="text" /></td>
+            </tr>
+            <tr>
+              <td><label>Subject:</label><br />
+                <input id="subject" name="subject" size="35" type="text" /></td>
+            </tr>
+            <tr>
+              <td><label>Comments:</label><br />
+                <input id="comments" name="comments" size="35" type="text" /></td>
+            </tr>
+            <tr>
+              <td><label>Keywords:</label><br />
+                <input id="keywords" name="keywords" size="35" type="text" /></td>
+            </tr>
+          </table>
+          <table>
+            <tr>
+              <td><label>Language:</label><br />
+                <select name="language" >
+                  <option stl:repeat="lang meta-lang" id="lang"
+                          value="${lang/value}" >
+                    ${lang/name}
+                  </option>
+                </select>
+              </td>
+              <td><label>Max heading level to split:</label><br />
+                <select name="max_level" >
+                  <option value=""></option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                </select>
+              </td>
+            </tr>
           </table>
           <br/>
           <button type="submit" name="action" value="upload"
