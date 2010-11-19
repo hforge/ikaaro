@@ -173,32 +173,34 @@ function wiki_format() {
 function wiki_preformatted() {
   $("#data-formatselect-menu").hide('fast');
   return insertTags('\n\n::\n\n  ', '\n\n',
-                    'Type text not to interpret with identation');
+                    '# Type text not to interpret with indentation\n' +
+                    '  def myfunc(obj):\n' +
+                    '      print "Hello"');
 }
 
 function wiki_heading1() {
   $("#data-formatselect-menu").hide('fast');
-  return insertTags('heading', '#', 'Title');
+  return insertTags('heading', '#', 'Heading 1 Title');
 }
 
 function wiki_heading2() {
   $("#data-formatselect-menu").hide('fast');
-  return insertTags('heading', '=', 'Title');
+  return insertTags('heading', '=', 'Sub-Heading 2');
 }
 
 function wiki_heading3() {
   $("#data-formatselect-menu").hide('fast');
-  return insertTags('heading', '-', 'Title');
+  return insertTags('heading', '-', 'Sub-Sub-Heading 3');
 }
 
 function wiki_heading4() {
   $("#data-formatselect-menu").hide('fast');
-  return insertTags('heading', '~', 'Title');
+  return insertTags('heading', '~', 'Sub-Sub-Sub-Heading 4');
 }
 
 function wiki_heading5() {
   $("#data-formatselect-menu").hide('fast');
-  return insertTags('heading', '`', 'Title');
+  return insertTags('heading', '`', 'Sub-Sub-Sub-Sub-Heading 5');
 }
 
 function wiki_help() {
