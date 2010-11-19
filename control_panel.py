@@ -51,6 +51,7 @@ class ControlPanelMenu(ContextMenu):
 
     def get_items(self):
         resource = self.resource
+        ac = resource.get_access_control()
         user = self.context.user
 
         items = []
@@ -58,7 +59,7 @@ class ControlPanelMenu(ContextMenu):
             view = resource.get_view(name)
             if view is None:
                 continue
-            if not resource.is_access_allowed(user, resource, view):
+            if not ac.is_access_allowed(user, resource, view):
                 continue
             items.append({
                 'title': view.title,
@@ -83,11 +84,12 @@ class ControlPanel(IconsView):
 
     def get_namespace(self, resource, context):
         items = []
+        ac = resource.get_access_control()
         for name in resource.class_control_panel:
             view = resource.get_view(name)
             if view is None:
                 continue
-            if not resource.is_access_allowed(context.user, resource, view):
+            if not ac.is_access_allowed(context.user, resource, view):
                 continue
             items.append({
                 'icon': resource.get_method_icon(view, size='48x48'),
