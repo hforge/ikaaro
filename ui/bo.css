@@ -588,6 +588,22 @@ p.tabme a.selected {
   padding: 4px 0 2px;
 }
 
+/**************************************************************************
+ * ui/file/externaledit.xml.en
+ *************************************************************************/
+
+#external-edit .unix, #external-edit .windows {
+  width: 440px;
+  min-height: 130px;
+}
+
+#external-edit .unix {
+  float: left;
+}
+
+#external-edit .windows {
+  float: right;
+}
 
 /**************************************************************************
  * NOT YET CLASSIFIED
