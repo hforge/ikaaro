@@ -150,6 +150,8 @@ def init(parser, options, target):
     database.set_handler('.metadata', metadata)
     root = root_class(metadata)
     root.init_resource(email, password)
+    # Set mtime
+    root.set_property('mtime', context.timestamp)
     context.root = root
     # Save changes
     database.save_changes()
