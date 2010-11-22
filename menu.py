@@ -343,10 +343,10 @@ class Menu(OrderedTable):
             if resource is None:
                 return False
 
-            # FIXME We should take into account the show_first_child
-            # parameter
-            ac = resource.get_access_control()
-            return ac.is_allowed_to_view(user, resource)
+            # Get the first view
+            # get_views checks ACLs with by calling is_access_allowed
+            resource_views = list(resource.get_views())
+            return len(resource_views) > 0
 
 
     def get_menu_namespace_level(self, context, url, depth=2,
