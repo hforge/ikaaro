@@ -23,8 +23,8 @@
           Copy the <tt>restedit.py</tt> script somewhere
         </li>
         <li>
-          Configure your browser so it uses the <tt>restedit.py</tt> script to open
-          web pages with the <em>application/x-restedit</em> mimetype
+          Configure your browser so it uses the <tt>restedit.py</tt> script to
+          open web pages with the <em>application/x-restedit</em> mimetype
         </li>
       </ol>
     </fieldset>
@@ -42,8 +42,8 @@
           </a>
         </li>
         <li>
-          Configure your browser so it uses the <tt>restedit.py</tt> script to open
-          web pages with the <em>application/x-restedit</em> mimetype
+          Configure your browser so it uses the <tt>restedit.py</tt> script to
+          open web pages with the <em>application/x-restedit</em> mimetype
         </li>
       </ol>
     </fieldset>
