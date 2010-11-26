@@ -24,6 +24,7 @@ from copy import deepcopy
 from itools.core import freeze, merge_dicts
 from itools.datatypes import Email, String, Unicode
 from itools.gettext import MSG
+from itools.log import log_warning
 from itools.uri import Path, Reference
 from itools.web import INFO, crypt_password, generate_password, Password
 
@@ -114,16 +115,22 @@ class User(AccessControl, Folder):
         return self.get_property('email')
 
 
+    def get_auth_token(self):
+        # Used by itools.web
+        return self.get_property('password')
+
+
     def set_password(self, password):
-        crypted = crypt_password(password)
-        self.set_property('password', crypted)
+        secure_hash = crypt_password(password)
+        self.set_property('password', secure_hash)
 
 
-    def authenticate(self, password, clear=False):
-        if clear:
-            password = crypt_password(password)
+    def authenticate(self, password, clear=None):
+        if clear is not None:
+            log_warning('The "clear" param is DEPRECATED', domain='ikaaro')
 
-        return password == self.get_property('password')
+        secure_hash = crypt_password(password)
+        return secure_hash == self.get_property('password')
 
 
     def get_groups(self):
@@ -140,8 +147,8 @@ class User(AccessControl, Folder):
 
     def set_auth_cookie(self, context, password):
         username = str(self.name)
-        crypted = crypt_password(password)
-        context.set_auth_cookie(username, crypted)
+        secure_hash = crypt_password(password)
+        context.set_auth_cookie(username, secure_hash)
 
 
     def get_timezone(self):
