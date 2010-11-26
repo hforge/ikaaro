@@ -26,7 +26,7 @@ from itools.datatypes import Email, String, Unicode
 from itools.gettext import MSG
 from itools.log import log_warning
 from itools.uri import Path, Reference
-from itools.web import INFO, crypt_password, generate_password, Password
+from itools.web import INFO, Password
 
 # Import from ikaaro
 from access import AccessControl
@@ -37,6 +37,7 @@ from user_views import User_ConfirmRegistration, User_EditAccount
 from user_views import User_EditPassword, User_EditPreferences, User_Profile
 from user_views import User_ResendConfirmation, User_Tasks
 from user_views import User_ChangePasswordForgotten, UserFolder_BrowseContent
+from utils import get_secure_hash, generate_password
 from views import MessageView
 
 
@@ -121,7 +122,7 @@ class User(AccessControl, Folder):
 
 
     def set_password(self, password):
-        secure_hash = crypt_password(password)
+        secure_hash = get_secure_hash(password)
         self.set_property('password', secure_hash)
 
 
@@ -129,7 +130,7 @@ class User(AccessControl, Folder):
         if clear is not None:
             log_warning('The "clear" param is DEPRECATED', domain='ikaaro')
 
-        secure_hash = crypt_password(password)
+        secure_hash = get_secure_hash(password)
         return secure_hash == self.get_property('password')
 
 
@@ -147,7 +148,7 @@ class User(AccessControl, Folder):
 
     def set_auth_cookie(self, context, password):
         username = str(self.name)
-        secure_hash = crypt_password(password)
+        secure_hash = get_secure_hash(password)
         context.set_auth_cookie(username, secure_hash)
 
 

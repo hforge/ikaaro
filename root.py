@@ -39,7 +39,7 @@ from itools.gettext import MSG
 from itools.handlers import ConfigFile, ro_database
 from itools.stl import stl
 from itools.uri import Path
-from itools.web import BaseView, get_context, crypt_password
+from itools.web import BaseView, get_context
 
 # Import from ikaaro
 from config import get_config
@@ -47,6 +47,7 @@ from folder import Folder
 from registry import get_resource_class
 from skins import UI, ui_path
 from user import UserFolder
+from utils import get_secure_hash
 from website import WebSite
 
 
@@ -90,13 +91,12 @@ class Root(WebSite):
     __fixed_handlers__ = ['users', 'ui', 'theme']
 
 
-
     def init_resource(self, email, password, admins=('0',)):
         WebSite.init_resource(self, admins=admins)
         # User folder
         users = self.make_resource('users', UserFolder, title={'en': u'Users'})
         # Default User
-        password = crypt_password(password)
+        password = get_secure_hash(password)
         user_class = get_resource_class('user')
         users.make_resource('0', user_class, email=email, password=password)
 
