@@ -401,7 +401,10 @@ class Folder_BrowseContent(SearchForm):
         sort_by = context.query['sort_by']
         reverse = context.query['reverse']
 
-        get_key = getattr(self, 'get_key_sorted_by_' + sort_by, None)
+        if sort_by is None:
+            get_key = None
+        else:
+            get_key = getattr(self, 'get_key_sorted_by_' + sort_by, None)
         if get_key:
             # Custom but slower sort algorithm
             items = results.get_documents()
