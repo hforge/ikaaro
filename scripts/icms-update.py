@@ -237,7 +237,7 @@ def update(parser, options, target):
     root = server.root
 
     mtime = root.get_property('mtime')
-    if mtime is None:
+    if mtime is None or options.mtime:
         message = 'STAGE 0: Set mtime and author in the metadata (y/N)? '
         if ask_confirmation(message, confirm) is False:
             abort()
@@ -337,6 +337,8 @@ if __name__ == '__main__':
         help="start the update without asking confirmation")
     parser.add_option('--force', action='store_true', default=False,
         help="continue the upgrade process in spite of errors")
+    parser.add_option('--mtime', action='store_true', default=False,
+        help="set mtime/author even when the root is up-to-date")
     parser.add_option('--profile',
         help="print profile information to the given file")
 
