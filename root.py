@@ -37,6 +37,7 @@ from itools.core import freeze, get_abspath
 from itools.database import GitDatabase
 from itools.gettext import MSG
 from itools.handlers import ConfigFile, ro_database
+from itools.log import log_warning
 from itools.stl import stl
 from itools.uri import Path
 from itools.web import BaseView, get_context
@@ -131,7 +132,8 @@ class Root(WebSite):
         users = self.get_resource('users')
         user = users.get_resource(username, soft=True)
         if user is None:
-            return username
+            log_warning('unkwnown user %s' % username, domain='ikaaro')
+            return unicode(username)
         return user.get_title()
 
 
