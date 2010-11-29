@@ -241,26 +241,36 @@ def update(parser, options, target):
         message = 'STAGE 0: Set mtime and author in the metadata (y/N)? '
         if ask_confirmation(message, confirm) is False:
             abort()
+
+        # Find out set of valid usernames
+        usernames = root.get_names('users')
+        usernames = set(usernames)
+
         print 'STAGE 0: Initializing mtime/author'
         # Load cache
         git_cache = {}
         cmd = ['git', 'log', '--pretty=format:%H%n%an%n%at%n%s', '--raw',
-               '--name-only', 'HEAD~1']
+               '--name-only']
         data = send_subprocess(cmd)
         lines = data.splitlines()
         i = 0
         while i < len(lines):
             date = int(lines[i + 2])
+            author = lines[i + 1]
+            if author not in usernames:
+                author = None
             commit = {
                 'revision': lines[i],                      # commit
-                'username': lines[i + 1],                  # author name
+                'username': author,                        # author name
                 'date': datetime.fromtimestamp(date, utc), # author date
-                'message': lines[i + 3],                   # subject
-                }
+                'message': lines[i + 3]}                   # subject
+
             # Modified files
             i += 4
             while i < len(lines) and lines[i]:
-                git_cache.setdefault(lines[i], commit)
+                path = lines[i]
+                if path not in git_cache or not git_cache[path]['username']:
+                    git_cache[path] = commit
                 i += 1
             # Next entry is separated by an empty line
             i += 1
