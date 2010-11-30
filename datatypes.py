@@ -15,6 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
+from base64 import decodestring, encodestring
 from marshal import dumps, loads
 from urllib import quote, unquote
 from zlib import compress, decompress
@@ -60,6 +61,19 @@ class FileDataType(DataType):
         filename, mimetype, body = data
         mimetype = guess_mimetype(filename, mimetype)
         return filename, mimetype, body
+
+
+
+class Password(DataType):
+
+    @staticmethod
+    def decode(data):
+        return decodestring(unquote(data))
+
+
+    @staticmethod
+    def encode(value):
+        return quote(encodestring(value))
 
 
 

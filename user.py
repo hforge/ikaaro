@@ -26,10 +26,11 @@ from itools.datatypes import Email, String, Unicode
 from itools.gettext import MSG
 from itools.log import log_warning
 from itools.uri import Path, Reference
-from itools.web import INFO, Password
+from itools.web import INFO
 
 # Import from ikaaro
 from access import AccessControl
+from datatypes import Password
 from folder import Folder
 from registry import get_resource_class
 from resource_views import DBResource_Edit
