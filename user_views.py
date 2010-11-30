@@ -95,7 +95,7 @@ class User_ConfirmRegistration(AutoForm):
         resource.set_password(password)
         resource.del_property('user_must_confirm')
         # Set cookie
-        resource.set_auth_cookie(context, password)
+        context.login(resource)
 
         # Ok
         message = INFO(u'Operation successful! Welcome.')
@@ -342,7 +342,7 @@ class User_EditPassword(AutoForm):
 
         # Update the cookie if we updated our own password
         if is_same_user:
-            resource.set_auth_cookie(context, newpass)
+            context.login(resource)
 
         # Ok
         context.message = messages.MSG_CHANGES_SAVED

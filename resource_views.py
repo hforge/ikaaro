@@ -383,9 +383,7 @@ class LoginView(STLForm):
             context.message = ERROR(u'The email or the password is incorrect.')
             return
 
-        # Set cookie & context
-        user.set_auth_cookie(context, password)
-        context.user = user
+        context.login(user)
 
         # Come back
         referrer = context.get_referrer()

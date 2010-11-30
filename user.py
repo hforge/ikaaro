@@ -95,6 +95,38 @@ class User(AccessControl, Folder):
 
 
     ########################################################################
+    # API / Authentication
+    ########################################################################
+    def get_user_id(self):
+        # Used by itools.web
+        return str(self.name)
+
+
+    def get_auth_token(self):
+        # Used by itools.web
+        return self.get_property('password')
+
+
+    def set_password(self, password):
+        secure_hash = get_secure_hash(password)
+        self.set_property('password', secure_hash)
+
+
+    def authenticate(self, password, clear=None):
+        if clear is not None:
+            log_warning('The "clear" param is DEPRECATED', domain='ikaaro')
+
+        secure_hash = get_secure_hash(password)
+        return secure_hash == self.get_property('password')
+
+
+    def set_auth_cookie(self, context, password):
+        msg = "user.set_auth_cookie is DEPRECATED, use context.login(user)"
+        log_warning(msg, domain='ikaaro')
+        context.login(self)
+
+
+    ########################################################################
     # API
     ########################################################################
     def get_title(self, language=None):
@@ -117,24 +149,6 @@ class User(AccessControl, Folder):
         return self.get_property('email')
 
 
-    def get_auth_token(self):
-        # Used by itools.web
-        return self.get_property('password')
-
-
-    def set_password(self, password):
-        secure_hash = get_secure_hash(password)
-        self.set_property('password', secure_hash)
-
-
-    def authenticate(self, password, clear=None):
-        if clear is not None:
-            log_warning('The "clear" param is DEPRECATED', domain='ikaaro')
-
-        secure_hash = get_secure_hash(password)
-        return secure_hash == self.get_property('password')
-
-
     def get_groups(self):
         """Returns all the role aware handlers where this user is a member.
         """
@@ -145,12 +159,6 @@ class User(AccessControl, Folder):
         results = root.search(is_role_aware=True, users=self.name)
         groups = [ x.abspath for x in results.get_documents() ]
         return tuple(groups)
-
-
-    def set_auth_cookie(self, context, password):
-        username = str(self.name)
-        secure_hash = get_secure_hash(password)
-        context.set_auth_cookie(username, secure_hash)
 
 
     def get_timezone(self):
