@@ -238,8 +238,10 @@ class File_ExternalEdit(BaseView):
             'url:%s://%s%s' % (uri.scheme, uri.authority, uri.path[:-1]),
             'last-modified:%s' % HTTPDate.encode(resource.get_mtime()),
             'content_type:%s' % handler.get_mimetype(),
-            'cookie:%s' % context.soup_message.get_header('Cookie'),
-            'title:%s' % resource.get_title().encode('utf-8')]
+            'title:%s' % resource.get_title().encode('utf-8'),
+            'include-Cookie:iauth="%s"' % context.get_cookie('iauth'),
+            'include-X-User-Agent:%s' % context.soup_message
+                                        .get_header('User-Agent')]
 
         # Try to guess the extension (optional)
         filename = resource.get_property('filename')
