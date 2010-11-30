@@ -383,7 +383,9 @@ class PathSelectorWidget(TextWidget):
     <button id="selector-button-${id}" class="button-selector"
       name="selector_button_${name}"
       onclick="return popup(';${action}?target_id=selector-${id}&amp;mode=input', 640, 480);">...</button>
-    ${workflow_state}""")
+    ${workflow_state}
+    <label class="language" for="${id}" stl:if="language"
+      >${language}</label>""")
 
 
     def workflow_state(self):
@@ -416,6 +418,8 @@ class ImageSelectorWidget(PathSelectorWidget):
       name="selector_button_${name}"
       onclick="return popup(';${action}?target_id=selector-${id}&amp;mode=input', 640, 480);">...</button>
     ${workflow_state}
+    <label class="language" for="${id}" stl:if="language"
+      >${language}</label>
     <br/>
     <img src="${value}/;thumb?width=${width}&amp;height=${height}" stl:if="value"/>""")
 
