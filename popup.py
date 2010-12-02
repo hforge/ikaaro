@@ -29,7 +29,8 @@ from itools.handlers import checkid
 from itools.fs import FileName
 from itools.uri import Path
 from itools.web import STLForm, ERROR
-from itools.database import OrQuery, PhraseQuery, StartQuery
+from itools.database import AndQuery, NotQuery, OrQuery, PhraseQuery
+from itools.database import StartQuery
 
 # Import from ikaaro
 from buttons import AddButton
@@ -37,7 +38,7 @@ from datatypes import FileDataType
 from folder_views import Folder_BrowseContent
 import messages
 from registry import get_resource_class
-from utils import reduce_string
+from utils import get_base_path_query, reduce_string
 from workflow import state_widget, StaticStateEnumerate, WorkflowAware
 
 
@@ -125,6 +126,39 @@ class AddBase_BrowseContent(Folder_BrowseContent):
         resource = self.target
         items = Folder_BrowseContent.get_items(self, resource, context, *args)
         return items
+
+
+    def get_search_types(self, resource, context):
+        # Narrow the children to target content
+        target = self.target
+        # 1. Build the query of all objects to search
+        path = target.get_canonical_path()
+        query = get_base_path_query(str(path))
+        if target.get_abspath() == '/':
+            theme_path = path.resolve_name('theme')
+            theme = get_base_path_query(str(theme_path), True)
+            query = AndQuery(query, NotQuery(theme))
+
+        # 2. Compute children_formats
+        children_formats = set()
+        for child in context.root.search(query).get_documents():
+            children_formats.add(child.format)
+
+        # 3. Do not show two options with the same title
+        formats = {}
+        for type in children_formats:
+            cls = get_resource_class(type)
+            title = cls.class_title.gettext()
+            formats.setdefault(title, []).append(type)
+
+        # 4. Build the namespace
+        types = []
+        for title, type in formats.items():
+            type = ','.join(type)
+            types.append({'name': type, 'value': title})
+        types.sort(key=lambda x: x['value'].lower())
+
+        return types
 
 
     def get_search_namespace(self, resource, context):
