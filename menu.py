@@ -111,7 +111,7 @@ class Menu_View(OrderedTable_View):
     def get_table_columns(self, resource, context):
         columns = [
             ('checkbox', None),
-            ('id', MSG(u'id'))]
+            ('id', MSG(u'id'), False)]
         # From the schema
         allow_submenu = resource.parent.allow_submenu
         for widget in self.get_widgets(resource, context):
@@ -119,10 +119,11 @@ class Menu_View(OrderedTable_View):
                 continue
             if widget.name == 'child' and not allow_submenu:
                 continue
-            column = (widget.name, getattr(widget, 'title', widget.name))
+            column = (widget.name, getattr(widget, 'title', widget.name),
+                      False)
             columns.append(column)
         # Add the workflow state
-        columns.append(('workflow_state', MSG(u'Workflow State')))
+        columns.append(('workflow_state', MSG(u'Workflow State'), False))
 
         return columns
 
