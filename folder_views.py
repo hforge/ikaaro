@@ -703,7 +703,6 @@ class Folder_PreviewContent(Folder_BrowseContent):
 
     title = MSG(u'Preview Content')
     styles = ['/ui/gallery/style.css']
-    scripts = ['/ui/gallery/javascript.js']
 
     context_menus = Folder_BrowseContent.context_menus + [ZoomMenu()]
     # Table
