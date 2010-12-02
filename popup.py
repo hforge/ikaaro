@@ -131,34 +131,8 @@ class AddBase_BrowseContent(Folder_BrowseContent):
     def get_search_types(self, resource, context):
         # Narrow the children to target content
         target = self.target
-        # 1. Build the query of all objects to search
-        path = target.get_canonical_path()
-        query = get_base_path_query(str(path))
-        if target.get_abspath() == '/':
-            theme_path = path.resolve_name('theme')
-            theme = get_base_path_query(str(theme_path), True)
-            query = AndQuery(query, NotQuery(theme))
-
-        # 2. Compute children_formats
-        children_formats = set()
-        for child in context.root.search(query).get_documents():
-            children_formats.add(child.format)
-
-        # 3. Do not show two options with the same title
-        formats = {}
-        for type in children_formats:
-            cls = get_resource_class(type)
-            title = cls.class_title.gettext()
-            formats.setdefault(title, []).append(type)
-
-        # 4. Build the namespace
-        types = []
-        for title, type in formats.items():
-            type = ','.join(type)
-            types.append({'name': type, 'value': title})
-        types.sort(key=lambda x: x['value'].lower())
-
-        return types
+        proxy = super(AddBase_BrowseContent, self)
+        return proxy.get_search_types(target, context)
 
 
     def get_search_namespace(self, resource, context):
