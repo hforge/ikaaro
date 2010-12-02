@@ -317,7 +317,6 @@ class Image_View(STLView):
     title = MSG(u'View')
     template = '/ui/binary/Image_view.xml'
     styles = ['/ui/gallery/style.css']
-    scripts = ['/ui/gallery/javascript.js']
 
     # Image default size as a string (empty = full size)
     query_schema = {
@@ -325,73 +324,18 @@ class Image_View(STLView):
         'height': String(default='600')}
 
 
-    def get_browse_images(self, resource, context):
-        from file import Image
-        user = context.user
-        parent = resource.parent
-        ac = parent.get_access_control()
-
-        return [ image for image in parent.search_resources(cls=Image)
-                 if ac.is_allowed_to_view(user, image) ]
-
-
     def get_namespace(self, resource, context):
-        size = context.get_form_value('size', type=Integer)
         width = context.query['width']
         height = context.query['height']
-        images = self.get_browse_images(resource, context)
-
-        my_index = None
-        for index, image in enumerate(images):
-            if image == resource:
-                my_index = index
-                break
-
-        # Navigate to next image
-        next_image = None
-        next_link = None
-        if my_index + 1 < len(images):
-            next_image = images[my_index + 1]
-            next_link = context.get_link(next_image)
-
-        # Navigate to previous image
-        prev_image = None
-        prev_link = None
-        if my_index > 0:
-            prev_image = images[my_index - 1]
-            prev_link = context.get_link(prev_image)
-
-        # List of 5 next and previous images to preload
-        next_images = images[my_index + 2:my_index + 6]
-        min_index = my_index - 5 if my_index > 5 else 0
-        max_index = my_index - 1 if my_index > 1 else 0
-        previous_images = images[min_index:max_index]
-        previous_images.reverse()
-        preload = []
-        for image in ([resource, next_image, prev_image]
-                      + next_images + previous_images):
-            if image:
-                uri = '%s/;thumb?width=%s&height=%s'
-                uri = uri % (context.get_link(image), width, height)
-                preload.append(uri)
 
         # Real width and height (displayed for reference)
         image_width, image_height = resource.handler.get_size()
 
-        return {'parent_link': context.get_link(resource.parent),
-                'size': size,
-                'width': width,
+        return {'width': width,
                 'height': height,
-                'preload': '"' + '", "'.join(preload) + '"',
-                'prev_link': prev_link,
-                'next_link': next_link,
                 'widths': ImageWidth.get_namespace(width),
                 'image_width': image_width,
-                'image_height': image_height,
-                'image_link': context.get_link(resource),
-                'index': my_index + 1,
-                'total': len(images),
-                'image_view': preload[0]}
+                'image_height': image_height}
 
 
 
