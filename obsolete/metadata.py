@@ -17,6 +17,7 @@
 
 # Import from itools
 from itools.core import freeze
+from itools.csv import Property
 from itools.datatypes import DataType, String, Unicode, XMLContent
 from itools.handlers import File
 from itools.web import get_context
@@ -252,7 +253,12 @@ class OldMetadata(File):
 
 
     def get_property(self, name, language=None):
-        return self.get_property_and_language(name, language=language)[0]
+        if name not in self.properties:
+            return None
+        value, lang = self.get_property_and_language(name, language=language)
+        if lang:
+            return Property(value, lang=lang)
+        return Property(value)
 
 
     def has_property(self, name, language=None):

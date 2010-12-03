@@ -126,14 +126,11 @@ class Issue(Folder):
 
         get_blob = database.get_blob_by_revision_and_path
 
-        history = []
         for hash in database.get_commit_hashs(filename):
             try:
-                metadata = get_blob(hash, filename, Metadata)
+                yield get_blob(hash, filename, Metadata)
             except SyntaxError:
-                metadata = get_blob(hash, filename, OldMetadata)
-            history.append(metadata)
-        return history
+                yield get_blob(hash, filename, OldMetadata)
 
 
     def add_comment(self, context, form, new=False):

@@ -181,8 +181,12 @@ class Issue_History(STLView):
         rows = []
         i = 0
         for metadata in resource.get_history():
+            # Skip old data (before 0.62) FIXME
             mtime = metadata.get_property('mtime')
-            username = metadata.get_property('last_author')
+            if mtime is None:
+                continue
+
+            username = metadata.get_property('last_author').value
             title = metadata.get_property('title')
             module = metadata.get_property('module')
             version = metadata.get_property('version')
@@ -190,26 +194,21 @@ class Issue_History(STLView):
             priority = metadata.get_property('priority')
             assigned_to = metadata.get_property('assigned_to')
             state = metadata.get_property('state')
-            comment = metadata.get_property('comment')
-            cc_list = metadata.get_property('cc_list') or ()
+            comments = metadata.get_property('comment')
+            cc_list = metadata.get_property('cc_list')
             product = metadata.get_property('product')
             attachment = metadata.get_property('attachment')
 
             # Solid in case the user has been removed
-            user = users.get_resource(username.value, soft=True)
+            user = users.get_resource(username, soft=True)
             usertitle = user and user.get_title() or username
 
-            if type(comment) is list:
-                last_comment = comment[-1]
-            else:
-                last_comment = comment
-            if last_comment.get_parameter('date') == mtime.value:
-                comment = last_comment.value
-            else:
-                comment = None
-            if comment:
+            if comments and comments[-1].get_parameter('date') == mtime.value:
+                comment = comments[-1].value
                 comment = XMLContent.encode(Unicode.encode(comment))
                 comment = XMLParser(comment.replace('\n', '<br />'))
+            else:
+                comment = None
             i += 1
             row_ns = {'number': i,
                       'user': usertitle,
