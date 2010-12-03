@@ -156,8 +156,11 @@
             <legend>Attachments</legend>
             <ul stl:if="attachments">
               <li stl:repeat="file attachments">
-                <a href="${file/name}/;download">${file/name}</a>
-                (${file/mtime}, ${file/author})
+                <span stl:if="file/missing" class="missing">${file/name}</span>
+                <stl:block stl:if="not file/missing">
+                  <a href="${file/name}/;download">${file/name}</a>
+                  (${file/mtime}, ${file/author})
+                </stl:block>
               </li>
             </ul>
             <label for="attachment">New attachment</label><br/>

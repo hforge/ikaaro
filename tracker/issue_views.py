@@ -117,13 +117,21 @@ class Issue_Edit(STLForm):
         # Attachments
         links = []
         get_user = root.get_user_title
-        for attachment in resource.get_property('attachment'):
-            attachment = resource.get_resource(attachment)
-            mtime = attachment.get_property('mtime')
+        for attachment_name in resource.get_property('attachment'):
+            attachment = resource.get_resource(attachment_name, soft=True)
+            missing = (attachment is None)
+            author = mtime = None
+            if missing is False:
+                mtime = attachment.get_property('mtime')
+                mtime = context.format_datetime(mtime)
+                author = get_user(attachment.get_property('last_author'))
+
             links.append({
-                'name': attachment.name,
-                'author': get_user(attachment.get_property('last_author')),
-                'mtime': context.format_datetime(mtime)})
+                'author': author,
+                'missing': missing,
+                'mtime': mtime,
+                'name': attachment_name})
+
         namespace['attachments'] = links
 
         return namespace

@@ -10,3 +10,7 @@
 .tracker-resource {
   color: #0A4A0A;
 }
+
+.missing {
+  text-decoration: line-through;
+}
