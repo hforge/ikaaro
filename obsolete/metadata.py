@@ -52,7 +52,7 @@ def get_datatype(format, name):
 
 
 
-class Metadata(File):
+class OldMetadata(File):
 
     def new(self, handler_class=None, format=None, **kw):
         # Add format and version

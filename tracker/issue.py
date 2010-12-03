@@ -35,6 +35,7 @@ from ikaaro.comments import comment_datatype
 from ikaaro.file import File
 from ikaaro.folder import Folder
 from ikaaro.metadata import Metadata
+from ikaaro.obsolete.metadata import OldMetadata
 from ikaaro.registry import get_resource_class
 from ikaaro.utils import generate_name
 from issue_views import Issue_Edit, Issue_History
@@ -122,9 +123,17 @@ class Issue(Folder):
         database = context.database
         filename = '%s.metadata' % self.get_abspath()
         filename = filename[1:]
-        return [
-            database.get_blob_by_revision_and_path(x, filename, Metadata)
-            for x in database.get_commit_hashs(filename) ]
+
+        get_blob = database.get_blob_by_revision_and_path
+
+        history = []
+        for hash in database.get_commit_hashs(filename):
+            try:
+                metadata = get_blob(hash, filename, Metadata)
+            except SyntaxError:
+                metadata = get_blob(hash, filename, OldMetadata)
+            history.append(metadata)
+        return history
 
 
     def add_comment(self, context, form, new=False):
