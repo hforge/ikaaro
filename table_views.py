@@ -343,10 +343,20 @@ class OrderedTable_View(Table_View):
 
 
     def get_table_columns(self, resource, context):
-        columns = Table_View.get_table_columns(self, resource, context)
-        columns.append(('order', MSG(u'Order')))
+        proxy = super(OrderedTable_View, self)
+        columns = proxy.get_table_columns(resource, context)
+        columns.append(('order', MSG(u'Order'), False))
 
-        return columns
+        # Disable order feature
+        table_columns = []
+        for column in columns:
+            if len(column) == 2:
+                name, title = column
+            else:
+                name, title, k = column
+            table_columns.append((name, title, False))
+
+        return table_columns
 
 
     def get_item_value(self, resource, context, item, column):
