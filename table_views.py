@@ -29,11 +29,11 @@ from buttons import Button, RemoveButton, OrderUpButton, OrderDownButton
 from buttons import OrderBottomButton, OrderTopButton
 import messages
 from resource_views import DBResource_Edit
-from views import SearchForm
+from views import BrowseForm
 
 
 
-class Table_View(SearchForm):
+class Table_View(BrowseForm):
 
     access = 'is_allowed_to_view'
     access_POST = 'is_allowed_to_edit'
@@ -45,10 +45,6 @@ class Table_View(SearchForm):
 
     def get_widgets(self, resource, context):
         return resource.get_form()
-
-
-    def get_search_schema(self, resource, context):
-        return resource.handler.record_properties
 
 
     def get_items(self, resource, context):
@@ -63,16 +59,6 @@ class Table_View(SearchForm):
         # Ok
         items = resource.handler.get_records()
         return list(items)
-
-
-    def get_search_fields(self, resource, context):
-        search_fields = []
-        schema = self.get_search_schema(resource, context)
-        for widget in self.get_widgets(resource, context):
-            if hasattr(schema[widget.name], 'index'):
-                title = getattr(widget, 'title', widget.name)
-                search_fields.append((widget.name, title))
-        return search_fields
 
 
     def sort_and_batch(self, resource, context, items):
