@@ -382,7 +382,8 @@ class DBResource_AddBase(STLForm):
             """
 
         target_id = context.get_form_value('target_id')
-        return additional_javascript % target_id
+        # As ':' is a css selector, escape it
+        return additional_javascript % target_id.replace(':', r'\\:')
 
 
     def action_upload(self, resource, context, form):
