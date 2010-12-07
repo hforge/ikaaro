@@ -57,8 +57,6 @@
     <button type="submit" name="action" value="${action/value}"
       id="${action/id}" onclick="${action/onclick}"
       >${action/title}</button>
-    <!--input type="hidden" name="target_path" value="toto_path" />
-    <input type="hidden" name="mode" value="toto_mode" /-->
   </stl:block>
 </p>
 
