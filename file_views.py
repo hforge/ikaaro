@@ -29,12 +29,15 @@ from itools.fs import FileName
 from itools.gettext import MSG
 from itools.handlers import get_handler_class_by_mimetype
 from itools.web import BaseView, STLView, STLForm, ERROR
+from itools.web import FormError
 
 # Import from ikaaro
-from autoform import title_widget, description_widget, subject_widget
-from autoform import file_widget, timestamp_widget
 from autoform import FileWidget, PathSelectorWidget, TextWidget
+from autoform import file_widget, timestamp_widget
+from autoform import title_widget, description_widget, subject_widget
 from datatypes import FileDataType, ImageWidth
+from folder import Folder
+from messages import MSG_NAME_CLASH
 from messages import MSG_NEW_RESOURCE, MSG_UNEXPECTED_MIMETYPE
 from resource_views import DBResource_Edit
 from views_new import NewInstance
@@ -376,6 +379,20 @@ class Archive_View(STLForm):
                 'extract': extract, 'widget': widget}
 
 
+    def _get_form(self, resource, context):
+        form = STLForm._get_form(self, resource, context)
+
+        # Get the target resource
+        target = form['target']
+        target = resource.get_resource(target, soft=True)
+        if target is None:
+            raise FormError, ERROR(u'Target does not exist.')
+        if isinstance(target, Folder) is False:
+            raise FormError, ERROR(u'Target must be a folder.')
+
+        return form
+
+
     def action(self, resource, context, form):
         # Get the list of paths to extract
         handler = resource.handler
@@ -388,12 +405,18 @@ class Archive_View(STLForm):
 
         # Make the resources
         language = resource.get_edit_languages(context)[0]
-        target.extract_archive(handler, language)
+        try:
+            target.extract_archive(handler, language)
+        except RuntimeError, message:
+            context.commit = False
+            context.message = MSG_NAME_CLASH
+            return
 
         # Ok
         message = MSG(u'Files extracted')
         goto = context.get_link(target)
         return context.come_back(message, goto=goto)
+
 
 
 class Flash_View(File_View):

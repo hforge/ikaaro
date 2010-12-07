@@ -143,6 +143,10 @@ class Folder(DBResource):
             # Case 1: folder
             filename = path[-1]
             if path.endswith_slash:
+                if folder.get_resource(filename, soft=True):
+                    message = 'There is already a resource named {name}'
+                    raise RuntimeError, message.format(name=filename)
+
                 folder.make_resource(filename, Folder)
                 continue
 
