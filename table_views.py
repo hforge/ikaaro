@@ -27,9 +27,9 @@ from itools.web import INFO, ERROR, BaseView, FormError
 # Import from ikaaro
 from buttons import Button, RemoveButton, OrderUpButton, OrderDownButton
 from buttons import OrderBottomButton, OrderTopButton
-import messages
 from resource_views import DBResource_Edit
 from views import BrowseForm
+import messages
 
 
 
@@ -48,15 +48,6 @@ class Table_View(BrowseForm):
 
 
     def get_items(self, resource, context):
-        # Build the search query
-        if self.search_template is not None:
-            query = context.query
-            search_term = query['search_term'].strip()
-            if search_term:
-                search_field = query['search_field']
-                return resource.handler.search(search_field, search_term)
-
-        # Ok
         items = resource.handler.get_records()
         return list(items)
 
