@@ -54,12 +54,14 @@ Security Policy
 
 If the user has the administrative role she will be able to modify the
 application's settings. Most notably to choose the *security policy* between
-two options (see figure):
+three options (see figure):
 
 * **Intranet** Authentication will be required for any level of access.  Only
   administrators will be able to register new users. (This is the default
   security policy.)
 * **Extranet**  Non authenticated users will be able to access published
+  content, and to register by themselves.
+* **Community site** Non authenticated users will be able to access published
   content, and to register by themselves.
 
 .. figure:: figures/settings.*
@@ -178,16 +180,16 @@ the text (see figure).
    The Wiki
 
 
-Forum
------
+Blog
+----
 
-The Forum, or blog, allows to keep a discussion on-line about whatever
+The Blog, or forum, allows to keep a discussion on-line about whatever
 topic. See figure for a philosophical discussion.
 
-.. figure:: figures/forum.*
+.. figure:: figures/blog.*
    :align: center
 
-   The Forum
+   The Blog
 
 
 Calendar
