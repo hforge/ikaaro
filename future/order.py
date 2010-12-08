@@ -19,12 +19,13 @@ from copy import deepcopy
 
 # Import from itools
 from itools.csv import UniqueError
+from itools.database import AndQuery, OrQuery, PhraseQuery, NotQuery
 from itools.datatypes import String
 from itools.gettext import MSG
+from itools.handlers.utils import transmap
 from itools.stl import set_prefix
 from itools.uri import get_reference, resolve_uri2, Path
 from itools.web import ERROR, INFO, get_context
-from itools.database import AndQuery, OrQuery, PhraseQuery, NotQuery
 from itools.xml import XMLParser
 
 # Import from ikaaro
@@ -169,7 +170,7 @@ class ResourcesOrderedTable_Unordered(Folder_BrowseContent):
                    ('path', MSG(u'Path')),
                    ('workflow_state', MSG(u'State'))]
         if self.order_preview:
-            columns.append(('order_preview', MSG(u"Preview")))
+            columns.append(('order_preview', MSG(u"Preview"), False))
         return columns
 
 
@@ -186,6 +187,15 @@ class ResourcesOrderedTable_Unordered(Folder_BrowseContent):
         return AndQuery(query_base_path, query_formats, *query_excluded)
 
 
+    def get_key_sorted_by_title(self):
+        # As we do not show abspath, title must return a value
+        # to avoid problem when sorting on title
+        def key(item):
+            title = item.title or unicode(item.name)
+            return title.lower().translate(transmap)
+        return key
+
+
     def get_items(self, resource, context):
         query = self.get_items_query(resource, context)
         return context.root.search(query)
@@ -196,7 +206,9 @@ class ResourcesOrderedTable_Unordered(Folder_BrowseContent):
         if column == 'checkbox':
             return item_brain.name, False
         elif column == 'title':
-            return item_resource.get_title(), context.get_link(item_resource)
+            # As we do not show abspath, title must return a value
+            title = item_brain.title or unicode(item_brain.name)
+            return title, context.get_link(item_resource)
         elif column == 'path':
             return item_brain.name
         elif column == 'workflow_state':
