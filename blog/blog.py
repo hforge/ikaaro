@@ -62,20 +62,19 @@ class Post_NewInstance(NewInstance):
 
 
     def action(self, resource, context, form):
-        name = form['name']
-        title = form['title']
-        html = form['data']
-        release_date = form['date']
-
-        # Make Object
-        language = resource.get_edit_languages(context)[0]
-        post = resource.make_resource(name, Post, language=language)
-        handler = post.get_handler(language=language)
-        handler.set_body(html)
-        post.metadata.set_property('title', Property(title, lang=language))
-        post.metadata.set_property('date', release_date)
-
-        goto = './%s/' % name
+        # Get the container
+        container = context.site_root.get_resource(form['path'])
+        # Make resource
+        language = container.get_edit_languages(context)[0]
+        child = container.make_resource(form['name'], Post, language=language)
+        # Set properties
+        handler = child.get_handler(language=language)
+        handler.set_body(form['data'])
+        title = Property(form['title'], lang=language)
+        child.metadata.set_property('title', title)
+        child.metadata.set_property('date', form['date'])
+        # Ok
+        goto = str(resource.get_pathto(child))
         return context.come_back(MSG_NEW_RESOURCE, goto=goto)
 
 

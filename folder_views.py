@@ -112,13 +112,31 @@ class Folder_NewResource(IconsView):
 
 
     def get_namespace(self, resource, context):
+        # 1. Find out the resource classes we can add
+        document_types = []
+        containers = set()
+        for brain in context.root.search(is_folder=True).get_documents():
+            if brain.format in containers:
+                continue
+
+            # Exclude configuration and users
+            resource = context.root.get_resource(brain.abspath)
+            if not resource.is_content_container():
+                continue
+
+            # Add
+            containers.add(brain.format)
+            for cls in resource.get_document_types():
+                if cls not in document_types:
+                    document_types.append(cls)
+
+        # 2. Build the namespace
         items = [
             {'icon': '/ui/' + cls.class_icon48,
              'title': cls.class_title.gettext(),
              'description': cls.class_description.gettext(),
-             'url': ';new_resource?type=%s' % quote(cls.class_id)
-            }
-            for cls in resource.get_document_types() ]
+             'url': ';new_resource?type=%s' % quote(cls.class_id)}
+            for cls in document_types ]
 
         return {
             'batch': None,

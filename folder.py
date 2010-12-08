@@ -207,8 +207,8 @@ class Folder(DBResource):
 
 
     def del_resource(self, name, soft=False, ref_action='restrict'):
-        """ref_action allows to specify which action is done before deleting the
-        resource.
+        """ref_action allows to specify which action is done before deleting
+        the resource.
         ref_action can take 2 values:
         - 'restrict' (default value): do an integrity check
         - 'force': do nothing
@@ -374,16 +374,32 @@ class Folder(DBResource):
             yield resource
 
 
+    def is_content_container(self):
+        from theme import Theme
+        from user import UserFolder
+
+        # Exclude configuration and users
+        resource = self
+        while resource is not None:
+            if isinstance(resource, (Theme, UserFolder)):
+                return False
+            resource = resource.parent
+
+        return True
+
+
     #######################################################################
     # User interface
     #######################################################################
     def get_view(self, name, query=None):
         # Add resource form
         if name == 'new_resource':
-            if query is not None and 'type' in query:
-                view = get_resource_class(query['type']).new_instance
-                if isinstance(view, BaseView):
-                    return view
+            if query:
+                class_id = query.get('type')
+                if class_id:
+                    view = get_resource_class(class_id).new_instance
+                    if isinstance(view, BaseView):
+                        return view
 
         # Default
         return DBResource.get_view(self, name, query)

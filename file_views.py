@@ -32,7 +32,7 @@ from itools.web import BaseView, STLView, STLForm, ERROR
 from itools.web import FormError
 
 # Import from ikaaro
-from autoform import FileWidget, PathSelectorWidget, TextWidget
+from autoform import FileWidget, PathSelectorWidget, SelectWidget, TextWidget
 from autoform import file_widget, timestamp_widget
 from autoform import title_widget, description_widget, subject_widget
 from datatypes import FileDataType, ImageWidth
@@ -48,13 +48,16 @@ class File_NewInstance(NewInstance):
 
     title = MSG(u'Upload File')
     schema = {
+        'file': FileDataType(mandatory=True),
         'title': Unicode,
+        'path': String(mandatory=True),
         'name': String,
-        'file': FileDataType(mandatory=True)}
+        }
     widgets = [
+        FileWidget('file', title=MSG(u'File'), size=35),
         title_widget,
-        TextWidget('name', title=MSG(u'Name'), default=''),
-        FileWidget('file', title=MSG(u'File'), size=35)]
+        SelectWidget('path', title=MSG(u'Path'), has_empty_option=False),
+        TextWidget('name', title=MSG(u'Name'), default='')]
 
 
     def get_new_resource_name(self, form):
@@ -66,23 +69,22 @@ class File_NewInstance(NewInstance):
         filename, mimetype, body = form['file']
         name, type, language = FileName.decode(filename)
 
-        return form['title'].strip() or name
+        return form['title'] or name
 
 
     def action(self, resource, context, form):
+        # Get the container
+        container = context.site_root.get_resource(form['path'])
         # Make the resource
         name = form['name']
         filename, mimetype, body = form['file']
-        language = resource.get_edit_languages(context)[0]
-        child = resource._make_file(name, filename, mimetype, body, language)
-
-        # Set the title
-        title = form['title'].strip()
-        title = Property(title, lang=language)
+        language = container.get_edit_languages(context)[0]
+        child = container._make_file(name, filename, mimetype, body, language)
+        # Set properties
+        title = Property(form['title'], lang=language)
         child.metadata.set_property('title', title)
-
         # Ok
-        goto = './%s/' % name
+        goto = str(resource.get_pathto(child))
         return context.come_back(MSG_NEW_RESOURCE, goto=goto)
 
 

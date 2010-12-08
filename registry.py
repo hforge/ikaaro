@@ -48,9 +48,7 @@ def get_resource_class(class_id):
 documents_registry = {}
 
 def register_document_type(resource_class, type=None):
-    if type not in documents_registry:
-        documents_registry[type] = []
-    documents_registry[type].append(resource_class)
+    documents_registry.setdefault(type, []).append(resource_class)
 
 
 def get_document_types(type=None, default=None):

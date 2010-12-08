@@ -23,7 +23,8 @@ from itools.handlers import checkid
 from itools.web import FormError
 
 # Import from ikaaro
-from autoform import AutoForm, ReadOnlyWidget, TextWidget, title_widget
+from autoform import AutoForm
+from autoform import ReadOnlyWidget, SelectWidget, TextWidget, title_widget
 from buttons import Button
 from registry import get_resource_class, get_document_types
 import messages
@@ -39,14 +40,17 @@ class NewInstance(AutoForm):
     query_schema = freeze({
         'type': String,
         'name': String,
+        'path': String,
         'title': Unicode})
     schema = freeze({
         'cls_description': Unicode,
+        'path': String(mandatory=True),
         'name': String,
         'title': Unicode})
     widgets = freeze([
         ReadOnlyWidget('cls_description'),
         title_widget,
+        SelectWidget('path', title=MSG(u'Path'), has_empty_option=False),
         TextWidget('name', title=MSG(u'Name'), default='')])
     actions = [Button(access=True, css='button-ok', title=MSG(u'Add'))]
     context_menus = freeze([])
@@ -65,14 +69,51 @@ class NewInstance(AutoForm):
 
 
     def get_value(self, resource, context, name, datatype):
-        if name in self.get_query_schema():
-            return context.query[name]
-        elif name == 'cls_description':
-            type = context.query['type']
-            if not type:
-                return ''
-            cls = get_resource_class(type)
+        if name == 'cls_description':
+            class_id = context.query['type']
+            cls = get_resource_class(class_id)
             return cls.class_description.gettext()
+        elif name == 'path':
+            class_id = context.query['type']
+            resource_path = resource.get_abspath()
+
+            cache = {}
+            items = []
+            selected, selected_len = 0, 0
+            idx = 0
+            for brain in context.root.search(is_folder=True).get_documents():
+                if brain.format not in cache:
+                    resource = context.root.get_resource(brain.abspath)
+                    if not resource.is_content_container():
+                        continue
+                    for cls in resource.get_document_types():
+                        if cls.class_id == class_id:
+                            cache[brain.format] = True
+                            break
+                    else:
+                        cache[brain.format] = False
+
+                if not cache[brain.format]:
+                    continue
+
+                path = context.site_root.get_pathto(brain)
+                title = '/' if not path else ('/%s' % path)
+                # Selected
+                if context.query['path'] == path:
+                    selected, selected_len = idx, -1
+                elif selected_len > -1:
+                    prefix = resource_path.get_prefix(brain.abspath)
+                    prefix_len = len(prefix)
+                    if prefix_len > selected_len:
+                        selected, selected_len = idx, prefix_len
+                # Next
+                items.append({'name': path, 'value': title, 'selected': False})
+                idx += 1
+
+            items[selected]['selected'] = True
+            return items
+        elif name in self.get_query_schema():
+            return context.query[name]
         return AutoForm.get_value(self, resource, context, name, datatype)
 
 
@@ -87,52 +128,49 @@ class NewInstance(AutoForm):
 
     def get_new_resource_name(self, form):
         # If the name is not explicitly given, use the title
-        name = form['name']
-        title = form['title'].strip()
-        if name is None:
-            return title
-        return name or title
+        return form['name'] or form['title']
 
 
     def _get_form(self, resource, context):
-        form = AutoForm._get_form(self, resource, context)
-        name = self.get_new_resource_name(form)
+        form = super(NewInstance, self)._get_form(resource, context)
 
-        # Check the name
+        # 1. Strip title and name
+        form['title'] = form['title'].strip()
+        form['name'] = form['name'].strip()
+
+        # 2. Get the name
+        name = self.get_new_resource_name(form)
         if not name:
             raise FormError, messages.MSG_NAME_MISSING
-
         try:
             name = checkid(name)
         except UnicodeEncodeError:
             name = None
-
         if name is None:
             raise FormError, messages.MSG_BAD_NAME
 
-        # Check the name is free
+        # 3. Check the name is free
         if resource.get_resource(name, soft=True) is not None:
             raise FormError, messages.MSG_NAME_CLASH
+        form['name'] = name
 
         # Ok
-        form['name'] = name
         return form
 
 
     def action(self, resource, context, form):
-        name = form['name']
-        title = form['title']
-
-        # Create the resource
+        # Get the container
+        container = context.site_root.get_resource(form['path'])
+        # Make the resource
         class_id = context.query['type']
         cls = get_resource_class(class_id)
-        child = resource.make_resource(name, cls)
-        # The metadata
-        language = resource.get_edit_languages(context)[0]
-        title = Property(title, lang=language)
+        child = container.make_resource(form['name'], cls)
+        # Set properties
+        language = container.get_edit_languages(context)[0]
+        title = Property(form['title'], lang=language)
         child.metadata.set_property('title', title)
-
-        goto = './%s/' % name
+        # Ok
+        goto = str(resource.get_pathto(child))
         return context.come_back(messages.MSG_NEW_RESOURCE, goto=goto)
 
 
