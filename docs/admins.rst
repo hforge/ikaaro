@@ -13,12 +13,12 @@ Introduction
 Requirements
 ------------
 
-Python 2.5.2 and :mod:`itools` [#admins-itools]_ 0.60 are required. It is
-recommended to install the :mod:`pil` [#admins-pil]_ and :mod:`docutils`
-[#admins-docutils]_ packages.
+Python 2.6, :mod:`itools` [#admins-itools]_ 0.62.1 and :mod:`guppy`
+[#admins-guppy]_ 0.1.8 are required. It is recommended to install the
+:mod:`pil` [#admins-pil]_ and :mod:`docutils` [#admins-docutils]_ packages.
 
-To be able to index office documents (ODF, PDF, etc.) the libraries :mod:`wv2`
-[#admins-wv2]_ and :mod:`poppler` [#admins-poppler]_  are needed.
+The other optionally requirements will be given by :mod:`ikaaro` when you
+launch it.
 
 
 Download and Install
@@ -62,22 +62,19 @@ option.  This is an excerpt for the :file:`icms-init.py` script::
     Creates a new instance of ikaaro with the name TARGET.
 
     Options:
-      --version             show program's version number and
-                            exit
+      --version             show program's version number and exit
       -h, --help            show this help message and exit
-      -a ADDRESS, --address=ADDRESS
-                            listen to IP ADDRESS
       -e EMAIL, --email=EMAIL
                             e-mail address of the admin user
       -p PORT, --port=PORT  listen to PORT number
-      -r ROOT, --root=ROOT  create an instance of the ROOT
-                            application
+      -r ROOT, --root=ROOT  create an instance of the ROOT application
       -s SMTP_HOST, --smtp-host=SMTP_HOST
-                            use the given SMTP_HOST to send
-                            emails
+                            use the given SMTP_HOST to send emails
       -w PASSWORD, --password=PASSWORD
-                            use the given PASSWORD for the
-                            admin user
+                            use the given PASSWORD for the admin user
+      -m MODULES, --modules=MODULES
+                            add the given MODULES to load at start
+      --profile=PROFILE     print profile information to the given file
 
 
 Make a new instance
@@ -126,30 +123,30 @@ The different options can be split in four groups:
 * The ``modules`` option allows to load (import) the specified Python packages
   when the server starts. This is the way we can extend the :mod:`ikaaro` CMS
   with third party packages.
-* The ``address`` and ``port`` options define the internet address and the
-  port number the Web server will listen to.
+* The ``listen-address`` and ``listen-port`` options define the internet
+  address and the port number the Web server will listen to.
 
   By default connections are accepted from any internet address. In a
   production environment it is wise to restrict the connections to only those
-  comming from the localhost. Section :ref:`admins-production` explains the
+  coming from the localhost. Section :ref:`admins-production` explains the
   details.
-* The ``smtp-host``, ``smtp-login`` and ``smtp-password`` are used to define
-  the SMTP relay server that is to be used to send emails; and to provide the
-  credentials for servers that require authentication.
+* The ``smtp-host``, ``smtp-from``, ``smtp-login`` and ``smtp-password`` are
+  used to define the SMTP relay server that is to be used to send emails; and
+  to provide the credentials for servers that require authentication.
 
-  The ``contact-email`` option must be a valid email address, it will be used
+  The ``contact-from`` option must be a valid email address, it will be used
   for the ``From`` field in outgoing messages.
 
   It is very important to set these options to proper values, since the
   :mod:`ikaaro` CMS sends emails for several important purposes.
-* The ``debug`` option if set will output extra informations to the events
-  log, the ``log/events`` file.
+* The ``log-level`` allows you to set the level of verbosity saved in the
+  events log ``log/events`` file.
 
 
 Start/Stop the server
 =====================
 
-The :mod:`ikaaro` CMS can be started simply be the use of the
+The :mod:`ikaaro` CMS can be started simply by the use of the
 :file:`icms-start.py` script::
 
     $ icms-start.py my_instance
@@ -195,7 +192,7 @@ There are four log files:
 
 * The access log uses the *Common Log Format* [#admins-logs]_, useful for
   example to build statistics about the usage of the web site.
-* By default the events log keeps record of the database transactions.  In
+* By default the events log keeps record of the database transactions. In
   debug mode (see section :ref:`admins-configuration-file`), more low-level
   information is recorded. This log file contains also information about every
   *internal server* error, specifically the request headers and the Python
@@ -230,10 +227,9 @@ make any changes unless you know what you are doing!*
 Metadata
 ^^^^^^^^
 
-Every :mod:`ikaaro` object is defined by a metadata file. As the example
-shows, a new instance has three objects: the root (defined by the
-:file:`.metadata` file), the users folder, and the admin user created by the
-init script.
+Every :mod:`ikaaro` object is defined by a metadata file. As the example shows,
+a new instance has three objects: the root (defined by the :file:`.metadata`
+file), the users folder and the theme folder.
 
 A metadata file looks like this:
 
@@ -251,7 +247,7 @@ A metadata file looks like this:
 Deployment in a production environment
 ======================================
 
-By default the server listens to all the network interfaces.  For security
+By default the server listens to all the network interfaces. For security
 reasons it is recommended to change the configuration so it only listens
 to the local interface:
 
@@ -320,15 +316,13 @@ instructions to restore the database (``git`` commands).
 
 .. rubric:: Footnotes
 
-.. [#admins-itools]  http://www.hforge.org/itools
+.. [#admins-itools] http://www.hforge.org/itools
+
+.. [#admins-guppy] http://guppy-pe.sourceforge.net/
 
 .. [#admins-pil] http://www.pythonware.com/products/pil/
 
 .. [#admins-docutils] http://docutils.sourceforge.net
-
-.. [#admins-wv2] http://sourceforge.net/projects/wvware/
-
-.. [#admins-poppler] http://poppler.freedesktop.org/
 
 .. [#admins-logs] http://www.w3.org/Daemon/User/Config/Logging.html\#common-logfile-format
 
