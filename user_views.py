@@ -230,10 +230,7 @@ class User_EditAccount(DBResource_Edit):
                     u' try again.', email=email).gettext()
                 return
 
-        goto = super(User_EditAccount, self).action(resource, context, form)
-        if type(context.message) is INFO:
-            context.message = INFO(u'Account changed.')
-        return goto
+        return super(User_EditAccount, self).action(resource, context, form)
 
 
 

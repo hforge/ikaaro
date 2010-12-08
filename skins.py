@@ -191,8 +191,6 @@ class Skin(UIFolder):
 
         # The view
         view_title = context.view.get_title(context)
-        if type(view_title) is MSG:
-            view_title = view_title.gettext()
 
         # Ok
         return template.gettext(root_title=root_title, here_title=here_title,
@@ -372,7 +370,7 @@ class Skin(UIFolder):
 
         messages_ns = []
         for message in messages:
-            css_class = 'error' if isinstance(message, ERROR) else 'info'
+            css_class = getattr(message, 'css', 'info')
             messages_ns.append({'message': message, 'class': css_class})
 
         namespace = {'messages': messages_ns}

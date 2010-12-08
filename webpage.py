@@ -22,7 +22,7 @@
 from copy import deepcopy
 
 # Import from itools
-from itools.core import merge_dicts
+from itools.core import merge_dicts, thingy_type
 from itools.datatypes import Tokens, String
 from itools.gettext import MSG
 from itools.html import xhtml_uri, XHTMLFile
@@ -195,7 +195,10 @@ class HTMLEditView(File_Edit):
 
     def action(self, resource, context, form):
         File_Edit.action(self, resource, context, form)
-        if context.edit_conflict or isinstance(context.message, ERROR):
+        if context.edit_conflict:
+            return
+        message = context.message
+        if type(message) is thingy_type and issubclass(message, ERROR):
             return
 
         # Send notifications
