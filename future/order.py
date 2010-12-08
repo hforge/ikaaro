@@ -94,8 +94,6 @@ class ResourcesOrderedTable_Ordered(OrderedTable_View):
     def get_table_columns(self, resource, context):
         columns = OrderedTable_View.get_table_columns(self, resource,
                                                       context)
-        # Remove "sortable" status
-        columns = [(name, title, False) for name, title in columns]
         # Remove column with id and replace it by title,
         # and add a column for the workflow state
         columns[1] = ('title', MSG(u'Title'), False)
