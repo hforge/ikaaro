@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import freeze, merge_dicts
+from itools.core import freeze
 from itools.csv import Property
 from itools.datatypes import String, Unicode
 from itools.gettext import MSG
@@ -26,7 +26,7 @@ from itools.web import FormError
 from autoform import AutoForm
 from autoform import ReadOnlyWidget, SelectWidget, TextWidget, title_widget
 from buttons import Button
-from registry import get_resource_class, get_document_types
+from registry import get_resource_class
 import messages
 
 
@@ -163,66 +163,6 @@ class NewInstance(AutoForm):
         container = context.site_root.get_resource(form['path'])
         # Make the resource
         class_id = context.query['type']
-        cls = get_resource_class(class_id)
-        child = container.make_resource(form['name'], cls)
-        # Set properties
-        language = container.get_edit_languages(context)[0]
-        title = Property(form['title'], lang=language)
-        child.metadata.set_property('title', title)
-        # Ok
-        goto = str(resource.get_pathto(child))
-        return context.come_back(messages.MSG_NEW_RESOURCE, goto=goto)
-
-
-
-subtype_widget = SelectWidget('class_id', title=MSG(u'Subtype'),
-                              has_empty_option=False)
-class ProxyNewInstance(NewInstance):
-    """This particular view allows to choose the resource to add from a
-    collection of resource classes, with radio buttons.
-    """
-
-    schema = merge_dicts(NewInstance.schema, class_id=String(madatory=True))
-
-
-    def get_widgets(self, resource, context):
-        widgets = NewInstance.widgets
-
-        type = context.query['type']
-        cls = get_resource_class(type)
-        document_types = get_document_types(type)
-        if len(document_types) < 2:
-            return widgets
-
-        return widgets + [subtype_widget]
-
-
-    def get_value(self, resource, context, name, datatype):
-        if name == 'class_id':
-            type = context.query['type']
-            cls = get_resource_class(type)
-            document_types = get_document_types(type)
-            selected = context.get_form_value('class_id')
-            items = [
-                {'name': x.class_id,
-                 'value': x.class_title.gettext(),
-                 'selected': x.class_id == selected}
-                for x in document_types ]
-            if selected is None:
-                items[0]['selected'] = True
-
-            # Ok
-            return items
-
-        proxy = super(ProxyNewInstance, self)
-        return proxy.get_value(resource, context, name, datatype)
-
-
-    def action(self, resource, context, form):
-        # Get the container
-        container = context.site_root.get_resource(form['path'])
-        # Make the resource
-        class_id = form['class_id'] or context.query['type']
         cls = get_resource_class(class_id)
         child = container.make_resource(form['name'], cls)
         # Set properties
