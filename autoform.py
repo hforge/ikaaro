@@ -516,9 +516,33 @@ class CaptchaWidget(TextWidget):
 
 
 
+class LocationWidget(SelectWidget):
+    """This widget is only used in NewInstance forms. It is a hack because
+    it is a composite widget and ikaaro does not allow to do this easily.
+    """
+
+    template = make_stl_template("""
+    <select id="${id}" name="${name}" class="${css}">
+      <option stl:repeat="option options" value="${option/name}"
+        selected="${option/selected}">${option/value}</option>
+    </select>
+    <input stl:if="include_name"
+      type="text" id="name" name="name" value="${name_value}"
+      maxlength="80" size="40" style="width: 50%" />
+    """)
+
+    include_name = True
+
+    def name_value(self):
+        return get_context().query['name']
+
+
+
+
 ###########################################################################
 # Common widgets to reuse
 ###########################################################################
+location_widget = LocationWidget('path', title=MSG(u'Location'))
 title_widget = TextWidget('title', title=MSG(u'Title'))
 description_widget = MultilineWidget('description',
                                      title=MSG(u'Description'), rows=8)
@@ -632,7 +656,6 @@ class AutoForm(STLForm):
             action = context.uri
             actions[0]['value'] = None
 
-
         # Build namespace
         return {
             'actions': actions,
@@ -641,4 +664,3 @@ class AutoForm(STLForm):
             'description': self.description,
             'first_widget': first_widget,
             'widgets': ns_widgets}
-

@@ -24,7 +24,7 @@ from os.path import basename, splitext
 # Import from itools
 from itools.core import merge_dicts
 from itools.csv import Property
-from itools.datatypes import Integer, Unicode, String, HTTPDate, PathDataType
+from itools.datatypes import Integer, String, HTTPDate, PathDataType
 from itools.fs import FileName
 from itools.gettext import MSG
 from itools.handlers import get_handler_class_by_mimetype
@@ -32,8 +32,8 @@ from itools.web import BaseView, STLView, STLForm, ERROR
 from itools.web import FormError
 
 # Import from ikaaro
-from autoform import FileWidget, PathSelectorWidget, SelectWidget, TextWidget
-from autoform import file_widget, timestamp_widget
+from autoform import FileWidget, PathSelectorWidget, ReadOnlyWidget
+from autoform import file_widget, location_widget, timestamp_widget
 from autoform import title_widget, description_widget, subject_widget
 from datatypes import FileDataType, ImageWidth
 from folder import Folder
@@ -47,17 +47,14 @@ from workflow import StateEnumerate, state_widget
 class File_NewInstance(NewInstance):
 
     title = MSG(u'Upload File')
-    schema = {
-        'file': FileDataType(mandatory=True),
-        'title': Unicode,
-        'path': String(mandatory=True),
-        'name': String,
-        }
+    schema = merge_dicts(NewInstance.schema,
+        file=FileDataType(mandatory=True))
+
     widgets = [
+        ReadOnlyWidget('cls_description'),
         FileWidget('file', title=MSG(u'File'), size=35),
         title_widget,
-        SelectWidget('path', title=MSG(u'Path'), has_empty_option=False),
-        TextWidget('name', title=MSG(u'Name'), default='')]
+        location_widget]
 
 
     def get_new_resource_name(self, form):

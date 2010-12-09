@@ -23,8 +23,7 @@ from itools.handlers import checkid
 from itools.web import FormError
 
 # Import from ikaaro
-from autoform import AutoForm
-from autoform import ReadOnlyWidget, SelectWidget, TextWidget, title_widget
+from autoform import AutoForm, ReadOnlyWidget, location_widget, title_widget
 from buttons import Button
 from registry import get_resource_class
 import messages
@@ -50,8 +49,7 @@ class NewInstance(AutoForm):
     widgets = freeze([
         ReadOnlyWidget('cls_description'),
         title_widget,
-        SelectWidget('path', title=MSG(u'Path'), has_empty_option=False),
-        TextWidget('name', title=MSG(u'Name'), default='')])
+        location_widget])
     actions = [Button(access=True, css='button-ok', title=MSG(u'Add'))]
     context_menus = freeze([])
 
