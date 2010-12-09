@@ -186,41 +186,36 @@ class CreditsView(STLView):
 
 
 
-class WebSite_NewInstance(ProxyNewInstance):
+vhosts_widget = MultilineWidget('vhosts', title=MSG(u'Domain names'),
+    tip=MSG(u'Type the hostnames this website will apply to, each one in a'
+            u' different line.'))
 
-    template = '/ui/website/new_instance.xml.en'
+class WebSite_NewInstance(ProxyNewInstance):
 
     schema = merge_dicts(ProxyNewInstance.schema, vhosts=String)
 
-    def get_namespace(self, resource, context):
-        namespace = ProxyNewInstance.get_namespace(self, resource, context)
-        # Add vhosts
-        vhosts = context.get_form_value('vhosts')
-        namespace['vhosts'] = vhosts
 
-        return namespace
+    def get_widgets(self, resource, context):
+        proxy = super(WebSite_NewInstance, self)
+        widgets = proxy.get_widgets(resource, context)
+        return widgets + [vhosts_widget]
 
 
     def action(self, resource, context, form):
-        name = form['name']
-        title = form['title']
+        # Get the container
+        container = context.site_root.get_resource(form['path'])
+        # Make the resource
+        class_id = form['class_id'] or context.query['type']
+        cls = get_resource_class(class_id)
+        child = container.make_resource(form['name'], cls)
+        # Set properties
+        language = container.get_edit_languages(context)[0]
+        title = Property(form['title'], lang=language)
+        child.metadata.set_property('title', title)
         vhosts = form['vhosts']
         vhosts = [ x.strip() for x in vhosts.splitlines() ]
         vhosts = [ x for x in vhosts if x ]
-
-        # Create the resource
-        class_id = form['class_id']
-        if class_id is None:
-            # Get it from the query
-            class_id = context.query['type']
-        cls = get_resource_class(class_id)
-        child = resource.make_resource(name, cls)
-        # The metadata
-        metadata = child.metadata
-        language = resource.get_edit_languages(context)[0]
-        metadata.set_property('title', Property(title, lang=language))
-        metadata.set_property('vhosts', vhosts)
-
-        goto = './%s/' % name
+        child.metadata.set_property('vhosts', vhosts)
+        # Ok
+        goto = str(resource.get_pathto(child))
         return context.come_back(MSG_NEW_RESOURCE, goto=goto)
-

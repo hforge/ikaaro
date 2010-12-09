@@ -200,24 +200,24 @@ class Tracker_NewInstance(NewInstance):
 
 
     def action(self, resource, context, form):
+        # Get the container
+        container = context.site_root.get_resource(form['path'])
+        # Make the resource
         name = form['name']
-        title = form['title']
-
-        # Create the resource
         class_id = context.query['type']
         cls = get_resource_class(class_id)
-        child = resource.make_resource(name, cls)
+        child = container.make_resource(name, cls)
         # The metadata
-        language = resource.get_edit_languages(context)[0]
-        title = Property(title, lang=language)
+        language = container.get_edit_languages(context)[0]
+        title = Property(form['title'], lang=language)
         child.metadata.set_property('title', title)
         # Add the initial product
         product = form['product']
-        table = resource.get_resource('%s/product' % name).get_handler()
+        table = container.get_resource('%s/product' % name).get_handler()
         product = Property(product, language='en')
         table.add_record({'title': product})
-
-        goto = './%s/' % name
+        # Ok
+        goto = str(resource.get_pathto(child))
         return context.come_back(messages.MSG_NEW_RESOURCE, goto=goto)
 
 

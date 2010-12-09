@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import freeze
+from itools.core import freeze, merge_dicts
 from itools.csv import Property
 from itools.datatypes import String, Unicode
 from itools.gettext import MSG
@@ -39,14 +39,14 @@ class NewInstance(AutoForm):
     access = 'is_allowed_to_add'
     query_schema = freeze({
         'type': String,
-        'name': String,
+        'title': Unicode,
         'path': String,
-        'title': Unicode})
+        'name': String})
     schema = freeze({
         'cls_description': Unicode,
+        'title': Unicode,
         'path': String(mandatory=True),
-        'name': String,
-        'title': Unicode})
+        'name': String})
     widgets = freeze([
         ReadOnlyWidget('cls_description'),
         title_widget,
@@ -175,61 +175,60 @@ class NewInstance(AutoForm):
 
 
 
+subtype_widget = SelectWidget('class_id', title=MSG(u'Subtype'),
+                              has_empty_option=False)
 class ProxyNewInstance(NewInstance):
     """This particular view allows to choose the resource to add from a
     collection of resource classes, with radio buttons.
     """
 
-    template = '/ui/base/proxy_new_instance.xml'
-    schema = {
-        'name': String,
-        'title': Unicode,
-        'class_id': String}
+    schema = merge_dicts(NewInstance.schema, class_id=String(madatory=True))
 
 
-    def get_namespace(self, resource, context):
+    def get_widgets(self, resource, context):
+        widgets = NewInstance.widgets
+
         type = context.query['type']
         cls = get_resource_class(type)
-
         document_types = get_document_types(type)
-        items = []
-        if document_types:
-            # Multiple types
-            if len(document_types) == 1:
-                items = None
-            else:
-                selected = context.get_form_value('class_id')
-                items = [
-                    {'title': x.class_title.gettext(),
-                     'class_id': x.class_id,
-                     'selected': x.class_id == selected,
-                     'icon': '/ui/' + x.class_icon16}
-                    for x in document_types ]
-                if selected is None:
-                    items[0]['selected'] = True
-        # Ok
-        return {
-            'class_id': cls.class_id,
-            'class_title': cls.class_title.gettext(),
-            'items': items}
+        if len(document_types) < 2:
+            return widgets
+
+        return widgets + [subtype_widget]
+
+
+    def get_value(self, resource, context, name, datatype):
+        if name == 'class_id':
+            type = context.query['type']
+            cls = get_resource_class(type)
+            document_types = get_document_types(type)
+            selected = context.get_form_value('class_id')
+            items = [
+                {'name': x.class_id,
+                 'value': x.class_title.gettext(),
+                 'selected': x.class_id == selected}
+                for x in document_types ]
+            if selected is None:
+                items[0]['selected'] = True
+
+            # Ok
+            return items
+
+        proxy = super(ProxyNewInstance, self)
+        return proxy.get_value(resource, context, name, datatype)
 
 
     def action(self, resource, context, form):
-        name = form['name']
-        title = form['title']
-
-        # Create the resource
-        class_id = form['class_id']
-        if class_id is None:
-            # Get it from the query
-            class_id = context.query['type']
+        # Get the container
+        container = context.site_root.get_resource(form['path'])
+        # Make the resource
+        class_id = form['class_id'] or context.query['type']
         cls = get_resource_class(class_id)
-        child = resource.make_resource(name, cls)
-        # The metadata
-        language = resource.get_edit_languages(context)[0]
-        title = Property(title, lang=language)
+        child = container.make_resource(form['name'], cls)
+        # Set properties
+        language = container.get_edit_languages(context)[0]
+        title = Property(form['title'], lang=language)
         child.metadata.set_property('title', title)
-
-        goto = './%s/' % name
+        # Ok
+        goto = str(resource.get_pathto(child))
         return context.come_back(messages.MSG_NEW_RESOURCE, goto=goto)
-
