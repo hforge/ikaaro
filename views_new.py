@@ -74,11 +74,10 @@ class NewInstance(AutoForm):
             return cls.class_description.gettext()
         elif name == 'path':
             class_id = context.query['type']
-            resource_path = resource.get_abspath()
+            here_path = context.site_root.get_pathto(resource)
 
             skip_formats = set()
             items = []
-            selected, selected_len = 0, 0
             idx = 0
             for resource in get_content_containers(context, skip_formats):
                 for cls in resource.get_document_types():
@@ -90,20 +89,20 @@ class NewInstance(AutoForm):
 
                 path = context.site_root.get_pathto(resource)
                 title = '/' if not path else ('/%s' % path)
-                # Selected
-                if context.query['path'] == path:
-                    selected, selected_len = idx, -1
-                elif selected_len > -1:
-                    prefix = resource_path.get_prefix(resource.get_abspath())
-                    prefix_len = len(prefix)
-                    if prefix_len > selected_len:
-                        selected, selected_len = idx, prefix_len
                 # Next
                 items.append({'name': path, 'value': title, 'selected': False})
                 idx += 1
 
-            items[selected]['selected'] = True
+            # Sort
             items.sort(key=lambda x: x['name'])
+
+            # Select
+            aux = [
+                (-len(here_path.get_prefix(item['name'])), i)
+                for i, item in enumerate(items) ]
+            aux.sort()
+            items[aux[0][1]]['selected'] = True
+
             return items
         elif name in self.get_query_schema():
             return context.query[name]
