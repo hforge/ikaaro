@@ -18,6 +18,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# Import from the Standard Library
+from socket import gethostname
+
 # Import from itools
 from itools.core import get_abspath, merge_dicts
 from itools.csv import Property
@@ -153,6 +156,11 @@ class AboutView(STLView):
 
     def get_namespace(self, resource, context):
         root = context.root
+
+        # Admin
+        ac = resource.get_access_control()
+        is_admin = ac.is_admin(context.user, resource)
+
         # Get packages
         package2title = {
             'gio': u'pygobject',
@@ -164,7 +172,10 @@ class AboutView(STLView):
             {'name': package2title.get(x, x),
              'version': y or MSG('no version found')}
                  for x, y in root.get_version_of_packages(context).items()]
-        return {'packages': packages}
+
+        return {'is_admin': is_admin,
+                'packages': packages,
+                'location': u'%s:%s' % (gethostname(), context.server.target)}
 
 
 
