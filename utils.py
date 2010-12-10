@@ -222,7 +222,7 @@ def get_content_containers(context, skip_formats):
     from theme import Theme
 
     query = AndQuery(
-        get_base_path_query(context.site_root.get_abspath(), True),
+        get_base_path_query(str(context.site_root.get_abspath()), True),
         PhraseQuery('is_folder', True))
 
     for brain in context.root.search(query).get_documents():
