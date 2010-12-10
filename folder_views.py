@@ -41,7 +41,7 @@ from buttons import RemoveButton, RenameButton, CopyButton, CutButton
 from datatypes import CopyCookie, ImageWidth
 from exceptions import ConsistencyError
 from registry import get_resource_class
-from utils import generate_name, get_base_path_query
+from utils import generate_name, get_base_path_query, get_content_containers
 from views import IconsView, SearchForm, ContextMenu
 from workflow import WorkflowAware, get_workflow_preview
 import messages
@@ -114,18 +114,9 @@ class Folder_NewResource(IconsView):
     def get_namespace(self, resource, context):
         # 1. Find out the resource classes we can add
         document_types = []
-        containers = set()
-        for brain in context.root.search(is_folder=True).get_documents():
-            if brain.format in containers:
-                continue
-
-            # Exclude configuration and users
-            resource = context.root.get_resource(brain.abspath)
-            if not resource.is_content_container():
-                continue
-
-            # Add
-            containers.add(brain.format)
+        skip_formats = set()
+        for resource in get_content_containers(context, skip_formats):
+            skip_formats.add(resource.class_id)
             for cls in resource.get_document_types():
                 if cls not in document_types:
                     document_types.append(cls)

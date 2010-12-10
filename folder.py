@@ -374,20 +374,6 @@ class Folder(DBResource):
             yield resource
 
 
-    def is_content_container(self):
-        from theme import Theme
-        from user import UserFolder
-
-        # Exclude configuration and users
-        resource = self
-        while resource is not None:
-            if isinstance(resource, (Theme, UserFolder)):
-                return False
-            resource = resource.parent
-
-        return True
-
-
     #######################################################################
     # User interface
     #######################################################################

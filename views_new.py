@@ -26,6 +26,7 @@ from itools.web import FormError
 from autoform import AutoForm, ReadOnlyWidget, location_widget, title_widget
 from buttons import Button
 from registry import get_resource_class
+from utils import get_content_containers
 import messages
 
 
@@ -75,32 +76,25 @@ class NewInstance(AutoForm):
             class_id = context.query['type']
             resource_path = resource.get_abspath()
 
-            cache = {}
+            skip_formats = set()
             items = []
             selected, selected_len = 0, 0
             idx = 0
-            for brain in context.root.search(is_folder=True).get_documents():
-                if brain.format not in cache:
-                    resource = context.root.get_resource(brain.abspath)
-                    if not resource.is_content_container():
-                        continue
-                    for cls in resource.get_document_types():
-                        if cls.class_id == class_id:
-                            cache[brain.format] = True
-                            break
-                    else:
-                        cache[brain.format] = False
-
-                if not cache[brain.format]:
+            for resource in get_content_containers(context, skip_formats):
+                for cls in resource.get_document_types():
+                    if cls.class_id == class_id:
+                        break
+                else:
+                    skip_formats.add(resource.class_id)
                     continue
 
-                path = context.site_root.get_pathto(brain)
+                path = context.site_root.get_pathto(resource)
                 title = '/' if not path else ('/%s' % path)
                 # Selected
                 if context.query['path'] == path:
                     selected, selected_len = idx, -1
                 elif selected_len > -1:
-                    prefix = resource_path.get_prefix(brain.abspath)
+                    prefix = resource_path.get_prefix(resource.get_abspath())
                     prefix_len = len(prefix)
                     if prefix_len > selected_len:
                         selected, selected_len = idx, prefix_len
@@ -109,6 +103,7 @@ class NewInstance(AutoForm):
                 idx += 1
 
             items[selected]['selected'] = True
+            items.sort(key=lambda x: x['name'])
             return items
         elif name in self.get_query_schema():
             return context.query[name]

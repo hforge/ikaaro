@@ -24,7 +24,7 @@ from sys import platform
 # Import from itools
 from itools.stl import STLTemplate
 from itools.web import get_context
-from itools.database import AllQuery, PhraseQuery, NotQuery, OrQuery
+from itools.database import AllQuery, AndQuery, PhraseQuery, NotQuery, OrQuery
 from itools.database import StartQuery
 
 if platform[:3] == 'win':
@@ -214,3 +214,35 @@ def get_base_path_query(abspath, include_container=False):
     container = PhraseQuery('abspath', abspath)
     return OrQuery(container, content)
 
+
+###########################################################################
+# Used by the add-form
+###########################################################################
+def get_content_containers(context, skip_formats):
+    from theme import Theme
+
+    query = AndQuery(
+        get_base_path_query(context.site_root.get_abspath(), True),
+        PhraseQuery('is_folder', True))
+
+    for brain in context.root.search(query).get_documents():
+        if brain.format in skip_formats:
+            continue
+
+        # Exclude users
+        abspath = brain.abspath
+        if abspath == '/users' or abspath.startswith('/users/'):
+            continue
+
+        # Get the resource
+        resource = context.root.get_resource(abspath)
+
+        # Exclude configuration
+        aux = resource
+        while aux is not None:
+            if isinstance(aux, Theme):
+                break
+            aux = aux.parent
+        else:
+            # Ok
+            yield resource
