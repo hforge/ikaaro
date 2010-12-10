@@ -321,8 +321,9 @@ span.field-error {
 
 table.new-resource-thumb {
   float: left;
-  margin-bottom: 10px;
   width: 18em;
+  height: 6em;
+  margin-right: 1em;
 }
 
 /**************************************************************************
