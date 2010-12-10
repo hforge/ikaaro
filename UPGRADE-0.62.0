@@ -264,4 +264,6 @@ The documents registry has been simplified:
   register_document_type(MyWebSite, WebSite.class_id)
 
   # Now
-  register_document_type(MyWebSite)
+  class MyRoot(Root):
+      def get_document_types(self):
+          return super(MyRoot, self).get_document_types() + [MyWebSite]
