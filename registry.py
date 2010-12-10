@@ -45,12 +45,11 @@ def get_resource_class(class_id):
 
 
 
-documents_registry = {}
+documents_registry = []
 
-def register_document_type(resource_class, type=None):
-    documents_registry.setdefault(type, []).append(resource_class)
+def register_document_type(resource_class):
+    documents_registry.append(resource_class)
 
 
-def get_document_types(type=None, default=None):
-    return documents_registry.get(type, default)
-
+def get_document_types():
+    return documents_registry

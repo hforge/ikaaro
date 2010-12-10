@@ -189,53 +189,18 @@ class CreditsView(STLView):
 vhosts_widget = MultilineWidget('vhosts', title=MSG(u'Domain names'),
     tip=MSG(u'Type the hostnames this website will apply to, each one in a'
             u' different line.'))
-subtype_widget = SelectWidget('class_id', title=MSG(u'Subtype'),
-                              has_empty_option=False)
 
 class WebSite_NewInstance(NewInstance):
 
-    schema = merge_dicts(NewInstance.schema,
-                         class_id=String(madatory=True),
-                         vhosts=String)
-
-    def get_widgets(self, resource, context):
-        widgets = list(NewInstance.widgets)
-        # Vhosts
-        widgets.append(vhosts_widget)
-        # Subtype
-        type = context.query['type']
-        document_types = get_document_types(type)
-        if len(document_types) > 1:
-            return widgets + [subtype_widget]
-
-        return widgets
-
-
-    def get_value(self, resource, context, name, datatype):
-        if name == 'class_id':
-            type = context.query['type']
-            document_types = get_document_types(type)
-            selected = context.get_form_value('class_id')
-            items = [
-                {'name': x.class_id,
-                 'value': x.class_title.gettext(),
-                 'selected': x.class_id == selected}
-                for x in document_types ]
-            if selected is None:
-                items[0]['selected'] = True
-
-            # Ok
-            return items
-
-        proxy = super(WebSite_NewInstance, self)
-        return proxy.get_value(resource, context, name, datatype)
+    schema = merge_dicts(NewInstance.schema, vhosts=String)
+    widgets = NewInstance.widgets + [vhosts_widget]
 
 
     def action(self, resource, context, form):
         # Get the container
         container = context.site_root.get_resource(form['path'])
         # Make the resource
-        class_id = form['class_id'] or context.query['type']
+        class_id = context.query['type']
         cls = get_resource_class(class_id)
         child = container.make_resource(form['name'], cls)
         # Set properties

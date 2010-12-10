@@ -241,10 +241,3 @@ class WebSite(RoleAware, Folder):
         menu.add_new_record({'path': '../../../;contact',
                              'title': Property(u'Contact', language='en'),
                              'target': '_top'})
-
-
-
-###########################################################################
-# Register
-###########################################################################
-register_document_type(WebSite, WebSite.class_id)

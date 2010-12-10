@@ -253,3 +253,15 @@ default roles and the list of roles is now split in two parts.
       class_roles = freeze(['myrole'])
       class_schema = freeze({'myrole': Tokens(source='metadata',
           title=MSG(u"My Role"))})
+
+
+Registry
+========
+
+The documents registry has been simplified:
+
+  # Before
+  register_document_type(MyWebSite, WebSite.class_id)
+
+  # Now
+  register_document_type(MyWebSite)
