@@ -159,9 +159,7 @@ class Event_NewInstance(Event_Edit):
         # Get date to add event
         selected_date = context.query['date']
         if selected_date is None:
-            message = u'To add an event, click on + symbol from the views.'
-            context.message = ERROR(message)
-            return {}
+            selected_date = date.today()
 
         # Timetables
         start_time = context.query['start_time']
