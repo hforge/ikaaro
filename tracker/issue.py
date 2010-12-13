@@ -77,7 +77,7 @@ class Issue(Folder):
 
 
     def get_document_types(self):
-        return [File]
+        return []
 
 
     def get_links(self):
