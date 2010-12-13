@@ -73,25 +73,25 @@
   background: #ffe;
 }
 
-.document .reference.external:link,
-.document .reference.external:visited {
+#content .document .reference.external:link,
+#content .document .reference.external:visited {
   padding-left: 18px;
   color: blue;
   background: url(../icons/16x16/website.png) top left no-repeat;
 }
 
-.document .reference.internal:link,
-.document .reference.internal:visited {
+#content .document .reference.internal:link,
+#content .document .reference.internal:visited {
   color: blue;
 }
 
-.document .reference.wiki:link,
-.document .reference.wiki:visited {
+#content .document .reference.wiki:link,
+#content .document .reference.wiki:visited {
   color: green;
 }
 
-.document .reference.nowiki:link,
-.document .reference.nowiki:visited {
+#content .document .reference.nowiki:link,
+#content .document .reference.nowiki:visited {
   color: red;
 }
 
