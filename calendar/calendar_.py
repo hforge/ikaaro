@@ -25,7 +25,7 @@ from datetime import time
 from itools.core import merge_dicts
 from itools.csv import Property, property_to_str
 from itools.csv.table import get_tokens, read_name, unfold_lines
-from itools.datatypes import DataType, Date, Integer, String
+from itools.datatypes import DataType, Integer, String
 from itools.gettext import MSG
 from itools.ical import iCalendar
 
