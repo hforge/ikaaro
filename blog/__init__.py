@@ -19,13 +19,9 @@ from itools.core import get_abspath
 
 # Import from ikaaro
 from ikaaro.skins import register_skin
-from ikaaro.registry import register_document_type
 from blog import Blog
 
 
 # Register skin
 path = get_abspath('ui')
 register_skin('blog', path)
-
-# Register document type
-register_document_type(Blog)

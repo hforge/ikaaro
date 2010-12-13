@@ -33,16 +33,18 @@ from itools.xml import XMLParser
 
 # Import from ikaaro
 from access import RoleAware
+from blog import Blog
+from calendar import Calendar
 from control_panel import CPBrowseUsers, CPEditContactOptions, CPEditLanguages
 from control_panel import CPEditMembership, CPEditSecurityPolicy
 from control_panel import CPEditVirtualHosts, CPOrphans, CPEditSEO
 from control_panel import ControlPanel, CPAddUser, CPBrokenLinks
 from control_panel import CPEditTheme
 from folder import Folder
-from registry import register_document_type
 from resource_views import LoginView
 from skins import UI, ui_path
 from theme import Theme
+from tracker import Tracker
 from website_views import AboutView, ContactForm, CreditsView
 from website_views import NotFoundView, ForbiddenView
 from website_views import WebSite_NewInstance
@@ -177,6 +179,11 @@ class WebSite(RoleAware, Folder):
 
     def is_allowed_to_register(self):
         return self.get_security_policy() == 'community'
+
+
+    def get_document_types(self):
+        proxy = super(WebSite, self)
+        return proxy.get_document_types() + [Blog, Calendar, Tracker]
 
 
     #######################################################################
