@@ -86,9 +86,9 @@ def resolve_references(doctree, resource, context,
             continue
         elif wiki_name:
             # Wiki link
-            reference = get_reference(wiki_name)
-            node['refuri'] = reference_resolver(resource, reference, context,
-                    **kw)
+            ref_resource = resource.get_resource(wiki_name)
+            reference = context.get_link(ref_resource)
+            node['refuri'] = str(context.uri.resolve(reference))
         elif wiki_name is None:
             # Regular link: point back to the site
             refuri = node.get('refuri')
