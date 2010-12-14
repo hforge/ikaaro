@@ -626,10 +626,6 @@ p.tabme a.selected {
   margin: 2px 0;
 }
 
-#autoform input, #autoform textarea {
-  width: 92%;
-}
-
 #autoform input[type=radio],
 #autoform input[type=checkbox] {
   width: auto;
