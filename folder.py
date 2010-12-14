@@ -67,16 +67,13 @@ class Folder(DBResource):
 
     def get_document_types(self):
         document_types = []
-        ancestor_classes = sorted(list(self.__class__.__mro__), reverse=True)
-        for ancestor_class in ancestor_classes:
+        for ancestor_class in reversed(self.__class__.__mro__):
             items = ancestor_class.__dict__.get('_register_document_types')
-            if items is None:
-                continue
-            document_types.extend(items)
+            if items:
+                document_types.extend(items)
 
-        # class_id to Class
-        return [ get_resource_class(class_id)
-                 for class_id in document_types ]
+        # class_id to class
+        return [ get_resource_class(class_id) for class_id in document_types ]
 
 
     def get_files_to_archive(self, content=False):
