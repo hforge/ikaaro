@@ -258,12 +258,10 @@ default roles and the list of roles is now split in two parts.
 Registry
 ========
 
-The documents registry has been simplified:
+The documents registry has changed:
 
   # Before
   register_document_type(MyWebSite, WebSite.class_id)
 
   # Now
-  class MyRoot(Root):
-      def get_document_types(self):
-          return super(MyRoot, self).get_document_types() + [MyWebSite]
+  register_document_type(MyWebSite, Root.class_id)
