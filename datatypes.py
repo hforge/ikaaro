@@ -23,6 +23,10 @@ from zlib import compress, decompress
 # Import from itools
 from itools.core import freeze, guess_type
 from itools.datatypes import DataType, Enumerate, Unicode, String
+from itools.web import get_context
+
+# Import from ikaaro
+from utils import get_content_containers
 
 
 """This module defines some datatypes used in ikaaro, whose inclusion in
@@ -105,3 +109,32 @@ class Multilingual(Unicode):
     multilingual = True
     # Used only for the metadata
     parameters_schema = {'lang': String}
+
+
+
+class ContainerPathDatatype(Enumerate):
+
+    def get_options(cls):
+        context = get_context()
+        resource = context.resource
+        class_id = context.query['type']
+        here_path = context.site_root.get_pathto(resource)
+
+        skip_formats = set()
+        items = []
+        for resource in get_content_containers(context, skip_formats):
+            for cls in resource.get_document_types():
+                if cls.class_id == class_id:
+                    break
+            else:
+                skip_formats.add(resource.class_id)
+                continue
+
+            path = context.site_root.get_pathto(resource)
+            title = '/' if not path else ('/%s' % path)
+            # Next
+            items.append({'name': path, 'value': title, 'selected': False})
+
+        # Sort
+        items.sort(key=lambda x: x['name'])
+        return items

@@ -25,8 +25,8 @@ from itools.web import FormError
 # Import from ikaaro
 from autoform import AutoForm, ReadOnlyWidget, location_widget, title_widget
 from buttons import Button
+from datatypes import ContainerPathDatatype
 from registry import get_resource_class
-from utils import get_content_containers
 import messages
 
 
@@ -45,7 +45,7 @@ class NewInstance(AutoForm):
     schema = freeze({
         'cls_description': Unicode,
         'title': Unicode,
-        'path': String,
+        'path': ContainerPathDatatype,
         'name': String})
     widgets = freeze([
         ReadOnlyWidget('cls_description'),
@@ -73,37 +73,7 @@ class NewInstance(AutoForm):
             cls = get_resource_class(class_id)
             return cls.class_description.gettext()
         elif name == 'path':
-            class_id = context.query['type']
-            here_path = context.site_root.get_pathto(resource)
-
-            skip_formats = set()
-            items = []
-            idx = 0
-            for resource in get_content_containers(context, skip_formats):
-                for cls in resource.get_document_types():
-                    if cls.class_id == class_id:
-                        break
-                else:
-                    skip_formats.add(resource.class_id)
-                    continue
-
-                path = context.site_root.get_pathto(resource)
-                title = '/' if not path else ('/%s' % path)
-                # Next
-                items.append({'name': path, 'value': title, 'selected': False})
-                idx += 1
-
-            # Sort
-            items.sort(key=lambda x: x['name'])
-
-            # Select
-            aux = [
-                (-len(here_path.get_prefix(item['name'])), i)
-                for i, item in enumerate(items) ]
-            aux.sort()
-            items[aux[0][1]]['selected'] = True
-
-            return items
+            return resource.get_abspath()
         elif name in self.get_query_schema():
             return context.query[name]
         return AutoForm.get_value(self, resource, context, name, datatype)
@@ -141,7 +111,8 @@ class NewInstance(AutoForm):
             raise FormError, messages.MSG_BAD_NAME
 
         # 3. Check the name is free
-        if resource.get_resource(name, soft=True) is not None:
+        container = context.site_root.get_resource(form['path'])
+        if container.get_resource(name, soft=True) is not None:
             raise FormError, messages.MSG_NAME_CLASH
         form['name'] = name
 
