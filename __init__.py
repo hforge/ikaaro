@@ -44,10 +44,15 @@ register_document_type(File)
 
 # Import ikaaro sub-packages (NOTE must be imported after so they are
 # register after)
-import blog
-import calendar
-import tracker
+from website import WebSite
+from blog import Blog
+from calendar import Calendar
+from tracker import Tracker
 
+register_document_type(WebSite, 'iKaaro')
+register_document_type(Blog, WebSite.class_id)
+register_document_type(Calendar, WebSite.class_id)
+register_document_type(Tracker, WebSite.class_id)
 
 ###########################################################################
 # Check for required software

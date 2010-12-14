@@ -40,7 +40,7 @@ from buttons import PasteButton, PublishButton, RetireButton
 from buttons import RemoveButton, RenameButton, CopyButton, CutButton
 from datatypes import CopyCookie, ImageWidth
 from exceptions import ConsistencyError
-from registry import get_resource_class, get_document_types
+from registry import get_resource_class
 from utils import generate_name, get_base_path_query, get_content_containers
 from views import IconsView, SearchForm, ContextMenu
 from workflow import WorkflowAware, get_workflow_preview
@@ -121,11 +121,7 @@ class Folder_NewResource(IconsView):
                 if cls not in document_types:
                     document_types.append(cls)
 
-        # 2. Sort
-        aux = get_document_types()
-        document_types.sort(key=lambda x: aux.index(x) if x in aux else 500)
-
-        # 3. Build the namespace
+        # 2. Build the namespace
         items = [
             {'icon': '/ui/' + cls.class_icon48,
              'title': cls.class_title.gettext(),

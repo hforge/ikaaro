@@ -44,12 +44,28 @@ def get_resource_class(class_id):
     return resources_registry[class_id]
 
 
+def register_document_type(resource_class, container_cls_id='folder'):
+    container_cls = get_resource_class(container_cls_id)
+    cls_register = container_cls.__dict__.get('_register_document_types')
+    if cls_register and resource_class.class_id in cls_register:
+        # Already registered
+        return
 
-documents_registry = []
+    # Check if the resource_class is not already defined in a ancestor classes
+    for i, ancestor_class in enumerate(container_cls.__mro__):
+        if i == 0:
+            # Skip myself
+            continue
+        get = ancestor_class.__dict__.get
+        ancestor_register = get('_register_document_types')
+        if ancestor_register is None:
+            continue
+        if resource_class.class_id in ancestor_register:
+            # Already registered in ancestor class
+            return
 
-def register_document_type(resource_class):
-    documents_registry.append(resource_class)
-
-
-def get_document_types():
-    return documents_registry
+    # Not defined in any ancestor classes
+    if cls_register is None:
+        cls_register = []
+        setattr(container_cls, '_register_document_types', cls_register)
+    cls_register.append(resource_class.class_id)

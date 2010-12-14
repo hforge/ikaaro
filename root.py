@@ -165,10 +165,6 @@ class Root(WebSite):
     ########################################################################
     # API
     ########################################################################
-    def get_document_types(self):
-        return WebSite.get_document_types(self) + [WebSite]
-
-
     def get_available_languages(self):
         """Returns the language codes for the user interface.
         """

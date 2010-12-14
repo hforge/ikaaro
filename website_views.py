@@ -32,7 +32,7 @@ from autoform import AutoForm, CaptchaDatatype, CaptchaWidget
 from autoform import HiddenWidget, SelectWidget, MultilineWidget, TextWidget
 from buttons import Button
 from messages import MSG_NEW_RESOURCE
-from registry import get_resource_class, get_document_types
+from registry import get_resource_class
 from views_new import NewInstance
 
 

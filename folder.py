@@ -38,7 +38,6 @@ from metadata import Metadata
 from multilingual import Multilingual
 from registry import register_resource_class, get_resource_class
 from registry import _lookup_class_id, resources_registry
-from registry import get_document_types
 from resource_ import DBResource
 from utils import get_base_path_query
 
@@ -67,7 +66,17 @@ class Folder(DBResource):
 
 
     def get_document_types(self):
-        return get_document_types()
+        document_types = []
+        ancestor_classes = sorted(list(self.__class__.__mro__), reverse=True)
+        for ancestor_class in ancestor_classes:
+            items = ancestor_class.__dict__.get('_register_document_types')
+            if items is None:
+                continue
+            document_types.extend(items)
+
+        # class_id to Class
+        return [ get_resource_class(class_id)
+                 for class_id in document_types ]
 
 
     def get_files_to_archive(self, content=False):
