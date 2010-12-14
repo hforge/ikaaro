@@ -4,11 +4,11 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
-<div class="context-menu" stl:if="items">
+<div class="context-menu" stl:if="display">
   <div class="context-menu-title">${title}</div>
   <form id="edit-language" name="edit-languages" action="${action}"
     method="get">
-    <fieldset>
+    <fieldset stl:if="items">
       <legend>Languages</legend>
       <ul>
         <li class="${item/class}" stl:repeat="item items">

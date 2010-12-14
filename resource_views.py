@@ -78,6 +78,17 @@ class EditLanguageMenu(ContextMenu):
 
 
     def get_items(self):
+        multilingual = False
+        schema = self.view._get_schema(self.resource, self.context)
+        for key, datatype in schema.iteritems():
+            if getattr(datatype, 'multilingual', False):
+                multilingual = True
+                break
+
+        if multilingual is False:
+            # No multilingual fields
+            return []
+
         site_root = self.resource.get_site_root()
         languages = site_root.get_property('website_languages')
         edit_languages = self.resource.get_edit_languages(self.context)
@@ -87,13 +98,23 @@ class EditLanguageMenu(ContextMenu):
             for x in languages ]
 
 
-
     def get_hidden_fields(self):
         return self.view._get_query_to_keep(self.resource, self.context)
 
 
     def hidden_fields(self):
         return self.get_hidden_fields()
+
+
+    def display(self):
+        """Do not display the form is there is nothing to show"""
+        items = self.get_items()
+        if len(items):
+            return True
+        fields = self.get_fields()
+        if len(fields):
+            return True
+        return len(self.hidden_fields())
 
 
 
