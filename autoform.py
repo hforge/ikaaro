@@ -346,7 +346,7 @@ class DateWidget(Widget):
 
     css = None
     format = '%Y-%m-%d'
-    size = None
+    size = 10
     show_time = False
 
     def show_time_js(self):
@@ -369,6 +369,32 @@ class DateWidget(Widget):
 
     def dates(self):
         return self.value_.splitlines()
+
+
+
+class DatetimeWidget(DateWidget):
+
+    template = make_stl_template("""
+    <input type="text" name="${name}" value="${value_}" id="${id}"
+      class="dateField" size="10" />
+    <button class="${css} button-selector">...</button>
+    <input type="text" name="${name}_time" value="${value_time}" size="5" />
+    <script language="javascript">
+      jQuery( "input.dateField" ).dynDateTime({
+        ifFormat: "${format}",
+        timeFormat: "24",
+        button: ".next()" });
+    </script>""")
+
+
+    @thingy_lazy_property
+    def value_time(self):
+        # FIXME A needed hack since this cannot be done properly with
+        # ikaaro
+        time = get_context().query['%s_time' % self.name]
+        if time:
+            return time.strftime('%H:%M')
+        return ''
 
 
 

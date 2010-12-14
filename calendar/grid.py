@@ -428,11 +428,11 @@ def get_grid_data(data, grid, start_date=None, templates=(None, None),
         # Build namespace for the content of cells containing event (new)
         if start_date is not None:
             str_date = Date.encode(current_date)
+            url = '{{0}}&start={date}&end={date}'.format(date=str_date)
             for column in table:
                 for cell in column['cells']:
                     if cell['newurl'] is not None:
-                        url = '%s&date=%s' % (cell['newurl'], str_date)
-                        cell['newurl'] = url
+                        cell['newurl'] = url.format(cell['newurl'])
                     if cell['new']:
                         cell['ns'] = stl(template, {'cell': cell,
                                                     'add_icon': add_icon})

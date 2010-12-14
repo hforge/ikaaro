@@ -27,8 +27,12 @@ from itools.gettext import MSG
 from itools.web import ERROR, FormError, STLForm, get_context
 
 # Import from ikaaro
+from ikaaro.autoform import DatetimeWidget, ReadOnlyWidget
+from ikaaro.autoform import location_widget, title_widget
 from ikaaro.file import File
 from ikaaro import messages
+from ikaaro.registry import get_resource_class
+from ikaaro.views_new import NewInstance
 from calendar_views import CalendarView, resolution
 
 
@@ -147,59 +151,75 @@ class Event_Edit(CalendarView, STLForm):
 
 
 
-class Event_NewInstance(Event_Edit):
+class Event_NewInstance(NewInstance):
 
-    query_schema = {
-        'date': Date,
-        'start_time': Time,
-        'end_time': Time}
+    query_schema = merge_dicts(NewInstance.query_schema,
+                               start=Date, start_time=Time,
+                               end=Date, end_time=Time)
 
-
-    def get_namespace(self, resource, context):
-        # Get date to add event
-        selected_date = context.query['date']
-        if selected_date is None:
-            selected_date = date.today()
-
-        # Timetables
-        start_time = context.query['start_time']
-        if start_time:
-            start_time = Time.encode(start_time)
-        end_time = context.query['end_time']
-        if end_time:
-            end_time = Time.encode(end_time)
-
-        # The namespace
-        namespace = {
-            'action': ';new_resource?type=event&date=%s' % selected_date,
-            'dtstart': selected_date,
-            'dtstart_time': start_time,
-            'dtend': selected_date,
-            'dtend_time': end_time,
-            'remove': False,
-            'firstday': self.get_first_day(),
-            'status': Status().get_namespace(None),
-            'allowed': True}
-
-        # Get values
-        for key in self.schema:
-            if key in namespace:
-                continue
-            namespace[key] = context.get_form_value(key)
-
-        return namespace
+    schema = merge_dicts(NewInstance.schema,
+                         start=Date(mandatory=True),
+                         start_time=Time,
+                         end=Date,
+                         end_time=Time)
+    widgets = freeze([
+        ReadOnlyWidget('cls_description'),
+        title_widget,
+        DatetimeWidget('start', title=MSG(u'Start'),
+                       tip=MSG(u'To add an event lasting all day long,'
+                               u' leave time fields empty.')),
+        DatetimeWidget('end', title=MSG(u'End')),
+        location_widget(include_name=False)])
 
 
-    def action_edit_event(self, resource, context, form):
-        # Make event
-        id = resource.get_new_id()
-        event = resource.make_resource(id, Event)
+    def get_new_resource_name(self, form):
+        container = get_context().site_root.get_resource(form['path'])
+        return container.get_new_id()
+
+
+    def get_value(self, resource, context, name, datatype):
+        if name in ('start', 'end'):
+            return context.query[name] or date.today()
+
+        proxy = super(Event_NewInstance, self)
+        return proxy.get_value(resource, context, name, datatype)
+
+
+    def _get_form(self, resource, context):
+        form = super(Event_NewInstance, self)._get_form(resource, context)
+
+        # Start
+        start_time = form['start_time'] or time(0, 0)
+        form['start'] = datetime.combine(form['start'], start_time)
+        # End
+        end_time = form['end_time'] or time(0, 0)
+        form['end'] = datetime.combine(form['end'], end_time)
+
+        return form
+
+
+    def action(self, resource, context, form):
+        # Get the container
+        container = context.site_root.get_resource(form['path'])
+        # Make the resource
+        class_id = context.query['type']
+        cls = get_resource_class(class_id)
+        child = container.make_resource(form['name'], cls)
         # Set properties
-        event.update(form)
+        language = container.get_edit_languages(context)[0]
+        title = Property(form['title'], lang=language)
+        child.metadata.set_property('title', title)
+        # Set properties / start
+        dt = form['start']
+        dt = Property(dt) if dt.time else Property(dt, value='DATE')
+        child.set_property('dtstart', dt)
+        # Set properties / end
+        dt = form['end']
+        dt = Property(dt) if dt.time else Property(dt, value='DATE')
+        child.set_property('dtend', dt)
         # Ok
-        message = messages.MSG_CHANGES_SAVED
-        goto = ';%s' % context.get_cookie('method') or 'monthly_view'
-        return context.come_back(message, goto=goto)
+        goto = str(resource.get_pathto(child))
+        return context.come_back(messages.MSG_NEW_RESOURCE, goto=goto)
 
 
 

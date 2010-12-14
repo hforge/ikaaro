@@ -246,22 +246,22 @@ class CalendarView(STLView):
         """Set header used to navigate into time.
 
         """
+        link = ';{method}?start={{date}}&end={{date}}'.format(method=method)
+        make_link = lambda x: link.format(date=Date.encode(x))
+
+        # Week
         week_number = '%0d' % self.get_week_number(c_date)
         current_week = MSG(u'Week {n}').gettext(n=week_number)
-        tmp_date = c_date - timedelta(7)
-        previous_week = ";%s?date=%s" % (method, Date.encode(tmp_date))
-        tmp_date = c_date + timedelta(7)
-        next_week = ";%s?date=%s" % (method, Date.encode(tmp_date))
+        previous_week = make_link(c_date - timedelta(7))
+        next_week = make_link(c_date + timedelta(7))
         # Month
         current_month = months[c_date.month].gettext()
         delta = 31
         if c_date.month != 1:
             kk, delta = monthrange(c_date.year, c_date.month - 1)
-        tmp_date = c_date - timedelta(delta)
-        previous_month = ";%s?date=%s" % (method, Date.encode(tmp_date))
+        previous_month = make_link(c_date - timedelta(delta))
         kk, delta = monthrange(c_date.year, c_date.month)
-        tmp_date = c_date + timedelta(delta)
-        next_month = ";%s?date=%s" % (method, Date.encode(tmp_date))
+        next_month = make_link(c_date + timedelta(delta))
         # Year
         date_before = date(c_date.year, 2, 28)
         date_after = date(c_date.year, 3, 1)
@@ -269,14 +269,12 @@ class CalendarView(STLView):
         if (isleap(c_date.year - 1) and c_date <= date_before) \
           or (isleap(c_date.year) and c_date > date_before):
             delta = 366
-        tmp_date = c_date - timedelta(delta)
-        previous_year = ";%s?date=%s" % (method, Date.encode(tmp_date))
+        previous_year = make_link(c_date - timedelta(delta))
         delta = 365
         if (isleap(c_date.year) and c_date <= date_before) \
           or (isleap(c_date.year +1) and c_date >= date_after):
             delta = 366
-        tmp_date = c_date + timedelta(delta)
-        next_year = ";%s?date=%s" % (method, Date.encode(tmp_date))
+        next_year = make_link(c_date + timedelta(delta))
         # Set value into namespace
         namespace['current_week'] = current_week
         namespace['previous_week'] = previous_week
@@ -288,8 +286,7 @@ class CalendarView(STLView):
         namespace['previous_year'] = previous_year
         namespace['next_year'] = next_year
         # Add today link
-        tmp_date = date.today()
-        namespace['today'] = ";%s?date=%s" % (method, Date.encode(tmp_date))
+        namespace['today'] = make_link(date.today())
         return namespace
 
 
@@ -481,6 +478,7 @@ class MonthlyView(CalendarView):
         namespace['weeks'] = []
         day = start
         # 5 weeks
+        link = ';new_resource?type=event&start={date}&end={date}'
         for w in range(5):
             ns_week = {'days': [], 'month': u''}
             # 7 days a week
@@ -491,8 +489,7 @@ class MonthlyView(CalendarView):
                     ns_day['nday'] = day.day
                     ns_day['selected'] = (day == today_date)
                     if with_new_url:
-                        url = ';new_resource?type=event&date=%s'
-                        ns_day['url'] = url % Date.encode(day)
+                        ns_day['url'] = link.format(date=Date.encode(day))
                     # Insert events
                     ns_events, events = self.events_to_namespace(resource,
                         events, day, with_edit_url=with_edit_url)

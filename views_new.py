@@ -120,7 +120,7 @@ class NewInstance(AutoForm):
 
     def get_new_resource_name(self, form):
         # If the name is not explicitly given, use the title
-        return form['name'] or form['title']
+        return form['name'].strip() or form['title']
 
 
     def _get_form(self, resource, context):
@@ -128,7 +128,6 @@ class NewInstance(AutoForm):
 
         # 1. Strip title and name
         form['title'] = form['title'].strip()
-        form['name'] = form['name'].strip()
 
         # 2. Get the name
         name = self.get_new_resource_name(form)
