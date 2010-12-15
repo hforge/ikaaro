@@ -19,10 +19,15 @@
 from itools.core import get_abspath
 
 # Import from ikaaro
+from ikaaro.registry import register_document_type
 from ikaaro.skins import register_skin
+from ikaaro.website import WebSite
 from tracker import Tracker
 
 
 # Register skin
 path = get_abspath('ui')
 register_skin('tracker', path)
+
+# Add trackers to websites
+register_document_type(Tracker, WebSite.class_id)
