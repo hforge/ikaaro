@@ -45,8 +45,8 @@ class NewInstance(AutoForm):
     schema = freeze({
         'cls_description': Unicode,
         'title': Unicode,
-        'path': ContainerPathDatatype,
-        'name': String})
+        'path': ContainerPathDatatype(default=''),
+        'name': String(default='')})
     widgets = freeze([
         ReadOnlyWidget('cls_description'),
         title_widget,
