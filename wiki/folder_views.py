@@ -46,6 +46,23 @@ from page_views import ALLOWED_FORMATS
 #################################################################
 # Private API
 #################################################################
+def generate_title_and_name(title, used):
+    # The easy case
+    name = checkid(title)
+    if name not in used:
+        return title, name
+
+    # OK we must search for a free title/name
+    index = 0
+    while True:
+        title2 = u'%s (%d)' % (title, index)
+        name = checkid(title2)
+        if name not in used:
+            return title2, name
+        index += 1
+
+
+
 def _add_image(filename, document, resource):
     if type(filename) is unicode:
         filename = filename.encode('UTF-8')
@@ -160,17 +177,18 @@ def _format_meta(form, template_name, toc_depth, language):
 
 
 
-def _get_cover_name(resource, document, template_name):
+def _get_cover_title_and_name(resource, document, template_name):
 
     # Compute an explicit name
-    name = document.get_meta().get_title()
-    if not name:
-        name = template_name
-    if name:
-        name = 'cover_%s' % checkid(name)
+    title = document.get_meta().get_title()
+    if not title:
+        title = template_name
+    if title:
+        title = 'Cover "%s"' % title
     else:
-        name = 'cover'
-    return generate_name(name, resource.get_names())
+        title = 'Cover'
+
+    return generate_title_and_name(title, resource.get_names())
 
 
 
@@ -232,8 +250,8 @@ def _format_content(resource, data, template_name, max_allowed_level):
 
             # In the cover ?
             if name is None:
-                name = cover = _get_cover_name(resource, document,
-                                               template_name)
+                cover, name = _get_cover_title_and_name(resource, document,
+                                                        template_name)
 
             # Add the page
             _add_wiki_page(resource, name, title, content)
@@ -246,23 +264,24 @@ def _format_content(resource, data, template_name, max_allowed_level):
             # Get the title
             fake_context = dict(lpod_context)
             fake_context['rst_mode'] = False
-            title = element.get_formatted_text(fake_context)
+            title = element.get_formatted_text(fake_context).strip()
 
             # Start a new content with the title, but without the first
             # '\n'
             content = [element.get_formatted_text(lpod_context)[1:]]
 
             # Search for a free WikiPage name
-            name = checkid(title) or 'invalid-name'
+            if not title:
+                title = 'Invalid name'
             names = resource.get_names()
-            name = generate_name(name, names)
+            link_title, name = generate_title_and_name(title, names)
 
             # Update links (add eventually blank levels to avoid a problem
             # with an inconsistency use of levels in the ODT file)
             for x in range(last_level + 1, level):
                 links += u'   ' * x + u'- [unknown title]\n'
             last_level = level
-            links += u'   ' * level + u'- `' + name + u'`_\n'
+            links += u'   ' * level + u'- `' + link_title + u'`_\n'
 
         # An other element
         else:
@@ -280,7 +299,8 @@ def _format_content(resource, data, template_name, max_allowed_level):
 
     # In the cover ?
     if name is None:
-        name = cover = _get_cover_name(resource, document, template_name)
+        cover, name = _get_cover_title_and_name(resource, document,
+                                                template_name)
 
     # Add the page
     _add_wiki_page(resource, name, title, content)
