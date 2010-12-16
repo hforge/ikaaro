@@ -63,7 +63,7 @@ class Post_NewInstance(NewInstance):
 
     def action(self, resource, context, form):
         # Get the container
-        container = context.site_root.get_resource(form['path'])
+        container = form['container']
         # Make resource
         language = container.get_edit_languages(context)[0]
         child = container.make_resource(form['name'], Post, language=language)

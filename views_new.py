@@ -20,7 +20,7 @@ from itools.csv import Property
 from itools.datatypes import String, Unicode
 from itools.gettext import MSG
 from itools.handlers import checkid
-from itools.web import FormError
+from itools.web import ERROR, FormError
 
 # Import from ikaaro
 from autoform import AutoForm, ReadOnlyWidget, location_widget, title_widget
@@ -96,10 +96,20 @@ class NewInstance(AutoForm):
     def _get_form(self, resource, context):
         form = super(NewInstance, self)._get_form(resource, context)
 
-        # 1. Strip title and name
+        # 1. The container
+        path = form['path']
+        container = context.site_root.get_resource(path)
+        ac = container.get_access_control()
+        if not ac.is_allowed_to_add(context.user, container):
+            path = '/' if path == '.' else '/%s/' % path
+            msg = ERROR(u'Adding resources to {path} is not allowed.')
+            raise FormError, msg.gettext(path=path)
+        form['container'] = container
+
+        # 2. Strip the title
         form['title'] = form['title'].strip()
 
-        # 2. Get the name
+        # 3. The name
         name = self.get_new_resource_name(form)
         if not name:
             raise FormError, messages.MSG_NAME_MISSING
@@ -109,9 +119,7 @@ class NewInstance(AutoForm):
             name = None
         if name is None:
             raise FormError, messages.MSG_BAD_NAME
-
-        # 3. Check the name is free
-        container = context.site_root.get_resource(form['path'])
+        # Check the name is free
         if container.get_resource(name, soft=True) is not None:
             raise FormError, messages.MSG_NAME_CLASH
         form['name'] = name
@@ -122,7 +130,7 @@ class NewInstance(AutoForm):
 
     def action(self, resource, context, form):
         # Get the container
-        container = context.site_root.get_resource(form['path'])
+        container = form['container']
         # Make the resource
         class_id = context.query['type']
         cls = get_resource_class(class_id)

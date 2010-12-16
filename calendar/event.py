@@ -173,8 +173,7 @@ class Event_NewInstance(NewInstance):
 
 
     def get_new_resource_name(self, form):
-        container = get_context().site_root.get_resource(form['path'])
-        return container.get_new_id()
+        return form['container'].get_new_id()
 
 
     def get_value(self, resource, context, name, datatype):
@@ -200,7 +199,7 @@ class Event_NewInstance(NewInstance):
 
     def action(self, resource, context, form):
         # Get the container
-        container = context.site_root.get_resource(form['path'])
+        container = form['container']
         # Make the resource
         class_id = context.query['type']
         cls = get_resource_class(class_id)

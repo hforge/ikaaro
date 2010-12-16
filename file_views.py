@@ -71,7 +71,7 @@ class File_NewInstance(NewInstance):
 
     def action(self, resource, context, form):
         # Get the container
-        container = context.site_root.get_resource(form['path'])
+        container = form['container']
         # Make the resource
         name = form['name']
         filename, mimetype, body = form['file']
