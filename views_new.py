@@ -45,7 +45,7 @@ class NewInstance(AutoForm):
     schema = freeze({
         'cls_description': Unicode,
         'title': Unicode,
-        'path': ContainerPathDatatype(default=''),
+        'path': ContainerPathDatatype,
         'name': String(default='')})
     widgets = freeze([
         ReadOnlyWidget('cls_description'),
@@ -97,8 +97,10 @@ class NewInstance(AutoForm):
         form = super(NewInstance, self)._get_form(resource, context)
 
         # 1. The container
+        container = resource
         path = form['path']
-        container = context.site_root.get_resource(path)
+        if path is not None:
+            container = context.site_root.get_resource(path)
         ac = container.get_access_control()
         if not ac.is_allowed_to_add(context.user, container):
             path = '/' if path == '.' else '/%s/' % path
