@@ -235,14 +235,16 @@ def get_content_containers(context, skip_formats):
             continue
 
         # Get the resource
-        resource = context.root.get_resource(abspath)
+        container = context.root.get_resource(abspath)
 
         # Exclude configuration
-        aux = resource
-        while aux is not None:
-            if isinstance(aux, Theme):
+        resource = container
+        while resource is not None:
+            if isinstance(resource, Theme):
                 break
-            aux = aux.parent
+            resource = resource.parent
         else:
-            # Ok
-            yield resource
+            # Check access control
+            ac = container.get_access_control()
+            if ac.is_allowed_to_add(context.user, container):
+                yield container
