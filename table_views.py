@@ -26,10 +26,17 @@ from itools.web import INFO, ERROR, BaseView, FormError
 
 # Import from ikaaro
 from buttons import Button, RemoveButton, OrderUpButton, OrderDownButton
-from buttons import OrderBottomButton, OrderTopButton
+from buttons import OrderBottomButton, OrderTopButton, AddButton
 from resource_views import DBResource_Edit
 from views import BrowseForm
 import messages
+
+
+
+class AddRecordButton(AddButton):
+
+    name = 'add_record'
+    title = MSG(u'Add record')
 
 
 
@@ -42,6 +49,8 @@ class Table_View(BrowseForm):
 
     schema = {
         'ids': Integer(multiple=True, mandatory=True)}
+    # Add record action does not required any parameters
+    action_add_record_schema = {}
 
     def get_widgets(self, resource, context):
         return resource.get_form()
@@ -119,7 +128,7 @@ class Table_View(BrowseForm):
         return value
 
 
-    table_actions = [RemoveButton]
+    table_actions = [AddRecordButton, RemoveButton]
 
 
     #######################################################################
@@ -133,6 +142,13 @@ class Table_View(BrowseForm):
         context.database.change_resource(resource)
 
         context.message = INFO(u'Record deleted.')
+
+
+    def action_add_record(self, resource, context, form):
+        """Do a redict to add_record view"""
+
+        goto = '%s/;add_record' % context.get_link(resource)
+        return context.come_back(None, goto=goto)
 
 
 
@@ -344,8 +360,8 @@ class OrderedTable_View(Table_View):
         return Table_View.get_item_value(self, resource, context, item, column)
 
 
-    table_actions = [RemoveButton, OrderUpButton, OrderDownButton,
-                     OrderTopButton, OrderBottomButton]
+    table_actions = [AddRecordButton, RemoveButton, OrderUpButton,
+                     OrderDownButton, OrderTopButton, OrderBottomButton]
 
     ######################################################################
     # Form Actions
