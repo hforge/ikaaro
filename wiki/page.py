@@ -111,7 +111,15 @@ class Book(Directive):
             if not value:
                 continue
             metadata.append('  %s: %s' % (key, value))
-        meta_node = nodes.literal_block('Book Metadata', '\n'.join(metadata))
+        template = options.get('template')
+        if template is not None:
+            metadata.append('  template: ')
+            meta_node = nodes.literal_block('Book Metadata',
+                                            '\n'.join(metadata))
+            meta_node.append(nodes.reference(refuri=template, text=template))
+        else:
+            meta_node = nodes.literal_block('Book Metadata',
+                                            '\n'.join(metadata))
         book_node = book(self.block_text, **options)
         if self.arguments:
             # Display the cover
