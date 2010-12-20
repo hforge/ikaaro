@@ -163,15 +163,26 @@ def _insert_endnotes(lpod_context, content):
 
 
 
-def _format_meta(form, template_name, toc_depth, language):
+def _format_meta(form, template_name, toc_depth, language, document):
     """Format the metadata of a rst book from a lpod document.
     """
     content = []
-    content.append(u'   :template: %s' % template_name)
     content.append(u'   :toc-depth: %s' % toc_depth)
-    for key in ['title', 'subject', 'comments', 'keywords']:
+    content.append(u'   :template: %s' % template_name)
+    content.append(u'   :ignore-missing-pages: no')
+    for key in ['title', 'comments', 'subject', 'keywords']:
         content.append(u'   :%s: %s' % (key,  form[key]))
     content.append(u'   :language: %s' % language)
+
+    # Compute a default filename
+    title = document.get_meta().get_title()
+    if not title:
+        filename, _, _ = form['file']
+        filename = checkid(filename)
+    else:
+        filename = checkid(title) + '.odt'
+    content.append(u'   :filename: %s' % filename)
+
     content.append(u'')
     return u"\n".join(content).encode('utf_8')
 
@@ -200,13 +211,11 @@ def _add_wiki_page(resource, name, title, content):
 
 
 
-def _format_content(resource, data, template_name, max_allowed_level):
+def _format_content(resource, document, template_name, max_allowed_level):
     """Format the content of a rst book from a lpod document.
     """
 
     # Get the body
-    from lpod.document import odf_get_document
-    document = odf_get_document(StringIO(data))
     body = document.get_body()
 
     # Create a context for the lpod functions
@@ -415,11 +424,16 @@ class DBResource_ImportODT(DBResource_AddBase):
         """Format the content of a rst book and create related resources.
         """
 
-        cover, links, toc_depth = _format_content(resource, data,
+        # Get the document
+        from lpod.document import odf_get_document
+        document = odf_get_document(StringIO(data))
+
+        # Make the book
+        cover, links, toc_depth = _format_content(resource, document,
                                                   template_name,
                                                   form['max_level'])
         language = self.get_language(form['language'])
-        meta = _format_meta(form, template_name, toc_depth, language)
+        meta = _format_meta(form, template_name, toc_depth, language, document)
         book = u' `%s`_\n%s\n%s' % (cover, meta, links)
 
         # Escape \n for javascript
