@@ -53,6 +53,7 @@ class NewInstance(AutoForm):
         location_widget])
     actions = [Button(access=True, css='button-ok', title=MSG(u'Add'))]
     context_menus = freeze([])
+    goto_view = None
 
 
     def get_title(self, context):
@@ -143,4 +144,6 @@ class NewInstance(AutoForm):
         child.metadata.set_property('title', title)
         # Ok
         goto = str(resource.get_pathto(child))
+        if self.goto_view:
+            goto = '%s/;%s' % (goto, self.goto_view)
         return context.come_back(messages.MSG_NEW_RESOURCE, goto=goto)
