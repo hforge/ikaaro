@@ -106,7 +106,8 @@ class Book(Directive):
             options['cover'] = directives.uri(cover_uri)
         # Metadata
         metadata = ['Book:']
-        for key in ('title', 'comments', 'subject', 'keywords'):
+        for key in ('toc-depth', 'ignore-missing-pages', 'title', 'comments',
+                    'subject', 'keywords', 'language', 'filename'):
             value = options.get(key)
             if not value:
                 continue

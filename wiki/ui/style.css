@@ -49,6 +49,12 @@
   margin-left: 20px;
 }
 
+#content .document .book {
+  border: 1px dashed #729fcf;
+  border-top: none;
+  margin-top: -11px;
+}
+
 #content .contents.topic {
   display: table;
   margin: 3px;
