@@ -29,6 +29,7 @@ from traceback import print_exc
 import itools
 from itools.core import start_subprocess, send_subprocess, utc
 from itools.csv import Property
+from itools.database import check_database
 from itools.fs import lfs
 from itools.handlers import ro_database
 from itools.web import get_context
@@ -163,6 +164,10 @@ def update(parser, options, target):
     if pid is not None:
         print 'Cannot proceed, the server is running in read-write mode.'
         return
+
+    # Check for database consistency
+    if options.quick is False and check_database(target) is False:
+        return 1
 
     # Start subprocess
     path = '%s/database' % target
@@ -341,6 +346,9 @@ if __name__ == '__main__':
         help="set mtime/author even when the root is up-to-date")
     parser.add_option('--profile',
         help="print profile information to the given file")
+    parser.add_option(
+        '--quick', action="store_true", default=False,
+        help="do not check the database consistency.")
 
     # TODO Add option --pretend (to know whether the database needs to be
     # updated)
