@@ -71,8 +71,8 @@ def find_versions_to_update(root, force=False):
         # Check for code that is older than the instance
         if obj_version > cls_version:
             print
-            print '* %s <%s>' % (resource.get_abspath(),
-                resource.__class__.__name__)
+            print '* %s resource=%s class=%s' % (resource.get_abspath(),
+                resource.metadata.format, resource.__class__)
             print '* the resource is newer than its class: %s > %s' % (
                 obj_version, cls_version)
             if force is False:
