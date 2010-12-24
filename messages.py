@@ -65,6 +65,15 @@ MSG_RESOURCES_REMOVED = INFO(u'Resources removed: {resources}.')
 MSG_RESOURCES_REFERENCED = ERROR(
     u'Action impossible (the resources are in use): {resources}.')
 
+MSG_RESOURCES_REFERENCED_HTML = ERROR(u"""
+    Action impossible (the resources are in use):
+    <stl:inline stl:repeat="resource resources">
+        <a href="${resource/href}" title="${resource/title}">
+            ${resource/title}
+        </a>
+        <stl:inline stl:if="not repeat/resource/end">,</stl:inline>
+    </stl:inline>""", format='stl')
+
 MSG_RESOURCES_NOT_PASTED = ERROR(u'Resources not allowed to paste here: '
                                  u'{resources}.')
 

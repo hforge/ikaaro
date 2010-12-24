@@ -532,8 +532,12 @@ class Folder_BrowseContent(SearchForm):
             msg = messages.MSG_RESOURCES_REMOVED(resources=resources)
             message.append(msg)
         if referenced:
-            resources = ', '.join(referenced)
-            msg = messages.MSG_RESOURCES_REFERENCED(resources=resources)
+            items = []
+            for name in referenced:
+                item = resource.get_resource(name)
+                items.append({'title': item.get_title(),
+                              'href': '%s/;backlinks' % context.get_link(item)})
+            msg = messages.MSG_RESOURCES_REFERENCED_HTML(resources=items)
             message.append(msg)
         if not_removed:
             resources = ', '.join(not_removed)
