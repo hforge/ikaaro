@@ -232,12 +232,15 @@ class BrowseForm(STLForm):
 
 
     def _get_table_columns(self, resource, context):
-        """ Always return a tuple of 3 elements. """
+        """ Always return a tuple of 4 elements. """
         table_columns = []
         for column in self.get_table_columns(resource, context):
             if len(column) == 2:
                 name, title = column
-                column = (name, title, True)
+                column = (name, title, True, None)
+            elif len(column) == 3:
+                name, title, sortable = column
+                column = (name, title, sortable, None)
             table_columns.append(column)
         return table_columns
 
@@ -347,7 +350,7 @@ class BrowseForm(STLForm):
 
         columns = self._get_table_columns(resource, context)
         columns_ns = []
-        for name, title, sortable in columns:
+        for name, title, sortable, css in columns:
             if name == 'checkbox':
                 # Type: checkbox
                 if self.external_form or actions:
@@ -357,6 +360,7 @@ class BrowseForm(STLForm):
                 columns_ns.append({
                     'is_checkbox': False,
                     'title': title,
+                    'css': 'thead-%s' % name,
                     'href': None,
                     'sortable': False})
             else:
@@ -370,6 +374,7 @@ class BrowseForm(STLForm):
                 columns_ns.append({
                     'is_checkbox': False,
                     'title': title,
+                    'css': 'thead-%s' % name,
                     'sortable': True,
                     'href': context.uri.path,
                     'href_up': base_href.replace(reverse=0),

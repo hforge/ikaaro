@@ -745,7 +745,7 @@ class Folder_PreviewContent(Folder_BrowseContent):
 
         columns = self._get_table_columns(resource, context)
         columns_ns = []
-        for name, title, sortable in columns:
+        for name, title, sortable, css in columns:
             if name == 'checkbox':
                 # Type: checkbox
                 if  actions:
@@ -821,7 +821,7 @@ class Folder_PreviewContent(Folder_BrowseContent):
             row['is_folder'] = (item_brain.format == 'folder')
             if isinstance(item_resource, WorkflowAware):
                 row['workflow_statename'] = item_resource.get_statename()
-            for name, title, sortable in columns:
+            for name, title, sortable, css in columns:
                 value = self.get_item_value(resource, context, item, name)
                 if value is None:
                     continue
