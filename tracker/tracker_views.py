@@ -148,7 +148,10 @@ class StoredSearchesMenu(ContextMenu):
         search_name = context.get_query_value('search_name')
         base = '%s/;view' % context.get_link(resource)
         items = []
+        ac = resource.get_access_control()
         for item in resource.search_resources(cls=StoredSearch):
+            if not ac.is_allowed_to_view(context.user, item):
+                continue
             # Make the title
             get_value = item.handler.get_value
             query = resource.get_search_query(get_value)
