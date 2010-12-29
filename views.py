@@ -97,6 +97,18 @@ class CompositeForm(CompositeView, STLForm):
             return view.get_schema(resource, context)
         return {}
 
+    def _get_action(self, resource, context):
+        super(CompositeForm, self)._get_action(resource, context)
+        # Check if the action is not defined in several subviews
+        method = None
+        for view in self.subviews:
+            view_method = getattr(view, context.form_action, None)
+            if view_method is not None and method:
+                msg = 'method "%s" should not be defined in several subviews'
+                raise ValueError, msg % context.form_action
+            else:
+                method = view_method
+
 
     def get_action_method(self, resource, context):
         for view in self.subviews:
@@ -104,6 +116,28 @@ class CompositeForm(CompositeView, STLForm):
             if method is not None:
                 return method
         return None
+
+
+    def get_namespace(self, resource, context):
+        if context.method == 'POST':
+            # When context.method is POST, render the subview which caused the
+            # POST as a 'POST' and the others as a 'GET'
+            context.method = 'GET'
+            views = []
+            for view in self.subviews:
+                method = getattr(view, context.form_action, None)
+                if method is None:
+                    views.append(view.GET(resource, context))
+                else:
+                    # Render the view as if it was a POST
+                    context.method = 'POST'
+                    views.append(view.GET(resource, context))
+                    context.method = 'GET'
+            # Restore context.method
+            context.method = 'POST'
+            return {'views': views}
+
+        return super(CompositeForm, self).get_namespace(resource, context)
 
 
 
