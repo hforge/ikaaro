@@ -237,6 +237,12 @@ span.field-error {
   background-repeat: no-repeat;
 }
 
+#message a {
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
 #message .info {
   border-color: #e7db52;
   background-color: #ffffe7;
