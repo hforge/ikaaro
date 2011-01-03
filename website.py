@@ -125,7 +125,7 @@ class WebSite(RoleAware, Folder):
         # NOTE We do it this way, instead of through a specific action,
         # to avoid redirections.
         language = context.get_form_value('language')
-        if language is not None:
+        if language is not None and language != '':
             context.set_cookie('language', language)
 
         # The default language (give a minimum weight)
@@ -141,7 +141,7 @@ class WebSite(RoleAware, Folder):
                 accept.set(language, 2.0)
         # Cookie (2.5)
         language = context.get_cookie('language')
-        if language is not None:
+        if language is not None and language != '':
             accept.set(language, 2.5)
 
 
