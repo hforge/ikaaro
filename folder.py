@@ -128,16 +128,16 @@ class Folder(DBResource):
         return self.make_resource(name, cls, body=body, **kw)
 
 
-    def extract_archive(self, handler, language, filter=None, postproc=None):
-        # Get the list of paths to extract
-        paths = handler.get_contents()
-        paths.sort()
-
-        # Extract
-        for path_str in paths:
+    def extract_archive(self, handler, language, filter=None, postproc=None,
+                        update=False):
+        change_resource = get_context().database.change_resource
+        for path_str in handler.get_contents():
+            # 1. Skip folders
             path = Path(path_str)
+            if path.endswith_slash:
+                continue
 
-            # Create parent folders if needed
+            # 2. Create parent folders if needed
             folder = self
             for name in path[:-1]:
                 subfolder = folder.get_resource(name, soft=True)
@@ -146,27 +146,37 @@ class Folder(DBResource):
                 else:
                     folder = subfolder
 
-            # Case 1: folder
-            filename = path[-1]
-            if path.endswith_slash:
-                if folder.get_resource(filename, soft=True):
-                    message = 'There is already a resource named {name}'
-                    raise RuntimeError, message.format(name=filename)
-
-                folder.make_resource(filename, Folder)
-                continue
-
-            # Case 2: file
+            # 3. Get the new body
+            name = path[-1]
             body = handler.get_file(path_str)
-            mimetype = guess_mimetype(filename, 'application/octet-stream')
+            mimetype = guess_mimetype(name, 'application/octet-stream')
             if filter:
                 body = filter(path_str, mimetype, body)
                 if body is None:
                     continue
 
-            file = folder._make_file(None, filename, mimetype, body, language)
-            if postproc:
-                postproc(file)
+            # 4. Update or make file
+            filename, extension, language = FileName.decode(name)
+            file = folder.get_resource(filename, soft=True)
+            if file:
+                if update is False:
+                    msg = 'unexpected resource at {path}'
+                    raise RuntimeError, msg.format(path=path_str)
+                if mimetype == 'text/html':
+                    body = stream_to_str_as_xhtml(HTMLParser(body))
+                old_body = file.handler.to_str()
+                file.handler.load_state_from_string(body)
+                if postproc:
+                    postproc(file)
+                # FIXME Comparing the bytes does not work for XML, so we use
+                # this weak heuristic
+                if len(old_body) != len(file.handler.to_str()):
+                    change_resource(file)
+            else:
+                # Case 1: the resource does not exist
+                file = folder._make_file(None, name, mimetype, body, language)
+                if postproc:
+                    postproc(file)
 
 
     def can_paste(self, source):
