@@ -684,9 +684,11 @@ class AutoForm(STLForm):
 
         # Build namespace
         return {
+            'before': None,
             'actions': actions,
             'action': action,
             'title': self.get_title(context),
             'description': self.description,
             'first_widget': first_widget,
-            'widgets': ns_widgets}
+            'widgets': ns_widgets,
+            'after': None}

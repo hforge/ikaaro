@@ -4,6 +4,8 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
+${before}
+
 <form id="autoform" name="autoform" action="${action}" method="post"
   enctype="multipart/form-data" stl:omit-tag="not actions">
   <fieldset>
@@ -35,5 +37,7 @@
     document.getElementById("${first_widget}").focus();
   </script>
 </form>
+
+${after}
 
 </stl:block>
