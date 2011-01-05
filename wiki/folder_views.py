@@ -465,4 +465,5 @@ class DBResource_ImportODT(DBResource_AddBase):
 
         # Build RST Book
         wiki_book = self.do_import(resource, data, form, template_name)
+        wiki_book = wiki_book.replace("'", "\\'")
         return self.get_javascript_return(context, wiki_book)
