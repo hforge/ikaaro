@@ -1,4 +1,4 @@
-ikaaro 0.62.5 (2010/12/XX)
+ikaaro 0.62.5 (2011/01/XX)
 ==========================
 
 This is a Content Management System built on Python & itools, among
@@ -11,17 +11,36 @@ other features ikaaro provides:
 Changes
 -------
 
-Now it is possible to select where a new resource will be added from
-the add form, with the help of a select box (bug #1102).
+Now the blog, the calendar and the tracker are not enabled by default,
+use the 'modules' variable in the 'config.conf' file to enable them:
+
+  modules = ikaaro.blog ikaaro.calendar ikaaro.tracker
+
+There have been several fixes related to restedit [1], like bug #1026,
+and now restedit version 1.2 or later is required.
+
+There have been several user interface improvements. Most notably now
+it is possible to select where a new resource will be added from the
+add form, with the help of a select box (see bug #1102). Also, TinyMCE
+has been upgraded from 3.3.8 to 3.3.9.2
 
 The icms-update.py script has a new option, --mtime, it will set the
 mtime/last_author fields after inspection of the Git history.
 
-The documentation has been updated (bug #1024).
+At the API level, the 'register_document_type' function has changed a
+litle, now the second parameter identifies the container class where
+the given document type can be added, and not its parent class. See
+the upgrade notes for examples.
 
-Other issues fixed include:
+Other issues resolved include:
 
+  #712 Tracker: add access control filter to the "Stored Searches" menu
+ #1024 The documentation has been updated
  #1063 Fix the search-by-type select box in the popup
+ #1087 Improve error message when trying to remove referenced resources
+
+
+[1] http://www.hforge.org/restedit/
 
 
 Resources
