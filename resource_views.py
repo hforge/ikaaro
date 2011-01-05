@@ -20,7 +20,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import merge_dicts
+from itools.core import merge_dicts, freeze
 from itools.database import OrQuery, PhraseQuery
 from itools.datatypes import Boolean, DateTime, Email, Integer, String
 from itools.gettext import MSG
@@ -125,13 +125,16 @@ class DBResource_Edit(AutoForm):
     icon = 'metadata.png'
     context_menus = []
 
-    schema = {
+    schema = freeze({
         'title': Multilingual,
         'description': Multilingual(hidden_by_default=True),
         'subject': Multilingual(hidden_by_default=True),
-        'timestamp': DateTime(readonly=True)}
-    widgets = [
-        timestamp_widget, title_widget, description_widget, subject_widget]
+        'timestamp': DateTime(readonly=True)})
+    widgets = freeze([
+        timestamp_widget,
+        title_widget,
+        description_widget,
+        subject_widget])
 
 
     def get_context_menus(self):
