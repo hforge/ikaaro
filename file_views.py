@@ -24,7 +24,7 @@ from os.path import basename, splitext
 # Import from itools
 from itools.core import merge_dicts
 from itools.csv import Property
-from itools.datatypes import Integer, String, HTTPDate, PathDataType
+from itools.datatypes import Boolean, Integer, String, HTTPDate, PathDataType
 from itools.fs import FileName
 from itools.gettext import MSG
 from itools.handlers import get_handler_class_by_mimetype
@@ -360,7 +360,7 @@ class Archive_View(STLForm):
     title = MSG(u'View')
     template = '/ui/binary/Archive_view.xml'
 
-    schema = {'target': PathDataType}
+    schema = {'target': PathDataType, 'update': Boolean}
 
     def get_namespace(self, resource, context):
         filename = resource.get_property('filename') or resource.get_title()
@@ -405,7 +405,7 @@ class Archive_View(STLForm):
         # Make the resources
         language = resource.get_edit_languages(context)[0]
         try:
-            target.extract_archive(handler, language)
+            target.extract_archive(handler, language, update=form['update'])
         except RuntimeError, message:
             context.commit = False
             context.message = MSG_NAME_CLASH
