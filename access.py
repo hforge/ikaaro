@@ -386,7 +386,7 @@ class AccessControl(BaseAccessControl):
         return self.is_allowed_to_edit(user, resource)
 
 
-    def is_allowed_to_add(self, user, resource):
+    def is_allowed_to_add(self, user, resource, class_id=None):
         return self.is_allowed_to_edit(user, resource)
 
 
@@ -517,7 +517,7 @@ class RoleAware(AccessControl):
         return False
 
 
-    def is_allowed_to_add(self, user, resource):
+    def is_allowed_to_add(self, user, resource, class_id=None):
         # Anonymous can touch nothing
         if user is None:
             return False

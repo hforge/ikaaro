@@ -103,7 +103,8 @@ class NewInstance(AutoForm):
         if path is not None:
             container = context.site_root.get_resource(path)
         ac = container.get_access_control()
-        if not ac.is_allowed_to_add(context.user, container):
+        class_id = context.query['type']
+        if not ac.is_allowed_to_add(context.user, container, class_id):
             path = '/' if path == '.' else '/%s/' % path
             msg = ERROR(u'Adding resources to {path} is not allowed.')
             raise FormError, msg.gettext(path=path)
