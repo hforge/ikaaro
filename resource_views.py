@@ -350,6 +350,13 @@ class LoginView(STLForm):
     meta = [('robots', 'noindex, follow', None)]
 
 
+    def POST(self, resource, context):
+        if context.status == 401:
+            # Don't submit login with data from another form
+            return self.GET
+        return super(LoginView, self).POST(resource, context)
+
+
     def get_value(self, resource, context, name, datatype):
         if name == 'username':
             return context.query['username']
