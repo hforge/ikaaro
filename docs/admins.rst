@@ -5,51 +5,88 @@ Administrators Guide
 
 .. highlight:: sh
 
-Introduction
-============
+
+Install
+=======
 
 .. _admins-requirements:
 
-Requirements
-------------
+System requirements
+-------------------
 
-Python 2.6, :mod:`itools` [#admins-itools]_ 0.62.1 and :mod:`guppy`
-[#admins-guppy]_ 0.1.8 are required. It is recommended to install the
-:mod:`pil` [#admins-pil]_ and :mod:`docutils` [#admins-docutils]_ packages.
+Only Unix-like systems (e.g. GNU/Linux and Mac OS X) are supported, ikaaro
+does not work on Windows.
 
-The other optionally requirements will be given by :mod:`ikaaro` when you
-launch it.
+The table below shows the software that must be installed, if possible
+install this in the system using standard packages from your distribution.
+The version in the second column is the minimum version supported, it may
+work or not with older versions:
+
+  ==========  =======  ========================================
+  Python        2.6.4  http://www.python.org/
+  ----------  -------  ----------------------------------------
+  pkg-config     0.23  http://pkg-config.freedesktop.org/
+  ----------  -------  ----------------------------------------
+  glib           2.20  http://www.gtk.org/
+  ----------  -------  ----------------------------------------
+  pygobject      2.20  http://www.pygtk.org/
+  ----------  -------  ----------------------------------------
+  Git             1.7  http://git-scm.com/
+  ----------  -------  ----------------------------------------
+  libsoup        2.28  http://live.gnome.org/LibSoup
+  ----------  -------  ----------------------------------------
+  pytz                 http://pytz.sourceforge.net/
+  ----------  -------  ----------------------------------------
+  xapian        1.0.8  http://www.xapian.org/
+  ----------  -------  ----------------------------------------
+  gettext        0.17  http://www.gnu.org/software/gettext/
+  ----------  -------  ----------------------------------------
+  virtualenv      1.1  http://pypi.python.org/pypi/virtualenv
+  ==========  =======  ========================================
+
+And this table shows the recommended software:
+
+  ==========  =======  ========================================
+  PIL           1.1.6  http://www.pythonware.com/products/pil/
+  ----------  -------  ----------------------------------------
+  rsvg           2.30  http://www.pygtk.org/
+  ----------  -------  ----------------------------------------
+  xlrd          0.6.1  http://www.lexicon.net/sjmachin/xlrd.htm
+  ----------  -------  ----------------------------------------
+  poppler      0.10.4  http://poppler.freedesktop.org/
+  ----------  -------  ----------------------------------------
+  wv2           0.2.3  https://sourceforge.net/projects/wvware
+  ==========  =======  ========================================
 
 
-Download and Install
---------------------
+Virtualenv
+----------
 
-Download the latest :mod:`ikaaro` version from http://www.hforge.org/ikaaro.
-Then to install it just type::
+We advice to install ikaaro within a virtual environment, this is the
+procedure::
 
-    $ tar xzf ikaaro-X.Y.Z.tar.gz
-    $ cd ikaaro-X.Y.Z
-    $ ipkg-build.py
-    $ python setup.py install
+  $ virtualenv --unzip-setuptools 0.62
+  $ ./0.62/bin/pip install itools
+  $ ./0.62/bin/pip install ikaaro
 
 
 The command line interface
---------------------------
+==========================
 
 The :mod:`ikaaro` package includes a collection of command line tools to
 create and manage instances:
 
-    ============================== ===============================================
-    :file:`icms-init.py`           creates a new :mod:`ikaaro` instance
-    ------------------------------ -----------------------------------------------
-    :file:`icms-start.py`          starts the web and the mail spool servers
-    ------------------------------ -----------------------------------------------
-    :file:`icms-stop.py`           stops the both servers
-    ------------------------------ -----------------------------------------------
-    :file:`icms-update.py`         updates the instance (after a software upgrade)
-    ------------------------------ -----------------------------------------------
-    :file:`icms-update-catalog.py` rebuilds the catalog
-    ============================== ===============================================
+  ============================== ===============================================
+  :file:`icms-init.py`           creates a new :mod:`ikaaro` instance
+  ------------------------------ -----------------------------------------------
+  :file:`icms-start.py`          starts the web and the mail spool servers
+  ------------------------------ -----------------------------------------------
+  :file:`icms-stop.py`           stops the both servers
+  ------------------------------ -----------------------------------------------
+  :file:`icms-update.py`         updates the instance (after a software upgrade)
+  ------------------------------ -----------------------------------------------
+  :file:`icms-update-catalog.py` rebuilds the catalog
+  ============================== ===============================================
 
 
 
