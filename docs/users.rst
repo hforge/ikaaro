@@ -39,7 +39,7 @@ page* (see figure). From the profile page the user will be able to:
 * manage her personal content.
 
 .. figure:: figures/profile.*
-   :align: center
+   :width: 740px
 
    User's Profile Page
 
@@ -65,7 +65,7 @@ three options (see figure):
   content, and to register by themselves.
 
 .. figure:: figures/settings.*
-   :align: center
+   :width: 740px
 
    Application's Settings
 
@@ -79,7 +79,7 @@ to add new users and to define their access roles (see figure).
 
 
 .. figure:: figures/members.*
-   :align: center
+   :width: 740px
 
    Managing Users
 
@@ -101,12 +101,12 @@ documents (see the following figures): Web Pages, images, PDF files, Open
 Office documents, etc.
 
 .. figure:: figures/content_thumbs.*
-   :align: center
+   :width: 740px
 
    Content & Document Management (thumbnails view)
 
 .. figure:: figures/content_list.*
-   :align: center
+   :width: 740px
 
    Content & Document Management (list view)
 
@@ -117,7 +117,7 @@ Web Pages
 Web Pages (HTML files) can be modified with the *in-line* editor (see figure).
 
 .. figure:: figures/epoz.*
-   :align: center
+   :width: 740px
 
    HTML in-line editor
 
@@ -131,7 +131,7 @@ figure), where every document or image is in one of these states: *private*,
 security policy (see section :ref:`users-security`).
 
 .. figure:: figures/workflow.*
-   :align: center
+   :width: 740px
 
    Workflow
 
@@ -145,7 +145,7 @@ possible to search for this content from the *browse list* view (see figure)
 or from the global search interface (see figure).
 
 .. figure:: figures/search.*
-   :align: center
+   :width: 740px
 
    Search
 
@@ -162,7 +162,7 @@ Tracker
 The issue tracker is an useful tool for project management (see figure).
 
 .. figure:: figures/tracker.*
-   :align: center
+   :width: 740px
 
    The Issue Tracker
 
@@ -175,7 +175,7 @@ content. A simple language called *reStructuredText* is used to give format to
 the text (see figure).
 
 .. figure:: figures/wiki.*
-   :align: center
+   :width: 740px
 
    The Wiki
 
@@ -187,7 +187,7 @@ The Blog, or forum, allows to keep a discussion on-line about whatever
 topic. See figure for a philosophical discussion.
 
 .. figure:: figures/blog.*
-   :align: center
+   :width: 740px
 
    The Blog
 
@@ -199,12 +199,12 @@ The Calendar is to keep control of your time, for instance (see the following
 figures).
 
 .. figure:: figures/calendar_month.*
-   :align: center
+   :width: 740px
 
    The Calendar (monthly view)
 
 .. figure:: figures/calendar_event.*
-   :align: center
+   :width: 740px
 
    The Calendar (event)
 
