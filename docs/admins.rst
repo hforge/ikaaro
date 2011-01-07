@@ -70,48 +70,48 @@ procedure::
   $ ./0.62/bin/pip install ikaaro
 
 
-The command line interface
-==========================
+The command line tools
+======================
 
 The :mod:`ikaaro` package includes a collection of command line tools to
 create and manage instances:
 
-  ============================== ===============================================
-  :file:`icms-init.py`           creates a new :mod:`ikaaro` instance
-  ------------------------------ -----------------------------------------------
-  :file:`icms-start.py`          starts the web and the mail spool servers
-  ------------------------------ -----------------------------------------------
-  :file:`icms-stop.py`           stops the both servers
-  ------------------------------ -----------------------------------------------
-  :file:`icms-update.py`         updates the instance (after a software upgrade)
-  ------------------------------ -----------------------------------------------
-  :file:`icms-update-catalog.py` rebuilds the catalog
-  ============================== ===============================================
-
-
+============================== ===============================================
+:file:`icms-init.py`           Creates a new :mod:`ikaaro` instance
+------------------------------ -----------------------------------------------
+:file:`icms-start.py`          Starts the web server
+------------------------------ -----------------------------------------------
+:file:`icms-stop.py`           Stops the web server
+------------------------------ -----------------------------------------------
+:file:`icms-update.py`         Updates the instance (after a software upgrade)
+------------------------------ -----------------------------------------------
+:file:`icms-update-catalog.py` Rebuilds the catalog
+------------------------------ -----------------------------------------------
+:file:`icms-forget.py`         Forgets transactions (rarely used)
+============================== ===============================================
 
 All the scripts are self-documented, just run any of them with the ``--help``
 option.  This is an excerpt for the :file:`icms-init.py` script::
 
-    $ icms-init.py --help
-    Usage: icms-init.py [OPTIONS] TARGET
+  $ icms-init.py --help
+  Usage: icms-init.py [OPTIONS] TARGET
 
-    Creates a new instance of ikaaro with the name TARGET.
+  Creates a new instance of ikaaro with the name TARGET.
 
-    Options:
-      --version             show program's version number and exit
-      -h, --help            show this help message and exit
-      -e EMAIL, --email=EMAIL
-                            e-mail address of the admin user
-      -p PORT, --port=PORT  listen to PORT number
-      -r ROOT, --root=ROOT  create an instance of the ROOT application
-      -s SMTP_HOST, --smtp-host=SMTP_HOST
-                            use the given SMTP_HOST to send emails
-      -w PASSWORD, --password=PASSWORD
-                            use the given PASSWORD for the admin user
-      -m MODULES, --modules=MODULES
-                            add the given MODULES to load at start
-      --profile=PROFILE     print profile information to the given file
+  Options:
+            --version             show program's version number and exit
+    -h, --help            show this help message and exit
+    -e EMAIL, --email=EMAIL
+                          e-mail address of the admin user
+    -p PORT, --port=PORT  listen to PORT number
+    -r ROOT, --root=ROOT  create an instance of the ROOT application
+    -s SMTP_HOST, --smtp-host=SMTP_HOST
+                          use the given SMTP_HOST to send emails
+    -w PASSWORD, --password=PASSWORD
+                          use the given PASSWORD for the admin user
+    -m MODULES, --modules=MODULES
+                          add the given MODULES to load at start
+    --profile=PROFILE     print profile information to the given file
 
 
 Make a new instance
@@ -137,47 +137,55 @@ The :file:`icms-init.py` script creates a folder (named :file:`my_instance` in
 the example) that keeps, among other things, the database and a configuration
 file::
 
-    $ tree -F -L 1 --noreport my_instance
-    my_instance
-    |-- catalog/
-    |-- config.conf
-    |-- database/
-    |-- log/
-    `-- spool/
+  $ tree -F -L 1 --noreport my_instance
+  my_instance
+  ├── catalog/
+  ├── config.conf
+  ├── database/
+  ├── log/
+  └── spool/
 
 
 .. _admins-configuration-file:
 
+Now you should edit the configuration file, and at least set the ``smtp-host``
+option so sending emails works, and the ``smtp-from`` option to have a valid
+email address.
+
+
 The configuration file
-----------------------
+======================
 
-Once the instance is created, it is a good idea to read the self-documented
-configuration file, :file:`config.conf`, to learn about the available options,
-and to finish the configuration process.
+The configuration file :file:`config.conf` is self-documented, and the default
+settings are likely to work on most cases, except for the ``smtp-host`` and
+``smtp-from`` parameters.
 
-The different options can be split in four groups:
+This is the list of available options:
 
-* The ``modules`` option allows to load (import) the specified Python packages
-  when the server starts. This is the way we can extend the :mod:`ikaaro` CMS
-  with third party packages.
-* The ``listen-address`` and ``listen-port`` options define the internet
-  address and the port number the Web server will listen to.
+*modules*
+  Space separated list of Python packages to load. Allows to extend
+  :mod:`ikaaro` with more features.
 
-  By default connections are accepted from any internet address. In a
-  production environment it is wise to restrict the connections to only those
-  coming from the localhost. Section :ref:`admins-production` explains the
-  details.
-* The ``smtp-host``, ``smtp-from``, ``smtp-login`` and ``smtp-password`` are
-  used to define the SMTP relay server that is to be used to send emails; and
-  to provide the credentials for servers that require authentication.
+*listen-address*, *listen-port*
+  Defines the address and port the web server will listen to (localhost:8080
+  by default).
 
-  The ``contact-from`` option must be a valid email address, it will be used
-  for the ``From`` field in outgoing messages.
+*smtp-host*, *smtp-login*, *smtp-password*, *smpt-from*
+  Defines the SMTP host used to send emails, with the credentials used to
+  connect to the server, and the default value for the ``From`` field.
 
-  It is very important to set these options to proper values, since the
-  :mod:`ikaaro` CMS sends emails for several important purposes.
-* The ``log-level`` allows you to set the level of verbosity saved in the
-  events log ``log/events`` file.
+*log-level*
+  May be ``critical``, ``error``, ``warning`` (default), ``info`` or
+  ``debug``. See section :ref:`admins-logging` for further details.
+
+*database-size*
+  Defines the lower and upper limits of the cache system.
+
+*profile-time*, *profile-space*
+  Used by developers to profile time or space.
+
+*index-text*
+  Allows to de-activate full-text indexing.
 
 
 Start/Stop the server
@@ -186,73 +194,83 @@ Start/Stop the server
 The :mod:`ikaaro` CMS can be started simply by the use of the
 :file:`icms-start.py` script::
 
-    $ icms-start.py my_instance
-    [my_instance] Web Server listens *:8080
+  $ icms-start.py my_instance
+  [my_instance] Web Server listens *:8080
 
-By default the process remain attached to the console, to stop it just
+By default the process remains attached to the console, to stop it just
 type ``Ctrl+C``.  It is stopped ``gracefully``, what means that pending
 requests will be handled and the proper responses sent to the clients.
 
 To detach from the console use the ``--detach`` option. Then, to stop the
-servers started this way use the :file:`icms-stop.py` script::
+server started this way use the :file:`icms-stop.py` script::
 
-    $ icms-start.py --detach my_instance
-    ...
-    $ icms-stop.py my_instance
-    [my_instance] Web Server shutting down (gracefully)...
+  $ icms-start.py --detach my_instance
+  ...
+  $ icms-stop.py my_instance
+  [my_instance] Web Server shutting down (gracefully)...
 
 With the Web server running, we can open our favourite browser and go to the
 ``http://localhost:8080`` URL, to reach the user interface (see figure).
 
 .. figure:: figures/back-office.*
-   :align: center
+   :width: 740px
 
-   The :mod:`ikaaro` Web interface.
-
-
-A look inside
-=============
-
-The content of an :mod:`ikaaro` instance is:
-
-* The configuration file (see section :ref:`admins-configuration-file`).
-* The logs folder (see below).
-* The database (see below).
-* The catalog keeps the indexes needed to quickly search in the database.
-* The mail spool keeps the emails to be sent by the spool server.
+   The :mod:`ikaaro` login form.
 
 
-The logs
---------
+Logging
+=======
 
-There are four log files:
+.. _admins-logging:
 
-* The access log uses the *Common Log Format* [#admins-logs]_, useful for
-  example to build statistics about the usage of the web site.
-* By default the events log keeps record of the database transactions. In
-  debug mode (see section :ref:`admins-configuration-file`), more low-level
-  information is recorded. This log file contains also information about every
-  *internal server* error, specifically the request headers and the Python
-  tracebacks.
-* The spool log keeps track of the emails sent by the spool server.
-* The spool error log keeps information about every error coming from the
-  spool server.
+There are two log files. Both of them are automatically rotated every three
+weeks.
+
+``log/access``
+  The access log records every request/response, it uses the *Common Log
+  Format* [#admins-logs]_
+
+``log/events``
+  The events log is where errors, warnings, info and debug messages are
+  written to.
+
+What is written to the events log is defined by the ``log-level`` configuration
+variable. There are five possible levels:
+
+*critical*
+  Log only critical errors (this kind of errors immediately stop the server).
+
+*error*
+  Log all errors, for instance application errors that produce a 500 response,
+  they include often a Python traceback.
+
+*warning*
+  Log errors and warning messages (this is the default value).
+
+*info*
+  Log errors, warning and informational messages. For instance, this will
+  include an informational message for every email successfully sent.
+
+*debug*
+  Log everything, including detailed data only useful for debugging.
 
 
 The database
-------------
+============
 
 The data is stored directly in the file system. This is what a new instance
 looks like::
 
-    $ tree --noreport -F my_instance/database
-    my_instance/database
-    |-- .metadata
-    |-- users/
-    |   `-- 0.metadata
-    `-- users.metadata
+  $ tree --noreport -F -L 1 -a my_instance/database
+  my_instance/database
+  ├── .git/
+  ├── .metadata
+  ├── theme/
+  ├── theme.metadata
+  ├── users/
+  └── users.metadata
 
-The database is made up of regular files and folders. For instance, a Web Page
+The database is made up of regular files and folders. For instance, a web page
 will be stored in the database as an XHTML file, an image or an office
 document will be stored as it is.
 
@@ -260,23 +278,52 @@ This is extremely useful for introspection and manipulation purposes, since we
 can use the old good Unix tools: ``grep``, ``vi``, etc. But of course, *don't
 make any changes unless you know what you are doing!*
 
-
 Metadata
-^^^^^^^^
+--------
 
 Every :mod:`ikaaro` object is defined by a metadata file. As the example shows,
-a new instance has three objects: the root (defined by the :file:`.metadata`
-file), the users folder and the theme folder.
+a new instance has three objects at the top level: the root (defined by the
+:file:`.metadata` file), the users folder and the theme folder.
 
-A metadata file looks like this:
+A metadata file looks like this::
 
-.. code-block:: xml
+  format;version=20081217:user
+  email:jdavid@itaapy.com
+  mtime:2011-01-07T17:42:41Z
+  password:eSE%2BkSBKIP9xL6PEKsIcR75QyeU%3D%0A
 
-    <?xml version="1.0" encoding="UTF-8"?>
-    <metadata format="user" version="20071215">
-      <password>FNp6/Vb9cFeAMTlQNcFylixbToQ%3D%0A</password>
-      <email>jdavid@itaapy.com</email>
-    </metadata>
+Git
+---
+
+In the listing above, however, there is one special folder: ``.git``
+
+Ikaaro uses Git to archive old versions of the data, and to implement the
+transaction system. You can for instance run ``git log`` to see all the
+transactions::
+
+  $ cd my_instance/database
+  $ git log
+  commit 214029f8d12329b1464cd4401e18f609c2fc2c6d
+  Author: nobody <>
+  Date:   Fri Jan 7 13:57:10 2011 +0000
+
+      GET http://localhost/
+
+One can easily imagine what a powerful feature Git is for a system admin. For
+instance to see what exactly happened when things go wrong, or to revert some
+faulty commit.
+
+
+The catalog
+-----------
+
+TODO
+
+
+The mail spool
+==============
+
+TODO
 
 
 .. _admins-production:
@@ -284,13 +331,30 @@ A metadata file looks like this:
 Deployment in a production environment
 ======================================
 
-By default the server listens to all the network interfaces. For security
-reasons it is recommended to change the configuration so it only listens
-to the local interface:
+We recommend to run production ikaaro instances using an specific user, create
+it this way::
 
-    ``listen-address = 127.0.0.1``
+  # useradd -b /var -m ikaaro
+  # su - ikaaro
 
-Then you can configure Apache [#admins-apache]_ as a proxy server:
+Then you can create one or more virtual environments, this is useful to have
+different software installed in different environments::
+
+  ikaaro $ virtualenv --unzip-setuptools 0.62
+  ikaaro $ ./0.62/bin/pip install itools
+  ikaaro $ ./0.62/bin/pip install ikaaro
+  ikaaro $ cd 0.62
+
+Now you can make one or more ikaaro instances::
+
+  ikaaro $ ./bin/icms-init.py -e test@example.com mysite.com
+  ikaaro $ vi mysite.com/config.conf
+  ikaaro $ ./bin/icms-start.py -d mysite.com
+
+It is recommended to deploy ikaaro instances behind a proxy server, for example
+using Apache or NGinx.
+
+Apache [#admins-apache]_:
 
 .. code-block:: apache
 
@@ -302,7 +366,12 @@ Then you can configure Apache [#admins-apache]_ as a proxy server:
     ProxyPreserveHost On
   </VirtualHost>
 
-Or Nginx [#admins-nginx]_:
+
+As you can appreciate in the Apache example, there is not much to do to
+support virtual hosting, since most of the work is done in the :mod:`ikaaro`
+side.
+
+Nginx [#admins-nginx]_:
 
 .. code-block:: nginx
 
@@ -316,10 +385,6 @@ Or Nginx [#admins-nginx]_:
 
         }
     }
-
-As you can appreciate in the Apache example, there is not much to do to
-support virtual hosting, since most of the work is done in the :mod:`ikaaro`
-side.
 
 
 
