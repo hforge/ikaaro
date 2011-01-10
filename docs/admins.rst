@@ -416,6 +416,61 @@ this happens, the server will refuse to start again, but it must provide some
 instructions to restore the database (``git`` commands).
 
 
+Mirroring
+=========
+
+Making a mirror of an ikaaro instance in a another server for failover is
+easy, thanks to Git.
+
+Say we have two servers, the production server named *prod*, and the failover
+server named *back*.
+
+We have this layout in the production server::
+
+  /var/ikaaro/      # The ikaaro's user home
+    0.62/           # The Python virtual environment
+      example.com/  # The ikaaro instance
+
+We are going to use a fetch strategy. This is to say, the failover server
+will trigger the synchronization process and fetch from the production server
+through the SSH protocol.  So the first step is to allow the failover server
+to SSH into the production server, to do so we need an SSH key::
+
+  # Make an SSH key in the failover server for the ikaaro user (do not set a
+  # passphrase)
+  ikaaro@back ~ $ ssh-keygen -t dsa
+
+  # Copy the public key into the production server
+  ikaaro@back ~ $ scp .ssh/id_dsa.pub joe@prod:/tmp
+
+  # In the production server, make the ikaaro user to accept the key
+  ikaaro@prod ~ $ cat /tmp/id_dsa.pub >> ~/.ssh/authorized_keys
+
+Now, for every ikaaro instance we want to mirror, we need to reproduce the
+layout in the failover server::
+
+  ikaaro@back ~ $ virtualenv --unzip-setuptools 0.62
+  ikaaro@back ~ $ cd 0.62
+  ikaaro@back ~/0.62 $ ./bin/pip install itools
+  ikaaro@back ~/0.62 $ ./bin/pip install ikaaro
+  ikaaro@back ~/0.62 $ ./bin/icms-init.py -e toto example.com
+
+We will throw away the database created this way, and make a clone of the
+database in the production server::
+
+  ikaaro@back ~/0.62 $ cd example.com
+  ikaaro@back ~/0.62/example.com $ rm -rf database
+  ikaaro@back ~/0.62/example.com $ git clone ssh://prod/~ikaaro/0.62/example.com/database/.git database
+
+Finally we will setup a cron job in the failover server to make a pull every
+hour::
+
+  /etc/cron.d/mirror-ikaaro
+  00 6-22 * * * ikaaro cd /var/ikaaro/0.62/example.com/database && git pull -q --rebase origin master
+
+
+
+
 .. rubric:: Footnotes
 
 .. [#admins-itools] http://www.hforge.org/itools
@@ -431,4 +486,3 @@ instructions to restore the database (``git`` commands).
 .. [#admins-apache] http://http.apache.org
 
 .. [#admins-nginx] http://nginx.org
-
