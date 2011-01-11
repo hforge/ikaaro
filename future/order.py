@@ -141,7 +141,6 @@ class ResourcesOrderedTable_Ordered(OrderedTable_View):
 
 
 
-
 class ResourcesOrderedTable_Unordered(Folder_BrowseContent):
 
     access = 'is_allowed_to_edit'
@@ -421,6 +420,7 @@ class ResourcesOrderedContainer(Folder):
 
 
     def init_resource(self, **kw):
+        super(ResourcesOrderedContainer, self).init_resource(**kw)
         self.make_resource(self.order_path, self.order_class)
 
 
