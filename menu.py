@@ -28,7 +28,7 @@ from itools.xml import XMLParser
 # Import from ikaaro
 from autoform import PathSelectorWidget, ReadOnlyWidget, SelectWidget
 from autoform import TextWidget
-from buttons import BrowseButton
+from buttons import BrowseButton, Button
 from datatypes import Multilingual
 from exceptions import ConsistencyError
 from folder import Folder
@@ -40,6 +40,7 @@ from popup import DBResource_AddLink
 from revisions_views import DBResource_CommitLog
 from table import OrderedTableFile, OrderedTable
 from table_views import OrderedTable_View
+from table_views import Table_AddRecord, Table_EditRecord
 from workflow import get_workflow_preview
 import messages
 
@@ -258,6 +259,48 @@ class Menu_AddLink(DBResource_AddLink):
 
 
 
+class Menu_AddRecord(Table_AddRecord):
+
+    actions = (Table_AddRecord.actions
+               + [Button(access=True, name='add_and_return',
+                         css='button-ok', title=MSG(u'Add and return'))])
+
+    def action_add_and_return(self, resource, context, record):
+        proxy = super(Menu_AddRecord, self)
+        return proxy.action(resource, context, record)
+
+
+    def action_on_success(self, resource, context):
+        if context.form_action == 'action_add_and_return':
+            goto = context.get_link(resource)
+        else:
+            n = len(resource.handler.records) - 1
+            goto = ';edit_record?id=%s' % n
+        return context.come_back(MSG(u'New record added.'), goto=goto)
+
+
+
+class Menu_EditRecord(Table_EditRecord):
+
+    actions = (Table_EditRecord.actions
+               + [Button(access=True, name='edit_and_return',
+                         css='button-ok', title=MSG(u'Edit and return'))])
+
+    def action_edit_and_return(self, resource, context, record):
+        proxy = super(Menu_EditRecord, self)
+        return proxy.action(resource, context, record)
+
+
+    def action_on_success(self, resource, context):
+        proxy = super(Menu_EditRecord, self)
+        proxy.action_on_success(resource, context)
+
+        if context.form_action == 'action_edit_and_return':
+            goto = context.get_link(resource)
+            return context.come_back(context.message, goto=goto)
+
+
+
 class Menu(OrderedTable):
 
     class_id = 'ikaaro-menu'
@@ -267,6 +310,8 @@ class Menu(OrderedTable):
 
     # Views
     add_link = Menu_AddLink()
+    add_record = Menu_AddRecord()
+    edit_record = Menu_EditRecord()
     view = Menu_View()
 
 
