@@ -52,10 +52,10 @@ class Theme(Folder):
                                          title=ControlPanel.title)
     edit = Theme_Edit()
     edit_css = GoToSpecificDocument(specific_document='style',
-                                    specific_view='edit',
-                                    title=MSG(u'Edit CSS'))
+            access='is_allowed_to_edit', specific_view='edit',
+            title=MSG(u'Edit CSS'))
     edit_menu = GoToSpecificDocument(specific_document='menu',
-                                     title=MSG(u'Edit menu'))
+            access='is_allowed_to_edit', title=MSG(u'Edit menu'))
 
     class_schema = merge_dicts(
         Folder.class_schema,
