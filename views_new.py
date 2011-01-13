@@ -74,7 +74,7 @@ class NewInstance(AutoForm):
             cls = get_resource_class(class_id)
             return cls.class_description.gettext()
         elif name == 'path':
-            return resource.get_abspath()
+            return context.site_root.get_pathto(resource)
         elif name in self.get_query_schema():
             return context.query[name]
         return AutoForm.get_value(self, resource, context, name, datatype)

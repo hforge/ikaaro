@@ -118,7 +118,6 @@ class ContainerPathDatatype(Enumerate):
         context = get_context()
         resource = context.resource
         class_id = context.query['type']
-        here_path = context.site_root.get_pathto(resource)
 
         skip_formats = set()
         items = []
