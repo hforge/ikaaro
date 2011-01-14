@@ -44,7 +44,7 @@ from ikaaro.resource_views import DBResource_Edit
 from issue import Issue
 from datatypes import get_issue_fields, TrackerList, ProductInfoList
 from datatypes import Tracker_UsersList
-from stored import StoredSearchFile, StoredSearch
+from stored import StoredSearch
 
 
 columns = [
@@ -78,12 +78,15 @@ class GoToIssueMenu(ContextMenu):
 class StoreSearchMenu(ContextMenu):
     """Form to store a search.
     """
-
     title = MSG(u'Remember this search')
     template = '/ui/tracker/menu_remember.xml'
-    query_schema = merge_dicts(StoredSearchFile.schema,
-                               search_name=String,
-                               search_title=Unicode)
+
+    def get_query_schema(self):
+        resource = self.resource
+        stored_search_class = resource.stored_search_class
+        return merge_dicts(stored_search_class.class_handler.schema,
+                           search_name=String,
+                           search_title=Unicode)
 
 
     @thingy_lazy_property
@@ -108,15 +111,19 @@ class StoreSearchMenu(ContextMenu):
         search = self.search
         if search:
             get = search.get_values
+            stored_search_class = search
         else:
             # Warning, a menu is not the default view!
             query = process_form(self.context.get_query_value,
-                                 self.query_schema)
+                                 self.get_query_schema())
             get = query.get
+
+            resource = self.resource
+            stored_search_class = resource.stored_search_class
 
         # Fill the fields
         fields = []
-        for name, type in StoredSearchFile.schema.iteritems():
+        for name, type in stored_search_class.class_handler.schema.iteritems():
             value = get(name)
             if isinstance(value, list):
                 for x in value:
@@ -592,10 +599,11 @@ class Tracker_Search(BaseSearchForm, Tracker_View):
 class Tracker_RememberSearch(BaseForm):
 
     access = 'is_allowed_to_edit'
-    schema = merge_dicts(StoredSearchFile.schema,
-                         search_name=String,
-                         search_title=Unicode(mandatory=True))
 
+    def get_schema(self, resource, context):
+        return merge_dicts(resource.stored_search_class.class_handler.schema,
+                           search_name=String,
+                           search_title=Unicode(mandatory=True))
 
     def GET(self, resource, context):
         # Required for when the form fails the automatic checks
@@ -638,8 +646,8 @@ class Tracker_RememberSearch(BaseForm):
         search.set_property('title', title, language=language)
 
         # Save the value
-        for name, type in StoredSearchFile.schema.iteritems():
-            value = form[name]
+        for name, type in search.class_handler.schema.iteritems():
+            value = form.get(name, None)
             if value:
                 search.set_values(name, value, type)
 

@@ -81,6 +81,7 @@ class Tracker(Folder):
 
 
     issue_class = Issue
+    stored_search_class = StoredSearch
 
     def init_resource(self, **kw):
         Folder.init_resource(self, **kw)
