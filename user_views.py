@@ -169,7 +169,6 @@ class User_Profile(STLView):
 
 
 
-
 class User_EditAccount(DBResource_Edit):
 
     access = 'is_allowed_to_edit'
@@ -231,6 +230,14 @@ class User_EditAccount(DBResource_Edit):
                 return
 
         return super(User_EditAccount, self).action(resource, context, form)
+
+
+    def set_value(self, resource, context, name, form):
+        # Skip password
+        if name == 'password':
+            return False
+        proxy = super(User_EditAccount, self)
+        return proxy.set_value(resource, context, name, form)
 
 
 
