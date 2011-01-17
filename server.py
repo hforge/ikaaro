@@ -178,6 +178,9 @@ class Server(WebServer):
         logger = WebLogger(log_file, log_level)
         register_logger(logger, 'itools.http', 'itools.web')
 
+        # Authentication cookie timedelta
+        self.auth_cookie_expires = get_value('auth-cookie-expires')
+
 
     #######################################################################
     # Email

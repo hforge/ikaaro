@@ -16,6 +16,7 @@
 
 # Import from the Standard Library
 from base64 import decodestring, encodestring
+from datetime import timedelta
 from marshal import dumps, loads
 from urllib import quote, unquote
 from zlib import compress, decompress
@@ -137,3 +138,15 @@ class ContainerPathDatatype(Enumerate):
         # Sort
         items.sort(key=lambda x: x['name'])
         return items
+
+
+
+class ExpireValue(DataType):
+    @staticmethod
+    def decode(value):
+        return timedelta(minutes=int(value))
+
+
+    @staticmethod
+    def encode(value):
+        return str(int(value.total_seconds() / 60))

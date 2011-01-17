@@ -84,10 +84,14 @@ database-size = 4800:5200
 profile-time = 0
 profile-space = 0
 
-# The "index-text" vairable defines whether the catalog must process full-text
+# The "index-text" variable defines whether the catalog must process full-text
 # indexing. It requires (much) more time and third-party applications.
 # To speed up catalog updates, set this option to 0 (default is 1).
 index-text = 1
+
+# Set expiration time in minutes for the authentication cookie, where 0
+# means the cookie does not expire (by default it is 0)
+auth-cookie-expires = 0
 """)
 
 
