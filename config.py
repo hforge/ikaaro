@@ -18,10 +18,16 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# Import from the Standard Library
+from datetime import timedelta
 
 # Import from itools
 from itools.handlers import ConfigFile, ro_database
 from itools.datatypes import Boolean, Integer, String, Tokens
+
+# Import from ikaaro
+from datatypes import ExpireValue
+
 
 
 class ServerConfig(ConfigFile):
@@ -39,6 +45,7 @@ class ServerConfig(ConfigFile):
         'profile-time': Boolean(default=False),
         'profile-space': Boolean(default=False),
         'index-text': Boolean(default=True),
+        'auth-cookie-expires': ExpireValue(default=timedelta(0))
     }
 
 

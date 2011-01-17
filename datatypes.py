@@ -16,6 +16,7 @@
 
 # Import from the Standard Library
 from base64 import decodestring, encodestring
+from datetime import timedelta
 from marshal import dumps, loads
 from urllib import quote, unquote
 from zlib import compress, decompress
@@ -96,3 +97,15 @@ class ImageWidth(Enumerate):
                {'name': '1024', 'value': u"large"},
                {'name': '1280', 'value': u"huge"},
                {'name': '', 'value': u"original"}]
+
+
+
+class ExpireValue(DataType):
+    @staticmethod
+    def decode(value):
+        return timedelta(minutes=int(value))
+
+
+    @staticmethod
+    def encode(value):
+        return str(int(value.total_seconds() / 60))
