@@ -119,6 +119,10 @@ class WebSite(RoleAware, Folder):
         return self.get_property('website_languages')[0]
 
 
+    def get_default_edit_languages(self):
+        return [self.get_default_language()]
+
+
     def before_traverse(self, context, min=Decimal('0.000001'),
                         zero=Decimal('0.0')):
         # Set the language cookie if specified by the query.

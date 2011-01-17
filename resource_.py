@@ -557,8 +557,9 @@ class DBResource(CatalogAware, IResource):
 
 
     def get_edit_languages(self, context):
-        site_languages = self.get_site_root().get_property('website_languages')
-        default = [site_languages[0]]
+        site_root = self.get_site_root()
+        site_languages = site_root.get_property('website_languages')
+        default = site_root.get_default_edit_languages(context)
 
         # Can not use context.query[] because edit_language is not necessarily
         # defined
