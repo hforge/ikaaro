@@ -2,14 +2,27 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
-<form action="" method="get">
-  <fieldset class="search">
-    <legend>Author's mail</legend>
-    <!-- Term -->
-    <input type="text" name="search_term" size="35" value="${search_term}" />
-    <!-- OK -->
-    <button type="submit" class="button-search">OK</button>
-  </fieldset>
-</form>
+  <form action="" method="get">
+
+    <fieldset class="search">
+      <legend>Search</legend>
+      <table>
+        <tr>
+          <td>
+            <label for="search_mail">Author's mail</label><br/>
+            <input size="35" name="search_mail" type="text"
+                   value="${search_mail}"/>
+          </td>
+          <td>
+            <label for="search_comment">Comment</label><br/>
+            <input size="35" name="search_comment" type="text"
+                   value="${search_comment}"/>
+            <button type="submit" class="button-search">Search</button>
+          </td>
+        </tr>
+      </table>
+    </fieldset>
+
+  </form>
 
 </stl:block>

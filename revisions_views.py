@@ -19,7 +19,7 @@ from re import compile, sub
 from subprocess import CalledProcessError
 
 # Import from itools
-from itools.datatypes import String, Unicode
+from itools.datatypes import String
 from itools.gettext import MSG
 from itools.uri import encode_query, get_reference
 from itools.web import STLView, ERROR
@@ -139,7 +139,8 @@ class DBResource_CommitLog(SearchForm):
     }
 
     search_template = '/ui/revisions/browse_search.xml'
-    search_schema = {'search_term': Unicode}
+    search_schema = {'search_mail': String,
+                     'search_comment': String}
     search_fields = None
 
     table_columns = [
@@ -152,11 +153,13 @@ class DBResource_CommitLog(SearchForm):
 
 
     def get_items(self, resource, context):
-        author_pattern = context.query['search_term'].strip()
-        author_pattern = (author_pattern.encode('utf-8')
-                          if author_pattern else None)
+        author_pattern = context.query['search_mail'].strip()
+        author_pattern = author_pattern if author_pattern else None
+        grep_pattern = context.query['search_comment'].strip()
+        grep_pattern = grep_pattern if grep_pattern else None
         return resource.get_revisions(content=True,
-                                      author_pattern=author_pattern)
+                                      author_pattern=author_pattern,
+                                      grep_pattern=grep_pattern)
 
 
     def sort_and_batch(self, resource, context, results):
@@ -198,6 +201,11 @@ class DBResource_CommitLog(SearchForm):
         query = encode_query({'revision': revision, 'to': to})
         uri = '%s/;changes?%s' % (context.get_link(resource), query)
         return get_reference(uri)
+
+
+    def get_search_namespace(self, resource, context):
+        return {'search_mail': context.query['search_mail'],
+                'search_comment': context.query['search_comment']}
 
 
 
