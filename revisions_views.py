@@ -19,15 +19,14 @@ from re import compile, sub
 from subprocess import CalledProcessError
 
 # Import from itools
-from itools.core import merge_dicts
-from itools.datatypes import Boolean, String
+from itools.datatypes import String, Unicode
 from itools.gettext import MSG
 from itools.uri import encode_query, get_reference
 from itools.web import STLView, ERROR
 
 # Import from ikaaro
 from buttons import Button
-from views import BrowseForm
+from views import SearchForm
 
 
 
@@ -130,7 +129,7 @@ class DiffButton(Button):
 
 
 
-class DBResource_CommitLog(BrowseForm):
+class DBResource_CommitLog(SearchForm):
 
     access = 'is_allowed_to_edit'
     title = MSG(u"Commit Log")
@@ -138,6 +137,10 @@ class DBResource_CommitLog(BrowseForm):
     schema = {
         'ids': IndexRevision(multiple=True, mandatory=True),
     }
+
+    search_template = '/ui/revisions/browse_search.xml'
+    search_schema = {'search_term': Unicode}
+    search_fields = None
 
     table_columns = [
         ('checkbox', None),
@@ -150,7 +153,11 @@ class DBResource_CommitLog(BrowseForm):
 
     def get_items(self, resource, context):
         root = context.root
-        items = resource.get_revisions(content=True)
+        author_pattern = context.query['search_term'].strip()
+        author_pattern = (author_pattern.encode('utf-8')
+                          if author_pattern else None)
+        items = resource.get_revisions(content=True,
+                                       author_pattern=author_pattern)
         users_cache = {}
 
         for i, item in enumerate(items):

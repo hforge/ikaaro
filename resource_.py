@@ -251,10 +251,10 @@ class DBResource(CatalogAware, IResource):
         raise NotImplementedError
 
 
-    def get_revisions(self, n=None, content=False):
+    def get_revisions(self, n=None, content=False, author_pattern=None):
         files = self.get_files_to_archive(content)
         database = get_context().database
-        return database.get_revisions(files, n)
+        return database.get_revisions(files, n, author_pattern)
 
 
     def get_last_revision(self):
