@@ -15,11 +15,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from standard library
-from operator import itemgetter
 from re import compile, sub
 from subprocess import CalledProcessError
 
-# Import from itools
+# Import from itools
 from itools.core import merge_dicts
 from itools.datatypes import Boolean, String
 from itools.gettext import MSG
@@ -139,15 +138,12 @@ class DBResource_CommitLog(BrowseForm):
     schema = {
         'ids': IndexRevision(multiple=True, mandatory=True),
     }
-    query_schema = merge_dicts(BrowseForm.query_schema,
-                               sort_by=String(default='date'),
-                               reverse=Boolean(default=True))
 
     table_columns = [
         ('checkbox', None),
-        ('date', MSG(u'Last Change')),
-        ('username', MSG(u'Author')),
-        ('message', MSG(u'Comment')),
+        ('date', MSG(u'Last Change'), False),
+        ('username', MSG(u'Author'), False),
+        ('message', MSG(u'Comment'), False),
     ]
     table_actions = [DiffButton]
 
@@ -163,7 +159,7 @@ class DBResource_CommitLog(BrowseForm):
                 username = root.get_user_title(item['username'])
                 users_cache[item['username']] = username
             item['username'] = username
-            # Hint to sort revisions quickly
+            # Used for keeping revisions order
             item['index'] = i
         return items
 
@@ -171,15 +167,6 @@ class DBResource_CommitLog(BrowseForm):
     def sort_and_batch(self, resource, context, results):
         start = context.query['batch_start']
         size = context.query['batch_size']
-        sort_by = context.query['sort_by']
-        reverse = context.query['reverse']
-
-        # Do not give a traceback if 'sort_by' has an unexpected value
-        if sort_by not in [ x[0] for x in self.table_columns ]:
-            sort_by = self.query_schema['sort_by'].default
-
-        # Sort & batch
-        results.sort(key=itemgetter(sort_by), reverse=reverse)
         return results[start:start+size]
 
 
@@ -194,6 +181,7 @@ class DBResource_CommitLog(BrowseForm):
     def action_diff(self, resource, context, form):
         # Take newer and older revisions, even if many selected
         ids = sorted(form['ids'])
+        # Each item is a (index, revision) tuple
         revision = ids.pop()[1]
         to = ids and ids.pop(0)[1] or 'HEAD'
         # FIXME same hack than rename to call a GET from a POST
