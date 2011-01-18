@@ -686,7 +686,7 @@ class Tracker_GoToIssue(BaseView):
         if issue is None or not isinstance(issue, Issue):
             return context.come_back(ERROR(u'Issue not found.'))
 
-        return context.uri.resolve2('../%s/;edit' % issue_name)
+        return context.uri.resolve2('../%s' % issue_name)
 
 
 
