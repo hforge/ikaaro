@@ -169,15 +169,23 @@ class DBResource_CommitLog(SearchForm):
 
 
     def get_items(self, resource, context):
-        root = context.root
         author_pattern = context.query['search_term'].strip()
         author_pattern = (author_pattern.encode('utf-8')
                           if author_pattern else None)
-        items = resource.get_revisions(content=True,
-                                       author_pattern=author_pattern)
-        users_cache = {}
+        return resource.get_revisions(content=True,
+                                      author_pattern=author_pattern)
 
-        for i, item in enumerate(items):
+
+    def sort_and_batch(self, resource, context, results):
+        root = context.root
+        start = context.query['batch_start']
+        size = context.query['batch_size']
+
+        result = results[start:start+size]
+
+        # Add username / index by only for the showed commits
+        users_cache = {}
+        for i, item in enumerate(results):
             username = users_cache.get(item['username'])
             if username is None:
                 username = root.get_user_title(item['username'])
@@ -185,13 +193,8 @@ class DBResource_CommitLog(SearchForm):
             item['username'] = username
             # Used for keeping revisions order
             item['index'] = i
-        return items
 
-
-    def sort_and_batch(self, resource, context, results):
-        start = context.query['batch_start']
-        size = context.query['batch_size']
-        return results[start:start+size]
+        return result
 
 
     def get_item_value(self, resource, context, item, column):
