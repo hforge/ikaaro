@@ -156,8 +156,8 @@ class DBResource_CommitLog(SearchForm):
     }
 
     search_template = '/ui/revisions/browse_search.xml'
-    search_schema = {'search_mail': String,
-                     'search_comment': String}
+    search_schema = {'search_mail': String(default=''),
+                     'search_comment': String(default='')}
     search_fields = None
 
     table_columns = [
