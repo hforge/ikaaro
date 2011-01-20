@@ -30,7 +30,7 @@ from itools.loop import Loop
 # Import from ikaaro
 from ikaaro.config import get_config
 from ikaaro.update import is_instance_up_to_date
-from ikaaro.server import Server, get_pid, get_fake_context
+from ikaaro.server import Server, get_pid
 
 
 def start(options, target):
@@ -67,8 +67,6 @@ def start(options, target):
 
     # Set-up the server
     server = Server(target, read_only=options.read_only)
-    context = get_fake_context()
-    server.init_context(context)
 
     # Find out the IP to listen to
     config = get_config(target)
