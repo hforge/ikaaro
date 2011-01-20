@@ -112,6 +112,43 @@ def get_fake_context():
     return context
 
 
+
+class CMSContext(Context):
+
+    set_mtime = True
+    message = None
+    content_type = None
+
+
+    def find_site_root(self):
+        # Default to root
+        root = self.root
+        self.site_root = root
+
+        # Check we have a URI
+        uri = self.uri
+        if uri is None:
+            return
+
+        # The site root depends on the host
+        hostname = get_host_from_authority(uri.authority)
+
+        catalog = self.database.catalog
+        # This may happen with a broken or missing catalog in
+        # icms-update-catalog.py
+        if not catalog:
+            return
+
+        results = catalog.search(vhosts=hostname)
+        if len(results) == 0:
+            return
+
+        documents = results.get_documents()
+        path = documents[0].abspath
+        self.site_root = root.get_resource(path)
+
+
+
 class Server(WebServer):
 
     def __init__(self, target, read_only=False, cache_size=None):
@@ -181,6 +218,15 @@ class Server(WebServer):
 
         # Authentication cookie timedelta
         self.auth_cookie_expires = get_value('auth-cookie-expires')
+
+
+    def get_pid(self):
+        return get_pid('%s/pid' % self.target)
+
+
+    def set_context(self, path, context):
+        context = super(Server, self).set_context(path, context)
+        context.database = self.database
 
 
     #######################################################################
@@ -309,46 +355,3 @@ class Server(WebServer):
 
         data = h.read()
         return loads(data)['read-only'] is False
-
-
-    #######################################################################
-    # Web
-    #######################################################################
-    def get_pid(self):
-        return get_pid('%s/pid' % self.target)
-
-
-    def init_context(self, context):
-        WebServer.init_context(self, context)
-        context.database = self.database
-        context.set_mtime = True
-        context.message = None
-        context.content_type = None
-
-
-    def find_site_root(self, context):
-        # Default to root
-        root = self.root
-        context.site_root = root
-
-        # Check we have a URI
-        uri = context.uri
-        if uri is None:
-            return
-
-        # The site root depends on the host
-        hostname = get_host_from_authority(uri.authority)
-
-        catalog = self.database.catalog
-        # This may happen with a broken or missing catalog in
-        # icms-update-catalog.py
-        if not catalog:
-            return
-
-        results = catalog.search(vhosts=hostname)
-        if len(results) == 0:
-            return
-
-        documents = results.get_documents()
-        path = documents[0].abspath
-        context.site_root = root.get_resource(path)

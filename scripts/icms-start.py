@@ -30,7 +30,7 @@ from itools.loop import Loop
 # Import from ikaaro
 from ikaaro.config import get_config
 from ikaaro.update import is_instance_up_to_date
-from ikaaro.server import Server, get_pid
+from ikaaro.server import Server, CMSContext, get_pid
 
 
 def start(options, target):
@@ -82,6 +82,7 @@ def start(options, target):
         raise ValueError, 'listen-port is missing from config.conf'
 
     server.listen(address, port)
+    server.set_context('/', CMSContext)
 
     # Run
     profile = config.get_value('profile-time')
