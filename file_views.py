@@ -285,20 +285,23 @@ class Image_Thumbnail(BaseView):
 
     query_schema = {
         'width': Integer,
-        'height': Integer}
+        'height': Integer,
+        'strict': Boolean(default=False)}
 
     def get_mtime(self, resource):
         return resource.handler.get_mtime()
 
 
     def GET(self, resource, context):
-        image_width, image_height = resource.handler.get_size()
+        handler = resource.handler
+        image_width, image_height = handler.get_size()
         width = context.query['width'] or image_width
         height = context.query['height'] or image_height
+        strict = context.query['strict']
 
         # TODO generate the thumbnail in the resource format
         format = 'png' if resource.metadata.format == 'image/png' else 'jpeg'
-        data, format = resource.handler.get_thumbnail(width, height, format)
+        data, format = handler.get_thumbnail(width, height, format, strict)
         if data is None:
             default = resource.get_resource('/ui/icons/48x48/image.png')
             data = default.to_str()
