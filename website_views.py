@@ -19,6 +19,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
+from getpass import getuser
 from socket import gethostname
 
 # Import from itools
@@ -155,27 +156,27 @@ class AboutView(STLView):
 
 
     def get_namespace(self, resource, context):
-        root = context.root
-
-        # Admin
+        # Case 1: not admin
         ac = resource.get_access_control()
-        is_admin = ac.is_admin(context.user, resource)
+        if not ac.is_admin(context.user, resource):
+            return {'is_admin': False}
 
-        # Get packages
+        # Case 2: admin
         package2title = {
             'gio': u'pygobject',
             'lpod': u'lpOD',
             'sys': u'Python',
-            'os': MSG(u'Operating System'),
-            }
+            'os': MSG(u'Operating System')}
+        root = context.root
         packages = [
             {'name': package2title.get(x, x),
              'version': y or MSG('no version found')}
                  for x, y in root.get_version_of_packages(context).items()]
 
-        return {'is_admin': is_admin,
+        location = (getuser(), gethostname(), context.server.target)
+        return {'is_admin': True,
                 'packages': packages,
-                'location': u'%s:%s' % (gethostname(), context.server.target)}
+                'location': u'%s@%s:%s' % location}
 
 
 
