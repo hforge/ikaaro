@@ -39,7 +39,7 @@ from ikaaro.config import get_config
 from ikaaro.metadata import Metadata
 from ikaaro.obsolete.metadata import OldMetadata
 from ikaaro.resource_ import DBResource
-from ikaaro.server import Server, ask_confirmation, get_fake_context
+from ikaaro.server import Server, ask_confirmation, get_fake_context, get_pid
 from ikaaro.server import load_modules
 
 
@@ -160,8 +160,8 @@ def update(parser, options, target):
     confirm = options.confirm
 
     # Check the server is not started, or started in read-only mode
-    server = Server(target, read_only=True, cache_size=options.cache_size)
-    if server.is_running_in_rw_mode():
+    pid = get_pid('%s/pid' % target)
+    if pid is not None:
         print 'Cannot proceed, the server is running in read-write mode.'
         return
 
