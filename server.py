@@ -163,7 +163,7 @@ class Server(WebServer):
         self.smtp_login = get_value('smtp-login', default='').strip()
         self.smtp_password = get_value('smtp-password', default='').strip()
         # Email is sent asynchronously
-        self._smtp_asynchro_send()
+        self.flush_spool()
 
         # Logging
         log_file = '%s/log/events' % target
@@ -185,7 +185,7 @@ class Server(WebServer):
     #######################################################################
     # Email
     #######################################################################
-    def send_email(self, message):
+    def save_email(self, message):
         # Check the SMTP host is defined
         if not self.smtp_host:
             raise ValueError, '"smtp-host" is not set in config.conf'
@@ -197,11 +197,15 @@ class Server(WebServer):
             file.write(message.as_string())
         finally:
             file.close()
-        self._smtp_asynchro_send()
 
 
-    def _smtp_asynchro_send(self):
+    def flush_spool(self):
         cron(self._smtp_send, timedelta(minutes=1))
+
+
+    def send_email(self, message):
+        self.save_email(message)
+        self.flush_spool()
 
 
     def _smtp_send(self):
