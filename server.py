@@ -185,6 +185,12 @@ class Server(WebServer):
     #######################################################################
     # Email
     #######################################################################
+    def get_spool_size(self):
+        spool = lfs.open(self.spool)
+        # We have always a 'failed' directory => "-1"
+        return len(spool.get_names()) - 1
+
+
     def save_email(self, message):
         # Check the SMTP host is defined
         if not self.smtp_host:
