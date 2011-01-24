@@ -6,6 +6,9 @@
 
   <fieldset style="float: right" stl:if="is_admin">
     <legend>Installed software</legend>
+    <p>
+    <tt>${location}</tt>
+    </p>
     <table id="browse-list">
       <thead>
         <tr class="odd">
@@ -43,10 +46,5 @@
     To learn more visit the project's <a
     href="http://www.hforge.org/ikaaro">Web Site</a>.
   </p>
-
-  <fieldset stl:if="is_admin">
-    <legend>Location</legend>
-    ${location}
-  </fieldset>
 
 </stl:block>
