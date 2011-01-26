@@ -18,7 +18,7 @@
 from operator import itemgetter
 
 # Import from itools
-from itools.datatypes import Enumerate
+from itools.datatypes import Enumerate, Tokens
 from itools.gettext import MSG
 from itools.web import STLForm, ERROR
 
@@ -140,6 +140,8 @@ class SubscribeForm(STLForm):
 
 
 class Observable(object):
+
+    class_schema = {'cc_list': Tokens(source='metadata')}
 
 
     def notify_subscribers(self, context):

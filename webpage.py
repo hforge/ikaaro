@@ -23,7 +23,7 @@ from copy import deepcopy
 
 # Import from itools
 from itools.core import merge_dicts, is_thingy
-from itools.datatypes import Tokens, String
+from itools.datatypes import String
 from itools.gettext import MSG
 from itools.html import xhtml_uri, XHTMLFile
 from itools.stl import rewrite_uris
@@ -254,7 +254,7 @@ class WebPage(ResourceWithHTML, Multilingual, Text):
 
     class_schema = merge_dicts(
         Text.class_schema,
-        cc_list=Tokens(source='metadata'))
+        Observable.class_schema)
 
 
 
