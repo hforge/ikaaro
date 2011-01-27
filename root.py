@@ -232,7 +232,6 @@ class Root(WebSite):
                 version = getattr(package, attribute)
             except AttributeError:
                 version = None
-                MSG(u'no version found').gettext()
             else:
                 if hasattr(version, '__call__'):
                     version = version()
