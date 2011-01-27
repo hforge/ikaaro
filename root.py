@@ -209,13 +209,18 @@ class Root(WebSite):
         versions = {}
         for name in packages:
             attribute = package2version.get(name, '__version__')
-            # Import
-            if '.' in name:
-                name, subname = name.split('.')
+
+            # Exception: PIL
+            if name == 'PIL.Image':
+                name = 'PIL'
                 try:
-                    package = __import__(subname, fromlist=[name])
+                    package = __import__('Image', fromlist=['PIL'])
                 except ImportError:
                     continue
+            # XXX Skip stuff like 'ikaaro.blog', etc.
+            elif '.' in name:
+                continue
+            # Common case
             else:
                 try:
                     package = __import__(name)
