@@ -69,7 +69,7 @@ def start(options, target):
     server = Server(target, read_only=options.read_only)
 
     # Find out the IP to listen to
-    config = get_config(target)
+    config = server.config
     address = config.get_value('listen-address').strip()
     if not address:
         raise ValueError, 'listen-address is missing from config.conf'

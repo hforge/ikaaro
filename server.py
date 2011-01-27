@@ -291,11 +291,10 @@ class Server(WebServer):
 
 
     def is_running_in_rw_mode(self):
-        config = get_config(self.target)
-        address = config.get_value('listen-address').strip()
+        address = self.config.get_value('listen-address').strip()
         if address == '*':
             address = '127.0.0.1'
-        port = config.get_value('listen-port')
+        port = self.config.get_value('listen-port')
 
         url = 'http://%s:%s/;_ctrl' % (address, port)
         try:

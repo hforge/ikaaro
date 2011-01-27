@@ -190,7 +190,7 @@ class Root(WebSite):
     def get_version_of_packages(self, context):
         # Python, itools & ikaaro
         packages = ['sys', 'itools', 'ikaaro']
-        config = get_config(context.server.target)
+        config = context.server.config
         packages.extend(config.get_value('modules'))
         # Try packages we frequently use
         packages.extend([
