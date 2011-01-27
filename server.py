@@ -120,6 +120,7 @@ class Server(WebServer):
 
         # Load the config
         config = get_config(target)
+        self.config = config
         load_modules(config)
 
         # Contact Email
