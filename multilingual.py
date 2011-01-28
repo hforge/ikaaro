@@ -86,3 +86,12 @@ class Multilingual(DBResource):
                   FileName.encode((new_name, extension, x)))
                  for x in langs ]
 
+
+    def to_text(self, languages=None):
+        if languages is None:
+            languages = self.get_site_root().get_property('website_languages')
+        result = {}
+        for language in languages:
+            handler = self.get_handler(language=language)
+            result[language] = handler.to_text()
+        return result

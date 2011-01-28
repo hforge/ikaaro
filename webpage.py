@@ -239,6 +239,16 @@ class ResourceWithHTML(Observable):
         return body.get_content_elements()
 
 
+    def to_text(self, languages=None):
+        if languages is None:
+            languages = self.get_site_root().get_property('website_languages')
+        result = {}
+        for language in languages:
+            handler = self.get_html_document(language=language)
+            result[language] = handler.to_text()
+        return result
+
+
 
 
 class WebPage(ResourceWithHTML, Multilingual, Text):
@@ -329,17 +339,12 @@ class WebPage(ResourceWithHTML, Multilingual, Text):
     #######################################################################
     # API
     #######################################################################
-    def to_text(self):
-        result = {}
-        languages = self.get_site_root().get_property('website_languages')
-        for language in languages:
-            handler = self.get_handler(language=language)
-            result[language] = handler.to_text()
-        return result
-
-
     def get_content_type(self):
         return 'application/xhtml+xml; charset=UTF-8'
+
+
+    def get_html_document(self, language=None):
+        return self.get_handler(language=language)
 
 
     #######################################################################
@@ -347,9 +352,6 @@ class WebPage(ResourceWithHTML, Multilingual, Text):
     #######################################################################
     new_instance = DBResource.new_instance
     view = WebPage_View()
-
-    def get_html_document(self, language=None):
-        return self.get_handler(language=language)
 
 
 
