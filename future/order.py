@@ -162,6 +162,10 @@ class ResourcesOrderedTable_Unordered(Folder_BrowseContent):
     def get_query_schema(self):
         return {}
 
+    # Reset actions
+    action_remove = action_rename = action_copy = None
+    action_cut = action_paste = action_publish = action_retire = None
+
 
     def get_table_columns(self, resource, context):
         columns = [('checkbox', None),
