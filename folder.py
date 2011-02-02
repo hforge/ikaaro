@@ -326,16 +326,17 @@ class Folder(DBResource):
         source_path, target_path = self._resolve_source_target(source_path,
                                                                target_path)
 
-        # Cannot move a resource to a subdirectory of itself
-        abspath = self.get_canonical_path()
-        if source_path.get_prefix(abspath) == source_path:
-            message = 'cannot move a resource to a subdirectory of itself'
-            raise ConsistencyError, message
-
         # Get the source and target resources
         source = self.get_resource(source_path)
         parent_path = target_path.resolve2('..')
         target_parent = self.get_resource(parent_path)
+
+        # Cannot move a resource to a subdirectory of itself
+        abspath = self.get_canonical_path()
+        aux = source.get_canonical_path()
+        if aux.get_prefix(abspath) == aux:
+            message = 'cannot move a resource to a subdirectory of itself'
+            raise ConsistencyError, message
 
         # Check compatibility
         if (not target_parent.can_paste(source)
