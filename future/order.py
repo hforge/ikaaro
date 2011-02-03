@@ -162,7 +162,7 @@ class ResourcesOrderedTable_Unordered(Folder_BrowseContent):
     def get_query_schema(self):
         return {}
 
-    # Reset actions
+    # Reset actions conflicting with ResourcesOrderedTable_Ordered
     action_remove = action_rename = action_copy = None
     action_cut = action_paste = action_publish = action_retire = None
 
@@ -180,14 +180,17 @@ class ResourcesOrderedTable_Unordered(Folder_BrowseContent):
     def get_items_query(self, resource, context):
         # Only in the given root
         parent_path = resource.get_order_root().get_canonical_path()
-        query_base_path = get_base_path_query(str(parent_path))
+        if resource.order_recursive:
+            query = get_base_path_query(str(parent_path))
+        else:
+            query = PhraseQuery('parent_path', str(parent_path))
         # Only the given types
         query_formats = [PhraseQuery('format', cls.class_id)
                          for cls in resource.get_orderable_classes()]
         query_formats = OrQuery(*query_formats)
         query_excluded = [NotQuery(PhraseQuery('name', name))
                           for name in resource.get_ordered_names()]
-        return AndQuery(query_base_path, query_formats, *query_excluded)
+        return AndQuery(query, query_formats, *query_excluded)
 
 
     def get_key_sorted_by_title(self):
@@ -329,6 +332,8 @@ class ResourcesOrderedTable(OrderedTable):
     orderable_classes = ()
     # Every item will be into this resource
     order_root_path = '..'
+    # Allow to choose direct children or subfolder children
+    order_recursive = False
 
     # Views
     view = ResourcesOrderedTable_View()
