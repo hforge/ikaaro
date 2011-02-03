@@ -8,19 +8,19 @@
   <fieldset>
     <legend>Subscriptions</legend>
     <!-- Current user -->
-    <stl:block stl:if="user_name">
-      <p stl:if="not user_checked">
+    <stl:block stl:if="current_user">
+      <p stl:if="not current_user/selected">
       You are not subscribed to this resource, to subscribe check the checkbox
       below:
       </p>
-      <p stl:if="user_checked">
+      <p stl:if="current_user/selected">
       You are subscribed to this resource, to unsubscribe uncheck the checkbox
       below:
       </p>
       <blockquote>
-        <input type="checkbox" name="cc_list" value="${user_name}"
-          id="${user_name}" checked="${user_checked}" />
-        <label for="${user_name}">${user_title}</label>
+        <input type="checkbox" name="cc_list" value="${current_user/name}"
+          id="${current_user/name}" checked="${current_user/selected}" />
+        <label for="${current_user/name}">${current_user/value}</label>
       </blockquote>
     </stl:block>
     <stl:block stl:if="is_admin">
@@ -36,7 +36,7 @@
                 <br/>
                 <input type="checkbox" name="cc_list" value="${user/name}"
                   id="${user/name}" checked="checked" />
-                <label for="${user/name}">${user/title}</label>
+                <label for="${user/name}">${user/value}</label>
               </stl:block>
             </td>
             <td valign="top" stl:if="not_subscribed">
@@ -47,13 +47,18 @@
                 <br/>
                 <input type="checkbox" name="cc_list" value="${user/name}"
                   id="${user/name}" />
-                <label for="${user/name}">${user/title}</label>
+                <label for="${user/name}">${user/value}</label>
               </stl:block>
             </td>
           </tr>
         </table>
       </blockquote>
+      <p>You can here add new members (a list of addresses separated by
+        spaces)</p>
+      <span stl:if="new_users/error" class="field-error">${new_users/error}<br/></span>
+      <textarea name="new_users" rows="10" cols="60">${new_users/value}</textarea>
     </stl:block>
+    <input stl:if="not is_admin" type="hidden" name="new_users" value=""/>
     <p>
       <button type="submit" class="button-ok">Save</button>
     </p>
