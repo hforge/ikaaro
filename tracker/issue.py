@@ -246,7 +246,7 @@ class Issue(Folder):
             empty = MSG(u'[empty]').gettext()
         # Modification of title
         last_prop = old_metadata.get_property('title')
-        last_title = last_prop.value if last_prop else None
+        last_title = last_prop.value if last_prop else empty
         new_title = self.get_property('title') or empty
         if last_title != new_title:
             field = MSG(u'Title').gettext()
