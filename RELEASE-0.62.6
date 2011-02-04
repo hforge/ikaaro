@@ -1,0 +1,54 @@
+ikaaro 0.62.6 (2011/02/XX)
+==========================
+
+This is a Content Management System built on Python & itools, among
+other features ikaaro provides:
+
+ - content and document management (index&search, metadata, etc.)
+ - multilingual user interfaces and content
+ - high level modules: wiki, forum, tracker, etc.
+
+Changes
+-------
+
+The new configuration option 'auth-cookie-expires' allows to define the
+expiration time (in minutes) for the authentication cookie. The default
+is 0 (does not expire).
+
+The commit log view has been improved, now it is possible to filter by
+author email and by the commit message (bug #832).
+
+The about page now shows the location (user, server and path) of the
+ikaaro instance (bug #1105). But this information, and the software
+that is installed, is now only visible to the site admins (bug #1104).
+
+Now site administrators can mass subscribe many users to an observable
+resource (like web page), even if the users are not in the database
+(bug #1165).
+
+The French translation has been updated.
+
+Other issues resolved include:
+
+ #1164 cc: inherit the root admins when needed
+ #1166 Fix renaming a resource if a parent folder has the same name
+
+
+Resources
+---------
+
+Download
+http://download.hforge.org/ikaaro/0.62/ikaaro-0.62.6.tar.gz
+
+Home
+http://www.hforge.org/ikaaro
+
+Documentation
+http://www.hforge.org/ikaaro/docs
+
+Mailing list
+http://www.hforge.org/community/
+http://archives.hforge.org/index.cgi?list=itools
+
+Bug Tracker
+http://bugs.hforge.org/
