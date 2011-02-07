@@ -120,7 +120,7 @@ class SubscribeForm(STLForm):
         subscribed = []
         not_subscribed = []
         for an_user in namespace['cc_list']['value']:
-            if an_user['name'] == user.name:
+            if user and an_user['name'] == user.name:
                 continue
             if an_user['name'] in cc_list:
                 an_user['selected'] = True
