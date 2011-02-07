@@ -104,7 +104,8 @@ class AddBase_BrowseContent(Folder_BrowseContent):
         elif column == 'name':
             target = self.target
             if self.is_folder(item_resource):
-                path_to_item = target.get_pathto(item_resource)
+                site_root = resource.get_site_root()
+                path_to_item = site_root.get_pathto(item_resource)
                 url_dic = {'target': str(path_to_item),
                            # Avoid search conservation
                            'search_text': None,
