@@ -9,7 +9,21 @@ Calendar._DN = new Array
  "Zaterdag",
  "Zondag");
 
+// short day names
 Calendar._SDN_len = 2;
+Calendar._SDN = new Array
+("Zon",
+ "Maa",
+ "Din",
+ "Woe",
+ "Don",
+ "Vri",
+ "Zat",
+ "Zon");
+
+// First day of the week. "0" means display Sunday first, "1" means display
+// Monday first, etc.
+Calendar._FD = 1;
 
 Calendar._MN = new Array
 ("Januari",
@@ -24,6 +38,21 @@ Calendar._MN = new Array
  "Oktober",
  "November",
  "December");
+
+// short month names
+Calendar._SMN = new Array
+("Jan",
+ "Feb",
+ "Maa",
+ "Apr",
+ "Mei",
+ "Jun",
+ "Jul",
+ "Aug",
+ "Sep",
+ "Okt",
+ "Nov",
+ "Dec");
 
 // tooltips
 Calendar._TT = {};
