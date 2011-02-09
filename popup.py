@@ -119,13 +119,14 @@ class AddBase_BrowseContent(Folder_BrowseContent):
             path = target.get_abspath().get_pathto(abspath)
             return unicode(path), url
         else:
-            return Folder_BrowseContent.get_item_value(self, resource, context,
-                       item, column)
+            proxy = super(AddBase_BrowseContent, self)
+            return proxy.get_item_value(resource, context, item, column)
 
 
     def get_items(self, resource, context, *args):
         resource = self.target
-        items = Folder_BrowseContent.get_items(self, resource, context, *args)
+        proxy = super(AddBase_BrowseContent, self)
+        items = proxy.get_items(resource, context, *args)
         return items
 
 
@@ -179,7 +180,8 @@ class AddImage_BrowseContent(AddBase_BrowseContent):
     def get_items(self, resource, context, *args):
         query = [PhraseQuery('is_folder', True), PhraseQuery('is_image', True)]
         args += OrQuery(*query) ,
-        return AddBase_BrowseContent.get_items(self, resource, context, *args)
+        proxy = super(AddImage_BrowseContent, self)
+        return proxy.get_items(resource, context, *args)
 
 
     def get_item_value(self, resource, context, item, column):
@@ -187,8 +189,8 @@ class AddImage_BrowseContent(AddBase_BrowseContent):
         if column == 'checkbox':
             if self.is_folder(item_resource):
                 return None
-            return AddBase_BrowseContent.get_item_value(self, resource,
-                    context, item, column)
+            proxy = super(AddImage_BrowseContent, self)
+            return proxy.get_item_value(resource, context, item, column)
         elif column == 'icon':
             if self.is_folder(item_resource):
                 # icon
@@ -204,8 +206,8 @@ class AddImage_BrowseContent(AddBase_BrowseContent):
                     path_to_icon = path_to_resource.resolve(path_to_icon)
             return path_to_icon
         else:
-            return AddBase_BrowseContent.get_item_value(self, resource,
-                    context, item, column)
+            proxy = super(AddImage_BrowseContent, self)
+            return proxy.get_item_value(resource, context, item, column)
 
 
 
@@ -226,7 +228,8 @@ class AddMedia_BrowseContent(AddBase_BrowseContent):
         query = [ StartQuery('format', x.class_id) for x in classes ]
         query.append(PhraseQuery('is_folder', True))
         args += OrQuery(*query) ,
-        return AddBase_BrowseContent.get_items(self, resource, context, *args)
+        proxy = super(AddMedia_BrowseContent, self)
+        return proxy.get_items(resource, context, *args)
 
 
 
@@ -540,7 +543,8 @@ class DBResource_AddImage(DBResource_AddBase):
         mode = context.get_form_value('mode')
         if mode == 'tiny_mce':
             return '/;download'
-        return DBResource_AddBase.get_resource_action(self, context)
+        proxy = super(DBResource_AddImage, self)
+        return proxy.get_resource_action(context)
 
 
 
