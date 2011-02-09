@@ -27,13 +27,10 @@
           <button type="submit" class="button-search">Search</button>
         </td>
       </tr>
-      <!-- Search Path -->
-      <input type="hidden" name="target" value="${target}" />
-      <!-- Mode -->
-      <input type="hidden" name="mode" value="${mode}" />
-      <!-- Target ID -->
-      <input type="hidden" name="target_id" value="${target_id}" />
     </table>
+    <!-- Hidden -->
+    <input stl:repeat="widget hidden_widgets" type="hidden"
+           name="${widget/name}" value="${widget/value}" />
   </fieldset>
 </form>
 

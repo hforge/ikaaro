@@ -21,7 +21,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import merge_dicts
+from itools.core import freeze, merge_dicts
 from itools.csv import Property
 from itools.datatypes import String, Unicode
 from itools.gettext import MSG
@@ -29,8 +29,7 @@ from itools.handlers import checkid
 from itools.fs import FileName
 from itools.uri import Path
 from itools.web import STLForm, ERROR
-from itools.database import AndQuery, NotQuery, OrQuery, PhraseQuery
-from itools.database import StartQuery
+from itools.database import OrQuery, PhraseQuery, StartQuery
 
 # Import from ikaaro
 from buttons import AddButton
@@ -38,7 +37,7 @@ from datatypes import FileDataType
 from folder_views import Folder_BrowseContent
 import messages
 from registry import get_resource_class
-from utils import get_base_path_query, reduce_string
+from utils import reduce_string
 from workflow import state_widget, StaticStateEnumerate, WorkflowAware
 
 
@@ -54,6 +53,7 @@ class AddBase_BrowseContent(Folder_BrowseContent):
     search_template = '/ui/html/addbase_browse_search.xml'
     query_schema = merge_dicts(Folder_BrowseContent.query_schema,
                                Folder_BrowseContent.search_schema)
+    hidden_fields = freeze(['target_id', 'mode'])
 
     folder_classes = ()
     item_classes = ()
@@ -137,13 +137,14 @@ class AddBase_BrowseContent(Folder_BrowseContent):
 
 
     def get_search_namespace(self, resource, context):
-        namespace = Folder_BrowseContent.get_search_namespace(self, resource,
-                        context)
+        proxy = super(AddBase_BrowseContent, self)
+        namespace = proxy.get_search_namespace(resource, context)
+        hidden_widgets = namespace['hidden_widgets']
+        # Hook hidden_widgets, add computed 'target' value
         popup_root_abspath = self.popup_root.get_abspath()
         target = popup_root_abspath.get_pathto(self.target.get_abspath())
-        namespace['target'] = target
-        namespace['target_id'] = context.get_form_value('target_id')
-        namespace['mode'] = context.get_form_value('mode')
+        hidden_widgets.append({'name': 'target', 'value': target})
+
         namespace['show_type_form'] = self.show_type_form
         return namespace
 

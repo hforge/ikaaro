@@ -299,9 +299,16 @@ class Folder_BrowseContent(SearchForm):
         widget = SelectWidget(name='search_type', datatype=datatype,
                               value=search_type)
 
+        # Hidden widgets
+        hidden_widgets = []
+        for name in self.hidden_fields:
+            value = context.get_query_value(name)
+            hidden_widgets.append({'name': name, 'value': value})
+
         return {
             'search_text': context.query['search_text'],
-            'search_types_widget': widget.render()}
+            'search_types_widget': widget.render(),
+            'hidden_widgets': hidden_widgets}
 
 
     def get_items(self, resource, context, *args):

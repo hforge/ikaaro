@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import merge_dicts
+from itools.core import freeze, merge_dicts
 from itools.datatypes import Boolean, Enumerate, Integer, String, Unicode
 from itools.gettext import MSG
 from itools.stl import stl
@@ -479,6 +479,7 @@ class SearchForm(BrowseForm):
         ('title', MSG(u'Title')),
         ('text', MSG(u'Text')),
         ('name', MSG(u'Name'))]
+    hidden_fields = freeze([])
 
 
     def get_query_schema(self):
@@ -522,9 +523,16 @@ class SearchForm(BrowseForm):
         else:
             widget = None
 
+        # Hidden widgets
+        hidden_widgets = []
+        for name in self.hidden_fields:
+            value = context.get_query_value(name)
+            hidden_widgets.append({'name': name, 'value': value})
+
         return {
             'search_term': context.query['search_term'],
-            'search_fields_widget': widget}
+            'search_fields_widget': widget,
+            'hidden_widgets': hidden_widgets}
 
 
 ###########################################################################

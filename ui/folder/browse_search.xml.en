@@ -21,6 +21,9 @@
         </td>
       </tr>
     </table>
+    <!-- Hidden -->
+    <input stl:repeat="widget hidden_widgets" type="hidden"
+           name="${widget/name}" value="${widget/value}" />
   </fieldset>
 </form>
 
