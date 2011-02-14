@@ -57,6 +57,9 @@ class StoredSearch(Text):
     edit = None
     external_edit = None
 
+    # Hide in browse_content
+    is_content = False
+
 
     def get_values(self, name, type=None):
         return self.handler.get_value(name)

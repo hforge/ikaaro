@@ -63,6 +63,8 @@ class Theme(Folder):
         favicon=PathDataType(source='metadata', default=''),
         logo=PathDataType(source='metadata', default=''))
 
+    is_content = False
+
 
     def init_resource(self, **kw):
         Folder.init_resource(self, **kw)

@@ -335,6 +335,9 @@ class ResourcesOrderedTable(OrderedTable):
     # Allow to choose direct children or subfolder children
     order_recursive = False
 
+    # Hide in browse_content
+    is_content = False
+
     # Views
     view = ResourcesOrderedTable_View()
 
@@ -423,6 +426,8 @@ class ResourcesOrderedContainer(Folder):
     order_path = 'order-resources'
     order_class = ResourcesOrderedTable
 
+    # Hide in browse_content
+    is_content = False
 
     # Views
     order = GoToOrderedTable()

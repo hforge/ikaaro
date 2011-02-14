@@ -677,6 +677,9 @@ class MenuFolder(Folder):
     class_menu = Menu
     allow_submenu = False
 
+    # Hide in browse_content
+    is_content = False
+
     # Views
     view = GoToSpecificDocument(specific_document='menu',
                                 title=MSG(u'View'),

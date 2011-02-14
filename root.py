@@ -88,8 +88,9 @@ class Root(WebSite):
                            'edit_contact_options', 'edit_seo', 'edit_theme']
     class_roles = freeze(['admins'])
 
-
     __fixed_handlers__ = ['users', 'ui', 'theme']
+
+    is_content = True
 
 
     def init_resource(self, email, password, admins=('0',)):

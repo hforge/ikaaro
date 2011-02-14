@@ -262,11 +262,9 @@ class Folder_BrowseContent(SearchForm):
     def get_search_types(self, resource, context):
         # 1. Build the query of all objects to search
         path = resource.get_canonical_path()
-        query = get_base_path_query(str(path))
-        if resource.get_abspath() == '/':
-            theme_path = path.resolve_name('theme')
-            theme = get_base_path_query(str(theme_path), True)
-            query = AndQuery(query, NotQuery(theme))
+        path_query = get_base_path_query(str(path))
+        content_query = PhraseQuery('is_content', True)
+        query = AndQuery(path_query, content_query)
 
         # 2. Compute children_formats
         children_formats = set()
@@ -319,11 +317,8 @@ class Folder_BrowseContent(SearchForm):
         path = resource.get_canonical_path()
         query = get_base_path_query(str(path))
         args.append(query)
-        # Exclude '/theme/'
-        if resource.get_abspath() == '/':
-            theme_path = path.resolve_name('theme')
-            theme = get_base_path_query(str(theme_path), True)
-            args.append(NotQuery(theme))
+        # Exclude non-content
+        args.append(PhraseQuery('is_content', True))
 
         # Filter by type
         search_type = context.query['search_type']

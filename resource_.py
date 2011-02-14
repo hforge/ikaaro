@@ -264,7 +264,13 @@ class DBResource(CatalogAware, IResource):
         'is_role_aware': Boolean(indexed=True),
         'is_image': Boolean(indexed=True),
         'is_folder': Boolean(indexed=True),
+        'is_content': Boolean(indexed=True),
         })
+
+
+    @property
+    def is_content(self):
+        return self.parent.is_content
 
 
     @classmethod
@@ -436,6 +442,9 @@ class DBResource(CatalogAware, IResource):
         # Folder
         from folder import Folder
         values['is_folder'] = isinstance(self, Folder)
+
+        # Content
+        values['is_content'] = self.is_content
 
         # Ok
         return values

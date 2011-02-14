@@ -198,6 +198,9 @@ class Tracker_TableResource(OrderedTable):
     class_title = MSG(u'Select Table')
     class_handler = Tracker_TableHandler
 
+    # Hide in browse_content
+    is_content = False
+
     form = [title_widget]
 
 
