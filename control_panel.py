@@ -134,7 +134,7 @@ class CPEditVirtualHosts(STLForm):
 
 class CPEditSecurityPolicy(STLForm):
 
-    access = 'is_allowed_to_edit'
+    access = 'is_admin'
     title = MSG(u'Security Policy')
     icon = 'lock.png'
     description = MSG(u'Choose the security policy.')
