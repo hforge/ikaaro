@@ -11,6 +11,10 @@ other features ikaaro provides:
 Changes
 -------
 
+NOTE: when upgrading to this new version run icms-update-catalog.py, a
+new index has been added to fix a usability problem, and so updating
+the catalog is required.
+
 The new configuration option 'auth-cookie-expires' allows to define the
 expiration time (in minutes) for the authentication cookie. The default
 is 0 (does not expire).
@@ -30,6 +34,7 @@ The French translation has been updated.
 
 Other issues resolved include:
 
+ #1150 Only admins can change the security policy
  #1164 cc: inherit the root admins when needed
  #1166 Fix renaming a resource if a parent folder has the same name
 
