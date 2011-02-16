@@ -246,6 +246,7 @@ class Folder_BrowseContent(SearchForm):
     search_schema = {
         'search_text': Unicode,
         'search_type': String}
+    search_content_only = True
 
     # Table
     table_columns = [
@@ -262,9 +263,10 @@ class Folder_BrowseContent(SearchForm):
     def get_search_types(self, resource, context):
         # 1. Build the query of all objects to search
         path = resource.get_canonical_path()
-        path_query = get_base_path_query(str(path))
-        content_query = PhraseQuery('is_content', True)
-        query = AndQuery(path_query, content_query)
+        query = get_base_path_query(str(path))
+        if self.search_content_only is True:
+            content_query = PhraseQuery('is_content', True)
+            query = AndQuery(query, content_query)
 
         # 2. Compute children_formats
         children_formats = set()
@@ -317,8 +319,9 @@ class Folder_BrowseContent(SearchForm):
         path = resource.get_canonical_path()
         query = get_base_path_query(str(path))
         args.append(query)
-        # Exclude non-content
-        args.append(PhraseQuery('is_content', True))
+        if self.search_content_only is True:
+            # Exclude non-content
+            args.append(PhraseQuery('is_content', True))
 
         # Filter by type
         search_type = context.query['search_type']
