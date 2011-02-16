@@ -17,6 +17,8 @@
         <td>
           <label for="search_type">Type</label><br/>
           ${search_types_widget}
+        </td>
+        <td>
           <button type="submit" class="button-search">Search</button>
         </td>
       </tr>
