@@ -4,46 +4,41 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
-<form id="loginform" name="loginform" method="post" action=";login">
+<form id="autoform" name="loginform" method="post" action=";login">
   <fieldset>
     <legend>Sign in</legend>
-    <table>
-      <tr>
-        <td>
-          <label for="username">E-mail Address</label>
-          <span class="field-is-missing" title="This field is required">*
-          </span>
-          <br/>
-          <span stl:if="username/error" class="field-error">${username/error}
-            <br/></span>
-          <input type="text" id="username" name="username"
-            value="${username/value}" size="40" />
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <label for="password">Password</label>
-          <br/>
-          <span stl:if="password/error" class="field-error">${password/error}
-            <br/></span>
-          <input type="password" id="password" name="password" size="40" />
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <input type="checkbox" id="no_password" name="no_password" value="1"
-            onclick="disable_field(this, password)" />
-          <label for="no_password">
-          <stl:block stl:if="register">
-          Check this box if you don't have a password or you forgot it.
-          </stl:block>
-          <stl:block stl:if="not register">
-          Check this box if you forgot your password.
-          </stl:block>
-          </label>
-        </td>
-      </tr>
-    </table>
+    <div>
+      <label for="username">E-mail Address</label>
+      <span class="field-is-missing" title="This field is required">*</span>
+      <br/>
+      <span stl:if="username/error" class="field-error">${username/error}
+        <br/></span>
+      <p class="widget">
+        <input type="text" id="username" name="username"
+          value="${username/value}" size="40" />
+      </p>
+    </div>
+    <div>
+      <label for="password">Password</label>
+      <br/>
+      <span stl:if="password/error" class="field-error">${password/error}
+        <br/></span>
+      <p class="widget">
+        <input type="password" id="password" name="password" size="40" />
+      </p>
+    </div>
+    <div>
+      <input type="checkbox" id="no_password" name="no_password" value="1"
+        onclick="disable_field(this, password)" />
+      <label for="no_password">
+      <stl:block stl:if="register">
+      Check this box if you don't have a password or you forgot it.
+      </stl:block>
+      <stl:block stl:if="not register">
+      Check this box if you forgot your password.
+      </stl:block>
+      </label>
+    </div>
     <p>
       <button type="submit" class="button-ok">Ok</button>
     </p>
