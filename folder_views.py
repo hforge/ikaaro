@@ -246,7 +246,6 @@ class Folder_BrowseContent(SearchForm):
     search_schema = {
         'search_text': Unicode,
         'search_type': String}
-    search_content_only = True
 
     # Table
     table_columns = [
@@ -260,11 +259,15 @@ class Folder_BrowseContent(SearchForm):
         ('workflow_state', MSG(u'State'))]
 
 
+    def search_content_only(self, resource, context):
+        return resource.is_content
+
+
     def get_search_types(self, resource, context):
         # 1. Build the query of all objects to search
         path = resource.get_canonical_path()
         query = get_base_path_query(str(path))
-        if self.search_content_only is True:
+        if self.search_content_only(resource, context) is True:
             content_query = PhraseQuery('is_content', True)
             query = AndQuery(query, content_query)
 
@@ -319,7 +322,7 @@ class Folder_BrowseContent(SearchForm):
         path = resource.get_canonical_path()
         query = get_base_path_query(str(path))
         args.append(query)
-        if self.search_content_only is True:
+        if self.search_content_only(resource, context) is True:
             # Exclude non-content
             args.append(PhraseQuery('is_content', True))
 
