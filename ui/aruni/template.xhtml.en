@@ -47,8 +47,8 @@
           <td class="languages">${languages}</td>
           <td class="search">
             <form action="/;browse_content" method="get">
-              <input name="search_text" type="text" value="" size="15"/>
-              <button class="button-search" type="submit">Search</button>
+              <input name="search_text" class="search_box" type="text"
+                value="" size="15" />
             </form>
           </td>
         </tr>

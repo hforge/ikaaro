@@ -121,6 +121,14 @@ div#page {
   margin: 0;
 }
 
+#header .header-toolbar .search form input.search_box {
+  background: #fff url(../icons/14x14/search-bw.png) no-repeat 3px center;
+  border-radius: 3px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  padding: 3px 3px 3px 20px;
+}
+
 #header .button-search {
   background: #fff;
   padding: 0;
