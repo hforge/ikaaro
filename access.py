@@ -57,11 +57,11 @@ class Roles_Datatype(Enumerate):
 
     resource = None
 
-    @classmethod
-    def get_options(cls):
-        site_root = cls.resource.get_site_root()
+    def get_options(self):
+        site_root = self.resource.get_site_root()
         return [{'name': x['name'], 'value': x['title']}
                  for x in site_root.get_roles_namespace()]
+
 
 ###########################################################################
 # Views
