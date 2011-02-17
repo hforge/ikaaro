@@ -636,3 +636,23 @@ p.tabme a.selected {
 #autoform input[type=checkbox] {
   width: auto;
 }
+
+div.helpbox {
+  background-color: #f6f6ff;
+  border: 1px solid #ccc;
+  border-radius: 15px;
+  -moz-border-radius: 15px;
+  -webkit-border-radius: 15px;
+  float: right;
+  margin: 7px;
+  padding: 7px;
+  width: 25em;
+}
+
+div.helpbox img.helpbox-icon {
+  float: left;
+}
+
+div.helpbox div.helpbox-text {
+  margin-left: 52px;
+}
