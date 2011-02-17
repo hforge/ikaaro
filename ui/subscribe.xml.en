@@ -7,6 +7,26 @@
 <form action="" method="post">
   <fieldset>
     <legend>Subscriptions</legend>
+
+    <!-- Anonymous -->
+    <stl:block stl:if="not current_user">
+      To subscribe or unsubscribe, please give us your mail:
+      <br/>
+
+      <span stl:if="x_email/error" class="field-error">${x_email/error}<br/></span>
+      <input type="text" name="x_email" size="35" value="${x_email/value}" />
+      <br/>
+
+      <input type="radio" name="x_subscribe"
+        checked="${x_subscribe/1_is_checked}" value="1"/>
+      <label>Subscribe</label>
+      <input type="radio" name="x_subscribe"
+        checked="${x_subscribe/0_is_checked}" value="0"/>
+      <label>Unsubscribe</label>
+      <br/>
+
+    </stl:block>
+
     <!-- Current user -->
     <stl:block stl:if="current_user">
       <p stl:if="not current_user/selected">
@@ -23,6 +43,8 @@
         <label for="${current_user/name}">${current_user/value}</label>
       </blockquote>
     </stl:block>
+
+    <!-- Admin -->
     <stl:block stl:if="is_admin">
       <p>Check and uncheck the users you want to subscribe or unsubscribe:</p>
       <blockquote>
@@ -58,10 +80,12 @@
       <span stl:if="new_users/error" class="field-error">${new_users/error}<br/></span>
       <textarea name="new_users" rows="10" cols="60">${new_users/value}</textarea>
     </stl:block>
-    <input stl:if="not is_admin" type="hidden" name="new_users" value=""/>
+
+    <!-- Save -->
     <p>
       <button type="submit" class="button-ok">Save</button>
     </p>
+
   </fieldset>
 </form>
 
