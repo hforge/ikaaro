@@ -271,7 +271,7 @@ class Observable(object):
         # 4. Send the message
         for user in users.value:
             user = context.root.get_user(user)
-            if user:
+            if user and not user.get_property('user_must_confirm'):
                 mail = user.get_property('email')
                 context.root.send_email(mail, subject, text=body)
 
