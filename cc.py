@@ -115,9 +115,9 @@ class SubscribeForm(STLForm):
         user = context.user
         if user:
             # Find the user
-            for an_user in namespace['cc_list']['value']:
-                if an_user['name'] == user.name:
-                    current_user = an_user
+            for a_user in namespace['cc_list']['value']:
+                if a_user['name'] == user.name:
+                    current_user = a_user
                     current_user['selected'] = user.name in cc_list
                     break
         else:
@@ -126,15 +126,15 @@ class SubscribeForm(STLForm):
         # Other users
         subscribed = []
         not_subscribed = []
-        for an_user in namespace['cc_list']['value']:
-            if user and an_user['name'] == user.name:
+        for a_user in namespace['cc_list']['value']:
+            if user and a_user['name'] == user.name:
                 continue
-            if an_user['name'] in cc_list:
-                an_user['selected'] = True
-                subscribed.append(an_user)
+            if a_user['name'] in cc_list:
+                a_user['selected'] = True
+                subscribed.append(a_user)
             else:
-                an_user['selected'] = False
-                not_subscribed.append(an_user)
+                a_user['selected'] = False
+                not_subscribed.append(a_user)
         subscribed.sort(key=itemgetter('value'))
         not_subscribed.sort(key=itemgetter('value'))
 
