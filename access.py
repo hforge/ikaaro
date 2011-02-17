@@ -59,8 +59,16 @@ class Roles_Datatype(Enumerate):
 
     def get_options(self):
         site_root = self.resource.get_site_root()
-        return [{'name': x['name'], 'value': x['title']}
-                 for x in site_root.get_roles_namespace()]
+        options = [
+            {'name': x['name'], 'value': x['title']}
+            for x in site_root.get_roles_namespace() ]
+
+        # Root admins (TODO special case, to remove)
+        if site_root.parent is not None:
+            options.append(
+                {'name': 'root-admins', 'value': MSG(u'Admin (root)')})
+
+        return options
 
 
 ###########################################################################

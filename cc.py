@@ -46,7 +46,7 @@ class UsersList(Enumerate):
             members = site_root.get_members()
 
         # Root admins are inherited (TODO Remove once we change this)
-        if not included_roles or 'admins' in included_roles:
+        if not included_roles or 'root-admins' in included_roles:
             root_admins = self.resource.get_root().get_property('admins')
             members.update(root_admins)
 
