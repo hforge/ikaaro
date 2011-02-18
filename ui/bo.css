@@ -385,27 +385,17 @@ table.new-resource-thumb {
   height: 9px;
 }
 
-#browse-list th a.sort-up {
-  background: transparent url(/ui/aruni/images/sort_up.png) no-repeat;
-}
-
-#browse-list th a.sort-down {
-  background: transparent url(/ui/aruni/images/sort_down.png) no-repeat;
-}
-
-#browse-list th a.sort-up-active {
-  background: transparent url(/ui/aruni/images/sort_up2.png) no-repeat;
-}
-
+#browse-list th a.sort-up,
+#browse-list th a.sort-up-active,
+#browse-list th a.sort-down,
 #browse-list th a.sort-down-active {
-  background: transparent url(/ui/aruni/images/sort_down2.png) no-repeat;
+  background: transparent url(/ui/aruni/images/sprite_sort.png) no-repeat;
 }
 
-#browse-list th a.sort-none {
-  background: transparent url(icons/16x16/none.png) right top no-repeat;
-  padding-right: 20px;
-  text-decoration: none;
-}
+#browse-list th a.sort-down { background-position: -10px -10px; }
+#browse-list th a.sort-down-active { background-position: -10px -29px; }
+#browse-list th a.sort-up { background-position: -10px -48px; }
+#browse-list th a.sort-up-active { background-position: -10px -67px; }
 
 #browse-list td a {
   text-decoration: none;
