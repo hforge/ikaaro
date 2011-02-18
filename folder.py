@@ -20,9 +20,10 @@
 
 # Import from itools
 from itools.database import AndQuery, NotQuery, PhraseQuery
+from itools.datatypes import Unicode
 from itools.fs import FileName
 from itools.gettext import MSG
-from itools.handlers import Folder as FolderHandler
+from itools.handlers import checkid, Folder as FolderHandler
 from itools.html import HTMLParser, stream_to_str_as_xhtml
 from itools.i18n import guess_language
 from itools.uri import Path
@@ -34,6 +35,7 @@ from exceptions import ConsistencyError
 from folder_views import Folder_BrowseContent
 from folder_views import Folder_NewResource, Folder_Orphans, Folder_Thumbnail
 from folder_views import Folder_PreviewContent, Folder_Rename, Folder_View
+from messages import MSG_BAD_NAME
 from metadata import Metadata
 from multilingual import Multilingual
 from registry import register_resource_class, get_resource_class
@@ -131,8 +133,10 @@ class Folder(DBResource):
     def extract_archive(self, handler, language, filter=None, postproc=None,
                         update=False):
         change_resource = get_context().database.change_resource
-        for path_str in handler.get_contents():
+        for u_path in handler.get_contents():
             # 1. Skip folders
+            path_str = Unicode.encode(u_path)
+
             path = Path(path_str)
             if path.endswith_slash:
                 continue
@@ -140,24 +144,40 @@ class Folder(DBResource):
             # 2. Create parent folders if needed
             folder = self
             for name in path[:-1]:
-                subfolder = folder.get_resource(name, soft=True)
+                # call checkid on name to avoid capitalized name
+                try:
+                    checkid_name = checkid(name)
+                except UnicodeEncodeError:
+                    checkid_name = None
+                if checkid_name is None:
+                    raise RuntimeError, MSG_BAD_NAME
+
+                subfolder = folder.get_resource(checkid_name, soft=True)
                 if subfolder is None:
-                    folder = folder.make_resource(name, Folder)
+                    folder = folder.make_resource(checkid_name, Folder)
                 else:
                     folder = subfolder
 
             # 3. Get the new body
             name = path[-1]
-            body = handler.get_file(path_str)
+            body = handler.get_file(u_path)
             mimetype = guess_mimetype(name, 'application/octet-stream')
             if filter:
-                body = filter(path_str, mimetype, body)
+                body = filter(u_path, mimetype, body)
                 if body is None:
                     continue
 
             # 4. Update or make file
             filename, extension, language = FileName.decode(name)
-            file = folder.get_resource(filename, soft=True)
+
+            try:
+                checkid_name = checkid(name)
+            except UnicodeEncodeError:
+                checkid_name = None
+            if checkid_name is None:
+                raise RuntimeError, MSG_BAD_NAME
+
+            file = folder.get_resource(checkid_name, soft=True)
             if file:
                 if update is False:
                     msg = 'unexpected resource at {path}'
@@ -174,7 +194,8 @@ class Folder(DBResource):
                     change_resource(file)
             else:
                 # Case 1: the resource does not exist
-                file = folder._make_file(None, name, mimetype, body, language)
+                file = folder._make_file(checkid_name, name, mimetype, body,
+                                         language)
                 if postproc:
                     postproc(file)
 
