@@ -128,7 +128,7 @@ class Root(WebSite):
 
 
     def get_user_title(self, username):
-        if username is None:
+        if not username:
             return None
         users = self.get_resource('users')
         user = users.get_resource(username, soft=True)
