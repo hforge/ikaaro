@@ -33,6 +33,7 @@ from traceback import format_exc
 from glib import GError
 
 # Import from itools
+from itools.core import get_abspath
 from itools.datatypes import Boolean
 from itools.fs import vfs, lfs
 from itools.http import SoupMessage
@@ -41,13 +42,15 @@ from itools.log import DEBUG, INFO, WARNING, ERROR, FATAL
 from itools.log import log_error, log_warning, log_info
 from itools.loop import cron
 from itools.uri import get_host_from_authority
-from itools.web import WebServer, WebLogger, Context, set_context
+from itools.web import WebServer, WebLogger
+from itools.web import Context, StaticContext, set_context
 
 # Import from ikaaro
 from config import get_config
 from database import get_database
 from metadata import Metadata
 from registry import get_resource_class
+from skins import skin_registry
 from utils import is_pid_running
 
 
@@ -229,6 +232,34 @@ class Server(WebServer):
         context.database = self.database
 
 
+    def listen(self, address, port):
+        super(Server, self).listen(address, port)
+        # Set ui
+        context = StaticContext(local_path=get_abspath('ui'))
+        self.set_context('/ui', context)
+        for name in skin_registry:
+            skin = skin_registry[name]
+            context = StaticContext(local_path=skin.key)
+            self.set_context('/ui/%s' % name, context)
+
+
+    def is_running_in_rw_mode(self):
+        address = self.config.get_value('listen-address').strip()
+        if address == '*':
+            address = '127.0.0.1'
+        port = self.config.get_value('listen-port')
+
+        url = 'http://%s:%s/;_ctrl' % (address, port)
+        try:
+            h = vfs.open(url)
+        except GError:
+            # The server is not running
+            return False
+
+        data = h.read()
+        return loads(data)['read-only'] is False
+
+
     #######################################################################
     # Email
     #######################################################################
@@ -338,20 +369,3 @@ class Server(WebServer):
         summary = 'Error sending email\n'
         details = format_exc()
         log_error(summary + details)
-
-
-    def is_running_in_rw_mode(self):
-        address = self.config.get_value('listen-address').strip()
-        if address == '*':
-            address = '127.0.0.1'
-        port = self.config.get_value('listen-port')
-
-        url = 'http://%s:%s/;_ctrl' % (address, port)
-        try:
-            h = vfs.open(url)
-        except GError:
-            # The server is not running
-            return False
-
-        data = h.read()
-        return loads(data)['read-only'] is False
