@@ -25,7 +25,7 @@ except ImportError:
 
 # Import from itools
 from itools.core import merge_dicts
-from itools.database import AndQuery, NotQuery, OrQuery, PhraseQuery, TextQuery
+from itools.database import AndQuery, OrQuery, PhraseQuery, TextQuery
 from itools.datatypes import Boolean, Enumerate, Integer, String, Unicode
 from itools.gettext import MSG
 from itools.handlers import checkid
@@ -473,9 +473,6 @@ class Folder_BrowseContent(SearchForm):
                 return id
             href = '%s/' % context.get_link(item_resource)
             return id, href
-        elif column == 'title':
-            # Title
-            return brain.title
         elif column == 'format':
             # Type
             return item_resource.class_title.gettext()
@@ -489,6 +486,10 @@ class Folder_BrowseContent(SearchForm):
         elif column == 'workflow_state':
             # The workflow state
             return get_workflow_preview(item_resource, context)
+        try:
+            return getattr(brain, column)
+        except AttributeError:
+            return item_resource.get_property(column)
 
 
     table_actions = [
