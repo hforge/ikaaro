@@ -43,7 +43,6 @@ class AddRecordButton(AddButton):
 class Table_View(BrowseForm):
 
     access = 'is_allowed_to_view'
-    access_POST = 'is_allowed_to_edit'
     title = MSG(u'View')
     icon = 'view.png'
 
@@ -95,6 +94,10 @@ class Table_View(BrowseForm):
             return item.id, False
         elif column == 'id':
             id = item.id
+            ac = resource.get_access_control()
+            view = resource.edit_record
+            if not ac.is_access_allowed(context.user, resource, view):
+                return id
             link = context.get_link(resource)
             return id, '%s/;edit_record?id=%s' % (link, id)
 
