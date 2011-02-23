@@ -328,7 +328,11 @@ class DBResource(CatalogAware, IResource):
 
     def get_revisions(self, n=None, content=False, author_pattern=None,
                       grep_pattern=None):
-        files = self.get_files_to_archive(content)
+        if self.parent is None and content is True:
+            files = None
+        else:
+            files = self.get_files_to_archive(content)
+
         database = get_context().database
         return database.get_revisions(files, n, author_pattern, grep_pattern)
 
