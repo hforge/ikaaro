@@ -16,12 +16,6 @@
     </tr>
     <tr>
       <td>
-        Location<br/>
-        <input type="text" name="location" value="${location}" />
-      </td>
-    </tr>
-    <tr>
-      <td>
         Start (To add an event lasting all day long, leave time fields empty.)
         <br/>
         <input type="text" name="dtstart" id="dtstart" class="dateField"
