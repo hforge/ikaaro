@@ -221,14 +221,14 @@ class BrowseForm(STLForm):
         # Batch
         items = self.get_items(resource, context)
         if self.batch_template is not None:
-            template = resource.get_resource(self.batch_template)
+            template = context.get_template(self.batch_template)
             namespace = self.get_batch_namespace(resource, context, items)
             batch = stl(template, namespace)
 
         # Content
         items = self.sort_and_batch(resource, context, items)
         if self.table_template is not None:
-            template = resource.get_resource(self.table_template)
+            template = context.get_template(self.table_template)
             namespace = self.get_table_namespace(resource, context, items)
             table = stl(template, namespace)
 
@@ -498,7 +498,7 @@ class SearchForm(BrowseForm):
         if self.search_template is None:
             namespace['search'] = None
         else:
-            search_template = resource.get_resource(self.search_template)
+            search_template = context.get_template(self.search_template)
             search_namespace = self.get_search_namespace(resource, context)
             namespace['search'] = stl(search_template, search_namespace)
 

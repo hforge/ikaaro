@@ -310,7 +310,7 @@ class Image_Thumbnail(BaseView):
         format = 'jpeg' if lossy else None
         data, format = handler.get_thumbnail(width, height, format, fit)
         if data is None:
-            default = resource.get_resource('/ui/icons/48x48/image.png')
+            default = context.get_template('/ui/icons/48x48/image.png')
             data = default.to_str()
             format = 'png'
 

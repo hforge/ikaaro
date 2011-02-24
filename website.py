@@ -40,7 +40,7 @@ from control_panel import ControlPanel, CPAddUser, CPBrokenLinks
 from control_panel import CPEditTheme
 from folder import Folder
 from resource_views import LoginView
-from skins import UI, ui_path
+from skins import skin_registry
 from theme import Theme
 from website_views import AboutView, ContactForm, CreditsView
 from website_views import NotFoundView, ForbiddenView
@@ -56,7 +56,7 @@ class WebSite(RoleAware, Folder):
     class_description = MSG(u'Create a new Web Site or Work Place.')
     class_icon16 = 'icons/16x16/website.png'
     class_icon48 = 'icons/48x48/website.png'
-    class_skin = 'ui/aruni'
+    class_skin = 'aruni'
     class_views = Folder.class_views + ['control_panel']
     class_control_panel = ['browse_users', 'add_user', 'edit_virtual_hosts',
                            'edit_security_policy', 'edit_languages',
@@ -69,9 +69,6 @@ class WebSite(RoleAware, Folder):
 
 
     def _get_resource(self, name):
-        if name == 'ui':
-            ui = UI(ui_path)
-            return ui
         if name in ('users', 'users.metadata'):
             return self.parent._get_resource(name)
         return Folder._get_resource(self, name)
@@ -153,9 +150,9 @@ class WebSite(RoleAware, Folder):
         # Back-Office
         hostname = context.uri.authority
         if hostname[:3] in ['bo.', 'bo-']:
-            return self.get_resource('/ui/aruni')
+            return skin_registry['aruni']
         # Fron-Office
-        return self.get_resource(self.class_skin)
+        return skin_registry[self.class_skin]
 
 
     def after_traverse(self, context):

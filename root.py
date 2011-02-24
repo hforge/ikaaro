@@ -46,7 +46,6 @@ from itools.web import BaseView, get_context
 from config import get_config
 from folder import Folder
 from registry import get_resource_class
-from skins import UI, ui_path
 from user import UserFolder
 from utils import get_secure_hash
 from website import WebSite
@@ -144,7 +143,7 @@ class Root(WebSite):
     def internal_server_error(self, context):
         namespace = {'traceback': traceback.format_exc()}
 
-        handler = self.get_resource('/ui/root/internal_server_error.xml')
+        handler = context.get_template('/ui/root/internal_server_error.xml')
         return stl(handler, namespace, mode='html')
 
 
@@ -152,9 +151,6 @@ class Root(WebSite):
     # Traverse
     ########################################################################
     def _get_resource(self, name):
-        if name == 'ui':
-            ui = UI(ui_path)
-            return ui
         return Folder._get_resource(self, name)
 
 
