@@ -32,14 +32,13 @@ from itools.web import get_context
 
 # Import from ikaaro
 from ikaaro.comments import comment_datatype
-from ikaaro.file import File
 from ikaaro.folder import Folder
 from ikaaro.metadata import Metadata
 from ikaaro.obsolete.metadata import OldMetadata
 from ikaaro.registry import get_resource_class
 from ikaaro.utils import generate_name
-from issue_views import Issue_Edit, Issue_History
-from issue_views import IssueTrackerMenu
+from issue_views import Issue_DownloadAttachments, Issue_Edit
+from issue_views import Issue_History, IssueTrackerMenu
 
 
 class Issue(Folder):
@@ -338,6 +337,7 @@ class Issue(Folder):
         return self.parent.get_context_menus() + [IssueTrackerMenu()]
 
 
+    download_attachments = Issue_DownloadAttachments()
     edit = Issue_Edit()
     history = Issue_History()
 
