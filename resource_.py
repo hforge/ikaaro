@@ -43,10 +43,45 @@ from views_new import NewInstance
 from workflow import WorkflowAware
 
 
-class IResource(Resource):
+
+class FreeDatatype(String):
+    """This datatype is used for properties not defined in the resource
+    schema, when the schema is defined as extensible.
+    """
+
+    multiple = True
+    parameters_schema = freeze({})
+    parameters_schema_default = String(multiple=True)
+
+
+
+class DBResourceMetaclass(type):
+
+    def __new__(mcs, name, bases, dict):
+        cls = type.__new__(mcs, name, bases, dict)
+        if 'class_id' in dict:
+            register_resource_class(cls)
+        for name, dt in cls.class_schema.iteritems():
+            if getattr(dt, 'indexed', False) or getattr(dt, 'stored', False):
+                register_field(name, dt)
+        return cls
+
+
+
+class DBResource(CatalogAware, Resource):
+
+    __metaclass__ = DBResourceMetaclass
 
     class_views = []
     context_menus = []
+
+
+    def __init__(self, metadata):
+        self.metadata = metadata
+        self._handler = None
+        # The tree
+        self.name = ''
+        self.parent = None
 
 
     def get_site_root(self):
@@ -78,15 +113,6 @@ class IResource(Resource):
     ########################################################################
     # Properties
     ########################################################################
-    @classmethod
-    def get_property_datatype(cls, name):
-        return String
-
-
-    def _get_property(self, name, language=None):
-        return None
-
-
     def get_property(self, name, language=None):
         """Return the property value for the given property name.
         """
@@ -104,93 +130,8 @@ class IResource(Resource):
         return property.value
 
 
-    def get_title(self):
-        return unicode(self.name)
-
-
     def get_page_title(self):
         return self.get_title()
-
-
-    ########################################################################
-    # Icons
-    ########################################################################
-    @classmethod
-    def get_class_icon(cls, size=16):
-        icon = getattr(cls, 'class_icon%s' % size, None)
-        if icon is None:
-            return None
-        return '/ui/%s' % icon
-
-
-    @classmethod
-    def get_resource_icon(cls, size=16):
-        icon = getattr(cls, 'icon%s' % size, None)
-        if icon is None:
-            return cls.get_class_icon(size)
-        return ';icon%s' % size
-
-
-    def get_method_icon(self, view, size='16x16', **kw):
-        icon = getattr(view, 'icon', None)
-        if icon is None:
-            return None
-        if callable(icon):
-            icon = icon(self, **kw)
-        return '/ui/icons/%s/%s' % (size, icon)
-
-
-    ########################################################################
-    # User interface
-    ########################################################################
-    def get_views(self):
-        user = get_context().user
-        ac = self.get_access_control()
-        for name in self.class_views:
-            view_name = name.split('?')[0]
-            view = self.get_view(view_name)
-            if ac.is_access_allowed(user, self, view):
-                yield name, view
-
-
-
-###########################################################################
-# Database resources
-###########################################################################
-class FreeDatatype(String):
-    """This datatype is used for properties not defined in the resource
-    schema, when the schema is defined as extensible.
-    """
-
-    multiple = True
-    parameters_schema = freeze({})
-    parameters_schema_default = String(multiple=True)
-
-
-
-class DBResourceMetaclass(type):
-
-    def __new__(mcs, name, bases, dict):
-        cls = type.__new__(mcs, name, bases, dict)
-        if 'class_id' in dict:
-            register_resource_class(cls)
-        for name, dt in cls.class_schema.iteritems():
-            if getattr(dt, 'indexed', False) or getattr(dt, 'stored', False):
-                register_field(name, dt)
-        return cls
-
-
-
-class DBResource(CatalogAware, IResource):
-
-    __metaclass__ = DBResourceMetaclass
-
-    def __init__(self, metadata):
-        self.metadata = metadata
-        self._handler = None
-        # The tree
-        self.name = ''
-        self.parent = None
 
 
     def init_resource(self, **kw):
@@ -744,8 +685,46 @@ class DBResource(CatalogAware, IResource):
 
 
     ########################################################################
+    # Icons
+    ########################################################################
+    @classmethod
+    def get_class_icon(cls, size=16):
+        icon = getattr(cls, 'class_icon%s' % size, None)
+        if icon is None:
+            return None
+        return '/ui/%s' % icon
+
+
+    @classmethod
+    def get_resource_icon(cls, size=16):
+        icon = getattr(cls, 'icon%s' % size, None)
+        if icon is None:
+            return cls.get_class_icon(size)
+        return ';icon%s' % size
+
+
+    def get_method_icon(self, view, size='16x16', **kw):
+        icon = getattr(view, 'icon', None)
+        if icon is None:
+            return None
+        if callable(icon):
+            icon = icon(self, **kw)
+        return '/ui/icons/%s/%s' % (size, icon)
+
+
+    ########################################################################
     # User interface
     ########################################################################
+    def get_views(self):
+        user = get_context().user
+        ac = self.get_access_control()
+        for name in self.class_views:
+            view_name = name.split('?')[0]
+            view = self.get_view(view_name)
+            if ac.is_access_allowed(user, self, view):
+                yield name, view
+
+
     def get_title(self, language=None):
         title = self.get_property('title', language=language)
         if title:
