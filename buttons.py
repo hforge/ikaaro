@@ -182,3 +182,12 @@ class AddButton(BrowseButton):
     name = 'add'
     title = MSG(u'Add')
     css = 'button-add'
+
+
+
+class ZipButton(BrowseButton):
+
+    access = 'is_allowed_to_edit'
+    name = 'zip'
+    title = MSG(u'Zip')
+    css = 'button-zip'

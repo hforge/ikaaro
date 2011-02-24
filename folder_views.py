@@ -15,7 +15,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
+from cStringIO import StringIO
 from urllib import quote
+from zipfile import ZipFile
 
 # Import from the Python Image Library
 try:
@@ -38,6 +40,7 @@ from itools.web import BaseView, STLForm, ERROR, get_context
 from autoform import SelectWidget
 from buttons import PasteButton, PublishButton, RetireButton
 from buttons import RemoveButton, RenameButton, CopyButton, CutButton
+from buttons import ZipButton
 from datatypes import CopyCookie, ImageWidth
 from exceptions import ConsistencyError
 from registry import get_resource_class
@@ -494,7 +497,7 @@ class Folder_BrowseContent(SearchForm):
 
     table_actions = [
         RemoveButton, RenameButton, CopyButton, CutButton, PasteButton,
-        PublishButton, RetireButton]
+        PublishButton, RetireButton, ZipButton]
 
 
     #######################################################################
@@ -718,6 +721,39 @@ class Folder_BrowseContent(SearchForm):
     def action_retire(self, resource, context, form):
         self._action_workflow(resource, context, form, 'retire', 'private',
                               messages.MSG_RETIRED)
+
+
+    def action_zip(self, resource, context, form):
+        from folder import Folder
+
+        stringio = StringIO()
+        archive = ZipFile(stringio, mode='w')
+        ids = form['ids']
+
+        ids.sort()
+        ids.reverse()
+        for name in ids:
+            child = resource.get_resource(name)
+            if isinstance(child, Folder):
+                # Skip folder
+                continue
+            for filename in child.get_files_to_archive(True):
+                resource_name = Path(filename).get_name()
+                if resource_name.endswith('.metadata'):
+                    # XXX Skip metadata
+                    continue
+                a_name = Path(name).resolve2(resource_name)
+                archive.writestr(str(a_name), child.handler.to_str())
+
+        archive.close()
+        # Content-Type
+        context.set_content_type('application/zip')
+        # Content-Disposition
+        disposition = 'inline'
+        filename = 'archive.zip'
+        context.set_content_disposition(disposition, filename)
+        # Ok
+        return stringio.getvalue()
 
 
 
