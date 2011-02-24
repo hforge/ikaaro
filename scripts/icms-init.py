@@ -158,6 +158,7 @@ def init(parser, options, target):
     root.set_property('mtime', context.timestamp)
     context.root = root
     # Save changes
+    context.git_message = 'Initial commit'
     database.save_changes()
     # Index the root
     catalog = database.catalog
