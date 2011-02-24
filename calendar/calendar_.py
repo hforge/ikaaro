@@ -144,8 +144,9 @@ class Calendar(Folder):
         Example of metadata:
           <timetables>(8,0),(10,0);(10,30),(12,0);(13,30),(17,30)</timetables>
         """
-        if self.has_property('timetables'):
-            return self.get_property('timetables')
+        timetables = self.get_property('timetables')
+        if timetables:
+            return timetables
 
         # From class value
         timetables = []
