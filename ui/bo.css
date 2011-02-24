@@ -160,6 +160,11 @@ span.field-error {
   padding-left: 19px;
 }
 
+.button-zip {
+  background-image: url(icons/16x16/zip.png);
+  padding-left: 19px;
+}
+
 /**************************************************************************
  * ui/aruni/location.xml.en
  *************************************************************************/
