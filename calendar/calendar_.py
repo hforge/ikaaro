@@ -131,8 +131,8 @@ class Calendar(Folder):
             return True
         if event:
             organizer = event.get_owner()
-            user_path = str(context.user.get_abspath())
-            return organizer and user_path == organizer.value
+            username = str(context.user.name)
+            return organizer and username == organizer
         ac = self.parent.get_access_control()
         return ac.is_allowed_to_edit(context.user, self.parent)
 
