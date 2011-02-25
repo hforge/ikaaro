@@ -445,8 +445,10 @@ class DBResource_AddBase(STLForm):
     def get_javascript_return(self, context, path):
         return """
             <script type="text/javascript">
+              <!--
               %s
               select_element('%s', '%s', '');
+              //-->
             </script>""" % (self.get_additional_javascript(context),
                             self.element_to_add, path)
 
