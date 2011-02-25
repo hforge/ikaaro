@@ -63,7 +63,8 @@ class Database(GitDatabase):
         git_msg = getattr(context, 'git_message', None)
         git_msg = (
             git_msg.encode('utf-8')
-            if git_msg else "%s %s" % (context.method, context.uri))
+            if git_msg else "%s %s action: %s" % (context.method, context.uri,
+                                                  context.form_action))
 
         # Ok
         return git_author, git_date, git_msg, docs_to_index, docs_to_unindex
