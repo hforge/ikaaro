@@ -21,7 +21,7 @@ from optparse import OptionParser
 
 # Import from itools
 import itools
-from itools.core import start_subprocess
+from itools.git import start_subprocess
 
 
 

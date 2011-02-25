@@ -26,10 +26,10 @@ from traceback import print_exc
 
 # Import from itools
 import itools
-from itools.core import start_subprocess
 from itools.csv import Property
 from itools.database import check_database
 from itools.fs import lfs
+from itools.git import start_subprocess
 from itools.handlers import ro_database
 from itools.web import get_context
 

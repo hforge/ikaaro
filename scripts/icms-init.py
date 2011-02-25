@@ -24,8 +24,8 @@ import sys
 
 # Import from itools
 import itools
-from itools.core import start_subprocess
 from itools.database import Catalog
+from itools.git import start_subprocess
 
 # Import from ikaaro
 from ikaaro.database import make_database
