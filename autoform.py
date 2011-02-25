@@ -335,7 +335,7 @@ class DateWidget(Widget):
     <input type="text" name="${name}" value="${value_}" id="${id}"
       class="dateField" size="${size}" />
     <button class="${css} button-selector">...</button>
-    <script language="javascript">
+    <script type="text/javascript">
       jQuery( "input.dateField" ).dynDateTime({
         ifFormat: "${format}",
         showsTime: ${show_time_js},
@@ -379,7 +379,7 @@ class DatetimeWidget(DateWidget):
       class="dateField" size="10" />
     <button class="${css} button-selector">...</button>
     <input type="text" name="${name}_time" value="${value_time}" size="5" />
-    <script language="javascript">
+    <script type="text/javascript">
       jQuery( "input.dateField" ).dynDateTime({
         ifFormat: "${format}",
         timeFormat: "24",

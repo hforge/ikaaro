@@ -4,7 +4,7 @@
 <stl:block xmlns="http://www.w3.org/1999/xhtml"
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
   <!-- Javascript -->
-  <script language="javascript">
+  <script type="text/javascript">
   var list_products = {<stl:inline stl:repeat="product list_products">
                        "${product/id}":
                           {'module':

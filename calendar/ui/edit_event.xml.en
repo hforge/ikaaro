@@ -122,7 +122,7 @@
   </p>
   </fieldset>
 
-  <script language="javascript">
+  <script type="text/javascript">
   $("#title").focus();
 
   jQuery( "input.dateField" ).dynDateTime({ifFormat: "%Y-%m-%d",

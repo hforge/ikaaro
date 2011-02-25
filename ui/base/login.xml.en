@@ -52,7 +52,7 @@
     </p>
   </fieldset>
 
-  <script language="javascript">
+  <script type="text/javascript">
     <stl:inline stl:if="not username/value">$("#username").focus();</stl:inline>
     <stl:inline stl:if="username/value">$("#password").focus();</stl:inline>
   </script>

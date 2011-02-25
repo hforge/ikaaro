@@ -33,7 +33,7 @@ ${before}
       </stl:block>
     </p>
   </fieldset>
-  <script language="javascript">
+  <script type="text/javascript">
     document.getElementById("${first_widget}").focus();
   </script>
 </form>

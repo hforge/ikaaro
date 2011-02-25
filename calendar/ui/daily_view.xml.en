@@ -48,7 +48,7 @@
   </table>
 </div>
 
-<script language="javascript">
+<script type="text/javascript">
   $("#date").focus();
   jQuery( "input.dateField" ).dynDateTime({
     ifFormat: "%Y-%m-%d",
