@@ -151,9 +151,7 @@ class DBResource_CommitLog(SearchForm):
     access = 'is_allowed_to_edit'
     title = MSG(u"Commit Log")
 
-    schema = {
-        'ids': IndexRevision(multiple=True, mandatory=True),
-    }
+    schema = {'ids': IndexRevision(multiple=True, mandatory=True)}
 
     search_template = '/ui/revisions/browse_search.xml'
     search_schema = {'search_mail': String(default=''),
@@ -164,8 +162,7 @@ class DBResource_CommitLog(SearchForm):
         ('checkbox', None),
         ('date', MSG(u'Last Change'), False),
         ('username', MSG(u'Author'), False),
-        ('message', MSG(u'Comment'), False),
-    ]
+        ('message', MSG(u'Comment'), False)]
     table_actions = [DiffButton]
 
 
@@ -204,7 +201,8 @@ class DBResource_CommitLog(SearchForm):
         if column == 'checkbox':
             return ('%s_%s' % (item['index'], item['revision']), False)
         elif column == 'date':
-            return (item['date'], './;changes?revision=%s' % item['revision'])
+            date = context.format_datetime(item['date'])
+            return (date, './;changes?revision=%s' % item['revision'])
         return item[column]
 
 
@@ -213,7 +211,7 @@ class DBResource_CommitLog(SearchForm):
         ids = sorted(form['ids'])
         # Each item is a (index, revision) tuple
         revision = ids.pop()[1]
-        to = ids and ids.pop(0)[1] or 'HEAD'
+        to = ids.pop(0)[1] if ids else 'HEAD'
         # FIXME same hack than rename to call a GET from a POST
         query = encode_query({'revision': revision, 'to': to})
         uri = '%s/;changes?%s' % (context.get_link(resource), query)
@@ -234,8 +232,7 @@ class DBResource_Changes(STLView):
 
     query_schema = {
         'revision': String(mandatory=True),
-        'to': String,
-        }
+        'to': String}
 
     def get_namespace(self, resource, context):
         revision = context.query['revision']
@@ -258,32 +255,12 @@ class DBResource_Changes(STLView):
         else:
             # Case 2: show a set of commits
             metadata = None
-            # Get the list of commits affecting the resource
-            revisions = [
-                x['revision'] for x in resource.get_revisions(content=True) ]
-            # Filter revisions in our range
-            # Below
-            while revisions and revisions[-1] != revision:
-                revisions.pop()
-            if not revisions:
-                error = ERROR(u'Commit {commit} not found', commit=revision)
-                context.message = error
-                return {'metadata': None, 'stat': None, 'changes': None}
-            # Above
-            if to != 'HEAD':
-                while revisions and revisions[0] != to:
-                    revisions.pop(0)
-                if not revisions:
-                    error = ERROR(u'Commit {commit} not found', commit=to)
-                    context.message = error
-                    return {'metadata': None, 'stat': None, 'changes': None}
             # Get the list of files affected in this series
-            files = database.get_files_affected(revisions)
+            files = database.get_files_affected(revision, to)
             # Get the statistic for these files
             # Starting revision is included in the diff
             revision = "%s^" % revision
             stat = database.get_stats(revision, to, paths=files)
-
             # Reuse the list of files to limit diff produced
             diff = database.get_diff_between(revision, to, paths=files)
 

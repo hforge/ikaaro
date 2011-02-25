@@ -18,7 +18,6 @@
 
 # Import from the Standard Library
 from cProfile import runctx
-from datetime import datetime
 from optparse import OptionParser
 from subprocess import Popen, PIPE
 from sys import exit, stdout
@@ -27,7 +26,7 @@ from traceback import print_exc
 
 # Import from itools
 import itools
-from itools.core import fixed_offset, start_subprocess, send_subprocess
+from itools.core import start_subprocess
 from itools.csv import Property
 from itools.database import check_database
 from itools.fs import lfs
@@ -254,32 +253,12 @@ def update(parser, options, target):
         print 'STAGE 0: Initializing mtime/author'
         # Load cache
         git_cache = {}
-        cmd = ['git', 'log', '--pretty=format:%H%n%an%n%at%n%s', '--raw',
-               '--name-only']
-        data = send_subprocess(cmd)
-        lines = data.splitlines()
-        utc = fixed_offset(0)
-        i = 0
-        while i < len(lines):
-            date = int(lines[i + 2])
-            author = lines[i + 1]
-            if author not in usernames:
-                author = None
-            commit = {
-                'revision': lines[i],                      # commit
-                'username': author,                        # author name
-                'date': datetime.fromtimestamp(date, utc), # author date
-                'message': lines[i + 3]}                   # subject
-
-            # Modified files
-            i += 4
-            while i < len(lines) and lines[i]:
-                path = lines[i]
+        for commit in database.worktree.git_log(include_files=True):
+            if commit['username'] not in usernames:
+                commit['username'] = None
+            for path in commit['paths']:
                 if path not in git_cache or not git_cache[path]['username']:
                     git_cache[path] = commit
-                i += 1
-            # Next entry is separated by an empty line
-            i += 1
 
         # Set mtime/author
         for resource in root.traverse_resources():
