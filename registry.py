@@ -37,6 +37,9 @@ def _lookup_class_id(class_id):
 
 
 def get_resource_class(class_id):
+    if type(class_id) is not str:
+        raise TypeError, 'expected byte string, got %s' % class_id
+
     class_id = _lookup_class_id(class_id)
     if class_id is None:
         class_id = 'application/octet-stream'
