@@ -56,15 +56,19 @@ class Database(GitDatabase):
         self.resources_new2old.clear()
 
         # 4. Find out commit author & message
-        git_msg = 'no comment'
         git_author = (
             '%s <%s>' % (userid, user.get_property('email'))
             if user else 'nobody <>')
+
         git_msg = getattr(context, 'git_message', None)
-        git_msg = (
-            git_msg.encode('utf-8')
-            if git_msg else "%s %s action: %s" % (context.method, context.uri,
-                                                  context.form_action))
+        if not git_msg:
+            git_msg = "%s %s" % (context.method, context.uri)
+
+            action = getattr(context, 'form_action', None)
+            if action:
+                git_msg += " action: %s" % action
+        else:
+            git_msg = git_msg.encode('utf-8')
 
         # Ok
         return git_author, git_date, git_msg, docs_to_index, docs_to_unindex
