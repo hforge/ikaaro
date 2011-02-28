@@ -21,15 +21,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Import from Standard Library
-from cStringIO import StringIO
-from zipfile import ZipFile
-
 # Import from itools
 from itools.csv import Property
 from itools.datatypes import Unicode, XMLContent
 from itools.gettext import MSG
-from itools.uri import Path
 from itools.web import BaseView, STLForm, STLView
 from itools.xml import XMLParser
 
@@ -74,29 +69,14 @@ class Issue_DownloadAttachments(BaseView):
     access = 'is_allowed_to_edit'
 
     def GET(self, resource, context):
-        stringio = StringIO()
-        archive = ZipFile(stringio, mode='w')
-
-        for attachment_name in resource.get_property('attachment'):
-            attachment = resource.get_resource(attachment_name, soft=True)
-            if attachment is None:
-                continue
-            for filename in attachment.get_files_to_archive(True):
-                name = Path(filename).get_name()
-                if name.endswith('.metadata'):
-                    # XXX Skip metadata
-                    continue
-                archive.writestr(name, attachment.handler.to_str())
-
-        archive.close()
-        # Content-Type
+        names = resource.get_property('attachment')
+        data = resource.export_zip(names)
+        # Content-Type & Content-Disposition
         context.set_content_type('application/zip')
-        # Content-Disposition
-        disposition = 'inline'
         filename = '%s-attachments.zip' % resource.name
-        context.set_content_disposition(disposition, filename)
+        context.set_content_disposition('inline', filename)
         # Ok
-        return stringio.getvalue()
+        return data
 
 
 

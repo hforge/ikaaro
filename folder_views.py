@@ -15,9 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from the Standard Library
-from cStringIO import StringIO
 from urllib import quote
-from zipfile import ZipFile
 
 # Import from the Python Image Library
 try:
@@ -724,36 +722,14 @@ class Folder_BrowseContent(SearchForm):
 
 
     def action_zip(self, resource, context, form):
-        from folder import Folder
-
-        stringio = StringIO()
-        archive = ZipFile(stringio, mode='w')
-        ids = form['ids']
-
-        ids.sort()
-        ids.reverse()
-        for name in ids:
-            child = resource.get_resource(name)
-            if isinstance(child, Folder):
-                # Skip folder
-                continue
-            for filename in child.get_files_to_archive(True):
-                resource_name = Path(filename).get_name()
-                if resource_name.endswith('.metadata'):
-                    # XXX Skip metadata
-                    continue
-                a_name = Path(name).resolve2(resource_name)
-                archive.writestr(str(a_name), child.handler.to_str())
-
-        archive.close()
-        # Content-Type
+        names = sorted(form['ids'], reverse=True)
+        data = resource.export_zip(names)
+        # Content-Type & Content-Disposition
         context.set_content_type('application/zip')
-        # Content-Disposition
-        disposition = 'inline'
         filename = 'archive.zip'
-        context.set_content_disposition(disposition, filename)
+        context.set_content_disposition('inline', filename)
         # Ok
-        return stringio.getvalue()
+        return data
 
 
 

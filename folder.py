@@ -18,6 +18,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# Import from the Standard Library
+from cStringIO import StringIO
+from zipfile import ZipFile
+
 # Import from itools
 from itools.database import AndQuery, NotQuery, PhraseQuery
 from itools.datatypes import Unicode
@@ -128,6 +132,22 @@ class Folder(DBResource):
             kw['extension'] = extension
 
         return self.make_resource(name, cls, body=body, **kw)
+
+
+    def export_zip(self, paths):
+        stringio = StringIO()
+        archive = ZipFile(stringio, mode='w')
+        for path in paths:
+            child = self.get_resource(path, soft=True)
+            if child is None or isinstance(child, Folder):
+                continue
+            for filename in child.get_files_to_archive(True):
+                if filename.endswith('.metadata'):
+                    continue
+                path = Path(self.handler.key).get_pathto(filename)
+                archive.writestr(str(path), child.handler.to_str())
+        archive.close()
+        return stringio.getvalue()
 
 
     def extract_archive(self, handler, language, filter=None, postproc=None,
