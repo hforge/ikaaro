@@ -437,7 +437,7 @@ class MonthlyView(CalendarView):
         today_date = date.today()
 
         # Current date
-        c_date = context.get_form_value('date')
+        c_date = context.get_form_value('start')
         c_date = get_current_date(c_date)
         # Save selected date
         context.set_cookie('selected_date', c_date)
@@ -566,7 +566,7 @@ class WeeklyView(CalendarView):
 
     def get_namespace(self, resource, context, ndays=7):
         # Current date
-        c_date = context.get_form_value('date')
+        c_date = context.get_form_value('start')
         if not c_date:
             c_date = context.get_cookie('selected_date')
         c_date = get_current_date(c_date)
@@ -621,7 +621,7 @@ class DailyView(CalendarView):
     access = 'is_allowed_to_view'
     title = MSG(u'Daily View')
     template = '/ui/calendar/daily_view.xml'
-    query_schema = {'date': Date}
+    query_schema = {'start': Date}
 
     # Start 07:00, End 21:00, Interval 30min
     class_cal_range = (time(7,0), time(21,0), 30)
@@ -637,7 +637,7 @@ class DailyView(CalendarView):
             method='daily_view', show_conflicts=False, context=None):
         cal_fields = self.class_cal_fields
         calendar_name = str(calendar.name)
-        args = {'date': Date.encode(c_date), 'method': method}
+        args = {'start': Date.encode(c_date), 'method': method}
 
         # Get a dict for each event, compute colspan
         handler = calendar.handler
@@ -775,7 +775,7 @@ class DailyView(CalendarView):
             context.set_cookie('method', 'daily_view')
 
         # Current date
-        c_date = context.query['date']
+        c_date = context.query['start']
         if c_date is None:
             c_date = date.today()
 
@@ -801,7 +801,7 @@ class DailyView(CalendarView):
         ns_calendar = self.get_ns_calendar(resource, c_date, timetables,
                                            context=context)
         return {
-            'date': Date.encode(c_date),
+            'start': Date.encode(c_date),
             'firstday': self.get_first_day(),
             'header_timetables': ns_timetables,
             'calendars': [ns_calendar]}

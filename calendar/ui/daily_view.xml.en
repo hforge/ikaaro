@@ -7,8 +7,8 @@
 <div id="cal-daily-view">
   <form id="attributes" action=";daily_view" method="get">
     Date:
-    <input type="text" name="date" id="date" class="dateField" size="11"
-      value="${date}" />
+    <input type="text" name="start" id="date" class="dateField" size="11"
+      value="${start}" />
     <input type="button" value="..." />
     <button type="submit" class="button-ok">OK</button>
   </form>
