@@ -31,10 +31,6 @@ class Button(thingy):
     name = None
     title = None
 
-    def __init__(self, **kw):
-        for key in kw:
-            setattr(self, key, kw[key])
-
 
     def show(self, resource, context):
         ac = resource.get_access_control()

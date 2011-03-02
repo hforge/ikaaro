@@ -116,8 +116,6 @@ class Widget(CMSTemplate):
         if name:
             self.name = name
         self.id = self.name.replace('_', '-')
-        for key in kw:
-            setattr(self, key, kw[key])
 
 
 
