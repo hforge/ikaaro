@@ -31,7 +31,7 @@ from itools.xml import XMLParser
 
 # Import from ikaaro
 from buttons import Button
-from utils import CMSTemplate
+from utils import CMSTemplate, make_stl_template
 
 
 
@@ -83,14 +83,6 @@ class HTMLBody(XHTMLBody):
 ###########################################################################
 # Widgets
 ###########################################################################
-
-stl_namespaces = {
-    None: 'http://www.w3.org/1999/xhtml',
-    'stl': 'http://www.hforge.org/xml-namespaces/stl'}
-def make_stl_template(data):
-    return list(XMLParser(data, stl_namespaces))
-
-
 
 def get_default_widget(datatype):
     if issubclass(datatype, Boolean):

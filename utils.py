@@ -22,10 +22,11 @@ from random import sample
 from sys import platform
 
 # Import from itools
-from itools.stl import STLTemplate
+from itools.database import StartQuery, AllQuery, AndQuery, PhraseQuery
+from itools.database import NotQuery, OrQuery
+from itools.stl import STLTemplate, stl_namespaces
 from itools.web import get_context
-from itools.database import AllQuery, AndQuery, PhraseQuery, NotQuery, OrQuery
-from itools.database import StartQuery
+from itools.xml import XMLParser
 
 if platform[:3] == 'win':
     from utils_win import is_pid_running, kill
@@ -36,6 +37,11 @@ else:
 ###########################################################################
 # CMS Template
 ###########################################################################
+
+def make_stl_template(data):
+    return list(XMLParser(data, stl_namespaces))
+
+
 
 class CMSTemplate(STLTemplate):
 
