@@ -388,18 +388,8 @@ class BrowseForm(STLForm):
     def get_actions_namespace(self, resource, context, items):
         actions = []
         for button in self.get_table_actions(resource, context):
-            if button.show(resource, context, items) is False:
-                continue
-            if button.confirm:
-                confirm = button.confirm.gettext().encode('utf_8')
-                onclick = 'return confirm("%s");' % confirm
-            else:
-                onclick = None
-            actions.append(
-                {'value': button.name,
-                 'title': button.title,
-                 'class': button.css,
-                 'onclick': onclick})
+            actions.append(button(resource=resource, context=context,
+                items=items))
         return actions
 
 

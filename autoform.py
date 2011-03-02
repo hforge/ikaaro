@@ -601,19 +601,7 @@ class AutoForm(STLForm):
         # (1) Actions (submit buttons)
         actions = []
         for button in self.get_actions(resource, context):
-            if button.show(resource, context) is False:
-                continue
-            if button.confirm:
-                confirm = button.confirm.gettext().encode('utf_8')
-                onclick = 'return confirm("%s");' % confirm
-            else:
-                onclick = None
-            actions.append(
-                {'value': button.name,
-                 'title': button.title,
-                 'class': button.css,
-                 'onclick': onclick})
-
+            actions.append(button(resource=resource, context=context))
         return actions
 
 
@@ -670,7 +658,7 @@ class AutoForm(STLForm):
             # If one action, remove the value parameter
             # to simulate old functionment
             action = context.uri
-            actions[0]['value'] = None
+            actions[0].name = None
 
         # Build namespace
         return {

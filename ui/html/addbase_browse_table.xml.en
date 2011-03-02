@@ -53,11 +53,7 @@
 </table>
 <!-- Action Button -->
 <p stl:if="actions">
-  <stl:block stl:repeat="action actions">
-    <button type="submit" name="action" value="${action/value}"
-      id="${action/id}" onclick="${action/onclick}"
-      >${action/title}</button>
-  </stl:block>
+  <stl:block stl:repeat="action actions">${action}</stl:block>
 </p>
 
 </stl:block>

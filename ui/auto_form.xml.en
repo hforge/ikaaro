@@ -23,14 +23,7 @@ ${before}
       <p class="widget" stl:repeat="widget widget/widgets">${widget}</p>
     </div>
     <p stl:if="actions">
-      <stl:block stl:repeat="action actions">
-        <button stl:if="not action/value" type="submit"
-          class="${action/class}" onclick="${action/onclick}"
-          >${action/title}</button>
-        <button stl:if="action/value" type="submit" name="action" value="${action/value}"
-          class="${action/class}" onclick="${action/onclick}"
-          >${action/title}</button>
-      </stl:block>
+      <stl:block stl:repeat="action actions">${action}</stl:block>
     </p>
   </fieldset>
   <script type="text/javascript">

@@ -15,36 +15,56 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import thingy
+from itools.core import thingy_property
 from itools.gettext import MSG
+from itools.stl import STLTemplate
 
 # Import from ikaaro
 from datatypes import CopyCookie
 import messages
+from utils import make_stl_template
 
 
-class Button(thingy):
-
+class Button(STLTemplate):
     access = False
-    confirm = None
-    css = 'button-ok'
+    template = make_stl_template('''
+        <button type="submit" name="${action}" value="${name}" class="${css}"
+            onclick="${onclick}">${title}</button>''')
     name = None
     title = None
+    css = 'button-ok'
+    confirm = None
 
 
-    def show(self, resource, context):
-        ac = resource.get_access_control()
-        return ac.is_access_allowed(context.user, resource, self)
+    @thingy_property
+    def action(cls):
+        if cls.name is None:
+            return None
+        return 'action'
+
+
+    @thingy_property
+    def onclick(cls):
+        confirm = cls.confirm
+        if not confirm:
+            return None
+        return u'return confirm("%s");' % confirm.gettext()
+
+
+    @thingy_property
+    def show(cls):
+        ac = cls.resource.get_access_control()
+        return ac.is_access_allowed(cls.context.user, cls.resource, cls)
 
 
 
 class BrowseButton(Button):
 
-    def show(self, resource, context, items):
-        if len(items) == 0:
+    @thingy_property
+    def show(cls):
+        if len(cls.items) == 0:
             return False
-        ac = resource.get_access_control()
-        return ac.is_access_allowed(context.user, resource, self)
+        return super(BrowseButton, cls).show
 
 
 
@@ -93,12 +113,12 @@ class PasteButton(BrowseButton):
     title = MSG(u'Paste')
 
 
-    def show(self, resource, context, items):
-        cut, paths = context.get_cookie('ikaaro_cp', datatype=CopyCookie)
+    @thingy_property
+    def show(cls):
+        cut, paths = cls.context.get_cookie('ikaaro_cp', datatype=CopyCookie)
         if len(paths) == 0:
             return False
-        ac = resource.get_access_control()
-        return ac.is_access_allowed(context.user, resource, self)
+        return super(PasteButton, cls).show
 
 
 
@@ -108,35 +128,28 @@ class PublishButton(BrowseButton):
     css = 'button-publish'
     name = 'publish'
     title = MSG(u'Publish')
+    transition = 'publish'
 
 
-    def show(self, resource, context, items):
-        ac = resource.get_access_control()
-        for item in items:
+    @thingy_property
+    def show(cls):
+        ac = cls.resource.get_access_control()
+        for item in cls.items:
             if type(item) is tuple:
                 item = item[1]
-            if ac.is_allowed_to_trans(context.user, item, 'publish'):
+            if ac.is_allowed_to_trans(cls.context.user, item, cls.transition):
                 return True
         return False
 
 
 
-class RetireButton(BrowseButton):
+class RetireButton(PublishButton):
 
     access = 'is_allowed_to_retire'
     css = 'button-retire'
     name = 'retire'
     title = MSG(u'Unpublish')
-
-
-    def show(self, resource, context, items):
-        ac = resource.get_access_control()
-        for item in items:
-            if type(item) is tuple:
-                item = item[1]
-            if ac.is_allowed_to_trans(context.user, item, 'retire'):
-                return True
-        return False
+    transition = 'retire'
 
 
 

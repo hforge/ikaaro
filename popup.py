@@ -21,7 +21,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools.core import freeze, merge_dicts
+from itools.core import freeze, merge_dicts, thingy_property
 from itools.csv import Property
 from itools.datatypes import String, Unicode
 from itools.gettext import MSG
@@ -37,8 +37,20 @@ from datatypes import FileDataType
 from folder_views import Folder_BrowseContent
 import messages
 from registry import get_resource_class
-from utils import reduce_string
+from utils import reduce_string, make_stl_template
 from workflow import state_widget, StaticStateEnumerate, WorkflowAware
+
+
+class SelectElement(AddButton):
+    template = make_stl_template('''
+        <button type="submit" name="action" value="" id="${css}"
+          class="${css}" onclick="${onclick}">${title}</button>''')
+
+
+    @thingy_property
+    def onclick(cls):
+        element = cls.element_to_add
+        return 'select_element("%s", $(this).attr("value"), "")' % element
 
 
 
@@ -71,7 +83,7 @@ class AddBase_BrowseContent(Folder_BrowseContent):
         ('last_author', MSG(u'Last Author')),
         ('workflow_state', MSG(u'State'))]
 
-    table_actions = [AddButton]
+    table_actions = [SelectElement]
 
 
     def get_folder_classes(self):
@@ -151,15 +163,10 @@ class AddBase_BrowseContent(Folder_BrowseContent):
 
 
     def get_actions_namespace(self, resource, context, items):
-        button = AddButton
         actions = []
-        js = "javascript:select_element('%s', $(this).attr('value'),'')"
-        js = js % self.element_to_add
-        actions.append(
-            {'value': '',
-             'title': button.title,
-             'id': button.css,
-             'onclick': js})
+        for button in self.get_table_actions(resource, context):
+            actions.append(button(resource=resource, context=context,
+                items=items, element_to_add=self.element_to_add))
         return actions
 
 
