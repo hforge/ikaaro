@@ -50,7 +50,6 @@
               <a stl:if="cell/newurl" class="add-event" href="${cell/newurl}">
                 <img width="16" height="16" src="${add_icon}" />
               </a>
-              <div>&nbsp;</div>
             </td>
           </div>
         </stl:block>

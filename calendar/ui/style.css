@@ -4,8 +4,9 @@
 #cal-monthly-view #selector,
 #cal-weekly-view #selector,
 #cal-daily-view #selector {
-  margin: 5px 0px 5px 0px;
+  margin: 5px 0px 10px 0px;
   font-size:18px;
+  border-bottom: 1px solid #0467BA;
 }
 
 #cal-monthly-view #selector ul,
@@ -26,16 +27,18 @@
 #cal-weekly-view #selector li a,
 #cal-daily-view #selector li a {
   text-decoration:none;
-  color: #cc0000;
+  color: #7ACA2A;
 }
 
 /* ******** */
 
 #cal-monthly-view table, #cal-weekly-view table {
   border-spacing: 1px;
+  border-collapse: collapse;
 }
 #cal-monthly-view td, #cal-weekly-view td {
-  background: #e9b96e;
+  background: #fff;
+  border: 1px solid #0467BA;
 }
 
 #cal-monthly-view .cal-today, #cal-weekly-view .cal-today,
@@ -47,13 +50,14 @@
 }
 
 #cal-monthly-view th, #cal-weekly-view th {
-  background: #cc0000;
-  color: #fce94f;
+  background: #fff;
+  color: #0467BA;
   font-weight: bold;
 }
 
 #cal-weekly-view th.time {
-  font-size: 0.9em;
+  font-size: 0.8em;
+  padding: 4px 0;
 }
 
 #cal-weekly-view th.header {
@@ -66,8 +70,10 @@
 
 #cal-monthly-view .month {
   font-weight: bold;
-  color: #cc0000;
+  color: #0467BA;
   padding: 2px 2px 0 3px;
+  border: none;
+  border-bottom: 1px solid #0467BA;
 }
 
 #cal-monthly-view .day,
@@ -77,11 +83,11 @@
 
 #cal-monthly-view .bold {
   font-weight: bold;
+  padding-left: 2px;
 }
 
 #cal-monthly-view .cal-day-selected, #cal-weekly-view .cal-day-selected {
-  color: #cc0000;
-  background: #fce94f;
+  color: #0467BA;
 }
 
 #cal-monthly-view .cal-day-selected {
@@ -91,7 +97,7 @@
 
 #cal-monthly-view .add-event, #cal-weekly-view .add-event,
 #cal-daily-view .add-event {
-  color: #ce5c00;
+  color: #0467BA;
   font-size:11px;
   vertical-align: top;
   text-decoration: none;
@@ -110,23 +116,19 @@
 #cal-monthly-view .CONFIRMED a,
 #cal-weekly-view .CONFIRMED {
   text-decoration: none;
-  color: #4a0000;
+  color: #fff;
 }
 #cal-monthly-view .event .TENTATIVE,
 #cal-monthly-view .TENTATIVE a,
 #cal-weekly-view .TENTATIVE {
   text-decoration: none;
-  color: #cc0000;
-}
-#cal-monthly-view .event .CANCELLED,
-#cal-monthly-view .event .CANCELLED a,
-#cal-weekly-view .CANCELLED {
-  color: #8f5902;
+  color: #fff;
 }
 #cal-monthly-view .event .CANCELLED,
 #cal-monthly-view .event .CANCELLED a,
 #cal-weekly-view .CANCELLED {
   text-decoration: line-through;
+  color: #f0f0f0;
 }
 
 #cal-monthly-view .event .time , #cal-weekly-view .event .time {
@@ -143,16 +145,26 @@ table.timetable {
 
 /* COLORS for events background */
 
+#cal-monthly-view td.day,
+#cal-weekly-view td.free {
+  background-color: #F9F9F9;
+  padding: 0;
+  border-collapse: collapse;
+}
+
 #cal-monthly-view table.event,
 #cal-weekly-view #full-day-events table.event {
  border-collapse: collapse;
  width: 100%;
 }
 
+#cal-monthly-view table.event td {
+ border-left: 0;
+ border-right: 0;
+}
 #cal-monthly-view table.event td,
 #cal-weekly-view #full-day-events table.event td {
- border-top: 1px solid white;
- border-bottom: 1px solid white;
+ border-top: 1px solid #0467BA;
  padding: 2px;
 }
 
@@ -162,23 +174,23 @@ table.timetable {
 }
 
 #cal-monthly-view .event .color0 td, #cal-weekly-view td.color0 {
- background-color: #BCA1A1;
+ background-color: #AC81A1;
 }
 
 #cal-monthly-view .event .color1 td, #cal-weekly-view td.color1 {
- background-color: #A1BCA1;
+ background-color: #719C71;
 }
 
 #cal-monthly-view .event .color2 td, #cal-weekly-view td.color2 {
- background-color: #A1A1BC;
+ background-color: #C1617C;
 }
 
 #cal-monthly-view .event .color3 td, #cal-weekly-view td.color3 {
- background-color: #90A5A5;
+ background-color: #A0A5B5;
 }
 
 #cal-monthly-view .event .color4 td, #cal-weekly-view td.color4 {
- background-color: #A5A590;
+ background-color: #A59580;
 }
 
 
@@ -195,7 +207,7 @@ table.timetable {
 
 #cal-daily-view table {
   border-collapse: collapse;
-  border-spacing: 1px;
+  border-spacing: 0px;
 }
 
 #cal-daily-view td {
@@ -210,7 +222,7 @@ table.timetable {
 
 #cal-daily-view .header-columns td {
   padding: 6px;
-  background: #e9b96e;
+  background: #fff;
 }
 
 #cal-daily-view .header-columns th a {
@@ -224,8 +236,8 @@ table.timetable {
 }
 
 #cal-daily-view .header-timetables td {
-  color: #fce94f;
-  background: #cc0000;
+  color: #0467BA;
+  background: #fff;
   font-weight: bold;
   width: 40px;
 }
