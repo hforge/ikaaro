@@ -274,3 +274,50 @@ The documents registry has changed:
 
   # Now
   register_document_type(MyWebSite, Root.class_id)
+
+
+
+Buttons
+=======
+
+Button are still thingies but they now inherit from STLTemplate, which means they render their own template.
+
+This change affects two steps. In namespace generation:
+
+  # Before
+
+  def get_actions_namespace(self, resource, context, items):
+      actions = []
+      for button in self.get_table_actions(resource, context):
+          ...
+          actions.append({
+              ...
+          })
+      return actions
+
+  # Now
+
+  def get_actions_namespace(self, resource, context, items):
+      actions = []
+      for button in self.get_table_actions(resource, context):
+          actions.append(button(resource=resource, context=context,
+              items=items))
+      return actions
+
+And template rendering:
+
+  # Before
+
+  <p stl:if="actions">
+    <stl:block stl:repeat="action actions">
+      <button type="submit" name="action" value="${action/value}"
+        class="${action/class}" onclick="${action/onclick}"
+        >${action/title}</button>
+    </stl:block>
+  </p>
+
+  # Now
+
+  <p stl:if="actions">
+    <stl:block stl:repeat="action actions">${action}</stl:block>
+  </p>

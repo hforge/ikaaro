@@ -28,14 +28,18 @@ from utils import make_stl_template
 class Button(STLTemplate):
     access = False
     template = make_stl_template('''
-        <button type="submit" name="${action}" value="${name}" class="${css}"
-            onclick="${onclick}">${title}</button>''')
+        <button type="submit" id="${id}" name="${action}" value="${name}"
+            class="${css}" onclick="${onclick}">${title}</button>''')
+    id = None
+    # TODO rename to "value" in 0.70
     name = None
-    title = None
+    # TODO rename to "content" in 0.70, add "title" attribute
+    title = MSG(u"OK")
     css = 'button-ok'
     confirm = None
 
 
+    # TODO rename to "name" in 0.70
     @thingy_property
     def action(cls):
         if cls.name is None:
