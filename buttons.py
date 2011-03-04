@@ -122,7 +122,7 @@ class PasteButton(BrowseButton):
         cut, paths = cls.context.get_cookie('ikaaro_cp', datatype=CopyCookie)
         if len(paths) == 0:
             return False
-        return super(PasteButton, cls).show
+        return super(BrowseButton, cls).show
 
 
 
