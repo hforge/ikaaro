@@ -107,6 +107,8 @@ class Calendar(Folder):
                   ((16,0),(17,0)), ((17,0),(18,0)), ((18,0),(19,0)),
                   ((19,0),(20,0)), ((20,0),(21,0))]
 
+    colors = ['#AC81A1', '#719C71', '#C1617C', '#A0A5B5', '#A59580']
+
 
     def get_new_id(self):
         ids = [ int(x) for x in self.get_names()]

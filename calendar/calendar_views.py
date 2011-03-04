@@ -363,6 +363,29 @@ class CalendarView(STLView):
         return events.get_documents(sort_by='dtstart')
 
 
+    def get_colors(self, resource):
+        return resource.colors
+
+
+    def get_color(self, resource, event, colors=None):
+        cache_colors = getattr(self, 'cache_colors', {})
+        cache_used_colors = getattr(self, 'cache_used_colors', 0)
+        if cache_colors == {}:
+            # Initialize cache_colors
+            self.cache_colors = {}
+        if colors is None:
+            colors = self.get_colors(resource)
+        organizer = event.get_owner()
+        color = self.cache_colors.get(organizer, None)
+        if color is None:
+            # Choose color for current organizer
+            color = colors[cache_used_colors % len(colors)]
+            # Update cache
+            self.cache_colors[organizer] = color
+            self.cache_used_colors = cache_used_colors + 1
+        return color
+
+
     def events_to_namespace(self, resource, events, day, grid=False,
                             show_conflicts=False, with_edit_url=True):
         """Build namespace for events occuring on current day.
@@ -381,6 +404,7 @@ class CalendarView(STLView):
             event = resource.get_resource(event.name)
             e_dtstart = event.get_property('dtstart').date()
             e_dtend = event.get_property('dtend').date()
+            color = self.get_color(resource, event, None)
             # Current event occurs on current date
             # event begins during current tt
             starts_on = e_dtstart == day
@@ -404,6 +428,7 @@ class CalendarView(STLView):
                 url = ('%s/;edit' % event.name) if with_edit_url else None
                 ns_event['url'] = url
                 ns_event['cal'] = 0
+                ns_event['color'] = color
                 if 'resource' in ns_event.keys():
                     ns_event['resource']['color'] = 0
                 else:
