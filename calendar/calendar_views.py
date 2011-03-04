@@ -203,6 +203,7 @@ class CalendarView(STLView):
     styles = ['/ui/calendar/style.css']
     # default viewed fields on monthly_view
     default_viewed_fields = ('dtstart', 'dtend', 'title', 'status')
+    selector_template = '/ui/calendar/cal_selector.xml'
 
 
     def get_first_day(self):
@@ -242,7 +243,7 @@ class CalendarView(STLView):
         return week_number
 
 
-    def add_selector_ns(self, c_date, method, namespace):
+    def get_selector_ns(self, c_date, method):
         """Set header used to navigate into time.
         """
         link = ';{method}?start={{date}}&end={{date}}'.format(method=method)
@@ -275,6 +276,7 @@ class CalendarView(STLView):
             delta = 366
         next_year = make_link(c_date + timedelta(delta))
         # Set value into namespace
+        namespace = {}
         namespace['current_week'] = current_week
         namespace['previous_week'] = previous_week
         namespace['next_week'] = next_week
@@ -455,6 +457,16 @@ class CalendarView(STLView):
         return ns_events, events
 
 
+    def get_namespace(self, resource, context, c_date, method=None, ndays=7):
+        namespace = {}
+        if method is not None and self.selector_template:
+            # Add header to navigate into time
+            template_selector = resource.get_resource(self.selector_template)
+            selector_ns = self.get_selector_ns(c_date, method)
+            namespace['cal_selector'] = stl(template_selector, selector_ns)
+        return namespace
+
+
 
 class MonthlyView(CalendarView):
 
@@ -500,9 +512,8 @@ class MonthlyView(CalendarView):
             template = self.monthly_template
 
         ###################################################################
-        namespace = {}
-        # Add header to navigate into time
-        namespace = self.add_selector_ns(c_date, 'monthly_view', namespace)
+        namespace = super(MonthlyView, self).get_namespace(resource, context,
+                c_date, 'monthly_view', ndays)
         # Get header line with days of the week
         namespace['days_of_week'] = self.days_of_week_ns(start, ndays=ndays)
 
@@ -615,8 +626,8 @@ class WeeklyView(CalendarView):
         if self.get_first_day() == 0:
             start = start - timedelta(1)
 
-        # Add header to navigate into time
-        namespace = self.add_selector_ns(c_date, 'weekly_view', {})
+        namespace = super(WeeklyView, self).get_namespace(resource, context,
+                c_date, 'weekly_view')
 
         # Get icon to appear to add a new event
         add_icon = '/ui/icons/16x16/add.png'
@@ -831,9 +842,9 @@ class DailyView(CalendarView):
         # Ok
         ns_calendar = self.get_ns_calendar(resource, c_date, timetables,
                                            context=context)
-        namespace = {}
-        # Add header to navigate into time
-        namespace = self.add_selector_ns(c_date, 'daily_view', namespace)
+
+        namespace = super(DailyView, self).get_namespace(resource, context,
+                c_date, 'daily_view')
         namespace['header_timetables'] = ns_timetables
         namespace['calendars'] = [ns_calendar]
 

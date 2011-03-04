@@ -5,40 +5,7 @@
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
 <div id="cal-weekly-view">
-  <div id="cal-selector">
-    <a stl:if="goto_monthly" href="${goto_monthly}" title="Monthly view"
-      class="goto-monthly" />
-    <a stl:if="goto_weekly" href="${goto_weekly}" title="Weekly view"
-      class="goto-weekly" />
-    <a stl:if="goto_daily" href="${goto_daily}" title="Daily view"
-      class="goto-daily" />
-    <a stl:if="goto_today" href="${goto_today}" title="Come back to today"
-      class="goto-today" />
-    <form id="attributes" action="" method="get">
-      <input type="text" name="start" id="date" class="dateField" size="10"
-        value="${start}" />
-      <input type="button" value="..." />
-      <button type="submit" class="button-ok">OK</button>
-    </form>
-    <ul>
-      <li>
-        <a href="${previous_week}">&laquo;</a>
-        ${current_week}
-        <a href="${next_week}">&raquo;</a>
-      </li>
-      <li>
-        <a href="${previous_month}">&laquo;</a>
-        ${current_month}
-        <a href="${next_month}">&raquo;</a>
-      </li>
-      <li>
-        <a href="${previous_year}">&laquo;</a>
-        ${current_year}
-        <a href="${next_year}">&raquo;</a>
-      </li>
-    </ul>
-  </div>
-
+  ${cal_selector}
   <table class="timetable" border="0" width="100%">
     <tr>
       <th></th>
@@ -84,9 +51,5 @@
 </div>
 <script type="text/javascript">
   $("#date").focus();
-  jQuery( "input.dateField" ).dynDateTime({
-    ifFormat: "%Y-%m-%d",
-    firstDay: ${firstday},
-    button: ".next()" });
 </script>
 </stl:block>
