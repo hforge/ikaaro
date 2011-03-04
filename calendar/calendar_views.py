@@ -291,6 +291,8 @@ class CalendarView(STLView):
         namespace['goto_weekly'] = make_link(c_date, 'weekly_view')
         namespace['goto_daily'] = make_link(c_date, 'daily_view')
         namespace['goto_today'] = make_link(date.today(), method)
+        namespace['start'] = Date.encode(c_date)
+        namespace['firstday'] = self.get_first_day()
         return namespace
 
 

@@ -3,12 +3,7 @@
 
 #cal-selector {
   margin: 5px 0px 10px 0px;
-  font-size:18px;
   border-bottom: 1px solid #0467BA;
-}
-
-#cal-daily-view #cal-selector {
-  font-size: inherit;
 }
 
 #cal-selector ul {
@@ -19,6 +14,7 @@
 #cal-selector li {
   display: inline;
   padding: 0 26px;
+  font-size:18px;
 }
 
 #cal-selector li a {
@@ -210,8 +206,8 @@ table.timetable {
 /**************************************************************************
  * daily_view
  **************************************************************************/
-#cal-daily-view #attributes {
-  margin: 5px 0 8px 0;
+#cal-selector #attributes {
+  display: inline;
 }
 
 #cal-daily-view #attributes span {

@@ -15,7 +15,7 @@
     <a stl:if="goto_today" href="${goto_today}" title="Come back to today"
       class="goto-today" />
     <form id="attributes" action=";daily_view" method="get">
-      <input type="text" name="start" id="date" class="dateField" size="11"
+      <input type="text" name="start" id="date" class="dateField" size="10"
         value="${start}" />
       <input type="button" value="..." />
       <button type="submit" class="button-ok">OK</button>

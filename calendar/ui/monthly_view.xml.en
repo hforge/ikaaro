@@ -14,6 +14,12 @@
       class="goto-daily" />
     <a stl:if="goto_today" href="${goto_today}" title="Come back to today"
       class="goto-today" />
+    <form id="attributes" action="" method="get">
+      <input type="text" name="start" id="date" class="dateField" size="10"
+        value="${start}" />
+      <input type="button" value="..." />
+      <button type="submit" class="button-ok">OK</button>
+    </form>
     <ul>
       <li>
         <a href="${previous_week}">&laquo;</a>
@@ -58,4 +64,11 @@
     </tr>
   </table>
 </div>
+<script type="text/javascript">
+  $("#date").focus();
+  jQuery( "input.dateField" ).dynDateTime({
+    ifFormat: "%Y-%m-%d",
+    firstDay: ${firstday},
+    button: ".next()" });
+</script>
 </stl:block>
