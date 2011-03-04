@@ -210,11 +210,11 @@ class Event_NewInstance(NewInstance):
         child.metadata.set_property('title', title)
         # Set properties / start
         dt = form['start']
-        dt = Property(dt) if dt.time else Property(dt, value='DATE')
+        dt = Property(dt) if dt.time else Property(dt, VALUE='DATE')
         child.set_property('dtstart', dt)
         # Set properties / end
         dt = form['end']
-        dt = Property(dt) if dt.time else Property(dt, value='DATE')
+        dt = Property(dt) if dt.time else Property(dt, VALUE='DATE')
         child.set_property('dtend', dt)
         # Ok
         goto = str(resource.get_pathto(child))
