@@ -831,19 +831,11 @@ class DailyView(CalendarView):
         # Ok
         ns_calendar = self.get_ns_calendar(resource, c_date, timetables,
                                            context=context)
-        namespace = {
-            'start': Date.encode(c_date),
-            'firstday': self.get_first_day(),
-            'header_timetables': ns_timetables,
-            'calendars': [ns_calendar]}
-
-        # Add monthly/weekly/daily/today goto links
-        link = ';{method}?start={date}&end={date}'
-        make_link = lambda x,y: link.format(date=Date.encode(x), method=y)
-        namespace['goto_monthly'] = make_link(c_date, 'monthly_view')
-        namespace['goto_weekly'] = make_link(c_date, 'weekly_view')
-        namespace['goto_daily'] = make_link(c_date, 'daily_view')
-        namespace['goto_today'] = make_link(date.today(), method)
+        namespace = {}
+        # Add header to navigate into time
+        namespace = self.add_selector_ns(c_date, 'daily_view', namespace)
+        namespace['header_timetables'] = ns_timetables
+        namespace['calendars'] = [ns_calendar]
 
         return namespace
 
