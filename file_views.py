@@ -168,8 +168,19 @@ class File_Edit(DBResource_Edit):
             filename, mimetype, body = file
             # Check wether the handler is able to deal with the uploaded file
             handler = resource.handler
-            handler_class = get_handler_class_by_mimetype(mimetype)
-            if not isinstance(handler, handler_class):
+            metadata = resource.metadata
+
+            try:
+                handler_class = get_handler_class_by_mimetype(mimetype)
+            except ValueError:
+                # mimetype is not registered
+                if mimetype != metadata.format:
+                    # Do not autorize to erase with different mimetype
+                    context.message = MSG_UNEXPECTED_MIMETYPE(mimetype=mimetype)
+                    return True
+                handler_class = None
+
+            if handler_class and not isinstance(handler, handler_class):
                 context.message = MSG_UNEXPECTED_MIMETYPE(mimetype=mimetype)
                 return True
 
@@ -186,7 +197,6 @@ class File_Edit(DBResource_Edit):
             # Update "filename" property
             resource.set_property("filename", filename)
             # Update metadata format
-            metadata = resource.metadata
             if '/' in metadata.format:
                 if mimetype != metadata.format:
                     metadata.format = mimetype
@@ -196,7 +206,8 @@ class File_Edit(DBResource_Edit):
             old_name, old_extension, old_lang = FileName.decode(handler_name)
             new_name, new_extension, new_lang = FileName.decode(filename)
             # FIXME Should 'FileName.decode' return lowercase extensions?
-            new_extension = new_extension.lower()
+            if type(new_extension) is str:
+                new_extension = new_extension.lower()
             if old_extension != new_extension:
                 # "handler.png" -> "handler.jpg"
                 folder = resource.parent.handler
