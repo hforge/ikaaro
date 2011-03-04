@@ -244,7 +244,6 @@ class CalendarView(STLView):
 
     def add_selector_ns(self, c_date, method, namespace):
         """Set header used to navigate into time.
-
         """
         link = ';{method}?start={{date}}&end={{date}}'.format(method=method)
         make_link = lambda x: link.format(date=Date.encode(x))
@@ -285,8 +284,13 @@ class CalendarView(STLView):
         namespace['current_year'] = c_date.year
         namespace['previous_year'] = previous_year
         namespace['next_year'] = next_year
-        # Add today link
-        namespace['today'] = make_link(date.today())
+        # Add monthly/weekly/daily/today goto links
+        link = ';{method}?start={date}&end={date}'
+        make_link = lambda x,y: link.format(date=Date.encode(x), method=y)
+        namespace['goto_monthly'] = make_link(c_date, 'monthly_view')
+        namespace['goto_weekly'] = make_link(c_date, 'weekly_view')
+        namespace['goto_daily'] = make_link(c_date, 'daily_view')
+        namespace['goto_today'] = make_link(date.today(), method)
         return namespace
 
 
@@ -825,11 +829,21 @@ class DailyView(CalendarView):
         # Ok
         ns_calendar = self.get_ns_calendar(resource, c_date, timetables,
                                            context=context)
-        return {
+        namespace = {
             'start': Date.encode(c_date),
             'firstday': self.get_first_day(),
             'header_timetables': ns_timetables,
             'calendars': [ns_calendar]}
+
+        # Add monthly/weekly/daily/today goto links
+        link = ';{method}?start={date}&end={date}'
+        make_link = lambda x,y: link.format(date=Date.encode(x), method=y)
+        namespace['goto_monthly'] = make_link(c_date, 'monthly_view')
+        namespace['goto_weekly'] = make_link(c_date, 'weekly_view')
+        namespace['goto_daily'] = make_link(c_date, 'daily_view')
+        namespace['goto_today'] = make_link(date.today(), method)
+
+        return namespace
 
 
 

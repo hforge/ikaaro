@@ -5,9 +5,15 @@
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
 <div id="cal-weekly-view">
-  <div id="selector">
-    <a stl:if="today" href="${today}" class="cal-today">
-      Come back to today</a>
+  <div id="cal-selector">
+    <a stl:if="goto_monthly" href="${goto_monthly}" title="Monthly view"
+      class="goto-monthly" />
+    <a stl:if="goto_weekly" href="${goto_weekly}" title="Weekly view"
+      class="goto-weekly" />
+    <a stl:if="goto_daily" href="${goto_daily}" title="Daily view"
+      class="goto-daily" />
+    <a stl:if="goto_today" href="${goto_today}" title="Come back to today"
+      class="goto-today" />
     <ul>
       <li>
         <a href="${previous_week}">&laquo;</a>

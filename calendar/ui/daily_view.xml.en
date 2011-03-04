@@ -5,13 +5,22 @@
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
 <div id="cal-daily-view">
-  <form id="attributes" action=";daily_view" method="get">
-    Date:
-    <input type="text" name="start" id="date" class="dateField" size="11"
-      value="${start}" />
-    <input type="button" value="..." />
-    <button type="submit" class="button-ok">OK</button>
-  </form>
+  <div id="cal-selector">
+    <a stl:if="goto_monthly" href="${goto_monthly}" title="Monthly view"
+      class="goto-monthly" />
+    <a stl:if="goto_weekly" href="${goto_weekly}" title="Weekly view"
+      class="goto-weekly" />
+    <a stl:if="goto_daily" href="${goto_daily}" title="Daily view"
+      class="goto-daily" />
+    <a stl:if="goto_today" href="${goto_today}" title="Come back to today"
+      class="goto-today" />
+    <form id="attributes" action=";daily_view" method="get">
+      <input type="text" name="start" id="date" class="dateField" size="11"
+        value="${start}" />
+      <input type="button" value="..." />
+      <button type="submit" class="button-ok">OK</button>
+    </form>
+  </div>
 
   <table cellspacing="0" cellpadding="0">
     <tr class="header-timetables">

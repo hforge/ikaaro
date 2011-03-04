@@ -1,33 +1,46 @@
 
 /* Selector */
 
-#cal-monthly-view #selector,
-#cal-weekly-view #selector,
-#cal-daily-view #selector {
+#cal-selector {
   margin: 5px 0px 10px 0px;
   font-size:18px;
   border-bottom: 1px solid #0467BA;
 }
 
-#cal-monthly-view #selector ul,
-#cal-weekly-view #selector ul,
-#cal-daily-view #selector ul {
+#cal-daily-view #cal-selector {
+  font-size: inherit;
+}
+
+#cal-selector ul {
   list-style:none;
   display:inline;
 }
 
-#cal-monthly-view #selector li,
-#cal-weekly-view #selector li,
-#cal-daily-view #selector li {
+#cal-selector li {
   display: inline;
   padding: 0 26px;
 }
 
-#cal-monthly-view #selector li a,
-#cal-weekly-view #selector li a,
-#cal-daily-view #selector li a {
+#cal-selector li a {
   text-decoration:none;
   color: #7ACA2A;
+}
+
+#cal-selector a.goto-monthly,
+#cal-selector a.goto-weekly,
+#cal-selector a.goto-daily,
+#cal-selector a.goto-today {
+  background: transparent url("../../ui/aruni/images/sprite_calendar.png") no-repeat;
+  float: left;
+  width: 16px;
+  height: 16px;
+}
+#cal-selector a.goto-monthly { background-position: 0 1px; }
+#cal-selector a.goto-weekly {background-position: 0 -15px; }
+#cal-selector a.goto-daily {background-position: 0 -31px; }
+#cal-selector a.goto-today {
+  background-position: 0 -47px;
+  margin-right: 10px;
 }
 
 /* ******** */
@@ -41,7 +54,7 @@
   border: 1px solid #0467BA;
 }
 
-#cal-monthly-view .cal-today, #cal-weekly-view .cal-today,
+#cal-weekly-view .cal-today,
 #cal-daily-view .cal-today {
   margin-left: 2px;
   color: #3465a4;
