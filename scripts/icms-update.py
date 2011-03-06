@@ -29,7 +29,6 @@ import itools
 from itools.csv import Property
 from itools.database import check_database
 from itools.fs import lfs
-from itools.git import start_subprocess
 from itools.handlers import ro_database
 from itools.web import get_context
 
@@ -168,10 +167,6 @@ def update(parser, options, target):
     if options.quick is False and check_database(target) is False:
         return 1
 
-    # Start subprocess
-    path = '%s/database' % target
-    start_subprocess(path)
-
     # Load the modules
     config = get_config(target)
     load_modules(config)
@@ -180,6 +175,7 @@ def update(parser, options, target):
     # STAGE 0: Change format of the metadata
     # XXX Specific to the migration from 0.61 to 0.62
     #######################################################################
+    path = '%s/database' % target
     metadata = ro_database.get_handler('%s/.metadata' % path, Metadata)
     try:
         metadata.load_state()

@@ -18,28 +18,27 @@
 
 # Import from the Standard Library
 from optparse import OptionParser
+from os import remove
+from os.path import join
+import sys
+from time import time
+from traceback import format_exc
 
 # Import from itools
 import itools
-from itools.git import start_subprocess
+from itools.core import vmsize
+from itools.database import check_database, get_register_fields
+from itools.i18n.accept import AcceptLanguage
+from itools.fs import lfs
+from itools.database import make_catalog, CatalogAware
+
+# Import from ikaaro
+from ikaaro.server import Server, ask_confirmation
+from ikaaro.server import get_fake_context
 
 
 
 def update_catalog(parser, options, target):
-    # Imports
-    from os import remove
-    from os.path import join
-    import sys
-    from time import time
-    from traceback import format_exc
-    from itools.core import vmsize
-    from itools.database import check_database, get_register_fields
-    from itools.i18n.accept import AcceptLanguage
-    from itools.fs import lfs
-    from itools.database import make_catalog, CatalogAware
-    from ikaaro.server import Server, ask_confirmation
-    from ikaaro.server import get_fake_context
-
     # Check the server is not started, or started in read-only mode
     server = Server(target, read_only=True, cache_size=options.cache_size)
     if server.is_running_in_rw_mode():
@@ -160,7 +159,6 @@ if __name__ == '__main__':
     target = args[0]
 
     # Action!
-    start_subprocess('%s/database' % target)
     if options.profile is not None:
         from cProfile import runctx
         runctx("update_catalog(parser, options, target)", globals(), locals(),

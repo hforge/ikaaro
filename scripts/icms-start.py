@@ -25,7 +25,6 @@ from sys import exit
 from itools import __version__
 from itools.core import become_daemon
 from itools.database import check_database
-from itools.git import start_subprocess
 from itools.loop import Loop
 
 # Import from ikaaro
@@ -40,6 +39,7 @@ def start(options, target):
     if pid is not None:
         print '[%s] The Web Server is already running.' % target
         return 1
+    # XXX Obsolete code, remove by 0.70
     sub_pid = get_pid('%s/pid-subprocess' % target)
     if sub_pid is not None:
         print ('[%s] The Web Server subprocess is running, please use '
@@ -61,10 +61,6 @@ def start(options, target):
     # Daemon mode
     if options.detach:
         become_daemon()
-
-    # Start
-    start_subprocess('%s/database' % target,
-                     pid_file='%s/pid-subprocess' % target)
 
     # Set-up the server
     server = Server(target, read_only=options.read_only)

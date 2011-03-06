@@ -16,7 +16,6 @@
 
 # Import from standard library
 from re import compile
-from subprocess import CalledProcessError
 
 # Import from itools
 from itools.datatypes import String
@@ -116,7 +115,7 @@ def get_older_state(resource, revision, context):
     cls = resource.handler.__class__
     try:
         handler = database.get_blob_by_revision_and_path(revision, path, cls)
-    except CalledProcessError:
+    except EnvironmentError:
         # Phantom handler or renamed file
         handler = None
 
@@ -244,7 +243,7 @@ class DBResource_Changes(STLView):
             # Case 1: show one commit
             try:
                 metadata = database.get_diff(revision)
-            except CalledProcessError, e:
+            except EnvironmentError, e:
                 error = unicode(str(e), 'utf_8')
                 context.message = ERROR(u"Git failed: {error}", error=error)
                 return {'metadata': None, 'stat': None, 'changes': None}
