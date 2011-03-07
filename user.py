@@ -236,6 +236,11 @@ class User(AccessControl, Folder):
     is_allowed_to_edit = is_self_or_admin
 
 
+    def is_allowed_to_view(self, user, resource):
+        if user is None:
+            return False
+        return super(User, self).is_allowed_to_view(user, resource)
+
     #######################################################################
     # Views
     #######################################################################
