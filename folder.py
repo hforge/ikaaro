@@ -39,7 +39,7 @@ from exceptions import ConsistencyError
 from folder_views import Folder_BrowseContent
 from folder_views import Folder_NewResource, Folder_Orphans, Folder_Thumbnail
 from folder_views import Folder_PreviewContent, Folder_Rename, Folder_View
-from messages import MSG_BAD_NAME
+from messages import MSG_BAD_NAME, MSG_NAME_CLASH
 from metadata import Metadata
 from multilingual import Multilingual
 from registry import register_resource_class, get_resource_class
@@ -175,6 +175,8 @@ class Folder(DBResource):
                 subfolder = folder.get_resource(checkid_name, soft=True)
                 if subfolder is None:
                     folder = folder.make_resource(checkid_name, Folder)
+                elif not isinstance(subfolder, Folder):
+                    raise RuntimeError, MSG_NAME_CLASH
                 else:
                     folder = subfolder
 
