@@ -368,6 +368,15 @@ class AccessControl(BaseAccessControl):
         return is_admin(user, resource)
 
 
+    def is_owner_or_admin(self, user, resource):
+        if user is None:
+            return False
+        if self.is_admin(user, resource):
+            return True
+        owner = resource.get_owner()
+        return owner == user.name
+
+
     def is_allowed_to_view(self, user, resource):
         # Resources with workflow
         if isinstance(resource, WorkflowAware):
