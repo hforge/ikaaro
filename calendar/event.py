@@ -127,7 +127,7 @@ class Event_Edit(CalendarView, STLForm):
             return
 
         # Update
-        resource.update(form)
+        resource.update(context, form)
         # Ok
         context.message = messages.MSG_CHANGES_SAVED
 
@@ -189,10 +189,12 @@ class Event_NewInstance(NewInstance):
 
         # Start
         start_time = form['start_time'] or time(0, 0)
-        form['start'] = datetime.combine(form['start'], start_time)
+        start = datetime.combine(form['start'], start_time)
+        form['start'] = context.add_user_tzinfo(start)
         # End
         end_time = form['end_time'] or time(0, 0)
-        form['end'] = datetime.combine(form['end'], end_time)
+        end = datetime.combine(form['end'], end_time)
+        form['end'] = context.add_user_tzinfo(end)
 
         return form
 
@@ -339,7 +341,7 @@ class Event(File):
         return ns
 
 
-    def update(self, form):
+    def update(self, context, form):
         """Return the properties dict, ready to be used by the add or update
         actions.
         """
@@ -348,9 +350,11 @@ class Event(File):
         dtstart_time = form['dtstart_time']
         if dtstart_time is None:
             dtstart = datetime.combine(dtstart, time(0, 0))
+            dtstart = context.add_user_tzinfo(dtstart)
             dtstart = Property(dtstart, VALUE='DATE')
         else:
             dtstart = datetime.combine(dtstart, dtstart_time)
+            dtstart = context.add_user_tzinfo(dtstart)
             dtstart = Property(dtstart)
         self.set_property('dtstart', dtstart)
 
@@ -360,9 +364,11 @@ class Event(File):
         if dtend_time is None:
             dtend = datetime.combine(dtend, time(0, 0))
             dtend = dtend + timedelta(days=1) - resolution
+            dtend = context.add_user_tzinfo(dtend)
             dtend = Property(dtend, VALUE='DATE')
         else:
             dtend = datetime.combine(dtend, dtend_time)
+            dtend = context.add_user_tzinfo(dtend)
             dtend = Property(dtend)
         self.set_property('dtend', dtend)
 
