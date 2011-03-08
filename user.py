@@ -26,7 +26,7 @@ from itools.datatypes import Email, String, Unicode
 from itools.gettext import MSG
 from itools.log import log_warning
 from itools.uri import Path, Reference
-from itools.web import INFO
+from itools.web import INFO, get_context
 
 # Import from ikaaro
 from access import AccessControl
@@ -237,9 +237,18 @@ class User(AccessControl, Folder):
 
 
     def is_allowed_to_view(self, user, resource):
-        if user is None:
-            return False
+        root = get_context().site_root
+        policy = root.get_security_policy()
+        if policy == 'intranet':
+            if user is None:
+                return False
+        elif policy == 'extranet':
+            pass
+        elif policy == 'community':
+            pass
+
         return super(User, self).is_allowed_to_view(user, resource)
+
 
     #######################################################################
     # Views
