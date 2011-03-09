@@ -55,10 +55,14 @@ class ReadOnlyDatabase(ROGitDatabase):
             return None
 
 
-    def get_revisions(self, files, n=None):
+    def get_revisions(self, files, n=None, author=None, grep=None):
         cmd = ['git', 'rev-list', '--pretty=format:%an%n%at%n%s']
         if n is not None:
             cmd = cmd + ['-n', str(n)]
+        if author is not None:
+            cmd += ['--author=%s' % author]
+        if grep is not None:
+            cmd += ['--grep=%s' % grep]
         cmd = cmd + ['HEAD', '--'] + files
         data = send_subprocess(cmd, path=self.path)
 
