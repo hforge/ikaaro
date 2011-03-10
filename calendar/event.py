@@ -120,6 +120,11 @@ class Event_Edit(DBResource_Edit):
     def _get_form(self, resource, context):
         form = super(Event_Edit, self)._get_form(resource, context)
 
+        if ((form['start_time'] is None and form['end_time'] is not None)
+            or (form['start_time'] is not None and form['end_time'] is None)):
+            msg = ERROR(u'Each time must be filled, or neither.')
+            raise FormError(msg)
+
         # Start
         start_time = form['start_time'] or time(0, 0)
         start = datetime.combine(form['start'], start_time)
@@ -204,6 +209,11 @@ class Event_NewInstance(NewInstance):
 
     def _get_form(self, resource, context):
         form = super(Event_NewInstance, self)._get_form(resource, context)
+
+        if ((form['start_time'] is None and form['end_time'] is not None)
+            or (form['start_time'] is not None and form['end_time'] is None)):
+            msg = ERROR(u'Each time must be filled, or neither.')
+            raise FormError(msg)
 
         # Start
         start_time = form['start_time'] or time(0, 0)
