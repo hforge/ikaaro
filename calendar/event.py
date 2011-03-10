@@ -31,6 +31,7 @@ from ikaaro.autoform import DatetimeWidget, MultilineWidget, ReadOnlyWidget
 from ikaaro.autoform import SelectWidget, TextWidget, location_widget
 from ikaaro.autoform import timestamp_widget, title_widget
 from ikaaro.buttons import Button
+from ikaaro.cc import Observable, UsersList
 from ikaaro.datatypes import Multilingual
 from ikaaro.file import File
 from ikaaro import messages
@@ -185,6 +186,7 @@ class Event_NewInstance(NewInstance):
                          start_time=Time,
                          end=Date(mandatory=True),
                          end_time=Time)
+
     widgets = freeze([
         ReadOnlyWidget('cls_description'),
         TextWidget('title', title=MSG(u'Title'), size=20),
@@ -192,7 +194,14 @@ class Event_NewInstance(NewInstance):
                        tip=MSG(u'To add an event lasting all day long,'
                                u' leave time fields empty.')),
         DatetimeWidget('end', title=MSG(u'End')),
+        SelectWidget('cc_list', title=MSG(u'Subscribers'),
+                     has_empty_option=False),
         location_widget(include_name=False)])
+
+
+    def get_schema(self, resource, context):
+        return merge_dicts(self.schema,
+                           cc_list=UsersList(resource=resource, multiple=True))
 
 
     def get_new_resource_name(self, form):
@@ -253,6 +262,10 @@ class Event_NewInstance(NewInstance):
         # Set properties / start and end
         self.set_value(child, context, 'start', form)
         self.set_value(child, context, 'end', form)
+
+        # Set properties / cc_list
+        child.set_property('cc_list', tuple(form['cc_list']))
+
         # Ok
         goto = str(resource.get_pathto(child))
         return context.come_back(messages.MSG_NEW_RESOURCE, goto=goto)
@@ -266,18 +279,19 @@ class EventDateTime(DateTime):
 
 
 
-class Event(File):
+class Event(File, Observable):
 
     class_id = 'event'
     class_title = MSG(u'Event')
     class_description = MSG(u'Calendar event')
     class_icon16 = 'icons/16x16/event.png'
     class_icon48 = 'icons/48x48/event.png'
-    class_views = ['edit', 'links', 'backlinks', 'edit_state']
+    class_views = ['edit', 'links', 'backlinks', 'edit_state', 'subscribe']
 
 
     class_schema = merge_dicts(
         File.class_schema,
+        Observable.class_schema,
         # Metadata
         dtstart=EventDateTime(source='metadata', indexed=True, stored=True),
         dtend=EventDateTime(source='metadata', indexed=True, stored=True),
@@ -396,6 +410,9 @@ class Event(File):
             return False
         proxy = super(Event_Edit, view)
         return proxy.set_value(self, context, name, form)
+
+        # Notify the subscribers
+        self.notify_subscribers(context)
 
 
     # Views
