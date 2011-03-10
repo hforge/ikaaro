@@ -218,10 +218,6 @@ class CalendarView(STLView):
         return ac.is_allowed_to_add(context.user, resource)
 
 
-    def get_with_edit_url(self, resource, context):
-        return self.get_with_new_url(resource, context)
-
-
     def get_week_number(self, c_date):
         """datetime.strftime('%U') gives week number, starting week by sunday
            datetime.strftime('%W') gives week number, starting week by monday
@@ -395,7 +391,7 @@ class CalendarView(STLView):
 
 
     def events_to_namespace(self, resource, events, day, grid=False,
-                            show_conflicts=False, with_edit_url=True):
+                            show_conflicts=False):
         """Build namespace for events occuring on current day.
         Update events, removing past ones.
 
@@ -405,6 +401,9 @@ class CalendarView(STLView):
               - get_end
               - get_ns_event.
         """
+        context = get_context()
+        user = context.user
+        ac = resource.get_access_control()
         ns_events = []
         index = 0
         while index < len(events):
@@ -433,6 +432,7 @@ class CalendarView(STLView):
                                               conflicts_list=conflicts_list,
                                               grid=grid, starts_on=starts_on,
                                               ends_on=ends_on, out_on=out_on)
+                with_edit_url = ac.is_allowed_to_view(user, event)
                 url = ('%s/;edit' % event.name) if with_edit_url else None
                 ns_event['url'] = url
                 ns_event['cal'] = 0
@@ -491,7 +491,6 @@ class MonthlyView(CalendarView):
             context.set_cookie('method', 'monthly_view')
         # Display link to add/edit an event
         with_new_url = self.get_with_new_url(resource, context)
-        with_edit_url = self.get_with_edit_url(resource, context)
 
         ###################################################################
         # Calculate start of previous week
@@ -534,7 +533,7 @@ class MonthlyView(CalendarView):
                         ns_day['url'] = link.format(date=Date.encode(day))
                     # Insert events
                     ns_events, events = self.events_to_namespace(resource,
-                        events, day, with_edit_url=with_edit_url)
+                        events, day)
                     ns_day['events'] = stl(template, {'events': ns_events})
                     ns_week['days'].append(ns_day)
                     if day.day == 1:
@@ -576,7 +575,7 @@ class WeeklyView(CalendarView):
 
 
     def get_grid_events(self, resource, start_date, ndays=7, headers=None,
-                        step=timedelta(1), with_edit_url=None):
+                        step=timedelta(1)):
         """Build namespace to give as data to gridlayout factory.
         """
         # Get events by day
@@ -597,8 +596,7 @@ class WeeklyView(CalendarView):
             ns_day['header'] = header
             # Insert events
             ns_events, events = self.events_to_namespace(resource, events,
-                                current_date, grid=True,
-                                with_edit_url=with_edit_url)
+                                current_date, grid=True)
             ns_day['events'] = ns_events
             ns_days.append(ns_day)
             current_date = current_date + step
@@ -643,9 +641,7 @@ class WeeklyView(CalendarView):
         # Calculate timetables and events occurring for current week
         timetables = self.get_timetables_grid_ns(resource, start)
 
-        with_edit_url = self.get_with_edit_url(resource, context)
-        events = self.get_grid_events(resource, start, headers=ns_headers,
-                with_edit_url=with_edit_url)
+        events = self.get_grid_events(resource, start, headers=ns_headers)
 
         # Fill data with grid (timetables) and data (events for each day)
         templates = self.get_weekly_templates()
@@ -677,6 +673,9 @@ class DailyView(CalendarView):
     # Get namespace for a resource's lines into daily_view
     def get_ns_calendar(self, calendar, c_date, timetables,
             method='daily_view', show_conflicts=False, context=None):
+        context = get_context()
+        user = context.user
+        ac = calendar.get_access_control()
         cal_fields = self.class_cal_fields
         calendar_name = str(calendar.name)
         args = {'start': Date.encode(c_date), 'method': method}
@@ -740,7 +739,6 @@ class DailyView(CalendarView):
                     uids = ['%s/%s' % (calendar_name, uid) for uid in uids]
                     conflicts_list.update(uids)
 
-        with_edit_url = self.get_with_edit_url(calendar, context)
         # Organize columns
         rows_namespace = []
         for row in rows:
@@ -763,6 +761,7 @@ class DailyView(CalendarView):
                            'evt_url': None}
                 # Add event
                 if event and tt_index == event['tt_start']:
+                    with_edit_url = ac.is_allowed_to_view(user, event)
                     if with_edit_url:
                         go_url = '%s/;edit?%s'
                         go_url = go_url % (event['name'], encode_query(args))
