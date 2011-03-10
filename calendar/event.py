@@ -150,8 +150,12 @@ class Event_Edit(DBResource_Edit):
 
 
     def action_edit(self, resource, context, form):
-        # Goto calendar to prevent from reloading event with empty time
         super(Event_Edit, self).action(resource, context, form)
+
+        # Send notifications
+        resource.notify_subscribers(context)
+
+        # Goto calendar to prevent from reloading event with empty time
         goto = context.get_link(resource.parent)
         return context.come_back(context.message, goto)
 
@@ -265,6 +269,9 @@ class Event_NewInstance(NewInstance):
 
         # Set properties / cc_list
         child.set_property('cc_list', tuple(form['cc_list']))
+
+        # Notify the subscribers
+        child.notify_subscribers(context)
 
         # Ok
         goto = str(resource.get_pathto(child))
@@ -410,9 +417,6 @@ class Event(File, Observable):
             return False
         proxy = super(Event_Edit, view)
         return proxy.set_value(self, context, name, form)
-
-        # Notify the subscribers
-        self.notify_subscribers(context)
 
 
     # Views
