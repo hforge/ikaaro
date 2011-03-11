@@ -112,6 +112,7 @@ class SubscribeForm(STLForm):
         is_admin = ac.is_admin(context.user, resource)
 
         # Current user
+        current_user = None
         user = context.user
         if user:
             # Find the user
@@ -120,8 +121,6 @@ class SubscribeForm(STLForm):
                     current_user = a_user
                     current_user['selected'] = user.name in cc_list
                     break
-        else:
-            current_user = None
 
         # Other users
         subscribed = []
