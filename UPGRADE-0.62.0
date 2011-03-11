@@ -321,3 +321,46 @@ And template rendering:
   <p stl:if="actions">
     <stl:block stl:repeat="action actions">${action}</stl:block>
   </p>
+
+
+Indexes
+=======
+
+Two new indexes were added to optimize and improve abspath searches.
+
+abspath_depth
+-------------
+
+The number of segments in the path, e.g. "/a/b/c/d" is of depth 4. Used to
+limit the depth of children searching (see below).
+
+parent_paths
+------------
+The list of successive ancestors to a resource, e.g. the resource "/a/b/c/d"
+has the parent paths ["/a", "/a/b", "/a/b/c"].
+
+Searching children of a given resource is now a matter of searching in this
+list.
+
+  # Before
+
+  StartQuery('abspath', '%s/' % abspath)
+
+  # Now
+
+  PhraseQuery('parent_paths', str(abspath))
+
+  # Before
+
+  PhraseQuery('parent_path', str(abspath))
+
+  # Now
+
+  AndQuery(PhraseQuery('parent_paths', str(abspath)),
+           PhraseQuery('abspath_depth', len(abspath) + 1))
+
+  # Or more convenient
+
+  get_base_path_query(abspath, depth=1)
+
+"parent_path" will be removed in 0.70.

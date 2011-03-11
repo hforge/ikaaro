@@ -28,10 +28,10 @@ from itools.csv import Property
 from itools.datatypes import Integer, String, Tokens, Unicode
 from itools.gettext import MSG
 from itools.database import RangeQuery, AndQuery, OrQuery, PhraseQuery
-from itools.database import StartQuery
 
 # Import from ikaaro
 from ikaaro.folder import Folder
+from ikaaro.utils import get_base_path_query
 from issue import Issue
 from stored import StoredSearch, StoredSearchFile
 from tables import ModulesResource, ModulesHandler
@@ -143,9 +143,7 @@ class Tracker(Folder):
 
 
     def get_issues_query_terms(self):
-        abspath = self.get_canonical_path()
-        abspath = '%s/' % abspath
-        return [StartQuery('abspath', abspath),
+        return [get_base_path_query(self.get_canonical_path()),
                 PhraseQuery('format', self.issue_class.class_id)]
 
 

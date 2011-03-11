@@ -300,9 +300,10 @@ class Folder(DBResource):
             # Check referencial-integrity
             catalog = database.catalog
             # FIXME Check sub-resources too
-            path = str(resource.get_canonical_path())
+            path = resource.get_canonical_path()
+            path_str = str(path)
             query_base_path = get_base_path_query(path)
-            query = AndQuery(PhraseQuery('links', path),
+            query = AndQuery(PhraseQuery('links', path_str),
                              NotQuery(query_base_path))
             results = catalog.search(query)
             if len(results):

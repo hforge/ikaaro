@@ -241,11 +241,10 @@ class CPBrokenLinks(STLView):
     def get_namespace(self, resource, context):
         # Find out broken links
         catalog = context.database.catalog
-        base = resource.get_abspath()
+        base = resource.get_canonical_path()
 
         # Search only within the given resource
-        base_str = str(base)
-        query = get_base_path_query(base_str, include_container=True)
+        query = get_base_path_query(base, include_container=True)
         results = catalog.search(query)
 
         # Find out the broken links

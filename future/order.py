@@ -180,10 +180,8 @@ class ResourcesOrderedTable_Unordered(Folder_BrowseContent):
     def get_items_query(self, resource, context):
         # Only in the given root
         parent_path = resource.get_order_root().get_canonical_path()
-        if resource.order_recursive:
-            query = get_base_path_query(str(parent_path))
-        else:
-            query = PhraseQuery('parent_path', str(parent_path))
+        depth = 0 if resource.order_recursive else 1
+        query = get_base_path_query(parent_path, depth=depth)
         # Only the given types
         query_formats = [PhraseQuery('format', cls.class_id)
                          for cls in resource.get_orderable_classes()]

@@ -270,7 +270,7 @@ class Folder_BrowseContent(SearchForm):
     def get_search_types(self, resource, context):
         # 1. Build the query of all objects to search
         path = resource.get_canonical_path()
-        query = get_base_path_query(str(path))
+        query = get_base_path_query(path)
         if self.search_content_only(resource, context) is True:
             content_query = PhraseQuery('is_content', True)
             query = AndQuery(query, content_query)
@@ -324,7 +324,7 @@ class Folder_BrowseContent(SearchForm):
 
         # Search in subtree
         path = resource.get_canonical_path()
-        query = get_base_path_query(str(path))
+        query = get_base_path_query(path)
         args.append(query)
         if self.search_content_only(resource, context) is True:
             # Exclude non-content

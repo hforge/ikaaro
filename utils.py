@@ -22,8 +22,7 @@ from random import sample
 from sys import platform
 
 # Import from itools
-from itools.database import StartQuery, AllQuery, AndQuery, PhraseQuery
-from itools.database import NotQuery, OrQuery
+from itools.database import AllQuery, AndQuery, PhraseQuery, OrQuery
 from itools.stl import STLTemplate, stl_namespaces
 from itools.web import get_context
 from itools.xml import XMLParser
@@ -197,12 +196,15 @@ def generate_name(name, used, suffix='_'):
 ###########################################################################
 # Index and Search
 ###########################################################################
-def get_base_path_query(abspath, include_container=False):
+def get_base_path_query(abspath, include_container=False, depth=0):
     """Builds a query that will return all the objects within the given
-    absolute path, like it is returned by 'resource.get_abspath()'.
+    absolute path, like it is returned by 'resource.get_canonical_path()'.
 
     If 'include_container' is true the resource at the given path will be
     returned too.
+
+    If 'depth' is 0, depth is unlimited, else depth is the generations of
+    children to limit the search to.
     """
     # Case 1: everything
     if abspath == '/' and include_container is True:
@@ -210,14 +212,20 @@ def get_base_path_query(abspath, include_container=False):
 
     # Case 2: everything but the root
     if abspath == '/':
-        return NotQuery(PhraseQuery('abspath', '/'))
+        return PhraseQuery('parent_paths', '/')
 
     # Case 3: some subfolder
-    content = StartQuery('abspath', abspath + '/')
+    content = PhraseQuery('parent_paths', str(abspath))
+    if depth > 0:
+        if type(abspath) is str:
+            depth += abspath.rstrip('/').count('/')
+        else:
+            depth += len(abspath)
+        content = AndQuery(content, PhraseQuery('abspath_depth', depth))
     if include_container is False:
         return content
 
-    container = PhraseQuery('abspath', abspath)
+    container = PhraseQuery('abspath', str(abspath))
     return OrQuery(container, content)
 
 
@@ -228,7 +236,7 @@ def get_content_containers(context, skip_formats):
     from theme import Theme
 
     query = AndQuery(
-        get_base_path_query(str(context.site_root.get_abspath()), True),
+        get_base_path_query(context.site_root.get_canonical_path(), True),
         PhraseQuery('is_folder', True))
 
     for brain in context.root.search(query).get_documents():

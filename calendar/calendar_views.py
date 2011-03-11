@@ -332,8 +332,7 @@ class CalendarView(STLView):
         # Search only events
         query.append(PhraseQuery('format', 'event'))
         # Only in the current calendar
-        abspath = str(calendar.get_canonical_path())
-        query.append(get_base_path_query(abspath))
+        query.append(get_base_path_query(calendar.get_canonical_path()))
         query = AndQuery(*query)
 
         # Search

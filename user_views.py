@@ -23,7 +23,7 @@ from itools.datatypes import Email, String, Unicode, DateTime
 from itools.gettext import MSG
 from itools.i18n import get_language_name
 from itools.web import BaseView, STLView, STLForm, INFO, ERROR
-from itools.database import PhraseQuery, AndQuery, OrQuery, StartQuery
+from itools.database import PhraseQuery, AndQuery, OrQuery
 
 # Import from pytz
 from pytz import common_timezones
@@ -34,6 +34,7 @@ from autoform import HiddenWidget, PasswordWidget, ReadOnlyWidget, TextWidget
 from folder import Folder_BrowseContent
 import messages
 from resource_views import DBResource_Edit
+from utils import get_base_path_query
 
 
 class User_ConfirmRegistration(AutoForm):
@@ -368,8 +369,8 @@ class User_Tasks(STLView):
         site_root = context.site_root
         if site_root.parent is not None:
             q2 = OrQuery(
-                StartQuery('abspath', '%s/' % site_root.get_abspath()),
-                StartQuery('abspath', '%s/' % resource.get_canonical_path()))
+                get_base_path_query(site_root.get_canonical_path()),
+                get_canonical_path(resource.get_canonical_path()))
             query = AndQuery(query, q2)
 
         # 2. Build the list of documents
