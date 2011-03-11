@@ -23,7 +23,7 @@
 from itools.core import freeze
 from itools.csv import Property
 from itools.database import register_field
-from itools.datatypes import Unicode, String, Boolean, DateTime
+from itools.datatypes import Unicode, String, Boolean, DateTime, Integer
 from itools.log import log_warning
 from itools.uri import Path
 from itools.web import Resource, get_context
@@ -252,9 +252,11 @@ class DBResource(CatalogAware, IResource):
         'subject': Multilingual(source='metadata', indexed=True),
         # Key & class id
         'abspath': String(indexed=True, stored=True),
+        'abspath_depth': Integer(indexed=True, stored=True),
         'format': String(indexed=True, stored=True),
         # Folder's view
-        'parent_path': String(indexed=True),
+        'parent_path': String(indexed=True), # TODO remove in 0.70
+        'parent_paths': String(multiple=True, indexed=True),
         'name': String(stored=True, indexed=True),
         # Referential integrity
         'links': String(multiple=True, indexed=True),
@@ -412,7 +414,10 @@ class DBResource(CatalogAware, IResource):
         if abspath_str != '/':
             parent_path = abspath.resolve2('..')
             values['parent_path'] = str(parent_path)
+            values['parent_paths'] = [str(abspath[:i])
+                    for i in range(len(abspath))]
         values['abspath'] = abspath_str
+        values['abspath_depth'] = len(abspath)
 
         # Full text
         context = get_context()
