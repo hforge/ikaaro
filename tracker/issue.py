@@ -93,11 +93,12 @@ class Issue(CommentsAware, Folder):
 
         get_blob = database.get_blob_by_revision_and_path
 
-        for hash in database.get_commit_hashs(filename):
+        for commit in database.worktree.git_log(filename, reverse=True):
+            sha = commit['sha']
             try:
-                yield get_blob(hash, filename, Metadata)
+                yield get_blob(sha, filename, Metadata)
             except SyntaxError:
-                yield get_blob(hash, filename, OldMetadata)
+                yield get_blob(sha, filename, OldMetadata)
 
 
     def add_comment(self, context, form, new=False):

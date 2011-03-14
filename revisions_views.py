@@ -161,7 +161,7 @@ class DBResource_CommitLog(SearchForm):
         ('checkbox', None),
         ('date', MSG(u'Last Change'), False),
         ('username', MSG(u'Author'), False),
-        ('message', MSG(u'Comment'), False)]
+        ('message_short', MSG(u'Comment'), False)]
     table_actions = [DiffButton]
 
 
@@ -185,10 +185,11 @@ class DBResource_CommitLog(SearchForm):
         # Add username / index by only for the showed commits
         users_cache = {}
         for i, item in enumerate(results):
-            username = users_cache.get(item['username'])
+            author_name = item['author_name']
+            username = users_cache.get(author_name)
             if username is None:
-                username = root.get_user_title(item['username'])
-                users_cache[item['username']] = username
+                username = root.get_user_title(author_name)
+                users_cache[author_name] = username
             item['username'] = username
             # Used for keeping revisions order
             item['index'] = i
@@ -198,10 +199,10 @@ class DBResource_CommitLog(SearchForm):
 
     def get_item_value(self, resource, context, item, column):
         if column == 'checkbox':
-            return ('%s_%s' % (item['index'], item['revision']), False)
+            return ('%s_%s' % (item['index'], item['sha']), False)
         elif column == 'date':
-            date = context.format_datetime(item['date'])
-            return (date, './;changes?revision=%s' % item['revision'])
+            date = context.format_datetime(item['author_date'])
+            return (date, './;changes?revision=%s' % item['sha'])
         return item[column]
 
 
@@ -237,31 +238,32 @@ class DBResource_Changes(STLView):
         revision = context.query['revision']
         to = context.query['to']
         root = context.root
-        database = context.database
+        worktree = context.database.worktree
 
         if to is None:
             # Case 1: show one commit
             try:
-                metadata = database.get_diff(revision)
+                diff = worktree.git_diff(revision)
             except EnvironmentError, e:
                 error = unicode(str(e), 'utf_8')
                 context.message = ERROR(u"Git failed: {error}", error=error)
                 return {'metadata': None, 'stat': None, 'changes': None}
+
+            metadata = worktree.get_metadata()
             author_name = metadata['author_name']
             metadata['author_name'] = root.get_user_title(author_name)
-            stat = database.get_stats(revision)
-            diff = metadata['diff']
+            stat = worktree.git_stats(revision)
         else:
             # Case 2: show a set of commits
             metadata = None
             # Get the list of files affected in this series
-            files = database.get_files_affected(revision, to)
+            files = worktree.get_files_changed(revision, to)
             # Get the statistic for these files
             # Starting revision is included in the diff
             revision = "%s^" % revision
-            stat = database.get_stats(revision, to, paths=files)
+            stat = worktree.git_stats(revision, to, paths=files)
             # Reuse the list of files to limit diff produced
-            diff = database.get_diff_between(revision, to, paths=files)
+            diff = worktree.git_diff(revision, to, paths=files)
 
         # Ok
         return {

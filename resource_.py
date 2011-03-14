@@ -339,26 +339,23 @@ class DBResource(CatalogAware, IResource):
         else:
             files = self.get_files_to_archive(content)
 
-        database = get_context().database
-        return database.get_revisions(files, n, author_pattern, grep_pattern)
-
-
-    def get_last_revision(self):
-        files = self.get_files_to_archive()
-        database = get_context().database
-        return database.get_last_revision(files)
+        worktree = get_context().database.worktree
+        return worktree.git_log(files, n, author_pattern, grep_pattern)
 
 
     def get_owner(self):
         revisions = self.get_revisions()
         if not revisions:
             return None
-        return revisions[-1]['username']
+        return revisions[-1]['author_name']
 
 
     def get_mtime(self):
-        revision = self.get_last_revision()
-        return revision['date'] if revision else None
+        revisions = self.get_revisions(1)
+        if revisions:
+            return revision[0]['author_date']
+
+        return None
 
 
     ########################################################################

@@ -250,10 +250,10 @@ def update(parser, options, target):
         # Load cache
         git_cache = {}
         for commit in database.worktree.git_log(include_files=True):
-            if commit['username'] not in usernames:
-                commit['username'] = None
+            if commit['author_name'] not in usernames:
+                commit['author_name'] = None
             for path in commit['paths']:
-                if path not in git_cache or not git_cache[path]['username']:
+                if path not in git_cache or not git_cache[path]['author_name']:
                     git_cache[path] = commit
 
         # Set mtime/author
@@ -267,11 +267,11 @@ def update(parser, options, target):
                 commit = git_cache.get(file)
                 if not commit:
                     continue
-                if not last_commit or commit['date'] > last_commit['date']:
+                if not last_commit or commit['author_date'] > last_commit['author_date']:
                     last_commit = commit
             metadata = resource.metadata
-            metadata.set_property('mtime', last_commit['date'])
-            metadata.set_property('last_author', last_commit['username'])
+            metadata.set_property('mtime', last_commit['author_date'])
+            metadata.set_property('last_author', last_commit['author_name'])
 
         # Commit
         context.git_message = u'Upgrade: set mtime/author'

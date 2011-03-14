@@ -17,7 +17,7 @@
       </tr>
       <tr>
         <td><b>Message</b></td>
-        <td>: ${metadata/subject}</td>
+        <td>: ${metadata/message_short}</td>
       </tr>
     </table>
   </fieldset>
