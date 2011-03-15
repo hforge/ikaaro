@@ -217,7 +217,9 @@ class DBResource(CatalogAware, IResource):
 
     def get_handler(self):
         if self._handler is None:
-            cls = self.class_handler
+            cls = getattr(self, 'class_handler', None)
+            if cls is None:
+                return None
             database = self.metadata.database
             key = self.metadata.key[:-9]
             handler = database.get_handler(key, cls=cls, soft=True)
@@ -466,7 +468,10 @@ class DBResource(CatalogAware, IResource):
         """Return all the handlers attached to this resource, except the
         metadata.
         """
-        return [self.handler]
+        handler = self.handler
+        if handler is None:
+            return []
+        return [handler]
 
 
     def rename_handlers(self, new_name):
