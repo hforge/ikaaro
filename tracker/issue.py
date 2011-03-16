@@ -346,7 +346,7 @@ class Issue(Folder):
     # Update
     #######################################################################
     def update_20100507(self):
-        from itools.core import utc
+        from itools.core import fixed_offset
         from obsolete import History
 
         metadata = self.metadata
@@ -370,6 +370,7 @@ class Issue(Folder):
             metadata.set_property('assigned_to', value)
 
         # Comments / Files
+        utc = fixed_offset(0)
         attachments = []
         for record in history.records:
             if record is None:
