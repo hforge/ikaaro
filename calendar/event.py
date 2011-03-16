@@ -287,6 +287,9 @@ class Event_NewInstance(NewInstance):
         child.set_property('cc_list', tuple(form['cc_list']))
 
         # Notify the subscribers
+        user = context.user
+        if user:
+            child.set_property('last_author', user.name)
         child.notify_subscribers(context)
 
         # Ok
@@ -433,6 +436,29 @@ class Event(File, Observable):
             return False
         proxy = super(Event_Edit, view)
         return proxy.set_value(self, context, name, form)
+
+
+    def get_message(self, context):
+        # Subject
+        title=self.get_title()
+        subject = MSG(u'The event "{title}" has been modified')
+        subject = subject.gettext(title=title)
+        # Body
+        message = MSG(u'DO NOT REPLY TO THIS EMAIL.\n\n'
+                      u'The user "{last_author}" has made some modifications '
+                      u'to the event "{title}".\n'
+                      u'To view these modifications please visit:\n'
+                      u'{resource_uri}\n')
+        uri = context.get_link(self)
+        uri = str(context.uri.resolve(uri))
+        uri += '/;edit'
+        last_author = self.get_property('last_author')
+        last_author = context.root.get_user_title(last_author)
+        body = message.gettext(last_author=last_author, resource_uri=uri,
+                               title=title)
+
+        # And return
+        return subject, body
 
 
     # Views

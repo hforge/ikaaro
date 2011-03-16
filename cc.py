@@ -246,6 +246,22 @@ class Observable(object):
     class_schema = {'cc_list': Tokens(source='metadata')}
 
 
+    def get_message(self, context):
+        """This function must return the tuple (subject, body)
+        """
+        # Subject
+        subject = MSG(u'[{title}] has been modified')
+        subject = subject.gettext(title=self.get_title())
+        # Body
+        message = MSG(u'DO NOT REPLY TO THIS EMAIL. To view modifications '
+                      u'please visit:\n{resource_uri}')
+        uri = str(context.uri)
+        uri = uri.split(';')[0] + ';commit_log'
+        body = message.gettext(resource_uri=uri)
+        # And return
+        return subject, body
+
+
     def notify_subscribers(self, context):
         # 1. Check the resource has been modified
         if not context.database.is_changed(self):
@@ -257,15 +273,7 @@ class Observable(object):
             return
 
         # 3. Build the message
-        # Subject
-        subject = MSG(u'[{title}] has been modified')
-        subject = subject.gettext(title=self.get_title())
-        # Body
-        message = MSG(u'DO NOT REPLY TO THIS EMAIL. To view modifications '
-                u'please visit:\n{resource_uri}')
-        uri = str(context.uri)
-        uri = uri.split(';')[0] + ';commit_log'
-        body = message.gettext(resource_uri=uri)
+        subject, body = self.get_message(context)
 
         # 4. Send the message
         for user in users.value:
