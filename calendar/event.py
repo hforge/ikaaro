@@ -54,6 +54,7 @@ class Status(Enumerate):
 class Event_Edit(DBResource_Edit):
 
     access = 'is_allowed_to_edit'
+    styles = ['/ui/calendar/style.css']
 
     query_schema = merge_dicts(DBResource_Edit.query_schema,
                                start=Date, start_time=Time,
@@ -94,6 +95,21 @@ class Event_Edit(DBResource_Edit):
         to_keep.add('start_time')
         to_keep.add('end_time')
         return fields, to_keep
+
+
+    def get_namespace(self, resource, context):
+        proxy = super(Event_Edit, self)
+        namespace = proxy.get_namespace(resource, context)
+
+        # Set organizer infos in ${before}
+        owner = resource.get_owner()
+        owner = get_context().root.get_user_title(owner)
+        from itools.xml import XMLParser
+        owner = MSG(u'<p id="event-owner">Created by <em>%s</em></p>' % owner)
+        owner = owner.gettext().encode('utf-8')
+        namespace['before'] = XMLParser(owner)
+
+        return namespace
 
 
     def get_value(self, resource, context, name, datatype):
