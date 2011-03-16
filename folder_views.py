@@ -258,6 +258,9 @@ class Folder_BrowseContent(SearchForm):
         ('mtime', MSG(u'Last Modified')),
         ('last_author', MSG(u'Last Author')),
         ('workflow_state', MSG(u'State'))]
+    table_actions = [
+        RemoveButton, RenameButton, CopyButton, CutButton, PasteButton,
+        PublishButton, RetireButton, ZipButton]
 
 
     def search_content_only(self, resource, context):
@@ -354,10 +357,14 @@ class Folder_BrowseContent(SearchForm):
         return context.root.search(query)
 
 
-    def get_key_sorted_by_title(self):
+    def _get_key_sorted_by_unicode(self, field):
         def key(item):
-            return item.title.lower().translate(transmap)
+            return getattr(item, field).lower().translate(transmap)
         return key
+
+
+    def get_key_sorted_by_title(self):
+        return self._get_key_sorted_by_unicode('title')
 
 
     def get_key_sorted_by_format(self):
@@ -373,13 +380,13 @@ class Folder_BrowseContent(SearchForm):
 
 
     def get_key_sorted_by_last_author(self):
-        context = get_context()
+        get_user_title = get_context().root.get_user_title
         def key(item, cache={}):
             author = item.last_author
             if author in cache:
                 return cache[author]
             if author:
-                title = context.root.get_user_title(author)
+                title = get_user_title(author)
                 value = title.lower().translate(transmap)
             else:
                 value = None
@@ -491,11 +498,6 @@ class Folder_BrowseContent(SearchForm):
             return getattr(brain, column)
         except AttributeError:
             return item_resource.get_property(column)
-
-
-    table_actions = [
-        RemoveButton, RenameButton, CopyButton, CutButton, PasteButton,
-        PublishButton, RetireButton, ZipButton]
 
 
     #######################################################################
