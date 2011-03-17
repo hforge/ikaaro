@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 0.3.0\n"
-"POT-Creation-Date: 2011-03-01 16:03+CET\n"
+"POT-Creation-Date: 2011-03-17 09:03+CET\n"
 "PO-Revision-Date: 2001-07-08 17:07+CET\n"
 "Last-Translator: jdavid\n"
 "Language-Team: ??\n"
@@ -62,7 +62,7 @@ msgstr ""
 msgid "${batch} <x id='1'/> ${table}"
 msgstr ""
 
-#: ../calendar/ui/weekly_view.xml.en:42
+#: ../calendar/ui/weekly_view.xml.en:21
 msgctxt "table cell"
 msgid "${row/start}-${row/end}"
 msgstr ""
@@ -139,7 +139,7 @@ msgctxt "noscript"
 msgid "(Javascript is deactivated or missing:"
 msgstr ""
 
-#: ../calendar/ui/daily_view.xml.en:29
+#: ../calendar/ui/daily_view.xml.en:22
 msgctxt "link"
 msgid "+"
 msgstr ""
@@ -229,6 +229,11 @@ msgid ""
 "content</g>  <g id='13'>Configuration</g>"
 msgstr ""
 
+#: ../calendar/ui/cal_selector.xml.en:35
+msgctxt "link"
+msgid "<g id='10'>«</g> ${current_month} <g id='11'>»</g>"
+msgstr ""
+
 #: ../tracker/ui/add_issue.xml.en:55
 msgctxt "label"
 msgid ""
@@ -243,10 +248,9 @@ msgid ""
 "${product/error} <x id='16'/></g>"
 msgstr ""
 
-#: ../calendar/ui/edit_event.xml.en:116
-msgctxt "button"
-msgid ""
-"<g id='14'>OK</g>  <g id='15'>Definitely remove</g>  <g id='16'>Cancel</g>"
+#: ../calendar/ui/cal_selector.xml.en:40
+msgctxt "link"
+msgid "<g id='12'>«</g> ${current_year} <g id='13'>»</g>"
 msgstr ""
 
 #: ../tracker/ui/add_issue.xml.en:68
@@ -266,6 +270,13 @@ msgstr ""
 #: ../ui/aruni/template.xhtml.en:91
 msgctxt "link"
 msgid "<g id='19'>About</g>  <g id='20'>Credits</g>  <g id='21'>License</g>"
+msgstr ""
+
+#: ../calendar/ui/monthly_view.xml.en:23
+msgctxt "span"
+msgid ""
+"<g id='2'>${day/nday}</g>  <g id='3'>${day/nday}</g>  <g id='4'>  <x id='5'/"
+"></g> ${day/events}"
 msgstr ""
 
 #: ../ui/aruni/location.xml.en:11
@@ -328,11 +339,6 @@ msgctxt "label"
 msgid ""
 "<g id='2'>Title</g>  <g id='3'>* </g>  <x id='4'/>  <g id='5'>${title/error} "
 "<x id='6'/></g>"
-msgstr ""
-
-#: ../calendar/ui/weekly_view.xml.en:13 ../calendar/ui/monthly_view.xml.en:13
-msgctxt "link"
-msgid "<g id='2'>«</g> ${current_week} <g id='3'>»</g>"
 msgstr ""
 
 #: ../tracker/ui/add_issue.xml.en:81
@@ -419,6 +425,13 @@ msgid ""
 "></g>"
 msgstr ""
 
+#: ../calendar/ui/daily_view.xml.en:28
+msgctxt "link"
+msgid ""
+"<g id='4'>${col/title}</g>  <g id='5'>${col/DTSTART}</g>  <g id='6'>${col/"
+"DTEND}</g>"
+msgstr ""
+
 #: ../tracker/ui/export_to_text.xml.en:19
 msgctxt "label"
 msgid "<g id='4'>${column/title}</g>  "
@@ -432,11 +445,6 @@ msgstr ""
 #: ../ui/folder/browse_search.xml.en:18
 msgctxt "label"
 msgid "<g id='4'>Type</g><x id='5'/> ${search_types_widget}"
-msgstr ""
-
-#: ../calendar/ui/weekly_view.xml.en:18 ../calendar/ui/monthly_view.xml.en:18
-msgctxt "link"
-msgid "<g id='4'>«</g> ${current_month} <g id='5'>»</g>"
 msgstr ""
 
 #: ../tracker/ui/add_issue.xml.en:140
@@ -478,23 +486,6 @@ msgctxt "link"
 msgid "<g id='6'>></g>  <g id='7'>>></g>"
 msgstr ""
 
-#: ../calendar/ui/weekly_view.xml.en:23 ../calendar/ui/monthly_view.xml.en:23
-msgctxt "link"
-msgid "<g id='6'>«</g> ${current_year} <g id='7'>»</g>"
-msgstr ""
-
-#: ../ui/auto_form.xml.en:27
-msgctxt "button"
-msgid "<g id='7'>${action/title}</g>  <g id='8'>${action/title}</g>"
-msgstr ""
-
-#: ../calendar/ui/daily_view.xml.en:35
-msgctxt "link"
-msgid ""
-"<g id='7'>${col/title}</g>  <g id='8'>${col/DTSTART}</g>  <g id='9'>${col/"
-"DTEND}</g>"
-msgstr ""
-
 #: ../tracker/ui/add_issue.xml.en:43
 msgctxt "label"
 msgid ""
@@ -533,18 +524,20 @@ msgctxt "button"
 msgid "<g id='8'>Remove</g>  <g id='9'>Update</g>"
 msgstr ""
 
-#: ../calendar/ui/monthly_view.xml.en:44
-msgctxt "span"
-msgid ""
-"<g id='9'>${day/nday}</g>  <g id='10'>${day/nday}</g>  <g id='11'>  <x "
-"id='12'/></g> ${day/events}"
+#: ../calendar/ui/cal_selector.xml.en:30
+msgctxt "link"
+msgid "<g id='8'>«</g> ${current_week} <g id='9'>»</g>"
+msgstr ""
+
+#: ../calendar/event.py:108
+msgid "<p id=\"event-owner\">Created by <em>%s</em></p>"
 msgstr ""
 
 #: ../messages.py:49
 msgid "A given name already exists."
 msgstr ""
 
-#: ../cc.py:200
+#: ../cc.py:199
 msgid ""
 "A new account has been created and you are now registered to this resource"
 msgstr ""
@@ -590,7 +583,7 @@ msgstr ""
 msgid "Active"
 msgstr ""
 
-#: ../buttons.py:183 ../text_views.py:260 ../table_views.py:237
+#: ../buttons.py:196 ../text_views.py:260 ../table_views.py:237
 #: ../views_new.py:54 ../tracker/tracker_views.py:271
 msgid "Add"
 msgstr ""
@@ -603,11 +596,6 @@ msgstr ""
 
 #: ../menu.py:87
 msgid "Add Child"
-msgstr ""
-
-#: ../calendar/ui/edit_event.xml.en:9
-msgctxt "legend"
-msgid "Add Event"
 msgstr ""
 
 #: ../tracker/ui/add_issue.xml.en:29
@@ -669,7 +657,7 @@ msgstr ""
 msgid "Adding resources to {path} is not allowed."
 msgstr ""
 
-#: ../access.py:451
+#: ../access.py:460
 msgid "Admin"
 msgstr ""
 
@@ -789,7 +777,7 @@ msgstr ""
 msgid "Backlinks"
 msgstr ""
 
-#: ../utils.py:99
+#: ../utils.py:105
 msgid "Basque"
 msgstr ""
 
@@ -806,7 +794,7 @@ msgstr ""
 msgid "Blog"
 msgstr ""
 
-#: ../autoform.py:577
+#: ../autoform.py:567
 msgid "Body"
 msgstr ""
 
@@ -826,15 +814,15 @@ msgstr ""
 msgid "Browse Members"
 msgstr ""
 
-#: ../popup.py:559
+#: ../popup.py:566
 msgid "Browse and insert a Media from the workspace"
 msgstr ""
 
-#: ../popup.py:529
+#: ../popup.py:536
 msgid "Browse and insert an Image from the workspace"
 msgstr ""
 
-#: ../popup.py:471
+#: ../popup.py:478
 msgid "Browse and link to a File from the workspace"
 msgstr ""
 
@@ -872,11 +860,11 @@ msgstr ""
 msgid "Calendar"
 msgstr ""
 
-#: ../calendar/event.py:236
+#: ../calendar/event.py:312
 msgid "Calendar event"
 msgstr ""
 
-#: ../calendar/event.py:46
+#: ../calendar/event.py:50
 msgid "Cancelled"
 msgstr ""
 
@@ -892,7 +880,7 @@ msgstr ""
 msgid "Caption"
 msgstr ""
 
-#: ../utils.py:100
+#: ../utils.py:106
 msgid "Catalan"
 msgstr ""
 
@@ -976,8 +964,8 @@ msgctxt "li"
 msgid "Collaboration with the Wiki module, the issue tracker, etc."
 msgstr ""
 
-#: ../calendar/ui/weekly_view.xml.en:10 ../calendar/ui/monthly_view.xml.en:10
-msgctxt "link"
+#: ../calendar/ui/cal_selector.xml.en:14
+msgctxt "title attribute"
 msgid "Come back to today"
 msgstr ""
 
@@ -1052,7 +1040,7 @@ msgstr ""
 msgid "Confirmation sent!"
 msgstr ""
 
-#: ../calendar/event.py:45
+#: ../calendar/event.py:49
 msgid "Confirmed"
 msgstr ""
 
@@ -1069,7 +1057,7 @@ msgctxt "li"
 msgid "Content &amp;"
 msgstr ""
 
-#: ../buttons.py:79
+#: ../buttons.py:99
 msgid "Copy"
 msgstr ""
 
@@ -1082,7 +1070,7 @@ msgstr ""
 msgid "Create a new Web Site or Work Place."
 msgstr ""
 
-#: ../popup.py:473
+#: ../popup.py:480
 msgid "Create a new page and link to it:"
 msgstr ""
 
@@ -1106,8 +1094,18 @@ msgstr ""
 msgid "Customize the theme and configure the menu"
 msgstr ""
 
-#: ../buttons.py:88
+#: ../buttons.py:108
 msgid "Cut"
+msgstr ""
+
+#: ../calendar/event.py:447
+msgid ""
+"DO NOT REPLY TO THIS EMAIL.\n"
+"\n"
+"The user \"{last_author}\" has made some modifications to the event "
+"\"{title}\".\n"
+"To view these modifications please visit:\n"
+"{resource_uri}\n"
 msgstr ""
 
 #: ../tracker/issue.py:198
@@ -1116,14 +1114,19 @@ msgid ""
 "{issue_uri}"
 msgstr ""
 
-#: ../cc.py:265
+#: ../cc.py:256
 msgid ""
 "DO NOT REPLY TO THIS EMAIL. To view modifications please visit:\n"
 "{resource_uri}"
 msgstr ""
 
-#: ../calendar/calendar_views.py:622
+#: ../calendar/calendar_views.py:660
 msgid "Daily View"
+msgstr ""
+
+#: ../calendar/ui/cal_selector.xml.en:12
+msgctxt "title attribute"
+msgid "Daily view"
 msgstr ""
 
 #: ../tracker/tracker.py:54
@@ -1149,11 +1152,6 @@ msgctxt "table cell"
 msgid "Date"
 msgstr ""
 
-#: ../calendar/ui/daily_view.xml.en:9
-msgctxt "form"
-msgid "Date:"
-msgstr ""
-
 #: ../calendar/calendar_views.py:57
 msgid "December"
 msgstr ""
@@ -1171,18 +1169,17 @@ msgstr ""
 msgid "Define the domain names for this Web Site."
 msgstr ""
 
-#: ../autoform.py:574 ../blog/blog.py:42
+#: ../calendar/event.py:87
+msgid "Definitely remove"
+msgstr ""
+
+#: ../autoform.py:564 ../blog/blog.py:42 ../calendar/event.py:79
 msgid "Description"
 msgstr ""
 
 #: ../blog/ui/Post_edit.xml.en:21
 msgctxt "label"
 msgid "Description"
-msgstr ""
-
-#: ../calendar/ui/edit_event.xml.en:42
-msgctxt "table cell"
-msgid "Description<x id='11'/>  <g id='12'>${description}</g>"
 msgstr ""
 
 #: ../ui/revisions/changes.xml.en:49
@@ -1234,6 +1231,10 @@ msgstr ""
 msgid "E-mail Address"
 msgstr ""
 
+#: ../calendar/event.py:142 ../calendar/event.py:244
+msgid "Each time must be filled, or neither."
+msgstr ""
+
 #: ../resource_views.py:124 ../text_views.py:41 ../text_views.py:98
 msgid "Edit"
 msgstr ""
@@ -1249,10 +1250,6 @@ msgstr ""
 
 #: ../theme.py:56
 msgid "Edit CSS"
-msgstr ""
-
-#: ../calendar/event.py:53
-msgid "Edit Event"
 msgstr ""
 
 #: ../tracker/issue_views.py:86
@@ -1346,16 +1343,11 @@ msgstr ""
 msgid "Emails signature"
 msgstr ""
 
-#: ../calendar/event.py:171
+#: ../calendar/event.py:78 ../calendar/event.py:216
 msgid "End"
 msgstr ""
 
-#: ../calendar/ui/edit_event.xml.en:31
-msgctxt "table cell"
-msgid "End<x id='7'/>  <x id='8'/>  <x id='9'/>  "
-msgstr ""
-
-#: ../utils.py:101
+#: ../utils.py:107
 msgid "English"
 msgstr ""
 
@@ -1367,11 +1359,11 @@ msgstr ""
 msgid "Error: {msg}"
 msgstr ""
 
-#: ../calendar/event.py:235
+#: ../calendar/event.py:311
 msgid "Event"
 msgstr ""
 
-#: ../calendar/event.py:144
+#: ../calendar/event.py:188
 msgid "Event definitely deleted."
 msgstr ""
 
@@ -1383,7 +1375,7 @@ msgstr ""
 msgid "Excel Spreadsheet"
 msgstr ""
 
-#: ../calendar/calendar_views.py:845
+#: ../calendar/calendar_views.py:888
 msgid "Export"
 msgstr ""
 
@@ -1406,7 +1398,7 @@ msgctxt "legend"
 msgid "Export to Text:"
 msgstr ""
 
-#: ../file_views.py:214
+#: ../file_views.py:216
 msgid "External Editor"
 msgstr ""
 
@@ -1420,11 +1412,11 @@ msgctxt "legend"
 msgid "Extract contents"
 msgstr ""
 
-#: ../calendar/calendar_views.py:834
+#: ../calendar/calendar_views.py:877
 msgid "Failed to load the file, may contain errors."
 msgstr ""
 
-#: ../file_views.py:181
+#: ../file_views.py:183
 msgid "Failed to load the file: {error}"
 msgstr ""
 
@@ -1451,7 +1443,7 @@ msgctxt "table cell"
 msgid "Filename"
 msgstr ""
 
-#: ../file_views.py:415
+#: ../file_views.py:417
 msgid "Files extracted"
 msgstr ""
 
@@ -1485,7 +1477,7 @@ msgctxt "button"
 msgid "Forget this Search"
 msgstr ""
 
-#: ../autoform.py:332
+#: ../autoform.py:322
 msgid "Format: 'yyyy-mm-dd'"
 msgstr ""
 
@@ -1494,7 +1486,7 @@ msgctxt "paragraph"
 msgid "Found <g id='1'>${total}</g> broken links."
 msgstr ""
 
-#: ../utils.py:102
+#: ../utils.py:108
 msgid "French"
 msgstr ""
 
@@ -1508,11 +1500,11 @@ msgctxt "table cell"
 msgid "From"
 msgstr ""
 
-#: ../folder_views.py:957
+#: ../folder_views.py:949
 msgid "Front Page"
 msgstr ""
 
-#: ../calendar/ui/weekly_view.xml.en:62
+#: ../calendar/ui/weekly_view.xml.en:40
 msgctxt "table cell"
 msgid "Full day"
 msgstr ""
@@ -1521,7 +1513,7 @@ msgstr ""
 msgid "GNU/Linux"
 msgstr ""
 
-#: ../utils.py:103
+#: ../utils.py:109
 msgid "German"
 msgstr ""
 
@@ -1570,7 +1562,7 @@ msgstr ""
 msgid "Grant access to a new user."
 msgstr ""
 
-#: ../access.py:448
+#: ../access.py:457
 msgid "Guest"
 msgstr ""
 
@@ -1612,7 +1604,7 @@ msgstr ""
 msgid "Home"
 msgstr ""
 
-#: ../utils.py:104
+#: ../utils.py:110
 msgid "Hungarian"
 msgstr ""
 
@@ -1647,19 +1639,19 @@ msgstr ""
 msgid "Image"
 msgstr ""
 
-#: ../calendar/calendar_views.py:814
+#: ../calendar/calendar_views.py:857
 msgid "Import"
 msgstr ""
 
-#: ../popup.py:528
+#: ../popup.py:535
 msgid "Insert image"
 msgstr ""
 
-#: ../popup.py:470
+#: ../popup.py:477
 msgid "Insert link"
 msgstr ""
 
-#: ../popup.py:558
+#: ../popup.py:565
 msgid "Insert media"
 msgstr ""
 
@@ -1673,11 +1665,11 @@ msgctxt "legend"
 msgid "Internal Server Error"
 msgstr ""
 
-#: ../calendar/event.py:78
+#: ../calendar/event.py:157 ../calendar/event.py:259
 msgid "Invalid dates."
 msgstr ""
 
-#: ../popup.py:491
+#: ../popup.py:498
 msgid "Invalid title."
 msgstr ""
 
@@ -1702,7 +1694,7 @@ msgstr ""
 msgid "Issues"
 msgstr ""
 
-#: ../utils.py:105
+#: ../utils.py:111
 msgid "Italian"
 msgstr ""
 
@@ -1710,7 +1702,7 @@ msgstr ""
 msgid "January"
 msgstr ""
 
-#: ../utils.py:106
+#: ../utils.py:112
 msgid "Japanese"
 msgstr ""
 
@@ -1736,7 +1728,7 @@ msgctxt "paragraph"
 msgid "Key features of iKaaro include:"
 msgstr ""
 
-#: ../autoform.py:575
+#: ../autoform.py:565
 msgid "Keywords"
 msgstr ""
 
@@ -1762,7 +1754,7 @@ msgstr ""
 msgid "Languages removed."
 msgstr ""
 
-#: ../folder_views.py:259 ../popup.py:71
+#: ../folder_views.py:259 ../popup.py:83
 msgid "Last Author"
 msgstr ""
 
@@ -1770,7 +1762,7 @@ msgstr ""
 msgid "Last Change"
 msgstr ""
 
-#: ../folder_views.py:258 ../popup.py:70
+#: ../folder_views.py:258 ../popup.py:82
 msgid "Last Modified"
 msgstr ""
 
@@ -1796,7 +1788,7 @@ msgctxt "legend"
 msgid "Linux/Unix"
 msgstr ""
 
-#: ../autoform.py:571
+#: ../autoform.py:561
 msgid "Location"
 msgstr ""
 
@@ -1839,7 +1831,7 @@ msgstr ""
 msgid "Medium"
 msgstr ""
 
-#: ../access.py:449
+#: ../access.py:458
 msgid "Member"
 msgstr ""
 
@@ -1923,8 +1915,13 @@ msgstr ""
 msgid "Monday"
 msgstr ""
 
-#: ../calendar/calendar_views.py:431
+#: ../calendar/calendar_views.py:474
 msgid "Monthly View"
+msgstr ""
+
+#: ../calendar/ui/cal_selector.xml.en:8
+msgctxt "title attribute"
+msgid "Monthly view"
 msgstr ""
 
 #: ../ui/root/about.xml.en:42
@@ -1937,7 +1934,7 @@ msgctxt "li"
 msgid "Multiple web sites in one instance, with separate access rights."
 msgstr ""
 
-#: ../views.py:481 ../popup.py:69
+#: ../views.py:471 ../popup.py:81
 msgid "Name"
 msgstr ""
 
@@ -1994,7 +1991,7 @@ msgctxt "li"
 msgid "Nicolas Deram (French)"
 msgstr ""
 
-#: ../autoform.py:247
+#: ../autoform.py:237
 msgid "No"
 msgstr ""
 
@@ -2070,8 +2067,12 @@ msgstr ""
 msgid "ODT"
 msgstr ""
 
+#: ../buttons.py:37
+msgid "OK"
+msgstr ""
+
 #: ../tracker/ui/menu_remember.xml.en:17 ../ui/html/popup.xml.en:95
-#: ../calendar/ui/daily_view.xml.en:13
+#: ../calendar/ui/cal_selector.xml.en:20
 msgctxt "button"
 msgid "OK"
 msgstr ""
@@ -2152,11 +2153,11 @@ msgstr ""
 msgid "Order"
 msgstr ""
 
-#: ../buttons.py:175
+#: ../buttons.py:188
 msgid "Order bottom"
 msgstr ""
 
-#: ../buttons.py:159
+#: ../buttons.py:172
 msgid "Order down"
 msgstr ""
 
@@ -2164,11 +2165,11 @@ msgstr ""
 msgid "Order resources"
 msgstr ""
 
-#: ../buttons.py:167
+#: ../buttons.py:180
 msgid "Order top"
 msgstr ""
 
-#: ../buttons.py:151
+#: ../buttons.py:164
 msgid "Order up"
 msgstr ""
 
@@ -2184,7 +2185,7 @@ msgstr ""
 msgid "Organize your files and documents with folders."
 msgstr ""
 
-#: ../folder_views.py:896
+#: ../folder_views.py:888
 msgid "Orphans"
 msgstr ""
 
@@ -2209,7 +2210,7 @@ msgstr ""
 msgid "Passwords mismatch, please try again."
 msgstr ""
 
-#: ../buttons.py:97
+#: ../buttons.py:117
 msgid "Paste"
 msgstr ""
 
@@ -2229,7 +2230,7 @@ msgstr ""
 msgid "Plain Text"
 msgstr ""
 
-#: ../autoform.py:531
+#: ../autoform.py:521
 msgid "Please answer the question below:"
 msgstr ""
 
@@ -2258,7 +2259,7 @@ msgstr ""
 msgid "Please select the resources to order up."
 msgstr ""
 
-#: ../utils.py:107
+#: ../utils.py:113
 msgid "Portuguese"
 msgstr ""
 
@@ -2283,7 +2284,7 @@ msgstr ""
 msgid "Preview"
 msgstr ""
 
-#: ../folder_views.py:738
+#: ../folder_views.py:740
 msgid "Preview Content"
 msgstr ""
 
@@ -2328,7 +2329,7 @@ msgstr ""
 msgid "Public"
 msgstr ""
 
-#: ../buttons.py:114
+#: ../buttons.py:134
 msgid "Publish"
 msgstr ""
 
@@ -2372,7 +2373,7 @@ msgstr ""
 msgid "Remember this search"
 msgstr ""
 
-#: ../buttons.py:61
+#: ../buttons.py:81
 msgid "Remove"
 msgstr ""
 
@@ -2380,7 +2381,7 @@ msgstr ""
 msgid "Remove from ordered list"
 msgstr ""
 
-#: ../buttons.py:70
+#: ../buttons.py:90
 msgid "Rename"
 msgstr ""
 
@@ -2410,7 +2411,7 @@ msgstr ""
 msgid "Replace favicon file (ICO 32x32 only)"
 msgstr ""
 
-#: ../autoform.py:579
+#: ../autoform.py:569
 msgid "Replace file"
 msgstr ""
 
@@ -2508,7 +2509,7 @@ msgstr ""
 msgid "Retract the document."
 msgstr ""
 
-#: ../access.py:450
+#: ../access.py:459
 msgid "Reviewer"
 msgstr ""
 
@@ -2532,7 +2533,7 @@ msgstr ""
 msgid "Saturday"
 msgstr ""
 
-#: ../autoform.py:600
+#: ../autoform.py:590 ../calendar/event.py:85
 msgid "Save"
 msgstr ""
 
@@ -2610,7 +2611,7 @@ msgstr ""
 msgid "Send"
 msgstr ""
 
-#: ../autoform.py:576
+#: ../autoform.py:566
 msgid "Separated by comma"
 msgstr ""
 
@@ -2622,7 +2623,7 @@ msgstr ""
 msgid "Set your preferred language and timezone."
 msgstr ""
 
-#: ../folder_views.py:898
+#: ../folder_views.py:890
 msgid "Show resources not linked from anywhere."
 msgstr ""
 
@@ -2654,7 +2655,7 @@ msgstr ""
 msgid "Someone already saved this document, click \"Save\" again to force."
 msgstr ""
 
-#: ../utils.py:108
+#: ../utils.py:114
 msgid "Spanish"
 msgstr ""
 
@@ -2662,15 +2663,8 @@ msgstr ""
 msgid "Stability Issue"
 msgstr ""
 
-#: ../calendar/event.py:168
+#: ../calendar/event.py:75 ../calendar/event.py:213
 msgid "Start"
-msgstr ""
-
-#: ../calendar/ui/edit_event.xml.en:19
-msgctxt "table cell"
-msgid ""
-"Start (To add an event lasting all day long, leave time fields empty.) <x "
-"id='3'/>  <x id='4'/>  <x id='5'/>  "
 msgstr ""
 
 #: ../calendar/calendar_views.py:135 ../calendar/calendar_views.py:188
@@ -2682,20 +2676,15 @@ msgctxt "heading"
 msgid "Stat"
 msgstr ""
 
-#: ../tracker/tracker_views.py:57 ../popup.py:72 ../tracker/issue.py:261
+#: ../tracker/tracker_views.py:57 ../popup.py:84 ../tracker/issue.py:261
 #: ../future/order.py:101 ../future/order.py:174 ../workflow.py:164
-#: ../access.py:150 ../folder_views.py:260
+#: ../access.py:150 ../calendar/event.py:80 ../folder_views.py:260
 msgid "State"
 msgstr ""
 
 #: ../tracker/ui/issue_history.xml.en:30
 msgctxt "emphasis"
 msgid "State:"
-msgstr ""
-
-#: ../calendar/ui/edit_event.xml.en:50
-msgctxt "table cell"
-msgid "Status"
 msgstr ""
 
 #: ../tracker/ui/search.xml.en:91 ../tracker/ui/change_bugs.xml.en:74
@@ -2714,6 +2703,10 @@ msgstr ""
 #: ../ui/subscribe.xml.en:55
 msgctxt "emphasis"
 msgid "Subscribed:"
+msgstr ""
+
+#: ../calendar/event.py:217
+msgid "Subscribers"
 msgstr ""
 
 #: ../cc.py:83
@@ -2746,11 +2739,11 @@ msgstr ""
 msgid "Target"
 msgstr ""
 
-#: ../file_views.py:388
+#: ../file_views.py:390
 msgid "Target does not exist."
 msgstr ""
 
-#: ../file_views.py:390
+#: ../file_views.py:392
 msgid "Target must be a folder."
 msgstr ""
 
@@ -2762,11 +2755,11 @@ msgstr ""
 msgid "Technology Upgrade"
 msgstr ""
 
-#: ../calendar/event.py:44
+#: ../calendar/event.py:48
 msgid "Tentative"
 msgstr ""
 
-#: ../views.py:480
+#: ../views.py:470
 msgid "Text"
 msgstr ""
 
@@ -2810,6 +2803,10 @@ msgstr ""
 msgid "The email or the password is incorrect."
 msgstr ""
 
+#: ../calendar/event.py:444
+msgid "The event \"{title}\" has been modified"
+msgstr ""
+
 #: ../theme_views.py:99 ../theme_views.py:119
 msgid "The file \"{filename}\" doesn't exists."
 msgstr ""
@@ -2818,7 +2815,7 @@ msgstr ""
 msgid "The file must be entered."
 msgstr ""
 
-#: ../popup.py:416
+#: ../popup.py:423
 msgid "The given file is not of the expected type."
 msgstr ""
 
@@ -2936,7 +2933,7 @@ msgctxt "paragraph"
 msgid "This program is free software:"
 msgstr ""
 
-#: ../cc.py:209
+#: ../cc.py:208
 msgid "This user was not in our database"
 msgstr ""
 
@@ -2957,20 +2954,15 @@ msgctxt "label"
 msgid "Timezone"
 msgstr ""
 
-#: ../tracker/tracker_views.py:52 ../autoform.py:572 ../tracker/issue.py:251
-#: ../views.py:479 ../menu.py:318 ../future/order.py:100
-#: ../future/order.py:172 ../folder_views.py:256
+#: ../tracker/tracker_views.py:52 ../autoform.py:562 ../tracker/issue.py:251
+#: ../views.py:469 ../menu.py:318 ../future/order.py:100
+#: ../future/order.py:172 ../calendar/event.py:212 ../folder_views.py:256
 msgid "Title"
 msgstr ""
 
 #: ../blog/ui/Post_edit.xml.en:11 ../ui/html/popup.xml.en:83
 #: ../ui/html/popup.xml.en:111
 msgctxt "label"
-msgid "Title"
-msgstr ""
-
-#: ../calendar/ui/edit_event.xml.en:13
-msgctxt "table cell"
 msgid "Title"
 msgstr ""
 
@@ -2983,7 +2975,7 @@ msgstr ""
 msgid "To activate your account, please type a password."
 msgstr ""
 
-#: ../calendar/event.py:169
+#: ../calendar/event.py:76 ../calendar/event.py:214
 msgid "To add an event lasting all day long, leave time fields empty."
 msgstr ""
 
@@ -3032,7 +3024,7 @@ msgstr ""
 msgid "To manage bugs and tasks"
 msgstr ""
 
-#: ../user.py:324
+#: ../user.py:338
 msgid "To manage the users please go <a href=\"/;browse_users\">here</a>."
 msgstr ""
 
@@ -3069,11 +3061,11 @@ msgctxt "table cell"
 msgid "Type"
 msgstr ""
 
-#: ../popup.py:560
+#: ../popup.py:567
 msgid "Type the URL of an external media"
 msgstr ""
 
-#: ../popup.py:472
+#: ../popup.py:479
 msgid "Type the URL of an external resource"
 msgstr ""
 
@@ -3132,7 +3124,7 @@ msgctxt "li"
 msgid "Unpack the tarball <g id='3'>restedit-last.tar.gz</g>"
 msgstr ""
 
-#: ../buttons.py:133
+#: ../buttons.py:155
 msgid "Unpublish"
 msgstr ""
 
@@ -3172,15 +3164,15 @@ msgstr ""
 msgid "Upload File"
 msgstr ""
 
-#: ../popup.py:474
+#: ../popup.py:481
 msgid "Upload a file to the current folder and link to it:"
 msgstr ""
 
-#: ../popup.py:562
+#: ../popup.py:569
 msgid "Upload a media to the current folder and insert it:"
 msgstr ""
 
-#: ../popup.py:532
+#: ../popup.py:539
 msgid "Upload an image to the current folder and insert it:"
 msgstr ""
 
@@ -3197,7 +3189,7 @@ msgctxt "table cell"
 msgid "User"
 msgstr ""
 
-#: ../user.py:256
+#: ../user.py:270
 msgid "User Folder"
 msgstr ""
 
@@ -3242,7 +3234,7 @@ msgctxt "table cell"
 msgid "Version"
 msgstr ""
 
-#: ../calendar/calendar_views.py:838
+#: ../calendar/calendar_views.py:881
 msgid "Version uploaded"
 msgstr ""
 
@@ -3264,9 +3256,9 @@ msgstr ""
 msgid "Video"
 msgstr ""
 
-#: ../file_views.py:319 ../file_views.py:348 ../file_views.py:360
-#: ../file_views.py:424 ../text_views.py:85 ../text_views.py:164
-#: ../blog/blog.py:85 ../tracker/tracker_views.py:317 ../user.py:322
+#: ../file_views.py:321 ../file_views.py:350 ../file_views.py:362
+#: ../file_views.py:426 ../text_views.py:85 ../text_views.py:164
+#: ../blog/blog.py:85 ../tracker/tracker_views.py:317 ../user.py:336
 #: ../table_views.py:46 ../menu.py:685 ../future/order.py:263
 #: ../future/order.py:293 ../webpage.py:162 ../folder_views.py:89
 msgid "View"
@@ -3288,12 +3280,17 @@ msgstr ""
 msgid "Wednesday"
 msgstr ""
 
-#: ../calendar/calendar_views.py:254
+#: ../calendar/calendar_views.py:250
 msgid "Week {n}"
 msgstr ""
 
-#: ../calendar/calendar_views.py:512
+#: ../calendar/calendar_views.py:553
 msgid "Weekly View"
+msgstr ""
+
+#: ../calendar/ui/cal_selector.xml.en:10
+msgctxt "title attribute"
+msgid "Weekly view"
 msgstr ""
 
 #: ../resource_views.py:423
@@ -3324,7 +3321,7 @@ msgstr ""
 msgid "Yahoo site verification key"
 msgstr ""
 
-#: ../autoform.py:247
+#: ../autoform.py:237
 msgid "Yes"
 msgstr ""
 
@@ -3340,10 +3337,6 @@ msgstr ""
 #: ../ui/root/forbidden.xml.en:9
 msgctxt "fieldset"
 msgid "You are not authorized to access this resource."
-msgstr ""
-
-#: ../calendar/event.py:125
-msgid "You are not authorized to modify this event."
 msgstr ""
 
 #: ../ui/subscribe.xml.en:33
@@ -3432,7 +3425,7 @@ msgctxt "li"
 msgid "Zhou Li (Chinese)"
 msgstr ""
 
-#: ../buttons.py:192 ../file.py:348
+#: ../buttons.py:205 ../file.py:348
 msgid "Zip"
 msgstr ""
 
@@ -3465,7 +3458,7 @@ msgstr ""
 msgid "[empty]"
 msgstr ""
 
-#: ../cc.py:262
+#: ../cc.py:253
 msgid "[{title}] has been modified"
 msgstr ""
 
@@ -3511,6 +3504,10 @@ msgstr ""
 
 #: ../website_views.py:166
 msgid "pygobject"
+msgstr ""
+
+#: ../buttons.py:55
+msgid "return confirm(\"%s\");"
 msgstr ""
 
 #: ../tracker/ui/export_to_text.xml.en:15
@@ -3584,7 +3581,7 @@ msgstr ""
 msgid "{title} - {search}"
 msgstr ""
 
-#: ../calendar/ui/weekly_view.xml.en:53 ../ui/aruni/languages.xml.en:7
+#: ../ui/aruni/languages.xml.en:7
 msgctxt "div"
 msgid " "
 msgstr ""
@@ -3604,7 +3601,7 @@ msgctxt "title attribute"
 msgid "« Previous"
 msgstr ""
 
-#: ../future/order.py:76 ../utils.py:120
+#: ../future/order.py:76 ../utils.py:126
 msgid "…"
 msgstr ""
 
