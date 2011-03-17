@@ -27,7 +27,8 @@ from itools.html import XHTMLFile
 # Template to display full day events
 default_template_fd = XHTMLFile(string=
     """
-    <td class="color${cal}" xmlns="http://www.w3.org/1999/xhtml">
+    <td xmlns="http://www.w3.org/1999/xhtml"
+        style="background-color: ${color}">
       <a href="${url}" class="${status}">${title}</a>
       <p>${description}</p>
     </td>""")
@@ -38,7 +39,7 @@ default_template = XHTMLFile(string=
     <td xmlns="http://www.w3.org/1999/xhtml"
       xmlns:stl="http://www.hforge.org/xml-namespaces/stl"
       colspan="${cell/colspan}" rowspan="${cell/rowspan}"
-      valign="top" class="color${cell/content/cal}">
+      valign="top" style="background-color: ${cell/content/color}">
       <a stl:if="cell/newurl" class="add_event" href="${cell/newurl}">
         <img width="16" height="16" src="${add_icon}" />
       </a><br/>
