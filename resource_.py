@@ -353,7 +353,7 @@ class DBResource(CatalogAware, IResource):
     def get_mtime(self):
         revisions = self.get_revisions(1)
         if revisions:
-            return revision[0]['author_date']
+            return revisions[0]['author_date']
 
         return None
 
