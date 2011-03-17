@@ -27,7 +27,7 @@ from itools.datatypes import Boolean, DateTime, Integer, String, URI, Unicode
 from itools.log import log_warning
 from itools.uri import Path
 from itools.web import AccessControl, BaseView, get_context
-from itools.database import CatalogAware, PhraseQuery
+from itools.database import PhraseQuery, Resource
 
 # Import from ikaaro
 from datatypes import Multilingual
@@ -68,7 +68,7 @@ class DBResourceMetaclass(type):
 
 
 
-class DBResource(CatalogAware):
+class DBResource(Resource):
 
     __metaclass__ = DBResourceMetaclass
     __hash__ = None
