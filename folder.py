@@ -137,15 +137,27 @@ class Folder(DBResource):
     def export_zip(self, paths):
         stringio = StringIO()
         archive = ZipFile(stringio, mode='w')
-        for path in paths:
-            child = self.get_resource(path, soft=True)
-            if child is None or isinstance(child, Folder):
-                continue
-            for filename in child.get_files_to_archive(True):
+
+        def _add_resource(resource):
+            for filename in resource.get_files_to_archive(True):
                 if filename.endswith('.metadata'):
                     continue
                 path = Path(self.handler.key).get_pathto(filename)
-                archive.writestr(str(path), child.handler.to_str())
+                archive.writestr(str(path), resource.handler.to_str())
+
+        for path in paths:
+            child = self.get_resource(path, soft=True)
+            if child is None:
+                continue
+            # A Folder => we add its content
+            if isinstance(child, Folder):
+                for subchild in child.traverse_resources():
+                    if subchild is None or isinstance(subchild, Folder):
+                        continue
+                    _add_resource(subchild)
+            else:
+                _add_resource(child)
+
         archive.close()
         return stringio.getvalue()
 
