@@ -255,8 +255,9 @@ class Observable(object):
         # Body
         message = MSG(u'DO NOT REPLY TO THIS EMAIL. To view modifications '
                       u'please visit:\n{resource_uri}')
-        uri = str(context.uri)
-        uri = uri.split(';')[0] + ';commit_log'
+        uri = context.get_link(self)
+        uri = str(context.uri.resolve(uri))
+        uri += '/;commit_log'
         body = message.gettext(resource_uri=uri)
         # And return
         return subject, body
