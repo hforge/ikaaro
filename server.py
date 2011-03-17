@@ -36,13 +36,13 @@ from glib import GError
 from itools.core import get_abspath
 from itools.datatypes import Boolean
 from itools.fs import vfs, lfs
-from itools.http import SoupMessage
 from itools.log import Logger, register_logger
 from itools.log import DEBUG, INFO, WARNING, ERROR, FATAL
 from itools.log import log_error, log_warning, log_info
 from itools.loop import cron
 from itools.web import WebServer, WebLogger
 from itools.web import StaticContext, set_context
+from itools.web import SoupMessage
 
 # Import from ikaaro
 from config import get_config
@@ -181,7 +181,7 @@ class Server(WebServer):
         logger.launch_rotate(timedelta(weeks=3))
         register_logger(logger, None)
         logger = WebLogger(log_file, log_level)
-        register_logger(logger, 'itools.http', 'itools.web')
+        register_logger(logger, 'itools.web')
 
         # Authentication cookie timedelta
         self.auth_cookie_expires = get_value('auth-cookie-expires')
