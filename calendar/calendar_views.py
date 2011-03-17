@@ -693,20 +693,25 @@ class DailyView(CalendarView):
             tt_end = len(timetables) - 1
             for tt_index, (start, end) in enumerate(timetables):
                 start = datetime.combine(c_date, start)
+                start = context.add_user_tzinfo(start)
                 end = datetime.combine(c_date, end)
+                end = context.add_user_tzinfo(end)
                 if start <= event_start:
                     tt_start = tt_index
                 if end >= event_end:
                     tt_end = tt_index
                     break
+
             uid = getattr(event, 'id', getattr(event, 'uid', None))
+            with_edit_url = ac.is_allowed_to_view(user, event)
             events_by_index.setdefault(tt_start, [])
             events_by_index[tt_start].append({
                 'name': event.name,
                 'title': event.get_property('title'),
                 'tt_start': tt_start,
                 'tt_end': tt_end,
-                'colspan': tt_end - tt_start + 1})
+                'colspan': tt_end - tt_start + 1,
+                'with_edit_url': with_edit_url})
 
         # Organize events in rows
         # If a row index is busy, start a new row
@@ -761,8 +766,7 @@ class DailyView(CalendarView):
                            'evt_url': None}
                 # Add event
                 if event and tt_index == event['tt_start']:
-                    with_edit_url = ac.is_allowed_to_view(user, event)
-                    if with_edit_url:
+                    if event['with_edit_url']:
                         go_url = '%s/;edit?%s'
                         go_url = go_url % (event['name'], encode_query(args))
                     else:
