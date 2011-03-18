@@ -247,13 +247,13 @@ class Event_NewInstance(NewInstance):
         # Start
         start_time = form['start_time'] or time(0, 0)
         start = datetime.combine(form['start'], start_time)
-        form['start'] = context.add_user_tzinfo(start)
+        form['start'] = context.fix_tzinfo(start)
         # End
         end_time = form['end_time'] or time(0, 0)
         end = datetime.combine(form['end'], end_time)
         if form['end_time'] is None:
             end = end + timedelta(days=1) - resolution
-        form['end'] = context.add_user_tzinfo(end)
+        form['end'] = context.fix_tzinfo(end)
 
         if start > end:
             msg = ERROR(u'Invalid dates.')
@@ -425,10 +425,10 @@ class Event(File, Observable):
                 if name == 'end':
                     dt = datetime.combine(dt, time(0, 0))
                     dt = dt + timedelta(days=1) - resolution
-                dt = context.add_user_tzinfo(dt)
+                dt = context.fix_tzinfo(dt)
                 dt = Property(dt, VALUE='DATE')
             else:
-                dt = context.add_user_tzinfo(dt)
+                dt = context.fix_tzinfo(dt)
                 dt = Property(dt)
             self.set_property('dt%s' % name, dt)
             return False

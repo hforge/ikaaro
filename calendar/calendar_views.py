@@ -693,9 +693,9 @@ class DailyView(CalendarView):
             tt_end = len(timetables) - 1
             for tt_index, (start, end) in enumerate(timetables):
                 start = datetime.combine(c_date, start)
-                start = context.add_user_tzinfo(start)
+                start = context.fix_tzinfo(start)
                 end = datetime.combine(c_date, end)
-                end = context.add_user_tzinfo(end)
+                end = context.fix_tzinfo(end)
                 if start <= event_start:
                     tt_start = tt_index
                 if end >= event_end:
