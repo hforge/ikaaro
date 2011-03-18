@@ -24,6 +24,7 @@ from zlib import compress, decompress
 # Import from itools
 from itools.core import freeze, guess_type
 from itools.datatypes import DataType, Enumerate, Unicode, String
+from itools.fs import FileName
 from itools.web import get_context
 
 # Import from ikaaro
@@ -41,6 +42,9 @@ encoding_map = {
 def guess_mimetype(filename, default):
     """Override itools function 'guess_type' to intercept the encoding.
     """
+    name, extension, language = FileName.decode(filename)
+    filename = FileName.encode((name, extension, None))
+
     mimetype, encoding = guess_type(filename)
     return encoding_map.get(encoding, mimetype or default)
 

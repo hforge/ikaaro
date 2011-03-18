@@ -162,8 +162,8 @@ class Folder(DBResource):
         return stringio.getvalue()
 
 
-    def extract_archive(self, handler, language, filter=None, postproc=None,
-                        update=False):
+    def extract_archive(self, handler, default_language, filter=None,
+                        postproc=None, update=False):
         change_resource = get_context().database.change_resource
         for u_path in handler.get_contents():
             # 1. Skip folders
@@ -193,17 +193,19 @@ class Folder(DBResource):
                     folder = subfolder
 
             # 3. Get the new body
-            name = path[-1]
+            filename = path[-1]
+            name, extension, language = FileName.decode(filename)
+            if language is None:
+                language = default_language
+
             body = handler.get_file(u_path)
-            mimetype = guess_mimetype(name, 'application/octet-stream')
+            mimetype = guess_mimetype(filename, 'application/octet-stream')
             if filter:
                 body = filter(u_path, mimetype, body)
                 if body is None:
                     continue
 
             # 4. Update or make file
-            filename, extension, language = FileName.decode(name)
-
             try:
                 checkid_name = checkid(name)
             except UnicodeEncodeError:
@@ -218,8 +220,11 @@ class Folder(DBResource):
                     raise RuntimeError, msg.format(path=path_str)
                 if mimetype == 'text/html':
                     body = stream_to_str_as_xhtml(HTMLParser(body))
+                    file_handler = file.get_handler(language)
+                else:
+                    file_handler = file.get_handler()
                 old_body = file.handler.to_str()
-                file.handler.load_state_from_string(body)
+                file_handler.load_state_from_string(body)
                 if postproc:
                     postproc(file)
                 # FIXME Comparing the bytes does not work for XML, so we use
@@ -228,8 +233,8 @@ class Folder(DBResource):
                     change_resource(file)
             else:
                 # Case 1: the resource does not exist
-                file = folder._make_file(checkid_name, name, mimetype, body,
-                                         language)
+                file = folder._make_file(checkid_name, filename, mimetype,
+                                         body, language)
                 if postproc:
                     postproc(file)
 
