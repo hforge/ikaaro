@@ -27,7 +27,7 @@ from traceback import print_exc
 
 # Import from itools
 import itools
-from itools.core import start_subprocess, send_subprocess, utc
+from itools.core import fixed_offset, start_subprocess, send_subprocess
 from itools.csv import Property
 from itools.database import check_database
 from itools.fs import lfs
@@ -258,6 +258,7 @@ def update(parser, options, target):
                '--name-only']
         data = send_subprocess(cmd)
         lines = data.splitlines()
+        utc = fixed_offset(0)
         i = 0
         while i < len(lines):
             date = int(lines[i + 2])
