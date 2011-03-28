@@ -18,6 +18,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# Import from the Standard Library
+from random import randint
+
 # Import from itools
 from itools.core import get_abspath, thingy_lazy_property
 from itools.datatypes import DataType, Date, Enumerate, Boolean, Unicode
@@ -106,6 +109,7 @@ class Widget(CMSTemplate):
     type = 'text'
     # Focus on it if the first one displayed
     focus = True
+    onsubmit = None
 
     template = make_stl_template("""
     <input type="${type}" id="${id}" name="${name}" value="${value}"
@@ -558,6 +562,33 @@ class LocationWidget(SelectWidget):
 
 
 
+class ProgressBarWidget(Widget):
+    name = 'progress-bar'
+    onsubmit = 'startProgressBar();'
+
+    template = make_stl_template("""
+    <div id="progress-bar-box">
+      <div id="progress-bar"/><span id="progress-bar-infos"/>
+    </div>
+    <script type="text/javascript">
+      $('head').append('<link rel="stylesheet" href="/ui/progressbar/jquery-progressbar.css" type="text/css" />');
+      var upload_id = ${upload_id};
+    </script>
+    <script  type="text/javascript" src="/ui/progressbar/jquery-progressbar.min.js"/>
+    """)
+
+
+    def __init__(self, **kw):
+        # An int in [1, 2^31 - 1]
+        self.upload_id = str(randint(1, 2147483647))
+
+        # HACK to add the upload_id in the POST URL
+        context = get_context()
+        if context is None:
+            return
+        context.uri = context.uri.replace(upload_id=self.upload_id)
+
+
 
 ###########################################################################
 # Common widgets to reuse
@@ -619,16 +650,27 @@ class AutoForm(STLForm):
 
         # Build widgets namespace
         first_widget = None
+        onsubmit = None
         ns_widgets = []
         for widget in widgets:
-            datatype = fields[widget.name]
-            ns_widget = widgets_namespace[widget.name]
+            datatype = fields.get(widget.name, None)
+            ns_widget = widgets_namespace.get(widget.name,
+                                              {'name': widget.name,
+                                               'value': None,
+                                               'error': None})
             ns_widget['title'] = getattr(widget, 'title', None)
             ns_widget['mandatory'] = getattr(datatype, 'mandatory', False)
-            ns_widget['is_date'] = issubclass(datatype, Date)
+            ns_widget['is_date'] = (datatype is not None and
+                                    issubclass(datatype, Date))
             ns_widget['suffix'] = widget.suffix
             ns_widget['tip'] = widget.tip
             ns_widget['endline'] = getattr(widget, 'endline', None)
+
+            # onsubmit
+            widget_onsubmit = getattr(widget, 'onsubmit', None)
+            if widget_onsubmit is not None and onsubmit is not None:
+                raise ValueError, "2 widgets want to change onsubmit"
+            onsubmit = widget_onsubmit
 
             # multilingual or monolingual
             value = ns_widget['value']
@@ -669,6 +711,7 @@ class AutoForm(STLForm):
             'before': None,
             'actions': actions,
             'action': action,
+            'onsubmit': onsubmit,
             'title': self.get_title(context),
             'description': self.description,
             'first_widget': first_widget,

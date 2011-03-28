@@ -135,3 +135,53 @@ function reply(id){
   textarea.value = replytext
   textarea.focus();
 }
+
+
+/* Progress bar: startProgressBar() */
+function startProgressBar()
+{
+    $("#progress-bar").progressbar();
+
+    var intervalId = setInterval(
+      function()
+      {
+        $.getJSON("/;upload_stats?upload_id=" + upload_id,
+          function(data)
+          {
+            if (data == null || !data.valid_id)
+            {
+              clearInterval(intervalId);
+              $("#progress-bar").progressbar("destroy");
+              $("#progress-bar-infos").empty();
+              return;
+            }
+            var percent = Math.floor(data.percent);
+
+            $("#progress-bar").progressbar("option", "value", percent);
+            $("#progress-bar-infos").html(sizeToText(data.uploaded_size,
+                                                     data.total_size,
+                                                     percent));
+          });
+      },
+      1500);
+}
+
+
+/* Progress bar: sizeToText */
+function sizeToText(uploaded_size, total_size, percent)
+{
+	percent = "(" + percent.toString() + "%)";
+    if (total_size > 1024 * 1024)
+    {
+        uploaded_size = (Math.round(uploaded_size*100/(1024*1024))/100).toString();
+        total_size = (Math.round(total_size * 100/(1024*1024))/100).toString();
+        return uploaded_size + "/" + total_size + "Mo" + percent;
+
+	} else if (size > 1024) {
+        uploaded_size = (Math.round(uploaded_size *100/1024)/100).toString();
+        total_size = (Math.round(total_size*100/1024)/100).toString();
+        return uploaded_size + "/" + total_size + "Ko" + percent;
+	} else {
+        return uploaded_size.toString() + "/" + total_size.toString() + "o" + percent;
+	}
+}

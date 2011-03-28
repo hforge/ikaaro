@@ -43,7 +43,6 @@ from itools.uri import Path
 from itools.web import BaseView, get_context
 
 # Import from ikaaro
-from config import get_config
 from folder import Folder
 from registry import get_resource_class
 from skins import UI, ui_path

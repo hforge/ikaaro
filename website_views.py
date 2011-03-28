@@ -20,16 +20,17 @@
 
 # Import from the Standard Library
 from getpass import getuser
+from json import dumps
 from socket import gethostname
 
 # Import from itools
 from itools.core import get_abspath, merge_dicts
 from itools.csv import Property
-from itools.datatypes import Email, String, Unicode
+from itools.datatypes import Email, String, Unicode, Integer
 from itools.datatypes import Enumerate
 from itools.gettext import MSG
 from itools.fs import lfs
-from itools.web import STLView, INFO
+from itools.web import BaseView, STLView, INFO
 
 # Import from ikaaro
 from autoform import AutoForm, CaptchaDatatype, CaptchaWidget
@@ -53,6 +54,34 @@ class ForbiddenView(STLView):
 
     def POST(self, resource, context):
         return self.GET
+
+
+
+class UploadStatsView(BaseView):
+
+    access = True
+    query_schema = {'upload_id': Integer}
+
+    def GET(self, resource, context):
+        context.content_type = 'text/plain'
+
+        upload_id = context.query.get('upload_id')
+        if upload_id is None:
+            return dumps({'valid_id': False})
+
+        stats = context.server.upload_stats.get(upload_id)
+        if stats is None:
+            return dumps({'valid_id': False})
+
+        uploaded_size, total_size = stats
+        if total_size != 0:
+            percent = float(uploaded_size) / total_size * 100.0
+        else:
+            percent = 0.0
+        return dumps({'valid_id': True,
+                      'percent': percent,
+                      'uploaded_size': uploaded_size,
+                      'total_size': total_size})
 
 
 

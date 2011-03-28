@@ -36,6 +36,7 @@ from itools.web import FormError
 from autoform import FileWidget, PathSelectorWidget, ReadOnlyWidget
 from autoform import file_widget, location_widget, timestamp_widget
 from autoform import title_widget, description_widget, subject_widget
+from autoform import ProgressBarWidget
 from datatypes import FileDataType
 from folder import Folder
 from messages import MSG_NAME_CLASH
@@ -55,7 +56,8 @@ class File_NewInstance(NewInstance):
         ReadOnlyWidget('cls_description'),
         FileWidget('file', title=MSG(u'File'), size=35),
         title_widget,
-        location_widget]
+        location_widget,
+        ProgressBarWidget()]
 
 
     def get_new_resource_name(self, form):

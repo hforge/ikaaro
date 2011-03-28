@@ -44,7 +44,7 @@ from skins import UI, ui_path
 from theme import Theme
 from website_views import AboutView, ContactForm, CreditsView
 from website_views import NotFoundView, ForbiddenView
-from website_views import WebSite_NewInstance
+from website_views import WebSite_NewInstance, UploadStatsView
 
 
 
@@ -209,6 +209,7 @@ class WebSite(RoleAware, Folder):
     forbidden = ForbiddenView()
     unauthorized = LoginView()
     not_found = NotFoundView()
+    upload_stats = UploadStatsView()
 
 
     #######################################################################
