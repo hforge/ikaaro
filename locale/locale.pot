@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2011-03-17 09:03+CET\n"
+"POT-Creation-Date: 2011-03-28 15:03+CET\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -633,7 +633,7 @@ msgstr ""
 msgid "Excel Spreadsheet"
 msgstr ""
 
-#: ../calendar/calendar_views.py:888
+#: ../calendar/calendar_views.py:892
 msgid "Export"
 msgstr ""
 
@@ -651,7 +651,7 @@ msgstr ""
 msgid "External Editor"
 msgstr ""
 
-#: ../calendar/calendar_views.py:877
+#: ../calendar/calendar_views.py:881
 msgid "Failed to load the file, may contain errors."
 msgstr ""
 
@@ -787,7 +787,7 @@ msgstr ""
 msgid "Image"
 msgstr ""
 
-#: ../calendar/calendar_views.py:857
+#: ../calendar/calendar_views.py:861
 msgid "Import"
 msgstr ""
 
@@ -1863,7 +1863,7 @@ msgstr ""
 msgid "Upgrade to version %s"
 msgstr ""
 
-#: ../scripts/icms-update.py:301
+#: ../scripts/icms-update.py:302
 msgid "Upgrade: set mtime/author"
 msgstr ""
 
@@ -1932,7 +1932,7 @@ msgstr ""
 msgid "Version"
 msgstr ""
 
-#: ../calendar/calendar_views.py:881
+#: ../calendar/calendar_views.py:885
 msgid "Version uploaded"
 msgstr ""
 
@@ -2097,7 +2097,7 @@ msgstr ""
 msgid "[{title}] has been modified"
 msgstr ""
 
-#: ../datatypes.py:104
+#: ../datatypes.py:108
 msgid "huge"
 msgstr ""
 
@@ -2109,7 +2109,7 @@ msgstr ""
 msgid "id"
 msgstr ""
 
-#: ../datatypes.py:103
+#: ../datatypes.py:107
 msgid "large"
 msgstr ""
 
@@ -2117,11 +2117,11 @@ msgstr ""
 msgid "lpOD"
 msgstr ""
 
-#: ../datatypes.py:102
+#: ../datatypes.py:106
 msgid "medium"
 msgstr ""
 
-#: ../datatypes.py:105
+#: ../datatypes.py:109
 msgid "original"
 msgstr ""
 
@@ -2133,7 +2133,7 @@ msgstr ""
 msgid "return confirm(\"%s\");"
 msgstr ""
 
-#: ../datatypes.py:101
+#: ../datatypes.py:105
 msgid "small"
 msgstr ""
 

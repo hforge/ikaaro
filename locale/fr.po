@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-17 09:03+CET\n"
+"POT-Creation-Date: 2011-03-28 15:03+CET\n"
 "PO-Revision-Date: 2010-10-27 16:38+0100\n"
 "Last-Translator: David Versmisse <david.versmisse@itaapy.com>\n"
 "Language-Team: Itaapy\n"
@@ -62,34 +62,34 @@ msgstr ""
 
 #: ../tracker/tracker_views.py:820
 msgid "#%s"
-msgstr "#%s"
+msgstr ""
 
 #: ../tracker/issue.py:117
 msgid "#%s %s"
-msgstr "#%s %s"
+msgstr ""
 
 #: ../tracker/tracker_views.py:951
 msgid "#%s - %s - %s"
-msgstr "#%s - %s - %s"
+msgstr ""
 
 #: ../ui/table/view.xml.en:5
 msgid "${batch} ${table}"
-msgstr "${batch} ${table}"
+msgstr ""
 
 #: ../tracker/ui/export_to_csv.xml.en:10 ../tracker/ui/change_bugs.xml.en:29
 #: ../tracker/ui/export_to_text.xml.en:11
 msgctxt "form"
 msgid "${batch} ${table}"
-msgstr "${batch} ${table}"
+msgstr ""
 
 #: ../ui/generic/browse.xml.en:8 ../ui/website/search.xml.en:13
 msgid "${batch} <x id='1'/> ${table}"
-msgstr "${batch} <x id='1'/> ${table}"
+msgstr ""
 
 #: ../calendar/ui/weekly_view.xml.en:21
 msgctxt "table cell"
 msgid "${row/start}-${row/end}"
-msgstr "${row/start}-${row/end}"
+msgstr ""
 
 #: ../ui/generic/browse_search.xml.en:9
 msgctxt "fieldset"
@@ -100,12 +100,12 @@ msgstr ""
 
 #: ../ui/generic/search.xml.en:8
 msgid "${search} <x id='1'/> ${batch} <x id='2'/> ${table}"
-msgstr "${search} <x id='1'/> ${batch} <x id='2'/> ${table}"
+msgstr ""
 
 #: ../blog/ui/Post_view.xml.en:6
 msgctxt "heading"
 msgid "${title} (${date})"
-msgstr "${title} (${date})"
+msgstr ""
 
 #: ../ui/binary/Archive_view.xml.en:12
 msgctxt "fieldset"
@@ -123,12 +123,12 @@ msgstr ""
 #: ../ui/PO_edit.xml.en:18
 msgctxt "link"
 msgid "&lt;"
-msgstr "&lt;"
+msgstr ""
 
 #: ../ui/website/broken_links.xml.en:11
 msgctxt "link"
 msgid "(${item/n}) <g id='2'>${item/path}</g>"
-msgstr "(${item/n}) <g id='2'>${item/path}</g>"
+msgstr ""
 
 #: ../tracker/ui/search.xml.en:59
 msgctxt "label"
@@ -229,12 +229,12 @@ msgstr ":"
 #: ../calendar/ui/monthly_template.xml.en:10
 msgctxt "link"
 msgid "<g id='1'> ${event/title}</g>  <g id='2'>${event/TIME}</g>"
-msgstr "<g id='1'> ${event/title}</g>  <g id='2'>${event/TIME}</g>"
+msgstr ""
 
 #: ../ui/tiny_mce/rte.xml.en:54
 msgctxt "label"
 msgid "<g id='1'>${language}</g>  <g id='2'>${value}</g>"
-msgstr "<g id='1'>${language}</g>  <g id='2'>${value}</g>"
+msgstr ""
 
 #: ../ui/binary/Image_view.xml.en:7
 msgctxt "link"
@@ -244,7 +244,7 @@ msgstr ""
 #: ../ui/auto_form.xml.en:16
 msgctxt "label"
 msgid "<g id='1'>${widget/title}</g>  <g id='2'>*</g>  <g id='3'>(?)</g>"
-msgstr "<g id='1'>${widget/title}</g>  <g id='2'>*</g>  <g id='3'>(?)</g>"
+msgstr ""
 
 #: ../tracker/ui/add_issue.xml.en:33
 msgctxt "label"
@@ -267,7 +267,7 @@ msgstr ""
 #: ../calendar/ui/cal_selector.xml.en:35
 msgctxt "link"
 msgid "<g id='10'>«</g> ${current_month} <g id='11'>»</g>"
-msgstr "<g id='10'>«</g> ${current_month} <g id='11'>»</g>"
+msgstr ""
 
 #: ../tracker/ui/add_issue.xml.en:55
 msgctxt "label"
@@ -275,8 +275,6 @@ msgid ""
 "<g id='11'>Product</g>  <g id='12'>* </g>  <x id='13'/>  <g id='14'>"
 "${product/error} <x id='15'/></g>"
 msgstr ""
-"<g id='11'>Produit</g>  <g id='12'>* </g>  <x id='13'/>  <g id='14'>"
-"${product/error} <x id='15'/></g>"
 
 #: ../tracker/ui/edit_issue.xml.en:59
 msgctxt "label"
@@ -290,7 +288,7 @@ msgstr ""
 #: ../calendar/ui/cal_selector.xml.en:40
 msgctxt "link"
 msgid "<g id='12'>«</g> ${current_year} <g id='13'>»</g>"
-msgstr "<g id='12'>«</g> ${current_year} <g id='13'>»</g>"
+msgstr ""
 
 #: ../tracker/ui/add_issue.xml.en:68
 msgctxt "label"
@@ -298,8 +296,6 @@ msgid ""
 "<g id='16'>Type</g>  <g id='17'>* </g>  <x id='18'/>  <g id='19'>${type/"
 "error} <x id='20'/></g>"
 msgstr ""
-"<g id='16'>Type</g>  <g id='17'>* </g>  <x id='18'/>  <g id='19'>${type/"
-"error} <x id='20'/></g>"
 
 #: ../tracker/ui/edit_issue.xml.en:72
 msgctxt "label"
@@ -307,8 +303,6 @@ msgid ""
 "<g id='17'>Type</g>  <g id='18'>* </g>  <x id='19'/>  <g id='20'>${type/"
 "error} <x id='21'/></g>"
 msgstr ""
-"<g id='17'>Type</g>  <g id='18'>* </g>  <x id='19'/>  <g id='20'>${type/"
-"error} <x id='21'/></g>"
 
 #: ../ui/aruni/template.xhtml.en:91
 msgctxt "link"
@@ -322,13 +316,11 @@ msgid ""
 "<g id='2'>${day/nday}</g>  <g id='3'>${day/nday}</g>  <g id='4'>  <x id='5'/"
 "></g> ${day/events}"
 msgstr ""
-"<g id='2'>${day/nday}</g>  <g id='3'>${day/nday}</g>  <g id='4'>  <x id='5'/"
-"></g> ${day/events}"
 
 #: ../ui/aruni/location.xml.en:11
 msgctxt "link"
 msgid "<g id='2'>${item/short_name}</g><g id='3'>/</g>"
-msgstr "<g id='2'>${item/short_name}</g><g id='3'>/</g>"
+msgstr ""
 
 #: ../ui/website/search_table.xml.en:10
 msgctxt "link"
@@ -336,18 +328,16 @@ msgid ""
 "<g id='2'>${item/title}</g>  <x id='3'/>  <g id='4'>${item/abspath}</g> - <g "
 "id='5'>${item/type}</g> - <g id='6'>${item/size}</g>"
 msgstr ""
-"<g id='2'>${item/title}</g>  <x id='3'/>  <g id='4'>${item/abspath}</g> - <g "
-"id='5'>${item/type}</g> - <g id='6'>${item/size}</g>"
 
 #: ../ui/aruni/languages.xml.en:9
 msgctxt "link"
 msgid "<g id='2'>${lang/value}</g>  <g id='3'>|</g>"
-msgstr "<g id='2'>${lang/value}</g>  <g id='3'>|</g>"
+msgstr ""
 
 #: ../ui/generic/browse_batch.xml.en:20
 msgctxt "link"
 msgid "<g id='2'>${page/number}</g>  <g id='3'>…</g>"
-msgstr "<g id='2'>${page/number}</g>  <g id='3'>…</g>"
+msgstr ""
 
 #: ../ui/subscribe.xml.en:16
 msgctxt "span"
@@ -404,7 +394,6 @@ msgctxt "label"
 msgid ""
 "<g id='21'>CC</g><x id='22'/>  <g id='23'>${cc_list/error} <x id='24'/></g>"
 msgstr ""
-"<g id='21'>CC</g><x id='22'/>  <g id='23'>${cc_list/error} <x id='24'/></g>"
 
 #: ../ui/html/popup.xml.en:89
 msgctxt "label"
@@ -424,8 +413,6 @@ msgid ""
 "<g id='24'>Module</g><x id='25'/>  <g id='26'>${module/error} <x id='27'/></"
 "g>"
 msgstr ""
-"<g id='24'>Module</g><x id='25'/>  <g id='26'>${module/error} <x id='27'/></"
-"g>"
 
 #: ../tracker/ui/add_issue.xml.en:93
 msgctxt "label"
@@ -433,8 +420,6 @@ msgid ""
 "<g id='25'>Module</g><x id='26'/>  <g id='27'>${module/error} <x id='28'/></"
 "g>"
 msgstr ""
-"<g id='25'>Module</g><x id='26'/>  <g id='27'>${module/error} <x id='28'/></"
-"g>"
 
 #: ../tracker/ui/edit_issue.xml.en:108
 msgctxt "label"
@@ -457,7 +442,7 @@ msgstr ""
 #: ../ui/user/profile.xml.en:17 ../ui/generic/icons_view.xml.en:16
 msgctxt "link"
 msgid "<g id='3'>${item/title}</g>  <x id='4'/> ${item/description}"
-msgstr "<g id='3'>${item/title}</g>  <x id='4'/> ${item/description}"
+msgstr ""
 
 #: ../tracker/ui/edit_issue.xml.en:123
 msgctxt "label"
@@ -465,8 +450,6 @@ msgid ""
 "<g id='33'>Version</g><x id='34'/>  <g id='35'>${version/error} <x id='36'/"
 "></g>"
 msgstr ""
-"<g id='33'>Version</g><x id='34'/>  <g id='35'>${version/error} <x id='36'/"
-"></g>"
 
 #: ../ui/html/popup.xml.en:123
 msgctxt "label"
@@ -479,8 +462,6 @@ msgid ""
 "<g id='34'>Version</g><x id='35'/>  <g id='36'>${version/error} <x id='37'/"
 "></g>"
 msgstr ""
-"<g id='34'>Version</g><x id='35'/>  <g id='36'>${version/error} <x id='37'/"
-"></g>"
 
 #: ../tracker/ui/edit_issue.xml.en:133
 msgctxt "label"
@@ -506,13 +487,11 @@ msgid ""
 "<g id='4'>${col/title}</g>  <g id='5'>${col/DTSTART}</g>  <g id='6'>${col/"
 "DTEND}</g>"
 msgstr ""
-"<g id='4'>${col/title}</g>  <g id='5'>${col/DTSTART}</g>  <g id='6'>${col/"
-"DTEND}</g>"
 
 #: ../tracker/ui/export_to_text.xml.en:19
 msgctxt "label"
 msgid "<g id='4'>${column/title}</g>  "
-msgstr "<g id='4'>${column/title}</g>  "
+msgstr ""
 
 #: ../ui/revisions/browse_search.xml.en:17
 msgctxt "label"
@@ -531,8 +510,6 @@ msgid ""
 "<g id='42'>Description</g>  <g id='43'>* </g>  <x id='44'/>  <g id='45'>"
 "${comment/error} <x id='46'/></g>  <g id='47'>${comment/value}</g>"
 msgstr ""
-"<g id='42'>Description</g>  <g id='43'>* </g>  <x id='44'/>  <g id='45'>"
-"${comment/error} <x id='46'/></g>  <g id='47'>${comment/value}</g>"
 
 #: ../tracker/ui/edit_issue.xml.en:146
 msgctxt "label"
@@ -546,7 +523,7 @@ msgstr ""
 #: ../tracker/ui/edit_issue.xml.en:161
 msgctxt "link"
 msgid "<g id='48'>${file/name}</g> (${file/mtime}, ${file/author})"
-msgstr "<g id='48'>${file/name}</g> (${file/mtime}, ${file/author})"
+msgstr ""
 
 #: ../tracker/ui/export_to_csv.xml.en:17
 msgctxt "label"
@@ -571,7 +548,7 @@ msgstr ""
 #: ../ui/PO_edit.xml.en:19
 msgctxt "link"
 msgid "<g id='6'>></g>  <g id='7'>>></g>"
-msgstr "<g id='6'>></g>  <g id='7'>>></g>"
+msgstr ""
 
 #: ../tracker/ui/add_issue.xml.en:43
 msgctxt "label"
@@ -585,7 +562,7 @@ msgstr ""
 #: ../ui/html/popup.xml.en:41
 msgctxt "link"
 msgid "<g id='8'>${x/short_title}</g> /"
-msgstr "<g id='8'>${x/short_title}</g> /"
+msgstr ""
 
 #: ../tracker/ui/edit_issue.xml.en:47
 msgctxt "label"
@@ -622,7 +599,7 @@ msgstr "<g id='8'>Supprimer</g>  <g id='9'>Mettre à jour</g>"
 #: ../calendar/ui/cal_selector.xml.en:30
 msgctxt "link"
 msgid "<g id='8'>«</g> ${current_week} <g id='9'>»</g>"
-msgstr "<g id='8'>«</g> ${current_week} <g id='9'>»</g>"
+msgstr ""
 
 #: ../calendar/event.py:108
 msgid "<p id=\"event-owner\">Created by <em>%s</em></p>"
@@ -996,7 +973,7 @@ msgstr "Modifier"
 
 #: ../access.py:212
 msgid "Change Role of {name}"
-msgstr "Modifier le rôle de ${name}"
+msgstr "Modifier le rôle de {name}"
 
 #: ../tracker/tracker_views.py:193 ../tracker/tracker_views.py:842
 msgid "Change Several Issues"
@@ -1221,8 +1198,7 @@ msgid ""
 msgstr ""
 "NE PAS RÉPONDRE À CE MESSAGE.\n"
 "\n"
-"L'utilisateur \"{last_author}\" a modifié l'évènement "
-"\"{title}\".\n"
+"L'utilisateur \"{last_author}\" a modifié l'évènement \"{title}\".\n"
 "Pour voir ces modifications, allez sur :\n"
 "{resource_uri}\n"
 
@@ -1497,7 +1473,7 @@ msgstr "Classeur MS Excel"
 msgid "Excel Spreadsheet"
 msgstr "Classeur au format MS Excel"
 
-#: ../calendar/calendar_views.py:888
+#: ../calendar/calendar_views.py:892
 msgid "Export"
 msgstr "Exporter"
 
@@ -1534,7 +1510,7 @@ msgctxt "legend"
 msgid "Extract contents"
 msgstr "Extraire le contenu"
 
-#: ../calendar/calendar_views.py:877
+#: ../calendar/calendar_views.py:881
 msgid "Failed to load the file, may contain errors."
 msgstr "Échec lors du chargement du fichier, il doit contenir des erreurs."
 
@@ -1763,7 +1739,7 @@ msgstr ""
 msgid "Image"
 msgstr "Image"
 
-#: ../calendar/calendar_views.py:857
+#: ../calendar/calendar_views.py:861
 msgid "Import"
 msgstr "Importer"
 
@@ -1982,8 +1958,6 @@ msgid ""
 "Message ${messages_index} / ${messages_total} <x id='3'/>  <g id='4'>&lt;&lt;"
 "</g>"
 msgstr ""
-"Message ${messages_index} / ${messages_total} <x id='3'/>  <g id='4'>&lt;&lt;"
-"</g>"
 
 #: ../text.py:80
 msgid "Message Catalog"
@@ -3301,7 +3275,7 @@ msgstr "Mettre à jour l'export texte"
 msgid "Upgrade to version %s"
 msgstr "Mise à jour vers la version %s"
 
-#: ../scripts/icms-update.py:301
+#: ../scripts/icms-update.py:302
 msgid "Upgrade: set mtime/author"
 msgstr "Mise-à-jour: fixez mtime/auteur"
 
@@ -3392,7 +3366,7 @@ msgctxt "table cell"
 msgid "Version"
 msgstr "Version"
 
-#: ../calendar/calendar_views.py:881
+#: ../calendar/calendar_views.py:885
 msgid "Version uploaded"
 msgstr "Version chargée"
 
@@ -3621,11 +3595,11 @@ msgstr "Dézoomer"
 #: ../ui/aruni/location.xml.en:16
 msgctxt "div"
 msgid "[ <g id='4'>  <g id='5'>${menu/label}</g>  <g id='6'>|</g>  </g> ]"
-msgstr "[ <g id='4'>  <g id='5'>${menu/label}</g>  <g id='6'>|</g>  </g> ]"
+msgstr ""
 
 #: ../tracker/tracker_views.py:948
 msgid "[%s]"
-msgstr "[%s]"
+msgstr ""
 
 #: ../tracker/issue.py:245
 msgid "[empty]"
@@ -3640,13 +3614,13 @@ msgctxt "table cell"
 msgid "days ago"
 msgstr "jours"
 
-#: ../datatypes.py:104
+#: ../datatypes.py:108
 msgid "huge"
 msgstr "énorme"
 
 #: ../root.py:83
 msgid "iKaaro"
-msgstr "iKaaro"
+msgstr ""
 
 #: ../ui/root/about.xml.en:29
 msgctxt "paragraph"
@@ -3662,7 +3636,7 @@ msgstr ""
 msgid "id"
 msgstr "id"
 
-#: ../datatypes.py:103
+#: ../datatypes.py:107
 msgid "large"
 msgstr "grande"
 
@@ -3670,11 +3644,11 @@ msgstr "grande"
 msgid "lpOD"
 msgstr "lpOD"
 
-#: ../datatypes.py:102
+#: ../datatypes.py:106
 msgid "medium"
 msgstr "moyenne"
 
-#: ../datatypes.py:105
+#: ../datatypes.py:109
 msgid "original"
 msgstr "originale"
 
@@ -3691,7 +3665,7 @@ msgctxt "legend"
 msgid "select the columns to export"
 msgstr "Veuillez sélectionner les colonnes à exporter"
 
-#: ../datatypes.py:101
+#: ../datatypes.py:105
 msgid "small"
 msgstr "petit"
 
@@ -3736,19 +3710,19 @@ msgstr "{field}: {old_value} vers {new_value}"
 
 #: ../tracker/issue.py:240
 msgid "{field}: {old_value}{new_value}"
-msgstr "{field}: {old_value}{new_value}"
+msgstr "{field} : {old_value}{new_value}"
 
 #: ../skins.py:189
 msgid "{root_title} - {here_title} - {view_title}"
-msgstr "{root_title} - {here_title} - {view_title}"
+msgstr ""
 
 #: ../skins.py:186
 msgid "{root_title} - {view_title}"
-msgstr "{root_title} - {view_title}"
+msgstr ""
 
 #: ../tracker/tracker_views.py:168
 msgid "{search_title} ({issues_nb})"
-msgstr "{search_title} ({issues_nb})"
+msgstr ""
 
 #: ../tracker/issue.py:219
 msgid ""
@@ -3764,12 +3738,12 @@ msgstr ""
 
 #: ../tracker/tracker_views.py:366
 msgid "{title} - {search}"
-msgstr "{title} - {search}"
+msgstr ""
 
 #: ../ui/aruni/languages.xml.en:7
 msgctxt "div"
 msgid " "
-msgstr " "
+msgstr ""
 
 #: ../ui/comments.xml.en:15
 msgctxt "table cell"
@@ -3793,7 +3767,7 @@ msgstr "…"
 #: ../ui/folder/rename.xml.en:15
 msgctxt "table cell"
 msgid "⇒ ${item/parent_path}"
-msgstr "⇒ ${item/parent_path}"
+msgstr ""
 
 #~ msgid "\"%s\" is incorrect"
 #~ msgstr "\"%s\" est incorrect"

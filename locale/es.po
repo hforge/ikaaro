@@ -3,7 +3,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: es\n"
-"POT-Creation-Date: 2011-03-17 09:03+CET\n"
+"POT-Creation-Date: 2011-03-28 15:03+CET\n"
 "PO-Revision-Date: 2006-12-06 16:23+0100\n"
 "Last-Translator: J. David Ibáñez <jdavid@itaapy.com>\n"
 "Language-Team: Spanish\n"
@@ -1504,7 +1504,7 @@ msgstr "Excel"
 msgid "Excel Spreadsheet"
 msgstr ""
 
-#: ../calendar/calendar_views.py:888
+#: ../calendar/calendar_views.py:892
 #, fuzzy
 msgid "Export"
 msgstr "Exportar"
@@ -1542,7 +1542,7 @@ msgctxt "legend"
 msgid "Extract contents"
 msgstr ""
 
-#: ../calendar/calendar_views.py:877
+#: ../calendar/calendar_views.py:881
 msgid "Failed to load the file, may contain errors."
 msgstr ""
 
@@ -1772,7 +1772,7 @@ msgstr ""
 msgid "Image"
 msgstr "Imagen"
 
-#: ../calendar/calendar_views.py:857
+#: ../calendar/calendar_views.py:861
 #, fuzzy
 msgid "Import"
 msgstr "Exportar"
@@ -3401,7 +3401,7 @@ msgstr ""
 msgid "Upgrade to version %s"
 msgstr ""
 
-#: ../scripts/icms-update.py:301
+#: ../scripts/icms-update.py:302
 msgid "Upgrade: set mtime/author"
 msgstr ""
 
@@ -3494,7 +3494,7 @@ msgctxt "table cell"
 msgid "Version"
 msgstr "Permisos"
 
-#: ../calendar/calendar_views.py:881
+#: ../calendar/calendar_views.py:885
 #, fuzzy
 msgid "Version uploaded"
 msgstr "Versión editada."
@@ -3737,7 +3737,7 @@ msgctxt "table cell"
 msgid "days ago"
 msgstr ""
 
-#: ../datatypes.py:104
+#: ../datatypes.py:108
 msgid "huge"
 msgstr "enorme"
 
@@ -3756,7 +3756,7 @@ msgstr ""
 msgid "id"
 msgstr ""
 
-#: ../datatypes.py:103
+#: ../datatypes.py:107
 msgid "large"
 msgstr "grande"
 
@@ -3764,11 +3764,11 @@ msgstr "grande"
 msgid "lpOD"
 msgstr ""
 
-#: ../datatypes.py:102
+#: ../datatypes.py:106
 msgid "medium"
 msgstr "mediano"
 
-#: ../datatypes.py:105
+#: ../datatypes.py:109
 msgid "original"
 msgstr ""
 
@@ -3785,7 +3785,7 @@ msgctxt "legend"
 msgid "select the columns to export"
 msgstr "selecciona las columnas a exportar"
 
-#: ../datatypes.py:101
+#: ../datatypes.py:105
 msgid "small"
 msgstr "pequeño"
 
