@@ -1,4 +1,4 @@
-ikaaro 0.62.7 (2011/03/XX)
+ikaaro 0.62.7 (2011/03/28)
 ==========================
 
 This is a Content Management System built on Python & itools, among
@@ -11,28 +11,30 @@ other features ikaaro provides:
 Changes
 -------
 
-NOTE: when upgrading to this new version run icms-update-catalog.py, a
-new index has been added to fix a usability problem, and so updating
-the catalog is required.
+NOTE: when upgrading to this new version it is recommended to run
+icms-update-catalog.py; two new indexes have been added to improve
+the performance of some queries, while they are not yet used they
+will in the next version. See bug #605 for details.
+
+Features:
+- Now from the "Browse content" view it is possible to download a ZIP
+  archive with the selected files (bug #1189)
+
+User interface:
+- More beautiful icons
+- Do not show users in the "Browse Content" view
 
 Performance improvements:
 - Optimize 'get_revisions' for the root resource
-- bug #605 (in progress)
-- Use sprite for sort icons
-
-User interface:
-- More beautiful icons (IE6 eol)
-- Users are not content (hidden from browse-content)
-
-Features:
-- folder_views: Allow to download a zip of selected files (#1189)
+- Use an sprite for the sort icons
 
 Access control
-- #1185 User profile seen by anyone
+- Now the user profile is not visible to anonymous users when the
+  website is in 'intranet' mode (bug #1185)
 
 Submodules
-- Many calendar improvements and fixes (#1176, #1177, #1178, #1184)
-- tracker: Add link to download a zip file with attachments
+- Calendar: many improvements and fixes (#1176, #1177, #1178, #1184)
+- Tracker: add link to download a ZIP file with the attachments
 
 Translations
 - Update French translations
