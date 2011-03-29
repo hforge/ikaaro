@@ -246,19 +246,19 @@ class Observable(object):
     class_schema = {'cc_list': Tokens(source='metadata')}
 
 
-    def get_message(self, context):
+    def get_message(self, context, language=None):
         """This function must return the tuple (subject, body)
         """
         # Subject
         subject = MSG(u'[{title}] has been modified')
-        subject = subject.gettext(title=self.get_title())
+        subject = subject.gettext(title=self.get_title(), language=language)
         # Body
         message = MSG(u'DO NOT REPLY TO THIS EMAIL. To view modifications '
                       u'please visit:\n{resource_uri}')
         uri = context.get_link(self)
         uri = str(context.uri.resolve(uri))
         uri += '/;commit_log'
-        body = message.gettext(resource_uri=uri)
+        body = message.gettext(resource_uri=uri, language=language)
         # And return
         return subject, body
 
@@ -273,14 +273,26 @@ class Observable(object):
         if not users:
             return
 
-        # 3. Build the message
-        subject, body = self.get_message(context)
+        # 3. Build the message for each language
+        site_root = self.get_site_root()
+        website_languages = site_root.get_property('website_languages')
+        default_language = site_root.get_default_language()
+        messages_dict = {}
+        for language in website_languages:
+            messages_dict[language] = self.get_message(context,
+                                                       language=language)
 
         # 4. Send the message
         for user in users.value:
             user = context.root.get_user(user)
             if user and not user.get_property('user_must_confirm'):
                 mail = user.get_property('email')
+
+                language = user.get_property('user_language')
+                if language not in website_languages:
+                    language = default_language
+                subject, body = messages_dict[language]
+
                 context.root.send_email(mail, subject, text=body)
 
 

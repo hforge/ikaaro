@@ -438,11 +438,11 @@ class Event(File, Observable):
         return proxy.set_value(self, context, name, form)
 
 
-    def get_message(self, context):
+    def get_message(self, context, language=None):
         # Subject
         title=self.get_title()
         subject = MSG(u'The event "{title}" has been modified')
-        subject = subject.gettext(title=title)
+        subject = subject.gettext(title=title, language=language)
         # Body
         message = MSG(u'DO NOT REPLY TO THIS EMAIL.\n\n'
                       u'The user "{last_author}" has made some modifications '
@@ -455,7 +455,7 @@ class Event(File, Observable):
         last_author = self.get_property('last_author')
         last_author = context.root.get_user_title(last_author)
         body = message.gettext(last_author=last_author, resource_uri=uri,
-                               title=title)
+                               title=title, language=language)
 
         # And return
         return subject, body
