@@ -167,7 +167,9 @@ class RoleAware_BrowseUsers(SearchForm):
         elif column == 'role':
             role = resource.get_user_role(item.name)
             role = resource.get_role_title(role)
-            return role, ';edit_membership?id=%s' % item.name
+            href = '/%s/;edit_membership?id=%s' % (
+                    context.site_root.get_pathto(resource), item.name)
+            return role, href
         elif column == 'account_state':
             user = context.root.get_resource(item.abspath)
             if user.get_property('user_must_confirm'):

@@ -18,12 +18,31 @@
 from operator import itemgetter
 
 # Import from itools
-from itools.datatypes import Enumerate, Tokens, Email, Boolean
+from itools.core import freeze
+from itools.datatypes import Enumerate, Tokens, Email, MultiLinesTokens
 from itools.gettext import MSG
-from itools.web import STLForm, ERROR
 
 # Import from ikaaro
-from messages import MSG_CHANGES_SAVED
+from access import RoleAware_BrowseUsers
+from autoform import AutoForm, TextWidget, ReadOnlyWidget, MultilineWidget
+from buttons import Button, BrowseButton
+from views import CompositeForm
+
+
+MSG_USER_SUBSCRIBED = MSG(u'You are now subscribed to this resource.')
+MSG_SUBSCRIBED = MSG(u'The following users were subscribed: {users}.',
+        format='replace_html')
+MSG_UNSUBSCRIBED = MSG(u'The following users were unsubscribed: {users}.',
+        format='replace_html')
+MSG_ADDED = MSG(u'The following users were added: {users}.',
+        format='replace_html')
+
+
+def get_subscribed_message(message, users, context):
+    pattern = u'<a href="{0}">{1}</a>'
+    users = [pattern.format(context.get_link(user), user.get_title())
+            for user in users]
+    return message(users=", ".join(users))
 
 
 
@@ -77,167 +96,192 @@ class UsersRawList(Tokens):
 
 
 
-class SubscribeForm(STLForm):
+class RegisterButton(Button):
+    access = True
+    name = 'register'
+    title = MSG(u'OK')
 
+
+
+class RegisterForm(AutoForm):
     access = 'is_allowed_to_view'
-    title = MSG(u'Subscriptions')
-    template = '/ui/subscribe.xml'
+    title = MSG(u"Subscribe")
+    schema = freeze({'email': Email(mandatory=True)})
+    widgets = freeze([TextWidget('email', title=MSG(u"E-mail Address"))])
+    query_schema = freeze({
+        'email': Email})
+    actions = [RegisterButton, Button] # len(actions) > 1 to keep the name
 
 
-    def get_schema(self, resource, context):
-        return {'x_email': Email(mandatory=context.user is None),
-                'x_subscribe': Boolean(default=True),
-                'cc_list': UsersList(resource=resource, multiple=True),
-                'new_users': UsersRawList()}
+    def get_widgets(self, resource, context):
+        widgets = super(RegisterForm, self).get_widgets(resource, context)
+        if context.user:
+            # E-mail becomes hard coded
+            widgets = list(widgets)
+            email = widgets[0]
+            widgets[0] = ReadOnlyWidget(name=email.name, focus=True,
+                    title=email.title)
+        return widgets
 
 
-    def get_namespace(self, resource, context):
-        namespace = super(SubscribeForm, self).get_namespace(resource, context)
-
-        # Anomymous
-        x_subscribe = namespace['x_subscribe']['value'] == '1'
-        namespace['x_subscribe']['0_is_checked'] = not x_subscribe
-        namespace['x_subscribe']['1_is_checked'] = x_subscribe
-
-        # Get the good cc_list
-        submit = (context.method == 'POST')
-        if submit:
-            cc_list = context.get_form_value('cc_list',
-                      type=UsersList(resource=resource, multiple=True))
-        else:
-            cc_list = resource.get_property('cc_list')
-
-        # Admin
-        ac = resource.get_access_control()
-        is_admin = ac.is_admin(context.user, resource)
-
-        # Current user
-        current_user = None
-        user = context.user
-        if user:
-            # Find the user
-            for a_user in namespace['cc_list']['value']:
-                if a_user['name'] == user.name:
-                    current_user = a_user
-                    current_user['selected'] = user.name in cc_list
-                    break
-
-        # Other users
-        subscribed = []
-        not_subscribed = []
-        for a_user in namespace['cc_list']['value']:
-            if user and a_user['name'] == user.name:
-                continue
-            if a_user['name'] in cc_list:
-                a_user['selected'] = True
-                subscribed.append(a_user)
-            else:
-                a_user['selected'] = False
-                not_subscribed.append(a_user)
-        subscribed.sort(key=itemgetter('value'))
-        not_subscribed.sort(key=itemgetter('value'))
-
-        # Ok
-        return {'x_email': namespace['x_email'],
-                'x_subscribe': namespace['x_subscribe'],
-                'current_user': current_user,
-                'is_admin': is_admin,
-                'subscribed': subscribed,
-                'not_subscribed': not_subscribed,
-                'new_users': namespace['new_users']}
+    def get_value(self, resource, context, name, datatype):
+        if name == 'email':
+            if context.user:
+                return context.user.get_property('email')
+            return context.query['email']
+        proxy = super(RegisterForm, self)
+        return proxy.get_value(self, resource, context, name, datatype)
 
 
-    def _add_user(self, resource, context, email):
+    def action_register(self, resource, context, form):
         root = context.root
-        site_root = resource.get_site_root()
-        users = root.get_resource('users')
+        email = form['email']
+        existing_user = root.get_user_from_login(email)
+        user = resource.subscribe_user(email=email, user=existing_user)
 
-        # Get the user
-        user = root.get_user_from_login(email)
-
-        # Get the user (create it if needed)
-        if user is None:
-            # Add the user
-            user = users.set_user(email, password=None)
-            user_id = user.name
+        if existing_user is None:
+            # New user must confirm
             user.send_confirmation(context, email)
         else:
-            user_id = user.name
-            # Check the user is not yet in the group
-            if user_id in site_root.get_members():
-                return user_id
-            user.send_registration(context, email)
+            if context.user is None:
+                # Someone subscribed an existing user, warn him
+                user.send_registration(context, email)
+                # Else user subscribed himself, do nothing
 
-        # Set the role
-        site_root.set_user_role(user_id, role='guests')
-        return user_id
+        context.message = MSG_USER_SUBSCRIBED
 
 
-    def _reset_context(self, resource, context, new_cc):
-        resource.set_property('cc_list', tuple(new_cc))
-        context.get_form()['x_email'] = ''
-        context.get_form()['x_subscribe'] = True
-        context.get_form()['cc_list'] = list(new_cc)
-        context.get_form()['new_users'] = ''
+
+class SubscribeButton(BrowseButton):
+    access = 'is_admin'
+    name = 'subscribe'
+    title = MSG(u"Subscribe")
 
 
-    def action(self, resource, context, form):
-        x_email = form.get('x_email')
-        x_subscribe = form.get('x_subscribe')
-        new_cc = form.get('cc_list')
-        new_users = form.get('new_users')
 
-        # Case 1: anonymous user
-        user = context.user
-        if user is None:
-            new_cc = set(resource.get_property('cc_list'))
+class UnsubscribeButton(SubscribeButton):
+    name = 'unsubscribe'
+    title = MSG(u"Unsubscribe")
 
-            if x_subscribe:
-                new_id = self._add_user(resource, context, x_email)
-                new_cc.add(new_id)
-                context.message = MSG(
- u'A new account has been created and you are now registered to this resource')
+
+
+class ManageForm(RoleAware_BrowseUsers):
+    access = 'is_admin'
+    title = MSG(u"Manage Subscriptions")
+    description = None
+
+    table_columns = freeze(RoleAware_BrowseUsers.table_columns +
+            [('subscribed', MSG(u"Subscribed"))])
+    table_actions = freeze([SubscribeButton, UnsubscribeButton])
+
+
+    def get_items(self, resource, context):
+        site_root = resource.get_site_root()
+        return super(ManageForm, self).get_items(site_root, context)
+
+
+    def get_item_value(self, resource, context, item, column):
+        if column == 'subscribed':
+            subscribed = item.name in resource.get_property('cc_list')
+            return MSG(u"Yes") if subscribed else MSG(u"No")
+        proxy = super(ManageForm, self)
+        site_root = resource.get_site_root()
+        return proxy.get_item_value(site_root, context, item, column)
+
+
+    def action_subscribe(self, resource, context, form):
+        users = context.root.get_resource('users')
+
+        subscribed = []
+        for username in form['ids']:
+            user = users.get_resource(username)
+            resource.subscribe_user(user=user)
+            subscribed.append(user)
+
+        context.message = get_subscribed_message(MSG_SUBSCRIBED, subscribed,
+                context)
+
+
+    def action_unsubscribe(self, resource, context, form):
+        users = context.root.get_resource('users')
+
+        unsubscribed = []
+        for username in form['ids']:
+            user = users.get_resource(username)
+            resource.unsubscribe_user(username)
+            unsubscribed.append(user)
+
+        context.message = get_subscribed_message(MSG_UNSUBSCRIBED,
+                unsubscribed, context)
+
+
+
+class MassSubscribeButton(Button):
+    access = True
+    name = 'mass_subscribe'
+    title = MSG(u'OK')
+
+
+
+class MassSubscriptionForm(AutoForm):
+    access = 'is_admin'
+    title = MSG(u"Mass Subscription")
+    schema = freeze({'emails': MultiLinesTokens(mandatory=True)})
+    widgets = freeze([MultilineWidget('emails', focus=False,
+        title=MSG(u"E-mail addresses to subscribe"))])
+    actions = [MassSubscribeButton, Button] # len(actions) > 1
+
+
+    def get_value(self, resource, context, name, datatype):
+        if name == 'emails':
+            return ''
+        proxy = super(MassSubscriptionForm, self)
+        return proxy.get_value(resource, context, name, datatype)
+
+
+    def action_mass_subscribe(self, resource, context, form):
+        root = context.root
+        site_root = resource.get_site_root()
+
+        added = []
+        subscribed = []
+        for email in form['emails']:
+            email = email.strip()
+            if not email:
+                continue
+            existing_user = root.get_user_from_login(email)
+            if existing_user is None:
+                existing_role = None
             else:
-                # Check whether the user already exists
-                user = context.root.get_user_from_login(x_email)
-                if user:
-                    new_cc.discard(user.name)
-                    context.message = MSG_CHANGES_SAVED
-                else:
-                    context.message = ERROR(
-                                    u'This user was not in our database')
-            # Ok
-            resource.set_property('cc_list', tuple(new_cc))
-            context.get_form()['cc_list'] = list(new_cc)
-            context.get_form()['new_users'] = ''
-            return
+                existing_role = site_root.get_user_role(existing_user.name)
+            user = resource.subscribe_user(email=email, user=existing_user)
+            if existing_user is None:
+                # New user must confirm
+                user.send_confirmation(context, email)
+                added.append(user)
+            else:
+                if existing_role is None:
+                    # User added to the website, inform him
+                    user.send_registration(context, email)
+                    # Else user already a member of the website
+                subscribed.append(user)
 
-        # Case 2: admin
-        ac = resource.get_access_control()
-        is_admin = ac.is_admin(context.user, resource)
-        if is_admin:
-            new_id_set = set()
-            for email in new_users:
-                new_id_set.add(self._add_user(resource, context, email))
-            new_cc = set(new_cc).union(new_id_set)
+        message = []
+        if added:
+            message.append(get_subscribed_message(MSG_ADDED, added, context))
+        if subscribed:
+            message.append(get_subscribed_message(MSG_SUBSCRIBED, subscribed,
+                context))
 
-            # Ok
-            context.message = MSG_CHANGES_SAVED
-            self._reset_context(resource, context, new_cc)
-            return
+        context.message = message
 
-        # Case 3: someone else
-        old_cc = resource.get_property('cc_list')
-        if user.name in new_cc:
-            new_cc = set(old_cc)
-            new_cc.add(user.name)
-        else:
-            new_cc = set(old_cc)
-            new_cc.discard(user.name)
 
-        # Ok
-        context.message = MSG_CHANGES_SAVED
-        self._reset_context(resource, context, new_cc)
+
+class SubscribeForm(CompositeForm):
+    access = 'is_allowed_to_view'
+    title = MSG(u'Subscriptions')
+
+    subviews = [RegisterForm(), ManageForm(), MassSubscriptionForm()]
 
 
 
@@ -261,6 +305,46 @@ class Observable(object):
         body = message.gettext(resource_uri=uri, language=language)
         # And return
         return subject, body
+
+
+    def subscribe_user(self, email=None, user=None):
+        root = self.get_root()
+        site_root = self.get_site_root()
+
+        # Get the user
+        if user is None:
+            if email is None:
+                raise ValueError, "email or user are mandatory"
+            user = root.get_user_from_login(email)
+
+        # Create it if needed
+        if user is None:
+            # Add the user
+            users = root.get_resource('users')
+            user = users.set_user(email, password=None)
+            user_id = user.name
+        else:
+            user_id = user.name
+
+        # Set the role
+        if user_id not in site_root.get_members():
+            site_root.set_user_role(user_id, role='guests')
+
+        # Add to subscribers list
+        cc_list = set(self.get_property('cc_list'))
+        cc_list.add(user_id)
+        self.set_property('cc_list', tuple(cc_list))
+
+        return user
+
+
+    def unsubscribe_user(self, username):
+        cc_list = set(self.get_property('cc_list'))
+        try:
+            cc_list.remove(username)
+        except KeyError:
+            pass
+        self.set_property('cc_list', tuple(cc_list))
 
 
     def notify_subscribers(self, context):
