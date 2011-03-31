@@ -104,6 +104,8 @@ class Widget(CMSTemplate):
     suffix = None
     tip = None
     type = 'text'
+    # Focus on it if the first one displayed
+    focus = True
 
     template = make_stl_template("""
     <input type="${type}" id="${id}" name="${name}" value="${value}"
@@ -128,6 +130,7 @@ class TextWidget(Widget):
 class HiddenWidget(Widget):
 
     type = 'hidden'
+    focus = False
 
 
 
@@ -150,6 +153,7 @@ class ReadOnlyWidget(Widget):
     ${displayed_}""")
 
     displayed = None
+    focus = False
 
 
     @thingy_lazy_property
@@ -617,7 +621,6 @@ class AutoForm(STLForm):
         first_widget = None
         ns_widgets = []
         for widget in widgets:
-            focus = not issubclass(widget, (ReadOnlyWidget, HiddenWidget))
             datatype = fields[widget.name]
             ns_widget = widgets_namespace[widget.name]
             ns_widget['title'] = getattr(widget, 'title', None)
@@ -637,7 +640,7 @@ class AutoForm(STLForm):
                                                datatype=datatype,
                                                value=value[language],
                                                language=language_title))
-                    if focus and not first_widget:
+                    if first_widget is None and widget.focus:
                         first_widget = widget_name
                 # fix label
                 if widgets_html:
@@ -645,7 +648,7 @@ class AutoForm(STLForm):
             else:
                 widget = widget(datatype=datatype, value=value)
                 widgets_html = [widget]
-                if focus and not first_widget:
+                if first_widget is None and widget.focus:
                     first_widget = widget.name
 
             ns_widget['widgets'] = widgets_html
