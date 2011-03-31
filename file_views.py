@@ -309,13 +309,16 @@ class Image_Thumbnail(BaseView):
 
     access = 'is_allowed_to_view'
 
+    query_schema = {'width': Integer(default=48),
+                    'height': Integer(default=48)}
+
     def get_mtime(self, resource):
         return resource.handler.get_mtime()
 
 
     def GET(self, resource, context):
-        width = context.get_form_value('width', type=Integer, default=48)
-        height = context.get_form_value('height', type=Integer, default=48)
+        width = context.query['width']
+        height = context.query['height']
 
         # TODO generate the thumbnail in the resource format
         format = 'png' if resource.metadata.format == 'image/png' else 'jpeg'
