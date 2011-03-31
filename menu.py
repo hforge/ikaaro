@@ -579,11 +579,11 @@ class Menu(OrderedTable):
                     uri = site_root_abspath.resolve2('.%s' % path)
                 else:
                     uri = base.resolve2(path)
-                try:
+                resource = self.get_resource(uri, soft=True)
+                if resource:
                     # Use the canonical path instead of the uri stocked
-                    resource = self.get_resource(uri)
                     link = str(resource.get_canonical_path())
-                except LookupError:
+                else:
                     # If the resource does not exist, simply use the uri
                     link = str(uri)
                 links.add(link)
