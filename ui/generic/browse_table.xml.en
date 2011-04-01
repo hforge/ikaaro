@@ -5,7 +5,7 @@
   xmlns:stl="http://www.hforge.org/xml-namespaces/stl">
 
 <form action="" method="post" name="browse_list" id="form-table"
-  stl:omit-tag="not actions">
+  stl:omit-tag="external_form">
 <table id="browse-list" class="${css}">
   <thead stl:if="columns">
     <tr>

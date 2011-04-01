@@ -450,7 +450,7 @@ class BrowseForm(STLForm):
             'columns': table_head,
             'rows': rows,
             'actions': actions,
-        }
+            'external_form': self.external_form or not actions}
 
 
 
