@@ -284,8 +284,8 @@ class Image_Thumbnail(BaseView):
     access = 'is_allowed_to_view'
 
     query_schema = {
-        'width': Integer,
-        'height': Integer,
+        'width': Integer(default=48),
+        'height': Integer(default=48),
         'strict': Boolean(default=False)}
 
     def get_mtime(self, resource):
