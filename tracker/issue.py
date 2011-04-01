@@ -194,31 +194,39 @@ class Issue(Folder):
             uri = context.uri.resolve(';edit')
         else:
             uri = context.uri.resolve('%s/;edit' % self.name)
-
-        message = MSG(u'DO NOT REPLY TO THIS EMAIL. To comment on this '
-                u'issue, please visit:\n{issue_uri}')
-        body = message.gettext(issue_uri=uri)
-        body += '\n\n'
-        body += '#%s %s\n\n' % (self.name, self.get_property('title'))
-        message = MSG(u'The user {title} did some changes.')
-        body +=  message.gettext(title=user_title)
-        body += '\n\n'
-        if attachment:
-            filename = unicode(filename, 'utf-8')
-            message = MSG(u'New Attachment: {filename}')
-            message = message.gettext(filename=filename)
-            body += message + '\n'
-        comment = context.get_form_value('comment', type=Unicode)
-        modifications = self.get_diff_with(old_metadata, context, new=new)
-        if modifications:
-            body += modifications
+        # Notify / Build the message for each language
+        site_root = self.get_site_root()
+        website_languages = site_root.get_property('website_languages')
+        default_language = site_root.get_default_language()
+        messages_dict = {}
+        for language in website_languages:
+            message = MSG(u'DO NOT REPLY TO THIS EMAIL. To comment on this '
+                    u'issue, please visit:\n{issue_uri}')
+            body = message.gettext(issue_uri=uri, language=language)
             body += '\n\n'
-        if comment:
-            title = MSG(u'Comment').gettext()
-            separator = len(title) * u'-'
-            template = u'{title}\n{separator}\n\n{comment}\n'
-            body += template.format(title=title, separator=separator,
-                                    comment=comment)
+            body += '#%s %s\n\n' % (self.name, self.get_property('title'))
+            message = MSG(u'The user {title} did some changes.')
+            body +=  message.gettext(title=user_title, language=language)
+            body += '\n\n'
+            if attachment:
+                filename = unicode(filename, 'utf-8')
+                message = MSG(u'New Attachment: {filename}')
+                message = message.gettext(filename=filename, language=language)
+                body += message + '\n'
+            comment = context.get_form_value('comment', type=Unicode)
+            modifications = self.get_diff_with(old_metadata, context, new=new,
+                                              language=language)
+            if modifications:
+                body += modifications
+                body += '\n\n'
+            if comment:
+                title = MSG(u'Comment').gettext(language=language)
+                separator = len(title) * u'-'
+                template = u'{title}\n{separator}\n\n{comment}\n'
+                body += template.format(title=title, separator=separator,
+                                        comment=comment)
+            # OK
+            messages_dict[language] = subject, body
         # Notify / Send
         root = context.root
         for to_addr in to_addrs:
@@ -226,10 +234,14 @@ class Issue(Folder):
             if not user:
                 continue
             to_addr = user.get_property('email')
+            language = user.get_property('user_language')
+            if language not in website_languages:
+                language = default_language
+            subject, body = messages_dict[language]
             root.send_email(to_addr, subject, text=body)
 
 
-    def get_diff_with(self, old_metadata, context, new=False):
+    def get_diff_with(self, old_metadata, context, new=False, language=None):
         """Return a text with the diff between the given Metadata and new
         issue state.
         """
@@ -242,15 +254,15 @@ class Issue(Folder):
         else:
             # Edit issue
             template = MSG(u'{field}: {old_value} to {new_value}')
-            empty = MSG(u'[empty]').gettext()
+            empty = MSG(u'[empty]').gettext(language=language)
         # Modification of title
         last_prop = old_metadata.get_property('title')
         last_title = last_prop.value if last_prop else empty
         new_title = self.get_property('title') or empty
         if last_title != new_title:
-            field = MSG(u'Title').gettext()
+            field = MSG(u'Title').gettext(language=language)
             text = template.gettext(field=field, old_value=last_title,
-                                    new_value=new_title)
+                                    new_value=new_title, language=language)
             modifications.append(text)
         # List modifications
         fields = [
@@ -260,7 +272,7 @@ class Issue(Folder):
             ('priority', MSG(u'Priority')),
             ('state', MSG(u'State'))]
         for name, field in fields:
-            field = field.gettext()
+            field = field.gettext(language=language)
             last_prop = old_metadata.get_property(name)
             last_value = last_prop.value if last_prop else None
             new_value = self.get_property(name)
@@ -279,7 +291,7 @@ class Issue(Folder):
                 rec = csv.get_record(new_value)
                 new_title = csv.get_record_value(rec, 'title')
             text = template.gettext(field=field, old_value=last_title,
-                                    new_value=new_title)
+                                    new_value=new_title, language=language)
             modifications.append(text)
 
         # Modifications of assigned_to
@@ -291,9 +303,10 @@ class Issue(Folder):
                 last_user = root.get_user(last_user).get_property('email')
             if new_user:
                 new_user = root.get_user(new_user).get_property('email')
-            field = MSG(u'Assigned To').gettext()
+            field = MSG(u'Assigned To').gettext(language=language)
             text = template.gettext(field=field, old_value=last_user or empty,
-                                    new_value=new_user or empty)
+                                    new_value=new_user or empty,
+                                    language=language)
             modifications.append(text)
 
         # Modifications of cc_list
@@ -310,11 +323,11 @@ class Issue(Folder):
             for cc in new_cc:
                 value = root.get_user(cc).get_property('email')
                 new_values.append(value)
-            field = MSG(u'CC').gettext()
+            field = MSG(u'CC').gettext(language=language)
             last_values = ', '.join(last_values) or empty
             new_values = ', '.join(new_values) or empty
             text = template.gettext(field=field, old_value=last_values,
-                                    new_value=new_values)
+                                    new_value=new_values, language=language)
             modifications.append(text)
 
         return u'\n'.join(modifications)

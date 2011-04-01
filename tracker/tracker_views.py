@@ -32,7 +32,7 @@ from itools.web.views import process_form
 
 # Import from ikaaro
 from ikaaro.access import Roles_Datatype
-from ikaaro.autoform import HiddenWidget, SelectWidget, TextWidget
+from ikaaro.autoform import SelectWidget, TextWidget
 from ikaaro.buttons import BrowseButton
 from ikaaro import messages
 from ikaaro.views import BrowseForm, SearchForm as BaseSearchForm, ContextMenu
