@@ -370,7 +370,7 @@ class User_Tasks(STLView):
         if site_root.parent is not None:
             q2 = OrQuery(
                 get_base_path_query(site_root.get_canonical_path()),
-                get_canonical_path(resource.get_canonical_path()))
+                get_base_path_query(resource.get_canonical_path()))
             query = AndQuery(query, q2)
 
         # 2. Build the list of documents
