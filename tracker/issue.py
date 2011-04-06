@@ -284,12 +284,14 @@ class Issue(Folder):
             if last_value or last_value == 0:
                 rec = csv.get_record(last_value)
                 if rec is None:
-                    last_title = 'undefined'
+                    last_title = MSG(u'undefined').gettext(language=language)
                 else:
-                    last_title = csv.get_record_value(rec, 'title')
+                    last_title = csv.get_record_value(rec, 'title',
+                                                      language=language)
             if new_value or new_value == 0:
                 rec = csv.get_record(new_value)
-                new_title = csv.get_record_value(rec, 'title')
+                new_title = csv.get_record_value(rec, 'title',
+                                                 language=language)
             text = template.gettext(field=field, old_value=last_title,
                                     new_value=new_title, language=language)
             modifications.append(text)
