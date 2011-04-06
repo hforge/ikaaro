@@ -567,12 +567,23 @@ class ProgressBarWidget(Widget):
     onsubmit = 'startProgressBar();'
 
     template = make_stl_template("""
-    <div id="progress-bar-box">
-      <div id="progress-bar"/><span id="progress-bar-infos"/>
+    <div id ="progress-bar-widget">
+        <div id="attachment-file-infos">
+            <p id="file-name" />
+            <p id="file-size" />
+            <p id="file-type" />
+        </div>
+        <div id="progress-bar-box">
+            <span><div id="progress-bar"/></span><span id="percent"/>
+            <div id="upload-size" />
+        </div>
     </div>
     <script type="text/javascript">
       $('head').append('<link rel="stylesheet" href="/ui/progressbar/jquery-progressbar.css" type="text/css" />');
       var upload_id = ${upload_id};
+      $("INPUT:file").focus(function () {
+        attachmentSelected($(this));
+      });
     </script>
     <script  type="text/javascript" src="/ui/progressbar/jquery-progressbar.min.js"/>
     """)

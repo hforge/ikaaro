@@ -304,15 +304,37 @@
 .ui-progressbar { height:2em; text-align: left; }
 .ui-progressbar .ui-progressbar-value {margin: -1px; height:100%; }
 
-
-/* Additional part for the progress bar */
-#autoform #progress-bar-box {
-	margin-top: 5px;
-	width: 380px;
-	height: 15px;
+/* Ikaaro 0.62
+ * Additional part for the progress bar
+ */
+#progress-bar-widget {
+  margin-top: 8px
 }
-
-#autoform #progress-bar-infos {
+#progress-bar-widget #attachment-file-infos {
+  margin: 8px 0px;
+}
+#progress-bar-widget #attachment-file-infos P {
+  margin: 2px 0px;
+  font-style: italic;
+  color: #666666;
+}
+#progress-bar-widget #progress-bar-box {
+  width: 425px;
+  display: none;
+}
+#progress-bar-widget #progress-bar-box #progress-bar{
+  width: 380px;
+  height: 15px;
+}
+#progress-bar-widget #progress-bar-box #upload-size {
+  float: left;
+  margin-top: 5px;
+  width: 175px;
+}
+#progress-bar-widget #progress-bar-box #progress-bar {
+  float: left;
+  margin-right: 12px;
+}
+#progress-bar-widget #progress-bar-box #percent {
   float: right;
 }
-

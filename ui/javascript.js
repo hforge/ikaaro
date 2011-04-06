@@ -140,48 +140,88 @@ function reply(id){
 /* Progress bar: startProgressBar() */
 function startProgressBar()
 {
-    $("#progress-bar").progressbar();
+  $("#progress-bar-box").css("display", "block");
+  $("#progress-bar").progressbar();
 
-    var intervalId = setInterval(
-      function()
-      {
-        $.getJSON("/;upload_stats?upload_id=" + upload_id,
-          function(data)
+  var intervalId = setInterval(
+    function()
+    {
+      $.getJSON("/;upload_stats?upload_id=" + upload_id,
+        function(data)
+        {
+          if (data == null || !data.valid_id)
           {
-            if (data == null || !data.valid_id)
-            {
-              clearInterval(intervalId);
-              $("#progress-bar").progressbar("destroy");
-              $("#progress-bar-infos").empty();
-              return;
-            }
-            var percent = Math.floor(data.percent);
+            clearInterval(intervalId);
+            $("#progress-bar").progressbar("destroy");
+            $("#progress-bar-box").css("display", "none")
+            return;
+          }
+          var percent = Math.floor(data.percent);
 
-            $("#progress-bar").progressbar("option", "value", percent);
-            $("#progress-bar-infos").html(sizeToText(data.uploaded_size,
-                                                     data.total_size,
-                                                     percent));
-          });
-      },
-      1500);
+          $("#progress-bar").progressbar("option", "value", percent);
+          var toText = sizeToText(data.uploaded_size, data.total_size, percent);
+          $("#upload-size").html(toText.uploaded_size + "/" + toText.total_size);
+          $("#percent").html(toText.percent)
+        });
+    },
+    1500);
 }
 
 
 /* Progress bar: sizeToText */
 function sizeToText(uploaded_size, total_size, percent)
 {
-	percent = "(" + percent.toString() + "%)";
-    if (total_size > 1024 * 1024)
-    {
-        uploaded_size = (Math.round(uploaded_size*100/(1024*1024))/100).toString();
-        total_size = (Math.round(total_size * 100/(1024*1024))/100).toString();
-        return uploaded_size + "/" + total_size + "Mo" + percent;
+  percent = percent.toString() + "%";
+  if (total_size > 1024 * 1024)
+  {
+    uploaded_size = (Math.round(uploaded_size*100/(1024*1024))/100).toString();
+    total_size = (Math.round(total_size * 100/(1024*1024))/100).toString();
+    return {  uploaded_size: uploaded_size,
+              total_size: total_size + "Mo",
+              percent:percent};
+  } else if (size > 1024) {
+    uploaded_size = (Math.round(uploaded_size *100/1024)/100).toString();
+    total_size = (Math.round(total_size*100/1024)/100).toString();
+    return {  uploaded_size: uploaded_size,
+              total_size: total_size + "Ko",
+              percent:percent};
+  } else {
+    return {  uploaded_size: uploaded_size.toString(),
+              total_size: total_size.toString() + "o",
+              percent:percent};
+  }
+}
 
-	} else if (size > 1024) {
-        uploaded_size = (Math.round(uploaded_size *100/1024)/100).toString();
-        total_size = (Math.round(total_size*100/1024)/100).toString();
-        return uploaded_size + "/" + total_size + "Ko" + percent;
-	} else {
-        return uploaded_size.toString() + "/" + total_size.toString() + "o" + percent;
-	}
+
+/* Progress bar: filenameHasExtension */
+function filenameHasExtension(filename)
+{
+  return (/[.]/.exec(filename)) ? /[^.]+$/.exec(filename) : undefined;
+}
+
+
+/* Progress bar: attachmentSelected */
+function attachmentSelected(file)
+{
+  var attachment = file.get(0).files[0];
+  if (attachment)
+  {
+    name = attachment.name;
+    size = attachment.size;
+    type = attachment.type;
+    if (size > 1024 * 1024)
+    {
+      sizeToTxt = (Math.round(size * 100 / (1024 * 1024)) / 100).toString() + 'Mo';
+    } else {
+      sizeToTxt = (Math.round(size * 100 / 1024) / 100).toString() + 'Ko';
+    }
+    // If the user choose a file without an extension, show an error text.
+    if (filenameHasExtension(name) == undefined) {
+      $("#file-name").html('Name: <span class="field-is-missing">The given filename have no extension!</span>');
+    } else {
+      $("#file-name").html('Name: ' + name);
+    }
+    $("#file-size").html('Size: ' + sizeToTxt);
+    (type == '') ? $("#file-type").html('Type: Unknown') : $("#file-type").html('Type: ' + type);
+  }
 }
