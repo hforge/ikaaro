@@ -938,6 +938,9 @@ class Tracker_ChangeSeveralBugs(Tracker_View):
 
         # Send mails
         root = context.root
+        site_root = resource.get_site_root()
+        website_languages = site_root.get_property('website_languages')
+        default_language = site_root.get_default_language()
         if user is None:
             user_title = MSG(u'ANONYMOUS').gettext()
         else:
@@ -947,14 +950,23 @@ class Tracker_ChangeSeveralBugs(Tracker_View):
         tracker_title = resource.get_property('title') or 'Tracker Issue'
         subject = u'[%s]' % tracker_title
         for user_id in users_issues:
+            user = root.get_user(user_id)
+            if not user:
+                continue
+            # Find a good language
+            language = user.get_property('user_language')
+            if language not in website_languages:
+                language = default_language
+            # Construct the body
             user_issues = [
                 u'#%s - %s - %s' % (x['href'], x['name'], x['title'])
                 for x in users_issues[user_id]
             ]
             user_issues = '\n'.join(user_issues)
             body = template.gettext(user=user_title, comment=comment,
-                                    issues=user_issues)
-            to_addr = root.get_user(user_id).get_property('email')
+                                    issues=user_issues, language=language)
+            # And send !
+            to_addr = user.get_property('email')
             root.send_email(to_addr, subject, text=body)
 
         context.message = messages.MSG_CHANGES_SAVED
