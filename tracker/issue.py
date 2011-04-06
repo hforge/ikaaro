@@ -266,6 +266,7 @@ class Issue(Folder):
             modifications.append(text)
         # List modifications
         fields = [
+            ('product', MSG(u'Product')),
             ('module', MSG(u'Module')),
             ('version', MSG(u'Version')),
             ('type', MSG(u'Type')),
