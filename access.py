@@ -348,7 +348,9 @@ class RoleAware_AddUser(AutoForm):
 
 
     def action_add_and_return(self, resource, context, form):
-        self._add(resource, context, form)
+        user_id = self._add(resource, context, form)
+        if user_id is not None:
+            context.message = INFO(u'User added.')
 
 
     def action_add_and_view(self, resource, context, form):
