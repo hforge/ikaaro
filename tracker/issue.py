@@ -208,10 +208,11 @@ class Issue(Folder):
             message = MSG(u'The user {title} did some changes.')
             body +=  message.gettext(title=user_title, language=language)
             body += '\n\n'
-            if attachment:
-                filename = unicode(filename, 'utf-8')
+            if attachment is not None:
+                u_filename = unicode(filename, 'utf-8')
                 message = MSG(u'New Attachment: {filename}')
-                message = message.gettext(filename=filename, language=language)
+                message = message.gettext(filename=u_filename,
+                                          language=language)
                 body += message + '\n'
             comment = context.get_form_value('comment', type=Unicode)
             modifications = self.get_diff_with(old_metadata, context, new=new,
