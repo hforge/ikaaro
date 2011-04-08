@@ -61,8 +61,7 @@ class Database(GitDatabase):
 
         # 4. Find out commit author & message
         git_author = (
-            '%s <%s>' % (userid, user.get_property('email'))
-            if user else 'nobody <>')
+            (userid, user.get_property('email')) if user else ('nobody', ''))
 
         git_msg = getattr(context, 'git_message', None)
         if not git_msg:
