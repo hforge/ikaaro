@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2011-04-12 16:04+CET\n"
+"POT-Creation-Date: 2011-04-14 09:04+CET\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -76,7 +76,7 @@ msgstr ""
 msgid "5"
 msgstr ""
 
-#: ../cc.py:42
+#: ../cc.py:46
 msgid "<a href=\"{0}\">{1}</a>"
 msgstr ""
 
@@ -469,7 +469,7 @@ msgstr ""
 msgid "DO NOT REPLY TO THIS EMAIL. To comment on this issue, please visit:\n{issue_uri}"
 msgstr ""
 
-#: ../cc.py:300
+#: ../cc.py:340
 msgid "DO NOT REPLY TO THIS EMAIL. To view modifications please visit:\n{resource_uri}"
 msgstr ""
 
@@ -521,12 +521,12 @@ msgstr ""
 msgid "Download"
 msgstr ""
 
-#: ../cc.py:110
+#: ../cc.py:120
 #: ../user_views.py:188
 msgid "E-mail Address"
 msgstr ""
 
-#: ../cc.py:231
+#: ../cc.py:265
 msgid "E-mail addresses to subscribe"
 msgstr ""
 
@@ -920,7 +920,7 @@ msgstr ""
 msgid "Mac OS X"
 msgstr ""
 
-#: ../cc.py:170
+#: ../cc.py:194
 msgid "Manage Subscriptions"
 msgstr ""
 
@@ -928,7 +928,7 @@ msgstr ""
 msgid "March"
 msgstr ""
 
-#: ../cc.py:228
+#: ../cc.py:262
 msgid "Mass Subscription"
 msgstr ""
 
@@ -1031,7 +1031,7 @@ msgstr ""
 msgid "New row added."
 msgstr ""
 
-#: ../cc.py:186
+#: ../cc.py:210
 #: ../autoform.py:241
 msgid "No"
 msgstr ""
@@ -1089,8 +1089,7 @@ msgid "ODT"
 msgstr ""
 
 #: ../buttons.py:37
-#: ../cc.py:102
-#: ../cc.py:222
+#: ../cc.py:256
 msgid "OK"
 msgstr ""
 
@@ -1601,12 +1600,12 @@ msgstr ""
 msgid "Stored Searches"
 msgstr ""
 
-#: ../cc.py:108
-#: ../cc.py:158
+#: ../cc.py:106
+#: ../cc.py:182
 msgid "Subscribe"
 msgstr ""
 
-#: ../cc.py:174
+#: ../cc.py:198
 msgid "Subscribed"
 msgstr ""
 
@@ -1614,7 +1613,11 @@ msgstr ""
 msgid "Subscribers"
 msgstr ""
 
-#: ../cc.py:282
+#: ../cc.py:118
+msgid "Subscription"
+msgstr ""
+
+#: ../cc.py:322
 msgid "Subscriptions"
 msgstr ""
 
@@ -1691,15 +1694,19 @@ msgstr ""
 msgid "The file must be entered."
 msgstr ""
 
-#: ../cc.py:37
+#: ../cc.py:41
+msgid "The following users are prevented from subscribing: {users}."
+msgstr ""
+
+#: ../cc.py:39
 msgid "The following users were added: {users}."
 msgstr ""
 
-#: ../cc.py:33
+#: ../cc.py:35
 msgid "The following users were subscribed: {users}."
 msgstr ""
 
-#: ../cc.py:35
+#: ../cc.py:37
 msgid "The following users were unsubscribed: {users}."
 msgstr ""
 
@@ -1889,7 +1896,8 @@ msgstr ""
 msgid "Unpublish"
 msgstr ""
 
-#: ../cc.py:164
+#: ../cc.py:112
+#: ../cc.py:188
 msgid "Unsubscribe"
 msgstr ""
 
@@ -2054,7 +2062,7 @@ msgstr ""
 msgid "Yahoo site verification key"
 msgstr ""
 
-#: ../cc.py:186
+#: ../cc.py:210
 #: ../autoform.py:241
 msgid "Yes"
 msgstr ""
@@ -2067,8 +2075,12 @@ msgstr ""
 msgid "You are now registered as users of: {site_name}.\nYou can follow this link {site_uri} to access to the site."
 msgstr ""
 
-#: ../cc.py:32
+#: ../cc.py:33
 msgid "You are now subscribed to this resource."
+msgstr ""
+
+#: ../cc.py:34
+msgid "You are now unsubscribed from this resource."
 msgstr ""
 
 #: ../control_panel.py:343
@@ -2137,7 +2149,7 @@ msgstr ""
 msgid "[empty]"
 msgstr ""
 
-#: ../cc.py:297
+#: ../cc.py:337
 msgid "[{title}] has been modified"
 msgstr ""
 

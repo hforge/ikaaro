@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: it\n"
-"POT-Creation-Date: 2011-04-12 16:04+CET\n"
+"POT-Creation-Date: 2011-04-14 09:04+CET\n"
 "PO-Revision-Date: 2004-11-26 14:39+0100\n"
 "Last-Translator: Paolo Dina <paolo@php3.it>\n"
 "Language-Team: Italian <paolo@php3.it>\n"
@@ -207,7 +207,7 @@ msgctxt "table cell"
 msgid ":"
 msgstr ""
 
-#: ../cc.py:42
+#: ../cc.py:46
 #, fuzzy
 msgid "<a href=\"{0}\">{1}</a>"
 msgstr ""
@@ -1179,7 +1179,7 @@ msgid ""
 "{issue_uri}"
 msgstr ""
 
-#: ../cc.py:300
+#: ../cc.py:340
 msgid ""
 "DO NOT REPLY TO THIS EMAIL. To view modifications please visit:\n"
 "{resource_uri}"
@@ -1306,12 +1306,12 @@ msgctxt "link"
 msgid "Download all attachments"
 msgstr "Commenti:"
 
-#: ../cc.py:110 ../user_views.py:188
+#: ../cc.py:120 ../user_views.py:188
 #, fuzzy
 msgid "E-mail Address"
 msgstr "Utenti"
 
-#: ../cc.py:231
+#: ../cc.py:265
 #, fuzzy
 msgid "E-mail addresses to subscribe"
 msgstr "Utenti"
@@ -1974,7 +1974,7 @@ msgctxt "legend"
 msgid "Make a comment"
 msgstr "Commenti:"
 
-#: ../cc.py:170
+#: ../cc.py:194
 #, fuzzy
 msgid "Manage Subscriptions"
 msgstr "Descrizione"
@@ -1984,7 +1984,7 @@ msgstr "Descrizione"
 msgid "March"
 msgstr "Cerca"
 
-#: ../cc.py:228
+#: ../cc.py:262
 #, fuzzy
 msgid "Mass Subscription"
 msgstr "Descrizione"
@@ -2180,7 +2180,7 @@ msgctxt "li"
 msgid "Nicolas Deram (French)"
 msgstr ""
 
-#: ../cc.py:186 ../autoform.py:241
+#: ../cc.py:210 ../autoform.py:241
 msgid "No"
 msgstr ""
 
@@ -2258,7 +2258,7 @@ msgstr ""
 msgid "ODT"
 msgstr ""
 
-#: ../buttons.py:37 ../cc.py:102 ../cc.py:222
+#: ../buttons.py:37 ../cc.py:256
 #, fuzzy
 msgid "OK"
 msgstr "OK"
@@ -2987,12 +2987,12 @@ msgstr "Cerca"
 msgid "Stored Searches"
 msgstr ""
 
-#: ../cc.py:108 ../cc.py:158
+#: ../cc.py:106 ../cc.py:182
 #, fuzzy
 msgid "Subscribe"
 msgstr "Descrizione"
 
-#: ../cc.py:174
+#: ../cc.py:198
 #, fuzzy
 msgid "Subscribed"
 msgstr "Descrizione"
@@ -3002,7 +3002,12 @@ msgstr "Descrizione"
 msgid "Subscribers"
 msgstr "Descrizione"
 
-#: ../cc.py:282
+#: ../cc.py:118
+#, fuzzy
+msgid "Subscription"
+msgstr "Descrizione"
+
+#: ../cc.py:322
 #, fuzzy
 msgid "Subscriptions"
 msgstr "Descrizione"
@@ -3118,15 +3123,19 @@ msgstr "L'utente \"%s\" non esiste"
 msgid "The file must be entered."
 msgstr "Deve essere inserito un file"
 
-#: ../cc.py:37
+#: ../cc.py:41
+msgid "The following users are prevented from subscribing: {users}."
+msgstr ""
+
+#: ../cc.py:39
 msgid "The following users were added: {users}."
 msgstr ""
 
-#: ../cc.py:33
+#: ../cc.py:35
 msgid "The following users were subscribed: {users}."
 msgstr ""
 
-#: ../cc.py:35
+#: ../cc.py:37
 msgid "The following users were unsubscribed: {users}."
 msgstr ""
 
@@ -3470,7 +3479,7 @@ msgstr ""
 msgid "Unpublish"
 msgstr "pubblicato"
 
-#: ../cc.py:164
+#: ../cc.py:112 ../cc.py:188
 #, fuzzy
 msgid "Unsubscribe"
 msgstr "Descrizione"
@@ -3688,7 +3697,7 @@ msgstr "File"
 msgid "Yahoo site verification key"
 msgstr ""
 
-#: ../cc.py:186 ../autoform.py:241
+#: ../cc.py:210 ../autoform.py:241
 msgid "Yes"
 msgstr ""
 
@@ -3712,9 +3721,16 @@ msgid ""
 "You can follow this link {site_uri} to access to the site."
 msgstr ""
 
-#: ../cc.py:32
+#: ../cc.py:33
 #, fuzzy
 msgid "You are now subscribed to this resource."
+msgstr ""
+"Seleziona l'utente/gli utenti che desideri aggiungere nel gruppo  <b stl:"
+"content=\"name\"></b> :"
+
+#: ../cc.py:34
+#, fuzzy
+msgid "You are now unsubscribed from this resource."
 msgstr ""
 "Seleziona l'utente/gli utenti che desideri aggiungere nel gruppo  <b stl:"
 "content=\"name\"></b> :"
@@ -3819,7 +3835,7 @@ msgstr ""
 msgid "[empty]"
 msgstr ""
 
-#: ../cc.py:297
+#: ../cc.py:337
 #, fuzzy
 msgid "[{title}] has been modified"
 msgstr "Il linguaggio predefinito è stato modificato."

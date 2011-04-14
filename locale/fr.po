@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-12 16:04+CET\n"
+"POT-Creation-Date: 2011-04-14 09:04+CET\n"
 "PO-Revision-Date: 2010-10-27 16:38+0100\n"
 "Last-Translator: David Versmisse <david.versmisse@itaapy.com>\n"
 "Language-Team: Itaapy\n"
@@ -226,7 +226,7 @@ msgctxt "table cell"
 msgid ":"
 msgstr ":"
 
-#: ../cc.py:42
+#: ../cc.py:46
 msgid "<a href=\"{0}\">{1}</a>"
 msgstr ""
 
@@ -1185,7 +1185,7 @@ msgstr ""
 "NE PAS RÉPONDRE À CE MESSAGE. Pour commenter cette fiche, allez sur :\n"
 "{issue_uri}"
 
-#: ../cc.py:300
+#: ../cc.py:340
 msgid ""
 "DO NOT REPLY TO THIS EMAIL. To view modifications please visit:\n"
 "{resource_uri}"
@@ -1300,11 +1300,11 @@ msgctxt "link"
 msgid "Download all attachments"
 msgstr "Télécharger toutes les pièces jointes"
 
-#: ../cc.py:110 ../user_views.py:188
+#: ../cc.py:120 ../user_views.py:188
 msgid "E-mail Address"
 msgstr "Adresse de courriel"
 
-#: ../cc.py:231
+#: ../cc.py:265
 msgid "E-mail addresses to subscribe"
 msgstr "Adresses de courriel à inscrire"
 
@@ -1898,7 +1898,7 @@ msgctxt "legend"
 msgid "Make a comment"
 msgstr "Faire un commentaire"
 
-#: ../cc.py:170
+#: ../cc.py:194
 msgid "Manage Subscriptions"
 msgstr "Gérer les inscriptions"
 
@@ -1906,7 +1906,7 @@ msgstr "Gérer les inscriptions"
 msgid "March"
 msgstr "Mars"
 
-#: ../cc.py:228
+#: ../cc.py:262
 msgid "Mass Subscription"
 msgstr "Inscriptions en masse"
 
@@ -2080,7 +2080,7 @@ msgctxt "li"
 msgid "Nicolas Deram (French)"
 msgstr "Nicolas Deram (français)"
 
-#: ../cc.py:186 ../autoform.py:241
+#: ../cc.py:210 ../autoform.py:241
 msgid "No"
 msgstr "Non"
 
@@ -2151,7 +2151,7 @@ msgstr "Classeur OpenDocument"
 msgid "ODT"
 msgstr "Texte OpenDocument"
 
-#: ../buttons.py:37 ../cc.py:102 ../cc.py:222
+#: ../buttons.py:37 ../cc.py:256
 msgid "OK"
 msgstr "OK"
 
@@ -2788,11 +2788,11 @@ msgstr "Recherche enregistrée"
 msgid "Stored Searches"
 msgstr "Recherches enregistrées"
 
-#: ../cc.py:108 ../cc.py:158
+#: ../cc.py:106 ../cc.py:182
 msgid "Subscribe"
 msgstr "Inscrire"
 
-#: ../cc.py:174
+#: ../cc.py:198
 msgid "Subscribed"
 msgstr "Inscrit"
 
@@ -2800,7 +2800,11 @@ msgstr "Inscrit"
 msgid "Subscribers"
 msgstr "Inscrits"
 
-#: ../cc.py:282
+#: ../cc.py:118
+msgid "Subscription"
+msgstr "Inscription"
+
+#: ../cc.py:322
 msgid "Subscriptions"
 msgstr "Inscriptions"
 
@@ -2903,15 +2907,20 @@ msgstr "Le fichier « {filename} » n'existe pas."
 msgid "The file must be entered."
 msgstr "Le fichier doit être saisi."
 
-#: ../cc.py:37
+#: ../cc.py:41
+#, fuzzy
+msgid "The following users are prevented from subscribing: {users}."
+msgstr "Les utilisateurs suivants ont été inscrits : {users}."
+
+#: ../cc.py:39
 msgid "The following users were added: {users}."
 msgstr "Les utilisateurs suivants ont été ajoutés : {users}."
 
-#: ../cc.py:33
+#: ../cc.py:35
 msgid "The following users were subscribed: {users}."
 msgstr "Les utilisateurs suivants ont été inscrits : {users}."
 
-#: ../cc.py:35
+#: ../cc.py:37
 msgid "The following users were unsubscribed: {users}."
 msgstr "Les utilisateurs suivants ont été désinscrits : {users}."
 
@@ -3240,7 +3249,7 @@ msgstr "Décompressez le tarball <g id='3'>restedit-last.tar.gz</g>"
 msgid "Unpublish"
 msgstr "Dépublier"
 
-#: ../cc.py:164
+#: ../cc.py:112 ../cc.py:188
 msgid "Unsubscribe"
 msgstr "Désinscrire"
 
@@ -3440,7 +3449,7 @@ msgstr "Fichier XML"
 msgid "Yahoo site verification key"
 msgstr "Clé de vérification de Yahoo"
 
-#: ../cc.py:186 ../autoform.py:241
+#: ../cc.py:210 ../autoform.py:241
 msgid "Yes"
 msgstr "Oui"
 
@@ -3466,8 +3475,13 @@ msgstr ""
 "Vous êtes maintenant enregistré comme utilisateur de: {site_name}.\n"
 "Vous pouvez suivre ce lien {site_uri} pour accéder au site."
 
-#: ../cc.py:32
+#: ../cc.py:33
 msgid "You are now subscribed to this resource."
+msgstr "Vous êtes désormais inscrit pour cette ressource."
+
+#: ../cc.py:34
+#, fuzzy
+msgid "You are now unsubscribed from this resource."
 msgstr "Vous êtes désormais inscrit pour cette ressource."
 
 #: ../control_panel.py:343
@@ -3573,7 +3587,7 @@ msgstr ""
 msgid "[empty]"
 msgstr "[vide]"
 
-#: ../cc.py:297
+#: ../cc.py:337
 msgid "[{title}] has been modified"
 msgstr "[{title}] a été modifié"
 

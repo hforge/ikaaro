@@ -3,7 +3,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: zh\n"
-"POT-Creation-Date: 2011-04-12 16:04+CET\n"
+"POT-Creation-Date: 2011-04-14 09:04+CET\n"
 "PO-Revision-Date: 2007-10-30 17:58+0100\n"
 "Last-Translator: Zhouli <zhouli@in-girum.net>\n"
 "Language-Team:  <zh@li.org>\n"
@@ -202,7 +202,7 @@ msgctxt "table cell"
 msgid ":"
 msgstr ""
 
-#: ../cc.py:42
+#: ../cc.py:46
 msgid "<a href=\"{0}\">{1}</a>"
 msgstr ""
 
@@ -1160,7 +1160,7 @@ msgid ""
 "{issue_uri}"
 msgstr ""
 
-#: ../cc.py:300
+#: ../cc.py:340
 msgid ""
 "DO NOT REPLY TO THIS EMAIL. To view modifications please visit:\n"
 "{resource_uri}"
@@ -1286,12 +1286,12 @@ msgctxt "link"
 msgid "Download all attachments"
 msgstr "新文件"
 
-#: ../cc.py:110 ../user_views.py:188
+#: ../cc.py:120 ../user_views.py:188
 #, fuzzy
 msgid "E-mail Address"
 msgstr "用户"
 
-#: ../cc.py:231
+#: ../cc.py:265
 #, fuzzy
 msgid "E-mail addresses to subscribe"
 msgstr "用户"
@@ -1942,7 +1942,7 @@ msgctxt "legend"
 msgid "Make a comment"
 msgstr "新文件"
 
-#: ../cc.py:170
+#: ../cc.py:194
 #, fuzzy
 msgid "Manage Subscriptions"
 msgstr "名称"
@@ -1952,7 +1952,7 @@ msgstr "名称"
 msgid "March"
 msgstr "搜索"
 
-#: ../cc.py:228
+#: ../cc.py:262
 #, fuzzy
 msgid "Mass Subscription"
 msgstr "名称"
@@ -2145,7 +2145,7 @@ msgctxt "li"
 msgid "Nicolas Deram (French)"
 msgstr ""
 
-#: ../cc.py:186 ../autoform.py:241
+#: ../cc.py:210 ../autoform.py:241
 msgid "No"
 msgstr ""
 
@@ -2223,7 +2223,7 @@ msgstr ""
 msgid "ODT"
 msgstr ""
 
-#: ../buttons.py:37 ../cc.py:102 ../cc.py:222
+#: ../buttons.py:37 ../cc.py:256
 msgid "OK"
 msgstr ""
 
@@ -2944,12 +2944,12 @@ msgstr "搜索"
 msgid "Stored Searches"
 msgstr ""
 
-#: ../cc.py:108 ../cc.py:158
+#: ../cc.py:106 ../cc.py:182
 #, fuzzy
 msgid "Subscribe"
 msgstr "名称"
 
-#: ../cc.py:174
+#: ../cc.py:198
 #, fuzzy
 msgid "Subscribed"
 msgstr "名称"
@@ -2959,7 +2959,12 @@ msgstr "名称"
 msgid "Subscribers"
 msgstr "名称"
 
-#: ../cc.py:282
+#: ../cc.py:118
+#, fuzzy
+msgid "Subscription"
+msgstr "名称"
+
+#: ../cc.py:322
 #, fuzzy
 msgid "Subscriptions"
 msgstr "名称"
@@ -3072,15 +3077,19 @@ msgstr ""
 msgid "The file must be entered."
 msgstr "必须写入文件."
 
-#: ../cc.py:37
+#: ../cc.py:41
+msgid "The following users are prevented from subscribing: {users}."
+msgstr ""
+
+#: ../cc.py:39
 msgid "The following users were added: {users}."
 msgstr ""
 
-#: ../cc.py:33
+#: ../cc.py:35
 msgid "The following users were subscribed: {users}."
 msgstr ""
 
-#: ../cc.py:35
+#: ../cc.py:37
 msgid "The following users were unsubscribed: {users}."
 msgstr ""
 
@@ -3417,7 +3426,7 @@ msgstr ""
 msgid "Unpublish"
 msgstr "公共"
 
-#: ../cc.py:164
+#: ../cc.py:112 ../cc.py:188
 #, fuzzy
 msgid "Unsubscribe"
 msgstr "名称"
@@ -3634,7 +3643,7 @@ msgstr ""
 msgid "Yahoo site verification key"
 msgstr ""
 
-#: ../cc.py:186 ../autoform.py:241
+#: ../cc.py:210 ../autoform.py:241
 msgid "Yes"
 msgstr ""
 
@@ -3658,8 +3667,12 @@ msgid ""
 "You can follow this link {site_uri} to access to the site."
 msgstr ""
 
-#: ../cc.py:32
+#: ../cc.py:33
 msgid "You are now subscribed to this resource."
+msgstr ""
+
+#: ../cc.py:34
+msgid "You are now unsubscribed from this resource."
 msgstr ""
 
 #: ../control_panel.py:343
@@ -3759,7 +3772,7 @@ msgstr ""
 msgid "[empty]"
 msgstr ""
 
-#: ../cc.py:297
+#: ../cc.py:337
 #, fuzzy
 msgid "[{title}] has been modified"
 msgstr "预设语言已被改变."
