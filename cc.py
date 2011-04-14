@@ -21,6 +21,7 @@ from operator import itemgetter
 from itools.core import freeze
 from itools.datatypes import Enumerate, Tokens, Email, MultiLinesTokens
 from itools.gettext import MSG
+from itools.web import INFO, ERROR
 
 # Import from ikaaro
 from access import RoleAware_BrowseUsers
@@ -29,14 +30,16 @@ from buttons import Button, BrowseButton
 from views import CompositeForm
 
 
-MSG_USER_SUBSCRIBED = MSG(u'You are now subscribed to this resource.')
-MSG_USER_UNSUBSCRIBED = MSG(u'You are now unsubscribed from this resource.')
-MSG_SUBSCRIBED = MSG(u'The following users were subscribed: {users}.',
+MSG_USER_SUBSCRIBED = INFO(u'You are now subscribed to this resource.')
+MSG_USER_UNSUBSCRIBED = INFO(u'You are now unsubscribed from this resource.')
+MSG_SUBSCRIBED = INFO(u'The following users were subscribed: {users}.',
         format='replace_html')
-MSG_UNSUBSCRIBED = MSG(u'The following users were unsubscribed: {users}.',
+MSG_UNSUBSCRIBED = INFO(u'The following users were unsubscribed: {users}.',
         format='replace_html')
-MSG_ADDED = MSG(u'The following users were added: {users}.',
+MSG_ADDED = INFO(u'The following users were added: {users}.',
         format='replace_html')
+MSG_UNALLOWED = ERROR(u'The following users are prevented from subscribing: '
+        u'{users}.', format='replace_html')
 
 
 def get_subscribed_message(message, users, context):
@@ -155,6 +158,8 @@ class RegisterForm(AutoForm):
                 user.send_registration(context, email)
                 # Else user subscribed himself, do nothing
 
+        resource.after_register(user.name)
+
         context.message = MSG_USER_SUBSCRIBED
 
 
@@ -163,7 +168,9 @@ class RegisterForm(AutoForm):
         email = form['email']
         user = root.get_user_from_login(email)
         if user is not None:
-            resource.unsubscribe_user(user.name)
+            username = user.name
+            resource.unsubscribe_user(username)
+            resource.after_unregister(username)
 
         context.message = MSG_USER_UNSUBSCRIBED
 
@@ -210,13 +217,23 @@ class ManageForm(RoleAware_BrowseUsers):
         users = context.root.get_resource('users')
 
         subscribed = []
+        unallowed = []
         for username in form['ids']:
             user = users.get_resource(username)
+            if not resource.is_subscription_allowed(username):
+                unallowed.append(user)
+                continue
             resource.subscribe_user(user=user)
             subscribed.append(user)
 
-        context.message = get_subscribed_message(MSG_SUBSCRIBED, subscribed,
-                context)
+        message = []
+        if subscribed:
+            message.append(get_subscribed_message(MSG_SUBSCRIBED, subscribed,
+                context))
+        if unallowed:
+            message.append(get_subscribed_message(MSG_UNALLOWED, unallowed,
+                context))
+        context.message = message
 
 
     def action_unsubscribe(self, resource, context, form):
@@ -262,6 +279,7 @@ class MassSubscriptionForm(AutoForm):
 
         added = []
         subscribed = []
+        unallowed = []
         for email in form['emails']:
             email = email.strip()
             if not email:
@@ -270,6 +288,9 @@ class MassSubscriptionForm(AutoForm):
             if existing_user is None:
                 existing_role = None
             else:
+                if not resource.is_subscription_allowed(existing_user.name):
+                    unallowed.append(existing_user)
+                    continue
                 existing_role = site_root.get_user_role(existing_user.name)
             user = resource.subscribe_user(email=email, user=existing_user)
             if existing_user is None:
@@ -289,7 +310,9 @@ class MassSubscriptionForm(AutoForm):
         if subscribed:
             message.append(get_subscribed_message(MSG_SUBSCRIBED, subscribed,
                 context))
-
+        if unallowed:
+            message.append(get_subscribed_message(MSG_UNALLOWED, unallowed,
+                context))
         context.message = message
 
 
@@ -322,6 +345,10 @@ class Observable(object):
         body = message.gettext(resource_uri=uri, language=language)
         # And return
         return subject, body
+
+
+    def is_subscription_allowed(self, username):
+        return True
 
 
     def subscribe_user(self, email=None, user=None):
@@ -362,6 +389,14 @@ class Observable(object):
         except KeyError:
             pass
         self.set_property('cc_list', tuple(cc_list))
+
+
+    def after_register(self, username):
+        pass
+
+
+    def after_unregister(self, username):
+        pass
 
 
     def notify_subscribers(self, context):
