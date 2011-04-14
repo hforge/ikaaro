@@ -30,6 +30,7 @@ from views import CompositeForm
 
 
 MSG_USER_SUBSCRIBED = MSG(u'You are now subscribed to this resource.')
+MSG_USER_UNSUBSCRIBED = MSG(u'You are now unsubscribed from this resource.')
 MSG_SUBSCRIBED = MSG(u'The following users were subscribed: {users}.',
         format='replace_html')
 MSG_UNSUBSCRIBED = MSG(u'The following users were unsubscribed: {users}.',
@@ -99,18 +100,24 @@ class UsersRawList(Tokens):
 class RegisterButton(Button):
     access = True
     name = 'register'
-    title = MSG(u'OK')
+    title = MSG(u'Subscribe')
+
+
+
+class UnregisterButton(RegisterButton):
+    name = 'unregister'
+    title = MSG(u'Unsubscribe')
 
 
 
 class RegisterForm(AutoForm):
     access = 'is_allowed_to_view'
-    title = MSG(u"Subscribe")
+    title = MSG(u"Subscription")
     schema = freeze({'email': Email(mandatory=True)})
     widgets = freeze([TextWidget('email', title=MSG(u"E-mail Address"))])
     query_schema = freeze({
         'email': Email})
-    actions = [RegisterButton, Button] # len(actions) > 1 to keep the name
+    actions = [RegisterButton, UnregisterButton]
 
 
     def get_widgets(self, resource, context):
@@ -149,6 +156,16 @@ class RegisterForm(AutoForm):
                 # Else user subscribed himself, do nothing
 
         context.message = MSG_USER_SUBSCRIBED
+
+
+    def action_unregister(self, resource, context, form):
+        root = context.root
+        email = form['email']
+        user = root.get_user_from_login(email)
+        if user is not None:
+            resource.unsubscribe_user(user.name)
+
+        context.message = MSG_USER_UNSUBSCRIBED
 
 
 
